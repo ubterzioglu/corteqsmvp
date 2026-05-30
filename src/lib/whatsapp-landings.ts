@@ -81,6 +81,8 @@ export interface UpdateLandingInput {
   adminName?: string;
   adminContact?: string;
   description?: string;
+  memberApproved: boolean;
+  adminApproved: boolean;
 }
 
 const WHATSAPP_LANDING_HERO_BUCKET = "whatsapp-landing-hero";
@@ -184,8 +186,8 @@ function rowToLanding(row: WhatsAppLandingRow): WhatsAppLanding {
     adminContact: normalizeOptionalText(row.admin_contact),
     description: normalizeCommunityOptionalText(row.description),
     submitterRole: parseSubmitterRole(row.description),
-    memberApproved: parseBooleanTag(row.description, "Badge member", true),
-    adminApproved: parseBooleanTag(row.description, "Badge admin", row.status === "approved"),
+    memberApproved: row.member_approved ?? false,
+    adminApproved: row.admin_approved ?? false,
     status: row.status as LandingStatus,
     rejectionReason: row.rejection_reason ?? undefined,
     createdAt: row.created_at,
