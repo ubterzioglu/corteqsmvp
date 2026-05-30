@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { footerFlatLinks } from "@/components/footerLinks";
-import footerCommunityVideo from "../../footer-community.mp4";
 
 const socialLinks = [
   {
@@ -73,7 +72,7 @@ const Footer = () => {
         playsInline
         aria-hidden="true"
       >
-        <source src={footerCommunityVideo} type="video/mp4" />
+        <source src="/videos/footer-community.mp4" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(8,36,44,0.88)_0%,rgba(16,37,47,0.76)_40%,rgba(23,29,35,0.72)_66%,rgba(51,35,28,0.84)_100%)]" />
       <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:32px_32px]" />

@@ -67,10 +67,10 @@ const DiasporaSearchBar = () => {
   };
 
   const typeToRoute: Record<string, string> = {
-    consultant: "/consultants",
-    association: "/associations",
-    business: "/businesses",
-    event: "/events",
+    consultant: "/directory",
+    association: "/directory",
+    business: "/cadde",
+    event: "/radar",
   };
 
   return (
@@ -119,7 +119,7 @@ const DiasporaSearchBar = () => {
                 🏥 Hastane
               </button>
               <button
-                onClick={() => navigate("/consultants?filter=ambassador")}
+                onClick={() => navigate("/directory")}
                 className={quickPillClass}
               >
                 🏅 Şehir Elçine Ulaş
@@ -144,7 +144,7 @@ const DiasporaSearchBar = () => {
                 }
               />
               <button
-                onClick={() => navigate("/relocation")}
+                onClick={() => navigate("/cadde")}
                 className={quickPillClass}
               >
                 🌍 Taşınma Motoru

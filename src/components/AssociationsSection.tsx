@@ -37,7 +37,7 @@ const AssociationsSection = () => {
             const isFollowed = isFollowedFn("association", a.id);
             return (
               <Link
-                to={`/association/${a.id}`}
+                to="/directory"
                 key={a.id}
                 className="relative bg-card rounded-2xl p-6 pt-9 shadow-card hover:shadow-card-hover transition-all duration-300 border border-border hover:-translate-y-1 block overflow-hidden"
               >
@@ -70,7 +70,7 @@ const AssociationsSection = () => {
                 </div>
 
                 <div className="flex gap-2">
-                  <Link to={`/association/${a.id}`} className="flex-1" onClick={(e) => e.stopPropagation()}>
+                  <Link to="/directory" className="flex-1" onClick={(e) => e.stopPropagation()}>
                     <Button variant="default" size="sm" className="w-full">Üye Ol</Button>
                   </Link>
                   <Button variant="outline" size="sm" className="flex-1 gap-1" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
@@ -83,7 +83,7 @@ const AssociationsSection = () => {
         </div>
 
         <div className="text-center mt-10">
-          <Link to="/associations">
+          <Link to="/directory">
             <Button variant="outline" size="lg">Tüm Kuruluşları Gör →</Button>
           </Link>
         </div>

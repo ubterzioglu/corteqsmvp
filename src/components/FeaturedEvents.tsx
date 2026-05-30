@@ -9,7 +9,6 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 import { events } from "@/data/mock";
 
 const categoryColors: Record<string, string> = {
@@ -45,18 +44,18 @@ const FeaturedEvents = () => {
               Diasporadaki en popüler etkinlikleri keşfedin
             </p>
           </div>
-          <Link to="/events">
+          <Link to="/radar">
             <Button variant="outline" className="gap-1 hidden sm:flex">
               Tümünü Gör <ArrowRight className="h-4 w-4" />
             </Button>
           </Link>
         </div>
 
-        <Carousel opts={{ align: "start", loop: true }} plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]} className="w-full">
+        <Carousel opts={{ align: "start", loop: true }} className="w-full">
           <CarouselContent className="-ml-4">
             {featuredEvents.map((event) => (
               <CarouselItem key={event.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
-                <Link to={`/event/${event.id}`} className="block group">
+                <Link to="/radar" className="block group">
                   <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 h-full">
                     <div className="relative h-48 overflow-hidden">
                       <img
@@ -113,7 +112,7 @@ const FeaturedEvents = () => {
         </Carousel>
 
         <div className="mt-8 text-center sm:hidden">
-          <Link to="/events">
+          <Link to="/radar">
             <Button variant="outline" className="gap-1">
               Tümünü Gör <ArrowRight className="h-4 w-4" />
             </Button>

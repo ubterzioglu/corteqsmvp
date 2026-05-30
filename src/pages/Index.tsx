@@ -1,5 +1,12 @@
 import { useEffect } from "react";
+import SectionErrorBoundary from "@/components/SectionErrorBoundary";
 import HeroSection from "@/components/HeroSection";
+import DiasporaSearchBar from "@/components/DiasporaSearchBar";
+import ConsultantCategories from "@/components/ConsultantCategories";
+import FeaturedConsultants from "@/components/FeaturedConsultants";
+import AssociationsSection from "@/components/AssociationsSection";
+import BusinessesSection from "@/components/BusinessesSection";
+import FeaturedEvents from "@/components/FeaturedEvents";
 import DiasporaMarqueeSection from "@/components/DiasporaMarqueeSection";
 import ChatBot from "@/components/chat/ChatBot";
 import FAQSection from "@/components/FAQSection";
@@ -21,12 +28,20 @@ const Index = () => {
       <div className="landing-ambient-orb landing-ambient-orb-five" aria-hidden="true" />
       <main id="main" className="relative isolate overflow-hidden pb-8">
         <HeroSection />
-        <SEOContentSection />
+        <SectionErrorBoundary sectionName="DiasporaSearchBar">
+          <DiasporaSearchBar />
+        </SectionErrorBoundary>
+        <ConsultantCategories />
+        <FeaturedConsultants />
         <GlobalNetworkShowcaseSection />
+        <AssociationsSection />
+        <BusinessesSection />
+        <FeaturedEvents />
         <LandingFoundersSection />
         <DiasporaMarqueeSection />
-        <ChatBot />
+        <SEOContentSection />
         <FAQSection />
+        <ChatBot />
       </main>
     </div>
   );

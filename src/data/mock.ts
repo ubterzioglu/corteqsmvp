@@ -1,4 +1,4 @@
-import fourVisionPhoto from "@/assets/4vision-youtube.png";
+import fourVisionPhoto from "@/assets/corteqs-logo.png";
 
 export interface Consultant {
   id: string;

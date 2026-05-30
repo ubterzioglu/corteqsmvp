@@ -50,7 +50,7 @@ const FeaturedConsultants = () => {
           {featured.map((c: any) => {
             const kind = c.isAmbassador ? "ambassador" : "consultant";
             const isFollowed = isFollowedFn(kind, c.id);
-            const linkTo = c.isAmbassador ? `/ambassador/${c.id}` : `/consultant/${c.id}`;
+            const linkTo = "/directory";
             return (
               <Link
                 to={linkTo}
@@ -144,7 +144,7 @@ const FeaturedConsultants = () => {
         </div>
 
         <div className="text-center mt-10">
-          <Link to="/consultants">
+          <Link to="/directory">
             <Button variant="outline" size="lg">Tüm Danışmanları Gör →</Button>
           </Link>
         </div>

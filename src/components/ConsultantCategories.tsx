@@ -190,7 +190,7 @@ const ConsultantCategories = () => {
 
         {/* City Ambassador Card */}
         <div className="mt-8 text-center">
-          <Link to="/city-ambassadors">
+          <Link to="/directory">
             <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-gold/10 border border-gold/30 hover:bg-gold/15 transition-colors cursor-pointer group">
               <Star className="h-6 w-6 text-gold" />
               <div className="text-left">

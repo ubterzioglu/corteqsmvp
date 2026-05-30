@@ -40,7 +40,7 @@ const BusinessesSection = () => {
             const isFollowed = isFollowedFn("business", b.id);
             return (
               <Link
-                to={`/business/${b.id}`}
+                to="/cadde"
                 key={b.id}
                 className="relative bg-card rounded-2xl p-6 pt-9 shadow-card hover:shadow-card-hover transition-all duration-300 border border-border hover:-translate-y-1 block overflow-hidden"
               >
@@ -89,10 +89,10 @@ const BusinessesSection = () => {
                 </div>
 
                 <div className="flex gap-2">
-                  <Link to={`/business/${b.id}`} className="flex-1" onClick={(e) => e.stopPropagation()}>
+                  <Link to="/cadde" className="flex-1" onClick={(e) => e.stopPropagation()}>
                     <Button variant="default" size="sm" className="w-full">Detay</Button>
                   </Link>
-                  <Link to={`/business/${b.id}`} className="flex-1" onClick={(e) => e.stopPropagation()}>
+                  <Link to="/cadde" className="flex-1" onClick={(e) => e.stopPropagation()}>
                     <Button variant="outline" size="sm" className="w-full gap-1 border-gold/30 text-gold hover:bg-gold/10">
                       🏷️ Kupon Al
                     </Button>
@@ -104,7 +104,7 @@ const BusinessesSection = () => {
         </div>
 
         <div className="text-center mt-10">
-          <Link to="/businesses">
+          <Link to="/cadde">
             <Button variant="outline" size="lg">Tüm İşletmeleri Gör →</Button>
           </Link>
         </div>
