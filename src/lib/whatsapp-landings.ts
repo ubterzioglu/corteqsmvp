@@ -341,8 +341,19 @@ export async function updateLandingTagline(dbId: string, tagline: string) {
 }
 
 export async function updateLanding(dbId: string, input: UpdateLandingInput) {
+  if (input.memberApproved && input.adminApproved) {
+    throw new Error("Bir topluluk hem üye hem admin onaylı olamaz");
+  }
+
   const adminName = normalizeCommunityOptionalText(input.adminName) ?? null;
   const adminContact = normalizeOptionalText(input.adminContact) ?? null;
+
+  const cleanDescription = normalizeCommunityText(
+    input.description
+      ?.replace(/\[Badge member:\s*(true|false)\]\s*/gi, "")
+      .replace(/\[Badge admin:\s*(true|false)\]\s*/gi, "")
+      .trim(),
+  ) || null;
 
   const { error } = await supabase
     .from("whatsapp_landings")
@@ -359,7 +370,9 @@ export async function updateLanding(dbId: string, input: UpdateLandingInput) {
       whatsapp_link: input.whatsappLink.trim(),
       admin_name: adminName,
       admin_contact: adminContact,
-      description: normalizeCommunityText(input.description) || null,
+      description: cleanDescription,
+      member_approved: input.memberApproved,
+      admin_approved: input.adminApproved,
       updated_at: new Date().toISOString(),
     })
     .eq("id", dbId);
