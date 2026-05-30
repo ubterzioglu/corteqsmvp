@@ -150,13 +150,6 @@ function parseTagValue(description: string | null | undefined, tagName: string) 
   return match?.[1]?.trim();
 }
 
-function parseBooleanTag(description: string | null | undefined, tagName: string, fallback: boolean) {
-  if (!description) return fallback;
-  const match = description.match(new RegExp(`\\[${tagName}:\\s*(true|false)\\]`, "i"));
-  if (!match) return fallback;
-  return match[1].toLowerCase() === "true";
-}
-
 function normalizeOptionalText(value?: string | null) {
   const trimmed = value?.trim();
   return trimmed ? trimmed : undefined;

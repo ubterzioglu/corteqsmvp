@@ -820,6 +820,7 @@ export type Database = {
       };
       whatsapp_landings: {
         Row: {
+          admin_approved: boolean;
           admin_contact: string | null;
           admin_name: string | null;
           call_to_action_text: string | null;
@@ -832,6 +833,7 @@ export type Database = {
           group_name: string;
           hero_image: string | null;
           id: string;
+          member_approved: boolean;
           mode: string;
           rejection_reason: string | null;
           slug: string;
@@ -842,6 +844,7 @@ export type Database = {
           whatsapp_link: string;
         };
         Insert: {
+          admin_approved?: boolean;
           admin_contact?: string | null;
           admin_name?: string | null;
           call_to_action_text?: string | null;
@@ -854,6 +857,7 @@ export type Database = {
           group_name: string;
           hero_image?: string | null;
           id?: string;
+          member_approved?: boolean;
           mode?: string;
           rejection_reason?: string | null;
           slug: string;
@@ -864,6 +868,7 @@ export type Database = {
           whatsapp_link: string;
         };
         Update: {
+          admin_approved?: boolean;
           admin_contact?: string | null;
           admin_name?: string | null;
           call_to_action_text?: string | null;
@@ -876,6 +881,7 @@ export type Database = {
           group_name?: string;
           hero_image?: string | null;
           id?: string;
+          member_approved?: boolean;
           mode?: string;
           rejection_reason?: string | null;
           slug?: string;
