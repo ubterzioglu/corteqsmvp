@@ -1,0 +1,22 @@
+import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import { describe, expect, it } from "vitest";
+
+import HeroSection from "@/components/HeroSection";
+
+describe("HeroSection", () => {
+  it("does not show the 19 Mayıs banner and still keeps the hero CTAs", () => {
+    render(
+      <MemoryRouter>
+        <HeroSection />
+      </MemoryRouter>,
+    );
+
+    expect(screen.queryByText("19 Mayıs Etkinlikleri")).not.toBeInTheDocument();
+    expect(screen.getByText("Türk Diasporasını Birleştiren")).toBeInTheDocument();
+    expect(screen.getByText("Ücretsiz Kayıt Ol")).toBeInTheDocument();
+    expect(screen.getByText("CorteQS Nedir")).toBeInTheDocument();
+    expect(screen.getByText("Biz Kimiz")).toBeInTheDocument();
+    expect(screen.getAllByText("Yakında!").length).toBeGreaterThan(0);
+  });
+});

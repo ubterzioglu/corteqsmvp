@@ -1,42 +1,355 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CorFin MVP</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #e2e8f0;
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CorteQS | Türk Diasporası Topluluk ve Network Platformu</title>
+    <meta name="description" content="CorteQS, Türk diasporası için topluluk, danışman ve fırsatları bir araya getirir. Expat ağına katılın, şehir bazlı güvenilir bağlantılar kurun.">
+    <meta name="author" content="CorteQS" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#aa8c42" />
+    <meta name="keywords" content="türk diaspora, diaspora connect, diaspora network, yurt dışı türkler, diaspora platformu, şehir elçisi, türk danışman ağı, global türk topluluğu, türk işletme ağı, diaspora networking" />
+    <link rel="canonical" href="https://corteqs.net/" />
+    <link rel="alternate" hreflang="tr" href="https://corteqs.net/" />
+    <link rel="alternate" hreflang="x-default" href="https://corteqs.net/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" /></noscript>
+    <link rel="preload" as="image" href="/og-image.png" fetchpriority="high" />
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XMZYTW34LQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XMZYTW34LQ');
+    </script>
+    <script src="https://analytics.ahrefs.com/analytics.js" data-key="m8GBM968oyKm69CewwRJTA" async></script>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://corteqs.net/" />
+    <meta property="og:site_name" content="CorteQS" />
+    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:title" content="CorteQS | Türk Diasporası Topluluk ve Network Platformu" />
+    <meta property="og:description" content="CorteQS, Türk diasporası için topluluk, danışman ve fırsatları bir araya getirir. Expat ağına katılın, şehir bazlı güvenilir bağlantılar kurun.">
+    <meta property="og:image" content="https://corteqs.net/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="CorteQS Diaspora Connect — Global Türk Diaspora Network Platformu" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@turksdiaspora" />
+    <meta name="twitter:creator" content="@turksdiaspora" />
+    <meta name="twitter:title" content="CorteQS | Türk Diasporası Topluluk ve Network Platformu" />
+    <meta name="twitter:description" content="CorteQS, Türk diasporası için topluluk, danışman ve fırsatları bir araya getirir. Expat ağına katılın, şehir bazlı güvenilir bağlantılar kurun.">
+    <meta name="twitter:image" content="https://corteqs.net/og-image.png" />
+    <meta name="twitter:image:alt" content="CorteQS Diaspora Connect — Global Türk Diaspora Network Platformu" />
+
+    <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wdkgdje6rb");
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://corteqs.net/#organization",
+          "name": "CorteQS",
+          "url": "https://corteqs.net",
+          "logo": "https://corteqs.net/logocorteqsbig.png",
+          "description": "CorteQS Diaspora Connect, dünya genelindeki Türk diasporasını danışmanlar, işletmeler, dernekler, vakıflar, bloggerlar ve bireylerle birleştiren bir global network platformudur. 164 ülkede 8.8 milyon Türk diasporasını hedefleyen CorteQS, profesyonel ağ oluşturma, iş birliği fırsatları ve topluluk gücünü bir araya getirmektedir. Diaspora networking, global profesyoneller ve iş bağlantıları alanında uzmanlaşmış platformumuz, Türk diasporası ve diğer diaspora topluluklarını bir çatı altında toplar.",
+          "foundingDate": "2026",
+          "foundingLocation": {
+            "@type": "Place",
+            "name": "Istanbul, Turkey"
+          },
+          "areaServed": [
+            {"@type": "City", "name": "Berlin"},
+            {"@type": "City", "name": "Dortmund"},
+            {"@type": "City", "name": "Köln"},
+            {"@type": "City", "name": "Hamburg"},
+            {"@type": "City", "name": "München"},
+            {"@type": "Country", "name": "Germany"},
+            {"@type": "Place", "name": "Europe"},
+            {"@type": "Place", "name": "Worldwide"}
+          ],
+          "knowsAbout": ["diaspora networking", "global professionals", "business connections", "Turkish diaspora", "professional networking", "community building"],
+          "brand": { "@id": "https://corteqs.net/#organization" },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "info@corteqs.net",
+            "contactType": "customer service"
+          },
+          "sameAs": [
+            "https://www.facebook.com/corteqs",
+            "https://www.instagram.com/corteqsturk",
+            "https://x.com/turksdiaspora",
+            "https://www.linkedin.com/company/corteqs-global"
+          ],
+          "founders": [
+            { "@id": "https://corteqs.net/#founder-qualtron-sinclair" },
+            { "@id": "https://corteqs.net/#founder-akcakanat-terzioglu" }
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://corteqs.net/#website",
+          "name": "CorteQS Diaspora Connect",
+          "alternateName": "CorteQS Diaspora Connect",
+          "url": "https://corteqs.net",
+          "inLanguage": "tr",
+          "publisher": { "@id": "https://corteqs.net/#organization" },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://www.google.com/search?q=site:corteqs.net+{search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://corteqs.net/#webpage",
+          "name": "CorteQS - Türk Diaspora Network Platformu",
+          "description": "Dünya genelindeki Türk diasporasını danışmanlar, işletmeler, kuruluşlar ve bireylerle birleştiren global network platformu.",
+          "url": "https://corteqs.net/",
+          "inLanguage": "tr",
+          "isPartOf": { "@id": "https://corteqs.net/#website" },
+          "author": { "@id": "https://corteqs.net/#organization" },
+          "primaryImageOfPage": {
+            "@type": "ImageObject",
+            "url": "https://corteqs.net/og-image.png"
+          },
+          "datePublished": "2026-04-18",
+          "dateModified": "2026-04-21",
+          "about": {
+            "@type": "Thing",
+            "name": "Türk Diaspora Network Platformu",
+            "description": "Global Türk diasporasını birleştiren profesyonel networking platformu"
+          },
+          "mentions": [
+            { "@type": "Thing", "name": "Türk diasporası" },
+            { "@type": "Thing", "name": "global yetenek" }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://corteqs.net/#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Ana Sayfa",
+              "item": "https://corteqs.net/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "author": { "@id": "https://corteqs.net/#organization" },
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "CorteQS nedir ve nasıl çalışır?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "CorteQS, yurt dışındaki Türk diasporasını şehir bazlı olarak danışmanlar, işletmeler, topluluklar, içerik üreticileri ve fırsat alanlarıyla buluşturan bir diaspora network platformudur. Amaç yalnızca bir rehber sunmak değil, aynı şehirde veya aynı ihtiyaca yakın insanları daha hızlı ve daha anlamlı biçimde bir araya getirmektir. Kullanıcılar kategori seçerek kayıt bırakır, yaşadıkları ya da taşınmak istedikleri şehri belirtir ve platform açıldığında kendi kullanım senaryolarına uygun alanlara yönlendirilir."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Yurtdışına taşınmak için CorteQS nasıl yardımcı olur?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yurt dışına taşınma sürecinde en büyük zorluk, doğru bilgiye ve doğru kişiye zamanında ulaşmaktır. CorteQS, vize, oturum, ev bulma, iş arama, şehirde ilk kurulum ve yerel yaşam gibi başlıklarda şehir bazlı bağlantılar kurmanıza yardımcı olmayı hedefler. Bu sayede belirsizlik azalır, ilk bağlantılar daha erken kurulur ve yeni bir şehirde sosyal ve profesyonel ağ oluşturma süreci hızlanır."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "CorteQS'te nasıl danışman bulabilirim?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "CorteQS'te danışman bulma mantığı, ihtiyacınızı genel kalabalık içinde kaybetmeden daha hedefli bir filtreleme sunmaktır. Vize, oturum, emlak, iş kurma, vergi, hukuk veya kariyer gibi başlıklarda hangi konuda destek aradığınızı belirtmeniz, sizi daha uygun profillere yaklaştırır. Yaşadığınız veya gitmek istediğiniz şehir bilgisinin eklenmesi de yerel uzmanlara ulaşmayı kolaylaştırır."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "İşletmemi CorteQS'e nasıl eklerim?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "İşletmeler CorteQS'e kayıt bırakarak kendi şehirlerinde ve hedefledikleri diaspora kitlesi içinde daha görünür hale gelmeyi amaçlayabilir. Bu görünürlük yalnızca müşteri bulmak için değil, aynı zamanda iş ortaklıkları, tedarik bağlantıları, etkinlik katılımı ve diaspora içindeki güven ilişkilerini güçlendirmek için de değerlidir. Platform yapısı, işletmelerin kendilerini kategori ve konum üzerinden konumlandırmasına imkan verir."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "CorteQS şehir elçisi (Ambassador) nedir, nasıl olunur?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Şehir elçileri, CorteQS'in yerel topluluk ayağını güçlendiren kişiler olarak düşünülür. Bulundukları şehirde diaspora ağını görünür kılmak, insanları birbirine bağlamak, etkinlikleri desteklemek ve yerel ihtiyaçları merkeze taşımak bu rolün temel parçalarıdır. Şehir elçisi olmak isteyen kişiler ilgili kategori üzerinden başvuru bırakabilir ve kendi şehirleri için ilgi gösterebilir."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "CorteQS üzerinden etkinliklere nasıl katılabilirim?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Etkinlikler diaspora topluluklarında güven ve ilişki kurmanın en hızlı yollarından biridir. CorteQS, bulunduğunuz şehirde veya ilgi duyduğunuz lokasyonlarda gerçekleşen buluşmaları, topluluk etkinliklerini, iş odaklı görüşmeleri ve içerik temelli organizasyonları daha erişilebilir hale getirmeyi hedefler. Bu model hem sosyal bağları kuvvetlendirir hem de profesyonel network oluşturmayı daha doğal hale getirir."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "CorteQS ücretsiz mi?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "CorteQS'in erken erişim ve temel katılım tarafı ücretsiz kurgulanmaktadır. Kullanıcıların kategori seçip kayıt bırakabilmesi, platform açılışıyla ilgili haber alması ve ilk topluluk akışına dahil olması için ücretli bir bariyer öngörülmemektedir. İlerleyen aşamalarda premium görünürlük veya gelişmiş kullanım imkanları sunulabilir, ancak ana yaklaşım temel ağ kurma deneyimini erişilebilir tutmaktır."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "CorteQS hangi ülkelerde ve şehirlerde aktif?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "CorteQS küresel bir diaspora fikriyle kurulsa da en güçlü başlangıç, Türk diasporasının yoğun olduğu şehirler üzerinden yapılmaktadır. Berlin, Londra, Amsterdam, Dubai, Sydney ve New York gibi merkezler ilk ilgi odağı olan şehirler arasında yer alırken, kayıt bırakan topluluk yoğunluğuna göre yeni lokasyonlar da önceliklendirilecektir. Bu yaklaşım platformun gerçek ihtiyaç ve topluluk hareketine göre büyümesini sağlar."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "CorteQS ile iş veya müşteri bulabilir miyim?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Evet, CorteQS'in önemli kullanım alanlarından biri iş ve müşteri bağlantılarıdır. Danışmanlar uzmanlıklarını daha görünür hale getirebilir, işletmeler kendi hedef kitlelerine ulaşabilir ve bireysel kullanıcılar da iş, proje, ortaklık veya yönlendirme fırsatlarını keşfetmeye daha yakın hale gelir. Diaspora bağlamı içinde kurulan bu temaslar çoğu zaman daha hızlı güven üretir ve daha somut sonuçlara dönüşebilir."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "CorteQS'e nasıl katılabilirim?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "CorteQS'e katılmak için landing page üzerindeki kayıt alanından kategorinizi seçerek ilginizi bırakmanız yeterlidir. Danışman, işletme, dernek, vakıf, içerik üreticisi, şehir elçisi veya bireysel kullanıcı olarak hangi rolde yer almak istediğinizi belirtmeniz, açılış sonrası size uygun akışların hazırlanmasına yardımcı olur. Kayıt bırakan kullanıcılar erken erişim duyurularını ve toplulukla ilgili haberleri takip edebilir."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Almanya'ya taşınmak istiyorum, CorteQS relocation sürecinde nasıl yardımcı olur?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Almanya'ya taşınma sürecinde vize başvuruları, oturum izni (Aufenthaltstitel), ev bulma, Anmeldung, banka hesabı açma ve sağlık sigortası gibi birçok adım vardır. CorteQS, bu süreçlerde Almanya'daki Türk diasporasından doğrulanmış danışmanlar ve şehir elçileriyle sizi buluşturur. Berlin, Dortmund, Köln, Hamburg ve München gibi şehirlerde yerel danışmanlar ve topluluk üyeleri, relocation sürecinizde size rehberlik edebilir."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "CorteQS'te doğrulanmış hizmet sağlayıcılarını nasıl bulabilirim?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "CorteQS, platformdaki danışman ve hizmet sağlayıcılarını doğrulama sürecinden geçirir. Doğrulanmış sağlayıcılar, profesyonel niteliklerini ve diaspora topluluğundaki güvenilirliklerini kanıtlamış kişilerdir. Platform açıldığında danışman profillerinde doğrulama durumu görüntülenecek, kullanıcılar değerlendirme ve geri bildirimlerle topluluk kalitesini destekleyebilecektir."
+              }
+            }
+          ]
+        },
+        {
+          "@type": "SpeakableSpecification",
+          "cssSelector": ["h1", "h2", ".hero-description", ".faq-answer"]
+        },
+        {
+          "@type": "Service",
+          "@id": "https://corteqs.net/#service",
+          "name": "CorteQS Diaspora Connect",
+          "description": "Global diaspora networking platformu. Türk diasporasını ve diğer diaspora topluluklarını danışmanlar, işletmeler, kuruluşlar ve bireylerle birleştirir.",
+          "provider": { "@id": "https://corteqs.net/#organization" },
+          "serviceType": "Professional Networking Platform",
+          "areaServed": "Worldwide",
+          "inLanguage": "tr"
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://corteqs.net/#software",
+          "name": "CorteQS Diaspora Connect",
+          "operatingSystem": "Web",
+          "applicationCategory": "NetworkingApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR"
+          },
+          "description": "Türk diasporasını, expatları ve yerel işletmeleri birleştiren şehir bazlı community platform.",
+          "url": "https://corteqs.net"
+        },
+        {
+          "@type": "Person",
+          "@id": "https://corteqs.net/#founder-qualtron-sinclair",
+          "name": "Qualtron Sinclair",
+          "jobTitle": "Co-Founder",
+          "description": "CorteQS Diaspora Connect kurucu ortağı. Global diaspora networking ve topluluk kurma üzerine çalışıyor.",
+          "nationality": "Turkish",
+          "worksFor": { "@id": "https://corteqs.net/#organization" }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://corteqs.net/#founder-akcakanat-terzioglu",
+          "name": "Akcakanat-Terzioglu",
+          "jobTitle": "Co-Founder",
+          "description": "CorteQS Diaspora Connect kurucu ortağı. Şehir bazlı diaspora ağları ve güven temelli bağlantı sistemleri üzerine odaklanıyor.",
+          "nationality": "Turkish",
+          "worksFor": { "@id": "https://corteqs.net/#organization" }
+        },
+        {
+          "@type": "ImageObject",
+          "@id": "https://corteqs.net/#hero-image",
+          "url": "https://corteqs.net/og-image.png",
+          "contentUrl": "https://corteqs.net/og-image.png",
+          "width": 1200,
+          "height": 630,
+          "caption": "CorteQS Diaspora Connect — Global Türk Diaspora Network Platformu",
+          "encodingFormat": "image/png"
+        },
+        {
+          "@type": "Offer",
+          "@id": "https://corteqs.net/#offer-country-founder",
+          "name": "Ülke Bazlı Kurucu",
+          "description": "CorteQS Diaspora Connect erken destekçi programı. Ülke bazlı kurucu ünvanı, 1 yıl sosyal medya tanıtımı, erken kullanıcı lead erişimi, etkinlik sponsorluğu önceliği ve platform reklam kredileri.",
+          "price": "1000",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/LimitedAvailability",
+          "eligibleQuantity": {
+            "@type": "QuantitativeValue",
+            "maxValue": 500
+          },
+          "seller": { "@id": "https://corteqs.net/#organization" },
+          "url": "https://corteqs.net/#kaydol",
+          "category": "Founder Backing"
+        },
+        {
+          "@type": "Offer",
+          "@id": "https://corteqs.net/#offer-honorary-founder",
+          "name": "Onursal Kurucu",
+          "description": "CorteQS Diaspora Connect onursal kurucu seviyesi. Global platform ve sosyal medya görünürlüğü, özel partnerlik fırsatları, stratejik birebir görüşmeler.",
+          "price": "10000",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/LimitedAvailability",
+          "eligibleQuantity": {
+            "@type": "QuantitativeValue",
+            "maxValue": 100
+          },
+          "seller": { "@id": "https://corteqs.net/#organization" },
+          "url": "https://corteqs.net/#kaydol",
+          "category": "Founder Backing"
         }
-        .container {
-            text-align: center;
-            padding: 2rem;
-        }
-        h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        p {
-            font-size: 1.25rem;
-            color: #94a3b8;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>CorFin MVP</h1>
-        <p>Coming soon...</p>
-    </div>
-</body>
+      ]
+    }
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script src="/env-config.js"></script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

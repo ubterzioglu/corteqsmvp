@@ -1,0 +1,1 @@
+CREATE POLICY "Users can delete own landings" ON public.whatsapp_landings FOR DELETE TO authenticated USING (auth.uid() = user_id);

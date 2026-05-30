@@ -1,0 +1,1 @@
+ALTER TABLE public.welcome_pack_orders ADD COLUMN needs_sim_card BOOLEAN NOT NULL DEFAULT false;

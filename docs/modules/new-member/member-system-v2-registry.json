@@ -1,0 +1,20 @@
+{
+  "profile_sections": [
+    "preview.isim_kurulus_adi",
+    "preview.konum",
+    "preview.profil_logo_gorseli",
+    "preview.kategori_sektor_etiketi",
+    "detail.hakkinda_bio",
+    "detail.taxonomy_etiketleri",
+    "detail.iletisim_linkleri"
+  ],
+  "taxonomy_groups": [
+    "consultant_subcategory",
+    "business_subtype"
+  ],
+  "notes": [
+    "Bu dosya v2.md bazli registry referansidir.",
+    "Bu fazda sadece landing repo icinde kullanilan section ve taxonomy kayitlari seedlenir.",
+    "Ref urunde olan ama bu repoda route/bilesen karsiligi olmayan moduller coming_soon veya inactive kalir."
+  ]
+}
