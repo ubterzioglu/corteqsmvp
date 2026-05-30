@@ -228,44 +228,44 @@
   "hotPaths": [
     {
       "path": "src\\pages\\AddWhatsAppPage.tsx",
-      "accessCount": 52,
-      "lastAccessed": 1780153193903,
+      "accessCount": 54,
+      "lastAccessed": 1780160458423,
       "type": "file"
     },
     {
       "path": "",
-      "accessCount": 23,
-      "lastAccessed": 1780153093776,
+      "accessCount": 32,
+      "lastAccessed": 1780160388963,
       "type": "directory"
     },
     {
       "path": "src\\components\\admin\\WhatsAppLandingsModeration.tsx",
-      "accessCount": 7,
-      "lastAccessed": 1780152541699,
+      "accessCount": 11,
+      "lastAccessed": 1780160473233,
       "type": "file"
     },
     {
       "path": "src",
-      "accessCount": 7,
-      "lastAccessed": 1780152941032,
+      "accessCount": 10,
+      "lastAccessed": 1780160420759,
       "type": "directory"
     },
     {
       "path": "src\\lib\\whatsapp-landings.ts",
+      "accessCount": 7,
+      "lastAccessed": 1780160475821,
+      "type": "file"
+    },
+    {
+      "path": "src\\App.tsx",
       "accessCount": 4,
-      "lastAccessed": 1780152939888,
+      "lastAccessed": 1780160343668,
       "type": "file"
     },
     {
       "path": "CLAUDE.md",
       "accessCount": 3,
       "lastAccessed": 1780150989925,
-      "type": "file"
-    },
-    {
-      "path": "src\\App.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1780152204157,
       "type": "file"
     },
     {
@@ -308,6 +308,36 @@
       "path": "src\\lib\\cadde.ts",
       "accessCount": 2,
       "lastAccessed": 1780151246688,
+      "type": "file"
+    },
+    {
+      "path": "Dockerfile",
+      "accessCount": 2,
+      "lastAccessed": 1780158629479,
+      "type": "file"
+    },
+    {
+      "path": "nixpacks.toml",
+      "accessCount": 2,
+      "lastAccessed": 1780158635230,
+      "type": "file"
+    },
+    {
+      "path": "nginx.conf.template",
+      "accessCount": 2,
+      "lastAccessed": 1780158648767,
+      "type": "file"
+    },
+    {
+      "path": "docker-entrypoint-env.sh",
+      "accessCount": 2,
+      "lastAccessed": 1780158648858,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\admin\\AdminWhatsAppLandingsPage.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1780160392161,
       "type": "file"
     },
     {
@@ -371,12 +401,6 @@
       "type": "file"
     },
     {
-      "path": "src\\pages\\admin\\AdminWhatsAppLandingsPage.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1780151245356,
-      "type": "file"
-    },
-    {
       "path": "src\\components\\ChatRegisterBar.tsx",
       "accessCount": 1,
       "lastAccessed": 1780151259089,
@@ -389,33 +413,51 @@
       "type": "file"
     },
     {
-      "path": "Dockerfile",
-      "accessCount": 1,
-      "lastAccessed": 1780157526739,
-      "type": "file"
-    },
-    {
-      "path": "nixpacks.toml",
-      "accessCount": 1,
-      "lastAccessed": 1780157526824,
-      "type": "file"
-    },
-    {
-      "path": "nginx.conf.template",
-      "accessCount": 1,
-      "lastAccessed": 1780157536402,
-      "type": "file"
-    },
-    {
-      "path": "docker-entrypoint-env.sh",
-      "accessCount": 1,
-      "lastAccessed": 1780157536824,
-      "type": "file"
-    },
-    {
       "path": ".env.example",
       "accessCount": 1,
       "lastAccessed": 1780157537197,
+      "type": "file"
+    },
+    {
+      "path": "server.mjs",
+      "accessCount": 1,
+      "lastAccessed": 1780158635421,
+      "type": "file"
+    },
+    {
+      "path": "docs\\history\\status-reports\\merge-raporu-2026-05-30.md",
+      "accessCount": 1,
+      "lastAccessed": 1780159574419,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260515120000_add_whatsapp_landings.sql",
+      "accessCount": 1,
+      "lastAccessed": 1780160403400,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260517110000_add_whatsapp_landing_hero_bucket.sql",
+      "accessCount": 1,
+      "lastAccessed": 1780160403609,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260502152623_dd64bab6-e32c-44ba-be2e-0d09a775bf83.sql",
+      "accessCount": 1,
+      "lastAccessed": 1780160403923,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\WhatsAppGroupLanding.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1780160412882,
+      "type": "file"
+    },
+    {
+      "path": "src\\components\\profiles\\WhatsAppGroupsTab.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1780160413013,
       "type": "file"
     }
   ],
