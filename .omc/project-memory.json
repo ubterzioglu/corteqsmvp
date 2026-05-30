@@ -228,32 +228,44 @@
   "hotPaths": [
     {
       "path": "src\\pages\\AddWhatsAppPage.tsx",
-      "accessCount": 54,
-      "lastAccessed": 1780160458423,
+      "accessCount": 55,
+      "lastAccessed": 1780172006228,
       "type": "file"
     },
     {
       "path": "",
-      "accessCount": 32,
-      "lastAccessed": 1780160388963,
-      "type": "directory"
-    },
-    {
-      "path": "src\\components\\admin\\WhatsAppLandingsModeration.tsx",
-      "accessCount": 11,
-      "lastAccessed": 1780160473233,
-      "type": "file"
-    },
-    {
-      "path": "src",
-      "accessCount": 10,
-      "lastAccessed": 1780160420759,
+      "accessCount": 33,
+      "lastAccessed": 1780172461863,
       "type": "directory"
     },
     {
       "path": "src\\lib\\whatsapp-landings.ts",
+      "accessCount": 23,
+      "lastAccessed": 1780172715565,
+      "type": "file"
+    },
+    {
+      "path": "src\\components\\admin\\WhatsAppLandingsModeration.tsx",
+      "accessCount": 23,
+      "lastAccessed": 1780173075354,
+      "type": "file"
+    },
+    {
+      "path": "src",
+      "accessCount": 14,
+      "lastAccessed": 1780172294340,
+      "type": "directory"
+    },
+    {
+      "path": "src\\integrations\\supabase\\types.ts",
+      "accessCount": 10,
+      "lastAccessed": 1780172613852,
+      "type": "directory"
+    },
+    {
+      "path": "supabase\\migrations\\20260530120000_add_badge_columns_to_whatsapp_landings.sql",
       "accessCount": 7,
-      "lastAccessed": 1780160475821,
+      "lastAccessed": 1780172307927,
       "type": "file"
     },
     {
@@ -261,6 +273,12 @@
       "accessCount": 4,
       "lastAccessed": 1780160343668,
       "type": "file"
+    },
+    {
+      "path": "supabase\\migrations",
+      "accessCount": 4,
+      "lastAccessed": 1780172302005,
+      "type": "directory"
     },
     {
       "path": "CLAUDE.md",
@@ -338,6 +356,30 @@
       "path": "src\\pages\\admin\\AdminWhatsAppLandingsPage.tsx",
       "accessCount": 2,
       "lastAccessed": 1780160392161,
+      "type": "file"
+    },
+    {
+      "path": "docs\\superpowers\\specs\\2026-05-30-community-badge-single-select-design.md",
+      "accessCount": 2,
+      "lastAccessed": 1780171733040,
+      "type": "file"
+    },
+    {
+      "path": "docs\\superpowers\\plans\\2026-05-30-community-badge-single-select.md",
+      "accessCount": 2,
+      "lastAccessed": 1780171845966,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260515120000_add_whatsapp_landings.sql",
+      "accessCount": 2,
+      "lastAccessed": 1780171974165,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260517110000_add_whatsapp_landing_hero_bucket.sql",
+      "accessCount": 2,
+      "lastAccessed": 1780171984900,
       "type": "file"
     },
     {
@@ -431,18 +473,6 @@
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260515120000_add_whatsapp_landings.sql",
-      "accessCount": 1,
-      "lastAccessed": 1780160403400,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260517110000_add_whatsapp_landing_hero_bucket.sql",
-      "accessCount": 1,
-      "lastAccessed": 1780160403609,
-      "type": "file"
-    },
-    {
       "path": "supabase\\migrations\\20260502152623_dd64bab6-e32c-44ba-be2e-0d09a775bf83.sql",
       "accessCount": 1,
       "lastAccessed": 1780160403923,
@@ -459,6 +489,12 @@
       "accessCount": 1,
       "lastAccessed": 1780160413013,
       "type": "file"
+    },
+    {
+      "path": "src\\integrations",
+      "accessCount": 1,
+      "lastAccessed": 1780172295593,
+      "type": "directory"
     }
   ],
   "userDirectives": []
