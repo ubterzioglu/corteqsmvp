@@ -387,6 +387,36 @@
       "accessCount": 1,
       "lastAccessed": 1780153098184,
       "type": "file"
+    },
+    {
+      "path": "Dockerfile",
+      "accessCount": 1,
+      "lastAccessed": 1780157526739,
+      "type": "file"
+    },
+    {
+      "path": "nixpacks.toml",
+      "accessCount": 1,
+      "lastAccessed": 1780157526824,
+      "type": "file"
+    },
+    {
+      "path": "nginx.conf.template",
+      "accessCount": 1,
+      "lastAccessed": 1780157536402,
+      "type": "file"
+    },
+    {
+      "path": "docker-entrypoint-env.sh",
+      "accessCount": 1,
+      "lastAccessed": 1780157536824,
+      "type": "file"
+    },
+    {
+      "path": ".env.example",
+      "accessCount": 1,
+      "lastAccessed": 1780157537197,
+      "type": "file"
     }
   ],
   "userDirectives": []
