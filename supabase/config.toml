@@ -1,0 +1,16 @@
+project_id = "injprdrsklkxgnaiixzh"
+
+[functions.chat-register]
+verify_jwt = true
+
+[functions.find-matches]
+verify_jwt = true
+
+[functions.send-submission-email]
+verify_jwt = true
+
+[functions.lansman-admin]
+verify_jwt = true
+
+[functions.submit-survey-response]
+verify_jwt = false

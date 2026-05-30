@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS gift_acceptance_enabled boolean NOT NULL DEFAULT false;

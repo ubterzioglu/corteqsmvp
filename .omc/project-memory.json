@@ -1,34 +1,393 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1780154801091,
-  "projectRoot": "C:\\temp_private\\corteqs\\corteqs_fin",
+  "lastScanned": 1780138428477,
+  "projectRoot": "C:\\temp_private\\corteqs\\corteqs_landing",
   "techStack": {
-    "languages": [],
-    "frameworks": [],
-    "packageManager": null,
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "react",
+        "version": "18.3.1",
+        "category": "frontend"
+      },
+      {
+        "name": "react-dom",
+        "version": "18.3.1",
+        "category": "frontend"
+      },
+      {
+        "name": "@playwright/test",
+        "version": "1.57.0",
+        "category": "testing"
+      },
+      {
+        "name": "vite",
+        "version": "5.4.19",
+        "category": "build"
+      },
+      {
+        "name": "vitest",
+        "version": "3.2.4",
+        "category": "testing"
+      }
+    ],
+    "packageManager": "npm",
     "runtime": null
   },
   "build": {
-    "buildCommand": null,
-    "testCommand": null,
-    "lintCommand": null,
-    "devCommand": null,
-    "scripts": {}
+    "buildCommand": "npm run build",
+    "testCommand": "npm test",
+    "lintCommand": "npm run lint",
+    "devCommand": "npm run dev",
+    "scripts": {
+      "dev": "vite",
+      "build": "vite build",
+      "build:dev": "vite build --mode development",
+      "start": "node server.mjs",
+      "verify:release": "node scripts/verify-release.mjs",
+      "import:command-center:may13": "node scripts/import-command-center-may13.mjs",
+      "import:command-center:may13:write": "node scripts/import-command-center-may13.mjs --write",
+      "import:resources:replace": "node scripts/replace-resource-entries-from-csv.mjs",
+      "lint": "eslint .",
+      "preview": "vite preview",
+      "test": "vitest run",
+      "test:watch": "vitest"
+    }
   },
   "conventions": {
     "namingStyle": null,
     "importStyle": null,
     "testPattern": null,
-    "fileOrganization": null
+    "fileOrganization": "type-based"
   },
   "structure": {
     "isMonorepo": false,
     "workspaces": [],
-    "mainDirectories": [],
-    "gitBranches": null
+    "mainDirectories": [
+      "docs",
+      "public",
+      "scripts",
+      "src"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
   },
   "customNotes": [],
-  "directoryMap": {},
-  "hotPaths": [],
+  "directoryMap": {
+    "backups": {
+      "path": "backups",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1780138428382,
+      "keyFiles": []
+    },
+    "dist": {
+      "path": "dist",
+      "purpose": "Distribution/build output",
+      "fileCount": 17,
+      "lastAccessed": 1780138428383,
+      "keyFiles": [
+        "ambassador.html",
+        "commercial.html",
+        "community-leader.html",
+        "contributor.html",
+        "env-config.js"
+      ]
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 8,
+      "lastAccessed": 1780138428384,
+      "keyFiles": [
+        "auth-login-durumu-2026-05-24.md",
+        "commercial-contributor-structure.md",
+        "marquee-haber-akisi.md",
+        "member-system-v2-registry.json",
+        "new-member-system-login-roller-featurelar.md"
+      ]
+    },
+    "docu": {
+      "path": "docu",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1780138428434,
+      "keyFiles": []
+    },
+    "lansman": {
+      "path": "lansman",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1780138428434,
+      "keyFiles": [
+        "index.html"
+      ]
+    },
+    "public": {
+      "path": "public",
+      "purpose": "Public files",
+      "fileCount": 10,
+      "lastAccessed": 1780138428435,
+      "keyFiles": [
+        "env-config.js",
+        "fav.png",
+        "favicon.ico",
+        "favicon.svg",
+        "llms.txt"
+      ]
+    },
+    "ref": {
+      "path": "ref",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1780138428436,
+      "keyFiles": []
+    },
+    "scripts": {
+      "path": "scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 3,
+      "lastAccessed": 1780138428436,
+      "keyFiles": [
+        "import-command-center-may13.mjs",
+        "replace-resource-entries-from-csv.mjs",
+        "verify-release.mjs"
+      ]
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 14,
+      "lastAccessed": 1780138428437,
+      "keyFiles": [
+        "App.addwa-routes.test.tsx",
+        "App.admin-cadde-route.test.tsx",
+        "App.admin-route.test.tsx",
+        "App.aiform-routes.test.tsx",
+        "App.cadde-routes.test.tsx"
+      ]
+    },
+    "supabase": {
+      "path": "supabase",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1780138428437,
+      "keyFiles": [
+        "config.toml"
+      ]
+    },
+    "_archive": {
+      "path": "_archive",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1780138428438,
+      "keyFiles": []
+    },
+    "dist\\assets": {
+      "path": "dist\\assets",
+      "purpose": "Static assets",
+      "fileCount": 27,
+      "lastAccessed": 1780138428439,
+      "keyFiles": [
+        "blogger-vlogger-CB3SgA9I.jpg",
+        "burak-D_NPD4FO.png",
+        "ComposedChart-B0l-067C.js"
+      ]
+    },
+    "supabase\\migrations": {
+      "path": "supabase\\migrations",
+      "purpose": "Database migrations",
+      "fileCount": 64,
+      "lastAccessed": 1780138428443,
+      "keyFiles": [
+        "20260406104636_435b29f1-111a-44a7-8840-41211d0a1c6a.sql",
+        "20260406193000_admin_and_submission_workflow.sql",
+        "20260418161500_add_backer_fields.sql"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "src\\pages\\AddWhatsAppPage.tsx",
+      "accessCount": 52,
+      "lastAccessed": 1780153193903,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 23,
+      "lastAccessed": 1780153093776,
+      "type": "directory"
+    },
+    {
+      "path": "src\\components\\admin\\WhatsAppLandingsModeration.tsx",
+      "accessCount": 7,
+      "lastAccessed": 1780152541699,
+      "type": "file"
+    },
+    {
+      "path": "src",
+      "accessCount": 7,
+      "lastAccessed": 1780152941032,
+      "type": "directory"
+    },
+    {
+      "path": "src\\lib\\whatsapp-landings.ts",
+      "accessCount": 4,
+      "lastAccessed": 1780152939888,
+      "type": "file"
+    },
+    {
+      "path": "CLAUDE.md",
+      "accessCount": 3,
+      "lastAccessed": 1780150989925,
+      "type": "file"
+    },
+    {
+      "path": "src\\App.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1780152204157,
+      "type": "file"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 2,
+      "lastAccessed": 1780150912011,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 2,
+      "lastAccessed": 1780150912293,
+      "type": "file"
+    },
+    {
+      "path": "tsconfig.json",
+      "accessCount": 2,
+      "lastAccessed": 1780150913195,
+      "type": "file"
+    },
+    {
+      "path": "vite.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1780150923929,
+      "type": "file"
+    },
+    {
+      "path": "vitest.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1780150924278,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\CaddePage.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1780151246127,
+      "type": "file"
+    },
+    {
+      "path": "src\\lib\\cadde.ts",
+      "accessCount": 2,
+      "lastAccessed": 1780151246688,
+      "type": "file"
+    },
+    {
+      "path": "src\\main.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1780138522816,
+      "type": "file"
+    },
+    {
+      "path": "components.json",
+      "accessCount": 1,
+      "lastAccessed": 1780138524282,
+      "type": "file"
+    },
+    {
+      "path": "eslint.config.js",
+      "accessCount": 1,
+      "lastAccessed": 1780138547381,
+      "type": "file"
+    },
+    {
+      "path": "docs\\PROJECT_TECHNICAL_OVERVIEW.md",
+      "accessCount": 1,
+      "lastAccessed": 1780138726123,
+      "type": "file"
+    },
+    {
+      "path": "playwright.config.ts",
+      "accessCount": 1,
+      "lastAccessed": 1780150924390,
+      "type": "file"
+    },
+    {
+      "path": "docs\\README.md",
+      "accessCount": 1,
+      "lastAccessed": 1780150933058,
+      "type": "file"
+    },
+    {
+      "path": "docs\\architecture\\PROJECT_TECHNICAL_OVERVIEW.md",
+      "accessCount": 1,
+      "lastAccessed": 1780150933313,
+      "type": "file"
+    },
+    {
+      "path": "tsconfig.app.json",
+      "accessCount": 1,
+      "lastAccessed": 1780150933569,
+      "type": "file"
+    },
+    {
+      "path": "src\\components\\ui\\badge.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1780151234113,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\AddWhatsAppPage.test.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1780151239812,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\admin\\AdminWhatsAppLandingsPage.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1780151245356,
+      "type": "file"
+    },
+    {
+      "path": "src\\components\\ChatRegisterBar.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1780151259089,
+      "type": "file"
+    },
+    {
+      "path": ".env.local",
+      "accessCount": 1,
+      "lastAccessed": 1780153098184,
+      "type": "file"
+    }
+  ],
   "userDirectives": []
 }

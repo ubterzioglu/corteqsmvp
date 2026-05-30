@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CorteQS Ambassador Program</title>
+  <meta
+    name="description"
+    content="CorteQS Ambassador Programı - bulunduğun şehirde ve ağda CorteQS'i temsil et, topluluk ve iş ağı büyümesine katkı ver."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:#061A34;
+      --deep:#031022;
+      --blue:#0078D4;
+      --cyan:#00A6D6;
+      --orange:#FF7A00;
+      --green:#58B800;
+      --white:#FFFFFF;
+      --muted:#5F7086;
+      --card:rgba(255,255,255,.88);
+      --line:rgba(0,120,212,.15);
+      --shadow:0 24px 70px rgba(3,16,34,.12);
+      --radius:28px;
+    }
+
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0;
+      font-family:"Manrope","Aptos","Segoe UI","Helvetica Neue",Arial,sans-serif;
+      font-size:15px;
+      color:var(--navy);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(0,166,214,.16), transparent 30%),
+        radial-gradient(circle at 86% 4%, rgba(255,122,0,.14), transparent 24%),
+        linear-gradient(180deg, #ffffff 0%, #f6fbff 44%, #ffffff 100%);
+    }
+
+    .container {
+      width:min(100% - 24px, 1120px);
+      margin:0 auto;
+    }
+
+    .hero {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:22px;
+      align-items:center;
+      padding:28px 0 30px;
+    }
+
+    .eyebrow {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:9px 14px;
+      border:1px solid rgba(255,122,0,.24);
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(255,122,0,.08), rgba(0,166,214,.1));
+      font-weight:800;
+      color:#133A61;
+      margin-bottom:18px;
+    }
+
+    .pulse {
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 0 8px rgba(88,184,0,.12);
+    }
+
+    h1 {
+      margin:0;
+      font-size:clamp(34px, 10.5vw, 66px);
+      line-height:.98;
+      letter-spacing:-.065em;
+      font-weight:800;
+    }
+
+    .gradient-text {
+      background:linear-gradient(90deg, var(--blue), var(--cyan), var(--orange));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .lead {
+      max-width:760px;
+      margin:18px 0 0;
+      font-size:clamp(15px, 3.8vw, 19px);
+      line-height:1.6;
+      color:#30445f;
+      font-weight:600;
+    }
+
+    .hero-card,
+    .card,
+    .callout,
+    table {
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:var(--card);
+      box-shadow:var(--shadow);
+    }
+
+    .hero-card {
+      padding:24px;
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at top right, rgba(255,122,0,.12), transparent 28%),
+        radial-gradient(circle at left bottom, rgba(0,166,214,.12), transparent 30%),
+        var(--card);
+    }
+
+    .hero-card h2 {
+      margin:0 0 12px;
+      font-size:24px;
+      line-height:1.1;
+      letter-spacing:-.045em;
+    }
+
+    .hero-card p {
+      margin:0;
+      font-size:15px;
+      line-height:1.65;
+      color:var(--muted);
+    }
+
+    .badge-row {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .badge {
+      padding:14px 16px;
+      border-radius:18px;
+      background:white;
+      border:1px solid rgba(0,120,212,.12);
+      font-size:14px;
+      line-height:1.5;
+      font-weight:700;
+      color:#24415f;
+    }
+
+    section { padding:18px 0 42px; }
+
+    .section-head {
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .section-head h2 {
+      margin:0;
+      font-size:clamp(24px, 7vw, 38px);
+      line-height:1.02;
+      letter-spacing:-.055em;
+      font-weight:800;
+    }
+
+    .section-head p {
+      margin:0;
+      max-width:640px;
+      font-size:15px;
+      line-height:1.6;
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    .grid-2,
+    .grid-3 {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
+    }
+
+    .card {
+      padding:20px;
+    }
+
+    .icon {
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, rgba(0,120,212,.12), rgba(255,122,0,.14));
+      font-size:20px;
+      margin-bottom:14px;
+    }
+
+    h3 {
+      margin:0 0 10px;
+      font-size:18px;
+      letter-spacing:-.03em;
+      font-weight:800;
+    }
+
+    p {
+      margin:0;
+      font-size:15px;
+      line-height:1.65;
+    }
+
+    ul {
+      margin:14px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+
+    li {
+      position:relative;
+      padding-left:24px;
+      color:#445872;
+      font-size:14px;
+      line-height:1.55;
+      font-weight:620;
+    }
+
+    li::before {
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      position:absolute;
+      left:0;
+      top:.45em;
+      background:linear-gradient(135deg, var(--cyan), var(--orange));
+      box-shadow:0 0 0 5px rgba(0,166,214,.08);
+    }
+
+    table {
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      background:white;
+    }
+
+    th, td {
+      padding:13px 12px;
+      text-align:left;
+      vertical-align:top;
+      border-bottom:1px solid rgba(0,120,212,.1);
+      font-size:12px;
+    }
+
+    th {
+      background:linear-gradient(135deg, rgba(0,120,212,.1), rgba(255,122,0,.08));
+      font-weight:900;
+    }
+
+    tr:last-child td { border-bottom:0; }
+
+    .callout {
+      padding:24px;
+      color:white;
+      background:
+        linear-gradient(135deg, rgba(0,120,212,.95), rgba(0,166,214,.92) 48%, rgba(255,122,0,.92));
+      border:none;
+    }
+
+    .callout h2,
+    .callout p,
+    .callout li {
+      color:white;
+    }
+
+    .callout p {
+      max-width:780px;
+      color:rgba(255,255,255,.92);
+    }
+
+    .footer-note {
+      margin-top:18px;
+      font-size:13px;
+      line-height:1.55;
+      color:rgba(255,255,255,.84);
+      font-weight:650;
+    }
+
+    @media (min-width: 680px) {
+      .container { width:min(100% - 40px, 1120px); }
+      .badge-row,
+      .grid-2,
+      .grid-3 { grid-template-columns:repeat(2, 1fr); }
+      th, td { font-size:13px; }
+    }
+
+    @media (min-width: 980px) {
+      .hero { grid-template-columns:1.08fr .92fr; gap:34px; padding:56px 0 36px; }
+      .grid-3 { grid-template-columns:repeat(3, 1fr); }
+      .section-head { flex-direction:row; justify-content:space-between; align-items:end; }
+    }
+
+    @media print {
+      body { background:white; }
+      .hero, section { padding:18px 0; }
+      .hero-card, .card, .callout, table { box-shadow:none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="container hero">
+      <div>
+        <div class="eyebrow"><span class="pulse"></span> Ambassador Program</div>
+        <h1>Bulunduğun ağda <span class="gradient-text">CorteQS’i temsil et.</span></h1>
+        <p class="lead">
+          Ambassador rolü, CorteQS’in şehirler, topluluklar ve profesyonel ağlar içinde daha görünür,
+          daha güvenilir ve daha kolay erişilebilir olmasını sağlayan temsil ve büyüme partnerliği modelidir.
+        </p>
+      </div>
+
+      <div class="hero-card">
+        <h2>Ambassador ne yapar?</h2>
+        <p>
+          Ambassador, bulunduğu çevrede CorteQS’in ne olduğunu doğru anlatır, uygun kişilere kapı açar,
+          topluluk içinde güven oluşturur ve ekip ile saha arasında köprü kurar.
+        </p>
+
+        <div class="badge-row">
+          <div class="badge">Topluluk görünürlüğünü artırır</div>
+          <div class="badge">Doğru bağlantıları ve tanıştırmaları açar</div>
+          <div class="badge">Yerel geri bildirimleri merkeze taşır</div>
+          <div class="badge">Marka ve güven temsilini güçlendirir</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="section-head">
+        <h2>Rolün çerçevesi</h2>
+        <p>
+          Bu rol klasik tam zamanlı istihdam mantığında değil; daha çok ilişki, temsil ve büyüme etkisi
+          üreten esnek bir iş birliği modeli olarak düşünülür.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <article class="card">
+          <div class="icon">🌍</div>
+          <h3>Temsil</h3>
+          <p>CorteQS’in değer önerisini bulunduğu şehirde, toplulukta veya sektörel ağda açık ve güven veren şekilde anlatır.</p>
+        </article>
+
+        <article class="card">
+          <div class="icon">🤝</div>
+          <h3>Bağlantı Açma</h3>
+          <p>Doğru kurumlara, profesyonellere, topluluk liderlerine ve potansiyel iş birliği kanallarına sıcak girişler sağlar.</p>
+        </article>
+
+        <article class="card">
+          <div class="icon">📣</div>
+          <h3>Görünürlük</h3>
+          <p>Yerelde güven, farkındalık ve hatırlanırlık oluşturarak CorteQS’in daha hızlı benimsenmesine katkı verir.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="section-head">
+        <h2>Ana sorumluluklar</h2>
+        <p>Ambassador rolü genellikle aşağıdaki davranış ve çıktılar etrafında şekillenir.</p>
+      </div>
+
+      <div class="grid-2">
+        <article class="card">
+          <h3>Beklenen katkılar</h3>
+          <ul>
+            <li>CorteQS’i bulunduğu çevrede doğru pozisyonlamak</li>
+            <li>Uygun adaylar, partnerler veya topluluk aktörleriyle tanıştırmalar yapmak</li>
+            <li>Yerel nabız ve geri bildirim toplamak</li>
+            <li>Etkinlik, buluşma veya topluluk görünürlüğü alanlarında destek vermek</li>
+            <li>Uzun vadeli güven ilişkileri kurmak ve beslemek</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3>Neden önemli?</h3>
+          <p>
+            CorteQS’in büyümesi yalnızca dijital görünürlükle değil, güvenli insan ilişkileriyle hızlanır.
+            Ambassador modeli bu yüzden sadece tanıtım değil, aynı zamanda güven transferi ve yerel meşruiyet üretir.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="section-head">
+        <h2>Contributor ile farkı</h2>
+        <p>İki rol birbiriyle yakın olsa da odak noktaları aynı değildir.</p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Başlık</th>
+            <th>Contributor</th>
+            <th>Ambassador</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Temel odak</td>
+            <td>Daha operasyonel ve saha bazlı katkı üretmek</td>
+            <td>Daha çok temsil, ilişki ve görünürlük oluşturmak</td>
+          </tr>
+          <tr>
+            <td>Ana güç</td>
+            <td>Yerel keşif, yönlendirme, eşleştirme ve akış desteği</td>
+            <td>Güven ilişkisi, network etkisi ve marka temsili</td>
+          </tr>
+          <tr>
+            <td>Tipik çıktı</td>
+            <td>Aday/işletme akışı ve sahadan veri</td>
+            <td>Sıcak girişler, tanıştırmalar ve topluluk görünürlüğü</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="container">
+      <div class="callout">
+        <h2>Bu rol ne zaman anlamlıdır?</h2>
+        <p>
+          Eğer kişi bulunduğu şehirde veya sektörde güvenilir bir çevreye sahipse, insanları bir araya getirmekte
+          iyiyse ve bir yapının temsilini doğal biçimde üstlenebiliyorsa Ambassador modeli yüksek etki üretir.
+        </p>
+        <div class="footer-note">
+          Bu doküman standalone paylaşım için hazırlanmıştır. İstenirse PDF olarak kaydedilebilir, tek başına
+          gönderilebilir ve ön görüşme materyali olarak kullanılabilir.
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

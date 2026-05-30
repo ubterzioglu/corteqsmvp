@@ -1,7 +1,80 @@
-.env.local
-.env*.local
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+
+# Environment files
 .env
-node_modules/
-.next/
-dist/
-build/
+.env.local
+.env.*.local
+*.local
+
+# Secrets
+secret.md
+secret_ignore.md
+remote.env.generated
+
+# Coverage
+coverage/
+
+# Playwright
+playwright-report/
+test-results/
+blob-report/
+.playwright-mcp/
+
+# Supabase
+supabase/.temp/
+supabase/.branches/
+supabase/.env
+
+# Runtime config
+env-config.js
+
+# TLS certificates
+*.pem
+*.key
+*.crt
+
+# Archive
+_archive/*
+!_archive/cleanup-2026-05-30/
+!_archive/cleanup-2026-05-30/**
+
+# Package managers
+.pnpm-store/
+
+# Agent / tool directories
+.kilo/
+.omc/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Misc
+1111.txt
+
+# Reference directory (Lovable exports)
+referans/
