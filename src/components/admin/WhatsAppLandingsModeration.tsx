@@ -70,11 +70,12 @@ type EditLandingState = UpdateLandingInput & {
   adminApproved: boolean;
 };
 
-type ApprovalSelection = "member" | "admin";
+type ApprovalSelection = "member" | "admin" | "none";
 
 function getApprovalSelection(memberApproved: boolean, adminApproved: boolean): ApprovalSelection {
   if (adminApproved) return "admin";
-  return "member";
+  if (memberApproved) return "member";
+  return "none";
 }
 
 function parseAdminContact(adminContact?: string) {
@@ -140,10 +141,13 @@ export default function WhatsAppLandingsModeration() {
 
   const platformLabelByRowId = useMemo(
     () =>
-      rows.reduce<Record<string, string>>((accumulator, row) => {
-        accumulator[row.dbId ?? row.id] = row.platform?.trim() || "Belirtilmedi";
-        return accumulator;
-      }, {}),
+      rows.reduce<Record<string, string>>(
+        (accumulator, row) => ({
+          ...accumulator,
+          [row.dbId ?? row.id]: row.platform?.trim() || "Belirtilmedi",
+        }),
+        {},
+      ),
     [rows],
   );
 
@@ -202,7 +206,6 @@ export default function WhatsAppLandingsModeration() {
 
   const handleEditSave = async () => {
     if (!editState) return;
-    const approvalSelection = getApprovalSelection(editState.memberApproved, editState.adminApproved);
 
     try {
       setSavingEdit(true);
@@ -231,12 +234,12 @@ export default function WhatsAppLandingsModeration() {
             .replace(/\[Badge admin:\s*(true|false)\]\s*/gi, "")
             .trim(),
           `[Platform: ${editState.platform}]`,
-          `[Badge member: ${approvalSelection === "member" ? "true" : "false"}]`,
-          `[Badge admin: ${approvalSelection === "admin" ? "true" : "false"}]`,
         ]
           .filter(Boolean)
           .join(" ")
           .trim(),
+        memberApproved: editState.memberApproved,
+        adminApproved: editState.adminApproved,
       });
       toast({ title: "Topluluk kaydı güncellendi" });
       setEditOpen(false);
@@ -521,7 +524,7 @@ export default function WhatsAppLandingsModeration() {
                 <RadioGroup
                   value={getApprovalSelection(editState.memberApproved, editState.adminApproved)}
                   onValueChange={(value) => setApprovalSelection(value as ApprovalSelection)}
-                  className="grid gap-2 sm:grid-cols-2"
+                  className="grid gap-2 sm:grid-cols-3"
                 >
                   <label
                     htmlFor="approval-member"
@@ -553,6 +556,22 @@ export default function WhatsAppLandingsModeration() {
                       className={editState.adminApproved ? "border-white text-white" : "border-orange-600 text-orange-600"}
                     />
                     <span className="font-medium">Admin onaylı!</span>
+                  </label>
+
+                  <label
+                    htmlFor="approval-none"
+                    className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 transition ${
+                      !editState.memberApproved && !editState.adminApproved
+                        ? "border-muted-foreground bg-muted text-foreground"
+                        : "border-border bg-background text-foreground"
+                    }`}
+                  >
+                    <RadioGroupItem
+                      id="approval-none"
+                      value="none"
+                      className="border-muted-foreground text-muted-foreground"
+                    />
+                    <span className="font-medium">Yok (badge yok)</span>
                   </label>
                 </RadioGroup>
               </div>
