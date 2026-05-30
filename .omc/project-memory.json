@@ -264,14 +264,14 @@
     },
     {
       "path": "supabase\\migrations\\20260530120000_add_badge_columns_to_whatsapp_landings.sql",
-      "accessCount": 7,
-      "lastAccessed": 1780172307927,
+      "accessCount": 8,
+      "lastAccessed": 1780173344679,
       "type": "file"
     },
     {
       "path": "src\\App.tsx",
-      "accessCount": 4,
-      "lastAccessed": 1780160343668,
+      "accessCount": 5,
+      "lastAccessed": 1780173326607,
       "type": "file"
     },
     {
@@ -288,8 +288,26 @@
     },
     {
       "path": "package.json",
-      "accessCount": 2,
-      "lastAccessed": 1780150912011,
+      "accessCount": 3,
+      "lastAccessed": 1780173326377,
+      "type": "file"
+    },
+    {
+      "path": "vite.config.ts",
+      "accessCount": 3,
+      "lastAccessed": 1780173327019,
+      "type": "file"
+    },
+    {
+      "path": "Dockerfile",
+      "accessCount": 3,
+      "lastAccessed": 1780173344010,
+      "type": "file"
+    },
+    {
+      "path": "nixpacks.toml",
+      "accessCount": 3,
+      "lastAccessed": 1780173344255,
       "type": "file"
     },
     {
@@ -302,12 +320,6 @@
       "path": "tsconfig.json",
       "accessCount": 2,
       "lastAccessed": 1780150913195,
-      "type": "file"
-    },
-    {
-      "path": "vite.config.ts",
-      "accessCount": 2,
-      "lastAccessed": 1780150923929,
       "type": "file"
     },
     {
@@ -326,18 +338,6 @@
       "path": "src\\lib\\cadde.ts",
       "accessCount": 2,
       "lastAccessed": 1780151246688,
-      "type": "file"
-    },
-    {
-      "path": "Dockerfile",
-      "accessCount": 2,
-      "lastAccessed": 1780158629479,
-      "type": "file"
-    },
-    {
-      "path": "nixpacks.toml",
-      "accessCount": 2,
-      "lastAccessed": 1780158635230,
       "type": "file"
     },
     {
@@ -380,6 +380,18 @@
       "path": "supabase\\migrations\\20260517110000_add_whatsapp_landing_hero_bucket.sql",
       "accessCount": 2,
       "lastAccessed": 1780171984900,
+      "type": "file"
+    },
+    {
+      "path": "server.mjs",
+      "accessCount": 2,
+      "lastAccessed": 1780173326788,
+      "type": "file"
+    },
+    {
+      "path": ".env.example",
+      "accessCount": 2,
+      "lastAccessed": 1780173327165,
       "type": "file"
     },
     {
@@ -455,18 +467,6 @@
       "type": "file"
     },
     {
-      "path": ".env.example",
-      "accessCount": 1,
-      "lastAccessed": 1780157537197,
-      "type": "file"
-    },
-    {
-      "path": "server.mjs",
-      "accessCount": 1,
-      "lastAccessed": 1780158635421,
-      "type": "file"
-    },
-    {
       "path": "docs\\history\\status-reports\\merge-raporu-2026-05-30.md",
       "accessCount": 1,
       "lastAccessed": 1780159574419,
@@ -495,6 +495,36 @@
       "accessCount": 1,
       "lastAccessed": 1780172295593,
       "type": "directory"
+    },
+    {
+      "path": "supabase\\migrations\\20260530093000_add_admin_edit_profile_data_rpcs.sql",
+      "accessCount": 1,
+      "lastAccessed": 1780173345074,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260529213000_create_cadde_mvp.sql",
+      "accessCount": 1,
+      "lastAccessed": 1780173345463,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260525230000_profile_sections_and_taxonomy_phase2.sql",
+      "accessCount": 1,
+      "lastAccessed": 1780173345960,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260525000000_rolesgo_role_attribute_approval_mvp.sql",
+      "accessCount": 1,
+      "lastAccessed": 1780173346275,
+      "type": "file"
+    },
+    {
+      "path": "docs\\CORTEQS_LANDING_TEKNIK_DOKUMANTASYON_2026-05-30.md",
+      "accessCount": 1,
+      "lastAccessed": 1780173619989,
+      "type": "file"
     }
   ],
   "userDirectives": []
