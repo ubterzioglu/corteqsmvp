@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { CheckCircle2, Clock3, Globe2, Lock, ShieldCheck, BookOpen } from "lucide-react";
+import { CheckCircle2, Clock3, Globe2, Lock, ShieldCheck, BookOpen, Sparkles, MapPin, UserCircle2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -142,6 +142,43 @@ const ProfilePage = () => {
   const visibleTaxonomyGroups = useMemo(() => {
     return profile?.taxonomyGroups ?? [];
   }, [profile?.taxonomyGroups]);
+
+  const attributeMap = useMemo(() => {
+    return new Map((profile?.attributes ?? []).map((attribute) => [attribute.attributeKey, attribute]));
+  }, [profile?.attributes]);
+
+  const readAttributeValue = useCallback((attributeKey: string) => {
+    const attribute = attributeMap.get(attributeKey);
+    return attribute ? getAttributeStringValue(attribute) : "";
+  }, [attributeMap]);
+
+  const isIndividualProfile = roleMeta?.canonicalSlug === "individual";
+  const displayName = readAttributeValue("full_name") || profile?.fullName || user?.user_metadata?.name || "CorteQS Üyesi";
+  const shortBio = readAttributeValue("bio_short");
+  const country = readAttributeValue("country");
+  const city = readAttributeValue("city");
+  const roleSpotlight = readAttributeValue(roleMeta?.defaultAttributeKey ?? "interests");
+  const locationLabel = [city, country].filter(Boolean).join(", ");
+  const initials = displayName
+    .split(/\s+/)
+    .map((part) => part[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase() || "CQ";
+  const publicAttributesCount = (profile?.attributes ?? []).filter((attribute) => draftVisibilities[attribute.attributeKey] === "public").length;
+  const pendingCount = profile?.pendingRequests.length ?? 0;
+  const dashboardCount = dashboardItems.length;
+  const completionHighlights = [
+    { key: "full_name", label: roleMeta?.displayNameLabel ?? "Görünen isim" },
+    { key: "country", label: "Ülke" },
+    { key: "city", label: "Şehir" },
+    { key: "bio_short", label: "Kısa açıklama" },
+    { key: roleMeta?.defaultAttributeKey ?? "interests", label: roleMeta?.defaultAttributeKey === "interests" ? "İlgi alanları" : "Rol detayı" },
+  ].map((item) => ({
+    ...item,
+    complete: Boolean(readAttributeValue(item.key).trim()),
+  }));
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -286,12 +323,94 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10">
-      <Card className="border-slate-200 bg-white/90 shadow-sm">
+    <div className={`mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 ${isIndividualProfile ? "pb-16" : ""}`}>
+      <Card className={isIndividualProfile ? "overflow-hidden border-slate-200 shadow-sm" : "border-slate-200 bg-white/90 shadow-sm"}>
+        {isIndividualProfile ? (
+          <div className="border-b border-border bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.18),transparent_35%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(248,250,252,0.92))]">
+            <CardHeader className="flex flex-col gap-5 pb-4 md:flex-row md:items-start md:justify-between">
+              <div className="flex items-start gap-4">
+                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] bg-gradient-to-br from-sky-500 to-cyan-500 text-2xl font-bold text-white shadow-lg">
+                  {initials}
+                </div>
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" className="border-sky-300/60 bg-sky-50 text-sky-700">
+                      <Sparkles className="mr-1 h-3 w-3" /> Bireysel Panelim
+                    </Badge>
+                    <Badge variant="secondary" className="bg-slate-900 text-white hover:bg-slate-900">
+                      {profile?.roleLabel ?? roleMeta?.adminLabel ?? "Rol"}
+                    </Badge>
+                    <Badge variant="outline" className="text-xs">
+                      Tamamlanma %{profile?.profileCompletion.percentage ?? 0}
+                    </Badge>
+                    {errorMessage ? <Badge variant="destructive" className="text-xs">Kısmi veri yüklendi</Badge> : null}
+                  </div>
+                  <div>
+                    <CardTitle className="text-3xl tracking-tight text-slate-950">{displayName}</CardTitle>
+                    <CardDescription className="mt-1 max-w-2xl text-sm text-slate-600">
+                      {shortBio
+                        ? `Profil özeti: ${shortBio}`
+                        : roleMeta?.description || "Profil kartını, görünürlüğünü ve taleplerini tek yerden yönet."}
+                    </CardDescription>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-600">
+                    <span className="inline-flex items-center gap-1.5">
+                      <UserCircle2 className="h-3.5 w-3.5" /> {profile?.email ?? user?.email ?? "-"}
+                    </span>
+                    {locationLabel ? (
+                      <span className="inline-flex items-center gap-1.5">
+                        <MapPin className="h-3.5 w-3.5" /> {locationLabel}
+                      </span>
+                    ) : null}
+                    {roleSpotlight ? (
+                      <span className="inline-flex items-center gap-1.5">
+                        <Sparkles className="h-3.5 w-3.5" /> İlgi odağı: {roleSpotlight}
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button size="sm" variant="outline" onClick={() => void refreshProfile()}>
+                  Yenile
+                </Button>
+                <Button size="sm" variant="outline" onClick={handleSignOut}>
+                  Çıkış Yap
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="grid gap-3 pb-6 md:grid-cols-4">
+              <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-sm backdrop-blur">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Profil Skoru</p>
+                <p className="mt-1 text-2xl font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
+                <p className="mt-1 text-xs text-slate-600">Zorunlu alan tamamlanma oranı</p>
+              </div>
+              <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-sm backdrop-blur">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Açık Modül</p>
+                <p className="mt-1 text-2xl font-bold text-slate-950">{dashboardCount}</p>
+                <p className="mt-1 text-xs text-slate-600">Şu an etkin dashboard erişimi</p>
+              </div>
+              <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-sm backdrop-blur">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Public Alan</p>
+                <p className="mt-1 text-2xl font-bold text-slate-950">{publicAttributesCount}</p>
+                <p className="mt-1 text-xs text-slate-600">Dışarıya açık profil alanı</p>
+              </div>
+              <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-sm backdrop-blur">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Bekleyen Talep</p>
+                <p className="mt-1 text-2xl font-bold text-slate-950">{pendingCount}</p>
+                <p className="mt-1 text-xs text-slate-600">Admin değerlendirme kuyruğu</p>
+              </div>
+            </CardContent>
+          </div>
+        ) : null}
         <CardHeader className="flex flex-col gap-3 pb-3 md:flex-row md:items-center md:justify-between">
           <div className="space-y-1">
-            <CardTitle className="text-2xl">{roleMeta?.title ?? "Profilim"}</CardTitle>
-            <CardDescription className="max-w-2xl text-xs">{roleMeta?.description}</CardDescription>
+            <CardTitle className={`${isIndividualProfile ? "text-xl" : "text-2xl"}`}>{roleMeta?.title ?? "Profilim"}</CardTitle>
+            <CardDescription className="max-w-2xl text-xs">
+              {isIndividualProfile
+                ? "Aşağıdaki alanlar bireysel profil kartını, directory görünürlüğünü ve erişimlerini belirler."
+                : roleMeta?.description}
+            </CardDescription>
             <div className="flex flex-wrap items-center gap-1.5">
               <Badge variant="secondary" className="text-xs">{profile?.roleLabel ?? roleMeta?.adminLabel ?? "Rol"}</Badge>
               <Badge variant="outline" className="text-xs">Tamamlanma %{profile?.profileCompletion.percentage ?? 0}</Badge>
@@ -307,10 +426,10 @@ const ProfilePage = () => {
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="grid gap-2 pb-4 md:grid-cols-3">
+        <CardContent className={`grid gap-2 pb-4 ${isIndividualProfile ? "md:grid-cols-4" : "md:grid-cols-3"}`}>
           <div className="rounded-lg border bg-slate-50 p-2.5">
             <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Görünen İsim</p>
-            <p className="mt-1 text-sm font-semibold">{profile?.fullName || user?.user_metadata?.name || "CorteQS Üyesi"}</p>
+            <p className="mt-1 text-sm font-semibold">{displayName}</p>
           </div>
           <div className="rounded-lg border bg-slate-50 p-2.5">
             <p className="text-[10px] uppercase tracking-wide text-muted-foreground">E-posta</p>
@@ -318,12 +437,38 @@ const ProfilePage = () => {
           </div>
           <div className="rounded-lg border bg-slate-50 p-2.5">
             <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Bekleyen Talep</p>
-            <p className="mt-1 text-sm font-semibold">{profile?.pendingRequests.length ?? 0}</p>
+            <p className="mt-1 text-sm font-semibold">{pendingCount}</p>
           </div>
+          {isIndividualProfile ? (
+            <div className="rounded-lg border bg-slate-50 p-2.5">
+              <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Açık Dashboard</p>
+              <p className="mt-1 text-sm font-semibold">{dashboardCount}</p>
+            </div>
+          ) : null}
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 xl:grid-cols-[1.8fr_1fr]">
+      {isIndividualProfile ? (
+        <div className="grid gap-3 md:grid-cols-5">
+          {completionHighlights.map((item) => (
+            <div key={item.key} className={`rounded-2xl border p-3 ${item.complete ? "border-emerald-200 bg-emerald-50/70" : "border-amber-200 bg-amber-50/70"}`}>
+              <div className="flex items-center gap-2">
+                {item.complete ? (
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                ) : (
+                  <Clock3 className="h-4 w-4 text-amber-700" />
+                )}
+                <p className="text-sm font-medium text-slate-900">{item.label}</p>
+              </div>
+              <p className="mt-1 text-xs text-slate-600">
+                {item.complete ? "Tamamlandı" : "Eksik veya doldurulmayı bekliyor"}
+              </p>
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      <div className={`grid gap-4 ${isIndividualProfile ? "xl:grid-cols-[1.65fr_1fr]" : "xl:grid-cols-[1.8fr_1fr]"}`}>
         <div className="space-y-4">
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="guide-common" className="rounded-lg border bg-blue-50/50 px-3">
@@ -608,15 +753,19 @@ const ProfilePage = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Açık Dashboard Erişimleri</CardTitle>
-              <CardDescription className="text-xs">Rolün ve override kayıtlarınla şu anda açık olan dashboard tabları.</CardDescription>
+              <CardDescription className="text-xs">
+                {isIndividualProfile
+                  ? "Merge edilen panel yapısına uyumlu olarak açık erişimlerini burada kart düzeninde gösteriyoruz."
+                  : "Rolün ve override kayıtlarınla şu anda açık olan dashboard tabları."}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
               {isDashboardLoading ? <p className="text-xs text-muted-foreground">Dashboard erişimleri yükleniyor...</p> : null}
               {!isDashboardLoading && dashboardItems.length ? (
                 dashboardItems.map((item) => (
-                  <div key={item.feature_key} className="rounded-lg border p-2">
+                  <div key={item.feature_key} className={`rounded-lg border p-2 ${isIndividualProfile ? "bg-slate-50/60" : ""}`}>
                     <div className="flex items-center justify-between gap-2">
-                      <div>
+                      <div className="min-w-0">
                         <p className="text-sm font-medium">{item.label}</p>
                         <p className="text-xs text-muted-foreground">{item.description ?? item.feature_key}</p>
                       </div>
@@ -656,12 +805,16 @@ const ProfilePage = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Bekleyen Talepler</CardTitle>
-              <CardDescription className="text-xs">Admin değerlendirmesi bekleyen son işlemler burada görünür.</CardDescription>
+              <CardDescription className="text-xs">
+                {isIndividualProfile
+                  ? "Panel görünümüne etki eden onay süreçleri burada toplanır."
+                  : "Admin değerlendirmesi bekleyen son işlemler burada görünür."}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
               {profile?.pendingRequests.length ? (
                 profile.pendingRequests.map((request) => (
-                  <div key={request.id} className="rounded-lg border p-2">
+                  <div key={request.id} className={`rounded-lg border p-2 ${isIndividualProfile ? "bg-slate-50/60" : ""}`}>
                     <div className="flex items-center justify-between gap-2">
                       <div>
                         <p className="text-sm font-medium">{request.requestType}</p>
