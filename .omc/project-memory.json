@@ -221,15 +221,39 @@
   },
   "hotPaths": [
     {
+      "path": "",
+      "accessCount": 15,
+      "lastAccessed": 1780254261819,
+      "type": "directory"
+    },
+    {
+      "path": "src\\components\\profile\\IndividualPublicView.tsx",
+      "accessCount": 11,
+      "lastAccessed": 1780254381931,
+      "type": "file"
+    },
+    {
       "path": "src\\App.tsx",
-      "accessCount": 5,
-      "lastAccessed": 1780233331879,
+      "accessCount": 9,
+      "lastAccessed": 1780250180004,
       "type": "file"
     },
     {
       "path": "src\\lib\\features.ts",
       "accessCount": 3,
       "lastAccessed": 1780232972615,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\DirectoryProfilePage.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1780250166746,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\DiasporaPeople.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1780254414528,
       "type": "file"
     },
     {
@@ -240,8 +264,44 @@
     },
     {
       "path": "merge.md",
-      "accessCount": 1,
-      "lastAccessed": 1780228988491,
+      "accessCount": 2,
+      "lastAccessed": 1780247956472,
+      "type": "file"
+    },
+    {
+      "path": "tech3105.md",
+      "accessCount": 2,
+      "lastAccessed": 1780247957121,
+      "type": "file"
+    },
+    {
+      "path": "src\\lib\\individual-profile.ts",
+      "accessCount": 2,
+      "lastAccessed": 1780248985226,
+      "type": "file"
+    },
+    {
+      "path": "src",
+      "accessCount": 2,
+      "lastAccessed": 1780249191293,
+      "type": "directory"
+    },
+    {
+      "path": "docs\\superpowers\\plans\\2026-05-31-individual-profile-public-view.md",
+      "accessCount": 2,
+      "lastAccessed": 1780249828248,
+      "type": "file"
+    },
+    {
+      "path": "src\\hooks\\usePublicIndividualProfile.test.ts",
+      "accessCount": 2,
+      "lastAccessed": 1780250077273,
+      "type": "file"
+    },
+    {
+      "path": "src\\components\\profile\\IndividualPublicView.test.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1780250105439,
       "type": "file"
     },
     {
@@ -275,12 +335,6 @@
       "type": "file"
     },
     {
-      "path": "tech3105.md",
-      "accessCount": 1,
-      "lastAccessed": 1780229140079,
-      "type": "file"
-    },
-    {
       "path": "tech3105.html",
       "accessCount": 1,
       "lastAccessed": 1780230016586,
@@ -290,6 +344,150 @@
       "path": "src\\lib\\whatsapp-landings.ts",
       "accessCount": 1,
       "lastAccessed": 1780232920111,
+      "type": "file"
+    },
+    {
+      "path": "src\\lib\\profile-types.ts",
+      "accessCount": 1,
+      "lastAccessed": 1780248767975,
+      "type": "file"
+    },
+    {
+      "path": "src\\lib\\member-profile-api.ts",
+      "accessCount": 1,
+      "lastAccessed": 1780248768621,
+      "type": "file"
+    },
+    {
+      "path": "src\\lib\\member-profile.ts",
+      "accessCount": 1,
+      "lastAccessed": 1780248768845,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\ProfilePage.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1780248769452,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\ProfileResolverPage.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1780248773790,
+      "type": "file"
+    },
+    {
+      "path": "src\\hooks\\useCurrentUserProfile.ts",
+      "accessCount": 1,
+      "lastAccessed": 1780248774240,
+      "type": "file"
+    },
+    {
+      "path": "src\\hooks\\useProfileFeatures.ts",
+      "accessCount": 1,
+      "lastAccessed": 1780248774393,
+      "type": "file"
+    },
+    {
+      "path": "src\\components\\profiles\\ProfileIndividual.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1780248774575,
+      "type": "file"
+    },
+    {
+      "path": "docs\\modules\\profiles\\profil.md",
+      "accessCount": 1,
+      "lastAccessed": 1780248775264,
+      "type": "file"
+    },
+    {
+      "path": "src\\components\\profile\\IndividualProfileCards.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1780248985281,
+      "type": "file"
+    },
+    {
+      "path": "src\\hooks\\useIndividualProfileDetails.ts",
+      "accessCount": 1,
+      "lastAccessed": 1780249007488,
+      "type": "file"
+    },
+    {
+      "path": "src\\components\\profiles\\IndividualPublicCard.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1780249133319,
+      "type": "file"
+    },
+    {
+      "path": "src\\hooks\\useFeedSocial.ts",
+      "accessCount": 1,
+      "lastAccessed": 1780249133840,
+      "type": "file"
+    },
+    {
+      "path": "src\\hooks\\useCafes.ts",
+      "accessCount": 1,
+      "lastAccessed": 1780249134115,
+      "type": "file"
+    },
+    {
+      "path": "src\\hooks",
+      "accessCount": 1,
+      "lastAccessed": 1780249186920,
+      "type": "directory"
+    },
+    {
+      "path": "supabase\\migrations\\20260531120000_allow_auth_read_open_individual_profiles.sql",
+      "accessCount": 1,
+      "lastAccessed": 1780249873947,
+      "type": "file"
+    },
+    {
+      "path": "src\\hooks\\usePublicIndividualProfile.ts",
+      "accessCount": 1,
+      "lastAccessed": 1780249904000,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260530120000_add_badge_columns_to_whatsapp_landings.sql",
+      "accessCount": 1,
+      "lastAccessed": 1780253804734,
+      "type": "file"
+    },
+    {
+      "path": "supabase\\migrations\\20260531183000_grant_corteqspersonal_full_bireysel_features.sql",
+      "accessCount": 1,
+      "lastAccessed": 1780253805200,
+      "type": "file"
+    },
+    {
+      "path": "docs\\bireysel-profil-rapor-2026-05-31.html",
+      "accessCount": 1,
+      "lastAccessed": 1780254141606,
+      "type": "file"
+    },
+    {
+      "path": "src\\components\\ui",
+      "accessCount": 1,
+      "lastAccessed": 1780254262639,
+      "type": "directory"
+    },
+    {
+      "path": "supabase\\migrations\\20260531150000_create_direct_messages.sql",
+      "accessCount": 1,
+      "lastAccessed": 1780254309243,
+      "type": "file"
+    },
+    {
+      "path": "src\\hooks\\useIndividualDirectory.ts",
+      "accessCount": 1,
+      "lastAccessed": 1780254324574,
+      "type": "file"
+    },
+    {
+      "path": "docs\\3105done.md",
+      "accessCount": 1,
+      "lastAccessed": 1780256924951,
       "type": "file"
     }
   ],
