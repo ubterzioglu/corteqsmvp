@@ -22,6 +22,8 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/components/auth/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -42,6 +44,9 @@ const IndividualPublicView = ({ details }: Props) => {
   const [followerCount, setFollowerCount] = useState(details.followerCount);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isFollowLoading, setIsFollowLoading] = useState(false);
+  const [isMessageOpen, setIsMessageOpen] = useState(false);
+  const [messageDraft, setMessageDraft] = useState("");
+  const [isMessageSending, setIsMessageSending] = useState(false);
 
   const isSelf = Boolean(user?.id && user.id === details.userId);
   const front = details.frontCard;
@@ -96,6 +101,30 @@ const IndividualPublicView = ({ details }: Props) => {
     };
   }, [details.userId, user]);
 
+  const handleSendMessage = async () => {
+    if (!user) {
+      toast({ title: "Mesaj göndermek için giriş yapın", variant: "destructive" });
+      return;
+    }
+    const content = messageDraft.trim();
+    if (!content) return;
+    setIsMessageSending(true);
+    try {
+      const { error } = await (supabase as any)
+        .from("direct_messages")
+        .insert({ sender_id: user.id, recipient_id: details.userId, content });
+      if (error) throw error;
+      toast({ title: "Mesaj gönderildi" });
+      setMessageDraft("");
+      setIsMessageOpen(false);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Mesaj gönderilemedi";
+      toast({ title: message, variant: "destructive" });
+    } finally {
+      setIsMessageSending(false);
+    }
+  };
+
   const handleFollowToggle = async () => {
     if (!user) {
       toast({ title: "Takip etmek için giriş yapın", variant: "destructive" });
@@ -133,10 +162,18 @@ const IndividualPublicView = ({ details }: Props) => {
       {/* Header */}
       <div className="border-b border-border bg-[radial-gradient(circle_at_top_left,rgba(18,164,196,0.18),transparent_38%),linear-gradient(135deg,rgba(15,23,42,0.04),rgba(15,23,42,0))] px-5 py-5 md:px-7 md:py-6">
         <div className="flex items-start gap-4">
-          {/* Avatar initials */}
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] bg-gradient-primary text-2xl font-bold text-primary-foreground shadow-lg md:h-24 md:w-24 md:text-3xl">
-            {avatarInitials}
-          </div>
+          {/* Avatar */}
+          {front.profileImageUrl ? (
+            <img
+              src={front.profileImageUrl}
+              alt={details.displayName}
+              className="h-20 w-20 shrink-0 rounded-[24px] object-cover shadow-lg md:h-24 md:w-24"
+            />
+          ) : (
+            <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] bg-gradient-primary text-2xl font-bold text-primary-foreground shadow-lg md:h-24 md:w-24 md:text-3xl">
+              {avatarInitials}
+            </div>
+          )}
 
           <div className="min-w-0 flex-1">
             {/* Badges row */}
@@ -277,18 +314,14 @@ const IndividualPublicView = ({ details }: Props) => {
                     </>
                   )}
                 </Button>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span>
-                        <Button size="sm" variant="outline" className="gap-1.5" disabled>
-                          <MessageSquare className="h-3.5 w-3.5" /> Mesaj
-                        </Button>
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent>Çok yakında</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1.5"
+                  onClick={() => setIsMessageOpen(true)}
+                >
+                  <MessageSquare className="h-3.5 w-3.5" /> Mesaj
+                </Button>
               </div>
             )}
           </div>
@@ -351,6 +384,37 @@ const IndividualPublicView = ({ details }: Props) => {
           )}
         </div>
       </div>
+      {/* Message dialog */}
+      <Dialog open={isMessageOpen} onOpenChange={setIsMessageOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{details.displayName} kullanıcısına mesaj</DialogTitle>
+          </DialogHeader>
+          <Textarea
+            placeholder="Mesajınızı yazın..."
+            rows={5}
+            maxLength={2000}
+            value={messageDraft}
+            onChange={(e) => setMessageDraft(e.target.value)}
+            className="mt-2 resize-none"
+          />
+          <div className="flex items-center justify-between gap-2 mt-2">
+            <span className="text-xs text-muted-foreground">{messageDraft.length}/2000</span>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => setIsMessageOpen(false)}>
+                İptal
+              </Button>
+              <Button
+                size="sm"
+                disabled={isMessageSending || messageDraft.trim().length === 0}
+                onClick={() => void handleSendMessage()}
+              >
+                {isMessageSending ? "Gönderiliyor..." : "Gönder"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
