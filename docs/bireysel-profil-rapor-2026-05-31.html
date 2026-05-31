@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bireysel Profil Görünümü — Uygulama Raporu | 2026-05-31</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; line-height: 1.6; }
+
+  .hero {
+    background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #ec4899 100%);
+    padding: 48px 32px 40px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.2rem; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+  .hero p { color: rgba(255,255,255,0.85); margin-top: 8px; font-size: 1rem; }
+  .hero .meta { display: flex; justify-content: center; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+  .hero .meta span { background: rgba(255,255,255,0.15); border-radius: 20px; padding: 4px 14px; font-size: 0.8rem; color: #fff; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 32px 20px 64px; }
+
+  .section { margin-bottom: 40px; }
+  .section-title {
+    font-size: 1.1rem; font-weight: 700; color: #38bdf8;
+    border-bottom: 2px solid #1e3a5f; padding-bottom: 8px; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title .icon { font-size: 1.2rem; }
+
+  /* Status badges */
+  .badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 20px; padding: 3px 10px; font-size: 0.72rem; font-weight: 600; }
+  .badge-green  { background: #14532d; color: #4ade80; }
+  .badge-blue   { background: #1e3a5f; color: #38bdf8; }
+  .badge-purple { background: #3b1f6b; color: #c084fc; }
+  .badge-yellow { background: #451a03; color: #fbbf24; }
+  .badge-red    { background: #450a0a; color: #f87171; }
+
+  /* Summary cards */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .card {
+    background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+    padding: 20px 16px; text-align: center;
+  }
+  .card .number { font-size: 2.4rem; font-weight: 800; line-height: 1; }
+  .card .label  { font-size: 0.75rem; color: #94a3b8; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .card.green  .number { color: #4ade80; }
+  .card.blue   .number { color: #38bdf8; }
+  .card.purple .number { color: #c084fc; }
+  .card.yellow .number { color: #fbbf24; }
+
+  /* Task list */
+  .task {
+    background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+    padding: 16px 20px; margin-bottom: 12px;
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .task-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+  .task-body { flex: 1; }
+  .task-title { font-weight: 700; font-size: 0.95rem; color: #f1f5f9; }
+  .task-desc  { font-size: 0.82rem; color: #94a3b8; margin-top: 4px; }
+  .task-files { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* File pills */
+  .file-pill {
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: 0.72rem; background: #0f172a; border: 1px solid #334155;
+    border-radius: 6px; padding: 2px 8px; color: #7dd3fc;
+  }
+  .file-pill.new    { border-color: #15803d; color: #4ade80; }
+  .file-pill.mod    { border-color: #b45309; color: #fbbf24; }
+  .file-pill.sql    { border-color: #7c3aed; color: #c084fc; }
+
+  /* Migration table */
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  th { text-align: left; padding: 10px 12px; background: #1e293b; color: #94a3b8; font-weight: 600; border-bottom: 1px solid #334155; }
+  td { padding: 10px 12px; border-bottom: 1px solid #1e293b; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #1e293b; }
+  .mono { font-family: 'Consolas', monospace; font-size: 0.78rem; color: #7dd3fc; }
+
+  /* Test results */
+  .test-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #1e293b; border-radius: 8px; margin-bottom: 8px; }
+  .test-name { font-family: monospace; font-size: 0.8rem; color: #cbd5e1; }
+  .test-pass { color: #4ade80; font-weight: 700; font-size: 0.85rem; }
+
+  /* Architecture */
+  .arch-box {
+    background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+    padding: 20px; font-family: monospace; font-size: 0.78rem;
+    color: #94a3b8; line-height: 1.8; overflow-x: auto;
+  }
+  .arch-box .green { color: #4ade80; }
+  .arch-box .blue  { color: #38bdf8; }
+  .arch-box .yellow{ color: #fbbf24; }
+  .arch-box .purple{ color: #c084fc; }
+
+  /* Commit log */
+  .commit { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #1e293b; align-items: flex-start; }
+  .commit:last-child { border-bottom: none; }
+  .commit-hash { font-family: monospace; font-size: 0.75rem; color: #f59e0b; background: #1c1109; padding: 2px 8px; border-radius: 4px; flex-shrink: 0; }
+  .commit-msg  { font-size: 0.85rem; color: #e2e8f0; }
+  .commit-meta { font-size: 0.72rem; color: #64748b; margin-top: 2px; }
+
+  /* Notice box */
+  .notice {
+    border-radius: 10px; padding: 14px 18px;
+    display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px;
+  }
+  .notice.green  { background: #052e16; border: 1px solid #166534; }
+  .notice.yellow { background: #1c1003; border: 1px solid #92400e; }
+  .notice.blue   { background: #082f49; border: 1px solid #0369a1; }
+  .notice .ni { font-size: 1.2rem; flex-shrink: 0; }
+  .notice .nt { font-size: 0.85rem; }
+  .notice .nt strong { display: block; margin-bottom: 4px; }
+
+  footer { text-align: center; padding: 32px; color: #475569; font-size: 0.78rem; border-top: 1px solid #1e293b; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🧑‍💼 Bireysel Profil Görünümü</h1>
+  <p>Uygulama Raporu &mdash; corteqs_fin / main branch</p>
+  <div class="meta">
+    <span>📅 2026-05-31</span>
+    <span>🌿 main → a5507d8</span>
+    <span>✅ Build: Geçti</span>
+    <span>🧪 Testler: 13/13</span>
+    <span>🗄️ 3 Migration Uygulandı</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Summary -->
+  <div class="section">
+    <div class="section-title"><span class="icon">📊</span> Özet</div>
+    <div class="cards">
+      <div class="card green"><div class="number">4</div><div class="label">Yeni Dosya</div></div>
+      <div class="card yellow"><div class="number">3</div><div class="label">Değişen Dosya</div></div>
+      <div class="card blue"><div class="number">13</div><div class="label">Test Geçti</div></div>
+      <div class="card purple"><div class="number">3</div><div class="label">Migration Uygulandı</div></div>
+    </div>
+    <div class="notice green">
+      <span class="ni">✅</span>
+      <div class="nt"><strong>Production'a başarıyla uygulandı</strong>3 migration remote Supabase veritabanına uygulandı. Build temiz, tüm testler geçiyor.</div>
+    </div>
+  </div>
+
+  <!-- Tasks -->
+  <div class="section">
+    <div class="section-title"><span class="icon">✅</span> Uygulanan Görevler</div>
+
+    <div class="task">
+      <div class="task-icon">🗄️</div>
+      <div class="task-body">
+        <div class="task-title">Task 1 — RLS SELECT Policy Migrasyonu</div>
+        <div class="task-desc">Authenticated kullanıcıların <code>visibility_status = 'open'</code> olan bireysel profilleri okuyabilmesi için yeni policy eklendi. Mevcut self-read policy'ye OR olarak eklendi, çakışma yok.</div>
+        <div class="task-files">
+          <span class="file-pill sql">📄 20260531140000_allow_auth_read_open_individual_profiles.sql</span>
+          <span class="badge badge-green">✓ Remote'ta Uygulandı</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-icon">🪝</div>
+      <div class="task-body">
+        <div class="task-title">Task 2 — <code>usePublicIndividualProfile</code> Hook</div>
+        <div class="task-desc">Başka bir kullanıcının <code>individual_profile_details</code> satırını çeken yeni hook. Auth bekleyen, <code>user_profiles</code> ve <code>individual_profile_details</code> tablolarını parallel fetch ediyor. <code>mapIndividualProfileRow</code> ile mevcut tip sistemini kullanıyor.</div>
+        <div class="task-files">
+          <span class="file-pill new">✨ src/hooks/usePublicIndividualProfile.ts</span>
+          <span class="file-pill new">✨ src/hooks/usePublicIndividualProfile.test.ts</span>
+          <span class="badge badge-green">4/4 Test</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-icon">🧩</div>
+      <div class="task-body">
+        <div class="task-title">Task 3 — <code>IndividualPublicView</code> Component</div>
+        <div class="task-desc">Ziyaretçi perspektifinden bireysel profil görünümü. <code>IndividualPublicCard.tsx</code> (self-view) ile aynı görsel tasarım ama TARGET kullanıcının cafe/follower verisini çekiyor. Takip Et / Takip Ediliyor toggle butonu, Mesaj (Çok Yakında), etkinlikler ve Cadde bölümleri içeriyor.</div>
+        <div class="task-files">
+          <span class="file-pill new">✨ src/components/profile/IndividualPublicView.tsx</span>
+          <span class="file-pill new">✨ src/components/profile/IndividualPublicView.test.tsx</span>
+          <span class="badge badge-green">9/9 Test</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-icon">📄</div>
+      <div class="task-body">
+        <div class="task-title">Task 4 — <code>DirectoryProfilePage.tsx</code> Güncellendi</div>
+        <div class="task-desc">Bireysel profil hook'u ve generic <code>get_public_profile_sections</code> RPC paralel çalışıyor. <code>individualDetails !== null</code> ise <code>IndividualPublicView</code> render ediliyor; yoksa mevcut generic <code>ProfileSectionRenderer</code> fallback olarak çalışıyor (danışman, işletme vb. profil tipleri için).</div>
+        <div class="task-files">
+          <span class="file-pill mod">✏️ src/pages/DirectoryProfilePage.tsx</span>
+          <span class="badge badge-blue">Mevcut Altyapı Korundu</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-icon">🔒</div>
+      <div class="task-body">
+        <div class="task-title">Task 5 — Route Auth Guard</div>
+        <div class="task-desc"><code>/directory/profile/:userId</code> route'u <code>RequireAuth</code> ile sarıldı. Giriş yapmamış kullanıcılar login sayfasına yönlendiriliyor.</div>
+        <div class="task-files">
+          <span class="file-pill mod">✏️ src/App.tsx</span>
+          <span class="badge badge-purple">Auth Required</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-icon">✨</div>
+      <div class="task-body">
+        <div class="task-title">Polish — 3 İyileştirme</div>
+        <div class="task-desc">
+          (1) <strong>DiasporaPeople:</strong> "Profili Gör" butonu artık <code>/directory/profile/:userId</code> route'una link ediyor.<br/>
+          (2) <strong>Email Gizliliği:</strong> Ziyaretçi görünümünde email adresi gösterilmiyor (self-view'da gösterilmeye devam ediyor).<br/>
+          (3) <strong>Mesaj Tooltip:</strong> Devre dışı Mesaj butonu üzerinde "Çok yakında" tooltip'i eklendi.
+        </div>
+        <div class="task-files">
+          <span class="file-pill mod">✏️ src/pages/DiasporaPeople.tsx</span>
+          <span class="file-pill mod">✏️ src/components/profile/IndividualPublicView.tsx</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Migration log -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🗄️</span> Migration Uygulama Logu</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Migration</th>
+          <th>İçerik</th>
+          <th>Durum</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">20260530120000</td>
+          <td style="font-size:0.82rem">whatsapp_landings tablosuna <code>member_approved</code> ve <code>admin_approved</code> boolean kolonları eklendi; badge constraint tanımlandı</td>
+          <td><span class="badge badge-green">✓ Uygulandı</span></td>
+        </tr>
+        <tr>
+          <td class="mono">20260531140000</td>
+          <td style="font-size:0.82rem">individual_profile_details tablosuna authenticated kullanıcıların open profilleri okumasını sağlayan RLS SELECT policy eklendi</td>
+          <td><span class="badge badge-green">✓ Uygulandı</span></td>
+        </tr>
+        <tr>
+          <td class="mono">20260531183000</td>
+          <td style="font-size:0.82rem">corteqspersonal@gmail.com hesabına bireysel profil tipi ve tam feature erişimi tanımlandı; admin_users'dan bağımsızlaştırıldı</td>
+          <td><span class="badge badge-green">✓ Uygulandı</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;">
+      <div class="notice yellow">
+        <span class="ni">⚠️</span>
+        <div class="nt"><strong>Timestamp çakışması giderildi</strong>Orijinal migration <code>20260531120000</code> zaten remote'ta uygulanan bir migration ile çakışıyordu. <code>20260531140000</code> olarak yeniden adlandırıldı, <code>git mv</code> ile commit'e dahil edildi.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Architecture -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🏗️</span> Mimari Akış</div>
+    <div class="arch-box">
+<span class="blue">Browser: /directory/profile/:userId</span>
+    │
+    ▼ <span class="yellow">RequireAuth</span>  ──── giriş yoksa → /login
+    │
+    ▼ <span class="blue">DirectoryProfilePage</span>
+    │
+    ├── <span class="green">usePublicIndividualProfile(userId)</span>          (parallel)
+    │       └─ supabase.from("user_profiles")
+    │       └─ supabase.from("individual_profile_details")   ← <span class="purple">RLS: visibility_status='open'</span>
+    │       └─ mapIndividualProfileRow(row, fallback)
+    │
+    ├── <span class="yellow">get_public_profile_sections RPC</span>            (parallel)
+    │       └─ generic sections (danışman, işletme, vb.)
+    │
+    ▼
+    if individualDetails !== null:
+        └─ <span class="green">IndividualPublicView</span>
+               ├─ Header: avatar, isim, rozet, konum
+               ├─ Stats: followerCount (live), takip
+               ├─ LinkedIn / CV / Sunum linkleri
+               ├─ Profil Mesajım
+               ├─ Takip Et / Mesaj butonları
+               ├─ <span class="blue">cafe_memberships</span> → "Cadde'de Takılıyor"
+               └─ detailCard.recentEvents → "Son 2 ayda etkinlikler"
+    else:
+        └─ <span class="yellow">ProfileSectionRenderer</span>  (mevcut, dokunulmadı)
+    </div>
+  </div>
+
+  <!-- Tests -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🧪</span> Test Sonuçları</div>
+
+    <p style="font-size:0.82rem; color:#64748b; margin-bottom:12px;">usePublicIndividualProfile — <strong style="color:#4ade80">4/4</strong></p>
+    <div class="test-row"><span class="test-name">returns isLoading=false and details=null when targetUserId is undefined</span><span class="test-pass">✓</span></div>
+    <div class="test-row"><span class="test-name">returns details=null when no individual_profile_details row exists</span><span class="test-pass">✓</span></div>
+    <div class="test-row"><span class="test-name">maps and returns details when row exists</span><span class="test-pass">✓</span></div>
+    <div class="test-row"><span class="test-name">sets errorMessage when the DB query fails</span><span class="test-pass">✓</span></div>
+
+    <p style="font-size:0.82rem; color:#64748b; margin: 16px 0 12px;">IndividualPublicView — <strong style="color:#4ade80">9/9</strong></p>
+    <div class="test-row"><span class="test-name">renders the display name</span><span class="test-pass">✓</span></div>
+    <div class="test-row"><span class="test-name">shows İş Arıyorum badge when jobSeeking is true</span><span class="test-pass">✓</span></div>
+    <div class="test-row"><span class="test-name">does not show İş Arıyorum badge when jobSeeking is false</span><span class="test-pass">✓</span></div>
+    <div class="test-row"><span class="test-name">shows CorteQS Pasaportu badge when corteqsPassport is true</span><span class="test-pass">✓</span></div>
+    <div class="test-row"><span class="test-name">shows follow button for other users (viewer != target)</span><span class="test-pass">✓</span></div>
+    <div class="test-row"><span class="test-name">renders Son 2 ayda etkinlikler section header</span><span class="test-pass">✓</span></div>
+    <div class="test-row"><span class="test-name">renders Cadde'de Takılıyor section header</span><span class="test-pass">✓</span></div>
+    <div class="test-row"><span class="test-name">shows world message when present</span><span class="test-pass">✓</span></div>
+    <div class="test-row"><span class="test-name">shows LinkedIn link when linkedinUrl is set and visible</span><span class="test-pass">✓</span></div>
+  </div>
+
+  <!-- Commits -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🌿</span> Commit Geçmişi</div>
+
+    <div class="commit">
+      <span class="commit-hash">a5507d8</span>
+      <div>
+        <div class="commit-msg">fix: rename RLS migration to avoid timestamp collision with 20260531120000</div>
+        <div class="commit-meta">1 dosya değişti (rename)</div>
+      </div>
+    </div>
+    <div class="commit">
+      <span class="commit-hash">1749547</span>
+      <div>
+        <div class="commit-msg">feat: polish bireysel profile public view</div>
+        <div class="commit-meta">2 dosya değişti — DiasporaPeople link + email gizliliği + Mesaj tooltip</div>
+      </div>
+    </div>
+    <div class="commit">
+      <span class="commit-hash">6c51232</span>
+      <div>
+        <div class="commit-msg">feat: integrate IndividualPublicView into DirectoryProfilePage + require auth</div>
+        <div class="commit-meta">2 dosya değişti — 117 ekleme, 63 silme</div>
+      </div>
+    </div>
+    <div class="commit">
+      <span class="commit-hash">9197c30</span>
+      <div>
+        <div class="commit-msg">feat: add bireysel profil public view infrastructure</div>
+        <div class="commit-meta">5 yeni dosya — 653 satır ekleme (hook, component, migration, testler)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What's not done -->
+  <div class="section">
+    <div class="section-title"><span class="icon">📋</span> Bekleyen / Kapsam Dışı</div>
+
+    <div class="notice blue">
+      <span class="ni">💬</span>
+      <div class="nt"><strong>Mesaj Butonu — Sonraki Faz</strong>"Mesaj" butonu bilerek devre dışı bırakıldı. Mesajlaşma modülü hazır olduğunda <code>IndividualPublicView.tsx</code>'teki <code>disabled</code> kaldırılıp route bağlanacak.</div>
+    </div>
+    <div class="notice yellow">
+      <span class="ni">🖼️</span>
+      <div class="nt"><strong>Profil Fotoğrafı</strong>Avatar initials (ilk 2 harf) gösteriliyor. <code>front_card.profile_image_url</code> alanı mevcut tipte var; gerçek fotoğraf desteği eklenebilir.</div>
+    </div>
+    <div class="notice blue">
+      <span class="ni">📋</span>
+      <div class="nt"><strong>DiasporaPeople Mock Verisi</strong>Sayfa hâlâ hardcoded mock kullanıcılarla çalışıyor. "Profili Gör" butonu route'a bağlandı ama mock ID'leri gerçek UUID olmadığından profil yüklenemez. Gerçek veri katmanı ayrı bir feature.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  corteqs_fin &mdash; main branch &mdash; 2026-05-31 &mdash; Claude Sonnet 4.6
+</footer>
+
+</body>
+</html>
