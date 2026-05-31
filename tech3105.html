@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>corteqs_fin — Teknik Durum Belgesi (2026-05-31)</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #222537;
+      --border: #2e3147;
+      --accent: #6c8ef7;
+      --accent2: #a78bfa;
+      --green: #34d399;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --code-bg: #161925;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    /* Layout */
+    .layout { display: flex; min-height: 100vh; }
+    nav {
+      width: 260px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    main {
+      flex: 1;
+      padding: 40px 48px;
+      max-width: 900px;
+    }
+
+    /* Nav */
+    .nav-logo {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .nav-date {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .nav-section {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 20px 0 6px;
+    }
+    nav a {
+      display: block;
+      padding: 5px 10px;
+      border-radius: 6px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13px;
+      transition: background 0.15s;
+    }
+    nav a:hover { background: var(--surface2); color: var(--accent); }
+
+    /* Headings */
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      border-left: 3px solid var(--accent);
+      padding-left: 12px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin: 48px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h2 .num {
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--accent);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent2);
+      margin: 24px 0 10px;
+    }
+    h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      margin: 16px 0 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+    thead tr { background: var(--surface2); }
+    th {
+      text-align: left;
+      padding: 9px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:hover td { background: var(--surface2); }
+    td code { background: var(--code-bg); padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+
+    /* Code blocks */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      font-size: 12.5px;
+      line-height: 1.6;
+      margin: 12px 0 20px;
+      font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+    }
+    code { font-family: 'SF Mono', 'Fira Code', Consolas, monospace; }
+    p code { background: var(--code-bg); padding: 1px 5px; border-radius: 3px; font-size: 12px; color: #a78bfa; }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-base { background: #1e3a5f; color: #60a5fa; }
+    .badge-overlay { background: #2d1f4a; color: var(--accent2); }
+    .badge-ref { background: #1c2a1e; color: var(--green); }
+    .badge-danger { background: #3b1a1a; color: var(--red); }
+    .badge-warn { background: #2e2112; color: var(--yellow); }
+    .badge-ok { background: #0f2a1e; color: var(--green); }
+    .badge-dep { background: #1f2030; color: var(--muted); }
+
+    /* Risk cards */
+    .risk-grid { display: grid; gap: 12px; margin: 16px 0; }
+    .risk-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .risk-card.high { border-left: 3px solid var(--red); }
+    .risk-card.medium { border-left: 3px solid var(--yellow); }
+    .risk-card.low { border-left: 3px solid var(--green); }
+    .risk-title {
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .risk-body { font-size: 12.5px; color: var(--muted); }
+    .risk-body code { color: var(--text); }
+
+    /* Callout */
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+    .callout.warn { border-left-color: var(--yellow); }
+    .callout.danger { border-left-color: var(--red); }
+    .callout strong { color: #fff; }
+
+    /* Step list */
+    .steps { margin: 12px 0; padding-left: 0; list-style: none; }
+    .steps li {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Module grid */
+    .module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .module-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .module-name {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .module-card code { display: block; font-size: 11px; color: var(--muted); margin: 2px 0; }
+
+    /* Footer */
+    footer {
+      margin-top: 64px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    p { margin: 8px 0; }
+    ul { padding-left: 20px; margin: 8px 0; }
+    li { margin: 4px 0; font-size: 13px; }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- Sidebar -->
+  <nav>
+    <div class="nav-logo">corteqs_fin</div>
+    <div class="nav-date">Teknik Belge · 2026-05-31</div>
+
+    <div class="nav-section">İçindekiler</div>
+    <a href="#origins">1. Repo Kökeni</a>
+    <a href="#base">↳ BASE: corteqslanding</a>
+    <a href="#overlay">↳ OVERLAY: lovable-v2</a>
+    <a href="#ref">↳ ref/global-network-bridge</a>
+    <a href="#status">2. Mevcut Durum</a>
+    <a href="#stack">↳ Tech Stack</a>
+    <a href="#migrations">↳ Migrations</a>
+    <a href="#edge-functions">↳ Edge Functions</a>
+    <a href="#arch">3. Mimari Harita</a>
+    <a href="#files">↳ Dosya Tablosu</a>
+    <a href="#auth">↳ Auth Çakışması</a>
+    <a href="#data">↳ Veri Katmanı</a>
+    <a href="#risks">4. Açık Riskler</a>
+    <a href="#pull">5. Yeni Özellik Çekme</a>
+    <a href="#workflow">↳ Pull Workflow</a>
+    <a href="#protected">↳ Korunan Dosyalar</a>
+    <a href="#modules">6. Domain Modülleri</a>
+    <a href="#tasks">7. Açık Görevler</a>
+    <a href="#commands">8. Komutlar</a>
+  </nav>
+
+  <!-- Main -->
+  <main>
+    <h1>corteqs_fin</h1>
+    <div class="subtitle">
+      Bu belge <strong>agent okunabilirliği</strong> için optimize edilmiştir.<br>
+      Bir agent bu projeye ilk kez bakıyorsa önce bu dosyayı, sonra <code>CLAUDE.md</code>'yi oku.<br>
+      Kodlama yapmadan önce <code>src/App.tsx</code> ve ilgili <code>*-api.ts</code> dosyalarını incele.
+    </div>
+
+    <!-- 1. REPO KÖKENİ -->
+    <h2 id="origins"><span class="num">1</span> Repo Kökeni — Neyin Nereden Geldiği</h2>
+    <p>Bu repo (<code>corteqs_fin</code>), 3 ayrı reponun <strong>2026-05-30</strong> tarihinde tek oturumda birleştirilmesiyle oluşturuldu.</p>
+
+    <table>
+      <thead>
+        <tr><th>Sıra</th><th>Commit</th><th>Kaynak</th><th>Ne Katkı Sağladı</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><code>5a80882</code></td>
+          <td><span class="badge badge-base">BASE</span> corteqslanding</td>
+          <td>Tüm altyapı, admin paneli, auth sistemi, migration'lar, Dockerfile, CLAUDE.md</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><code>28abaa8</code></td>
+          <td><span class="badge badge-overlay">OVERLAY</span> lovable-v2</td>
+          <td>35 yeni sayfa, 101 yeni component, 8 hook, contexts/, data/, content/, 46 migration</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><code>eba2cc1</code></td>
+          <td>Merge commit</td>
+          <td>İki dalın <code>main</code>'de birleştirilmesi</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 id="base">BASE: corteqslanding</h3>
+    <p>GitHub: <code>https://github.com/ubterzioglu/corteqslanding</code></p>
+    <p>Bu repo, <code>corteqs_fin</code>'in <strong>çekirdeğidir</strong>. Aşağıdaki her şey buradan geldi:</p>
+    <pre>src/
+  App.tsx                          # Tüm route tablosu
+  components/auth/                 # AuthProvider, RequireAuth, RequireFeature
+  components/admin/                # Admin panel bileşenleri
+  components/surveys/              # Survey renderer
+  lib/muhasebe-*.ts                # Muhasebe domain (referans mimari)
+  lib/submissions.ts               # Ana form kayıt servisi
+  lib/lansman.ts / referral-codes.ts / marquee.ts / cadde.ts
+  integrations/supabase/           # Lovable kaynaklı typed client (DOKUNMA)
+  pages/admin/                     # Admin sayfaları (orijinal set)
+  pages/FormPage.tsx / LansmanPage.tsx / CaddePage.tsx
+supabase/migrations/ (20260530'a kadar)  # 65+ orijinal migration
+supabase/functions/
+  send-submission-email / chat-register / find-matches
+  lansman-admin (deprecated) / submit-survey-response
+Dockerfile / nixpacks.toml / server.mjs / CLAUDE.md</pre>
+
+    <h3 id="overlay">OVERLAY: corteqs-mvp-merged-lovable-v2</h3>
+    <p>Lovable.dev üzerinde geliştirilen <strong>global network / diaspora MVP</strong> uygulaması. Çakışan dosyalar BASE'den korundu.</p>
+    <pre>src/
+  contexts/
+    AuthContext.tsx               # OVERLAY auth (BASE AuthProvider ile ÇAKIŞMA RİSKİ)
+    DiasporaContext.tsx           # Diaspora state yönetimi
+  data/
+    continents.ts / countryCities.ts / mock.ts / mockFeedPosts.ts
+    organizationCategories.ts / userSubcategories.ts   ← Tümü mock veri
+  content/
+    founding1000WelcomeEmail      # Karşılama maili içeriği
+  pages/ (35 yeni sayfa):
+    Feed.tsx / Events.tsx / Career.tsx / Businesses.tsx / AITwin.tsx
+    DiasporaPeople.tsx / RadarPage.tsx / Associations.tsx / Consultants.tsx
+    CityAmbassadors.tsx / CityNews.tsx / Bloggers.tsx
+    WhatsAppGroups.tsx / MapSearch.tsx / HospitalAppointment.tsx
+    RegisterDiaspora.tsx / RelocationEngine.tsx / Onboarding.tsx / Dashboards.tsx
+    ve diğerleri...
+  components/ (101 yeni bileşen):
+    AmbassadorReferralCard.tsx / AnnouncementBoard.tsx
+    booking/ / business/ / city-news/ / connections/ / feed/ / messaging/
+    GlobalNetworkShowcaseSection.tsx / InternationalDiasporaHero.tsx
+  hooks/ (8 yeni hook)
+supabase/migrations/ (46 yeni — 20260322–20260513):
+  feed_posts / cafes / messages / appointments / connections / job_listings
+  Kural: Tüm migration'larda CREATE TABLE IF NOT EXISTS kullanıldı</pre>
+
+    <h3 id="ref">ref/global-network-bridge/</h3>
+    <div class="callout">
+      <strong>Bu dizin üretim koduna dahil değildir.</strong> lovable-v2'nin Lovable Cloud'dan self-hosted Supabase'e geçiş paketidir. Referans / migrasyon rehberi olarak korunuyor.
+    </div>
+    <pre>ref/global-network-bridge/
+  migration-bundle/
+    supabase/migrations/          # 20 adet Lovable'da uygulanan migration
+    supabase/functions/
+      diaspora-search             # Henüz deploy edilmedi
+      relocation-chat             # Henüz deploy edilmedi
+      whatsapp-bot-lookup         # Henüz deploy edilmedi
+    full_schema.sql               # DB snapshot
+    seed_data.sql                 # Seed verisi</pre>
+    <div class="callout warn">
+      <strong>Deploy öncesi:</strong> Bu 3 edge function'da <code>LOVABLE_API_KEY</code> → <code>GEMINI_API_KEY</code> dönüşümü ve endpoint URL güncellemesi gerekiyor.
+    </div>
+
+    <!-- 2. DURUM -->
+    <h2 id="status"><span class="num">2</span> Mevcut Proje Durumu</h2>
+
+    <h3>Son Commit'ler</h3>
+    <table>
+      <thead><tr><th>SHA</th><th>Mesaj</th></tr></thead>
+      <tbody>
+        <tr><td><code>3e17ffd</code></td><td>hadi bakalım (.omc güncelleme)</td></tr>
+        <tr><td><code>6b2318b</code></td><td>docs: timestamped teknik dokümantasyon</td></tr>
+        <tr><td><code>bc3b951</code></td><td>feat: 'no badge' seçeneği + badge flag'leri updateLanding'e geçirme</td></tr>
+        <tr><td><code>46a4fbe</code></td><td>feat: badge flag'leri member_approved/admin_approved kolonlarına yazıldı</td></tr>
+        <tr><td><code>60a64e0</code></td><td>feat: whatsapp_landings'e member_approved ve admin_approved kolonları eklendi</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Aktif çalışma:</strong> <code>whatsapp_landings</code> tablosuna community badge sistemi — <code>member_approved</code> ve <code>admin_approved</code> boolean kolonları.</p>
+
+    <h3 id="stack">Tech Stack</h3>
+    <table>
+      <thead><tr><th>Katman</th><th>Versiyon</th><th>Not</th></tr></thead>
+      <tbody>
+        <tr><td>React</td><td>18.3.1</td><td>StrictMode kapalı</td></tr>
+        <tr><td>TypeScript</td><td>5.8.3</td><td><span class="badge badge-warn">strict: false</span> strictNullChecks: false, noImplicitAny: false</td></tr>
+        <tr><td>Vite</td><td>5.4.19</td><td>SWC + özel standalone HTML plugin</td></tr>
+        <tr><td>react-router-dom</td><td>6.30.1</td><td>BrowserRouter, 80+ route</td></tr>
+        <tr><td>@tanstack/react-query</td><td>5.83.0</td><td>Tutarsız kullanım</td></tr>
+        <tr><td>Tailwind CSS</td><td>3.4.17</td><td>CSS variables ile tema</td></tr>
+        <tr><td>shadcn/ui</td><td>—</td><td>src/components/ui/* — dokunma</td></tr>
+        <tr><td>Supabase JS SDK</td><td>2.101.1</td><td>Project ID: injprdrsklkxgnaiixzh</td></tr>
+        <tr><td>Vitest</td><td>3.x</td><td>jsdom + Testing Library</td></tr>
+        <tr><td>Playwright</td><td>1.57</td><td>Altyapı var, aktif kullanım yok</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="migrations">Migration Durumu</h3>
+    <table>
+      <thead><tr><th>Kaynak</th><th>Adet</th><th>Tarih Aralığı</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-base">BASE</span> corteqslanding</td><td>~65</td><td>20260530'a kadar</td></tr>
+        <tr><td><span class="badge badge-overlay">OVERLAY</span> lovable-v2</td><td>46</td><td>20260322–20260513</td></tr>
+        <tr><td><strong>Toplam</strong></td><td><strong>~111</strong></td><td>Çakışma riski var — doğrula</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="edge-functions">Edge Functions (Production)</h3>
+    <table>
+      <thead><tr><th>Function</th><th>Durum</th><th>Açıklama</th></tr></thead>
+      <tbody>
+        <tr><td><code>send-submission-email</code></td><td><span class="badge badge-ok">Aktif</span></td><td>Resend API ile kayıt maili</td></tr>
+        <tr><td><code>chat-register</code></td><td><span class="badge badge-ok">Aktif</span></td><td>Gemini AI chatbot kayıt akışı</td></tr>
+        <tr><td><code>find-matches</code></td><td><span class="badge badge-ok">Aktif</span></td><td>AI eşleştirme</td></tr>
+        <tr><td><code>submit-survey-response</code></td><td><span class="badge badge-ok">Aktif</span></td><td>Anket yanıt kaydı</td></tr>
+        <tr><td><code>lansman-admin</code></td><td><span class="badge badge-dep">Deprecated</span></td><td>410 döner</td></tr>
+        <tr><td><code>diaspora-search</code></td><td><span class="badge badge-warn">Deploy edilmedi</span></td><td>ref/ altında bekliyor</td></tr>
+        <tr><td><code>relocation-chat</code></td><td><span class="badge badge-warn">Deploy edilmedi</span></td><td>ref/ altında bekliyor</td></tr>
+        <tr><td><code>whatsapp-bot-lookup</code></td><td><span class="badge badge-warn">Deploy edilmedi</span></td><td>ref/ altında bekliyor</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 3. MİMARİ -->
+    <h2 id="arch"><span class="num">3</span> Mimari Harita</h2>
+
+    <h3 id="files">Dosya Sorumluluğu Tablosu</h3>
+    <table>
+      <thead><tr><th>Dosya / Dizin</th><th>Kaynak</th><th>Sorumluluk</th><th>Dokunulabilir?</th></tr></thead>
+      <tbody>
+        <tr><td><code>src/App.tsx</code></td><td><span class="badge badge-base">BASE</span></td><td>Tüm route tablosu (80+ route)</td><td>Evet (dikkatli)</td></tr>
+        <tr><td><code>src/integrations/supabase/client.ts</code></td><td><span class="badge badge-base">BASE</span> Lovable gen.</td><td>Typed Supabase client</td><td><span class="badge badge-danger">HAYIR</span></td></tr>
+        <tr><td><code>src/lib/supabase.ts</code></td><td><span class="badge badge-base">BASE</span></td><td>Custom client re-export</td><td>Evet</td></tr>
+        <tr><td><code>src/lib/muhasebe-*.ts</code></td><td><span class="badge badge-base">BASE</span></td><td>Muhasebe domain — referans mimari</td><td>Evet</td></tr>
+        <tr><td><code>src/components/auth/AuthProvider.tsx</code></td><td><span class="badge badge-base">BASE</span></td><td>Supabase session context — canonical</td><td>Evet (dikkatli)</td></tr>
+        <tr><td><code>src/contexts/AuthContext.tsx</code></td><td><span class="badge badge-overlay">OVERLAY</span></td><td>lovable-v2 auth context</td><td><span class="badge badge-warn">Audit önce</span></td></tr>
+        <tr><td><code>src/contexts/DiasporaContext.tsx</code></td><td><span class="badge badge-overlay">OVERLAY</span></td><td>Diaspora state</td><td>Evet</td></tr>
+        <tr><td><code>src/data/</code></td><td><span class="badge badge-overlay">OVERLAY</span></td><td>Mock veri — gerçek API'ye taşınacak</td><td>Evet</td></tr>
+        <tr><td><code>src/components/ui/*</code></td><td><span class="badge badge-base">BASE</span> shadcn</td><td>Primitives</td><td><span class="badge badge-danger">HAYIR</span> shadcn CLI ile</td></tr>
+        <tr><td><code>vite.config.ts</code></td><td><span class="badge badge-base">BASE</span></td><td>Build config + standalone HTML inject</td><td>Evet (dikkatli)</td></tr>
+        <tr><td><code>server.mjs</code></td><td><span class="badge badge-base">BASE</span></td><td>Runtime env injection, chat proxy</td><td>Evet (dikkatli)</td></tr>
+        <tr><td><code>ref/global-network-bridge/</code></td><td><span class="badge badge-ref">REF</span></td><td>Geçiş rehberi, prod'a dahil değil</td><td>Okuma amaçlı</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="auth">Auth Sistemi — Çakışma Durumu</h3>
+    <table>
+      <thead><tr><th>Context</th><th>Kaynak</th><th>Konum</th><th>Durum</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>AuthProvider</td>
+          <td><span class="badge badge-base">BASE</span></td>
+          <td><code>src/components/auth/AuthProvider.tsx</code></td>
+          <td>Canonical — RequireAuth kullanıyor</td>
+        </tr>
+        <tr>
+          <td>AuthContext</td>
+          <td><span class="badge badge-overlay">OVERLAY</span></td>
+          <td><code>src/contexts/AuthContext.tsx</code></td>
+          <td><span class="badge badge-warn">Hangi bileşenler kullanıyor? (doğrulanmadı)</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      Auth'a dokunan herhangi bir görev için önce şunu çalıştır:<br>
+      <pre style="margin-top:8px">grep -r "AuthContext\|AuthProvider\|useAuth" src/ --include="*.tsx" -l</pre>
+    </div>
+
+    <h3 id="data">Veri Çekme Stilleri</h3>
+    <table>
+      <thead><tr><th>Stil</th><th>Örnek</th><th>Durum</th></tr></thead>
+      <tbody>
+        <tr><td>Direkt component fetch</td><td><code>useEffect + supabase.from()</code></td><td><span class="badge badge-danger">Anti-pattern, yaygın</span></td></tr>
+        <tr><td>API modül katmanı</td><td><code>src/lib/muhasebe-api.ts</code></td><td><span class="badge badge-ok">Tercih edilen</span></td></tr>
+        <tr><td>React Query hooks</td><td><code>useMuhasebe.ts</code></td><td><span class="badge badge-base">Önerilen, az kullanılıyor</span></td></tr>
+      </tbody>
+    </table>
+    <p><strong>Yeni özellikler için:</strong> <code>src/lib/&lt;feature&gt;-api.ts</code> + React Query kullan (muhasebe pattern'ini takip et).</p>
+
+    <!-- 4. RİSKLER -->
+    <h2 id="risks"><span class="num">4</span> Açık Riskler</h2>
+    <div class="risk-grid">
+      <div class="risk-card high">
+        <div class="risk-title"><span class="badge badge-danger">YÜK. ÖNCELİK</span> App.tsx Route Entegrasyonu</div>
+        <div class="risk-body">
+          35 OVERLAY sayfası eklendi. Bunların <code>src/App.tsx</code>'e route olarak eklenip eklenmediği doğrulanmadı. Eklenmeyen sayfalar 404 verir.<br>
+          <pre>grep -E "Feed|Events|Career|AITwin|DiasporaPeople|RadarPage" src/App.tsx</pre>
+        </div>
+      </div>
+      <div class="risk-card high">
+        <div class="risk-title"><span class="badge badge-danger">YÜK. ÖNCELİK</span> Auth Sistemi Çakışması</div>
+        <div class="risk-body">
+          İki ayrı auth implementasyonu mevcut. Hangisinin canonical olduğu test edilmedi. AuthContext ile AuthProvider aynı anda import edilirse runtime hatası çıkabilir.
+        </div>
+      </div>
+      <div class="risk-card medium">
+        <div class="risk-title"><span class="badge badge-warn">ORTA ÖNCELİK</span> Migration Sırası Çakışması</div>
+        <div class="risk-body">
+          46 OVERLAY migration'ının (20260322–20260513) BASE migration'larla örtüşüp örtüşmediği bilinmiyor.<br>
+          <pre>supabase migrations list</pre>
+        </div>
+      </div>
+      <div class="risk-card medium">
+        <div class="risk-title"><span class="badge badge-warn">ORTA ÖNCELİK</span> Deploy Edilmemiş Edge Functions</div>
+        <div class="risk-body">
+          <code>ref/global-network-bridge/supabase/functions/</code> altındaki 3 function deploy edilmedi. Deploy öncesi <code>LOVABLE_API_KEY</code> → <code>GEMINI_API_KEY</code> dönüşümü gerekiyor.
+        </div>
+      </div>
+      <div class="risk-card low">
+        <div class="risk-title"><span class="badge badge-ok">DÜŞÜK ÖNCELİK</span> Mock Data</div>
+        <div class="risk-body">
+          <code>src/data/</code> altındaki tüm dosyalar mock veri içeriyor. Production'da gerçek Supabase sorgularıyla değiştirilmeli.
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. YENİ ÖZELLİK ÇEKME -->
+    <h2 id="pull"><span class="num">5</span> corteqslanding'den Yeni Özellik Çekme — Agent Direktifleri</h2>
+    <div class="callout">
+      <strong>Kaynak repo:</strong> <code>https://github.com/ubterzioglu/corteqslanding</code><br>
+      Bu repo, <code>corteqs_fin</code>'in BASE kaynağıdır. Yeni özellikler ve düzeltmeler burada birikebilir.
+    </div>
+
+    <h3>Sync Öncesi — GitHub API ile İzleme</h3>
+    <pre># Son commit'leri listele
+gh api repos/ubterzioglu/corteqslanding/commits \
+  --jq '.[0:10] | .[] | {sha: .sha[0:7], msg: .commit.message, date: .commit.author.date}'
+
+# Belirli bir dosyanın uzak versiyonunu oku
+gh api repos/ubterzioglu/corteqslanding/contents/src/App.tsx \
+  --jq '.content' | base64 -d
+
+# BASE merge'den bu yana değişen dosyalar (BASE commit: 5a80882)
+gh api "repos/ubterzioglu/corteqslanding/compare/5a80882...HEAD" \
+  --jq '.files[].filename'</pre>
+
+    <h3 id="workflow">Pull Workflow</h3>
+    <ul class="steps">
+      <li><span class="step-num">1</span><span>GitHub API ile son commit'leri tara — sadece yeni/değişmiş dosyaları belirle.</span></li>
+      <li><span class="step-num">2</span><span>Lokal versiyonla diff al. OVERLAY değişikliklerini eziyor mu? Auth, App.tsx veya migration etkileniyor mu?</span></li>
+      <li><span class="step-num">3</span><span>Migration varsa: tarih kontrolü yap, <code>CREATE TABLE IF NOT EXISTS</code> kullanıldığından emin ol, <code>supabase/migrations/</code> sonuna ekle.</span></li>
+      <li><span class="step-num">4</span><span>Çakışmayan dosyaları kopyala. App.tsx için route ekle (override etme, ekle). Auth değişikliklerini önce audit et.</span></li>
+      <li><span class="step-num">5</span><span>Doğrula: <code>npm run build</code> → <code>npm run test</code> → etkilenen sayfayı browser'da kontrol et.</span></li>
+    </ul>
+
+    <h3 id="protected">Korunan Dosyalar — Asla Overwrite Yapma</h3>
+    <table>
+      <thead><tr><th>Dosya</th><th>Neden Korumalı</th></tr></thead>
+      <tbody>
+        <tr><td><code>src/App.tsx</code></td><td>35 OVERLAY sayfasının route'ları var — merge gerekir, overwrite değil</td></tr>
+        <tr><td><code>src/integrations/supabase/client.ts</code></td><td>Lovable-generated, lokal tipler farklı</td></tr>
+        <tr><td><code>supabase/migrations/</code></td><td>Hiçbir migration silinemez, yenisi eklenir</td></tr>
+        <tr><td><code>server.mjs</code></td><td>Runtime config lokal ortama özel</td></tr>
+      </tbody>
+    </table>
+
+    <h3>SEO — Asla Değiştirilmeyecek Route'lar</h3>
+    <table>
+      <thead><tr><th>Route</th><th>Dosya</th><th>Neden Kritik</th></tr></thead>
+      <tbody>
+        <tr><td><code>/lansman</code></td><td>pages/LansmanPage.tsx</td><td>SEO geçmişi</td></tr>
+        <tr><td><code>/cadde</code></td><td>pages/CaddePage.tsx</td><td>SEO geçmişi</td></tr>
+        <tr><td><code>/founders</code></td><td>App.tsx'te tanımlı</td><td>SEO geçmişi</td></tr>
+        <tr><td><code>/commercial/&lt;slug&gt;</code></td><td>vite.config.ts özel plugin</td><td>SEO + standalone HTML</td></tr>
+        <tr><td><code>/19051919</code></td><td>pages/May19*.tsx</td><td>SEO geçmişi</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 6. MODÜLLER -->
+    <h2 id="modules"><span class="num">6</span> Domain Modülleri</h2>
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="module-name">muhasebe (accounting) — REFERANS MİMARİ</div>
+        <code>lib/muhasebe-api.ts</code>
+        <code>lib/muhasebe-schemas.ts</code>
+        <code>lib/muhasebe-format.ts</code>
+        <code>lib/muhasebe-aggregations.ts</code>
+        <code>pages/admin/muhasebe/</code>
+        <code>components/admin/muhasebe/</code>
+      </div>
+      <div class="module-card">
+        <div class="module-name">lansman (launch registration)</div>
+        <code>lib/lansman.ts</code>
+        <code>types/lansman.ts</code>
+        <code>pages/LansmanPage.tsx</code>
+        <code>components/LansmanForm.tsx</code>
+        <code>pages/admin/AdminLansmanPage.tsx</code>
+      </div>
+      <div class="module-card">
+        <div class="module-name">cadde (marketplace)</div>
+        <code>lib/cadde.ts</code>
+        <code>pages/CaddePage.tsx</code>
+      </div>
+      <div class="module-card">
+        <div class="module-name">anket (surveys)</div>
+        <code>lib/surveys.ts</code>
+        <code>pages/SurveysPage.tsx</code>
+        <code>pages/SurveyDetailPage.tsx</code>
+        <code>pages/admin/surveys/</code>
+        <code>components/surveys/</code>
+      </div>
+      <div class="module-card">
+        <div class="module-name">profil (member profiles)</div>
+        <code>lib/member-profile.ts</code>
+        <code>lib/member-profile-api.ts</code>
+        <code>lib/individual-profile.ts</code>
+        <code>pages/ProfilePage.tsx</code>
+        <code>pages/DirectoryPage.tsx</code>
+      </div>
+      <div class="module-card">
+        <div class="module-name">referral</div>
+        <code>lib/referral-codes.ts</code>
+        <code>pages/admin/referral/</code>
+      </div>
+      <div class="module-card">
+        <div class="module-name">workspace</div>
+        <code>lib/dashboard/</code>
+        <code>pages/admin/workspace/</code>
+        <code>components/dashboard/</code>
+      </div>
+      <div class="module-card">
+        <div class="module-name">auth (çift kaynak — dikkat)</div>
+        <code>components/auth/AuthProvider.tsx ← canonical</code>
+        <code>contexts/AuthContext.tsx ← audit gerekli</code>
+      </div>
+    </div>
+
+    <!-- 7. AÇIK GÖREVLER -->
+    <h2 id="tasks"><span class="num">7</span> Açık Görevler</h2>
+    <ul class="steps">
+      <li><span class="step-num">1</span><span><strong>Route audit</strong> — 35 OVERLAY sayfasının App.tsx'te route'u var mı?</span></li>
+      <li><span class="step-num">2</span><span><strong>Auth audit</strong> — AuthContext vs AuthProvider çakışması test edilmedi.</span></li>
+      <li><span class="step-num">3</span><span><strong>Migration audit</strong> — <code>supabase migrations list</code> çalıştır, sıra ve çakışma kontrol et.</span></li>
+      <li><span class="step-num">4</span><span><strong>Edge function deploy</strong> — diaspora-search, relocation-chat, whatsapp-bot-lookup (ref/ altından, API key güncelle).</span></li>
+      <li><span class="step-num">5</span><span><strong>Mock data</strong> — <code>src/data/</code> altındaki tüm dosyaları gerçek Supabase sorguları ile değiştir.</span></li>
+      <li><span class="step-num">6</span><span><strong>Coolify port</strong> — port 80 girildiğinden emin ol, redeploy yap.</span></li>
+      <li><span class="step-num">7</span><span><strong>E2E smoke test</strong> — Feed, Events, Career sayfalarının render olduğunu doğrula.</span></li>
+    </ul>
+
+    <!-- 8. KOMUTLAR -->
+    <h2 id="commands"><span class="num">8</span> Komut Referansı</h2>
+    <h3>Geliştirme</h3>
+    <pre>npm run dev                           # Vite dev server, port 8080
+npm run build                         # Production bundle
+npm run test                          # Vitest
+npm run lint                          # ESLint</pre>
+
+    <h3>Supabase</h3>
+    <pre>supabase migrations list              # Migration durumu (çakışma kontrolü için)
+supabase db push                      # Lokal schema push
+supabase functions deploy &lt;name&gt;      # Edge function deploy</pre>
+
+    <h3>Release Doğrulama</h3>
+    <pre>npm run verify:release
+BASE_URL=https://mvp.corteqs.net npm run verify:release</pre>
+
+    <h3>corteqslanding Repo İzleme</h3>
+    <pre># Son 5 commit
+gh api repos/ubterzioglu/corteqslanding/commits \
+  --jq '.[0:5] | .[] | {sha: .sha[0:7], msg: .commit.message}'
+
+# BASE'den bu yana değişen dosyalar
+gh api "repos/ubterzioglu/corteqslanding/compare/5a80882...HEAD" \
+  --jq '.files[].filename'</pre>
+
+    <footer>
+      corteqs_fin Teknik Durum Belgesi · 2026-05-31 · Claude Sonnet 4.6
+    </footer>
+  </main>
+</div>
+</body>
+</html>

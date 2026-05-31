@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1780138428477,
-  "projectRoot": "C:\\temp_private\\corteqs\\corteqs_landing",
+  "lastScanned": 1780227110901,
+  "projectRoot": "c:\\temp_private\\corteqs\\corteqs_fin",
   "techStack": {
     "languages": [
       {
@@ -86,10 +86,7 @@
       "scripts",
       "src"
     ],
-    "gitBranches": {
-      "defaultBranch": "main",
-      "branchingStrategy": null
-    }
+    "gitBranches": null
   },
   "customNotes": [],
   "directoryMap": {
@@ -97,14 +94,14 @@
       "path": "backups",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1780138428382,
+      "lastAccessed": 1780227110818,
       "keyFiles": []
     },
     "dist": {
       "path": "dist",
       "purpose": "Distribution/build output",
       "fileCount": 17,
-      "lastAccessed": 1780138428383,
+      "lastAccessed": 1780227110818,
       "keyFiles": [
         "ambassador.html",
         "commercial.html",
@@ -116,28 +113,25 @@
     "docs": {
       "path": "docs",
       "purpose": "Documentation",
-      "fileCount": 8,
-      "lastAccessed": 1780138428384,
+      "fileCount": 2,
+      "lastAccessed": 1780227110819,
       "keyFiles": [
-        "auth-login-durumu-2026-05-24.md",
-        "commercial-contributor-structure.md",
-        "marquee-haber-akisi.md",
-        "member-system-v2-registry.json",
-        "new-member-system-login-roller-featurelar.md"
+        "CORTEQS_LANDING_TEKNIK_DOKUMANTASYON_2026-05-30.md",
+        "README.md"
       ]
     },
     "docu": {
       "path": "docu",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1780138428434,
+      "lastAccessed": 1780227110876,
       "keyFiles": []
     },
     "lansman": {
       "path": "lansman",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1780138428434,
+      "lastAccessed": 1780227110876,
       "keyFiles": [
         "index.html"
       ]
@@ -146,7 +140,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 10,
-      "lastAccessed": 1780138428435,
+      "lastAccessed": 1780227110877,
       "keyFiles": [
         "env-config.js",
         "fav.png",
@@ -159,14 +153,14 @@
       "path": "ref",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1780138428436,
+      "lastAccessed": 1780227110877,
       "keyFiles": []
     },
     "scripts": {
       "path": "scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 3,
-      "lastAccessed": 1780138428436,
+      "lastAccessed": 1780227110878,
       "keyFiles": [
         "import-command-center-may13.mjs",
         "replace-resource-entries-from-csv.mjs",
@@ -177,7 +171,7 @@
       "path": "src",
       "purpose": "Source code",
       "fileCount": 14,
-      "lastAccessed": 1780138428437,
+      "lastAccessed": 1780227110878,
       "keyFiles": [
         "App.addwa-routes.test.tsx",
         "App.admin-cadde-route.test.tsx",
@@ -190,7 +184,7 @@
       "path": "supabase",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1780138428437,
+      "lastAccessed": 1780227110878,
       "keyFiles": [
         "config.toml"
       ]
@@ -199,331 +193,103 @@
       "path": "_archive",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1780138428438,
+      "lastAccessed": 1780227110879,
       "keyFiles": []
     },
     "dist\\assets": {
       "path": "dist\\assets",
       "purpose": "Static assets",
-      "fileCount": 27,
-      "lastAccessed": 1780138428439,
+      "fileCount": 30,
+      "lastAccessed": 1780227110880,
       "keyFiles": [
+        "addwaimage-CQ0S0aXe.png",
         "blogger-vlogger-CB3SgA9I.jpg",
-        "burak-D_NPD4FO.png",
-        "ComposedChart-B0l-067C.js"
+        "burak-D_NPD4FO.png"
       ]
     },
     "supabase\\migrations": {
       "path": "supabase\\migrations",
       "purpose": "Database migrations",
-      "fileCount": 64,
-      "lastAccessed": 1780138428443,
+      "fileCount": 111,
+      "lastAccessed": 1780227110882,
       "keyFiles": [
-        "20260406104636_435b29f1-111a-44a7-8840-41211d0a1c6a.sql",
-        "20260406193000_admin_and_submission_workflow.sql",
-        "20260418161500_add_backer_fields.sql"
+        "20260322185422_0c2fefe6-54d8-4444-83e3-10996948943b.sql",
+        "20260326112832_9bf32535-1683-4393-9f7e-c9b722013634.sql",
+        "20260326112842_8d8e27b7-3d7d-4091-a297-005b24613a91.sql"
       ]
     }
   },
   "hotPaths": [
     {
-      "path": "src\\pages\\AddWhatsAppPage.tsx",
-      "accessCount": 55,
-      "lastAccessed": 1780172006228,
-      "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 33,
-      "lastAccessed": 1780172461863,
-      "type": "directory"
-    },
-    {
-      "path": "src\\lib\\whatsapp-landings.ts",
-      "accessCount": 23,
-      "lastAccessed": 1780172715565,
-      "type": "file"
-    },
-    {
-      "path": "src\\components\\admin\\WhatsAppLandingsModeration.tsx",
-      "accessCount": 23,
-      "lastAccessed": 1780173075354,
-      "type": "file"
-    },
-    {
-      "path": "src",
-      "accessCount": 14,
-      "lastAccessed": 1780172294340,
-      "type": "directory"
-    },
-    {
-      "path": "src\\integrations\\supabase\\types.ts",
-      "accessCount": 10,
-      "lastAccessed": 1780172613852,
-      "type": "directory"
-    },
-    {
-      "path": "supabase\\migrations\\20260530120000_add_badge_columns_to_whatsapp_landings.sql",
-      "accessCount": 8,
-      "lastAccessed": 1780173344679,
-      "type": "file"
-    },
-    {
       "path": "src\\App.tsx",
       "accessCount": 5,
-      "lastAccessed": 1780173326607,
+      "lastAccessed": 1780233331879,
       "type": "file"
     },
     {
-      "path": "supabase\\migrations",
-      "accessCount": 4,
-      "lastAccessed": 1780172302005,
-      "type": "directory"
-    },
-    {
-      "path": "CLAUDE.md",
+      "path": "src\\lib\\features.ts",
       "accessCount": 3,
-      "lastAccessed": 1780150989925,
+      "lastAccessed": 1780232972615,
       "type": "file"
     },
     {
-      "path": "package.json",
-      "accessCount": 3,
-      "lastAccessed": 1780173326377,
-      "type": "file"
-    },
-    {
-      "path": "vite.config.ts",
-      "accessCount": 3,
-      "lastAccessed": 1780173327019,
-      "type": "file"
-    },
-    {
-      "path": "Dockerfile",
-      "accessCount": 3,
-      "lastAccessed": 1780173344010,
-      "type": "file"
-    },
-    {
-      "path": "nixpacks.toml",
-      "accessCount": 3,
-      "lastAccessed": 1780173344255,
-      "type": "file"
-    },
-    {
-      "path": "README.md",
+      "path": "src\\components\\admin\\admin-navigation.ts",
       "accessCount": 2,
-      "lastAccessed": 1780150912293,
+      "lastAccessed": 1780232981272,
       "type": "file"
     },
     {
-      "path": "tsconfig.json",
-      "accessCount": 2,
-      "lastAccessed": 1780150913195,
-      "type": "file"
-    },
-    {
-      "path": "vitest.config.ts",
-      "accessCount": 2,
-      "lastAccessed": 1780150924278,
-      "type": "file"
-    },
-    {
-      "path": "src\\pages\\CaddePage.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1780151246127,
-      "type": "file"
-    },
-    {
-      "path": "src\\lib\\cadde.ts",
-      "accessCount": 2,
-      "lastAccessed": 1780151246688,
-      "type": "file"
-    },
-    {
-      "path": "nginx.conf.template",
-      "accessCount": 2,
-      "lastAccessed": 1780158648767,
-      "type": "file"
-    },
-    {
-      "path": "docker-entrypoint-env.sh",
-      "accessCount": 2,
-      "lastAccessed": 1780158648858,
-      "type": "file"
-    },
-    {
-      "path": "src\\pages\\admin\\AdminWhatsAppLandingsPage.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1780160392161,
-      "type": "file"
-    },
-    {
-      "path": "docs\\superpowers\\specs\\2026-05-30-community-badge-single-select-design.md",
-      "accessCount": 2,
-      "lastAccessed": 1780171733040,
-      "type": "file"
-    },
-    {
-      "path": "docs\\superpowers\\plans\\2026-05-30-community-badge-single-select.md",
-      "accessCount": 2,
-      "lastAccessed": 1780171845966,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260515120000_add_whatsapp_landings.sql",
-      "accessCount": 2,
-      "lastAccessed": 1780171974165,
-      "type": "file"
-    },
-    {
-      "path": "supabase\\migrations\\20260517110000_add_whatsapp_landing_hero_bucket.sql",
-      "accessCount": 2,
-      "lastAccessed": 1780171984900,
-      "type": "file"
-    },
-    {
-      "path": "server.mjs",
-      "accessCount": 2,
-      "lastAccessed": 1780173326788,
-      "type": "file"
-    },
-    {
-      "path": ".env.example",
-      "accessCount": 2,
-      "lastAccessed": 1780173327165,
-      "type": "file"
-    },
-    {
-      "path": "src\\main.tsx",
+      "path": "merge.md",
       "accessCount": 1,
-      "lastAccessed": 1780138522816,
-      "type": "file"
-    },
-    {
-      "path": "components.json",
-      "accessCount": 1,
-      "lastAccessed": 1780138524282,
-      "type": "file"
-    },
-    {
-      "path": "eslint.config.js",
-      "accessCount": 1,
-      "lastAccessed": 1780138547381,
-      "type": "file"
-    },
-    {
-      "path": "docs\\PROJECT_TECHNICAL_OVERVIEW.md",
-      "accessCount": 1,
-      "lastAccessed": 1780138726123,
-      "type": "file"
-    },
-    {
-      "path": "playwright.config.ts",
-      "accessCount": 1,
-      "lastAccessed": 1780150924390,
-      "type": "file"
-    },
-    {
-      "path": "docs\\README.md",
-      "accessCount": 1,
-      "lastAccessed": 1780150933058,
-      "type": "file"
-    },
-    {
-      "path": "docs\\architecture\\PROJECT_TECHNICAL_OVERVIEW.md",
-      "accessCount": 1,
-      "lastAccessed": 1780150933313,
-      "type": "file"
-    },
-    {
-      "path": "tsconfig.app.json",
-      "accessCount": 1,
-      "lastAccessed": 1780150933569,
-      "type": "file"
-    },
-    {
-      "path": "src\\components\\ui\\badge.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1780151234113,
-      "type": "file"
-    },
-    {
-      "path": "src\\pages\\AddWhatsAppPage.test.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1780151239812,
-      "type": "file"
-    },
-    {
-      "path": "src\\components\\ChatRegisterBar.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1780151259089,
-      "type": "file"
-    },
-    {
-      "path": ".env.local",
-      "accessCount": 1,
-      "lastAccessed": 1780153098184,
+      "lastAccessed": 1780228988491,
       "type": "file"
     },
     {
       "path": "docs\\history\\status-reports\\merge-raporu-2026-05-30.md",
       "accessCount": 1,
-      "lastAccessed": 1780159574419,
+      "lastAccessed": 1780228989391,
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260502152623_dd64bab6-e32c-44ba-be2e-0d09a775bf83.sql",
+      "path": "docs\\architecture\\CORTEQS_LANDING_TEKNIK_DOKUMANTASYON.md",
       "accessCount": 1,
-      "lastAccessed": 1780160403923,
+      "lastAccessed": 1780228989738,
       "type": "file"
     },
     {
-      "path": "src\\pages\\WhatsAppGroupLanding.tsx",
+      "path": "ref\\global-network-bridge\\README.md",
       "accessCount": 1,
-      "lastAccessed": 1780160412882,
+      "lastAccessed": 1780228995511,
       "type": "file"
     },
     {
-      "path": "src\\components\\profiles\\WhatsAppGroupsTab.tsx",
+      "path": "docs\\architecture\\PROJECT_TECHNICAL_OVERVIEW.md",
       "accessCount": 1,
-      "lastAccessed": 1780160413013,
+      "lastAccessed": 1780228995933,
       "type": "file"
     },
     {
-      "path": "src\\integrations",
+      "path": "ref\\global-network-bridge\\migration-bundle\\README_MIGRATION.md",
       "accessCount": 1,
-      "lastAccessed": 1780172295593,
-      "type": "directory"
-    },
-    {
-      "path": "supabase\\migrations\\20260530093000_add_admin_edit_profile_data_rpcs.sql",
-      "accessCount": 1,
-      "lastAccessed": 1780173345074,
+      "lastAccessed": 1780229004699,
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260529213000_create_cadde_mvp.sql",
+      "path": "tech3105.md",
       "accessCount": 1,
-      "lastAccessed": 1780173345463,
+      "lastAccessed": 1780229140079,
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260525230000_profile_sections_and_taxonomy_phase2.sql",
+      "path": "tech3105.html",
       "accessCount": 1,
-      "lastAccessed": 1780173345960,
+      "lastAccessed": 1780230016586,
       "type": "file"
     },
     {
-      "path": "supabase\\migrations\\20260525000000_rolesgo_role_attribute_approval_mvp.sql",
+      "path": "src\\lib\\whatsapp-landings.ts",
       "accessCount": 1,
-      "lastAccessed": 1780173346275,
-      "type": "file"
-    },
-    {
-      "path": "docs\\CORTEQS_LANDING_TEKNIK_DOKUMANTASYON_2026-05-30.md",
-      "accessCount": 1,
-      "lastAccessed": 1780173619989,
+      "lastAccessed": 1780232920111,
       "type": "file"
     }
   ],
