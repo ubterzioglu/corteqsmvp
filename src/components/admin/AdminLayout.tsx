@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import {
   adminPanelDocNavItems,
   adminPanelNavItems,
+  communityNavItems,
   externalAdminNavItems,
   may19RecordNavItems,
   newMemberSystemNavItems,
@@ -102,6 +103,7 @@ const AdminLayout = () => {
   const [otherActionsMenuOpen, setOtherActionsMenuOpen] = useState(false);
   const [eventMenuOpen, setEventMenuOpen] = useState(false);
   const [newMemberMenuOpen, setNewMemberMenuOpen] = useState(false);
+  const [communityMenuOpen, setCommunityMenuOpen] = useState(false);
   const [advisorMenuOpen, setAdvisorMenuOpen] = useState(false);
   const [adminPanelMenuOpen, setAdminPanelMenuOpen] = useState(false);
   const demoUrl = "https://global-network-bridge.lovable.app/";
@@ -229,6 +231,7 @@ const AdminLayout = () => {
     location.pathname.startsWith("/admin/advisors/") ||
     otherRecordNavItems.some((item) => location.pathname === item.to) ||
     may19RecordNavItems.some((item) => location.pathname === item.to);
+  const communityMenuActive = communityNavItems.some((item) => location.pathname === item.to);
   const eventMenuActive = eventNavItems.some((item) => location.pathname === item.to);
   const newMemberMenuActive =
     location.pathname.startsWith("/admin/new-member") || location.pathname === "/admin/roller-taslak";
@@ -254,6 +257,8 @@ const AdminLayout = () => {
     { to: "/admin/lansman", label: "Lansman Katılım" },
     { to: "/admin/surveys", label: "Anketler" },
     { to: "/admin/whatsapp-landings", label: "Topluluklar" },
+    { to: "/admin/whatsapp-landings/editors", label: "Topluluk Editörleri" },
+    { to: "/admin/whatsapp-landings/guide", label: "Topluluk Kullanma Kılavuzu" },
     { to: "/admin/cadde", label: "Cadde" },
     { to: "/admin/may19/kelime", label: "19 Mayıs Kelime" },
     { to: "/admin/may19/ani", label: "19 Mayıs Anı" },
@@ -539,6 +544,44 @@ const AdminLayout = () => {
                     onMouseLeave={() => setOtherActionsMenuOpen(false)}
                   >
                     {otherActionNavItems.map((item) => {
+                      const isActive = location.pathname === item.to;
+
+                      return (
+                        <DropdownMenuItem key={item.to} asChild>
+                          <Link to={item.to} className="flex items-center justify-between gap-3">
+                            <span>{item.label}</span>
+                            {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
+                          </Link>
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="flex items-center">
+                <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
+                <DropdownMenu open={communityMenuOpen} onOpenChange={setCommunityMenuOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <div
+                      onMouseEnter={() => setCommunityMenuOpen(true)}
+                      onMouseLeave={() => setCommunityMenuOpen(false)}
+                    >
+                      <button
+                        type="button"
+                        className={`${linkClass({ isActive: communityMenuActive, variant: "members" })} inline-flex items-center gap-1`}
+                      >
+                        Topluluklar
+                        <ChevronDown className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="start"
+                    className="w-56"
+                    onMouseEnter={() => setCommunityMenuOpen(true)}
+                    onMouseLeave={() => setCommunityMenuOpen(false)}
+                  >
+                    {communityNavItems.map((item) => {
                       const isActive = location.pathname === item.to;
 
                       return (

@@ -10,6 +10,7 @@ import {
   Heart,
   MapPin,
   MessageSquare,
+  Pencil,
   Search,
   Share2,
   ShieldCheck,
@@ -29,10 +30,14 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useAuth } from "@/components/auth/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import {
+  buildLandingDescription,
+  canCurrentUserEditLanding,
   createJoinRequest,
+  getEditableLandingForCurrentUser,
   getLanding,
   listLandings,
   submitLanding,
@@ -279,7 +284,7 @@ type JoinFormState = {
 };
 
 const initialGroupForm: GroupFormState = {
-  submitterRole: "manager",
+  submitterRole: "member",
   platform: "",
   category: "",
   groupName: "",
@@ -313,6 +318,7 @@ export default function AddWhatsAppPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   const groupSlug = searchParams.get("group")?.trim() ?? "";
 
   const [landings, setLandings] = useState<WhatsAppLanding[]>([]);
@@ -324,6 +330,7 @@ export default function AddWhatsAppPage() {
   const [copied, setCopied] = useState(false);
   const [submittingGroup, setSubmittingGroup] = useState(false);
   const [submittingJoin, setSubmittingJoin] = useState(false);
+  const [canEditSelectedLanding, setCanEditSelectedLanding] = useState(false);
   const [groupForm, setGroupForm] = useState<GroupFormState>(initialGroupForm);
   const [joinForm, setJoinForm] = useState<JoinFormState>(initialJoinForm);
   const [heroImageFile, setHeroImageFile] = useState<File | null>(null);
@@ -361,10 +368,23 @@ export default function AddWhatsAppPage() {
     setLoadingLanding(true);
 
     getLanding(groupSlug)
-      .then((landing) => {
+      .then(async (landing) => {
         if (!cancelled) {
           const placeholderLanding = placeholderLandings.find((item) => item.id === groupSlug);
-          setSelectedLanding(landing ?? placeholderLanding ?? null);
+          if (landing) {
+            setSelectedLanding(landing);
+            return;
+          }
+
+          if (user) {
+            const editableLanding = await getEditableLandingForCurrentUser(groupSlug);
+            if (!cancelled && editableLanding) {
+              setSelectedLanding(editableLanding);
+              return;
+            }
+          }
+
+          setSelectedLanding(placeholderLanding ?? null);
         }
       })
       .finally(() => {
@@ -374,7 +394,24 @@ export default function AddWhatsAppPage() {
     return () => {
       cancelled = true;
     };
-  }, [groupSlug]);
+  }, [groupSlug, user]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!selectedLanding?.dbId || !user) {
+      setCanEditSelectedLanding(false);
+      return;
+    }
+
+    void canCurrentUserEditLanding(selectedLanding.dbId).then((value) => {
+      if (!cancelled) setCanEditSelectedLanding(value);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedLanding?.dbId, user]);
 
   const filteredLandings = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -466,6 +503,14 @@ export default function AddWhatsAppPage() {
       const adminContact = [groupForm.adminEmail.trim() ? `E-posta: ${groupForm.adminEmail.trim()}` : "", groupForm.adminPhone.trim() ? `Telefon: ${groupForm.adminPhone.trim()}` : ""]
         .filter(Boolean)
         .join("\n");
+      const submitterLabel = groupForm.submitterRole === "manager" ? "Topluluk Yöneticisiyim" : "Topluluk Üyesiyim";
+      const description = buildLandingDescription({
+        description: `[Başvuru tipi: ${submitterLabel}] ${groupForm.description}`.trim(),
+        platform: groupForm.platform,
+        memberApproved: true,
+        adminApproved: false,
+        editorReviewPending: false,
+      });
 
       await submitLanding({
         groupName: groupForm.groupName,
@@ -479,7 +524,7 @@ export default function AddWhatsAppPage() {
         whatsappLink: groupForm.whatsappLink,
         adminName: groupForm.adminName,
         adminContact,
-        description: `[Platform: ${groupForm.platform}] [Başvuru tipi: ${groupForm.submitterRole === "manager" ? "Topluluk Yöneticisiyim" : "Topluluk Üyesiyim"}] ${groupForm.description}`.trim(),
+        description,
       });
 
       toast({
@@ -808,6 +853,8 @@ export default function AddWhatsAppPage() {
     );
   };
 
+  const getLandingHeroImage = (landing: WhatsAppLanding) => landing.heroImage?.trim() || waPlaceholderImage;
+
   const getApprovalStatusMeta = (landing: WhatsAppLanding) => {
     if (landing.adminApproved) {
       return {
@@ -859,30 +906,39 @@ export default function AddWhatsAppPage() {
                   event.preventDefault();
                   backToList();
                 }}
-                className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+                className="flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white/95 px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Tüm gruplar
               </Link>
 
-              {selectedLanding.heroImage ? (
+              {selectedLanding.mode === "visual" || selectedLanding.heroImage ? (
                 <section className="relative overflow-hidden rounded-[2rem] border border-border">
                   <img
-                    src={selectedLanding.heroImage}
+                    src={getLandingHeroImage(selectedLanding)}
                     alt={selectedLanding.groupName}
                     className="aspect-video w-full object-cover"
+                    onError={(event) => {
+                      if (event.currentTarget.src !== waPlaceholderImage) {
+                        event.currentTarget.src = waPlaceholderImage;
+                      }
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-900/35 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-6 text-white md:p-8">
-                    <div className="mb-4">{renderPlatformLogo(selectedLanding.platform, "lg")}</div>
-                    <h1 className="text-3xl font-black leading-tight md:text-5xl">{selectedLanding.groupName}</h1>
+                    <div className="mb-4 flex items-center gap-4">
+                      <div className="shrink-0">{renderPlatformLogo(selectedLanding.platform, "lg")}</div>
+                      <h1 className="text-3xl font-black leading-tight md:text-5xl">{selectedLanding.groupName}</h1>
+                    </div>
                     <p className="mt-3 max-w-2xl text-sm text-slate-100 md:text-lg">{selectedLanding.tagline}</p>
                   </div>
                 </section>
               ) : (
                 <section className="rounded-[2rem] border border-border bg-[linear-gradient(135deg,#ecfdf5_0%,#ffffff_55%,#f8fafc_100%)] p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
-                  <div className="mb-4">{renderPlatformLogo(selectedLanding.platform, "lg")}</div>
-                  <h1 className="text-3xl font-black text-foreground md:text-5xl">{selectedLanding.groupName}</h1>
+                  <div className="mb-4 flex items-center gap-4">
+                    <div className="shrink-0">{renderPlatformLogo(selectedLanding.platform, "lg")}</div>
+                    <h1 className="text-3xl font-black text-foreground md:text-5xl">{selectedLanding.groupName}</h1>
+                  </div>
                   <p className="mt-3 max-w-2xl text-base text-muted-foreground md:text-xl">
                     {selectedLanding.tagline}
                   </p>
@@ -902,7 +958,7 @@ export default function AddWhatsAppPage() {
                     <div className={`${detailMetaCardClass} border-slate-700 bg-slate-600 text-white`}>
                       <MapPin className="h-4.5 w-4.5 shrink-0" />
                       <div className="min-w-0">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">Sehir</p>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">Lokasyon</p>
                         <p className="truncate text-sm font-semibold">{selectedLanding.city}, {selectedLanding.country}</p>
                       </div>
                     </div>
@@ -946,6 +1002,20 @@ export default function AddWhatsAppPage() {
                 <p className="mt-4 whitespace-pre-line text-foreground/85">{selectedLanding.callToActionText}</p>
 
                 <div className="mt-6 flex flex-col gap-3">
+                  {canEditSelectedLanding ? (
+                    <Button
+                      size="lg"
+                      asChild
+                      variant="outline"
+                      className="w-full gap-2 border-[#4285F4] bg-[#4285F4] text-black hover:bg-[#357AE8] hover:text-black"
+                    >
+                      <Link to={`/addcom/edit/${encodeURIComponent(selectedLanding.id)}`}>
+                        <Pencil className="h-5 w-5" />
+                        Landing'i Düzenle
+                      </Link>
+                    </Button>
+                  ) : null}
+
                   <Button size="lg" asChild className="w-full gap-2 bg-emerald-600 text-white hover:bg-emerald-700">
                     <a href={selectedLanding.whatsappLink} target="_blank" rel="noopener noreferrer">
                       <ExternalLink className="h-5 w-5" />
@@ -1090,17 +1160,19 @@ export default function AddWhatsAppPage() {
                       <div className="mt-2 flex flex-wrap gap-2">
                         <Button
                           type="button"
-                          variant={groupForm.submitterRole === "manager" ? "default" : "outline"}
-                          onClick={() => updateGroupForm("submitterRole", "manager")}
+                          variant={groupForm.submitterRole === "member" ? "default" : "outline"}
+                          onClick={() => updateGroupForm("submitterRole", "member")}
+                          className={groupForm.submitterRole === "member" ? "border-orange-500 bg-orange-500 text-white hover:bg-orange-600" : ""}
                         >
-                          Topluluk Yöneticisiyim
+                          Topluluk Üyesiyim
                         </Button>
                         <Button
                           type="button"
-                          variant={groupForm.submitterRole === "member" ? "default" : "outline"}
-                          onClick={() => updateGroupForm("submitterRole", "member")}
+                          variant={groupForm.submitterRole === "manager" ? "default" : "outline"}
+                          onClick={() => updateGroupForm("submitterRole", "manager")}
+                          className={groupForm.submitterRole === "manager" ? "border-orange-500 bg-orange-500 text-white hover:bg-orange-600" : ""}
                         >
-                          Topluluk Üyesiyim
+                          Topluluk Yöneticisiyim
                         </Button>
                       </div>
                     </div>
@@ -1170,7 +1242,7 @@ export default function AddWhatsAppPage() {
                         spellCheck
                         value={groupForm.country}
                         onChange={(event) => updateGroupForm("country", event.target.value)}
-                        placeholder="Almanya"
+                        placeholder="Global veya ülke adı giriniz"
                       />
                     </div>
 
@@ -1347,12 +1419,17 @@ export default function AddWhatsAppPage() {
                       to={`/addcom?group=${encodeURIComponent(landing.id)}`}
                       className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-border bg-white shadow-[0_16px_50px_rgba(15,23,42,0.05)] transition-transform duration-200 hover:-translate-y-1"
                     >
-                      {landing.heroImage ? (
+                      {landing.mode === "visual" || landing.heroImage ? (
                         <div className="relative">
                           <img
-                            src={landing.heroImage}
+                            src={getLandingHeroImage(landing)}
                             alt={landing.groupName}
                             className="aspect-video w-full object-cover"
+                            onError={(event) => {
+                              if (event.currentTarget.src !== waPlaceholderImage) {
+                                event.currentTarget.src = waPlaceholderImage;
+                              }
+                            }}
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-900/20 to-transparent" />
                         </div>

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import {
   adminPanelDocNavItems,
+  communityNavItems,
   externalAdminNavItems,
   may19RecordNavItems,
   otherActionNavItems,
@@ -39,9 +40,14 @@ const otherActionDescriptions: Record<string, string> = {
 const otherRecordDescriptions: Record<string, string> = {
   "Üye Takibi": "Üye kayıtlarını, filtreleri ve operasyon adımlarını tek ekrandan yönetin.",
   "Lansman Katılım": "Lansman kayıtlarını, filtreleri ve form cevaplarını inceleyin.",
-  "WhatsApp Grupları": "WhatsApp grup ve landing başvurularını moderasyon ekranından yönetin.",
   "19 Mayıs Kelime": "19 kelimelik fikir gönderimlerini onaylayın, reddedin ve not alın.",
   "19 Mayıs Anı": "19 Mayıs anı gönderimlerini moderasyon akışından yönetin.",
+};
+
+const communityDescriptions: Record<string, string> = {
+  Topluluklar: "Topluluk landing kayıtlarını ekleyin, düzenleyin, onaylayın ve yayına alın.",
+  "Topluluk Editörleri": "Landing bazlı editör atamalarını yönetin ve yetkileri kaldırın.",
+  "Topluluk Kullanma Kılavuzu": "Topluluk ekleme, landing düzenleme ve editör yönetimi adımlarını madde madde inceleyin.",
 };
 
 const advisorRecordItems = advisorProfileSections.map((section) => ({
@@ -259,6 +265,38 @@ const AdminHomePage = () => {
                             <div className="min-w-0 flex-1">
                               <h3 className="text-sm font-semibold text-slate-900">{item.label}</h3>
                               <p className="mt-0.5 text-xs leading-5 text-slate-600">{otherRecordDescriptions[item.label]}</p>
+                            </div>
+                          </div>
+                          <Button asChild variant="ghost" size="xs" className="mt-2 h-6 px-2 text-xs">
+                            <Link to={item.to}>
+                              Sayfayı Aç
+                              <ArrowRight className="h-3 w-3 ml-1" />
+                            </Link>
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="communities" className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/70 px-3">
+                  <AccordionTrigger className="py-3 text-left hover:no-underline">
+                    <div className="space-y-1">
+                      <div className="text-sm font-semibold text-slate-950">Topluluklar</div>
+                      <div className="text-xs text-slate-600">Landing moderasyonu, editör yönetimi ve kullanım kılavuzuna buradan ulaşın.</div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-3">
+                    <div className="grid gap-2">
+                      {communityNavItems.map((item) => (
+                        <div key={item.to} className="rounded-xl border border-slate-200 bg-white p-3">
+                          <div className="flex items-start gap-3">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700">
+                              <item.icon className="h-3.5 w-3.5" />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <h3 className="text-sm font-semibold text-slate-900">{item.label}</h3>
+                              <p className="mt-0.5 text-xs leading-5 text-slate-600">{communityDescriptions[item.label]}</p>
                             </div>
                           </div>
                           <Button asChild variant="ghost" size="xs" className="mt-2 h-6 px-2 text-xs">

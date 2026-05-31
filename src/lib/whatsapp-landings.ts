@@ -38,6 +38,8 @@ export interface WhatsAppLanding {
   submitterRole?: LandingSubmitterRole;
   memberApproved?: boolean;
   adminApproved?: boolean;
+  editorReviewPending?: boolean;
+  editorReviewUpdatedAt?: string;
   status?: LandingStatus;
   rejectionReason?: string;
   createdAt: string;
@@ -81,8 +83,18 @@ export interface UpdateLandingInput {
   adminName?: string;
   adminContact?: string;
   description?: string;
-  memberApproved: boolean;
-  adminApproved: boolean;
+}
+
+export interface LandingEditorAssignment {
+  id: string;
+  landingId: string;
+  landingSlug: string;
+  landingGroupName: string;
+  userId: string;
+  userFullName: string | null;
+  userEmail: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const WHATSAPP_LANDING_HERO_BUCKET = "whatsapp-landing-hero";
@@ -150,6 +162,18 @@ function parseTagValue(description: string | null | undefined, tagName: string) 
   return match?.[1]?.trim();
 }
 
+function parseBooleanTag(description: string | null | undefined, tagName: string, fallback: boolean) {
+  if (!description) return fallback;
+  const match = description.match(new RegExp(`\\[${tagName}:\\s*(true|false)\\]`, "i"));
+  if (!match) return fallback;
+  return match[1].toLowerCase() === "true";
+}
+
+function hasBooleanTag(description: string | null | undefined, tagName: string) {
+  if (!description) return false;
+  return new RegExp(`\\[${tagName}:\\s*(true|false)\\]`, "i").test(description);
+}
+
 function normalizeOptionalText(value?: string | null) {
   const trimmed = value?.trim();
   return trimmed ? trimmed : undefined;
@@ -160,7 +184,74 @@ function normalizeCommunityOptionalText(value?: string | null) {
   return trimmed ? trimmed : undefined;
 }
 
-function rowToLanding(row: WhatsAppLandingRow): WhatsAppLanding {
+export function stripLandingMetadataTags(description?: string | null) {
+  return (description ?? "")
+    .replace(/\[Platform:\s*[^\]]+\]\s*/gi, "")
+    .replace(/\[Badge member:\s*(true|false)\]\s*/gi, "")
+    .replace(/\[Badge admin:\s*(true|false)\]\s*/gi, "")
+    .replace(/\[Editor review pending:\s*(true|false)\]\s*/gi, "")
+    .replace(/\[Editor review updated at:\s*[^\]]+\]\s*/gi, "")
+    .trim();
+}
+
+export function parseAdminContact(adminContact?: string) {
+  const lines = adminContact?.split("\n").map((line) => line.trim()).filter(Boolean) ?? [];
+  const emailLine = lines.find((line) => line.toLowerCase().startsWith("e-posta:"));
+  const phoneLine = lines.find((line) => line.toLowerCase().startsWith("telefon:"));
+  const emailMatch = adminContact?.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  const phoneMatch = adminContact?.match(/(\+?\d[\d\s().-]{6,}\d)/);
+
+  return {
+    adminEmail: emailLine ? emailLine.replace(/^e-posta:\s*/i, "").trim() : (emailMatch?.[0] ?? ""),
+    adminPhone: phoneLine ? phoneLine.replace(/^telefon:\s*/i, "").trim() : (phoneMatch?.[0]?.trim() ?? ""),
+  };
+}
+
+export function buildLandingDescription(params: {
+  description?: string | null;
+  platform?: string | null;
+  memberApproved?: boolean;
+  adminApproved?: boolean;
+  editorReviewPending?: boolean;
+  editorReviewUpdatedAt?: string | null;
+}) {
+  const parts = [stripLandingMetadataTags(params.description)];
+
+  if (params.platform?.trim()) {
+    parts.push(`[Platform: ${params.platform.trim()}]`);
+  }
+
+  if (typeof params.memberApproved === "boolean") {
+    parts.push(`[Badge member: ${params.memberApproved ? "true" : "false"}]`);
+  }
+
+  if (typeof params.adminApproved === "boolean") {
+    parts.push(`[Badge admin: ${params.adminApproved ? "true" : "false"}]`);
+  }
+
+  if (typeof params.editorReviewPending === "boolean") {
+    parts.push(`[Editor review pending: ${params.editorReviewPending ? "true" : "false"}]`);
+  }
+
+  if (params.editorReviewUpdatedAt?.trim()) {
+    parts.push(`[Editor review updated at: ${params.editorReviewUpdatedAt.trim()}]`);
+  }
+
+  return parts.filter(Boolean).join(" ").trim();
+}
+
+export function rowToLanding(row: WhatsAppLandingRow): WhatsAppLanding {
+  const hasMemberApprovalTag = hasBooleanTag(row.description, "Badge member");
+  const hasAdminApprovalTag = hasBooleanTag(row.description, "Badge admin");
+  const adminApproved = hasAdminApprovalTag
+    ? parseBooleanTag(row.description, "Badge admin", false)
+    : row.status === "approved";
+  const memberApproved = adminApproved
+    ? false
+    : hasMemberApprovalTag
+      ? parseBooleanTag(row.description, "Badge member", false)
+      : true;
+
   return {
     id: row.slug,
     dbId: row.id,
@@ -179,8 +270,10 @@ function rowToLanding(row: WhatsAppLandingRow): WhatsAppLanding {
     adminContact: normalizeOptionalText(row.admin_contact),
     description: normalizeCommunityOptionalText(row.description),
     submitterRole: parseSubmitterRole(row.description),
-    memberApproved: row.member_approved ?? false,
-    adminApproved: row.admin_approved ?? false,
+    memberApproved,
+    adminApproved,
+    editorReviewPending: parseBooleanTag(row.description, "Editor review pending", false),
+    editorReviewUpdatedAt: parseTagValue(row.description, "Editor review updated at"),
     status: row.status as LandingStatus,
     rejectionReason: row.rejection_reason ?? undefined,
     createdAt: row.created_at,
@@ -207,6 +300,24 @@ export async function getLanding(slug: string): Promise<WhatsAppLanding | undefi
 
   if (!error && data) return rowToLanding(data);
   return undefined;
+}
+
+export async function getEditableLandingForCurrentUser(slug: string): Promise<WhatsAppLanding | undefined> {
+  const { data, error } = await (supabase as any).rpc("get_current_user_editable_whatsapp_landing", {
+    p_slug: slug,
+  });
+
+  if (error || !Array.isArray(data) || data.length === 0) return undefined;
+  return rowToLanding(data[0] as WhatsAppLandingRow);
+}
+
+export async function canCurrentUserEditLanding(landingDbId: string): Promise<boolean> {
+  const { data, error } = await (supabase as any).rpc("current_user_can_edit_whatsapp_landing", {
+    p_landing_id: landingDbId,
+  });
+
+  if (error) return false;
+  return Boolean(data);
 }
 
 export async function listLandings(): Promise<WhatsAppLanding[]> {
@@ -341,19 +452,8 @@ export async function updateLandingTagline(dbId: string, tagline: string) {
 }
 
 export async function updateLanding(dbId: string, input: UpdateLandingInput) {
-  if (input.memberApproved && input.adminApproved) {
-    throw new Error("Bir topluluk hem üye hem admin onaylı olamaz");
-  }
-
   const adminName = normalizeCommunityOptionalText(input.adminName) ?? null;
   const adminContact = normalizeOptionalText(input.adminContact) ?? null;
-
-  const cleanDescription = normalizeCommunityText(
-    input.description
-      ?.replace(/\[Badge member:\s*(true|false)\]\s*/gi, "")
-      .replace(/\[Badge admin:\s*(true|false)\]\s*/gi, "")
-      .trim(),
-  ) || null;
 
   const { error } = await supabase
     .from("whatsapp_landings")
@@ -370,12 +470,89 @@ export async function updateLanding(dbId: string, input: UpdateLandingInput) {
       whatsapp_link: input.whatsappLink.trim(),
       admin_name: adminName,
       admin_contact: adminContact,
-      description: cleanDescription,
-      member_approved: input.memberApproved,
-      admin_approved: input.adminApproved,
+      description: normalizeCommunityText(input.description) || null,
       updated_at: new Date().toISOString(),
     })
     .eq("id", dbId);
+
+  if (error) throw error;
+}
+
+export async function updateCurrentUserEditableLanding(params: {
+  landingId: string;
+  groupName: string;
+  category: LandingCategory;
+  country: string;
+  city: string;
+  heroImage?: string;
+  callToActionText?: string;
+  conditions?: string;
+  whatsappLink: string;
+  adminName?: string;
+  adminContact?: string;
+  description?: string;
+}) {
+  const { data, error } = await (supabase as any).rpc("update_current_user_editable_whatsapp_landing", {
+    p_landing_id: params.landingId,
+    p_group_name: normalizeCommunityText(params.groupName),
+    p_category: params.category,
+    p_country: normalizeCommunityText(params.country),
+    p_city: normalizeCommunityText(params.city),
+    p_hero_image: params.heroImage?.trim() || null,
+    p_call_to_action_text: normalizeCommunityText(params.callToActionText) || null,
+    p_conditions: normalizeCommunityText(params.conditions) || null,
+    p_whatsapp_link: params.whatsappLink.trim(),
+    p_admin_name: normalizeCommunityOptionalText(params.adminName) ?? null,
+    p_admin_contact: normalizeOptionalText(params.adminContact) ?? null,
+    p_description: normalizeCommunityText(params.description) || null,
+  });
+
+  if (error) throw error;
+  return rowToLanding(data as WhatsAppLandingRow);
+}
+
+export async function listLandingEditorAssignmentsAsAdmin(): Promise<LandingEditorAssignment[]> {
+  const { data, error } = await (supabase as any)
+    .from("whatsapp_landing_editors")
+    .select(`
+      id,
+      landing_id,
+      user_id,
+      created_at,
+      updated_at,
+      whatsapp_landings!inner(id, slug, group_name),
+      user_profiles!inner(user_id, full_name, email)
+    `)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  return ((data ?? []) as any[]).map((row) => ({
+    id: String(row.id),
+    landingId: String(row.landing_id),
+    landingSlug: String(row.whatsapp_landings.slug),
+    landingGroupName: normalizeCommunityText(String(row.whatsapp_landings.group_name)),
+    userId: String(row.user_id),
+    userFullName: row.user_profiles.full_name ?? null,
+    userEmail: row.user_profiles.email ?? null,
+    createdAt: String(row.created_at),
+    updatedAt: String(row.updated_at),
+  }));
+}
+
+export async function grantLandingEditorAsAdmin(landingId: string, userId: string) {
+  const { error } = await (supabase as any).rpc("admin_grant_whatsapp_landing_editor", {
+    p_landing_id: landingId,
+    p_user_id: userId,
+  });
+
+  if (error) throw error;
+}
+
+export async function revokeLandingEditorAsAdmin(assignmentId: string) {
+  const { error } = await (supabase as any).rpc("admin_revoke_whatsapp_landing_editor", {
+    p_assignment_id: assignmentId,
+  });
 
   if (error) throw error;
 }

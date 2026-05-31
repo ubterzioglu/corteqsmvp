@@ -26,6 +26,7 @@ export const GENERIC_FEATURE_KEYS = {
   referralCreate: "referral.create",
   cityManage: "city.manage",
   adminRequiresApproval: "admin.requires_approval",
+  whatsappLandingEditAssigned: "whatsapp_landing.edit_assigned",
 } as const;
 
 export type GenericFeatureKey = (typeof GENERIC_FEATURE_KEYS)[keyof typeof GENERIC_FEATURE_KEYS];
@@ -174,6 +175,12 @@ export const GENERIC_FEATURES: FeatureMeta<GenericFeatureKey>[] = [
     key: GENERIC_FEATURE_KEYS.adminRequiresApproval,
     label: "Admin Onayı Gerekir",
     description: "İlgili akış admin onayı gerektirir",
+    category: "generic",
+  },
+  {
+    key: GENERIC_FEATURE_KEYS.whatsappLandingEditAssigned,
+    label: "Atanmış Topluluk Landing Düzenleme",
+    description: "Kullanıcıya atanmış topluluk landing kayıtlarını düzenleyebilme yetkisi",
     category: "generic",
   },
 ];
