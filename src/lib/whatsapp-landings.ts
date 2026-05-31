@@ -291,6 +291,16 @@ async function getAuthenticatedUser() {
   return user;
 }
 
+async function getOptionalUser() {
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error) throw error;
+  return user ?? null;
+}
+
 export async function getLanding(slug: string): Promise<WhatsAppLanding | undefined> {
   const { data, error } = await supabase
     .from("whatsapp_landings")
@@ -332,7 +342,7 @@ export async function listLandings(): Promise<WhatsAppLanding[]> {
 }
 
 export async function submitLanding(input: SaveLandingInput): Promise<{ slug: string; id: string }> {
-  const user = await getAuthenticatedUser();
+  const user = await getOptionalUser();
   const groupName = normalizeCommunityText(input.groupName);
   const country = normalizeCommunityText(input.country);
   const city = normalizeCommunityText(input.city);
@@ -352,8 +362,8 @@ export async function submitLanding(input: SaveLandingInput): Promise<{ slug: st
     slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
   }
 
-  const payload: TablesInsert<"whatsapp_landings"> = {
-    user_id: user.id,
+  const payload = {
+    user_id: user?.id ?? null,
     slug,
     group_name: groupName,
     category: input.category,
@@ -368,7 +378,7 @@ export async function submitLanding(input: SaveLandingInput): Promise<{ slug: st
     admin_name: adminName,
     admin_contact: adminContact,
     description,
-  };
+  } as TablesInsert<"whatsapp_landings">;
 
   const { error } = await supabase.from("whatsapp_landings").insert(payload);
 
@@ -384,10 +394,11 @@ export async function submitLanding(input: SaveLandingInput): Promise<{ slug: st
 }
 
 export async function uploadWhatsAppLandingHeroImage(file: File): Promise<string> {
-  const user = await getAuthenticatedUser();
+  const user = await getOptionalUser();
   const extension = file.name.includes(".") ? file.name.split(".").pop() : "jpg";
   const safeBase = slugify(file.name.replace(/\.[^/.]+$/, "")) || "hero-image";
-  const filePath = `${user.id}/${Date.now()}-${safeBase}.${extension}`;
+  const ownerSegment = user?.id ?? "anon";
+  const filePath = `${ownerSegment}/${Date.now()}-${safeBase}.${extension}`;
 
   const { error } = await supabase.storage
     .from(WHATSAPP_LANDING_HERO_BUCKET)
@@ -403,16 +414,16 @@ export async function uploadWhatsAppLandingHeroImage(file: File): Promise<string
 }
 
 export async function createJoinRequest(input: JoinRequestInput) {
-  const user = await getAuthenticatedUser();
+  const user = await getOptionalUser();
 
-  const payload: WhatsAppJoinRequestInsert = {
+  const payload = {
     landing_id: input.landingDbId,
-    user_id: user.id,
+    user_id: user?.id ?? null,
     full_name: input.fullName.trim(),
     email: input.email.trim(),
     phone: input.phone?.trim() || null,
     note: input.note?.trim() || null,
-  };
+  } as WhatsAppJoinRequestInsert;
 
   const { error } = await supabase.from("whatsapp_join_requests").insert(payload);
   if (error) throw error;

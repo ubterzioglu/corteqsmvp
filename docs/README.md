@@ -36,6 +36,7 @@ Bu klasor, aktif teknik dokumani, modul belgelerini, operasyon notlarini ve gecm
 - `operations/database/dosyalardatabase.md`
 - `guides/anket-user-guide.md`
 - `guides/rolesgo-mvp-kullanim-klavuzu.md`
+- `guides/topluluk-yonetimi-kullanma-klavuzu.md`
 - `guides/workspace-resources-admin-kullanim-rehberi.md`
 
 ## History

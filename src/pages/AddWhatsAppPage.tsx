@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
   Check,
@@ -32,7 +32,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/components/auth/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import {
   buildLandingDescription,
   canCurrentUserEditLanding,
@@ -110,7 +109,7 @@ const placeholderLandings: WhatsAppLanding[] = [
     mode: "visual",
     heroImage: waPlaceholderImage,
     tagline: "",
-    callToActionText: "Topluluk; girişimciler, operatörler ve yatırım odaklı profesyoneller için tanışma ve bilgi paylaşım alanı.",
+    callToActionText: "Girişimciler, operatörler ve yatırım odaklı profesyoneller için tanışma ve bilgi paylaşım alanı.",
     conditions: "",
     whatsappLink: "#",
     description: "Erken aşama girişimlerden büyüme evresindeki projelere kadar nitelikli bağlantılar kurmak isteyenler için.",
@@ -223,6 +222,10 @@ const approvalBadgeMeta = {
   },
 } as const;
 
+function stripCommunityPrefix(text?: string | null) {
+  return text?.replace(/^Topluluk\s*[:;]\s*/i, "").trim() ?? "";
+}
+
 const platformOptions = [
   "WhatsApp",
   "Telegram",
@@ -316,6 +319,7 @@ function getErrorMessage(error: unknown, fallback = "Beklenmeyen hata") {
 
 export default function AddWhatsAppPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
@@ -452,18 +456,15 @@ export default function AddWhatsAppPage() {
     setJoinForm((current) => ({ ...current, [field]: value }));
   };
 
-  const ensureSignedIn = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+  const ensureSignedInForGroupSubmit = () => {
     if (user) return true;
 
+    const nextPath = `${location.pathname}${location.search}`;
     toast({
-      title: "Giriş gerekli",
-      description: "Mevcut giriş ekranı yeni sekmede açılıyor. Giriş yaptıktan sonra bu sekmeye geri dönebilirsin.",
+      title: "Üyelik gerekli",
+      description: "Topluluk başvurusu göndermek için Google veya e-posta/şifre ile giriş yapmalısın.",
     });
-    window.open("/admin", "_blank", "noopener");
+    navigate(`/login?next=${encodeURIComponent(nextPath)}`);
     return false;
   };
 
@@ -491,7 +492,7 @@ export default function AddWhatsAppPage() {
       return;
     }
 
-    if (!(await ensureSignedIn())) return;
+    if (!ensureSignedInForGroupSubmit()) return;
 
     setSubmittingGroup(true);
     try {
@@ -581,8 +582,6 @@ export default function AddWhatsAppPage() {
       });
       return;
     }
-
-    if (!(await ensureSignedIn())) return;
 
     setSubmittingJoin(true);
     try {
@@ -999,7 +998,7 @@ export default function AddWhatsAppPage() {
 
               <section className="rounded-[1.75rem] border border-border bg-card p-6 shadow-[0_20px_60px_rgba(15,23,42,0.06)] md:p-8">
                 <h2 className="text-xl font-bold text-foreground">Grubun çağrı metni</h2>
-                <p className="mt-4 whitespace-pre-line text-foreground/85">{selectedLanding.callToActionText}</p>
+                <p className="mt-4 whitespace-pre-line text-foreground/85">{stripCommunityPrefix(selectedLanding.callToActionText)}</p>
 
                 <div className="mt-6 flex flex-col gap-3">
                   {canEditSelectedLanding ? (
@@ -1404,13 +1403,15 @@ export default function AddWhatsAppPage() {
                 {filteredLandings.map((landing) => {
                   const Icon = categoryMeta[landing.category].icon;
                   const cardSummary =
-                    landing.callToActionText?.trim() ||
-                    landing.description
+                    stripCommunityPrefix(landing.callToActionText) ||
+                    stripCommunityPrefix(
+                      landing.description
                       ?.replace(/\[Platform:\s*[^\]]+\]\s*/gi, "")
                       .replace(/\[Başvuru tipi:[^\]]+\]\s*/gi, "")
                       .replace(/\[Badge member:\s*(true|false)\]\s*/gi, "")
                       .replace(/\[Badge admin:\s*(true|false)\]\s*/gi, "")
-                      .trim() ||
+                      .trim(),
+                    ) ||
                     "Topluluk detaylarını görmek için karta tıkla.";
 
                   return (

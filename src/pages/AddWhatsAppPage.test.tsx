@@ -8,6 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 const toastSpy = vi.fn();
 const listLandingsSpy = vi.fn();
 const getLandingSpy = vi.fn();
+const useAuthMock = vi.fn();
 
 vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({
@@ -15,21 +16,15 @@ vi.mock("@/hooks/use-toast", () => ({
   }),
 }));
 
+vi.mock("@/components/auth/useAuth", () => ({
+  useAuth: () => useAuthMock(),
+}));
+
 vi.mock("@/lib/whatsapp-landings", () => ({
   listLandings: (...args: unknown[]) => listLandingsSpy(...args),
   getLanding: (...args: unknown[]) => getLandingSpy(...args),
   submitLanding: vi.fn(),
   createJoinRequest: vi.fn(),
-}));
-
-vi.mock("@/integrations/supabase/client", () => ({
-  supabase: {
-    auth: {
-      getUser: vi.fn().mockResolvedValue({
-        data: { user: null },
-      }),
-    },
-  },
 }));
 
 const listFixture = [
@@ -68,6 +63,7 @@ describe("AddWhatsAppPage", () => {
   beforeEach(() => {
     listLandingsSpy.mockResolvedValue(listFixture);
     getLandingSpy.mockResolvedValue(listFixture[0]);
+    useAuthMock.mockReturnValue({ user: null });
   });
 
   afterEach(() => {

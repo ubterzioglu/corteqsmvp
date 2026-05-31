@@ -51,6 +51,10 @@ describe("AdminHomePage", () => {
     expect(screen.getByText("Lansman Katılım")).toBeInTheDocument();
     expect(screen.getByText("19 Mayıs Kelime")).toBeInTheDocument();
     expect(screen.getByText("19 Mayıs Anı")).toBeInTheDocument();
+    expect(screen.getByText("Topluluklar")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("Topluluklar"));
+    expect(screen.getByText("Topluluk Editörleri")).toBeInTheDocument();
+    expect(screen.getByText("Topluluk Kullanma Kılavuzu")).toBeInTheDocument();
     expect(screen.getByText("Dashboard Merkezi")).toBeInTheDocument();
     expect(screen.getByText("Command Center")).toBeInTheDocument();
     expect(screen.getByText("Dosyalar ve Linkler")).toBeInTheDocument();
@@ -59,7 +63,7 @@ describe("AdminHomePage", () => {
     expect(screen.getByText("Kortex — CTO, Pitch & PRD Dokümanları")).toBeInTheDocument();
     expect(screen.getByText("Roadmap")).toBeInTheDocument();
     expect(screen.getByText("Ambassador")).toBeInTheDocument();
-    expect(screen.getByText("Cap Table V2 — Hisse Yapisi")).toBeInTheDocument();
+    expect(screen.getByText("Cap Table V2 — Hisse Yapısı")).toBeInTheDocument();
     expect(screen.getByText("Proje Takibi Şablonu")).toBeInTheDocument();
     fireEvent.click(screen.getByText("Dış Bağlantılar"));
     expect(screen.getByText("Engine")).toBeInTheDocument();

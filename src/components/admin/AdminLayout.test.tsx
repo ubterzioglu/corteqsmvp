@@ -72,6 +72,7 @@ describe("AdminLayout", () => {
     );
     expect(screen.getByRole("link", { name: "Demo" })).toHaveAttribute("target", "_blank");
     expect(screen.getByRole("button", { name: /New Member System/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Topluluklar/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Üye Takibi" })).toBeInTheDocument();
     expect(screen.queryByRole("menuitem", { name: /Loginli Kullanıcılar & Roller/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Dış Bağlantılar" })).not.toBeInTheDocument();
@@ -82,6 +83,11 @@ describe("AdminLayout", () => {
     expect(await screen.findByRole("menuitem", { name: /Loginli Kullanıcılar & Roller/i })).toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /Roller & Featurelar/i })).toBeInTheDocument();
     fireEvent.mouseLeave(newMemberSystemButton);
+    const communityButton = screen.getByRole("button", { name: /Topluluklar/i });
+    fireEvent.mouseEnter(communityButton);
+    expect(await screen.findByRole("menuitem", { name: /Topluluk Editörleri/i })).toBeInTheDocument();
+    expect(await screen.findByRole("menuitem", { name: /Topluluk Kullanma Kılavuzu/i })).toBeInTheDocument();
+    fireEvent.mouseLeave(communityButton);
     fireEvent.mouseEnter(dashboardButton);
 
     const externalLinksSubTrigger = await screen.findByText("Dış Bağlantılar");

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router-dom";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { Button } from "@/components/ui/button";
@@ -11,13 +11,25 @@ import { supabase } from "@/integrations/supabase/client";
 
 const LoginPage = () => {
   const { session, isLoading } = useAuth();
+  const [searchParams] = useSearchParams();
   const [oauthSubmitting, setOauthSubmitting] = useState(false);
   const [passwordSubmitting, setPasswordSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const redirectTo = useMemo(() => `${window.location.origin}/login`, []);
+  const nextPath = useMemo(() => {
+    const rawNext = searchParams.get("next")?.trim();
+    return rawNext?.startsWith("/") ? rawNext : "/profile";
+  }, [searchParams]);
+
+  const redirectTo = useMemo(() => {
+    const loginUrl = new URL("/login", window.location.origin);
+    if (nextPath !== "/profile") {
+      loginUrl.searchParams.set("next", nextPath);
+    }
+    return loginUrl.toString();
+  }, [nextPath]);
 
   useEffect(() => {
     const previousTitle = document.title;
@@ -84,7 +96,7 @@ const LoginPage = () => {
   };
 
   if (!isLoading && session) {
-    return <Navigate to="/profile" replace />;
+    return <Navigate to={nextPath} replace />;
   }
 
   return (
