@@ -184,9 +184,6 @@ const IndividualPublicView = ({ details }: Props) => {
               ) : null}
             </div>
 
-            {details.email && details.email !== "-" && (
-              <p className="mt-1 truncate text-sm text-muted-foreground">{details.email}</p>
-            )}
 
             {/* Stats row */}
             <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
@@ -280,9 +277,18 @@ const IndividualPublicView = ({ details }: Props) => {
                     </>
                   )}
                 </Button>
-                <Button size="sm" variant="outline" className="gap-1.5" disabled>
-                  <MessageSquare className="h-3.5 w-3.5" /> Mesaj
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span>
+                        <Button size="sm" variant="outline" className="gap-1.5" disabled>
+                          <MessageSquare className="h-3.5 w-3.5" /> Mesaj
+                        </Button>
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>Çok yakında</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             )}
           </div>
