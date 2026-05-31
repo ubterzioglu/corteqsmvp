@@ -136,7 +136,14 @@ const App = () => (
               <Route path="/login" element={<LoginPage />} />
               <Route path="/directory" element={<DirectoryPage />} />
               <Route path="/cadde" element={<CaddePage />} />
-              <Route path="/directory/profile/:userId" element={<DirectoryProfilePage />} />
+              <Route
+                path="/directory/profile/:userId"
+                element={
+                  <RequireAuth>
+                    <DirectoryProfilePage />
+                  </RequireAuth>
+                }
+              />
               <Route
                 path="/profile"
                 element={
