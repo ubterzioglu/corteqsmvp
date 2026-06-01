@@ -7,7 +7,16 @@ const includeDirs = ["src", "public", "docs", "scripts"];
 const includeFiles = ["index.html", "package.json", "vite.config.ts", "tsconfig.json"];
 const extensions = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json", ".md", ".html", ".css", ".svg", ".yml", ".yaml"]);
 const skipDirs = new Set(["node_modules", ".git", "dist", "coverage"]);
-const suspiciousPattern = /(Ã|Ä|Å|â€™|â€œ|â€|ðŸ|�)/;
+const suspiciousTokens = [
+  "\u00C3",
+  "\u00C4",
+  "\u00C5",
+  "\u00E2\u20AC\u2122",
+  "\u00E2\u20AC\u0153",
+  "\u00E2\u20AC",
+  "\u00F0\u0178",
+  "\uFFFD",
+];
 
 async function walk(targetPath, files) {
   const entry = await stat(targetPath);
@@ -29,7 +38,7 @@ function findSuspiciousLines(content) {
   return content
     .split(/\r?\n/)
     .map((line, index) => ({ line, lineNumber: index + 1 }))
-    .filter(({ line }) => line.includes("\uFFFD") || suspiciousPattern.test(line))
+    .filter(({ line }) => suspiciousTokens.some((token) => line.includes(token)))
     .map(({ line, lineNumber }) => ({ lineNumber, snippet: line.trim().slice(0, 180) }));
 }
 

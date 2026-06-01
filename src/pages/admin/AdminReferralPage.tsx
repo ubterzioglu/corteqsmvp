@@ -96,7 +96,7 @@ const AdminReferralPage = () => {
       } catch (error) {
         if (cancelled) return;
         const message = error instanceof Error ? error.message : "Bilinmeyen hata";
-        toast({ title: "Referral verileri yuklenemedi", description: message, variant: "destructive" });
+        toast({ title: "Referral verileri yüklenemedi", description: message, variant: "destructive" });
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -186,9 +186,9 @@ const AdminReferralPage = () => {
       const next = new URLSearchParams(searchParams);
       next.delete("action");
       setSearchParams(next, { replace: true });
-      toast({ title: "Referral kodu olusturuldu", description: created.code });
+      toast({ title: "Referral kodu oluşturuldu", description: created.code });
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Referral kodu olusturulamadi.";
+      const message = error instanceof Error ? error.message : "Referral kodu oluşturulamadı.";
       toast({ title: "Oluşturma başarısız", description: message, variant: "destructive" });
     } finally {
       setCreating(false);
@@ -210,7 +210,7 @@ const AdminReferralPage = () => {
         document.execCommand("copy");
         document.body.removeChild(textarea);
       }
-      toast({ title: "Kopyalandi", description: code });
+      toast({ title: "Kopyalandı", description: code });
     } catch {
       toast({ title: "Kopyalama başarısız", description: "Kod panoya kopyalanamadı.", variant: "destructive" });
     }
@@ -236,7 +236,7 @@ const AdminReferralPage = () => {
 
   const saveEdit = async (id: string) => {
     if (!editingValidFrom || !editingValidUntil) {
-      toast({ title: "Gecerlilik tarihleri zorunlu", variant: "destructive" });
+      toast({ title: "Geçerlilik tarihleri zorunlu", variant: "destructive" });
       return;
     }
     if (new Date(editingValidUntil) < new Date(editingValidFrom)) {
@@ -431,7 +431,7 @@ const AdminReferralPage = () => {
                         <div>Valid Window: <span className="text-foreground">{referral.valid_from} - {referral.valid_until}</span></div>
                         <div>Random: <span className="font-mono text-foreground">{referral.random_part}</span></div>
                         <div>Usage Count: <span className="text-foreground">{referral.usage_count}</span></div>
-                        <div>Son Kullanim: <span className="text-foreground">{referral.used_at ? new Date(referral.used_at).toLocaleString("tr-TR") : "-"}</span></div>
+                        <div>Son Kullanım: <span className="text-foreground">{referral.used_at ? new Date(referral.used_at).toLocaleString("tr-TR") : "-"}</span></div>
                         <div className="md:col-span-2">Not: <span className="text-foreground">{referral.note || "Yok"}</span></div>
                         <div className="md:col-span-2 flex flex-wrap gap-2">
                           <Button
@@ -453,7 +453,7 @@ const AdminReferralPage = () => {
                                 Kaydet
                               </Button>
                               <Button variant="secondary" size="sm" onClick={cancelEdit} disabled={Boolean(busyById[referral.id])}>
-                                Vazgec
+                                Vazgeç
                               </Button>
                             </>
                           ) : (
@@ -490,13 +490,13 @@ const AdminReferralPage = () => {
                             <Textarea
                               value={editingNote}
                               onChange={(event) => setEditingNote(event.target.value)}
-                              placeholder="Aciklama (opsiyonel)"
+                              placeholder="Açıklama (opsiyonel)"
                               rows={3}
                             />
                           </div>
                         )}
                         <div className="md:col-span-2">
-                          Kayitlar:
+                          Kayıtlar:
                           <span className="text-foreground">
                             {usages.length
                               ? ` ${usages.map((usage) => usage.full_name || usage.email || "Isimsiz").join(", ")}`

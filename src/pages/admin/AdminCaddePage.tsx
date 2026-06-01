@@ -280,8 +280,8 @@ export default function AdminCaddePage() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Cadde Yonetimi</CardTitle>
-          <CardDescription>Demo ve gercek Cadde icerigini tek panelden yonet.</CardDescription>
+          <CardTitle>Cadde Yönetimi</CardTitle>
+          <CardDescription>Demo ve gerçek Cadde içeriğini tek panelden yönet.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3 md:grid-cols-4">
           {stats.map((item) => (
@@ -304,7 +304,7 @@ export default function AdminCaddePage() {
         <TabsContent value="posts">
           <Card>
             <CardHeader>
-              <CardTitle>{editingPostId ? "Cadde Post Duzenle" : "Yeni Cadde Post"}</CardTitle>
+              <CardTitle>{editingPostId ? "Cadde Post Düzenle" : "Yeni Cadde Post"}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-3">
@@ -312,7 +312,7 @@ export default function AdminCaddePage() {
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="demo">Demo</SelectItem>
-                    <SelectItem value="real">Gercek</SelectItem>
+                    <SelectItem value="real">Gerçek</SelectItem>
                   </SelectContent>
                 </Select>
                 <Select value={postForm.status} onValueChange={(value) => setPostForm((current) => ({ ...current, status: selectStatus(value) }))}>
@@ -333,34 +333,34 @@ export default function AdminCaddePage() {
                   </SelectContent>
                 </Select>
               </div>
-              <Input placeholder="Baslik" value={postForm.title ?? ""} onChange={(event) => setPostForm((current) => ({ ...current, title: event.target.value }))} />
-              <Textarea placeholder="Post govdesi" rows={5} value={postForm.body} onChange={(event) => setPostForm((current) => ({ ...current, body: event.target.value }))} />
+              <Input placeholder="Başlık" value={postForm.title ?? ""} onChange={(event) => setPostForm((current) => ({ ...current, title: event.target.value }))} />
+              <Textarea placeholder="Post gövdesi" rows={5} value={postForm.body} onChange={(event) => setPostForm((current) => ({ ...current, body: event.target.value }))} />
               <div className="grid gap-4 md:grid-cols-2">
-                <Input placeholder="Yazar gorunen adi" value={postForm.author_name_override ?? ""} onChange={(event) => setPostForm((current) => ({ ...current, author_name_override: event.target.value }))} />
-                <Input placeholder="Yazar rolu" value={postForm.author_role ?? ""} onChange={(event) => setPostForm((current) => ({ ...current, author_role: event.target.value }))} />
+                <Input placeholder="Yazar görünen adı" value={postForm.author_name_override ?? ""} onChange={(event) => setPostForm((current) => ({ ...current, author_name_override: event.target.value }))} />
+                <Input placeholder="Yazar rolü" value={postForm.author_role ?? ""} onChange={(event) => setPostForm((current) => ({ ...current, author_role: event.target.value }))} />
               </div>
               <div className="grid gap-4 md:grid-cols-2">
                 <Select value={postForm.countryName || "__all__"} onValueChange={(value) => setPostForm((current) => ({ ...current, countryName: value === "__all__" ? "" : value, cityName: "" }))}>
-                  <SelectTrigger><SelectValue placeholder="Ulke" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Ülke" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__all__">Ulke secme</SelectItem>
+                    <SelectItem value="__all__">Ülke seçme</SelectItem>
                     {countryOptions.map((country) => <SelectItem key={country.id} value={country.name}>{country.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
                 <Select value={postForm.cityName || "__all__"} onValueChange={(value) => setPostForm((current) => ({ ...current, cityName: value === "__all__" ? "" : value }))}>
-                  <SelectTrigger><SelectValue placeholder="Sehir" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Şehir" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__all__">Sehir secme</SelectItem>
+                    <SelectItem value="__all__">Şehir seçme</SelectItem>
                     {postCityOptions.map((city) => <SelectItem key={city.id} value={city.name}>{city.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
               <div className="flex flex-wrap gap-6">
-                <div className="flex items-center gap-2"><Switch checked={postForm.is_bridge} onCheckedChange={(checked) => setPostForm((current) => ({ ...current, is_bridge: checked }))} /><Label>Kopru</Label></div>
+                <div className="flex items-center gap-2"><Switch checked={postForm.is_bridge} onCheckedChange={(checked) => setPostForm((current) => ({ ...current, is_bridge: checked }))} /><Label>Köprü</Label></div>
                 <div className="flex items-center gap-2"><Switch checked={postForm.pinned} onCheckedChange={(checked) => setPostForm((current) => ({ ...current, pinned: checked }))} /><Label>Pinned</Label></div>
               </div>
               <div className="flex gap-3">
-                <Button onClick={() => postMutation.mutate()} disabled={postMutation.isPending}>{editingPostId ? "Guncelle" : "Kaydet"}</Button>
+                <Button onClick={() => postMutation.mutate()} disabled={postMutation.isPending}>{editingPostId ? "Güncelle" : "Kaydet"}</Button>
                 <Button variant="outline" onClick={() => { setEditingPostId(null); setPostForm(postDefaults()); }}>Temizle</Button>
               </div>
             </CardContent>
@@ -370,10 +370,10 @@ export default function AdminCaddePage() {
             <CardHeader><CardTitle>Mevcut Postlar</CardTitle></CardHeader>
             <CardContent>
               <AdminSimpleTable
-                headers={["Baslik", "Mod", "Durum", "Tip", "Aksiyon"]}
+                headers={["Başlık", "Mod", "Durum", "Tip", "Aksiyon"]}
                 rows={postRows.map((row) => ({
                   key: row.id,
-                  cells: [row.title ?? "(Basliksiz)", row.content_mode, row.status, row.post_type],
+                  cells: [row.title ?? "(Başlıksız)", row.content_mode, row.status, row.post_type],
                   actions: (
                     <>
                       <Button variant="outline" size="sm" onClick={() => {
@@ -403,8 +403,8 @@ export default function AdminCaddePage() {
 
         <TabsContent value="cafes">
           <EntityEditorCard
-            title={editingCafeId ? "Cafe Duzenle" : "Yeni Cafe"}
-            saveLabel={editingCafeId ? "Guncelle" : "Kaydet"}
+            title={editingCafeId ? "Cafe Düzenle" : "Yeni Cafe"}
+            saveLabel={editingCafeId ? "Güncelle" : "Kaydet"}
             onSave={() => cafeMutation.mutate()}
             onReset={() => { setEditingCafeId(null); setCafeForm(cafeDefaults()); }}
           >
@@ -416,8 +416,8 @@ export default function AdminCaddePage() {
                 onStatusChange={(value) => setCafeForm((current) => ({ ...current, status: selectStatus(value) }))}
               />
             </div>
-            <Input placeholder="Cafe basligi" value={cafeForm.title} onChange={(event) => setCafeForm((current) => ({ ...current, title: event.target.value }))} />
-            <Textarea placeholder="Cafe aciklamasi" rows={4} value={cafeForm.summary} onChange={(event) => setCafeForm((current) => ({ ...current, summary: event.target.value }))} />
+            <Input placeholder="Cafe başlığı" value={cafeForm.title} onChange={(event) => setCafeForm((current) => ({ ...current, title: event.target.value }))} />
+            <Textarea placeholder="Cafe açıklaması" rows={4} value={cafeForm.summary} onChange={(event) => setCafeForm((current) => ({ ...current, summary: event.target.value }))} />
             <LocationSelectors
               countries={countryOptions}
               cities={cafeCityOptions}
@@ -430,18 +430,18 @@ export default function AdminCaddePage() {
               <Input type="datetime-local" value={cafeForm.starts_at} onChange={(event) => setCafeForm((current) => ({ ...current, starts_at: event.target.value }))} />
               <Input type="datetime-local" value={cafeForm.ends_at} onChange={(event) => setCafeForm((current) => ({ ...current, ends_at: event.target.value }))} />
             </div>
-            <Input placeholder="Host gorunen adi" value={cafeForm.host_name_override ?? ""} onChange={(event) => setCafeForm((current) => ({ ...current, host_name_override: event.target.value }))} />
+            <Input placeholder="Host görünen adı" value={cafeForm.host_name_override ?? ""} onChange={(event) => setCafeForm((current) => ({ ...current, host_name_override: event.target.value }))} />
             <div className="flex flex-wrap gap-6">
-              <div className="flex items-center gap-2"><Switch checked={cafeForm.is_bridge} onCheckedChange={(checked) => setCafeForm((current) => ({ ...current, is_bridge: checked }))} /><Label>Kopru</Label></div>
-              <div className="flex items-center gap-2"><Switch checked={cafeForm.is_free} onCheckedChange={(checked) => setCafeForm((current) => ({ ...current, is_free: checked }))} /><Label>Ucretsiz</Label></div>
+              <div className="flex items-center gap-2"><Switch checked={cafeForm.is_bridge} onCheckedChange={(checked) => setCafeForm((current) => ({ ...current, is_bridge: checked }))} /><Label>Köprü</Label></div>
+              <div className="flex items-center gap-2"><Switch checked={cafeForm.is_free} onCheckedChange={(checked) => setCafeForm((current) => ({ ...current, is_free: checked }))} /><Label>Ücretsiz</Label></div>
               <div className="flex items-center gap-2"><Switch checked={cafeForm.is_active} onCheckedChange={(checked) => setCafeForm((current) => ({ ...current, is_active: checked }))} /><Label>Aktif</Label></div>
             </div>
           </EntityEditorCard>
           <AdminSimpleTable
-            headers={["Baslik", "Mod", "Durum", "Aktif", "Aksiyon"]}
+            headers={["Başlık", "Mod", "Durum", "Aktif", "Aksiyon"]}
             rows={cafeRows.map((row) => ({
               key: row.id,
-              cells: [row.title, row.content_mode, row.status, row.is_active ? "Evet" : "Hayir"],
+              cells: [row.title, row.content_mode, row.status, row.is_active ? "Evet" : "Hayır"],
               actions: (
                 <>
                   <Button variant="outline" size="sm" onClick={() => {
@@ -470,8 +470,8 @@ export default function AdminCaddePage() {
 
         <TabsContent value="billboards">
           <EntityEditorCard
-            title={editingBillboardId ? "Billboard Duzenle" : "Yeni Billboard"}
-            saveLabel={editingBillboardId ? "Guncelle" : "Kaydet"}
+            title={editingBillboardId ? "Billboard Düzenle" : "Yeni Billboard"}
+            saveLabel={editingBillboardId ? "Güncelle" : "Kaydet"}
             onSave={() => billboardMutation.mutate()}
             onReset={() => { setEditingBillboardId(null); setBillboardForm(billboardDefaults()); }}
           >
@@ -491,9 +491,9 @@ export default function AdminCaddePage() {
                 </SelectContent>
               </Select>
             </div>
-            <Input placeholder="Baslik" value={billboardForm.title} onChange={(event) => setBillboardForm((current) => ({ ...current, title: event.target.value }))} />
-            <Input placeholder="Alt baslik" value={billboardForm.subtitle ?? ""} onChange={(event) => setBillboardForm((current) => ({ ...current, subtitle: event.target.value }))} />
-            <Textarea placeholder="Aciklama" rows={4} value={billboardForm.description} onChange={(event) => setBillboardForm((current) => ({ ...current, description: event.target.value }))} />
+            <Input placeholder="Başlık" value={billboardForm.title} onChange={(event) => setBillboardForm((current) => ({ ...current, title: event.target.value }))} />
+            <Input placeholder="Alt başlık" value={billboardForm.subtitle ?? ""} onChange={(event) => setBillboardForm((current) => ({ ...current, subtitle: event.target.value }))} />
+            <Textarea placeholder="Açıklama" rows={4} value={billboardForm.description} onChange={(event) => setBillboardForm((current) => ({ ...current, description: event.target.value }))} />
             <LocationSelectors
               countries={countryOptions}
               cities={billboardCityOptions}
@@ -514,7 +514,7 @@ export default function AdminCaddePage() {
             <div className="flex items-center gap-2"><Switch checked={billboardForm.is_featured} onCheckedChange={(checked) => setBillboardForm((current) => ({ ...current, is_featured: checked }))} /><Label>Featured</Label></div>
           </EntityEditorCard>
           <AdminSimpleTable
-            headers={["Baslik", "Tip", "Mod", "Durum", "Aksiyon"]}
+            headers={["Başlık", "Tip", "Mod", "Durum", "Aksiyon"]}
             rows={billboardRows.map((row) => ({
               key: row.id,
               cells: [row.title, row.card_type, row.content_mode, row.status],
@@ -548,8 +548,8 @@ export default function AdminCaddePage() {
 
         <TabsContent value="sponsored">
           <EntityEditorCard
-            title={editingSponsoredId ? "Sponsorlu Yerlesim Duzenle" : "Yeni Sponsorlu Yerlesim"}
-            saveLabel={editingSponsoredId ? "Guncelle" : "Kaydet"}
+            title={editingSponsoredId ? "Sponsorlu Yerleşim Düzenle" : "Yeni Sponsorlu Yerleşim"}
+            saveLabel={editingSponsoredId ? "Güncelle" : "Kaydet"}
             onSave={() => sponsoredMutation.mutate()}
             onReset={() => { setEditingSponsoredId(null); setSponsoredForm(sponsoredDefaults()); }}
           >
@@ -562,8 +562,8 @@ export default function AdminCaddePage() {
               />
             </div>
             <Input placeholder="Placement key" value={sponsoredForm.placement_key} onChange={(event) => setSponsoredForm((current) => ({ ...current, placement_key: event.target.value }))} />
-            <Input placeholder="Baslik" value={sponsoredForm.title} onChange={(event) => setSponsoredForm((current) => ({ ...current, title: event.target.value }))} />
-            <Textarea placeholder="Aciklama" rows={4} value={sponsoredForm.description} onChange={(event) => setSponsoredForm((current) => ({ ...current, description: event.target.value }))} />
+            <Input placeholder="Başlık" value={sponsoredForm.title} onChange={(event) => setSponsoredForm((current) => ({ ...current, title: event.target.value }))} />
+            <Textarea placeholder="Açıklama" rows={4} value={sponsoredForm.description} onChange={(event) => setSponsoredForm((current) => ({ ...current, description: event.target.value }))} />
             <LocationSelectors
               countries={countryOptions}
               cities={sponsoredCityOptions}
@@ -583,7 +583,7 @@ export default function AdminCaddePage() {
             </div>
           </EntityEditorCard>
           <AdminSimpleTable
-            headers={["Baslik", "Placement", "Mod", "Durum", "Aksiyon"]}
+            headers={["Başlık", "Placement", "Mod", "Durum", "Aksiyon"]}
             rows={sponsoredRows.map((row) => ({
               key: row.id,
               cells: [row.title, row.placement_key, row.content_mode, row.status],
@@ -634,7 +634,7 @@ function ModeStatusSelectors({
         <SelectTrigger><SelectValue /></SelectTrigger>
         <SelectContent>
           <SelectItem value="demo">Demo</SelectItem>
-          <SelectItem value="real">Gercek</SelectItem>
+          <SelectItem value="real">Gerçek</SelectItem>
         </SelectContent>
       </Select>
       <Select value={status} onValueChange={onStatusChange}>
@@ -694,16 +694,16 @@ function LocationSelectors({
   return (
     <div className="grid gap-4 md:grid-cols-2">
       <Select value={countryName || "__all__"} onValueChange={(value) => onCountryChange(value === "__all__" ? "" : value)}>
-        <SelectTrigger><SelectValue placeholder="Ulke" /></SelectTrigger>
+        <SelectTrigger><SelectValue placeholder="Ülke" /></SelectTrigger>
         <SelectContent>
-          <SelectItem value="__all__">Ulke secme</SelectItem>
+          <SelectItem value="__all__">Ülke seçme</SelectItem>
           {countries.map((country) => <SelectItem key={country.id} value={country.name}>{country.name}</SelectItem>)}
         </SelectContent>
       </Select>
       <Select value={cityName || "__all__"} onValueChange={(value) => onCityChange(value === "__all__" ? "" : value)}>
-        <SelectTrigger><SelectValue placeholder="Sehir" /></SelectTrigger>
+        <SelectTrigger><SelectValue placeholder="Şehir" /></SelectTrigger>
         <SelectContent>
-          <SelectItem value="__all__">Sehir secme</SelectItem>
+          <SelectItem value="__all__">Şehir seçme</SelectItem>
           {cities.map((city) => <SelectItem key={city.id} value={city.name}>{city.name}</SelectItem>)}
         </SelectContent>
       </Select>
@@ -747,7 +747,7 @@ function DeleteButton({ onDelete }: { onDelete: () => Promise<void> }) {
       variant="destructive"
       size="sm"
       onClick={() => {
-        if (!window.confirm("Bu kayit silinsin mi?")) return;
+        if (!window.confirm("Bu kayıt silinsin mi?")) return;
         void onDelete();
       }}
     >
