@@ -4,18 +4,14 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import PublicProfileSummaryView from "@/components/profile/PublicProfileSummaryView";
 import { supabase } from "@/integrations/supabase/client";
 import { usePublicIndividualProfile } from "@/hooks/usePublicIndividualProfile";
 import IndividualPublicView from "@/components/profile/IndividualPublicView";
-
-type PublicProfileSectionRow = {
-  section_key: string;
-  section_area: "preview_card" | "detail_card";
-  label: string;
-  component_name: string | null;
-  sort_order: number;
-  content: Record<string, unknown> | null;
-};
+import {
+  buildPublicProfileViewModelFromSections,
+  type PublicProfileSectionRow,
+} from "@/lib/profile-view-model";
 
 const DirectoryProfilePage = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -89,6 +85,10 @@ const DirectoryProfilePage = () => {
     typeof categorySection?.content?.primary_label === "string"
       ? categorySection.content.primary_label
       : null;
+  const genericProfileModel = useMemo(
+    () => buildPublicProfileViewModelFromSections(userId, sections),
+    [sections, userId],
+  );
 
   if (!userId) {
     return <Navigate to="/directory" replace />;
@@ -156,86 +156,12 @@ const DirectoryProfilePage = () => {
                 Bu profil görünür değil veya yayınlanmış public section içermiyor.
               </p>
             ) : null}
-            {detailSections.map((section) => (
-              <ProfileSectionRenderer key={section.section_key} section={section} />
-            ))}
+            {!sectionsError && sections.length > 0 ? <PublicProfileSummaryView model={genericProfileModel} /> : null}
           </CardContent>
         </Card>
       ) : null}
     </div>
   );
-};
-
-const ProfileSectionRenderer = ({ section }: { section: PublicProfileSectionRow }) => {
-  const content = section.content ?? {};
-
-  if (section.component_name === "rich_text") {
-    const text = typeof content.text === "string" ? content.text : null;
-    if (!text) return null;
-    return (
-      <div className="rounded-xl border p-4">
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">{section.label}</p>
-        <p className="mt-2 whitespace-pre-wrap text-base">{text}</p>
-      </div>
-    );
-  }
-
-  if (section.component_name === "badges") {
-    const groups = content.groups as
-      | Record<string, Array<{ key: string; label: string }>>
-      | undefined;
-    const allLabels = groups
-      ? Object.values(groups).flatMap((items) => items.map((item) => item.label))
-      : Array.isArray(content.taxonomy)
-        ? content.taxonomy.filter((item): item is string => typeof item === "string")
-        : [];
-    if (!allLabels.length) return null;
-    return (
-      <div className="rounded-xl border p-4">
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">{section.label}</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {allLabels.map((label) => (
-            <Badge key={label} variant="outline">
-              {label}
-            </Badge>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (section.component_name === "links") {
-    const links = Array.isArray(content.links)
-      ? content.links.filter(
-          (item): item is { label: string; url: string } =>
-            Boolean(item) &&
-            typeof item === "object" &&
-            typeof item.label === "string" &&
-            typeof item.url === "string",
-        )
-      : [];
-    if (!links.length) return null;
-    return (
-      <div className="rounded-xl border p-4">
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">{section.label}</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {links.map((link) => (
-            <a
-              key={`${link.label}:${link.url}`}
-              href={link.url}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-md border px-3 py-1.5 text-sm text-primary transition hover:bg-primary/5"
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  return null;
 };
 
 export default DirectoryProfilePage;

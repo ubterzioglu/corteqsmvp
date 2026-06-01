@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useCurrentUserProfile } from "@/hooks/useCurrentUserProfile";
 import { useCurrentUserDashboard } from "@/hooks/useCurrentUserDashboard";
@@ -19,6 +20,8 @@ import { submitFeatureRequest, submitRoleChangeRequest, updateProfileAttribute, 
 import { getAttributeStringValue, type AttributeVisibility, type ProfileAttributeState, type TaxonomyGroupState } from "@/lib/member-profile";
 import { defaultProfileType, getRoleMeta, isProfileType, profileTypeOptions, type ProfileType } from "@/lib/profile-types";
 import { supabase } from "@/integrations/supabase/client";
+import PublicProfileSummaryView from "@/components/profile/PublicProfileSummaryView";
+import { buildSelfProfileViewModel } from "@/lib/profile-view-model";
 
 type DraftValueMap = Record<string, string | boolean>;
 type DraftVisibilityMap = Record<string, AttributeVisibility>;
@@ -169,6 +172,10 @@ const ProfilePage = () => {
   const publicAttributesCount = (profile?.attributes ?? []).filter((attribute) => draftVisibilities[attribute.attributeKey] === "public").length;
   const pendingCount = profile?.pendingRequests.length ?? 0;
   const dashboardCount = dashboardItems.length;
+  const selfProfileViewModel = useMemo(
+    () => (profile ? buildSelfProfileViewModel(profile, dashboardCount) : null),
+    [dashboardCount, profile],
+  );
   const completionHighlights = [
     { key: "full_name", label: roleMeta?.displayNameLabel ?? "Görünen isim" },
     { key: "country", label: "Ülke" },

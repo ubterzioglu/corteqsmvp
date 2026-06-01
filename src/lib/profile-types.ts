@@ -37,6 +37,9 @@ export type RoleMeta = {
     | "main_platform"
     | "ambassador_city";
   displayNameLabel: string;
+  selfSectionKeys: readonly string[];
+  publicSectionKeys: readonly string[];
+  defaultPreviewBehavior: "compact" | "rich";
 };
 
 export const roleMetas: RoleMeta[] = [
@@ -50,6 +53,9 @@ export const roleMetas: RoleMeta[] = [
     sortOrder: 10,
     defaultAttributeKey: "interests",
     displayNameLabel: "Ad Soyad",
+    selfSectionKeys: ["summary", "common_attributes", "role_attributes", "taxonomy", "requests", "dashboard"],
+    publicSectionKeys: ["hero", "about", "taxonomy", "contact"],
+    defaultPreviewBehavior: "rich",
   },
   {
     legacyKey: "danisman",
@@ -61,6 +67,9 @@ export const roleMetas: RoleMeta[] = [
     sortOrder: 20,
     defaultAttributeKey: "expertise_area",
     displayNameLabel: "Ad Soyad / Uzman Adı",
+    selfSectionKeys: ["summary", "common_attributes", "role_attributes", "taxonomy", "requests", "dashboard"],
+    publicSectionKeys: ["hero", "about", "expertise", "taxonomy", "contact"],
+    defaultPreviewBehavior: "compact",
   },
   {
     legacyKey: "isletme",
@@ -72,6 +81,9 @@ export const roleMetas: RoleMeta[] = [
     sortOrder: 30,
     defaultAttributeKey: "business_category",
     displayNameLabel: "İşletme Adı",
+    selfSectionKeys: ["summary", "common_attributes", "role_attributes", "taxonomy", "requests", "dashboard"],
+    publicSectionKeys: ["hero", "about", "services", "taxonomy", "contact"],
+    defaultPreviewBehavior: "compact",
   },
   {
     legacyKey: "kurulus-dernek",
@@ -83,6 +95,9 @@ export const roleMetas: RoleMeta[] = [
     sortOrder: 40,
     defaultAttributeKey: "organization_type",
     displayNameLabel: "Kuruluş Adı",
+    selfSectionKeys: ["summary", "common_attributes", "role_attributes", "taxonomy", "requests", "dashboard"],
+    publicSectionKeys: ["hero", "about", "focus", "taxonomy", "contact"],
+    defaultPreviewBehavior: "compact",
   },
   {
     legacyKey: "blogger-vlogger-youtuber",
@@ -94,6 +109,9 @@ export const roleMetas: RoleMeta[] = [
     sortOrder: 50,
     defaultAttributeKey: "main_platform",
     displayNameLabel: "Görünen İsim",
+    selfSectionKeys: ["summary", "common_attributes", "role_attributes", "taxonomy", "requests", "dashboard"],
+    publicSectionKeys: ["hero", "about", "platform", "taxonomy", "contact"],
+    defaultPreviewBehavior: "compact",
   },
   {
     legacyKey: "sehir-elcisi",
@@ -105,6 +123,9 @@ export const roleMetas: RoleMeta[] = [
     sortOrder: 60,
     defaultAttributeKey: "ambassador_city",
     displayNameLabel: "Ad Soyad",
+    selfSectionKeys: ["summary", "common_attributes", "role_attributes", "taxonomy", "requests", "dashboard"],
+    publicSectionKeys: ["hero", "about", "city", "taxonomy", "contact"],
+    defaultPreviewBehavior: "compact",
   },
 ] as const;
 
