@@ -28,6 +28,7 @@ const navigate = useNavigate();
           <div className="flex items-center gap-2 min-w-0 shrink-0">
             <Link to="/" className="flex items-center gap-2 shrink-0">
               <img src="/logo.png" alt="CorteQS" className="h-12 w-auto sm:h-14 md:h-16" />
+              <span className="hidden sm:inline-block text-sm font-semibold text-muted-foreground bg-muted/60 px-2 py-0.5 rounded-md border border-border">MVP</span>
             </Link>
           </div>
 
