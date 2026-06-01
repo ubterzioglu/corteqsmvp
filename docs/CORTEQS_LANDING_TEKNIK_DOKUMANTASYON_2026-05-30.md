@@ -585,6 +585,12 @@ try {
 
 > Bu terimler **değiştirilmemelidir** — domain uyumu ve kullanıcı anlayışı için kritik.
 
+### Bireysel Profil UI Notu
+
+- Bireysel kullanıcı düzenleme ekranı için canonical kaynak: `src/pages/ProfilePage.tsx`
+- Bireysel public görünüm için canonical kaynak: `src/components/profile/IndividualPublicView.tsx`
+- `src/components/profiles/ProfileIndividual.tsx` legacy/ayrı akış olarak değerlendirilmelidir; bireysel profil tasarımının tek merkezi değildir.
+
 ---
 
 ## 11. Test Altyapısı

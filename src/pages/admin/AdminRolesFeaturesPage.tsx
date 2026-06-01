@@ -434,13 +434,13 @@ const AdminRolesFeaturesPage = () => {
         sections={guideSections}
       />
       <Card>
-        <CardHeader>
-          <CardTitle>New Member System - Rol / Feature Matrix</CardTitle>
-          <CardDescription>
+        <CardHeader className="space-y-2 pb-4">
+          <CardTitle className="text-[2rem] leading-tight">New Member System - Rol / Feature Matrix</CardTitle>
+          <CardDescription className="text-[13px] leading-5">
             Satır bazında feature, sütun bazında rol görünümü. Global durum ve role göre açık/kapalı durumu aynı ekranda yönetilir.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           {isLoading ? <p className="text-sm text-muted-foreground">Feature matrisi yükleniyor...</p> : null}
           {errorMessage ? <p className="text-sm text-destructive">Veri alınamadı: {errorMessage}</p> : null}
 
@@ -449,12 +449,12 @@ const AdminRolesFeaturesPage = () => {
               <table className="min-w-[1100px] w-full table-fixed text-sm">
                 <thead className="bg-muted/40">
                   <tr>
-                    <th className="w-[400px] px-3 py-3 text-left font-medium">Feature</th>
-                    <th className="w-[120px] px-3 py-3 text-left font-medium">Global</th>
+                    <th className="w-[400px] px-3 py-2.5 text-left text-[13px] font-medium">Feature</th>
+                    <th className="w-[120px] px-3 py-2.5 text-left text-[13px] font-medium">Global</th>
                     {roles.map((role) => (
-                      <th key={role.id} className="w-[130px] px-3 py-3 text-left font-medium">
+                      <th key={role.id} className="w-[130px] px-3 py-2.5 text-left text-[13px] font-medium leading-5">
                         {role.label}
-                        <p className="text-[11px] font-normal text-muted-foreground">{role.key}</p>
+                        <p className="text-[10px] font-normal leading-4 text-muted-foreground">{role.key}</p>
                       </th>
                     ))}
                   </tr>
@@ -465,25 +465,25 @@ const AdminRolesFeaturesPage = () => {
                       key={feature.key}
                       className={`align-top transition-colors ${index === 0 ? "" : "border-t"} ${index % 2 === 0 ? "bg-white" : "bg-muted/10"} hover:bg-muted/20`}
                     >
-                      <td className="px-3 py-3 align-top">
+                      <td className="px-3 py-2.5 align-top">
                         {(() => {
                           const featureDetail = getFeatureDetail(feature);
 
                           return (
-                            <div className="space-y-2">
-                              <div className="space-y-1">
-                                <p className="leading-5 font-medium text-foreground">{featureDetail.label}</p>
-                                <p className="break-all text-[11px] leading-4 text-muted-foreground">{feature.key}</p>
-                                <p className="text-[12px] leading-5 text-slate-600">{featureDetail.shortDescription}</p>
+                            <div className="space-y-1.5">
+                              <div className="space-y-0.5">
+                                <p className="text-[15px] font-medium leading-5 text-foreground">{featureDetail.label}</p>
+                                <p className="break-all text-[10px] leading-4 text-muted-foreground">{feature.key}</p>
+                                <p className="text-[11px] leading-4 text-slate-600">{featureDetail.shortDescription}</p>
                               </div>
                               {featureDetail.details ? (
-                                <Collapsible className="pt-1">
-                                  <CollapsibleTrigger className="group flex w-full items-center justify-between rounded-lg border border-border/80 bg-background/80 px-3 py-2 text-left text-[11px] font-medium text-slate-700 transition hover:bg-muted/40">
+                                <Collapsible className="pt-0.5">
+                                  <CollapsibleTrigger className="group flex w-full items-center justify-between rounded-lg border border-border/80 bg-background/80 px-3 py-1.5 text-left text-[10px] font-medium leading-4 text-slate-700 transition hover:bg-muted/40">
                                     <span>Açıklamayı Göster</span>
                                     <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition group-data-[state=open]:rotate-180" />
                                   </CollapsibleTrigger>
-                                  <CollapsibleContent className="mt-2 rounded-lg border border-muted bg-muted/20 p-3 text-[11px] leading-5 text-muted-foreground">
-                                    <div className="space-y-2">
+                                  <CollapsibleContent className="mt-1.5 rounded-lg border border-muted bg-muted/20 p-2.5 text-[10px] leading-4 text-muted-foreground">
+                                    <div className="space-y-1.5">
                                       <p><span className="font-medium text-slate-700">Özet:</span> {featureDetail.details.summary}</p>
                                       <p><span className="font-medium text-slate-700">Etkisi:</span> {featureDetail.details.effect}</p>
                                       <p><span className="font-medium text-slate-700">Not:</span> {featureDetail.details.adminHint}</p>
@@ -494,29 +494,29 @@ const AdminRolesFeaturesPage = () => {
                             </div>
                           );
                         })()}
-                        <div className="mt-2 flex flex-wrap gap-1">
+                        <div className="mt-1.5 flex flex-wrap gap-1">
                           {Array.from(new Set(features.filter((item) => item.key === feature.key).map((item) => item.scope_role))).map((scopeRole) => (
-                            <Badge key={scopeRole} variant="outline" className="px-2 py-0 text-[10px] leading-4">
+                            <Badge key={scopeRole} variant="outline" className="px-1.5 py-0 text-[9px] leading-4">
                               {roleByKey.get(scopeRole)?.label ?? scopeRole}
                             </Badge>
                           ))}
                         </div>
                       </td>
-                      <td className="px-3 py-3">
-                        <div className="flex items-center gap-3">
+                      <td className="px-3 py-2.5">
+                        <div className="flex items-center gap-2.5">
                           <Switch
                             checked={feature.is_active_globally}
                             disabled={savingKey === `global:${feature.key}`}
                             onCheckedChange={(checked) => void handleGlobalToggle(feature.key, checked)}
                           />
-                          <Badge variant={feature.is_active_globally ? "secondary" : "outline"}>
+                          <Badge variant={feature.is_active_globally ? "secondary" : "outline"} className="px-1.5 py-0 text-[10px]">
                             {feature.is_active_globally ? "Açık" : "Kapalı"}
                           </Badge>
                         </div>
                       </td>
                       {roles.map((role) => (
-                        <td key={`${feature.key}-${role.id}`} className="px-3 py-3">
-                          <div className="flex items-center gap-3">
+                        <td key={`${feature.key}-${role.id}`} className="px-3 py-2.5">
+                          <div className="flex items-center gap-2">
                             <Switch
                               checked={flagMap[role.id]?.[feature.key] ?? false}
                               disabled={savingKey === `${role.id}:${feature.key}`}
