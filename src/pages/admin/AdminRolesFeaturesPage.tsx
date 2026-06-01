@@ -474,8 +474,8 @@ const AdminRolesFeaturesPage = () => {
                               <div className="space-y-0.5">
                                 <p className="text-[15px] font-medium leading-5 text-foreground">{featureDetail.label}</p>
                               </div>
-                              {featureDetail.details ? (
-                                <div className="pt-0.5">
+                              <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                                {featureDetail.details ? (
                                   <HoverCard openDelay={120} closeDelay={80}>
                                     <HoverCardTrigger asChild>
                                       <button
@@ -494,34 +494,32 @@ const AdminRolesFeaturesPage = () => {
                                       </div>
                                     </HoverCardContent>
                                   </HoverCard>
-                                </div>
-                              ) : null}
+                                ) : null}
+                                {Array.from(new Set(features.filter((item) => item.key === feature.key).map((item) => item.scope_role))).map((scopeRole) => (
+                                  scopeRole === "*" ? (
+                                    <HoverCard key={scopeRole} openDelay={120} closeDelay={80}>
+                                      <HoverCardTrigger asChild>
+                                        <button
+                                          type="button"
+                                          className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-border/80 bg-background text-[10px] font-medium leading-none text-slate-700 transition hover:bg-muted/40"
+                                        >
+                                          *
+                                        </button>
+                                      </HoverCardTrigger>
+                                      <HoverCardContent align="start" side="right" className="w-[180px] rounded-lg border border-muted bg-background p-2 text-[10px] leading-4 text-muted-foreground shadow-md">
+                                        Bu feature tum roller icin tanimlanabilir.
+                                      </HoverCardContent>
+                                    </HoverCard>
+                                  ) : (
+                                    <Badge key={scopeRole} variant="outline" className="px-1.5 py-0 text-[9px] leading-4">
+                                      {roleByKey.get(scopeRole)?.label ?? scopeRole}
+                                    </Badge>
+                                  )
+                                ))}
+                              </div>
                             </div>
                           );
                         })()}
-                        <div className="mt-1 flex flex-wrap gap-1">
-                          {Array.from(new Set(features.filter((item) => item.key === feature.key).map((item) => item.scope_role))).map((scopeRole) => (
-                            scopeRole === "*" ? (
-                              <HoverCard key={scopeRole} openDelay={120} closeDelay={80}>
-                                <HoverCardTrigger asChild>
-                                  <button
-                                    type="button"
-                                    className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-border/80 bg-background text-[10px] font-medium leading-none text-slate-700 transition hover:bg-muted/40"
-                                  >
-                                    *
-                                  </button>
-                                </HoverCardTrigger>
-                                <HoverCardContent align="start" side="right" className="w-[180px] rounded-lg border border-muted bg-background p-2 text-[10px] leading-4 text-muted-foreground shadow-md">
-                                  Bu feature tum roller icin tanimlanabilir.
-                                </HoverCardContent>
-                              </HoverCard>
-                            ) : (
-                              <Badge key={scopeRole} variant="outline" className="px-1.5 py-0 text-[9px] leading-4">
-                                {roleByKey.get(scopeRole)?.label ?? scopeRole}
-                              </Badge>
-                            )
-                          ))}
-                        </div>
                       </td>
                       <td className="px-3 py-2.5">
                         <div className="flex items-center gap-2.5">

@@ -23,32 +23,32 @@ const DiasporaSearchBar = () => {
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const runSearch = (searchQuery: string) => {
+  const runSearch = async (searchQuery: string) => {
     const trimmedQuery = searchQuery.trim();
     if (!trimmedQuery) return;
 
     const country = selectedCountry === "all" ? null : selectedCountry;
-    const matchedResults = searchDiaspora(trimmedQuery, country);
+    const matchedResults = await searchDiaspora(trimmedQuery, country);
     setResults(matchedResults);
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!query.trim()) return;
     setLoading(true);
     setHasSearched(true);
-    runSearch(query);
+    await runSearch(query);
     setLoading(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleSearch();
+    if (e.key === "Enter") void handleSearch();
   };
 
-  const handleQuickSearch = (term: string) => {
+  const handleQuickSearch = async (term: string) => {
     setQuery(term);
     setLoading(true);
     setHasSearched(true);
-    runSearch(term);
+    await runSearch(term);
     setLoading(false);
   };
 
@@ -83,7 +83,7 @@ const DiasporaSearchBar = () => {
                 className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none font-body"
               />
               <button
-                onClick={handleSearch}
+                onClick={() => void handleSearch()}
                 disabled={loading || !query.trim()}
                 className="shrink-0 rounded-xl bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold transition-colors hover:bg-primary/90 disabled:opacity-50"
               >
@@ -95,7 +95,7 @@ const DiasporaSearchBar = () => {
           {/* Quick CTA Buttons */}
           <div className="mx-auto flex max-w-6xl flex-col items-center gap-3">
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <button onClick={() => handleQuickSearch("Konsolosluk")} className={`${quickPillClass} ${quickPillStyles.blue}`}>
+              <button onClick={() => void handleQuickSearch("Konsolosluk")} className={`${quickPillClass} ${quickPillStyles.blue}`}>
                 🏛️ Konsolosluk
               </button>
               <button
@@ -104,10 +104,10 @@ const DiasporaSearchBar = () => {
               >
                 🏅 Şehir Elçine Ulaş
               </button>
-              <button onClick={() => handleQuickSearch("Vize danışmanı")} className={`${quickPillClass} ${quickPillStyles.yellow}`}>
+              <button onClick={() => void handleQuickSearch("Vize danışmanı")} className={`${quickPillClass} ${quickPillStyles.yellow}`}>
                 ✈️ Vize & Göçmenlik
               </button>
-              <button onClick={() => handleQuickSearch("İş ilanları")} className={`${quickPillClass} ${quickPillStyles.green}`}>
+              <button onClick={() => void handleQuickSearch("İş ilanları")} className={`${quickPillClass} ${quickPillStyles.green}`}>
                 💼 İş İlanları
               </button>
             </div>
@@ -143,7 +143,7 @@ const DiasporaSearchBar = () => {
                 <div
                   key={i}
                   onClick={() => {
-                    const route = typeToRoute[r.type];
+                    const route = r.href ?? typeToRoute[r.type];
                     if (route) navigate(route);
                   }}
                   className="flex items-start gap-3 bg-card border border-border rounded-xl px-4 py-3 text-left hover:shadow-md transition-shadow cursor-pointer"

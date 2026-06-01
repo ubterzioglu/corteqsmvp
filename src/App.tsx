@@ -79,6 +79,11 @@ import AdminTaxonomyPage from "@/pages/admin/AdminTaxonomyPage";
 import AdminNewMemberGuidePage from "@/pages/admin/AdminNewMemberGuidePage";
 import CaddePage from "@/pages/CaddePage";
 import AdminCaddePage from "@/pages/admin/AdminCaddePage";
+import Associations from "@/pages/Associations";
+import AssociationDetail from "@/pages/AssociationDetail";
+import HospitalAppointment from "@/pages/HospitalAppointment";
+import IndependentProfilePage from "@/pages/IndependentProfilePage";
+import AdminConsulateProfilesPage from "@/pages/admin/AdminConsulateProfilesPage";
 
 const queryClient = new QueryClient();
 
@@ -137,6 +142,10 @@ const App = () => (
                 <Route path="/form" element={<FormPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/directory" element={<DirectoryPage />} />
+                <Route path="/associations" element={<Associations />} />
+                <Route path="/association/:id" element={<AssociationDetail />} />
+                <Route path="/kurulus/:slug" element={<IndependentProfilePage />} />
+                <Route path="/hospital-appointment/:id" element={<HospitalAppointment />} />
                 <Route path="/cadde" element={<CaddePage />} />
                 <Route
                   path="/directory/profile/:userId"
@@ -206,6 +215,7 @@ const App = () => (
                 <Route path="whatsapp-landings" element={<AdminWhatsAppLandingsPage />} />
                 <Route path="whatsapp-landings/editors" element={<AdminWhatsAppLandingEditorsPage />} />
                 <Route path="whatsapp-landings/guide" element={<AdminCommunityGuidePage />} />
+                <Route path="consulates" element={<AdminConsulateProfilesPage />} />
                 <Route path="may19/kelime" element={<AdminMay19IdeaPage />} />
                 <Route path="may19/ani" element={<AdminMay19MomentPage />} />
                 <Route path="about" element={<AdminAboutPage />} />

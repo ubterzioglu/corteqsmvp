@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Users, MapPin, Calendar as CalendarIcon, GraduationCap, Radio, Tv, Music, Landmark, Stethoscope } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Users, MapPin, Calendar as CalendarIcon, Music, Stethoscope } from "lucide-react";
 import MapShareButtons from "@/components/MapShareButtons";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
@@ -10,6 +10,10 @@ import { associations } from "@/data/mock";
 import DemoBadge from "@/components/DemoBadge";
 import CategoryListingBanner from "@/components/CategoryListingBanner";
 import InterestForm from "@/components/InterestForm";
+import {
+  listPublishedIndependentProfiles,
+  type IndependentProfile,
+} from "@/lib/independent-profiles";
 
 const typeFilters = [
   { key: "all", label: "Tümü" },
@@ -23,15 +27,60 @@ const typeFilters = [
   { key: "dijital", label: "💬 Dijital Topluluklar" },
 ];
 
+type DisplayAssociation = (typeof associations)[number] & {
+  href: string;
+  source: "mock" | "independent";
+};
+
 const Associations = () => {
   const { selectedCountry: country } = useDiaspora();
   const [city, setCity] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [independentProfiles, setIndependentProfiles] = useState<IndependentProfile[]>([]);
 
   // Reset city when country changes
   useEffect(() => { setCity("all"); }, [country]);
 
-  const filtered = associations.filter((a) => {
+  useEffect(() => {
+    let isMounted = true;
+
+    void (async () => {
+      const profiles = await listPublishedIndependentProfiles("consulate");
+      if (isMounted) setIndependentProfiles(profiles);
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const mappedIndependentProfiles: DisplayAssociation[] = independentProfiles.map((profile) => ({
+    id: profile.slug,
+    name: profile.title,
+    type: profile.typeLabel as DisplayAssociation["type"],
+    country: profile.country,
+    city: profile.city,
+    members: 0,
+    events: profile.announcements.length,
+    description: profile.description,
+    website: profile.websiteUrl ?? "",
+    founded: 0,
+    logo: profile.logoUrl || "🏛️",
+    href: `/kurulus/${profile.slug}`,
+    source: "independent",
+  }));
+
+  const mappedMockAssociations: DisplayAssociation[] = associations
+    .filter((association) => !["Büyükelçilik", "Konsolosluk"].includes(association.type))
+    .map((association) => ({
+      ...association,
+      href: `/association/${association.id}`,
+      source: "mock",
+    }));
+
+  const associationCards = [...mappedIndependentProfiles, ...mappedMockAssociations];
+
+  const filtered = associationCards.filter((a) => {
     const matchesCountry = country === "all" || a.country === country;
     const matchesCity = city === "all" || a.city === city;
     const matchesType = typeFilter === "all"
@@ -99,9 +148,9 @@ const Associations = () => {
           <CategoryListingBanner categoryLabel="Kuruluşlar" formAnchorId="kayit-form" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {filtered.slice(0, 2).map((a) => (
+            {filtered.map((a) => (
               <Link
-                to={`/association/${a.id}`}
+                to={a.href}
                 key={a.id}
                 className="group relative bg-card rounded-2xl p-6 pt-9 shadow-card hover:shadow-card-hover transition-all duration-300 border border-border hover:-translate-y-1 block overflow-hidden"
               >
@@ -138,7 +187,7 @@ const Associations = () => {
                  <MapShareButtons name={a.name} city={a.city} country={a.country} className="mb-3" />
 
                  <div className="flex gap-2">
-                  <Link to={`/association/${a.id}`} className="flex-1" onClick={(e) => e.stopPropagation()}>
+                  <Link to={a.href} className="flex-1" onClick={(e) => e.stopPropagation()}>
                     <Button variant="default" size="sm" className="w-full">Detay</Button>
                   </Link>
                   {a.type === "Radyo" ? (
@@ -154,9 +203,11 @@ const Associations = () => {
                       </Button>
                     </Link>
                   ) : ["Büyükelçilik", "Konsolosluk"].includes(a.type) ? (
-                    <Button variant="outline" size="sm" className="flex-1 gap-1" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
-                      <CalendarIcon className="h-3 w-3" /> Randevu Al
-                    </Button>
+                    <Link to={a.href} className="flex-1" onClick={(e) => e.stopPropagation()}>
+                      <Button variant="outline" size="sm" className="w-full gap-1">
+                        <CalendarIcon className="h-3 w-3" /> Profili Aç
+                      </Button>
+                    </Link>
                   ) : (
                     <Button variant="outline" size="sm" className="flex-1" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
                       {a.type === "TV Kanalı" ? "İzle" : "Etkinlikler"}

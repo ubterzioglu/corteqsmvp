@@ -43,6 +43,7 @@ export const communityNavItems = [
   { to: "/admin/whatsapp-landings", label: "Topluluklar", icon: MessageSquare },
   { to: "/admin/whatsapp-landings/editors", label: "Topluluk Editörleri", icon: Shield },
   { to: "/admin/whatsapp-landings/guide", label: "Topluluk Kullanma Kılavuzu", icon: BookOpen },
+  { to: "/admin/consulates", label: "Konsolosluk Profilleri", icon: Globe },
 ] as const;
 
 export const may19RecordNavItems = [
