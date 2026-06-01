@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import DirectoryProfilePage from "@/pages/DirectoryProfilePage";
 
 const rpcMock = vi.fn();
+const usePublicIndividualProfileMock = vi.fn();
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
@@ -12,8 +13,17 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
+vi.mock("@/hooks/usePublicIndividualProfile", () => ({
+  usePublicIndividualProfile: (...args: unknown[]) => usePublicIndividualProfileMock(...args),
+}));
+
 describe("DirectoryProfilePage", () => {
   it("renders section-driven public profile content", async () => {
+    usePublicIndividualProfileMock.mockReturnValue({
+      details: null,
+      isLoading: false,
+      errorMessage: null,
+    });
     rpcMock.mockResolvedValue({
       data: [
         {

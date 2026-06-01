@@ -650,6 +650,65 @@ const ProfilePage = () => {
         </div>
 
         <div className="space-y-4">
+          {selfProfileViewModel ? (
+            <Card className="border-slate-200 bg-white/90 shadow-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">Cift Modlu Profil Merkezi</CardTitle>
+                <CardDescription className="text-xs">
+                  Bu alan, kendi profilini duzenlerken loginli diger kullanicilarin gorecegi visitor gorunumunu da ayni ekranda onizlemeni saglar.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Tabs defaultValue="preview" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="preview">Public Onizleme</TabsTrigger>
+                    <TabsTrigger value="status">Profil Durumu</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="preview" className="mt-4">
+                    <PublicProfileSummaryView model={selfProfileViewModel.preview} mode="preview" />
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {roleMeta?.publicSectionKeys.map((key) => (
+                        <Badge key={key} variant="outline" className="text-[10px]">
+                          {key}
+                        </Badge>
+                      ))}
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="status" className="mt-4 space-y-3">
+                    <div className="grid gap-2 md:grid-cols-2">
+                      <div className="rounded-lg border bg-slate-50 p-3">
+                        <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Rol</p>
+                        <p className="mt-1 text-sm font-semibold">{selfProfileViewModel.roleLabel}</p>
+                      </div>
+                      <div className="rounded-lg border bg-slate-50 p-3">
+                        <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Tamamlanma</p>
+                        <p className="mt-1 text-sm font-semibold">%{selfProfileViewModel.completionPercentage}</p>
+                      </div>
+                      <div className="rounded-lg border bg-slate-50 p-3">
+                        <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Public Alan</p>
+                        <p className="mt-1 text-sm font-semibold">{selfProfileViewModel.publicAttributeCount}</p>
+                      </div>
+                      <div className="rounded-lg border bg-slate-50 p-3">
+                        <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Açık Dashboard</p>
+                        <p className="mt-1 text-sm font-semibold">{selfProfileViewModel.dashboardCount}</p>
+                      </div>
+                    </div>
+                    <div className="rounded-lg border bg-slate-50 p-3">
+                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Self View Blokları</p>
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {roleMeta?.selfSectionKeys.map((key) => (
+                          <Badge key={key} variant="secondary" className="text-[10px]">
+                            {key}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          ) : null}
+
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="guide-role-application" className="rounded-lg border bg-emerald-50/50 px-3">
               <AccordionTrigger className="py-2 text-sm font-medium hover:no-underline">
