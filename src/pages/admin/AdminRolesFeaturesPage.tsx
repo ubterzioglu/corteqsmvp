@@ -4,12 +4,12 @@ import AdminPageGuideAccordion, { type AdminPageGuideSection } from "@/component
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { setFeatureGlobalStateAsAdmin, setRoleFeatureFlagAsAdmin } from "@/lib/admin";
 import { getFeatureMeta } from "@/lib/features";
-import { ChevronDown } from "lucide-react";
+import { Info } from "lucide-react";
 
 type RoleRow = {
   id: string;
@@ -477,19 +477,26 @@ const AdminRolesFeaturesPage = () => {
                                 <p className="text-[11px] leading-4 text-slate-600">{featureDetail.shortDescription}</p>
                               </div>
                               {featureDetail.details ? (
-                                <Collapsible className="pt-0.5">
-                                  <CollapsibleTrigger className="group flex w-full items-center justify-between rounded-lg border border-border/80 bg-background/80 px-3 py-1.5 text-left text-[10px] font-medium leading-4 text-slate-700 transition hover:bg-muted/40">
-                                    <span>Açıklamayı Göster</span>
-                                    <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition group-data-[state=open]:rotate-180" />
-                                  </CollapsibleTrigger>
-                                  <CollapsibleContent className="mt-1.5 rounded-lg border border-muted bg-muted/20 p-2.5 text-[10px] leading-4 text-muted-foreground">
-                                    <div className="space-y-1.5">
-                                      <p><span className="font-medium text-slate-700">Özet:</span> {featureDetail.details.summary}</p>
-                                      <p><span className="font-medium text-slate-700">Etkisi:</span> {featureDetail.details.effect}</p>
-                                      <p><span className="font-medium text-slate-700">Not:</span> {featureDetail.details.adminHint}</p>
-                                    </div>
-                                  </CollapsibleContent>
-                                </Collapsible>
+                                <div className="pt-0.5">
+                                  <HoverCard openDelay={120} closeDelay={80}>
+                                    <HoverCardTrigger asChild>
+                                      <button
+                                        type="button"
+                                        className="inline-flex w-[220px] items-center gap-1.5 rounded-md border border-border/80 bg-background/80 px-2 py-1 text-left text-[10px] font-medium leading-4 text-slate-700 transition hover:bg-muted/40"
+                                      >
+                                        <Info className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                                        <span>Detayli aciklama</span>
+                                      </button>
+                                    </HoverCardTrigger>
+                                    <HoverCardContent align="start" side="bottom" className="w-[280px] rounded-lg border border-muted bg-background p-2.5 text-[10px] leading-4 text-muted-foreground shadow-md">
+                                      <div className="space-y-1.5">
+                                        <p><span className="font-medium text-slate-700">Ozet:</span> {featureDetail.details.summary}</p>
+                                        <p><span className="font-medium text-slate-700">Etkisi:</span> {featureDetail.details.effect}</p>
+                                        <p><span className="font-medium text-slate-700">Not:</span> {featureDetail.details.adminHint}</p>
+                                      </div>
+                                    </HoverCardContent>
+                                  </HoverCard>
+                                </div>
                               ) : null}
                             </div>
                           );
