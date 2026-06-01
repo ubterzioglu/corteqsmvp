@@ -108,7 +108,7 @@ const presenceLabelMap = {
 } as const;
 
 const featureTabMap = {
-  [INDIVIDUAL_FEATURE_KEYS.about]: { key: "about", label: "Hakkinda", icon: Globe },
+  [INDIVIDUAL_FEATURE_KEYS.about]: { key: "about", label: "Hakkında", icon: Globe },
   [INDIVIDUAL_FEATURE_KEYS.serviceRequests]: { key: "service-requests", label: "Hizmet Talepleri", icon: FileText },
   [INDIVIDUAL_FEATURE_KEYS.events]: { key: "events", label: "Etkinlikler", icon: Calendar },
   [INDIVIDUAL_FEATURE_KEYS.follows]: { key: "following", label: "Takip", icon: Users },
@@ -138,7 +138,7 @@ const mapDetailsToForm = (details: IndividualProfileDetailsCore): SettingsFormSt
   school: details.controlPanel.school === "-" ? "" : details.controlPanel.school,
   institution: details.controlPanel.institution === "-" ? "" : details.controlPanel.institution,
   linkedin: details.controlPanel.linkedin === "-" ? "" : details.controlPanel.linkedin,
-  bio: details.controlPanel.bio === "Bio / Hakkinda alani henuz doldurulmadi." ? "" : details.controlPanel.bio,
+  bio: details.controlPanel.bio === "Bio / Hakkında alanı henüz doldurulmadı." ? "" : details.controlPanel.bio,
   languages: details.detailCard.languages.join(", "),
   interests: details.detailCard.interests.join(", "),
   profileVisible: details.controlPanel.profileVisible,
@@ -173,7 +173,7 @@ export const IndividualProfileCards = ({
       });
     }
 
-    next.push({ key: "settings", label: "Profil Ayarlari", icon: Settings });
+    next.push({ key: "settings", label: "Profil Ayarları", icon: Settings });
     return next;
   }, [moduleKeySet, shouldShowFeatureTabs]);
 
@@ -240,7 +240,7 @@ export const IndividualProfileCards = ({
                 <p className="text-xl font-semibold">{details.displayName}</p>
                 <Badge variant="outline">{presenceLabelMap[details.presenceStatus]}</Badge>
                 <Badge variant="outline">{visibleStateLabel[details.visibilityStatus]}</Badge>
-                {details.jobSeeking ? <Badge>Is Ariyorum</Badge> : null}
+                {details.jobSeeking ? <Badge>İş Arıyorum</Badge> : null}
                 {front.corteqsPassport ? (
                   <Badge className="bg-amber-500/10 text-amber-700 border-amber-500/30 gap-1">
                     <ShieldCheck className="h-3 w-3" /> CorteQS Pasaportu
@@ -248,7 +248,7 @@ export const IndividualProfileCards = ({
                 ) : null}
                 {panel.profileVisible ? (
                   <Badge variant="secondary" className="gap-1">
-                    <Eye className="h-3 w-3" /> Gorunur
+                    <Eye className="h-3 w-3" /> Görünür
                   </Badge>
                 ) : (
                   <Badge variant="outline" className="gap-1">
@@ -262,7 +262,7 @@ export const IndividualProfileCards = ({
               ) : null}
               <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted-foreground">
                 <span>
-                  <strong className="text-foreground">{details.followerCount}</strong> takipci
+                  <strong className="text-foreground">{details.followerCount}</strong> takipçi
                 </span>
                 <span>
                   <strong className="text-foreground">{details.followingCount}</strong> takip
@@ -314,16 +314,16 @@ export const IndividualProfileCards = ({
               })}
             </TabsList>
 
-            {isFeaturesLoading ? <p className="mt-3 text-xs text-muted-foreground">Feature bilgileri yukleniyor...</p> : null}
+            {isFeaturesLoading ? <p className="mt-3 text-xs text-muted-foreground">Feature bilgileri yükleniyor...</p> : null}
             {featureErrorMessage ? (
               <p className="mt-3 text-xs text-muted-foreground">
-                Feature verisi alinamadi. Guvenli mod nedeniyle sadece Profil Ayarlari goruntuleniyor.
+                Feature verisi alınamadı. Güvenli mod nedeniyle sadece Profil Ayarları görüntüleniyor.
               </p>
             ) : null}
 
             <TabsContent value="about" className="mt-4 space-y-3">
               <div className="rounded-md border p-3">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Hakkinda</p>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Hakkında</p>
                 <p className="text-sm text-muted-foreground">{detail.aboutText}</p>
               </div>
               <div className="grid gap-3 md:grid-cols-2">
@@ -332,8 +332,8 @@ export const IndividualProfileCards = ({
                   <ChipList items={detail.languages} emptyLabel="Dil eklenmedi" />
                 </div>
                 <div className="rounded-md border p-3">
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Yasadigi Ulkeler</p>
-                  <PlaceList items={detail.countriesLived} emptyLabel="Kayit yok" />
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Yaşadığı Ülkeler</p>
+                  <PlaceList items={detail.countriesLived} emptyLabel="Kayıt yok" />
                 </div>
               </div>
             </TabsContent>
@@ -351,7 +351,7 @@ export const IndividualProfileCards = ({
             <TabsContent value="events" className="mt-4">
               <div className="space-y-3 rounded-md border p-3">
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Etkinlikler</p>
-                <ChipList items={detail.events} emptyLabel="Etkinlik kaydi yok" />
+                <ChipList items={detail.events} emptyLabel="Etkinlik kaydı yok" />
                 {detail.recentEvents.length > 0 ? (
                   <div className="space-y-1">
                     {detail.recentEvents.map((event) => (
@@ -391,7 +391,7 @@ export const IndividualProfileCards = ({
               <div className="rounded-md border p-3">
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Mesaj Kutusu</p>
                 <p className="text-xs text-muted-foreground">
-                  Mesajlasma ozeti bu fazda read-only gosterilir. Detayli aksiyonlar sonraki fazda acilacak.
+                  Mesajlaşma özeti bu fazda read-only gösterilir. Detaylı aksiyonlar sonraki fazda açılacak.
                 </p>
                 <p className="mt-3 text-[11px] text-muted-foreground">
                   kaynak: {featureSources[INDIVIDUAL_FEATURE_KEYS.messages] ?? "fallback"}
@@ -411,15 +411,15 @@ export const IndividualProfileCards = ({
 
             <TabsContent value="settings" className="mt-4 space-y-3">
               <div className="flex items-center justify-between gap-2">
-                <p className="text-xs text-muted-foreground">Profil bilgilerini kendin duzenleyebilirsin.</p>
+                <p className="text-xs text-muted-foreground">Profil bilgilerini kendin düzenleyebilirsin.</p>
                 {!isEditingSettings ? (
                   <Button type="button" size="sm" variant="outline" onClick={() => setIsEditingSettings(true)}>
-                    Duzenle
+                    Düzenle
                   </Button>
                 ) : null}
               </div>
 
-              {saveProfileError ? <p className="text-xs text-destructive">Kaydetme hatasi: {saveProfileError}</p> : null}
+              {saveProfileError ? <p className="text-xs text-destructive">Kaydetme hatası: {saveProfileError}</p> : null}
 
               {isEditingSettings ? (
                 <div className="space-y-3 rounded-md border p-3">
@@ -433,19 +433,19 @@ export const IndividualProfileCards = ({
                       <Input value={settingsForm.tagline} onChange={(event) => setSettingsForm((current) => ({ ...current, tagline: event.target.value }))} />
                     </div>
                     <div className="space-y-1 md:col-span-2">
-                      <Label className="text-xs">Status Mesaji</Label>
+                      <Label className="text-xs">Status Mesajı</Label>
                       <Input value={settingsForm.statusText} onChange={(event) => setSettingsForm((current) => ({ ...current, statusText: event.target.value }))} />
                     </div>
                     <div className="space-y-1 md:col-span-2">
-                      <Label className="text-xs">Profil Mesajim</Label>
+                      <Label className="text-xs">Profil Mesajım</Label>
                       <Textarea value={settingsForm.worldMessage} onChange={(event) => setSettingsForm((current) => ({ ...current, worldMessage: event.target.value }))} rows={2} />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs">Aktif Ulke</Label>
+                      <Label className="text-xs">Aktif Ülke</Label>
                       <Input value={settingsForm.activeCountry} onChange={(event) => setSettingsForm((current) => ({ ...current, activeCountry: event.target.value }))} />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs">Aktif Sehir</Label>
+                      <Label className="text-xs">Aktif Şehir</Label>
                       <Input value={settingsForm.activeCity} onChange={(event) => setSettingsForm((current) => ({ ...current, activeCity: event.target.value }))} />
                     </div>
                     <div className="space-y-1">
@@ -457,19 +457,19 @@ export const IndividualProfileCards = ({
                       <Input value={settingsForm.linkedin} onChange={(event) => setSettingsForm((current) => ({ ...current, linkedin: event.target.value }))} />
                     </div>
                     <div className="space-y-1 md:col-span-2">
-                      <Label className="text-xs">Bio / Hakkinda</Label>
+                      <Label className="text-xs">Bio / Hakkında</Label>
                       <Textarea value={settingsForm.bio} onChange={(event) => setSettingsForm((current) => ({ ...current, bio: event.target.value }))} rows={3} />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs">Ulke</Label>
+                      <Label className="text-xs">Ülke</Label>
                       <Input value={settingsForm.country} onChange={(event) => setSettingsForm((current) => ({ ...current, country: event.target.value }))} />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs">Sehir</Label>
+                      <Label className="text-xs">Şehir</Label>
                       <Input value={settingsForm.city} onChange={(event) => setSettingsForm((current) => ({ ...current, city: event.target.value }))} />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs">Kac Yildir Burada</Label>
+                      <Label className="text-xs">Kaç Yıldır Burada</Label>
                       <Input value={settingsForm.yearsInCity} onChange={(event) => setSettingsForm((current) => ({ ...current, yearsInCity: event.target.value }))} />
                     </div>
                     <div className="space-y-1">
@@ -477,7 +477,7 @@ export const IndividualProfileCards = ({
                       <Input value={settingsForm.phone} onChange={(event) => setSettingsForm((current) => ({ ...current, phone: event.target.value }))} />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs">Egitim</Label>
+                      <Label className="text-xs">Eğitim</Label>
                       <Input value={settingsForm.education} onChange={(event) => setSettingsForm((current) => ({ ...current, education: event.target.value }))} />
                     </div>
                     <div className="space-y-1">
@@ -489,22 +489,22 @@ export const IndividualProfileCards = ({
                       <Input value={settingsForm.institution} onChange={(event) => setSettingsForm((current) => ({ ...current, institution: event.target.value }))} />
                     </div>
                     <div className="space-y-1 md:col-span-2">
-                      <Label className="text-xs">Diller (virgulle ayir)</Label>
+                      <Label className="text-xs">Diller (virgülle ayır)</Label>
                       <Input value={settingsForm.languages} onChange={(event) => setSettingsForm((current) => ({ ...current, languages: event.target.value }))} />
                     </div>
                     <div className="space-y-1 md:col-span-2">
-                      <Label className="text-xs">Ilgi Alanlari (virgulle ayir)</Label>
+                      <Label className="text-xs">İlgi Alanları (virgülle ayır)</Label>
                       <Input value={settingsForm.interests} onChange={(event) => setSettingsForm((current) => ({ ...current, interests: event.target.value }))} />
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-4">
                     <label className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Switch checked={settingsForm.profileVisible} onCheckedChange={(checked) => setSettingsForm((current) => ({ ...current, profileVisible: checked }))} />
-                      Profil gorunur
+                      Profil görünür
                     </label>
                     <label className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Switch checked={settingsForm.jobSeeking} onCheckedChange={(checked) => setSettingsForm((current) => ({ ...current, jobSeeking: checked }))} />
-                      Is ariyorum
+                      İş arıyorum
                     </label>
                   </div>
 
@@ -521,32 +521,32 @@ export const IndividualProfileCards = ({
                         setIsEditingSettings(false);
                       }}
                     >
-                      Iptal
+                      İptal
                     </Button>
                   </div>
                 </div>
               ) : (
                 <>
                   <div className="grid gap-2 rounded-md border p-3 md:grid-cols-2">
-                    <Field label="Ulke" value={panel.country} />
-                    <Field label="Sehir" value={panel.city} />
-                    <Field label="Kac Yildir Burada" value={panel.yearsInCity} />
+                    <Field label="Ülke" value={panel.country} />
+                    <Field label="Şehir" value={panel.city} />
+                    <Field label="Kaç Yıldır Burada" value={panel.yearsInCity} />
                     <Field label="Telefon" value={panel.phone} />
-                    <Field label="Dogum Tarihi" value={panel.birthDate} />
-                    <Field label="Egitim" value={panel.education} />
+                    <Field label="Doğum Tarihi" value={panel.birthDate} />
+                    <Field label="Eğitim" value={panel.education} />
                     <Field label="Okul" value={panel.school} />
                     <Field label="LinkedIn" value={panel.linkedin} />
                   </div>
                   <div className="rounded-md border p-3">
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Bio / Hakkinda</p>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Bio / Hakkında</p>
                     <p className="text-sm text-muted-foreground">{panel.bio}</p>
                   </div>
                   <div className="rounded-md border p-3">
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Panel Aksiyonlari</p>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Panel Aksiyonları</p>
                     <ChipList items={panel.navActions} emptyLabel="Aksiyon tanimi yok" />
                   </div>
                   <div className="rounded-md border p-3">
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Profil Tamamlama Adimlari</p>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Profil Tamamlama Adımları</p>
                     <div className="space-y-1">
                       {panel.profileSteps.map((step) => (
                         <p key={step.label} className="text-xs text-muted-foreground">
@@ -557,7 +557,7 @@ export const IndividualProfileCards = ({
                   </div>
                   {detail.relocation.enabled ? (
                     <div className="rounded-md border p-3">
-                      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Tasinma Plani</p>
+                      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Taşınma Planı</p>
                       <p className="text-xs text-muted-foreground">
                         {[detail.relocation.city, detail.relocation.country].filter(Boolean).join(", ")}
                       </p>

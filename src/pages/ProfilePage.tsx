@@ -653,15 +653,15 @@ const ProfilePage = () => {
           {selfProfileViewModel ? (
             <Card className="border-slate-200 bg-white/90 shadow-sm">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base">Cift Modlu Profil Merkezi</CardTitle>
+                <CardTitle className="text-base">Çift Modlu Profil Merkezi</CardTitle>
                 <CardDescription className="text-xs">
-                  Bu alan, kendi profilini duzenlerken loginli diger kullanicilarin gorecegi visitor gorunumunu da ayni ekranda onizlemeni saglar.
+                  Bu alan, kendi profilini düzenlerken loginli diğer kullanıcıların göreceği visitor görünümünü de aynı ekranda önizlemeni sağlar.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="preview" className="w-full">
                   <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="preview">Public Onizleme</TabsTrigger>
+                    <TabsTrigger value="preview">Public Önizleme</TabsTrigger>
                     <TabsTrigger value="status">Profil Durumu</TabsTrigger>
                   </TabsList>
                   <TabsContent value="preview" className="mt-4">

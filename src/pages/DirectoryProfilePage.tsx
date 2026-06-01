@@ -57,14 +57,6 @@ const DirectoryProfilePage = () => {
         .sort((a, b) => a.sort_order - b.sort_order),
     [sections],
   );
-  const detailSections = useMemo(
-    () =>
-      sections
-        .filter((s) => s.section_area === "detail_card")
-        .sort((a, b) => a.sort_order - b.sort_order),
-    [sections],
-  );
-
   const displayName = previewSections.find(
     (s) => s.section_key === "preview.isim_kurulus_adi",
   )?.content?.text;

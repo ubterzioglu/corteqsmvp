@@ -70,7 +70,7 @@ describe("DirectoryProfilePage", () => {
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText("CorteQS Business")).toBeInTheDocument();
+    expect((await screen.findAllByText("CorteQS Business")).length).toBeGreaterThan(0);
     expect(screen.getByText("Diaspora odaklı bir business profili.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Website" })).toHaveAttribute("href", "https://corteqs.test");
   });

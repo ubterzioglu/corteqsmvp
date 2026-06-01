@@ -34,7 +34,7 @@ import {
 } from "@/lib/cadde";
 
 const WORLD_CLOCKS = [
-  { label: "Istanbul", timezone: "Europe/Istanbul" },
+  { label: "İstanbul", timezone: "Europe/Istanbul" },
   { label: "Berlin", timezone: "Europe/Berlin" },
   { label: "Londra", timezone: "Europe/London" },
   { label: "New York", timezone: "America/New_York" },
@@ -43,18 +43,18 @@ const WORLD_CLOCKS = [
 ] as const;
 
 const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof ThumbsUp }> = [
-  { key: "like", label: "Begendim", icon: ThumbsUp },
+  { key: "like", label: "Beğendim", icon: ThumbsUp },
   { key: "support", label: "Destek", icon: Sparkles },
   { key: "idea", label: "Fikir", icon: Flame },
 ];
 
 const SECONDARY_NAV = [
   { label: "Cadde", to: "/cadde" },
-  { label: "Is", to: "/commercial" },
+  { label: "İş", to: "/commercial" },
   { label: "Sosyal", to: "/directory" },
   { label: "Harita", href: "https://globe.corteqs.net" },
-  { label: "Giris Yap", to: "/login" },
-  { label: "Kayit Ol", to: "/form" },
+  { label: "Giriş Yap", to: "/login" },
+  { label: "Kayıt Ol", to: "/form" },
 ] as const;
 
 const formatTimeChip = (timezone: string) =>
@@ -138,8 +138,8 @@ const CaddePage = () => {
 
   const postMutation = useMutation({
     mutationFn: async () => {
-      if (!user) throw new Error("Bu islem icin giris yapin.");
-      if (!composer.body.trim()) throw new Error("Paylasim metni zorunlu.");
+      if (!user) throw new Error("Bu işlem için giriş yapın.");
+      if (!composer.body.trim()) throw new Error("Paylaşım metni zorunlu.");
       await createCaddePost(
         {
           type: composer.type,
@@ -156,16 +156,16 @@ const CaddePage = () => {
       setComposer(emptyComposer);
       await invalidateCadde();
       setSearchParams(serializeCaddeFilters({ ...filters, mode: "real" }));
-      toast({ title: "Paylasim Cadde'ye eklendi" });
+      toast({ title: "Paylaşım Cadde'ye eklendi" });
     },
     onError: (error) => {
-      toast({ title: "Paylasim gonderilemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({ title: "Paylaşım gönderilemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
     },
   });
 
   const reactionMutation = useMutation({
     mutationFn: async ({ postId, reactionType, currentlyActive }: { postId: string; reactionType: CaddeReactionType; currentlyActive: boolean }) => {
-      if (!user) throw new Error("Bu islem icin giris yapin.");
+      if (!user) throw new Error("Bu işlem için giriş yapın.");
       await toggleCaddeReaction(postId, user.id, reactionType, currentlyActive);
     },
     onSuccess: invalidateCadde,
@@ -174,14 +174,14 @@ const CaddePage = () => {
         navigate("/login");
         return;
       }
-      toast({ title: "Reaksiyon guncellenemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({ title: "Reaksiyon güncellenemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
     },
   });
 
   const commentMutation = useMutation({
     mutationFn: async ({ postId, body }: { postId: string; body: string }) => {
-      if (!user) throw new Error("Bu islem icin giris yapin.");
-      if (!body.trim()) throw new Error("Yorum bos olamaz.");
+      if (!user) throw new Error("Bu işlem için giriş yapın.");
+      if (!body.trim()) throw new Error("Yorum boş olamaz.");
       await createCaddeComment(postId, user.id, body);
     },
     onSuccess: async (_data, variables) => {
@@ -193,13 +193,13 @@ const CaddePage = () => {
         navigate("/login");
         return;
       }
-      toast({ title: "Yorum gonderilemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({ title: "Yorum gönderilemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
     },
   });
 
   const joinCafeMutation = useMutation({
     mutationFn: async (cafeId: string) => {
-      if (!user) throw new Error("Bu islem icin giris yapin.");
+      if (!user) throw new Error("Bu işlem için giriş yapın.");
       await joinCaddeCafe(cafeId, user.id);
     },
     onSuccess: invalidateCadde,
@@ -208,7 +208,7 @@ const CaddePage = () => {
         navigate("/login");
         return;
       }
-      toast({ title: "Cafe katilimi basarisiz", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({ title: "Cafe katılımı başarısız", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
     },
   });
 
@@ -235,7 +235,7 @@ const CaddePage = () => {
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-6 lg:px-6">
           <div className="flex flex-wrap items-center gap-2">
             <Badge className="bg-[#ffefe0] text-[#9a4b18] hover:bg-[#ffefe0]">CorteQS Cadde MVP</Badge>
-            <p className="text-sm text-slate-600">Sehir bazli diaspora akisi, aktif kafeler ve sponsorlu kesif alani.</p>
+            <p className="text-sm text-slate-600">Şehir bazlı diaspora akışı, aktif kafeler ve sponsorlu keşif alanı.</p>
           </div>
           <div className="flex flex-wrap gap-2">
             {SECONDARY_NAV.map((item) =>
@@ -260,32 +260,32 @@ const CaddePage = () => {
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <CardTitle>Konum</CardTitle>
-                  <CardDescription>Global akis, sehir secimi ve kopru modu</CardDescription>
+                  <CardDescription>Global akış, şehir seçimi ve köprü modu</CardDescription>
                 </div>
                 <Globe2 className="h-5 w-5 text-orange-500" />
               </div>
               <Button className="w-full justify-between rounded-2xl bg-slate-900 text-white hover:bg-slate-800">
-                Caddeye Cik
+                Caddeye Çık
                 <span className="text-xs uppercase tracking-[0.2em] text-orange-200">{filters.mode}</span>
               </Button>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">Gercek / Demo</p>
-                  <p className="text-xs text-slate-500">{filters.mode === "real" ? "Gercek: kullanici paylasimlari" : "Demo: admin seed icerik"}</p>
+                  <p className="text-sm font-semibold text-slate-900">Gerçek / Demo</p>
+                  <p className="text-xs text-slate-500">{filters.mode === "real" ? "Gerçek: kullanıcı paylaşımları" : "Demo: admin seed içerik"}</p>
                 </div>
                 <Switch checked={filters.mode === "real"} onCheckedChange={(checked) => updateFilters({ mode: checked ? "real" : "demo" })} />
               </div>
 
               <div className="space-y-2">
-                <Label>Ulke</Label>
+                <Label>Ülke</Label>
                 <Select value={filters.country || "__all__"} onValueChange={(value) => updateFilters({ country: value === "__all__" ? "" : value, city: "" })}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Ulke sec" />
+                    <SelectValue placeholder="Ülke seç" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__all__">Tum ulkeler</SelectItem>
+                    <SelectItem value="__all__">Tüm ülkeler</SelectItem>
                     {(countriesQuery.data ?? []).map((country) => (
                       <SelectItem key={country.id} value={country.name}>
                         {country.name}
@@ -296,13 +296,13 @@ const CaddePage = () => {
               </div>
 
               <div className="space-y-2">
-                <Label>Sehir</Label>
+                <Label>Şehir</Label>
                 <Select value={filters.city || "__all__"} onValueChange={(value) => updateFilters({ city: value === "__all__" ? "" : value })}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Sehir sec" />
+                    <SelectValue placeholder="Şehir seç" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__all__">Tum sehirler</SelectItem>
+                    <SelectItem value="__all__">Tüm şehirler</SelectItem>
                     {(citiesQuery.data ?? []).map((city) => (
                       <SelectItem key={city.id} value={city.name}>
                         {city.name}
@@ -315,8 +315,8 @@ const CaddePage = () => {
               <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-emerald-950">Kopru</p>
-                    <p className="text-xs leading-relaxed text-emerald-700">TR-Diaspora arasinda tasinma, is ve mentorluk akisi.</p>
+                    <p className="text-sm font-semibold text-emerald-950">Köprü</p>
+                    <p className="text-xs leading-relaxed text-emerald-700">TR-Diaspora arasında taşınma, iş ve mentorluk akışı.</p>
                   </div>
                   <Switch checked={filters.bridge} onCheckedChange={(checked) => updateFilters({ bridge: checked })} />
                 </div>
@@ -330,7 +330,7 @@ const CaddePage = () => {
                 <MessagesSquare className="h-4 w-4 text-orange-500" />
                 People Discovery
               </CardTitle>
-              <CardDescription>Mevcut directory deneyimine Cadde filtreleriyle gec.</CardDescription>
+              <CardDescription>Mevcut directory deneyimine Cadde filtreleriyle geç.</CardDescription>
             </CardHeader>
             <CardContent>
               <Button asChild variant="outline" className="w-full justify-between rounded-2xl">
@@ -344,8 +344,8 @@ const CaddePage = () => {
 
           <Card className="border-slate-200 bg-white/90">
             <CardHeader>
-              <CardTitle className="text-base">Aktif Cafe Ozeti</CardTitle>
-              <CardDescription>Secili filtre icindeki odalar</CardDescription>
+              <CardTitle className="text-base">Aktif Cafe Özeti</CardTitle>
+              <CardDescription>Seçili filtre içindeki odalar</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {(cafesQuery.data ?? []).slice(0, 3).map((cafe) => (
@@ -353,9 +353,9 @@ const CaddePage = () => {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="font-semibold text-slate-900">{cafe.title}</p>
-                      <p className="text-xs text-slate-500">{cafe.city ?? "Global"} • {cafe.memberCount} uye</p>
+                      <p className="text-xs text-slate-500">{cafe.city ?? "Global"} • {cafe.memberCount} üye</p>
                     </div>
-                    {cafe.isBridge ? <Badge variant="secondary">Kopru</Badge> : null}
+                    {cafe.isBridge ? <Badge variant="secondary">Köprü</Badge> : null}
                   </div>
                 </div>
               ))}
@@ -370,9 +370,9 @@ const CaddePage = () => {
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <CardTitle>Diaspora Cadde</CardTitle>
-                  <CardDescription>Global Turk toplulugunun sehir bazli sosyal akisi</CardDescription>
+                  <CardDescription>Global Türk topluluğunun şehir bazlı sosyal akışı</CardDescription>
                 </div>
-                <Badge variant="outline">{filters.city || filters.country || "Global Akis"}</Badge>
+                <Badge variant="outline">{filters.city || filters.country || "Global Akış"}</Badge>
               </div>
               <div className="flex flex-wrap gap-2">
                 {WORLD_CLOCKS.map((clock) => (
@@ -389,7 +389,7 @@ const CaddePage = () => {
           <Card className="border-slate-200 bg-white/90">
             <CardHeader>
               <CardTitle className="text-lg">Aktif Cafeler</CardTitle>
-              <CardDescription>Kisa sureli topluluk odalari ve tema bazli bulusmalar</CardDescription>
+              <CardDescription>Kısa süreli topluluk odaları ve tema bazlı buluşmalar</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -400,11 +400,11 @@ const CaddePage = () => {
                         <p className="font-semibold text-slate-900">{cafe.title}</p>
                         <p className="mt-1 text-xs text-slate-500">{cafe.city ?? "Global"} • {formatDateTime(cafe.startsAt)}</p>
                       </div>
-                      {cafe.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Kopru</Badge> : null}
+                      {cafe.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
                     </div>
                     <p className="mt-3 text-sm leading-relaxed text-slate-600">{cafe.summary}</p>
                     <div className="mt-4 flex items-center justify-between gap-3">
-                      <div className="text-xs text-slate-500">Host: {cafe.hostName} • {cafe.memberCount} uye</div>
+                      <div className="text-xs text-slate-500">Host: {cafe.hostName} • {cafe.memberCount} üye</div>
                       <Button
                         size="sm"
                         variant={cafe.joinedByViewer ? "secondary" : "outline"}
@@ -416,7 +416,7 @@ const CaddePage = () => {
                           joinCafeMutation.mutate(cafe.id);
                         }}
                       >
-                        {cafe.joinedByViewer ? "Katildin" : "Katil"}
+                        {cafe.joinedByViewer ? "Katıldın" : "Katıl"}
                       </Button>
                     </div>
                   </div>
@@ -427,8 +427,8 @@ const CaddePage = () => {
 
           <Card className="border-slate-200 bg-white/95">
             <CardHeader>
-              <CardTitle className="text-lg">Paylasim Olustur</CardTitle>
-              <CardDescription>{session ? "Cadde icin sehir bazli paylasim ekleyebilirsin." : "Paylasim ve reaksiyonlar icin giris gerekli."}</CardDescription>
+              <CardTitle className="text-lg">Paylaşım Oluştur</CardTitle>
+              <CardDescription>{session ? "Cadde için şehir bazlı paylaşım ekleyebilirsin." : "Paylaşım ve reaksiyonlar için giriş gerekli."}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {session ? (
@@ -449,25 +449,25 @@ const CaddePage = () => {
                       </Select>
                     </div>
                     <div className="space-y-2">
-                      <Label>Baslik</Label>
-                      <Input value={composer.title} onChange={(event) => setComposer((current) => ({ ...current, title: event.target.value }))} placeholder="Istege bagli baslik" />
+                      <Label>Başlık</Label>
+                      <Input value={composer.title} onChange={(event) => setComposer((current) => ({ ...current, title: event.target.value }))} placeholder="İsteğe bağlı başlık" />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <Label>Mesaj</Label>
-                    <Textarea value={composer.body} onChange={(event) => setComposer((current) => ({ ...current, body: event.target.value }))} placeholder="Sehrindeki ihtiyacini, etkinligini veya firsatini paylas." rows={5} />
+                    <Textarea value={composer.body} onChange={(event) => setComposer((current) => ({ ...current, body: event.target.value }))} placeholder="Şehrindeki ihtiyacını, etkinliğini veya fırsatını paylaş." rows={5} />
                   </div>
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="text-sm text-slate-500">Akis: {filters.mode === "real" ? "Gercek" : "Demo secili. Gonderince Gercek akisa gececeksin."}</div>
+                    <div className="text-sm text-slate-500">Akış: {filters.mode === "real" ? "Gerçek" : "Demo seçili. Gönderince Gerçek akışa geçeceksin."}</div>
                     <Button onClick={() => postMutation.mutate()} disabled={postMutation.isPending}>
-                      {postMutation.isPending ? "Gonderiliyor..." : "Cadde'de Paylas"}
+                      {postMutation.isPending ? "Gönderiliyor..." : "Cadde'de Paylaş"}
                     </Button>
                   </div>
                 </>
               ) : (
                 <div className="rounded-[24px] border border-dashed border-orange-200 bg-orange-50 p-5">
                   <p className="text-sm leading-relaxed text-slate-700">
-                    Ziyaretciler akisi gorebilir. Paylasim, yorum ve reaksiyon icin <Link to="/login" className="font-semibold text-orange-700 underline">giris yap</Link>.
+                    Ziyaretçiler akışı görebilir. Paylaşım, yorum ve reaksiyon için <Link to="/login" className="font-semibold text-orange-700 underline">giriş yap</Link>.
                   </p>
                 </div>
               )}
@@ -498,7 +498,7 @@ const CaddePage = () => {
                           <p className="font-semibold text-slate-900">{item.post.authorName}</p>
                           {item.post.authorRole ? <Badge variant="secondary">{item.post.authorRole}</Badge> : null}
                           {item.post.pinned ? <Badge className="bg-slate-900 text-white hover:bg-slate-900">Pinned</Badge> : null}
-                          {item.post.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Kopru</Badge> : null}
+                          {item.post.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
                           <Badge variant="outline">{item.post.type}</Badge>
                         </div>
                         <p className="text-xs text-slate-500">
@@ -553,7 +553,7 @@ const CaddePage = () => {
                         <Textarea
                           value={commentDrafts[item.post.id] ?? ""}
                           onChange={(event) => setCommentDrafts((current) => ({ ...current, [item.post.id]: event.target.value }))}
-                          placeholder={session ? "Yorum yaz" : "Yorum icin giris yap"}
+                          placeholder={session ? "Yorum yaz" : "Yorum için giriş yap"}
                           rows={2}
                           disabled={!session}
                         />
@@ -567,7 +567,7 @@ const CaddePage = () => {
                             commentMutation.mutate({ postId: item.post.id, body: commentDrafts[item.post.id] ?? "" });
                           }}
                         >
-                          Gonder
+                          Gönder
                         </Button>
                       </div>
                     </div>
@@ -579,7 +579,7 @@ const CaddePage = () => {
             {!feedQuery.isLoading && filters.mode === "real" && feedItems.length === 0 ? (
               <Card className="border-dashed border-slate-300 bg-white/90">
                 <CardContent className="p-8 text-center text-slate-500">
-                  Bu filtrelerde gercek Cadde icerigi yok. Demo moda gecerek ornek akis gorebilirsin.
+                  Bu filtrelerde gerçek Cadde içeriği yok. Demo moda geçerek örnek akış görebilirsin.
                 </CardContent>
               </Card>
             ) : null}
@@ -587,7 +587,7 @@ const CaddePage = () => {
             {feedQuery.hasNextPage ? (
               <div className="flex justify-center">
                 <Button variant="outline" onClick={() => feedQuery.fetchNextPage()} disabled={feedQuery.isFetchingNextPage}>
-                  {feedQuery.isFetchingNextPage ? "Yukleniyor..." : "Daha Fazla Yukle"}
+                  {feedQuery.isFetchingNextPage ? "Yükleniyor..." : "Daha Fazla Yükle"}
                 </Button>
               </div>
             ) : null}
@@ -598,7 +598,7 @@ const CaddePage = () => {
           <Card className="border-slate-200 bg-white/90">
             <CardHeader>
               <CardTitle>Billboard</CardTitle>
-              <CardDescription>Danisman, isletme ve etkinlik kartlari</CardDescription>
+              <CardDescription>Danışman, işletme ve etkinlik kartları</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {(billboardsQuery.data ?? []).map((card) => (
@@ -620,16 +620,16 @@ const CaddePage = () => {
 
           <Card className="border-slate-200 bg-slate-900 text-white">
             <CardHeader>
-              <CardTitle className="text-white">Cadde Icinde Gorunur Ol</CardTitle>
-              <CardDescription className="text-slate-300">Billboard veya sponsorlu akista yer almak icin talep birak.</CardDescription>
+              <CardTitle className="text-white">Cadde İçinde Görünür Ol</CardTitle>
+              <CardDescription className="text-slate-300">Billboard veya sponsorlu akışta yer almak için talep bırak.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-start gap-3 rounded-2xl bg-white/10 p-3">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-orange-300" />
-                <p className="text-sm text-slate-200">Danisman, etkinlik ve topluluk kampanyalarini sehir bazli yayinlayabilirsin.</p>
+                <p className="text-sm text-slate-200">Danışman, etkinlik ve topluluk kampanyalarını şehir bazlı yayınlayabilirsin.</p>
               </div>
               <Button asChild className="w-full rounded-2xl bg-white text-slate-900 hover:bg-slate-100">
-                <Link to="/form">Basvuru Gonder</Link>
+                <Link to="/form">Başvuru Gönder</Link>
               </Button>
             </CardContent>
           </Card>

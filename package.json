@@ -5,15 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm run verify:text",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "start": "node server.mjs",
     "verify:release": "node scripts/verify-release.mjs",
+    "verify:text": "node scripts/verify-text-encoding.mjs",
     "import:command-center:may13": "node scripts/import-command-center-may13.mjs",
     "import:command-center:may13:write": "node scripts/import-command-center-may13.mjs --write",
     "import:resources:replace": "node scripts/replace-resource-entries-from-csv.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
+    "pretest": "npm run verify:text",
     "test": "vitest run",
     "test:watch": "vitest"
   },

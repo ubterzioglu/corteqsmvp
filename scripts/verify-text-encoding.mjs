@@ -1,0 +1,109 @@
+import { readdir, readFile, stat } from "node:fs/promises";
+import path from "node:path";
+
+const rootDir = process.cwd();
+const decoder = new TextDecoder("utf-8", { fatal: true });
+const includeDirs = ["src", "public", "docs", "scripts"];
+const includeFiles = ["index.html", "package.json", "vite.config.ts", "tsconfig.json"];
+const extensions = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json", ".md", ".html", ".css", ".svg", ".yml", ".yaml"]);
+const skipDirs = new Set(["node_modules", ".git", "dist", "coverage"]);
+const suspiciousPattern = /(Ã|Ä|Å|â€™|â€œ|â€|ðŸ|�)/;
+
+async function walk(targetPath, files) {
+  const entry = await stat(targetPath);
+  if (entry.isDirectory()) {
+    if (skipDirs.has(path.basename(targetPath))) return;
+    const children = await readdir(targetPath, { withFileTypes: true });
+    for (const child of children) {
+      await walk(path.join(targetPath, child.name), files);
+    }
+    return;
+  }
+
+  if (extensions.has(path.extname(targetPath))) {
+    files.push(targetPath);
+  }
+}
+
+function findSuspiciousLines(content) {
+  return content
+    .split(/\r?\n/)
+    .map((line, index) => ({ line, lineNumber: index + 1 }))
+    .filter(({ line }) => line.includes("\uFFFD") || suspiciousPattern.test(line))
+    .map(({ line, lineNumber }) => ({ lineNumber, snippet: line.trim().slice(0, 180) }));
+}
+
+async function collectFiles() {
+  const files = [];
+
+  for (const dir of includeDirs) {
+    const absoluteDir = path.join(rootDir, dir);
+    try {
+      await walk(absoluteDir, files);
+    } catch {
+      // optional directory
+    }
+  }
+
+  for (const file of includeFiles) {
+    const absoluteFile = path.join(rootDir, file);
+    try {
+      const entry = await stat(absoluteFile);
+      if (entry.isFile()) files.push(absoluteFile);
+    } catch {
+      // optional file
+    }
+  }
+
+  return files;
+}
+
+async function main() {
+  const files = await collectFiles();
+  const failures = [];
+
+  for (const file of files) {
+    let content;
+    try {
+      content = decoder.decode(await readFile(file));
+    } catch (error) {
+      failures.push({
+        file,
+        type: "invalid-utf8",
+        detail: error instanceof Error ? error.message : String(error),
+      });
+      continue;
+    }
+
+    const suspiciousLines = findSuspiciousLines(content);
+    if (suspiciousLines.length > 0) {
+      failures.push({
+        file,
+        type: "suspicious-text",
+        detail: suspiciousLines,
+      });
+    }
+  }
+
+  if (failures.length === 0) {
+    console.log(`UTF-8 verification passed for ${files.length} files.`);
+    return;
+  }
+
+  console.error("UTF-8 verification failed.\n");
+  for (const failure of failures) {
+    console.error(`- ${path.relative(rootDir, failure.file)} [${failure.type}]`);
+    if (failure.type === "invalid-utf8") {
+      console.error(`  ${failure.detail}`);
+      continue;
+    }
+
+    for (const issue of failure.detail) {
+      console.error(`  line ${issue.lineNumber}: ${issue.snippet}`);
+    }
+  }
+
+  process.exitCode = 1;
+}
+
+await main();

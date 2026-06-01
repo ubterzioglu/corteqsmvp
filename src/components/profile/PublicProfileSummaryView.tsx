@@ -35,7 +35,7 @@ const PublicProfileSummaryView = ({ model, mode = "public" }: Props) => {
           <div className="min-w-0 space-y-2">
             <div className="flex flex-wrap items-center gap-1.5">
               <Badge variant="secondary">{model.roleLabel}</Badge>
-              {mode === "preview" ? <Badge variant="outline">Public Onizleme</Badge> : null}
+              {mode === "preview" ? <Badge variant="outline">Public Önizleme</Badge> : null}
               {model.badges.slice(1).map((badge) => (
                 <Badge key={badge} variant="outline" className="text-[10px]">
                   {badge}
@@ -45,7 +45,7 @@ const PublicProfileSummaryView = ({ model, mode = "public" }: Props) => {
             <div>
               <CardTitle className="text-2xl">{model.displayName}</CardTitle>
               <CardDescription className="mt-1 text-sm">
-                {model.headline || model.roleDescription || "Profil ozeti henüz eklenmedi."}
+                {model.headline || model.roleDescription || "Profil özeti henüz eklenmedi."}
               </CardDescription>
             </div>
             {model.locationLabel ? (
@@ -80,7 +80,7 @@ const PublicProfileSummaryView = ({ model, mode = "public" }: Props) => {
 
         {model.links.length ? (
           <div className="space-y-2">
-            <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Baglantilar</p>
+            <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Bağlantılar</p>
             <div className="flex flex-wrap gap-2">
               {model.links.map((link) => (
                 <a

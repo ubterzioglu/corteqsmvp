@@ -483,12 +483,12 @@ const AdminRolesFeaturesPage = () => {
                                         className="inline-flex w-[148px] items-center gap-1.5 rounded-md border border-border/80 bg-background/80 px-2 py-1 text-left text-[10px] font-medium leading-4 text-slate-700 transition hover:bg-muted/40"
                                       >
                                         <Info className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                                        <span>Detayli aciklama</span>
+                                        <span>Detaylı açıklama</span>
                                       </button>
                                     </HoverCardTrigger>
                                     <HoverCardContent align="start" side="bottom" className="w-[280px] rounded-lg border border-muted bg-background p-2.5 text-[10px] leading-4 text-muted-foreground shadow-md">
                                       <div className="space-y-1.5">
-                                        <p><span className="font-medium text-slate-700">Ozet:</span> {featureDetail.details.summary}</p>
+                                        <p><span className="font-medium text-slate-700">Özet:</span> {featureDetail.details.summary}</p>
                                         <p><span className="font-medium text-slate-700">Etkisi:</span> {featureDetail.details.effect}</p>
                                         <p><span className="font-medium text-slate-700">Not:</span> {featureDetail.details.adminHint}</p>
                                       </div>

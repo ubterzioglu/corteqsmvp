@@ -83,7 +83,7 @@ const RadarNewsManager = () => {
     try {
       setItems(await fetchRadarNewsAdmin());
     } catch (error) {
-      toast({ title: "Radar haberleri yuklenemedi", description: String(error), variant: "destructive" });
+      toast({ title: "Radar haberleri yüklenemedi", description: String(error), variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -113,9 +113,9 @@ const RadarNewsManager = () => {
     try {
       const url = await uploadRadarImage(file);
       setForm((current) => ({ ...current, imageUrl: url, imageAlt: current.imageAlt || current.title }));
-      toast({ title: "Gorsel yuklendi" });
+      toast({ title: "Görsel yüklendi" });
     } catch (error) {
-      toast({ title: "Gorsel yuklenemedi", description: String(error), variant: "destructive" });
+      toast({ title: "Görsel yüklenemedi", description: String(error), variant: "destructive" });
     } finally {
       setUploading(false);
       event.target.value = "";
@@ -125,7 +125,7 @@ const RadarNewsManager = () => {
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!form.title.trim() || !form.summary.trim()) {
-      toast({ title: "Baslik ve ozet zorunlu", variant: "destructive" });
+      toast({ title: "Başlık ve özet zorunlu", variant: "destructive" });
       return;
     }
 
@@ -148,7 +148,7 @@ const RadarNewsManager = () => {
     try {
       if (editingItem) {
         await updateRadarNews(editingItem.id, payload);
-        toast({ title: "Haber guncellendi" });
+        toast({ title: "Haber güncellendi" });
       } else {
         await createRadarNews(payload);
         toast({ title: "Haber eklendi" });
@@ -158,20 +158,20 @@ const RadarNewsManager = () => {
       setForm(EMPTY_FORM);
       await load();
     } catch (error) {
-      toast({ title: "Kayit basarisiz", description: String(error), variant: "destructive" });
+      toast({ title: "Kayıt başarısız", description: String(error), variant: "destructive" });
     } finally {
       setSaving(false);
     }
   };
 
   const onDelete = async (item: RadarNewsItem) => {
-    if (!confirm(`"${item.title}" kaydini silmek istediginden emin misin?`)) return;
+    if (!confirm(`"${item.title}" kaydını silmek istediğinden emin misin?`)) return;
     try {
       await deleteRadarNews(item.id);
       toast({ title: "Haber silindi" });
       await load();
     } catch (error) {
-      toast({ title: "Silme basarisiz", description: String(error), variant: "destructive" });
+      toast({ title: "Silme başarısız", description: String(error), variant: "destructive" });
     }
   };
 
@@ -180,10 +180,10 @@ const RadarNewsManager = () => {
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="flex items-center gap-2 text-xl font-bold text-foreground">
-            <Newspaper className="h-5 w-5 text-primary" /> CorteQS Radar Yonetimi
+            <Newspaper className="h-5 w-5 text-primary" /> CorteQS Radar Yönetimi
           </h2>
           <p className="text-sm text-muted-foreground">
-            Ana sayfadaki marquee, tum haberler listesi ve detay sayfalari buradan yonetilir.
+            Ana sayfadaki marquee, tüm haberler listesi ve detay sayfaları buradan yönetilir.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -204,7 +204,7 @@ const RadarNewsManager = () => {
         ) : sortedItems.length === 0 ? (
           <Card className="xl:col-span-2">
             <CardContent className="py-10 text-center text-sm text-muted-foreground">
-              Henuz Radar haberi bulunmuyor.
+              Henüz Radar haberi bulunmuyor.
             </CardContent>
           </Card>
         ) : (
@@ -219,7 +219,7 @@ const RadarNewsManager = () => {
                         <Badge variant={item.isActive ? "default" : "secondary"}>
                           {item.isActive ? "Aktif" : "Pasif"}
                         </Badge>
-                        <Badge variant="outline">Sira: {item.sortOrder}</Badge>
+                        <Badge variant="outline">Sıra: {item.sortOrder}</Badge>
                         {hasDetail ? <Badge variant="outline">Detay var</Badge> : <Badge variant="secondary">Detay yok</Badge>}
                       </div>
                       <CardTitle className="line-clamp-2 text-lg">{item.title}</CardTitle>
@@ -241,7 +241,7 @@ const RadarNewsManager = () => {
                   <p className="line-clamp-3 text-sm text-muted-foreground">{item.summary}</p>
                   <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground">
                     <div>Slug: {item.slug || "—"}</div>
-                    <div>Yayin: {new Date(item.publishedAt).toLocaleString("tr-TR")}</div>
+                    <div>Yayın: {new Date(item.publishedAt).toLocaleString("tr-TR")}</div>
                     <div>Metrik: {item.metricValue || "—"}</div>
                     <div>Harici URL: {item.externalUrl ? "Var" : "Yok"}</div>
                   </div>
@@ -261,7 +261,7 @@ const RadarNewsManager = () => {
                       </a>
                     ) : null}
                     <Button size="sm" variant="outline" className="gap-1.5" onClick={() => openEdit(item)}>
-                      <Edit className="h-3.5 w-3.5" /> Duzenle
+                      <Edit className="h-3.5 w-3.5" /> Düzenle
                     </Button>
                     <Button
                       size="sm"
@@ -282,12 +282,12 @@ const RadarNewsManager = () => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingItem ? "Radar Haberini Duzenle" : "Yeni Radar Haberi"}</DialogTitle>
+            <DialogTitle>{editingItem ? "Radar Haberini Düzenle" : "Yeni Radar Haberi"}</DialogTitle>
           </DialogHeader>
           <form onSubmit={onSubmit} className="space-y-5">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="radar-title">Baslik</Label>
+                <Label htmlFor="radar-title">Başlık</Label>
                 <Input
                   id="radar-title"
                   value={form.title}
@@ -303,7 +303,7 @@ const RadarNewsManager = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Kayit Turu</Label>
+                <Label>Kayıt Türü</Label>
                 <div className="flex h-10 items-center rounded-md border border-input bg-muted/40 px-3 text-sm font-medium text-foreground">
                   Haber
                 </div>
@@ -311,18 +311,18 @@ const RadarNewsManager = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="radar-summary">Kisa Ozet</Label>
+              <Label htmlFor="radar-summary">Kısa Özet</Label>
               <Textarea
                 id="radar-summary"
                 rows={3}
                 value={form.summary}
                 onChange={(event) => setForm((current) => ({ ...current, summary: event.target.value }))}
-                placeholder="Marquee ve liste kartlarinda gorunecek kisa ozet"
+                placeholder="Marquee ve liste kartlarında görünecek kısa özet"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="radar-detail">Detay Icerigi</Label>
+              <Label htmlFor="radar-detail">Detay İçeriği</Label>
               <Textarea
                 id="radar-detail"
                 rows={8}
@@ -335,13 +335,13 @@ const RadarNewsManager = () => {
                     slug: detailContent.trim() ? slugify(current.title) : "",
                   }));
                 }}
-                placeholder="Bos birakilirsa detay sayfasi olusmaz ve 'Detayi oku' gosterilmez."
+                placeholder="Boş bırakılırsa detay sayfası oluşmaz ve 'Detayı oku' gösterilmez."
               />
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="radar-image-url">Gorsel URL</Label>
+                <Label htmlFor="radar-image-url">Görsel URL</Label>
                 <Input
                   id="radar-image-url"
                   value={form.imageUrl}
@@ -350,25 +350,25 @@ const RadarNewsManager = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="radar-image-alt">Gorsel Alt Metni</Label>
+                <Label htmlFor="radar-image-alt">Görsel Alt Metni</Label>
                 <Input
                   id="radar-image-alt"
                   value={form.imageAlt}
                   onChange={(event) => setForm((current) => ({ ...current, imageAlt: event.target.value }))}
-                  placeholder="Gorsel aciklamasi"
+                  placeholder="Görsel açıklaması"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="radar-upload">Gorsel Yukle</Label>
+              <Label htmlFor="radar-upload">Görsel Yükle</Label>
               <Input id="radar-upload" type="file" accept="image/*" onChange={(event) => void onUpload(event)} />
-              {uploading ? <p className="text-xs text-muted-foreground">Gorsel yukleniyor...</p> : null}
+              {uploading ? <p className="text-xs text-muted-foreground">Görsel yükleniyor...</p> : null}
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="radar-external-url">Dis Kaynak URL</Label>
+                <Label htmlFor="radar-external-url">Dış Kaynak URL</Label>
                 <Input
                   id="radar-external-url"
                   value={form.externalUrl}
@@ -399,7 +399,7 @@ const RadarNewsManager = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="radar-sort-order">Siralama</Label>
+                <Label htmlFor="radar-sort-order">Sıralama</Label>
                 <Input
                   id="radar-sort-order"
                   type="number"
@@ -408,7 +408,7 @@ const RadarNewsManager = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="radar-published-at">Yayin Tarihi</Label>
+                <Label htmlFor="radar-published-at">Yayın Tarihi</Label>
                 <Input
                   id="radar-published-at"
                   type="datetime-local"
@@ -420,19 +420,19 @@ const RadarNewsManager = () => {
 
             <div className="flex items-center justify-between rounded-xl border border-border bg-muted/30 px-4 py-3">
               <div>
-                <p className="text-sm font-semibold text-foreground">Yayinda gorunsun</p>
-                <p className="text-xs text-muted-foreground">Kapaliysa public tarafta listelenmez.</p>
+                <p className="text-sm font-semibold text-foreground">Yayında görünsün</p>
+                <p className="text-xs text-muted-foreground">Kapalıysa public tarafta listelenmez.</p>
               </div>
               <Switch checked={form.isActive} onCheckedChange={(checked) => setForm((current) => ({ ...current, isActive: checked }))} />
             </div>
 
             <div className="flex items-center justify-end gap-2">
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                Vazgec
+                Vazgeç
               </Button>
               <Button type="submit" disabled={saving} className="gap-1.5">
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                {editingItem ? "Degisiklikleri Kaydet" : "Haberi Yayinla"}
+                {editingItem ? "Değişiklikleri Kaydet" : "Haberi Yayınla"}
               </Button>
             </div>
           </form>
