@@ -11,7 +11,6 @@ import {
   adminPanelNavItems,
   communityNavItems,
   externalAdminNavItems,
-  may19RecordNavItems,
   newMemberSystemNavItems,
   otherActionNavItems,
   otherRecordNavItems,
@@ -102,17 +101,20 @@ const AdminLayout = () => {
   const [resetLoading, setResetLoading] = useState(false);
   const [otherActionsMenuOpen, setOtherActionsMenuOpen] = useState(false);
   const [eventMenuOpen, setEventMenuOpen] = useState(false);
+  const [inactiveMenuOpen, setInactiveMenuOpen] = useState(false);
   const [newMemberMenuOpen, setNewMemberMenuOpen] = useState(false);
   const [communityMenuOpen, setCommunityMenuOpen] = useState(false);
   const [advisorMenuOpen, setAdvisorMenuOpen] = useState(false);
   const [adminPanelMenuOpen, setAdminPanelMenuOpen] = useState(false);
   const demoUrl = "https://global-network-bridge.lovable.app/";
   const eventNavItems = [
-    { to: "/admin/may19/ani", label: "19 Mayıs Anı" },
-    { to: "/admin/may19/kelime", label: "19 Mayıs Fikir" },
     { to: "/admin/surveys", label: "Anketler" },
     { to: "/admin/whatsapp-landings", label: "Topluluklar" },
     { to: "/admin/consulates", label: "Konsolosluk Profilleri" },
+  ] as const;
+  const inactiveNavItems = [
+    { to: "/admin/may19/ani", label: "19 Mayıs Anı" },
+    { to: "/admin/may19/kelime", label: "19 Mayıs Fikir" },
   ] as const;
 
   const syncSession = useCallback(async (nextSession: Session | null) => {
@@ -230,10 +232,10 @@ const AdminLayout = () => {
 
   const advisorMenuActive =
     location.pathname.startsWith("/admin/advisors/") ||
-    otherRecordNavItems.some((item) => location.pathname === item.to) ||
-    may19RecordNavItems.some((item) => location.pathname === item.to);
+    otherRecordNavItems.some((item) => location.pathname === item.to);
   const communityMenuActive = communityNavItems.some((item) => location.pathname === item.to);
   const eventMenuActive = eventNavItems.some((item) => location.pathname === item.to);
+  const inactiveMenuActive = inactiveNavItems.some((item) => location.pathname === item.to);
   const newMemberMenuActive =
     location.pathname.startsWith("/admin/new-member") || location.pathname === "/admin/roller-taslak";
   const otherActionsMenuActive = otherActionNavItems.some((item) => location.pathname === item.to);
@@ -425,6 +427,44 @@ const AdminLayout = () => {
                       onMouseLeave={() => setEventMenuOpen(false)}
                     >
                       {eventNavItems.map((item) => {
+                        const isActive = location.pathname === item.to;
+
+                        return (
+                          <DropdownMenuItem key={item.to} asChild>
+                            <Link to={item.to} className="flex items-center justify-between gap-3">
+                              <span>{item.label}</span>
+                              {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
+                            </Link>
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                <div className="flex items-center">
+                  <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
+                  <DropdownMenu open={inactiveMenuOpen} onOpenChange={setInactiveMenuOpen}>
+                    <DropdownMenuTrigger asChild>
+                      <div
+                        onMouseEnter={() => setInactiveMenuOpen(true)}
+                        onMouseLeave={() => setInactiveMenuOpen(false)}
+                      >
+                        <button
+                          type="button"
+                          className={`${linkClass({ isActive: inactiveMenuActive })} inline-flex items-center gap-1`}
+                        >
+                          Inaktif
+                          <ChevronDown className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="start"
+                      className="w-48"
+                      onMouseEnter={() => setInactiveMenuOpen(true)}
+                      onMouseLeave={() => setInactiveMenuOpen(false)}
+                    >
+                      {inactiveNavItems.map((item) => {
                         const isActive = location.pathname === item.to;
 
                         return (
@@ -644,23 +684,6 @@ const AdminLayout = () => {
                             <DropdownMenuItem key={section.key} asChild>
                               <Link to={href} className="flex items-center justify-between gap-3">
                                 <span>{section.label}</span>
-                                {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
-                              </Link>
-                            </DropdownMenuItem>
-                          );
-                        })}
-                      </DropdownMenuSubContent>
-                    </DropdownMenuSub>
-                    <DropdownMenuSub>
-                      <DropdownMenuSubTrigger>19 Mayıs</DropdownMenuSubTrigger>
-                      <DropdownMenuSubContent className="w-56">
-                        {may19RecordNavItems.map((item) => {
-                          const isActive = location.pathname === item.to;
-
-                          return (
-                            <DropdownMenuItem key={item.to} asChild>
-                              <Link to={item.to} className="flex items-center justify-between gap-3">
-                                <span>{item.label}</span>
                                 {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
                               </Link>
                             </DropdownMenuItem>

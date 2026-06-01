@@ -386,8 +386,8 @@ const AdminMembersPage = () => {
       setSelectedSubmissionId(null);
       return;
     }
-    if (!selectedSubmissionId || !rows.some((submission) => submission.id === selectedSubmissionId)) {
-      setSelectedSubmissionId(rows[0].id);
+    if (selectedSubmissionId && !rows.some((submission) => submission.id === selectedSubmissionId)) {
+      setSelectedSubmissionId(null);
     }
   }, [rows, selectedSubmissionId]);
 
@@ -519,6 +519,12 @@ const AdminMembersPage = () => {
     setIsDetailEditing(false);
     setDetailDraft(null);
   };
+
+  const closeDetailDialog = useCallback(() => {
+    setSelectedSubmissionId(null);
+    setIsDetailEditing(false);
+    setDetailDraft(null);
+  }, []);
 
   const saveDetailEdit = async () => {
     if (!selectedSubmission || !detailDraft) return;
@@ -1218,12 +1224,17 @@ const AdminMembersPage = () => {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Kayıt Detayı</CardTitle>
-          <CardDescription>Seçili üyenin detay bilgilerini ve kayıt kaynağını görüntüleyin.</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <Dialog
+        open={Boolean(selectedSubmission)}
+        onOpenChange={(open) => {
+          if (!open) closeDetailDialog();
+        }}
+      >
+        <DialogContent className="max-h-[88vh] max-w-5xl overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Kayıt Detayı</DialogTitle>
+            <DialogDescription>Seçili üyenin detay bilgilerini ve kayıt kaynağını görüntüleyin.</DialogDescription>
+          </DialogHeader>
           {selectedSubmission ? (
             isDetailEditing && detailDraft ? (
               <div className="space-y-4">
@@ -1351,28 +1362,29 @@ const AdminMembersPage = () => {
                         const documentKey = `${document.path ?? document.url ?? document.name}-${index}`;
 
                         return (
-                        <div
-                          key={documentKey}
-                          className="flex flex-wrap items-center justify-between gap-2 rounded-md border bg-background px-3 py-2 text-xs"
-                        >
-                          <div className="min-w-0">
-                            <div className="truncate font-medium text-foreground">{document.name}</div>
-                            {document.sizeBytes ? (
-                              <div className="text-muted-foreground">{formatBytes(document.sizeBytes)}</div>
-                            ) : null}
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 gap-1 text-xs"
-                            disabled={openingDocumentKey === documentKey}
-                            onClick={() => void openSubmissionDocument(documentKey, index)}
+                          <div
+                            key={documentKey}
+                            className="flex flex-wrap items-center justify-between gap-2 rounded-md border bg-background px-3 py-2 text-xs"
                           >
-                            Aç
-                            <ExternalLink className="h-3.5 w-3.5" />
-                          </Button>
-                        </div>
-                      )})}
+                            <div className="min-w-0">
+                              <div className="truncate font-medium text-foreground">{document.name}</div>
+                              {document.sizeBytes ? (
+                                <div className="text-muted-foreground">{formatBytes(document.sizeBytes)}</div>
+                              ) : null}
+                            </div>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 gap-1 text-xs"
+                              disabled={openingDocumentKey === documentKey}
+                              onClick={() => void openSubmissionDocument(documentKey, index)}
+                            >
+                              Aç
+                              <ExternalLink className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        );
+                      })}
                     </div>
                   ) : (
                     <p className="text-xs text-muted-foreground">Bu kayda bağlı yüklenmiş doküman bulunmuyor.</p>
@@ -1446,28 +1458,29 @@ const AdminMembersPage = () => {
                         const documentKey = `${document.path ?? document.url ?? document.name}-${index}`;
 
                         return (
-                        <div
-                          key={documentKey}
-                          className="flex flex-wrap items-center justify-between gap-2 rounded-md border bg-background px-3 py-2 text-xs"
-                        >
-                          <div className="min-w-0">
-                            <div className="truncate font-medium text-foreground">{document.name}</div>
-                            {document.sizeBytes ? (
-                              <div className="text-muted-foreground">{formatBytes(document.sizeBytes)}</div>
-                            ) : null}
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 gap-1 text-xs"
-                            disabled={openingDocumentKey === documentKey}
-                            onClick={() => void openSubmissionDocument(documentKey, index)}
+                          <div
+                            key={documentKey}
+                            className="flex flex-wrap items-center justify-between gap-2 rounded-md border bg-background px-3 py-2 text-xs"
                           >
-                            Aç
-                            <ExternalLink className="h-3.5 w-3.5" />
-                          </Button>
-                        </div>
-                      )})}
+                            <div className="min-w-0">
+                              <div className="truncate font-medium text-foreground">{document.name}</div>
+                              {document.sizeBytes ? (
+                                <div className="text-muted-foreground">{formatBytes(document.sizeBytes)}</div>
+                              ) : null}
+                            </div>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 gap-1 text-xs"
+                              disabled={openingDocumentKey === documentKey}
+                              onClick={() => void openSubmissionDocument(documentKey, index)}
+                            >
+                              Aç
+                              <ExternalLink className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        );
+                      })}
                     </div>
                   ) : (
                     <p className="text-xs text-muted-foreground">Bu kayda bağlı yüklenmiş doküman bulunmuyor.</p>
@@ -1491,11 +1504,9 @@ const AdminMembersPage = () => {
                 </div>
               </div>
             )
-          ) : (
-            <p className="text-sm text-muted-foreground">Detayları görmek için tablodan bir kayıt seçin.</p>
-          )}
-        </CardContent>
-      </Card>
+          ) : null}
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={createOpen} onOpenChange={(open) => { setCreateOpen(open); if (!open) closeAction(); }}>
         <DialogContent>
