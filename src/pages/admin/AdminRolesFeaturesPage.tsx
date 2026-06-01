@@ -256,6 +256,14 @@ const getFallbackFeatureDescription = (feature: FeatureCatalogRow) => {
   return `${feature.label || humanizeFeatureKey(featureKey)} için erişim davranışını kontrol eder`;
 };
 
+const getScopeRoleLabel = (scopeRole: string, roleByKey: Map<string, RoleRow>) => {
+  if (scopeRole === "*") {
+    return "Tum Roller";
+  }
+
+  return roleByKey.get(scopeRole)?.label ?? scopeRole;
+};
+
 const guideSections: AdminPageGuideSection[] = [
   {
     title: "Bu ekran ne için kullanılır?",
@@ -504,7 +512,7 @@ const AdminRolesFeaturesPage = () => {
                         <div className="mt-1.5 flex flex-wrap gap-1">
                           {Array.from(new Set(features.filter((item) => item.key === feature.key).map((item) => item.scope_role))).map((scopeRole) => (
                             <Badge key={scopeRole} variant="outline" className="px-1.5 py-0 text-[9px] leading-4">
-                              {roleByKey.get(scopeRole)?.label ?? scopeRole}
+                              {getScopeRoleLabel(scopeRole, roleByKey)}
                             </Badge>
                           ))}
                         </div>
