@@ -102,7 +102,7 @@ const LansmanPage = () => {
                   <a href="#lansman-formu">Lansmana Kayıt Ol</a>
                 </Button>
                 <Button asChild size="lg" variant="outline" className={heroCtaClass}>
-                  <a href="https://corteqs.net/" target="_blank" rel="noreferrer">
+                  <a href="https://mvp.corteqs.net/" target="_blank" rel="noreferrer">
                     CorteQS Hakkında
                   </a>
                 </Button>

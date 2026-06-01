@@ -5,18 +5,18 @@
 CorteQS, yurt dışındaki Türk diasporasını şehir bazlı olarak danışmanlar (vize, emlak, iş kurma, vergi, hukuk, kariyer), işletmeler, dernekler, vakıflar, radyo/TV yayıncıları, bloggerlar/vloggerlar, şehir elçileri ve bireylerle buluşturan bir diaspora network platformudur. Platform 2026'da Istanbul merkezli kurulmuş olup küresel ölçekte Berlin, Londra, Amsterdam, Dubai, Sydney ve New York gibi yoğun diaspora şehirlerinde erken aktif olmayı planlar.
 
 ## Ana sayfa
-- [CorteQS Ana Sayfa](https://corteqs.net/): Platform tanıtımı, erken kayıt ve destek formları
-- [Hakkında bölümü](https://corteqs.net/#hakkinda): "CorteQS Nedir ve Diaspora Nasıl Birleştirilir?"
-- [Sıkça Sorulan Sorular](https://corteqs.net/#sss): 12 başlıklı SSS — platform işleyişi, katılım, ücretlendirme, ülke/şehir aktivasyonu
+- [CorteQS Ana Sayfa](https://mvp.corteqs.net/): Platform tanıtımı, erken kayıt ve destek formları
+- [Hakkında bölümü](https://mvp.corteqs.net/#hakkinda): "CorteQS Nedir ve Diaspora Nasıl Birleştirilir?"
+- [Sıkça Sorulan Sorular](https://mvp.corteqs.net/#sss): 12 başlıklı SSS — platform işleyişi, katılım, ücretlendirme, ülke/şehir aktivasyonu
 
 ## Kategoriler
-- [Kategoriler bölümü](https://corteqs.net/#kategoriler): Danışmanlar, İşletmeler & Şirketler, Dernekler & Vakıflar, Radyo/TV, Blogger/Vlogger, Şehir Elçileri, Bireyler
+- [Kategoriler bölümü](https://mvp.corteqs.net/#kategoriler): Danışmanlar, İşletmeler & Şirketler, Dernekler & Vakıflar, Radyo/TV, Blogger/Vlogger, Şehir Elçileri, Bireyler
 
 ## Katılım yolları
-- [Erken İlgi Kaydı](https://corteqs.net/#ilgi): Ücretsiz erken erişim listesi — kategori ve şehir seçimi ile
-- [Destekçi / Kurucu Programı](https://corteqs.net/#destek): $1.000 "Ülke Bazlı Kurucu" ve $10.000 "Onursal Kurucu" katkı seçenekleri
-- [Şehir Elçisi Başvurusu](https://corteqs.net/#elci): Bulunulan şehirde diaspora ağını temsil eden bölgesel partnerlik rolü
-- [Blogger & Vlogger Ağı](https://corteqs.net/#blogger): İçerik üreticileri için görünürlük ve topluluk ağı
+- [Erken İlgi Kaydı](https://mvp.corteqs.net/#ilgi): Ücretsiz erken erişim listesi — kategori ve şehir seçimi ile
+- [Destekçi / Kurucu Programı](https://mvp.corteqs.net/#destek): $1.000 "Ülke Bazlı Kurucu" ve $10.000 "Onursal Kurucu" katkı seçenekleri
+- [Şehir Elçisi Başvurusu](https://mvp.corteqs.net/#elci): Bulunulan şehirde diaspora ağını temsil eden bölgesel partnerlik rolü
+- [Blogger & Vlogger Ağı](https://mvp.corteqs.net/#blogger): İçerik üreticileri için görünürlük ve topluluk ağı
 
 ## İletişim
 - E-posta: info@corteqs.net
@@ -25,5 +25,5 @@ CorteQS, yurt dışındaki Türk diasporasını şehir bazlı olarak danışmanl
 - Instagram: https://www.instagram.com/corteqssocial
 
 ## Teknik
-- [robots.txt](https://corteqs.net/robots.txt)
-- [sitemap.xml](https://corteqs.net/sitemap.xml)
+- [robots.txt](https://mvp.corteqs.net/robots.txt)
+- [sitemap.xml](https://mvp.corteqs.net/sitemap.xml)

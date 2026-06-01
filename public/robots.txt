@@ -64,4 +64,4 @@ User-agent: Bytespider
 Allow: /
 Disallow: /admin
 
-Sitemap: https://corteqs.net/sitemap.xml
+Sitemap: https://mvp.corteqs.net/sitemap.xml

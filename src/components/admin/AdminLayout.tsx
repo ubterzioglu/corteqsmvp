@@ -339,7 +339,7 @@ const AdminLayout = () => {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <a
-                href="https://corteqs.net"
+                href="https://mvp.corteqs.net"
                 target="_blank"
                 rel="noreferrer"
                 className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background p-1.5 shadow-sm transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-md"

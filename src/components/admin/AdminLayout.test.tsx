@@ -65,7 +65,7 @@ describe("AdminLayout", () => {
       expect(screen.getByText("Admin Home Content")).toBeInTheDocument();
     });
 
-    expect(screen.getByRole("link", { name: /CorteQS ana siteye git/i })).toHaveAttribute("href", "https://corteqs.net");
+    expect(screen.getByRole("link", { name: /CorteQS ana siteye git/i })).toHaveAttribute("href", "https://mvp.corteqs.net");
     expect(screen.getByRole("link", { name: "Demo" })).toHaveAttribute(
       "href",
       "https://global-network-bridge.lovable.app/",

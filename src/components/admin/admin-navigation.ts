@@ -21,7 +21,7 @@ export const newMemberSystemNavItems = [
 export const externalAdminNavItems = [
   { href: "https://eng.corteqs.net", label: "Engine", icon: ExternalLink },
   { href: "https://globe.corteqs.net", label: "Globe", icon: ExternalLink },
-  { href: "https://corteqs.net/founders", label: "Founders", icon: ExternalLink },
+  { href: "https://mvp.corteqs.net/founders", label: "Founders", icon: ExternalLink },
 ] as const;
 
 export const otherActionNavItems = [

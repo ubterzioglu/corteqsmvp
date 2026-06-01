@@ -8,7 +8,7 @@ type MetaState = {
 
 const DESCRIPTION =
   "Read CorteQS Privacy Policy to understand how we collect, use, protect, and retain personal information.";
-const CANONICAL_URL = "https://corteqs.net/privacy-policy";
+const CANONICAL_URL = "https://mvp.corteqs.net/privacy-policy";
 
 const upsertMetaDescription = (content: string) => {
   let element = document.querySelector('meta[name="description"]');
@@ -185,7 +185,7 @@ const PrivacyPolicyPage = () => {
             <h2 className="mb-3 text-xl font-bold text-foreground">10. Contact</h2>
             <p>For any privacy-related questions or requests:</p>
             <p className="mt-3">📧 Email: info@corteqs.net</p>
-            <p>🌐 Website: https://corteqs.net</p>
+            <p>🌐 Website: https://mvp.corteqs.net</p>
           </section>
 
           <section>

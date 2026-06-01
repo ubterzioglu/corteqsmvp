@@ -1,48 +1,43 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import { useDiaspora } from "@/contexts/DiasporaContext";
 import WelcomePackOrderForm from "@/components/WelcomePackOrderForm";
-
-interface SearchResult {
-  title: string;
-  description: string;
-  category: string;
-  location: string;
-  type: string;
-  icon: string;
-}
+import { searchDiaspora, type DiasporaSearchResult } from "@/lib/diasporaSearch";
 
 const quickPillClass =
-  "inline-flex items-center gap-1.5 rounded-full border border-orange-200/70 bg-[linear-gradient(135deg,rgba(255,243,236,0.92),rgba(255,233,220,0.98))] px-4 py-2 text-xs font-medium text-orange-700 shadow-[0_10px_28px_-20px_rgba(249,115,22,0.28)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,rgba(255,238,228,0.96),rgba(255,225,207,1))] hover:text-orange-800 hover:shadow-[0_16px_36px_-22px_rgba(249,115,22,0.34)]";
+  "inline-flex min-w-[168px] items-center justify-center gap-1.5 rounded-full border px-4 py-2 text-xs font-semibold shadow-[0_10px_28px_-20px_rgba(15,23,42,0.24)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_36px_-22px_rgba(15,23,42,0.3)]";
+
+const quickPillStyles = {
+  blue: "border-[#4285F4]/35 bg-[linear-gradient(135deg,rgba(66,133,244,0.12),rgba(66,133,244,0.2))] text-[#185ABC] hover:bg-[linear-gradient(135deg,rgba(66,133,244,0.18),rgba(66,133,244,0.26))]",
+  red: "border-[#EA4335]/35 bg-[linear-gradient(135deg,rgba(234,67,53,0.12),rgba(234,67,53,0.2))] text-[#C5221F] hover:bg-[linear-gradient(135deg,rgba(234,67,53,0.18),rgba(234,67,53,0.26))]",
+  yellow: "border-[#FBBC05]/45 bg-[linear-gradient(135deg,rgba(251,188,5,0.14),rgba(251,188,5,0.24))] text-[#B06000] hover:bg-[linear-gradient(135deg,rgba(251,188,5,0.2),rgba(251,188,5,0.3))]",
+  green: "border-[#34A853]/35 bg-[linear-gradient(135deg,rgba(52,168,83,0.12),rgba(52,168,83,0.2))] text-[#137333] hover:bg-[linear-gradient(135deg,rgba(52,168,83,0.18),rgba(52,168,83,0.26))]",
+} as const;
 
 const DiasporaSearchBar = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { selectedCountry } = useDiaspora();
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchResult[]>([]);
+  const [results, setResults] = useState<DiasporaSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const handleSearch = async () => {
+  const runSearch = (searchQuery: string) => {
+    const trimmedQuery = searchQuery.trim();
+    if (!trimmedQuery) return;
+
+    const country = selectedCountry === "all" ? null : selectedCountry;
+    const matchedResults = searchDiaspora(trimmedQuery, country);
+    setResults(matchedResults);
+  };
+
+  const handleSearch = () => {
     if (!query.trim()) return;
     setLoading(true);
     setHasSearched(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("diaspora-search", {
-        body: { query: query.trim(), country: selectedCountry === "all" ? null : selectedCountry },
-      });
-      if (error) throw error;
-      setResults(data?.results || []);
-    } catch (e: any) {
-      toast({ title: "Arama hatası", description: e.message || "Bir hata oluştu", variant: "destructive" });
-      setResults([]);
-    } finally {
-      setLoading(false);
-    }
+    runSearch(query);
+    setLoading(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -53,17 +48,8 @@ const DiasporaSearchBar = () => {
     setQuery(term);
     setLoading(true);
     setHasSearched(true);
-    supabase.functions.invoke("diaspora-search", {
-      body: { query: term, country: selectedCountry === "all" ? null : selectedCountry },
-    }).then(({ data, error }) => {
-      if (error) {
-        toast({ title: "Arama hatası", description: "Bir hata oluştu", variant: "destructive" });
-        setResults([]);
-      } else {
-        setResults(data?.results || []);
-      }
-      setLoading(false);
-    });
+    runSearch(term);
+    setLoading(false);
   };
 
   const typeToRoute: Record<string, string> = {
@@ -109,28 +95,19 @@ const DiasporaSearchBar = () => {
           {/* Quick CTA Buttons */}
           <div className="mx-auto flex max-w-6xl flex-col items-center gap-3">
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <button onClick={() => handleQuickSearch("Konsolosluk")} className={quickPillClass}>
+              <button onClick={() => handleQuickSearch("Konsolosluk")} className={`${quickPillClass} ${quickPillStyles.blue}`}>
                 🏛️ Konsolosluk
-              </button>
-              <button onClick={() => handleQuickSearch("Doktor")} className={quickPillClass}>
-                🩺 Doktor
-              </button>
-              <button onClick={() => handleQuickSearch("Hastane")} className={quickPillClass}>
-                🏥 Hastane
               </button>
               <button
                 onClick={() => navigate("/directory")}
-                className={quickPillClass}
+                className={`${quickPillClass} ${quickPillStyles.red}`}
               >
                 🏅 Şehir Elçine Ulaş
               </button>
-              <button onClick={() => handleQuickSearch("Vize danışmanı")} className={quickPillClass}>
+              <button onClick={() => handleQuickSearch("Vize danışmanı")} className={`${quickPillClass} ${quickPillStyles.yellow}`}>
                 ✈️ Vize & Göçmenlik
               </button>
-              <button onClick={() => handleQuickSearch("Türk marketi")} className={quickPillClass}>
-                🛒 Türk Marketi
-              </button>
-              <button onClick={() => handleQuickSearch("İş ilanları")} className={quickPillClass}>
+              <button onClick={() => handleQuickSearch("İş ilanları")} className={`${quickPillClass} ${quickPillStyles.green}`}>
                 💼 İş İlanları
               </button>
             </div>
@@ -138,14 +115,14 @@ const DiasporaSearchBar = () => {
             <div className="flex flex-wrap items-center justify-center gap-3">
               <WelcomePackOrderForm
                 trigger={
-                  <button className={quickPillClass}>
+                  <button className={`${quickPillClass} ${quickPillStyles.red}`}>
                     🎁 Hoşgeldin Paketi Oluştur
                   </button>
                 }
               />
               <button
                 onClick={() => navigate("/cadde")}
-                className={quickPillClass}
+                className={`${quickPillClass} ${quickPillStyles.blue}`}
               >
                 🌍 Taşınma Motoru
               </button>

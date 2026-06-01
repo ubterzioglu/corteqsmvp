@@ -256,14 +256,6 @@ const getFallbackFeatureDescription = (feature: FeatureCatalogRow) => {
   return `${feature.label || humanizeFeatureKey(featureKey)} için erişim davranışını kontrol eder`;
 };
 
-const getScopeRoleLabel = (scopeRole: string, roleByKey: Map<string, RoleRow>) => {
-  if (scopeRole === "*") {
-    return "Tum Roller";
-  }
-
-  return roleByKey.get(scopeRole)?.label ?? scopeRole;
-};
-
 const guideSections: AdminPageGuideSection[] = [
   {
     title: "Bu ekran ne için kullanılır?",
@@ -481,8 +473,6 @@ const AdminRolesFeaturesPage = () => {
                             <div className="space-y-1.5">
                               <div className="space-y-0.5">
                                 <p className="text-[15px] font-medium leading-5 text-foreground">{featureDetail.label}</p>
-                                <p className="break-all text-[10px] leading-4 text-muted-foreground">{feature.key}</p>
-                                <p className="text-[11px] leading-4 text-slate-600">{featureDetail.shortDescription}</p>
                               </div>
                               {featureDetail.details ? (
                                 <div className="pt-0.5">
@@ -490,7 +480,7 @@ const AdminRolesFeaturesPage = () => {
                                     <HoverCardTrigger asChild>
                                       <button
                                         type="button"
-                                        className="inline-flex w-[220px] items-center gap-1.5 rounded-md border border-border/80 bg-background/80 px-2 py-1 text-left text-[10px] font-medium leading-4 text-slate-700 transition hover:bg-muted/40"
+                                        className="inline-flex w-[148px] items-center gap-1.5 rounded-md border border-border/80 bg-background/80 px-2 py-1 text-left text-[10px] font-medium leading-4 text-slate-700 transition hover:bg-muted/40"
                                       >
                                         <Info className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                                         <span>Detayli aciklama</span>
@@ -509,11 +499,27 @@ const AdminRolesFeaturesPage = () => {
                             </div>
                           );
                         })()}
-                        <div className="mt-1.5 flex flex-wrap gap-1">
+                        <div className="mt-1 flex flex-wrap gap-1">
                           {Array.from(new Set(features.filter((item) => item.key === feature.key).map((item) => item.scope_role))).map((scopeRole) => (
-                            <Badge key={scopeRole} variant="outline" className="px-1.5 py-0 text-[9px] leading-4">
-                              {getScopeRoleLabel(scopeRole, roleByKey)}
-                            </Badge>
+                            scopeRole === "*" ? (
+                              <HoverCard key={scopeRole} openDelay={120} closeDelay={80}>
+                                <HoverCardTrigger asChild>
+                                  <button
+                                    type="button"
+                                    className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-border/80 bg-background text-[10px] font-medium leading-none text-slate-700 transition hover:bg-muted/40"
+                                  >
+                                    *
+                                  </button>
+                                </HoverCardTrigger>
+                                <HoverCardContent align="start" side="right" className="w-[180px] rounded-lg border border-muted bg-background p-2 text-[10px] leading-4 text-muted-foreground shadow-md">
+                                  Bu feature tum roller icin tanimlanabilir.
+                                </HoverCardContent>
+                              </HoverCard>
+                            ) : (
+                              <Badge key={scopeRole} variant="outline" className="px-1.5 py-0 text-[9px] leading-4">
+                                {roleByKey.get(scopeRole)?.label ?? scopeRole}
+                              </Badge>
+                            )
                           ))}
                         </div>
                       </td>
