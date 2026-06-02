@@ -1,0 +1,1967 @@
+{
+  "generated_at": "2026-06-02T08:40:28.906Z",
+  "source_root": "https://www.mfa.gov.tr/yurtdisi-teskilati.tr.mfa",
+  "ajax_urls_detected": 0,
+  "direct_contact_pages_detected": 241,
+  "direct_contact_pages_visited": 50,
+  "mission_count": 241,
+  "mission_units_count": 34,
+  "mission_relations_count": 5,
+  "changed_records_count": 23,
+  "low_confidence_count": 223,
+  "structured_working_hours_count": 0,
+  "needs_review_count": 223,
+  "critical_missing_fields": {
+    "missing_address_count": 223,
+    "missing_phone_count": 239,
+    "missing_email_count": 239
+  },
+  "needs_review": [
+    {
+      "slug": "abidjan-buyukelciligi-https-abidjan-be-mfa-gov-tr",
+      "mission_name": "Abidjan Büyükelçiliği",
+      "source_url": "https://abidjan-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "abuja-buyukelciligi-https-abuja-be-mfa-gov-tr",
+      "mission_name": "Abuja Büyükelçiliği",
+      "source_url": "https://abuja-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "addis-ababa-buyukelciligi-https-addisababa-be-mfa-gov-tr",
+      "mission_name": "Addis Ababa Büyükelçiliği",
+      "source_url": "https://addisababa-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "akra-buyukelciligi-https-akra-be-mfa-gov-tr",
+      "mission_name": "Akra Büyükelçiliği",
+      "source_url": "https://akra-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "aktau-baskonsoloslugu-https-aktau-bk-mfa-gov-tr",
+      "mission_name": "Aktau Başkonsolosluğu",
+      "source_url": "https://aktau-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "almati-baskonsoloslugu-https-almati-bk-mfa-gov-tr",
+      "mission_name": "Almatı Başkonsolosluğu",
+      "source_url": "https://almati-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "amman-buyukelciligi-https-amman-be-mfa-gov-tr",
+      "mission_name": "Amman Büyükelçiliği",
+      "source_url": "https://amman-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "amsterdam-baskonsoloslugu-https-amsterdam-bk-mfa-gov-tr",
+      "mission_name": "Amsterdam Başkonsolosluğu",
+      "source_url": "https://amsterdam-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "antananarivo-buyukelciligi-https-antananarivo-be-mfa-gov-tr",
+      "mission_name": "Antananarivo Büyükelçiliği",
+      "source_url": "https://antananarivo-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "anvers-baskonsoloslugu-https-anvers-bk-mfa-gov-tr",
+      "mission_name": "Anvers Başkonsolosluğu",
+      "source_url": "https://anvers-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "askabat-buyukelciligi-https-askabat-be-mfa-gov-tr",
+      "mission_name": "Aşkabat Büyükelçiliği",
+      "source_url": "https://askabat-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "asmara-buyukelciligi-https-asmara-be-mfa-gov-tr",
+      "mission_name": "Asmara Büyükelçiliği",
+      "source_url": "https://asmara-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "astana-buyukelciligi-https-astana-be-mfa-gov-tr",
+      "mission_name": "Astana Büyükelçiliği",
+      "source_url": "https://astana-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "asuncion-buyukelciligi-https-asuncion-be-mfa-gov-tr",
+      "mission_name": "Asuncion Büyükelçiliği",
+      "source_url": "https://asuncion-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "atina-buyukelciligi-https-atina-be-mfa-gov-tr",
+      "mission_name": "Atina Büyükelçiliği",
+      "source_url": "https://atina-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "atina-pire-baskonsoloslugu-https-atinapire-bk-mfa-gov-tr",
+      "mission_name": "Atina - Pire Başkonsolosluğu",
+      "source_url": "https://atinapire-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "bagdat-buyukelciligi-https-bagdat-be-mfa-gov-tr",
+      "mission_name": "Bağdat Büyükelçiliği",
+      "source_url": "https://bagdat-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "baku-buyukelciligi-https-baku-be-mfa-gov-tr",
+      "mission_name": "Bakü Büyükelçiliği",
+      "source_url": "https://baku-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "bamako-buyukelciligi-https-bamako-be-mfa-gov-tr",
+      "mission_name": "Bamako Büyükelçiliği",
+      "source_url": "https://bamako-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "bandar-seri-begavan-buyukelciligi-https-bandar-be-mfa-gov-tr",
+      "mission_name": "Bandar Seri Begavan Büyükelçiliği",
+      "source_url": "https://bandar-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "bangkok-buyukelciligi-https-bangkok-be-mfa-gov-tr",
+      "mission_name": "Bangkok Büyükelçiliği",
+      "source_url": "https://bangkok-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "banja-luka-baskonsoloslugu-https-banjaluka-bk-mfa-gov-tr",
+      "mission_name": "Banja Luka Başkonsolosluğu",
+      "source_url": "https://banjaluka-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "barselona-baskonsoloslugu-https-barselona-bk-mfa-gov-tr-mission-contact",
+      "mission_name": "Barselona Başkonsolosluğu",
+      "source_url": "https://barselona-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "basra-baskonsoloslugu-https-basra-bk-mfa-gov-tr",
+      "mission_name": "Basra Başkonsolosluğu",
+      "source_url": "https://basra-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "batum-baskonsoloslugu-https-batum-bk-mfa-gov-tr",
+      "mission_name": "Batum Başkonsolosluğu",
+      "source_url": "https://batum-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "belgrad-buyukelciligi-https-belgrad-be-mfa-gov-tr",
+      "mission_name": "Belgrad Büyükelçiliği",
+      "source_url": "https://belgrad-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "berlin-baskonsoloslugu-https-berlin-bk-mfa-gov-tr",
+      "mission_name": "Berlin Başkonsolosluğu",
+      "source_url": "https://berlin-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "berlin-buyukelciligi-https-berlin-be-mfa-gov-tr",
+      "mission_name": "Berlin Büyükelçiliği",
+      "source_url": "https://berlin-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "beyrut-buyukelciligi-https-beyrut-be-mfa-gov-tr",
+      "mission_name": "Beyrut Büyükelçiliği",
+      "source_url": "https://beyrut-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "biskek-buyukelciligi-https-biskek-be-mfa-gov-tr",
+      "mission_name": "Bişkek Büyükelçiliği",
+      "source_url": "https://biskek-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "bissau-buyukelciligi-https-bissau-be-mfa-gov-tr",
+      "mission_name": "Bissau Büyükelçiliği",
+      "source_url": "https://bissau-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "bogota-buyukelciligi-https-bogota-be-mfa-gov-tr",
+      "mission_name": "Bogota Büyükelçiliği",
+      "source_url": "https://bogota-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "bordeaux-baskonsoloslugu-https-bordo-bk-mfa-gov-tr",
+      "mission_name": "Bordeaux Başkonsolosluğu",
+      "source_url": "https://bordo-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "boston-baskonsoloslugu-https-boston-bk-mfa-gov-tr",
+      "mission_name": "Boston Başkonsolosluğu",
+      "source_url": "https://boston-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "brasilia-buyukelciligi-https-brezilya-be-mfa-gov-tr",
+      "mission_name": "Brasilia Büyükelçiliği",
+      "source_url": "https://brezilya-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "bratislava-buyukelciligi-https-bratislava-be-mfa-gov-tr",
+      "mission_name": "Bratislava Büyükelçiliği",
+      "source_url": "https://bratislava-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "brazavil-buyukelciligi-https-brazavil-be-mfa-gov-tr",
+      "mission_name": "Brazavil Büyükelçiliği",
+      "source_url": "https://brazavil-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "bregenz-baskonsoloslugu-https-bregenz-bk-mfa-gov-tr",
+      "mission_name": "Bregenz Başkonsolosluğu",
+      "source_url": "https://bregenz-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "bruksel-baskonsoloslugu-https-bruksel-bk-mfa-gov-tr",
+      "mission_name": "Brüksel Başkonsolosluğu",
+      "source_url": "https://bruksel-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "bruksel-buyukelciligi-https-bruksel-be-mfa-gov-tr",
+      "mission_name": "Brüksel Büyükelçiliği",
+      "source_url": "https://bruksel-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "budapeste-buyukelciligi-https-budapeste-be-mfa-gov-tr",
+      "mission_name": "Budapeşte Büyükelçiliği",
+      "source_url": "https://budapeste-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "buenos-aires-buyukelciligi-https-buenosaires-be-mfa-gov-tr",
+      "mission_name": "Buenos Aires Büyükelçiliği",
+      "source_url": "https://buenosaires-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "bujumbura-buyukelciligi-https-bujumbura-be-mfa-gov-tr",
+      "mission_name": "Bujumbura Büyükelçiliği",
+      "source_url": "https://bujumbura-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "bukres-buyukelciligi-https-bukres-be-mfa-gov-tr",
+      "mission_name": "Bükreş Büyükelçiliği",
+      "source_url": "https://bukres-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "burgaz-baskonsoloslugu-https-burgaz-bk-mfa-gov-tr",
+      "mission_name": "Burgaz Başkonsolosluğu",
+      "source_url": "https://burgaz-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "cape-town-baskonsoloslugu-https-capetown-bk-mfa-gov-tr",
+      "mission_name": "Cape Town Başkonsolosluğu",
+      "source_url": "https://capetown-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "cenevre-baskonsoloslugu-https-cenevre-bk-mfa-gov-tr-mission-contact",
+      "mission_name": "Cenevre Başkonsolosluğu",
+      "source_url": "https://cenevre-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "cezayir-buyukelciligi-https-cezayir-be-mfa-gov-tr",
+      "mission_name": "Cezayir Büyükelçiliği",
+      "source_url": "https://cezayir-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "chicago-baskonsoloslugu-https-sikago-bk-mfa-gov-tr",
+      "mission_name": "Chicago Başkonsolosluğu",
+      "source_url": "https://sikago-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "cidde-baskonsoloslugu-https-cidde-bk-mfa-gov-tr",
+      "mission_name": "Cidde Başkonsolosluğu",
+      "source_url": "https://cidde-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "dakar-buyukelciligi-https-dakar-be-mfa-gov-tr",
+      "mission_name": "Dakar Büyükelçiliği",
+      "source_url": "https://dakar-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "dakka-buyukelciligi-https-dakka-be-mfa-gov-tr",
+      "mission_name": "Dakka Büyükelçiliği",
+      "source_url": "https://dakka-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "darusselam-buyukelciligi-https-darusselam-be-mfa-gov-tr",
+      "mission_name": "Darüsselam Büyükelçiliği",
+      "source_url": "https://darusselam-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "deventer-baskonsoloslugu-https-deventer-bk-mfa-gov-tr",
+      "mission_name": "Deventer Başkonsolosluğu",
+      "source_url": "https://deventer-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "dusanbe-buyukelciligi-https-dusanbe-be-mfa-gov-tr",
+      "mission_name": "Duşanbe Büyükelçiliği",
+      "source_url": "https://dusanbe-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "dusseldorf-baskonsoloslugu-https-dusseldorf-bk-mfa-gov-tr",
+      "mission_name": "Düsseldorf Başkonsolosluğu",
+      "source_url": "https://dusseldorf-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "edinburgh-baskonsoloslugu-https-edinburg-bk-mfa-gov-tr",
+      "mission_name": "Edinburgh Başkonsolosluğu",
+      "source_url": "https://edinburg-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "encemine-buyukelciligi-https-encemine-be-mfa-gov-tr",
+      "mission_name": "Encemine Büyükelçiliği",
+      "source_url": "https://encemine-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "erbil-baskonsoloslugu-https-erbil-bk-mfa-gov-tr",
+      "mission_name": "Erbil Başkonsolosluğu",
+      "source_url": "https://erbil-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "essen-baskonsoloslugu-https-essen-bk-mfa-gov-tr",
+      "mission_name": "Essen Başkonsolosluğu",
+      "source_url": "https://essen-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "filibe-baskonsoloslugu-https-filibe-bk-mfa-gov-tr",
+      "mission_name": "Filibe Başkonsolosluğu",
+      "source_url": "https://filibe-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "frankfurt-baskonsoloslugu-https-frankfurt-bk-mfa-gov-tr",
+      "mission_name": "Frankfurt Başkonsolosluğu",
+      "source_url": "https://frankfurt-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "freetown-buyukelciligi-https-freetown-be-mfa-gov-tr",
+      "mission_name": "Freetown Büyükelçiliği",
+      "source_url": "https://freetown-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "gaboron-buyukelciligi-https-gaboron-be-mfa-gov-tr",
+      "mission_name": "Gaboron Büyükelçiliği",
+      "source_url": "https://gaboron-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "gazimagusa-baskonsoloslugu-https-gazimagusa-bk-mfa-gov-tr",
+      "mission_name": "Gazimağusa Başkonsolosluğu",
+      "source_url": "https://gazimagusa-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "gence-baskonsoloslugu-https-gence-bk-mfa-gov-tr",
+      "mission_name": "Gence Başkonsolosluğu",
+      "source_url": "https://gence-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "guanco-baskonsoloslugu-https-guangzhou-bk-mfa-gov-tr",
+      "mission_name": "Guanco Başkonsolosluğu",
+      "source_url": "https://guangzhou-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "gumulcine-baskonsoloslugu-https-gumulcine-bk-mfa-gov-tr",
+      "mission_name": "Gümülcine Başkonsolosluğu",
+      "source_url": "https://gumulcine-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "halep-baskonsoloslugu-https-halep-bk-mfa-gov-tr",
+      "mission_name": "Halep Başkonsolosluğu",
+      "source_url": "https://halep-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "hamburg-baskonsoloslugu-https-hamburg-bk-mfa-gov-tr",
+      "mission_name": "Hamburg Başkonsolosluğu",
+      "source_url": "https://hamburg-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "hannover-baskonsoloslugu-https-hannover-bk-mfa-gov-tr",
+      "mission_name": "Hannover Başkonsolosluğu",
+      "source_url": "https://hannover-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "hanoi-buyukelciligi-https-hanoi-be-mfa-gov-tr",
+      "mission_name": "Hanoi Büyükelçiliği",
+      "source_url": "https://hanoi-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "harare-buyukelciligi-https-harare-be-mfa-gov-tr",
+      "mission_name": "Harare Büyükelçiliği",
+      "source_url": "https://harare-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "hargeysa-baskonsoloslugu-https-hargeysa-bk-mfa-gov-tr",
+      "mission_name": "Hargeysa Başkonsolosluğu",
+      "source_url": "https://hargeysa-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "hartum-buyukelciligi-https-hartum-be-mfa-gov-tr",
+      "mission_name": "Hartum Büyükelçiliği",
+      "source_url": "https://hartum-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "havana-buyukelciligi-https-havana-be-mfa-gov-tr",
+      "mission_name": "Havana Büyükelçiliği",
+      "source_url": "https://havana-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "haydarabad-baskonsoloslugu-https-haydarabad-bk-mfa-gov-tr",
+      "mission_name": "Haydarabad Başkonsolosluğu",
+      "source_url": "https://haydarabad-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "hong-kong-baskonsoloslugu-https-hongkong-bk-mfa-gov-tr",
+      "mission_name": "Hong Kong Başkonsolosluğu",
+      "source_url": "https://hongkong-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "houston-baskonsoloslugu-https-houston-bk-mfa-gov-tr",
+      "mission_name": "Houston Başkonsolosluğu",
+      "source_url": "https://houston-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "iskenderiye-baskonsoloslugu-https-iskenderiye-bk-mfa-gov-tr",
+      "mission_name": "İskenderiye Başkonsolosluğu",
+      "source_url": "https://iskenderiye-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "islamabad-buyukelciligi-https-islamabad-be-mfa-gov-tr",
+      "mission_name": "İslamabad Büyükelçiliği",
+      "source_url": "https://islamabad-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "juba-buyukelciligi-https-juba-be-mfa-gov-tr",
+      "mission_name": "Juba Büyükelçiliği",
+      "source_url": "https://juba-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kabil-buyukelciligi-https-kabil-be-mfa-gov-tr",
+      "mission_name": "Kabil Büyükelçiliği",
+      "source_url": "https://kabil-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kahire-buyukelciligi-https-kahire-be-mfa-gov-tr",
+      "mission_name": "Kahire Büyükelçiliği",
+      "source_url": "https://kahire-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kampala-buyukelciligi-https-kampala-be-mfa-gov-tr",
+      "mission_name": "Kampala Büyükelçiliği",
+      "source_url": "https://kampala-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kanberra-buyukelciligi-https-kanberra-be-mfa-gov-tr",
+      "mission_name": "Kanberra Büyükelçiliği",
+      "source_url": "https://kanberra-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "karaci-baskonsoloslugu-https-karaci-bk-mfa-gov-tr",
+      "mission_name": "Karaçi Başkonsolosluğu",
+      "source_url": "https://karaci-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "karakas-buyukelciligi-https-karakas-be-mfa-gov-tr",
+      "mission_name": "Karakas Büyükelçiliği",
+      "source_url": "https://karakas-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "karlsruhe-baskonsoloslugu-https-karlsruhe-bk-mfa-gov-tr",
+      "mission_name": "Karlsruhe Başkonsolosluğu",
+      "source_url": "https://karlsruhe-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kassel-baskonsoloslugu-https-kassel-bk-mfa-gov-tr",
+      "mission_name": "Kassel Başkonsolosluğu",
+      "source_url": "https://kassel-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kazan-baskonsoloslugu-https-kazan-bk-mfa-gov-tr",
+      "mission_name": "Kazan Başkonsolosluğu",
+      "source_url": "https://kazan-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kiev-buyukelciligi-https-kiev-be-mfa-gov-tr",
+      "mission_name": "Kiev Büyükelçiliği",
+      "source_url": "https://kiev-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kigali-buyukelciligi-https-kigali-be-mfa-gov-tr",
+      "mission_name": "Kigali Büyükelçiliği",
+      "source_url": "https://kigali-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kinsasa-buyukelciligi-https-kinsasa-be-mfa-gov-tr",
+      "mission_name": "Kinşasa Büyükelçiliği",
+      "source_url": "https://kinsasa-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kisinev-buyukelciligi-https-kisinev-be-mfa-gov-tr",
+      "mission_name": "Kişinev Büyükelçiliği",
+      "source_url": "https://kisinev-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kito-buyukelciligi-https-kito-be-mfa-gov-tr",
+      "mission_name": "Kito Büyükelçiliği",
+      "source_url": "https://kito-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "koln-baskonsoloslugu-https-koln-bk-mfa-gov-tr",
+      "mission_name": "Köln Başkonsolosluğu",
+      "source_url": "https://koln-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kolombo-buyukelciligi-https-kolombo-be-mfa-gov-tr",
+      "mission_name": "Kolombo Büyükelçiliği",
+      "source_url": "https://kolombo-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "komrat-baskonsoloslugu-https-komrat-bk-mfa-gov-tr",
+      "mission_name": "Komrat Başkonsolosluğu",
+      "source_url": "https://komrat-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "konakri-buyukelciligi-https-konakri-be-mfa-gov-tr",
+      "mission_name": "Konakri Büyükelçiliği",
+      "source_url": "https://konakri-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kopenhag-buyukelciligi-https-kopenhag-be-mfa-gov-tr",
+      "mission_name": "Kopenhag Büyükelçiliği",
+      "source_url": "https://kopenhag-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kostence-baskonsoloslugu-https-kostence-bk-mfa-gov-tr",
+      "mission_name": "Köstence Başkonsolosluğu",
+      "source_url": "https://kostence-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "krasnodar-baskonsoloslugu-https-krasnodar-bk-mfa-gov-tr",
+      "mission_name": "Krasnodar Başkonsolosluğu",
+      "source_url": "https://krasnodar-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kuala-lumpur-buyukelciligi-https-kualalumpur-be-mfa-gov-tr",
+      "mission_name": "Kuala Lumpur Büyükelçiliği",
+      "source_url": "https://kualalumpur-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kudus-baskonsoloslugu-https-kudus-bk-mfa-gov-tr",
+      "mission_name": "Kudüs Başkonsolosluğu",
+      "source_url": "https://kudus-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "kuveyt-buyukelciligi-https-kuveyt-be-mfa-gov-tr",
+      "mission_name": "Kuveyt Büyükelçiliği",
+      "source_url": "https://kuveyt-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "la-paz-buyukelciligi-http-mfa-gov-tr",
+      "mission_name": "La Paz Büyükelçiliği",
+      "source_url": "http://mfa.gov.tr",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "lahey-buyukelciligi-https-lahey-be-mfa-gov-tr",
+      "mission_name": "Lahey Büyükelçiliği",
+      "source_url": "https://lahey-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "lahor-baskonsoloslugu-https-lahor-bk-mfa-gov-tr",
+      "mission_name": "Lahor Başkonsolosluğu",
+      "source_url": "https://lahor-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "lefkosa-buyukelciligi-https-lefkosa-be-mfa-gov-tr",
+      "mission_name": "Lefkoşa Büyükelçiliği",
+      "source_url": "https://lefkosa-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "librevil-buyukelciligi-https-librevil-be-mfa-gov-tr",
+      "mission_name": "Librevil Büyükelçiliği",
+      "source_url": "https://librevil-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "lima-buyukelciligi-https-lima-be-mfa-gov-tr",
+      "mission_name": "Lima Büyükelçiliği",
+      "source_url": "https://lima-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "lizbon-buyukelciligi-https-lizbon-be-mfa-gov-tr",
+      "mission_name": "Lizbon Büyükelçiliği",
+      "source_url": "https://lizbon-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "lome-buyukelciligi-https-lome-be-mfa-gov-tr",
+      "mission_name": "Lome Büyükelçiliği",
+      "source_url": "https://lome-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "londra-baskonsoloslugu-https-londra-bk-mfa-gov-tr",
+      "mission_name": "Londra Başkonsolosluğu",
+      "source_url": "https://londra-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "londra-buyukelciligi-https-londra-be-mfa-gov-tr",
+      "mission_name": "Londra Büyükelçiliği",
+      "source_url": "https://londra-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "los-angeles-baskonsoloslugu-https-losangeles-bk-mfa-gov-tr",
+      "mission_name": "Los Angeles Başkonsolosluğu",
+      "source_url": "https://losangeles-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "luanda-buyukelciligi-https-luanda-be-mfa-gov-tr",
+      "mission_name": "Luanda Büyükelçiliği",
+      "source_url": "https://luanda-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "lubliyana-buyukelciligi-https-ljubljana-be-mfa-gov-tr",
+      "mission_name": "Lübliyana Büyükelçiliği",
+      "source_url": "https://ljubljana-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "luksemburg-buyukelciligi-https-luksemburg-be-mfa-gov-tr",
+      "mission_name": "Lüksemburg Büyükelçiliği",
+      "source_url": "https://luksemburg-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "lusaka-buyukelciligi-https-lusaka-be-mfa-gov-tr",
+      "mission_name": "Lusaka Büyükelçiliği",
+      "source_url": "https://lusaka-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "lyon-baskonsoloslugu-https-lyon-bk-mfa-gov-tr",
+      "mission_name": "Lyon Başkonsolosluğu",
+      "source_url": "https://lyon-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "mainz-baskonsoloslugu-https-mainz-bk-mfa-gov-tr",
+      "mission_name": "Mainz Başkonsolosluğu",
+      "source_url": "https://mainz-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "malabo-buyukelciligi-https-malabo-be-mfa-gov-tr",
+      "mission_name": "Malabo Büyükelçiliği",
+      "source_url": "https://malabo-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "manama-buyukelciligi-https-manama-be-mfa-gov-tr",
+      "mission_name": "Manama Büyükelçiliği",
+      "source_url": "https://manama-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "manchester-baskonsoloslugu-https-manchester-bk-mfa-gov-tr",
+      "mission_name": "Manchester Başkonsolosluğu",
+      "source_url": "https://manchester-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "manila-buyukelciligi-https-manila-be-mfa-gov-tr",
+      "mission_name": "Manila Büyükelçiliği",
+      "source_url": "https://manila-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "maputo-buyukelciligi-https-maputo-be-mfa-gov-tr",
+      "mission_name": "Maputo Büyükelçiliği",
+      "source_url": "https://maputo-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "marsilya-baskonsoloslugu-https-marsilya-bk-mfa-gov-tr",
+      "mission_name": "Marsilya Başkonsolosluğu",
+      "source_url": "https://marsilya-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "meksika-buyukelciligi-https-meksika-be-mfa-gov-tr",
+      "mission_name": "Meksika Büyükelçiliği",
+      "source_url": "https://meksika-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "melbourne-baskonsoloslugu-https-melburn-bk-mfa-gov-tr",
+      "mission_name": "Melbourne Başkonsolosluğu",
+      "source_url": "https://melburn-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "meshed-baskonsoloslugu-https-meshed-bk-mfa-gov-tr",
+      "mission_name": "Meşhed Başkonsolosluğu",
+      "source_url": "https://meshed-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "mezar-i-serif-baskonsoloslugu-https-mserif-bk-mfa-gov-tr",
+      "mission_name": "Mezar-ı Şerif Başkonsolosluğu",
+      "source_url": "https://mserif-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "miami-baskonsoloslugu-https-miami-bk-mfa-gov-tr",
+      "mission_name": "Miami Başkonsolosluğu",
+      "source_url": "https://miami-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "milano-baskonsoloslugu-https-milano-bk-mfa-gov-tr",
+      "mission_name": "Milano Başkonsolosluğu",
+      "source_url": "https://milano-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "minsk-buyukelciligi-https-minsk-be-mfa-gov-tr",
+      "mission_name": "Minsk Büyükelçiliği",
+      "source_url": "https://minsk-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "misurata-baskonsoloslugu-https-misurata-bk-mfa-gov-tr",
+      "mission_name": "Misurata Başkonsolosluğu",
+      "source_url": "https://misurata-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "mogadisu-buyukelciligi-https-mogadisu-be-mfa-gov-tr",
+      "mission_name": "Mogadişu Büyükelçiliği",
+      "source_url": "https://mogadisu-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "montevideo-buyukelciligi-https-montevideo-be-mfa-gov-tr",
+      "mission_name": "Montevideo Büyükelçiliği",
+      "source_url": "https://montevideo-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "montreal-baskonsoloslugu-https-montreal-bk-mfa-gov-tr-mission-contact",
+      "mission_name": "Montreal Başkonsolosluğu",
+      "source_url": "https://montreal-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "moskova-buyukelciligi-https-moskova-be-mfa-gov-tr",
+      "mission_name": "Moskova Büyükelçiliği",
+      "source_url": "https://moskova-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "mostar-baskonsoloslugu-https-mostar-bk-mfa-gov-tr",
+      "mission_name": "Mostar Başkonsolosluğu",
+      "source_url": "https://mostar-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "mumbai-baskonsoloslugu-https-mumbai-bk-mfa-gov-tr",
+      "mission_name": "Mumbai Başkonsolosluğu",
+      "source_url": "https://mumbai-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "munih-baskonsoloslugu-https-munih-bk-mfa-gov-tr",
+      "mission_name": "Münih Başkonsolosluğu",
+      "source_url": "https://munih-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "munster-baskonsoloslugu-https-munster-bk-mfa-gov-tr",
+      "mission_name": "Münster Başkonsolosluğu",
+      "source_url": "https://munster-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "muskat-buyukelciligi-https-muskat-be-mfa-gov-tr",
+      "mission_name": "Muskat Büyükelçiliği",
+      "source_url": "https://muskat-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "musul-baskonsoloslugu-https-musul-bk-mfa-gov-tr",
+      "mission_name": "Musul Başkonsolosluğu",
+      "source_url": "https://musul-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "nagoya-baskonsoloslugu-https-nagoya-bk-mfa-gov-tr",
+      "mission_name": "Nagoya Başkonsolosluğu",
+      "source_url": "https://nagoya-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "nahcivan-baskonsoloslugu-https-nahcivan-bk-mfa-gov-tr",
+      "mission_name": "Nahçıvan Başkonsolosluğu",
+      "source_url": "https://nahcivan-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "nairobi-buyukelciligi-https-nairobi-be-mfa-gov-tr",
+      "mission_name": "Nairobi Büyükelçiliği",
+      "source_url": "https://nairobi-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "nantes-baskonsoloslugu-https-nant-bk-mfa-gov-tr",
+      "mission_name": "Nantes Başkonsolosluğu",
+      "source_url": "https://nant-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "nepido-buyukelciligi-https-nepido-be-mfa-gov-tr",
+      "mission_name": "Nepido Büyükelçiliği",
+      "source_url": "https://nepido-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "new-york-baskonsoloslugu-https-newyork-bk-mfa-gov-tr",
+      "mission_name": "New York Başkonsolosluğu",
+      "source_url": "https://newyork-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "niamey-buyukelciligi-https-niamey-be-mfa-gov-tr",
+      "mission_name": "Niamey Büyükelçiliği",
+      "source_url": "https://niamey-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "nis-konsolosluk-burosu-https-nis-kb-mfa-gov-tr",
+      "mission_name": "Niş Konsolosluk Bürosu",
+      "source_url": "https://nis-kb.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 12
+    },
+    {
+      "slug": "nuaksot-buyukelciligi-https-nuaksot-be-mfa-gov-tr",
+      "mission_name": "Nuakşot Büyükelçiliği",
+      "source_url": "https://nuaksot-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "nurnberg-baskonsoloslugu-https-nurnberg-bk-mfa-gov-tr",
+      "mission_name": "Nürnberg Başkonsolosluğu",
+      "source_url": "https://nurnberg-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "odessa-baskonsoloslugu-https-odessa-bk-mfa-gov-tr",
+      "mission_name": "Odessa Başkonsolosluğu",
+      "source_url": "https://odessa-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "oslo-buyukelciligi-https-oslo-be-mfa-gov-tr",
+      "mission_name": "Oslo Büyükelçiliği",
+      "source_url": "https://oslo-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "panama-buyukelciligi-https-panama-be-mfa-gov-tr",
+      "mission_name": "Panama Büyükelçiliği",
+      "source_url": "https://panama-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "paris-baskonsoloslugu-https-paris-bk-mfa-gov-tr",
+      "mission_name": "Paris Başkonsolosluğu",
+      "source_url": "https://paris-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "paris-buyukelciligi-https-paris-be-mfa-gov-tr",
+      "mission_name": "Paris Büyükelçiliği",
+      "source_url": "https://paris-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "pekin-buyukelciligi-https-pekin-be-mfa-gov-tr",
+      "mission_name": "Pekin Büyükelçiliği",
+      "source_url": "https://pekin-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "podgoritsa-buyukelciligi-https-podgorica-be-mfa-gov-tr",
+      "mission_name": "Podgoritsa Büyükelçiliği",
+      "source_url": "https://podgorica-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "port-of-spain-buyukelciligi-https-portofspain-be-mfa-gov-tr",
+      "mission_name": "Port of Spain Büyükelçiliği",
+      "source_url": "https://portofspain-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "prag-buyukelciligi-https-prag-be-mfa-gov-tr",
+      "mission_name": "Prag Büyükelçiliği",
+      "source_url": "https://prag-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "pretoria-buyukelciligi-https-pretoria-be-mfa-gov-tr",
+      "mission_name": "Pretoria Büyükelçiliği",
+      "source_url": "https://pretoria-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "pristine-buyukelciligi-https-pristine-be-mfa-gov-tr",
+      "mission_name": "Priştine Büyükelçiliği",
+      "source_url": "https://pristine-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "prizren-baskonsoloslugu-https-prizren-bk-mfa-gov-tr",
+      "mission_name": "Prizren Başkonsolosluğu",
+      "source_url": "https://prizren-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "punom-pen-buyukelciligi-https-punompen-be-mfa-gov-tr",
+      "mission_name": "Punom Pen Büyükelçiliği",
+      "source_url": "https://punompen-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "rabat-buyukelciligi-https-rabat-be-mfa-gov-tr",
+      "mission_name": "Rabat Büyükelçiliği",
+      "source_url": "https://rabat-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "riga-buyukelciligi-https-riga-be-mfa-gov-tr",
+      "mission_name": "Riga Büyükelçiliği",
+      "source_url": "https://riga-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "riyad-buyukelciligi-https-riyad-be-mfa-gov-tr",
+      "mission_name": "Riyad Büyükelçiliği",
+      "source_url": "https://riyad-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "rodos-baskonsoloslugu-https-rodos-bk-mfa-gov-tr",
+      "mission_name": "Rodos Başkonsolosluğu",
+      "source_url": "https://rodos-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "roma-buyukelciligi-https-roma-be-mfa-gov-tr",
+      "mission_name": "Roma Büyükelçiliği",
+      "source_url": "https://roma-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "rotterdam-baskonsoloslugu-https-rotterdam-bk-mfa-gov-tr",
+      "mission_name": "Rotterdam Başkonsolosluğu",
+      "source_url": "https://rotterdam-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "salzburg-baskonsoloslugu-https-salzburg-bk-mfa-gov-tr",
+      "mission_name": "Salzburg Başkonsolosluğu",
+      "source_url": "https://salzburg-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "sam-buyukelciligi-https-sam-be-mfa-gov-tr",
+      "mission_name": "Şam Büyükelçiliği",
+      "source_url": "https://sam-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "san-hose-buyukelciligi-https-sanhose-be-mfa-gov-tr",
+      "mission_name": "San Hose Büyükelçiliği",
+      "source_url": "https://sanhose-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "sana-buyukelciligi-https-sana-be-mfa-gov-tr",
+      "mission_name": "Sana Büyükelçiliği",
+      "source_url": "https://sana-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "sanghay-baskonsoloslugu-https-sanghay-bk-mfa-gov-tr",
+      "mission_name": "Şanghay Başkonsolosluğu",
+      "source_url": "https://sanghay-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "santiago-buyukelciligi-https-santiago-be-mfa-gov-tr",
+      "mission_name": "Santiago Büyükelçiliği",
+      "source_url": "https://santiago-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "santo-domingo-buyukelciligi-https-santodomingo-be-mfa-gov-tr",
+      "mission_name": "Santo Domingo Büyükelçiliği",
+      "source_url": "https://santodomingo-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "sao-paulo-baskonsoloslugu-https-saopaulo-bk-mfa-gov-tr",
+      "mission_name": "Sao Paulo Başkonsolosluğu",
+      "source_url": "https://saopaulo-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "saraybosna-buyukelciligi-https-saraybosna-be-mfa-gov-tr",
+      "mission_name": "Saraybosna Büyükelçiliği",
+      "source_url": "https://saraybosna-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "selanik-baskonsoloslugu-https-selanik-bk-mfa-gov-tr",
+      "mission_name": "Selanik Başkonsolosluğu",
+      "source_url": "https://selanik-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "semerkant-baskonsoloslugu-https-semerkant-bk-mfa-gov-tr",
+      "mission_name": "Semerkant Başkonsolosluğu",
+      "source_url": "https://semerkant-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "seul-buyukelciligi-https-seul-be-mfa-gov-tr",
+      "mission_name": "Seul Büyükelçiliği",
+      "source_url": "https://seul-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "sidney-baskonsoloslugu-https-sidney-bk-mfa-gov-tr",
+      "mission_name": "Sidney Başkonsolosluğu",
+      "source_url": "https://sidney-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "singapur-buyukelciligi-https-singapur-be-mfa-gov-tr",
+      "mission_name": "Singapur Büyükelçiliği",
+      "source_url": "https://singapur-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "sofya-buyukelciligi-https-sofya-be-mfa-gov-tr",
+      "mission_name": "Sofya Büyükelçiliği",
+      "source_url": "https://sofya-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "st-petersburg-baskonsoloslugu-https-stpetersburg-bk-mfa-gov-tr",
+      "mission_name": "St. Petersburg Başkonsolosluğu",
+      "source_url": "https://stpetersburg-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "strazburg-baskonsoloslugu-https-strazburg-bk-mfa-gov-tr",
+      "mission_name": "Strazburg Başkonsolosluğu",
+      "source_url": "https://strazburg-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "stuttgart-baskonsoloslugu-https-stuttgart-bk-mfa-gov-tr",
+      "mission_name": "Stuttgart Başkonsolosluğu",
+      "source_url": "https://stuttgart-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "suleymaniye-konsolosluk-ajanligi-https-suleymaniye-ka-mfa-gov-tr",
+      "mission_name": "Süleymaniye Konsolosluk Ajanlığı",
+      "source_url": "https://suleymaniye.ka.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 12
+    },
+    {
+      "slug": "tahran-buyukelciligi-https-tahran-be-mfa-gov-tr",
+      "mission_name": "Tahran Büyükelçiliği",
+      "source_url": "https://tahran-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "taskent-buyukelciligi-https-taskent-be-mfa-gov-tr",
+      "mission_name": "Taşkent Büyükelçiliği",
+      "source_url": "https://taskent-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "tel-aviv-buyukelciligi-https-telaviv-be-mfa-gov-tr",
+      "mission_name": "Tel Aviv Büyükelçiliği",
+      "source_url": "https://telaviv-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "tiflis-buyukelciligi-https-tiflis-be-mfa-gov-tr",
+      "mission_name": "Tiflis Büyükelçiliği",
+      "source_url": "https://tiflis-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "tiran-buyukelciligi-https-tiran-be-mfa-gov-tr",
+      "mission_name": "Tiran Büyükelçiliği",
+      "source_url": "https://tiran-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "tokyo-buyukelciligi-https-tokyo-be-mfa-gov-tr",
+      "mission_name": "Tokyo Büyükelçiliği",
+      "source_url": "https://tokyo-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "trablus-buyukelciligi-https-trablus-be-mfa-gov-tr",
+      "mission_name": "Trablus Büyükelçiliği",
+      "source_url": "https://trablus-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "tunus-buyukelciligi-https-tunus-be-mfa-gov-tr",
+      "mission_name": "Tunus Büyükelçiliği",
+      "source_url": "https://tunus-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "turkistan-baskonsoloslugu-https-turkistan-bk-mfa-gov-tr",
+      "mission_name": "Türkistan Başkonsolosluğu",
+      "source_url": "https://turkistan-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "ulanbator-buyukelciligi-https-ulanbator-be-mfa-gov-tr",
+      "mission_name": "Ulanbator Büyükelçiliği",
+      "source_url": "https://ulanbator-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "urumiye-baskonsoloslugu-https-urumiye-bk-mfa-gov-tr",
+      "mission_name": "Urumiye Başkonsolosluğu",
+      "source_url": "https://urumiye-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "uskup-buyukelciligi-https-uskup-be-mfa-gov-tr",
+      "mission_name": "Üsküp Büyükelçiliği",
+      "source_url": "https://uskup-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "vagadugu-buyukelciligi-https-ugudugu-be-mfa-gov-tr",
+      "mission_name": "Vagadugu Büyükelçiliği",
+      "source_url": "https://ugudugu-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "valetta-buyukelciligi-https-valetta-be-mfa-gov-tr",
+      "mission_name": "Valetta Büyükelçiliği",
+      "source_url": "https://valetta-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "vancouver-baskonsoloslugu-https-vancouver-bk-mfa-gov-tr-mission-contact",
+      "mission_name": "Vancouver Başkonsolosluğu",
+      "source_url": "https://vancouver-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "varsova-buyukelciligi-https-varsova-be-mfa-gov-tr",
+      "mission_name": "Varşova Büyükelçiliği",
+      "source_url": "https://varsova-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "vatikan-buyukelciligi-https-vatikan-be-mfa-gov-tr",
+      "mission_name": "Vatikan Büyükelçiliği",
+      "source_url": "https://vatikan-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "vilnius-buyukelciligi-https-vilnius-be-mfa-gov-tr",
+      "mission_name": "Vilnius Büyükelçiliği",
+      "source_url": "https://vilnius-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "viyana-baskonsoloslugu-https-viyana-bk-mfa-gov-tr",
+      "mission_name": "Viyana Başkonsolosluğu",
+      "source_url": "https://viyana-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "viyana-buyukelciligi-https-viyana-be-mfa-gov-tr",
+      "mission_name": "Viyana Büyükelçiliği",
+      "source_url": "https://viyana-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "viyentiyan-buyukelciligi-https-viyentiyan-be-mfa-gov-tr",
+      "mission_name": "Viyentiyan Büyükelçiliği",
+      "source_url": "https://viyentiyan-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "washington-buyukelciligi-https-vasington-be-mfa-gov-tr",
+      "mission_name": "Washington Büyükelçiliği",
+      "source_url": "https://vasington-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "wellington-buyukelciligi-https-wellington-be-mfa-gov-tr",
+      "mission_name": "Wellington Büyükelçiliği",
+      "source_url": "https://wellington-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "windhoek-buyukelciligi-https-windhoek-be-mfa-gov-tr",
+      "mission_name": "Windhoek Büyükelçiliği",
+      "source_url": "https://windhoek-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "yaounde-buyukelciligi-https-yaounde-be-mfa-gov-tr",
+      "mission_name": "Yaounde Büyükelçiliği",
+      "source_url": "https://yaounde-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "yeni-delhi-buyukelciligi-https-yenidelhi-be-mfa-gov-tr",
+      "mission_name": "Yeni Delhi Büyükelçiliği",
+      "source_url": "https://yenidelhi-be.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "yeni-pazar-baskonsoloslugu-https-yenipazar-bk-mfa-gov-tr",
+      "mission_name": "Yeni Pazar Başkonsolosluğu",
+      "source_url": "https://yenipazar-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    },
+    {
+      "slug": "zurih-baskonsoloslugu-https-zurih-bk-mfa-gov-tr-mission-contact",
+      "mission_name": "Zürih Başkonsolosluğu",
+      "source_url": "https://zurih-bk.mfa.gov.tr/Mission/Contact",
+      "verification_status": "official_directory_seed",
+      "parser_confidence": 28,
+      "data_completeness_score": 14
+    }
+  ],
+  "errors": [
+    {
+      "stage": "parse_contact",
+      "url": "https://kabil-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://kabil-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://mserif-bk.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://mserif-bk.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://kassel-bk.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://kassel-bk.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://luanda-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://luanda-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://manama-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://manama-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://bandar-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://bandar-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://sofya-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://sofya-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://burgaz-bk.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://burgaz-bk.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://filibe-bk.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://filibe-bk.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://ugudugu-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://ugudugu-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://cezayir-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://cezayir-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://encemine-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://encemine-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://santodomingo-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://santodomingo-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://kito-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://kito-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://addisababa-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://addisababa-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://abidjan-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://abidjan-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://kudus-bk.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://kudus-bk.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://librevil-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://librevil-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://akra-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://akra-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://konakri-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://konakri-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://tahran-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://tahran-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://meshed-bk.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://meshed-bk.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://urumiye-bk.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://urumiye-bk.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://barselona-bk.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://barselona-bk.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://cenevre-bk.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://cenevre-bk.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://zurih-bk.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://zurih-bk.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://tokyo-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://tokyo-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://nagoya-bk.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://nagoya-bk.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://punompen-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://punompen-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://yaounde-be.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://yaounde-be.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://montreal-bk.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://montreal-bk.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "stage": "parse_contact",
+      "url": "https://vancouver-bk.mfa.gov.tr/Mission/Contact",
+      "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://vancouver-bk.mfa.gov.tr/Mission/Contact\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    }
+  ]
+}

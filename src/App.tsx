@@ -84,6 +84,7 @@ import AssociationDetail from "@/pages/AssociationDetail";
 import HospitalAppointment from "@/pages/HospitalAppointment";
 import IndependentProfilePage from "@/pages/IndependentProfilePage";
 import AdminConsulateProfilesPage from "@/pages/admin/AdminConsulateProfilesPage";
+import AdminTurkishMissionsDataPage from "@/pages/admin/AdminTurkishMissionsDataPage";
 
 const queryClient = new QueryClient();
 
@@ -203,6 +204,7 @@ const App = () => (
                 <Route path="surveys/:id/edit" element={<AdminSurveyEditPage />} />
                 <Route path="surveys/:id/responses" element={<AdminSurveyResponsesPage />} />
                 <Route path="new-member/users-roles" element={<AdminLoginUsersRolesPage />} />
+                <Route path="data/kullanici-rolleri" element={<AdminLoginUsersRolesPage />} />
                 <Route path="new-member/guide" element={<AdminNewMemberGuidePage />} />
                 <Route path="new-member/roles-features" element={<AdminRolesFeaturesPage />} />
                 <Route path="new-member/attributes" element={<AdminAttributesPage />} />
@@ -216,6 +218,7 @@ const App = () => (
                 <Route path="whatsapp-landings/editors" element={<AdminWhatsAppLandingEditorsPage />} />
                 <Route path="whatsapp-landings/guide" element={<AdminCommunityGuidePage />} />
                 <Route path="consulates" element={<AdminConsulateProfilesPage />} />
+                <Route path="data/:category" element={<AdminTurkishMissionsDataPage />} />
                 <Route path="may19/kelime" element={<AdminMay19IdeaPage />} />
                 <Route path="may19/ani" element={<AdminMay19MomentPage />} />
                 <Route path="about" element={<AdminAboutPage />} />

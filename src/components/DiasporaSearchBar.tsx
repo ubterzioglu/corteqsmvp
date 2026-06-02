@@ -66,9 +66,6 @@ const DiasporaSearchBar = () => {
           <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-2">
             🌍 Diasporada <span className="text-gradient-primary">Ara</span>
           </h2>
-          <p className="text-muted-foreground text-sm font-body mb-6">
-            Konsolosluk, doktor, market, iş ilanı ve daha fazlasını anında bul
-          </p>
 
           {/* AI Chat Bar */}
           <div className="max-w-2xl mx-auto mb-6">

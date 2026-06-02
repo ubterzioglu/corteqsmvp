@@ -1,0 +1,14 @@
+{
+  "name": "turkish-missions-import-builder",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Build a PostgreSQL/Supabase import from official Republic of Türkiye Ministry of Foreign Affairs overseas mission pages.",
+  "scripts": {
+    "build": "node scrape-and-build-import.mjs",
+    "check": "node --check scrape-and-build-import.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.52.0"
+  }
+}

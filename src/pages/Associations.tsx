@@ -45,7 +45,7 @@ const Associations = () => {
     let isMounted = true;
 
     void (async () => {
-      const profiles = await listPublishedIndependentProfiles("consulate");
+      const profiles = await listPublishedIndependentProfiles("all");
       if (isMounted) setIndependentProfiles(profiles);
     })();
 
@@ -89,7 +89,7 @@ const Associations = () => {
       || (typeFilter === "akademik" && ["Akademik", "Üniversite"].includes(a.type))
       || (typeFilter === "egitim" && a.type === "Okul")
       || (typeFilter === "medya" && ["TV Kanalı", "Radyo"].includes(a.type))
-      || (typeFilter === "diplomatik" && ["Büyükelçilik", "Konsolosluk"].includes(a.type))
+      || (typeFilter === "diplomatik" && ["Büyükelçilik", "Başkonsolosluk", "Konsolosluk", "Konsolosluk Ofisi"].includes(a.type))
       || (typeFilter === "hastane" && a.type === "Hastane")
       || (typeFilter === "dijital" && ["Dijital Topluluk", "WhatsApp Grubu", "Telegram Grubu", "Discord Topluluğu", "Online Topluluk"].includes(a.type));
     return matchesCountry && matchesCity && matchesType;
@@ -154,7 +154,7 @@ const Associations = () => {
                 key={a.id}
                 className="group relative bg-card rounded-2xl p-6 pt-9 shadow-card hover:shadow-card-hover transition-all duration-300 border border-border hover:-translate-y-1 block overflow-hidden"
               >
-                <DemoBadge variant="card" />
+                {a.source === "mock" ? <DemoBadge variant="card" /> : null}
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center text-secondary-foreground font-bold text-sm shrink-0">
                     {a.logo}
@@ -202,7 +202,7 @@ const Associations = () => {
                         <Stethoscope className="h-3 w-3" /> Randevu Al
                       </Button>
                     </Link>
-                  ) : ["Büyükelçilik", "Konsolosluk"].includes(a.type) ? (
+                  ) : ["Büyükelçilik", "Başkonsolosluk", "Konsolosluk", "Konsolosluk Ofisi"].includes(a.type) ? (
                     <Link to={a.href} className="flex-1" onClick={(e) => e.stopPropagation()}>
                       <Button variant="outline" size="sm" className="w-full gap-1">
                         <CalendarIcon className="h-3 w-3" /> Profili Aç

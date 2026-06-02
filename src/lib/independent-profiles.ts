@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 
-export type IndependentProfileKind = "consulate";
+export type IndependentProfileKind = "consulate" | "embassy";
+export type IndependentProfileKindFilter = IndependentProfileKind | "all";
 
 export type IndependentProfileService = {
   title: string;
@@ -223,13 +224,18 @@ export async function getPublicIndependentProfile(slug: string): Promise<Indepen
 }
 
 export async function listPublishedIndependentProfiles(
-  profileKind: IndependentProfileKind = "consulate",
+  profileKind: IndependentProfileKindFilter = "all",
 ): Promise<IndependentProfile[]> {
-  const { data, error } = await (supabase as any)
+  let query = (supabase as any)
     .from("independent_profiles")
     .select("*")
-    .eq("is_published", true)
-    .eq("profile_kind", profileKind)
+    .eq("is_published", true);
+
+  if (profileKind !== "all") {
+    query = query.eq("profile_kind", profileKind);
+  }
+
+  const { data, error } = await query
     .order("sort_order", { ascending: true })
     .order("title", { ascending: true });
 

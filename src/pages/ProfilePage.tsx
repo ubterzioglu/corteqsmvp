@@ -331,17 +331,17 @@ const ProfilePage = () => {
 
   return (
     <div className={`mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 ${isIndividualProfile ? "pb-16" : ""}`}>
-      <Card className={isIndividualProfile ? "overflow-hidden border-slate-200 shadow-sm" : "border-slate-200 bg-white/90 shadow-sm"}>
+      <Card className={isIndividualProfile ? "overflow-hidden border-slate-200/90 bg-white shadow-[0_30px_80px_-40px_rgba(15,23,42,0.35)]" : "border-slate-200 bg-white/90 shadow-sm"}>
         {isIndividualProfile ? (
-          <div className="border-b border-border bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.18),transparent_35%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(248,250,252,0.92))]">
+          <div className="border-b border-border bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(8,145,178,0.16),transparent_32%),linear-gradient(135deg,rgba(248,250,252,0.98),rgba(240,249,255,0.94)_46%,rgba(255,255,255,1)_100%)]">
             <CardHeader className="flex flex-col gap-5 pb-4 md:flex-row md:items-start md:justify-between">
               <div className="flex items-start gap-4">
-                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] bg-gradient-to-br from-sky-500 to-cyan-500 text-2xl font-bold text-white shadow-lg">
+                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[28px] bg-[linear-gradient(145deg,#0f172a,#0ea5e9)] text-2xl font-bold text-white shadow-[0_24px_45px_-24px_rgba(14,165,233,0.75)]">
                   {initials}
                 </div>
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="outline" className="border-sky-300/60 bg-sky-50 text-sky-700">
+                    <Badge variant="outline" className="border-sky-300/60 bg-white/80 text-sky-700">
                       <Sparkles className="mr-1 h-3 w-3" /> Bireysel Panelim
                     </Badge>
                     <Badge variant="secondary" className="bg-slate-900 text-white hover:bg-slate-900">
@@ -353,7 +353,7 @@ const ProfilePage = () => {
                     {errorMessage ? <Badge variant="destructive" className="text-xs">Kısmi veri yüklendi</Badge> : null}
                   </div>
                   <div>
-                    <CardTitle className="text-3xl tracking-tight text-slate-950">{displayName}</CardTitle>
+                    <CardTitle className="text-3xl tracking-tight text-slate-950 md:text-4xl">{displayName}</CardTitle>
                     <CardDescription className="mt-1 max-w-2xl text-sm text-slate-600">
                       {shortBio
                         ? `Profil özeti: ${shortBio}`
@@ -387,22 +387,22 @@ const ProfilePage = () => {
               </div>
             </CardHeader>
             <CardContent className="grid gap-3 pb-6 md:grid-cols-4">
-              <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-sm backdrop-blur">
+              <div className="rounded-[22px] border border-white/80 bg-white/90 p-3 shadow-sm backdrop-blur">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Profil Skoru</p>
                 <p className="mt-1 text-2xl font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
                 <p className="mt-1 text-xs text-slate-600">Zorunlu alan tamamlanma oranı</p>
               </div>
-              <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-sm backdrop-blur">
+              <div className="rounded-[22px] border border-white/80 bg-white/90 p-3 shadow-sm backdrop-blur">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Açık Modül</p>
                 <p className="mt-1 text-2xl font-bold text-slate-950">{dashboardCount}</p>
                 <p className="mt-1 text-xs text-slate-600">Şu an etkin dashboard erişimi</p>
               </div>
-              <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-sm backdrop-blur">
+              <div className="rounded-[22px] border border-white/80 bg-white/90 p-3 shadow-sm backdrop-blur">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Public Alan</p>
                 <p className="mt-1 text-2xl font-bold text-slate-950">{publicAttributesCount}</p>
                 <p className="mt-1 text-xs text-slate-600">Dışarıya açık profil alanı</p>
               </div>
-              <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-sm backdrop-blur">
+              <div className="rounded-[22px] border border-white/80 bg-white/90 p-3 shadow-sm backdrop-blur">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Bekleyen Talep</p>
                 <p className="mt-1 text-2xl font-bold text-slate-950">{pendingCount}</p>
                 <p className="mt-1 text-xs text-slate-600">Admin değerlendirme kuyruğu</p>

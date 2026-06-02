@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -17,11 +24,13 @@ import {
   type IndependentProfileAnnouncement,
   type IndependentProfileCta,
   type IndependentProfileInput,
+  type IndependentProfileKind,
   type IndependentProfileService,
 } from "@/lib/independent-profiles";
 
 type FormState = {
   slug: string;
+  profileKind: IndependentProfileKind;
   typeLabel: string;
   title: string;
   subtitle: string;
@@ -45,6 +54,7 @@ type FormState = {
 
 const EMPTY_FORM: FormState = {
   slug: "",
+  profileKind: "consulate",
   typeLabel: "Konsolosluk",
   title: "",
   subtitle: "",
@@ -70,6 +80,7 @@ const stringifyPretty = (value: unknown) => JSON.stringify(value, null, 2);
 
 const profileToFormState = (profile: IndependentProfile): FormState => ({
   slug: profile.slug,
+  profileKind: profile.profileKind,
   typeLabel: profile.typeLabel,
   title: profile.title,
   subtitle: profile.subtitle ?? "",
@@ -111,8 +122,8 @@ const parseJsonArray = <T,>(label: string, raw: string): T[] => {
 
 const buildInputFromForm = (form: FormState): IndependentProfileInput => ({
   slug: slugifyIndependentProfile(form.slug || form.title),
-  profileKind: "consulate",
-  typeLabel: form.typeLabel.trim() || "Konsolosluk",
+  profileKind: form.profileKind,
+  typeLabel: form.typeLabel.trim() || (form.profileKind === "embassy" ? "Büyükelçilik" : "Konsolosluk"),
   title: form.title.trim(),
   subtitle: form.subtitle.trim() || null,
   country: form.country.trim(),
@@ -162,7 +173,7 @@ export default function AdminConsulateProfilesPage() {
       }
     } catch (error) {
       toast({
-        title: "Konsolosluk profilleri yüklenemedi",
+        title: "Diplomatik profiller yüklenemedi",
         description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
         variant: "destructive",
       });
@@ -206,11 +217,11 @@ export default function AdminConsulateProfilesPage() {
       if (selectedProfile) {
         const saved = await updateIndependentProfileAsAdmin(selectedProfile.id, payload);
         await loadProfiles(saved.id);
-        toast({ title: "Konsolosluk profili güncellendi" });
+        toast({ title: "Diplomatik profil güncellendi" });
       } else {
         const saved = await createIndependentProfileAsAdmin(payload);
         await loadProfiles(saved.id);
-        toast({ title: "Yeni konsolosluk profili oluşturuldu" });
+        toast({ title: "Yeni diplomatik profil oluşturuldu" });
       }
     } catch (error) {
       toast({
@@ -229,8 +240,8 @@ export default function AdminConsulateProfilesPage() {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <CardTitle>Konsolosluk Profilleri</CardTitle>
-              <CardDescription>Bağımsız slug tabanlı public profil kayıtları</CardDescription>
+              <CardTitle>Diplomatik Profiller</CardTitle>
+              <CardDescription>Büyükelçilik ve konsolosluklar için bağımsız public profil kayıtları</CardDescription>
             </div>
             <Button size="sm" variant="outline" onClick={handleNew}>
               <Plus className="h-4 w-4" />
@@ -241,7 +252,7 @@ export default function AdminConsulateProfilesPage() {
         <CardContent className="space-y-2">
           {isLoading ? <p className="text-sm text-muted-foreground">Kayıtlar yükleniyor...</p> : null}
           {!isLoading && profiles.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Henüz konsolosluk profili yok.</p>
+            <p className="text-sm text-muted-foreground">Henüz diplomatik profil yok.</p>
           ) : null}
           {profiles.map((profile) => (
             <button
@@ -273,13 +284,33 @@ export default function AdminConsulateProfilesPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{selectedProfile ? "Konsolosluk Profilini Düzenle" : "Yeni Konsolosluk Profili"}</CardTitle>
+          <CardTitle>{selectedProfile ? "Diplomatik Profili Düzenle" : "Yeni Diplomatik Profil"}</CardTitle>
           <CardDescription>
             JSON alanları doğrudan DB yapısıyla uyumludur. `services`, `announcements` ve `cta` alanlarına array JSON gir.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid gap-4 md:grid-cols-2">
+            <Field label="Profil Türü">
+              <Select
+                value={form.profileKind}
+                onValueChange={(value) => {
+                  const profileKind = value as IndependentProfileKind;
+                  updateForm("profileKind", profileKind);
+                  if (!form.typeLabel.trim() || form.typeLabel === "Konsolosluk" || form.typeLabel === "Büyükelçilik") {
+                    updateForm("typeLabel", profileKind === "embassy" ? "Büyükelçilik" : "Konsolosluk");
+                  }
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Profil türü seç" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="consulate">Konsolosluk</SelectItem>
+                  <SelectItem value="embassy">Büyükelçilik</SelectItem>
+                </SelectContent>
+              </Select>
+            </Field>
             <Field label="Slug">
               <Input value={form.slug} onChange={(event) => updateForm("slug", event.target.value)} placeholder="tc-berlin-buyukelcilik" />
             </Field>
@@ -329,7 +360,7 @@ export default function AdminConsulateProfilesPage() {
               value={form.description}
               onChange={(event) => updateForm("description", event.target.value)}
               className="min-h-[120px]"
-              placeholder="Konsolosluk açıklaması"
+              placeholder={form.profileKind === "embassy" ? "Büyükelçilik açıklaması" : "Konsolosluk açıklaması"}
             />
           </Field>
 

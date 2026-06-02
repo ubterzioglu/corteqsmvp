@@ -71,15 +71,17 @@ describe("AdminLayout", () => {
       "https://global-network-bridge.lovable.app/",
     );
     expect(screen.getByRole("link", { name: "Demo" })).toHaveAttribute("target", "_blank");
-    expect(screen.getByRole("button", { name: /New Member System/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Üyeler/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Topluluklar/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Üye Takibi" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Data/i })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Üye Takibi" })).not.toBeInTheDocument();
     expect(screen.queryByRole("menuitem", { name: /Loginli Kullanıcılar & Roller/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Dış Bağlantılar" })).not.toBeInTheDocument();
     const dashboardButton = screen.getByRole("button", { name: /Dashboard/i });
 
-    const newMemberSystemButton = screen.getByRole("button", { name: /New Member System/i });
+    const newMemberSystemButton = screen.getByRole("button", { name: /Üyeler/i });
     fireEvent.mouseEnter(newMemberSystemButton);
+    expect(await screen.findByRole("menuitem", { name: /Üye Takibi/i })).toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /Loginli Kullanıcılar & Roller/i })).toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /Roller & Featurelar/i })).toBeInTheDocument();
     fireEvent.mouseLeave(newMemberSystemButton);
@@ -88,6 +90,13 @@ describe("AdminLayout", () => {
     expect(await screen.findByRole("menuitem", { name: /Topluluk Editörleri/i })).toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /Topluluk Kullanma Kılavuzu/i })).toBeInTheDocument();
     fireEvent.mouseLeave(communityButton);
+    const dataButton = screen.getByRole("button", { name: /^Data$/i });
+    fireEvent.mouseEnter(dataButton);
+    expect(await screen.findByRole("menuitem", { name: /Büyükelçilik/i })).toBeInTheDocument();
+    expect(await screen.findByRole("menuitem", { name: /Başkonsolosluk/i })).toBeInTheDocument();
+    expect(await screen.findByRole("menuitem", { name: /Konsolosluk Ofisi/i })).toBeInTheDocument();
+    expect(await screen.findByRole("menuitem", { name: /Kullanıcı Rolleri/i })).toBeInTheDocument();
+    fireEvent.mouseLeave(dataButton);
     fireEvent.mouseEnter(dashboardButton);
 
     const externalLinksSubTrigger = await screen.findByText("Dış Bağlantılar");
@@ -111,10 +120,11 @@ describe("AdminLayout", () => {
 
     const otherRecordsButton = screen.getByRole("button", { name: /Diğer Kayıtlar/i });
     fireEvent.mouseEnter(otherRecordsButton);
-
-    const may19SubTrigger = await screen.findByText("19 Mayıs");
-    fireEvent.click(may19SubTrigger);
-    expect(await screen.findByRole("menuitem", { name: /19 Mayıs Kelime/i })).toBeInTheDocument();
+    expect(await screen.findByRole("menuitem", { name: /Lansman Katılım/i })).toBeInTheDocument();
+    expect(await screen.findByRole("menuitem", { name: /Anketler/i })).toBeInTheDocument();
+    const inactiveSubTrigger = await screen.findByText("Inaktif");
+    fireEvent.click(inactiveSubTrigger);
+    expect(await screen.findByRole("menuitem", { name: /19 Mayıs Fikir/i })).toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /19 Mayıs Anı/i })).toBeInTheDocument();
   });
 
@@ -142,11 +152,11 @@ describe("AdminLayout", () => {
     const dashboardButton = screen.getByRole("button", { name: /Dashboard/i });
     fireEvent.mouseEnter(dashboardButton);
 
-    expect(screen.getAllByText("Command Center")[0].closest("a")).toHaveAttribute(
+    expect(screen.getAllByText("CC")[0].closest("a")).toHaveAttribute(
       "href",
       "/admin/workspace/command-center",
     );
-    expect((await screen.findByRole("menuitem", { name: /Command Center/i })).closest("a")).toHaveAttribute(
+    expect((await screen.findByRole("menuitem", { name: /^CC$/i })).closest("a")).toHaveAttribute(
       "href",
       "/admin/workspace/command-center",
     );

@@ -59,7 +59,7 @@ const queryIndependentConsulates = async (terms: string[], country?: string | nu
     .from("independent_profiles")
     .select("slug, title, type_label, description, country, city")
     .eq("is_published", true)
-    .eq("profile_kind", "consulate")
+    .in("profile_kind", ["consulate", "embassy"])
     .order("sort_order", { ascending: true });
 
   if (error || !Array.isArray(data)) return [];

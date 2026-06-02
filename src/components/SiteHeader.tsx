@@ -4,6 +4,9 @@ import logo from "../../newlogo.png";
 export default function SiteHeader() {
   return (
     <div className="sticky top-0 z-50 border-b border-orange-100/90 bg-[linear-gradient(180deg,#fffdf9_0%,#fff8f0_100%)] backdrop-blur-sm">
+      <div className="border-b border-amber-300/70 bg-[linear-gradient(90deg,#fff1bf_0%,#ffc96b_48%,#ffb347_100%)] px-4 py-2 text-center text-[0.72rem] font-black uppercase tracking-[0.28em] text-slate-950 shadow-[inset_0_-1px_0_rgba(255,255,255,0.35)] sm:text-[0.8rem]">
+        DİKKAT! MVP!
+      </div>
       <div className="container mx-auto px-4 py-3 lg:px-6">
         <div className="flex flex-col items-center gap-4 md:flex-row md:flex-wrap md:items-center md:justify-between">
           <Link
@@ -25,8 +28,11 @@ export default function SiteHeader() {
                 aria-hidden="true"
                 className="h-8 w-px bg-slate-300/85"
               />
-              <div className="max-w-[11rem] text-[1rem] font-semibold tracking-[0.02em] text-slate-800 sm:max-w-none sm:text-[1.05rem]">
-                Global Türk Diaspora Network
+              <div className="flex max-w-[16rem] items-center gap-2 text-[1rem] font-semibold tracking-[0.02em] text-slate-800 sm:max-w-none sm:text-[1.05rem]">
+                <span className="text-[1.1rem] font-black uppercase tracking-[0.12em] text-red-600 sm:text-[1.35rem]">
+                  MVP
+                </span>
+                <span>Global Türk Diaspora Network</span>
               </div>
             </div>
           </Link>

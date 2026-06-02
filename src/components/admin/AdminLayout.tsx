@@ -10,6 +10,7 @@ import {
   adminPanelDocNavItems,
   adminPanelNavItems,
   communityNavItems,
+  dataNavItems,
   externalAdminNavItems,
   newMemberSystemNavItems,
   otherActionNavItems,
@@ -100,18 +101,12 @@ const AdminLayout = () => {
   const [authLoading, setAuthLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
   const [otherActionsMenuOpen, setOtherActionsMenuOpen] = useState(false);
-  const [eventMenuOpen, setEventMenuOpen] = useState(false);
-  const [inactiveMenuOpen, setInactiveMenuOpen] = useState(false);
   const [newMemberMenuOpen, setNewMemberMenuOpen] = useState(false);
   const [communityMenuOpen, setCommunityMenuOpen] = useState(false);
+  const [dataMenuOpen, setDataMenuOpen] = useState(false);
   const [advisorMenuOpen, setAdvisorMenuOpen] = useState(false);
   const [adminPanelMenuOpen, setAdminPanelMenuOpen] = useState(false);
   const demoUrl = "https://global-network-bridge.lovable.app/";
-  const eventNavItems = [
-    { to: "/admin/surveys", label: "Anketler" },
-    { to: "/admin/whatsapp-landings", label: "Topluluklar" },
-    { to: "/admin/consulates", label: "Konsolosluk Profilleri" },
-  ] as const;
   const inactiveNavItems = [
     { to: "/admin/may19/ani", label: "19 Mayıs Anı" },
     { to: "/admin/may19/kelime", label: "19 Mayıs Fikir" },
@@ -232,20 +227,20 @@ const AdminLayout = () => {
 
   const advisorMenuActive =
     location.pathname.startsWith("/admin/advisors/") ||
-    otherRecordNavItems.some((item) => location.pathname === item.to);
+    otherRecordNavItems.some((item) => location.pathname === item.to) ||
+    inactiveNavItems.some((item) => location.pathname === item.to);
   const communityMenuActive = communityNavItems.some((item) => location.pathname === item.to);
-  const eventMenuActive = eventNavItems.some((item) => location.pathname === item.to);
-  const inactiveMenuActive = inactiveNavItems.some((item) => location.pathname === item.to);
+  const dataMenuActive = dataNavItems.some((item) => location.pathname === item.to);
   const newMemberMenuActive =
-    location.pathname.startsWith("/admin/new-member") || location.pathname === "/admin/roller-taslak";
+    location.pathname.startsWith("/admin/new-member") ||
+    location.pathname === "/admin/roller-taslak" ||
+    location.pathname === "/admin/members";
   const otherActionsMenuActive = otherActionNavItems.some((item) => location.pathname === item.to);
   const adminPanelMenuActive = adminPanelNavItems.some((item) => location.pathname === item.to);
-  const membersNavItem = primaryAdminNavItems.find((item) => item.to === "/admin/members");
-  const secondaryPrimaryNavItems = primaryAdminNavItems.filter((item) => item.to !== "/admin/members");
   const isRouteActive = (to: string) => location.pathname === to;
   const mobileMainLinks = [
-    { to: "/admin", label: "Admin Ana Sayfa" },
-    { to: "/admin/workspace/command-center", label: "Command Center" },
+    { to: "/admin/workspace/command-center", label: "CC" },
+    { to: "/admin/members", label: "Üye Takibi" },
     { to: "/admin/new-member/guide", label: "Genel Kullanım Kılavuzu" },
     { to: "/admin/new-member/users-roles", label: "Loginli Kullanıcılar & Roller" },
     { to: "/admin/new-member/roles-features", label: "Roller & Featurelar" },
@@ -253,7 +248,6 @@ const AdminLayout = () => {
     { to: "/admin/new-member/profile-sections", label: "Profile Sections" },
     { to: "/admin/new-member/taxonomy", label: "Taxonomy Yönetimi" },
     { to: "/admin/new-member/overrides", label: "Feature Override" },
-    { to: "/admin/members", label: "Üye Takibi" },
     { to: "/admin/referral", label: "Ref Kod" },
     { to: "/admin/approvals", label: "Approval Queue" },
     { to: "/admin/audit-logs", label: "Audit Logs" },
@@ -262,7 +256,12 @@ const AdminLayout = () => {
     { to: "/admin/whatsapp-landings", label: "Topluluklar" },
     { to: "/admin/whatsapp-landings/editors", label: "Topluluk Editörleri" },
     { to: "/admin/whatsapp-landings/guide", label: "Topluluk Kullanma Kılavuzu" },
-    { to: "/admin/consulates", label: "Konsolosluk Profilleri" },
+    { to: "/admin/consulates", label: "Diplomatik Profiller" },
+    { to: "/admin/data/buyukelcilik", label: "Data: Büyükelçilik" },
+    { to: "/admin/data/baskonsolosluk", label: "Data: Başkonsolosluk" },
+    { to: "/admin/data/konsolosluk", label: "Data: Konsolosluk" },
+    { to: "/admin/data/konsolosluk-ofisi", label: "Data: Konsolosluk Ofisi" },
+    { to: "/admin/data/kullanici-rolleri", label: "Data: Kullanıcı Rolleri" },
     { to: "/admin/cadde", label: "Cadde" },
     { to: "/admin/may19/kelime", label: "19 Mayıs Kelime" },
     { to: "/admin/may19/ani", label: "19 Mayıs Anı" },
@@ -270,10 +269,10 @@ const AdminLayout = () => {
     { to: "/admin/marquee", label: "Haber Bandı" },
     { to: "/admin/social-media", label: "Sosyal Medya" },
     { to: "/admin/about", label: "Güncellemeler" },
-    { to: "/admin/workspace", label: "Dashboard Merkezi" },
     { to: "/admin/workspace/resources", label: "Dosyalar ve Linkler" },
     { to: "/admin/workspace/mvp", label: "MVP Listesi" },
   ] as const;
+  const headerWorkspaceNavItems = workspaceAdminNavItems.filter((item) => item.key !== "workspace-home");
 
   if (!authenticated) {
     return (
@@ -401,97 +400,11 @@ const AdminLayout = () => {
             <nav className="hidden flex-wrap items-center gap-1 lg:flex">
                 <div className="flex items-center">
                   <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
-                  <DropdownMenu open={eventMenuOpen} onOpenChange={setEventMenuOpen}>
-                    <DropdownMenuTrigger asChild>
-                      <div
-                        onMouseEnter={() => setEventMenuOpen(true)}
-                        onMouseLeave={() => setEventMenuOpen(false)}
-                      >
-                        <button
-                          type="button"
-                          className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors ${
-                            eventMenuActive
-                              ? "bg-[#D93025] text-white"
-                              : "bg-[#FCE8E6] text-[#B3261E] hover:bg-[#FAD2CF]"
-                          }`}
-                        >
-                          Etkinlik
-                          <ChevronDown className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="start"
-                      className="w-48"
-                      onMouseEnter={() => setEventMenuOpen(true)}
-                      onMouseLeave={() => setEventMenuOpen(false)}
-                    >
-                      {eventNavItems.map((item) => {
-                        const isActive = location.pathname === item.to;
-
-                        return (
-                          <DropdownMenuItem key={item.to} asChild>
-                            <Link to={item.to} className="flex items-center justify-between gap-3">
-                              <span>{item.label}</span>
-                              {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
-                            </Link>
-                          </DropdownMenuItem>
-                        );
-                      })}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-                <div className="flex items-center">
-                  <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
-                  <DropdownMenu open={inactiveMenuOpen} onOpenChange={setInactiveMenuOpen}>
-                    <DropdownMenuTrigger asChild>
-                      <div
-                        onMouseEnter={() => setInactiveMenuOpen(true)}
-                        onMouseLeave={() => setInactiveMenuOpen(false)}
-                      >
-                        <button
-                          type="button"
-                          className={`${linkClass({ isActive: inactiveMenuActive })} inline-flex items-center gap-1`}
-                        >
-                          Inaktif
-                          <ChevronDown className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="start"
-                      className="w-48"
-                      onMouseEnter={() => setInactiveMenuOpen(true)}
-                      onMouseLeave={() => setInactiveMenuOpen(false)}
-                    >
-                      {inactiveNavItems.map((item) => {
-                        const isActive = location.pathname === item.to;
-
-                        return (
-                          <DropdownMenuItem key={item.to} asChild>
-                            <Link to={item.to} className="flex items-center justify-between gap-3">
-                              <span>{item.label}</span>
-                              {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
-                            </Link>
-                          </DropdownMenuItem>
-                        );
-                      })}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-                <div className="flex items-center">
-                  <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
-                  <NavLink to="/admin" className={({ isActive }) => linkClass({ isActive, variant: "home" })}>
-                    Admin Ana Sayfa
-                  </NavLink>
-                </div>
-                <div className="flex items-center">
-                  <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
                   <NavLink
                     to="/admin/workspace/command-center"
                     className={({ isActive }) => linkClass({ isActive, variant: "command-center" })}
                   >
-                    Command Center
+                    CC
                   </NavLink>
                 </div>
                 <div className="flex items-center">
@@ -517,7 +430,7 @@ const AdminLayout = () => {
                         type="button"
                         className={`${linkClass({ isActive: newMemberMenuActive, variant: "members" })} inline-flex items-center gap-1`}
                       >
-                        New Member System
+                        Üyeler
                         <ChevronDown className="h-3.5 w-3.5" />
                       </button>
                     </div>
@@ -543,18 +456,7 @@ const AdminLayout = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-                {membersNavItem ? (
-                  <div key={membersNavItem.to} className="flex items-center">
-                    <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
-                    <NavLink
-                      to={membersNavItem.to}
-                      className={({ isActive }) => linkClass({ isActive, variant: "members" })}
-                    >
-                      {membersNavItem.label}
-                    </NavLink>
-                  </div>
-                ) : null}
-                {secondaryPrimaryNavItems.map((item) => (
+                {primaryAdminNavItems.map((item) => (
                   <div key={item.to} className="flex items-center">
                     <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
                     <NavLink to={item.to} className={({ isActive }) => linkClass({ isActive })}>
@@ -640,6 +542,44 @@ const AdminLayout = () => {
               </div>
               <div className="flex items-center">
                 <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
+                <DropdownMenu open={dataMenuOpen} onOpenChange={setDataMenuOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <div
+                      onMouseEnter={() => setDataMenuOpen(true)}
+                      onMouseLeave={() => setDataMenuOpen(false)}
+                    >
+                      <button
+                        type="button"
+                        className={`${linkClass({ isActive: dataMenuActive })} inline-flex items-center gap-1`}
+                      >
+                        Data
+                        <ChevronDown className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="start"
+                    className="w-56"
+                    onMouseEnter={() => setDataMenuOpen(true)}
+                    onMouseLeave={() => setDataMenuOpen(false)}
+                  >
+                    {dataNavItems.map((item) => {
+                      const isActive = location.pathname === item.to;
+
+                      return (
+                        <DropdownMenuItem key={item.to} asChild>
+                          <Link to={item.to} className="flex items-center justify-between gap-3">
+                            <span>{item.label}</span>
+                            {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
+                          </Link>
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="flex items-center">
+                <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
                 <DropdownMenu open={advisorMenuOpen} onOpenChange={setAdvisorMenuOpen}>
                   <DropdownMenuTrigger asChild>
                     <div
@@ -657,7 +597,7 @@ const AdminLayout = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="start"
-                    className="w-48"
+                    className="w-56"
                     onMouseEnter={() => setAdvisorMenuOpen(true)}
                     onMouseLeave={() => setAdvisorMenuOpen(false)}
                   >
@@ -671,8 +611,25 @@ const AdminLayout = () => {
                             {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
                           </Link>
                         </DropdownMenuItem>
-                      );
-                    })}
+                        );
+                      })}
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>Inaktif</DropdownMenuSubTrigger>
+                      <DropdownMenuSubContent className="max-h-[260px] w-56 overflow-y-auto">
+                        {inactiveNavItems.map((item) => {
+                          const isActive = location.pathname === item.to;
+
+                          return (
+                            <DropdownMenuItem key={item.to} asChild>
+                              <Link to={item.to} className="flex items-center justify-between gap-3">
+                                <span>{item.label}</span>
+                                {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
+                              </Link>
+                            </DropdownMenuItem>
+                          );
+                        })}
+                      </DropdownMenuSubContent>
+                    </DropdownMenuSub>
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger>Sosyal Link Profilleri</DropdownMenuSubTrigger>
                       <DropdownMenuSubContent className="w-56">
@@ -717,7 +674,7 @@ const AdminLayout = () => {
                     onMouseEnter={() => setAdminPanelMenuOpen(true)}
                     onMouseLeave={() => setAdminPanelMenuOpen(false)}
                   >
-                    {workspaceAdminNavItems.map((item) => (
+                    {headerWorkspaceNavItems.map((item) => (
                       <DropdownMenuItem key={item.key} asChild>
                         <Link to={item.to} className="flex items-center justify-between gap-3">
                           <span>{item.label}</span>

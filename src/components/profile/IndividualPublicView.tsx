@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/components/auth/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import type { TablesInsert } from "@/integrations/supabase/types";
 import { toast } from "@/hooks/use-toast";
 import type { IndividualProfileDetailsCore } from "@/lib/individual-profile";
 
@@ -55,6 +56,8 @@ const IndividualPublicView = ({ details }: Props) => {
     .filter((part) => part && part !== "-")
     .join(", ");
   const avatarInitials = details.displayName.slice(0, 2).toUpperCase();
+  const canMessageUser = !isSelf && Boolean(details.userId);
+  const canFollowUser = !isSelf && Boolean(details.userId);
 
   useEffect(() => {
     if (!details.userId) return;
@@ -62,7 +65,7 @@ const IndividualPublicView = ({ details }: Props) => {
 
     void (async () => {
       const [{ data: cafeRows }, { count }, { data: followRow }] = await Promise.all([
-        (supabase as any)
+        supabase
           .from("cafe_memberships")
           .select("cafe_id, joined_at, cafes:cafe_id(id, name, theme, closes_at)")
           .eq("user_id", details.userId)
@@ -84,12 +87,21 @@ const IndividualPublicView = ({ details }: Props) => {
 
       if (cancelled) return;
 
-      const cafeRow: any = cafeRows?.[0];
+      const cafeRow = cafeRows?.[0] as
+        | {
+            cafes?: {
+              id: string;
+              name: string;
+              theme?: string | null;
+              closes_at: string;
+            } | null;
+          }
+        | undefined;
       if (cafeRow?.cafes && new Date(cafeRow.cafes.closes_at).getTime() > Date.now()) {
         setActiveCafe({
           id: cafeRow.cafes.id,
           name: cafeRow.cafes.name,
-          theme: cafeRow.cafes.theme,
+          theme: cafeRow.cafes.theme ?? undefined,
         });
       }
       if (count !== null) setFollowerCount(count);
@@ -106,13 +118,20 @@ const IndividualPublicView = ({ details }: Props) => {
       toast({ title: "Mesaj göndermek için giriş yapın", variant: "destructive" });
       return;
     }
+    if (!details.userId) {
+      toast({ title: "Bu profile şu anda mesaj gönderilemiyor", variant: "destructive" });
+      return;
+    }
     const content = messageDraft.trim();
     if (!content) return;
     setIsMessageSending(true);
     try {
-      const { error } = await (supabase as any)
-        .from("direct_messages")
-        .insert({ sender_id: user.id, recipient_id: details.userId, content });
+      const payload: TablesInsert<"direct_messages"> = {
+        sender_id: user.id,
+        recipient_id: details.userId,
+        content,
+      };
+      const { error } = await supabase.from("direct_messages").insert(payload);
       if (error) throw error;
       toast({ title: "Mesaj gönderildi" });
       setMessageDraft("");
@@ -128,6 +147,10 @@ const IndividualPublicView = ({ details }: Props) => {
   const handleFollowToggle = async () => {
     if (!user) {
       toast({ title: "Takip etmek için giriş yapın", variant: "destructive" });
+      return;
+    }
+    if (!details.userId) {
+      toast({ title: "Bu profil şu anda takip edilemiyor", variant: "destructive" });
       return;
     }
     setIsFollowLoading(true);
@@ -300,7 +323,7 @@ const IndividualPublicView = ({ details }: Props) => {
                 <Button
                   size="sm"
                   variant={isFollowing ? "secondary" : "default"}
-                  disabled={isFollowLoading}
+                  disabled={isFollowLoading || !canFollowUser}
                   onClick={() => void handleFollowToggle()}
                   className="gap-1.5"
                 >
@@ -318,7 +341,14 @@ const IndividualPublicView = ({ details }: Props) => {
                   size="sm"
                   variant="outline"
                   className="gap-1.5"
-                  onClick={() => setIsMessageOpen(true)}
+                  disabled={!canMessageUser}
+                  onClick={() => {
+                    if (!canMessageUser) {
+                      toast({ title: "Bu profile şu anda mesaj gönderilemiyor", variant: "destructive" });
+                      return;
+                    }
+                    setIsMessageOpen(true);
+                  }}
                 >
                   <MessageSquare className="h-3.5 w-3.5" /> Mesaj
                 </Button>

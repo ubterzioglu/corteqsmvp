@@ -1,30 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MessageSquare, Inbox, Send, Mail, MailOpen, RefreshCcw } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { tr } from "date-fns/locale";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
-import { formatDistanceToNow } from "date-fns";
-import { tr } from "date-fns/locale";
 
-interface Message {
-  id: string;
-  thread_id: string;
-  sender_id: string;
-  sender_name: string | null;
-  recipient_user_id: string | null;
-  recipient_kind: string;
-  recipient_slug: string | null;
-  recipient_name: string | null;
-  subject: string | null;
-  body: string;
-  context_url: string | null;
-  is_read: boolean;
-  created_at: string;
-}
+type DirectMessage = Tables<"direct_messages">;
+type UserProfile = Pick<Tables<"user_profiles">, "user_id" | "full_name" | "email">;
+
+type MessageWithDisplay = DirectMessage & {
+  counterpartId: string;
+  counterpartName: string;
+};
 
 const fmtAgo = (d: string) => {
   try {
@@ -37,8 +31,9 @@ const fmtAgo = (d: string) => {
 const MessagesInbox = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [inbox, setInbox] = useState<Message[]>([]);
-  const [sent, setSent] = useState<Message[]>([]);
+  const [inbox, setInbox] = useState<DirectMessage[]>([]);
+  const [sent, setSent] = useState<DirectMessage[]>([]);
+  const [profileMap, setProfileMap] = useState<Record<string, UserProfile>>({});
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
@@ -47,74 +42,165 @@ const MessagesInbox = () => {
   const load = async () => {
     if (!user) return;
     setLoading(true);
+
     const [recv, sentRes] = await Promise.all([
       supabase
-        .from("messages")
-        .select("*")
-        .eq("recipient_user_id", user.id)
+        .from("direct_messages")
+        .select("id, sender_id, recipient_id, content, created_at, read_at")
+        .eq("recipient_id", user.id)
         .order("created_at", { ascending: false })
         .limit(200),
       supabase
-        .from("messages")
-        .select("*")
+        .from("direct_messages")
+        .select("id, sender_id, recipient_id, content, created_at, read_at")
         .eq("sender_id", user.id)
         .order("created_at", { ascending: false })
         .limit(200),
     ]);
-    setInbox((recv.data ?? []) as Message[]);
-    setSent((sentRes.data ?? []) as Message[]);
+
+    if (recv.error || sentRes.error) {
+      toast({
+        title: "Mesajlar yüklenemedi",
+        description: recv.error?.message ?? sentRes.error?.message,
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
+    }
+
+    const inboxRows = recv.data ?? [];
+    const sentRows = sentRes.data ?? [];
+    setInbox(inboxRows);
+    setSent(sentRows);
+
+    const counterpartIds = Array.from(
+      new Set(
+        [...inboxRows.map((message) => message.sender_id), ...sentRows.map((message) => message.recipient_id)].filter(
+          Boolean,
+        ),
+      ),
+    );
+
+    if (counterpartIds.length === 0) {
+      setProfileMap({});
+      setLoading(false);
+      return;
+    }
+
+    const { data: profiles, error: profilesError } = await supabase
+      .from("user_profiles")
+      .select("user_id, full_name, email")
+      .in("user_id", counterpartIds);
+
+    if (profilesError) {
+      toast({
+        title: "Kullanıcı bilgileri yüklenemedi",
+        description: profilesError.message,
+        variant: "destructive",
+      });
+      setProfileMap({});
+      setLoading(false);
+      return;
+    }
+
+    const nextMap = (profiles ?? []).reduce<Record<string, UserProfile>>((acc, profile) => {
+      acc[profile.user_id] = profile;
+      return acc;
+    }, {});
+
+    setProfileMap(nextMap);
     setLoading(false);
   };
 
   useEffect(() => {
-    load();
+    void load();
     if (!user) return;
+
     const channel = supabase
-      .channel("messages-inbox")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages", filter: `recipient_user_id=eq.${user.id}` },
-        () => load(),
-      )
+      .channel(`direct-messages-${user.id}`)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "direct_messages" }, (payload) => {
+        const message = payload.new as Partial<DirectMessage>;
+        if (message.sender_id === user.id || message.recipient_id === user.id) {
+          void load();
+        }
+      })
       .subscribe();
+
     return () => {
       supabase.removeChannel(channel);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
-  const markRead = async (m: Message) => {
-    if (m.is_read) return;
-    await supabase.from("messages").update({ is_read: true }).eq("id", m.id);
-    setInbox((prev) => prev.map((x) => (x.id === m.id ? { ...x, is_read: true } : x)));
+  const markRead = async (message: DirectMessage) => {
+    if (message.read_at || !user || message.recipient_id !== user.id) return;
+
+    const readAt = new Date().toISOString();
+    const { error } = await supabase
+      .from("direct_messages")
+      .update({ read_at: readAt })
+      .eq("id", message.id)
+      .eq("recipient_id", user.id);
+
+    if (error) {
+      toast({ title: "Mesaj okundu işaretlenemedi", description: error.message, variant: "destructive" });
+      return;
+    }
+
+    setInbox((prev) => prev.map((item) => (item.id === message.id ? { ...item, read_at: readAt } : item)));
   };
 
-  const reply = async (original: Message) => {
+  const reply = async (original: MessageWithDisplay) => {
     if (!user) return;
-    const text = replyText.trim();
-    if (!text) return;
+
+    const content = replyText.trim();
+    if (!content) return;
+
     setSending(true);
-    const { error } = await supabase.from("messages").insert({
-      thread_id: original.thread_id,
+
+    const payload: TablesInsert<"direct_messages"> = {
       sender_id: user.id,
-      recipient_user_id: original.sender_id,
-      recipient_kind: "individual",
-      recipient_name: original.sender_name ?? "Kullanıcı",
-      subject: original.subject ? `Re: ${original.subject}` : null,
-      body: text,
-    });
+      recipient_id: original.sender_id === user.id ? original.recipient_id : original.sender_id,
+      content,
+    };
+
+    const { error } = await supabase.from("direct_messages").insert(payload);
+
     setSending(false);
+
     if (error) {
       toast({ title: "Cevap gönderilemedi", description: error.message, variant: "destructive" });
       return;
     }
+
     setReplyText("");
     toast({ title: "Cevap gönderildi" });
-    load();
+    void load();
   };
 
-  const unreadCount = inbox.filter((m) => !m.is_read).length;
-  const active = inbox.find((m) => m.id === activeId) ?? sent.find((m) => m.id === activeId);
+  const inboxWithDisplay = useMemo<MessageWithDisplay[]>(
+    () =>
+      inbox.map((message) => ({
+        ...message,
+        counterpartId: message.sender_id,
+        counterpartName:
+          profileMap[message.sender_id]?.full_name ?? profileMap[message.sender_id]?.email ?? "Kullanıcı",
+      })),
+    [inbox, profileMap],
+  );
+
+  const sentWithDisplay = useMemo<MessageWithDisplay[]>(
+    () =>
+      sent.map((message) => ({
+        ...message,
+        counterpartId: message.recipient_id,
+        counterpartName:
+          profileMap[message.recipient_id]?.full_name ?? profileMap[message.recipient_id]?.email ?? "Kullanıcı",
+      })),
+    [profileMap, sent],
+  );
+
+  const unreadCount = inboxWithDisplay.filter((message) => !message.read_at).length;
+  const active = inboxWithDisplay.find((message) => message.id === activeId) ?? sentWithDisplay.find((message) => message.id === activeId);
 
   if (!user) {
     return (
@@ -124,21 +210,23 @@ const MessagesInbox = () => {
     );
   }
 
-  const renderList = (items: Message[], emptyLabel: string, kind: "inbox" | "sent") => (
+  const renderList = (items: MessageWithDisplay[], emptyLabel: string, kind: "inbox" | "sent") => (
     <div className="divide-y divide-border max-h-[480px] overflow-y-auto">
       {items.length === 0 && (
         <p className="text-sm text-muted-foreground font-body py-10 text-center">{emptyLabel}</p>
       )}
-      {items.map((m) => {
-        const counterpart = kind === "inbox" ? m.sender_name ?? "Kullanıcı" : m.recipient_name ?? "Alıcı";
-        const isActive = activeId === m.id;
-        const unread = kind === "inbox" && !m.is_read;
+      {items.map((message) => {
+        const isActive = activeId === message.id;
+        const unread = kind === "inbox" && !message.read_at;
+
         return (
           <button
-            key={m.id}
+            key={message.id}
             onClick={() => {
-              setActiveId(m.id);
-              if (kind === "inbox") markRead(m);
+              setActiveId(message.id);
+              if (kind === "inbox") {
+                void markRead(message);
+              }
             }}
             className={`w-full text-left p-3 hover:bg-muted/50 transition-colors ${isActive ? "bg-muted/60" : ""}`}
           >
@@ -150,17 +238,12 @@ const MessagesInbox = () => {
                   <MailOpen className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                 )}
                 <span className={`text-sm truncate ${unread ? "font-bold text-foreground" : "text-foreground"}`}>
-                  {counterpart}
+                  {message.counterpartName}
                 </span>
               </div>
-              <span className="text-[10px] text-muted-foreground shrink-0">{fmtAgo(m.created_at)}</span>
+              <span className="text-[10px] text-muted-foreground shrink-0">{fmtAgo(message.created_at)}</span>
             </div>
-            {m.subject && (
-              <p className={`text-xs truncate ${unread ? "font-semibold text-foreground" : "text-muted-foreground"}`}>
-                {m.subject}
-              </p>
-            )}
-            <p className="text-xs text-muted-foreground font-body truncate">{m.body}</p>
+            <p className="text-xs text-muted-foreground font-body truncate">{message.content}</p>
           </button>
         );
       })}
@@ -173,11 +256,9 @@ const MessagesInbox = () => {
         <div className="flex items-center gap-2">
           <MessageSquare className="h-5 w-5 text-primary" />
           <h2 className="text-lg font-bold text-foreground">Mesaj Kutusu</h2>
-          {unreadCount > 0 && (
-            <Badge className="bg-primary text-primary-foreground">{unreadCount} yeni</Badge>
-          )}
+          {unreadCount > 0 && <Badge className="bg-primary text-primary-foreground">{unreadCount} yeni</Badge>}
         </div>
-        <Button variant="ghost" size="sm" onClick={load} disabled={loading} className="gap-1">
+        <Button variant="ghost" size="sm" onClick={() => void load()} disabled={loading} className="gap-1">
           <RefreshCcw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} /> Yenile
         </Button>
       </div>
@@ -187,17 +268,17 @@ const MessagesInbox = () => {
           <Tabs defaultValue="inbox" className="w-full">
             <TabsList className="w-full justify-start rounded-none border-b border-border bg-transparent px-2">
               <TabsTrigger value="inbox" className="gap-1.5">
-                <Inbox className="h-3.5 w-3.5" /> Gelen ({inbox.length})
+                <Inbox className="h-3.5 w-3.5" /> Gelen ({inboxWithDisplay.length})
               </TabsTrigger>
               <TabsTrigger value="sent" className="gap-1.5">
-                <Send className="h-3.5 w-3.5" /> Gönderilen ({sent.length})
+                <Send className="h-3.5 w-3.5" /> Gönderilen ({sentWithDisplay.length})
               </TabsTrigger>
             </TabsList>
             <TabsContent value="inbox" className="m-0">
-              {renderList(inbox, "Henüz mesaj yok.", "inbox")}
+              {renderList(inboxWithDisplay, "Henüz mesaj yok.", "inbox")}
             </TabsContent>
             <TabsContent value="sent" className="m-0">
-              {renderList(sent, "Henüz mesaj göndermedin.", "sent")}
+              {renderList(sentWithDisplay, "Henüz mesaj göndermedin.", "sent")}
             </TabsContent>
           </Tabs>
         </div>
@@ -211,27 +292,24 @@ const MessagesInbox = () => {
             <div className="flex flex-col h-full">
               <div className="mb-3 pb-3 border-b border-border">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Badge variant="secondary" className="capitalize">{active.recipient_kind}</Badge>
+                  <Badge variant="secondary">{active.sender_id === user.id ? "Gönderilen" : "Gelen"}</Badge>
                   <span className="text-xs text-muted-foreground">{fmtAgo(active.created_at)}</span>
                 </div>
-                {active.subject && <h3 className="font-bold text-foreground mt-2">{active.subject}</h3>}
-                <p className="text-xs text-muted-foreground mt-1">
-                  {active.sender_id === user.id
-                    ? `Kime: ${active.recipient_name ?? "—"}`
-                    : `Kimden: ${active.sender_name ?? "Kullanıcı"}`}
+                <p className="text-xs text-muted-foreground mt-2">
+                  {active.sender_id === user.id ? `Kime: ${active.counterpartName}` : `Kimden: ${active.counterpartName}`}
                 </p>
               </div>
-              <p className="text-sm text-foreground whitespace-pre-wrap font-body flex-1">{active.body}</p>
-              {active.recipient_user_id === user.id && (
+              <p className="text-sm text-foreground whitespace-pre-wrap font-body flex-1">{active.content}</p>
+              {active.recipient_id === user.id && (
                 <div className="mt-4 pt-4 border-t border-border space-y-2">
                   <Textarea
                     placeholder="Cevabını yaz..."
                     value={replyText}
-                    onChange={(e) => setReplyText(e.target.value)}
+                    onChange={(event) => setReplyText(event.target.value)}
                     rows={3}
                   />
                   <div className="flex justify-end">
-                    <Button size="sm" onClick={() => reply(active)} disabled={!replyText.trim() || sending} className="gap-1.5">
+                    <Button size="sm" onClick={() => void reply(active)} disabled={!replyText.trim() || sending} className="gap-1.5">
                       <Send className="h-3.5 w-3.5" /> {sending ? "..." : "Cevap Gönder"}
                     </Button>
                   </div>

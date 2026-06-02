@@ -29,7 +29,7 @@ describe("App founders routing", () => {
   it("renders the founders page on /founders", () => {
     render(<App />);
 
-    expect(screen.getByRole("heading", { name: "CorteQS Global Türk Diaspora Network" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "CorteQS CorteQS MVP Global Türk Diaspora Network" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Burak Akçakanat" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Umut Barış Terzioğlu" })).toBeInTheDocument();
     expect(screen.getByAltText("CorteQS kurucular logosu")).toBeInTheDocument();

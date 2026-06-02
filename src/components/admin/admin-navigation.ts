@@ -3,12 +3,12 @@ import { Heart, Lightbulb, Megaphone, MessageSquare, MonitorPlay, Radio, ScrollT
 import { workspaceDocPages } from "@/lib/dashboard/workspace-doc-pages";
 
 export const primaryAdminNavItems = [
-  { to: "/admin/members", label: "Üye Takibi", icon: Network },
   { to: "/admin/referral", label: "Ref Kod", icon: Sparkles },
   { to: "/admin/workspace/resources", label: "Dosyalar", icon: FolderKanban },
 ] as const;
 
 export const newMemberSystemNavItems = [
+  { to: "/admin/members", label: "Üye Takibi", icon: Network },
   { to: "/admin/new-member/guide", label: "Genel Kullanım Kılavuzu", icon: BookOpen },
   { to: "/admin/new-member/users-roles", label: "Loginli Kullanıcılar & Roller", icon: Network },
   { to: "/admin/new-member/roles-features", label: "Roller & Featurelar", icon: Shield },
@@ -43,7 +43,15 @@ export const communityNavItems = [
   { to: "/admin/whatsapp-landings", label: "Topluluklar", icon: MessageSquare },
   { to: "/admin/whatsapp-landings/editors", label: "Topluluk Editörleri", icon: Shield },
   { to: "/admin/whatsapp-landings/guide", label: "Topluluk Kullanma Kılavuzu", icon: BookOpen },
-  { to: "/admin/consulates", label: "Konsolosluk Profilleri", icon: Globe },
+  { to: "/admin/consulates", label: "Diplomatik Profiller", icon: Globe },
+] as const;
+
+export const dataNavItems = [
+  { to: "/admin/data/buyukelcilik", label: "Büyükelçilik", icon: Globe },
+  { to: "/admin/data/baskonsolosluk", label: "Başkonsolosluk", icon: Globe },
+  { to: "/admin/data/konsolosluk", label: "Konsolosluk", icon: Globe },
+  { to: "/admin/data/konsolosluk-ofisi", label: "Konsolosluk Ofisi", icon: Globe },
+  { to: "/admin/data/kullanici-rolleri", label: "Kullanıcı Rolleri", icon: Shield },
 ] as const;
 
 export const may19RecordNavItems = [
@@ -53,7 +61,7 @@ export const may19RecordNavItems = [
 
 export const workspaceAdminNavItems = [
   { key: "workspace-home", to: "/admin/workspace", label: "Dashboard Merkezi", icon: BookOpen },
-  { key: "command-center", to: "/admin/workspace/command-center", label: "Command Center", icon: ListChecks },
+  { key: "command-center", to: "/admin/workspace/command-center", label: "CC", icon: ListChecks },
   { key: "links", to: "/admin/workspace/resources", label: "Dosyalar ve Linkler", icon: FolderKanban },
   { key: "mvp", to: "/admin/workspace/mvp", label: "MVP Listesi", icon: Rocket },
 ] as const;

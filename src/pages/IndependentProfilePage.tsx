@@ -28,6 +28,9 @@ const formatAnnouncementDate = (value?: string) => {
   return parsed.toLocaleDateString("tr-TR", { day: "2-digit", month: "short", year: "numeric" });
 };
 
+const profileKindLabel = (profileKind: IndependentProfile["profileKind"]) =>
+  profileKind === "embassy" ? "Büyükelçilik Profili" : "Konsolosluk Profili";
+
 const IndependentProfilePage = () => {
   const { slug = "" } = useParams<{ slug: string }>();
   const [profile, setProfile] = useState<IndependentProfile | null>(null);
@@ -64,15 +67,15 @@ const IndependentProfilePage = () => {
 
         {isLoading ? (
           <Card className="rounded-3xl border border-border bg-card p-8 text-center text-muted-foreground">
-            Konsolosluk profili yükleniyor...
+            Diplomatik profil yükleniyor...
           </Card>
         ) : null}
 
         {!isLoading && !profile ? (
           <Card className="rounded-3xl border border-border bg-card p-8 text-center">
-            <h1 className="text-2xl font-bold text-foreground">Konsolosluk profili bulunamadı</h1>
+            <h1 className="text-2xl font-bold text-foreground">Diplomatik profil bulunamadı</h1>
             <p className="mt-3 text-muted-foreground">
-              Bu slug için yayınlanmış bağımsız bir konsolosluk profili yok.
+              Bu slug için yayınlanmış bağımsız bir büyükelçilik veya konsolosluk profili yok.
             </p>
             <Link to="/associations">
               <Button className="mt-6" variant="outline">
@@ -220,7 +223,7 @@ const HeroCopy = ({ profile, dark = false }: { profile: IndependentProfile; dark
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant={dark ? "secondary" : "outline"}>{profile.typeLabel}</Badge>
-          <Badge variant={dark ? "secondary" : "secondary"}>{profile.profileKind === "consulate" ? "Bağımsız Profil" : profile.profileKind}</Badge>
+          <Badge variant={dark ? "secondary" : "secondary"}>{profileKindLabel(profile.profileKind)}</Badge>
         </div>
         <h1 className={`text-3xl font-black md:text-5xl ${dark ? "text-white" : "text-foreground"}`}>{profile.title}</h1>
       </div>
