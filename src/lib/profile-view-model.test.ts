@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS } from "@/lib/features";
 import type { CurrentUserProfilePayload } from "@/lib/member-profile";
 import {
   buildPublicProfileViewModelFromCurrentUser,
@@ -171,7 +172,11 @@ describe("profile-view-model", () => {
       roleLabel: "İşletme",
       roleDescription: "İşletme profili",
       roleSlug: "business",
-      features: [],
+      features: [
+        { key: GENERIC_FEATURE_KEYS.profileWebsiteCard, isEnabled: true, source: "role_default" },
+        { key: GENERIC_FEATURE_KEYS.profileLinkedinCard, isEnabled: false, source: "role_default" },
+        { key: INDIVIDUAL_FEATURE_KEYS.jobSeekingBadge, isEnabled: true, source: "role_default" },
+      ],
       attributes: [
         {
           attributeKey: "full_name",
@@ -228,6 +233,42 @@ describe("profile-view-model", () => {
           displayValue: "https://www.instagram.com/aysekaya",
         },
         {
+          attributeKey: "website_url",
+          label: "Website",
+          description: null,
+          dataType: "url",
+          isSystem: false,
+          sortOrder: 170,
+          isRequired: false,
+          isPublicDefault: true,
+          userCanEdit: true,
+          userCanHide: true,
+          requiresAdminApprovalOnChange: false,
+          visibility: "public",
+          approvalStatus: "approved",
+          valueText: "https://aysekaya.studio",
+          valueJson: null,
+          displayValue: "https://aysekaya.studio",
+        },
+        {
+          attributeKey: "linkedin_url",
+          label: "LinkedIn",
+          description: null,
+          dataType: "url",
+          isSystem: false,
+          sortOrder: 171,
+          isRequired: false,
+          isPublicDefault: true,
+          userCanEdit: true,
+          userCanHide: true,
+          requiresAdminApprovalOnChange: false,
+          visibility: "public",
+          approvalStatus: "approved",
+          valueText: "https://www.linkedin.com/in/aysekaya",
+          valueJson: null,
+          displayValue: "https://www.linkedin.com/in/aysekaya",
+        },
+        {
           attributeKey: "x_url",
           label: "X (Twitter)",
           description: null,
@@ -245,6 +286,24 @@ describe("profile-view-model", () => {
           valueJson: null,
           displayValue: "https://x.com/aysekaya",
         },
+        {
+          attributeKey: "job_seeking_opt_in",
+          label: "İş Arıyorum Badge'i",
+          description: null,
+          dataType: "boolean",
+          isSystem: false,
+          sortOrder: 180,
+          isRequired: false,
+          isPublicDefault: false,
+          userCanEdit: true,
+          userCanHide: false,
+          requiresAdminApprovalOnChange: false,
+          visibility: "public",
+          approvalStatus: "approved",
+          valueText: null,
+          valueJson: true,
+          displayValue: true,
+        },
       ],
       taxonomyGroups: [],
       pendingRequests: [],
@@ -258,10 +317,14 @@ describe("profile-view-model", () => {
     const model = buildPublicProfileViewModelFromCurrentUser(profile);
 
     expect(model.links).toEqual([
+      { label: "Website", url: "https://aysekaya.studio" },
       { label: "Instagram", url: "https://www.instagram.com/aysekaya" },
       { label: "X (Twitter)", url: "https://x.com/aysekaya" },
     ]);
+    expect(model.links.some((item) => item.label === "LinkedIn")).toBe(false);
+    expect(model.badges).toContain("İş Arıyorum");
     expect(model.sections.some((section) => section.key === "instagram_url")).toBe(false);
     expect(model.sections.some((section) => section.key === "x_url")).toBe(false);
+    expect(model.sections.some((section) => section.key === "website_url")).toBe(false);
   });
 });

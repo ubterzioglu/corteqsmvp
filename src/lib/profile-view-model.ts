@@ -1,6 +1,7 @@
-import type { CurrentUserProfilePayload, ProfileAttributeState } from "@/lib/member-profile";
+import type { CurrentUserProfilePayload, ProfileAttributeState, ProfileFeatureState } from "@/lib/member-profile";
 import { getAttributeStringValue } from "@/lib/member-profile";
 import type { IndividualProfileDetailsCore } from "@/lib/individual-profile";
+import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS } from "@/lib/features";
 import { getRoleMeta, type ProfileType } from "@/lib/profile-types";
 
 export type PublicProfileSectionRow = {
@@ -86,6 +87,10 @@ const LINK_LABELS: Record<string, string> = {
 };
 
 const LINK_ATTRIBUTE_KEYS = new Set(Object.keys(LINK_LABELS));
+const FEATURE_GATED_PUBLIC_LINK_KEYS = new Map<string, string>([
+  ["linkedin_url", GENERIC_FEATURE_KEYS.profileLinkedinCard],
+  ["website_url", GENERIC_FEATURE_KEYS.profileWebsiteCard],
+]);
 
 const getStringValue = (attribute: ProfileAttributeState) => {
   const displayValue = getAttributeStringValue(attribute).trim();
@@ -109,11 +114,19 @@ const uniqueLinks = (links: PublicProfileLink[]) => {
   });
 };
 
-const buildLinksFromAttributes = (attributes: ProfileAttributeState[]): PublicProfileLink[] =>
+const isFeatureEnabled = (features: ProfileFeatureState[], featureKey: string) => {
+  return features.some((feature) => feature.key === featureKey && feature.isEnabled);
+};
+
+const buildLinksFromAttributes = (attributes: ProfileAttributeState[], features: ProfileFeatureState[]): PublicProfileLink[] =>
   uniqueLinks(
     attributes.flatMap((attribute) => {
       const raw = getStringValue(attribute);
       if (!raw || !isLikelyUrl(raw)) return [];
+      const requiredFeatureKey = FEATURE_GATED_PUBLIC_LINK_KEYS.get(attribute.attributeKey);
+      if (requiredFeatureKey && !isFeatureEnabled(features, requiredFeatureKey)) {
+        return [];
+      }
       const label = LINK_LABELS[attribute.attributeKey] ?? attribute.label;
       return [{ label, url: raw }];
     }),
@@ -180,6 +193,11 @@ const buildRoleSpecificSections = (profile: CurrentUserProfilePayload, publicAtt
   return sections;
 };
 
+const getBooleanAttributeValue = (attributes: ProfileAttributeState[], attributeKey: string) => {
+  const attribute = attributes.find((item) => item.attributeKey === attributeKey);
+  return attribute?.valueJson === true;
+};
+
 export const buildPublicProfileViewModelFromCurrentUser = (
   profile: CurrentUserProfilePayload,
 ): PublicProfileViewModel => {
@@ -193,8 +211,19 @@ export const buildPublicProfileViewModelFromCurrentUser = (
     getStringValue(profile.attributes.find((attribute) => attribute.attributeKey === "bio_short") ?? publicAttributes[0]) ||
     roleMeta?.description ||
     "Bu profil henüz detaylandırılmadı.";
-  const links = buildLinksFromAttributes(publicAttributes);
+  const links = buildLinksFromAttributes(publicAttributes, profile.features);
   const taxonomy = buildTaxonomyLabels(profile);
+  const extraBadges = [
+    isFeatureEnabled(profile.features, INDIVIDUAL_FEATURE_KEYS.jobSeekingBadge) && getBooleanAttributeValue(publicAttributes, "job_seeking_opt_in")
+      ? "İş Arıyorum"
+      : "",
+    isFeatureEnabled(profile.features, INDIVIDUAL_FEATURE_KEYS.movingSoonBadge) && getBooleanAttributeValue(publicAttributes, "moving_soon_opt_in")
+      ? "Yakında Taşınacağım"
+      : "",
+    isFeatureEnabled(profile.features, INDIVIDUAL_FEATURE_KEYS.volunteerMentorship) && getBooleanAttributeValue(publicAttributes, "volunteer_mentorship_opt_in")
+      ? "Gönüllü Mentör"
+      : "",
+  ].filter(Boolean);
 
   return {
     userId: profile.userId,
@@ -210,6 +239,7 @@ export const buildPublicProfileViewModelFromCurrentUser = (
       profile.roleLabel,
       `${publicAttributes.length} public alan`,
       `Tamamlanma %${profile.profileCompletion.percentage}`,
+      ...extraBadges,
     ],
     taxonomy,
     links,
@@ -302,6 +332,9 @@ export const buildPublicProfileViewModelFromSections = (
   const taxonomy = Array.isArray(categorySection?.content?.taxonomy)
     ? categorySection.content.taxonomy.filter((item): item is string => typeof item === "string")
     : [];
+  const extraBadges = Array.isArray(categorySection?.content?.extra_badges)
+    ? categorySection.content.extra_badges.filter((item): item is string => typeof item === "string")
+    : [];
   const primaryLabel =
     typeof categorySection?.content?.primary_label === "string" ? categorySection.content.primary_label : null;
 
@@ -331,7 +364,7 @@ export const buildPublicProfileViewModelFromSections = (
     headline: taxonomy.length ? taxonomy.join(" • ") : "Public profil görünümü",
     locationLabel: [locationSection?.content?.city, locationSection?.content?.country].filter(Boolean).join(", "),
     imageUrl: typeof imageSection?.content?.url === "string" ? imageSection.content.url : null,
-    badges: [primaryLabel, ...taxonomy].filter((item): item is string => Boolean(item)).slice(0, 4),
+    badges: [primaryLabel, ...extraBadges, ...taxonomy].filter((item): item is string => Boolean(item)).slice(0, 6),
     taxonomy,
     links,
     sections: detailSections
@@ -357,14 +390,9 @@ export const buildPublicProfileViewModelFromIndividual = (
   if (details.frontCard.linkedinUrl && details.frontCard.linkedinVisible) {
     links.push({ label: "LinkedIn", url: details.frontCard.linkedinUrl });
   }
-  if (details.frontCard.cvDoc?.url) {
-    links.push({ label: details.frontCard.cvDoc.name || "CV", url: details.frontCard.cvDoc.url });
-  }
-  if (details.frontCard.presentationDoc?.url) {
-    links.push({
-      label: details.frontCard.presentationDoc.name || "Sunum",
-      url: details.frontCard.presentationDoc.url,
-    });
+  const websiteUrl = details.controlPanel.websiteLinks[0] ?? details.controlPanel.websites[0];
+  if (websiteUrl) {
+    links.push({ label: "Website", url: websiteUrl });
   }
 
   const sections: PublicProfileSection[] = [];
@@ -391,7 +419,8 @@ export const buildPublicProfileViewModelFromIndividual = (
     badges: [
       "Bireysel",
       details.jobSeeking ? "İş Arıyor" : "",
-      details.mentorOptIn ? "Mentor" : "",
+      details.mentorOptIn ? "Gönüllü Mentör" : "",
+      details.detailCard.relocation.enabled ? "Yakında Taşınacağım" : "",
       details.controlPanel.profileVisible ? "Profil Açık" : "Profil Kilitli",
     ].filter(Boolean),
     taxonomy: details.detailCard.interests,

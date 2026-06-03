@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type ComponentType, type ReactNode } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import {
+  Briefcase,
   BookOpen,
   CheckCircle2,
   ChevronDown,
   Clock3,
   Eye,
   EyeOff,
+  FileText,
   Facebook,
   Globe2,
   HelpCircle,
@@ -17,11 +19,13 @@ import {
   MapPin,
   MessageCircle,
   Music2,
+  Plane,
   ShieldCheck,
   Sparkles,
   Trash2,
   Twitter,
   UserCircle2,
+  UserCheck,
   Youtube,
 } from "lucide-react";
 
@@ -39,7 +43,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useCurrentUserProfile } from "@/hooks/useCurrentUserProfile";
 import { useCurrentUserDashboard } from "@/hooks/useCurrentUserDashboard";
-import { GENERIC_FEATURE_KEYS, type GenericFeatureKey } from "@/lib/features";
+import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS, type GenericFeatureKey } from "@/lib/features";
 import {
   submitFeatureRequest,
   submitRoleChangeRequest,
@@ -48,7 +52,10 @@ import {
   updateUserTaxonomySelection,
 } from "@/lib/member-profile-api";
 import { getAttributeStringValue, type AttributeVisibility, type ProfileAttributeState, type TaxonomyGroupState } from "@/lib/member-profile";
+import { getProfileDocumentAccessUrl, parseProfileDocumentRecord, removeProfileDocument, uploadProfileDocument, type ProfileDocumentRecord } from "@/lib/profile-documents";
 import { defaultProfileType, getRoleMeta, isProfileType, profileTypeOptions, type ProfileType } from "@/lib/profile-types";
+import { validateCvFile, validatePresentationFile } from "@/lib/security";
+import { formatBytes } from "@/lib/submissions";
 import { supabase } from "@/integrations/supabase/client";
 
 type DraftValueMap = Record<string, string | boolean>;
@@ -123,13 +130,6 @@ const SOCIAL_ATTRIBUTE_CONFIGS: SocialAttributeConfig[] = [
     iconClassName: "text-blue-600",
   },
   {
-    key: "linkedin_url",
-    label: "LinkedIn",
-    placeholder: "linkedin.com/...",
-    icon: Linkedin,
-    iconClassName: "text-sky-700",
-  },
-  {
     key: "youtube_url",
     label: "YouTube",
     placeholder: "@kanal veya URL",
@@ -161,7 +161,26 @@ const SOCIAL_ATTRIBUTE_CONFIGS: SocialAttributeConfig[] = [
 
 const SOCIAL_ATTRIBUTE_KEYS = new Set(SOCIAL_ATTRIBUTE_CONFIGS.map((config) => config.key));
 const PROFILE_PHOTO_ATTRIBUTE_KEY = "profile_photo_url";
+const LINKEDIN_ATTRIBUTE_KEY = "linkedin_url";
+const WEBSITE_ATTRIBUTE_KEY = "website_url";
+const JOB_SEEKING_OPT_IN_ATTRIBUTE_KEY = "job_seeking_opt_in";
+const MOVING_SOON_OPT_IN_ATTRIBUTE_KEY = "moving_soon_opt_in";
+const VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY = "volunteer_mentorship_opt_in";
+const CV_DOCUMENT_ATTRIBUTE_KEY = "cv_doc";
+const PRESENTATION_DOCUMENT_ATTRIBUTE_KEY = "presentation_doc";
+const SPECIAL_PROFILE_ATTRIBUTE_KEYS = new Set([
+  PROFILE_PHOTO_ATTRIBUTE_KEY,
+  LINKEDIN_ATTRIBUTE_KEY,
+  WEBSITE_ATTRIBUTE_KEY,
+  JOB_SEEKING_OPT_IN_ATTRIBUTE_KEY,
+  MOVING_SOON_OPT_IN_ATTRIBUTE_KEY,
+  VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY,
+  CV_DOCUMENT_ATTRIBUTE_KEY,
+  PRESENTATION_DOCUMENT_ATTRIBUTE_KEY,
+]);
 const AVATARS_BUCKET = "avatars";
+const PROFILE_CV_BUCKET = "profile-cv-files";
+const PROFILE_PRESENTATION_BUCKET = "profile-presentation-files";
 const MAX_PROFILE_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 
 const buildAvatarStoragePath = (userId: string, file: File) => {
@@ -240,6 +259,21 @@ const mapAttributeDraftValue = (attribute: ProfileAttributeState): string | bool
   return getAttributeStringValue(attribute);
 };
 
+const readBooleanAttributeValue = (attribute: ProfileAttributeState | null | undefined) => {
+  return attribute?.valueJson === true;
+};
+
+const formatDocumentMeta = (document: ProfileDocumentRecord | null) => {
+  if (!document) return "Henüz dosya yüklenmedi.";
+
+  const details = [
+    document.contentType ? document.contentType.toUpperCase() : "",
+    document.sizeBytes ? formatBytes(document.sizeBytes) : "",
+  ].filter(Boolean);
+
+  return details.length ? `${details.join(" • ")}` : "Dosya hazır";
+};
+
 const ProfilePage = () => {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -254,6 +288,10 @@ const ProfilePage = () => {
   const [savingTaxonomyGroupKey, setSavingTaxonomyGroupKey] = useState<string | null>(null);
   const [savingCommonAttributes, setSavingCommonAttributes] = useState(false);
   const [savingSocialMedia, setSavingSocialMedia] = useState(false);
+  const [savingPreferenceKey, setSavingPreferenceKey] = useState<string | null>(null);
+  const [uploadingDocumentKey, setUploadingDocumentKey] = useState<string | null>(null);
+  const [removingDocumentKey, setRemovingDocumentKey] = useState<string | null>(null);
+  const [openingDocumentKey, setOpeningDocumentKey] = useState<string | null>(null);
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarRemoving, setAvatarRemoving] = useState(false);
   const [roleRequestTarget, setRoleRequestTarget] = useState<ProfileType | "">("");
@@ -263,6 +301,8 @@ const ProfilePage = () => {
   const [taxonomyDrafts, setTaxonomyDrafts] = useState<Record<string, string[]>>({});
   const helpCardRef = useRef<HTMLDivElement | null>(null);
   const avatarInputRef = useRef<HTMLInputElement | null>(null);
+  const cvInputRef = useRef<HTMLInputElement | null>(null);
+  const presentationInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (!profile) return;
@@ -296,6 +336,10 @@ const ProfilePage = () => {
     return new Map((profile?.features ?? []).map((feature) => [feature.key, feature]));
   }, [profile?.features]);
 
+  const isFeatureEnabled = useCallback((featureKey: string) => {
+    return featureMap.get(featureKey)?.isEnabled ?? false;
+  }, [featureMap]);
+
   const groupedAttributes = useMemo(() => {
     const common: ProfileAttributeState[] = [];
     const socialMedia: ProfileAttributeState[] = [];
@@ -304,7 +348,7 @@ const ProfilePage = () => {
     for (const attribute of profile?.attributes ?? []) {
       if (["full_name", "country", "city", "bio_short"].includes(attribute.attributeKey)) {
         common.push(attribute);
-      } else if (attribute.attributeKey === PROFILE_PHOTO_ATTRIBUTE_KEY) {
+      } else if (SPECIAL_PROFILE_ATTRIBUTE_KEYS.has(attribute.attributeKey)) {
         continue;
       } else if (SOCIAL_ATTRIBUTE_KEYS.has(attribute.attributeKey)) {
         socialMedia.push(attribute);
@@ -335,9 +379,24 @@ const ProfilePage = () => {
     return attribute ? getAttributeStringValue(attribute) : "";
   }, [attributeMap]);
 
-  const profilePhotoAttribute = attributeMap.get(PROFILE_PHOTO_ATTRIBUTE_KEY) ?? null;
+  const linkedinAttribute = attributeMap.get(LINKEDIN_ATTRIBUTE_KEY) ?? null;
+  const websiteAttribute = attributeMap.get(WEBSITE_ATTRIBUTE_KEY) ?? null;
+  const jobSeekingOptInAttribute = attributeMap.get(JOB_SEEKING_OPT_IN_ATTRIBUTE_KEY) ?? null;
+  const movingSoonOptInAttribute = attributeMap.get(MOVING_SOON_OPT_IN_ATTRIBUTE_KEY) ?? null;
+  const volunteerMentorshipOptInAttribute = attributeMap.get(VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY) ?? null;
+  const cvDocumentAttribute = attributeMap.get(CV_DOCUMENT_ATTRIBUTE_KEY) ?? null;
+  const presentationDocumentAttribute = attributeMap.get(PRESENTATION_DOCUMENT_ATTRIBUTE_KEY) ?? null;
+  const cvDocument = parseProfileDocumentRecord(cvDocumentAttribute?.valueJson);
+  const presentationDocument = parseProfileDocumentRecord(presentationDocumentAttribute?.valueJson);
 
   const isIndividualProfile = roleMeta?.canonicalSlug === "individual";
+  const jobSeekingFeatureEnabled = isFeatureEnabled(INDIVIDUAL_FEATURE_KEYS.jobSeekingBadge);
+  const movingSoonFeatureEnabled = isFeatureEnabled(INDIVIDUAL_FEATURE_KEYS.movingSoonBadge);
+  const volunteerMentorshipFeatureEnabled = isFeatureEnabled(INDIVIDUAL_FEATURE_KEYS.volunteerMentorship);
+  const linkedinCardEnabled = isFeatureEnabled(GENERIC_FEATURE_KEYS.profileLinkedinCard);
+  const websiteCardEnabled = isFeatureEnabled(GENERIC_FEATURE_KEYS.profileWebsiteCard);
+  const cvUploadEnabled = isFeatureEnabled(GENERIC_FEATURE_KEYS.profileCvUpload);
+  const presentationUploadEnabled = isFeatureEnabled(GENERIC_FEATURE_KEYS.profilePresentationUpload);
   const displayName = readAttributeValue("full_name") || profile?.fullName || user?.user_metadata?.name || "CorteQS Üyesi";
   const shortBio = readAttributeValue("bio_short");
   const country = readAttributeValue("country");
@@ -370,6 +429,35 @@ const ProfilePage = () => {
     ...item,
     complete: Boolean(readAttributeValue(item.key).trim()),
   }));
+  const featureToggleCards = [
+    {
+      key: JOB_SEEKING_OPT_IN_ATTRIBUTE_KEY,
+      enabled: jobSeekingFeatureEnabled,
+      checked: readBooleanAttributeValue(jobSeekingOptInAttribute),
+      title: "İş Arıyorum Badge'i",
+      description: "Profilinde \"İş Arıyorum\" etiketi görünür.",
+      icon: Briefcase,
+      toneClassName: "border-cyan-200 bg-cyan-50/60",
+    },
+    {
+      key: MOVING_SOON_OPT_IN_ATTRIBUTE_KEY,
+      enabled: movingSoonFeatureEnabled,
+      checked: readBooleanAttributeValue(movingSoonOptInAttribute),
+      title: "Yakında Taşınacağım",
+      description: "Profilinde yakında taşınacağını belirten rozet görünür.",
+      icon: Plane,
+      toneClassName: "border-amber-200 bg-amber-50/60",
+    },
+    {
+      key: VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY,
+      enabled: volunteerMentorshipFeatureEnabled,
+      checked: readBooleanAttributeValue(volunteerMentorshipOptInAttribute),
+      title: "Gönüllü Mentörlük",
+      description: "Açıldığında profilinden gönüllü mentör görünürlüğü aktif olur.",
+      icon: UserCheck,
+      toneClassName: "border-emerald-200 bg-emerald-50/60",
+    },
+  ].filter((item) => item.enabled);
 
   const guideSections = useMemo<GuideSection[]>(
     () => [
@@ -541,6 +629,42 @@ const ProfilePage = () => {
     }
   };
 
+  const handleCvFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    const validationError = validateCvFile(file);
+    if (validationError) {
+      toast({
+        title: "CV yüklenemedi",
+        description: validationError,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    await handleUploadDocument(CV_DOCUMENT_ATTRIBUTE_KEY, PROFILE_CV_BUCKET, file, cvDocument);
+  };
+
+  const handlePresentationFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    const validationError = validatePresentationFile(file);
+    if (validationError) {
+      toast({
+        title: "Sunum yüklenemedi",
+        description: validationError,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    await handleUploadDocument(PRESENTATION_DOCUMENT_ATTRIBUTE_KEY, PROFILE_PRESENTATION_BUCKET, file, presentationDocument);
+  };
+
   const handleDraftChange = (attributeKey: string, nextValue: string | boolean) => {
     setDraftValues((current) => ({ ...current, [attributeKey]: nextValue }));
   };
@@ -559,8 +683,10 @@ const ProfilePage = () => {
         .filter(Boolean);
     } else {
       const textValue = String(rawValue ?? "").trim();
-      valueToSend = SOCIAL_ATTRIBUTE_KEYS.has(attribute.attributeKey)
+      valueToSend = SOCIAL_ATTRIBUTE_KEYS.has(attribute.attributeKey) || attribute.attributeKey === LINKEDIN_ATTRIBUTE_KEY
         ? normalizeSocialMediaValue(attribute.attributeKey, textValue)
+        : attribute.attributeKey === WEBSITE_ATTRIBUTE_KEY && textValue
+          ? ensureHttpsUrl(textValue)
         : textValue;
     }
 
@@ -643,6 +769,232 @@ const ProfilePage = () => {
       });
     } finally {
       setSavingSocialMedia(false);
+    }
+  };
+
+  const patchIndividualProfileDetails = async (
+    patchBuilder: (
+      current: {
+        front_card: Record<string, unknown> | null;
+        detail_card: Record<string, unknown> | null;
+        profile_settings: Record<string, unknown> | null;
+      } | null,
+    ) => Record<string, unknown>,
+  ) => {
+    if (!user || !isIndividualProfile) return;
+
+    const { data: currentRow, error: currentError } = await supabase
+      .from("individual_profile_details")
+      .select("front_card, detail_card, profile_settings")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (currentError) throw currentError;
+
+    const payload = patchBuilder(currentRow as {
+      front_card: Record<string, unknown> | null;
+      detail_card: Record<string, unknown> | null;
+      profile_settings: Record<string, unknown> | null;
+    } | null);
+
+    const { error: upsertError } = await supabase.from("individual_profile_details").upsert({
+      user_id: user.id,
+      ...payload,
+    });
+
+    if (upsertError) throw upsertError;
+  };
+
+  const handleSavePreferenceToggle = async (attributeKey: string, checked: boolean) => {
+    setSavingPreferenceKey(attributeKey);
+    try {
+      await updateProfileAttribute(attributeKey, checked, "public");
+
+      if (attributeKey === JOB_SEEKING_OPT_IN_ATTRIBUTE_KEY) {
+        await patchIndividualProfileDetails(() => ({
+          job_seeking: checked,
+        }));
+      }
+
+      if (attributeKey === MOVING_SOON_OPT_IN_ATTRIBUTE_KEY) {
+        await patchIndividualProfileDetails((current) => {
+          const existingDetailCard =
+            current?.detail_card && typeof current.detail_card === "object" ? current.detail_card : {};
+          const existingRelocation =
+            existingDetailCard.relocation && typeof existingDetailCard.relocation === "object"
+              ? (existingDetailCard.relocation as Record<string, unknown>)
+              : {};
+
+          return {
+            detail_card: {
+              ...existingDetailCard,
+              relocation: {
+                ...existingRelocation,
+                enabled: checked,
+              },
+            },
+          };
+        });
+      }
+
+      if (attributeKey === VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY) {
+        await patchIndividualProfileDetails(() => ({
+          mentor_opt_in: checked,
+        }));
+      }
+
+      await refreshProfile();
+      toast({
+        title: "Tercih güncellendi",
+        description: checked ? "Profil tercihi görünür oldu." : "Profil tercihi kapatıldı.",
+      });
+    } catch (error) {
+      toast({
+        title: "Tercih kaydedilemedi",
+        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingPreferenceKey(null);
+    }
+  };
+
+  const handleSaveLinkCard = async (attribute: ProfileAttributeState) => {
+    const { valueToSend, visibility } = buildAttributePayload(attribute);
+    const normalizedValue = typeof valueToSend === "string" ? valueToSend : String(valueToSend ?? "");
+
+    setSavingAttributeKey(attribute.attributeKey);
+    try {
+      await updateProfileAttribute(attribute.attributeKey, normalizedValue, visibility);
+
+      if (attribute.attributeKey === LINKEDIN_ATTRIBUTE_KEY) {
+        await patchIndividualProfileDetails((current) => {
+          const frontCard =
+            current?.front_card && typeof current.front_card === "object" ? current.front_card : {};
+          const profileSettings =
+            current?.profile_settings && typeof current.profile_settings === "object" ? current.profile_settings : {};
+
+          return {
+            front_card: {
+              ...frontCard,
+              linkedin_url: normalizedValue || null,
+              linkedin_visible: visibility === "public",
+            },
+            profile_settings: {
+              ...profileSettings,
+              linkedin: normalizedValue || "",
+            },
+          };
+        });
+      }
+
+      if (attribute.attributeKey === WEBSITE_ATTRIBUTE_KEY) {
+        await patchIndividualProfileDetails((current) => {
+          const profileSettings =
+            current?.profile_settings && typeof current.profile_settings === "object" ? current.profile_settings : {};
+
+          return {
+            profile_settings: {
+              ...profileSettings,
+              website_links: normalizedValue ? [normalizedValue] : [],
+              websites: normalizedValue ? [normalizedValue] : [],
+            },
+          };
+        });
+      }
+
+      await refreshProfile();
+      toast({
+        title: "Bağlantı kaydedildi",
+        description: `${attribute.label} güncellendi.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Bağlantı kaydedilemedi",
+        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingAttributeKey(null);
+    }
+  };
+
+  const handleOpenDocument = async (documentKey: string, document: ProfileDocumentRecord | null) => {
+    if (!document) return;
+    setOpeningDocumentKey(documentKey);
+    try {
+      const signedUrl = await getProfileDocumentAccessUrl(document);
+      window.open(signedUrl, "_blank", "noopener,noreferrer");
+    } catch (error) {
+      toast({
+        title: "Dosya açılamadı",
+        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        variant: "destructive",
+      });
+    } finally {
+      setOpeningDocumentKey(null);
+    }
+  };
+
+  const handleUploadDocument = async (
+    attributeKey: string,
+    bucket: string,
+    file: File,
+    currentDocument: ProfileDocumentRecord | null,
+  ) => {
+    if (!user) return;
+
+    setUploadingDocumentKey(attributeKey);
+    let nextDocument: ProfileDocumentRecord | null = null;
+    try {
+      nextDocument = await uploadProfileDocument(bucket, user.id, file);
+      await updateProfileAttribute(attributeKey, nextDocument, "private");
+
+      if (currentDocument) {
+        await removeProfileDocument(currentDocument);
+      }
+
+      await refreshProfile();
+      toast({
+        title: "Dosya yüklendi",
+        description: `${file.name} profil dosyalarına eklendi.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Dosya yüklenemedi",
+        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        variant: "destructive",
+      });
+      if (nextDocument) {
+        await removeProfileDocument(nextDocument).catch(() => undefined);
+      }
+    } finally {
+      setUploadingDocumentKey(null);
+    }
+  };
+
+  const handleRemoveDocument = async (attributeKey: string, document: ProfileDocumentRecord | null) => {
+    setRemovingDocumentKey(attributeKey);
+    try {
+      await updateProfileAttribute(attributeKey, null, "private");
+
+      if (document) {
+        await removeProfileDocument(document);
+      }
+
+      await refreshProfile();
+      toast({
+        title: "Dosya kaldırıldı",
+        description: "Profil dosyası güvenli şekilde silindi.",
+      });
+    } catch (error) {
+      toast({
+        title: "Dosya kaldırılamadı",
+        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        variant: "destructive",
+      });
+    } finally {
+      setRemovingDocumentKey(null);
     }
   };
 
@@ -772,6 +1124,20 @@ const ProfilePage = () => {
 
   return (
     <div className={`mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 ${isIndividualProfile ? "pb-16" : ""}`}>
+      <input
+        ref={cvInputRef}
+        type="file"
+        accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        className="hidden"
+        onChange={(event) => void handleCvFileChange(event)}
+      />
+      <input
+        ref={presentationInputRef}
+        type="file"
+        accept=".pdf,.ppt,.pptx,.key,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/x-iwork-keynote-sffkey"
+        className="hidden"
+        onChange={(event) => void handlePresentationFileChange(event)}
+      />
       <Card className={isIndividualProfile ? "overflow-hidden border-slate-200/90 bg-white shadow-[0_30px_80px_-40px_rgba(15,23,42,0.35)]" : "border-slate-200 bg-white/90 shadow-sm"}>
         {isIndividualProfile ? (
           <div className="border-b border-border bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(8,145,178,0.16),transparent_32%),linear-gradient(135deg,rgba(248,250,252,0.98),rgba(240,249,255,0.94)_46%,rgba(255,255,255,1)_100%)]">
@@ -940,7 +1306,7 @@ const ProfilePage = () => {
                   displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
                   isSaving={savingCommonAttributes}
                   saveMode="section"
-                  visibilityMode="collapsible-radio"
+                  visibilityMode="inline-switch"
                   onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
                   onVisibilityChange={(nextVisibility) =>
                     setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
@@ -954,6 +1320,31 @@ const ProfilePage = () => {
               </div>
             </CardContent>
           </Card>
+
+          {featureToggleCards.length ? (
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">Profil Rozetleri</CardTitle>
+                <CardDescription className="text-xs">
+                  Açık feature&apos;lar için görünürlük tercihlerini ayrı ayrı yönet.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {featureToggleCards.map((item) => (
+                  <PreferenceToggleCard
+                    key={item.key}
+                    title={item.title}
+                    description={item.description}
+                    checked={item.checked}
+                    toneClassName={item.toneClassName}
+                    icon={item.icon}
+                    disabled={savingPreferenceKey === item.key}
+                    onCheckedChange={(checked) => void handleSavePreferenceToggle(item.key, checked)}
+                  />
+                ))}
+              </CardContent>
+            </Card>
+          ) : null}
 
           <Card>
             <CardHeader className="pb-2">
@@ -1031,6 +1422,80 @@ const ProfilePage = () => {
               )}
             </CardContent>
           </Card>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            {linkedinCardEnabled && linkedinAttribute ? (
+              <StandaloneLinkAttributeCard
+                attribute={linkedinAttribute}
+                title="LinkedIn"
+                description="LinkedIn profil linkini ayrı kartta yönet ve istersen public göster."
+                icon={Linkedin}
+                iconClassName="text-sky-700"
+                draftValue={draftValues[linkedinAttribute.attributeKey]}
+                draftVisibility={draftVisibilities[linkedinAttribute.attributeKey] ?? linkedinAttribute.visibility}
+                isSaving={savingAttributeKey === linkedinAttribute.attributeKey}
+                onValueChange={(nextValue) => handleDraftChange(linkedinAttribute.attributeKey, nextValue)}
+                onVisibilityChange={(nextVisibility) =>
+                  setDraftVisibilities((current) => ({ ...current, [linkedinAttribute.attributeKey]: nextVisibility }))
+                }
+                onSave={() => void handleSaveLinkCard(linkedinAttribute)}
+              />
+            ) : null}
+
+            {websiteCardEnabled && websiteAttribute ? (
+              <StandaloneLinkAttributeCard
+                attribute={websiteAttribute}
+                title="Web Sitesi"
+                description="Kişisel veya kurumsal web siteni ayrı kartta yönet."
+                icon={Globe2}
+                iconClassName="text-emerald-700"
+                draftValue={draftValues[websiteAttribute.attributeKey]}
+                draftVisibility={draftVisibilities[websiteAttribute.attributeKey] ?? websiteAttribute.visibility}
+                isSaving={savingAttributeKey === websiteAttribute.attributeKey}
+                onValueChange={(nextValue) => handleDraftChange(websiteAttribute.attributeKey, nextValue)}
+                onVisibilityChange={(nextVisibility) =>
+                  setDraftVisibilities((current) => ({ ...current, [websiteAttribute.attributeKey]: nextVisibility }))
+                }
+                onSave={() => void handleSaveLinkCard(websiteAttribute)}
+              />
+            ) : null}
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            {cvUploadEnabled ? (
+              <ProfileDocumentCard
+                title="CV / Özgeçmiş"
+                description="Private bucket içinde saklanır. Sadece sen ve admin erişebilir."
+                icon={FileText}
+                document={cvDocument}
+                acceptLabel="PDF, DOC, DOCX"
+                statusLabel={formatDocumentMeta(cvDocument)}
+                isUploading={uploadingDocumentKey === CV_DOCUMENT_ATTRIBUTE_KEY}
+                isRemoving={removingDocumentKey === CV_DOCUMENT_ATTRIBUTE_KEY}
+                isOpening={openingDocumentKey === CV_DOCUMENT_ATTRIBUTE_KEY}
+                onUploadClick={() => cvInputRef.current?.click()}
+                onOpenClick={() => void handleOpenDocument(CV_DOCUMENT_ATTRIBUTE_KEY, cvDocument)}
+                onRemoveClick={() => void handleRemoveDocument(CV_DOCUMENT_ATTRIBUTE_KEY, cvDocument)}
+              />
+            ) : null}
+
+            {presentationUploadEnabled ? (
+              <ProfileDocumentCard
+                title="Sunum / Tanıtım"
+                description="Private bucket içinde saklanır. Public profile linklerine eklenmez."
+                icon={BookOpen}
+                document={presentationDocument}
+                acceptLabel="PDF, PPT, PPTX, KEY"
+                statusLabel={formatDocumentMeta(presentationDocument)}
+                isUploading={uploadingDocumentKey === PRESENTATION_DOCUMENT_ATTRIBUTE_KEY}
+                isRemoving={removingDocumentKey === PRESENTATION_DOCUMENT_ATTRIBUTE_KEY}
+                isOpening={openingDocumentKey === PRESENTATION_DOCUMENT_ATTRIBUTE_KEY}
+                onUploadClick={() => presentationInputRef.current?.click()}
+                onOpenClick={() => void handleOpenDocument(PRESENTATION_DOCUMENT_ATTRIBUTE_KEY, presentationDocument)}
+                onRemoveClick={() => void handleRemoveDocument(PRESENTATION_DOCUMENT_ATTRIBUTE_KEY, presentationDocument)}
+              />
+            ) : null}
+          </div>
 
           <Card>
             <CardHeader className="pb-2">
@@ -1318,7 +1783,7 @@ type ProfileAttributeEditorProps = {
   displayNameLabel: string;
   isSaving: boolean;
   saveMode: "single" | "section";
-  visibilityMode: "select" | "collapsible-radio";
+  visibilityMode: "select" | "collapsible-radio" | "inline-switch";
   onValueChange: (value: string | boolean) => void;
   onVisibilityChange: (value: AttributeVisibility) => void;
   onSave?: () => void;
@@ -1339,6 +1804,7 @@ const ProfileAttributeEditor = ({
   const [isVisibilityOpen, setIsVisibilityOpen] = useState(false);
   const attributeLabel = attribute.attributeKey === "full_name" ? displayNameLabel : attribute.label;
   const visibilityLabel = VISIBILITY_OPTIONS.find((option) => option.value === draftVisibility)?.label ?? draftVisibility;
+  const visibilityLocked = !attribute.userCanHide;
 
   return (
     <div className="rounded-lg border p-3">
@@ -1351,36 +1817,73 @@ const ProfileAttributeEditor = ({
           </div>
           {attribute.description ? <p className="text-xs text-muted-foreground">{attribute.description}</p> : null}
         </div>
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          {attribute.approvalStatus === "approved" ? (
-            <span className="inline-flex items-center gap-1 text-emerald-700">
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              Onaylı
+        {visibilityMode === "inline-switch" ? (
+          <div className="inline-flex items-center gap-2 rounded-full border bg-slate-50/80 px-2.5 py-1.5 text-xs">
+            {draftVisibility === "public" ? (
+              <Eye className="h-3.5 w-3.5 text-primary" />
+            ) : (
+              <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
+            )}
+            <span className="font-medium text-slate-700">{visibilityLabel}</span>
+            <Switch
+              checked={draftVisibility === "public"}
+              onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")}
+              disabled={visibilityLocked}
+              aria-label={`${attributeLabel} görünürlük`}
+            />
+          </div>
+        ) : (
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            {attribute.approvalStatus === "approved" ? (
+              <span className="inline-flex items-center gap-1 text-emerald-700">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                Onaylı
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 text-amber-700">
+                <Clock3 className="h-3.5 w-3.5" />
+                Beklemede
+              </span>
+            )}
+            <span className="inline-flex items-center gap-1 text-slate-600">
+              {draftVisibility === "public" ? <Globe2 className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
+              {visibilityLabel}
             </span>
-          ) : (
-            <span className="inline-flex items-center gap-1 text-amber-700">
-              <Clock3 className="h-3.5 w-3.5" />
-              Beklemede
-            </span>
-          )}
-          <span className="inline-flex items-center gap-1 text-slate-600">
-            {draftVisibility === "public" ? <Globe2 className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
-            {visibilityLabel}
-          </span>
-        </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-3 space-y-2">
         <AttributeInput attribute={attribute} value={draftValue} onChange={onValueChange} />
 
-        {visibilityMode === "collapsible-radio" ? (
+        {visibilityMode === "inline-switch" ? (
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            {attribute.approvalStatus === "approved" ? (
+              <span className="inline-flex items-center gap-1 text-emerald-700">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                Onaylı
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 text-amber-700">
+                <Clock3 className="h-3.5 w-3.5" />
+                Beklemede
+              </span>
+            )}
+            {visibilityLocked ? (
+              <span className="inline-flex items-center gap-1 text-slate-600">
+                <Lock className="h-3.5 w-3.5" />
+                Bu alan gizlenemez
+              </span>
+            ) : null}
+          </div>
+        ) : visibilityMode === "collapsible-radio" ? (
           <Collapsible open={isVisibilityOpen} onOpenChange={setIsVisibilityOpen}>
             <div className="rounded-xl border bg-slate-50/70">
               <CollapsibleTrigger asChild>
                 <button
                   type="button"
                   className="flex w-full items-center justify-between gap-3 px-3 py-2 text-left"
-                  disabled={!attribute.userCanHide}
+                  disabled={visibilityLocked}
                 >
                   <div>
                     <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Görünürlük</p>
@@ -1417,7 +1920,7 @@ const ProfileAttributeEditor = ({
             <Select
               value={draftVisibility}
               onValueChange={(value) => onVisibilityChange(value as AttributeVisibility)}
-              disabled={!attribute.userCanHide}
+              disabled={visibilityLocked}
             >
               <SelectTrigger className="h-8 text-sm">
                 <SelectValue placeholder="Görünürlük seç" />
@@ -1451,6 +1954,164 @@ const ProfileAttributeEditor = ({
         ) : null}
       </div>
     </div>
+  );
+};
+
+type PreferenceToggleCardProps = {
+  title: string;
+  description: string;
+  checked: boolean;
+  disabled: boolean;
+  toneClassName: string;
+  icon: ComponentType<{ className?: string }>;
+  onCheckedChange: (checked: boolean) => void;
+};
+
+const PreferenceToggleCard = ({
+  title,
+  description,
+  checked,
+  disabled,
+  toneClassName,
+  icon: Icon,
+  onCheckedChange,
+}: PreferenceToggleCardProps) => {
+  return (
+    <div className={`rounded-xl border p-3 ${toneClassName}`}>
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-2">
+          <Icon className="mt-0.5 h-4 w-4 text-foreground" />
+          <div>
+            <p className="text-sm font-medium text-foreground">{title}</p>
+            <p className="text-xs text-muted-foreground">{description}</p>
+          </div>
+        </div>
+        <Switch checked={checked} disabled={disabled} onCheckedChange={onCheckedChange} />
+      </div>
+    </div>
+  );
+};
+
+type StandaloneLinkAttributeCardProps = {
+  attribute: ProfileAttributeState;
+  title: string;
+  description: string;
+  icon: ComponentType<{ className?: string }>;
+  iconClassName: string;
+  draftValue: string | boolean | undefined;
+  draftVisibility: AttributeVisibility;
+  isSaving: boolean;
+  onValueChange: (value: string | boolean) => void;
+  onVisibilityChange: (value: AttributeVisibility) => void;
+  onSave: () => void;
+};
+
+const StandaloneLinkAttributeCard = ({
+  attribute,
+  title,
+  description,
+  icon: Icon,
+  iconClassName,
+  draftValue,
+  draftVisibility,
+  isSaving,
+  onValueChange,
+  onVisibilityChange,
+  onSave,
+}: StandaloneLinkAttributeCardProps) => {
+  const visible = draftVisibility === "public";
+
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <Icon className={`h-4 w-4 ${iconClassName}`} />
+          {title}
+        </CardTitle>
+        <CardDescription className="text-xs">{description}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="flex items-center justify-between rounded-xl border bg-slate-50/70 px-3 py-2">
+          <div className="flex items-center gap-2 text-xs text-slate-600">
+            {visible ? <Eye className="h-3.5 w-3.5 text-primary" /> : <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />}
+            <span>{visible ? "Görünür" : "Gizli"}</span>
+          </div>
+          <Switch checked={visible} disabled={!attribute.userCanHide} onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")} />
+        </div>
+        <Input
+          type="url"
+          value={typeof draftValue === "string" ? draftValue : ""}
+          onChange={(event) => onValueChange(event.target.value)}
+          placeholder={attribute.label}
+        />
+        <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+          <span>Boş kalırsa public profilde gösterilmez.</span>
+          <Button size="sm" onClick={onSave} disabled={isSaving}>
+            {isSaving ? "Kaydediliyor..." : "Kaydet"}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+type ProfileDocumentCardProps = {
+  title: string;
+  description: string;
+  icon: ComponentType<{ className?: string }>;
+  document: ProfileDocumentRecord | null;
+  acceptLabel: string;
+  statusLabel: string;
+  isUploading: boolean;
+  isRemoving: boolean;
+  isOpening: boolean;
+  onUploadClick: () => void;
+  onOpenClick: () => void;
+  onRemoveClick: () => void;
+};
+
+const ProfileDocumentCard = ({
+  title,
+  description,
+  icon: Icon,
+  document,
+  acceptLabel,
+  statusLabel,
+  isUploading,
+  isRemoving,
+  isOpening,
+  onUploadClick,
+  onOpenClick,
+  onRemoveClick,
+}: ProfileDocumentCardProps) => {
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <Icon className="h-4 w-4 text-primary" />
+          {title}
+        </CardTitle>
+        <CardDescription className="text-xs">{description}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="rounded-xl border bg-slate-50/70 px-3 py-3">
+          <p className="text-sm font-medium text-foreground">{document?.name ?? "Henüz dosya yok"}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{acceptLabel} desteklenir.</p>
+          <p className="mt-1 text-xs text-slate-600">{statusLabel}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button size="sm" onClick={onUploadClick} disabled={isUploading || isRemoving}>
+            {isUploading ? "Yükleniyor..." : document ? "Dosyayı Değiştir" : "Dosya Yükle"}
+          </Button>
+          <Button size="sm" variant="outline" onClick={onOpenClick} disabled={!document || isOpening || isUploading}>
+            {isOpening ? "Açılıyor..." : "Dosyayı Aç"}
+          </Button>
+          <Button size="sm" variant="outline" onClick={onRemoveClick} disabled={!document || isRemoving || isUploading}>
+            {isRemoving ? "Siliniyor..." : "Dosyayı Kaldır"}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

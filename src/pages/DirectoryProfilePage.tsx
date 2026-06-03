@@ -81,6 +81,9 @@ const DirectoryProfilePage = () => {
     () => buildPublicProfileViewModelFromSections(userId, sections),
     [sections, userId],
   );
+  const individualExtraBadges = Array.isArray(categorySection?.content?.extra_badges)
+    ? categorySection.content.extra_badges.filter((item): item is string => typeof item === "string")
+    : [];
 
   if (!userId) {
     return <Navigate to="/directory" replace />;
@@ -102,7 +105,11 @@ const DirectoryProfilePage = () => {
 
       {/* Individual (bireysel) profile view */}
       {!isIndividualLoading && individualDetails ? (
-        <IndividualPublicView details={individualDetails} />
+        <IndividualPublicView
+          details={individualDetails}
+          publicLinks={genericProfileModel.links}
+          extraBadges={individualExtraBadges}
+        />
       ) : null}
 
       {/* Generic section-based profile (non-individual types) */}

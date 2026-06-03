@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
+import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS } from "@/lib/features";
 import type { CurrentUserProfilePayload } from "@/lib/member-profile";
 import ProfilePage from "@/pages/ProfilePage";
 
@@ -48,6 +49,13 @@ describe("ProfilePage", () => {
     features: [
       { key: "directory.visible", isEnabled: false, source: "role_default" },
       { key: "events.create", isEnabled: false, source: "role_default" },
+      { key: INDIVIDUAL_FEATURE_KEYS.jobSeekingBadge, isEnabled: true, source: "role_default" },
+      { key: INDIVIDUAL_FEATURE_KEYS.movingSoonBadge, isEnabled: true, source: "role_default" },
+      { key: INDIVIDUAL_FEATURE_KEYS.volunteerMentorship, isEnabled: true, source: "role_default" },
+      { key: GENERIC_FEATURE_KEYS.profileLinkedinCard, isEnabled: true, source: "role_default" },
+      { key: GENERIC_FEATURE_KEYS.profileWebsiteCard, isEnabled: true, source: "role_default" },
+      { key: GENERIC_FEATURE_KEYS.profileCvUpload, isEnabled: true, source: "role_default" },
+      { key: GENERIC_FEATURE_KEYS.profilePresentationUpload, isEnabled: true, source: "role_default" },
     ],
     attributes: [
       {
@@ -139,6 +147,114 @@ describe("ProfilePage", () => {
         valueText: "https://www.linkedin.com/in/firmascope",
         valueJson: null,
         displayValue: "https://www.linkedin.com/in/firmascope",
+      },
+      {
+        attributeKey: "website_url",
+        label: "Web Sitesi",
+        description: "Website linki",
+        dataType: "url",
+        isSystem: false,
+        sortOrder: 173,
+        isRequired: false,
+        isPublicDefault: true,
+        userCanEdit: true,
+        userCanHide: true,
+        requiresAdminApprovalOnChange: false,
+        visibility: "public",
+        approvalStatus: "approved",
+        valueText: "https://firmascope.co",
+        valueJson: null,
+        displayValue: "https://firmascope.co",
+      },
+      {
+        attributeKey: "job_seeking_opt_in",
+        label: "İş Arıyorum Badge'i",
+        description: "Badge tercihi",
+        dataType: "boolean",
+        isSystem: false,
+        sortOrder: 177,
+        isRequired: false,
+        isPublicDefault: false,
+        userCanEdit: true,
+        userCanHide: false,
+        requiresAdminApprovalOnChange: false,
+        visibility: "public",
+        approvalStatus: "approved",
+        valueText: null,
+        valueJson: true,
+        displayValue: true,
+      },
+      {
+        attributeKey: "moving_soon_opt_in",
+        label: "Yakında Taşınacağım",
+        description: "Badge tercihi",
+        dataType: "boolean",
+        isSystem: false,
+        sortOrder: 178,
+        isRequired: false,
+        isPublicDefault: false,
+        userCanEdit: true,
+        userCanHide: false,
+        requiresAdminApprovalOnChange: false,
+        visibility: "public",
+        approvalStatus: "approved",
+        valueText: null,
+        valueJson: false,
+        displayValue: false,
+      },
+      {
+        attributeKey: "volunteer_mentorship_opt_in",
+        label: "Gönüllü Mentörlük",
+        description: "Badge tercihi",
+        dataType: "boolean",
+        isSystem: false,
+        sortOrder: 179,
+        isRequired: false,
+        isPublicDefault: false,
+        userCanEdit: true,
+        userCanHide: false,
+        requiresAdminApprovalOnChange: false,
+        visibility: "public",
+        approvalStatus: "approved",
+        valueText: null,
+        valueJson: true,
+        displayValue: true,
+      },
+      {
+        attributeKey: "cv_doc",
+        label: "CV / Özgeçmiş",
+        description: "Özel dosya",
+        dataType: "json",
+        isSystem: false,
+        sortOrder: 180,
+        isRequired: false,
+        isPublicDefault: false,
+        userCanEdit: true,
+        userCanHide: false,
+        requiresAdminApprovalOnChange: false,
+        visibility: "private",
+        approvalStatus: "approved",
+        valueText: null,
+        valueJson: null,
+        displayValue: null,
+      },
+      {
+        attributeKey: "presentation_doc",
+        label: "Sunum / Tanıtım",
+        description: "Özel dosya",
+        dataType: "json",
+        isSystem: false,
+        sortOrder: 181,
+        isRequired: false,
+        isPublicDefault: false,
+        userCanEdit: true,
+        userCanHide: false,
+        requiresAdminApprovalOnChange: false,
+        visibility: "private",
+        approvalStatus: "approved",
+        valueText: null,
+        valueJson: null,
+        displayValue: null,
       },
       {
         attributeKey: "profile_photo_url",
@@ -269,9 +385,18 @@ describe("ProfilePage", () => {
     expect(screen.getAllByRole("img", { name: "firmascope" })).toHaveLength(1);
     expect(screen.getByRole("img", { name: "firmascope" })).toHaveAttribute("src", "https://example.com/avatar.jpg");
     expect(screen.getByText("Ortak Profil Alanları")).toBeInTheDocument();
+    expect(screen.getByText("Profil Rozetleri")).toBeInTheDocument();
     expect(screen.getByText("Sosyal Medya Hesapları")).toBeInTheDocument();
     expect(screen.getByDisplayValue("https://www.instagram.com/firmascope")).toBeInTheDocument();
+    expect(screen.queryByText("LinkedIn", { selector: "span" })).toBeInTheDocument();
     expect(screen.getByDisplayValue("https://www.linkedin.com/in/firmascope")).toBeInTheDocument();
+    expect(screen.getByText("Web Sitesi")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("https://firmascope.co")).toBeInTheDocument();
+    expect(screen.getByText("CV / Özgeçmiş")).toBeInTheDocument();
+    expect(screen.getByText("Sunum / Tanıtım")).toBeInTheDocument();
+    expect(screen.getByText("İş Arıyorum Badge'i")).toBeInTheDocument();
+    expect(screen.getByText("Yakında Taşınacağım")).toBeInTheDocument();
+    expect(screen.getByText("Gönüllü Mentörlük")).toBeInTheDocument();
     expect(screen.getByText("Rolüne Özel Alanlar")).toBeInTheDocument();
     expect(screen.getByText("Alt Kategori / Alt Tip")).toBeInTheDocument();
     expect(screen.getByText("Feature Talepleri")).toBeInTheDocument();
@@ -286,13 +411,9 @@ describe("ProfilePage", () => {
     expect(screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için")).not.toBeInTheDocument();
     expect(screen.getAllByText("mentorluk, topluluk, networking").length).toBeGreaterThan(0);
 
-    const visibilityButtons = screen.getAllByRole("button", { name: /Görünürlük/i });
-    const editableVisibilityButton = visibilityButtons.find((button) => !button.hasAttribute("disabled"));
-    expect(editableVisibilityButton).toBeDefined();
-    fireEvent.click(editableVisibilityButton!);
+    expect(screen.getByRole("switch", { name: /Görünen İsim görünürlük/i })).toBeInTheDocument();
     expect(screen.getAllByText("Görünür").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Gizli").length).toBeGreaterThan(0);
-    expect(screen.queryByText("Sadece Admin")).not.toBeInTheDocument();
   });
 
   it("does not render the bireysel fallback description when short bio is empty", async () => {

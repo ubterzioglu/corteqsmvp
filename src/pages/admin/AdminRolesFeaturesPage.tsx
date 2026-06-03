@@ -133,6 +133,26 @@ const FEATURE_DETAILS: Record<string, FeatureDetail> = {
     effect: "Açık olduğunda profilinden otomatik gönüllü mentör kartı veya ilgili görünürlük akışı üretilebilir.",
     adminHint: "Topluluk dayanışması ve newcomer desteği istenen rollerde açık tutulması faydalıdır.",
   },
+  "profile.linkedin_card": {
+    summary: "Kullanıcının profilindeki ayrı LinkedIn kartını açar.",
+    effect: "Açık olduğunda LinkedIn linki sosyal medya kartından bağımsız olarak ayrı kartta yönetilir ve public görünümde değerlendirilebilir.",
+    adminHint: "Profesyonel görünürlük beklentisi olan tüm rollerde açık tutulabilir.",
+  },
+  "profile.website_card": {
+    summary: "Kullanıcının profilindeki ayrı web sitesi kartını açar.",
+    effect: "Açık olduğunda website linki ayrı kartta yönetilir ve public linkler içinde gösterilebilir.",
+    adminHint: "Kurumsal veya kişisel site paylaşımı istenen rollerde açık tutulması faydalıdır.",
+  },
+  "profile.cv_upload": {
+    summary: "Kullanıcının özel CV / özgeçmiş dosyası yükleme kartını açar.",
+    effect: "Açık olduğunda kullanıcı private bucket üzerinde CV yükleyebilir, değiştirebilir ve kaldırabilir.",
+    adminHint: "Public paylaşım yapmadan dosya toplamak istiyorsan güvenli varsayılan olarak açık kalabilir.",
+  },
+  "profile.presentation_upload": {
+    summary: "Kullanıcının özel sunum / tanıtım dosyası yükleme kartını açar.",
+    effect: "Açık olduğunda kullanıcı private bucket üzerinde sunum dosyası yükleyebilir, değiştirebilir ve kaldırabilir.",
+    adminHint: "Özellikle business, consultant ve creator profillerinde değerli olabilir; ama tüm rollerde de açık bırakılabilir.",
+  },
   "admin.requires_approval": {
     summary: "Kullanıcının ilgili işlemi tek başına tamamlaması yerine admin onay akışına düşmesini sağlar.",
     effect: "Açık olduğunda rolün bazı değişiklikleri doğrudan uygulanmaz; önce onay bekler.",

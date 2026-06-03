@@ -7,13 +7,11 @@ import {
   Coffee,
   Eye,
   EyeOff,
-  FileText,
   Info,
   Linkedin,
   MapPin,
   MessageSquare,
   Plane,
-  Presentation,
   ShieldCheck,
   UserCheck,
   UserPlus,
@@ -30,12 +28,15 @@ import { supabase } from "@/integrations/supabase/client";
 import type { TablesInsert } from "@/integrations/supabase/types";
 import { toast } from "@/hooks/use-toast";
 import type { IndividualProfileDetailsCore } from "@/lib/individual-profile";
+import type { PublicProfileLink } from "@/lib/profile-view-model";
 
 type Props = {
   details: IndividualProfileDetailsCore;
+  publicLinks?: PublicProfileLink[];
+  extraBadges?: string[];
 };
 
-const IndividualPublicView = ({ details }: Props) => {
+const IndividualPublicView = ({ details, publicLinks = [], extraBadges = [] }: Props) => {
   const { user } = useAuth();
   const [activeCafe, setActiveCafe] = useState<{
     id: string;
@@ -58,6 +59,18 @@ const IndividualPublicView = ({ details }: Props) => {
   const avatarInitials = details.displayName.slice(0, 2).toUpperCase();
   const canMessageUser = !isSelf && Boolean(details.userId);
   const canFollowUser = !isSelf && Boolean(details.userId);
+  const hasJobBadge = extraBadges.includes("İş Arıyorum") || details.jobSeeking;
+  const hasMentorBadge = extraBadges.includes("Gönüllü Mentör") || details.mentorOptIn;
+  const hasMovingSoonBadge = extraBadges.includes("Yakında Taşınacağım") || relocation.enabled;
+  const fallbackLinks: PublicProfileLink[] = [];
+  if (details.frontCard.linkedinUrl && details.frontCard.linkedinVisible) {
+    fallbackLinks.push({ label: "LinkedIn", url: details.frontCard.linkedinUrl });
+  }
+  const websiteUrl = details.controlPanel.websiteLinks[0] ?? details.controlPanel.websites[0];
+  if (websiteUrl) {
+    fallbackLinks.push({ label: "Website", url: websiteUrl });
+  }
+  const visibleLinks = publicLinks.length ? publicLinks : fallbackLinks;
 
   useEffect(() => {
     if (!details.userId) return;
@@ -201,9 +214,14 @@ const IndividualPublicView = ({ details }: Props) => {
           <div className="min-w-0 flex-1">
             {/* Badges row */}
             <div className="flex flex-wrap items-center gap-2">
-              {details.jobSeeking && (
+              {hasJobBadge && (
                 <Badge className="border-turquoise/30 bg-turquoise/15 text-turquoise">
                   <Briefcase className="mr-1 h-3 w-3" /> İş Arıyorum
+                </Badge>
+              )}
+              {hasMentorBadge && (
+                <Badge className="border-emerald-500/30 bg-emerald-500/15 text-emerald-700">
+                  <UserCheck className="mr-1 h-3 w-3" /> Gönüllü Mentör
                 </Badge>
               )}
               {details.controlPanel.profileVisible ? (
@@ -262,48 +280,30 @@ const IndividualPublicView = ({ details }: Props) => {
             </div>
 
             {/* Document links */}
-            {((front.linkedinUrl && front.linkedinVisible) ||
-              front.cvDoc ||
-              front.presentationDoc) ? (
+            {visibleLinks.length ? (
               <div className="mt-4 flex flex-wrap items-center gap-2">
-                {front.linkedinUrl && front.linkedinVisible && (
+                {visibleLinks.map((link) => (
                   <a
-                    href={front.linkedinUrl}
+                    key={`${link.label}-${link.url}`}
+                    href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/85 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
                   >
-                    <Linkedin className="h-3.5 w-3.5" /> LinkedIn
+                    {link.label === "LinkedIn" ? <Linkedin className="h-3.5 w-3.5" /> : <ArrowUpRight className="h-3.5 w-3.5" />}
+                    {link.label}
                   </a>
-                )}
-                {front.cvDoc && (
-                  <a
-                    href={front.cvDoc.url ?? "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/85 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
-                  >
-                    <FileText className="h-3.5 w-3.5" /> CV
-                  </a>
-                )}
-                {front.presentationDoc && (
-                  <a
-                    href={front.presentationDoc.url ?? "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/85 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
-                  >
-                    <Presentation className="h-3.5 w-3.5" /> Sunum
-                  </a>
-                )}
+                ))}
               </div>
             ) : null}
 
             {/* Relocation badge */}
-            {relocation.enabled && (relocation.country || relocation.city) && (
+            {hasMovingSoonBadge && (
               <Badge className="mt-4 gap-1 border-amber-500/30 bg-amber-500/15 text-amber-700">
-                <Plane className="h-3 w-3" /> Yakında taşınacak:{" "}
-                {[relocation.city, relocation.country].filter(Boolean).join(", ")}
+                <Plane className="h-3 w-3" />{" "}
+                {relocation.country || relocation.city
+                  ? `Yakında taşınacak: ${[relocation.city, relocation.country].filter(Boolean).join(", ")}`
+                  : "Yakında taşınacak"}
               </Badge>
             )}
 

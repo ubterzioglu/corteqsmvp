@@ -5,6 +5,7 @@ const ALLOWED_FILE_EXTENSIONS = new Set([
 ]);
 
 const CV_ALLOWED_EXTENSIONS = new Set(["pdf", "doc", "docx"]);
+const PRESENTATION_ALLOWED_EXTENSIONS = new Set(["pdf", "ppt", "pptx", "key"]);
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 const ARGE_MAX_FILE_SIZE = 50 * 1024 * 1024;
 const DANGEROUS_URL_SCHEMES = /^(javascript|data|vbscript|blob):/i;
@@ -56,6 +57,13 @@ export function validateCvFile(file: File): string | null {
   return validateFile(file, {
     allowedExtensions: CV_ALLOWED_EXTENSIONS,
     maxSize: MAX_FILE_SIZE,
+  });
+}
+
+export function validatePresentationFile(file: File): string | null {
+  return validateFile(file, {
+    allowedExtensions: PRESENTATION_ALLOWED_EXTENSIONS,
+    maxSize: ARGE_MAX_FILE_SIZE,
   });
 }
 
