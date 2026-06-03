@@ -1,6 +1,6 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS } from "@/lib/features";
 import type { CurrentUserProfilePayload } from "@/lib/member-profile";
@@ -9,6 +9,11 @@ import ProfilePage from "@/pages/ProfilePage";
 const useAuthMock = vi.fn();
 const useCurrentUserProfileMock = vi.fn();
 const useCurrentUserDashboardMock = vi.fn();
+const updateProfileAttributeMock = vi.fn();
+const submitFeatureRequestMock = vi.fn();
+const submitRoleChangeRequestMock = vi.fn();
+const updateProfileAvatarMock = vi.fn();
+const updateUserTaxonomySelectionMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
@@ -28,6 +33,14 @@ vi.mock("@/hooks/use-toast", () => ({
   }),
 }));
 
+vi.mock("@/lib/member-profile-api", () => ({
+  submitFeatureRequest: (...args: unknown[]) => submitFeatureRequestMock(...args),
+  submitRoleChangeRequest: (...args: unknown[]) => submitRoleChangeRequestMock(...args),
+  updateProfileAttribute: (...args: unknown[]) => updateProfileAttributeMock(...args),
+  updateProfileAvatar: (...args: unknown[]) => updateProfileAvatarMock(...args),
+  updateUserTaxonomySelection: (...args: unknown[]) => updateUserTaxonomySelectionMock(...args),
+}));
+
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     auth: {
@@ -37,6 +50,15 @@ vi.mock("@/integrations/supabase/client", () => ({
 }));
 
 describe("ProfilePage", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    updateProfileAttributeMock.mockResolvedValue({ status: "approved" });
+    submitFeatureRequestMock.mockResolvedValue("request-1");
+    submitRoleChangeRequestMock.mockResolvedValue("request-1");
+    updateProfileAvatarMock.mockResolvedValue({ status: "approved" });
+    updateUserTaxonomySelectionMock.mockResolvedValue({ status: "approved" });
+  });
+
   const baseProfile: CurrentUserProfilePayload = {
     userId: "u-1",
     email: "firmascope@gmail.com",
@@ -75,6 +97,42 @@ describe("ProfilePage", () => {
         valueText: "firmascope",
         valueJson: null,
         displayValue: "firmascope",
+      },
+      {
+        attributeKey: "country",
+        label: "Ülke",
+        description: "Profil ülkesi",
+        dataType: "text",
+        isSystem: true,
+        sortOrder: 20,
+        isRequired: false,
+        isPublicDefault: true,
+        userCanEdit: true,
+        userCanHide: true,
+        requiresAdminApprovalOnChange: false,
+        visibility: "public",
+        approvalStatus: "approved",
+        valueText: "Almanya",
+        valueJson: null,
+        displayValue: "Almanya",
+      },
+      {
+        attributeKey: "city",
+        label: "Şehir",
+        description: "Profil şehri",
+        dataType: "text",
+        isSystem: true,
+        sortOrder: 30,
+        isRequired: false,
+        isPublicDefault: true,
+        userCanEdit: true,
+        userCanHide: true,
+        requiresAdminApprovalOnChange: false,
+        visibility: "public",
+        approvalStatus: "approved",
+        valueText: "Berlin",
+        valueJson: null,
+        displayValue: "Berlin",
       },
       {
         attributeKey: "bio_short",
@@ -385,6 +443,7 @@ describe("ProfilePage", () => {
     expect(screen.getAllByRole("img", { name: "firmascope" })).toHaveLength(1);
     expect(screen.getByRole("img", { name: "firmascope" })).toHaveAttribute("src", "https://example.com/avatar.jpg");
     expect(screen.getByText("Ortak Profil Alanları")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Ad Soyadı Kaydet" })).toBeInTheDocument();
     expect(screen.getByText("Profil Rozetleri")).toBeInTheDocument();
     expect(screen.getByText("Sosyal Medya Hesapları")).toBeInTheDocument();
     expect(screen.getByDisplayValue("https://www.instagram.com/firmascope")).toBeInTheDocument();
@@ -457,5 +516,51 @@ describe("ProfilePage", () => {
     expect(screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için")).not.toBeInTheDocument();
     expect(screen.queryByText(/Profil özeti:/i)).not.toBeInTheDocument();
     expect(screen.queryByText("Profil kartını, görünürlüğünü ve taleplerini tek yerden yönet.")).not.toBeInTheDocument();
+  });
+
+  it("saves display name separately from the shared profile section", async () => {
+    const refreshProfileMock = vi.fn().mockResolvedValue(undefined);
+
+    useAuthMock.mockReturnValue({
+      user: { id: "u-1", email: "firmascope@gmail.com", user_metadata: { name: "firmascope" } },
+    });
+    useCurrentUserDashboardMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      items: [],
+      refreshDashboard: vi.fn(),
+    });
+    useCurrentUserProfileMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      profile: baseProfile,
+      refreshProfile: refreshProfileMock,
+    });
+
+    render(
+      <MemoryRouter initialEntries={["/profile/bireysel"]}>
+        <Routes>
+          <Route path="/profile/:type" element={<ProfilePage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    fireEvent.change(screen.getByDisplayValue("firmascope"), { target: { value: "Ada Yilmaz" } });
+    fireEvent.click(screen.getByRole("button", { name: "Ad Soyadı Kaydet" }));
+
+    await waitFor(() => {
+      expect(updateProfileAttributeMock).toHaveBeenCalledWith("full_name", "Ada Yilmaz", "public");
+    });
+
+    updateProfileAttributeMock.mockClear();
+
+    fireEvent.click(screen.getByRole("button", { name: /Ortak Alanları Kaydet/i }));
+
+    await waitFor(() => {
+      expect(updateProfileAttributeMock).toHaveBeenCalledTimes(3);
+    });
+
+    expect(updateProfileAttributeMock.mock.calls.map((call) => call[0])).toEqual(["country", "city", "bio_short"]);
+    expect(refreshProfileMock).toHaveBeenCalled();
   });
 });

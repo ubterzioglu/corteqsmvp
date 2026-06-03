@@ -347,7 +347,7 @@ const ProfilePage = () => {
     const roleSpecific: ProfileAttributeState[] = [];
 
     for (const attribute of profile?.attributes ?? []) {
-      if (["full_name", "country", "city", "bio_short"].includes(attribute.attributeKey)) {
+      if (["country", "city", "bio_short"].includes(attribute.attributeKey)) {
         common.push(attribute);
       } else if (SPECIAL_PROFILE_ATTRIBUTE_KEYS.has(attribute.attributeKey)) {
         continue;
@@ -374,6 +374,7 @@ const ProfilePage = () => {
   const attributeMap = useMemo(() => {
     return new Map((profile?.attributes ?? []).map((attribute) => [attribute.attributeKey, attribute]));
   }, [profile?.attributes]);
+  const displayNameAttribute = attributeMap.get("full_name") ?? null;
 
   const readAttributeValue = useCallback((attributeKey: string) => {
     const attribute = attributeMap.get(attributeKey);
@@ -1295,6 +1296,21 @@ const ProfilePage = () => {
       ) : null}
 
       <div className="space-y-4">
+          {displayNameAttribute ? (
+            <DisplayNameAttributeCard
+              attribute={displayNameAttribute}
+              displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
+              draftValue={draftValues[displayNameAttribute.attributeKey]}
+              draftVisibility={draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility}
+              isSaving={savingAttributeKey === displayNameAttribute.attributeKey}
+              onValueChange={(nextValue) => handleDraftChange(displayNameAttribute.attributeKey, nextValue)}
+              onVisibilityChange={(nextVisibility) =>
+                setDraftVisibilities((current) => ({ ...current, [displayNameAttribute.attributeKey]: nextVisibility }))
+              }
+              onSave={() => void handleSaveAttribute(displayNameAttribute)}
+            />
+          ) : null}
+
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Ortak Profil Alanları</CardTitle>
@@ -1791,6 +1807,75 @@ type ProfileAttributeEditorProps = {
   onValueChange: (value: string | boolean) => void;
   onVisibilityChange: (value: AttributeVisibility) => void;
   onSave?: () => void;
+};
+
+type DisplayNameAttributeCardProps = {
+  attribute: ProfileAttributeState;
+  displayNameLabel: string;
+  draftValue: string | boolean | undefined;
+  draftVisibility: AttributeVisibility;
+  isSaving: boolean;
+  onValueChange: (value: string | boolean) => void;
+  onVisibilityChange: (value: AttributeVisibility) => void;
+  onSave: () => void;
+};
+
+const DisplayNameAttributeCard = ({
+  attribute,
+  displayNameLabel,
+  draftValue,
+  draftVisibility,
+  isSaving,
+  onValueChange,
+  onVisibilityChange,
+  onSave,
+}: DisplayNameAttributeCardProps) => {
+  const visibilityLocked = !attribute.userCanHide;
+  const saveButtonLabel = displayNameLabel.toLowerCase().includes("ad soyad")
+    ? "Ad Soyadı Kaydet"
+    : "İsmi Kaydet";
+
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base">{displayNameLabel}</CardTitle>
+        <CardDescription className="text-xs">
+          Profil başlığında ve directory görünümünde kullanılacak ismini ayrı kaydedebilirsin.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="flex flex-col gap-3 md:flex-row md:items-start">
+          <div className="flex-1 space-y-2">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <p className="text-sm font-semibold">{displayNameLabel}</p>
+              {attribute.isRequired ? <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">Zorunlu</Badge> : null}
+            </div>
+            <AttributeInput attribute={attribute} value={draftValue} onChange={onValueChange} />
+          </div>
+          <div className="w-full md:w-[92px]">
+            <div className="flex h-10 items-center justify-between gap-1.5 rounded-full border bg-slate-50/80 px-2 text-xs">
+              {draftVisibility === "public" ? (
+                <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
+              ) : (
+                <EyeOff className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+              )}
+              <Switch
+                checked={draftVisibility === "public"}
+                onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")}
+                disabled={visibilityLocked}
+                aria-label={`${displayNameLabel} görünürlük`}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-end">
+          <Button size="sm" onClick={onSave} disabled={!attribute.userCanEdit || isSaving}>
+            {isSaving ? "Kaydediliyor..." : saveButtonLabel}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
 };
 
 const ProfileAttributeEditor = ({
