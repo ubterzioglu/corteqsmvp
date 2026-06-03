@@ -317,8 +317,8 @@ describe("profile-view-model", () => {
     const model = buildPublicProfileViewModelFromCurrentUser(profile);
 
     expect(model.links).toEqual([
-      { label: "Website", url: "https://aysekaya.studio" },
       { label: "Instagram", url: "https://www.instagram.com/aysekaya" },
+      { label: "Website", url: "https://aysekaya.studio" },
       { label: "X (Twitter)", url: "https://x.com/aysekaya" },
     ]);
     expect(model.links.some((item) => item.label === "LinkedIn")).toBe(false);

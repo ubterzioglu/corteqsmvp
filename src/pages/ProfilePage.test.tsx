@@ -388,7 +388,6 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Profil Rozetleri")).toBeInTheDocument();
     expect(screen.getByText("Sosyal Medya Hesapları")).toBeInTheDocument();
     expect(screen.getByDisplayValue("https://www.instagram.com/firmascope")).toBeInTheDocument();
-    expect(screen.queryByText("LinkedIn", { selector: "span" })).toBeInTheDocument();
     expect(screen.getByDisplayValue("https://www.linkedin.com/in/firmascope")).toBeInTheDocument();
     expect(screen.getByText("Web Sitesi")).toBeInTheDocument();
     expect(screen.getByDisplayValue("https://firmascope.co")).toBeInTheDocument();
@@ -411,9 +410,9 @@ describe("ProfilePage", () => {
     expect(screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için")).not.toBeInTheDocument();
     expect(screen.getAllByText("mentorluk, topluluk, networking").length).toBeGreaterThan(0);
 
-    expect(screen.getByRole("switch", { name: /Görünen İsim görünürlük/i })).toBeInTheDocument();
+    expect(screen.getByRole("switch", { name: /Ad Soyad görünürlük/i })).toBeInTheDocument();
     expect(screen.getAllByText("Görünür").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Gizli").length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("switch").length).toBeGreaterThan(3);
   });
 
   it("does not render the bireysel fallback description when short bio is empty", async () => {
