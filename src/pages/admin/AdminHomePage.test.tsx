@@ -35,6 +35,7 @@ describe("AdminHomePage", () => {
     const { container } = renderAdminHomePage();
 
     expect(screen.getByText("Header menüsündeki tüm item'lar artık tek gridde.")).toBeInTheDocument();
+    expect(screen.getByRole("searchbox", { name: /admin kartlarında ara/i })).toBeInTheDocument();
     expect(screen.getByText("6 kolonlu hızlı erişim")).toBeInTheDocument();
     expect(screen.queryByText("Yeni Üye Sistemi")).not.toBeInTheDocument();
     expect(screen.queryByText("Admin Çekirdeği")).not.toBeInTheDocument();
@@ -82,6 +83,21 @@ describe("AdminHomePage", () => {
     expect(screen.queryByText("ARGE Dökümanları")).not.toBeInTheDocument();
     expect(container.querySelector(".xl\\:grid-cols-6")).not.toBeNull();
     expect(screen.getByRole("button", { name: /Çıkış/i })).toBeInTheDocument();
+  });
+
+  it("filters admin cards with the search bar", () => {
+    renderAdminHomePage();
+
+    const searchInput = screen.getByRole("searchbox", { name: /admin kartlarında ara/i });
+    fireEvent.change(searchInput, { target: { value: "muhasebe" } });
+
+    expect(screen.getByDisplayValue("muhasebe")).toBeInTheDocument();
+    expect(screen.getByText("Muhasebe")).toBeInTheDocument();
+    expect(screen.queryByText("Cadde")).not.toBeInTheDocument();
+
+    fireEvent.change(searchInput, { target: { value: "bulunamayan ifade" } });
+
+    expect(screen.getByText("Aramayla eslesen kart bulunamadi.")).toBeInTheDocument();
   });
 
   it("uses the shared logout action", () => {

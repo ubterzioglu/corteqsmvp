@@ -1,5 +1,5 @@
-import type { ComponentType } from "react";
-import { ArrowRight, ExternalLink, LogOut, ScrollText, Sparkles } from "lucide-react";
+import { useMemo, useState, type ComponentType } from "react";
+import { ArrowRight, ExternalLink, LogOut, ScrollText, Search, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import {
@@ -17,6 +17,7 @@ import {
 import { useAdminOutletContext } from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { advisorProfileSections } from "@/lib/resource-links";
 
 type NavIcon = ComponentType<{ className?: string }>;
@@ -346,6 +347,7 @@ function AdminNavCard({ item, onLogout }: { item: NavCardItem; onLogout: () => v
 
 const AdminHomePage = () => {
   const { session, onLogout } = useAdminOutletContext();
+  const [searchQuery, setSearchQuery] = useState("");
   const navCards = [
     ...orderedNavCards,
     {
@@ -359,6 +361,17 @@ const AdminHomePage = () => {
       tone: "neutral" as const,
     },
   ];
+  const normalizedSearchQuery = searchQuery.trim().toLocaleLowerCase("tr-TR");
+  const filteredNavCards = useMemo(() => {
+    if (!normalizedSearchQuery) return navCards;
+
+    return navCards.filter((item) =>
+      [item.label, item.description, item.eyebrow]
+        .join(" ")
+        .toLocaleLowerCase("tr-TR")
+        .includes(normalizedSearchQuery),
+    );
+  }, [navCards, normalizedSearchQuery]);
 
   return (
     <div className="space-y-5">
@@ -403,11 +416,39 @@ const AdminHomePage = () => {
         </CardContent>
       </Card>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-        {navCards.map((item) => (
-          <AdminNavCard key={item.key} item={item} onLogout={onLogout} />
-        ))}
+      <div className="rounded-[26px] border border-slate-200/80 bg-white/90 p-3 shadow-[0_18px_60px_-42px_rgba(15,23,42,0.35)] backdrop-blur">
+        <label className="flex items-center gap-3 rounded-[20px] border border-slate-200 bg-slate-50/80 px-4 py-3 shadow-inner transition focus-within:border-sky-300 focus-within:bg-white focus-within:ring-2 focus-within:ring-sky-100">
+          <Search className="h-4 w-4 shrink-0 text-slate-400" />
+          <Input
+            type="search"
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            aria-label="Admin kartlarında ara"
+            placeholder="Kart adı, açıklama veya kategori ara"
+            className="h-auto border-0 bg-transparent px-0 py-0 text-sm shadow-none ring-0 placeholder:text-slate-400 focus-visible:ring-0"
+          />
+        </label>
       </div>
+
+      {filteredNavCards.length ? (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+          {filteredNavCards.map((item) => (
+            <AdminNavCard key={item.key} item={item} onLogout={onLogout} />
+          ))}
+        </div>
+      ) : (
+        <Card className="rounded-[26px] border-dashed border-slate-300 bg-white/80 shadow-[0_18px_60px_-42px_rgba(15,23,42,0.22)]">
+          <CardContent className="flex flex-col items-start gap-2 p-6">
+            <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              Filtre Sonucu
+            </div>
+            <CardTitle className="text-base text-slate-950">Aramayla eslesen kart bulunamadi.</CardTitle>
+            <CardDescription className="text-sm text-slate-600">
+              Daha genel bir kelime dene ya da aramayi temizleyip tum admin kartlarini yeniden goster.
+            </CardDescription>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
