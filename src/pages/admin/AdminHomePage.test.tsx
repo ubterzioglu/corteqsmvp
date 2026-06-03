@@ -32,18 +32,18 @@ function renderAdminHomePage(onLogout = vi.fn()) {
 
 describe("AdminHomePage", () => {
   it("shows all header areas on the admin landing page", () => {
-    renderAdminHomePage();
+    const { container } = renderAdminHomePage();
 
-    expect(screen.getByText("Yeni Üye Sistemi")).toBeInTheDocument();
-    expect(screen.getByText("Admin Çekirdeği")).toBeInTheDocument();
-    expect(screen.getByText("Operasyon Modülleri")).toBeInTheDocument();
-    expect(screen.getByText("Community Kontrol Merkezi")).toBeInTheDocument();
-    expect(screen.getByText("Veri Katmanı")).toBeInTheDocument();
-    expect(screen.getByText("Kayıt ve Moderasyon Alanları")).toBeInTheDocument();
-    expect(screen.getByText("Workspace ve Dokümanlar")).toBeInTheDocument();
-    expect(screen.getByText("Harici Yüzeyler")).toBeInTheDocument();
-    expect(screen.getByText("Dashboard")).toBeInTheDocument();
-    expect(screen.getByText("Dış Bağlantılar")).toBeInTheDocument();
+    expect(screen.getByText("Header menüsündeki tüm item'lar artık tek gridde.")).toBeInTheDocument();
+    expect(screen.getByText("6 kolonlu hızlı erişim")).toBeInTheDocument();
+    expect(screen.queryByText("Yeni Üye Sistemi")).not.toBeInTheDocument();
+    expect(screen.queryByText("Admin Çekirdeği")).not.toBeInTheDocument();
+    expect(screen.queryByText("Operasyon Modülleri")).not.toBeInTheDocument();
+    expect(screen.queryByText("Community Kontrol Merkezi")).not.toBeInTheDocument();
+    expect(screen.queryByText("Veri Katmanı")).not.toBeInTheDocument();
+    expect(screen.queryByText("Kayıt ve Moderasyon Alanları")).not.toBeInTheDocument();
+    expect(screen.queryByText("Workspace ve Dokümanlar")).not.toBeInTheDocument();
+    expect(screen.queryByText("Harici Yüzeyler")).not.toBeInTheDocument();
     expect(screen.getByText("Üye Takibi")).toBeInTheDocument();
     expect(screen.getByText("Ref Kod")).toBeInTheDocument();
     expect(screen.getByText("Dosyalar")).toBeInTheDocument();
@@ -73,12 +73,14 @@ describe("AdminHomePage", () => {
     expect(screen.getByText("Engine")).toBeInTheDocument();
     expect(screen.getByText("Globe")).toBeInTheDocument();
     expect(screen.getByText("Founders")).toBeInTheDocument();
+    expect(screen.getByText("Dashboard Merkezi")).toBeInTheDocument();
     const externalLinks = screen.getAllByRole("link", { name: /Bağlantıyı Aç/i });
     expect(externalLinks[0]).toHaveAttribute("href", "https://eng.corteqs.net");
     expect(externalLinks[1]).toHaveAttribute("href", "https://globe.corteqs.net");
     expect(externalLinks[2]).toHaveAttribute("href", "https://mvp.corteqs.net/founders");
     expect(screen.queryByText("IK Dökümanları")).not.toBeInTheDocument();
     expect(screen.queryByText("ARGE Dökümanları")).not.toBeInTheDocument();
+    expect(container.querySelector(".xl\\:grid-cols-6")).not.toBeNull();
     expect(screen.getByRole("button", { name: /Çıkış/i })).toBeInTheDocument();
   });
 

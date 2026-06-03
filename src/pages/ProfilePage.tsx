@@ -1805,6 +1805,7 @@ const ProfileAttributeEditor = ({
   const attributeLabel = attribute.attributeKey === "full_name" ? displayNameLabel : attribute.label;
   const visibilityLabel = VISIBILITY_OPTIONS.find((option) => option.value === draftVisibility)?.label ?? draftVisibility;
   const visibilityLocked = !attribute.userCanHide;
+  const approvalLabel = attribute.approvalStatus === "approved" ? "Onaylı" : "Beklemede";
 
   return (
     <div className="rounded-lg border p-3">
@@ -1813,24 +1814,34 @@ const ProfileAttributeEditor = ({
           <div className="flex flex-wrap items-center gap-1.5">
             <p className="text-sm font-semibold">{attributeLabel}</p>
             {attribute.isRequired ? <Badge variant="secondary" className="text-[10px] px-1.5 py-0">Zorunlu</Badge> : null}
-            {attribute.requiresAdminApprovalOnChange ? <Badge variant="outline" className="text-[10px] px-1.5 py-0">Onaylı</Badge> : null}
+            {attribute.requiresAdminApprovalOnChange && visibilityMode !== "inline-switch" ? (
+              <Badge variant="outline" className="text-[10px] px-1.5 py-0">Onaylı</Badge>
+            ) : null}
           </div>
           {attribute.description ? <p className="text-xs text-muted-foreground">{attribute.description}</p> : null}
         </div>
         {visibilityMode === "inline-switch" ? (
-          <div className="inline-flex items-center gap-2 rounded-full border bg-slate-50/80 px-2.5 py-1.5 text-xs">
-            {draftVisibility === "public" ? (
-              <Eye className="h-3.5 w-3.5 text-primary" />
-            ) : (
-              <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
-            )}
-            <span className="font-medium text-slate-700">{visibilityLabel}</span>
-            <Switch
-              checked={draftVisibility === "public"}
-              onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")}
-              disabled={visibilityLocked}
-              aria-label={`${attributeLabel} görünürlük`}
-            />
+          <div className="flex flex-wrap items-center justify-end gap-2 text-xs">
+            {attribute.requiresAdminApprovalOnChange ? (
+              <span className="inline-flex items-center gap-1 text-emerald-700">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                {approvalLabel}
+              </span>
+            ) : null}
+            <div className="inline-flex items-center gap-2 rounded-full border bg-slate-50/80 px-2.5 py-1.5 text-xs">
+              {draftVisibility === "public" ? (
+                <Eye className="h-3.5 w-3.5 text-primary" />
+              ) : (
+                <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
+              )}
+              <span className="font-medium text-slate-700">{visibilityLabel}</span>
+              <Switch
+                checked={draftVisibility === "public"}
+                onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")}
+                disabled={visibilityLocked}
+                aria-label={`${attributeLabel} görünürlük`}
+              />
+            </div>
           </div>
         ) : (
           <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -1858,17 +1869,6 @@ const ProfileAttributeEditor = ({
 
         {visibilityMode === "inline-switch" ? (
           <div className="flex flex-wrap items-center gap-2 text-xs">
-            {attribute.approvalStatus === "approved" ? (
-              <span className="inline-flex items-center gap-1 text-emerald-700">
-                <CheckCircle2 className="h-3.5 w-3.5" />
-                Onaylı
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 text-amber-700">
-                <Clock3 className="h-3.5 w-3.5" />
-                Beklemede
-              </span>
-            )}
             {visibilityLocked ? (
               <span className="inline-flex items-center gap-1 text-slate-600">
                 <Lock className="h-3.5 w-3.5" />

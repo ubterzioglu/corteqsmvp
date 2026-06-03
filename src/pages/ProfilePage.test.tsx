@@ -388,6 +388,7 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Profil Rozetleri")).toBeInTheDocument();
     expect(screen.getByText("Sosyal Medya Hesapları")).toBeInTheDocument();
     expect(screen.getByDisplayValue("https://www.instagram.com/firmascope")).toBeInTheDocument();
+    expect(screen.getAllByText("LinkedIn")).toHaveLength(1);
     expect(screen.getByDisplayValue("https://www.linkedin.com/in/firmascope")).toBeInTheDocument();
     expect(screen.getByText("Web Sitesi")).toBeInTheDocument();
     expect(screen.getByDisplayValue("https://firmascope.co")).toBeInTheDocument();

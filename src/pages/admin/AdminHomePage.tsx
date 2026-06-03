@@ -16,40 +16,81 @@ import {
 } from "@/components/admin/admin-navigation";
 import { useAdminOutletContext } from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { advisorProfileSections } from "@/lib/resource-links";
 
 type NavIcon = ComponentType<{ className?: string }>;
+type NavTone = "sky" | "violet" | "amber" | "emerald" | "cyan" | "rose" | "slate" | "indigo" | "neutral";
+
+type BaseNavCard = {
+  key: string;
+  label: string;
+  description: string;
+  icon: NavIcon;
+  eyebrow: string;
+  tone: NavTone;
+};
 
 type NavCardItem =
-  | {
-      key: string;
-      label: string;
-      description: string;
-      icon: NavIcon;
+  | (BaseNavCard & {
       kind: "internal";
       to: string;
-      eyebrow?: string;
-    }
-  | {
-      key: string;
-      label: string;
-      description: string;
-      icon: NavIcon;
+    })
+  | (BaseNavCard & {
       kind: "external";
       href: string;
-      eyebrow?: string;
-    };
+    })
+  | (BaseNavCard & {
+      kind: "action";
+      action: "logout";
+    });
 
-type NavSection = {
-  key: string;
-  eyebrow: string;
-  title: string;
-  description: string;
-  accentClassName: string;
-  iconWrapClassName: string;
-  buttonClassName: string;
-  items: NavCardItem[];
+const toneClasses: Record<NavTone, { card: string; iconWrap: string; button: string }> = {
+  sky: {
+    card: "border-sky-200/80 bg-gradient-to-br from-sky-50 via-white to-cyan-50",
+    iconWrap: "border-sky-200 bg-sky-100 text-sky-700",
+    button: "border-sky-200 bg-white/90 text-sky-900 hover:bg-sky-100",
+  },
+  violet: {
+    card: "border-violet-200/80 bg-gradient-to-br from-violet-50 via-white to-fuchsia-50",
+    iconWrap: "border-violet-200 bg-violet-100 text-violet-700",
+    button: "border-violet-200 bg-white/90 text-violet-900 hover:bg-violet-100",
+  },
+  amber: {
+    card: "border-amber-200/80 bg-gradient-to-br from-amber-50 via-white to-orange-50",
+    iconWrap: "border-amber-200 bg-amber-100 text-amber-700",
+    button: "border-amber-200 bg-white/90 text-amber-900 hover:bg-amber-100",
+  },
+  emerald: {
+    card: "border-emerald-200/80 bg-gradient-to-br from-emerald-50 via-white to-teal-50",
+    iconWrap: "border-emerald-200 bg-emerald-100 text-emerald-700",
+    button: "border-emerald-200 bg-white/90 text-emerald-900 hover:bg-emerald-100",
+  },
+  cyan: {
+    card: "border-cyan-200/80 bg-gradient-to-br from-cyan-50 via-white to-blue-50",
+    iconWrap: "border-cyan-200 bg-cyan-100 text-cyan-700",
+    button: "border-cyan-200 bg-white/90 text-cyan-900 hover:bg-cyan-100",
+  },
+  rose: {
+    card: "border-rose-200/80 bg-gradient-to-br from-rose-50 via-white to-pink-50",
+    iconWrap: "border-rose-200 bg-rose-100 text-rose-700",
+    button: "border-rose-200 bg-white/90 text-rose-900 hover:bg-rose-100",
+  },
+  slate: {
+    card: "border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-zinc-100",
+    iconWrap: "border-slate-200 bg-white text-slate-700",
+    button: "border-slate-200 bg-white/90 text-slate-900 hover:bg-slate-100",
+  },
+  indigo: {
+    card: "border-indigo-200/80 bg-gradient-to-br from-indigo-50 via-white to-blue-50",
+    iconWrap: "border-indigo-200 bg-indigo-100 text-indigo-700",
+    button: "border-indigo-200 bg-white/90 text-indigo-900 hover:bg-indigo-100",
+  },
+  neutral: {
+    card: "border-slate-200/80 bg-gradient-to-br from-white via-slate-50 to-zinc-50",
+    iconWrap: "border-slate-200 bg-white text-slate-700",
+    button: "border-slate-200 bg-white/90 text-slate-900 hover:bg-slate-100",
+  },
 };
 
 const newMemberDescriptions: Record<string, string> = {
@@ -102,7 +143,8 @@ const otherRecordDescriptions: Record<string, string> = {
 };
 
 const dashboardDescriptions: Record<string, string> = {
-  "CC": "Command Center akışını, görev yoğunluğunu ve koordinasyon araçlarını aç.",
+  "Dashboard Merkezi": "Admin workspace girişini ve genel paneli tek karttan aç.",
+  CC: "Command Center akışını, görev yoğunluğunu ve koordinasyon araçlarını aç.",
   "Dosyalar ve Linkler": "Workspace dokümanları ve ortak bağlantılara tek panelden geç.",
   "MVP Listesi": "MVP önceliklerini ve ürün akışını aynı yerden takip et.",
 };
@@ -121,6 +163,7 @@ const advisorRecordItems = advisorProfileSections.map((section) => ({
   icon: ScrollText,
   kind: "internal" as const,
   eyebrow: "Sosyal Link Profilleri",
+  tone: "rose" as const,
 }));
 
 const inactiveRecordItems = [
@@ -132,6 +175,7 @@ const inactiveRecordItems = [
     icon: ScrollText,
     kind: "internal" as const,
     eyebrow: "İnaktif",
+    tone: "rose" as const,
   },
   {
     key: "inactive-may19-fikir",
@@ -141,246 +185,180 @@ const inactiveRecordItems = [
     icon: ScrollText,
     kind: "internal" as const,
     eyebrow: "İnaktif",
+    tone: "rose" as const,
   },
-];
+] satisfies NavCardItem[];
 
-const sections: NavSection[] = [
-  {
-    key: "new-member",
+const orderedNavCards: NavCardItem[] = [
+  ...newMemberSystemNavItems.map((item) => ({
+    key: item.to,
+    label: item.label,
+    description: newMemberDescriptions[item.label] ?? "Bu admin ekranını aç.",
+    icon: item.icon,
+    kind: "internal" as const,
+    to: item.to,
     eyebrow: "Üyeler",
-    title: "Yeni Üye Sistemi",
-    description: "Header’daki Üyeler menüsünün tamamı burada kart düzeninde açılır.",
-    accentClassName: "border-sky-200/80 bg-gradient-to-br from-sky-50 via-white to-cyan-50",
-    iconWrapClassName: "border-sky-200 bg-sky-100 text-sky-700",
-    buttonClassName: "border-sky-200 bg-white/90 text-sky-900 hover:bg-sky-100",
-    items: newMemberSystemNavItems.map((item) => ({
-      key: item.to,
-      label: item.label,
-      description: newMemberDescriptions[item.label] ?? "Bu admin ekranını aç.",
-      icon: item.icon,
-      kind: "internal",
-      to: item.to,
-    })),
-  },
-  {
-    key: "primary",
+    tone: "sky" as const,
+  })),
+  ...primaryAdminNavItems.map((item) => ({
+    key: item.to,
+    label: item.label,
+    description: primaryDescriptions[item.label] ?? "Bu admin ekranını aç.",
+    icon: item.icon,
+    kind: "internal" as const,
+    to: item.to,
     eyebrow: "Kısa Yollar",
-    title: "Admin Çekirdeği",
-    description: "Header’da doğrudan görünen temel admin bağlantılarını premium kartlar olarak kullan.",
-    accentClassName: "border-violet-200/80 bg-gradient-to-br from-violet-50 via-white to-fuchsia-50",
-    iconWrapClassName: "border-violet-200 bg-violet-100 text-violet-700",
-    buttonClassName: "border-violet-200 bg-white/90 text-violet-900 hover:bg-violet-100",
-    items: primaryAdminNavItems.map((item) => ({
-      key: item.to,
-      label: item.label,
-      description: primaryDescriptions[item.label] ?? "Bu admin ekranını aç.",
-      icon: item.icon,
-      kind: "internal",
-      to: item.to,
-    })),
-  },
-  {
-    key: "actions",
+    tone: "violet" as const,
+  })),
+  ...otherActionNavItems.map((item) => ({
+    key: item.to,
+    label: item.label,
+    description: otherActionDescriptions[item.label] ?? "Bu admin ekranını aç.",
+    icon: item.icon,
+    kind: "internal" as const,
+    to: item.to,
     eyebrow: "Diğer İşlemler",
-    title: "Operasyon Modülleri",
-    description: "Harici akışlar dışındaki operasyonel tüm yönetim modülleri tek bakışta burada.",
-    accentClassName: "border-amber-200/80 bg-gradient-to-br from-amber-50 via-white to-orange-50",
-    iconWrapClassName: "border-amber-200 bg-amber-100 text-amber-700",
-    buttonClassName: "border-amber-200 bg-white/90 text-amber-900 hover:bg-amber-100",
-    items: otherActionNavItems.map((item) => ({
-      key: item.to,
-      label: item.label,
-      description: otherActionDescriptions[item.label] ?? "Bu admin ekranını aç.",
-      icon: item.icon,
-      kind: "internal",
-      to: item.to,
-    })),
-  },
-  {
-    key: "community",
+    tone: "amber" as const,
+  })),
+  ...communityNavItems.map((item) => ({
+    key: item.to,
+    label: item.label,
+    description: communityDescriptions[item.label] ?? "Bu topluluk ekranını aç.",
+    icon: item.icon,
+    kind: "internal" as const,
+    to: item.to,
     eyebrow: "Topluluklar",
-    title: "Community Kontrol Merkezi",
-    description: "Topluluklar dropdown’ındaki tüm yüzeyleri renkli kartlarla aç.",
-    accentClassName: "border-emerald-200/80 bg-gradient-to-br from-emerald-50 via-white to-teal-50",
-    iconWrapClassName: "border-emerald-200 bg-emerald-100 text-emerald-700",
-    buttonClassName: "border-emerald-200 bg-white/90 text-emerald-900 hover:bg-emerald-100",
-    items: communityNavItems.map((item) => ({
-      key: item.to,
-      label: item.label,
-      description: communityDescriptions[item.label] ?? "Bu topluluk ekranını aç.",
-      icon: item.icon,
-      kind: "internal",
-      to: item.to,
-    })),
-  },
-  {
-    key: "data",
+    tone: "emerald" as const,
+  })),
+  ...dataNavItems.map((item) => ({
+    key: item.to,
+    label: item.label,
+    description: dataDescriptions[item.label] ?? "Bu veri ekranını aç.",
+    icon: item.icon,
+    kind: "internal" as const,
+    to: item.to,
     eyebrow: "Data",
-    title: "Veri Katmanı",
-    description: "Header’daki Data menüsünü tek sayfalık bir operasyon ızgarasına dönüştür.",
-    accentClassName: "border-cyan-200/80 bg-gradient-to-br from-cyan-50 via-white to-blue-50",
-    iconWrapClassName: "border-cyan-200 bg-cyan-100 text-cyan-700",
-    buttonClassName: "border-cyan-200 bg-white/90 text-cyan-900 hover:bg-cyan-100",
-    items: dataNavItems.map((item) => ({
-      key: item.to,
-      label: item.label,
-      description: dataDescriptions[item.label] ?? "Bu veri ekranını aç.",
-      icon: item.icon,
-      kind: "internal",
-      to: item.to,
-    })),
-  },
-  {
-    key: "records",
+    tone: "cyan" as const,
+  })),
+  ...otherRecordNavItems.map((item) => ({
+    key: item.to,
+    label: item.label,
+    description: otherRecordDescriptions[item.label] ?? "Bu kayıt ekranını aç.",
+    icon: item.icon,
+    kind: "internal" as const,
+    to: item.to,
     eyebrow: "Diğer Kayıtlar",
-    title: "Kayıt ve Moderasyon Alanları",
-    description: "Dropdown içindeki kayıt, moderasyon, inaktif ve sosyal link profili akışlarını birlikte göster.",
-    accentClassName: "border-rose-200/80 bg-gradient-to-br from-rose-50 via-white to-pink-50",
-    iconWrapClassName: "border-rose-200 bg-rose-100 text-rose-700",
-    buttonClassName: "border-rose-200 bg-white/90 text-rose-900 hover:bg-rose-100",
-    items: [
-      ...otherRecordNavItems.map((item) => ({
-        key: item.to,
-        label: item.label,
-        description: otherRecordDescriptions[item.label] ?? "Bu kayıt ekranını aç.",
-        icon: item.icon,
-        kind: "internal" as const,
-        to: item.to,
-      })),
-      ...may19RecordNavItems.map((item) => ({
-        key: item.to,
-        label: item.label,
-        description: otherRecordDescriptions[item.label] ?? "Bu moderasyon ekranını aç.",
-        icon: item.icon,
-        kind: "internal" as const,
-        to: item.to,
-        eyebrow: "19 Mayıs",
-      })),
-      ...inactiveRecordItems,
-      ...advisorRecordItems,
-    ],
-  },
-  {
-    key: "dashboard",
-    eyebrow: "Dashboard",
-    title: "Workspace ve Dokümanlar",
-    description: "Header’daki dashboard araçlarını ve doküman girişlerini altı kolonlu vitrinde topla.",
-    accentClassName: "border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-zinc-100",
-    iconWrapClassName: "border-slate-200 bg-white text-slate-700",
-    buttonClassName: "border-slate-200 bg-white/90 text-slate-900 hover:bg-slate-100",
-    items: [
-      ...workspaceAdminNavItems
-        .filter((item) => item.key !== "workspace-home")
-        .map((item) => ({
-          key: item.key,
-          label: item.label,
-          description: dashboardDescriptions[item.label] ?? "Bu workspace aracını aç.",
-          icon: item.icon,
-          kind: "internal" as const,
-          to: item.to,
-          eyebrow: item.label === "CC" ? "Command Center" : "Workspace",
-        })),
-      ...adminPanelDocNavItems.map((item) => ({
-        key: item.key,
-        label: item.label,
-        description: "Admin wiki ve doküman setindeki ilgili sayfayı doğrudan aç.",
-        icon: item.icon,
-        kind: "internal" as const,
-        to: item.to,
-        eyebrow: "Doküman",
-      })),
-    ],
-  },
-  {
-    key: "external",
+    tone: "rose" as const,
+  })),
+  ...may19RecordNavItems.map((item) => ({
+    key: item.to,
+    label: item.label,
+    description: otherRecordDescriptions[item.label] ?? "Bu moderasyon ekranını aç.",
+    icon: item.icon,
+    kind: "internal" as const,
+    to: item.to,
+    eyebrow: "19 Mayıs",
+    tone: "rose" as const,
+  })),
+  ...inactiveRecordItems,
+  ...advisorRecordItems,
+  ...workspaceAdminNavItems.map((item) => ({
+    key: item.key,
+    label: item.label,
+    description: dashboardDescriptions[item.label] ?? "Bu workspace aracını aç.",
+    icon: item.icon,
+    kind: "internal" as const,
+    to: item.to,
+    eyebrow: item.label === "CC" ? "Command Center" : "Dashboard",
+    tone: "slate" as const,
+  })),
+  ...adminPanelDocNavItems.map((item) => ({
+    key: item.key,
+    label: item.label,
+    description: "Admin wiki ve doküman setindeki ilgili sayfayı doğrudan aç.",
+    icon: item.icon,
+    kind: "internal" as const,
+    to: item.to,
+    eyebrow: "Doküman",
+    tone: "slate" as const,
+  })),
+  ...externalAdminNavItems.map((item) => ({
+    key: item.href,
+    label: item.label,
+    description: externalAdminLinkDescriptions[item.label] ?? "Dış bağlantıyı yeni sekmede aç.",
+    icon: item.icon,
+    kind: "external" as const,
+    href: item.href,
     eyebrow: "Dış Bağlantılar",
-    title: "Harici Yüzeyler",
-    description: "Admin header’ındaki dış bağlantıları aynı premium hissiyle ayrı kartlar halinde göster.",
-    accentClassName: "border-indigo-200/80 bg-gradient-to-br from-indigo-50 via-white to-blue-50",
-    iconWrapClassName: "border-indigo-200 bg-indigo-100 text-indigo-700",
-    buttonClassName: "border-indigo-200 bg-white/90 text-indigo-900 hover:bg-indigo-100",
-    items: externalAdminNavItems.map((item) => ({
-      key: item.href,
-      label: item.label,
-      description: externalAdminLinkDescriptions[item.label] ?? "Dış bağlantıyı yeni sekmede aç.",
-      icon: item.icon,
-      kind: "external",
-      href: item.href,
-    })),
-  },
+    tone: "indigo" as const,
+  })),
 ];
 
-function SectionCard({ section }: { section: NavSection }) {
+function AdminNavCard({ item, onLogout }: { item: NavCardItem; onLogout: () => void | Promise<void> }) {
+  const tone = toneClasses[item.tone];
+
   return (
-    <Card className={`overflow-hidden rounded-[30px] border shadow-[0_24px_80px_-42px_rgba(15,23,42,0.38)] ${section.accentClassName}`}>
-      <CardHeader className="pb-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="inline-flex items-center rounded-full border border-white/80 bg-white/80 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-700 shadow-sm backdrop-blur">
-            {section.eyebrow}
+    <article
+      className={`group relative overflow-hidden rounded-[26px] border p-4 shadow-[0_18px_55px_-40px_rgba(15,23,42,0.55)] backdrop-blur transition duration-200 hover:-translate-y-1 hover:shadow-[0_24px_70px_-34px_rgba(15,23,42,0.42)] ${tone.card}`}
+    >
+      <div className="pointer-events-none absolute inset-x-5 top-0 h-20 rounded-b-full bg-gradient-to-b from-white/80 to-transparent opacity-80" />
+      <div className="relative flex h-full flex-col gap-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border shadow-sm ${tone.iconWrap}`}>
+            <item.icon className="h-4.5 w-4.5" />
           </div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-3 py-1 text-[11px] text-slate-600 backdrop-blur">
-            <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-            Premium admin kısayolları
+          <div className="rounded-full border border-slate-200/80 bg-white/90 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.16em] text-slate-500">
+            {item.eyebrow}
           </div>
         </div>
+
         <div className="space-y-2">
-          <CardTitle className="text-2xl text-slate-950">{section.title}</CardTitle>
-          <CardDescription className="max-w-3xl text-sm leading-6 text-slate-600">{section.description}</CardDescription>
+          <h2 className="text-sm font-semibold leading-5 text-slate-950">{item.label}</h2>
+          <p className="text-xs leading-5 text-slate-600">{item.description}</p>
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-6">
-          {section.items.map((item) => (
-            <article
-              key={item.key}
-              className="group relative overflow-hidden rounded-[26px] border border-white/70 bg-white/88 p-4 shadow-[0_18px_55px_-40px_rgba(15,23,42,0.55)] backdrop-blur transition duration-200 hover:-translate-y-1 hover:shadow-[0_24px_70px_-34px_rgba(15,23,42,0.42)]"
-            >
-              <div className="pointer-events-none absolute inset-x-5 top-0 h-20 rounded-b-full bg-gradient-to-b from-white/80 to-transparent opacity-80" />
-              <div className="relative flex h-full flex-col gap-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border shadow-sm ${section.iconWrapClassName}`}>
-                    <item.icon className="h-4.5 w-4.5" />
-                  </div>
-                  {item.eyebrow ? (
-                    <div className="rounded-full border border-slate-200/80 bg-white/90 px-2.5 py-1 text-[10px] font-medium tracking-[0.16em] text-slate-500 uppercase">
-                      {item.eyebrow}
-                    </div>
-                  ) : null}
-                </div>
 
-                <div className="space-y-2">
-                  <h3 className="text-sm font-semibold leading-5 text-slate-950">{item.label}</h3>
-                  <p className="text-xs leading-5 text-slate-600">{item.description}</p>
-                </div>
-
-                <div className="mt-auto">
-                  {item.kind === "internal" ? (
-                    <Button asChild variant="outline" size="sm" className={`h-9 w-full justify-between rounded-xl text-xs shadow-sm ${section.buttonClassName}`}>
-                      <Link to={item.to}>
-                        Ekranı Aç
-                        <ArrowRight className="h-3.5 w-3.5" />
-                      </Link>
-                    </Button>
-                  ) : (
-                    <Button asChild variant="outline" size="sm" className={`h-9 w-full justify-between rounded-xl text-xs shadow-sm ${section.buttonClassName}`}>
-                      <a href={item.href} target="_blank" rel="noreferrer">
-                        Bağlantıyı Aç
-                        <ExternalLink className="h-3.5 w-3.5" />
-                      </a>
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </article>
-          ))}
+        <div className="mt-auto">
+          {item.kind === "internal" ? (
+            <Button asChild variant="outline" size="sm" className={`h-9 w-full justify-between rounded-xl text-xs shadow-sm ${tone.button}`}>
+              <Link to={item.to}>
+                Ekranı Aç
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </Button>
+          ) : item.kind === "external" ? (
+            <Button asChild variant="outline" size="sm" className={`h-9 w-full justify-between rounded-xl text-xs shadow-sm ${tone.button}`}>
+              <a href={item.href} target="_blank" rel="noreferrer">
+                Bağlantıyı Aç
+                <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            </Button>
+          ) : (
+            <Button variant="outline" size="sm" className={`h-9 w-full justify-between rounded-xl text-xs shadow-sm ${tone.button}`} onClick={() => void onLogout()}>
+              Çıkış
+              <LogOut className="h-3.5 w-3.5" />
+            </Button>
+          )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </article>
   );
 }
 
 const AdminHomePage = () => {
   const { session, onLogout } = useAdminOutletContext();
+  const navCards = [
+    ...orderedNavCards,
+    {
+      key: "logout",
+      label: "Çıkış",
+      description: "Admin oturumunu güvenli şekilde kapat ve giriş ekranına dön.",
+      icon: LogOut,
+      kind: "action" as const,
+      action: "logout" as const,
+      eyebrow: "Çıkış",
+      tone: "neutral" as const,
+    },
+  ];
 
   return (
     <div className="space-y-5">
@@ -392,21 +370,20 @@ const AdminHomePage = () => {
               CorteQS Admin Atelier
             </div>
             <div className="space-y-2">
-              <h1 className="text-3xl font-semibold tracking-tight text-slate-950 lg:text-4xl">Header’daki tüm yönetim yüzeyleri artık tek vitrinde.</h1>
-              <p className="max-w-3xl text-sm leading-6 text-slate-600 lg:text-base">
-                Açılış ekranı, admin header menüsündeki tüm bağlantıları renkli kartlara dönüştürür. Böylece dropdown dolaşmadan bütün yönetim
-                alanlarını aynı ekranda altı kolonlu premium bir düzen içinde açabilirsin.
-              </p>
+              <CardTitle className="text-3xl tracking-tight text-slate-950 lg:text-4xl">Header menüsündeki tüm item&apos;lar artık tek gridde.</CardTitle>
+              <CardDescription className="max-w-3xl text-sm leading-6 text-slate-600 lg:text-base">
+                Tüm admin bağlantıları soldan sağa aynı akışta dizilir. Dropdown dolaşmadan her ekranı renkli kartlardan açabilir, doküman ve dış yüzeylere aynı landing üzerinden ulaşabilirsin.
+              </CardDescription>
             </div>
             <div className="flex flex-wrap gap-2">
               <div className="inline-flex items-center rounded-full border border-slate-200 bg-white/80 px-3 py-1 text-xs text-slate-700 shadow-sm">
                 6 kolonlu hızlı erişim
               </div>
               <div className="inline-flex items-center rounded-full border border-slate-200 bg-white/80 px-3 py-1 text-xs text-slate-700 shadow-sm">
-                Tüm header menüsü tek ekranda
+                Soldan sağa sıralı kart akışı
               </div>
               <div className="inline-flex items-center rounded-full border border-slate-200 bg-white/80 px-3 py-1 text-xs text-slate-700 shadow-sm">
-                Renk kodlu premium kartlar
+                Premium renk kodlu görünüm
               </div>
             </div>
           </div>
@@ -415,26 +392,21 @@ const AdminHomePage = () => {
             <div className="rounded-[24px] border border-white/80 bg-white/86 p-4 shadow-sm backdrop-blur">
               <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500">Aktif kullanıcı</div>
               <div className="mt-2 text-sm font-semibold text-slate-950">{session.user.email}</div>
-              <div className="mt-1 text-xs leading-5 text-slate-600">Bu admin hub görünümü oturum açan hesap için kişiselleştirilmiş olarak yüklenir.</div>
+              <div className="mt-1 text-xs leading-5 text-slate-600">Bu admin landing görünümü oturum açan hesap için kişiselleştirilmiş olarak yüklenir.</div>
             </div>
             <div className="rounded-[24px] border border-white/80 bg-white/86 p-4 shadow-sm backdrop-blur">
-              <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500">Bölüm sayısı</div>
-              <div className="mt-2 text-3xl font-semibold text-slate-950">{sections.length}</div>
-              <div className="mt-1 text-xs leading-5 text-slate-600">Header kaynaklarının tamamı section section aynı ekranda listeleniyor.</div>
+              <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500">Kart sayısı</div>
+              <div className="mt-2 text-3xl font-semibold text-slate-950">{navCards.length}</div>
+              <div className="mt-1 text-xs leading-5 text-slate-600">Header kaynaklarının tamamı tek bir ordered grid içinde sunuluyor.</div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {sections.map((section) => (
-        <SectionCard key={section.key} section={section} />
-      ))}
-
-      <div className="flex justify-end">
-        <Button variant="outline" size="sm" className="gap-2 rounded-xl bg-white/90 shadow-sm" onClick={() => void onLogout()}>
-          <LogOut className="h-3.5 w-3.5" />
-          Çıkış
-        </Button>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+        {navCards.map((item) => (
+          <AdminNavCard key={item.key} item={item} onLogout={onLogout} />
+        ))}
       </div>
     </div>
   );
