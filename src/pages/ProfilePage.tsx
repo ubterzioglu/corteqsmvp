@@ -815,18 +815,20 @@ const ProfilePage = () => {
               {errorMessage ? <Badge variant="destructive" className="text-xs">Kısmi veri yüklendi</Badge> : null}
             </div>
           </div>
-          <div className="flex gap-2">
-            <Button size="sm" variant="outline" onClick={scrollToHelpCard}>
-              <HelpCircle className="mr-1.5 h-4 w-4" />
-              Yardım
-            </Button>
-            <Button size="sm" variant="outline" onClick={() => void refreshProfile()}>
-              Yenile
-            </Button>
-            <Button size="sm" variant="outline" onClick={handleSignOut}>
-              Çıkış Yap
-            </Button>
-          </div>
+          {!isIndividualProfile ? (
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={scrollToHelpCard}>
+                <HelpCircle className="mr-1.5 h-4 w-4" />
+                Yardım
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => void refreshProfile()}>
+                Yenile
+              </Button>
+              <Button size="sm" variant="outline" onClick={handleSignOut}>
+                Çıkış Yap
+              </Button>
+            </div>
+          ) : null}
         </CardHeader>
         <CardContent className={`grid gap-2 pb-4 ${isIndividualProfile ? "md:grid-cols-4" : "md:grid-cols-3"}`}>
           <div className="rounded-lg border bg-slate-50 p-2.5">

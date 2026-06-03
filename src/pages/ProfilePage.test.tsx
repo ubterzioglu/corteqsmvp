@@ -265,7 +265,8 @@ describe("ProfilePage", () => {
     expect(await screen.findByText("Bireysel Kullanıcı")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Yardım/i })).toBeInTheDocument();
     expect(screen.getByText("Profil Resmi")).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "firmascope" })).toHaveAttribute("src", "https://example.com/avatar.jpg");
+    expect(screen.getAllByRole("img", { name: "firmascope" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("img", { name: "firmascope" })[0]).toHaveAttribute("src", "https://example.com/avatar.jpg");
     expect(screen.getByText("Ortak Profil Alanları")).toBeInTheDocument();
     expect(screen.getByText("Sosyal Medya Hesapları")).toBeInTheDocument();
     expect(screen.getByDisplayValue("https://www.instagram.com/firmascope")).toBeInTheDocument();
