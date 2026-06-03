@@ -8,12 +8,15 @@ export type LandingCategory =
   | "is"
   | "doktor"
   | "yatirim"
-  | "girisim"
   | "akademik"
   | "dayanisma"
+  | "hr"
+  | "kisisel-gelisim"
   | "diger";
 export type LandingStatus = "pending" | "approved" | "rejected";
 export type LandingSubmitterRole = "manager" | "member";
+export type LandingLanguage = "tr" | "en" | "de" | "ar";
+export type LandingOrigin = "global" | "mena" | "berlin" | "turkiye" | "avrupa";
 
 type WhatsAppLandingRow = Tables<"whatsapp_landings">;
 type WhatsAppJoinRequestInsert = TablesInsert<"whatsapp_join_requests">;
@@ -40,6 +43,11 @@ export interface WhatsAppLanding {
   adminApproved?: boolean;
   editorReviewPending?: boolean;
   editorReviewUpdatedAt?: string;
+  memberCount?: number;
+  memberCountUpdatedAt?: string;
+  groupScore?: number;
+  language?: LandingLanguage;
+  origin?: LandingOrigin;
   status?: LandingStatus;
   rejectionReason?: string;
   createdAt: string;
@@ -59,6 +67,9 @@ export interface SaveLandingInput {
   adminName?: string;
   adminContact?: string;
   description?: string;
+  memberCount?: number;
+  language?: LandingLanguage;
+  origin?: LandingOrigin;
 }
 
 export interface JoinRequestInput {
@@ -83,6 +94,10 @@ export interface UpdateLandingInput {
   adminName?: string;
   adminContact?: string;
   description?: string;
+  memberCount?: number;
+  language?: LandingLanguage;
+  origin?: LandingOrigin;
+  groupScore?: number;
 }
 
 export interface LandingEditorAssignment {
@@ -124,6 +139,20 @@ const COMMUNITY_TURKISH_REPLACEMENTS: Array<[RegExp, string]> = [
   [/\bhatti\b/g, "hattı"],
 ];
 
+const LANDING_CATEGORY_ALIASES: Record<string, LandingCategory> = {
+  alumni: "alumni",
+  hobi: "hobi",
+  is: "is",
+  doktor: "doktor",
+  yatirim: "yatirim",
+  girisim: "yatirim",
+  akademik: "akademik",
+  dayanisma: "dayanisma",
+  hr: "hr",
+  "kisisel-gelisim": "kisisel-gelisim",
+  diger: "diger",
+};
+
 export function slugify(value: string) {
   return value
     .toLowerCase()
@@ -147,6 +176,12 @@ export function normalizeCommunityText(value?: string | null) {
     (current, [pattern, replacement]) => current.replace(pattern, replacement),
     trimmed,
   );
+}
+
+export function normalizeLandingCategory(value?: string | null): LandingCategory {
+  const normalized = value?.trim().toLowerCase();
+  if (!normalized) return "diger";
+  return LANDING_CATEGORY_ALIASES[normalized] ?? "diger";
 }
 
 function parseSubmitterRole(description?: string | null): LandingSubmitterRole | undefined {
@@ -257,7 +292,7 @@ export function rowToLanding(row: WhatsAppLandingRow): WhatsAppLanding {
     dbId: row.id,
     groupName: normalizeCommunityText(row.group_name),
     platform: parseTagValue(row.description, "Platform"),
-    category: row.category as LandingCategory,
+    category: normalizeLandingCategory(row.category),
     country: normalizeCommunityText(row.country),
     city: normalizeCommunityText(row.city),
     mode: row.mode as LandingMode,
@@ -274,6 +309,11 @@ export function rowToLanding(row: WhatsAppLandingRow): WhatsAppLanding {
     adminApproved,
     editorReviewPending: parseBooleanTag(row.description, "Editor review pending", false),
     editorReviewUpdatedAt: parseTagValue(row.description, "Editor review updated at"),
+    memberCount: row.member_count ?? undefined,
+    memberCountUpdatedAt: row.member_count_updated_at ?? undefined,
+    groupScore: row.group_score ?? undefined,
+    language: (row.language as LandingLanguage) ?? undefined,
+    origin: (row.origin as LandingOrigin) ?? undefined,
     status: row.status as LandingStatus,
     rejectionReason: row.rejection_reason ?? undefined,
     createdAt: row.created_at,
@@ -378,6 +418,10 @@ export async function submitLanding(input: SaveLandingInput): Promise<{ slug: st
     admin_name: adminName,
     admin_contact: adminContact,
     description,
+    member_count: input.memberCount ?? null,
+    member_count_updated_at: input.memberCount ? new Date().toISOString() : null,
+    language: input.language ?? null,
+    origin: input.origin ?? null,
   } as TablesInsert<"whatsapp_landings">;
 
   const { error } = await supabase.from("whatsapp_landings").insert(payload);
@@ -482,6 +526,11 @@ export async function updateLanding(dbId: string, input: UpdateLandingInput) {
       admin_name: adminName,
       admin_contact: adminContact,
       description: normalizeCommunityText(input.description) || null,
+      member_count: input.memberCount ?? null,
+      member_count_updated_at: input.memberCount ? new Date().toISOString() : null,
+      language: input.language ?? null,
+      origin: input.origin ?? null,
+      group_score: input.groupScore ?? null,
       updated_at: new Date().toISOString(),
     })
     .eq("id", dbId);
@@ -502,6 +551,9 @@ export async function updateCurrentUserEditableLanding(params: {
   adminName?: string;
   adminContact?: string;
   description?: string;
+  memberCount?: number;
+  language?: LandingLanguage;
+  origin?: LandingOrigin;
 }) {
   const { data, error } = await (supabase as any).rpc("update_current_user_editable_whatsapp_landing", {
     p_landing_id: params.landingId,
@@ -516,6 +568,10 @@ export async function updateCurrentUserEditableLanding(params: {
     p_admin_name: normalizeCommunityOptionalText(params.adminName) ?? null,
     p_admin_contact: normalizeOptionalText(params.adminContact) ?? null,
     p_description: normalizeCommunityText(params.description) || null,
+    p_member_count: params.memberCount ?? null,
+    p_member_count_updated_at: params.memberCount ? new Date().toISOString() : null,
+    p_language: params.language ?? null,
+    p_origin: params.origin ?? null,
   });
 
   if (error) throw error;

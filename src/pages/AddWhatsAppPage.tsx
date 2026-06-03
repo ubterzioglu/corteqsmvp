@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
+  Briefcase,
   Check,
   ExternalLink,
   Globe,
@@ -24,7 +25,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -32,6 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/components/auth/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import {
   buildLandingDescription,
   canCurrentUserEditLanding,
@@ -42,7 +43,10 @@ import {
   submitLanding,
   uploadWhatsAppLandingHeroImage,
   type LandingCategory,
+  type LandingLanguage,
+  type LandingOrigin,
   type WhatsAppLanding,
+  normalizeLandingCategory,
 } from "@/lib/whatsapp-landings";
 import messagingHeroImage from "../../addwaimage.png";
 import waPlaceholderImage from "../../waplaceholder.png";
@@ -76,11 +80,6 @@ const categoryMeta: Record<
     label: "Yatırım & Girişim",
     chipClass: "border-emerald-600 bg-emerald-500 text-white",
   },
-  girisim: {
-    icon: TrendingUp,
-    label: "Yatırım & Girişim",
-    chipClass: "border-emerald-600 bg-emerald-500 text-white",
-  },
   akademik: {
     icon: Globe,
     label: "Akademik",
@@ -90,6 +89,16 @@ const categoryMeta: Record<
     icon: HandHeart,
     label: "Dayanışma",
     chipClass: "border-rose-600 bg-rose-500 text-white",
+  },
+  hr: {
+    icon: Briefcase,
+    label: "HR",
+    chipClass: "border-violet-600 bg-violet-500 text-white",
+  },
+  "kisisel-gelisim": {
+    icon: Sparkles,
+    label: "Kişisel Gelişim",
+    chipClass: "border-pink-600 bg-pink-500 text-white",
   },
   diger: {
     icon: Sparkles,
@@ -103,7 +112,7 @@ const placeholderLandings: WhatsAppLanding[] = [
     id: "placeholder-berlin-girisim",
     groupName: "Berlin Girişim Ağı",
     platform: "Discord",
-    category: "girisim",
+    category: "yatirim",
     country: "Almanya",
     city: "Berlin",
     mode: "visual",
@@ -222,6 +231,10 @@ const approvalBadgeMeta = {
   },
 } as const;
 
+function getCategoryMeta(category?: string | null) {
+  return categoryMeta[normalizeLandingCategory(category)];
+}
+
 function stripCommunityPrefix(text?: string | null) {
   return text?.replace(/^Topluluk\s*[:;]\s*/i, "").trim() ?? "";
 }
@@ -244,25 +257,28 @@ const categoryOptions: Array<{ value: LandingCategory; label: string }> = [
   { value: "hobi", label: "Hobi" },
   { value: "is", label: "İş Grubu" },
   { value: "doktor", label: "Doktor / Sağlık" },
-  { value: "yatirim", label: "Yatırım" },
-  { value: "girisim", label: "Girişim" },
+  { value: "yatirim", label: "Yatırım & Girişim" },
   { value: "akademik", label: "Akademik" },
   { value: "dayanisma", label: "Dayanışma" },
+  { value: "hr", label: "HR" },
+  { value: "kisisel-gelisim", label: "Kişisel Gelişim" },
   { value: "diger", label: "Diğer" },
 ];
 
-const platformMarkMeta: Record<string, { short: string; className: string }> = {
-  WhatsApp: { short: "WA", className: "bg-[#e7f9ee] text-[#1f9d55]" },
-  Telegram: { short: "TG", className: "bg-[#e7f4ff] text-[#229ED9]" },
-  Discord: { short: "DS", className: "bg-[#eef0ff] text-[#5865F2]" },
-  Facebook: { short: "f", className: "bg-[#ecf3ff] text-[#1877F2]" },
-  Instagram: { short: "IG", className: "bg-[#fff0f6] text-[#E1306C]" },
-  LinkedIn: { short: "in", className: "bg-[#eef7ff] text-[#0A66C2]" },
-  X: { short: "X", className: "bg-slate-900 text-white" },
-  TikTok: { short: "TT", className: "bg-slate-100 text-slate-900" },
-  YouTube: { short: "YT", className: "bg-[#fff0f0] text-[#FF0000]" },
-  Reddit: { short: "R", className: "bg-[#fff3ea] text-[#FF5700]" },
-};
+const languageOptions: Array<{ value: LandingLanguage; label: string }> = [
+  { value: "tr", label: "Türkçe" },
+  { value: "en", label: "İngilizce" },
+  { value: "de", label: "Almanca" },
+  { value: "ar", label: "Arapça" },
+];
+
+const originOptions: Array<{ value: LandingOrigin; label: string }> = [
+  { value: "global", label: "Global" },
+  { value: "mena", label: "MENA" },
+  { value: "berlin", label: "Berlin" },
+  { value: "turkiye", label: "Türkiye" },
+  { value: "avrupa", label: "Avrupa" },
+];
 
 type GroupFormState = {
   submitterRole: "manager" | "member";
@@ -277,6 +293,9 @@ type GroupFormState = {
   adminName: string;
   adminEmail: string;
   adminPhone: string;
+  memberCount: string;
+  language: LandingLanguage | "";
+  origin: LandingOrigin | "";
 };
 
 type JoinFormState = {
@@ -299,6 +318,9 @@ const initialGroupForm: GroupFormState = {
   adminName: "",
   adminEmail: "",
   adminPhone: "",
+  memberCount: "",
+  language: "",
+  origin: "",
 };
 
 const initialJoinForm: JoinFormState = {
@@ -317,6 +339,11 @@ function getErrorMessage(error: unknown, fallback = "Beklenmeyen hata") {
   return fallback;
 }
 
+function formatGroupScore(score?: number) {
+  if (typeof score !== "number" || Number.isNaN(score)) return null;
+  return Number.isInteger(score) ? score.toString() : score.toFixed(1);
+}
+
 export default function AddWhatsAppPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
@@ -330,8 +357,15 @@ export default function AddWhatsAppPage() {
   const [loadingList, setLoadingList] = useState(true);
   const [loadingLanding, setLoadingLanding] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterCategory, setFilterCategory] = useState<LandingCategory | "">("");
+  const [filterCity, setFilterCity] = useState("");
+  const [filterApproval, setFilterApproval] = useState<"member" | "admin" | "">("");
+  const [filterOrigin, setFilterOrigin] = useState<LandingOrigin | "">("");
+  const [filterLanguage, setFilterLanguage] = useState<LandingLanguage | "">("");
   const [joinDialogOpen, setJoinDialogOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [groupFormOpen, setGroupFormOpen] = useState(false);
+  const [oauthSubmitting, setOauthSubmitting] = useState(false);
   const [submittingGroup, setSubmittingGroup] = useState(false);
   const [submittingJoin, setSubmittingJoin] = useState(false);
   const [canEditSelectedLanding, setCanEditSelectedLanding] = useState(false);
@@ -344,6 +378,19 @@ export default function AddWhatsAppPage() {
   useEffect(() => {
     document.dispatchEvent(new Event("render-complete"));
   }, []);
+
+  useEffect(() => {
+    const shouldOpenGroupForm = searchParams.get("openGroupForm") === "1";
+    if (!user || !shouldOpenGroupForm) return;
+
+    setGroupFormOpen(true);
+    setOauthSubmitting(false);
+
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete("openGroupForm");
+    nextParams.delete("group");
+    setSearchParams(nextParams, { replace: true });
+  }, [searchParams, setSearchParams, user]);
 
   useEffect(() => {
     let cancelled = false;
@@ -422,22 +469,33 @@ export default function AddWhatsAppPage() {
     const mergedLandings = landings.length >= 6 ? landings : [...landings, ...placeholderLandings.slice(0, 6 - landings.length)];
 
     return mergedLandings.filter((landing) => {
-      if (!query) return true;
+      if (query) {
+        const haystack = [
+          landing.groupName,
+          landing.tagline,
+          landing.country,
+          landing.city,
+          landing.description,
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
 
-      const haystack = [
-        landing.groupName,
-        landing.tagline,
-        landing.country,
-        landing.city,
-        landing.description,
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
+        if (!haystack.includes(query)) return false;
+      }
 
-      return haystack.includes(query);
+      if (filterCategory && landing.category !== filterCategory) return false;
+      if (filterCity && landing.city !== filterCity) return false;
+      if (filterApproval === "admin" && !landing.adminApproved) return false;
+      if (filterApproval === "member" && !landing.memberApproved) return false;
+      if (filterOrigin && landing.origin !== filterOrigin) return false;
+      if (filterLanguage && landing.language !== filterLanguage) return false;
+
+      return true;
     });
-  }, [landings, searchQuery]);
+  }, [landings, searchQuery, filterCategory, filterCity, filterApproval, filterOrigin, filterLanguage]);
+
+  const uniqueCities = useMemo(() => [...new Set(landings.map((l) => l.city).filter(Boolean))].sort(), [landings]);
 
   const selectedConditionItems = useMemo(
     () =>
@@ -456,21 +514,53 @@ export default function AddWhatsAppPage() {
     setJoinForm((current) => ({ ...current, [field]: value }));
   };
 
-  const ensureSignedInForGroupSubmit = () => {
-    if (user) return true;
-
-    const nextPath = `${location.pathname}${location.search}`;
-    toast({
-      title: "Üyelik gerekli",
-      description: "Topluluk başvurusu göndermek için Google veya e-posta/şifre ile giriş yapmalısın.",
-    });
-    navigate(`/login?next=${encodeURIComponent(nextPath)}`);
-    return false;
-  };
-
   const resetGroupForm = () => {
     setGroupForm(initialGroupForm);
     setHeroImageFile(null);
+  };
+
+  const startGoogleAuthForGroupForm = async () => {
+    if (user) {
+      setGroupFormOpen(true);
+      return true;
+    }
+
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete("group");
+    nextParams.set("openGroupForm", "1");
+    const nextQuery = nextParams.toString();
+    const nextPath = nextQuery ? `${location.pathname}?${nextQuery}` : location.pathname;
+
+    setOauthSubmitting(true);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: new URL(nextPath, window.location.origin).toString(),
+      },
+    });
+
+    if (error) {
+      toast({
+        title: "Google girişi başlatılamadı",
+        description: error.message,
+        variant: "destructive",
+      });
+      setOauthSubmitting(false);
+      return false;
+    }
+
+    return false;
+  };
+
+  const ensureSignedInForGroupSubmit = async () => {
+    if (user) return true;
+
+    toast({
+      title: "Google girişi gerekli",
+      description: "Topluluk formunu göndermek için önce Google hesabınla giriş yapmalısın.",
+    });
+    return false;
   };
 
   const handleGroupSubmit = async () => {
@@ -492,7 +582,7 @@ export default function AddWhatsAppPage() {
       return;
     }
 
-    if (!ensureSignedInForGroupSubmit()) return;
+    if (!(await ensureSignedInForGroupSubmit())) return;
 
     setSubmittingGroup(true);
     try {
@@ -526,6 +616,9 @@ export default function AddWhatsAppPage() {
         adminName: groupForm.adminName,
         adminContact,
         description,
+        memberCount: groupForm.memberCount ? parseInt(groupForm.memberCount, 10) : undefined,
+        language: groupForm.language || undefined,
+        origin: groupForm.origin || undefined,
       });
 
       toast({
@@ -536,6 +629,7 @@ export default function AddWhatsAppPage() {
       });
 
       resetGroupForm();
+      setGroupFormOpen(false);
     } catch (error) {
       toast({
         title: "Gönderilemedi",
@@ -707,11 +801,12 @@ export default function AddWhatsAppPage() {
     }
 
     // Category badge (vibrant colors)
-    const Icon = categoryMeta[landing.category].icon;
+    const category = getCategoryMeta(landing.category);
+    const Icon = category.icon;
     badges.push(
-      <Badge key="category" className={`flex h-8 w-full cursor-default items-center justify-center border px-3 text-center text-xs font-semibold ${categoryMeta[landing.category].chipClass}`}>
+      <Badge key="category" className={`flex h-8 w-full cursor-default items-center justify-center border px-3 text-center text-xs font-semibold ${category.chipClass}`}>
         <Icon className="mr-1.5 h-3 w-3" />
-        {categoryMeta[landing.category].label}
+        {category.label}
       </Badge>
     );
 
@@ -738,7 +833,7 @@ export default function AddWhatsAppPage() {
     return <div className="flex flex-col gap-2">{badges}</div>;
   };
 
-  const renderPlatformLogo = (platform?: string, size: "md" | "lg" = "md") => {
+  const renderPlatformLogo = (platform?: string, size: "card" | "md" | "lg" = "md") => {
     if (!platform) return null;
 
     const platformLogoMap: Record<string, { svg: JSX.Element; className: string }> = {
@@ -836,8 +931,8 @@ export default function AddWhatsAppPage() {
     if (!logoMeta) return null;
 
     const isWhatsApp = platform === "WhatsApp";
-    const outerSize = size === "lg" ? "h-20 w-20" : "h-16 w-16";
-    const innerSize = size === "lg" ? "h-12 w-12" : "h-10 w-10";
+    const outerSize = size === "lg" ? "h-20 w-20" : size === "card" ? "h-12 w-12" : "h-16 w-16";
+    const innerSize = size === "lg" ? "h-12 w-12" : size === "card" ? "h-[1.875rem] w-[1.875rem]" : "h-10 w-10";
     const ringClass = isWhatsApp
       ? "ring-2 ring-emerald-200 shadow-[0_18px_40px_rgba(37,211,102,0.28)]"
       : "ring-2 ring-white shadow-lg";
@@ -945,12 +1040,12 @@ export default function AddWhatsAppPage() {
               )}
 
               {(() => {
-                const cat = categoryMeta[selectedLanding.category];
+                const cat = getCategoryMeta(selectedLanding.category);
                 const CatIcon = cat.icon;
                 const approvalStatus = getApprovalStatusMeta(selectedLanding);
-                const managerName = selectedLanding.adminName?.trim() || "-";
                 const detailMetaCardClass =
                   "flex min-h-[76px] items-center gap-3 rounded-2xl border px-4 py-3 text-left shadow-sm";
+                const formattedScore = formatGroupScore(selectedLanding.groupScore);
 
                 return (
                   <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -971,10 +1066,12 @@ export default function AddWhatsAppPage() {
                     </div>
 
                     <div className={`${detailMetaCardClass} border-violet-600 bg-violet-500 text-white`}>
-                      <Users className="h-4.5 w-4.5 shrink-0" />
+                      <Sparkles className="h-4.5 w-4.5 shrink-0" />
                       <div className="min-w-0">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">Yönetici</p>
-                        <p className="truncate text-sm font-semibold">{managerName}</p>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">CorteQS Grup Skoru</p>
+                        <p className="truncate text-sm font-semibold">
+                          {formattedScore ? `${formattedScore} / 10` : "Skor bekleniyor"}
+                        </p>
                       </div>
                     </div>
 
@@ -1134,235 +1231,313 @@ export default function AddWhatsAppPage() {
         </section>
 
         <div className="mt-8 rounded-[1.9rem] border border-emerald-200/70 bg-[linear-gradient(135deg,rgba(236,253,245,0.96)_0%,rgba(255,255,255,0.98)_42%,rgba(239,246,255,0.94)_100%)] p-3 shadow-[0_20px_60px_rgba(15,23,42,0.08)] ring-1 ring-white/80 backdrop-blur-sm">
-          <Accordion type="single" collapsible defaultValue={undefined} className="w-full">
-            <AccordionItem value="addwa-form" className="border-b-0">
-              <AccordionTrigger
-                className="min-h-[62px] rounded-[1.45rem] bg-white/55 px-3 py-0 text-slate-900 hover:no-underline"
-                chevronWrapperClassName="border border-emerald-200/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.95)_0%,rgba(220,252,231,0.92)_100%)] shadow-[0_12px_28px_rgba(16,185,129,0.15)] ring-1 ring-white/90"
-                chevronClassName="h-4.5 w-4.5 text-emerald-700"
+          <div className="rounded-[1.45rem] bg-white/55 p-4 md:p-5">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-start gap-3 text-left">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#ecfdf5_0%,#d1fae5_100%)] shadow-[0_10px_24px_rgba(16,185,129,0.16)] ring-1 ring-emerald-200/80">
+                  <Sparkles className="h-4.5 w-4.5 text-emerald-700" />
+                </span>
+                <div className="space-y-1">
+                  <h2 className="text-base font-bold tracking-[0.01em] text-slate-900 md:text-lg">Topluluk eklemek istiyorum</h2>
+                  <p className="text-sm text-slate-600">
+                    Mevcut toplulukları herkes görebilir. Yeni topluluk eklemek için Google hesabınla giriş yap.
+                  </p>
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                className="w-full bg-emerald-600 text-white hover:bg-emerald-700 md:w-auto"
+                onClick={() => void startGoogleAuthForGroupForm()}
+                disabled={oauthSubmitting || submittingGroup}
               >
-                <div className="flex min-h-[56px] items-center gap-3 text-left">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#ecfdf5_0%,#d1fae5_100%)] shadow-[0_10px_24px_rgba(16,185,129,0.16)] ring-1 ring-emerald-200/80">
-                    <Sparkles className="h-4 w-4 text-emerald-700" />
-                  </span>
-                  <div className="flex items-center">
-                    <h2 className="text-base font-bold tracking-[0.01em] text-slate-900 md:text-lg">Topluluk Ekle</h2>
+                {oauthSubmitting
+                  ? "Google'a yönlendiriliyor..."
+                  : user
+                    ? "Topluluk formunu aç"
+                    : "Google ile topluluk ekle"}
+              </Button>
+            </div>
+          </div>
+          <Accordion
+            type="single"
+            collapsible
+            value={groupFormOpen ? "group-form" : ""}
+            onValueChange={(value) => setGroupFormOpen(value === "group-form")}
+            className="mt-3"
+          >
+            <AccordionItem
+              value="group-form"
+              className="overflow-hidden rounded-[1.45rem] border border-emerald-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(236,253,245,0.92)_100%)]"
+            >
+              <AccordionTrigger className="px-5 py-4 text-left text-base font-bold text-slate-900 hover:no-underline">
+                {groupFormOpen ? "Topluluk formunu kapat" : "Topluluk formunu aç"}
+              </AccordionTrigger>
+              <AccordionContent className="border-t border-emerald-100 px-5 pb-5 pt-4">
+                <div className="mb-5">
+                  <h3 className="text-left text-xl font-bold text-slate-900">Topluluk Ekle</h3>
+                  <p className="mt-1 text-left text-sm text-slate-600">
+                    Formu doldurup topluluğunu hemen incelemeye gönderebilirsin.
+                  </p>
+                </div>
+
+                <div className="space-y-5">
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">1. Grup Bilgileri</h3>
+                  <div>
+                    <Label>Başvuru Tipi</Label>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      <Button
+                        type="button"
+                        variant={groupForm.submitterRole === "member" ? "default" : "outline"}
+                        onClick={() => updateGroupForm("submitterRole", "member")}
+                        className={groupForm.submitterRole === "member" ? "border-orange-500 bg-orange-500 text-white hover:bg-orange-600" : ""}
+                      >
+                        Topluluk Üyesiyim
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={groupForm.submitterRole === "manager" ? "default" : "outline"}
+                        onClick={() => updateGroupForm("submitterRole", "manager")}
+                        className={groupForm.submitterRole === "manager" ? "border-orange-500 bg-orange-500 text-white hover:bg-orange-600" : ""}
+                      >
+                        Topluluk Yöneticisiyim
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="platform">Platform *</Label>
+                    <Select value={groupForm.platform} onValueChange={(value) => updateGroupForm("platform", value)}>
+                      <SelectTrigger id="platform" className={`mt-1 ${formFieldInsetClass}`}>
+                        <SelectValue placeholder="Platform seç" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {platformOptions.map((platform) => (
+                          <SelectItem key={platform} value={platform}>
+                            {platform}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="category">Kategori</Label>
+                    <Select value={groupForm.category} onValueChange={(value) => updateGroupForm("category", value as LandingCategory)}>
+                      <SelectTrigger id="category" className={`mt-1 ${formFieldInsetClass}`}>
+                        <SelectValue placeholder="İsteğe bağlı kategori seç" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categoryOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="group-name">Grup Adı *</Label>
+                    <Input
+                      id="group-name"
+                      className={formFieldInsetClass}
+                      lang="tr"
+                      spellCheck
+                      value={groupForm.groupName}
+                      onChange={(event) => updateGroupForm("groupName", event.target.value)}
+                      placeholder="Örn: Berlin Türk Girişimciler"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="whatsapp-link">Topluluk Linki *</Label>
+                    <Input
+                      id="whatsapp-link"
+                      className={formFieldInsetClass}
+                      value={groupForm.whatsappLink}
+                      onChange={(event) => updateGroupForm("whatsappLink", event.target.value)}
+                      placeholder="https://..."
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="country">Ülke *</Label>
+                    <Input
+                      id="country"
+                      className={formFieldInsetClass}
+                      lang="tr"
+                      spellCheck
+                      value={groupForm.country}
+                      onChange={(event) => updateGroupForm("country", event.target.value)}
+                      placeholder="Global veya ülke adı giriniz"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="description">Kısa Açıklama</Label>
+                    <Textarea
+                      id="description"
+                      className={formFieldInsetClass}
+                      lang="tr"
+                      spellCheck
+                      rows={3}
+                      value={groupForm.description}
+                      onChange={(event) => updateGroupForm("description", event.target.value)}
+                      placeholder="Grup hakkında 1-2 cümle"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="member-count">Topluluk Üye Sayısı</Label>
+                    <Input
+                      id="member-count"
+                      type="number"
+                      className={formFieldInsetClass}
+                      value={groupForm.memberCount}
+                      onChange={(event) => updateGroupForm("memberCount", event.target.value)}
+                      placeholder="Örn: 250"
+                      min={0}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="language">Topluluk Dili</Label>
+                    <Select value={groupForm.language} onValueChange={(value) => updateGroupForm("language", value as LandingLanguage)}>
+                      <SelectTrigger id="language" className={formFieldInsetClass}>
+                        <SelectValue placeholder="Dil seçin" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {languageOptions.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="origin">Köken / Bölge</Label>
+                    <Select value={groupForm.origin} onValueChange={(value) => updateGroupForm("origin", value as LandingOrigin)}>
+                      <SelectTrigger id="origin" className={formFieldInsetClass}>
+                        <SelectValue placeholder="Bölge seçin" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {originOptions.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
-              </AccordionTrigger>
-              <AccordionContent className="pt-4">
-                <div className="space-y-5">
+
+                {groupForm.submitterRole === "manager" ? (
                   <div className="space-y-3">
-                    <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">1. Grup Bilgileri</h3>
-                    <div>
-                      <Label>Başvuru Tipi</Label>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        <Button
-                          type="button"
-                          variant={groupForm.submitterRole === "member" ? "default" : "outline"}
-                          onClick={() => updateGroupForm("submitterRole", "member")}
-                          className={groupForm.submitterRole === "member" ? "border-orange-500 bg-orange-500 text-white hover:bg-orange-600" : ""}
-                        >
-                          Topluluk Üyesiyim
-                        </Button>
-                        <Button
-                          type="button"
-                          variant={groupForm.submitterRole === "manager" ? "default" : "outline"}
-                          onClick={() => updateGroupForm("submitterRole", "manager")}
-                          className={groupForm.submitterRole === "manager" ? "border-orange-500 bg-orange-500 text-white hover:bg-orange-600" : ""}
-                        >
-                          Topluluk Yöneticisiyim
-                        </Button>
-                      </div>
-                    </div>
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                      2. Topluluk Kartı Özelliklerini Belirtin (Sadece Yöneticiler İçindir.)
+                    </h3>
 
                     <div>
-                      <Label htmlFor="platform">Platform *</Label>
-                      <Select value={groupForm.platform} onValueChange={(value) => updateGroupForm("platform", value)}>
-                        <SelectTrigger id="platform" className={`mt-1 ${formFieldInsetClass}`}>
-                          <SelectValue placeholder="Platform seç" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {platformOptions.map((platform) => (
-                            <SelectItem key={platform} value={platform}>
-                              {platform}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="category">Kategori</Label>
-                      <Select value={groupForm.category} onValueChange={(value) => updateGroupForm("category", value as LandingCategory)}>
-                        <SelectTrigger id="category" className={`mt-1 ${formFieldInsetClass}`}>
-                          <SelectValue placeholder="İsteğe bağlı kategori seç" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categoryOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="group-name">Grup Adı *</Label>
-                      <Input
-                        id="group-name"
-                        className={formFieldInsetClass}
-                        lang="tr"
-                        spellCheck
-                        value={groupForm.groupName}
-                        onChange={(event) => updateGroupForm("groupName", event.target.value)}
-                        placeholder="Örn: Berlin Türk Girişimciler"
+                      <Label htmlFor="hero-image-file">Topluluk Kartı İçin Görsel Yükle</Label>
+                      <input
+                        ref={heroImageInputRef}
+                        id="hero-image-file"
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        className="hidden"
+                        onChange={(event) => setHeroImageFile(event.target.files?.[0] ?? null)}
                       />
+                      <button
+                        type="button"
+                        onClick={() => heroImageInputRef.current?.click()}
+                        className="ml-3 inline-flex h-11 items-center gap-2 rounded-xl border border-orange-200 bg-orange-500 px-4 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(249,115,22,0.22)] transition hover:-translate-y-0.5 hover:bg-orange-600 hover:shadow-[0_16px_36px_rgba(249,115,22,0.28)]"
+                      >
+                        Dosya Seç
+                      </button>
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        {heroImageFile
+                          ? `Seçilen dosya: ${heroImageFile.name}`
+                          : "Dosya tipi: JPG, PNG, WEBP, GIF. Önerilen oran: 16:9 yatay. Maksimum dosya boyutu: 5 MB."}
+                      </p>
                     </div>
 
                     <div>
-                      <Label htmlFor="whatsapp-link">Topluluk Linki *</Label>
-                      <Input
-                        id="whatsapp-link"
-                        className={formFieldInsetClass}
-                        value={groupForm.whatsappLink}
-                        onChange={(event) => updateGroupForm("whatsappLink", event.target.value)}
-                        placeholder="https://..."
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="country">Ülke *</Label>
-                      <Input
-                        id="country"
-                        className={formFieldInsetClass}
-                        lang="tr"
-                        spellCheck
-                        value={groupForm.country}
-                        onChange={(event) => updateGroupForm("country", event.target.value)}
-                        placeholder="Global veya ülke adı giriniz"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="description">Kısa Açıklama</Label>
+                      <Label htmlFor="cta-text">Yeni üyeler için mesaj</Label>
                       <Textarea
-                        id="description"
+                        id="cta-text"
                         className={formFieldInsetClass}
                         lang="tr"
                         spellCheck
-                        rows={3}
-                        value={groupForm.description}
-                        onChange={(event) => updateGroupForm("description", event.target.value)}
-                        placeholder="Grup hakkında 1-2 cümle"
+                        rows={4}
+                        value={groupForm.callToActionText}
+                        onChange={(event) => updateGroupForm("callToActionText", event.target.value)}
+                        placeholder="Yeni üyelere çağrı amacıyla metin yaz."
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="conditions">Topluluk Kuralları</Label>
+                      <Textarea
+                        id="conditions"
+                        className={formFieldInsetClass}
+                        lang="tr"
+                        spellCheck
+                        rows={4}
+                        value={groupForm.conditions}
+                        onChange={(event) => updateGroupForm("conditions", event.target.value)}
+                        placeholder={"Her satıra bir kural yazın\nÖrn: Grup içi reklam yasak"}
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="admin-name">Topluluk Yöneticisi Adı Soyad *</Label>
+                      <Input
+                        id="admin-name"
+                        className={formFieldInsetClass}
+                        lang="tr"
+                        spellCheck
+                        value={groupForm.adminName}
+                        onChange={(event) => updateGroupForm("adminName", event.target.value)}
+                        placeholder="Ad Soyad"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="admin-email">Topluluk Yöneticisi Mail Adresi *</Label>
+                      <Input
+                        id="admin-email"
+                        type="email"
+                        className={formFieldInsetClass}
+                        value={groupForm.adminEmail}
+                        onChange={(event) => updateGroupForm("adminEmail", event.target.value)}
+                        placeholder="ornek@email.com"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="admin-phone">Topluluk Yöneticisi Telefon *</Label>
+                      <Input
+                        id="admin-phone"
+                        className={formFieldInsetClass}
+                        value={groupForm.adminPhone}
+                        onChange={(event) => updateGroupForm("adminPhone", event.target.value)}
+                        placeholder="+49 ..."
                       />
                     </div>
                   </div>
+                ) : null}
 
-                  {groupForm.submitterRole === "manager" ? (
-                    <div className="space-y-3">
-                      <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                        2. Topluluk Kartı Özelliklerini Belirtin (Sadece Yöneticiler İçindir.)
-                      </h3>
-
-                      <div>
-                        <Label htmlFor="hero-image-file">Topluluk Kartı İçin Görsel Yükle</Label>
-                        <input
-                          ref={heroImageInputRef}
-                          id="hero-image-file"
-                          type="file"
-                          accept="image/jpeg,image/png,image/webp,image/gif"
-                          className="hidden"
-                          onChange={(event) => setHeroImageFile(event.target.files?.[0] ?? null)}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => heroImageInputRef.current?.click()}
-                          className="ml-3 inline-flex h-11 items-center gap-2 rounded-xl border border-orange-200 bg-orange-500 px-4 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(249,115,22,0.22)] transition hover:-translate-y-0.5 hover:bg-orange-600 hover:shadow-[0_16px_36px_rgba(249,115,22,0.28)]"
-                        >
-                          Dosya Seç
-                        </button>
-                          <p className="mt-2 text-xs text-muted-foreground">
-                            {heroImageFile
-                              ? `Seçilen dosya: ${heroImageFile.name}`
-                              : "Dosya tipi: JPG, PNG, WEBP, GIF. Önerilen oran: 16:9 yatay. Maksimum dosya boyutu: 5 MB."}
-                          </p>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="cta-text">Yeni üyeler için mesaj</Label>
-                        <Textarea
-                          id="cta-text"
-                          className={formFieldInsetClass}
-                          lang="tr"
-                          spellCheck
-                          rows={4}
-                          value={groupForm.callToActionText}
-                          onChange={(event) => updateGroupForm("callToActionText", event.target.value)}
-                          placeholder="Yeni üyelere çağrı amacıyla metin yaz."
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="conditions">Topluluk Kuralları</Label>
-                        <Textarea
-                          id="conditions"
-                          className={formFieldInsetClass}
-                          lang="tr"
-                          spellCheck
-                          rows={4}
-                          value={groupForm.conditions}
-                          onChange={(event) => updateGroupForm("conditions", event.target.value)}
-                          placeholder={"Her satıra bir kural yazın\nÖrn: Grup içi reklam yasak"}
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="admin-name">Topluluk Yöneticisi Adı Soyad *</Label>
-                        <Input
-                          id="admin-name"
-                          className={formFieldInsetClass}
-                          lang="tr"
-                          spellCheck
-                          value={groupForm.adminName}
-                          onChange={(event) => updateGroupForm("adminName", event.target.value)}
-                          placeholder="Ad Soyad"
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="admin-email">Topluluk Yöneticisi Mail Adresi *</Label>
-                        <Input
-                          id="admin-email"
-                          type="email"
-                          className={formFieldInsetClass}
-                          value={groupForm.adminEmail}
-                          onChange={(event) => updateGroupForm("adminEmail", event.target.value)}
-                          placeholder="ornek@email.com"
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="admin-phone">Topluluk Yöneticisi Telefon *</Label>
-                        <Input
-                          id="admin-phone"
-                          className={formFieldInsetClass}
-                          value={groupForm.adminPhone}
-                          onChange={(event) => updateGroupForm("adminPhone", event.target.value)}
-                          placeholder="+49 ..."
-                        />
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <Button
-                    className="w-full bg-emerald-600 text-white hover:bg-emerald-700"
-                    onClick={() => void handleGroupSubmit()}
-                    disabled={submittingGroup}
-                  >
-                    {submittingGroup ? "Gönderiliyor..." : "Başvuruyu Gönder"}
-                  </Button>
+                <Button
+                  className="w-full bg-emerald-600 text-white hover:bg-emerald-700"
+                  onClick={() => void handleGroupSubmit()}
+                  disabled={submittingGroup}
+                >
+                  {submittingGroup ? "Gönderiliyor..." : "Başvuruyu Gönder"}
+                </Button>
                 </div>
               </AccordionContent>
             </AccordionItem>
@@ -1378,6 +1553,67 @@ export default function AddWhatsAppPage() {
               className="pl-9"
               placeholder="Topluluk ara!"
             />
+          </div>
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Select value={filterCategory || "__all__"} onValueChange={(v) => setFilterCategory(v === "__all__" ? "" : (v as LandingCategory))}>
+              <SelectTrigger className="w-[210px]" aria-label="Kategori filtresi">
+                <SelectValue placeholder="Kategori" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">Tüm Kategoriler</SelectItem>
+                {categoryOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={filterCity || "__all__"} onValueChange={(v) => setFilterCity(v === "__all__" ? "" : v)}>
+              <SelectTrigger className="w-[140px]" aria-label="Şehir filtresi">
+                <SelectValue placeholder="Şehir" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">Tüm Şehirler</SelectItem>
+                {uniqueCities.map((city) => (
+                  <SelectItem key={city} value={city}>{city}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={filterApproval || "__all__"} onValueChange={(v) => setFilterApproval(v === "__all__" ? "" : (v as "member" | "admin"))}>
+              <SelectTrigger className="w-[180px]" aria-label="Onay tipi filtresi">
+                <SelectValue placeholder="Onay Tipi" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">Tüm Onaylar</SelectItem>
+                <SelectItem value="admin">Admin onaylı</SelectItem>
+                <SelectItem value="member">Kullanıcı onaylı</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={filterOrigin || "__all__"} onValueChange={(v) => setFilterOrigin(v === "__all__" ? "" : (v as LandingOrigin))}>
+              <SelectTrigger className="w-[130px]" aria-label="Bölge filtresi">
+                <SelectValue placeholder="Bölge" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">Tüm Bölgeler</SelectItem>
+                {originOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={filterLanguage || "__all__"} onValueChange={(v) => setFilterLanguage(v === "__all__" ? "" : (v as LandingLanguage))}>
+              <SelectTrigger className="w-[130px]" aria-label="Dil filtresi">
+                <SelectValue placeholder="Dil" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">Tüm Diller</SelectItem>
+                {languageOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="mt-5">
@@ -1401,7 +1637,8 @@ export default function AddWhatsAppPage() {
             ) : (
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {filteredLandings.map((landing) => {
-                  const Icon = categoryMeta[landing.category].icon;
+                  const category = getCategoryMeta(landing.category);
+                  const Icon = category.icon;
                   const cardSummary =
                     stripCommunityPrefix(landing.callToActionText) ||
                     stripCommunityPrefix(
@@ -1439,9 +1676,9 @@ export default function AddWhatsAppPage() {
                       <div className="flex flex-1 flex-col p-5">
                         <div className="flex flex-col gap-2">
                           {renderApprovalBadges(landing)}
-                          <Badge className={`flex h-8 w-full items-center justify-center border px-3 text-xs font-semibold ${categoryMeta[landing.category].chipClass}`}>
+                          <Badge className={`flex h-8 w-full items-center justify-center border px-3 text-xs font-semibold ${category.chipClass}`}>
                             <Icon className="mr-1.5 h-3 w-3" />
-                            {categoryMeta[landing.category].label}
+                            {category.label}
                           </Badge>
                         </div>
                         <h3 className="mt-4 text-xl font-bold text-foreground group-hover:text-emerald-700">
@@ -1449,12 +1686,53 @@ export default function AddWhatsAppPage() {
                         </h3>
                         <p className="mt-2 flex-1 line-clamp-2 text-sm text-muted-foreground">{cardSummary}</p>
                         <hr className="mt-4 border-t border-border/40" />
-                        <div className="flex items-center justify-between pt-3 text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-2 pt-3 text-muted-foreground">
                           <span className="flex items-center gap-1.5 text-sm">
                             <MapPin className="h-3.5 w-3.5" />
                             {landing.city}, {landing.country}
                           </span>
-                          {renderPlatformLogo(landing.platform)}
+                          {landing.memberCount ? (
+                            <span className="flex items-center gap-1 text-sm">
+                              <Users className="h-3.5 w-3.5" />
+                              {landing.memberCount.toLocaleString("tr-TR")}
+                            </span>
+                          ) : null}
+                          {landing.language ? (
+                            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                              {languageOptions.find((o) => o.value === landing.language)?.label ?? landing.language}
+                            </span>
+                          ) : null}
+                          {landing.origin ? (
+                            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                              {originOptions.find((o) => o.value === landing.origin)?.label ?? landing.origin}
+                            </span>
+                          ) : null}
+                        </div>
+                        <div className="mt-4 flex items-end justify-between gap-3">
+                          <div className="min-h-[3rem]">
+                            {typeof landing.groupScore === "number" ? (
+                              <div className="inline-flex min-w-[7.5rem] flex-col rounded-2xl border border-violet-200 bg-violet-50 px-3 py-2 text-left shadow-sm">
+                                <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-violet-500">
+                                  CorteQS Skoru
+                                </span>
+                                <span className="text-base font-black text-violet-700">
+                                  {formatGroupScore(landing.groupScore)} / 10
+                                </span>
+                              </div>
+                            ) : (
+                              <div className="inline-flex min-w-[7.5rem] flex-col rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-left shadow-sm">
+                                <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
+                                  CorteQS Skoru
+                                </span>
+                                <span className="text-sm font-semibold text-slate-700">
+                                  Skor bekleniyor
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="shrink-0 self-end">
+                            {renderPlatformLogo(landing.platform, "card")}
+                          </div>
                         </div>
                       </div>
                     </Link>

@@ -17,6 +17,7 @@ vi.mock("@/integrations/supabase/client", () => ({
 import {
   buildLandingDescription,
   normalizeCommunityText,
+  normalizeLandingCategory,
   parseAdminContact,
   rowToLanding,
   slugify,
@@ -37,6 +38,11 @@ describe("whatsapp landing helpers", () => {
     expect(normalizeCommunityText("Berlin Girisim Agi")).toBe("Berlin Girişim Ağı");
     expect(normalizeCommunityText("Dubai Yatirim Cevresi")).toBe("Dubai Yatırım Çevresi");
     expect(normalizeCommunityText("Turk Girisimciler")).toBe("Türk Girişimciler");
+  });
+
+  it("normalizes legacy and unknown landing categories", () => {
+    expect(normalizeLandingCategory("girisim")).toBe("yatirim");
+    expect(normalizeLandingCategory("bilinmeyen")).toBe("diger");
   });
 
   it("strips metadata tags from landing descriptions", () => {
@@ -95,6 +101,7 @@ describe("whatsapp landing helpers", () => {
 
     expect(landing.memberApproved).toBe(true);
     expect(landing.adminApproved).toBe(false);
+    expect(landing.category).toBe("yatirim");
   });
 
   it("defaults approved landings to admin approved only when badge tags are absent", () => {

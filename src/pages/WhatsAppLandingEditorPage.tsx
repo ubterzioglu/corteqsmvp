@@ -14,6 +14,8 @@ import {
   getEditableLandingForCurrentUser,
   parseAdminContact,
   type LandingCategory,
+  type LandingLanguage,
+  type LandingOrigin,
   type WhatsAppLanding,
   updateCurrentUserEditableLanding,
 } from "@/lib/whatsapp-landings";
@@ -23,11 +25,27 @@ const categoryOptions: Array<{ value: LandingCategory; label: string }> = [
   { value: "hobi", label: "Hobi" },
   { value: "is", label: "İş Grubu" },
   { value: "doktor", label: "Doktor / Sağlık" },
-  { value: "yatirim", label: "Yatırım" },
-  { value: "girisim", label: "Girişim" },
+  { value: "yatirim", label: "Yatırım & Girişim" },
   { value: "akademik", label: "Akademik" },
   { value: "dayanisma", label: "Dayanışma" },
+  { value: "hr", label: "HR" },
+  { value: "kisisel-gelisim", label: "Kişisel Gelişim" },
   { value: "diger", label: "Diğer" },
+];
+
+const languageOptions: Array<{ value: LandingLanguage; label: string }> = [
+  { value: "tr", label: "Türkçe" },
+  { value: "en", label: "İngilizce" },
+  { value: "de", label: "Almanca" },
+  { value: "ar", label: "Arapça" },
+];
+
+const originOptions: Array<{ value: LandingOrigin; label: string }> = [
+  { value: "global", label: "Global" },
+  { value: "mena", label: "MENA" },
+  { value: "berlin", label: "Berlin" },
+  { value: "turkiye", label: "Türkiye" },
+  { value: "avrupa", label: "Avrupa" },
 ];
 
 const platformOptions = [
@@ -61,6 +79,9 @@ type EditableLandingState = {
   description: string;
   memberApproved: boolean;
   adminApproved: boolean;
+  memberCount: string;
+  language: LandingLanguage | "";
+  origin: LandingOrigin | "";
 };
 
 function toEditableLandingState(landing: WhatsAppLanding): EditableLandingState {
@@ -84,6 +105,9 @@ function toEditableLandingState(landing: WhatsAppLanding): EditableLandingState 
     description: landing.description ?? "",
     memberApproved: landing.memberApproved ?? true,
     adminApproved: landing.adminApproved ?? false,
+    memberCount: landing.memberCount?.toString() ?? "",
+    language: landing.language ?? "",
+    origin: landing.origin ?? "",
   };
 }
 
@@ -154,6 +178,9 @@ export default function WhatsAppLandingEditorPage() {
         adminName: state.adminName,
         adminContact,
         description: nextDescription,
+        memberCount: state.memberCount ? parseInt(state.memberCount, 10) : undefined,
+        language: state.language || undefined,
+        origin: state.origin || undefined,
       });
 
       setState(toEditableLandingState(updated));
@@ -293,6 +320,42 @@ export default function WhatsAppLandingEditorPage() {
               <div className="space-y-1.5">
                 <Label htmlFor="landing-admin-phone">Yönetici Telefon</Label>
                 <Input id="landing-admin-phone" value={state.adminPhone} onChange={(event) => updateField("adminPhone", event.target.value)} />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="landing-member-count">Üye Sayısı</Label>
+              <Input id="landing-member-count" type="number" value={state.memberCount} onChange={(event) => updateField("memberCount", event.target.value)} placeholder="Örn: 250" min={0} />
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label>Topluluk Dili</Label>
+                <Select value={state.language || "__none__"} onValueChange={(value) => updateField("language", (value === "__none__" ? "" : value) as LandingLanguage | "")}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Dil seçin" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none__">Seçilmedi</SelectItem>
+                    {languageOptions.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Köken / Bölge</Label>
+                <Select value={state.origin || "__none__"} onValueChange={(value) => updateField("origin", (value === "__none__" ? "" : value) as LandingOrigin | "")}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Bölge seçin" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none__">Seçilmedi</SelectItem>
+                    {originOptions.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
