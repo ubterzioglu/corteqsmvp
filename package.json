@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predev": "npm run verify:text",
     "dev": "vite",
     "prebuild": "npm run verify:text",
     "build": "vite build",
@@ -14,6 +15,7 @@
     "import:command-center:may13": "node scripts/import-command-center-may13.mjs",
     "import:command-center:may13:write": "node scripts/import-command-center-may13.mjs --write",
     "import:resources:replace": "node scripts/replace-resource-entries-from-csv.mjs",
+    "prelint": "npm run verify:text",
     "lint": "eslint .",
     "preview": "vite preview",
     "pretest": "npm run verify:text",

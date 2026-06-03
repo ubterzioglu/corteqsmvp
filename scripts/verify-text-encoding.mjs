@@ -17,6 +17,13 @@ const suspiciousTokens = [
   "\u00F0\u0178",
   "\uFFFD",
 ];
+const suspiciousPatterns = [
+  /\u00C3[\u0080-\u00BF]/u,
+  /\u00C4[\u0080-\u00BF]/u,
+  /\u00C5[\u0080-\u00BF]/u,
+  /\u00E2\u20AC[\u0000-\u00FF]?/u,
+  /\u00E2\u20AC\u2122|\u00E2\u20AC\u0153|\u00E2\u20AC\u009D|\u00E2\u20AC\u201C|\u00E2\u20AC\u201D|\u00E2\u20AC\u00A2/u,
+];
 
 async function walk(targetPath, files) {
   const entry = await stat(targetPath);
@@ -38,7 +45,7 @@ function findSuspiciousLines(content) {
   return content
     .split(/\r?\n/)
     .map((line, index) => ({ line, lineNumber: index + 1 }))
-    .filter(({ line }) => suspiciousTokens.some((token) => line.includes(token)))
+    .filter(({ line }) => suspiciousTokens.some((token) => line.includes(token)) || suspiciousPatterns.some((pattern) => pattern.test(line)))
     .map(({ line, lineNumber }) => ({ lineNumber, snippet: line.trim().slice(0, 180) }));
 }
 

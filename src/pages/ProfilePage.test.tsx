@@ -276,8 +276,13 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Alt Kategori / Alt Tip")).toBeInTheDocument();
     expect(screen.getByText("Feature Talepleri")).toBeInTheDocument();
     expect(screen.getByText("Açık Dashboard Erişimleri")).toBeInTheDocument();
+    expect(screen.getByText("Profil Özeti & Tamamlanma")).toBeInTheDocument();
+    expect(screen.getByText("Genel Durum")).toBeInTheDocument();
+    expect(screen.getByText("Tamamlanma Durumu")).toBeInTheDocument();
     expect(screen.getByText("Yardım & Kılavuzlar")).toBeInTheDocument();
     expect(screen.getAllByText("Diaspora için iş birliği ve mentorluk fırsatlarına açığım.").length).toBeGreaterThan(0);
+    expect(screen.getByText("Profil özeti: Diaspora için iş birliği ve mentorluk fırsatlarına açığım.")).toBeInTheDocument();
+    expect(screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için")).not.toBeInTheDocument();
     expect(screen.getAllByText("mentorluk, topluluk, networking").length).toBeGreaterThan(0);
 
     const visibilityButtons = screen.getAllByRole("button", { name: /Görünürlük/i });
@@ -287,5 +292,39 @@ describe("ProfilePage", () => {
     expect(screen.getAllByText("Görünür").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Gizli").length).toBeGreaterThan(0);
     expect(screen.queryByText("Sadece Admin")).not.toBeInTheDocument();
+  });
+
+  it("does not render the bireysel fallback description when short bio is empty", async () => {
+    useAuthMock.mockReturnValue({
+      user: { id: "u-1", email: "firmascope@gmail.com", user_metadata: {} },
+    });
+    useCurrentUserDashboardMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      items: [],
+      refreshDashboard: vi.fn(),
+    });
+    useCurrentUserProfileMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      profile: {
+        ...baseProfile,
+        attributes: baseProfile.attributes.filter((attribute) => attribute.attributeKey !== "bio_short"),
+      },
+      refreshProfile: vi.fn(),
+    });
+
+    render(
+      <MemoryRouter initialEntries={["/profile/bireysel"]}>
+        <Routes>
+          <Route path="/profile/:type" element={<ProfilePage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByText("Bireysel Panelim")).toBeInTheDocument();
+    expect(screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Profil özeti:/i)).not.toBeInTheDocument();
+    expect(screen.queryByText("Profil kartını, görünürlüğünü ve taleplerini tek yerden yönet.")).not.toBeInTheDocument();
   });
 });

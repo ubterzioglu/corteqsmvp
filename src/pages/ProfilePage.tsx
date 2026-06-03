@@ -111,7 +111,7 @@ const SOCIAL_ATTRIBUTE_CONFIGS: SocialAttributeConfig[] = [
   {
     key: "instagram_url",
     label: "Instagram",
-    placeholder: "@kullaniciadi veya tam URL",
+    placeholder: "@kullanıcıadı veya tam URL",
     icon: Instagram,
     iconClassName: "text-pink-500",
   },
@@ -139,21 +139,21 @@ const SOCIAL_ATTRIBUTE_CONFIGS: SocialAttributeConfig[] = [
   {
     key: "tiktok_url",
     label: "TikTok",
-    placeholder: "@kullaniciadi",
+    placeholder: "@kullanıcıadı",
     icon: Music2,
     iconClassName: "text-foreground",
   },
   {
     key: "x_url",
     label: "X (Twitter)",
-    placeholder: "@kullaniciadi",
+    placeholder: "@kullanıcıadı",
     icon: Twitter,
     iconClassName: "text-foreground",
   },
   {
     key: "reddit_url",
     label: "Reddit",
-    placeholder: "u/kullaniciadi veya URL",
+    placeholder: "u/kullanıcıadı veya URL",
     icon: MessageCircle,
     iconClassName: "text-orange-500",
   },
@@ -345,6 +345,11 @@ const ProfilePage = () => {
   const currentAvatarUrl = readAttributeValue(PROFILE_PHOTO_ATTRIBUTE_KEY);
   const roleSpotlight = readAttributeValue(roleMeta?.defaultAttributeKey ?? "interests");
   const locationLabel = [city, country].filter(Boolean).join(", ");
+  const heroDescription = shortBio
+    ? `Profil özeti: ${shortBio}`
+    : isIndividualProfile
+      ? ""
+      : roleMeta?.description || "Profil kartını, görünürlüğünü ve taleplerini tek yerden yönet.";
   const initials = displayName
     .split(/\s+/)
     .map((part) => part[0])
@@ -798,11 +803,11 @@ const ProfilePage = () => {
                   </div>
                   <div>
                     <CardTitle className="text-3xl tracking-tight text-slate-950 md:text-4xl">{displayName}</CardTitle>
-                    <CardDescription className="mt-1 max-w-2xl text-sm text-slate-600">
-                      {shortBio
-                        ? `Profil özeti: ${shortBio}`
-                        : roleMeta?.description || "Profil kartını, görünürlüğünü ve taleplerini tek yerden yönet."}
-                    </CardDescription>
+                    {heroDescription ? (
+                      <CardDescription className="mt-1 max-w-2xl text-sm text-slate-600">
+                        {heroDescription}
+                      </CardDescription>
+                    ) : null}
                   </div>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-600">
                     <span className="inline-flex items-center gap-1.5">
@@ -837,28 +842,6 @@ const ProfilePage = () => {
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="grid gap-3 pb-6 md:grid-cols-4">
-              <div className="rounded-[22px] border border-white/80 bg-white/90 p-3 shadow-sm backdrop-blur">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Profil Skoru</p>
-                <p className="mt-1 text-2xl font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
-                <p className="mt-1 text-xs text-slate-600">Zorunlu alan tamamlanma oranı</p>
-              </div>
-              <div className="rounded-[22px] border border-white/80 bg-white/90 p-3 shadow-sm backdrop-blur">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Açık Modül</p>
-                <p className="mt-1 text-2xl font-bold text-slate-950">{dashboardCount}</p>
-                <p className="mt-1 text-xs text-slate-600">Şu an etkin dashboard erişimi</p>
-              </div>
-              <div className="rounded-[22px] border border-white/80 bg-white/90 p-3 shadow-sm backdrop-blur">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Public Alan</p>
-                <p className="mt-1 text-2xl font-bold text-slate-950">{publicAttributesCount}</p>
-                <p className="mt-1 text-xs text-slate-600">Dışarıya açık profil alanı</p>
-              </div>
-              <div className="rounded-[22px] border border-white/80 bg-white/90 p-3 shadow-sm backdrop-blur">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Bekleyen Talep</p>
-                <p className="mt-1 text-2xl font-bold text-slate-950">{pendingCount}</p>
-                <p className="mt-1 text-xs text-slate-600">Admin değerlendirme kuyruğu</p>
-              </div>
-            </CardContent>
           </div>
         ) : null}
         {!isIndividualProfile ? (
@@ -898,23 +881,71 @@ const ProfilePage = () => {
       </Card>
 
       {isIndividualProfile ? (
-        <div className="grid gap-3 md:grid-cols-5">
-          {completionHighlights.map((item) => (
-            <div key={item.key} className={`rounded-2xl border p-3 ${item.complete ? "border-emerald-200 bg-emerald-50/70" : "border-amber-200 bg-amber-50/70"}`}>
-              <div className="flex items-center gap-2">
-                {item.complete ? (
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                ) : (
-                  <Clock3 className="h-4 w-4 text-amber-700" />
-                )}
-                <p className="text-sm font-medium text-slate-900">{item.label}</p>
-              </div>
-              <p className="mt-1 text-xs text-slate-600">
-                {item.complete ? "Tamamlandı" : "Eksik veya doldurulmayı bekliyor"}
-              </p>
-            </div>
-          ))}
-        </div>
+        <Card className="border-slate-200/90 bg-white/90 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Profil Özeti & Tamamlanma</CardTitle>
+            <CardDescription className="text-xs">
+              Profil metriklerini ve eksik alanlarını tek kart içinde takip et.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Accordion type="multiple" defaultValue={["summary-metrics", "completion-status"]} className="space-y-2">
+              <AccordionItem value="summary-metrics" className="overflow-hidden rounded-xl border px-3">
+                <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
+                  Genel Durum
+                </AccordionTrigger>
+                <AccordionContent className="pb-3">
+                  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                    <div className="rounded-[22px] border bg-slate-50/80 p-3">
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Profil Skoru</p>
+                      <p className="mt-1 text-2xl font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
+                      <p className="mt-1 text-xs text-slate-600">Zorunlu alan tamamlanma oranı</p>
+                    </div>
+                    <div className="rounded-[22px] border bg-slate-50/80 p-3">
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Açık Modül</p>
+                      <p className="mt-1 text-2xl font-bold text-slate-950">{dashboardCount}</p>
+                      <p className="mt-1 text-xs text-slate-600">Şu an etkin dashboard erişimi</p>
+                    </div>
+                    <div className="rounded-[22px] border bg-slate-50/80 p-3">
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Public Alan</p>
+                      <p className="mt-1 text-2xl font-bold text-slate-950">{publicAttributesCount}</p>
+                      <p className="mt-1 text-xs text-slate-600">Dışarıya açık profil alanı</p>
+                    </div>
+                    <div className="rounded-[22px] border bg-slate-50/80 p-3">
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Bekleyen Talep</p>
+                      <p className="mt-1 text-2xl font-bold text-slate-950">{pendingCount}</p>
+                      <p className="mt-1 text-xs text-slate-600">Admin değerlendirme kuyruğu</p>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="completion-status" className="overflow-hidden rounded-xl border px-3">
+                <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
+                  Tamamlanma Durumu
+                </AccordionTrigger>
+                <AccordionContent className="pb-3">
+                  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+                    {completionHighlights.map((item) => (
+                      <div key={item.key} className={`rounded-2xl border p-3 ${item.complete ? "border-emerald-200 bg-emerald-50/70" : "border-amber-200 bg-amber-50/70"}`}>
+                        <div className="flex items-center gap-2">
+                          {item.complete ? (
+                            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                          ) : (
+                            <Clock3 className="h-4 w-4 text-amber-700" />
+                          )}
+                          <p className="text-sm font-medium text-slate-900">{item.label}</p>
+                        </div>
+                        <p className="mt-1 text-xs text-slate-600">
+                          {item.complete ? "Tamamlandı" : "Eksik veya doldurulmayı bekliyor"}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </CardContent>
+        </Card>
       ) : null}
 
       <div className={`grid gap-4 ${isIndividualProfile ? "xl:grid-cols-[1.65fr_1fr]" : "xl:grid-cols-[1.8fr_1fr]"}`}>

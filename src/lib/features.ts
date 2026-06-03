@@ -7,6 +7,9 @@ export const INDIVIDUAL_FEATURE_KEYS = {
   messages: "individual.messages",
   activity: "individual.activity",
   cvRequest: "individual.cv_request",
+  jobSeekingBadge: "individual.job_seeking_badge",
+  movingSoonBadge: "individual.moving_soon_badge",
+  volunteerMentorship: "individual.volunteer_mentorship",
 } as const;
 
 export type IndividualFeatureKey = (typeof INDIVIDUAL_FEATURE_KEYS)[keyof typeof INDIVIDUAL_FEATURE_KEYS];
@@ -89,6 +92,24 @@ export const INDIVIDUAL_FEATURES: FeatureMeta<IndividualFeatureKey>[] = [
     key: INDIVIDUAL_FEATURE_KEYS.cvRequest,
     label: "CV Talebi",
     description: "CV/özgeçmiş talep modülü",
+    category: "legacy-individual",
+  },
+  {
+    key: INDIVIDUAL_FEATURE_KEYS.jobSeekingBadge,
+    label: "İş Arıyorum Badge'i",
+    description: "Profilde İş Arıyorum etiketi görünür",
+    category: "legacy-individual",
+  },
+  {
+    key: INDIVIDUAL_FEATURE_KEYS.movingSoonBadge,
+    label: "Yakında Taşınacağım",
+    description: "Taşınma planını rozet ve filtre akışlarında görünür kılar",
+    category: "legacy-individual",
+  },
+  {
+    key: INDIVIDUAL_FEATURE_KEYS.volunteerMentorship,
+    label: "Gönüllü Mentörlük",
+    description: "Profil üzerinden gönüllü mentör kartı oluşturma akışını açar",
     category: "legacy-individual",
   },
 ];

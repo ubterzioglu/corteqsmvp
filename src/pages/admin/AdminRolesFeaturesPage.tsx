@@ -118,6 +118,21 @@ const FEATURE_DETAILS: Record<string, FeatureDetail> = {
     effect: "Açık olduğunda diğer kullanıcılar ya da ilgili taraflar CV isteme akışına erişebilir.",
     adminHint: "Özellikle profesyonel görünürlük beklenen bireysel kullanıcılar için değerlidir.",
   },
+  "individual.job_seeking_badge": {
+    summary: "Profilde kullanıcının iş aradığını belirten rozetin açılmasını sağlar.",
+    effect: "Açık olduğunda bireysel profil kartında İş Arıyorum etiketi gösterilebilir.",
+    adminHint: "Kariyer ve fırsat eşleşmesini öne çıkarmak istiyorsan açık tutulabilir.",
+  },
+  "individual.moving_soon_badge": {
+    summary: "Yakında taşınacağını belirten rozet ve ilgili filtre görünürlüğünü açar.",
+    effect: "Açık olduğunda taşınılacak ülke/şehir bilgisi rozet akışında kullanılabilir ve Taşınacaklar filtresine dahil edilebilir.",
+    adminHint: "Relokasyon odaklı kullanıcı senaryolarında keşfedilmeyi artırmak için açık tutulabilir.",
+  },
+  "individual.volunteer_mentorship": {
+    summary: "Kullanıcının gönüllü mentör olarak görünmesini sağlayan akışı açar.",
+    effect: "Açık olduğunda profilinden otomatik gönüllü mentör kartı veya ilgili görünürlük akışı üretilebilir.",
+    adminHint: "Topluluk dayanışması ve newcomer desteği istenen rollerde açık tutulması faydalıdır.",
+  },
   "admin.requires_approval": {
     summary: "Kullanıcının ilgili işlemi tek başına tamamlaması yerine admin onay akışına düşmesini sağlar.",
     effect: "Açık olduğunda rolün bazı değişiklikleri doğrudan uygulanmaz; önce onay bekler.",
