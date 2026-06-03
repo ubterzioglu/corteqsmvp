@@ -183,6 +183,25 @@ const PROFILE_CV_BUCKET = "profile-cv-files";
 const PROFILE_PRESENTATION_BUCKET = "profile-presentation-files";
 const MAX_PROFILE_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 
+const GOOGLE_SOFT_CARD_HERO =
+  "overflow-hidden border-[rgba(66,133,244,0.16)] bg-white shadow-[0_30px_80px_-40px_rgba(66,133,244,0.36)]";
+const GOOGLE_SOFT_CARD_SECTION =
+  "border-[rgba(66,133,244,0.14)] bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.11),transparent_34%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.11),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.08),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.09),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(255,255,255,0.9))] shadow-[0_24px_55px_-42px_rgba(66,133,244,0.42)] backdrop-blur-[2px]";
+const GOOGLE_SOFT_CARD_SUBTLE =
+  "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.12),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.1),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.84))] shadow-[0_18px_35px_-30px_rgba(66,133,244,0.3)]";
+const GOOGLE_SOFT_CARD_SUBTLE_INTERACTIVE =
+  "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.12),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.1),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.84))] shadow-[0_18px_35px_-30px_rgba(66,133,244,0.3)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_40px_-28px_rgba(66,133,244,0.34)]";
+const GOOGLE_SOFT_HERO_SURFACE =
+  "border-b border-[rgba(66,133,244,0.1)] bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.26),transparent_30%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.24),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.12),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.14),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(247,250,255,0.95)_44%,rgba(255,252,244,0.94)_100%)]";
+const GOOGLE_SOFT_SUCCESS_PANEL =
+  "border border-[rgba(52,168,83,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(241,248,242,0.88)),radial-gradient(circle_at_top_left,rgba(52,168,83,0.15),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(66,133,244,0.08),transparent_28%)]";
+const GOOGLE_SOFT_DANGER_PANEL =
+  "border border-[rgba(234,67,53,0.2)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(253,242,240,0.88)),radial-gradient(circle_at_top_left,rgba(234,67,53,0.13),transparent_34%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_26%)]";
+const GOOGLE_SOFT_WARNING_PANEL =
+  "border border-[rgba(251,188,5,0.26)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,249,230,0.9)),radial-gradient(circle_at_top_left,rgba(251,188,5,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(234,67,53,0.08),transparent_30%)]";
+const GOOGLE_SOFT_SWITCH_PANEL =
+  "border border-white/75 bg-[linear-gradient(180deg,rgba(255,255,255,0.93),rgba(255,255,255,0.82)),radial-gradient(circle_at_top_left,rgba(66,133,244,0.1),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_28%)]";
+
 const buildAvatarStoragePath = (userId: string, file: File) => {
   const safeExtension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
   return `${userId}/profile-${Date.now()}.${safeExtension}`;
@@ -439,7 +458,7 @@ const ProfilePage = () => {
       title: "İş Arıyorum Badge'i",
       description: "Profilinde \"İş Arıyorum\" etiketi görünür.",
       icon: Briefcase,
-      toneClassName: "border-cyan-200 bg-cyan-50/60",
+      toneClassName: GOOGLE_SOFT_CARD_SUBTLE,
     },
     {
       key: MOVING_SOON_OPT_IN_ATTRIBUTE_KEY,
@@ -448,7 +467,7 @@ const ProfilePage = () => {
       title: "Yakında Taşınacağım",
       description: "Profilinde yakında taşınacağını belirten rozet görünür.",
       icon: Plane,
-      toneClassName: "border-amber-200 bg-amber-50/60",
+      toneClassName: GOOGLE_SOFT_WARNING_PANEL,
     },
     {
       key: VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY,
@@ -457,7 +476,7 @@ const ProfilePage = () => {
       title: "Gönüllü Mentörlük",
       description: "Açıldığında profilinden gönüllü mentör görünürlüğü aktif olur.",
       icon: UserCheck,
-      toneClassName: "border-emerald-200 bg-emerald-50/60",
+      toneClassName: GOOGLE_SOFT_SUCCESS_PANEL,
     },
   ].filter((item) => item.enabled);
 
@@ -466,7 +485,7 @@ const ProfilePage = () => {
       {
         key: "guide-common",
         title: "Ortak Profil Alanları Kullanım Kılavuzu",
-        accentClassName: "bg-blue-50/50",
+        accentClassName: "bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.12),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.9),rgba(243,248,255,0.84))]",
         content: (
           <div className="space-y-2 text-xs text-muted-foreground">
             <p><strong className="text-foreground">Görünen İsim:</strong> Directory ve profil kartında gösterilecek adınız. Değişiklikler anında yansır.</p>
@@ -481,7 +500,7 @@ const ProfilePage = () => {
       {
         key: "guide-role",
         title: "Rolüne Özel Alanlar Kullanım Kılavuzu",
-        accentClassName: "bg-purple-50/50",
+        accentClassName: "bg-[radial-gradient(circle_at_top_right,rgba(251,188,5,0.13),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(66,133,244,0.1),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,251,238,0.86))]",
         content: (
           <div className="space-y-2 text-xs text-muted-foreground">
             <p>Rolüne özel alanlar, seçtiğin rol türüne göre dinamik olarak belirlenir. Örneğin <strong className="text-foreground">Ambassador</strong> rolünde bölge bilgisi, <strong className="text-foreground">Blogger</strong> rolünde blog URL&apos;si gibi alanlar görünebilir.</p>
@@ -493,7 +512,7 @@ const ProfilePage = () => {
       {
         key: "guide-role-application",
         title: "Rol Başvurusu Kılavuzu",
-        accentClassName: "bg-emerald-50/50",
+        accentClassName: "bg-[radial-gradient(circle_at_top_left,rgba(52,168,83,0.13),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.9),rgba(241,248,242,0.86))]",
         content: (
           <div className="space-y-2 text-xs text-muted-foreground">
             <p>Her üyenin aynı anda sadece <strong className="text-foreground">bir aktif rolü</strong> olabilir. Mevcut rolünüzden farklı bir role başvurmak için açılır menüden seçim yapın.</p>
@@ -506,7 +525,7 @@ const ProfilePage = () => {
       {
         key: "guide-features",
         title: "Feature Talepleri Kılavuzu",
-        accentClassName: "bg-amber-50/50",
+        accentClassName: "bg-[radial-gradient(circle_at_top_right,rgba(251,188,5,0.15),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,249,232,0.88))]",
         content: (
           <div className="space-y-2 text-xs text-muted-foreground">
             <p><strong className="text-foreground">Directory Görünürlüğü:</strong> Profilinizin public dizinde görünmesini sağlar. Onaylandıktan sonra diğer üyeler sizi bulabilir.</p>
@@ -522,7 +541,7 @@ const ProfilePage = () => {
       {
         key: "guide-pending",
         title: "Bekleyen Talepler Kılavuzu",
-        accentClassName: "bg-slate-50",
+        accentClassName: "bg-[radial-gradient(circle_at_top_left,rgba(234,67,53,0.1),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(66,133,244,0.08),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.9),rgba(248,249,250,0.88))]",
         content: (
           <div className="space-y-2 text-xs text-muted-foreground">
             <p>Bu bölümde admin onayı bekleyen tüm talepleriniz listelenir. Talep türü ve oluşturulma tarihi bilgileri gösterilir.</p>
@@ -1140,31 +1159,31 @@ const ProfilePage = () => {
         className="hidden"
         onChange={(event) => void handlePresentationFileChange(event)}
       />
-      <Card className={isIndividualProfile ? "overflow-hidden border-slate-200/90 bg-white shadow-[0_30px_80px_-40px_rgba(15,23,42,0.35)]" : "border-slate-200 bg-white/90 shadow-sm"}>
+      <Card className={isIndividualProfile ? GOOGLE_SOFT_CARD_HERO : GOOGLE_SOFT_CARD_SECTION}>
         {isIndividualProfile ? (
-          <div className="border-b border-border bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(8,145,178,0.16),transparent_32%),linear-gradient(135deg,rgba(248,250,252,0.98),rgba(240,249,255,0.94)_46%,rgba(255,255,255,1)_100%)]">
+          <div className={GOOGLE_SOFT_HERO_SURFACE}>
             <CardHeader className="flex flex-col gap-5 pb-4 md:flex-row md:items-start md:justify-between">
               <div className="flex items-start gap-4">
                 {currentAvatarUrl ? (
                   <img
                     src={currentAvatarUrl}
                     alt={displayName}
-                    className="h-20 w-20 shrink-0 rounded-[28px] object-cover shadow-[0_24px_45px_-24px_rgba(14,165,233,0.75)]"
+                    className="h-20 w-20 shrink-0 rounded-[28px] object-cover shadow-[0_24px_45px_-24px_rgba(66,133,244,0.5)]"
                   />
                 ) : (
-                  <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[28px] bg-[linear-gradient(145deg,#0f172a,#0ea5e9)] text-2xl font-bold text-white shadow-[0_24px_45px_-24px_rgba(14,165,233,0.75)]">
+                  <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[28px] bg-[linear-gradient(145deg,#4285F4,#34A853_55%,#FBBC05)] text-2xl font-bold text-white shadow-[0_24px_45px_-24px_rgba(66,133,244,0.52)]">
                     {initials}
                   </div>
                 )}
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="outline" className="border-sky-300/60 bg-white/80 text-sky-700">
+                    <Badge variant="outline" className="border-[rgba(66,133,244,0.28)] bg-white/85 text-[#3367D6]">
                       <Sparkles className="mr-1 h-3 w-3" /> Bireysel Panelim
                     </Badge>
-                    <Badge variant="secondary" className="bg-slate-900 text-white hover:bg-slate-900">
+                    <Badge variant="secondary" className="bg-[rgba(66,133,244,0.12)] text-slate-900 hover:bg-[rgba(66,133,244,0.12)]">
                       {profile?.roleLabel ?? roleMeta?.adminLabel ?? "Rol"}
                     </Badge>
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="border-[rgba(251,188,5,0.26)] bg-white/80 text-xs">
                       Tamamlanma %{profile?.profileCompletion.percentage ?? 0}
                     </Badge>
                     {errorMessage ? <Badge variant="destructive" className="text-xs">Kısmi veri yüklendi</Badge> : null}
@@ -1231,15 +1250,15 @@ const ProfilePage = () => {
               </div>
             </CardHeader>
             <CardContent className="grid gap-2 pb-4 md:grid-cols-3">
-              <div className="rounded-lg border bg-slate-50 p-2.5">
+              <div className={`rounded-lg p-2.5 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
                 <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Görünen İsim</p>
                 <p className="mt-1 text-sm font-semibold">{displayName}</p>
               </div>
-              <div className="rounded-lg border bg-slate-50 p-2.5">
+              <div className={`rounded-lg p-2.5 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
                 <p className="text-[10px] uppercase tracking-wide text-muted-foreground">E-posta</p>
                 <p className="mt-1 break-all text-xs">{profile?.email ?? user?.email ?? "-"}</p>
               </div>
-              <div className="rounded-lg border bg-slate-50 p-2.5">
+              <div className={`rounded-lg p-2.5 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
                 <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Bekleyen Talep</p>
                 <p className="mt-1 text-sm font-semibold">{pendingCount}</p>
               </div>
@@ -1249,7 +1268,7 @@ const ProfilePage = () => {
       </Card>
 
       {isIndividualProfile ? (
-        <Card className="overflow-hidden border-slate-200/90 bg-white/90 shadow-sm">
+        <Card className={`overflow-hidden ${GOOGLE_SOFT_CARD_SECTION}`}>
           <CardHeader className="p-0">
             <button
               type="button"
@@ -1267,7 +1286,7 @@ const ProfilePage = () => {
           {isProfileSummaryOpen ? (
             <CardContent id="profile-summary-content" className="pt-0 pb-4">
               <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-6">
-                <div className="rounded-[20px] border bg-slate-50/80 px-2.5 py-2 text-xs leading-4">
+                <div className={`rounded-[20px] px-2.5 py-2 text-xs leading-4 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
                   <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Profil Skoru</p>
                   <p className="mt-1 font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
                   <p className="mt-1 text-slate-600">
@@ -1277,7 +1296,7 @@ const ProfilePage = () => {
                 {completionHighlights.map((item) => (
                   <div
                     key={item.key}
-                    className={`rounded-2xl border px-2.5 py-2 text-xs leading-4 ${item.complete ? "border-emerald-200 bg-emerald-50/80" : "border-rose-200 bg-rose-50/75"}`}
+                    className={`rounded-2xl px-2.5 py-2 text-xs leading-4 ${item.complete ? GOOGLE_SOFT_SUCCESS_PANEL : GOOGLE_SOFT_DANGER_PANEL}`}
                   >
                     <div className="flex items-center gap-1.5">
                       {item.complete ? (
@@ -1311,7 +1330,7 @@ const ProfilePage = () => {
             />
           ) : null}
 
-          <Card>
+          <Card className={GOOGLE_SOFT_CARD_SECTION}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Ortak Profil Alanları</CardTitle>
               <CardDescription className="text-xs">Bu alanlar profil kartın ve directory görünümün için kullanılır.</CardDescription>
@@ -1342,7 +1361,7 @@ const ProfilePage = () => {
           </Card>
 
           {featureToggleCards.length ? (
-            <Card>
+            <Card className={GOOGLE_SOFT_CARD_SECTION}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base">Profil Rozetleri</CardTitle>
                 <CardDescription className="text-xs">
@@ -1366,7 +1385,7 @@ const ProfilePage = () => {
             </Card>
           ) : null}
 
-          <Card>
+          <Card className={GOOGLE_SOFT_CARD_SECTION}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Sosyal Medya Hesapları</CardTitle>
               <CardDescription className="text-xs">
@@ -1384,7 +1403,7 @@ const ProfilePage = () => {
                       const visible = (draftVisibilities[attribute.attributeKey] ?? attribute.visibility) === "public";
 
                       return (
-                        <div key={attribute.attributeKey} className="rounded-xl border p-3">
+                        <div key={attribute.attributeKey} className={`rounded-xl p-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
                           <div className="flex items-center justify-between gap-3">
                             <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                               <Icon className={`h-4 w-4 ${config.iconClassName}`} />
@@ -1517,7 +1536,7 @@ const ProfilePage = () => {
             ) : null}
           </div>
 
-          <Card>
+          <Card className={GOOGLE_SOFT_CARD_SECTION}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Rolüne Özel Alanlar</CardTitle>
               <CardDescription className="text-xs">Aktif rolüne bağlı dinamik alanlar burada görünür.</CardDescription>
@@ -1547,7 +1566,7 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className={GOOGLE_SOFT_CARD_SECTION}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Alt Kategori / Alt Tip</CardTitle>
               <CardDescription className="text-xs">Rolüne bağlı taxonomy seçimleri profildeki görünüm ve zorunlu alanları etkiler.</CardDescription>
@@ -1557,7 +1576,7 @@ const ProfilePage = () => {
                 visibleTaxonomyGroups.map((group) => {
                   const selectedKeys = taxonomyDrafts[group.groupKey] ?? [];
                   return (
-                    <div key={group.groupKey} className="rounded-lg border p-3">
+                    <div key={group.groupKey} className={`rounded-lg p-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div>
                           <p className="text-sm font-medium">{group.label}</p>
@@ -1590,8 +1609,8 @@ const ProfilePage = () => {
                             <button
                               key={option.key}
                               type="button"
-                              className={`rounded-lg border px-3 py-2 text-left transition ${
-                                selected ? "border-primary bg-primary/5" : "border-border hover:bg-muted/40"
+                              className={`rounded-lg px-3 py-2 text-left ${selected ? GOOGLE_SOFT_CARD_SUBTLE : GOOGLE_SOFT_CARD_SUBTLE_INTERACTIVE} ${
+                                selected ? "border-primary/50" : ""
                               }`}
                               onClick={() => toggleTaxonomyOption(group, option.key)}
                             >
@@ -1628,7 +1647,7 @@ const ProfilePage = () => {
           </Card>
       </div>
 
-      <Card className="border-slate-200 bg-white/90 shadow-sm">
+      <Card className={GOOGLE_SOFT_CARD_SECTION}>
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Başvurular & Erişimler</CardTitle>
           <CardDescription className="text-xs">
@@ -1637,7 +1656,7 @@ const ProfilePage = () => {
         </CardHeader>
         <CardContent>
           <Accordion type="multiple" className="space-y-2">
-            <AccordionItem value="role-request" className="overflow-hidden rounded-lg border px-3">
+            <AccordionItem value="role-request" className={`overflow-hidden rounded-lg px-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
               <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
                 Rol Başvurusu
               </AccordionTrigger>
@@ -1667,7 +1686,7 @@ const ProfilePage = () => {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="feature-requests" className="overflow-hidden rounded-lg border px-3">
+            <AccordionItem value="feature-requests" className={`overflow-hidden rounded-lg px-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
               <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
                 Feature Talepleri
               </AccordionTrigger>
@@ -1677,7 +1696,7 @@ const ProfilePage = () => {
                   const state = featureMap.get(item.key);
                   const isPending = profile?.pendingRequests.some((request) => request.targetFeatureKey === item.key) ?? false;
                   return (
-                    <div key={item.key} className="rounded-lg border p-2">
+                    <div key={item.key} className={`rounded-lg p-2 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
                           <p className="text-sm font-medium">{item.title}</p>
@@ -1703,7 +1722,7 @@ const ProfilePage = () => {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="dashboard-access" className="overflow-hidden rounded-lg border px-3">
+            <AccordionItem value="dashboard-access" className={`overflow-hidden rounded-lg px-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
               <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
                 Açık Dashboard Erişimleri
               </AccordionTrigger>
@@ -1716,7 +1735,7 @@ const ProfilePage = () => {
                 {isDashboardLoading ? <p className="text-xs text-muted-foreground">Dashboard erişimleri yükleniyor...</p> : null}
                 {!isDashboardLoading && dashboardItems.length ? (
                   dashboardItems.map((item) => (
-                    <div key={item.feature_key} className={`rounded-lg border p-2 ${isIndividualProfile ? "bg-slate-50/60" : ""}`}>
+                    <div key={item.feature_key} className={`rounded-lg p-2 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
                           <p className="text-sm font-medium">{item.label}</p>
@@ -1735,7 +1754,7 @@ const ProfilePage = () => {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="pending-requests" className="overflow-hidden rounded-lg border px-3">
+            <AccordionItem value="pending-requests" className={`overflow-hidden rounded-lg px-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
               <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
                 Bekleyen Talepler
               </AccordionTrigger>
@@ -1747,7 +1766,7 @@ const ProfilePage = () => {
                 </p>
                 {profile?.pendingRequests.length ? (
                   profile.pendingRequests.map((request) => (
-                    <div key={request.id} className={`rounded-lg border p-2 ${isIndividualProfile ? "bg-slate-50/60" : ""}`}>
+                    <div key={request.id} className={`rounded-lg p-2 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
                       <div className="flex items-center justify-between gap-2">
                         <div>
                           <p className="text-sm font-medium">{request.requestType}</p>
@@ -1766,7 +1785,7 @@ const ProfilePage = () => {
         </CardContent>
       </Card>
 
-      <Card ref={helpCardRef} className="border-slate-200 bg-white/90 shadow-sm">
+      <Card ref={helpCardRef} className={GOOGLE_SOFT_CARD_SECTION}>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <HelpCircle className="h-4 w-4 text-primary" />
@@ -1779,7 +1798,7 @@ const ProfilePage = () => {
         <CardContent>
           <Accordion type="single" collapsible className="w-full space-y-2">
             {guideSections.map((section) => (
-              <AccordionItem key={section.key} value={section.key} className={`rounded-lg border px-3 ${section.accentClassName}`}>
+              <AccordionItem key={section.key} value={section.key} className={`rounded-lg border border-white/80 px-3 shadow-[0_18px_32px_-30px_rgba(66,133,244,0.28)] ${section.accentClassName}`}>
                 <AccordionTrigger className="py-2 text-sm font-medium hover:no-underline">
                   <span className="inline-flex items-center gap-2">
                     <BookOpen className="h-4 w-4 text-primary" />
@@ -1836,7 +1855,7 @@ const DisplayNameAttributeCard = ({
     : "İsmi Kaydet";
 
   return (
-    <Card>
+    <Card className={GOOGLE_SOFT_CARD_SECTION}>
       <CardHeader className="pb-2">
         <CardTitle className="text-base">{displayNameLabel}</CardTitle>
         <CardDescription className="text-xs">
@@ -1853,7 +1872,7 @@ const DisplayNameAttributeCard = ({
             <AttributeInput attribute={attribute} value={draftValue} onChange={onValueChange} />
           </div>
           <div className="w-full md:w-[92px]">
-            <div className="flex h-10 items-center justify-between gap-1.5 rounded-full border bg-slate-50/80 px-2 text-xs">
+            <div className={`flex h-10 items-center justify-between gap-1.5 rounded-full px-2 text-xs ${GOOGLE_SOFT_SWITCH_PANEL}`}>
               {draftVisibility === "public" ? (
                 <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
               ) : (
@@ -1898,7 +1917,7 @@ const ProfileAttributeEditor = ({
 
   if (visibilityMode === "inline-switch") {
     return (
-      <div className="rounded-lg border px-2.5 py-2">
+      <div className={`rounded-lg px-2.5 py-2 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
         <div className="flex items-start gap-2">
           <div className="w-28 shrink-0 space-y-1 sm:w-36">
             <div className="flex flex-wrap items-center gap-1">
@@ -1912,7 +1931,7 @@ const ProfileAttributeEditor = ({
           </div>
 
           <div className="w-[84px] shrink-0">
-            <div className="flex h-9 items-center justify-between gap-1.5 rounded-full border bg-slate-50/80 px-2 text-xs">
+            <div className={`flex h-9 items-center justify-between gap-1.5 rounded-full px-2 text-xs ${GOOGLE_SOFT_SWITCH_PANEL}`}>
               {draftVisibility === "public" ? (
                 <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
               ) : (
@@ -1932,7 +1951,7 @@ const ProfileAttributeEditor = ({
   }
 
   return (
-    <div className="rounded-lg border p-3">
+    <div className={`rounded-lg p-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div className="space-y-0.5">
           <div className="flex flex-wrap items-center gap-1.5">
@@ -1968,7 +1987,7 @@ const ProfileAttributeEditor = ({
 
         {visibilityMode === "collapsible-radio" ? (
           <Collapsible open={isVisibilityOpen} onOpenChange={setIsVisibilityOpen}>
-            <div className="rounded-xl border bg-slate-50/70">
+            <div className={`rounded-xl ${GOOGLE_SOFT_CARD_SUBTLE}`}>
               <CollapsibleTrigger asChild>
                 <button
                   type="button"
@@ -1994,7 +2013,7 @@ const ProfileAttributeEditor = ({
                       <label
                         key={option.value}
                         htmlFor={optionId}
-                        className="flex cursor-pointer items-center gap-3 rounded-lg border bg-white px-3 py-2 text-sm"
+                        className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm ${GOOGLE_SOFT_CARD_SUBTLE_INTERACTIVE}`}
                       >
                         <RadioGroupItem value={option.value} id={optionId} />
                         <span>{option.label}</span>
@@ -2035,7 +2054,7 @@ const ProfileAttributeEditor = ({
         ) : null}
 
         {attribute.requiresAdminApprovalOnChange ? (
-          <div className="rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1.5 text-xs text-amber-900">
+          <div className={`rounded-lg px-2.5 py-1.5 text-xs text-amber-900 ${GOOGLE_SOFT_WARNING_PANEL}`}>
             <div className="flex items-start gap-1.5">
               <ShieldCheck className="mt-0.5 h-3.5 w-3.5" />
               <p>Bu alan güncellendiğinde public görünmeden önce admin onayı bekler.</p>
@@ -2067,7 +2086,7 @@ const PreferenceToggleCard = ({
   onCheckedChange,
 }: PreferenceToggleCardProps) => {
   return (
-    <div className={`rounded-xl border p-3 ${toneClassName}`}>
+    <div className={`rounded-xl p-3 ${toneClassName}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-2">
           <Icon className="mt-0.5 h-4 w-4 text-foreground" />
@@ -2112,7 +2131,7 @@ const StandaloneLinkAttributeCard = ({
   const visible = draftVisibility === "public";
 
   return (
-    <Card>
+    <Card className={GOOGLE_SOFT_CARD_SECTION}>
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base">
           <Icon className={`h-4 w-4 ${iconClassName}`} />
@@ -2121,7 +2140,7 @@ const StandaloneLinkAttributeCard = ({
         <CardDescription className="text-xs">{description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="flex items-center justify-between rounded-xl border bg-slate-50/70 px-3 py-2">
+        <div className={`flex items-center justify-between rounded-xl px-3 py-2 ${GOOGLE_SOFT_SWITCH_PANEL}`}>
           <div className="flex items-center gap-1.5 text-xs text-slate-600">
             {visible ? <Eye className="h-3.5 w-3.5 text-primary" /> : <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />}
           </div>
@@ -2174,7 +2193,7 @@ const ProfileDocumentCard = ({
   onRemoveClick,
 }: ProfileDocumentCardProps) => {
   return (
-    <Card>
+    <Card className={GOOGLE_SOFT_CARD_SECTION}>
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base">
           <Icon className="h-4 w-4 text-primary" />
@@ -2183,7 +2202,7 @@ const ProfileDocumentCard = ({
         <CardDescription className="text-xs">{description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="rounded-xl border bg-slate-50/70 px-3 py-3">
+        <div className={`rounded-xl px-3 py-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
           <p className="text-sm font-medium text-foreground">{document?.name ?? "Henüz dosya yok"}</p>
           <p className="mt-1 text-xs text-muted-foreground">{acceptLabel} desteklenir.</p>
           <p className="mt-1 text-xs text-slate-600">{statusLabel}</p>
@@ -2225,7 +2244,7 @@ const AttributeInput = ({ attribute, value, onChange, compact = false }: Attribu
 
   if (attribute.dataType === "boolean") {
     return (
-      <div className={`flex items-center justify-between rounded-xl border px-3 ${compact ? "h-9 py-1.5" : "py-2"}`}>
+      <div className={`flex items-center justify-between rounded-xl px-3 ${GOOGLE_SOFT_CARD_SUBTLE} ${compact ? "h-9 py-1.5" : "py-2"}`}>
         <p className={`${compact ? "text-xs" : "text-sm"} font-medium`}>{attribute.label}</p>
         <Switch checked={Boolean(value)} onCheckedChange={(checked) => onChange(checked)} />
       </div>
