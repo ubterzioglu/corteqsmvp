@@ -1339,17 +1339,14 @@ const ProfilePage = () => {
           {isProfileSummaryOpen ? (
             <CardContent id="profile-summary-content" className="pt-0 pb-4">
               <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-6">
-                <div className={`rounded-[20px] px-2.5 py-2 text-xs leading-4 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
+                <div className={`flex items-center gap-2 rounded-[20px] px-2.5 py-1.5 text-xs ${GOOGLE_SOFT_CARD_SUBTLE}`}>
                   <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Profil Skoru</p>
-                  <p className="mt-1 font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
-                  <p className="mt-1 text-slate-600">
-                    {(profile?.profileCompletion.requiredCompleted ?? 0)} / {(profile?.profileCompletion.requiredTotal ?? 0)} zorunlu alan dolu
-                  </p>
+                  <p className="font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
                 </div>
                 {completionHighlights.map((item) => (
                   <div
                     key={item.key}
-                    className={`rounded-2xl px-2.5 py-2 text-xs leading-4 ${item.complete ? GOOGLE_SOFT_SUCCESS_PANEL : GOOGLE_SOFT_DANGER_PANEL}`}
+                    className={`flex items-center gap-1.5 rounded-2xl px-2.5 py-1.5 text-xs ${item.complete ? GOOGLE_SOFT_SUCCESS_PANEL : GOOGLE_SOFT_DANGER_PANEL}`}
                   >
                     <div className="flex items-center gap-1.5">
                       {item.complete ? (
