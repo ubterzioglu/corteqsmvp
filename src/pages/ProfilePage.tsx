@@ -889,42 +889,18 @@ const ProfilePage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Accordion type="multiple" defaultValue={["summary-metrics", "completion-status"]} className="space-y-2">
-              <AccordionItem value="summary-metrics" className="overflow-hidden rounded-xl border px-3">
+            <Accordion type="single" collapsible defaultValue="profile-summary" className="space-y-2">
+              <AccordionItem value="profile-summary" className="overflow-hidden rounded-xl border px-3">
                 <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
-                  Genel Durum
+                  Profil Özeti
                 </AccordionTrigger>
                 <AccordionContent className="pb-3">
-                  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
                     <div className="rounded-[22px] border bg-slate-50/80 p-3">
                       <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Profil Skoru</p>
                       <p className="mt-1 text-2xl font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
                       <p className="mt-1 text-xs text-slate-600">Zorunlu alan tamamlanma oranı</p>
                     </div>
-                    <div className="rounded-[22px] border bg-slate-50/80 p-3">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Açık Modül</p>
-                      <p className="mt-1 text-2xl font-bold text-slate-950">{dashboardCount}</p>
-                      <p className="mt-1 text-xs text-slate-600">Şu an etkin dashboard erişimi</p>
-                    </div>
-                    <div className="rounded-[22px] border bg-slate-50/80 p-3">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Public Alan</p>
-                      <p className="mt-1 text-2xl font-bold text-slate-950">{publicAttributesCount}</p>
-                      <p className="mt-1 text-xs text-slate-600">Dışarıya açık profil alanı</p>
-                    </div>
-                    <div className="rounded-[22px] border bg-slate-50/80 p-3">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Bekleyen Talep</p>
-                      <p className="mt-1 text-2xl font-bold text-slate-950">{pendingCount}</p>
-                      <p className="mt-1 text-xs text-slate-600">Admin değerlendirme kuyruğu</p>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="completion-status" className="overflow-hidden rounded-xl border px-3">
-                <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
-                  Tamamlanma Durumu
-                </AccordionTrigger>
-                <AccordionContent className="pb-3">
-                  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
                     {completionHighlights.map((item) => (
                       <div key={item.key} className={`rounded-2xl border p-3 ${item.complete ? "border-emerald-200 bg-emerald-50/70" : "border-amber-200 bg-amber-50/70"}`}>
                         <div className="flex items-center gap-2">
@@ -948,8 +924,7 @@ const ProfilePage = () => {
         </Card>
       ) : null}
 
-      <div className={`grid gap-4 ${isIndividualProfile ? "xl:grid-cols-[1.65fr_1fr]" : "xl:grid-cols-[1.8fr_1fr]"}`}>
-        <div className="space-y-4">
+      <div className="space-y-4">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Ortak Profil Alanları</CardTitle>
@@ -1166,148 +1141,145 @@ const ProfilePage = () => {
               )}
             </CardContent>
           </Card>
-        </div>
-
-        <div className="space-y-4">
-          <Card className="border-slate-200 bg-white/90 shadow-sm">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Başvurular & Erişimler</CardTitle>
-              <CardDescription className="text-xs">
-                Rol başvurularını, feature taleplerini, açık erişimlerini ve bekleyen süreçlerini tek kartta yönet.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Accordion type="multiple" className="space-y-2">
-                <AccordionItem value="role-request" className="overflow-hidden rounded-lg border px-3">
-                  <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
-                    Rol Başvurusu
-                  </AccordionTrigger>
-                  <AccordionContent className="space-y-2 pb-3">
-                    <p className="text-xs text-muted-foreground">Tek aktif rol modeli korunur. Yeni rol için başvuru admin onayına düşer.</p>
-                    <Select value={roleRequestTarget} onValueChange={(value) => setRoleRequestTarget(value as ProfileType)}>
-                      <SelectTrigger className="h-9 text-sm">
-                        <SelectValue placeholder="Başvurmak istediğin rolü seç" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {availableRoleTargets.map((option) => (
-                          <SelectItem key={option.type} value={option.type}>
-                            {option.title}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Textarea
-                      value={roleRequestNote}
-                      onChange={(event) => setRoleRequestNote(event.target.value)}
-                      placeholder="Kısa bir açıklama veya ek bilgi yazabilirsin."
-                      className="min-h-[60px] text-sm"
-                    />
-                    <Button size="sm" className="w-full" disabled={!roleRequestTarget || submittingRoleRequest} onClick={() => void handleSubmitRoleRequest()}>
-                      {submittingRoleRequest ? "Gönderiliyor..." : "Rol Başvurusu Gönder"}
-                    </Button>
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="feature-requests" className="overflow-hidden rounded-lg border px-3">
-                  <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
-                    Feature Talepleri
-                  </AccordionTrigger>
-                  <AccordionContent className="space-y-2 pb-3">
-                    <p className="text-xs text-muted-foreground">Kapalı veya onay gerektiren akışlar için tek tıkla talep bırak.</p>
-                    {REQUESTABLE_FEATURES.map((item) => {
-                      const state = featureMap.get(item.key);
-                      const isPending = profile?.pendingRequests.some((request) => request.targetFeatureKey === item.key) ?? false;
-                      return (
-                        <div key={item.key} className="rounded-lg border p-2">
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="min-w-0">
-                              <p className="text-sm font-medium">{item.title}</p>
-                              <p className="text-xs text-muted-foreground">{item.description}</p>
-                              <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
-                                <Badge variant="outline" className="text-[10px] px-1.5 py-0">Kaynak: {state?.source ?? "fallback"}</Badge>
-                                {isPending ? <Badge variant="outline" className="text-[10px] px-1.5 py-0">Beklemede</Badge> : null}
-                              </div>
-                            </div>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="shrink-0 text-xs h-7 px-2"
-                              disabled={Boolean(state?.isEnabled) || isPending || featureRequestingKey === item.key}
-                              onClick={() => void handleRequestFeature(item.key)}
-                            >
-                              {featureRequestingKey === item.key ? "Gönderiliyor..." : state?.isEnabled ? "Aktif" : "Talep Et"}
-                            </Button>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="dashboard-access" className="overflow-hidden rounded-lg border px-3">
-                  <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
-                    Açık Dashboard Erişimleri
-                  </AccordionTrigger>
-                  <AccordionContent className="space-y-2 pb-3">
-                    <p className="text-xs text-muted-foreground">
-                      {isIndividualProfile
-                        ? "Merge edilen panel yapısına uyumlu olarak açık erişimlerini burada kart düzeninde gösteriyoruz."
-                        : "Rolün ve override kayıtlarınla şu anda açık olan dashboard tabları."}
-                    </p>
-                    {isDashboardLoading ? <p className="text-xs text-muted-foreground">Dashboard erişimleri yükleniyor...</p> : null}
-                    {!isDashboardLoading && dashboardItems.length ? (
-                      dashboardItems.map((item) => (
-                        <div key={item.feature_key} className={`rounded-lg border p-2 ${isIndividualProfile ? "bg-slate-50/60" : ""}`}>
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="min-w-0">
-                              <p className="text-sm font-medium">{item.label}</p>
-                              <p className="text-xs text-muted-foreground">{item.description ?? item.feature_key}</p>
-                            </div>
-                            <Badge variant="outline" className="text-[10px]">
-                              {item.source}
-                            </Badge>
-                          </div>
-                        </div>
-                      ))
-                    ) : null}
-                    {!isDashboardLoading && dashboardItems.length === 0 ? (
-                      <p className="text-xs text-muted-foreground">Açık dashboard modülü bulunamadı.</p>
-                    ) : null}
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="pending-requests" className="overflow-hidden rounded-lg border px-3">
-                  <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
-                    Bekleyen Talepler
-                  </AccordionTrigger>
-                  <AccordionContent className="space-y-2 pb-3">
-                    <p className="text-xs text-muted-foreground">
-                      {isIndividualProfile
-                        ? "Panel görünümüne etki eden onay süreçleri burada toplanır."
-                        : "Admin değerlendirmesi bekleyen son işlemler burada görünür."}
-                    </p>
-                    {profile?.pendingRequests.length ? (
-                      profile.pendingRequests.map((request) => (
-                        <div key={request.id} className={`rounded-lg border p-2 ${isIndividualProfile ? "bg-slate-50/60" : ""}`}>
-                          <div className="flex items-center justify-between gap-2">
-                            <div>
-                              <p className="text-sm font-medium">{request.requestType}</p>
-                              <p className="text-xs text-muted-foreground">{new Date(request.createdAt).toLocaleString("tr-TR")}</p>
-                            </div>
-                            <Badge variant="outline" className="text-[10px]">Pending</Badge>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-xs text-muted-foreground">Şu anda bekleyen talebin yok.</p>
-                    )}
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </CardContent>
-          </Card>
-        </div>
       </div>
+
+      <Card className="border-slate-200 bg-white/90 shadow-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">Başvurular & Erişimler</CardTitle>
+          <CardDescription className="text-xs">
+            Rol başvurularını, feature taleplerini, açık erişimlerini ve bekleyen süreçlerini tek kartta yönet.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Accordion type="multiple" className="space-y-2">
+            <AccordionItem value="role-request" className="overflow-hidden rounded-lg border px-3">
+              <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
+                Rol Başvurusu
+              </AccordionTrigger>
+              <AccordionContent className="space-y-2 pb-3">
+                <p className="text-xs text-muted-foreground">Tek aktif rol modeli korunur. Yeni rol için başvuru admin onayına düşer.</p>
+                <Select value={roleRequestTarget} onValueChange={(value) => setRoleRequestTarget(value as ProfileType)}>
+                  <SelectTrigger className="h-9 text-sm">
+                    <SelectValue placeholder="Başvurmak istediğin rolü seç" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableRoleTargets.map((option) => (
+                      <SelectItem key={option.type} value={option.type}>
+                        {option.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Textarea
+                  value={roleRequestNote}
+                  onChange={(event) => setRoleRequestNote(event.target.value)}
+                  placeholder="Kısa bir açıklama veya ek bilgi yazabilirsin."
+                  className="min-h-[60px] text-sm"
+                />
+                <Button size="sm" className="w-full" disabled={!roleRequestTarget || submittingRoleRequest} onClick={() => void handleSubmitRoleRequest()}>
+                  {submittingRoleRequest ? "Gönderiliyor..." : "Rol Başvurusu Gönder"}
+                </Button>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="feature-requests" className="overflow-hidden rounded-lg border px-3">
+              <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
+                Feature Talepleri
+              </AccordionTrigger>
+              <AccordionContent className="space-y-2 pb-3">
+                <p className="text-xs text-muted-foreground">Kapalı veya onay gerektiren akışlar için tek tıkla talep bırak.</p>
+                {REQUESTABLE_FEATURES.map((item) => {
+                  const state = featureMap.get(item.key);
+                  const isPending = profile?.pendingRequests.some((request) => request.targetFeatureKey === item.key) ?? false;
+                  return (
+                    <div key={item.key} className="rounded-lg border p-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium">{item.title}</p>
+                          <p className="text-xs text-muted-foreground">{item.description}</p>
+                          <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
+                            <Badge variant="outline" className="text-[10px] px-1.5 py-0">Kaynak: {state?.source ?? "fallback"}</Badge>
+                            {isPending ? <Badge variant="outline" className="text-[10px] px-1.5 py-0">Beklemede</Badge> : null}
+                          </div>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="shrink-0 text-xs h-7 px-2"
+                          disabled={Boolean(state?.isEnabled) || isPending || featureRequestingKey === item.key}
+                          onClick={() => void handleRequestFeature(item.key)}
+                        >
+                          {featureRequestingKey === item.key ? "Gönderiliyor..." : state?.isEnabled ? "Aktif" : "Talep Et"}
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="dashboard-access" className="overflow-hidden rounded-lg border px-3">
+              <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
+                Açık Dashboard Erişimleri
+              </AccordionTrigger>
+              <AccordionContent className="space-y-2 pb-3">
+                <p className="text-xs text-muted-foreground">
+                  {isIndividualProfile
+                    ? "Merge edilen panel yapısına uyumlu olarak açık erişimlerini burada kart düzeninde gösteriyoruz."
+                    : "Rolün ve override kayıtlarınla şu anda açık olan dashboard tabları."}
+                </p>
+                {isDashboardLoading ? <p className="text-xs text-muted-foreground">Dashboard erişimleri yükleniyor...</p> : null}
+                {!isDashboardLoading && dashboardItems.length ? (
+                  dashboardItems.map((item) => (
+                    <div key={item.feature_key} className={`rounded-lg border p-2 ${isIndividualProfile ? "bg-slate-50/60" : ""}`}>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium">{item.label}</p>
+                          <p className="text-xs text-muted-foreground">{item.description ?? item.feature_key}</p>
+                        </div>
+                        <Badge variant="outline" className="text-[10px]">
+                          {item.source}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))
+                ) : null}
+                {!isDashboardLoading && dashboardItems.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">Açık dashboard modülü bulunamadı.</p>
+                ) : null}
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="pending-requests" className="overflow-hidden rounded-lg border px-3">
+              <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
+                Bekleyen Talepler
+              </AccordionTrigger>
+              <AccordionContent className="space-y-2 pb-3">
+                <p className="text-xs text-muted-foreground">
+                  {isIndividualProfile
+                    ? "Panel görünümüne etki eden onay süreçleri burada toplanır."
+                    : "Admin değerlendirmesi bekleyen son işlemler burada görünür."}
+                </p>
+                {profile?.pendingRequests.length ? (
+                  profile.pendingRequests.map((request) => (
+                    <div key={request.id} className={`rounded-lg border p-2 ${isIndividualProfile ? "bg-slate-50/60" : ""}`}>
+                      <div className="flex items-center justify-between gap-2">
+                        <div>
+                          <p className="text-sm font-medium">{request.requestType}</p>
+                          <p className="text-xs text-muted-foreground">{new Date(request.createdAt).toLocaleString("tr-TR")}</p>
+                        </div>
+                        <Badge variant="outline" className="text-[10px]">Pending</Badge>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-muted-foreground">Şu anda bekleyen talebin yok.</p>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </CardContent>
+      </Card>
 
       <Card ref={helpCardRef} className="border-slate-200 bg-white/90 shadow-sm">
         <CardHeader className="pb-3">

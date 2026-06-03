@@ -277,8 +277,9 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Feature Talepleri")).toBeInTheDocument();
     expect(screen.getByText("Açık Dashboard Erişimleri")).toBeInTheDocument();
     expect(screen.getByText("Profil Özeti & Tamamlanma")).toBeInTheDocument();
-    expect(screen.getByText("Genel Durum")).toBeInTheDocument();
-    expect(screen.getByText("Tamamlanma Durumu")).toBeInTheDocument();
+    expect(screen.getByText("Profil Özeti")).toBeInTheDocument();
+    expect(screen.queryByText("Genel Durum")).not.toBeInTheDocument();
+    expect(screen.queryByText("Tamamlanma Durumu")).not.toBeInTheDocument();
     expect(screen.getByText("Yardım & Kılavuzlar")).toBeInTheDocument();
     expect(screen.getAllByText("Diaspora için iş birliği ve mentorluk fırsatlarına açığım.").length).toBeGreaterThan(0);
     expect(screen.getByText("Profil özeti: Diaspora için iş birliği ve mentorluk fırsatlarına açığım.")).toBeInTheDocument();
