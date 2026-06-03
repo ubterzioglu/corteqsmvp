@@ -1,6 +1,28 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type ComponentType, type ReactNode } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { CheckCircle2, Clock3, Globe2, Lock, ShieldCheck, BookOpen, Sparkles, MapPin, UserCircle2 } from "lucide-react";
+import {
+  BookOpen,
+  CheckCircle2,
+  Clock3,
+  Eye,
+  EyeOff,
+  Facebook,
+  Globe2,
+  HelpCircle,
+  ImagePlus,
+  Instagram,
+  Linkedin,
+  Lock,
+  MapPin,
+  MessageCircle,
+  Music2,
+  ShieldCheck,
+  Sparkles,
+  Trash2,
+  Twitter,
+  UserCircle2,
+  Youtube,
+} from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -16,7 +38,13 @@ import { useToast } from "@/hooks/use-toast";
 import { useCurrentUserProfile } from "@/hooks/useCurrentUserProfile";
 import { useCurrentUserDashboard } from "@/hooks/useCurrentUserDashboard";
 import { GENERIC_FEATURE_KEYS, type GenericFeatureKey } from "@/lib/features";
-import { submitFeatureRequest, submitRoleChangeRequest, updateProfileAttribute, updateUserTaxonomySelection } from "@/lib/member-profile-api";
+import {
+  submitFeatureRequest,
+  submitRoleChangeRequest,
+  updateProfileAttribute,
+  updateProfileAvatar,
+  updateUserTaxonomySelection,
+} from "@/lib/member-profile-api";
 import { getAttributeStringValue, type AttributeVisibility, type ProfileAttributeState, type TaxonomyGroupState } from "@/lib/member-profile";
 import { defaultProfileType, getRoleMeta, isProfileType, profileTypeOptions, type ProfileType } from "@/lib/profile-types";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,6 +53,21 @@ import { buildSelfProfileViewModel } from "@/lib/profile-view-model";
 
 type DraftValueMap = Record<string, string | boolean>;
 type DraftVisibilityMap = Record<string, AttributeVisibility>;
+
+type SocialAttributeConfig = {
+  key: string;
+  label: string;
+  placeholder: string;
+  icon: ComponentType<{ className?: string }>;
+  iconClassName: string;
+};
+
+type GuideSection = {
+  key: string;
+  title: string;
+  accentClassName: string;
+  content: ReactNode;
+};
 
 const VISIBILITY_OPTIONS: { value: AttributeVisibility; label: string }[] = [
   { value: "public", label: "Public" },
@@ -65,6 +108,127 @@ const REQUESTABLE_FEATURES: { key: GenericFeatureKey; title: string; description
   },
 ];
 
+const SOCIAL_ATTRIBUTE_CONFIGS: SocialAttributeConfig[] = [
+  {
+    key: "instagram_url",
+    label: "Instagram",
+    placeholder: "@kullaniciadi veya tam URL",
+    icon: Instagram,
+    iconClassName: "text-pink-500",
+  },
+  {
+    key: "facebook_url",
+    label: "Facebook",
+    placeholder: "Sayfa URL'si",
+    icon: Facebook,
+    iconClassName: "text-blue-600",
+  },
+  {
+    key: "linkedin_url",
+    label: "LinkedIn",
+    placeholder: "linkedin.com/...",
+    icon: Linkedin,
+    iconClassName: "text-sky-700",
+  },
+  {
+    key: "youtube_url",
+    label: "YouTube",
+    placeholder: "@kanal veya URL",
+    icon: Youtube,
+    iconClassName: "text-red-600",
+  },
+  {
+    key: "tiktok_url",
+    label: "TikTok",
+    placeholder: "@kullaniciadi",
+    icon: Music2,
+    iconClassName: "text-foreground",
+  },
+  {
+    key: "x_url",
+    label: "X (Twitter)",
+    placeholder: "@kullaniciadi",
+    icon: Twitter,
+    iconClassName: "text-foreground",
+  },
+  {
+    key: "reddit_url",
+    label: "Reddit",
+    placeholder: "u/kullaniciadi veya URL",
+    icon: MessageCircle,
+    iconClassName: "text-orange-500",
+  },
+] as const;
+
+const SOCIAL_ATTRIBUTE_KEYS = new Set(SOCIAL_ATTRIBUTE_CONFIGS.map((config) => config.key));
+const PROFILE_PHOTO_ATTRIBUTE_KEY = "profile_photo_url";
+const AVATARS_BUCKET = "avatars";
+const MAX_PROFILE_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+
+const buildAvatarStoragePath = (userId: string, file: File) => {
+  const safeExtension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+  return `${userId}/profile-${Date.now()}.${safeExtension}`;
+};
+
+const getPublicAvatarUrl = (path: string) => supabase.storage.from(AVATARS_BUCKET).getPublicUrl(path).data.publicUrl;
+
+const getAvatarStoragePathFromUrl = (url: string | null) => {
+  if (!url) return null;
+  const marker = `/storage/v1/object/public/${AVATARS_BUCKET}/`;
+  const index = url.indexOf(marker);
+  if (index === -1) return null;
+  return decodeURIComponent(url.slice(index + marker.length));
+};
+
+const ensureHttpsUrl = (value: string) => (value.match(/^https?:\/\//i) ? value : `https://${value}`);
+
+const normalizeSocialMediaValue = (attributeKey: string, rawValue: string) => {
+  const value = rawValue.trim();
+  if (!value) return "";
+
+  if (/^https?:\/\//i.test(value)) {
+    return value;
+  }
+
+  switch (attributeKey) {
+    case "instagram_url": {
+      if (/instagram\.com/i.test(value)) return ensureHttpsUrl(value);
+      return `https://www.instagram.com/${value.replace(/^@+/, "")}`;
+    }
+    case "facebook_url": {
+      if (/facebook\.com/i.test(value)) return ensureHttpsUrl(value);
+      return `https://www.facebook.com/${value.replace(/^@+/, "")}`;
+    }
+    case "linkedin_url": {
+      if (/linkedin\.com/i.test(value)) return ensureHttpsUrl(value);
+      return `https://www.linkedin.com/in/${value.replace(/^@+/, "")}`;
+    }
+    case "youtube_url": {
+      if (/youtube\.com|youtu\.be/i.test(value)) return ensureHttpsUrl(value);
+      const cleaned = value.replace(/^@+/, "");
+      return `https://www.youtube.com/@${cleaned}`;
+    }
+    case "tiktok_url": {
+      if (/tiktok\.com/i.test(value)) return ensureHttpsUrl(value);
+      return `https://www.tiktok.com/@${value.replace(/^@+/, "")}`;
+    }
+    case "x_url": {
+      if (/x\.com|twitter\.com/i.test(value)) return ensureHttpsUrl(value);
+      return `https://x.com/${value.replace(/^@+/, "")}`;
+    }
+    case "reddit_url": {
+      if (/reddit\.com/i.test(value)) return ensureHttpsUrl(value);
+      const cleaned = value.replace(/^\/+/, "");
+      if (/^(u|r)\//i.test(cleaned)) {
+        return `https://www.reddit.com/${cleaned}`;
+      }
+      return `https://www.reddit.com/u/${cleaned.replace(/^@+/, "")}`;
+    }
+    default:
+      return value;
+  }
+};
+
 const mapAttributeDraftValue = (attribute: ProfileAttributeState): string | boolean => {
   if (attribute.dataType === "boolean") {
     return Boolean(attribute.valueJson);
@@ -89,11 +253,16 @@ const ProfilePage = () => {
   const [draftVisibilities, setDraftVisibilities] = useState<DraftVisibilityMap>({});
   const [savingAttributeKey, setSavingAttributeKey] = useState<string | null>(null);
   const [savingTaxonomyGroupKey, setSavingTaxonomyGroupKey] = useState<string | null>(null);
+  const [savingSocialMedia, setSavingSocialMedia] = useState(false);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarRemoving, setAvatarRemoving] = useState(false);
   const [roleRequestTarget, setRoleRequestTarget] = useState<ProfileType | "">("");
   const [roleRequestNote, setRoleRequestNote] = useState("");
   const [submittingRoleRequest, setSubmittingRoleRequest] = useState(false);
   const [featureRequestingKey, setFeatureRequestingKey] = useState<string | null>(null);
   const [taxonomyDrafts, setTaxonomyDrafts] = useState<Record<string, string[]>>({});
+  const helpCardRef = useRef<HTMLDivElement | null>(null);
+  const avatarInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (!profile) return;
@@ -129,17 +298,28 @@ const ProfilePage = () => {
 
   const groupedAttributes = useMemo(() => {
     const common: ProfileAttributeState[] = [];
+    const socialMedia: ProfileAttributeState[] = [];
     const roleSpecific: ProfileAttributeState[] = [];
 
     for (const attribute of profile?.attributes ?? []) {
-      if (["full_name", "country", "city", "profile_photo_url", "bio_short"].includes(attribute.attributeKey)) {
+      if (["full_name", "country", "city", "bio_short"].includes(attribute.attributeKey)) {
         common.push(attribute);
+      } else if (attribute.attributeKey === PROFILE_PHOTO_ATTRIBUTE_KEY) {
+        continue;
+      } else if (SOCIAL_ATTRIBUTE_KEYS.has(attribute.attributeKey)) {
+        socialMedia.push(attribute);
       } else {
         roleSpecific.push(attribute);
       }
     }
 
-    return { common, roleSpecific };
+    socialMedia.sort((left, right) => {
+      const leftIndex = SOCIAL_ATTRIBUTE_CONFIGS.findIndex((item) => item.key === left.attributeKey);
+      const rightIndex = SOCIAL_ATTRIBUTE_CONFIGS.findIndex((item) => item.key === right.attributeKey);
+      return leftIndex - rightIndex;
+    });
+
+    return { common, socialMedia, roleSpecific };
   }, [profile?.attributes]);
 
   const visibleTaxonomyGroups = useMemo(() => {
@@ -155,11 +335,14 @@ const ProfilePage = () => {
     return attribute ? getAttributeStringValue(attribute) : "";
   }, [attributeMap]);
 
+  const profilePhotoAttribute = attributeMap.get(PROFILE_PHOTO_ATTRIBUTE_KEY) ?? null;
+
   const isIndividualProfile = roleMeta?.canonicalSlug === "individual";
   const displayName = readAttributeValue("full_name") || profile?.fullName || user?.user_metadata?.name || "CorteQS Üyesi";
   const shortBio = readAttributeValue("bio_short");
   const country = readAttributeValue("country");
   const city = readAttributeValue("city");
+  const currentAvatarUrl = readAttributeValue(PROFILE_PHOTO_ATTRIBUTE_KEY);
   const roleSpotlight = readAttributeValue(roleMeta?.defaultAttributeKey ?? "interests");
   const locationLabel = [city, country].filter(Boolean).join(", ");
   const initials = displayName
@@ -187,9 +370,174 @@ const ProfilePage = () => {
     complete: Boolean(readAttributeValue(item.key).trim()),
   }));
 
+  const guideSections = useMemo<GuideSection[]>(
+    () => [
+      {
+        key: "guide-common",
+        title: "Ortak Profil Alanları Kullanım Kılavuzu",
+        accentClassName: "bg-blue-50/50",
+        content: (
+          <div className="space-y-2 text-xs text-muted-foreground">
+            <p><strong className="text-foreground">Görünen İsim:</strong> Directory ve profil kartında gösterilecek adınız. Değişiklikler anında yansır.</p>
+            <p><strong className="text-foreground">Ülke / Şehir:</strong> Konum bilgileriniz. Harita ve filtreleme için kullanılır. Görünürlük ayarını değiştirebilirsiniz.</p>
+            <p><strong className="text-foreground">Profil Fotoğrafı:</strong> Yüklediğiniz görsel avatar ve public profil önizlemesinde birlikte kullanılır.</p>
+            <p><strong className="text-foreground">Kısa Biyografi:</strong> Kendinizi tanıtan 1-2 cümlelik özet. Directory listelemelerinde görünür.</p>
+            <p><strong className="text-foreground">Görünürlük Ayarı:</strong> Her alan için <em>Public</em>, <em>Private</em> veya <em>Sadece Admin</em> seçebilirsiniz.</p>
+            <p><strong className="text-foreground">Onay Süreci:</strong> Bazı alanlarda değişiklik yapıldığında admin onayı gerekir. Bu alanlar "Onaylı" etiketi ile işaretlenir.</p>
+          </div>
+        ),
+      },
+      {
+        key: "guide-role",
+        title: "Rolüne Özel Alanlar Kullanım Kılavuzu",
+        accentClassName: "bg-purple-50/50",
+        content: (
+          <div className="space-y-2 text-xs text-muted-foreground">
+            <p>Rolüne özel alanlar, seçtiğin rol türüne göre dinamik olarak belirlenir. Örneğin <strong className="text-foreground">Ambassador</strong> rolünde bölge bilgisi, <strong className="text-foreground">Blogger</strong> rolünde blog URL&apos;si gibi alanlar görünebilir.</p>
+            <p>Bu alanların bir kısmı admin onayı gerektirebilir. Onay gerektiren alanlarda değişiklik yapıldığında "Beklemede" durumu görünür ve admin onaylayana kadar public gösterilmez.</p>
+            <p>Her alan için görünürlük ayarını değiştirebilirsin: <em>Public</em>, <em>Private</em> veya <em>Sadece Admin</em>.</p>
+          </div>
+        ),
+      },
+      {
+        key: "guide-role-application",
+        title: "Rol Başvurusu Kılavuzu",
+        accentClassName: "bg-emerald-50/50",
+        content: (
+          <div className="space-y-2 text-xs text-muted-foreground">
+            <p>Her üyenin aynı anda sadece <strong className="text-foreground">bir aktif rolü</strong> olabilir. Mevcut rolünüzden farklı bir role başvurmak için açılır menüden seçim yapın.</p>
+            <p><strong className="text-foreground">Başvuru süreci:</strong> Başvurunuz admin onay kuyruğuna eklenir. Onaylanırsa yeni rolünüz aktifleşir ve eski rolünüz kaldırılır.</p>
+            <p><strong className="text-foreground">Açıklama alanı:</strong> Başvurunuzu destekleyen kısa bir metin yazın. Bu not admin değerlendirmesinde kullanılır.</p>
+            <p><strong className="text-foreground">Mevcut rolünüz:</strong> Profil kartındaki "Rol" etiketi mevcut aktif rolünüzü gösterir. Başvuru onaylanana kadar mevcut rolünüz değişmez.</p>
+          </div>
+        ),
+      },
+      {
+        key: "guide-features",
+        title: "Feature Talepleri Kılavuzu",
+        accentClassName: "bg-amber-50/50",
+        content: (
+          <div className="space-y-2 text-xs text-muted-foreground">
+            <p><strong className="text-foreground">Directory Görünürlüğü:</strong> Profilinizin public dizinde görünmesini sağlar. Onaylandıktan sonra diğer üyeler sizi bulabilir.</p>
+            <p><strong className="text-foreground">Featured Profil:</strong> Profil kartınızın dizinde öne çıkarılır. Daha fazla görünürlük sağlar.</p>
+            <p><strong className="text-foreground">WhatsApp Yayınlama:</strong> WhatsApp numaranızın profil kartınızda public olarak gösterilmesi için onay gerekir.</p>
+            <p><strong className="text-foreground">Etkinlik Oluşturma:</strong> Platformda etkinlik yayınlama yetkisi talep edin.</p>
+            <p><strong className="text-foreground">Teklif / Hizmet Oluşturma:</strong> Hizmet veya ürün tekliflerinizi yayınlama erişimi talep edin.</p>
+            <p><strong className="text-foreground">Referral Oluşturma:</strong> Davet kodu oluşturarak yeni üye kazandırma erişimi talep edin.</p>
+            <p><strong className="text-foreground">Talep Durumu:</strong> Her talebiniz admin onay sürecinden geçer. "Beklemede" etiketi göründüğünde talebiniz kuyruktadır.</p>
+          </div>
+        ),
+      },
+      {
+        key: "guide-pending",
+        title: "Bekleyen Talepler Kılavuzu",
+        accentClassName: "bg-slate-50",
+        content: (
+          <div className="space-y-2 text-xs text-muted-foreground">
+            <p>Bu bölümde admin onayı bekleyen tüm talepleriniz listelenir. Talep türü ve oluşturulma tarihi bilgileri gösterilir.</p>
+            <p><strong className="text-foreground">Rol değişikliği talepleri:</strong> Yeni rol başvurusu yapıldığında burada görünür. Onaylanana veya reddedilene kadar bekler.</p>
+            <p><strong className="text-foreground">Feature talepleri:</strong> Kapalı özellikler için erişim talebinde bulunduğunuzda burada listelenir.</p>
+            <p><strong className="text-foreground">Profil alanı değişiklikleri:</strong> Admin onayı gerektiren alanlarda yapılan güncellemeler burada takip edilir.</p>
+            <p>Talepler genellikle 1-3 iş günü içinde değerlendirilir. Sorularınız için admin ekibiyle iletişime geçebilirsiniz.</p>
+          </div>
+        ),
+      },
+    ],
+    [],
+  );
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate("/login", { replace: true });
+  };
+
+  const scrollToHelpCard = () => {
+    helpCardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleAvatarFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!user || !file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast({
+        title: "Geçersiz dosya",
+        description: "Lütfen bir görsel dosyası seç.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (file.size > MAX_PROFILE_IMAGE_SIZE_BYTES) {
+      toast({
+        title: "Dosya çok büyük",
+        description: "Profil resmi en fazla 5 MB olabilir.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const nextPath = buildAvatarStoragePath(user.id, file);
+    const previousPath = getAvatarStoragePathFromUrl(currentAvatarUrl);
+
+    setAvatarUploading(true);
+    try {
+      const { error: uploadError } = await supabase.storage
+        .from(AVATARS_BUCKET)
+        .upload(nextPath, file, { contentType: file.type, upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const publicUrl = getPublicAvatarUrl(nextPath);
+      await updateProfileAvatar(publicUrl);
+
+      if (previousPath && previousPath !== nextPath) {
+        await supabase.storage.from(AVATARS_BUCKET).remove([previousPath]);
+      }
+
+      await refreshProfile();
+      toast({
+        title: "Profil resmi güncellendi",
+        description: "Yeni görsel profilinde kullanılmaya başlandı.",
+      });
+    } catch (error) {
+      toast({
+        title: "Profil resmi yüklenemedi",
+        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        variant: "destructive",
+      });
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
+
+  const handleRemoveAvatar = async () => {
+    const previousPath = getAvatarStoragePathFromUrl(currentAvatarUrl);
+
+    setAvatarRemoving(true);
+    try {
+      await updateProfileAvatar(null);
+
+      if (previousPath) {
+        await supabase.storage.from(AVATARS_BUCKET).remove([previousPath]);
+      }
+
+      await refreshProfile();
+      toast({
+        title: "Profil resmi kaldırıldı",
+        description: "Avatar ve public profil görseli temizlendi.",
+      });
+    } catch (error) {
+      toast({
+        title: "Profil resmi kaldırılamadı",
+        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        variant: "destructive",
+      });
+    } finally {
+      setAvatarRemoving(false);
+    }
   };
 
   const handleDraftChange = (attributeKey: string, nextValue: string | boolean) => {
@@ -209,7 +557,10 @@ const ProfilePage = () => {
         .map((item) => item.trim())
         .filter(Boolean);
     } else {
-      valueToSend = String(rawValue ?? "").trim();
+      const textValue = String(rawValue ?? "").trim();
+      valueToSend = SOCIAL_ATTRIBUTE_KEYS.has(attribute.attributeKey)
+        ? normalizeSocialMediaValue(attribute.attributeKey, textValue)
+        : textValue;
     }
 
     setSavingAttributeKey(attribute.attributeKey);
@@ -231,6 +582,34 @@ const ProfilePage = () => {
       });
     } finally {
       setSavingAttributeKey(null);
+    }
+  };
+
+  const handleSaveSocialMedia = async () => {
+    if (!groupedAttributes.socialMedia.length) return;
+
+    setSavingSocialMedia(true);
+    try {
+      for (const attribute of groupedAttributes.socialMedia) {
+        const rawValue = String(draftValues[attribute.attributeKey] ?? "").trim();
+        const normalizedValue = normalizeSocialMediaValue(attribute.attributeKey, rawValue);
+        const visibility = draftVisibilities[attribute.attributeKey] ?? attribute.visibility;
+        await updateProfileAttribute(attribute.attributeKey, normalizedValue, visibility);
+      }
+
+      await refreshProfile();
+      toast({
+        title: "Sosyal medya alanları kaydedildi",
+        description: "Bağlantılar ve görünürlük ayarları güncellendi.",
+      });
+    } catch (error) {
+      toast({
+        title: "Sosyal medya alanları kaydedilemedi",
+        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingSocialMedia(false);
     }
   };
 
@@ -336,9 +715,17 @@ const ProfilePage = () => {
           <div className="border-b border-border bg-[radial-gradient(circle_at_top_left,rgba(14,165,233,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(8,145,178,0.16),transparent_32%),linear-gradient(135deg,rgba(248,250,252,0.98),rgba(240,249,255,0.94)_46%,rgba(255,255,255,1)_100%)]">
             <CardHeader className="flex flex-col gap-5 pb-4 md:flex-row md:items-start md:justify-between">
               <div className="flex items-start gap-4">
-                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[28px] bg-[linear-gradient(145deg,#0f172a,#0ea5e9)] text-2xl font-bold text-white shadow-[0_24px_45px_-24px_rgba(14,165,233,0.75)]">
-                  {initials}
-                </div>
+                {currentAvatarUrl ? (
+                  <img
+                    src={currentAvatarUrl}
+                    alt={displayName}
+                    className="h-20 w-20 shrink-0 rounded-[28px] object-cover shadow-[0_24px_45px_-24px_rgba(14,165,233,0.75)]"
+                  />
+                ) : (
+                  <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[28px] bg-[linear-gradient(145deg,#0f172a,#0ea5e9)] text-2xl font-bold text-white shadow-[0_24px_45px_-24px_rgba(14,165,233,0.75)]">
+                    {initials}
+                  </div>
+                )}
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="outline" className="border-sky-300/60 bg-white/80 text-sky-700">
@@ -378,6 +765,10 @@ const ProfilePage = () => {
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
+                <Button size="sm" variant="outline" onClick={scrollToHelpCard}>
+                  <HelpCircle className="mr-1.5 h-4 w-4" />
+                  Yardım
+                </Button>
                 <Button size="sm" variant="outline" onClick={() => void refreshProfile()}>
                   Yenile
                 </Button>
@@ -425,6 +816,10 @@ const ProfilePage = () => {
             </div>
           </div>
           <div className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={scrollToHelpCard}>
+              <HelpCircle className="mr-1.5 h-4 w-4" />
+              Yardım
+            </Button>
             <Button size="sm" variant="outline" onClick={() => void refreshProfile()}>
               Yenile
             </Button>
@@ -477,26 +872,61 @@ const ProfilePage = () => {
 
       <div className={`grid gap-4 ${isIndividualProfile ? "xl:grid-cols-[1.65fr_1fr]" : "xl:grid-cols-[1.8fr_1fr]"}`}>
         <div className="space-y-4">
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="guide-common" className="rounded-lg border bg-blue-50/50 px-3">
-              <AccordionTrigger className="py-2 text-sm font-medium hover:no-underline">
-                <span className="inline-flex items-center gap-2">
-                  <BookOpen className="h-4 w-4 text-blue-600" />
-                  Ortak Profil Alanları Kullanım Kılavuzu
-                </span>
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2 text-xs text-muted-foreground">
-                  <p><strong className="text-foreground">Görünen İsim:</strong> Directory ve profil kartında gösterilecek adınız. Değişiklikler anında yansır.</p>
-                  <p><strong className="text-foreground">Ülke / Şehir:</strong> Konum bilgileriniz. Harita ve filtreleme için kullanılır. Görünürlük ayarını değiştirebilirsiniz.</p>
-                  <p><strong className="text-foreground">Profil Fotoğrafı:</strong> Profil kartınızda gösterilecek görsel URL'si. Lütfen doğrudan bir resim bağlantısı girin.</p>
-                  <p><strong className="text-foreground">Kısa Biyografi:</strong> Kendinizi tanıtan 1-2 cümlelik özet. Directory listelemelerinde görünür.</p>
-                  <p><strong className="text-foreground">Görünürlük Ayarı:</strong> Her alan için <em>Public</em> (herkes görebilir), <em>Private</em> (sizin görebilirsiniz) veya <em>Sadece Admin</em> seçebilirsiniz.</p>
-                  <p><strong className="text-foreground">Onay Süreci:</strong> Bazı alanlarda değişiklik yapıldığında admin onayı gerekir. Bu alanlar "Onaylı" etiketi ile işaretlenir.</p>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Profil Resmi</CardTitle>
+              <CardDescription className="text-xs">
+                Yüklediğin görsel avatar ve public profil önizlemesinde birlikte kullanılır.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                {currentAvatarUrl ? (
+                  <img
+                    src={currentAvatarUrl}
+                    alt={displayName}
+                    className="h-24 w-24 rounded-[28px] object-cover shadow-sm"
+                  />
+                ) : (
+                  <div className="flex h-24 w-24 items-center justify-center rounded-[28px] bg-gradient-to-br from-sky-500 to-cyan-500 text-2xl font-bold text-white shadow-sm">
+                    {initials}
+                  </div>
+                )}
+                <div className="min-w-0 flex-1 space-y-2">
+                  <p className="text-sm font-medium text-foreground">{displayName}</p>
+                  <p className="text-xs text-muted-foreground">
+                    PNG, JPG veya WEBP desteklenir. Maksimum dosya boyutu 5 MB.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <input
+                      ref={avatarInputRef}
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp,image/jpg"
+                      className="hidden"
+                      onChange={(event) => void handleAvatarFileChange(event)}
+                    />
+                    <Button
+                      size="sm"
+                      onClick={() => avatarInputRef.current?.click()}
+                      disabled={avatarUploading || avatarRemoving}
+                    >
+                      <ImagePlus className="mr-1.5 h-4 w-4" />
+                      {avatarUploading ? "Yükleniyor..." : currentAvatarUrl ? "Resmi Değiştir" : "Resim Yükle"}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => void handleRemoveAvatar()}
+                      disabled={!currentAvatarUrl || avatarUploading || avatarRemoving}
+                    >
+                      <Trash2 className="mr-1.5 h-4 w-4" />
+                      {avatarRemoving ? "Kaldırılıyor..." : "Resmi Kaldır"}
+                    </Button>
+                  </div>
                 </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+              </div>
+            </CardContent>
+          </Card>
 
           <Card>
             <CardHeader className="pb-2">
@@ -522,23 +952,82 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
 
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="guide-role" className="rounded-lg border bg-purple-50/50 px-3">
-              <AccordionTrigger className="py-2 text-sm font-medium hover:no-underline">
-                <span className="inline-flex items-center gap-2">
-                  <BookOpen className="h-4 w-4 text-purple-600" />
-                  Rolüne Özel Alanlar Kullanım Kılavuzu
-                </span>
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2 text-xs text-muted-foreground">
-                  <p>Rolüne özel alanlar, seçtiğin rol türüne göre dinamik olarak belirlenir. Örneğin <strong className="text-foreground">Ambassador</strong> rolünde bölge bilgisi, <strong className="text-foreground">Blogger</strong> rolünde blog URL'si gibi alanlar görünebilir.</p>
-                  <p>Bu alanların bir kısmı admin onayı gerektirebilir. Onay gerektiren alanlarda değişiklik yapıldığında "Beklemede" durumu görünür ve admin onaylayana kadar public gösterilmez.</p>
-                  <p>Her alan için görünürlük ayarını değiştirebilirsin: <em>Public</em> (herkese açık), <em>Private</em> (gizli), <em>Sadece Admin</em> (admin görebilir).</p>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Sosyal Medya Hesapları</CardTitle>
+              <CardDescription className="text-xs">
+                Profesyoneller, işletme ve kuruluşlar için tavsiye edilir. Hesaplarını ekle ve her biri için profilde gösterimi ayrı ayrı aç/kapat.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {groupedAttributes.socialMedia.length ? (
+                <>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {groupedAttributes.socialMedia.map((attribute) => {
+                      const config = SOCIAL_ATTRIBUTE_CONFIGS.find((item) => item.key === attribute.attributeKey);
+                      if (!config) return null;
+                      const Icon = config.icon;
+                      const visible = (draftVisibilities[attribute.attributeKey] ?? attribute.visibility) === "public";
+
+                      return (
+                        <div key={attribute.attributeKey} className="rounded-xl border p-3">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                              <Icon className={`h-4 w-4 ${config.iconClassName}`} />
+                              <span>{config.label}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {visible ? (
+                                <Eye className="h-3.5 w-3.5 text-primary" />
+                              ) : (
+                                <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
+                              )}
+                              <Switch
+                                checked={visible}
+                                onCheckedChange={(checked) =>
+                                  setDraftVisibilities((current) => ({
+                                    ...current,
+                                    [attribute.attributeKey]: checked ? "public" : "private",
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
+                          <div className="mt-3 space-y-2">
+                            <Input
+                              value={typeof draftValues[attribute.attributeKey] === "string" ? String(draftValues[attribute.attributeKey] ?? "") : ""}
+                              onChange={(event) => handleDraftChange(attribute.attributeKey, event.target.value)}
+                              placeholder={config.placeholder}
+                            />
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex flex-wrap items-center gap-1.5">
+                                {attribute.requiresAdminApprovalOnChange ? (
+                                  <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                                    Onaylı
+                                  </Badge>
+                                ) : null}
+                                <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                                  {visible ? "Public" : "Private"}
+                                </Badge>
+                              </div>
+                              <p className="text-[11px] text-muted-foreground">Boş alanlar public profilde görünmez.</p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="flex justify-end">
+                    <Button size="sm" onClick={() => void handleSaveSocialMedia()} disabled={savingSocialMedia}>
+                      {savingSocialMedia ? "Kaydediliyor..." : "Sosyal Medya Kartını Kaydet"}
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <p className="text-xs text-muted-foreground">Bu profil için sosyal medya alanları henüz etkin değil.</p>
+              )}
+            </CardContent>
+          </Card>
 
           <Card>
             <CardHeader className="pb-2">
@@ -709,25 +1198,6 @@ const ProfilePage = () => {
             </Card>
           ) : null}
 
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="guide-role-application" className="rounded-lg border bg-emerald-50/50 px-3">
-              <AccordionTrigger className="py-2 text-sm font-medium hover:no-underline">
-                <span className="inline-flex items-center gap-2">
-                  <BookOpen className="h-4 w-4 text-emerald-600" />
-                  Rol Başvurusu Kılavuzu
-                </span>
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2 text-xs text-muted-foreground">
-                  <p>Her üyenin aynı anda sadece <strong className="text-foreground">bir aktif rolü</strong> olabilir. Mevcut rolünüzden farklı bir role başvurmak için açılır menüden seçim yapın.</p>
-                  <p><strong className="text-foreground">Başvuru süreci:</strong> Başvurunuz admin onay kuyruğuna eklenir. Onaylanırsa yeni rolünüz aktifleşir ve eski rolünüz kaldırılır.</p>
-                  <p><strong className="text-foreground">Açıklama alanı:</strong> Başvurunuzu destekleyen kısa bir metin yazın. Bu not admin değerlendirmesinde kullanılır.</p>
-                  <p><strong className="text-foreground">Mevcut rolünüz:</strong> Profil kartındaki "Rol" etiketi mevcut aktif rolünüzü gösterir. Başvuru onaylanana kadar mevcut rolünüz değişmez.</p>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Rol Başvurusu</CardTitle>
@@ -757,28 +1227,6 @@ const ProfilePage = () => {
               </Button>
             </CardContent>
           </Card>
-
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="guide-features" className="rounded-lg border bg-amber-50/50 px-3">
-              <AccordionTrigger className="py-2 text-sm font-medium hover:no-underline">
-                <span className="inline-flex items-center gap-2">
-                  <BookOpen className="h-4 w-4 text-amber-600" />
-                  Feature Talepleri Kılavuzu
-                </span>
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2 text-xs text-muted-foreground">
-                  <p><strong className="text-foreground">Directory Görünürlüğü:</strong> Profilinizin public dizinde görünmesini sağlar. Onaylandıktan sonra diğer üyeler sizi bulabilir.</p>
-                  <p><strong className="text-foreground">Featured Profil:</strong> Profil kartınızın dizinde öne çıkarılır. Daha fazla görünürlük sağlar.</p>
-                  <p><strong className="text-foreground">WhatsApp Yayınlama:</strong> WhatsApp numaranızın profil kartınızda public olarak gösterilmesi için onay gerekir.</p>
-                  <p><strong className="text-foreground">Etkinlik Oluşturma:</strong> Platformda etkinlik yayınlama yetkisi talep edin.</p>
-                  <p><strong className="text-foreground">Teklif / Hizmet Oluşturma:</strong> Hizmet veya ürün tekliflerinizi yayınlama erişimi talep edin.</p>
-                  <p><strong className="text-foreground">Referral Oluşturma:</strong> Davet kodu oluşturarak yeni üye kazandırma erişimi talep edin.</p>
-                  <p><strong className="text-foreground">Talep Durumu:</strong> Her talebiniz admin onay sürecinden geçer. "Beklemede" etiketi göründüğünde talebiniz kuyruktadır.</p>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
 
           <Card>
             <CardHeader className="pb-2">
@@ -848,26 +1296,6 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
 
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="guide-pending" className="rounded-lg border bg-slate-50 px-3">
-              <AccordionTrigger className="py-2 text-sm font-medium hover:no-underline">
-                <span className="inline-flex items-center gap-2">
-                  <BookOpen className="h-4 w-4 text-slate-600" />
-                  Bekleyen Talepler Kılavuzu
-                </span>
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2 text-xs text-muted-foreground">
-                  <p>Bu bölümde admin onayı bekleyen tüm talepleriniz listelenir. Talep türü ve oluşturulma tarihi bilgileri gösterilir.</p>
-                  <p><strong className="text-foreground">Rol değişikliği talepleri:</strong> Yeni rol başvurusu yapıldığında burada görünür. Onaylanana veya reddedilene kadar bekler.</p>
-                  <p><strong className="text-foreground">Feature talepleri:</strong> Kapalı özellikler için erişim talebinde bulunduğunuzda burada listelenir.</p>
-                  <p><strong className="text-foreground">Profil alanı değişiklikleri:</strong> Admin onayı gerektiren alanlarda yapılan güncellemeler burada takip edilir.</p>
-                  <p>Talepler genellikle 1-3 iş günü içinde değerlendirilir. Sorularınız için admin ekibiyle iletişime geçebilirsiniz.</p>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Bekleyen Talepler</CardTitle>
@@ -897,6 +1325,33 @@ const ProfilePage = () => {
           </Card>
         </div>
       </div>
+
+      <Card ref={helpCardRef} className="border-slate-200 bg-white/90 shadow-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <HelpCircle className="h-4 w-4 text-primary" />
+            Yardım & Kılavuzlar
+          </CardTitle>
+          <CardDescription className="text-xs">
+            Profilini doldururken ihtiyaç duyacağın tüm açıklamaları tek yerde topladık.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Accordion type="single" collapsible className="w-full space-y-2">
+            {guideSections.map((section) => (
+              <AccordionItem key={section.key} value={section.key} className={`rounded-lg border px-3 ${section.accentClassName}`}>
+                <AccordionTrigger className="py-2 text-sm font-medium hover:no-underline">
+                  <span className="inline-flex items-center gap-2">
+                    <BookOpen className="h-4 w-4 text-primary" />
+                    {section.title}
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>{section.content}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </CardContent>
+      </Card>
     </div>
   );
 };

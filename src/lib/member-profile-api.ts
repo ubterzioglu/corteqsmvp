@@ -41,3 +41,12 @@ export async function updateUserTaxonomySelection(groupKey: string, optionKeys: 
   if (error) throw error;
   return data;
 }
+
+export async function updateProfileAvatar(avatarUrl: string | null) {
+  const { data, error } = await (supabase as any).rpc("update_profile_avatar", {
+    next_avatar_url: avatarUrl,
+  });
+
+  if (error) throw error;
+  return data;
+}

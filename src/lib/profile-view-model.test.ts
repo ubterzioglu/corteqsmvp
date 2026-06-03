@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import type { CurrentUserProfilePayload } from "@/lib/member-profile";
 import {
+  buildPublicProfileViewModelFromCurrentUser,
   buildPublicProfileViewModelFromSections,
   buildSelfProfileViewModel,
 } from "@/lib/profile-view-model";
@@ -158,5 +159,109 @@ describe("profile-view-model", () => {
 
     expect(model.displayName).toBe("CorteQS Business");
     expect(model.sections[0]?.content).toContain("Diaspora odaklı");
+  });
+
+  it("maps social media url attributes into public links without duplicating them as sections", () => {
+    const profile: CurrentUserProfilePayload = {
+      userId: "user-3",
+      email: "user3@example.com",
+      fullName: "Ayse Kaya",
+      profileType: "isletme",
+      roleKey: "isletme",
+      roleLabel: "İşletme",
+      roleDescription: "İşletme profili",
+      roleSlug: "business",
+      features: [],
+      attributes: [
+        {
+          attributeKey: "full_name",
+          label: "İşletme Adı",
+          description: null,
+          dataType: "text",
+          isSystem: true,
+          sortOrder: 10,
+          isRequired: true,
+          isPublicDefault: true,
+          userCanEdit: true,
+          userCanHide: false,
+          requiresAdminApprovalOnChange: false,
+          visibility: "public",
+          approvalStatus: "approved",
+          valueText: "Ayse Kaya Studio",
+          valueJson: null,
+          displayValue: "Ayse Kaya Studio",
+        },
+        {
+          attributeKey: "bio_short",
+          label: "Kısa Açıklama",
+          description: null,
+          dataType: "textarea",
+          isSystem: false,
+          sortOrder: 20,
+          isRequired: false,
+          isPublicDefault: true,
+          userCanEdit: true,
+          userCanHide: true,
+          requiresAdminApprovalOnChange: false,
+          visibility: "public",
+          approvalStatus: "approved",
+          valueText: "Berlin merkezli tasarım stüdyosu.",
+          valueJson: null,
+          displayValue: "Berlin merkezli tasarım stüdyosu.",
+        },
+        {
+          attributeKey: "instagram_url",
+          label: "Instagram",
+          description: null,
+          dataType: "url",
+          isSystem: false,
+          sortOrder: 171,
+          isRequired: false,
+          isPublicDefault: true,
+          userCanEdit: true,
+          userCanHide: true,
+          requiresAdminApprovalOnChange: false,
+          visibility: "public",
+          approvalStatus: "approved",
+          valueText: "https://www.instagram.com/aysekaya",
+          valueJson: null,
+          displayValue: "https://www.instagram.com/aysekaya",
+        },
+        {
+          attributeKey: "x_url",
+          label: "X (Twitter)",
+          description: null,
+          dataType: "url",
+          isSystem: false,
+          sortOrder: 175,
+          isRequired: false,
+          isPublicDefault: true,
+          userCanEdit: true,
+          userCanHide: true,
+          requiresAdminApprovalOnChange: false,
+          visibility: "public",
+          approvalStatus: "approved",
+          valueText: "https://x.com/aysekaya",
+          valueJson: null,
+          displayValue: "https://x.com/aysekaya",
+        },
+      ],
+      taxonomyGroups: [],
+      pendingRequests: [],
+      profileCompletion: {
+        requiredTotal: 2,
+        requiredCompleted: 2,
+        percentage: 100,
+      },
+    };
+
+    const model = buildPublicProfileViewModelFromCurrentUser(profile);
+
+    expect(model.links).toEqual([
+      { label: "Instagram", url: "https://www.instagram.com/aysekaya" },
+      { label: "X (Twitter)", url: "https://x.com/aysekaya" },
+    ]);
+    expect(model.sections.some((section) => section.key === "instagram_url")).toBe(false);
+    expect(model.sections.some((section) => section.key === "x_url")).toBe(false);
   });
 });

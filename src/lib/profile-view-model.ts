@@ -64,10 +64,18 @@ const COMMON_PUBLIC_ATTRIBUTE_KEYS = new Set([
 ]);
 
 const LINK_LABELS: Record<string, string> = {
+  facebook_url: "Facebook",
+  facebook: "Facebook",
+  reddit_url: "Reddit",
+  reddit: "Reddit",
   linkedin: "LinkedIn",
   linkedin_url: "LinkedIn",
   instagram: "Instagram",
   instagram_url: "Instagram",
+  x_url: "X (Twitter)",
+  x: "X (Twitter)",
+  twitter_url: "X (Twitter)",
+  twitter: "X (Twitter)",
   website: "Website",
   website_url: "Website",
   portfolio_url: "Portfolyo",
@@ -76,6 +84,8 @@ const LINK_LABELS: Record<string, string> = {
   youtube_url: "YouTube",
   tiktok_url: "TikTok",
 };
+
+const LINK_ATTRIBUTE_KEYS = new Set(Object.keys(LINK_LABELS));
 
 const getStringValue = (attribute: ProfileAttributeState) => {
   const displayValue = getAttributeStringValue(attribute).trim();
@@ -129,7 +139,9 @@ const getImageUrl = (attributes: ProfileAttributeState[]) => {
 const buildRoleSpecificSections = (profile: CurrentUserProfilePayload, publicAttributes: ProfileAttributeState[]) => {
   const roleMeta = getRoleMeta(profile.profileType);
   const roleSpecificAttributes = publicAttributes.filter(
-    (attribute) => !COMMON_PUBLIC_ATTRIBUTE_KEYS.has(attribute.attributeKey),
+    (attribute) =>
+      !COMMON_PUBLIC_ATTRIBUTE_KEYS.has(attribute.attributeKey) &&
+      !LINK_ATTRIBUTE_KEYS.has(attribute.attributeKey),
   );
   const spotlightAttribute = roleSpecificAttributes.find(
     (attribute) => attribute.attributeKey === roleMeta?.defaultAttributeKey,

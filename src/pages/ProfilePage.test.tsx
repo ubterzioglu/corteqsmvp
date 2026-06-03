@@ -104,6 +104,60 @@ describe("ProfilePage", () => {
         valueJson: null,
         displayValue: "mentorluk, topluluk, networking",
       },
+      {
+        attributeKey: "instagram_url",
+        label: "Instagram",
+        description: "Instagram profili",
+        dataType: "url",
+        isSystem: false,
+        sortOrder: 171,
+        isRequired: false,
+        isPublicDefault: true,
+        userCanEdit: true,
+        userCanHide: true,
+        requiresAdminApprovalOnChange: false,
+        visibility: "public",
+        approvalStatus: "approved",
+        valueText: "https://www.instagram.com/firmascope",
+        valueJson: null,
+        displayValue: "https://www.instagram.com/firmascope",
+      },
+      {
+        attributeKey: "linkedin_url",
+        label: "LinkedIn",
+        description: "LinkedIn profili",
+        dataType: "url",
+        isSystem: false,
+        sortOrder: 172,
+        isRequired: false,
+        isPublicDefault: true,
+        userCanEdit: true,
+        userCanHide: true,
+        requiresAdminApprovalOnChange: false,
+        visibility: "public",
+        approvalStatus: "approved",
+        valueText: "https://www.linkedin.com/in/firmascope",
+        valueJson: null,
+        displayValue: "https://www.linkedin.com/in/firmascope",
+      },
+      {
+        attributeKey: "profile_photo_url",
+        label: "Profil Görseli",
+        description: "Profil fotoğrafı",
+        dataType: "url",
+        isSystem: true,
+        sortOrder: 40,
+        isRequired: false,
+        isPublicDefault: true,
+        userCanEdit: true,
+        userCanHide: true,
+        requiresAdminApprovalOnChange: false,
+        visibility: "public",
+        approvalStatus: "approved",
+        valueText: "https://example.com/avatar.jpg",
+        valueJson: null,
+        displayValue: "https://example.com/avatar.jpg",
+      },
     ],
     taxonomyGroups: [],
     pendingRequests: [],
@@ -209,12 +263,19 @@ describe("ProfilePage", () => {
     );
 
     expect(await screen.findByText("Bireysel Kullanıcı")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Yardım/i })).toBeInTheDocument();
+    expect(screen.getByText("Profil Resmi")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "firmascope" })).toHaveAttribute("src", "https://example.com/avatar.jpg");
     expect(screen.getByText("Ortak Profil Alanları")).toBeInTheDocument();
+    expect(screen.getByText("Sosyal Medya Hesapları")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("https://www.instagram.com/firmascope")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("https://www.linkedin.com/in/firmascope")).toBeInTheDocument();
     expect(screen.getByText("Rolüne Özel Alanlar")).toBeInTheDocument();
     expect(screen.getByText("Alt Kategori / Alt Tip")).toBeInTheDocument();
     expect(screen.getByText("Feature Talepleri")).toBeInTheDocument();
     expect(screen.getByText("Açık Dashboard Erişimleri")).toBeInTheDocument();
     expect(screen.getByText("Çift Modlu Profil Merkezi")).toBeInTheDocument();
+    expect(screen.getByText("Yardım & Kılavuzlar")).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Public Önizleme" })).toBeInTheDocument();
     expect(screen.getAllByText("Diaspora için iş birliği ve mentorluk fırsatlarına açığım.").length).toBeGreaterThan(0);
     expect(screen.getAllByText("mentorluk, topluluk, networking").length).toBeGreaterThan(0);
