@@ -737,6 +737,62 @@ const ProfilePage = () => {
     return <Navigate to={`/profile/${profile.profileType}`} replace />;
   }
 
+  const avatarManagerBlock = (
+    <div className={`flex flex-col gap-4 rounded-[24px] border p-4 ${isIndividualProfile ? "border-white/80 bg-white/85 shadow-sm backdrop-blur" : "border-slate-200 bg-slate-50/70"}`}>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+        {currentAvatarUrl ? (
+          <img
+            src={currentAvatarUrl}
+            alt={displayName}
+            className="h-24 w-24 shrink-0 rounded-[28px] object-cover shadow-sm"
+          />
+        ) : (
+          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-[28px] bg-gradient-to-br from-sky-500 to-cyan-500 text-2xl font-bold text-white shadow-sm">
+            {initials}
+          </div>
+        )}
+        <div className="min-w-0 flex-1 space-y-2">
+          <div>
+            <p className="text-sm font-semibold text-foreground">Profil Resmi</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Yüklediğin görsel avatar ve public profil önizlemesinde birlikte kullanılır.
+            </p>
+          </div>
+          <p className="text-sm font-medium text-foreground">{displayName}</p>
+          <p className="text-xs text-muted-foreground">
+            PNG, JPG veya WEBP desteklenir. Maksimum dosya boyutu 5 MB.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <input
+              ref={avatarInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/jpg"
+              className="hidden"
+              onChange={(event) => void handleAvatarFileChange(event)}
+            />
+            <Button
+              size="sm"
+              onClick={() => avatarInputRef.current?.click()}
+              disabled={avatarUploading || avatarRemoving}
+            >
+              <ImagePlus className="mr-1.5 h-4 w-4" />
+              {avatarUploading ? "Yükleniyor..." : currentAvatarUrl ? "Resmi Değiştir" : "Resim Yükle"}
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => void handleRemoveAvatar()}
+              disabled={!currentAvatarUrl || avatarUploading || avatarRemoving}
+            >
+              <Trash2 className="mr-1.5 h-4 w-4" />
+              {avatarRemoving ? "Kaldırılıyor..." : "Resmi Kaldır"}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className={`mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 ${isIndividualProfile ? "pb-16" : ""}`}>
       <Card className={isIndividualProfile ? "overflow-hidden border-slate-200/90 bg-white shadow-[0_30px_80px_-40px_rgba(15,23,42,0.35)]" : "border-slate-200 bg-white/90 shadow-sm"}>
@@ -807,6 +863,9 @@ const ProfilePage = () => {
               </div>
             </CardHeader>
             <CardContent className="grid gap-3 pb-6 md:grid-cols-4">
+              <div className="md:col-span-4">
+                {avatarManagerBlock}
+              </div>
               <div className="rounded-[22px] border border-white/80 bg-white/90 p-3 shadow-sm backdrop-blur">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Profil Skoru</p>
                 <p className="mt-1 text-2xl font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
@@ -846,6 +905,9 @@ const ProfilePage = () => {
               </div>
             </CardHeader>
             <CardContent className="grid gap-2 pb-4 md:grid-cols-3">
+              <div className="md:col-span-3">
+                {avatarManagerBlock}
+              </div>
               <div className="rounded-lg border bg-slate-50 p-2.5">
                 <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Görünen İsim</p>
                 <p className="mt-1 text-sm font-semibold">{displayName}</p>
@@ -885,62 +947,6 @@ const ProfilePage = () => {
 
       <div className={`grid gap-4 ${isIndividualProfile ? "xl:grid-cols-[1.65fr_1fr]" : "xl:grid-cols-[1.8fr_1fr]"}`}>
         <div className="space-y-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Profil Resmi</CardTitle>
-              <CardDescription className="text-xs">
-                Yüklediğin görsel avatar ve public profil önizlemesinde birlikte kullanılır.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                {currentAvatarUrl ? (
-                  <img
-                    src={currentAvatarUrl}
-                    alt={displayName}
-                    className="h-24 w-24 rounded-[28px] object-cover shadow-sm"
-                  />
-                ) : (
-                  <div className="flex h-24 w-24 items-center justify-center rounded-[28px] bg-gradient-to-br from-sky-500 to-cyan-500 text-2xl font-bold text-white shadow-sm">
-                    {initials}
-                  </div>
-                )}
-                <div className="min-w-0 flex-1 space-y-2">
-                  <p className="text-sm font-medium text-foreground">{displayName}</p>
-                  <p className="text-xs text-muted-foreground">
-                    PNG, JPG veya WEBP desteklenir. Maksimum dosya boyutu 5 MB.
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    <input
-                      ref={avatarInputRef}
-                      type="file"
-                      accept="image/png,image/jpeg,image/webp,image/jpg"
-                      className="hidden"
-                      onChange={(event) => void handleAvatarFileChange(event)}
-                    />
-                    <Button
-                      size="sm"
-                      onClick={() => avatarInputRef.current?.click()}
-                      disabled={avatarUploading || avatarRemoving}
-                    >
-                      <ImagePlus className="mr-1.5 h-4 w-4" />
-                      {avatarUploading ? "Yükleniyor..." : currentAvatarUrl ? "Resmi Değiştir" : "Resim Yükle"}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => void handleRemoveAvatar()}
-                      disabled={!currentAvatarUrl || avatarUploading || avatarRemoving}
-                    >
-                      <Trash2 className="mr-1.5 h-4 w-4" />
-                      {avatarRemoving ? "Kaldırılıyor..." : "Resmi Kaldır"}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Ortak Profil Alanları</CardTitle>
