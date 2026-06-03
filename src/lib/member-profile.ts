@@ -170,7 +170,7 @@ export const mapCurrentUserProfilePayload = (value: Json | null): CurrentUserPro
             userCanEdit: readBoolean(attribute, "user_can_edit", true),
             userCanHide: readBoolean(attribute, "user_can_hide", true),
             requiresAdminApprovalOnChange: readBoolean(attribute, "requires_admin_approval_on_change"),
-            visibility: visibility as AttributeVisibility,
+            visibility: (visibility === "public" ? "public" : "private") as AttributeVisibility,
             approvalStatus: approvalStatus as ApprovalStatus,
             valueText: readString(attribute, "value_text"),
             valueJson: (attribute.value_json as Json | undefined) ?? null,
