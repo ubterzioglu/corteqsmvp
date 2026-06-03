@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
@@ -401,8 +401,15 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Alt Kategori / Alt Tip")).toBeInTheDocument();
     expect(screen.getByText("Feature Talepleri")).toBeInTheDocument();
     expect(screen.getByText("Açık Dashboard Erişimleri")).toBeInTheDocument();
-    expect(screen.getByText("Profil Özeti & Tamamlanma")).toBeInTheDocument();
-    expect(screen.getByText("Profil Özeti")).toBeInTheDocument();
+    const profileSummaryToggle = screen.getByRole("button", { name: "Profil Özeti & Tamamlanma" });
+    expect(profileSummaryToggle).toBeInTheDocument();
+    expect(profileSummaryToggle).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByText("Profil Skoru")).not.toBeInTheDocument();
+
+    fireEvent.click(profileSummaryToggle);
+
+    expect(profileSummaryToggle).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("Profil Skoru")).toBeInTheDocument();
     expect(screen.queryByText("Genel Durum")).not.toBeInTheDocument();
     expect(screen.queryByText("Tamamlanma Durumu")).not.toBeInTheDocument();
     expect(screen.getByText("Yardım & Kılavuzlar")).toBeInTheDocument();
@@ -412,6 +419,7 @@ describe("ProfilePage", () => {
     expect(screen.getAllByText("mentorluk, topluluk, networking").length).toBeGreaterThan(0);
 
     expect(screen.getByRole("switch", { name: /Ad Soyad görünürlük/i })).toBeInTheDocument();
+    expect(screen.getByRole("switch", { name: /Kısa Açıklama görünürlük/i })).toBeInTheDocument();
     expect(screen.getAllByText("Görünür").length).toBeGreaterThan(0);
     expect(screen.getAllByRole("switch").length).toBeGreaterThan(3);
   });

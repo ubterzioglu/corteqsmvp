@@ -294,6 +294,7 @@ const ProfilePage = () => {
   const [openingDocumentKey, setOpeningDocumentKey] = useState<string | null>(null);
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarRemoving, setAvatarRemoving] = useState(false);
+  const [isProfileSummaryOpen, setIsProfileSummaryOpen] = useState(false);
   const [roleRequestTarget, setRoleRequestTarget] = useState<ProfileType | "">("");
   const [roleRequestNote, setRoleRequestNote] = useState("");
   const [submittingRoleRequest, setSubmittingRoleRequest] = useState(false);
@@ -1247,46 +1248,50 @@ const ProfilePage = () => {
       </Card>
 
       {isIndividualProfile ? (
-        <Card className="border-slate-200/90 bg-white/90 shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Profil Özeti & Tamamlanma</CardTitle>
-            <CardDescription className="text-xs">
-              Profil metriklerini ve eksik alanlarını tek kart içinde takip et.
-            </CardDescription>
+        <Card className="overflow-hidden border-slate-200/90 bg-white/90 shadow-sm">
+          <CardHeader className="p-0">
+            <button
+              type="button"
+              className="flex w-full items-center justify-between gap-3 px-6 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              aria-expanded={isProfileSummaryOpen}
+              aria-controls="profile-summary-content"
+              onClick={() => setIsProfileSummaryOpen((current) => !current)}
+            >
+              <CardTitle className="text-base">Profil Özeti & Tamamlanma</CardTitle>
+              <ChevronDown
+                className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${isProfileSummaryOpen ? "rotate-180" : ""}`}
+              />
+            </button>
           </CardHeader>
-          <CardContent>
-            <Accordion type="single" collapsible defaultValue="profile-summary" className="space-y-2">
-              <AccordionItem value="profile-summary" className="overflow-hidden rounded-xl border px-3">
-                <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
-                  Profil Özeti
-                </AccordionTrigger>
-                <AccordionContent className="pb-3">
-                  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
-                    <div className="rounded-[22px] border bg-slate-50/80 p-3">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Profil Skoru</p>
-                      <p className="mt-1 text-2xl font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
-                      <p className="mt-1 text-xs text-slate-600">Zorunlu alan tamamlanma oranı</p>
+          {isProfileSummaryOpen ? (
+            <CardContent id="profile-summary-content" className="pt-0 pb-4">
+              <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-6">
+                <div className="rounded-[20px] border bg-slate-50/80 px-2.5 py-2 text-xs leading-4">
+                  <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Profil Skoru</p>
+                  <p className="mt-1 font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
+                  <p className="mt-1 text-slate-600">Zorunlu alan tamamlanma oranı</p>
+                </div>
+                {completionHighlights.map((item) => (
+                  <div
+                    key={item.key}
+                    className={`rounded-2xl border px-2.5 py-2 text-xs leading-4 ${item.complete ? "border-emerald-200 bg-emerald-50/70" : "border-amber-200 bg-amber-50/70"}`}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      {item.complete ? (
+                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                      ) : (
+                        <Clock3 className="h-3.5 w-3.5 text-amber-700" />
+                      )}
+                      <p className="font-semibold text-slate-900">{item.label}</p>
                     </div>
-                    {completionHighlights.map((item) => (
-                      <div key={item.key} className={`rounded-2xl border p-3 ${item.complete ? "border-emerald-200 bg-emerald-50/70" : "border-amber-200 bg-amber-50/70"}`}>
-                        <div className="flex items-center gap-2">
-                          {item.complete ? (
-                            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                          ) : (
-                            <Clock3 className="h-4 w-4 text-amber-700" />
-                          )}
-                          <p className="text-sm font-medium text-slate-900">{item.label}</p>
-                        </div>
-                        <p className="mt-1 text-xs text-slate-600">
-                          {item.complete ? "Tamamlandı" : "Eksik veya doldurulmayı bekliyor"}
-                        </p>
-                      </div>
-                    ))}
+                    <p className="mt-1 text-slate-600">
+                      {item.complete ? "Tamamlandı" : "Eksik veya doldurulmayı bekliyor"}
+                    </p>
                   </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </CardContent>
+                ))}
+              </div>
+            </CardContent>
+          ) : null}
         </Card>
       ) : null}
 
@@ -1807,34 +1812,29 @@ const ProfileAttributeEditor = ({
   const visibilityLocked = !attribute.userCanHide;
   const approvalLabel = attribute.approvalStatus === "approved" ? "Onaylı" : "Beklemede";
 
-  return (
-    <div className="rounded-lg border p-3">
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div className="space-y-0.5">
-          <div className="flex flex-wrap items-center gap-1.5">
-            <p className="text-sm font-semibold">{attributeLabel}</p>
-            {attribute.isRequired ? <Badge variant="secondary" className="text-[10px] px-1.5 py-0">Zorunlu</Badge> : null}
-            {attribute.requiresAdminApprovalOnChange && visibilityMode !== "inline-switch" ? (
-              <Badge variant="outline" className="text-[10px] px-1.5 py-0">Onaylı</Badge>
-            ) : null}
+  if (visibilityMode === "inline-switch") {
+    return (
+      <div className="rounded-lg border px-2.5 py-2">
+        <div className="flex items-start gap-2">
+          <div className="w-28 shrink-0 space-y-1 sm:w-36">
+            <div className="flex flex-wrap items-center gap-1">
+              <p className="text-sm font-semibold leading-4">{attributeLabel}</p>
+              {attribute.isRequired ? <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">Zorunlu</Badge> : null}
+            </div>
           </div>
-          {attribute.description ? <p className="text-xs text-muted-foreground">{attribute.description}</p> : null}
-        </div>
-        {visibilityMode === "inline-switch" ? (
-          <div className="flex flex-wrap items-center justify-end gap-2 text-xs">
-            {attribute.requiresAdminApprovalOnChange ? (
-              <span className="inline-flex items-center gap-1 text-emerald-700">
-                <CheckCircle2 className="h-3.5 w-3.5" />
-                {approvalLabel}
-              </span>
-            ) : null}
-            <div className="inline-flex items-center gap-2 rounded-full border bg-slate-50/80 px-2.5 py-1.5 text-xs">
+
+          <div className="min-w-0 flex-1">
+            <AttributeInput attribute={attribute} value={draftValue} onChange={onValueChange} compact />
+          </div>
+
+          <div className="w-[132px] shrink-0">
+            <div className="flex h-9 items-center gap-1.5 rounded-full border bg-slate-50/80 px-2 text-xs">
               {draftVisibility === "public" ? (
-                <Eye className="h-3.5 w-3.5 text-primary" />
+                <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
               ) : (
-                <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
+                <EyeOff className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
               )}
-              <span className="font-medium text-slate-700">{visibilityLabel}</span>
+              <span className="min-w-0 flex-1 truncate font-medium text-slate-700">{visibilityLabel}</span>
               <Switch
                 checked={draftVisibility === "public"}
                 onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")}
@@ -1843,40 +1843,65 @@ const ProfileAttributeEditor = ({
               />
             </div>
           </div>
-        ) : (
-          <div className="flex flex-wrap items-center gap-2 text-xs">
-            {attribute.approvalStatus === "approved" ? (
-              <span className="inline-flex items-center gap-1 text-emerald-700">
+        </div>
+
+        {attribute.description || visibilityLocked || attribute.requiresAdminApprovalOnChange ? (
+          <div className="mt-2 space-y-1">
+            {attribute.description ? <p className="text-xs text-muted-foreground">{attribute.description}</p> : null}
+            {visibilityLocked ? (
+              <span className="inline-flex items-center gap-1 text-xs text-slate-600">
+                <Lock className="h-3.5 w-3.5" />
+                Bu alan gizlenemez
+              </span>
+            ) : null}
+            {attribute.requiresAdminApprovalOnChange ? (
+              <span className="inline-flex items-center gap-1 text-xs text-emerald-700">
                 <CheckCircle2 className="h-3.5 w-3.5" />
-                Onaylı
+                {approvalLabel}
               </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 text-amber-700">
-                <Clock3 className="h-3.5 w-3.5" />
-                Beklemede
-              </span>
-            )}
-            <span className="inline-flex items-center gap-1 text-slate-600">
-              {draftVisibility === "public" ? <Globe2 className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
-              {visibilityLabel}
-            </span>
+            ) : null}
           </div>
-        )}
+        ) : null}
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-lg border p-3">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div className="space-y-0.5">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <p className="text-sm font-semibold">{attributeLabel}</p>
+            {attribute.isRequired ? <Badge variant="secondary" className="text-[10px] px-1.5 py-0">Zorunlu</Badge> : null}
+            {attribute.requiresAdminApprovalOnChange ? (
+              <Badge variant="outline" className="text-[10px] px-1.5 py-0">Onaylı</Badge>
+            ) : null}
+          </div>
+          {attribute.description ? <p className="text-xs text-muted-foreground">{attribute.description}</p> : null}
+        </div>
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          {attribute.approvalStatus === "approved" ? (
+            <span className="inline-flex items-center gap-1 text-emerald-700">
+              <CheckCircle2 className="h-3.5 w-3.5" />
+              Onaylı
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 text-amber-700">
+              <Clock3 className="h-3.5 w-3.5" />
+              Beklemede
+            </span>
+          )}
+          <span className="inline-flex items-center gap-1 text-slate-600">
+            {draftVisibility === "public" ? <Globe2 className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
+            {visibilityLabel}
+          </span>
+        </div>
       </div>
 
       <div className="mt-3 space-y-2">
         <AttributeInput attribute={attribute} value={draftValue} onChange={onValueChange} />
 
-        {visibilityMode === "inline-switch" ? (
-          <div className="flex flex-wrap items-center gap-2 text-xs">
-            {visibilityLocked ? (
-              <span className="inline-flex items-center gap-1 text-slate-600">
-                <Lock className="h-3.5 w-3.5" />
-                Bu alan gizlenemez
-              </span>
-            ) : null}
-          </div>
-        ) : visibilityMode === "collapsible-radio" ? (
+        {visibilityMode === "collapsible-radio" ? (
           <Collapsible open={isVisibilityOpen} onOpenChange={setIsVisibilityOpen}>
             <div className="rounded-xl border bg-slate-50/70">
               <CollapsibleTrigger asChild>
@@ -2119,12 +2144,14 @@ type AttributeInputProps = {
   attribute: ProfileAttributeState;
   value: string | boolean | undefined;
   onChange: (value: string | boolean) => void;
+  compact?: boolean;
 };
 
-const AttributeInput = ({ attribute, value, onChange }: AttributeInputProps) => {
+const AttributeInput = ({ attribute, value, onChange, compact = false }: AttributeInputProps) => {
   if (attribute.dataType === "textarea" || attribute.dataType === "multi_select" || attribute.dataType === "json") {
     return (
       <Textarea
+        className={compact ? "min-h-[40px] text-xs" : undefined}
         value={typeof value === "string" ? value : ""}
         onChange={(event) => onChange(event.target.value)}
         placeholder={attribute.dataType === "multi_select" ? "Virgülle ayırarak yaz" : attribute.label}
@@ -2134,8 +2161,8 @@ const AttributeInput = ({ attribute, value, onChange }: AttributeInputProps) => 
 
   if (attribute.dataType === "boolean") {
     return (
-      <div className="flex items-center justify-between rounded-xl border px-3 py-2">
-        <p className="text-sm font-medium">{attribute.label}</p>
+      <div className={`flex items-center justify-between rounded-xl border px-3 ${compact ? "h-9 py-1.5" : "py-2"}`}>
+        <p className={`${compact ? "text-xs" : "text-sm"} font-medium`}>{attribute.label}</p>
         <Switch checked={Boolean(value)} onCheckedChange={(checked) => onChange(checked)} />
       </div>
     );
@@ -2143,6 +2170,7 @@ const AttributeInput = ({ attribute, value, onChange }: AttributeInputProps) => 
 
   return (
     <Input
+      className={compact ? "h-9 text-xs md:text-xs" : undefined}
       type={attribute.dataType === "url" ? "url" : "text"}
       value={typeof value === "string" ? value : ""}
       onChange={(event) => onChange(event.target.value)}
