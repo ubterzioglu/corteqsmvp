@@ -830,41 +830,37 @@ const ProfilePage = () => {
             </CardContent>
           </div>
         ) : null}
-        <CardHeader className="flex flex-col gap-3 pb-3 md:flex-row md:items-center md:justify-between">
-          <div className="space-y-1">
-            <CardTitle className={`${isIndividualProfile ? "text-xl" : "text-2xl"}`}>{roleMeta?.title ?? "Profilim"}</CardTitle>
-            <CardDescription className="max-w-2xl text-xs">
-              {isIndividualProfile
-                ? "Aşağıdaki alanlar bireysel profil kartını, directory görünürlüğünü ve erişimlerini belirler."
-                : roleMeta?.description}
-            </CardDescription>
-            <div className="flex flex-wrap items-center gap-1.5">
-              <Badge variant="secondary" className="text-xs">{profile?.roleLabel ?? roleMeta?.adminLabel ?? "Rol"}</Badge>
-              <Badge variant="outline" className="text-xs">Tamamlanma %{profile?.profileCompletion.percentage ?? 0}</Badge>
-              {errorMessage ? <Badge variant="destructive" className="text-xs">Kısmi veri yüklendi</Badge> : null}
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className={`grid gap-2 pb-4 ${isIndividualProfile ? "md:grid-cols-4" : "md:grid-cols-3"}`}>
-          <div className="rounded-lg border bg-slate-50 p-2.5">
-            <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Görünen İsim</p>
-            <p className="mt-1 text-sm font-semibold">{displayName}</p>
-          </div>
-          <div className="rounded-lg border bg-slate-50 p-2.5">
-            <p className="text-[10px] uppercase tracking-wide text-muted-foreground">E-posta</p>
-            <p className="mt-1 break-all text-xs">{profile?.email ?? user?.email ?? "-"}</p>
-          </div>
-          <div className="rounded-lg border bg-slate-50 p-2.5">
-            <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Bekleyen Talep</p>
-            <p className="mt-1 text-sm font-semibold">{pendingCount}</p>
-          </div>
-          {isIndividualProfile ? (
-            <div className="rounded-lg border bg-slate-50 p-2.5">
-              <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Açık Dashboard</p>
-              <p className="mt-1 text-sm font-semibold">{dashboardCount}</p>
-            </div>
-          ) : null}
-        </CardContent>
+        {!isIndividualProfile ? (
+          <>
+            <CardHeader className="flex flex-col gap-3 pb-3 md:flex-row md:items-center md:justify-between">
+              <div className="space-y-1">
+                <CardTitle className="text-2xl">{roleMeta?.title ?? "Profilim"}</CardTitle>
+                <CardDescription className="max-w-2xl text-xs">
+                  {roleMeta?.description}
+                </CardDescription>
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <Badge variant="secondary" className="text-xs">{profile?.roleLabel ?? roleMeta?.adminLabel ?? "Rol"}</Badge>
+                  <Badge variant="outline" className="text-xs">Tamamlanma %{profile?.profileCompletion.percentage ?? 0}</Badge>
+                  {errorMessage ? <Badge variant="destructive" className="text-xs">Kısmi veri yüklendi</Badge> : null}
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="grid gap-2 pb-4 md:grid-cols-3">
+              <div className="rounded-lg border bg-slate-50 p-2.5">
+                <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Görünen İsim</p>
+                <p className="mt-1 text-sm font-semibold">{displayName}</p>
+              </div>
+              <div className="rounded-lg border bg-slate-50 p-2.5">
+                <p className="text-[10px] uppercase tracking-wide text-muted-foreground">E-posta</p>
+                <p className="mt-1 break-all text-xs">{profile?.email ?? user?.email ?? "-"}</p>
+              </div>
+              <div className="rounded-lg border bg-slate-50 p-2.5">
+                <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Bekleyen Talep</p>
+                <p className="mt-1 text-sm font-semibold">{pendingCount}</p>
+              </div>
+            </CardContent>
+          </>
+        ) : null}
       </Card>
 
       {isIndividualProfile ? (

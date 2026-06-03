@@ -262,7 +262,7 @@ describe("ProfilePage", () => {
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText("Bireysel Kullanıcı")).toBeInTheDocument();
+    expect(await screen.findByText("Bireysel Panelim")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Yardım/i })).toBeInTheDocument();
     expect(screen.getByText("Profil Resmi")).toBeInTheDocument();
     expect(screen.getAllByRole("img", { name: "firmascope" }).length).toBeGreaterThan(0);
