@@ -1899,8 +1899,8 @@ const ProfilePage = () => {
           </CardContent>
         ) : null}
       </Card>
-    </div>
-  );
+  </div>
+);
 };
 
 type ProfileAttributeEditorProps = {
