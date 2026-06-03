@@ -184,17 +184,17 @@ const PROFILE_PRESENTATION_BUCKET = "profile-presentation-files";
 const MAX_PROFILE_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 
 const GOOGLE_SOFT_CARD_HERO =
-  "overflow-hidden border-gray-200 shadow-[0_2px_16px_-4px_rgba(0,0,0,0.1)]";
+  "overflow-hidden border-orange-100/60 shadow-[0_2px_16px_-4px_rgba(0,0,0,0.1),0_0_24px_-6px_rgba(249,115,22,0.22)]";
 const GOOGLE_SOFT_CARD_SECTION =
-  "border-gray-200 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)]";
+  "border-orange-100/50 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_18px_-6px_rgba(249,115,22,0.18)]";
 const GOOGLE_SOFT_CARD_BLUE_SECTION =
-  "border-gray-200 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)]";
+  "border-orange-100/50 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_18px_-6px_rgba(249,115,22,0.18)]";
 const GOOGLE_SOFT_CARD_YELLOW_SECTION =
-  "border-gray-200 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)]";
+  "border-orange-100/50 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_18px_-6px_rgba(249,115,22,0.18)]";
 const GOOGLE_SOFT_CARD_GREEN_SECTION =
-  "border-gray-200 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)]";
+  "border-orange-100/50 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_18px_-6px_rgba(249,115,22,0.18)]";
 const GOOGLE_SOFT_CARD_RED_SECTION =
-  "border-gray-200 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)]";
+  "border-orange-100/50 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_18px_-6px_rgba(249,115,22,0.18)]";
 const GOOGLE_SOFT_CARD_SUBTLE =
   "border border-gray-100 bg-gray-50/80";
 const GOOGLE_SOFT_CARD_SUBTLE_INTERACTIVE =
