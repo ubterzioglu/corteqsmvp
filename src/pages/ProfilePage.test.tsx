@@ -420,7 +420,8 @@ describe("ProfilePage", () => {
 
     expect(screen.getByRole("switch", { name: /Ad Soyad görünürlük/i })).toBeInTheDocument();
     expect(screen.getByRole("switch", { name: /Kısa Açıklama görünürlük/i })).toBeInTheDocument();
-    expect(screen.getAllByText("Görünür").length).toBeGreaterThan(0);
+    expect(screen.queryByText("Tamamlandı")).not.toBeInTheDocument();
+    expect(screen.queryByText("Eksik veya doldurulmayı bekliyor")).not.toBeInTheDocument();
     expect(screen.getAllByRole("switch").length).toBeGreaterThan(3);
   });
 

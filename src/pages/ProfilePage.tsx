@@ -1269,24 +1269,23 @@ const ProfilePage = () => {
                 <div className="rounded-[20px] border bg-slate-50/80 px-2.5 py-2 text-xs leading-4">
                   <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Profil Skoru</p>
                   <p className="mt-1 font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
-                  <p className="mt-1 text-slate-600">Zorunlu alan tamamlanma oranı</p>
+                  <p className="mt-1 text-slate-600">
+                    {(profile?.profileCompletion.requiredCompleted ?? 0)} / {(profile?.profileCompletion.requiredTotal ?? 0)} zorunlu alan dolu
+                  </p>
                 </div>
                 {completionHighlights.map((item) => (
                   <div
                     key={item.key}
-                    className={`rounded-2xl border px-2.5 py-2 text-xs leading-4 ${item.complete ? "border-emerald-200 bg-emerald-50/70" : "border-amber-200 bg-amber-50/70"}`}
+                    className={`rounded-2xl border px-2.5 py-2 text-xs leading-4 ${item.complete ? "border-emerald-200 bg-emerald-50/80" : "border-rose-200 bg-rose-50/75"}`}
                   >
                     <div className="flex items-center gap-1.5">
                       {item.complete ? (
                         <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
                       ) : (
-                        <Clock3 className="h-3.5 w-3.5 text-amber-700" />
+                        <Clock3 className="h-3.5 w-3.5 text-rose-500" />
                       )}
                       <p className="font-semibold text-slate-900">{item.label}</p>
                     </div>
-                    <p className="mt-1 text-slate-600">
-                      {item.complete ? "Tamamlandı" : "Eksik veya doldurulmayı bekliyor"}
-                    </p>
                   </div>
                 ))}
               </div>
@@ -1827,14 +1826,13 @@ const ProfileAttributeEditor = ({
             <AttributeInput attribute={attribute} value={draftValue} onChange={onValueChange} compact />
           </div>
 
-          <div className="w-[132px] shrink-0">
-            <div className="flex h-9 items-center gap-1.5 rounded-full border bg-slate-50/80 px-2 text-xs">
+          <div className="w-[84px] shrink-0">
+            <div className="flex h-9 items-center justify-between gap-1.5 rounded-full border bg-slate-50/80 px-2 text-xs">
               {draftVisibility === "public" ? (
                 <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
               ) : (
                 <EyeOff className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
               )}
-              <span className="min-w-0 flex-1 truncate font-medium text-slate-700">{visibilityLabel}</span>
               <Switch
                 checked={draftVisibility === "public"}
                 onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")}
@@ -2039,9 +2037,8 @@ const StandaloneLinkAttributeCard = ({
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex items-center justify-between rounded-xl border bg-slate-50/70 px-3 py-2">
-          <div className="flex items-center gap-2 text-xs text-slate-600">
+          <div className="flex items-center gap-1.5 text-xs text-slate-600">
             {visible ? <Eye className="h-3.5 w-3.5 text-primary" /> : <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />}
-            <span>{visible ? "Görünür" : "Gizli"}</span>
           </div>
           <Switch checked={visible} disabled={!attribute.userCanHide} onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")} />
         </div>
