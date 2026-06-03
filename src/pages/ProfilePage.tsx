@@ -184,21 +184,21 @@ const PROFILE_PRESENTATION_BUCKET = "profile-presentation-files";
 const MAX_PROFILE_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 
 const GOOGLE_SOFT_CARD_HERO =
-  "overflow-hidden border-[rgba(66,133,244,0.18)] bg-white shadow-[0_34px_90px_-38px_rgba(66,133,244,0.42),0_0_0_1px_rgba(251,188,5,0.06)]";
+  "overflow-hidden border-[rgba(66,133,244,0.32)] bg-white shadow-[0_34px_90px_-38px_rgba(66,133,244,0.55),0_0_0_2px_rgba(66,133,244,0.14)]";
 const GOOGLE_SOFT_CARD_SECTION =
-  "border-[rgba(66,133,244,0.16)] bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.13),transparent_32%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.13),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.09),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.1),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(255,255,255,0.9))] shadow-[0_28px_60px_-38px_rgba(66,133,244,0.46),0_0_0_1px_rgba(66,133,244,0.04)] backdrop-blur-[2px]";
+  "border-[rgba(66,133,244,0.22)] bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.22),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.2),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.15),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.18),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(248,252,255,0.93))] shadow-[0_28px_60px_-38px_rgba(66,133,244,0.5),0_0_0_1.5px_rgba(66,133,244,0.1)] backdrop-blur-[2px]";
 const GOOGLE_SOFT_CARD_BLUE_SECTION =
-  "border-[rgba(66,133,244,0.18)] bg-[radial-gradient(ellipse_at_top_left,rgba(66,133,244,0.2),transparent_42%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.09),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.06),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(244,248,255,0.88))] shadow-[0_28px_60px_-38px_rgba(66,133,244,0.46),0_0_0_1px_rgba(66,133,244,0.06)] backdrop-blur-[2px]";
+  "border-[rgba(66,133,244,0.28)] bg-[radial-gradient(ellipse_at_top_left,rgba(66,133,244,0.32),transparent_42%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.1),transparent_36%),linear-gradient(180deg,rgba(232,240,254,0.7),rgba(255,255,255,0.94))] shadow-[0_28px_60px_-38px_rgba(66,133,244,0.55),0_0_0_2px_rgba(66,133,244,0.12)] backdrop-blur-[2px]";
 const GOOGLE_SOFT_CARD_YELLOW_SECTION =
-  "border-[rgba(251,188,5,0.22)] bg-[radial-gradient(ellipse_at_top_right,rgba(251,188,5,0.2),transparent_38%),radial-gradient(circle_at_top_left,rgba(66,133,244,0.1),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.09),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.06),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(255,251,238,0.88))] shadow-[0_28px_60px_-38px_rgba(251,188,5,0.38),0_0_0_1px_rgba(251,188,5,0.06)] backdrop-blur-[2px]";
+  "border-[rgba(251,188,5,0.35)] bg-[radial-gradient(ellipse_at_top_right,rgba(251,188,5,0.32),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.08),transparent_36%),linear-gradient(180deg,rgba(254,249,195,0.65),rgba(255,255,255,0.94))] shadow-[0_28px_60px_-38px_rgba(251,188,5,0.48),0_0_0_2px_rgba(251,188,5,0.14)] backdrop-blur-[2px]";
 const GOOGLE_SOFT_CARD_GREEN_SECTION =
-  "border-[rgba(52,168,83,0.2)] bg-[radial-gradient(ellipse_at_top_left,rgba(52,168,83,0.2),transparent_36%),radial-gradient(circle_at_top_right,rgba(66,133,244,0.09),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(251,188,5,0.1),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.06),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(242,249,244,0.88))] shadow-[0_28px_60px_-38px_rgba(52,168,83,0.36),0_0_0_1px_rgba(52,168,83,0.06)] backdrop-blur-[2px]";
+  "border-[rgba(52,168,83,0.3)] bg-[radial-gradient(ellipse_at_top_left,rgba(52,168,83,0.3),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(66,133,244,0.08),transparent_36%),linear-gradient(180deg,rgba(220,252,231,0.65),rgba(255,255,255,0.94))] shadow-[0_28px_60px_-38px_rgba(52,168,83,0.45),0_0_0_2px_rgba(52,168,83,0.1)] backdrop-blur-[2px]";
 const GOOGLE_SOFT_CARD_RED_SECTION =
-  "border-[rgba(234,67,53,0.18)] bg-[radial-gradient(ellipse_at_top_left,rgba(234,67,53,0.17),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.12),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(66,133,244,0.1),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(52,168,83,0.06),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(253,245,244,0.88))] shadow-[0_28px_60px_-38px_rgba(234,67,53,0.34),0_0_0_1px_rgba(234,67,53,0.06)] backdrop-blur-[2px]";
+  "border-[rgba(234,67,53,0.28)] bg-[radial-gradient(ellipse_at_top_left,rgba(234,67,53,0.27),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(251,188,5,0.1),transparent_36%),linear-gradient(180deg,rgba(254,226,226,0.65),rgba(255,255,255,0.94))] shadow-[0_28px_60px_-38px_rgba(234,67,53,0.44),0_0_0_2px_rgba(234,67,53,0.1)] backdrop-blur-[2px]";
 const GOOGLE_SOFT_CARD_SUBTLE =
-  "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.12),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.1),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.84))] shadow-[0_18px_35px_-30px_rgba(66,133,244,0.3)]";
+  "border border-white/90 bg-white/80 shadow-[0_4px_20px_-12px_rgba(66,133,244,0.2)] backdrop-blur-sm";
 const GOOGLE_SOFT_CARD_SUBTLE_INTERACTIVE =
-  "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.12),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.1),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.84))] shadow-[0_18px_35px_-30px_rgba(66,133,244,0.3)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_40px_-28px_rgba(66,133,244,0.34)]";
+  "border border-white/90 bg-white/80 shadow-[0_4px_20px_-12px_rgba(66,133,244,0.2)] backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-[0_8px_28px_-12px_rgba(66,133,244,0.28)]";
 
 const GOOGLE_SOFT_SUBTLE_WARM =
   "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(251,188,5,0.14),transparent_34%),radial-gradient(circle_at_top_right,rgba(234,67,53,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,251,244,0.84))] shadow-[0_18px_35px_-30px_rgba(251,188,5,0.28)]";
@@ -210,7 +210,7 @@ const GOOGLE_SOFT_SUBTLE_RED =
   "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(234,67,53,0.12),transparent_34%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(253,247,244,0.84))] shadow-[0_18px_35px_-30px_rgba(234,67,53,0.24)]";
 
 const GOOGLE_SOFT_HERO_SURFACE =
-  "border-b border-[rgba(66,133,244,0.1)] bg-[radial-gradient(ellipse_at_top_left,rgba(66,133,244,0.3),transparent_32%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.28),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.14),transparent_22%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.16),transparent_26%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(247,250,255,0.95)_44%,rgba(255,252,244,0.94)_100%)]";
+  "border-b border-[rgba(66,133,244,0.16)] bg-[radial-gradient(ellipse_at_top_left,rgba(66,133,244,0.38),transparent_35%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.34),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.18),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.22),transparent_28%),linear-gradient(135deg,rgba(232,240,254,0.55),rgba(255,255,255,0.95)_44%,rgba(255,252,230,0.5)_100%)]";
 const GOOGLE_SOFT_ACTION_PANEL =
   "rounded-[26px] border border-[rgba(249,115,22,0.2)] bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.12),transparent_34%),radial-gradient(circle_at_top_right,rgba(249,115,22,0.08),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.07),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,237,0.86))] p-3 shadow-[0_24px_45px_-36px_rgba(249,115,22,0.25)]";
 const GOOGLE_SOFT_SUCCESS_PANEL =
@@ -232,21 +232,21 @@ const AMBER_ACTION_BUTTON =
 const PremiumBackground = () => (
   <>
     <style>{`
-      @keyframes gOrb1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-60px) scale(1.12)}66%{transform:translate(-30px,40px) scale(0.92)}}
-      @keyframes gOrb2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-55px,-45px) scale(1.18)}}
-      @keyframes gOrb3{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(35px,55px) scale(0.88)}75%{transform:translate(-40px,-25px) scale(1.08)}}
-      @keyframes gOrb4{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(55px,40px) scale(1.14)}80%{transform:translate(-15px,-55px) scale(0.92)}}
-      @keyframes gPulse{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:0.72;transform:scale(1.06)}}
-      @keyframes gGrid{0%,100%{opacity:0.3}50%{opacity:0.6}}
+      @keyframes gOrb1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(50px,-70px) scale(1.15)}66%{transform:translate(-40px,50px) scale(0.9)}}
+      @keyframes gOrb2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-65px,-55px) scale(1.2)}}
+      @keyframes gOrb3{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(45px,65px) scale(0.86)}75%{transform:translate(-50px,-30px) scale(1.1)}}
+      @keyframes gOrb4{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(65px,50px) scale(1.18)}80%{transform:translate(-20px,-65px) scale(0.9)}}
+      @keyframes gPulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:0.85;transform:scale(1.08)}}
+      @keyframes gGrid{0%,100%{opacity:0.2}50%{opacity:0.5}}
     `}</style>
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <div style={{position:"absolute",inset:0,background:"linear-gradient(145deg,rgba(66,133,244,0.05) 0%,rgba(255,255,255,0) 50%,rgba(52,168,83,0.04) 100%)"}} />
-      <div style={{position:"absolute",top:"-20%",left:"-15%",width:"75%",height:"70%",borderRadius:"50%",background:"radial-gradient(circle,rgba(66,133,244,0.26) 0%,rgba(66,133,244,0.1) 38%,transparent 65%)",animation:"gOrb1 24s ease-in-out infinite",filter:"blur(70px)"}} />
-      <div style={{position:"absolute",top:"0%",right:"-20%",width:"65%",height:"60%",borderRadius:"50%",background:"radial-gradient(circle,rgba(251,188,5,0.24) 0%,rgba(251,188,5,0.09) 38%,transparent 65%)",animation:"gOrb2 30s ease-in-out infinite",filter:"blur(75px)"}} />
-      <div style={{position:"absolute",top:"40%",left:"-10%",width:"60%",height:"55%",borderRadius:"50%",background:"radial-gradient(circle,rgba(234,67,53,0.2) 0%,rgba(234,67,53,0.07) 38%,transparent 65%)",animation:"gOrb3 26s ease-in-out infinite",filter:"blur(65px)"}} />
-      <div style={{position:"absolute",bottom:"-15%",right:"-12%",width:"68%",height:"62%",borderRadius:"50%",background:"radial-gradient(circle,rgba(52,168,83,0.22) 0%,rgba(52,168,83,0.08) 38%,transparent 65%)",animation:"gOrb4 32s ease-in-out infinite",filter:"blur(70px)"}} />
-      <div style={{position:"absolute",top:"35%",left:"20%",width:"60%",height:"45%",borderRadius:"50%",background:"radial-gradient(ellipse,rgba(66,133,244,0.1) 0%,rgba(251,188,5,0.08) 45%,transparent 70%)",animation:"gPulse 20s ease-in-out infinite",filter:"blur(90px)"}} />
-      <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,rgba(66,133,244,0.07) 1px,transparent 1px)",backgroundSize:"52px 52px",animation:"gGrid 8s ease-in-out infinite"}} />
+    <div className="pointer-events-none fixed inset-0 overflow-hidden" style={{zIndex:-1}} aria-hidden="true">
+      <div style={{position:"absolute",inset:0,background:"linear-gradient(145deg,rgba(232,240,254,0.55) 0%,rgba(255,252,230,0.3) 35%,rgba(252,236,234,0.3) 65%,rgba(232,248,236,0.45) 100%)"}} />
+      <div style={{position:"absolute",top:"-5%",left:"-8%",width:"55%",height:"55%",borderRadius:"50%",background:"radial-gradient(circle,rgba(66,133,244,0.38) 0%,rgba(66,133,244,0.15) 40%,transparent 68%)",animation:"gOrb1 24s ease-in-out infinite",filter:"blur(50px)"}} />
+      <div style={{position:"absolute",top:"5%",right:"-10%",width:"52%",height:"52%",borderRadius:"50%",background:"radial-gradient(circle,rgba(251,188,5,0.35) 0%,rgba(251,188,5,0.13) 40%,transparent 68%)",animation:"gOrb2 30s ease-in-out infinite",filter:"blur(55px)"}} />
+      <div style={{position:"absolute",top:"45%",left:"-5%",width:"48%",height:"48%",borderRadius:"50%",background:"radial-gradient(circle,rgba(234,67,53,0.32) 0%,rgba(234,67,53,0.11) 40%,transparent 68%)",animation:"gOrb3 26s ease-in-out infinite",filter:"blur(52px)"}} />
+      <div style={{position:"absolute",bottom:"-5%",right:"-8%",width:"54%",height:"54%",borderRadius:"50%",background:"radial-gradient(circle,rgba(52,168,83,0.34) 0%,rgba(52,168,83,0.12) 40%,transparent 68%)",animation:"gOrb4 32s ease-in-out infinite",filter:"blur(54px)"}} />
+      <div style={{position:"absolute",top:"28%",left:"22%",width:"56%",height:"44%",borderRadius:"50%",background:"radial-gradient(ellipse,rgba(66,133,244,0.14) 0%,rgba(251,188,5,0.11) 45%,transparent 72%)",animation:"gPulse 20s ease-in-out infinite",filter:"blur(80px)"}} />
+      <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,rgba(66,133,244,0.1) 1px,transparent 1px)",backgroundSize:"48px 48px",animation:"gGrid 10s ease-in-out infinite"}} />
     </div>
   </>
 );
