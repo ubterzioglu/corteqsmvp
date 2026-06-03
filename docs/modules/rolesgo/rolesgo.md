@@ -363,7 +363,7 @@ Kullanıcı attribute değerlerini tutar.
 | `attribute_id` | uuid | `attribute_catalog.id` |
 | `value_text` | text | Text değer |
 | `value_json` | jsonb | Çoklu / karmaşık değer |
-| `visibility` | text | `public`, `private`, `admin_only` |
+| `visibility` | text | `public`, `private` |
 | `approval_status` | text | `draft`, `pending`, `approved`, `rejected` |
 | `approved_by` | uuid | Admin user id |
 | `approved_at` | timestamptz | Onay tarihi |
@@ -383,8 +383,7 @@ Kullanıcı, izin verilen alanlarda görünürlüğü kendisi seçebilir.
 | Değer | Açıklama |
 |---|---|
 | `public` | Public directory’de görünebilir |
-| `private` | Sadece kullanıcı görür |
-| `admin_only` | Sadece admin görür |
+| `private` | Public profilde görünmez; kullanıcı ve admin görebilir |
 
 Varsayılan mantık:
 
@@ -395,7 +394,7 @@ Varsayılan mantık:
 | Şehir | `public` |
 | Profil görseli | `public` |
 | Bio | `public` |
-| Email | `admin_only` |
+| Email | `private` |
 | Telefon | `private` |
 | WhatsApp | `private` |
 | LinkedIn | `private` veya `public` kullanıcı seçimine bağlı |
@@ -1236,7 +1235,7 @@ Buna göre teknik plan ve küçük implementation todo listesi oluştur.
 | Permission bypass | Kullanıcı UI guard’ı bypass edebilir | RLS + RPC zorunlu |
 | Attribute karmaşası | Çok fazla role özel alan sistemi karmaşıklaştırır | Attribute catalog + role rules |
 | Approval karmaşası | Her işlem approval’a düşünce admin yükü artar | Talep tipi, filtre ve bulk action eklenmeli |
-| Sensitive data leak | Email / telefon public görünebilir | Default `admin_only` veya `private` |
+| Sensitive data leak | Email / telefon public görünebilir | Default `private` |
 | Çoklu rol ihtiyacı | Kullanıcı ileride birden fazla rol isteyebilir | MVP tek rol + feature override |
 | Admin panel karmaşası | Matrix ve override ekranları zorlaşabilir | Fazlı geliştirme |
 | Eski `profile_type` bağımlılığı | Mevcut sistem kırılabilir | Sync trigger ve backward compatibility korunmalı |

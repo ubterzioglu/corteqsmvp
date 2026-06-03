@@ -108,7 +108,7 @@ export async function updateUserProfileAttributeAsAdmin(
   userId: string,
   attributeKey: string,
   attributeValue: unknown,
-  visibility?: "public" | "private" | "admin_only" | null,
+  visibility?: "public" | "private" | null,
 ) {
   const { error } = await supabase.rpc("admin_update_user_profile_attribute", {
     target_user_id: userId,

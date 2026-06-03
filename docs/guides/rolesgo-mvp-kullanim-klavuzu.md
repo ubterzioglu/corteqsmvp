@@ -90,7 +90,6 @@ Her alan için görünürlük seviyesi bulunur:
 
 - `public`
 - `private`
-- `admin_only`
 
 Kullanıcı sadece `user_can_hide = true` olan alanların görünürlüğünü değiştirebilir.
 
@@ -264,7 +263,6 @@ Bu sayfada yalnızca public olarak gösterilmesi izinli alanlar görünür.
 
 - email
 - `private` alanlar
-- `admin_only` alanlar
 
 ## 6. Feature ve Approval Mantığı
 

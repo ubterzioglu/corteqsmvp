@@ -39,7 +39,7 @@ type UserAttributeValueRow = {
   attribute_id: string;
   value_text: string | null;
   value_json: unknown;
-  visibility: "public" | "private" | "admin_only";
+  visibility: "public" | "private";
   approval_status: "draft" | "pending" | "approved" | "rejected";
 };
 
@@ -81,7 +81,7 @@ type UserAttributeDisplayItem = {
   description: string | null;
   dataType: string;
   value: string;
-  visibility: "public" | "private" | "admin_only";
+  visibility: "public" | "private";
   approvalStatus: "draft" | "pending" | "approved" | "rejected";
   isSystem: boolean;
   sortOrder: number;
@@ -200,7 +200,7 @@ const getAttributeDraftSeedValue = (attribute: UserAttributeDisplayItem) => (att
 const shouldSaveAttributeDraft = (
   attribute: UserAttributeDisplayItem,
   draftValue: string,
-  nextVisibility: "public" | "private" | "admin_only",
+  nextVisibility: "public" | "private",
 ) => {
   return draftValue !== getAttributeDraftSeedValue(attribute) || nextVisibility !== attribute.visibility;
 };
@@ -263,7 +263,7 @@ const AdminLoginUsersRolesPage = () => {
   const [userDataDialogState, setUserDataDialogState] = useState<UserDataDialogState | null>(null);
   const [dialogRoleId, setDialogRoleId] = useState("");
   const [attributeDrafts, setAttributeDrafts] = useState<Record<string, string>>({});
-  const [visibilityDrafts, setVisibilityDrafts] = useState<Record<string, "public" | "private" | "admin_only">>({});
+  const [visibilityDrafts, setVisibilityDrafts] = useState<Record<string, "public" | "private">>({});
   const [taxonomyDrafts, setTaxonomyDrafts] = useState<Record<string, string[]>>({});
   const [isUserDataSaving, setIsUserDataSaving] = useState(false);
 
@@ -945,7 +945,7 @@ const AdminLoginUsersRolesPage = () => {
                               onValueChange={(value) =>
                                 setVisibilityDrafts((current) => ({
                                   ...current,
-                                  [attribute.key]: value as "public" | "private" | "admin_only",
+                                  [attribute.key]: value as "public" | "private",
                                 }))
                               }
                               disabled={isUserDataSaving}
@@ -956,7 +956,6 @@ const AdminLoginUsersRolesPage = () => {
                               <SelectContent>
                                 <SelectItem value="public">public</SelectItem>
                                 <SelectItem value="private">private</SelectItem>
-                                <SelectItem value="admin_only">admin_only</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>

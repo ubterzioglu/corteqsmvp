@@ -278,6 +278,10 @@ describe("AdminLoginUsersRolesPage", () => {
     expect(screen.getByDisplayValue("Ayşe Yılmaz")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Kurucu ekipten.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Tüm Değişiklikleri Kaydet" })).toBeInTheDocument();
+    fireEvent.click(screen.getAllByRole("combobox")[1]);
+    expect(screen.getAllByText("public").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("private").length).toBeGreaterThan(0);
+    expect(screen.queryByText("admin_only")).not.toBeInTheDocument();
   });
 
   it("saves all dialog changes through admin helpers", async () => {

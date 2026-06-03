@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
@@ -264,9 +264,10 @@ describe("ProfilePage", () => {
 
     expect(await screen.findByText("Bireysel Panelim")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Yardım/i })).toBeInTheDocument();
-    expect(screen.getByText("Profil Resmi")).toBeInTheDocument();
-    expect(screen.getAllByRole("img", { name: "firmascope" }).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("img", { name: "firmascope" })[0]).toHaveAttribute("src", "https://example.com/avatar.jpg");
+    expect(screen.getByRole("button", { name: /Resmi Değiştir/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Resmi Kaldır/i })).toBeInTheDocument();
+    expect(screen.getAllByRole("img", { name: "firmascope" })).toHaveLength(1);
+    expect(screen.getByRole("img", { name: "firmascope" })).toHaveAttribute("src", "https://example.com/avatar.jpg");
     expect(screen.getByText("Ortak Profil Alanları")).toBeInTheDocument();
     expect(screen.getByText("Sosyal Medya Hesapları")).toBeInTheDocument();
     expect(screen.getByDisplayValue("https://www.instagram.com/firmascope")).toBeInTheDocument();
@@ -278,5 +279,13 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Yardım & Kılavuzlar")).toBeInTheDocument();
     expect(screen.getAllByText("Diaspora için iş birliği ve mentorluk fırsatlarına açığım.").length).toBeGreaterThan(0);
     expect(screen.getAllByText("mentorluk, topluluk, networking").length).toBeGreaterThan(0);
+
+    const visibilityButtons = screen.getAllByRole("button", { name: /Görünürlük/i });
+    const editableVisibilityButton = visibilityButtons.find((button) => !button.hasAttribute("disabled"));
+    expect(editableVisibilityButton).toBeDefined();
+    fireEvent.click(editableVisibilityButton!);
+    expect(screen.getAllByText("Görünür").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Gizli").length).toBeGreaterThan(0);
+    expect(screen.queryByText("Sadece Admin")).not.toBeInTheDocument();
   });
 });

@@ -70,9 +70,8 @@ type GuideSection = {
 };
 
 const VISIBILITY_OPTIONS: { value: AttributeVisibility; label: string }[] = [
-  { value: "public", label: "Public" },
-  { value: "private", label: "Private" },
-  { value: "admin_only", label: "Sadece Admin" },
+  { value: "public", label: "Görünür" },
+  { value: "private", label: "Gizli" },
 ];
 
 const REQUESTABLE_FEATURES: { key: GenericFeatureKey; title: string; description: string }[] = [
@@ -379,7 +378,7 @@ const ProfilePage = () => {
             <p><strong className="text-foreground">Ülke / Şehir:</strong> Konum bilgileriniz. Harita ve filtreleme için kullanılır. Görünürlük ayarını değiştirebilirsiniz.</p>
             <p><strong className="text-foreground">Profil Fotoğrafı:</strong> Yüklediğiniz görsel avatar ve public profil önizlemesinde birlikte kullanılır.</p>
             <p><strong className="text-foreground">Kısa Biyografi:</strong> Kendinizi tanıtan 1-2 cümlelik özet. Directory listelemelerinde görünür.</p>
-            <p><strong className="text-foreground">Görünürlük Ayarı:</strong> Her alan için <em>Public</em>, <em>Private</em> veya <em>Sadece Admin</em> seçebilirsiniz.</p>
+            <p><strong className="text-foreground">Görünürlük Ayarı:</strong> Her alan için <em>Görünür</em> veya <em>Gizli</em> seçebilirsiniz.</p>
             <p><strong className="text-foreground">Onay Süreci:</strong> Bazı alanlarda değişiklik yapıldığında admin onayı gerekir. Bu alanlar "Onaylı" etiketi ile işaretlenir.</p>
           </div>
         ),
@@ -392,7 +391,7 @@ const ProfilePage = () => {
           <div className="space-y-2 text-xs text-muted-foreground">
             <p>Rolüne özel alanlar, seçtiğin rol türüne göre dinamik olarak belirlenir. Örneğin <strong className="text-foreground">Ambassador</strong> rolünde bölge bilgisi, <strong className="text-foreground">Blogger</strong> rolünde blog URL&apos;si gibi alanlar görünebilir.</p>
             <p>Bu alanların bir kısmı admin onayı gerektirebilir. Onay gerektiren alanlarda değişiklik yapıldığında "Beklemede" durumu görünür ve admin onaylayana kadar public gösterilmez.</p>
-            <p>Her alan için görünürlük ayarını değiştirebilirsin: <em>Public</em>, <em>Private</em> veya <em>Sadece Admin</em>.</p>
+            <p>Her alan için görünürlük ayarını değiştirebilirsin: <em>Görünür</em> veya <em>Gizli</em>.</p>
           </div>
         ),
       },
@@ -737,59 +736,32 @@ const ProfilePage = () => {
     return <Navigate to={`/profile/${profile.profileType}`} replace />;
   }
 
-  const avatarManagerBlock = (
-    <div className={`flex flex-col gap-4 rounded-[24px] border p-4 ${isIndividualProfile ? "border-white/80 bg-white/85 shadow-sm backdrop-blur" : "border-slate-200 bg-slate-50/70"}`}>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        {currentAvatarUrl ? (
-          <img
-            src={currentAvatarUrl}
-            alt={displayName}
-            className="h-24 w-24 shrink-0 rounded-[28px] object-cover shadow-sm"
-          />
-        ) : (
-          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-[28px] bg-gradient-to-br from-sky-500 to-cyan-500 text-2xl font-bold text-white shadow-sm">
-            {initials}
-          </div>
-        )}
-        <div className="min-w-0 flex-1 space-y-2">
-          <div>
-            <p className="text-sm font-semibold text-foreground">Profil Resmi</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Yüklediğin görsel avatar ve public profil önizlemesinde birlikte kullanılır.
-            </p>
-          </div>
-          <p className="text-sm font-medium text-foreground">{displayName}</p>
-          <p className="text-xs text-muted-foreground">
-            PNG, JPG veya WEBP desteklenir. Maksimum dosya boyutu 5 MB.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            <input
-              ref={avatarInputRef}
-              type="file"
-              accept="image/png,image/jpeg,image/webp,image/jpg"
-              className="hidden"
-              onChange={(event) => void handleAvatarFileChange(event)}
-            />
-            <Button
-              size="sm"
-              onClick={() => avatarInputRef.current?.click()}
-              disabled={avatarUploading || avatarRemoving}
-            >
-              <ImagePlus className="mr-1.5 h-4 w-4" />
-              {avatarUploading ? "Yükleniyor..." : currentAvatarUrl ? "Resmi Değiştir" : "Resim Yükle"}
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => void handleRemoveAvatar()}
-              disabled={!currentAvatarUrl || avatarUploading || avatarRemoving}
-            >
-              <Trash2 className="mr-1.5 h-4 w-4" />
-              {avatarRemoving ? "Kaldırılıyor..." : "Resmi Kaldır"}
-            </Button>
-          </div>
-        </div>
-      </div>
+  const avatarActionButtons = (
+    <div className="flex flex-wrap gap-2">
+      <input
+        ref={avatarInputRef}
+        type="file"
+        accept="image/png,image/jpeg,image/webp,image/jpg"
+        className="hidden"
+        onChange={(event) => void handleAvatarFileChange(event)}
+      />
+      <Button
+        size="sm"
+        onClick={() => avatarInputRef.current?.click()}
+        disabled={avatarUploading || avatarRemoving}
+      >
+        <ImagePlus className="mr-1.5 h-4 w-4" />
+        {avatarUploading ? "Yükleniyor..." : currentAvatarUrl ? "Resmi Değiştir" : "Resim Yükle"}
+      </Button>
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => void handleRemoveAvatar()}
+        disabled={!currentAvatarUrl || avatarUploading || avatarRemoving}
+      >
+        <Trash2 className="mr-1.5 h-4 w-4" />
+        {avatarRemoving ? "Kaldırılıyor..." : "Resmi Kaldır"}
+      </Button>
     </div>
   );
 
@@ -847,6 +819,9 @@ const ProfilePage = () => {
                       </span>
                     ) : null}
                   </div>
+                  <div className="pt-1">
+                    {avatarActionButtons}
+                  </div>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -863,9 +838,6 @@ const ProfilePage = () => {
               </div>
             </CardHeader>
             <CardContent className="grid gap-3 pb-6 md:grid-cols-4">
-              <div className="md:col-span-4">
-                {avatarManagerBlock}
-              </div>
               <div className="rounded-[22px] border border-white/80 bg-white/90 p-3 shadow-sm backdrop-blur">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Profil Skoru</p>
                 <p className="mt-1 text-2xl font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
@@ -902,12 +874,12 @@ const ProfilePage = () => {
                   <Badge variant="outline" className="text-xs">Tamamlanma %{profile?.profileCompletion.percentage ?? 0}</Badge>
                   {errorMessage ? <Badge variant="destructive" className="text-xs">Kısmi veri yüklendi</Badge> : null}
                 </div>
+                <div className="pt-1">
+                  {avatarActionButtons}
+                </div>
               </div>
             </CardHeader>
             <CardContent className="grid gap-2 pb-4 md:grid-cols-3">
-              <div className="md:col-span-3">
-                {avatarManagerBlock}
-              </div>
               <div className="rounded-lg border bg-slate-50 p-2.5">
                 <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Görünen İsim</p>
                 <p className="mt-1 text-sm font-semibold">{displayName}</p>
@@ -1032,7 +1004,7 @@ const ProfilePage = () => {
                                   </Badge>
                                 ) : null}
                                 <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                                  {visible ? "Public" : "Private"}
+                                  {visible ? "Görünür" : "Gizli"}
                                 </Badge>
                               </div>
                               <p className="text-[11px] text-muted-foreground">Boş alanlar public profilde görünmez.</p>
@@ -1390,7 +1362,7 @@ const ProfileAttributeEditor = ({
           )}
           <span className="inline-flex items-center gap-1 text-slate-600">
             {draftVisibility === "public" ? <Globe2 className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
-            {draftVisibility}
+            {visibilityLabel}
           </span>
         </div>
       </div>

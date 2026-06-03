@@ -3,7 +3,7 @@ import type { FeatureSource, GenericFeatureKey } from "@/lib/features";
 import type { CanonicalRoleSlug, LegacyRoleKey } from "@/lib/profile-types";
 
 export type AttributeDataType = "text" | "textarea" | "select" | "multi_select" | "url" | "phone" | "boolean" | "json";
-export type AttributeVisibility = "public" | "private" | "admin_only";
+export type AttributeVisibility = "public" | "private";
 export type ApprovalStatus = "draft" | "pending" | "approved" | "rejected" | "cancelled";
 export type ApprovalRequestType =
   | "role_change"
