@@ -187,12 +187,24 @@ const GOOGLE_SOFT_CARD_HERO =
   "overflow-hidden border-[rgba(66,133,244,0.16)] bg-white shadow-[0_30px_80px_-40px_rgba(66,133,244,0.36)]";
 const GOOGLE_SOFT_CARD_SECTION =
   "border-[rgba(66,133,244,0.14)] bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.11),transparent_34%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.11),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.08),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.09),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(255,255,255,0.9))] shadow-[0_24px_55px_-42px_rgba(66,133,244,0.42)] backdrop-blur-[2px]";
+const GOOGLE_SOFT_CARD_BLUE_SECTION =
+  "border-[rgba(66,133,244,0.15)] bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.16),transparent_34%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.08),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.08),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(244,248,255,0.9))] shadow-[0_24px_55px_-42px_rgba(66,133,244,0.4)] backdrop-blur-[2px]";
+const GOOGLE_SOFT_CARD_YELLOW_SECTION =
+  "border-[rgba(251,188,5,0.18)] bg-[radial-gradient(circle_at_top_right,rgba(251,188,5,0.17),transparent_30%),radial-gradient(circle_at_top_left,rgba(66,133,244,0.09),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(255,251,238,0.9))] shadow-[0_24px_55px_-42px_rgba(251,188,5,0.32)] backdrop-blur-[2px]";
+const GOOGLE_SOFT_CARD_GREEN_SECTION =
+  "border-[rgba(52,168,83,0.16)] bg-[radial-gradient(circle_at_top_left,rgba(52,168,83,0.16),transparent_32%),radial-gradient(circle_at_top_right,rgba(66,133,244,0.08),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(251,188,5,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(242,249,244,0.9))] shadow-[0_24px_55px_-42px_rgba(52,168,83,0.3)] backdrop-blur-[2px]";
+const GOOGLE_SOFT_CARD_RED_SECTION =
+  "border-[rgba(234,67,53,0.14)] bg-[radial-gradient(circle_at_top_left,rgba(234,67,53,0.14),transparent_32%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(66,133,244,0.09),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(253,245,244,0.9))] shadow-[0_24px_55px_-42px_rgba(234,67,53,0.28)] backdrop-blur-[2px]";
 const GOOGLE_SOFT_CARD_SUBTLE =
   "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.12),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.1),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.84))] shadow-[0_18px_35px_-30px_rgba(66,133,244,0.3)]";
 const GOOGLE_SOFT_CARD_SUBTLE_INTERACTIVE =
   "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.12),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.1),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.84))] shadow-[0_18px_35px_-30px_rgba(66,133,244,0.3)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_40px_-28px_rgba(66,133,244,0.34)]";
 const GOOGLE_SOFT_HERO_SURFACE =
   "border-b border-[rgba(66,133,244,0.1)] bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.26),transparent_30%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.24),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.12),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.14),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(247,250,255,0.95)_44%,rgba(255,252,244,0.94)_100%)]";
+const GOOGLE_SOFT_ACTION_PANEL =
+  "rounded-[26px] border border-white/75 bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.16),transparent_34%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.14),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.12),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.82))] p-3 shadow-[0_24px_45px_-36px_rgba(66,133,244,0.36)]";
+const GOOGLE_SOFT_ACTION_BUTTON =
+  "h-10 w-full min-w-0 justify-center rounded-xl border-white/85 bg-white/82 px-3 text-xs font-medium shadow-[0_12px_26px_-24px_rgba(66,133,244,0.34)] backdrop-blur-[2px] hover:bg-white";
 const GOOGLE_SOFT_SUCCESS_PANEL =
   "border border-[rgba(52,168,83,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(241,248,242,0.88)),radial-gradient(circle_at_top_left,rgba(52,168,83,0.15),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(66,133,244,0.08),transparent_28%)]";
 const GOOGLE_SOFT_DANGER_PANEL =
@@ -314,6 +326,8 @@ const ProfilePage = () => {
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarRemoving, setAvatarRemoving] = useState(false);
   const [isProfileSummaryOpen, setIsProfileSummaryOpen] = useState(false);
+  const [isAccessCardOpen, setIsAccessCardOpen] = useState(false);
+  const [isHelpCardOpen, setIsHelpCardOpen] = useState(false);
   const [roleRequestTarget, setRoleRequestTarget] = useState<ProfileType | "">("");
   const [roleRequestNote, setRoleRequestNote] = useState("");
   const [submittingRoleRequest, setSubmittingRoleRequest] = useState(false);
@@ -562,6 +576,7 @@ const ProfilePage = () => {
   };
 
   const scrollToHelpCard = () => {
+    setIsHelpCardOpen(true);
     helpCardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -1143,6 +1158,42 @@ const ProfilePage = () => {
     </div>
   );
 
+  const heroActionButtons = (
+    <div className={`w-full max-w-[320px] shrink-0 self-start ${GOOGLE_SOFT_ACTION_PANEL}`}>
+      <div className="grid grid-cols-2 gap-2">
+        <Button
+          size="sm"
+          className={GOOGLE_SOFT_ACTION_BUTTON}
+          onClick={() => avatarInputRef.current?.click()}
+          disabled={avatarUploading || avatarRemoving}
+        >
+          <ImagePlus className="mr-1.5 h-4 w-4" />
+          {avatarUploading ? "Yükleniyor..." : currentAvatarUrl ? "Resmi Değiştir" : "Resim Yükle"}
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          className={GOOGLE_SOFT_ACTION_BUTTON}
+          onClick={() => void handleRemoveAvatar()}
+          disabled={!currentAvatarUrl || avatarUploading || avatarRemoving}
+        >
+          <Trash2 className="mr-1.5 h-4 w-4" />
+          {avatarRemoving ? "Kaldırılıyor..." : "Resmi Kaldır"}
+        </Button>
+        <Button size="sm" variant="outline" className={GOOGLE_SOFT_ACTION_BUTTON} onClick={scrollToHelpCard}>
+          <HelpCircle className="mr-1.5 h-4 w-4" />
+          Yardım
+        </Button>
+        <Button size="sm" variant="outline" className={GOOGLE_SOFT_ACTION_BUTTON} onClick={() => void refreshProfile()}>
+          Yenile
+        </Button>
+        <Button size="sm" variant="outline" className={GOOGLE_SOFT_ACTION_BUTTON} onClick={handleSignOut}>
+          Çıkış Yap
+        </Button>
+      </div>
+    </div>
+  );
+
   return (
     <div className={`mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 ${isIndividualProfile ? "pb-16" : ""}`}>
       <input
@@ -1162,8 +1213,8 @@ const ProfilePage = () => {
       <Card className={isIndividualProfile ? GOOGLE_SOFT_CARD_HERO : GOOGLE_SOFT_CARD_SECTION}>
         {isIndividualProfile ? (
           <div className={GOOGLE_SOFT_HERO_SURFACE}>
-            <CardHeader className="flex flex-col gap-5 pb-4 md:flex-row md:items-start md:justify-between">
-              <div className="flex items-start gap-4">
+            <CardHeader className="flex flex-col gap-5 pb-4 lg:flex-row lg:items-start lg:justify-between">
+              <div className="flex min-w-0 flex-1 items-start gap-4">
                 {currentAvatarUrl ? (
                   <img
                     src={currentAvatarUrl}
@@ -1211,23 +1262,9 @@ const ProfilePage = () => {
                       </span>
                     ) : null}
                   </div>
-                  <div className="pt-1">
-                    {avatarActionButtons}
-                  </div>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2">
-                <Button size="sm" variant="outline" onClick={scrollToHelpCard}>
-                  <HelpCircle className="mr-1.5 h-4 w-4" />
-                  Yardım
-                </Button>
-                <Button size="sm" variant="outline" onClick={() => void refreshProfile()}>
-                  Yenile
-                </Button>
-                <Button size="sm" variant="outline" onClick={handleSignOut}>
-                  Çıkış Yap
-                </Button>
-              </div>
+              {heroActionButtons}
             </CardHeader>
           </div>
         ) : null}
@@ -1268,7 +1305,7 @@ const ProfilePage = () => {
       </Card>
 
       {isIndividualProfile ? (
-        <Card className={`overflow-hidden ${GOOGLE_SOFT_CARD_SECTION}`}>
+        <Card className={`overflow-hidden ${GOOGLE_SOFT_CARD_BLUE_SECTION}`}>
           <CardHeader className="p-0">
             <button
               type="button"
@@ -1330,7 +1367,7 @@ const ProfilePage = () => {
             />
           ) : null}
 
-          <Card className={GOOGLE_SOFT_CARD_SECTION}>
+          <Card className={GOOGLE_SOFT_CARD_YELLOW_SECTION}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Ortak Profil Alanları</CardTitle>
               <CardDescription className="text-xs">Bu alanlar profil kartın ve directory görünümün için kullanılır.</CardDescription>
@@ -1361,7 +1398,7 @@ const ProfilePage = () => {
           </Card>
 
           {featureToggleCards.length ? (
-            <Card className={GOOGLE_SOFT_CARD_SECTION}>
+            <Card className={GOOGLE_SOFT_CARD_GREEN_SECTION}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base">Profil Rozetleri</CardTitle>
                 <CardDescription className="text-xs">
@@ -1385,7 +1422,7 @@ const ProfilePage = () => {
             </Card>
           ) : null}
 
-          <Card className={GOOGLE_SOFT_CARD_SECTION}>
+          <Card className={GOOGLE_SOFT_CARD_RED_SECTION}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Sosyal Medya Hesapları</CardTitle>
               <CardDescription className="text-xs">
@@ -1536,7 +1573,7 @@ const ProfilePage = () => {
             ) : null}
           </div>
 
-          <Card className={GOOGLE_SOFT_CARD_SECTION}>
+          <Card className={GOOGLE_SOFT_CARD_GREEN_SECTION}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Rolüne Özel Alanlar</CardTitle>
               <CardDescription className="text-xs">Aktif rolüne bağlı dinamik alanlar burada görünür.</CardDescription>
@@ -1566,7 +1603,7 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
 
-          <Card className={GOOGLE_SOFT_CARD_SECTION}>
+          <Card className={GOOGLE_SOFT_CARD_YELLOW_SECTION}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Alt Kategori / Alt Tip</CardTitle>
               <CardDescription className="text-xs">Rolüne bağlı taxonomy seçimleri profildeki görünüm ve zorunlu alanları etkiler.</CardDescription>
