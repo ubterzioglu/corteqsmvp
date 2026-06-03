@@ -1844,24 +1844,6 @@ const ProfileAttributeEditor = ({
             </div>
           </div>
         </div>
-
-        {attribute.description || visibilityLocked || attribute.requiresAdminApprovalOnChange ? (
-          <div className="mt-2 space-y-1">
-            {attribute.description ? <p className="text-xs text-muted-foreground">{attribute.description}</p> : null}
-            {visibilityLocked ? (
-              <span className="inline-flex items-center gap-1 text-xs text-slate-600">
-                <Lock className="h-3.5 w-3.5" />
-                Bu alan gizlenemez
-              </span>
-            ) : null}
-            {attribute.requiresAdminApprovalOnChange ? (
-              <span className="inline-flex items-center gap-1 text-xs text-emerald-700">
-                <CheckCircle2 className="h-3.5 w-3.5" />
-                {approvalLabel}
-              </span>
-            ) : null}
-          </div>
-        ) : null}
       </div>
     );
   }
