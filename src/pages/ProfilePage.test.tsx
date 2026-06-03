@@ -545,7 +545,7 @@ describe("ProfilePage", () => {
       </MemoryRouter>,
     );
 
-    fireEvent.change(screen.getByDisplayValue("firmascope"), { target: { value: "Ada Yilmaz" } });
+    fireEvent.change(screen.getAllByDisplayValue("firmascope")[0], { target: { value: "Ada Yilmaz" } });
     fireEvent.click(screen.getByRole("button", { name: "Ad Soyadı Kaydet" }));
 
     await waitFor(() => {
