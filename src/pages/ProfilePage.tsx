@@ -1169,37 +1169,35 @@ const ProfilePage = () => {
   );
 
   const heroActionButtons = (
-    <div className={`w-full max-w-[200px] shrink-0 self-start ${GOOGLE_SOFT_ACTION_PANEL}`}>
-      <div className="flex flex-col gap-2">
+    <div className={`w-full max-w-[280px] shrink-0 self-start ${GOOGLE_SOFT_ACTION_PANEL}`}>
+      <div className="grid grid-cols-2 gap-1.5">
         <Button
-          size="sm"
-          className={AMBER_ACTION_BUTTON}
+          className={`${AMBER_ACTION_BUTTON} h-8 text-[11px]`}
           onClick={() => avatarInputRef.current?.click()}
           disabled={avatarUploading || avatarRemoving}
         >
-          <ImagePlus className="mr-1.5 h-4 w-4" />
-          {avatarUploading ? "Yükleniyor..." : currentAvatarUrl ? "Resmi Değiştir" : "Resim Yükle"}
+          <ImagePlus className="mr-1 h-3.5 w-3.5" />
+          {avatarUploading ? "Yükleniyor..." : currentAvatarUrl ? "Değiştir" : "Yükle"}
         </Button>
         <Button
-          size="sm"
-          className={AMBER_ACTION_BUTTON}
+          className={`${AMBER_ACTION_BUTTON} h-8 text-[11px]`}
           onClick={() => void handleRemoveAvatar()}
           disabled={!currentAvatarUrl || avatarUploading || avatarRemoving}
         >
-          <Trash2 className="mr-1.5 h-4 w-4" />
-          {avatarRemoving ? "Kaldırılıyor..." : "Resmi Kaldır"}
+          <Trash2 className="mr-1 h-3.5 w-3.5" />
+          {avatarRemoving ? "Kaldırılıyor..." : "Kaldır"}
         </Button>
-        <Button size="sm" className={AMBER_ACTION_BUTTON} onClick={scrollToHelpCard}>
-          <HelpCircle className="mr-1.5 h-4 w-4" />
+        <Button className={`${AMBER_ACTION_BUTTON} h-8 text-[11px]`} onClick={scrollToHelpCard}>
+          <HelpCircle className="mr-1 h-3.5 w-3.5" />
           Yardım
         </Button>
-        <Button size="sm" className={AMBER_ACTION_BUTTON} onClick={() => void refreshProfile()}>
+        <Button className={`${AMBER_ACTION_BUTTON} h-8 text-[11px]`} onClick={() => void refreshProfile()}>
           Yenile
         </Button>
-        <Button size="sm" className={AMBER_ACTION_BUTTON} onClick={handleSignOut}>
-          Çıkış Yap
-        </Button>
       </div>
+      <Button className={`${AMBER_ACTION_BUTTON} h-8 mt-1.5 text-[11px]`} onClick={handleSignOut}>
+        Çıkış Yap
+      </Button>
     </div>
   );
 
