@@ -75,6 +75,11 @@ Thumbs.db
 
 # Misc
 1111.txt
+tech0106.md
+
+# Turkish missions import builder - generated output
+turkish_missions_import_builder/output/*
+!turkish_missions_import_builder/output/.gitkeep
 
 # Reference directory (Lovable exports)
 referans/
