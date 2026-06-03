@@ -1235,10 +1235,10 @@ const ProfilePage = () => {
                   <img
                     src={currentAvatarUrl}
                     alt={displayName}
-                    className="h-20 w-20 shrink-0 rounded-2xl object-cover shadow-[0_4px_16px_-4px_rgba(0,0,0,0.15)]"
+                    className="h-40 w-40 shrink-0 rounded-2xl object-cover shadow-[0_4px_16px_-4px_rgba(0,0,0,0.15)]"
                   />
                 ) : (
-                  <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-orange-500 text-2xl font-bold text-white shadow-[0_6px_20px_-6px_rgba(249,115,22,0.45)]">
+                  <div className="flex h-40 w-40 shrink-0 items-center justify-center rounded-2xl bg-orange-500 text-4xl font-bold text-white shadow-[0_6px_20px_-6px_rgba(249,115,22,0.45)]">
                     {initials}
                   </div>
                 )}
