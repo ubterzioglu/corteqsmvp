@@ -184,27 +184,35 @@ const PROFILE_PRESENTATION_BUCKET = "profile-presentation-files";
 const MAX_PROFILE_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 
 const GOOGLE_SOFT_CARD_HERO =
-  "overflow-hidden border-[rgba(66,133,244,0.16)] bg-white shadow-[0_30px_80px_-40px_rgba(66,133,244,0.36)]";
+  "overflow-hidden border-[rgba(66,133,244,0.18)] bg-white shadow-[0_34px_90px_-38px_rgba(66,133,244,0.42),0_0_0_1px_rgba(251,188,5,0.06)]";
 const GOOGLE_SOFT_CARD_SECTION =
-  "border-[rgba(66,133,244,0.14)] bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.11),transparent_34%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.11),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.08),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.09),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(255,255,255,0.9))] shadow-[0_24px_55px_-42px_rgba(66,133,244,0.42)] backdrop-blur-[2px]";
+  "border-[rgba(66,133,244,0.16)] bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.13),transparent_32%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.13),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.09),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.1),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(255,255,255,0.9))] shadow-[0_28px_60px_-38px_rgba(66,133,244,0.46),0_0_0_1px_rgba(66,133,244,0.04)] backdrop-blur-[2px]";
 const GOOGLE_SOFT_CARD_BLUE_SECTION =
-  "border-[rgba(66,133,244,0.15)] bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.16),transparent_34%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.08),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.08),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(244,248,255,0.9))] shadow-[0_24px_55px_-42px_rgba(66,133,244,0.4)] backdrop-blur-[2px]";
+  "border-[rgba(66,133,244,0.18)] bg-[radial-gradient(ellipse_at_top_left,rgba(66,133,244,0.2),transparent_42%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.09),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.06),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(244,248,255,0.88))] shadow-[0_28px_60px_-38px_rgba(66,133,244,0.46),0_0_0_1px_rgba(66,133,244,0.06)] backdrop-blur-[2px]";
 const GOOGLE_SOFT_CARD_YELLOW_SECTION =
-  "border-[rgba(251,188,5,0.18)] bg-[radial-gradient(circle_at_top_right,rgba(251,188,5,0.17),transparent_30%),radial-gradient(circle_at_top_left,rgba(66,133,244,0.09),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(255,251,238,0.9))] shadow-[0_24px_55px_-42px_rgba(251,188,5,0.32)] backdrop-blur-[2px]";
+  "border-[rgba(251,188,5,0.22)] bg-[radial-gradient(ellipse_at_top_right,rgba(251,188,5,0.2),transparent_38%),radial-gradient(circle_at_top_left,rgba(66,133,244,0.1),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.09),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.06),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(255,251,238,0.88))] shadow-[0_28px_60px_-38px_rgba(251,188,5,0.38),0_0_0_1px_rgba(251,188,5,0.06)] backdrop-blur-[2px]";
 const GOOGLE_SOFT_CARD_GREEN_SECTION =
-  "border-[rgba(52,168,83,0.16)] bg-[radial-gradient(circle_at_top_left,rgba(52,168,83,0.16),transparent_32%),radial-gradient(circle_at_top_right,rgba(66,133,244,0.08),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(251,188,5,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(242,249,244,0.9))] shadow-[0_24px_55px_-42px_rgba(52,168,83,0.3)] backdrop-blur-[2px]";
+  "border-[rgba(52,168,83,0.2)] bg-[radial-gradient(ellipse_at_top_left,rgba(52,168,83,0.2),transparent_36%),radial-gradient(circle_at_top_right,rgba(66,133,244,0.09),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(251,188,5,0.1),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.06),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(242,249,244,0.88))] shadow-[0_28px_60px_-38px_rgba(52,168,83,0.36),0_0_0_1px_rgba(52,168,83,0.06)] backdrop-blur-[2px]";
 const GOOGLE_SOFT_CARD_RED_SECTION =
-  "border-[rgba(234,67,53,0.14)] bg-[radial-gradient(circle_at_top_left,rgba(234,67,53,0.14),transparent_32%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(66,133,244,0.09),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(253,245,244,0.9))] shadow-[0_24px_55px_-42px_rgba(234,67,53,0.28)] backdrop-blur-[2px]";
+  "border-[rgba(234,67,53,0.18)] bg-[radial-gradient(ellipse_at_top_left,rgba(234,67,53,0.17),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.12),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(66,133,244,0.1),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(52,168,83,0.06),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(253,245,244,0.88))] shadow-[0_28px_60px_-38px_rgba(234,67,53,0.34),0_0_0_1px_rgba(234,67,53,0.06)] backdrop-blur-[2px]";
 const GOOGLE_SOFT_CARD_SUBTLE =
   "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.12),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.1),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.84))] shadow-[0_18px_35px_-30px_rgba(66,133,244,0.3)]";
 const GOOGLE_SOFT_CARD_SUBTLE_INTERACTIVE =
   "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.12),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.1),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.84))] shadow-[0_18px_35px_-30px_rgba(66,133,244,0.3)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_40px_-28px_rgba(66,133,244,0.34)]";
+
+const GOOGLE_SOFT_SUBTLE_WARM =
+  "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(251,188,5,0.14),transparent_34%),radial-gradient(circle_at_top_right,rgba(234,67,53,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,251,244,0.84))] shadow-[0_18px_35px_-30px_rgba(251,188,5,0.28)]";
+const GOOGLE_SOFT_SUBTLE_COOL =
+  "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.14),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(244,248,255,0.84))] shadow-[0_18px_35px_-30px_rgba(66,133,244,0.28)]";
+const GOOGLE_SOFT_SUBTLE_GREEN =
+  "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(52,168,83,0.14),transparent_34%),radial-gradient(circle_at_top_right,rgba(66,133,244,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(242,249,244,0.84))] shadow-[0_18px_35px_-30px_rgba(52,168,83,0.28)]";
+const GOOGLE_SOFT_SUBTLE_RED =
+  "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(234,67,53,0.12),transparent_34%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(253,247,244,0.84))] shadow-[0_18px_35px_-30px_rgba(234,67,53,0.24)]";
+
 const GOOGLE_SOFT_HERO_SURFACE =
-  "border-b border-[rgba(66,133,244,0.1)] bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.26),transparent_30%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.24),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.12),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.14),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(247,250,255,0.95)_44%,rgba(255,252,244,0.94)_100%)]";
+  "border-b border-[rgba(66,133,244,0.1)] bg-[radial-gradient(ellipse_at_top_left,rgba(66,133,244,0.3),transparent_32%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.28),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.14),transparent_22%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.16),transparent_26%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(247,250,255,0.95)_44%,rgba(255,252,244,0.94)_100%)]";
 const GOOGLE_SOFT_ACTION_PANEL =
-  "rounded-[26px] border border-white/75 bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.16),transparent_34%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.14),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.12),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.82))] p-3 shadow-[0_24px_45px_-36px_rgba(66,133,244,0.36)]";
-const GOOGLE_SOFT_ACTION_BUTTON =
-  "h-10 w-full min-w-0 justify-center rounded-xl border-white/85 bg-white/82 px-3 text-xs font-medium shadow-[0_12px_26px_-24px_rgba(66,133,244,0.34)] backdrop-blur-[2px] hover:bg-white";
+  "rounded-[26px] border border-[rgba(217,160,58,0.2)] bg-[radial-gradient(circle_at_top_left,rgba(242,201,76,0.16),transparent_34%),radial-gradient(circle_at_top_right,rgba(217,160,58,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.08),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,252,244,0.82))] p-3 shadow-[0_24px_45px_-36px_rgba(217,160,58,0.32)]";
 const GOOGLE_SOFT_SUCCESS_PANEL =
   "border border-[rgba(52,168,83,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(241,248,242,0.88)),radial-gradient(circle_at_top_left,rgba(52,168,83,0.15),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(66,133,244,0.08),transparent_28%)]";
 const GOOGLE_SOFT_DANGER_PANEL =
@@ -212,7 +220,37 @@ const GOOGLE_SOFT_DANGER_PANEL =
 const GOOGLE_SOFT_WARNING_PANEL =
   "border border-[rgba(251,188,5,0.26)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,249,230,0.9)),radial-gradient(circle_at_top_left,rgba(251,188,5,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(234,67,53,0.08),transparent_30%)]";
 const GOOGLE_SOFT_SWITCH_PANEL =
-  "border border-white/75 bg-[linear-gradient(180deg,rgba(255,255,255,0.93),rgba(255,255,255,0.82)),radial-gradient(circle_at_top_left,rgba(66,133,244,0.1),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_28%)]";
+  "border border-white/75 bg-[linear-gradient(180deg,rgba(255,255,255,0.93),rgba(255,255,255,0.82)),radial-gradient(circle_at_top_left,rgba(217,160,58,0.1),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.08),transparent_28%)]";
+
+const AMBER_BUTTON_PRIMARY =
+  "border border-[rgba(217,160,58,0.32)] bg-[linear-gradient(180deg,rgba(242,201,76,0.92),rgba(217,160,58,0.88))] text-white shadow-[0_10px_24px_-12px_rgba(217,160,58,0.4)] hover:bg-[linear-gradient(180deg,rgba(242,201,76,0.96),rgba(217,160,58,0.94))] hover:shadow-[0_12px_28px_-10px_rgba(217,160,58,0.48)]";
+const AMBER_BUTTON_OUTLINE =
+  "border border-[rgba(217,160,58,0.38)] bg-[rgba(255,255,255,0.82)] text-[#9A7320] shadow-[0_8px_18px_-14px_rgba(217,160,58,0.26)] hover:bg-[rgba(242,201,76,0.1)] hover:border-[rgba(217,160,58,0.52)] hover:text-[#8B6518]";
+const AMBER_ACTION_BUTTON =
+  "h-10 w-full min-w-0 justify-center rounded-xl border-[rgba(217,160,58,0.32)] bg-[rgba(255,255,255,0.85)] px-3 text-xs font-medium text-[#9A7320] shadow-[0_12px_26px_-24px_rgba(217,160,58,0.32)] backdrop-blur-[2px] hover:bg-[rgba(242,201,76,0.12)] hover:border-[rgba(217,160,58,0.48)] hover:text-[#8B6518]";
+
+const GLOBE_POSITIONS = [
+  { emoji: "\u{1F310}", top: "3%", left: "8%", "--globe-size": "32px", "--globe-opacity": "0.08", "--globe-duration": "24s", "--globe-delay": "0s" },
+  { emoji: "\u{1F30D}", top: "12%", right: "6%", "--globe-size": "24px", "--globe-opacity": "0.06", "--globe-duration": "28s", "--globe-delay": "-6s" },
+  { emoji: "\u{1F30E}", top: "38%", left: "3%", "--globe-size": "20px", "--globe-opacity": "0.05", "--globe-duration": "32s", "--globe-delay": "-12s" },
+  { emoji: "\u{1F30F}", top: "55%", right: "4%", "--globe-size": "28px", "--globe-opacity": "0.06", "--globe-duration": "26s", "--globe-delay": "-9s" },
+  { emoji: "\u{1F310}", top: "78%", left: "10%", "--globe-size": "22px", "--globe-opacity": "0.04", "--globe-duration": "30s", "--globe-delay": "-16s" },
+  { emoji: "\u{1F30D}", top: "90%", right: "12%", "--globe-size": "18px", "--globe-opacity": "0.04", "--globe-duration": "34s", "--globe-delay": "-20s" },
+] as const;
+
+const FloatingGlobeBackground = () => (
+  <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    {GLOBE_POSITIONS.map((globe, index) => (
+      <span
+        key={index}
+        className="profile-globe hidden md:block"
+        style={globe as unknown as React.CSSProperties}
+      >
+        {globe.emoji}
+      </span>
+    ))}
+  </div>
+);
 
 const buildAvatarStoragePath = (userId: string, file: File) => {
   const safeExtension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
@@ -1133,6 +1171,7 @@ const ProfilePage = () => {
     <div className="flex flex-wrap gap-2">
       <Button
         size="sm"
+        className={AMBER_BUTTON_PRIMARY}
         onClick={() => avatarInputRef.current?.click()}
         disabled={avatarUploading || avatarRemoving}
       >
@@ -1141,7 +1180,7 @@ const ProfilePage = () => {
       </Button>
       <Button
         size="sm"
-        variant="outline"
+        className={AMBER_BUTTON_OUTLINE}
         onClick={() => void handleRemoveAvatar()}
         disabled={!currentAvatarUrl || avatarUploading || avatarRemoving}
       >
@@ -1156,7 +1195,7 @@ const ProfilePage = () => {
       <div className="grid grid-cols-2 gap-2">
         <Button
           size="sm"
-          className={GOOGLE_SOFT_ACTION_BUTTON}
+          className={AMBER_ACTION_BUTTON}
           onClick={() => avatarInputRef.current?.click()}
           disabled={avatarUploading || avatarRemoving}
         >
@@ -1165,22 +1204,21 @@ const ProfilePage = () => {
         </Button>
         <Button
           size="sm"
-          variant="outline"
-          className={GOOGLE_SOFT_ACTION_BUTTON}
+          className={AMBER_ACTION_BUTTON}
           onClick={() => void handleRemoveAvatar()}
           disabled={!currentAvatarUrl || avatarUploading || avatarRemoving}
         >
           <Trash2 className="mr-1.5 h-4 w-4" />
           {avatarRemoving ? "Kaldırılıyor..." : "Resmi Kaldır"}
         </Button>
-        <Button size="sm" variant="outline" className={GOOGLE_SOFT_ACTION_BUTTON} onClick={scrollToHelpCard}>
+        <Button size="sm" className={AMBER_ACTION_BUTTON} onClick={scrollToHelpCard}>
           <HelpCircle className="mr-1.5 h-4 w-4" />
           Yardım
         </Button>
-        <Button size="sm" variant="outline" className={GOOGLE_SOFT_ACTION_BUTTON} onClick={() => void refreshProfile()}>
+        <Button size="sm" className={AMBER_ACTION_BUTTON} onClick={() => void refreshProfile()}>
           Yenile
         </Button>
-        <Button size="sm" variant="outline" className={GOOGLE_SOFT_ACTION_BUTTON} onClick={handleSignOut}>
+        <Button size="sm" className={AMBER_ACTION_BUTTON} onClick={handleSignOut}>
           Çıkış Yap
         </Button>
       </div>
@@ -1188,7 +1226,8 @@ const ProfilePage = () => {
   );
 
   return (
-    <div className={`mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 ${isIndividualProfile ? "pb-16" : ""}`}>
+    <div className={`relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 ${isIndividualProfile ? "pb-16" : ""}`}>
+      <FloatingGlobeBackground />
       <input
         ref={avatarInputRef}
         type="file"
@@ -1390,7 +1429,7 @@ const ProfilePage = () => {
                 />
               ))}
               <div className="flex justify-end pt-1">
-                <Button size="sm" onClick={() => void handleSaveCommonAttributes()} disabled={savingCommonAttributes}>
+                <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={() => void handleSaveCommonAttributes()} disabled={savingCommonAttributes}>
                   {savingCommonAttributes ? "Kaydediliyor..." : "Ortak Alanları Kaydet"}
                 </Button>
               </div>
@@ -1488,7 +1527,7 @@ const ProfilePage = () => {
                     })}
                   </div>
                   <div className="flex justify-end">
-                    <Button size="sm" onClick={() => void handleSaveSocialMedia()} disabled={savingSocialMedia}>
+                    <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={() => void handleSaveSocialMedia()} disabled={savingSocialMedia}>
                       {savingSocialMedia ? "Kaydediliyor..." : "Sosyal Medya Kartını Kaydet"}
                     </Button>
                   </div>
@@ -1635,7 +1674,7 @@ const ProfilePage = () => {
                         </div>
                         <Button
                           size="sm"
-                          variant="outline"
+                          className={AMBER_BUTTON_OUTLINE}
                           disabled={savingTaxonomyGroupKey === group.groupKey}
                           onClick={() => void handleSaveTaxonomyGroup(group)}
                         >
@@ -1735,7 +1774,7 @@ const ProfilePage = () => {
                   placeholder="Kısa bir açıklama veya ek bilgi yazabilirsin."
                   className="min-h-[60px] text-sm"
                 />
-                <Button size="sm" className="w-full" disabled={!roleRequestTarget || submittingRoleRequest} onClick={() => void handleSubmitRoleRequest()}>
+                <Button size="sm" className={`w-full ${AMBER_BUTTON_PRIMARY}`} disabled={!roleRequestTarget || submittingRoleRequest} onClick={() => void handleSubmitRoleRequest()}>
                   {submittingRoleRequest ? "Gönderiliyor..." : "Rol Başvurusu Gönder"}
                 </Button>
               </AccordionContent>
@@ -1763,8 +1802,7 @@ const ProfilePage = () => {
                         </div>
                         <Button
                           size="sm"
-                          variant="outline"
-                          className="shrink-0 text-xs h-7 px-2"
+                          className={`shrink-0 text-xs h-7 px-2 ${AMBER_BUTTON_OUTLINE}`}
                           disabled={Boolean(state?.isEnabled) || isPending || featureRequestingKey === item.key}
                           onClick={() => void handleRequestFeature(item.key)}
                         >
@@ -1959,7 +1997,7 @@ const DisplayNameAttributeCard = ({
           </div>
         </div>
         <div className="flex justify-end">
-          <Button size="sm" onClick={onSave} disabled={!attribute.userCanEdit || isSaving}>
+          <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={onSave} disabled={!attribute.userCanEdit || isSaving}>
             {isSaving ? "Kaydediliyor..." : saveButtonLabel}
           </Button>
         </div>
@@ -2118,7 +2156,7 @@ const ProfileAttributeEditor = ({
 
         {saveMode === "single" && onSave ? (
           <div className="flex justify-end">
-            <Button size="sm" onClick={onSave} disabled={!attribute.userCanEdit || isSaving}>
+            <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={onSave} disabled={!attribute.userCanEdit || isSaving}>
               {isSaving ? "Kaydediliyor..." : "Kaydet"}
             </Button>
           </div>
@@ -2227,7 +2265,7 @@ const StandaloneLinkAttributeCard = ({
         />
         <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
           <span>Boş kalırsa public profilde gösterilmez.</span>
-          <Button size="sm" onClick={onSave} disabled={isSaving}>
+          <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={onSave} disabled={isSaving}>
             {isSaving ? "Kaydediliyor..." : "Kaydet"}
           </Button>
         </div>
@@ -2283,13 +2321,13 @@ const ProfileDocumentCard = ({
           <p className="mt-1 text-xs text-slate-600">{statusLabel}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button size="sm" onClick={onUploadClick} disabled={isUploading || isRemoving}>
+          <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={onUploadClick} disabled={isUploading || isRemoving}>
             {isUploading ? "Yükleniyor..." : document ? "Dosyayı Değiştir" : "Dosya Yükle"}
           </Button>
-          <Button size="sm" variant="outline" onClick={onOpenClick} disabled={!document || isOpening || isUploading}>
+          <Button size="sm" className={AMBER_BUTTON_OUTLINE} onClick={onOpenClick} disabled={!document || isOpening || isUploading}>
             {isOpening ? "Açılıyor..." : "Dosyayı Aç"}
           </Button>
-          <Button size="sm" variant="outline" onClick={onRemoveClick} disabled={!document || isRemoving || isUploading}>
+          <Button size="sm" className={AMBER_BUTTON_OUTLINE} onClick={onRemoveClick} disabled={!document || isRemoving || isUploading}>
             {isRemoving ? "Siliniyor..." : "Dosyayı Kaldır"}
           </Button>
         </div>
