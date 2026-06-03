@@ -1131,13 +1131,6 @@ const ProfilePage = () => {
 
   const avatarActionButtons = (
     <div className="flex flex-wrap gap-2">
-      <input
-        ref={avatarInputRef}
-        type="file"
-        accept="image/png,image/jpeg,image/webp,image/jpg"
-        className="hidden"
-        onChange={(event) => void handleAvatarFileChange(event)}
-      />
       <Button
         size="sm"
         onClick={() => avatarInputRef.current?.click()}
@@ -1197,6 +1190,13 @@ const ProfilePage = () => {
   return (
     <div className={`mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 ${isIndividualProfile ? "pb-16" : ""}`}>
       <input
+        ref={avatarInputRef}
+        type="file"
+        accept="image/png,image/jpeg,image/webp,image/jpg"
+        className="hidden"
+        onChange={(event) => void handleAvatarFileChange(event)}
+      />
+      <input
         ref={cvInputRef}
         type="file"
         accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -1210,7 +1210,7 @@ const ProfilePage = () => {
         className="hidden"
         onChange={(event) => void handlePresentationFileChange(event)}
       />
-      <Card className={isIndividualProfile ? GOOGLE_SOFT_CARD_HERO : GOOGLE_SOFT_CARD_SECTION}>
+      <Card className={isIndividualProfile ? GOOGLE_SOFT_CARD_HERO : GOOGLE_SOFT_CARD_BLUE_SECTION}>
         {isIndividualProfile ? (
           <div className={GOOGLE_SOFT_HERO_SURFACE}>
             <CardHeader className="flex flex-col gap-5 pb-4 lg:flex-row lg:items-start lg:justify-between">
@@ -1503,6 +1503,7 @@ const ProfilePage = () => {
             {linkedinCardEnabled && linkedinAttribute ? (
               <StandaloneLinkAttributeCard
                 attribute={linkedinAttribute}
+                cardClassName={GOOGLE_SOFT_CARD_BLUE_SECTION}
                 title="LinkedIn"
                 description="LinkedIn profil linkini ayrı kartta yönet ve istersen public göster."
                 icon={Linkedin}
@@ -1521,6 +1522,7 @@ const ProfilePage = () => {
             {websiteCardEnabled && websiteAttribute ? (
               <StandaloneLinkAttributeCard
                 attribute={websiteAttribute}
+                cardClassName={GOOGLE_SOFT_CARD_GREEN_SECTION}
                 title="Web Sitesi"
                 description="Kişisel veya kurumsal web siteni ayrı kartta yönet."
                 icon={Globe2}
@@ -1540,6 +1542,7 @@ const ProfilePage = () => {
           <div className="grid gap-4 lg:grid-cols-2">
             {cvUploadEnabled ? (
               <ProfileDocumentCard
+                cardClassName={GOOGLE_SOFT_CARD_YELLOW_SECTION}
                 title="CV / Özgeçmiş"
                 description="Private bucket içinde saklanır. Sadece sen ve admin erişebilir."
                 icon={FileText}
@@ -1557,6 +1560,7 @@ const ProfilePage = () => {
 
             {presentationUploadEnabled ? (
               <ProfileDocumentCard
+                cardClassName={GOOGLE_SOFT_CARD_RED_SECTION}
                 title="Sunum / Tanıtım"
                 description="Private bucket içinde saklanır. Public profile linklerine eklenmez."
                 icon={BookOpen}
@@ -1684,15 +1688,29 @@ const ProfilePage = () => {
           </Card>
       </div>
 
-      <Card className={GOOGLE_SOFT_CARD_SECTION}>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">Başvurular & Erişimler</CardTitle>
-          <CardDescription className="text-xs">
-            Rol başvurularını, feature taleplerini, açık erişimlerini ve bekleyen süreçlerini tek kartta yönet.
-          </CardDescription>
+      <Card className={`overflow-hidden ${GOOGLE_SOFT_CARD_RED_SECTION}`}>
+        <CardHeader className="p-0">
+          <button
+            type="button"
+            className="flex w-full items-center justify-between gap-3 rounded-[30px] px-6 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            aria-expanded={isAccessCardOpen}
+            aria-controls="access-card-content"
+            onClick={() => setIsAccessCardOpen((current) => !current)}
+          >
+            <div className="space-y-1">
+              <CardTitle className="text-base">Başvurular & Erişimler</CardTitle>
+              <CardDescription className="text-xs">
+                Rol başvurularını, feature taleplerini, açık erişimlerini ve bekleyen süreçlerini tek kartta yönet.
+              </CardDescription>
+            </div>
+            <ChevronDown
+              className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${isAccessCardOpen ? "rotate-180" : ""}`}
+            />
+          </button>
         </CardHeader>
-        <CardContent>
-          <Accordion type="multiple" className="space-y-2">
+        {isAccessCardOpen ? (
+          <CardContent id="access-card-content" className="pt-0">
+            <Accordion type="multiple" className="space-y-2">
             <AccordionItem value="role-request" className={`overflow-hidden rounded-lg px-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
               <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
                 Rol Başvurusu
@@ -1818,22 +1836,37 @@ const ProfilePage = () => {
                 )}
               </AccordionContent>
             </AccordionItem>
-          </Accordion>
-        </CardContent>
+            </Accordion>
+          </CardContent>
+        ) : null}
       </Card>
 
-      <Card ref={helpCardRef} className={GOOGLE_SOFT_CARD_SECTION}>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <HelpCircle className="h-4 w-4 text-primary" />
-            Yardım & Kılavuzlar
-          </CardTitle>
-          <CardDescription className="text-xs">
-            Profilini doldururken ihtiyaç duyacağın tüm açıklamaları tek yerde topladık.
-          </CardDescription>
+      <Card ref={helpCardRef} className={`overflow-hidden ${GOOGLE_SOFT_CARD_BLUE_SECTION}`}>
+        <CardHeader className="p-0">
+          <button
+            type="button"
+            className="flex w-full items-center justify-between gap-3 rounded-[30px] px-6 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            aria-expanded={isHelpCardOpen}
+            aria-controls="help-card-content"
+            onClick={() => setIsHelpCardOpen((current) => !current)}
+          >
+            <div className="space-y-1">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <HelpCircle className="h-4 w-4 text-primary" />
+                Yardım & Kılavuzlar
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Profilini doldururken ihtiyaç duyacağın tüm açıklamaları tek yerde topladık.
+              </CardDescription>
+            </div>
+            <ChevronDown
+              className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${isHelpCardOpen ? "rotate-180" : ""}`}
+            />
+          </button>
         </CardHeader>
-        <CardContent>
-          <Accordion type="single" collapsible className="w-full space-y-2">
+        {isHelpCardOpen ? (
+          <CardContent id="help-card-content" className="pt-0">
+            <Accordion type="single" collapsible className="w-full space-y-2">
             {guideSections.map((section) => (
               <AccordionItem key={section.key} value={section.key} className={`rounded-lg border border-white/80 px-3 shadow-[0_18px_32px_-30px_rgba(66,133,244,0.28)] ${section.accentClassName}`}>
                 <AccordionTrigger className="py-2 text-sm font-medium hover:no-underline">
@@ -1845,8 +1878,9 @@ const ProfilePage = () => {
                 <AccordionContent>{section.content}</AccordionContent>
               </AccordionItem>
             ))}
-          </Accordion>
-        </CardContent>
+            </Accordion>
+          </CardContent>
+        ) : null}
       </Card>
     </div>
   );
@@ -1892,7 +1926,7 @@ const DisplayNameAttributeCard = ({
     : "İsmi Kaydet";
 
   return (
-    <Card className={GOOGLE_SOFT_CARD_SECTION}>
+    <Card className={GOOGLE_SOFT_CARD_BLUE_SECTION}>
       <CardHeader className="pb-2">
         <CardTitle className="text-base">{displayNameLabel}</CardTitle>
         <CardDescription className="text-xs">
@@ -2140,6 +2174,7 @@ const PreferenceToggleCard = ({
 
 type StandaloneLinkAttributeCardProps = {
   attribute: ProfileAttributeState;
+  cardClassName?: string;
   title: string;
   description: string;
   icon: ComponentType<{ className?: string }>;
@@ -2154,6 +2189,7 @@ type StandaloneLinkAttributeCardProps = {
 
 const StandaloneLinkAttributeCard = ({
   attribute,
+  cardClassName,
   title,
   description,
   icon: Icon,
@@ -2168,7 +2204,7 @@ const StandaloneLinkAttributeCard = ({
   const visible = draftVisibility === "public";
 
   return (
-    <Card className={GOOGLE_SOFT_CARD_SECTION}>
+    <Card className={cardClassName ?? GOOGLE_SOFT_CARD_SECTION}>
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base">
           <Icon className={`h-4 w-4 ${iconClassName}`} />
@@ -2201,6 +2237,7 @@ const StandaloneLinkAttributeCard = ({
 };
 
 type ProfileDocumentCardProps = {
+  cardClassName?: string;
   title: string;
   description: string;
   icon: ComponentType<{ className?: string }>;
@@ -2216,6 +2253,7 @@ type ProfileDocumentCardProps = {
 };
 
 const ProfileDocumentCard = ({
+  cardClassName,
   title,
   description,
   icon: Icon,
@@ -2230,7 +2268,7 @@ const ProfileDocumentCard = ({
   onRemoveClick,
 }: ProfileDocumentCardProps) => {
   return (
-    <Card className={GOOGLE_SOFT_CARD_SECTION}>
+    <Card className={cardClassName ?? GOOGLE_SOFT_CARD_SECTION}>
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base">
           <Icon className="h-4 w-4 text-primary" />
