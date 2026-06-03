@@ -184,43 +184,43 @@ const PROFILE_PRESENTATION_BUCKET = "profile-presentation-files";
 const MAX_PROFILE_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 
 const GOOGLE_SOFT_CARD_HERO =
-  "overflow-hidden border-[rgba(66,133,244,0.32)] bg-white shadow-[0_34px_90px_-38px_rgba(66,133,244,0.55),0_0_0_2px_rgba(66,133,244,0.14)]";
+  "overflow-hidden border-gray-200 shadow-[0_2px_16px_-4px_rgba(0,0,0,0.1)]";
 const GOOGLE_SOFT_CARD_SECTION =
-  "border-[rgba(66,133,244,0.22)] bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.22),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.2),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.15),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.18),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.97),rgba(248,252,255,0.93))] shadow-[0_28px_60px_-38px_rgba(66,133,244,0.5),0_0_0_1.5px_rgba(66,133,244,0.1)] backdrop-blur-[2px]";
+  "border-gray-200 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)]";
 const GOOGLE_SOFT_CARD_BLUE_SECTION =
-  "border-[rgba(66,133,244,0.28)] bg-[radial-gradient(ellipse_at_top_left,rgba(66,133,244,0.32),transparent_42%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.1),transparent_36%),linear-gradient(180deg,rgba(232,240,254,0.7),rgba(255,255,255,0.94))] shadow-[0_28px_60px_-38px_rgba(66,133,244,0.55),0_0_0_2px_rgba(66,133,244,0.12)] backdrop-blur-[2px]";
+  "border-gray-200 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)]";
 const GOOGLE_SOFT_CARD_YELLOW_SECTION =
-  "border-[rgba(251,188,5,0.35)] bg-[radial-gradient(ellipse_at_top_right,rgba(251,188,5,0.32),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.08),transparent_36%),linear-gradient(180deg,rgba(254,249,195,0.65),rgba(255,255,255,0.94))] shadow-[0_28px_60px_-38px_rgba(251,188,5,0.48),0_0_0_2px_rgba(251,188,5,0.14)] backdrop-blur-[2px]";
+  "border-gray-200 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)]";
 const GOOGLE_SOFT_CARD_GREEN_SECTION =
-  "border-[rgba(52,168,83,0.3)] bg-[radial-gradient(ellipse_at_top_left,rgba(52,168,83,0.3),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(66,133,244,0.08),transparent_36%),linear-gradient(180deg,rgba(220,252,231,0.65),rgba(255,255,255,0.94))] shadow-[0_28px_60px_-38px_rgba(52,168,83,0.45),0_0_0_2px_rgba(52,168,83,0.1)] backdrop-blur-[2px]";
+  "border-gray-200 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)]";
 const GOOGLE_SOFT_CARD_RED_SECTION =
-  "border-[rgba(234,67,53,0.28)] bg-[radial-gradient(ellipse_at_top_left,rgba(234,67,53,0.27),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(251,188,5,0.1),transparent_36%),linear-gradient(180deg,rgba(254,226,226,0.65),rgba(255,255,255,0.94))] shadow-[0_28px_60px_-38px_rgba(234,67,53,0.44),0_0_0_2px_rgba(234,67,53,0.1)] backdrop-blur-[2px]";
+  "border-gray-200 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)]";
 const GOOGLE_SOFT_CARD_SUBTLE =
-  "border border-white/90 bg-white/80 shadow-[0_4px_20px_-12px_rgba(66,133,244,0.2)] backdrop-blur-sm";
+  "border border-gray-100 bg-gray-50/80";
 const GOOGLE_SOFT_CARD_SUBTLE_INTERACTIVE =
-  "border border-white/90 bg-white/80 shadow-[0_4px_20px_-12px_rgba(66,133,244,0.2)] backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-[0_8px_28px_-12px_rgba(66,133,244,0.28)]";
+  "border border-gray-100 bg-gray-50/80 transition hover:bg-gray-100/80 hover:-translate-y-0.5";
 
 const GOOGLE_SOFT_SUBTLE_WARM =
-  "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(251,188,5,0.14),transparent_34%),radial-gradient(circle_at_top_right,rgba(234,67,53,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,251,244,0.84))] shadow-[0_18px_35px_-30px_rgba(251,188,5,0.28)]";
+  "border border-orange-100 bg-orange-50/60";
 const GOOGLE_SOFT_SUBTLE_COOL =
-  "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.14),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(244,248,255,0.84))] shadow-[0_18px_35px_-30px_rgba(66,133,244,0.28)]";
+  "border border-blue-100 bg-blue-50/60";
 const GOOGLE_SOFT_SUBTLE_GREEN =
-  "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(52,168,83,0.14),transparent_34%),radial-gradient(circle_at_top_right,rgba(66,133,244,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(242,249,244,0.84))] shadow-[0_18px_35px_-30px_rgba(52,168,83,0.28)]";
+  "border border-green-100 bg-green-50/60";
 const GOOGLE_SOFT_SUBTLE_RED =
-  "border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(234,67,53,0.12),transparent_34%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(253,247,244,0.84))] shadow-[0_18px_35px_-30px_rgba(234,67,53,0.24)]";
+  "border border-red-100 bg-red-50/60";
 
 const GOOGLE_SOFT_HERO_SURFACE =
-  "border-b border-[rgba(66,133,244,0.16)] bg-[radial-gradient(ellipse_at_top_left,rgba(66,133,244,0.38),transparent_35%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.34),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.18),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.22),transparent_28%),linear-gradient(135deg,rgba(232,240,254,0.55),rgba(255,255,255,0.95)_44%,rgba(255,252,230,0.5)_100%)]";
+  "border-b border-gray-100 bg-white";
 const GOOGLE_SOFT_ACTION_PANEL =
-  "rounded-[26px] border border-[rgba(249,115,22,0.2)] bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.12),transparent_34%),radial-gradient(circle_at_top_right,rgba(249,115,22,0.08),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.07),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,237,0.86))] p-3 shadow-[0_24px_45px_-36px_rgba(249,115,22,0.25)]";
+  "rounded-2xl border border-gray-200 bg-gray-50 p-3 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)]";
 const GOOGLE_SOFT_SUCCESS_PANEL =
-  "border border-[rgba(52,168,83,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(241,248,242,0.88)),radial-gradient(circle_at_top_left,rgba(52,168,83,0.15),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(66,133,244,0.08),transparent_28%)]";
+  "border border-green-200 bg-green-50";
 const GOOGLE_SOFT_DANGER_PANEL =
-  "border border-[rgba(234,67,53,0.2)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(253,242,240,0.88)),radial-gradient(circle_at_top_left,rgba(234,67,53,0.13),transparent_34%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.1),transparent_26%)]";
+  "border border-red-200 bg-red-50";
 const GOOGLE_SOFT_WARNING_PANEL =
-  "border border-[rgba(251,188,5,0.26)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,249,230,0.9)),radial-gradient(circle_at_top_left,rgba(251,188,5,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(234,67,53,0.08),transparent_30%)]";
+  "border border-orange-200 bg-orange-50";
 const GOOGLE_SOFT_SWITCH_PANEL =
-  "border border-white/75 bg-[linear-gradient(180deg,rgba(255,255,255,0.93),rgba(255,255,255,0.82)),radial-gradient(circle_at_top_left,rgba(217,160,58,0.1),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.08),transparent_28%)]";
+  "border border-gray-100 bg-gray-50";
 
 const AMBER_BUTTON_PRIMARY =
   "border border-[rgba(234,88,12,0.3)] bg-[linear-gradient(180deg,rgba(249,115,22,0.95),rgba(234,88,0,0.9))] text-white shadow-[0_10px_24px_-12px_rgba(249,115,22,0.5)] hover:bg-[linear-gradient(180deg,rgba(251,146,60,0.97),rgba(249,115,22,0.95))] hover:shadow-[0_12px_28px_-10px_rgba(249,115,22,0.62)]";
@@ -229,27 +229,6 @@ const AMBER_BUTTON_OUTLINE =
 const AMBER_ACTION_BUTTON =
   "h-10 w-full min-w-0 justify-center rounded-xl border border-[rgba(249,115,22,0.28)] bg-[rgba(255,255,255,0.85)] px-3 text-xs font-medium text-orange-700 shadow-[0_12px_26px_-24px_rgba(249,115,22,0.3)] backdrop-blur-[2px] hover:bg-[rgba(249,115,22,0.1)] hover:border-[rgba(249,115,22,0.46)] hover:text-orange-800";
 
-const PremiumBackground = () => (
-  <>
-    <style>{`
-      @keyframes gOrb1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(50px,-70px) scale(1.15)}66%{transform:translate(-40px,50px) scale(0.9)}}
-      @keyframes gOrb2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-65px,-55px) scale(1.2)}}
-      @keyframes gOrb3{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(45px,65px) scale(0.86)}75%{transform:translate(-50px,-30px) scale(1.1)}}
-      @keyframes gOrb4{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(65px,50px) scale(1.18)}80%{transform:translate(-20px,-65px) scale(0.9)}}
-      @keyframes gPulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:0.85;transform:scale(1.08)}}
-      @keyframes gGrid{0%,100%{opacity:0.2}50%{opacity:0.5}}
-    `}</style>
-    <div className="pointer-events-none fixed inset-0 overflow-hidden" style={{zIndex:-1}} aria-hidden="true">
-      <div style={{position:"absolute",inset:0,background:"linear-gradient(145deg,rgba(232,240,254,0.55) 0%,rgba(255,252,230,0.3) 35%,rgba(252,236,234,0.3) 65%,rgba(232,248,236,0.45) 100%)"}} />
-      <div style={{position:"absolute",top:"-5%",left:"-8%",width:"55%",height:"55%",borderRadius:"50%",background:"radial-gradient(circle,rgba(66,133,244,0.38) 0%,rgba(66,133,244,0.15) 40%,transparent 68%)",animation:"gOrb1 24s ease-in-out infinite",filter:"blur(50px)"}} />
-      <div style={{position:"absolute",top:"5%",right:"-10%",width:"52%",height:"52%",borderRadius:"50%",background:"radial-gradient(circle,rgba(251,188,5,0.35) 0%,rgba(251,188,5,0.13) 40%,transparent 68%)",animation:"gOrb2 30s ease-in-out infinite",filter:"blur(55px)"}} />
-      <div style={{position:"absolute",top:"45%",left:"-5%",width:"48%",height:"48%",borderRadius:"50%",background:"radial-gradient(circle,rgba(234,67,53,0.32) 0%,rgba(234,67,53,0.11) 40%,transparent 68%)",animation:"gOrb3 26s ease-in-out infinite",filter:"blur(52px)"}} />
-      <div style={{position:"absolute",bottom:"-5%",right:"-8%",width:"54%",height:"54%",borderRadius:"50%",background:"radial-gradient(circle,rgba(52,168,83,0.34) 0%,rgba(52,168,83,0.12) 40%,transparent 68%)",animation:"gOrb4 32s ease-in-out infinite",filter:"blur(54px)"}} />
-      <div style={{position:"absolute",top:"28%",left:"22%",width:"56%",height:"44%",borderRadius:"50%",background:"radial-gradient(ellipse,rgba(66,133,244,0.14) 0%,rgba(251,188,5,0.11) 45%,transparent 72%)",animation:"gPulse 20s ease-in-out infinite",filter:"blur(80px)"}} />
-      <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,rgba(66,133,244,0.1) 1px,transparent 1px)",backgroundSize:"48px 48px",animation:"gGrid 10s ease-in-out infinite"}} />
-    </div>
-  </>
-);
 
 const buildAvatarStoragePath = (userId: string, file: File) => {
   const safeExtension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
@@ -1226,7 +1205,6 @@ const ProfilePage = () => {
 
   return (
     <div className={`relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 ${isIndividualProfile ? "pb-16" : ""}`}>
-      <PremiumBackground />
       <input
         ref={avatarInputRef}
         type="file"
@@ -1257,22 +1235,22 @@ const ProfilePage = () => {
                   <img
                     src={currentAvatarUrl}
                     alt={displayName}
-                    className="h-20 w-20 shrink-0 rounded-[28px] object-cover shadow-[0_24px_45px_-24px_rgba(66,133,244,0.5)]"
+                    className="h-20 w-20 shrink-0 rounded-2xl object-cover shadow-[0_4px_16px_-4px_rgba(0,0,0,0.15)]"
                   />
                 ) : (
-                  <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[28px] bg-[linear-gradient(145deg,#4285F4,#34A853_55%,#FBBC05)] text-2xl font-bold text-white shadow-[0_24px_45px_-24px_rgba(66,133,244,0.52)]">
+                  <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-orange-500 text-2xl font-bold text-white shadow-[0_6px_20px_-6px_rgba(249,115,22,0.45)]">
                     {initials}
                   </div>
                 )}
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="outline" className="border-[rgba(66,133,244,0.28)] bg-white/85 text-[#3367D6]">
+                    <Badge variant="outline" className="border-orange-200 bg-orange-50 text-orange-700">
                       <Sparkles className="mr-1 h-3 w-3" /> Bireysel Panelim
                     </Badge>
-                    <Badge variant="secondary" className="bg-[rgba(66,133,244,0.12)] text-slate-900 hover:bg-[rgba(66,133,244,0.12)]">
+                    <Badge variant="secondary" className="bg-gray-100 text-slate-700 hover:bg-gray-100">
                       {profile?.roleLabel ?? roleMeta?.adminLabel ?? "Rol"}
                     </Badge>
-                    <Badge variant="outline" className="border-[rgba(251,188,5,0.26)] bg-white/80 text-xs">
+                    <Badge variant="outline" className="border-gray-200 text-xs text-gray-500">
                       Tamamlanma %{profile?.profileCompletion.percentage ?? 0}
                     </Badge>
                     {errorMessage ? <Badge variant="destructive" className="text-xs">Kısmi veri yüklendi</Badge> : null}
