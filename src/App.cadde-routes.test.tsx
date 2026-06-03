@@ -12,6 +12,14 @@ vi.mock("@/components/auth/AuthProvider", () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
+vi.mock("@/components/auth/RequireAuth", () => ({
+  default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+vi.mock("@/components/auth/RequireFeature", () => ({
+  default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
 vi.mock("@/components/admin/AdminLayout", () => ({
   default: () => (
     <div>

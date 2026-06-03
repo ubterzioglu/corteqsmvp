@@ -5,7 +5,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import RequireAuth from "@/components/auth/RequireAuth";
+import RequireFeature from "@/components/auth/RequireFeature";
 import { DiasporaProvider } from "@/contexts/DiasporaContext";
+import { GENERIC_FEATURE_KEYS } from "@/lib/features";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import AboutPage from "./pages/AboutPage.tsx";
@@ -147,7 +149,16 @@ const App = () => (
                 <Route path="/association/:id" element={<AssociationDetail />} />
                 <Route path="/kurulus/:slug" element={<IndependentProfilePage />} />
                 <Route path="/hospital-appointment/:id" element={<HospitalAppointment />} />
-                <Route path="/cadde" element={<CaddePage />} />
+                <Route
+                  path="/cadde"
+                  element={
+                    <RequireAuth>
+                      <RequireFeature feature={GENERIC_FEATURE_KEYS.caddeAccess} fallback={<Navigate to="/" replace />}>
+                        <CaddePage />
+                      </RequireFeature>
+                    </RequireAuth>
+                  }
+                />
                 <Route
                   path="/directory/profile/:userId"
                   element={

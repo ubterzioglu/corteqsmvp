@@ -15,6 +15,7 @@ export const GENERIC_FEATURE_KEYS = {
   profileViewOwn: "profile.view_own",
   profileEditOwn: "profile.edit_own",
   profileEditPublic: "profile.edit_public",
+  caddeAccess: "cadde.access",
   directoryVisible: "directory.visible",
   directoryFeatured: "directory.featured",
   contactReceive: "contact.receive",
@@ -109,6 +110,12 @@ export const GENERIC_FEATURES: FeatureMeta<GenericFeatureKey>[] = [
     key: GENERIC_FEATURE_KEYS.profileEditPublic,
     label: "Public Alanları Düzenle",
     description: "Kullanıcı public görünür alanlarını yönetebilir",
+    category: "generic",
+  },
+  {
+    key: GENERIC_FEATURE_KEYS.caddeAccess,
+    label: "Cadde Erişimi",
+    description: "Kullanıcı Cadde sayfasına erişebilir",
     category: "generic",
   },
   {

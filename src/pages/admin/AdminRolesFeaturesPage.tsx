@@ -128,6 +128,11 @@ const FEATURE_DETAILS: Record<string, FeatureDetail> = {
     effect: "Açıldığında şehir yönetimiyle ilgili akışlar bu rol için kullanılabilir hale gelir.",
     adminHint: "Şu an daha sınırlı bir alan olduğu için sadece gerçekten yetkili roller için açılmalı.",
   },
+  "cadde.access": {
+    summary: "Kullanıcının CorteQS Cadde sayfasına erişimini kontrol eder.",
+    effect: "Açık olduğunda kullanıcı `/cadde` rotasını açabilir ve Cadde deneyimini kullanabilir.",
+    adminHint: "Şimdilik tüm rollerde açık başlayabilir; ileride role veya kullanıcı bazında daha ayrıntılı ayrıştırılabilir.",
+  },
   "contact.receive": {
     summary: "Kullanıcının platform üzerinden gelen iletişim veya iş birliği taleplerini almasını sağlar.",
     effect: "Açık olduğunda profil veya ilgili kart üzerinden kullanıcıya temas kurulabilir.",

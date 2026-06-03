@@ -3,6 +3,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import {
   BookOpen,
   CheckCircle2,
+  ChevronDown,
   Clock3,
   Eye,
   EyeOff,
@@ -28,9 +29,11 @@ import { useAuth } from "@/components/auth/useAuth";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
@@ -250,6 +253,7 @@ const ProfilePage = () => {
   const [draftVisibilities, setDraftVisibilities] = useState<DraftVisibilityMap>({});
   const [savingAttributeKey, setSavingAttributeKey] = useState<string | null>(null);
   const [savingTaxonomyGroupKey, setSavingTaxonomyGroupKey] = useState<string | null>(null);
+  const [savingCommonAttributes, setSavingCommonAttributes] = useState(false);
   const [savingSocialMedia, setSavingSocialMedia] = useState(false);
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarRemoving, setAvatarRemoving] = useState(false);
@@ -537,7 +541,7 @@ const ProfilePage = () => {
     setDraftValues((current) => ({ ...current, [attributeKey]: nextValue }));
   };
 
-  const handleSaveAttribute = async (attribute: ProfileAttributeState) => {
+  const buildAttributePayload = (attribute: ProfileAttributeState) => {
     const rawValue = draftValues[attribute.attributeKey];
     const visibility = draftVisibilities[attribute.attributeKey] ?? attribute.visibility;
 
@@ -555,6 +559,12 @@ const ProfilePage = () => {
         ? normalizeSocialMediaValue(attribute.attributeKey, textValue)
         : textValue;
     }
+
+    return { valueToSend, visibility };
+  };
+
+  const handleSaveAttribute = async (attribute: ProfileAttributeState) => {
+    const { valueToSend, visibility } = buildAttributePayload(attribute);
 
     setSavingAttributeKey(attribute.attributeKey);
     try {
@@ -575,6 +585,32 @@ const ProfilePage = () => {
       });
     } finally {
       setSavingAttributeKey(null);
+    }
+  };
+
+  const handleSaveCommonAttributes = async () => {
+    if (!groupedAttributes.common.length) return;
+
+    setSavingCommonAttributes(true);
+    try {
+      for (const attribute of groupedAttributes.common) {
+        const { valueToSend, visibility } = buildAttributePayload(attribute);
+        await updateProfileAttribute(attribute.attributeKey, valueToSend, visibility);
+      }
+
+      await refreshProfile();
+      toast({
+        title: "Ortak profil alanları kaydedildi",
+        description: "İsim, konum, biyografi ve görünürlük ayarları güncellendi.",
+      });
+    } catch (error) {
+      toast({
+        title: "Ortak alanlar kaydedilemedi",
+        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingCommonAttributes(false);
     }
   };
 
@@ -808,20 +844,6 @@ const ProfilePage = () => {
               {errorMessage ? <Badge variant="destructive" className="text-xs">Kısmi veri yüklendi</Badge> : null}
             </div>
           </div>
-          {!isIndividualProfile ? (
-            <div className="flex gap-2">
-              <Button size="sm" variant="outline" onClick={scrollToHelpCard}>
-                <HelpCircle className="mr-1.5 h-4 w-4" />
-                Yardım
-              </Button>
-              <Button size="sm" variant="outline" onClick={() => void refreshProfile()}>
-                Yenile
-              </Button>
-              <Button size="sm" variant="outline" onClick={handleSignOut}>
-                Çıkış Yap
-              </Button>
-            </div>
-          ) : null}
         </CardHeader>
         <CardContent className={`grid gap-2 pb-4 ${isIndividualProfile ? "md:grid-cols-4" : "md:grid-cols-3"}`}>
           <div className="rounded-lg border bg-slate-50 p-2.5">
@@ -936,14 +958,20 @@ const ProfilePage = () => {
                   draftValue={draftValues[attribute.attributeKey]}
                   draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
                   displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
-                  isSaving={savingAttributeKey === attribute.attributeKey}
+                  isSaving={savingCommonAttributes}
+                  saveMode="section"
+                  visibilityMode="collapsible-radio"
                   onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
                   onVisibilityChange={(nextVisibility) =>
                     setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
                   }
-                  onSave={() => void handleSaveAttribute(attribute)}
                 />
               ))}
+              <div className="flex justify-end pt-1">
+                <Button size="sm" onClick={() => void handleSaveCommonAttributes()} disabled={savingCommonAttributes}>
+                  {savingCommonAttributes ? "Kaydediliyor..." : "Ortak Alanları Kaydet"}
+                </Button>
+              </div>
             </CardContent>
           </Card>
 
@@ -1035,13 +1063,15 @@ const ProfilePage = () => {
                   <ProfileAttributeEditor
                     key={attribute.attributeKey}
                     attribute={attribute}
-                    draftValue={draftValues[attribute.attributeKey]}
-                    draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
-                    displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
-                    isSaving={savingAttributeKey === attribute.attributeKey}
-                    onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
-                    onVisibilityChange={(nextVisibility) =>
-                      setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
+                  draftValue={draftValues[attribute.attributeKey]}
+                  draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
+                  displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
+                  isSaving={savingAttributeKey === attribute.attributeKey}
+                  saveMode="single"
+                  visibilityMode="select"
+                  onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
+                  onVisibilityChange={(nextVisibility) =>
+                    setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
                     }
                     onSave={() => void handleSaveAttribute(attribute)}
                   />
@@ -1298,9 +1328,11 @@ type ProfileAttributeEditorProps = {
   draftVisibility: AttributeVisibility;
   displayNameLabel: string;
   isSaving: boolean;
+  saveMode: "single" | "section";
+  visibilityMode: "select" | "collapsible-radio";
   onValueChange: (value: string | boolean) => void;
   onVisibilityChange: (value: AttributeVisibility) => void;
-  onSave: () => void;
+  onSave?: () => void;
 };
 
 const ProfileAttributeEditor = ({
@@ -1309,11 +1341,15 @@ const ProfileAttributeEditor = ({
   draftVisibility,
   displayNameLabel,
   isSaving,
+  saveMode,
+  visibilityMode,
   onValueChange,
   onVisibilityChange,
   onSave,
 }: ProfileAttributeEditorProps) => {
+  const [isVisibilityOpen, setIsVisibilityOpen] = useState(false);
   const attributeLabel = attribute.attributeKey === "full_name" ? displayNameLabel : attribute.label;
+  const visibilityLabel = VISIBILITY_OPTIONS.find((option) => option.value === draftVisibility)?.label ?? draftVisibility;
 
   return (
     <div className="rounded-lg border p-3">
@@ -1348,7 +1384,46 @@ const ProfileAttributeEditor = ({
       <div className="mt-3 space-y-2">
         <AttributeInput attribute={attribute} value={draftValue} onChange={onValueChange} />
 
-        <div className="grid gap-2 md:grid-cols-[1fr_auto] md:items-center">
+        {visibilityMode === "collapsible-radio" ? (
+          <Collapsible open={isVisibilityOpen} onOpenChange={setIsVisibilityOpen}>
+            <div className="rounded-xl border bg-slate-50/70">
+              <CollapsibleTrigger asChild>
+                <button
+                  type="button"
+                  className="flex w-full items-center justify-between gap-3 px-3 py-2 text-left"
+                  disabled={!attribute.userCanHide}
+                >
+                  <div>
+                    <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Görünürlük</p>
+                    <p className="text-sm font-medium text-foreground">{visibilityLabel}</p>
+                  </div>
+                  <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isVisibilityOpen ? "rotate-180" : ""}`} />
+                </button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden border-t">
+                <RadioGroup
+                  value={draftVisibility}
+                  onValueChange={(value) => onVisibilityChange(value as AttributeVisibility)}
+                  className="gap-2 p-3"
+                >
+                  {VISIBILITY_OPTIONS.map((option) => {
+                    const optionId = `${attribute.attributeKey}-${option.value}`;
+                    return (
+                      <label
+                        key={option.value}
+                        htmlFor={optionId}
+                        className="flex cursor-pointer items-center gap-3 rounded-lg border bg-white px-3 py-2 text-sm"
+                      >
+                        <RadioGroupItem value={option.value} id={optionId} />
+                        <span>{option.label}</span>
+                      </label>
+                    );
+                  })}
+                </RadioGroup>
+              </CollapsibleContent>
+            </div>
+          </Collapsible>
+        ) : (
           <div className="max-w-xs">
             <Select
               value={draftVisibility}
@@ -1367,10 +1442,15 @@ const ProfileAttributeEditor = ({
               </SelectContent>
             </Select>
           </div>
-          <Button size="sm" onClick={onSave} disabled={!attribute.userCanEdit || isSaving}>
-            {isSaving ? "Kaydediliyor..." : "Kaydet"}
-          </Button>
-        </div>
+        )}
+
+        {saveMode === "single" && onSave ? (
+          <div className="flex justify-end">
+            <Button size="sm" onClick={onSave} disabled={!attribute.userCanEdit || isSaving}>
+              {isSaving ? "Kaydediliyor..." : "Kaydet"}
+            </Button>
+          </div>
+        ) : null}
 
         {attribute.requiresAdminApprovalOnChange ? (
           <div className="rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1.5 text-xs text-amber-900">
