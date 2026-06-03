@@ -22,6 +22,35 @@ export async function submitFeatureRequest(featureKey: string, payload: Record<s
 }
 
 export async function updateProfileAttribute(attributeKey: string, value: unknown, visibility?: AttributeVisibility) {
+  if (attributeKey === "full_name") {
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError) throw userError;
+
+    const userId = userData.user?.id;
+    if (!userId) {
+      throw new Error("Kullanıcı bulunamadı.");
+    }
+
+    const normalizedValue = typeof value === "string"
+      ? value.trim()
+      : String(value ?? "").trim();
+
+    const { error } = await supabase
+      .from("user_profiles")
+      .update({
+        full_name: normalizedValue || null,
+      })
+      .eq("user_id", userId);
+
+    if (error) throw error;
+
+    return {
+      attribute_key: attributeKey,
+      status: "approved",
+      visibility: "public",
+    };
+  }
+
   const { data, error } = await supabase.rpc("update_profile_attribute", {
     attribute_key: attributeKey,
     attribute_value: value,
