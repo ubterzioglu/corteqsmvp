@@ -275,9 +275,7 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Alt Kategori / Alt Tip")).toBeInTheDocument();
     expect(screen.getByText("Feature Talepleri")).toBeInTheDocument();
     expect(screen.getByText("Açık Dashboard Erişimleri")).toBeInTheDocument();
-    expect(screen.getByText("Çift Modlu Profil Merkezi")).toBeInTheDocument();
     expect(screen.getByText("Yardım & Kılavuzlar")).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "Public Önizleme" })).toBeInTheDocument();
     expect(screen.getAllByText("Diaspora için iş birliği ve mentorluk fırsatlarına açığım.").length).toBeGreaterThan(0);
     expect(screen.getAllByText("mentorluk, topluluk, networking").length).toBeGreaterThan(0);
   });

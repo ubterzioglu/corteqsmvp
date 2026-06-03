@@ -33,7 +33,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useCurrentUserProfile } from "@/hooks/useCurrentUserProfile";
 import { useCurrentUserDashboard } from "@/hooks/useCurrentUserDashboard";
@@ -48,8 +47,6 @@ import {
 import { getAttributeStringValue, type AttributeVisibility, type ProfileAttributeState, type TaxonomyGroupState } from "@/lib/member-profile";
 import { defaultProfileType, getRoleMeta, isProfileType, profileTypeOptions, type ProfileType } from "@/lib/profile-types";
 import { supabase } from "@/integrations/supabase/client";
-import PublicProfileSummaryView from "@/components/profile/PublicProfileSummaryView";
-import { buildSelfProfileViewModel } from "@/lib/profile-view-model";
 
 type DraftValueMap = Record<string, string | boolean>;
 type DraftVisibilityMap = Record<string, AttributeVisibility>;
@@ -355,10 +352,6 @@ const ProfilePage = () => {
   const publicAttributesCount = (profile?.attributes ?? []).filter((attribute) => draftVisibilities[attribute.attributeKey] === "public").length;
   const pendingCount = profile?.pendingRequests.length ?? 0;
   const dashboardCount = dashboardItems.length;
-  const selfProfileViewModel = useMemo(
-    () => (profile ? buildSelfProfileViewModel(profile, dashboardCount) : null),
-    [dashboardCount, profile],
-  );
   const completionHighlights = [
     { key: "full_name", label: roleMeta?.displayNameLabel ?? "Görünen isim" },
     { key: "country", label: "Ülke" },
@@ -1141,65 +1134,6 @@ const ProfilePage = () => {
         </div>
 
         <div className="space-y-4">
-          {selfProfileViewModel ? (
-            <Card className="border-slate-200 bg-white/90 shadow-sm">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">Çift Modlu Profil Merkezi</CardTitle>
-                <CardDescription className="text-xs">
-                  Bu alan, kendi profilini düzenlerken loginli diğer kullanıcıların göreceği visitor görünümünü de aynı ekranda önizlemeni sağlar.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Tabs defaultValue="preview" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="preview">Public Önizleme</TabsTrigger>
-                    <TabsTrigger value="status">Profil Durumu</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="preview" className="mt-4">
-                    <PublicProfileSummaryView model={selfProfileViewModel.preview} mode="preview" />
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {roleMeta?.publicSectionKeys.map((key) => (
-                        <Badge key={key} variant="outline" className="text-[10px]">
-                          {key}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TabsContent>
-                  <TabsContent value="status" className="mt-4 space-y-3">
-                    <div className="grid gap-2 md:grid-cols-2">
-                      <div className="rounded-lg border bg-slate-50 p-3">
-                        <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Rol</p>
-                        <p className="mt-1 text-sm font-semibold">{selfProfileViewModel.roleLabel}</p>
-                      </div>
-                      <div className="rounded-lg border bg-slate-50 p-3">
-                        <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Tamamlanma</p>
-                        <p className="mt-1 text-sm font-semibold">%{selfProfileViewModel.completionPercentage}</p>
-                      </div>
-                      <div className="rounded-lg border bg-slate-50 p-3">
-                        <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Public Alan</p>
-                        <p className="mt-1 text-sm font-semibold">{selfProfileViewModel.publicAttributeCount}</p>
-                      </div>
-                      <div className="rounded-lg border bg-slate-50 p-3">
-                        <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Açık Dashboard</p>
-                        <p className="mt-1 text-sm font-semibold">{selfProfileViewModel.dashboardCount}</p>
-                      </div>
-                    </div>
-                    <div className="rounded-lg border bg-slate-50 p-3">
-                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Self View Blokları</p>
-                      <div className="mt-2 flex flex-wrap gap-1.5">
-                        {roleMeta?.selfSectionKeys.map((key) => (
-                          <Badge key={key} variant="secondary" className="text-[10px]">
-                            {key}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-          ) : null}
-
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Rol Başvurusu</CardTitle>
