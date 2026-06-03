@@ -1169,6 +1169,7 @@ const ProfilePage = () => {
           </Button>
         </div>
       </Card>
+    </div>
   );
 
   const heroActionButtons = (
