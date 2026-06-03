@@ -212,7 +212,7 @@ const GOOGLE_SOFT_SUBTLE_RED =
 const GOOGLE_SOFT_HERO_SURFACE =
   "border-b border-[rgba(66,133,244,0.1)] bg-[radial-gradient(ellipse_at_top_left,rgba(66,133,244,0.3),transparent_32%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.28),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.14),transparent_22%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.16),transparent_26%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(247,250,255,0.95)_44%,rgba(255,252,244,0.94)_100%)]";
 const GOOGLE_SOFT_ACTION_PANEL =
-  "rounded-[26px] border border-[rgba(217,160,58,0.2)] bg-[radial-gradient(circle_at_top_left,rgba(242,201,76,0.16),transparent_34%),radial-gradient(circle_at_top_right,rgba(217,160,58,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.08),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,252,244,0.82))] p-3 shadow-[0_24px_45px_-36px_rgba(217,160,58,0.32)]";
+  "rounded-[26px] border border-[rgba(249,115,22,0.2)] bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.12),transparent_34%),radial-gradient(circle_at_top_right,rgba(249,115,22,0.08),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(52,168,83,0.07),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,237,0.86))] p-3 shadow-[0_24px_45px_-36px_rgba(249,115,22,0.25)]";
 const GOOGLE_SOFT_SUCCESS_PANEL =
   "border border-[rgba(52,168,83,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(241,248,242,0.88)),radial-gradient(circle_at_top_left,rgba(52,168,83,0.15),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(66,133,244,0.08),transparent_28%)]";
 const GOOGLE_SOFT_DANGER_PANEL =
@@ -223,33 +223,32 @@ const GOOGLE_SOFT_SWITCH_PANEL =
   "border border-white/75 bg-[linear-gradient(180deg,rgba(255,255,255,0.93),rgba(255,255,255,0.82)),radial-gradient(circle_at_top_left,rgba(217,160,58,0.1),transparent_36%),radial-gradient(circle_at_top_right,rgba(251,188,5,0.08),transparent_28%)]";
 
 const AMBER_BUTTON_PRIMARY =
-  "border border-[rgba(217,160,58,0.32)] bg-[linear-gradient(180deg,rgba(242,201,76,0.92),rgba(217,160,58,0.88))] text-white shadow-[0_10px_24px_-12px_rgba(217,160,58,0.4)] hover:bg-[linear-gradient(180deg,rgba(242,201,76,0.96),rgba(217,160,58,0.94))] hover:shadow-[0_12px_28px_-10px_rgba(217,160,58,0.48)]";
+  "border border-[rgba(234,88,12,0.3)] bg-[linear-gradient(180deg,rgba(249,115,22,0.95),rgba(234,88,0,0.9))] text-white shadow-[0_10px_24px_-12px_rgba(249,115,22,0.5)] hover:bg-[linear-gradient(180deg,rgba(251,146,60,0.97),rgba(249,115,22,0.95))] hover:shadow-[0_12px_28px_-10px_rgba(249,115,22,0.62)]";
 const AMBER_BUTTON_OUTLINE =
-  "border border-[rgba(217,160,58,0.38)] bg-[rgba(255,255,255,0.82)] text-[#9A7320] shadow-[0_8px_18px_-14px_rgba(217,160,58,0.26)] hover:bg-[rgba(242,201,76,0.1)] hover:border-[rgba(217,160,58,0.52)] hover:text-[#8B6518]";
+  "border border-[rgba(249,115,22,0.38)] bg-[rgba(255,255,255,0.82)] text-orange-700 shadow-[0_8px_18px_-14px_rgba(249,115,22,0.24)] hover:bg-[rgba(249,115,22,0.09)] hover:border-[rgba(249,115,22,0.55)] hover:text-orange-800";
 const AMBER_ACTION_BUTTON =
-  "h-10 w-full min-w-0 justify-center rounded-xl border-[rgba(217,160,58,0.32)] bg-[rgba(255,255,255,0.85)] px-3 text-xs font-medium text-[#9A7320] shadow-[0_12px_26px_-24px_rgba(217,160,58,0.32)] backdrop-blur-[2px] hover:bg-[rgba(242,201,76,0.12)] hover:border-[rgba(217,160,58,0.48)] hover:text-[#8B6518]";
+  "h-10 w-full min-w-0 justify-center rounded-xl border border-[rgba(249,115,22,0.28)] bg-[rgba(255,255,255,0.85)] px-3 text-xs font-medium text-orange-700 shadow-[0_12px_26px_-24px_rgba(249,115,22,0.3)] backdrop-blur-[2px] hover:bg-[rgba(249,115,22,0.1)] hover:border-[rgba(249,115,22,0.46)] hover:text-orange-800";
 
-const GLOBE_POSITIONS = [
-  { emoji: "\u{1F310}", top: "3%", left: "8%", "--globe-size": "32px", "--globe-opacity": "0.08", "--globe-duration": "24s", "--globe-delay": "0s" },
-  { emoji: "\u{1F30D}", top: "12%", right: "6%", "--globe-size": "24px", "--globe-opacity": "0.06", "--globe-duration": "28s", "--globe-delay": "-6s" },
-  { emoji: "\u{1F30E}", top: "38%", left: "3%", "--globe-size": "20px", "--globe-opacity": "0.05", "--globe-duration": "32s", "--globe-delay": "-12s" },
-  { emoji: "\u{1F30F}", top: "55%", right: "4%", "--globe-size": "28px", "--globe-opacity": "0.06", "--globe-duration": "26s", "--globe-delay": "-9s" },
-  { emoji: "\u{1F310}", top: "78%", left: "10%", "--globe-size": "22px", "--globe-opacity": "0.04", "--globe-duration": "30s", "--globe-delay": "-16s" },
-  { emoji: "\u{1F30D}", top: "90%", right: "12%", "--globe-size": "18px", "--globe-opacity": "0.04", "--globe-duration": "34s", "--globe-delay": "-20s" },
-] as const;
-
-const FloatingGlobeBackground = () => (
-  <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-    {GLOBE_POSITIONS.map((globe, index) => (
-      <span
-        key={index}
-        className="profile-globe hidden md:block"
-        style={globe as unknown as React.CSSProperties}
-      >
-        {globe.emoji}
-      </span>
-    ))}
-  </div>
+const PremiumBackground = () => (
+  <>
+    <style>{`
+      @keyframes gOrb1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-60px) scale(1.12)}66%{transform:translate(-30px,40px) scale(0.92)}}
+      @keyframes gOrb2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-55px,-45px) scale(1.18)}}
+      @keyframes gOrb3{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(35px,55px) scale(0.88)}75%{transform:translate(-40px,-25px) scale(1.08)}}
+      @keyframes gOrb4{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(55px,40px) scale(1.14)}80%{transform:translate(-15px,-55px) scale(0.92)}}
+      @keyframes gPulse{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:0.72;transform:scale(1.06)}}
+      @keyframes gGrid{0%,100%{opacity:0.3}50%{opacity:0.6}}
+    `}</style>
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <div style={{position:"absolute",inset:0,background:"linear-gradient(145deg,rgba(66,133,244,0.05) 0%,rgba(255,255,255,0) 50%,rgba(52,168,83,0.04) 100%)"}} />
+      <div style={{position:"absolute",top:"-20%",left:"-15%",width:"75%",height:"70%",borderRadius:"50%",background:"radial-gradient(circle,rgba(66,133,244,0.26) 0%,rgba(66,133,244,0.1) 38%,transparent 65%)",animation:"gOrb1 24s ease-in-out infinite",filter:"blur(70px)"}} />
+      <div style={{position:"absolute",top:"0%",right:"-20%",width:"65%",height:"60%",borderRadius:"50%",background:"radial-gradient(circle,rgba(251,188,5,0.24) 0%,rgba(251,188,5,0.09) 38%,transparent 65%)",animation:"gOrb2 30s ease-in-out infinite",filter:"blur(75px)"}} />
+      <div style={{position:"absolute",top:"40%",left:"-10%",width:"60%",height:"55%",borderRadius:"50%",background:"radial-gradient(circle,rgba(234,67,53,0.2) 0%,rgba(234,67,53,0.07) 38%,transparent 65%)",animation:"gOrb3 26s ease-in-out infinite",filter:"blur(65px)"}} />
+      <div style={{position:"absolute",bottom:"-15%",right:"-12%",width:"68%",height:"62%",borderRadius:"50%",background:"radial-gradient(circle,rgba(52,168,83,0.22) 0%,rgba(52,168,83,0.08) 38%,transparent 65%)",animation:"gOrb4 32s ease-in-out infinite",filter:"blur(70px)"}} />
+      <div style={{position:"absolute",top:"35%",left:"20%",width:"60%",height:"45%",borderRadius:"50%",background:"radial-gradient(ellipse,rgba(66,133,244,0.1) 0%,rgba(251,188,5,0.08) 45%,transparent 70%)",animation:"gPulse 20s ease-in-out infinite",filter:"blur(90px)"}} />
+      <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(circle,rgba(66,133,244,0.07) 1px,transparent 1px)",backgroundSize:"52px 52px",animation:"gGrid 8s ease-in-out infinite"}} />
+    </div>
+  </>
 );
 
 const buildAvatarStoragePath = (userId: string, file: File) => {
@@ -1191,8 +1190,8 @@ const ProfilePage = () => {
   );
 
   const heroActionButtons = (
-    <div className={`w-full max-w-[320px] shrink-0 self-start ${GOOGLE_SOFT_ACTION_PANEL}`}>
-      <div className="grid grid-cols-2 gap-2">
+    <div className={`w-full max-w-[200px] shrink-0 self-start ${GOOGLE_SOFT_ACTION_PANEL}`}>
+      <div className="flex flex-col gap-2">
         <Button
           size="sm"
           className={AMBER_ACTION_BUTTON}
@@ -1227,7 +1226,7 @@ const ProfilePage = () => {
 
   return (
     <div className={`relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 ${isIndividualProfile ? "pb-16" : ""}`}>
-      <FloatingGlobeBackground />
+      <PremiumBackground />
       <input
         ref={avatarInputRef}
         type="file"
