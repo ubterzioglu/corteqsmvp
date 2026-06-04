@@ -128,15 +128,10 @@ const communityDescriptions: Record<string, string> = {
 };
 
 const dataDescriptions: Record<string, string> = {
-  Büyükelçilik: "Büyükelçilik veri setini güncelle ve kaynak bütünlüğünü denetle.",
-  Başkonsolosluk: "Başkonsolosluk kayıtlarını operasyon panelinden düzenle.",
-  Konsolosluk: "Konsolosluk girişlerini, filtreleri ve eşleşmeleri doğrula.",
-  "Konsolosluk Ofisi": "Ofis seviyesindeki kayıtları ve lokasyon bilgilerini yönet.",
-  "Kullanıcı Rolleri": "Sistem rollerini veri seviyesinde hızla incele.",
+  Kataloglar: "Yeni katalog kayıtlarını tek ekranda ara, filtrele ve detaylarını incele.",
 };
 
 const otherRecordDescriptions: Record<string, string> = {
-  "Lansman Katılım": "Lansman akışındaki katılımcıları ve form çıktısını ayrıntılı incele.",
   Anketler: "Anket setlerini, cevapları ve yayın akışını yönet.",
   "19 Mayıs Kelime": "19 kelimelik fikir gönderimlerini moderasyon kuyruğundan yönet.",
   "19 Mayıs Anı": "19 Mayıs anı içeriklerini tek ekranda gözden geçir.",

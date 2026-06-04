@@ -267,15 +267,18 @@ const AdminMembersPage = () => {
       supabase
         .from("submissions")
         .select("id", { count: "exact", head: true })
-        .eq("source_type", "form"),
+        .eq("source_type", "form")
+        .neq("status", "archived"),
       supabase
         .from("submissions")
         .select("id", { count: "exact", head: true })
-        .eq("source_type", "chatbot"),
+        .eq("source_type", "chatbot")
+        .neq("status", "archived"),
       supabase
         .from("submissions")
         .select("id", { count: "exact", head: true })
-        .eq("source_type", "wa"),
+        .eq("source_type", "wa")
+        .neq("status", "archived"),
     ]);
 
     if (submissionResult.error || chatbotResult.error || waResult.error) {
@@ -330,6 +333,7 @@ const AdminMembersPage = () => {
       if (debouncedEmail) query = query.ilike("email", `%${debouncedEmail}%`);
       if (debouncedCity) query = query.ilike("city", `%${debouncedCity}%`);
       if (statusFilter) query = query.eq("status", statusFilter);
+      else query = query.neq("status", "archived");
       if (formTypeFilter) query = query.eq("form_type", formTypeFilter);
       if (categoryFilter) query = query.eq("category", categoryFilter);
       if (referralSourceFilter) query = query.eq("referral_source", referralSourceFilter);

@@ -48,7 +48,7 @@ const linkClass = ({
   variant = "default",
 }: {
   isActive: boolean;
-  variant?: "default" | "home" | "command-center" | "demo" | "members";
+  variant?: "default" | "home" | "command-center" | "members";
 }) => {
   if (variant === "home") {
     return `rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors ${
@@ -63,14 +63,6 @@ const linkClass = ({
       isActive
         ? "bg-[#EA4335] text-white"
         : "bg-[#FCE8E6] text-[#C5221F] hover:bg-[#FAD2CF]"
-    }`;
-  }
-
-  if (variant === "demo") {
-    return `rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors ${
-      isActive
-        ? "bg-[#FBBC05] text-[#3C2F00]"
-        : "bg-[#FEF7E0] text-[#B06000] hover:bg-[#FEEFC3]"
     }`;
   }
 
@@ -106,7 +98,6 @@ const AdminLayout = () => {
   const [dataMenuOpen, setDataMenuOpen] = useState(false);
   const [advisorMenuOpen, setAdvisorMenuOpen] = useState(false);
   const [adminPanelMenuOpen, setAdminPanelMenuOpen] = useState(false);
-  const demoUrl = "https://global-network-bridge.lovable.app/";
   const inactiveNavItems = [
     { to: "/admin/may19/ani", label: "19 Mayıs Anı" },
     { to: "/admin/may19/kelime", label: "19 Mayıs Fikir" },
@@ -251,17 +242,12 @@ const AdminLayout = () => {
     { to: "/admin/referral", label: "Ref Kod" },
     { to: "/admin/approvals", label: "Approval Queue" },
     { to: "/admin/audit-logs", label: "Audit Logs" },
-    { to: "/admin/lansman", label: "Lansman Katılım" },
     { to: "/admin/surveys", label: "Anketler" },
     { to: "/admin/whatsapp-landings", label: "Topluluklar" },
     { to: "/admin/whatsapp-landings/editors", label: "Topluluk Editörleri" },
     { to: "/admin/whatsapp-landings/guide", label: "Topluluk Kullanma Kılavuzu" },
     { to: "/admin/consulates", label: "Diplomatik Profiller" },
-    { to: "/admin/data/buyukelcilik", label: "Data: Büyükelçilik" },
-    { to: "/admin/data/baskonsolosluk", label: "Data: Başkonsolosluk" },
-    { to: "/admin/data/konsolosluk", label: "Data: Konsolosluk" },
-    { to: "/admin/data/konsolosluk-ofisi", label: "Data: Konsolosluk Ofisi" },
-    { to: "/admin/data/kullanici-rolleri", label: "Data: Kullanıcı Rolleri" },
+    { to: "/admin/data", label: "Data: Kataloglar" },
     { to: "/admin/cadde", label: "Cadde" },
     { to: "/admin/may19/kelime", label: "19 Mayıs Kelime" },
     { to: "/admin/may19/ani", label: "19 Mayıs Anı" },
@@ -378,14 +364,6 @@ const AdminLayout = () => {
                         </Link>
                       </SheetClose>
                     ))}
-                    <a
-                      href={demoUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="block rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted"
-                    >
-                      Demo
-                    </a>
                     <button
                       type="button"
                       onClick={() => void handleLogout()}
@@ -406,17 +384,6 @@ const AdminLayout = () => {
                   >
                     CC
                   </NavLink>
-                </div>
-                <div className="flex items-center">
-                  <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
-                  <a
-                    href={demoUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={linkClass({ isActive: false, variant: "demo" })}
-                  >
-                    Demo
-                  </a>
                 </div>
               <div className="flex items-center">
                 <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />

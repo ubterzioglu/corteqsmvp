@@ -55,7 +55,8 @@ const guideSections: AdminPageGuideSection[] = [
       "2. O role bağlı taxonomy grubunda `Aktif`, `Zorunlu` ve seçim tipini kontrol et.",
       "3. Gruptaki seçenekleri tek tek aktif veya pasif yap.",
       "4. `single` yalnızca tek seçim, `multiple` birden fazla seçim anlamına gelir.",
-      "5. Kaydettikten sonra ilgili kullanıcının profil ekranında seçim yapabildiğini ve beklenen alanların açıldığını doğrula.",
+      "5. Kaydettikten sonra ilgili kullanıcının profil ekranında seçim yapabildiğini, beklenen alanların açıldığını ve kaydın korunduğunu doğrula.",
+      "6. Option pasifse yeni seçimlerde görünmemeli; fakat eski kullanıcı verisi gerekiyorsa DB'de korunmaya devam eder.",
     ],
   },
   {
@@ -64,6 +65,7 @@ const guideSections: AdminPageGuideSection[] = [
       "Consultant uzmanlık etiketleri, business subtype veya benzeri sınıflandırmalar için burada işlem yap.",
       "Gerçek yetki açıp kapatmak istiyorsan burada değil `Roller & Featurelar` ekranında çalış.",
       "Bir alanı zorunlu/public yapmak istiyorsan burada değil `Attribute Yönetimi` ekranında çalış.",
+      "Kategori adı değiştiyse önce burada option/rule katmanını güncelle, sonra profil ekranında label ve zorunlu alan etkisini kontrol et.",
     ],
   },
   {
@@ -72,6 +74,18 @@ const guideSections: AdminPageGuideSection[] = [
       "Pasif yaptığın option yeni seçimlerde görünmüyor olmalı.",
       "Business subtype değişince ilgili şartlı alanlar profilde mantıklı görünmeli.",
       "Consultant için `gayrimenkul` seçildiğinde buna bağlı medya/ek alan davranışı da kontrol edilmeli.",
+      "Rolüne Özel Alanlar kartı, taxonomy etkisiyle açılan veri ihtiyacını destekliyor mu diye kullanıcı profilini ayrıca doğrula.",
+      "Kullanıcı yanlış kategori altında görünüyorsa önce aktif role, sonra taxonomy rule'a, en sonda eski seçili option'lara bak.",
+    ],
+  },
+  {
+    title: "Son kategori değişiklikleri için hızlı kontrol listesi",
+    items: [
+      "1. Rol doğru mu kontrol et; yanlış rol taxonomy ekranındaki doğru grubu gizleyebilir.",
+      "2. İlgili grup aktif mi ve seçim tipi beklendiği gibi mi bak.",
+      "3. Option aktif/pasif durumunu doğrula.",
+      "4. Gerekirse kullanıcı profiline gidip seçim sonrası zorunlu alanların açıldığını teyit et.",
+      "5. Public profile veya directory çıktısında kategori etiketinin beklenen isimle göründüğünü kontrol et.",
     ],
   },
 ];

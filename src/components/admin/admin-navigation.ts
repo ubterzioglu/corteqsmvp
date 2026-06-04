@@ -1,5 +1,5 @@
-import { BookOpen, ClipboardList, ExternalLink, FolderKanban, Globe, ListChecks, Network, Rocket, ScrollText as ScrollTextIcon, Shield, Sparkles } from "lucide-react";
-import { Heart, Lightbulb, Megaphone, MessageSquare, MonitorPlay, Radio, ScrollText } from "lucide-react";
+import { BookOpen, ClipboardList, Database, ExternalLink, FolderKanban, Globe, ListChecks, Network, Rocket, ScrollText as ScrollTextIcon, Shield, Sparkles } from "lucide-react";
+import { Heart, Lightbulb, Megaphone, MessageSquare, Radio, ScrollText } from "lucide-react";
 import { workspaceDocPages } from "@/lib/dashboard/workspace-doc-pages";
 
 export const primaryAdminNavItems = [
@@ -35,7 +35,6 @@ export const otherActionNavItems = [
 ] as const;
 
 export const otherRecordNavItems = [
-  { to: "/admin/lansman", label: "Lansman Katılım", icon: MonitorPlay },
   { to: "/admin/surveys", label: "Anketler", icon: ClipboardList },
 ] as const;
 
@@ -47,11 +46,7 @@ export const communityNavItems = [
 ] as const;
 
 export const dataNavItems = [
-  { to: "/admin/data/buyukelcilik", label: "Büyükelçilik", icon: Globe },
-  { to: "/admin/data/baskonsolosluk", label: "Başkonsolosluk", icon: Globe },
-  { to: "/admin/data/konsolosluk", label: "Konsolosluk", icon: Globe },
-  { to: "/admin/data/konsolosluk-ofisi", label: "Konsolosluk Ofisi", icon: Globe },
-  { to: "/admin/data/kullanici-rolleri", label: "Kullanıcı Rolleri", icon: Shield },
+  { to: "/admin/data", label: "Kataloglar", icon: Database },
 ] as const;
 
 export const may19RecordNavItems = [

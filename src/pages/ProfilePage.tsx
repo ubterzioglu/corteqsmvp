@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type ComponentType, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type ComponentType } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import {
   Briefcase,
@@ -30,7 +30,6 @@ import {
 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -42,18 +41,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useCurrentUserProfile } from "@/hooks/useCurrentUserProfile";
-import { useCurrentUserDashboard } from "@/hooks/useCurrentUserDashboard";
-import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS, type GenericFeatureKey } from "@/lib/features";
+import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS } from "@/lib/features";
 import {
-  submitFeatureRequest,
-  submitRoleChangeRequest,
   updateProfileAttribute,
   updateProfileAvatar,
-  updateUserTaxonomySelection,
 } from "@/lib/member-profile-api";
-import { getAttributeStringValue, type AttributeVisibility, type ProfileAttributeState, type TaxonomyGroupState } from "@/lib/member-profile";
+import { getAttributeStringValue, type AttributeVisibility, type ProfileAttributeState } from "@/lib/member-profile";
 import { getProfileDocumentAccessUrl, parseProfileDocumentRecord, removeProfileDocument, uploadProfileDocument, type ProfileDocumentRecord } from "@/lib/profile-documents";
-import { defaultProfileType, getRoleMeta, isProfileType, profileTypeOptions, type ProfileType } from "@/lib/profile-types";
+import { defaultProfileType, getRoleMeta, isProfileType } from "@/lib/profile-types";
 import { validateCvFile, validatePresentationFile } from "@/lib/security";
 import { formatBytes } from "@/lib/submissions";
 import { supabase } from "@/integrations/supabase/client";
@@ -69,49 +64,9 @@ type SocialAttributeConfig = {
   iconClassName: string;
 };
 
-type GuideSection = {
-  key: string;
-  title: string;
-  accentClassName: string;
-  content: ReactNode;
-};
-
 const VISIBILITY_OPTIONS: { value: AttributeVisibility; label: string }[] = [
   { value: "public", label: "Görünür" },
   { value: "private", label: "Gizli" },
-];
-
-const REQUESTABLE_FEATURES: { key: GenericFeatureKey; title: string; description: string }[] = [
-  {
-    key: GENERIC_FEATURE_KEYS.directoryVisible,
-    title: "Directory Görünürlüğü",
-    description: "Public directory’de görünmek için onay isteği oluştur.",
-  },
-  {
-    key: GENERIC_FEATURE_KEYS.directoryFeatured,
-    title: "Featured Profil",
-    description: "Profilinin öne çıkarılmış kart olarak listelenmesini iste.",
-  },
-  {
-    key: GENERIC_FEATURE_KEYS.contactShowWhatsapp,
-    title: "WhatsApp Yayınlama",
-    description: "WhatsApp bilgisini public göstermek için onay isteği gönder.",
-  },
-  {
-    key: GENERIC_FEATURE_KEYS.eventsCreate,
-    title: "Etkinlik Oluşturma",
-    description: "Etkinlik oluşturma akışına erişim için talep bırak.",
-  },
-  {
-    key: GENERIC_FEATURE_KEYS.offersCreate,
-    title: "Teklif / Hizmet Oluşturma",
-    description: "Teklif yayınlama erişimi için talep bırak.",
-  },
-  {
-    key: GENERIC_FEATURE_KEYS.referralCreate,
-    title: "Referral Oluşturma",
-    description: "Referral oluşturma erişimi için talep bırak.",
-  },
 ];
 
 const SOCIAL_ATTRIBUTE_CONFIGS: SocialAttributeConfig[] = [
@@ -327,12 +282,10 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { type } = useParams<{ type: string }>();
   const { isLoading, errorMessage, profile, refreshProfile } = useCurrentUserProfile(true);
-  const { items: dashboardItems, isLoading: isDashboardLoading } = useCurrentUserDashboard(true);
 
   const [draftValues, setDraftValues] = useState<DraftValueMap>({});
   const [draftVisibilities, setDraftVisibilities] = useState<DraftVisibilityMap>({});
   const [savingAttributeKey, setSavingAttributeKey] = useState<string | null>(null);
-  const [savingTaxonomyGroupKey, setSavingTaxonomyGroupKey] = useState<string | null>(null);
   const [savingCommonAttributes, setSavingCommonAttributes] = useState(false);
   const [savingSocialMedia, setSavingSocialMedia] = useState(false);
   const [savingPreferenceKey, setSavingPreferenceKey] = useState<string | null>(null);
@@ -342,13 +295,6 @@ const ProfilePage = () => {
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarRemoving, setAvatarRemoving] = useState(false);
   const [isProfileSummaryOpen, setIsProfileSummaryOpen] = useState(false);
-  const [isAccessCardOpen, setIsAccessCardOpen] = useState(false);
-  const [isHelpCardOpen, setIsHelpCardOpen] = useState(false);
-  const [roleRequestTarget, setRoleRequestTarget] = useState<ProfileType | "">("");
-  const [roleRequestNote, setRoleRequestNote] = useState("");
-  const [submittingRoleRequest, setSubmittingRoleRequest] = useState(false);
-  const [featureRequestingKey, setFeatureRequestingKey] = useState<string | null>(null);
-  const [taxonomyDrafts, setTaxonomyDrafts] = useState<Record<string, string[]>>({});
   const helpCardRef = useRef<HTMLDivElement | null>(null);
   const avatarInputRef = useRef<HTMLInputElement | null>(null);
   const cvInputRef = useRef<HTMLInputElement | null>(null);
@@ -367,20 +313,7 @@ const ProfilePage = () => {
     setDraftVisibilities(nextVisibilities);
   }, [profile]);
 
-  useEffect(() => {
-    if (!profile) return;
-    const nextDrafts: Record<string, string[]> = {};
-    for (const group of profile.taxonomyGroups) {
-      nextDrafts[group.groupKey] = group.options.filter((option) => option.isSelected).map((option) => option.key);
-    }
-    setTaxonomyDrafts(nextDrafts);
-  }, [profile]);
-
   const roleMeta = useMemo(() => getRoleMeta(profile?.profileType ?? type), [profile?.profileType, type]);
-
-  const availableRoleTargets = useMemo(() => {
-    return profileTypeOptions.filter((option) => option.type !== profile?.profileType);
-  }, [profile?.profileType]);
 
   const featureMap = useMemo(() => {
     return new Map((profile?.features ?? []).map((feature) => [feature.key, feature]));
@@ -415,10 +348,6 @@ const ProfilePage = () => {
 
     return { common, socialMedia, roleSpecific };
   }, [profile?.attributes]);
-
-  const visibleTaxonomyGroups = useMemo(() => {
-    return profile?.taxonomyGroups ?? [];
-  }, [profile?.taxonomyGroups]);
 
   const attributeMap = useMemo(() => {
     return new Map((profile?.attributes ?? []).map((attribute) => [attribute.attributeKey, attribute]));
@@ -467,9 +396,7 @@ const ProfilePage = () => {
     .slice(0, 2)
     .join("")
     .toUpperCase() || "CQ";
-  const publicAttributesCount = (profile?.attributes ?? []).filter((attribute) => draftVisibilities[attribute.attributeKey] === "public").length;
   const pendingCount = profile?.pendingRequests.length ?? 0;
-  const dashboardCount = dashboardItems.length;
   const completionHighlights = [
     { key: "full_name", label: roleMeta?.displayNameLabel ?? "Görünen isim" },
     { key: "country", label: "Ülke" },
@@ -510,89 +437,12 @@ const ProfilePage = () => {
     },
   ].filter((item) => item.enabled);
 
-  const guideSections = useMemo<GuideSection[]>(
-    () => [
-      {
-        key: "guide-common",
-        title: "Ortak Profil Alanları Kullanım Kılavuzu",
-        accentClassName: "bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.12),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.9),rgba(243,248,255,0.84))]",
-        content: (
-          <div className="space-y-2 text-xs text-muted-foreground">
-            <p><strong className="text-foreground">Görünen İsim:</strong> Directory ve profil kartında gösterilecek adınız. Değişiklikler anında yansır.</p>
-            <p><strong className="text-foreground">Ülke / Şehir:</strong> Konum bilgileriniz. Harita ve filtreleme için kullanılır. Görünürlük ayarını değiştirebilirsiniz.</p>
-            <p><strong className="text-foreground">Profil Fotoğrafı:</strong> Yüklediğiniz görsel avatar ve public profil önizlemesinde birlikte kullanılır.</p>
-            <p><strong className="text-foreground">Kısa Biyografi:</strong> Kendinizi tanıtan 1-2 cümlelik özet. Directory listelemelerinde görünür.</p>
-            <p><strong className="text-foreground">Görünürlük Ayarı:</strong> Her alan için <em>Görünür</em> veya <em>Gizli</em> seçebilirsiniz.</p>
-            <p><strong className="text-foreground">Onay Süreci:</strong> Bazı alanlarda değişiklik yapıldığında admin onayı gerekir. Bu alanlar "Onaylı" etiketi ile işaretlenir.</p>
-          </div>
-        ),
-      },
-      {
-        key: "guide-role",
-        title: "Rolüne Özel Alanlar Kullanım Kılavuzu",
-        accentClassName: "bg-[radial-gradient(circle_at_top_right,rgba(251,188,5,0.13),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(66,133,244,0.1),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,251,238,0.86))]",
-        content: (
-          <div className="space-y-2 text-xs text-muted-foreground">
-            <p>Rolüne özel alanlar, seçtiğin rol türüne göre dinamik olarak belirlenir. Örneğin <strong className="text-foreground">Ambassador</strong> rolünde bölge bilgisi, <strong className="text-foreground">Blogger</strong> rolünde blog URL&apos;si gibi alanlar görünebilir.</p>
-            <p>Bu alanların bir kısmı admin onayı gerektirebilir. Onay gerektiren alanlarda değişiklik yapıldığında "Beklemede" durumu görünür ve admin onaylayana kadar public gösterilmez.</p>
-            <p>Her alan için görünürlük ayarını değiştirebilirsin: <em>Görünür</em> veya <em>Gizli</em>.</p>
-          </div>
-        ),
-      },
-      {
-        key: "guide-role-application",
-        title: "Rol Başvurusu Kılavuzu",
-        accentClassName: "bg-[radial-gradient(circle_at_top_left,rgba(52,168,83,0.13),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.9),rgba(241,248,242,0.86))]",
-        content: (
-          <div className="space-y-2 text-xs text-muted-foreground">
-            <p>Her üyenin aynı anda sadece <strong className="text-foreground">bir aktif rolü</strong> olabilir. Mevcut rolünüzden farklı bir role başvurmak için açılır menüden seçim yapın.</p>
-            <p><strong className="text-foreground">Başvuru süreci:</strong> Başvurunuz admin onay kuyruğuna eklenir. Onaylanırsa yeni rolünüz aktifleşir ve eski rolünüz kaldırılır.</p>
-            <p><strong className="text-foreground">Açıklama alanı:</strong> Başvurunuzu destekleyen kısa bir metin yazın. Bu not admin değerlendirmesinde kullanılır.</p>
-            <p><strong className="text-foreground">Mevcut rolünüz:</strong> Profil kartındaki "Rol" etiketi mevcut aktif rolünüzü gösterir. Başvuru onaylanana kadar mevcut rolünüz değişmez.</p>
-          </div>
-        ),
-      },
-      {
-        key: "guide-features",
-        title: "Feature Talepleri Kılavuzu",
-        accentClassName: "bg-[radial-gradient(circle_at_top_right,rgba(251,188,5,0.15),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,249,232,0.88))]",
-        content: (
-          <div className="space-y-2 text-xs text-muted-foreground">
-            <p><strong className="text-foreground">Directory Görünürlüğü:</strong> Profilinizin public dizinde görünmesini sağlar. Onaylandıktan sonra diğer üyeler sizi bulabilir.</p>
-            <p><strong className="text-foreground">Featured Profil:</strong> Profil kartınızın dizinde öne çıkarılır. Daha fazla görünürlük sağlar.</p>
-            <p><strong className="text-foreground">WhatsApp Yayınlama:</strong> WhatsApp numaranızın profil kartınızda public olarak gösterilmesi için onay gerekir.</p>
-            <p><strong className="text-foreground">Etkinlik Oluşturma:</strong> Platformda etkinlik yayınlama yetkisi talep edin.</p>
-            <p><strong className="text-foreground">Teklif / Hizmet Oluşturma:</strong> Hizmet veya ürün tekliflerinizi yayınlama erişimi talep edin.</p>
-            <p><strong className="text-foreground">Referral Oluşturma:</strong> Davet kodu oluşturarak yeni üye kazandırma erişimi talep edin.</p>
-            <p><strong className="text-foreground">Talep Durumu:</strong> Her talebiniz admin onay sürecinden geçer. "Beklemede" etiketi göründüğünde talebiniz kuyruktadır.</p>
-          </div>
-        ),
-      },
-      {
-        key: "guide-pending",
-        title: "Bekleyen Talepler Kılavuzu",
-        accentClassName: "bg-[radial-gradient(circle_at_top_left,rgba(234,67,53,0.1),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(66,133,244,0.08),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.9),rgba(248,249,250,0.88))]",
-        content: (
-          <div className="space-y-2 text-xs text-muted-foreground">
-            <p>Bu bölümde admin onayı bekleyen tüm talepleriniz listelenir. Talep türü ve oluşturulma tarihi bilgileri gösterilir.</p>
-            <p><strong className="text-foreground">Rol değişikliği talepleri:</strong> Yeni rol başvurusu yapıldığında burada görünür. Onaylanana veya reddedilene kadar bekler.</p>
-            <p><strong className="text-foreground">Feature talepleri:</strong> Kapalı özellikler için erişim talebinde bulunduğunuzda burada listelenir.</p>
-            <p><strong className="text-foreground">Profil alanı değişiklikleri:</strong> Admin onayı gerektiren alanlarda yapılan güncellemeler burada takip edilir.</p>
-            <p>Talepler genellikle 1-3 iş günü içinde değerlendirilir. Sorularınız için admin ekibiyle iletişime geçebilirsiniz.</p>
-          </div>
-        ),
-      },
-    ],
-    [],
-  );
-
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate("/login", { replace: true });
   };
 
   const scrollToHelpCard = () => {
-    setIsHelpCardOpen(true);
     helpCardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -1047,89 +897,6 @@ const ProfilePage = () => {
       });
     } finally {
       setRemovingDocumentKey(null);
-    }
-  };
-
-  const handleSubmitRoleRequest = async () => {
-    if (!roleRequestTarget) return;
-
-    setSubmittingRoleRequest(true);
-    try {
-      await submitRoleChangeRequest(roleRequestTarget, roleRequestNote.trim());
-      setRoleRequestNote("");
-      setRoleRequestTarget("");
-      await refreshProfile();
-      toast({
-        title: "Rol başvurusu gönderildi",
-        description: "Başvurun admin onay kuyruğuna eklendi.",
-      });
-    } catch (error) {
-      toast({
-        title: "Başvuru gönderilemedi",
-        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
-        variant: "destructive",
-      });
-    } finally {
-      setSubmittingRoleRequest(false);
-    }
-  };
-
-  const handleRequestFeature = async (featureKey: GenericFeatureKey) => {
-    setFeatureRequestingKey(featureKey);
-    try {
-      await submitFeatureRequest(featureKey, { requested_from: "profile" });
-      await refreshProfile();
-      toast({
-        title: "Talep gönderildi",
-        description: "İlgili feature için admin onay isteği oluşturuldu.",
-      });
-    } catch (error) {
-      toast({
-        title: "Talep gönderilemedi",
-        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
-        variant: "destructive",
-      });
-    } finally {
-      setFeatureRequestingKey(null);
-    }
-  };
-
-  const toggleTaxonomyOption = (group: TaxonomyGroupState, optionKey: string) => {
-    setTaxonomyDrafts((current) => {
-      const existing = current[group.groupKey] ?? [];
-      const exists = existing.includes(optionKey);
-
-      if (group.selectionMode === "single") {
-        return {
-          ...current,
-          [group.groupKey]: exists ? [] : [optionKey],
-        };
-      }
-
-      return {
-        ...current,
-        [group.groupKey]: exists ? existing.filter((item) => item !== optionKey) : [...existing, optionKey],
-      };
-    });
-  };
-
-  const handleSaveTaxonomyGroup = async (group: TaxonomyGroupState) => {
-    setSavingTaxonomyGroupKey(group.groupKey);
-    try {
-      await updateUserTaxonomySelection(group.groupKey, taxonomyDrafts[group.groupKey] ?? []);
-      await refreshProfile();
-      toast({
-        title: "Taxonomy seçimi kaydedildi",
-        description: `${group.label} güncellendi.`,
-      });
-    } catch (error) {
-      toast({
-        title: "Taxonomy kaydedilemedi",
-        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
-        variant: "destructive",
-      });
-    } finally {
-      setSavingTaxonomyGroupKey(null);
     }
   };
 
@@ -1592,313 +1359,76 @@ const ProfilePage = () => {
             ) : null}
           </div>
 
-          <Card className={GOOGLE_SOFT_CARD_GREEN_SECTION}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Rolüne Özel Alanlar</CardTitle>
-              <CardDescription className="text-xs">Aktif rolüne bağlı dinamik alanlar burada görünür.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {groupedAttributes.roleSpecific.length > 0 ? (
-                groupedAttributes.roleSpecific.map((attribute) => (
-                  <ProfileAttributeEditor
-                    key={attribute.attributeKey}
-                    attribute={attribute}
-                  draftValue={draftValues[attribute.attributeKey]}
-                  draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
-                  displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
-                  isSaving={savingAttributeKey === attribute.attributeKey}
-                  saveMode="single"
-                  visibilityMode="select"
-                  onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
-                  onVisibilityChange={(nextVisibility) =>
-                    setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
-                    }
-                    onSave={() => void handleSaveAttribute(attribute)}
-                  />
-                ))
-              ) : (
-                <p className="text-xs text-muted-foreground">Bu rol için ek alan bulunmuyor.</p>
-              )}
-            </CardContent>
-          </Card>
+          <LockedProfileSectionCard
+            title="Rolüne Özel Alanlar"
+            description="Aktif rolüne bağlı dinamik alanlar burada görünür."
+            className={GOOGLE_SOFT_CARD_GREEN_SECTION}
+          />
 
-          <Card className={GOOGLE_SOFT_CARD_YELLOW_SECTION}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Alt Kategori / Alt Tip</CardTitle>
-              <CardDescription className="text-xs">Rolüne bağlı taxonomy seçimleri profildeki görünüm ve zorunlu alanları etkiler.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {visibleTaxonomyGroups.length ? (
-                visibleTaxonomyGroups.map((group) => {
-                  const selectedKeys = taxonomyDrafts[group.groupKey] ?? [];
-                  return (
-                    <div key={group.groupKey} className={`rounded-lg p-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-                      <div className="flex flex-wrap items-start justify-between gap-2">
-                        <div>
-                          <p className="text-sm font-medium">{group.label}</p>
-                          <p className="text-xs text-muted-foreground">{group.description ?? "Rol özel seçim grubu."}</p>
-                          <div className="mt-1 flex flex-wrap gap-1">
-                            <Badge variant="outline" className="text-[10px]">
-                              {group.selectionMode === "multiple" ? "Çoklu seçim" : "Tek seçim"}
-                            </Badge>
-                            {group.isRequired ? (
-                              <Badge variant="secondary" className="text-[10px]">
-                                Zorunlu
-                              </Badge>
-                            ) : null}
-                          </div>
-                        </div>
-                        <Button
-                          size="sm"
-                          className={AMBER_BUTTON_OUTLINE}
-                          disabled={savingTaxonomyGroupKey === group.groupKey}
-                          onClick={() => void handleSaveTaxonomyGroup(group)}
-                        >
-                          {savingTaxonomyGroupKey === group.groupKey ? "Kaydediliyor..." : "Seçimi Kaydet"}
-                        </Button>
-                      </div>
-
-                      <div className="mt-3 grid gap-2 md:grid-cols-2">
-                        {group.options.filter((option) => option.isActive).map((option) => {
-                          const selected = selectedKeys.includes(option.key);
-                          return (
-                            <button
-                              key={option.key}
-                              type="button"
-                              className={`rounded-lg px-3 py-2 text-left ${selected ? GOOGLE_SOFT_CARD_SUBTLE : GOOGLE_SOFT_CARD_SUBTLE_INTERACTIVE} ${
-                                selected ? "border-primary/50" : ""
-                              }`}
-                              onClick={() => toggleTaxonomyOption(group, option.key)}
-                            >
-                              <div className="flex items-start justify-between gap-2">
-                                <div>
-                                  <p className="text-sm font-medium">{option.label}</p>
-                                  <p className="text-xs text-muted-foreground">{option.description ?? "Seçilebilir seçenek"}</p>
-                                </div>
-                                {selected ? <CheckCircle2 className="mt-0.5 h-4 w-4 text-primary" /> : null}
-                              </div>
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      {group.groupKey === "business_subtype" ? (
-                        <p className="mt-3 text-xs text-muted-foreground">
-                          `Classic` adres ve harita linkini, `Online` website ve servis bölgelerini, `Startup` ise kuruluş yılı gibi alanları öne çıkarır.
-                        </p>
-                      ) : null}
-
-                      {group.groupKey === "consultant_subcategory" && selectedKeys.includes("consultant_category.gayrimenkul") ? (
-                        <p className="mt-3 text-xs text-muted-foreground">
-                          Gayrimenkul seçimi aktifken danışman profiline medya/link alanı eklenir ve public kartta bu uzmanlık etiketi gösterilebilir.
-                        </p>
-                      ) : null}
-                    </div>
-                  );
-                })
-              ) : (
-                <p className="text-xs text-muted-foreground">Bu rol için taxonomy seçimi tanımlı değil.</p>
-              )}
-            </CardContent>
-          </Card>
+          <LockedProfileSectionCard
+            title="Alt Kategori / Alt Tip"
+            description="Rolüne bağlı taxonomy seçimleri profildeki görünüm ve zorunlu alanları etkiler."
+            className={GOOGLE_SOFT_CARD_YELLOW_SECTION}
+          />
       </div>
 
-      <Card className={`overflow-hidden ${GOOGLE_SOFT_CARD_RED_SECTION}`}>
-        <CardHeader className="p-0">
-          <button
-            type="button"
-            className="flex w-full items-center justify-between gap-3 rounded-[30px] px-6 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            aria-expanded={isAccessCardOpen}
-            aria-controls="access-card-content"
-            onClick={() => setIsAccessCardOpen((current) => !current)}
-          >
-            <div className="space-y-1">
-              <CardTitle className="text-base">Başvurular & Erişimler</CardTitle>
-              <CardDescription className="text-xs">
-                Rol başvurularını, feature taleplerini, açık erişimlerini ve bekleyen süreçlerini tek kartta yönet.
-              </CardDescription>
-            </div>
-            <ChevronDown
-              className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${isAccessCardOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-        </CardHeader>
-        {isAccessCardOpen ? (
-          <CardContent id="access-card-content" className="pt-0">
-            <Accordion type="multiple" className="space-y-2">
-            <AccordionItem value="role-request" className={`overflow-hidden rounded-lg px-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-              <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
-                Rol Başvurusu
-              </AccordionTrigger>
-              <AccordionContent className="space-y-2 pb-3">
-                <p className="text-xs text-muted-foreground">Tek aktif rol modeli korunur. Yeni rol için başvuru admin onayına düşer.</p>
-                <Select value={roleRequestTarget} onValueChange={(value) => setRoleRequestTarget(value as ProfileType)}>
-                  <SelectTrigger className="h-9 text-sm">
-                    <SelectValue placeholder="Başvurmak istediğin rolü seç" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableRoleTargets.map((option) => (
-                      <SelectItem key={option.type} value={option.type}>
-                        {option.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Textarea
-                  value={roleRequestNote}
-                  onChange={(event) => setRoleRequestNote(event.target.value)}
-                  placeholder="Kısa bir açıklama veya ek bilgi yazabilirsin."
-                  className="min-h-[60px] text-sm"
-                />
-                <Button size="sm" className={`w-full ${AMBER_BUTTON_PRIMARY}`} disabled={!roleRequestTarget || submittingRoleRequest} onClick={() => void handleSubmitRoleRequest()}>
-                  {submittingRoleRequest ? "Gönderiliyor..." : "Rol Başvurusu Gönder"}
-                </Button>
-              </AccordionContent>
-            </AccordionItem>
+      <LockedProfileSectionCard
+        title="Başvurular & Erişimler"
+        description="Rol başvurularını, feature taleplerini, açık erişimlerini ve bekleyen süreçlerini tek kartta yönet."
+        className={GOOGLE_SOFT_CARD_RED_SECTION}
+      />
 
-            <AccordionItem value="feature-requests" className={`overflow-hidden rounded-lg px-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-              <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
-                Feature Talepleri
-              </AccordionTrigger>
-              <AccordionContent className="space-y-2 pb-3">
-                <p className="text-xs text-muted-foreground">Kapalı veya onay gerektiren akışlar için tek tıkla talep bırak.</p>
-                {REQUESTABLE_FEATURES.map((item) => {
-                  const state = featureMap.get(item.key);
-                  const isPending = profile?.pendingRequests.some((request) => request.targetFeatureKey === item.key) ?? false;
-                  return (
-                    <div key={item.key} className={`rounded-lg p-2 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium">{item.title}</p>
-                          <p className="text-xs text-muted-foreground">{item.description}</p>
-                          <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
-                            <Badge variant="outline" className="text-[10px] px-1.5 py-0">Kaynak: {state?.source ?? "fallback"}</Badge>
-                            {isPending ? <Badge variant="outline" className="text-[10px] px-1.5 py-0">Beklemede</Badge> : null}
-                          </div>
-                        </div>
-                        <Button
-                          size="sm"
-                          className={`shrink-0 text-xs h-7 px-2 ${AMBER_BUTTON_OUTLINE}`}
-                          disabled={Boolean(state?.isEnabled) || isPending || featureRequestingKey === item.key}
-                          onClick={() => void handleRequestFeature(item.key)}
-                        >
-                          {featureRequestingKey === item.key ? "Gönderiliyor..." : state?.isEnabled ? "Aktif" : "Talep Et"}
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="dashboard-access" className={`overflow-hidden rounded-lg px-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-              <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
-                Açık Dashboard Erişimleri
-              </AccordionTrigger>
-              <AccordionContent className="space-y-2 pb-3">
-                <p className="text-xs text-muted-foreground">
-                  {isIndividualProfile
-                    ? "Merge edilen panel yapısına uyumlu olarak açık erişimlerini burada kart düzeninde gösteriyoruz."
-                    : "Rolün ve override kayıtlarınla şu anda açık olan dashboard tabları."}
-                </p>
-                {isDashboardLoading ? <p className="text-xs text-muted-foreground">Dashboard erişimleri yükleniyor...</p> : null}
-                {!isDashboardLoading && dashboardItems.length ? (
-                  dashboardItems.map((item) => (
-                    <div key={item.feature_key} className={`rounded-lg p-2 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium">{item.label}</p>
-                          <p className="text-xs text-muted-foreground">{item.description ?? item.feature_key}</p>
-                        </div>
-                        <Badge variant="outline" className="text-[10px]">
-                          {item.source}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))
-                ) : null}
-                {!isDashboardLoading && dashboardItems.length === 0 ? (
-                  <p className="text-xs text-muted-foreground">Açık dashboard modülü bulunamadı.</p>
-                ) : null}
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="pending-requests" className={`overflow-hidden rounded-lg px-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-              <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
-                Bekleyen Talepler
-              </AccordionTrigger>
-              <AccordionContent className="space-y-2 pb-3">
-                <p className="text-xs text-muted-foreground">
-                  {isIndividualProfile
-                    ? "Panel görünümüne etki eden onay süreçleri burada toplanır."
-                    : "Admin değerlendirmesi bekleyen son işlemler burada görünür."}
-                </p>
-                {profile?.pendingRequests.length ? (
-                  profile.pendingRequests.map((request) => (
-                    <div key={request.id} className={`rounded-lg p-2 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-                      <div className="flex items-center justify-between gap-2">
-                        <div>
-                          <p className="text-sm font-medium">{request.requestType}</p>
-                          <p className="text-xs text-muted-foreground">{new Date(request.createdAt).toLocaleString("tr-TR")}</p>
-                        </div>
-                        <Badge variant="outline" className="text-[10px]">Pending</Badge>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-xs text-muted-foreground">Şu anda bekleyen talebin yok.</p>
-                )}
-              </AccordionContent>
-            </AccordionItem>
-            </Accordion>
-          </CardContent>
-        ) : null}
-      </Card>
-
-      <Card ref={helpCardRef} className={`overflow-hidden ${GOOGLE_SOFT_CARD_BLUE_SECTION}`}>
-        <CardHeader className="p-0">
-          <button
-            type="button"
-            className="flex w-full items-center justify-between gap-3 rounded-[30px] px-6 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            aria-expanded={isHelpCardOpen}
-            aria-controls="help-card-content"
-            onClick={() => setIsHelpCardOpen((current) => !current)}
-          >
-            <div className="space-y-1">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <HelpCircle className="h-4 w-4 text-primary" />
-                Yardım & Kılavuzlar
-              </CardTitle>
-              <CardDescription className="text-xs">
-                Profilini doldururken ihtiyaç duyacağın tüm açıklamaları tek yerde topladık.
-              </CardDescription>
-            </div>
-            <ChevronDown
-              className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${isHelpCardOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-        </CardHeader>
-        {isHelpCardOpen ? (
-          <CardContent id="help-card-content" className="pt-0">
-            <Accordion type="single" collapsible className="w-full space-y-2">
-              {guideSections.map((section) => (
-                <AccordionItem key={section.key} value={section.key} className={`rounded-lg border border-white/80 px-3 shadow-[0_18px_32px_-30px_rgba(66,133,244,0.28)] ${section.accentClassName}`}>
-                  <AccordionTrigger className="py-2 text-sm font-medium hover:no-underline">
-                    <span className="inline-flex items-center gap-2">
-                      <BookOpen className="h-4 w-4 text-primary" />
-                      {section.title}
-                    </span>
-                  </AccordionTrigger>
-                  <AccordionContent>{section.content}</AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </CardContent>
-        ) : null}
-      </Card>
+      <div ref={helpCardRef}>
+        <LockedProfileSectionCard
+          title="Yardım & Kılavuzlar"
+          description="Profilini doldururken ihtiyaç duyacağın tüm açıklamaları tek yerde topladık."
+          className={GOOGLE_SOFT_CARD_BLUE_SECTION}
+          titleIcon={HelpCircle}
+        />
+      </div>
   </div>
 );
 };
+
+type LockedProfileSectionCardProps = {
+  title: string;
+  description: string;
+  className: string;
+  titleIcon?: ComponentType<{ className?: string }>;
+};
+
+const LockedProfileSectionCard = ({
+  title,
+  description,
+  className,
+  titleIcon: TitleIcon,
+}: LockedProfileSectionCardProps) => (
+  <Card className={`overflow-hidden ${className}`}>
+    <CardHeader className="p-0">
+      <button
+        type="button"
+        disabled
+        aria-disabled="true"
+        aria-expanded="false"
+        className="flex w-full items-center justify-between gap-3 rounded-[30px] px-6 py-4 text-left opacity-100"
+      >
+        <div className="space-y-1">
+          <CardTitle className="flex items-center gap-2 text-base">
+            {TitleIcon ? <TitleIcon className="h-4 w-4 text-primary" /> : null}
+            {title}
+          </CardTitle>
+          <CardDescription className="text-xs">{description}</CardDescription>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="border-slate-300 bg-white/85 text-[10px] uppercase tracking-[0.18em] text-slate-600">
+            Locked
+          </Badge>
+          <Lock className="h-4 w-4 text-slate-500" />
+        </div>
+      </button>
+    </CardHeader>
+  </Card>
+);
 
 type ProfileAttributeEditorProps = {
   attribute: ProfileAttributeState;

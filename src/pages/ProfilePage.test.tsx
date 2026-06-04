@@ -461,6 +461,7 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Gönüllü Mentörlük")).toBeInTheDocument();
     expect(screen.getByText("Rolüne Özel Alanlar")).toBeInTheDocument();
     expect(screen.getByText("Alt Kategori / Alt Tip")).toBeInTheDocument();
+    expect(screen.getAllByText("Locked")).toHaveLength(4);
     const profileSummaryToggle = screen.getByRole("button", { name: "Profil Özeti & Tamamlanma" });
     expect(profileSummaryToggle).toBeInTheDocument();
     expect(profileSummaryToggle).toHaveAttribute("aria-expanded", "false");
@@ -474,30 +475,32 @@ describe("ProfilePage", () => {
     expect(screen.queryByText("Tamamlanma Durumu")).not.toBeInTheDocument();
     const accessCardToggle = screen.getByRole("button", { name: /Başvurular & Erişimler/i });
     expect(accessCardToggle).toBeInTheDocument();
+    expect(accessCardToggle).toBeDisabled();
     expect(accessCardToggle).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByText("Rol Başvurusu")).not.toBeInTheDocument();
     expect(screen.queryByText("Açık Dashboard Erişimleri")).not.toBeInTheDocument();
 
     fireEvent.click(accessCardToggle);
 
-    expect(accessCardToggle).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByText("Rol Başvurusu")).toBeInTheDocument();
-    expect(screen.getByText("Feature Talepleri")).toBeInTheDocument();
-    expect(screen.getByText("Açık Dashboard Erişimleri")).toBeInTheDocument();
+    expect(accessCardToggle).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByText("Rol Başvurusu")).not.toBeInTheDocument();
+    expect(screen.queryByText("Feature Talepleri")).not.toBeInTheDocument();
+    expect(screen.queryByText("Açık Dashboard Erişimleri")).not.toBeInTheDocument();
 
     const helpCardToggle = screen.getByRole("button", { name: /Yardım & Kılavuzlar/i });
     expect(helpCardToggle).toBeInTheDocument();
+    expect(helpCardToggle).toBeDisabled();
     expect(helpCardToggle).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByText("Ortak Profil Alanları Kullanım Kılavuzu")).not.toBeInTheDocument();
 
     fireEvent.click(helpCardToggle);
 
-    expect(helpCardToggle).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByText("Ortak Profil Alanları Kullanım Kılavuzu")).toBeInTheDocument();
+    expect(helpCardToggle).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByText("Ortak Profil Alanları Kullanım Kılavuzu")).not.toBeInTheDocument();
     expect(screen.getAllByText("Diaspora için iş birliği ve mentorluk fırsatlarına açığım.").length).toBeGreaterThan(0);
     expect(screen.getByText("Profil özeti: Diaspora için iş birliği ve mentorluk fırsatlarına açığım.")).toBeInTheDocument();
     expect(screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için")).not.toBeInTheDocument();
-    expect(screen.getAllByText("mentorluk, topluluk, networking").length).toBeGreaterThan(0);
+    expect(screen.queryByText("mentorluk, topluluk, networking")).not.toBeInTheDocument();
 
     expect(screen.getByRole("switch", { name: /Ad Soyad görünürlük/i })).toBeInTheDocument();
     expect(screen.getByRole("switch", { name: /Kısa Açıklama görünürlük/i })).toBeInTheDocument();

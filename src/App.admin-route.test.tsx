@@ -4,10 +4,6 @@ import { Outlet } from "react-router-dom";
 
 import App from "@/App";
 
-vi.mock("@/pages/AdminLansmanPage.tsx", () => ({
-  default: () => <div>Standalone Lansman Admin Page</div>,
-}));
-
 vi.mock("@/components/admin/AdminLayout", () => ({
   default: () => (
     <div>

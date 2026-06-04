@@ -33,6 +33,16 @@ const guideSections: AdminPageGuideSection[] = [
     ],
   },
   {
+    title: "Kategori değişikliği karar ağacı",
+    items: [
+      "Kategori görünmüyor veya yanlışsa önce kullanıcının rolünü doğrula; yanlış rol doğru taxonomy grubunu hiç göstermeyebilir.",
+      "Rol doğruysa `Taxonomy Yönetimi` içinde ilgili grubun aktif, zorunlu ve seçim tipini kontrol et.",
+      "Option pasif yapıldıysa yeni kullanıcılarda görünmez; eski kullanıcı kaydı duruyorsa ayrıca profil ekranından seçimi doğrula.",
+      "Kategori değişikliğinden sonra şartlı alanlar beklenmiyorsa `Attribute Yönetimi` yerine önce taxonomy etkisini incele.",
+      "Son kontrol olarak public profile veya directory görünümünde kategori etiketinin doğru isimle çıktığını doğrula.",
+    ],
+  },
+  {
     title: "Ekranlar arasındaki görev ayrımı",
     items: [
       "`Roller & Featurelar` public kart görünümünü yönetmez; yalnızca gerçek feature/capability yönetir.",
@@ -48,8 +58,8 @@ const guideSections: AdminPageGuideSection[] = [
       "1. Önce kullanıcının rolünü doğrula.",
       "2. Sonra feature erişimi gerekiyor mu kontrol et.",
       "3. Ardından attribute/form davranışını kontrol et.",
-      "4. Gerekirse public profile section görünümünü düzenle.",
-      "5. Consultant veya business ise taxonomy seçimini doğrula.",
+      "4. Consultant veya business ise taxonomy seçimini doğrula.",
+      "5. Gerekirse public profile section görünümünü düzenle.",
       "6. En sonda, gerçekten gerekiyorsa kullanıcı bazlı override ver.",
     ],
   },
@@ -60,6 +70,7 @@ const guideSections: AdminPageGuideSection[] = [
       "Aynı sorunu yaşayan birden fazla kullanıcı varsa override yerine rol, feature veya attribute seviyesinde çözüm düşün.",
       "Business subtype ve consultant category bazı alanları şartlı zorunlu yapabilir; bu yüzden özellikle bu rollerde profil ekranını test etmek önemlidir.",
       "Public profile tarafında veri görünmüyorsa sebep section kapalı olması, attribute public olmaması veya approval beklemesi olabilir.",
+      "Kategori değişikliği yaptıktan sonra en az bir gerçek kullanıcı profiliyle form davranışını test etmek, sadece admin ayar ekranına bakmaktan daha güvenlidir.",
     ],
   },
 ];

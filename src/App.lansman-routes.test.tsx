@@ -4,10 +4,6 @@ import { Outlet } from "react-router-dom";
 
 import App from "@/App";
 
-vi.mock("@/pages/AdminLansmanPage.tsx", () => ({
-  default: () => <div>Standalone Lansman Admin Page</div>,
-}));
-
 vi.mock("@/components/admin/AdminLayout", () => ({
   default: () => (
     <div>
@@ -17,7 +13,11 @@ vi.mock("@/components/admin/AdminLayout", () => ({
   ),
 }));
 
-describe("App lansman admin routing", () => {
+vi.mock("@/pages/NotFound.tsx", () => ({
+  default: () => <div>Admin Not Found</div>,
+}));
+
+describe("App removed lansman admin routing", () => {
   beforeEach(() => {
     window.history.pushState({}, "", "/admin/lansman");
   });
@@ -26,10 +26,10 @@ describe("App lansman admin routing", () => {
     window.history.pushState({}, "", "/");
   });
 
-  it("renders the lansman admin route inside the shared admin shell", () => {
+  it("renders admin not found inside the shared admin shell", () => {
     render(<App />);
 
-    expect(screen.getByText("Standalone Lansman Admin Page")).toBeInTheDocument();
     expect(screen.getByText("Shared Admin Layout")).toBeInTheDocument();
+    expect(screen.getByText("Admin Not Found")).toBeInTheDocument();
   });
 });

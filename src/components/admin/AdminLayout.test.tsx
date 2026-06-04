@@ -49,7 +49,8 @@ function renderAdminLayout(pathname: string) {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<div>Admin Home Content</div>} />
           <Route path="members" element={<div>Members Content</div>} />
-          <Route path="lansman" element={<div>Lansman Content</div>} />
+          <Route path="surveys" element={<div>Surveys Content</div>} />
+          <Route path="data" element={<div>Unified Data Content</div>} />
           <Route path="workspace/command-center" element={<div>Workspace Command Center</div>} />
         </Route>
       </Routes>
@@ -58,7 +59,7 @@ function renderAdminLayout(pathname: string) {
 }
 
 describe("AdminLayout", () => {
-  it("shows demo link in header and external links inside dashboard menu", async () => {
+  it("shows core admin navigation and external links inside dashboard menu", async () => {
     renderAdminLayout("/admin");
 
     await waitFor(() => {
@@ -66,11 +67,7 @@ describe("AdminLayout", () => {
     });
 
     expect(screen.getByRole("link", { name: /CorteQS ana siteye git/i })).toHaveAttribute("href", "https://mvp.corteqs.net");
-    expect(screen.getByRole("link", { name: "Demo" })).toHaveAttribute(
-      "href",
-      "https://global-network-bridge.lovable.app/",
-    );
-    expect(screen.getByRole("link", { name: "Demo" })).toHaveAttribute("target", "_blank");
+    expect(screen.queryByRole("link", { name: "Demo" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Üyeler/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Topluluklar/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Data/i })).toBeInTheDocument();
@@ -92,10 +89,9 @@ describe("AdminLayout", () => {
     fireEvent.mouseLeave(communityButton);
     const dataButton = screen.getByRole("button", { name: /^Data$/i });
     fireEvent.mouseEnter(dataButton);
-    expect(await screen.findByRole("menuitem", { name: /Büyükelçilik/i })).toBeInTheDocument();
-    expect(await screen.findByRole("menuitem", { name: /Başkonsolosluk/i })).toBeInTheDocument();
-    expect(await screen.findByRole("menuitem", { name: /Konsolosluk Ofisi/i })).toBeInTheDocument();
-    expect(await screen.findByRole("menuitem", { name: /Kullanıcı Rolleri/i })).toBeInTheDocument();
+    expect(await screen.findByRole("menuitem", { name: /Kataloglar/i })).toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: /Büyükelçilik/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: /Kullanıcı Rolleri/i })).not.toBeInTheDocument();
     fireEvent.mouseLeave(dataButton);
     fireEvent.mouseEnter(dashboardButton);
 
@@ -120,8 +116,8 @@ describe("AdminLayout", () => {
 
     const otherRecordsButton = screen.getByRole("button", { name: /Diğer Kayıtlar/i });
     fireEvent.mouseEnter(otherRecordsButton);
-    expect(await screen.findByRole("menuitem", { name: /Lansman Katılım/i })).toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /Anketler/i })).toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: /Lansman Katılım/i })).not.toBeInTheDocument();
     const inactiveSubTrigger = await screen.findByText("Inaktif");
     fireEvent.click(inactiveSubTrigger);
     expect(await screen.findByRole("menuitem", { name: /19 Mayıs Fikir/i })).toBeInTheDocument();
@@ -129,10 +125,10 @@ describe("AdminLayout", () => {
   });
 
   it("hides global actions outside the members page", async () => {
-    renderAdminLayout("/admin/lansman");
+    renderAdminLayout("/admin/surveys");
 
     await waitFor(() => {
-      expect(screen.getByText("Lansman Content")).toBeInTheDocument();
+      expect(screen.getByText("Surveys Content")).toBeInTheDocument();
     });
 
     expect(screen.getByRole("button", { name: /Diğer Kayıtlar/i })).toBeInTheDocument();

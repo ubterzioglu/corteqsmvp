@@ -53,7 +53,6 @@ describe("AdminHomePage", () => {
     expect(screen.getByText("Cadde")).toBeInTheDocument();
     expect(screen.getByText("Sosyal Medya")).toBeInTheDocument();
     expect(screen.getByText("Güncellemeler")).toBeInTheDocument();
-    expect(screen.getByText("Lansman Katılım")).toBeInTheDocument();
     expect(screen.getByText("Anketler")).toBeInTheDocument();
     expect(screen.getByText("19 Mayıs Kelime")).toBeInTheDocument();
     expect(screen.getAllByText("19 Mayıs Anı").length).toBeGreaterThan(0);
@@ -61,8 +60,9 @@ describe("AdminHomePage", () => {
     expect(screen.getByText("Topluluk Editörleri")).toBeInTheDocument();
     expect(screen.getByText("Topluluk Kullanma Kılavuzu")).toBeInTheDocument();
     expect(screen.getByText("Diplomatik Profiller")).toBeInTheDocument();
-    expect(screen.getByText("Başkonsolosluk")).toBeInTheDocument();
-    expect(screen.getByText("Kullanıcı Rolleri")).toBeInTheDocument();
+    expect(screen.getByText("Kataloglar")).toBeInTheDocument();
+    expect(screen.queryByText("Başkonsolosluk")).not.toBeInTheDocument();
+    expect(screen.queryByText("Kullanıcı Rolleri")).not.toBeInTheDocument();
     expect(screen.getByText("CC")).toBeInTheDocument();
     expect(screen.getByText("Dosyalar ve Linkler")).toBeInTheDocument();
     expect(screen.getByText("MVP Listesi")).toBeInTheDocument();
@@ -75,6 +75,7 @@ describe("AdminHomePage", () => {
     expect(screen.getByText("Globe")).toBeInTheDocument();
     expect(screen.getByText("Founders")).toBeInTheDocument();
     expect(screen.getByText("Dashboard Merkezi")).toBeInTheDocument();
+    expect(screen.queryByText("Demo")).not.toBeInTheDocument();
     const externalLinks = screen.getAllByRole("link", { name: /Bağlantıyı Aç/i });
     expect(externalLinks[0]).toHaveAttribute("href", "https://eng.corteqs.net");
     expect(externalLinks[1]).toHaveAttribute("href", "https://globe.corteqs.net");

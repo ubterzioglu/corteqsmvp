@@ -80,20 +80,58 @@ let mockBucketStats = {
 let mockBucketStatsError: Error | null = null;
 const windowOpen = vi.fn();
 
-function applyFilters(data: MockSubmission[]) {
+function getFieldValue(row: MockSubmission, column: string) {
+  return row[column as keyof MockSubmission];
+}
+
+function createSelectQuery(data: MockSubmission[]) {
   return {
-    ilike: () => applyFilters(data),
-    eq: () => applyFilters(data),
-    gte: () => applyFilters(data),
-    lte: () => applyFilters(data),
-    order: () => ({
-      range: (start: number, end: number) =>
-        Promise.resolve({
-          data: data.slice(start, end + 1),
-          count: data.length,
+    ilike: (column: string, pattern: string) => {
+      const normalizedPattern = pattern.replace(/%/g, "").toLocaleLowerCase("tr-TR");
+      return createSelectQuery(
+        data.filter((row) =>
+          String(getFieldValue(row, column) ?? "")
+            .toLocaleLowerCase("tr-TR")
+            .includes(normalizedPattern),
+        ),
+      );
+    },
+    eq: (column: string, value: string | boolean) =>
+      createSelectQuery(data.filter((row) => getFieldValue(row, column) === value)),
+    neq: (column: string, value: string | boolean) =>
+      createSelectQuery(data.filter((row) => getFieldValue(row, column) !== value)),
+    gte: (column: string, value: string) =>
+      createSelectQuery(data.filter((row) => String(getFieldValue(row, column) ?? "") >= value)),
+    lte: (column: string, value: string) =>
+      createSelectQuery(data.filter((row) => String(getFieldValue(row, column) ?? "") <= value)),
+    order: (column: string, options?: { ascending?: boolean }) => ({
+      range: (start: number, end: number) => {
+        const sorted = [...data].sort((left, right) => {
+          const leftValue = String(getFieldValue(left, column) ?? "");
+          const rightValue = String(getFieldValue(right, column) ?? "");
+          const orderResult = leftValue.localeCompare(rightValue, "tr");
+          return options?.ascending ? orderResult : -orderResult;
+        });
+
+        return Promise.resolve({
+          data: sorted.slice(start, end + 1),
+          count: sorted.length,
           error: null,
-        }),
+        });
+      },
     }),
+  };
+}
+
+function createHeadCountQuery(data: MockSubmission[]) {
+  return {
+    eq: (column: string, value: string | boolean) =>
+      createHeadCountQuery(data.filter((row) => getFieldValue(row, column) === value)),
+    neq: (column: string, value: string | boolean) =>
+      Promise.resolve({
+        count: data.filter((row) => getFieldValue(row, column) !== value).length,
+        error: null,
+      }),
   };
 }
 
@@ -107,16 +145,10 @@ vi.mock("@/integrations/supabase/client", () => ({
       return {
         select: (_columns: string, options?: { count?: "exact"; head?: boolean }) => {
           if (options?.head) {
-            return {
-              eq: (_column: string, value: string) =>
-                Promise.resolve({
-                  count: mockRows.filter((row) => row.source_type === value).length,
-                  error: null,
-                }),
-            };
+            return createHeadCountQuery(mockRows);
           }
 
-          return applyFilters(mockRows);
+          return createSelectQuery(mockRows);
         },
       };
     },
@@ -158,8 +190,8 @@ beforeEach(() => {
   windowOpen.mockReset();
   vi.stubGlobal("open", windowOpen);
   mockRows = createMockRows();
-  mockRows[0].phone = "+49 123 456 789";
-  mockRows[0].documents = [
+  mockRows[44].phone = "+49 123 456 789";
+  mockRows[44].documents = [
     {
       url: null,
       path: "member-1-cv.pdf",
@@ -175,11 +207,15 @@ beforeEach(() => {
       contentType: "application/pdf",
     },
   ];
-  mockRows[1].phone = "0555 123 12";
-  mockRows[1].document_url = "https://example.com/legacy-doc.pdf";
-  mockRows[1].document_name = "legacy-doc.pdf";
-  mockRows[2].phone = "";
-  mockRows[2].documents = [];
+  mockRows[43].phone = "0555 123 12";
+  mockRows[43].document_url = "https://example.com/legacy-doc.pdf";
+  mockRows[43].document_name = "legacy-doc.pdf";
+  mockRows[42].phone = "";
+  mockRows[42].documents = [];
+  mockRows[0].status = "archived";
+  mockRows[0].fullname = "Archived Member";
+  mockRows[43].source_type = "chatbot";
+  mockRows[42].source_type = "wa";
   mockBucketStats = {
     bucket_id: "submission-documents",
     file_count: 12,
@@ -228,6 +264,8 @@ describe("AdminMembersPage", () => {
   it("shows uploaded documents for the selected submission", async () => {
     renderPage();
 
+    fireEvent.click(await screen.findByText("Member 45"));
+
     expect(await screen.findByText("Yüklenen Dokümanlar")).toBeInTheDocument();
     expect(screen.getByText("member-1-cv.pdf")).toBeInTheDocument();
     expect(screen.getByText("member-1-portfolio.pdf")).toBeInTheDocument();
@@ -242,11 +280,13 @@ describe("AdminMembersPage", () => {
   });
 
   it("falls back to legacy single-document fields when documents json is empty", async () => {
-    mockRows[0].documents = [];
-    mockRows[0].document_url = "https://example.com/legacy-doc.pdf";
-    mockRows[0].document_name = "legacy-doc.pdf";
+    mockRows[43].documents = [];
+    mockRows[43].document_url = "https://example.com/legacy-doc.pdf";
+    mockRows[43].document_name = "legacy-doc.pdf";
 
     renderPage();
+
+    fireEvent.click(await screen.findByText("Member 44"));
 
     expect(await screen.findByText("legacy-doc.pdf")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Aç" }));
@@ -289,5 +329,23 @@ describe("AdminMembersPage", () => {
     renderPage();
 
     expect(await screen.findByText("Doküman kapasite özeti şu anda alınamıyor.")).toBeInTheDocument();
+  });
+
+  it("excludes archived members from summary counts and the default list", async () => {
+    renderPage();
+
+    expect(await screen.findByText("Toplam Üye")).toBeInTheDocument();
+    expect(screen.getByText("42")).toBeInTheDocument();
+    expect(screen.getByText("44")).toBeInTheDocument();
+    expect(screen.queryByText("Archived Member")).not.toBeInTheDocument();
+    expect(screen.getByText("Toplam 44 kayıt · Seçili 0")).toBeInTheDocument();
+  });
+
+  it("shows archived members when the archived status filter is selected", async () => {
+    renderPage("/admin/members?page=1&pageSize=20&status=archived");
+
+    expect(await screen.findByText("Archived Member")).toBeInTheDocument();
+    expect(screen.queryByText("Member 45")).not.toBeInTheDocument();
+    expect(screen.getByText("Toplam 1 kayıt · Seçili 0")).toBeInTheDocument();
   });
 });
