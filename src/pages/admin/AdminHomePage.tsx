@@ -118,6 +118,7 @@ const otherActionDescriptions: Record<string, string> = {
   "Approval Queue": "Onay bekleyen profil, rol ve feature taleplerini sıradan geçir.",
   "Audit Logs": "Kritik admin işlemlerinin geçmişini ve değişiklik izlerini incele.",
   Güncellemeler: "Ürün güncellemeleri ve yönetim notlarını güncel tut.",
+  Yardım: "Yetkilendirme sisteminin basit rehberini ve kullanım kılavuzunu aç.",
 };
 
 const communityDescriptions: Record<string, string> = {

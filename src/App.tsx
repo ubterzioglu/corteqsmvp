@@ -86,6 +86,7 @@ import HospitalAppointment from "@/pages/HospitalAppointment";
 import IndependentProfilePage from "@/pages/IndependentProfilePage";
 import AdminConsulateProfilesPage from "@/pages/admin/AdminConsulateProfilesPage";
 import AdminCatalogPage from "@/pages/admin/AdminCatalogPage";
+import AdminHelpPage from "@/pages/admin/AdminHelpPage";
 
 const queryClient = new QueryClient();
 
@@ -231,6 +232,7 @@ const App = () => (
                 <Route path="may19/kelime" element={<AdminMay19IdeaPage />} />
                 <Route path="may19/ani" element={<AdminMay19MomentPage />} />
                 <Route path="about" element={<AdminAboutPage />} />
+                <Route path="help" element={<AdminHelpPage />} />
                 <Route path="workspace" element={<AdminWorkspaceHomePage />} />
                 <Route path="workspace/command-center" element={<AdminCommandCenterPage />} />
                 <Route path="workspace/resources" element={<AdminResourcesPage />} />

@@ -4,15 +4,12 @@ import AdminPageGuideAccordion, { type AdminPageGuideSection } from "@/component
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { setFeatureGlobalStateAsAdmin, setRoleFeatureFlagAsAdmin } from "@/lib/admin";
 import { getFeatureMeta } from "@/lib/features";
-import { HelpCircle, Info } from "lucide-react";
-import guideHtml from "@/assets/docs/yetkilendirme-rehberi.html?raw";
+import { Info } from "lucide-react";
 
 type RoleRow = {
   id: string;
@@ -364,7 +361,6 @@ const AdminRolesFeaturesPage = () => {
   const [features, setFeatures] = useState<FeatureCatalogRow[]>([]);
   const [flagMap, setFlagMap] = useState<Record<string, Record<string, boolean>>>({});
   const [savingKey, setSavingKey] = useState<string | null>(null);
-  const [helpOpen, setHelpOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -502,16 +498,6 @@ const AdminRolesFeaturesPage = () => {
                 Satır bazında feature, sütun bazında rol görünümü. Global durum ve role göre açık/kapalı durumu aynı ekranda yönetilir.
               </CardDescription>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setHelpOpen(true)}
-              className="mt-0.5 shrink-0"
-              aria-label="Yetkilendirme sistemi rehberini aç"
-            >
-              <HelpCircle className="h-4 w-4 mr-1.5" />
-              Yardım
-            </Button>
           </div>
         </CardHeader>
         <CardContent className="pt-0">
@@ -634,21 +620,6 @@ const AdminRolesFeaturesPage = () => {
         </CardContent>
       </Card>
 
-      <Dialog open={helpOpen} onOpenChange={setHelpOpen}>
-        <DialogContent className="max-w-5xl max-h-[90vh] p-0">
-          <DialogHeader className="px-6 pt-6 pb-0">
-            <DialogTitle>Yetkilendirme Sistemi — Tam Rehberi</DialogTitle>
-          </DialogHeader>
-          <div className="overflow-y-auto max-h-[calc(90vh-100px)]">
-            <iframe
-              srcDoc={guideHtml}
-              title="CorteQS Yetkilendirme Sistemi Tam Rehberi"
-              className="w-full border-0"
-              style={{ minHeight: "600px", height: "100%" }}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

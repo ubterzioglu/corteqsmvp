@@ -182,7 +182,7 @@ const AMBER_BUTTON_PRIMARY =
 const AMBER_BUTTON_OUTLINE =
   "border border-[rgba(249,115,22,0.38)] bg-[rgba(255,255,255,0.82)] text-orange-700 shadow-[0_8px_18px_-14px_rgba(249,115,22,0.24)] hover:bg-[rgba(249,115,22,0.09)] hover:border-[rgba(249,115,22,0.55)] hover:text-orange-800";
 const AMBER_ACTION_BUTTON =
-  "h-10 w-full min-w-0 justify-center rounded-xl border border-[rgba(249,115,22,0.28)] bg-[rgba(255,255,255,0.85)] px-3 text-xs font-medium text-orange-700 shadow-[0_12px_26px_-24px_rgba(249,115,22,0.3)] backdrop-blur-[2px] hover:bg-[rgba(249,115,22,0.1)] hover:border-[rgba(249,115,22,0.46)] hover:text-orange-800";
+  "h-10 w-full min-w-0 justify-center rounded-xl border border-[rgba(249,115,22,0.28)] bg-[rgba(255,255,255,0.85)] px-3 text-[11px] font-medium text-orange-700 shadow-[0_12px_26px_-24px_rgba(249,115,22,0.3)] backdrop-blur-[2px] hover:bg-[rgba(249,115,22,0.1)] hover:border-[rgba(249,115,22,0.46)] hover:text-orange-800";
 
 
 const buildAvatarStoragePath = (userId: string, file: File) => {
@@ -1039,25 +1039,25 @@ const ProfilePage = () => {
                     className="h-40 w-40 shrink-0 rounded-2xl object-cover shadow-[0_4px_16px_-4px_rgba(0,0,0,0.15)]"
                   />
                 ) : (
-                  <div className="flex h-40 w-40 shrink-0 items-center justify-center rounded-2xl bg-orange-500 text-4xl font-bold text-white shadow-[0_6px_20px_-6px_rgba(249,115,22,0.45)]">
+                  <div className="flex h-40 w-40 shrink-0 items-center justify-center rounded-2xl bg-orange-500 text-[11px] font-bold text-white shadow-[0_6px_20px_-6px_rgba(249,115,22,0.45)]">
                     {initials}
                   </div>
                 )}
                 <div className="space-y-2">
                   {errorMessage ? (
                     <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="destructive" className="text-xs">Kısmi veri yüklendi</Badge>
+                      <Badge variant="destructive" className="text-[11px]">Kısmi veri yüklendi</Badge>
                     </div>
                   ) : null}
                   <div>
-                    <CardTitle className="text-3xl tracking-tight text-slate-950 md:text-4xl">{displayName}</CardTitle>
+                    <CardTitle className="text-[11px] tracking-tight text-slate-950 md:text-[11px]">{displayName}</CardTitle>
                     {heroDescription ? (
-                      <CardDescription className="mt-1 max-w-2xl text-sm text-slate-600">
+                      <CardDescription className="mt-1 max-w-2xl text-[11px] text-slate-600">
                         {heroDescription}
                       </CardDescription>
                     ) : null}
                   </div>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-600">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-slate-600">
                     <span className="inline-flex items-center gap-1.5">
                       <UserCircle2 className="h-3.5 w-3.5" /> {profile?.email ?? user?.email ?? "-"}
                     </span>
@@ -1082,11 +1082,11 @@ const ProfilePage = () => {
           <>
             <CardHeader className="flex flex-col gap-3 pb-3 md:flex-row md:items-center md:justify-between">
               <div className="space-y-1">
-                <CardTitle className="text-2xl">{roleMeta?.title ?? "Profilim"}</CardTitle>
+                <CardTitle className="text-[11px]">{roleMeta?.title ?? "Profilim"}</CardTitle>
                 <div className="flex flex-wrap items-center gap-1.5">
-                  <Badge variant="secondary" className="text-xs">{profile?.roleLabel ?? roleMeta?.adminLabel ?? "Rol"}</Badge>
-                  <Badge variant="outline" className="text-xs">Tamamlanma %{profile?.profileCompletion.percentage ?? 0}</Badge>
-                  {errorMessage ? <Badge variant="destructive" className="text-xs">Kısmi veri yüklendi</Badge> : null}
+                  <Badge variant="secondary" className="text-[11px]">{profile?.roleLabel ?? roleMeta?.adminLabel ?? "Rol"}</Badge>
+                  <Badge variant="outline" className="text-[11px]">Tamamlanma %{profile?.profileCompletion.percentage ?? 0}</Badge>
+                  {errorMessage ? <Badge variant="destructive" className="text-[11px]">Kısmi veri yüklendi</Badge> : null}
                 </div>
                 <div className="pt-1">
                   {avatarActionButtons}
@@ -1095,16 +1095,16 @@ const ProfilePage = () => {
             </CardHeader>
             <CardContent className="grid gap-2 pb-4 md:grid-cols-3">
               <div className={`rounded-lg p-2.5 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-                <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Görünen İsim</p>
-                <p className="mt-1 text-sm font-semibold">{displayName}</p>
+                <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Görünen İsim</p>
+                <p className="mt-1 text-[11px] font-semibold">{displayName}</p>
               </div>
               <div className={`rounded-lg p-2.5 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-                <p className="text-[10px] uppercase tracking-wide text-muted-foreground">E-posta</p>
-                <p className="mt-1 break-all text-xs">{profile?.email ?? user?.email ?? "-"}</p>
+                <p className="text-[11px] uppercase tracking-wide text-muted-foreground">E-posta</p>
+                <p className="mt-1 break-all text-[11px]">{profile?.email ?? user?.email ?? "-"}</p>
               </div>
               <div className={`rounded-lg p-2.5 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-                <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Bekleyen Talep</p>
-                <p className="mt-1 text-sm font-semibold">{pendingCount}</p>
+                <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Bekleyen Talep</p>
+                <p className="mt-1 text-[11px] font-semibold">{pendingCount}</p>
               </div>
             </CardContent>
           </>
@@ -1121,7 +1121,7 @@ const ProfilePage = () => {
               aria-controls="profile-summary-content"
               onClick={() => setIsProfileSummaryOpen((current) => !current)}
             >
-              <CardTitle className="text-base">Profil Durumu</CardTitle>
+              <CardTitle className="text-[11px]">Profil Durumu</CardTitle>
               <ChevronDown
                 className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${isProfileSummaryOpen ? "rotate-180" : ""}`}
               />
@@ -1130,14 +1130,14 @@ const ProfilePage = () => {
           {isProfileSummaryOpen ? (
             <CardContent id="profile-summary-content" className="pt-0 pb-4">
               <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-6">
-                <div className={`flex items-center gap-2 rounded-[20px] px-2.5 py-1.5 text-xs ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-                  <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Profil Skoru</p>
+                <div className={`flex items-center gap-2 rounded-[20px] px-2.5 py-1.5 text-[11px] ${GOOGLE_SOFT_CARD_SUBTLE}`}>
+                  <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Profil Skoru</p>
                   <p className="font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
                 </div>
                 {completionHighlights.map((item) => (
                   <div
                     key={item.key}
-                    className={`flex items-center gap-1.5 rounded-2xl px-2.5 py-1.5 text-xs ${item.complete ? GOOGLE_SOFT_SUCCESS_PANEL : GOOGLE_SOFT_DANGER_PANEL}`}
+                    className={`flex items-center gap-1.5 rounded-2xl px-2.5 py-1.5 text-[11px] ${item.complete ? GOOGLE_SOFT_SUCCESS_PANEL : GOOGLE_SOFT_DANGER_PANEL}`}
                   >
                     <div className="flex items-center gap-1.5">
                       {item.complete ? (
@@ -1173,7 +1173,7 @@ const ProfilePage = () => {
 
           <Card className={GOOGLE_SOFT_CARD_YELLOW_SECTION}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Ortak Profil Alanları</CardTitle>
+              <CardTitle className="text-[11px]">Ortak Profil Alanları</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {groupedAttributes.common.map((attribute) => (
@@ -1203,7 +1203,7 @@ const ProfilePage = () => {
           {featureToggleCards.length ? (
             <Card className={GOOGLE_SOFT_CARD_GREEN_SECTION}>
               <CardHeader className="pb-2">
-                <CardTitle className="text-base">Profil Rozetleri</CardTitle>
+                <CardTitle className="text-[11px]">Profil Rozetleri</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {featureToggleCards.map((item) => (
@@ -1224,7 +1224,7 @@ const ProfilePage = () => {
 
           <Card className={GOOGLE_SOFT_CARD_RED_SECTION}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Sosyal Medya Hesapları</CardTitle>
+              <CardTitle className="text-[11px]">Sosyal Medya Hesapları</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {groupedAttributes.socialMedia.length ? (
@@ -1239,7 +1239,7 @@ const ProfilePage = () => {
                       return (
                         <div key={attribute.attributeKey} className={`rounded-xl p-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
                           <div className="flex items-center justify-between gap-3">
-                            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                            <div className="flex items-center gap-2 text-[11px] font-medium text-foreground">
                               <Icon className={`h-4 w-4 ${config.iconClassName}`} />
                               <span>{config.label}</span>
                             </div>
@@ -1269,11 +1269,11 @@ const ProfilePage = () => {
                             <div className="flex items-center justify-between gap-2">
                               <div className="flex flex-wrap items-center gap-1.5">
                                 {attribute.requiresAdminApprovalOnChange ? (
-                                  <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                                  <Badge variant="outline" className="text-[11px] px-1.5 py-0">
                                     Onaylı
                                   </Badge>
                                 ) : null}
-                                <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                                <Badge variant="outline" className="text-[11px] px-1.5 py-0">
                                   {visible ? "Görünür" : "Gizli"}
                                 </Badge>
                               </div>
@@ -1291,7 +1291,7 @@ const ProfilePage = () => {
                   </div>
                 </>
               ) : (
-                <p className="text-xs text-muted-foreground">Bu profil için sosyal medya alanları henüz etkin değil.</p>
+                <p className="text-[11px] text-muted-foreground">Bu profil için sosyal medya alanları henüz etkin değil.</p>
               )}
             </CardContent>
           </Card>
@@ -1428,13 +1428,13 @@ const LockedProfileSectionCard = ({
         className="flex w-full items-center justify-between gap-3 rounded-[30px] px-6 py-4 text-left opacity-100"
       >
         <div className="space-y-1">
-          <CardTitle className="flex items-center gap-2 text-base">
+          <CardTitle className="flex items-center gap-2 text-[11px]">
             {TitleIcon ? <TitleIcon className="h-4 w-4 text-primary" /> : null}
             {title}
           </CardTitle>
         </div>
         <div className="flex items-center gap-2">
-          <Badge variant="outline" className="border-slate-300 bg-white/85 text-[10px] uppercase tracking-[0.18em] text-slate-600">
+          <Badge variant="outline" className="border-slate-300 bg-white/85 text-[11px] uppercase tracking-[0.18em] text-slate-600">
             Locked
           </Badge>
           <Lock className="h-4 w-4 text-slate-500" />
@@ -1486,18 +1486,18 @@ const DisplayNameAttributeCard = ({
   return (
     <Card className={GOOGLE_SOFT_CARD_BLUE_SECTION}>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base">{displayNameLabel}</CardTitle>
+        <CardTitle className="text-[11px]">{displayNameLabel}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex flex-col gap-3 md:flex-row md:items-start">
           <div className="flex-1 space-y-2">
             {attribute.isRequired ? (
-              <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">Zorunlu</Badge>
+              <Badge variant="secondary" className="px-1.5 py-0 text-[11px]">Zorunlu</Badge>
             ) : null}
             <AttributeInput attribute={attribute} value={draftValue} onChange={onValueChange} />
           </div>
           <div className="w-full md:w-[92px]">
-            <div className={`flex h-10 items-center justify-between gap-1.5 rounded-full px-2 text-xs ${GOOGLE_SOFT_SWITCH_PANEL}`}>
+            <div className={`flex h-10 items-center justify-between gap-1.5 rounded-full px-2 text-[11px] ${GOOGLE_SOFT_SWITCH_PANEL}`}>
               {draftVisibility === "public" ? (
                 <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
               ) : (
@@ -1546,8 +1546,8 @@ const ProfileAttributeEditor = ({
         <div className="flex items-start gap-2">
           <div className="w-28 shrink-0 space-y-1 sm:w-36">
             <div className="flex flex-wrap items-center gap-1">
-              <p className="text-sm font-semibold leading-4">{attributeLabel}</p>
-              {attribute.isRequired ? <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">Zorunlu</Badge> : null}
+              <p className="text-[11px] font-semibold leading-4">{attributeLabel}</p>
+              {attribute.isRequired ? <Badge variant="secondary" className="px-1.5 py-0 text-[11px]">Zorunlu</Badge> : null}
             </div>
           </div>
 
@@ -1556,7 +1556,7 @@ const ProfileAttributeEditor = ({
           </div>
 
           <div className="w-[84px] shrink-0">
-            <div className={`flex h-9 items-center justify-between gap-1.5 rounded-full px-2 text-xs ${GOOGLE_SOFT_SWITCH_PANEL}`}>
+            <div className={`flex h-9 items-center justify-between gap-1.5 rounded-full px-2 text-[11px] ${GOOGLE_SOFT_SWITCH_PANEL}`}>
               {draftVisibility === "public" ? (
                 <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
               ) : (
@@ -1580,15 +1580,15 @@ const ProfileAttributeEditor = ({
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div className="space-y-0.5">
           <div className="flex flex-wrap items-center gap-1.5">
-            <p className="text-sm font-semibold">{attributeLabel}</p>
-            {attribute.isRequired ? <Badge variant="secondary" className="text-[10px] px-1.5 py-0">Zorunlu</Badge> : null}
+            <p className="text-[11px] font-semibold">{attributeLabel}</p>
+            {attribute.isRequired ? <Badge variant="secondary" className="text-[11px] px-1.5 py-0">Zorunlu</Badge> : null}
             {attribute.requiresAdminApprovalOnChange ? (
-              <Badge variant="outline" className="text-[10px] px-1.5 py-0">Onaylı</Badge>
+              <Badge variant="outline" className="text-[11px] px-1.5 py-0">Onaylı</Badge>
             ) : null}
           </div>
-          {attribute.description ? <p className="text-xs text-muted-foreground">{attribute.description}</p> : null}
+          {attribute.description ? <p className="text-[11px] text-muted-foreground">{attribute.description}</p> : null}
         </div>
-        <div className="flex flex-wrap items-center gap-2 text-xs">
+        <div className="flex flex-wrap items-center gap-2 text-[11px]">
           {attribute.approvalStatus === "approved" ? (
             <span className="inline-flex items-center gap-1 text-emerald-700">
               <CheckCircle2 className="h-3.5 w-3.5" />
@@ -1621,7 +1621,7 @@ const ProfileAttributeEditor = ({
                 >
                   <div>
                     <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Görünürlük</p>
-                    <p className="text-sm font-medium text-foreground">{visibilityLabel}</p>
+                    <p className="text-[11px] font-medium text-foreground">{visibilityLabel}</p>
                   </div>
                   <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isVisibilityOpen ? "rotate-180" : ""}`} />
                 </button>
@@ -1638,7 +1638,7 @@ const ProfileAttributeEditor = ({
                       <label
                         key={option.value}
                         htmlFor={optionId}
-                        className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm ${GOOGLE_SOFT_CARD_SUBTLE_INTERACTIVE}`}
+                        className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-[11px] ${GOOGLE_SOFT_CARD_SUBTLE_INTERACTIVE}`}
                       >
                         <RadioGroupItem value={option.value} id={optionId} />
                         <span>{option.label}</span>
@@ -1656,7 +1656,7 @@ const ProfileAttributeEditor = ({
               onValueChange={(value) => onVisibilityChange(value as AttributeVisibility)}
               disabled={visibilityLocked}
             >
-              <SelectTrigger className="h-8 text-sm">
+              <SelectTrigger className="h-8 text-[11px]">
                 <SelectValue placeholder="Görünürlük seç" />
               </SelectTrigger>
               <SelectContent>
@@ -1679,7 +1679,7 @@ const ProfileAttributeEditor = ({
         ) : null}
 
         {attribute.requiresAdminApprovalOnChange ? (
-          <div className={`rounded-lg px-2.5 py-1.5 text-xs text-amber-900 ${GOOGLE_SOFT_WARNING_PANEL}`}>
+          <div className={`rounded-lg px-2.5 py-1.5 text-[11px] text-amber-900 ${GOOGLE_SOFT_WARNING_PANEL}`}>
             <div className="flex items-start gap-1.5">
               <ShieldCheck className="mt-0.5 h-3.5 w-3.5" />
               <p>Bu alan güncellendiğinde public görünmeden önce admin onayı bekler.</p>
@@ -1716,8 +1716,8 @@ const PreferenceToggleCard = ({
         <div className="flex items-start gap-2">
           <Icon className="mt-0.5 h-4 w-4 text-foreground" />
           <div>
-            <p className="text-sm font-medium text-foreground">{title}</p>
-            <p className="text-xs text-muted-foreground">{description}</p>
+            <p className="text-[11px] font-medium text-foreground">{title}</p>
+            <p className="text-[11px] text-muted-foreground">{description}</p>
           </div>
         </div>
         <Switch checked={checked} disabled={disabled} onCheckedChange={onCheckedChange} />
@@ -1760,14 +1760,14 @@ const StandaloneLinkAttributeCard = ({
   return (
     <Card className={cardClassName ?? GOOGLE_SOFT_CARD_SECTION}>
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-base">
+        <CardTitle className="flex items-center gap-2 text-[11px]">
           <Icon className={`h-4 w-4 ${iconClassName}`} />
           {title}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className={`flex items-center justify-between rounded-xl px-3 py-2 ${GOOGLE_SOFT_SWITCH_PANEL}`}>
-          <div className="flex items-center gap-1.5 text-xs text-slate-600">
+          <div className="flex items-center gap-1.5 text-[11px] text-slate-600">
             {visible ? <Eye className="h-3.5 w-3.5 text-primary" /> : <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />}
           </div>
           <Switch checked={visible} disabled={!attribute.userCanHide} onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")} />
@@ -1822,16 +1822,16 @@ const ProfileDocumentCard = ({
   return (
     <Card className={cardClassName ?? GOOGLE_SOFT_CARD_SECTION}>
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-base">
+        <CardTitle className="flex items-center gap-2 text-[11px]">
           <Icon className="h-4 w-4 text-primary" />
           {title}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className={`rounded-xl px-3 py-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-          <p className="text-sm font-medium text-foreground">{document?.name ?? "Henüz dosya yok"}</p>
-          <p className="mt-1 text-xs text-muted-foreground">{acceptLabel} desteklenir.</p>
-          <p className="mt-1 text-xs text-slate-600">{statusLabel}</p>
+          <p className="text-[11px] font-medium text-foreground">{document?.name ?? "Henüz dosya yok"}</p>
+          <p className="mt-1 text-[11px] text-muted-foreground">{acceptLabel} desteklenir.</p>
+          <p className="mt-1 text-[11px] text-slate-600">{statusLabel}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={onUploadClick} disabled={isUploading || isRemoving}>
@@ -1860,7 +1860,7 @@ const AttributeInput = ({ attribute, value, onChange, compact = false }: Attribu
   if (attribute.dataType === "textarea" || attribute.dataType === "multi_select" || attribute.dataType === "json") {
     return (
       <Textarea
-        className={compact ? "min-h-[40px] text-xs" : undefined}
+        className={compact ? "min-h-[40px] text-[11px]" : undefined}
         value={typeof value === "string" ? value : ""}
         onChange={(event) => onChange(event.target.value)}
         placeholder={attribute.dataType === "multi_select" ? "Virgülle ayırarak yaz" : attribute.label}
@@ -1871,7 +1871,7 @@ const AttributeInput = ({ attribute, value, onChange, compact = false }: Attribu
   if (attribute.dataType === "boolean") {
     return (
       <div className={`flex items-center justify-between rounded-xl px-3 ${GOOGLE_SOFT_CARD_SUBTLE} ${compact ? "h-9 py-1.5" : "py-2"}`}>
-        <p className={`${compact ? "text-xs" : "text-sm"} font-medium`}>{attribute.label}</p>
+        <p className={`${compact ? "text-[11px]" : "text-[11px]"} font-medium`}>{attribute.label}</p>
         <Switch checked={Boolean(value)} onCheckedChange={(checked) => onChange(checked)} />
       </div>
     );
@@ -1879,7 +1879,7 @@ const AttributeInput = ({ attribute, value, onChange, compact = false }: Attribu
 
   return (
     <Input
-      className={compact ? "h-9 text-xs md:text-xs" : undefined}
+      className={compact ? "h-9 text-[11px] md:text-[11px]" : undefined}
       type={attribute.dataType === "url" ? "url" : "text"}
       value={typeof value === "string" ? value : ""}
       onChange={(event) => onChange(event.target.value)}

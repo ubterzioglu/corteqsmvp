@@ -1,5 +1,5 @@
 import { BookOpen, ClipboardList, Database, ExternalLink, FolderKanban, Globe, ListChecks, Network, Rocket, ScrollText as ScrollTextIcon, Shield, Sparkles } from "lucide-react";
-import { Heart, Lightbulb, Megaphone, MessageSquare, Radio, ScrollText } from "lucide-react";
+import { CircleHelp, Heart, Lightbulb, Megaphone, MessageSquare, Radio, ScrollText } from "lucide-react";
 import { workspaceDocPages } from "@/lib/dashboard/workspace-doc-pages";
 
 export const primaryAdminNavItems = [
@@ -32,6 +32,7 @@ export const otherActionNavItems = [
   { to: "/admin/approvals", label: "Approval Queue", icon: ClipboardList },
   { to: "/admin/audit-logs", label: "Audit Logs", icon: ScrollTextIcon },
   { to: "/admin/about", label: "Güncellemeler", icon: ScrollText },
+  { to: "/admin/help", label: "Yardım", icon: CircleHelp },
 ] as const;
 
 export const otherRecordNavItems = [
