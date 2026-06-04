@@ -287,6 +287,7 @@ const ProfilePage = () => {
   const [draftValues, setDraftValues] = useState<DraftValueMap>({});
   const [draftVisibilities, setDraftVisibilities] = useState<DraftVisibilityMap>({});
   const [socialMediaAllVisible, setSocialMediaAllVisible] = useState(true);
+  const [commonAttributesAllVisible, setCommonAttributesAllVisible] = useState(true);
   const [savingAttributeKey, setSavingAttributeKey] = useState<string | null>(null);
   const [savingCommonAttributes, setSavingCommonAttributes] = useState(false);
   const [savingSocialMedia, setSavingSocialMedia] = useState(false);
@@ -1194,50 +1195,69 @@ const ProfilePage = () => {
 
                 <Separator className="my-2" />
 
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {groupedAttributes.common
-                    .filter((attr) => ["country", "city"].includes(attr.attributeKey))
-                    .map((attribute) => (
-                      <ProfileAttributeEditor
-                        key={attribute.attributeKey}
-                        attribute={attribute}
-                        draftValue={draftValues[attribute.attributeKey]}
-                        draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
-                        displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
-                        isSaving={savingCommonAttributes}
-                        saveMode="section"
-                        visibilityMode="inline-switch"
-                        onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
-                        onVisibilityChange={(nextVisibility) =>
-                          setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
-                        }
-                      />
-                    ))}
-                </div>
+                <div className="flex flex-col gap-3">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {groupedAttributes.common
+                      .filter((attr) => ["country", "city"].includes(attr.attributeKey))
+                      .map((attribute) => (
+                        <ProfileAttributeEditor
+                          key={attribute.attributeKey}
+                          attribute={attribute}
+                          draftValue={draftValues[attribute.attributeKey]}
+                          draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
+                          displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
+                          isSaving={savingCommonAttributes}
+                          saveMode="section"
+                          visibilityMode="inline-switch"
+                          onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
+                          onVisibilityChange={(nextVisibility) =>
+                            setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
+                          }
+                        />
+                      ))}
+                  </div>
 
-                {groupedAttributes.common
-                .filter((attr) => attr.attributeKey === "bio_short")
-                .map((attribute) => (
-                  <ProfileAttributeEditor
-                    key={attribute.attributeKey}
-                    attribute={attribute}
-                    draftValue={draftValues[attribute.attributeKey]}
-                    draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
-                    displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
-                    isSaving={savingCommonAttributes}
-                    saveMode="section"
-                    visibilityMode="inline-switch"
-                    onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
-                    onVisibilityChange={(nextVisibility) =>
-                      setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
-                    }
-                  />
-                ))}
-              <div className="flex justify-end pt-1">
-                <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={() => void handleSaveCommonAttributes()} disabled={savingCommonAttributes}>
-                  {savingCommonAttributes ? "Kaydediliyor..." : "Ortak Alanları Kaydet"}
-                </Button>
-              </div>
+                  <div className="flex items-end gap-2">
+                    <div className="flex-1 space-y-1">
+                      <label className="text-[10px] font-medium text-foreground">Kısa Açıklama</label>
+                      {groupedAttributes.common
+                      .filter((attr) => attr.attributeKey === "bio_short")
+                      .map((attribute) => (
+                        <AttributeInput
+                          key={attribute.attributeKey}
+                          attribute={attribute}
+                          value={draftValues[attribute.attributeKey]}
+                          onChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
+                        />
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <div className={`flex items-center gap-1.5 rounded-full px-2 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
+                        {commonAttributesAllVisible ? (
+                          <Eye className="h-3.5 w-3.5 text-primary" />
+                        ) : (
+                          <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
+                        )}
+                        <Switch
+                          checked={commonAttributesAllVisible}
+                          onCheckedChange={(checked) => {
+                            setCommonAttributesAllVisible(checked);
+                            setDraftVisibilities((current) => {
+                              const updated = { ...current };
+                              groupedAttributes.common.forEach((attr) => {
+                                updated[attr.attributeKey] = checked ? "public" : "private";
+                              });
+                              return updated;
+                            });
+                          }}
+                        />
+                      </div>
+                      <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={() => void handleSaveCommonAttributes()} disabled={savingCommonAttributes}>
+                        {savingCommonAttributes ? "Kaydediliyor..." : "Ortak Alanları Kaydet"}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           ) : null}
