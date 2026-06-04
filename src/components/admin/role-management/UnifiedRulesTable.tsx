@@ -335,13 +335,12 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
 
   return (
     <div className="overflow-x-auto rounded-lg border">
-      <Table className={bundle ? "min-w-[1420px] table-fixed" : "min-w-[980px] table-fixed"}>
+      <Table className={bundle ? "min-w-[1180px] table-fixed" : "min-w-[840px] table-fixed"}>
         <TableHeader>
           <TableRow>
             <TableHead className="w-16 whitespace-nowrap px-2 text-[11px]">Tür</TableHead>
-            <TableHead className="w-[17rem] whitespace-nowrap px-2 text-[11px]">Label</TableHead>
-            <TableHead className="w-[20rem] whitespace-nowrap px-2 text-[11px]">Key</TableHead>
-            <TableHead className="w-[24rem] whitespace-nowrap px-2 text-[11px]">Açıklama</TableHead>
+            <TableHead className="w-[15rem] whitespace-nowrap px-2 text-[11px]">Label</TableHead>
+            <TableHead className="w-[18rem] whitespace-nowrap px-2 text-[11px]">Açıklama</TableHead>
             {bundle && <TableHead className="whitespace-nowrap px-2 text-[11px]">Kurallar ({bundle.role.label})</TableHead>}
           </TableRow>
         </TableHeader>
@@ -371,9 +370,6 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
                     </span>
                   )}
                 </div>
-              </TableCell>
-              <TableCell className="px-2 py-2 whitespace-nowrap">
-                <p className="truncate text-[10px] font-mono text-muted-foreground" title={row.key}>{row.key}</p>
               </TableCell>
               <TableCell className="px-2 py-2 whitespace-nowrap">
                 {editingDesc === `${row.kind}:${row.key}` ? (
