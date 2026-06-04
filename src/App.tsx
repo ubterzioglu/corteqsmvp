@@ -87,6 +87,7 @@ import IndependentProfilePage from "@/pages/IndependentProfilePage";
 import AdminConsulateProfilesPage from "@/pages/admin/AdminConsulateProfilesPage";
 import AdminCatalogPage from "@/pages/admin/AdminCatalogPage";
 import AdminHelpPage from "@/pages/admin/AdminHelpPage";
+import AdminRoleCategoryFeatureGuidePage from "@/pages/admin/AdminRoleCategoryFeatureGuidePage";
 
 const queryClient = new QueryClient();
 
@@ -216,6 +217,7 @@ const App = () => (
                 <Route path="new-member/users-roles" element={<AdminLoginUsersRolesPage />} />
                 <Route path="data" element={<AdminCatalogPage />} />
                 <Route path="new-member/guide" element={<AdminNewMemberGuidePage />} />
+                <Route path="new-member/kategori-rol-feature-rehberi" element={<AdminRoleCategoryFeatureGuidePage />} />
                 <Route path="new-member/roles-features" element={<AdminRolesFeaturesPage />} />
                 <Route path="new-member/attributes" element={<AdminAttributesPage />} />
                 <Route path="new-member/profile-sections" element={<AdminProfileSectionsPage />} />

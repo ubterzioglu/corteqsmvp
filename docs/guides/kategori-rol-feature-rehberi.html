@@ -299,6 +299,7 @@
                     <li><a href="#categories">Kategoriler</a></li>
                     <li><a href="#features">Features</a></li>
                     <li><a href="#roles">Roller</a></li>
+                    <li><a href="#role-category-matrix">Rol · Kategori Matrisi</a></li>
                     <li><a href="#priority">Öncelik Sırası</a></li>
                 </ul>
 
@@ -516,6 +517,189 @@
                                 <td><span class="inline-code">sehir-elcisi</span></td>
                                 <td>Şehir Elçisi</td>
                                 <td>Şehir temsilcisi</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section" id="role-category-matrix">
+                    <h2>🧭 Rol · Kategori · Feature Matrisi</h2>
+                    <p>Bu matris, <strong>canlı veritabanı durumu</strong> yerine admin karar mantığını anlatır. Gerçek açık / kapalı durum için her zaman <span class="inline-code">/admin/new-member/roles-features</span> ekranındaki switch'lere bakın.</p>
+
+                    <h3>Seviye Anlamları</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Seviye</th>
+                                <th>Anlamı</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge success">Temel</span></td>
+                                <td>Bu rol için çoğu senaryoda beklenen ve sık kullanılan feature ailesi</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td>Ürün stratejisine, görünürlük kararına veya kullanıcı ihtiyacına göre açılır</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge">Operasyonel</span></td>
+                                <td>Ancak sorumluluk taşıyan veya görev atanan hesaplarda anlamlıdır</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge error">Yok</span></td>
+                                <td>Teknik scope veya ürün mantığı nedeniyle bu role uygulanmaz</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kategori</th>
+                                <th>Feature Ailesi</th>
+                                <th>Bireysel</th>
+                                <th>Danışman</th>
+                                <th>İşletme</th>
+                                <th>Kuruluş / Dernek</th>
+                                <th>İçerik Üreticisi</th>
+                                <th>Şehir Elçisi</th>
+                                <th>Admin Notu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Legacy bireysel profili</td>
+                                <td><span class="inline-code">individual.*</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge error">Yok</span></td>
+                                <td><span class="badge error">Yok</span></td>
+                                <td><span class="badge error">Yok</span></td>
+                                <td><span class="badge error">Yok</span></td>
+                                <td><span class="badge error">Yok</span></td>
+                                <td>Bu aile yalnızca <span class="inline-code">bireysel</span> scope'unda çalışır.</td>
+                            </tr>
+                            <tr>
+                                <td>Profil yönetimi</td>
+                                <td><span class="inline-code">profile.*</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td>Kendi profilini görme ve düzenleme neredeyse tüm rollerde çekirdek ihtiyaçtır.</td>
+                            </tr>
+                            <tr>
+                                <td>Directory görünürlüğü</td>
+                                <td><span class="inline-code">directory.*</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td>Bireyselde daha kontrollü, temsil ve uzmanlık rollerde daha yaygın kullanılır.</td>
+                            </tr>
+                            <tr>
+                                <td>İletişim ve erişim</td>
+                                <td><span class="inline-code">contact.*</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td>Mahremiyet etkisi olduğu için rol kadar kullanıcının isteği de önemlidir.</td>
+                            </tr>
+                            <tr>
+                                <td>İçerik üretimi</td>
+                                <td><span class="inline-code">content.*</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge">Operasyonel</span></td>
+                                <td>İçerik üreticisinde temel, diğer rollerde ise topluluk stratejisine göre açılır.</td>
+                            </tr>
+                            <tr>
+                                <td>Üretim aksiyonları</td>
+                                <td><span class="inline-code">events.create</span>, <span class="inline-code">offers.create</span>, <span class="inline-code">referral.create</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td>Bu yetkiler operasyon yükü getirir; varsayımla değil ihtiyaçla açılmalıdır.</td>
+                            </tr>
+                            <tr>
+                                <td>Platform erişimi</td>
+                                <td><span class="inline-code">cadde.access</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td>Geniş kullanıma uygun kabul edilir; canlı durum için global toggle ayrıca kontrol edilmelidir.</td>
+                            </tr>
+                            <tr>
+                                <td>Yerel operasyon</td>
+                                <td><span class="inline-code">city.manage</span>, <span class="inline-code">whatsapp_landing.edit_assigned</span></td>
+                                <td><span class="badge error">Yok</span></td>
+                                <td><span class="badge">Operasyonel</span></td>
+                                <td><span class="badge">Operasyonel</span></td>
+                                <td><span class="badge">Operasyonel</span></td>
+                                <td><span class="badge">Operasyonel</span></td>
+                                <td><span class="badge success">Temel</span></td>
+                                <td>Bu alanlar role değil görev atamasına göre açılmalıdır.</td>
+                            </tr>
+                            <tr>
+                                <td>Sistem güvenliği</td>
+                                <td><span class="inline-code">admin.requires_approval</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td><span class="badge warning">Seçimli</span></td>
+                                <td>Bu feature avantaj değil, kontrollü onay akışı anlamına gelir.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Hangi Değişiklik Hangi Ekranda?</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>İhtiyaç</th>
+                                <th>Gidilecek Ekran</th>
+                                <th>Yapılacak İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Bir roldeki herkes aynı şekilde etkilenecek</td>
+                                <td><span class="inline-code">/admin/new-member/roles-features</span></td>
+                                <td>İlgili rol sütunundaki switch'i değiştir</td>
+                            </tr>
+                            <tr>
+                                <td>Tek kullanıcıya istisna verilecek</td>
+                                <td><span class="inline-code">/admin/new-member/overrides</span></td>
+                                <td>Matrixi bozma; user override kullan</td>
+                            </tr>
+                            <tr>
+                                <td>Feature herkeste tamamen kapansın</td>
+                                <td><span class="inline-code">/admin/new-member/roles-features</span></td>
+                                <td>Önce global toggle'ı kapat</td>
+                            </tr>
+                            <tr>
+                                <td>Sorun feature değil profil parçası ya da alan görünürlüğü</td>
+                                <td>İlgili ayar ekranı</td>
+                                <td>Feature matrix yerine doğru modüle git</td>
                             </tr>
                         </tbody>
                     </table>

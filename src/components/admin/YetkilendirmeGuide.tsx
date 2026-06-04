@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import RoleCategoryFeatureMatrixSection from "@/components/admin/RoleCategoryFeatureMatrixSection";
 
 const YetkilendirmeGuide = () => {
   const [activeSection, setActiveSection] = useState("basla");
@@ -24,6 +25,7 @@ const YetkilendirmeGuide = () => {
     { id: "hikaye", label: "Hikaye" },
     { id: "roller", label: "Roller" },
     { id: "yetkiler", label: "Yetkiler" },
+    { id: "matris", label: "Rol-Kategori Matrisi" },
     { id: "itemler", label: "Katalog İtemler" },
     { id: "birlikli", label: "Hepsi Birlikte" },
     { id: "ornek", label: "Örnek Akış" },
@@ -218,6 +220,8 @@ const YetkilendirmeGuide = () => {
                 <strong className="text-green-700">✅ Kısaca:</strong> Her rolle gelen bir yetki listesi var. Blogger'lar blog yazabilir, etkinlik açabilir. Danışmanlar directory'de görünür.
               </div>
             </div>
+
+            <RoleCategoryFeatureMatrixSection />
 
             {/* KATALOG İTEMLER */}
             <div data-section="itemler" className="scroll-mt-4 mb-10">

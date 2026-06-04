@@ -231,6 +231,7 @@ const AdminLayout = () => {
     { to: "/admin/workspace/command-center", label: "CC" },
     { to: "/admin/members", label: "Üye Takibi" },
     { to: "/admin/new-member/guide", label: "Genel Kullanım Kılavuzu" },
+    { to: "/admin/new-member/kategori-rol-feature-rehberi", label: "Kategori / Rol / Feature HTML" },
     { to: "/admin/new-member/users-roles", label: "Loginli Kullanıcılar & Roller" },
     { to: "/admin/new-member/roles-features", label: "Roller & Featurelar" },
     { to: "/admin/new-member/attributes", label: "Attribute Yönetimi" },
