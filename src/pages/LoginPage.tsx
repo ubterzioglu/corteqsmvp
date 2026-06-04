@@ -161,9 +161,19 @@ const LoginPage = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <Tabs value={mode} onValueChange={(value) => updateMode(normalizeMode(value))}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">Giriş Yap</TabsTrigger>
-              <TabsTrigger value="signup">Kayıt Ol</TabsTrigger>
+            <TabsList className="grid h-auto w-full grid-cols-2 rounded-2xl bg-orange-100/70 p-1.5">
+              <TabsTrigger
+                value="login"
+                className="rounded-xl px-4 py-2.5 text-base font-semibold text-slate-600 data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-[0_10px_24px_rgba(249,115,22,0.35)]"
+              >
+                Giriş Yap
+              </TabsTrigger>
+              <TabsTrigger
+                value="signup"
+                className="rounded-xl px-4 py-2.5 text-base font-semibold text-slate-600 data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-[0_10px_24px_rgba(249,115,22,0.35)]"
+              >
+                Kayıt Ol
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="login" className="space-y-4">

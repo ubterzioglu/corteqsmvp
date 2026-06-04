@@ -38,7 +38,7 @@ export default function SiteHeader() {
           </Link>
 
           <div className="min-w-0 w-full md:flex-1">
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-center md:justify-end md:text-right">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 text-center md:justify-end md:text-right">
               <p className="text-sm font-semibold tracking-[0.03em] text-slate-800 sm:text-base">
                 Türk Diasporasını Birleştiren Platform
               </p>
@@ -53,6 +53,24 @@ export default function SiteHeader() {
               >
                 Biz kimiz?
               </Link>
+              <span
+                aria-hidden="true"
+                className="hidden h-5 w-px bg-slate-300/80 lg:block"
+              />
+              <div className="flex flex-wrap items-center justify-center gap-2 md:justify-end">
+                <Link
+                  to="/login?mode=login"
+                  className="inline-flex min-h-[42px] items-center justify-center rounded-xl border border-emerald-200/90 bg-emerald-50 px-4 text-sm font-semibold text-emerald-900 transition-colors hover:bg-emerald-100"
+                >
+                  Giriş Yap
+                </Link>
+                <Link
+                  to="/login?mode=signup"
+                  className="inline-flex min-h-[42px] items-center justify-center rounded-xl border border-orange-200/90 bg-orange-100 px-4 text-sm font-semibold text-orange-950 transition-colors hover:bg-orange-200"
+                >
+                  Kayıt Ol
+                </Link>
+              </div>
             </div>
           </div>
         </div>
