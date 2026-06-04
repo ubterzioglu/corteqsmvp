@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { setFeatureGlobalStateAsAdmin, setRoleFeatureFlagAsAdmin } from "@/lib/admin";
 import { getFeatureMeta } from "@/lib/features";
 import { HelpCircle, Info } from "lucide-react";
+import guideHtml from "@/assets/docs/yetkilendirme-rehberi.html?raw";
 
 type RoleRow = {
   id: string;
@@ -640,7 +641,7 @@ const AdminRolesFeaturesPage = () => {
           </DialogHeader>
           <div className="overflow-y-auto max-h-[calc(90vh-100px)]">
             <iframe
-              src="/docs/yetkilendirme-rehberi.html"
+              srcDoc={guideHtml}
               title="CorteQS Yetkilendirme Sistemi Tam Rehberi"
               className="w-full border-0"
               style={{ minHeight: "600px", height: "100%" }}
