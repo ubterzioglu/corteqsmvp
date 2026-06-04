@@ -1200,34 +1200,32 @@ const ProfilePage = () => {
                     {groupedAttributes.common
                       .filter((attr) => ["country", "city"].includes(attr.attributeKey))
                       .map((attribute) => (
-                        <ProfileAttributeEditor
-                          key={attribute.attributeKey}
-                          attribute={attribute}
-                          draftValue={draftValues[attribute.attributeKey]}
-                          draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
-                          displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
-                          isSaving={savingCommonAttributes}
-                          saveMode="section"
-                          visibilityMode="inline-switch"
-                          onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
-                          onVisibilityChange={(nextVisibility) =>
-                            setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
-                          }
-                        />
+                        <div key={attribute.attributeKey} className="space-y-1">
+                          <label className="text-[10px] font-medium text-foreground">
+                            {attribute.attributeKey === "country" ? "Ülke" : "Şehir"}
+                          </label>
+                          <AttributeInput
+                            attribute={attribute}
+                            value={draftValues[attribute.attributeKey]}
+                            onChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
+                          />
+                        </div>
                       ))}
                   </div>
 
-                  <div className="flex items-end gap-2">
+                  <div className="flex items-center gap-2">
                     <div className="flex-1 space-y-1">
                       <label className="text-[10px] font-medium text-foreground">Kısa Açıklama</label>
                       {groupedAttributes.common
                       .filter((attr) => attr.attributeKey === "bio_short")
                       .map((attribute) => (
-                        <AttributeInput
+                        <Input
                           key={attribute.attributeKey}
-                          attribute={attribute}
-                          value={draftValues[attribute.attributeKey]}
-                          onChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
+                          type="text"
+                          value={typeof draftValues[attribute.attributeKey] === "string" ? draftValues[attribute.attributeKey] : ""}
+                          onChange={(event) => handleDraftChange(attribute.attributeKey, event.target.value)}
+                          placeholder={attribute.label}
+                          className="h-8 text-[10px] placeholder:text-[10px]"
                         />
                       ))}
                     </div>
