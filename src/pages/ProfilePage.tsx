@@ -1166,13 +1166,19 @@ const ProfilePage = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1.5 shrink-0 min-w-fit">
-                    <span className="text-[11px] font-medium text-foreground">{roleMeta?.displayNameLabel ?? "Görünen İsim"}</span>
+                  <div className="flex items-center gap-1.5 shrink-0 w-32">
+                    <span className="text-[10px] font-medium text-foreground truncate">{roleMeta?.displayNameLabel ?? "Görünen İsim"}</span>
                     {displayNameAttribute.isRequired ? (
-                      <Badge variant="secondary" className="px-1.5 py-0 text-[11px]">Zorunlu</Badge>
+                      <Badge variant="secondary" className="px-1.5 py-0 text-[9px] shrink-0">Zorunlu</Badge>
                     ) : null}
                   </div>
-                  <AttributeInput attribute={displayNameAttribute} value={draftValues[displayNameAttribute.attributeKey]} onChange={(nextValue) => handleDraftChange(displayNameAttribute.attributeKey, nextValue)} />
+                  <Input
+                    type="text"
+                    value={typeof draftValues[displayNameAttribute.attributeKey] === "string" ? draftValues[displayNameAttribute.attributeKey] : ""}
+                    onChange={(event) => handleDraftChange(displayNameAttribute.attributeKey, event.target.value)}
+                    placeholder={displayNameAttribute.label}
+                    className="h-8 flex-1 text-[10px] placeholder:text-[10px]"
+                  />
                   <div className={`flex items-center gap-1.5 rounded-full px-2 shrink-0 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
                     {draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility === "public" ? (
                       <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
@@ -1186,8 +1192,6 @@ const ProfilePage = () => {
                       aria-label={`${roleMeta?.displayNameLabel ?? "Görünen İsim"} görünürlük`}
                     />
                   </div>
-                </div>
-                <div className="flex justify-end">
                   <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={() => void handleSaveAttribute(displayNameAttribute)} disabled={!displayNameAttribute.userCanEdit || savingAttributeKey === displayNameAttribute.attributeKey}>
                     {savingAttributeKey === displayNameAttribute.attributeKey ? "Kaydediliyor..." : displayNameAttribute.attributeKey === "full_name" ? "Ad Soyadı Kaydet" : "İsmi Kaydet"}
                   </Button>
