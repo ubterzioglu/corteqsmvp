@@ -4,12 +4,14 @@ import AdminPageGuideAccordion, { type AdminPageGuideSection } from "@/component
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { setFeatureGlobalStateAsAdmin, setRoleFeatureFlagAsAdmin } from "@/lib/admin";
 import { getFeatureMeta } from "@/lib/features";
-import { Info } from "lucide-react";
+import { HelpCircle, Info } from "lucide-react";
 
 type RoleRow = {
   id: string;
@@ -361,6 +363,7 @@ const AdminRolesFeaturesPage = () => {
   const [features, setFeatures] = useState<FeatureCatalogRow[]>([]);
   const [flagMap, setFlagMap] = useState<Record<string, Record<string, boolean>>>({});
   const [savingKey, setSavingKey] = useState<string | null>(null);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -491,10 +494,24 @@ const AdminRolesFeaturesPage = () => {
       />
       <Card>
         <CardHeader className="space-y-2 pb-4">
-          <CardTitle className="text-[2rem] leading-tight">New Member System - Rol / Feature Matrix</CardTitle>
-          <CardDescription className="text-[13px] leading-5">
-            Satır bazında feature, sütun bazında rol görünümü. Global durum ve role göre açık/kapalı durumu aynı ekranda yönetilir.
-          </CardDescription>
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-1">
+              <CardTitle className="text-[2rem] leading-tight">New Member System - Rol / Feature Matrix</CardTitle>
+              <CardDescription className="text-[13px] leading-5">
+                Satır bazında feature, sütun bazında rol görünümü. Global durum ve role göre açık/kapalı durumu aynı ekranda yönetilir.
+              </CardDescription>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setHelpOpen(true)}
+              className="mt-0.5 shrink-0"
+              aria-label="Yetkilendirme sistemi rehberini aç"
+            >
+              <HelpCircle className="h-4 w-4 mr-1.5" />
+              Yardım
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="pt-0">
           {isLoading ? <p className="text-sm text-muted-foreground">Feature matrisi yükleniyor...</p> : null}
@@ -615,6 +632,22 @@ const AdminRolesFeaturesPage = () => {
           ) : null}
         </CardContent>
       </Card>
+
+      <Dialog open={helpOpen} onOpenChange={setHelpOpen}>
+        <DialogContent className="max-w-5xl max-h-[90vh] p-0">
+          <DialogHeader className="px-6 pt-6 pb-0">
+            <DialogTitle>Yetkilendirme Sistemi — Tam Rehberi</DialogTitle>
+          </DialogHeader>
+          <div className="overflow-y-auto max-h-[calc(90vh-100px)]">
+            <iframe
+              src="/docs/yetkilendirme-rehberi.html"
+              title="CorteQS Yetkilendirme Sistemi Tam Rehberi"
+              className="w-full border-0"
+              style={{ minHeight: "600px", height: "100%" }}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

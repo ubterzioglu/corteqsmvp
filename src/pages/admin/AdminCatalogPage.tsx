@@ -1,5 +1,5 @@
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
-import { Database, MapPin, Search, SlidersHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight, Database, MapPin, Search, SlidersHorizontal } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,8 @@ import {
   type AdminCatalogFilters,
   type AdminCatalogItemType,
 } from "@/lib/admin-catalog";
+
+const PAGE_SIZE = 50;
 
 const DEFAULT_FILTERS: AdminCatalogFilters = {
   query: "",
@@ -68,6 +70,7 @@ const AdminCatalogPage = () => {
   const [filters, setFilters] = useState<AdminCatalogFilters>(DEFAULT_FILTERS);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const deferredQuery = useDeferredValue(filters.query);
 
@@ -139,7 +142,15 @@ const AdminCatalogPage = () => {
 
   const handleFilterChange = <K extends keyof AdminCatalogFilters>(key: K, value: AdminCatalogFilters[K]) => {
     setFilters((current) => ({ ...current, [key]: value }));
+    setCurrentPage(1);
   };
+
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE));
+
+  const paginatedItems = useMemo(
+    () => filteredItems.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
+    [filteredItems, currentPage],
+  );
 
   return (
     <>
@@ -190,7 +201,7 @@ const AdminCatalogPage = () => {
                 <CardTitle>Data</CardTitle>
                 <CardDescription>Başlık, slug, kategori, kaynak tipi ve lokasyon üzerinden katalog kayıtlarını filtrele.</CardDescription>
               </div>
-              <Button variant="outline" onClick={() => setFilters(DEFAULT_FILTERS)}>
+              <Button variant="outline" onClick={() => { setFilters(DEFAULT_FILTERS); setCurrentPage(1); }}>
                 Filtreleri Temizle
               </Button>
             </div>
@@ -303,7 +314,7 @@ const AdminCatalogPage = () => {
                   ) : null}
 
                   {!isLoading
-                    ? filteredItems.map((item) => (
+                    ? paginatedItems.map((item) => (
                         <TableRow
                           key={item.id}
                           className="cursor-pointer"
@@ -343,6 +354,60 @@ const AdminCatalogPage = () => {
                 </TableBody>
               </Table>
             </div>
+
+            {totalPages > 1 ? (
+              <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                <div className="text-xs text-slate-600">
+                  {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filteredItems.length)} / {filteredItems.length} kayıt
+                </div>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    disabled={currentPage <= 1}
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 2)
+                    .reduce<(number | "ellipsis")[]>((acc, p, idx, arr) => {
+                      if (idx > 0) {
+                        const prev = arr[idx - 1];
+                        if (p - prev > 1) acc.push("ellipsis");
+                      }
+                      acc.push(p);
+                      return acc;
+                    }, [])
+                    .map((item, idx) =>
+                      item === "ellipsis" ? (
+                        <span key={`ellipsis-${idx}`} className="px-1 text-xs text-slate-400">…</span>
+                      ) : (
+                        <button
+                          key={item}
+                          type="button"
+                          onClick={() => setCurrentPage(item)}
+                          className={`inline-flex h-8 w-8 items-center justify-center rounded-md border text-sm ${
+                            item === currentPage
+                              ? "border-slate-900 bg-slate-900 font-medium text-white"
+                              : "border-slate-200 hover:bg-slate-50"
+                          }`}
+                        >
+                          {item}
+                        </button>
+                      ),
+                    )}
+                  <button
+                    type="button"
+                    disabled={currentPage >= totalPages}
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            ) : null}
 
             <div className="flex items-center gap-2 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-xs text-slate-600">
               <SlidersHorizontal className="h-4 w-4 shrink-0 text-slate-500" />

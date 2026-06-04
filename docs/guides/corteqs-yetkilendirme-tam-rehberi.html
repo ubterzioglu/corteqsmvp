@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CorteQS Yetkilendirme Sistemi — Tam Rehberi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 0;
+            min-height: 600px;
+            background: white;
+        }
+
+        .sidebar {
+            background: #f9f9f9;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+        }
+
+        .sidebar h3 {
+            font-size: 0.85em;
+            color: #667eea;
+            text-transform: uppercase;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .sidebar h3:first-child {
+            margin-top: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar a {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9em;
+            display: block;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background: #e8e8ff;
+            color: #667eea;
+            padding-left: 15px;
+        }
+
+        .main {
+            padding: 40px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section h3 {
+            font-size: 1.3em;
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .section h4 {
+            font-size: 1.1em;
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+
+        thead {
+            background: #667eea;
+            color: white;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tbody tr:nth-child(odd) {
+            background: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background: #f0f0ff;
+        }
+
+        pre, .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 0.9em;
+            line-height: 1.5;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+
+        .flow {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', monospace;
+            font-size: 0.95em;
+            line-height: 1.8;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .inline-code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Monaco', monospace;
+            color: #d63384;
+        }
+
+        .box, .step-box {
+            background: #f9f9ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            font-size: 1.05em;
+        }
+
+        .success {
+            background: #dcfce7;
+            border-left: 4px solid #22c55e;
+        }
+
+        .warning {
+            background: #fef08a;
+            border-left: 4px solid #eab308;
+        }
+
+        .error {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+        }
+
+        .step-box strong {
+            color: #667eea;
+        }
+
+        .box {
+            background: #fff5f7;
+            border-left: 4px solid #f5576c;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        blockquote {
+            border-left: 4px solid #667eea;
+            background: #f9f9ff;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        blockquote p {
+            margin: 0;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #e0e0e0;
+            margin: 40px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .badge.success {
+            background: #28a745;
+        }
+
+        .badge.warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .badge.error {
+            background: #dc3545;
+        }
+
+        .footer {
+            background: #f9f9f9;
+            border-top: 1px solid #e0e0e0;
+            padding: 20px 40px;
+            text-align: center;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 1024px) {
+            .content-wrapper {
+                grid-template-columns: 250px 1fr;
+            }
+
+            .sidebar {
+                font-size: 0.9em;
+            }
+
+            .main {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                max-height: none;
+                position: relative;
+                top: auto;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+                margin-bottom: 20px;
+            }
+
+            .main {
+                padding: 20px;
+                max-height: none;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            table {
+                font-size: 0.85em;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 CorteQS Yetkilendirme Sistemi — Tam Rehberi</h1>
+            <p>Kategori · Rol · Feature · Claim Sistemi Tüm Kılavuz</p>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="sidebar">
+                <h3>📚 BAŞLANGIÇ</h3>
+                <ul>
+                    <li><a href="#intro">Giriş</a></li>
+                    <li><a href="#model">3 Katman Modeli</a></li>
+                </ul>
+
+                <h3>🎯 KATEGORİ-ROL-FEATURE</h3>
+                <ul>
+                    <li><a href="#kategoriler">Kategoriler</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#roller">Roller</a></li>
+                    <li><a href="#oncelik">Öncelik Sırası</a></li>
+                </ul>
+
+                <h3>💡 BASIT REHBER</h3>
+                <ul>
+                    <li><a href="#basit-basla">Başlangıç</a></li>
+                    <li><a href="#hikaye">Basit Hikaye</a></li>
+                    <li><a href="#itemler">Katalog İtemler</a></li>
+                    <li><a href="#birlikli">Hepsi Birlikte</a></li>
+                </ul>
+
+                <h3>🏷️ CLAIM SİSTEMİ</h3>
+                <ul>
+                    <li><a href="#claim-nedir">Claim Nedir?</a></li>
+                    <li><a href="#claim-adimlar">Adım Adım</a></li>
+                    <li><a href="#claim-ornegi">Örnek Senaryolar</a></li>
+                    <li><a href="#claim-admin">Admin Kontrolü</a></li>
+                </ul>
+
+                <h3>⚙️ ADMIN</h3>
+                <ul>
+                    <li><a href="#admin-arayuzler">Admin Arayüzleri</a></li>
+                    <li><a href="#admin-senaryolar">Pratik Senaryolar</a></li>
+                    <li><a href="#hatalar">Ortak Hatalar</a></li>
+                    <li><a href="#sorular">SSS</a></li>
+                </ul>
+
+                <h3>🔧 TEKNİK</h3>
+                <ul>
+                    <li><a href="#teknik-detay">Tablo İlişkileri</a></li>
+                    <li><a href="#rpc">RPC Mantığı</a></li>
+                </ul>
+            </div>
+
+            <div class="main">
+                <!-- ========== BAŞLANGIÇ ========== -->
+                <div class="section" id="intro">
+                    <h2>🚀 Giriş</h2>
+                    <p>CorteQS Fin'de kullanıcı yetkileri <strong>kategori → feature → rol</strong> hiyerarşisi ile yönetilir. Ayrıca, sahipsiz katalog itemlerinin sahiplik taleplerini kontrol eden bir <strong>claim sistemi</strong> vardır. Bu rehber her şeyi adım adım açıklıyor.</p>
+                </div>
+
+                <div class="section" id="model">
+                    <h2>1️⃣ Üç Katman Modeli</h2>
+                    <p>Yetkilendirme sistemi üç katmandan oluşur:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Katman</th>
+                                <th>Nerede Tutulur</th>
+                                <th>Ne İşe Yarar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Kategori</strong></td>
+                                <td><span class="inline-code">src/lib/features.ts</span></td>
+                                <td>Feature'ları mantıksal gruplara ayırır (Profil, Directory, İletişim, vb.)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Feature</strong></td>
+                                <td><span class="inline-code">feature_catalog</span> tablosu</td>
+                                <td>Somut bir yetki (örn. "directory.visible")</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rol</strong></td>
+                                <td><span class="inline-code">roles</span> tablosu</td>
+                                <td>Kullanıcı tipi; feature'ları toplu açar/kapar</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Override</strong></td>
+                                <td><span class="inline-code">user_feature_overrides</span> tablosu</td>
+                                <td>Tek kullanıcıya rol dışı istisna yetki</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ========== KATEGORİ-ROL-FEATURE ========== -->
+                <div class="section" id="kategoriler">
+                    <h2>📋 Kategoriler — Organize Yapı</h2>
+                    <p><strong>Kategori</strong>, feature'ları admin arayüzünde organize göstermek için kullanılan mantıksal gruptur. <em>7 kategori vardır:</em></p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Simge</th>
+                                <th>Kategori</th>
+                                <th>Features</th>
+                                <th>Amaç</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>📋</td>
+                                <td>Profil Yönetimi</td>
+                                <td><span class="inline-code">profile.*</span></td>
+                                <td>Profil görüntüleme ve düzenleme</td>
+                            </tr>
+                            <tr>
+                                <td>🗂️</td>
+                                <td>Directory</td>
+                                <td><span class="inline-code">directory.*</span></td>
+                                <td>Public directory görünürlüğü</td>
+                            </tr>
+                            <tr>
+                                <td>💬</td>
+                                <td>İletişim</td>
+                                <td><span class="inline-code">contact.*</span></td>
+                                <td>İletişim talepleri alma</td>
+                            </tr>
+                            <tr>
+                                <td>✍️</td>
+                                <td>İçerik</td>
+                                <td><span class="inline-code">content.*</span></td>
+                                <td>İçerik oluşturma ve düzenleme</td>
+                            </tr>
+                            <tr>
+                                <td>🎯</td>
+                                <td>Üretim</td>
+                                <td><span class="inline-code">events.*</span>, <span class="inline-code">offers.*</span>, <span class="inline-code">referral.*</span></td>
+                                <td>Etkinlik, teklif, referral oluşturma</td>
+                            </tr>
+                            <tr>
+                                <td>🌐</td>
+                                <td>Platform</td>
+                                <td><span class="inline-code">cadde.*</span>, <span class="inline-code">city.*</span></td>
+                                <td>Platform özel alanları</td>
+                            </tr>
+                            <tr>
+                                <td>⚙️</td>
+                                <td>Sistem</td>
+                                <td><span class="inline-code">admin.*</span></td>
+                                <td>Admin kontrolleri</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <blockquote>
+                        <p><strong>⚠️ Önemli:</strong> Kategoriler sadece UI'da organizasyondur. Veritabanında feature'ları yönetmez.</p>
+                    </blockquote>
+                </div>
+
+                <div class="section" id="features">
+                    <h2>✨ Features — Somut Yetkiler</h2>
+                    <p><strong>Feature</strong>, bir somut yetki veya işlevsellik. Veritabanında <span class="inline-code">feature_catalog</span> tablosunda tutulur.</p>
+
+                    <p><strong>Örnekler:</strong></p>
+                    <ul>
+                        <li><span class="inline-code">profile.view_own</span> → Kullanıcı kendi profilini görebilir</li>
+                        <li><span class="inline-code">directory.visible</span> → Kullanıcı public directory'de listelenebilir</li>
+                        <li><span class="inline-code">events.create</span> → Kullanıcı etkinlik oluşturabilir</li>
+                    </ul>
+
+                    <h4>Feature'ın Özellikleri</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Özellik</th>
+                                <th>Açıklama</th>
+                                <th>Örnek</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Key</strong></td>
+                                <td>Unique identifier</td>
+                                <td><span class="inline-code">profile.edit_own</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Label</strong></td>
+                                <td>Türkçe görünen ad</td>
+                                <td>"Kendi Profilini Düzenle"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Global State</strong></td>
+                                <td>Sistem genelinde açık mı?</td>
+                                <td><span class="badge success">true</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Scope Role</strong></td>
+                                <td>Hangi role(ler) için?</td>
+                                <td><span class="inline-code">*</span> (tüm) veya specific</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section" id="roller">
+                    <h2>👥 Roller — Kullanıcı Tipleri</h2>
+                    <p>Sistemde <strong>6 aktif rol</strong> vardır. Kullanıcı başına bir rol atanır.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rol Key</th>
+                                <th>Görünen Ad</th>
+                                <th>Kullanıcı Tipi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="inline-code">bireysel</span></td>
+                                <td>Bireysel Kullanıcı</td>
+                                <td>Standart üye</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">danisman</span></td>
+                                <td>Danışman</td>
+                                <td>Profesyonel danışman</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">isletme</span></td>
+                                <td>İşletme</td>
+                                <td>Şirket / işletme</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">kurulus-dernek</span></td>
+                                <td>Kuruluş / Dernek</td>
+                                <td>Sivil toplum</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">blogger-vlogger-youtuber</span></td>
+                                <td>İçerik Üreticisi</td>
+                                <td>Blog/vlog üreticileri</td>
+                            </tr>
+                            <tr>
+                                <td><span class="inline-code">sehir-elcisi</span></td>
+                                <td>Şehir Elçisi</td>
+                                <td>Şehir temsilcisi</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section" id="oncelik">
+                    <h2>⚡ Öncelik Sırası — Feature Karar Ağacı</h2>
+                    <p>Bir kullanıcı feature X'i kullanabilir mi? Bu karar şu sırayla belirlenir:</p>
+
+                    <pre>1. GLOBAL DURUM
+   └─ is_active_globally = FALSE? → ❌ KİMSE KULLANAMIYOR
+
+2. KULLANICI OVERRIDE
+   └─ user_feature_overrides = TRUE? → ✅ VERİLİ
+
+3. ROL FEATURE BAYRĞI
+   └─ role_feature_flags = TRUE? → ✅ VERİLİ
+
+4. ROL FEATURE VARSAYILANI
+   └─ role_feature_defaults = TRUE? → ✅ VERİLİ
+
+SONUÇ: Yukarıdaki ilk kural uygulanır (en spesifik kazanır)</pre>
+
+                    <h4>Örnek Senaryolar</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Durum</th>
+                                <th>Sonuç</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Global kapalı, rol açık, override yok</td>
+                                <td><span class="badge error">❌ Kapalı</span></td>
+                            </tr>
+                            <tr>
+                                <td>Global açık, rol kapalı, override = açık</td>
+                                <td><span class="badge success">✅ Açık</span></td>
+                            </tr>
+                            <tr>
+                                <td>Global açık, rol açık, override = kapalı</td>
+                                <td><span class="badge warning">⚠️ Kapalı</span> (override kazandı)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <blockquote>
+                        <p><strong>Kural:</strong> Global toggle kapalıysa, override bile o feature'ı açamaz!</p>
+                    </blockquote>
+                </div>
+
+                <!-- ========== BASIT REHBER ========== -->
+                <div class="section" id="basit-basla">
+                    <h2>🌟 Basit Başlangıç — Çok Basit Rehber</h2>
+                    <p>Teknik detaylara girmeden, basit bir şekilde sistemi anlayalım:</p>
+                </div>
+
+                <div class="section" id="hikaye">
+                    <h2>📖 Basit Bir Hikaye: Ayşe'nin Yolculuğu</h2>
+                    <p>Ayşe adında birisi var. Ayşe ne yapabileceğini anlamak istiyorum:</p>
+
+                    <div class="step-box">
+                        <strong>Adım 1: Ayşe kim?</strong><br>
+                        Ayşe bir "Blogger". Bu onun <span class="highlight">Rolü</span>.
+                    </div>
+
+                    <div class="step-box">
+                        <strong>Adım 2: Blogger ne yapabilir?</strong><br>
+                        Blogger şu şeyleri yapabilir:
+                        <ul>
+                            <li>✅ Blog yazısı yazmak</li>
+                            <li>✅ Etkinlik oluşturmak</li>
+                            <li>❌ Danışman profili açmak (bunu yapamaz)</li>
+                            <li>❌ İş ilanı yayınlamak (bunu yapamaz)</li>
+                        </ul>
+                        Bunlar Blogger'ın <span class="highlight">Yetkileri</span>.
+                    </div>
+
+                    <div class="step-box">
+                        <strong>Adım 3: Ayşe etkinlik oluşturmak istiyor</strong><br>
+                        Sistem kontrol ediyor:
+                        <ul>
+                            <li>Ayşe blogger mi? ✅ EVET</li>
+                            <li>Blogger'lar etkinlik oluşturabilir mi? ✅ EVET</li>
+                            <li>O halde izin ver!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section" id="itemler">
+                    <h2>📦 Katalog İtemler — Oluşturulan Şeyler</h2>
+                    <p>İtemler, platformda gerçekten oluşturulan şeylerdir:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>İtem Tipi</th>
+                                <th>Ne?</th>
+                                <th>Örnek</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Danışman Profili</strong></td>
+                                <td>Birinin danışman sayfası</td>
+                                <td>Ahmet'in hukuk danışmanı profili</td>
+                            </tr>
+                            <tr>
+                                <td><strong>İşletme Profili</strong></td>
+                                <td>Bir dükkan/restoran sayfası</td>
+                                <td>ABC Restoran'ın sayfası</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Etkinlik</strong></td>
+                                <td>Bir etkinlik duyurusu</td>
+                                <td>Yazılım konferansı — 15 Haziran</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Blog Yazısı</strong></td>
+                                <td>Bir blog yazısı</td>
+                                <td>"React'e Giriş" yazısı</td>
+                            </tr>
+                            <tr>
+                                <td><strong>İş İlanı</strong></td>
+                                <td>Açık pozisyon</td>
+                                <td>Junior Developer arıyoruz</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section" id="birlikli">
+                    <h2>🔗 Hepsi Birlikte Nasıl Çalışır?</h2>
+                    <div class="flow">
+┌──────────────────────────────────┐
+│ AYŞE GIRIŞ YAPIYOR               │
+└──────────────────────────────────┘
+         ⬇️
+┌──────────────────────────────────┐
+│ SİSTEM KONTROL EDİYOR:           │
+│ "Ayşe kim?"                      │
+│ CEVAP: "Blog yazarı" (Blogger)   │
+└──────────────────────────────────┘
+         ⬇️
+┌──────────────────────────────────┐
+│ "Blogger ne yapabilir?"          │
+│ ✅ Blog yazı yazabilir           │
+│ ✅ Etkinlik oluşturabilir        │
+│ ❌ Danışman profili açamaz       │
+└──────────────────────────────────┘
+         ⬇️
+┌──────────────────────────────────┐
+│ AYŞE BLOG YAZISINA TIKLADI        │
+└──────────────────────────────────┘
+         ⬇️
+┌──────────────────────────────────┐
+│ "Blogger blog yazı yazabilir mi?"│
+│ CEVAP: EVET ✅                   │
+└──────────────────────────────────┘
+         ⬇️
+┌──────────────────────────────────┐
+│ "O HALDE İZİN VER!"              │
+│ Ayşe blog yazı yazabiliyor       │
+└──────────────────────────────────┘
+                    </div>
+                </div>
+
+                <!-- ========== CLAIM SİSTEMİ ========== -->
+                <div class="section" id="claim-nedir">
+                    <h2>🏷️ Claim Sistemi — Sahiplik Talepleri</h2>
+                    <p>Claim sistemi, birinin sahip olduğu bir şeyi (işletme, danışman profili, vb.) sistemde talep etmesine izin verir.</p>
+
+                    <div class="box">
+                        <strong>Basit örnek:</strong><br>
+                        ABC Restoran eski bir katalog item'i. Hiç kimse oluşturmadı. Gerçek restaurant sahibi bulundu ve "bu benim işletmem" dedi. Claim sistemi bunu kontrol edip, sahibiliği verir.
+                    </div>
+
+                    <h3>Ne Zaman Claim Yapılır?</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Durum</th>
+                                <th>Neden?</th>
+                                <th>Örnek</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Eski/İthal Item</strong></td>
+                                <td>Sistemde var ama kimse oluşturmadı</td>
+                                <td>Eski restoran listesi, ithal edilen işletmeler</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sahipsiz Profil</strong></td>
+                                <td>Profil var ama sahibi giriş yapmadı</td>
+                                <td>Gerçek danışman, profili buldu</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Doğrulama</strong></td>
+                                <td>Sahipliği kanıtlamak gerekli</td>
+                                <td>Sertifika, ruhsat, belgeler</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section" id="claim-adimlar">
+                    <h2>👣 Claim Adım Adım</h2>
+
+                    <div class="step-box">
+                        <strong>1️⃣ Sahip Katalogu Bulur</strong><br>
+                        "ABC Restoran" var mı diye arar.
+                    </div>
+
+                    <div class="step-box">
+                        <strong>2️⃣ "Bu Benim" Butonuna Tıklar</strong><br>
+                        "Claim This Business" veya "Bu Benim" butonuna tıklar.
+                    </div>
+
+                    <div class="step-box">
+                        <strong>3️⃣ Talep Formu Doldurur</strong><br>
+                        <ul>
+                            <li><strong>Claim Tipi:</strong> "ownership" (sahiplik)</li>
+                            <li><strong>Kanıt (Evidence):</strong> Fotoğraf, sertifika, ruhsat dosyası</li>
+                            <li><strong>Not:</strong> Neden bu benim? Açıklama</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-box">
+                        <strong>4️⃣ Gönderir</strong><br>
+                        Talep sisteme kaydedilir. Status = <span class="highlight">pending</span>
+                    </div>
+
+                    <div class="step-box success">
+                        <strong>5️⃣ Admin İnceliyor ve Onaylarsa</strong><br>
+                        <ul>
+                            <li>✅ Sahiplik talep edene verilir</li>
+                            <li>✅ Item'in sahibi değişir</li>
+                            <li>✅ Kişi artık o item'i yönetebilir</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section" id="claim-ornegi">
+                    <h2>📖 Claim Senaryoları</h2>
+
+                    <h3>Başarılı Senaryo: Restaurant Sahibi</h3>
+                    <p>Mehmet'in "Mehmet's Kebab" adında bir restoran var. Sitede bu restaurant zaten var. Mehmet "bu benim" demek istiyor.</p>
+
+                    <div class="step-box">
+                        <strong>1. Mehmet'in Yaptığı:</strong><br>
+                        <ul>
+                            <li>Restoran katalogunu bulur</li>
+                            <li>"Bu İşletmem" butonuna tıklar</li>
+                            <li>Form doldurur: Ruhsat fotoğrafı, işletme belgesi, açıklama</li>
+                            <li>Gönderir</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-box">
+                        <strong>2. Sistem'in Yaptığı:</strong><br>
+                        <ul>
+                            <li>Talep kaydediliyor: <span class="highlight">catalog_claim_requests</span> tablosuna</li>
+                            <li>Status: <span class="highlight">pending</span></li>
+                            <li>Admin paneline düşüyor</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-box success">
+                        <strong>3. Admin Onaylarsa:</strong><br>
+                        <ul>
+                            <li>✅ Talep status = <span class="highlight">approved</span></li>
+                            <li>✅ Restaurant'ın sahibi = Mehmet</li>
+                            <li>✅ Mehmet artık restoran'ı düzenleyebiliyor</li>
+                        </ul>
+                    </div>
+
+                    <hr>
+
+                    <h3>Başarısız Senaryo: Kanıtsız Claim</h3>
+                    <p>Ahmet bir restoran buldu ve "bu benim" dedi ama kanıt yok.</p>
+
+                    <div class="step-box error">
+                        <strong>❌ Admin Reddederse:</strong><br>
+                        <ul>
+                            <li>Kanıt yok → Şüpheli</li>
+                            <li>Talep status = <span class="highlight">rejected</span></li>
+                            <li>Ahmet tekrar deneyebilir (kanıtla)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section" id="claim-admin">
+                    <h2>🔧 Admin: Claim Kontrolü</h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Durum</th>
+                                <th>Anlamı</th>
+                                <th>Sonrası</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="highlight">pending</span></td>
+                                <td>Talep yapıldı, admin incelemedi</td>
+                                <td>Admin kontrol edebilir</td>
+                            </tr>
+                            <tr>
+                                <td><span class="highlight">approved</span></td>
+                                <td>Admin onayladı</td>
+                                <td>Sahiplik verildi, işlem bitti</td>
+                            </tr>
+                            <tr>
+                                <td><span class="highlight">rejected</span></td>
+                                <td>Admin reddetti</td>
+                                <td>Yeni talep açılabilir</td>
+                            </tr>
+                            <tr>
+                                <td><span class="highlight">cancelled</span></td>
+                                <td>Talep iptal edildi</td>
+                                <td>Yeni talep açılabilir</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Admin Neler Yapabilir?</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>İşlem</th>
+                                <th>Ne Yapar?</th>
+                                <th>Nerede?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Talep İncele</strong></td>
+                                <td>Kanıt ve detayları görebilir</td>
+                                <td>/admin/approvals</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Approve</strong></td>
+                                <td>Sahiplik verilir</td>
+                                <td>/admin/approvals → Approve</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Reject</strong></td>
+                                <td>Talep reddedilir</td>
+                                <td>/admin/approvals → Reject</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Not Ekle</strong></td>
+                                <td>Neden karar verdi not düşebilir</td>
+                                <td>/admin/approvals → Review Note</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ========== ADMIN ARAYÜZLER ========== -->
+                <div class="section" id="admin-arayuzler">
+                    <h2>🖥️ Admin Arayüzleri — Kontrol Panelleri</h2>
+
+                    <h3>1. /admin/new-member/roles-features — Çapraz Tablo</h3>
+                    <p><strong>Ne gösterilir?</strong></p>
+                    <ul>
+                        <li>Satırlar: Tüm features (kategori başlıklarıyla gruplu)</li>
+                        <li>Sütunlar: Tüm roller</li>
+                    </ul>
+
+                    <p><strong>Ne yapılır?</strong></p>
+                    <ul>
+                        <li>Global toggle: Feature'ı sistem genelinde aç/kapat</li>
+                        <li>Hücre toggle: İlgili rolde o feature açık mı?</li>
+                    </ul>
+
+                    <h3>2. /admin/new-member/users-roles — Kullanıcı Roller</h3>
+                    <p>Bireysel kullanıcılara rol atama, effective features özeti gösterme</p>
+
+                    <h3>3. /admin/new-member/overrides — Kullanıcı İstisnaları</h3>
+                    <p>Tek kullanıcıya, rolünden bağımsız olarak feature açıp kapatma</p>
+
+                    <blockquote>
+                        <p><strong>💡 İpucu:</strong> Override verirken neden alanını doldurun. Audit logda kritiktir!</p>
+                    </blockquote>
+                </div>
+
+                <div class="section" id="admin-senaryolar">
+                    <h2>📖 Pratik Admin Senaryoları</h2>
+
+                    <h3>Senaryo 1: Yeni İçerik Üreticisi Ekle</h3>
+                    <p><strong>Amaç:</strong> BloggerX'i <span class="inline-code">blogger-vlogger-youtuber</span> rolüyle ekle, içerik oluşturabilsin.</p>
+                    <ol>
+                        <li>/admin/new-member/users-roles → BloggerX → Rol = <span class="inline-code">blogger-vlogger-youtuber</span></li>
+                        <li>/admin/new-member/roles-features → <span class="inline-code">content.create</span> satırı → sütun = ✅</li>
+                        <li>BloggerX oturum açınca <span class="inline-code">content.create</span> = true döner</li>
+                        <li>✅ BloggerX içerik oluşturabilir</li>
+                    </ol>
+
+                    <h3>Senaryo 2: Danışman'ı Directory'de Gizle</h3>
+                    <p><strong>Amaç:</strong> DoctorX (danisman) directory'de görünmesin.</p>
+                    <ol>
+                        <li>/admin/new-member/overrides → DoctorX seç</li>
+                        <li><span class="inline-code">directory.visible</span> → ❌ disable</li>
+                        <li>Neden: "Mahremiyet isteği"</li>
+                        <li>✅ DoctorX directory'de gizli kalır</li>
+                    </ol>
+
+                    <h3>Senaryo 3: Tüm Kullanıcılara Etkinlik Oluşturma Kapalı</h3>
+                    <p><strong>Amaç:</strong> <span class="inline-code">events.create</span> feature'ını system genelinde kapat (geçici).</p>
+                    <ol>
+                        <li>/admin/new-member/roles-features → <span class="inline-code">events.create</span> satırı</li>
+                        <li>Global toggle → ❌ kapalı</li>
+                        <li>✅ Tüm roller için etkinlik oluşturma kapalı</li>
+                    </ol>
+                </div>
+
+                <div class="section" id="hatalar">
+                    <h2>⚠️ Ortak Hatalar ve Çözümleri</h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Hata</th>
+                                <th>Sebebi</th>
+                                <th>Çözüm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Feature açık ama kullanıcı görmüyor</td>
+                                <td>Global toggle kapalı</td>
+                                <td>/roles-features → global toggle aç</td>
+                            </tr>
+                            <tr>
+                                <td>Override verip etki görmedi</td>
+                                <td>Global toggle kapalı</td>
+                                <td>Önce global toggle'ı aç</td>
+                            </tr>
+                            <tr>
+                                <td>Rol değiştirildi ama feature değişmedi</td>
+                                <td>Session cache'i</td>
+                                <td>Kullanıcı çıkış/giriş yapsın</td>
+                            </tr>
+                            <tr>
+                                <td>Claim talep reddedildi</td>
+                                <td>Kanıt yetersiz</td>
+                                <td>Daha iyi kanıt ile yeniden talep edin</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section" id="sorular">
+                    <h2>❓ Sık Sorulan Sorular</h2>
+
+                    <h3>S: Aynı kişi iki role sahip olabilir mi?</h3>
+                    <div class="warning">
+                        <strong>C:</strong> HAYIR. Her kişinin sadece BİR rolü vardır.
+                    </div>
+
+                    <h3>S: Admin yetkilerini değiştirebilir mi?</h3>
+                    <div class="success">
+                        <strong>C:</strong> EVET! Admin tüm kontrolleri yapabilir.
+                    </div>
+
+                    <h3>S: Yanlış onay verdim, geri alabilir miyim?</h3>
+                    <div class="success">
+                        <strong>C:</strong> Claim approved olduktan sonra değiştirilemez. Yanlışsa yeni talep açılması istenir.
+                    </div>
+
+                    <h3>S: Feature'ı kapatırsan, override bile açamaz mı?</h3>
+                    <div class="warning">
+                        <strong>C:</strong> HAYIR. Global toggle kapalıysa, override bile o feature'ı açamaz!
+                    </div>
+                </div>
+
+                <!-- ========== TEKNİK ========== -->
+                <div class="section" id="teknik-detay">
+                    <h2>🔧 Teknik: Tablo İlişkileri</h2>
+
+                    <pre>feature_catalog (key PK)
+  ├─ key (string) - Unique identifier
+  ├─ label - Türkçe adı
+  ├─ is_active_globally ← GLOBAL KILIT
+  └─ scope_role - '*' veya specific role_key
+
+role_feature_flags (role_id, feature_key) PK
+  ├─ role_id FK
+  ├─ feature_key FK
+  └─ is_enabled ← ROL BAYRĞI
+
+user_feature_overrides (user_id, feature_key) PK
+  ├─ user_id FK
+  ├─ feature_key FK
+  ├─ is_enabled ← KULLANICI ÖZ YETKI
+  └─ reason - Audit için
+
+catalog_claim_requests (id PK)
+  ├─ item_id FK
+  ├─ requested_by_user_id FK
+  ├─ claim_type (ownership)
+  ├─ evidence (JSON)
+  ├─ status (pending|approved|rejected|cancelled)
+  └─ reviewed_by_user_id FK (admin tarafından)</pre>
+                </div>
+
+                <div class="section" id="rpc">
+                    <h2>📡 RPC Fonksiyonları</h2>
+
+                    <h3>get_current_user_features()</h3>
+                    <p>Şu anki kullanıcı için feature'ları çözen RPC:</p>
+
+                    <pre>SELECT
+  feature_key,
+  is_enabled = (
+    is_active_globally AND COALESCE(
+      user_override.is_enabled,
+      role_flag.is_enabled,
+      role_default.is_enabled,
+      false
+    )
+  ) AS resolved_enabled
+FROM feature_catalog
+WHERE scope_role = user_role OR scope_role = '*'</pre>
+
+                    <h3>submit_catalog_claim_request()</h3>
+                    <p>Kullanıcı tarafından talep oluşturma:</p>
+                    <ul>
+                        <li>target_item_id: Hangi item?</li>
+                        <li>claim_type: 'ownership'</li>
+                        <li>evidence: JSON kanıtlar</li>
+                        <li>note: Açıklama</li>
+                    </ul>
+
+                    <h3>review_catalog_claim_request()</h3>
+                    <p>Admin tarafından talep inceleme ve karar:</p>
+                    <ul>
+                        <li>target_claim_request_id: Hangi talep?</li>
+                        <li>decision: 'approved' | 'rejected' | 'cancelled'</li>
+                        <li>review_note: Açıklama</li>
+                    </ul>
+                </div>
+
+                <hr>
+
+                <div class="section">
+                    <h2>✅ Özet</h2>
+                    <p><strong>CorteQS Yetkilendirme Sistemi üç başlıkta çalışır:</strong></p>
+                    <ol>
+                        <li><strong>Kategori-Rol-Feature:</strong> Admin kategorileri görerek, rol başına feature'ları kontrol eder</li>
+                        <li><strong>Karar Ağacı:</strong> Global → Override → Rol → Fallback sırası ile feature kullanılabilirliği karar verilir</li>
+                        <li><strong>Claim Sistemi:</strong> Kullanıcı sahipsiz item'lere talep yapabilir, admin inceler ve onaylar</li>
+                    </ol>
+
+                    <div class="success">
+                        <p><strong>🎯 Amaç:</strong> Flexible yet controlled authorization with ownership verification for catalog items.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>CorteQS Fin Yetkilendirme Sistemi — Tam Rehberi | Son Güncelleme: 2026-06-04</p>
+            <p>Email ile gönderilebilir, bağımsız standalone HTML dosya | Tüm tarayıcılarda çalışır</p>
+        </div>
+    </div>
+</body>
+</html>

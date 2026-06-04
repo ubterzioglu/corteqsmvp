@@ -1099,7 +1099,7 @@ const ProfilePage = () => {
               aria-controls="profile-summary-content"
               onClick={() => setIsProfileSummaryOpen((current) => !current)}
             >
-              <CardTitle className="text-base">Profil Özeti & Tamamlanma</CardTitle>
+              <CardTitle className="text-base">Profil Durumu</CardTitle>
               <ChevronDown
                 className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${isProfileSummaryOpen ? "rotate-180" : ""}`}
               />
