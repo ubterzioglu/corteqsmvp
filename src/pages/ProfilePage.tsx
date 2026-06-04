@@ -1174,6 +1174,9 @@ const ProfilePage = () => {
 
   const heroActionButtons = (
     <div className={`w-full max-w-[280px] shrink-0 self-start ${GOOGLE_SOFT_ACTION_PANEL}`}>
+      <div className="mb-1.5 px-1 text-center text-[11px] font-medium text-orange-700">
+        Profil Fotoğrafı
+      </div>
       <div className="grid grid-cols-2 gap-1.5">
         <Card className="col-span-2">
           <div className="flex gap-1.5 p-1">
@@ -1249,18 +1252,11 @@ const ProfilePage = () => {
                   </div>
                 )}
                 <div className="space-y-2">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="outline" className="border-orange-200 bg-orange-50 text-orange-700">
-                      <Sparkles className="mr-1 h-3 w-3" /> Bireysel Panelim
-                    </Badge>
-                    <Badge variant="secondary" className="bg-gray-100 text-slate-700 hover:bg-gray-100">
-                      {profile?.roleLabel ?? roleMeta?.adminLabel ?? "Rol"}
-                    </Badge>
-                    <Badge variant="outline" className="border-gray-200 text-xs text-gray-500">
-                      Tamamlanma %{profile?.profileCompletion.percentage ?? 0}
-                    </Badge>
-                    {errorMessage ? <Badge variant="destructive" className="text-xs">Kısmi veri yüklendi</Badge> : null}
-                  </div>
+                  {errorMessage ? (
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge variant="destructive" className="text-xs">Kısmi veri yüklendi</Badge>
+                    </div>
+                  ) : null}
                   <div>
                     <CardTitle className="text-3xl tracking-tight text-slate-950 md:text-4xl">{displayName}</CardTitle>
                     {heroDescription ? (

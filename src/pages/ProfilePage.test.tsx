@@ -436,10 +436,11 @@ describe("ProfilePage", () => {
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText("Bireysel Panelim")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "firmascope" })).toBeInTheDocument();
+    expect(screen.getByText("Profil Fotoğrafı")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /^Yardım$/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Resmi Değiştir/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Resmi Kaldır/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Değiştir$/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Kaldır$/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Yenile/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Çıkış Yap/i })).toBeInTheDocument();
     expect(screen.getAllByRole("img", { name: "firmascope" })).toHaveLength(1);
@@ -533,7 +534,7 @@ describe("ProfilePage", () => {
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText("Bireysel Panelim")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "firmascope" })).toBeInTheDocument();
     expect(screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için")).not.toBeInTheDocument();
     expect(screen.queryByText(/Profil özeti:/i)).not.toBeInTheDocument();
     expect(screen.queryByText("Profil kartını, görünürlüğünü ve taleplerini tek yerden yönet.")).not.toBeInTheDocument();
