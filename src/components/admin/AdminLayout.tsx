@@ -232,6 +232,8 @@ const AdminLayout = () => {
     { to: "/admin/members", label: "Üye Takibi" },
     { to: "/admin/new-member/guide", label: "Genel Kullanım Kılavuzu" },
     { to: "/admin/new-member/users-roles", label: "Loginli Kullanıcılar & Roller" },
+    { to: "/admin/new-member/roles-preview", label: "Roller Önizleme" },
+    { to: "/admin/new-member/entity-preview", label: "AFS Önizleme" },
     { to: "/admin/new-member/role-management", label: "Rol Yönetimi" },
     { to: "/admin/new-member/overrides", label: "Feature Override" },
     { to: "/admin/referral", label: "Ref Kod" },
