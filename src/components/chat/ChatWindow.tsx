@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Bot, Loader2 } from "lucide-react";
 import ChatMessage from "@/components/chat/ChatMessage";
 import ChatQuickReply from "@/components/chat/ChatQuickReply";
 import ChatInput from "@/components/chat/ChatInput";
 import ChatProgressBar from "@/components/chat/ChatProgressBar";
 import type { ChatState } from "@/hooks/useChatMachine";
 import { getProgressInfo } from "@/lib/chatConfig";
+import chatbotMascot from "../../../lmaskot.png";
 
 type Props = {
   state: ChatState;
@@ -77,8 +77,8 @@ const ChatWindow = ({
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/30">
-                <Bot className="h-5 w-5 text-primary-foreground" />
+              <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-primary/15 bg-white shadow-lg shadow-primary/20">
+                <img src={chatbotMascot} alt="CorteQS chatbot logosu" className="h-full w-full object-cover" />
               </div>
               <span
                 className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-card"
@@ -112,8 +112,8 @@ const ChatWindow = ({
         ))}
         {isLoading && (
           <div className="flex justify-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent">
-              <Bot className="h-4 w-4 text-primary-foreground" />
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-primary/15 bg-white">
+              <img src={chatbotMascot} alt="" className="h-full w-full object-cover" aria-hidden="true" />
             </div>
             <div className="rounded-2xl rounded-tl-sm bg-muted px-4 py-3">
               <div className="flex gap-1.5">

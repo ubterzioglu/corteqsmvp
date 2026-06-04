@@ -14,7 +14,7 @@ import {
   Globe2,
 } from "lucide-react";
 import RegisterInterestForm from "@/components/RegisterInterestForm";
-import magicBallHero from "@/assets/corteqs-magic-ball-hero.jpg";
+import magicBallHero from "../../lmaskot.png";
 
 const themes = [
   { title: "Kültür", desc: "Yaşanılan ülkedeki kültürel deneyimler, Türk diasporasının izleri ve kültürler arası gözlemler." },
