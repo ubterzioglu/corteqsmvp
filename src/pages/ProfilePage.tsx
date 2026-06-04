@@ -286,6 +286,7 @@ const ProfilePage = () => {
 
   const [draftValues, setDraftValues] = useState<DraftValueMap>({});
   const [draftVisibilities, setDraftVisibilities] = useState<DraftVisibilityMap>({});
+  const [socialMediaAllVisible, setSocialMediaAllVisible] = useState(true);
   const [savingAttributeKey, setSavingAttributeKey] = useState<string | null>(null);
   const [savingCommonAttributes, setSavingCommonAttributes] = useState(false);
   const [savingSocialMedia, setSavingSocialMedia] = useState(false);
@@ -1037,7 +1038,7 @@ const ProfilePage = () => {
                   <img
                     src={currentAvatarUrl}
                     alt={displayName}
-                    className="h-40 w-40 shrink-0 rounded-2xl object-cover shadow-[0_4px_16px_-4px_rgba(0,0,0,0.15)]"
+                    className="h-40 w-40 shrink-0 rounded-2xl object-cover shadow-[0_4px_16px_-4px_rgba(249,115,22,0.3)]"
                   />
                 ) : (
                   <div className="flex h-40 w-40 shrink-0 items-center justify-center rounded-2xl bg-orange-500 text-[11px] font-bold text-white shadow-[0_6px_20px_-6px_rgba(249,115,22,0.45)]">
@@ -1275,7 +1276,6 @@ const ProfilePage = () => {
                       const config = SOCIAL_ATTRIBUTE_CONFIGS.find((item) => item.key === attribute.attributeKey);
                       if (!config) return null;
                       const Icon = config.icon;
-                      const visible = (draftVisibilities[attribute.attributeKey] ?? attribute.visibility) === "public";
 
                       return (
                         <div key={attribute.attributeKey} className="flex items-center gap-2">
@@ -1289,27 +1289,31 @@ const ProfilePage = () => {
                             placeholder={config.placeholder}
                             className="h-8 flex-1 text-[11px] placeholder:text-[11px]"
                           />
-                          <div className={`flex items-center gap-1.5 rounded-full px-2 shrink-0 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
-                            {visible ? (
-                              <Eye className="h-3.5 w-3.5 text-primary" />
-                            ) : (
-                              <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
-                            )}
-                            <Switch
-                              checked={visible}
-                              onCheckedChange={(checked) =>
-                                setDraftVisibilities((current) => ({
-                                  ...current,
-                                  [attribute.attributeKey]: checked ? "public" : "private",
-                                }))
-                              }
-                            />
-                          </div>
                         </div>
                       );
                     })}
                   </div>
-                  <div className="flex justify-end">
+                  <div className="flex items-center justify-end gap-2">
+                    <div className={`flex items-center gap-1.5 rounded-full px-2 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
+                      {socialMediaAllVisible ? (
+                        <Eye className="h-3.5 w-3.5 text-primary" />
+                      ) : (
+                        <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
+                      )}
+                      <Switch
+                        checked={socialMediaAllVisible}
+                        onCheckedChange={(checked) => {
+                          setSocialMediaAllVisible(checked);
+                          setDraftVisibilities((current) => {
+                            const updated = { ...current };
+                            groupedAttributes.socialMedia.forEach((attr) => {
+                              updated[attr.attributeKey] = checked ? "public" : "private";
+                            });
+                            return updated;
+                          });
+                        }}
+                      />
+                    </div>
                     <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={() => void handleSaveSocialMedia()} disabled={savingSocialMedia}>
                       {savingSocialMedia ? "Kaydediliyor..." : "Sosyal Medya Kartını Kaydet"}
                     </Button>
