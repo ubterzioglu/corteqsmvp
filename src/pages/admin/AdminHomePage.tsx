@@ -98,7 +98,7 @@ const toneClasses: Record<NavTone, { card: string; iconWrap: string; button: str
 const newMemberDescriptions: Record<string, string> = {
   "Üye Takibi": "Yeni kayıtları, operasyon akışını ve günlük incelemeleri merkezden yönet.",
   "Genel Kullanım Kılavuzu": "Yeni üye sisteminin uçtan uca kullanım notlarını tek yerden aç.",
-  "Loginli Kullanıcılar & Roller": "Kullanıcı rol atamaları, görünürlükler ve profil alanlarını düzenle.",
+  "Loginli Üyeler & Roller": "Loginli üye rol atamaları, görünürlükler ve profil alanlarını düzenle.",
   "Roller & Featurelar": "Rol bazlı feature açma, kapama ve varsayılanları stratejik olarak kurgula.",
   "Attribute Yönetimi": "Alan kuralları, zorunluluklar ve görünürlük davranışlarını güncelle.",
   "Profile Sections": "Profil bileşen sıralarını ve role göre section akışını şekillendir.",

@@ -72,15 +72,15 @@ describe("AdminLayout", () => {
     expect(screen.getByRole("button", { name: /Topluluklar/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Data/i })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Üye Takibi" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("menuitem", { name: /Loginli Kullanıcılar & Roller/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: /Loginli Üyeler & Roller/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Dış Bağlantılar" })).not.toBeInTheDocument();
     const dashboardButton = screen.getByRole("button", { name: /Dashboard/i });
 
     const newMemberSystemButton = screen.getByRole("button", { name: /Üyeler/i });
     fireEvent.mouseEnter(newMemberSystemButton);
     expect(await screen.findByRole("menuitem", { name: /Üye Takibi/i })).toBeInTheDocument();
-    expect(await screen.findByRole("menuitem", { name: /Loginli Kullanıcılar & Roller/i })).toBeInTheDocument();
-    expect(await screen.findByRole("menuitem", { name: /Roller & Featurelar/i })).toBeInTheDocument();
+    expect(await screen.findByRole("menuitem", { name: /Loginli Üyeler & Roller/i })).toBeInTheDocument();
+    expect(await screen.findByRole("menuitem", { name: /Rol Yönetimi/i })).toBeInTheDocument();
     fireEvent.mouseLeave(newMemberSystemButton);
     const communityButton = screen.getByRole("button", { name: /Topluluklar/i });
     fireEvent.mouseEnter(communityButton);
