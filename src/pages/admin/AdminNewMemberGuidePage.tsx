@@ -1,14 +1,36 @@
-import AdminPageGuideAccordion, { type AdminPageGuideSection } from "@/components/admin/AdminPageGuideAccordion";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
-const guideSections: AdminPageGuideSection[] = [
+const ruleLegendItems = [
+  "A: Aktif",
+  "Z: Zorunlu",
+  "P: Public",
+  "D: Düzenler",
+  "G: Gizler / Global",
+  "O: Onay",
+  "R: Rol",
+  "S: Sıra",
+] as const;
+
+const guideSections = [
   {
     title: "Yeni sistemin mantığı",
     items: [
       "Bu alan, yeni üye sistemindeki tüm operasyon ekranlarını tek bir akışta toplar.",
       "Yeni yapıda önce üyeyi bulur, sonra rolünü kontrol eder, gerekiyorsa rol kurallarını düzenler, en sonda da gerçekten ihtiyaç varsa override verirsin.",
       "Temel mantık şudur: genel kural önce rolde çözülür, tekil istisna gerekiyorsa override kullanılır.",
+    ],
+  },
+  {
+    title: "Tablodaki kısaltmalar ne anlama gelir?",
+    items: [
+      "A = Aktif. İlgili attribute, feature veya section şu anda açık mı onu gösterir.",
+      "Z = Zorunlu. Alanın kullanıcı tarafından doldurulmasının zorunlu olup olmadığını gösterir.",
+      "P = Public. Alanın varsayılan olarak public görünür olup olmadığını gösterir.",
+      "D = Düzenler. Kullanıcının ilgili alanı düzenleyip düzenleyemediğini gösterir.",
+      "G = Gizler / Global. Attribute tarafında kullanıcı alanı gizleyebilir mi, feature tarafında ise feature global olarak açık mı onu temsil eder.",
+      "O = Onay. Değişiklik admin onayı gerektiriyor mu onu gösterir.",
+      "R = Rol. Feature satırında bu özelliğin seçili role açık olup olmadığını gösterir.",
+      "S = Sıra. Alanın veya section'ın ekrandaki sıralama değerini gösterir.",
     ],
   },
   {
@@ -38,10 +60,10 @@ const guideSections: AdminPageGuideSection[] = [
   {
     title: "Rol Yönetimi ekranını nasıl okumalısın?",
     items: [
-      "Tablodaki `A` kayıtları attribute'tur; form alanı davranışını temsil eder.",
-      "Tablodaki `F` kayıtları feature'dir; modül veya capability açık-kapalı durumunu temsil eder.",
-      "Tablodaki `S` kayıtları profile section'dir; profil kartında hangi bölümün nasıl göründüğünü temsil eder.",
-      "Rol seçmeden katalog görünür; rol seçtiğinde aynı satırlarda o role ait kurallar aktif edit moduna döner.",
+      "Tablodaki `A` rozetleri attribute satırlarını temsil eder; bunlar form alanı davranışını yönetir.",
+      "Tablodaki `F` rozetleri feature satırlarını temsil eder; bunlar modül veya capability açık-kapalı durumunu yönetir.",
+      "Tablodaki `S` rozetleri profile section satırlarını temsil eder; bunlar profil kartında hangi bölümün nasıl göründüğünü yönetir.",
+      "Rol seçmeden katalog görünür; rol seçtiğinde aynı satırlar o role ait kurallarla edit moduna döner.",
       "Bir değişikliği kaydetmeden önce bunun rol seviyesi genel kural mı yoksa tekil istisna mı olduğuna karar ver.",
     ],
   },
@@ -66,35 +88,48 @@ const guideSections: AdminPageGuideSection[] = [
       "Onboarding import değişiklikleri canlı akışı etkileyebileceği için mapping ve hedef alan kontrolünü ikinci kez doğrulamak güvenlidir.",
     ],
   },
-];
+] as const;
 
 const AdminNewMemberGuidePage = () => {
   return (
-    <div className="space-y-4">
-      <AdminPageGuideAccordion
-        summary="Yeni üyeler menüsündeki ekranların ne işe yaradığını, hangi durumda hangisini kullanman gerektiğini ve önerilen operasyon sırasını bu sayfada madde madde görebilirsin."
-        sections={guideSections}
-      />
+    <AdminPageLayout className="max-w-5xl gap-8">
+      <section className="space-y-4">
+        <div className="space-y-2">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Kullanım Klavuzu</h1>
+          <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
+            Yeni üyeler menüsündeki ekranların ne işe yaradığını, hangi durumda hangisini kullanman gerektiğini ve rol
+            yönetimi tablosundaki kısaltmaların ne anlama geldiğini bu sayfada düz anlatımla görebilirsin.
+          </p>
+        </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Kullanım Klavuzu</CardTitle>
-          <CardDescription>
-            Bu sayfa, güncel üyeler menüsündeki ekranlar için tek noktadan hızlı karar desteği verir.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4 text-sm text-muted-foreground">
-          <p>
-            Yeni akışta üye operasyonu, rol ataması, rol kuralı, tekil override, katalog önizleme ve onboarding import adımları
-            birbirinden ayrıldı. Böylece önce doğru seviyede karar verip sonra doğru ekranda işlem yapman kolaylaşır.
-          </p>
-          <p>
-            Kısa özet: kullanıcının ana kimliği önce `Rol` ile belirlenir, rolün tüm üye grubuna uygulanan kuralları
-            `Rol Yönetimi` ile düzenlenir, yalnızca tek kişiye özel sapma gerekiyorsa `Feature Override` kullanılır.
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+          {ruleLegendItems.map((item) => (
+            <span
+              key={item}
+              className="rounded-full border border-border bg-muted/40 px-3 py-1.5 font-medium tracking-[0.01em]"
+            >
+              {item}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <div className="space-y-8">
+        {guideSections.map((section) => (
+          <section key={section.title} className="space-y-3 border-b border-border/70 pb-6 last:border-b-0 last:pb-0">
+            <h2 className="text-lg font-semibold text-foreground">{section.title}</h2>
+            <ul className="space-y-2 text-sm leading-6 text-muted-foreground">
+              {section.items.map((item) => (
+                <li key={item} className="flex gap-3">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </AdminPageLayout>
   );
 };
 

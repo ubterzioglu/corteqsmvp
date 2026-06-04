@@ -667,7 +667,7 @@ const AdminLayout = () => {
               )}
               <div className="flex items-center">
                 <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
-                <NavLink to="/admin/help" className={({ isActive }) => linkClass({ isActive })} title="Yardım">
+                <NavLink to="/admin/new-member/guide" className={({ isActive }) => linkClass({ isActive })} title="Kullanım Klavuzu">
                   <CircleHelp className="h-3.5 w-3.5" />
                 </NavLink>
               </div>
