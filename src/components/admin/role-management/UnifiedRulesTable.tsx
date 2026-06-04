@@ -335,11 +335,11 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
 
   return (
     <div className="overflow-x-auto rounded-lg border">
-      <Table className={bundle ? "min-w-[1520px] table-fixed" : "min-w-[1040px] table-fixed"}>
+      <Table className={bundle ? "min-w-[1420px] table-fixed" : "min-w-[980px] table-fixed"}>
         <TableHeader>
           <TableRow>
             <TableHead className="w-16 whitespace-nowrap px-2 text-[11px]">Tür</TableHead>
-            <TableHead className="w-[24rem] whitespace-nowrap px-2 text-[11px]">Label</TableHead>
+            <TableHead className="w-[17rem] whitespace-nowrap px-2 text-[11px]">Label</TableHead>
             <TableHead className="w-[20rem] whitespace-nowrap px-2 text-[11px]">Key</TableHead>
             <TableHead className="w-[24rem] whitespace-nowrap px-2 text-[11px]">Açıklama</TableHead>
             {bundle && <TableHead className="whitespace-nowrap px-2 text-[11px]">Kurallar ({bundle.role.label})</TableHead>}

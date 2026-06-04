@@ -71,12 +71,12 @@ const AdminRolesPreviewPage = () => {
             <p className="text-sm text-muted-foreground">Roller yükleniyor...</p>
           ) : (
             <div className="overflow-x-auto rounded-lg border">
-              <Table className="min-w-[1080px] table-fixed">
+              <Table className="min-w-[960px] table-fixed">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-36 whitespace-nowrap text-[12px]">Aile</TableHead>
-                    <TableHead className="w-[24rem] whitespace-nowrap text-[12px]">Label (Türkçe)</TableHead>
-                    <TableHead className="w-[22rem] whitespace-nowrap text-[12px]">Key (Slug)</TableHead>
+                    <TableHead className="w-32 whitespace-nowrap text-[12px]">Aile</TableHead>
+                    <TableHead className="w-[18rem] whitespace-nowrap text-[12px]">Label (Türkçe)</TableHead>
+                    <TableHead className="w-[18rem] whitespace-nowrap text-[12px]">Key (Slug)</TableHead>
                     <TableHead className="whitespace-nowrap text-[12px]">Açıklama</TableHead>
                   </TableRow>
                 </TableHeader>
