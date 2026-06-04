@@ -598,6 +598,18 @@ const ProfilePage = () => {
   const handleSaveAttribute = async (attribute: ProfileAttributeState) => {
     const { valueToSend, visibility } = buildAttributePayload(attribute);
 
+    if (attribute.dataType !== "boolean") {
+      const textValue = String(valueToSend ?? "").trim();
+      if (!textValue) {
+        toast({
+          title: "Alan boş",
+          description: `${attribute.label} alanını doldurmadan kaydedemezsiniz.`,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     setSavingAttributeKey(attribute.attributeKey);
     try {
       const result = (await updateProfileAttribute(attribute.attributeKey, valueToSend, visibility)) as { status?: string } | null;
@@ -623,9 +635,21 @@ const ProfilePage = () => {
   const handleSaveCommonAttributes = async () => {
     if (!groupedAttributes.common.length) return;
 
+    const attributesToSave = groupedAttributes.common.filter((attribute) => {
+      const rawValue = draftValues[attribute.attributeKey];
+      if (attribute.dataType === "boolean") return true;
+      const textValue = String(rawValue ?? "").trim();
+      return textValue.length > 0;
+    });
+
+    if (!attributesToSave.length) {
+      toast({ title: "Kaydedilecek alan bulunamadı", description: "En az bir ortak alanı doldurun." });
+      return;
+    }
+
     setSavingCommonAttributes(true);
     try {
-      for (const attribute of groupedAttributes.common) {
+      for (const attribute of attributesToSave) {
         const { valueToSend, visibility } = buildAttributePayload(attribute);
         await updateProfileAttribute(attribute.attributeKey, valueToSend, visibility);
       }
@@ -653,6 +677,7 @@ const ProfilePage = () => {
     try {
       for (const attribute of groupedAttributes.socialMedia) {
         const rawValue = String(draftValues[attribute.attributeKey] ?? "").trim();
+        if (!rawValue) continue;
         const normalizedValue = normalizeSocialMediaValue(attribute.attributeKey, rawValue);
         const visibility = draftVisibilities[attribute.attributeKey] ?? attribute.visibility;
         await updateProfileAttribute(attribute.attributeKey, normalizedValue, visibility);
