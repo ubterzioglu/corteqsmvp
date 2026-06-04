@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import RoleSearchSelect from "@/components/admin/RoleSearchSelect";
 
 type UserRow = {
   user_id: string;
@@ -895,22 +896,13 @@ const AdminLoginUsersRolesPage = () => {
                     <div className="space-y-1">
                       <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Rol Yönetimi</p>
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                        <Select
+                        <RoleSearchSelect
+                          roles={roles.map((role) => ({ key: role.id, label: role.label }))}
                           value={dialogRoleId}
                           onValueChange={setDialogRoleId}
                           disabled={isUserDataSaving || updatingUserId === userDataDialogState.user.user_id || roles.length === 0}
-                        >
-                          <SelectTrigger className="h-9 min-w-[240px] text-xs">
-                            <SelectValue placeholder="Rol seç" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {roles.map((role) => (
-                              <SelectItem key={role.id} value={role.id}>
-                                {role.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                          className="h-9 min-w-[240px]"
+                        />
                       </div>
                     </div>
                     <Button type="button" size="sm" onClick={() => void handleSaveAllUserData()} disabled={isUserDataSaving || updatingUserId === userDataDialogState.user.user_id}>

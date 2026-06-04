@@ -80,6 +80,7 @@ import AdminProfileSectionsPage from "@/pages/admin/AdminProfileSectionsPage";
 import AdminTaxonomyPage from "@/pages/admin/AdminTaxonomyPage";
 import AdminNewMemberGuidePage from "@/pages/admin/AdminNewMemberGuidePage";
 import AdminOnboardingImportsPage from "@/pages/admin/AdminOnboardingImportsPage";
+import AdminRoleManagementPage from "@/pages/admin/AdminRoleManagementPage";
 import CaddePage from "@/pages/CaddePage";
 import AdminCaddePage from "@/pages/admin/AdminCaddePage";
 import Associations from "@/pages/Associations";
@@ -225,6 +226,7 @@ const App = () => (
                 <Route path="new-member/profile-sections" element={<AdminProfileSectionsPage />} />
                 <Route path="new-member/taxonomy" element={<AdminTaxonomyPage />} />
                 <Route path="new-member/overrides" element={<AdminUserOverridesPage />} />
+                <Route path="new-member/role-management" element={<AdminRoleManagementPage />} />
                 <Route path="approvals" element={<AdminApprovalsPage />} />
                 <Route path="audit-logs" element={<AdminAuditLogsPage />} />
                 <Route path="roller-taslak" element={<AdminRolesDraftPage />} />

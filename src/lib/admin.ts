@@ -376,3 +376,79 @@ export async function deleteReferralCodeHard(id: string): Promise<void> {
   const { error } = await supabase.from("referral_codes").delete().eq("id", id);
   if (error) throw error;
 }
+
+// --- Role management bundle ---
+
+export type AttributeRule = {
+  is_enabled: boolean;
+  is_required: boolean;
+  is_public_default: boolean;
+  user_can_edit: boolean;
+  user_can_hide: boolean;
+  requires_admin_approval_on_change: boolean;
+  sort_order: number;
+};
+
+export type RoleManagementAttribute = {
+  key: string;
+  label: string;
+  description: string | null;
+  admin_note: string | null;
+  rule: AttributeRule;
+};
+
+export type RoleManagementFeature = {
+  key: string;
+  label: string;
+  description: string | null;
+  admin_note: string | null;
+  is_active_globally: boolean;
+  is_enabled: boolean;
+};
+
+export type SectionRule = {
+  is_enabled: boolean;
+  requires_approval: boolean;
+  sort_order: number;
+};
+
+export type RoleManagementSection = {
+  key: string;
+  label: string;
+  description: string | null;
+  admin_note: string | null;
+  section_area: string;
+  rule: SectionRule;
+};
+
+export type RoleManagementBundle = {
+  role: { id: string; key: string; label: string };
+  attributes: RoleManagementAttribute[];
+  features: RoleManagementFeature[];
+  sections: RoleManagementSection[];
+};
+
+export async function getRoleManagementBundle(roleKey: string): Promise<RoleManagementBundle> {
+  const { data, error } = await (supabase as any).rpc("get_role_management_bundle", {
+    p_role_key: roleKey,
+  });
+
+  if (error) throw error;
+  return data as RoleManagementBundle;
+}
+
+export async function upsertEntityMetadataAsAdmin(params: {
+  entityType: "attribute" | "feature" | "profile_section";
+  entityKey: string;
+  description?: string | null;
+  adminNote?: string | null;
+}): Promise<void> {
+  const { error } = await (supabase as any).rpc("admin_upsert_entity_metadata", {
+    p_entity_type: params.entityType,
+    p_entity_key:  params.entityKey,
+    p_description: params.description ?? null,
+    p_admin_note:  params.adminNote ?? null,
+  });
+
+  if (error) throw error;
+}
