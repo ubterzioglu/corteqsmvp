@@ -1268,10 +1268,10 @@ const ProfilePage = () => {
             <CardHeader className="pb-2">
               <CardTitle className="text-[11px]">Sosyal Medya Hesapları</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3">
               {groupedAttributes.socialMedia.length ? (
                 <>
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     {groupedAttributes.socialMedia.map((attribute) => {
                       const config = SOCIAL_ATTRIBUTE_CONFIGS.find((item) => item.key === attribute.attributeKey);
                       if (!config) return null;
@@ -1322,7 +1322,7 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-3">
             {linkedinCardEnabled && linkedinAttribute ? (
               <StandaloneLinkAttributeCard
                 attribute={linkedinAttribute}
@@ -1785,17 +1785,17 @@ const StandaloneLinkAttributeCard = ({
 
   return (
     <Card className={cardClassName ?? GOOGLE_SOFT_CARD_SECTION}>
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-[11px]">
           <Icon className={`h-4 w-4 ${iconClassName}`} />
           {title}
         </CardTitle>
-        {description ? (
-          <CardDescription className="text-[11px]">{description}</CardDescription>
-        ) : null}
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-0">
         <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 shrink-0 min-w-fit">
+            <span className="text-[11px] font-medium text-foreground">{title}</span>
+          </div>
           <Input
             type="url"
             value={typeof draftValue === "string" ? draftValue : ""}
@@ -1807,8 +1807,6 @@ const StandaloneLinkAttributeCard = ({
             {visible ? <Eye className="h-3.5 w-3.5 text-primary" /> : <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />}
             <Switch checked={visible} disabled={!attribute.userCanHide} onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")} />
           </div>
-        </div>
-        <div className="flex justify-end">
           <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={onSave} disabled={isSaving}>
             {isSaving ? "Kaydediliyor..." : "Kaydet"}
           </Button>
