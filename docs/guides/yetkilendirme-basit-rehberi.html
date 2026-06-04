@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yetkilendirme Basit Rehberi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+            color: #2c3e50;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+            padding: 0 20px 20px;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h3 {
+            font-size: 0.9em;
+            color: #667eea;
+            text-transform: uppercase;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        .sidebar h3:first-child {
+            margin-top: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar a {
+            color: #555;
+            text-decoration: none;
+            font-size: 0.95em;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: #f0f0ff;
+            color: #667eea;
+            padding-left: 18px;
+        }
+
+        .content {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section h3 {
+            font-size: 1.3em;
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .section p {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 1.05em;
+        }
+
+        .step-box {
+            background: #f9f9ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            font-size: 1.05em;
+        }
+
+        .step-box strong {
+            color: #667eea;
+        }
+
+        .flow-diagram {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', monospace;
+            margin: 20px 0;
+            font-size: 0.95em;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .example-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .example-box strong {
+            color: #856404;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .success-box strong {
+            color: #155724;
+        }
+
+        .warning-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .warning-box strong {
+            color: #721c24;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1em;
+        }
+
+        thead {
+            background: #667eea;
+            color: white;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tbody tr:nth-child(odd) {
+            background: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background: #f0f0ff;
+        }
+
+        .checklist {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .checklist li {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .checklist li:before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        ul {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                top: auto;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎓 Yetkilendirme Sistemi — Çok Basit Rehberi</h1>
+        <p>Gerizekalıya anlatır gibi açıklanan rehber</p>
+    </div>
+
+    <div class="container">
+        <div class="main-layout">
+            <div class="sidebar">
+                <h3>📚 Bölümler</h3>
+                <ul>
+                    <li><a href="#basla">Başlangıç</a></li>
+                    <li><a href="#hikaye">Hikaye</a></li>
+                    <li><a href="#roller">Roller</a></li>
+                    <li><a href="#yetkiler">Yetkiler</a></li>
+                    <li><a href="#itemler">Katalog İtemler</a></li>
+                    <li><a href="#birlikli">Hepsi Birlikte</a></li>
+                    <li><a href="#ornek">Örnek Akış</a></li>
+                    <li><a href="#admin">Admin Kontrolü</a></li>
+                    <li><a href="#sorular">SSS</a></li>
+                </ul>
+            </div>
+
+            <div class="content">
+                <!-- BAŞLANGIÇ -->
+                <div class="section" id="basla">
+                    <h2>🌟 Başlangıç</h2>
+                    <p>Bir kullanıcı giriş yapıyor. Sistem şu soruları soruyor:</p>
+                    <div class="checklist">
+                        <li>Bu kişi kim? (Roller)</li>
+                        <li>Bu kişinin yetkileri neler? (Yetkiler)</li>
+                        <li>Hangi şeyleri görebilir? (Katalog İtemler)</li>
+                        <li>Hangi şeyleri oluşturabilir?</li>
+                    </div>
+                    <p>Bu rehber bu soruların cevaplarını açıklıyor.</p>
+                </div>
+
+                <!-- BASIT HİKAYE -->
+                <div class="section" id="hikaye">
+                    <h2>📖 Basit Bir Hikaye</h2>
+                    <p>Ayşe adında birisi var. Ayşe ne yapabileceğini anlamak istiyorum:</p>
+
+                    <div class="step-box">
+                        <strong>Adım 1: Ayşe kim?</strong><br>
+                        Ayşe bir "Blogger". Bu onun <span class="highlight">Rolü</span>.
+                    </div>
+
+                    <div class="step-box">
+                        <strong>Adım 2: Blogger ne yapabilir?</strong><br>
+                        Blogger şu şeyleri yapabilir:
+                        <ul>
+                            <li>✅ Blog yazısı yazmak</li>
+                            <li>✅ Etkinlik oluşturmak</li>
+                            <li>❌ Danışman profili açmak (bunu yapamaz)</li>
+                            <li>❌ İş ilanı yayınlamak (bunu yapamaz)</li>
+                        </ul>
+                        Bunlar Blogger'ın <span class="highlight">Yetkileri</span>.
+                    </div>
+
+                    <div class="step-box">
+                        <strong>Adım 3: Ayşe etkinlik oluşturmak istiyor</strong><br>
+                        Sistem kontrol ediyor:
+                        <ul>
+                            <li>Ayşe blogger mi? ✅ EVET</li>
+                            <li>Blogger'lar etkinlik oluşturabilir mi? ✅ EVET</li>
+                            <li>O halde izin ver!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- ROLLER -->
+                <div class="section" id="roller">
+                    <h2>👥 Roller — Kullanıcı Tipleri</h2>
+                    <p>Sistemde 6 tane rol var. Her rol bir "etikettir":</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>🏷️ Rol Adı</th>
+                                <th>Kim Bu?</th>
+                                <th>Örnek Kişiler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Bireysel</strong></td>
+                                <td>Normal kullanıcı</td>
+                                <td>Ayşe, Mehmet, Fatma</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Danışman</strong></td>
+                                <td>Profesyonel danışman</td>
+                                <td>Hukuk danışmanı, muhasebe danışmanı</td>
+                            </tr>
+                            <tr>
+                                <td><strong>İşletme</strong></td>
+                                <td>Şirket veya mağaza</td>
+                                <td>Restoran, berber, kütüphane</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Kuruluş/Dernek</strong></td>
+                                <td>Örgüt</td>
+                                <td>NGO, ticaret odası, dernek</td>
+                            </tr>
+                            <tr>
+                                <td><strong>İçerik Üreticisi</strong></td>
+                                <td>Blogger, YouTuber, vlogger</td>
+                                <td>Blogger, YouTuber</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Şehir Elçisi</strong></td>
+                                <td>Bölgesel lider</td>
+                                <td>Şehir temsilcisi</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <strong>💡 Örnek:</strong> Ahmet bir blogger. Sistem Ahmet'e "İçerik Üreticisi" etiketi yapıştırıyor. Bu etiket Ahmet'in ne yapabileceğini belirliyor.
+                    </div>
+                </div>
+
+                <!-- YETKİLER -->
+                <div class="section" id="yetkiler">
+                    <h2>🔑 Yetkiler — Ne Yapabileceğiniz</h2>
+                    <p>Yetkiler, bir rolün yapabileceği şeylerdir. Mesela:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Yetki Adı</th>
+                                <th>Ne Demek?</th>
+                                <th>Örnek</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Blog yazısı yazabilir</td>
+                                <td>Blog yazısı oluşturabilir mi?</td>
+                                <td>Blogger ✅, Danışman ❌</td>
+                            </tr>
+                            <tr>
+                                <td>Etkinlik oluşturabilir</td>
+                                <td>Etkinlik açabilir mi?</td>
+                                <td>Blogger ✅, Bireysel ❌</td>
+                            </tr>
+                            <tr>
+                                <td>Directory'de görünebilir</td>
+                                <td>Herkese açık listede görünür mü?</td>
+                                <td>Danışman ✅, Bireysel ❌</td>
+                            </tr>
+                            <tr>
+                                <td>Profil düzenleyebilir</td>
+                                <td>Kendi bilgilerini değiştirebilir mi?</td>
+                                <td>Hepsi ✅</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="success-box">
+                        <strong>✅ Kısaca:</strong> Her rolle gelen bir yetki listesi var. Blogger'lar blog yazabilir, etkinlik açabilir. Danışmanlar directory'de görünür.
+                    </div>
+                </div>
+
+                <!-- KATALOG İTEMLER -->
+                <div class="section" id="itemler">
+                    <h2>📦 Katalog İtemler — Oluşturulan Şeyler</h2>
+                    <p>İtemler, platformda gerçekten oluşturulan şeylerdir:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>İtem Tipi</th>
+                                <th>Ne?</th>
+                                <th>Örnek</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Danışman Profili</strong></td>
+                                <td>Birinin danışman sayfası</td>
+                                <td>Ahmet'in hukuk danışmanı profili</td>
+                            </tr>
+                            <tr>
+                                <td><strong>İşletme Profili</strong></td>
+                                <td>Bir dükkan/restoran sayfası</td>
+                                <td>ABC Restoran'ın sayfası</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Etkinlik</strong></td>
+                                <td>Bir etkinlik duyurusu</td>
+                                <td>Yazılım konferansı — 15 Haziran</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Blog Yazısı</strong></td>
+                                <td>Bir blog yazısı</td>
+                                <td>"React'e Giriş" yazısı</td>
+                            </tr>
+                            <tr>
+                                <td><strong>İş İlanı</strong></td>
+                                <td>Açık pozisyon</td>
+                                <td>Junior Developer arıyoruz</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pazar İlanı</strong></td>
+                                <td>Satış/Kiralık</td>
+                                <td>İkinci el bisiklet satılık</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <strong>💡 Örnek:</strong> Ayşe blog yazısı oluşturuyor. Bu yazı bir <span class="highlight">İtem</span> oluyor. O yazının bir "tipi" var: "Blog Yazısı".
+                    </div>
+                </div>
+
+                <!-- HEPSI BIRLIKTE -->
+                <div class="section" id="birlikli">
+                    <h2>🔗 Hepsi Birlikte Nasıl Çalışır?</h2>
+                    <p>Rol + Yetki + İtem = Güvenlik</p>
+
+                    <div class="flow-diagram">
+┌──────────────────────────────────────────┐
+│ AYŞE GIRIŞ YAPIYOR                       │
+└──────────────────────────────────────────┘
+         ⬇️
+┌──────────────────────────────────────────┐
+│ SİSTEM KONTROL EDİYOR:                   │
+│ "Ayşe kim?"                              │
+│ CEVAP: "Blog yazarı" (İçerik Üreticisi) │
+└──────────────────────────────────────────┘
+         ⬇️
+┌──────────────────────────────────────────┐
+│ "Blogger ne yapabilir?"                  │
+│ ✅ Blog yazı yazabilir                   │
+│ ✅ Etkinlik oluşturabilir                │
+│ ❌ Danışman profili açamaz               │
+└──────────────────────────────────────────┘
+         ⬇️
+┌──────────────────────────────────────────┐
+│ AYŞE BLOG YAZISINA TIKLADI                │
+└──────────────────────────────────────────┘
+         ⬇️
+┌──────────────────────────────────────────┐
+│ "Blogger blog yazı yazabilir mi?"        │
+│ CEVAP: EVET ✅                           │
+└──────────────────────────────────────────┘
+         ⬇️
+┌──────────────────────────────────────────┐
+│ "O HALDE İZİN VER!"                      │
+│ Ayşe blog yazı yazabiliyor               │
+└──────────────────────────────────────────┘
+                    </div>
+                </div>
+
+                <!-- ÖRNEK AKIŞ -->
+                <div class="section" id="ornek">
+                    <h2>🎬 Gerçek Örnek: Etkinlik Oluşturma</h2>
+
+                    <h3>Senaryo: Blogger Fatma etkinlik açmak istiyor</h3>
+
+                    <div class="step-box">
+                        <strong>1️⃣ Fatma giriş yapıyor</strong><br>
+                        Sistem: "Hoşgeldiniz Fatma. Siz İçerik Üreticisisiniz."
+                    </div>
+
+                    <div class="step-box">
+                        <strong>2️⃣ Fatma "Etkinlik Oluştur" butonuna basıyor</strong><br>
+                        Sistem arka planda kontrol ediyor:
+                        <ul>
+                            <li>Fatma authentice mi? ✅ EVET</li>
+                            <li>Fatma'nın rolü ne? ✅ İçerik Üreticisi</li>
+                            <li>İçerik Üreticileri etkinlik oluşturabilir mi? ✅ EVET</li>
+                        </ul>
+                    </div>
+
+                    <div class="success-box">
+                        <strong>✅ SONUÇ:</strong> Fatma etkinlik formu görüyor. Başlık, tarih, yer gibi bilgileri doldurabilir.
+                    </div>
+
+                    <div class="step-box">
+                        <strong>3️⃣ Fatma formu doldurup "Yayınla" butonuna basıyor</strong><br>
+                        Sistem kontrol ediyor:
+                        <ul>
+                            <li>Bu bir etkinlik mi? ✅ EVET</li>
+                            <li>Yetki var mı? ✅ EVET (İçerik Üreticileri yapabilir)</li>
+                            <li>Veri doğru mu? ✅ EVET</li>
+                        </ul>
+                    </div>
+
+                    <div class="success-box">
+                        <strong>✅ BAŞARILI!</strong> Etkinlik oluşturuldu. Herkese görünüyor.
+                    </div>
+
+                    <hr style="margin: 30px 0; border: none; border-top: 2px solid #e0e0e0;">
+
+                    <h3>Peki Bireysel Kullanıcı Ayşe ne olur?</h3>
+
+                    <div class="step-box">
+                        <strong>1️⃣ Ayşe giriş yapıyor</strong><br>
+                        Sistem: "Hoşgeldiniz Ayşe. Siz Bireyselsiniz."
+                    </div>
+
+                    <div class="step-box">
+                        <strong>2️⃣ Ayşe "Etkinlik Oluştur" butonuna basıyor</strong><br>
+                        Sistem kontrol ediyor:
+                        <ul>
+                            <li>Ayşe'nin rolü ne? ✅ Bireysel</li>
+                            <li>Bireysel kullanıcılar etkinlik oluşturabilir mi? ❌ HAYIR</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>❌ SONUÇ:</strong> Sistem hata gösteriyor: "Maalesef etkinlik oluşturmak için yeterli yetkiniz yok."
+                    </div>
+                </div>
+
+                <!-- ADMIN KONTROLÜ -->
+                <div class="section" id="admin">
+                    <h2>🔧 Admin Nasıl Kontrol Edebilir?</h2>
+                    <p>Admin (yönetici) hepsi bu kontrol edebilir. Üç ana yer vardır:</p>
+
+                    <h3>1️⃣ Roller Sayfası</h3>
+                    <p>Admin buraya gidiyor: <span class="highlight">/admin/new-member/users-roles</span></p>
+                    <p>Ne yapabilir?</p>
+                    <ul>
+                        <li>Ayşe'nin rolünü değiştirebilir: Bireysel → İçerik Üreticisi</li>
+                        <li>Böylece Ayşe blog yazı yazabilir hale gelir</li>
+                    </ul>
+
+                    <h3>2️⃣ Yetkiler Sayfası</h3>
+                    <p>Admin buraya gidiyor: <span class="highlight">/admin/new-member/roles-features</span></p>
+                    <p>Ne yapabilir?</p>
+                    <ul>
+                        <li>Blogger'lar etkinlik oluşturabilir mi? Kontrol edebilir ✅ veya ✅</li>
+                        <li>Örneğin "Geçici olarak kimse etkinlik oluşturmasın" diye kapatabilir</li>
+                    </ul>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Yetki</th>
+                                <th>Bireysel</th>
+                                <th>Blogger</th>
+                                <th>Danışman</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Blog yazı yazabilir</td>
+                                <td>❌</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Etkinlik oluşturabilir</td>
+                                <td>❌</td>
+                                <td>✅</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td>Directory'de görünebilir</td>
+                                <td>❌</td>
+                                <td>✅</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td>Profil düzenleyebilir</td>
+                                <td>✅</td>
+                                <td>✅</td>
+                                <td>✅</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>3️⃣ İstisna Sayfası</h3>
+                    <p>Admin buraya gidiyor: <span class="highlight">/admin/new-member/overrides</span></p>
+                    <p>Ne yapabilir?</p>
+                    <ul>
+                        <li>Ayşe (Bireysel) sadece etkinlik oluşturmasına izin verebilir</li>
+                        <li>"Ayşe özel durum, etkinlik oluşturabilir" diye not düşebilir</li>
+                    </ul>
+
+                    <div class="example-box">
+                        <strong>💡 Örnek:</strong> Ayşe başkan oldu. Admin şimdi "Ayşe'ye etkinlik oluşturma izni ver" diyor. Ayşe etkinlik oluşturabiliyor artık.
+                    </div>
+                </div>
+
+                <!-- SSS -->
+                <div class="section" id="sorular">
+                    <h2>❓ Sık Sorulan Sorular</h2>
+
+                    <h3>Soru: Aynı kişi iki role sahip olabilir mi?</h3>
+                    <div class="warning-box">
+                        <strong>Cevap:</strong> HAYIR. Her kişinin sadece BİR rolü vardır. Ayşe ya Blogger ya Danışman, ikisi olamaz.
+                    </div>
+
+                    <h3>Soru: Bir yetki tüm roller için aynı mı?</h3>
+                    <div class="warning-box">
+                        <strong>Cevap:</strong> HAYIR. "Profil düzenle" her rol için açık. Ama "etkinlik oluştur" blogger'lar için açık, danışmanlar için kapalı.
+                    </div>
+
+                    <h3>Soru: Admin yetkilerini değiştirebilir mi?</h3>
+                    <div class="success-box">
+                        <strong>Cevap:</strong> EVET! Admin herşeyi kontrol edebilir. Blogger'ların etkinlik oluşturmasını engelleyebilir, Ayşe'ye özel izin verebilir, vb.
+                    </div>
+
+                    <h3>Soru: Bir kişiye yanılı yetki vermişsem?</h3>
+                    <div class="success-box">
+                        <strong>Cevap:</strong> Admin geri alabilir. Ayşe'nin rolünü değiştirir, izin kapatır, veya istisna siler.
+                    </div>
+
+                    <h3>Soru: Tüm sistem ne zaman kontrol edilir?</h3>
+                    <div class="success-box">
+                        <strong>Cevap:</strong> HER ZAMAN. Ayşe bir şey yapmak istediğinde, sistem öncesinde kontrol eder. Yetkisi yoksa izin vermez.
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <p>CorteQS Fin Yetkilendirme Sistemi — Basit Rehberi</p>
+                    <p>Admin kontrol panelinden her şeyi yönetebilirsiniz.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claim Sistemi Rehberi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+            color: #2c3e50;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 1.8em;
+            color: #f5576c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #f5576c;
+        }
+
+        .section h3 {
+            font-size: 1.3em;
+            color: #f093fb;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .box {
+            background: #fff5f7;
+            border-left: 4px solid #f5576c;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            font-size: 1.05em;
+        }
+
+        .step-box {
+            background: #f0f9ff;
+            border-left: 4px solid #0284c7;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 6px;
+        }
+
+        .success {
+            background: #dcfce7;
+            border-left: 4px solid #22c55e;
+        }
+
+        .warning {
+            background: #fef08a;
+            border-left: 4px solid #eab308;
+        }
+
+        .error {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+        }
+
+        .flow {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', monospace;
+            font-size: 0.95em;
+            line-height: 1.8;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        thead {
+            background: #f5576c;
+            color: white;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tbody tr:nth-child(odd) {
+            background: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background: #fff5f7;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .highlight {
+            background: #fef08a;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Monaco', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏷️ Claim Sistemi Rehberi</h1>
+            <p>Sahiplik Talepleri Nasıl Çalışır?</p>
+        </div>
+
+        <div class="content">
+            <!-- BAŞLANGIÇ -->
+            <div class="section">
+                <h2>🌟 Claim Sistemi Nedir?</h2>
+                <p>Claim sistemi, birinin sahip olduğu bir şeyi (işletme, danışman profili, vb.) sistemde talep etmesine izin verir.</p>
+
+                <div class="box">
+                    <strong>Basit örnek:</strong><br>
+                    ABC Restoran eski bir katalog item'i. Hiç kimse oluşturmadı, sitede yok. Gerçek restaurant sahibi bulundu ve "bu benim işletmem" dedi. Claim sistemi bunu kontrol edip, sahibiliği verir.
+                </div>
+            </div>
+
+            <!-- NE ZİTEN CLAIM? -->
+            <div class="section">
+                <h2>❓ Ne Zaman Claim Yapılır?</h2>
+                <p>Şu durumlarda claim yapılır:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Durum</th>
+                            <th>Neden?</th>
+                            <th>Örnek</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Eski/İthal Item</strong></td>
+                            <td>Sistemde var ama kimse oluşturmadı</td>
+                            <td>Eski restoran listesi, ithal edilen işletmeler</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sahipsiz Profil</strong></td>
+                            <td>Profil var ama sahibi giriş yapmadı</td>
+                            <td>Gerçek danışman, profili buldu</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Doğrulama</strong></td>
+                            <td>Sahipliği kanıtlamak gerekli</td>
+                            <td>Sertifika, ruhsat, belgeler</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ADIM ADIM -->
+            <div class="section">
+                <h2>👣 Adım Adım: Nasıl Claim Yapılır?</h2>
+
+                <div class="step-box">
+                    <strong>1️⃣ Sahip Katalogu Bulur</strong><br>
+                    "ABC Restoran" var mı diye arar.
+                </div>
+
+                <div class="step-box">
+                    <strong>2️⃣ "Bu Benim" Butonuna Tıklar</strong><br>
+                    "Claim This Business" veya "Bu Benim" butonuna tıklar.
+                </div>
+
+                <div class="step-box">
+                    <strong>3️⃣ Talep Formu Doldurur</strong><br>
+                    <ul>
+                        <li><strong>Claim Tipi:</strong> "ownership" (sahiplik)</li>
+                        <li><strong>Kanıt (Evidence):</strong> Fotoğraf, sertifika, ruhsat dosyası (JSON)</li>
+                        <li><strong>Not:</strong> Neden bu benim? Açıklama</li>
+                    </ul>
+                </div>
+
+                <div class="step-box">
+                    <strong>4️⃣ Gönderir</strong><br>
+                    Talep sisteme kaydedilir. Status = <span class="highlight">pending</span>
+                </div>
+
+                <div class="step-box">
+                    <strong>5️⃣ Admin İnceliyor</strong><br>
+                    Moderator talebi görerek:
+                    <ul>
+                        <li>Kanıtı kontrol eder</li>
+                        <li>Onaylar (approved) veya Reddeder (rejected)</li>
+                    </ul>
+                </div>
+
+                <div class="step-box success">
+                    <strong>✅ Onaylanırsa</strong><br>
+                    <ul>
+                        <li>Sahiplik talep edene verilir</li>
+                        <li>Item'in sahibi değişir</li>
+                        <li>Kişi artık o item'i yönetebilir</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- WORKFLOW DİYAGRAMI -->
+            <div class="section">
+                <h2>🔄 Akış Diyagramı</h2>
+                <div class="flow">
+KULLANICI
+  ↓
+"Bu benim işletmem" diye claim yapıyor
+  ↓
+SISTEM: Talep oluşturuyor (status = pending)
+  ↓
+ADMIN TARAFINDA
+  ├─ Kanıt inceleniyor
+  ├─ Sorular sorulabiliyor
+  └─ Karar veriliyor
+  ↓
+DECİSİON
+  ├─ approved → Sahiplik verilir ✅
+  ├─ rejected → Talep reddedilir ❌
+  └─ cancelled → İptal edilir ⛔
+  ↓
+SONUÇ
+  ├─ Approved: Kullanıcı artık sahibi
+  ├─ Rejected: Item'in sahibi yok
+  └─ Cancelled: Talep iptal
+                </div>
+            </div>
+
+            <!-- ÖRNEK -->
+            <div class="section">
+                <h2>📖 Gerçek Örnek: Restaurant Sahibi</h2>
+
+                <h3>Senaryo</h3>
+                <p>Mehmet'in "Mehmet's Kebab" adında bir restoran var. Sitede bu restaurant zaten var (eski listede). Mehmet giriş yapıyor ve "bu benim" demek istiyor.</p>
+
+                <h3>Adımlar</h3>
+
+                <div class="step-box">
+                    <strong>Mehmet'in Yaptığı:</strong><br>
+                    <ul>
+                        <li>Restoran katalogunu bulur</li>
+                        <li>"Bu İşletmem" butonuna tıklar</li>
+                        <li>Form doldurur:
+                            <ul>
+                                <li>Claim Type: "ownership"</li>
+                                <li>Evidence: Ruhsat fotoğrafı (.jpg), işletme belgesi</li>
+                                <li>Note: "20 yıldır bu restoranda çalışıyorum, ben sahibiyim"</li>
+                            </ul>
+                        </li>
+                        <li>Gönderir</li>
+                    </ul>
+                </div>
+
+                <div class="step-box">
+                    <strong>Sistem'in Yaptığı:</strong><br>
+                    <ul>
+                        <li>Talep kaydediliyor: <span class="highlight">catalog_claim_requests</span> tablosuna</li>
+                        <li>Status: <span class="highlight">pending</span></li>
+                        <li>Audit log'a yazılıyor</li>
+                        <li>Admin paneline düşüyor</li>
+                    </ul>
+                </div>
+
+                <div class="step-box">
+                    <strong>Admin'in Yaptığı (Şehir Moderatörü):</strong><br>
+                    <ul>
+                        <li>/admin/approvals → Pending claims sekmesi</li>
+                        <li>Mehmet'in talebini açıyor</li>
+                        <li>Kanıt kontrol ediyor: "Evet ruhsat sahibi Mehmet"</li>
+                        <li>"Approve" butonuna tıklıyor</li>
+                    </ul>
+                </div>
+
+                <div class="step-box success">
+                    <strong>✅ Sonuç:</strong><br>
+                    <ul>
+                        <li>Talep status = <span class="highlight">approved</span></li>
+                        <li>Restaurant'ın sahibi = Mehmet</li>
+                        <li>Item'in verification_status = <span class="highlight">claimed</span></li>
+                        <li>Mehmet artık restoran'ı düzenleyebiliyor</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- BAŞARISIZ ÖRNEK -->
+            <div class="section">
+                <h2>📖 Başarısız Örnek: Sahte Claim</h2>
+
+                <h3>Senaryo</h3>
+                <p>Ahmet bir restoran buldu ve "bu benim" dedi ama kanıt yok.</p>
+
+                <div class="step-box">
+                    <strong>Ahmet'in Yaptığı:</strong><br>
+                    <ul>
+                        <li>Form dolduruyor</li>
+                        <li>Evidence: Boş (hiç kanıt yok)</li>
+                        <li>Note: "Evet bu benim"</li>
+                    </ul>
+                </div>
+
+                <div class="step-box error">
+                    <strong>❌ Admin'in Yaptığı:</strong><br>
+                    <ul>
+                        <li>Kanıt yok → Şüpheli</li>
+                        <li>"Reject" tıklıyor</li>
+                        <li>Note ekliyor: "Kanıt alınız"</li>
+                    </ul>
+                </div>
+
+                <div class="step-box warning">
+                    <strong>⚠️ Sonuç:</strong><br>
+                    <ul>
+                        <li>Talep status = <span class="highlight">rejected</span></li>
+                        <li>Restoran'ın sahibi yok</li>
+                        <li>Ahmet tekrar deneyebilir (kanıtla)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CLAIM STATES -->
+            <div class="section">
+                <h2>🔀 Claim Durumları</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Durum</th>
+                            <th>Anlamı</th>
+                            <th>Sonrası</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="highlight">pending</span></td>
+                            <td>Talep yapıldı, admin incelemedi</td>
+                            <td>Admin kontrol edebilir</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">approved</span></td>
+                            <td>Admin onayladı</td>
+                            <td>Sahiplik verildi, işlem bitti</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">rejected</span></td>
+                            <td>Admin reddetti</td>
+                            <td>Yeni talep açılabilir</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">cancelled</span></td>
+                            <td>Talep iptal edildi</td>
+                            <td>Yeni talep açılabilir</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- TEKNIK DETAY -->
+            <div class="section">
+                <h2>⚙️ Teknik Detaylar</h2>
+
+                <h3>Tablo: catalog_claim_requests</h3>
+                <div class="code">
+{
+  id: UUID,                      // Talep ID
+  item_id: UUID,                 // Hangi item?
+  requested_by_user_id: UUID,    // Kim talep etti?
+  claim_type: 'ownership',       // Sahiplik talebii
+  evidence: JSON,                // Kanıt dosyaları
+  note: string,                  // Açıklama
+  status: 'pending|approved|rejected|cancelled',
+  reviewed_by_user_id: UUID,     // Kim inceledi?
+  reviewed_at: timestamp,        // Ne zaman incelendi?
+}
+                </div>
+
+                <h3>RPC Fonksiyonları</h3>
+
+                <p><strong>1. submit_catalog_claim_request()</strong></p>
+                <ul>
+                    <li>Talep yapar</li>
+                    <li>User tarafından çağrılır</li>
+                    <li>Evidence ve note ekler</li>
+                </ul>
+
+                <p><strong>2. review_catalog_claim_request()</strong></p>
+                <ul>
+                    <li>Talebi inceler</li>
+                    <li>Admin (moderator) tarafından çağrılır</li>
+                    <li>Approve / Reject / Cancel karar verir</li>
+                </ul>
+            </div>
+
+            <!-- ADMIN KONTROL -->
+            <div class="section">
+                <h2>🔧 Admin Kontrolü</h2>
+
+                <h3>Admin Neler Yapabilir?</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>İşlem</th>
+                            <th>Ne Yapar?</th>
+                            <th>Nerede?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Talep İncele</strong></td>
+                            <td>Kanıt ve detayları görebilir</td>
+                            <td>/admin/approvals</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Approve</strong></td>
+                            <td>Sahiplik verilir</td>
+                            <td>/admin/approvals → Approve</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reject</strong></td>
+                            <td>Talep reddedilir</td>
+                            <td>/admin/approvals → Reject</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Not Ekle</strong></td>
+                            <td>Neden karar verdi not düşebilir</td>
+                            <td>/admin/approvals → Review Note</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>SSS: Admin Soruları</h3>
+
+                <div class="box">
+                    <strong>S: Kanıt nasıl kontrol ederim?</strong><br>
+                    C: Evidence field'inde JSON dosyalar var. Fotoğraf URL'leri, belgeler. Admin panelinde preview görebiliyor.
+                </div>
+
+                <div class="box">
+                    <strong>S: Yanlış onay verdiysem?</strong><br>
+                    C: Talep approved/rejected olduktan sonra değiştirilemez. Yanlışsa yeni talep açılması istenir.
+                </div>
+
+                <div class="box">
+                    <strong>S: Claim Rejected ise?</strong><br>
+                    C: Kullanıcı daha iyi kanıt dengan yeni talep açabilir.
+                </div>
+            </div>
+
+            <!-- CLAIM SONRASI -->
+            <div class="section">
+                <h2>✅ Claim Approved Olduktan Sonra?</h2>
+
+                <div class="step-box success">
+                    <strong>1. Sahiplik Verilir</strong><br>
+                    Item'in sahip alanı güncellenir.
+                </div>
+
+                <div class="step-box success">
+                    <strong>2. Status Değişir</strong><br>
+                    Item'in verification_status = "claimed"
+                </div>
+
+                <div class="step-box success">
+                    <strong>3. Yönetim Yetkisi</strong><br>
+                    Sahibi item'i düzenleyebiliyor:
+                    <ul>
+                        <li>Açıklamayı güncelleyebilir</li>
+                        <li>Fotoğraf ekleyebilir</li>
+                        <li>İletişim bilgisini değiştirebilir</li>
+                        <li>Yayın durumunu (published/draft) kontrolleyebilir</li>
+                    </ul>
+                </div>
+
+                <div class="step-box success">
+                    <strong>4. Audit Log</strong><br>
+                    Tüm işlem sistem'de kaydedilir (kim, ne zaman, neler).
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>CorteQS Fin — Claim Sistemi Rehberi</p>
+                <p>Admin panelinden talepleri /admin/approvals'te kontrol edebilirsiniz.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
