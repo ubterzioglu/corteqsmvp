@@ -41,7 +41,13 @@ const AdminRoleManagementPage = () => {
         setLoadingRoles(false);
         return;
       }
-      setRoles((data ?? []) as RoleOption[]);
+      setRoles(
+        ((data ?? []) as Array<{ key: string; label: string }>).map((role) => ({
+          value: role.key,
+          label: role.label,
+          hint: role.key,
+        })),
+      );
       setLoadingRoles(false);
     })();
     return () => { isMounted = false; };

@@ -8,10 +8,10 @@ beforeEach(() => {
 });
 
 const roles = [
-  { key: "User_Standard", label: "Standart Kullanıcı" },
-  { key: "Consultant_RealEstate", label: "Gayrimenkul Danışmanı" },
-  { key: "Business_RestaurantCafe", label: "Restoran / Cafe" },
-  { key: "Healthcare_Doctor", label: "Doktor" },
+  { value: "User_Standard", label: "Standart Kullanıcı", hint: "User_Standard" },
+  { value: "Consultant_RealEstate", label: "Gayrimenkul Danışmanı", hint: "Consultant_RealEstate" },
+  { value: "Business_RestaurantCafe", label: "Restoran / Cafe", hint: "Business_RestaurantCafe" },
+  { value: "Healthcare_Doctor", label: "Doktor", hint: "Healthcare_Doctor" },
 ];
 
 describe("RoleSearchSelect", () => {
@@ -74,5 +74,11 @@ describe("RoleSearchSelect", () => {
       />,
     );
     expect(screen.getByText("Bir rol seçiniz...")).toBeInTheDocument();
+  });
+
+  it("renders optional role hint text in the list", () => {
+    render(<RoleSearchSelect roles={roles} value="" onValueChange={vi.fn()} />);
+    fireEvent.click(screen.getByRole("combobox"));
+    expect(screen.getByText("Consultant_RealEstate")).toBeInTheDocument();
   });
 });

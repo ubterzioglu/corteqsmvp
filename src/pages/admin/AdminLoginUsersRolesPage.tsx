@@ -897,7 +897,12 @@ const AdminLoginUsersRolesPage = () => {
                       <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Rol Yönetimi</p>
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                         <RoleSearchSelect
-                          roles={roles.map((role) => ({ key: role.id, label: role.label }))}
+                          roles={roles.map((role) => ({
+                            value: role.id,
+                            label: role.label,
+                            hint: role.key,
+                            searchText: role.id,
+                          }))}
                           value={dialogRoleId}
                           onValueChange={setDialogRoleId}
                           disabled={isUserDataSaving || updatingUserId === userDataDialogState.user.user_id || roles.length === 0}

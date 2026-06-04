@@ -13,8 +13,10 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export type RoleOption = {
-  key: string;
+  value: string;
   label: string;
+  hint?: string;
+  searchText?: string;
 };
 
 type RoleSearchSelectProps = {
@@ -36,7 +38,7 @@ const RoleSearchSelect = ({
 }: RoleSearchSelectProps) => {
   const [open, setOpen] = useState(false);
 
-  const selectedRole = roles.find((r) => r.key === value);
+  const selectedRole = roles.find((r) => r.value === value);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -62,23 +64,25 @@ const RoleSearchSelect = ({
             <CommandGroup>
               {roles.map((role) => (
                 <CommandItem
-                  key={role.key}
-                  value={`${role.label} ${role.key}`}
+                  key={role.value}
+                  value={`${role.label} ${role.hint ?? ""} ${role.searchText ?? ""}`.trim()}
                   onSelect={() => {
-                    onValueChange(role.key);
+                    onValueChange(role.value);
                     setOpen(false);
                   }}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4 shrink-0",
-                      value === role.key ? "opacity-100" : "opacity-0",
+                      value === role.value ? "opacity-100" : "opacity-0",
                     )}
                   />
                   <span className="flex-1 truncate">{role.label}</span>
-                  <span className="ml-2 text-[10px] text-muted-foreground shrink-0">
-                    {role.key}
-                  </span>
+                  {role.hint ? (
+                    <span className="ml-2 shrink-0 text-[10px] text-muted-foreground">
+                      {role.hint}
+                    </span>
+                  ) : null}
                 </CommandItem>
               ))}
             </CommandGroup>
