@@ -196,7 +196,7 @@ const PostGenerator = () => {
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin" /></div>;
-  if (!user) return <Navigate to="/auth" replace />;
+  if (!user) return <Navigate to="/login" replace />;
   if (isAdmin === false) return (
     <div className="min-h-screen flex flex-col">
       <Navbar />

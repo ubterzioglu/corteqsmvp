@@ -38,7 +38,7 @@ const MapSearch = () => {
         description: "Yol tarifini WhatsApp'ınıza göndermek için lütfen giriş yapın.",
         variant: "destructive",
       });
-      navigate("/auth");
+      navigate("/login");
       return;
     }
     if (!profile?.phone) {

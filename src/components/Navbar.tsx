@@ -74,7 +74,7 @@ const navigate = useNavigate();
             ) : (
               <>
                 <div className="h-6 w-px bg-border/90" />
-                <Link to="/auth" className="flex-1 min-w-[132px]">
+                <Link to="/login?mode=login" className="flex-1 min-w-[132px]">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -84,7 +84,7 @@ const navigate = useNavigate();
                   </Button>
                 </Link>
                 <div className="h-6 w-px bg-border/90" />
-                <Link to="/auth" className="flex-1 min-w-[132px]">
+                <Link to="/login?mode=signup" className="flex-1 min-w-[132px]">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -139,10 +139,10 @@ const navigate = useNavigate();
                   </>
                 ) : (
                   <div className="flex gap-2 mt-2">
-                    <Link to="/auth" onClick={() => setIsOpen(false)} className="flex-1">
+                    <Link to="/login?mode=login" onClick={() => setIsOpen(false)} className="flex-1">
                       <Button variant="ghost" size="sm" className="w-full">{t.nav.login}</Button>
                     </Link>
-                    <Link to="/auth" onClick={() => setIsOpen(false)} className="flex-1">
+                    <Link to="/login?mode=signup" onClick={() => setIsOpen(false)} className="flex-1">
                       <Button variant="default" size="sm" className="w-full">{t.nav.signup}</Button>
                     </Link>
                   </div>

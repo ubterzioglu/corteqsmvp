@@ -43,7 +43,7 @@ const PlatformMessageButton = ({
         description: "Mesaj göndermek için lütfen giriş yapın veya kayıt olun.",
         variant: "destructive",
       });
-      navigate("/auth");
+      navigate("/login");
       return;
     }
     setOpen(true);

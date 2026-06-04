@@ -99,7 +99,7 @@ const Events = () => {
   const requireAuth = (cb: () => void) => {
     if (!user) {
       toast({ title: "Giriş gerekli", description: "Etkinlik oluşturmak için lütfen giriş yapın." });
-      navigate("/auth?redirect=/events");
+      navigate("/login?next=/events");
       return;
     }
     cb();

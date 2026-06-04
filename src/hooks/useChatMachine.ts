@@ -1,12 +1,7 @@
 import { useReducer, useCallback, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { notifySubmission } from "@/lib/mail";
 import {
   getCategoryLabel,
   getReferralSourceLabel,
-  toSubmissionInsert,
-  uploadSubmissionDocuments,
-  validateReferralCodeBeforeSubmit,
   validateSubmissionDocuments,
 } from "@/lib/submissions";
 import {
@@ -395,7 +390,7 @@ export function useChatMachine() {
     }
 
     dispatch({ type: "SEND_MESSAGE", payload: input });
-  }, [state]);
+  }, []);
 
   const selectQuickReply = useCallback((value: string) => {
     dispatch({ type: "SELECT_QUICK_REPLY", payload: value });
@@ -435,51 +430,11 @@ export function useChatMachine() {
     submitRef.current = true;
     dispatch({ type: "CONFIRM_SUBMIT" });
 
-    try {
-      const { data, documentFiles } = state;
-      const uploadedDocs = await uploadSubmissionDocuments(documentFiles);
-
-      const values: Record<string, FormDataEntryValue> = {
-        category: data.category ?? "",
-        fullname: data.fullname ?? "",
-        country: data.country ?? "",
-        city: data.city ?? "",
-        business: data.business ?? "",
-        field: data.field ?? "",
-        email: data.email ?? "",
-        phone: data.phone ?? "",
-        referral_source: data.referral_source ?? "",
-        referral_detail: data.referral_detail ?? "",
-        referral_code: data.referral_code ?? "",
-        offers_needs: data.offers_needs ?? "",
-        document_url: uploadedDocs[0]?.url ?? "",
-        document_name: uploadedDocs[0]?.name ?? "",
-        documents: uploadedDocs as unknown as FormDataEntryValue,
-        contest_interest: data.contest_interest ? "yes" : "",
-        whatsapp_interest: data.whatsapp_interest ? "yes" : "",
-      };
-
-      const payload = toSubmissionInsert(values, "register", data.consent);
-      payload.source_type = "chatbot";
-      payload.referral_source = payload.referral_source || "ai-chat";
-      payload.referral_code = await validateReferralCodeBeforeSubmit(payload.referral_code);
-      const { data: inserted, error } = await supabase.from("submissions").insert(payload).select("id").single();
-      if (error) throw error;
-
-      try {
-        if (inserted?.id) {
-          await notifySubmission(inserted.id);
-        }
-      } catch (notificationError) {
-        console.error("Mail notification error:", notificationError);
-      }
-
-      dispatch({ type: "SUBMIT_SUCCESS" });
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "L\u00fctfen tekrar deneyin veya info@corteqs.net adresine yaz\u0131n.";
-      submitRef.current = false;
-      dispatch({ type: "SUBMIT_ERROR", payload: message });
-    }
+    submitRef.current = false;
+    dispatch({
+      type: "SUBMIT_ERROR",
+      payload: "Bu asistan artık kayıt almıyor. Lütfen hesabını /login üzerinden oluştur.",
+    });
   }, [state]);
 
   return {

@@ -1,8 +1,5 @@
 project_id = "injprdrsklkxgnaiixzh"
 
-[functions.chat-register]
-verify_jwt = true
-
 [functions.find-matches]
 verify_jwt = true
 

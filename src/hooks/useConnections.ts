@@ -88,7 +88,7 @@ export function useConnections() {
     async (otherId: string, otherName?: string) => {
       if (!user) {
         toast({ title: "Giriş gerekli", description: "Bağlantı kurmak için giriş yap.", variant: "destructive" });
-        navigate("/auth");
+        navigate("/login");
         return false;
       }
       if (otherId === user.id) return false;

@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,7 +11,6 @@ import { GENERIC_FEATURE_KEYS } from "@/lib/features";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import AboutPage from "./pages/AboutPage.tsx";
-import FormPage from "./pages/FormPage.tsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.tsx";
 import DiasporaDetailPage from "./pages/DiasporaDetailPage.tsx";
@@ -56,7 +55,6 @@ import AdminWhatsAppLandingsPage from "@/pages/admin/AdminWhatsAppLandingsPage";
 import AdminWhatsAppLandingEditorsPage from "@/pages/admin/AdminWhatsAppLandingEditorsPage";
 import AdminCommunityGuidePage from "@/pages/admin/AdminCommunityGuidePage";
 import WhatsAppLandingEditorPage from "@/pages/WhatsAppLandingEditorPage";
-import AIFormPage from "./pages/AIFormPage.tsx";
 import AdminMay19IdeaPage from "@/pages/admin/AdminMay19IdeaPage";
 import AdminMay19MomentPage from "@/pages/admin/AdminMay19MomentPage";
 import SurveysPage from "./pages/SurveysPage.tsx";
@@ -99,6 +97,11 @@ const WhatsAppGroupDetailRedirect = () => {
   const { id } = useParams<{ id: string }>();
 
   return <Navigate to={`/addcom?group=${encodeURIComponent(id ?? "")}`} replace />;
+};
+
+const AuthRouteRedirect = () => {
+  const location = useLocation();
+  return <Navigate to={`/login${location.search}`} replace />;
 };
 
 const FoundersCombinedPage = () => (
@@ -146,9 +149,10 @@ const App = () => (
                 <Route path="/anket" element={<SurveysPage />} />
                 <Route path="/anket/tesekkurler" element={<SurveyThankYouPage />} />
                 <Route path="/anket/:slug" element={<SurveyDetailPage />} />
-                <Route path="/aiform" element={<AIFormPage />} />
-                <Route path="/form" element={<FormPage />} />
+                <Route path="/aiform" element={<Navigate to="/login" replace />} />
+                <Route path="/form" element={<Navigate to="/login" replace />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/auth" element={<AuthRouteRedirect />} />
                 <Route path="/welcome/activate" element={<WelcomeActivatePage />} />
                 <Route path="/directory" element={<DirectoryPage />} />
                 <Route path="/associations" element={<Associations />} />

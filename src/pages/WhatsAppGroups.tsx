@@ -99,7 +99,7 @@ const WhatsAppGroups = () => {
         title: "Giriş gerekli",
         description: "Giriş sayfası yeni sekmede açılıyor. Giriş yaptıktan sonra bu sekmeye dönüp tekrar Gönder'e bas — formun korunuyor.",
       });
-      window.open("/auth", "_blank", "noopener");
+      window.open("/login", "_blank", "noopener");
       return;
     }
     if (!isConsentValid(consent)) {

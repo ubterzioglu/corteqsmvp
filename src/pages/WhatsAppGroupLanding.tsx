@@ -110,7 +110,7 @@ const WhatsAppGroupLanding = () => {
         title: "Giriş gerekli",
         description: "Talep göndermek için giriş sayfası yeni sekmede açılıyor. Giriş yaptıktan sonra bu sekmeye dön ve tekrar Gönder'e bas.",
       });
-      window.open("/auth", "_blank", "noopener");
+      window.open("/login", "_blank", "noopener");
       return;
     }
     if (!joinName.trim() || !joinEmail.trim()) {

@@ -125,7 +125,7 @@ const Feed = () => {
   const cafeOpen = inCafe && new Date(cafe!.closes_at) > new Date();
 
   const categoryAccountLink = !user
-    ? "/auth"
+    ? "/login?mode=signup"
     : !onboardingCompleted
       ? "/onboarding"
       : "/profile";

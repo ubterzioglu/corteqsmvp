@@ -1,22 +1,34 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import App from "@/App";
-
-vi.mock("@/pages/AIFormPage.tsx", () => ({
-  default: () => <div>AI Form Route</div>,
-}));
 
 describe("App /aiform routing", () => {
   afterEach(() => {
     window.history.pushState({}, "", "/");
   });
 
-  it("renders the public /aiform route", () => {
+  it("redirects the legacy /aiform route to /login", async () => {
     window.history.pushState({}, "", "/aiform");
 
     render(<App />);
 
-    expect(screen.getByText("AI Form Route")).toBeInTheDocument();
+    expect(await screen.findByText("CorteQS Hesabı")).toBeInTheDocument();
+  });
+
+  it("redirects the legacy /form route to /login", async () => {
+    window.history.pushState({}, "", "/form");
+
+    render(<App />);
+
+    expect(await screen.findByText("CorteQS Hesabı")).toBeInTheDocument();
+  });
+
+  it("redirects the legacy /auth route to /login", async () => {
+    window.history.pushState({}, "", "/auth");
+
+    render(<App />);
+
+    expect(await screen.findByText("CorteQS Hesabı")).toBeInTheDocument();
   });
 });

@@ -445,7 +445,7 @@ const DEMO_SPONSORED: CaddeSponsoredPlacement = {
   description: "Danışman, etkinlik veya topluluk teklifinizi Cadde akışında görünür hale getirin.",
   badgeText: "Sponsorlu",
   ctaLabel: "Talep Bırak",
-  ctaUrl: "/form",
+  ctaUrl: "/login?mode=signup",
   imageUrl: null,
 };
 

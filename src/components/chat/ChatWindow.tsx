@@ -18,6 +18,7 @@ type Props = {
   loadingOverride?: boolean;
   errorOverride?: string | null;
   allowInputAfterSubmit?: boolean;
+  showProgress?: boolean;
 };
 
 const ChatWindow = ({
@@ -31,6 +32,7 @@ const ChatWindow = ({
   loadingOverride,
   errorOverride,
   allowInputAfterSubmit = false,
+  showProgress = true,
 }: Props) => {
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -92,10 +94,12 @@ const ChatWindow = ({
               </p>
             </div>
           </div>
-          <div className="text-right">
-            <p className="text-xs text-muted-foreground">İlerleme</p>
-            <ChatProgressBar percentage={percentage} />
-          </div>
+          {showProgress ? (
+            <div className="text-right">
+              <p className="text-xs text-muted-foreground">İlerleme</p>
+              <ChatProgressBar percentage={percentage} />
+            </div>
+          ) : null}
         </div>
       </div>
 

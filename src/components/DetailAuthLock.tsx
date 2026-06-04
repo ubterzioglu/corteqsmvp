@@ -23,7 +23,7 @@ const DetailAuthLock = ({ category = "kart" }: { category?: string }) => {
           </p>
         </div>
       </div>
-      <Link to="/auth">
+      <Link to="/login">
         <Button size="sm" variant="default" className="gap-1.5 shrink-0">
           <Lock className="h-3.5 w-3.5" /> Giriş / Kayıt
         </Button>

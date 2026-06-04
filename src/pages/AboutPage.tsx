@@ -493,7 +493,7 @@ const AboutPage = () => {
                 WhatsApp Topluluğuna Katıl
               </a>
                 <a
-                  href="https://mvp.corteqs.net/form"
+                  href="/login?mode=signup"
                   target="_blank"
                   rel="noopener noreferrer"
                 className="inline-flex min-w-[240px] items-center justify-center gap-2 rounded-2xl border border-[#d55d1f] bg-[linear-gradient(135deg,#f97316_0%,#f26522_48%,#ef5b1c_100%)] px-6 py-3.5 text-sm font-bold text-white shadow-[0_16px_34px_rgba(242,101,34,0.22)] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_40px_rgba(242,101,34,0.28)]"

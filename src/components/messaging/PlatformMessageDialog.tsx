@@ -52,7 +52,7 @@ const PlatformMessageDialog = ({
   const goToAuth = () => {
     const redirect = encodeURIComponent(window.location.pathname + window.location.search);
     onOpenChange(false);
-    navigate(`/auth?redirect=${redirect}`);
+    navigate(`/login?next=${redirect}`);
   };
 
   const send = async () => {

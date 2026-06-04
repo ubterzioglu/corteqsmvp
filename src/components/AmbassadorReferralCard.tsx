@@ -30,7 +30,7 @@ const AmbassadorReferralCard = () => {
   }, [user]);
 
   const shareUrl = code
-    ? `${window.location.origin}/auth?ref=${encodeURIComponent(code)}`
+    ? `${window.location.origin}/login?ref=${encodeURIComponent(code)}`
     : "";
 
   const handleCopy = async (text: string) => {

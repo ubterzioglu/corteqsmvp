@@ -65,7 +65,7 @@ const CityAmbassadors = () => {
     e.preventDefault();
     if (!user) {
       toast({ title: "Giriş yapmalısınız", description: "Başvuru için lütfen giriş yapın.", variant: "destructive" });
-      navigate("/auth");
+      navigate("/login");
       return;
     }
     if (!form.full_name || !form.email || !form.phone || !form.city || !form.country) {

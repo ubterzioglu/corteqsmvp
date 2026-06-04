@@ -161,9 +161,9 @@ const CitiesSection = () => {
                     <span className="mr-1 font-bold uppercase tracking-widest text-primary">Radarımızdaki Şehirler:</span>
                     {radarCities.join(", ")}. Bu şehirler için de topluluk ilgisini topluyoruz. Şehrin listede yoksa{" "}
                     <a href="#kaydol" className="font-semibold text-primary underline-offset-4 transition-colors hover:text-accent hover:underline">
-                      kaydını bırak
+                      asistana sor
                     </a>{" "}
-                    ve şehrini radarımıza alalım.
+                    ve şehrini radarımıza birlikte değerlendirelim.
                   </p>
                 </div>
               </div>

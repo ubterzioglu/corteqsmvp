@@ -48,7 +48,7 @@ describe("cadde helpers", () => {
         description: "Desc",
         badgeText: "Sponsorlu",
         ctaLabel: "Git",
-        ctaUrl: "/form",
+        ctaUrl: "/login?mode=signup",
         imageUrl: null,
       },
       "real",

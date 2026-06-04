@@ -54,7 +54,7 @@ const SECONDARY_NAV = [
   { label: "Sosyal", to: "/directory" },
   { label: "Harita", href: "https://globe.corteqs.net" },
   { label: "Giriş Yap", to: "/login" },
-  { label: "Kayıt Ol", to: "/form" },
+  { label: "Kayıt Ol", to: "/login?mode=signup" },
 ] as const;
 
 const formatTimeChip = (timezone: string) =>
@@ -629,7 +629,7 @@ const CaddePage = () => {
                 <p className="text-sm text-slate-200">Danışman, etkinlik ve topluluk kampanyalarını şehir bazlı yayınlayabilirsin.</p>
               </div>
               <Button asChild className="w-full rounded-2xl bg-white text-slate-900 hover:bg-slate-100">
-                <Link to="/form">Başvuru Gönder</Link>
+                <Link to="/login?mode=signup">Başvuru Gönder</Link>
               </Button>
             </CardContent>
           </Card>
