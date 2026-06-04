@@ -1,28 +1,26 @@
-import { Link } from "react-router-dom";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
+import RawHtmlDocument from "@/components/admin/RawHtmlDocument";
 import YetkilendirmeGuide from "@/components/admin/YetkilendirmeGuide";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import rawGuideHtml from "../../../docs/guides/kategori-rol-feature-rehberi.html?raw";
 
 const AdminHelpPage = () => {
   return (
-    <AdminPageLayout>
+    <AdminPageLayout className="max-w-7xl">
+      <YetkilendirmeGuide />
+
       <Card>
         <CardHeader>
           <CardTitle>Kategori / Rol / Feature HTML Rehberi</CardTitle>
           <CardDescription>
-            Standalone HTML dokumanini admin panel icinde route olarak acmak icin bu kisayolu kullan.
+            Yeni HTML rehberi ayri bir sayfaya gitmeden bu yardim ekraninin icine merge edildi. Icerik iframe olmadan
+            dogrudan render edilir.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Link
-            to="/admin/new-member/kategori-rol-feature-rehberi"
-            className="inline-flex items-center rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
-          >
-            HTML rehberi ac
-          </Link>
+          <RawHtmlDocument html={rawGuideHtml} className="overflow-hidden rounded-xl border border-border bg-white" />
         </CardContent>
       </Card>
-      <YetkilendirmeGuide />
     </AdminPageLayout>
   );
 };
