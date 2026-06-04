@@ -1163,27 +1163,26 @@ const ProfilePage = () => {
                 <CardTitle className="text-[11px]">Profil Alanları</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <div className="flex flex-col gap-3 md:flex-row md:items-start">
-                  <div className="flex-1 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 shrink-0 min-w-fit">
+                    <span className="text-[11px] font-medium text-foreground">{roleMeta?.displayNameLabel ?? "Görünen İsim"}</span>
                     {displayNameAttribute.isRequired ? (
                       <Badge variant="secondary" className="px-1.5 py-0 text-[11px]">Zorunlu</Badge>
                     ) : null}
-                    <AttributeInput attribute={displayNameAttribute} value={draftValues[displayNameAttribute.attributeKey]} onChange={(nextValue) => handleDraftChange(displayNameAttribute.attributeKey, nextValue)} />
                   </div>
-                  <div className="w-full md:w-[92px]">
-                    <div className={`flex h-10 items-center justify-between gap-1.5 rounded-full px-2 text-[11px] ${GOOGLE_SOFT_SWITCH_PANEL}`}>
-                      {draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility === "public" ? (
-                        <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
-                      ) : (
-                        <EyeOff className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                      )}
-                      <Switch
-                        checked={(draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility) === "public"}
-                        onCheckedChange={(checked) => setDraftVisibilities((current) => ({ ...current, [displayNameAttribute.attributeKey]: checked ? "public" : "private" }))}
-                        disabled={!displayNameAttribute.userCanHide}
-                        aria-label={`${roleMeta?.displayNameLabel ?? "Görünen İsim"} görünürlük`}
-                      />
-                    </div>
+                  <AttributeInput attribute={displayNameAttribute} value={draftValues[displayNameAttribute.attributeKey]} onChange={(nextValue) => handleDraftChange(displayNameAttribute.attributeKey, nextValue)} />
+                  <div className={`flex items-center gap-1.5 rounded-full px-2 shrink-0 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
+                    {draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility === "public" ? (
+                      <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
+                    ) : (
+                      <EyeOff className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                    )}
+                    <Switch
+                      checked={(draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility) === "public"}
+                      onCheckedChange={(checked) => setDraftVisibilities((current) => ({ ...current, [displayNameAttribute.attributeKey]: checked ? "public" : "private" }))}
+                      disabled={!displayNameAttribute.userCanHide}
+                      aria-label={`${roleMeta?.displayNameLabel ?? "Görünen İsim"} görünürlük`}
+                    />
                   </div>
                 </div>
                 <div className="flex justify-end">
