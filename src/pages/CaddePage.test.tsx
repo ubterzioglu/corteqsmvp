@@ -57,8 +57,8 @@ describe("CaddePage", () => {
 
     renderPage();
 
-    expect(await screen.findByText(/Paylasim ve reaksiyonlar icin giris gerekli/i)).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /giris yap/i }).length).toBeGreaterThan(0);
+    expect(await screen.findByText(/Paylaşım ve reaksiyonlar için giriş gerekli/i)).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: /giriş yap/i }).length).toBeGreaterThan(0);
   });
 
   it("lets authenticated users switch to real mode from the URL state", async () => {
@@ -72,7 +72,7 @@ describe("CaddePage", () => {
 
     renderPage("/cadde?mode=demo");
 
-    expect(await screen.findByText(/Cadde icin sehir bazli paylasim ekleyebilirsin/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Cadde için şehir bazlı paylaşım ekleyebilirsin/i)).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole("switch")[0]);
 
     await waitFor(() => {

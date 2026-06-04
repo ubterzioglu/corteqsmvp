@@ -1,4 +1,5 @@
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
+import { REFERRAL_SOURCE_OPTIONS } from "@/lib/profile-onboarding-normalize";
 import { normalizeOptionalTurkishText, normalizeTurkishText } from "@/lib/text-normalization";
 
 export type Submission = Tables<"submissions">;
@@ -52,20 +53,7 @@ export const categoryOptions = [
   { value: "support", label: "Destek / Yatırım" },
 ] as const;
 
-export const referralSourceOptions = [
-  { value: "whatsapp", label: "WhatsApp Grubu" },
-  { value: "instagram", label: "Instagram" },
-  { value: "linkedin", label: "LinkedIn" },
-  { value: "x-twitter", label: "X (Twitter)" },
-  { value: "facebook", label: "Facebook" },
-  { value: "tiktok", label: "TikTok" },
-  { value: "youtube", label: "YouTube" },
-  { value: "arkadas-tavsiye", label: "Arkadaş / Tavsiye" },
-  { value: "etkinlik", label: "Etkinlik / Buluşma" },
-  { value: "google", label: "Google Arama" },
-  { value: "basin-haber", label: "Basın / Haber" },
-  { value: "diger", label: "Diğer" },
-] as const;
+export const referralSourceOptions = REFERRAL_SOURCE_OPTIONS;
 
 const categoryLabelMap = new Map(categoryOptions.map((option) => [option.value, option.label]));
 const referralLabelMap = new Map(referralSourceOptions.map((option) => [option.value, option.label]));
@@ -437,6 +425,15 @@ function isRowLevelSecurityError(error: unknown): boolean {
   return code === "42501" || /row-level security policy/i.test(message ?? "");
 }
 
+function isOnboardingDuplicateError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+
+  const code = "code" in error && typeof (error as ErrorWithMessage).code === "string" ? (error as ErrorWithMessage).code : "";
+  const message = "message" in error && typeof (error as ErrorWithMessage).message === "string" ? (error as ErrorWithMessage).message : "";
+
+  return code === "23505" && /onboarding_key/i.test(message ?? "");
+}
+
 export async function insertSubmissionWithCompatibility(payload: SubmissionInsert) {
   const { supabase } = await import("@/integrations/supabase/client");
   let currentPayload: Record<string, unknown> = { ...payload };
@@ -450,6 +447,10 @@ export async function insertSubmissionWithCompatibility(payload: SubmissionInser
 
     if (!error) return data;
 
+    if (isOnboardingDuplicateError(error)) {
+      return { id: null, duplicate: true };
+    }
+
     const missingColumn = getMissingColumnName(error);
     if (missingColumn && missingColumn in currentPayload) {
       const { [missingColumn]: _removed, ...nextPayload } = currentPayload;
@@ -462,6 +463,10 @@ export async function insertSubmissionWithCompatibility(payload: SubmissionInser
     if (isRowLevelSecurityError(error)) {
       const { error: insertOnlyError } = await supabase.from("submissions").insert(currentPayload as SubmissionInsert);
       if (!insertOnlyError) return null;
+
+      if (isOnboardingDuplicateError(insertOnlyError)) {
+        return { id: null, duplicate: true };
+      }
 
       const fallbackMissingColumn = getMissingColumnName(insertOnlyError);
       if (fallbackMissingColumn && fallbackMissingColumn in currentPayload) {

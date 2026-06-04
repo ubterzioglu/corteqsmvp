@@ -71,6 +71,7 @@ import ProfilePage from "@/pages/ProfilePage";
 import ProfileResolverPage from "@/pages/ProfileResolverPage";
 import DirectoryPage from "@/pages/DirectoryPage";
 import DirectoryProfilePage from "@/pages/DirectoryProfilePage";
+import WelcomeActivatePage from "@/pages/WelcomeActivatePage";
 import AdminAttributesPage from "@/pages/admin/AdminAttributesPage";
 import AdminUserOverridesPage from "@/pages/admin/AdminUserOverridesPage";
 import AdminApprovalsPage from "@/pages/admin/AdminApprovalsPage";
@@ -78,6 +79,7 @@ import AdminAuditLogsPage from "@/pages/admin/AdminAuditLogsPage";
 import AdminProfileSectionsPage from "@/pages/admin/AdminProfileSectionsPage";
 import AdminTaxonomyPage from "@/pages/admin/AdminTaxonomyPage";
 import AdminNewMemberGuidePage from "@/pages/admin/AdminNewMemberGuidePage";
+import AdminOnboardingImportsPage from "@/pages/admin/AdminOnboardingImportsPage";
 import CaddePage from "@/pages/CaddePage";
 import AdminCaddePage from "@/pages/admin/AdminCaddePage";
 import Associations from "@/pages/Associations";
@@ -144,6 +146,7 @@ const App = () => (
                 <Route path="/aiform" element={<AIFormPage />} />
                 <Route path="/form" element={<FormPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/welcome/activate" element={<WelcomeActivatePage />} />
                 <Route path="/directory" element={<DirectoryPage />} />
                 <Route path="/associations" element={<Associations />} />
                 <Route path="/association/:id" element={<AssociationDetail />} />
@@ -218,6 +221,7 @@ const App = () => (
                 <Route path="new-member/guide" element={<AdminNewMemberGuidePage />} />
                 <Route path="new-member/roles-features" element={<AdminRolesFeaturesPage />} />
                 <Route path="new-member/attributes" element={<AdminAttributesPage />} />
+                <Route path="new-member/onboarding-imports" element={<AdminOnboardingImportsPage />} />
                 <Route path="new-member/profile-sections" element={<AdminProfileSectionsPage />} />
                 <Route path="new-member/taxonomy" element={<AdminTaxonomyPage />} />
                 <Route path="new-member/overrides" element={<AdminUserOverridesPage />} />

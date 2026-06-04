@@ -27,15 +27,15 @@ describe("May19CampaignPage", () => {
     expect(screen.queryByRole("link", { name: /Modüllere İn/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Global Harita/i })).not.toBeInTheDocument();
 
-    expect(screen.getByRole("link", { name: /1\. Dünya Üzerinde Yerini İşaretle/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /Dünya Üzerinde Yerini İşaretle/i })).toHaveAttribute(
       "href",
       "https://globe.corteqs.net",
     );
-    expect(screen.getByRole("link", { name: /2\. 19 Kelimelik Fikrini Gönder/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /19 Kelimelik Fikrini Gönder/i })).toHaveAttribute(
       "href",
       "/190519idea",
     );
-    expect(screen.getByRole("link", { name: /3\. 19 Mayıs Anını Paylaş/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /19 Mayıs Anını Paylaş/i })).toHaveAttribute(
       "href",
       "/190519memory",
     );

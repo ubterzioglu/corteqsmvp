@@ -13,6 +13,7 @@ export const newMemberSystemNavItems = [
   { to: "/admin/new-member/users-roles", label: "Loginli Kullanıcılar & Roller", icon: Network },
   { to: "/admin/new-member/roles-features", label: "Roller & Featurelar", icon: Shield },
   { to: "/admin/new-member/attributes", label: "Attribute Yönetimi", icon: BookOpen },
+  { to: "/admin/new-member/onboarding-imports", label: "Onboarding Importları", icon: ClipboardList },
   { to: "/admin/new-member/profile-sections", label: "Profile Sections", icon: BookOpen },
   { to: "/admin/new-member/taxonomy", label: "Taxonomy Yönetimi", icon: ListChecks },
   { to: "/admin/new-member/overrides", label: "Feature Override", icon: Sparkles },

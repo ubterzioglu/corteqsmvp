@@ -62,6 +62,8 @@ const IndividualPublicView = ({ details, publicLinks = [], extraBadges = [] }: P
   const hasJobBadge = extraBadges.includes("İş Arıyorum") || details.jobSeeking;
   const hasMentorBadge = extraBadges.includes("Gönüllü Mentör") || details.mentorOptIn;
   const hasMovingSoonBadge = extraBadges.includes("Yakında Taşınacağım") || relocation.enabled;
+  const businessOrOrganization = details.controlPanel.businessOrOrganization.trim();
+  const interestFocus = details.controlPanel.interestFocus.trim();
   const fallbackLinks: PublicProfileLink[] = [];
   if (details.frontCard.linkedinUrl && details.frontCard.linkedinVisible) {
     fallbackLinks.push({ label: "LinkedIn", url: details.frontCard.linkedinUrl });
@@ -260,6 +262,11 @@ const IndividualPublicView = ({ details, publicLinks = [], extraBadges = [] }: P
                   {details.tagline}
                 </span>
               ) : null}
+              {businessOrOrganization ? (
+                <span className="rounded-full border border-emerald-200 bg-emerald-50/80 px-3 py-1 text-xs font-medium text-emerald-700">
+                  {businessOrOrganization}
+                </span>
+              ) : null}
             </div>
 
 
@@ -295,6 +302,12 @@ const IndividualPublicView = ({ details, publicLinks = [], extraBadges = [] }: P
                   </a>
                 ))}
               </div>
+            ) : null}
+
+            {interestFocus ? (
+              <p className="mt-4 text-sm font-medium text-foreground/80">
+                İştigal / İlgi Sahası: {interestFocus}
+              </p>
             ) : null}
 
             {/* Relocation badge */}

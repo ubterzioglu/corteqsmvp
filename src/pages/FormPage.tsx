@@ -11,17 +11,23 @@ import corteqsLogo from "../../newlogo.png";
 import { notifySubmission } from "@/lib/mail";
 import { useAuth } from "@/components/auth/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { useResumePendingOnboarding } from "@/hooks/use-profile-onboarding";
+import {
+  buildPendingOnboardingPayload,
+  finalizeAuthenticatedSubmission,
+  loadPendingOnboardingPayload,
+  savePendingOnboardingPayload,
+} from "@/lib/profile-onboarding-api";
+import { normalizePendingFormPayload } from "@/lib/profile-onboarding-normalize";
+import { pendingOnboardingFormSchema } from "@/lib/profile-onboarding-schemas";
 import {
   categoryOptions,
   getReadableErrorMessage,
   getReferralDetailLabel,
   getReferralDetailPlaceholder,
-  insertSubmissionWithCompatibility,
   isReferralDetailRequired,
   referralSourceOptions,
   shouldShowReferralDetail,
-  toSubmissionInsert,
-  validateReferralCodeBeforeSubmit,
 } from "@/lib/submissions";
 
 const FormPage = () => {
@@ -29,7 +35,9 @@ const FormPage = () => {
   const navigate = useNavigate();
   const { user, isLoading: isAuthLoading } = useAuth();
   const formRef = useRef<HTMLFormElement>(null);
+  const lastResumedKeyRef = useRef<string | null>(null);
   const [oauthSubmitting, setOauthSubmitting] = useState(false);
+  const resumePendingOnboarding = useResumePendingOnboarding();
 
   const [prefilledReferralCode] = useState(() => {
     if (typeof window === "undefined") return "";
@@ -50,36 +58,100 @@ const FormPage = () => {
     document.dispatchEvent(new Event("render-complete"));
   }, []);
 
-  // Restore state from sessionStorage
-  useEffect(() => {
-    const saved = sessionStorage.getItem("corteqs_form_backup");
-    if (saved && formRef.current) {
-      try {
-        const parsed = JSON.parse(saved);
-        Object.keys(parsed).forEach((key) => {
-          const el = formRef.current?.elements.namedItem(key) as HTMLInputElement | HTMLSelectElement | null;
-          if (el) {
-            if (el.type === 'checkbox') {
-              (el as HTMLInputElement).checked = parsed[key] === "on" || parsed[key] === "yes";
-            } else if (el.type !== 'radio') {
-               el.value = parsed[key];
-            }
-          }
-        });
-        
-        // Restore controlled inputs
-        if (parsed.category) setSelectedCat(parsed.category);
-        if (parsed.phone) setPhone(parsed.phone);
-        if (parsed.referral_source) setReferralSource(parsed.referral_source);
-        if (parsed.referral_detail) setReferralDetail(parsed.referral_detail);
-        if (parsed.referral_code) setReferralCode(parsed.referral_code);
-        if (parsed.consent === "on" || parsed.consent === "true") setConsent(true);
-      } catch (e) {
-        // Ignore JSON parse errors
+  const buildCurrentPendingFormValues = () => {
+    const formData = formRef.current ? new FormData(formRef.current) : new FormData();
+    const values = Object.fromEntries(formData.entries());
+
+    return pendingOnboardingFormSchema.parse({
+      category: selectedCat || String(values.category ?? ""),
+      fullname: String(values.fullname ?? ""),
+      country: String(values.country ?? ""),
+      city: String(values.city ?? ""),
+      business: String(values.business ?? ""),
+      field: String(values.field ?? ""),
+      email: String(values.email ?? ""),
+      phone,
+      description: String(values.description ?? ""),
+      offers_needs: String(values.offers_needs ?? ""),
+      company_name: String(values.company_name ?? ""),
+      donor_type: String(values.donor_type ?? ""),
+      donation_amount: String(values.donation_amount ?? ""),
+      document_url: String(values.document_url ?? ""),
+      document_name: String(values.document_name ?? ""),
+      referral_source: referralSource,
+      referral_detail: referralDetail,
+      referral_code: referralCode,
+      linkedin: String(values.linkedin ?? ""),
+      instagram: String(values.instagram ?? ""),
+      tiktok: String(values.tiktok ?? ""),
+      facebook: String(values.facebook ?? ""),
+      twitter: String(values.twitter ?? ""),
+      website: String(values.website ?? ""),
+      contest_interest:
+        values.contest_interest === "yes" ||
+        values.contest_interest === "on" ||
+        values.contest_interest === true,
+      whatsapp_interest:
+        values.whatsapp_interest === "yes" ||
+        values.whatsapp_interest === "on" ||
+        values.whatsapp_interest === true,
+      consent,
+    });
+  };
+
+  const applyPendingPayloadToForm = (payload: ReturnType<typeof loadPendingOnboardingPayload>) => {
+    if (!payload || !formRef.current) return;
+
+    const values = payload.form;
+    const assignInputValue = (name: string, nextValue: string) => {
+      const element = formRef.current?.elements.namedItem(name) as
+        | HTMLInputElement
+        | HTMLSelectElement
+        | null;
+      if (element && element.type !== "radio") {
+        element.value = nextValue;
       }
-      sessionStorage.removeItem("corteqs_form_backup");
-    }
-  }, []);
+    };
+
+    assignInputValue("category", values.category);
+    assignInputValue("fullname", values.fullname);
+    assignInputValue("country", values.country);
+    assignInputValue("city", values.city);
+    assignInputValue("business", values.business);
+    assignInputValue("field", values.field);
+    assignInputValue("email", values.email);
+    assignInputValue("description", values.description);
+    assignInputValue("offers_needs", values.offers_needs);
+    assignInputValue("company_name", values.company_name);
+    assignInputValue("donor_type", values.donor_type);
+    assignInputValue("donation_amount", values.donation_amount);
+    assignInputValue("document_url", values.document_url);
+    assignInputValue("document_name", values.document_name);
+    assignInputValue("linkedin", values.linkedin);
+    assignInputValue("instagram", values.instagram);
+    assignInputValue("tiktok", values.tiktok);
+    assignInputValue("facebook", values.facebook);
+    assignInputValue("twitter", values.twitter);
+    assignInputValue("website", values.website);
+
+    const contestInterest = formRef.current.elements.namedItem("contest_interest") as HTMLInputElement | null;
+    if (contestInterest) contestInterest.checked = values.contest_interest;
+
+    const whatsappInterest = formRef.current.elements.namedItem("whatsapp_interest") as HTMLInputElement | null;
+    if (whatsappInterest) whatsappInterest.checked = values.whatsapp_interest;
+
+    setSelectedCat(values.category);
+    setPhone(values.phone);
+    setReferralSource(values.referral_source);
+    setReferralDetail(values.referral_detail);
+    setReferralCode(values.referral_code || prefilledReferralCode);
+    setConsent(values.consent);
+  };
+
+  // Restore state from versioned onboarding storage
+  useEffect(() => {
+    applyPendingPayloadToForm(loadPendingOnboardingPayload());
+  }, [prefilledReferralCode]);
 
   // Pre-fill user data
   useEffect(() => {
@@ -101,12 +173,80 @@ const FormPage = () => {
     return e164.test(cleaned);
   };
 
-  const handleGoogleSignIn = async () => {
-    if (formRef.current) {
-      const formData = new FormData(formRef.current);
-      const values = Object.fromEntries(formData.entries());
-      sessionStorage.setItem("corteqs_form_backup", JSON.stringify(values));
+  useEffect(() => {
+    if (isAuthLoading || !user) return;
+
+    const pendingPayload = loadPendingOnboardingPayload();
+    if (!pendingPayload) return;
+
+    try {
+      normalizePendingFormPayload(pendingPayload);
+    } catch {
+      applyPendingPayloadToForm(pendingPayload);
+      return;
     }
+
+    if (lastResumedKeyRef.current === pendingPayload.onboardingKey || resumePendingOnboarding.isPending) {
+      return;
+    }
+
+    lastResumedKeyRef.current = pendingPayload.onboardingKey;
+
+    resumePendingOnboarding.mutate(undefined, {
+      onSuccess: async (result) => {
+        if (!result) return;
+
+        try {
+          if (result.submissionId) {
+            await notifySubmission(result.submissionId);
+          }
+        } catch (notificationError) {
+          console.error("Mail notification error:", notificationError);
+        }
+
+        toast({
+          title: result.duplicate ? "Kaydınız zaten tamamlanmış" : "Kaydınız Alındı! ✅",
+          description: result.duplicate
+            ? "Bekleyen kayıt tekrar bulundu ve yeni kopya oluşturulmadı."
+            : "Auth dönüşünden sonra başvurunuz güvenli şekilde tamamlandı.",
+        });
+
+        setSubmitted(true);
+        setConsent(false);
+        setPhone("");
+        setPhoneError("");
+        setReferralCode(prefilledReferralCode);
+        setReferralSource("");
+        setReferralDetail("");
+        setSelectedCat("");
+      },
+      onError: (error) => {
+        lastResumedKeyRef.current = null;
+        const message = getReadableErrorMessage(
+          error,
+          "Bekleyen kayıt tamamlanamadı. Form verileri korunuyor, lütfen tekrar deneyin.",
+        );
+        toast({
+          title: "Bekleyen kayıt tamamlanamadı",
+          description: message,
+          variant: "destructive",
+        });
+      },
+    });
+  }, [
+    applyPendingPayloadToForm,
+    isAuthLoading,
+    prefilledReferralCode,
+    resumePendingOnboarding,
+    toast,
+    user,
+  ]);
+
+  const handleGoogleSignIn = async () => {
+    const pendingPayload = buildPendingOnboardingPayload({
+      form: buildCurrentPendingFormValues(),
+    });
+    savePendingOnboardingPayload(pendingPayload);
 
     setOauthSubmitting(true);
     const { error } = await supabase.auth.signInWithOAuth({
@@ -137,19 +277,22 @@ const FormPage = () => {
 
     setLoading(true);
     const formData = new FormData(e.currentTarget);
-    const values = Object.fromEntries(formData.entries());
+    const pendingPayload = buildPendingOnboardingPayload({
+      form: buildCurrentPendingFormValues(),
+    });
+    savePendingOnboardingPayload(pendingPayload);
 
     // User Signup Logic if not authenticated
     if (!user) {
-      const emailStr = String(values.email).trim();
-      const passwordStr = String(values.password || "");
+      const emailStr = String(formData.get("email") ?? "").trim();
+      const passwordStr = String(formData.get("password") ?? "");
 
-      const { error: authError } = await supabase.auth.signUp({
+      const { data: authData, error: authError } = await supabase.auth.signUp({
         email: emailStr,
         password: passwordStr,
         options: {
           data: {
-            full_name: String(values.fullname),
+            full_name: String(formData.get("fullname") ?? ""),
           },
         },
       });
@@ -176,28 +319,34 @@ const FormPage = () => {
         setLoading(false);
         return;
       }
+
+      if (!authData.session) {
+        toast({
+          title: "E-posta doğrulaması bekleniyor",
+          description: "Form verileriniz kaydedildi. E-postanızı doğrulayıp giriş yaptığınızda başvurunuz tamamlanacak.",
+        });
+        setLoading(false);
+        navigate("/login?next=/form");
+        return;
+      }
     }
 
-    values.phone = phone.replace(/[\s\-().]/g, "");
-    values.referral_source = referralSource;
-    values.referral_detail = referralDetail;
-
     try {
-      const payload = toSubmissionInsert(values, "register", consent);
-      payload.referral_code = await validateReferralCodeBeforeSubmit(payload.referral_code);
-      const inserted = await insertSubmissionWithCompatibility(payload);
+      const finalized = await finalizeAuthenticatedSubmission(pendingPayload);
 
       try {
-        if (inserted?.id) {
-          await notifySubmission(inserted.id);
+        if (finalized.submissionId) {
+          await notifySubmission(finalized.submissionId);
         }
       } catch (notificationError) {
         console.error("Mail notification error:", notificationError);
       }
 
       toast({
-        title: "Kaydınız Alındı! ✅",
-        description: "Teşekkürler! Platform açıldığında sizinle iletişime geçeceğiz.",
+        title: finalized.duplicate ? "Kaydınız zaten tamamlanmış" : "Kaydınız Alındı! ✅",
+        description: finalized.duplicate
+          ? "Bu pending kayıt daha önce işlenmişti; yeni kopya oluşturulmadı."
+          : "Teşekkürler! Platform açıldığında sizinle iletişime geçeceğiz.",
       });
 
       setSubmitted(true);
@@ -309,7 +458,7 @@ const FormPage = () => {
             ) : (
               <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 text-center">
                 <p className="text-sm font-medium">Merhaba {user.user_metadata?.full_name || "Kullanıcı"},</p>
-                <p className="text-xs text-muted-foreground">Bilgilerinizle devam edebilirsiniz.</p>
+                <p className="text-xs text-muted-foreground">Auth tamamlandıktan sonra form tek seferde finalize edilir.</p>
               </div>
             )}
           </div>

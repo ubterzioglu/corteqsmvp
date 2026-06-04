@@ -16,7 +16,7 @@ vi.mock("react-simple-maps", () => ({
 }));
 
 describe("May19MapPage", () => {
-  it("renders without backend data and links back to the campaign", () => {
+  it("renders without backend data and links to the campaign modules", () => {
     render(
       <MemoryRouter>
         <May19MapPage />
@@ -24,7 +24,7 @@ describe("May19MapPage", () => {
     );
 
     expect(screen.getByText(/Global Diaspora Haritası/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Ana Kampanyaya Dön/i })).toHaveAttribute("href", "/19051919");
-    expect(screen.getByTestId("map-shell")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Modüllere Git/i })).toHaveAttribute("href", "/19051919#modules");
+    expect(screen.getByRole("link", { name: /Haritaya Katıl/i })).toHaveAttribute("href", "https://globe.corteqs.net/");
   });
 });

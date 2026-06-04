@@ -165,6 +165,7 @@ export type Database = {
       };
       user_profiles: {
         Row: {
+          avatar_url: string | null;
           auth_provider: string | null;
           created_at: string;
           email: string | null;
@@ -174,6 +175,7 @@ export type Database = {
           user_id: string;
         };
         Insert: {
+          avatar_url?: string | null;
           auth_provider?: string | null;
           created_at?: string;
           email?: string | null;
@@ -183,6 +185,7 @@ export type Database = {
           user_id: string;
         };
         Update: {
+          avatar_url?: string | null;
           auth_provider?: string | null;
           created_at?: string;
           email?: string | null;
@@ -192,6 +195,75 @@ export type Database = {
           user_id?: string;
         };
         Relationships: [];
+      };
+      profile_onboarding_imports: {
+        Row: {
+          activated_at: string | null;
+          auth_user_id: string | null;
+          batch_id: string;
+          created_at: string;
+          email_normalized: string;
+          id: string;
+          invite_sent_at: string | null;
+          last_error: string | null;
+          profile_user_id: string | null;
+          retry_count: number;
+          snapshot: Json;
+          source_submission_id: string;
+          source_type: string;
+          status: string;
+          updated_at: string;
+        };
+        Insert: {
+          activated_at?: string | null;
+          auth_user_id?: string | null;
+          batch_id: string;
+          created_at?: string;
+          email_normalized: string;
+          id?: string;
+          invite_sent_at?: string | null;
+          last_error?: string | null;
+          profile_user_id?: string | null;
+          retry_count?: number;
+          snapshot?: Json;
+          source_submission_id: string;
+          source_type?: string;
+          status?: string;
+          updated_at?: string;
+        };
+        Update: {
+          activated_at?: string | null;
+          auth_user_id?: string | null;
+          batch_id?: string;
+          created_at?: string;
+          email_normalized?: string;
+          id?: string;
+          invite_sent_at?: string | null;
+          last_error?: string | null;
+          profile_user_id?: string | null;
+          retry_count?: number;
+          snapshot?: Json;
+          source_submission_id?: string;
+          source_type?: string;
+          status?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "profile_onboarding_imports_profile_user_id_fkey";
+            columns: ["profile_user_id"];
+            isOneToOne: false;
+            referencedRelation: "user_profiles";
+            referencedColumns: ["user_id"];
+          },
+          {
+            foreignKeyName: "profile_onboarding_imports_source_submission_id_fkey";
+            columns: ["source_submission_id"];
+            isOneToOne: false;
+            referencedRelation: "submissions";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       individual_profile_details: {
         Row: {
@@ -1746,6 +1818,7 @@ export type Database = {
           instagram: string | null;
           linkedin: string | null;
           notes: string | null;
+          onboarding_key: string | null;
           offers_needs: string | null;
           phone: string;
           referral_code: string | null;
@@ -1758,6 +1831,7 @@ export type Database = {
           source_type: "form" | "chatbot" | "wa";
           status: string;
           tiktok: string | null;
+          user_id: string | null;
           twitter: string | null;
           whatsapp_interest: boolean | null;
           website: string | null;
@@ -1790,6 +1864,7 @@ export type Database = {
           instagram?: string | null;
           linkedin?: string | null;
           notes?: string | null;
+          onboarding_key?: string | null;
           offers_needs?: string | null;
           phone: string;
           referral_code?: string | null;
@@ -1802,6 +1877,7 @@ export type Database = {
           source_type?: "form" | "chatbot" | "wa";
           status?: string;
           tiktok?: string | null;
+          user_id?: string | null;
           twitter?: string | null;
           whatsapp_interest?: boolean | null;
           website?: string | null;
@@ -1834,6 +1910,7 @@ export type Database = {
           instagram?: string | null;
           linkedin?: string | null;
           notes?: string | null;
+          onboarding_key?: string | null;
           offers_needs?: string | null;
           phone?: string;
           referral_code?: string | null;
@@ -1846,6 +1923,7 @@ export type Database = {
           source_type?: "form" | "chatbot" | "wa";
           status?: string;
           tiktok?: string | null;
+          user_id?: string | null;
           twitter?: string | null;
           whatsapp_interest?: boolean | null;
           website?: string | null;
@@ -2082,6 +2160,10 @@ export type Database = {
         Args: { role_key: string; target_user_id: string };
         Returns: undefined;
       };
+      complete_current_profile_onboarding_activation: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
       get_current_user_features: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -2089,6 +2171,10 @@ export type Database = {
           is_enabled: boolean;
           source: string;
         }[];
+      };
+      get_current_profile_onboarding_activation: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
       };
       get_current_user_profile: {
         Args: Record<PropertyKey, never>;

@@ -12,6 +12,8 @@
     "start": "node server.mjs",
     "verify:release": "node scripts/verify-release.mjs",
     "verify:text": "node scripts/verify-text-encoding.mjs",
+    "onboarding:import": "node scripts/onboarding-import.mjs",
+    "onboarding:report": "node scripts/onboarding-report.mjs",
     "import:command-center:may13": "node scripts/import-command-center-may13.mjs",
     "import:command-center:may13:write": "node scripts/import-command-center-may13.mjs --write",
     "import:resources:replace": "node scripts/replace-resource-entries-from-csv.mjs",

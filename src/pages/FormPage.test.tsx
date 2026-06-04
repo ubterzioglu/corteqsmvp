@@ -10,6 +10,20 @@ vi.mock("@/hooks/use-toast", () => ({
   }),
 }));
 
+vi.mock("@/components/auth/useAuth", () => ({
+  useAuth: () => ({
+    user: null,
+    isLoading: false,
+  }),
+}));
+
+vi.mock("@/hooks/use-profile-onboarding", () => ({
+  useResumePendingOnboarding: () => ({
+    mutateAsync: vi.fn(),
+    isPending: false,
+  }),
+}));
+
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     from: vi.fn(),

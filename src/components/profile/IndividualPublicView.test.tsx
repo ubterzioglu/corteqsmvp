@@ -90,4 +90,18 @@ describe("IndividualPublicView", () => {
     render(<IndividualPublicView details={details} />, { wrapper });
     expect(screen.getByRole("link", { name: /LinkedIn/ })).toBeInTheDocument();
   });
+
+  it("shows business or organization chip when public-safe mirror exists", () => {
+    const details = makeDetails();
+    details.controlPanel.businessOrOrganization = "CorteQS Community";
+    render(<IndividualPublicView details={details} />, { wrapper });
+    expect(screen.getByText("CorteQS Community")).toBeInTheDocument();
+  });
+
+  it("shows interest focus line when public-safe mirror exists", () => {
+    const details = makeDetails();
+    details.controlPanel.interestFocus = "Diaspora Growth";
+    render(<IndividualPublicView details={details} />, { wrapper });
+    expect(screen.getByText(/İştigal \/ İlgi Sahası: Diaspora Growth/)).toBeInTheDocument();
+  });
 });

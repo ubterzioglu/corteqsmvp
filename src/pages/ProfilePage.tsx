@@ -43,6 +43,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useCurrentUserProfile } from "@/hooks/useCurrentUserProfile";
 import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS } from "@/lib/features";
+import { getReferralSourceOptions } from "@/lib/profile-onboarding-normalize";
 import {
   updateProfileAttribute,
   updateProfileAvatar,
@@ -124,6 +125,12 @@ const MOVING_SOON_OPT_IN_ATTRIBUTE_KEY = "moving_soon_opt_in";
 const VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY = "volunteer_mentorship_opt_in";
 const CV_DOCUMENT_ATTRIBUTE_KEY = "cv_doc";
 const PRESENTATION_DOCUMENT_ATTRIBUTE_KEY = "presentation_doc";
+const REFERRAL_CODE_ATTRIBUTE_KEY = "referral_code";
+const REFERRAL_SOURCE_ATTRIBUTE_KEY = "referral_source";
+const PRIVATE_ONLY_ONBOARDING_ATTRIBUTE_KEYS = new Set([
+  REFERRAL_CODE_ATTRIBUTE_KEY,
+  REFERRAL_SOURCE_ATTRIBUTE_KEY,
+]);
 const SPECIAL_PROFILE_ATTRIBUTE_KEYS = new Set([
   PROFILE_PHOTO_ATTRIBUTE_KEY,
   LINKEDIN_ATTRIBUTE_KEY,
@@ -291,6 +298,7 @@ const ProfilePage = () => {
   const [savingAttributeKey, setSavingAttributeKey] = useState<string | null>(null);
   const [savingCommonAttributes, setSavingCommonAttributes] = useState(false);
   const [savingSocialMedia, setSavingSocialMedia] = useState(false);
+  const [savingRoleSpecificAttributes, setSavingRoleSpecificAttributes] = useState(false);
   const [savingPreferenceKey, setSavingPreferenceKey] = useState<string | null>(null);
   const [uploadingDocumentKey, setUploadingDocumentKey] = useState<string | null>(null);
   const [removingDocumentKey, setRemovingDocumentKey] = useState<string | null>(null);
@@ -381,6 +389,7 @@ const ProfilePage = () => {
   const cvUploadEnabled = isFeatureEnabled(GENERIC_FEATURE_KEYS.profileCvUpload);
   const presentationUploadEnabled = isFeatureEnabled(GENERIC_FEATURE_KEYS.profilePresentationUpload);
   const displayName = readAttributeValue("full_name") || profile?.fullName || user?.user_metadata?.name || "CorteQS Üyesi";
+  const displayNameLabel = roleMeta?.displayNameLabel ?? "Görünen İsim";
   const shortBio = readAttributeValue("bio_short");
   const country = readAttributeValue("country");
   const city = readAttributeValue("city");
@@ -699,6 +708,46 @@ const ProfilePage = () => {
       });
     } finally {
       setSavingSocialMedia(false);
+    }
+  };
+
+  const handleSaveRoleSpecificAttributes = async () => {
+    if (!groupedAttributes.roleSpecific.length) return;
+
+    const attributesToSave = groupedAttributes.roleSpecific.filter((attribute) => {
+      const rawValue = draftValues[attribute.attributeKey];
+      if (attribute.dataType === "boolean") return true;
+      return String(rawValue ?? "").trim().length > 0;
+    });
+
+    if (!attributesToSave.length) {
+      toast({
+        title: "Kaydedilecek alan bulunamadı",
+        description: "En az bir rolüne özel alanı doldurun.",
+      });
+      return;
+    }
+
+    setSavingRoleSpecificAttributes(true);
+    try {
+      for (const attribute of attributesToSave) {
+        const { valueToSend, visibility } = buildAttributePayload(attribute);
+        await updateProfileAttribute(attribute.attributeKey, valueToSend, visibility);
+      }
+
+      await refreshProfile();
+      toast({
+        title: "Rolüne özel alanlar kaydedildi",
+        description: "Yeni bireysel onboarding alanları ve diğer rol özel alanlar güncellendi.",
+      });
+    } catch (error) {
+      toast({
+        title: "Rolüne özel alanlar kaydedilemedi",
+        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingRoleSpecificAttributes(false);
     }
   };
 
@@ -1425,11 +1474,51 @@ const ProfilePage = () => {
             ) : null}
           </div>
 
-          <LockedProfileSectionCard
-            title="Rolüne Özel Alanlar"
-            description="Aktif rolüne bağlı dinamik alanlar burada görünür."
-            className={GOOGLE_SOFT_CARD_GREEN_SECTION}
-          />
+          <Card className={GOOGLE_SOFT_CARD_GREEN_SECTION}>
+            <CardHeader className="pb-2">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <CardTitle className="text-[11px]">Rolüne Özel Alanlar</CardTitle>
+                  <CardDescription className="text-[11px]">
+                    Aktif rolüne bağlı alanları tek kartta güncelle. Referral alanları backend tarafından private tutulur.
+                  </CardDescription>
+                </div>
+                <Button
+                  size="sm"
+                  className={AMBER_BUTTON_PRIMARY}
+                  onClick={() => void handleSaveRoleSpecificAttributes()}
+                  disabled={savingRoleSpecificAttributes || !groupedAttributes.roleSpecific.length}
+                >
+                  {savingRoleSpecificAttributes ? "Kaydediliyor..." : "Rolüne Özel Alanları Kaydet"}
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {groupedAttributes.roleSpecific.length ? (
+                groupedAttributes.roleSpecific.map((attribute) => (
+                  <ProfileAttributeEditor
+                    key={attribute.attributeKey}
+                    attribute={attribute}
+                    draftValue={draftValues[attribute.attributeKey]}
+                    draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
+                    displayNameLabel={displayNameLabel}
+                    isSaving={savingRoleSpecificAttributes}
+                    saveMode="section"
+                    visibilityMode="select"
+                    hideVisibilityControl={PRIVATE_ONLY_ONBOARDING_ATTRIBUTE_KEYS.has(attribute.attributeKey)}
+                    onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
+                    onVisibilityChange={(nextVisibility) =>
+                      setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
+                    }
+                  />
+                ))
+              ) : (
+                <p className="text-[11px] text-muted-foreground">
+                  Bu rol için şu an kullanıcı tarafından düzenlenebilir özel alan bulunmuyor.
+                </p>
+              )}
+            </CardContent>
+          </Card>
 
           <LockedProfileSectionCard
             title="Alt Kategori / Alt Tip"
@@ -1503,6 +1592,7 @@ type ProfileAttributeEditorProps = {
   isSaving: boolean;
   saveMode: "single" | "section";
   visibilityMode: "select" | "collapsible-radio" | "inline-switch";
+  hideVisibilityControl?: boolean;
   onValueChange: (value: string | boolean) => void;
   onVisibilityChange: (value: AttributeVisibility) => void;
   onSave?: () => void;
@@ -1581,6 +1671,7 @@ const ProfileAttributeEditor = ({
   isSaving,
   saveMode,
   visibilityMode,
+  hideVisibilityControl = false,
   onValueChange,
   onVisibilityChange,
   onSave,
@@ -1651,17 +1742,24 @@ const ProfileAttributeEditor = ({
               Beklemede
             </span>
           )}
-          <span className="inline-flex items-center gap-1 text-slate-600">
-            {draftVisibility === "public" ? <Globe2 className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
-            {visibilityLabel}
-          </span>
+          {!hideVisibilityControl ? (
+            <span className="inline-flex items-center gap-1 text-slate-600">
+              {draftVisibility === "public" ? <Globe2 className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
+              {visibilityLabel}
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 text-slate-600">
+              <Lock className="h-3.5 w-3.5" />
+              Private
+            </span>
+          )}
         </div>
       </div>
 
       <div className="mt-3 space-y-2">
         <AttributeInput attribute={attribute} value={draftValue} onChange={onValueChange} />
 
-        {visibilityMode === "collapsible-radio" ? (
+        {hideVisibilityControl ? null : visibilityMode === "collapsible-radio" ? (
           <Collapsible open={isVisibilityOpen} onOpenChange={setIsVisibilityOpen}>
             <div className={`rounded-xl ${GOOGLE_SOFT_CARD_SUBTLE}`}>
               <CollapsibleTrigger asChild>
@@ -1927,6 +2025,24 @@ const AttributeInput = ({ attribute, value, onChange, compact = false }: Attribu
         <p className={`${compact ? "text-[11px]" : "text-[11px]"} font-medium`}>{attribute.label}</p>
         <Switch checked={Boolean(value)} onCheckedChange={(checked) => onChange(checked)} />
       </div>
+    );
+  }
+
+  if (attribute.dataType === "select" && attribute.attributeKey === REFERRAL_SOURCE_ATTRIBUTE_KEY) {
+    return (
+      <Select value={typeof value === "string" && value.trim() ? value : "__empty__"} onValueChange={(nextValue) => onChange(nextValue === "__empty__" ? "" : nextValue)}>
+        <SelectTrigger className={compact ? "h-9 text-[10px]" : undefined}>
+          <SelectValue placeholder={attribute.label} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="__empty__">Seçiniz...</SelectItem>
+          {getReferralSourceOptions().map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     );
   }
 

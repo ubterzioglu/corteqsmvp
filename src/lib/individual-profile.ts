@@ -86,6 +86,8 @@ export type IndividualProfileControlPanelPayload = {
   institution: string;
   bio: string;
   linkedin: string;
+  businessOrOrganization: string;
+  interestFocus: string;
   websiteLinks: string[];
   websites: string[];
   skills: string[];
@@ -356,6 +358,8 @@ export const buildFallbackIndividualProfileDetails = (input: {
       institution: "-",
       bio: "Bio / Hakkında alanı henüz doldurulmadı.",
       linkedin: "-",
+      businessOrOrganization: "",
+      interestFocus: "",
       websiteLinks: [],
       websites: [],
       skills: [],
@@ -457,6 +461,8 @@ export const mapIndividualProfileRow = (
       institution: readString(profileSettings, "institution", fallback.controlPanel.institution),
       bio: readString(profileSettings, "bio", fallback.controlPanel.bio),
       linkedin: readString(profileSettings, "linkedin", fallback.controlPanel.linkedin),
+      businessOrOrganization: readString(profileSettings, "business_or_organization", fallback.controlPanel.businessOrOrganization),
+      interestFocus: readString(profileSettings, "interest_focus", fallback.controlPanel.interestFocus),
       websiteLinks: readStringArray(profileSettings, "website_links"),
       websites: readStringArray(profileSettings, "websites"),
       skills: readStringArray(profileSettings, "skills"),

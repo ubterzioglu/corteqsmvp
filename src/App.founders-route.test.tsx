@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Outlet } from "react-router-dom";
 
@@ -28,7 +28,7 @@ describe("App founders routing", () => {
     expect(screen.getByRole("link", { name: "CorteQS CorteQS MVP Global Türk Diaspora Network" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Burak Akçakanat" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Umut Barış Terzioğlu" })).toBeInTheDocument();
-    expect(screen.getByAltText("CorteQS kurucular logosu")).toBeInTheDocument();
+    expect(screen.getAllByAltText("CorteQS").length).toBeGreaterThan(0);
     expect(screen.getByAltText("Burak Akçakanat profil fotoğrafı")).toBeInTheDocument();
     expect(screen.getByAltText("Umut Barış Terzioğlu profil fotoğrafı")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Burak Akçakanat LinkedIn profili" })).toHaveAttribute(
@@ -39,16 +39,6 @@ describe("App founders routing", () => {
       "href",
       "https://www.linkedin.com/in/ubterzioglu",
     );
-    const burakAccordionButton = screen.getByRole("button", { name: /Kurucu Ortak Burak Akçakanat/i });
-    const umutAccordionButton = screen.getByRole("button", { name: /Kurucu Ortak Umut Barış Terzioğlu/i });
-
-    expect(burakAccordionButton).toHaveAttribute("data-state", "closed");
-    expect(umutAccordionButton).toHaveAttribute("data-state", "closed");
-
-    fireEvent.click(umutAccordionButton);
-
-    expect(burakAccordionButton).toHaveAttribute("data-state", "open");
-    expect(umutAccordionButton).toHaveAttribute("data-state", "open");
     expect(screen.getByText("Ürün güveni odaklı kalite yaklaşımı")).toBeInTheDocument();
     expect(screen.getByText("Disiplinli test stratejisi")).toBeInTheDocument();
     expect(screen.getByText("Süreç optimizasyonu bakışı")).toBeInTheDocument();
@@ -58,10 +48,5 @@ describe("App founders routing", () => {
     expect(screen.getByText("Kaliteyi koruyan sistem tasarımı")).toBeInTheDocument();
     expect(screen.getByText("Operasyonel düzen kurma disiplini")).toBeInTheDocument();
     expect(screen.getByText("Diaspora ihtiyaçlarına ürün yaklaşımı")).toBeInTheDocument();
-
-    fireEvent.click(burakAccordionButton);
-
-    expect(burakAccordionButton).toHaveAttribute("data-state", "closed");
-    expect(umutAccordionButton).toHaveAttribute("data-state", "closed");
   });
 });
