@@ -462,7 +462,7 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Rolüne Özel Alanlar")).toBeInTheDocument();
     expect(screen.getByText("Alt Kategori / Alt Tip")).toBeInTheDocument();
     expect(screen.getAllByText("Locked")).toHaveLength(4);
-    const profileSummaryToggle = screen.getByRole("button", { name: "Profil Özeti & Tamamlanma" });
+    const profileSummaryToggle = screen.getByRole("button", { name: "Profil Durumu" });
     expect(profileSummaryToggle).toBeInTheDocument();
     expect(profileSummaryToggle).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByText("Profil Skoru")).not.toBeInTheDocument();

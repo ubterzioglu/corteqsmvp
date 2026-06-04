@@ -1058,9 +1058,6 @@ const ProfilePage = () => {
             <CardHeader className="flex flex-col gap-3 pb-3 md:flex-row md:items-center md:justify-between">
               <div className="space-y-1">
                 <CardTitle className="text-2xl">{roleMeta?.title ?? "Profilim"}</CardTitle>
-                <CardDescription className="max-w-2xl text-xs">
-                  {roleMeta?.description}
-                </CardDescription>
                 <div className="flex flex-wrap items-center gap-1.5">
                   <Badge variant="secondary" className="text-xs">{profile?.roleLabel ?? roleMeta?.adminLabel ?? "Rol"}</Badge>
                   <Badge variant="outline" className="text-xs">Tamamlanma %{profile?.profileCompletion.percentage ?? 0}</Badge>
@@ -1152,7 +1149,6 @@ const ProfilePage = () => {
           <Card className={GOOGLE_SOFT_CARD_YELLOW_SECTION}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Ortak Profil Alanları</CardTitle>
-              <CardDescription className="text-xs">Bu alanlar profil kartın ve directory görünümün için kullanılır.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {groupedAttributes.common.map((attribute) => (
@@ -1183,9 +1179,6 @@ const ProfilePage = () => {
             <Card className={GOOGLE_SOFT_CARD_GREEN_SECTION}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base">Profil Rozetleri</CardTitle>
-                <CardDescription className="text-xs">
-                  Açık feature&apos;lar için görünürlük tercihlerini ayrı ayrı yönet.
-                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 {featureToggleCards.map((item) => (
@@ -1207,9 +1200,6 @@ const ProfilePage = () => {
           <Card className={GOOGLE_SOFT_CARD_RED_SECTION}>
             <CardHeader className="pb-2">
               <CardTitle className="text-base">Sosyal Medya Hesapları</CardTitle>
-              <CardDescription className="text-xs">
-                Profesyoneller, işletme ve kuruluşlar için tavsiye edilir. Hesaplarını ekle ve her biri için profilde gösterimi ayrı ayrı aç/kapat.
-              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {groupedAttributes.socialMedia.length ? (
@@ -1417,7 +1407,6 @@ const LockedProfileSectionCard = ({
             {TitleIcon ? <TitleIcon className="h-4 w-4 text-primary" /> : null}
             {title}
           </CardTitle>
-          <CardDescription className="text-xs">{description}</CardDescription>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="border-slate-300 bg-white/85 text-[10px] uppercase tracking-[0.18em] text-slate-600">
@@ -1473,17 +1462,13 @@ const DisplayNameAttributeCard = ({
     <Card className={GOOGLE_SOFT_CARD_BLUE_SECTION}>
       <CardHeader className="pb-2">
         <CardTitle className="text-base">{displayNameLabel}</CardTitle>
-        <CardDescription className="text-xs">
-          Profil başlığında ve directory görünümünde kullanılacak ismini ayrı kaydedebilirsin.
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex flex-col gap-3 md:flex-row md:items-start">
           <div className="flex-1 space-y-2">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <p className="text-sm font-semibold">{displayNameLabel}</p>
-              {attribute.isRequired ? <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">Zorunlu</Badge> : null}
-            </div>
+            {attribute.isRequired ? (
+              <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">Zorunlu</Badge>
+            ) : null}
             <AttributeInput attribute={attribute} value={draftValue} onChange={onValueChange} />
           </div>
           <div className="w-full md:w-[92px]">
@@ -1754,7 +1739,6 @@ const StandaloneLinkAttributeCard = ({
           <Icon className={`h-4 w-4 ${iconClassName}`} />
           {title}
         </CardTitle>
-        <CardDescription className="text-xs">{description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className={`flex items-center justify-between rounded-xl px-3 py-2 ${GOOGLE_SOFT_SWITCH_PANEL}`}>
@@ -1769,8 +1753,7 @@ const StandaloneLinkAttributeCard = ({
           onChange={(event) => onValueChange(event.target.value)}
           placeholder={attribute.label}
         />
-        <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
-          <span>Boş kalırsa public profilde gösterilmez.</span>
+        <div className="flex justify-end">
           <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={onSave} disabled={isSaving}>
             {isSaving ? "Kaydediliyor..." : "Kaydet"}
           </Button>
@@ -1818,7 +1801,6 @@ const ProfileDocumentCard = ({
           <Icon className="h-4 w-4 text-primary" />
           {title}
         </CardTitle>
-        <CardDescription className="text-xs">{description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className={`rounded-xl px-3 py-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
