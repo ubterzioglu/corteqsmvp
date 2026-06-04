@@ -240,7 +240,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
         requires_admin_approval_on_change: false, sort_order: row.sortOrder,
       };
       return (
-        <div className="flex flex-nowrap items-center gap-2 whitespace-nowrap">
+        <div className="flex flex-wrap items-center gap-1.5">
           {(
             [
               ["A", "is_enabled"],
@@ -278,7 +278,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
     if (row.kind === "feature") {
       const feat = featMap.get(row.key);
       return (
-        <div className="flex flex-nowrap items-center gap-2 whitespace-nowrap">
+        <div className="flex flex-wrap items-center gap-1.5">
           <div className="inline-flex shrink-0 items-center gap-1">
             <span className="text-[9px] text-muted-foreground">G</span>
             <Switch
@@ -304,7 +304,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
     if (row.kind === "profile_section") {
       const rule = sectMap.get(row.key)?.rule ?? { is_enabled: false, requires_approval: false, sort_order: row.sortOrder };
       return (
-        <div className="flex flex-nowrap items-center gap-2 whitespace-nowrap">
+        <div className="flex flex-wrap items-center gap-1.5">
           <div className="inline-flex shrink-0 items-center gap-1">
             <span className="text-[9px] text-muted-foreground">A</span>
             <Switch
@@ -345,7 +345,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border">
+    <div className="overflow-hidden rounded-lg border">
       {bundle && (
         <div className="flex justify-end border-b bg-muted/20 px-3 py-2">
           <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
@@ -357,19 +357,19 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
           </div>
         </div>
       )}
-      <Table className={bundle ? "min-w-[1180px] table-fixed" : "min-w-[840px] table-fixed"}>
+      <Table className="w-full table-fixed">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-16 whitespace-nowrap px-2 text-[11px]">Tür</TableHead>
-            <TableHead className="w-[15rem] whitespace-nowrap px-2 text-[11px]">Label</TableHead>
-            <TableHead className="w-[18rem] whitespace-nowrap px-2 text-[11px]">Açıklama</TableHead>
-            {bundle && <TableHead className="whitespace-nowrap px-2 text-[11px]">Kurallar ({bundle.role.label})</TableHead>}
+            <TableHead className="w-14 px-2 text-[11px]">Tür</TableHead>
+            <TableHead className="w-[28%] px-2 text-[11px]">Label</TableHead>
+            <TableHead className="w-[32%] px-2 text-[11px]">Açıklama</TableHead>
+            {bundle && <TableHead className="px-2 text-[11px]">Kurallar ({bundle.role.label})</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
           {rows.map((row) => (
             <TableRow key={`${row.kind}:${row.key}`} className="align-middle">
-              <TableCell className="px-2 py-2 whitespace-nowrap">
+              <TableCell className="px-2 py-2 align-top">
                 <Badge
                   variant="outline"
                   className={`h-6 min-w-6 justify-center px-1.5 py-0 text-[10px] font-semibold ${KIND_META[row.kind].className}`}
@@ -378,9 +378,9 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
                   {KIND_META[row.kind].short}
                 </Badge>
               </TableCell>
-              <TableCell className="px-2 py-2 whitespace-nowrap">
-                <div className="flex items-center gap-1.5 whitespace-nowrap">
-                  <p className="truncate text-[12px] font-medium" title={row.label}>{row.label}</p>
+              <TableCell className="px-2 py-2 align-top">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <p className="max-w-full break-words text-[12px] font-medium" title={row.label}>{row.label}</p>
                   {row.dataType && (
                     <span className="shrink-0 rounded border border-muted-foreground/20 bg-muted/40 px-1.5 py-0.5 text-[9px] text-muted-foreground">
                       {row.dataType}
@@ -393,11 +393,11 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
                   )}
                 </div>
               </TableCell>
-              <TableCell className="px-2 py-2 whitespace-nowrap">
+              <TableCell className="px-2 py-2 align-top">
                 {editingDesc === `${row.kind}:${row.key}` ? (
-                  <div className="flex items-center gap-1.5 whitespace-nowrap">
+                  <div className="flex flex-wrap items-center gap-1.5">
                     <Input
-                      className="h-7 w-[220px] px-2 text-[11px]"
+                      className="h-7 min-w-[180px] flex-1 px-2 text-[11px]"
                       value={descDraft}
                       onChange={(e) => setDescDraft(e.target.value)}
                       onKeyDown={(e) => {
@@ -412,7 +412,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
                 ) : (
                   <button
                     type="button"
-                    className="block max-w-full truncate text-left text-[11px] text-muted-foreground hover:text-foreground"
+                    className="block max-w-full break-words text-left text-[11px] text-muted-foreground hover:text-foreground"
                     title={row.description || "Açıklama ekle"}
                     onClick={() => { setEditingDesc(`${row.kind}:${row.key}`); setDescDraft(row.description ?? ""); }}
                   >
@@ -421,7 +421,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
                 )}
               </TableCell>
               {bundle && (
-                <TableCell className="px-2 py-2 whitespace-nowrap">
+                <TableCell className="px-2 py-2 align-top">
                   {renderEditControls(row)}
                 </TableCell>
               )}

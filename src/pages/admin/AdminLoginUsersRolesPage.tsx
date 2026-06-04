@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 import { setUserRoleAsAdmin, updateUserProfileAttributeAsAdmin, updateUserTaxonomySelectionAsAdmin } from "@/lib/admin";
@@ -10,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -121,6 +123,8 @@ type UsersRolesBackFilters = {
 
 const DEFAULT_PROVIDER_FILTER: ProviderFilter = "google";
 const DEFAULT_SORT_FILTER: SortFilter = "created_desc";
+const ADMIN_SWITCH_PANEL =
+  "border border-emerald-200/70 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.95),_rgba(229,246,238,0.95)_60%,_rgba(214,242,228,0.95)_100%)] shadow-[0_1px_2px_rgba(16,24,40,0.04)]";
 
 const parseProviderFilter = (value: string | null): ProviderFilter => {
   if (value === "all" || value === "unknown" || value === "google") {
@@ -870,7 +874,7 @@ const AdminLoginUsersRolesPage = () => {
               <div className="rounded-lg border bg-muted/30 p-3">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="space-y-1">
-                    <p className="text-sm font-medium text-foreground">{userDataDialogState.user.full_name || "İsimsiz kullanıcı"}</p>
+                    <p className="text-[13px] font-medium text-foreground">{userDataDialogState.user.full_name || "İsimsiz kullanıcı"}</p>
                     <p className="text-xs text-muted-foreground">{userDataDialogState.user.email || "-"}</p>
                     <p className="text-xs text-muted-foreground">
                       Provider: {userDataDialogState.user.auth_provider || "-"} • Kayıt:
@@ -879,13 +883,13 @@ const AdminLoginUsersRolesPage = () => {
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="secondary">
+                    <Badge variant="secondary" className="text-[11px]">
                       Rol: {roleById.get(dialogRoleId)?.label ?? userDataDialogState.roleLabel}
                     </Badge>
-                    <Badge variant="outline" className="border-orange-200 bg-orange-50 text-orange-700">
+                    <Badge variant="outline" className="border-orange-200 bg-orange-50 text-[11px] text-orange-700">
                       Pending: {pendingCountByUserId[userDataDialogState.user.user_id] ?? 0}
                     </Badge>
-                    <Badge variant="outline" className="border-orange-200 bg-orange-50 text-orange-700">
+                    <Badge variant="outline" className="border-orange-200 bg-orange-50 text-[11px] text-orange-700">
                       Override: {overrideCountByUserId[userDataDialogState.user.user_id] ?? 0}
                     </Badge>
                   </div>
@@ -894,7 +898,7 @@ const AdminLoginUsersRolesPage = () => {
                 <div className="mt-4 rounded-lg border bg-background p-3">
                   <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                     <div className="space-y-1">
-                      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Rol Yönetimi</p>
+                      <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Rol Yönetimi</p>
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                         <RoleSearchSelect
                           roles={roles.map((role) => ({
@@ -906,11 +910,11 @@ const AdminLoginUsersRolesPage = () => {
                           value={dialogRoleId}
                           onValueChange={setDialogRoleId}
                           disabled={isUserDataSaving || updatingUserId === userDataDialogState.user.user_id || roles.length === 0}
-                          className="h-9 min-w-[240px]"
+                          className="h-9 min-w-[240px] text-[11px]"
                         />
                       </div>
                     </div>
-                    <Button type="button" size="sm" onClick={() => void handleSaveAllUserData()} disabled={isUserDataSaving || updatingUserId === userDataDialogState.user.user_id}>
+                    <Button type="button" size="sm" className="text-[11px]" onClick={() => void handleSaveAllUserData()} disabled={isUserDataSaving || updatingUserId === userDataDialogState.user.user_id}>
                       {isUserDataSaving || updatingUserId === userDataDialogState.user.user_id ? "Kaydediliyor..." : "Tüm Değişiklikleri Kaydet"}
                     </Button>
                   </div>
@@ -919,58 +923,65 @@ const AdminLoginUsersRolesPage = () => {
 
               <div className="space-y-3">
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground">Attribute Değerleri</h3>
+                  <h3 className="text-[13px] font-semibold text-foreground">Attribute Değerleri</h3>
                   <p className="text-xs text-muted-foreground">Kullanıcının doldurduğu alanlar ve mevcut onay/görünürlük durumu.</p>
                 </div>
 
                 {userDataDialogState.attributes.length > 0 ? (
                   <div className="max-h-[420px] space-y-2 overflow-y-auto pr-1">
                     {userDataDialogState.attributes.map((attribute) => (
-                      <div key={attribute.key} className="rounded-lg border p-3">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-sm font-medium text-foreground">{attribute.label}</p>
-                          <Badge variant="outline" className="text-[10px]">{attribute.key}</Badge>
-                          <Badge variant="outline" className="text-[10px]">{attribute.dataType}</Badge>
-                          <Badge variant="outline" className="text-[10px]">{attribute.visibility}</Badge>
-                          <Badge variant="outline" className="text-[10px]">{attribute.approvalStatus}</Badge>
-                        </div>
-                        {attribute.description ? (
-                          <p className="mt-1 text-xs text-muted-foreground">{attribute.description}</p>
-                        ) : null}
-                        <div className="mt-2 space-y-2">
+                      <div key={attribute.key} className="rounded-lg border px-3 py-2">
+                        <div className="flex flex-col gap-2 xl:flex-row xl:items-start">
+                          <div className="xl:w-44 xl:shrink-0">
+                            <div className="flex flex-wrap items-center gap-1.5">
+                              <p className="text-[11px] font-semibold text-foreground">{attribute.label}</p>
+                              <Badge variant="outline" className="px-1.5 py-0 text-[9px]">{attribute.key}</Badge>
+                              <Badge variant="outline" className="px-1.5 py-0 text-[9px]">{attribute.dataType}</Badge>
+                              <Badge variant="outline" className="px-1.5 py-0 text-[9px]">{attribute.approvalStatus}</Badge>
+                            </div>
+                            {attribute.description ? (
+                              <p className="mt-1 text-[10px] leading-4 text-muted-foreground">{attribute.description}</p>
+                            ) : null}
+                          </div>
+
+                          <div className="min-w-0 flex-1">
                           {attribute.dataType === "textarea" || attribute.dataType === "json" || attribute.value.includes("\n") ? (
                             <Textarea
                               rows={attribute.dataType === "json" ? 5 : 3}
+                              className="min-h-[40px] text-[11px]"
                               value={attributeDrafts[attribute.key] ?? ""}
                               onChange={(event) => setAttributeDrafts((current) => ({ ...current, [attribute.key]: event.target.value }))}
                               disabled={isUserDataSaving}
                             />
                           ) : (
                             <Input
+                              className="h-9 text-[10px] placeholder:text-[10px]"
                               value={attributeDrafts[attribute.key] ?? ""}
                               onChange={(event) => setAttributeDrafts((current) => ({ ...current, [attribute.key]: event.target.value }))}
                               disabled={isUserDataSaving}
                             />
                           )}
-                          <div className="flex flex-wrap items-center gap-2">
-                            <Select
-                              value={visibilityDrafts[attribute.key] ?? attribute.visibility}
-                              onValueChange={(value) =>
-                                setVisibilityDrafts((current) => ({
-                                  ...current,
-                                  [attribute.key]: value as "public" | "private",
-                                }))
-                              }
-                              disabled={isUserDataSaving}
-                            >
-                              <SelectTrigger className="h-9 w-[160px] text-xs">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="public">public</SelectItem>
-                                <SelectItem value="private">private</SelectItem>
-                              </SelectContent>
-                            </Select>
+                          </div>
+
+                          <div className="xl:w-[84px] xl:shrink-0">
+                            <div className={`flex h-9 items-center justify-between gap-1.5 rounded-full px-2 text-[11px] ${ADMIN_SWITCH_PANEL}`}>
+                              {(visibilityDrafts[attribute.key] ?? attribute.visibility) === "public" ? (
+                                <Eye className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                              ) : (
+                                <EyeOff className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                              )}
+                              <Switch
+                                checked={(visibilityDrafts[attribute.key] ?? attribute.visibility) === "public"}
+                                onCheckedChange={(checked) =>
+                                  setVisibilityDrafts((current) => ({
+                                    ...current,
+                                    [attribute.key]: checked ? "public" : "private",
+                                  }))
+                                }
+                                disabled={isUserDataSaving}
+                                aria-label={`${attribute.label} görünürlük`}
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -983,20 +994,20 @@ const AdminLoginUsersRolesPage = () => {
 
               <div className="space-y-3">
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground">Taxonomy Seçimleri</h3>
+                  <h3 className="text-[13px] font-semibold text-foreground">Taxonomy Seçimleri</h3>
                   <p className="text-xs text-muted-foreground">Rolüne bağlı sınıflandırma veya alt tip seçimleri.</p>
                 </div>
 
                 {userDataDialogState.taxonomyGroups.length > 0 ? (
                   <div className="space-y-2">
                     {userDataDialogState.taxonomyGroups.map((group) => (
-                      <div key={group.key} className="rounded-lg border p-3">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-sm font-medium text-foreground">{group.label}</p>
-                          <Badge variant="outline" className="text-[10px]">{group.key}</Badge>
+                      <div key={group.key} className="rounded-lg border px-3 py-2">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <p className="text-[11px] font-semibold text-foreground">{group.label}</p>
+                          <Badge variant="outline" className="px-1.5 py-0 text-[9px]">{group.key}</Badge>
                         </div>
-                        {group.description ? <p className="mt-1 text-xs text-muted-foreground">{group.description}</p> : null}
-                        <div className="mt-2 space-y-3">
+                        {group.description ? <p className="mt-1 text-[10px] leading-4 text-muted-foreground">{group.description}</p> : null}
+                        <div className="mt-2">
                           <div className="flex flex-wrap gap-2">
                             {group.options.map((option) => {
                               const selected = (taxonomyDrafts[group.key] ?? []).includes(option.key);
@@ -1006,7 +1017,7 @@ const AdminLoginUsersRolesPage = () => {
                                   type="button"
                                   onClick={() => handleToggleTaxonomyOption(group.key, option.key)}
                                   disabled={isUserDataSaving}
-                                  className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                                  className={`rounded-full border px-2.5 py-1 text-[10px] transition-colors ${
                                     selected
                                       ? "border-orange-300 bg-orange-100 text-orange-800"
                                       : "border-border bg-background text-muted-foreground hover:bg-muted"
