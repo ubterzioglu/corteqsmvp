@@ -23,10 +23,22 @@ type Props = {
   onBundleChange: (patch: Partial<RoleManagementBundle>) => void;
 };
 
-const KIND_BADGE_VARIANT: Record<string, "default" | "secondary" | "outline"> = {
-  attribute: "secondary",
-  feature: "default",
-  profile_section: "outline",
+const KIND_META: Record<string, { short: string; className: string }> = {
+  attribute: {
+    short: "A",
+    className:
+      "border-[#ef8c3f]/35 bg-[linear-gradient(135deg,#fff0de_0%,#ffd6af_52%,#ffbc7b_100%)] text-[#c96a1a]",
+  },
+  feature: {
+    short: "F",
+    className:
+      "border-[#34A853]/35 bg-[linear-gradient(135deg,rgba(52,168,83,0.12),rgba(52,168,83,0.2))] text-[#137333]",
+  },
+  profile_section: {
+    short: "S",
+    className:
+      "border-[#4285F4]/35 bg-[linear-gradient(135deg,rgba(66,133,244,0.12),rgba(66,133,244,0.2))] text-[#185ABC]",
+  },
 };
 
 const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
@@ -217,7 +229,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
         requires_admin_approval_on_change: false, sort_order: row.sortOrder,
       };
       return (
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-nowrap items-center gap-2 whitespace-nowrap">
           {(
             [
               ["Aktif",    "is_enabled"],
@@ -228,21 +240,21 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
               ["Onay",     "requires_admin_approval_on_change"],
             ] as [string, keyof RoleManagementAttribute["rule"]][]
           ).map(([label, field]) => (
-            <div key={field} className="inline-flex items-center gap-1">
-              <span className="text-[10px] text-muted-foreground">{label}</span>
+            <div key={field} className="inline-flex shrink-0 items-center gap-1">
+              <span className="text-[9px] text-muted-foreground">{label}</span>
               <Switch
-                className="h-4 w-7 [&>span]:h-3 [&>span]:w-3 [&>span]:data-[state=checked]:translate-x-3"
+                className="h-3.5 w-6 [&>span]:h-2.5 [&>span]:w-2.5 [&>span]:data-[state=checked]:translate-x-2.5"
                 checked={rule[field] as boolean}
                 disabled={savingKey !== null}
                 onCheckedChange={(checked) => void handleAttrToggle(row, field, checked)}
               />
             </div>
           ))}
-          <div className="inline-flex items-center gap-1">
-            <span className="text-[10px] text-muted-foreground">Sıra</span>
+          <div className="inline-flex shrink-0 items-center gap-1">
+            <span className="text-[9px] text-muted-foreground">Sıra</span>
             <Input
               type="number"
-              className="h-5 w-12 text-[10px] px-1"
+              className="h-5 w-11 px-1 text-[10px]"
               defaultValue={String(rule.sort_order)}
               disabled={savingKey !== null}
               onBlur={(e) => void handleAttrSortOrder(row, Number(e.target.value) || rule.sort_order)}
@@ -255,20 +267,20 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
     if (row.kind === "feature") {
       const feat = featMap.get(row.key);
       return (
-        <div className="flex flex-wrap gap-1.5">
-          <div className="inline-flex items-center gap-1">
-            <span className="text-[10px] text-muted-foreground">Global</span>
+        <div className="flex flex-nowrap items-center gap-2 whitespace-nowrap">
+          <div className="inline-flex shrink-0 items-center gap-1">
+            <span className="text-[9px] text-muted-foreground">Global</span>
             <Switch
-              className="h-4 w-7 [&>span]:h-3 [&>span]:w-3 [&>span]:data-[state=checked]:translate-x-3"
+              className="h-3.5 w-6 [&>span]:h-2.5 [&>span]:w-2.5 [&>span]:data-[state=checked]:translate-x-2.5"
               checked={feat?.is_active_globally ?? row.isActiveGlobally ?? false}
               disabled={savingKey !== null}
               onCheckedChange={(checked) => void handleFeatGlobalToggle(row, checked)}
             />
           </div>
-          <div className="inline-flex items-center gap-1">
-            <span className="text-[10px] text-muted-foreground">Rol</span>
+          <div className="inline-flex shrink-0 items-center gap-1">
+            <span className="text-[9px] text-muted-foreground">Rol</span>
             <Switch
-              className="h-4 w-7 [&>span]:h-3 [&>span]:w-3 [&>span]:data-[state=checked]:translate-x-3"
+              className="h-3.5 w-6 [&>span]:h-2.5 [&>span]:w-2.5 [&>span]:data-[state=checked]:translate-x-2.5"
               checked={feat?.is_enabled ?? false}
               disabled={savingKey !== null}
               onCheckedChange={(checked) => void handleFeatRoleToggle(row, checked)}
@@ -281,30 +293,30 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
     if (row.kind === "profile_section") {
       const rule = sectMap.get(row.key)?.rule ?? { is_enabled: false, requires_approval: false, sort_order: row.sortOrder };
       return (
-        <div className="flex flex-wrap gap-1.5">
-          <div className="inline-flex items-center gap-1">
-            <span className="text-[10px] text-muted-foreground">Aktif</span>
+        <div className="flex flex-nowrap items-center gap-2 whitespace-nowrap">
+          <div className="inline-flex shrink-0 items-center gap-1">
+            <span className="text-[9px] text-muted-foreground">Aktif</span>
             <Switch
-              className="h-4 w-7 [&>span]:h-3 [&>span]:w-3 [&>span]:data-[state=checked]:translate-x-3"
+              className="h-3.5 w-6 [&>span]:h-2.5 [&>span]:w-2.5 [&>span]:data-[state=checked]:translate-x-2.5"
               checked={rule.is_enabled}
               disabled={savingKey !== null}
               onCheckedChange={(checked) => void handleSectToggle(row, "is_enabled", checked)}
             />
           </div>
-          <div className="inline-flex items-center gap-1">
-            <span className="text-[10px] text-muted-foreground">Onay</span>
+          <div className="inline-flex shrink-0 items-center gap-1">
+            <span className="text-[9px] text-muted-foreground">Onay</span>
             <Switch
-              className="h-4 w-7 [&>span]:h-3 [&>span]:w-3 [&>span]:data-[state=checked]:translate-x-3"
+              className="h-3.5 w-6 [&>span]:h-2.5 [&>span]:w-2.5 [&>span]:data-[state=checked]:translate-x-2.5"
               checked={rule.requires_approval}
               disabled={savingKey !== null}
               onCheckedChange={(checked) => void handleSectToggle(row, "requires_approval", checked)}
             />
           </div>
-          <div className="inline-flex items-center gap-1">
-            <span className="text-[10px] text-muted-foreground">Sıra</span>
+          <div className="inline-flex shrink-0 items-center gap-1">
+            <span className="text-[9px] text-muted-foreground">Sıra</span>
             <Input
               type="number"
-              className="h-5 w-12 text-[10px] px-1"
+              className="h-5 w-11 px-1 text-[10px]"
               defaultValue={String(rule.sort_order)}
               disabled={savingKey !== null}
               onBlur={(e) => void handleSectSortOrder(row, Number(e.target.value) || rule.sort_order)}
@@ -323,41 +335,51 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
 
   return (
     <div className="overflow-x-auto rounded-lg border">
-      <Table>
+      <Table className={bundle ? "min-w-[1520px] table-fixed" : "min-w-[1040px] table-fixed"}>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-24 text-[12px]">Tür</TableHead>
-            <TableHead className="text-[12px]">Label</TableHead>
-            <TableHead className="w-48 text-[12px]">Key</TableHead>
-            <TableHead className="text-[12px]">Açıklama</TableHead>
-            {bundle && <TableHead className="text-[12px]">Kurallar ({bundle.role.label})</TableHead>}
+            <TableHead className="w-16 whitespace-nowrap px-2 text-[11px]">Tür</TableHead>
+            <TableHead className="w-[24rem] whitespace-nowrap px-2 text-[11px]">Label</TableHead>
+            <TableHead className="w-[20rem] whitespace-nowrap px-2 text-[11px]">Key</TableHead>
+            <TableHead className="w-[24rem] whitespace-nowrap px-2 text-[11px]">Açıklama</TableHead>
+            {bundle && <TableHead className="whitespace-nowrap px-2 text-[11px]">Kurallar ({bundle.role.label})</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={`${row.kind}:${row.key}`} className="align-top">
-              <TableCell className="py-2">
-                <Badge variant={KIND_BADGE_VARIANT[row.kind]} className="text-[10px] px-1.5 py-0">
-                  {ENTITY_KIND_LABELS[row.kind]}
+            <TableRow key={`${row.kind}:${row.key}`} className="align-middle">
+              <TableCell className="px-2 py-2 whitespace-nowrap">
+                <Badge
+                  variant="outline"
+                  className={`h-6 min-w-6 justify-center px-1.5 py-0 text-[10px] font-semibold ${KIND_META[row.kind].className}`}
+                  title={ENTITY_KIND_LABELS[row.kind]}
+                >
+                  {KIND_META[row.kind].short}
                 </Badge>
-                {row.sectionArea && (
-                  <p className="mt-0.5 text-[9px] text-muted-foreground">{row.sectionArea}</p>
-                )}
               </TableCell>
-              <TableCell className="py-2">
-                <p className="text-[13px] font-medium leading-5">{row.label}</p>
-                {row.dataType && (
-                  <p className="text-[10px] text-muted-foreground">{row.dataType}</p>
-                )}
+              <TableCell className="px-2 py-2 whitespace-nowrap">
+                <div className="flex items-center gap-1.5 whitespace-nowrap">
+                  <p className="truncate text-[12px] font-medium" title={row.label}>{row.label}</p>
+                  {row.dataType && (
+                    <span className="shrink-0 rounded border border-muted-foreground/20 bg-muted/40 px-1.5 py-0.5 text-[9px] text-muted-foreground">
+                      {row.dataType}
+                    </span>
+                  )}
+                  {row.sectionArea && (
+                    <span className="shrink-0 rounded border border-muted-foreground/20 bg-muted/40 px-1.5 py-0.5 text-[9px] text-muted-foreground">
+                      {row.sectionArea}
+                    </span>
+                  )}
+                </div>
               </TableCell>
-              <TableCell className="py-2">
-                <p className="text-[11px] font-mono text-muted-foreground break-all">{row.key}</p>
+              <TableCell className="px-2 py-2 whitespace-nowrap">
+                <p className="truncate text-[10px] font-mono text-muted-foreground" title={row.key}>{row.key}</p>
               </TableCell>
-              <TableCell className="py-2">
+              <TableCell className="px-2 py-2 whitespace-nowrap">
                 {editingDesc === `${row.kind}:${row.key}` ? (
-                  <div className="flex items-start gap-1.5">
+                  <div className="flex items-center gap-1.5 whitespace-nowrap">
                     <Input
-                      className="h-6 text-xs px-1.5"
+                      className="h-7 w-[220px] px-2 text-[11px]"
                       value={descDraft}
                       onChange={(e) => setDescDraft(e.target.value)}
                       onKeyDown={(e) => {
@@ -366,13 +388,14 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
                       }}
                       autoFocus
                     />
-                    <button type="button" className="text-[10px] text-primary shrink-0" onClick={() => void saveDescription(row, descDraft)}>Kaydet</button>
-                    <button type="button" className="text-[10px] text-muted-foreground shrink-0" onClick={() => setEditingDesc(null)}>İptal</button>
+                    <button type="button" className="shrink-0 text-[10px] text-primary" onClick={() => void saveDescription(row, descDraft)}>Kaydet</button>
+                    <button type="button" className="shrink-0 text-[10px] text-muted-foreground" onClick={() => setEditingDesc(null)}>İptal</button>
                   </div>
                 ) : (
                   <button
                     type="button"
-                    className="text-left text-xs text-muted-foreground hover:text-foreground"
+                    className="block max-w-full truncate text-left text-[11px] text-muted-foreground hover:text-foreground"
+                    title={row.description || "Açıklama ekle"}
                     onClick={() => { setEditingDesc(`${row.kind}:${row.key}`); setDescDraft(row.description ?? ""); }}
                   >
                     {row.description || "Açıklama ekle…"}
@@ -380,7 +403,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
                 )}
               </TableCell>
               {bundle && (
-                <TableCell className="py-2">
+                <TableCell className="px-2 py-2 whitespace-nowrap">
                   {renderEditControls(row)}
                 </TableCell>
               )}

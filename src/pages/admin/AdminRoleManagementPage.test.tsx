@@ -154,6 +154,29 @@ describe("AdminRoleManagementPage", () => {
     });
   });
 
+  it("clears role and filters with clear button", async () => {
+    renderPage();
+    await waitFor(() => expect(getRolePicker()).toBeInTheDocument());
+
+    fireEvent.click(getRolePicker());
+    fireEvent.click(screen.getByText("Standart Kullanıcı"));
+    await waitFor(() => {
+      expect(getRoleManagementBundle).toHaveBeenCalledWith("User_Standard");
+    });
+
+    fireEvent.change(screen.getByPlaceholderText(/Ara/i), { target: { value: "bio" } });
+    expect(screen.getByPlaceholderText(/Ara/i)).toHaveValue("bio");
+
+    fireEvent.click(screen.getByRole("button", { name: /Seçimi temizle/i }));
+
+    await waitFor(() => {
+      expect(getRolePicker()).toHaveTextContent("Rol seç");
+      expect(screen.getByPlaceholderText(/Ara/i)).toHaveValue("");
+      expect(screen.getByText("Profil Düzenle")).toBeInTheDocument();
+      expect(screen.getByText("Hakkında")).toBeInTheDocument();
+    });
+  });
+
   it("shows error toast when catalog load fails", async () => {
     fetchCatalogRows.mockRejectedValue(new Error("Katalog hatası"));
     renderPage();

@@ -71,31 +71,38 @@ const AdminRolesPreviewPage = () => {
             <p className="text-sm text-muted-foreground">Roller yükleniyor...</p>
           ) : (
             <div className="overflow-x-auto rounded-lg border">
-              <Table>
+              <Table className="min-w-[1080px] table-fixed">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-28 text-[12px]">Aile</TableHead>
-                    <TableHead className="text-[12px]">Label (Türkçe)</TableHead>
-                    <TableHead className="w-72 text-[12px]">Key (Slug)</TableHead>
-                    <TableHead className="text-[12px]">Açıklama</TableHead>
+                    <TableHead className="w-36 whitespace-nowrap text-[12px]">Aile</TableHead>
+                    <TableHead className="w-[24rem] whitespace-nowrap text-[12px]">Label (Türkçe)</TableHead>
+                    <TableHead className="w-[22rem] whitespace-nowrap text-[12px]">Key (Slug)</TableHead>
+                    <TableHead className="whitespace-nowrap text-[12px]">Açıklama</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {roles.map((role) => (
                     <TableRow key={role.key}>
-                      <TableCell className="py-2">
-                        <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                      <TableCell className="py-2 whitespace-nowrap">
+                        <Badge variant="outline" className="px-1.5 py-0 text-[10px] whitespace-nowrap">
                           {getFamilyBadge(role.key)}
                         </Badge>
                       </TableCell>
-                      <TableCell className="py-2">
-                        <p className="text-[13px] font-medium">{role.label}</p>
+                      <TableCell className="py-2 whitespace-nowrap">
+                        <p className="truncate text-[13px] font-medium" title={role.label}>
+                          {role.label}
+                        </p>
                       </TableCell>
-                      <TableCell className="py-2">
-                        <p className="text-[11px] font-mono text-muted-foreground">{role.key}</p>
+                      <TableCell className="py-2 whitespace-nowrap">
+                        <p className="truncate text-[11px] font-mono text-muted-foreground" title={role.key}>
+                          {role.key}
+                        </p>
                       </TableCell>
-                      <TableCell className="py-2">
-                        <p className="text-xs text-muted-foreground">
+                      <TableCell className="py-2 whitespace-nowrap">
+                        <p
+                          className="truncate text-xs text-muted-foreground"
+                          title={role.description ?? "Açıklama yok"}
+                        >
                           {role.description ?? <span className="italic">—</span>}
                         </p>
                       </TableCell>

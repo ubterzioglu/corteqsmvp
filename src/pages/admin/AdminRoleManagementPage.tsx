@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { getRoleManagementBundle, type RoleManagementBundle } from "@/lib/admin";
@@ -113,6 +114,19 @@ const AdminRoleManagementPage = () => {
     setBundle((prev) => (prev ? { ...prev, ...patch } : prev));
   };
 
+  const clearSelections = () => {
+    setSelectedRoleKey("");
+    setSearch("");
+    setKindFilter("all");
+    setBundle(null);
+    setBundleError(null);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.delete("role");
+      return next;
+    }, { replace: true });
+  };
+
   const visibleRows = filterCatalogRows(catalogRows, { search, kind: kindFilter });
 
   return (
@@ -126,15 +140,27 @@ const AdminRoleManagementPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Role selector */}
-          <div className="max-w-sm">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:flex-nowrap">
             <RoleSearchSelect
               roles={roles}
               value={selectedRoleKey}
               onValueChange={setSelectedRoleKey}
               disabled={loadingRoles}
               placeholder={loadingRoles ? "Roller yükleniyor..." : "Rol seç (isteğe bağlı)…"}
+              className="h-11 w-full md:w-[240px] lg:w-[280px]"
             />
+            <EntityTypeFilter
+              search={search}
+              onSearchChange={setSearch}
+              kind={kindFilter}
+              onKindChange={setKindFilter}
+              className="flex-col gap-2 md:w-auto md:flex-row md:items-center md:flex-nowrap"
+              searchClassName="h-11 w-full max-w-none text-sm md:w-[260px] lg:w-[320px]"
+              triggerClassName="h-11 w-full text-sm md:w-[140px] lg:w-[160px]"
+            />
+            <Button type="button" variant="outline" className="h-11 md:ml-auto" onClick={clearSelections}>
+              Seçimi temizle
+            </Button>
           </div>
 
           {selectedRoleKey && loadingBundle && (
@@ -143,14 +169,6 @@ const AdminRoleManagementPage = () => {
           {bundleError && (
             <p className="text-sm text-destructive">Rol yüklenemedi: {bundleError}</p>
           )}
-
-          {/* Search + type filter */}
-          <EntityTypeFilter
-            search={search}
-            onSearchChange={setSearch}
-            kind={kindFilter}
-            onKindChange={setKindFilter}
-          />
 
           {loadingCatalog ? (
             <p className="text-sm text-muted-foreground">Katalog yükleniyor...</p>

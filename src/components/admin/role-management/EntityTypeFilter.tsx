@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 import { ENTITY_KIND_LABELS, type EntityKind } from "@/lib/role-catalog";
 
 type Props = {
@@ -7,6 +8,9 @@ type Props = {
   onSearchChange: (value: string) => void;
   kind: EntityKind | "all";
   onKindChange: (value: EntityKind | "all") => void;
+  className?: string;
+  searchClassName?: string;
+  triggerClassName?: string;
 };
 
 const KIND_OPTIONS: Array<{ value: EntityKind | "all" }> = [
@@ -16,17 +20,25 @@ const KIND_OPTIONS: Array<{ value: EntityKind | "all" }> = [
   { value: "profile_section" },
 ];
 
-const EntityTypeFilter = ({ search, onSearchChange, kind, onKindChange }: Props) => {
+const EntityTypeFilter = ({
+  search,
+  onSearchChange,
+  kind,
+  onKindChange,
+  className,
+  searchClassName,
+  triggerClassName,
+}: Props) => {
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className={cn("flex flex-wrap items-center gap-2", className)}>
       <Input
         placeholder="Ara (label, key, açıklama)…"
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}
-        className="h-8 max-w-xs text-xs"
+        className={cn("h-8 max-w-xs text-xs", searchClassName)}
       />
       <Select value={kind} onValueChange={(v) => onKindChange(v as EntityKind | "all")}>
-        <SelectTrigger className="h-8 w-36 text-xs">
+        <SelectTrigger className={cn("h-8 w-36 text-xs", triggerClassName)}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
