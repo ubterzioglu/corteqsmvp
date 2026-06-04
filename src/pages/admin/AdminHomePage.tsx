@@ -97,13 +97,13 @@ const toneClasses: Record<NavTone, { card: string; iconWrap: string; button: str
 
 const newMemberDescriptions: Record<string, string> = {
   "Üye Takibi": "Yeni kayıtları, operasyon akışını ve günlük incelemeleri merkezden yönet.",
-  "Genel Kullanım Kılavuzu": "Yeni üye sisteminin uçtan uca kullanım notlarını tek yerden aç.",
   "Loginli Üyeler & Roller": "Loginli üye rol atamaları, görünürlükler ve profil alanlarını düzenle.",
   "Roller & Featurelar": "Rol bazlı feature açma, kapama ve varsayılanları stratejik olarak kurgula.",
   "Attribute Yönetimi": "Alan kuralları, zorunluluklar ve görünürlük davranışlarını güncelle.",
   "Profile Sections": "Profil bileşen sıralarını ve role göre section akışını şekillendir.",
   "Taxonomy Yönetimi": "Alt kategori, alt tip ve seçilebilir taxonomy seçeneklerini yönet.",
   "Feature Override": "Kullanıcı bazlı override ile standart akıştan kontrollü sapmalar oluştur.",
+  "Kullanım Klavuzu": "Yeni üyeler sistemindeki ekranları hangi sırayla ve hangi durumda kullanacağını madde madde aç.",
 };
 
 const primaryDescriptions: Record<string, string> = {

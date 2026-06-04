@@ -81,6 +81,7 @@ describe("AdminLayout", () => {
     expect(await screen.findByRole("menuitem", { name: /Üye Takibi/i })).toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /Loginli Üyeler & Roller/i })).toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /Rol Yönetimi/i })).toBeInTheDocument();
+    expect(await screen.findByRole("menuitem", { name: /Kullanım Klavuzu/i })).toBeInTheDocument();
     fireEvent.mouseLeave(newMemberSystemButton);
     const communityButton = screen.getByRole("button", { name: /Topluluklar/i });
     fireEvent.mouseEnter(communityButton);

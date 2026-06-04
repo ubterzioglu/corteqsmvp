@@ -15,6 +15,7 @@ export const newMemberSystemNavItems = [
   { to: "/admin/new-member/roles-preview", label: "Roller Önizleme", icon: ListChecks },
   { to: "/admin/new-member/entity-preview", label: "AFS Önizleme", icon: Database },
   { to: "/admin/new-member/onboarding-imports", label: "Onboarding Importları", icon: ClipboardList },
+  { to: "/admin/new-member/guide", label: "Kullanım Klavuzu", icon: BookOpen },
 ] as const;
 
 export const externalAdminNavItems = [

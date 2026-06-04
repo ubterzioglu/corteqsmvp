@@ -227,6 +227,7 @@ const AdminLayout = () => {
     location.pathname === "/admin/members";
   const adminPanelMenuActive = adminPanelNavItems.some((item) => location.pathname === item.to);
   const isRouteActive = (to: string) => location.pathname === to;
+  const isNewMemberGuideItem = (to: string) => to === "/admin/new-member/guide";
   const mobileMainLinks = [
     { to: "/admin/workspace/command-center", label: "CC" },
     { to: "/admin/members", label: "Üye Takibi" },
@@ -236,6 +237,7 @@ const AdminLayout = () => {
     { to: "/admin/new-member/roles-preview", label: "Roller Önizleme" },
     { to: "/admin/new-member/entity-preview", label: "AFS Önizleme" },
     { to: "/admin/new-member/onboarding-imports", label: "Onboarding Importları" },
+    { to: "/admin/new-member/guide", label: "Kullanım Klavuzu" },
     { to: "/admin/referral", label: "Ref Kod" },
     { to: "/admin/approvals", label: "Approval Queue" },
     { to: "/admin/audit-logs", label: "Audit Logs" },
@@ -352,9 +354,13 @@ const AdminLayout = () => {
                         <Link
                           to={item.to}
                           className={`block rounded-md px-3 py-2 text-sm transition-colors ${
-                            location.pathname === item.to
-                              ? "bg-primary text-primary-foreground"
-                              : "text-foreground hover:bg-muted"
+                            isNewMemberGuideItem(item.to)
+                              ? location.pathname === item.to
+                                ? "bg-[#EA4335] text-white"
+                                : "text-[#C5221F] hover:bg-[#FCE8E6]"
+                              : location.pathname === item.to
+                                ? "bg-primary text-primary-foreground"
+                                : "text-foreground hover:bg-muted"
                           }`}
                         >
                           {item.label}
@@ -410,9 +416,16 @@ const AdminLayout = () => {
 
                       return (
                         <DropdownMenuItem key={item.to} asChild>
-                          <Link to={item.to} className="flex items-center justify-between gap-3">
+                          <Link
+                            to={item.to}
+                            className={`flex items-center justify-between gap-3 ${
+                              isNewMemberGuideItem(item.to) ? "text-[#C5221F]" : ""
+                            }`}
+                          >
                             <span>{item.label}</span>
-                            {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
+                            {isActive ? (
+                              <Check className={`h-4 w-4 ${isNewMemberGuideItem(item.to) ? "text-[#C5221F]" : "text-primary"}`} />
+                            ) : null}
                           </Link>
                         </DropdownMenuItem>
                       );

@@ -4,65 +4,66 @@ import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 const guideSections: AdminPageGuideSection[] = [
   {
-    title: "Yeni sistemin mantigi",
+    title: "Yeni sistemin mantığı",
     items: [
-      "Bu alan, yeni üye sistemindeki tüm operasyon ekranlarini tek bir akista toplar.",
-      "Yeni yapida once uyeyi bulur, sonra rolunu kontrol eder, gerekiyorsa rol kurallarini duzenler, en sonda da istisna gerekiyorsa override verirsin.",
-      "Temel mantik su: genel kural once rolde cozulur, tekil istisna gerekiyorsa override kullanilir.",
+      "Bu alan, yeni üye sistemindeki tüm operasyon ekranlarını tek bir akışta toplar.",
+      "Yeni yapıda önce üyeyi bulur, sonra rolünü kontrol eder, gerekiyorsa rol kurallarını düzenler, en sonda da gerçekten ihtiyaç varsa override verirsin.",
+      "Temel mantık şudur: genel kural önce rolde çözülür, tekil istisna gerekiyorsa override kullanılır.",
     ],
   },
   {
-    title: "Menu sirasiyla ekranlar ne ise yarar?",
+    title: "Menü sırasıyla ekranlar ne işe yarar?",
     items: [
-      "`Uye Takibi`: Tum uye havuzunu, operasyon akisini ve genel uye incelemesini buradan yonetirsin.",
-      "`Loginli Uyeler & Roller`: Login olmus kullanicinin aktif rolunu gorur ve ana rol atamasini burada degistirirsin.",
-      "`Rol Yonetimi`: Rol bazinda attribute, feature ve profile section kurallarini tek tabloda gorur ve duzenlersin.",
-      "`Feature Override`: Sadece tek kullanici icin rol varsayimini bozmadan ozel feature istisnasi verirsin.",
-      "`Roller Onizleme`: Sistemde tanimli aktif rolleri sadece okunur sekilde kontrol edersin.",
-      "`AFS Onizleme`: Attribute, Feature ve Section kataloglarini sadece okunur sekilde toplu olarak gorursun.",
-      "`Onboarding Importlari`: Onboarding tarafindan gelen veri setlerini, mapping mantigini ve import akislarini yonetirsin.",
+      "`Üye Takibi`: Tüm üye havuzunu, operasyon akışını ve genel üye incelemesini buradan yönetirsin.",
+      "`Loginli Üyeler & Roller`: Login olmuş kullanıcının aktif rolünü görür ve ana rol atamasını burada değiştirirsin.",
+      "`Rol Yönetimi`: Rol bazında attribute, feature ve profile section kurallarını tek tabloda görür ve düzenlersin.",
+      "`Feature Override`: Sadece tek kullanıcı için rol varsayımını bozmadan özel feature istisnası verirsin.",
+      "`Roller Önizleme`: Sistemde tanımlı aktif rolleri sadece okunur şekilde kontrol edersin.",
+      "`AFS Önizleme`: Attribute, Feature ve Section kataloglarını sadece okunur şekilde toplu olarak görürsün.",
+      "`Onboarding Importları`: Onboarding tarafından gelen veri setlerini, mapping mantığını ve import akışlarını yönetirsin.",
+      "`Kullanım Klavuzu`: Bu ekranların hangi sırayla ve hangi durumda kullanılacağını hızlıca tekrar hatırlarsın.",
     ],
   },
   {
     title: "Hangi durumda hangi ekrana gitmelisin?",
     items: [
-      "Kullaniciya yanlis deneyim aciliyorsa once `Loginli Uyeler & Roller` ekraninda rol dogru mu diye bak.",
-      "Ayni sorun o roldeki herkesi etkiliyorsa `Rol Yonetimi` ekranina git ve genel kuralı orada duzelt.",
-      "Sorun sadece bir kiside varsa ve diger ayni rol kullanicilarinda olmamasi gerekiyorsa `Feature Override` kullan.",
-      "Rol adlarini, sluglarini veya aciklamalarini toplu kontrol etmek istiyorsan `Roller Onizleme` ekranina git.",
-      "Bir kaydin attribute mu feature mi section mi oldugunu hizlica anlamak istiyorsan `AFS Onizleme` ekranina git.",
-      "Onboarding kaynakli veri eksigi, toplu veri girisi veya import kontrolu gerekiyorsa `Onboarding Importlari` ekranina git.",
+      "Kullanıcıya yanlış deneyim açılıyorsa önce `Loginli Üyeler & Roller` ekranında rol doğru mu diye bak.",
+      "Aynı sorun o roldeki herkesi etkiliyorsa `Rol Yönetimi` ekranına git ve genel kuralı orada düzelt.",
+      "Sorun sadece bir kişide varsa ve diğer aynı rol kullanıcılarında olmaması gerekiyorsa `Feature Override` kullan.",
+      "Rol adlarını, sluglarını veya açıklamalarını toplu kontrol etmek istiyorsan `Roller Önizleme` ekranına git.",
+      "Bir kaydın attribute mu feature mi section mı olduğunu hızlıca anlamak istiyorsan `AFS Önizleme` ekranına git.",
+      "Onboarding kaynaklı veri eksiği, toplu veri girişi veya import kontrolü gerekiyorsa `Onboarding Importları` ekranına git.",
     ],
   },
   {
-    title: "Rol Yonetimi ekranini nasil okumalisin?",
+    title: "Rol Yönetimi ekranını nasıl okumalısın?",
     items: [
-      "Tablodaki `A` kayitlari attribute'tur; form alani davranisini temsil eder.",
-      "Tablodaki `F` kayitlari feature'dir; modül veya capability acik-kapali durumunu temsil eder.",
-      "Tablodaki `S` kayitlari profile section'dir; profil kartinda hangi bolumun nasil gorundugunu temsil eder.",
-      "Rol secmeden katalog gorunur; rol sectiginde ayni satirlarda o role ait kurallar aktif edit moduna doner.",
-      "Bir degisikligi kaydetmeden once bunun rol seviyesi genel kural mi yoksa tekil istisna mi olduguna karar ver.",
+      "Tablodaki `A` kayıtları attribute'tur; form alanı davranışını temsil eder.",
+      "Tablodaki `F` kayıtları feature'dir; modül veya capability açık-kapalı durumunu temsil eder.",
+      "Tablodaki `S` kayıtları profile section'dir; profil kartında hangi bölümün nasıl göründüğünü temsil eder.",
+      "Rol seçmeden katalog görünür; rol seçtiğinde aynı satırlarda o role ait kurallar aktif edit moduna döner.",
+      "Bir değişikliği kaydetmeden önce bunun rol seviyesi genel kural mı yoksa tekil istisna mı olduğuna karar ver.",
     ],
   },
   {
-    title: "Onerilen calisma sirasi",
+    title: "Önerilen çalışma sırası",
     items: [
-      "1. Once `Uye Takibi` veya ilgili operasyon kaydindan kullaniciyi bul.",
-      "2. Sonra `Loginli Uyeler & Roller` ekraninda ana rol atamasini kontrol et.",
-      "3. Sorun rol kaynakliysa `Rol Yonetimi` ekraninda attribute, feature veya section satirini duzelt.",
-      "4. Sorun sadece tek kullanici icinse `Feature Override` ile istisna ver.",
-      "5. Son kontrol icin `Roller Onizleme` ve `AFS Onizleme` ekranlarindan kayit tanimlarini capraz kontrol et.",
-      "6. Veri girisi veya toplu kaynak guncellemesi gerekiyorsa `Onboarding Importlari` tarafina gec.",
+      "1. Önce `Üye Takibi` veya ilgili operasyon kaydından kullanıcıyı bul.",
+      "2. Sonra `Loginli Üyeler & Roller` ekranında ana rol atamasını kontrol et.",
+      "3. Sorun rol kaynaklıysa `Rol Yönetimi` ekranında attribute, feature veya section satırını düzelt.",
+      "4. Sorun sadece tek kullanıcıya özelse `Feature Override` ile istisna ver.",
+      "5. Son kontrol için `Roller Önizleme` ve `AFS Önizleme` ekranlarından kayıt tanımlarını çapraz kontrol et.",
+      "6. Veri girişi veya toplu kaynak güncellemesi gerekiyorsa `Onboarding Importları` tarafına geç.",
     ],
   },
   {
-    title: "Operasyon kurallari",
+    title: "Operasyon kuralları",
     items: [
-      "Override'i ilk cozum olarak kullanma; once rol seviyesinde cozulup cozulmeyecegine bak.",
-      "Ayni problem birden fazla kullanicida varsa genel kurali `Rol Yonetimi` tarafinda duzeltmek daha temizdir.",
-      "`Roller Onizleme` ve `AFS Onizleme` ekranlari duzenleme icin degil, kontrol ve dogrulama icindir.",
-      "Rol degisikligi yaptiginda kullanicinin gercek deneyimini mutlaka ilgili ekran veya profil akisinda test et.",
-      "Onboarding import degisiklikleri canli akisi etkileyebilecegi icin mapping ve hedef alan kontrolunu ikinci kez dogrulamak guvenlidir.",
+      "Override'i ilk çözüm olarak kullanma; önce rol seviyesinde çözülüp çözülemeyeceğine bak.",
+      "Aynı problem birden fazla kullanıcıda varsa genel kuralı `Rol Yönetimi` tarafında düzeltmek daha temizdir.",
+      "`Roller Önizleme` ve `AFS Önizleme` ekranları düzenleme için değil, kontrol ve doğrulama içindir.",
+      "Rol değişikliği yaptığında kullanıcının gerçek deneyimini mutlaka ilgili ekran veya profil akışında test et.",
+      "Onboarding import değişiklikleri canlı akışı etkileyebileceği için mapping ve hedef alan kontrolünü ikinci kez doğrulamak güvenlidir.",
     ],
   },
 ];
@@ -71,25 +72,25 @@ const AdminNewMemberGuidePage = () => {
   return (
     <div className="space-y-4">
       <AdminPageGuideAccordion
-        summary="Yeni New Member System menüsündeki ekranların ne işe yaradığını, hangi durumda hangisini kullanman gerektiğini ve önerilen operasyon sırasını bu sayfada madde madde görebilirsin."
+        summary="Yeni üyeler menüsündeki ekranların ne işe yaradığını, hangi durumda hangisini kullanman gerektiğini ve önerilen operasyon sırasını bu sayfada madde madde görebilirsin."
         sections={guideSections}
       />
 
       <Card>
         <CardHeader>
-          <CardTitle>Genel Kullanım Kılavuzu</CardTitle>
+          <CardTitle>Kullanım Klavuzu</CardTitle>
           <CardDescription>
             Bu sayfa, güncel üyeler menüsündeki ekranlar için tek noktadan hızlı karar desteği verir.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-sm text-muted-foreground">
           <p>
-            Yeni akista uye operasyonu, rol atamasi, rol kurali, tekil override, katalog onizleme ve onboarding import adimlari
-            birbirinden ayrildi. Boylece once dogru seviyede karar verip sonra dogru ekranda islem yapman kolaylasir.
+            Yeni akışta üye operasyonu, rol ataması, rol kuralı, tekil override, katalog önizleme ve onboarding import adımları
+            birbirinden ayrıldı. Böylece önce doğru seviyede karar verip sonra doğru ekranda işlem yapman kolaylaşır.
           </p>
           <p>
-            Kisa ozet: kullanicinin ana kimligi once `Rol` ile belirlenir, rolun tum uye grubuna uygulanan kurallari
-            `Rol Yonetimi` ile duzenlenir, yalnizca tek kisiye ozel sapma gerekiyorsa `Feature Override` kullanilir.
+            Kısa özet: kullanıcının ana kimliği önce `Rol` ile belirlenir, rolün tüm üye grubuna uygulanan kuralları
+            `Rol Yönetimi` ile düzenlenir, yalnızca tek kişiye özel sapma gerekiyorsa `Feature Override` kullanılır.
           </p>
         </CardContent>
       </Card>
