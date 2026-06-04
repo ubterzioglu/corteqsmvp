@@ -1271,7 +1271,7 @@ const ProfilePage = () => {
             <CardContent className="space-y-4">
               {groupedAttributes.socialMedia.length ? (
                 <>
-                  <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
                     {groupedAttributes.socialMedia.map((attribute) => {
                       const config = SOCIAL_ATTRIBUTE_CONFIGS.find((item) => item.key === attribute.attributeKey);
                       if (!config) return null;
@@ -1279,48 +1279,32 @@ const ProfilePage = () => {
                       const visible = (draftVisibilities[attribute.attributeKey] ?? attribute.visibility) === "public";
 
                       return (
-                        <div key={attribute.attributeKey} className={`rounded-xl p-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-                          <div className="flex flex-wrap items-center justify-between gap-3">
-                            <div className="flex items-center gap-2 text-[11px] font-medium text-foreground">
-                              <Icon className={`h-4 w-4 ${config.iconClassName}`} />
-                              <span>{config.label}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {visible ? (
-                                <Eye className="h-3.5 w-3.5 text-primary" />
-                              ) : (
-                                <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
-                              )}
-                              <Switch
-                                checked={visible}
-                                onCheckedChange={(checked) =>
-                                  setDraftVisibilities((current) => ({
-                                    ...current,
-                                    [attribute.attributeKey]: checked ? "public" : "private",
-                                  }))
-                                }
-                              />
-                            </div>
+                        <div key={attribute.attributeKey} className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5 shrink-0 min-w-fit">
+                            <Icon className={`h-4 w-4 ${config.iconClassName}`} />
+                            <span className="text-[11px] font-medium text-foreground">{config.label}</span>
                           </div>
-                          <div className="mt-3 space-y-2">
-                            <Input
-                              value={typeof draftValues[attribute.attributeKey] === "string" ? String(draftValues[attribute.attributeKey] ?? "") : ""}
-                              onChange={(event) => handleDraftChange(attribute.attributeKey, event.target.value)}
-                              placeholder={config.placeholder}
+                          <Input
+                            value={typeof draftValues[attribute.attributeKey] === "string" ? String(draftValues[attribute.attributeKey] ?? "") : ""}
+                            onChange={(event) => handleDraftChange(attribute.attributeKey, event.target.value)}
+                            placeholder={config.placeholder}
+                            className="h-8 flex-1 text-[11px]"
+                          />
+                          <div className={`flex items-center gap-1.5 rounded-full px-2 shrink-0 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
+                            {visible ? (
+                              <Eye className="h-3.5 w-3.5 text-primary" />
+                            ) : (
+                              <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
+                            )}
+                            <Switch
+                              checked={visible}
+                              onCheckedChange={(checked) =>
+                                setDraftVisibilities((current) => ({
+                                  ...current,
+                                  [attribute.attributeKey]: checked ? "public" : "private",
+                                }))
+                              }
                             />
-                            <div className="flex items-center justify-between gap-2">
-                              <div className="flex flex-wrap items-center gap-1.5">
-                                {attribute.requiresAdminApprovalOnChange ? (
-                                  <Badge variant="outline" className="text-[11px] px-1.5 py-0">
-                                    Onaylı
-                                  </Badge>
-                                ) : null}
-                                <Badge variant="outline" className="text-[11px] px-1.5 py-0">
-                                  {visible ? "Görünür" : "Gizli"}
-                                </Badge>
-                              </div>
-                              <p className="text-[11px] text-muted-foreground">Boş alanlar public profilde görünmez.</p>
-                            </div>
                           </div>
                         </div>
                       );
@@ -1806,20 +1790,24 @@ const StandaloneLinkAttributeCard = ({
           <Icon className={`h-4 w-4 ${iconClassName}`} />
           {title}
         </CardTitle>
+        {description ? (
+          <CardDescription className="text-[11px]">{description}</CardDescription>
+        ) : null}
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className={`flex items-center justify-between rounded-xl px-3 py-2 ${GOOGLE_SOFT_SWITCH_PANEL}`}>
-          <div className="flex items-center gap-1.5 text-[11px] text-slate-600">
+        <div className="flex items-center gap-2">
+          <Input
+            type="url"
+            value={typeof draftValue === "string" ? draftValue : ""}
+            onChange={(event) => onValueChange(event.target.value)}
+            placeholder={attribute.label}
+            className="h-8 flex-1 text-[11px]"
+          />
+          <div className={`flex items-center gap-1.5 rounded-full px-2 shrink-0 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
             {visible ? <Eye className="h-3.5 w-3.5 text-primary" /> : <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />}
+            <Switch checked={visible} disabled={!attribute.userCanHide} onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")} />
           </div>
-          <Switch checked={visible} disabled={!attribute.userCanHide} onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")} />
         </div>
-        <Input
-          type="url"
-          value={typeof draftValue === "string" ? draftValue : ""}
-          onChange={(event) => onValueChange(event.target.value)}
-          placeholder={attribute.label}
-        />
         <div className="flex justify-end">
           <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={onSave} disabled={isSaving}>
             {isSaving ? "Kaydediliyor..." : "Kaydet"}
