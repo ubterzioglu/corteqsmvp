@@ -438,7 +438,14 @@ const AdminLoginUsersRolesPage = () => {
     setSearchParams(new URLSearchParams(), { replace: true });
   };
 
-  const handleRoleChange = async (row: UserRow, nextRoleId: string) => {
+  const handleRoleChange = async (
+    row: UserRow,
+    nextRoleId: string,
+    options?: {
+      suppressSuccessToast?: boolean;
+      suppressErrorToast?: boolean;
+    },
+  ) => {
     const nextRole = roleById.get(nextRoleId);
     if (!nextRole) return;
 
@@ -462,17 +469,22 @@ const AdminLoginUsersRolesPage = () => {
           },
         };
       });
-      toast({
-        title: "Rol güncellendi",
-        description: `${row.email ?? row.user_id} için rol ${nextRole.label} olarak kaydedildi.`,
-      });
+      if (!options?.suppressSuccessToast) {
+        toast({
+          title: "Rol güncellendi",
+          description: `${row.email ?? row.user_id} için rol ${nextRole.label} olarak kaydedildi.`,
+        });
+      }
     } catch (error) {
       setRoleByUserId((current) => ({ ...current, [row.user_id]: prevRoleId }));
-      toast({
-        title: "Rol güncellenemedi",
-        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
-        variant: "destructive",
-      });
+      if (!options?.suppressErrorToast) {
+        toast({
+          title: "Rol güncellenemedi",
+          description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+          variant: "destructive",
+        });
+      }
+      throw error;
     } finally {
       setUpdatingUserId((current) => (current === row.user_id ? null : current));
     }
@@ -670,7 +682,10 @@ const AdminLoginUsersRolesPage = () => {
         roleByUserId[userDataDialogState.user.user_id] ?? roleIdByKey.get(userDataDialogState.user.profile_type) ?? "";
 
       if (dialogRoleId && dialogRoleId !== currentRoleId) {
-        await handleRoleChange(userDataDialogState.user, dialogRoleId);
+        await handleRoleChange(userDataDialogState.user, dialogRoleId, {
+          suppressSuccessToast: true,
+          suppressErrorToast: true,
+        });
       }
 
       for (const attribute of userDataDialogState.attributes) {

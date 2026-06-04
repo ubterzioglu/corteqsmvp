@@ -233,6 +233,10 @@ function renderPage(initialEntry = "/admin/new-member/users-roles") {
 }
 
 beforeEach(() => {
+  Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+    configurable: true,
+    value: vi.fn(),
+  });
   toast.mockReset();
   setUserRoleAsAdmin.mockReset();
   updateUserProfileAttributeAsAdmin.mockReset();
@@ -304,5 +308,34 @@ describe("AdminLoginUsersRolesPage", () => {
     expect(updateUserProfileAttributeAsAdmin).toHaveBeenCalledTimes(1);
     expect(updateUserProfileAttributeAsAdmin).toHaveBeenCalledWith("user-1", "bio", "Topluluk lideri.", "public");
     expect(updateUserTaxonomySelectionAsAdmin).toHaveBeenCalledWith("user-1", "focus", ["community", "growth"]);
+  });
+
+  it("does not show success or continue saving when role update fails", async () => {
+    setUserRoleAsAdmin.mockRejectedValueOnce(new Error("role update failed"));
+    renderPage();
+
+    expect(await screen.findByText("Ayşe Yılmaz")).toBeInTheDocument();
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
+    expect(await screen.findByRole("heading", { name: "Kullanıcı Details" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getAllByRole("combobox")[0]);
+    fireEvent.click(await screen.findByText("Danışman"));
+    fireEvent.click(screen.getByRole("button", { name: "Tüm Değişiklikleri Kaydet" }));
+
+    await waitFor(() => {
+      expect(setUserRoleAsAdmin).toHaveBeenCalledWith("user-1", "danisman");
+    });
+
+    expect(updateUserProfileAttributeAsAdmin).not.toHaveBeenCalled();
+    expect(updateUserTaxonomySelectionAsAdmin).not.toHaveBeenCalled();
+    expect(toast).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: "Details kaydedilemedi",
+        description: "role update failed",
+        variant: "destructive",
+      }),
+    );
+    expect(toast).not.toHaveBeenCalledWith(expect.objectContaining({ title: "Details kaydedildi" }));
   });
 });
