@@ -127,13 +127,14 @@ create table if not exists public.catalog_categories (
   id uuid primary key default gen_random_uuid(),
   parent_id uuid references public.catalog_categories(id) on delete set null,
   module text not null references public.catalog_item_types(key) on delete cascade,
-  slug text not null unique,
+  slug text not null,
   name text not null,
   description text,
   is_active boolean not null default true,
   sort_order integer not null default 0,
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+  updated_at timestamptz not null default now(),
+  unique (module, slug)
 );
 
 create table if not exists public.catalog_item_categories (
@@ -519,7 +520,7 @@ do $$
 declare
   v_table_name text;
 begin
-  foreach v_table_name in array[
+  FOREACH v_table_name IN ARRAY ARRAY[
     'catalog_item_types',
     'feature_definitions',
     'item_type_features',
@@ -547,13 +548,13 @@ begin
     'community_group_details',
     'person_profile_details'
   ]
-  loop
+  LOOP
     execute format('drop trigger if exists trg_%1$s_updated_at on public.%1$s', v_table_name);
     execute format(
       'create trigger trg_%1$s_updated_at before update on public.%1$s for each row execute function public.update_updated_at_column()',
       v_table_name
     );
-  end loop;
+  END LOOP;
 end
 $$;
 

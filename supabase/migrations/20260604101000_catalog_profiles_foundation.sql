@@ -26,7 +26,7 @@ set
   country_code = coalesce(nullif(p.country_code, ''), nullif((u.raw_user_meta_data ->> 'country_code'), '')),
   platform_role = coalesce(nullif(p.platform_role, ''), 'user')
 from public.user_profiles up
-left join auth.users u on u.id = p.id
+left join auth.users u on u.id = up.user_id
 where up.user_id = p.id;
 
 update public.profiles p

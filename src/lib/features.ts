@@ -47,6 +47,7 @@ export type FeatureMeta<TFeatureKey extends string = string> = {
   label: string;
   description: string;
   category: "legacy-individual" | "generic";
+  subcategory?: string; // For grouping generic features
 };
 
 export const INDIVIDUAL_FEATURES: FeatureMeta<IndividualFeatureKey>[] = [
@@ -124,120 +125,140 @@ export const GENERIC_FEATURES: FeatureMeta<GenericFeatureKey>[] = [
     label: "Kendi Profilini Gör",
     description: "Kullanıcı kendi profilini görüntüleyebilir",
     category: "generic",
+    subcategory: "📋 Profil Yönetimi",
   },
   {
     key: GENERIC_FEATURE_KEYS.profileEditOwn,
     label: "Kendi Profilini Düzenle",
     description: "Kullanıcı kendi profil verilerini güncelleyebilir",
     category: "generic",
+    subcategory: "📋 Profil Yönetimi",
   },
   {
     key: GENERIC_FEATURE_KEYS.profileEditPublic,
     label: "Public Alanları Düzenle",
     description: "Kullanıcı public görünür alanlarını yönetebilir",
     category: "generic",
+    subcategory: "📋 Profil Yönetimi",
   },
   {
     key: GENERIC_FEATURE_KEYS.profileLinkedinCard,
     label: "LinkedIn Kartı",
     description: "Kullanıcı LinkedIn kartını profilinde yönetebilir",
     category: "generic",
+    subcategory: "📋 Profil Yönetimi",
   },
   {
     key: GENERIC_FEATURE_KEYS.profileWebsiteCard,
     label: "Web Sitesi Kartı",
     description: "Kullanıcı web sitesi kartını profilinde yönetebilir",
     category: "generic",
+    subcategory: "📋 Profil Yönetimi",
   },
   {
     key: GENERIC_FEATURE_KEYS.profileCvUpload,
     label: "CV Yükleme",
     description: "Kullanıcı profil CV dosyasını yükleyebilir ve yönetebilir",
     category: "generic",
+    subcategory: "📋 Profil Yönetimi",
   },
   {
     key: GENERIC_FEATURE_KEYS.profilePresentationUpload,
     label: "Sunum Yükleme",
     description: "Kullanıcı profil sunum/tanıtım dosyasını yükleyebilir ve yönetebilir",
     category: "generic",
-  },
-  {
-    key: GENERIC_FEATURE_KEYS.caddeAccess,
-    label: "Cadde Erişimi",
-    description: "Kullanıcı Cadde sayfasına erişebilir",
-    category: "generic",
+    subcategory: "📋 Profil Yönetimi",
   },
   {
     key: GENERIC_FEATURE_KEYS.directoryVisible,
     label: "Directory Görünürlüğü",
     description: "Public directory içerisinde listelenebilir",
     category: "generic",
+    subcategory: "🗂️ Directory",
   },
   {
     key: GENERIC_FEATURE_KEYS.directoryFeatured,
     label: "Öne Çıkarılmış Profil",
     description: "Directory içinde öne çıkarılmış kart olarak listelenebilir",
     category: "generic",
+    subcategory: "🗂️ Directory",
   },
   {
     key: GENERIC_FEATURE_KEYS.contactReceive,
     label: "İletişim Talebi Al",
     description: "Kullanıcı iletişim talepleri alabilir",
     category: "generic",
+    subcategory: "💬 İletişim",
   },
   {
     key: GENERIC_FEATURE_KEYS.contactShowWhatsapp,
     label: "WhatsApp Göster",
     description: "Kullanıcı WhatsApp bilgisini public olarak gösterebilir",
     category: "generic",
+    subcategory: "💬 İletişim",
   },
   {
     key: GENERIC_FEATURE_KEYS.contentCreate,
     label: "İçerik Oluştur",
     description: "Kullanıcı içerik/post oluşturabilir",
     category: "generic",
+    subcategory: "✍️ İçerik",
   },
   {
     key: GENERIC_FEATURE_KEYS.contentEditOwn,
     label: "İçeriğini Düzenle",
     description: "Kullanıcı kendi içeriğini düzenleyebilir",
     category: "generic",
+    subcategory: "✍️ İçerik",
   },
   {
     key: GENERIC_FEATURE_KEYS.eventsCreate,
     label: "Etkinlik Oluştur",
     description: "Kullanıcı etkinlik açma akışına erişebilir",
     category: "generic",
+    subcategory: "🎯 Üretim",
   },
   {
     key: GENERIC_FEATURE_KEYS.offersCreate,
     label: "Teklif Oluştur",
     description: "Kullanıcı teklif/hizmet oluşturma akışına erişebilir",
     category: "generic",
+    subcategory: "🎯 Üretim",
   },
   {
     key: GENERIC_FEATURE_KEYS.referralCreate,
     label: "Referral Oluştur",
     description: "Kullanıcı referral talebi başlatabilir",
     category: "generic",
+    subcategory: "🎯 Üretim",
+  },
+  {
+    key: GENERIC_FEATURE_KEYS.caddeAccess,
+    label: "Cadde Erişimi",
+    description: "Kullanıcı Cadde sayfasına erişebilir",
+    category: "generic",
+    subcategory: "🌐 Platform",
   },
   {
     key: GENERIC_FEATURE_KEYS.cityManage,
     label: "Şehir Yönetimi",
     description: "Kullanıcı şehir bazlı yönetim alanına erişebilir",
     category: "generic",
-  },
-  {
-    key: GENERIC_FEATURE_KEYS.adminRequiresApproval,
-    label: "Admin Onayı Gerekir",
-    description: "İlgili akış admin onayı gerektirir",
-    category: "generic",
+    subcategory: "🌐 Platform",
   },
   {
     key: GENERIC_FEATURE_KEYS.whatsappLandingEditAssigned,
     label: "Atanmış Topluluk Landing Düzenleme",
     description: "Kullanıcıya atanmış topluluk landing kayıtlarını düzenleyebilme yetkisi",
     category: "generic",
+    subcategory: "🌐 Platform",
+  },
+  {
+    key: GENERIC_FEATURE_KEYS.adminRequiresApproval,
+    label: "Admin Onayı Gerekir",
+    description: "İlgili akış admin onayı gerektirir",
+    category: "generic",
+    subcategory: "⚙️ Sistem",
   },
 ];
 

@@ -61,7 +61,7 @@ do $$
 declare
   v_table_name text;
 begin
-  foreach v_table_name in array[
+  FOREACH v_table_name IN ARRAY ARRAY[
     'catalog_item_types',
     'feature_definitions',
     'item_type_features',
@@ -96,9 +96,9 @@ begin
     'community_group_details',
     'person_profile_details'
   ]
-  loop
+  LOOP
     execute format('alter table public.%I enable row level security', v_table_name);
-  end loop;
+  END LOOP;
 end
 $$;
 

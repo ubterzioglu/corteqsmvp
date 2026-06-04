@@ -296,6 +296,22 @@ const getFallbackFeatureDescription = (feature: FeatureCatalogRow) => {
   return `${feature.label || humanizeFeatureKey(featureKey)} için erişim davranışını kontrol eder`;
 };
 
+const groupFeaturesBySubcategory = (features: FeatureCatalogRow[]) => {
+  const grouped = new Map<string, FeatureCatalogRow[]>();
+
+  for (const feature of features) {
+    const meta = getFeatureMeta(feature.key);
+    const subcategory = meta?.subcategory || "Diğer";
+
+    if (!grouped.has(subcategory)) {
+      grouped.set(subcategory, []);
+    }
+    grouped.get(subcategory)!.push(feature);
+  }
+
+  return Array.from(grouped.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+};
+
 const guideSections: AdminPageGuideSection[] = [
   {
     title: "Bu ekran ne için kullanılır?",
@@ -500,11 +516,17 @@ const AdminRolesFeaturesPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {matrixFeatures.map((feature, index) => (
-                    <tr
-                      key={feature.key}
-                      className={`align-top transition-colors ${index === 0 ? "" : "border-t"} ${index % 2 === 0 ? "bg-white" : "bg-muted/10"} hover:bg-muted/20`}
-                    >
+                  {groupFeaturesBySubcategory(matrixFeatures).flatMap(([subcategory, categoryFeatures], categoryIndex) => [
+                    <tr key={`category-${subcategory}`} className="bg-slate-50 border-t-2 border-b">
+                      <td colSpan={roles.length + 2} className="px-3 py-2 text-sm font-semibold text-slate-700">
+                        {subcategory}
+                      </td>
+                    </tr>,
+                    ...categoryFeatures.map((feature, featureIndex) => (
+                      <tr
+                        key={feature.key}
+                        className={`align-top transition-colors border-t ${featureIndex % 2 === 0 ? "bg-white" : "bg-muted/10"} hover:bg-muted/20`}
+                      >
                       <td className="px-3 py-2.5 align-top">
                         {(() => {
                           const featureDetail = getFeatureDetail(feature);
@@ -585,7 +607,8 @@ const AdminRolesFeaturesPage = () => {
                         </td>
                       ))}
                     </tr>
-                  ))}
+                    ))
+                  ])}
                 </tbody>
               </table>
             </div>
