@@ -1271,7 +1271,7 @@ const ProfilePage = () => {
             <CardContent className="space-y-3">
               {groupedAttributes.socialMedia.length ? (
                 <>
-                  <div className="space-y-1.5">
+                  <div className="grid gap-3 md:grid-cols-2">
                     {groupedAttributes.socialMedia.map((attribute) => {
                       const config = SOCIAL_ATTRIBUTE_CONFIGS.find((item) => item.key === attribute.attributeKey);
                       if (!config) return null;
@@ -1288,7 +1288,7 @@ const ProfilePage = () => {
                             value={typeof draftValues[attribute.attributeKey] === "string" ? String(draftValues[attribute.attributeKey] ?? "") : ""}
                             onChange={(event) => handleDraftChange(attribute.attributeKey, event.target.value)}
                             placeholder={config.placeholder}
-                            className="h-8 flex-1 text-[11px]"
+                            className="h-8 flex-1 text-[11px] placeholder:text-[11px]"
                           />
                           <div className={`flex items-center gap-1.5 rounded-full px-2 shrink-0 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
                             {visible ? (
@@ -1322,7 +1322,7 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
 
-          <div className="space-y-3">
+          <div className="grid gap-4 md:grid-cols-2">
             {linkedinCardEnabled && linkedinAttribute ? (
               <StandaloneLinkAttributeCard
                 attribute={linkedinAttribute}
@@ -1801,7 +1801,7 @@ const StandaloneLinkAttributeCard = ({
             value={typeof draftValue === "string" ? draftValue : ""}
             onChange={(event) => onValueChange(event.target.value)}
             placeholder={attribute.label}
-            className="h-8 flex-1 text-[11px]"
+            className="h-8 flex-1 text-[11px] placeholder:text-[11px]"
           />
           <div className={`flex items-center gap-1.5 rounded-full px-2 shrink-0 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
             {visible ? <Eye className="h-3.5 w-3.5 text-primary" /> : <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />}
