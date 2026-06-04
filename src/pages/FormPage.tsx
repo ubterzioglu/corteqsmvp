@@ -1,13 +1,16 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import heroNetworkLight from "@/assets/hero-network-light.jpg";
 import corteqsLogo from "../../newlogo.png";
 import { notifySubmission } from "@/lib/mail";
+import { useAuth } from "@/components/auth/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import {
   categoryOptions,
   getReadableErrorMessage,
@@ -23,6 +26,11 @@ import {
 
 const FormPage = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { user, isLoading: isAuthLoading } = useAuth();
+  const formRef = useRef<HTMLFormElement>(null);
+  const [oauthSubmitting, setOauthSubmitting] = useState(false);
+
   const [prefilledReferralCode] = useState(() => {
     if (typeof window === "undefined") return "";
     const params = new URLSearchParams(window.location.search);
@@ -42,10 +50,78 @@ const FormPage = () => {
     document.dispatchEvent(new Event("render-complete"));
   }, []);
 
+  // Restore state from sessionStorage
+  useEffect(() => {
+    const saved = sessionStorage.getItem("corteqs_form_backup");
+    if (saved && formRef.current) {
+      try {
+        const parsed = JSON.parse(saved);
+        Object.keys(parsed).forEach((key) => {
+          const el = formRef.current?.elements.namedItem(key) as HTMLInputElement | HTMLSelectElement | null;
+          if (el) {
+            if (el.type === 'checkbox') {
+              (el as HTMLInputElement).checked = parsed[key] === "on" || parsed[key] === "yes";
+            } else if (el.type !== 'radio') {
+               el.value = parsed[key];
+            }
+          }
+        });
+        
+        // Restore controlled inputs
+        if (parsed.category) setSelectedCat(parsed.category);
+        if (parsed.phone) setPhone(parsed.phone);
+        if (parsed.referral_source) setReferralSource(parsed.referral_source);
+        if (parsed.referral_detail) setReferralDetail(parsed.referral_detail);
+        if (parsed.referral_code) setReferralCode(parsed.referral_code);
+        if (parsed.consent === "on" || parsed.consent === "true") setConsent(true);
+      } catch (e) {}
+      sessionStorage.removeItem("corteqs_form_backup");
+    }
+  }, []);
+
+  // Pre-fill user data
+  useEffect(() => {
+    if (user && formRef.current) {
+      const fullnameEl = formRef.current.elements.namedItem("fullname") as HTMLInputElement;
+      const emailEl = formRef.current.elements.namedItem("email") as HTMLInputElement;
+      if (fullnameEl && !fullnameEl.value && user.user_metadata?.full_name) {
+        fullnameEl.value = user.user_metadata.full_name;
+      }
+      if (emailEl && !emailEl.value && user.email) {
+        emailEl.value = user.email;
+      }
+    }
+  }, [user]);
+
   const validatePhone = (value: string) => {
     const cleaned = value.replace(/[\s\-().]/g, "");
     const e164 = /^\+[1-9]\d{7,14}$/;
     return e164.test(cleaned);
+  };
+
+  const handleGoogleSignIn = async () => {
+    if (formRef.current) {
+      const formData = new FormData(formRef.current);
+      const values = Object.fromEntries(formData.entries());
+      sessionStorage.setItem("corteqs_form_backup", JSON.stringify(values));
+    }
+
+    setOauthSubmitting(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin + "/form",
+      },
+    });
+
+    if (error) {
+      toast({
+        title: "Google ile giriş yapılamadı",
+        description: error.message,
+        variant: "destructive",
+      });
+      setOauthSubmitting(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -60,6 +136,46 @@ const FormPage = () => {
     setLoading(true);
     const formData = new FormData(e.currentTarget);
     const values = Object.fromEntries(formData.entries());
+
+    // User Signup Logic if not authenticated
+    if (!user) {
+      const emailStr = String(values.email).trim();
+      const passwordStr = String(values.password || "");
+
+      const { error: authError } = await supabase.auth.signUp({
+        email: emailStr,
+        password: passwordStr,
+        options: {
+          data: {
+            full_name: String(values.fullname),
+          },
+        },
+      });
+
+      if (authError) {
+        if (
+          authError.message.toLowerCase().includes("already registered") || 
+          (authError.status === 400 && authError.message.includes("already registered")) ||
+          authError.message.includes("User already registered")
+        ) {
+          toast({
+            title: "Bu e-posta adresi kullanımda",
+            description: "Bu e-posta adresiyle bir hesap zaten var. Lütfen giriş yapın.",
+            variant: "destructive",
+          });
+          navigate("/login?next=/form");
+        } else {
+          toast({
+            title: "Kayıt Hatası",
+            description: authError.message,
+            variant: "destructive",
+          });
+        }
+        setLoading(false);
+        return;
+      }
+    }
+
     values.phone = phone.replace(/[\s\-().]/g, "");
     values.referral_source = referralSource;
     values.referral_detail = referralDetail;
@@ -159,7 +275,43 @@ const FormPage = () => {
       </div>
 
       <div className="flex-1 max-w-2xl mx-auto w-full px-4 py-10 sm:py-12">
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form ref={formRef} onSubmit={handleSubmit} className="space-y-5">
+          
+          <div className="mb-6 space-y-4">
+            {!user ? (
+              <>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="w-full flex gap-2 items-center justify-center bg-white text-black hover:bg-gray-50 hover:text-black border-gray-300"
+                  onClick={handleGoogleSignIn}
+                  disabled={oauthSubmitting || loading || isAuthLoading}
+                >
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+                    <path d="M12.0003 4.75C13.7703 4.75 15.3553 5.36 16.6053 6.54998L20.0303 3.125C17.9502 1.19 15.2353 0 12.0003 0C7.31028 0 3.25527 2.69 1.28027 6.60998L5.27028 9.70498C6.21525 6.86 8.87028 4.75 12.0003 4.75Z" fill="#EA4335" />
+                    <path d="M23.49 12.275C23.49 11.49 23.415 10.73 23.3 10H12V14.51H18.47C18.18 15.99 17.34 17.25 16.08 18.1L19.945 21.1C22.2 19.01 23.49 15.92 23.49 12.275Z" fill="#4285F4" />
+                    <path d="M5.26498 14.2949C5.02498 13.5699 4.88501 12.7999 4.88501 11.9999C4.88501 11.1999 5.01998 10.4299 5.26498 9.7049L1.275 6.60986C0.46 8.22986 0 10.0599 0 11.9999C0 13.9399 0.46 15.7699 1.28 17.3899L5.26498 14.2949Z" fill="#FBBC05" />
+                    <path d="M12.0004 24.0001C15.2404 24.0001 17.9654 22.935 19.9454 21.095L16.0804 18.095C15.0054 18.82 13.6204 19.245 12.0004 19.245C8.8704 19.245 6.21537 17.135 5.26538 14.29L1.27539 17.385C3.25539 21.31 7.3104 24.0001 12.0004 24.0001Z" fill="#34A853" />
+                  </svg>
+                  {oauthSubmitting ? "Yönlendiriliyor..." : "Google ile Hızlı Kayıt Ol"}
+                </Button>
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">veya Standart Kayıt</span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 text-center">
+                <p className="text-sm font-medium">Merhaba {user.user_metadata?.full_name || "Kullanıcı"},</p>
+                <p className="text-xs text-muted-foreground">Bilgilerinizle devam edebilirsiniz.</p>
+              </div>
+            )}
+          </div>
+
           <div>
             <Label htmlFor="category">Kategori / İlgi Alanı</Label>
             <select
@@ -216,10 +368,18 @@ const FormPage = () => {
             <Input id="field" name="field" placeholder="Faaliyet veya ilgi alanınız" required />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <Label htmlFor="email">E-posta</Label>
-              <Input id="email" name="email" type="email" placeholder="ornek@mail.com" required />
+              <Input 
+                id="email" 
+                name="email" 
+                type="email" 
+                placeholder="ornek@mail.com" 
+                required 
+                readOnly={!!user}
+                className={user ? "bg-muted text-muted-foreground" : ""}
+              />
             </div>
             <div>
               <Label htmlFor="phone">Telefon (ülke kodu ile)</Label>
@@ -246,6 +406,20 @@ const FormPage = () => {
               )}
             </div>
           </div>
+
+          {!user && (
+            <div>
+              <Label htmlFor="password">Şifre Belirleyin</Label>
+              <Input 
+                id="password" 
+                name="password" 
+                type="password" 
+                placeholder="Hesabınız için şifre girin" 
+                required 
+              />
+              <p className="text-xs text-muted-foreground mt-1">Platform açıldığında giriş yapmak için kullanacaksınız.</p>
+            </div>
+          )}
 
           <div className="space-y-3">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
