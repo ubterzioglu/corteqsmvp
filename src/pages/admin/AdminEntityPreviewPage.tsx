@@ -74,20 +74,19 @@ const AdminEntityPreviewPage = () => {
             <p className="text-sm text-muted-foreground">Yükleniyor...</p>
           ) : (
             <div className="overflow-x-auto rounded-lg border">
-              <Table className="min-w-[1180px] table-fixed">
+              <Table className="min-w-[920px] table-fixed">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-16 whitespace-nowrap px-2 text-[11px]">Tür</TableHead>
-                    <TableHead className="w-[17rem] whitespace-nowrap px-2 text-[11px]">Label</TableHead>
-                    <TableHead className="w-[20rem] whitespace-nowrap px-2 text-[11px]">Key</TableHead>
-                    <TableHead className="w-[24rem] whitespace-nowrap px-2 text-[11px]">Açıklama</TableHead>
-                    <TableHead className="w-[18rem] whitespace-nowrap px-2 text-[11px]">Admin Notu</TableHead>
+                    <TableHead className="w-[16rem] whitespace-nowrap px-2 text-[11px]">Label</TableHead>
+                    <TableHead className="w-[20rem] whitespace-nowrap px-2 text-[11px]">Açıklama</TableHead>
+                    <TableHead className="w-[16rem] whitespace-nowrap px-2 text-[11px]">Admin Notu</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {visibleRows.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="py-4 text-center text-sm text-muted-foreground">
+                      <TableCell colSpan={4} className="py-4 text-center text-sm text-muted-foreground">
                         Eşleşen kayıt bulunamadı.
                       </TableCell>
                     </TableRow>
@@ -117,9 +116,6 @@ const AdminEntityPreviewPage = () => {
                               </span>
                             )}
                           </div>
-                        </TableCell>
-                        <TableCell className="px-2 py-2 whitespace-nowrap">
-                          <p className="truncate text-[10px] font-mono text-muted-foreground" title={row.key}>{row.key}</p>
                         </TableCell>
                         <TableCell className="px-2 py-2 whitespace-nowrap">
                           <p className="truncate text-[11px] text-muted-foreground" title={row.description ?? "Açıklama yok"}>

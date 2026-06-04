@@ -55,11 +55,11 @@ describe("AdminEntityPreviewPage", () => {
     });
   });
 
-  it("renders keys in table", async () => {
+  it("does not render key column", async () => {
     renderPage();
     await waitFor(() => {
-      expect(screen.getByText("bio")).toBeInTheDocument();
-      expect(screen.getByText("profile.edit_own")).toBeInTheDocument();
+      expect(screen.queryByText("bio")).not.toBeInTheDocument();
+      expect(screen.queryByText("profile.edit_own")).not.toBeInTheDocument();
     });
   });
 
