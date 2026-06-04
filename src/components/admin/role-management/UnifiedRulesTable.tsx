@@ -41,6 +41,17 @@ const KIND_META: Record<string, { short: string; className: string }> = {
   },
 };
 
+const RULE_LEGEND_ITEMS = [
+  "A: Aktif",
+  "Z: Zorunlu",
+  "P: Public",
+  "D: Düzenler",
+  "G: Gizler / Global",
+  "O: Onay",
+  "R: Rol",
+  "S: Sıra",
+] as const;
+
 const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
   const { toast } = useToast();
   const [savingKey, setSavingKey] = useState<string | null>(null);
@@ -232,12 +243,12 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
         <div className="flex flex-nowrap items-center gap-2 whitespace-nowrap">
           {(
             [
-              ["Aktif",    "is_enabled"],
-              ["Zorunlu",  "is_required"],
-              ["Public",   "is_public_default"],
-              ["Düzenler", "user_can_edit"],
-              ["Gizler",   "user_can_hide"],
-              ["Onay",     "requires_admin_approval_on_change"],
+              ["A", "is_enabled"],
+              ["Z", "is_required"],
+              ["P", "is_public_default"],
+              ["D", "user_can_edit"],
+              ["G", "user_can_hide"],
+              ["O", "requires_admin_approval_on_change"],
             ] as [string, keyof RoleManagementAttribute["rule"]][]
           ).map(([label, field]) => (
             <div key={field} className="inline-flex shrink-0 items-center gap-1">
@@ -251,7 +262,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
             </div>
           ))}
           <div className="inline-flex shrink-0 items-center gap-1">
-            <span className="text-[9px] text-muted-foreground">Sıra</span>
+            <span className="text-[9px] text-muted-foreground">S</span>
             <Input
               type="number"
               className="h-5 w-11 px-1 text-[10px]"
@@ -269,7 +280,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
       return (
         <div className="flex flex-nowrap items-center gap-2 whitespace-nowrap">
           <div className="inline-flex shrink-0 items-center gap-1">
-            <span className="text-[9px] text-muted-foreground">Global</span>
+            <span className="text-[9px] text-muted-foreground">G</span>
             <Switch
               className="h-3.5 w-6 [&>span]:h-2.5 [&>span]:w-2.5 [&>span]:data-[state=checked]:translate-x-2.5"
               checked={feat?.is_active_globally ?? row.isActiveGlobally ?? false}
@@ -278,7 +289,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
             />
           </div>
           <div className="inline-flex shrink-0 items-center gap-1">
-            <span className="text-[9px] text-muted-foreground">Rol</span>
+            <span className="text-[9px] text-muted-foreground">R</span>
             <Switch
               className="h-3.5 w-6 [&>span]:h-2.5 [&>span]:w-2.5 [&>span]:data-[state=checked]:translate-x-2.5"
               checked={feat?.is_enabled ?? false}
@@ -295,7 +306,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
       return (
         <div className="flex flex-nowrap items-center gap-2 whitespace-nowrap">
           <div className="inline-flex shrink-0 items-center gap-1">
-            <span className="text-[9px] text-muted-foreground">Aktif</span>
+            <span className="text-[9px] text-muted-foreground">A</span>
             <Switch
               className="h-3.5 w-6 [&>span]:h-2.5 [&>span]:w-2.5 [&>span]:data-[state=checked]:translate-x-2.5"
               checked={rule.is_enabled}
@@ -304,7 +315,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
             />
           </div>
           <div className="inline-flex shrink-0 items-center gap-1">
-            <span className="text-[9px] text-muted-foreground">Onay</span>
+            <span className="text-[9px] text-muted-foreground">O</span>
             <Switch
               className="h-3.5 w-6 [&>span]:h-2.5 [&>span]:w-2.5 [&>span]:data-[state=checked]:translate-x-2.5"
               checked={rule.requires_approval}
@@ -313,7 +324,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
             />
           </div>
           <div className="inline-flex shrink-0 items-center gap-1">
-            <span className="text-[9px] text-muted-foreground">Sıra</span>
+            <span className="text-[9px] text-muted-foreground">S</span>
             <Input
               type="number"
               className="h-5 w-11 px-1 text-[10px]"
@@ -335,6 +346,17 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
 
   return (
     <div className="overflow-x-auto rounded-lg border">
+      {bundle && (
+        <div className="flex justify-end border-b bg-muted/20 px-3 py-2">
+          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
+            {RULE_LEGEND_ITEMS.map((item) => (
+              <span key={item} className="whitespace-nowrap">
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
       <Table className={bundle ? "min-w-[1180px] table-fixed" : "min-w-[840px] table-fixed"}>
         <TableHeader>
           <TableRow>
