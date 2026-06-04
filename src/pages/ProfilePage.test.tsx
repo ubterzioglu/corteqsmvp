@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -169,6 +169,78 @@ describe("ProfilePage", () => {
         valueText: "mentorluk, topluluk, networking",
         valueJson: null,
         displayValue: "mentorluk, topluluk, networking",
+      },
+      {
+        attributeKey: "business_or_organization",
+        label: "İşletme / Kuruluş",
+        description: "Rol özel alan",
+        dataType: "text",
+        isSystem: false,
+        sortOrder: 120,
+        isRequired: false,
+        isPublicDefault: true,
+        userCanEdit: true,
+        userCanHide: true,
+        requiresAdminApprovalOnChange: false,
+        visibility: "public",
+        approvalStatus: "approved",
+        valueText: "Corteqs Labs",
+        valueJson: null,
+        displayValue: "Corteqs Labs",
+      },
+      {
+        attributeKey: "interest_focus",
+        label: "İştigal / İlgi Sahası",
+        description: "Rol özel alan",
+        dataType: "text",
+        isSystem: false,
+        sortOrder: 130,
+        isRequired: false,
+        isPublicDefault: true,
+        userCanEdit: true,
+        userCanHide: true,
+        requiresAdminApprovalOnChange: false,
+        visibility: "public",
+        approvalStatus: "approved",
+        valueText: "Network tasarımı",
+        valueJson: null,
+        displayValue: "Network tasarımı",
+      },
+      {
+        attributeKey: "referral_code",
+        label: "Referral Kodu",
+        description: "Referral alanı",
+        dataType: "text",
+        isSystem: false,
+        sortOrder: 140,
+        isRequired: true,
+        isPublicDefault: false,
+        userCanEdit: true,
+        userCanHide: false,
+        requiresAdminApprovalOnChange: false,
+        visibility: "private",
+        approvalStatus: "approved",
+        valueText: "REF-2026",
+        valueJson: null,
+        displayValue: "REF-2026",
+      },
+      {
+        attributeKey: "referral_source",
+        label: "Bizi nereden buldunuz?",
+        description: "Referral alanı",
+        dataType: "select",
+        isSystem: false,
+        sortOrder: 150,
+        isRequired: true,
+        isPublicDefault: false,
+        userCanEdit: true,
+        userCanHide: false,
+        requiresAdminApprovalOnChange: false,
+        visibility: "private",
+        approvalStatus: "approved",
+        valueText: "linkedin",
+        valueJson: null,
+        displayValue: "LinkedIn",
       },
       {
         attributeKey: "instagram_url",
@@ -500,13 +572,17 @@ describe("ProfilePage", () => {
     expect(screen.getByText(/Diaspora için iş birliği ve mentorluk fırsatlarına açığım\./i)).toBeInTheDocument();
     expect(screen.getByText("Profil özeti: Diaspora için iş birliği ve mentorluk fırsatlarına açığım.")).toBeInTheDocument();
     expect(screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için")).not.toBeInTheDocument();
-    expect(screen.getByDisplayValue("mentorluk, topluluk, networking")).toBeInTheDocument();
+    expect(screen.queryByDisplayValue("mentorluk, topluluk, networking")).not.toBeInTheDocument();
+    expect(screen.getByDisplayValue("Corteqs Labs")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Network tasarımı")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("REF-2026")).toBeInTheDocument();
 
     expect(screen.getByRole("switch", { name: /Ad Soyad görünürlük/i })).toBeInTheDocument();
     expect(screen.getAllByRole("switch").length).toBeGreaterThanOrEqual(2);
     expect(screen.queryByText("Tamamlandı")).not.toBeInTheDocument();
     expect(screen.queryByText("Eksik veya doldurulmayı bekliyor")).not.toBeInTheDocument();
     expect(screen.getAllByRole("switch").length).toBeGreaterThan(3);
+    expect(screen.getAllByDisplayValue("firmascope")).toHaveLength(1);
   });
 
   it("does not render the bireysel fallback description when short bio is empty", async () => {
@@ -570,7 +646,7 @@ describe("ProfilePage", () => {
       </MemoryRouter>,
     );
 
-    fireEvent.change(screen.getAllByDisplayValue("firmascope")[0], { target: { value: "Ada Yilmaz" } });
+    fireEvent.change(screen.getByDisplayValue("firmascope"), { target: { value: "Ada Yilmaz" } });
     fireEvent.click(screen.getByRole("button", { name: "Ad Soyadı Kaydet" }));
 
     await waitFor(() => {
@@ -586,6 +662,66 @@ describe("ProfilePage", () => {
     });
 
     expect(updateProfileAttributeMock.mock.calls.map((call) => call[0])).toEqual(["country", "city", "bio_short"]);
+    expect(refreshProfileMock).toHaveBeenCalled();
+  });
+
+  it("renders compact role-specific rows and saves referral fields without visibility switches", async () => {
+    const refreshProfileMock = vi.fn().mockResolvedValue(undefined);
+
+    useAuthMock.mockReturnValue({
+      user: { id: "u-1", email: "firmascope@gmail.com", user_metadata: { name: "firmascope" } },
+    });
+    useCurrentUserDashboardMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      items: [],
+      refreshDashboard: vi.fn(),
+    });
+    useCurrentUserProfileMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      profile: baseProfile,
+      refreshProfile: refreshProfileMock,
+    });
+
+    render(
+      <MemoryRouter initialEntries={["/profile/bireysel"]}>
+        <Routes>
+          <Route path="/profile/:type" element={<ProfilePage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    const roleCardButton = screen.getByRole("button", { name: /Rolüne Özel Alanları Kaydet/i });
+    const roleCard = roleCardButton.parentElement?.parentElement?.parentElement ?? null;
+    expect(roleCard).not.toBeNull();
+    const roleCardScope = within(roleCard as HTMLElement);
+
+    expect(roleCardScope.queryByDisplayValue("mentorluk, topluluk, networking")).not.toBeInTheDocument();
+    expect(roleCardScope.queryByDisplayValue("firmascope")).not.toBeInTheDocument();
+    expect(roleCardScope.getByDisplayValue("Corteqs Labs")).toBeInTheDocument();
+    expect(roleCardScope.getByDisplayValue("Network tasarımı")).toBeInTheDocument();
+    expect(roleCardScope.getByDisplayValue("REF-2026")).toBeInTheDocument();
+    expect(roleCardScope.getByText("İşletme / Kuruluş")).toBeInTheDocument();
+    expect(roleCardScope.getByText("İştigal / İlgi Sahası")).toBeInTheDocument();
+    expect(roleCardScope.queryByRole("switch", { name: /Referral Kodu görünürlük/i })).not.toBeInTheDocument();
+    expect(roleCardScope.queryByRole("switch", { name: /Bizi nereden buldunuz\\? görünürlük/i })).not.toBeInTheDocument();
+    expect(roleCardScope.getByRole("switch", { name: /İşletme \/ Kuruluş görünürlük/i })).toBeInTheDocument();
+    expect(roleCardScope.getByRole("switch", { name: /İştigal \/ İlgi Sahası görünürlük/i })).toBeInTheDocument();
+    expect(roleCardScope.queryByText("Rol özel alan")).not.toBeInTheDocument();
+    expect(roleCardScope.queryByText("Referral alanı")).not.toBeInTheDocument();
+
+    fireEvent.click(roleCardButton);
+
+    await waitFor(() => {
+      expect(updateProfileAttributeMock.mock.calls.map((call) => call[0])).toEqual([
+        "business_or_organization",
+        "interest_focus",
+        "referral_code",
+        "referral_source",
+      ]);
+    });
+
     expect(refreshProfileMock).toHaveBeenCalled();
   });
 });

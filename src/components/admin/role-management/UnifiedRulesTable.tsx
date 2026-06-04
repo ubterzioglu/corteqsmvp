@@ -265,7 +265,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
             <span className="text-[9px] text-muted-foreground">S</span>
             <Input
               type="number"
-              className="h-5 w-11 px-1 text-[10px]"
+              className="h-5 w-11 px-1 text-center text-[9px] leading-none"
               defaultValue={String(rule.sort_order)}
               disabled={savingKey !== null}
               onBlur={(e) => void handleAttrSortOrder(row, Number(e.target.value) || rule.sort_order)}
@@ -327,7 +327,7 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
             <span className="text-[9px] text-muted-foreground">S</span>
             <Input
               type="number"
-              className="h-5 w-11 px-1 text-[10px]"
+              className="h-5 w-11 px-1 text-center text-[9px] leading-none"
               defaultValue={String(rule.sort_order)}
               disabled={savingKey !== null}
               onBlur={(e) => void handleSectSortOrder(row, Number(e.target.value) || rule.sort_order)}

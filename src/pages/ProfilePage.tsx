@@ -131,6 +131,10 @@ const PRIVATE_ONLY_ONBOARDING_ATTRIBUTE_KEYS = new Set([
   REFERRAL_CODE_ATTRIBUTE_KEY,
   REFERRAL_SOURCE_ATTRIBUTE_KEY,
 ]);
+const HIDDEN_ROLE_SPECIFIC_ATTRIBUTE_KEYS = new Set([
+  "full_name",
+  "interests",
+]);
 const SPECIAL_PROFILE_ATTRIBUTE_KEYS = new Set([
   PROFILE_PHOTO_ATTRIBUTE_KEY,
   LINKEDIN_ATTRIBUTE_KEY,
@@ -346,6 +350,8 @@ const ProfilePage = () => {
         continue;
       } else if (SOCIAL_ATTRIBUTE_KEYS.has(attribute.attributeKey)) {
         socialMedia.push(attribute);
+      } else if (HIDDEN_ROLE_SPECIFIC_ATTRIBUTE_KEYS.has(attribute.attributeKey)) {
+        continue;
       } else {
         roleSpecific.push(attribute);
       }
@@ -1504,7 +1510,7 @@ const ProfilePage = () => {
                     displayNameLabel={displayNameLabel}
                     isSaving={savingRoleSpecificAttributes}
                     saveMode="section"
-                    visibilityMode="select"
+                    visibilityMode="inline-switch"
                     hideVisibilityControl={PRIVATE_ONLY_ONBOARDING_ATTRIBUTE_KEYS.has(attribute.attributeKey)}
                     onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
                     onVisibilityChange={(nextVisibility) =>
@@ -1697,21 +1703,23 @@ const ProfileAttributeEditor = ({
             <AttributeInput attribute={attribute} value={draftValue} onChange={onValueChange} compact />
           </div>
 
-          <div className="w-[84px] shrink-0">
-            <div className={`flex h-9 items-center justify-between gap-1.5 rounded-full px-2 text-[11px] ${GOOGLE_SOFT_SWITCH_PANEL}`}>
-              {draftVisibility === "public" ? (
-                <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
-              ) : (
-                <EyeOff className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-              )}
-              <Switch
-                checked={draftVisibility === "public"}
-                onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")}
-                disabled={visibilityLocked}
-                aria-label={`${attributeLabel} görünürlük`}
-              />
+          {hideVisibilityControl ? null : (
+            <div className="w-[84px] shrink-0">
+              <div className={`flex h-9 items-center justify-between gap-1.5 rounded-full px-2 text-[11px] ${GOOGLE_SOFT_SWITCH_PANEL}`}>
+                {draftVisibility === "public" ? (
+                  <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
+                ) : (
+                  <EyeOff className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                )}
+                <Switch
+                  checked={draftVisibility === "public"}
+                  onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")}
+                  disabled={visibilityLocked}
+                  aria-label={`${attributeLabel} görünürlük`}
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     );
