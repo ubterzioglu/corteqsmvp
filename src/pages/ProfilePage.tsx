@@ -32,6 +32,7 @@ import {
 import { useAuth } from "@/components/auth/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -143,13 +144,13 @@ const GOOGLE_SOFT_CARD_HERO =
 const GOOGLE_SOFT_CARD_SECTION =
   "border-orange-100/50 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_18px_-6px_rgba(249,115,22,0.18)]";
 const GOOGLE_SOFT_CARD_BLUE_SECTION =
-  "border-orange-100/50 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_18px_-6px_rgba(249,115,22,0.18)]";
+  "border-blue-100/60 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_28px_-4px_rgba(66,133,244,0.40)]";
 const GOOGLE_SOFT_CARD_YELLOW_SECTION =
-  "border-orange-100/50 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_18px_-6px_rgba(249,115,22,0.18)]";
+  "border-yellow-100/60 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_28px_-4px_rgba(251,188,4,0.40)]";
 const GOOGLE_SOFT_CARD_GREEN_SECTION =
-  "border-orange-100/50 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_18px_-6px_rgba(249,115,22,0.18)]";
+  "border-green-100/60 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_28px_-4px_rgba(52,168,83,0.40)]";
 const GOOGLE_SOFT_CARD_RED_SECTION =
-  "border-orange-100/50 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_18px_-6px_rgba(249,115,22,0.18)]";
+  "border-red-100/60 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_28px_-4px_rgba(234,67,53,0.40)]";
 const GOOGLE_SOFT_CARD_SUBTLE =
   "border border-gray-100 bg-gray-50/80";
 const GOOGLE_SOFT_CARD_SUBTLE_INTERACTIVE =
@@ -178,9 +179,9 @@ const GOOGLE_SOFT_SWITCH_PANEL =
   "border border-gray-100 bg-gray-50";
 
 const AMBER_BUTTON_PRIMARY =
-  "border border-[rgba(234,88,12,0.3)] bg-[linear-gradient(180deg,rgba(249,115,22,0.95),rgba(234,88,0,0.9))] text-white shadow-[0_10px_24px_-12px_rgba(249,115,22,0.5)] hover:bg-[linear-gradient(180deg,rgba(251,146,60,0.97),rgba(249,115,22,0.95))] hover:shadow-[0_12px_28px_-10px_rgba(249,115,22,0.62)]";
+  "text-[11px] border border-[rgba(234,88,12,0.3)] bg-[linear-gradient(180deg,rgba(249,115,22,0.95),rgba(234,88,0,0.9))] text-white shadow-[0_10px_24px_-12px_rgba(249,115,22,0.5)] hover:bg-[linear-gradient(180deg,rgba(251,146,60,0.97),rgba(249,115,22,0.95))] hover:shadow-[0_12px_28px_-10px_rgba(249,115,22,0.62)]";
 const AMBER_BUTTON_OUTLINE =
-  "border border-[rgba(249,115,22,0.38)] bg-[rgba(255,255,255,0.82)] text-orange-700 shadow-[0_8px_18px_-14px_rgba(249,115,22,0.24)] hover:bg-[rgba(249,115,22,0.09)] hover:border-[rgba(249,115,22,0.55)] hover:text-orange-800";
+  "text-[11px] border border-[rgba(249,115,22,0.38)] bg-[rgba(255,255,255,0.82)] text-orange-700 shadow-[0_8px_18px_-14px_rgba(249,115,22,0.24)] hover:bg-[rgba(249,115,22,0.09)] hover:border-[rgba(249,115,22,0.55)] hover:text-orange-800";
 const AMBER_ACTION_BUTTON =
   "h-10 w-full min-w-0 justify-center rounded-xl border border-[rgba(249,115,22,0.28)] bg-[rgba(255,255,255,0.85)] px-3 text-[11px] font-medium text-orange-700 shadow-[0_12px_26px_-24px_rgba(249,115,22,0.3)] backdrop-blur-[2px] hover:bg-[rgba(249,115,22,0.1)] hover:border-[rgba(249,115,22,0.46)] hover:text-orange-800";
 
@@ -1157,55 +1158,96 @@ const ProfilePage = () => {
 
       <div className="space-y-4">
           {displayNameAttribute ? (
-            <DisplayNameAttributeCard
-              attribute={displayNameAttribute}
-              displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
-              draftValue={draftValues[displayNameAttribute.attributeKey]}
-              draftVisibility={draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility}
-              isSaving={savingAttributeKey === displayNameAttribute.attributeKey}
-              onValueChange={(nextValue) => handleDraftChange(displayNameAttribute.attributeKey, nextValue)}
-              onVisibilityChange={(nextVisibility) =>
-                setDraftVisibilities((current) => ({ ...current, [displayNameAttribute.attributeKey]: nextVisibility }))
-              }
-              onSave={() => void handleSaveAttribute(displayNameAttribute)}
-            />
-          ) : null}
+            <Card className={GOOGLE_SOFT_CARD_BLUE_SECTION}>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-[11px]">Profil Alanları</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex flex-col gap-3 md:flex-row md:items-start">
+                  <div className="flex-1 space-y-2">
+                    {displayNameAttribute.isRequired ? (
+                      <Badge variant="secondary" className="px-1.5 py-0 text-[11px]">Zorunlu</Badge>
+                    ) : null}
+                    <AttributeInput attribute={displayNameAttribute} value={draftValues[displayNameAttribute.attributeKey]} onChange={(nextValue) => handleDraftChange(displayNameAttribute.attributeKey, nextValue)} />
+                  </div>
+                  <div className="w-full md:w-[92px]">
+                    <div className={`flex h-10 items-center justify-between gap-1.5 rounded-full px-2 text-[11px] ${GOOGLE_SOFT_SWITCH_PANEL}`}>
+                      {draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility === "public" ? (
+                        <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
+                      ) : (
+                        <EyeOff className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                      )}
+                      <Switch
+                        checked={(draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility) === "public"}
+                        onCheckedChange={(checked) => setDraftVisibilities((current) => ({ ...current, [displayNameAttribute.attributeKey]: checked ? "public" : "private" }))}
+                        disabled={!displayNameAttribute.userCanHide}
+                        aria-label={`${roleMeta?.displayNameLabel ?? "Görünen İsim"} görünürlük`}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-end">
+                  <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={() => void handleSaveAttribute(displayNameAttribute)} disabled={!displayNameAttribute.userCanEdit || savingAttributeKey === displayNameAttribute.attributeKey}>
+                    {savingAttributeKey === displayNameAttribute.attributeKey ? "Kaydediliyor..." : displayNameAttribute.attributeKey === "full_name" ? "Ad Soyadı Kaydet" : "İsmi Kaydet"}
+                  </Button>
+                </div>
 
-          <Card className={GOOGLE_SOFT_CARD_YELLOW_SECTION}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-[11px]">Ortak Profil Alanları</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {groupedAttributes.common.map((attribute) => (
-                <ProfileAttributeEditor
-                  key={attribute.attributeKey}
-                  attribute={attribute}
-                  draftValue={draftValues[attribute.attributeKey]}
-                  draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
-                  displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
-                  isSaving={savingCommonAttributes}
-                  saveMode="section"
-                  visibilityMode="inline-switch"
-                  onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
-                  onVisibilityChange={(nextVisibility) =>
-                    setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
-                  }
-                />
-              ))}
+                <Separator className="my-2" />
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {groupedAttributes.common
+                    .filter((attr) => ["country", "city"].includes(attr.attributeKey))
+                    .map((attribute) => (
+                      <ProfileAttributeEditor
+                        key={attribute.attributeKey}
+                        attribute={attribute}
+                        draftValue={draftValues[attribute.attributeKey]}
+                        draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
+                        displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
+                        isSaving={savingCommonAttributes}
+                        saveMode="section"
+                        visibilityMode="inline-switch"
+                        onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
+                        onVisibilityChange={(nextVisibility) =>
+                          setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
+                        }
+                      />
+                    ))}
+                </div>
+
+                {groupedAttributes.common
+                .filter((attr) => attr.attributeKey === "bio_short")
+                .map((attribute) => (
+                  <ProfileAttributeEditor
+                    key={attribute.attributeKey}
+                    attribute={attribute}
+                    draftValue={draftValues[attribute.attributeKey]}
+                    draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
+                    displayNameLabel={roleMeta?.displayNameLabel ?? "Görünen İsim"}
+                    isSaving={savingCommonAttributes}
+                    saveMode="section"
+                    visibilityMode="inline-switch"
+                    onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
+                    onVisibilityChange={(nextVisibility) =>
+                      setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
+                    }
+                  />
+                ))}
               <div className="flex justify-end pt-1">
                 <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={() => void handleSaveCommonAttributes()} disabled={savingCommonAttributes}>
                   {savingCommonAttributes ? "Kaydediliyor..." : "Ortak Alanları Kaydet"}
                 </Button>
               </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          ) : null}
 
           {featureToggleCards.length ? (
             <Card className={GOOGLE_SOFT_CARD_GREEN_SECTION}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-[11px]">Profil Rozetleri</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {featureToggleCards.map((item) => (
                   <PreferenceToggleCard
                     key={item.key}
@@ -1238,7 +1280,7 @@ const ProfilePage = () => {
 
                       return (
                         <div key={attribute.attributeKey} className={`rounded-xl p-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
-                          <div className="flex items-center justify-between gap-3">
+                          <div className="flex flex-wrap items-center justify-between gap-3">
                             <div className="flex items-center gap-2 text-[11px] font-medium text-foreground">
                               <Icon className={`h-4 w-4 ${config.iconClassName}`} />
                               <span>{config.label}</span>
@@ -1296,7 +1338,7 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
 
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2">
             {linkedinCardEnabled && linkedinAttribute ? (
               <StandaloneLinkAttributeCard
                 attribute={linkedinAttribute}

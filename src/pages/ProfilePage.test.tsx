@@ -445,7 +445,7 @@ describe("ProfilePage", () => {
     expect(screen.getByRole("button", { name: /Çıkış Yap/i })).toBeInTheDocument();
     expect(screen.getAllByRole("img", { name: "firmascope" })).toHaveLength(1);
     expect(screen.getByRole("img", { name: "firmascope" })).toHaveAttribute("src", "https://example.com/avatar.jpg");
-    expect(screen.getByText("Ortak Profil Alanları")).toBeInTheDocument();
+    expect(screen.getByText("Profil Alanları")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ad Soyadı Kaydet" })).toBeInTheDocument();
     expect(screen.getByText("Profil Rozetleri")).toBeInTheDocument();
     expect(screen.getByText("Sosyal Medya Hesapları")).toBeInTheDocument();
