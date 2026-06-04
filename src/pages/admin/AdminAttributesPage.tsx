@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 import AdminPageGuideAccordion, { type AdminPageGuideSection } from "@/components/admin/AdminPageGuideAccordion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

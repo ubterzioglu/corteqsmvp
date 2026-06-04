@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import SurveyBuilder from "@/components/admin/surveys/SurveyBuilder";
 import { getSurveyById, type SurveyWithQuestions } from "@/lib/surveys";
 

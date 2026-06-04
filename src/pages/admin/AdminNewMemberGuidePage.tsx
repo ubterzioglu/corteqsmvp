@@ -1,5 +1,6 @@
 import AdminPageGuideAccordion, { type AdminPageGuideSection } from "@/components/admin/AdminPageGuideAccordion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 const guideSections: AdminPageGuideSection[] = [
   {

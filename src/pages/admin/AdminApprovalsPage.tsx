@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";

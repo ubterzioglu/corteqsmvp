@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
+import {
 import {
   type ColumnDef,
   flexRender,
@@ -27,6 +29,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { isValidWhatsappPhone, normalizePhone } from "@/lib/lansman";
+import {
 import {
   categoryOptions,
   formatBytes,

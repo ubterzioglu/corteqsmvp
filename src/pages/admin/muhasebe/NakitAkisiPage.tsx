@@ -37,6 +37,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 import { useExpenses, useIncomes } from '@/hooks/useMuhasebe';
 import { aggregateCashflowMonthly, getCurrencyTotal } from '@/lib/muhasebe-aggregations';

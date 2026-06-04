@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import SurveyStatusBadge from "@/components/admin/surveys/SurveyStatusBadge";
 import {
   archiveSurvey,

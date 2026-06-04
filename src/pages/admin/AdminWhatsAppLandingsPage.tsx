@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import WhatsAppLandingsModeration from "@/components/admin/WhatsAppLandingsModeration";
 
 export default function AdminWhatsAppLandingsPage() {

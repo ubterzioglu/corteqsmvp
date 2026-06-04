@@ -1,5 +1,6 @@
 import { useMemo, useState, type ComponentType } from "react";
 import { ArrowRight, ExternalLink, LogOut, ScrollText, Search, Sparkles } from "lucide-react";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Link } from "react-router-dom";
 
 import {

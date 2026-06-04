@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Navigate, useParams } from "react-router-dom";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Instagram, Mail, MessageCircle, Pencil, Phone, Plus, Save, Trash2, X } from "lucide-react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";

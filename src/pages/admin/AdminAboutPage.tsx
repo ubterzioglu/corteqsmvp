@@ -1,4 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 const updates = [
   "26 Nisan 2026: WhatsApp bot kaynaklı kayıtları `submissions` tablosu ile birleştiren migration eklendi; `source_type` ve `source_external_id` alanları üzerinden form, chatbot ve WA kayıtları ayrıştırılabilir hale geldi.",

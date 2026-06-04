@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import SurveyBuilder from "@/components/admin/surveys/SurveyBuilder";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 export default function AdminSurveyCreatePage() {
   const navigate = useNavigate();

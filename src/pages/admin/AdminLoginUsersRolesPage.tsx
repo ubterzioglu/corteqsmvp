@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 import { setUserRoleAsAdmin, updateUserProfileAttributeAsAdmin, updateUserTaxonomySelectionAsAdmin } from "@/lib/admin";
 import AdminPageGuideAccordion, { type AdminPageGuideSection } from "@/components/admin/AdminPageGuideAccordion";

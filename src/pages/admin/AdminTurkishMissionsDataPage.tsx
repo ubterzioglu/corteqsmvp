@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Plus, Save } from "lucide-react";
 
 import { Button } from "@/components/ui/button";

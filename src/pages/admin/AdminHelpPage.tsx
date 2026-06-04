@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import guideHtml from "@/assets/docs/yetkilendirme-basit-rehberi.html?raw";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const AdminHelpPage = () => {
