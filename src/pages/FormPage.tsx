@@ -74,7 +74,9 @@ const FormPage = () => {
         if (parsed.referral_detail) setReferralDetail(parsed.referral_detail);
         if (parsed.referral_code) setReferralCode(parsed.referral_code);
         if (parsed.consent === "on" || parsed.consent === "true") setConsent(true);
-      } catch (e) {}
+      } catch (e) {
+        // Ignore JSON parse errors
+      }
       sessionStorage.removeItem("corteqs_form_backup");
     }
   }, []);
