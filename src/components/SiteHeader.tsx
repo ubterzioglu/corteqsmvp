@@ -29,9 +29,6 @@ export default function SiteHeader() {
                 className="h-8 w-px bg-slate-300/85"
               />
               <div className="flex max-w-[16rem] items-center gap-2 text-[1rem] font-semibold tracking-[0.02em] text-slate-800 sm:max-w-none sm:text-[1.05rem]">
-                <span className="text-[1.1rem] font-black uppercase tracking-[0.12em] text-red-600 sm:text-[1.35rem]">
-                  MVP
-                </span>
                 <span>Global Türk Diaspora Network</span>
               </div>
             </div>
