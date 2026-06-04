@@ -92,7 +92,6 @@ const AdminLayout = () => {
   const [password, setPassword] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
-  const [otherActionsMenuOpen, setOtherActionsMenuOpen] = useState(false);
   const [newMemberMenuOpen, setNewMemberMenuOpen] = useState(false);
   const [communityMenuOpen, setCommunityMenuOpen] = useState(false);
   const [dataMenuOpen, setDataMenuOpen] = useState(false);
@@ -226,7 +225,6 @@ const AdminLayout = () => {
     location.pathname.startsWith("/admin/new-member") ||
     location.pathname === "/admin/roller-taslak" ||
     location.pathname === "/admin/members";
-  const otherActionsMenuActive = otherActionNavItems.some((item) => location.pathname === item.to);
   const adminPanelMenuActive = adminPanelNavItems.some((item) => location.pathname === item.to);
   const isRouteActive = (to: string) => location.pathname === to;
   const mobileMainLinks = [
@@ -431,44 +429,6 @@ const AdminLayout = () => {
                     </NavLink>
                   </div>
                 ))}
-              <div className="flex items-center">
-                <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
-                <DropdownMenu open={otherActionsMenuOpen} onOpenChange={setOtherActionsMenuOpen}>
-                  <DropdownMenuTrigger asChild>
-                    <div
-                      onMouseEnter={() => setOtherActionsMenuOpen(true)}
-                      onMouseLeave={() => setOtherActionsMenuOpen(false)}
-                    >
-                      <button
-                        type="button"
-                        className={`${linkClass({ isActive: otherActionsMenuActive })} inline-flex items-center gap-1`}
-                      >
-                        Diğer İşlemler
-                        <ChevronDown className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="start"
-                    className="w-48"
-                    onMouseEnter={() => setOtherActionsMenuOpen(true)}
-                    onMouseLeave={() => setOtherActionsMenuOpen(false)}
-                  >
-                    {otherActionNavItems.map((item) => {
-                      const isActive = location.pathname === item.to;
-
-                      return (
-                        <DropdownMenuItem key={item.to} asChild>
-                          <Link to={item.to} className="flex items-center justify-between gap-3">
-                            <span>{item.label}</span>
-                            {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
-                          </Link>
-                        </DropdownMenuItem>
-                      );
-                    })}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
               <div className="flex items-center">
                 <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
                 <DropdownMenu open={communityMenuOpen} onOpenChange={setCommunityMenuOpen}>
@@ -693,6 +653,12 @@ const AdminLayout = () => {
                   {"<- Referral"}
                 </Link>
               )}
+              <div className="flex items-center">
+                <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
+                <NavLink to="/admin/help" className={({ isActive }) => linkClass({ isActive })} title="Yardım">
+                  <CircleHelp className="h-3.5 w-3.5" />
+                </NavLink>
+              </div>
               <div className="flex items-center">
                 <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
                 <button onClick={() => void handleLogout()} className={linkClass({ isActive: false })}>

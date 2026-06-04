@@ -32,7 +32,6 @@ export const otherActionNavItems = [
   { to: "/admin/approvals", label: "Approval Queue", icon: ClipboardList },
   { to: "/admin/audit-logs", label: "Audit Logs", icon: ScrollTextIcon },
   { to: "/admin/about", label: "Güncellemeler", icon: ScrollText },
-  { to: "/admin/help", label: "Yardım", icon: CircleHelp },
 ] as const;
 
 export const otherRecordNavItems = [
