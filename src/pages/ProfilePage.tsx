@@ -1279,15 +1279,15 @@ const ProfilePage = () => {
 
                       return (
                         <div key={attribute.attributeKey} className="flex items-center gap-2">
-                          <div className="flex items-center gap-1.5 shrink-0 min-w-fit">
+                          <div className="flex items-center gap-1.5 shrink-0 w-32">
                             <Icon className={`h-4 w-4 ${config.iconClassName}`} />
-                            <span className="text-[11px] font-medium text-foreground">{config.label}</span>
+                            <span className="text-[10px] font-medium text-foreground truncate">{config.label}</span>
                           </div>
                           <Input
                             value={typeof draftValues[attribute.attributeKey] === "string" ? String(draftValues[attribute.attributeKey] ?? "") : ""}
                             onChange={(event) => handleDraftChange(attribute.attributeKey, event.target.value)}
                             placeholder={config.placeholder}
-                            className="h-8 flex-1 text-[11px] placeholder:text-[11px]"
+                            className="h-8 flex-1 text-[10px] placeholder:text-[10px]"
                           />
                         </div>
                       );
@@ -1804,7 +1804,7 @@ const StandaloneLinkAttributeCard = ({
             value={typeof draftValue === "string" ? draftValue : ""}
             onChange={(event) => onValueChange(event.target.value)}
             placeholder={attribute.label}
-            className="h-8 flex-1 text-[11px] placeholder:text-[11px]"
+            className="h-8 flex-1 text-[10px] placeholder:text-[10px]"
           />
           <div className={`flex items-center gap-1.5 rounded-full px-2 shrink-0 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
             {visible ? <Eye className="h-3.5 w-3.5 text-primary" /> : <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />}
@@ -1910,7 +1910,7 @@ const AttributeInput = ({ attribute, value, onChange, compact = false }: Attribu
 
   return (
     <Input
-      className={compact ? "h-9 text-[11px] md:text-[11px]" : undefined}
+      className={compact ? "h-9 text-[10px] md:text-[10px] placeholder:text-[10px]" : "text-[10px] placeholder:text-[10px]"}
       type={attribute.dataType === "url" ? "url" : "text"}
       value={typeof value === "string" ? value : ""}
       onChange={(event) => onChange(event.target.value)}
