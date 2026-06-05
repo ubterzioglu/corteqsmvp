@@ -13,7 +13,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
-import { allCountries } from "@/data/countryCities";
+import { useGeoCountries } from "@/hooks/useGeo";
 
 interface PersonRow {
   id: string;
@@ -54,6 +54,7 @@ const PROFESSIONS = [
 ];
 
 const DiasporaPeopleSearch = () => {
+  const countriesQuery = useGeoCountries();
   const [q, setQ] = useState("");
   const [country, setCountry] = useState<string>("all");
   const [city, setCity] = useState<string>("all");
@@ -90,10 +91,6 @@ const DiasporaPeopleSearch = () => {
     return () => { cancelled = true; };
   }, []);
 
-  const cities = country === "all"
-    ? []
-    : [];
-
   const filtered = useMemo(() => {
     return people.filter((p) => {
       if (q && !(p.full_name || "").toLowerCase().includes(q.toLowerCase()) && !(p.profession || "").toLowerCase().includes(q.toLowerCase())) return false;
@@ -124,19 +121,21 @@ const DiasporaPeopleSearch = () => {
         <SearchableCountrySelect
           value={country}
           onChange={(v) => { setCountry(v); setCity("all"); }}
-          countries={["all", ...allCountries]}
+          countries={["all", ...(countriesQuery.data ?? []).map((countryItem) => countryItem.name)]}
           placeholder="Ülke"
           size="xs"
           allowClear={false}
+          includeAllOptionLabel="Tüm Ülkeler"
         />
         <SearchableCitySelect
           value={city}
           onChange={setCity}
           countryName={country === "all" ? undefined : country}
-          placeholder={country === "all" ? "Şehir" : `Tüm Şehirler - ${country}`}
+          placeholder={country === "all" ? "Önce ülke seçin" : `Tüm Şehirler - ${country}`}
           size="xs"
           allowClear={false}
           disabled={country === "all"}
+          includeAllOptionLabel={country === "all" ? undefined : `Tüm Şehirler - ${country}`}
         />
         <Select value={profession} onValueChange={setProfession}>
           <SelectTrigger className="h-7 text-[11px]"><SelectValue placeholder="Meslek" /></SelectTrigger>

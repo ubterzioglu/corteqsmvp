@@ -1,0 +1,1013 @@
+export interface GeoCountrySeed {
+  code: string;
+  name: string;
+}
+
+export const geoCountrySeeds: GeoCountrySeed[] = [
+  {
+    "code": "GB",
+    "name": "__TR_I_CAP__ngiltere"
+  },
+  {
+    "code": "IR",
+    "name": "__TR_I_CAP__ran"
+  },
+  {
+    "code": "IE",
+    "name": "__TR_I_CAP__rlanda"
+  },
+  {
+    "code": "ES",
+    "name": "__TR_I_CAP__spanya"
+  },
+  {
+    "code": "IL",
+    "name": "__TR_I_CAP__srail"
+  },
+  {
+    "code": "SE",
+    "name": "__TR_I_CAP__sveç"
+  },
+  {
+    "code": "CH",
+    "name": "__TR_I_CAP__sviçre"
+  },
+  {
+    "code": "IT",
+    "name": "__TR_I_CAP__talya"
+  },
+  {
+    "code": "IS",
+    "name": "__TR_I_CAP__zlanda"
+  },
+  {
+    "code": "US",
+    "name": "ABD"
+  },
+  {
+    "code": "VI",
+    "name": "ABD Virjin Adaları"
+  },
+  {
+    "code": "AF",
+    "name": "Afganistan"
+  },
+  {
+    "code": "AX",
+    "name": "Aland"
+  },
+  {
+    "code": "DE",
+    "name": "Almanya"
+  },
+  {
+    "code": "UM",
+    "name": "Amerika Birleşik Devletleri Küçük Dış Adaları"
+  },
+  {
+    "code": "AS",
+    "name": "Amerikan Samoası"
+  },
+  {
+    "code": "AD",
+    "name": "Andorra"
+  },
+  {
+    "code": "AO",
+    "name": "Angola"
+  },
+  {
+    "code": "AI",
+    "name": "Anguilla"
+  },
+  {
+    "code": "AQ",
+    "name": "Antarktika"
+  },
+  {
+    "code": "AG",
+    "name": "Antigua ve Barbuda"
+  },
+  {
+    "code": "AR",
+    "name": "Arjantin"
+  },
+  {
+    "code": "AL",
+    "name": "Arnavutluk"
+  },
+  {
+    "code": "AW",
+    "name": "Aruba"
+  },
+  {
+    "code": "AU",
+    "name": "Avustralya"
+  },
+  {
+    "code": "AT",
+    "name": "Avusturya"
+  },
+  {
+    "code": "AZ",
+    "name": "Azerbaycan"
+  },
+  {
+    "code": "AE",
+    "name": "BAE"
+  },
+  {
+    "code": "WS",
+    "name": "Bağımsız Samoa Devleti"
+  },
+  {
+    "code": "BS",
+    "name": "Bahamalar"
+  },
+  {
+    "code": "BH",
+    "name": "Bahreyn"
+  },
+  {
+    "code": "BD",
+    "name": "Bangladeş"
+  },
+  {
+    "code": "BB",
+    "name": "Barbados"
+  },
+  {
+    "code": "BY",
+    "name": "Belarus"
+  },
+  {
+    "code": "BE",
+    "name": "Belçika"
+  },
+  {
+    "code": "BZ",
+    "name": "Belize"
+  },
+  {
+    "code": "BJ",
+    "name": "Benin"
+  },
+  {
+    "code": "BM",
+    "name": "Bermuda"
+  },
+  {
+    "code": "BO",
+    "name": "Bolivya"
+  },
+  {
+    "code": "BA",
+    "name": "Bosna Hersek"
+  },
+  {
+    "code": "BW",
+    "name": "Botsvana"
+  },
+  {
+    "code": "BV",
+    "name": "Bouvet Adası"
+  },
+  {
+    "code": "BR",
+    "name": "Brezilya"
+  },
+  {
+    "code": "IO",
+    "name": "Britanya Hint Okyanusu Toprakları"
+  },
+  {
+    "code": "BN",
+    "name": "Brunei"
+  },
+  {
+    "code": "BG",
+    "name": "Bulgaristan"
+  },
+  {
+    "code": "BF",
+    "name": "Burkina Faso"
+  },
+  {
+    "code": "BI",
+    "name": "Burundi"
+  },
+  {
+    "code": "BT",
+    "name": "Butan"
+  },
+  {
+    "code": "KY",
+    "name": "Cayman Adaları"
+  },
+  {
+    "code": "GI",
+    "name": "Cebelitarık"
+  },
+  {
+    "code": "DZ",
+    "name": "Cezayir"
+  },
+  {
+    "code": "CX",
+    "name": "Christmas Adası"
+  },
+  {
+    "code": "DJ",
+    "name": "Cibuti"
+  },
+  {
+    "code": "CC",
+    "name": "Cocos (Keeling) Adaları"
+  },
+  {
+    "code": "CK",
+    "name": "Cook Adaları"
+  },
+  {
+    "code": "CW",
+    "name": "Curaçao"
+  },
+  {
+    "code": "TD",
+    "name": "Çad"
+  },
+  {
+    "code": "CZ",
+    "name": "Çekya"
+  },
+  {
+    "code": "CN",
+    "name": "Çin"
+  },
+  {
+    "code": "DK",
+    "name": "Danimarka"
+  },
+  {
+    "code": "TL",
+    "name": "Doğu Timor"
+  },
+  {
+    "code": "DO",
+    "name": "Dominik Cumhuriyeti"
+  },
+  {
+    "code": "DM",
+    "name": "Dominika"
+  },
+  {
+    "code": "EC",
+    "name": "Ekvador"
+  },
+  {
+    "code": "GQ",
+    "name": "Ekvator Ginesi"
+  },
+  {
+    "code": "SV",
+    "name": "El Salvador"
+  },
+  {
+    "code": "ID",
+    "name": "Endonezya"
+  },
+  {
+    "code": "ER",
+    "name": "Eritre"
+  },
+  {
+    "code": "AM",
+    "name": "Ermenistan"
+  },
+  {
+    "code": "EE",
+    "name": "Estonya"
+  },
+  {
+    "code": "SZ",
+    "name": "Esvatini"
+  },
+  {
+    "code": "ET",
+    "name": "Etiyopya"
+  },
+  {
+    "code": "FK",
+    "name": "Falkland (Malvina) Adaları"
+  },
+  {
+    "code": "FO",
+    "name": "Faroe Adaları"
+  },
+  {
+    "code": "MA",
+    "name": "Fas"
+  },
+  {
+    "code": "FJ",
+    "name": "Fiji"
+  },
+  {
+    "code": "CI",
+    "name": "Fildişi Sahili"
+  },
+  {
+    "code": "PH",
+    "name": "Filipinler"
+  },
+  {
+    "code": "PS",
+    "name": "Filistin"
+  },
+  {
+    "code": "FI",
+    "name": "Finlandiya"
+  },
+  {
+    "code": "FR",
+    "name": "Fransa"
+  },
+  {
+    "code": "GF",
+    "name": "Fransız Guyanası"
+  },
+  {
+    "code": "TF",
+    "name": "Fransız Güney ve Antarktika Toprakları"
+  },
+  {
+    "code": "PF",
+    "name": "Fransız Polinezyası"
+  },
+  {
+    "code": "GA",
+    "name": "Gabon"
+  },
+  {
+    "code": "GM",
+    "name": "Gambiya"
+  },
+  {
+    "code": "GH",
+    "name": "Gana"
+  },
+  {
+    "code": "GN",
+    "name": "Gine"
+  },
+  {
+    "code": "GW",
+    "name": "Gine-Bissau"
+  },
+  {
+    "code": "GD",
+    "name": "Grenada"
+  },
+  {
+    "code": "GL",
+    "name": "Grönland"
+  },
+  {
+    "code": "GP",
+    "name": "Guadeloupe"
+  },
+  {
+    "code": "GU",
+    "name": "Guam"
+  },
+  {
+    "code": "GT",
+    "name": "Guatemala"
+  },
+  {
+    "code": "GG",
+    "name": "Guernsey"
+  },
+  {
+    "code": "GY",
+    "name": "Guyana"
+  },
+  {
+    "code": "ZA",
+    "name": "Güney Afrika"
+  },
+  {
+    "code": "GS",
+    "name": "Güney Georgia ve Güney Sandwich Adaları"
+  },
+  {
+    "code": "KR",
+    "name": "Güney Kore"
+  },
+  {
+    "code": "SS",
+    "name": "Güney Sudan"
+  },
+  {
+    "code": "GE",
+    "name": "Gürcistan"
+  },
+  {
+    "code": "HT",
+    "name": "Haiti"
+  },
+  {
+    "code": "HM",
+    "name": "Heard Adası ve McDonald Adaları"
+  },
+  {
+    "code": "HR",
+    "name": "Hırvatistan"
+  },
+  {
+    "code": "IN",
+    "name": "Hindistan"
+  },
+  {
+    "code": "NL",
+    "name": "Hollanda"
+  },
+  {
+    "code": "HN",
+    "name": "Honduras"
+  },
+  {
+    "code": "HK",
+    "name": "Hong Kong"
+  },
+  {
+    "code": "IQ",
+    "name": "Irak"
+  },
+  {
+    "code": "JM",
+    "name": "Jamaika"
+  },
+  {
+    "code": "JP",
+    "name": "Japonya"
+  },
+  {
+    "code": "JE",
+    "name": "Jersey"
+  },
+  {
+    "code": "KH",
+    "name": "Kamboçya"
+  },
+  {
+    "code": "CM",
+    "name": "Kamerun"
+  },
+  {
+    "code": "CA",
+    "name": "Kanada"
+  },
+  {
+    "code": "ME",
+    "name": "Karadağ"
+  },
+  {
+    "code": "BQ",
+    "name": "Karayip Hollandası"
+  },
+  {
+    "code": "QA",
+    "name": "Katar"
+  },
+  {
+    "code": "KZ",
+    "name": "Kazakistan"
+  },
+  {
+    "code": "KE",
+    "name": "Kenya"
+  },
+  {
+    "code": "CY",
+    "name": "Kıbrıs"
+  },
+  {
+    "code": "KG",
+    "name": "Kırgızistan"
+  },
+  {
+    "code": "KI",
+    "name": "Kiribati"
+  },
+  {
+    "code": "KKTC",
+    "name": "KKTC"
+  },
+  {
+    "code": "CO",
+    "name": "Kolombiya"
+  },
+  {
+    "code": "KM",
+    "name": "Komorlar"
+  },
+  {
+    "code": "CG",
+    "name": "Kongo Cumhuriyeti"
+  },
+  {
+    "code": "CD",
+    "name": "Kongo Demokratik Cumhuriyeti"
+  },
+  {
+    "code": "XK",
+    "name": "Kosova"
+  },
+  {
+    "code": "CR",
+    "name": "Kosta Rika"
+  },
+  {
+    "code": "KW",
+    "name": "Kuveyt"
+  },
+  {
+    "code": "KP",
+    "name": "Kuzey Kore"
+  },
+  {
+    "code": "MK",
+    "name": "Kuzey Makedonya"
+  },
+  {
+    "code": "MP",
+    "name": "Kuzey Mariana Adaları"
+  },
+  {
+    "code": "CU",
+    "name": "Küba"
+  },
+  {
+    "code": "LA",
+    "name": "Laos"
+  },
+  {
+    "code": "LS",
+    "name": "Lesotho"
+  },
+  {
+    "code": "LV",
+    "name": "Letonya"
+  },
+  {
+    "code": "LR",
+    "name": "Liberya"
+  },
+  {
+    "code": "LY",
+    "name": "Libya"
+  },
+  {
+    "code": "LI",
+    "name": "Lihtenştayn"
+  },
+  {
+    "code": "LT",
+    "name": "Litvanya"
+  },
+  {
+    "code": "LB",
+    "name": "Lübnan"
+  },
+  {
+    "code": "LU",
+    "name": "Lüksemburg"
+  },
+  {
+    "code": "HU",
+    "name": "Macaristan"
+  },
+  {
+    "code": "MG",
+    "name": "Madagaskar"
+  },
+  {
+    "code": "MO",
+    "name": "Makao"
+  },
+  {
+    "code": "MW",
+    "name": "Malavi"
+  },
+  {
+    "code": "MV",
+    "name": "Maldivler"
+  },
+  {
+    "code": "MY",
+    "name": "Malezya"
+  },
+  {
+    "code": "ML",
+    "name": "Mali"
+  },
+  {
+    "code": "MT",
+    "name": "Malta"
+  },
+  {
+    "code": "IM",
+    "name": "Man Adası"
+  },
+  {
+    "code": "MH",
+    "name": "Marshall Adaları"
+  },
+  {
+    "code": "MQ",
+    "name": "Martinik"
+  },
+  {
+    "code": "MU",
+    "name": "Mauritius"
+  },
+  {
+    "code": "YT",
+    "name": "Mayotte"
+  },
+  {
+    "code": "MX",
+    "name": "Meksika"
+  },
+  {
+    "code": "EG",
+    "name": "Mısır"
+  },
+  {
+    "code": "FM",
+    "name": "Mikronezya"
+  },
+  {
+    "code": "MN",
+    "name": "Moğolistan"
+  },
+  {
+    "code": "MD",
+    "name": "Moldova"
+  },
+  {
+    "code": "MC",
+    "name": "Monako"
+  },
+  {
+    "code": "MS",
+    "name": "Montserrat"
+  },
+  {
+    "code": "MR",
+    "name": "Moritanya"
+  },
+  {
+    "code": "MZ",
+    "name": "Mozambik"
+  },
+  {
+    "code": "MM",
+    "name": "Myanmar"
+  },
+  {
+    "code": "NA",
+    "name": "Namibya"
+  },
+  {
+    "code": "NR",
+    "name": "Nauru"
+  },
+  {
+    "code": "NP",
+    "name": "Nepal"
+  },
+  {
+    "code": "NE",
+    "name": "Nijer"
+  },
+  {
+    "code": "NG",
+    "name": "Nijerya"
+  },
+  {
+    "code": "NI",
+    "name": "Nikaragua"
+  },
+  {
+    "code": "NU",
+    "name": "Niue"
+  },
+  {
+    "code": "NF",
+    "name": "Norfolk Adası"
+  },
+  {
+    "code": "NO",
+    "name": "Norveç"
+  },
+  {
+    "code": "CF",
+    "name": "Orta Afrika Cumhuriyeti"
+  },
+  {
+    "code": "UZ",
+    "name": "Özbekistan"
+  },
+  {
+    "code": "PK",
+    "name": "Pakistan"
+  },
+  {
+    "code": "PW",
+    "name": "Palau"
+  },
+  {
+    "code": "PA",
+    "name": "Panama"
+  },
+  {
+    "code": "PG",
+    "name": "Papua Yeni Gine"
+  },
+  {
+    "code": "PY",
+    "name": "Paraguay"
+  },
+  {
+    "code": "PE",
+    "name": "Peru"
+  },
+  {
+    "code": "PN",
+    "name": "Pitcairn Adaları"
+  },
+  {
+    "code": "PL",
+    "name": "Polonya"
+  },
+  {
+    "code": "PT",
+    "name": "Portekiz"
+  },
+  {
+    "code": "PR",
+    "name": "Porto Riko"
+  },
+  {
+    "code": "RE",
+    "name": "Reunion"
+  },
+  {
+    "code": "RO",
+    "name": "Romanya"
+  },
+  {
+    "code": "RW",
+    "name": "Ruanda"
+  },
+  {
+    "code": "RU",
+    "name": "Rusya"
+  },
+  {
+    "code": "EH",
+    "name": "Sahra Demokratik Arap Cumhuriyeti"
+  },
+  {
+    "code": "BL",
+    "name": "Saint Barthelemy"
+  },
+  {
+    "code": "SH",
+    "name": "Saint Helena"
+  },
+  {
+    "code": "KN",
+    "name": "Saint Kitts ve Nevis"
+  },
+  {
+    "code": "LC",
+    "name": "Saint Lucia"
+  },
+  {
+    "code": "MF",
+    "name": "Saint Martin"
+  },
+  {
+    "code": "PM",
+    "name": "Saint Pierre ve Miquelon"
+  },
+  {
+    "code": "VC",
+    "name": "Saint Vincent ve Grenadinler"
+  },
+  {
+    "code": "SM",
+    "name": "San Marino"
+  },
+  {
+    "code": "ST",
+    "name": "Sao Tome ve Principe"
+  },
+  {
+    "code": "SN",
+    "name": "Senegal"
+  },
+  {
+    "code": "SC",
+    "name": "Seyşeller"
+  },
+  {
+    "code": "RS",
+    "name": "Sırbistan"
+  },
+  {
+    "code": "SL",
+    "name": "Sierra Leone"
+  },
+  {
+    "code": "SG",
+    "name": "Singapur"
+  },
+  {
+    "code": "SX",
+    "name": "Sint Maarten"
+  },
+  {
+    "code": "SK",
+    "name": "Slovakya"
+  },
+  {
+    "code": "SI",
+    "name": "Slovenya"
+  },
+  {
+    "code": "SB",
+    "name": "Solomon Adaları"
+  },
+  {
+    "code": "SO",
+    "name": "Somali"
+  },
+  {
+    "code": "LK",
+    "name": "Sri Lanka"
+  },
+  {
+    "code": "SD",
+    "name": "Sudan"
+  },
+  {
+    "code": "SR",
+    "name": "Surinam"
+  },
+  {
+    "code": "SY",
+    "name": "Suriye"
+  },
+  {
+    "code": "SA",
+    "name": "Suudi Arabistan"
+  },
+  {
+    "code": "SJ",
+    "name": "Svalbard ve Jan Mayen"
+  },
+  {
+    "code": "CL",
+    "name": "Şili"
+  },
+  {
+    "code": "TJ",
+    "name": "Tacikistan"
+  },
+  {
+    "code": "TZ",
+    "name": "Tanzanya"
+  },
+  {
+    "code": "TH",
+    "name": "Tayland"
+  },
+  {
+    "code": "TW",
+    "name": "Tayvan"
+  },
+  {
+    "code": "TG",
+    "name": "Togo"
+  },
+  {
+    "code": "TK",
+    "name": "Tokelau"
+  },
+  {
+    "code": "TO",
+    "name": "Tonga"
+  },
+  {
+    "code": "TT",
+    "name": "Trinidad ve Tobago"
+  },
+  {
+    "code": "TN",
+    "name": "Tunus"
+  },
+  {
+    "code": "TC",
+    "name": "Turks ve Caicos Adaları"
+  },
+  {
+    "code": "TV",
+    "name": "Tuvalu"
+  },
+  {
+    "code": "TR",
+    "name": "Türkiye"
+  },
+  {
+    "code": "TM",
+    "name": "Türkmenistan"
+  },
+  {
+    "code": "UG",
+    "name": "Uganda"
+  },
+  {
+    "code": "UA",
+    "name": "Ukrayna"
+  },
+  {
+    "code": "OM",
+    "name": "Umman"
+  },
+  {
+    "code": "UY",
+    "name": "Uruguay"
+  },
+  {
+    "code": "JO",
+    "name": "Ürdün"
+  },
+  {
+    "code": "VU",
+    "name": "Vanuatu"
+  },
+  {
+    "code": "VA",
+    "name": "Vatikan"
+  },
+  {
+    "code": "VE",
+    "name": "Venezuela"
+  },
+  {
+    "code": "VN",
+    "name": "Vietnam"
+  },
+  {
+    "code": "VG",
+    "name": "Virjin Adaları"
+  },
+  {
+    "code": "WF",
+    "name": "Wallis ve Futuna Adaları Bölgesi"
+  },
+  {
+    "code": "YE",
+    "name": "Yemen"
+  },
+  {
+    "code": "NC",
+    "name": "Yeni Kaledonya"
+  },
+  {
+    "code": "NZ",
+    "name": "Yeni Zelanda"
+  },
+  {
+    "code": "CV",
+    "name": "Yeşil Burun"
+  },
+  {
+    "code": "GR",
+    "name": "Yunanistan"
+  },
+  {
+    "code": "ZM",
+    "name": "Zambiya"
+  },
+  {
+    "code": "ZW",
+    "name": "Zimbabve"
+  }
+];
+
+export const geoCountryNames = geoCountrySeeds.map((country) => country.name);

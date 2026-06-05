@@ -1,9 +1,8 @@
 import { useMemo } from "react";
-import { MapPin } from "lucide-react";
-import { useDiaspora, countryList } from "@/contexts/DiasporaContext";
-import { countryCities } from "@/data/countryCities";
+import { useDiaspora } from "@/contexts/DiasporaContext";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
+import { useGeoCountries } from "@/hooks/useGeo";
 
 interface Props {
   city: string;
@@ -13,30 +12,11 @@ interface Props {
 
 const CountryCitySelector = ({ city, onCityChange, className = "" }: Props) => {
   const { selectedCountry, setSelectedCountry } = useDiaspora();
+  const countriesQuery = useGeoCountries();
 
   const countriesWithAll = useMemo(
-    () => ["all", ...countryList],
-    [],
-  );
-
-  const cities = useMemo(
-    () =>
-      selectedCountry === "all"
-        ? Array.from(new Set(Object.values(countryCities).flat())).sort((a, b) =>
-            a.localeCompare(b, "tr"),
-          )
-        : countryCities[selectedCountry] || [],
-    [selectedCountry],
-  );
-
-  const allCitiesLabel =
-    selectedCountry === "all"
-      ? "Tüm Şehirler"
-      : `Tüm Şehirler — ${selectedCountry}`;
-
-  const citiesWithAll = useMemo(
-    () => ["all", ...cities],
-    [cities],
+    () => ["all", ...(countriesQuery.data ?? []).map((country) => country.name)],
+    [countriesQuery.data],
   );
 
   return (
@@ -51,15 +31,17 @@ const CountryCitySelector = ({ city, onCityChange, className = "" }: Props) => {
         placeholder="🌍 Tüm Ülkeler"
         size="sm"
         allowClear={false}
+        includeAllOptionLabel="🌍 Tüm Ülkeler"
       />
       <SearchableCitySelect
         value={city}
         onChange={onCityChange}
         countryName={selectedCountry === "all" ? undefined : selectedCountry}
-        cities={selectedCountry === "all" ? citiesWithAll : citiesWithAll}
-        placeholder={allCitiesLabel}
+        placeholder={selectedCountry === "all" ? "Önce ülke seçin" : `Tüm Şehirler — ${selectedCountry}`}
         size="sm"
         allowClear={false}
+        includeAllOptionLabel={selectedCountry === "all" ? undefined : `Tüm Şehirler — ${selectedCountry}`}
+        disabled={selectedCountry === "all"}
       />
     </div>
   );

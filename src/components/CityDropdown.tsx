@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { MapPin, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { countryCities } from "@/data/countryCities";
+import { useGeoCities } from "@/hooks/useGeo";
 
 interface CityDropdownProps {
   country: string;
@@ -13,11 +13,11 @@ interface CityDropdownProps {
 const CityDropdown = ({ country, city, onCityChange }: CityDropdownProps) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const citiesQuery = useGeoCities(country === "all" ? "" : country, country !== "all");
 
-  // Build city list based on country
   const cities = country === "all"
-    ? Array.from(new Set(Object.values(countryCities).flat())).sort((a, b) => a.localeCompare(b, 'tr'))
-    : (countryCities[country] || []);
+    ? []
+    : (citiesQuery.data ?? []).map((item) => item.name);
 
   const label = country === "all"
     ? (city === "all" ? "Tüm Şehirler" : city)
@@ -33,6 +33,7 @@ const CityDropdown = ({ country, city, onCityChange }: CityDropdownProps) => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  if (country === "all") return null;
   if (cities.length === 0) return null;
 
   return (

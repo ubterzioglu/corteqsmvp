@@ -6,10 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { allCountries, countryCities } from "@/data/countryCities";
 import { continents, continentList } from "@/data/continents";
 import { useIsPremium, FREE_COUNTRY_LIMIT } from "@/hooks/useIsPremium";
 import { toast } from "@/hooks/use-toast";
+import { useGeoCitiesForCountries, useGeoCountries } from "@/hooks/useGeo";
 
 interface Props {
   selectedCountries: string[];
@@ -29,27 +29,28 @@ const MultiCountryCityFilter = ({
   onContinentChange,
 }: Props) => {
   const isPremium = useIsPremium();
+  const countriesQuery = useGeoCountries();
   const [countrySearch, setCountrySearch] = useState("");
   const [citySearch, setCitySearch] = useState("");
+  const scopedCountries = useMemo(() => {
+    if (selectedContinent) return continents[selectedContinent] || [];
+    return selectedCountries;
+  }, [selectedContinent, selectedCountries]);
+  const scopedCitiesQuery = useGeoCitiesForCountries(scopedCountries, scopedCountries.length > 0);
 
   const filteredCountries = useMemo(
-    () => allCountries.filter((c) => c.toLowerCase().includes(countrySearch.toLowerCase())),
-    [countrySearch],
+    () => (countriesQuery.data ?? [])
+      .map((country) => country.name)
+      .filter((country) => country.toLowerCase().includes(countrySearch.toLowerCase())),
+    [countriesQuery.data, countrySearch],
   );
 
   const availableCities = useMemo(() => {
-    let source: string[];
-    if (selectedContinent) {
-      source = (continents[selectedContinent] || []).flatMap((c) => countryCities[c] || []);
-    } else if (selectedCountries.length > 0) {
-      source = selectedCountries.flatMap((c) => countryCities[c] || []);
-    } else {
-      source = Object.values(countryCities).flat();
-    }
+    const source = (scopedCitiesQuery.data ?? []).map((city) => city.name);
     return Array.from(new Set(source))
-      .filter((c) => c.toLowerCase().includes(citySearch.toLowerCase()))
-      .sort((a, b) => a.localeCompare(b, "tr"));
-  }, [selectedContinent, selectedCountries, citySearch]);
+      .filter((city) => city.toLowerCase().includes(citySearch.toLowerCase()))
+      .sort((left, right) => left.localeCompare(right, "tr"));
+  }, [citySearch, scopedCitiesQuery.data]);
 
   const toggleCountry = (val: string) => {
     const has = selectedCountries.includes(val);

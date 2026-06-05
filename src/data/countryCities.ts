@@ -1,5 +1,7 @@
-// Comprehensive world country → cities map (Turkish names where common).
-// Drives the global Country + City selectors and category page filters.
+import { geoCountryNames } from "@/data/geoCountries.generated";
+
+// Legacy fallback city map kept for non-DB/offline scenarios.
+// Live selectors should read from geo tables via src/lib/geo.ts.
 export const countryCities: Record<string, string[]> = {
   // Europe
   "Almanya": ["Berlin", "Münih", "Frankfurt", "Hamburg", "Düsseldorf", "Köln", "Stuttgart", "Bremen", "Hannover", "Leipzig", "Dortmund", "Essen", "Nürnberg"],
@@ -121,7 +123,5 @@ export const countryCities: Record<string, string[]> = {
   "Uganda": ["Kampala"],
 };
 
-// Sorted list of all countries
-export const allCountries = Object.keys(countryCities).sort((a, b) =>
-  a.localeCompare(b, "tr"),
-);
+// Full country list fallback sourced from generated global geo seed.
+export const allCountries = geoCountryNames;

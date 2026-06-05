@@ -14,8 +14,10 @@ import {
   type DirectoryRoleOption,
   type UnifiedDirectoryRow,
 } from "@/lib/catalog-directory";
+import { useGeoCountries } from "@/hooks/useGeo";
 
 const DirectoryPage = () => {
+  const countriesQuery = useGeoCountries();
   const [searchParams, setSearchParams] = useSearchParams();
   const [rows, setRows] = useState<UnifiedDirectoryRow[]>([]);
   const [roleOptions, setRoleOptions] = useState<DirectoryRoleOption[]>([]);
@@ -65,15 +67,6 @@ const DirectoryPage = () => {
     };
   }, [cityFilter, countryFilter, featuredOnly, roleFilter, searchText]);
 
-  const availableCountries = useMemo(
-    () => Array.from(new Set(rows.map((row) => row.country).filter(Boolean))),
-    [rows],
-  );
-  const availableCities = useMemo(
-    () => Array.from(new Set(rows.map((row) => row.city).filter(Boolean))),
-    [rows],
-  );
-
   const updateFilter = (key: string, value: string | null) => {
     const next = new URLSearchParams(searchParams);
     if (!value || value === "all") {
@@ -112,18 +105,21 @@ const DirectoryPage = () => {
             <SearchableCountrySelect
               value={countryFilter || "all"}
               onChange={(v) => updateFilter("country", v || "all")}
-              countries={["all", ...availableCountries as string[]]}
+              countries={["all", ...(countriesQuery.data ?? []).map((country) => country.name)]}
               placeholder="Ülke"
               size="sm"
               allowClear={false}
+              includeAllOptionLabel="Tüm Ülkeler"
             />
             <SearchableCitySelect
               value={cityFilter || "all"}
               onChange={(v) => updateFilter("city", v || "all")}
-              cities={["all", ...availableCities as string[]]}
-              placeholder="Şehir"
+              countryName={countryFilter || undefined}
+              placeholder={countryFilter ? `Tüm Şehirler - ${countryFilter}` : "Önce ülke seçin"}
               size="sm"
               allowClear={false}
+              includeAllOptionLabel={countryFilter ? `Tüm Şehirler - ${countryFilter}` : undefined}
+              disabled={!countryFilter}
             />
             <Button variant={featuredOnly ? "default" : "outline"} onClick={() => updateFilter("featured", featuredOnly ? null : "1")}>
               Featured

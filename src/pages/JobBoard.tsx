@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
 import { supabase } from "@/integrations/supabase/client";
-import { countryCities } from "@/data/countryCities";
 import JobApplyDialog from "@/components/JobApplyDialog";
+import { useGeoCities, useGeoCountries } from "@/hooks/useGeo";
 
 type Listing = {
   id: string;
@@ -32,6 +32,7 @@ type Listing = {
 };
 
 const JobBoard = () => {
+  const countriesQuery = useGeoCountries();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [country, setCountry] = useState<string>("all");
@@ -52,18 +53,14 @@ const JobBoard = () => {
     })();
   }, []);
 
-  const countries = useMemo(() => {
-    const set = new Set<string>();
-    listings.forEach((l) => l.country && set.add(l.country));
-    return Array.from(set).sort();
-  }, [listings]);
+  const countryCitiesQuery = useGeoCities(country === "all" ? "" : country, country !== "all");
 
   const cityOptions = useMemo(() => {
     if (country === "all") return [];
-    const fromData = (countryCities[country] || []).slice().sort();
+    const fromData = (countryCitiesQuery.data ?? []).map((cityItem) => cityItem.name);
     const fromListings = Array.from(new Set(listings.filter((l) => l.country === country).map((l) => l.city).filter(Boolean) as string[]));
     return Array.from(new Set([...fromData, ...fromListings])).sort();
-  }, [country, listings]);
+  }, [country, countryCitiesQuery.data, listings]);
 
   const filtered = useMemo(() => {
     const k = keyword.trim().toLowerCase();
@@ -111,20 +108,22 @@ const JobBoard = () => {
             <SearchableCountrySelect
               value={country === "all" ? "" : country}
               onChange={(v) => { setCountry(v || "all"); setCity("all"); }}
-              countries={["all", ...countries]}
+              countries={["all", ...(countriesQuery.data ?? []).map((countryItem) => countryItem.name)]}
               placeholder="Ülke"
               size="sm"
               allowClear={false}
+              includeAllOptionLabel="Tüm Ülkeler"
             />
             <SearchableCitySelect
               value={city === "all" ? "" : city}
               onChange={(v) => setCity(v || "all")}
-              cities={["all", ...cityOptions]}
+              cities={country === "all" ? [] : cityOptions}
               countryName={country === "all" ? undefined : country}
               placeholder={country === "all" ? "Önce ülke seçin" : `Tüm Şehirler - ${country}`}
               size="sm"
               allowClear={false}
               disabled={country === "all"}
+              includeAllOptionLabel={country === "all" ? undefined : `Tüm Şehirler - ${country}`}
             />
           </div>
           <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">

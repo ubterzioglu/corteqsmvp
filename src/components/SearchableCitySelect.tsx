@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/command";
 import { countryCities } from "@/data/countryCities";
 import { filterByQuery } from "@/lib/country-city-search";
+import { useGeoCities } from "@/hooks/useGeo";
 
 export interface SearchableCitySelectProps {
   value: string;
@@ -31,6 +32,8 @@ export interface SearchableCitySelectProps {
   label?: string;
   id?: string;
   name?: string;
+  includeAllOptionLabel?: string;
+  allOptionValue?: string;
 }
 
 const sizeClasses = {
@@ -51,20 +54,36 @@ const SearchableCitySelect = ({
   cities: externalCities,
   id,
   name,
+  includeAllOptionLabel,
+  allOptionValue = "all",
 }: SearchableCitySelectProps) => {
   const [open, setOpen] = useState(false);
+  const citiesQuery = useGeoCities(countryName ?? "", !externalCities);
 
   const cities = useMemo(() => {
     if (externalCities) return externalCities;
     if (!countryName) return [];
-    return countryCities[countryName] || [];
-  }, [externalCities, countryName]);
+    const liveCities = (citiesQuery.data ?? []).map((city) => city.name);
+    return liveCities.length > 0 ? liveCities : countryCities[countryName] || [];
+  }, [citiesQuery.data, countryName, externalCities]);
 
   const isDisabled = disabled || (!externalCities && !countryName);
 
-  const displayValue = value || "";
+  const displayValue = value === allOptionValue && includeAllOptionLabel
+    ? includeAllOptionLabel
+    : value || "";
 
-  const valueExists = value && cities.includes(value);
+  const optionList = useMemo(
+    () => {
+      const deduped = cities.filter((item, index) => cities.indexOf(item) === index);
+      return includeAllOptionLabel
+        ? [allOptionValue, ...deduped.filter((item) => item !== allOptionValue)]
+        : deduped;
+    },
+    [allOptionValue, cities, includeAllOptionLabel],
+  );
+
+  const valueExists = value && (value === allOptionValue || cities.includes(value));
 
   return (
     <div className={cn("relative", className)}>
@@ -131,7 +150,7 @@ const SearchableCitySelect = ({
                     <span className="italic">Mevcut: {value}</span>
                   </CommandItem>
                 )}
-                {cities.map((city) => (
+                {optionList.map((city) => (
                   <CommandItem
                     key={city}
                     value={city}
@@ -146,7 +165,7 @@ const SearchableCitySelect = ({
                         value === city ? "opacity-100" : "opacity-0",
                       )}
                     />
-                    {city}
+                    {city === allOptionValue ? includeAllOptionLabel : city}
                   </CommandItem>
                 ))}
               </CommandGroup>

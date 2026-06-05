@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/command";
 import { allCountries } from "@/data/countryCities";
 import { filterByQuery } from "@/lib/country-city-search";
+import { useGeoCountries } from "@/hooks/useGeo";
 
 export interface SearchableCountrySelectProps {
   value: string;
@@ -30,6 +31,8 @@ export interface SearchableCountrySelectProps {
   label?: string;
   id?: string;
   name?: string;
+  includeAllOptionLabel?: string;
+  allOptionValue?: string;
 }
 
 const sizeClasses = {
@@ -49,17 +52,29 @@ const SearchableCountrySelect = ({
   countries,
   id,
   name,
+  includeAllOptionLabel,
+  allOptionValue = "all",
 }: SearchableCountrySelectProps) => {
   const [open, setOpen] = useState(false);
-  const list = countries ?? allCountries;
+  const countriesQuery = useGeoCountries(!countries);
+  const liveCountries = useMemo(
+    () => (countriesQuery.data ?? []).map((country) => country.name),
+    [countriesQuery.data],
+  );
+  const list = countries ?? (liveCountries.length > 0 ? liveCountries : allCountries);
 
-  const displayValue = value || "";
+  const displayValue = value === allOptionValue && includeAllOptionLabel
+    ? includeAllOptionLabel
+    : value || "";
 
   const filteredList = useMemo(() => {
-    return list;
-  }, [list]);
+    const deduped = list.filter((item, index) => list.indexOf(item) === index);
+    return includeAllOptionLabel
+      ? [allOptionValue, ...deduped.filter((item) => item !== allOptionValue)]
+      : deduped;
+  }, [allOptionValue, includeAllOptionLabel, list]);
 
-  const valueExists = value && list.includes(value);
+  const valueExists = value && (value === allOptionValue || list.includes(value));
 
   return (
     <div className={cn("relative", className)}>
@@ -141,7 +156,7 @@ const SearchableCountrySelect = ({
                         value === country ? "opacity-100" : "opacity-0",
                       )}
                     />
-                    {country}
+                    {country === allOptionValue ? includeAllOptionLabel : country}
                   </CommandItem>
                 ))}
               </CommandGroup>

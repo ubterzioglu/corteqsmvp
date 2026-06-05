@@ -8,7 +8,6 @@ import Navbar from "@/components/Navbar";
 import CountryCitySelector from "@/components/CountryCitySelector";
 import { useDiaspora } from "@/contexts/DiasporaContext";
 import { consultants, cityAmbassadors } from "@/data/mock";
-import { countryCities } from "@/data/countryCities";
 import { useToast } from "@/hooks/use-toast";
 import { useFollow } from "@/hooks/useFollow";
 import DemoBadge from "@/components/DemoBadge";
@@ -212,12 +211,6 @@ const Consultants = () => {
     }
     setSearchParams(nextParams, { replace: true });
   };
-
-  // Only show cities when a country is selected
-  const activeCities = useMemo(() => {
-    if (country === "all") return [];
-    return countryCities[country] || [];
-  }, [country]);
 
   const activeFilter = categoryFilters.find((f) => f.key === category);
   const activeSubFilter = activeFilter?.subs?.find((s) => s.key === activeSub);
