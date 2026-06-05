@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import CatalogItemRuleManager from "@/components/admin/catalog/CatalogItemRuleManager";
 import RoleSearchSelect from "@/components/admin/RoleSearchSelect";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,22 +32,24 @@ const CatalogItemRolePanel = ({ itemId, currentRoleKey, roles, onRoleChanged }: 
 
   useEffect(() => {
     let isMounted = true;
-    setIsLoadingRules(true);
-    setErrorMessage(null);
+    const loadRules = async () => {
+      setIsLoadingRules(true);
+      setErrorMessage(null);
 
-    void getCatalogItemRules(itemId)
-      .then((nextRules) => {
+      try {
+        const nextRules = await getCatalogItemRules(itemId);
         if (isMounted) setRules(nextRules);
-      })
-      .catch((error) => {
+      } catch (error) {
         if (isMounted) {
           setRules(null);
           setErrorMessage(error instanceof Error ? error.message : "Kurallar alınamadı.");
         }
-      })
-      .finally(() => {
+      } finally {
         if (isMounted) setIsLoadingRules(false);
-      });
+      }
+    };
+
+    void loadRules();
 
     return () => {
       isMounted = false;
@@ -61,6 +64,7 @@ const CatalogItemRolePanel = ({ itemId, currentRoleKey, roles, onRoleChanged }: 
       const nextRoleKey = selectedRoleKey || null;
       await setCatalogItemRole(itemId, nextRoleKey);
       onRoleChanged(nextRoleKey);
+      setRules(await getCatalogItemRules(itemId));
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Rol güncellenemedi.");
     } finally {
@@ -93,10 +97,14 @@ const CatalogItemRolePanel = ({ itemId, currentRoleKey, roles, onRoleChanged }: 
         {isLoadingRules ? <p className="text-sm text-muted-foreground">Kurallar yükleniyor...</p> : null}
 
         {rules ? (
-          <div className="grid gap-3 md:grid-cols-3">
-            <RuleSummary title="Attributes" count={rules.attributes.length} values={rules.attributes.map((item) => item.label)} />
-            <RuleSummary title="Features" count={rules.features.length} values={rules.features.map((item) => item.label ?? item.key)} />
-            <RuleSummary title="Sections" count={rules.sections.length} values={rules.sections.map((item) => item.label ?? item.key)} />
+          <div className="space-y-4">
+            <div className="grid gap-3 md:grid-cols-3">
+              <RuleSummary title="Attributes" count={rules.attributes.length} values={rules.attributes.map((item) => item.label)} />
+              <RuleSummary title="Features" count={rules.features.length} values={rules.features.map((item) => item.label ?? item.key)} />
+              <RuleSummary title="Sections" count={rules.sections.length} values={rules.sections.map((item) => item.label ?? item.key)} />
+            </div>
+
+            <CatalogItemRuleManager itemId={itemId} rules={rules} onRulesChanged={setRules} />
           </div>
         ) : null}
       </CardContent>

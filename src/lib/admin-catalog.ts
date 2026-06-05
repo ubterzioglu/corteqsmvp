@@ -1,11 +1,16 @@
 import { supabase } from "@/integrations/supabase/client";
 import type {
+  AdminProfileSearchResult,
   AttributeOverrideConfig,
+  CatalogClaim,
   CatalogItemEditor,
   CatalogItemRules,
+  UnifiedRecord,
+  UnifiedRecordPage,
 } from "@/lib/catalog-types";
 
 export type AdminCatalogFilters = {
+  kind: "" | "catalog_item" | "profile";
   query: string;
   itemType: string;
   status: string;
@@ -134,6 +139,58 @@ type RawCatalogRow = {
   source_records?: RawCatalogSource[] | null;
 };
 
+type RawCatalogEditorRow = {
+  user_id: string;
+  role: CatalogItemEditor["membershipRole"];
+  status: CatalogItemEditor["status"];
+  created_at: string;
+  profiles?: { full_name?: string | null; email?: string | null } | { full_name?: string | null; email?: string | null }[] | null;
+};
+
+type RawUnifiedRecordRow = {
+  id: string;
+  kind: UnifiedRecord["kind"];
+  slug?: string | null;
+  item_type?: string | null;
+  title: string;
+  summary?: string | null;
+  status: string;
+  visibility?: string | null;
+  verification_status?: string | null;
+  platform_role_key?: string | null;
+  primary_city?: string | null;
+  primary_country_code?: string | null;
+  category_labels?: string[] | null;
+  source_types?: string[] | null;
+  created_at: string;
+  updated_at: string;
+  profile_type?: string | null;
+  email?: string | null;
+  total_count?: number | string | null;
+};
+
+type RawCatalogClaimRow = {
+  id: string;
+  item_id: string;
+  item_title: string;
+  requested_by_user_id: string;
+  requester_full_name: string;
+  requester_email?: string | null;
+  claim_type: string;
+  note?: string | null;
+  status: CatalogClaim["status"];
+  created_at: string;
+  reviewed_at?: string | null;
+  reviewed_by_user_id?: string | null;
+  reviewer_full_name?: string | null;
+};
+
+type RawProfileSearchRow = {
+  id: string;
+  full_name: string;
+  email?: string | null;
+};
+
 const ADMIN_CATALOG_SELECT = [
   "id",
   "item_type",
@@ -240,56 +297,55 @@ const mapCatalogRow = (row: RawCatalogRow): AdminCatalogDetail => {
   };
 };
 
-const normalizeFilterText = (value: string) => value.trim().toLocaleLowerCase("tr-TR");
+const normalizeProfile = (value: RawCatalogEditorRow["profiles"]) => {
+  if (Array.isArray(value)) return value[0] ?? null;
+  return value ?? null;
+};
 
-export function filterAdminCatalogItems(
-  items: AdminCatalogDetail[],
-  filters: AdminCatalogFilters,
-): AdminCatalogDetail[] {
-  const normalizedQuery = normalizeFilterText(filters.query);
-  const normalizedCity = normalizeFilterText(filters.city);
-  const normalizedCountryCode = normalizeFilterText(filters.countryCode);
+const mapUnifiedRecord = (row: RawUnifiedRecordRow): UnifiedRecord => ({
+  id: row.id,
+  kind: row.kind,
+  slug: normalizeString(row.slug) ?? null,
+  itemType: normalizeString(row.item_type) ?? null,
+  title: row.title,
+  summary: normalizeString(row.summary) ?? null,
+  status: row.status,
+  visibility: normalizeString(row.visibility) ?? null,
+  verificationStatus: normalizeString(row.verification_status) ?? null,
+  platformRoleKey: normalizeString(row.platform_role_key) ?? null,
+  primaryCity: normalizeString(row.primary_city) ?? null,
+  primaryCountryCode: normalizeString(row.primary_country_code) ?? null,
+  categoryLabels: Array.isArray(row.category_labels) ? row.category_labels.filter(Boolean) : [],
+  sourceTypes: Array.isArray(row.source_types) ? row.source_types.filter(Boolean) : [],
+  createdAt: row.created_at,
+  updatedAt: row.updated_at,
+  profileType: normalizeString(row.profile_type) ?? null,
+  email: normalizeString(row.email) ?? null,
+});
 
-  return items.filter((item) => {
-    if (filters.itemType && item.itemType !== filters.itemType) return false;
-    if (filters.status && item.status !== filters.status) return false;
-    if (filters.verificationStatus && item.verificationStatus !== filters.verificationStatus) return false;
+type CatalogRpcClient = {
+  rpc: (
+    functionName:
+      | "admin_set_catalog_item_role"
+      | "get_catalog_item_rules"
+      | "admin_upsert_catalog_item_attribute_override"
+      | "admin_delete_catalog_item_attribute_override"
+      | "admin_upsert_catalog_item_feature_override"
+      | "admin_delete_catalog_item_feature_override"
+      | "admin_upsert_catalog_item_section_override"
+      | "admin_delete_catalog_item_section_override"
+      | "admin_grant_catalog_editor"
+      | "admin_revoke_catalog_editor"
+      | "admin_approve_catalog_claim"
+      | "admin_reject_catalog_claim"
+      | "admin_list_catalog_claims"
+      | "admin_search_profiles"
+      | "admin_list_unified_records",
+    args: Record<string, unknown>,
+  ) => Promise<{ data: unknown; error: QueryError | null }>;
+};
 
-    if (
-      normalizedCity &&
-      !item.locations.some((location) => normalizeFilterText(location.city ?? "") === normalizedCity)
-    ) {
-      return false;
-    }
-
-    if (
-      normalizedCountryCode &&
-      !item.locations.some(
-        (location) => normalizeFilterText(location.countryCode ?? "") === normalizedCountryCode,
-      )
-    ) {
-      return false;
-    }
-
-    if (!normalizedQuery) return true;
-
-    const searchHaystack = [
-      item.title,
-      item.slug,
-      item.headline ?? "",
-      item.shortDescription ?? "",
-      item.longDescription ?? "",
-      item.primaryCity ?? "",
-      item.primaryCountryCode ?? "",
-      ...item.categoryLabels,
-      ...item.sourceTypes,
-    ]
-      .join(" ")
-      .toLocaleLowerCase("tr-TR");
-
-    return searchHaystack.includes(normalizedQuery);
-  });
-}
+const catalogRpcClient = supabase as unknown as CatalogRpcClient;
 
 export async function listAdminCatalogItemTypes(): Promise<AdminCatalogItemType[]> {
   const { data, error } = await (supabase
@@ -303,7 +359,7 @@ export async function listAdminCatalogItemTypes(): Promise<AdminCatalogItemType[
 
   if (error) throw error;
 
-  return (data ?? []).map((row: { key: string; label: string }) => ({
+  return (data ?? []).map((row) => ({
     key: row.key,
     label: row.label,
   }));
@@ -327,34 +383,58 @@ export async function listAdminCatalogRoles(): Promise<AdminCatalogRoleOption[]>
   }));
 }
 
-export async function listAdminCatalogItems(limit = 1000): Promise<AdminCatalogDetail[]> {
+export async function getAdminCatalogItemDetail(itemId: string): Promise<AdminCatalogDetail> {
   const { data, error } = await (supabase
     .from("catalog_items")
     .select(ADMIN_CATALOG_SELECT)
-    .order("created_at", { ascending: false })
-    .limit(limit) as unknown as Promise<{
-      data: RawCatalogRow[] | null;
+    .eq("id", itemId)
+    .single() as unknown as Promise<{
+      data: RawCatalogRow | null;
       error: QueryError | null;
     }>);
 
   if (error) throw error;
+  if (!data) {
+    throw new Error("Katalog kaydı bulunamadı.");
+  }
 
-  return (data ?? []).map(mapCatalogRow);
+  return mapCatalogRow(data);
 }
 
-type CatalogRpcClient = {
-  rpc: (
-    functionName:
-      | "admin_set_catalog_item_role"
-      | "get_catalog_item_rules"
-      | "admin_grant_catalog_editor"
-      | "admin_revoke_catalog_editor"
-      | "admin_approve_catalog_claim",
-    args: Record<string, unknown>,
-  ) => Promise<{ data: unknown; error: QueryError | null }>;
-};
+export async function listAdminUnifiedRecords({
+  page,
+  pageSize,
+  filters,
+}: {
+  page: number;
+  pageSize: number;
+  filters: AdminCatalogFilters;
+}): Promise<UnifiedRecordPage> {
+  const { data, error } = await catalogRpcClient.rpc("admin_list_unified_records", {
+    p_page: page,
+    p_page_size: pageSize,
+    p_kind: filters.kind || null,
+    p_query: filters.query.trim() || null,
+    p_item_type: filters.itemType || null,
+    p_status: filters.status || null,
+    p_verification_status: filters.verificationStatus || null,
+    p_city: filters.city.trim() || null,
+    p_country_code: filters.countryCode.trim() || null,
+  });
 
-const catalogRpcClient = supabase as unknown as CatalogRpcClient;
+  if (error) throw error;
+
+  const rows = (data as RawUnifiedRecordRow[] | null) ?? [];
+  const records = rows.map(mapUnifiedRecord);
+  const totalCount = Number(rows[0]?.total_count ?? 0);
+
+  return {
+    records,
+    totalCount,
+    page,
+    pageSize,
+  };
+}
 
 export async function setCatalogItemRole(itemId: string, roleKey: string | null): Promise<void> {
   const { error } = await catalogRpcClient.rpc("admin_set_catalog_item_role", {
@@ -382,22 +462,80 @@ export async function getCatalogItemRules(itemId: string): Promise<CatalogItemRu
   };
 }
 
-export async function upsertCatalogItemAttributeOverride(
+export async function setCatalogItemAttributeOverride(
   itemId: string,
   attributeKey: string,
   config: AttributeOverrideConfig,
 ): Promise<void> {
-  const { error } = await supabase.from("catalog_item_attribute_overrides").upsert(
-    {
-      item_id: itemId,
-      attribute_key: attributeKey,
-      is_enabled: config.isEnabled ?? true,
-      display_order: config.displayOrder ?? null,
-      override_label: config.overrideLabel ?? null,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "item_id,attribute_key" },
-  );
+  const { error } = await catalogRpcClient.rpc("admin_upsert_catalog_item_attribute_override", {
+    p_item_id: itemId,
+    p_attribute_key: attributeKey,
+    p_is_enabled: config.isEnabled ?? true,
+    p_display_order: config.displayOrder ?? null,
+    p_override_label: config.overrideLabel ?? null,
+  });
+
+  if (error) throw error;
+}
+
+export async function removeCatalogItemAttributeOverride(itemId: string, attributeKey: string): Promise<void> {
+  const { error } = await catalogRpcClient.rpc("admin_delete_catalog_item_attribute_override", {
+    p_item_id: itemId,
+    p_attribute_key: attributeKey,
+  });
+
+  if (error) throw error;
+}
+
+export async function setCatalogItemFeatureOverride(
+  itemId: string,
+  featureKey: string,
+  isEnabled: boolean,
+): Promise<void> {
+  const { error } = await catalogRpcClient.rpc("admin_upsert_catalog_item_feature_override", {
+    p_item_id: itemId,
+    p_feature_key: featureKey,
+    p_is_enabled: isEnabled,
+  });
+
+  if (error) throw error;
+}
+
+export async function removeCatalogItemFeatureOverride(itemId: string, featureKey: string): Promise<void> {
+  const { error } = await catalogRpcClient.rpc("admin_delete_catalog_item_feature_override", {
+    p_item_id: itemId,
+    p_feature_key: featureKey,
+  });
+
+  if (error) throw error;
+}
+
+export async function setCatalogItemSectionOverride(
+  itemId: string,
+  sectionKey: string,
+  {
+    isVisible,
+    displayOrder,
+  }: {
+    isVisible: boolean;
+    displayOrder?: number | null;
+  },
+): Promise<void> {
+  const { error } = await catalogRpcClient.rpc("admin_upsert_catalog_item_section_override", {
+    p_item_id: itemId,
+    p_section_key: sectionKey,
+    p_is_visible: isVisible,
+    p_display_order: displayOrder ?? null,
+  });
+
+  if (error) throw error;
+}
+
+export async function removeCatalogItemSectionOverride(itemId: string, sectionKey: string): Promise<void> {
+  const { error } = await catalogRpcClient.rpc("admin_delete_catalog_item_section_override", {
+    p_item_id: itemId,
+    p_section_key: sectionKey,
+  });
 
   if (error) throw error;
 }
@@ -428,18 +566,56 @@ export async function approveCatalogClaim(claimId: string): Promise<void> {
   if (error) throw error;
 }
 
-type RawCatalogEditorRow = {
-  user_id: string;
-  role: CatalogItemEditor["membershipRole"];
-  status: CatalogItemEditor["status"];
-  created_at: string;
-  profiles?: { full_name?: string | null; email?: string | null } | { full_name?: string | null; email?: string | null }[] | null;
-};
+export async function rejectCatalogClaim(claimId: string, reviewNote?: string | null): Promise<void> {
+  const { error } = await catalogRpcClient.rpc("admin_reject_catalog_claim", {
+    p_claim_id: claimId,
+    p_review_note: reviewNote ?? null,
+  });
 
-const normalizeProfile = (value: RawCatalogEditorRow["profiles"]) => {
-  if (Array.isArray(value)) return value[0] ?? null;
-  return value ?? null;
-};
+  if (error) throw error;
+}
+
+export async function listCatalogClaims(itemId: string, status?: CatalogClaim["status"] | ""): Promise<CatalogClaim[]> {
+  const { data, error } = await catalogRpcClient.rpc("admin_list_catalog_claims", {
+    p_item_id: itemId,
+    p_status: status || null,
+  });
+
+  if (error) throw error;
+
+  return ((data as RawCatalogClaimRow[] | null) ?? []).map((row) => ({
+    id: row.id,
+    itemId: row.item_id,
+    itemTitle: row.item_title,
+    requestedByUserId: row.requested_by_user_id,
+    requesterFullName: row.requester_full_name,
+    requesterEmail: normalizeString(row.requester_email) ?? null,
+    claimType: row.claim_type,
+    note: normalizeString(row.note) ?? null,
+    status: row.status,
+    createdAt: row.created_at,
+    reviewedAt: normalizeString(row.reviewed_at) ?? null,
+    reviewedByUserId: normalizeString(row.reviewed_by_user_id) ?? null,
+    reviewerFullName: normalizeString(row.reviewer_full_name) ?? null,
+  }));
+}
+
+export async function searchAdminProfiles(query: string, limit = 10): Promise<AdminProfileSearchResult[]> {
+  if (!query.trim()) return [];
+
+  const { data, error } = await catalogRpcClient.rpc("admin_search_profiles", {
+    p_query: query.trim(),
+    p_limit: limit,
+  });
+
+  if (error) throw error;
+
+  return ((data as RawProfileSearchRow[] | null) ?? []).map((row) => ({
+    id: row.id,
+    fullName: row.full_name,
+    email: normalizeString(row.email) ?? null,
+  }));
+}
 
 export async function listCatalogItemEditors(itemId: string): Promise<CatalogItemEditor[]> {
   const { data, error } = await (supabase

@@ -322,10 +322,44 @@ begin
     from public.catalog_item_memberships
     where item_id = (select id from public.catalog_items where slug = 'ankara-kebap-berlin')
       and user_id = '11111111-1111-1111-1111-111111111111'
-      and role = 'owner'
+      and role = 'editor'
       and status = 'active'
   ) then
-    raise exception 'Owner membership was not created after claim approval';
+    raise exception 'Editor membership was not created after claim approval';
+  end if;
+end;
+$$;
+
+select public.admin_upsert_catalog_item_feature_override(
+  (select id from public.catalog_items where slug = 'ankara-kebap-berlin'),
+  'directory.visible',
+  false
+);
+
+do $$
+begin
+  if not exists (
+    select 1
+    from public.catalog_item_feature_overrides
+    where item_id = (select id from public.catalog_items where slug = 'ankara-kebap-berlin')
+      and feature_key = 'directory.visible'
+      and is_enabled = false
+  ) then
+    raise exception 'Feature override RPC did not write expected record';
+  end if;
+end;
+$$;
+
+do $$
+declare
+  v_unified_count integer;
+begin
+  select count(*)
+  into v_unified_count
+  from public.admin_list_unified_records(1, 10, null, null, null, null, null, null, null);
+
+  if v_unified_count = 0 then
+    raise exception 'Unified admin RPC returned no rows';
   end if;
 end;
 $$;
@@ -408,6 +442,18 @@ $$;
 
 select set_config('request.jwt.claim.role', 'anon', true);
 select set_config('request.jwt.claim.sub', '', true);
+
+do $$
+begin
+  begin
+    perform public.admin_list_unified_records(1, 10, null, null, null, null, null, null, null);
+    raise exception 'Unauthenticated caller reached admin_list_unified_records';
+  exception
+    when sqlstate '42501' then
+      null;
+  end;
+end;
+$$;
 
 do $$
 begin
