@@ -221,7 +221,13 @@ describe("AdminCatalogPage", () => {
     expect(screen.getByText("KTG = Katalog")).toBeInTheDocument();
     expect(screen.getByText("YAY = Yayında")).toBeInTheDocument();
     expect(screen.getByText("RES = Resmi Kaynak")).toBeInTheDocument();
+    expect(screen.getByText("Kısaltma Rehberi")).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Rol" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /Tür Kısaltmaları/i }));
+    expect(
+      screen.getByText("CSV, import, manuel giriş veya başka kaynaklardan gelen katalog kayıtlarını temsil eder."),
+    ).toBeInTheDocument();
 
     const berlinRow = screen.getByText("Berlin Derneği").closest("tr");
     expect(berlinRow).not.toBeNull();

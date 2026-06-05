@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Database, MapPin, Search, SlidersHorizontal,
 import CatalogClaimRequestsPanel from "@/components/admin/catalog/CatalogClaimRequestsPanel";
 import CatalogItemEditorsPanel from "@/components/admin/catalog/CatalogItemEditorsPanel";
 import CatalogItemRolePanel from "@/components/admin/catalog/CatalogItemRolePanel";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,37 +27,102 @@ import {
 import type { UnifiedRecord } from "@/lib/catalog-types";
 
 const PAGE_SIZE = 50;
-const KIND_ABBREVIATIONS: Record<UnifiedRecord["kind"], { code: string; label: string }> = {
-  catalog_item: { code: "KTG", label: "Katalog" },
-  profile: { code: "KUL", label: "Kullanıcı" },
+type LegendItem = {
+  code: string;
+  label: string;
+  description: string;
 };
-const STATUS_ABBREVIATIONS: Record<string, { code: string; label: string }> = {
-  published: { code: "YAY", label: "Yayında" },
-  draft: { code: "TSL", label: "Taslak" },
-  pending_review: { code: "INC", label: "İncelemede" },
-  archived: { code: "ARS", label: "Arşiv" },
-  rejected: { code: "RED", label: "Reddedildi" },
-  directory_opted_in: { code: "DIZ", label: "Dizinde" },
-  private: { code: "GIZ", label: "Gizli" },
+
+const KIND_ABBREVIATIONS: Record<UnifiedRecord["kind"], LegendItem> = {
+  catalog_item: {
+    code: "KTG",
+    label: "Katalog",
+    description: "CSV, import, manuel giriş veya başka kaynaklardan gelen katalog kayıtlarını temsil eder.",
+  },
+  profile: {
+    code: "KUL",
+    label: "Kullanıcı",
+    description: "Doğrudan platform kullanıcısına ait profil kaydını temsil eder.",
+  },
 };
-const VERIFICATION_ABBREVIATIONS: Record<string, { code: string; label: string }> = {
-  unverified: { code: "YOK", label: "Doğrulama Yok" },
-  pending: { code: "BEK", label: "Beklemede" },
-  verified: { code: "DGR", label: "Doğrulandı" },
-  official_source: { code: "RES", label: "Resmi Kaynak" },
-  claimed: { code: "SHP", label: "Sahiplenildi" },
+const STATUS_ABBREVIATIONS: Record<string, LegendItem> = {
+  published: {
+    code: "YAY",
+    label: "Yayında",
+    description: "Kayıt yayına alınmış durumdadır; ilgili akışta görünür veya kullanılabilir kabul edilir.",
+  },
+  draft: {
+    code: "TSL",
+    label: "Taslak",
+    description: "Kayıt henüz tamamlanmamış ya da yayına hazır olmadığı için taslak olarak tutulur.",
+  },
+  pending_review: {
+    code: "INC",
+    label: "İncelemede",
+    description: "Kayıt admin ya da moderasyon incelemesi bekliyordur; karar süreci tamamlanmamıştır.",
+  },
+  archived: {
+    code: "ARS",
+    label: "Arşiv",
+    description: "Kayıt aktif kullanım akışından çıkarılmıştır ama geçmiş referansı için saklanır.",
+  },
+  rejected: {
+    code: "RED",
+    label: "Reddedildi",
+    description: "Kayıt veya süreç olumsuz kararla sonuçlanmıştır; tekrar değerlendirme gerekebilir.",
+  },
+  directory_opted_in: {
+    code: "DIZ",
+    label: "Dizinde",
+    description: "Kullanıcı profili dizinde görünmeyi seçmiştir ve listelemeye dahildir.",
+  },
+  private: {
+    code: "GIZ",
+    label: "Gizli",
+    description: "Kullanıcı profili listeleme veya dizin görünürlüğünü kapatmıştır.",
+  },
+};
+const VERIFICATION_ABBREVIATIONS: Record<string, LegendItem> = {
+  unverified: {
+    code: "YOK",
+    label: "Doğrulama Yok",
+    description: "Kaydın doğruluğu için henüz ek bir teyit veya kaynak onayı bulunmuyor.",
+  },
+  pending: {
+    code: "BEK",
+    label: "Beklemede",
+    description: "Doğrulama süreci başlamış ama henüz sonuçlandırılmamıştır.",
+  },
+  verified: {
+    code: "DGR",
+    label: "Doğrulandı",
+    description: "Kayıt platform içinde kontrol edilmiş ve yeterli doğrulama eşiğini geçmiştir.",
+  },
+  official_source: {
+    code: "RES",
+    label: "Resmi Kaynak",
+    description: "Kayıt resmi veya yüksek güvenilirlikli bir kaynaktan geldiği için güçlü doğrulama sinyali taşır.",
+  },
+  claimed: {
+    code: "SHP",
+    label: "Sahiplenildi",
+    description: "Kayıt ilgili kişi veya temsilci tarafından sahiplenme akışına girmiş ya da bağlanmıştır.",
+  },
 };
 const LEGEND_SECTIONS = [
   {
     title: "Tür",
+    summary: "Kaydın sistemde hangi ana varlık ailesine ait olduğunu gösterir.",
     items: Object.values(KIND_ABBREVIATIONS),
   },
   {
     title: "Durum",
+    summary: "Kaydın yayın, görünürlük veya moderasyon yaşam döngüsündeki anlık konumunu gösterir.",
     items: Object.values(STATUS_ABBREVIATIONS),
   },
   {
     title: "Doğrulama",
+    summary: "Kaydın güvenilirlik ve teyit düzeyini özetler.",
     items: Object.values(VERIFICATION_ABBREVIATIONS),
   },
 ] as const;
@@ -323,6 +389,42 @@ const AdminCatalogPage = () => {
                 </CardContent>
               </Card>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-slate-200 bg-white shadow-[0_18px_55px_-42px_rgba(15,23,42,0.24)]">
+          <CardHeader className="pb-3">
+            <CardTitle>Kısaltma Rehberi</CardTitle>
+            <CardDescription>
+              Tablodaki kısa kodlar alan kazanmak için kullanılır. Aşağıdan her kodun sistemde tam olarak neyi anlattığını açabilirsiniz.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Accordion type="single" collapsible className="w-full">
+              {LEGEND_SECTIONS.map((section) => (
+                <AccordionItem key={section.title} value={section.title.toLocaleLowerCase("tr-TR")} className="border-slate-200">
+                  <AccordionTrigger className="py-4 text-left text-sm font-semibold text-slate-900 hover:no-underline">
+                    <div className="space-y-1">
+                      <div>{section.title} Kısaltmaları</div>
+                      <div className="text-xs font-normal text-slate-500">{section.summary}</div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-4 pt-1">
+                    <div className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                      {section.items.map((item) => (
+                        <div key={`${section.title}-detail-${item.code}`} className="grid gap-1 md:grid-cols-[72px_160px_minmax(0,1fr)] md:items-start">
+                          <div className="inline-flex w-fit items-center rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-700">
+                            {item.code}
+                          </div>
+                          <div className="text-sm font-medium text-slate-900">{item.label}</div>
+                          <div className="text-sm leading-6 text-slate-600">{item.description}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </CardContent>
         </Card>
 
