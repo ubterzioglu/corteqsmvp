@@ -13,6 +13,7 @@ export type AdminCatalogFilters = {
   kind: "" | "catalog_item" | "profile";
   query: string;
   itemType: string;
+  platformRoleKey: string;
   status: string;
   verificationStatus: string;
   city: string;
@@ -416,6 +417,7 @@ export async function listAdminUnifiedRecords({
     p_kind: filters.kind || null,
     p_query: filters.query.trim() || null,
     p_item_type: filters.itemType || null,
+    p_platform_role_key: filters.platformRoleKey || null,
     p_status: filters.status || null,
     p_verification_status: filters.verificationStatus || null,
     p_city: filters.city.trim() || null,

@@ -31,6 +31,7 @@ const DEFAULT_FILTERS: AdminCatalogFilters = {
   kind: "",
   query: "",
   itemType: "",
+  platformRoleKey: "",
   status: "",
   verificationStatus: "",
   city: "",
@@ -280,7 +281,7 @@ const AdminCatalogPage = () => {
             </div>
           </CardHeader>
           <CardContent className="space-y-5">
-            <div className="grid gap-3 xl:grid-cols-[minmax(0,2fr)_repeat(6,minmax(0,1fr))]">
+            <div className="grid gap-3 xl:grid-cols-[minmax(0,2fr)_repeat(7,minmax(0,1fr))]">
               <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 shadow-inner">
                 <Search className="h-4 w-4 shrink-0 text-slate-400" />
                 <Input
@@ -313,6 +314,23 @@ const AdminCatalogPage = () => {
                   {itemTypes.map((itemType) => (
                     <SelectItem key={itemType.key} value={itemType.key}>
                       {itemType.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={filters.platformRoleKey || "__all__"}
+                onValueChange={(value) => handleFilterChange("platformRoleKey", value === "__all__" ? "" : value)}
+              >
+                <SelectTrigger aria-label="Rol filtresi">
+                  <SelectValue placeholder="Rol" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__all__">Tüm roller</SelectItem>
+                  {roles.map((role) => (
+                    <SelectItem key={role.key} value={role.key}>
+                      {role.label}
                     </SelectItem>
                   ))}
                 </SelectContent>

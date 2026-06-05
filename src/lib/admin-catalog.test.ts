@@ -80,6 +80,7 @@ describe("admin-catalog rpc wrappers", () => {
         kind: "",
         query: "berlin",
         itemType: "",
+        platformRoleKey: "",
         status: "",
         verificationStatus: "",
         city: "",
@@ -87,7 +88,13 @@ describe("admin-catalog rpc wrappers", () => {
       },
     });
 
-    expect(rpcMock).toHaveBeenCalledWith("admin_list_unified_records", expect.objectContaining({ p_query: "berlin" }));
+    expect(rpcMock).toHaveBeenCalledWith(
+      "admin_list_unified_records",
+      expect.objectContaining({
+        p_query: "berlin",
+        p_platform_role_key: null,
+      }),
+    );
     expect(result.totalCount).toBe(2);
     expect(result.records[0]).toMatchObject({
       id: "item-1",

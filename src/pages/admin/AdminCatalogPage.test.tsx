@@ -86,8 +86,12 @@ describe("AdminCatalogPage", () => {
   beforeEach(() => {
     toast.mockReset();
     listAdminCatalogItemTypesMock.mockResolvedValue([{ key: "organization", label: "Organization" }]);
-    listAdminCatalogRolesMock.mockResolvedValue([{ key: "Organization_Association", label: "Dernek" }]);
-    listAdminUnifiedRecordsMock.mockImplementation(({ filters }: { filters: { kind: string; query: string } }) => {
+    listAdminCatalogRolesMock.mockResolvedValue([
+      { key: "Organization_Association", label: "Dernek" },
+      { key: "Community_Leader", label: "Topluluk Lideri" },
+    ]);
+    listAdminUnifiedRecordsMock.mockImplementation(
+      ({ filters }: { filters: { kind: string; query: string; platformRoleKey?: string } }) => {
       let records = [...baseRecords];
 
       if (filters.kind) {
@@ -104,13 +108,18 @@ describe("AdminCatalogPage", () => {
         );
       }
 
+      if (filters.platformRoleKey) {
+        records = records.filter((record) => record.platformRoleKey === filters.platformRoleKey);
+      }
+
       return Promise.resolve({
         records,
         totalCount: records.length,
         page: 1,
         pageSize: 50,
       });
-    });
+      },
+    );
     getAdminCatalogItemDetailMock.mockResolvedValue({
       id: "item-1",
       itemType: "organization",
@@ -200,5 +209,22 @@ describe("AdminCatalogPage", () => {
     expect(await screen.findByText("Profil Özeti")).toBeInTheDocument();
     expect(screen.queryByRole("tab", { name: "Rol & Kurallar" })).not.toBeInTheDocument();
     expect(screen.getByText(/profile-uygun özet/i)).toBeInTheDocument();
+  });
+
+  it("filters rows by platform role", async () => {
+    render(<AdminCatalogPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Berlin Derneği")).toBeInTheDocument();
+      expect(screen.getByText("Ayşe Yılmaz")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole("combobox", { name: "Rol filtresi" }));
+    fireEvent.click(screen.getByRole("option", { name: "Dernek" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Berlin Derneği")).toBeInTheDocument();
+      expect(screen.queryByText("Ayşe Yılmaz")).not.toBeInTheDocument();
+    });
   });
 });

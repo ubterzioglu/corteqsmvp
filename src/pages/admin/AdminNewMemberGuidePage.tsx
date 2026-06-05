@@ -502,6 +502,110 @@ const blocks: GuideBlock[] = [
       },
     ],
   },
+  {
+    heading: "13. Sistem Mimarisi — 10 Maddelik Genel Özet",
+    tag: "Mimari",
+    sections: [
+      {
+        title: "1. Genel Model: Her Şey Bir Kayıt",
+        items: [
+          "Platformdaki tüm varlıklar — ister gerçek kullanıcı, ister CSV'den içe aktarılmış doktor listesi olsun — catalog_items veya profiles tablosundan birinde bir kayıt olarak yaşar.",
+          "Admin ekranında (/admin/data) her iki tablo admin_list_unified_records RPC aracılığıyla kind: 'catalog_item' | 'profile' ayrımıyla tek bir unified listede gösterilir.",
+          "Bir katalog kaydı gerçek bir kullanıcıya bağlandığında (person_profile_details.linked_profile_id) iki kayıt aynı kişiyi temsil eder ama birleştirilmez — bağlantı takip edilir.",
+        ],
+      },
+      {
+        title: "2. Rol Sistemi: 82 Rol, İki Katman",
+        items: [
+          "Platformda toplamda 82 aktif rol tanımlıdır (roles tablosu). Bunlar iki farklı katmanda kullanılır.",
+          "Auth kullanıcıları için (RolesGo sistemi): user_role_assignments tablosu. Legacy: user_profiles.profile_type alanı (bireysel, danisman, isletme, kurulus-dernek, blogger-vlogger-youtuber, sehir-elcisi). İki sistem şu an paralel yürür.",
+          "Katalog item'lar için: catalog_items.platform_role_key kolonu — doğrudan roles.key'e referans verir. Admin /admin/data → Rol & Kurallar tab'ından admin_set_catalog_item_role RPC ile atanır.",
+          "Rol aileleri: User (5), Admin (3), Consultant (11), Organization (8), Business (26), Healthcare (7), Event (3), Job (4), Community (5), Marketplace (5) + orijinal 6 legacy rol.",
+        ],
+      },
+      {
+        title: "3. Attribute Sistemi: Üç Katmanlı Form Alanı Modeli",
+        items: [
+          "attribute_catalog → Tüm sistemdeki attribute sözlüğü (key, label, data_type, is_active).",
+          "role_attribute_rules → Hangi attribute hangi rolde aktif? (is_enabled, is_required, is_public_default, user_can_edit, user_can_hide, requires_admin_approval_on_change, sort_order).",
+          "user_profile_attributes → Auth kullanıcısının gerçek değeri (value_text, value_json, visibility: public/private, approval_status).",
+          "catalog_item_attribute_overrides → Katalog item'ın rol kuralının üstüne yazan item-level istisna (is_enabled, display_order, override_label). isOverride rozeti inherited/override ayrımını gösterir.",
+          "Veri tipleri: text, textarea, json, multi_select (value_json array), boolean (value_json). approval_status akışı: draft → pending → approved | rejected.",
+        ],
+      },
+      {
+        title: "4. Feature Flag Sistemi: Üç Katmanlı Çözümleme",
+        items: [
+          "feature_catalog → Tüm feature sözlüğü (key, label, is_active_globally).",
+          "role_feature_flags → Hangi feature hangi rolde açık?",
+          "user_feature_overrides / catalog_item_feature_overrides → Kullanıcı veya item bazlı admin istisnası (her zaman kazanır).",
+          "Çözümleme önceliği (yüksekten düşüğe): 1. override, 2. role_default, 3. fallback (false).",
+          "Runtime'da get_current_user_features RPC çağrılır; her feature için { isEnabled, source } döner. RequireFeature bileşeni buna göre render eder.",
+        ],
+      },
+      {
+        title: "5. Profile Section Sistemi: Profil Bölümü Görünürlüğü",
+        items: [
+          "profile_section_catalog → Mevcut section'lar (key, label, section_area, sort_order, is_active).",
+          "role_profile_section_rules → Hangi section hangi rolde görünür? (is_enabled, sort_order).",
+          "catalog_item_section_overrides → Katalog item bazında görünürlük istisnası (is_visible, display_order).",
+          "selfSectionKeys — kullanıcının kendi düzenleme ekranındaki bölümler: summary, common_attributes, role_attributes, taxonomy, requests, dashboard.",
+          "publicSectionKeys — ziyaretçinin profil sayfasında gördükleri: hero, about, expertise/services/focus/platform/city, taxonomy, contact.",
+        ],
+      },
+      {
+        title: "6. Taxonomy Sistemi: Dinamik Kategori Seçimi",
+        items: [
+          "taxonomy_groups → Kategori grupları (örn: 'Uzmanlık Alanı', 'Sektör').",
+          "taxonomy_options → Grup içindeki seçenekler (örn: 'Fintech', 'Sağlık').",
+          "role_taxonomy_rules → Hangi grup hangi rolde aktif? Seçim modu (single/multiple).",
+          "user_taxonomy_selections → Kullanıcının seçtiği option'lar.",
+          "Rol değişiminde mevcut seçimler korunur ama yeni rolün aktif grupları farklılaşabilir. danisman rolü expertise_area grubunu zorunlu görebilirken bireysel görmez.",
+        ],
+      },
+      {
+        title: "7. Katalog Item Altyapısı: Unified Veri Modeli",
+        items: [
+          "8 item tipi: advisor, organization, business, event, marketplace_listing, job_posting, community_group, person_profile.",
+          "Her item tipine ait detay tablosu: advisor_details, business_details, event_details, job_posting_details, community_group_details, person_profile_details vb.",
+          "Yan tablolar: catalog_item_locations, catalog_item_contacts, catalog_item_media, catalog_item_links, catalog_item_categories, catalog_item_tags, catalog_item_services, source_records (hangi CSV/API'den geldi), catalog_audit_logs.",
+          "platform_role_key: Her item bir roles tablosu key'iyle eşleştirilir. Bu atama yapılınca o rolün attribute/feature/section kural seti item'a otomatik uygulanır.",
+        ],
+      },
+      {
+        title: "8. Claim (Sahiplenme) Mekanizması",
+        items: [
+          "Kullanıcı /directory/catalog/:slug sayfasında 'Sahiplen' butonuna basar → submit_catalog_claim_request RPC → catalog_claim_requests tablosuna 'pending' kayıt.",
+          "Admin /admin/data → item'ı aç → Talepler tab'ı → bekleyen talebi görür (talep eden kişi, tarih, not, statü).",
+          "Onayla → admin_approve_catalog_claim RPC → catalog_item_memberships'e 'editor' yetkisi verilir.",
+          "Reddet → admin_reject_catalog_claim RPC → kayıt değişmez.",
+          "Membership rolleri: owner, manager, editor, contributor, viewer. Admin ayrıca admin_grant_catalog_editor ile manuel editör ekleyebilir.",
+        ],
+      },
+      {
+        title: "9. Auth Kullanıcısı Akışı",
+        items: [
+          "Kayıt (/lansman veya /login) → Supabase Auth → profiles tablosuna kayıt (profile_type = 'bireysel' default).",
+          "Admin → /admin/new-member/users-roles → kullanıcıyı bul → Details → rol ata → admin_set_user_role RPC → user_role_assignments güncellenir.",
+          "Kullanıcının sonraki oturumunda get_current_user_features() yeni role göre döner → RequireFeature bileşeni feature durumuna göre UI render eder.",
+          "Auth katmanı: AuthProvider (session), RequireAuth (route guard), RequireFeature (feature guard), useFeatureFlags() (runtime RPC).",
+          "Dual sistem uyarısı: admin_users (eski) + user_profiles_v2 (yeni) eş zamanlı çalışıyor. Profil mantığına dokunmadan önce her ikisini kontrol et.",
+        ],
+      },
+      {
+        title: "10. Admin Operasyon Yüzeyi ve Kritik Kurallar",
+        items: [
+          "Loginli Üyeler & Roller (/admin/new-member/users-roles): Auth kullanıcısına rol atar, attribute düzenler.",
+          "Rol Yönetimi (/admin/new-member/role-management): Rol bazında attribute/feature/section kuralı tanımlar. Değişiklik o roldeki TÜM kayıtlara yansır.",
+          "Feature Override (/admin/new-member/overrides): Tek kullanıcıya özel feature istisnası.",
+          "Katalog Unified (/admin/data): Tüm catalog_item + profile kayıtları; rol ata, override ekle, claim yönet, editör ata.",
+          "Override ilk çözüm değil son çaredir. Aynı sorun birden fazla kayıtta varsa Rol Yönetimi'nde genel kuralı düzelt.",
+          "Katalog item'a rol atandıktan sonra o rolün kural tabloları doluysa attribute/feature/section listesi otomatik gelir; boşsa liste boş görünür — önce Rol Yönetimi'nde kuralları tanımla.",
+          "Supabase migration'ları asla silinmez veya yeniden sıralanmaz. SEO kilitli URL'ler (/lansman, /cadde, /19051919, /anket) değiştirilemez.",
+        ],
+      },
+    ],
+  },
 ];
 
 const AdminNewMemberGuidePage = () => {
