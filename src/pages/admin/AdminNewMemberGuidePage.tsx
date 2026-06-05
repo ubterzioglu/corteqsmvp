@@ -25,28 +25,28 @@ type GuideBlock = {
 
 const blocks: GuideBlock[] = [
   {
-    heading: "1. Yeni Sistemin Mantığı",
+    heading: "1. Sistemin Genel Mantığı",
     tag: "Genel Bakış",
     sections: [
       {
         title: "Temel çalışma prensibi",
         items: [
-          "Bu menü, yeni üye sistemindeki tüm operasyon ekranlarını tek bir akışta toplar.",
-          "Yeni yapıda önce üyeyi bulur, sonra rolünü kontrol eder, gerekiyorsa rol kurallarını düzenler, en sonda da gerçekten ihtiyaç varsa override verirsin.",
-          "Temel mantık şudur: genel kural önce rolde çözülür, tekil istisna gerekiyorsa override kullanılır.",
-          "Override'ı ilk çözüm olarak kullanma; önce rol seviyesinde çözülüp çözülemeyeceğine bak.",
-          "Aynı problem birden fazla kullanıcıda varsa genel kuralı Rol Yönetimi tarafında düzeltmek daha temizdir.",
+          "Platformdaki tüm kayıtlar — ister giriş yapmış kullanıcı profili, ister dışarıdan içe aktarılmış katalog kaydı olsun — artık tek bir unified veri modelinde toplanır.",
+          "Her kayda bir platform rolü atanır (örn: bireysel, danisman, doktor). Rol atanınca o role ait attribute, feature ve section kuralları otomatik olarak o kayda uygulanır.",
+          "Genel kural önce rol seviyesinde çözülür. Tekil istisna gerekiyorsa override kullanılır. Override ilk çözüm değil, son çaredir.",
+          "Aynı sorun birden fazla kayıtta varsa genel kuralı Rol Yönetimi ekranında düzelt; tüm o roldeki kayıtlar etkilenir.",
+          "Claim mekanizması: sahipsiz katalog kayıtları için kullanıcılar sahiplenme talebinde bulunabilir; admin onaylayınca o kullanıcı kaydı düzenleme yetkisi kazanır.",
         ],
       },
       {
-        title: "Önerilen çalışma sırası",
+        title: "Önerilen operasyon sırası",
         items: [
-          "1. Önce Üye Takibi veya ilgili operasyon kaydından kullanıcıyı bul.",
-          "2. Sonra Loginli Üyeler & Roller ekranında ana rol atamasını kontrol et.",
-          "3. Sorun rol kaynaklıysa Rol Yönetimi ekranında attribute, feature veya section satırını düzelt.",
-          "4. Sorun sadece tek kullanıcıya özelse Feature Override ile istisna ver.",
-          "5. Son kontrol için Roller Önizleme ve AFS Önizleme ekranlarından kayıt tanımlarını çapraz kontrol et.",
-          "6. Veri girişi veya toplu kaynak güncellemesi gerekiyorsa Onboarding Importları tarafına geç.",
+          "1. Kaydı bul — Loginli Üyeler & Roller veya Katalog ekranında kullanıcı ya da katalog item'ı ara.",
+          "2. Rolü kontrol et — Kaydın platform rolü doğru mu? Yanlışsa hemen düzelt.",
+          "3. Rol kurallarını kontrol et — Rol atanınca attribute, feature ve section'lar otomatik gelir. Eksik veya yanlış görünüyorsa Rol Yönetimi ekranına git.",
+          "4. Tekil istisna gerekiyorsa override ekle — Feature Override (kullanıcı için) veya Katalog item'ı üzerinde item-level override uygula.",
+          "5. Claim varsa incele ve onayla — Katalog ekranındaki Talepler tab'ından bekleyen claim'leri onayla; onaylanan kullanıcı editör yetkisi kazanır.",
+          "6. Toplu veri girişi gerekiyorsa Onboarding Importları ekranına geç.",
         ],
       },
     ],
@@ -58,25 +58,38 @@ const blocks: GuideBlock[] = [
       {
         title: "Yeni Üyeler menüsündeki ekranlar",
         items: [
-          "Üye Takibi: Tüm üye havuzunu, operasyon akışını ve genel üye incelemesini buradan yönetirsin.",
-          "Loginli Üyeler & Roller (/admin/new-member/users-roles): Login olmuş kullanıcının aktif rolünü görür, ana rol atamasını burada değiştirirsin. Kullanıcı detaylarını açarak attribute ve taxonomy düzenlemesi de yapabilirsin.",
-          "Rol Yönetimi (/admin/new-member/role-management): Rol bazında attribute, feature ve profile section kurallarını tek tabloda görür ve düzenlersin.",
-          "Feature Override (/admin/new-member/overrides): Sadece tek kullanıcı için rol varsayımını bozmadan özel feature istisnası verirsin.",
+          "Üye Takibi: Tüm üye havuzunu ve operasyon akışını buradan yönetirsin.",
+          "Loginli Üyeler & Roller (/admin/new-member/users-roles): Giriş yapmış kullanıcıların aktif rolünü görür, ana rol atamasını burada değiştirirsin. Kullanıcı detay dialogundan attribute ve taxonomy düzenlemesi de yapabilirsin.",
+          "Rol Yönetimi (/admin/new-member/role-management): Rol bazında attribute, feature ve profile section kurallarını tek tabloda görür ve düzenlersin. Bir rolde yaptığın değişiklik o roldeki TÜM kayıtlara yansır.",
+          "Feature Override (/admin/new-member/overrides): Sadece tek bir kullanıcı için rol varsayımını bozmadan özel feature istisnası tanımlarsın.",
           "Roller Önizleme (/admin/new-member/roles-preview): Sistemde tanımlı aktif rolleri sadece okunur şekilde kontrol edersin.",
           "AFS Önizleme (/admin/new-member/entity-preview): Attribute, Feature ve Section kataloglarını sadece okunur şekilde toplu olarak görürsün.",
-          "Onboarding Importları (/admin/new-member/onboarding-imports): Onboarding tarafından gelen veri setlerini, mapping mantığını ve import akışlarını yönetirsin.",
-          "Kullanım Klavuzu (/admin/new-member/guide): Bu ekranların hangi sırayla ve hangi durumda kullanılacağını hatırlarsın.",
+          "Onboarding Importları (/admin/new-member/onboarding-imports): Onboarding kaynaklı veri setlerini, mapping mantığını ve import akışlarını yönetirsin.",
+          "Kullanım Klavuzu (/admin/new-member/guide): Bu ekransın.",
+        ],
+      },
+      {
+        title: "Katalog Yönetimi ekranı (/admin/catalog)",
+        items: [
+          "Hem auth'lu kullanıcı profillerini (kind: profile) hem dışarıdan içe aktarılmış katalog kayıtlarını (kind: catalog_item) tek bir unified tabloda listeler.",
+          "Tür filtresiyle yalnızca katalog kayıtları veya yalnızca kullanıcı profilleri görüntülenebilir.",
+          "Satıra tıklayınca detay Sheet açılır: Genel Bilgiler, Rol & Kurallar, Düzenleyiciler, Talepler, Kaynaklar tab'ları vardır.",
+          "Rol & Kurallar tab'ından item'a platform rolü atayabilir; o rolün attribute/feature/section kurallarını görebilir ve item bazında override ekleyip kaldırabilirsin.",
+          "Talepler tab'ından o item için bekleyen claim'leri görür, approve veya reject edebilirsin.",
+          "Düzenleyiciler tab'ından item'ı düzenleme yetkisi olan kullanıcıları görebilir, arama ile yeni editör ekleyebilir veya mevcut yetkiyi iptal edebilirsin.",
         ],
       },
       {
         title: "Hangi durumda hangi ekrana gitmelisin?",
         items: [
-          "Kullanıcıya yanlış deneyim açılıyorsa önce Loginli Üyeler & Roller ekranında rol doğru mu diye bak.",
-          "Aynı sorun o roldeki herkesi etkiliyorsa Rol Yönetimi ekranına git ve genel kuralı orada düzelt.",
-          "Sorun sadece bir kişide varsa ve diğer aynı rol kullanıcılarında olmaması gerekiyorsa Feature Override kullan.",
-          "Rol adlarını, sluglarını veya açıklamalarını toplu kontrol etmek istiyorsan Roller Önizleme ekranına git.",
-          "Bir kaydın attribute mu feature mi section mı olduğunu hızlıca anlamak istiyorsan AFS Önizleme ekranına git.",
-          "Onboarding kaynaklı veri eksiği, toplu veri girişi veya import kontrolü gerekiyorsa Onboarding Importları ekranına git.",
+          "Kullanıcıya yanlış deneyim açılıyorsa → Loginli Üyeler & Roller ekranında rolü kontrol et.",
+          "Aynı sorun o roldeki herkesi etkiliyorsa → Rol Yönetimi ekranında genel kuralı düzelt.",
+          "Sorun sadece bir kullanıcıda varsa → Feature Override ile tekil istisna ver.",
+          "Katalog kaydına rol atamak veya attribute/feature/section override eklemek istiyorsan → Katalog ekranı → Rol & Kurallar tab'ı.",
+          "Claim taleplerini onaylamak istiyorsan → Katalog ekranı → Talepler tab'ı.",
+          "Rol adlarını veya açıklamalarını toplu kontrol etmek istiyorsan → Roller Önizleme.",
+          "Bir kaydın attribute mu feature mi section mı olduğunu anlamak istiyorsan → AFS Önizleme.",
+          "Onboarding kaynaklı veri eksiği veya toplu import gerekiyorsa → Onboarding Importları.",
         ],
       },
       {
@@ -112,10 +125,10 @@ const blocks: GuideBlock[] = [
       {
         title: "Rol Yönetimi ekranını nasıl okumalısın?",
         items: [
-          "Tablodaki A rozetleri attribute satırlarını temsil eder; bunlar form alanı davranışını yönetir.",
-          "Tablodaki F rozetleri feature satırlarını temsil eder; bunlar modül veya capability açık-kapalı durumunu yönetir.",
-          "Tablodaki S rozetleri profile section satırlarını temsil eder; bunlar profil kartında hangi bölümün nasıl göründüğünü yönetir.",
-          "Rol seçmeden katalog görünür; rol seçtiğinde aynı satırlar o role ait kurallarla edit moduna döner.",
+          "A rozetleri attribute satırlarını temsil eder — form alanı davranışını yönetir.",
+          "F rozetleri feature satırlarını temsil eder — modül veya capability açık/kapalı durumunu yönetir.",
+          "S rozetleri profile section satırlarını temsil eder — profil kartında hangi bölümün nasıl göründüğünü yönetir.",
+          "Rol seçmeden katalog görünür; rol seçince aynı satırlar o role ait kurallarla edit moduna döner.",
           "Bir değişikliği kaydetmeden önce bunun rol seviyesi genel kural mı yoksa tekil istisna mı olduğuna karar ver.",
           "Roller Önizleme ve AFS Önizleme ekranları düzenleme için değil, kontrol ve doğrulama içindir.",
         ],
@@ -166,11 +179,12 @@ const blocks: GuideBlock[] = [
         items: [
           "Legacy sistem: user_profiles.profile_type alanı kullanır. Değerler: bireysel, danisman, isletme, kurulus-dernek, blogger-vlogger-youtuber, sehir-elcisi.",
           "RolesGo sistemi (Mayıs 2026 MVP): roles ve user_role_assignments tabloları üzerinden çalışır.",
+          "Katalog kayıtları ise catalog_items.platform_role_key kolonu üzerinden rol alır; bu alan roles tablosundaki key'e referans verir.",
           "Profil kodu düzenlenirken her iki sistemin de kontrol edilmesi gerekir; tek sistem kanonikal hale gelene kadar ikisi paralel yürür.",
         ],
       },
       {
-        title: "6 rol tipi ve özellikleri",
+        title: "Platform rolleri ve amaçları",
         items: [
           "bireysel (individual) — Hizmet almak, etkinliklere katılmak ve diaspora ağını keşfetmek için. Birincil attribute: interests.",
           "danisman (consultant) — Uzmanlık sergilemek, hizmet sunmak, müşteri portföyü büyütmek için. Birincil attribute: expertise_area.",
@@ -178,25 +192,38 @@ const blocks: GuideBlock[] = [
           "kurulus-dernek (organization) — Topluluk, dernek veya resmi yapı yönetimi için. Birincil attribute: organization_type.",
           "blogger-vlogger-youtuber (influencer) — İçerik üretimi, kampanya katılımı, kitle büyütme için. Birincil attribute: main_platform.",
           "sehir-elcisi (ambassador) — Şehirde CorteQS ağını temsil etmek, topluluğu büyütmek için. Birincil attribute: ambassador_city.",
+          "Yeni roller (örn: doktor, dis-hekimi) katalog-specific roller olarak tanımlanabilir ve catalog_items.platform_role_key alanıyla atanır.",
         ],
       },
       {
-        title: "Rol atama süreci adım adım",
+        title: "Kullanıcıya rol atama süreci adım adım",
         items: [
           "1. /admin/new-member/users-roles ekranına git.",
           "2. Kullanıcıyı ada veya e-postaya göre ara.",
           "3. İlgili satırda 'Details' butonuna tıkla.",
           "4. Açılan dialog'da mevcut rol badge olarak görünür.",
           "5. RoleSearchSelect ile yeni rolü seç.",
-          "6. 'Tüm Değişiklikleri Kaydet' → admin_set_user_role RPC çağrısı → user_role_assignments güncellenir.",
+          "6. 'Tüm Değişiklikleri Kaydet' → admin_set_user_role RPC → user_role_assignments güncellenir.",
+          "7. Kullanıcının sonraki oturumunda get_current_user_features() yeni role göre döner.",
+        ],
+      },
+      {
+        title: "Katalog item'a rol atama süreci adım adım",
+        items: [
+          "1. /admin/catalog ekranına git.",
+          "2. İlgili katalog item'ını bul ve satıra tıkla.",
+          "3. Açılan Sheet'te 'Rol & Kurallar' tab'ına geç.",
+          "4. Rol seçiciden uygun rolü seç (örn: healthcare_advisor).",
+          "5. 'Rolü Kaydet' → admin_set_catalog_item_role RPC → catalog_items.platform_role_key güncellenir.",
+          "6. Rol kaydedilince o rolün attribute, feature ve section kuralları aynı tab'da otomatik olarak listelenir.",
         ],
       },
       {
         title: "Rol seçimi karar rehberi",
         items: [
-          "Kullanıcının TÜM deneyimi değişecekse → rolü burada değiştir.",
-          "Sadece tek bir izin farklı olsun istiyorsan → role dokunma, Feature Override ekranına git.",
-          "Rol değişimi sonrası profil formu sorunu var mı? → Attribute Yönetimi ekranını kontrol et.",
+          "Kullanıcının veya kaydın TÜM deneyimi değişecekse → rolü değiştir.",
+          "Sadece tek bir izin veya alan farklı olsun istiyorsan → role dokunma, override kullan.",
+          "Rol değişimi sonrası profil formu sorunu var mı? → Attribute ekranını kontrol et.",
           "Taxonomy seçim sorunu var mı? → Taxonomy Yönetimi ekranını kontrol et.",
           "Section görünüm sorunu var mı? → Profile Sections ekranını kontrol et.",
           "danisman ve isletme rollerinde taxonomy zorunlu alanları değişebilir; rol değişimi sonrası profili test et.",
@@ -211,8 +238,8 @@ const blocks: GuideBlock[] = [
       {
         title: "Çözümleme önceliği (yüksekten düşüğe)",
         items: [
-          "1. override — Bu kullanıcıya özel admin müdahalesi. Her zaman kazanır.",
-          "2. role_default — Kullanıcının rolünün varsayılan kuralı.",
+          "1. override — Bu kullanıcıya veya item'a özel admin müdahalesi. Her zaman kazanır.",
+          "2. role_default — Kullanıcının veya item'ın rolünün varsayılan kuralı.",
           "3. fallback — Ne override ne rol tanımı var; varsayılan değer false (kapalı).",
           "Kaynak nereden geldiğini öğrenmek için getFeatureSource('feature.key') kullanılır.",
           "Feature çözümü debug: kullanıcı feature göremiyorsa sırayla kontrol et → override var mı? → role_default var mı? → global kapalı mı?",
@@ -221,16 +248,16 @@ const blocks: GuideBlock[] = [
       {
         title: "Admin feature yönetimi — hangi işlem nerede?",
         items: [
-          "Rol için feature aç/kapat → /admin/new-member/roles-features → admin_set_role_feature_flag RPC → O roldeki TÜM kullanıcılar etkilenir.",
+          "Rol için feature aç/kapat → /admin/new-member/roles-features → admin_set_role_feature_flag RPC → O roldeki TÜM kayıtlar etkilenir.",
           "Tek kullanıcıya override ver → /admin/new-member/overrides → admin_set_user_feature_override_detailed RPC → Sadece o kullanıcı etkilenir.",
-          "Override temizle → aynı ekranda → admin_clear_user_feature_override RPC.",
+          "Katalog item'a feature override ver → /admin/catalog → Rol & Kurallar tab'ı → Feature listesinde toggle → admin_upsert_catalog_item_feature_override RPC.",
+          "Override temizle → aynı ekranlarda → admin_clear_user_feature_override veya admin_delete_catalog_item_feature_override RPC.",
           "Feature'ı dünya genelinde kapat → /admin/new-member/roles-features → admin_set_feature_global_state RPC.",
         ],
       },
       {
         title: "Feature kategorileri (referans)",
         items: [
-          "IndividualFeatureKey (legacy): individual.about, individual.service_requests, individual.events, individual.follows, individual.whatsapp, individual.messages, individual.activity, individual.cv_request, individual.job_seeking_badge, individual.moving_soon_badge, individual.volunteer_mentorship",
           "Profil: profile.view_own, profile.edit_own, profile.edit_public, profile.linkedin_card, profile.website_card, profile.cv_upload, profile.presentation_upload",
           "Directory: directory.visible, directory.featured",
           "İletişim: contact.receive, contact.show_whatsapp",
@@ -238,6 +265,7 @@ const blocks: GuideBlock[] = [
           "Üretim: events.create, offers.create, referral.create",
           "Platform: cadde.access, city.manage, whatsapp_landing.edit_assigned",
           "Sistem: admin.requires_approval",
+          "Legacy (individual): individual.about, individual.service_requests, individual.events, individual.follows, individual.whatsapp, individual.messages, individual.activity, individual.cv_request, individual.job_seeking_badge, individual.moving_soon_badge, individual.volunteer_mentorship",
         ],
       },
     ],
@@ -249,9 +277,20 @@ const blocks: GuideBlock[] = [
       {
         title: "Katmanlar (yukarıdan aşağıya)",
         items: [
-          "attribute_catalog — Ne tür attribute var? key, label, data_type, is_active alanları.",
+          "attribute_catalog — Ne tür attribute var? key, label, data_type, is_active alanları. Tüm sistemin temel sözlüğü.",
           "role_attribute_rules — Hangi role hangi attribute uygulanır? is_enabled, is_required, is_public_default, user_can_edit, user_can_hide, requires_admin_approval_on_change, sort_order.",
-          "user_profile_attributes — Kullanıcının gerçek değerleri: value_text, value_json, visibility (public/private), approval_status.",
+          "user_profile_attributes — Auth kullanıcısının gerçek değerleri: value_text, value_json, visibility (public/private), approval_status.",
+          "catalog_item_attribute_overrides — Katalog item'ın rol kuralının üstüne yazan item-level override: attribute_key, is_enabled, display_order, override_label. Rol kuralından gelmeyen attribute'ları da item'a ekleyebilir.",
+        ],
+      },
+      {
+        title: "Override mantığı (katalog item'lar için)",
+        items: [
+          "Inherited: Rol atanmış bir katalog item'ı, o rolün role_attribute_rules tablosundaki tüm aktif attribute'ları miras alır.",
+          "Override ekle: Admin Katalog ekranı → Rol & Kurallar → Attribute listesinde bir satırı toggle eder veya label/sıra düzenler → admin_upsert_catalog_item_attribute_override RPC çağrılır.",
+          "Override kaldır (varsayılana dön): Aynı listede override rozeti olan bir satırda 'Varsayılana dön' → admin_delete_catalog_item_attribute_override RPC.",
+          "isOverride rozeti: Listede bir satır role'den mi geliyor (inherited) yoksa item'a özel mi (override) olduğunu gösterir.",
+          "Override olmayan ama rol tarafından gelen kural değiştirilemez — ancak override eklenerek üstüne yazılabilir.",
         ],
       },
       {
@@ -265,7 +304,7 @@ const blocks: GuideBlock[] = [
         ],
       },
       {
-        title: "approval_status değerleri",
+        title: "approval_status değerleri (auth kullanıcı attribute'ları için)",
         items: [
           "draft — Kullanıcı henüz kaydetmedi.",
           "pending — Admin onayı bekleniyor; approval_requests tablosunda bir kayıt oluşur.",
@@ -274,7 +313,7 @@ const blocks: GuideBlock[] = [
         ],
       },
       {
-        title: "Admin attribute güncelleme akışı",
+        title: "Admin attribute güncelleme akışı (auth kullanıcısı için)",
         items: [
           "1. /admin/new-member/users-roles → 'Details' butonu.",
           "2. Attribute listesi yüklenir (attribute_catalog + user_profile_attributes join).",
@@ -295,7 +334,7 @@ const blocks: GuideBlock[] = [
           "taxonomy_groups — Kategori grupları. Örnek: 'Uzmanlık Alanı', 'Sektör'.",
           "taxonomy_options — Grup içindeki seçenekler. Örnek: 'Fintech', 'Sağlık'.",
           "role_taxonomy_rules — Hangi grubun hangi rolde aktif olduğu ve seçim modu (single/multiple).",
-          "user_taxonomy_selections — Kullanıcının seçtiği option'ların listesi.",
+          "user_taxonomy_selections — Auth kullanıcısının seçtiği option'ların listesi.",
         ],
       },
       {
@@ -318,6 +357,7 @@ const blocks: GuideBlock[] = [
         items: [
           "profile_section_catalog — Mevcut section'lar: key, label, section_area, sort_order, is_active.",
           "role_profile_section_rules — Hangi section hangi rolde görünür? is_enabled, requires_approval, sort_order.",
+          "catalog_item_section_overrides — Katalog item bazında section görünürlük override'ı: section_key, is_visible, display_order.",
         ],
       },
       {
@@ -330,25 +370,55 @@ const blocks: GuideBlock[] = [
       {
         title: "Admin yönetimi",
         items: [
-          "/admin/new-member/profile-sections ekranından section sıralaması ve aktiflik durumu yönetilir.",
+          "/admin/new-member/profile-sections ekranından auth kullanıcı section sıralaması ve aktiflik durumu yönetilir.",
           "admin_upsert_role_profile_section_rule RPC ile rol bazında section kuralları güncellenir.",
+          "Katalog item'lar için: /admin/catalog → Rol & Kurallar tab'ı → Section listesinde toggle → admin_upsert_catalog_item_section_override RPC.",
+          "Katalog item section override'ını kaldırmak için aynı listede 'Varsayılana dön' → admin_delete_catalog_item_section_override RPC.",
         ],
       },
     ],
   },
   {
-    heading: "10. Rehber (Directory) ve Katalog Sahiplenme",
+    heading: "10. Katalog Kayıtları ve Unified View",
     tag: "Katalog",
     sections: [
       {
-        title: "Nasıl çalışır?",
+        title: "Unified view nedir?",
         items: [
-          "Rehber (Directory) ekranı artık sadece kayıtlı kullanıcı profillerini değil, dışarıdan içe aktarılmış sahiplenilebilir 'Katalog (Catalog)' kayıtlarını da tek bir listede birleşik (unified) olarak gösterir.",
-          "Yeni rollere ait (Örn: Doktor, Diş Hekimi vb.) toplu veri yüklemeleri, geliştirici ekibi tarafından generic CSV importer aracıyla auth user yaratmadan, public katalog kayıtları olarak içeri alınır.",
-          "İçe aktarılan katalog kayıtlarının CSV'deki hangi sütunlarla (ad, iletişim, kategori vb.) eşleşeceği altyapıdaki 'catalog-role-import-map.json' kural dosyasından yönetilir.",
-          "Kullanıcılar henüz kimseye ait olmayan katalog kayıtlarını '/directory/catalog/:slug' özel detay sayfasında görüntüler.",
-          "Sisteme giriş yapmış üyeler, bu sayfadan 'Claim' (Sahiplen) butonunu kullanarak kaydın kendilerine ait olduğunu beyan edebilir (submit_catalog_claim_request).",
-          "Gelen sahiplenme (claim) talepleri, mevcut talep onay mekanizması üzerinden yönetici tarafından değerlendirilir ve onaylandığında kayıt üyenin profiline dönüşür.",
+          "Admin Katalog ekranı (/admin/catalog) hem auth kullanıcı profillerini (kind: profile) hem dışarıdan içe aktarılmış sahipsiz kayıtları (kind: catalog_item) tek bir tabloda gösterir.",
+          "Arka planda admin_list_unified_records RPC çalışır; catalog_items ve profiles tablolarını union all ile birleştirir.",
+          "Tür filtresiyle sadece katalog kayıtları (catalog_item) veya sadece kullanıcı profilleri (profile) gösterilebilir.",
+          "Server-side sayfalama desteklenir; sayfa başına maksimum 100 kayıt döner.",
+        ],
+      },
+      {
+        title: "Katalog kaydı nedir ve nasıl oluşur?",
+        items: [
+          "Katalog kaydı: sisteme auth kullanıcısı yaratılmadan, ham veri olarak içe aktarılan bir profildir. Örnek: CSV'den yüklenen doktor, diş hekimi listeleri.",
+          "İçe aktarma sırasında catalog-role-import-map.json kural dosyası hangi CSV sütununun hangi alana eşleşeceğini belirler.",
+          "Katalog kayıtları public olarak /directory/catalog/:slug adresinde görünür ve henüz bir kullanıcıya bağlı değildir.",
+          "Katalog kaydına platform rolü atandığında o rolün tüm attribute, feature ve section kuralları otomatik uygulanır.",
+        ],
+      },
+      {
+        title: "Claim (Sahiplenme) mekanizması",
+        items: [
+          "Giriş yapmış bir kullanıcı, kendine ait olduğunu düşündüğü bir katalog kaydının detay sayfasında 'Sahiplen' (Claim) butonuna basar.",
+          "Bu işlem submit_catalog_claim_request RPC'yi çağırır ve catalog_claim_requests tablosuna 'pending' statüsünde kayıt oluşturur.",
+          "Admin, /admin/catalog ekranında ilgili item'ı açar → Talepler tab'ına geçer → bekleyen claim'i görür.",
+          "Claim listesinde: talepte bulunanın adı, e-postası, claim tipi, notu, talep tarihi ve statüsü görünür.",
+          "Onayla → admin_approve_catalog_claim RPC → kullanıcıya 'editor' membership yetkisi verilir; katalog kaydı artık o kullanıcı tarafından düzenlenebilir hale gelir.",
+          "Reddet → admin_reject_catalog_claim RPC → talep reddedilir, kayıt değişmez.",
+        ],
+      },
+      {
+        title: "Editör yetki yönetimi",
+        items: [
+          "Katalog item'ın Düzenleyiciler tab'ında o kayda düzenleme yetkisi olan tüm kullanıcılar listelenir.",
+          "Membership rolleri: owner (tam yetki), manager, editor, contributor, viewer.",
+          "Admin kullanıcı adı veya e-posta arama ile yeni editör ekleyebilir (admin_grant_catalog_editor RPC).",
+          "Mevcut bir editörün yetkisini iptal etmek için aynı listede revoke işlemi yapılır (admin_revoke_catalog_editor RPC).",
+          "Claim onaylandığında editör yetkisi otomatik verilir; bu tab'dan takip edilebilir.",
         ],
       },
     ],
@@ -358,7 +428,7 @@ const blocks: GuideBlock[] = [
     tag: "Süreç Akışları",
     sections: [
       {
-        title: "Yeni üye kayıt ve rol atama süreci",
+        title: "Yeni auth kullanıcısı kayıt ve rol atama",
         items: [
           "1. Kullanıcı /lansman veya /login üzerinden kayıt olur.",
           "2. Supabase Auth → user oluşur → user_profiles tablosuna kayıt düşer (profile_type = 'bireysel' default).",
@@ -366,6 +436,28 @@ const blocks: GuideBlock[] = [
           "4. 'Details' → doğru rolü seç → 'Tüm Değişiklikleri Kaydet'.",
           "5. admin_set_user_role RPC → user_role_assignments güncellenir.",
           "6. Kullanıcının sonraki oturumunda get_current_user_features() yeni role göre döner.",
+        ],
+      },
+      {
+        title: "Katalog item oluşturma, rol atama ve kural yönetimi",
+        items: [
+          "1. Geliştirici ekibi CSV importer ile katalog kaydını catalog_items tablosuna yükler (platform_role_key boş veya CSV'den gelir).",
+          "2. Admin → /admin/catalog → ilgili katalog item'ını bul.",
+          "3. Satıra tıkla → Rol & Kurallar tab'ına geç → uygun rolü seç → 'Rolü Kaydet'.",
+          "4. Rol kaydedilince o rolün attribute, feature ve section'ları listelenir.",
+          "5. Gerekirse inherited kuralların üstüne item-level override ekle (toggle, label düzenleme).",
+          "6. Override kaldırmak için ilgili satırda 'Varsayılana dön' butonunu kullan.",
+        ],
+      },
+      {
+        title: "Claim onaylama ve editör yetkisi verme",
+        items: [
+          "1. Kullanıcı /directory/catalog/:slug sayfasında 'Sahiplen' butonuna basar.",
+          "2. Admin → /admin/catalog → ilgili item'ı aç → Talepler tab'ı.",
+          "3. Bekleyen talebi gör: talep eden kişi, tarih, not.",
+          "4. 'Onayla' butonuna bas → admin_approve_catalog_claim RPC → kullanıcıya editor membership verilir.",
+          "5. Düzenleyiciler tab'ından onaylanan kullanıcının editor olarak eklendiğini doğrula.",
+          "6. Gerekirse kullanıcının yetki seviyesini (editor → manager vb.) elle ayarla.",
         ],
       },
       {
@@ -379,14 +471,6 @@ const blocks: GuideBlock[] = [
           "6. RequireFeature bileşeni isFeatureEnabled() sonucuna göre children veya fallback render eder.",
         ],
       },
-      {
-        title: "Feature açma/kapama süreci",
-        items: [
-          "Tüm role uygula: /admin/new-member/roles-features → Rol seç → Feature aç/kapat → admin_set_role_feature_flag RPC.",
-          "Tek kullanıcıya override: /admin/new-member/overrides → Kullanıcı seç → Feature + değer + gerekçe → admin_set_user_feature_override_detailed RPC.",
-          "Dünya genelinde kapat: /admin/new-member/roles-features → Global Durum → admin_set_feature_global_state RPC.",
-        ],
-      },
     ],
   },
   {
@@ -397,10 +481,11 @@ const blocks: GuideBlock[] = [
         title: "Operasyon kuralları",
         items: [
           "Override'ı ilk çözüm olarak kullanma; önce rol seviyesinde çözülüp çözülemeyeceğine bak.",
-          "Aynı problem birden fazla kullanıcıda varsa genel kuralı Rol Yönetimi tarafında düzeltmek daha temizdir.",
-          "Roller Önizleme ve AFS Önizleme ekranları düzenleme için değil, kontrol ve doğrulama içindir.",
-          "Rol değişikliği yaptığında kullanıcının gerçek deneyimini mutlaka ilgili ekran veya profil akışında test et.",
-          "Onboarding import değişiklikleri canlı akışı etkileyebileceği için mapping ve hedef alan kontrolünü ikinci kez doğrulamak güvenlidir.",
+          "Aynı problem birden fazla kayıtta varsa genel kuralı Rol Yönetimi tarafında düzeltmek daha temizdir — her item'a tek tek override eklemek bakımı zorlaştırır.",
+          "Katalog item'a rol atamadan önce o rolün attribute/feature/section kural setini AFS Önizleme'den kontrol et.",
+          "Rol değişikliği yaptığında kaydın gerçek deneyimini profil akışında veya katalog detay sayfasında test et.",
+          "Claim onaylarken talep eden kullanıcının gerçekten o kayıtla ilgili biri olduğunu doğrula; gerekirse notu oku.",
+          "Onboarding import değişiklikleri canlı akışı etkileyebilir; mapping ve hedef alan kontrolünü ikinci kez doğrulamak güvenlidir.",
         ],
       },
       {
@@ -410,8 +495,9 @@ const blocks: GuideBlock[] = [
           "Supabase client çift kaynak: integrations/supabase/client.ts (tip tanımlı, tercih et) ve lib/supabase.ts (re-export). Yeni kod için integrations/ kullan.",
           "Supabase migration'ları asla sil veya yeniden sırala; sadece yeni migration ekle.",
           "SEO kilitli URL'ler: /lansman, /cadde, /19051919, /anket — bu path'leri değiştirme.",
-          "TypeScript strict: false kasıtlı. Yeni kod strict:true gibi yaz ama mevcut koda dokunurken hata bekle.",
-          "Feature çözümü debug: kullanıcı feature göremiyorsa sırayla kontrol et → override var mı? → role_default var mı? → global kapalı mı?",
+          "TypeScript strict: false kasıtlı. Yeni kod strict:true gibi yaz ama mevcut koda dokunurken tip hatası bekle.",
+          "catalog_items.platform_role_key değiştirildiğinde o item'a bağlı tüm override'lar korunur ama artık yeni rolle uyumsuz olabilir — rol değişimi sonrası override listesini gözden geçir.",
+          "Feature çözümü debug: kullanıcı veya katalog item feature göremiyorsa sırayla kontrol et → override var mı? → role_default var mı? → global kapalı mı?",
         ],
       },
     ],
@@ -427,9 +513,10 @@ const AdminNewMemberGuidePage = () => {
             Kullanım Klavuzu
           </h1>
           <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-            Yeni üyeler menüsündeki ekranların ne işe yaradığını, hangi durumda
-            hangisini kullanman gerektiğini, sistem mimarisini ve kritik
-            kısıtlamaları bu sayfada madde madde bulabilirsin.
+            Yeni üyeler menüsündeki ve katalog ekranlarındaki tüm operasyon
+            yüzeylerinin ne işe yaradığını, unified kayıt modelini, rol/attribute/feature/section
+            hiyerarşisini, claim mekanizmasını ve kritik kısıtlamaları bu sayfada
+            madde madde bulabilirsin.
           </p>
         </div>
 
