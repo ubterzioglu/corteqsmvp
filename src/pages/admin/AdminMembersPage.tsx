@@ -28,6 +28,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { isValidWhatsappPhone, normalizePhone } from "@/lib/lansman";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 import {
   categoryOptions,
   formatBytes,
@@ -195,6 +197,8 @@ const AdminMembersPage = () => {
   const [importOpen, setImportOpen] = useState(false);
   const [bulkOpen, setBulkOpen] = useState(false);
   const [importCsvText, setImportCsvText] = useState("");
+  const [createCountry, setCreateCountry] = useState("");
+  const [createCity, setCreateCity] = useState("");
 
   const action = searchParams.get("action");
 
@@ -645,11 +649,12 @@ const AdminMembersPage = () => {
             return <span className="text-xs">{row.original.city}</span>;
           }
           return (
-            <Input
-              className="h-8 text-xs"
+            <SearchableCitySelect
               value={rowDraft.city}
-              onClick={(event) => event.stopPropagation()}
-              onChange={(event) => setRowDraft((current) => (current ? { ...current, city: event.target.value } : current))}
+              onChange={(v) => setRowDraft((current) => (current ? { ...current, city: v } : current))}
+              countryName={rowDraft.country}
+              size="sm"
+              className="[&>button]:h-8 [&>button]:text-xs"
             />
           );
         },
@@ -1032,7 +1037,13 @@ const AdminMembersPage = () => {
             </div>
             <div className="space-y-1">
               <label className="text-[11px] text-muted-foreground">Şehir (metin)</label>
-              <Input className="h-8 text-xs" value={cityInput} onChange={(event) => setCityInput(event.target.value)} placeholder="şehir ara" />
+              <SearchableCitySelect
+                value={cityInput}
+                onChange={setCityInput}
+                placeholder="şehir ara"
+                size="sm"
+                allowClear={true}
+              />
             </div>
             <div className="space-y-1">
               <label className="text-[11px] text-muted-foreground">Durum (enum)</label>
@@ -1285,18 +1296,19 @@ const AdminMembersPage = () => {
                     </div>
                     <div className="space-y-1">
                       <label className="text-[11px] text-muted-foreground">Ülke</label>
-                      <Input
-                        className="h-8 text-xs"
+                      <SearchableCountrySelect
                         value={detailDraft.country}
-                        onChange={(event) => setDetailDraft((current) => (current ? { ...current, country: event.target.value } : current))}
+                        onChange={(v) => setDetailDraft((current) => (current ? { ...current, country: v, city: "" } : current))}
+                        size="sm"
                       />
                     </div>
                     <div className="space-y-1">
                       <label className="text-[11px] text-muted-foreground">Şehir</label>
-                      <Input
-                        className="h-8 text-xs"
+                      <SearchableCitySelect
                         value={detailDraft.city}
-                        onChange={(event) => setDetailDraft((current) => (current ? { ...current, city: event.target.value } : current))}
+                        onChange={(v) => setDetailDraft((current) => (current ? { ...current, city: v } : current))}
+                        countryName={detailDraft.country}
+                        size="sm"
                       />
                     </div>
                     <div className="space-y-1">
@@ -1521,8 +1533,21 @@ const AdminMembersPage = () => {
           </DialogHeader>
           <form className="space-y-3" onSubmit={(event) => void createMember(event)}>
             <Input name="fullname" placeholder="Ad Soyad" required />
-            <Input name="country" placeholder="Ülke" required />
-            <Input name="city" placeholder="Şehir" required />
+            <SearchableCountrySelect
+              value={createCountry}
+              onChange={(v) => { setCreateCountry(v); setCreateCity(""); }}
+              placeholder="Ülke"
+              size="sm"
+              name="country"
+            />
+            <SearchableCitySelect
+              value={createCity}
+              onChange={setCreateCity}
+              countryName={createCountry}
+              placeholder="Şehir"
+              size="sm"
+              name="city"
+            />
             <Input name="field" placeholder="Alan" required />
             <Input name="email" type="email" placeholder="E-posta" required />
             <Input name="phone" placeholder="Telefon" required />

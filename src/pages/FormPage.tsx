@@ -20,6 +20,8 @@ import {
 } from "@/lib/profile-onboarding-api";
 import { normalizePendingFormPayload } from "@/lib/profile-onboarding-normalize";
 import { pendingOnboardingFormSchema } from "@/lib/profile-onboarding-schemas";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 import {
   categoryOptions,
   getReadableErrorMessage,
@@ -53,6 +55,8 @@ const FormPage = () => {
   const [referralSource, setReferralSource] = useState("");
   const [referralDetail, setReferralDetail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [formCountry, setFormCountry] = useState("");
+  const [formCity, setFormCity] = useState("");
 
   useEffect(() => {
     document.dispatchEvent(new Event("render-complete"));
@@ -115,8 +119,8 @@ const FormPage = () => {
 
     assignInputValue("category", values.category);
     assignInputValue("fullname", values.fullname);
-    assignInputValue("country", values.country);
-    assignInputValue("city", values.city);
+    setFormCountry(values.country);
+    setFormCity(values.city);
     assignInputValue("business", values.business);
     assignInputValue("field", values.field);
     assignInputValue("email", values.email);
@@ -501,11 +505,24 @@ const FormPage = () => {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label htmlFor="country">Ülke</Label>
-              <Input id="country" name="country" placeholder="Almanya" required />
+              <SearchableCountrySelect
+                value={formCountry}
+                onChange={(v) => { setFormCountry(v); setFormCity(""); }}
+                placeholder="Almanya"
+                name="country"
+                id="country"
+              />
             </div>
             <div>
               <Label htmlFor="city">Şehir</Label>
-              <Input id="city" name="city" placeholder="Berlin" required />
+              <SearchableCitySelect
+                value={formCity}
+                onChange={setFormCity}
+                countryName={formCountry}
+                placeholder="Berlin"
+                name="city"
+                id="city"
+              />
             </div>
           </div>
 

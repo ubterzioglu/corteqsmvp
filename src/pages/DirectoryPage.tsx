@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 import {
   listDirectoryRoleOptions,
   listUnifiedDirectoryRows,
@@ -107,32 +109,22 @@ const DirectoryPage = () => {
                 ))}
               </SelectContent>
             </Select>
-            <Select value={countryFilter || "all"} onValueChange={(value) => updateFilter("country", value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Ülke" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tüm ülkeler</SelectItem>
-                {availableCountries.map((country) => (
-                  <SelectItem key={country} value={country ?? ""}>
-                    {country}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={cityFilter || "all"} onValueChange={(value) => updateFilter("city", value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Şehir" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tüm şehirler</SelectItem>
-                {availableCities.map((city) => (
-                  <SelectItem key={city} value={city ?? ""}>
-                    {city}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <SearchableCountrySelect
+              value={countryFilter || "all"}
+              onChange={(v) => updateFilter("country", v || "all")}
+              countries={["all", ...availableCountries as string[]]}
+              placeholder="Ülke"
+              size="sm"
+              allowClear={false}
+            />
+            <SearchableCitySelect
+              value={cityFilter || "all"}
+              onChange={(v) => updateFilter("city", v || "all")}
+              cities={["all", ...availableCities as string[]]}
+              placeholder="Şehir"
+              size="sm"
+              allowClear={false}
+            />
             <Button variant={featuredOnly ? "default" : "outline"} onClick={() => updateFilter("featured", featuredOnly ? null : "1")}>
               Featured
             </Button>

@@ -11,7 +11,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { allCountries, countryCities } from "@/data/countryCities";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
+import { allCountries } from "@/data/countryCities";
 
 interface PersonRow {
   id: string;
@@ -90,7 +92,7 @@ const DiasporaPeopleSearch = () => {
 
   const cities = country === "all"
     ? []
-    : (countryCities[country] || []);
+    : [];
 
   const filtered = useMemo(() => {
     return people.filter((p) => {
@@ -119,22 +121,23 @@ const DiasporaPeopleSearch = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-1.5">
-        <Select value={country} onValueChange={(v) => { setCountry(v); setCity("all"); }}>
-          <SelectTrigger className="h-7 text-[11px]"><SelectValue placeholder="Ülke" /></SelectTrigger>
-          <SelectContent className="max-h-64">
-            <SelectItem value="all">🌍 Tüm Ülkeler</SelectItem>
-            {allCountries.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-          </SelectContent>
-        </Select>
-        <Select value={city} onValueChange={setCity} disabled={country === "all"}>
-          <SelectTrigger className="h-7 text-[11px]">
-            <SelectValue placeholder={country === "all" ? "Şehir" : `Tüm Şehirler - ${country}`} />
-          </SelectTrigger>
-          <SelectContent className="max-h-64">
-            <SelectItem value="all">{country === "all" ? "Tüm Şehirler" : `Tüm Şehirler - ${country}`}</SelectItem>
-            {cities.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-          </SelectContent>
-        </Select>
+        <SearchableCountrySelect
+          value={country}
+          onChange={(v) => { setCountry(v); setCity("all"); }}
+          countries={["all", ...allCountries]}
+          placeholder="Ülke"
+          size="xs"
+          allowClear={false}
+        />
+        <SearchableCitySelect
+          value={city}
+          onChange={setCity}
+          countryName={country === "all" ? undefined : country}
+          placeholder={country === "all" ? "Şehir" : `Tüm Şehirler - ${country}`}
+          size="xs"
+          allowClear={false}
+          disabled={country === "all"}
+        />
         <Select value={profession} onValueChange={setProfession}>
           <SelectTrigger className="h-7 text-[11px]"><SelectValue placeholder="Meslek" /></SelectTrigger>
           <SelectContent className="max-h-64">

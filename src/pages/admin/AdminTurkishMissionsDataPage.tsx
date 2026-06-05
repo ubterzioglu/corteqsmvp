@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 import {
   ADMIN_TURKISH_MISSION_TYPES,
   createTurkishMissionAsAdmin,
@@ -434,13 +436,24 @@ export default function AdminTurkishMissionsDataPage() {
                 <Input value={form.parentMissionSlug} onChange={(event) => updateForm("parentMissionSlug", event.target.value)} placeholder="tc-berlin-buyukelcilik" />
               </Field>
               <Field label="Ülke">
-                <Input value={form.country} onChange={(event) => updateForm("country", event.target.value)} placeholder="Almanya" />
+                <SearchableCountrySelect
+                  value={form.country}
+                  onChange={(v) => updateForm("country", v)}
+                  placeholder="Almanya"
+                  size="sm"
+                />
               </Field>
               <Field label="Ülke Kodu">
                 <Input value={form.countryCode} onChange={(event) => updateForm("countryCode", event.target.value)} placeholder="DE" />
               </Field>
               <Field label="Şehir">
-                <Input value={form.city} onChange={(event) => updateForm("city", event.target.value)} placeholder="Berlin" />
+                <SearchableCitySelect
+                  value={form.city}
+                  onChange={(v) => updateForm("city", v)}
+                  countryName={form.country}
+                  placeholder="Berlin"
+                  size="sm"
+                />
               </Field>
               <Field label="Şehir Normalized">
                 <Input value={form.cityNormalized} onChange={(event) => updateForm("cityNormalized", event.target.value)} placeholder="berlin" />

@@ -54,6 +54,8 @@ import { defaultProfileType, getRoleMeta, isProfileType } from "@/lib/profile-ty
 import { validateCvFile, validatePresentationFile } from "@/lib/security";
 import { formatBytes } from "@/lib/submissions";
 import { supabase } from "@/integrations/supabase/client";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 
 type DraftValueMap = Record<string, string | boolean>;
 type DraftVisibilityMap = Record<string, AttributeVisibility>;
@@ -1263,11 +1265,20 @@ const ProfilePage = () => {
                           <label className="text-[10px] font-medium text-foreground">
                             {attribute.attributeKey === "country" ? "Ülke" : "Şehir"}
                           </label>
-                          <AttributeInput
-                            attribute={attribute}
-                            value={draftValues[attribute.attributeKey]}
-                            onChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
-                          />
+                          {attribute.attributeKey === "country" ? (
+                            <SearchableCountrySelect
+                              value={typeof draftValues[attribute.attributeKey] === "string" ? draftValues[attribute.attributeKey] : ""}
+                              onChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
+                              size="sm"
+                            />
+                          ) : (
+                            <SearchableCitySelect
+                              value={typeof draftValues[attribute.attributeKey] === "string" ? draftValues[attribute.attributeKey] : ""}
+                              onChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
+                              countryName={typeof draftValues["country"] === "string" ? draftValues["country"] : undefined}
+                              size="sm"
+                            />
+                          )}
                         </div>
                       ))}
                   </div>

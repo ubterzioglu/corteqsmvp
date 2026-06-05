@@ -16,6 +16,8 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 import {
   createIndependentProfileAsAdmin,
   listIndependentProfilesAsAdmin,
@@ -325,10 +327,21 @@ export default function AdminConsulateProfilesPage() {
               <Input value={form.subtitle} onChange={(event) => updateForm("subtitle", event.target.value)} placeholder="Kısa özet" />
             </Field>
             <Field label="Ülke">
-              <Input value={form.country} onChange={(event) => updateForm("country", event.target.value)} placeholder="İngiltere" />
+              <SearchableCountrySelect
+                value={form.country}
+                onChange={(v) => updateForm("country", v)}
+                placeholder="İngiltere"
+                size="sm"
+              />
             </Field>
             <Field label="Şehir">
-              <Input value={form.city} onChange={(event) => updateForm("city", event.target.value)} placeholder="Londra" />
+              <SearchableCitySelect
+                value={form.city}
+                onChange={(v) => updateForm("city", v)}
+                countryName={form.country}
+                placeholder="Londra"
+                size="sm"
+              />
             </Field>
             <Field label="Website">
               <Input value={form.websiteUrl} onChange={(event) => updateForm("websiteUrl", event.target.value)} placeholder="https://..." />

@@ -5,7 +5,8 @@ import Navbar from "@/components/Navbar";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 import { supabase } from "@/integrations/supabase/client";
 import { countryCities } from "@/data/countryCities";
 import JobApplyDialog from "@/components/JobApplyDialog";
@@ -107,20 +108,24 @@ const JobBoard = () => {
                 className="pl-9"
               />
             </div>
-            <Select value={country} onValueChange={(v) => { setCountry(v); setCity("all"); }}>
-              <SelectTrigger><SelectValue placeholder="Ülke" /></SelectTrigger>
-              <SelectContent className="z-50 bg-popover">
-                <SelectItem value="all">Tüm Ülkeler</SelectItem>
-                {countries.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-              </SelectContent>
-            </Select>
-            <Select value={city} onValueChange={setCity} disabled={country === "all"}>
-              <SelectTrigger><SelectValue placeholder={country === "all" ? "Önce ülke seçin" : `Tüm Şehirler - ${country}`} /></SelectTrigger>
-              <SelectContent className="z-50 bg-popover">
-                <SelectItem value="all">{country === "all" ? "Tüm Şehirler" : `Tüm Şehirler - ${country}`}</SelectItem>
-                {cityOptions.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-              </SelectContent>
-            </Select>
+            <SearchableCountrySelect
+              value={country === "all" ? "" : country}
+              onChange={(v) => { setCountry(v || "all"); setCity("all"); }}
+              countries={["all", ...countries]}
+              placeholder="Ülke"
+              size="sm"
+              allowClear={false}
+            />
+            <SearchableCitySelect
+              value={city === "all" ? "" : city}
+              onChange={(v) => setCity(v || "all")}
+              cities={["all", ...cityOptions]}
+              countryName={country === "all" ? undefined : country}
+              placeholder={country === "all" ? "Önce ülke seçin" : `Tüm Şehirler - ${country}`}
+              size="sm"
+              allowClear={false}
+              disabled={country === "all"}
+            />
           </div>
           <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
             <Filter className="h-3.5 w-3.5" />

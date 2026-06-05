@@ -11,11 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import ConsentCheckboxes, { emptyConsent, isConsentValid, type ConsentState } from "@/components/ConsentCheckboxes";
-
-const COUNTRIES = [
-  "Almanya", "Hollanda", "İngiltere", "Fransa", "ABD", "Kanada", "Avustralya",
-  "İsviçre", "Avusturya", "Belçika", "İsveç", "Norveç", "Danimarka"
-];
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 
 interface WelcomePackOrderFormProps {
   trigger?: React.ReactNode;
@@ -148,16 +145,20 @@ const WelcomePackOrderForm = ({
               <Label className="text-sm font-medium flex items-center gap-1.5">
                 <MapPin className="h-3.5 w-3.5" /> Ülke *
               </Label>
-              <Select value={form.country} onValueChange={v => update("country", v)}>
-                <SelectTrigger><SelectValue placeholder="Ülke seçin" /></SelectTrigger>
-                <SelectContent>
-                  {COUNTRIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-                </SelectContent>
-              </Select>
+              <SearchableCountrySelect
+                value={form.country}
+                onChange={(v) => update("country", v)}
+                placeholder="Ülke seçin"
+              />
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-medium">Şehir</Label>
-              <Input placeholder="Örn: Berlin" value={form.city} onChange={e => update("city", e.target.value)} />
+              <SearchableCitySelect
+                value={form.city}
+                onChange={(v) => update("city", v)}
+                countryName={form.country}
+                placeholder="Örn: Berlin"
+              />
             </div>
           </div>
 

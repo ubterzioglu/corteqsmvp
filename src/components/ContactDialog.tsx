@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 
 const schema = z.object({
   full_name: z.string().trim().min(2, "İsim en az 2 karakter").max(120),
@@ -80,12 +82,21 @@ const ContactDialog = ({ trigger, className }: Props) => {
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <Label htmlFor="cm-country">Ülke</Label>
-              <Input id="cm-country" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} maxLength={80} />
+              <Label>Ülke</Label>
+              <SearchableCountrySelect
+                value={form.country}
+                onChange={(v) => setForm({ ...form, country: v, city: "" })}
+                placeholder="Ülke seçin"
+              />
             </div>
             <div>
-              <Label htmlFor="cm-city">Şehir</Label>
-              <Input id="cm-city" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} maxLength={80} />
+              <Label>Şehir</Label>
+              <SearchableCitySelect
+                value={form.city}
+                onChange={(v) => setForm({ ...form, city: v })}
+                countryName={form.country}
+                placeholder="Şehir seçin"
+              />
             </div>
           </div>
           <div>

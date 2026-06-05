@@ -22,6 +22,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { INDIVIDUAL_FEATURE_KEYS, type IndividualFeatureMeta } from "@/lib/features";
 import type { IndividualProfileDetailsCore, IndividualProfileUpdateInput } from "@/lib/individual-profile";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 
 type IndividualProfileCardsProps = {
   details: IndividualProfileDetailsCore;
@@ -462,11 +464,20 @@ export const IndividualProfileCards = ({
                     </div>
                     <div className="space-y-1">
                       <Label className="text-xs">Ülke</Label>
-                      <Input value={settingsForm.country} onChange={(event) => setSettingsForm((current) => ({ ...current, country: event.target.value }))} />
+                      <SearchableCountrySelect
+                        value={settingsForm.country}
+                        onChange={(v) => setSettingsForm((current) => ({ ...current, country: v, city: "" }))}
+                        size="sm"
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label className="text-xs">Şehir</Label>
-                      <Input value={settingsForm.city} onChange={(event) => setSettingsForm((current) => ({ ...current, city: event.target.value }))} />
+                      <SearchableCitySelect
+                        value={settingsForm.city}
+                        onChange={(v) => setSettingsForm((current) => ({ ...current, city: v }))}
+                        countryName={settingsForm.country}
+                        size="sm"
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label className="text-xs">Kaç Yıldır Burada</Label>

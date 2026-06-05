@@ -707,7 +707,7 @@ const AdminCatalogPage = () => {
       </div>
 
       <Sheet open={Boolean(selectedRecord)} onOpenChange={(open) => (!open ? setSelectedRecord(null) : undefined)}>
-        <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-2xl">
+        <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
           {selectedRecord ? (
             selectedRecord.kind === "catalog_item" ? (
               selectedCatalogDetail ? (

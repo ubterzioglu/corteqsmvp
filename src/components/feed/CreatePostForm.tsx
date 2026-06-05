@@ -2,14 +2,8 @@ import { useState, useEffect } from "react";
 import { Send, MapPin, Globe, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { allCountries, countryCities } from "@/data/countryCities";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
@@ -55,7 +49,7 @@ const CreatePostForm = ({ onCreated, cafeId }: Props) => {
     })();
   }, [user]);
 
-  const cities = country ? countryCities[country] || [] : [];
+  const cities = [];
 
   const submit = async () => {
     if (!user) {
@@ -147,32 +141,23 @@ const CreatePostForm = ({ onCreated, cafeId }: Props) => {
             >
               <Globe className="h-3.5 w-3.5" /> {globalOnly ? "Global'de yayınla ✓" : "Sadece Global"}
             </button>
-            <Select
+            <SearchableCountrySelect
               value={country}
-              onValueChange={(v) => { setCountry(v); setCity(""); setGlobalOnly(false); }}
+              onChange={(v) => { setCountry(v); setCity(""); setGlobalOnly(false); }}
+              placeholder="@Ülke seç"
+              size="sm"
+              className="w-44"
               disabled={globalOnly}
-            >
-              <SelectTrigger className="h-9 text-xs w-44">
-                <Globe className="h-3.5 w-3.5 text-primary mr-1" />
-                <SelectValue placeholder="@Ülke seç" />
-              </SelectTrigger>
-              <SelectContent className="max-h-60">
-                {allCountries.map((c) => (
-                  <SelectItem key={c} value={c}>@{c}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={city} onValueChange={(v) => { setCity(v); setGlobalOnly(false); }} disabled={!country || globalOnly}>
-              <SelectTrigger className="h-9 text-xs w-44">
-                <MapPin className="h-3.5 w-3.5 text-turquoise mr-1" />
-                <SelectValue placeholder="@Şehir seç" />
-              </SelectTrigger>
-              <SelectContent className="max-h-60">
-                {cities.map((c) => (
-                  <SelectItem key={c} value={c}>@{c}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            />
+            <SearchableCitySelect
+              value={city}
+              onChange={(v) => { setCity(v); setGlobalOnly(false); }}
+              countryName={country}
+              placeholder="@Şehir seç"
+              size="sm"
+              className="w-44"
+              disabled={!country || globalOnly}
+            />
             {!globalOnly && (country || city) && (
               <div className="flex items-center gap-1 text-[11px] flex-wrap">
                 {city && <span className="px-1.5 py-0.5 rounded-full bg-turquoise/10 text-turquoise font-semibold">@{city}</span>}

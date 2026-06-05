@@ -14,13 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { allCountries, countryCities } from "@/data/countryCities";
 import { continents } from "@/data/continents";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsPremium } from "@/hooks/useIsPremium";
 import { toast } from "@/hooks/use-toast";
 import { moderateCafeName } from "@/lib/cafeNameModeration";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 
 const THEME_SUGGESTIONS = [
   "IT",
@@ -62,7 +63,6 @@ const CreateCafeForm = ({ trigger, onCreated, ambassadorMode = false }: Props) =
   const [entryQuestion, setEntryQuestion] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const cities = country ? countryCities[country] || [] : [];
   const continentList = Object.keys(continents);
   const capacity = ambassadorMode ? 500 : (duration >= 4 ? 300 : 100);
 
@@ -219,21 +219,23 @@ const CreateCafeForm = ({ trigger, onCreated, ambassadorMode = false }: Props) =
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <Label className="text-[11px]">Ülke</Label>
-                    <Select value={country} onValueChange={(v) => { setCountry(v); setCity(""); }}>
-                      <SelectTrigger><SelectValue placeholder="Seç" /></SelectTrigger>
-                      <SelectContent className="max-h-60">
-                        {allCountries.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
+                    <SearchableCountrySelect
+                      value={country}
+                      onChange={(v) => { setCountry(v); setCity(""); }}
+                      placeholder="Seç"
+                      size="sm"
+                    />
                   </div>
                   <div>
                     <Label className="text-[11px] flex items-center gap-1"><MapPin className="h-3 w-3" /> Şehir</Label>
-                    <Select value={city} onValueChange={setCity} disabled={!country}>
-                      <SelectTrigger><SelectValue placeholder="Seç" /></SelectTrigger>
-                      <SelectContent className="max-h-60">
-                        {cities.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
+                    <SearchableCitySelect
+                      value={city}
+                      onChange={setCity}
+                      countryName={country}
+                      placeholder="Seç"
+                      size="sm"
+                      disabled={!country}
+                    />
                   </div>
                 </div>
               </div>
