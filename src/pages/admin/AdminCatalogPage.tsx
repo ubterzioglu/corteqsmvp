@@ -26,6 +26,40 @@ import {
 import type { UnifiedRecord } from "@/lib/catalog-types";
 
 const PAGE_SIZE = 50;
+const KIND_ABBREVIATIONS: Record<UnifiedRecord["kind"], { code: string; label: string }> = {
+  catalog_item: { code: "KTG", label: "Katalog" },
+  profile: { code: "KUL", label: "Kullanıcı" },
+};
+const STATUS_ABBREVIATIONS: Record<string, { code: string; label: string }> = {
+  published: { code: "YAY", label: "Yayında" },
+  draft: { code: "TSL", label: "Taslak" },
+  pending_review: { code: "INC", label: "İncelemede" },
+  archived: { code: "ARS", label: "Arşiv" },
+  rejected: { code: "RED", label: "Reddedildi" },
+  directory_opted_in: { code: "DIZ", label: "Dizinde" },
+  private: { code: "GIZ", label: "Gizli" },
+};
+const VERIFICATION_ABBREVIATIONS: Record<string, { code: string; label: string }> = {
+  unverified: { code: "YOK", label: "Doğrulama Yok" },
+  pending: { code: "BEK", label: "Beklemede" },
+  verified: { code: "DGR", label: "Doğrulandı" },
+  official_source: { code: "RES", label: "Resmi Kaynak" },
+  claimed: { code: "SHP", label: "Sahiplenildi" },
+};
+const LEGEND_SECTIONS = [
+  {
+    title: "Tür",
+    items: Object.values(KIND_ABBREVIATIONS),
+  },
+  {
+    title: "Durum",
+    items: Object.values(STATUS_ABBREVIATIONS),
+  },
+  {
+    title: "Doğrulama",
+    items: Object.values(VERIFICATION_ABBREVIATIONS),
+  },
+] as const;
 
 const DEFAULT_FILTERS: AdminCatalogFilters = {
   kind: "",
@@ -60,7 +94,18 @@ const compactList = (values: string[], fallback = "-") => {
   return values.join(", ");
 };
 
-const kindLabel = (kind: UnifiedRecord["kind"]) => (kind === "catalog_item" ? "Katalog" : "Kullanıcı");
+const kindLabel = (kind: UnifiedRecord["kind"]) => KIND_ABBREVIATIONS[kind].label;
+const getKindCode = (kind: UnifiedRecord["kind"]) => KIND_ABBREVIATIONS[kind].code;
+const getStatusCode = (status: string) => STATUS_ABBREVIATIONS[status]?.code ?? formatLabel(status);
+const getStatusLabel = (status: string) => STATUS_ABBREVIATIONS[status]?.label ?? formatLabel(status);
+const getVerificationCode = (status: string | null) => {
+  if (!status) return "-";
+  return VERIFICATION_ABBREVIATIONS[status]?.code ?? formatLabel(status);
+};
+const getVerificationLabel = (status: string | null) => {
+  if (!status) return "-";
+  return VERIFICATION_ABBREVIATIONS[status]?.label ?? formatLabel(status);
+};
 
 const AdminCatalogPage = () => {
   const { toast } = useToast();
@@ -200,6 +245,10 @@ const AdminCatalogPage = () => {
       ),
     [records],
   );
+  const roleLabelByKey = useMemo(
+    () => new Map(roles.map((role) => [role.key, role.label])),
+    [roles],
+  );
 
   const handleFilterChange = <K extends keyof AdminCatalogFilters>(key: K, value: AdminCatalogFilters[K]) => {
     setFilters((current) => ({ ...current, [key]: value }));
@@ -236,6 +285,21 @@ const AdminCatalogPage = () => {
                 <CardDescription className="max-w-3xl text-sm leading-6 text-slate-600">
                   Unified admin görünümü ile katalog item&apos;larını ve kullanıcı kayıtlarını tek tabloda ara, filtrele ve detayını aç.
                 </CardDescription>
+              </div>
+
+              <div className="grid gap-3 lg:grid-cols-3">
+                {LEGEND_SECTIONS.map((section) => (
+                  <div key={section.title} className="rounded-2xl border border-white/80 bg-white/75 px-4 py-3 shadow-sm backdrop-blur">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">{section.title} Lejant</div>
+                    <div className="mt-2 space-y-1 text-xs text-slate-600">
+                      {section.items.map((item) => (
+                        <div key={`${section.title}-${item.code}`}>
+                          {item.code} = {item.label}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -389,6 +453,7 @@ const AdminCatalogPage = () => {
                     <TableHead>Başlık</TableHead>
                     <TableHead>Tür</TableHead>
                     <TableHead>Tip</TableHead>
+                    <TableHead>Rol</TableHead>
                     <TableHead>Durum</TableHead>
                     <TableHead>Doğrulama</TableHead>
                     <TableHead>Kaynak / Özet</TableHead>
@@ -399,7 +464,7 @@ const AdminCatalogPage = () => {
                 <TableBody>
                   {isLoading ? (
                     <TableRow>
-                      <TableCell colSpan={8} className="py-14 text-center text-sm text-muted-foreground">
+                      <TableCell colSpan={9} className="py-14 text-center text-sm text-muted-foreground">
                         Admin kayıtları yükleniyor...
                       </TableCell>
                     </TableRow>
@@ -407,7 +472,7 @@ const AdminCatalogPage = () => {
 
                   {!isLoading && records.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={8} className="py-14 text-center text-sm text-muted-foreground">
+                      <TableCell colSpan={9} className="py-14 text-center text-sm text-muted-foreground">
                         Bu filtrelerle eşleşen kayıt bulunamadı.
                       </TableCell>
                     </TableRow>
@@ -424,16 +489,31 @@ const AdminCatalogPage = () => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge variant="outline">{kindLabel(record.kind)}</Badge>
+                            <Badge variant="outline" title={kindLabel(record.kind)} aria-label={`Tür: ${kindLabel(record.kind)}`}>
+                              {getKindCode(record.kind)}
+                            </Badge>
                           </TableCell>
                           <TableCell>
                             <Badge variant="outline">{record.itemType ? formatLabel(record.itemType) : record.profileType ? formatLabel(record.profileType) : "-"}</Badge>
                           </TableCell>
                           <TableCell>
-                            <Badge variant="secondary">{formatLabel(record.status)}</Badge>
+                            <div className="max-w-[150px] text-xs font-medium leading-5 text-slate-700">
+                              {roleLabelByKey.get(record.platformRoleKey ?? "") ?? record.platformRoleKey ?? "-"}
+                            </div>
                           </TableCell>
                           <TableCell>
-                            <Badge variant="outline">{record.verificationStatus ? formatLabel(record.verificationStatus) : "-"}</Badge>
+                            <Badge variant="secondary" title={getStatusLabel(record.status)} aria-label={`Durum: ${getStatusLabel(record.status)}`}>
+                              {getStatusCode(record.status)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant="outline"
+                              title={getVerificationLabel(record.verificationStatus)}
+                              aria-label={`Doğrulama: ${getVerificationLabel(record.verificationStatus)}`}
+                            >
+                              {getVerificationCode(record.verificationStatus)}
+                            </Badge>
                           </TableCell>
                           <TableCell className="max-w-[220px] text-xs text-muted-foreground">
                             {record.kind === "catalog_item"

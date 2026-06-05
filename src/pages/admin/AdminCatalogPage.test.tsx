@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import AdminCatalogPage from "@/pages/admin/AdminCatalogPage";
@@ -92,32 +92,32 @@ describe("AdminCatalogPage", () => {
     ]);
     listAdminUnifiedRecordsMock.mockImplementation(
       ({ filters }: { filters: { kind: string; query: string; platformRoleKey?: string } }) => {
-      let records = [...baseRecords];
+        let records = [...baseRecords];
 
-      if (filters.kind) {
-        records = records.filter((record) => record.kind === filters.kind);
-      }
+        if (filters.kind) {
+          records = records.filter((record) => record.kind === filters.kind);
+        }
 
-      if (filters.query) {
-        const normalized = filters.query.toLocaleLowerCase("tr-TR");
-        records = records.filter((record) =>
-          [record.title, record.summary ?? "", record.slug ?? "", record.email ?? ""]
-            .join(" ")
-            .toLocaleLowerCase("tr-TR")
-            .includes(normalized),
-        );
-      }
+        if (filters.query) {
+          const normalized = filters.query.toLocaleLowerCase("tr-TR");
+          records = records.filter((record) =>
+            [record.title, record.summary ?? "", record.slug ?? "", record.email ?? ""]
+              .join(" ")
+              .toLocaleLowerCase("tr-TR")
+              .includes(normalized),
+          );
+        }
 
-      if (filters.platformRoleKey) {
-        records = records.filter((record) => record.platformRoleKey === filters.platformRoleKey);
-      }
+        if (filters.platformRoleKey) {
+          records = records.filter((record) => record.platformRoleKey === filters.platformRoleKey);
+        }
 
-      return Promise.resolve({
-        records,
-        totalCount: records.length,
-        page: 1,
-        pageSize: 50,
-      });
+        return Promise.resolve({
+          records,
+          totalCount: records.length,
+          page: 1,
+          pageSize: 50,
+        });
       },
     );
     getAdminCatalogItemDetailMock.mockResolvedValue({
@@ -211,6 +211,28 @@ describe("AdminCatalogPage", () => {
     expect(screen.getByText(/profile-uygun özet/i)).toBeInTheDocument();
   });
 
+  it("renders compact column codes, legend, and role labels", async () => {
+    render(<AdminCatalogPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Berlin Derneği")).toBeInTheDocument();
+    });
+
+    expect(screen.getByText("KTG = Katalog")).toBeInTheDocument();
+    expect(screen.getByText("YAY = Yayında")).toBeInTheDocument();
+    expect(screen.getByText("RES = Resmi Kaynak")).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Rol" })).toBeInTheDocument();
+
+    const berlinRow = screen.getByText("Berlin Derneği").closest("tr");
+    expect(berlinRow).not.toBeNull();
+
+    const rowScope = within(berlinRow as HTMLTableRowElement);
+    expect(rowScope.getByText("KTG")).toBeInTheDocument();
+    expect(rowScope.getByText("YAY")).toBeInTheDocument();
+    expect(rowScope.getByText("RES")).toBeInTheDocument();
+    expect(rowScope.getByText("Dernek")).toBeInTheDocument();
+  });
+
   it("filters rows by platform role", async () => {
     render(<AdminCatalogPage />);
 
@@ -226,5 +248,17 @@ describe("AdminCatalogPage", () => {
       expect(screen.getByText("Berlin Derneği")).toBeInTheDocument();
       expect(screen.queryByText("Ayşe Yılmaz")).not.toBeInTheDocument();
     });
+  });
+
+  it("falls back to platform role key when role label is unavailable", async () => {
+    listAdminCatalogRolesMock.mockResolvedValue([{ key: "Organization_Association", label: "Dernek" }]);
+
+    render(<AdminCatalogPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Ayşe Yılmaz")).toBeInTheDocument();
+    });
+
+    expect(screen.getByText("Community_Leader")).toBeInTheDocument();
   });
 });
