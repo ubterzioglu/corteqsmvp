@@ -69,7 +69,7 @@ const blocks: GuideBlock[] = [
         ],
       },
       {
-        title: "Katalog Yönetimi ekranı (/admin/catalog)",
+        title: "Katalog Yönetimi ekranı (/admin/data)",
         items: [
           "Hem auth'lu kullanıcı profillerini (kind: profile) hem dışarıdan içe aktarılmış katalog kayıtlarını (kind: catalog_item) tek bir unified tabloda listeler.",
           "Tür filtresiyle yalnızca katalog kayıtları veya yalnızca kullanıcı profilleri görüntülenebilir.",
@@ -210,7 +210,7 @@ const blocks: GuideBlock[] = [
       {
         title: "Katalog item'a rol atama süreci adım adım",
         items: [
-          "1. /admin/catalog ekranına git.",
+          "1. /admin/data ekranına git.",
           "2. İlgili katalog item'ını bul ve satıra tıkla.",
           "3. Açılan Sheet'te 'Rol & Kurallar' tab'ına geç.",
           "4. Rol seçiciden uygun rolü seç (örn: healthcare_advisor).",
@@ -250,7 +250,7 @@ const blocks: GuideBlock[] = [
         items: [
           "Rol için feature aç/kapat → /admin/new-member/roles-features → admin_set_role_feature_flag RPC → O roldeki TÜM kayıtlar etkilenir.",
           "Tek kullanıcıya override ver → /admin/new-member/overrides → admin_set_user_feature_override_detailed RPC → Sadece o kullanıcı etkilenir.",
-          "Katalog item'a feature override ver → /admin/catalog → Rol & Kurallar tab'ı → Feature listesinde toggle → admin_upsert_catalog_item_feature_override RPC.",
+          "Katalog item'a feature override ver → /admin/data → Rol & Kurallar tab'ı → Feature listesinde toggle → admin_upsert_catalog_item_feature_override RPC.",
           "Override temizle → aynı ekranlarda → admin_clear_user_feature_override veya admin_delete_catalog_item_feature_override RPC.",
           "Feature'ı dünya genelinde kapat → /admin/new-member/roles-features → admin_set_feature_global_state RPC.",
         ],
@@ -372,7 +372,7 @@ const blocks: GuideBlock[] = [
         items: [
           "/admin/new-member/profile-sections ekranından auth kullanıcı section sıralaması ve aktiflik durumu yönetilir.",
           "admin_upsert_role_profile_section_rule RPC ile rol bazında section kuralları güncellenir.",
-          "Katalog item'lar için: /admin/catalog → Rol & Kurallar tab'ı → Section listesinde toggle → admin_upsert_catalog_item_section_override RPC.",
+          "Katalog item'lar için: /admin/data → Rol & Kurallar tab'ı → Section listesinde toggle → admin_upsert_catalog_item_section_override RPC.",
           "Katalog item section override'ını kaldırmak için aynı listede 'Varsayılana dön' → admin_delete_catalog_item_section_override RPC.",
         ],
       },
@@ -385,7 +385,7 @@ const blocks: GuideBlock[] = [
       {
         title: "Unified view nedir?",
         items: [
-          "Admin Katalog ekranı (/admin/catalog) hem auth kullanıcı profillerini (kind: profile) hem dışarıdan içe aktarılmış sahipsiz kayıtları (kind: catalog_item) tek bir tabloda gösterir.",
+          "Admin Katalog ekranı (/admin/data) hem auth kullanıcı profillerini (kind: profile) hem dışarıdan içe aktarılmış sahipsiz kayıtları (kind: catalog_item) tek bir tabloda gösterir.",
           "Arka planda admin_list_unified_records RPC çalışır; catalog_items ve profiles tablolarını union all ile birleştirir.",
           "Tür filtresiyle sadece katalog kayıtları (catalog_item) veya sadece kullanıcı profilleri (profile) gösterilebilir.",
           "Server-side sayfalama desteklenir; sayfa başına maksimum 100 kayıt döner.",
@@ -405,7 +405,7 @@ const blocks: GuideBlock[] = [
         items: [
           "Giriş yapmış bir kullanıcı, kendine ait olduğunu düşündüğü bir katalog kaydının detay sayfasında 'Sahiplen' (Claim) butonuna basar.",
           "Bu işlem submit_catalog_claim_request RPC'yi çağırır ve catalog_claim_requests tablosuna 'pending' statüsünde kayıt oluşturur.",
-          "Admin, /admin/catalog ekranında ilgili item'ı açar → Talepler tab'ına geçer → bekleyen claim'i görür.",
+          "Admin, /admin/data ekranında ilgili item'ı açar → Talepler tab'ına geçer → bekleyen claim'i görür.",
           "Claim listesinde: talepte bulunanın adı, e-postası, claim tipi, notu, talep tarihi ve statüsü görünür.",
           "Onayla → admin_approve_catalog_claim RPC → kullanıcıya 'editor' membership yetkisi verilir; katalog kaydı artık o kullanıcı tarafından düzenlenebilir hale gelir.",
           "Reddet → admin_reject_catalog_claim RPC → talep reddedilir, kayıt değişmez.",
@@ -442,7 +442,7 @@ const blocks: GuideBlock[] = [
         title: "Katalog item oluşturma, rol atama ve kural yönetimi",
         items: [
           "1. Geliştirici ekibi CSV importer ile katalog kaydını catalog_items tablosuna yükler (platform_role_key boş veya CSV'den gelir).",
-          "2. Admin → /admin/catalog → ilgili katalog item'ını bul.",
+          "2. Admin → /admin/data → ilgili katalog item'ını bul.",
           "3. Satıra tıkla → Rol & Kurallar tab'ına geç → uygun rolü seç → 'Rolü Kaydet'.",
           "4. Rol kaydedilince o rolün attribute, feature ve section'ları listelenir.",
           "5. Gerekirse inherited kuralların üstüne item-level override ekle (toggle, label düzenleme).",
@@ -453,7 +453,7 @@ const blocks: GuideBlock[] = [
         title: "Claim onaylama ve editör yetkisi verme",
         items: [
           "1. Kullanıcı /directory/catalog/:slug sayfasında 'Sahiplen' butonuna basar.",
-          "2. Admin → /admin/catalog → ilgili item'ı aç → Talepler tab'ı.",
+          "2. Admin → /admin/data → ilgili item'ı aç → Talepler tab'ı.",
           "3. Bekleyen talebi gör: talep eden kişi, tarih, not.",
           "4. 'Onayla' butonuna bas → admin_approve_catalog_claim RPC → kullanıcıya editor membership verilir.",
           "5. Düzenleyiciler tab'ından onaylanan kullanıcının editor olarak eklendiğini doğrula.",
