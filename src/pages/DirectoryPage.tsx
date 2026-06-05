@@ -6,29 +6,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/integrations/supabase/client";
-import { profileTypeOptions } from "@/lib/profile-types";
-
-type DirectoryRow = {
-  user_id: string;
-  role_key: string;
-  role_label: string;
-  role_slug: string;
-  display_name: string;
-  short_bio: string | null;
-  country: string | null;
-  city: string | null;
-  profile_image_url: string | null;
-  special_attribute_key: string | null;
-  special_attribute_label: string | null;
-  special_attribute_value: string | null;
-  is_featured: boolean;
-  is_verified: boolean;
-};
+import {
+  listDirectoryRoleOptions,
+  listUnifiedDirectoryRows,
+  type DirectoryRoleOption,
+  type UnifiedDirectoryRow,
+} from "@/lib/catalog-directory";
 
 const DirectoryPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [rows, setRows] = useState<DirectoryRow[]>([]);
+  const [rows, setRows] = useState<UnifiedDirectoryRow[]>([]);
+  const [roleOptions, setRoleOptions] = useState<DirectoryRoleOption[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -44,26 +32,30 @@ const DirectoryPage = () => {
     void (async () => {
       setIsLoading(true);
       setErrorMessage(null);
-      const { data, error } = await supabase.rpc("list_public_directory_profiles", {
-        search_text: searchText || null,
-        role_filter: roleFilter === "all" ? null : roleFilter,
-        country_filter: countryFilter || null,
-        city_filter: cityFilter || null,
-        featured_only: featuredOnly,
-        verified_only: false,
-      });
 
-      if (!isMounted) return;
+      try {
+        const [nextRows, nextRoles] = await Promise.all([
+          listUnifiedDirectoryRows({
+            searchText,
+            roleFilter,
+            countryFilter,
+            cityFilter,
+            featuredOnly,
+          }),
+          listDirectoryRoleOptions(),
+        ]);
 
-      if (error) {
-        setErrorMessage(error.message);
+        if (!isMounted) return;
+
+        setRows(nextRows);
+        setRoleOptions(nextRoles);
+        setIsLoading(false);
+      } catch (error) {
+        if (!isMounted) return;
+        setErrorMessage(error instanceof Error ? error.message : "Bilinmeyen hata");
         setRows([]);
         setIsLoading(false);
-        return;
       }
-
-      setRows((data ?? []) as DirectoryRow[]);
-      setIsLoading(false);
     })();
 
     return () => {
@@ -71,8 +63,14 @@ const DirectoryPage = () => {
     };
   }, [cityFilter, countryFilter, featuredOnly, roleFilter, searchText]);
 
-  const availableCountries = useMemo(() => Array.from(new Set(rows.map((row) => row.country).filter(Boolean))), [rows]);
-  const availableCities = useMemo(() => Array.from(new Set(rows.map((row) => row.city).filter(Boolean))), [rows]);
+  const availableCountries = useMemo(
+    () => Array.from(new Set(rows.map((row) => row.country).filter(Boolean))),
+    [rows],
+  );
+  const availableCities = useMemo(
+    () => Array.from(new Set(rows.map((row) => row.city).filter(Boolean))),
+    [rows],
+  );
 
   const updateFilter = (key: string, value: string | null) => {
     const next = new URLSearchParams(searchParams);
@@ -102,9 +100,9 @@ const DirectoryPage = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tüm roller</SelectItem>
-                {profileTypeOptions.map((option) => (
-                  <SelectItem key={option.type} value={option.type}>
-                    {option.title}
+                {roleOptions.map((option) => (
+                  <SelectItem key={option.key} value={option.key}>
+                    {option.label}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -145,27 +143,28 @@ const DirectoryPage = () => {
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {rows.map((row) => (
-              <Link key={row.user_id} to={`/directory/profile/${row.user_id}`} className="group">
+              <Link key={`${row.recordType}-${row.id}`} to={row.href} className="group">
                 <div className="h-full rounded-2xl border bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-lg font-semibold">{row.display_name}</p>
-                      <p className="text-sm text-muted-foreground">{row.role_label}</p>
+                      <p className="text-lg font-semibold">{row.title}</p>
+                      <p className="text-sm text-muted-foreground">{row.roleLabel}</p>
                     </div>
                     <div className="flex flex-wrap gap-1">
-                      {row.is_featured ? <Badge>Featured</Badge> : null}
-                      {row.is_verified ? <Badge variant="outline">Onaylı</Badge> : null}
+                      {row.recordType === "catalog_item" ? <Badge variant="secondary">Claimable</Badge> : null}
+                      {row.isFeatured ? <Badge>Featured</Badge> : null}
+                      {row.isVerified ? <Badge variant="outline">Onaylı</Badge> : null}
                     </div>
                   </div>
 
                   <div className="mt-4 space-y-2 text-sm text-muted-foreground">
-                    <p>{row.short_bio ?? "Henüz kısa açıklama eklenmedi."}</p>
+                    <p>{row.description ?? "Henüz kısa açıklama eklenmedi."}</p>
                     <p>
                       {row.country ?? "-"} {row.city ? `• ${row.city}` : ""}
                     </p>
-                    {row.special_attribute_label && row.special_attribute_value ? (
+                    {row.specialLabel && row.specialValue ? (
                       <p>
-                        <span className="font-medium text-foreground">{row.special_attribute_label}:</span> {row.special_attribute_value}
+                        <span className="font-medium text-foreground">{row.specialLabel}:</span> {row.specialValue}
                       </p>
                     ) : null}
                   </div>

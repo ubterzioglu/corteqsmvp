@@ -69,6 +69,7 @@ import ProfilePage from "@/pages/ProfilePage";
 import ProfileResolverPage from "@/pages/ProfileResolverPage";
 import DirectoryPage from "@/pages/DirectoryPage";
 import DirectoryProfilePage from "@/pages/DirectoryProfilePage";
+import DirectoryCatalogItemPage from "@/pages/DirectoryCatalogItemPage";
 import WelcomeActivatePage from "@/pages/WelcomeActivatePage";
 import AdminAttributesPage from "@/pages/admin/AdminAttributesPage";
 import AdminUserOverridesPage from "@/pages/admin/AdminUserOverridesPage";
@@ -154,6 +155,7 @@ const App = () => (
                 <Route path="/auth" element={<AuthRouteRedirect />} />
                 <Route path="/welcome/activate" element={<WelcomeActivatePage />} />
                 <Route path="/directory" element={<DirectoryPage />} />
+                <Route path="/directory/catalog/:slug" element={<DirectoryCatalogItemPage />} />
                 <Route path="/associations" element={<Associations />} />
                 <Route path="/association/:id" element={<AssociationDetail />} />
                 <Route path="/kurulus/:slug" element={<IndependentProfilePage />} />
