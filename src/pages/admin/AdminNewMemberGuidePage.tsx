@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+import { Sparkles } from "lucide-react";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 const ruleLegendItems = [
@@ -105,16 +107,25 @@ const AdminNewMemberGuidePage = () => {
   return (
     <AdminPageLayout className="max-w-5xl gap-8">
       <section className="space-y-4">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-            Kullanım Klavuzu
-          </h1>
-          <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-            Yeni üyeler menüsündeki ekranların ne işe yaradığını, hangi durumda
-            hangisini kullanman gerektiğini ve rol yönetimi tablosundaki
-            kısaltmaların ne anlama geldiğini bu sayfada düz anlatımla
-            görebilirsin.
-          </p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+              Kullanım Klavuzu
+            </h1>
+            <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
+              Yeni üyeler menüsündeki ekranların ne işe yaradığını, hangi durumda
+              hangisini kullanman gerektiğini ve rol yönetimi tablosundaki
+              kısaltmaların ne anlama geldiğini bu sayfada düz anlatımla
+              görebilirsin.
+            </p>
+          </div>
+          <Link
+            to="/admin/new-member/guide2"
+            className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-2 text-xs font-medium text-violet-700 shadow-sm transition hover:bg-violet-100"
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            Claude Anlatım
+          </Link>
         </div>
 
         <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
