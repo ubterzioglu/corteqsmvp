@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Database, MapPin, Search, SlidersHorizontal,
 import CatalogClaimRequestsPanel from "@/components/admin/catalog/CatalogClaimRequestsPanel";
 import CatalogItemEditorsPanel from "@/components/admin/catalog/CatalogItemEditorsPanel";
 import CatalogItemRolePanel from "@/components/admin/catalog/CatalogItemRolePanel";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -392,41 +392,48 @@ const AdminCatalogPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="border-slate-200 bg-white shadow-[0_18px_55px_-42px_rgba(15,23,42,0.24)]">
-          <CardHeader className="pb-3">
-            <CardTitle>Kısaltma Rehberi</CardTitle>
-            <CardDescription>
-              Tablodaki kısa kodlar alan kazanmak için kullanılır. Aşağıdan her kodun sistemde tam olarak neyi anlattığını açabilirsiniz.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Accordion type="single" collapsible className="w-full">
-              {LEGEND_SECTIONS.map((section) => (
-                <AccordionItem key={section.title} value={section.title.toLocaleLowerCase("tr-TR")} className="border-slate-200">
-                  <AccordionTrigger className="py-4 text-left text-sm font-semibold text-slate-900 hover:no-underline">
-                    <div className="space-y-1">
-                      <div>{section.title} Kısaltmaları</div>
-                      <div className="text-xs font-normal text-slate-500">{section.summary}</div>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-4 pt-1">
-                    <div className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                      {section.items.map((item) => (
-                        <div key={`${section.title}-detail-${item.code}`} className="grid gap-1 md:grid-cols-[72px_160px_minmax(0,1fr)] md:items-start">
-                          <div className="inline-flex w-fit items-center rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-700">
-                            {item.code}
+        <Collapsible defaultOpen={false}>
+          <Card className="border-slate-200 bg-white shadow-[0_18px_55px_-42px_rgba(15,23,42,0.24)]">
+            <CollapsibleTrigger asChild>
+              <CardHeader className="cursor-pointer select-none pb-3 transition-colors hover:bg-slate-50/60">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <CardTitle>Kısaltma Rehberi</CardTitle>
+                    <CardDescription>
+                      Tablodaki kısa kodlar alan kazanmak için kullanılır. Aşağıdan her kodun sistemde tam olarak neyi anlattığını açabilirsiniz.
+                    </CardDescription>
+                  </div>
+                  <ChevronRight className="h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 [[data-state=open]>&]:rotate-90" />
+                </div>
+              </CardHeader>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <CardContent className="pt-0">
+                <div className="space-y-6">
+                  {LEGEND_SECTIONS.map((section) => (
+                    <div key={section.title}>
+                      <div className="space-y-1 mb-3">
+                        <div className="text-sm font-semibold text-slate-900">{section.title} Kısaltmaları</div>
+                        <div className="text-xs text-slate-500">{section.summary}</div>
+                      </div>
+                      <div className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        {section.items.map((item) => (
+                          <div key={`${section.title}-detail-${item.code}`} className="grid gap-1 md:grid-cols-[72px_160px_minmax(0,1fr)] md:items-start">
+                            <div className="inline-flex w-fit items-center rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-700">
+                              {item.code}
+                            </div>
+                            <div className="text-sm font-medium text-slate-900">{item.label}</div>
+                            <div className="text-sm leading-6 text-slate-600">{item.description}</div>
                           </div>
-                          <div className="text-sm font-medium text-slate-900">{item.label}</div>
-                          <div className="text-sm leading-6 text-slate-600">{item.description}</div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </CardContent>
-        </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </CollapsibleContent>
+          </Card>
+        </Collapsible>
 
         <Card className="border-slate-200 shadow-[0_18px_55px_-42px_rgba(15,23,42,0.28)]">
           <CardHeader className="gap-4">

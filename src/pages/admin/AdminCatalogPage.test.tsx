@@ -224,7 +224,7 @@ describe("AdminCatalogPage", () => {
     expect(screen.getByText("Kısaltma Rehberi")).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Rol" })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /Tür Kısaltmaları/i }));
+    fireEvent.click(screen.getByText("Kısaltma Rehberi"));
     expect(
       screen.getByText("CSV, import, manuel giriş veya başka kaynaklardan gelen katalog kayıtlarını temsil eder."),
     ).toBeInTheDocument();
