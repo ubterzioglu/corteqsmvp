@@ -68,32 +68,26 @@ describe("AdminLayout", () => {
 
     expect(screen.getByRole("link", { name: /CorteQS ana siteye git/i })).toHaveAttribute("href", "https://mvp.corteqs.net");
     expect(screen.queryByRole("link", { name: "Demo" })).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Üyeler/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Üyeler & Veritabanı/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Topluluklar/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Data/i })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Üye Takibi" })).not.toBeInTheDocument();
     expect(screen.queryByRole("menuitem", { name: /Loginli Üyeler & Roller/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Dış Bağlantılar" })).not.toBeInTheDocument();
     const dashboardButton = screen.getByRole("button", { name: /Dashboard/i });
 
-    const newMemberSystemButton = screen.getByRole("button", { name: /Üyeler/i });
+    const newMemberSystemButton = screen.getByRole("button", { name: /Üyeler & Veritabanı/i });
     fireEvent.mouseEnter(newMemberSystemButton);
     expect(await screen.findByRole("menuitem", { name: /Üye Takibi/i })).toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /Loginli Üyeler & Roller/i })).toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /Rol Yönetimi/i })).toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /Kullanım Klavuzu/i })).toBeInTheDocument();
+    expect(await screen.findByRole("menuitem", { name: /Kataloglar/i })).toBeInTheDocument();
     fireEvent.mouseLeave(newMemberSystemButton);
     const communityButton = screen.getByRole("button", { name: /Topluluklar/i });
     fireEvent.mouseEnter(communityButton);
     expect(await screen.findByRole("menuitem", { name: /Topluluk Editörleri/i })).toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /Topluluk Kullanma Kılavuzu/i })).toBeInTheDocument();
     fireEvent.mouseLeave(communityButton);
-    const dataButton = screen.getByRole("button", { name: /^Data$/i });
-    fireEvent.mouseEnter(dataButton);
-    expect(await screen.findByRole("menuitem", { name: /Kataloglar/i })).toBeInTheDocument();
-    expect(screen.queryByRole("menuitem", { name: /Büyükelçilik/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("menuitem", { name: /Kullanıcı Rolleri/i })).not.toBeInTheDocument();
-    fireEvent.mouseLeave(dataButton);
     fireEvent.mouseEnter(dashboardButton);
 
     const externalLinksSubTrigger = await screen.findByText("Dış Bağlantılar");
