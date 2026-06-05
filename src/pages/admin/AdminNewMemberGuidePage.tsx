@@ -88,6 +88,17 @@ const guideSections = [
       "Onboarding import değişiklikleri canlı akışı etkileyebileceği için mapping ve hedef alan kontrolünü ikinci kez doğrulamak güvenlidir.",
     ],
   },
+  {
+    title: "Rehber (Directory) ve Katalog Sahiplenme İşleyişi",
+    items: [
+      "Rehber (Directory) ekranı artık sadece kayıtlı kullanıcı profillerini değil, dışarıdan içe aktarılmış sahiplenilebilir 'Katalog (Catalog)' kayıtlarını da tek bir listede birleşik (unified) olarak gösterir.",
+      "Yeni rollere ait (Örn: Doktor, Diş Hekimi vb.) toplu veri yüklemeleri, geliştirici ekibi tarafından generic CSV importer aracıyla auth user yaratmadan, public katalog kayıtları olarak içeri alınır.",
+      "İçe aktarılan katalog kayıtlarının CSV'deki hangi sütunlarla (ad, iletişim, kategori vb.) eşleşeceği altyapıdaki 'catalog-role-import-map.json' kural dosyasından yönetilir.",
+      "Kullanıcılar henüz kimseye ait olmayan katalog kayıtlarını '/directory/catalog/:slug' özel detay sayfasında görüntüler.",
+      "Sisteme giriş yapmış üyeler, bu sayfadan 'Claim' (Sahiplen) butonunu kullanarak kaydın kendilerine ait olduğunu beyan edebilir (submit_catalog_claim_request).",
+      "Gelen sahiplenme (claim) talepleri, mevcut talep onay mekanizması üzerinden yönetici tarafından değerlendirilir ve onaylandığında kayıt üyenin profiline dönüşür.",
+    ],
+  },
 ] as const;
 
 const AdminNewMemberGuidePage = () => {
@@ -95,10 +106,14 @@ const AdminNewMemberGuidePage = () => {
     <AdminPageLayout className="max-w-5xl gap-8">
       <section className="space-y-4">
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Kullanım Klavuzu</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Kullanım Klavuzu
+          </h1>
           <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-            Yeni üyeler menüsündeki ekranların ne işe yaradığını, hangi durumda hangisini kullanman gerektiğini ve rol
-            yönetimi tablosundaki kısaltmaların ne anlama geldiğini bu sayfada düz anlatımla görebilirsin.
+            Yeni üyeler menüsündeki ekranların ne işe yaradığını, hangi durumda
+            hangisini kullanman gerektiğini ve rol yönetimi tablosundaki
+            kısaltmaların ne anlama geldiğini bu sayfada düz anlatımla
+            görebilirsin.
           </p>
         </div>
 
@@ -116,12 +131,20 @@ const AdminNewMemberGuidePage = () => {
 
       <div className="space-y-8">
         {guideSections.map((section) => (
-          <section key={section.title} className="space-y-3 border-b border-border/70 pb-6 last:border-b-0 last:pb-0">
-            <h2 className="text-lg font-semibold text-foreground">{section.title}</h2>
+          <section
+            key={section.title}
+            className="space-y-3 border-b border-border/70 pb-6 last:border-b-0 last:pb-0"
+          >
+            <h2 className="text-lg font-semibold text-foreground">
+              {section.title}
+            </h2>
             <ul className="space-y-2 text-sm leading-6 text-muted-foreground">
               {section.items.map((item) => (
                 <li key={item} className="flex gap-3">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+                  <span
+                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
+                    aria-hidden
+                  />
                   <span>{item}</span>
                 </li>
               ))}
