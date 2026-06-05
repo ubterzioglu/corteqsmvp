@@ -6,6 +6,7 @@ import AdminCatalogPage from "@/pages/admin/AdminCatalogPage";
 const toast = vi.fn();
 const listAdminCatalogItemsMock = vi.fn();
 const listAdminCatalogItemTypesMock = vi.fn();
+const listAdminCatalogRolesMock = vi.fn();
 
 vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({
@@ -20,6 +21,7 @@ vi.mock("@/lib/admin-catalog", async () => {
     ...actual,
     listAdminCatalogItems: (...args: unknown[]) => listAdminCatalogItemsMock(...args),
     listAdminCatalogItemTypes: (...args: unknown[]) => listAdminCatalogItemTypesMock(...args),
+    listAdminCatalogRoles: (...args: unknown[]) => listAdminCatalogRolesMock(...args),
   };
 });
 
@@ -29,6 +31,10 @@ describe("AdminCatalogPage", () => {
     listAdminCatalogItemTypesMock.mockResolvedValue([
       { key: "organization", label: "Organization" },
       { key: "community_group", label: "Community Group" },
+    ]);
+    listAdminCatalogRolesMock.mockResolvedValue([
+      { key: "Organization_Association", label: "Dernek" },
+      { key: "Community_WhatsAppGroup", label: "WhatsApp Grubu" },
     ]);
     listAdminCatalogItemsMock.mockResolvedValue([
       {
@@ -50,6 +56,7 @@ describe("AdminCatalogPage", () => {
         categoryLabels: ["Association"],
         sourceTypes: ["turkish_mission"],
         thumbnailUrl: null,
+        platformRoleKey: "Organization_Association",
         attributes: { featured: true },
         createdByUserId: "user-1",
         categories: [{ slug: "association", name: "Association", isPrimary: true }],
@@ -83,6 +90,7 @@ describe("AdminCatalogPage", () => {
         categoryLabels: ["WhatsApp"],
         sourceTypes: ["whatsapp_landing"],
         thumbnailUrl: null,
+        platformRoleKey: "Community_WhatsAppGroup",
         attributes: { featured: false },
         createdByUserId: "user-2",
         categories: [{ slug: "whatsapp", name: "WhatsApp", isPrimary: true }],
@@ -129,10 +137,12 @@ describe("AdminCatalogPage", () => {
 
     fireEvent.click(screen.getByText("Berlin Derneği"));
 
-    expect(await screen.findByText("Kaynak Kayıtları")).toBeInTheDocument();
-    expect(screen.getByText("source-1")).toBeInTheDocument();
+    expect(await screen.findByText("Platform Rolü")).toBeInTheDocument();
+    expect(screen.getByText("Organization_Association")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Rol & Kurallar" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Düzenleyiciler" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Kaynaklar" })).toBeInTheDocument();
     expect(screen.getAllByText("Association").length).toBeGreaterThan(0);
     expect(screen.getByText(/Alexanderplatz 1/i)).toBeInTheDocument();
-    expect(screen.getByText(/featured/i)).toBeInTheDocument();
   });
 });

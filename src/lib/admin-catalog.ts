@@ -1,4 +1,9 @@
 import { supabase } from "@/integrations/supabase/client";
+import type {
+  AttributeOverrideConfig,
+  CatalogItemEditor,
+  CatalogItemRules,
+} from "@/lib/catalog-types";
 
 export type AdminCatalogFilters = {
   query: string;
@@ -10,6 +15,11 @@ export type AdminCatalogFilters = {
 };
 
 export type AdminCatalogItemType = {
+  key: string;
+  label: string;
+};
+
+export type AdminCatalogRoleOption = {
   key: string;
   label: string;
 };
@@ -53,6 +63,7 @@ export type AdminCatalogListItem = {
   categoryLabels: string[];
   sourceTypes: string[];
   thumbnailUrl: string | null;
+  platformRoleKey: string | null;
 };
 
 export type AdminCatalogDetail = AdminCatalogListItem & {
@@ -113,6 +124,7 @@ type RawCatalogRow = {
   verification_status: string;
   attributes?: unknown;
   created_by_user_id?: unknown;
+  platform_role_key?: unknown;
   created_at: string;
   updated_at: string;
   published_at?: unknown;
@@ -135,6 +147,7 @@ const ADMIN_CATALOG_SELECT = [
   "verification_status",
   "attributes",
   "created_by_user_id",
+  "platform_role_key",
   "created_at",
   "updated_at",
   "published_at",
@@ -196,6 +209,7 @@ const mapCatalogRow = (row: RawCatalogRow): AdminCatalogDetail => {
   const categories = mapCategories(row.catalog_item_categories);
   const locations = mapLocations(row.catalog_item_locations);
   const sources = mapSources(row.source_records);
+  const attributes = normalizeRecord(row.attributes);
   const primaryLocation = locations.find((location) => location.isPrimary) ?? locations[0] ?? null;
 
   return {
@@ -209,7 +223,7 @@ const mapCatalogRow = (row: RawCatalogRow): AdminCatalogDetail => {
     status: row.status,
     visibility: row.visibility,
     verificationStatus: row.verification_status,
-    attributes: normalizeRecord(row.attributes),
+    attributes,
     createdByUserId: normalizeString(row.created_by_user_id),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -219,6 +233,7 @@ const mapCatalogRow = (row: RawCatalogRow): AdminCatalogDetail => {
     categoryLabels: categories.map((category) => category.name),
     sourceTypes: Array.from(new Set(sources.map((source) => source.sourceType))),
     thumbnailUrl: getThumbnailUrl(row.catalog_item_media),
+    platformRoleKey: normalizeString(row.platform_role_key) ?? normalizeString(attributes.platform_role_key),
     categories,
     locations,
     sources,
@@ -294,6 +309,24 @@ export async function listAdminCatalogItemTypes(): Promise<AdminCatalogItemType[
   }));
 }
 
+export async function listAdminCatalogRoles(): Promise<AdminCatalogRoleOption[]> {
+  const { data, error } = await (supabase
+    .from("roles")
+    .select("key, label")
+    .eq("is_active", true)
+    .order("sort_order", { ascending: true }) as unknown as Promise<{
+      data: Array<{ key: string; label: string }> | null;
+      error: QueryError | null;
+    }>);
+
+  if (error) throw error;
+
+  return (data ?? []).map((row) => ({
+    key: row.key,
+    label: row.label,
+  }));
+}
+
 export async function listAdminCatalogItems(limit = 1000): Promise<AdminCatalogDetail[]> {
   const { data, error } = await (supabase
     .from("catalog_items")
@@ -307,4 +340,129 @@ export async function listAdminCatalogItems(limit = 1000): Promise<AdminCatalogD
   if (error) throw error;
 
   return (data ?? []).map(mapCatalogRow);
+}
+
+type CatalogRpcClient = {
+  rpc: (
+    functionName:
+      | "admin_set_catalog_item_role"
+      | "get_catalog_item_rules"
+      | "admin_grant_catalog_editor"
+      | "admin_revoke_catalog_editor"
+      | "admin_approve_catalog_claim",
+    args: Record<string, unknown>,
+  ) => Promise<{ data: unknown; error: QueryError | null }>;
+};
+
+const catalogRpcClient = supabase as unknown as CatalogRpcClient;
+
+export async function setCatalogItemRole(itemId: string, roleKey: string | null): Promise<void> {
+  const { error } = await catalogRpcClient.rpc("admin_set_catalog_item_role", {
+    p_item_id: itemId,
+    p_role_key: roleKey,
+  });
+
+  if (error) throw error;
+}
+
+export async function getCatalogItemRules(itemId: string): Promise<CatalogItemRules> {
+  const { data, error } = await catalogRpcClient.rpc("get_catalog_item_rules", {
+    p_item_id: itemId,
+  });
+
+  if (error) throw error;
+  const rules = data as Partial<CatalogItemRules> | null;
+
+  return {
+    platformRoleKey: rules?.platformRoleKey ?? null,
+    attributes: rules?.attributes ?? [],
+    features: rules?.features ?? [],
+    sections: rules?.sections ?? [],
+    overrides: rules?.overrides ?? { attributes: [], features: [], sections: [] },
+  };
+}
+
+export async function upsertCatalogItemAttributeOverride(
+  itemId: string,
+  attributeKey: string,
+  config: AttributeOverrideConfig,
+): Promise<void> {
+  const { error } = await supabase.from("catalog_item_attribute_overrides").upsert(
+    {
+      item_id: itemId,
+      attribute_key: attributeKey,
+      is_enabled: config.isEnabled ?? true,
+      display_order: config.displayOrder ?? null,
+      override_label: config.overrideLabel ?? null,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "item_id,attribute_key" },
+  );
+
+  if (error) throw error;
+}
+
+export async function grantCatalogItemEditor(itemId: string, targetUserId: string): Promise<void> {
+  const { error } = await catalogRpcClient.rpc("admin_grant_catalog_editor", {
+    p_item_id: itemId,
+    p_target_user_id: targetUserId,
+  });
+
+  if (error) throw error;
+}
+
+export async function revokeCatalogItemEditor(itemId: string, targetUserId: string): Promise<void> {
+  const { error } = await catalogRpcClient.rpc("admin_revoke_catalog_editor", {
+    p_item_id: itemId,
+    p_target_user_id: targetUserId,
+  });
+
+  if (error) throw error;
+}
+
+export async function approveCatalogClaim(claimId: string): Promise<void> {
+  const { error } = await catalogRpcClient.rpc("admin_approve_catalog_claim", {
+    p_claim_id: claimId,
+  });
+
+  if (error) throw error;
+}
+
+type RawCatalogEditorRow = {
+  user_id: string;
+  role: CatalogItemEditor["membershipRole"];
+  status: CatalogItemEditor["status"];
+  created_at: string;
+  profiles?: { full_name?: string | null; email?: string | null } | { full_name?: string | null; email?: string | null }[] | null;
+};
+
+const normalizeProfile = (value: RawCatalogEditorRow["profiles"]) => {
+  if (Array.isArray(value)) return value[0] ?? null;
+  return value ?? null;
+};
+
+export async function listCatalogItemEditors(itemId: string): Promise<CatalogItemEditor[]> {
+  const { data, error } = await (supabase
+    .from("catalog_item_memberships")
+    .select("user_id, role, status, created_at, profiles(full_name,email)")
+    .eq("item_id", itemId)
+    .in("role", ["owner", "manager", "editor"])
+    .order("created_at", { ascending: false }) as unknown as Promise<{
+      data: RawCatalogEditorRow[] | null;
+      error: QueryError | null;
+    }>);
+
+  if (error) throw error;
+
+  return (data ?? []).map((row) => {
+    const profile = normalizeProfile(row.profiles);
+    return {
+      userId: row.user_id,
+      fullName: profile?.full_name ?? "İsimsiz kullanıcı",
+      email: profile?.email ?? "",
+      membershipRole: row.role,
+      status: row.status,
+      grantedAt: row.created_at,
+    };
+  });
 }

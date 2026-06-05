@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 type CatalogDetailRow = {
   id: string;
   item_type: string;
+  platform_role_key: string | null;
   slug: string;
   title: string;
   headline: string | null;
@@ -61,7 +62,7 @@ type CatalogClaimRpcClient = {
     functionName: "submit_catalog_claim_request",
     args: {
       target_item_id: string;
-      claim_type: "ownership";
+      claim_type: "editor_access";
       evidence: Record<string, unknown>;
       note: string;
     },
@@ -116,6 +117,7 @@ const DirectoryCatalogItemPage = () => {
           [
             "id",
             "item_type",
+            "platform_role_key",
             "slug",
             "title",
             "headline",
@@ -157,7 +159,11 @@ const DirectoryCatalogItemPage = () => {
     [item],
   );
   const categories = useMemo(() => normalizeCategoryRows(item?.catalog_item_categories), [item]);
-  const roleLabel = readTextAttribute(item?.attributes, "platform_role_label") ?? readTextAttribute(item?.attributes, "platform_role_key") ?? item?.item_type;
+  const roleLabel =
+    readTextAttribute(item?.attributes, "platform_role_label") ??
+    item?.platform_role_key ??
+    readTextAttribute(item?.attributes, "platform_role_key") ??
+    item?.item_type;
   const locationLabel = [
     primaryLocation?.city,
     primaryLocation?.country_code ? countryLabels[primaryLocation.country_code] ?? primaryLocation.country_code : null,
@@ -174,9 +180,9 @@ const DirectoryCatalogItemPage = () => {
 
     const { error } = await catalogClient.rpc("submit_catalog_claim_request", {
       target_item_id: item.id,
-      claim_type: "ownership",
+      claim_type: "editor_access",
       evidence: { source: "directory_catalog_page", slug: item.slug },
-      note: "Directory catalog profile ownership claim",
+      note: "Directory catalog item editor access request",
     });
 
     if (error) {
@@ -226,11 +232,11 @@ const DirectoryCatalogItemPage = () => {
               {canClaim && !authLoading ? (
                 user ? (
                   <Button onClick={submitClaim} disabled={claimStatus !== "idle"}>
-                    {claimStatus === "submitted" ? "Talep Gönderildi" : claimStatus === "submitting" ? "Gönderiliyor..." : "Bu Profili Claim Et"}
+                    {claimStatus === "submitted" ? "Talep Gönderildi" : claimStatus === "submitting" ? "Gönderiliyor..." : "Bu Sayfayı Düzenlemek İstiyorum"}
                   </Button>
                 ) : (
                   <Button asChild>
-                    <Link to={loginHref}>Claim Etmek İçin Giriş Yap</Link>
+                    <Link to={loginHref}>Düzenleme Yetkisi İçin Giriş Yap</Link>
                   </Button>
                 )
               ) : null}
@@ -239,11 +245,16 @@ const DirectoryCatalogItemPage = () => {
           <CardContent className="space-y-6">
             {claimError ? <p className="text-sm text-destructive">Claim talebi gönderilemedi: {claimError}</p> : null}
             {claimStatus === "submitted" ? (
-              <p className="text-sm text-emerald-700">Claim talebiniz admin onayına gönderildi.</p>
+              <p className="text-sm text-emerald-700">Düzenleme yetkisi talebiniz admin onayına gönderildi.</p>
             ) : null}
 
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>{item.short_description ?? item.long_description ?? "Açıklama eklenmedi."}</p>
+              {canClaim ? (
+                <p>
+                  Bu katalog kaydının sahibi ya da yetkili temsilcisiyseniz içeriği düzenleyebilmek için başvurabilirsiniz.
+                </p>
+              ) : null}
               {locationLabel ? <p>{locationLabel}</p> : null}
               {primaryLocation?.address_line ? <p>{primaryLocation.address_line}</p> : null}
             </div>

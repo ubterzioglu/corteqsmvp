@@ -64,14 +64,15 @@ describe("catalog-role-importer", () => {
       title: "Arkin Kara",
       itemType: "advisor",
       roleKey: "Healthcare_Doctor",
+      platformRoleKey: "Healthcare_Doctor",
       slug: "dortmund-doktor-arkin-kara",
       externalId: "https-hausarztpraxis-arkinkara-de",
       location: { city: "Dortmund", country_code: "DE" },
       attributes: {
-        platform_role_key: "Healthcare_Doctor",
         platform_role_label: "Doktor",
       },
     });
+    expect(record.attributes.platform_role_key).toBeUndefined();
     expect(record.contacts.some((contact) => contact.contact_type === "website")).toBe(true);
     expect(record.services).toEqual(["Genel Tıp / Aile Hekimliği"]);
   });

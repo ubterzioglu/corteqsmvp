@@ -161,6 +161,7 @@ export function buildImportRecord(row, roleConfig, roleMap, options = {}) {
     slug: slugify([city, roleConfig.label, title].filter(Boolean).join(" ")),
     externalId: slugify(sourceKey),
     sourceUrl: website || null,
+    platformRoleKey: roleConfig.roleKey,
     contacts: [
       phone ? { contact_type: "phone", contact_value: phone, label: "Telefon", is_primary: true } : null,
       email ? { contact_type: "email", contact_value: email, label: "E-posta", is_primary: !phone } : null,
@@ -178,7 +179,6 @@ export function buildImportRecord(row, roleConfig, roleMap, options = {}) {
     attributes: {
       import_source: options.sourceType,
       source_label: sourceLabel,
-      platform_role_key: roleConfig.roleKey,
       platform_role_label: roleConfig.label,
       specialty_summary: specialtySummary || roleConfig.label,
       csv_row_number: row.rowNumber,
@@ -236,6 +236,7 @@ export async function upsertImportRecord(supabase, record, categoryId, sourceTyp
     p_attributes: record.attributes,
     p_source_url: record.sourceUrl,
     p_raw_snapshot: record.rawSnapshot,
+    p_platform_role_key: record.platformRoleKey,
   });
 
   if (itemError) throw itemError;

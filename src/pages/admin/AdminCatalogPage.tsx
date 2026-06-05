@@ -1,5 +1,7 @@
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Database, MapPin, Search, SlidersHorizontal } from "lucide-react";
+import CatalogItemEditorsPanel from "@/components/admin/catalog/CatalogItemEditorsPanel";
+import CatalogItemRolePanel from "@/components/admin/catalog/CatalogItemRolePanel";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 import { Badge } from "@/components/ui/badge";
@@ -21,14 +23,17 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import {
   filterAdminCatalogItems,
   listAdminCatalogItems,
   listAdminCatalogItemTypes,
+  listAdminCatalogRoles,
   type AdminCatalogDetail,
   type AdminCatalogFilters,
   type AdminCatalogItemType,
+  type AdminCatalogRoleOption,
 } from "@/lib/admin-catalog";
 
 const PAGE_SIZE = 50;
@@ -68,6 +73,7 @@ const AdminCatalogPage = () => {
   const { toast } = useToast();
   const [items, setItems] = useState<AdminCatalogDetail[]>([]);
   const [itemTypes, setItemTypes] = useState<AdminCatalogItemType[]>([]);
+  const [roles, setRoles] = useState<AdminCatalogRoleOption[]>([]);
   const [filters, setFilters] = useState<AdminCatalogFilters>(DEFAULT_FILTERS);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
@@ -82,15 +88,17 @@ const AdminCatalogPage = () => {
       setIsLoading(true);
 
       try {
-        const [nextItems, nextItemTypes] = await Promise.all([
+        const [nextItems, nextItemTypes, nextRoles] = await Promise.all([
           listAdminCatalogItems(),
           listAdminCatalogItemTypes(),
+          listAdminCatalogRoles(),
         ]);
 
         if (!isMounted) return;
 
         setItems(nextItems);
         setItemTypes(nextItemTypes);
+        setRoles(nextRoles);
       } catch (error) {
         if (!isMounted) return;
 
@@ -147,6 +155,14 @@ const AdminCatalogPage = () => {
   };
 
   const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE));
+
+  const handleSelectedItemRoleChanged = (roleKey: string | null) => {
+    if (!selectedItemId) return;
+
+    setItems((current) =>
+      current.map((item) => (item.id === selectedItemId ? { ...item, platformRoleKey: roleKey } : item)),
+    );
+  };
 
   const paginatedItems = useMemo(
     () => filteredItems.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
@@ -434,108 +450,135 @@ const AdminCatalogPage = () => {
                 </SheetDescription>
               </SheetHeader>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">Temel Bilgiler</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3 text-sm">
-                    <MetadataRow label="Görünürlük" value={formatLabel(selectedItem.visibility)} />
-                    <MetadataRow label="Oluşturulma" value={formatDateTime(selectedItem.createdAt)} />
-                    <MetadataRow label="Güncellenme" value={formatDateTime(selectedItem.updatedAt)} />
-                    <MetadataRow label="Yayına Alınma" value={formatDateTime(selectedItem.publishedAt)} />
-                    <MetadataRow label="Oluşturan Kullanıcı" value={selectedItem.createdByUserId ?? "-"} />
-                  </CardContent>
-                </Card>
+              <Tabs defaultValue="general" className="space-y-5">
+                <TabsList className="h-auto w-full flex-wrap justify-start">
+                  <TabsTrigger value="general">Genel Bilgiler</TabsTrigger>
+                  <TabsTrigger value="rules">Rol & Kurallar</TabsTrigger>
+                  <TabsTrigger value="editors">Düzenleyiciler</TabsTrigger>
+                  <TabsTrigger value="sources">Kaynaklar</TabsTrigger>
+                </TabsList>
 
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">Görünür Özet</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3 text-sm text-muted-foreground">
-                    <p>{selectedItem.headline ?? "Başlık altı açıklama yok."}</p>
-                    <p>{selectedItem.shortDescription ?? "Kısa açıklama yok."}</p>
-                    <p>{selectedItem.longDescription ?? "Uzun açıklama yok."}</p>
-                  </CardContent>
-                </Card>
-              </div>
+                <TabsContent value="general" className="space-y-5">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Card>
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-base">Temel Bilgiler</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3 text-sm">
+                        <MetadataRow label="Görünürlük" value={formatLabel(selectedItem.visibility)} />
+                        <MetadataRow label="Platform Rolü" value={selectedItem.platformRoleKey ?? "-"} />
+                        <MetadataRow label="Oluşturulma" value={formatDateTime(selectedItem.createdAt)} />
+                        <MetadataRow label="Güncellenme" value={formatDateTime(selectedItem.updatedAt)} />
+                        <MetadataRow label="Yayına Alınma" value={formatDateTime(selectedItem.publishedAt)} />
+                        <MetadataRow label="Oluşturan Kullanıcı" value={selectedItem.createdByUserId ?? "-"} />
+                      </CardContent>
+                    </Card>
 
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base">Kategori ve Lokasyon</CardTitle>
-                </CardHeader>
-                <CardContent className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Kategoriler</div>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedItem.categories.length ? (
-                        selectedItem.categories.map((category) => (
-                          <Badge key={`${category.slug}-${category.isPrimary ? "primary" : "secondary"}`} variant={category.isPrimary ? "secondary" : "outline"}>
-                            {category.name}
-                          </Badge>
-                        ))
-                      ) : (
-                        <span className="text-sm text-muted-foreground">Kategori yok.</span>
-                      )}
-                    </div>
+                    <Card>
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-base">Görünür Özet</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3 text-sm text-muted-foreground">
+                        <p>{selectedItem.headline ?? "Başlık altı açıklama yok."}</p>
+                        <p>{selectedItem.shortDescription ?? "Kısa açıklama yok."}</p>
+                        <p>{selectedItem.longDescription ?? "Uzun açıklama yok."}</p>
+                      </CardContent>
+                    </Card>
                   </div>
 
-                  <div className="space-y-2">
-                    <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                      <MapPin className="h-3.5 w-3.5" />
-                      Lokasyonlar
-                    </div>
-                    <div className="space-y-2">
-                      {selectedItem.locations.length ? (
-                        selectedItem.locations.map((location, index) => (
-                          <div key={`${location.city}-${location.countryCode}-${index}`} className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
-                            <div>{[location.city, location.countryCode].filter(Boolean).join(", ") || "Lokasyon bilgisi eksik"}</div>
-                            <div className="text-xs text-muted-foreground">{location.addressLine ?? "-"}</div>
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base">Kategori ve Lokasyon</CardTitle>
+                    </CardHeader>
+                    <CardContent className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-2">
+                        <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Kategoriler</div>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedItem.categories.length ? (
+                            selectedItem.categories.map((category) => (
+                              <Badge key={`${category.slug}-${category.isPrimary ? "primary" : "secondary"}`} variant={category.isPrimary ? "secondary" : "outline"}>
+                                {category.name}
+                              </Badge>
+                            ))
+                          ) : (
+                            <span className="text-sm text-muted-foreground">Kategori yok.</span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                          <MapPin className="h-3.5 w-3.5" />
+                          Lokasyonlar
+                        </div>
+                        <div className="space-y-2">
+                          {selectedItem.locations.length ? (
+                            selectedItem.locations.map((location, index) => (
+                              <div key={`${location.city}-${location.countryCode}-${index}`} className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
+                                <div>{[location.city, location.countryCode].filter(Boolean).join(", ") || "Lokasyon bilgisi eksik"}</div>
+                                <div className="text-xs text-muted-foreground">{location.addressLine ?? "-"}</div>
+                              </div>
+                            ))
+                          ) : (
+                            <span className="text-sm text-muted-foreground">Lokasyon kaydı yok.</span>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="rules">
+                  <CatalogItemRolePanel
+                    itemId={selectedItem.id}
+                    currentRoleKey={selectedItem.platformRoleKey}
+                    roles={roles}
+                    onRoleChanged={handleSelectedItemRoleChanged}
+                  />
+                </TabsContent>
+
+                <TabsContent value="editors">
+                  <CatalogItemEditorsPanel itemId={selectedItem.id} />
+                </TabsContent>
+
+                <TabsContent value="sources" className="space-y-5">
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base">Kaynak Kayıtları</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {selectedItem.sources.length ? (
+                        selectedItem.sources.map((source) => (
+                          <div key={`${source.sourceType}-${source.externalId}`} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <Badge variant="outline">{formatLabel(source.sourceType)}</Badge>
+                              <span className="text-sm font-medium text-slate-900">{source.externalId}</span>
+                            </div>
+                            <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+                              <div>Import: {formatDateTime(source.importedAt)}</div>
+                              <div>Last seen: {formatDateTime(source.lastSeenAt)}</div>
+                              <div className="break-all">URL: {source.sourceUrl ?? "-"}</div>
+                            </div>
                           </div>
                         ))
                       ) : (
-                        <span className="text-sm text-muted-foreground">Lokasyon kaydı yok.</span>
+                        <p className="text-sm text-muted-foreground">Bu kayıt için source record bulunamadı.</p>
                       )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                    </CardContent>
+                  </Card>
 
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base">Kaynak Kayıtları</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {selectedItem.sources.length ? (
-                    selectedItem.sources.map((source) => (
-                      <div key={`${source.sourceType}-${source.externalId}`} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <Badge variant="outline">{formatLabel(source.sourceType)}</Badge>
-                          <span className="text-sm font-medium text-slate-900">{source.externalId}</span>
-                        </div>
-                        <div className="mt-2 space-y-1 text-xs text-muted-foreground">
-                          <div>Import: {formatDateTime(source.importedAt)}</div>
-                          <div>Last seen: {formatDateTime(source.lastSeenAt)}</div>
-                          <div className="break-all">URL: {source.sourceUrl ?? "-"}</div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-sm text-muted-foreground">Bu kayıt için source record bulunamadı.</p>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base">Attributes JSON</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <pre className="overflow-x-auto rounded-2xl border border-slate-200 bg-slate-950 p-4 text-xs leading-6 text-slate-100">
-                    {JSON.stringify(selectedItem.attributes, null, 2)}
-                  </pre>
-                </CardContent>
-              </Card>
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base">Attributes JSON</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <pre className="overflow-x-auto rounded-2xl border border-slate-200 bg-slate-950 p-4 text-xs leading-6 text-slate-100">
+                        {JSON.stringify(selectedItem.attributes, null, 2)}
+                      </pre>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
             </div>
           ) : null}
         </SheetContent>

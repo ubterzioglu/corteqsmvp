@@ -27,6 +27,7 @@ vi.mock("@/integrations/supabase/client", () => ({
 const catalogItem = {
   id: "item-1",
   item_type: "advisor",
+  platform_role_key: "Healthcare_Doctor",
   slug: "dortmund-turkce-doktor-arkin-kara",
   title: "Arkin Kara",
   headline: "Genel Tıp",
@@ -68,13 +69,13 @@ describe("DirectoryCatalogItemPage", () => {
 
     expect(await screen.findByText("Arkin Kara")).toBeInTheDocument();
     expect(screen.getByText("Dortmund'da Türkçe hizmet veren doktor.")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Claim Etmek İçin Giriş Yap/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /Düzenleme Yetkisi İçin Giriş Yap/i })).toHaveAttribute(
       "href",
       "/login?mode=signup&next=%2Fdirectory%2Fcatalog%2Fdortmund-turkce-doktor-arkin-kara",
     );
   });
 
-  it("submits ownership claim for authenticated users", async () => {
+  it("submits editor access claim for authenticated users", async () => {
     useAuthMock.mockReturnValue({ user: { id: "user-1" }, session: { access_token: "token" }, isLoading: false });
 
     render(
@@ -85,14 +86,14 @@ describe("DirectoryCatalogItemPage", () => {
       </MemoryRouter>,
     );
 
-    fireEvent.click(await screen.findByRole("button", { name: /Bu Profili Claim Et/i }));
+    fireEvent.click(await screen.findByRole("button", { name: /Bu Sayfayı Düzenlemek İstiyorum/i }));
 
     await waitFor(() => {
       expect(rpcMock).toHaveBeenCalledWith(
         "submit_catalog_claim_request",
-        expect.objectContaining({ target_item_id: "item-1", claim_type: "ownership" }),
+        expect.objectContaining({ target_item_id: "item-1", claim_type: "editor_access" }),
       );
     });
-    expect(await screen.findByText("Claim talebiniz admin onayına gönderildi.")).toBeInTheDocument();
+    expect(await screen.findByText("Düzenleme yetkisi talebiniz admin onayına gönderildi.")).toBeInTheDocument();
   });
 });

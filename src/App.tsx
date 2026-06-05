@@ -78,7 +78,6 @@ import AdminAuditLogsPage from "@/pages/admin/AdminAuditLogsPage";
 import AdminProfileSectionsPage from "@/pages/admin/AdminProfileSectionsPage";
 import AdminTaxonomyPage from "@/pages/admin/AdminTaxonomyPage";
 import AdminNewMemberGuidePage from "@/pages/admin/AdminNewMemberGuidePage";
-import AdminClaudeGuidePage from "@/pages/admin/AdminClaudeGuidePage";
 import AdminOnboardingImportsPage from "@/pages/admin/AdminOnboardingImportsPage";
 import AdminRoleManagementPage from "@/pages/admin/AdminRoleManagementPage";
 import AdminRolesPreviewPage from "@/pages/admin/AdminRolesPreviewPage";
@@ -228,7 +227,6 @@ const App = () => (
                 <Route path="new-member/users-roles" element={<AdminLoginUsersRolesPage />} />
                 <Route path="data" element={<AdminCatalogPage />} />
                 <Route path="new-member/guide" element={<AdminNewMemberGuidePage />} />
-                <Route path="new-member/guide2" element={<AdminClaudeGuidePage />} />
                 <Route path="new-member/roles-features" element={<AdminRolesFeaturesPage />} />
                 <Route path="new-member/attributes" element={<AdminAttributesPage />} />
                 <Route path="new-member/onboarding-imports" element={<AdminOnboardingImportsPage />} />
