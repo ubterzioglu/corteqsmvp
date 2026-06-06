@@ -121,7 +121,6 @@ describe("profile-view-model", () => {
           displayValue: "Göçmenlik Hukuku",
         },
       ],
-      taxonomyGroups: [],
       pendingRequests: [],
       profileCompletion: {
         requiredTotal: 4,
@@ -305,7 +304,6 @@ describe("profile-view-model", () => {
           displayValue: true,
         },
       ],
-      taxonomyGroups: [],
       pendingRequests: [],
       profileCompletion: {
         requiredTotal: 2,

@@ -230,7 +230,6 @@ const AdminLayout = () => {
     { to: "/admin/members", label: "Üye Takibi (eski)" },
     { to: "/admin/data", label: "Veritabanı" },
     { to: "/admin/new-member/role-matrix", label: "Tüm Roller AFS Matrisi" },
-    { to: "/admin/new-member/taxonomy", label: "Taxonomy Yönetimi" },
     { to: "/admin/new-member/overrides", label: "Feature Override" },
     { to: "/admin/new-member/guide", label: "Kullanım Klavuzu" },
     { to: "/admin/referral", label: "Ref Kod" },

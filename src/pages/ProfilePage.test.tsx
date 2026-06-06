@@ -13,8 +13,6 @@ const updateProfileAttributeMock = vi.fn();
 const submitFeatureRequestMock = vi.fn();
 const submitRoleChangeRequestMock = vi.fn();
 const updateProfileAvatarMock = vi.fn();
-const updateUserTaxonomySelectionMock = vi.fn();
-
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
 }));
@@ -38,7 +36,6 @@ vi.mock("@/lib/member-profile-api", () => ({
   submitRoleChangeRequest: (...args: unknown[]) => submitRoleChangeRequestMock(...args),
   updateProfileAttribute: (...args: unknown[]) => updateProfileAttributeMock(...args),
   updateProfileAvatar: (...args: unknown[]) => updateProfileAvatarMock(...args),
-  updateUserTaxonomySelection: (...args: unknown[]) => updateUserTaxonomySelectionMock(...args),
 }));
 
 vi.mock("@/integrations/supabase/client", () => ({
@@ -56,7 +53,6 @@ describe("ProfilePage", () => {
     submitFeatureRequestMock.mockResolvedValue("request-1");
     submitRoleChangeRequestMock.mockResolvedValue("request-1");
     updateProfileAvatarMock.mockResolvedValue({ status: "approved" });
-    updateUserTaxonomySelectionMock.mockResolvedValue({ status: "approved" });
   });
 
   const baseProfile: CurrentUserProfilePayload = {
@@ -405,7 +401,6 @@ describe("ProfilePage", () => {
         displayValue: "https://example.com/avatar.jpg",
       },
     ],
-    taxonomyGroups: [],
     pendingRequests: [],
     profileCompletion: {
       requiredTotal: 1,
@@ -532,8 +527,8 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Yakında Taşınacağım")).toBeInTheDocument();
     expect(screen.getByText("Gönüllü Mentörlük")).toBeInTheDocument();
     expect(screen.getByText("Rolüne Özel Alanlar")).toBeInTheDocument();
-    expect(screen.getByText("Alt Kategori / Alt Tip")).toBeInTheDocument();
-    expect(screen.getAllByText("Locked").length).toBeGreaterThanOrEqual(3);
+    expect(screen.queryByText("Alt Kategori / Alt Tip")).not.toBeInTheDocument();
+    expect(screen.getAllByText("Locked").length).toBeGreaterThanOrEqual(2);
     const profileSummaryToggle = screen.getByRole("button", { name: "Profil Durumu" });
     expect(profileSummaryToggle).toBeInTheDocument();
     expect(profileSummaryToggle).toHaveAttribute("aria-expanded", "false");

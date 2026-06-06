@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { mapCurrentUserProfilePayload } from "@/lib/member-profile";
 
 describe("mapCurrentUserProfilePayload", () => {
-  it("maps taxonomy groups and options from rpc payload", () => {
+  it("ignores retired taxonomy payload and keeps the active profile shape stable", () => {
     const payload = {
       user_id: "user-1",
       email: "user@test.com",
@@ -42,15 +42,8 @@ describe("mapCurrentUserProfilePayload", () => {
 
     const result = mapCurrentUserProfilePayload(payload as never);
 
-    expect(result?.taxonomyGroups).toHaveLength(1);
-    expect(result?.taxonomyGroups[0]).toMatchObject({
-      groupKey: "business_subtype",
-      selectionMode: "single",
-      isRequired: true,
-    });
-    expect(result?.taxonomyGroups[0]?.options[0]).toMatchObject({
-      key: "business_subtype.classic",
-      isSelected: true,
-    });
+    expect(result).not.toBeNull();
+    expect(result).not.toHaveProperty("taxonomyGroups");
+    expect(result?.roleLabel).toBe("İşletme");
   });
 });

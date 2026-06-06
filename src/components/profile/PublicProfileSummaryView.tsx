@@ -51,15 +51,6 @@ const PublicProfileSummaryView = ({ model, mode = "public" }: Props) => {
             {model.locationLabel ? (
               <p className="text-xs text-muted-foreground">{model.locationLabel}</p>
             ) : null}
-            {model.taxonomy.length ? (
-              <div className="flex flex-wrap gap-1.5">
-                {model.taxonomy.map((item) => (
-                  <Badge key={item} variant="outline" className="text-[10px]">
-                    {item}
-                  </Badge>
-                ))}
-              </div>
-            ) : null}
           </div>
         </div>
       </CardHeader>

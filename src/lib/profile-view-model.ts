@@ -35,7 +35,6 @@ export type PublicProfileViewModel = {
   locationLabel: string;
   imageUrl: string | null;
   badges: string[];
-  taxonomy: string[];
   links: PublicProfileLink[];
   sections: PublicProfileSection[];
   emptyMessage: string;
@@ -132,11 +131,6 @@ const buildLinksFromAttributes = (attributes: ProfileAttributeState[], features:
     }),
   );
 
-const buildTaxonomyLabels = (profile: CurrentUserProfilePayload) =>
-  profile.taxonomyGroups.flatMap((group) =>
-    group.options.filter((option) => option.isSelected).map((option) => option.label),
-  );
-
 const getLocationLabel = (attributes: ProfileAttributeState[]) => {
   const country = attributes.find((attribute) => attribute.attributeKey === "country");
   const city = attributes.find((attribute) => attribute.attributeKey === "city");
@@ -212,7 +206,6 @@ export const buildPublicProfileViewModelFromCurrentUser = (
     roleMeta?.description ||
     "Bu profil henüz detaylandırılmadı.";
   const links = buildLinksFromAttributes(publicAttributes, profile.features);
-  const taxonomy = buildTaxonomyLabels(profile);
   const extraBadges = [
     isFeatureEnabled(profile.features, INDIVIDUAL_FEATURE_KEYS.jobSeekingBadge) && getBooleanAttributeValue(publicAttributes, "job_seeking_opt_in")
       ? "İş Arıyorum"
@@ -241,7 +234,6 @@ export const buildPublicProfileViewModelFromCurrentUser = (
       `Tamamlanma %${profile.profileCompletion.percentage}`,
       ...extraBadges,
     ],
-    taxonomy,
     links,
     sections: buildRoleSpecificSections(profile, publicAttributes),
     emptyMessage: "Bu profil için henüz yayınlanmış public alan bulunmuyor.",
@@ -278,11 +270,6 @@ const normalizeSectionContent = (section: PublicProfileSectionRow): string | nul
   }
 
   if (section.component_name === "badges") {
-    if (Array.isArray(content.taxonomy)) {
-      const labels = content.taxonomy.filter((item): item is string => typeof item === "string");
-      return labels.join(", ");
-    }
-
     if (content.groups && typeof content.groups === "object") {
       const labels = Object.values(content.groups as Record<string, unknown[]>)
         .flatMap((items) => items)
@@ -329,9 +316,6 @@ export const buildPublicProfileViewModelFromSections = (
     (section) => section.section_key === "preview.kategori_sektor_etiketi",
   );
 
-  const taxonomy = Array.isArray(categorySection?.content?.taxonomy)
-    ? categorySection.content.taxonomy.filter((item): item is string => typeof item === "string")
-    : [];
   const extraBadges = Array.isArray(categorySection?.content?.extra_badges)
     ? categorySection.content.extra_badges.filter((item): item is string => typeof item === "string")
     : [];
@@ -361,11 +345,10 @@ export const buildPublicProfileViewModelFromSections = (
     roleTitle: primaryLabel ?? "Profil",
     roleDescription: "",
     displayName: typeof displayName === "string" ? displayName : "Profil",
-    headline: taxonomy.length ? taxonomy.join(" • ") : "Public profil görünümü",
+    headline: primaryLabel ?? "Public profil görünümü",
     locationLabel: [locationSection?.content?.city, locationSection?.content?.country].filter(Boolean).join(", "),
     imageUrl: typeof imageSection?.content?.url === "string" ? imageSection.content.url : null,
-    badges: [primaryLabel, ...extraBadges, ...taxonomy].filter((item): item is string => Boolean(item)).slice(0, 6),
-    taxonomy,
+    badges: [primaryLabel, ...extraBadges].filter((item): item is string => Boolean(item)).slice(0, 6),
     links,
     sections: detailSections
       .map((section) => {
@@ -423,7 +406,6 @@ export const buildPublicProfileViewModelFromIndividual = (
       details.detailCard.relocation.enabled ? "Yakında Taşınacağım" : "",
       details.controlPanel.profileVisible ? "Profil Açık" : "Profil Kilitli",
     ].filter(Boolean),
-    taxonomy: details.detailCard.interests,
     links,
     sections,
     emptyMessage: "Bu profil için gösterilecek alan bulunmuyor.",

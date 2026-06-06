@@ -4,7 +4,6 @@ import { ChevronLeft, ChevronRight, Database, MapPin, Search, SlidersHorizontal,
 import CatalogClaimRequestsPanel from "@/components/admin/catalog/CatalogClaimRequestsPanel";
 import CatalogEntityProfilePanel from "@/components/admin/catalog/CatalogEntityProfilePanel";
 import CatalogItemEditorsPanel from "@/components/admin/catalog/CatalogItemEditorsPanel";
-import CatalogItemRolePanel from "@/components/admin/catalog/CatalogItemRolePanel";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -328,19 +327,7 @@ const AdminCatalogPage = () => {
 
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
-  const handleSelectedItemRoleChanged = (roleKey: string | null) => {
-    if (!selectedRecord || selectedRecord.kind !== "catalog_item") return;
-
-    setSelectedRecord((current) => (current ? { ...current, platformRoleKey: roleKey } : current));
-    setSelectedCatalogDetail((current) => (current ? { ...current, platformRoleKey: roleKey } : current));
-    setRecords((current) =>
-      current.map((record) => (record.id === selectedRecord.id ? { ...record, platformRoleKey: roleKey } : record)),
-    );
-  };
-
   const selectedProfile = selectedRecord?.kind === "profile" ? selectedRecord : null;
-  const selectedCatalogRecord = selectedRecord?.kind === "catalog_item" ? selectedRecord : null;
-
   return (
     <>
       <div className="space-y-6">
@@ -350,7 +337,7 @@ const AdminCatalogPage = () => {
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-slate-950">
                   <Database className="h-4 w-4 text-emerald-600" />
-                  <span>Profile Rol Atama</span>
+                  <span>Veritabanı</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-slate-950">
                   <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
@@ -370,6 +357,9 @@ const AdminCatalogPage = () => {
                   </div>
                 ))}
               </div>
+              <p className="text-sm text-slate-600">
+                Tüm profil ve katalog kayıtlarını tek tabloda görüntüle. Bir kayıt seçerek attribute değerlerini düzenle.
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -421,8 +411,8 @@ const AdminCatalogPage = () => {
           <CardHeader className="gap-4">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <CardTitle>Data</CardTitle>
-                <CardDescription>Tür, tip, rol, kaynak ve lokasyon bilgisi üzerinden unified admin kayıtlarını filtrele.</CardDescription>
+                <CardTitle>Kayıt Listesi</CardTitle>
+                <CardDescription>Rol, durum, kaynak ve lokasyon bilgisi üzerinden tüm kayıtları filtrele.</CardDescription>
               </div>
               <Button
                 variant="outline"
@@ -694,10 +684,7 @@ const AdminCatalogPage = () => {
             selectedRecord.kind === "catalog_item" ? (
               selectedCatalogDetail ? (
                 <CatalogDetailSheet
-                  record={selectedCatalogRecord}
                   detail={selectedCatalogDetail}
-                  roles={roles}
-                  onRoleChanged={handleSelectedItemRoleChanged}
                 />
               ) : isLoadingSelectedDetail ? (
                 <div className="py-10 text-sm text-muted-foreground">Katalog detayı yükleniyor...</div>
@@ -713,15 +700,9 @@ const AdminCatalogPage = () => {
 };
 
 const CatalogDetailSheet = ({
-  record,
   detail,
-  roles,
-  onRoleChanged,
 }: {
-  record: UnifiedRecord | null;
   detail: AdminCatalogDetail;
-  roles: AdminCatalogRoleOption[];
-  onRoleChanged: (roleKey: string | null) => void;
 }) => (
   <div className="space-y-6">
     <SheetHeader>
@@ -733,15 +714,14 @@ const CatalogDetailSheet = ({
       </div>
       <SheetTitle>{detail.title}</SheetTitle>
       <SheetDescription>
-        <code>{detail.slug}</code> kaydının metadata, profil, kural, claim ve düzenleyici detayları.
+        <code>{detail.slug}</code> kaydının özet, attribute, claim ve düzenleyici detayları.
       </SheetDescription>
     </SheetHeader>
 
     <Tabs defaultValue="general" className="space-y-5">
       <TabsList className="h-auto w-full flex-wrap justify-start">
-        <TabsTrigger value="general">Genel Bilgiler</TabsTrigger>
-        <TabsTrigger value="profile">Catalog Profili</TabsTrigger>
-        <TabsTrigger value="rules">Rol & Kurallar</TabsTrigger>
+        <TabsTrigger value="general">Özet</TabsTrigger>
+        <TabsTrigger value="profile">Attribute Değerleri</TabsTrigger>
         <TabsTrigger value="claims">Talepler</TabsTrigger>
         <TabsTrigger value="editors">Düzenleyiciler</TabsTrigger>
         <TabsTrigger value="sources">Kaynaklar</TabsTrigger>
@@ -754,7 +734,7 @@ const CatalogDetailSheet = ({
               <CardTitle className="text-base">Temel Bilgiler</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
-              <MetadataRow label="Tür" value={kindLabel(record?.kind ?? "catalog_item")} />
+              <MetadataRow label="Tür" value={kindLabel("catalog_item")} />
               <MetadataRow label="Görünürlük" value={formatLabel(detail.visibility)} />
               <MetadataRow label="Platform Rolü" value={detail.platformRoleKey ?? "-"} />
               <MetadataRow label="Oluşturulma" value={formatDateTime(detail.createdAt)} />
@@ -823,10 +803,6 @@ const CatalogDetailSheet = ({
 
       <TabsContent value="profile">
         <CatalogEntityProfilePanel itemId={detail.id} />
-      </TabsContent>
-
-      <TabsContent value="rules">
-        <CatalogItemRolePanel itemId={detail.id} currentRoleKey={detail.platformRoleKey} roles={roles} onRoleChanged={onRoleChanged} />
       </TabsContent>
 
       <TabsContent value="claims">

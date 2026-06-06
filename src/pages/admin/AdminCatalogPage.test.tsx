@@ -15,10 +15,6 @@ vi.mock("@/hooks/use-toast", () => ({
   }),
 }));
 
-vi.mock("@/components/admin/catalog/CatalogItemRolePanel", () => ({
-  default: () => <div>Role Panel Mock</div>,
-}));
-
 vi.mock("@/components/admin/catalog/CatalogEntityProfilePanel", () => ({
   default: () => <div>Catalog Profile Panel Mock</div>,
 }));
@@ -187,7 +183,8 @@ describe("AdminCatalogPage", () => {
 
     fireEvent.click(screen.getByText("Berlin Derneği"));
 
-    expect(await screen.findByRole("tab", { name: "Rol & Kurallar" })).toBeInTheDocument();
+    expect(await screen.findByRole("tab", { name: "Attribute Değerleri" })).toBeInTheDocument();
+    expect(screen.queryByRole("tab", { name: "Rol & Kurallar" })).not.toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Talepler" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Düzenleyiciler" })).toBeInTheDocument();
     expect(screen.getByText(/Alexanderplatz 1/i)).toBeInTheDocument();
@@ -222,8 +219,9 @@ describe("AdminCatalogPage", () => {
       expect(screen.getByText("Berlin Derneği")).toBeInTheDocument();
     });
 
-    expect(screen.getByText("Profile Rol Atama")).toBeInTheDocument();
+    expect(screen.getByText("Veritabanı")).toBeInTheDocument();
     expect(screen.getByText("Toplam Kayıt")).toBeInTheDocument();
+    expect(screen.getByText(/Bir kayıt seçerek attribute değerlerini düzenle/i)).toBeInTheDocument();
     expect(screen.queryByText("Unified Admin Data")).not.toBeInTheDocument();
     expect(screen.queryByText("Katalog ve kullanıcılar tek admin yüzeyinde.")).not.toBeInTheDocument();
     expect(screen.queryByText("Sayfa Sonucu")).not.toBeInTheDocument();

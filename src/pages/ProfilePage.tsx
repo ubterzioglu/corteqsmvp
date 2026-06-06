@@ -1537,11 +1537,6 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
 
-          <LockedProfileSectionCard
-            title="Alt Kategori / Alt Tip"
-            description="Rolüne bağlı taxonomy seçimleri profildeki görünüm ve zorunlu alanları etkiler."
-            className={GOOGLE_SOFT_CARD_YELLOW_SECTION}
-          />
       </div>
 
       <LockedProfileSectionCard

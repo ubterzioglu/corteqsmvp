@@ -70,12 +70,11 @@ const blocks: GuideBlock[] = [
       {
         title: "Veritabanı menüsü — güncel operasyon yüzeyi",
         items: [
-          "Veritabanı (/admin/data): Katalog kayıtlarını (catalog_items) listeler; her kayda platform rolü atarsın, linked_user_id ile auth kullanıcısı bağlarsın, item-level override uygularsın. Operasyonun çoğu buradan yürür.",
+          "Veritabanı (/admin/data): Katalog kayıtlarını (catalog_items) listeler; attribute değerlerini, görünürlük bilgisini, linked_user_id ilişkisini ve operasyon özetini buradan yönetirsin.",
           "Profil ve Rol Atama (/admin/new-member/profile-role-assignment): Catalog kayıtlarını ve bağlı auth kullanıcılarını birlikte görürsün. Hızlı rol değişikliği, claim ve editor yönetimi için kullan.",
           "Tüm Roller AFS Matrisi (/admin/new-member/role-matrix): Seçili rol için attribute, feature ve section kurallarını tek tabloda yönet. URL filtresi: ?kind=attribute | ?kind=feature | ?kind=profile_section.",
-          "Taxonomy Yönetimi (/admin/new-member/taxonomy): Role bağlı taxonomy gruplarını ve kullanıcı seçimlerini yönetirsin.",
           "Feature Override (/admin/new-member/overrides): Tek bir auth kullanıcısı için rol varsayımını bozmadan özel feature istisnası yazarsın.",
-          "Kullanım Kılavuzu (/admin/new-member/guide): Bu sayfa — canlı referans katalogları aşağıdaki açılır kartlarda.",
+          "Kullanım Kılavuzu (/admin/new-member/guide): Bu sayfa — rehber ve referans kataloglarını tek akışta toplar.",
         ],
       },
       {
@@ -96,7 +95,7 @@ const blocks: GuideBlock[] = [
           "Aynı rol altındaki herkes yanlış davranıyorsa: /admin/new-member/role-matrix.",
           "Sorun tek kişideyse: /admin/new-member/overrides.",
           "Sorun public profil kart parçasıysa: role-matrix içindeki section satırı (?kind=profile_section).",
-          "Sorun katalog kaydına özelse: /admin/data > Rol & Kurallar.",
+          "Sorun katalog kaydına özelse: /admin/data içinde attribute değerlerini ve metadata özetini kontrol et.",
         ],
       },
     ],

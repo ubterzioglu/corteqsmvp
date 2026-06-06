@@ -2,18 +2,15 @@ import { useCallback, useEffect, useState } from "react";
 
 import {
   adminSetCatalogItemAttribute,
-  adminSetCatalogItemFeatureOverride,
   getCatalogItemProfile,
   type CatalogEntityProfile,
   type CatalogEntityProfileAttribute,
-  type CatalogEntityProfileFeature,
 } from "@/lib/catalog-entity-api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
 type CatalogEntityProfilePanelProps = {
@@ -46,7 +43,6 @@ const parseAttributeValue = (attribute: CatalogEntityProfileAttribute, rawValue:
 const CatalogEntityProfilePanel = ({ itemId }: CatalogEntityProfilePanelProps) => {
   const [profile, setProfile] = useState<CatalogEntityProfile | null>(null);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
-  const [featureDrafts, setFeatureDrafts] = useState<Record<string, boolean>>({});
   const [visibilityDrafts, setVisibilityDrafts] = useState<Record<string, CatalogEntityProfileAttribute["visibility"]>>({});
   const [pendingKey, setPendingKey] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -64,9 +60,6 @@ const CatalogEntityProfilePanel = ({ itemId }: CatalogEntityProfilePanelProps) =
       );
       setVisibilityDrafts(
         Object.fromEntries(nextProfile.attributes.map((attribute) => [attribute.attribute_key, attribute.visibility])),
-      );
-      setFeatureDrafts(
-        Object.fromEntries(nextProfile.features.map((feature) => [feature.feature_key, feature.is_enabled])),
       );
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Katalog profil verisi alınamadı.");
@@ -99,27 +92,13 @@ const CatalogEntityProfilePanel = ({ itemId }: CatalogEntityProfilePanelProps) =
     }
   };
 
-  const saveFeature = async (feature: CatalogEntityProfileFeature) => {
-    setPendingKey(`feature:${feature.feature_key}`);
-    setErrorMessage(null);
-
-    try {
-      await adminSetCatalogItemFeatureOverride(itemId, feature.feature_key, featureDrafts[feature.feature_key] ?? feature.is_enabled);
-      await loadProfile();
-    } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Feature override kaydedilemedi.");
-    } finally {
-      setPendingKey(null);
-    }
-  };
-
   return (
     <div className="space-y-5">
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Catalog Profili</CardTitle>
           <CardDescription>
-            Member bridge ve yeni catalog attribute/feature katmanini buradan yonetebilirsin.
+            Attribute değerlerini ve görünürlük bilgisini bu panelden yönetebilirsin.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3 text-sm md:grid-cols-2">
@@ -139,7 +118,7 @@ const CatalogEntityProfilePanel = ({ itemId }: CatalogEntityProfilePanelProps) =
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Attributes</CardTitle>
-            <CardDescription>Item type kurallarina gore attribute degerleri ve gorunurlukleri.</CardDescription>
+            <CardDescription>Role göre çözümlenmiş alan değerleri ve görünürlükleri.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {profile?.attributes.length ? (
@@ -220,60 +199,7 @@ const CatalogEntityProfilePanel = ({ itemId }: CatalogEntityProfilePanelProps) =
                 );
               })
             ) : (
-              <p className="text-sm text-muted-foreground">Bu item type icin attribute kuralı bulunmuyor.</p>
-            )}
-          </CardContent>
-        </Card>
-      ) : null}
-
-      {!isLoading ? (
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">Features</CardTitle>
-            <CardDescription>Default feature durumu ve item bazli override yonetimi.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {profile?.features.length ? (
-              profile.features.map((feature) => {
-                const fieldKey = feature.feature_key;
-                const isSaving = pendingKey === `feature:${fieldKey}`;
-
-                return (
-                  <div key={fieldKey} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="space-y-2">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <div className="font-medium text-slate-950">{fieldKey}</div>
-                          <Badge variant={feature.source === "override" ? "secondary" : "outline"}>{feature.source}</Badge>
-                        </div>
-                        {feature.reason ? <div className="text-xs text-muted-foreground">{feature.reason}</div> : null}
-                      </div>
-
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                          <span>Aktif</span>
-                          <Switch
-                            checked={featureDrafts[fieldKey] ?? feature.is_enabled}
-                            onCheckedChange={(checked) =>
-                              setFeatureDrafts((current) => ({
-                                ...current,
-                                [fieldKey]: checked,
-                              }))
-                            }
-                            disabled={isSaving}
-                            aria-label={`${fieldKey} aktif`}
-                          />
-                        </div>
-                        <Button type="button" size="sm" onClick={() => void saveFeature(feature)} disabled={isSaving}>
-                          {isSaving ? "Kaydediliyor..." : "Feature Kaydet"}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <p className="text-sm text-muted-foreground">Bu item type icin feature default tanimi yok.</p>
+              <p className="text-sm text-muted-foreground">Bu kayıt için attribute kuralı bulunmuyor.</p>
             )}
           </CardContent>
         </Card>

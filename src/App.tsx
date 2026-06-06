@@ -73,7 +73,6 @@ import WelcomeActivatePage from "@/pages/WelcomeActivatePage";
 import AdminUserOverridesPage from "@/pages/admin/AdminUserOverridesPage";
 import AdminApprovalsPage from "@/pages/admin/AdminApprovalsPage";
 import AdminAuditLogsPage from "@/pages/admin/AdminAuditLogsPage";
-import AdminTaxonomyPage from "@/pages/admin/AdminTaxonomyPage";
 import AdminNewMemberGuidePage from "@/pages/admin/AdminNewMemberGuidePage";
 import AdminRoleManagementPage from "@/pages/admin/AdminRoleManagementPage";
 import CaddePage from "@/pages/CaddePage";
@@ -231,7 +230,7 @@ const App = () => (
                 <Route path="new-member/roles-features" element={<Navigate to="/admin/new-member/role-matrix?kind=feature" replace />} />
                 <Route path="new-member/attributes" element={<Navigate to="/admin/new-member/role-matrix?kind=attribute" replace />} />
                 <Route path="new-member/profile-sections" element={<Navigate to="/admin/new-member/role-matrix?kind=profile_section" replace />} />
-                <Route path="new-member/taxonomy" element={<AdminTaxonomyPage />} />
+                <Route path="new-member/taxonomy" element={<Navigate to="/admin/new-member/guide?notice=taxonomy-retired" replace />} />
                 <Route path="new-member/overrides" element={<AdminUserOverridesPage />} />
                 <Route path="new-member/role-management" element={<Navigate to="/admin/new-member/role-matrix" replace />} />
                 <Route path="new-member/roles-preview" element={<Navigate to="/admin/new-member/role-matrix" replace />} />

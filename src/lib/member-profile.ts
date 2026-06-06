@@ -43,23 +43,6 @@ export type ProfileFeatureState = {
   source: FeatureSource;
 };
 
-export type TaxonomyOptionState = {
-  key: string;
-  label: string;
-  description: string | null;
-  isActive: boolean;
-  isSelected: boolean;
-};
-
-export type TaxonomyGroupState = {
-  groupKey: string;
-  label: string;
-  description: string | null;
-  selectionMode: "single" | "multiple";
-  isRequired: boolean;
-  options: TaxonomyOptionState[];
-};
-
 export type PendingApprovalSummary = {
   id: string;
   requestType: ApprovalRequestType;
@@ -83,7 +66,6 @@ export type CurrentUserProfilePayload = {
   roleSlug: CanonicalRoleSlug;
   features: ProfileFeatureState[];
   attributes: ProfileAttributeState[];
-  taxonomyGroups: TaxonomyGroupState[];
   pendingRequests: PendingApprovalSummary[];
   profileCompletion: {
     requiredTotal: number;
@@ -204,45 +186,6 @@ export const mapCurrentUserProfilePayload = (value: Json | null): CurrentUserPro
         .filter((item): item is PendingApprovalSummary => Boolean(item))
     : [];
 
-  const taxonomyGroups = Array.isArray(record.taxonomy_groups)
-    ? record.taxonomy_groups
-        .map((item) => {
-          const group = asRecord(item);
-          const groupKey = readString(group, "group_key");
-          const label = readString(group, "label");
-          const selectionMode = readString(group, "selection_mode");
-          if (!groupKey || !label || !selectionMode) return null;
-
-          const options = Array.isArray(group.options)
-            ? group.options
-                .map((optionItem) => {
-                  const option = asRecord(optionItem);
-                  const key = readString(option, "key");
-                  const optionLabel = readString(option, "label");
-                  if (!key || !optionLabel) return null;
-                  return {
-                    key,
-                    label: optionLabel,
-                    description: readString(option, "description"),
-                    isActive: readBoolean(option, "is_active", true),
-                    isSelected: readBoolean(option, "is_selected"),
-                  };
-                })
-                .filter((option): option is TaxonomyOptionState => Boolean(option))
-            : [];
-
-          return {
-            groupKey,
-            label,
-            description: readString(group, "description"),
-            selectionMode: (selectionMode === "multiple" ? "multiple" : "single") as "single" | "multiple",
-            isRequired: readBoolean(group, "is_required"),
-            options,
-          };
-        })
-        .filter((group): group is TaxonomyGroupState => Boolean(group))
-    : [];
-
   const completionRecord = asRecord(record.profile_completion as Json | undefined);
 
   return {
@@ -256,7 +199,6 @@ export const mapCurrentUserProfilePayload = (value: Json | null): CurrentUserPro
     roleSlug: roleSlug as CanonicalRoleSlug,
     features,
     attributes,
-    taxonomyGroups,
     pendingRequests,
     profileCompletion: {
       requiredTotal: readNumber(completionRecord, "required_total"),
