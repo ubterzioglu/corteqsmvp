@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { clearUserFeatureOverrideAsAdmin, setUserFeatureOverrideDetailedAsAdmin } from "@/lib/admin";
+import { listAdminMemberCatalogProfiles } from "@/lib/member-catalog";
 
 type UserRow = {
   user_id: string;
@@ -88,28 +89,48 @@ const AdminUserOverridesPage = () => {
   useEffect(() => {
     let isMounted = true;
     void (async () => {
-      const [usersResult, featuresResult, overridesResult] = await Promise.all([
-        supabase.from("user_profiles").select("user_id, email, full_name, profile_type").order("created_at", { ascending: false }),
-        supabase.from("feature_catalog").select("key, label, scope_role").order("key"),
-        supabase.from("user_feature_overrides").select("user_id, feature_key, is_enabled, reason, updated_at").order("updated_at", { ascending: false }),
-      ]);
+      try {
+        const [usersResult, featuresResult, overridesResult] = await Promise.all([
+          listAdminMemberCatalogProfiles({
+            query: "",
+            provider: "all",
+            fromDate: "",
+            toDate: "",
+            sort: "created_desc",
+          }),
+          supabase.from("feature_catalog").select("key, label, scope_role").order("key"),
+          supabase.from("user_feature_overrides").select("user_id, feature_key, is_enabled, reason, updated_at").order("updated_at", { ascending: false }),
+        ]);
 
-      if (!isMounted) return;
+        if (!isMounted) return;
 
-      if (usersResult.error || featuresResult.error || overridesResult.error) {
+        if (featuresResult.error || overridesResult.error) {
+          toast({
+            title: "Override verileri alınamadı",
+            description: featuresResult.error?.message ?? overridesResult.error?.message ?? "Bilinmeyen hata",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        const userRows = usersResult.map((row) => ({
+          user_id: row.userId,
+          email: row.email ?? null,
+          full_name: row.fullName ?? null,
+          profile_type: row.profileType ?? "bireysel",
+        })) as UserRow[];
+        setUsers(userRows);
+        setFeatures((featuresResult.data ?? []) as FeatureRow[]);
+        setOverrides((overridesResult.data ?? []) as OverrideRow[]);
+        setSelectedUserId(userRows[0]?.user_id ?? "");
+      } catch (error) {
+        if (!isMounted) return;
         toast({
           title: "Override verileri alınamadı",
-          description: usersResult.error?.message ?? featuresResult.error?.message ?? overridesResult.error?.message ?? "Bilinmeyen hata",
+          description: error instanceof Error ? error.message : "Bilinmeyen hata",
           variant: "destructive",
         });
-        return;
       }
-
-      const userRows = (usersResult.data ?? []) as UserRow[];
-      setUsers(userRows);
-      setFeatures((featuresResult.data ?? []) as FeatureRow[]);
-      setOverrides((overridesResult.data ?? []) as OverrideRow[]);
-      setSelectedUserId(userRows[0]?.user_id ?? "");
     })();
 
     return () => {

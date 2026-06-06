@@ -1,30 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const {
-  getUserMock,
-  eqMock,
-  updateMock,
-  fromMock,
   rpcMock,
+  getCurrentMemberCatalogProfileMock,
 } = vi.hoisted(() => {
-  const eq = vi.fn();
-  const update = vi.fn(() => ({ eq }));
-
   return {
-    getUserMock: vi.fn(),
-    eqMock: eq,
-    updateMock: update,
-    fromMock: vi.fn(() => ({ update })),
     rpcMock: vi.fn(),
+    getCurrentMemberCatalogProfileMock: vi.fn(),
   };
 });
 
+vi.mock("@/lib/member-catalog", () => ({
+  getCurrentMemberCatalogProfile: getCurrentMemberCatalogProfileMock,
+}));
+
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
-    auth: {
-      getUser: getUserMock,
-    },
-    from: fromMock,
     rpc: rpcMock,
   },
 }));
@@ -34,19 +25,20 @@ import { updateProfileAttribute } from "@/lib/member-profile-api";
 describe("updateProfileAttribute", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    getUserMock.mockResolvedValue({ data: { user: { id: "user-1" } }, error: null });
-    eqMock.mockResolvedValue({ error: null });
+    getCurrentMemberCatalogProfileMock.mockResolvedValue({ itemId: "item-1", userId: "user-1" });
     rpcMock.mockResolvedValue({ data: { status: "approved" }, error: null });
   });
 
-  it("updates full_name directly on user_profiles", async () => {
+  it("updates full_name through the catalog item RPC", async () => {
     const result = await updateProfileAttribute("full_name", "  Birey CorteQ  ", "public");
 
-    expect(getUserMock).toHaveBeenCalledTimes(1);
-    expect(fromMock).toHaveBeenCalledWith("user_profiles");
-    expect(updateMock).toHaveBeenCalledWith({ full_name: "Birey CorteQ" });
-    expect(eqMock).toHaveBeenCalledWith("user_id", "user-1");
-    expect(rpcMock).not.toHaveBeenCalled();
+    expect(getCurrentMemberCatalogProfileMock).toHaveBeenCalledTimes(1);
+    expect(rpcMock).toHaveBeenCalledWith("update_catalog_item_attribute", {
+      p_item_id: "item-1",
+      p_attribute_key: "full_name",
+      p_value: "Birey CorteQ",
+      p_visibility: "public",
+    });
     expect(result).toEqual({
       attribute_key: "full_name",
       status: "approved",
@@ -62,6 +54,5 @@ describe("updateProfileAttribute", () => {
       attribute_value: "Kısa açıklama",
       visibility: "public",
     });
-    expect(fromMock).not.toHaveBeenCalled();
   });
 });

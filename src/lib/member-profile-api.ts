@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { AttributeVisibility } from "@/lib/member-profile";
+import { getCurrentMemberCatalogProfile } from "@/lib/member-catalog";
 
 export async function submitRoleChangeRequest(targetRoleKey: string, note: string) {
   const { data, error } = await supabase.rpc("submit_role_change_request", {
@@ -23,24 +24,21 @@ export async function submitFeatureRequest(featureKey: string, payload: Record<s
 
 export async function updateProfileAttribute(attributeKey: string, value: unknown, visibility?: AttributeVisibility) {
   if (attributeKey === "full_name") {
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError) throw userError;
-
-    const userId = userData.user?.id;
-    if (!userId) {
-      throw new Error("Kullanıcı bulunamadı.");
+    const currentMemberProfile = await getCurrentMemberCatalogProfile();
+    if (!currentMemberProfile?.itemId) {
+      throw new Error("Member profil kaydı bulunamadı.");
     }
 
     const normalizedValue = typeof value === "string"
       ? value.trim()
       : String(value ?? "").trim();
 
-    const { error } = await supabase
-      .from("user_profiles")
-      .update({
-        full_name: normalizedValue || null,
-      })
-      .eq("user_id", userId);
+    const { error } = await supabase.rpc("update_catalog_item_attribute", {
+      p_item_id: currentMemberProfile.itemId,
+      p_attribute_key: "full_name",
+      p_value: normalizedValue || null,
+      p_visibility: visibility ?? "public",
+    });
 
     if (error) throw error;
 

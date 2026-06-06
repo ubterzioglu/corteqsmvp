@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { defaultProfileType, profileTypeOptions, type ProfileType } from "@/lib/profile-types";
+import { getCurrentMemberCatalogProfile } from "@/lib/member-catalog";
 
 const iconByType: Record<ProfileType, JSX.Element> = {
   bireysel: <CircleUserRound className="h-5 w-5 text-blue-500" />,
@@ -32,27 +33,23 @@ const ProfileResolverPage = () => {
     let isMounted = true;
 
     void (async () => {
-      const { data, error } = await supabase
-        .from("user_profiles")
-        .select("profile_type")
-        .eq("user_id", user.id)
-        .maybeSingle();
+      try {
+        const data = await getCurrentMemberCatalogProfile();
 
-      if (!isMounted) return;
+        if (!isMounted) return;
 
-      if (error) {
-        setErrorMessage(error.message);
+        const profileType = data?.profileType;
+        if (profileType && profileTypeOptions.some((option) => option.type === profileType)) {
+          setInitialProfileType(profileType as ProfileType);
+        } else {
+          setInitialProfileType(null);
+        }
         setIsProfileLoading(false);
-        return;
+      } catch (error) {
+        if (!isMounted) return;
+        setErrorMessage(error instanceof Error ? error.message : "Profil tipi alınamadı.");
+        setIsProfileLoading(false);
       }
-
-      const profileType = data?.profile_type;
-      if (profileType && profileTypeOptions.some((option) => option.type === profileType)) {
-        setInitialProfileType(profileType as ProfileType);
-      } else {
-        setInitialProfileType(null);
-      }
-      setIsProfileLoading(false);
     })();
 
     return () => {
@@ -77,17 +74,9 @@ const ProfileResolverPage = () => {
     setErrorMessage(null);
     setIsSaving(true);
 
-    const { error } = await supabase
-      .from("user_profiles")
-      .upsert(
-        {
-          user_id: user.id,
-          email: user.email ?? null,
-          full_name: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
-          profile_type: selectedType,
-        },
-        { onConflict: "user_id" },
-      );
+    const { error } = await supabase.rpc("set_current_member_catalog_role", {
+      p_role_key: selectedType,
+    });
 
     if (error) {
       setErrorMessage(error.message);

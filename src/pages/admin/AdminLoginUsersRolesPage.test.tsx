@@ -4,11 +4,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import AdminLoginUsersRolesPage from "@/pages/admin/AdminLoginUsersRolesPage";
 
-const { toast, setUserRoleAsAdmin, updateUserProfileAttributeAsAdmin, updateUserTaxonomySelectionAsAdmin } = vi.hoisted(() => ({
+const { toast, updateUserTaxonomySelectionAsAdmin, setMemberCatalogRoleAsAdmin, listAdminMemberCatalogProfiles, getCatalogItemProfile, adminSetCatalogItemAttribute } = vi.hoisted(() => ({
   toast: vi.fn(),
-  setUserRoleAsAdmin: vi.fn(),
-  updateUserProfileAttributeAsAdmin: vi.fn(),
   updateUserTaxonomySelectionAsAdmin: vi.fn(),
+  setMemberCatalogRoleAsAdmin: vi.fn(),
+  listAdminMemberCatalogProfiles: vi.fn(),
+  getCatalogItemProfile: vi.fn(),
+  adminSetCatalogItemAttribute: vi.fn(),
 }));
 
 vi.mock("@/hooks/use-toast", () => ({
@@ -18,9 +20,17 @@ vi.mock("@/hooks/use-toast", () => ({
 }));
 
 vi.mock("@/lib/admin", () => ({
-  setUserRoleAsAdmin,
-  updateUserProfileAttributeAsAdmin,
   updateUserTaxonomySelectionAsAdmin,
+}));
+
+vi.mock("@/lib/member-catalog", () => ({
+  listAdminMemberCatalogProfiles,
+  setMemberCatalogRoleAsAdmin,
+}));
+
+vi.mock("@/lib/catalog-entity-api", () => ({
+  getCatalogItemProfile,
+  adminSetCatalogItemAttribute,
 }));
 
 const roles = [
@@ -28,22 +38,24 @@ const roles = [
   { id: "role-danisman", key: "danisman", label: "Danışman", sort_order: 20, is_active: true },
 ];
 
-const userProfiles = [
+const memberProfiles = [
   {
-    user_id: "user-1",
+    itemId: "item-1",
+    userId: "user-1",
     email: "ayse@example.com",
-    full_name: "Ayşe Yılmaz",
-    profile_type: "bireysel",
-    auth_provider: "google",
-    created_at: "2026-05-24T13:30:04.000Z",
+    fullName: "Ayşe Yılmaz",
+    profileType: "bireysel",
+    authProvider: "google",
+    createdAt: "2026-05-24T13:30:04.000Z",
   },
   {
-    user_id: "user-2",
+    itemId: "item-2",
+    userId: "user-2",
     email: "mehmet@example.com",
-    full_name: "Mehmet Kara",
-    profile_type: "danisman",
-    auth_provider: "google",
-    created_at: "2026-05-23T13:30:04.000Z",
+    fullName: "Mehmet Kara",
+    profileType: "danisman",
+    authProvider: "google",
+    createdAt: "2026-05-23T13:30:04.000Z",
   },
 ];
 
@@ -54,35 +66,50 @@ const roleAssignments = [
 
 const pendingApprovals = [{ user_id: "user-1", status: "pending" }];
 const overrides = [{ user_id: "user-1", feature_key: "profile-edit" }];
-const userProfileAttributes = [
-  {
-    attribute_id: "attr-bio",
-    value_text: "Kurucu ekipten.",
-    value_json: null,
-    visibility: "public",
-    approval_status: "approved",
-  },
-];
-const attributeCatalog = [
-  {
-    id: "attr-bio",
-    key: "bio",
-    label: "Bio",
-    description: "Kısa açıklama",
-    data_type: "textarea",
-    is_system: false,
-    sort_order: 20,
-  },
-  {
-    id: "attr-country",
-    key: "country",
-    label: "Ülke",
-    description: "Profil ülkesi",
-    data_type: "text",
-    is_system: false,
-    sort_order: 30,
-  },
-];
+const catalogProfile = {
+  id: "item-1",
+  item_type: "member",
+  slug: "member-user-1",
+  title: "Ayşe Yılmaz",
+  status: "published",
+  visibility: "private",
+  linked_user_id: "user-1",
+  attributes: [
+    {
+      attribute_key: "full_name",
+      label: "Görünen İsim",
+      data_type: "text",
+      is_system: true,
+      sort_order: 0,
+      is_required: true,
+      is_public_default: true,
+      editor_can_edit: true,
+      editor_can_hide: false,
+      requires_admin_approval_on_change: false,
+      visibility: "public",
+      approval_status: "approved",
+      value_text: "Ayşe Yılmaz",
+      value_json: null,
+    },
+    {
+      attribute_key: "bio",
+      label: "Bio",
+      data_type: "textarea",
+      is_system: false,
+      sort_order: 20,
+      is_required: false,
+      is_public_default: true,
+      editor_can_edit: true,
+      editor_can_hide: true,
+      requires_admin_approval_on_change: false,
+      visibility: "public",
+      approval_status: "approved",
+      value_text: "Kurucu ekipten.",
+      value_json: null,
+    },
+  ],
+  features: [],
+};
 const userTaxonomySelections = [{ group_id: "group-focus", option_id: "option-community" }];
 const roleTaxonomyRules = [{ group_id: "group-focus" }];
 const taxonomyGroups = [
@@ -103,21 +130,6 @@ vi.mock("@/integrations/supabase/client", () => ({
               order: () => Promise.resolve({ data: roles, error: null }),
             }),
           }),
-        };
-      }
-
-      if (table === "user_profiles") {
-        return {
-          select: () => {
-            const query = {
-              eq: () => query,
-              or: () => query,
-              gte: () => query,
-              lt: () => query,
-              order: () => Promise.resolve({ data: userProfiles, error: null }),
-            };
-            return query;
-          },
         };
       }
 
@@ -143,24 +155,6 @@ vi.mock("@/integrations/supabase/client", () => ({
         return {
           select: () => ({
             in: () => Promise.resolve({ data: overrides, error: null }),
-          }),
-        };
-      }
-
-      if (table === "user_profile_attributes") {
-        return {
-          select: () => ({
-            eq: () => Promise.resolve({ data: userProfileAttributes, error: null }),
-          }),
-        };
-      }
-
-      if (table === "attribute_catalog") {
-        return {
-          select: () => ({
-            eq: () => ({
-              order: () => Promise.resolve({ data: attributeCatalog, error: null }),
-            }),
           }),
         };
       }
@@ -238,11 +232,15 @@ beforeEach(() => {
     value: vi.fn(),
   });
   toast.mockReset();
-  setUserRoleAsAdmin.mockReset();
-  updateUserProfileAttributeAsAdmin.mockReset();
   updateUserTaxonomySelectionAsAdmin.mockReset();
-  setUserRoleAsAdmin.mockResolvedValue(undefined);
-  updateUserProfileAttributeAsAdmin.mockResolvedValue(undefined);
+  setMemberCatalogRoleAsAdmin.mockReset();
+  listAdminMemberCatalogProfiles.mockReset();
+  getCatalogItemProfile.mockReset();
+  adminSetCatalogItemAttribute.mockReset();
+  setMemberCatalogRoleAsAdmin.mockResolvedValue(undefined);
+  listAdminMemberCatalogProfiles.mockResolvedValue(memberProfiles);
+  getCatalogItemProfile.mockResolvedValue(catalogProfile);
+  adminSetCatalogItemAttribute.mockResolvedValue(undefined);
   updateUserTaxonomySelectionAsAdmin.mockResolvedValue(undefined);
 });
 
@@ -299,17 +297,17 @@ describe("AdminLoginUsersRolesPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Tüm Değişiklikleri Kaydet" }));
 
     await waitFor(() => {
-      expect(updateUserProfileAttributeAsAdmin).toHaveBeenCalled();
+      expect(adminSetCatalogItemAttribute).toHaveBeenCalled();
     });
 
-    expect(setUserRoleAsAdmin).not.toHaveBeenCalled();
-    expect(updateUserProfileAttributeAsAdmin).toHaveBeenCalledTimes(1);
-    expect(updateUserProfileAttributeAsAdmin).toHaveBeenCalledWith("user-1", "bio", "Topluluk lideri.", "public");
+    expect(setMemberCatalogRoleAsAdmin).not.toHaveBeenCalled();
+    expect(adminSetCatalogItemAttribute).toHaveBeenCalledTimes(1);
+    expect(adminSetCatalogItemAttribute).toHaveBeenCalledWith("item-1", "bio", "Topluluk lideri.", "public");
     expect(updateUserTaxonomySelectionAsAdmin).toHaveBeenCalledWith("user-1", "focus", ["community", "growth"]);
   });
 
   it("does not show success or continue saving when role update fails", async () => {
-    setUserRoleAsAdmin.mockRejectedValueOnce(new Error("role update failed"));
+    setMemberCatalogRoleAsAdmin.mockRejectedValueOnce(new Error("role update failed"));
     renderPage();
 
     expect(await screen.findByText("Ayşe Yılmaz")).toBeInTheDocument();
@@ -322,10 +320,10 @@ describe("AdminLoginUsersRolesPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Tüm Değişiklikleri Kaydet" }));
 
     await waitFor(() => {
-      expect(setUserRoleAsAdmin).toHaveBeenCalledWith("user-1", "danisman");
+      expect(setMemberCatalogRoleAsAdmin).toHaveBeenCalledWith("item-1", "danisman");
     });
 
-    expect(updateUserProfileAttributeAsAdmin).not.toHaveBeenCalled();
+    expect(adminSetCatalogItemAttribute).not.toHaveBeenCalled();
     expect(updateUserTaxonomySelectionAsAdmin).not.toHaveBeenCalled();
     expect(toast).toHaveBeenCalledWith(
       expect.objectContaining({

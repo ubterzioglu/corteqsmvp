@@ -8,6 +8,8 @@ import {
   type IndividualProfileDetailsCore,
   type IndividualProfileUpdateInput,
 } from "@/lib/individual-profile";
+import { getCurrentMemberCatalogProfile } from "@/lib/member-catalog";
+import { updateProfileAttribute } from "@/lib/member-profile-api";
 
 const PROFILE_DETAILS_SELECT = [
   "user_id",
@@ -57,37 +59,34 @@ export const useIndividualProfileDetails = (enabled = true) => {
     setIsLoading(true);
     setErrorMessage(null);
 
-    const [{ data: profileData, error: profileError }, { data, error }] = await Promise.all([
-      supabase.from("user_profiles").select("full_name, email").eq("user_id", user.id).maybeSingle(),
+    const [{ data: detailsData, error: detailsError }, memberProfile] = await Promise.all([
       supabase
         .from("individual_profile_details")
         .select(PROFILE_DETAILS_SELECT)
         .eq("user_id", user.id)
         .maybeSingle(),
+      getCurrentMemberCatalogProfile(),
     ]);
 
     const resolvedDisplayName =
-      typeof profileData?.full_name === "string" && profileData.full_name.trim().length > 0
-        ? profileData.full_name
+      typeof memberProfile?.fullName === "string" && memberProfile.fullName.trim().length > 0
+        ? memberProfile.fullName
         : displayName;
-    const resolvedEmail =
-      typeof profileData?.email === "string" && profileData.email.trim().length > 0
-        ? profileData.email
-        : email;
+    const resolvedEmail = email;
     const fallback = buildFallbackIndividualProfileDetails({
       userId: user.id,
       displayName: resolvedDisplayName,
       email: resolvedEmail,
     });
 
-    if (error || profileError) {
+    if (detailsError) {
       setDetails(fallback);
-      setErrorMessage(error?.message ?? profileError?.message ?? "Profil verisi yuklenemedi.");
+      setErrorMessage(detailsError.message ?? "Profil verisi yuklenemedi.");
       setIsLoading(false);
       return;
     }
 
-    setDetails(mapIndividualProfileRow(data, fallback));
+    setDetails(mapIndividualProfileRow(detailsData, fallback));
     setIsLoading(false);
   }, [displayName, email, enabled, user]);
 
@@ -195,14 +194,7 @@ export const useIndividualProfileDetails = (enabled = true) => {
         throw detailsError;
       }
 
-      const { error: profileError } = await supabase
-        .from("user_profiles")
-        .update({ full_name: input.displayName || null })
-        .eq("user_id", user.id);
-
-      if (profileError) {
-        throw profileError;
-      }
+      await updateProfileAttribute("full_name", input.displayName || null, "public");
 
       const normalizedName = input.displayName.trim();
       if (normalizedName) {

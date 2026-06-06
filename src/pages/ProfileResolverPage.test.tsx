@@ -5,19 +5,20 @@ import { describe, expect, it, vi } from "vitest";
 import ProfileResolverPage from "@/pages/ProfileResolverPage";
 
 const useAuthMock = vi.fn();
-const maybeSingleMock = vi.fn();
-const upsertMock = vi.fn();
-const eqMock = vi.fn();
-const selectMock = vi.fn();
-const fromMock = vi.fn();
+const rpcMock = vi.fn();
+const getCurrentMemberCatalogProfileMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
 }));
 
+vi.mock("@/lib/member-catalog", () => ({
+  getCurrentMemberCatalogProfile: () => getCurrentMemberCatalogProfileMock(),
+}));
+
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
-    from: (...args: unknown[]) => fromMock(...args),
+    rpc: (...args: unknown[]) => rpcMock(...args),
   },
 }));
 
@@ -28,10 +29,7 @@ describe("ProfileResolverPage", () => {
       isLoading: false,
     });
 
-    maybeSingleMock.mockResolvedValue({ data: { profile_type: "danisman" }, error: null });
-    eqMock.mockReturnValue({ maybeSingle: maybeSingleMock });
-    selectMock.mockReturnValue({ eq: eqMock });
-    fromMock.mockReturnValue({ select: selectMock });
+    getCurrentMemberCatalogProfileMock.mockResolvedValue({ profileType: "danisman" });
 
     render(
       <MemoryRouter initialEntries={["/profile"]}>
@@ -51,11 +49,8 @@ describe("ProfileResolverPage", () => {
       isLoading: false,
     });
 
-    maybeSingleMock.mockResolvedValue({ data: null, error: null });
-    eqMock.mockReturnValue({ maybeSingle: maybeSingleMock });
-    selectMock.mockReturnValue({ eq: eqMock });
-    upsertMock.mockResolvedValue({ error: null });
-    fromMock.mockReturnValue({ select: selectMock, upsert: upsertMock });
+    getCurrentMemberCatalogProfileMock.mockResolvedValue(null);
+    rpcMock.mockResolvedValue({ error: null });
 
     render(
       <MemoryRouter initialEntries={["/profile"]}>
@@ -70,7 +65,9 @@ describe("ProfileResolverPage", () => {
     fireEvent.click(screen.getByRole("button", { name: /Devam Et/i }));
 
     await waitFor(() => {
-      expect(upsertMock).toHaveBeenCalled();
+      expect(rpcMock).toHaveBeenCalledWith("set_current_member_catalog_role", {
+        p_role_key: "isletme",
+      });
     });
     expect(await screen.findByText("Isletme Profil")).toBeInTheDocument();
   });

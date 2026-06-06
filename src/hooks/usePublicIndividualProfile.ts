@@ -7,6 +7,7 @@ import {
   mapIndividualProfileRow,
   type IndividualProfileDetailsCore,
 } from "@/lib/individual-profile";
+import { listMemberCatalogNames } from "@/lib/member-catalog";
 
 const PROFILE_DETAILS_SELECT = [
   "user_id",
@@ -52,26 +53,22 @@ export const usePublicIndividualProfile = (targetUserId: string | undefined) => 
       setErrorMessage(null);
 
       const [
-        { data: profileData, error: profileError },
         { data: detailsData, error: detailsError },
+        nameMap,
       ] = await Promise.all([
-        supabase
-          .from("user_profiles")
-          .select("full_name, email")
-          .eq("user_id", targetUserId)
-          .maybeSingle(),
         supabase
           .from("individual_profile_details")
           .select(PROFILE_DETAILS_SELECT)
           .eq("user_id", targetUserId)
           .maybeSingle(),
+        listMemberCatalogNames([targetUserId]),
       ]);
 
       if (!isMounted) return;
 
-      if (detailsError || profileError) {
+      if (detailsError) {
         setErrorMessage(
-          detailsError?.message ?? profileError?.message ?? "Profil verisi yuklenemedi.",
+          detailsError.message ?? "Profil verisi yuklenemedi.",
         );
         setDetails(null);
         setIsLoading(false);
@@ -84,14 +81,8 @@ export const usePublicIndividualProfile = (targetUserId: string | undefined) => 
         return;
       }
 
-      const displayName =
-        typeof profileData?.full_name === "string" && profileData.full_name.trim()
-          ? profileData.full_name
-          : "CorteQS Üyesi";
-      const email =
-        typeof profileData?.email === "string" && profileData.email.trim()
-          ? profileData.email
-          : "-";
+      const displayName = nameMap.get(targetUserId) ?? "CorteQS Üyesi";
+      const email = "-";
 
       const fallback = buildFallbackIndividualProfileDetails({
         userId: targetUserId,

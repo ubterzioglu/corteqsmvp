@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { listMemberCatalogNames } from "@/lib/member-catalog";
 
 export type DirectoryProfile = {
   userId: string;
@@ -99,17 +100,8 @@ export const useIndividualDirectory = (limit = 20) => {
 
       const userIds = rows.map((r: any) => r.user_id as string);
 
-      const { data: profileRows } = await supabase
-        .from("user_profiles")
-        .select("user_id, full_name")
-        .in("user_id", userIds);
-
+      const nameMap = await listMemberCatalogNames(userIds);
       if (!isMounted) return;
-
-      const nameMap = new Map<string, string>();
-      (profileRows ?? []).forEach((p: any) => {
-        if (p.user_id && p.full_name) nameMap.set(p.user_id, p.full_name);
-      });
 
       const mapped: DirectoryProfile[] = rows.map((r: any) => {
         const front = r.front_card ?? {};

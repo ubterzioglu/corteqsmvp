@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
-import { setUserRoleAsAdmin, updateUserProfileAttributeAsAdmin, updateUserTaxonomySelectionAsAdmin } from "@/lib/admin";
+import { updateUserTaxonomySelectionAsAdmin } from "@/lib/admin";
 import AdminPageGuideAccordion, { type AdminPageGuideSection } from "@/components/admin/AdminPageGuideAccordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,8 +16,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import RoleSearchSelect from "@/components/admin/RoleSearchSelect";
+import { adminSetCatalogItemAttribute, getCatalogItemProfile } from "@/lib/catalog-entity-api";
+import { listAdminMemberCatalogProfiles, setMemberCatalogRoleAsAdmin } from "@/lib/member-catalog";
 
 type UserRow = {
+  item_id: string;
   user_id: string;
   email: string | null;
   full_name: string | null;
@@ -37,24 +40,6 @@ type RoleRow = {
 type AssignmentRow = {
   user_id: string;
   role_id: string;
-};
-
-type UserAttributeValueRow = {
-  attribute_id: string;
-  value_text: string | null;
-  value_json: unknown;
-  visibility: "public" | "private";
-  approval_status: "draft" | "pending" | "approved" | "rejected";
-};
-
-type AttributeCatalogDetailRow = {
-  id: string;
-  key: string;
-  label: string;
-  description: string | null;
-  data_type: string;
-  is_system: boolean;
-  sort_order: number;
 };
 
 type UserTaxonomySelectionRow = {
@@ -308,110 +293,93 @@ const AdminLoginUsersRolesPage = () => {
     let isMounted = true;
 
     void (async () => {
-      setIsLoading(true);
-      setErrorMessage(null);
+      try {
+        setIsLoading(true);
+        setErrorMessage(null);
+        const data = await listAdminMemberCatalogProfiles({
+          query: searchText,
+          provider: providerFilter,
+          fromDate,
+          toDate,
+          sort: sortFilter,
+        });
 
-      let query = supabase
-        .from("user_profiles")
-        .select("user_id, email, full_name, profile_type, auth_provider, created_at");
+        if (!isMounted) return;
 
-      if (providerFilter === "google") {
-        query = query.eq("auth_provider", "google");
-      } else if (providerFilter === "unknown") {
-        query = query.or("auth_provider.is.null,auth_provider.eq.unknown");
-      }
+        const userRows = data.map((row) => ({
+          item_id: row.itemId,
+          user_id: row.userId,
+          email: row.email ?? null,
+          full_name: row.fullName ?? null,
+          profile_type: row.profileType ?? "bireysel",
+          auth_provider: row.authProvider ?? null,
+          created_at: row.createdAt ?? new Date(0).toISOString(),
+        })) as UserRow[];
+        setRows(userRows);
 
-      const trimmedSearch = searchText.trim();
-      if (trimmedSearch) {
-        query = query.or(`full_name.ilike.%${trimmedSearch}%,email.ilike.%${trimmedSearch}%`);
-      }
+        if (userRows.length === 0) {
+          setRoleByUserId({});
+          setPendingCountByUserId({});
+          setOverrideCountByUserId({});
+          setIsLoading(false);
+          return;
+        }
 
-      if (fromDate) {
-        query = query.gte("created_at", `${fromDate}T00:00:00.000Z`);
-      }
+        const [assignmentsResult, approvalsResult, overridesResult] = await Promise.all([
+          supabase
+            .from("user_role_assignments")
+            .select("user_id, role_id")
+            .in("user_id", userRows.map((row) => row.user_id)),
+          supabase
+            .from("approval_requests")
+            .select("user_id, status")
+            .eq("status", "pending")
+            .in("user_id", userRows.map((row) => row.user_id)),
+          supabase
+            .from("user_feature_overrides")
+            .select("user_id, feature_key")
+            .in("user_id", userRows.map((row) => row.user_id)),
+        ]);
 
-      if (toDate) {
-        const nextDate = new Date(`${toDate}T00:00:00.000Z`);
-        nextDate.setUTCDate(nextDate.getUTCDate() + 1);
-        query = query.lt("created_at", nextDate.toISOString());
-      }
+        if (!isMounted) return;
 
-      if (sortFilter === "created_desc") {
-        query = query.order("created_at", { ascending: false });
-      } else if (sortFilter === "created_asc") {
-        query = query.order("created_at", { ascending: true });
-      } else {
-        query = query.order("full_name", { ascending: true, nullsFirst: false });
-      }
+        if (assignmentsResult.error || approvalsResult.error || overridesResult.error) {
+          setErrorMessage(assignmentsResult.error?.message ?? approvalsResult.error?.message ?? overridesResult.error?.message ?? "Bilinmeyen hata");
+          setRoleByUserId({});
+          setPendingCountByUserId({});
+          setOverrideCountByUserId({});
+          setIsLoading(false);
+          return;
+        }
 
-      const { data, error } = await query;
+        const nextMap: Record<string, string> = {};
+        for (const item of (assignmentsResult.data ?? []) as AssignmentRow[]) {
+          nextMap[item.user_id] = item.role_id;
+        }
 
-      if (!isMounted) return;
+        const nextPendingCountByUserId: Record<string, number> = {};
+        for (const row of approvalsResult.data ?? []) {
+          nextPendingCountByUserId[row.user_id] = (nextPendingCountByUserId[row.user_id] ?? 0) + 1;
+        }
 
-      if (error) {
+        const nextOverrideCountByUserId: Record<string, number> = {};
+        for (const row of overridesResult.data ?? []) {
+          nextOverrideCountByUserId[row.user_id] = (nextOverrideCountByUserId[row.user_id] ?? 0) + 1;
+        }
+
+        setRoleByUserId(nextMap);
+        setPendingCountByUserId(nextPendingCountByUserId);
+        setOverrideCountByUserId(nextOverrideCountByUserId);
+        setIsLoading(false);
+      } catch (error) {
+        if (!isMounted) return;
         setRows([]);
-        setErrorMessage(error.message);
-        setIsLoading(false);
-        return;
-      }
-
-      const userRows = (data ?? []) as UserRow[];
-      setRows(userRows);
-
-      if (userRows.length === 0) {
         setRoleByUserId({});
         setPendingCountByUserId({});
         setOverrideCountByUserId({});
+        setErrorMessage(error instanceof Error ? error.message : "Bilinmeyen hata");
         setIsLoading(false);
-        return;
       }
-
-      const [assignmentsResult, approvalsResult, overridesResult] = await Promise.all([
-        supabase
-          .from("user_role_assignments")
-          .select("user_id, role_id")
-          .in("user_id", userRows.map((row) => row.user_id)),
-        supabase
-          .from("approval_requests")
-          .select("user_id, status")
-          .eq("status", "pending")
-          .in("user_id", userRows.map((row) => row.user_id)),
-        supabase
-          .from("user_feature_overrides")
-          .select("user_id, feature_key")
-          .in("user_id", userRows.map((row) => row.user_id)),
-      ]);
-
-      if (!isMounted) return;
-
-      if (assignmentsResult.error || approvalsResult.error || overridesResult.error) {
-        setErrorMessage(assignmentsResult.error?.message ?? approvalsResult.error?.message ?? overridesResult.error?.message ?? "Bilinmeyen hata");
-        setRoleByUserId({});
-        setPendingCountByUserId({});
-        setOverrideCountByUserId({});
-        setIsLoading(false);
-        return;
-      }
-
-      const nextMap: Record<string, string> = {};
-      for (const item of (assignmentsResult.data ?? []) as AssignmentRow[]) {
-        nextMap[item.user_id] = item.role_id;
-      }
-
-      const nextPendingCountByUserId: Record<string, number> = {};
-      for (const row of approvalsResult.data ?? []) {
-        nextPendingCountByUserId[row.user_id] = (nextPendingCountByUserId[row.user_id] ?? 0) + 1;
-      }
-
-      const nextOverrideCountByUserId: Record<string, number> = {};
-      for (const row of overridesResult.data ?? []) {
-        nextOverrideCountByUserId[row.user_id] = (nextOverrideCountByUserId[row.user_id] ?? 0) + 1;
-      }
-
-      setRoleByUserId(nextMap);
-      setPendingCountByUserId(nextPendingCountByUserId);
-      setOverrideCountByUserId(nextOverrideCountByUserId);
-      setIsLoading(false);
     })();
 
     return () => {
@@ -459,7 +427,7 @@ const AdminLoginUsersRolesPage = () => {
     setUpdatingUserId(row.user_id);
 
     try {
-      await setUserRoleAsAdmin(row.user_id, nextRole.key);
+      await setMemberCatalogRoleAsAdmin(row.item_id, nextRole.key);
       setRows((current) =>
         current.map((item) => (item.user_id === row.user_id ? { ...item, profile_type: nextRole.key } : item)),
       );
@@ -509,22 +477,8 @@ const AdminLoginUsersRolesPage = () => {
     setTaxonomyDrafts({});
 
     try {
-      const { data: attributeRows, error: attributeError } = await supabase
-        .from("user_profile_attributes")
-        .select("attribute_id, value_text, value_json, visibility, approval_status")
-        .eq("user_id", row.user_id);
-
-      if (attributeError) throw attributeError;
-
-      const typedAttributeRows = (attributeRows ?? []) as UserAttributeValueRow[];
-      const attributeValueById = new Map(typedAttributeRows.map((item) => [item.attribute_id, item]));
-
-      const [catalogResult, taxonomySelectionsResult, roleTaxonomyRulesResult] = await Promise.all([
-        supabase
-          .from("attribute_catalog")
-          .select("id, key, label, description, data_type, is_system, sort_order")
-          .eq("is_active", true)
-          .order("sort_order", { ascending: true }),
+      const [catalogProfile, taxonomySelectionsResult, roleTaxonomyRulesResult] = await Promise.all([
+        getCatalogItemProfile(row.item_id),
         supabase
           .from("user_taxonomy_selections")
           .select("group_id, option_id")
@@ -538,8 +492,8 @@ const AdminLoginUsersRolesPage = () => {
           : Promise.resolve({ data: [], error: null }),
       ]);
 
-      if (catalogResult.error || taxonomySelectionsResult.error || roleTaxonomyRulesResult.error) {
-        throw catalogResult.error ?? taxonomySelectionsResult.error ?? roleTaxonomyRulesResult.error;
+      if (taxonomySelectionsResult.error || roleTaxonomyRulesResult.error) {
+        throw taxonomySelectionsResult.error ?? roleTaxonomyRulesResult.error;
       }
 
       const taxonomySelections = (taxonomySelectionsResult.data ?? []) as UserTaxonomySelectionRow[];
@@ -565,39 +519,19 @@ const AdminLoginUsersRolesPage = () => {
         throw taxonomyGroupsResult.error ?? taxonomyOptionsResult.error;
       }
 
-      const catalogById = new Map(
-        ((catalogResult.data ?? []) as AttributeCatalogDetailRow[]).map((item) => [item.id, item]),
-      );
-
-      const attributes: UserAttributeDisplayItem[] = [
-        {
-          key: "full_name",
-          label: "Görünen İsim",
-          description: "user_profiles içindeki görünen ad",
-          dataType: "text",
-          value: row.full_name?.trim() || "-",
-          visibility: "public",
-          approvalStatus: "approved",
-          isSystem: true,
-          sortOrder: 0,
-        },
-        ...((catalogResult.data ?? []) as AttributeCatalogDetailRow[])
-          .map((catalog) => {
-            const item = attributeValueById.get(catalog.id);
-            return {
-              key: catalog.key,
-              label: catalog.label,
-              description: catalog.description,
-              dataType: catalog.data_type,
-              value: item ? formatAttributeValue(item.value_text, item.value_json) : "-",
-              visibility: item?.visibility ?? "private",
-              approvalStatus: item?.approval_status ?? "approved",
-              isSystem: catalog.is_system,
-              sortOrder: catalog.sort_order,
-            } satisfies UserAttributeDisplayItem;
-          })
-          .sort((left, right) => left.sortOrder - right.sortOrder),
-      ];
+      const attributes: UserAttributeDisplayItem[] = catalogProfile.attributes
+        .map((attribute) => ({
+          key: attribute.attribute_key,
+          label: attribute.label,
+          description: null,
+          dataType: attribute.data_type,
+          value: formatAttributeValue(attribute.value_text, attribute.value_json),
+          visibility: attribute.visibility === "admin_only" ? "private" : attribute.visibility,
+          approvalStatus: attribute.approval_status,
+          isSystem: attribute.is_system,
+          sortOrder: attribute.sort_order,
+        }))
+        .sort((left, right) => left.sortOrder - right.sortOrder);
 
       const taxonomyGroupsById = new Map(
         ((taxonomyGroupsResult.data ?? []) as TaxonomyGroupRow[]).map((item) => [item.id, item]),
@@ -698,8 +632,8 @@ const AdminLoginUsersRolesPage = () => {
         const nextVisibility = visibilityDrafts[attribute.key] ?? attribute.visibility;
         if (!shouldSaveAttributeDraft(attribute, rawValue, nextVisibility)) continue;
         const payload = parseAttributeDraftValue(attribute, rawValue);
-        await updateUserProfileAttributeAsAdmin(
-          userDataDialogState.user.user_id,
+        await adminSetCatalogItemAttribute(
+          userDataDialogState.user.item_id,
           attribute.key,
           payload,
           nextVisibility,
