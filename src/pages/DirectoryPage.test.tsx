@@ -9,6 +9,7 @@ const listUnifiedDirectoryRowsMock = vi.fn();
 const listDirectoryRoleOptionsMock = vi.fn();
 const useGeoCountriesMock = vi.fn();
 const useGeoCitiesMock = vi.fn();
+const useAuthMock = vi.fn();
 
 vi.mock("@/lib/catalog-directory", async () => {
   const actual = await vi.importActual<typeof import("@/lib/catalog-directory")>("@/lib/catalog-directory");
@@ -22,6 +23,10 @@ vi.mock("@/lib/catalog-directory", async () => {
 vi.mock("@/hooks/useGeo", () => ({
   useGeoCountries: (...args: unknown[]) => useGeoCountriesMock(...args),
   useGeoCities: (...args: unknown[]) => useGeoCitiesMock(...args),
+}));
+
+vi.mock("@/components/auth/useAuth", () => ({
+  useAuth: (...args: unknown[]) => useAuthMock(...args),
 }));
 
 const renderPage = (initialEntry = "/directory") => {
@@ -46,12 +51,17 @@ const renderPage = (initialEntry = "/directory") => {
 
 describe("DirectoryPage", () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     window.HTMLElement.prototype.scrollIntoView = vi.fn();
     window.HTMLElement.prototype.hasPointerCapture = vi.fn(() => false);
     window.HTMLElement.prototype.setPointerCapture = vi.fn();
     window.HTMLElement.prototype.releasePointerCapture = vi.fn();
+    useAuthMock.mockReturnValue({
+      user: { id: "user-1" },
+      isLoading: false,
+    });
     listDirectoryRoleOptionsMock.mockResolvedValue([
-      { key: "danisman", label: "Danışman" },
+      { key: "Business_Market_Bakkal", label: "Bakkal" },
       { key: "Healthcare_Doctor", label: "Doktor" },
     ]);
     useGeoCountriesMock.mockReturnValue({
@@ -60,31 +70,32 @@ describe("DirectoryPage", () => {
     useGeoCitiesMock.mockReturnValue({ data: [] });
     listUnifiedDirectoryRowsMock.mockResolvedValue([
       {
-        recordType: "user_profile",
-        id: "user-1",
-        href: "/directory/profile/user-1",
+        recordType: "catalog_item",
+        id: "item-1",
+        href: "/directory/catalog/ayse-kaya",
         title: "Ayşe Kaya",
-        roleKey: "danisman",
-        roleLabel: "Danışman",
-        description: "Vergi danışmanı",
-        country: "Almanya",
+        roleKey: "Business_Market_Bakkal",
+        roleLabel: "Bakkal",
+        description: "Mahalle bakkalı",
+        country: "DE",
         city: "Berlin",
         imageUrl: null,
-        specialLabel: "Uzmanlık",
-        specialValue: "Vergi",
+        specialLabel: "Uzmanlık / Kategori",
+        specialValue: "Gıda",
         isFeatured: false,
         isVerified: true,
         isClaimable: false,
+        itemType: "business",
       },
       {
         recordType: "catalog_item",
-        id: "item-1",
+        id: "item-2",
         href: "/directory/catalog/dortmund-turkce-doktor-arkin-kara",
         title: "Arkin Kara",
         roleKey: "Healthcare_Doctor",
         roleLabel: "Doktor",
         description: "Dortmund'da Türkçe hizmet veren doktor.",
-        country: "Almanya",
+        country: "DE",
         city: "Dortmund",
         imageUrl: null,
         specialLabel: "Uzmanlık / Kategori",
@@ -92,16 +103,17 @@ describe("DirectoryPage", () => {
         isFeatured: false,
         isVerified: false,
         isClaimable: true,
+        itemType: "advisor",
       },
     ]);
   });
 
-  it("renders user profiles and claimable catalog records in one list", async () => {
+  it("renders canonical catalog records in one list", async () => {
     renderPage();
 
     expect(await screen.findByText("Ayşe Kaya")).toBeInTheDocument();
     expect(screen.getByText("Arkin Kara")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Ayşe Kaya/i })).toHaveAttribute("href", "/directory/profile/user-1");
+    expect(screen.getByRole("link", { name: /Ayşe Kaya/i })).toHaveAttribute("href", "/directory/catalog/ayse-kaya");
     expect(screen.getByRole("link", { name: /Arkin Kara/i })).toHaveAttribute(
       "href",
       "/directory/catalog/dortmund-turkce-doktor-arkin-kara",
@@ -109,7 +121,7 @@ describe("DirectoryPage", () => {
     expect(screen.getByText("Claimable")).toBeInTheDocument();
   });
 
-  it("passes live role filters from the URL into unified directory loading", async () => {
+  it("passes live role filters from the URL into canonical directory loading", async () => {
     renderPage("/directory?role=Healthcare_Doctor");
 
     await waitFor(() => {
@@ -119,11 +131,15 @@ describe("DirectoryPage", () => {
     });
   });
 
-  it("renders rows as directory links instead of grid cards", async () => {
-    renderPage("/directory?q=vergi");
+  it("shows a login CTA for anonymous users", async () => {
+    useAuthMock.mockReturnValue({
+      user: null,
+      isLoading: false,
+    });
 
-    expect(await screen.findByRole("link", { name: /Ayşe Kaya/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Arkin Kara/i })).toBeInTheDocument();
-    expect(screen.getByText(/Diaspora profillerini ve katalog kayitlarini/i)).toBeInTheDocument();
+    renderPage();
+
+    expect(screen.getByText(/Tam directory icin giris gerekiyor/i)).toBeInTheDocument();
+    expect(listUnifiedDirectoryRowsMock).not.toHaveBeenCalled();
   });
 });

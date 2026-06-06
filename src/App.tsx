@@ -28,8 +28,6 @@ import AdminMarqueePage from "@/pages/admin/AdminMarqueePage";
 import AdminAdvisorLinksPage from "@/pages/admin/AdminAdvisorLinksPage";
 import AdminSocialMediaLinksPage from "@/pages/admin/AdminSocialMediaLinksPage";
 import AdminRolesDraftPage from "@/pages/admin/AdminRolesDraftPage";
-import AdminLoginUsersRolesPage from "@/pages/admin/AdminLoginUsersRolesPage";
-import AdminRolesFeaturesPage from "@/pages/admin/AdminRolesFeaturesPage";
 import AdminHomePage from "@/pages/admin/AdminHomePage";
 import AdminWorkspaceHomePage from "@/pages/admin/workspace/AdminWorkspaceHomePage";
 import AdminCommandCenterPage from "@/pages/admin/workspace/AdminCommandCenterPage";
@@ -67,21 +65,18 @@ import AdminSurveyResponsesPage from "@/pages/admin/surveys/AdminSurveyResponses
 import LoginPage from "@/pages/LoginPage";
 import ProfilePage from "@/pages/ProfilePage";
 import ProfileResolverPage from "@/pages/ProfileResolverPage";
+import CatalogItemEditorPage from "@/pages/CatalogItemEditorPage";
 import DirectoryPage from "@/pages/DirectoryPage";
 import DirectoryProfilePage from "@/pages/DirectoryProfilePage";
 import DirectoryCatalogItemPage from "@/pages/DirectoryCatalogItemPage";
 import WelcomeActivatePage from "@/pages/WelcomeActivatePage";
-import AdminAttributesPage from "@/pages/admin/AdminAttributesPage";
 import AdminUserOverridesPage from "@/pages/admin/AdminUserOverridesPage";
 import AdminApprovalsPage from "@/pages/admin/AdminApprovalsPage";
 import AdminAuditLogsPage from "@/pages/admin/AdminAuditLogsPage";
-import AdminProfileSectionsPage from "@/pages/admin/AdminProfileSectionsPage";
 import AdminTaxonomyPage from "@/pages/admin/AdminTaxonomyPage";
 import AdminNewMemberGuidePage from "@/pages/admin/AdminNewMemberGuidePage";
 import AdminOnboardingImportsPage from "@/pages/admin/AdminOnboardingImportsPage";
 import AdminRoleManagementPage from "@/pages/admin/AdminRoleManagementPage";
-import AdminRolesPreviewPage from "@/pages/admin/AdminRolesPreviewPage";
-import AdminEntityPreviewPage from "@/pages/admin/AdminEntityPreviewPage";
 import CaddePage from "@/pages/CaddePage";
 import AdminCaddePage from "@/pages/admin/AdminCaddePage";
 import Associations from "@/pages/Associations";
@@ -190,6 +185,14 @@ const App = () => (
                     </RequireAuth>
                   }
                 />
+                <Route
+                  path="/profile/catalog/:itemId"
+                  element={
+                    <RequireAuth>
+                      <CatalogItemEditorPage />
+                    </RequireAuth>
+                  }
+                />
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                 <Route path="/reset-password" element={<ResetPasswordPage />} />
                 <Route path="*" element={<NotFound />} />
@@ -220,18 +223,20 @@ const App = () => (
                 <Route path="surveys/new" element={<AdminSurveyCreatePage />} />
                 <Route path="surveys/:id/edit" element={<AdminSurveyEditPage />} />
                 <Route path="surveys/:id/responses" element={<AdminSurveyResponsesPage />} />
-                <Route path="new-member/users-roles" element={<AdminLoginUsersRolesPage />} />
+                <Route path="new-member/profile-role-assignment" element={<AdminCatalogPage />} />
+                <Route path="new-member/role-matrix" element={<AdminRoleManagementPage />} />
+                <Route path="new-member/users-roles" element={<Navigate to="/admin/new-member/profile-role-assignment" replace />} />
                 <Route path="data" element={<AdminCatalogPage />} />
                 <Route path="new-member/guide" element={<AdminNewMemberGuidePage />} />
-                <Route path="new-member/roles-features" element={<AdminRolesFeaturesPage />} />
-                <Route path="new-member/attributes" element={<AdminAttributesPage />} />
+                <Route path="new-member/roles-features" element={<Navigate to="/admin/new-member/role-matrix?kind=feature" replace />} />
+                <Route path="new-member/attributes" element={<Navigate to="/admin/new-member/role-matrix?kind=attribute" replace />} />
                 <Route path="new-member/onboarding-imports" element={<AdminOnboardingImportsPage />} />
-                <Route path="new-member/profile-sections" element={<AdminProfileSectionsPage />} />
+                <Route path="new-member/profile-sections" element={<Navigate to="/admin/new-member/role-matrix?kind=profile_section" replace />} />
                 <Route path="new-member/taxonomy" element={<AdminTaxonomyPage />} />
                 <Route path="new-member/overrides" element={<AdminUserOverridesPage />} />
-                <Route path="new-member/role-management" element={<AdminRoleManagementPage />} />
-                <Route path="new-member/roles-preview" element={<AdminRolesPreviewPage />} />
-                <Route path="new-member/entity-preview" element={<AdminEntityPreviewPage />} />
+                <Route path="new-member/role-management" element={<Navigate to="/admin/new-member/role-matrix" replace />} />
+                <Route path="new-member/roles-preview" element={<Navigate to="/admin/new-member/role-matrix" replace />} />
+                <Route path="new-member/entity-preview" element={<Navigate to="/admin/new-member/role-matrix" replace />} />
                 <Route path="approvals" element={<AdminApprovalsPage />} />
                 <Route path="audit-logs" element={<AdminAuditLogsPage />} />
                 <Route path="roller-taslak" element={<AdminRolesDraftPage />} />

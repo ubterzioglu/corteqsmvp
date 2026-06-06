@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { useAuth } from "@/components/auth/useAuth";
+import { Button } from "@/components/ui/button";
 import DirectoryFilters from "@/components/directory/DirectoryFilters";
 import DirectoryResultRow from "@/components/directory/DirectoryResultRow";
 import DirectorySearchBar from "@/components/directory/DirectorySearchBar";
@@ -13,6 +15,7 @@ import {
 import { useGeoCountries } from "@/hooks/useGeo";
 
 const DirectoryPage = () => {
+  const { user, isLoading: isAuthLoading } = useAuth();
   const countriesQuery = useGeoCountries();
   const [searchParams, setSearchParams] = useSearchParams();
   const [rows, setRows] = useState<UnifiedDirectoryRow[]>([]);
@@ -27,6 +30,14 @@ const DirectoryPage = () => {
   const featuredOnly = searchParams.get("featured") === "1";
 
   useEffect(() => {
+    if (isAuthLoading || !user) {
+      setRows([]);
+      setRoleOptions([]);
+      setIsLoading(false);
+      setErrorMessage(null);
+      return;
+    }
+
     let isMounted = true;
 
     void (async () => {
@@ -61,7 +72,7 @@ const DirectoryPage = () => {
     return () => {
       isMounted = false;
     };
-  }, [cityFilter, countryFilter, featuredOnly, roleFilter, searchText]);
+  }, [cityFilter, countryFilter, featuredOnly, isAuthLoading, roleFilter, searchText, user]);
 
   const updateFilter = (key: string, value: string | null) => {
     const next = new URLSearchParams(searchParams);
@@ -96,6 +107,22 @@ const DirectoryPage = () => {
           </div>
         </section>
 
+        {!isAuthLoading && !user ? (
+          <section className="mb-6 rounded-[28px] border border-primary/20 bg-white/70 p-6 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.35)] backdrop-blur-xl">
+            <h2 className="text-xl font-semibold text-foreground">Tam directory icin giris gerekiyor.</h2>
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+              Unified katalog aramasi sadece giris yapmis kullanicilara acik. Giris yaptiginda bireysel, doktor, avukat, isletme ve kurulus profillerini ayni kaynaktan gorebilirsin.
+            </p>
+            <div className="mt-4">
+              <Button asChild>
+                <a href="/login?next=%2Fdirectory">Giris Yap</a>
+              </Button>
+            </div>
+          </section>
+        ) : null}
+
+        {user ? (
+          <>
         <div className="mb-4 max-w-2xl">
           <DirectorySearchBar
             value={searchText}
@@ -139,6 +166,8 @@ const DirectoryPage = () => {
               </p>
             )}
           </div>
+        ) : null}
+          </>
         ) : null}
       </main>
     </div>

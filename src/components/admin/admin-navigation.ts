@@ -9,11 +9,10 @@ export const primaryAdminNavItems = [
 
 export const newMemberSystemNavItems = [
   { to: "/admin/members", label: "Üye Takibi", icon: Network },
-  { to: "/admin/new-member/users-roles", label: "Loginli Üyeler & Roller", icon: Network },
-  { to: "/admin/new-member/role-management", label: "Rol Yönetimi", icon: Shield },
+  { to: "/admin/new-member/profile-role-assignment", label: "Profil ve Rol Atama", icon: Network },
+  { to: "/admin/new-member/role-matrix", label: "Tüm Roller AFS Matrisi", icon: Shield },
+  { to: "/admin/new-member/taxonomy", label: "Taxonomy Yönetimi", icon: Database },
   { to: "/admin/new-member/overrides", label: "Feature Override", icon: Sparkles },
-  { to: "/admin/new-member/roles-preview", label: "Roller Önizleme", icon: ListChecks },
-  { to: "/admin/new-member/entity-preview", label: "AFS Önizleme", icon: Database },
   { to: "/admin/new-member/onboarding-imports", label: "Onboarding Importları", icon: ClipboardList },
   { to: "/admin/new-member/guide", label: "Kullanım Klavuzu", icon: BookOpen },
   { to: "/admin/data", label: "Kataloglar", icon: Database },

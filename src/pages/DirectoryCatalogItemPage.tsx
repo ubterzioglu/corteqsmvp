@@ -47,26 +47,11 @@ type CatalogDetailRow = {
 
 type SupabaseError = { message: string };
 
-type CatalogItemFilterQuery = {
-  eq: (column: string, value: string) => CatalogItemFilterQuery;
-  maybeSingle: () => Promise<{ data: CatalogDetailRow | null; error: SupabaseError | null }>;
-};
-
-type CatalogItemQuery = {
-  select: (columns: string) => CatalogItemFilterQuery;
-};
-
 type CatalogClaimRpcClient = {
-  from: (tableName: "catalog_items") => CatalogItemQuery;
   rpc: (
-    functionName: "submit_catalog_claim_request",
-    args: {
-      target_item_id: string;
-      claim_type: "editor_access";
-      evidence: Record<string, unknown>;
-      note: string;
-    },
-  ) => Promise<{ error: SupabaseError | null }>;
+    functionName: "get_catalog_item_public_profile" | "submit_catalog_claim_request",
+    args: Record<string, unknown>,
+  ) => Promise<{ data: CatalogDetailRow | null; error: SupabaseError | null }>;
 };
 
 const catalogClient = supabase as unknown as CatalogClaimRpcClient;
@@ -111,39 +96,19 @@ const DirectoryCatalogItemPage = () => {
       setIsLoading(true);
       setErrorMessage(null);
 
-      const { data, error } = await catalogClient
-        .from("catalog_items")
-        .select(
-          [
-            "id",
-            "item_type",
-            "platform_role_key",
-            "slug",
-            "title",
-            "headline",
-            "short_description",
-            "long_description",
-            "verification_status",
-            "attributes",
-            "catalog_item_contacts(contact_type,contact_value,label,is_primary)",
-            "catalog_item_locations(country_code,city,region,address_line,is_primary)",
-            "catalog_item_services(service_name,description)",
-            "catalog_item_languages(language_code,proficiency)",
-            "catalog_item_categories(is_primary,catalog_categories(slug,name))",
-          ].join(","),
-        )
-        .eq("slug", slug)
-        .eq("status", "published")
-        .eq("visibility", "public")
-        .maybeSingle();
+      const { data, error } = await catalogClient.rpc("get_catalog_item_public_profile", {
+        p_slug: slug,
+      });
 
       if (!isMounted) return;
 
       if (error) {
         setErrorMessage(error.message);
         setItem(null);
+      } else if (!data || !data.id) {
+        setItem(null);
       } else {
-        setItem((data ?? null) as CatalogDetailRow | null);
+        setItem(data);
       }
 
       setIsLoading(false);
@@ -209,7 +174,7 @@ const DirectoryCatalogItemPage = () => {
       {isLoading ? <p className="text-sm text-muted-foreground">Katalog kaydı yükleniyor...</p> : null}
       {errorMessage ? <p className="text-sm text-destructive">Kayıt alınamadı: {errorMessage}</p> : null}
       {!isLoading && !errorMessage && !item ? (
-        <p className="text-sm text-muted-foreground">Bu katalog kaydı bulunamadı veya yayınlanmış değil.</p>
+        <p className="text-sm text-muted-foreground">Bu katalog kaydı bulunamadı veya bu hesap için görünür değil.</p>
       ) : null}
 
       {item ? (
@@ -246,54 +211,54 @@ const DirectoryCatalogItemPage = () => {
             ) : null
           }
         >
-            {claimError ? <p className="text-sm text-destructive">Claim talebi gönderilemedi: {claimError}</p> : null}
-            {claimStatus === "submitted" ? (
-              <p className="text-sm text-emerald-700">Düzenleme yetkisi talebiniz admin onayına gönderildi.</p>
-            ) : null}
+          {claimError ? <p className="text-sm text-destructive">Claim talebi gönderilemedi: {claimError}</p> : null}
+          {claimStatus === "submitted" ? (
+            <p className="text-sm text-emerald-700">Düzenleme yetkisi talebiniz admin onayına gönderildi.</p>
+          ) : null}
 
-            <div className="space-y-2 text-sm text-muted-foreground">
-              <p>{item.short_description ?? item.long_description ?? "Açıklama eklenmedi."}</p>
-              {canClaim ? (
-                <p>
-                  Bu katalog kaydının sahibi ya da yetkili temsilcisiyseniz içeriği düzenleyebilmek için başvurabilirsiniz.
-                </p>
-              ) : null}
-              {locationLabel ? <p>{locationLabel}</p> : null}
-              {primaryLocation?.address_line ? <p>{primaryLocation.address_line}</p> : null}
-            </div>
-
-            {item.catalog_item_contacts?.length ? (
-              <section className="space-y-2">
-                <h2 className="text-base font-semibold">İletişim</h2>
-                <div className="grid gap-2 text-sm text-muted-foreground">
-                  {item.catalog_item_contacts.map((contact) => (
-                    <p key={`${contact.contact_type}-${contact.contact_value}`}>
-                      <span className="font-medium text-foreground">{contact.label ?? contact.contact_type}:</span>{" "}
-                      {contact.contact_type === "website" || contact.contact_type === "appointment_url" ? (
-                        <a className="text-primary underline-offset-4 hover:underline" href={contact.contact_value} target="_blank" rel="noreferrer">
-                          {contact.contact_value}
-                        </a>
-                      ) : (
-                        contact.contact_value
-                      )}
-                    </p>
-                  ))}
-                </div>
-              </section>
+          <div className="space-y-2 text-sm text-muted-foreground">
+            <p>{item.short_description ?? item.long_description ?? "Açıklama eklenmedi."}</p>
+            {canClaim ? (
+              <p>
+                Bu katalog kaydının sahibi ya da yetkili temsilcisiyseniz içeriği düzenleyebilmek için başvurabilirsiniz.
+              </p>
             ) : null}
+            {locationLabel ? <p>{locationLabel}</p> : null}
+            {primaryLocation?.address_line ? <p>{primaryLocation.address_line}</p> : null}
+          </div>
 
-            {item.catalog_item_services?.length ? (
-              <section className="space-y-2">
-                <h2 className="text-base font-semibold">Hizmetler</h2>
-                <div className="flex flex-wrap gap-2">
-                  {item.catalog_item_services.map((service) => (
-                    <Badge key={service.service_name} variant="outline">
-                      {service.service_name}
-                    </Badge>
-                  ))}
-                </div>
-              </section>
-            ) : null}
+          {item.catalog_item_contacts?.length ? (
+            <section className="space-y-2">
+              <h2 className="text-base font-semibold">İletişim</h2>
+              <div className="grid gap-2 text-sm text-muted-foreground">
+                {item.catalog_item_contacts.map((contact) => (
+                  <p key={`${contact.contact_type}-${contact.contact_value}`}>
+                    <span className="font-medium text-foreground">{contact.label ?? contact.contact_type}:</span>{" "}
+                    {contact.contact_type === "website" || contact.contact_type === "appointment_url" ? (
+                      <a className="text-primary underline-offset-4 hover:underline" href={contact.contact_value} target="_blank" rel="noreferrer">
+                        {contact.contact_value}
+                      </a>
+                    ) : (
+                      contact.contact_value
+                    )}
+                  </p>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {item.catalog_item_services?.length ? (
+            <section className="space-y-2">
+              <h2 className="text-base font-semibold">Hizmetler</h2>
+              <div className="flex flex-wrap gap-2">
+                {item.catalog_item_services.map((service) => (
+                  <Badge key={service.service_name} variant="outline">
+                    {service.service_name}
+                  </Badge>
+                ))}
+              </div>
+            </section>
+          ) : null}
         </ProfileHeroCard>
       ) : null}
     </div>

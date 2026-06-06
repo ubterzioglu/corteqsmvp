@@ -1,13 +1,18 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { BriefcaseBusiness, Building2, CircleUserRound, Gift, Globe2, PenLine } from "lucide-react";
 
+import EditableProfilesSelector from "@/components/profile/EditableProfilesSelector";
 import { useAuth } from "@/components/auth/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  getCurrentMemberCatalogProfile,
+  getMyEditableCatalogItems,
+  type EditableCatalogItemSummary,
+} from "@/lib/member-catalog";
 import { defaultProfileType, profileTypeOptions, type ProfileType } from "@/lib/profile-types";
-import { getCurrentMemberCatalogProfile } from "@/lib/member-catalog";
 
 const iconByType: Record<ProfileType, JSX.Element> = {
   bireysel: <CircleUserRound className="h-5 w-5 text-blue-500" />,
@@ -24,8 +29,8 @@ const ProfileResolverPage = () => {
   const [selectedType, setSelectedType] = useState<ProfileType | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   const [initialProfileType, setInitialProfileType] = useState<ProfileType | null>(null);
+  const [editableItems, setEditableItems] = useState<EditableCatalogItemSummary[]>([]);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
 
   useEffect(() => {
@@ -34,21 +39,28 @@ const ProfileResolverPage = () => {
 
     void (async () => {
       try {
-        const data = await getCurrentMemberCatalogProfile();
+        const [currentProfile, myItems] = await Promise.all([
+          getCurrentMemberCatalogProfile(),
+          getMyEditableCatalogItems(),
+        ]);
 
         if (!isMounted) return;
 
-        const profileType = data?.profileType;
-        if (profileType && profileTypeOptions.some((option) => option.type === profileType)) {
-          setInitialProfileType(profileType as ProfileType);
+        setEditableItems(myItems);
+
+        const memberItem = myItems.find((item) => item.itemType === "member");
+        if (currentProfile?.profileType) {
+          setInitialProfileType(currentProfile.profileType as ProfileType);
+        } else if (memberItem) {
+          setInitialProfileType(memberItem.legacyProfileType);
         } else {
           setInitialProfileType(null);
         }
-        setIsProfileLoading(false);
       } catch (error) {
         if (!isMounted) return;
         setErrorMessage(error instanceof Error ? error.message : "Profil tipi alınamadı.");
-        setIsProfileLoading(false);
+      } finally {
+        if (isMounted) setIsProfileLoading(false);
       }
     })();
 
@@ -57,12 +69,38 @@ const ProfileResolverPage = () => {
     };
   }, [isLoading, user]);
 
+  const handleOpenEditableItem = useCallback((item: EditableCatalogItemSummary) => {
+    if (item.itemType === "member") {
+      navigate(`/profile/${item.legacyProfileType}`, { replace: true });
+      return;
+    }
+
+    navigate(`/profile/catalog/${item.itemId}`, { replace: true });
+  }, [navigate]);
+
+  useEffect(() => {
+    if (editableItems.length !== 1) return;
+    handleOpenEditableItem(editableItems[0]);
+  }, [editableItems, handleOpenEditableItem]);
+
   if (!isLoading && !user) {
     return <Navigate to="/login" replace />;
   }
 
   if (isLoading || isProfileLoading) {
     return <div className="flex min-h-[70vh] items-center justify-center">Profil yönlendirmeniz hazırlanıyor...</div>;
+  }
+
+  if (editableItems.length > 1) {
+    return (
+      <div className="mx-auto w-full max-w-5xl px-4 py-10">
+        <EditableProfilesSelector items={editableItems} onSelect={handleOpenEditableItem} />
+      </div>
+    );
+  }
+
+  if (editableItems.length === 1) {
+    return null;
   }
 
   if (initialProfileType) {
@@ -84,7 +122,7 @@ const ProfileResolverPage = () => {
       return;
     }
 
-    navigate(`/profile/${selectedType}`, { replace: true });
+    navigate(`/profile/${selectedType || defaultProfileType}`, { replace: true });
   };
 
   return (

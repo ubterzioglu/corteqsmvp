@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { defaultProfileType, isProfileType, type ProfileType } from "@/lib/profile-types";
 
 type QueryError = { message: string };
 
@@ -12,18 +13,36 @@ export type MemberCatalogProfileSummary = {
   authProvider?: string | null;
 };
 
+export type EditableCatalogItemSummary = {
+  itemId: string;
+  slug: string;
+  title: string;
+  itemType: string;
+  roleKey: string | null;
+  accessLevel: "owner" | "manager" | "editor";
+  isPrimaryOwner: boolean;
+  createdAt: string | null;
+  legacyProfileType: ProfileType;
+};
+
 type MemberCatalogRpcClient = {
   rpc: (
     functionName:
       | "get_current_member_catalog_profile"
       | "list_member_catalog_names"
       | "admin_list_member_catalog_profiles"
-      | "admin_set_member_catalog_role",
+      | "admin_set_member_catalog_role"
+      | "get_my_editable_catalog_items",
     args?: Record<string, unknown>,
   ) => Promise<{ data: unknown; error: QueryError | null }>;
 };
 
 const memberCatalogRpcClient = supabase as unknown as MemberCatalogRpcClient;
+
+const normalizeLegacyProfileType = (value: string | null | undefined): ProfileType => {
+  if (value && isProfileType(value)) return value;
+  return defaultProfileType;
+};
 
 export async function getCurrentMemberCatalogProfile(): Promise<MemberCatalogProfileSummary | null> {
   const { data, error } = await memberCatalogRpcClient.rpc("get_current_member_catalog_profile");
@@ -102,4 +121,37 @@ export async function setMemberCatalogRoleAsAdmin(itemId: string, roleKey: strin
     p_role_key: roleKey,
   });
   if (error) throw error;
+}
+
+export async function getMyEditableCatalogItems(): Promise<EditableCatalogItemSummary[]> {
+  const { data, error } = await memberCatalogRpcClient.rpc("get_my_editable_catalog_items");
+  if (error) throw error;
+
+  const rows = Array.isArray(data) ? (data as Array<Record<string, unknown>>) : [];
+
+  return rows.flatMap((row) => {
+    const itemId = typeof row.item_id === "string" ? row.item_id : null;
+    const slug = typeof row.slug === "string" ? row.slug : null;
+    const title = typeof row.title === "string" ? row.title : null;
+    const itemType = typeof row.item_type === "string" ? row.item_type : null;
+    const accessLevel = typeof row.access_level === "string" ? row.access_level : null;
+
+    if (!itemId || !slug || !title || !itemType || !accessLevel) {
+      return [];
+    }
+
+    const roleKey = typeof row.platform_role_key === "string" ? row.platform_role_key : null;
+
+    return [{
+      itemId,
+      slug,
+      title,
+      itemType,
+      roleKey,
+      accessLevel: accessLevel as EditableCatalogItemSummary["accessLevel"],
+      isPrimaryOwner: Boolean(row.is_primary_owner),
+      createdAt: typeof row.created_at === "string" ? row.created_at : null,
+      legacyProfileType: normalizeLegacyProfileType(roleKey),
+    }];
+  });
 }

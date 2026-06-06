@@ -37,7 +37,7 @@ const DirectoryResultRow = ({ row }: DirectoryResultRowProps) => {
               Onayli
             </Badge>
           ) : null}
-          {row.recordType === "catalog_item" ? (
+          {row.recordType === "catalog_item" && row.isClaimable ? (
             <Badge variant="secondary" className="px-2 py-0 text-[10px]">
               Claimable
             </Badge>

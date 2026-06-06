@@ -1,100 +1,88 @@
 import { supabase } from "@/integrations/supabase/client";
 
-export type DirectoryUserProfileRow = {
-  user_id: string;
-  role_key: string;
-  role_label: string;
-  role_slug: string;
-  display_name: string;
-  short_bio: string | null;
-  country: string | null;
-  city: string | null;
-  profile_image_url: string | null;
-  special_attribute_key: string | null;
-  special_attribute_label: string | null;
-  special_attribute_value: string | null;
-  is_featured: boolean;
-  is_verified: boolean;
-};
+type SupabaseError = { message: string };
 
-export type CatalogSearchRow = {
+type DirectorySearchRpcRow = {
   item_id: string;
   item_type: string;
   slug: string;
   title: string;
-  headline: string | null;
-  short_description: string | null;
+  role_key: string;
+  role_label: string;
+  description: string | null;
   city: string | null;
-  country_code: string | null;
-  verification_status: string;
-  category_slugs: string[] | null;
-  language_codes: string[] | null;
-  thumbnail_url: string | null;
-  score: number;
-  filter_data: Record<string, unknown> | null;
+  country: string | null;
+  image_url: string | null;
+  special_label: string | null;
+  special_value: string | null;
+  is_featured: boolean;
+  is_verified: boolean;
+  is_claimable: boolean;
 };
 
-type SupabaseError = { message: string };
-
-type SearchCatalogRpcClient = {
+type DirectoryRpcClient = {
   rpc: (
-    functionName: "search_catalog",
+    functionName: "search_directory_catalog",
     args: {
-      search_query: string | null;
-      item_types: string[] | null;
-      category_slugs: string[] | null;
-      city_filter: string | null;
-      country_filter: string | null;
-      language_filters: string[] | null;
-      verified_only: boolean;
-      limit_count: number;
-      offset_count: number;
+      p_search_text: string | null;
+      p_role_key: string | null;
+      p_country_code: string | null;
+      p_city: string | null;
+      p_featured_only: boolean;
     },
-  ) => Promise<{ data: CatalogSearchRow[] | null; error: SupabaseError | null }>;
+  ) => Promise<{ data: DirectorySearchRpcRow[] | null; error: SupabaseError | null }>;
 };
 
-const catalogRpcClient = supabase as unknown as SearchCatalogRpcClient;
+const directoryRpcClient = supabase as unknown as DirectoryRpcClient;
+
+type RolesQueryClient = {
+  from: (
+    tableName: "roles",
+  ) => {
+    select: (
+      columns: string,
+    ) => {
+      eq: (
+        column: string,
+        value: unknown,
+      ) => {
+        order: (
+          column: string,
+          options: { ascending: boolean },
+        ) => Promise<{
+          data: Array<{ key: string; label: string; is_directory_visible?: boolean | null }> | null;
+          error: SupabaseError | null;
+        }>;
+      };
+    };
+  };
+};
+
+const rolesQueryClient = supabase as unknown as RolesQueryClient;
 
 export type DirectoryRoleOption = {
   key: string;
   label: string;
 };
 
-export type UnifiedDirectoryRow =
-  | {
-      recordType: "user_profile";
-      id: string;
-      href: string;
-      title: string;
-      roleKey: string;
-      roleLabel: string;
-      description: string | null;
-      country: string | null;
-      city: string | null;
-      imageUrl: string | null;
-      specialLabel: string | null;
-      specialValue: string | null;
-      isFeatured: boolean;
-      isVerified: boolean;
-      isClaimable: false;
-    }
-  | {
-      recordType: "catalog_item";
-      id: string;
-      href: string;
-      title: string;
-      roleKey: string;
-      roleLabel: string;
-      description: string | null;
-      country: string | null;
-      city: string | null;
-      imageUrl: string | null;
-      specialLabel: string | null;
-      specialValue: string | null;
-      isFeatured: boolean;
-      isVerified: boolean;
-      isClaimable: boolean;
-    };
+export type UnifiedDirectoryRow = {
+  recordType: "catalog_item";
+  id: string;
+  href: string;
+  title: string;
+  roleKey: string;
+  roleLabel: string;
+  description: string | null;
+  country: string | null;
+  city: string | null;
+  imageUrl: string | null;
+  specialLabel: string | null;
+  specialValue: string | null;
+  isFeatured: boolean;
+  isVerified: boolean;
+  isClaimable: boolean;
+  itemType: string;
+};
 
 const legacyCountryToCode: Record<string, string> = {
   Almanya: "DE",
@@ -109,89 +97,48 @@ const legacyCountryToCode: Record<string, string> = {
   BAE: "AE",
 };
 
-const countryCodeToLabel: Record<string, string> = {
-  DE: "Almanya",
-  GB: "İngiltere",
-  US: "ABD",
-  FR: "Fransa",
-  QA: "Katar",
-  AE: "BAE",
-};
-
 export const toCountryCode = (value: string | null | undefined) => {
   if (!value) return null;
   const trimmed = value.trim();
   if (!trimmed) return null;
   if (/^[a-z]{2}$/i.test(trimmed)) return trimmed.toUpperCase();
-  return legacyCountryToCode[trimmed] ?? trimmed;
+  return legacyCountryToCode[trimmed] ?? trimmed.toUpperCase();
 };
 
-const toCountryLabel = (value: string | null | undefined) => {
-  if (!value) return null;
-  const code = toCountryCode(value);
-  return code ? countryCodeToLabel[code] ?? code : null;
-};
-
-const readAttribute = (attributes: Record<string, unknown> | null | undefined, key: string) => {
-  const value = attributes?.[key];
-  return typeof value === "string" && value.trim() ? value.trim() : null;
-};
-
-export const mapUserProfileToDirectoryRow = (row: DirectoryUserProfileRow): UnifiedDirectoryRow => ({
-  recordType: "user_profile",
-  id: row.user_id,
-  href: `/directory/profile/${row.user_id}`,
-  title: row.display_name,
+const mapDirectorySearchRow = (row: DirectorySearchRpcRow): UnifiedDirectoryRow => ({
+  recordType: "catalog_item",
+  id: row.item_id,
+  href: `/directory/catalog/${row.slug}`,
+  title: row.title,
   roleKey: row.role_key,
   roleLabel: row.role_label,
-  description: row.short_bio,
+  description: row.description,
   country: row.country,
   city: row.city,
-  imageUrl: row.profile_image_url,
-  specialLabel: row.special_attribute_label,
-  specialValue: row.special_attribute_value,
+  imageUrl: row.image_url,
+  specialLabel: row.special_label,
+  specialValue: row.special_value,
   isFeatured: row.is_featured,
   isVerified: row.is_verified,
-  isClaimable: false,
+  isClaimable: row.is_claimable,
+  itemType: row.item_type,
 });
 
-export const mapCatalogSearchToDirectoryRow = (
-  row: CatalogSearchRow,
-  roleLabelByKey: Map<string, string>,
-): UnifiedDirectoryRow => {
-  const attributes = row.filter_data && typeof row.filter_data === "object" ? row.filter_data : {};
-  const roleKey = readAttribute(attributes, "platform_role_key") ?? row.item_type;
-  const roleLabel = readAttribute(attributes, "platform_role_label") ?? roleLabelByKey.get(roleKey) ?? roleKey;
-  const specialValue = readAttribute(attributes, "specialty_summary") ?? row.headline;
-
-  return {
-    recordType: "catalog_item",
-    id: row.item_id,
-    href: `/directory/catalog/${row.slug}`,
-    title: row.title,
-    roleKey,
-    roleLabel,
-    description: row.short_description,
-    country: toCountryLabel(row.country_code),
-    city: row.city,
-    imageUrl: row.thumbnail_url,
-    specialLabel: specialValue ? "Uzmanlık / Kategori" : null,
-    specialValue,
-    isFeatured: false,
-    isVerified: ["verified", "official_source", "claimed"].includes(row.verification_status),
-    isClaimable: row.verification_status !== "claimed",
-  };
-};
-
 export async function listDirectoryRoleOptions(): Promise<DirectoryRoleOption[]> {
-  const { data, error } = await supabase
+  const { data, error } = await rolesQueryClient
     .from("roles")
-    .select("key, label")
+    .select("key, label, is_directory_visible")
     .eq("is_active", true)
     .order("sort_order", { ascending: true });
 
   if (error) throw error;
-  return (data ?? []) as DirectoryRoleOption[];
+
+  return ((data ?? []) as Array<{ key: string; label: string; is_directory_visible?: boolean | null }>)
+    .filter((role) => role.is_directory_visible !== false)
+    .map((role) => ({
+      key: role.key,
+      label: role.label,
+    }));
 }
 
 export async function listUnifiedDirectoryRows(filters: {
@@ -201,63 +148,15 @@ export async function listUnifiedDirectoryRows(filters: {
   cityFilter: string;
   featuredOnly: boolean;
 }): Promise<UnifiedDirectoryRow[]> {
-  const [roleOptions, profilesResult] = await Promise.all([
-    listDirectoryRoleOptions(),
-    supabase.rpc("list_public_directory_profiles", {
-      search_text: filters.searchText || null,
-      role_filter: filters.roleFilter === "all" ? null : filters.roleFilter,
-      country_filter: filters.countryFilter || null,
-      city_filter: filters.cityFilter || null,
-      featured_only: filters.featuredOnly,
-      verified_only: false,
-    }),
-  ]);
-
-  if (profilesResult.error) throw profilesResult.error;
-
-  const roleLabelByKey = new Map(roleOptions.map((role) => [role.key, role.label]));
-  const countryCode = toCountryCode(filters.countryFilter);
-  const itemTypes = roleFilterToItemTypes(filters.roleFilter);
-  const catalogResult = await catalogRpcClient.rpc("search_catalog", {
-    search_query: filters.searchText || null,
-    item_types: itemTypes,
-    category_slugs: null,
-    city_filter: filters.cityFilter || null,
-    country_filter: countryCode,
-    language_filters: null,
-    verified_only: false,
-    limit_count: 100,
-    offset_count: 0,
+  const { data, error } = await directoryRpcClient.rpc("search_directory_catalog", {
+    p_search_text: filters.searchText.trim() || null,
+    p_role_key: filters.roleFilter === "all" ? null : filters.roleFilter,
+    p_country_code: toCountryCode(filters.countryFilter),
+    p_city: filters.cityFilter.trim() || null,
+    p_featured_only: filters.featuredOnly,
   });
 
-  if (catalogResult.error) throw catalogResult.error;
+  if (error) throw error;
 
-  const profileRows = ((profilesResult.data ?? []) as DirectoryUserProfileRow[]).map(mapUserProfileToDirectoryRow);
-  const catalogRows = ((catalogResult.data ?? []) as CatalogSearchRow[])
-    .map((row) => mapCatalogSearchToDirectoryRow(row, roleLabelByKey))
-    .filter((row) => filters.roleFilter === "all" || row.roleKey === filters.roleFilter)
-    .filter((row) => !filters.featuredOnly || row.isFeatured);
-
-  return [...profileRows, ...catalogRows];
-}
-
-function roleFilterToItemTypes(roleFilter: string): string[] | null {
-  if (!roleFilter || roleFilter === "all") return null;
-  if (
-    roleFilter.startsWith("Consultant_") ||
-    ["Healthcare_Doctor", "Healthcare_Dentist", "Healthcare_Psychologist"].includes(roleFilter)
-  ) {
-    return ["advisor"];
-  }
-  if (roleFilter.startsWith("Business_") || roleFilter === "Healthcare_Clinic" || roleFilter === "Healthcare_Pharmacy") {
-    return ["business"];
-  }
-  if (roleFilter.startsWith("Organization_") || roleFilter === "Healthcare_Hospital") {
-    return ["organization"];
-  }
-  if (roleFilter.startsWith("Event_")) return ["event"];
-  if (roleFilter.startsWith("Job_")) return ["job_posting"];
-  if (roleFilter.startsWith("Community_")) return ["community_group"];
-  if (roleFilter.startsWith("Marketplace_")) return ["marketplace_listing"];
-  return null;
+  return ((data ?? []) as DirectorySearchRpcRow[]).map(mapDirectorySearchRow);
 }

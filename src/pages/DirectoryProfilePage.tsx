@@ -1,47 +1,81 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, useParams } from "react-router-dom";
 
-import ProfileHeroCard from "@/components/directory/ProfileHeroCard";
-import { Button } from "@/components/ui/button";
-import PublicProfileSummaryView from "@/components/profile/PublicProfileSummaryView";
 import { supabase } from "@/integrations/supabase/client";
-import { usePublicIndividualProfile } from "@/hooks/usePublicIndividualProfile";
-import IndividualPublicView from "@/components/profile/IndividualPublicView";
-import {
-  buildPublicProfileViewModelFromSections,
-  type PublicProfileSectionRow,
-} from "@/lib/profile-view-model";
+
+type RedirectRow = {
+  slug: string;
+};
+
+type CatalogRedirectQueryClient = {
+  from: (
+    tableName: "catalog_items",
+  ) => {
+    select: (
+      columns: string,
+    ) => {
+      eq: (
+        column: string,
+        value: unknown,
+      ) => {
+        eq: (
+          nestedColumn: string,
+          nestedValue: unknown,
+        ) => {
+          order: (
+            orderColumn: string,
+            options: { ascending: boolean },
+          ) => {
+            limit: (
+              count: number,
+            ) => {
+              maybeSingle: () => Promise<{
+                data: RedirectRow | null;
+                error: { message: string } | null;
+              }>;
+            };
+          };
+        };
+      };
+    };
+  };
+};
+
+const redirectQueryClient = supabase as unknown as CatalogRedirectQueryClient;
 
 const DirectoryProfilePage = () => {
   const { userId } = useParams<{ userId: string }>();
-
-  // Individual profile (bireysel) — fetched in parallel with generic sections
-  const { details: individualDetails, isLoading: isIndividualLoading } =
-    usePublicIndividualProfile(userId);
-
-  // Generic section-based profile (consultants, businesses, orgs, etc.)
-  const [sections, setSections] = useState<PublicProfileSectionRow[]>([]);
-  const [isSectionsLoading, setIsSectionsLoading] = useState(true);
-  const [sectionsError, setSectionsError] = useState<string | null>(null);
+  const [slug, setSlug] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
     let isMounted = true;
 
     void (async () => {
-      setIsSectionsLoading(true);
-      setSectionsError(null);
-      const { data, error } = await (supabase as any).rpc("get_public_profile_sections", {
-        target_user_id: userId,
-      });
+      setIsLoading(true);
+      setNotFound(false);
+
+      const { data, error } = await redirectQueryClient
+        .from("catalog_items")
+        .select("slug")
+        .eq("linked_user_id", userId)
+        .eq("item_type", "member")
+        .order("created_at", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
       if (!isMounted) return;
-      if (error) {
-        setSectionsError(error.message);
-        setSections([]);
+
+      if (error || !data?.slug) {
+        setNotFound(true);
+        setSlug(null);
       } else {
-        setSections((data ?? []) as PublicProfileSectionRow[]);
+        setSlug((data as RedirectRow).slug);
       }
-      setIsSectionsLoading(false);
+
+      setIsLoading(false);
     })();
 
     return () => {
@@ -49,91 +83,23 @@ const DirectoryProfilePage = () => {
     };
   }, [userId]);
 
-  const previewSections = useMemo(
-    () =>
-      sections
-        .filter((s) => s.section_area === "preview_card")
-        .sort((a, b) => a.sort_order - b.sort_order),
-    [sections],
-  );
-  const displayName = previewSections.find(
-    (s) => s.section_key === "preview.isim_kurulus_adi",
-  )?.content?.text;
-  const locationSection = previewSections.find((s) => s.section_key === "preview.konum");
-  const imageSection = previewSections.find((s) => s.section_key === "preview.profil_logo_gorseli");
-  const categorySection = previewSections.find(
-    (s) => s.section_key === "preview.kategori_sektor_etiketi",
-  );
-  const imageUrl =
-    typeof imageSection?.content?.url === "string" ? imageSection.content.url : null;
-  const locationLabel = [locationSection?.content?.city, locationSection?.content?.country]
-    .filter(Boolean)
-    .join(" • ");
-  const taxonomyLabels = Array.isArray(categorySection?.content?.taxonomy)
-    ? categorySection.content.taxonomy.filter((item): item is string => typeof item === "string")
-    : [];
-  const primaryLabel =
-    typeof categorySection?.content?.primary_label === "string"
-      ? categorySection.content.primary_label
-      : null;
-  const genericProfileModel = useMemo(
-    () => buildPublicProfileViewModelFromSections(userId, sections),
-    [sections, userId],
-  );
-  const individualExtraBadges = Array.isArray(categorySection?.content?.extra_badges)
-    ? categorySection.content.extra_badges.filter((item): item is string => typeof item === "string")
-    : [];
-
   if (!userId) {
     return <Navigate to="/directory" replace />;
   }
 
-  const isLoading = isIndividualLoading && isSectionsLoading;
+  if (slug) {
+    return <Navigate to={`/directory/catalog/${slug}`} replace />;
+  }
 
-  return (
-    <div className="mx-auto w-full max-w-5xl px-4 py-10">
-      <div className="mb-4">
-        <Button asChild variant="outline">
-          <Link to="/directory">Directory'ye Dön</Link>
-        </Button>
-      </div>
+  if (isLoading) {
+    return <div className="mx-auto max-w-3xl px-4 py-10 text-sm text-muted-foreground">Profil yönlendiriliyor...</div>;
+  }
 
-      {isLoading ? (
-        <p className="text-sm text-muted-foreground">Profil yükleniyor...</p>
-      ) : null}
+  if (notFound) {
+    return <Navigate to="/directory" replace />;
+  }
 
-      {/* Individual (bireysel) profile view */}
-      {!isIndividualLoading && individualDetails ? (
-        <IndividualPublicView
-          details={individualDetails}
-          publicLinks={genericProfileModel.links}
-          extraBadges={individualExtraBadges}
-        />
-      ) : null}
-
-      {/* Generic section-based profile (non-individual types) */}
-      {!isIndividualLoading && !individualDetails && !isSectionsLoading ? (
-        <ProfileHeroCard
-          title={String(displayName ?? "Profil")}
-          subtitle={locationLabel || null}
-          roleLabel={primaryLabel}
-          locationLabel={locationLabel || null}
-          imageUrl={imageUrl}
-          badges={taxonomyLabels.map((label) => ({ label, variant: "outline" as const }))}
-        >
-            {sectionsError ? (
-              <p className="text-sm text-destructive">Profil alınamadı: {sectionsError}</p>
-            ) : null}
-            {!sectionsError && sections.length === 0 ? (
-              <p className="text-sm text-muted-foreground">
-                Bu profil görünür değil veya yayınlanmış public section içermiyor.
-              </p>
-            ) : null}
-            {!sectionsError && sections.length > 0 ? <PublicProfileSummaryView model={genericProfileModel} /> : null}
-        </ProfileHeroCard>
-      ) : null}
-    </div>
-  );
+  return null;
 };
 
 export default DirectoryProfilePage;
