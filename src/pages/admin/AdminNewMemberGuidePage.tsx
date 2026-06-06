@@ -1,250 +1,282 @@
+import { useEffect, useState } from "react";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Badge } from "@/components/ui/badge";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { supabase } from "@/integrations/supabase/client";
+import { fetchCatalogRows, type CatalogRow } from "@/lib/role-catalog";
+
+type RoleRow = { key: string; label: string; sort_order: number; is_active: boolean };
+
+type RoleFamily = { family: string; label: string; roles: RoleRow[] };
+
+const FAMILY_LABELS: Record<string, string> = {
+  legacy: "Legacy (Eski Sistem)",
+  User_: "Kullanıcı",
+  Admin_: "Admin",
+  Consultant_: "Danışman",
+  Organization_: "Kuruluş",
+  Business_: "İşletme",
+  Healthcare_: "Sağlık",
+  Event_: "Etkinlik",
+  Job_: "İş",
+  Community_: "Topluluk",
+  Marketplace_: "Marketplace",
+};
+
+function getFamilyKey(key: string): string {
+  const prefix = Object.keys(FAMILY_LABELS).find(
+    (p) => p !== "legacy" && key.startsWith(p),
+  );
+  return prefix ?? "legacy";
+}
+
+function groupRoles(roles: RoleRow[]): RoleFamily[] {
+  const map = new Map<string, RoleRow[]>();
+  for (const role of roles) {
+    const family = getFamilyKey(role.key);
+    if (!map.has(family)) map.set(family, []);
+    map.get(family)!.push(role);
+  }
+  return Array.from(map.entries()).map(([family, groupedRoles]) => ({
+    family,
+    label: FAMILY_LABELS[family] ?? family,
+    roles: groupedRoles,
+  }));
+}
 
 const ruleLegendItems = [
   "A: Aktif",
   "F: Feature",
   "Z: Zorunlu",
   "P: Public",
-  "D: Duzenler",
+  "D: Düzenler",
   "G: Global / Gizler",
   "O: Onay",
   "R: Rol",
-  "S: Sira",
+  "S: Sıra",
 ] as const;
 
-type GuideSection = {
-  title: string;
-  items: readonly string[];
-};
-
-type GuideBlock = {
-  heading: string;
-  tag?: string;
-  sections: GuideSection[];
-};
+type GuideSection = { title: string; items: readonly string[] };
+type GuideBlock = { heading: string; tag?: string; sections: GuideSection[] };
 
 const blocks: GuideBlock[] = [
   {
-    heading: "1. Hangi ekran ne ise yariyor?",
+    heading: "1. Hangi ekran ne işe yarıyor?",
     tag: "Menu",
     sections: [
       {
-        title: "Veritabani menusu - bugunku ana operasyon yuzeyi",
+        title: "Veritabanı menüsü — güncel operasyon yüzeyi",
         items: [
-          "Veritabani (/admin/data): Auth profilleri ile catalog item kayitlarini ayni operasyon yuzeyinde gorur; rol ata, claim yonet, editor ver, item-level override uygularsin.",
-          "Profil ve Rol Atama (/admin/new-member/profile-role-assignment): Veritabani ekraninin ayni operasyon akisini yeni uyeler baglaminda acar.",
-          "Tum Roller (/admin/new-member/roles-list): Sistemdeki tum rol kayitlarini aile, key ve sort order bazinda denetlersin.",
-          "Tum Roller AFS Matrisi (/admin/new-member/role-matrix): Rol bazli attribute + feature + profile section kuralini tek tabloda yonettigimiz ana ekrandir.",
-          "Feature Override (/admin/new-member/overrides): Tek bir auth kullanicisi icin rol varsayimini bozmadan ozel feature istisnasi yazarsin.",
-          "Taxonomy Yonetimi (/admin/new-member/taxonomy): Alt kategori, alt tip ve secilebilir taxonomy seceneklerini yonetirsin.",
-          "Kullanim Klavuzu (/admin/new-member/guide): Guncel route ve operasyon sirasini tek sayfada aciklar.",
+          "Veritabanı (/admin/data): Katalog kayıtlarını (catalog_items) listeler; her kayda platform rolü atarsın, linked_user_id ile auth kullanıcısı bağlarsın, item-level override uygularsın. Operasyonun çoğu buradan yürür.",
+          "Profil ve Rol Atama (/admin/new-member/profile-role-assignment): Catalog kayıtlarını ve bağlı auth kullanıcılarını birlikte görürsün. Hızlı rol değişikliği, claim ve editor yönetimi için kullan.",
+          "Tüm Roller AFS Matrisi (/admin/new-member/role-matrix): Seçili rol için attribute, feature ve section kurallarını tek tabloda yönet. URL filtresi: ?kind=attribute | ?kind=feature | ?kind=profile_section.",
+          "Taxonomy Yönetimi (/admin/new-member/taxonomy): Role bağlı taxonomy gruplarını ve kullanıcı seçimlerini yönetirsin.",
+          "Feature Override (/admin/new-member/overrides): Tek bir auth kullanıcısı için rol varsayımını bozmadan özel feature istisnası yazarsın.",
+          "Kullanım Kılavuzu (/admin/new-member/guide): Bu sayfa — canlı referans katalogları aşağıdaki açılır kartlarda.",
         ],
       },
       {
-        title: "Yardimci ama hala aktif ekranlar",
+        title: "Yönlendirmeler — eski rotalar artık redirect yapıyor",
         items: [
-          "Uyelikle ilgili eski operasyon ekrani artik ust menude ayri bir baglanti olarak durur: /admin/members -> Uye Takibi (eski).",
-          "/admin/new-member/users-roles, /role-management, /roles-preview ve /entity-preview route'lari redirect amacli durabilir; menudeki ana hedefler yeni route'lardir.",
-          "/admin/new-member/profile-sections route'u ayri ayri section toggle etmek icin hala kullanilabilir.",
-          "/admin/new-member/attributes ve /admin/new-member/roles-features route'lari yardimci redirect'lerdir; gundelik operasyonun buyuk kismi profile-role-assignment, role-matrix ve data icinden yurur.",
+          "/admin/new-member/users-roles → /admin/new-member/profile-role-assignment",
+          "/admin/new-member/role-management → /admin/new-member/role-matrix",
+          "/admin/new-member/roles-features → /admin/new-member/role-matrix?kind=feature",
+          "/admin/new-member/attributes → /admin/new-member/role-matrix?kind=attribute",
+          "/admin/new-member/profile-sections → /admin/new-member/role-matrix?kind=profile_section",
+          "/admin/new-member/roles-preview ve /admin/new-member/entity-preview → /admin/new-member/role-matrix",
         ],
       },
       {
         title: "Hangi sorunda nereye gitmelisin?",
         items: [
-          "Kullanicinin rolu yanlissa: once /admin/new-member/profile-role-assignment veya /admin/data.",
-          "Ayni rol altindaki herkes yanlis davraniyorsa: /admin/new-member/role-matrix.",
-          "Sorun tek kisideyse: /admin/new-member/overrides.",
-          "Sorun rol sozlugunde veya aile dagilimindaysa: /admin/new-member/roles-list.",
-          "Sorun public profil kart parcasiysa: role-matrix icindeki section satiri veya gerekirse /admin/new-member/profile-sections.",
-          "Sorun katalog kaydina ozelse: /admin/data > Rol & Kurallar.",
+          "Kullanıcının rolü yanlışsa: önce /admin/new-member/profile-role-assignment.",
+          "Aynı rol altındaki herkes yanlış davranıyorsa: /admin/new-member/role-matrix.",
+          "Sorun tek kişideyse: /admin/new-member/overrides.",
+          "Sorun public profil kart parçasıysa: role-matrix içindeki section satırı (?kind=profile_section).",
+          "Sorun katalog kaydına özelse: /admin/data > Rol & Kurallar.",
         ],
       },
     ],
   },
   {
-    heading: "2. Auth kullanimi nasil calisiyor?",
+    heading: "2. Auth kullanımı nasıl çalışıyor?",
     tag: "Auth",
     sections: [
       {
-        title: "Iki farkli auth kapisi var",
+        title: "İki farklı auth kapısı var",
         items: [
-          "Tum uygulama AuthProvider ile sarili; burada Supabase session dinlenir, getSession() ile ilk oturum restore edilir, context'e session + user + isLoading verilir.",
-          "Public tarafta RequireAuth sadece belli rotalarda kullanilir: /profile, /profile/:type, /cadde ve bazi editor akislarinda.",
-          "Admin tarafi Route seviyesinde RequireAuth ile sarili degil; /admin altinda giris ve admin kontrolunu AdminLayout kendi icinde yapar.",
-          "AdminLayout once Supabase session var mi diye bakar, sonra userIsAdmin() ile admin_users tablosunda kullaniciyi dogrular; admin degilse admin ekrani acilmaz.",
+          "Tüm uygulama AuthProvider ile sarılı; Supabase session dinlenir, getSession() ile ilk oturum restore edilir, context'e session + user + isLoading verilir.",
+          "Public tarafta RequireAuth sadece belli rotalarda kullanılır: /profile, /profile/:type, /cadde ve bazı editor akışlarında.",
+          "Admin tarafı Route seviyesinde RequireAuth ile sarılı değil; /admin altında giriş ve admin kontrolünü AdminLayout kendi içinde yapar.",
+          "AdminLayout önce Supabase session var mı diye bakar, sonra userIsAdmin() ile admin_users tablosunda kullanıcıyı doğrular; admin değilse ekran açılmaz.",
         ],
       },
       {
         title: "Feature guard nerede devreye giriyor?",
         items: [
-          "RequireFeature component'i useFeatureFlags() hook'unu kullanir.",
-          "useFeatureFlags() auth kullanicisi varsa get_current_user_features RPC'sini cagirir ve her feature icin isEnabled + source bilgisini toplar.",
-          "Source degeri bugun override, role_default veya fallback olarak normalize edilir.",
-          "Ornek: /cadde rotasi hem RequireAuth hem RequireFeature(cadde.access) ile korunur.",
+          "RequireFeature component'i useFeatureFlags() hook'unu kullanır.",
+          "useFeatureFlags() auth kullanıcısı varsa get_current_user_features RPC'sini çağırır; her feature için isEnabled + source bilgisini toplar.",
+          "Source: override → role_default → fallback sırasıyla normalize edilir.",
+          "Örnek: /cadde rotası hem RequireAuth hem RequireFeature(cadde.access) ile korunur.",
         ],
       },
       {
-        title: "Pratik auth notlari",
+        title: "Pratik auth notları",
         items: [
-          "Admin olmasi gereken ama /admin'e giremeyen hesapta once session'i degil admin_users kaydini kontrol et.",
-          "Public directory profil rotasi su an /directory/profile/:userId olarak acik; guide veya operasyon karari yazarken bu rotayi auth zorunlu varsayma.",
-          "AuthProvider ayri, admin yetkisi ayri kavramdir: login olmak admin olmak demek degildir.",
+          "Admin olması gereken ama /admin'e giremeyen hesapta önce session'ı değil admin_users kaydını kontrol et.",
+          "Public directory profil rotası /directory/profile/:userId olarak açık; auth zorunlu varsayma.",
+          "AuthProvider ayrı, admin yetkisi ayrı kavramdır: login olmak admin olmak demek değildir.",
         ],
       },
     ],
   },
   {
-    heading: "3. Rol kullanimi nasil calisiyor?",
+    heading: "3. Rol kullanımı nasıl çalışıyor?",
     tag: "Rol",
     sections: [
       {
-        title: "Bugunku write path",
+        title: "Bugünkü write path",
         items: [
-          "Loginli kullanicilar user_profiles tablosundan listelenir.",
-          "Aktif rol atamasi admin_set_user_role RPC ile yazilir.",
-          "Rol secimi runtime'da user_role_assignments ve ilgili role kurallariyla birlikte davranisa yansir.",
-          "Profil ve rol atama akisinda listeye ek olarak approval_requests ve user_feature_overrides sayilari da cekilir; bu sayede rol degisikliginden sonra ek is gerekip gerekmedigi gorulur.",
+          "Catalog kayıtları /admin/new-member/profile-role-assignment veya /admin/data üzerinden listelenir.",
+          "Aktif rol ataması admin_set_user_role RPC ile yazılır.",
+          "Rol seçimi runtime'da user_role_assignments ve ilgili rol kurallarıyla birlikte davranışa yansır.",
+          "Profil ve Rol Atama ekranında linked_user_id üzerinden auth bağlantısı da yönetilir.",
         ],
       },
       {
-        title: "Rol degisikligi neyi etkiler?",
+        title: "Rol değişikliği neyi etkiler?",
         items: [
-          "Kullanicinin gorecegi feature set'i degisir.",
-          "Role bagli taxonomy gruplari degisebilir.",
-          "Role bagli attribute kurallari degisebilir.",
-          "Role bagli profile section kurallari degisebilir.",
-          "Bu yuzden rol degisikligi yalnizca etiket degil, tum deneyimi etkileyen ana karar katmanidir.",
+          "Kullanıcının göreceği feature set'i değişir.",
+          "Role bağlı taxonomy grupları değişebilir.",
+          "Role bağlı attribute kuralları değişebilir.",
+          "Role bağlı profile section kuralları değişebilir.",
+          "Bu yüzden rol değişikliği yalnızca etiket değil, tüm deneyimi etkileyen ana karar katmanıdır.",
         ],
       },
       {
-        title: "Ne zaman rol degistirilmeli?",
+        title: "Ne zaman rol değiştirilmeli?",
         items: [
-          "Kullanicinin genel deneyimi yanlissa rol degistir.",
-          "Sadece tek bir yetki farkli olsun istiyorsan rol degistirme; override kullan.",
-          "Katalog item icin rol atayacaksan bunu /admin/data ekraninda item bazinda yap.",
+          "Kullanıcının genel deneyimi yanlışsa rol değiştir.",
+          "Sadece tek bir yetki farklı olsun istiyorsan rol değiştirme; override kullan.",
+          "Katalog item için platform rolü atayacaksan bunu /admin/data ekranında item bazında yap.",
         ],
       },
     ],
   },
   {
-    heading: "4. Profil ve attribute kullanimi",
+    heading: "4. Profil ve attribute kullanımı",
     tag: "Profil",
     sections: [
       {
-        title: "Details penceresinde ne yonetiliyor?",
+        title: "Profil ve Rol Atama ekranında ne yönetiliyor?",
         items: [
-          "Users-roles ekranindaki Details, kullanicinin gercek profil verisini acan operasyon penceresidir.",
-          "Profil ve Rol Atama akisi, kullanicinin gercek profil verisini acan operasyon penceresidir.",
-          "Burada rol secici vardir; ayni kayit ekranindan rol degisikligi de yapilabilir.",
-          "Attribute listesi user_profile_attributes verisini attribute_catalog ile birlikte gosterir.",
-          "Admin burada deger, visibility ve onay baglamini birlikte gorur; kayit admin_update_user_profile_attribute RPC'si ile yazilir.",
-          "Ayni pencerede role gore taxonomy gruplari da cekilir; degisiklik admin_update_user_taxonomy_selection RPC'si ile kaydedilir.",
+          "/admin/new-member/profile-role-assignment, catalog_items + linked_user_id + user_role_assignments okuması yapıyor.",
+          "Rol seçici vardır; aynı ekrandan rol değişikliği yapılabilir.",
+          "Attribute listesi user_profile_attributes verisini attribute_catalog ile birlikte gösterir.",
+          "Admin burada değer, visibility ve onay bağlamını birlikte görür; kayıt admin_update_user_profile_attribute RPC'si ile yazılır.",
+          "Aynı ekranda role göre taxonomy grupları da çekilir; değişiklik admin_update_user_taxonomy_selection RPC'si ile kaydedilir.",
         ],
       },
       {
-        title: "Attribute katmanlari",
+        title: "Attribute katmanları",
         items: [
-          "attribute_catalog: alan sozlugu.",
-          "role_attribute_rules: o rolde alanin aktifligi, zorunlulugu, public varsayimi ve duzenlenebilirligi.",
-          "user_profile_attributes: auth kullanicisinin gercek degeri, visibility ve approval_status bilgisi.",
-          "Katalog item tarafinda ayri bir item-level attribute override katmani vardir; bu auth kullanici attribute kaydiyla ayni sey degildir.",
+          "attribute_catalog: alan sözlüğü (tüm tanımlar).",
+          "role_attribute_rules: o rolde alanın aktifliği, zorunluluğu, public varsayımı ve düzenlenebilirliği.",
+          "user_profile_attributes: auth kullanıcısının gerçek değeri, visibility ve approval_status bilgisi.",
+          "catalog_item_attributes: katalog item'larına ait ayrı bir attribute katmanı; auth kullanıcı attribute kaydıyla aynı şey değildir.",
         ],
       },
       {
-        title: "Operasyon karari",
+        title: "Operasyon kararı",
         items: [
-          "Sorun form alani kuraliysa role-matrix ekraninda duzelt.",
-          "Sorun kullanicinin kendi girdigi veriyse profile-role-assignment veya /admin/data icindeki detail akisinda duzelt.",
-          "Sorun sadece bir katalog item'a ozelse /admin/data icindeki item-level override'i kullan.",
+          "Sorun form alanı kuralıysa role-matrix ekranında (?kind=attribute) düzelt.",
+          "Sorun kullanıcının kendi girdiği veriyse profile-role-assignment içinde düzelt.",
+          "Sorun sadece bir katalog item'a özelse /admin/data içindeki item-level override'ı kullan.",
         ],
       },
     ],
   },
   {
-    heading: "5. Feature kullanimi",
+    heading: "5. Feature kullanımı",
     tag: "Feature",
     sections: [
       {
-        title: "Bugunku feature cozumleme mantigi",
+        title: "Bugünkü feature çözümleme mantığı",
         items: [
-          "Runtime okumasi get_current_user_features RPC ile yapilir.",
-          "Admin yazma akisinda rol bazli feature degisikligi admin_set_role_feature_flag RPC ile kaydedilir.",
-          "Tek kullanici override'i admin_set_user_feature_override_detailed RPC ile yazilir.",
-          "Global feature toggle admin_set_feature_global_state RPC ile yonetilir.",
+          "Runtime okuması get_current_user_features RPC ile yapılır.",
+          "Rol bazlı feature değişikliği admin_set_role_feature_flag RPC ile kaydedilir.",
+          "Tek kullanıcı override'ı admin_set_user_feature_override_detailed RPC ile yazılır.",
+          "Global feature toggle admin_set_feature_global_state RPC ile yönetilir.",
         ],
       },
       {
-        title: "Nereden yonetilir?",
+        title: "Nereden yönetilir?",
         items: [
-          "Rolun genel feature karari icin once /admin/new-member/role-matrix dusunulmeli.",
-          "Tek kisiye ozel istisna icin /admin/new-member/overrides kullanilir.",
-          "Legacy matrix gorunumu ve global/rol switch tablosu icin /admin/new-member/roles-features hala mevcuttur.",
-          "Katalog item'a ozel feature istisnasi gerekiyorsa /admin/data > Rol & Kurallar kullanilir.",
+          "Rolün genel feature kararı için /admin/new-member/role-matrix?kind=feature kullan.",
+          "Tek kişiye özel istisna için /admin/new-member/overrides kullanılır.",
+          "Katalog item'a özel feature istisnası gerekiyorsa /admin/data > Rol & Kurallar kullanılır.",
         ],
       },
       {
-        title: "Override ne zaman kullanilir?",
+        title: "Override ne zaman kullanılır?",
         items: [
-          "Ayni feature sorunu birden fazla kiside varsa override yazma; rol seviyesinde cozum ara.",
-          "Override gecici veya istisnai operasyon icin uygundur.",
-          "Override eklendikten sonra neden alanini bos birakmamak iyi pratiktir; daha sonra neden verildigi anlasilir.",
+          "Aynı feature sorunu birden fazla kişide varsa override yazma; rol seviyesinde çözüm ara.",
+          "Override geçici veya istisnai operasyon içindir.",
+          "Override eklendikten sonra neden alanını boş bırakmamak iyi pratiktir.",
         ],
       },
     ],
   },
   {
-    heading: "6. Section kullanimi",
+    heading: "6. Section kullanımı",
     tag: "Section",
     sections: [
       {
         title: "Section nedir?",
         items: [
-          "Section, public veya self profil ekraninda hangi kart parcasinin gorunecegini belirleyen katmandir.",
-          "Feature bir capability'dir; section ise gorunum parcasi. Ikisi ayni sey degildir.",
+          "Section, public veya self profil ekranında hangi kart parçasının görüneceğini belirleyen katmandır.",
+          "Feature bir capability'dir; section görünüm parçasıdır. İkisi aynı şey değildir.",
         ],
       },
       {
-        title: "Bugunku section write path",
+        title: "Bugünkü section write path",
         items: [
-          "Rol bazli section kurali admin_upsert_role_profile_section_rule RPC ile yazilir.",
-          "Ayri ekran olarak /admin/new-member/profile-sections role_profile_section_rules tablosunu yonetir.",
-          "Tum Roller AFS Matrisi ekraninda da section satirlari ayni mantigin birlesik editoru olarak yer alir.",
+          "Rol bazlı section kuralı admin_upsert_role_profile_section_rule RPC ile yazılır.",
+          "Rol Matrisi ekranı (/admin/new-member/role-matrix?kind=profile_section) section satırlarının birleşik editörüdür.",
         ],
       },
       {
-        title: "Ne zaman section degistirilmeli?",
+        title: "Ne zaman section değiştirilmeli?",
         items: [
-          "Kullanici o modulu kullanabilsin ama kartta gorunmesin/gorunsun karari gerekiyorsa section tarafina bak.",
-          "Kart icindeki alanin public/private davranisi section konusu degil, attribute konusudur.",
-          "Bir bolum herkes icin degil sadece bir item icin farkli olsun istiyorsan /admin/data tarafindaki item-level section override kullanilir.",
+          "Kullanıcı modülü kullanabilsin ama kartta görünmesin/görünsün kararı gerekiyorsa section tarafına bak.",
+          "Kart içindeki alanın public/private davranışı section konusu değil, attribute konusudur.",
+          "Tek bir item için farklı section davranışı gerekiyorsa /admin/data içindeki item-level override kullanılır.",
         ],
       },
     ],
   },
   {
-    heading: "7. En saglikli operasyon sirasi",
-    tag: "Akis",
+    heading: "7. En sağlıklı operasyon sırası",
+    tag: "Akış",
     sections: [
       {
-        title: "Bir uyede sorun gordugunde",
+        title: "Bir üyede sorun gördüğünde",
         items: [
-          "1. /admin/new-member/profile-role-assignment veya /admin/data ekraninda kullaniciyi bul.",
-          "2. Rol dogru mu kontrol et.",
-          "3. Details icinde attribute ve taxonomy verisini kontrol et.",
-          "4. Sorun hala rolde genel bir kural gibi gorunuyorsa /admin/new-member/role-matrix ekranina gec.",
-          "5. Sorun yalnizca bu kullanicidaysa /admin/new-member/overrides kullan.",
-          "6. Public profil kart parcasi sorunuysa section kuralini kontrol et.",
+          "1. /admin/new-member/profile-role-assignment ekranında kullanıcıyı bul.",
+          "2. Rolü doğru mu kontrol et.",
+          "3. Detay panelinde attribute ve taxonomy verisini kontrol et.",
+          "4. Sorun genel bir kural gibi görünüyorsa /admin/new-member/role-matrix ekranına geç.",
+          "5. Sorun yalnızca bu kullanıcıdaysa /admin/new-member/overrides kullan.",
+          "6. Public profil kart parçası sorunuysa section kuralını kontrol et (?kind=profile_section).",
         ],
       },
       {
-        title: "Bir katalog kaydinda sorun gordugunde",
+        title: "Bir katalog kaydında sorun gördüğünde",
         items: [
-          "1. /admin/data ekraninda kaydi ac.",
-          "2. Rol & Kurallar tab'inda platform rolunu kontrol et.",
+          "1. /admin/data ekranında kaydı aç.",
+          "2. Platform rolünü kontrol et.",
           "3. Gerekirse item-level attribute / feature / section override uygula.",
-          "4. Claim veya editor yetkisi gerekiyorsa ayni kayit icinden yonet.",
+          "4. Claim veya editor yetkisi gerekiyorsa aynı kayıt içinden yönet.",
         ],
       },
     ],
@@ -254,21 +286,20 @@ const blocks: GuideBlock[] = [
     tag: "Kritik",
     sections: [
       {
-        title: "Bu guide yazilirken kodda gorunen gercek durum",
+        title: "Mevcut kod akışındaki gerçek durum",
         items: [
-          "Admin auth guard'i App.tsx route seviyesinde degil, AdminLayout icinde calisiyor.",
-          "Veritabani menusu icin ana editorler artik profile-role-assignment, role-matrix ve data ekranlaridir.",
-          "Uye Takibi (eski) ust menude ayri tutulur; Veritabani dropdown'inin parcasi degildir.",
-          "Profil ve rol atama operasyonu user_profiles + user_role_assignments + approval_requests + user_feature_overrides okumasi yapiyor.",
-          "Feature source anlatiminda bu guide mevcut hook davranisini baz alir: override -> role_default -> fallback.",
+          "Admin auth guard'ı App.tsx route seviyesinde değil AdminLayout içinde çalışıyor.",
+          "Ana editor artık role-matrix; eski /roles-features, /role-management, /roles-preview rotaları redirect yapıyor.",
+          "Feature source sırası: override → role_default → fallback.",
+          "Catalog item attribute katmanı (catalog_item_attributes) auth kullanıcı attribute'undan (user_profile_attributes) ayrıdır; karıştırma.",
         ],
       },
       {
-        title: "Temiz sistem kurali",
+        title: "Temiz sistem kuralı",
         items: [
-          "Override ilk cozum degil son care olsun.",
-          "Ayni kural birden cok kaydi etkiliyorsa rol seviyesinde duzelt.",
-          "Rol degisikliginden sonra profil, feature ve section davranisini test etmeden islemi bitmis sayma.",
+          "Override ilk çözüm değil son çare olsun.",
+          "Aynı kural birden çok kaydı etkiliyorsa rol seviyesinde düzelt.",
+          "Rol değişikliğinden sonra profil, feature ve section davranışını test etmeden işlemi bitmiş sayma.",
         ],
       },
     ],
@@ -276,35 +307,60 @@ const blocks: GuideBlock[] = [
 ];
 
 const AdminNewMemberGuidePage = () => {
+  const [roles, setRoles] = useState<RoleRow[]>([]);
+  const [catalogRows, setCatalogRows] = useState<CatalogRow[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    void (async () => {
+      const [rolesResult, catalogResult] = await Promise.allSettled([
+        supabase
+          .from("roles")
+          .select("key, label, sort_order, is_active")
+          .order("sort_order"),
+        fetchCatalogRows(),
+      ]);
+      if (!isMounted) return;
+      if (rolesResult.status === "fulfilled" && !rolesResult.value.error) {
+        setRoles((rolesResult.value.data ?? []) as RoleRow[]);
+      }
+      if (catalogResult.status === "fulfilled") {
+        setCatalogRows(catalogResult.value);
+      }
+      setLoading(false);
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const roleGroups = groupRoles(roles);
+  const attributes = catalogRows.filter((r) => r.kind === "attribute");
+  const features = catalogRows.filter((r) => r.kind === "feature");
+  const sections = catalogRows.filter((r) => r.kind === "profile_section");
+
   return (
     <AdminPageLayout className="max-w-5xl gap-10">
       <section className="space-y-4">
         <div className="space-y-2">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-            Kullanim Klavuzu
+            Kullanım Kılavuzu
           </h1>
           <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-            Bu rehber, bugunku kod akisina gore `rol`, `profil`, `feature`,
-            `attribute`, `section` ve `auth` kullanimini tek yerde toplar.
-            Ozellikle yeni uyeler menusu ile katalog ekranindaki guncel operasyon
-            sirasi burada ozetlenir.
+            Güncel kod akışına göre rol, profil, feature, attribute, section ve auth kullanımını tek yerde toplar.
+            Veritabanı menüsündeki güncel operasyon sırası burada özetlenir; canlı referans katalogları sayfanın sonundaki açılır kartlardadır.
           </p>
         </div>
-
         <div className="flex flex-wrap gap-2">
           {blocks.map((block) =>
             block.tag ? (
-              <Badge
-                key={block.tag}
-                variant="secondary"
-                className="rounded-full text-xs"
-              >
+              <Badge key={block.tag} variant="secondary" className="rounded-full text-xs">
                 {block.tag}
               </Badge>
             ) : null
           )}
         </div>
-
         <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
           {ruleLegendItems.map((item) => (
             <span
@@ -326,19 +382,11 @@ const AdminNewMemberGuidePage = () => {
             <div className="space-y-6">
               {block.sections.map((section) => (
                 <div key={section.title} className="space-y-3">
-                  <h3 className="text-sm font-semibold text-foreground/80">
-                    {section.title}
-                  </h3>
+                  <h3 className="text-sm font-semibold text-foreground/80">{section.title}</h3>
                   <ul className="space-y-2">
                     {section.items.map((item) => (
-                      <li
-                        key={item}
-                        className="flex gap-3 text-sm leading-6 text-muted-foreground"
-                      >
-                        <span
-                          className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
-                          aria-hidden
-                        />
+                      <li key={item} className="flex gap-3 text-sm leading-6 text-muted-foreground">
+                        <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -349,6 +397,141 @@ const AdminNewMemberGuidePage = () => {
           </div>
         ))}
       </div>
+
+      <section className="space-y-4">
+        <div className="space-y-1">
+          <h2 className="border-b border-border/60 pb-3 text-lg font-semibold tracking-tight text-foreground">
+            Referans Katalogları
+          </h2>
+          <p className="pt-2 text-sm text-muted-foreground">
+            Veritabanından canlı çekilir. İhtiyaç duyduğunda aç, kapat.
+          </p>
+        </div>
+
+        {loading ? (
+          <p className="text-sm text-muted-foreground">Yükleniyor…</p>
+        ) : (
+          <Accordion type="multiple" className="w-full">
+            <AccordionItem value="roles">
+              <AccordionTrigger className="text-sm font-semibold">
+                Tüm Roller ({roles.length})
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-6 pt-2">
+                  {roleGroups.map((group) => (
+                    <div key={group.family} className="space-y-2">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        {group.label} — {group.roles.length} rol
+                      </p>
+                      <div className="grid gap-1 sm:grid-cols-2">
+                        {group.roles.map((role) => (
+                          <div
+                            key={role.key}
+                            className="flex items-center justify-between rounded-md border border-border/50 bg-muted/30 px-3 py-1.5 text-xs"
+                          >
+                            <span className="font-medium text-foreground">{role.label}</span>
+                            <code className="ml-2 shrink-0 text-[10px] text-muted-foreground">
+                              {role.key}
+                            </code>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="attributes">
+              <AccordionTrigger className="text-sm font-semibold">
+                Attribute Kataloğu ({attributes.length})
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="grid gap-1 pt-2 sm:grid-cols-2">
+                  {attributes.map((a) => (
+                    <div
+                      key={a.key}
+                      className="space-y-0.5 rounded-md border border-border/50 bg-muted/30 px-3 py-2 text-xs"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-medium text-foreground">{a.label}</span>
+                        {a.dataType && (
+                          <Badge variant="outline" className="shrink-0 text-[10px]">
+                            {a.dataType}
+                          </Badge>
+                        )}
+                      </div>
+                      <code className="text-muted-foreground">{a.key}</code>
+                      {a.description && (
+                        <p className="text-muted-foreground/70">{a.description}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="features">
+              <AccordionTrigger className="text-sm font-semibold">
+                Feature Kataloğu ({features.length})
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="grid gap-1 pt-2 sm:grid-cols-2">
+                  {features.map((f) => (
+                    <div
+                      key={f.key}
+                      className="space-y-0.5 rounded-md border border-border/50 bg-muted/30 px-3 py-2 text-xs"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-medium text-foreground">{f.label}</span>
+                        <Badge
+                          variant={f.isActiveGlobally ? "default" : "secondary"}
+                          className="shrink-0 text-[10px]"
+                        >
+                          {f.isActiveGlobally ? "Global Aktif" : "Pasif"}
+                        </Badge>
+                      </div>
+                      <code className="text-muted-foreground">{f.key}</code>
+                      {f.description && (
+                        <p className="text-muted-foreground/70">{f.description}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="sections">
+              <AccordionTrigger className="text-sm font-semibold">
+                Bölüm Kataloğu — Sections ({sections.length})
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="grid gap-1 pt-2 sm:grid-cols-2">
+                  {sections.map((s) => (
+                    <div
+                      key={s.key}
+                      className="space-y-0.5 rounded-md border border-border/50 bg-muted/30 px-3 py-2 text-xs"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-medium text-foreground">{s.label}</span>
+                        {s.sectionArea && (
+                          <Badge variant="outline" className="shrink-0 text-[10px]">
+                            {s.sectionArea}
+                          </Badge>
+                        )}
+                      </div>
+                      <code className="text-muted-foreground">{s.key}</code>
+                      {s.description && (
+                        <p className="text-muted-foreground/70">{s.description}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        )}
+      </section>
     </AdminPageLayout>
   );
 };
