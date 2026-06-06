@@ -190,6 +190,7 @@ describe("AdminCatalogPage", () => {
     expect(screen.getByText(/Alexanderplatz 1/i)).toBeInTheDocument();
   });
 
+
   it("filters by kind and shows profile-specific detail without catalog tabs", async () => {
     render(<AdminCatalogPage />);
 
