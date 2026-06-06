@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchCatalogRows, type CatalogRow } from "@/lib/role-catalog";
 
@@ -307,9 +309,12 @@ const blocks: GuideBlock[] = [
 ];
 
 const AdminNewMemberGuidePage = () => {
+  const location = useLocation();
   const [roles, setRoles] = useState<RoleRow[]>([]);
   const [catalogRows, setCatalogRows] = useState<CatalogRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [openReferenceItems, setOpenReferenceItems] = useState<string[]>([]);
+  const roleListRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -339,18 +344,39 @@ const AdminNewMemberGuidePage = () => {
   const attributes = catalogRows.filter((r) => r.kind === "attribute");
   const features = catalogRows.filter((r) => r.kind === "feature");
   const sections = catalogRows.filter((r) => r.kind === "profile_section");
+  const shouldOpenRoleList = useMemo(
+    () => location.hash === "#rol-listesi" || new URLSearchParams(location.search).get("section") === "rol-listesi",
+    [location.hash, location.search],
+  );
+
+  useEffect(() => {
+    if (!shouldOpenRoleList || loading) return;
+
+    setOpenReferenceItems((current) => (current.includes("roles") ? current : [...current, "roles"]));
+
+    const timeout = window.setTimeout(() => {
+      roleListRef.current?.scrollIntoView?.({ behavior: "smooth", block: "start" });
+    }, 50);
+
+    return () => window.clearTimeout(timeout);
+  }, [loading, shouldOpenRoleList]);
 
   return (
     <AdminPageLayout className="max-w-5xl gap-10">
       <section className="space-y-4">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-            Kullanım Kılavuzu
-          </h1>
-          <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-            Güncel kod akışına göre rol, profil, feature, attribute, section ve auth kullanımını tek yerde toplar.
-            Veritabanı menüsündeki güncel operasyon sırası burada özetlenir; canlı referans katalogları sayfanın sonundaki açılır kartlardadır.
-          </p>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+              Kullanım Kılavuzu
+            </h1>
+            <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
+              Güncel kod akışına göre rol, profil, feature, attribute, section ve auth kullanımını tek yerde toplar.
+              Veritabanı menüsündeki güncel operasyon sırası burada özetlenir; canlı referans katalogları sayfanın sonundaki açılır kartlardadır.
+            </p>
+          </div>
+          <Button asChild variant="outline" size="sm" className="self-start">
+            <Link to="/admin/new-member/guide#rol-listesi">Rol Listesi</Link>
+          </Button>
         </div>
         <div className="flex flex-wrap gap-2">
           {blocks.map((block) =>
@@ -398,7 +424,7 @@ const AdminNewMemberGuidePage = () => {
         ))}
       </div>
 
-      <section className="space-y-4">
+      <section ref={roleListRef} id="rol-listesi" className="scroll-mt-28 space-y-4">
         <div className="space-y-1">
           <h2 className="border-b border-border/60 pb-3 text-lg font-semibold tracking-tight text-foreground">
             Referans Katalogları
@@ -411,7 +437,7 @@ const AdminNewMemberGuidePage = () => {
         {loading ? (
           <p className="text-sm text-muted-foreground">Yükleniyor…</p>
         ) : (
-          <Accordion type="multiple" className="w-full">
+          <Accordion type="multiple" className="w-full" value={openReferenceItems} onValueChange={setOpenReferenceItems}>
             <AccordionItem value="roles">
               <AccordionTrigger className="text-sm font-semibold">
                 Tüm Roller ({roles.length})

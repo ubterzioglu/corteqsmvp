@@ -76,7 +76,6 @@ import AdminAuditLogsPage from "@/pages/admin/AdminAuditLogsPage";
 import AdminTaxonomyPage from "@/pages/admin/AdminTaxonomyPage";
 import AdminNewMemberGuidePage from "@/pages/admin/AdminNewMemberGuidePage";
 import AdminRoleManagementPage from "@/pages/admin/AdminRoleManagementPage";
-import AdminRolesListPage from "@/pages/admin/AdminRolesListPage";
 import CaddePage from "@/pages/CaddePage";
 import AdminCaddePage from "@/pages/admin/AdminCaddePage";
 import Associations from "@/pages/Associations";
@@ -228,7 +227,7 @@ const App = () => (
                 <Route path="new-member/users-roles" element={<Navigate to="/admin/new-member/profile-role-assignment" replace />} />
                 <Route path="data" element={<AdminCatalogPage />} />
                 <Route path="new-member/guide" element={<AdminNewMemberGuidePage />} />
-                <Route path="new-member/roles-list" element={<AdminRolesListPage />} />
+                <Route path="new-member/roles-list" element={<Navigate to="/admin/new-member/guide#rol-listesi" replace />} />
                 <Route path="new-member/roles-features" element={<Navigate to="/admin/new-member/role-matrix?kind=feature" replace />} />
                 <Route path="new-member/attributes" element={<Navigate to="/admin/new-member/role-matrix?kind=attribute" replace />} />
                 <Route path="new-member/profile-sections" element={<Navigate to="/admin/new-member/role-matrix?kind=profile_section" replace />} />

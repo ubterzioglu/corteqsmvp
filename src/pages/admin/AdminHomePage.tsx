@@ -97,8 +97,6 @@ const toneClasses: Record<NavTone, { card: string; iconWrap: string; button: str
 
 const newMemberDescriptions: Record<string, string> = {
   Veritabanı: "Kullanıcı ve katalog kayıtlarını tek operasyon yüzeyinde ara, filtrele ve detaylandır.",
-  "Profil ve Rol Atama": "Loginli üye rol atamaları, görünürlükler ve profil alanlarını düzenle.",
-  "Tüm Roller": "Sistemdeki bütün aktif ve legacy rolleri ailelerine göre denetle.",
   "Tüm Roller AFS Matrisi": "Rol bazlı attribute, feature ve section kurallarını stratejik olarak kurgula.",
   "Taxonomy Yönetimi": "Alt kategori, alt tip ve seçilebilir taxonomy seçeneklerini yönet.",
   "Feature Override": "Kullanıcı bazlı override ile standart akıştan kontrollü sapmalar oluştur.",

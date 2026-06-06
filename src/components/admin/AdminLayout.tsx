@@ -229,8 +229,6 @@ const AdminLayout = () => {
     { to: "/admin/workspace/command-center", label: "CC" },
     { to: "/admin/members", label: "Üye Takibi (eski)" },
     { to: "/admin/data", label: "Veritabanı" },
-    { to: "/admin/new-member/profile-role-assignment", label: "Profil ve Rol Atama" },
-    { to: "/admin/new-member/roles-list", label: "Tüm Roller" },
     { to: "/admin/new-member/role-matrix", label: "Tüm Roller AFS Matrisi" },
     { to: "/admin/new-member/taxonomy", label: "Taxonomy Yönetimi" },
     { to: "/admin/new-member/overrides", label: "Feature Override" },

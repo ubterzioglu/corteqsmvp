@@ -46,7 +46,8 @@ describe("AdminHomePage", () => {
     expect(screen.queryByText("Workspace ve Dokümanlar")).not.toBeInTheDocument();
     expect(screen.queryByText("Harici Yüzeyler")).not.toBeInTheDocument();
     expect(screen.getAllByText("Veritabanı").length).toBeGreaterThan(0);
-    expect(screen.getByText(/^Tüm Roller$/)).toBeInTheDocument();
+    expect(screen.queryByText(/^Tüm Roller$/)).not.toBeInTheDocument();
+    expect(screen.queryByText("Profil ve Rol Atama")).not.toBeInTheDocument();
     expect(screen.getByText("Ref Kod")).toBeInTheDocument();
     expect(screen.getByText("Dosyalar")).toBeInTheDocument();
     expect(screen.getByText("Muhasebe")).toBeInTheDocument();

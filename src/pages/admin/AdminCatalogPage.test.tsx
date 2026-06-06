@@ -222,6 +222,12 @@ describe("AdminCatalogPage", () => {
       expect(screen.getByText("Berlin Derneği")).toBeInTheDocument();
     });
 
+    expect(screen.getByText("Profile Rol Atama")).toBeInTheDocument();
+    expect(screen.getByText("Toplam Kayıt")).toBeInTheDocument();
+    expect(screen.queryByText("Unified Admin Data")).not.toBeInTheDocument();
+    expect(screen.queryByText("Katalog ve kullanıcılar tek admin yüzeyinde.")).not.toBeInTheDocument();
+    expect(screen.queryByText("Sayfa Sonucu")).not.toBeInTheDocument();
+    expect(screen.queryByText("İçerik Tipi")).not.toBeInTheDocument();
     expect(screen.getByText("KTG = Katalog")).toBeInTheDocument();
     expect(screen.getByText("YAY = Yayında")).toBeInTheDocument();
     expect(screen.getByText("RES = Resmi Kaynak")).toBeInTheDocument();
@@ -270,5 +276,24 @@ describe("AdminCatalogPage", () => {
     });
 
     expect(screen.getByText("Community_Leader")).toBeInTheDocument();
+  });
+
+  it("renders legend chips in alphabetical code order", async () => {
+    render(<AdminCatalogPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Berlin Derneği")).toBeInTheDocument();
+    });
+
+    const arz = screen.getByText("ARS = Arşiv");
+    const bek = screen.getByText("BEK = Beklemede");
+    const dgr = screen.getByText("DGR = Doğrulandı");
+
+    expect(
+      arz.compareDocumentPosition(bek) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      bek.compareDocumentPosition(dgr) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
   });
 });

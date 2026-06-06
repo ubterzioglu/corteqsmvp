@@ -1,4 +1,4 @@
-import { BookOpen, ClipboardList, Database, ExternalLink, FolderKanban, Globe, ListChecks, Network, Rocket, ScrollText as ScrollTextIcon, Shield, Sparkles } from "lucide-react";
+import { BookOpen, ClipboardList, Database, ExternalLink, FolderKanban, Globe, ListChecks, Rocket, ScrollText as ScrollTextIcon, Shield, Sparkles } from "lucide-react";
 import { CircleHelp, Heart, Lightbulb, Megaphone, MessageSquare, Radio, ScrollText } from "lucide-react";
 import { workspaceDocPages } from "@/lib/dashboard/workspace-doc-pages";
 
@@ -9,8 +9,6 @@ export const primaryAdminNavItems = [
 
 export const newMemberSystemNavItems = [
   { to: "/admin/data", label: "Veritabanı", icon: Database },
-  { to: "/admin/new-member/profile-role-assignment", label: "Profil ve Rol Atama", icon: Network },
-  { to: "/admin/new-member/roles-list", label: "Tüm Roller", icon: Shield },
   { to: "/admin/new-member/role-matrix", label: "Tüm Roller AFS Matrisi", icon: Shield },
   { to: "/admin/new-member/taxonomy", label: "Taxonomy Yönetimi", icon: Database },
   { to: "/admin/new-member/overrides", label: "Feature Override", icon: Sparkles },

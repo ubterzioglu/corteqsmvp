@@ -32,6 +32,7 @@ type LegendItem = {
   code: string;
   label: string;
   description: string;
+  group: string;
 };
 
 const KIND_ABBREVIATIONS: Record<UnifiedRecord["kind"], LegendItem> = {
@@ -39,11 +40,13 @@ const KIND_ABBREVIATIONS: Record<UnifiedRecord["kind"], LegendItem> = {
     code: "KTG",
     label: "Katalog",
     description: "CSV, import, manuel giriş veya başka kaynaklardan gelen katalog kayıtlarını temsil eder.",
+    group: "Tür",
   },
   profile: {
     code: "KUL",
     label: "Kullanıcı",
     description: "Doğrudan platform kullanıcısına ait profil kaydını temsil eder.",
+    group: "Tür",
   },
 };
 const STATUS_ABBREVIATIONS: Record<string, LegendItem> = {
@@ -51,36 +54,43 @@ const STATUS_ABBREVIATIONS: Record<string, LegendItem> = {
     code: "YAY",
     label: "Yayında",
     description: "Kayıt yayına alınmış durumdadır; ilgili akışta görünür veya kullanılabilir kabul edilir.",
+    group: "Durum",
   },
   draft: {
     code: "TSL",
     label: "Taslak",
     description: "Kayıt henüz tamamlanmamış ya da yayına hazır olmadığı için taslak olarak tutulur.",
+    group: "Durum",
   },
   pending_review: {
     code: "INC",
     label: "İncelemede",
     description: "Kayıt admin ya da moderasyon incelemesi bekliyordur; karar süreci tamamlanmamıştır.",
+    group: "Durum",
   },
   archived: {
     code: "ARS",
     label: "Arşiv",
     description: "Kayıt aktif kullanım akışından çıkarılmıştır ama geçmiş referansı için saklanır.",
+    group: "Durum",
   },
   rejected: {
     code: "RED",
     label: "Reddedildi",
     description: "Kayıt veya süreç olumsuz kararla sonuçlanmıştır; tekrar değerlendirme gerekebilir.",
+    group: "Durum",
   },
   directory_opted_in: {
     code: "DIZ",
     label: "Dizinde",
     description: "Kullanıcı profili dizinde görünmeyi seçmiştir ve listelemeye dahildir.",
+    group: "Durum",
   },
   private: {
     code: "GIZ",
     label: "Gizli",
     description: "Kullanıcı profili listeleme veya dizin görünürlüğünü kapatmıştır.",
+    group: "Durum",
   },
 };
 const VERIFICATION_ABBREVIATIONS: Record<string, LegendItem> = {
@@ -88,45 +98,38 @@ const VERIFICATION_ABBREVIATIONS: Record<string, LegendItem> = {
     code: "YOK",
     label: "Doğrulama Yok",
     description: "Kaydın doğruluğu için henüz ek bir teyit veya kaynak onayı bulunmuyor.",
+    group: "Doğrulama",
   },
   pending: {
     code: "BEK",
     label: "Beklemede",
     description: "Doğrulama süreci başlamış ama henüz sonuçlandırılmamıştır.",
+    group: "Doğrulama",
   },
   verified: {
     code: "DGR",
     label: "Doğrulandı",
     description: "Kayıt platform içinde kontrol edilmiş ve yeterli doğrulama eşiğini geçmiştir.",
+    group: "Doğrulama",
   },
   official_source: {
     code: "RES",
     label: "Resmi Kaynak",
     description: "Kayıt resmi veya yüksek güvenilirlikli bir kaynaktan geldiği için güçlü doğrulama sinyali taşır.",
+    group: "Doğrulama",
   },
   claimed: {
     code: "SHP",
     label: "Sahiplenildi",
     description: "Kayıt ilgili kişi veya temsilci tarafından sahiplenme akışına girmiş ya da bağlanmıştır.",
+    group: "Doğrulama",
   },
 };
-const LEGEND_SECTIONS = [
-  {
-    title: "Tür",
-    summary: "Kaydın sistemde hangi ana varlık ailesine ait olduğunu gösterir.",
-    items: Object.values(KIND_ABBREVIATIONS),
-  },
-  {
-    title: "Durum",
-    summary: "Kaydın yayın, görünürlük veya moderasyon yaşam döngüsündeki anlık konumunu gösterir.",
-    items: Object.values(STATUS_ABBREVIATIONS),
-  },
-  {
-    title: "Doğrulama",
-    summary: "Kaydın güvenilirlik ve teyit düzeyini özetler.",
-    items: Object.values(VERIFICATION_ABBREVIATIONS),
-  },
-] as const;
+const LEGEND_ITEMS = [
+  ...Object.values(KIND_ABBREVIATIONS),
+  ...Object.values(STATUS_ABBREVIATIONS),
+  ...Object.values(VERIFICATION_ABBREVIATIONS),
+].sort((left, right) => left.code.localeCompare(right.code, "tr")) as const;
 
 const DEFAULT_FILTERS: AdminCatalogFilters = {
   kind: "",
@@ -316,6 +319,7 @@ const AdminCatalogPage = () => {
     () => new Map(roles.map((role) => [role.key, role.label])),
     [roles],
   );
+  const legendItems = useMemo(() => [...LEGEND_ITEMS], []);
 
   const handleFilterChange = <K extends keyof AdminCatalogFilters>(key: K, value: AdminCatalogFilters[K]) => {
     setFilters((current) => ({ ...current, [key]: value }));
@@ -340,58 +344,33 @@ const AdminCatalogPage = () => {
   return (
     <>
       <div className="space-y-6">
-        <Card className="overflow-hidden border-slate-200 bg-[radial-gradient(circle_at_top_left,_rgba(34,197,94,0.14),_transparent_36%),radial-gradient(circle_at_top_right,_rgba(59,130,246,0.14),_transparent_34%),linear-gradient(160deg,_rgba(255,255,255,0.98),_rgba(248,250,252,0.96))] shadow-[0_28px_90px_-52px_rgba(15,23,42,0.5)]">
-          <CardContent className="flex flex-col gap-5 p-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-3">
-              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-600 shadow-sm">
-                <Database className="h-3.5 w-3.5 text-emerald-600" />
-                Unified Admin Data
-              </div>
-              <div className="space-y-2">
-                <CardTitle className="text-3xl tracking-tight text-slate-950">Katalog ve kullanıcılar tek admin yüzeyinde.</CardTitle>
-                <CardDescription className="max-w-3xl text-sm leading-6 text-slate-600">
-                  Unified admin görünümü ile katalog item&apos;larını ve kullanıcı kayıtlarını tek tabloda ara, filtrele ve detayını aç.
-                </CardDescription>
+        <div className="sticky top-[76px] z-20">
+          <Card className="overflow-hidden border-slate-200 bg-white/95 shadow-[0_18px_55px_-42px_rgba(15,23,42,0.32)] backdrop-blur">
+            <CardContent className="space-y-4 p-4 sm:p-5">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-slate-950">
+                  <Database className="h-4 w-4 text-emerald-600" />
+                  <span>Profile Rol Atama</span>
+                </div>
+                <div className="self-start rounded-2xl border border-slate-200 bg-slate-50/90 px-4 py-3 shadow-sm">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Toplam Kayıt</div>
+                  <div className="mt-1 text-2xl font-semibold text-slate-950">{isLoading ? "..." : totalCount}</div>
+                </div>
               </div>
 
-              <div className="grid gap-3 lg:grid-cols-3">
-                {LEGEND_SECTIONS.map((section) => (
-                  <div key={section.title} className="rounded-2xl border border-white/80 bg-white/75 px-4 py-3 shadow-sm backdrop-blur">
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">{section.title} Lejant</div>
-                    <div className="mt-2 space-y-1 text-xs text-slate-600">
-                      {section.items.map((item) => (
-                        <div key={`${section.title}-${item.code}`}>
-                          {item.code} = {item.label}
-                        </div>
-                      ))}
-                    </div>
+              <div className="flex flex-wrap gap-2">
+                {legendItems.map((item) => (
+                  <div
+                    key={`${item.group}-${item.code}`}
+                    className="rounded-full border border-slate-200 bg-slate-50/90 px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm"
+                  >
+                    {item.code} = {item.label}
                   </div>
                 ))}
               </div>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-3">
-              <Card className="border-white/80 bg-white/88 shadow-sm">
-                <CardContent className="p-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Toplam Kayıt</div>
-                  <div className="mt-2 text-3xl font-semibold text-slate-950">{isLoading ? "..." : totalCount}</div>
-                </CardContent>
-              </Card>
-              <Card className="border-white/80 bg-white/88 shadow-sm">
-                <CardContent className="p-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Sayfa Sonucu</div>
-                  <div className="mt-2 text-3xl font-semibold text-slate-950">{isLoading ? "..." : records.length}</div>
-                </CardContent>
-              </Card>
-              <Card className="border-white/80 bg-white/88 shadow-sm">
-                <CardContent className="p-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">İçerik Tipi</div>
-                  <div className="mt-2 text-lg font-semibold text-slate-950">{itemTypes.length} aktif katalog tipi</div>
-                </CardContent>
-              </Card>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
         <Collapsible defaultOpen={false}>
           <Card className="border-slate-200 bg-white shadow-[0_18px_55px_-42px_rgba(15,23,42,0.24)]">
@@ -410,26 +389,26 @@ const AdminCatalogPage = () => {
             </CollapsibleTrigger>
             <CollapsibleContent>
               <CardContent className="pt-0">
-                <div className="space-y-6">
-                  {LEGEND_SECTIONS.map((section) => (
-                    <div key={section.title}>
-                      <div className="space-y-1 mb-3">
-                        <div className="text-sm font-semibold text-slate-900">{section.title} Kısaltmaları</div>
-                        <div className="text-xs text-slate-500">{section.summary}</div>
-                      </div>
-                      <div className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                        {section.items.map((item) => (
-                          <div key={`${section.title}-detail-${item.code}`} className="grid gap-1 md:grid-cols-[72px_160px_minmax(0,1fr)] md:items-start">
-                            <div className="inline-flex w-fit items-center rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-700">
-                              {item.code}
-                            </div>
-                            <div className="text-sm font-medium text-slate-900">{item.label}</div>
-                            <div className="text-sm leading-6 text-slate-600">{item.description}</div>
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                    {legendItems.map((item) => (
+                      <div
+                        key={`legend-detail-${item.group}-${item.code}`}
+                        className="rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
+                      >
+                        <div className="flex flex-wrap items-center gap-2">
+                          <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-700">
+                            {item.code}
                           </div>
-                        ))}
+                          <div className="text-sm font-medium text-slate-900">{item.label}</div>
+                          <Badge variant="outline" className="text-[10px]">
+                            {item.group}
+                          </Badge>
+                        </div>
+                        <div className="mt-2 text-sm leading-6 text-slate-600">{item.description}</div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </CollapsibleContent>

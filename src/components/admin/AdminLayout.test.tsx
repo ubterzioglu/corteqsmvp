@@ -78,8 +78,8 @@ describe("AdminLayout", () => {
     const newMemberSystemButton = screen.getByRole("button", { name: /Veritabanı/i });
     fireEvent.mouseEnter(newMemberSystemButton);
     expect(await screen.findByRole("menuitem", { name: /^Veritabanı$/i })).toBeInTheDocument();
-    expect(await screen.findByRole("menuitem", { name: /Profil ve Rol Atama/i })).toBeInTheDocument();
-    expect(await screen.findByRole("menuitem", { name: /^Tüm Roller$/i })).toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: /Profil ve Rol Atama/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: /^Tüm Roller$/i })).not.toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /^Tüm Roller AFS Matrisi$/i })).toBeInTheDocument();
     expect(await screen.findByRole("menuitem", { name: /Kullanım Klavuzu/i })).toBeInTheDocument();
     fireEvent.mouseLeave(newMemberSystemButton);
