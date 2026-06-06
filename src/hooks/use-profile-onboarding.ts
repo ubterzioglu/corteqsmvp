@@ -5,7 +5,7 @@ import {
   getCurrentOnboardingActivation,
   resendCurrentOnboardingActivationLink,
   resumePendingOnboarding,
-} from "@/lib/profile-onboarding-api";
+} from "@/lib/pending-onboarding-api";
 
 export const useCurrentOnboardingActivation = (enabled = true) => {
   return useQuery({

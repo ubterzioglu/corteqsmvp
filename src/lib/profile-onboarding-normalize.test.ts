@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { normalizeEmail, normalizePendingFormPayload } from "@/lib/profile-onboarding-normalize";
-import { type PendingOnboardingPayload } from "@/lib/profile-onboarding-schemas";
+import { normalizeEmail, normalizePendingFormPayload } from "@/lib/pending-onboarding-normalize";
+import { type PendingOnboardingPayload } from "@/lib/pending-onboarding-schemas";
 
 const makePayload = (overrides: Partial<PendingOnboardingPayload["form"]> = {}): PendingOnboardingPayload => ({
   version: 1,

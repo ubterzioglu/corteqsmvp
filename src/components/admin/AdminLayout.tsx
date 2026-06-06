@@ -221,22 +221,20 @@ const AdminLayout = () => {
   const newMemberMenuActive =
     location.pathname.startsWith("/admin/new-member") ||
     location.pathname === "/admin/roller-taslak" ||
-    location.pathname === "/admin/members" ||
     location.pathname === "/admin/data";
   const adminPanelMenuActive = adminPanelNavItems.some((item) => location.pathname === item.to);
   const isRouteActive = (to: string) => location.pathname === to;
   const isNewMemberGuideItem = (to: string) => to === "/admin/new-member/guide";
   const mobileMainLinks = [
     { to: "/admin/workspace/command-center", label: "CC" },
-    { to: "/admin/members", label: "Üye Takibi" },
-    { to: "/admin/new-member/users-roles", label: "Loginli Üyeler & Roller" },
-    { to: "/admin/new-member/role-management", label: "Rol Yönetimi" },
+    { to: "/admin/members", label: "Üye Takibi (eski)" },
+    { to: "/admin/data", label: "Veritabanı" },
+    { to: "/admin/new-member/profile-role-assignment", label: "Profil ve Rol Atama" },
+    { to: "/admin/new-member/roles-list", label: "Tüm Roller" },
+    { to: "/admin/new-member/role-matrix", label: "Tüm Roller AFS Matrisi" },
+    { to: "/admin/new-member/taxonomy", label: "Taxonomy Yönetimi" },
     { to: "/admin/new-member/overrides", label: "Feature Override" },
-    { to: "/admin/new-member/roles-preview", label: "Roller Önizleme" },
-    { to: "/admin/new-member/entity-preview", label: "AFS Önizleme" },
-    { to: "/admin/new-member/onboarding-imports", label: "Onboarding Importları" },
     { to: "/admin/new-member/guide", label: "Kullanım Klavuzu" },
-    { to: "/admin/data", label: "Kataloglar" },
     { to: "/admin/referral", label: "Ref Kod" },
     { to: "/admin/approvals", label: "Approval Queue" },
     { to: "/admin/audit-logs", label: "Audit Logs" },
@@ -388,6 +386,15 @@ const AdminLayout = () => {
                 </div>
               <div className="flex items-center">
                 <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
+                <NavLink
+                  to="/admin/members"
+                  className={({ isActive }) => linkClass({ isActive, variant: "members" })}
+                >
+                  Üye Takibi (eski)
+                </NavLink>
+              </div>
+              <div className="flex items-center">
+                <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
                 <DropdownMenu open={newMemberMenuOpen} onOpenChange={setNewMemberMenuOpen}>
                   <DropdownMenuTrigger asChild>
                     <div
@@ -398,7 +405,7 @@ const AdminLayout = () => {
                         type="button"
                         className={`${linkClass({ isActive: newMemberMenuActive, variant: "members" })} inline-flex items-center gap-1`}
                       >
-                        Üyeler & Veritabanı
+                        Veritabanı
                         <ChevronDown className="h-3.5 w-3.5" />
                       </button>
                     </div>

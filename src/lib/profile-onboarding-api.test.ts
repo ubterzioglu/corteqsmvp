@@ -6,7 +6,7 @@ import {
   finalizeAuthenticatedSubmission,
   loadPendingOnboardingPayload,
   savePendingOnboardingPayload,
-} from "@/lib/profile-onboarding-api";
+} from "@/lib/pending-onboarding-api";
 
 const {
   getUserMock,

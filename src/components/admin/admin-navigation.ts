@@ -8,14 +8,13 @@ export const primaryAdminNavItems = [
 ] as const;
 
 export const newMemberSystemNavItems = [
-  { to: "/admin/members", label: "Üye Takibi", icon: Network },
+  { to: "/admin/data", label: "Veritabanı", icon: Database },
   { to: "/admin/new-member/profile-role-assignment", label: "Profil ve Rol Atama", icon: Network },
+  { to: "/admin/new-member/roles-list", label: "Tüm Roller", icon: Shield },
   { to: "/admin/new-member/role-matrix", label: "Tüm Roller AFS Matrisi", icon: Shield },
   { to: "/admin/new-member/taxonomy", label: "Taxonomy Yönetimi", icon: Database },
   { to: "/admin/new-member/overrides", label: "Feature Override", icon: Sparkles },
-  { to: "/admin/new-member/onboarding-imports", label: "Onboarding Importları", icon: ClipboardList },
   { to: "/admin/new-member/guide", label: "Kullanım Klavuzu", icon: BookOpen },
-  { to: "/admin/data", label: "Kataloglar", icon: Database },
 ] as const;
 
 export const externalAdminNavItems = [
@@ -46,7 +45,7 @@ export const communityNavItems = [
 ] as const;
 
 export const dataNavItems = [
-  { to: "/admin/data", label: "Kataloglar", icon: Database },
+  { to: "/admin/data", label: "Veritabanı", icon: Database },
 ] as const;
 
 export const may19RecordNavItems = [

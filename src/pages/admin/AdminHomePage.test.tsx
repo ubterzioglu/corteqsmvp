@@ -45,7 +45,8 @@ describe("AdminHomePage", () => {
     expect(screen.queryByText("Kayıt ve Moderasyon Alanları")).not.toBeInTheDocument();
     expect(screen.queryByText("Workspace ve Dokümanlar")).not.toBeInTheDocument();
     expect(screen.queryByText("Harici Yüzeyler")).not.toBeInTheDocument();
-    expect(screen.getByText("Üye Takibi")).toBeInTheDocument();
+    expect(screen.getAllByText("Veritabanı").length).toBeGreaterThan(0);
+    expect(screen.getByText(/^Tüm Roller$/)).toBeInTheDocument();
     expect(screen.getByText("Ref Kod")).toBeInTheDocument();
     expect(screen.getByText("Dosyalar")).toBeInTheDocument();
     expect(screen.getByText("Muhasebe")).toBeInTheDocument();
@@ -60,7 +61,6 @@ describe("AdminHomePage", () => {
     expect(screen.getByText("Topluluk Editörleri")).toBeInTheDocument();
     expect(screen.getByText("Topluluk Kullanma Kılavuzu")).toBeInTheDocument();
     expect(screen.getByText("Diplomatik Profiller")).toBeInTheDocument();
-    expect(screen.getByText("Kataloglar")).toBeInTheDocument();
     expect(screen.queryByText("Başkonsolosluk")).not.toBeInTheDocument();
     expect(screen.queryByText("Kullanıcı Rolleri")).not.toBeInTheDocument();
     expect(screen.getByText("CC")).toBeInTheDocument();

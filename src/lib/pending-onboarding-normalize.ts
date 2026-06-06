@@ -1,7 +1,7 @@
 import type {
   PendingOnboardingFormValues,
   PendingOnboardingPayload,
-} from "@/lib/profile-onboarding-schemas";
+} from "@/lib/pending-onboarding-schemas";
 
 export const REFERRAL_SOURCE_OPTIONS = [
   { value: "whatsapp", label: "WhatsApp Grubu" },
@@ -11,11 +11,11 @@ export const REFERRAL_SOURCE_OPTIONS = [
   { value: "facebook", label: "Facebook" },
   { value: "tiktok", label: "TikTok" },
   { value: "youtube", label: "YouTube" },
-  { value: "arkadas-tavsiye", label: "Arkadaş / Tavsiye" },
-  { value: "etkinlik", label: "Etkinlik / Buluşma" },
+  { value: "arkadas-tavsiye", label: "Arkadas / Tavsiye" },
+  { value: "etkinlik", label: "Etkinlik / Bulusma" },
   { value: "google", label: "Google Arama" },
-  { value: "basin-haber", label: "Basın / Haber" },
-  { value: "diger", label: "Diğer" },
+  { value: "basin-haber", label: "Basin / Haber" },
+  { value: "diger", label: "Diger" },
 ] as const;
 
 const ALLOWED_REFERRAL_SOURCE_VALUES = new Set(REFERRAL_SOURCE_OPTIONS.map((option) => option.value));
@@ -86,9 +86,9 @@ export const normalizePendingFormPayload = (
 
   requireNonEmpty("Kategori", form.category);
   requireNonEmpty("Ad Soyad", form.fullname);
-  requireNonEmpty("Ülke", form.country);
-  requireNonEmpty("Şehir", form.city);
-  requireNonEmpty("İştigal / İlgi Sahası", form.field);
+  requireNonEmpty("Ulke", form.country);
+  requireNonEmpty("Sehir", form.city);
+  requireNonEmpty("Istigal / Ilgi Sahasi", form.field);
   requireNonEmpty("Telefon", form.phone);
 
   const emailNormalized = normalizeEmail(form.email);
@@ -97,15 +97,15 @@ export const normalizePendingFormPayload = (
   }
 
   if (!E164_PHONE_PATTERN.test(form.phone)) {
-    throw new Error("Telefon ülke kodu ile başlamalı.");
+    throw new Error("Telefon ulke kodu ile baslamali.");
   }
 
   if (form.referral_source && !ALLOWED_REFERRAL_SOURCE_VALUES.has(form.referral_source)) {
-    throw new Error("Referral kaynağı geçersiz.");
+    throw new Error("Referral kaynagi gecersiz.");
   }
 
   if (form.referral_source === "whatsapp" && !form.referral_detail) {
-    throw new Error("WhatsApp kaynağı seçildiğinde detay gerekli.");
+    throw new Error("WhatsApp kaynagi secildiginde detay gerekli.");
   }
 
   const formEntries: Record<string, FormDataEntryValue> = {

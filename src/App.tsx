@@ -75,8 +75,8 @@ import AdminApprovalsPage from "@/pages/admin/AdminApprovalsPage";
 import AdminAuditLogsPage from "@/pages/admin/AdminAuditLogsPage";
 import AdminTaxonomyPage from "@/pages/admin/AdminTaxonomyPage";
 import AdminNewMemberGuidePage from "@/pages/admin/AdminNewMemberGuidePage";
-import AdminOnboardingImportsPage from "@/pages/admin/AdminOnboardingImportsPage";
 import AdminRoleManagementPage from "@/pages/admin/AdminRoleManagementPage";
+import AdminRolesListPage from "@/pages/admin/AdminRolesListPage";
 import CaddePage from "@/pages/CaddePage";
 import AdminCaddePage from "@/pages/admin/AdminCaddePage";
 import Associations from "@/pages/Associations";
@@ -228,9 +228,9 @@ const App = () => (
                 <Route path="new-member/users-roles" element={<Navigate to="/admin/new-member/profile-role-assignment" replace />} />
                 <Route path="data" element={<AdminCatalogPage />} />
                 <Route path="new-member/guide" element={<AdminNewMemberGuidePage />} />
+                <Route path="new-member/roles-list" element={<AdminRolesListPage />} />
                 <Route path="new-member/roles-features" element={<Navigate to="/admin/new-member/role-matrix?kind=feature" replace />} />
                 <Route path="new-member/attributes" element={<Navigate to="/admin/new-member/role-matrix?kind=attribute" replace />} />
-                <Route path="new-member/onboarding-imports" element={<AdminOnboardingImportsPage />} />
                 <Route path="new-member/profile-sections" element={<Navigate to="/admin/new-member/role-matrix?kind=profile_section" replace />} />
                 <Route path="new-member/taxonomy" element={<AdminTaxonomyPage />} />
                 <Route path="new-member/overrides" element={<AdminUserOverridesPage />} />

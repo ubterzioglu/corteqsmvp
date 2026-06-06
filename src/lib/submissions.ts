@@ -1,5 +1,5 @@
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
-import { REFERRAL_SOURCE_OPTIONS } from "@/lib/profile-onboarding-normalize";
+import { REFERRAL_SOURCE_OPTIONS } from "@/lib/pending-onboarding-normalize";
 import { normalizeOptionalTurkishText, normalizeTurkishText } from "@/lib/text-normalization";
 
 export type Submission = Tables<"submissions">;

@@ -96,11 +96,10 @@ const toneClasses: Record<NavTone, { card: string; iconWrap: string; button: str
 };
 
 const newMemberDescriptions: Record<string, string> = {
-  "Üye Takibi": "Yeni kayıtları, operasyon akışını ve günlük incelemeleri merkezden yönet.",
-  "Loginli Üyeler & Roller": "Loginli üye rol atamaları, görünürlükler ve profil alanlarını düzenle.",
-  "Roller & Featurelar": "Rol bazlı feature açma, kapama ve varsayılanları stratejik olarak kurgula.",
-  "Attribute Yönetimi": "Alan kuralları, zorunluluklar ve görünürlük davranışlarını güncelle.",
-  "Profile Sections": "Profil bileşen sıralarını ve role göre section akışını şekillendir.",
+  Veritabanı: "Kullanıcı ve katalog kayıtlarını tek operasyon yüzeyinde ara, filtrele ve detaylandır.",
+  "Profil ve Rol Atama": "Loginli üye rol atamaları, görünürlükler ve profil alanlarını düzenle.",
+  "Tüm Roller": "Sistemdeki bütün aktif ve legacy rolleri ailelerine göre denetle.",
+  "Tüm Roller AFS Matrisi": "Rol bazlı attribute, feature ve section kurallarını stratejik olarak kurgula.",
   "Taxonomy Yönetimi": "Alt kategori, alt tip ve seçilebilir taxonomy seçeneklerini yönet.",
   "Feature Override": "Kullanıcı bazlı override ile standart akıştan kontrollü sapmalar oluştur.",
   "Kullanım Klavuzu": "Yeni üyeler sistemindeki ekranları hangi sırayla ve hangi durumda kullanacağını madde madde aç.",
@@ -130,7 +129,7 @@ const communityDescriptions: Record<string, string> = {
 };
 
 const dataDescriptions: Record<string, string> = {
-  Kataloglar: "Yeni katalog kayıtlarını tek ekranda ara, filtrele ve detaylarını incele.",
+  Veritabanı: "Yeni katalog kayıtlarını tek ekranda ara, filtrele ve detaylarını incele.",
 };
 
 const otherRecordDescriptions: Record<string, string> = {
@@ -189,7 +188,7 @@ const inactiveRecordItems = [
 
 const orderedNavCards: NavCardItem[] = [
   ...newMemberSystemNavItems.map((item) => ({
-    key: item.to,
+    key: `new-member-${item.to}`,
     label: item.label,
     description: newMemberDescriptions[item.label] ?? "Bu admin ekranını aç.",
     icon: item.icon,
@@ -199,7 +198,7 @@ const orderedNavCards: NavCardItem[] = [
     tone: "sky" as const,
   })),
   ...primaryAdminNavItems.map((item) => ({
-    key: item.to,
+    key: `primary-${item.to}`,
     label: item.label,
     description: primaryDescriptions[item.label] ?? "Bu admin ekranını aç.",
     icon: item.icon,
@@ -209,7 +208,7 @@ const orderedNavCards: NavCardItem[] = [
     tone: "violet" as const,
   })),
   ...otherActionNavItems.map((item) => ({
-    key: item.to,
+    key: `other-action-${item.to}`,
     label: item.label,
     description: otherActionDescriptions[item.label] ?? "Bu admin ekranını aç.",
     icon: item.icon,
@@ -219,7 +218,7 @@ const orderedNavCards: NavCardItem[] = [
     tone: "amber" as const,
   })),
   ...communityNavItems.map((item) => ({
-    key: item.to,
+    key: `community-${item.to}`,
     label: item.label,
     description: communityDescriptions[item.label] ?? "Bu topluluk ekranını aç.",
     icon: item.icon,
@@ -229,7 +228,7 @@ const orderedNavCards: NavCardItem[] = [
     tone: "emerald" as const,
   })),
   ...dataNavItems.map((item) => ({
-    key: item.to,
+    key: `data-${item.to}`,
     label: item.label,
     description: dataDescriptions[item.label] ?? "Bu veri ekranını aç.",
     icon: item.icon,
@@ -239,7 +238,7 @@ const orderedNavCards: NavCardItem[] = [
     tone: "cyan" as const,
   })),
   ...otherRecordNavItems.map((item) => ({
-    key: item.to,
+    key: `other-record-${item.to}`,
     label: item.label,
     description: otherRecordDescriptions[item.label] ?? "Bu kayıt ekranını aç.",
     icon: item.icon,
@@ -249,7 +248,7 @@ const orderedNavCards: NavCardItem[] = [
     tone: "rose" as const,
   })),
   ...may19RecordNavItems.map((item) => ({
-    key: item.to,
+    key: `may19-${item.to}`,
     label: item.label,
     description: otherRecordDescriptions[item.label] ?? "Bu moderasyon ekranını aç.",
     icon: item.icon,

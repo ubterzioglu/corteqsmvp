@@ -14,7 +14,7 @@ import {
   useCurrentOnboardingActivation,
   useResendCurrentOnboardingActivationLink,
 } from "@/hooks/use-profile-onboarding";
-import { getReferralSourceOptions } from "@/lib/profile-onboarding-normalize";
+import { getReferralSourceOptions } from "@/lib/pending-onboarding-normalize";
 
 const WelcomeActivatePage = () => {
   const navigate = useNavigate();

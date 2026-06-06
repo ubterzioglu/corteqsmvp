@@ -9,12 +9,12 @@ import {
   PROFILE_ONBOARDING_STORAGE_KEY,
   type PendingOnboardingFormValues,
   type PendingOnboardingPayload,
-} from "@/lib/profile-onboarding-schemas";
+} from "@/lib/pending-onboarding-schemas";
 import {
   createOnboardingKey,
   normalizePendingFormPayload,
   type NormalizedPendingOnboardingPayload,
-} from "@/lib/profile-onboarding-normalize";
+} from "@/lib/pending-onboarding-normalize";
 import {
   insertSubmissionWithCompatibility,
   toSubmissionInsert,
@@ -55,6 +55,8 @@ type ActivationDraftInput = {
 };
 
 const hasWindow = () => typeof window !== "undefined";
+const getLocalStorage = () => (hasWindow() ? window.localStorage : null);
+const getSessionStorage = () => (hasWindow() ? window.sessionStorage : null);
 
 const readStorageValue = (key: string, storage: Storage | null) => {
   if (!storage) return null;
@@ -83,9 +85,6 @@ const removeStorageValue = (key: string, storage: Storage | null) => {
   }
 };
 
-const getLocalStorage = () => (hasWindow() ? window.localStorage : null);
-const getSessionStorage = () => (hasWindow() ? window.sessionStorage : null);
-
 export const buildPendingOnboardingPayload = (params: {
   form: Partial<PendingOnboardingFormValues>;
   mode?: SubmissionFormMode;
@@ -101,11 +100,7 @@ export const buildPendingOnboardingPayload = (params: {
 };
 
 export const savePendingOnboardingPayload = (payload: PendingOnboardingPayload) => {
-  writeStorageValue(
-    PROFILE_ONBOARDING_STORAGE_KEY,
-    JSON.stringify(payload),
-    getLocalStorage(),
-  );
+  writeStorageValue(PROFILE_ONBOARDING_STORAGE_KEY, JSON.stringify(payload), getLocalStorage());
 };
 
 export const loadPendingOnboardingPayload = (): PendingOnboardingPayload | null => {
@@ -125,10 +120,7 @@ export const loadPendingOnboardingPayload = (): PendingOnboardingPayload | null 
   if (!legacyValue) return null;
 
   try {
-    const migrated = migrateLegacyPendingOnboardingPayload(
-      JSON.parse(legacyValue),
-      createOnboardingKey,
-    );
+    const migrated = migrateLegacyPendingOnboardingPayload(JSON.parse(legacyValue), createOnboardingKey);
     if (migrated) {
       savePendingOnboardingPayload(migrated);
     }
@@ -149,14 +141,12 @@ const ensureAuthenticatedUser = async () => {
   const { data, error } = await supabase.auth.getUser();
   if (error) throw error;
   if (!data.user) {
-    throw new Error("Oturum bulunamadı.");
+    throw new Error("Oturum bulunamadi.");
   }
   return data.user;
 };
 
-export const finalizeAuthenticatedSubmission = async (
-  payload: PendingOnboardingPayload,
-) => {
+export const finalizeAuthenticatedSubmission = async (payload: PendingOnboardingPayload) => {
   const user = await ensureAuthenticatedUser();
   const normalized = normalizePendingFormPayload(payload);
   const submission = toSubmissionInsert(
@@ -242,7 +232,7 @@ export const activateCurrentOnboardingProfile = async (draft: ActivationDraftInp
   const trimmedReferralSource = draft.referralSource.trim();
 
   if (!trimmedFullName || !trimmedCountry || !trimmedCity) {
-    throw new Error("Ad Soyad, ülke ve şehir gerekli.");
+    throw new Error("Ad Soyad, ulke ve sehir gerekli.");
   }
 
   await updateProfileAttribute("full_name", trimmedFullName, "public");
@@ -250,19 +240,11 @@ export const activateCurrentOnboardingProfile = async (draft: ActivationDraftInp
   await updateProfileAttribute("city", trimmedCity, "public");
 
   if (trimmedBusiness) {
-    await updateProfileAttribute(
-      "business_or_organization",
-      trimmedBusiness,
-      draft.businessVisibility,
-    );
+    await updateProfileAttribute("business_or_organization", trimmedBusiness, draft.businessVisibility);
   }
 
   if (trimmedInterest) {
-    await updateProfileAttribute(
-      "interest_focus",
-      trimmedInterest,
-      draft.interestVisibility,
-    );
+    await updateProfileAttribute("interest_focus", trimmedInterest, draft.interestVisibility);
   }
 
   if (trimmedReferralCode) {
@@ -281,7 +263,7 @@ export const activateCurrentOnboardingProfile = async (draft: ActivationDraftInp
 export const resendCurrentOnboardingActivationLink = async (email: string) => {
   const normalizedEmail = email.trim();
   if (!normalizedEmail) {
-    throw new Error("E-posta bulunamadı.");
+    throw new Error("E-posta bulunamadi.");
   }
 
   const redirectTo = `${window.location.origin}/welcome/activate`;
@@ -294,17 +276,6 @@ export const resendCurrentOnboardingActivationLink = async (email: string) => {
   });
 
   if (error) throw error;
-};
-
-export const listProfileOnboardingImportsForAdmin = async () => {
-  const { data, error } = await supabase
-    .from("profile_onboarding_imports")
-    .select("id, batch_id, source_submission_id, email_normalized, auth_user_id, profile_user_id, source_type, status, invite_sent_at, activated_at, retry_count, last_error, snapshot, created_at, updated_at")
-    .order("created_at", { ascending: false })
-    .limit(200);
-
-  if (error) throw error;
-  return data ?? [];
 };
 
 export type PendingOnboardingStoragePreview = NormalizedPendingOnboardingPayload;

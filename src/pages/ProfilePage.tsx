@@ -43,7 +43,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useCurrentUserProfile } from "@/hooks/useCurrentUserProfile";
 import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS } from "@/lib/features";
-import { getReferralSourceOptions } from "@/lib/profile-onboarding-normalize";
+import { getReferralSourceOptions } from "@/lib/pending-onboarding-normalize";
 import {
   updateProfileAttribute,
   updateProfileAvatar,

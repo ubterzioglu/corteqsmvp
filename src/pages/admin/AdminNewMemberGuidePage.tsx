@@ -30,32 +30,34 @@ const blocks: GuideBlock[] = [
     tag: "Menu",
     sections: [
       {
-        title: "Yeni Uyeler menusu - bugunku ana operasyon yuzeyi",
+        title: "Veritabani menusu - bugunku ana operasyon yuzeyi",
         items: [
-          "Loginli Uyeler & Roller (/admin/new-member/users-roles): Auth kullanicisini bulur, aktif rolunu gorur, Details icinden rol, attribute ve taxonomy verisini yonetirsin.",
-          "Rol Yonetimi (/admin/new-member/role-management): Bugun rol bazli attribute + feature + profile section kuralini tek tabloda yonettigimiz ana ekrandir.",
+          "Veritabani (/admin/data): Auth profilleri ile catalog item kayitlarini ayni operasyon yuzeyinde gorur; rol ata, claim yonet, editor ver, item-level override uygularsin.",
+          "Profil ve Rol Atama (/admin/new-member/profile-role-assignment): Veritabani ekraninin ayni operasyon akisini yeni uyeler baglaminda acar.",
+          "Tum Roller (/admin/new-member/roles-list): Sistemdeki tum rol kayitlarini aile, key ve sort order bazinda denetlersin.",
+          "Tum Roller AFS Matrisi (/admin/new-member/role-matrix): Rol bazli attribute + feature + profile section kuralini tek tabloda yonettigimiz ana ekrandir.",
           "Feature Override (/admin/new-member/overrides): Tek bir auth kullanicisi icin rol varsayimini bozmadan ozel feature istisnasi yazarsin.",
-          "Roller Onizleme (/admin/new-member/roles-preview): Aktif rol sozlugunu sadece okunur kontrol etmek icin kullanilir.",
-          "AFS Onizleme (/admin/new-member/entity-preview): Attribute, feature ve section kataloglarini toplu kontrol edersin.",
-          "Onboarding Importlari (/admin/new-member/onboarding-imports): Toplu veri girisi, mapping ve import akislarini izlersin.",
-          "Kataloglar (/admin/data): Auth profilleri ile catalog item kayitlarini ayni operasyon yuzeyinde gorur; rol ata, claim yonet, editor ver, item-level override uygularsin.",
+          "Taxonomy Yonetimi (/admin/new-member/taxonomy): Alt kategori, alt tip ve secilebilir taxonomy seceneklerini yonetirsin.",
+          "Kullanim Klavuzu (/admin/new-member/guide): Guncel route ve operasyon sirasini tek sayfada aciklar.",
         ],
       },
       {
         title: "Yardimci ama hala aktif ekranlar",
         items: [
-          "/admin/new-member/roles-features route'u duruyor ama menudeki ana editor artik Rol Yonetimi ekranidir.",
+          "Uyelikle ilgili eski operasyon ekrani artik ust menude ayri bir baglanti olarak durur: /admin/members -> Uye Takibi (eski).",
+          "/admin/new-member/users-roles, /role-management, /roles-preview ve /entity-preview route'lari redirect amacli durabilir; menudeki ana hedefler yeni route'lardir.",
           "/admin/new-member/profile-sections route'u ayri ayri section toggle etmek icin hala kullanilabilir.",
-          "/admin/new-member/attributes ve /admin/new-member/taxonomy route'lari yardimci ekran olarak mevcut; ancak gundelik operasyonun buyuk kismi users-roles ve role-management icinden yuruyor.",
+          "/admin/new-member/attributes ve /admin/new-member/roles-features route'lari yardimci redirect'lerdir; gundelik operasyonun buyuk kismi profile-role-assignment, role-matrix ve data icinden yurur.",
         ],
       },
       {
         title: "Hangi sorunda nereye gitmelisin?",
         items: [
-          "Kullanicinin rolu yanlissa: once /admin/new-member/users-roles.",
-          "Ayni rol altindaki herkes yanlis davraniyorsa: /admin/new-member/role-management.",
+          "Kullanicinin rolu yanlissa: once /admin/new-member/profile-role-assignment veya /admin/data.",
+          "Ayni rol altindaki herkes yanlis davraniyorsa: /admin/new-member/role-matrix.",
           "Sorun tek kisideyse: /admin/new-member/overrides.",
-          "Sorun public profil kart parcasiysa: role-management icindeki section satiri veya gerekirse /admin/new-member/profile-sections.",
+          "Sorun rol sozlugunde veya aile dagilimindaysa: /admin/new-member/roles-list.",
+          "Sorun public profil kart parcasiysa: role-matrix icindeki section satiri veya gerekirse /admin/new-member/profile-sections.",
           "Sorun katalog kaydina ozelse: /admin/data > Rol & Kurallar.",
         ],
       },
@@ -103,7 +105,7 @@ const blocks: GuideBlock[] = [
           "Loginli kullanicilar user_profiles tablosundan listelenir.",
           "Aktif rol atamasi admin_set_user_role RPC ile yazilir.",
           "Rol secimi runtime'da user_role_assignments ve ilgili role kurallariyla birlikte davranisa yansir.",
-          "Users-roles ekraninda listeye ek olarak approval_requests ve user_feature_overrides sayilari da cekilir; bu sayede rol degisikliginden sonra ek is gerekip gerekmedigi gorulur.",
+          "Profil ve rol atama akisinda listeye ek olarak approval_requests ve user_feature_overrides sayilari da cekilir; bu sayede rol degisikliginden sonra ek is gerekip gerekmedigi gorulur.",
         ],
       },
       {
@@ -134,6 +136,7 @@ const blocks: GuideBlock[] = [
         title: "Details penceresinde ne yonetiliyor?",
         items: [
           "Users-roles ekranindaki Details, kullanicinin gercek profil verisini acan operasyon penceresidir.",
+          "Profil ve Rol Atama akisi, kullanicinin gercek profil verisini acan operasyon penceresidir.",
           "Burada rol secici vardir; ayni kayit ekranindan rol degisikligi de yapilabilir.",
           "Attribute listesi user_profile_attributes verisini attribute_catalog ile birlikte gosterir.",
           "Admin burada deger, visibility ve onay baglamini birlikte gorur; kayit admin_update_user_profile_attribute RPC'si ile yazilir.",
@@ -152,8 +155,8 @@ const blocks: GuideBlock[] = [
       {
         title: "Operasyon karari",
         items: [
-          "Sorun form alani kuraliysa role-management ekraninda duzelt.",
-          "Sorun kullanicinin kendi girdigi veriyse users-roles > Details icinde duzelt.",
+          "Sorun form alani kuraliysa role-matrix ekraninda duzelt.",
+          "Sorun kullanicinin kendi girdigi veriyse profile-role-assignment veya /admin/data icindeki detail akisinda duzelt.",
           "Sorun sadece bir katalog item'a ozelse /admin/data icindeki item-level override'i kullan.",
         ],
       },
@@ -175,7 +178,7 @@ const blocks: GuideBlock[] = [
       {
         title: "Nereden yonetilir?",
         items: [
-          "Rolun genel feature karari icin once /admin/new-member/role-management dusunulmeli.",
+          "Rolun genel feature karari icin once /admin/new-member/role-matrix dusunulmeli.",
           "Tek kisiye ozel istisna icin /admin/new-member/overrides kullanilir.",
           "Legacy matrix gorunumu ve global/rol switch tablosu icin /admin/new-member/roles-features hala mevcuttur.",
           "Katalog item'a ozel feature istisnasi gerekiyorsa /admin/data > Rol & Kurallar kullanilir.",
@@ -207,7 +210,7 @@ const blocks: GuideBlock[] = [
         items: [
           "Rol bazli section kurali admin_upsert_role_profile_section_rule RPC ile yazilir.",
           "Ayri ekran olarak /admin/new-member/profile-sections role_profile_section_rules tablosunu yonetir.",
-          "Rol Yonetimi ekraninda da section satirlari ayni mantigin birlesik editoru olarak yer alir.",
+          "Tum Roller AFS Matrisi ekraninda da section satirlari ayni mantigin birlesik editoru olarak yer alir.",
         ],
       },
       {
@@ -227,10 +230,10 @@ const blocks: GuideBlock[] = [
       {
         title: "Bir uyede sorun gordugunde",
         items: [
-          "1. /admin/new-member/users-roles ekraninda kullaniciyi bul.",
+          "1. /admin/new-member/profile-role-assignment veya /admin/data ekraninda kullaniciyi bul.",
           "2. Rol dogru mu kontrol et.",
           "3. Details icinde attribute ve taxonomy verisini kontrol et.",
-          "4. Sorun hala rolde genel bir kural gibi gorunuyorsa /admin/new-member/role-management ekranina gec.",
+          "4. Sorun hala rolde genel bir kural gibi gorunuyorsa /admin/new-member/role-matrix ekranina gec.",
           "5. Sorun yalnizca bu kullanicidaysa /admin/new-member/overrides kullan.",
           "6. Public profil kart parcasi sorunuysa section kuralini kontrol et.",
         ],
@@ -254,8 +257,9 @@ const blocks: GuideBlock[] = [
         title: "Bu guide yazilirken kodda gorunen gercek durum",
         items: [
           "Admin auth guard'i App.tsx route seviyesinde degil, AdminLayout icinde calisiyor.",
-          "Yeni Uyeler menusu icin ana editor artik role-management; roles-features ekranini tek kaynak varsayma.",
-          "Users-roles operasyonu user_profiles + user_role_assignments + approval_requests + user_feature_overrides okumasi yapiyor.",
+          "Veritabani menusu icin ana editorler artik profile-role-assignment, role-matrix ve data ekranlaridir.",
+          "Uye Takibi (eski) ust menude ayri tutulur; Veritabani dropdown'inin parcasi degildir.",
+          "Profil ve rol atama operasyonu user_profiles + user_role_assignments + approval_requests + user_feature_overrides okumasi yapiyor.",
           "Feature source anlatiminda bu guide mevcut hook davranisini baz alir: override -> role_default -> fallback.",
         ],
       },

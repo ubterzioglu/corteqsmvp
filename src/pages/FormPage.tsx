@@ -17,9 +17,9 @@ import {
   finalizeAuthenticatedSubmission,
   loadPendingOnboardingPayload,
   savePendingOnboardingPayload,
-} from "@/lib/profile-onboarding-api";
-import { normalizePendingFormPayload } from "@/lib/profile-onboarding-normalize";
-import { pendingOnboardingFormSchema } from "@/lib/profile-onboarding-schemas";
+} from "@/lib/pending-onboarding-api";
+import { normalizePendingFormPayload } from "@/lib/pending-onboarding-normalize";
+import { pendingOnboardingFormSchema } from "@/lib/pending-onboarding-schemas";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
 import {
