@@ -19,6 +19,10 @@ vi.mock("@/components/admin/catalog/CatalogItemRolePanel", () => ({
   default: () => <div>Role Panel Mock</div>,
 }));
 
+vi.mock("@/components/admin/catalog/CatalogEntityProfilePanel", () => ({
+  default: () => <div>Catalog Profile Panel Mock</div>,
+}));
+
 vi.mock("@/components/admin/catalog/CatalogItemEditorsPanel", () => ({
   default: () => <div>Editors Panel Mock</div>,
 }));

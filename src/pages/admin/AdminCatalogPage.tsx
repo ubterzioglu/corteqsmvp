@@ -2,6 +2,7 @@ import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Database, MapPin, Search, SlidersHorizontal, UserRound } from "lucide-react";
 
 import CatalogClaimRequestsPanel from "@/components/admin/catalog/CatalogClaimRequestsPanel";
+import CatalogEntityProfilePanel from "@/components/admin/catalog/CatalogEntityProfilePanel";
 import CatalogItemEditorsPanel from "@/components/admin/catalog/CatalogItemEditorsPanel";
 import CatalogItemRolePanel from "@/components/admin/catalog/CatalogItemRolePanel";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -751,13 +752,14 @@ const CatalogDetailSheet = ({
       </div>
       <SheetTitle>{detail.title}</SheetTitle>
       <SheetDescription>
-        <code>{detail.slug}</code> kaydının metadata, kural, claim ve düzenleyici detayları.
+        <code>{detail.slug}</code> kaydının metadata, profil, kural, claim ve düzenleyici detayları.
       </SheetDescription>
     </SheetHeader>
 
     <Tabs defaultValue="general" className="space-y-5">
       <TabsList className="h-auto w-full flex-wrap justify-start">
         <TabsTrigger value="general">Genel Bilgiler</TabsTrigger>
+        <TabsTrigger value="profile">Catalog Profili</TabsTrigger>
         <TabsTrigger value="rules">Rol & Kurallar</TabsTrigger>
         <TabsTrigger value="claims">Talepler</TabsTrigger>
         <TabsTrigger value="editors">Düzenleyiciler</TabsTrigger>
@@ -836,6 +838,10 @@ const CatalogDetailSheet = ({
             </div>
           </CardContent>
         </Card>
+      </TabsContent>
+
+      <TabsContent value="profile">
+        <CatalogEntityProfilePanel itemId={detail.id} />
       </TabsContent>
 
       <TabsContent value="rules">
