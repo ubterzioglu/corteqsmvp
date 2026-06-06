@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 
+import ProfileHeroCard from "@/components/directory/ProfileHeroCard";
 import { useAuth } from "@/components/auth/useAuth";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 
 type CatalogDetailRow = {
@@ -213,36 +213,39 @@ const DirectoryCatalogItemPage = () => {
       ) : null}
 
       {item ? (
-        <Card className="border-slate-200 bg-white/90 shadow-sm">
-          <CardHeader>
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div className="space-y-2">
-                <CardTitle>{item.title}</CardTitle>
-                <CardDescription>{item.headline ?? roleLabel}</CardDescription>
-                <div className="flex flex-wrap gap-1.5">
-                  {roleLabel ? <Badge variant="secondary">{roleLabel}</Badge> : null}
-                  {categories.map((category) => (
-                    <Badge key={category.slug} variant="outline">
-                      {category.name}
-                    </Badge>
-                  ))}
-                  {item.verification_status === "claimed" ? <Badge>Claimed</Badge> : <Badge variant="outline">Claimable</Badge>}
-                </div>
-              </div>
-              {canClaim && !authLoading ? (
-                user ? (
-                  <Button onClick={submitClaim} disabled={claimStatus !== "idle"}>
-                    {claimStatus === "submitted" ? "Talep Gönderildi" : claimStatus === "submitting" ? "Gönderiliyor..." : "Bu Sayfayı Düzenlemek İstiyorum"}
-                  </Button>
-                ) : (
-                  <Button asChild>
-                    <Link to={loginHref}>Düzenleme Yetkisi İçin Giriş Yap</Link>
-                  </Button>
-                )
-              ) : null}
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-6">
+        <ProfileHeroCard
+          title={item.title}
+          subtitle={item.headline ?? null}
+          roleLabel={roleLabel ?? null}
+          locationLabel={locationLabel || null}
+          imageUrl={null}
+          badges={[
+            ...categories.map((category) => ({
+              label: category.name,
+              variant: "outline" as const,
+            })),
+            item.verification_status === "claimed"
+              ? { label: "Claimed", variant: "default" as const }
+              : { label: "Claimable", variant: "outline" as const },
+          ]}
+          actions={
+            canClaim && !authLoading ? (
+              user ? (
+                <Button onClick={() => void submitClaim()} disabled={claimStatus !== "idle"}>
+                  {claimStatus === "submitted"
+                    ? "Talep Gonderildi"
+                    : claimStatus === "submitting"
+                      ? "Gonderiliyor..."
+                      : "Bu Sayfayi Duzenlemek Istiyorum"}
+                </Button>
+              ) : (
+                <Button asChild>
+                  <Link to={loginHref}>Duzenleme Yetkisi Icin Giris Yap</Link>
+                </Button>
+              )
+            ) : null
+          }
+        >
             {claimError ? <p className="text-sm text-destructive">Claim talebi gönderilemedi: {claimError}</p> : null}
             {claimStatus === "submitted" ? (
               <p className="text-sm text-emerald-700">Düzenleme yetkisi talebiniz admin onayına gönderildi.</p>
@@ -291,8 +294,7 @@ const DirectoryCatalogItemPage = () => {
                 </div>
               </section>
             ) : null}
-          </CardContent>
-        </Card>
+        </ProfileHeroCard>
       ) : null}
     </div>
   );

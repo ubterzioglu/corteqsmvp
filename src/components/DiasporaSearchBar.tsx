@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
-import { useDiaspora } from "@/contexts/DiasporaContext";
 import WelcomePackOrderForm from "@/components/WelcomePackOrderForm";
-import { searchDiaspora, type DiasporaSearchResult } from "@/lib/diasporaSearch";
 
 const quickPillClass =
   "inline-flex min-w-[168px] items-center justify-center gap-1.5 rounded-full border px-4 py-2 text-xs font-semibold shadow-[0_10px_28px_-20px_rgba(15,23,42,0.24)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_36px_-22px_rgba(15,23,42,0.3)]";
@@ -17,46 +14,21 @@ const quickPillStyles = {
 
 const DiasporaSearchBar = () => {
   const navigate = useNavigate();
-  const { selectedCountry } = useDiaspora();
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<DiasporaSearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
 
-  const runSearch = async (searchQuery: string) => {
-    const trimmedQuery = searchQuery.trim();
-    if (!trimmedQuery) return;
-
-    const country = selectedCountry === "all" ? null : selectedCountry;
-    const matchedResults = await searchDiaspora(trimmedQuery, country);
-    setResults(matchedResults);
-  };
-
-  const handleSearch = async () => {
-    if (!query.trim()) return;
-    setLoading(true);
-    setHasSearched(true);
-    await runSearch(query);
-    setLoading(false);
+  const handleSearch = () => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    navigate(`/directory?q=${encodeURIComponent(trimmed)}`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") void handleSearch();
+    if (e.key === "Enter") handleSearch();
   };
 
-  const handleQuickSearch = async (term: string) => {
+  const handleQuickSearch = (term: string) => {
     setQuery(term);
-    setLoading(true);
-    setHasSearched(true);
-    await runSearch(term);
-    setLoading(false);
-  };
-
-  const typeToRoute: Record<string, string> = {
-    consultant: "/directory",
-    association: "/directory",
-    business: "/cadde",
-    event: "/radar",
+    navigate(`/directory?q=${encodeURIComponent(term)}`);
   };
 
   return (
@@ -80,11 +52,11 @@ const DiasporaSearchBar = () => {
                 className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none font-body"
               />
               <button
-                onClick={() => void handleSearch()}
-                disabled={loading || !query.trim()}
+                onClick={handleSearch}
+                disabled={!query.trim()}
                 className="shrink-0 rounded-xl bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold transition-colors hover:bg-primary/90 disabled:opacity-50"
               >
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Ara"}
+                Ara
               </button>
             </div>
           </div>
@@ -92,7 +64,7 @@ const DiasporaSearchBar = () => {
           {/* Quick CTA Buttons */}
           <div className="mx-auto flex max-w-6xl flex-col items-center gap-3">
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <button onClick={() => void handleQuickSearch("Konsolosluk")} className={`${quickPillClass} ${quickPillStyles.blue}`}>
+              <button onClick={() => handleQuickSearch("Konsolosluk")} className={`${quickPillClass} ${quickPillStyles.blue}`}>
                 🏛️ Konsolosluk
               </button>
               <button
@@ -101,10 +73,10 @@ const DiasporaSearchBar = () => {
               >
                 🏅 Şehir Elçine Ulaş
               </button>
-              <button onClick={() => void handleQuickSearch("Vize danışmanı")} className={`${quickPillClass} ${quickPillStyles.yellow}`}>
+              <button onClick={() => handleQuickSearch("Vize danışmanı")} className={`${quickPillClass} ${quickPillStyles.yellow}`}>
                 ✈️ Vize & Göçmenlik
               </button>
-              <button onClick={() => void handleQuickSearch("İş ilanları")} className={`${quickPillClass} ${quickPillStyles.green}`}>
+              <button onClick={() => handleQuickSearch("İş İlanları")} className={`${quickPillClass} ${quickPillStyles.green}`}>
                 💼 İş İlanları
               </button>
             </div>
@@ -125,43 +97,6 @@ const DiasporaSearchBar = () => {
               </button>
             </div>
           </div>
-
-          {/* Search Results */}
-          {loading && (
-            <div className="mt-6 flex items-center justify-center gap-2 text-muted-foreground">
-              <Loader2 className="h-5 w-5 animate-spin" />
-              <span className="text-sm">AI aranıyor...</span>
-            </div>
-          )}
-
-          {!loading && hasSearched && results.length > 0 && (
-            <div className="max-w-2xl mx-auto mt-6 space-y-3">
-              {results.map((r, i) => (
-                <div
-                  key={i}
-                  onClick={() => {
-                    const route = r.href ?? typeToRoute[r.type];
-                    if (route) navigate(route);
-                  }}
-                  className="flex items-start gap-3 bg-card border border-border rounded-xl px-4 py-3 text-left hover:shadow-md transition-shadow cursor-pointer"
-                >
-                  <span className="text-2xl mt-0.5">{r.icon}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="font-semibold text-sm text-foreground">{r.title}</span>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">{r.category}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground line-clamp-2">{r.description}</p>
-                    <p className="text-[11px] text-muted-foreground/70 mt-1">📍 {r.location}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {!loading && hasSearched && results.length === 0 && (
-            <p className="mt-6 text-sm text-muted-foreground">Sonuç bulunamadı. Farklı bir arama deneyin.</p>
-          )}
         </div>
       </div>
     </section>

@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -6,6 +7,8 @@ import DirectoryPage from "@/pages/DirectoryPage";
 
 const listUnifiedDirectoryRowsMock = vi.fn();
 const listDirectoryRoleOptionsMock = vi.fn();
+const useGeoCountriesMock = vi.fn();
+const useGeoCitiesMock = vi.fn();
 
 vi.mock("@/lib/catalog-directory", async () => {
   const actual = await vi.importActual<typeof import("@/lib/catalog-directory")>("@/lib/catalog-directory");
@@ -15,6 +18,31 @@ vi.mock("@/lib/catalog-directory", async () => {
     listDirectoryRoleOptions: (...args: unknown[]) => listDirectoryRoleOptionsMock(...args),
   };
 });
+
+vi.mock("@/hooks/useGeo", () => ({
+  useGeoCountries: (...args: unknown[]) => useGeoCountriesMock(...args),
+  useGeoCities: (...args: unknown[]) => useGeoCitiesMock(...args),
+}));
+
+const renderPage = (initialEntry = "/directory") => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={[initialEntry]}>
+        <Routes>
+          <Route path="/directory" element={<DirectoryPage />} />
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>,
+  );
+};
 
 describe("DirectoryPage", () => {
   beforeEach(() => {
@@ -26,6 +54,10 @@ describe("DirectoryPage", () => {
       { key: "danisman", label: "Danışman" },
       { key: "Healthcare_Doctor", label: "Doktor" },
     ]);
+    useGeoCountriesMock.mockReturnValue({
+      data: [{ code: "DE", name: "Almanya" }],
+    });
+    useGeoCitiesMock.mockReturnValue({ data: [] });
     listUnifiedDirectoryRowsMock.mockResolvedValue([
       {
         recordType: "user_profile",
@@ -65,13 +97,7 @@ describe("DirectoryPage", () => {
   });
 
   it("renders user profiles and claimable catalog records in one list", async () => {
-    render(
-      <MemoryRouter initialEntries={["/directory"]}>
-        <Routes>
-          <Route path="/directory" element={<DirectoryPage />} />
-        </Routes>
-      </MemoryRouter>,
-    );
+    renderPage();
 
     expect(await screen.findByText("Ayşe Kaya")).toBeInTheDocument();
     expect(screen.getByText("Arkin Kara")).toBeInTheDocument();
@@ -84,18 +110,20 @@ describe("DirectoryPage", () => {
   });
 
   it("passes live role filters from the URL into unified directory loading", async () => {
-    render(
-      <MemoryRouter initialEntries={["/directory?role=Healthcare_Doctor"]}>
-        <Routes>
-          <Route path="/directory" element={<DirectoryPage />} />
-        </Routes>
-      </MemoryRouter>,
-    );
+    renderPage("/directory?role=Healthcare_Doctor");
 
     await waitFor(() => {
       expect(listUnifiedDirectoryRowsMock).toHaveBeenLastCalledWith(
         expect.objectContaining({ roleFilter: "Healthcare_Doctor" }),
       );
     });
+  });
+
+  it("renders rows as directory links instead of grid cards", async () => {
+    renderPage("/directory?q=vergi");
+
+    expect(await screen.findByRole("link", { name: /Ayşe Kaya/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Arkin Kara/i })).toBeInTheDocument();
+    expect(screen.getByText(/Diaspora profillerini ve katalog kayitlarini/i)).toBeInTheDocument();
   });
 });

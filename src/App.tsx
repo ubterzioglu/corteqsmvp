@@ -172,11 +172,7 @@ const App = () => (
                 />
                 <Route
                   path="/directory/profile/:userId"
-                  element={
-                    <RequireAuth>
-                      <DirectoryProfilePage />
-                    </RequireAuth>
-                  }
+                  element={<DirectoryProfilePage />}
                 />
                 <Route
                   path="/profile"

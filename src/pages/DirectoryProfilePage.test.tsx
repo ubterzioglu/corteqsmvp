@@ -73,5 +73,6 @@ describe("DirectoryProfilePage", () => {
     expect((await screen.findAllByText("CorteQS Business")).length).toBeGreaterThan(0);
     expect(screen.getByText("Diaspora odaklı bir business profili.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Website" })).toHaveAttribute("href", "https://corteqs.test");
+    expect(screen.getAllByText("Berlin • Germany").length).toBeGreaterThan(0);
   });
 });

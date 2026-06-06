@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import ProfileHeroCard from "@/components/directory/ProfileHeroCard";
 import { Button } from "@/components/ui/button";
 import PublicProfileSummaryView from "@/components/profile/PublicProfileSummaryView";
 import { supabase } from "@/integrations/supabase/client";
@@ -114,39 +113,14 @@ const DirectoryProfilePage = () => {
 
       {/* Generic section-based profile (non-individual types) */}
       {!isIndividualLoading && !individualDetails && !isSectionsLoading ? (
-        <Card className="border-slate-200 bg-white/90 shadow-sm">
-          <CardHeader>
-            <div className="flex flex-col gap-4 md:flex-row md:items-start">
-              <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border bg-muted">
-                {imageUrl ? (
-                  <img
-                    src={imageUrl}
-                    alt={String(displayName ?? "Profil görseli")}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <span className="text-xs text-muted-foreground">Görsel yok</span>
-                )}
-              </div>
-              <div className="min-w-0 space-y-2">
-                <CardTitle>{String(displayName ?? "Profil")}</CardTitle>
-                <CardDescription>
-                  {locationLabel || "Public profile section renderer"}
-                </CardDescription>
-                <div className="flex flex-wrap gap-1.5">
-                  {primaryLabel ? (
-                    <Badge variant="secondary">{primaryLabel}</Badge>
-                  ) : null}
-                  {taxonomyLabels.map((label) => (
-                    <Badge key={label} variant="outline">
-                      {label}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <ProfileHeroCard
+          title={String(displayName ?? "Profil")}
+          subtitle={locationLabel || null}
+          roleLabel={primaryLabel}
+          locationLabel={locationLabel || null}
+          imageUrl={imageUrl}
+          badges={taxonomyLabels.map((label) => ({ label, variant: "outline" as const }))}
+        >
             {sectionsError ? (
               <p className="text-sm text-destructive">Profil alınamadı: {sectionsError}</p>
             ) : null}
@@ -156,8 +130,7 @@ const DirectoryProfilePage = () => {
               </p>
             ) : null}
             {!sectionsError && sections.length > 0 ? <PublicProfileSummaryView model={genericProfileModel} /> : null}
-          </CardContent>
-        </Card>
+        </ProfileHeroCard>
       ) : null}
     </div>
   );
