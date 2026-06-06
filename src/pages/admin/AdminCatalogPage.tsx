@@ -360,17 +360,15 @@ const AdminCatalogPage = () => {
                 </div>
               </div>
 
-              <div className="-mx-1 overflow-x-auto px-1">
-                <div className="flex min-w-max flex-nowrap gap-2 pb-1">
-                  {legendItems.map((item) => (
-                    <div
-                      key={`${item.group}-${item.code}`}
-                      className="whitespace-nowrap rounded-full border border-slate-200 bg-slate-50/90 px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm"
-                    >
-                      {item.code} = {item.label}
-                    </div>
-                  ))}
-                </div>
+              <div className="flex flex-wrap gap-2">
+                {legendItems.map((item) => (
+                  <div
+                    key={`${item.group}-${item.code}`}
+                    className="rounded-full border border-slate-200 bg-slate-50/90 px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm"
+                  >
+                    {item.code} = {item.label}
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>

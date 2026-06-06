@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Badge } from "@/components/ui/badge";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchCatalogRows, type CatalogRow } from "@/lib/role-catalog";
@@ -60,6 +59,8 @@ const ruleLegendItems = [
 
 type GuideSection = { title: string; items: readonly string[] };
 type GuideBlock = { heading: string; tag?: string; sections: GuideSection[] };
+type GuideNavSection = { title: string; id: string };
+type GuideNavItem = { heading: string; id: string; sections: GuideNavSection[] };
 
 const blocks: GuideBlock[] = [
   {
@@ -308,13 +309,38 @@ const blocks: GuideBlock[] = [
   },
 ];
 
+const REFERENCE_SECTION_ID = "guide-reference-kataloglari";
+const ROLE_LIST_SECTION_ID = "rol-listesi";
+const ATTRIBUTE_SECTION_ID = "guide-reference-attribute-katalogu";
+const FEATURE_SECTION_ID = "guide-reference-feature-katalogu";
+const PROFILE_SECTION_ID = "guide-reference-bolum-katalogu-sections";
+
+function slugify(value: string) {
+  return value
+    .toLocaleLowerCase("tr-TR")
+    .replace(/ı/g, "i")
+    .replace(/ğ/g, "g")
+    .replace(/ü/g, "u")
+    .replace(/ş/g, "s")
+    .replace(/ö/g, "o")
+    .replace(/ç/g, "c")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function getBlockId(heading: string) {
+  return `guide-block-${slugify(heading)}`;
+}
+
+function getSectionId(heading: string, title: string) {
+  return `guide-section-${slugify(heading)}-${slugify(title)}`;
+}
+
 const AdminNewMemberGuidePage = () => {
   const location = useLocation();
   const [roles, setRoles] = useState<RoleRow[]>([]);
   const [catalogRows, setCatalogRows] = useState<CatalogRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [openReferenceItems, setOpenReferenceItems] = useState<string[]>([]);
-  const roleListRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -344,220 +370,276 @@ const AdminNewMemberGuidePage = () => {
   const attributes = catalogRows.filter((r) => r.kind === "attribute");
   const features = catalogRows.filter((r) => r.kind === "feature");
   const sections = catalogRows.filter((r) => r.kind === "profile_section");
-  const shouldOpenRoleList = useMemo(
-    () => location.hash === "#rol-listesi" || new URLSearchParams(location.search).get("section") === "rol-listesi",
+  const targetSectionId = useMemo(
+    () => location.hash.replace(/^#/, "") || new URLSearchParams(location.search).get("section") || "",
     [location.hash, location.search],
+  );
+  const navItems = useMemo<GuideNavItem[]>(
+    () => [
+      ...blocks.map((block) => ({
+        heading: block.heading,
+        id: getBlockId(block.heading),
+        sections: block.sections.map((section) => ({
+          title: section.title,
+          id: getSectionId(block.heading, section.title),
+        })),
+      })),
+      {
+        heading: "Referans Katalogları",
+        id: REFERENCE_SECTION_ID,
+        sections: [
+          { title: "Tüm Roller", id: ROLE_LIST_SECTION_ID },
+          { title: "Attribute Kataloğu", id: ATTRIBUTE_SECTION_ID },
+          { title: "Feature Kataloğu", id: FEATURE_SECTION_ID },
+          { title: "Bölüm Kataloğu — Sections", id: PROFILE_SECTION_ID },
+        ],
+      },
+    ],
+    [],
   );
 
   useEffect(() => {
-    if (!shouldOpenRoleList || loading) return;
-
-    setOpenReferenceItems((current) => (current.includes("roles") ? current : [...current, "roles"]));
+    if (!targetSectionId) return;
 
     const timeout = window.setTimeout(() => {
-      roleListRef.current?.scrollIntoView?.({ behavior: "smooth", block: "start" });
+      document.getElementById(targetSectionId)?.scrollIntoView?.({ behavior: "smooth", block: "start" });
     }, 50);
 
     return () => window.clearTimeout(timeout);
-  }, [loading, shouldOpenRoleList]);
+  }, [targetSectionId]);
 
   return (
-    <AdminPageLayout className="max-w-5xl gap-10">
-      <section className="space-y-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Kullanım Kılavuzu
-            </h1>
-            <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-              Güncel kod akışına göre rol, profil, feature, attribute, section ve auth kullanımını tek yerde toplar.
-              Veritabanı menüsündeki güncel operasyon sırası burada özetlenir; canlı referans katalogları sayfanın sonundaki açılır kartlardadır.
+    <AdminPageLayout className="max-w-7xl gap-10">
+      <div className="grid grid-cols-[240px_minmax(0,1fr)] gap-6 lg:gap-10">
+        <aside className="sticky top-28 self-start">
+          <nav className="rounded-3xl border border-border/60 bg-background/95 p-4 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/85">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+              İçindekiler
             </p>
-          </div>
-          <Button asChild variant="outline" size="sm" className="self-start">
-            <Link to="/admin/new-member/guide#rol-listesi">Rol Listesi</Link>
-          </Button>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {blocks.map((block) =>
-            block.tag ? (
-              <Badge key={block.tag} variant="secondary" className="rounded-full text-xs">
-                {block.tag}
-              </Badge>
-            ) : null
-          )}
-        </div>
-        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-          {ruleLegendItems.map((item) => (
-            <span
-              key={item}
-              className="rounded-full border border-border bg-muted/40 px-3 py-1.5 font-medium tracking-[0.01em]"
-            >
-              {item}
-            </span>
-          ))}
-        </div>
-      </section>
+            <div className="space-y-4">
+              {navItems.map((item) => {
+                const isHeadingActive = targetSectionId === item.id;
+                return (
+                  <div key={item.id} className="space-y-2">
+                    <a
+                      href={`#${item.id}`}
+                      className={`block text-sm font-semibold leading-5 transition-colors ${
+                        isHeadingActive ? "text-foreground" : "text-foreground/80 hover:text-foreground"
+                      }`}
+                    >
+                      {item.heading}
+                    </a>
+                    <div className="space-y-1 border-l border-border/60 pl-3">
+                      {item.sections.map((section) => {
+                        const isSectionActive = targetSectionId === section.id;
+                        return (
+                          <a
+                            key={section.id}
+                            href={`#${section.id}`}
+                            className={`block text-xs leading-5 transition-colors ${
+                              isSectionActive ? "font-medium text-primary" : "text-muted-foreground hover:text-foreground"
+                            }`}
+                          >
+                            {section.title}
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </nav>
+        </aside>
 
-      <div className="space-y-12">
-        {blocks.map((block) => (
-          <div key={block.heading} className="space-y-6">
-            <h2 className="border-b border-border/60 pb-3 text-lg font-semibold tracking-tight text-foreground">
-              {block.heading}
-            </h2>
-            <div className="space-y-6">
-              {block.sections.map((section) => (
-                <div key={section.title} className="space-y-3">
-                  <h3 className="text-sm font-semibold text-foreground/80">{section.title}</h3>
-                  <ul className="space-y-2">
-                    {section.items.map((item) => (
-                      <li key={item} className="flex gap-3 text-sm leading-6 text-muted-foreground">
-                        <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+        <div className="min-w-0 space-y-12">
+          <section className="space-y-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="space-y-2">
+                <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+                  Kullanım Kılavuzu
+                </h1>
+                <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
+                  Güncel kod akışına göre rol, profil, feature, attribute, section ve auth kullanımını tek yerde toplar.
+                  Veritabanı menüsündeki güncel operasyon sırası burada özetlenir; canlı referans katalogları artık aynı sayfa akışında doğrudan görünür.
+                </p>
+              </div>
+              <Button asChild variant="outline" size="sm" className="self-start">
+                <Link to="/admin/new-member/guide#rol-listesi">Rol Listesi</Link>
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {blocks.map((block) =>
+                block.tag ? (
+                  <Badge key={block.tag} variant="secondary" className="rounded-full text-xs">
+                    {block.tag}
+                  </Badge>
+                ) : null
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+              {ruleLegendItems.map((item) => (
+                <span
+                  key={item}
+                  className="rounded-full border border-border bg-muted/40 px-3 py-1.5 font-medium tracking-[0.01em]"
+                >
+                  {item}
+                </span>
               ))}
             </div>
-          </div>
-        ))}
-      </div>
+          </section>
 
-      <section ref={roleListRef} id="rol-listesi" className="scroll-mt-28 space-y-4">
-        <div className="space-y-1">
-          <h2 className="border-b border-border/60 pb-3 text-lg font-semibold tracking-tight text-foreground">
-            Referans Katalogları
-          </h2>
-          <p className="pt-2 text-sm text-muted-foreground">
-            Veritabanından canlı çekilir. İhtiyaç duyduğunda aç, kapat.
-          </p>
-        </div>
-
-        {loading ? (
-          <p className="text-sm text-muted-foreground">Yükleniyor…</p>
-        ) : (
-          <Accordion type="multiple" className="w-full" value={openReferenceItems} onValueChange={setOpenReferenceItems}>
-            <AccordionItem value="roles">
-              <AccordionTrigger className="text-sm font-semibold">
-                Tüm Roller ({roles.length})
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-6 pt-2">
-                  {roleGroups.map((group) => (
-                    <div key={group.family} className="space-y-2">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        {group.label} — {group.roles.length} rol
-                      </p>
-                      <div className="grid gap-1 sm:grid-cols-2">
-                        {group.roles.map((role) => (
-                          <div
-                            key={role.key}
-                            className="flex items-center justify-between rounded-md border border-border/50 bg-muted/30 px-3 py-1.5 text-xs"
-                          >
-                            <span className="font-medium text-foreground">{role.label}</span>
-                            <code className="ml-2 shrink-0 text-[10px] text-muted-foreground">
-                              {role.key}
-                            </code>
-                          </div>
+          <div className="space-y-12">
+            {blocks.map((block) => (
+              <section
+                key={block.heading}
+                id={getBlockId(block.heading)}
+                className="scroll-mt-28 space-y-6"
+              >
+                <h2 className="border-b border-border/60 pb-3 text-lg font-semibold tracking-tight text-foreground">
+                  {block.heading}
+                </h2>
+                <div className="space-y-6">
+                  {block.sections.map((section) => (
+                    <section
+                      key={section.title}
+                      id={getSectionId(block.heading, section.title)}
+                      className="scroll-mt-28 space-y-3"
+                    >
+                      <h3 className="text-sm font-semibold text-foreground/80">{section.title}</h3>
+                      <ul className="space-y-2">
+                        {section.items.map((item) => (
+                          <li key={item} className="flex gap-3 text-sm leading-6 text-muted-foreground">
+                            <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+                            <span>{item}</span>
+                          </li>
                         ))}
-                      </div>
-                    </div>
+                      </ul>
+                    </section>
                   ))}
                 </div>
-              </AccordionContent>
-            </AccordionItem>
+              </section>
+            ))}
+          </div>
 
-            <AccordionItem value="attributes">
-              <AccordionTrigger className="text-sm font-semibold">
-                Attribute Kataloğu ({attributes.length})
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="grid gap-1 pt-2 sm:grid-cols-2">
-                  {attributes.map((a) => (
-                    <div
-                      key={a.key}
-                      className="space-y-0.5 rounded-md border border-border/50 bg-muted/30 px-3 py-2 text-xs"
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-medium text-foreground">{a.label}</span>
-                        {a.dataType && (
-                          <Badge variant="outline" className="shrink-0 text-[10px]">
-                            {a.dataType}
+          <section id={REFERENCE_SECTION_ID} className="scroll-mt-28 space-y-6">
+            <h2 className="border-b border-border/60 pb-3 text-lg font-semibold tracking-tight text-foreground">
+              Referans Katalogları
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Veritabanından canlı çekilir. Sol menüden ilgili katalog bölümüne doğrudan atlayabilirsin.
+            </p>
+
+            {loading ? (
+              <p className="text-sm text-muted-foreground">Yükleniyor…</p>
+            ) : (
+              <div className="space-y-8">
+                <section id={ROLE_LIST_SECTION_ID} className="scroll-mt-28 space-y-4">
+                  <h3 className="text-base font-semibold text-foreground">Tüm Roller ({roles.length})</h3>
+                  <div className="space-y-6">
+                    {roleGroups.map((group) => (
+                      <div key={group.family} className="space-y-2">
+                        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                          {group.label} — {group.roles.length} rol
+                        </p>
+                        <div className="grid gap-1 sm:grid-cols-2">
+                          {group.roles.map((role) => (
+                            <div
+                              key={role.key}
+                              className="flex items-center justify-between rounded-md border border-border/50 bg-muted/30 px-3 py-1.5 text-xs"
+                            >
+                              <span className="font-medium text-foreground">{role.label}</span>
+                              <code className="ml-2 shrink-0 text-[10px] text-muted-foreground">
+                                {role.key}
+                              </code>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                <section id={ATTRIBUTE_SECTION_ID} className="scroll-mt-28 space-y-4">
+                  <h3 className="text-base font-semibold text-foreground">
+                    Attribute Kataloğu ({attributes.length})
+                  </h3>
+                  <div className="grid gap-1 sm:grid-cols-2">
+                    {attributes.map((a) => (
+                      <div
+                        key={a.key}
+                        className="space-y-0.5 rounded-md border border-border/50 bg-muted/30 px-3 py-2 text-xs"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-medium text-foreground">{a.label}</span>
+                          {a.dataType && (
+                            <Badge variant="outline" className="shrink-0 text-[10px]">
+                              {a.dataType}
+                            </Badge>
+                          )}
+                        </div>
+                        <code className="text-muted-foreground">{a.key}</code>
+                        {a.description && <p className="text-muted-foreground/70">{a.description}</p>}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                <section id={FEATURE_SECTION_ID} className="scroll-mt-28 space-y-4">
+                  <h3 className="text-base font-semibold text-foreground">
+                    Feature Kataloğu ({features.length})
+                  </h3>
+                  <div className="grid gap-1 sm:grid-cols-2">
+                    {features.map((f) => (
+                      <div
+                        key={f.key}
+                        className="space-y-0.5 rounded-md border border-border/50 bg-muted/30 px-3 py-2 text-xs"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-medium text-foreground">{f.label}</span>
+                          <Badge
+                            variant={f.isActiveGlobally ? "default" : "secondary"}
+                            className="shrink-0 text-[10px]"
+                          >
+                            {f.isActiveGlobally ? "Global Aktif" : "Pasif"}
                           </Badge>
-                        )}
+                        </div>
+                        <code className="text-muted-foreground">{f.key}</code>
+                        {f.description && <p className="text-muted-foreground/70">{f.description}</p>}
                       </div>
-                      <code className="text-muted-foreground">{a.key}</code>
-                      {a.description && (
-                        <p className="text-muted-foreground/70">{a.description}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
+                    ))}
+                  </div>
+                </section>
 
-            <AccordionItem value="features">
-              <AccordionTrigger className="text-sm font-semibold">
-                Feature Kataloğu ({features.length})
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="grid gap-1 pt-2 sm:grid-cols-2">
-                  {features.map((f) => (
-                    <div
-                      key={f.key}
-                      className="space-y-0.5 rounded-md border border-border/50 bg-muted/30 px-3 py-2 text-xs"
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-medium text-foreground">{f.label}</span>
-                        <Badge
-                          variant={f.isActiveGlobally ? "default" : "secondary"}
-                          className="shrink-0 text-[10px]"
-                        >
-                          {f.isActiveGlobally ? "Global Aktif" : "Pasif"}
-                        </Badge>
+                <section id={PROFILE_SECTION_ID} className="scroll-mt-28 space-y-4">
+                  <h3 className="text-base font-semibold text-foreground">
+                    Bölüm Kataloğu — Sections ({sections.length})
+                  </h3>
+                  <div className="grid gap-1 sm:grid-cols-2">
+                    {sections.map((s) => (
+                      <div
+                        key={s.key}
+                        className="space-y-0.5 rounded-md border border-border/50 bg-muted/30 px-3 py-2 text-xs"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-medium text-foreground">{s.label}</span>
+                          {s.sectionArea && (
+                            <Badge variant="outline" className="shrink-0 text-[10px]">
+                              {s.sectionArea}
+                            </Badge>
+                          )}
+                        </div>
+                        <code className="text-muted-foreground">{s.key}</code>
+                        {s.description && <p className="text-muted-foreground/70">{s.description}</p>}
                       </div>
-                      <code className="text-muted-foreground">{f.key}</code>
-                      {f.description && (
-                        <p className="text-muted-foreground/70">{f.description}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="sections">
-              <AccordionTrigger className="text-sm font-semibold">
-                Bölüm Kataloğu — Sections ({sections.length})
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="grid gap-1 pt-2 sm:grid-cols-2">
-                  {sections.map((s) => (
-                    <div
-                      key={s.key}
-                      className="space-y-0.5 rounded-md border border-border/50 bg-muted/30 px-3 py-2 text-xs"
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-medium text-foreground">{s.label}</span>
-                        {s.sectionArea && (
-                          <Badge variant="outline" className="shrink-0 text-[10px]">
-                            {s.sectionArea}
-                          </Badge>
-                        )}
-                      </div>
-                      <code className="text-muted-foreground">{s.key}</code>
-                      {s.description && (
-                        <p className="text-muted-foreground/70">{s.description}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        )}
-      </section>
+                    ))}
+                  </div>
+                </section>
+              </div>
+            )}
+          </section>
+        </div>
+      </div>
     </AdminPageLayout>
   );
 };
