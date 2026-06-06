@@ -149,7 +149,6 @@ const blocks: GuideBlock[] = [
         title: "Rol değişikliği neyi etkiler?",
         items: [
           "Kullanıcının göreceği feature set'i değişir.",
-          "Role bağlı taxonomy grupları değişebilir.",
           "Role bağlı attribute kuralları değişebilir.",
           "Role bağlı profile section kuralları değişebilir.",
           "Bu yüzden rol değişikliği yalnızca etiket değil, tüm deneyimi etkileyen ana karar katmanıdır.",
@@ -176,7 +175,7 @@ const blocks: GuideBlock[] = [
           "Rol seçici vardır; aynı ekrandan rol değişikliği yapılabilir.",
           "Attribute listesi user_profile_attributes verisini attribute_catalog ile birlikte gösterir.",
           "Admin burada değer, visibility ve onay bağlamını birlikte görür; kayıt admin_update_user_profile_attribute RPC'si ile yazılır.",
-          "Aynı ekranda role göre taxonomy grupları da çekilir; değişiklik admin_update_user_taxonomy_selection RPC'si ile kaydedilir.",
+          "Aynı ekranda kullanıcıya bağlı temel profil verisi ve rol davranışı birlikte takip edilir.",
         ],
       },
       {
@@ -193,7 +192,7 @@ const blocks: GuideBlock[] = [
         items: [
           "Sorun form alanı kuralıysa role-matrix ekranında (?kind=attribute) düzelt.",
           "Sorun kullanıcının kendi girdiği veriyse profile-role-assignment içinde düzelt.",
-          "Sorun sadece bir katalog item'a özelse /admin/data içindeki item-level override'ı kullan.",
+          "Sorun sadece bir katalog item'a özelse /admin/data içinden attribute değerini veya metadata kaydını düzelt.",
         ],
       },
     ],
@@ -216,7 +215,7 @@ const blocks: GuideBlock[] = [
         items: [
           "Rolün genel feature kararı için /admin/new-member/role-matrix?kind=feature kullan.",
           "Tek kişiye özel istisna için /admin/new-member/overrides kullanılır.",
-          "Katalog item'a özel feature istisnası gerekiyorsa /admin/data > Rol & Kurallar kullanılır.",
+          "Katalog item ekranı feature istisnası vermez; feature davranışı rol veya kullanıcı override seviyesinde çözülür.",
         ],
       },
       {
@@ -252,7 +251,7 @@ const blocks: GuideBlock[] = [
         items: [
           "Kullanıcı modülü kullanabilsin ama kartta görünmesin/görünsün kararı gerekiyorsa section tarafına bak.",
           "Kart içindeki alanın public/private davranışı section konusu değil, attribute konusudur.",
-          "Tek bir item için farklı section davranışı gerekiyorsa /admin/data içindeki item-level override kullanılır.",
+          "Section davranışı standart akışta rol seviyesinden yönetilir; item-level section override kullanılmaz.",
         ],
       },
     ],
@@ -266,7 +265,7 @@ const blocks: GuideBlock[] = [
         items: [
           "1. /admin/new-member/profile-role-assignment ekranında kullanıcıyı bul.",
           "2. Rolü doğru mu kontrol et.",
-          "3. Detay panelinde attribute ve taxonomy verisini kontrol et.",
+          "3. Detay panelinde attribute verisini kontrol et.",
           "4. Sorun genel bir kural gibi görünüyorsa /admin/new-member/role-matrix ekranına geç.",
           "5. Sorun yalnızca bu kullanıcıdaysa /admin/new-member/overrides kullan.",
           "6. Public profil kart parçası sorunuysa section kuralını kontrol et (?kind=profile_section).",
@@ -277,7 +276,7 @@ const blocks: GuideBlock[] = [
         items: [
           "1. /admin/data ekranında kaydı aç.",
           "2. Platform rolünü kontrol et.",
-          "3. Gerekirse item-level attribute / feature / section override uygula.",
+          "3. Gerekirse attribute değerini, sahip/editör ilişkisini veya claim durumunu güncelle.",
           "4. Claim veya editor yetkisi gerekiyorsa aynı kayıt içinden yönet.",
         ],
       },

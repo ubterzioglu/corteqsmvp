@@ -1,10 +1,33 @@
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS } from "@/lib/features";
 import type { CurrentUserProfilePayload } from "@/lib/member-profile";
 import ProfilePage from "@/pages/ProfilePage";
+
+function renderProfilePage(initialEntry: string, options?: { includeRedirectTargets?: boolean }) {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={[initialEntry]}>
+        <Routes>
+          <Route path="/profile/:type" element={<ProfilePage />} />
+          {options?.includeRedirectTargets ? <Route path="/profile/bireysel" element={<div>Bireysel Profil</div>} /> : null}
+          {options?.includeRedirectTargets ? <Route path="/profile/danisman" element={<div>Danisman Profil</div>} /> : null}
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>,
+  );
+}
 
 const useAuthMock = vi.fn();
 const useCurrentUserProfileMock = vi.fn();
@@ -426,14 +449,7 @@ describe("ProfilePage", () => {
       refreshProfile: vi.fn(),
     });
 
-    render(
-      <MemoryRouter initialEntries={["/profile/invalid"]}>
-        <Routes>
-          <Route path="/profile/:type" element={<ProfilePage />} />
-          <Route path="/profile/bireysel" element={<div>Bireysel Profil</div>} />
-        </Routes>
-      </MemoryRouter>,
-    );
+    renderProfilePage("/profile/invalid", { includeRedirectTargets: true });
 
     expect(await screen.findByText("Bireysel Profil")).toBeInTheDocument();
   });
@@ -455,14 +471,7 @@ describe("ProfilePage", () => {
       refreshProfile: vi.fn(),
     });
 
-    render(
-      <MemoryRouter initialEntries={["/profile/isletme"]}>
-        <Routes>
-          <Route path="/profile/:type" element={<ProfilePage />} />
-          <Route path="/profile/danisman" element={<div>Danisman Profil</div>} />
-        </Routes>
-      </MemoryRouter>,
-    );
+    renderProfilePage("/profile/isletme", { includeRedirectTargets: true });
 
     expect(await screen.findByText("Danisman Profil")).toBeInTheDocument();
   });
@@ -495,13 +504,7 @@ describe("ProfilePage", () => {
       refreshProfile: vi.fn(),
     });
 
-    render(
-      <MemoryRouter initialEntries={["/profile/bireysel"]}>
-        <Routes>
-          <Route path="/profile/:type" element={<ProfilePage />} />
-        </Routes>
-      </MemoryRouter>,
-    );
+    renderProfilePage("/profile/bireysel");
 
     expect(await screen.findByRole("heading", { name: "firmascope" })).toBeInTheDocument();
     expect(screen.getByText("Profil Fotoğrafı")).toBeInTheDocument();
@@ -600,13 +603,7 @@ describe("ProfilePage", () => {
       refreshProfile: vi.fn(),
     });
 
-    render(
-      <MemoryRouter initialEntries={["/profile/bireysel"]}>
-        <Routes>
-          <Route path="/profile/:type" element={<ProfilePage />} />
-        </Routes>
-      </MemoryRouter>,
-    );
+    renderProfilePage("/profile/bireysel");
 
     expect(await screen.findByRole("heading", { name: "firmascope" })).toBeInTheDocument();
     expect(screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için")).not.toBeInTheDocument();
@@ -633,13 +630,7 @@ describe("ProfilePage", () => {
       refreshProfile: refreshProfileMock,
     });
 
-    render(
-      <MemoryRouter initialEntries={["/profile/bireysel"]}>
-        <Routes>
-          <Route path="/profile/:type" element={<ProfilePage />} />
-        </Routes>
-      </MemoryRouter>,
-    );
+    renderProfilePage("/profile/bireysel");
 
     fireEvent.change(screen.getByDisplayValue("firmascope"), { target: { value: "Ada Yilmaz" } });
     fireEvent.click(screen.getByRole("button", { name: "Ad Soyadı Kaydet" }));
@@ -679,13 +670,7 @@ describe("ProfilePage", () => {
       refreshProfile: refreshProfileMock,
     });
 
-    render(
-      <MemoryRouter initialEntries={["/profile/bireysel"]}>
-        <Routes>
-          <Route path="/profile/:type" element={<ProfilePage />} />
-        </Routes>
-      </MemoryRouter>,
-    );
+    renderProfilePage("/profile/bireysel");
 
     const roleCardButton = screen.getByRole("button", { name: /Rolüne Özel Alanları Kaydet/i });
     const roleCard = roleCardButton.parentElement?.parentElement?.parentElement ?? null;
