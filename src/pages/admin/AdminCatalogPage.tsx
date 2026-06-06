@@ -347,26 +347,30 @@ const AdminCatalogPage = () => {
         <div className="sticky top-[76px] z-20">
           <Card className="overflow-hidden border-slate-200 bg-white/95 shadow-[0_18px_55px_-42px_rgba(15,23,42,0.32)] backdrop-blur">
             <CardContent className="space-y-4 p-4 sm:p-5">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-slate-950">
                   <Database className="h-4 w-4 text-emerald-600" />
                   <span>Profile Rol Atama</span>
                 </div>
-                <div className="self-start rounded-2xl border border-slate-200 bg-slate-50/90 px-4 py-3 shadow-sm">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Toplam Kayıt</div>
-                  <div className="mt-1 text-2xl font-semibold text-slate-950">{isLoading ? "..." : totalCount}</div>
+                <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-slate-950">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    Toplam Kayıt
+                  </span>
+                  <span>{isLoading ? "..." : totalCount}</span>
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                {legendItems.map((item) => (
-                  <div
-                    key={`${item.group}-${item.code}`}
-                    className="rounded-full border border-slate-200 bg-slate-50/90 px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm"
-                  >
-                    {item.code} = {item.label}
-                  </div>
-                ))}
+              <div className="-mx-1 overflow-x-auto px-1">
+                <div className="flex min-w-max flex-nowrap gap-2 pb-1">
+                  {legendItems.map((item) => (
+                    <div
+                      key={`${item.group}-${item.code}`}
+                      className="whitespace-nowrap rounded-full border border-slate-200 bg-slate-50/90 px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm"
+                    >
+                      {item.code} = {item.label}
+                    </div>
+                  ))}
+                </div>
               </div>
             </CardContent>
           </Card>
