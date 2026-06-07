@@ -75,6 +75,7 @@ import AdminApprovalsPage from "@/pages/admin/AdminApprovalsPage";
 import AdminAuditLogsPage from "@/pages/admin/AdminAuditLogsPage";
 import AdminNewMemberGuidePage from "@/pages/admin/AdminNewMemberGuidePage";
 import AdminRoleManagementPage from "@/pages/admin/AdminRoleManagementPage";
+import AdminRolesOverviewPage from "@/pages/admin/AdminRolesOverviewPage";
 import CaddePage from "@/pages/CaddePage";
 import AdminCaddePage from "@/pages/admin/AdminCaddePage";
 import Associations from "@/pages/Associations";
@@ -224,6 +225,7 @@ const App = () => (
                 <Route path="surveys/:id/responses" element={<AdminSurveyResponsesPage />} />
                 <Route path="new-member/profile-role-assignment" element={<AdminCatalogPage />} />
                 <Route path="new-member/role-matrix" element={<AdminRoleManagementPage />} />
+                <Route path="new-member/roles-overview" element={<AdminRolesOverviewPage />} />
                 <Route path="new-member/users-roles" element={<Navigate to="/admin/new-member/profile-role-assignment" replace />} />
                 <Route path="data" element={<AdminCatalogPage />} />
                 <Route path="veritabani-tablolari" element={<AdminDatabaseTablesPage />} />
