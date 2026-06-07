@@ -314,6 +314,22 @@ const AdminCatalogPage = () => {
       ),
     [records],
   );
+
+  const cityOptions = useMemo(
+    () =>
+      Array.from(new Set(records.map((record) => record.primaryCity).filter(Boolean) as string[])).sort((left, right) =>
+        left.localeCompare(right, "tr"),
+      ),
+    [records],
+  );
+
+  const countryOptions = useMemo(
+    () =>
+      Array.from(new Set(records.map((record) => record.primaryCountryCode).filter(Boolean) as string[])).sort((left, right) =>
+        left.localeCompare(right, "tr"),
+      ),
+    [records],
+  );
   const roleLabelByKey = useMemo(
     () => new Map(roles.map((role) => [role.key, role.label])),
     [roles],
@@ -347,11 +363,11 @@ const AdminCatalogPage = () => {
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-7 gap-2">
                 {legendItems.map((item) => (
                   <div
                     key={`${item.group}-${item.code}`}
-                    className="rounded-full border border-slate-200 bg-slate-50/90 px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm"
+                    className="rounded-full border border-slate-200 bg-slate-50/90 px-3 py-1.5 text-center text-xs font-medium text-slate-700 shadow-sm"
                   >
                     {item.code} = {item.label}
                   </div>
@@ -426,7 +442,7 @@ const AdminCatalogPage = () => {
             </div>
           </CardHeader>
           <CardContent className="space-y-5">
-            <div className="grid gap-3 xl:grid-cols-[minmax(0,2fr)_repeat(7,minmax(0,1fr))]">
+            <div className="space-y-3">
               <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 shadow-inner">
                 <Search className="h-4 w-4 shrink-0 text-slate-400" />
                 <Input
@@ -439,92 +455,108 @@ const AdminCatalogPage = () => {
                 />
               </label>
 
-              <Select value={filters.kind || "__all__"} onValueChange={(value) => handleFilterChange("kind", value === "__all__" ? "" : (value as AdminCatalogFilters["kind"]))}>
-                <SelectTrigger aria-label="Tür filtresi">
-                  <SelectValue placeholder="Tür" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__all__">Tüm türler</SelectItem>
-                  <SelectItem value="catalog_item">Katalog</SelectItem>
-                  <SelectItem value="profile">Kullanıcı</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+                <Select value={filters.kind || "__all__"} onValueChange={(value) => handleFilterChange("kind", value === "__all__" ? "" : (value as AdminCatalogFilters["kind"]))}>
+                  <SelectTrigger aria-label="Tür filtresi">
+                    <SelectValue placeholder="Tüm türler" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">Tüm türler</SelectItem>
+                    <SelectItem value="catalog_item">Katalog</SelectItem>
+                    <SelectItem value="profile">Kullanıcı</SelectItem>
+                  </SelectContent>
+                </Select>
 
-              <Select value={filters.itemType || "__all__"} onValueChange={(value) => handleFilterChange("itemType", value === "__all__" ? "" : value)}>
-                <SelectTrigger aria-label="Item type filtresi">
-                  <SelectValue placeholder="İçerik tipi" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__all__">Tüm tipler</SelectItem>
-                  {itemTypes.map((itemType) => (
-                    <SelectItem key={itemType.key} value={itemType.key}>
-                      {itemType.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <Select value={filters.itemType || "__all__"} onValueChange={(value) => handleFilterChange("itemType", value === "__all__" ? "" : value)}>
+                  <SelectTrigger aria-label="Item type filtresi">
+                    <SelectValue placeholder="Tüm tipler" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">Tüm tipler</SelectItem>
+                    {itemTypes.map((itemType) => (
+                      <SelectItem key={itemType.key} value={itemType.key}>
+                        {itemType.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              <Select
-                value={filters.platformRoleKey || "__all__"}
-                onValueChange={(value) => handleFilterChange("platformRoleKey", value === "__all__" ? "" : value)}
-              >
-                <SelectTrigger aria-label="Rol filtresi">
-                  <SelectValue placeholder="Rol" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__all__">Tüm roller</SelectItem>
-                  {roles.map((role) => (
-                    <SelectItem key={role.key} value={role.key}>
-                      {role.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <Select
+                  value={filters.platformRoleKey || "__all__"}
+                  onValueChange={(value) => handleFilterChange("platformRoleKey", value === "__all__" ? "" : value)}
+                >
+                  <SelectTrigger aria-label="Rol filtresi">
+                    <SelectValue placeholder="Tüm roller" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">Tüm roller</SelectItem>
+                    {roles.map((role) => (
+                      <SelectItem key={role.key} value={role.key}>
+                        {role.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              <Select value={filters.status || "__all__"} onValueChange={(value) => handleFilterChange("status", value === "__all__" ? "" : value)}>
-                <SelectTrigger aria-label="Durum filtresi">
-                  <SelectValue placeholder="Durum" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__all__">Tüm durumlar</SelectItem>
-                  {statusOptions.map((status) => (
-                    <SelectItem key={status} value={status}>
-                      {formatLabel(status)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <Select value={filters.status || "__all__"} onValueChange={(value) => handleFilterChange("status", value === "__all__" ? "" : value)}>
+                  <SelectTrigger aria-label="Durum filtresi">
+                    <SelectValue placeholder="Tüm durumlar" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">Tüm durumlar</SelectItem>
+                    {statusOptions.map((status) => (
+                      <SelectItem key={status} value={status}>
+                        {formatLabel(status)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              <Select
-                value={filters.verificationStatus || "__all__"}
-                onValueChange={(value) => handleFilterChange("verificationStatus", value === "__all__" ? "" : value)}
-              >
-                <SelectTrigger aria-label="Doğrulama filtresi">
-                  <SelectValue placeholder="Doğrulama" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__all__">Tüm doğrulamalar</SelectItem>
-                  {verificationOptions.map((status) => (
-                    <SelectItem key={status} value={status}>
-                      {formatLabel(status)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <Select
+                  value={filters.verificationStatus || "__all__"}
+                  onValueChange={(value) => handleFilterChange("verificationStatus", value === "__all__" ? "" : value)}
+                >
+                  <SelectTrigger aria-label="Doğrulama filtresi">
+                    <SelectValue placeholder="Tüm doğrulamalar" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">Tüm doğrulamalar</SelectItem>
+                    {verificationOptions.map((status) => (
+                      <SelectItem key={status} value={status}>
+                        {formatLabel(status)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              <Input
-                value={filters.city}
-                onChange={(event) => handleFilterChange("city", event.target.value)}
-                placeholder="Şehir"
-                aria-label="Şehir filtresi"
-              />
+                <Select value={filters.city || "__all__"} onValueChange={(value) => handleFilterChange("city", value === "__all__" ? "" : value)}>
+                  <SelectTrigger aria-label="Şehir filtresi">
+                    <SelectValue placeholder="Tüm şehirler" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">Tüm şehirler</SelectItem>
+                    {cityOptions.map((city) => (
+                      <SelectItem key={city} value={city}>
+                        {city}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              <Input
-                value={filters.countryCode}
-                onChange={(event) => handleFilterChange("countryCode", event.target.value)}
-                placeholder="Ülke kodu"
-                aria-label="Ülke kodu filtresi"
-              />
+                <Select value={filters.countryCode || "__all__"} onValueChange={(value) => handleFilterChange("countryCode", value === "__all__" ? "" : value)}>
+                  <SelectTrigger aria-label="Ülke filtresi">
+                    <SelectValue placeholder="Tüm ülkeler" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">Tüm ülkeler</SelectItem>
+                    {countryOptions.map((code) => (
+                      <SelectItem key={code} value={code}>
+                        {code}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-white">

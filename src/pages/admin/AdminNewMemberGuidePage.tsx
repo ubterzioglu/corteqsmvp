@@ -414,36 +414,21 @@ const AdminNewMemberGuidePage = () => {
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
               İçindekiler
             </p>
-            <div className="space-y-4">
+            <div className="space-y-1">
               {navItems.map((item) => {
                 const isHeadingActive = targetSectionId === item.id;
                 return (
-                  <div key={item.id} className="space-y-2">
-                    <a
-                      href={`#${item.id}`}
-                      className={`block text-sm font-semibold leading-5 transition-colors ${
-                        isHeadingActive ? "text-foreground" : "text-foreground/80 hover:text-foreground"
-                      }`}
-                    >
-                      {item.heading}
-                    </a>
-                    <div className="space-y-1 border-l border-border/60 pl-3">
-                      {item.sections.map((section) => {
-                        const isSectionActive = targetSectionId === section.id;
-                        return (
-                          <a
-                            key={section.id}
-                            href={`#${section.id}`}
-                            className={`block text-xs leading-5 transition-colors ${
-                              isSectionActive ? "font-medium text-primary" : "text-muted-foreground hover:text-foreground"
-                            }`}
-                          >
-                            {section.title}
-                          </a>
-                        );
-                      })}
-                    </div>
-                  </div>
+                  <a
+                    key={item.id}
+                    href={`#${item.id}`}
+                    className={`block rounded-lg px-2 py-1.5 text-sm font-medium leading-5 transition-colors ${
+                      isHeadingActive
+                        ? "bg-primary/10 text-primary"
+                        : "text-foreground/75 hover:bg-muted/60 hover:text-foreground"
+                    }`}
+                  >
+                    {item.heading}
+                  </a>
                 );
               })}
             </div>
