@@ -221,7 +221,8 @@ const AdminLayout = () => {
   const newMemberMenuActive =
     location.pathname.startsWith("/admin/new-member") ||
     location.pathname === "/admin/roller-taslak" ||
-    location.pathname === "/admin/data";
+    location.pathname === "/admin/data" ||
+    location.pathname === "/admin/veritabani-tablolari";
   const adminPanelMenuActive = adminPanelNavItems.some((item) => location.pathname === item.to);
   const isRouteActive = (to: string) => location.pathname === to;
   const isNewMemberGuideItem = (to: string) => to === "/admin/new-member/guide";
@@ -229,6 +230,7 @@ const AdminLayout = () => {
     { to: "/admin/workspace/command-center", label: "CC" },
     { to: "/admin/members", label: "Üye Takibi (eski)" },
     { to: "/admin/data", label: "Veritabanı" },
+    { to: "/admin/veritabani-tablolari", label: "Veritabanı Tabloları" },
     { to: "/admin/new-member/role-matrix", label: "Tüm Roller AFS Matrisi" },
     { to: "/admin/new-member/overrides", label: "Feature Override" },
     { to: "/admin/new-member/guide", label: "Kullanım Klavuzu" },

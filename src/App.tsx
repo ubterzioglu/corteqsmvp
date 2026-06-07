@@ -83,6 +83,7 @@ import HospitalAppointment from "@/pages/HospitalAppointment";
 import IndependentProfilePage from "@/pages/IndependentProfilePage";
 import AdminConsulateProfilesPage from "@/pages/admin/AdminConsulateProfilesPage";
 import AdminCatalogPage from "@/pages/admin/AdminCatalogPage";
+import AdminDatabaseTablesPage from "@/pages/admin/AdminDatabaseTablesPage";
 
 const queryClient = new QueryClient();
 
@@ -225,6 +226,7 @@ const App = () => (
                 <Route path="new-member/role-matrix" element={<AdminRoleManagementPage />} />
                 <Route path="new-member/users-roles" element={<Navigate to="/admin/new-member/profile-role-assignment" replace />} />
                 <Route path="data" element={<AdminCatalogPage />} />
+                <Route path="veritabani-tablolari" element={<AdminDatabaseTablesPage />} />
                 <Route path="new-member/guide" element={<AdminNewMemberGuidePage />} />
                 <Route path="new-member/roles-list" element={<Navigate to="/admin/new-member/guide#rol-listesi" replace />} />
                 <Route path="new-member/roles-features" element={<Navigate to="/admin/new-member/role-matrix?kind=feature" replace />} />

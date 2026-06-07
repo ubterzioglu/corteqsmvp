@@ -9,6 +9,7 @@ export const primaryAdminNavItems = [
 
 export const newMemberSystemNavItems = [
   { to: "/admin/data", label: "Veritabanı", icon: Database },
+  { to: "/admin/veritabani-tablolari", label: "Veritabanı Tabloları", icon: Database },
   { to: "/admin/new-member/role-matrix", label: "Tüm Roller AFS Matrisi", icon: Shield },
   { to: "/admin/new-member/overrides", label: "Feature Override", icon: Sparkles },
   { to: "/admin/new-member/guide", label: "Kullanım Klavuzu", icon: BookOpen },
