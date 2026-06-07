@@ -146,8 +146,15 @@ const AdminRoleManagementPage = () => {
           <span className="rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
             Yok — teknik scope veya ürün mantığı nedeniyle bu role uygulanmaz
           </span>
-          <span className="ml-auto hidden text-[10px] text-muted-foreground/60 sm:block">
-            A: Aktif · F: Feature · Z: Zorunlu · P: Public · D: Düzenler · G: Global/Gizler · O: Onay · R: Rol · S: Sıra
+          <span className="ml-auto hidden text-[10px] leading-relaxed text-muted-foreground/60 sm:block">
+            <span className="font-semibold">A</span> Aktif &nbsp;
+            <span className="font-semibold">Z</span> Zorunlu &nbsp;
+            <span className="font-semibold">P</span> Public &nbsp;
+            <span className="font-semibold">D</span> Düzenler &nbsp;
+            <span className="font-semibold">G</span> Gizler / Global &nbsp;
+            <span className="font-semibold">O</span> Onay &nbsp;
+            <span className="font-semibold">R</span> Rol &nbsp;
+            <span className="font-semibold">S</span> Sıra
           </span>
         </div>
       </div>
