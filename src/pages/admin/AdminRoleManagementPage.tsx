@@ -131,6 +131,27 @@ const AdminRoleManagementPage = () => {
 
   return (
     <AdminPageLayout>
+      <div className="sticky top-14 z-20 -mx-4 mb-4 border-b border-border/60 bg-background/95 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-background/85 sm:-mx-6 sm:px-6">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Kısaltmalar</span>
+          <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+            Temel — rolün çoğu senaryoda bu aileye ihtiyacı vardır
+          </span>
+          <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700">
+            Secimli — ürün stratejisine veya operasyon kararına göre açılır
+          </span>
+          <span className="rounded-full border border-sky-200 bg-sky-50 px-2.5 py-0.5 text-xs font-medium text-sky-700">
+            Operasyonel — yalnızca görevli veya sorumlu hesaplarda anlamlıdır
+          </span>
+          <span className="rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+            Yok — teknik scope veya ürün mantığı nedeniyle bu role uygulanmaz
+          </span>
+          <span className="ml-auto hidden text-[10px] text-muted-foreground/60 sm:block">
+            A: Aktif · F: Feature · Z: Zorunlu · P: Public · D: Düzenler · G: Global/Gizler · O: Onay · R: Rol · S: Sıra
+          </span>
+        </div>
+      </div>
+
       <Card>
         <CardHeader>
           <CardTitle>Rol Yönetimi</CardTitle>
