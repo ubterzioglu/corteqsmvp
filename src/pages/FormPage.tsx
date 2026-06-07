@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import heroNetworkLight from "@/assets/hero-network-light.jpg";
-import corteqsLogo from "../../newlogo.png";
+const corteqsLogo = "/newlogo.png";
 import { notifySubmission } from "@/lib/mail";
 import { useAuth } from "@/components/auth/useAuth";
 import { supabase } from "@/integrations/supabase/client";

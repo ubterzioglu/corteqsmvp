@@ -3,9 +3,9 @@ import May19CampaignShell from "@/components/may19/May19CampaignShell";
 import may19GlobePinsImage from "@/assets/may19-globe-pins.png";
 import may19IdeasImage from "@/assets/may19-ideas.jpg";
 import may19MomentsImage from "@/assets/may19-moments.jpg";
-import heroLandmarks from "../../denemeremake.png";
-import may19HeaderBg from "../../newbg.png";
-import may19PoeticLayer from "../../last.png";
+const heroLandmarks = "/denemeremake.png";
+const may19HeaderBg = "/newbg.png";
+const may19PoeticLayer = "/last.png";
 
 const moduleCards = [
   {

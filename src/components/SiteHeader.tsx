@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../../newlogo.png";
+const logo = "/newlogo.png";
 
 export default function SiteHeader() {
   return (

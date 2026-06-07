@@ -1,7 +1,7 @@
 import { Clapperboard, Globe, PenTool, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import logo from "../../newlogo.png";
+const logo = "/newlogo.png";
 
 const featuredLinks = [
   {

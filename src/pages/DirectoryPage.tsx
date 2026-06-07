@@ -14,7 +14,7 @@ import {
   type UnifiedDirectoryRow,
 } from "@/lib/catalog-directory";
 import { useGeoCountries } from "@/hooks/useGeo";
-import mascot from "../../lmaskot.png";
+const mascot = "/lmaskot.png";
 
 const DirectoryPage = () => {
   const { user, isLoading: isAuthLoading } = useAuth();

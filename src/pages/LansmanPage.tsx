@@ -7,8 +7,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import heroPoster from "../../yeniinffffffff.png";
-import logo from "../../newlogo.png";
+const heroPoster = "/yeniinffffffff.png";
+const logo = "/newlogo.png";
 
 const launchPanelClass =
   "rounded-[2rem] border border-slate-200/90 bg-[linear-gradient(135deg,rgba(255,255,255,0.98)_0%,rgba(247,243,239,0.94)_54%,rgba(240,248,255,0.98)_100%)] p-7 text-slate-900 shadow-[0_24px_80px_rgba(15,23,42,0.08)]";

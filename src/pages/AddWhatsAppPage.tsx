@@ -48,8 +48,8 @@ import {
   type WhatsAppLanding,
   normalizeLandingCategory,
 } from "@/lib/whatsapp-landings";
-import messagingHeroImage from "../../addwaimage.png";
-import waPlaceholderImage from "../../waplaceholder.png";
+const messagingHeroImage = "/addwaimage.png";
+const waPlaceholderImage = "/waplaceholder.png";
 
 const categoryMeta: Record<
   LandingCategory,

@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { AlertTriangle, Archive, Pencil, Plus, Save, Search, Trash2, X } from 'lucide-react'
 import AccordionCard from '@/components/dashboard/AccordionCard'
-import burakAvatar from '../../../../burak.png'
-import ubtAvatar from '../../../../ubt.png'
+const burakAvatar = '/burak.png'
+const ubtAvatar = '/ubt.png'
 import {
   archiveCommandCenterItem,
   COMMAND_CENTER_PRIORITY_OPTIONS,

@@ -22,7 +22,7 @@ import {
   UserRoundPlus,
   Zap,
 } from "lucide-react";
-import corteqsLogo from "../../newlogo.png";
+const corteqsLogo = "/newlogo.png";
 import heroNetworkLight from "@/assets/hero-network-light.jpg";
 
 const audienceNetworkPeople = [

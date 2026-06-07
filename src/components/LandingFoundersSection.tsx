@@ -2,8 +2,8 @@ import { useState } from "react";
 import { ChevronDown, Linkedin, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import burakPhoto from "../../burak.png";
-import ubtPhoto from "../../ubt.png";
+const burakPhoto = "/burak.png";
+const ubtPhoto = "/ubt.png";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const founders = [

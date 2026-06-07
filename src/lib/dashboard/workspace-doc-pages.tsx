@@ -388,8 +388,6 @@ export const workspaceDocPages: WorkspaceDocPage[] = [
       },
     ],
   },
-];
-
   {
     slug: "out-of-order",
     title: "Out of Order — Bekleyen Sistem Borçları",

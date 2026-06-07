@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Linkedin } from "lucide-react";
-import burakPhoto from "../../burak.png";
-import ubtPhoto from "../../ubt.png";
+const burakPhoto = "/burak.png";
+const ubtPhoto = "/ubt.png";
 
 type FounderSection = {
   title: string;

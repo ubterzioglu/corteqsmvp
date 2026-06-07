@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import heroLogo from "../../newlogo.png";
-import heroLandmarks from "../../denemeremake.png";
+const heroLogo = "/newlogo.png";
+const heroLandmarks = "/denemeremake.png";
 import RegisterInterestForm from "./RegisterInterestForm";
 
 const HeroSection = () => {

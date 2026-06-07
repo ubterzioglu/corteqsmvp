@@ -2,7 +2,7 @@ import May19CampaignShell from "@/components/may19/May19CampaignShell";
 import May19SubmissionForm from "@/components/may19/May19SubmissionForm";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import heroLandmarks from "../../denemeremake.png";
+const heroLandmarks = "/denemeremake.png";
 
 export default function May19MomentPage() {
   return (

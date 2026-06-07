@@ -13,7 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import showcasePanelImage from "@/assets/global-network-showcase-panel.png";
-import logo from "../../newlogo.png";
+const logo = "/newlogo.png";
 
 const rebuiltCards = [
   {
