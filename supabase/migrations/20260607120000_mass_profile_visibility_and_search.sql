@@ -195,16 +195,18 @@ set
   approval_status = 'approved',
   approved_at = coalesce(upa.approved_at, now()),
   updated_at = now()
-from public.role_attribute_rules rar
-join public.attribute_catalog ac on ac.id = rar.attribute_id
-join public.user_profiles up on up.user_id = upa.user_id
-join public.roles r on r.key = up.profile_type and r.id = rar.role_id
-where upa.attribute_id = rar.attribute_id
-  and rar.is_public_default = true
-  and rar.is_enabled = true
-  and (
+where (
     upa.visibility is distinct from 'public'
     or upa.approval_status is distinct from 'approved'
+  )
+  and exists (
+    select 1
+    from public.role_attribute_rules rar
+    join public.roles r on r.id = rar.role_id
+    join public.user_profiles up on up.profile_type = r.key and up.user_id = upa.user_id
+    where rar.attribute_id = upa.attribute_id
+      and rar.is_public_default = true
+      and rar.is_enabled = true
   );
 
 commit;
