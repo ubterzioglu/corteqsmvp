@@ -231,6 +231,7 @@ const AdminLayout = () => {
     { to: "/admin/members", label: "Üye Takibi (eski)" },
     { to: "/admin/data", label: "Veritabanı" },
     { to: "/admin/veritabani-tablolari", label: "Veritabanı Tabloları" },
+    { to: "/admin/new-member/roles-overview", label: "RolesGo Genel Bakış" },
     { to: "/admin/new-member/role-matrix", label: "Tüm Roller AFS Matrisi" },
     { to: "/admin/new-member/overrides", label: "Feature Override" },
     { to: "/admin/new-member/guide", label: "Kullanım Klavuzu" },
