@@ -390,6 +390,156 @@ export const workspaceDocPages: WorkspaceDocPage[] = [
   },
 ];
 
+  {
+    slug: "out-of-order",
+    title: "Out of Order — Bekleyen Sistem Borçları",
+    description: "Bilerek arka planda tutulan, zamanı gelince devreye alınacak ya da silinecek kod ve sistemlerin envanteri.",
+    badge: ["Teknik Borç", "Beklemede", "Karar Gerekiyor"],
+    sections: [
+      {
+        id: "orphaned-auth",
+        title: "Orphaned Auth Sistemi (38 dosya kör)",
+        accentColor: "#EA4335",
+        content: (
+          <div className="space-y-4 text-sm leading-7 text-slate-700">
+            <p>
+              <strong>Durum:</strong> Bilerek arka planda, dokunulmadan bekliyor.
+            </p>
+            <p>
+              <strong>Ne var:</strong> <code>src/contexts/AuthContext.tsx</code> — Lovable-v2 overlay'inden gelen
+              ikinci bir AuthProvider. Kendi içinde session, profile, accountType, signOut ve refreshProfile
+              destekliyor. <code>profiles</code> tablosundan veri çekiyor.
+            </p>
+            <p>
+              <strong>Sorun:</strong> Bu provider <code>App.tsx</code>'te mount edilmemiş. Bu context'ten{" "}
+              <code>useAuth</code> import eden 38 dosya her zaman <code>user: null</code>,{" "}
+              <code>loading: true</code> alıyor — kullanıcı giriş yapmış olsa bile.
+            </p>
+            <p>
+              <strong>Etkilenen 38 dosya:</strong>
+            </p>
+            <ul className="list-disc space-y-1 pl-5">
+              <li>src/pages/Feed.tsx</li>
+              <li>src/pages/Events.tsx</li>
+              <li>src/pages/MapSearch.tsx</li>
+              <li>src/pages/Onboarding.tsx</li>
+              <li>src/pages/PostGenerator.tsx</li>
+              <li>src/pages/WhatsAppGroups.tsx</li>
+              <li>src/pages/WhatsAppGroupLanding.tsx</li>
+              <li>src/pages/CityAmbassadors.tsx</li>
+              <li>src/pages/ConsultantDetail.tsx</li>
+              <li>src/pages/VolunteerMentorDetail.tsx</li>
+              <li>src/components/Navbar.tsx</li>
+              <li>src/components/DetailAuthLock.tsx</li>
+              <li>src/components/ProfileCompletePopup.tsx</li>
+              <li>src/components/ProfileSetupBanner.tsx (profiles/)</li>
+              <li>src/components/PhoneVerification.tsx</li>
+              <li>src/components/CreateEventForm.tsx</li>
+              <li>src/components/CouponCheckoutDialog.tsx</li>
+              <li>src/components/CaddeProfileGate.tsx</li>
+              <li>src/components/WelcomePackCTA.tsx</li>
+              <li>src/components/WelcomePackOrderForm.tsx</li>
+              <li>src/components/AmbassadorReferralCard.tsx</li>
+              <li>src/components/feed/CreatePostForm.tsx</li>
+              <li>src/components/feed/CreateCafeForm.tsx</li>
+              <li>src/components/messaging/PlatformMessageButton.tsx</li>
+              <li>src/components/messaging/PlatformMessageDialog.tsx</li>
+              <li>src/components/messaging/MessagesInbox.tsx</li>
+              <li>src/components/profiles/IndividualPublicCard.tsx</li>
+              <li>src/components/profiles/ProfileIndividual.tsx</li>
+              <li>src/components/connections/NotificationsPanel.tsx</li>
+              <li>src/components/connections/ConnectionsFollowersStats.tsx</li>
+              <li>src/components/booking/AppointmentBookingDialog.tsx</li>
+              <li>src/components/booking/AppointmentManagePanel.tsx</li>
+              <li>src/components/booking/BloggerAnalytics.tsx</li>
+              <li>src/components/booking/CategoryPerformance.tsx</li>
+              <li>src/hooks/useConnections.ts</li>
+              <li>src/hooks/useIsPremium.ts</li>
+              <li>src/hooks/useFeedSocial.ts</li>
+              <li>src/hooks/useCafes.ts</li>
+            </ul>
+            <p>
+              <strong>Zamanı gelince yapılacak:</strong>
+            </p>
+            <ul className="list-disc space-y-1 pl-5">
+              <li>
+                <strong>Seçenek A (bu sayfalar gerçek auth gerektiriyor):</strong>{" "}
+                <code>src/contexts/AuthContext.tsx</code>'teki AuthProvider'ı App.tsx'e ekle —{" "}
+                canonical AuthProvider'ın altına, iç içe değil yan yana. Sonra 38 dosyadaki{" "}
+                <code>useAuth</code> import'larının doğru context'i kullandığını doğrula.
+                <br />
+                Not: İki context'in field adları farklı (<code>isLoading</code> vs <code>loading</code>) —
+                geçiş sırasında tip hatalarını kontrol et.
+              </li>
+              <li>
+                <strong>Seçenek B (bu sayfalar zaten auth gerektirmiyor):</strong>{" "}
+                38 dosyayı sil ya da canonical <code>src/components/auth/useAuth</code>'a geçir.
+                Orphaned context'i tamamen kaldır.
+              </li>
+              <li>
+                <strong>Seçenek C (live'a geçildi, hala kullanılmıyor):</strong>{" "}
+                38 dosyayı ve <code>src/contexts/AuthContext.tsx</code>'i sil.
+              </li>
+            </ul>
+          </div>
+        ),
+      },
+      {
+        id: "dual-role-system",
+        title: "İki Paralel Rol/Yetki Sistemi",
+        accentColor: "#FBBC04",
+        content: (
+          <div className="space-y-4 text-sm leading-7 text-slate-700">
+            <p>
+              <strong>Durum:</strong> Her ikisi de aktif, canonical olan netleşmemiş.
+            </p>
+            <p>
+              <strong>Eski sistem:</strong> <code>public.admin_users</code> tablosu.{" "}
+              <code>src/lib/admin.ts</code>'deki <code>userIsAdmin()</code> bu tabloyu sorgular.{" "}
+              <code>AdminLayout</code> tüm admin bölümünü bu kontrol üzerinden kilitler.
+            </p>
+            <p>
+              <strong>Yeni sistem:</strong> <code>user_profiles_v2</code> + <code>rolesgo_*</code>{" "}
+              tabloları (RolesGo MVP, Mayıs 2026). <code>RequireFeature</code> ve{" "}
+              <code>useFeatureFlags</code> hook'ları bu sistemi kullanıyor.
+            </p>
+            <p>
+              <strong>Zamanı gelince yapılacak:</strong>
+            </p>
+            <ul className="list-disc space-y-1 pl-5">
+              <li>Yeni sistemin (rolesgo) admin erişim kontrolünü de kapsayacağı kararlaştırıldığında
+                <code>AdminLayout</code>'taki <code>userIsAdmin()</code> çağrısı yeni sisteme taşınır.</li>
+              <li><code>admin_users</code> tablosu deprecated edilir, migration ile kaldırılır.</li>
+              <li>Bu karar verilmeden profile/role logic'e dokunma.</li>
+            </ul>
+          </div>
+        ),
+      },
+      {
+        id: "profiles-table",
+        title: "profiles vs user_profiles_v2 Tablosu",
+        accentColor: "#9334E9",
+        content: (
+          <div className="space-y-4 text-sm leading-7 text-slate-700">
+            <p>
+              <strong>Durum:</strong> Orphaned auth context <code>profiles</code> tablosundan çekiyor,
+              yeni sistem <code>user_profiles_v2</code> kullanıyor.
+            </p>
+            <p>
+              <strong>Sorun:</strong> İki ayrı profil tablosu var. Orphaned context mount edilseydi bile
+              yanlış tablodan veri okuyacaktı.
+            </p>
+            <p>
+              <strong>Zamanı gelince yapılacak:</strong> Auth sistemi kararı verildikten sonra orphaned
+              context'i <code>user_profiles_v2</code>'ye taşı ya da tamamen kaldır.
+            </p>
+          </div>
+        ),
+      },
+    ],
+  },
+];
+
 export function getWorkspaceDocPage(slug: string) {
   return workspaceDocPages.find((page) => page.slug === slug) ?? null;
 }

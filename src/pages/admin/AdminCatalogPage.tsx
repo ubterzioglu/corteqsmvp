@@ -151,6 +151,17 @@ const formatDateTime = (value: string | null) => {
   });
 };
 
+const formatDateShort = (value: string | null) => {
+  if (!value) return "-";
+
+  return new Date(value).toLocaleDateString("tr-TR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+    timeZone: "Europe/Berlin",
+  });
+};
+
 const formatLabel = (value: string) =>
   value
     .split("_")
@@ -563,7 +574,7 @@ const AdminCatalogPage = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Başlık</TableHead>
+                    <TableHead>Başlık / Kaynak</TableHead>
                     <TableHead>Tür</TableHead>
                     <TableHead>Tip</TableHead>
                     <TableHead>Rol</TableHead>
@@ -571,7 +582,7 @@ const AdminCatalogPage = () => {
                     <TableHead>Doğrulama</TableHead>
                     <TableHead>Kaynak / Özet</TableHead>
                     <TableHead>Lokasyon</TableHead>
-                    <TableHead>Oluşturulma</TableHead>
+                    <TableHead>Tarih</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -594,11 +605,13 @@ const AdminCatalogPage = () => {
                   {!isLoading
                     ? records.map((record) => (
                         <TableRow key={`${record.kind}-${record.id}`} className="cursor-pointer" onClick={() => setSelectedRecord(record)}>
-                          <TableCell className="min-w-[260px]">
-                            <div className="space-y-1">
-                              <div className="font-medium text-slate-950">{record.title}</div>
-                              <div className="text-xs text-muted-foreground">{record.slug ?? record.email ?? record.id}</div>
-                              {record.summary ? <div className="line-clamp-2 text-xs text-muted-foreground">{record.summary}</div> : null}
+                          <TableCell className="min-w-[200px] max-w-[240px]">
+                            <div className="flex flex-col gap-0.5">
+                              <div className="truncate font-medium text-slate-950 leading-tight">{record.title}</div>
+                              <div className="flex items-center gap-1.5">
+                                <span className="truncate text-[10px] text-muted-foreground">{record.slug ?? record.email ?? record.id}</span>
+                                <span className="shrink-0 text-[10px] text-slate-400">{formatDateShort(record.createdAt)}</span>
+                              </div>
                             </div>
                           </TableCell>
                           <TableCell>
@@ -609,8 +622,11 @@ const AdminCatalogPage = () => {
                           <TableCell>
                             <Badge variant="outline">{record.itemType ? formatLabel(record.itemType) : record.profileType ? formatLabel(record.profileType) : "-"}</Badge>
                           </TableCell>
-                          <TableCell>
-                            <div className="max-w-[150px] text-xs font-medium leading-5 text-slate-700">
+                          <TableCell className="max-w-[130px]">
+                            <div
+                              className="truncate text-[11px] font-medium text-slate-700"
+                              title={roleLabelByKey.get(record.platformRoleKey ?? "") ?? record.platformRoleKey ?? "-"}
+                            >
                               {roleLabelByKey.get(record.platformRoleKey ?? "") ?? record.platformRoleKey ?? "-"}
                             </div>
                           </TableCell>
@@ -628,17 +644,28 @@ const AdminCatalogPage = () => {
                               {getVerificationCode(record.verificationStatus)}
                             </Badge>
                           </TableCell>
-                          <TableCell className="max-w-[220px] text-xs text-muted-foreground">
-                            {record.kind === "catalog_item"
-                              ? compactList(
-                                  [...record.categoryLabels, ...record.sourceTypes.map((value) => formatLabel(value))].slice(0, 3),
-                                )
-                              : record.email ?? "-"}
+                          <TableCell className="max-w-[160px]">
+                            <div
+                              className="truncate text-[11px] text-muted-foreground"
+                              title={
+                                record.kind === "catalog_item"
+                                  ? compactList([...record.categoryLabels, ...record.sourceTypes.map((value) => formatLabel(value))].slice(0, 5))
+                                  : (record.email ?? "-")
+                              }
+                            >
+                              {record.kind === "catalog_item"
+                                ? compactList(
+                                    [...record.categoryLabels, ...record.sourceTypes.map((value) => formatLabel(value))].slice(0, 3),
+                                  )
+                                : record.email ?? "-"}
+                            </div>
                           </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">
+                          <TableCell className="text-[11px] text-muted-foreground whitespace-nowrap">
                             {[record.primaryCity, record.primaryCountryCode].filter(Boolean).join(", ") || "-"}
                           </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">{formatDateTime(record.createdAt)}</TableCell>
+                          <TableCell className="text-[11px] text-muted-foreground whitespace-nowrap" title={formatDateTime(record.createdAt)}>
+                            {formatDateShort(record.createdAt)}
+                          </TableCell>
                         </TableRow>
                       ))
                     : null}
