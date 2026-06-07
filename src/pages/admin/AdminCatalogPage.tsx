@@ -1,5 +1,5 @@
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Database, MapPin, Search, SlidersHorizontal, UserRound } from "lucide-react";
+import { ChevronLeft, ChevronRight, Database, MapPin, Search, ShieldCheck, SlidersHorizontal, UserRound } from "lucide-react";
 
 import CatalogClaimRequestsPanel from "@/components/admin/catalog/CatalogClaimRequestsPanel";
 import CatalogEntityProfilePanel from "@/components/admin/catalog/CatalogEntityProfilePanel";
@@ -19,11 +19,13 @@ import {
   listAdminCatalogItemTypes,
   listAdminCatalogRoles,
   listAdminUnifiedRecords,
+  setCatalogItemRole,
   type AdminCatalogDetail,
   type AdminCatalogFilters,
   type AdminCatalogItemType,
   type AdminCatalogRoleOption,
 } from "@/lib/admin-catalog";
+import { setUserRoleAsAdmin } from "@/lib/admin";
 import type { UnifiedRecord } from "@/lib/catalog-types";
 
 const PAGE_SIZE = 50;
@@ -355,6 +357,31 @@ const AdminCatalogPage = () => {
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   const selectedProfile = selectedRecord?.kind === "profile" ? selectedRecord : null;
+
+  const handleCatalogRoleChange = async (itemId: string, roleKey: string | null) => {
+    try {
+      await setCatalogItemRole(itemId, roleKey);
+      setSelectedCatalogDetail((prev) => prev ? { ...prev, platformRoleKey: roleKey } : prev);
+      setRecords((prev) =>
+        prev.map((r) => r.id === itemId ? { ...r, platformRoleKey: roleKey } : r),
+      );
+      toast({ title: "Katalog rolü güncellendi", description: roleKey ? `Yeni rol: ${roleLabelByKey.get(roleKey) ?? roleKey}` : "Rol kaldırıldı." });
+    } catch (error) {
+      toast({ title: "Rol güncellenemedi", description: error instanceof Error ? error.message : "Beklenmeyen hata.", variant: "destructive" });
+    }
+  };
+
+  const handleProfileRoleChange = async (userId: string, roleKey: string) => {
+    try {
+      await setUserRoleAsAdmin(userId, roleKey);
+      setRecords((prev) =>
+        prev.map((r) => r.id === userId ? { ...r, platformRoleKey: roleKey } : r),
+      );
+      toast({ title: "Kullanıcı rolü güncellendi", description: `Yeni rol: ${roleLabelByKey.get(roleKey) ?? roleKey}` });
+    } catch (error) {
+      toast({ title: "Rol güncellenemedi", description: error instanceof Error ? error.message : "Beklenmeyen hata.", variant: "destructive" });
+    }
+  };
   return (
     <>
       <div className="space-y-6">
@@ -744,12 +771,18 @@ const AdminCatalogPage = () => {
               selectedCatalogDetail ? (
                 <CatalogDetailSheet
                   detail={selectedCatalogDetail}
+                  roles={roles}
+                  onRoleChange={(roleKey) => handleCatalogRoleChange(selectedCatalogDetail.id, roleKey)}
                 />
               ) : isLoadingSelectedDetail ? (
                 <div className="py-10 text-sm text-muted-foreground">Katalog detayı yükleniyor...</div>
               ) : null
             ) : selectedProfile ? (
-              <ProfileDetailSheet profile={selectedProfile} />
+              <ProfileDetailSheet
+                profile={selectedProfile}
+                roles={roles}
+                onRoleChange={(roleKey) => handleProfileRoleChange(selectedProfile.id, roleKey)}
+              />
             ) : null
           ) : null}
         </SheetContent>
@@ -758,10 +791,80 @@ const AdminCatalogPage = () => {
   );
 };
 
+const RoleChangeSection = ({
+  currentRoleKey,
+  roles,
+  onRoleChange,
+  isClearable = false,
+}: {
+  currentRoleKey: string | null;
+  roles: AdminCatalogRoleOption[];
+  onRoleChange: (roleKey: string | null) => void;
+  isClearable?: boolean;
+}) => {
+  const [pendingKey, setPendingKey] = useState<string>(currentRoleKey ?? "");
+  const [saving, setSaving] = useState(false);
+
+  const isDirty = pendingKey !== (currentRoleKey ?? "");
+
+  const handleSave = async () => {
+    setSaving(true);
+    await onRoleChange(pendingKey || null);
+    setSaving(false);
+  };
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <ShieldCheck className="h-4 w-4 text-slate-500" />
+          Rol Yönetimi
+        </CardTitle>
+        <CardDescription>Bu kayıt için platform rolünü değiştirin.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="flex items-center gap-2">
+          <Select value={pendingKey} onValueChange={setPendingKey}>
+            <SelectTrigger className="flex-1">
+              <SelectValue placeholder="Rol seçin..." />
+            </SelectTrigger>
+            <SelectContent>
+              {isClearable && (
+                <SelectItem value="">— Rol Yok —</SelectItem>
+              )}
+              {roles.map((role) => (
+                <SelectItem key={role.key} value={role.key}>
+                  {role.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            size="sm"
+            disabled={!isDirty || saving}
+            onClick={handleSave}
+          >
+            {saving ? "Kaydediliyor..." : "Kaydet"}
+          </Button>
+        </div>
+        {currentRoleKey && (
+          <p className="text-xs text-muted-foreground">
+            Mevcut rol: <span className="font-medium text-slate-700">{currentRoleKey}</span>
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
 const CatalogDetailSheet = ({
   detail,
+  roles,
+  onRoleChange,
 }: {
   detail: AdminCatalogDetail;
+  roles: AdminCatalogRoleOption[];
+  onRoleChange: (roleKey: string | null) => void;
 }) => (
   <div className="space-y-6">
     <SheetHeader>
@@ -787,6 +890,13 @@ const CatalogDetailSheet = ({
       </TabsList>
 
       <TabsContent value="general" className="space-y-5">
+        <RoleChangeSection
+          currentRoleKey={detail.platformRoleKey}
+          roles={roles}
+          onRoleChange={onRoleChange}
+          isClearable
+        />
+
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader className="pb-3">
@@ -913,7 +1023,15 @@ const CatalogDetailSheet = ({
   </div>
 );
 
-const ProfileDetailSheet = ({ profile }: { profile: UnifiedRecord }) => (
+const ProfileDetailSheet = ({
+  profile,
+  roles,
+  onRoleChange,
+}: {
+  profile: UnifiedRecord;
+  roles: AdminCatalogRoleOption[];
+  onRoleChange: (roleKey: string) => void;
+}) => (
   <div className="space-y-6">
     <SheetHeader>
       <div className="flex flex-wrap items-center gap-2">
@@ -924,6 +1042,12 @@ const ProfileDetailSheet = ({ profile }: { profile: UnifiedRecord }) => (
       <SheetTitle>{profile.title}</SheetTitle>
       <SheetDescription>Kullanıcı profiline ait unified admin özeti.</SheetDescription>
     </SheetHeader>
+
+    <RoleChangeSection
+      currentRoleKey={profile.platformRoleKey}
+      roles={roles}
+      onRoleChange={(roleKey) => roleKey && onRoleChange(roleKey)}
+    />
 
     <Card>
       <CardHeader className="pb-3">
