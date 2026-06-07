@@ -19,6 +19,10 @@ Bu klasor, aktif teknik dokumani, modul belgelerini, operasyon notlarini ve gecm
 | `archive/` | Emekliye ayrilmis, artik kullanilmayan belgeler |
 | `inbox-review/` | Guncelligi veya siniflandirmasi kesinlestirilemeyen dosyalar |
 
+## Agent Context (buradan başla)
+
+- [AGENT_CONTEXT.md](AGENT_CONTEXT.md) — Yeni oturum için tek dosya özet: stack, auth, veri katmanı, kritik dosyalar, kısıtlamalar (13 KB, ~365 satır)
+
 ## Aktif Mimari Belgeler
 
 - [architecture/PROJECT_TECHNICAL_OVERVIEW.md](architecture/PROJECT_TECHNICAL_OVERVIEW.md)

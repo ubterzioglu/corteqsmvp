@@ -7,12 +7,14 @@ import DirectoryFilters from "@/components/directory/DirectoryFilters";
 import DirectoryResultRow from "@/components/directory/DirectoryResultRow";
 import DirectorySearchBar from "@/components/directory/DirectorySearchBar";
 import {
+  getTotalDirectoryCount,
   listDirectoryRoleOptions,
   listUnifiedDirectoryRows,
   type DirectoryRoleOption,
   type UnifiedDirectoryRow,
 } from "@/lib/catalog-directory";
 import { useGeoCountries } from "@/hooks/useGeo";
+import mascot from "../../lmaskot.png";
 
 const DirectoryPage = () => {
   const { user, isLoading: isAuthLoading } = useAuth();
@@ -22,6 +24,7 @@ const DirectoryPage = () => {
   const [roleOptions, setRoleOptions] = useState<DirectoryRoleOption[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [totalCount, setTotalCount] = useState<number | null>(null);
 
   const searchText = searchParams.get("q") ?? "";
   const roleFilter = searchParams.get("role") ?? "all";
@@ -74,6 +77,10 @@ const DirectoryPage = () => {
     };
   }, [cityFilter, countryFilter, featuredOnly, isAuthLoading, roleFilter, searchText, user]);
 
+  useEffect(() => {
+    void getTotalDirectoryCount().then(setTotalCount);
+  }, []);
+
   const updateFilter = (key: string, value: string | null) => {
     const next = new URLSearchParams(searchParams);
     if (!value || value === "all") {
@@ -93,29 +100,55 @@ const DirectoryPage = () => {
       <div className="landing-ambient-orb landing-ambient-orb-five" aria-hidden="true" />
 
       <main className="relative mx-auto w-full max-w-6xl px-4 py-10">
-        <section className="mb-6 rounded-[32px] border border-white/60 bg-white/55 p-6 shadow-[0_30px_80px_-48px_rgba(15,23,42,0.45)] backdrop-blur-xl md:p-8">
-          <div className="max-w-3xl">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-primary/80">
-              CorteQS Directory
-            </p>
-            <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              Diaspora profillerini ve katalog kayitlarini tek yerde kesfet.
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm text-muted-foreground md:text-base">
-              Arama, rol ve lokasyon filtreleriyle dogru kisiye veya dogru kayda hizlica ulas.
-            </p>
+        {/* Hero card */}
+        <section className="mb-6 overflow-hidden rounded-[32px] border border-white/60 bg-gradient-to-br from-white/70 via-white/55 to-primary/5 shadow-[0_30px_80px_-48px_rgba(15,23,42,0.45)] backdrop-blur-xl">
+          <div className="flex items-center justify-between gap-6 p-6 md:p-8">
+            {/* Left: text content */}
+            <div className="min-w-0 flex-1">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-primary/70">
+                Türk Diaspora Ağı
+              </p>
+              <h1 className="text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
+                <span className="text-primary">CorteQS</span>{" "}
+                <span>Türk Diaspora Ağı</span>
+              </h1>
+              <p className="mt-3 max-w-xl text-sm text-muted-foreground md:text-base">
+                Türk diasporasında ara! 80+ kategoride aradığını bul!
+              </p>
+              {/* Stats row */}
+              <div className="mt-4 flex flex-wrap gap-3">
+                {totalCount !== null ? (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                    {totalCount.toLocaleString("tr-TR")} kayıt
+                  </span>
+                ) : null}
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  80+ kategori
+                </span>
+              </div>
+            </div>
+            {/* Right: mascot */}
+            <div className="hidden shrink-0 sm:block">
+              <img
+                src={mascot}
+                alt="CorteQS maskot"
+                className="h-32 w-auto drop-shadow-xl md:h-40"
+              />
+            </div>
           </div>
         </section>
 
         {!isAuthLoading && !user ? (
           <section className="mb-6 rounded-[28px] border border-primary/20 bg-white/70 p-6 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.35)] backdrop-blur-xl">
-            <h2 className="text-xl font-semibold text-foreground">Tam directory icin giris gerekiyor.</h2>
+            <h2 className="text-xl font-semibold text-foreground">Tam dizin için giriş gerekiyor.</h2>
             <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Unified katalog aramasi sadece giris yapmis kullanicilara acik. Giris yaptiginda bireysel, doktor, avukat, isletme ve kurulus profillerini ayni kaynaktan gorebilirsin.
+              Birleşik katalog araması sadece giriş yapmış kullanıcılara açık. Giriş yaptığında bireysel, doktor, avukat, işletme ve kuruluş profillerini aynı kaynaktan görebilirsin.
             </p>
             <div className="mt-4">
               <Button asChild>
-                <a href="/login?next=%2Fdirectory">Giris Yap</a>
+                <a href="/login?next=%2Fdirectory">Giriş Yap</a>
               </Button>
             </div>
           </section>
@@ -123,50 +156,55 @@ const DirectoryPage = () => {
 
         {user ? (
           <>
-        <div className="mb-4">
-          <DirectorySearchBar
-            value={searchText}
-            onChange={(value) => updateFilter("q", value || null)}
-          />
-        </div>
+            <div className="mb-4">
+              <DirectorySearchBar
+                value={searchText}
+                onChange={(value) => updateFilter("q", value || null)}
+              />
+            </div>
 
-        <div className="mb-6 rounded-[28px] border border-white/60 bg-white/60 p-4 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.35)] backdrop-blur-xl md:p-5">
-          <DirectoryFilters
-            roleOptions={roleOptions}
-            roleFilter={roleFilter}
-            onRoleChange={(value) => updateFilter("role", value)}
-            countryFilter={countryFilter}
-            cityFilter={cityFilter}
-            featuredOnly={featuredOnly}
-            countryOptions={(countriesQuery.data ?? []).map((country) => country.name)}
-            onCountryChange={(value) => updateFilter("country", value)}
-            onCityChange={(value) => updateFilter("city", value)}
-            onFeaturedChange={(value) => updateFilter("featured", value ? "1" : null)}
-          />
-        </div>
+            <div className="mb-6 rounded-[28px] border border-white/60 bg-white/60 p-4 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.35)] backdrop-blur-xl md:p-5">
+              <DirectoryFilters
+                roleOptions={roleOptions}
+                roleFilter={roleFilter}
+                onRoleChange={(value) => updateFilter("role", value)}
+                countryFilter={countryFilter}
+                cityFilter={cityFilter}
+                featuredOnly={featuredOnly}
+                countryOptions={(countriesQuery.data ?? []).map((country) => country.name)}
+                onCountryChange={(value) => updateFilter("country", value)}
+                onCityChange={(value) => updateFilter("city", value)}
+                onFeaturedChange={(value) => updateFilter("featured", value ? "1" : null)}
+              />
+            </div>
 
-        {isLoading ? (
-          <p className="py-8 text-center text-sm text-muted-foreground">Directory yukleniyor...</p>
-        ) : null}
-        {errorMessage ? (
-          <p className="py-4 text-center text-sm text-destructive">
-            Directory alinamadi: {errorMessage}
-          </p>
-        ) : null}
-
-        {!isLoading && !errorMessage ? (
-          <div className="space-y-3">
-            {rows.length > 0 ? (
-              rows.map((row) => (
-                <DirectoryResultRow key={`${row.recordType}-${row.id}`} row={row} />
-              ))
-            ) : (
-              <p className="py-8 text-center text-sm text-muted-foreground">
-                Filtrelerine uygun gorunur profil bulunamadi.
+            {isLoading ? (
+              <p className="py-8 text-center text-sm text-muted-foreground">Dizin yükleniyor...</p>
+            ) : null}
+            {errorMessage ? (
+              <p className="py-4 text-center text-sm text-destructive">
+                Dizin alınamadı: {errorMessage}
               </p>
-            )}
-          </div>
-        ) : null}
+            ) : null}
+
+            {!isLoading && !errorMessage ? (
+              <div className="space-y-3">
+                {rows.length > 0 ? (
+                  <>
+                    <p className="pb-1 text-xs font-medium text-muted-foreground">
+                      {rows.length.toLocaleString("tr-TR")} sonuç bulundu
+                    </p>
+                    {rows.map((row) => (
+                      <DirectoryResultRow key={`${row.recordType}-${row.id}`} row={row} />
+                    ))}
+                  </>
+                ) : (
+                  <p className="py-8 text-center text-sm text-muted-foreground">
+                    Filtrelerine uygun görünür profil bulunamadı.
+                  </p>
+                )}
+              </div>
+            ) : null}
           </>
         ) : null}
       </main>

@@ -163,3 +163,25 @@ export async function listUnifiedDirectoryRows(filters: {
 
   return ((data ?? []) as DirectorySearchRpcRow[]).map(mapDirectorySearchRow);
 }
+
+type CountQueryClient = {
+  from: (
+    tableName: "catalog_items",
+  ) => {
+    select: (
+      columns: string,
+      options: { count: "exact"; head: boolean },
+    ) => Promise<{ count: number | null; error: SupabaseError | null }>;
+  };
+};
+
+const countQueryClient = supabase as unknown as CountQueryClient;
+
+export async function getTotalDirectoryCount(): Promise<number> {
+  const { count, error } = await countQueryClient
+    .from("catalog_items")
+    .select("*", { count: "exact", head: true });
+
+  if (error) return 0;
+  return count ?? 0;
+}

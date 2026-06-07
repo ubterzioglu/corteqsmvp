@@ -9,7 +9,7 @@ interface DirectorySearchBarProps {
 const DirectorySearchBar = ({
   value,
   onChange,
-  placeholder = "Isim, bio veya role ozel alan ara...",
+  placeholder = "İsim, bio veya role özel alan ara...",
 }: DirectorySearchBarProps) => {
   return (
     <div className="relative flex items-center gap-3 rounded-2xl border border-white/70 bg-white/70 px-4 py-3 shadow-[0_22px_45px_-28px_rgba(15,23,42,0.26)] backdrop-blur-xl">
@@ -26,7 +26,7 @@ const DirectorySearchBar = ({
           type="button"
           onClick={() => onChange("")}
           className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
-          aria-label="Aramayi temizle"
+          aria-label="Aramayı temizle"
         >
           <X className="h-4 w-4" />
         </button>
