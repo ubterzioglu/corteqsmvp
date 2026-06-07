@@ -802,14 +802,15 @@ const RoleChangeSection = ({
   onRoleChange: (roleKey: string | null) => void;
   isClearable?: boolean;
 }) => {
-  const [pendingKey, setPendingKey] = useState<string>(currentRoleKey ?? "");
+  const NONE = "__none__";
+  const [pendingKey, setPendingKey] = useState<string>(currentRoleKey ?? NONE);
   const [saving, setSaving] = useState(false);
 
-  const isDirty = pendingKey !== (currentRoleKey ?? "");
+  const isDirty = pendingKey !== (currentRoleKey ?? NONE);
 
   const handleSave = async () => {
     setSaving(true);
-    await onRoleChange(pendingKey || null);
+    await onRoleChange(pendingKey === NONE ? null : pendingKey);
     setSaving(false);
   };
 
@@ -830,7 +831,7 @@ const RoleChangeSection = ({
             </SelectTrigger>
             <SelectContent>
               {isClearable && (
-                <SelectItem value="">— Rol Yok —</SelectItem>
+                <SelectItem value={NONE}>— Rol Yok —</SelectItem>
               )}
               {roles.map((role) => (
                 <SelectItem key={role.key} value={role.key}>
