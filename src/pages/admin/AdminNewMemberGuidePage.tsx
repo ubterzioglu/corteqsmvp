@@ -64,12 +64,134 @@ type GuideNavItem = { heading: string; id: string; sections: GuideNavSection[] }
 
 const blocks: GuideBlock[] = [
   {
-    heading: "1. Hangi ekran ne işe yarıyor?",
-    tag: "Menu",
+    heading: "0. Hızlı Başlangıç — Yeni Sisteme Genel Bakış",
+    tag: "Başlangıç",
+    sections: [
+      {
+        title: "RolesGo sistemi ne yapar?",
+        items: [
+          "Sistemdeki her üye veya katalog kaydına bir 'platform rolü' atanır. Bu rol, o kişinin hangi özelliklere erişeceğini, profilinde hangi alanların görüneceğini ve hangi kart bölümlerinin gösterileceğini belirler.",
+          "3 katman vardır: Rol (kim?), Attribute (hangi profil alanları?), Feature (hangi özellikler?). Bunları birbirinden bağımsız yönetebilirsin.",
+          "Sistemin tamamını tek bir ekranda görmek için: RolesGo Genel Bakış (/admin/new-member/roles-overview). Soldaki listeden bir item, ortadaki listeden bir rol seçerek o kombinasyonun tam detayını altta görebilirsin.",
+        ],
+      },
+      {
+        title: "Hangi ekran ne zaman açılır?",
+        items: [
+          "Sisteme ilk defa bakıyorum veya genel durumu anlamak istiyorum → RolesGo Genel Bakış (/admin/new-member/roles-overview)",
+          "Bir üyenin rolünü değiştirmek veya attribute verisine bakmak istiyorum → Profil ve Rol Atama (/admin/new-member/profile-role-assignment)",
+          "Bir rolün tüm kurallarını (attribute, feature, section) düzenlemek istiyorum → Tüm Roller AFS Matrisi (/admin/new-member/role-matrix)",
+          "Tek bir kişiye özel istisna feature vermek istiyorum → Feature Override (/admin/new-member/overrides)",
+          "Katalog kaydının (şirket, kuruluş vb.) platform rolünü veya attribute değerlerini değiştirmek istiyorum → Veritabanı (/admin/data)",
+        ],
+      },
+    ],
+  },
+  {
+    heading: "1. Adım Adım: Yeni Üye Geldiğinde Ne Yapılır?",
+    tag: "Üye Yönetimi",
+    sections: [
+      {
+        title: "Adım 1 — Üyeyi bul",
+        items: [
+          "/admin/new-member/profile-role-assignment sayfasını aç.",
+          "Arama kutusuna üyenin adını veya e-posta adresini yaz.",
+          "Listeden ilgili kaydı tıkla — sağ tarafta detay paneli açılır.",
+        ],
+      },
+      {
+        title: "Adım 2 — Rolü kontrol et ve gerekirse değiştir",
+        items: [
+          "Detay panelinde 'Platform Rolü' alanını gör.",
+          "Yanlış rol atanmışsa 'Rol Değiştir' butonuna tıkla, listeden doğru rolü seç.",
+          "Kaydet. Bu işlem user_role_assignments tablosuna yazar; kullanıcı bir sonraki oturumunda yeni rolü alır.",
+          "Dikkat: rol değişikliği feature, attribute ve section davranışını birlikte etkiler — sadece etiket değildir.",
+        ],
+      },
+      {
+        title: "Adım 3 — Attribute verisini kontrol et",
+        items: [
+          "Detay panelinde attribute listesini gör. Her satırda değer, visibility ve approval_status bulunur.",
+          "Bir değer yanlışsa satır üzerinde düzenleme yapabilirsin; kayıt admin_update_user_profile_attribute RPC'si ile yazılır.",
+          "Kullanıcı bir alanı doldurmuş ama 'onay bekliyor' durumundaysa approval_status'u buradan güncelle.",
+        ],
+      },
+      {
+        title: "Adım 4 — Tüm adımlar sonunda kontrol",
+        items: [
+          "RolesGo Genel Bakış'a (/admin/new-member/roles-overview) geçip üyenin kaydını sol listede bul.",
+          "Atadığın rolü orta listeden seç — alt panelde attribute, feature ve section kuralları görünür.",
+          "Beklenen yapıyla uyuşuyor mu kontrol et. Uyuşmuyorsa role-matrix'e geçip o rolün kurallarını düzelt.",
+        ],
+      },
+    ],
+  },
+  {
+    heading: "2. Adım Adım: Rol Kurallarını Düzenlemek (AFS Matrisi)",
+    tag: "Rol Kuralları",
+    sections: [
+      {
+        title: "Bir rolün attribute kuralını değiştirmek",
+        items: [
+          "/admin/new-member/role-matrix?kind=attribute adresine git.",
+          "Üst filtreden düzenlemek istediğin rolü seç.",
+          "Tabloda ilgili attribute satırını bul. A (aktif), Z (zorunlu), P (public) sütunlarını toggle ile değiştir.",
+          "Değişiklik anında kaydedilir — sayfa yenilemeye gerek yok.",
+          "Kontrol için RolesGo Genel Bakış'ta o rolü seçerek alt panelden sonucu gör.",
+        ],
+      },
+      {
+        title: "Bir rolün feature flag'ini değiştirmek",
+        items: [
+          "/admin/new-member/role-matrix?kind=feature adresine git.",
+          "Rolü seçtikten sonra feature satırlarını gör.",
+          "Toggle ile feature'ı aç veya kapat; admin_set_role_feature_flag RPC çağrılır.",
+          "Bu değişiklik o role sahip tüm kullanıcıları etkiler. Yalnızca tek kişiyi etkilemek istiyorsan override kullan (bakınız Bölüm 5).",
+        ],
+      },
+      {
+        title: "Bir rolün profil section'ını değiştirmek",
+        items: [
+          "/admin/new-member/role-matrix?kind=profile_section adresine git.",
+          "Rolü seçip section satırını toggle ile aç/kapat; admin_upsert_role_profile_section_rule RPC çağrılır.",
+          "Section = public/self profil kartında görünen blok. Feature ile karıştırma: feature 'yapabilmek', section 'görünmek' demektir.",
+        ],
+      },
+    ],
+  },
+  {
+    heading: "3. Adım Adım: Katalog Kaydı Yönetimi",
+    tag: "Katalog",
+    sections: [
+      {
+        title: "Bir şirket / kuruluş kaydında sorun gördüğünde",
+        items: [
+          "/admin/data adresine git.",
+          "Arama veya filtre ile kaydı bul ve tıkla.",
+          "Platform rolünü kontrol et — yanlışsa değiştir.",
+          "Attribute değerlerini kontrol et (catalog_item_attributes). Bu, auth kullanıcı attribute'undan (user_profile_attributes) farklı bir tablodur; karıştırma.",
+          "Sahip/editör ilişkisi (claim ve editor yetkisi) varsa aynı ekran içinden yönet.",
+        ],
+      },
+      {
+        title: "Claim isteği onaylarken",
+        items: [
+          "/admin/approvals adresine git.",
+          "Onay bekleyen kaydı listede bul.",
+          "Claim detayını incele: hangi katalog kaydı için, kim istemiş.",
+          "Onayla veya reddet. Onaylama, catalog_item_claims tablosuna yazar ve ilgili kullanıcıya editör yetkisi verir.",
+        ],
+      },
+    ],
+  },
+  {
+    heading: "4. Hangi Ekran Ne İşe Yarıyor?",
+    tag: "Ekranlar",
     sections: [
       {
         title: "Veritabanı menüsü — güncel operasyon yüzeyi",
         items: [
+          "RolesGo Genel Bakış (/admin/new-member/roles-overview): Tüm item'lar, roller ve entity'ler tek sayfada. Seçim yaparak örnek case detayını gör. Sisteme yeni başlarken buradan başla.",
           "Veritabanı (/admin/data): Katalog kayıtlarını (catalog_items) listeler; attribute değerlerini, görünürlük bilgisini, linked_user_id ilişkisini ve operasyon özetini buradan yönetirsin.",
           "Profil ve Rol Atama (/admin/new-member/profile-role-assignment): Catalog kayıtlarını ve bağlı auth kullanıcılarını birlikte görürsün. Hızlı rol değişikliği, claim ve editor yönetimi için kullan.",
           "Tüm Roller AFS Matrisi (/admin/new-member/role-matrix): Seçili rol için attribute, feature ve section kurallarını tek tabloda yönet. URL filtresi: ?kind=attribute | ?kind=feature | ?kind=profile_section.",
@@ -78,30 +200,20 @@ const blocks: GuideBlock[] = [
         ],
       },
       {
-        title: "Yönlendirmeler — eski rotalar artık redirect yapıyor",
-        items: [
-          "/admin/new-member/users-roles → /admin/new-member/profile-role-assignment",
-          "/admin/new-member/role-management → /admin/new-member/role-matrix",
-          "/admin/new-member/roles-features → /admin/new-member/role-matrix?kind=feature",
-          "/admin/new-member/attributes → /admin/new-member/role-matrix?kind=attribute",
-          "/admin/new-member/profile-sections → /admin/new-member/role-matrix?kind=profile_section",
-          "/admin/new-member/roles-preview ve /admin/new-member/entity-preview → /admin/new-member/role-matrix",
-        ],
-      },
-      {
         title: "Hangi sorunda nereye gitmelisin?",
         items: [
-          "Kullanıcının rolü yanlışsa: önce /admin/new-member/profile-role-assignment.",
-          "Aynı rol altındaki herkes yanlış davranıyorsa: /admin/new-member/role-matrix.",
-          "Sorun tek kişideyse: /admin/new-member/overrides.",
-          "Sorun public profil kart parçasıysa: role-matrix içindeki section satırı (?kind=profile_section).",
-          "Sorun katalog kaydına özelse: /admin/data içinde attribute değerlerini ve metadata özetini kontrol et.",
+          "Sistemi genel olarak anlamak istiyorum → RolesGo Genel Bakış (/admin/new-member/roles-overview)",
+          "Kullanıcının rolü yanlışsa → /admin/new-member/profile-role-assignment",
+          "Aynı rol altındaki herkes yanlış davranıyorsa → /admin/new-member/role-matrix",
+          "Sorun tek kişideyse → /admin/new-member/overrides",
+          "Sorun public profil kart parçasıysa → role-matrix içindeki section satırı (?kind=profile_section)",
+          "Sorun katalog kaydına özelse → /admin/data içinde attribute değerlerini ve metadata özetini kontrol et",
         ],
       },
     ],
   },
   {
-    heading: "2. Auth kullanımı nasıl çalışıyor?",
+    heading: "5. Auth kullanımı nasıl çalışıyor?",
     tag: "Auth",
     sections: [
       {
@@ -133,7 +245,7 @@ const blocks: GuideBlock[] = [
     ],
   },
   {
-    heading: "3. Rol kullanımı nasıl çalışıyor?",
+    heading: "6. Rol kullanımı nasıl çalışıyor?",
     tag: "Rol",
     sections: [
       {
@@ -165,7 +277,7 @@ const blocks: GuideBlock[] = [
     ],
   },
   {
-    heading: "4. Profil ve attribute kullanımı",
+    heading: "7. Profil ve attribute kullanımı",
     tag: "Profil",
     sections: [
       {
@@ -198,7 +310,7 @@ const blocks: GuideBlock[] = [
     ],
   },
   {
-    heading: "5. Feature kullanımı",
+    heading: "8. Feature kullanımı",
     tag: "Feature",
     sections: [
       {
@@ -229,7 +341,7 @@ const blocks: GuideBlock[] = [
     ],
   },
   {
-    heading: "6. Section kullanımı",
+    heading: "9. Section kullanımı",
     tag: "Section",
     sections: [
       {
@@ -257,7 +369,7 @@ const blocks: GuideBlock[] = [
     ],
   },
   {
-    heading: "7. En sağlıklı operasyon sırası",
+    heading: "10. En sağlıklı operasyon sırası",
     tag: "Akış",
     sections: [
       {
@@ -283,7 +395,7 @@ const blocks: GuideBlock[] = [
     ],
   },
   {
-    heading: "8. Kritik notlar",
+    heading: "11. Kritik notlar",
     tag: "Kritik",
     sections: [
       {
