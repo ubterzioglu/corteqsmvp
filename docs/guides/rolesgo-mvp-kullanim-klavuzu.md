@@ -1,382 +1,255 @@
 # RolesGo MVP Kullanım Kılavuzu
 
-Bu doküman, `docs/modules/rolesgo/rolesgo.md` uyumlu yeni üye sistemi MVP'sinin günlük kullanımını ve operasyon adımlarını özetler.
+Bu doküman, yeni üye sistemi MVP'sinin günlük kullanımını ve operasyon adımlarını özetler. Teknik detaylar için `docs/modules/rolesgo/rolesgo.md` ve `docs/guides/kategori-rol-feature-yapisi.md` belgelerine bakın.
 
-## 1. Ne Deploy Edildi
+---
 
-Supabase tarafında aşağıdaki migration'lar remote ortama uygulanmış durumda:
+## 1. Hangi Ekran Ne İşe Yarıyor?
 
-- `20260524213000_add_individual_profile_details.sql`
-- `20260524220000_backfill_individual_profile_details_payload.sql`
-- `20260524223500_enable_self_edit_individual_profile_details.sql`
-- `20260525000000_rolesgo_role_attribute_approval_mvp.sql`
+| Ekran | Yol | Ne Yapar |
+|-------|-----|----------|
+| Kullanıcılar & Roller | `/admin/new-member/users-roles` | Kullanıcıya rol atar, override sayısını ve bekleyen talepleri gösterir |
+| Roller & Feature'lar | `/admin/new-member/roles-features` | Role bazlı feature matrisini global ve rol düzeyinde açar/kapar |
+| Attribute Yönetimi | `/admin/new-member/attributes` | Attribute kataloğunu ve role kurallarını yönetir |
+| Kullanıcı Override | `/admin/new-member/overrides` | Tek kullanıcıya rolünden bağımsız istisna yetki verir |
+| Onay Kuyruğu | `/admin/approvals` | Bekleyen tüm rol, feature ve attribute taleplerini onaylar/reddeder |
+| Audit Log | `/admin/audit-logs` | Admin işlemlerinin geçmişini gösterir |
+| Kullanıcı Profili | `/profile` | Kullanıcı kendi profilini düzenler, rol başvurusu açar |
+| Public Dizin | `/directory` | Admin onaylı profilleri listeler |
+| Profil Detay | `/directory/profile/:userId` | Tek bir kullanıcının public profilini gösterir |
 
-Bu paketle birlikte aktif olan ana parçalar:
+---
 
-- Rol bazlı feature yönetimi
-- Dinamik attribute katalogu
-- Kullanıcı profil attribute kayıtları
-- Approval queue
-- Admin audit logs
-- Role request ve feature request RPC'leri
-- Public directory listeleme ve detay RPC'leri
+## 2. Auth Kullanımı Nasıl Çalışıyor?
 
-## 2. Route Haritası
+Sistem Google OAuth ile çalışır. Yeni kullanıcı giriş yaptığında otomatik olarak `bireysel` rolüyle başlar.
 
-Kullanıcı tarafı:
+**Akış:**
 
-- `/profile`
-- `/profile/:type`
-- `/directory`
-- `/directory/profile/:userId`
+1. Kullanıcı Google ile giriş yapar.
+2. `user_profiles_v2` kaydı oluşturulur.
+3. `user_role_assignments` tablosuna `bireysel` rolü atanır.
+4. Kullanıcı `/profile` sayfasına yönlendirilir.
 
-Admin tarafı:
+**Frontend guard bileşenleri:**
 
-- `/admin/new-member/users-roles`
-- `/admin/new-member/roles-features`
-- `/admin/new-member/attributes`
-- `/admin/new-member/overrides`
-- `/admin/approvals`
-- `/admin/audit-logs`
+| Bileşen | Ne Kontrol Eder |
+|---------|----------------|
+| `RequireAuth` | Kullanıcı giriş yapmış mı |
+| `RequireFeature` | Kullanıcının belirli bir feature'ı var mı |
+| `RequireAdmin` | `is_admin(auth.uid())` kontrolü |
 
-## 3. Kullanıcı Akışı
+**Güvenlik katmanı:** Frontend guard tek başına yeterli değildir. Kritik işlemler RLS + RPC üzerinden korunur.
 
-### 3.1 Profil Sayfası
+---
 
-Kullanıcı giriş yaptıktan sonra profil akışı `/profile` üzerinden çalışır. Sistem aktif role göre doğru tipe yönlendirir.
+## 3. Rol Kullanımı Nasıl Çalışıyor?
 
-Profil ekranındaki ana bloklar:
+MVP'de her kullanıcının **bir aktif rolü** vardır.
 
-- Ortak profil alanları
-- Role özel alanlar
-- Rol başvurusu
-- Feature talep kartları
-- Bekleyen approval listesi
+**Mevcut roller:**
 
-### 3.2 Ortak Alanlar
+| Rol Key | Görünen Ad |
+|---------|-----------|
+| `bireysel` | Bireysel Kullanıcı |
+| `danisman` | Danışman |
+| `isletme` | İşletme |
+| `kurulus-dernek` | Kuruluş / Dernek |
+| `blogger-vlogger-youtuber` | İçerik Üreticisi |
+| `sehir-elcisi` | Şehir Elçisi |
 
-Ortak alanlar:
+**Rol başvurusu akışı:**
 
-- `full_name`
-- `country`
-- `city`
-- `profile_photo_url`
-- `bio_short`
+1. Kullanıcı `/profile` sayfasından hedef rolü seçer.
+2. İsteğe bağlı not yazar ve başvuru gönderir.
+3. `approval_requests` tablosuna `role_change` tipiyle kayıt düşer.
+4. Admin `/admin/approvals` ekranından onaylar ya da reddeder.
+5. Onaylanırsa `user_role_assignments` güncellenir, `user_profiles.profile_type` ile senkronize olur.
 
-Bu alanlar profil kartı ve directory görünümü için kullanılır.
+**Kural:** Aynı hedef role ikinci pending başvuru açılamaz.
 
-### 3.3 Role Özel Alanlar
+---
 
-Role göre açılan ilk özel alanlar:
+## 4. Profil ve Attribute Kullanımı
 
-- `bireysel` -> `interests`
-- `danisman` -> `expertise_area`
-- `isletme` -> `business_category`
-- `kurulus-dernek` -> `organization_type`
-- `blogger-vlogger-youtuber` -> `main_platform`
-- `sehir-elcisi` -> `ambassador_city`
+### Ortak Alanlar (Tüm Rollerde)
 
-### 3.4 Alan Güncelleme
+| Alan | Açıklama |
+|------|----------|
+| `full_name` | Görünen isim (role göre label değişir) |
+| `country` | Ülke |
+| `city` | Şehir |
+| `profile_photo_url` | Profil fotoğrafı |
+| `bio_short` | Kısa açıklama |
 
-Kullanıcı bir alanı güncellediğinde:
+### Role Özel Alanlar
 
-- Alan admin onayı gerektirmiyorsa direkt kaydolur
-- Alan admin onayı gerektiriyorsa `pending` statüsüne düşer
-- Public görünümde eski onaylı değer kalmaya devam eder
+| Rol | Attribute Key | Label |
+|-----|--------------|-------|
+| `bireysel` | `interests` | İlgi Alanları |
+| `danisman` | `expertise_area` | Uzmanlık Alanı |
+| `isletme` | `business_category` | İşletme Kategorisi |
+| `kurulus-dernek` | `organization_type` | Kuruluş Türü |
+| `blogger-vlogger-youtuber` | `main_platform` | Ana Platform |
+| `sehir-elcisi` | `ambassador_city` | Sorumlu Şehir |
 
-### 3.5 Görünürlük Yönetimi
+### Alan Güncelleme Davranışı
 
-Her alan için görünürlük seviyesi bulunur:
+| Durum | Sonuç |
+|-------|-------|
+| Alan onay gerektirmiyorsa | Direkt kaydedilir |
+| Alan onay gerektiriyorsa | `pending` statüsüne düşer, public'te eski onaylı değer görünür |
 
-- `public`
-- `private`
+### Görünürlük Seçenekleri
 
-Kullanıcı sadece `user_can_hide = true` olan alanların görünürlüğünü değiştirebilir.
+| Değer | Açıklama |
+|-------|----------|
+| `public` | Public directory'de görünür |
+| `private` | Yalnızca kullanıcı ve admin görebilir |
 
-### 3.6 Rol Başvurusu
+Kullanıcı yalnızca `user_can_hide = true` olan alanların görünürlüğünü değiştirebilir.
 
-Kullanıcı profil ekranındaki rol başvurusu bölümünden aktif olmayan bir role başvurabilir.
+---
 
-Akış:
+## 5. Feature Kullanımı
 
-1. Hedef rol seçilir
-2. İsteğe bağlı not yazılır
-3. Başvuru gönderilir
-4. Kayıt `approval_requests` tablosuna `role_change` olarak düşer
-5. Admin onaylarsa aktif rol güncellenir
+### Öncelik Sırası
 
-Aynı hedef role ikinci pending başvuru açılamaz.
+```
+1. user_feature_overrides   (EN YÜKSEK)
+2. role_feature_flags
+3. role_feature_defaults    (fallback)
+4. false                    (EN DÜŞÜK)
+```
 
-### 3.7 Feature Talebi
+Bunun **üstünde** global bir kilit vardır: `feature_catalog.is_active_globally = false` ise override bile olsa feature açılmaz.
 
-Kullanıcı profil ekranından şu akışlar için talep bırakabilir:
+### Başlıca Feature Key'ler
 
-- Directory görünürlüğü
-- Featured profil
-- WhatsApp görünürlüğü
-- Etkinlik oluşturma
-- Teklif oluşturma
-- Referral oluşturma
+| Feature Key | Ne Açar |
+|-------------|---------|
+| `profile.view_own` | Kendi profilini görme |
+| `profile.edit_own` | Kendi profilini düzenleme |
+| `directory.visible` | Public dizinde listeleme |
+| `directory.featured` | Öne çıkarılmış profil |
+| `contact.show_whatsapp` | WhatsApp numarası gösterme |
+| `events.create` | Etkinlik oluşturma |
+| `offers.create` | Teklif/hizmet oluşturma |
+| `referral.create` | Referral talebi başlatma |
+| `city.manage` | Şehir bazlı yönetim (MVP sonrası) |
 
-Talep gönderildiğinde kayıt `approval_requests` içine yazılır ve admin kuyruğuna düşer.
+### Sık Yapılan Hatalar
 
-## 4. Admin Akışı
+| Belirti | Neden | Çözüm |
+|---------|-------|-------|
+| Feature açık ama kullanıcı göremez | Global toggle kapalı | `/roles-features` → ilgili satırda global toggle kontrol et |
+| Override verildi ama etkisiz | Global toggle kapalı | Global toggle açılmadan override geçersiz |
+| `individual.*` feature başka rolde çalışmıyor | `scope_role` yalnızca `bireysel` | Bu feature'lar teknik olarak diğer rollerde uygulanmaz |
 
-### 4.1 Loginli Kullanıcılar ve Roller
+---
 
-Sayfa: `/admin/new-member/users-roles`
+## 6. Section Kullanımı
 
-Bu ekranda admin şunları yapabilir:
+Public profil görünümü (`/directory/profile/:userId`) üç katmandan oluşur:
 
-- Kullanıcının aktif rolünü değiştirmek
-- Effective feature özetini görmek
-- Bekleyen approval sayısını görmek
-- Son talep durumlarını görmek
-- Role özel kısa attribute önizlemesini görmek
+| Katman | Açıklama |
+|--------|----------|
+| Ön Kart | Konum, profil görseli, rol etiketi, rozetler |
+| Detay Kart | Sekmeler ve genişletilmiş bilgiler |
+| Attribute Alanları | Kullanıcının doldurduğu ve public yaptığı değerler |
 
-### 4.2 Roller ve Featurelar
+Public sorgular hassas veri içermez. Şunlar **hiçbir zaman** public query'ye dahil edilmez: `email`, `phone`, `whatsapp`, onaysız attribute değerleri.
 
-Sayfa: `/admin/new-member/roles-features`
+---
 
-Bu ekran matrix mantığında çalışır:
+## 7. En Sağlıklı Operasyon Sırası
 
-- Satırlar feature'ları gösterir
-- Sütunlar rolleri gösterir
-- Global açık/kapalı durumu yönetilir
-- Rol bazlı enable/disable yapılır
+### Yeni Kullanıcıya Rol Vermek
 
-Önemli nokta:
+1. `/admin/new-member/users-roles` → kullanıcıyı bul
+2. Hedef rolü seç → kaydet
+3. Gerekirse `/admin/new-member/roles-features` üzerinden feature matrisini kontrol et
+4. Gerekirse `/admin/new-member/overrides` üzerinden istisna yetki ver
 
-- Global durum `feature_catalog.is_active_globally` üstünden yönetilir
-- Rol bazlı durum `role_feature_flags` üstünden yönetilir
-- Kullanıcı override'ı varsa en son o kazanır
+### Kullanıcıyı Directory'de Görünür Yapmak
 
-Öncelik sırası:
+1. Kullanıcının doğru role sahip olduğundan emin ol
+2. `/admin/new-member/roles-features` → `directory.visible` satırının açık olduğunu doğrula
+3. `/admin/approvals` → bekleyen `directory_visibility` talebini onayla
+4. Kullanıcının profilde public alanların dolu ve onaylı olduğunu kontrol et
 
-1. `user_feature_overrides`
-2. `role_feature_flags`
-3. `role_feature_defaults`
-4. fallback
+### Attribute'u Onay Gerektirir Hale Getirmek
 
-### 4.3 Attribute Yönetimi
+1. `/admin/new-member/attributes` → ilgili attribute + role rule kaydını bul
+2. `requires_admin_approval_on_change` alanını aç → kaydet
 
-Sayfa: `/admin/new-member/attributes`
+### Tek Kullanıcıya İstisna Yetki Vermek
 
-Bu ekranda admin:
+1. `/admin/new-member/overrides` → kullanıcıyı seç
+2. Feature anahtarını seç → enable/disable override ver
+3. **Neden alanını doldurun** — audit logda kritik bilgidir
 
-- Attribute katalogunu görür
-- Alan label ve açıklamalarını takip eder
-- Role bazlı rule'ları düzenler
-- `is_required`, `is_public_default`, `user_can_edit`, `user_can_hide`, `requires_admin_approval_on_change` alanlarını yönetir
+### Approval Queue Yönetimi
 
-### 4.4 User Feature Override
+1. `/admin/approvals` sayfasını aç
+2. Talep tipiyle filtrele (`role_change`, `directory_visibility`, `attribute_change`, vb.)
+3. Onayla veya reddet
+4. Onay sonuçları otomatik işlenir: rol değişirse `user_role_assignments` güncellenir, attribute değişirse ilgili kayıt `approved` olur
 
-Sayfa: `/admin/new-member/overrides`
+---
 
-Bu ekran kullanıcı bazlı özel yetki açıp kapatmak için kullanılır.
+## 8. Kritik Notlar
 
-Kullanım senaryoları:
+**Migration kuralları:**
 
-- Rolünde kapalı olan bir feature'ı tek kullanıcıya açmak
-- Geçici erişim vermek
-- İstisna kullanıcı tanımlamak
+- Üretimde migration silinemez, sırası değiştirilemez — yalnızca yeni migration eklenir.
+- `approval_requests` gibi önceden var olan tablolarda yeniden oluşturma değil, genişletme yaklaşımı kullanılır.
+- `if not exists` ve uyumluluk mantığı her migration'da zorunludur.
 
-Override verirken mümkünse neden alanı doldurulmalıdır. Bu bilgi audit tarafında da faydalı olur.
+**RPC kuralları:**
 
-### 4.5 Approval Queue
+- Kritik yazma işlemleri doğrudan tablo update'i yapmaz; RPC üzerinden geçer.
+- Audit log yazımı uygulama tarafında değil, DB/RPC tarafında tutulur.
+- Public directory okuması doğrudan ham tablodan değil, güvenli RPC yüzeyinden yapılır.
 
-Sayfa: `/admin/approvals`
+**Feature key kuralı:**
 
-Bu ekran tüm bekleyen taleplerin ana kuyruğudur.
+- `feature_catalog.key` global tekil çalışır.
+- Generic feature eklemelerinde aynı key'i role başına tekrar üretmeyin.
 
-Başlıca request type'lar:
+**Auth ve rol çakışması:**
 
-- `role_change`
-- `directory_visibility`
-- `contact_visibility`
-- `featured_listing`
-- `event_create`
-- `offer_create`
-- `referral_create`
-- `attribute_change`
-- `city_manage`
+- Eski `admin_users` tablosu ve `rolesgo_*` tabloları şu an birlikte çalışmaktadır.
+- `is_admin()` fonksiyonu her iki sistemi de tanır.
+- Profil mantığına dokunmadan önce mevcut durumu doğrulayın.
 
-Admin seçenekleri:
+---
 
-- `approve`
-- `reject`
-
-Approval sonucu:
-
-- Rol değişikliği ise kullanıcı rolü güncellenir
-- Attribute change ise ilgili attribute `approved` veya `rejected` olur
-- Feature talebi ise ilgili kullanıcı override veya durum kaydı işlenir
-
-### 4.6 Audit Logs
-
-Sayfa: `/admin/audit-logs`
-
-Bu ekran admin işlemlerinin geçmişini izlemek için kullanılır.
-
-İlk sürümde loglanan başlıca action'lar:
-
-- `role.assigned`
-- `role.changed`
-- `feature.enabled`
-- `feature.disabled`
-- `feature.override_set`
-- `feature.override_cleared`
-- `approval.approved`
-- `approval.rejected`
-- `attribute.rule_updated`
-- `attribute.value_approved`
-- `attribute.value_rejected`
-
-## 5. Public Directory
-
-### 5.1 Liste Sayfası
-
-Sayfa: `/directory`
-
-Liste sadece şu profilleri gösterir:
-
-- görünürlük açısından uygun olanlar
-- ilgili feature'ı açık olanlar
-- public alanları onaylı olanlar
-
-Temel filtreler:
-
-- role
-- country
-- city
-- serbest metin arama
-- featured only
-- verified only
-
-### 5.2 Profil Detay Sayfası
-
-Sayfa: `/directory/profile/:userId`
-
-Bu sayfada yalnızca public olarak gösterilmesi izinli alanlar görünür.
-
-Özellikle gösterilmez:
-
-- email
-- `private` alanlar
-
-## 6. Feature ve Approval Mantığı
-
-Yeni generic feature anahtarları:
-
-- `profile.view_own`
-- `profile.edit_own`
-- `profile.edit_public`
-- `directory.visible`
-- `directory.featured`
-- `contact.receive`
-- `contact.show_whatsapp`
-- `content.create`
-- `content.edit_own`
-- `events.create`
-- `offers.create`
-- `referral.create`
-- `city.manage`
-- `admin.requires_approval`
-
-Notlar:
-
-- `individual.*` legacy feature'ları korunur
-- Generic feature'lar global katalogda tutulur
-- Rol bazlı izinler `role_feature_flags` ile çözülür
-- `city.manage` şu anda kapalı bırakılabilir ve "yakında" mantığında kullanılabilir
-
-## 7. Supabase Operasyon Komutları
-
-### 7.1 Migration Durumu Kontrol
+## Referans Komutları
 
 ```powershell
+# Migration durumu
 supabase migration list
-```
 
-### 7.2 Remote Veritabanına Migration Push
-
-```powershell
+# Remote'a push
 supabase db push
-```
 
-### 7.3 Yeni Migration Oluşturma
-
-```powershell
+# Yeni migration oluştur
 supabase migration new migration_adi
-```
 
-### 7.4 Type Güncelleme
-
-Remote schema güncellendikten sonra TypeScript tiplerini yenilemek için:
-
-```powershell
-supabase gen types typescript --local
-```
-
-veya remote erişim yetkisi uygunsa uygun profile ile:
-
-```powershell
+# TypeScript tiplerini yenile (remote)
 supabase gen types typescript --linked > src/integrations/supabase/types.ts
+
+# Release sonrası doğrulama
+BASE_URL=https://corteqs.net npm run verify:release
 ```
 
-### 7.5 Dikkat Edilecek Noktalar
+## Release Kontrol Listesi
 
-- Prod'da bazı tablolar önceden var olabilir; migration'lar mümkün olduğunca `if not exists` ve uyumluluk mantığıyla yazılmalı
-- Özellikle `approval_requests` gibi önceden bulunan tablolarda yeniden yaratma değil, genişletme yaklaşımı tercih edilmeli
-- `feature_catalog.key` şu anda global tekil çalışır; generic feature eklemelerinde aynı key'i role başına tekrar üretmeyin
-
-## 8. Sık Yapılacak İşler
-
-### 8.1 Yeni Kullanıcıya Rol Vermek
-
-1. `/admin/new-member/users-roles` sayfasına git
-2. Kullanıcıyı bul
-3. Hedef rolü seç
-4. Kaydet
-5. Gerekirse aynı kullanıcı için feature matrix veya override kontrol et
-
-### 8.2 Bir Alanı Onay Gerektirir Hale Getirmek
-
-1. `/admin/new-member/attributes` sayfasına git
-2. İlgili attribute ve role rule kaydını bul
-3. `requires_admin_approval_on_change` alanını aç
-4. Kaydet
-
-### 8.3 Kullanıcıyı Directory'de Görünür Yapmak
-
-1. Kullanıcının ilgili role sahip olduğundan emin ol
-2. `/admin/new-member/roles-features` sayfasında `directory.visible` izin durumunu kontrol et
-3. Gerekirse `/admin/approvals` içinde pending request'i onayla
-4. Profilde public alanların dolu olduğundan emin ol
-
-### 8.4 Tek Kullanıcıya İstisnai Yetki Vermek
-
-1. `/admin/new-member/overrides` sayfasına git
-2. Kullanıcıyı seç
-3. Feature anahtarını seç
-4. Enable veya disable override ver
-5. İsteğe bağlı neden yaz
-
-## 9. Teknik Notlar
-
-- RPC tabanlı kritik yazmalar tercih edilir
-- Audit log yazımı uygulama tarafında değil DB/RPC tarafında tutulur
-- Public directory okuması doğrudan ham tablo okumaz; güvenli yüzeyden ilerler
-- Kullanıcı başına tek aktif rol modeli korunur
-
-## 10. Hızlı Kontrol Listesi
-
-Release sonrası kontrol için:
-
-1. `supabase migration list` ile local/remote eşit mi kontrol et
-2. `/profile` açılıyor mu kontrol et
-3. Rol başvurusu oluşturulabiliyor mu kontrol et
-4. `/admin/approvals` içinde talep görünüyor mu kontrol et
-5. Admin onay sonrası rol veya feature gerçekten etkinleşiyor mu kontrol et
-6. `/directory` içinde sadece beklenen profiller listeleniyor mu kontrol et
-7. `/admin/audit-logs` içinde işlem izi düşüyor mu kontrol et
+1. `supabase migration list` — local/remote eşit mi?
+2. `/profile` açılıyor mu?
+3. Rol başvurusu oluşturulabiliyor mu?
+4. `/admin/approvals` — talep görünüyor mu?
+5. Admin onayı sonrası rol veya feature etkinleşiyor mu?
+6. `/directory` — yalnızca beklenen profiller listeleniyor mu?
+7. `/admin/audit-logs` — işlem izi düşüyor mu?
