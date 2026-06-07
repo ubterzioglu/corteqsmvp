@@ -149,7 +149,7 @@ const DirectoryCatalogItemPage = () => {
 
   const publicAttributes = useMemo(() => {
     return (catalogProfile?.attributes ?? [])
-      .filter((a) => a.visibility === "public" && (a.value_text || a.value_json != null))
+      .filter((a) => a.visibility === "public")
       .sort((a, b) => a.sort_order - b.sort_order);
   }, [catalogProfile]);
 
@@ -255,16 +255,19 @@ const DirectoryCatalogItemPage = () => {
               <div className="grid gap-2 text-sm text-muted-foreground">
                 {publicAttributes.map((attr) => {
                   const val = renderAttributeValue(attr);
-                  if (!val) return null;
                   return (
                     <p key={attr.attribute_key}>
                       <span className="font-medium text-foreground">{attr.label}:</span>{" "}
-                      {attr.data_type === "url" ? (
-                        <a className="text-primary underline-offset-4 hover:underline" href={val} target="_blank" rel="noreferrer">
-                          {val}
-                        </a>
+                      {val ? (
+                        attr.data_type === "url" ? (
+                          <a className="text-primary underline-offset-4 hover:underline" href={val} target="_blank" rel="noreferrer">
+                            {val}
+                          </a>
+                        ) : (
+                          val
+                        )
                       ) : (
-                        val
+                        <span className="text-muted-foreground/50">—</span>
                       )}
                     </p>
                   );
