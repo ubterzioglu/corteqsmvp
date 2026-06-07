@@ -18,22 +18,17 @@ type CatalogRedirectQueryClient = {
         column: string,
         value: unknown,
       ) => {
-        eq: (
-          nestedColumn: string,
-          nestedValue: unknown,
+        order: (
+          orderColumn: string,
+          options: { ascending: boolean },
         ) => {
-          order: (
-            orderColumn: string,
-            options: { ascending: boolean },
+          limit: (
+            count: number,
           ) => {
-            limit: (
-              count: number,
-            ) => {
-              maybeSingle: () => Promise<{
-                data: RedirectRow | null;
-                error: { message: string } | null;
-              }>;
-            };
+            maybeSingle: () => Promise<{
+              data: RedirectRow | null;
+              error: { message: string } | null;
+            }>;
           };
         };
       };
@@ -61,7 +56,6 @@ const DirectoryProfilePage = () => {
         .from("catalog_items")
         .select("slug")
         .eq("linked_user_id", userId)
-        .eq("item_type", "member")
         .order("created_at", { ascending: true })
         .limit(1)
         .maybeSingle();
