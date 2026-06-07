@@ -63,12 +63,27 @@ npm run test -- src/lib/muhasebe-api.test.ts  # Run single test file
 **Guideline:** New features should use `src/lib/*-api.ts` + React Query hooks. Prefer `muhasebe-*.ts` pattern over surveys/lansman pattern.
 
 ### Authentication & Roles
-- `AuthProvider` manages Supabase session via context
-- `RequireAuth` guards admin routes
-- `RequireFeature` provides feature-flag-based authorization
-- **Old system:** `public.admin_users` table + role_features view
-- **New system:** `user_profiles_v2` + `rolesgo_*` tables (RolesGo MVP, May 2026)
-- **Status:** Both systems coexist. Canonical direction TBD — ask before touching profile logic.
+
+**CRITICAL: Two AuthProviders — only one is mounted**
+
+| | `src/components/auth/` | `src/contexts/AuthContext.tsx` |
+|---|---|---|
+| Mounted in App.tsx | **YES** (canonical) | **NO** (orphaned provider) |
+| Fields | `session`, `user`, `isLoading` | `session`, `user`, `loading`, `profile`, `accountType`, `signOut`, `refreshProfile` |
+| Profile support | None | Fetches from `profiles` table |
+
+`src/contexts/AuthContext.tsx` exports its own `AuthProvider` and `useAuth`, but its `AuthProvider` is **never mounted** in App.tsx. The 38 public/member-area components that import `useAuth` from `src/contexts/AuthContext.tsx` receive only the default context values (`user: null`, `loading: true`) — they never see a real session.
+
+**Before touching any of these 38 files, confirm whether they need real auth or are intentionally unauthenticated UI.**
+
+The canonical `useAuth` lives in `src/components/auth/useAuth.ts` → reads from `src/components/auth/auth-context.ts`. Always import from here for admin/guarded routes.
+
+**Role / permission systems (both active, direction TBD):**
+- **Old system:** `public.admin_users` table — `userIsAdmin()` in `src/lib/admin.ts` checks this. `AdminLayout` gates the entire admin section via this check.
+- **New system:** `user_profiles_v2` + `rolesgo_*` tables (RolesGo MVP, May 2026) — drives `RequireFeature` / `useFeatureFlags`.
+- `RequireAuth` guards admin routes (checks canonical session).
+- `RequireFeature` provides feature-flag-based authorization via new system.
+- **Do not touch profile logic or role checks without first clarifying which system applies to the feature.**
 
 ### Feature Modules (Copy Muhasebe Pattern)
 Muhasebe module is the architectural template:
