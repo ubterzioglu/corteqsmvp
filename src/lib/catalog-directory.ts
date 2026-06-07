@@ -66,7 +66,7 @@ export type DirectoryRoleOption = {
 };
 
 export type UnifiedDirectoryRow = {
-  recordType: "catalog_item";
+  recordType: "catalog_item" | "member";
   id: string;
   href: string;
   title: string;
@@ -105,24 +105,27 @@ export const toCountryCode = (value: string | null | undefined) => {
   return legacyCountryToCode[trimmed] ?? trimmed.toUpperCase();
 };
 
-const mapDirectorySearchRow = (row: DirectorySearchRpcRow): UnifiedDirectoryRow => ({
-  recordType: "catalog_item",
-  id: row.item_id,
-  href: `/directory/catalog/${row.slug}`,
-  title: row.title,
-  roleKey: row.role_key,
-  roleLabel: row.role_label,
-  description: row.description,
-  country: row.country,
-  city: row.city,
-  imageUrl: row.image_url,
-  specialLabel: row.special_label,
-  specialValue: row.special_value,
-  isFeatured: row.is_featured,
-  isVerified: row.is_verified,
-  isClaimable: row.is_claimable,
-  itemType: row.item_type,
-});
+const mapDirectorySearchRow = (row: DirectorySearchRpcRow): UnifiedDirectoryRow => {
+  const isMember = row.item_type === "member";
+  return {
+    recordType: isMember ? "member" : "catalog_item",
+    id: row.item_id,
+    href: isMember ? `/directory/profile/${row.slug}` : `/directory/catalog/${row.slug}`,
+    title: row.title,
+    roleKey: row.role_key,
+    roleLabel: row.role_label,
+    description: row.description,
+    country: row.country,
+    city: row.city,
+    imageUrl: row.image_url,
+    specialLabel: row.special_label,
+    specialValue: row.special_value,
+    isFeatured: row.is_featured,
+    isVerified: row.is_verified,
+    isClaimable: row.is_claimable,
+    itemType: row.item_type,
+  };
+};
 
 export async function listDirectoryRoleOptions(): Promise<DirectoryRoleOption[]> {
   const { data, error } = await rolesQueryClient

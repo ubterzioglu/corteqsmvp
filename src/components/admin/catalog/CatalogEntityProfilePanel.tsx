@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { Save } from "lucide-react";
 
 import {
   adminSetCatalogItemAttribute,
@@ -128,43 +129,19 @@ const CatalogEntityProfilePanel = ({ itemId }: CatalogEntityProfilePanelProps) =
                 const isJson = isJsonAttribute(attribute);
 
                 return (
-                  <div key={fieldKey} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-                      <div className="space-y-2">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <div className="font-medium text-slate-950">{attribute.label}</div>
-                          <Badge variant="outline">{fieldKey}</Badge>
-                          <Badge variant="outline">{attribute.data_type}</Badge>
-                          {attribute.is_required ? <Badge variant="secondary">Required</Badge> : null}
-                        </div>
-                        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                          <span>Approval: {attribute.approval_status}</span>
-                          <span>Default: {attribute.is_public_default ? "public" : "private"}</span>
+                  <div key={fieldKey} className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <span className="font-medium text-slate-950 text-sm">{attribute.label}</span>
+                          <Badge variant="outline" className="text-xs py-0">{fieldKey}</Badge>
+                          <Badge variant="outline" className="text-xs py-0">{attribute.data_type}</Badge>
+                          {attribute.is_required ? <Badge variant="secondary" className="text-xs py-0">Required</Badge> : null}
+                          <span className="text-xs text-muted-foreground">{attribute.approval_status}</span>
+                          <span className="text-xs text-muted-foreground">· {attribute.is_public_default ? "public" : "private"}</span>
                         </div>
                       </div>
 
-                      <Select
-                        value={visibilityDrafts[fieldKey] ?? attribute.visibility}
-                        onValueChange={(value) =>
-                          setVisibilityDrafts((current) => ({
-                            ...current,
-                            [fieldKey]: value as CatalogEntityProfileAttribute["visibility"],
-                          }))
-                        }
-                        disabled={isSaving}
-                      >
-                        <SelectTrigger className="w-full lg:w-[180px]" aria-label={`${fieldKey} visibility`}>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="public">Public</SelectItem>
-                          <SelectItem value="private">Private</SelectItem>
-                          <SelectItem value="admin_only">Admin Only</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="mt-4 space-y-3">
                       {isJson ? (
                         <Textarea
                           value={drafts[fieldKey] ?? ""}
@@ -174,7 +151,7 @@ const CatalogEntityProfilePanel = ({ itemId }: CatalogEntityProfilePanelProps) =
                               [fieldKey]: event.target.value,
                             }))
                           }
-                          className="min-h-28 font-mono text-xs"
+                          className="w-48 min-h-16 font-mono text-xs"
                           disabled={isSaving}
                         />
                       ) : (
@@ -186,14 +163,43 @@ const CatalogEntityProfilePanel = ({ itemId }: CatalogEntityProfilePanelProps) =
                               [fieldKey]: event.target.value,
                             }))
                           }
+                          className="w-48 h-8 text-sm"
                           disabled={isSaving}
                         />
                       )}
-                      <div className="flex justify-end">
-                        <Button type="button" size="sm" onClick={() => void saveAttribute(attribute)} disabled={isSaving}>
-                          {isSaving ? "Kaydediliyor..." : "Attribute Kaydet"}
-                        </Button>
-                      </div>
+
+                      <Select
+                        value={visibilityDrafts[fieldKey] ?? attribute.visibility}
+                        onValueChange={(value) =>
+                          setVisibilityDrafts((current) => ({
+                            ...current,
+                            [fieldKey]: value as CatalogEntityProfileAttribute["visibility"],
+                          }))
+                        }
+                        disabled={isSaving}
+                      >
+                        <SelectTrigger className="w-[120px] h-8 text-xs" aria-label={`${fieldKey} visibility`}>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="public">Public</SelectItem>
+                          <SelectItem value="private">Private</SelectItem>
+                          <SelectItem value="admin_only">Admin Only</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="outline"
+                        className="h-8 w-8 shrink-0"
+                        onClick={() => void saveAttribute(attribute)}
+                        disabled={isSaving}
+                        aria-label="Attribute Kaydet"
+                        title="Attribute Kaydet"
+                      >
+                        <Save className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 );
