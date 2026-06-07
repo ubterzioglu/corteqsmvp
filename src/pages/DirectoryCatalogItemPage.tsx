@@ -6,6 +6,7 @@ import { useAuth } from "@/components/auth/useAuth";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { getCatalogItemProfile, type CatalogEntityProfile, type CatalogEntityProfileAttribute } from "@/lib/catalog-entity-api";
 
 type CatalogDetailRow = {
   id: string;
@@ -87,6 +88,7 @@ const DirectoryCatalogItemPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [claimStatus, setClaimStatus] = useState<"idle" | "submitting" | "submitted">("idle");
   const [claimError, setClaimError] = useState<string | null>(null);
+  const [catalogProfile, setCatalogProfile] = useState<CatalogEntityProfile | null>(null);
 
   useEffect(() => {
     if (!slug) return;
@@ -95,6 +97,7 @@ const DirectoryCatalogItemPage = () => {
     void (async () => {
       setIsLoading(true);
       setErrorMessage(null);
+      setCatalogProfile(null);
 
       const { data, error } = await catalogClient.rpc("get_catalog_item_public_profile", {
         p_slug: slug,
@@ -109,6 +112,12 @@ const DirectoryCatalogItemPage = () => {
         setItem(null);
       } else {
         setItem(data);
+        try {
+          const profile = await getCatalogItemProfile(data.id);
+          if (isMounted) setCatalogProfile(profile);
+        } catch {
+          // attributes opsiyonel — hata olursa statik görünüm devam eder
+        }
       }
 
       setIsLoading(false);
@@ -137,6 +146,19 @@ const DirectoryCatalogItemPage = () => {
     .join(" • ");
   const canClaim = item && item.verification_status !== "claimed";
   const loginHref = `/login?mode=signup&next=${encodeURIComponent(`/directory/catalog/${slug ?? ""}`)}`;
+
+  const publicAttributes = useMemo(() => {
+    return (catalogProfile?.attributes ?? [])
+      .filter((a) => a.visibility === "public" && (a.value_text || a.value_json != null))
+      .sort((a, b) => a.sort_order - b.sort_order);
+  }, [catalogProfile]);
+
+  const renderAttributeValue = (attr: CatalogEntityProfileAttribute): string | null => {
+    if (attr.data_type === "boolean") return attr.value_json === true ? "Evet" : "Hayır";
+    if (Array.isArray(attr.value_json)) return (attr.value_json as string[]).join(", ");
+    if (typeof attr.value_json === "string" && attr.value_json.trim()) return attr.value_json;
+    return attr.value_text ?? null;
+  };
 
   const submitClaim = async () => {
     if (!item || !user) return;
@@ -226,6 +248,30 @@ const DirectoryCatalogItemPage = () => {
             {locationLabel ? <p>{locationLabel}</p> : null}
             {primaryLocation?.address_line ? <p>{primaryLocation.address_line}</p> : null}
           </div>
+
+          {publicAttributes.length > 0 ? (
+            <section className="space-y-2">
+              <h2 className="text-base font-semibold">Profil Bilgileri</h2>
+              <div className="grid gap-2 text-sm text-muted-foreground">
+                {publicAttributes.map((attr) => {
+                  const val = renderAttributeValue(attr);
+                  if (!val) return null;
+                  return (
+                    <p key={attr.attribute_key}>
+                      <span className="font-medium text-foreground">{attr.label}:</span>{" "}
+                      {attr.data_type === "url" ? (
+                        <a className="text-primary underline-offset-4 hover:underline" href={val} target="_blank" rel="noreferrer">
+                          {val}
+                        </a>
+                      ) : (
+                        val
+                      )}
+                    </p>
+                  );
+                })}
+              </div>
+            </section>
+          ) : null}
 
           {item.catalog_item_contacts?.length ? (
             <section className="space-y-2">
