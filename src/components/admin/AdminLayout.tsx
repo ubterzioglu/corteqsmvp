@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { Link, NavLink, Outlet, useLocation, useNavigate, useOutletContext } from "react-router-dom";
-import { Check, ChevronDown, CircleHelp, Download, Layers3, Menu, Plus, Share2 } from "lucide-react";
+import { Bell, Check, ChevronDown, CircleHelp, Download, Layers3, Menu, Plus, Share2 } from "lucide-react";
 const logo = "/newlogo.png";
 
 import { Button } from "@/components/ui/button";
@@ -95,6 +95,7 @@ const AdminLayout = () => {
   const [communityMenuOpen, setCommunityMenuOpen] = useState(false);
   const [advisorMenuOpen, setAdvisorMenuOpen] = useState(false);
   const [adminPanelMenuOpen, setAdminPanelMenuOpen] = useState(false);
+  const [updatesMenuOpen, setUpdatesMenuOpen] = useState(false);
   const inactiveNavItems = [
     { to: "/admin/may19/ani", label: "19 Mayıs Anı" },
     { to: "/admin/may19/kelime", label: "19 Mayıs Fikir" },
@@ -318,30 +319,6 @@ const AdminLayout = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Güncellemeler Banner */}
-      <div className="border-b border-amber-200 bg-amber-50 dark:border-amber-900/40 dark:bg-amber-950/30">
-        <div className="container mx-auto px-4 py-2.5">
-          <div className="flex flex-wrap items-start gap-x-6 gap-y-1 text-sm">
-            <span className="shrink-0 font-semibold text-amber-800 dark:text-amber-300">🔔 Güncellemeler</span>
-            <span className="text-amber-700 dark:text-amber-400">
-              <span className="font-medium">2026-06-09 · Kullanıcı İmport:</span>{" "}
-              Submissions tablosundaki 92 gerçek kullanıcı auth sisteme aktarıldı ve{" "}
-              <span className="font-medium">bireysel</span> rolü atandı. Artık admin panelinde
-              Authentication → Users altında görünüyorlar. Şifre belirleme e-postaları henüz
-              gönderilmedi — hazır olduğunda yapılabilir.
-            </span>
-            <span className="text-amber-700 dark:text-amber-400">
-              <span className="font-medium">2026-06-09 · Sistem Düzeltmesi:</span>{" "}
-              Auth trigger hatası giderildi (
-              <code className="rounded bg-amber-100 px-1 text-xs dark:bg-amber-900/50">
-                on_auth_user_created_catalog_profile
-              </code>{" "}
-              drop edilen <code className="rounded bg-amber-100 px-1 text-xs dark:bg-amber-900/50">profiles</code> tablosuna
-              bağlıydı). Yeni kullanıcı kaydı artık sorunsuz çalışıyor.
-            </span>
-          </div>
-        </div>
-      </div>
       <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur">
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -656,6 +633,58 @@ const AdminLayout = () => {
                   {"<- Referral"}
                 </Link>
               )}
+              <div className="flex items-center">
+                <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
+                <DropdownMenu open={updatesMenuOpen} onOpenChange={setUpdatesMenuOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <div
+                      onMouseEnter={() => setUpdatesMenuOpen(true)}
+                      onMouseLeave={() => setUpdatesMenuOpen(false)}
+                    >
+                      <button
+                        type="button"
+                        className={`${linkClass({ isActive: false })} inline-flex items-center gap-1`}
+                      >
+                        <Bell className="h-3.5 w-3.5" />
+                        <span className="ml-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white">2</span>
+                      </button>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-96"
+                    onMouseEnter={() => setUpdatesMenuOpen(true)}
+                    onMouseLeave={() => setUpdatesMenuOpen(false)}
+                  >
+                    <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">Güncellemeler</div>
+                    <div className="border-t border-border" />
+                    <div className="space-y-0">
+                      <div className="px-3 py-3 text-sm">
+                        <div className="mb-1 flex items-baseline gap-2">
+                          <span className="font-medium text-foreground">2026-06-09 · Kullanıcı İmport</span>
+                          <span className="text-xs text-muted-foreground">Yeni</span>
+                        </div>
+                        <p className="text-muted-foreground">
+                          Submissions tablosundaki 92 gerçek kullanıcı auth sisteme aktarıldı ve{" "}
+                          <span className="font-medium text-foreground">bireysel</span> rolü atandı. Artık admin panelinde
+                          Authentication → Users altında görünüyorlar. Şifre belirleme e-postaları henüz
+                          gönderilmedi — hazır olduğunda yapılabilir.
+                        </p>
+                      </div>
+                      <div className="border-t border-border" />
+                      <div className="px-3 py-3 text-sm">
+                        <div className="mb-1 font-medium text-foreground">2026-06-09 · Sistem Düzeltmesi</div>
+                        <p className="text-muted-foreground">
+                          Auth trigger hatası giderildi (
+                          <code className="rounded bg-muted px-1 text-xs">on_auth_user_created_catalog_profile</code>{" "}
+                          drop edilen <code className="rounded bg-muted px-1 text-xs">profiles</code> tablosuna bağlıydı).
+                          Yeni kullanıcı kaydı artık sorunsuz çalışıyor.
+                        </p>
+                      </div>
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
               <div className="flex items-center">
                 <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
                 <NavLink to="/admin/new-member/guide" className={({ isActive }) => linkClass({ isActive })} title="Kullanım Klavuzu">
