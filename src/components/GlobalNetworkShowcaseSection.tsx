@@ -94,17 +94,17 @@ const GlobalNetworkShowcaseSection = () => {
     <section className="relative overflow-hidden py-5 lg:py-8">
       <div className="container relative z-10 mx-auto max-w-6xl px-4">
         <div className="rounded-[1.75rem] border border-slate-200/75 bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(252,253,255,0.96))] px-6 py-5 shadow-[0_16px_36px_rgba(15,23,42,0.05)] md:px-8 md:py-7 xl:px-6 xl:py-6">
-            <h2 className="mb-5 text-center text-[1.85rem] font-black leading-[0.97] tracking-[-0.05em] text-slate-900 sm:text-[2.35rem] lg:text-[2.85rem]">
-              Dünyanın farklı yerlerinde yaşayan Türkleri{" "}
+            <h2 className="mb-5 text-center text-[1.5rem] font-black leading-[1.15] tracking-[-0.03em] text-slate-900 sm:text-[1.85rem] lg:text-[2.2rem]">
+              Dünyanın farklı yerlerinde yaşayan<br />
               <span className="bg-[linear-gradient(90deg,#23b26d_0%,#7c3aed_48%,#ff7a18_100%)] bg-clip-text text-transparent">
-                sosyal ve ekonomik olarak
-              </span>{" "}
+                Türkleri sosyal ve ekonomik olarak
+              </span><br />
               birbirine bağlıyoruz.
             </h2>
 
             <div className="flex justify-center mb-5">
               <img
-                src="/sweet.png"
+                src="/sweet.jpg"
                 alt="CorteQS global ağ görseli"
                 className="w-full max-w-2xl object-contain"
               />
