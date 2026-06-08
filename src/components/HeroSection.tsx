@@ -56,7 +56,12 @@ const HeroSection = () => {
 
       <div className="relative z-10 mx-auto w-full max-w-[1780px] px-4 py-5 md:px-6 md:py-6 2xl:px-10">
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,36rem)_minmax(0,1fr)] lg:gap-7 xl:grid-cols-[minmax(0,38rem)_minmax(0,1fr)] 2xl:grid-cols-[minmax(0,42rem)_minmax(0,1fr)] 2xl:gap-10">
-          <div className="max-w-[760px] lg:-translate-y-4 xl:-translate-y-6 2xl:-translate-y-8">
+          <div
+            className="max-w-[760px] lg:-translate-y-4 xl:-translate-y-6 2xl:-translate-y-8"
+            style={{
+              animation: "heroSlideInLeft 0.7s cubic-bezier(0.22, 1, 0.36, 1) both",
+            }}
+          >
             <div className="flex max-w-[36rem] flex-col justify-center rounded-[2rem] border border-white/80 bg-[linear-gradient(90deg,rgba(255,255,255,0.96)_0%,rgba(255,255,255,0.93)_38%,rgba(255,255,255,0.82)_62%,rgba(255,255,255,0.58)_82%,rgba(255,255,255,0.18)_100%)] p-4 shadow-[0_20px_55px_-36px_rgba(15,23,42,0.32)] backdrop-blur-xl sm:p-5 lg:max-w-[34rem] lg:px-6 2xl:max-w-[38rem]">
               <div className="mb-3 flex flex-col items-start gap-3 md:flex-row md:items-center">
                 <img src={heroLogo} alt="CorteQS Logo" className="w-full max-w-[152px] shrink-0 md:max-w-[176px]" />
@@ -155,7 +160,12 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <div className="relative hidden lg:flex lg:justify-end">
+          <div
+            className="relative hidden lg:flex lg:justify-end"
+            style={{
+              animation: "heroSlideInRight 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both",
+            }}
+          >
             <div className="relative w-full max-w-[1180px] xl:max-w-[1320px] 2xl:max-w-[1460px]">
               <div className="relative overflow-hidden rounded-3xl">
                 <video

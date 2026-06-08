@@ -314,6 +314,28 @@
   line-height: 1;
 }
 
+@keyframes heroSlideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes heroSlideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .landing-ambient-orb {
     animation: none;
@@ -334,5 +356,10 @@
 
   .profile-globe {
     animation: none;
+  }
+
+  [style*="heroSlideInLeft"],
+  [style*="heroSlideInRight"] {
+    animation: none !important;
   }
 }
