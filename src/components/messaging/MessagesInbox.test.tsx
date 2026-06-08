@@ -85,10 +85,20 @@ vi.mock("@/integrations/supabase/client", () => {
           return query;
         }
 
-        if (table === "user_profiles") {
+        if (table === "user_profile_attributes") {
           const query = {
             select: vi.fn(() => query),
-            in: vi.fn(() => Promise.resolve({ data: mocks.profiles, error: null })),
+            in: vi.fn(() => query),
+            eq: vi.fn(() =>
+              Promise.resolve({
+                data: mocks.profiles.map((p) => ({
+                  user_id: p.user_id,
+                  value_text: p.full_name,
+                  attribute_catalog: { key: "full_name" },
+                })),
+                error: null,
+              }),
+            ),
           };
           return query;
         }

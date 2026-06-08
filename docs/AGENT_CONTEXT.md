@@ -2,7 +2,7 @@
 
 > Bu dosya, yeni bir agent oturumunun projeyi hızla kavraması için hazırlanmıştır.
 > Diğer teknik belgelerden bilgi derleyerek token maliyetini minimize eder.
-> **Güncelleme:** 2026-06-07
+> **Güncelleme:** 2026-06-09
 
 ---
 
@@ -13,7 +13,7 @@
 - URL: `https://corteqs.net`
 - Supabase Project ID: `injprdrsklkxgnaiixzh`
 - Deploy: Docker / Coolify → `npm run build` → `node server.mjs`
-- ~90 public sayfa, ~30 admin sayfası, ~42 lib modülü, 122+ migration, 49 test dosyası
+- ~90 public sayfa, ~30 admin sayfası, ~50 lib modülü, 188 migration, 49+ test dosyası
 
 ### Modüller (tek SPA içinde)
 
@@ -65,11 +65,13 @@ src/
 │   └── profile/, surveys/, may19/, chat/
 ├── lib/
 │   ├── muhasebe-*.ts        # api, schemas, format, aggregations — REFERANS PATTERN
-│   ├── supabase.ts          # Custom client (duplikasyon riski)
-│   ├── admin.ts             # userIsAdmin() — eski sistem
-│   ├── features.ts          # Feature flag helpers
+│   ├── member-profile*.ts   # Profil API katmanı (member-profile-api.ts tercih)
 │   ├── catalog-*.ts         # Katalog veri katmanı
-│   ├── member-profile*.ts   # Profil API katmanı
+│   ├── profile-*.ts         # Profil view model, helpers, types
+│   ├── independent-profiles.ts / individual-profile.ts
+│   ├── supabase.ts          # Custom client (duplikasyon riski)
+│   ├── admin.ts             # is_admin() kontrolü — eski tablo kalktı, is_admin() RPC'ye bağlı
+│   ├── features.ts          # Feature flag yardımcıları
 │   └── dashboard/           # Workspace data layer
 ├── hooks/                   # use-mobile, use-toast, useMuhasebe
 ├── integrations/supabase/
@@ -104,15 +106,18 @@ RequireFeature    — feature flag bazlı render
 useFeatureFlags() — get_current_user_features RPC
 ```
 
-### İki Paralel Sistem (geçiş sürecinde)
+### Tek Sistem (geçiş tamamlandı — 2026-06-09)
 
-| Eski | Yeni |
-|------|------|
-| `public.admin_users` tablosu | `user_profiles_v2` + `rolesgo_*` |
-| `userIsAdmin()` in `lib/admin.ts` | `RequireFeature` / `useFeatureFlags` |
-| `AdminLayout` gate | Feature flag bazlı gate |
+`admin_users`, `profiles`, `user_profiles`, `role_feature_defaults` tabloları **DROP edildi**.
 
-**Profil/rol mantığına dokunmadan önce hangi sistemin geçerli olduğunu sor.**
+| Eski (KALDIRILDI) | Yeni (CANONICAL) |
+|-------------------|------------------|
+| `public.admin_users` | `public.is_admin()` RPC / `public.is_moderator()` RPC |
+| `public.profiles` | `user_profile_attributes` (full_name, avatar_url vs. attribute olarak) |
+| `public.user_profiles` | `user_role_assignments` + `user_profile_attributes` |
+| `public.role_feature_defaults` | `role_feature_flags` |
+
+**Profil/rol mantığına dokunmadan önce:** `user_role_assignments` ve `user_profile_attributes` tablolarını kullan. `public.profiles` veya `user_profiles`'a referans veren herhangi bir kod varsa kaldırılmalı.
 
 ---
 
@@ -146,16 +151,17 @@ components/admin/muhasebe/   → UI components
 
 ## 6. Veritabanı Modeli (Kritik Tablolar)
 
-### Auth Kullanıcısı
+### Auth Kullanıcısı (GÜNCEL — legacy tablolar kalktı)
 
 ```
-profiles                     → Supabase auth bağlantılı temel profil
-user_profiles_v2             → Genişletilmiş profil (yeni sistem)
-user_role_assignments        → RolesGo: auth user ↔ rol
-user_profile_attributes      → Kullanıcının attribute değerleri
+auth.users                   → Supabase Auth canonical kayıt
+user_role_assignments        → user ↔ rol (TEK YER)
+user_profile_attributes      → Tüm profil verileri attribute olarak
 user_feature_overrides       → Kullanıcıya özel feature istisnası
-user_taxonomy_selections     → Kullanıcının taxonomy seçimleri
+approval_requests            → Rol değişikliği, feature talep, attribute onay
 ```
+
+> `profiles`, `user_profiles`, `admin_users`, `role_feature_defaults` tablolar **mevcut değil**.
 
 ### Katalog
 
@@ -166,9 +172,6 @@ catalog_items                → Tüm katalog kayıtları (item_type + platform_
   ├── event_details
   ├── person_profile_details → linked_profile_id ile auth user'a bağlanır
   └── ...
-catalog_item_attribute_overrides  → Item bazında attribute istisnaları
-catalog_item_feature_overrides    → Item bazında feature istisnaları
-catalog_item_section_overrides    → Item bazında section istisnaları
 catalog_item_memberships          → owner/editor/viewer yetkileri
 catalog_claim_requests            → Sahiplenme talepleri
 catalog_audit_logs
@@ -177,21 +180,20 @@ catalog_audit_logs
 ### Kural Tabloları (Rol → Attribute/Feature/Section)
 
 ```
-roles                        → 82 aktif rol tanımı
+roles                        → Aktif rol tanımları
 attribute_catalog            → Attribute sözlüğü
 role_attribute_rules         → Hangi attribute hangi rolde aktif/zorunlu/onay gerekli
 feature_catalog              → Feature sözlüğü
-role_feature_flags           → Hangi feature hangi rolde açık
+role_feature_flags           → Hangi feature hangi rolde açık (role_feature_defaults YOK)
 profile_section_catalog      → Section sözlüğü
 role_profile_section_rules   → Hangi section hangi rolde görünür
-taxonomy_groups / options    → Çoktan seçmeli kategori sistemi
+taxonomy_groups / options    → Çoktan seçmeli kategori sistemi (runtime kaldırıldı)
 role_taxonomy_rules          → Hangi taxonomy grubu hangi rolde aktif
 ```
 
 ### Diğer Önemli Tablolar
 
 ```
-public.admin_users           → Eski admin sistemi
 submissions                  → Form gönderimleri (RLS hassas)
 surveys / survey_questions / survey_responses
 muhasebe_gelirler / muhasebe_giderler
@@ -205,7 +207,7 @@ geo_countries / geo_cities   → Global coğrafya referansı
 ### Feature Çözümleme Önceliği
 
 ```
-override (user/item bazlı) > role_default > fallback (false)
+override (user/item bazlı) > role_feature_flags default > fallback (false)
 ```
 
 ### Claim Akışı
@@ -214,6 +216,19 @@ override (user/item bazlı) > role_default > fallback (false)
 submit_catalog_claim_request RPC → catalog_claim_requests (pending)
 Admin onay → admin_approve_catalog_claim → catalog_item_memberships (editor)
 Admin red  → admin_reject_catalog_claim
+```
+
+### Kritik RPC'ler
+
+```
+get_current_user_profile()       → Session kullanıcısının tam profili (user_role_assignments + user_profile_attributes)
+get_current_user_features()      → Feature flag listesi
+admin_search_profiles()          → Admin üye arama (auth.users + user_profile_attributes)
+admin_list_catalog_claims()      → Claim yönetimi
+list_public_directory_profiles() → Dizin liste endpoint'i
+admin_set_user_role()            → Rol atama
+update_profile_attribute()       → Attribute güncelleme (onay akışıyla)
+is_admin() / is_moderator()      → Yetki kontrol fonksiyonları
 ```
 
 ---
@@ -280,12 +295,14 @@ supabase migrations list
 | `src/contexts/AuthContext.tsx` | **KULLANMA** — orphaned provider |
 | `src/integrations/supabase/client.ts` | Lovable-generated — değiştirme |
 | `src/lib/muhasebe-*.ts` | Referans mimari pattern |
-| `src/lib/admin.ts` | Eski admin sistem — `userIsAdmin()` |
+| `src/lib/admin.ts` | `is_admin()` / `is_moderator()` wrappers |
 | `src/lib/features.ts` | Feature flag yardımcıları |
+| `src/lib/member-profile-api.ts` | Üye profil API katmanı (tercih edilen) |
+| `src/lib/catalog-directory.ts` | Dizin arama veri katmanı |
 | `vite.config.ts` | Standalone HTML emit — dokunma |
 | `server.mjs` | Production runtime |
 | `supabase/migrations/20260512103000_security_hardening_phase1.sql` | Güvenlik baseline |
-| `supabase/migrations/20260525000000_rolesgo_role_attribute_approval_mvp.sql` | Yeni yetki sistemi başlangıcı |
+| `supabase/migrations/20260609003000_drop_legacy_tables.sql` | Legacy tablo temizliği |
 
 ---
 
@@ -311,17 +328,16 @@ supabase migrations list
 2. **Çift Supabase client** — `integrations/client.ts` + `lib/supabase.ts`; tek kaynağa indir
 3. **Karışık data fetching** — React Query + `*-api.ts` standardına geç
 4. **TypeScript loose** — `strict` kademeli açılabilir
-5. **Test coverage parçalı** — yeni modüllerde (RolesGo, profile-v2) düşük
-6. **Eski + yeni auth sistemi** — `admin_users` vs `user_profiles_v2` paralel yaşıyor
-7. **`no-unused-vars` ESLint kapalı** — ölü kod tespiti için açılmalı
-8. **Playwright E2E pasif** — kritik flow'lar için aktive edilmeli
+5. **Test coverage parçalı** — yeni modüllerde (RolesGo, catalog, profile-v2) düşük
+6. **`no-unused-vars` ESLint kapalı** — ölü kod tespiti için açılmalı
+7. **Playwright E2E pasif** — kritik flow'lar için aktive edilmeli
+8. **`src/contexts/AuthContext.tsx` orphaned** — referans veren 38 component hâlâ var, temizlenmeli
 
 ---
 
 ## 12. Yeni Özellik Eklerken Kontrol Listesi
 
 ```
-[ ] Hangi auth sistemi geçerli? (eski: admin_users / yeni: rolesgo_*)
 [ ] Data: lib/*-api.ts + React Query mı? (component içi fetch değil)
 [ ] Zod schema: lib/*-schemas.ts'de mi?
 [ ] Route: App.tsx'e mi yoksa feature routes.tsx'e mi?
@@ -329,27 +345,34 @@ supabase migrations list
 [ ] Migration eklendi mi? (sil/sırala değil, ekle)
 [ ] RLS policy'ler test edildi mi?
 [ ] Turkish domain termler korundu mu?
+[ ] profiles / user_profiles / admin_users tablolarına referans YOK mu? (kalktı)
+[ ] Yetki için is_admin() / is_moderator() RPC mi kullanılıyor?
 ```
 
 ---
 
-## 13. Son Migrations (2026-06-07)
+## 13. Son Migrations (2026-06-09)
 
 ```
-20260607000000_geo_cities_seed.sql
-20260607010000_afs_phase0_foundation_tables.sql
-20260607020000_afs_phase1_member_type_and_trigger.sql
-20260607030000_afs_phase2_catalog_rpcs.sql
-20260607040000_afs_phase4_directory_sync.sql
-20260607050000_unify_member_profiles_on_catalog.sql
-20260607060000_retire_taxonomy_runtime_and_item_overrides.sql
-20260607070000_directory_individual_users.sql
-20260607080000_geo_cities_extended.sql
-20260607090000_directory_search_multiword.sql
-20260607120000_mass_profile_visibility_and_search.sql
+20260608020000_simplify_unified_records_rpc.sql
+20260608030000_catalog_as_profile_source_of_truth.sql
+20260609000000_backup_member_data.sql
+20260609001000_backfill_to_rolesgo.sql          # profiles verisi → user_profile_attributes
+20260609002000_update_rpc_remove_rfd.sql
+20260609003000_drop_legacy_tables.sql           # profiles, user_profiles, admin_users, role_feature_defaults DROP
+20260609003600_fix_directory_opt_in_trigger.sql
+20260609004000_set_admin_users.sql
+20260609010000_fix_is_moderator_post_legacy_drop.sql
+20260609011000_fix_unified_records_role_param.sql
+20260609012000_fix_bucket_stats_rpc.sql
+20260609013000_fix_catalog_rpcs_post_legacy_drop.sql  # catalog RPC'leri auth.users'a taşıdı
 ```
 
-AFS (All From Single) fazları tamamlandı: catalog ve profiller unified veri modeline taşındı. Taxonomy runtime kaldırıldı.
+**2026-06-09 büyük temizlik özeti:**
+- Legacy tablolar `profiles`, `user_profiles`, `admin_users`, `role_feature_defaults` DROP edildi
+- Tüm RPC'ler `auth.users` + `user_profile_attributes` + `user_role_assignments` üzerinden çalışıyor
+- Profil verisi canonical olarak `user_profile_attributes` tablosunda yaşıyor
+- `is_admin()` / `is_moderator()` fonksiyonları güncellendi (artık `admin_users` tablosu yok)
 
 ---
 

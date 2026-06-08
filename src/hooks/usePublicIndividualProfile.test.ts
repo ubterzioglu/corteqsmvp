@@ -18,6 +18,9 @@ vi.mock("@/components/auth/useAuth", () => ({
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: { from: mockFrom },
 }));
+vi.mock("@/lib/member-catalog", () => ({
+  listMemberCatalogNames: vi.fn().mockResolvedValue(new Map([["user-abc", "Ayşe Demir"]])),
+}));
 
 import { usePublicIndividualProfile } from "./usePublicIndividualProfile";
 
@@ -37,9 +40,7 @@ describe("usePublicIndividualProfile", () => {
   });
 
   it("returns details=null when no individual_profile_details row exists", async () => {
-    mockMaybeSingle
-      .mockResolvedValueOnce({ data: null, error: null })
-      .mockResolvedValueOnce({ data: null, error: null });
+    mockMaybeSingle.mockResolvedValueOnce({ data: null, error: null });
 
     const { result } = renderHook(() => usePublicIndividualProfile("user-abc"));
     await waitFor(() => expect(result.current.isLoading).toBe(false));
@@ -48,24 +49,22 @@ describe("usePublicIndividualProfile", () => {
   });
 
   it("maps and returns details when row exists", async () => {
-    mockMaybeSingle
-      .mockResolvedValueOnce({ data: { full_name: "Ayşe Demir", email: "ayse@example.com" }, error: null })
-      .mockResolvedValueOnce({
-        data: {
-          user_id: "user-abc",
-          tagline: "Yazılım mühendisi",
-          visibility_status: "open",
-          presence_status: "online",
-          follower_count: 12,
-          following_count: 5,
-          event_count: 3,
-          front_card: null,
-          detail_card: null,
-          control_panel: null,
-          profile_settings: null,
-        },
-        error: null,
-      });
+    mockMaybeSingle.mockResolvedValueOnce({
+      data: {
+        user_id: "user-abc",
+        tagline: "Yazılım mühendisi",
+        visibility_status: "open",
+        presence_status: "online",
+        follower_count: 12,
+        following_count: 5,
+        event_count: 3,
+        front_card: null,
+        detail_card: null,
+        control_panel: null,
+        profile_settings: null,
+      },
+      error: null,
+    });
 
     const { result } = renderHook(() => usePublicIndividualProfile("user-abc"));
     await waitFor(() => expect(result.current.isLoading).toBe(false));
@@ -76,9 +75,7 @@ describe("usePublicIndividualProfile", () => {
   });
 
   it("sets errorMessage when the DB query fails", async () => {
-    mockMaybeSingle
-      .mockResolvedValueOnce({ data: null, error: null })
-      .mockResolvedValueOnce({ data: null, error: { message: "permission denied" } });
+    mockMaybeSingle.mockResolvedValueOnce({ data: null, error: { message: "permission denied" } });
 
     const { result } = renderHook(() => usePublicIndividualProfile("user-abc"));
     await waitFor(() => expect(result.current.isLoading).toBe(false));
