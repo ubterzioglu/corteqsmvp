@@ -83,3 +83,4 @@ turkish_missions_import_builder/output/*
 
 # Reference directory (Lovable exports)
 referans/
+.secretdb
