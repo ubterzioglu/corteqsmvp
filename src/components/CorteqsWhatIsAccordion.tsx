@@ -1,6 +1,13 @@
 import { Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const logo = "/newlogo.png";
 
@@ -10,49 +17,64 @@ type CorteqsWhatIsAccordionProps = {
 
 const CorteqsWhatIsAccordion = ({ className }: CorteqsWhatIsAccordionProps) => {
   return (
-    <Accordion type="single" collapsible className={className}>
-      <AccordionItem
-        value="corteqs-nedir"
-        className="overflow-hidden rounded-[1.75rem] border border-[#bfe5de] bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(240,250,247,0.96),rgba(247,252,255,0.94))] px-5 shadow-[0_18px_40px_rgba(69,145,132,0.10)] backdrop-blur-sm md:px-7"
-      >
-        <AccordionTrigger
-          className="gap-3 py-4 text-left hover:no-underline md:gap-4 md:py-5"
-          chevronWrapperClassName="border border-[#b7dcd4] bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(240,249,246,0.96))] text-[#153a5b] shadow-[0_10px_24px_rgba(21,58,91,0.10)]"
-          chevronClassName="h-4.5 w-4.5"
+    <Dialog>
+      <DialogTrigger asChild>
+        <button
+          type="button"
+          className={`group relative inline-flex w-full items-center justify-center rounded-[1.25rem] border border-[#dd9700] bg-[linear-gradient(135deg,#fbbc05_0%,#f9ab00_100%)] px-5 py-4 text-center text-base font-black text-white shadow-[0_16px_34px_rgba(251,188,5,0.34),inset_0_1px_0_rgba(255,255,255,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:saturate-110 sm:text-[1.05rem] ${className ?? ""}`}
         >
-          <span className="inline-flex max-w-full items-center gap-2 bg-[linear-gradient(90deg,#0f766e_0%,#2563eb_50%,#7c3aed_100%)] bg-clip-text text-lg font-black leading-tight text-transparent sm:text-xl md:text-2xl">
-            <Sparkles className="h-4 w-4 text-primary" />
+          <span
+            className="pointer-events-none absolute inset-0 rounded-[1.25rem] opacity-100"
+            aria-hidden
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 42%, rgba(255,255,255,0) 100%)",
+            }}
+          />
+          <span className="relative z-10 inline-flex items-center gap-2">
+            <Sparkles className="h-4 w-4" />
             CorteQS nedir?
           </span>
-        </AccordionTrigger>
-        <AccordionContent className="pb-6">
-          <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-8">
-            <p
-              id="geo-content-title"
-              className="max-w-4xl text-justify text-[1.08rem] leading-relaxed text-foreground md:text-[1.2rem]"
-            >
+        </button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl overflow-hidden rounded-[2rem] border border-[#f1d7ad] bg-[linear-gradient(145deg,#fffdf8_0%,#fff7e8_40%,#ffffff_100%)] p-0 shadow-[0_36px_120px_-42px_rgba(15,23,42,0.45)]">
+        <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_220px]">
+          <div className="p-6 sm:p-8">
+            <DialogTitle className="inline-flex items-center gap-2 text-2xl font-black text-[#153a5b] sm:text-[2rem]">
+              <Sparkles className="h-5 w-5 text-[#f59e0b]" />
+              CorteQS nedir?
+            </DialogTitle>
+            <DialogDescription className="mt-5 text-base leading-relaxed text-slate-700 sm:text-[1.05rem]">
               CorteQS, dünyanın farklı şehirlerinde yaşayan Türkleri birbirine bağlayan bir platformdur.
               İnsanlar burada toplulukları bulur, yeni bağlantılar kurar ve iş, destek veya işbirliği
               fırsatlarına ulaşır.
-            </p>
-
-            <div className="relative mx-auto hidden lg:flex lg:items-center lg:justify-center">
-              <div
-                aria-hidden="true"
-                className="absolute inset-6 rounded-full bg-[radial-gradient(circle,rgba(37,99,235,0.18)_0%,rgba(15,118,110,0.12)_42%,rgba(255,255,255,0)_74%)] blur-2xl"
-              />
-              <div className="relative rounded-[2rem] border border-white/75 bg-[linear-gradient(145deg,rgba(255,255,255,0.92),rgba(232,247,243,0.82))] p-4 shadow-[0_26px_50px_-24px_rgba(37,99,235,0.34),0_14px_32px_-18px_rgba(15,118,110,0.28)] backdrop-blur-md">
-                <img
-                  src={logo}
-                  alt="CorteQS logosu"
-                  className="h-[132px] w-[132px] rounded-full object-contain drop-shadow-[0_16px_24px_rgba(21,58,91,0.22)]"
-                />
-              </div>
+            </DialogDescription>
+            <div className="mt-6">
+              <Link
+                to="/login?mode=signup"
+                className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-[#2f6fda] bg-[linear-gradient(135deg,#4285F4_0%,#3B78E7_100%)] px-5 text-sm font-bold text-white shadow-[0_16px_34px_rgba(66,133,244,0.34),inset_0_1px_0_rgba(255,255,255,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:saturate-110 sm:text-base"
+              >
+                Kayıt ol!
+              </Link>
             </div>
           </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+
+          <div className="relative hidden items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.14)_0%,rgba(15,118,110,0.12)_40%,rgba(255,255,255,0)_75%)] p-6 lg:flex">
+            <div
+              aria-hidden="true"
+              className="absolute inset-6 rounded-full bg-[radial-gradient(circle,rgba(37,99,235,0.18)_0%,rgba(15,118,110,0.12)_42%,rgba(255,255,255,0)_74%)] blur-2xl"
+            />
+            <div className="relative rounded-[2rem] border border-white/75 bg-[linear-gradient(145deg,rgba(255,255,255,0.92),rgba(232,247,243,0.82))] p-4 shadow-[0_26px_50px_-24px_rgba(37,99,235,0.34),0_14px_32px_-18px_rgba(15,118,110,0.28)] backdrop-blur-md">
+              <img
+                src={logo}
+                alt="CorteQS logosu"
+                className="h-[132px] w-[132px] rounded-full object-contain drop-shadow-[0_16px_24px_rgba(21,58,91,0.22)]"
+              />
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
