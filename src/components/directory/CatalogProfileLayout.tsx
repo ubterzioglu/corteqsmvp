@@ -104,112 +104,112 @@ const CatalogProfileLayout = ({
       ) : null}
 
       {/* Main content: 2/3 left + 1/3 right sidebar */}
-      {publicAttributes.length > 0 || hasSidebar ? (
-        <div className="grid gap-4 lg:grid-cols-3">
-          {/* Left: Profil Bilgileri (2/3) */}
-          <div className="space-y-4 lg:col-span-2">
-            {publicAttributes.length > 0 ? (
-              <SectionCard icon={<User className="h-4 w-4 text-primary" />} title="Profil Bilgileri">
-                <dl className="divide-y divide-border/40">
-                  {publicAttributes.map((attr) => {
-                    const val = renderAttributeValue(attr);
-                    return (
-                      <div
-                        key={attr.attribute_key}
-                        className="flex items-start gap-4 py-2.5 first:pt-0 last:pb-0"
-                      >
-                        <dt className="w-36 shrink-0 text-xs font-medium text-muted-foreground pt-0.5">
-                          {attr.label}
-                        </dt>
-                        <dd className="min-w-0 flex-1 text-sm font-medium text-foreground">
-                          {val ? (
-                            attr.data_type === "url" ? (
-                              <a
-                                className="break-all text-primary underline-offset-4 hover:underline"
-                                href={val}
-                                target="_blank"
-                                rel="noreferrer"
-                              >
-                                {val}
-                              </a>
-                            ) : (
-                              val
-                            )
-                          ) : (
-                            <span className="text-muted-foreground/40">—</span>
-                          )}
-                        </dd>
-                      </div>
-                    );
-                  })}
-                </dl>
-              </SectionCard>
-            ) : null}
-          </div>
-
-          {/* Right sidebar (1/3) */}
-          {hasSidebar ? (
-            <div className="space-y-4">
-              {contacts.length > 0 ? (
-                <SectionCard icon={<Phone className="h-4 w-4 text-primary" />} title="İletişim">
-                  <ul className="space-y-3 text-sm">
-                    {contacts.map((contact) => (
-                      <li
-                        key={`${contact.contact_type}-${contact.contact_value}`}
-                        className="flex items-start gap-2.5"
-                      >
-                        {contactIcon(contact.contact_type)}
-                        <span className="min-w-0 flex-1">
-                          <span className="block text-xs text-muted-foreground">
-                            {contact.label ?? contact.contact_type}
-                          </span>
-                          {contact.contact_type === "website" || contact.contact_type === "appointment_url" ? (
+      <div className={`grid gap-4 ${hasSidebar ? "lg:grid-cols-3" : ""}`}>
+        {/* Left: Profil Bilgileri (2/3) */}
+        <div className={`space-y-4 ${hasSidebar ? "lg:col-span-2" : ""}`}>
+          <SectionCard icon={<User className="h-4 w-4 text-primary" />} title="Profil Bilgileri">
+            <dl className="divide-y divide-border/40">
+              {publicAttributes.length > 0 ? (
+                publicAttributes.map((attr) => {
+                  const val = renderAttributeValue(attr);
+                  return (
+                    <div
+                      key={attr.attribute_key}
+                      className="flex items-start gap-4 py-2.5 first:pt-0 last:pb-0"
+                    >
+                      <dt className="w-36 shrink-0 text-xs font-medium text-muted-foreground pt-0.5">
+                        {attr.label}
+                      </dt>
+                      <dd className="min-w-0 flex-1 text-sm font-medium text-foreground">
+                        {val ? (
+                          attr.data_type === "url" ? (
                             <a
                               className="break-all text-primary underline-offset-4 hover:underline"
-                              href={contact.contact_value}
+                              href={val}
                               target="_blank"
                               rel="noreferrer"
                             >
-                              {contact.contact_value}
+                              {val}
                             </a>
                           ) : (
-                            <span className="text-foreground">{contact.contact_value}</span>
-                          )}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </SectionCard>
-              ) : null}
-
-              {services.length > 0 ? (
-                <SectionCard icon={<Briefcase className="h-4 w-4 text-primary" />} title="Hizmetler">
-                  <div className="flex flex-wrap gap-2">
-                    {services.map((service) => (
-                      <Badge key={service.service_name} variant="outline" className="text-xs">
-                        {service.service_name}
-                      </Badge>
-                    ))}
-                  </div>
-                </SectionCard>
-              ) : null}
-
-              {languages && languages.length > 0 ? (
-                <SectionCard icon={<Star className="h-4 w-4 text-primary" />} title="Diller">
-                  <div className="flex flex-wrap gap-2">
-                    {languages.map((lang) => (
-                      <Badge key={lang.language_code} variant="secondary" className="text-xs">
-                        {lang.language_code}
-                        {lang.proficiency ? ` · ${lang.proficiency}` : ""}
-                      </Badge>
-                    ))}
-                  </div>
-                </SectionCard>
-              ) : null}
-            </div>
-          ) : null}
+                            val
+                          )
+                        ) : (
+                          <span className="text-muted-foreground/40">—</span>
+                        )}
+                      </dd>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="py-2 text-sm text-muted-foreground/50">Henüz profil bilgisi eklenmemiş.</p>
+              )}
+            </dl>
+          </SectionCard>
         </div>
-      ) : null}
+
+        {/* Right sidebar (1/3) */}
+        {hasSidebar ? (
+          <div className="space-y-4">
+            {contacts.length > 0 ? (
+              <SectionCard icon={<Phone className="h-4 w-4 text-primary" />} title="İletişim">
+                <ul className="space-y-3 text-sm">
+                  {contacts.map((contact) => (
+                    <li
+                      key={`${contact.contact_type}-${contact.contact_value}`}
+                      className="flex items-start gap-2.5"
+                    >
+                      {contactIcon(contact.contact_type)}
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-xs text-muted-foreground">
+                          {contact.label ?? contact.contact_type}
+                        </span>
+                        {contact.contact_type === "website" || contact.contact_type === "appointment_url" ? (
+                          <a
+                            className="break-all text-primary underline-offset-4 hover:underline"
+                            href={contact.contact_value}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {contact.contact_value}
+                          </a>
+                        ) : (
+                          <span className="text-foreground">{contact.contact_value}</span>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </SectionCard>
+            ) : null}
+
+            {services.length > 0 ? (
+              <SectionCard icon={<Briefcase className="h-4 w-4 text-primary" />} title="Hizmetler">
+                <div className="flex flex-wrap gap-2">
+                  {services.map((service) => (
+                    <Badge key={service.service_name} variant="outline" className="text-xs">
+                      {service.service_name}
+                    </Badge>
+                  ))}
+                </div>
+              </SectionCard>
+            ) : null}
+
+            {languages && languages.length > 0 ? (
+              <SectionCard icon={<Star className="h-4 w-4 text-primary" />} title="Diller">
+                <div className="flex flex-wrap gap-2">
+                  {languages.map((lang) => (
+                    <Badge key={lang.language_code} variant="secondary" className="text-xs">
+                      {lang.language_code}
+                      {lang.proficiency ? ` · ${lang.proficiency}` : ""}
+                    </Badge>
+                  ))}
+                </div>
+              </SectionCard>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 };

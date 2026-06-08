@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import heroVideo from "../../herovideo.mp4";
 const heroLogo = "/newlogo.png";
+const heroLandmarks = "/denemeremake.png";
 import RegisterInterestForm from "./RegisterInterestForm";
 
 const HeroSection = () => {
@@ -154,17 +154,11 @@ const HeroSection = () => {
 
           <div className="relative hidden lg:flex lg:justify-end">
             <div className="relative w-full max-w-[1180px] xl:max-w-[1320px] 2xl:max-w-[1460px]">
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-hidden="true"
+              <img
+                src={heroLandmarks}
+                alt=""
                 className="h-auto w-full object-contain object-right"
-              >
-                <source src={heroVideo} type="video/mp4" />
-              </video>
+              />
             </div>
           </div>
         </div>
