@@ -43,17 +43,6 @@ export default function SiteHeader() {
                 aria-hidden="true"
                 className="hidden h-5 w-px bg-slate-300/80 sm:block"
               />
-              <Link
-                to="/founders"
-                onClick={() => window.scrollTo({ top: 0, behavior: "auto" })}
-                className="text-sm font-semibold text-primary transition-colors hover:text-accent sm:text-base"
-              >
-                Biz kimiz?
-              </Link>
-              <span
-                aria-hidden="true"
-                className="hidden h-5 w-px bg-slate-300/80 lg:block"
-              />
               <div className="flex items-center gap-x-3">
                 <Link
                   to="/login?mode=login"

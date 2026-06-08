@@ -48,13 +48,23 @@ const CorteqsWhatIsAccordion = ({ className }: CorteqsWhatIsAccordionProps) => {
               İnsanlar burada toplulukları bulur, yeni bağlantılar kurar ve iş, destek veya işbirliği
               fırsatlarına ulaşır.
             </DialogDescription>
-            <div className="mt-6">
+            <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 to="/login?mode=signup"
                 className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-[#2f6fda] bg-[linear-gradient(135deg,#4285F4_0%,#3B78E7_100%)] px-5 text-sm font-bold text-white shadow-[0_16px_34px_rgba(66,133,244,0.34),inset_0_1px_0_rgba(255,255,255,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:saturate-110 sm:text-base"
               >
                 Kayıt ol!
               </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  const el = document.getElementById("kaydol");
+                  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-[#34A853]/60 bg-[linear-gradient(135deg,#34A853_0%,#2F9B4D_100%)] px-5 text-sm font-bold text-white shadow-[0_16px_34px_rgba(52,168,83,0.34),inset_0_1px_0_rgba(255,255,255,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:saturate-110 sm:text-base"
+              >
+                Bilgi al!
+              </button>
             </div>
           </div>
 
