@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Database, MapPin, Search, ShieldCheck, Slide
 import CatalogClaimRequestsPanel from "@/components/admin/catalog/CatalogClaimRequestsPanel";
 import CatalogEntityProfilePanel from "@/components/admin/catalog/CatalogEntityProfilePanel";
 import CatalogItemEditorsPanel from "@/components/admin/catalog/CatalogItemEditorsPanel";
+import RoleSearchSelect from "@/components/admin/RoleSearchSelect";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -806,6 +807,10 @@ const RoleChangeSection = ({
   const [pendingKey, setPendingKey] = useState<string>(currentRoleKey ?? NONE);
   const [saving, setSaving] = useState(false);
 
+  useEffect(() => {
+    setPendingKey(currentRoleKey ?? NONE);
+  }, [currentRoleKey]);
+
   const isDirty = pendingKey !== (currentRoleKey ?? NONE);
 
   const handleSave = async () => {
@@ -825,21 +830,23 @@ const RoleChangeSection = ({
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex items-center gap-2">
-          <Select value={pendingKey} onValueChange={setPendingKey}>
-            <SelectTrigger className="flex-1">
-              <SelectValue placeholder="Rol seçin..." />
-            </SelectTrigger>
-            <SelectContent>
-              {isClearable && (
-                <SelectItem value={NONE}>— Rol Yok —</SelectItem>
-              )}
-              {roles.map((role) => (
-                <SelectItem key={role.key} value={role.key}>
-                  {role.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <RoleSearchSelect
+            roles={[
+              ...(isClearable
+                ? [{ value: NONE, label: "— Rol Yok —", hint: "no_role", searchText: "rol yok none clear" }]
+                : []),
+              ...roles.map((role) => ({
+                value: role.key,
+                label: role.label,
+                hint: role.key,
+                searchText: `${role.label} ${role.key}`,
+              })),
+            ]}
+            value={pendingKey}
+            onValueChange={setPendingKey}
+            placeholder="Rol seçin..."
+            className="flex-1"
+          />
           <Button
             size="sm"
             disabled={!isDirty || saving}

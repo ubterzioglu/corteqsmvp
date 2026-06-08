@@ -44,8 +44,12 @@ const DirectoryProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
+  // catalog-directory.ts routes member items as /directory/profile/<slug> (e.g. "member-b82291bc...")
+  // instead of a UUID. Detect this and forward straight to the catalog page.
+  const isSlugParam = userId ? /^[a-z]+-[a-z0-9]+/i.test(userId) && !userId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i) : false;
+
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || isSlugParam) return;
     let isMounted = true;
 
     void (async () => {
@@ -75,10 +79,15 @@ const DirectoryProfilePage = () => {
     return () => {
       isMounted = false;
     };
-  }, [userId]);
+  }, [userId, isSlugParam]);
 
   if (!userId) {
     return <Navigate to="/directory" replace />;
+  }
+
+  // Param is already a catalog slug (member-xxx, isletme-xxx, etc.) — redirect directly
+  if (isSlugParam) {
+    return <Navigate to={`/directory/catalog/${userId}`} replace />;
   }
 
   if (slug) {
