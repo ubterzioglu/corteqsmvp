@@ -44,6 +44,12 @@ const KIND_ABBREVIATIONS: Record<UnifiedRecord["kind"], LegendItem> = {
     description: "CSV, import, manuel giriş veya başka kaynaklardan gelen katalog kayıtlarını temsil eder.",
     group: "Tür",
   },
+  member_profile: {
+    code: "MEM",
+    label: "Üye",
+    description: "Bir auth kullanıcısına bağlı üye katalog kaydını (item_type = member) temsil eder.",
+    group: "Tür",
+  },
   profile: {
     code: "KUL",
     label: "Kullanıcı",
@@ -275,7 +281,12 @@ const AdminCatalogPage = () => {
   }, [currentPage, effectiveFilters, toast]);
 
   useEffect(() => {
-    if (selectedRecord?.kind !== "catalog_item") {
+    // member_profile records are catalog_items rows (item_type = 'member'),
+    // so they load through the same catalog detail RPC as catalog_item.
+    const isCatalogBacked =
+      selectedRecord?.kind === "catalog_item" || selectedRecord?.kind === "member_profile";
+
+    if (!isCatalogBacked) {
       setSelectedCatalogDetail(null);
       return;
     }
@@ -502,6 +513,7 @@ const AdminCatalogPage = () => {
                   <SelectContent>
                     <SelectItem value="__all__">Tüm türler</SelectItem>
                     <SelectItem value="catalog_item">Katalog</SelectItem>
+                    <SelectItem value="member_profile">Üye</SelectItem>
                     <SelectItem value="profile">Kullanıcı</SelectItem>
                   </SelectContent>
                 </Select>
@@ -768,7 +780,7 @@ const AdminCatalogPage = () => {
       <Sheet open={Boolean(selectedRecord)} onOpenChange={(open) => (!open ? setSelectedRecord(null) : undefined)}>
         <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
           {selectedRecord ? (
-            selectedRecord.kind === "catalog_item" ? (
+            selectedRecord.kind === "catalog_item" || selectedRecord.kind === "member_profile" ? (
               selectedCatalogDetail ? (
                 <CatalogDetailSheet
                   detail={selectedCatalogDetail}

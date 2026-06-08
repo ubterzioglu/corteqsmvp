@@ -80,6 +80,26 @@ const baseRecords = [
     profileType: "Community_Leader",
     email: "ayse@example.com",
   },
+  {
+    id: "member-1",
+    kind: "member_profile" as const,
+    slug: "member-abc123",
+    itemType: "member",
+    title: "Mehmet Üye",
+    summary: "mehmet@example.com",
+    status: "published",
+    visibility: "public",
+    verificationStatus: "claimed",
+    platformRoleKey: "bireysel",
+    primaryCity: "Köln",
+    primaryCountryCode: "DE",
+    categoryLabels: [],
+    sourceTypes: [],
+    createdAt: "2026-06-08T10:00:00.000Z",
+    updatedAt: "2026-06-08T10:15:00.000Z",
+    profileType: "bireysel",
+    email: "mehmet@example.com",
+  },
 ];
 
 describe("AdminCatalogPage", () => {
@@ -120,7 +140,37 @@ describe("AdminCatalogPage", () => {
         });
       },
     );
-    getAdminCatalogItemDetailMock.mockResolvedValue({
+    getAdminCatalogItemDetailMock.mockImplementation((itemId: string) => {
+      if (itemId === "member-1") {
+        return Promise.resolve({
+          id: "member-1",
+          itemType: "member",
+          slug: "member-abc123",
+          title: "Mehmet Üye",
+          headline: "CorteQS üyesi",
+          shortDescription: "Bireysel üye kaydı",
+          longDescription: "Üye uzun açıklaması",
+          status: "published",
+          visibility: "public",
+          verificationStatus: "claimed",
+          createdAt: "2026-06-08T10:00:00.000Z",
+          updatedAt: "2026-06-08T10:15:00.000Z",
+          publishedAt: "2026-06-08T11:00:00.000Z",
+          primaryCity: "Köln",
+          primaryCountryCode: "DE",
+          categoryLabels: [],
+          sourceTypes: [],
+          thumbnailUrl: null,
+          platformRoleKey: "bireysel",
+          attributes: { bridge_source: "auth_member_sync" },
+          createdByUserId: "user-9",
+          categories: [],
+          locations: [{ city: "Köln", countryCode: "DE", addressLine: null, isPrimary: true }],
+          sources: [],
+        });
+      }
+
+      return Promise.resolve({
       id: "item-1",
       itemType: "organization",
       slug: "berlin-dernegi",
@@ -153,6 +203,7 @@ describe("AdminCatalogPage", () => {
           lastSeenAt: "2026-06-04T09:30:00.000Z",
         },
       ],
+    });
     });
   });
 
@@ -190,6 +241,21 @@ describe("AdminCatalogPage", () => {
     expect(screen.getByText(/Alexanderplatz 1/i)).toBeInTheDocument();
   });
 
+
+  it("opens catalog detail for member_profile records", async () => {
+    render(<AdminCatalogPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Mehmet Üye")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByText("Mehmet Üye"));
+
+    // The detail panel must render catalog content, not stay blank.
+    expect(await screen.findByRole("tab", { name: "Attribute Değerleri" })).toBeInTheDocument();
+    expect(screen.getByText("Bireysel üye kaydı")).toBeInTheDocument();
+    expect(getAdminCatalogItemDetailMock).toHaveBeenCalledWith("member-1");
+  });
 
   it("filters by kind and shows profile-specific detail without catalog tabs", async () => {
     render(<AdminCatalogPage />);

@@ -53,7 +53,10 @@ export interface AttributeOverrideConfig {
   overrideLabel?: string | null;
 }
 
-export type UnifiedRecordKind = "catalog_item" | "profile";
+// "member_profile" rows are catalog_items with item_type = 'member' and a
+// linked auth user (admin_list_unified_records, migration 20260608020000).
+// "profile" is retained for the legacy profiles-table shape.
+export type UnifiedRecordKind = "catalog_item" | "member_profile" | "profile";
 
 export interface UnifiedRecord {
   id: string;
