@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import CorteqsWhatIsAccordion from "./CorteqsWhatIsAccordion";
 const heroLogo = "/newlogo.png";
-const heroLandmarks = "/denemeremake.png";
 import RegisterInterestForm from "./RegisterInterestForm";
 
 const HeroSection = () => {
@@ -158,11 +157,18 @@ const HeroSection = () => {
 
           <div className="relative hidden lg:flex lg:justify-end">
             <div className="relative w-full max-w-[1180px] xl:max-w-[1320px] 2xl:max-w-[1460px]">
-              <img
-                src={heroLandmarks}
-                alt=""
-                className="h-auto w-full object-contain object-right"
-              />
+              <div className="relative overflow-hidden rounded-3xl">
+                <video
+                  src="/herovideo.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="h-auto w-full object-cover"
+                />
+                {/* köşe gölgelendirme */}
+                <div className="pointer-events-none absolute inset-0 rounded-3xl shadow-[inset_0_0_60px_30px_rgba(0,0,0,0.35)]" />
+              </div>
             </div>
           </div>
         </div>
