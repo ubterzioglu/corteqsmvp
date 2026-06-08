@@ -101,7 +101,7 @@ const DirectoryPage = () => {
 
       <main className="relative mx-auto w-full max-w-6xl px-4 py-10">
         {/* Hero card */}
-        <section className="mb-6 overflow-hidden rounded-[32px] border border-white/60 bg-gradient-to-br from-white/70 via-white/55 to-primary/5 shadow-[0_0_60px_-12px_rgba(66,133,244,0.28),0_0_60px_-12px_rgba(234,67,53,0.18),0_30px_80px_-48px_rgba(15,23,42,0.45)] backdrop-blur-xl">
+        <section className="mb-6 overflow-hidden rounded-[32px] border border-orange-300/70 bg-gradient-to-br from-white/70 via-white/55 to-primary/5 shadow-[0_0_80px_-8px_rgba(249,115,22,0.45),0_0_40px_-12px_rgba(251,188,5,0.35),0_30px_80px_-48px_rgba(15,23,42,0.45)] backdrop-blur-xl">
           <div className="flex items-center justify-between gap-6 p-6 md:p-8">
             {/* Left: text content */}
             <div className="min-w-0 flex-1">
@@ -109,7 +109,7 @@ const DirectoryPage = () => {
                 Türk Diaspora Ağı
               </p>
               <h1 className="text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
-                <span className="text-primary">CorteQS</span>{" "}
+                <span className="bg-[linear-gradient(90deg,#EA4335_0%,#FBBC05_28%,#34A853_52%,#4285F4_76%,#A259FF_100%)] bg-clip-text text-transparent">CorteQS</span>{" "}
                 <span>Türk Diaspora Ağı</span>
               </h1>
               <p className="mt-3 max-w-xl text-sm text-muted-foreground md:text-base">
@@ -118,8 +118,8 @@ const DirectoryPage = () => {
               {/* Stats row */}
               <div className="mt-4 flex flex-wrap gap-3">
                 {totalCount !== null ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-300 bg-orange-50 px-3 py-1 text-xs font-semibold text-orange-600">
+                    <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
                     {totalCount.toLocaleString("tr-TR")} kayıt
                   </span>
                 ) : null}
