@@ -3,7 +3,6 @@ import SectionErrorBoundary from "@/components/SectionErrorBoundary";
 import HeroSection from "@/components/HeroSection";
 import DiasporaSearchBar from "@/components/DiasporaSearchBar";
 import ConsultantCategories from "@/components/ConsultantCategories";
-import FeaturedConsultants from "@/components/FeaturedConsultants";
 import FeaturedEvents from "@/components/FeaturedEvents";
 import DiasporaMarqueeSection from "@/components/DiasporaMarqueeSection";
 import ChatBot from "@/components/chat/ChatBot";
@@ -30,7 +29,6 @@ const Index = () => {
           <DiasporaSearchBar />
         </SectionErrorBoundary>
         <ConsultantCategories />
-        <FeaturedConsultants />
         <GlobalNetworkShowcaseSection />
         <FeaturedEvents />
         <LandingFoundersSection />
