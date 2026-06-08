@@ -178,6 +178,13 @@ const HeroSection = () => {
                 />
                 {/* köşe gölgelendirme */}
                 <div className="pointer-events-none absolute inset-0 rounded-3xl shadow-[inset_0_0_60px_30px_rgba(0,0,0,0.35)]" />
+                {/* sol kenar smooth geçiş */}
+                <div
+                  className="pointer-events-none absolute inset-y-0 left-0 w-32 rounded-l-3xl"
+                  style={{
+                    background: "linear-gradient(to right, hsl(var(--background)) 0%, transparent 100%)",
+                  }}
+                />
               </div>
             </div>
           </div>
