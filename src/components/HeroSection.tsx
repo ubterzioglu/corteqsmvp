@@ -61,12 +61,12 @@ const HeroSection = () => {
               <div className="mb-3 flex flex-col items-start gap-3 md:flex-row md:items-center">
                 <img src={heroLogo} alt="CorteQS Logo" className="w-full max-w-[152px] shrink-0 md:max-w-[176px]" />
                 <h1 className="text-2xl font-extrabold leading-[0.95] text-foreground md:text-4xl 2xl:text-[2.75rem]">
-                  Türk Diasporasını Birleştiren{" "}
+                  Dünyadaki Türkleri Bir Araya Getiren{" "}
                   <span className="text-accent">Platform</span>
                 </h1>
               </div>
               <p className="hero-description mb-5 max-w-lg text-[15px] leading-relaxed text-muted-foreground md:text-base 2xl:max-w-xl 2xl:text-[1.05rem]">
-                Dünyanın her yerindeki Türkleri tek çatı altında buluşturur.
+                Dünyanın farklı yerlerinde yaşayan Türkleri sosyal ve ekonomik olarak birbirine bağlıyoruz.
                 <br />
                 Ücretsiz kayıt ol! Ağını genişlet! Bağlan, keşfet, birlikte büyü!
               </p>

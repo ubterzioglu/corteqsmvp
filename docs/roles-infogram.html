@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CorteQS — Kullanıcı & Rol Sistemi İnfogram</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --card: #1a1d27;
+      --card2: #20243a;
+      --border: #2e3350;
+      --accent1: #6c63ff;
+      --accent2: #00d4aa;
+      --accent3: #ff6b6b;
+      --accent4: #ffa94d;
+      --accent5: #74c0fc;
+      --text: #e8eaf6;
+      --muted: #8892b0;
+      --green: #51cf66;
+      --yellow: #ffd43b;
+      --red: #ff6b6b;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      padding: 32px 16px;
+    }
+    h1 { font-size: 2rem; font-weight: 800; }
+    h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; }
+    h3 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+    h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 6px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    p { color: var(--muted); margin-bottom: 10px; line-height: 1.7; }
+    a { color: var(--accent1); }
+    code {
+      background: rgba(108,99,255,0.15);
+      color: var(--accent5);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 12px;
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    /* Layout */
+    .page { max-width: 1200px; margin: 0 auto; }
+    .section { margin-bottom: 48px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    @media(max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+    @media(max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .card-accent1 { border-left: 4px solid var(--accent1); }
+    .card-accent2 { border-left: 4px solid var(--accent2); }
+    .card-accent3 { border-left: 4px solid var(--accent3); }
+    .card-accent4 { border-left: 4px solid var(--accent4); }
+    .card-accent5 { border-left: 4px solid var(--accent5); }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #1a1d27 0%, #20243a 50%, #1a1d27 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 40px;
+      margin-bottom: 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(108,99,255,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 50%, rgba(0,212,170,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero h1 { margin-bottom: 12px; background: linear-gradient(135deg, #a78bfa, #6c63ff, #00d4aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { font-size: 1rem; max-width: 700px; margin: 0 auto 24px; }
+    .hero-stats { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2rem; font-weight: 800; color: var(--accent1); }
+    .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Section header */
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-num {
+      background: var(--accent1);
+      color: white;
+      border-radius: 8px;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+    .section-num.green { background: var(--accent2); color: #0f1117; }
+    .section-num.orange { background: var(--accent4); color: #0f1117; }
+    .section-num.red { background: var(--accent3); }
+    .section-num.blue { background: var(--accent5); color: #0f1117; }
+
+    /* Tags / Badges */
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .badge-purple { background: rgba(108,99,255,0.2); color: #a78bfa; border: 1px solid rgba(108,99,255,0.3); }
+    .badge-green  { background: rgba(81,207,102,0.15); color: #69db7c; border: 1px solid rgba(81,207,102,0.3); }
+    .badge-orange { background: rgba(255,169,77,0.15); color: #ffc078; border: 1px solid rgba(255,169,77,0.3); }
+    .badge-red    { background: rgba(255,107,107,0.15); color: #ff8787; border: 1px solid rgba(255,107,107,0.3); }
+    .badge-blue   { background: rgba(116,192,252,0.15); color: #a5d8ff; border: 1px solid rgba(116,192,252,0.3); }
+    .badge-teal   { background: rgba(0,212,170,0.15); color: #63e6be; border: 1px solid rgba(0,212,170,0.3); }
+
+    /* Table */
+    .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .tbl th { background: var(--card2); color: var(--muted); font-weight: 700; text-align: left; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .tbl td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .tbl tr:last-child td { border-bottom: none; }
+    .tbl tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* Flow/Steps */
+    .flow { display: flex; flex-direction: column; gap: 0; }
+    .flow-step {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 16px 0;
+      position: relative;
+    }
+    .flow-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 18px; top: 56px;
+      width: 2px; height: calc(100% - 24px);
+      background: var(--border);
+    }
+    .flow-icon {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+      position: relative; z-index: 1;
+    }
+    .flow-body { flex: 1; }
+    .flow-title { font-weight: 700; margin-bottom: 4px; }
+    .flow-desc { color: var(--muted); font-size: 13px; }
+
+    /* Priority steps */
+    .priority-chain { display: flex; flex-direction: column; gap: 8px; }
+    .priority-item {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+    }
+    .priority-rank {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 12px;
+      flex-shrink: 0;
+    }
+    .priority-arrow {
+      text-align: center;
+      color: var(--muted);
+      font-size: 18px;
+      padding: 2px 0;
+    }
+    .priority-body { flex: 1; }
+    .priority-title { font-weight: 700; font-size: 13px; }
+    .priority-sub { font-size: 12px; color: var(--muted); }
+    .priority-source {
+      font-size: 11px; font-family: monospace;
+      background: rgba(255,255,255,0.05);
+      border-radius: 4px; padding: 2px 8px;
+      color: var(--accent5);
+    }
+
+    /* Schema box */
+    .schema-box {
+      background: #12151f;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 12px;
+      overflow-x: auto;
+    }
+    .schema-box .col-name { color: var(--accent5); }
+    .schema-box .col-type { color: var(--accent4); }
+    .schema-box .col-note { color: var(--muted); }
+    .schema-box .col-pk   { color: var(--accent3); font-weight: 700; }
+
+    /* Role family */
+    .role-family {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .role-family-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .role-family-title { font-weight: 700; font-size: 13px; }
+    .role-family-count {
+      background: rgba(108,99,255,0.2);
+      color: var(--accent1);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 8px;
+    }
+    .role-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .role-tag {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Compare table */
+    .compare-yes { color: var(--green); font-weight: 700; }
+    .compare-no  { color: var(--red); font-weight: 700; }
+
+    /* State machine */
+    .states { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .state-box {
+      border-radius: 10px;
+      padding: 10px 16px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 13px;
+      min-width: 100px;
+    }
+    .state-arrow { font-size: 20px; color: var(--muted); }
+
+    /* Callout */
+    .callout {
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .callout-body { flex: 1; }
+    .callout-title { font-weight: 700; margin-bottom: 4px; }
+    .callout-text { font-size: 13px; color: var(--muted); }
+    .callout.warn { background: rgba(255,169,77,0.08); border: 1px solid rgba(255,169,77,0.25); }
+    .callout.info { background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.25); }
+    .callout.danger { background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.25); }
+    .callout.success { background: rgba(81,207,102,0.08); border: 1px solid rgba(81,207,102,0.25); }
+
+    /* Feature grid */
+    .feature-pill {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-family: monospace;
+      color: var(--accent5);
+    }
+    .feature-group-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+    .feature-group-label:first-child { margin-top: 0; }
+    .feature-list { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    /* Table of contents */
+    .toc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 48px;
+    }
+    .toc-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    @media(max-width: 600px) { .toc-list { grid-template-columns: 1fr; } }
+    .toc-list a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 13px;
+      display: flex; align-items: center; gap: 8px;
+      padding: 4px 0;
+      transition: color 0.2s;
+    }
+    .toc-list a:hover { color: var(--text); }
+    .toc-list .toc-num { color: var(--accent1); font-weight: 700; font-size: 11px; min-width: 20px; }
+
+    /* Divider */
+    .divider { height: 1px; background: var(--border); margin: 48px 0; }
+
+    /* Tip box */
+    .tip { background: rgba(0,212,170,0.06); border: 1px solid rgba(0,212,170,0.2); border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #63e6be; margin-top: 12px; }
+    .tip strong { color: var(--accent2); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>CorteQS Kullanıcı & Rol Sistemi</h1>
+    <p>Database katmanından frontend hook'larına kadar <strong>AFS (Attribute · Feature · State)</strong> sistemini junior developer gözünden anlatan tam referans dökümanı.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">15</div><div class="stat-label">Tablo</div></div>
+      <div class="stat"><div class="stat-num">82</div><div class="stat-label">Rol</div></div>
+      <div class="stat"><div class="stat-num">36</div><div class="stat-label">Feature</div></div>
+      <div class="stat"><div class="stat-num">11</div><div class="stat-label">Rol Ailesi</div></div>
+      <div class="stat"><div class="stat-num">2</div><div class="stat-label">Paralel Sistem</div></div>
+    </div>
+  </div>
+
+  <!-- İÇİNDEKİLER -->
+  <div class="toc">
+    <h3 style="margin-bottom:14px;">📋 İçindekiler</h3>
+    <ul class="toc-list">
+      <li><a href="#big-picture"><span class="toc-num">01</span> Büyük Resim — İki Sistem</a></li>
+      <li><a href="#legacy"><span class="toc-num">02</span> Legacy Sistem (Eski)</a></li>
+      <li><a href="#rolesgo"><span class="toc-num">03</span> RolesGo Sistemi (Yeni)</a></li>
+      <li><a href="#roller"><span class="toc-num">04</span> 82 Rolün Aile Haritası</a></li>
+      <li><a href="#feature"><span class="toc-num">05</span> Feature Catalog (36 Feature)</a></li>
+      <li><a href="#hierarchy"><span class="toc-num">06</span> Feature Çözümleme Hiyerarşisi</a></li>
+      <li><a href="#attribute"><span class="toc-num">07</span> Attribute Sistemi</a></li>
+      <li><a href="#approval"><span class="toc-num">08</span> Onay (Approval) State Machine</a></li>
+      <li><a href="#tables"><span class="toc-num">09</span> 15 Tablonun Tam Haritası</a></li>
+      <li><a href="#frontend"><span class="toc-num">10</span> Frontend Entegrasyonu</a></li>
+      <li><a href="#compare"><span class="toc-num">11</span> Legacy vs RolesGo Karşılaştırma</a></li>
+    </ul>
+  </div>
+
+  <!-- 01 BÜYÜK RESİM -->
+  <div class="section" id="big-picture">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div>
+        <h2>Büyük Resim — Neden İki Sistem Var?</h2>
+        <p style="margin:0">Her sistemi anlamadan kod yazmak tehlikeli olabilir.</p>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Junior'a kritik uyarı</div>
+        <div class="callout-text">Bu projede <strong>iki ayrı auth/rol sistemi</strong> aynı anda çalışıyor. Birbirini bilmiyor gibi davranıyor ama aslında paralel. Birini atlarsanız bug çıkar. Her feature'da hangisini kullandığınızı bilin.</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card card-accent3">
+        <h4>Legacy Sistem (Eski — Hâlâ Aktif)</h4>
+        <h3 style="color: var(--accent3);">Basit ama sınırlı</h3>
+        <p>Kullanıcının bir <code>profile_type</code> alanı var. 6 sabit değerden biri. Admin olmak için ayrı bir <code>admin_users</code> tablosuna eklenmek gerekiyor.</p>
+        <div style="margin-top:12px;">
+          <span class="badge badge-orange">6 sabit rol</span>
+          <span class="badge badge-red" style="margin-left:6px;">genişletilemiyor</span>
+          <span class="badge badge-blue" style="margin-left:6px;">hâlâ prod'da aktif</span>
+        </div>
+      </div>
+      <div class="card card-accent2">
+        <h4>RolesGo Sistemi (Yeni — MVP Mayıs 2026)</h4>
+        <h3 style="color: var(--accent2);">Esnek ve genişletilebilir</h3>
+        <p>82 rol, 36 feature, attribute yönetimi, onay iş akışı, audit log. Migration yazmadan yeni rol eklenebiliyor. Tam bir RBAC + feature flag sistemi.</p>
+        <div style="margin-top:12px;">
+          <span class="badge badge-teal">82 rol</span>
+          <span class="badge badge-green" style="margin-left:6px;">migration'sız genişler</span>
+          <span class="badge badge-purple" style="margin-left:6px;">audit trail var</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <div class="callout info">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Nasıl birlikte çalışıyorlar?</div>
+          <div class="callout-text">Legacy sistem, eski sayfalar tarafından hâlâ kullanılıyor. <code>is_admin()</code> SQL fonksiyonu her iki sistemi de kontrol ediyor (<code>admin_users</code> tablosu VE <code>profiles.platform_role = 'admin'</code>). Yeni feature geliştirirken <strong>RolesGo sistemini</strong> kullanın.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 02 LEGACY -->
+  <div class="section" id="legacy">
+    <div class="section-header">
+      <div class="section-num red">02</div>
+      <div>
+        <h2>Legacy Sistem — Eski Yapı</h2>
+        <p style="margin:0">Şu an prod'da çalışan, 6 sabit rollü sistem.</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div>
+        <h4>Ana Profil Tablosu</h4>
+        <div class="schema-box">
+          <div><span class="col-pk">user_id</span>   <span class="col-type">UUID</span>     <span class="col-note">-- PRIMARY KEY</span></div>
+          <div><span class="col-name">email</span>     <span class="col-type">TEXT</span></div>
+          <div><span class="col-name">full_name</span> <span class="col-type">TEXT</span></div>
+          <div><span class="col-name">profile_type</span> <span class="col-type">ENUM</span>  <span class="col-note">-- ← 6 değer buraya</span></div>
+          <div><span class="col-name">auth_provider</span> <span class="col-type">TEXT</span></div>
+          <div><span class="col-name">avatar_url</span>   <span class="col-type">TEXT</span></div>
+          <div><span class="col-name">created_at</span>   <span class="col-type">TIMESTAMPTZ</span></div>
+        </div>
+        <p style="margin-top:10px;font-size:12px;">Tablo adı: <code>public.user_profiles</code></p>
+      </div>
+      <div>
+        <h4>Admin İşaretçi Tablosu</h4>
+        <div class="schema-box">
+          <div><span class="col-pk">user_id</span>   <span class="col-type">UUID</span>  <span class="col-note">-- PRIMARY KEY</span></div>
+          <div><span class="col-name">created_at</span> <span class="col-type">TIMESTAMPTZ</span></div>
+          <div style="margin-top:12px; color: var(--muted);">-- Sadece bu kadar!</div>
+          <div style="color: var(--muted);">-- Tabloda olmak = admin olmak</div>
+        </div>
+        <p style="margin-top:10px;font-size:12px;">Tablo adı: <code>public.admin_users</code></p>
+        <div class="callout danger" style="margin-top:10px;padding:10px 14px;">
+          <div class="callout-icon" style="font-size:14px;">🚨</div>
+          <div class="callout-body">
+            <div class="callout-title" style="font-size:12px;">Dikkat</div>
+            <div class="callout-text" style="font-size:12px;">Bu tabloya kayıt eklemek kullanıcıyı admin yapıyor. Direkt <code>INSERT</code> yapmayın, admin panelini kullanın.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h4 style="margin-bottom:12px;">6 Legacy Rol Tipi</h4>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>profile_type değeri</th>
+          <th>Türkçe Anlamı</th>
+          <th>Kim Kullanır</th>
+          <th>Durum</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>bireysel</code></td>
+          <td>Bireysel Üye</td>
+          <td>Standart kullanıcı, kişisel hesap</td>
+          <td><span class="badge badge-green">Aktif</span></td>
+        </tr>
+        <tr>
+          <td><code>danisman</code></td>
+          <td>Danışman</td>
+          <td>Profesyonel hizmet sunan kişi</td>
+          <td><span class="badge badge-green">Aktif</span></td>
+        </tr>
+        <tr>
+          <td><code>isletme</code></td>
+          <td>İşletme</td>
+          <td>Ticari kuruluş hesabı</td>
+          <td><span class="badge badge-green">Aktif</span></td>
+        </tr>
+        <tr>
+          <td><code>kurulus-dernek</code></td>
+          <td>Kuruluş / Dernek</td>
+          <td>Sivil toplum kuruluşları</td>
+          <td><span class="badge badge-green">Aktif</span></td>
+        </tr>
+        <tr>
+          <td><code>blogger-vlogger-youtuber</code></td>
+          <td>İçerik Üreticisi</td>
+          <td>Dijital içerik üreten kişiler</td>
+          <td><span class="badge badge-green">Aktif</span></td>
+        </tr>
+        <tr>
+          <td><code>sehir-elcisi</code></td>
+          <td>Şehir Elçisi</td>
+          <td>Community lead, şehir temsilcisi</td>
+          <td><span class="badge badge-green">Aktif</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip" style="margin-top:16px;">
+      <strong>💡 Junior ipucu:</strong> Legacy sistemi yeni feature'larda kullanmayın. Eğer bir sayfada <code>profile_type</code> kontrolü görüyorsanız, bu legacy kodu. RolesGo'ya geçiş yapılacak.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 03 ROLESGO -->
+  <div class="section" id="rolesgo">
+    <div class="section-header">
+      <div class="section-num green">03</div>
+      <div>
+        <h2>RolesGo Sistemi — Yeni Yapı</h2>
+        <p style="margin:0">Mayıs 2026'da eklendi. Yeni feature'lar için bu sistemi kullanın.</p>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <div class="callout-title">Neden daha iyi?</div>
+        <div class="callout-text">Yeni bir rol tipi eklemek için migration yazmak gerekmiyor. Sadece <code>roles</code> tablosuna bir satır eklemek yeterli. Feature'ları da aynı şekilde <code>feature_catalog</code>'a ekleyebilirsiniz.</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div>
+        <h4>Roller Tablosu</h4>
+        <div class="schema-box">
+          <div><span class="col-pk">id</span>         <span class="col-type">UUID</span>        <span class="col-note">-- PRIMARY KEY</span></div>
+          <div><span class="col-name">key</span>        <span class="col-type">TEXT UNIQUE</span> <span class="col-note">-- rol tanımlayıcısı</span></div>
+          <div><span class="col-name">label</span>      <span class="col-type">TEXT</span>        <span class="col-note">-- görüntü adı</span></div>
+          <div><span class="col-name">description</span><span class="col-type">TEXT</span></div>
+          <div><span class="col-name">sort_order</span> <span class="col-type">INT</span>         <span class="col-note">-- aile gruplarını ayırır</span></div>
+          <div><span class="col-name">is_active</span>  <span class="col-type">BOOLEAN</span></div>
+          <div><span class="col-name">created_at</span> <span class="col-type">TIMESTAMPTZ</span></div>
+        </div>
+        <p style="margin-top:10px;font-size:12px;">Tablo adı: <code>public.roles</code> — 82 satır</p>
+      </div>
+      <div>
+        <h4>Kullanıcı ↔ Rol Atama Tablosu</h4>
+        <div class="schema-box">
+          <div><span class="col-pk">user_id</span>    <span class="col-type">UUID</span>  <span class="col-note">-- PK + FK → auth.users</span></div>
+          <div><span class="col-name">role_id</span>    <span class="col-type">UUID</span>  <span class="col-note">-- FK → public.roles</span></div>
+          <div><span class="col-name">updated_by</span> <span class="col-type">UUID</span>  <span class="col-note">-- kim atadı?</span></div>
+          <div><span class="col-name">created_at</span> <span class="col-type">TIMESTAMPTZ</span></div>
+          <div><span class="col-name">updated_at</span> <span class="col-type">TIMESTAMPTZ</span></div>
+          <div style="margin-top:12px; color: var(--yellow);">-- 1 kullanıcı = 1 rol (one-to-one)</div>
+          <div style="color: var(--muted);">-- user_id PRIMARY KEY olduğu için</div>
+        </div>
+        <p style="margin-top:10px;font-size:12px;">Tablo adı: <code>public.user_role_assignments</code></p>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body">
+        <div class="callout-title">sort_order neden önemli?</div>
+        <div class="callout-text"><code>sort_order</code> 10–60 arası = legacy roller. 1000+ = yeni RolesGo rolleri. Aynı tabloda ama farklı "aileler". Yeni rol eklerken doğru aile range'ini kullanın.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 04 ROL AİLELERİ -->
+  <div class="section" id="roller">
+    <div class="section-header">
+      <div class="section-num orange">04</div>
+      <div>
+        <h2>82 Rolün Aile Haritası</h2>
+        <p style="margin:0">Her aile belirli bir <code>sort_order</code> aralığında gruplandırılmış.</p>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="role-family">
+        <div class="role-family-header">
+          <div class="role-family-title">🏛️ Legacy</div>
+          <div class="role-family-count">6 rol</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">sort_order: 10–60</div>
+        <div class="role-tags">
+          <span class="role-tag">bireysel</span>
+          <span class="role-tag">danisman</span>
+          <span class="role-tag">isletme</span>
+          <span class="role-tag">kurulus-dernek</span>
+          <span class="role-tag">blogger-vlogger</span>
+          <span class="role-tag">sehir-elcisi</span>
+        </div>
+      </div>
+
+      <div class="role-family">
+        <div class="role-family-header">
+          <div class="role-family-title">👤 User Ailesi</div>
+          <div class="role-family-count">5 rol</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">sort_order: 1000+</div>
+        <div class="role-tags">
+          <span class="role-tag">standard</span>
+          <span class="role-tag">premium</span>
+          <span class="role-tag">verified</span>
+          <span class="role-tag">+2 daha</span>
+        </div>
+      </div>
+
+      <div class="role-family">
+        <div class="role-family-header">
+          <div class="role-family-title">🛡️ Admin Ailesi</div>
+          <div class="role-family-count">3 rol</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">sort_order: 1100+</div>
+        <div class="role-tags">
+          <span class="role-tag" style="color: var(--accent4);">ContentModerator</span>
+          <span class="role-tag" style="color: var(--accent1);">PlatformAdmin</span>
+          <span class="role-tag" style="color: var(--accent3);">SuperAdmin</span>
+        </div>
+      </div>
+
+      <div class="role-family">
+        <div class="role-family-header">
+          <div class="role-family-title">💼 Danışman Ailesi</div>
+          <div class="role-family-count">11 rol</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">sort_order: 1200–1300</div>
+        <div class="role-tags">
+          <span class="role-tag">hukuk</span>
+          <span class="role-tag">finans</span>
+          <span class="role-tag">sağlık</span>
+          <span class="role-tag">kariyer</span>
+          <span class="role-tag">+7 daha</span>
+        </div>
+      </div>
+
+      <div class="role-family">
+        <div class="role-family-header">
+          <div class="role-family-title">🏢 Kuruluş Ailesi</div>
+          <div class="role-family-count">8 rol</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">sort_order: 1400+</div>
+        <div class="role-tags">
+          <span class="role-tag">dernek</span>
+          <span class="role-tag">vakıf</span>
+          <span class="role-tag">sendika</span>
+          <span class="role-tag">+5 daha</span>
+        </div>
+      </div>
+
+      <div class="role-family">
+        <div class="role-family-header">
+          <div class="role-family-title">🏪 İşletme Ailesi</div>
+          <div class="role-family-count">24 rol</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">sort_order: 1600–1840</div>
+        <div class="role-tags">
+          <span class="role-tag">kafe</span>
+          <span class="role-tag">restoran</span>
+          <span class="role-tag">yazılım</span>
+          <span class="role-tag">gayrimenkul</span>
+          <span class="role-tag">+20 daha</span>
+        </div>
+      </div>
+
+      <div class="role-family">
+        <div class="role-family-header">
+          <div class="role-family-title">🏥 Sağlık Ailesi</div>
+          <div class="role-family-count">7 rol</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">sort_order: 2000–2060</div>
+        <div class="role-tags">
+          <span class="role-tag">doktor</span>
+          <span class="role-tag">eczane</span>
+          <span class="role-tag">klinik</span>
+          <span class="role-tag">+4 daha</span>
+        </div>
+      </div>
+
+      <div class="role-family">
+        <div class="role-family-header">
+          <div class="role-family-title">🎉 Etkinlik Ailesi</div>
+          <div class="role-family-count">3 rol</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">sort_order: 2100+</div>
+        <div class="role-tags">
+          <span class="role-tag">etkinlik organizatörü</span>
+          <span class="role-tag">+2 daha</span>
+        </div>
+      </div>
+
+      <div class="role-family">
+        <div class="role-family-header">
+          <div class="role-family-title">💼 İş Ailesi</div>
+          <div class="role-family-count">4 rol</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">sort_order: 2200+</div>
+        <div class="role-tags">
+          <span class="role-tag">iş arayan</span>
+          <span class="role-tag">işveren</span>
+          <span class="role-tag">+2 daha</span>
+        </div>
+      </div>
+
+      <div class="role-family">
+        <div class="role-family-header">
+          <div class="role-family-title">🤝 Topluluk Ailesi</div>
+          <div class="role-family-count">5 rol</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">sort_order: 2300+</div>
+        <div class="role-tags">
+          <span class="role-tag">mentor</span>
+          <span class="role-tag">gönüllü</span>
+          <span class="role-tag">+3 daha</span>
+        </div>
+      </div>
+
+      <div class="role-family">
+        <div class="role-family-header">
+          <div class="role-family-title">🛒 Marketplace Ailesi</div>
+          <div class="role-family-count">5 rol</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">sort_order: 2400+</div>
+        <div class="role-tags">
+          <span class="role-tag">satıcı</span>
+          <span class="role-tag">alıcı</span>
+          <span class="role-tag">+3 daha</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:20px;">
+      <strong>💡 Junior ipucu:</strong> Yeni bir rol ailesi ekleyecekseniz, 2400'ün üstünde bir sort_order aralığı seçin ve <code>roles</code> tablosuna satırları ekleyin. Kod değişikliği gerekmez!
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 05 FEATURE CATALOG -->
+  <div class="section" id="feature">
+    <div class="section-header">
+      <div class="section-num blue">05</div>
+      <div>
+        <h2>Feature Catalog — 36 Feature</h2>
+        <p style="margin:0">"Bu kullanıcı bu özelliği kullanabilir mi?" sorusunun cevabı burada.</p>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Feature nedir?</div>
+        <div class="callout-text">Bir kullanıcının yapabildiği veya görebildiği şeylerin anahtarları. Örneğin <code>cadde.access</code> = Cadde sayfasına girebilir mi? <code>events.create</code> = Etkinlik oluşturabilir mi? Her feature için "açık/kapalı" kararı verilir.</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <h4>Feature Catalog Tablosu</h4>
+        <div class="schema-box">
+          <div><span class="col-pk">key</span>               <span class="col-type">TEXT</span>    <span class="col-note">-- PRIMARY KEY</span></div>
+          <div><span class="col-name">label</span>             <span class="col-type">TEXT</span>    <span class="col-note">-- görüntü adı</span></div>
+          <div><span class="col-name">description</span>       <span class="col-type">TEXT</span></div>
+          <div><span class="col-name">scope_role</span>        <span class="col-type">TEXT</span>    <span class="col-note">-- hangi roller için?</span></div>
+          <div><span class="col-name">is_active_globally</span><span class="col-type">BOOLEAN</span><span class="col-note">-- global kapatma</span></div>
+        </div>
+        <p style="margin-top:10px;font-size:12px;">Tablo adı: <code>public.feature_catalog</code></p>
+      </div>
+      <div>
+        <h4>Rol → Feature Mapping</h4>
+        <div class="schema-box">
+          <div><span class="col-pk">role_id</span>     <span class="col-type">UUID</span>    <span class="col-note">-- PK (composite)</span></div>
+          <div><span class="col-pk">feature_key</span> <span class="col-type">TEXT</span>    <span class="col-note">-- PK (composite)</span></div>
+          <div><span class="col-name">is_enabled</span> <span class="col-type">BOOLEAN</span><span class="col-note">-- bu rol için açık mı?</span></div>
+          <div><span class="col-name">updated_by</span> <span class="col-type">UUID</span></div>
+        </div>
+        <p style="margin-top:10px;font-size:12px;">Tablo adı: <code>public.role_feature_flags</code></p>
+
+        <div class="schema-box" style="margin-top:10px;">
+          <div><span class="col-pk">user_id</span>     <span class="col-type">UUID</span>    <span class="col-note">-- PK (composite)</span></div>
+          <div><span class="col-pk">feature_key</span> <span class="col-type">TEXT</span>    <span class="col-note">-- PK (composite)</span></div>
+          <div><span class="col-name">is_enabled</span> <span class="col-type">BOOLEAN</span><span class="col-note">-- kişisel override</span></div>
+          <div><span class="col-name">reason</span>     <span class="col-type">TEXT</span>    <span class="col-note">-- neden override?</span></div>
+        </div>
+        <p style="margin-top:10px;font-size:12px;">Tablo adı: <code>public.user_feature_overrides</code></p>
+      </div>
+    </div>
+
+    <h4 style="margin-top:24px;margin-bottom:12px;">Generik Feature'lar (24)</h4>
+
+    <div class="feature-group-label">Profil Yönetimi</div>
+    <div class="feature-list">
+      <div class="feature-pill">profile.view_own</div>
+      <div class="feature-pill">profile.edit_own</div>
+      <div class="feature-pill">profile.edit_public</div>
+      <div class="feature-pill">profile.linkedin_card</div>
+      <div class="feature-pill">profile.website_card</div>
+      <div class="feature-pill">profile.cv_upload</div>
+      <div class="feature-pill">profile.presentation_upload</div>
+    </div>
+
+    <div class="feature-group-label">Dizin</div>
+    <div class="feature-list">
+      <div class="feature-pill">directory.visible</div>
+      <div class="feature-pill">directory.featured</div>
+    </div>
+
+    <div class="feature-group-label">İletişim</div>
+    <div class="feature-list">
+      <div class="feature-pill">contact.receive</div>
+      <div class="feature-pill">contact.show_whatsapp</div>
+    </div>
+
+    <div class="feature-group-label">İçerik</div>
+    <div class="feature-list">
+      <div class="feature-pill">content.create</div>
+      <div class="feature-pill">content.edit_own</div>
+    </div>
+
+    <div class="feature-group-label">Üretim / Oluşturma</div>
+    <div class="feature-list">
+      <div class="feature-pill">events.create</div>
+      <div class="feature-pill">offers.create</div>
+      <div class="feature-pill">referral.create</div>
+    </div>
+
+    <div class="feature-group-label">Platform</div>
+    <div class="feature-list">
+      <div class="feature-pill">cadde.access</div>
+      <div class="feature-pill">city.manage</div>
+      <div class="feature-pill">whatsapp_landing.edit_assigned</div>
+      <div class="feature-pill">admin.requires_approval</div>
+    </div>
+
+    <h4 style="margin-top:24px;margin-bottom:12px;">Legacy Bireysel Feature'lar (12)</h4>
+    <div class="feature-list">
+      <div class="feature-pill" style="color:var(--muted);">individual.about</div>
+      <div class="feature-pill" style="color:var(--muted);">individual.service_requests</div>
+      <div class="feature-pill" style="color:var(--muted);">individual.events</div>
+      <div class="feature-pill" style="color:var(--muted);">individual.follows</div>
+      <div class="feature-pill" style="color:var(--muted);">individual.whatsapp</div>
+      <div class="feature-pill" style="color:var(--muted);">individual.messages</div>
+      <div class="feature-pill" style="color:var(--muted);">individual.activity</div>
+      <div class="feature-pill" style="color:var(--muted);">individual.cv_request</div>
+      <div class="feature-pill" style="color:var(--muted);">individual.job_seeking_badge</div>
+      <div class="feature-pill" style="color:var(--muted);">individual.moving_soon_badge</div>
+      <div class="feature-pill" style="color:var(--muted);">individual.volunteer_mentorship</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 06 HİYERARŞİ -->
+  <div class="section" id="hierarchy">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <div>
+        <h2>Feature Çözümleme Hiyerarşisi</h2>
+        <p style="margin:0">"Bu feature aktif mi?" sorusu 5 adımda cevap bulur. Sıra önemli!</p>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Junior için kritik</div>
+        <div class="callout-text">Bir feature'ın açık olup olmadığını <strong>siz hesaplamayın</strong>. <code>useFeatureFlags()</code> hook'unu veya <code>get_current_user_features()</code> RPC'sini kullanın. Bu 5 adımlı mantık zaten orada uygulandı.</div>
+      </div>
+    </div>
+
+    <div class="priority-chain">
+      <div class="priority-item">
+        <div class="priority-rank" style="background:rgba(255,107,107,0.2);color:var(--accent3);">1</div>
+        <div class="priority-body">
+          <div class="priority-title">Kişisel Override (En Yüksek Öncelik)</div>
+          <div class="priority-sub">Admin, bu kullanıcı için özellikle bir istisna tanımladıysa — bu kazanır. Her şeyi ezer.</div>
+        </div>
+        <div class="priority-source">user_feature_overrides</div>
+      </div>
+      <div class="priority-arrow">↓ bulunamazsa</div>
+      <div class="priority-item">
+        <div class="priority-rank" style="background:rgba(108,99,255,0.2);color:var(--accent1);">2</div>
+        <div class="priority-body">
+          <div class="priority-title">Rol Bazlı Ayar</div>
+          <div class="priority-sub">Kullanıcının rolü için bu feature açık/kapalı olarak ayarlandıysa — bu kullanılır.</div>
+        </div>
+        <div class="priority-source">role_feature_flags</div>
+      </div>
+      <div class="priority-arrow">↓ bulunamazsa</div>
+      <div class="priority-item">
+        <div class="priority-rank" style="background:rgba(255,169,77,0.2);color:var(--accent4);">3</div>
+        <div class="priority-body">
+          <div class="priority-title">Legacy Profile Type Varsayılanı</div>
+          <div class="priority-sub">Eski sistem: kullanıcının <code>profile_type</code>'ına göre default değer. Legacy kaldıkça burada kalacak.</div>
+        </div>
+        <div class="priority-source">role_feature_defaults</div>
+      </div>
+      <div class="priority-arrow">↓ bulunamazsa</div>
+      <div class="priority-item">
+        <div class="priority-rank" style="background:rgba(116,192,252,0.2);color:var(--accent5);">4</div>
+        <div class="priority-body">
+          <div class="priority-title">Global Kapatma Kontrolü</div>
+          <div class="priority-sub">Feature tüm sistemde kapalıysa (<code>is_active_globally = false</code>) — herkes için kapalı.</div>
+        </div>
+        <div class="priority-source">feature_catalog</div>
+      </div>
+      <div class="priority-arrow">↓ hâlâ bulunamazsa</div>
+      <div class="priority-item" style="border-color:rgba(255,255,255,0.05);">
+        <div class="priority-rank" style="background:rgba(136,146,176,0.15);color:var(--muted);">5</div>
+        <div class="priority-body">
+          <div class="priority-title" style="color:var(--muted);">Varsayılan: Kapalı</div>
+          <div class="priority-sub">Hiçbir kayıt bulunamadıysa → feature kapalı sayılır.</div>
+        </div>
+        <div class="priority-source" style="color:var(--muted);">false (fallback)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 07 ATTRIBUTE -->
+  <div class="section" id="attribute">
+    <div class="section-header">
+      <div class="section-num orange">07</div>
+      <div>
+        <h2>Attribute Sistemi</h2>
+        <p style="margin:0">Kullanıcı profilindeki "ek bilgiler" — esnek, rol bazlı, onay destekli.</p>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Attribute nedir?</div>
+        <div class="callout-text">Profil tablosuna kolon eklemek yerine, dinamik "özellikler" sistemi. Örneğin "LinkedIn URL", "Uzmanlık Alanı", "CV Dosyası". Her attribute, hangi rol için gerekli/isteğe bağlı/görünür olduğunu ayrıca tanımlar.</div>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:20px;">
+      <div>
+        <h4>Attribute Catalog</h4>
+        <div class="schema-box">
+          <div><span class="col-pk">id</span>        <span class="col-type">UUID</span>  <span class="col-note">-- PK</span></div>
+          <div><span class="col-name">key</span>       <span class="col-type">TEXT UNIQUE</span></div>
+          <div><span class="col-name">label</span>     <span class="col-type">TEXT</span></div>
+          <div><span class="col-name">data_type</span> <span class="col-type">ENUM</span></div>
+          <div><span class="col-name">is_system</span> <span class="col-type">BOOLEAN</span></div>
+          <div><span class="col-name">is_active</span> <span class="col-type">BOOLEAN</span></div>
+        </div>
+      </div>
+      <div>
+        <h4>Rol Attribute Kuralları</h4>
+        <div class="schema-box">
+          <div><span class="col-pk">role_id</span>       <span class="col-type">UUID</span></div>
+          <div><span class="col-pk">attribute_id</span>   <span class="col-type">UUID</span></div>
+          <div><span class="col-name">is_enabled</span>   <span class="col-type">BOOL</span></div>
+          <div><span class="col-name">is_required</span>  <span class="col-type">BOOL</span></div>
+          <div><span class="col-name">user_can_edit</span><span class="col-type">BOOL</span></div>
+          <div><span class="col-name">user_can_hide</span><span class="col-type">BOOL</span></div>
+          <div><span class="col-name">requires_approval</span><span class="col-type">BOOL</span></div>
+        </div>
+      </div>
+      <div>
+        <h4>Kullanıcı Attribute Değerleri</h4>
+        <div class="schema-box">
+          <div><span class="col-pk">user_id</span>        <span class="col-type">UUID</span></div>
+          <div><span class="col-pk">attribute_id</span>    <span class="col-type">UUID</span></div>
+          <div><span class="col-name">value_text</span>    <span class="col-type">TEXT</span></div>
+          <div><span class="col-name">value_json</span>    <span class="col-type">JSONB</span></div>
+          <div><span class="col-name">visibility</span>    <span class="col-type">ENUM</span></div>
+          <div><span class="col-name">approval_status</span><span class="col-type">ENUM</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <h4 style="margin-bottom:10px;">8 Data Type</h4>
+        <table class="tbl">
+          <thead><tr><th>Tip</th><th>Kullanım Örneği</th></tr></thead>
+          <tbody>
+            <tr><td><code>text</code></td><td>Kısa metin, isim, başlık</td></tr>
+            <tr><td><code>textarea</code></td><td>Uzun biyografi, açıklama</td></tr>
+            <tr><td><code>select</code></td><td>Tek seçimli dropdown</td></tr>
+            <tr><td><code>multi_select</code></td><td>Birden fazla uzmanlık alanı</td></tr>
+            <tr><td><code>url</code></td><td>LinkedIn, web sitesi URL'si</td></tr>
+            <tr><td><code>phone</code></td><td>WhatsApp numarası</td></tr>
+            <tr><td><code>boolean</code></td><td>İş arıyor mu? Evet/Hayır</td></tr>
+            <tr><td><code>json</code></td><td>Karmaşık yapılandırılmış veri</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 style="margin-bottom:10px;">Görünürlük Seviyeleri</h4>
+        <table class="tbl">
+          <thead><tr><th>Visibility</th><th>Kimler Görebilir</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge badge-green">public</span></td><td>Herkes (dizinde görünür)</td></tr>
+            <tr><td><span class="badge badge-orange">private</span></td><td>Sadece kullanıcının kendisi</td></tr>
+            <tr><td><span class="badge badge-red">admin_only</span></td><td>Sadece adminler</td></tr>
+          </tbody>
+        </table>
+
+        <h4 style="margin-top:16px;margin-bottom:10px;">Onay Durumları</h4>
+        <table class="tbl">
+          <thead><tr><th>Approval Status</th><th>Anlamı</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge badge-blue">draft</span></td><td>Henüz gönderilmedi</td></tr>
+            <tr><td><span class="badge badge-orange">pending</span></td><td>Admin onayı bekleniyor</td></tr>
+            <tr><td><span class="badge badge-green">approved</span></td><td>Onaylandı, yayında</td></tr>
+            <tr><td><span class="badge badge-red">rejected</span></td><td>Reddedildi</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 08 APPROVAL -->
+  <div class="section" id="approval">
+    <div class="section-header">
+      <div class="section-num red">08</div>
+      <div>
+        <h2>Onay (Approval) State Machine</h2>
+        <p style="margin:0">Hassas işlemler doğrudan gerçekleşmiyor — önce admin onayı gerekiyor.</p>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">🔄</div>
+      <div class="callout-body">
+        <div class="callout-title">State Machine nedir?</div>
+        <div class="callout-text">Bir istek sadece belirli durumlar arasında geçiş yapabilir. PENDING → APPROVED veya PENDING → REJECTED olabilir ama APPROVED → PENDING olamaz. Bu kurallar database'de zorlanıyor.</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+      <div class="states">
+        <div class="state-box" style="background:rgba(108,99,255,0.15);border:1px solid rgba(108,99,255,0.3);color:var(--accent1);">
+          Kullanıcı<br>İsteği Gönderir
+        </div>
+        <div class="state-arrow">→</div>
+        <div class="state-box" style="background:rgba(255,169,77,0.15);border:1px solid rgba(255,169,77,0.3);color:var(--accent4);">
+          PENDING<br><span style="font-size:11px;font-weight:400;">Admin bekliyor</span>
+        </div>
+        <div class="state-arrow">→</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="state-box" style="background:rgba(81,207,102,0.15);border:1px solid rgba(81,207,102,0.3);color:var(--green);">
+            APPROVED<br><span style="font-size:11px;font-weight:400;">Otomatik uygulama</span>
+          </div>
+          <div class="state-box" style="background:rgba(255,107,107,0.15);border:1px solid rgba(255,107,107,0.3);color:var(--red);">
+            REJECTED<br><span style="font-size:11px;font-weight:400;">Admin notu ile</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;">
+          <div class="state-arrow" style="writing-mode:vertical-lr;transform:rotate(180deg);">veya kullanıcı</div>
+        </div>
+        <div class="state-box" style="background:rgba(136,146,176,0.1);border:1px solid var(--border);color:var(--muted);">
+          CANCELLED<br><span style="font-size:11px;font-weight:400;">Kullanıcı iptal etti</span>
+        </div>
+      </div>
+    </div>
+
+    <h4 style="margin-bottom:12px;">9 İstek Tipi</h4>
+    <div class="grid-3">
+      <div class="card card-accent1">
+        <h4>Rol & Erişim</h4>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+          <span class="badge badge-purple">role_change</span>
+          <span class="badge badge-purple">directory_visibility</span>
+          <span class="badge badge-purple">contact_visibility</span>
+          <span class="badge badge-purple">featured_listing</span>
+        </div>
+      </div>
+      <div class="card card-accent2">
+        <h4>İçerik Oluşturma</h4>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+          <span class="badge badge-teal">event_create</span>
+          <span class="badge badge-teal">offer_create</span>
+          <span class="badge badge-teal">referral_create</span>
+        </div>
+      </div>
+      <div class="card card-accent4">
+        <h4>Profil & Yönetim</h4>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+          <span class="badge badge-orange">attribute_change</span>
+          <span class="badge badge-orange">city_manage</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout success" style="margin-top:20px;">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <div class="callout-title">Otomatik uygulama</div>
+        <div class="callout-text"><code>admin_review_approval_request()</code> fonksiyonu karar = 'approved' olduğunda isteğin logic'ini otomatik çalıştırıyor. Admin "onayla" dediğinde kullanıcının rolü güncelleniyor, feature açılıyor vs. — ayrıca bir işlem yapmaya gerek yok.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 09 15 TABLO -->
+  <div class="section" id="tables">
+    <div class="section-header">
+      <div class="section-num green">09</div>
+      <div>
+        <h2>15 Tablonun Tam Haritası</h2>
+        <p style="margin:0">Hangi tablo ne iş yapar, hangi tabloyla ilişkili?</p>
+      </div>
+    </div>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Tablo Adı</th>
+          <th>Ne İşe Yarar</th>
+          <th>Kategori</th>
+          <th>Sistem</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--muted);">1</td>
+          <td><code>user_profiles</code></td>
+          <td>Ana kullanıcı profili, <code>profile_type</code> içerir</td>
+          <td><span class="badge badge-blue">Profil</span></td>
+          <td><span class="badge badge-red">Legacy</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);">2</td>
+          <td><code>profiles</code></td>
+          <td>Paralel legacy tablo, <code>platform_role</code> içerir</td>
+          <td><span class="badge badge-blue">Profil</span></td>
+          <td><span class="badge badge-red">Legacy</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);">3</td>
+          <td><code>admin_users</code></td>
+          <td>Admin işaretçisi — tabloda olmak = admin</td>
+          <td><span class="badge badge-blue">Profil</span></td>
+          <td><span class="badge badge-red">Legacy</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);">4</td>
+          <td><code>roles</code></td>
+          <td>82 rol tanımı, aile grupları sort_order ile</td>
+          <td><span class="badge badge-purple">Rol</span></td>
+          <td><span class="badge badge-green">RolesGo</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);">5</td>
+          <td><code>user_role_assignments</code></td>
+          <td>Hangi kullanıcının hangi rolü var (1:1)</td>
+          <td><span class="badge badge-purple">Rol</span></td>
+          <td><span class="badge badge-green">RolesGo</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);">6</td>
+          <td><code>feature_catalog</code></td>
+          <td>36 feature tanımı, global aktiflik</td>
+          <td><span class="badge badge-teal">Feature</span></td>
+          <td><span class="badge badge-green">RolesGo</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);">7</td>
+          <td><code>role_feature_flags</code></td>
+          <td>Hangi rol için hangi feature açık/kapalı</td>
+          <td><span class="badge badge-teal">Feature</span></td>
+          <td><span class="badge badge-green">RolesGo</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);">8</td>
+          <td><code>user_feature_overrides</code></td>
+          <td>Kişisel feature istisnası + neden override edildi</td>
+          <td><span class="badge badge-teal">Feature</span></td>
+          <td><span class="badge badge-green">RolesGo</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);">9</td>
+          <td><code>role_feature_defaults</code></td>
+          <td>Legacy profile_type için varsayılan feature değerleri</td>
+          <td><span class="badge badge-teal">Feature</span></td>
+          <td><span class="badge badge-red">Legacy</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);">10</td>
+          <td><code>attribute_catalog</code></td>
+          <td>Dinamik profil özellik tanımları, 8 data type</td>
+          <td><span class="badge badge-orange">Attribute</span></td>
+          <td><span class="badge badge-green">RolesGo</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);">11</td>
+          <td><code>role_attribute_rules</code></td>
+          <td>Hangi rol için hangi attribute gerekli/opsiyonel</td>
+          <td><span class="badge badge-orange">Attribute</span></td>
+          <td><span class="badge badge-green">RolesGo</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);">12</td>
+          <td><code>user_profile_attributes</code></td>
+          <td>Kullanıcının attribute değerleri + görünürlük + onay durumu</td>
+          <td><span class="badge badge-orange">Attribute</span></td>
+          <td><span class="badge badge-green">RolesGo</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);">13</td>
+          <td><code>approval_requests</code></td>
+          <td>Onay bekleyen istekler, 4 durum, 9 istek tipi</td>
+          <td><span class="badge badge-red">Onay</span></td>
+          <td><span class="badge badge-green">RolesGo</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted);">14</td>
+          <td><code>admin_audit_logs</code></td>
+          <td>Admin işlem kayıtları, before/after JSON değerleri</td>
+          <td><span class="badge badge-red">Onay</span></td>
+          <td><span class="badge badge-green">RolesGo</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 10 FRONTEND -->
+  <div class="section" id="frontend">
+    <div class="section-header">
+      <div class="section-num blue">10</div>
+      <div>
+        <h2>Frontend Entegrasyonu</h2>
+        <p style="margin:0">Kod yazarken hangi hook ve component'i kullanacaksınız?</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="card card-accent1">
+        <h3>useFeatureFlags()</h3>
+        <p><code>src/hooks/useFeatureFlags.ts</code> — Supabase RPC'yi çağırır ve feature durumlarını döndürür.</p>
+        <div class="schema-box" style="margin-top:12px;">
+          <div style="color:var(--muted);">// Kullanım</div>
+          <div><span class="col-name">const</span> <span style="color:white;">{</span></div>
+          <div>  <span class="col-name">isFeatureEnabled</span>,</div>
+          <div>  <span class="col-name">getFeatureSource</span>,</div>
+          <div>  <span class="col-name">featureMap</span>,</div>
+          <div>  <span class="col-name">isLoading</span>,</div>
+          <div>  <span class="col-name">refreshFeatures</span></div>
+          <div><span style="color:white;">} =</span> <span class="col-type">useFeatureFlags</span>()</div>
+          <div style="margin-top:8px;color:var(--muted);">// Kontrol</div>
+          <div><span class="col-name">isFeatureEnabled</span>(<span class="col-type">'cadde.access'</span>)</div>
+          <div><span class="col-note">// → true | false</span></div>
+        </div>
+      </div>
+      <div class="card card-accent2">
+        <h3>&lt;RequireFeature /&gt;</h3>
+        <p><code>src/components/auth/RequireFeature.tsx</code> — Feature gate component. Feature kapalıysa <code>fallback</code> gösterir.</p>
+        <div class="schema-box" style="margin-top:12px;">
+          <div style="color:var(--muted);">{/* Kullanım */}</div>
+          <div><span style="color:var(--accent3);">&lt;RequireFeature</span></div>
+          <div>  <span class="col-name">feature</span>=<span class="col-type">"cadde.access"</span></div>
+          <div>  <span class="col-name">fallback</span>=<span style="color:white;">{</span><span style="color:var(--accent3);">&lt;UpgradePrompt/&gt;</span><span style="color:white;">}</span></div>
+          <div><span style="color:var(--accent3);">&gt;</span></div>
+          <div>  <span style="color:var(--accent3);">&lt;CaddeComponent/&gt;</span></div>
+          <div><span style="color:var(--accent3);">&lt;/RequireFeature&gt;</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h4 style="margin-bottom:12px;">Önemli Dosya Referansları</h4>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Dosya</th>
+          <th>Ne İçeriyor</th>
+          <th>Ne Zaman Bakılır</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>src/lib/features.ts</code></td>
+          <td>Feature key sabitleri, tip tanımları (<code>AppFeatureKey</code>)</td>
+          <td>Yeni feature eklerken veya type-safe key kullanırken</td>
+        </tr>
+        <tr>
+          <td><code>src/lib/profile-types.ts</code></td>
+          <td>6 legacy profil tipi, metadata, slug'lar</td>
+          <td>Legacy profile_type ile çalışırken</td>
+        </tr>
+        <tr>
+          <td><code>src/lib/admin.ts</code></td>
+          <td>Admin RPC wrapper'ları (setUserRole, setFeatureFlag vb.)</td>
+          <td>Admin panel sayfaları yazarken</td>
+        </tr>
+        <tr>
+          <td><code>src/contexts/AuthContext.tsx</code></td>
+          <td><code>useAuth</code> hook, profil bilgisi, accountType</td>
+          <td>Kullanıcı bilgisine ihtiyaç duyulduğunda</td>
+        </tr>
+        <tr>
+          <td><code>src/components/auth/RequireFeature.tsx</code></td>
+          <td>Feature gate component</td>
+          <td>Feature'a göre UI göster/gizle yaparken</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4 style="margin-top:24px;margin-bottom:12px;">Admin RPC Fonksiyonları</h4>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Fonksiyon</th>
+          <th>Ne Yapar</th>
+          <th>Parametre</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>admin_set_user_role()</code></td>
+          <td>Kullanıcıya rol ata</td>
+          <td>user_id, role_key</td>
+        </tr>
+        <tr>
+          <td><code>admin_set_role_feature_flag()</code></td>
+          <td>Rol için feature aç/kapat</td>
+          <td>role_key, feature_key, is_enabled</td>
+        </tr>
+        <tr>
+          <td><code>admin_set_user_feature_override()</code></td>
+          <td>Kişisel feature override</td>
+          <td>user_id, feature_key, is_enabled</td>
+        </tr>
+        <tr>
+          <td><code>admin_review_approval_request()</code></td>
+          <td>Onay kararı ver + otomatik uygula</td>
+          <td>request_id, 'approved'|'rejected', note</td>
+        </tr>
+        <tr>
+          <td><code>admin_set_attribute_rule()</code></td>
+          <td>Attribute kuralını güncelle</td>
+          <td>role_key, attribute_key, rule_payload</td>
+        </tr>
+        <tr>
+          <td><code>getRoleManagementBundle()</code></td>
+          <td>Tüm yönetim verisini tek sorguda çek</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><code>get_current_user_profile()</code></td>
+          <td>Tam profil, rol, feature'lar, attribute'lar</td>
+          <td>— (mevcut kullanıcı)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 11 KARŞILAŞTIRMA -->
+  <div class="section" id="compare">
+    <div class="section-header">
+      <div class="section-num">11</div>
+      <div>
+        <h2>Legacy vs RolesGo — Tam Karşılaştırma</h2>
+        <p style="margin:0">Hangi sistemi ne zaman kullanmalıyım?</p>
+      </div>
+    </div>
+
+    <table class="tbl" style="margin-bottom:20px;">
+      <thead>
+        <tr>
+          <th>Özellik</th>
+          <th>Legacy Sistem</th>
+          <th>RolesGo Sistemi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Rol sayısı</strong></td>
+          <td>6 (sabit enum değeri)</td>
+          <td>82+ (tabloda satır)</td>
+        </tr>
+        <tr>
+          <td><strong>Yeni rol eklemek</strong></td>
+          <td><span class="compare-no">✗</span> Migration gerekir</td>
+          <td><span class="compare-yes">✓</span> Sadece tablo INSERT</td>
+        </tr>
+        <tr>
+          <td><strong>Rol atama</strong></td>
+          <td><code>user_profiles.profile_type</code></td>
+          <td><code>user_role_assignments</code> tablosu</td>
+        </tr>
+        <tr>
+          <td><strong>Feature kontrolü</strong></td>
+          <td><code>role_feature_defaults</code></td>
+          <td><code>role_feature_flags</code> per role_id</td>
+        </tr>
+        <tr>
+          <td><strong>Kişisel override</strong></td>
+          <td><span class="compare-no">✗</span> Yok</td>
+          <td><span class="compare-yes">✓</span> user_feature_overrides + reason</td>
+        </tr>
+        <tr>
+          <td><strong>Profil attribute</strong></td>
+          <td>Tablo kolonları (sabit)</td>
+          <td>Dinamik attribute_catalog</td>
+        </tr>
+        <tr>
+          <td><strong>Görünürlük</strong></td>
+          <td><span class="compare-no">✗</span> Desteklenmiyor</td>
+          <td><span class="compare-yes">✓</span> public / private / admin_only</td>
+        </tr>
+        <tr>
+          <td><strong>Onay iş akışı</strong></td>
+          <td><span class="compare-no">✗</span> Manuel admin işlemi</td>
+          <td><span class="compare-yes">✓</span> approval_requests state machine</td>
+        </tr>
+        <tr>
+          <td><strong>Admin tespiti</strong></td>
+          <td>Sadece admin_users tablosu</td>
+          <td>admin_users + profiles.platform_role</td>
+        </tr>
+        <tr>
+          <td><strong>Audit trail</strong></td>
+          <td><span class="compare-no">✗</span> Yok</td>
+          <td><span class="compare-yes">✓</span> admin_audit_logs (before/after)</td>
+        </tr>
+        <tr>
+          <td><strong>Genişletilebilirlik</strong></td>
+          <td><span class="compare-no">✗</span> Schema değişikliği gerekir</td>
+          <td><span class="compare-yes">✓</span> Migration'sız eklenebilir</td>
+        </tr>
+        <tr>
+          <td><strong>Mevcut durum</strong></td>
+          <td><span class="badge badge-orange">Aktif — korunuyor</span></td>
+          <td><span class="badge badge-green">Aktif — büyüyor</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout danger">
+      <div class="callout-icon">🚨</div>
+      <div class="callout-body">
+        <div class="callout-title">Ne zaman hangi sistemi kullanmalısınız?</div>
+        <div class="callout-text">
+          <strong>Mevcut sayfalara dokunuyorsanız:</strong> Hangi sistemi kullandığını önce kontrol edin. <code>profile_type</code> görüyorsanız → legacy. <code>useFeatureFlags</code>/<code>RequireFeature</code> görüyorsanız → RolesGo.<br><br>
+          <strong>Yeni feature yazıyorsanız:</strong> Her zaman RolesGo. <code>feature_catalog</code>'a key ekleyin, <code>RequireFeature</code> kullanın.<br><br>
+          <strong>Admin kontrolü yapıyorsanız:</strong> <code>is_admin()</code> SQL fonksiyonunu kullanın — her iki sistemi de kontrol ediyor.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="text-align:center;padding:32px 0;color:var(--muted);font-size:12px;border-top:1px solid var(--border);margin-top:32px;">
+    <div style="margin-bottom:8px;font-size:16px;">CorteQS Rol & AFS Sistemi</div>
+    <div>15 tablo · 82 rol · 36 feature · 11 aile · 2 paralel sistem</div>
+    <div style="margin-top:8px;">Hazırlanma: 2026-06 — Bu döküman prod şemasını yansıtır</div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -14,7 +14,7 @@ describe("SiteHeader", () => {
 
     expect(screen.getByText("CorteQS")).toBeInTheDocument();
     expect(screen.getByText("Global Türk Diaspora Network")).toBeInTheDocument();
-    expect(screen.getByText("Türk Diasporasını Birleştiren Platform")).toBeInTheDocument();
+    expect(screen.getByText("Dünyadaki Türkleri Bir Araya Getiren Platform")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Giriş Yap" })).toHaveAttribute("href", "/login?mode=login");
     expect(screen.getByRole("link", { name: "Kayıt Ol" })).toHaveAttribute("href", "/login?mode=signup");
     expect(screen.queryByText("Founding 1000")).not.toBeInTheDocument();

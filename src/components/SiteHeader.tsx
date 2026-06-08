@@ -37,7 +37,7 @@ export default function SiteHeader() {
           <div className="min-w-0 w-full md:flex-1">
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 text-center md:justify-end md:text-right">
               <p className="text-sm font-semibold tracking-[0.03em] text-slate-800 sm:text-base">
-                Türk Diasporasını Birleştiren Platform
+                Dünyadaki Türkleri Bir Araya Getiren Platform
               </p>
               <span
                 aria-hidden="true"
