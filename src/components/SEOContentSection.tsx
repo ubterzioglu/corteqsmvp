@@ -52,9 +52,9 @@ const SEOContentSection = () => {
                   id="geo-content-title"
                   className="max-w-4xl text-justify text-[1.08rem] leading-relaxed text-foreground md:text-[1.2rem]"
                 >
-                  Dünyaya dağılmış Türk topluluklarının ekonomik ve sosyal sinir ağlarını örüyoruz. CorteQS,
-                  dünyanın farklı şehirlerinde yaşayan Türkleri; sadece bir sosyal ağda değil, gerçek fırsatlar,
-                  topluluklar ve bağlantılar etrafında bir araya getirir.
+                  CorteQS, dünyanın farklı şehirlerinde yaşayan Türkleri birbirine bağlayan bir platformdur.
+                  İnsanlar burada toplulukları bulur, yeni bağlantılar kurar ve iş, destek veya işbirliği
+                  fırsatlarına ulaşır.
                 </p>
 
                 <div className="relative mx-auto hidden lg:flex lg:items-center lg:justify-center">
