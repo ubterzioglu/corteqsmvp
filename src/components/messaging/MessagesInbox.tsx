@@ -13,7 +13,7 @@ import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
 
 type DirectMessage = Tables<"direct_messages">;
-type UserProfile = Pick<Tables<"user_profiles">, "user_id" | "full_name" | "email">;
+type UserProfile = { user_id: string; full_name: string | null; email: string | null };
 
 type MessageWithDisplay = DirectMessage & {
   counterpartId: string;
@@ -87,10 +87,21 @@ const MessagesInbox = () => {
       return;
     }
 
-    const { data: profiles, error: profilesError } = await supabase
-      .from("user_profiles")
-      .select("user_id, full_name, email")
-      .in("user_id", counterpartIds);
+    const attrsData = await supabase
+      .from("user_profile_attributes")
+      .select("user_id, value_text, attribute_catalog!inner(key)")
+      .in("user_id", counterpartIds)
+      .eq("attribute_catalog.key", "full_name");
+    const profilesError = attrsData.error;
+    const nameByUser: Record<string, string | null> = {};
+    for (const row of (attrsData.data ?? []) as any[]) {
+      nameByUser[row.user_id] = row.value_text ?? null;
+    }
+    const profiles: UserProfile[] = counterpartIds.map((uid) => ({
+      user_id: uid,
+      full_name: nameByUser[uid] ?? null,
+      email: null,
+    }));
 
     if (profilesError) {
       toast({

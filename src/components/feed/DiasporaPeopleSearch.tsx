@@ -66,13 +66,27 @@ const DiasporaPeopleSearch = () => {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("id, full_name, avatar_url, city, country, profession")
+      // Fetch all members via user_role_assignments
+      const { data: uraData } = await supabase
+        .from("user_role_assignments")
+        .select("user_id")
         .limit(40);
       if (cancelled) return;
-      const real = (data as any[]) || [];
-      // Online check: any active cafe membership in last 4h
+      const userIds = (uraData || []).map((u: any) => u.user_id);
+      const { getProfilesBasicBatch, getAttributesBatch } = await import("@/lib/profile-helpers");
+      const basicProfiles = await getProfilesBasicBatch(userIds);
+      const attrsAll = await Promise.all(
+        basicProfiles.map((p) => getAttributesBatch(p.user_id, ["city", "country", "profession"]))
+      );
+      const real: PersonRow[] = basicProfiles.map((p, i) => ({
+        id: p.user_id,
+        full_name: p.full_name,
+        avatar_url: p.avatar_url,
+        city: attrsAll[i].city,
+        country: attrsAll[i].country,
+        profession: attrsAll[i].profession,
+      }));
+      // Online check
       let onlineIds = new Set<string>();
       if (real.length > 0) {
         const since = new Date(Date.now() - 4 * 3600 * 1000).toISOString();

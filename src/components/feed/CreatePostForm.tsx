@@ -35,17 +35,12 @@ const CreatePostForm = ({ onCreated, cafeId }: Props) => {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("country, city")
-        .eq("id", user.id)
-        .maybeSingle();
-      if (data) {
-        setProfileCountry(data.country || "");
-        setProfileCity(data.city || "");
-        setCountry((prev) => prev || data.country || "");
-        setCity((prev) => prev || data.city || "");
-      }
+      const { getAttributesBatch } = await import("@/lib/profile-helpers");
+      const attrs = await getAttributesBatch(user.id, ["country", "city"]);
+      setProfileCountry(attrs.country || "");
+      setProfileCity(attrs.city || "");
+      setCountry((prev) => prev || attrs.country || "");
+      setCity((prev) => prev || attrs.city || "");
     })();
   }, [user]);
 

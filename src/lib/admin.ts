@@ -13,9 +13,10 @@ import type { IndividualFeatureKey } from "@/lib/features";
 
 export async function userIsAdmin(userId: string) {
   const { data, error } = await supabase
-    .from("admin_users")
-    .select("user_id")
+    .from("user_role_assignments")
+    .select("roles!inner(key)")
     .eq("user_id", userId)
+    .ilike("roles.key", "Admin_%")
     .maybeSingle();
 
   if (error) throw error;

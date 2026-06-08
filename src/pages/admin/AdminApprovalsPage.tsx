@@ -59,7 +59,7 @@ const AdminApprovalsPage = () => {
           .from("approval_requests")
           .select("id, request_type, user_id, target_role_key, target_feature_key, target_entity_type, payload, status, admin_note, created_at")
           .order("created_at", { ascending: false }),
-        supabase.from("user_profiles").select("user_id, email, full_name"),
+        supabase.from("user_role_assignments").select("user_id, roles!inner(key)"),
       ]);
 
       if (!isMounted) return;
@@ -73,8 +73,29 @@ const AdminApprovalsPage = () => {
         return;
       }
 
+      // Fetch full_name attributes for all users in parallel
+      const userIds = (usersResult.data ?? []).map((u: any) => u.user_id);
+      const attrsResult = userIds.length > 0
+        ? await supabase
+            .from("user_profile_attributes")
+            .select("user_id, value_text, attribute_catalog!inner(key)")
+            .in("user_id", userIds)
+            .eq("attribute_catalog.key", "full_name")
+        : { data: [] };
+
+      const nameByUser: Record<string, string | null> = {};
+      for (const row of (attrsResult.data ?? []) as any[]) {
+        nameByUser[row.user_id] = row.value_text ?? null;
+      }
+
+      const enrichedUsers: UserRow[] = (usersResult.data ?? []).map((u: any) => ({
+        user_id: u.user_id,
+        email: null,
+        full_name: nameByUser[u.user_id] ?? null,
+      }));
+
       setRequests((requestsResult.data ?? []) as ApprovalRow[]);
-      setUsers((usersResult.data ?? []) as UserRow[]);
+      setUsers(enrichedUsers);
     })();
 
     return () => {

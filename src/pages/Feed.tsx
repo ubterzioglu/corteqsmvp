@@ -223,15 +223,13 @@ const Feed = () => {
         (id) => !authorMap[id],
       );
       if (ids.length > 0) {
-        const { data: profs } = await supabase
-          .from("profiles")
-          .select("id, full_name, avatar_url")
-          .in("id", ids);
-        if (profs) {
+        const { getProfilesBasicBatch } = await import("@/lib/profile-helpers");
+        const profs = await getProfilesBasicBatch(ids);
+        if (profs.length > 0) {
           setAuthorMap((prev) => {
             const next = { ...prev };
-            profs.forEach((p: any) => {
-              next[p.id] = { full_name: p.full_name, avatar_url: p.avatar_url };
+            profs.forEach((p) => {
+              next[p.user_id] = { full_name: p.full_name, avatar_url: p.avatar_url };
             });
             return next;
           });
@@ -289,12 +287,10 @@ const Feed = () => {
         setPendingMembers([]);
         return;
       }
-      const { data: profs } = await supabase
-        .from("profiles")
-        .select("id, full_name")
-        .in("id", rows.map((r) => r.user_id));
-      const nameMap = Object.fromEntries((profs || []).map((p: any) => [p.id, p.full_name]));
-      setPendingMembers(rows.map((r) => ({ ...r, full_name: nameMap[r.user_id] })));
+      const { getProfilesBasicBatch } = await import("@/lib/profile-helpers");
+      const profs = await getProfilesBasicBatch(rows.map((r) => r.user_id));
+      const nameMap = Object.fromEntries(profs.map((p) => [p.user_id, p.full_name]));
+      setPendingMembers(rows.map((r) => ({ ...r, full_name: nameMap[r.user_id] ?? null })));
     })();
   }, [cafe, user]);
 

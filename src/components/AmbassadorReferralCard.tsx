@@ -17,13 +17,10 @@ const AmbassadorReferralCard = () => {
     if (!user) return;
     let cancelled = false;
     (async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("ambassador_referral_code")
-        .eq("id", user.id)
-        .maybeSingle();
+      const { getAttributeValue } = await import("@/lib/profile-helpers");
+      const val = await getAttributeValue(user.id, "ambassador_referral_code");
       if (cancelled) return;
-      setCode((data as any)?.ambassador_referral_code || "");
+      setCode(val || "");
       setLoading(false);
     })();
     return () => { cancelled = true; };

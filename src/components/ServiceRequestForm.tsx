@@ -109,18 +109,13 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      const { data } = await supabase
-        .from("profiles")
-        .select("city, country")
-        .eq("id", user.id)
-        .maybeSingle();
-      if (data) {
-        setForm(p => ({
-          ...p,
-          city: p.city || (data as any).city || "",
-          country: p.country || (data as any).country || "",
-        }));
-      }
+      const { getAttributesBatch } = await import("@/lib/profile-helpers");
+      const attrs = await getAttributesBatch(user.id, ["city", "country"]);
+      setForm(p => ({
+        ...p,
+        city: p.city || attrs.city || "",
+        country: p.country || attrs.country || "",
+      }));
     })();
   }, []);
 

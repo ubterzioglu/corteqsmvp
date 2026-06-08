@@ -520,26 +520,32 @@ const AdminNewMemberGuidePage = () => {
 
   return (
     <AdminPageLayout className="max-w-7xl gap-10">
-      <div className="grid grid-cols-[240px_minmax(0,1fr)] gap-6 lg:gap-10">
+      <div className="grid grid-cols-[220px_minmax(0,1fr)] gap-6 lg:gap-10">
         <aside className="sticky top-28 self-start">
-          <nav className="rounded-3xl border border-border/60 bg-background/95 p-4 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/85">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+          <nav className="rounded-3xl border border-border/60 bg-background/95 p-3 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/85">
+            <p className="mb-2 px-1 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
               İçindekiler
             </p>
-            <div className="space-y-1">
-              {navItems.map((item) => {
+            <div className="space-y-0.5">
+              {navItems.map((item, idx) => {
                 const isHeadingActive = targetSectionId === item.id;
+                const shortLabel = item.heading === "Referans Katalogları"
+                  ? "Referans Katalogları"
+                  : blocks[idx]?.tag
+                    ? `${idx}. ${blocks[idx].tag}`
+                    : item.heading;
                 return (
                   <a
                     key={item.id}
                     href={`#${item.id}`}
-                    className={`block rounded-lg px-2 py-1.5 text-sm font-medium leading-5 transition-colors ${
+                    className={`block truncate rounded-lg px-2 py-1 text-xs font-medium leading-5 transition-colors ${
                       isHeadingActive
                         ? "bg-primary/10 text-primary"
                         : "text-foreground/75 hover:bg-muted/60 hover:text-foreground"
                     }`}
+                    title={item.heading}
                   >
-                    {item.heading}
+                    {shortLabel}
                   </a>
                 );
               })}

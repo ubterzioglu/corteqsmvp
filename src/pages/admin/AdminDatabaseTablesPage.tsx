@@ -16,11 +16,8 @@ interface TableInfo {
 
 const DB_TABLES: TableInfo[] = [
   // Auth & Kullanıcı
-  { name: "admin_users", description: "Admin Kullanıcılar", purpose: "Sisteme admin erişimi olan kullanıcıların listesi.", rowCount: 2, rls: true, group: "Auth & Kullanıcı" },
-  { name: "profiles", description: "Profiller", purpose: "Giriş yapmış kullanıcıların temel profil kayıtları.", rowCount: 14, rls: true, group: "Auth & Kullanıcı" },
-  { name: "user_profiles", description: "Kullanıcı Profilleri", purpose: "Kullanıcı profil detayları (ad, fotoğraf, kısa bio vb.).", rowCount: 14, rls: true, group: "Auth & Kullanıcı" },
-  { name: "user_roles", description: "Kullanıcı Rolleri", purpose: "Kullanıcılara atanan rolleri saklar.", rowCount: 11, rls: true, group: "Auth & Kullanıcı" },
-  { name: "user_role_assignments", description: "Rol Atamaları", purpose: "Kullanıcı–rol bağlantı tablosu.", rowCount: 14, rls: true, group: "Auth & Kullanıcı" },
+  { name: "user_roles", description: "Kullanıcı Rolleri", purpose: "Kullanıcılara atanan rolleri saklar (legacy uyumluluk).", rowCount: 11, rls: true, group: "Auth & Kullanıcı" },
+  { name: "user_role_assignments", description: "Rol Atamaları", purpose: "Kullanıcı–rol bağlantı tablosu. Admin yetkisi buradaki Admin_ prefix'li rollerle belirlenir.", rowCount: 14, rls: true, group: "Auth & Kullanıcı" },
   { name: "user_feature_overrides", description: "Feature Override", purpose: "Belirli kullanıcılar için özellik bayraklarını geçersiz kılar.", rowCount: 59, rls: true, group: "Auth & Kullanıcı" },
   { name: "user_profile_attributes", description: "Profil Nitelikleri", purpose: "Kullanıcı profillerine bağlı özel nitelik değerleri.", rowCount: 28, rls: true, group: "Auth & Kullanıcı" },
   { name: "user_cvs", description: "Kullanıcı CV'leri", purpose: "Yüklenen CV dosyalarının meta verilerini tutar.", rowCount: 3, rls: true, group: "Auth & Kullanıcı" },
@@ -79,7 +76,7 @@ const DB_TABLES: TableInfo[] = [
   { name: "attribute_catalog", description: "Nitelik Kataloğu", purpose: "Profillere eklenebilecek niteliklerin tanım listesi.", rowCount: 33, rls: true, group: "Rol & Yetki" },
   { name: "profile_section_catalog", description: "Profil Bölüm Kataloğu", purpose: "Profil sayfasındaki bölümlerin tanım listesi.", rowCount: 7, rls: true, group: "Rol & Yetki" },
   { name: "role_feature_flags", description: "Rol–Özellik Bayrakları", purpose: "Her role hangi özelliklerin atanacağını belirler.", rowCount: 2487, rls: true, group: "Rol & Yetki" },
-  { name: "role_feature_defaults", description: "Rol Özellik Varsayılanları", purpose: "Rol bazında özellik varsayılan değerleri.", rowCount: 2481, rls: true, group: "Rol & Yetki" },
+  { name: "_member_backup_20260609", description: "Üye Yedeği", purpose: "Migration öncesi 124 üyenin tam yedek tablosu. Güvenlik ağı — silinmez.", rowCount: 124, rls: false, group: "Sistem" },
   { name: "role_attribute_rules", description: "Rol Nitelik Kuralları", purpose: "Role göre nitelik görünürlük ve zorunluluk kuralları.", rowCount: 1977, rls: true, group: "Rol & Yetki" },
   { name: "role_profile_section_rules", description: "Rol Profil Bölüm Kuralları", purpose: "Role göre profil bölümü görünürlük kuralları.", rowCount: 574, rls: true, group: "Rol & Yetki" },
   { name: "role_taxonomy_rules", description: "Rol Taksonomi Kuralları", purpose: "Role göre taksonomi seçim kuralları.", rowCount: 2, rls: true, group: "Rol & Yetki" },

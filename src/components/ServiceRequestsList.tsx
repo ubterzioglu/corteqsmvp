@@ -114,12 +114,9 @@ const ServiceRequestsList = () => {
         // Fetch consultant names
         const proposalsWithNames = await Promise.all(
           (proposals || []).map(async (p) => {
-            const { data: profile } = await supabase
-              .from("profiles")
-              .select("full_name")
-              .eq("id", p.consultant_id)
-              .single();
-            return { ...p, consultant_name: profile?.full_name || "Danışman" };
+            const { getAttributeValue } = await import("@/lib/profile-helpers");
+            const fullName = await getAttributeValue(p.consultant_id, "full_name");
+            return { ...p, consultant_name: fullName || "Danışman" };
           })
         );
 

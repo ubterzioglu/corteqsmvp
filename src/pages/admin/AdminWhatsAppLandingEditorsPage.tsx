@@ -43,16 +43,36 @@ export default function AdminWhatsAppLandingEditorsPage() {
         const [landingRows, assignmentRows, usersResult] = await Promise.all([
           listAllSubmissions(),
           listLandingEditorAssignmentsAsAdmin(),
-          supabase.from("user_profiles").select("user_id, email, full_name").order("created_at", { ascending: false }),
+          supabase.from("user_role_assignments").select("user_id"),
         ]);
 
         if (!mounted) return;
 
         if (usersResult.error) throw usersResult.error;
 
+        const userIds = (usersResult.data ?? []).map((u: any) => u.user_id);
+        const attrsResult = userIds.length > 0
+          ? await supabase
+              .from("user_profile_attributes")
+              .select("user_id, value_text, attribute_catalog!inner(key)")
+              .in("user_id", userIds)
+              .in("attribute_catalog.key", ["full_name"])
+          : { data: [] };
+
+        const nameByUser: Record<string, string | null> = {};
+        for (const row of (attrsResult.data ?? []) as any[]) {
+          nameByUser[row.user_id] = row.value_text ?? null;
+        }
+
+        const enrichedUsers: UserOption[] = userIds.map((uid: string) => ({
+          user_id: uid,
+          email: null,
+          full_name: nameByUser[uid] ?? null,
+        }));
+
         setLandings(landingRows.filter((row) => Boolean(row.dbId)));
         setAssignments(assignmentRows);
-        setUsers((usersResult.data ?? []) as UserOption[]);
+        setUsers(enrichedUsers);
       } catch (error) {
         toast({
           title: "Landing editör verileri alınamadı",

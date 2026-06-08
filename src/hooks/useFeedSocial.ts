@@ -33,12 +33,19 @@ export function useFeedSocial() {
     }
     setLoading(true);
 
-    // 1) Current user profile (for similarity)
-    const { data: me } = await supabase
-      .from("profiles")
-      .select("id, full_name, avatar_url, city, country, profession, school, account_type")
-      .eq("id", user.id)
-      .single();
+    // 1) Current user profile attributes for similarity
+    const { getAttributesBatch, getProfilesBasicBatch } = await import("@/lib/profile-helpers");
+    const myAttrs = await getAttributesBatch(user.id, ["full_name", "avatar_url", "city", "country", "profession", "school"]);
+    const me: FeedProfile | null = {
+      id: user.id,
+      full_name: myAttrs.full_name,
+      avatar_url: myAttrs.avatar_url,
+      city: myAttrs.city,
+      country: myAttrs.country,
+      profession: myAttrs.profession,
+      school: myAttrs.school,
+      account_type: null,
+    };
 
     // 2) Followed user IDs
     const { data: follows } = await supabase
@@ -47,46 +54,42 @@ export function useFeedSocial() {
       .eq("follower_id", user.id);
     const followingIds = (follows || []).map((f: any) => f.following_id);
 
-    // 3) Followed profiles
+    // 3) Followed profiles via profile-helpers
     if (followingIds.length > 0) {
-      const { data: profs } = await supabase
-        .from("profiles")
-        .select("id, full_name, avatar_url, city, country, profession, school, account_type")
-        .in("id", followingIds)
-        .limit(10);
-      setFollowing((profs as FeedProfile[]) || []);
+      const profs = await getProfilesBasicBatch(followingIds.slice(0, 10));
+      setFollowing(profs.map((p) => ({
+        id: p.user_id,
+        full_name: p.full_name,
+        avatar_url: p.avatar_url,
+        city: null, country: null, profession: null, school: null, account_type: p.role_key,
+      })));
     } else {
       setFollowing([]);
     }
 
-    // 4) Suggestions via similarity (country/city/profession/school)
-    if (me) {
-      const orParts: string[] = [];
-      if (me.country) orParts.push(`country.eq.${me.country}`);
-      if (me.city) orParts.push(`city.eq.${me.city}`);
-      if (me.profession) orParts.push(`profession.eq.${me.profession}`);
-      if (me.school) orParts.push(`school.eq.${me.school}`);
-
-      if (orParts.length > 0) {
-        let q = supabase
-          .from("profiles")
-          .select("id, full_name, avatar_url, city, country, profession, school, account_type")
-          .neq("id", user.id)
-          .or(orParts.join(","))
-          .limit(50);
-
-        const { data: candidates } = await q;
-        const excluded = new Set([user.id, ...followingIds]);
-        const scored: Suggestion[] = (candidates || [])
-          .filter((p: any) => !excluded.has(p.id))
-          .map((p: any) => {
+    // 4) Suggestions: fetch all users, score by shared attributes
+    if (me.country || me.city || me.profession || me.school) {
+      const { data: allUsers } = await supabase
+        .from("user_role_assignments")
+        .select("user_id")
+        .neq("user_id", user.id)
+        .limit(100);
+      const candidateIds = (allUsers || []).map((u: any) => u.user_id).filter((id: string) => !followingIds.includes(id));
+      if (candidateIds.length > 0) {
+        const candidates = await getProfilesBasicBatch(candidateIds.slice(0, 50));
+        const candidateAttrs = await Promise.all(
+          candidates.slice(0, 20).map((c) => getAttributesBatch(c.user_id, ["city", "country", "profession", "school"]))
+        );
+        const scored: Suggestion[] = candidates.slice(0, 20)
+          .map((p, i) => {
+            const attrs = candidateAttrs[i];
             let score = 0;
             const reasons: string[] = [];
-            if (me.country && p.country === me.country) { score += 1; reasons.push(`📍 ${p.country}`); }
-            if (me.city && p.city === me.city) { score += 2; reasons.push(`🏙 ${p.city}`); }
-            if (me.profession && p.profession === me.profession) { score += 3; reasons.push(`💼 ${p.profession}`); }
-            if (me.school && p.school === me.school) { score += 3; reasons.push(`🎓 ${p.school}`); }
-            return { ...p, score, reasons };
+            if (me.country && attrs.country === me.country) { score += 1; reasons.push(`📍 ${attrs.country}`); }
+            if (me.city && attrs.city === me.city) { score += 2; reasons.push(`🏙 ${attrs.city}`); }
+            if (me.profession && attrs.profession === me.profession) { score += 3; reasons.push(`💼 ${attrs.profession}`); }
+            if (me.school && attrs.school === me.school) { score += 3; reasons.push(`🎓 ${attrs.school}`); }
+            return { id: p.user_id, full_name: p.full_name, avatar_url: p.avatar_url, city: attrs.city, country: attrs.country, profession: attrs.profession, school: attrs.school, account_type: p.role_key, score, reasons };
           })
           .filter((p) => p.score > 0)
           .sort((a, b) => b.score - a.score)
@@ -95,6 +98,8 @@ export function useFeedSocial() {
       } else {
         setSuggestions([]);
       }
+    } else {
+      setSuggestions([]);
     }
 
     setLoading(false);

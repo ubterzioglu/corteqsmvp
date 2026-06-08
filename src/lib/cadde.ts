@@ -604,8 +604,12 @@ async function fetchCityMap() {
 async function fetchUserNameMap(authorIds: string[], extraUserIds: string[] = []) {
   const allIds = Array.from(new Set([...authorIds, ...extraUserIds].filter(Boolean)));
   if (allIds.length === 0) return new Map<string, string>();
-  const { data } = await db.from("user_profiles").select("user_id, full_name").in("user_id", allIds);
-  return new Map<string, string>((data ?? []).map((row: { user_id: string; full_name: string | null }) => [row.user_id, row.full_name ?? FALLBACK_PROFILE_NAME]));
+  const { data } = await db
+    .from("user_profile_attributes")
+    .select("user_id, value_text, attribute_catalog!inner(key)")
+    .in("user_id", allIds)
+    .eq("attribute_catalog.key", "full_name");
+  return new Map<string, string>((data ?? []).map((row: any) => [row.user_id, row.value_text ?? FALLBACK_PROFILE_NAME]));
 }
 
 async function fetchPostReactions(postIds: string[]) {

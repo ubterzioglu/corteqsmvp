@@ -105,7 +105,9 @@ const ConsultantServiceRequests = () => {
 
     const enriched = await Promise.all(
       reqData.map(async (req) => {
-        const { data: profile } = await supabase.from("profiles").select("full_name").eq("id", req.user_id).single();
+        const { getAttributeValue } = await import("@/lib/profile-helpers");
+        const fullName = await getAttributeValue(req.user_id, "full_name");
+        const profile = { full_name: fullName };
         const { data: myProposal } = await supabase
           .from("service_proposals")
           .select("*")

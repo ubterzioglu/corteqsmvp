@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Bell, Check, X, Shield, Inbox, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { getProfilesBasicBatch } from "@/lib/profile-helpers";
 import { useAuth } from "@/contexts/AuthContext";
 import { useConnections } from "@/hooks/useConnections";
 import { Button } from "@/components/ui/button";
@@ -50,16 +51,11 @@ const NotificationsPanel = () => {
   useEffect(() => {
     const ids = Array.from(new Set(incomingPending.map((r) => r.requester_id)));
     if (!ids.length) return;
-    supabase
-      .from("profiles")
-      .select("id, full_name, avatar_url")
-      .in("id", ids)
-      .then(({ data }) => {
-        if (!data) return;
-        const map: Record<string, RequesterProfile> = {};
-        for (const p of data) map[p.id] = p as RequesterProfile;
-        setProfilesById(map);
-      });
+    getProfilesBasicBatch(ids).then((profiles) => {
+      const map: Record<string, RequesterProfile> = {};
+      for (const p of profiles) map[p.user_id] = { id: p.user_id, full_name: p.full_name, avatar_url: p.avatar_url };
+      setProfilesById(map);
+    });
   }, [incomingPending]);
 
   const markRead = async (id: string) => {

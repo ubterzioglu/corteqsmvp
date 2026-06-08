@@ -77,16 +77,21 @@ const Onboarding = () => {
         }
       }
 
-      // Update profile with account_type and mark onboarding as completed
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .update({
-          account_type: selected,
-          onboarding_completed: true,
-        })
-        .eq("id", user.id);
-
-      if (profileError) throw profileError;
+      // Set role via RolesGo — account_type maps to role key
+      const roleMap: Record<string, string> = {
+        user: "bireysel",
+        consultant: "danisman",
+        business: "isletme",
+        association: "kurulus-dernek",
+        blogger: "blogger-vlogger-youtuber",
+        ambassador: "sehir-elcisi",
+      };
+      const roleKey = roleMap[selected] ?? selected;
+      const { error: roleError } = await supabase.rpc("admin_set_user_role", {
+        target_user_id: user.id,
+        role_key: roleKey,
+      });
+      if (roleError) throw roleError;
 
       await refreshProfile();
       toast({ title: "Hesabınız hazır! 🎉", description: "Profilinize yönlendiriliyorsunuz." });
