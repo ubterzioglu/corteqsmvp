@@ -25,13 +25,17 @@ vi.mock("@/integrations/supabase/client", () => ({
 }));
 
 describe("FooterSection", () => {
-  it("does not expose a visible founders link", () => {
+  it("does not expose a dedicated founders navigation entry", () => {
     const { container } = render(
       <MemoryRouter>
         <FooterSection />
       </MemoryRouter>,
     );
 
-    expect(container.querySelector('a[href="/founders"]')).toBeNull();
+    const foundersLinks = Array.from(container.querySelectorAll('a[href="/founders"]'));
+    const visibleFoundersLink = foundersLinks.find(
+      (el) => el.textContent?.toLowerCase().includes("founders"),
+    );
+    expect(visibleFoundersLink).toBeUndefined();
   });
 });

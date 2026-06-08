@@ -139,7 +139,7 @@ describe("DirectoryPage", () => {
 
     renderPage();
 
-    expect(screen.getByText(/Tam directory icin giris gerekiyor/i)).toBeInTheDocument();
+    expect(screen.getByText(/Tam dizin için giriş gerekiyor/i)).toBeInTheDocument();
     expect(listUnifiedDirectoryRowsMock).not.toHaveBeenCalled();
   });
 });

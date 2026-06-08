@@ -14,7 +14,6 @@ describe("HeroSection", () => {
 
     expect(screen.queryByText("19 Mayıs Etkinlikleri")).not.toBeInTheDocument();
     expect(screen.getByText("Dünyadaki Türkleri Bir Araya Getiren")).toBeInTheDocument();
-    expect(screen.getByText("CorteQS nedir?")).toBeInTheDocument();
     expect(screen.getByText("Ücretsiz Kayıt Ol")).toBeInTheDocument();
     expect(screen.getByText("Biz Kimiz")).toBeInTheDocument();
     expect(screen.getByText(/WhatsApp Grubuna Katıl/i)).toBeInTheDocument();

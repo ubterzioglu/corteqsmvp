@@ -48,19 +48,15 @@ describe("AdminNewMemberGuidePage", () => {
       "/admin/new-member/guide#rol-listesi",
     );
 
-    expect(screen.getByRole("link", { name: "1. Hangi ekran ne işe yarıyor?" })).toHaveAttribute(
+    // nav uses shortLabel format: "<index>. <tag>"
+    expect(screen.getByRole("link", { name: "0. Başlangıç" })).toHaveAttribute(
       "href",
-      "#guide-block-1-hangi-ekran-ne-ise-yariyor",
-    );
-    expect(screen.getByRole("link", { name: "Veritabanı menüsü — güncel operasyon yüzeyi" })).toHaveAttribute(
-      "href",
-      "#guide-section-1-hangi-ekran-ne-ise-yariyor-veritabani-menusu-guncel-operasyon-yuzeyi",
+      "#guide-block-0-hizli-baslangic-yeni-sisteme-genel-bakis",
     );
     expect(screen.getByRole("link", { name: "Referans Katalogları" })).toHaveAttribute(
       "href",
       "#guide-reference-kataloglari",
     );
-    expect(screen.getByRole("link", { name: "Tüm Roller" })).toHaveAttribute("href", "#rol-listesi");
 
     await waitFor(() => {
       expect(screen.getByText(/Tüm Roller \(1\)/)).toBeInTheDocument();

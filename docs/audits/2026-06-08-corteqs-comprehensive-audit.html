@@ -347,12 +347,13 @@
 
     <div class="findings-list" id="security-findings">
 
-      <div class="finding" data-sev="high" data-id="SEC-01">
+      <div class="finding" data-sev="high" data-id="SEC-01" data-status="resolved">
         <div class="finding-header" onclick="toggle(this)">
           <span class="finding-id">SEC-01</span>
           <span class="sev sev-high">HIGH</span>
           <span class="finding-title">d3-color ReDoS — react-simple-maps bağımlılığı</span>
           <span class="finding-loc">node_modules/d3-transition, d3-zoom</span>
+          <span class="sev" style="background:#16a34a;color:#fff">✅ ÇÖZÜLDÜ</span>
           <span class="chevron">▶</span>
         </div>
         <div class="finding-body">
@@ -369,15 +370,19 @@
             3. Geçici: Bileşeni production'a bakan herhangi bir input'tan izole et</p>
           </div>
           <div class="tags"><span class="tag">npm-audit</span><span class="tag">dependency</span><span class="tag">ReDoS</span><span class="tag">CWE-400</span></div>
+          <div class="remedy" style="border-left:4px solid #16a34a;background:#f0fdf4">
+            <p><strong>✅ Çözüm (2026-06-08):</strong> <code>react-simple-maps</code> production kodunda kullanılmadığı tespit edildi (yalnızca test mock'u). Paket tamamen kaldırıldı (<code>npm uninstall react-simple-maps</code>). d3-color güvenlik açığı ortadan kalktı.</p>
+          </div>
         </div>
       </div>
 
-      <div class="finding" data-sev="medium" data-id="SEC-02">
+      <div class="finding" data-sev="medium" data-id="SEC-02" data-status="resolved">
         <div class="finding-header" onclick="toggle(this)">
           <span class="finding-id">SEC-02</span>
           <span class="sev sev-medium">MEDIUM</span>
           <span class="finding-title">react-router Open Redirect — // ile başlayan path</span>
           <span class="finding-loc">node_modules/react-router</span>
+          <span class="sev" style="background:#16a34a;color:#fff">✅ ÇÖZÜLDÜ</span>
           <span class="chevron">▶</span>
         </div>
         <div class="finding-body">
@@ -394,6 +399,9 @@
             3. Kullanıcı girdisinden oluşturulan yolları sanitize et</p>
           </div>
           <div class="tags"><span class="tag">npm-audit</span><span class="tag">open-redirect</span><span class="tag">react-router</span></div>
+          <div class="remedy" style="border-left:4px solid #16a34a;background:#f0fdf4">
+            <p><strong>✅ Çözüm (2026-06-08):</strong> <code>react-router-dom</code> v6.30.1 → v7.17.0 yükseltildi. 160 dosyada kullanılan API (BrowserRouter, Routes, Route, Link, useNavigate, useParams) v7 ile tam uyumlu — breaking change yok. 295 test başarıyla geçti.</p>
+          </div>
         </div>
       </div>
 
@@ -609,12 +617,13 @@ const MuhasebeRoutes = React.lazy(() => import('./pages/admin/muhasebe/routes'))
         </div>
       </div>
 
-      <div class="finding" data-sev="medium" data-id="ARCH-03">
+      <div class="finding" data-sev="medium" data-id="ARCH-03" data-status="resolved">
         <div class="finding-header" onclick="toggle(this)">
           <span class="finding-id">ARCH-03</span>
           <span class="sev sev-medium">MEDIUM</span>
           <span class="finding-title">Test başarısızlıkları — AFS sonrası mock yetersizliği</span>
           <span class="finding-loc">src/hooks/usePublicIndividualProfile.test.ts, src/components/messaging/MessagesInbox.test.tsx</span>
+          <span class="sev" style="background:#16a34a;color:#fff">✅ ÇÖZÜLDÜ</span>
           <span class="chevron">▶</span>
         </div>
         <div class="finding-body">
@@ -631,6 +640,9 @@ const MuhasebeRoutes = React.lazy(() => import('./pages/admin/muhasebe/routes'))
             3. Tüm başarısız test dosyalarını listele ve toplu güncelle</p>
           </div>
           <div class="tags"><span class="tag">tests</span><span class="tag">AFS</span><span class="tag">mocks</span></div>
+          <div class="remedy" style="border-left:4px solid #16a34a;background:#f0fdf4">
+            <p><strong>✅ Çözüm (2026-06-08):</strong> 13 test dosyasındaki tüm başarısızlıklar giderildi. Yapılan düzeltmeler: <code>catalog-directory.test.ts</code> (kaldırılan fonksiyon mock'ları temizlendi), <code>SiteHeader.test.tsx</code> / <code>App.cadde-routes.test.tsx</code> / <code>App.founders-route.test.tsx</code> (<code>useAuth</code> mock eklendi), <code>AdminMembersPage.test.tsx</code> / <code>FormPage.test.tsx</code> (<code>QueryClientProvider</code> wrapper eklendi), <code>ProfileResolverPage.test.tsx</code> (<code>getMyEditableCatalogItems</code> mock eklendi), <code>DirectoryCatalogItemPage.test.tsx</code> (<code>getCatalogItemProfile</code> mock + doğru RPC mock), <code>CatalogEntityProfilePanel.test.tsx</code> (disabled state assertion), <code>DirectoryPage.test.tsx</code> (Türkçe string eşleşmesi), <code>AdminNewMemberGuidePage.test.tsx</code> (shortLabel formatı), <code>FooterSection.test.tsx</code> + <code>HeroSection.test.tsx</code> (güncel bileşen içeriği). Sonuç: 85 dosya / 295 test — hepsi yeşil.</p>
+          </div>
         </div>
       </div>
 
@@ -1077,26 +1089,26 @@ const MuhasebeRoutes = React.lazy(() => import('./pages/admin/muhasebe/routes'))
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr style="background:#f0fdf4">
           <td><span class="priority-badge p1">P1</span></td>
-          <td>ARCH-03</td>
-          <td>15 başarısız testi düzelt — AFS sonrası mock güncellemesi</td>
+          <td>ARCH-03 <span style="color:#16a34a;font-weight:bold">✅</span></td>
+          <td>15 başarısız testi düzelt — AFS sonrası mock güncellemesi <em style="color:#16a34a">(Tamamlandı 2026-06-08: 85 dosya / 295 test yeşil)</em></td>
           <td>CI güvenilirliği</td>
           <td>M (2-4 saat)</td>
           <td>Backend</td>
         </tr>
-        <tr>
+        <tr style="background:#f0fdf4">
           <td><span class="priority-badge p1">P1</span></td>
-          <td>SEC-01</td>
-          <td>d3-color ReDoS: react-simple-maps@1.0.0'a yükselt veya kaldır</td>
+          <td>SEC-01 <span style="color:#16a34a;font-weight:bold">✅</span></td>
+          <td>d3-color ReDoS: react-simple-maps kaldırıldı <em style="color:#16a34a">(Tamamlandı 2026-06-08: paket production'da kullanılmıyordu)</em></td>
           <td>Güvenlik</td>
           <td>M-L</td>
           <td>Frontend</td>
         </tr>
-        <tr>
+        <tr style="background:#f0fdf4">
           <td><span class="priority-badge p1">P1</span></td>
-          <td>SEC-02</td>
-          <td>react-router open redirect: güncellenmiş versiyona geç</td>
+          <td>SEC-02 <span style="color:#16a34a;font-weight:bold">✅</span></td>
+          <td>react-router open redirect: react-router-dom v6.30.1 → v7.17.0 yükseltildi <em style="color:#16a34a">(Tamamlandı 2026-06-08)</em></td>
           <td>Güvenlik</td>
           <td>S</td>
           <td>Frontend</td>
@@ -1198,8 +1210,9 @@ const MuhasebeRoutes = React.lazy(() => import('./pages/admin/muhasebe/routes'))
       <div class="summary-box">
         <h3>✅ Hemen Yapılacaklar (Bu Hafta)</h3>
         <ul>
-          <li>15 başarısız test → mock güncellemesi (ARCH-03)</li>
-          <li>react-simple-maps güncelleme araştırması (SEC-01)</li>
+          <li>✅ 15 başarısız test → mock güncellemesi (ARCH-03) — <strong>Tamamlandı 2026-06-08</strong></li>
+          <li>✅ react-simple-maps kaldırıldı — d3-color ReDoS giderildi (SEC-01) — <strong>Tamamlandı 2026-06-08</strong></li>
+          <li>✅ react-router-dom v7.17.0'a yükseltildi — open redirect giderildi (SEC-02) — <strong>Tamamlandı 2026-06-08</strong></li>
           <li>src/lib/supabase.ts silme (ARCH-02)</li>
           <li>rel="noopener noreferrer" AboutPage (SEC-04)</li>
         </ul>

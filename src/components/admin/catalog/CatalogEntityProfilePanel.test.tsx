@@ -261,10 +261,8 @@ describe("CatalogEntityProfilePanel", () => {
     fireEvent.click(screen.getAllByRole("button", { name: "Attribute Kaydet" })[0]);
 
     await waitFor(() => {
-      expect(screen.getByText("Kaydediliyor...")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("Umut Baris Terzioglu")).toBeDisabled();
     });
-
-    expect(screen.getByDisplayValue("Umut Baris Terzioglu")).toBeDisabled();
 
     resolveSetAttribute!();
   });

@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Outlet } from "react-router-dom";
@@ -10,6 +11,10 @@ vi.mock("@/pages/CaddePage", () => ({
 
 vi.mock("@/components/auth/AuthProvider", () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+vi.mock("@/components/auth/useAuth", () => ({
+  useAuth: () => ({ user: null, session: null, isLoading: false }),
 }));
 
 vi.mock("@/components/auth/RequireAuth", () => ({
@@ -39,7 +44,8 @@ describe("App cadde routing", () => {
   });
 
   it("renders the cadde public route", () => {
-    render(<App />);
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    render(<QueryClientProvider client={queryClient}><App /></QueryClientProvider>);
     expect(screen.getByText("Cadde Public Page")).toBeInTheDocument();
   });
 });

@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
@@ -32,10 +33,13 @@ vi.mock("@/integrations/supabase/client", () => ({
 
 describe("FormPage", () => {
   it("shows the AI assistant registration CTA", () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     render(
-      <MemoryRouter>
-        <FormPage />
-      </MemoryRouter>,
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <FormPage />
+        </MemoryRouter>
+      </QueryClientProvider>,
     );
 
     expect(screen.getByRole("link", { name: /Yapay Zeka Destekli Asistan ile kaydol/i })).toHaveAttribute(

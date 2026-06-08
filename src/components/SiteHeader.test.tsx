@@ -1,8 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import SiteHeader from "@/components/SiteHeader";
+
+vi.mock("@/components/auth/useAuth", () => ({
+  useAuth: () => ({ user: null, session: null, isLoading: false }),
+}));
 
 describe("SiteHeader", () => {
   it("shows the brand header with auth links routed from the top bar", () => {

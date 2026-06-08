@@ -7,6 +7,7 @@ import ProfileResolverPage from "@/pages/ProfileResolverPage";
 const useAuthMock = vi.fn();
 const rpcMock = vi.fn();
 const getCurrentMemberCatalogProfileMock = vi.fn();
+const getMyEditableCatalogItemsMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
@@ -14,6 +15,7 @@ vi.mock("@/components/auth/useAuth", () => ({
 
 vi.mock("@/lib/member-catalog", () => ({
   getCurrentMemberCatalogProfile: () => getCurrentMemberCatalogProfileMock(),
+  getMyEditableCatalogItems: () => getMyEditableCatalogItemsMock(),
 }));
 
 vi.mock("@/integrations/supabase/client", () => ({
@@ -29,7 +31,20 @@ describe("ProfileResolverPage", () => {
       isLoading: false,
     });
 
-    getCurrentMemberCatalogProfileMock.mockResolvedValue({ profileType: "danisman" });
+    getCurrentMemberCatalogProfileMock.mockResolvedValue(null);
+    getMyEditableCatalogItemsMock.mockResolvedValue([
+      {
+        itemId: "item-1",
+        slug: "test-user",
+        title: "Test User",
+        itemType: "member",
+        roleKey: "danisman",
+        accessLevel: "owner",
+        isPrimaryOwner: true,
+        createdAt: null,
+        legacyProfileType: "danisman",
+      },
+    ]);
 
     render(
       <MemoryRouter initialEntries={["/profile"]}>
@@ -50,6 +65,7 @@ describe("ProfileResolverPage", () => {
     });
 
     getCurrentMemberCatalogProfileMock.mockResolvedValue(null);
+    getMyEditableCatalogItemsMock.mockResolvedValue([]);
     rpcMock.mockResolvedValue({ error: null });
 
     render(

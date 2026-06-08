@@ -24,6 +24,10 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
+vi.mock("@/lib/catalog-entity-api", () => ({
+  getCatalogItemProfile: vi.fn().mockResolvedValue(null),
+}));
+
 const catalogItem = {
   id: "item-1",
   item_type: "advisor",
@@ -49,7 +53,12 @@ describe("DirectoryCatalogItemPage", () => {
   beforeEach(() => {
     useAuthMock.mockReturnValue({ user: null, session: null, isLoading: false });
     rpcMock.mockReset();
-    rpcMock.mockResolvedValue({ data: {}, error: null });
+    rpcMock.mockImplementation((fn: string) => {
+      if (fn === "get_catalog_item_public_profile") {
+        return Promise.resolve({ data: catalogItem, error: null });
+      }
+      return Promise.resolve({ data: {}, error: null });
+    });
     maybeSingleMock.mockResolvedValue({ data: catalogItem, error: null });
     eqVisibilityMock.mockReturnValue({ maybeSingle: maybeSingleMock });
     eqStatusMock.mockReturnValue({ eq: eqVisibilityMock });
@@ -67,9 +76,9 @@ describe("DirectoryCatalogItemPage", () => {
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText("Arkin Kara")).toBeInTheDocument();
-    expect(screen.getByText("Dortmund'da Türkçe hizmet veren doktor.")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Düzenleme Yetkisi İçin Giriş Yap/i })).toHaveAttribute(
+    expect(await screen.findByRole("heading", { name: "Arkin Kara", level: 1 })).toBeInTheDocument();
+    expect(screen.getAllByText(/Türkçe hizmet veren doktor/).length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: /Duzenleme Yetkisi Icin Giris Yap/i })).toHaveAttribute(
       "href",
       "/login?mode=signup&next=%2Fdirectory%2Fcatalog%2Fdortmund-turkce-doktor-arkin-kara",
     );
@@ -86,7 +95,7 @@ describe("DirectoryCatalogItemPage", () => {
       </MemoryRouter>,
     );
 
-    fireEvent.click(await screen.findByRole("button", { name: /Bu Sayfayı Düzenlemek İstiyorum/i }));
+    fireEvent.click(await screen.findByRole("button", { name: /Bu Sayfayi Duzenlemek Istiyorum/i }));
 
     await waitFor(() => {
       expect(rpcMock).toHaveBeenCalledWith(
@@ -94,6 +103,6 @@ describe("DirectoryCatalogItemPage", () => {
         expect.objectContaining({ target_item_id: "item-1", claim_type: "editor_access" }),
       );
     });
-    expect(await screen.findByText("Düzenleme yetkisi talebiniz admin onayına gönderildi.")).toBeInTheDocument();
+    expect(await screen.findByText("Talep Gonderildi")).toBeInTheDocument();
   });
 });

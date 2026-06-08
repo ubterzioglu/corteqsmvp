@@ -1,8 +1,13 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import AdminMembersPage from "@/pages/admin/AdminMembersPage";
+
+vi.mock("@/components/SearchableCitySelect", () => ({
+  default: () => null,
+}));
 
 const toast = vi.fn();
 
@@ -176,12 +181,15 @@ vi.mock("@/integrations/supabase/client", () => ({
 }));
 
 function renderPage(initialEntry = "/admin/members?page=1&pageSize=20") {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
-    <MemoryRouter initialEntries={[initialEntry]}>
-      <Routes>
-        <Route path="/admin/members" element={<AdminMembersPage />} />
-      </Routes>
-    </MemoryRouter>,
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={[initialEntry]}>
+        <Routes>
+          <Route path="/admin/members" element={<AdminMembersPage />} />
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>,
   );
 }
 
