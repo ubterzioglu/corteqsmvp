@@ -16,7 +16,7 @@ interface TableInfo {
 
 const DB_TABLES: TableInfo[] = [
   // Auth & Kullanıcı
-  { name: "user_roles", description: "Kullanıcı Rolleri", purpose: "Kullanıcılara atanan rolleri saklar (legacy uyumluluk).", rowCount: 11, rls: true, group: "Auth & Kullanıcı" },
+  // (user_roles legacy enum tablosu 20260609020000 ile kaldırıldı — veri user_role_assignments'a taşındı.)
   { name: "user_role_assignments", description: "Rol Atamaları", purpose: "Kullanıcı–rol bağlantı tablosu. Admin yetkisi buradaki Admin_ prefix'li rollerle belirlenir.", rowCount: 14, rls: true, group: "Auth & Kullanıcı" },
   { name: "user_feature_overrides", description: "Feature Override", purpose: "Belirli kullanıcılar için özellik bayraklarını geçersiz kılar.", rowCount: 59, rls: true, group: "Auth & Kullanıcı" },
   { name: "user_profile_attributes", description: "Profil Nitelikleri", purpose: "Kullanıcı profillerine bağlı özel nitelik değerleri.", rowCount: 28, rls: true, group: "Auth & Kullanıcı" },

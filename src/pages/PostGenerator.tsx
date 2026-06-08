@@ -69,12 +69,9 @@ const PostGenerator = () => {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", user.id)
-        .eq("role", "admin")
-        .maybeSingle();
+      // Eski user_roles tablosu kaldırıldı (20260609020000). Admin kontrolü artık
+      // canonical is_admin() RPC'si üzerinden (user_role_assignments → Admin_*).
+      const { data } = await (supabase as any).rpc("is_admin", { uid: user.id });
       setIsAdmin(!!data);
     })();
   }, [user]);

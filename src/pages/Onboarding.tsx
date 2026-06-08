@@ -65,19 +65,9 @@ const Onboarding = () => {
     setLoading(true);
 
     try {
-      // Update user_roles — delete default 'user' role if selecting something else, then insert
-      if (selected !== "user") {
-        // Insert the new role
-        const { error: roleError } = await supabase
-          .from("user_roles")
-          .insert({ user_id: user.id, role: selected as any });
-
-        if (roleError && !roleError.message.includes("duplicate")) {
-          throw roleError;
-        }
-      }
-
-      // Set role via RolesGo — account_type maps to role key
+      // Set role via RolesGo — account_type maps to role key.
+      // (Eski user_roles tablosuna yazma kaldırıldı; tablo 20260609020000 ile düşürüldü.
+      // Rol artık tek kaynak olan user_role_assignments'a admin_set_user_role RPC'siyle yazılır.)
       const roleMap: Record<string, string> = {
         user: "bireysel",
         consultant: "danisman",

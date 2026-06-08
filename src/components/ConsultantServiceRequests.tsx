@@ -70,14 +70,18 @@ const ConsultantServiceRequests = () => {
       return;
     }
 
-    // Detect role — consultants filter by their categories; businesses see all open requests
-    const { data: roles } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id);
-    const roleNames = (roles || []).map((r) => r.role as string);
-    const isConsultant = roleNames.includes("consultant");
-    const isBusiness = roleNames.includes("business");
+    // Detect role — consultants filter by their categories; businesses see all open requests.
+    // Eski user_roles enum tablosu kaldırıldı (20260609020000). Rol artık canonical
+    // user_role_assignments → roles.key prefix'i üzerinden okunur (Consultant_* / Business_*),
+    // RLS policy'leriyle aynı eşleme.
+    const { data: roleRow } = await supabase
+      .from("user_role_assignments")
+      .select("roles!inner(key)")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    const roleKey = ((roleRow as { roles?: { key?: string } } | null)?.roles?.key) ?? "";
+    const isConsultant = roleKey.startsWith("Consultant_");
+    const isBusiness = roleKey.startsWith("Business_");
 
     let query = supabase
       .from("service_requests")
