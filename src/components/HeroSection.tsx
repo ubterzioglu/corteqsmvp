@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import heroVideo from "../../herovideo.mp4";
 const heroLogo = "/newlogo.png";
-const heroVideo = "/herovideo.mp4";
 import RegisterInterestForm from "./RegisterInterestForm";
 
 const HeroSection = () => {
