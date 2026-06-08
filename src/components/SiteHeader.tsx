@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "@/components/auth/useAuth";
 const logo = "/newlogo.png";
 
 export default function SiteHeader() {
+  const { user } = useAuth();
   return (
     <div className="sticky top-0 z-50 border-b border-orange-100/90 bg-[linear-gradient(180deg,#fffdf9_0%,#fff8f0_100%)] backdrop-blur-sm">
       <div className="border-b border-amber-300/70 bg-[linear-gradient(90deg,#fff1bf_0%,#ffc96b_48%,#ffb347_100%)] px-4 py-2 text-center text-[0.72rem] font-black uppercase tracking-[0.28em] text-slate-950 shadow-[inset_0_-1px_0_rgba(255,255,255,0.35)] sm:text-[0.8rem]">
@@ -44,19 +46,30 @@ export default function SiteHeader() {
                 className="hidden h-5 w-px bg-slate-300/80 sm:block"
               />
               <div className="flex items-center gap-x-3">
-                <Link
-                  to="/login?mode=login"
-                  className="text-sm font-semibold text-[#34A853] transition-colors hover:text-[#2F9B4D]"
-                >
-                  Giriş Yap
-                </Link>
-                <span aria-hidden="true" className="h-5 w-px bg-slate-300/80" />
-                <Link
-                  to="/login?mode=signup"
-                  className="text-sm font-semibold text-[#ee652b] transition-colors hover:text-[#d95520]"
-                >
-                  Kayıt Ol
-                </Link>
+                {user ? (
+                  <Link
+                    to="/profile"
+                    className="text-sm font-semibold text-[#34A853] transition-colors hover:text-[#2F9B4D]"
+                  >
+                    Profilim
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/login?mode=login"
+                      className="text-sm font-semibold text-[#34A853] transition-colors hover:text-[#2F9B4D]"
+                    >
+                      Giriş Yap
+                    </Link>
+                    <span aria-hidden="true" className="h-5 w-px bg-slate-300/80" />
+                    <Link
+                      to="/login?mode=signup"
+                      className="text-sm font-semibold text-[#ee652b] transition-colors hover:text-[#d95520]"
+                    >
+                      Kayıt Ol
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
