@@ -3,6 +3,13 @@ import CorteqsWhatIsAccordion from "@/components/CorteqsWhatIsAccordion";
 
 const featuredLinks = [
   {
+    to: "/founders",
+    className:
+      "border-[#2f6fda] bg-[linear-gradient(135deg,#4285F4_0%,#3B78E7_100%)] text-white shadow-[0_16px_34px_rgba(66,133,244,0.34),inset_0_1px_0_rgba(255,255,255,0.18)]",
+    label: "Biz Kimiz?",
+    scrollTop: true,
+  },
+  {
     to: "/founding-1000",
     className:
       "border-[#F9AB00] bg-[linear-gradient(135deg,#FBBC05_0%,#F9AB00_100%)] text-white shadow-[0_16px_34px_rgba(251,188,5,0.34),inset_0_1px_0_rgba(255,255,255,0.18)]",

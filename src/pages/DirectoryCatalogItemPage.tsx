@@ -227,6 +227,8 @@ const DirectoryCatalogItemPage = () => {
           }
         >
           <CatalogProfileLayout
+            title={item.title}
+            roleLabel={roleLabel ?? null}
             shortDescription={item.short_description ?? null}
             longDescription={item.long_description ?? null}
             canClaim={!!canClaim}

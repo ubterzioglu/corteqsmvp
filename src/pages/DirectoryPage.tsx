@@ -101,7 +101,7 @@ const DirectoryPage = () => {
 
       <main className="relative mx-auto w-full max-w-6xl px-4 py-10">
         {/* Hero card */}
-        <section className="mb-6 overflow-hidden rounded-[32px] border border-white/60 bg-gradient-to-br from-white/70 via-white/55 to-primary/5 shadow-[0_30px_80px_-48px_rgba(15,23,42,0.45)] backdrop-blur-xl">
+        <section className="mb-6 overflow-hidden rounded-[32px] border border-white/60 bg-gradient-to-br from-white/70 via-white/55 to-primary/5 shadow-[0_0_60px_-12px_rgba(66,133,244,0.28),0_0_60px_-12px_rgba(234,67,53,0.18),0_30px_80px_-48px_rgba(15,23,42,0.45)] backdrop-blur-xl">
           <div className="flex items-center justify-between gap-6 p-6 md:p-8">
             {/* Left: text content */}
             <div className="min-w-0 flex-1">
@@ -163,7 +163,7 @@ const DirectoryPage = () => {
               />
             </div>
 
-            <div className="mb-6 rounded-[28px] border border-white/60 bg-white/60 p-4 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.35)] backdrop-blur-xl md:p-5">
+            <div className="mb-6 rounded-[28px] border border-white/60 bg-white/60 p-4 shadow-[0_0_40px_-10px_rgba(251,188,5,0.22),0_0_40px_-10px_rgba(52,168,83,0.18),0_24px_60px_-40px_rgba(15,23,42,0.35)] backdrop-blur-xl md:p-5">
               <DirectoryFilters
                 roleOptions={roleOptions}
                 roleFilter={roleFilter}

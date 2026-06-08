@@ -34,6 +34,8 @@ export interface CatalogProfileLayoutProps {
   languages?: LanguageRow[];
   claimNotice?: ReactNode;
   statusNotice?: ReactNode;
+  title?: string;
+  roleLabel?: string | null;
 }
 
 const contactIcon = (type: string) => {
@@ -62,6 +64,8 @@ const SectionCard = ({ icon, title, children }: { icon: ReactNode; title: string
   </Card>
 );
 
+type StaticRow = { label: string; value: string };
+
 const CatalogProfileLayout = ({
   shortDescription,
   longDescription,
@@ -74,9 +78,19 @@ const CatalogProfileLayout = ({
   languages,
   claimNotice,
   statusNotice,
+  title,
+  roleLabel,
 }: CatalogProfileLayoutProps) => {
   const description = shortDescription ?? longDescription;
   const hasSidebar = contacts.length > 0 || services.length > 0 || (languages && languages.length > 0);
+
+  const staticRows: StaticRow[] = [
+    title ? { label: "Görünen İsim", value: title } : null,
+    roleLabel ? { label: "Rol / Tür", value: roleLabel } : null,
+    locationLabel ? { label: "Konum", value: locationLabel } : null,
+    description ? { label: "Kısa Açıklama", value: description } : null,
+    addressLine ? { label: "Adres", value: addressLine } : null,
+  ].filter((row): row is StaticRow => row !== null);
 
   return (
     <div className="space-y-4">
@@ -103,41 +117,53 @@ const CatalogProfileLayout = ({
         <div className={`space-y-4 ${hasSidebar ? "lg:col-span-2" : ""}`}>
           <SectionCard icon={<User className="h-4 w-4 text-primary" />} title="Profil Bilgileri">
             <dl className="divide-y divide-border/40">
-              {publicAttributes.length > 0 ? (
-                publicAttributes.map((attr) => {
-                  const val = renderAttributeValue(attr);
-                  return (
-                    <div
-                      key={attr.attribute_key}
-                      className="flex items-start gap-4 py-2.5 first:pt-0 last:pb-0"
-                    >
-                      <dt className="w-36 shrink-0 text-xs font-medium text-muted-foreground pt-0.5">
-                        {attr.label}
-                      </dt>
-                      <dd className="min-w-0 flex-1 text-sm font-medium text-foreground">
-                        {val ? (
-                          attr.data_type === "url" ? (
-                            <a
-                              className="break-all text-primary underline-offset-4 hover:underline"
-                              href={val}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              {val}
-                            </a>
-                          ) : (
-                            val
-                          )
+              {staticRows.map((row) => (
+                <div
+                  key={row.label}
+                  className="flex items-start gap-4 py-2.5 first:pt-0 last:pb-0"
+                >
+                  <dt className="w-36 shrink-0 text-xs font-medium text-muted-foreground pt-0.5">
+                    {row.label}
+                  </dt>
+                  <dd className="min-w-0 flex-1 text-sm font-medium text-foreground">
+                    {row.value}
+                  </dd>
+                </div>
+              ))}
+              {publicAttributes.map((attr) => {
+                const val = renderAttributeValue(attr);
+                return (
+                  <div
+                    key={attr.attribute_key}
+                    className="flex items-start gap-4 py-2.5 first:pt-0 last:pb-0"
+                  >
+                    <dt className="w-36 shrink-0 text-xs font-medium text-muted-foreground pt-0.5">
+                      {attr.label}
+                    </dt>
+                    <dd className="min-w-0 flex-1 text-sm font-medium text-foreground">
+                      {val ? (
+                        attr.data_type === "url" ? (
+                          <a
+                            className="break-all text-primary underline-offset-4 hover:underline"
+                            href={val}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {val}
+                          </a>
                         ) : (
-                          <span className="text-muted-foreground/40">—</span>
-                        )}
-                      </dd>
-                    </div>
-                  );
-                })
-              ) : (
+                          val
+                        )
+                      ) : (
+                        <span className="text-muted-foreground/40">—</span>
+                      )}
+                    </dd>
+                  </div>
+                );
+              })}
+              {staticRows.length === 0 && publicAttributes.length === 0 ? (
                 <p className="py-2 text-sm text-muted-foreground/50">Henüz profil bilgisi eklenmemiş.</p>
-              )}
+              ) : null}
             </dl>
           </SectionCard>
         </div>
