@@ -318,6 +318,30 @@ const AdminLayout = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Güncellemeler Banner */}
+      <div className="border-b border-amber-200 bg-amber-50 dark:border-amber-900/40 dark:bg-amber-950/30">
+        <div className="container mx-auto px-4 py-2.5">
+          <div className="flex flex-wrap items-start gap-x-6 gap-y-1 text-sm">
+            <span className="shrink-0 font-semibold text-amber-800 dark:text-amber-300">🔔 Güncellemeler</span>
+            <span className="text-amber-700 dark:text-amber-400">
+              <span className="font-medium">2026-06-09 · Kullanıcı İmport:</span>{" "}
+              Submissions tablosundaki 92 gerçek kullanıcı auth sisteme aktarıldı ve{" "}
+              <span className="font-medium">bireysel</span> rolü atandı. Artık admin panelinde
+              Authentication → Users altında görünüyorlar. Şifre belirleme e-postaları henüz
+              gönderilmedi — hazır olduğunda yapılabilir.
+            </span>
+            <span className="text-amber-700 dark:text-amber-400">
+              <span className="font-medium">2026-06-09 · Sistem Düzeltmesi:</span>{" "}
+              Auth trigger hatası giderildi (
+              <code className="rounded bg-amber-100 px-1 text-xs dark:bg-amber-900/50">
+                on_auth_user_created_catalog_profile
+              </code>{" "}
+              drop edilen <code className="rounded bg-amber-100 px-1 text-xs dark:bg-amber-900/50">profiles</code> tablosuna
+              bağlıydı). Yeni kullanıcı kaydı artık sorunsuz çalışıyor.
+            </span>
+          </div>
+        </div>
+      </div>
       <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur">
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-wrap items-center justify-between gap-4">

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CorteQS — Kullanıcı & Rol Sistemi İnfogram</title>
+  <title>CorteQS — RolesGo Sistem Dökümanı</title>
   <style>
     :root {
       --bg: #0f1117;
@@ -137,31 +137,6 @@
     .tbl tr:last-child td { border-bottom: none; }
     .tbl tr:hover td { background: rgba(255,255,255,0.02); }
 
-    /* Flow/Steps */
-    .flow { display: flex; flex-direction: column; gap: 0; }
-    .flow-step {
-      display: flex; align-items: flex-start; gap: 16px;
-      padding: 16px 0;
-      position: relative;
-    }
-    .flow-step:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      left: 18px; top: 56px;
-      width: 2px; height: calc(100% - 24px);
-      background: var(--border);
-    }
-    .flow-icon {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; flex-shrink: 0;
-      position: relative; z-index: 1;
-    }
-    .flow-body { flex: 1; }
-    .flow-title { font-weight: 700; margin-bottom: 4px; }
-    .flow-desc { color: var(--muted); font-size: 13px; }
-
     /* Priority steps */
     .priority-chain { display: flex; flex-direction: column; gap: 8px; }
     .priority-item {
@@ -235,10 +210,6 @@
       font-size: 11px;
       color: var(--muted);
     }
-
-    /* Compare table */
-    .compare-yes { color: var(--green); font-weight: 700; }
-    .compare-no  { color: var(--red); font-weight: 700; }
 
     /* State machine */
     .states { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
@@ -320,8 +291,30 @@
     .tip { background: rgba(0,212,170,0.06); border: 1px solid rgba(0,212,170,0.2); border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #63e6be; margin-top: 12px; }
     .tip strong { color: var(--accent2); }
 
-    /* Strikethrough / removed */
-    .removed { text-decoration: line-through; opacity: 0.4; }
+    /* Flow */
+    .flow { display: flex; flex-direction: column; gap: 0; }
+    .flow-step {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 16px 0;
+      position: relative;
+    }
+    .flow-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 18px; top: 56px;
+      width: 2px; height: calc(100% - 24px);
+      background: var(--border);
+    }
+    .flow-icon {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+      position: relative; z-index: 1;
+    }
+    .flow-body { flex: 1; }
+    .flow-title { font-weight: 700; margin-bottom: 4px; }
+    .flow-desc { color: var(--muted); font-size: 13px; }
   </style>
 </head>
 <body>
@@ -329,14 +322,14 @@
 
   <!-- HERO -->
   <div class="hero">
-    <h1>CorteQS Kullanıcı & Rol Sistemi</h1>
-    <p>Database katmanından frontend hook'larına kadar <strong>RolesGo (AFS: Attribute · Feature · State)</strong> sistemini anlatan tam referans dökümanı. Legacy tablolar kaldırıldı — artık tek sistem var.</p>
+    <h1>CorteQS — RolesGo Sistem Dökümanı</h1>
+    <p>Database katmanından frontend hook'larına kadar <strong>RolesGo (AFS: Attribute · Feature · State)</strong> mimarisini anlatan tam referans dökümanı. Tek sistem, tek kaynak.</p>
     <div class="hero-stats">
       <div class="stat"><div class="stat-num">13</div><div class="stat-label">Tablo</div></div>
       <div class="stat"><div class="stat-num">82</div><div class="stat-label">Rol</div></div>
       <div class="stat"><div class="stat-num">21</div><div class="stat-label">Generic Feature</div></div>
       <div class="stat"><div class="stat-num">11</div><div class="stat-label">Rol Ailesi</div></div>
-      <div class="stat"><div class="stat-num">1</div><div class="stat-label">Sistem (RolesGo)</div></div>
+      <div class="stat"><div class="stat-num">1</div><div class="stat-label">Sistem</div></div>
     </div>
   </div>
 
@@ -344,119 +337,34 @@
   <div class="toc">
     <h3 style="margin-bottom:14px;">İçindekiler</h3>
     <ul class="toc-list">
-      <li><a href="#migration-note"><span class="toc-num">00</span> Migration Notu — Ne Değişti?</a></li>
-      <li><a href="#rolesgo"><span class="toc-num">01</span> RolesGo Sistemi — Tek Sistem</a></li>
+      <li><a href="#mimari"><span class="toc-num">01</span> Sistem Mimarisi — Genel Bakış</a></li>
       <li><a href="#roller"><span class="toc-num">02</span> 82 Rolün Aile Haritası</a></li>
-      <li><a href="#feature"><span class="toc-num">03</span> Feature Catalog</a></li>
-      <li><a href="#hierarchy"><span class="toc-num">04</span> Feature Çözümleme Hiyerarşisi</a></li>
-      <li><a href="#attribute"><span class="toc-num">05</span> Attribute Sistemi</a></li>
-      <li><a href="#approval"><span class="toc-num">06</span> Onay (Approval) State Machine</a></li>
-      <li><a href="#tables"><span class="toc-num">07</span> 13 Tablonun Tam Haritası</a></li>
-      <li><a href="#frontend"><span class="toc-num">08</span> Frontend Entegrasyonu</a></li>
+      <li><a href="#kayit-akisi"><span class="toc-num">03</span> Kayıt & Rol Atama Akışı</a></li>
+      <li><a href="#feature"><span class="toc-num">04</span> Feature Kataloğu</a></li>
+      <li><a href="#hierarchy"><span class="toc-num">05</span> Feature Çözümleme Hiyerarşisi</a></li>
+      <li><a href="#attribute"><span class="toc-num">06</span> Attribute Sistemi</a></li>
+      <li><a href="#approval"><span class="toc-num">07</span> Onay (Approval) State Machine</a></li>
+      <li><a href="#tables"><span class="toc-num">08</span> 13 Tablonun Tam Haritası</a></li>
+      <li><a href="#frontend"><span class="toc-num">09</span> Frontend Entegrasyonu</a></li>
+      <li><a href="#rpc"><span class="toc-num">10</span> RPC Fonksiyonları Referansı</a></li>
     </ul>
   </div>
 
-  <!-- 00 MİGRATION NOTU -->
-  <div class="section" id="migration-note">
-    <div class="section-header">
-      <div class="section-num red">00</div>
-      <div>
-        <h2>Migration Notu — Ne Değişti? (2026-06-09)</h2>
-        <p style="margin:0">Migration <code>20260609001000</code>–<code>20260609003000</code> ile legacy tablolar production'dan kaldırıldı.</p>
-      </div>
-    </div>
-
-    <div class="callout success">
-      <div class="callout-icon">✅</div>
-      <div class="callout-body">
-        <div class="callout-title">Artık tek sistem var — RolesGo</div>
-        <div class="callout-text">Eski "iki paralel sistem" durumu sona erdi. Tüm kullanıcı verileri <code>user_role_assignments</code> + <code>user_profile_attributes</code>'a taşındı. Legacy tablolar drop edildi. Kod yazarken sadece RolesGo'yu düşünün.</div>
-      </div>
-    </div>
-
-    <table class="tbl">
-      <thead>
-        <tr>
-          <th>Ne Değişti</th>
-          <th>Önceki Durum</th>
-          <th>Yeni Durum</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>user_profiles tablosu</strong></td>
-          <td>Ana profil tablosu, <code>profile_type</code> kolonuyla</td>
-          <td><span class="badge badge-red">DROP edildi</span> — auth.users + user_profile_attributes</td>
-        </tr>
-        <tr>
-          <td><strong>profiles tablosu</strong></td>
-          <td>Paralel legacy profil, <code>platform_role</code> kolonuyla</td>
-          <td><span class="badge badge-red">DROP edildi</span> — veriler attribute'lara taşındı</td>
-        </tr>
-        <tr>
-          <td><strong>admin_users tablosu</strong></td>
-          <td>Tabloda olmak = admin</td>
-          <td><span class="badge badge-red">DROP edildi</span> — <code>Admin_%</code> rolü atar</td>
-        </tr>
-        <tr>
-          <td><strong>role_feature_defaults tablosu</strong></td>
-          <td>Legacy profile_type için feature varsayılanları</td>
-          <td><span class="badge badge-red">DROP edildi</span> — <code>role_feature_flags</code>'e taşındı</td>
-        </tr>
-        <tr>
-          <td><strong>is_admin() fonksiyonu</strong></td>
-          <td><code>admin_users</code> tablosu veya <code>profiles.platform_role='admin'</code></td>
-          <td><code>user_role_assignments</code>'ta <code>r.key ilike 'Admin_%'</code></td>
-        </tr>
-        <tr>
-          <td><strong>get_current_user_features()</strong></td>
-          <td>3 katman: override → role → rfd fallback</td>
-          <td>2 katman: override → role_feature_flags (fallback yok)</td>
-        </tr>
-        <tr>
-          <td><strong>Yeni attribute'lar</strong></td>
-          <td>profiles'taki kolonlar ayrıydı</td>
-          <td><code>attribute_catalog</code>'a eklendi: avatar_url, phone, profession, school, business_name, vb. (20+ yeni)</td>
-        </tr>
-        <tr>
-          <td><strong>Profil sync trigger'ları</strong></td>
-          <td>user_profiles ↔ user_role_assignments çift yönlü sync</td>
-          <td><span class="badge badge-red">Kaldırıldı</span> — tek kaynak user_role_assignments</td>
-        </tr>
-        <tr>
-          <td><strong>Auth user created trigger</strong></td>
-          <td>on_auth_user_created → user_profiles + profiles oluşturur</td>
-          <td><span class="badge badge-red">Kaldırıldı</span> — yeni kullanıcı için sadece user_role_assignments kaydı</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="callout warn" style="margin-top:16px;">
-      <div class="callout-icon">⚠️</div>
-      <div class="callout-body">
-        <div class="callout-title">Eski koda dikkat</div>
-        <div class="callout-text">Codebse'de hâlâ <code>profile_type</code>, <code>admin_users</code>, <code>profiles.platform_role</code> veya <code>role_feature_defaults</code> referansı görüyorsanız — bu kod artık çalışmaz. <strong>Güncellenmesi gerekir.</strong> <code>useFeatureFlags()</code> hook'u ve <code>user_role_assignments</code> tablosunu kullanın.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <!-- 01 ROLESGO -->
-  <div class="section" id="rolesgo">
+  <!-- 01 MİMARİ -->
+  <div class="section" id="mimari">
     <div class="section-header">
       <div class="section-num green">01</div>
       <div>
-        <h2>RolesGo Sistemi — Tek Sistem</h2>
-        <p style="margin:0">Tüm kullanıcı rolleri, feature'lar, attribute'lar ve onay akışları buradan yönetilir.</p>
+        <h2>Sistem Mimarisi — Genel Bakış</h2>
+        <p style="margin:0">RolesGo, tüm kullanıcı rolleri, feature'lar, attribute'lar ve onay akışlarını tek bir mimaride yönetir.</p>
       </div>
     </div>
 
     <div class="callout success">
       <div class="callout-icon">✅</div>
       <div class="callout-body">
-        <div class="callout-title">Neden daha iyi?</div>
-        <div class="callout-text">Yeni bir rol tipi eklemek için migration yazmak gerekmiyor. Sadece <code>roles</code> tablosuna bir satır eklemek yeterli. Yeni rol otomatik olarak <strong>bireysel</strong> baseline'ını miras alır (backfill migration idempotent olarak çalışır). Feature'ları da aynı şekilde <code>feature_catalog</code>'a ekleyebilirsiniz. Kullanıcı profil verisi artık doğrudan <code>user_profile_attributes</code>'ta — eski <code>profiles</code> veya <code>user_profiles</code> kolonlarına ihtiyaç yok.</div>
+        <div class="callout-title">Tek sistem, tek kaynak</div>
+        <div class="callout-text">Tüm kullanıcı verileri <code>user_role_assignments</code> + <code>user_profile_attributes</code>'ta saklanır. Her kullanıcı sisteme <code>bireysel</code> rolüyle girer. Admin panelinden rol, feature ve attribute değişiklikleri yönetilir. Güvenlik Frontend Guard + RLS + RPC üçlüsüyle sağlanır.</div>
       </div>
     </div>
 
@@ -490,18 +398,18 @@
     </div>
 
     <div class="callout info">
-      <div class="callout-icon">ℹ️</div>
+      <div class="callout-icon">🔑</div>
       <div class="callout-body">
-        <div class="callout-title">sort_order ve Bireysel Baseline</div>
-        <div class="callout-text"><code>sort_order</code> 10–60 arası = legacy rol key'leri (bireysel, danisman, isletme…) — bunlar artık sadece <code>roles</code> tablosunda birer satır, ayrı bir "eski sistem" değil. 1000+ = yeni RolesGo rolleri. Her rol, <code>bireysel</code> rolünün tüm feature flag'lerini, attribute kurallarını ve profil section kurallarını otomatik devralır.</div>
+        <div class="callout-title">Admin tespiti</div>
+        <div class="callout-text"><code>is_admin(uid)</code> fonksiyonu <code>user_role_assignments</code>'a bakarak <code>r.key ilike 'Admin_%'</code> koşulunu sağlayan bir rol arar. Admin rolü atamak için: <code>admin_set_user_role(user_id, 'Admin_SuperAdmin')</code></div>
       </div>
     </div>
 
     <div class="callout info" style="margin-top:12px;">
-      <div class="callout-icon">🔑</div>
+      <div class="callout-icon">💡</div>
       <div class="callout-body">
-        <div class="callout-title">Admin tespiti — yeni yöntem</div>
-        <div class="callout-text"><code>is_admin(uid)</code> fonksiyonu artık sadece <code>user_role_assignments</code>'a bakıyor: <code>r.key ilike 'Admin_%'</code> koşulunu sağlayan bir rol varsa admin. <code>admin_users</code> tablosu ve <code>profiles.platform_role</code> artık yok. Admin rolü atamak için <code>admin_set_user_role(user_id, 'Admin_SuperAdmin')</code> kullanın.</div>
+        <div class="callout-title">Yeni rol ailesi eklemek</div>
+        <div class="callout-text">Migration yazmak gerekmez. Sadece <code>roles</code> tablosuna satır eklenir. Yeni rol otomatik olarak <code>bireysel</code> baseline'ının tüm feature flag'lerini ve attribute kurallarını miras alır (backfill migration idempotent çalışır). Admin rolü için key'in <code>Admin_</code> ile başlaması yeterli.</div>
       </div>
     </div>
   </div>
@@ -521,10 +429,10 @@
     <div class="grid-3">
       <div class="role-family">
         <div class="role-family-header">
-          <div class="role-family-title">🏛️ Legacy Key'ler (Hâlâ Aktif)</div>
+          <div class="role-family-title">🌱 Bireysel Roller</div>
           <div class="role-family-count">6 rol</div>
         </div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">sort_order: 10–60 — ayrı sistem değil, sadece eski key'ler</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">sort_order: 10–60 — tüm yeni kullanıcıların başlangıç noktası</div>
         <div class="role-tags">
           <span class="role-tag">bireysel</span>
           <span class="role-tag">danisman</span>
@@ -685,27 +593,103 @@
     </div>
 
     <div class="tip" style="margin-top:20px;">
-      <strong>💡 Junior ipucu:</strong> Yeni bir rol ailesi ekleyecekseniz, 2440'ın üstünde bir sort_order aralığı seçin ve <code>roles</code> tablosuna satırları ekleyin. Kod değişikliği gerekmez — backfill migration otomatik devreye girer. Admin rol ataması için key'in <code>Admin_</code> ile başlaması yeterli — <code>is_admin()</code> bunu otomatik tanır.
+      <strong>sort_order kuralı:</strong> Yeni bir rol ailesi eklerken 2440'ın üstünde bir aralık seçin ve <code>roles</code> tablosuna satırları ekleyin. Kod değişikliği gerekmez — backfill migration otomatik devreye girer.
     </div>
   </div>
 
   <div class="divider"></div>
 
-  <!-- 03 FEATURE CATALOG -->
+  <!-- 03 KAYIT AKIŞI -->
+  <div class="section" id="kayit-akisi">
+    <div class="section-header">
+      <div class="section-num green">03</div>
+      <div>
+        <h2>Kayıt & Rol Atama Akışı</h2>
+        <p style="margin:0">Yeni kullanıcı otomatik olarak <code>bireysel</code> rolüyle başlar. Rol değişikliği admin onayı gerektirir.</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <h4 style="margin-bottom:14px;">İlk Kayıt Akışı</h4>
+        <div class="flow">
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(108,99,255,0.2);">1</div>
+            <div class="flow-body">
+              <div class="flow-title">Google OAuth ile giriş</div>
+              <div class="flow-desc">Kullanıcı Google hesabıyla giriş yapar. <code>auth.users</code>'a kayıt oluşur.</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(0,212,170,0.2);">2</div>
+            <div class="flow-body">
+              <div class="flow-title">Bireysel rol atanır</div>
+              <div class="flow-desc"><code>user_role_assignments</code>'a <code>bireysel</code> rolü otomatik eklenir.</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(255,169,77,0.2);">3</div>
+            <div class="flow-body">
+              <div class="flow-title">/profile sayfasına yönlendirme</div>
+              <div class="flow-desc">Kullanıcı profil bilgilerini tamamlar, isterse rol başvurusu açar.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h4 style="margin-bottom:14px;">Rol Başvurusu Akışı</h4>
+        <div class="flow">
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(108,99,255,0.2);">1</div>
+            <div class="flow-body">
+              <div class="flow-title">Kullanıcı rol seçer</div>
+              <div class="flow-desc"><code>/profile</code> sayfasından hedef rolü seçer, not yazar ve başvuru gönderir.</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(255,169,77,0.2);">2</div>
+            <div class="flow-body">
+              <div class="flow-title">approval_requests'e düşer</div>
+              <div class="flow-desc"><code>role_change</code> tipiyle kayıt açılır. Aynı role ikinci pending başvuru açılamaz.</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(81,207,102,0.2);">3</div>
+            <div class="flow-body">
+              <div class="flow-title">Admin karar verir</div>
+              <div class="flow-desc">Onaylanırsa <code>user_role_assignments</code> otomatik güncellenir. Tüm işlem audit log'a yazılır.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout info" style="margin-top:20px;">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body">
+        <div class="callout-title">Feature override — rol değiştirmeden yetki vermek</div>
+        <div class="callout-text">Admin, bir kullanıcıya rolünden bağımsız özel feature açabilir. Örneğin <code>bireysel</code> kullanıcıya <code>events.create = true</code> override verilebilir. Rol değişmez, sadece o feature açılır. Bunun için <code>admin_set_user_feature_override_detailed()</code> kullanılır ve neden alanı doldurulur.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 04 FEATURE CATALOG -->
   <div class="section" id="feature">
     <div class="section-header">
-      <div class="section-num blue">03</div>
+      <div class="section-num blue">04</div>
       <div>
-        <h2>Feature Catalog</h2>
+        <h2>Feature Kataloğu</h2>
         <p style="margin:0">"Bu kullanıcı bu özelliği kullanabilir mi?" sorusunun cevabı burada. 21 generic + 11 legacy-individual = 32 feature.</p>
       </div>
     </div>
 
-    <div class="callout info">
-      <div class="callout-icon">💡</div>
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
       <div class="callout-body">
-        <div class="callout-title">Feature nedir?</div>
-        <div class="callout-text">Bir kullanıcının yapabildiği veya görebildiği şeylerin anahtarları. Örneğin <code>cadde.access</code> = Cadde sayfasına girebilir mi? <code>events.create</code> = Etkinlik oluşturabilir mi? Her feature için "açık/kapalı" kararı verilir. Frontend'de <code>src/lib/features.ts</code> dosyasındaki sabitlerden kullanın, string literal yazmayın.</div>
+        <div class="callout-title">String literal yazmayın</div>
+        <div class="callout-text">Frontend'de feature key kullanırken <code>src/lib/features.ts</code>'teki <code>GENERIC_FEATURE_KEYS</code> veya <code>INDIVIDUAL_FEATURE_KEYS</code> sabitlerini kullanın. Örnek: <code>GENERIC_FEATURE_KEYS.caddeAccess</code> — <code>'cadde.access'</code> değil.</div>
       </div>
     </div>
 
@@ -717,22 +701,22 @@
           <div><span class="col-name">label</span>             <span class="col-type">TEXT</span>    <span class="col-note">-- görüntü adı</span></div>
           <div><span class="col-name">description</span>       <span class="col-type">TEXT</span></div>
           <div><span class="col-name">scope_role</span>        <span class="col-type">TEXT</span>    <span class="col-note">-- '*' = tüm roller</span></div>
-          <div><span class="col-name">is_active_globally</span><span class="col-type">BOOLEAN</span><span class="col-note">-- false = tüm kullanıcılar için kapalı</span></div>
+          <div><span class="col-name">is_active_globally</span><span class="col-type">BOOLEAN</span><span class="col-note">-- false = tüm sistemde kapalı</span></div>
         </div>
         <p style="margin-top:10px;font-size:12px;">Tablo adı: <code>public.feature_catalog</code></p>
         <div class="tip" style="margin-top:10px;">
-          <strong>scope_role:</strong> Bireysel baseline backfill'den sonra tüm aktif roller için <code>'*'</code> (global) haline getirildi. <code>get_current_user_features()</code>, <code>scope_role = '*'</code> veya kullanıcının rol key'iyle eşleşen feature'ları döndürür.
+          <strong>scope_role = '*'</strong> anlamı: Bu feature tüm rollere uygulanır. <code>get_current_user_features()</code>, <code>scope_role = '*'</code> veya kullanıcının rol key'iyle eşleşen feature'ları döndürür.
         </div>
       </div>
       <div>
-        <h4>Rol → Feature Mapping</h4>
+        <h4>Rol → Feature ve Kullanıcı → Override Tabloları</h4>
         <div class="schema-box">
           <div><span class="col-pk">role_id</span>     <span class="col-type">UUID</span>    <span class="col-note">-- PK (composite)</span></div>
           <div><span class="col-pk">feature_key</span> <span class="col-type">TEXT</span>    <span class="col-note">-- PK (composite)</span></div>
           <div><span class="col-name">is_enabled</span> <span class="col-type">BOOLEAN</span><span class="col-note">-- bu rol için açık mı?</span></div>
           <div><span class="col-name">updated_by</span> <span class="col-type">UUID</span></div>
         </div>
-        <p style="margin-top:10px;font-size:12px;">Tablo adı: <code>public.role_feature_flags</code></p>
+        <p style="margin-top:8px;font-size:12px;">Tablo adı: <code>public.role_feature_flags</code></p>
 
         <div class="schema-box" style="margin-top:10px;">
           <div><span class="col-pk">user_id</span>     <span class="col-type">UUID</span>    <span class="col-note">-- PK (composite)</span></div>
@@ -740,7 +724,7 @@
           <div><span class="col-name">is_enabled</span> <span class="col-type">BOOLEAN</span><span class="col-note">-- kişisel override</span></div>
           <div><span class="col-name">reason</span>     <span class="col-type">TEXT</span>    <span class="col-note">-- neden override?</span></div>
         </div>
-        <p style="margin-top:10px;font-size:12px;">Tablo adı: <code>public.user_feature_overrides</code></p>
+        <p style="margin-top:8px;font-size:12px;">Tablo adı: <code>public.user_feature_overrides</code></p>
       </div>
     </div>
 
@@ -794,7 +778,7 @@
       <div class="feature-pill">admin.requires_approval</div>
     </div>
 
-    <h4 style="margin-top:24px;margin-bottom:12px;">Legacy Bireysel Feature'lar (11) — sadece eski sayfalar</h4>
+    <h4 style="margin-top:24px;margin-bottom:12px;">Individual Feature'lar (11) — eski profil sayfaları için</h4>
     <div class="feature-list">
       <div class="feature-pill" style="color:var(--muted);">individual.about</div>
       <div class="feature-pill" style="color:var(--muted);">individual.service_requests</div>
@@ -808,11 +792,10 @@
       <div class="feature-pill" style="color:var(--muted);">individual.moving_soon_badge</div>
       <div class="feature-pill" style="color:var(--muted);">individual.volunteer_mentorship</div>
     </div>
-
     <div class="callout warn" style="margin-top:16px;">
       <div class="callout-icon">⚠️</div>
       <div class="callout-body">
-        <div class="callout-title">DB'de olmayan feature'lar</div>
+        <div class="callout-title">DB'de henüz olmayan feature'lar</div>
         <div class="callout-text"><code>profile.linkedin_card</code>, <code>profile.website_card</code>, <code>profile.cv_upload</code>, <code>profile.presentation_upload</code>, <code>cadde.access</code>, <code>whatsapp_landing.edit_assigned</code> ve tüm <code>individual.*</code> feature'ları şu an <code>feature_catalog</code> tablosunda yok — sadece frontend sabitlerinde tanımlı. DB'ye eklenene kadar <code>useFeatureFlags()</code> bunları <code>false</code> döndürür.</div>
       </div>
     </div>
@@ -820,21 +803,21 @@
 
   <div class="divider"></div>
 
-  <!-- 04 HİYERARŞİ -->
+  <!-- 05 HİYERARŞİ -->
   <div class="section" id="hierarchy">
     <div class="section-header">
-      <div class="section-num">04</div>
+      <div class="section-num">05</div>
       <div>
         <h2>Feature Çözümleme Hiyerarşisi</h2>
-        <p style="margin:0">"Bu feature aktif mi?" sorusu <code>get_current_user_features()</code> RPC'sinde artık <strong>2 adımda</strong> cevap bulur (eski 4 adım → 2 adım).</p>
+        <p style="margin:0">"Bu feature aktif mi?" sorusu <code>get_current_user_features()</code> RPC'sinde <strong>2 adımda</strong> cevap bulur.</p>
       </div>
     </div>
 
     <div class="callout warn">
       <div class="callout-icon">⚠️</div>
       <div class="callout-body">
-        <div class="callout-title">Junior için kritik</div>
-        <div class="callout-text">Bir feature'ın açık olup olmadığını <strong>siz hesaplamayın</strong>. <code>useFeatureFlags()</code> hook'unu veya <code>get_current_user_features()</code> RPC'sini kullanın. Bu mantık zaten orada uygulandı. Artık <code>user_profiles</code> fallback'i yok — kullanıcının <code>user_role_assignments</code>'ta kaydı olmalı.</div>
+        <div class="callout-title">Feature durumunu kendiniz hesaplamayın</div>
+        <div class="callout-text"><code>useFeatureFlags()</code> hook'unu veya <code>get_current_user_features()</code> RPC'sini kullanın. Kullanıcının <code>user_role_assignments</code>'ta bir kaydı olması şarttır — kayıt yoksa tüm feature'lar kapalı döner.</div>
       </div>
     </div>
 
@@ -843,7 +826,7 @@
         <div class="priority-rank" style="background:rgba(255,107,107,0.2);color:var(--accent3);">1</div>
         <div class="priority-body">
           <div class="priority-title">Kişisel Override (En Yüksek Öncelik)</div>
-          <div class="priority-sub">Admin, bu kullanıcı için özellikle bir istisna tanımladıysa — bu kazanır. Her şeyi ezer. <code>reason</code> alanında neden override edildiği de saklanır.</div>
+          <div class="priority-sub">Admin bu kullanıcı için özellikle bir istisna tanımladıysa — bu kazanır. Her şeyi ezer. <code>reason</code> alanında neden override edildiği saklanır.</div>
         </div>
         <div class="priority-source">user_feature_overrides</div>
       </div>
@@ -852,7 +835,7 @@
         <div class="priority-rank" style="background:rgba(108,99,255,0.2);color:var(--accent1);">2</div>
         <div class="priority-body">
           <div class="priority-title">Rol Bazlı Ayar</div>
-          <div class="priority-sub">Kullanıcının rolü için bu feature açık/kapalı olarak ayarlandıysa — bu kullanılır. Rol, <code>user_role_assignments</code>'tan alınır. <code>role_feature_defaults</code> fallback'i artık yok.</div>
+          <div class="priority-sub">Kullanıcının rolü için bu feature açık/kapalı ayarlandıysa kullanılır. Rol, <code>user_role_assignments</code>'tan alınır.</div>
         </div>
         <div class="priority-source">role_feature_flags</div>
       </div>
@@ -861,7 +844,7 @@
         <div class="priority-rank" style="background:rgba(136,146,176,0.15);color:var(--muted);">3</div>
         <div class="priority-body">
           <div class="priority-title" style="color:var(--muted);">Varsayılan: Kapalı</div>
-          <div class="priority-sub">Hiçbir kayıt bulunamadıysa → feature kapalı sayılır. Global <code>is_active_globally = false</code> da tüm zincirleri override eder — feature'ı sistem genelinde kapatır.</div>
+          <div class="priority-sub">Hiçbir kayıt bulunamadıysa feature kapalı sayılır. <code>is_active_globally = false</code> tüm zinciri override eder — feature'ı sistem genelinde kapatır.</div>
         </div>
         <div class="priority-source" style="color:var(--muted);">false (fallback)</div>
       </div>
@@ -870,12 +853,12 @@
     <div class="callout info" style="margin-top:20px;">
       <div class="callout-icon">🔍</div>
       <div class="callout-body">
-        <div class="callout-title">get_current_user_features() — sadeleştirilmiş mantık</div>
+        <div class="callout-title">get_current_user_features() mantığı</div>
         <div class="callout-text">
-          <code>effective_role</code> CTE: <code>user_role_assignments</code>'tan kullanıcının rolünü al.<br>
-          Feature listesi: <code>feature_catalog</code>'dan <code>scope_role = '*'</code> veya <code>scope_role = role_key</code> olanları al.<br>
-          Sonuç: <code>fc.is_active_globally AND coalesce(ufo.is_enabled, rff.is_enabled, false)</code><br>
-          Source: <code>'override'</code> → <code>'role_default'</code> → <code>'fallback'</code>
+          <strong>effective_role CTE:</strong> <code>user_role_assignments</code>'tan kullanıcının rolünü al.<br>
+          <strong>Feature listesi:</strong> <code>feature_catalog</code>'dan <code>scope_role = '*'</code> veya <code>scope_role = role_key</code> olanları al.<br>
+          <strong>Sonuç:</strong> <code>fc.is_active_globally AND coalesce(ufo.is_enabled, rff.is_enabled, false)</code><br>
+          <strong>Source:</strong> <code>'override'</code> → <code>'role_default'</code> → <code>'fallback'</code>
         </div>
       </div>
     </div>
@@ -883,21 +866,21 @@
 
   <div class="divider"></div>
 
-  <!-- 05 ATTRIBUTE -->
+  <!-- 06 ATTRIBUTE -->
   <div class="section" id="attribute">
     <div class="section-header">
-      <div class="section-num orange">05</div>
+      <div class="section-num orange">06</div>
       <div>
         <h2>Attribute Sistemi</h2>
-        <p style="margin:0">Kullanıcı profilindeki tüm veriler — eski <code>profiles</code> kolonları dahil — artık burada.</p>
+        <p style="margin:0">Kullanıcı profilindeki tüm veriler <code>user_profile_attributes</code>'ta dinamik olarak saklanır.</p>
       </div>
     </div>
 
     <div class="callout info">
       <div class="callout-icon">💡</div>
       <div class="callout-body">
-        <div class="callout-title">Attribute nedir? (Genişledi)</div>
-        <div class="callout-text">Profil tablosuna kolon eklemek yerine dinamik "özellikler" sistemi. Eski <code>profiles</code> tablosundaki tüm kolonlar (<code>avatar_url</code>, <code>phone</code>, <code>profession</code>, <code>school</code>, <code>business_name</code> vb.) artık <code>attribute_catalog</code>'da tanımlı ve <code>user_profile_attributes</code>'ta saklanıyor. Sistem attribute'ları (<code>is_system=true</code>): <code>full_name</code>, <code>country</code>, <code>city</code>, <code>profile_photo_url</code>, <code>bio_short</code>. Rol-özel attribute'lar: <code>interests</code>, <code>expertise_area</code>, <code>business_category</code>, <code>organization_type</code>, <code>main_platform</code>, <code>ambassador_city</code>. Profiles'tan taşınanlar: <code>avatar_url</code>, <code>phone</code>, <code>profession</code>, <code>school</code>, <code>address</code>, <code>cv_path</code>, <code>presentation_path</code>, <code>business_name</code>, <code>business_sector</code>, <code>is_volunteer_mentor</code> ve daha fazlası.</div>
+        <div class="callout-title">Attribute nedir?</div>
+        <div class="callout-text">Profil tablosuna kolon eklemek yerine dinamik "özellikler" sistemi kullanılır. Tüm profil alanları <code>attribute_catalog</code>'da tanımlı ve değerleri <code>user_profile_attributes</code>'ta saklanır. Sistem attribute'ları (<code>is_system=true</code>): <code>full_name</code>, <code>country</code>, <code>city</code>, <code>profile_photo_url</code>, <code>bio_short</code>. Rol-özel attribute'lar: <code>interests</code>, <code>expertise_area</code>, <code>business_category</code>, <code>organization_type</code>, <code>main_platform</code>, <code>ambassador_city</code>. Ek alanlar: <code>avatar_url</code>, <code>phone</code>, <code>profession</code>, <code>school</code>, <code>address</code>, <code>cv_path</code>, <code>presentation_path</code>, <code>business_name</code>, <code>business_sector</code>, <code>is_volunteer_mentor</code> ve daha fazlası.</div>
       </div>
     </div>
 
@@ -987,17 +970,30 @@
       <div class="callout-icon">📌</div>
       <div class="callout-body">
         <div class="callout-title">full_name özel davranışı</div>
-        <div class="callout-text"><code>full_name</code> attribute'u <code>user_profile_attributes</code> tablosunda saklanır. <code>get_current_user_profile()</code> bunu <code>attribute_catalog</code> join'i üzerinden okur. <code>update_profile_attribute('full_name', ...)</code> çağrısı bunu otomatik halleder. Artık <code>user_profiles.full_name</code> kolonu yok.</div>
+        <div class="callout-text"><code>full_name</code> attribute'u <code>user_profile_attributes</code> tablosunda saklanır. <code>get_current_user_profile()</code> bunu <code>attribute_catalog</code> join'i üzerinden okur. <code>update_profile_attribute('full_name', ...)</code> çağrısı bunu otomatik halleder.</div>
       </div>
     </div>
+
+    <h4 style="margin-top:24px;margin-bottom:12px;">Rol Bazlı Attribute Örnekleri</h4>
+    <table class="tbl">
+      <thead><tr><th>Rol</th><th>Attribute Key</th><th>Label</th></tr></thead>
+      <tbody>
+        <tr><td><code>bireysel</code></td><td><code>interests</code></td><td>İlgi Alanları</td></tr>
+        <tr><td><code>danisman</code></td><td><code>expertise_area</code></td><td>Uzmanlık Alanı</td></tr>
+        <tr><td><code>isletme</code></td><td><code>business_category</code></td><td>İşletme Kategorisi</td></tr>
+        <tr><td><code>kurulus-dernek</code></td><td><code>organization_type</code></td><td>Kuruluş Türü</td></tr>
+        <tr><td><code>blogger-vlogger-youtuber</code></td><td><code>main_platform</code></td><td>Ana Platform</td></tr>
+        <tr><td><code>sehir-elcisi</code></td><td><code>ambassador_city</code></td><td>Sorumlu Şehir</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <div class="divider"></div>
 
-  <!-- 06 APPROVAL -->
+  <!-- 07 APPROVAL -->
   <div class="section" id="approval">
     <div class="section-header">
-      <div class="section-num red">06</div>
+      <div class="section-num red">07</div>
       <div>
         <h2>Onay (Approval) State Machine</h2>
         <p style="margin:0">Hassas işlemler doğrudan gerçekleşmiyor — önce admin onayı gerekiyor.</p>
@@ -1008,7 +1004,7 @@
       <div class="callout-icon">🔄</div>
       <div class="callout-body">
         <div class="callout-title">State Machine nedir?</div>
-        <div class="callout-text">Bir istek sadece belirli durumlar arasında geçiş yapabilir. PENDING → APPROVED veya PENDING → REJECTED olabilir ama APPROVED → PENDING olamaz. Bu kurallar database'de zorlanıyor. <code>approval_requests</code> tablosunda aynı (user_id, request_type, target_*) kombinasyonu için yalnızca bir PENDING istek olabilir — unique index bunu garanti eder.</div>
+        <div class="callout-text">Bir istek sadece belirli durumlar arasında geçiş yapabilir: PENDING → APPROVED veya PENDING → REJECTED. APPROVED → PENDING olamaz. Bu kurallar database'de zorlanıyor. <code>approval_requests</code> tablosunda aynı (user_id, request_type, target_*) kombinasyonu için yalnızca bir PENDING istek olabilir — unique index bunu garanti eder.</div>
       </div>
     </div>
 
@@ -1071,20 +1067,20 @@
       <div class="callout-icon">✅</div>
       <div class="callout-body">
         <div class="callout-title">Otomatik uygulama</div>
-        <div class="callout-text"><code>admin_review_approval_request()</code> fonksiyonu karar = 'approved' olduğunda isteğin logic'ini otomatik çalıştırıyor: <code>role_change</code> → <code>admin_set_user_role()</code>, <code>attribute_change</code> → <code>user_profile_attributes</code> upsert, diğerleri → <code>admin_set_user_feature_override_detailed()</code>. Admin "onayla" dediğinde her şey otomatik gerçekleşir.</div>
+        <div class="callout-text"><code>admin_review_approval_request()</code> karar = 'approved' olduğunda isteğin mantığını otomatik çalıştırır: <code>role_change</code> → <code>admin_set_user_role()</code>, <code>attribute_change</code> → <code>user_profile_attributes</code> upsert, diğerleri → <code>admin_set_user_feature_override_detailed()</code>. Admin "onayla" dediğinde her şey otomatik gerçekleşir.</div>
       </div>
     </div>
   </div>
 
   <div class="divider"></div>
 
-  <!-- 07 TABLOLAR -->
+  <!-- 08 TABLOLAR -->
   <div class="section" id="tables">
     <div class="section-header">
-      <div class="section-num green">07</div>
+      <div class="section-num green">08</div>
       <div>
         <h2>13 Tablonun Tam Haritası</h2>
-        <p style="margin:0">4 legacy tablo drop edildi (user_profiles, profiles, admin_users, role_feature_defaults). Kalan 13 tablo.</p>
+        <p style="margin:0">RolesGo sisteminin tüm tabloları. Temel kaynak: <code>auth.users</code> + bu 13 tablo.</p>
       </div>
     </div>
 
@@ -1131,7 +1127,7 @@
         <tr>
           <td style="color:var(--muted);">6</td>
           <td><code>attribute_catalog</code></td>
-          <td>Dinamik profil özellik tanımları, 8 data type — eski profiles kolonları dahil</td>
+          <td>Dinamik profil özellik tanımları, 8 data type</td>
           <td><span class="badge badge-orange">Attribute</span></td>
         </tr>
         <tr>
@@ -1143,7 +1139,7 @@
         <tr>
           <td style="color:var(--muted);">8</td>
           <td><code>user_profile_attributes</code></td>
-          <td>Kullanıcının tüm profil verileri (eski profiles + user_profiles birleşti) — FK → auth.users</td>
+          <td>Kullanıcının tüm profil verileri — FK → auth.users</td>
           <td><span class="badge badge-orange">Attribute</span></td>
         </tr>
         <tr>
@@ -1179,38 +1175,24 @@
       </tbody>
     </table>
 
-    <div class="callout danger" style="margin-top:20px;">
-      <div class="callout-icon">🚨</div>
-      <div class="callout-body">
-        <div class="callout-title">DROP edilen tablolar — artık yok</div>
-        <div class="callout-text">
-          <code>public.user_profiles</code> — <strong>DROP edildi</strong> (migration 20260609003000)<br>
-          <code>public.profiles</code> — <strong>DROP edildi</strong> (migration 20260609003000)<br>
-          <code>public.admin_users</code> — <strong>DROP edildi</strong> (migration 20260609003000)<br>
-          <code>public.role_feature_defaults</code> — <strong>DROP edildi</strong> (migration 20260609003000)<br>
-          Bu tablolara referans veren herhangi bir kod güncellenmelidir.
-        </div>
-      </div>
-    </div>
-
-    <div class="callout info" style="margin-top:16px;">
+    <div class="callout info" style="margin-top:20px;">
       <div class="callout-icon">🔗</div>
       <div class="callout-body">
         <div class="callout-title">catalog_item_types bridge tablosu</div>
-        <div class="callout-text">Her aktif rol için <code>catalog_item_types</code>'ta otomatik bir satır oluşturulur (migration <code>20260607160000</code>). <code>linked_role_key</code> kolonu <code>get_catalog_item_profile</code>'ın <code>role_attribute_rules</code> / <code>role_feature_flags</code>'i kullanmasını sağlar. Legacy mapping: <code>member</code>→<code>bireysel</code>, <code>advisor</code>→<code>danisman</code>, <code>organization</code>→<code>kurulus-dernek</code>, <code>business</code>→<code>isletme</code>, <code>person_profile</code>→<code>blogger-vlogger-youtuber</code>.</div>
+        <div class="callout-text">Her aktif rol için <code>catalog_item_types</code>'ta otomatik bir satır oluşturulur. <code>linked_role_key</code> kolonu <code>get_catalog_item_profile</code>'ın <code>role_attribute_rules</code> / <code>role_feature_flags</code>'i kullanmasını sağlar. Legacy mapping: <code>member</code>→<code>bireysel</code>, <code>advisor</code>→<code>danisman</code>, <code>organization</code>→<code>kurulus-dernek</code>, <code>business</code>→<code>isletme</code>, <code>person_profile</code>→<code>blogger-vlogger-youtuber</code>.</div>
       </div>
     </div>
   </div>
 
   <div class="divider"></div>
 
-  <!-- 08 FRONTEND -->
+  <!-- 09 FRONTEND -->
   <div class="section" id="frontend">
     <div class="section-header">
-      <div class="section-num blue">08</div>
+      <div class="section-num blue">09</div>
       <div>
         <h2>Frontend Entegrasyonu</h2>
-        <p style="margin:0">Kod yazarken hangi hook ve component'i kullanacaksınız?</p>
+        <p style="margin:0">Kod yazarken hangi hook, component ve dosyayı kullanacaksınız?</p>
       </div>
     </div>
 
@@ -1227,7 +1209,7 @@
           <div>  <span class="col-name">isLoading</span>,</div>
           <div>  <span class="col-name">refreshFeatures</span></div>
           <div><span style="color:white;">} =</span> <span class="col-type">useFeatureFlags</span>()</div>
-          <div style="margin-top:8px;color:var(--muted);">// Kontrol — sabiti kullanın</div>
+          <div style="margin-top:8px;color:var(--muted);">// Sabiti kullanın, literal değil</div>
           <div><span class="col-name">isFeatureEnabled</span>(<span class="col-type">GENERIC_FEATURE_KEYS.caddeAccess</span>)</div>
           <div><span class="col-note">// → true | false</span></div>
         </div>
@@ -1274,7 +1256,7 @@
         </tr>
         <tr>
           <td><code>src/contexts/AuthContext.tsx</code></td>
-          <td>Orphaned provider (App.tsx'te mount edilmemiş) — 38 public sayfa buradan import ediyor</td>
+          <td>App.tsx'te mount edilmemiş provider — 38 public sayfa buradan import ediyor, null session döner</td>
           <td>Dokunmadan önce CLAUDE.md'yi okuyun</td>
         </tr>
         <tr>
@@ -1290,20 +1272,32 @@
       </tbody>
     </table>
 
-    <div class="callout danger" style="margin-top:16px;">
-      <div class="callout-icon">🚨</div>
-      <div class="callout-body">
-        <div class="callout-title">Artık geçersiz olan frontend pattern'ler</div>
-        <div class="callout-text">
-          <code>supabase.from('user_profiles').select()</code> — tablo yok, <code>get_current_user_profile()</code> RPC kullanın<br>
-          <code>supabase.from('profiles').select()</code> — tablo yok, <code>user_profile_attributes</code> kullanın<br>
-          <code>supabase.from('admin_users').select()</code> — tablo yok, <code>is_admin()</code> veya <code>Admin_%</code> rol kontrolü yapın<br>
-          <code>profile_type</code> string kontrolü — <code>user_role_assignments</code> join'i veya <code>get_current_user_profile()</code> kullanın
-        </div>
+    <h4 style="margin-top:24px;margin-bottom:12px;">Admin Panel Ekranları</h4>
+    <table class="tbl">
+      <thead><tr><th>Ekran</th><th>Route</th><th>Ne Yapar</th></tr></thead>
+      <tbody>
+        <tr><td>Kullanıcılar & Roller</td><td><code>/admin/new-member/users-roles</code></td><td>Kullanıcıya rol atar, override ve talep sayısını gösterir</td></tr>
+        <tr><td>Roller & Feature'lar</td><td><code>/admin/new-member/roles-features</code></td><td>Role bazlı feature matrisini global/rol düzeyinde yönetir</td></tr>
+        <tr><td>Attribute Yönetimi</td><td><code>/admin/new-member/attributes</code></td><td>Attribute kataloğu ve role kurallarını yönetir</td></tr>
+        <tr><td>Kullanıcı Override</td><td><code>/admin/new-member/overrides</code></td><td>Tek kullanıcıya rolünden bağımsız istisna yetki verir</td></tr>
+        <tr><td>Onay Kuyruğu</td><td><code>/admin/approvals</code></td><td>Bekleyen tüm talepleri onaylar/reddeder</td></tr>
+        <tr><td>Audit Log</td><td><code>/admin/audit-logs</code></td><td>Admin işlemlerinin geçmişini gösterir</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 10 RPC REFERANSI -->
+  <div class="section" id="rpc">
+    <div class="section-header">
+      <div class="section-num orange">10</div>
+      <div>
+        <h2>RPC Fonksiyonları Referansı</h2>
+        <p style="margin:0">Kritik yazma işlemleri doğrudan tablo update'i yapmaz — RPC üzerinden geçer. Audit log DB/RPC tarafında tutulur.</p>
       </div>
     </div>
 
-    <h4 style="margin-top:24px;margin-bottom:12px;">Admin RPC Fonksiyonları</h4>
     <table class="tbl">
       <thead>
         <tr>
@@ -1313,51 +1307,6 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td><code>admin_set_user_role()</code></td>
-          <td>Kullanıcıya rol ata (<code>user_role_assignments</code> upsert)</td>
-          <td>user_id, role_key</td>
-        </tr>
-        <tr>
-          <td><code>admin_set_role_feature_flag()</code></td>
-          <td>Rol için feature aç/kapat + audit log</td>
-          <td>role_key, feature_key, is_enabled</td>
-        </tr>
-        <tr>
-          <td><code>admin_set_user_feature_override()</code></td>
-          <td>Kişisel feature override (reason'sız)</td>
-          <td>user_id, feature_key, is_enabled</td>
-        </tr>
-        <tr>
-          <td><code>admin_set_user_feature_override_detailed()</code></td>
-          <td>Kişisel feature override + reason kaydı</td>
-          <td>user_id, feature_key, is_enabled, reason</td>
-        </tr>
-        <tr>
-          <td><code>admin_clear_user_feature_override()</code></td>
-          <td>Kişisel feature override'ı siler + audit log</td>
-          <td>user_id, feature_key</td>
-        </tr>
-        <tr>
-          <td><code>admin_review_approval_request()</code></td>
-          <td>Onay kararı ver + otomatik uygula</td>
-          <td>request_id, 'approved'|'rejected', note</td>
-        </tr>
-        <tr>
-          <td><code>admin_set_attribute_rule()</code></td>
-          <td>Attribute kuralını güncelle + audit log</td>
-          <td>role_key, attribute_key, rule_payload</td>
-        </tr>
-        <tr>
-          <td><code>admin_set_feature_global_state()</code></td>
-          <td>Feature'ı tüm sistemde aç/kapat</td>
-          <td>feature_key, is_active_globally</td>
-        </tr>
-        <tr>
-          <td><code>is_admin(uid)</code></td>
-          <td>Admin kontrolü — <code>user_role_assignments</code>'ta <code>Admin_%</code> key'li rol var mı?</td>
-          <td>uid (UUID)</td>
-        </tr>
         <tr>
           <td><code>get_current_user_profile()</code></td>
           <td>Tam profil: rol, feature'lar, attribute'lar, pending istekler, profil completion</td>
@@ -1384,19 +1333,77 @@
           <td>feature_key, payload</td>
         </tr>
         <tr>
+          <td><code>is_admin(uid)</code></td>
+          <td>Admin kontrolü — <code>user_role_assignments</code>'ta <code>Admin_%</code> key'li rol var mı?</td>
+          <td>uid (UUID)</td>
+        </tr>
+        <tr>
+          <td><code>admin_set_user_role()</code></td>
+          <td>Kullanıcıya rol ata (<code>user_role_assignments</code> upsert) + audit log</td>
+          <td>user_id, role_key</td>
+        </tr>
+        <tr>
+          <td><code>admin_set_role_feature_flag()</code></td>
+          <td>Rol için feature aç/kapat + audit log</td>
+          <td>role_key, feature_key, is_enabled</td>
+        </tr>
+        <tr>
+          <td><code>admin_set_user_feature_override_detailed()</code></td>
+          <td>Kişisel feature override + reason kaydı + audit log</td>
+          <td>user_id, feature_key, is_enabled, reason</td>
+        </tr>
+        <tr>
+          <td><code>admin_set_user_feature_override()</code></td>
+          <td>Kişisel feature override (reason'sız)</td>
+          <td>user_id, feature_key, is_enabled</td>
+        </tr>
+        <tr>
+          <td><code>admin_clear_user_feature_override()</code></td>
+          <td>Kişisel feature override'ı siler + audit log</td>
+          <td>user_id, feature_key</td>
+        </tr>
+        <tr>
+          <td><code>admin_review_approval_request()</code></td>
+          <td>Onay kararı ver + otomatik uygula (rol, attribute veya feature günceller)</td>
+          <td>request_id, 'approved'|'rejected', note</td>
+        </tr>
+        <tr>
+          <td><code>admin_set_attribute_rule()</code></td>
+          <td>Attribute kuralını güncelle + audit log</td>
+          <td>role_key, attribute_key, rule_payload</td>
+        </tr>
+        <tr>
+          <td><code>admin_set_feature_global_state()</code></td>
+          <td>Feature'ı tüm sistemde aç/kapat</td>
+          <td>feature_key, is_active_globally</td>
+        </tr>
+        <tr>
           <td><code>list_public_directory_profiles()</code></td>
           <td>Public dizin listesi — feature_state CTE ile feature kontrolü yapar</td>
           <td>search_text, role_filter, country_filter, city_filter, featured_only, verified_only</td>
         </tr>
       </tbody>
     </table>
+
+    <div class="callout danger" style="margin-top:20px;">
+      <div class="callout-icon">🚨</div>
+      <div class="callout-body">
+        <div class="callout-title">Doğrudan tablo erişimi yasak</div>
+        <div class="callout-text">
+          <code>supabase.from('user_role_assignments').update()</code> — RLS engeller, <code>admin_set_user_role()</code> kullanın<br>
+          <code>supabase.from('role_feature_flags').update()</code> — RLS engeller, <code>admin_set_role_feature_flag()</code> kullanın<br>
+          <code>supabase.from('user_profile_attributes').insert()</code> — <code>update_profile_attribute()</code> RPC kullanın<br>
+          Public directory okuması ham tablodan değil <code>list_public_directory_profiles()</code> üzerinden yapılır
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- FOOTER -->
   <div style="text-align:center;padding:32px 0;color:var(--muted);font-size:12px;border-top:1px solid var(--border);margin-top:32px;">
-    <div style="margin-bottom:8px;font-size:16px;">CorteQS Rol & AFS Sistemi</div>
-    <div>13 tablo · 82 rol · 21 generic feature · 11 aile · 1 sistem (RolesGo)</div>
-    <div style="margin-top:8px;">Son güncelleme: 2026-06-09 — Migration 20260609013000'e kadar şemayı yansıtır</div>
+    <div style="margin-bottom:8px;font-size:16px;">CorteQS — RolesGo (AFS) Sistemi</div>
+    <div>13 tablo · 82 rol · 21 generic feature · 11 aile · 1 sistem</div>
+    <div style="margin-top:8px;">Son güncelleme: 2026-06-08 — Migration 20260609013000 şemasını yansıtır</div>
   </div>
 
 </div>

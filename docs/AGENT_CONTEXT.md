@@ -2,7 +2,7 @@
 
 > Bu dosya, yeni bir agent oturumunun projeyi hızla kavraması için hazırlanmıştır.
 > Diğer teknik belgelerden bilgi derleyerek token maliyetini minimize eder.
-> **Güncelleme:** 2026-06-09
+> **Güncelleme:** 2026-06-08 (son commit: hero serisi)
 
 ---
 
@@ -13,22 +13,25 @@
 - URL: `https://corteqs.net`
 - Supabase Project ID: `injprdrsklkxgnaiixzh`
 - Deploy: Docker / Coolify → `npm run build` → `node server.mjs`
-- ~90 public sayfa, ~30 admin sayfası, ~50 lib modülü, 188 migration, 49+ test dosyası
+- ~100 public sayfa, ~35 admin sayfası, ~55 lib modülü, 190+ migration, 55+ test dosyası
 
 ### Modüller (tek SPA içinde)
 
 | Modül | Path | Açıklama |
 |-------|------|----------|
-| Landing | `/`, `/about`, `/founders`, `/cadde` | Kurumsal tanıtım |
+| Landing | `/`, `/founders`, `/iletisim`, `/pricing`, `/kariyer` | Kurumsal tanıtım |
 | Lansman | `/lansman` | Startup/girişim kayıt formu |
 | Anketler | `/anket`, `/admin/surveys/*` | Admin yönetimli anket |
 | Muhasebe | `/admin/muhasebe/*` | Gelir/gider/nakit akışı |
-| Dizin | `/directory/*` | Üye profil dizini |
+| Dizin | `/directory/*`, `/directory/catalog/:slug` | Üye profil + katalog item sayfaları |
 | Ticari | `/commercial/<slug>` | Standalone partner sayfaları |
 | Workspace | `/admin/workspace/*` | Komuta merkezi, todo, kaynaklar |
-| May19 | `/19051919`, `/may19/*` | Anma kampanyası |
-| Catalog | `/admin/data` | Unified catalog + üye yönetimi |
-| RolesGo | `/admin/new-member/*` | Rol/attribute/feature/section yönetimi |
+| May19 | `/19051919`, `/19051919/harita` | Anma kampanyası |
+| Catalog | `/admin/data`, `/admin/new-member/profile-role-assignment` | Unified catalog + üye yönetimi |
+| RolesGo | `/admin/new-member/*` | Rol/attribute/feature/section/overview yönetimi |
+| WhatsApp | `/addcom`, `/addcom/edit/:slug`, `/admin/whatsapp-landings/*` | WhatsApp landing yönetimi |
+| Profile | `/profile`, `/profile/:type`, `/profile/catalog/:itemId` | Kullanıcı profil editörü |
+| Welcome | `/welcome/activate` | Yeni üye aktivasyon akışı |
 
 ---
 
@@ -50,30 +53,50 @@ recharts          react-simple-maps        @tanstack/react-table 8
 
 ```
 src/
-├── App.tsx                  # Tüm 80+ route tek dosyada (refactor hedefi)
+├── App.tsx                  # Tüm 100+ route tek dosyada; lazy() ile code-split edilmiş
 ├── main.tsx                 # hydrateRoot/createRoot switch
 ├── pages/
 │   ├── admin/
 │   │   ├── muhasebe/        # routes.tsx ile modülerize (ÖRNEK AL)
-│   │   ├── workspace/
-│   │   └── surveys/
-│   └── ...                  # Public sayfalar
+│   │   ├── workspace/       # Komuta, todo, resources, mvp, meeting-notes, docs
+│   │   ├── surveys/         # CRUD survey yönetimi
+│   │   ├── AdminCatalogPage.tsx          # /admin/data + /admin/new-member/profile-role-assignment
+│   │   ├── AdminRoleManagementPage.tsx   # /admin/new-member/role-matrix (attr/feature/section)
+│   │   ├── AdminRolesOverviewPage.tsx    # /admin/new-member/roles-overview
+│   │   ├── AdminDatabaseTablesPage.tsx   # /admin/veritabani-tablolari
+│   │   ├── AdminNewMemberGuidePage.tsx   # /admin/new-member/guide
+│   │   └── ...                           # Diğer admin sayfaları
+│   ├── DirectoryPage.tsx                 # /directory
+│   ├── DirectoryCatalogItemPage.tsx      # /directory/catalog/:slug
+│   ├── DirectoryProfilePage.tsx          # /directory/profile/:userId
+│   ├── CatalogItemEditorPage.tsx         # /profile/catalog/:itemId
+│   ├── WelcomeActivatePage.tsx           # /welcome/activate
+│   ├── ContactPage.tsx                   # /iletisim
+│   └── ...                              # Public sayfalar
 ├── components/
 │   ├── ui/                  # shadcn primitives — DOKUNMA
 │   ├── auth/                # AuthProvider, RequireAuth, RequireFeature
-│   ├── admin/muhasebe/      # Muhasebe UI kapsülü
-│   └── profile/, surveys/, may19/, chat/
+│   ├── admin/
+│   │   ├── muhasebe/        # Muhasebe UI kapsülü
+│   │   ├── catalog/         # CatalogEntityProfilePanel, CatalogClaimRequestsPanel, vb.
+│   │   ├── role-management/ # AttributeRulesPanel, FeatureFlagsPanel, ProfileSectionRulesPanel
+│   │   └── roles-overview/  # RoleListPanel, ItemListPanel, EntityCatalogPanel, CaseDetailPanel
+│   ├── directory/           # DirectorySearchBar, DirectoryFilters, DirectoryResultRow, ProfileHeroCard, CatalogProfileLayout
+│   ├── profile/             # EditableProfilesSelector, IndividualPublicView
+│   └── profile/, surveys/, may19/, chat/, connections/, messaging/, feed/
 ├── lib/
 │   ├── muhasebe-*.ts        # api, schemas, format, aggregations — REFERANS PATTERN
-│   ├── member-profile*.ts   # Profil API katmanı (member-profile-api.ts tercih)
-│   ├── catalog-*.ts         # Katalog veri katmanı
-│   ├── profile-*.ts         # Profil view model, helpers, types
-│   ├── independent-profiles.ts / individual-profile.ts
-│   ├── supabase.ts          # Custom client (duplikasyon riski)
-│   ├── admin.ts             # is_admin() kontrolü — eski tablo kalktı, is_admin() RPC'ye bağlı
+│   ├── member-profile-api.ts  # Profil API katmanı (TERCIH ET)
+│   ├── member-profile.ts    # Profil tipler + helpers
+│   ├── catalog-*.ts         # catalog-directory.ts, catalog-entity-api.ts, catalog-types.ts
+│   ├── admin-catalog.ts     # Admin catalog data layer
+│   ├── profile-*.ts         # profile-view-model, profile-helpers, profile-types, profile-onboarding-*
+│   ├── role-catalog.ts      # Rol tanımları veri katmanı
+│   ├── supabase.ts          # Custom client (duplikasyon riski — yeni kodda kullanma)
+│   ├── admin.ts             # is_admin() / is_moderator() wrappers
 │   ├── features.ts          # Feature flag yardımcıları
 │   └── dashboard/           # Workspace data layer
-├── hooks/                   # use-mobile, use-toast, useMuhasebe
+├── hooks/                   # useFeatureFlags, useMuhasebe, usePublicIndividualProfile, vb.
 ├── integrations/supabase/
 │   └── client.ts            # Lovable-generated — RİSKLİ, DOKUNMA
 └── contexts/
@@ -288,7 +311,7 @@ supabase migrations list
 
 | Dosya | Neden Kritik |
 |-------|--------------|
-| `src/App.tsx` | Tüm route'lar burada — şişkin, refactor hedefi |
+| `src/App.tsx` | Tüm 100+ route burada; lazy() ile code-split edilmiş |
 | `src/main.tsx` | hydrateRoot/createRoot switch |
 | `src/components/auth/AuthProvider.tsx` | Session yönetiminin kalbi |
 | `src/components/auth/useAuth.ts` | Canonical auth hook — buradan import et |
@@ -299,16 +322,23 @@ supabase migrations list
 | `src/lib/features.ts` | Feature flag yardımcıları |
 | `src/lib/member-profile-api.ts` | Üye profil API katmanı (tercih edilen) |
 | `src/lib/catalog-directory.ts` | Dizin arama veri katmanı |
+| `src/lib/catalog-entity-api.ts` | Katalog entity profil işlemleri |
+| `src/lib/admin-catalog.ts` | Admin unified records / catalog data layer |
+| `src/lib/role-catalog.ts` | Rol tanımları veri katmanı |
+| `src/lib/profile-helpers.ts` | Profil yardımcı fonksiyonları (yeni eklendi) |
+| `src/components/admin/roles-overview/` | RolesOverview modül bileşenleri |
+| `src/components/directory/` | Dizin arama/filtreleme/sonuç bileşenleri |
 | `vite.config.ts` | Standalone HTML emit — dokunma |
 | `server.mjs` | Production runtime |
 | `supabase/migrations/20260512103000_security_hardening_phase1.sql` | Güvenlik baseline |
 | `supabase/migrations/20260609003000_drop_legacy_tables.sql` | Legacy tablo temizliği |
+| `supabase/migrations/20260609015000_fix_catalog_profile_trigger_post_drop.sql` | Yeni kullanıcı oluşturma trigger düzeltmesi |
 
 ---
 
 ## 10. Dokunulmayacak / Kırılmayacak Şeyler
 
-1. **SEO kilitli URL'ler:** `/lansman`, `/cadde`, `/19051919`, `/anket`, `/commercial/<slug>`, `/founders` — path değiştirilemez
+1. **SEO kilitli URL'ler:** `/lansman`, `/cadde`, `/19051919`, `/anket`, `/commercial/<slug>`, `/founders`, `/directory`, `/iletisim` — path değiştirilemez
 2. **Supabase migration'ları** — silinemez, yeniden sıralanamaz; sadece yeni ekle
 3. **`server.mjs`** — env injection ve RAG proxy mantığı
 4. **`vite.config.ts`** — standalone HTML emit
@@ -324,14 +354,15 @@ supabase migrations list
 
 ## 11. Bilinen Teknik Borçlar (öncelik sırasıyla)
 
-1. **`src/App.tsx` monolitik** — 80+ route tek dosyada, lazy loading yok; muhasebe `routes.tsx` pattern'ini yay
+1. **`src/App.tsx` hâlâ büyük** — 100+ route, lazy() ile code-split yapılmış ama muhasebe dışı modüller `routes.tsx` pattern'ine taşınmadı
 2. **Çift Supabase client** — `integrations/client.ts` + `lib/supabase.ts`; tek kaynağa indir
-3. **Karışık data fetching** — React Query + `*-api.ts` standardına geç
+3. **Karışık data fetching** — React Query + `*-api.ts` standardına geç; component içi `supabase.from()` hâlâ yaygın
 4. **TypeScript loose** — `strict` kademeli açılabilir
-5. **Test coverage parçalı** — yeni modüllerde (RolesGo, catalog, profile-v2) düşük
+5. **Test coverage parçalı** — yeni modüllerde (RolesGo, catalog, WhatsApp landings) düşük
 6. **`no-unused-vars` ESLint kapalı** — ölü kod tespiti için açılmalı
-7. **Playwright E2E pasif** — kritik flow'lar için aktive edilmeli
-8. **`src/contexts/AuthContext.tsx` orphaned** — referans veren 38 component hâlâ var, temizlenmeli
+7. **Playwright E2E pasif** — kritik flow'lar (kayıt, profil düzenleme, catalog claim) için aktive edilmeli
+8. **`src/contexts/AuthContext.tsx` orphaned** — referans veren componentler hâlâ var, temizlenmeli
+9. **Yeni kullanıcı trigger** — `20260609015000` ile düzeltildi; yeni kayıt akışı `welcome/activate` üzerinden test edilmeli
 
 ---
 
@@ -351,7 +382,7 @@ supabase migrations list
 
 ---
 
-## 13. Son Migrations (2026-06-09)
+## 13. Son Migrations (2026-06-08/09)
 
 ```
 20260608020000_simplify_unified_records_rpc.sql
@@ -363,9 +394,11 @@ supabase migrations list
 20260609003600_fix_directory_opt_in_trigger.sql
 20260609004000_set_admin_users.sql
 20260609010000_fix_is_moderator_post_legacy_drop.sql
-20260609011000_fix_unified_records_role_param.sql
-20260609012000_fix_bucket_stats_rpc.sql
-20260609013000_fix_catalog_rpcs_post_legacy_drop.sql  # catalog RPC'leri auth.users'a taşıdı
+20260609011000_fix_unified_records_role_param.sql    # admin_list_unified_records p_platform_role_key restore
+20260609012000_fix_bucket_stats_rpc.sql              # get_submission_documents_bucket_stats → is_admin()
+20260609013000_fix_catalog_rpcs_post_legacy_drop.sql # catalog RPC'leri auth.users'a taşıdı
+20260609014000_fix_unified_records_ambiguous_columns.sql  # CTE kolon çakışması (42702) düzeltme
+20260609015000_fix_catalog_profile_trigger_post_drop.sql  # handle_auth_user_catalog_profile → user_role_assignments
 ```
 
 **2026-06-09 büyük temizlik özeti:**
@@ -373,6 +406,7 @@ supabase migrations list
 - Tüm RPC'ler `auth.users` + `user_profile_attributes` + `user_role_assignments` üzerinden çalışıyor
 - Profil verisi canonical olarak `user_profile_attributes` tablosunda yaşıyor
 - `is_admin()` / `is_moderator()` fonksiyonları güncellendi (artık `admin_users` tablosu yok)
+- Yeni kullanıcı kayıt trigger'ı düzeltildi: `on_auth_user_created` → otomatik `bireysel` rolü atar
 
 ---
 
