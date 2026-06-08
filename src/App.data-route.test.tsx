@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Outlet } from "react-router-dom";
 
@@ -26,26 +26,24 @@ describe("App data routing", () => {
     window.history.pushState({}, "", "/");
   });
 
-  it("renders the unified data route inside the shared admin shell", () => {
-    render(<App />);
+  it("renders the unified data route inside the shared admin shell", async () => {
+    await act(async () => { render(<App />); });
 
     expect(screen.getByText("Shared Admin Layout")).toBeInTheDocument();
     expect(screen.getByText("Unified Admin Data Page")).toBeInTheDocument();
   });
 
-  it("redirects legacy data category routes to the unified data page", () => {
+  it("redirects legacy data category routes to the unified data page", async () => {
     window.history.pushState({}, "", "/admin/data/buyukelcilik");
-
-    render(<App />);
+    await act(async () => { render(<App />); });
 
     expect(screen.getByText("Shared Admin Layout")).toBeInTheDocument();
     expect(screen.getByText("Unified Admin Data Page")).toBeInTheDocument();
   });
 
-  it("keeps the old kullanici-rolleri data alias inside the unified data flow", () => {
+  it("keeps the old kullanici-rolleri data alias inside the unified data flow", async () => {
     window.history.pushState({}, "", "/admin/data/kullanici-rolleri");
-
-    render(<App />);
+    await act(async () => { render(<App />); });
 
     expect(screen.getByText("Shared Admin Layout")).toBeInTheDocument();
     expect(screen.getByText("Unified Admin Data Page")).toBeInTheDocument();

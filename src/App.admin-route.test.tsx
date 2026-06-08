@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Outlet } from "react-router-dom";
 
@@ -26,8 +26,8 @@ describe("App admin routing", () => {
     window.history.pushState({}, "", "/");
   });
 
-  it("renders the admin landing page on /admin", () => {
-    render(<App />);
+  it("renders the admin landing page on /admin", async () => {
+    await act(async () => { render(<App />); });
 
     expect(screen.getByText("Shared Admin Layout")).toBeInTheDocument();
     expect(screen.getByText("Admin landing page")).toBeInTheDocument();

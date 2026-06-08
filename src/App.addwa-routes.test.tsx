@@ -1,5 +1,5 @@
+import { act, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
 import { useLocation } from "react-router-dom";
 
 import App from "@/App";
@@ -16,35 +16,27 @@ describe("App /addcom routing", () => {
     window.history.pushState({}, "", "/");
   });
 
-  it("renders the public /addcom route", () => {
+  it("renders the public /addcom route", async () => {
     window.history.pushState({}, "", "/addcom");
-
-    render(<App />);
-
+    await act(async () => { render(<App />); });
     expect(screen.getByText("AddCOM Route /addcom")).toBeInTheDocument();
   });
 
-  it("redirects /addwa to /addcom", () => {
+  it("redirects /addwa to /addcom", async () => {
     window.history.pushState({}, "", "/addwa");
-
-    render(<App />);
-
+    await act(async () => { render(<App />); });
     expect(screen.getByText("AddCOM Route /addcom")).toBeInTheDocument();
   });
 
-  it("redirects /whatsapp-groups to /addcom", () => {
+  it("redirects /whatsapp-groups to /addcom", async () => {
     window.history.pushState({}, "", "/whatsapp-groups");
-
-    render(<App />);
-
+    await act(async () => { render(<App />); });
     expect(screen.getByText("AddCOM Route /addcom")).toBeInTheDocument();
   });
 
-  it("redirects /whatsapp-groups/:id to /addcom?group=:id", () => {
+  it("redirects /whatsapp-groups/:id to /addcom?group=:id", async () => {
     window.history.pushState({}, "", "/whatsapp-groups/berlin-grubu");
-
-    render(<App />);
-
+    await act(async () => { render(<App />); });
     expect(screen.getByText("AddCOM Route /addcom?group=berlin-grubu")).toBeInTheDocument();
   });
 });

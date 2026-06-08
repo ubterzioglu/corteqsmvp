@@ -1,4 +1,5 @@
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
+import { supabase } from "@/integrations/supabase/client";
 import { REFERRAL_SOURCE_OPTIONS } from "@/lib/pending-onboarding-normalize";
 import { normalizeOptionalTurkishText, normalizeTurkishText } from "@/lib/text-normalization";
 
@@ -231,7 +232,6 @@ export function getSubmissionDocuments(
 
 export async function getSubmissionDocumentAccessUrl(document: UploadedDocument): Promise<string> {
   if (document.path) {
-    const { supabase } = await import("@/integrations/supabase/client");
     const { data, error } = await supabase.storage
       .from("submission-documents")
       .createSignedUrl(document.path, 300);
@@ -270,7 +270,6 @@ export function getSubmissionDocumentsBucketLevel(usageRatio: number): Submissio
 export async function uploadSubmissionDocuments(files: File[]): Promise<UploadedDocument[]> {
   if (!files.length) return [];
 
-  const { supabase } = await import("@/integrations/supabase/client");
   const uploadedDocs: UploadedDocument[] = [];
 
   for (const file of files) {
@@ -295,7 +294,6 @@ export async function uploadSubmissionDocuments(files: File[]): Promise<Uploaded
 }
 
 export async function getSubmissionDocumentsBucketStats(): Promise<SubmissionDocumentsBucketStats> {
-  const { supabase } = await import("@/integrations/supabase/client");
   const { data, error } = await supabase.rpc("get_submission_documents_bucket_stats");
 
   if (error) throw error;
@@ -379,7 +377,6 @@ export async function validateReferralCodeBeforeSubmit(referralCode: string | nu
   const normalized = normalizeOptionalTurkishText(referralCode ?? "")?.toUpperCase() ?? "";
   if (!normalized) return null;
 
-  const { supabase } = await import("@/integrations/supabase/client");
   const { data, error } = await supabase.rpc("validate_and_bind_referral_code", {
     input_code: normalized,
     reference_time: new Date().toISOString(),
@@ -435,7 +432,6 @@ function isOnboardingDuplicateError(error: unknown): boolean {
 }
 
 export async function insertSubmissionWithCompatibility(payload: SubmissionInsert) {
-  const { supabase } = await import("@/integrations/supabase/client");
   let currentPayload: Record<string, unknown> = { ...payload };
 
   for (let attempt = 0; attempt < 4; attempt += 1) {

@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
 const standaloneDocuments = [
   {
@@ -135,6 +136,13 @@ export default defineConfig(({ mode }) => ({
       },
     },
     mode === "development" && componentTagger(),
+    ViteImageOptimizer({
+      png: { quality: 80 },
+      jpeg: { quality: 80 },
+      jpg: { quality: 80 },
+      webp: { lossless: false, quality: 80 },
+      includePublic: true,
+    }),
   ].filter(Boolean),
   resolve: {
     alias: {

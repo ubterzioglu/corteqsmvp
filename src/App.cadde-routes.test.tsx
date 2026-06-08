@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Outlet } from "react-router-dom";
 
@@ -43,9 +43,9 @@ describe("App cadde routing", () => {
     window.history.pushState({}, "", "/");
   });
 
-  it("renders the cadde public route", () => {
+  it("renders the cadde public route", async () => {
     const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-    render(<QueryClientProvider client={queryClient}><App /></QueryClientProvider>);
+    await act(async () => { render(<QueryClientProvider client={queryClient}><App /></QueryClientProvider>); });
     expect(screen.getByText("Cadde Public Page")).toBeInTheDocument();
   });
 });

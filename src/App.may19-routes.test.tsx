@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import App from "@/App";
 
@@ -56,35 +56,27 @@ describe("App 19 Mayıs routing", () => {
     window.history.pushState({}, "", "/");
   });
 
-  it("renders the public 19051919 route", () => {
+  it("renders the public 19051919 route", async () => {
     window.history.pushState({}, "", "/19051919");
-
-    render(<App />);
-
-    expect(screen.getByText("May19 Campaign Route")).toBeInTheDocument();
+    await act(async () => { render(<App />); });
+    await waitFor(() => expect(screen.getByText("May19 Campaign Route")).toBeInTheDocument());
   });
 
-  it("renders the public 19051919 harita route", () => {
+  it("renders the public 19051919 harita route", async () => {
     window.history.pushState({}, "", "/19051919/harita");
-
-    render(<App />);
-
-    expect(screen.getByText("May19 Map Route")).toBeInTheDocument();
+    await act(async () => { render(<App />); });
+    await waitFor(() => expect(screen.getByText("May19 Map Route")).toBeInTheDocument());
   });
 
-  it("renders the public 190519idea route", () => {
+  it("renders the public 190519idea route", async () => {
     window.history.pushState({}, "", "/190519idea");
-
-    render(<App />);
-
-    expect(screen.getByText("May19 Idea Route")).toBeInTheDocument();
+    await act(async () => { render(<App />); });
+    await waitFor(() => expect(screen.getByText("May19 Idea Route")).toBeInTheDocument());
   });
 
-  it("renders the public 190519memory route", () => {
+  it("renders the public 190519memory route", async () => {
     window.history.pushState({}, "", "/190519memory");
-
-    render(<App />);
-
-    expect(screen.getByText("May19 Moment Route")).toBeInTheDocument();
+    await act(async () => { render(<App />); });
+    await waitFor(() => expect(screen.getByText("May19 Moment Route")).toBeInTheDocument());
   });
 });
