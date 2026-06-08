@@ -4,8 +4,6 @@ import HeroSection from "@/components/HeroSection";
 import DiasporaSearchBar from "@/components/DiasporaSearchBar";
 import ConsultantCategories from "@/components/ConsultantCategories";
 import FeaturedConsultants from "@/components/FeaturedConsultants";
-import AssociationsSection from "@/components/AssociationsSection";
-import BusinessesSection from "@/components/BusinessesSection";
 import FeaturedEvents from "@/components/FeaturedEvents";
 import DiasporaMarqueeSection from "@/components/DiasporaMarqueeSection";
 import ChatBot from "@/components/chat/ChatBot";
@@ -34,8 +32,6 @@ const Index = () => {
         <ConsultantCategories />
         <FeaturedConsultants />
         <GlobalNetworkShowcaseSection />
-        <AssociationsSection />
-        <BusinessesSection />
         <FeaturedEvents />
         <LandingFoundersSection />
         <DiasporaMarqueeSection />

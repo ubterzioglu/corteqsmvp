@@ -29,7 +29,7 @@ const featuredLinks = [
 
 const SEOContentSection = () => {
   return (
-    <section className="relative mt-3 overflow-hidden py-2 lg:-mt-12 lg:py-3">
+    <section className="relative mt-12 overflow-hidden py-4 lg:mt-16 lg:py-5">
       <article className="container relative z-10 mx-auto flex max-w-6xl flex-col gap-4 px-4" aria-labelledby="geo-content-title">
         <Accordion type="single" collapsible>
           <AccordionItem
