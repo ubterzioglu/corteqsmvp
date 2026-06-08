@@ -74,7 +74,9 @@ const HeroSection = () => {
             </div>
 
             <div className="mt-3 max-w-[760px] space-y-2.5 lg:max-w-[540px] xl:max-w-[590px] 2xl:max-w-[640px]">
-              <CorteqsWhatIsAccordion />
+              <div className="w-full max-w-lg 2xl:max-w-[38rem]">
+                <CorteqsWhatIsAccordion />
+              </div>
               <div className="grid w-full max-w-lg gap-2.5 sm:grid-cols-2 2xl:max-w-[38rem]">
                 <a
                   href="#kaydol"

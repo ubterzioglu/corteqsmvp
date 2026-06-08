@@ -74,24 +74,18 @@ const navigate = useNavigate();
             ) : (
               <>
                 <div className="h-6 w-px bg-border/90" />
-                <Link to="/login?mode=login" className="flex-1 min-w-[132px]">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full rounded-xl border border-emerald-200/80 bg-[rgba(173,226,202,0.55)] px-4 text-[hsl(155_30%_20%)] shadow-none hover:bg-[rgba(173,226,202,0.8)] hover:text-[hsl(155_30%_18%)]"
-                  >
-                    {t.nav.login}
-                  </Button>
+                <Link
+                  to="/login?mode=login"
+                  className="px-3 py-1.5 text-sm font-semibold text-emerald-700 hover:text-emerald-600 transition-colors"
+                >
+                  {t.nav.login}
                 </Link>
                 <div className="h-6 w-px bg-border/90" />
-                <Link to="/login?mode=signup" className="flex-1 min-w-[132px]">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full rounded-xl border border-orange-200/80 bg-[rgba(248,176,121,0.42)] px-4 text-[hsl(20_58%_28%)] shadow-none hover:bg-[rgba(248,176,121,0.65)] hover:text-[hsl(20_58%_24%)]"
-                  >
-                    {t.nav.signup}
-                  </Button>
+                <Link
+                  to="/login?mode=signup"
+                  className="px-3 py-1.5 text-sm font-semibold text-orange-600 hover:text-orange-500 transition-colors"
+                >
+                  {t.nav.signup}
                 </Link>
               </>
             )}

@@ -97,11 +97,11 @@ const GlobalNetworkShowcaseSection = () => {
             <div className="grid gap-5 xl:grid-cols-[1.06fr_0.94fr] xl:items-center">
               <div className="max-w-[760px] xl:pr-2">
                 <h2 className="max-w-[13ch] text-[1.85rem] font-black leading-[0.97] tracking-[-0.05em] text-slate-900 sm:text-[2.35rem] lg:text-[2.85rem] xl:max-w-[12.8ch]">
-                  Dünyaya dağılmış Türk topluluklarının{" "}
+                  Dünyanın farklı yerlerinde yaşayan Türkleri{" "}
                   <span className="bg-[linear-gradient(90deg,#23b26d_0%,#7c3aed_48%,#ff7a18_100%)] bg-clip-text text-transparent">
-                    ekonomik ve sosyal sinir ağlarını
+                    sosyal ve ekonomik olarak
                   </span>{" "}
-                  örüyoruz.
+                  birbirine bağlıyoruz.
                 </h2>
                 <p className="mt-4 max-w-[38rem] text-[0.98rem] font-medium leading-7 text-slate-500 sm:text-[1.08rem]">
                   CorteQS, işletmelerden profesyonellere, kuruluşlardan topluluk yöneticilerine

@@ -13,6 +13,12 @@ import NotFound from "./pages/NotFound.tsx";
 import AboutPage from "./pages/AboutPage.tsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.tsx";
+import TermsOfService from "./pages/TermsOfService.tsx";
+import KVKK from "./pages/KVKK.tsx";
+import CookiePolicy from "./pages/CookiePolicy.tsx";
+import ContactPage from "./pages/ContactPage.tsx";
+import Pricing from "./pages/Pricing.tsx";
+import Career from "./pages/Career.tsx";
 import DiasporaDetailPage from "./pages/DiasporaDetailPage.tsx";
 import RadarPage from "./pages/RadarPage.tsx";
 import CommercialIndexPage from "./pages/CommercialIndexPage.tsx";
@@ -194,6 +200,13 @@ const App = () => (
                   }
                 />
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                <Route path="/legal/privacy" element={<PrivacyPolicyPage />} />
+                <Route path="/legal/terms" element={<TermsOfService />} />
+                <Route path="/legal/kvkk" element={<KVKK />} />
+                <Route path="/legal/cookies" element={<CookiePolicy />} />
+                <Route path="/iletisim" element={<ContactPage />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/kariyer" element={<Career />} />
                 <Route path="/reset-password" element={<ResetPasswordPage />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
