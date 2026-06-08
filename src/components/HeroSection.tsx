@@ -79,7 +79,7 @@ const HeroSection = () => {
               </div>
               <div className="grid w-full max-w-lg gap-2.5 sm:grid-cols-2 2xl:max-w-[38rem]">
                 <a
-                  href="#kaydol"
+                  href="/signup"
                   className={`${heroCtaClass} whitespace-nowrap`}
                   style={heroCardStyles.register}
                 >
