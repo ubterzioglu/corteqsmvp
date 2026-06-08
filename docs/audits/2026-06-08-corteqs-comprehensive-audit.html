@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CorteQS Kapsamlı Denetim Raporu — 2026-06-08</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #222536;
+    --border: #2d3148;
+    --text: #e2e4ef;
+    --muted: #8b90b0;
+    --accent: #6c8fff;
+    --critical: #ff5c5c;
+    --high: #ff8c42;
+    --medium: #f0c14b;
+    --low: #4ec9b0;
+    --info: #6c8fff;
+    --good: #4ade80;
+    --score-a: #4ade80;
+    --score-b: #a3e635;
+    --score-c: #f0c14b;
+    --score-d: #ff8c42;
+    --score-f: #ff5c5c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; line-height: 1.6; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Layout */
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+  header { background: linear-gradient(135deg, #1a1d27 0%, #0d1025 100%); border-bottom: 1px solid var(--border); padding: 32px 0; }
+  header .container { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .header-title h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: #fff; }
+  .header-title .subtitle { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .header-meta { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .meta-item { text-align: center; }
+  .meta-item .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .meta-item .value { font-size: 22px; font-weight: 700; }
+
+  /* Score cards */
+  .scorecard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; padding: 24px 0; }
+  .scorecard { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; position: relative; overflow: hidden; }
+  .scorecard::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .scorecard.grade-a::before { background: var(--score-a); }
+  .scorecard.grade-b::before { background: var(--score-b); }
+  .scorecard.grade-c::before { background: var(--score-c); }
+  .scorecard.grade-d::before { background: var(--score-d); }
+  .scorecard.grade-f::before { background: var(--score-f); }
+  .scorecard .score-num { font-size: 48px; font-weight: 800; line-height: 1; margin: 8px 0 4px; }
+  .grade-a .score-num { color: var(--score-a); }
+  .grade-b .score-num { color: var(--score-b); }
+  .grade-c .score-num { color: var(--score-c); }
+  .grade-d .score-num { color: var(--score-d); }
+  .grade-f .score-num { color: var(--score-f); }
+  .scorecard .score-label { font-size: 13px; font-weight: 600; color: #fff; }
+  .scorecard .score-desc { font-size: 11px; color: var(--muted); margin-top: 6px; }
+  .scorecard .grade-badge { display: inline-block; width: 28px; height: 28px; border-radius: 50%; font-weight: 800; font-size: 14px; line-height: 28px; margin-top: 8px; }
+  .grade-a .grade-badge { background: var(--score-a); color: #000; }
+  .grade-b .grade-badge { background: var(--score-b); color: #000; }
+  .grade-c .grade-badge { background: var(--score-c); color: #000; }
+  .grade-d .grade-badge { background: var(--score-d); color: #000; }
+  .grade-f .grade-badge { background: var(--score-f); color: #fff; }
+
+  /* Overall score */
+  .overall-score { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; display: flex; align-items: center; gap: 32px; margin: 24px 0; flex-wrap: wrap; }
+  .overall-num { font-size: 96px; font-weight: 900; line-height: 1; }
+  .overall-details h2 { font-size: 20px; font-weight: 700; }
+  .overall-details p { color: var(--muted); margin-top: 6px; max-width: 500px; }
+
+  /* Navigation tabs */
+  nav.tabs { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+  nav.tabs .container { display: flex; gap: 0; overflow-x: auto; }
+  .tab-btn { padding: 14px 20px; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 500; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.2s; }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* Sections */
+  .section { padding: 32px 0; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+  .section-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+  .section-title .icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+  /* Filters */
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .filter-btn { padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.15s; }
+  .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .search-box { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 12px; width: 200px; }
+  .search-box:focus { outline: none; border-color: var(--accent); }
+  .search-box::placeholder { color: var(--muted); }
+
+  /* Finding cards */
+  .findings-list { display: flex; flex-direction: column; gap: 12px; }
+  .finding { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .finding-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; user-select: none; }
+  .finding-header:hover { background: var(--surface2); }
+  .finding-id { font-size: 11px; font-weight: 700; color: var(--muted); min-width: 72px; font-family: monospace; }
+  .finding-title { flex: 1; font-weight: 600; font-size: 14px; }
+  .finding-loc { font-size: 11px; color: var(--muted); font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
+  .finding-body { padding: 0 16px 16px; display: none; border-top: 1px solid var(--border); }
+  .finding-body.open { display: block; }
+  .finding-body h4 { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin: 12px 0 6px; }
+  .finding-body p { color: var(--text); font-size: 13px; }
+  .finding-body code { background: var(--surface2); padding: 2px 6px; border-radius: 4px; font-size: 12px; font-family: monospace; color: #c9d1d9; }
+  .finding-body pre { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin: 8px 0; font-size: 12px; font-family: monospace; overflow-x: auto; color: #c9d1d9; white-space: pre-wrap; }
+  .finding-body .remedy { background: #0d2214; border: 1px solid #1a4d2e; border-radius: 6px; padding: 10px 14px; }
+  .finding-body .remedy p { color: #86efac; }
+  .finding-body .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .finding-body .tag { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; background: var(--surface2); color: var(--muted); }
+  .chevron { font-size: 12px; color: var(--muted); transition: transform 0.2s; }
+  .finding.open .chevron { transform: rotate(90deg); }
+
+  /* Severity badges */
+  .sev { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
+  .sev-critical { background: #3d0000; color: var(--critical); border: 1px solid var(--critical); }
+  .sev-high { background: #2d1500; color: var(--high); border: 1px solid var(--high); }
+  .sev-medium { background: #2d2200; color: var(--medium); border: 1px solid var(--medium); }
+  .sev-low { background: #001f1b; color: var(--low); border: 1px solid var(--low); }
+  .sev-info { background: #0d1a3d; color: var(--info); border: 1px solid var(--info); }
+  .sev-good { background: #0d2214; color: var(--good); border: 1px solid var(--good); }
+
+  /* Stats bar */
+  .stat-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  .stat-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; display: flex; align-items: center; gap: 8px; }
+  .stat-chip .num { font-size: 20px; font-weight: 700; }
+  .stat-chip .lbl { font-size: 11px; color: var(--muted); }
+
+  /* Test results */
+  .test-result-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin: 8px 0; }
+  .test-pass { background: var(--good); }
+  .test-fail { background: var(--critical); }
+
+  /* Action plan table */
+  .action-table { width: 100%; border-collapse: collapse; }
+  .action-table th { text-align: left; padding: 10px 14px; background: var(--surface2); color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+  .action-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: top; }
+  .action-table tr:last-child td { border-bottom: none; }
+  .action-table tr:hover td { background: var(--surface2); }
+  .priority-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+  .p1 { background: #3d0000; color: var(--critical); }
+  .p2 { background: #2d1500; color: var(--high); }
+  .p3 { background: #2d2200; color: var(--medium); }
+  .p4 { background: #001f1b; color: var(--low); }
+
+  /* Summary boxes */
+  .summary-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+  .summary-box h3 { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+  .summary-box ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .summary-box ul li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--muted); }
+  .summary-box ul li::before { content: '→'; color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+
+  /* AGENT_CONTEXT accuracy table */
+  .accuracy-table { width: 100%; border-collapse: collapse; }
+  .accuracy-table th { text-align: left; padding: 10px 14px; background: var(--surface2); color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+  .accuracy-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 12px; font-family: monospace; vertical-align: top; }
+  .accuracy-table tr:last-child td { border-bottom: none; }
+  .accuracy-table tr:hover td { background: var(--surface2); }
+  .status-correct { color: var(--good); }
+  .status-wrong { color: var(--critical); }
+  .status-partial { color: var(--medium); }
+
+  /* Dividers */
+  hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* Hidden / filter helpers */
+  .finding.hidden { display: none; }
+  .tab-section { display: none; }
+  .tab-section.active { display: block; }
+
+  /* Print */
+  @media print {
+    body { background: #fff; color: #000; }
+    nav.tabs, .filters, .search-box { display: none; }
+    .finding-body { display: block !important; }
+    .tab-section { display: block !important; }
+    header { background: #f5f5f5; border-bottom: 1px solid #ddd; }
+    .scorecard, .finding, .summary-box { break-inside: avoid; }
+  }
+
+  @media (max-width: 768px) {
+    .overall-score { flex-direction: column; text-align: center; }
+    .overall-num { font-size: 64px; }
+    .header-meta { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-title">
+      <h1>CorteQS Kapsamlı Denetim Raporu</h1>
+      <div class="subtitle">Denetim Tarihi: 8 Haziran 2026 &nbsp;|&nbsp; Yürüten: Claude Sonnet 4.6 (read-only audit) &nbsp;|&nbsp; Kapsam: Güvenlik · Mimari · Rotalar · Belgeler</div>
+    </div>
+    <div class="header-meta">
+      <div class="meta-item"><div class="label">Toplam Bulgu</div><div class="value" style="color:var(--accent)">26</div></div>
+      <div class="meta-item"><div class="label">Kritik/Yüksek</div><div class="value" style="color:var(--high)">3</div></div>
+      <div class="meta-item"><div class="label">Orta</div><div class="value" style="color:var(--medium)">8</div></div>
+      <div class="meta-item"><div class="label">Düşük/Bilgi</div><div class="value" style="color:var(--low)">15</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- Sticky nav -->
+<nav class="tabs">
+  <div class="container">
+    <button class="tab-btn active" onclick="switchTab('overview')">Genel Bakış</button>
+    <button class="tab-btn" onclick="switchTab('security')">🔐 Güvenlik</button>
+    <button class="tab-btn" onclick="switchTab('architecture')">🏗️ Mimari</button>
+    <button class="tab-btn" onclick="switchTab('routes')">🔗 Rotalar</button>
+    <button class="tab-btn" onclick="switchTab('docs')">📄 Belgeler</button>
+    <button class="tab-btn" onclick="switchTab('agent-context')">📋 AGENT_CONTEXT</button>
+    <button class="tab-btn" onclick="switchTab('action-plan')">🎯 Aksiyon Planı</button>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ===== GENEL BAKIŞ ===== -->
+<div class="tab-section active" id="tab-overview">
+  <div class="section">
+    <div class="overall-score">
+      <div class="overall-num" style="color: var(--score-c)">68</div>
+      <div class="overall-details">
+        <h2>Genel Sağlık Skoru: C+</h2>
+        <p>Proje işlevsel ve deploy edilebilir durumda. Güvenlik temeli sağlam, ancak bağımlılık güvenlik açıkları, büyük JS bundle, test başarısızlıkları ve mimari borç giderilmesi gereken öncelikli alanlar.</p>
+        <div class="tags" style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+          <span class="sev sev-good">BUILD: PASS ✓</span>
+          <span class="sev sev-good">LINT: PASS ✓</span>
+          <span class="sev sev-critical">TESTS: 15 FAILED</span>
+          <span class="sev sev-high">NPM AUDIT: 1 High, 3 Moderate</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scorecard-grid">
+      <div class="scorecard grade-c">
+        <div class="score-label">Güvenlik</div>
+        <div class="score-num">72</div>
+        <div class="score-desc">npm audit bulguları mevcut; server-side güvenlik iyi; RLS sağlam</div>
+        <div class="grade-badge">C</div>
+      </div>
+      <div class="scorecard grade-d">
+        <div class="score-label">Mimari</div>
+        <div class="score-num">61</div>
+        <div class="score-desc">Monolitik App.tsx, ölü kod, 1.87MB bundle, tip güvenliği zayıf</div>
+        <div class="grade-badge">D</div>
+      </div>
+      <div class="scorecard grade-b">
+        <div class="score-label">Rota Sağlığı</div>
+        <div class="score-num">80</div>
+        <div class="score-desc">SEO rotaları korumalı; lazy loading yok; admin guard tutarlı</div>
+        <div class="grade-badge">B</div>
+      </div>
+      <div class="scorecard grade-b">
+        <div class="score-label">Belge Kalitesi</div>
+        <div class="score-num">78</div>
+        <div class="score-desc">Kapsamlı docs/ klasörü; bazı belgeler güncelleme gerektiriyor</div>
+        <div class="grade-badge">B</div>
+      </div>
+      <div class="scorecard grade-d">
+        <div class="score-label">Test Sağlığı</div>
+        <div class="score-num">64</div>
+        <div class="score-desc">15 test dosyası başarısız; mock yetersizliği (AFS sonrası)</div>
+        <div class="grade-badge">D</div>
+      </div>
+    </div>
+
+    <!-- Araç sonuçları özeti -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-top: 8px;">
+      <div class="summary-box">
+        <h3>🔨 Build Sonucu (Vite 5)</h3>
+        <ul>
+          <li>Exit: 0 — Başarılı (39.89 sn)</li>
+          <li>main-*.js: <strong style="color:var(--medium)">1,870 KB</strong> (gzip: 504 KB)</li>
+          <li>Dinamik/statik import karışımı uyarısı (client.ts)</li>
+          <li>5 standalone commercial HTML dokümanı üretildi</li>
+          <li>Muhasebe route'ları lazy-split olarak ayrıldı ✓</li>
+        </ul>
+      </div>
+      <div class="summary-box">
+        <h3>🧪 Test Sonuçları (Vitest)</h3>
+        <div class="test-result-bar">
+          <div class="test-pass" style="width:91%"></div>
+          <div class="test-fail" style="width:9%"></div>
+        </div>
+        <ul>
+          <li>85 test dosyası — <strong style="color:var(--good)">70 geçti</strong>, <strong style="color:var(--critical)">15 başarısız</strong></li>
+          <li>297 test — <strong style="color:var(--good)">269 geçti</strong>, <strong style="color:var(--critical)">28 başarısız</strong></li>
+          <li>4 Unhandled Rejection</li>
+          <li>Ana neden: memberCatalogRpcClient.rpc mock'lanmamış (AFS sonrası)</li>
+          <li>MessagesInbox: user_profile_attributes tablo mock'ı eksik</li>
+        </ul>
+      </div>
+      <div class="summary-box">
+        <h3>🔍 ESLint Sonucu</h3>
+        <ul>
+          <li>src/ klasörü: <strong style="color:var(--good)">0 hata, 0 uyarı</strong></li>
+          <li>ref/ klasörü (referans, deploy dışı): 60+ hata (no-explicit-any, no-empty, rules-of-hooks)</li>
+          <li>src/ lintı temiz — CI için yeterli</li>
+        </ul>
+      </div>
+      <div class="summary-box">
+        <h3>📦 npm audit</h3>
+        <ul>
+          <li><strong style="color:var(--critical)">1 High:</strong> d3-color ReDoS (via react-simple-maps)</li>
+          <li><strong style="color:var(--medium)">3 Moderate:</strong> brace-expansion DoS, esbuild CORS (dev-only), react-router open redirect</li>
+          <li><strong style="color:var(--low)">1 Low:</strong> @tootallnate/once control flow</li>
+          <li>Düzeltme: react-simple-maps@1.0.0 (breaking), vite@8+ (breaking)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="summary-box" style="margin-top: 0;">
+      <h3>📊 Proje Ölçütleri</h3>
+      <div class="stat-row">
+        <div class="stat-chip"><div class="num" style="color:var(--accent)">547</div><div class="lbl">TS/TSX Dosyası</div></div>
+        <div class="stat-chip"><div class="num" style="color:var(--accent)">184</div><div class="lbl">Migrasyon</div></div>
+        <div class="stat-chip"><div class="num" style="color:var(--accent)">85</div><div class="lbl">Test Dosyası</div></div>
+        <div class="stat-chip"><div class="num" style="color:var(--accent)">~85</div><div class="lbl">Rota</div></div>
+        <div class="stat-chip"><div class="num" style="color:var(--medium)">108</div><div class="lbl">as any kullanımı</div></div>
+        <div class="stat-chip"><div class="num" style="color:var(--critical)">1,870<span style="font-size:14px">KB</span></div><div class="lbl">JS Bundle</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GÜVENLİK ===== -->
+<div class="tab-section" id="tab-security">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🔐 Güvenlik Bulguları</div>
+      <div class="filters">
+        <input class="search-box" type="text" placeholder="Ara..." onkeyup="filterFindings('security', this.value)">
+        <button class="filter-btn active" onclick="filterSev('security', 'all', this)">Tümü</button>
+        <button class="filter-btn" onclick="filterSev('security', 'high', this)">High</button>
+        <button class="filter-btn" onclick="filterSev('security', 'medium', this)">Medium</button>
+        <button class="filter-btn" onclick="filterSev('security', 'low', this)">Low</button>
+        <button class="filter-btn" onclick="filterSev('security', 'info', this)">Info</button>
+        <button class="filter-btn" onclick="filterSev('security', 'good', this)">Good</button>
+      </div>
+    </div>
+
+    <div class="findings-list" id="security-findings">
+
+      <div class="finding" data-sev="high" data-id="SEC-01">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">SEC-01</span>
+          <span class="sev sev-high">HIGH</span>
+          <span class="finding-title">d3-color ReDoS — react-simple-maps bağımlılığı</span>
+          <span class="finding-loc">node_modules/d3-transition, d3-zoom</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p><code>react-simple-maps</code> kütüphanesi eski bir <code>d3-color</code> (<3.1.0) versiyonu kullandığından <strong>Düzenli İfade Hizmet Reddi (ReDoS)</strong> açığı mevcut. Sunucu tarafında çalışmıyor olsa da, renk dizesi işleyen bir yol saldırganın kontrolündeyse CPU freeze riski var.</p>
+          <h4>Kaynak</h4>
+          <p><code>npm audit</code> — GHSA-36jr-mh4h-2g58 (CWE-400)</p>
+          <h4>Etki Analizi</h4>
+          <p>Harita bileşenlerine bağlı. WorldMap veya benzeri bileşenler <code>react-simple-maps</code> kullanıyorsa etkileniyor. Düzeltme için <code>react-simple-maps</code>'i v1.0.0'a yükseltmek gerekir (breaking change).</p>
+          <h4>Çözüm</h4>
+          <div class="remedy">
+            <p>1. <code>react-simple-maps@1.0.0</code>'a yükselt (major breaking — API değişikliklerine hazır ol)<br>
+            2. Alternatif: react-simple-maps kullanımını kaldırıp hafif bir SVG tabanlı harita bileşenine geç<br>
+            3. Geçici: Bileşeni production'a bakan herhangi bir input'tan izole et</p>
+          </div>
+          <div class="tags"><span class="tag">npm-audit</span><span class="tag">dependency</span><span class="tag">ReDoS</span><span class="tag">CWE-400</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="medium" data-id="SEC-02">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">SEC-02</span>
+          <span class="sev sev-medium">MEDIUM</span>
+          <span class="finding-title">react-router Open Redirect — // ile başlayan path</span>
+          <span class="finding-loc">node_modules/react-router</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p><code>react-router</code>'ın mevcut versiyonunda, <code>//evil.com</code> gibi çift slash ile başlayan path'ler protocol-relative URL olarak yorumlanabilir ve açık redirect oluşturabilir.</p>
+          <h4>Kaynak</h4>
+          <p><code>npm audit</code> — GHSA-2j2x-hqr9-3h42</p>
+          <h4>Etki Analizi</h4>
+          <p>Saldırgan, kullanıcıyı phishing sitesine yönlendirebilir. <code>navigate("//evil.com")</code> gibi bir çağrı tehlikeli. Mevcut kod tabanında bu tür kullanım gözlemlenmedi, ancak gelecekteki geliştirmelerde risk var.</p>
+          <h4>Çözüm</h4>
+          <div class="remedy">
+            <p>1. <code>react-router-dom</code>'u düzeltilmiş versiyona güncelle<br>
+            2. Tüm navigate() çağrılarının kullanıcı girdisinden gelip gelmediğini kontrol et<br>
+            3. Kullanıcı girdisinden oluşturulan yolları sanitize et</p>
+          </div>
+          <div class="tags"><span class="tag">npm-audit</span><span class="tag">open-redirect</span><span class="tag">react-router</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="medium" data-id="SEC-03">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">SEC-03</span>
+          <span class="sev sev-medium">MEDIUM</span>
+          <span class="finding-title">esbuild CORS — development sunucusu isteğe açık</span>
+          <span class="finding-loc">node_modules/vite/node_modules/esbuild ≤0.24.2</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Vite'ın dahili esbuild versiyonu ≤0.24.2, herhangi bir web sitesinin dev server'a istek atıp yanıtı okumasına izin veriyor (GHSA-67mh-4wv8-2f99). Sadece geliştirme ortamını etkiliyor, production değil.</p>
+          <h4>Etki</h4>
+          <p>Sadece <code>npm run dev</code> çalışırken risk var. Production deployment (<code>server.mjs</code>) etkilenmiyor.</p>
+          <h4>Çözüm</h4>
+          <div class="remedy">
+            <p>Düzeltme için Vite 8.x gerekli (major breaking). Kısa vadede dev ortamında <code>--host localhost</code> ile sadece localhost'a bağla (zaten varsayılan).</p>
+          </div>
+          <div class="tags"><span class="tag">dev-only</span><span class="tag">esbuild</span><span class="tag">CORS</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="low" data-id="SEC-04">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">SEC-04</span>
+          <span class="sev sev-low">LOW</span>
+          <span class="finding-title">target="_blank" rel eksik — AboutPage.tsx</span>
+          <span class="finding-loc">src/pages/AboutPage.tsx:195, 488</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Bazı dış bağlantılarda <code>rel="noopener noreferrer"</code> eksik. <code>target="_blank"</code> olan bağlantılarda açılan sayfa <code>window.opener</code>'a erişebilir.</p>
+          <h4>Etki</h4>
+          <p>Düşük risk; modern tarayıcılar otomatik <code>noopener</code> ekliyor. Ancak en iyi pratik olarak eklenmelidir.</p>
+          <h4>Çözüm</h4>
+          <div class="remedy">
+            <p>Tüm <code>target="_blank"</code> bağlantılarına <code>rel="noopener noreferrer"</code> ekle.</p>
+          </div>
+          <div class="tags"><span class="tag">xss-adjacent</span><span class="tag">best-practice</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="info" data-id="SEC-05">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">SEC-05</span>
+          <span class="sev sev-info">INFO</span>
+          <span class="finding-title">dangerouslySetInnerHTML — CommercialDocumentPage.tsx</span>
+          <span class="finding-loc">src/pages/CommercialDocumentPage.tsx</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p><code>dangerouslySetInnerHTML={{ __html: document.html ?? "" }}</code> kullanımı var. Ancak kaynak <code>getCommercialDocumentBySlug()</code>'dan geliyor ve bu statik lokal veri — kullanıcı girdisi değil.</p>
+          <h4>Risk Seviyesi</h4>
+          <p>Düşük — veri statik ve hardcoded. Ağ kaynağına geçilirse risk yükselir.</p>
+          <h4>Öneri</h4>
+          <div class="remedy">
+            <p>Mevcut haliyle güvenli. Eğer gelecekte dinamik kaynak kullanılırsa DOMPurify ile sanitize edilmesi gerekir.</p>
+          </div>
+          <div class="tags"><span class="tag">dangerouslySetInnerHTML</span><span class="tag">static-source</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="info" data-id="SEC-06">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">SEC-06</span>
+          <span class="sev sev-info">INFO</span>
+          <span class="finding-title">Shadow DOM innerHTML — RawHtmlDocument.tsx</span>
+          <span class="finding-loc">src/components/admin/RawHtmlDocument.tsx</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Admin bileşeni <code>shadowRoot.innerHTML = ...</code> ile HTML içeriği render ediyor. Shadow DOM CSS izolasyonu sağlıyor. İçerik sadece admin tarafından yönetiliyor.</p>
+          <h4>Risk Seviyesi</h4>
+          <p>Orta — admin-only erişim ile sınırlı. Yetkisiz bir admin hesabı ele geçirilirse XSS vektörü olabilir.</p>
+          <h4>Öneri</h4>
+          <div class="remedy">
+            <p>Admin RLS politikalarının sıkı olduğundan emin ol. Opsiyonel: DOMPurify ile sanitize eklenebilir.</p>
+          </div>
+          <div class="tags"><span class="tag">admin-only</span><span class="tag">shadow-dom</span><span class="tag">innerHTML</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="info" data-id="SEC-07">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">SEC-07</span>
+          <span class="sev sev-info">INFO</span>
+          <span class="finding-title">.env.local — gerçek secret'lar mevcut ama gitignored</span>
+          <span class="finding-loc">.env.local (untracked)</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Lokal <code>.env.local</code> dosyası gerçek kimlik bilgileri içeriyor: Facebook access token, Supabase access token, DB password, RAG API secret, admin password. Ancak <code>.gitignore</code> tarafından koruniyor ve git'te takip edilmiyor.</p>
+          <h4>Durum</h4>
+          <p><strong style="color:var(--good)">Güvenli</strong> — <code>git ls-files .env.local</code> çıktısı boş. Commit edilmemiş.</p>
+          <h4>Öneri</h4>
+          <div class="remedy">
+            <p>Mevcut haliyle yeterli. Ek katman olarak secret manager (Coolify vault veya environment-level secrets) kullanımı önerilir.</p>
+          </div>
+          <div class="tags"><span class="tag">secrets</span><span class="tag">gitignored</span><span class="tag">local-dev</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="good" data-id="SEC-08">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">SEC-08</span>
+          <span class="sev sev-good">GOOD</span>
+          <span class="finding-title">server.mjs güvenlik başlıkları ve RAG proxy koruması</span>
+          <span class="finding-loc">server.mjs</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Production sunucusu iyi güvenlik pratikleri uyguluyor: CSP, HSTS, X-Frame-Options DENY, X-Content-Type-Options. RAG proxy POST-only, content-type doğrulaması, 12 req/dk rate limiting, 32KB body limit ve 15 saniye timeout içeriyor. RAG_API_SECRET frontend'e asla açılmıyor.</p>
+          <h4>Pozitif Bulgular</h4>
+          <p>✓ Path traversal koruması (/../ tespiti)<br>
+          ✓ /env-config.js sadece güvenli anahtarları expose ediyor<br>
+          ✓ Rate limiting (12/dk)<br>
+          ✓ Body size limit (32KB)</p>
+          <div class="tags"><span class="tag">positive</span><span class="tag">server</span><span class="tag">rate-limiting</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="good" data-id="SEC-09">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">SEC-09</span>
+          <span class="sev sev-good">GOOD</span>
+          <span class="finding-title">SECURITY DEFINER fonksiyonları — search_path korumalı</span>
+          <span class="finding-loc">supabase/migrations/20260607030000_afs_phase2_catalog_rpcs.sql</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Denetlenen tüm <code>SECURITY DEFINER</code> PostgreSQL fonksiyonları <code>SET search_path = public</code> direktifine sahip — bu, schema injection saldırılarını engeller. Ayrıca <code>is_admin(auth.uid())</code> kontrolü admin fonksiyonlarını koruyor.</p>
+          <h4>Pozitif Bulgular</h4>
+          <p>✓ GRANT/REVOKE pattern: public'ten iptal, authenticated'e ver<br>
+          ✓ update_catalog_item_attribute: sahiplik kontrolü<br>
+          ✓ admin_* fonksiyonlar: is_admin() kontrolü</p>
+          <div class="tags"><span class="tag">positive</span><span class="tag">postgresql</span><span class="tag">RLS</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== MİMARİ ===== -->
+<div class="tab-section" id="tab-architecture">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🏗️ Mimari Bulgular</div>
+      <div class="filters">
+        <input class="search-box" type="text" placeholder="Ara..." onkeyup="filterFindings('architecture', this.value)">
+        <button class="filter-btn active" onclick="filterSev('architecture', 'all', this)">Tümü</button>
+        <button class="filter-btn" onclick="filterSev('architecture', 'high', this)">High</button>
+        <button class="filter-btn" onclick="filterSev('architecture', 'medium', this)">Medium</button>
+        <button class="filter-btn" onclick="filterSev('architecture', 'low', this)">Low</button>
+        <button class="filter-btn" onclick="filterSev('architecture', 'good', this)">Good</button>
+      </div>
+    </div>
+
+    <div class="findings-list" id="architecture-findings">
+
+      <div class="finding" data-sev="high" data-id="ARCH-01">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">ARCH-01</span>
+          <span class="sev sev-high">HIGH</span>
+          <span class="finding-title">src/App.tsx monolitik — 85 rota, lazy loading yok, 1.87MB bundle</span>
+          <span class="finding-loc">src/App.tsx (291 satır)</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Tüm ~85 rota tek bir dosyada tanımlı, hiçbiri lazy-loaded değil. Bu durum ilk yükleme süresi ve Time-to-Interactive'i olumsuz etkiliyor. <code>main-*.js</code> 1,870 KB (gzip: 504 KB) — Vite önerilen 500 KB limitinin 3.7 katı.</p>
+          <h4>Etki</h4>
+          <p>Bir kullanıcı sadece <code>/lansman</code> sayfasını ziyaret etse dahi tüm admin ve muhasebe kodu indirilir. LCP (Largest Contentful Paint) değerini olumsuz etkileyebilir.</p>
+          <h4>Çözüm</h4>
+          <div class="remedy">
+            <p>1. Route gruplarını feature-based modüllere taşı (muhasebe örüntüsü zaten var: routes.tsx)<br>
+            2. <code>React.lazy()</code> + <code>Suspense</code> ile admin ve feature route'larını code-split yap<br>
+            3. Hedef: main bundle &lt;400 KB gzip</p>
+          </div>
+          <pre>// Hedef örüntü
+const AdminLayout = React.lazy(() => import('./components/admin/AdminLayout'))
+const MuhasebeRoutes = React.lazy(() => import('./pages/admin/muhasebe/routes'))</pre>
+          <div class="tags"><span class="tag">performance</span><span class="tag">bundle-size</span><span class="tag">code-splitting</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="medium" data-id="ARCH-02">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">ARCH-02</span>
+          <span class="sev sev-medium">MEDIUM</span>
+          <span class="finding-title">src/lib/supabase.ts — ölü kod, ithal edilmiyor</span>
+          <span class="finding-loc">src/lib/supabase.ts</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>İkincil Supabase client dosyası (<code>src/lib/supabase.ts</code>) hiçbir kaynak dosyasından import edilmiyor. <code>persistSession: false</code> ve <code>autoRefreshToken: false</code> ile yapılandırılmış — yanlış ayarlar barındırıyor.</p>
+          <h4>Kanıt</h4>
+          <p>Grep sonucu: "No files found" — src/ klasöründe hiçbir dosya bu modülü import etmiyor.</p>
+          <h4>Çözüm</h4>
+          <div class="remedy">
+            <p>Dosyayı güvenle silebilirsin. Canonical client: <code>src/integrations/supabase/client.ts</code></p>
+          </div>
+          <div class="tags"><span class="tag">dead-code</span><span class="tag">supabase</span><span class="tag">cleanup</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="medium" data-id="ARCH-03">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">ARCH-03</span>
+          <span class="sev sev-medium">MEDIUM</span>
+          <span class="finding-title">Test başarısızlıkları — AFS sonrası mock yetersizliği</span>
+          <span class="finding-loc">src/hooks/usePublicIndividualProfile.test.ts, src/components/messaging/MessagesInbox.test.tsx</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>AFS (All-From-Single) catalog birleştirme (7 Haziran 2026) sonrası bazı testler güncellenmemiş. İki ana başarısızlık kümesi:</p>
+          <p>1. <code>memberCatalogRpcClient.rpc is not a function</code> — <code>usePublicIndividualProfile.test.ts</code>'te yeni RPC client mock'lanmamış<br>
+          2. <code>Unexpected table: user_profile_attributes</code> — <code>MessagesInbox.test.tsx</code>'te yeni tablo mock'u eksik</p>
+          <h4>Etki</h4>
+          <p>85 test dosyasının 15'i başarısız (28 test). CI engellemiyor (test failure exit code yok) ama güvenilirliği düşürüyor.</p>
+          <h4>Çözüm</h4>
+          <div class="remedy">
+            <p>1. <code>usePublicIndividualProfile.test.ts</code>: <code>memberCatalogRpcClient</code> mock'unu yeni RPC API ile güncelle<br>
+            2. <code>MessagesInbox.test.tsx</code>: <code>user_profile_attributes</code> ve <code>user_role_assignments</code> tablo mock'larını ekle<br>
+            3. Tüm başarısız test dosyalarını listele ve toplu güncelle</p>
+          </div>
+          <div class="tags"><span class="tag">tests</span><span class="tag">AFS</span><span class="tag">mocks</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="medium" data-id="ARCH-04">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">ARCH-04</span>
+          <span class="sev sev-medium">MEDIUM</span>
+          <span class="finding-title">108 adet "as any" kullanımı — 38 dosya</span>
+          <span class="finding-loc">src/ (38 dosya genelinde)</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>TypeScript'in <code>as any</code> operatörü 108 kez kullanılmış. Bu durum tip güvenliğini zayıflatıyor ve çalışma zamanı hatalarını derleme zamanında yakalamayı engelliyor.</p>
+          <h4>Etki</h4>
+          <p>Yeni kod eklenirken tip hataları gizlenebilir. Supabase RPC dönüş tiplerinin çoğu any olduğundan, refactor'da potansiyel kırılma noktaları var.</p>
+          <h4>Çözüm</h4>
+          <div class="remedy">
+            <p>1. <code>as any</code>'yi <code>as unknown as TargetType</code> pattern'ine dönüştür<br>
+            2. Supabase <code>integrations/supabase/types.ts</code> üretilmiş tip tanımlarını kullan<br>
+            3. Artımlı iyileştirme: en sık kullanılan modüllerden başla</p>
+          </div>
+          <div class="tags"><span class="tag">type-safety</span><span class="tag">typescript</span><span class="tag">tech-debt</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="medium" data-id="ARCH-05">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">ARCH-05</span>
+          <span class="sev sev-medium">MEDIUM</span>
+          <span class="finding-title">Dinamik/statik import karışımı — client.ts</span>
+          <span class="finding-loc">src/lib/submissions.ts → src/integrations/supabase/client.ts</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p><code>src/lib/submissions.ts</code> <code>client.ts</code>'i dinamik import ile kullanıyor, ancak diğer 40+ dosya statik import yapıyor. Vite bu durumu uyarı olarak bildiriyor: "dynamically imported by X but also statically imported by Y."</p>
+          <h4>Etki</h4>
+          <p>Modülün iki ayrı chunk'a konulmasını engelliyor, bundle optimizasyonunu sekteye uğratıyor.</p>
+          <h4>Çözüm</h4>
+          <div class="remedy">
+            <p><code>submissions.ts</code>'deki dinamik import'ı statik import'a çevir. Tüm import'lar tutarlı olmalı.</p>
+          </div>
+          <div class="tags"><span class="tag">vite</span><span class="tag">bundle</span><span class="tag">dynamic-import</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="low" data-id="ARCH-06">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">ARCH-06</span>
+          <span class="sev sev-low">LOW</span>
+          <span class="finding-title">Production'da TODO yorum — monetization placeholder</span>
+          <span class="finding-loc">src/hooks/useIsPremium.ts</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Production kodunda TODO yorumu bulunuyor: monetization özelliği için yer tutucu. Fonksiyonel değil ama teknik borcu işaret ediyor.</p>
+          <h4>Çözüm</h4>
+          <div class="remedy">
+            <p>Feature tamamlandığında TODO'yu kaldır veya bir issue tracker'a taşı.</p>
+          </div>
+          <div class="tags"><span class="tag">todo</span><span class="tag">tech-debt</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="low" data-id="ARCH-07">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">ARCH-07</span>
+          <span class="sev sev-low">LOW</span>
+          <span class="finding-title">Büyük asset dosyaları — optimize edilmemiş görseller</span>
+          <span class="finding-loc">dist/assets/</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Build çıktısında bazı görseller çok büyük: <code>corteqs-logo-globe-*.png</code> 1.5 MB, <code>may19-globe-pins-*.png</code> 2.56 MB, <code>hero-network-light-*.jpg</code> 1.27 MB.</p>
+          <h4>Etki</h4>
+          <p>LCP ve mobil kullanıcılar için sayfa yükleme süresini olumsuz etkiliyor.</p>
+          <h4>Çözüm</h4>
+          <div class="remedy">
+            <p>1. PNG'leri WebP formatına dönüştür (genellikle %30-70 boyut azalması)<br>
+            2. Vite plugin ile build zamanında otomatik optimizasyon: <code>vite-plugin-imagemin</code><br>
+            3. Büyük görseller için lazy loading ekle</p>
+          </div>
+          <div class="tags"><span class="tag">performance</span><span class="tag">images</span><span class="tag">LCP</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="good" data-id="ARCH-08">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">ARCH-08</span>
+          <span class="sev sev-good">GOOD</span>
+          <span class="finding-title">AuthContext.tsx şim — geriye dönük uyumluluk sağlanmış</span>
+          <span class="finding-loc">src/contexts/AuthContext.tsx</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>AGENT_CONTEXT.md "orphaned provider" diyor ancak gerçekte bu dosya iyi yazılmış bir geriye-dönük uyumluluk şimi. Canonical auth'tan (<code>src/components/auth/useAuth.ts</code>) import alıp <code>loading</code> alias'ını ekleyerek 38 bileşeni kırmadan sunarken gerçek auth verisini sağlıyor.</p>
+          <h4>Pozitif</h4>
+          <p>✓ 38 bileşen gerçek auth verisi alıyor<br>
+          ✓ Canonical auth tek noktadan yönetiliyor<br>
+          ✓ Migration path net</p>
+          <div class="tags"><span class="tag">positive</span><span class="tag">auth</span><span class="tag">backward-compat</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="good" data-id="ARCH-09">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">ARCH-09</span>
+          <span class="sev sev-good">GOOD</span>
+          <span class="finding-title">Muhasebe modülü — referans mimari örüntü</span>
+          <span class="finding-loc">src/pages/admin/muhasebe/, src/lib/muhasebe-*.ts</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Muhasebe modülü doğru bölünmüş: API katmanı (<code>muhasebe-api.ts</code>), şema katmanı (<code>muhasebe-schemas.ts</code>), hesaplama katmanı (<code>muhasebe-aggregations.ts</code>), route modülü (<code>routes.tsx</code>) ve lazy-split Vite chunk'ları.</p>
+          <h4>Pozitif</h4>
+          <p>✓ Lazy loading uygulanmış (ayrı chunk)<br>
+          ✓ Zod şemaları ile tip güvenliği<br>
+          ✓ React Query kullanımı<br>
+          ✓ Diğer modüller için kopyalanabilir örüntü</p>
+          <div class="tags"><span class="tag">positive</span><span class="tag">architecture</span><span class="tag">reference-pattern</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== ROTALAR ===== -->
+<div class="tab-section" id="tab-routes">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🔗 Rota Analizi</div>
+    </div>
+
+    <div class="findings-list" id="routes-findings">
+
+      <div class="finding" data-sev="medium" data-id="ROUTE-01">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">ROUTE-01</span>
+          <span class="sev sev-medium">MEDIUM</span>
+          <span class="finding-title">Admin rotası AdminLayout'a sarılmış ama RequireAuth sargısı yok — sadece AuthLayout güveni</span>
+          <span class="finding-loc">src/App.tsx — /admin/* route grubu</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p><code>/admin</code> rotaları <code>AdminLayout</code>'a sarılı. <code>AdminLayout</code> içinde <code>userIsAdmin()</code> kontrolü yapılıyor ama bu client-side bir kontrol. <code>RequireAuth</code> bileşeni admin rota grubunun dışında tanımlı.</p>
+          <h4>Etki</h4>
+          <p>Session olmayan bir kullanıcı <code>/admin</code>'e git route'larına direkt erişmeye çalışırsa UI'da hata görecek (AdminLayout içinde yönetiliyor). RLS sayesinde data güvende ama UI akışı daha açık izah edilmeli.</p>
+          <h4>Öneri</h4>
+          <div class="remedy">
+            <p>Admin route grubuna <code>RequireAuth</code> wrapper ekleyerek güvenlik katmanını açıkça belgele. Mevcut AdminLayout davranışını koru ama ek sarmalayıcıyı belt-and-suspenders olarak ekle.</p>
+          </div>
+          <div class="tags"><span class="tag">auth</span><span class="tag">admin</span><span class="tag">routing</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="low" data-id="ROUTE-02">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">ROUTE-02</span>
+          <span class="sev sev-low">LOW</span>
+          <span class="finding-title">Tüm rotalar eager-loaded — code splitting yok</span>
+          <span class="finding-loc">src/App.tsx</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Muhasebe dışındaki tüm route bileşenleri eager import ile yükleniyor. Kullanıcı <code>/lansman</code> sayfasına girdiğinde tüm admin, profil ve diğer sayfa kodları da indirilir.</p>
+          <h4>Çözüm</h4>
+          <div class="remedy">
+            <p>Route gruplarını <code>React.lazy()</code> ile split et. Öncelik sırası: admin sayfaları, lansman, profil sayfaları.</p>
+          </div>
+          <div class="tags"><span class="tag">performance</span><span class="tag">code-splitting</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="good" data-id="ROUTE-03">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">ROUTE-03</span>
+          <span class="sev sev-good">GOOD</span>
+          <span class="finding-title">SEO kritik rotalar — değiştirilmemiş ve korumalı</span>
+          <span class="finding-loc">src/App.tsx</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>SEO kilitli rotalar CLAUDE.md'de belgelenmiş ve mevcut kodda değiştirilmemiş: <code>/lansman</code>, <code>/cadde</code>, <code>/founders</code>, <code>/19051919</code>, <code>/anket</code>, <code>/commercial/:slug</code>.</p>
+          <h4>Pozitif</h4>
+          <p>✓ Rota değişiklik koruması dokümante edilmiş<br>
+          ✓ Git geçmişi SEO değişikliklerini izliyor<br>
+          ✓ commercial/:slug Vite plugin ile standalone HTML üretiyor</p>
+          <div class="tags"><span class="tag">positive</span><span class="tag">SEO</span><span class="tag">routing</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="good" data-id="ROUTE-04">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">ROUTE-04</span>
+          <span class="sev sev-good">GOOD</span>
+          <span class="finding-title">Standalone commercial HTML belgeleri doğru üretiliyor</span>
+          <span class="finding-loc">vite.config.ts, dist/commercial/</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Vite plugin 5 adet standalone HTML belge üretiyor: contributor, influencer-partner, strategic-partner, community-leader, ambassador. Her biri hem <code>/commercial/&lt;slug&gt;/</code> hem de <code>/&lt;slug&gt;/</code> path'lerinde erişilebilir.</p>
+          <h4>Pozitif</h4>
+          <p>✓ 5 belge doğru konumlarda üretildi<br>
+          ✓ SPA fallback ile uyumlu<br>
+          ✓ Gzip boyutları makul (3.86–2.07 MB arası)</p>
+          <div class="tags"><span class="tag">positive</span><span class="tag">vite-plugin</span><span class="tag">commercial</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== BELGELER ===== -->
+<div class="tab-section" id="tab-docs">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">📄 Belge Yaşam Döngüsü Analizi</div>
+    </div>
+
+    <div class="findings-list" id="docs-findings">
+
+      <div class="finding" data-sev="medium" data-id="DOC-01">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">DOC-01</span>
+          <span class="sev sev-medium">MEDIUM</span>
+          <span class="finding-title">AGENT_CONTEXT.md — birden fazla yanlış bilgi içeriyor</span>
+          <span class="finding-loc">docs/AGENT_CONTEXT.md</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Proje bağlamını tanımlayan bu kritik belge birkaç hatalı claim içeriyor. Detaylar AGENT_CONTEXT sekmesinde.</p>
+          <h4>Çözüm</h4>
+          <div class="remedy">
+            <p>AGENT_CONTEXT.md'yi güncel duruma göre düzelt. Özellikle AuthContext açıklamasını ve test sayısını güncelle.</p>
+          </div>
+          <div class="tags"><span class="tag">docs</span><span class="tag">accuracy</span><span class="tag">agent-context</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="low" data-id="DOC-02">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">DOC-02</span>
+          <span class="sev sev-low">LOW</span>
+          <span class="finding-title">docs/history/ klasörü — arşivlenmiş planlar silinmeden bırakılmış</span>
+          <span class="finding-loc">docs/history/</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Tamamlanmış plan ve cleanup raporları docs/history/ ve docs/cleanup/ klasörlerinde duruyor. Bunlar git geçmişinde zaten mevcut, ayrıca dosya olarak tutulmaları gerek olmayabilir.</p>
+          <h4>Öneri</h4>
+          <div class="remedy">
+            <p>Arşiv klasörlerinin aktif referans için değil, tarihsel bağlam için tutulduğunu belgele. CLAUDE.md'de bu ayrımı belirt.</p>
+          </div>
+          <div class="tags"><span class="tag">docs</span><span class="tag">housekeeping</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="good" data-id="DOC-03">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">DOC-03</span>
+          <span class="sev sev-good">GOOD</span>
+          <span class="finding-title">CLAUDE.md — kapsamlı ve doğru proje rehberi</span>
+          <span class="finding-loc">CLAUDE.md (root)</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>CLAUDE.md son derece kapsamlı: kritik dosya listesi, domain terminoloji koruması (muhasebe, lansman vb.), SEO kilitli rotalar, değiştirilemez migration kuralı, iki auth sistemi uyarısı, muhasebe modülü referans mimari, deployment detayları.</p>
+          <h4>Pozitif</h4>
+          <p>✓ Türkçe domain terimleri korunuyor<br>
+          ✓ Çift auth sisteminin riskleri belgelenmiş<br>
+          ✓ Bilinen mimari borçlar listeli<br>
+          ✓ Geliştirici tuzakları önceden uyarılmış</p>
+          <div class="tags"><span class="tag">positive</span><span class="tag">documentation</span><span class="tag">CLAUDE.md</span></div>
+        </div>
+      </div>
+
+      <div class="finding" data-sev="good" data-id="DOC-04">
+        <div class="finding-header" onclick="toggle(this)">
+          <span class="finding-id">DOC-04</span>
+          <span class="sev sev-good">GOOD</span>
+          <span class="finding-title">docs/ klasörü iyi yapılandırılmış — operations, modules, guides, history</span>
+          <span class="finding-loc">docs/</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="finding-body">
+          <h4>Açıklama</h4>
+          <p>Belge yapısı: <code>docs/architecture/</code>, <code>docs/modules/</code>, <code>docs/guides/</code>, <code>docs/operations/</code>, <code>docs/history/</code>. Türkçe domain isimleriyle tutarlı.</p>
+          <h4>Pozitif</h4>
+          <p>✓ Kategori bazlı organizasyon<br>
+          ✓ Operasyon runbook'ları mevcut<br>
+          ✓ Teknik dokümantasyon Türkçe (uygun)</p>
+          <div class="tags"><span class="tag">positive</span><span class="tag">documentation</span><span class="tag">structure</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== AGENT_CONTEXT Doğruluğu ===== -->
+<div class="tab-section" id="tab-agent-context">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">📋 AGENT_CONTEXT.md Doğruluk Tablosu</div>
+    </div>
+
+    <div class="summary-box">
+      <h3>Denetim Yöntemi</h3>
+      <ul>
+        <li>Her claim için kaynak dosyayı okudum ve grep ile doğruladım</li>
+        <li>Rakamsal iddialar için gerçek dosya sayısı ve satır sayısı kontrol edildi</li>
+        <li>Mimari iddialar için kaynak kodu incelendi</li>
+      </ul>
+    </div>
+
+    <div style="overflow-x: auto;">
+    <table class="accuracy-table">
+      <thead>
+        <tr>
+          <th>AGENT_CONTEXT İddiası</th>
+          <th>Gerçek Durum</th>
+          <th>Durum</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>"~90 public pages, ~30 admin pages"</td>
+          <td>~85 rota (App.tsx'de sayıldı), 65+ admin sayfası</td>
+          <td><span class="status-partial">⚠ KISMEN DOĞRU</span></td>
+        </tr>
+        <tr>
+          <td>"~42 lib modules"</td>
+          <td>src/lib/ altında 42 civarı .ts dosyası mevcut</td>
+          <td><span class="status-correct">✓ DOĞRU</span></td>
+        </tr>
+        <tr>
+          <td>"122+ migrations"</td>
+          <td>184 migrasyon (supabase/migrations/ klasöründe sayıldı)</td>
+          <td><span class="status-wrong">✗ YANLIŞ — 184 adet</span></td>
+        </tr>
+        <tr>
+          <td>"49 test files"</td>
+          <td>85 test dosyası (*.test.ts/tsx pattern ile sayıldı)</td>
+          <td><span class="status-wrong">✗ YANLIŞ — 85 adet</span></td>
+        </tr>
+        <tr>
+          <td>"AuthContext.tsx is an orphaned provider — never mounted"</td>
+          <td>Geriye uyumluluk şimi — canonical auth'tan re-export yapıyor, gerçek session veriyor</td>
+          <td><span class="status-wrong">✗ YANLIŞ — şim, orphaned değil</span></td>
+        </tr>
+        <tr>
+          <td>"38 components import useAuth from contexts/AuthContext"</td>
+          <td>38 dosya import ediyor ve gerçek auth verisi alıyor (şim sayesinde)</td>
+          <td><span class="status-partial">⚠ SAYI DOĞRU ama sonuç yanlış yorumlanmış</span></td>
+        </tr>
+        <tr>
+          <td>"lib/supabase.ts — custom re-export"</td>
+          <td>Hiçbir dosya import etmiyor, persistSession:false ayarı var — dead code</td>
+          <td><span class="status-wrong">✗ YANLIŞ — ölü kod</span></td>
+        </tr>
+        <tr>
+          <td>"old system: public.admin_users table"</td>
+          <td>admin.ts artık user_role_assignments kullanıyor (yeni sistem), admin_users kaldırılmış</td>
+          <td><span class="status-partial">⚠ GÜNCELLENMİŞ — admin.ts yeni sistemi kullanıyor</span></td>
+        </tr>
+        <tr>
+          <td>"muhasebe module is the architectural template"</td>
+          <td>Doğru — lazy split, Zod, React Query, routes.tsx ile tam örüntü</td>
+          <td><span class="status-correct">✓ DOĞRU</span></td>
+        </tr>
+        <tr>
+          <td>"TypeScript strict: false (intentional)"</td>
+          <td>tsconfig.json onaylandı — strict:false, strictNullChecks:false</td>
+          <td><span class="status-correct">✓ DOĞRU</span></td>
+        </tr>
+        <tr>
+          <td>"60+ Supabase migrations"</td>
+          <td>184 migrasyon mevcut</td>
+          <td><span class="status-wrong">✗ YANLIŞ — 184 adet (CLAUDE.md'de de 60+ yazıyor)</span></td>
+        </tr>
+        <tr>
+          <td>"vite.config.ts: standalone HTML injection for commercial/* routes"</td>
+          <td>Doğrulandı — 5 standalone doküman üretiliyor</td>
+          <td><span class="status-correct">✓ DOĞRU</span></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="summary-box" style="margin-top: 24px;">
+      <h3>Güncellenmesi Gereken Alanlar (AGENT_CONTEXT.md)</h3>
+      <ul>
+        <li>Migrasyon sayısını 122 → 184+ olarak güncelle</li>
+        <li>Test dosyası sayısını 49 → 85 olarak güncelle</li>
+        <li>AuthContext.tsx açıklamasını "orphaned" → "backward-compat shim" olarak düzelt</li>
+        <li>lib/supabase.ts'i "dead code" olarak işaretle</li>
+        <li>admin.ts'in artık yeni sistem (user_role_assignments) kullandığını belirt</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AKSİYON PLANI ===== -->
+<div class="tab-section" id="tab-action-plan">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🎯 Öncelikli Aksiyon Planı</div>
+    </div>
+
+    <div class="summary-box">
+      <h3>Öncelik Sınıfları</h3>
+      <ul>
+        <li><strong style="color:var(--critical)">P1 — Kritik (≤1 hafta):</strong> Güvenlik açıkları, çöken testler</li>
+        <li><strong style="color:var(--high)">P2 — Yüksek (≤1 ay):</strong> Performans, ölü kod, büyük mimari borç</li>
+        <li><strong style="color:var(--medium)">P3 — Orta (≤3 ay):</strong> Tip güvenliği, belge güncellemeleri</li>
+        <li><strong style="color:var(--low)">P4 — Düşük (backlog):</strong> İyileştirmeler, temizlik</li>
+      </ul>
+    </div>
+
+    <div style="overflow-x: auto;">
+    <table class="action-table">
+      <thead>
+        <tr>
+          <th>Öncelik</th>
+          <th>Bulgu</th>
+          <th>Aksiyon</th>
+          <th>Etki</th>
+          <th>Çaba</th>
+          <th>Sahip</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="priority-badge p1">P1</span></td>
+          <td>ARCH-03</td>
+          <td>15 başarısız testi düzelt — AFS sonrası mock güncellemesi</td>
+          <td>CI güvenilirliği</td>
+          <td>M (2-4 saat)</td>
+          <td>Backend</td>
+        </tr>
+        <tr>
+          <td><span class="priority-badge p1">P1</span></td>
+          <td>SEC-01</td>
+          <td>d3-color ReDoS: react-simple-maps@1.0.0'a yükselt veya kaldır</td>
+          <td>Güvenlik</td>
+          <td>M-L</td>
+          <td>Frontend</td>
+        </tr>
+        <tr>
+          <td><span class="priority-badge p1">P1</span></td>
+          <td>SEC-02</td>
+          <td>react-router open redirect: güncellenmiş versiyona geç</td>
+          <td>Güvenlik</td>
+          <td>S</td>
+          <td>Frontend</td>
+        </tr>
+        <tr>
+          <td><span class="priority-badge p2">P2</span></td>
+          <td>ARCH-01</td>
+          <td>App.tsx route code-splitting: React.lazy + Suspense ekle</td>
+          <td>Bundle -60%, TTI iyileşmesi</td>
+          <td>L (1-2 gün)</td>
+          <td>Frontend</td>
+        </tr>
+        <tr>
+          <td><span class="priority-badge p2">P2</span></td>
+          <td>ARCH-02</td>
+          <td>src/lib/supabase.ts sil — dead code</td>
+          <td>Karmaşıklık azalması</td>
+          <td>XS</td>
+          <td>Herhangi</td>
+        </tr>
+        <tr>
+          <td><span class="priority-badge p2">P2</span></td>
+          <td>ARCH-05</td>
+          <td>submissions.ts dinamik import'ını statik yap</td>
+          <td>Bundle optimize</td>
+          <td>XS</td>
+          <td>Frontend</td>
+        </tr>
+        <tr>
+          <td><span class="priority-badge p2">P2</span></td>
+          <td>ARCH-07</td>
+          <td>Büyük görselleri WebP'e dönüştür + vite-plugin-imagemin ekle</td>
+          <td>LCP, mobil perf</td>
+          <td>S</td>
+          <td>Frontend</td>
+        </tr>
+        <tr>
+          <td><span class="priority-badge p3">P3</span></td>
+          <td>DOC-01</td>
+          <td>AGENT_CONTEXT.md ve CLAUDE.md'yi güncel duruma göre düzelt</td>
+          <td>Onboarding kalitesi</td>
+          <td>S</td>
+          <td>Tech Lead</td>
+        </tr>
+        <tr>
+          <td><span class="priority-badge p3">P3</span></td>
+          <td>ARCH-04</td>
+          <td>108 "as any" → "as unknown as Type" artımlı dönüşüm (modül bazlı)</td>
+          <td>Tip güvenliği</td>
+          <td>L (birkaç sprint)</td>
+          <td>Ekip</td>
+        </tr>
+        <tr>
+          <td><span class="priority-badge p3">P3</span></td>
+          <td>ROUTE-01</td>
+          <td>Admin route grubuna RequireAuth wrapper ekle (belt-and-suspenders)</td>
+          <td>Auth netliği</td>
+          <td>S</td>
+          <td>Frontend</td>
+        </tr>
+        <tr>
+          <td><span class="priority-badge p3">P3</span></td>
+          <td>SEC-03</td>
+          <td>Vite 8.x yükseltme planı yap (breaking changes incelemesi ile)</td>
+          <td>Dev güvenliği</td>
+          <td>M</td>
+          <td>DevOps</td>
+        </tr>
+        <tr>
+          <td><span class="priority-badge p4">P4</span></td>
+          <td>SEC-04</td>
+          <td>AboutPage.tsx dış linklere rel="noopener noreferrer" ekle</td>
+          <td>Best practice</td>
+          <td>XS</td>
+          <td>Herhangi</td>
+        </tr>
+        <tr>
+          <td><span class="priority-badge p4">P4</span></td>
+          <td>ARCH-06</td>
+          <td>useIsPremium.ts TODO'sunu bir issue'ya taşı veya implement et</td>
+          <td>Tech debt azalması</td>
+          <td>XS</td>
+          <td>Product</td>
+        </tr>
+        <tr>
+          <td><span class="priority-badge p4">P4</span></td>
+          <td>DOC-02</td>
+          <td>docs/history/ klasörünün amacını CLAUDE.md'de belgele</td>
+          <td>Belge netliği</td>
+          <td>XS</td>
+          <td>Tech Lead</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <hr>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 24px;">
+      <div class="summary-box">
+        <h3>✅ Hemen Yapılacaklar (Bu Hafta)</h3>
+        <ul>
+          <li>15 başarısız test → mock güncellemesi (ARCH-03)</li>
+          <li>react-simple-maps güncelleme araştırması (SEC-01)</li>
+          <li>src/lib/supabase.ts silme (ARCH-02)</li>
+          <li>rel="noopener noreferrer" AboutPage (SEC-04)</li>
+        </ul>
+      </div>
+      <div class="summary-box">
+        <h3>📅 Bu Ay Yapılacaklar</h3>
+        <ul>
+          <li>App.tsx code-splitting planı ve implementation (ARCH-01)</li>
+          <li>Görsel optimizasyon pipeline (ARCH-07)</li>
+          <li>AGENT_CONTEXT.md güncelleme (DOC-01)</li>
+          <li>submissions.ts dinamik import düzeltmesi (ARCH-05)</li>
+        </ul>
+      </div>
+      <div class="summary-box">
+        <h3>🗓️ Sprint Backlog'u</h3>
+        <ul>
+          <li>as any → tip güvenliği dönüşümü (ARCH-04)</li>
+          <li>Vite 8.x yükseltme planı (SEC-03)</li>
+          <li>Admin RequireAuth wrapper (ROUTE-01)</li>
+          <li>useIsPremium monetization implementation (ARCH-06)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- Footer -->
+<div style="background: var(--surface); border-top: 1px solid var(--border); padding: 20px 0; margin-top: 40px;">
+  <div class="container" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+    <div style="color: var(--muted); font-size: 12px;">
+      CorteQS Kapsamlı Denetim Raporu &nbsp;·&nbsp; 2026-06-08 &nbsp;·&nbsp; READ-ONLY audit — uygulama kodu değiştirilmedi
+    </div>
+    <div style="color: var(--muted); font-size: 12px;">
+      547 TS/TSX dosyası &nbsp;·&nbsp; 184 migrasyon &nbsp;·&nbsp; 85 test dosyası &nbsp;·&nbsp; Build: PASS &nbsp;·&nbsp; Lint: PASS
+    </div>
+  </div>
+</div>
+
+<script>
+  // Tab switching
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // Toggle finding detail
+  function toggle(header) {
+    const finding = header.parentElement;
+    const body = finding.querySelector('.finding-body');
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    finding.classList.toggle('open', !isOpen);
+  }
+
+  // Filter by severity
+  function filterSev(section, sev, btn) {
+    const container = document.getElementById(section + '-findings');
+    if (!container) return;
+    container.querySelectorAll('.finding').forEach(f => {
+      f.classList.toggle('hidden', sev !== 'all' && f.dataset.sev !== sev);
+    });
+    btn.closest('.filters').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // Search filter
+  function filterFindings(section, query) {
+    const container = document.getElementById(section + '-findings');
+    if (!container) return;
+    const q = query.toLowerCase();
+    container.querySelectorAll('.finding').forEach(f => {
+      const text = f.textContent.toLowerCase();
+      f.classList.toggle('hidden', q.length > 0 && !text.includes(q));
+    });
+  }
+
+  // Score bar chart animation on load
+  document.addEventListener('DOMContentLoaded', () => {
+    // Animate score numbers
+    document.querySelectorAll('.score-num').forEach(el => {
+      const target = parseInt(el.textContent);
+      let current = 0;
+      const step = Math.ceil(target / 30);
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = current;
+        if (current >= target) clearInterval(timer);
+      }, 20);
+    });
+  });
+</script>
+</body>
+</html>
