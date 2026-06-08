@@ -12,7 +12,7 @@ const DirectorySearchBar = ({
   placeholder = "İsim, bio veya role özel alan ara...",
 }: DirectorySearchBarProps) => {
   return (
-    <div className="relative flex items-center gap-3 rounded-2xl border-2 border-orange-300 bg-white/70 px-4 py-3 shadow-[0_0_60px_-6px_rgba(249,115,22,0.55),0_0_30px_-8px_rgba(251,188,5,0.40),0_22px_45px_-28px_rgba(15,23,42,0.26)] backdrop-blur-xl">
+    <div className="relative flex items-center gap-3 rounded-2xl border-4 border-orange-300 bg-white/70 px-4 py-3 shadow-[0_22px_45px_-28px_rgba(15,23,42,0.26)] backdrop-blur-xl">
       <Search className="h-5 w-5 shrink-0 text-muted-foreground" />
       <input
         type="text"
