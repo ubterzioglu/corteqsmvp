@@ -42,11 +42,11 @@ const MarqueeItemCard = ({ item, className }: MarqueeItemCardProps) => {
   const cardContent = (
     <article
       className={cn(
-        "group flex h-full min-h-[418px] flex-col overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg",
+        "group flex h-full min-h-[210px] flex-col overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg",
         className,
       )}
     >
-      <div className="relative h-[188px] shrink-0 overflow-hidden bg-muted">
+      <div className="relative h-[90px] shrink-0 overflow-hidden bg-muted">
         <img
           src={imageUrl}
           alt={item.image_alt || item.title}

@@ -3,22 +3,32 @@ import CorteqsWhatIsAccordion from "@/components/CorteqsWhatIsAccordion";
 
 const featuredLinks = [
   {
+    to: "/founders",
+    className:
+      "border-[#2f6fda] bg-[linear-gradient(135deg,#4285F4_0%,#3B78E7_100%)] text-white shadow-[0_16px_34px_rgba(66,133,244,0.34),inset_0_1px_0_rgba(255,255,255,0.18)]",
+    label: "Biz Kimiz?",
+    scrollTop: true,
+  },
+  {
     to: "/founding-1000",
     className:
       "border-[#F9AB00] bg-[linear-gradient(135deg,#FBBC05_0%,#F9AB00_100%)] text-white shadow-[0_16px_34px_rgba(251,188,5,0.34),inset_0_1px_0_rgba(255,255,255,0.18)]",
     label: "Founding 1000'e Katıl",
+    scrollTop: false,
   },
   {
     to: "/blogger-yarismasi",
     className:
       "border-[#c5221f] bg-[linear-gradient(135deg,#EA4335_0%,#D93025_100%)] text-white shadow-[0_16px_34px_rgba(234,67,53,0.34),inset_0_1px_0_rgba(255,255,255,0.18)]",
     label: "Blogger Yarışması",
+    scrollTop: false,
   },
   {
     to: "/vlogger-yarismasi",
     className:
-      "border-[#2f6fda] bg-[linear-gradient(135deg,#4285F4_0%,#3B78E7_100%)] text-white shadow-[0_16px_34px_rgba(66,133,244,0.34),inset_0_1px_0_rgba(255,255,255,0.18)]",
+      "border-[#2f6fda] bg-[linear-gradient(135deg,#34A853_0%,#2F9B4D_100%)] text-white shadow-[0_16px_34px_rgba(52,168,83,0.34),inset_0_1px_0_rgba(255,255,255,0.18)]",
     label: "Vlogger Yarışması",
+    scrollTop: false,
   },
 ] as const;
 
@@ -35,6 +45,7 @@ const SEOContentSection = () => {
             <Link
               key={link.to}
               to={link.to}
+              onClick={link.scrollTop ? () => window.scrollTo({ top: 0, behavior: "auto" }) : undefined}
               className={`${linkClass} ${link.className}`}
             >
               <span
