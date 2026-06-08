@@ -41,7 +41,7 @@ const ItemListPanel = ({ items, selectedItemId, onSelectItem, totalCount, isLoad
                 <TableCell className="text-xs py-1.5 max-w-[160px] truncate">{item.title}</TableCell>
                 <TableCell className="py-1.5">
                   <Badge variant="outline" className="text-[10px]">
-                    {item.kind === "catalog_item" ? "KTG" : "KUL"}
+                    {item.kind === "catalog_item" ? "KTG" : item.kind === "member_profile" ? "MEM" : "KUL"}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-[10px] text-muted-foreground py-1.5">{item.platformRoleKey ?? "-"}</TableCell>

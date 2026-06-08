@@ -354,7 +354,7 @@
       <li><a href="#s7"><span class="toc-num">07</span> Member Köprüsü &amp; Trigger Akışı</a></li>
       <li><a href="#s8"><span class="toc-num">08</span> Trigger Envanteri</a></li>
       <li><a href="#s9"><span class="toc-num">09</span> RPC Katmanı (admin/data)</a></li>
-      <li><a href="#s10"><span class="toc-num">10</span> Haziran 2026 Regresyonu &amp; Fix</a></li>
+      <li><a href="#s10"><span class="toc-num">10</span> Haziran 2026 Regresyonları (DB + Frontend) &amp; Fix</a></li>
       <li><a href="#s11"><span class="toc-num">11</span> Açık Riskler &amp; Teknik Borç</a></li>
     </ul>
   </div>
@@ -728,6 +728,10 @@
         <code>linked_user_id IS NOT NULL → member_profile</code>, aksi → <code>catalog_item</code>.</p>
         <p>Filtreler: kind, query, item_type, status, verification, city, country, <strong>platform_role_key</strong>. Sayfalama dahili <code>total_count</code> ile.</p>
         <div class="tip">Şu an döndürür: <strong>107 member_profile + 516 catalog_item</strong>.</div>
+        <p style="margin-top:10px;">Frontend (<code>AdminCatalogPage</code>) artık <code>member_profile</code>'ı
+        <code>catalog_item</code> gibi işler: ikisi de <code>catalog_items</code> satırı olduğu için detay paneli
+        <code>getAdminCatalogItemDetail</code> ile yüklenir. <span class="badge badge-green">2026-06-09 fix</span>
+        — bkz. §10.</p>
       </div>
       <div class="card card-accent5">
         <h3>🌐 list_public_directory_profiles</h3>
@@ -746,7 +750,7 @@
   <div class="section" id="s10">
     <div class="section-header">
       <div class="section-num red">10</div>
-      <h2>Haziran 2026 Regresyonu &amp; Fix</h2>
+      <h2>Haziran 2026 Regresyonları (DB + Frontend) &amp; Fix</h2>
     </div>
     <div class="callout danger">
       <div class="callout-icon">🐛</div>
@@ -780,6 +784,36 @@
     <div class="tip" style="margin-top:16px;">
       <strong>Doğrulandı:</strong> Yeni-kullanıcı trigger testi (rollback'li) tam 1 köprü oluşturuyor.
       Commit <code>c6a23bc</code> — main'e push edildi, prod DB'ye uygulandı.
+    </div>
+
+    <div class="callout danger" style="margin-top:24px;">
+      <div class="callout-icon">🖥️</div>
+      <div class="callout-body">
+        <div class="callout-title">İkinci regresyon (frontend): Üye kaydına tıklayınca detay paneli boş geliyordu</div>
+        <div class="callout-text">
+          DB köprüsü düzeldikten sonra 107 member <code>/admin/data</code>'da listeleniyordu, ama bir
+          <span class="badge badge-red">MEM</span> satırına tıklayınca yan panel boş açılıyordu —
+          katalog (Advisor/Doctor) satırları normal açılırken. Sebep bir <strong>veri-sözleşmesi
+          uyumsuzluğu</strong>: RPC <code>kind='member_profile'</code> döndürüyor, ama frontend yalnızca
+          <code>catalog_item</code> ve <code>profile</code> kind'larını tanıyordu; <code>member_profile</code>
+          her iki dalın dışına düşüp <code>null</code> render ediyordu (Sheet açılıyor ama içerik boş).
+          TS bunu yakalayamadı çünkü <code>UnifiedRecordKind</code> tipi RPC değişince güncellenmemişti.
+        </div>
+      </div>
+    </div>
+    <table class="tbl" style="margin-top:8px;">
+      <thead><tr><th>Dosya</th><th>Düzeltme</th></tr></thead>
+      <tbody>
+        <tr><td><code>src/lib/catalog-types.ts</code></td><td><code>UnifiedRecordKind</code>'a <code>"member_profile"</code> eklendi (tip artık RPC ile eşleşiyor)</td></tr>
+        <tr><td><code>src/pages/admin/AdminCatalogPage.tsx</code></td><td>Detay-yükleme effect'i + Sheet render dalı <code>member_profile</code>'ı da <code>catalog_item</code> gibi işliyor → <code>CatalogDetailSheet</code> + <code>getAdminCatalogItemDetail</code>. Legend'a <code>MEM = Üye</code>, "Tür" filtresine "Üye" seçeneği eklendi</td></tr>
+        <tr><td><code>src/pages/admin/AdminCatalogPage.test.tsx</code></td><td>Önce başarısız (RED) test eklendi, fix sonrası 7/7 geçti</td></tr>
+        <tr><td><code>roles-overview/types.ts</code> + <code>ItemListPanel.tsx</code></td><td>Aynı kök sebep: <code>ItemListEntry.kind</code> tipi güncellendi, rozet artık member için <span class="badge badge-red">MEM</span> gösteriyor (önce yanlışlıkla "KUL")</td></tr>
+      </tbody>
+    </table>
+    <div class="tip" style="margin-top:16px;">
+      <strong>Mantık:</strong> Member kaydı zaten bir <code>catalog_items</code> satırı (<code>item_type='member'</code>)
+      olduğu için detayı katalog item RPC'siyle yüklenir; ayrı bir profil görünümü gerekmez.
+      <code>tsc --noEmit</code> temiz, data-route testleri 3/3. <span class="badge badge-green">Frontend-only — migration/RPC/RLS'e dokunulmadı</span>
     </div>
   </div>
 
