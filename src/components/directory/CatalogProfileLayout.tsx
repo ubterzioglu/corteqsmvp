@@ -83,22 +83,16 @@ const CatalogProfileLayout = ({
       {statusNotice}
       {claimNotice}
 
-      {/* Description / location notice */}
-      {description || (canClaim && locationLabel) || addressLine ? (
+      {/* Description / address notice */}
+      {description || addressLine ? (
         <Card className="border-border/60 shadow-sm">
           <CardContent className="p-5 space-y-2 text-sm text-muted-foreground">
             {description ? <p className="leading-relaxed">{description}</p> : null}
-            {canClaim ? (
-              <p className="text-xs">
-                Bu katalog kaydının sahibi ya da yetkili temsilcisiyseniz içeriği düzenleyebilmek için başvurabilirsiniz.
-              </p>
-            ) : null}
-            {locationLabel ? (
+            {addressLine ? (
               <p className="flex items-center gap-1.5 text-xs">
-                <MapPin className="h-3.5 w-3.5" /> {locationLabel}
+                <MapPin className="h-3.5 w-3.5" /> {addressLine}
               </p>
             ) : null}
-            {addressLine ? <p className="text-xs">{addressLine}</p> : null}
           </CardContent>
         </Card>
       ) : null}
