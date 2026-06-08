@@ -103,11 +103,22 @@ const GlobalNetworkShowcaseSection = () => {
             </h2>
 
             <div className="flex justify-center mb-5">
-              <img
-                src="/sweet.jpg"
-                alt="CorteQS global ağ görseli"
-                className="w-full max-w-2xl object-contain"
-              />
+              <div className="relative w-full max-w-2xl">
+                <img
+                  src="/sweet.jpg"
+                  alt="CorteQS global ağ görseli"
+                  className="w-full object-contain rounded-[1.5rem]"
+                  style={{
+                    filter: "drop-shadow(0 8px 32px rgba(124,58,237,0.18)) drop-shadow(0 2px 12px rgba(35,178,109,0.14))",
+                  }}
+                />
+                {/* Sol kenar solma */}
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-20 rounded-l-[1.5rem] bg-gradient-to-r from-white/90 to-transparent" />
+                {/* Sağ kenar solma */}
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-20 rounded-r-[1.5rem] bg-gradient-to-l from-white/90 to-transparent" />
+                {/* Alt kenar solma */}
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-16 rounded-b-[1.5rem] bg-gradient-to-t from-white/80 to-transparent" />
+              </div>
             </div>
 
             <p className="mb-8 text-center text-[0.98rem] font-medium leading-7 text-slate-500 sm:text-[1.08rem]">
