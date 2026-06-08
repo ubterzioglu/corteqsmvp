@@ -37,7 +37,7 @@ const CorteqsWhatIsAccordion = ({ className }: CorteqsWhatIsAccordionProps) => {
           </span>
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-sm overflow-hidden rounded-[2rem] border border-[#f1d7ad] bg-[linear-gradient(145deg,#fffdf8_0%,#fff7e8_40%,#ffffff_100%)] p-0 shadow-[0_36px_120px_-42px_rgba(15,23,42,0.45)]">
+      <DialogContent className="max-w-md overflow-hidden rounded-[2rem] border border-[#f1d7ad] bg-[linear-gradient(145deg,#fffdf8_0%,#fff7e8_40%,#ffffff_100%)] p-0 shadow-[0_36px_120px_-42px_rgba(15,23,42,0.45)]">
         <div className="flex flex-col items-center px-6 pb-7 pt-6">
           {/* Başlık */}
           <DialogTitle className="inline-flex items-center gap-2 text-xl font-black text-[#153a5b]">
@@ -51,14 +51,14 @@ const CorteqsWhatIsAccordion = ({ className }: CorteqsWhatIsAccordionProps) => {
               aria-hidden="true"
               className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(37,99,235,0.18)_0%,rgba(15,118,110,0.12)_50%,rgba(255,255,255,0)_74%)] blur-2xl"
             />
-            <div className="relative h-52 w-52 overflow-hidden rounded-full border-4 border-white shadow-[0_20px_50px_-16px_rgba(37,99,235,0.38),0_8px_24px_-10px_rgba(15,118,110,0.28)]">
+            <div className="relative h-64 w-64 overflow-hidden rounded-full border-4 border-white shadow-[0_20px_50px_-16px_rgba(37,99,235,0.38),0_8px_24px_-10px_rgba(15,118,110,0.28)]">
               <video
                 src="/whatmaskot.mp4"
                 autoPlay
                 muted
                 loop
                 playsInline
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover object-center"
               />
             </div>
           </div>

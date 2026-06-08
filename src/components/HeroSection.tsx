@@ -70,7 +70,7 @@ const HeroSection = () => {
                   <span className="text-accent">Platform</span>
                 </h1>
               </div>
-              <p className="hero-description mb-5 max-w-lg text-[15px] leading-relaxed text-muted-foreground md:text-base 2xl:max-w-xl 2xl:text-[1.05rem]">
+              <p className="hero-description mb-5 max-w-lg text-[12px] leading-relaxed text-muted-foreground md:text-[13px] 2xl:max-w-xl 2xl:text-[14px]">
                 Dünyanın farklı yerlerinde yaşayan Türkleri sosyal ve ekonomik olarak birbirine bağlıyoruz.
                 <br />
                 <strong>Ücretsiz kayıt ol! Ağını genişlet! Bağlan, keşfet, birlikte büyü!</strong>
