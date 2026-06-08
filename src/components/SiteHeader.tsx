@@ -54,16 +54,17 @@ export default function SiteHeader() {
                 aria-hidden="true"
                 className="hidden h-5 w-px bg-slate-300/80 lg:block"
               />
-              <div className="flex flex-wrap items-center justify-center gap-2 md:justify-end">
+              <div className="flex items-center gap-x-3">
                 <Link
                   to="/login?mode=login"
-                  className="inline-flex min-h-[42px] items-center justify-center rounded-xl border border-emerald-200/90 bg-emerald-50 px-4 text-sm font-semibold text-emerald-900 transition-colors hover:bg-emerald-100"
+                  className="text-sm font-semibold text-[#34A853] transition-colors hover:text-[#2F9B4D]"
                 >
                   Giriş Yap
                 </Link>
+                <span aria-hidden="true" className="h-5 w-px bg-slate-300/80" />
                 <Link
                   to="/login?mode=signup"
-                  className="inline-flex min-h-[42px] items-center justify-center rounded-xl border border-orange-200/90 bg-orange-100 px-4 text-sm font-semibold text-orange-950 transition-colors hover:bg-orange-200"
+                  className="text-sm font-semibold text-[#ee652b] transition-colors hover:text-[#d95520]"
                 >
                   Kayıt Ol
                 </Link>

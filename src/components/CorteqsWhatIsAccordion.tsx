@@ -21,7 +21,7 @@ const CorteqsWhatIsAccordion = ({ className }: CorteqsWhatIsAccordionProps) => {
       <DialogTrigger asChild>
         <button
           type="button"
-          className={`group relative inline-flex w-full items-center justify-center rounded-[1.25rem] border border-[#c94f1f] bg-[linear-gradient(135deg,#ee652b_0%,#d95520_100%)] px-5 py-4 text-center text-base font-medium text-white shadow-[0_16px_34px_rgba(238,101,43,0.34),inset_0_1px_0_rgba(255,255,255,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:saturate-110 sm:text-[1.05rem] ${className ?? ""}`}
+          className={`group relative inline-flex w-full items-center justify-center rounded-[1.25rem] border border-[#c94f1f] bg-[linear-gradient(135deg,#ee652b_0%,#d95520_100%)] px-5 py-4 text-center text-base font-normal text-white shadow-[0_16px_34px_rgba(238,101,43,0.34),inset_0_1px_0_rgba(255,255,255,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:saturate-110 sm:text-[1.05rem] ${className ?? ""}`}
         >
           <span
             className="pointer-events-none absolute inset-0 rounded-[1.25rem] opacity-100"
@@ -31,8 +31,7 @@ const CorteqsWhatIsAccordion = ({ className }: CorteqsWhatIsAccordionProps) => {
                 "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 42%, rgba(255,255,255,0) 100%)",
             }}
           />
-          <span className="relative z-10 inline-flex items-center gap-2">
-            <Sparkles className="h-4 w-4" />
+          <span className="relative z-10">
             CorteQS Nedir?
           </span>
         </button>
