@@ -115,6 +115,7 @@ const Footer = () => {
                     {link.to ? (
                       <Link
                         to={link.to}
+                        onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
                         className="text-white transition-colors hover:text-white"
                       >
                         {link.label}

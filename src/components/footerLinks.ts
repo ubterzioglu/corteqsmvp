@@ -13,10 +13,10 @@ export const footerLinkSections: FooterLinkSection[] = [
   {
     title: "Kurumsal",
     links: [
-      { label: "Hakkımızda", href: "#" },
+      { label: "Hakkımızda", to: "/founders" },
       { label: "Fiyatlandırma", to: "/pricing" },
-      { label: "Founding 1000", to: "/founders-1000" },
-      { label: "İletişim", href: "#" },
+      { label: "Founding 1000", to: "/founding-1000" },
+      { label: "İletişim", to: "/iletisim" },
       { label: "Kariyer", to: "/kariyer" },
     ],
   },

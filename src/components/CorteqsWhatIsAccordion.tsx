@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -16,8 +17,9 @@ type CorteqsWhatIsAccordionProps = {
 };
 
 const CorteqsWhatIsAccordion = ({ className }: CorteqsWhatIsAccordionProps) => {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button
           type="button"
@@ -58,8 +60,11 @@ const CorteqsWhatIsAccordion = ({ className }: CorteqsWhatIsAccordionProps) => {
               <button
                 type="button"
                 onClick={() => {
-                  const el = document.getElementById("kaydol");
-                  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                  setOpen(false);
+                  setTimeout(() => {
+                    const el = document.getElementById("kaydol");
+                    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }, 150);
                 }}
                 className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-[#34A853]/60 bg-[linear-gradient(135deg,#34A853_0%,#2F9B4D_100%)] px-5 text-sm font-bold text-white shadow-[0_16px_34px_rgba(52,168,83,0.34),inset_0_1px_0_rgba(255,255,255,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:saturate-110 sm:text-base"
               >
