@@ -177,8 +177,8 @@ const compactList = (values: string[], fallback = "-") => {
   return values.join(", ");
 };
 
-const kindLabel = (kind: UnifiedRecord["kind"]) => KIND_ABBREVIATIONS[kind].label;
-const getKindCode = (kind: UnifiedRecord["kind"]) => KIND_ABBREVIATIONS[kind].code;
+const kindLabel = (kind: UnifiedRecord["kind"]) => KIND_ABBREVIATIONS[kind]?.label ?? formatLabel(kind);
+const getKindCode = (kind: UnifiedRecord["kind"]) => KIND_ABBREVIATIONS[kind]?.code ?? kind.slice(0, 3).toUpperCase();
 const getStatusCode = (status: string) => STATUS_ABBREVIATIONS[status]?.code ?? formatLabel(status);
 const getStatusLabel = (status: string) => STATUS_ABBREVIATIONS[status]?.label ?? formatLabel(status);
 const getVerificationCode = (status: string | null) => {
