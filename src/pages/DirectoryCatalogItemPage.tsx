@@ -2,11 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 
 import ProfileHeroCard from "@/components/directory/ProfileHeroCard";
+import CatalogProfileLayout from "@/components/directory/CatalogProfileLayout";
 import { useAuth } from "@/components/auth/useAuth";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { getCatalogItemProfile, type CatalogEntityProfile, type CatalogEntityProfileAttribute } from "@/lib/catalog-entity-api";
+import { getCatalogItemProfile, type CatalogEntityProfile } from "@/lib/catalog-entity-api";
 
 type CatalogDetailRow = {
   id: string;
@@ -153,13 +153,6 @@ const DirectoryCatalogItemPage = () => {
       .sort((a, b) => a.sort_order - b.sort_order);
   }, [catalogProfile]);
 
-  const renderAttributeValue = (attr: CatalogEntityProfileAttribute): string | null => {
-    if (attr.data_type === "boolean") return attr.value_json === true ? "Evet" : "Hayır";
-    if (Array.isArray(attr.value_json)) return (attr.value_json as string[]).join(", ");
-    if (typeof attr.value_json === "string" && attr.value_json.trim()) return attr.value_json;
-    return attr.value_text ?? null;
-  };
-
   const submitClaim = async () => {
     if (!item || !user) return;
     setClaimStatus("submitting");
@@ -233,81 +226,27 @@ const DirectoryCatalogItemPage = () => {
             ) : null
           }
         >
-          {claimError ? <p className="text-sm text-destructive">Claim talebi gönderilemedi: {claimError}</p> : null}
-          {claimStatus === "submitted" ? (
-            <p className="text-sm text-emerald-700">Düzenleme yetkisi talebiniz admin onayına gönderildi.</p>
-          ) : null}
-
-          <div className="space-y-2 text-sm text-muted-foreground">
-            <p>{item.short_description ?? item.long_description ?? "Açıklama eklenmedi."}</p>
-            {canClaim ? (
-              <p>
-                Bu katalog kaydının sahibi ya da yetkili temsilcisiyseniz içeriği düzenleyebilmek için başvurabilirsiniz.
-              </p>
-            ) : null}
-            {locationLabel ? <p>{locationLabel}</p> : null}
-            {primaryLocation?.address_line ? <p>{primaryLocation.address_line}</p> : null}
-          </div>
-
-          {publicAttributes.length > 0 ? (
-            <section className="space-y-2">
-              <h2 className="text-base font-semibold">Profil Bilgileri</h2>
-              <div className="grid gap-2 text-sm text-muted-foreground">
-                {publicAttributes.map((attr) => {
-                  const val = renderAttributeValue(attr);
-                  return (
-                    <p key={attr.attribute_key}>
-                      <span className="font-medium text-foreground">{attr.label}:</span>{" "}
-                      {val ? (
-                        attr.data_type === "url" ? (
-                          <a className="text-primary underline-offset-4 hover:underline" href={val} target="_blank" rel="noreferrer">
-                            {val}
-                          </a>
-                        ) : (
-                          val
-                        )
-                      ) : (
-                        <span className="text-muted-foreground/50">—</span>
-                      )}
-                    </p>
-                  );
-                })}
-              </div>
-            </section>
-          ) : null}
-
-          {item.catalog_item_contacts?.length ? (
-            <section className="space-y-2">
-              <h2 className="text-base font-semibold">İletişim</h2>
-              <div className="grid gap-2 text-sm text-muted-foreground">
-                {item.catalog_item_contacts.map((contact) => (
-                  <p key={`${contact.contact_type}-${contact.contact_value}`}>
-                    <span className="font-medium text-foreground">{contact.label ?? contact.contact_type}:</span>{" "}
-                    {contact.contact_type === "website" || contact.contact_type === "appointment_url" ? (
-                      <a className="text-primary underline-offset-4 hover:underline" href={contact.contact_value} target="_blank" rel="noreferrer">
-                        {contact.contact_value}
-                      </a>
-                    ) : (
-                      contact.contact_value
-                    )}
-                  </p>
-                ))}
-              </div>
-            </section>
-          ) : null}
-
-          {item.catalog_item_services?.length ? (
-            <section className="space-y-2">
-              <h2 className="text-base font-semibold">Hizmetler</h2>
-              <div className="flex flex-wrap gap-2">
-                {item.catalog_item_services.map((service) => (
-                  <Badge key={service.service_name} variant="outline">
-                    {service.service_name}
-                  </Badge>
-                ))}
-              </div>
-            </section>
-          ) : null}
+          <CatalogProfileLayout
+            shortDescription={item.short_description ?? null}
+            longDescription={item.long_description ?? null}
+            canClaim={!!canClaim}
+            locationLabel={locationLabel || null}
+            addressLine={primaryLocation?.address_line ?? null}
+            publicAttributes={publicAttributes}
+            contacts={item.catalog_item_contacts ?? []}
+            services={item.catalog_item_services ?? []}
+            languages={item.catalog_item_languages ?? []}
+            claimNotice={
+              claimError ? (
+                <p className="text-sm text-destructive">Claim talebi gönderilemedi: {claimError}</p>
+              ) : null
+            }
+            statusNotice={
+              claimStatus === "submitted" ? (
+                <p className="text-sm text-emerald-700">Düzenleme yetkisi talebiniz admin onayına gönderildi.</p>
+              ) : null
+            }
+          />
         </ProfileHeroCard>
       ) : null}
     </div>
