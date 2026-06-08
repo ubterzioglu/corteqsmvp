@@ -94,29 +94,26 @@ const GlobalNetworkShowcaseSection = () => {
     <section className="relative overflow-hidden py-5 lg:py-8">
       <div className="container relative z-10 mx-auto max-w-6xl px-4">
         <div className="rounded-[1.75rem] border border-slate-200/75 bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(252,253,255,0.96))] px-6 py-5 shadow-[0_16px_36px_rgba(15,23,42,0.05)] md:px-8 md:py-7 xl:px-6 xl:py-6">
-            <div className="grid gap-5 xl:grid-cols-[1.06fr_0.94fr] xl:items-center">
-              <div className="max-w-[760px] xl:pr-2">
-                <h2 className="max-w-[13ch] text-[1.85rem] font-black leading-[0.97] tracking-[-0.05em] text-slate-900 sm:text-[2.35rem] lg:text-[2.85rem] xl:max-w-[12.8ch]">
-                  Dünyanın farklı yerlerinde yaşayan Türkleri{" "}
-                  <span className="bg-[linear-gradient(90deg,#23b26d_0%,#7c3aed_48%,#ff7a18_100%)] bg-clip-text text-transparent">
-                    sosyal ve ekonomik olarak
-                  </span>{" "}
-                  birbirine bağlıyoruz.
-                </h2>
-                <p className="mt-4 max-w-[38rem] text-[0.98rem] font-medium leading-7 text-slate-500 sm:text-[1.08rem]">
-                  CorteQS, işletmelerden profesyonellere, kuruluşlardan topluluk yöneticilerine
-                  kadar herkesi tek bir ağ içinde bir araya getirir.
-                </p>
-              </div>
+            <h2 className="mb-5 text-center text-[1.85rem] font-black leading-[0.97] tracking-[-0.05em] text-slate-900 sm:text-[2.35rem] lg:text-[2.85rem]">
+              Dünyanın farklı yerlerinde yaşayan Türkleri{" "}
+              <span className="bg-[linear-gradient(90deg,#23b26d_0%,#7c3aed_48%,#ff7a18_100%)] bg-clip-text text-transparent">
+                sosyal ve ekonomik olarak
+              </span>{" "}
+              birbirine bağlıyoruz.
+            </h2>
 
-              <div className="relative hidden min-h-[260px] overflow-hidden rounded-[1.9rem] bg-transparent md:block xl:min-h-[300px]">
-                <img
-                  src={showcasePanelImage}
-                  alt="CorteQS global ağ görseli"
-                  className="h-full w-full object-contain object-center xl:scale-[1.08]"
-                />
-              </div>
+            <div className="flex justify-center mb-5">
+              <img
+                src="/sweet.png"
+                alt="CorteQS global ağ görseli"
+                className="w-full max-w-2xl object-contain"
+              />
             </div>
+
+            <p className="mb-8 text-center text-[0.98rem] font-medium leading-7 text-slate-500 sm:text-[1.08rem]">
+              CorteQS, işletmelerden profesyonellere, kuruluşlardan topluluk yöneticilerine
+              kadar herkesi tek bir ağ içinde bir araya getirir.
+            </p>
 
             <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-6">
               {rebuiltCards.map((card) => {

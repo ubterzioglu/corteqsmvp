@@ -75,15 +75,22 @@ const navigate = useNavigate();
               <>
                 <div className="h-6 w-px bg-border/90" />
                 <Link
+                  to="/founders"
+                  className="px-3 py-1.5 text-sm font-semibold text-[#4285F4] hover:text-[#3B78E7] transition-colors"
+                >
+                  Biz Kimiz?
+                </Link>
+                <div className="h-6 w-px bg-border/90" />
+                <Link
                   to="/login?mode=login"
-                  className="px-3 py-1.5 text-sm font-semibold text-emerald-700 hover:text-emerald-600 transition-colors"
+                  className="px-3 py-1.5 text-sm font-semibold text-[#34A853] hover:text-[#2F9B4D] transition-colors"
                 >
                   {t.nav.login}
                 </Link>
                 <div className="h-6 w-px bg-border/90" />
                 <Link
                   to="/login?mode=signup"
-                  className="px-3 py-1.5 text-sm font-semibold text-orange-600 hover:text-orange-500 transition-colors"
+                  className="px-3 py-1.5 text-sm font-semibold text-[#ee652b] hover:text-[#d95520] transition-colors"
                 >
                   {t.nav.signup}
                 </Link>
