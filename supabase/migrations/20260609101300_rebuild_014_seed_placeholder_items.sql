@@ -17,7 +17,7 @@
 begin;
 
 -- kebab-case slug: lower, replace _ with -, collapse non-alnum to -
-insert into public.catalog_items (item_type, slug, display_name, status, visibility, is_placeholder, platform_role_key)
+insert into public.catalog_items (item_type, slug, title, status, visibility, is_placeholder, platform_role_key)
 select
   r.key,
   'placeholder-' || regexp_replace(regexp_replace(lower(r.key), '_', '-', 'g'), '[^a-z0-9]+', '-', 'g'),

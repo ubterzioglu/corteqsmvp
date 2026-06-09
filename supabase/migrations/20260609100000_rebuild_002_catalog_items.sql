@@ -16,7 +16,10 @@
 --   attributes(jsonb), created_at, updated_at, platform_role_key, linked_user_id
 --
 -- Mapping decisions:
---   title              -> display_name      (rename)
+--   title              -> KEPT as `title` (rename reverted at Checkpoint: column
+--                          rename would break 13 fns in too many syntactic forms;
+--                          keeping title avoids brittle column rewire. display_name
+--                          is NOT introduced; consumers keep using catalog_items.title)
 --   created_by_user_id -> created_by        (rename)
 --   verification_status -> derive is_verified boolean (add; keep column for now)
 --   country_code/city  -> add if absent (country_code added; city may live in
@@ -31,16 +34,7 @@
 
 begin;
 
--- 1. display_name (from title)
-do $$
-begin
-  if exists (select 1 from information_schema.columns
-             where table_schema='public' and table_name='catalog_items' and column_name='title')
-     and not exists (select 1 from information_schema.columns
-             where table_schema='public' and table_name='catalog_items' and column_name='display_name') then
-    alter table public.catalog_items rename column title to display_name;
-  end if;
-end $$;
+-- 1. title is intentionally KEPT (no rename to display_name). See header.
 
 -- 2. created_by (from created_by_user_id)
 do $$

@@ -95,7 +95,7 @@ begin
 
   select jsonb_build_object(
     'slug', v_item.slug,
-    'display_name', v_item.display_name,
+    'display_name', v_item.title,
     'short_description', v_item.short_description,
     'country_code', v_item.country_code,
     'city', v_item.city,

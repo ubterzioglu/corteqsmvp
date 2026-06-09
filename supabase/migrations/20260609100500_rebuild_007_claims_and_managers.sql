@@ -51,31 +51,23 @@ begin
   end if;
 end $$;
 
--- expose manager_role synonym (live column is `role`); keep `role` until rewire.
+-- `role` column is intentionally KEPT (no rename to manager_role): renaming it
+-- would break 7 functions referencing catalog_item_managers.role in varied
+-- syntactic forms. The table rename (memberships->managers) is enough; the role
+-- column keeps its name. Domain guard applied on the existing `role` column.
 do $$
 begin
   if exists (select 1 from information_schema.columns
              where table_schema='public' and table_name='catalog_item_managers' and column_name='role')
-     and not exists (select 1 from information_schema.columns
-             where table_schema='public' and table_name='catalog_item_managers' and column_name='manager_role') then
-    alter table public.catalog_item_managers rename column role to manager_role;
-  end if;
-end $$;
-
--- manager_role domain guard
-do $$
-begin
-  if exists (select 1 from information_schema.columns
-             where table_schema='public' and table_name='catalog_item_managers' and column_name='manager_role')
      and not exists (select 1 from pg_constraint where conname='catalog_item_managers_role_chk') then
     -- widen-safe: only enforce if existing values already conform
     if not exists (
       select 1 from public.catalog_item_managers
-      where manager_role is not null
-        and manager_role not in ('owner','admin','editor','moderator')) then
+      where role is not null
+        and role not in ('owner','admin','editor','moderator')) then
       alter table public.catalog_item_managers
         add constraint catalog_item_managers_role_chk
-        check (manager_role in ('owner','admin','editor','moderator'));
+        check (role in ('owner','admin','editor','moderator'));
     end if;
   end if;
 end $$;
