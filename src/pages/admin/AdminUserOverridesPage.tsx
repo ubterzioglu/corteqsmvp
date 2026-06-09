@@ -98,7 +98,7 @@ const AdminUserOverridesPage = () => {
             toDate: "",
             sort: "created_desc",
           }),
-          supabase.from("feature_catalog").select("key, label, scope_role").order("key"),
+          supabase.from("afs_features").select("key, label, scope_role").order("key"),
           supabase.from("user_feature_overrides").select("user_id, feature_key, is_enabled, reason, updated_at").order("updated_at", { ascending: false }),
         ]);
 

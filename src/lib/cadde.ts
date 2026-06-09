@@ -606,9 +606,9 @@ async function fetchUserNameMap(authorIds: string[], extraUserIds: string[] = []
   if (allIds.length === 0) return new Map<string, string>();
   const { data } = await db
     .from("user_profile_attributes")
-    .select("user_id, value_text, attribute_catalog!inner(key)")
+    .select("user_id, value_text, afs_attributes!inner(key)")
     .in("user_id", allIds)
-    .eq("attribute_catalog.key", "full_name");
+    .eq("afs_attributes.key", "full_name");
   return new Map<string, string>((data ?? []).map((row: any) => [row.user_id, row.value_text ?? FALLBACK_PROFILE_NAME]));
 }
 

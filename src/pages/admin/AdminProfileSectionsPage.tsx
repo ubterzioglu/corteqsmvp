@@ -86,12 +86,12 @@ const AdminProfileSectionsPage = () => {
       const [rolesResult, sectionsResult, rulesResult] = await Promise.all([
         (supabase as any).from("roles").select("id, key, label").eq("is_active", true).order("sort_order"),
         (supabase as any)
-          .from("profile_section_catalog")
+          .from("afs_sections")
           .select("id, key, label, description, section_area, sort_order")
           .eq("is_active", true)
           .order("sort_order"),
         (supabase as any)
-          .from("role_profile_section_rules")
+          .from("role_sections")
           .select("role_id, section_id, is_enabled, requires_approval, sort_order"),
       ]);
 

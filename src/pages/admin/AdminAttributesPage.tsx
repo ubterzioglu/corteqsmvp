@@ -120,12 +120,12 @@ const AdminAttributesPage = () => {
       const [rolesResult, attributesResult, rulesResult] = await Promise.all([
         supabase.from("roles").select("id, key, label, sort_order").eq("is_active", true).order("sort_order"),
         supabase
-          .from("attribute_catalog")
+          .from("afs_attributes")
           .select("id, key, label, description, data_type, is_active, is_system, sort_order")
           .eq("is_active", true)
           .order("sort_order"),
         supabase
-          .from("role_attribute_rules")
+          .from("role_attributes")
           .select(
             "id, role_id, attribute_id, is_enabled, is_required, is_public_default, user_can_edit, user_can_hide, requires_admin_approval_on_change, sort_order",
           ),

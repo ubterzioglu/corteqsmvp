@@ -621,7 +621,7 @@ export async function searchAdminProfiles(query: string, limit = 10): Promise<Ad
 
 export async function listCatalogItemEditors(itemId: string): Promise<CatalogItemEditor[]> {
   const { data, error } = await (supabase
-    .from("catalog_item_memberships")
+    .from("catalog_item_managers")
     .select("user_id, role, status, created_at, profiles(full_name,email)")
     .eq("item_id", itemId)
     .in("role", ["owner", "manager", "editor"])

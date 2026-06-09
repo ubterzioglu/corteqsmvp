@@ -89,9 +89,9 @@ const MessagesInbox = () => {
 
     const attrsData = await supabase
       .from("user_profile_attributes")
-      .select("user_id, value_text, attribute_catalog!inner(key)")
+      .select("user_id, value_text, afs_attributes!inner(key)")
       .in("user_id", counterpartIds)
-      .eq("attribute_catalog.key", "full_name");
+      .eq("afs_attributes.key", "full_name");
     const profilesError = attrsData.error;
     const nameByUser: Record<string, string | null> = {};
     for (const row of (attrsData.data ?? []) as any[]) {

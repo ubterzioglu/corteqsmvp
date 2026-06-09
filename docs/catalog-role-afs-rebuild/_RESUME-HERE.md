@@ -3,7 +3,11 @@
 > **Bu dosya kaldığım yeri ve sıradaki adımı anlatır. Devam ederken ÖNCE bunu oku.**
 > Tarih: 2026-06-09 · Branch: `rebuild/catalog-flat-role-afs` · Repo: corfin-mvp · Supabase: `injprdrsklkxgnaiixzh`
 
-## TEK CÜMLE DURUM
+## GÜNCEL DURUM (2026-06-09, Phase 4 ortası)
+Phase 1-3 ✅ + Phase 4a (44 DB fn rewire: 010c programatik + 010d elle user_profiles onarımı) ✅ commit `571c164`. Phase 4b: frontend `.from()` (18 çağrı, 7 dosya) + embedded-join `attribute_catalog!inner`→`afs_attributes` (24 ref, 7 dosya) düzeltildi. **KARAR DEĞİŞİKLİĞİ: title→display_name ve role→manager_role kolon rename'leri GERİ ALINDI** (002/007) — kolon rename çok fazla fonksiyonu kırıyordu; tablolar rename, bu 2 kolon eski isimde. 010b silindi. Şu an: npm build + local DB start (types regen için) paralel çalışıyor. SIRADAKİ: build sonucu kontrol → types.ts regen (supabase gen types) → Phase 4 commit + report 07 → Phase 5 (frontend ekranlar) → 6 (admin menü/guide/infogram) → 7 (E2E+grep) → 8 GATE (drop legacy 016/017 + prod push DUR).
+Eski commitler: c8f4746(P1 foundation) cac4608(P1 raporlar) 7aa4c14(P2) 4089b0c(P3 seed) fbfb6f0(P3 010b-silindi) 571c164(P4a).
+
+## TEK CÜMLE DURUM (eski — Phase 3 öncesi)
 Phase 1 (raporlar) + Phase 2 (şema migration 002–010) **tamamlandı ve local DB'de doğrulandı (commit edildi)**. Phase 3 seed migration'ları yazıldı ama **014 (placeholder seed) local'de BLOKE** — `catalog_items`'e insert, eski `ci.title` kolonunu okuyan bir trigger fonksiyonunu (`catalog_rebuild_search_document`) tetikliyor; o kolon 002'de `display_name`'e rename edildi.
 
 ## SIRADAKİ ADIM (kullanıcı kararı bekleniyor / verildi)

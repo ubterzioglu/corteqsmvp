@@ -372,8 +372,8 @@ const AdminRolesFeaturesPage = () => {
 
       const [rolesResult, featuresResult, flagsResult] = await Promise.all([
         supabase.from("roles").select("id, key, label, sort_order, is_active").eq("is_active", true).order("sort_order"),
-        supabase.from("feature_catalog").select("key, label, description, scope_role, is_active_globally").order("key"),
-        supabase.from("role_feature_flags").select("role_id, feature_key, is_enabled"),
+        supabase.from("afs_features").select("key, label, description, scope_role, is_active_globally").order("key"),
+        supabase.from("role_features").select("role_id, feature_key, is_enabled"),
       ]);
 
       if (!isMounted) return;

@@ -78,9 +78,9 @@ const AdminApprovalsPage = () => {
       const attrsResult = userIds.length > 0
         ? await supabase
             .from("user_profile_attributes")
-            .select("user_id, value_text, attribute_catalog!inner(key)")
+            .select("user_id, value_text, afs_attributes!inner(key)")
             .in("user_id", userIds)
-            .eq("attribute_catalog.key", "full_name")
+            .eq("afs_attributes.key", "full_name")
         : { data: [] };
 
       const nameByUser: Record<string, string | null> = {};

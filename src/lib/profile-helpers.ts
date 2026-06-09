@@ -11,9 +11,9 @@ export async function getProfileBasic(userId: string): Promise<ProfileBasic | nu
   const [attrsResult, roleResult] = await Promise.all([
     supabase
       .from("user_profile_attributes")
-      .select("value_text, attribute_catalog!inner(key)")
+      .select("value_text, afs_attributes!inner(key)")
       .eq("user_id", userId)
-      .in("attribute_catalog.key", ["full_name", "avatar_url"]),
+      .in("afs_attributes.key", ["full_name", "avatar_url"]),
     supabase
       .from("user_role_assignments")
       .select("roles!inner(key)")
@@ -23,7 +23,7 @@ export async function getProfileBasic(userId: string): Promise<ProfileBasic | nu
 
   const attrs = attrsResult.data ?? [];
   const getValue = (key: string) =>
-    (attrs.find((a: any) => a.attribute_catalog?.key === key)?.value_text ?? null);
+    (attrs.find((a: any) => a.afs_attributes?.key === key)?.value_text ?? null);
 
   return {
     user_id: userId,
@@ -36,9 +36,9 @@ export async function getProfileBasic(userId: string): Promise<ProfileBasic | nu
 export async function getAttributeValue(userId: string, key: string): Promise<string | null> {
   const { data } = await supabase
     .from("user_profile_attributes")
-    .select("value_text, attribute_catalog!inner(key)")
+    .select("value_text, afs_attributes!inner(key)")
     .eq("user_id", userId)
-    .eq("attribute_catalog.key", key)
+    .eq("afs_attributes.key", key)
     .maybeSingle();
 
   return (data as any)?.value_text ?? null;
@@ -50,16 +50,16 @@ export async function getAttributesBatch(
 ): Promise<Record<string, string | null>> {
   const { data } = await supabase
     .from("user_profile_attributes")
-    .select("value_text, attribute_catalog!inner(key)")
+    .select("value_text, afs_attributes!inner(key)")
     .eq("user_id", userId)
-    .in("attribute_catalog.key", keys);
+    .in("afs_attributes.key", keys);
 
   const result: Record<string, string | null> = {};
   for (const key of keys) {
     result[key] = null;
   }
   for (const row of data ?? []) {
-    const k = (row as any).attribute_catalog?.key;
+    const k = (row as any).afs_attributes?.key;
     if (k) result[k] = (row as any).value_text ?? null;
   }
   return result;
@@ -71,9 +71,9 @@ export async function getProfilesBasicBatch(userIds: string[]): Promise<ProfileB
   const [attrsResult, rolesResult] = await Promise.all([
     supabase
       .from("user_profile_attributes")
-      .select("user_id, value_text, attribute_catalog!inner(key)")
+      .select("user_id, value_text, afs_attributes!inner(key)")
       .in("user_id", userIds)
-      .in("attribute_catalog.key", ["full_name", "avatar_url"]),
+      .in("afs_attributes.key", ["full_name", "avatar_url"]),
     supabase
       .from("user_role_assignments")
       .select("user_id, roles!inner(key)")
@@ -84,7 +84,7 @@ export async function getProfilesBasicBatch(userIds: string[]): Promise<ProfileB
   for (const row of attrsResult.data ?? []) {
     const r = row as any;
     const uid = r.user_id;
-    const k = r.attribute_catalog?.key;
+    const k = r.afs_attributes?.key;
     if (!attrsByUser[uid]) attrsByUser[uid] = {};
     if (k && r.value_text) attrsByUser[uid][k] = r.value_text;
   }

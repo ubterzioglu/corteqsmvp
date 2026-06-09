@@ -12,9 +12,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [attrsResult, roleResult] = await Promise.all([
       supabase
         .from("user_profile_attributes")
-        .select("value_text, attribute_catalog!inner(key)")
+        .select("value_text, afs_attributes!inner(key)")
         .eq("user_id", userId)
-        .in("attribute_catalog.key", ["full_name", "avatar_url", "phone"]),
+        .in("afs_attributes.key", ["full_name", "avatar_url", "phone"]),
       supabase
         .from("user_role_assignments")
         .select("roles!inner(key)")
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const attrs = attrsResult.data ?? [];
     const getValue = (key: string) =>
-      (attrs.find((a: any) => a.attribute_catalog?.key === key)?.value_text ?? null);
+      (attrs.find((a: any) => a.afs_attributes?.key === key)?.value_text ?? null);
 
     const roleKey = (roleResult.data as any)?.roles?.key ?? null;
     const onboardingCompleted = Boolean(getValue("full_name"));

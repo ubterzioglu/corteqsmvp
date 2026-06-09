@@ -40,9 +40,9 @@ const AdminRolesOverviewPage = () => {
       try {
         const [rolesRes, attrRes, featRes, sectRes, itemsRes] = await Promise.all([
           supabase.from("roles").select("id, key, label, is_active, sort_order").eq("is_active", true).order("sort_order"),
-          supabase.from("attribute_catalog").select("key, label, description, data_type, sort_order").eq("is_active", true).order("sort_order"),
-          supabase.from("feature_catalog").select("key, label, description, scope_role, sort_order").order("sort_order"),
-          (supabase as any).from("profile_section_catalog").select("key, label, description, section_area, sort_order").eq("is_active", true).order("sort_order"),
+          supabase.from("afs_attributes").select("key, label, description, data_type, sort_order").eq("is_active", true).order("sort_order"),
+          supabase.from("afs_features").select("key, label, description, scope_role, sort_order").order("sort_order"),
+          (supabase as any).from("afs_sections").select("key, label, description, section_area, sort_order").eq("is_active", true).order("sort_order"),
           listAdminUnifiedRecords({ page: 1, pageSize: 100, filters: { kind: "", query: "", itemType: "", platformRoleKey: "", status: "", verificationStatus: "", city: "", countryCode: "" } }),
         ]);
 
@@ -114,16 +114,16 @@ const AdminRolesOverviewPage = () => {
       try {
         const [attrRulesRes, featFlagsRes, sectRulesRes] = await Promise.all([
           supabase
-            .from("role_attribute_rules")
-            .select("is_enabled, is_required, is_public_default, attribute_catalog(key, label)")
+            .from("role_attributes")
+            .select("is_enabled, is_required, is_public_default, afs_attributes(key, label)")
             .eq("role_id", role.id),
           supabase
-            .from("role_feature_flags")
+            .from("role_features")
             .select("feature_key, is_enabled")
             .eq("role_id", role.id),
           (supabase as any)
-            .from("role_profile_section_rules")
-            .select("is_enabled, profile_section_catalog(key, label)")
+            .from("role_sections")
+            .select("is_enabled, afs_sections(key, label)")
             .eq("role_id", role.id),
         ]);
 
@@ -135,8 +135,8 @@ const AdminRolesOverviewPage = () => {
 
         setAssignment({
           attributeRules: ((attrRulesRes.data ?? []) as any[]).map((r) => ({
-            attributeKey: r.attribute_catalog?.key ?? "",
-            attributeLabel: r.attribute_catalog?.label ?? r.attribute_catalog?.key ?? "",
+            attributeKey: r.afs_attributes?.key ?? "",
+            attributeLabel: r.afs_attributes?.label ?? r.afs_attributes?.key ?? "",
             is_enabled: r.is_enabled,
             is_required: r.is_required,
             is_public_default: r.is_public_default,
@@ -147,8 +147,8 @@ const AdminRolesOverviewPage = () => {
             is_enabled: f.is_enabled,
           })),
           sectionRules: ((sectRulesRes.data ?? []) as any[]).map((s) => ({
-            sectionKey: s.profile_section_catalog?.key ?? "",
-            sectionLabel: s.profile_section_catalog?.label ?? "",
+            sectionKey: s.afs_sections?.key ?? "",
+            sectionLabel: s.afs_sections?.label ?? "",
             is_enabled: s.is_enabled,
           })),
         });

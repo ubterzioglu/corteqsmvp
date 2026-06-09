@@ -30,18 +30,18 @@ type MetaRow = {
 export async function fetchCatalogRows(): Promise<CatalogRow[]> {
   const [attrResult, featResult, sectResult, metaResult] = await Promise.all([
     supabase
-      .from("attribute_catalog")
+      .from("afs_attributes")
       .select("key, label, description, data_type, sort_order")
       .eq("is_active", true)
       .order("sort_order"),
 
     supabase
-      .from("feature_catalog")
+      .from("afs_features")
       .select("key, label, description, is_active_globally")
       .order("key"),
 
     (supabase as any)
-      .from("profile_section_catalog")
+      .from("afs_sections")
       .select("key, label, description, section_area, sort_order")
       .eq("is_active", true)
       .order("sort_order"),
