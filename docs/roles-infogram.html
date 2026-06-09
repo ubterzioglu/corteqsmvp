@@ -280,10 +280,9 @@
       Üç şeyi anlarsan her şeyi anlarsın: <strong>Item</strong>, <strong>Rol</strong> ve <strong>AFS</strong>.
     </p>
     <div class="hero-stats">
-      <div class="stat"><div class="stat-num">623</div><div class="stat-label">Item (kayıt)</div></div>
-      <div class="stat"><div class="stat-num">82</div><div class="stat-label">Rol (sıfat)</div></div>
+      <div class="stat"><div class="stat-num">76</div><div class="stat-label">Item (yer tutucu)</div></div>
+      <div class="stat"><div class="stat-num">76</div><div class="stat-label">Rol (düz / bağımsız)</div></div>
       <div class="stat"><div class="stat-num">53 / 42 / 7</div><div class="stat-label">Attribute / Feature / Section</div></div>
-      <div class="stat"><div class="stat-num">107</div><div class="stat-label">Üye kaydı</div></div>
     </div>
     <p style="margin-top:20px;font-size:0.8rem;">
       <span class="badge badge-teal">Canlı veriler</span>
@@ -301,7 +300,7 @@
       <li><a href="#s3"><span class="toc-num">03</span> AFS nedir? (Bilgi + Yetki + Bölüm)</a></li>
       <li><a href="#s4"><span class="toc-num">04</span> Hepsi nasıl bağlanıyor?</a></li>
       <li><a href="#s5"><span class="toc-num">05</span> İki durum: login vs dışarıdan</a></li>
-      <li><a href="#s6"><span class="toc-num">06</span> 82 rol neler? (Aileler)</a></li>
+      <li><a href="#s6"><span class="toc-num">06</span> 76 rol neler? (Düz liste)</a></li>
       <li><a href="#s7"><span class="toc-num">07</span> Yeni üye kaydolunca ne oluyor?</a></li>
       <li><a href="#s8"><span class="toc-num">08</span> "Admin" kim demek?</a></li>
       <li><a href="#s9"><span class="toc-num">09</span> Sistemin altında hangi tablolar var?</a></li>
@@ -328,7 +327,7 @@
         <span class="emoji">🎭</span>
         <div class="name">ROL</div>
         <div class="real">roles</div>
-        <div class="desc">Her item'ın bir <strong>sıfatı/mesleği</strong> vardır: "bireysel kullanıcı", "doktor", "işletme"… Bu onun rolüdür.</div>
+        <div class="desc">Her item'ın bir <strong>sıfatı/mesleği</strong> vardır: "standart kullanıcı", "doktor", "işletme"… Bu onun rolüdür.</div>
       </div>
       <div class="concept">
         <span class="emoji">🧩</span>
@@ -356,34 +355,37 @@
     <p>
       Eskiden farklı şeyler farklı yerlerde tutuluyordu. Şimdi <strong>her şey tek bir defterde</strong>:
       üye de, işletme de, doktor da, dernek de aynı listede birer satır. Bu deftere
-      <code>catalog_items</code> diyoruz ve içinde <strong>623 kart</strong> var.
+      <code>catalog_items</code> diyoruz. Bu ilk sürümde (v1) defter <strong>tam 76 yer tutucu kart</strong> ile başlatılır —
+      <strong>her düz rol için bir tane</strong>. Eski gerçek veriler henüz taşınmadı; gerçek kayıtlar zamanla bu deftere eklenecek.
     </p>
     <div class="analogy">
       <span class="analogy-icon">🗂️</span>
       <div class="t">
         <strong>Benzetme:</strong> Tek bir kocaman <strong>rehber/telefon defteri</strong> düşün. İçinde kişiler de var, dükkanlar da,
         hastaneler de. Hepsi aynı defterde ama her kartın üstünde "bu ne tür bir kayıt" yazıyor.
+        Şimdilik defterde her rol için birer <strong>örnek/yer tutucu kart</strong> var; içi gerçek verilerle dolacak.
       </div>
     </div>
-    <h3 style="margin-top:20px;">623 kartın türlere göre dağılımı</h3>
-    <table class="tbl">
-      <thead><tr><th>Tür</th><th>Adet</th><th>Bu ne demek?</th></tr></thead>
-      <tbody>
-        <tr><td><strong>İşletme/Kurum</strong> <code>organization</code></td><td>482</td><td>Dükkan, şirket, kurum kayıtları (en kalabalık grup)</td></tr>
-        <tr><td><strong>Üye</strong> <code>member</code></td><td>107</td><td>Siteye <strong>kaydolmuş gerçek kişiler</strong>. Her birinin bir hesabı var.</td></tr>
-        <tr><td><strong>Kişi profili</strong> <code>person_profile</code></td><td>14</td><td>Eski sistemden gelen kişi kayıtları</td></tr>
-        <tr><td><strong>Danışman</strong> <code>advisor</code></td><td>10</td><td>Danışman kayıtları</td></tr>
-        <tr><td><strong>Topluluk</strong> <code>community_group</code></td><td>10</td><td>WhatsApp/Telegram gibi topluluk grupları</td></tr>
-      </tbody>
-    </table>
+    <div class="callout info" style="margin-top:16px;">
+      <div class="callout-icon">🌱</div>
+      <div class="callout-body">
+        <div class="callout-title">v1'de defter neyle başlar?</div>
+        <div class="callout-text">
+          İlk sürümde <code>catalog_items</code> içinde <strong>tam 76 kayıt</strong> bulunur — her düz rol için bir adet
+          <strong>yer tutucu (placeholder) kart</strong>. Bu, sistemin "şu rol gerçekten neye benziyor" diye gösterebilmesi
+          için konmuş örnek kartlardır. <strong>Eski/gerçek veriler bu sürümde taşınmadı</strong>; gerçek üyeler, işletmeler
+          ve diğer kayıtlar zamanla bu deftere eklenecek.
+        </div>
+      </div>
+    </div>
     <div class="callout info" style="margin-top:16px;">
       <div class="callout-icon">🔑</div>
       <div class="callout-body">
-        <div class="callout-title">"Üye" kartının özel bir yanı var</div>
+        <div class="callout-title">Bir kartın "sahibi" olabilir</div>
         <div class="callout-text">
-          Bir kart "üye" türündeyse, o kartın arkasında <strong>gerçek bir giriş yapabilen hesap</strong> vardır
-          (teknik adı: <code>linked_user_id</code> dolu olması). Yani üye kartı = "bu kartın bir sahibi var, giriş yapabiliyor".
-          Diğer kartların (işletme vb.) sahibi sonradan bağlanabilir ya da hiç olmayabilir.
+          Bir kartın arkasında <strong>gerçek bir giriş yapabilen hesap</strong> bağlı olabilir
+          (teknik adı: <code>linked_user_id</code> dolu olması). Yani sahibi bağlı bir kart = "bu kartın bir sahibi var, giriş yapabiliyor".
+          Diğer kartların sahibi sonradan bağlanabilir (bkz. <code>catalog_item_managers</code>) ya da hiç olmayabilir.
         </div>
       </div>
     </div>
@@ -397,7 +399,8 @@
     </div>
     <p>
       Her item'ın bir <strong>rolü</strong> vardır. Rol, "bu kart ne işe yarar / kim/ne'dir" sorusunun cevabıdır.
-      Sistemde <strong>82 farklı rol</strong> tanımlı (örnek: bireysel kullanıcı, doktor, işletme, dernek, şehir elçisi…).
+      Sistemde <strong>76 farklı rol</strong> tanımlı (örnek: standart kullanıcı, doktor, spor salonu, dernek/vakıf, organizatör…).
+      Bu <strong>76 rolün hepsi düz ve bağımsızdır</strong> — aralarında aile, üst/alt rol ya da kalıtım (inheritance) yoktur.
     </p>
     <div class="analogy">
       <span class="analogy-icon">🎓</span>
@@ -411,17 +414,13 @@
         <h3>📌 Önemli kural: 1 kişi = 1 rol</h3>
         <p>Bir kullanıcının aynı anda <strong>tek bir rolü</strong> olur. "Hem doktor hem işletme" gibi iki rol birden olmaz.
         Rol değişirse, eski rolün getirdiği her şey gider, yeni rolünki gelir.</p>
-        <p>Hangi kullanıcının hangi rolde olduğu ayrı bir listede tutulur (<code>user_role_assignments</code>, 108 kayıt).</p>
+        <p>Hangi kullanıcının hangi rolde olduğu ayrı bir listede tutulur (<code>user_role_assignments</code>).</p>
       </div>
       <div class="card card-accent1">
-        <h3>👥 Şu an gerçek dağılım</h3>
-        <p>82 rol <em>tanımlı</em> ama hepsi <em>kullanılıyor</em> demek değil. Şu anki gerçek durum:</p>
-        <ul class="plain">
-          <li><strong>104 kişi</strong> → "bireysel" rolünde (neredeyse herkes)</li>
-          <li><strong>2 kişi</strong> → Süper Admin</li>
-          <li><strong>1 kişi</strong> → danışman</li>
-          <li>Kalan ~79 rol → şu an <strong>0 kişi</strong> (ileride kullanılmak üzere hazır bekliyor)</li>
-        </ul>
+        <h3>🟰 Hepsi eşit seviyede (düz)</h3>
+        <p>76 rolün <strong>tamamı aynı seviyede</strong> durur. Hiçbir rol bir diğerinin "alt türü" değildir; hiçbir rol
+        başka bir rolden özellik <em>miras almaz</em>. Her rolün kendi AFS listesi vardır, başkasınınkine bağlı değildir.</p>
+        <p>Yani "76 rol" = <strong>76 bağımsız şablon</strong>. Aile yok, üst kategori yok, alt kategori yok.</p>
       </div>
     </div>
   </div>
@@ -440,21 +439,21 @@
       <div class="concept" style="border-left:4px solid var(--accent5);">
         <span class="emoji">📝</span>
         <div class="name">Attribute</div>
-        <div class="real">attribute_catalog · 53 adet</div>
+        <div class="real">afs_attributes · 53 adet</div>
         <div class="desc"><strong>Bilgi alanları.</strong> Profilde doldurulan kutucuklar: isim, şehir, telefon, biyografi, LinkedIn linki…
         "Bu rol hangi bilgileri tutabilir?"</div>
       </div>
       <div class="concept" style="border-left:4px solid var(--accent4);">
         <span class="emoji">🎚️</span>
         <div class="name">Feature</div>
-        <div class="real">feature_catalog · 42 adet</div>
+        <div class="real">afs_features · 42 adet</div>
         <div class="desc"><strong>Yetkiler / açılıp kapanan özellikler.</strong> "Etkinlik oluşturabilir mi?", "WhatsApp gösterilsin mi?",
         "Cadde'ye girebilir mi?" gibi aç/kapa düğmeleri.</div>
       </div>
       <div class="concept" style="border-left:4px solid var(--accent2);">
         <span class="emoji">🧱</span>
         <div class="name">Section</div>
-        <div class="real">profile_section_catalog · 7 adet</div>
+        <div class="real">afs_sections · 7 adet</div>
         <div class="desc"><strong>Profil bölümleri.</strong> Profil sayfasında hangi kartlar/bölümler görünsün: "Hakkında",
         "İletişim Kartı", "Etkinlikler"… Sayfanın kutuları.</div>
       </div>
@@ -474,9 +473,9 @@
       <div class="callout-body">
         <div class="callout-title">Rol ile AFS nasıl eşleşiyor?</div>
         <div class="callout-text">
-          Her rol için "bu rol hangi attribute/feature/section'lara sahip" diye önceden hazırlanmış dev listeler var:
-          rol→attribute (<code>role_attribute_rules</code>), rol→feature (<code>role_feature_flags</code>),
-          rol→section (<code>role_profile_section_rules</code>). Sistem "bu kişinin rolü ne?" deyip o rolün listesine bakar.
+          Her rol için "bu rol hangi attribute/feature/section'lara sahip" diye önceden hazırlanmış listeler var:
+          rol→attribute (<code>role_attributes</code>), rol→feature (<code>role_features</code>),
+          rol→section (<code>role_sections</code>). Sistem "bu kişinin rolü ne?" deyip o rolün listesine bakar.
           Kişiye <strong>özel istisna</strong> gerekirse (örn. "bu kişiye normalde kapalı bir özelliği aç") ayrı bir
           "override" kaydıyla yapılır — kişiye özel ayar her zaman rolün varsayılanını ezer.
         </div>
@@ -494,7 +493,7 @@
     <div class="map" style="margin-top:16px;">
       <div class="map-box" style="border-color:var(--accent5);">🪪 ITEM (kart)<br><span style="font-weight:400;font-size:11px;color:var(--muted);">örn. Ahmet'in üye kartı</span></div>
       <div class="map-arrow">⬇ kartın bir rolü var</div>
-      <div class="map-box" style="border-color:var(--accent2);">🎭 ROL<br><span style="font-weight:400;font-size:11px;color:var(--muted);">örn. "bireysel kullanıcı"</span></div>
+      <div class="map-box" style="border-color:var(--accent2);">🎭 ROL<br><span style="font-weight:400;font-size:11px;color:var(--muted);">örn. "standart kullanıcı"</span></div>
       <div class="map-arrow">⬇ rolün AFS listesi açılır</div>
       <div class="map-row">
         <div class="map-box" style="border-color:var(--accent5);">📝 Attribute<br><span style="font-weight:400;font-size:11px;color:var(--muted);">bilgiler</span></div>
@@ -505,7 +504,7 @@
       <div class="map-box" style="border-color:var(--accent1);">🖥️ Kişinin gördüğü profil ekranı</div>
     </div>
     <div class="tip" style="margin-top:16px;">
-      <strong>Cümleyle:</strong> "Ahmet'in kartı (item) → rolü 'bireysel' → 'bireysel' rolünün izin verdiği bilgiler,
+      <strong>Cümleyle:</strong> "Ahmet'in kartı (item) → rolü 'standart kullanıcı' → o rolün izin verdiği bilgiler,
       yetkiler ve bölümler → Ahmet'in ekranı." Sistem her seferinde bu zinciri takip eder.
     </div>
   </div>
@@ -556,37 +555,49 @@
   <div class="section" id="s6">
     <div class="section-header">
       <div class="section-num green">06</div>
-      <h2>82 rol neler? — Ailelere göre gruplanır</h2>
+      <h2>76 rol neler? — Hepsi düz tek liste</h2>
     </div>
     <p>
-      82 rol tek tek ezberlenmez; <strong>ailelere</strong> (gruplara) ayrılmıştır. Her aile benzer rolleri toplar.
-      İşte aileler ve içlerinden birkaç örnek:
+      76 rolün <strong>hepsi düz ve birbirinden bağımsızdır</strong>. Aile, üst rol, alt rol ya da kalıtım yoktur.
+      Aşağıdaki başlıklar (Kullanıcı, Admin, Danışman…) sadece <strong>gözle gruplayıp kolay bulman için</strong>
+      konmuş <em>görsel etiketlerdir</em> — birer "aile" ya da "kategori" değildir. Her rol kendi başına ayakta durur,
+      kendi AFS listesine sahiptir; bir başlık altında olması onu başka bir role bağlamaz.
     </p>
+    <div class="callout info" style="margin-top:8px;margin-bottom:8px;">
+      <div class="callout-icon">📏</div>
+      <div class="callout-body">
+        <div class="callout-title">Başlıklar = sadece görsel sıralama</div>
+        <div class="callout-text">
+          Aşağıdaki tablodaki başlıklar yalnızca rolleri <strong>göz için kümelemeye</strong> yarar. Sistem açısından
+          76 rolün <strong>hepsi aynı seviyededir</strong> — hiçbiri diğerinin altında veya üstünde değildir,
+          hiçbiri diğerinden özellik miras almaz.
+        </div>
+      </div>
+    </div>
     <table class="tbl" style="margin-top:8px;">
-      <thead><tr><th>Aile</th><th>Kaç rol</th><th>Örnek roller</th></tr></thead>
+      <thead><tr><th>Görsel başlık</th><th>Yaklaşık rol</th><th>Örnek roller</th></tr></thead>
       <tbody>
-        <tr><td><strong>İşletme</strong> (Business)</td><td>25</td><td>Spor salonu, mağaza, hukuk bürosu, eczane, restoran/kafe…</td></tr>
-        <tr><td><strong>Danışman</strong> (Consultant)</td><td>11</td><td>Finans, vize/göçmenlik, gayrimenkul, hukuk/vergi…</td></tr>
-        <tr><td><strong>Kurum</strong> (Organization)</td><td>8</td><td>Büyükelçilik/konsolosluk, dernek/vakıf, oda/konsey…</td></tr>
-        <tr><td><strong>Sağlık</strong> (Healthcare)</td><td>7</td><td>Hastane, doktor, diş hekimi, psikolog…</td></tr>
-        <tr><td><strong>Pazaryeri</strong> (Marketplace)</td><td>5</td><td>Kurumsal satıcı, bireysel satıcı, ev sahibi…</td></tr>
-        <tr><td><strong>Topluluk</strong> (Community)</td><td>5</td><td>Grup yöneticisi, Discord/Telegram yöneticisi…</td></tr>
-        <tr><td><strong>Kullanıcı</strong> (User)</td><td>5</td><td>Standart, şehir elçisi, diaspora üyesi…</td></tr>
-        <tr><td><strong>İş/Kariyer</strong> (Job)</td><td>4</td><td>İşveren, aday, ajans, işe alımcı</td></tr>
-        <tr><td><strong>Etkinlik</strong> (Event)</td><td>3</td><td>Organizatör, sponsor, mekan</td></tr>
-        <tr><td><strong>Admin</strong></td><td>3</td><td>Süper Admin, Platform Admin, İçerik Moderatörü</td></tr>
-        <tr><td><strong>Eski tip (slug) roller</strong></td><td>6</td><td>bireysel, danisman, isletme, kurulus-dernek, sehir-elcisi…</td></tr>
+        <tr><td><strong>İşletme</strong></td><td>~25</td><td>Spor salonu, mağaza, hukuk bürosu, eczane, restoran/kafe…</td></tr>
+        <tr><td><strong>Danışman</strong></td><td>~11</td><td>Finans, vize/göçmenlik, gayrimenkul, hukuk/vergi…</td></tr>
+        <tr><td><strong>Kuruluş</strong></td><td>~8</td><td>Büyükelçilik/konsolosluk, dernek/vakıf, oda/konsey…</td></tr>
+        <tr><td><strong>Sağlık</strong></td><td>~7</td><td>Hastane, doktor, diş hekimi, psikolog…</td></tr>
+        <tr><td><strong>Marketplace</strong></td><td>~5</td><td>Kurumsal satıcı, bireysel satıcı, ev sahibi…</td></tr>
+        <tr><td><strong>Topluluk</strong></td><td>~5</td><td>Grup yöneticisi, Discord/Telegram yöneticisi…</td></tr>
+        <tr><td><strong>Kullanıcı</strong></td><td>~5</td><td>Standart, diaspora üyesi…</td></tr>
+        <tr><td><strong>İş</strong></td><td>~4</td><td>İşveren, aday, ajans, işe alımcı</td></tr>
+        <tr><td><strong>Etkinlik</strong></td><td>~3</td><td>Organizatör, sponsor, mekan</td></tr>
+        <tr><td><strong>Admin</strong></td><td>~3</td><td>Süper Admin, Platform Admin, İçerik Moderatörü</td></tr>
       </tbody>
     </table>
     <div class="callout warn" style="margin-top:16px;">
-      <div class="callout-icon">🔀</div>
+      <div class="callout-icon">🧹</div>
       <div class="callout-body">
-        <div class="callout-title">Şu an iki isimlendirme bir arada</div>
+        <div class="callout-title">Eski roller artık yok</div>
         <div class="callout-text">
-          Yeni roller "Aile_AltTip" gibi adlandırılır (örn. <code>Business_Gym</code>, <code>Admin_SuperAdmin</code>).
-          Bir de eski tip kısa adlı roller var (<code>bireysel</code>, <code>danisman</code>…). İlginç olan:
-          <strong>gerçek kullanıcıların neredeyse tamamı hâlâ eski "bireysel" rolünde</strong>; yeni detaylı roller
-          tanımlı ama henüz boş. Yani sistem geleceğe hazır, ama bugün çoğunlukla tek rol kullanılıyor.
+          Önceki sürümdeki bazı eski/kısa adlı roller (<code>bireysel</code>, <code>danisman</code>, <code>isletme</code>,
+          <code>kurulus-dernek</code>, <code>blogger-vlogger-youtuber</code>, <code>sehir-elcisi</code>) <strong>kaldırıldı</strong>.
+          Bu yüzden eski "82 rol" sayısı yerine artık <strong>76 düz rol</strong> var. Tek isimlendirme, tek düz liste —
+          ailelere ya da iki ayrı isimlendirmeye bölünmüş hali geride kaldı.
         </div>
       </div>
     </div>
@@ -609,7 +620,7 @@
       </div>
       <div class="flow-step">
         <div class="flow-icon" style="background:rgba(108,99,255,0.2);color:#a78bfa;">2</div>
-        <div class="flow-body"><div class="flow-title">Rol verilir</div><div class="flow-desc">Otomatik olarak <strong>"bireysel"</strong> rolü atanır. (Herkes buradan başlar; sonra değiştirilebilir.)</div></div>
+        <div class="flow-body"><div class="flow-title">Rol verilir</div><div class="flow-desc">Otomatik olarak <strong>"standart kullanıcı"</strong> rolü atanır. (Herkes buradan başlar; sonra değiştirilebilir.)</div></div>
       </div>
       <div class="flow-step">
         <div class="flow-icon" style="background:rgba(0,212,170,0.2);color:#63e6be;">3</div>
@@ -678,28 +689,28 @@
     <table class="tbl" style="margin-top:8px;">
       <thead><tr><th>Defter (tablo)</th><th>Kaç kayıt</th><th>Ne işe yarar (basitçe)</th></tr></thead>
       <tbody>
-        <tr><td><code>catalog_items</code></td><td>623</td><td><span class="badge badge-teal">Kayıt</span> Tüm kartların tutulduğu ana defter</td></tr>
-        <tr><td><code>catalog_item_memberships</code></td><td>131</td><td><span class="badge badge-teal">Kayıt</span> Hangi kartı kim yönetebilir (sahip/editör)</td></tr>
-        <tr><td><code>roles</code></td><td>82</td><td><span class="badge badge-purple">Rol</span> Tüm rollerin tanımı</td></tr>
-        <tr><td><code>user_role_assignments</code></td><td>108</td><td><span class="badge badge-purple">Rol</span> Hangi kullanıcı hangi rolde</td></tr>
-        <tr><td><code>attribute_catalog</code></td><td>53</td><td><span class="badge badge-blue">Bilgi</span> Var olan tüm bilgi alanlarının listesi</td></tr>
-        <tr><td><code>role_attribute_rules</code></td><td>1.977</td><td><span class="badge badge-blue">Bilgi</span> Hangi rol hangi bilgileri tutabilir</td></tr>
-        <tr><td><code>user_profile_attributes</code></td><td>197</td><td><span class="badge badge-blue">Bilgi</span> Kullanıcıların doldurduğu gerçek değerler</td></tr>
-        <tr><td><code>feature_catalog</code></td><td>42</td><td><span class="badge badge-orange">Yetki</span> Var olan tüm aç/kapa özelliklerin listesi</td></tr>
-        <tr><td><code>role_feature_flags</code></td><td>2.487</td><td><span class="badge badge-orange">Yetki</span> Hangi rolde hangi özellik açık</td></tr>
-        <tr><td><code>user_feature_overrides</code></td><td>59</td><td><span class="badge badge-orange">Yetki</span> Kişiye özel istisnalar (rolün üstüne)</td></tr>
-        <tr><td><code>profile_section_catalog</code></td><td>7</td><td><span class="badge badge-green">Bölüm</span> Var olan profil bölümlerinin listesi</td></tr>
-        <tr><td><code>role_profile_section_rules</code></td><td>574</td><td><span class="badge badge-green">Bölüm</span> Hangi rolde hangi bölüm görünür</td></tr>
-        <tr><td><code>catalog_search_documents</code></td><td>623</td><td><span class="badge badge-teal">Arama</span> Kartların aranabilir kopyası</td></tr>
-        <tr><td><code>admin_audit_logs</code></td><td>41</td><td><span class="badge badge-purple">Kayıt defteri</span> "Kim ne zaman ne yaptı" günlüğü</td></tr>
+        <tr><td><code>catalog_items</code></td><td>76</td><td><span class="badge badge-teal">Kayıt</span> Tüm kartların tutulduğu ana defter (v1: her rol için 1 yer tutucu)</td></tr>
+        <tr><td><code>roles</code></td><td>76</td><td><span class="badge badge-purple">Rol</span> Tüm düz rollerin tanımı</td></tr>
+        <tr><td><code>catalog_item_roles</code></td><td>—</td><td><span class="badge badge-purple">Rol</span> Hangi kartın hangi rol(ler)de olduğu</td></tr>
+        <tr><td><code>user_role_assignments</code></td><td>—</td><td><span class="badge badge-purple">Rol</span> Hangi kullanıcı hangi rolde</td></tr>
+        <tr><td><code>afs_attributes</code></td><td>53</td><td><span class="badge badge-blue">Bilgi</span> Var olan tüm bilgi alanlarının listesi</td></tr>
+        <tr><td><code>role_attributes</code></td><td>—</td><td><span class="badge badge-blue">Bilgi</span> Hangi rol hangi bilgileri tutabilir</td></tr>
+        <tr><td><code>catalog_item_attribute_values</code></td><td>—</td><td><span class="badge badge-blue">Bilgi</span> Kartların doldurduğu gerçek değerler</td></tr>
+        <tr><td><code>afs_features</code></td><td>42</td><td><span class="badge badge-orange">Yetki</span> Var olan tüm aç/kapa özelliklerin listesi</td></tr>
+        <tr><td><code>role_features</code></td><td>—</td><td><span class="badge badge-orange">Yetki</span> Hangi rolde hangi özellik açık</td></tr>
+        <tr><td><code>afs_sections</code></td><td>7</td><td><span class="badge badge-green">Bölüm</span> Var olan profil bölümlerinin listesi</td></tr>
+        <tr><td><code>role_sections</code></td><td>—</td><td><span class="badge badge-green">Bölüm</span> Hangi rolde hangi bölüm görünür</td></tr>
+        <tr><td><code>...override tabloları</code></td><td>—</td><td><span class="badge badge-orange">Yetki</span> Karta/kişiye özel istisnalar (rolün varsayılanını ezer)</td></tr>
+        <tr><td><code>catalog_item_claims</code></td><td>—</td><td><span class="badge badge-teal">Talep</span> "Bu kart benim" sahiplik talepleri</td></tr>
+        <tr><td><code>catalog_item_managers</code></td><td>—</td><td><span class="badge badge-teal">Kayıt</span> Hangi kartı kim yönetebilir (sahip/editör)</td></tr>
       </tbody>
     </table>
     <div class="analogy">
       <span class="analogy-icon">🧠</span>
       <div class="t">
-        <strong>Hatırlatma:</strong> "<em>catalog</em>" (katalog) demek = "var olan seçeneklerin listesi".
-        "<em>...rules / flags</em>" demek = "hangi rolde ne açık" eşleştirmeleri.
-        "<em>user_...</em>" ile başlayanlar = "tek tek kullanıcıların gerçek verisi". Bu üç kalıbı bilirsen
+        <strong>Hatırlatma:</strong> "<em>afs_...</em>" demek = "var olan seçeneklerin listesi" (attribute/feature/section katalogları).
+        "<em>role_...</em>" demek = "hangi rolde ne açık" eşleştirmeleri.
+        "<em>catalog_item_...</em>" ile başlayanlar = "tek tek kartların gerçek verisi/ilişkisi". Bu üç kalıbı bilirsen
         tablo isimlerini görünce ne olduklarını tahmin edebilirsin.
       </div>
     </div>
@@ -713,38 +724,27 @@
     </div>
     <p>Sistemde hâlâ birkaç "kafa karıştırıcı" durum var. Bunları bilmek, ileride şaşırmamanı sağlar:</p>
     <div class="grid-2" style="margin-top:16px;">
-      <div class="card card-accent3">
-        <h4>🔴 Eski bir rol sistemi hâlâ duruyor</h4>
-        <p>Yeni rol sistemi (asıl kullanılan) yanında, <strong>çok eski bir rol listesi</strong> de silinmeden duruyor
-        (<code>user_roles</code>, 11 kayıt). Bazı eski fonksiyonlar hâlâ ona bakıyor. Tek sisteme indirilmesi gerekiyor.</p>
+      <div class="card card-accent4">
+        <h4>🟠 Şimdilik sadece yer tutucular var</h4>
+        <p>v1'de <code>catalog_items</code> içinde her rol için birer <strong>örnek/yer tutucu kart</strong> var (toplam 76).
+        Bunlar gerçek üye/işletme değil; rolün neye benzediğini göstermek için konmuş şablonlardır.
+        "76 kart var" görünce "76 gerçek kayıt var" sanma.</p>
       </div>
       <div class="card card-accent4">
-        <h4>🟠 Boş roller çok</h4>
-        <p>82 rolün <strong>79'u şu an boş</strong> (0 kullanıcı). Roller hazır ama kullanılmıyor; gerçek herkes hâlâ
-        "bireysel" rolünde. Bu yüzden "82 rol var" görünce "82 grup insan var" sanma — çoğu boş şablon.</p>
-      </div>
-      <div class="card card-accent4">
-        <h4>🟠 Üye başlıkları zayıf</h4>
-        <p>Sonradan oluşturulan 107 üye kartının başlığı çoğunlukla <strong>e-postanın baş kısmından</strong> türetildi
-        (örn. "ahmet"). İsim bilgisinden düzgün başlıkla zenginleştirilmesi gerekiyor.</p>
+        <h4>🟠 Gerçek veriler henüz taşınmadı</h4>
+        <p>Eski sistemdeki gerçek üyeler, işletmeler ve diğer kayıtlar <strong>bu sürümde taşınmadı</strong>.
+        Defter düz rol yapısıyla sıfırdan kuruldu; gerçek veriler ilerleyen adımlarda eklenecek.</p>
       </div>
       <div class="card card-accent1">
-        <h4>🔵 Eski yedek/artık tablolar</h4>
-        <p>Eski profillerin yedekleri ve bazı eski tablolar (<code>independent_profiles</code> gibi) hâlâ duruyor.
-        "Her şey tek defterde" hedefini tam tutturmak için bunlar temizlenmeli.</p>
+        <h4>🔵 "Başlık ≠ aile" karışmasın</h4>
+        <p>06. bölümdeki başlıklar (İşletme, Danışman, Sağlık…) sadece <strong>görsel etiket</strong>tir.
+        Bunları "aile" ya da "üst kategori" sanma — sistemde rol kalıtımı/ailesi <strong>yoktur</strong>, hepsi düz ve eşittir.</p>
       </div>
-    </div>
-    <div class="callout info" style="margin-top:8px;">
-      <div class="callout-icon">📌</div>
-      <div class="callout-body">
-        <div class="callout-title">Geçmişteki büyük hata ve düzeltmesi (kısa hikaye)</div>
-        <div class="callout-text">
-          Haziran 2026'da eski tablolar silinirken, üye kartını otomatik oluşturan parça da yanlışlıkla silindi.
-          Sonuç: 107 üyenin 93'ü panelde <strong>görünmez oldu</strong>. Düzeltmeyle hem o parça geri kondu hem de
-          eksik 93 kart toplu olarak yeniden oluşturuldu. Şimdi 107 üyenin hepsi görünüyor ve yeni kayıtlar sorunsuz.
-          Ayrıca bir üyeye tıklayınca <strong>boş açılan detay paneli</strong> sorunu da düzeltildi (sistemin "üye"yi
-          normal bir kart gibi tanıması sağlandı).
-        </div>
+      <div class="card card-accent3">
+        <h4>🔴 Eski rol/tablo adlarını kullanma</h4>
+        <p>Eski adlar (<code>attribute_catalog</code>, <code>feature_catalog</code>, <code>role_feature_flags</code>,
+        <code>catalog_item_memberships</code>…) ve 6 eski rol (<code>bireysel</code>, <code>danisman</code> vb.)
+        <strong>kaldırıldı</strong>. Yeni adlar için 09. bölümdeki tabloya bak.</p>
       </div>
     </div>
   </div>

@@ -8,43 +8,6 @@ import { fetchCatalogRows, type CatalogRow } from "@/lib/role-catalog";
 
 type RoleRow = { key: string; label: string; sort_order: number; is_active: boolean };
 
-type RoleFamily = { family: string; label: string; roles: RoleRow[] };
-
-const FAMILY_LABELS: Record<string, string> = {
-  legacy: "Legacy (Eski Sistem)",
-  User_: "Kullanıcı",
-  Admin_: "Admin",
-  Consultant_: "Danışman",
-  Organization_: "Kuruluş",
-  Business_: "İşletme",
-  Healthcare_: "Sağlık",
-  Event_: "Etkinlik",
-  Job_: "İş",
-  Community_: "Topluluk",
-  Marketplace_: "Marketplace",
-};
-
-function getFamilyKey(key: string): string {
-  const prefix = Object.keys(FAMILY_LABELS).find(
-    (p) => p !== "legacy" && key.startsWith(p),
-  );
-  return prefix ?? "legacy";
-}
-
-function groupRoles(roles: RoleRow[]): RoleFamily[] {
-  const map = new Map<string, RoleRow[]>();
-  for (const role of roles) {
-    const family = getFamilyKey(role.key);
-    if (!map.has(family)) map.set(family, []);
-    map.get(family)!.push(role);
-  }
-  return Array.from(map.entries()).map(([family, groupedRoles]) => ({
-    family,
-    label: FAMILY_LABELS[family] ?? family,
-    roles: groupedRoles,
-  }));
-}
-
 const ruleLegendItems = [
   "A: Aktif",
   "F: Feature",
@@ -285,7 +248,7 @@ const blocks: GuideBlock[] = [
         items: [
           "/admin/new-member/profile-role-assignment, catalog_items + linked_user_id + user_role_assignments okuması yapıyor.",
           "Rol seçici vardır; aynı ekrandan rol değişikliği yapılabilir.",
-          "Attribute listesi user_profile_attributes verisini attribute_catalog ile birlikte gösterir.",
+          "Attribute listesi user_profile_attributes verisini afs_attributes ile birlikte gösterir.",
           "Admin burada değer, visibility ve onay bağlamını birlikte görür; kayıt admin_update_user_profile_attribute RPC'si ile yazılır.",
           "Aynı ekranda kullanıcıya bağlı temel profil verisi ve rol davranışı birlikte takip edilir.",
         ],
@@ -293,8 +256,8 @@ const blocks: GuideBlock[] = [
       {
         title: "Attribute katmanları",
         items: [
-          "attribute_catalog: alan sözlüğü (tüm tanımlar).",
-          "role_attribute_rules: o rolde alanın aktifliği, zorunluluğu, public varsayımı ve düzenlenebilirliği.",
+          "afs_attributes: alan sözlüğü (tüm tanımlar).",
+          "role_attributes: o rolde alanın aktifliği, zorunluluğu, public varsayımı ve düzenlenebilirliği.",
           "user_profile_attributes: auth kullanıcısının gerçek değeri, visibility ve approval_status bilgisi.",
           "catalog_item_attributes: katalog item'larına ait ayrı bir attribute katmanı; auth kullanıcı attribute kaydıyla aynı şey değildir.",
         ],
@@ -476,10 +439,22 @@ const AdminNewMemberGuidePage = () => {
     };
   }, []);
 
-  const roleGroups = groupRoles(roles);
+  const sortedRoles = useMemo(
+    () =>
+      [...roles].sort((a, b) => {
+        const orderDiff = (a.sort_order ?? 0) - (b.sort_order ?? 0);
+        if (orderDiff !== 0) return orderDiff;
+        return a.label.localeCompare(b.label, "tr-TR");
+      }),
+    [roles],
+  );
   const attributes = catalogRows.filter((r) => r.kind === "attribute");
   const features = catalogRows.filter((r) => r.kind === "feature");
   const sections = catalogRows.filter((r) => r.kind === "profile_section");
+  const roleCount = sortedRoles.length || 76;
+  const attributeCount = attributes.length || 53;
+  const featureCount = features.length || 42;
+  const sectionCount = sections.length || 7;
   const targetSectionId = useMemo(
     () => location.hash.replace(/^#/, "") || new URLSearchParams(location.search).get("section") || "",
     [location.hash, location.search],
@@ -588,6 +563,30 @@ const AdminNewMemberGuidePage = () => {
                 </span>
               ))}
             </div>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {[
+                { label: "Rol", value: roleCount },
+                { label: "Attribute", value: attributeCount },
+                { label: "Feature", value: featureCount },
+                { label: "Section", value: sectionCount },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-2xl border border-border/60 bg-muted/30 px-4 py-3"
+                >
+                  <p className="text-2xl font-semibold tracking-tight text-foreground">
+                    {stat.value}
+                  </p>
+                  <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground/70">
+              Sayılar veritabanından canlı çekilir; veri yüklenene kadar referans
+              değerler gösterilir (76 rol / 53 attribute / 42 feature / 7 section).
+            </p>
           </section>
 
           <div className="space-y-12">
@@ -636,26 +635,17 @@ const AdminNewMemberGuidePage = () => {
             ) : (
               <div className="space-y-8">
                 <section id={ROLE_LIST_SECTION_ID} className="scroll-mt-28 space-y-4">
-                  <h3 className="text-base font-semibold text-foreground">Tüm Roller ({roles.length})</h3>
-                  <div className="space-y-6">
-                    {roleGroups.map((group) => (
-                      <div key={group.family} className="space-y-2">
-                        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                          {group.label} — {group.roles.length} rol
-                        </p>
-                        <div className="grid gap-1 sm:grid-cols-2">
-                          {group.roles.map((role) => (
-                            <div
-                              key={role.key}
-                              className="flex items-center justify-between rounded-md border border-border/50 bg-muted/30 px-3 py-1.5 text-xs"
-                            >
-                              <span className="font-medium text-foreground">{role.label}</span>
-                              <code className="ml-2 shrink-0 text-[10px] text-muted-foreground">
-                                {role.key}
-                              </code>
-                            </div>
-                          ))}
-                        </div>
+                  <h3 className="text-base font-semibold text-foreground">Tüm Roller ({sortedRoles.length})</h3>
+                  <div className="grid gap-1 sm:grid-cols-2">
+                    {sortedRoles.map((role) => (
+                      <div
+                        key={role.key}
+                        className="flex items-center justify-between rounded-md border border-border/50 bg-muted/30 px-3 py-1.5 text-xs"
+                      >
+                        <span className="font-medium text-foreground">{role.label}</span>
+                        <code className="ml-2 shrink-0 text-[10px] text-muted-foreground">
+                          {role.key}
+                        </code>
                       </div>
                     ))}
                   </div>
