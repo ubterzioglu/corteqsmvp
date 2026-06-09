@@ -70,7 +70,7 @@ describe("AdminLayout", () => {
     expect(screen.queryByRole("link", { name: "Demo" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Veritabanı/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Topluluklar/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Üye Takibi \(eski\)/i })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Üye Takibi \(eski\)/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("menuitem", { name: /Profil ve Rol Atama/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Dış Bağlantılar" })).not.toBeInTheDocument();
     const dashboardButton = screen.getByRole("button", { name: /Dashboard/i });
@@ -98,16 +98,12 @@ describe("AdminLayout", () => {
     );
   });
 
-  it("shows global actions on the members page", async () => {
-    renderAdminLayout("/admin/members");
+  it("shows the other-records dropdown with its submenu", async () => {
+    renderAdminLayout("/admin/surveys");
 
     await waitFor(() => {
-      expect(screen.getByText("Members Content")).toBeInTheDocument();
+      expect(screen.getByText("Surveys Content")).toBeInTheDocument();
     });
-
-    expect(screen.getByRole("button", { name: /Diğer Kayıtlar/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Yeni kayıt ekle/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Referral oluştur/i })).toBeInTheDocument();
 
     const otherRecordsButton = screen.getByRole("button", { name: /Diğer Kayıtlar/i });
     fireEvent.mouseEnter(otherRecordsButton);
@@ -119,14 +115,13 @@ describe("AdminLayout", () => {
     expect(await screen.findByRole("menuitem", { name: /19 Mayıs Anı/i })).toBeInTheDocument();
   });
 
-  it("hides global actions outside the members page", async () => {
+  it("does not render the removed members global actions", async () => {
     renderAdminLayout("/admin/surveys");
 
     await waitFor(() => {
       expect(screen.getByText("Surveys Content")).toBeInTheDocument();
     });
 
-    expect(screen.getByRole("button", { name: /Diğer Kayıtlar/i })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Yeni kayıt ekle/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Referral oluştur/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Export \/ Import/i })).not.toBeInTheDocument();

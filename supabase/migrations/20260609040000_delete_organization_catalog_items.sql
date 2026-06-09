@@ -1,0 +1,32 @@
+-- ============================================================
+-- Purpose:                Delete all catalog_items with item_type='organization' (482 rows) and their
+--                         CASCADE children. Keeps member(107)/person_profile(14)/advisor(10)/community_group(10).
+-- Module:                 CATALOG
+-- Risk level:             HIGH (irreversible data deletion of 482 items + ~3389 child rows via CASCADE)
+-- Preconditions:          Backup taken first into public._bak_org_*_20260609 (9 tables, locked, RLS on).
+--                         Confirmed: all 482 organizations have linked_user_id IS NULL (not tied to any auth user).
+-- Rollback:               Re-insert from public._bak_org_*_20260609 backup tables (parent first, then children).
+--                         See ROLLBACK block at bottom.
+-- Data migration required: no (pure deletion). Source feed = source_records/turkish_missions (not deleted).
+-- Estimated lock impact:  brief row locks on catalog_items + ~8 child tables; small dataset.
+-- Manual verification:    after apply organization count = 0; member/advisor/community_group/person_profile unchanged;
+-- ============================================================
+
+-- CASCADE handles all child rows (organization_details, catalog_item_*, source_records,
+-- catalog_search_documents, catalog_audit_logs, catalog_claim_requests, etc.) for these item_ids.
+DELETE FROM public.catalog_items WHERE item_type = 'organization';
+
+-- ------------------------------------------------------------
+-- ROLLBACK (restore from backup; run manually if needed):
+--   INSERT INTO public.catalog_items            SELECT * FROM public._bak_org_catalog_items_20260609;
+--   INSERT INTO public.organization_details     SELECT * FROM public._bak_org_organization_details_20260609;
+--   INSERT INTO public.catalog_item_links       SELECT * FROM public._bak_org_catalog_item_links_20260609;
+--   INSERT INTO public.catalog_item_categories  SELECT * FROM public._bak_org_catalog_item_categories_20260609;
+--   INSERT INTO public.catalog_item_locations   SELECT * FROM public._bak_org_catalog_item_locations_20260609;
+--   INSERT INTO public.catalog_item_contacts    SELECT * FROM public._bak_org_catalog_item_contacts_20260609;
+--   INSERT INTO public.catalog_item_media       SELECT * FROM public._bak_org_catalog_item_media_20260609;
+--   INSERT INTO public.source_records           SELECT * FROM public._bak_org_source_records_20260609;
+--   INSERT INTO public.catalog_search_documents SELECT * FROM public._bak_org_catalog_search_documents_20260609;
+-- NOTE: re-running catalog sync from turkish_missions may also re-create these organizations.
+-- Drop backups when confident: DROP TABLE public._bak_org_*_20260609;
+-- ------------------------------------------------------------

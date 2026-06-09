@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { Link, NavLink, Outlet, useLocation, useNavigate, useOutletContext } from "react-router-dom";
-import { Bell, Check, ChevronDown, CircleHelp, Download, Layers3, Menu, Plus, Share2 } from "lucide-react";
+import { Bell, Check, ChevronDown, CircleHelp, Menu } from "lucide-react";
 const logo = "/newlogo.png";
 
 import { Button } from "@/components/ui/button";
@@ -188,32 +188,6 @@ const AdminLayout = () => {
     setSession(null);
   };
 
-  const globalActions = useMemo(
-    () => [
-      {
-        label: "Yeni kayıt ekle",
-        icon: Plus,
-        onClick: () => navigate("/admin/members?action=create-member"),
-      },
-      {
-        label: "Referral oluştur",
-        icon: Share2,
-        onClick: () => navigate("/admin/referral?action=create"),
-      },
-      {
-        label: "Export / Import",
-        icon: Download,
-        onClick: () => navigate("/admin/members?action=import-export"),
-      },
-      {
-        label: "Toplu işlem",
-        icon: Layers3,
-        onClick: () => navigate("/admin/members?action=bulk"),
-      },
-    ],
-    [navigate],
-  );
-
   const advisorMenuActive =
     location.pathname.startsWith("/admin/advisors/") ||
     otherRecordNavItems.some((item) => location.pathname === item.to) ||
@@ -229,7 +203,6 @@ const AdminLayout = () => {
   const isNewMemberGuideItem = (to: string) => to === "/admin/new-member/guide";
   const mobileMainLinks = [
     { to: "/admin/workspace/command-center", label: "CC" },
-    { to: "/admin/members", label: "Üye Takibi (eski)" },
     { to: "/admin/data", label: "Veritabanı" },
     { to: "/admin/veritabani-tablolari", label: "Veritabanı Tabloları" },
     { to: "/admin/new-member/roles-overview", label: "RolesGo Genel Bakış" },
@@ -385,15 +358,6 @@ const AdminLayout = () => {
                     CC
                   </NavLink>
                 </div>
-              <div className="flex items-center">
-                <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
-                <NavLink
-                  to="/admin/members"
-                  className={({ isActive }) => linkClass({ isActive, variant: "members" })}
-                >
-                  Üye Takibi (eski)
-                </NavLink>
-              </div>
               <div className="flex items-center">
                 <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
                 <DropdownMenu open={newMemberMenuOpen} onOpenChange={setNewMemberMenuOpen}>
@@ -702,16 +666,6 @@ const AdminLayout = () => {
         </div>
       </header>
       <main className="container mx-auto px-4 py-6">
-        {location.pathname === "/admin/members" ? (
-          <div className="mb-5 flex flex-wrap items-center justify-end gap-2">
-            {globalActions.map((action) => (
-              <Button key={action.label} variant="outline" size="sm" onClick={action.onClick}>
-                <action.icon className="h-4 w-4" />
-                {action.label}
-              </Button>
-            ))}
-          </div>
-        ) : null}
         {session && <Outlet context={{ session, onLogout: handleLogout }} />}
       </main>
     </div>
