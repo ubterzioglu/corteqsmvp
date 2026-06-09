@@ -23,7 +23,7 @@ create policy catalog_item_roles_public_read
     exists (
       select 1 from public.catalog_items ci
       where ci.id = catalog_item_roles.catalog_item_id
-        and ci.status = 'active'
+        and ci.status = 'published'
         and ci.visibility = 'public'
         and ci.deleted_at is null
     )

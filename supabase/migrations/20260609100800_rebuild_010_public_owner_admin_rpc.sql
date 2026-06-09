@@ -88,7 +88,7 @@ declare
   v_result jsonb;
 begin
   select * into v_item from public.catalog_items
-   where slug = p_slug and status = 'active' and visibility = 'public' and deleted_at is null;
+   where slug = p_slug and status = 'published' and visibility = 'public' and deleted_at is null;
   if v_item.id is null then
     return null;
   end if;
