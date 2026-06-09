@@ -49,10 +49,10 @@
 ## 4. Teardown targets (genuine legacy)
 Drop: `catalog_item_types`, `item_type_attribute_rules`, `item_type_feature_defaults`, `item_type_features`, `role_taxonomy_rules`, `entity_metadata` (if unused), the 6 legacy role rows, family columns on `roles`, and all legacy RPCs/RLS/triggers referencing them. Old `_bak_*` tables retained as historical (out of scope to drop).
 
-## 5. Satellite tables — keep/drop (grep-driven; FINALIZE in report 01)
-Runtime (.ts/.tsx) consumers found: `admin-catalog.ts`, `AdminDatabaseTablesPage.tsx`, `DirectoryCatalogItemPage.tsx`.
-- **Keep (live consumers):** `catalog_search_documents` (directory search), `catalog_item_media`, `catalog_item_contacts`, `catalog_item_links`, `catalog_item_locations` — pending exact-consumer confirmation in report 01.
-- **Drop (zero runtime consumers):** candidates `catalog_item_reviews/_reports/_services/_tags/_relations/_languages/_categories/_favorites/catalog_audit_logs` — confirm each has 0 `.ts/.tsx` refs before dropping.
+## 5. Satellite tables — keep/drop (FINALIZED in report 06)
+Functional consumers: `DirectoryCatalogItemPage.tsx`, `admin-catalog.ts`, `admin-profile-api.ts` (NOT `AdminDatabaseTablesPage.tsx`, which only lists table names).
+- **KEEP (functional consumers):** `catalog_search_documents`, `catalog_item_media`, `catalog_item_contacts`, `catalog_item_links`, `catalog_item_locations`, `catalog_item_services`, `catalog_item_languages`, `catalog_item_categories` (+ `catalog_categories`).
+- **DROP (0 functional consumers):** `catalog_item_reviews`, `catalog_item_reports`, `catalog_item_tags`, `catalog_item_relations`, `catalog_item_favorites`, `catalog_audit_logs`, `catalog_item_verification_records`, `entity_metadata`.
 
 ## 6. Visibility & RLS (plan §5)
 Levels: `public, authenticated, owner, editor, admin, internal`. Public RPCs are whitelist-only (no `select *`). Never expose: `requester_email`, claim details, manager list, admin/moderation notes, audit logs, private CV/presentation docs, `referral_code`, `phone_verified`, internal attrs/features, draft fields.
