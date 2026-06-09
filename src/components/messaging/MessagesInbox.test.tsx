@@ -94,7 +94,7 @@ vi.mock("@/integrations/supabase/client", () => {
                 data: mocks.profiles.map((p) => ({
                   user_id: p.user_id,
                   value_text: p.full_name,
-                  attribute_catalog: { key: "full_name" },
+                  afs_attributes: { key: "full_name" },
                 })),
                 error: null,
               }),

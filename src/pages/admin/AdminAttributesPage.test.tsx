@@ -65,7 +65,7 @@ vi.mock("@/integrations/supabase/client", () => ({
         };
       }
 
-      if (table === "attribute_catalog") {
+      if (table === "afs_attributes") {
         return {
           select: () => ({
             eq: () => ({
@@ -75,7 +75,7 @@ vi.mock("@/integrations/supabase/client", () => ({
         };
       }
 
-      if (table === "role_attribute_rules") {
+      if (table === "role_attributes") {
         return {
           select: () => Promise.resolve({ data: rules, error: null }),
         };

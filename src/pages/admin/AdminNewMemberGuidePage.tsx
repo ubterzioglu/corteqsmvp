@@ -132,7 +132,7 @@ const blocks: GuideBlock[] = [
           "/admin/data adresine git.",
           "Arama veya filtre ile kaydı bul ve tıkla.",
           "Platform rolünü kontrol et — yanlışsa değiştir.",
-          "Attribute değerlerini kontrol et (catalog_item_attributes). Bu, auth kullanıcı attribute'undan (user_profile_attributes) farklı bir tablodur; karıştırma.",
+          "Attribute değerlerini kontrol et (catalog_item_attribute_values). Bu, auth kullanıcı attribute'undan (user_profile_attributes) farklı bir tablodur; karıştırma.",
           "Sahip/editör ilişkisi (claim ve editor yetkisi) varsa aynı ekran içinden yönet.",
         ],
       },
@@ -259,7 +259,7 @@ const blocks: GuideBlock[] = [
           "afs_attributes: alan sözlüğü (tüm tanımlar).",
           "role_attributes: o rolde alanın aktifliği, zorunluluğu, public varsayımı ve düzenlenebilirliği.",
           "user_profile_attributes: auth kullanıcısının gerçek değeri, visibility ve approval_status bilgisi.",
-          "catalog_item_attributes: katalog item'larına ait ayrı bir attribute katmanı; auth kullanıcı attribute kaydıyla aynı şey değildir.",
+          "catalog_item_attribute_values: katalog item'larına ait ayrı bir attribute katmanı; auth kullanıcı attribute kaydıyla aynı şey değildir.",
         ],
       },
       {
@@ -367,7 +367,7 @@ const blocks: GuideBlock[] = [
           "Admin auth guard'ı App.tsx route seviyesinde değil AdminLayout içinde çalışıyor.",
           "Ana editor artık role-matrix; eski /roles-features, /role-management, /roles-preview rotaları redirect yapıyor.",
           "Feature source sırası: override → role_default → fallback.",
-          "Catalog item attribute katmanı (catalog_item_attributes) auth kullanıcı attribute'undan (user_profile_attributes) ayrıdır; karıştırma.",
+          "Catalog item attribute katmanı (catalog_item_attribute_values) auth kullanıcı attribute'undan (user_profile_attributes) ayrıdır; karıştırma.",
         ],
       },
       {
