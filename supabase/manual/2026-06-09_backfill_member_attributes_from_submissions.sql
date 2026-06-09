@@ -161,8 +161,10 @@ select pg_temp._bf_upsert('bio_short',       'c.description',     'public');
 select pg_temp._bf_upsert('linkedin_url',    'c.linkedin',        'public');
 select pg_temp._bf_upsert('instagram_url',   'c.instagram',       'public');
 select pg_temp._bf_upsert('website_url',     'c.website',         'public');
-select pg_temp._bf_upsert('referral_source', 'c.referral_source', 'admin_only');
-select pg_temp._bf_upsert('referral_code',   'c.referral_code',   'admin_only');
+-- NOT: user_profile_attributes_visibility_check yalnızca ('public','private')
+-- kabul ediyor ('admin_only' YOK). Referral verisi hassas -> 'private'.
+select pg_temp._bf_upsert('referral_source', 'c.referral_source', 'private');
+select pg_temp._bf_upsert('referral_code',   'c.referral_code',   'private');
 
 -- ---------------------------------------------------------------------------
 -- D) catalog_items.title düzeltmesi: title hâlâ email local-part ise gerçek

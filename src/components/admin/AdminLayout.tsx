@@ -93,6 +93,7 @@ const AdminLayout = () => {
   const [resetLoading, setResetLoading] = useState(false);
   const [newMemberMenuOpen, setNewMemberMenuOpen] = useState(false);
   const [communityMenuOpen, setCommunityMenuOpen] = useState(false);
+  const [otherActionMenuOpen, setOtherActionMenuOpen] = useState(false);
   const [advisorMenuOpen, setAdvisorMenuOpen] = useState(false);
   const [adminPanelMenuOpen, setAdminPanelMenuOpen] = useState(false);
   const [updatesMenuOpen, setUpdatesMenuOpen] = useState(false);
@@ -193,6 +194,7 @@ const AdminLayout = () => {
     otherRecordNavItems.some((item) => location.pathname === item.to) ||
     inactiveNavItems.some((item) => location.pathname === item.to);
   const communityMenuActive = communityNavItems.some((item) => location.pathname === item.to);
+  const otherActionMenuActive = otherActionNavItems.some((item) => location.pathname === item.to);
   const newMemberMenuActive =
     location.pathname.startsWith("/admin/new-member") ||
     location.pathname === "/admin/roller-taslak" ||
@@ -224,10 +226,12 @@ const AdminLayout = () => {
     { to: "/admin/marquee", label: "Haber Bandı" },
     { to: "/admin/social-media", label: "Sosyal Medya" },
     { to: "/admin/about", label: "Güncellemeler" },
+    { to: "/admin/workspace/docs/out-of-order", label: "Out of Order" },
+    { to: "/admin/workspace", label: "Dashboard Merkezi" },
     { to: "/admin/workspace/resources", label: "Dosyalar ve Linkler" },
     { to: "/admin/workspace/mvp", label: "MVP Listesi" },
   ] as const;
-  const headerWorkspaceNavItems = workspaceAdminNavItems.filter((item) => item.key !== "workspace-home");
+  const headerWorkspaceNavItems = workspaceAdminNavItems.filter((item) => item.key !== "command-center");
 
   if (!authenticated) {
     return (
@@ -441,6 +445,47 @@ const AdminLayout = () => {
                         <DropdownMenuItem key={item.to} asChild>
                           <Link to={item.to} className="flex items-center justify-between gap-3">
                             <span>{item.label}</span>
+                            {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
+                          </Link>
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="flex items-center">
+                <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
+                <DropdownMenu open={otherActionMenuOpen} onOpenChange={setOtherActionMenuOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <div
+                      onMouseEnter={() => setOtherActionMenuOpen(true)}
+                      onMouseLeave={() => setOtherActionMenuOpen(false)}
+                    >
+                      <button
+                        type="button"
+                        className={`${linkClass({ isActive: otherActionMenuActive })} inline-flex items-center gap-1`}
+                      >
+                        Diğer İşlemler
+                        <ChevronDown className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="start"
+                    className="max-h-[70vh] w-56 overflow-y-auto"
+                    onMouseEnter={() => setOtherActionMenuOpen(true)}
+                    onMouseLeave={() => setOtherActionMenuOpen(false)}
+                  >
+                    {otherActionNavItems.map((item) => {
+                      const isActive = location.pathname === item.to;
+
+                      return (
+                        <DropdownMenuItem key={item.to} asChild>
+                          <Link to={item.to} className="flex items-center justify-between gap-3">
+                            <span className="inline-flex items-center gap-2">
+                              <item.icon className="h-4 w-4" />
+                              {item.label}
+                            </span>
                             {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
                           </Link>
                         </DropdownMenuItem>
