@@ -220,9 +220,8 @@ select
   true,
   cs.sort_order
 from category_seed cs
-on conflict (slug) do update
+on conflict (module, slug) do update
 set
-  module = excluded.module,
   name = excluded.name,
   description = excluded.description,
   is_active = true,

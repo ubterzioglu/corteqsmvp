@@ -23,8 +23,13 @@ BEGIN
     'referral_codes','referral_code_usages','referral_codes_legacy','referral_groups',
     'referral_sources','referral_types','wa_messages','wa_tasks','wa_users'
   ] LOOP
-    EXECUTE format('REVOKE ALL ON TABLE public.%I FROM anon;', t);
-    EXECUTE format('REVOKE ALL ON TABLE public.%I FROM authenticated;', t);
+    -- Replay-safety (2026-06-09): wa_* tables live only in the production DB
+    -- (created outside this migration history), so skip any table that is not
+    -- present. No-op on production where all tables exist.
+    IF to_regclass('public.' || t) IS NOT NULL THEN
+      EXECUTE format('REVOKE ALL ON TABLE public.%I FROM anon;', t);
+      EXECUTE format('REVOKE ALL ON TABLE public.%I FROM authenticated;', t);
+    END IF;
   END LOOP;
 END $$;
 

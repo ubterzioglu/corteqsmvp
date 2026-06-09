@@ -1,5 +1,12 @@
 BEGIN;
 
+-- Replay-safety fix (2026-06-09): a plain CREATE OR REPLACE cannot change an
+-- existing function's RETURNS TABLE signature (Postgres 42P13). On a clean
+-- migration replay an earlier definition of this function with a different
+-- return type may already exist, so drop it first. No-op on production (the
+-- function already has this signature). Does not reorder/delete any migration.
+DROP FUNCTION IF EXISTS public.validate_and_bind_referral_code(TEXT, TIMESTAMPTZ);
+
 CREATE OR REPLACE FUNCTION public.validate_and_bind_referral_code(
   input_code TEXT,
   reference_time TIMESTAMPTZ DEFAULT now()

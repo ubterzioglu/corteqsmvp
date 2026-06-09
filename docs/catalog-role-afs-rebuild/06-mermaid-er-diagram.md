@@ -2,7 +2,10 @@
 
 > **Date:** 2026-06-09 · Companion to design `05`. Satellite verdicts are grep-driven (src/**/*.{ts,tsx}, functional consumers only — admin DB-browser listing in `AdminDatabaseTablesPage.tsx` does NOT count as a dependency).
 
-## Satellite keep/drop — FINALIZED
+## ⮕ DECISION OVERRIDE (Checkpoint 1): KEEP ALL SATELLITES
+> User decided at Checkpoint 1 to **keep all satellite tables**. The DROP column below is SUPERSEDED — no satellite is dropped in this rebuild. Teardown is limited to family residue (family columns, 6 legacy roles, `catalog_item_types`, `item_type_*`, `role_taxonomy_rules`). The analysis below is retained for the record only.
+
+## Satellite keep/drop — FINALIZED (analysis only; see override above)
 | Satellite | Functional consumer? | Verdict |
 |---|---|---|
 | `catalog_search_documents` | directory search (RPC + triggers) | **KEEP** |
