@@ -1,4 +1,12 @@
-# 🔵 RESUME HERE — Catalog/Flat-Role/AFS Rebuild
+# ✅ REBUILD COMPLETE (2026-06-09) — prod'a push edildi ve doğrulandı
+
+**TÜM 18 migration prod'da canlı.** PROD doğrulama: 76 rol / 0 legacy / 53 attr / 42 feat / 7 section / 76 placeholder / 239 item (163 gerçek korundu) / 0 legacy tablo / 0 family kolon / 0 eski isim. Build PASS, 287/288 test (1 alakasız). Son commit: 075acdd. Raporlar 00-14 + _RESUME tamam.
+**Açık takip:** 127 gerçek member item'ın legacy rol linki koparıldı (platform_role_key null, catalog_item_roles temizlendi) — admin ile flat role yeniden bağlanmalı. Detay: rapor 12 §5.
+**Frontend deploy:** types.ts + rewire commit'li ama frontend henüz deploy edilmedi (Coolify) — gerekirse deploy et.
+
+---
+
+# 🔵 (ARŞİV) RESUME HERE — Catalog/Flat-Role/AFS Rebuild
 
 > **Bu dosya kaldığım yeri ve sıradaki adımı anlatır. Devam ederken ÖNCE bunu oku.**
 > Tarih: 2026-06-09 · Branch: `rebuild/catalog-flat-role-afs` · Repo: corfin-mvp · Supabase: `injprdrsklkxgnaiixzh`
