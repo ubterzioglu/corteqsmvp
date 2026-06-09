@@ -286,20 +286,22 @@ describe("AdminCatalogPage", () => {
       expect(screen.getByText("Berlin Derneği")).toBeInTheDocument();
     });
 
-    expect(screen.getByText("Veritabanı")).toBeInTheDocument();
-    expect(screen.getByText("Toplam Kayıt")).toBeInTheDocument();
-    expect(screen.getByText(/Bir kayıt seçerek attribute değerlerini düzenle/i)).toBeInTheDocument();
+    // The top "Veritabanı" summary card was removed; its labels must be gone.
+    expect(screen.queryByText("Veritabanı")).not.toBeInTheDocument();
+    expect(screen.queryByText("Toplam Kayıt")).not.toBeInTheDocument();
     expect(screen.queryByText("Unified Admin Data")).not.toBeInTheDocument();
     expect(screen.queryByText("Katalog ve kullanıcılar tek admin yüzeyinde.")).not.toBeInTheDocument();
     expect(screen.queryByText("Sayfa Sonucu")).not.toBeInTheDocument();
     expect(screen.queryByText("İçerik Tipi")).not.toBeInTheDocument();
-    expect(screen.getByText("KTG = Katalog")).toBeInTheDocument();
-    expect(screen.getByText("YAY = Yayında")).toBeInTheDocument();
-    expect(screen.getByText("RES = Resmi Kaynak")).toBeInTheDocument();
+    expect(screen.queryByText("KTG = Katalog")).not.toBeInTheDocument();
     expect(screen.getByText("Kısaltma Rehberi")).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Rol" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByText("Kısaltma Rehberi"));
+    // The legend now lives only inside the "Kısaltma Rehberi" detail section,
+    // where code and label render as separate elements.
+    expect(screen.getByText("Katalog")).toBeInTheDocument();
+    expect(screen.getByText("Resmi Kaynak")).toBeInTheDocument();
     expect(
       screen.getByText("CSV, import, manuel giriş veya başka kaynaklardan gelen katalog kayıtlarını temsil eder."),
     ).toBeInTheDocument();
@@ -350,9 +352,11 @@ describe("AdminCatalogPage", () => {
       expect(screen.getByText("Berlin Derneği")).toBeInTheDocument();
     });
 
-    const arz = screen.getByText("ARS = Arşiv");
-    const bek = screen.getByText("BEK = Beklemede");
-    const dgr = screen.getByText("DGR = Doğrulandı");
+    fireEvent.click(screen.getByText("Kısaltma Rehberi"));
+
+    const arz = screen.getByText("ARS");
+    const bek = screen.getByText("BEK");
+    const dgr = screen.getByText("DGR");
 
     expect(
       arz.compareDocumentPosition(bek) & Node.DOCUMENT_POSITION_FOLLOWING,

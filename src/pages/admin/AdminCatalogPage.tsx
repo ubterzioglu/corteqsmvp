@@ -1,5 +1,5 @@
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Database, MapPin, Search, ShieldCheck, SlidersHorizontal, UserRound } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Search, ShieldCheck, SlidersHorizontal, UserRound } from "lucide-react";
 
 import CatalogClaimRequestsPanel from "@/components/admin/catalog/CatalogClaimRequestsPanel";
 import CatalogEntityProfilePanel from "@/components/admin/catalog/CatalogEntityProfilePanel";
@@ -397,39 +397,6 @@ const AdminCatalogPage = () => {
   return (
     <>
       <div className="space-y-6">
-        <div className="sticky top-[76px] z-20">
-          <Card className="overflow-hidden border-slate-200 bg-white/95 shadow-[0_18px_55px_-42px_rgba(15,23,42,0.32)] backdrop-blur">
-            <CardContent className="space-y-4 p-4 sm:p-5">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-slate-950">
-                  <Database className="h-4 w-4 text-emerald-600" />
-                  <span>Veritabanı</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-slate-950">
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                    Toplam Kayıt
-                  </span>
-                  <span>{isLoading ? "..." : totalCount}</span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-7 gap-2">
-                {legendItems.map((item) => (
-                  <div
-                    key={`${item.group}-${item.code}`}
-                    className="rounded-full border border-slate-200 bg-slate-50/90 px-3 py-1.5 text-center text-xs font-medium text-slate-700 shadow-sm"
-                  >
-                    {item.code} = {item.label}
-                  </div>
-                ))}
-              </div>
-              <p className="text-sm text-slate-600">
-                Tüm profil ve katalog kayıtlarını tek tabloda görüntüle. Bir kayıt seçerek attribute değerlerini düzenle.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
         <Collapsible defaultOpen={false}>
           <Card className="border-slate-200 bg-white shadow-[0_18px_55px_-42px_rgba(15,23,42,0.24)]">
             <CollapsibleTrigger asChild>

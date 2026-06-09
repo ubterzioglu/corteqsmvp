@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { getProfilesBasicBatch } from "@/lib/profile-helpers";
 import type {
   AdminProfileSearchResult,
   AttributeOverrideConfig,
@@ -298,11 +299,6 @@ const mapCatalogRow = (row: RawCatalogRow): AdminCatalogDetail => {
   };
 };
 
-const normalizeProfile = (value: RawCatalogEditorRow["profiles"]) => {
-  if (Array.isArray(value)) return value[0] ?? null;
-  return value ?? null;
-};
-
 const mapUnifiedRecord = (row: RawUnifiedRecordRow): UnifiedRecord => ({
   id: row.id,
   kind: row.kind,
@@ -348,21 +344,34 @@ type CatalogRpcClient = {
 
 const catalogRpcClient = supabase as unknown as CatalogRpcClient;
 
+const ITEM_TYPE_LABEL = (value: string): string =>
+  value
+    .split(/[_-]/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toLocaleUpperCase("tr-TR") + part.slice(1))
+    .join(" ");
+
+// The `catalog_item_types` lookup table was dropped in migration 016
+// (rebuild_016_drop_legacy_schema); `catalog_items.item_type` is now free text.
+// Item type options are derived from the distinct values actually in use.
 export async function listAdminCatalogItemTypes(): Promise<AdminCatalogItemType[]> {
   const { data, error } = await (supabase
-    .from("catalog_item_types")
-    .select("key, label")
-    .eq("is_active", true)
-    .order("label", { ascending: true }) as unknown as Promise<{
-      data: Array<{ key: string; label: string }> | null;
+    .from("catalog_items")
+    .select("item_type")
+    .not("item_type", "is", null) as unknown as Promise<{
+      data: Array<{ item_type: string | null }> | null;
       error: QueryError | null;
     }>);
 
   if (error) throw error;
 
-  return (data ?? []).map((row) => ({
-    key: row.key,
-    label: row.label,
+  const keys = Array.from(
+    new Set((data ?? []).map((row) => row.item_type).filter((value): value is string => Boolean(value))),
+  ).sort((left, right) => left.localeCompare(right, "tr"));
+
+  return keys.map((key) => ({
+    key,
+    label: ITEM_TYPE_LABEL(key),
   }));
 }
 
@@ -619,28 +628,39 @@ export async function searchAdminProfiles(query: string, limit = 10): Promise<Ad
   }));
 }
 
+// The legacy `profiles` table was dropped (migration 003); `catalog_item_managers`
+// no longer has a profiles relationship to embed. Names are resolved from
+// `user_profile_attributes` (full_name) via getProfilesBasicBatch. Email is no
+// longer reachable from this surface (it lives in auth), so it is left blank.
 export async function listCatalogItemEditors(itemId: string): Promise<CatalogItemEditor[]> {
   const { data, error } = await (supabase
     .from("catalog_item_managers")
-    .select("user_id, role, status, created_at, profiles(full_name,email)")
+    .select("user_id, role, status, created_at")
     .eq("item_id", itemId)
     .in("role", ["owner", "manager", "editor"])
     .order("created_at", { ascending: false }) as unknown as Promise<{
-      data: RawCatalogEditorRow[] | null;
+      data: Array<Pick<RawCatalogEditorRow, "user_id" | "role" | "status" | "created_at">> | null;
       error: QueryError | null;
     }>);
 
   if (error) throw error;
 
-  return (data ?? []).map((row) => {
-    const profile = normalizeProfile(row.profiles);
-    return {
-      userId: row.user_id,
-      fullName: profile?.full_name ?? "İsimsiz kullanıcı",
-      email: profile?.email ?? "",
-      membershipRole: row.role,
-      status: row.status,
-      grantedAt: row.created_at,
-    };
-  });
+  const rows = data ?? [];
+  const nameByUserId = new Map<string, string | null>();
+
+  if (rows.length > 0) {
+    const profiles = await getProfilesBasicBatch(rows.map((row) => row.user_id));
+    for (const profile of profiles) {
+      nameByUserId.set(profile.user_id, profile.full_name);
+    }
+  }
+
+  return rows.map((row) => ({
+    userId: row.user_id,
+    fullName: nameByUserId.get(row.user_id) ?? "İsimsiz kullanıcı",
+    email: "",
+    membershipRole: row.role,
+    status: row.status,
+    grantedAt: row.created_at,
+  }));
 }
