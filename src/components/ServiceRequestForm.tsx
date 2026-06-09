@@ -196,8 +196,8 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
       markRealServiceRequest();
       toast({ title: "Talep oluşturuldu!", description: "Danışmanlar tekliflerini gönderecektir." });
       onSuccess?.();
-    } catch (err: any) {
-      toast({ title: "Hata", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Hata", description: err instanceof Error ? err.message : undefined, variant: "destructive" });
     } finally {
       setLoading(false);
     }

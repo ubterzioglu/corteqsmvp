@@ -43,17 +43,17 @@ npm run test -- src/lib/muhasebe-api.test.ts  # Run single test file
 
 ## Architecture & Code Organization
 
-### Routing (App.tsx — Known Bottleneck)
-- All 80+ routes defined in `src/App.tsx` (large file, low modularity)
-- **Exception:** Muhasebe routes are modularized via `src/pages/admin/muhasebe/routes.tsx` — use this as reference pattern
+### Routing (App.tsx — Already Modularized)
+- All routes defined in `src/App.tsx` — but the file is now **~300 lines** and **code-split via ~75 `lazy()` imports** (not the monolith it once was)
+- **Reference:** Muhasebe routes are modularized via `src/pages/admin/muhasebe/routes.tsx` — use this as the pattern for further extraction
 - Public pages wrapped in `<PublicLayout />` (header, footer, scroll button)
 - Admin pages wrapped in `<AdminLayout />` + `<RequireAuth />`
-- No lazy loading or code-splitting yet (bundle optimization opportunity)
+- Remaining (optional) refactor: move non-muhasebe modules to the `routes.tsx` pattern — see `docs/refactor/2026-06-09-refactor-backlog.md`
 
 ### Data Layer (Mixed Patterns — Inconsistent)
-**Two Supabase client sources:**
-- `src/integrations/supabase/client.ts` (Lovable-generated, has type definitions)
-- `src/lib/supabase.ts` (custom re-export)
+**Single Supabase client source (consolidation complete):**
+- `src/integrations/supabase/client.ts` (Lovable-generated, has type definitions) — the only client.
+- `src/lib/supabase.ts` **no longer exists** (0 imports). The old "two clients" note is obsolete.
 
 **Three data-fetching styles (choose one per feature):**
 1. **Direct component fetch** (anti-pattern): `supabase.from('table').select()` in component
@@ -64,26 +64,25 @@ npm run test -- src/lib/muhasebe-api.test.ts  # Run single test file
 
 ### Authentication & Roles
 
-**CRITICAL: Two AuthProviders — only one is mounted**
+**Canonical auth + a backward-compat shim**
 
 | | `src/components/auth/` | `src/contexts/AuthContext.tsx` |
 |---|---|---|
-| Mounted in App.tsx | **YES** (canonical) | **NO** (orphaned provider) |
-| Fields | `session`, `user`, `isLoading` | `session`, `user`, `loading`, `profile`, `accountType`, `signOut`, `refreshProfile` |
-| Profile support | None | Fetches from `profiles` table |
+| Mounted in App.tsx | **YES** (canonical) | N/A — re-exports the canonical `AuthProvider` |
+| Role | Source of truth (`session`, `user`, `isLoading`) | **Backward-compat shim**: `useAuth` delegates to canonical; provides a correct `loading` alias |
 
-`src/contexts/AuthContext.tsx` exports its own `AuthProvider` and `useAuth`, but its `AuthProvider` is **never mounted** in App.tsx. The 38 public/member-area components that import `useAuth` from `src/contexts/AuthContext.tsx` receive only the default context values (`user: null`, `loading: true`) — they never see a real session.
+`src/contexts/AuthContext.tsx` is **not** an orphan. It is a backward-compatibility shim: its `useAuth` delegates to the canonical `@/components/auth/useAuth`, and it re-exports the canonical `AuthProvider`. The `loading` field is a correct alias for `isLoading`. **~39 files still import from this shim** and see real session state.
 
-**Before touching any of these 38 files, confirm whether they need real auth or are intentionally unauthenticated UI.**
+**Migration (deferred, low-risk):** point those 39 imports at `@/components/auth/useAuth` (rename `loading`→`isLoading` where used), then delete the shim once imports hit 0. See `docs/refactor/2026-06-09-refactor-backlog.md` (B5).
 
-The canonical `useAuth` lives in `src/components/auth/useAuth.ts` → reads from `src/components/auth/auth-context.ts`. Always import from here for admin/guarded routes.
+The canonical `useAuth` lives in `src/components/auth/useAuth.ts` → reads from `src/components/auth/auth-context.ts`. For new code, always import from here.
 
-**Role / permission systems (both active, direction TBD):**
-- **Old system:** `public.admin_users` table — `userIsAdmin()` in `src/lib/admin.ts` checks this. `AdminLayout` gates the entire admin section via this check.
-- **New system:** `user_profiles_v2` + `rolesgo_*` tables (RolesGo MVP, May 2026) — drives `RequireFeature` / `useFeatureFlags`.
+**Role / permission system (single system — legacy dropped 2026-06-09):**
+- **Admin check:** `userIsAdmin()` in `src/lib/admin.ts` calls the `is_admin()` RPC. The `public.admin_users` table was **DROPPED** (migration `20260609003000`). `AdminLayout` gates the admin section via this check.
+- **Canonical tables:** `user_role_assignments` + `user_profile_attributes` (+ `is_admin()`/`is_moderator()` RPCs). The old `profiles` / `user_profiles` / `admin_users` / `role_feature_defaults` tables no longer exist.
+- **Feature flags:** `RequireFeature` / `useFeatureFlags` resolve via `get_current_user_features()` (`role_feature_flags` + `user_feature_overrides`).
 - `RequireAuth` guards admin routes (checks canonical session).
-- `RequireFeature` provides feature-flag-based authorization via new system.
-- **Do not touch profile logic or role checks without first clarifying which system applies to the feature.**
+- **Do not reference `profiles` / `user_profiles` / `admin_users`** — use `user_role_assignments` + `user_profile_attributes` and the `is_admin()`/`is_moderator()` RPCs.
 
 ### Feature Modules (Copy Muhasebe Pattern)
 Muhasebe module is the architectural template:
@@ -138,10 +137,11 @@ This is intentional to avoid massive refactor burden. When adding new code, writ
 
 | File | Why It Matters |
 |------|---|
-| `src/App.tsx` | Master route table (refactor target) |
+| `src/App.tsx` | Master route table (~300 lines, ~75 `lazy()` code-split) |
 | `src/main.tsx` | Hydrate/Render switch (future SSR entry) |
 | `src/components/auth/AuthProvider.tsx` | Supabase session + context root |
 | `src/lib/muhasebe-*.ts` | Reference architecture (apis, schemas, aggregations) |
+| `src/lib/admin.ts` + `src/lib/admin/*.ts` | `admin.ts` is a 57-line barrel; real impl in `admin/` (7 domain APIs) — pattern for new admin APIs |
 | `src/integrations/supabase/client.ts` | Lovable-generated, risky to modify |
 | `vite.config.ts` | Standalone HTML injection for commercial/* routes |
 | `server.mjs` | Production runtime; env injection via `/env-config.js` |
@@ -300,13 +300,17 @@ Located in `docs/`:
 
 ## Known Limitations & Refactor Opportunities
 
-1. **`src/App.tsx` is monolithic** → Use feature-based route modules (muhasebe pattern)
-2. **Duplicate Supabase client** → Consolidate to single source of truth
-3. **Mixed data fetching** → Standardize on React Query + `*-api.ts` modules
-4. **No code-splitting** → Add `React.lazy` + `Suspense` for route chunks
-5. **TypeScript loose** → Can be tightened incrementally
-6. **Test coverage spotty** → Add critical path E2E tests (Playwright)
-7. **Old + new auth systems coexist** → Clarify canonical direction
+> Consolidated, prioritized roadmap: `docs/refactor/2026-06-09-refactor-backlog.md` (items B1–B10).
+
+1. **Generated `supabase/types.ts` out of sync** → ~164 tsc errors; regenerate via `supabase gen types` (B1, highest priority)
+2. **Broken imports** → `@/lib/mapEntities`, `@/lib/radarNews`, `html-to-image` missing; runtime crash risk (B2)
+3. **`AdminLayout.tsx` still large (721 lines)** → split into layout sub-components + `useAdminAccess` hook (B4)
+4. **Auth shim migration** → ~39 imports of `@/contexts/AuthContext`; migrate to canonical, then delete shim (B5)
+5. **Mixed data fetching** → in-component `supabase.from()` still common; standardize on `*-api.ts` + React Query (B6)
+6. **TypeScript loose** → tighten incrementally after B1; ~103 `as any` to clean up (B7)
+7. **Test coverage spotty** → `AdminMembersPage.test.tsx` broken (B3); activate Playwright for critical flows
+
+**Already done:** App.tsx modularized (~75 `lazy()`), single Supabase client, legacy auth tables dropped (single system), `admin.ts` split into `admin/` domain modules.
 
 ## Additional Resources
 

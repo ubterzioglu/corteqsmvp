@@ -169,8 +169,8 @@ const ConsultantServiceRequests = () => {
       setProposalFormId(null);
       setProposalForm({ message: "", price: "", estimatedDuration: "", scope: "", paymentTerms: "" });
       fetchRequests();
-    } catch (err: any) {
-      toast({ title: "Hata", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Hata", description: err instanceof Error ? err.message : undefined, variant: "destructive" });
     } finally {
       setSendingProposal(false);
     }

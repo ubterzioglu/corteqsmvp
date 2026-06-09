@@ -86,8 +86,8 @@ const Onboarding = () => {
       await refreshProfile();
       toast({ title: "Hesabınız hazır! 🎉", description: "Profilinize yönlendiriliyorsunuz." });
       navigate("/profile");
-    } catch (error: any) {
-      toast({ title: "Hata", description: error.message, variant: "destructive" });
+    } catch (error: unknown) {
+      toast({ title: "Hata", description: error instanceof Error ? error.message : undefined, variant: "destructive" });
     } finally {
       setLoading(false);
     }

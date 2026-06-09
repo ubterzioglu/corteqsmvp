@@ -96,8 +96,8 @@ const CityAmbassadors = () => {
       if (error) throw error;
       setSubmitted(true);
       toast({ title: "Başvurunuz alındı! 🎉", description: "En kısa sürede sizinle iletişime geçeceğiz." });
-    } catch (err: any) {
-      toast({ title: "Hata", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Hata", description: err instanceof Error ? err.message : undefined, variant: "destructive" });
     } finally {
       setLoading(false);
     }

@@ -175,8 +175,8 @@ const InterestForm = ({
       if (error) throw error;
       setSubmitted(true);
       toast({ title: "Kaydınız alındı", description: "En kısa sürede sizinle iletişime geçeceğiz." });
-    } catch (err: any) {
-      toast({ title: "Bir şeyler ters gitti", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Bir şeyler ters gitti", description: err instanceof Error ? err.message : undefined, variant: "destructive" });
     } finally {
       setSubmitting(false);
     }

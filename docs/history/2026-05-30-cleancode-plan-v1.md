@@ -1,3 +1,7 @@
+> **ARŞİV (2026-06-09):** Bu, clean-code görevinin **eski varyantıdır** (2026-05-30).
+> Güncel master prompt: kök dizindeki `cleancode.md`. Uygulama raporları: `docs/refactor/2026-06-09-*`.
+> Konsolide yol haritası: `docs/refactor/2026-06-09-refactor-backlog.md`. Geçmiş kayıt olarak korunur.
+
 # CorteQS Landing — Güvenli Clean Code ve Dokümantasyon Düzenleme Görevi
 
 ## 1. Rolün

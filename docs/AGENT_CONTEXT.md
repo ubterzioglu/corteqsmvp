@@ -2,7 +2,8 @@
 
 > Bu dosya, yeni bir agent oturumunun projeyi hızla kavraması için hazırlanmıştır.
 > Diğer teknik belgelerden bilgi derleyerek token maliyetini minimize eder.
-> **Güncelleme:** 2026-06-08 (son commit: hero serisi)
+> **Güncelleme:** 2026-06-09 (clean-code refactor sonrası repo gerçekliğiyle senkronlandı)
+> **Refactor yol haritası:** `docs/refactor/2026-06-09-refactor-backlog.md` (ertelenen işler B1–B10)
 
 ---
 
@@ -92,32 +93,36 @@ src/
 │   ├── admin-catalog.ts     # Admin catalog data layer
 │   ├── profile-*.ts         # profile-view-model, profile-helpers, profile-types, profile-onboarding-*
 │   ├── role-catalog.ts      # Rol tanımları veri katmanı
-│   ├── supabase.ts          # Custom client (duplikasyon riski — yeni kodda kullanma)
-│   ├── admin.ts             # is_admin() / is_moderator() wrappers
+│   ├── admin.ts             # 57 satır pure barrel → src/lib/admin/'i re-export eder
+│   ├── admin/               # 7 domain API: access/role/feature/profile/taxonomy/approval/referral (+ admin-types)
 │   ├── features.ts          # Feature flag yardımcıları
 │   └── dashboard/           # Workspace data layer
+│   # NOT: src/lib/supabase.ts KALDIRILDI — tek client: integrations/supabase/client.ts
 ├── hooks/                   # useFeatureFlags, useMuhasebe, usePublicIndividualProfile, vb.
 ├── integrations/supabase/
 │   └── client.ts            # Lovable-generated — RİSKLİ, DOKUNMA
 └── contexts/
-    └── AuthContext.tsx       # ORPHANED — App.tsx'e mount edilmemiş, KULLANMA
+    └── AuthContext.tsx       # BACKWARD-COMPAT SHIM — canonical useAuth'a delege eder; yeni kodda @/components/auth/useAuth kullan
 ```
 
 ---
 
 ## 4. Auth & Yetkilendirme
 
-### ÖNEMLİ: İki AuthProvider var, biri ölü
+### ÖNEMLİ: Canonical auth + backward-compat shim
 
 | | `src/components/auth/` | `src/contexts/AuthContext.tsx` |
 |--|------------------------|-------------------------------|
-| App.tsx'e mount? | **EVET** (canonical) | **HAYIR** (orphaned) |
-| Kullan mı? | **EVET** | **HAYIR** |
+| App.tsx'e mount? | **EVET** (canonical) | Canonical AuthProvider'ı re-export eder |
+| Rol | Kaynak (`session`/`user`/`isLoading`) | **Shim**: `useAuth` canonical'a delege; `loading` alias'ı doğru |
+| Yeni kodda kullan? | **EVET** | Hayır — ama orphan/ölü DEĞİL (39 dosya hâlâ buradan import ediyor, gerçek session görüyorlar) |
 
-**Doğru import:**
+**Doğru import (yeni kod):**
 ```ts
 import { useAuth } from "@/components/auth/useAuth";
 ```
+
+> Shim migrasyonu ertelendi (39 import → canonical, `loading`→`isLoading`, sonra shim sil). Bkz. refactor backlog **B5**.
 
 ### Yetki Katmanları
 
@@ -152,12 +157,12 @@ useFeatureFlags() — get_current_user_features RPC
 2. `src/lib/*-api.ts` — **tercih edilen** (`muhasebe-api.ts` örnek al)
 3. React Query `useQuery` / `useMutation` — **önerilen**, az kullanılmış
 
-### İki Supabase Client (sorun)
+### Tek Supabase Client (konsolidasyon tamamlandı)
 
-- `src/integrations/supabase/client.ts` — Lovable-generated, type'lı
-- `src/lib/supabase.ts` — custom re-export
+- `src/integrations/supabase/client.ts` — Lovable-generated, type'lı — **tek client**.
+- `src/lib/supabase.ts` **artık yok** (0 import). Eski "iki client" notu geçersiz.
 
-Yeni kod için `src/integrations/supabase/client.ts`'i kullan, `lib/supabase.ts`'e dokunma.
+Tüm kod `@/integrations/supabase/client`'i kullanır.
 
 ### Muhasebe Pattern (kopyala)
 
@@ -315,10 +320,10 @@ supabase migrations list
 | `src/main.tsx` | hydrateRoot/createRoot switch |
 | `src/components/auth/AuthProvider.tsx` | Session yönetiminin kalbi |
 | `src/components/auth/useAuth.ts` | Canonical auth hook — buradan import et |
-| `src/contexts/AuthContext.tsx` | **KULLANMA** — orphaned provider |
-| `src/integrations/supabase/client.ts` | Lovable-generated — değiştirme |
+| `src/contexts/AuthContext.tsx` | Backward-compat shim — canonical'a delege; yeni kodda `@/components/auth/useAuth` kullan |
+| `src/integrations/supabase/client.ts` | Lovable-generated — değiştirme (tek client) |
 | `src/lib/muhasebe-*.ts` | Referans mimari pattern |
-| `src/lib/admin.ts` | `is_admin()` / `is_moderator()` wrappers |
+| `src/lib/admin.ts` + `src/lib/admin/` | `admin.ts` = barrel; `admin/` = 7 domain API (yeni admin API'leri için pattern) |
 | `src/lib/features.ts` | Feature flag yardımcıları |
 | `src/lib/member-profile-api.ts` | Üye profil API katmanı (tercih edilen) |
 | `src/lib/catalog-directory.ts` | Dizin arama veri katmanı |
@@ -354,15 +359,19 @@ supabase migrations list
 
 ## 11. Bilinen Teknik Borçlar (öncelik sırasıyla)
 
-1. **`src/App.tsx` hâlâ büyük** — 100+ route, lazy() ile code-split yapılmış ama muhasebe dışı modüller `routes.tsx` pattern'ine taşınmadı
-2. **Çift Supabase client** — `integrations/client.ts` + `lib/supabase.ts`; tek kaynağa indir
-3. **Karışık data fetching** — React Query + `*-api.ts` standardına geç; component içi `supabase.from()` hâlâ yaygın
-4. **TypeScript loose** — `strict` kademeli açılabilir
-5. **Test coverage parçalı** — yeni modüllerde (RolesGo, catalog, WhatsApp landings) düşük
-6. **`no-unused-vars` ESLint kapalı** — ölü kod tespiti için açılmalı
-7. **Playwright E2E pasif** — kritik flow'lar (kayıt, profil düzenleme, catalog claim) için aktive edilmeli
-8. **`src/contexts/AuthContext.tsx` orphaned** — referans veren componentler hâlâ var, temizlenmeli
+> Konsolide, uygulanabilir yol haritası: `docs/refactor/2026-06-09-refactor-backlog.md` (B1–B10).
+
+1. **Generated `supabase/types.ts` senkron değil** — ~164 tsc hatası; `supabase gen types` ile yenile (B1, en yüksek öncelik)
+2. **Kırık import'lar** — `@/lib/mapEntities`, `@/lib/radarNews`, `html-to-image` eksik; runtime crash riski (B2)
+3. **`AdminLayout.tsx` hâlâ büyük (721 satır)** — alt bileşenlere + `useAdminAccess` hook'una böl (B4)
+4. **Auth shim migrasyonu** — `@/contexts/AuthContext`'ten ~39 import; canonical'a geçir, sonra shim'i sil (B5)
+5. **Karışık data fetching** — component içi `supabase.from()` hâlâ yaygın; `*-api.ts` + React Query'ye geç (B6)
+6. **TypeScript loose** — B1 sonrası kademeli sıkılaştır; ~103 `as any` temizle (B7)
+7. **`no-unused-vars` ESLint kapalı** — warn seviyesinde aç (B8)
+8. **Test coverage parçalı** — `AdminMembersPage.test.tsx` kırık (B3); Playwright E2E pasif (kayıt/profil/catalog claim)
 9. **Yeni kullanıcı trigger** — `20260609015000` ile düzeltildi; yeni kayıt akışı `welcome/activate` üzerinden test edilmeli
+
+**Zaten yapıldı:** App.tsx modüler (~75 lazy), tek Supabase client, legacy auth tabloları drop edildi (tek sistem), `admin.ts` → `admin/` domain modüllerine bölündü.
 
 ---
 

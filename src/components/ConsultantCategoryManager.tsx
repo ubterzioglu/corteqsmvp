@@ -63,8 +63,8 @@ const ConsultantCategoryManager = () => {
         setSelectedCategories(prev => [...prev, category]);
         toast({ title: `"${category}" eklendi` });
       }
-    } catch (err: any) {
-      toast({ title: "Hata", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Hata", description: err instanceof Error ? err.message : undefined, variant: "destructive" });
     } finally {
       setSaving(false);
     }
