@@ -1,4 +1,4 @@
-import { BookOpen, ClipboardList, Database, ExternalLink, FolderKanban, Globe, ListChecks, Rocket, ScrollText as ScrollTextIcon, Shield, Sparkles, TriangleAlert } from "lucide-react";
+import { BookOpen, ClipboardList, Database, ExternalLink, FolderKanban, Globe, ListChecks, Rocket, ScrollText as ScrollTextIcon, Shield, ShieldCheck, Sparkles, TriangleAlert } from "lucide-react";
 import { CircleHelp, Heart, Lightbulb, Megaphone, MessageSquare, Radio, ScrollText } from "lucide-react";
 import { workspaceDocPages } from "@/lib/dashboard/workspace-doc-pages";
 
@@ -14,6 +14,7 @@ export const newMemberSystemNavItems = [
   { to: "/admin/new-member/role-matrix", label: "Tüm Roller AFS Matrisi", icon: Shield },
   { to: "/admin/new-member/overrides", label: "Feature Override", icon: Sparkles },
   { to: "/admin/new-member/guide", label: "Kullanım Klavuzu", icon: BookOpen },
+  { to: "/admin/new-member/durum-raporu", label: "Durum Raporu", icon: ShieldCheck },
 ] as const;
 
 export const externalAdminNavItems = [

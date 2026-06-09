@@ -773,10 +773,57 @@
     </div>
   </div>
 
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num green">12</div>
+      <h2>Rebuild Durumu — bu yapı nasıl canlıya alındı?</h2>
+    </div>
+    <p>
+      Eski "rol ailesi" (parent / alt-rol / kategori) mantığı <strong>tamamen kaldırıldı</strong> ve yerine tekil,
+      düz (flat) roller + AFS mimarisi kuruldu. <strong>18 migration 9 Haziran 2026'da üretime uygulandı ve doğrulandı.</strong>
+      Gerçek veri korundu (tablolar yeniden adlandırıldı, silinmedi); her flat rol için birer "placeholder" kart eklendi.
+    </p>
+
+    <div class="grid-3" style="margin-top:16px;">
+      <div class="stat"><div class="stat-num">76</div><div class="stat-label">Flat Rol (0 legacy)</div></div>
+      <div class="stat"><div class="stat-num">53 / 42 / 7</div><div class="stat-label">Attribute / Feature / Section</div></div>
+      <div class="stat"><div class="stat-num">76</div><div class="stat-label">Placeholder Kart</div></div>
+      <div class="stat"><div class="stat-num">0</div><div class="stat-label">Legacy Tablo</div></div>
+      <div class="stat"><div class="stat-num">0</div><div class="stat-label">Family Kolon</div></div>
+      <div class="stat"><div class="stat-num">0</div><div class="stat-label">Eski Tablo İsmi (runtime)</div></div>
+    </div>
+
+    <p style="margin-top:18px;"><strong>Yapılan işin aşamaları (raporlar 00–14):</strong></p>
+    <ul>
+      <li><strong>00 Preflight:</strong> rol sayısı 82→76, attribute "55"→53 (başlık hatası) tutarsızlıkları çözüldü.</li>
+      <li><strong>01–04 Envanter:</strong> sistem denetimi, flat rol listesi, AFS katalogları, rol↔AFS matrisi (uniform).</li>
+      <li><strong>05–06 Tasarım:</strong> yeni şema + ER diyagramı (CATALOG ITEMS → FLAT ROLES → AFS).</li>
+      <li><strong>07–08 Entegrasyon:</strong> 44+ DB fonksiyonu ve frontend veri erişimi yeni tablo isimlerine bağlandı.</li>
+      <li><strong>09 Admin UI:</strong> Veritabanı menüsü, kullanım kılavuzu ve bu infografik flat'e güncellendi.</li>
+      <li><strong>10 Legacy temizlik:</strong> 6 legacy rol + item-type indirection tabloları drop edildi; satellite'ler korundu.</li>
+      <li><strong>11 Test:</strong> DB doğrulama + build geçti, 287/288 birim test.</li>
+      <li><strong>12 Push:</strong> 18 migration üretime uygulandı ve doğrulandı.</li>
+      <li><strong>13 Cleanup:</strong> runtime kodda 0 eski tablo ismi / 0 rol-family kavramı.</li>
+      <li><strong>14 Değişen dosyalar:</strong> migrationlar, src, raporlar listesi.</li>
+    </ul>
+
+    <div class="callout info" style="margin-top:14px;">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Açık takip işi</div>
+        <div class="callout-text">
+          Legacy roller silinirken, onlara bağlı ~127 gerçek üye kaydının rol linki koparıldı. Bu kayıtlar korundu
+          ancak uygun bir flat role (örn. <code>User_Standard</code>) yeniden bağlanmalı. Canlı durumu yönetici
+          panelindeki <strong>"Durum Raporu"</strong> sayfasından takip edebilirsin.
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="divider"></div>
   <p style="text-align:center;color:var(--muted);font-size:12px;">
-    CorteQS — Rol Sistemi Basit Anlatım · Veriler 9 Haziran 2026 fotoğrafından ·
-    Daha teknik detay için yönetici panelindeki "RolesGo Genel Bakış" sayfasına bak.
+    CorteQS — Rol Sistemi Basit Anlatım · Veriler 9 Haziran 2026 fotoğrafından · Rebuild tamamlandı ve canlıya alındı ·
+    Canlı metrikler için "Durum Raporu", teknik detay için "RolesGo Genel Bakış" sayfasına bak.
   </p>
 
 </div>

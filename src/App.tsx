@@ -90,6 +90,7 @@ const AdminUserOverridesPage = lazy(() => import("@/pages/admin/AdminUserOverrid
 const AdminApprovalsPage = lazy(() => import("@/pages/admin/AdminApprovalsPage"));
 const AdminAuditLogsPage = lazy(() => import("@/pages/admin/AdminAuditLogsPage"));
 const AdminNewMemberGuidePage = lazy(() => import("@/pages/admin/AdminNewMemberGuidePage"));
+const AdminDurumRaporuPage = lazy(() => import("@/pages/admin/AdminDurumRaporuPage"));
 const AdminRoleManagementPage = lazy(() => import("@/pages/admin/AdminRoleManagementPage"));
 const AdminRolesOverviewPage = lazy(() => import("@/pages/admin/AdminRolesOverviewPage"));
 const AdminCaddePage = lazy(() => import("@/pages/admin/AdminCaddePage"));
@@ -246,6 +247,7 @@ const App = () => (
                   <Route path="data" element={<AdminCatalogPage />} />
                   <Route path="veritabani-tablolari" element={<AdminDatabaseTablesPage />} />
                   <Route path="new-member/guide" element={<AdminNewMemberGuidePage />} />
+                  <Route path="new-member/durum-raporu" element={<AdminDurumRaporuPage />} />
                   <Route path="new-member/roles-list" element={<Navigate to="/admin/new-member/guide#rol-listesi" replace />} />
                   <Route path="new-member/roles-features" element={<Navigate to="/admin/new-member/role-matrix?kind=feature" replace />} />
                   <Route path="new-member/attributes" element={<Navigate to="/admin/new-member/role-matrix?kind=attribute" replace />} />
