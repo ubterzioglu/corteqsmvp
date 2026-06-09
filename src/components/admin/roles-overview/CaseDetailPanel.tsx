@@ -2,6 +2,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { RoleEntityAssignment } from "./types";
 
+export type CaseDetailMode = "login" | "external";
+
 interface Props {
   selectedItemTitle: string | null;
   selectedRoleLabel: string | null;
@@ -9,7 +11,13 @@ interface Props {
   adminEmail: string | null;
   assignment: RoleEntityAssignment | null;
   isLoading?: boolean;
+  mode?: CaseDetailMode;
 }
+
+const CASE_TITLES: Record<CaseDetailMode, string> = {
+  login: "Profil login olduğunda",
+  external: "Profile dışarıdan bakıldığında",
+};
 
 const CaseDetailPanel = ({
   selectedItemTitle,
@@ -18,7 +26,10 @@ const CaseDetailPanel = ({
   adminEmail,
   assignment,
   isLoading,
+  mode = "login",
 }: Props) => {
+  const isLogin = mode === "login";
+
   if (!selectedItemTitle && !selectedRoleLabel) {
     return (
       <Card>
@@ -32,28 +43,30 @@ const CaseDetailPanel = ({
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold">Örnek Case</CardTitle>
+        <CardTitle className="text-sm font-semibold">{CASE_TITLES[mode]}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <div className="space-y-2 rounded-lg border p-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Claim / Admin</p>
-            {claimantEmail ? (
-              <div>
-                <p className="text-[10px] text-muted-foreground">Claim Sahibi</p>
-                <p className="text-xs font-medium">{claimantEmail}</p>
-              </div>
-            ) : null}
-            {adminEmail ? (
-              <div>
-                <p className="text-[10px] text-muted-foreground">Admin</p>
-                <p className="text-xs font-medium">{adminEmail}</p>
-              </div>
-            ) : null}
-            {!claimantEmail && !adminEmail ? (
-              <p className="text-xs text-muted-foreground">Bilgi yok</p>
-            ) : null}
-          </div>
+        <div className={`grid grid-cols-1 gap-3 ${isLogin ? "md:grid-cols-3" : "md:grid-cols-1"}`}>
+          {isLogin ? (
+            <div className="space-y-2 rounded-lg border p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Claim / Admin</p>
+              {claimantEmail ? (
+                <div>
+                  <p className="text-[10px] text-muted-foreground">Claim Sahibi</p>
+                  <p className="text-xs font-medium">{claimantEmail}</p>
+                </div>
+              ) : null}
+              {adminEmail ? (
+                <div>
+                  <p className="text-[10px] text-muted-foreground">Admin</p>
+                  <p className="text-xs font-medium">{adminEmail}</p>
+                </div>
+              ) : null}
+              {!claimantEmail && !adminEmail ? (
+                <p className="text-xs text-muted-foreground">Bilgi yok</p>
+              ) : null}
+            </div>
+          ) : null}
 
           <div className="space-y-2 rounded-lg border p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">1 Item</p>
@@ -64,14 +77,16 @@ const CaseDetailPanel = ({
             )}
           </div>
 
-          <div className="space-y-2 rounded-lg border p-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">1 Rol</p>
-            {selectedRoleLabel ? (
-              <p className="text-xs font-medium">{selectedRoleLabel}</p>
-            ) : (
-              <p className="text-xs text-muted-foreground">Seçilmedi</p>
-            )}
-          </div>
+          {isLogin ? (
+            <div className="space-y-2 rounded-lg border p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">1 Rol</p>
+              {selectedRoleLabel ? (
+                <p className="text-xs font-medium">{selectedRoleLabel}</p>
+              ) : (
+                <p className="text-xs text-muted-foreground">Seçilmedi</p>
+              )}
+            </div>
+          ) : null}
         </div>
 
         {isLoading ? (

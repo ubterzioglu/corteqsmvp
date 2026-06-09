@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { listAdminUnifiedRecords } from "@/lib/admin-catalog";
+import { listAdminUnifiedRecords, listCatalogItemEditors } from "@/lib/admin-catalog";
 import ItemListPanel from "@/components/admin/roles-overview/ItemListPanel";
 import RoleListPanel from "@/components/admin/roles-overview/RoleListPanel";
 import EntityCatalogPanel from "@/components/admin/roles-overview/EntityCatalogPanel";
@@ -20,8 +20,19 @@ const AdminRolesOverviewPage = () => {
 
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [selectedRoleKey, setSelectedRoleKey] = useState<string | null>(null);
+  const [selectedAdminEmail, setSelectedAdminEmail] = useState<string | null>(null);
   const [assignment, setAssignment] = useState<RoleEntityAssignment | null>(null);
   const [loadingCase, setLoadingCase] = useState(false);
+
+  // Selecting an item auto-drives its assigned role (platformRoleKey) so the AFS flows from
+  // the item's real role. Manual role selection (RoleListPanel) remains a fallback.
+  const handleSelectItem = (itemId: string) => {
+    setSelectedItemId(itemId);
+    const item = listItems.find((entry) => entry.id === itemId);
+    if (item?.platformRoleKey) {
+      setSelectedRoleKey(item.platformRoleKey);
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -72,7 +83,8 @@ const AdminRolesOverviewPage = () => {
             title: r.title,
             platformRoleKey: r.platformRoleKey,
             status: r.status,
-            claimantEmail: null,
+            // admin_list_unified_records returns the linked member's email (claim sahibi).
+            claimantEmail: r.email ?? null,
             adminEmail: null,
           })),
         );
@@ -150,6 +162,31 @@ const AdminRolesOverviewPage = () => {
     return () => { isMounted = false; };
   }, [selectedRoleKey, roles, entityItems, toast]);
 
+  // "Admin" = the item's owner/manager (the person who manages that profile).
+  useEffect(() => {
+    if (!selectedItemId) {
+      setSelectedAdminEmail(null);
+      return;
+    }
+
+    let isMounted = true;
+    void (async () => {
+      try {
+        const editors = await listCatalogItemEditors(selectedItemId);
+        if (!isMounted) return;
+        const owner =
+          editors.find((editor) => editor.membershipRole === "owner") ??
+          editors.find((editor) => editor.membershipRole === "manager") ??
+          null;
+        setSelectedAdminEmail(owner?.email || null);
+      } catch {
+        // Membership may not exist (e.g. member_profile items) — leave admin empty silently.
+        if (isMounted) setSelectedAdminEmail(null);
+      }
+    })();
+    return () => { isMounted = false; };
+  }, [selectedItemId]);
+
   const selectedItem = useMemo(() => listItems.find((i) => i.id === selectedItemId) ?? null, [listItems, selectedItemId]);
   const selectedRole = useMemo(() => roles.find((r) => r.key === selectedRoleKey) ?? null, [roles, selectedRoleKey]);
 
@@ -165,7 +202,7 @@ const AdminRolesOverviewPage = () => {
           <ItemListPanel
             items={listItems}
             selectedItemId={selectedItemId}
-            onSelectItem={setSelectedItemId}
+            onSelectItem={handleSelectItem}
             totalCount={totalItemCount}
             isLoading={loadingTop}
           />
@@ -181,13 +218,23 @@ const AdminRolesOverviewPage = () => {
           />
         </div>
 
-        <div>
-          <h2 className="mb-2 text-lg font-semibold">Örnek Case</h2>
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">Örnek Case</h2>
           <CaseDetailPanel
+            mode="login"
             selectedItemTitle={selectedItem?.title ?? null}
             selectedRoleLabel={selectedRole?.label ?? null}
             claimantEmail={selectedItem?.claimantEmail ?? null}
-            adminEmail={selectedItem?.adminEmail ?? null}
+            adminEmail={selectedAdminEmail}
+            assignment={assignment}
+            isLoading={loadingCase}
+          />
+          <CaseDetailPanel
+            mode="external"
+            selectedItemTitle={selectedItem?.title ?? null}
+            selectedRoleLabel={selectedRole?.label ?? null}
+            claimantEmail={null}
+            adminEmail={null}
             assignment={assignment}
             isLoading={loadingCase}
           />
