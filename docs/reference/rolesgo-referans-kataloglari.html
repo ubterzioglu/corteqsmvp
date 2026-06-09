@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RolesGo Referans Katalogları — CorteQS</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #0f172a;
+    --muted: #64748b;
+    --muted-30: #f1f5f9;
+    --border: #e2e8f0;
+    --primary: #6d28d9;
+    --primary-10: #f5f3ff;
+    --radius: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b0f1a;
+      --fg: #e2e8f0;
+      --muted: #94a3b8;
+      --muted-30: #1e293b;
+      --border: #1e293b;
+      --primary: #a78bfa;
+      --primary-10: #1e1b3a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.55;
+    font-size: 14px;
+  }
+  .layout {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 40px;
+  }
+  @media (max-width: 880px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { display: none; }
+  }
+  aside {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+  }
+  nav {
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--bg);
+    padding: 12px;
+  }
+  nav .label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--muted);
+    padding: 0 4px 8px;
+    margin: 0;
+  }
+  nav a {
+    display: block;
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--fg);
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  nav a:hover { background: var(--muted-30); }
+  h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 8px; }
+  .lead { color: var(--muted); max-width: 760px; margin: 0 0 16px; }
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+    margin: 48px 0 20px;
+    scroll-margin-top: 24px;
+  }
+  h3 { font-size: 15px; font-weight: 600; margin: 28px 0 12px; scroll-margin-top: 24px; }
+  .family-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 20px 0 8px;
+  }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
+  .legend span {
+    border: 1px solid var(--border);
+    background: var(--muted-30);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .grid { display: grid; gap: 6px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+  .role-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border: 1px solid var(--border);
+    background: var(--muted-30);
+    border-radius: 8px;
+    padding: 7px 12px;
+  }
+  .role-chip .name { font-weight: 500; }
+  .card {
+    border: 1px solid var(--border);
+    background: var(--muted-30);
+    border-radius: 8px;
+    padding: 9px 12px;
+  }
+  .card .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .card .name { font-weight: 500; }
+  .card .desc { color: var(--muted); font-size: 12px; margin: 2px 0 0; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .badge {
+    flex-shrink: 0;
+    border-radius: 999px;
+    padding: 2px 9px;
+    font-size: 10px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+  }
+  .badge.solid { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .badge.muted { background: var(--muted-30); color: var(--muted); }
+  .count { color: var(--muted); font-weight: 400; }
+  .meta { font-size: 12px; color: var(--muted); margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <nav>
+      <p class="label">İçindekiler</p>
+      <a href="#rol-listesi">Tüm Roller</a>
+      <a href="#attribute-katalogu">Attribute Kataloğu</a>
+      <a href="#feature-katalogu">Feature Kataloğu</a>
+      <a href="#bolum-katalogu">Bölüm Kataloğu — Sections</a>
+    </nav>
+  </aside>
+
+  <main>
+    <h1>RolesGo Referans Katalogları</h1>
+    <p class="lead">
+      <code>/admin/new-member/guide#rol-listesi</code> sayfasının "Referans Katalogları" bölümü.
+      Veri canlı veritabanından çekildi (<code>roles</code>, <code>attribute_catalog</code>,
+      <code>feature_catalog</code>, <code>profile_section_catalog</code>, <code>entity_metadata</code>).
+      Üretim tarihi: 2026-06-09.
+    </p>
+    <div class="legend">
+      <span>A: Aktif</span><span>F: Feature</span><span>Z: Zorunlu</span><span>P: Public</span>
+      <span>D: Düzenler</span><span>G: Global / Gizler</span><span>O: Onay</span>
+      <span>R: Rol</span><span>S: Sıra</span>
+    </div>
+
+    <h2 id="rol-listesi">Tüm Roller <span class="count">(82)</span></h2>
+
+    <p class="family-label">Legacy (Eski Sistem) — 6 rol</p>
+    <div class="grid">
+      <div class="role-chip"><span class="name">Bireysel Kullanıcı</span><code>bireysel</code></div>
+      <div class="role-chip"><span class="name">Danışman</span><code>danisman</code></div>
+      <div class="role-chip"><span class="name">İşletme</span><code>isletme</code></div>
+      <div class="role-chip"><span class="name">Kuruluş / Dernek</span><code>kurulus-dernek</code></div>
+      <div class="role-chip"><span class="name">Blogger / Vlogger / YouTuber</span><code>blogger-vlogger-youtuber</code></div>
+      <div class="role-chip"><span class="name">Şehir Elçisi</span><code>sehir-elcisi</code></div>
+    </div>
+
+    <p class="family-label">Kullanıcı — 5 rol</p>
+    <div class="grid">
+      <div class="role-chip"><span class="name">Standart Kullanıcı</span><code>User_Standard</code></div>
+      <div class="role-chip"><span class="name">Diaspora Üyesi</span><code>User_DiasporaMember</code></div>
+      <div class="role-chip"><span class="name">Destekçi</span><code>User_Contributor</code></div>
+      <div class="role-chip"><span class="name">Şehir Elçisi</span><code>User_CityAmbassador</code></div>
+      <div class="role-chip"><span class="name">Blogger / Vlogger</span><code>User_BloggerVlogger</code></div>
+    </div>
+
+    <p class="family-label">Admin — 3 rol</p>
+    <div class="grid">
+      <div class="role-chip"><span class="name">İçerik Moderatörü</span><code>Admin_ContentModerator</code></div>
+      <div class="role-chip"><span class="name">Platform Yöneticisi</span><code>Admin_PlatformAdmin</code></div>
+      <div class="role-chip"><span class="name">Süper Admin</span><code>Admin_SuperAdmin</code></div>
+    </div>
+
+    <p class="family-label">Danışman — 11 rol</p>
+    <div class="grid">
+      <div class="role-chip"><span class="name">Gayrimenkul Danışmanı</span><code>Consultant_RealEstate</code></div>
+      <div class="role-chip"><span class="name">Vize &amp; Göçmenlik Danışmanı</span><code>Consultant_VisaImmigration</code></div>
+      <div class="role-chip"><span class="name">Şirket Kuruluşu &amp; İş Danışmanı</span><code>Consultant_BusinessSetupWork</code></div>
+      <div class="role-chip"><span class="name">Hukuk &amp; Vergi Danışmanı</span><code>Consultant_LawTax</code></div>
+      <div class="role-chip"><span class="name">Marka &amp; Patent Danışmanı</span><code>Consultant_TrademarkPatent</code></div>
+      <div class="role-chip"><span class="name">Finansal Danışman</span><code>Consultant_Financial</code></div>
+      <div class="role-chip"><span class="name">Yaşam &amp; Relocation Danışmanı</span><code>Consultant_LifeRelocation</code></div>
+      <div class="role-chip"><span class="name">Aile &amp; Çocuk Danışmanı</span><code>Consultant_FamilyChildren</code></div>
+      <div class="role-chip"><span class="name">Psikolog &amp; Koç</span><code>Consultant_PsychologistCoach</code></div>
+      <div class="role-chip"><span class="name">Eğitim Danışmanı</span><code>Consultant_Education</code></div>
+      <div class="role-chip"><span class="name">Pratik Hayat Danışmanı</span><code>Consultant_PracticalLife</code></div>
+    </div>
+
+    <p class="family-label">Kuruluş — 8 rol</p>
+    <div class="grid">
+      <div class="role-chip"><span class="name">Dernek / Vakıf</span><code>Organization_AssociationFoundation</code></div>
+      <div class="role-chip"><span class="name">Oda / Konsey</span><code>Organization_ChamberCouncil</code></div>
+      <div class="role-chip"><span class="name">Akademik Birim</span><code>Organization_AcademicUnit</code></div>
+      <div class="role-chip"><span class="name">Eğitim Kuruluşu</span><code>Organization_EducationInstitution</code></div>
+      <div class="role-chip"><span class="name">Türk Medya Kuruluşu</span><code>Organization_TurkishMedia</code></div>
+      <div class="role-chip"><span class="name">Büyükelçilik / Konsolosluk</span><code>Organization_EmbassyConsulate</code></div>
+      <div class="role-chip"><span class="name">Sağlık Kuruluşu</span><code>Organization_HealthcareInstitution</code></div>
+      <div class="role-chip"><span class="name">Dijital Topluluk</span><code>Organization_DigitalCommunity</code></div>
+    </div>
+
+    <p class="family-label">İşletme — 24 rol</p>
+    <div class="grid">
+      <div class="role-chip"><span class="name">Restoran / Cafe</span><code>Business_RestaurantCafe</code></div>
+      <div class="role-chip"><span class="name">Market / Bakkal</span><code>Business_MarketGrocery</code></div>
+      <div class="role-chip"><span class="name">Fırın / Pastane</span><code>Business_BakeryPatisserie</code></div>
+      <div class="role-chip"><span class="name">Kuaför / Güzellik Merkezi</span><code>Business_HairdresserBeauty</code></div>
+      <div class="role-chip"><span class="name">Berber</span><code>Business_Barber</code></div>
+      <div class="role-chip"><span class="name">Sağlık Merkezi / Klinik</span><code>Business_HealthcareClinic</code></div>
+      <div class="role-chip"><span class="name">Eczane</span><code>Business_Pharmacy</code></div>
+      <div class="role-chip"><span class="name">Hukuk Bürosu</span><code>Business_LawOffice</code></div>
+      <div class="role-chip"><span class="name">Muhasebe / Finans Ofisi</span><code>Business_AccountingFinance</code></div>
+      <div class="role-chip"><span class="name">Gayrimenkul Ofisi</span><code>Business_RealEstateOffice</code></div>
+      <div class="role-chip"><span class="name">Seyahat Acentesi</span><code>Business_TravelAgency</code></div>
+      <div class="role-chip"><span class="name">Otel / Konaklama</span><code>Business_HotelAccommodation</code></div>
+      <div class="role-chip"><span class="name">Eğitim Kurumu</span><code>Business_EducationInstitution</code></div>
+      <div class="role-chip"><span class="name">Dil Okulu</span><code>Business_LanguageSchool</code></div>
+      <div class="role-chip"><span class="name">IT / Yazılım Şirketi</span><code>Business_ITSoftware</code></div>
+      <div class="role-chip"><span class="name">Tasarım / Reklam Ajansı</span><code>Business_DesignAdvertising</code></div>
+      <div class="role-chip"><span class="name">İnşaat / Tadilat Firması</span><code>Business_ConstructionRenovation</code></div>
+      <div class="role-chip"><span class="name">Nakliye / Lojistik Firması</span><code>Business_TransportLogistics</code></div>
+      <div class="role-chip"><span class="name">Otomotiv İşletmesi</span><code>Business_Automotive</code></div>
+      <div class="role-chip"><span class="name">Spor Salonu</span><code>Business_Gym</code></div>
+      <div class="role-chip"><span class="name">Çocuk / Aile İşletmesi</span><code>Business_ChildrenFamily</code></div>
+      <div class="role-chip"><span class="name">Sigorta Şirketi / Acentesi</span><code>Business_Insurance</code></div>
+      <div class="role-chip"><span class="name">Perakende / Mağaza</span><code>Business_RetailStore</code></div>
+      <div class="role-chip"><span class="name">E-Ticaret İşletmesi</span><code>Business_ECommerce</code></div>
+      <div class="role-chip"><span class="name">Toptan Ticaret İşletmesi</span><code>Business_Wholesale</code></div>
+    </div>
+
+    <p class="family-label">Sağlık — 7 rol</p>
+    <div class="grid">
+      <div class="role-chip"><span class="name">Doktor</span><code>Healthcare_Doctor</code></div>
+      <div class="role-chip"><span class="name">Diş Hekimi</span><code>Healthcare_Dentist</code></div>
+      <div class="role-chip"><span class="name">Psikolog</span><code>Healthcare_Psychologist</code></div>
+      <div class="role-chip"><span class="name">Hastane</span><code>Healthcare_Hospital</code></div>
+      <div class="role-chip"><span class="name">Klinik</span><code>Healthcare_Clinic</code></div>
+      <div class="role-chip"><span class="name">Eczane</span><code>Healthcare_Pharmacy</code></div>
+      <div class="role-chip"><span class="name">Randevu Veren Sağlık Kuruluşu</span><code>Healthcare_AppointmentProvider</code></div>
+    </div>
+
+    <p class="family-label">Etkinlik — 3 rol</p>
+    <div class="grid">
+      <div class="role-chip"><span class="name">Etkinlik Organizatörü</span><code>Event_Organizer</code></div>
+      <div class="role-chip"><span class="name">Etkinlik Mekânı</span><code>Event_Venue</code></div>
+      <div class="role-chip"><span class="name">Etkinlik Sponsoru</span><code>Event_Sponsor</code></div>
+    </div>
+
+    <p class="family-label">İş — 4 rol</p>
+    <div class="grid">
+      <div class="role-chip"><span class="name">İşveren</span><code>Job_Employer</code></div>
+      <div class="role-chip"><span class="name">İşe Alım Uzmanı / Recruiter</span><code>Job_Recruiter</code></div>
+      <div class="role-chip"><span class="name">İş Arayan</span><code>Job_Candidate</code></div>
+      <div class="role-chip"><span class="name">İş Bulma Kurumu / Ajans</span><code>Job_Agency</code></div>
+    </div>
+
+    <p class="family-label">Topluluk — 5 rol</p>
+    <div class="grid">
+      <div class="role-chip"><span class="name">Topluluk Yöneticisi</span><code>Community_GroupAdmin</code></div>
+      <div class="role-chip"><span class="name">WhatsApp Grup Yöneticisi</span><code>Community_WhatsAppAdmin</code></div>
+      <div class="role-chip"><span class="name">Telegram Grup Yöneticisi</span><code>Community_TelegramAdmin</code></div>
+      <div class="role-chip"><span class="name">Discord Topluluk Yöneticisi</span><code>Community_DiscordAdmin</code></div>
+      <div class="role-chip"><span class="name">Sosyal Medya Topluluk Yöneticisi</span><code>Community_SocialMediaAdmin</code></div>
+    </div>
+
+    <p class="family-label">Marketplace — 5 rol</p>
+    <div class="grid">
+      <div class="role-chip"><span class="name">Bireysel İlan Sahibi</span><code>Marketplace_IndividualSeller</code></div>
+      <div class="role-chip"><span class="name">Kurumsal Satıcı</span><code>Marketplace_BusinessSeller</code></div>
+      <div class="role-chip"><span class="name">Hizmet Sağlayıcı</span><code>Marketplace_ServiceProvider</code></div>
+      <div class="role-chip"><span class="name">Ders / Kurs Sağlayıcısı</span><code>Marketplace_CourseProvider</code></div>
+      <div class="role-chip"><span class="name">Ev / Oda İlanı Sahibi</span><code>Marketplace_Landlord</code></div>
+    </div>
+
+    <h2 id="attribute-katalogu">Attribute Kataloğu <span class="count">(55)</span></h2>
+    <div class="grid">
+      <div class="card"><div class="top"><span class="name">Profil Fotoğrafı</span><span class="badge muted">url</span></div><code>avatar_url</code></div>
+      <div class="card"><div class="top"><span class="name">Gorunen Isim</span><span class="badge muted">text</span></div><code>full_name</code><p class="desc">Profilin gorunen ismi</p></div>
+      <div class="card"><div class="top"><span class="name">Ulke</span><span class="badge muted">text</span></div><code>country</code><p class="desc">Profilin ulkesi</p></div>
+      <div class="card"><div class="top"><span class="name">Telefon</span><span class="badge muted">phone</span></div><code>phone</code></div>
+      <div class="card"><div class="top"><span class="name">Sehir</span><span class="badge muted">text</span></div><code>city</code><p class="desc">Profilin sehri</p></div>
+      <div class="card"><div class="top"><span class="name">Meslek</span><span class="badge muted">text</span></div><code>profession</code></div>
+      <div class="card"><div class="top"><span class="name">Profil Gorseli</span><span class="badge muted">url</span></div><code>profile_photo_url</code><p class="desc">Profil veya logo gorseli</p></div>
+      <div class="card"><div class="top"><span class="name">Okul</span><span class="badge muted">text</span></div><code>school</code></div>
+      <div class="card"><div class="top"><span class="name">Adres</span><span class="badge muted">textarea</span></div><code>address</code></div>
+      <div class="card"><div class="top"><span class="name">Kisa Aciklama</span><span class="badge muted">textarea</span></div><code>bio_short</code><p class="desc">Kisa profil aciklamasi</p></div>
+      <div class="card"><div class="top"><span class="name">Haritada Göster</span><span class="badge muted">boolean</span></div><code>show_on_map</code></div>
+      <div class="card"><div class="top"><span class="name">CV</span><span class="badge muted">url</span></div><code>cv_path</code></div>
+      <div class="card"><div class="top"><span class="name">CV Adı</span><span class="badge muted">text</span></div><code>cv_name</code></div>
+      <div class="card"><div class="top"><span class="name">Sunum</span><span class="badge muted">url</span></div><code>presentation_path</code></div>
+      <div class="card"><div class="top"><span class="name">Sunum Adı</span><span class="badge muted">text</span></div><code>presentation_name</code></div>
+      <div class="card"><div class="top"><span class="name">İşletme Adı</span><span class="badge muted">text</span></div><code>business_name</code></div>
+      <div class="card"><div class="top"><span class="name">Sektör</span><span class="badge muted">text</span></div><code>business_sector</code></div>
+      <div class="card"><div class="top"><span class="name">İşletme Websitesi</span><span class="badge muted">url</span></div><code>business_website</code></div>
+      <div class="card"><div class="top"><span class="name">İşletme Açıklaması</span><span class="badge muted">textarea</span></div><code>business_description</code></div>
+      <div class="card"><div class="top"><span class="name">Gönüllü Mentor</span><span class="badge muted">boolean</span></div><code>is_volunteer_mentor</code></div>
+      <div class="card"><div class="top"><span class="name">Mentor Konuları</span><span class="badge muted">text</span></div><code>mentor_topics</code></div>
+      <div class="card"><div class="top"><span class="name">Haftalık Mentor Saati</span><span class="badge muted">text</span></div><code>mentor_weekly_hours</code></div>
+      <div class="card"><div class="top"><span class="name">Ilgi Alanlari</span><span class="badge muted">textarea</span></div><code>interests</code><p class="desc">Bireysel kullanicinin ilgi alanlari</p></div>
+      <div class="card"><div class="top"><span class="name">Doğrulanmış</span><span class="badge muted">boolean</span></div><code>is_verified</code></div>
+      <div class="card"><div class="top"><span class="name">Uzmanlik Alani</span><span class="badge muted">text</span></div><code>expertise_area</code><p class="desc">Consultant ana uzmanlik alani</p></div>
+      <div class="card"><div class="top"><span class="name">Eleman Arıyor</span><span class="badge muted">boolean</span></div><code>hiring_mode</code></div>
+      <div class="card"><div class="top"><span class="name">Isletme Kategorisi</span><span class="badge muted">text</span></div><code>business_category</code><p class="desc">Isletmenin faaliyet kategorisi</p></div>
+      <div class="card"><div class="top"><span class="name">Telefon Doğrulandı</span><span class="badge muted">boolean</span></div><code>phone_verified</code></div>
+      <div class="card"><div class="top"><span class="name">Kurulus Turu</span><span class="badge muted">text</span></div><code>organization_type</code><p class="desc">Kurulus tipi</p></div>
+      <div class="card"><div class="top"><span class="name">Ana Platform</span><span class="badge muted">text</span></div><code>main_platform</code><p class="desc">Influencer ana platformu</p></div>
+      <div class="card"><div class="top"><span class="name">Sorumlu Sehir</span><span class="badge muted">text</span></div><code>ambassador_city</code><p class="desc">Elcinin sorumlu oldugu sehir</p></div>
+      <div class="card"><div class="top"><span class="name">LinkedIn URL</span><span class="badge muted">url</span></div><code>linkedin_url</code><p class="desc">Public LinkedIn profil linki</p></div>
+      <div class="card"><div class="top"><span class="name">İşletme / Kuruluş</span><span class="badge muted">text</span></div><code>business_or_organization</code><p class="desc">Kullanıcının ilişkilendirdiği işletme veya kuruluş bilgisi.</p></div>
+      <div class="card"><div class="top"><span class="name">Instagram</span><span class="badge muted">url</span></div><code>instagram_url</code><p class="desc">Public Instagram profil veya hesap linki</p></div>
+      <div class="card"><div class="top"><span class="name">Facebook</span><span class="badge muted">url</span></div><code>facebook_url</code><p class="desc">Public Facebook sayfa veya profil linki</p></div>
+      <div class="card"><div class="top"><span class="name">İştigal / İlgi Sahası</span><span class="badge muted">text</span></div><code>interest_focus</code><p class="desc">Kullanıcının iştigal veya ilgi sahası.</p></div>
+      <div class="card"><div class="top"><span class="name">Referral Kodu</span><span class="badge muted">text</span></div><code>referral_code</code><p class="desc">Kullanıcıyla ilişkilendirilmiş referral kodu.</p></div>
+      <div class="card"><div class="top"><span class="name">YouTube</span><span class="badge muted">url</span></div><code>youtube_url</code><p class="desc">Public YouTube kanal veya video linki</p></div>
+      <div class="card"><div class="top"><span class="name">Bizi nereden buldunuz?</span><span class="badge muted">select</span></div><code>referral_source</code><p class="desc">Kullanıcının CorteQS ile ilk temas kaynağı.</p></div>
+      <div class="card"><div class="top"><span class="name">TikTok</span><span class="badge muted">url</span></div><code>tiktok_url</code><p class="desc">Public TikTok profil linki</p></div>
+      <div class="card"><div class="top"><span class="name">X (Twitter)</span><span class="badge muted">url</span></div><code>x_url</code><p class="desc">Public X veya Twitter profil linki</p></div>
+      <div class="card"><div class="top"><span class="name">Reddit</span><span class="badge muted">url</span></div><code>reddit_url</code><p class="desc">Public Reddit profil veya subreddit linki</p></div>
+      <div class="card"><div class="top"><span class="name">İş Arıyorum Badge'i</span><span class="badge muted">boolean</span></div><code>job_seeking_opt_in</code><p class="desc">Profilinde iş aradığını belirten rozet tercih kaydı</p></div>
+      <div class="card"><div class="top"><span class="name">Yakında Taşınacağım</span><span class="badge muted">boolean</span></div><code>moving_soon_opt_in</code><p class="desc">Yakında taşınacağını belirten rozet tercih kaydı</p></div>
+      <div class="card"><div class="top"><span class="name">Gönüllü Mentörlük</span><span class="badge muted">boolean</span></div><code>volunteer_mentorship_opt_in</code><p class="desc">Gönüllü mentörlük görünürlüğü tercih kaydı</p></div>
+      <div class="card"><div class="top"><span class="name">CV / Özgeçmiş</span><span class="badge muted">json</span></div><code>cv_doc</code><p class="desc">Profil sahibinin yüklediği özel CV dosyası</p></div>
+      <div class="card"><div class="top"><span class="name">Website</span><span class="badge muted">url</span></div><code>website_url</code><p class="desc">Public website veya landing adresi</p></div>
+      <div class="card"><div class="top"><span class="name">Sunum / Tanıtım</span><span class="badge muted">json</span></div><code>presentation_doc</code><p class="desc">Profil sahibinin yüklediği özel sunum veya tanıtım dosyası</p></div>
+      <div class="card"><div class="top"><span class="name">Servis Bölgeleri</span><span class="badge muted">textarea</span></div><code>service_regions</code><p class="desc">Hizmet verilen şehir, ülke veya bölgeler</p></div>
+      <div class="card"><div class="top"><span class="name">Fiziksel Adres</span><span class="badge muted">textarea</span></div><code>physical_address</code><p class="desc">Ofis veya işletme fiziksel adresi</p></div>
+      <div class="card"><div class="top"><span class="name">Harita Linki</span><span class="badge muted">url</span></div><code>map_link</code><p class="desc">Google Maps veya yön tarifi linki</p></div>
+      <div class="card"><div class="top"><span class="name">Kuruluş Yılı</span><span class="badge muted">text</span></div><code>founded_year</code><p class="desc">Startup veya işletme kuruluş yılı</p></div>
+      <div class="card"><div class="top"><span class="name">Gayrimenkul Medya Linkleri</span><span class="badge muted">textarea</span></div><code>real_estate_media_urls</code><p class="desc">Gayrimenkul danışmanlığı için görsel veya video linkleri</p></div>
+    </div>
+
+    <h2 id="feature-katalogu">Feature Kataloğu <span class="count">(42)</span></h2>
+    <div class="grid">
+      <div class="card"><div class="top"><span class="name">Admin Onayi Gerektirir</span><span class="badge solid">Global Aktif</span></div><code>admin.requires_approval</code><p class="desc">Islem admin onayina tabi</p></div>
+      <div class="card"><div class="top"><span class="name">Cadde Erişimi</span><span class="badge solid">Global Aktif</span></div><code>cadde.access</code><p class="desc">Kullanıcının CorteQS Cadde sayfasına erişmesini sağlar.</p></div>
+      <div class="card"><div class="top"><span class="name">Sehir Yonetimi</span><span class="badge solid">Global Aktif</span></div><code>city.manage</code><p class="desc">Sehir bazli yonetim</p></div>
+      <div class="card"><div class="top"><span class="name">Iletisim Talebi Al</span><span class="badge solid">Global Aktif</span></div><code>contact.receive</code><p class="desc">Iletisim talebi alma</p></div>
+      <div class="card"><div class="top"><span class="name">WhatsApp Goster</span><span class="badge solid">Global Aktif</span></div><code>contact.show_whatsapp</code><p class="desc">WhatsApp bilgisini gosterme</p></div>
+      <div class="card"><div class="top"><span class="name">Icerik Olustur</span><span class="badge solid">Global Aktif</span></div><code>content.create</code><p class="desc">Icerik/post olusturma</p></div>
+      <div class="card"><div class="top"><span class="name">Icerik Duzenle</span><span class="badge solid">Global Aktif</span></div><code>content.edit_own</code><p class="desc">Kendi icerigini duzenleme</p></div>
+      <div class="card"><div class="top"><span class="name">Dashboard: Admin Önizleme Modu</span><span class="badge muted">Pasif</span></div><code>dashboard.admin_onizleme_modu</code><p class="desc">Admin için önizleme modu</p></div>
+      <div class="card"><div class="top"><span class="name">Dashboard: Analitik</span><span class="badge solid">Global Aktif</span></div><code>dashboard.tab_analitik</code><p class="desc">Analitik tabına erişim</p></div>
+      <div class="card"><div class="top"><span class="name">Dashboard: Etkinlikler</span><span class="badge solid">Global Aktif</span></div><code>dashboard.tab_etkinlikler</code><p class="desc">Etkinlikler tabına erişim</p></div>
+      <div class="card"><div class="top"><span class="name">Dashboard: Mesaj Kutusu</span><span class="badge solid">Global Aktif</span></div><code>dashboard.tab_mesaj_kutusu</code><p class="desc">Mesaj kutusu tabına erişim</p></div>
+      <div class="card"><div class="top"><span class="name">Dashboard: Profil Ayarları</span><span class="badge solid">Global Aktif</span></div><code>dashboard.tab_profil_ayarlari</code><p class="desc">Profil ayarları tabına erişim</p></div>
+      <div class="card"><div class="top"><span class="name">Dashboard: Takip Ettiklerim</span><span class="badge solid">Global Aktif</span></div><code>dashboard.tab_takip_ettiklerim</code><p class="desc">Takip listesi tabına erişim</p></div>
+      <div class="card"><div class="top"><span class="name">Dashboard: WhatsApp</span><span class="badge solid">Global Aktif</span></div><code>dashboard.tab_whatsapp</code><p class="desc">WhatsApp tabına erişim</p></div>
+      <div class="card"><div class="top"><span class="name">One Cikarilmis Profil</span><span class="badge solid">Global Aktif</span></div><code>directory.featured</code><p class="desc">One cikarilmis listing</p></div>
+      <div class="card"><div class="top"><span class="name">Directory Gorunurlugu</span><span class="badge solid">Global Aktif</span></div><code>directory.visible</code><p class="desc">Public directory gorunurlugu</p></div>
+      <div class="card"><div class="top"><span class="name">Etkinlik Olustur</span><span class="badge solid">Global Aktif</span></div><code>events.create</code><p class="desc">Etkinlik olusturma</p></div>
+      <div class="card"><div class="top"><span class="name">External Links</span><span class="badge solid">Global Aktif</span></div><code>external_links</code><p class="desc">Public website and social links</p></div>
+      <div class="card"><div class="top"><span class="name">Favorites</span><span class="badge solid">Global Aktif</span></div><code>favorites</code><p class="desc">Saved items for signed-in users</p></div>
+      <div class="card"><div class="top"><span class="name">Hakkında</span><span class="badge solid">Global Aktif</span></div><code>individual.about</code><p class="desc">Bireysel kullanıcı hakkında/özet modülü</p></div>
+      <div class="card"><div class="top"><span class="name">Aktivite</span><span class="badge solid">Global Aktif</span></div><code>individual.activity</code><p class="desc">Bireysel aktivite akışı modülü</p></div>
+      <div class="card"><div class="top"><span class="name">CV Talebi</span><span class="badge solid">Global Aktif</span></div><code>individual.cv_request</code><p class="desc">Bireysel CV talebi modülü</p></div>
+      <div class="card"><div class="top"><span class="name">Etkinlikler</span><span class="badge solid">Global Aktif</span></div><code>individual.events</code><p class="desc">Bireysel etkinlikler modülü</p></div>
+      <div class="card"><div class="top"><span class="name">Takipler</span><span class="badge solid">Global Aktif</span></div><code>individual.follows</code><p class="desc">Bireysel takip edilenler modülü</p></div>
+      <div class="card"><div class="top"><span class="name">İş Arıyorum Badge'i</span><span class="badge solid">Global Aktif</span></div><code>individual.job_seeking_badge</code><p class="desc">Profilde İş Arıyorum etiketi görünür.</p></div>
+      <div class="card"><div class="top"><span class="name">Mesajlar</span><span class="badge solid">Global Aktif</span></div><code>individual.messages</code><p class="desc">Bireysel mesajlar modülü</p></div>
+      <div class="card"><div class="top"><span class="name">Yakında Taşınacağım</span><span class="badge solid">Global Aktif</span></div><code>individual.moving_soon_badge</code><p class="desc">Taşınma planını rozet ve filtre akışlarında görünür kılar.</p></div>
+      <div class="card"><div class="top"><span class="name">Hizmet Talepleri</span><span class="badge solid">Global Aktif</span></div><code>individual.service_requests</code><p class="desc">Bireysel hizmet talepleri modülü</p></div>
+      <div class="card"><div class="top"><span class="name">Gönüllü Mentörlük</span><span class="badge solid">Global Aktif</span></div><code>individual.volunteer_mentorship</code><p class="desc">Profil üzerinden gönüllü mentör görünürlüğünü açar.</p></div>
+      <div class="card"><div class="top"><span class="name">WhatsApp</span><span class="badge solid">Global Aktif</span></div><code>individual.whatsapp</code><p class="desc">Bireysel WhatsApp modülü</p></div>
+      <div class="card"><div class="top"><span class="name">Media Gallery</span><span class="badge solid">Global Aktif</span></div><code>media_gallery</code><p class="desc">Public media attachments</p></div>
+      <div class="card"><div class="top"><span class="name">Teklif Olustur</span><span class="badge solid">Global Aktif</span></div><code>offers.create</code><p class="desc">Hizmet/teklif olusturma</p></div>
+      <div class="card"><div class="top"><span class="name">CV Yükleme</span><span class="badge solid">Global Aktif</span></div><code>profile.cv_upload</code><p class="desc">Kullanıcının profiline CV / özgeçmiş dosyası yüklemesini sağlar.</p></div>
+      <div class="card"><div class="top"><span class="name">Profilimi Duzenle</span><span class="badge solid">Global Aktif</span></div><code>profile.edit_own</code><p class="desc">Kendi profilini duzenleme</p></div>
+      <div class="card"><div class="top"><span class="name">Public Profil Alanlari</span><span class="badge solid">Global Aktif</span></div><code>profile.edit_public</code><p class="desc">Public alanlarini duzenleme</p></div>
+      <div class="card"><div class="top"><span class="name">LinkedIn Kartı</span><span class="badge solid">Global Aktif</span></div><code>profile.linkedin_card</code><p class="desc">Kullanıcının LinkedIn kartını profilinde yönetmesini sağlar.</p></div>
+      <div class="card"><div class="top"><span class="name">Sunum Yükleme</span><span class="badge solid">Global Aktif</span></div><code>profile.presentation_upload</code><p class="desc">Kullanıcının profiline sunum / tanıtım dosyası yüklemesini sağlar.</p></div>
+      <div class="card"><div class="top"><span class="name">Profilimi Goruntule</span><span class="badge solid">Global Aktif</span></div><code>profile.view_own</code><p class="desc">Kendi profilini goruntuleme</p></div>
+      <div class="card"><div class="top"><span class="name">Web Sitesi Kartı</span><span class="badge solid">Global Aktif</span></div><code>profile.website_card</code><p class="desc">Kullanıcının web sitesi kartını profilinde yönetmesini sağlar.</p></div>
+      <div class="card"><div class="top"><span class="name">Referral Olustur</span><span class="badge solid">Global Aktif</span></div><code>referral.create</code><p class="desc">Referral olusturma</p></div>
+      <div class="card"><div class="top"><span class="name">Verification Badge</span><span class="badge solid">Global Aktif</span></div><code>verification_badge</code><p class="desc">Verified or official source markers</p></div>
+      <div class="card"><div class="top"><span class="name">Atanmış Topluluk Landing Düzenleme</span><span class="badge solid">Global Aktif</span></div><code>whatsapp_landing.edit_assigned</code><p class="desc">Kullanıcının admin tarafından atandığı topluluk landing kayıtlarını düzenlemesini sağlar.</p></div>
+    </div>
+
+    <h2 id="bolum-katalogu">Bölüm Kataloğu — Sections <span class="count">(7)</span></h2>
+    <div class="grid">
+      <div class="card"><div class="top"><span class="name">İsim / Kuruluş Adı</span><span class="badge muted">preview_card</span></div><code>preview.isim_kurulus_adi</code><p class="desc">Public ön kart ana başlığı</p></div>
+      <div class="card"><div class="top"><span class="name">Konum</span><span class="badge muted">preview_card</span></div><code>preview.konum</code><p class="desc">Şehir ve ülke konumu</p></div>
+      <div class="card"><div class="top"><span class="name">Profil / Logo Görseli</span><span class="badge muted">preview_card</span></div><code>preview.profil_logo_gorseli</code><p class="desc">Public profil görseli</p></div>
+      <div class="card"><div class="top"><span class="name">Kategori / Sektör Etiketi</span><span class="badge muted">preview_card</span></div><code>preview.kategori_sektor_etiketi</code><p class="desc">Rol özel alanı veya taxonomy etiketleri</p></div>
+      <div class="card"><div class="top"><span class="name">Hakkında</span><span class="badge muted">detail_card</span></div><code>detail.hakkinda_bio</code><p class="desc">Public kısa açıklama</p></div>
+      <div class="card"><div class="top"><span class="name">Uzmanlık / Alt Tip Etiketleri</span><span class="badge muted">detail_card</span></div><code>detail.taxonomy_etiketleri</code><p class="desc">Taxonomy etiketleri</p></div>
+      <div class="card"><div class="top"><span class="name">İletişim Linkleri</span><span class="badge muted">detail_card</span></div><code>detail.iletisim_linkleri</code><p class="desc">Public website ve sosyal medya linkleri</p></div>
+    </div>
+  </main>
+</div>
+</body>
+</html>
