@@ -16,6 +16,18 @@ import {
 import { useGeoCountries } from "@/hooks/useGeo";
 const mascot = "/lmaskot.png";
 
+// Supabase RPC errors are plain objects ({ message, code, details }), not Error
+// instances. Narrow defensively so the real DB message surfaces instead of a
+// generic "Bilinmeyen hata".
+function getDirectoryErrorMessage(error: unknown): string {
+  if (error instanceof Error && error.message) return error.message;
+  if (error && typeof error === "object" && "message" in error) {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+  return "Bilinmeyen hata";
+}
+
 const DirectoryPage = () => {
   const { user, isLoading: isAuthLoading } = useAuth();
   const countriesQuery = useGeoCountries();
@@ -66,7 +78,7 @@ const DirectoryPage = () => {
         setIsLoading(false);
       } catch (error) {
         if (!isMounted) return;
-        setErrorMessage(error instanceof Error ? error.message : "Bilinmeyen hata");
+        setErrorMessage(getDirectoryErrorMessage(error));
         setRows([]);
         setIsLoading(false);
       }

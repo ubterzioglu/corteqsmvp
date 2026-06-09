@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CorteQS — RolesGo Sistem Dökümanı</title>
+  <title>CorteQS — Rol Sistemi (En Basit Anlatım)</title>
   <style>
     :root {
       --bg: #0f1117;
@@ -27,15 +27,16 @@
       background: var(--bg);
       color: var(--text);
       font-family: 'Segoe UI', system-ui, sans-serif;
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: 15px;
+      line-height: 1.7;
       padding: 32px 16px;
     }
     h1 { font-size: 2rem; font-weight: 800; }
-    h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; }
-    h3 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+    h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; }
+    h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
     h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 6px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
-    p { color: var(--muted); margin-bottom: 10px; line-height: 1.7; }
+    p { color: var(--muted); margin-bottom: 10px; }
+    strong { color: var(--text); }
     a { color: var(--accent1); }
     code {
       background: rgba(108,99,255,0.15);
@@ -47,7 +48,7 @@
     }
 
     /* Layout */
-    .page { max-width: 1200px; margin: 0 auto; }
+    .page { max-width: 1100px; margin: 0 auto; }
     .section { margin-bottom: 48px; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
@@ -87,7 +88,7 @@
       pointer-events: none;
     }
     .hero h1 { margin-bottom: 12px; background: linear-gradient(135deg, #a78bfa, #6c63ff, #00d4aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .hero p { font-size: 1rem; max-width: 700px; margin: 0 auto 24px; }
+    .hero p { font-size: 1.05rem; max-width: 760px; margin: 0 auto 12px; }
     .hero-stats { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
     .stat { text-align: center; }
     .stat-num { font-size: 2rem; font-weight: 800; color: var(--accent1); }
@@ -104,9 +105,9 @@
       background: var(--accent1);
       color: white;
       border-radius: 8px;
-      width: 32px; height: 32px;
+      width: 34px; height: 34px;
       display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 0.875rem;
+      font-weight: 800; font-size: 0.95rem;
       flex-shrink: 0;
     }
     .section-num.green { background: var(--accent2); color: #0f1117; }
@@ -131,97 +132,11 @@
     .badge-teal   { background: rgba(0,212,170,0.15); color: #63e6be; border: 1px solid rgba(0,212,170,0.3); }
 
     /* Table */
-    .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
     .tbl th { background: var(--card2); color: var(--muted); font-weight: 700; text-align: left; padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
     .tbl td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
     .tbl tr:last-child td { border-bottom: none; }
     .tbl tr:hover td { background: rgba(255,255,255,0.02); }
-
-    /* Priority steps */
-    .priority-chain { display: flex; flex-direction: column; gap: 8px; }
-    .priority-item {
-      display: flex; align-items: center; gap: 12px;
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 16px;
-    }
-    .priority-rank {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 12px;
-      flex-shrink: 0;
-    }
-    .priority-arrow {
-      text-align: center;
-      color: var(--muted);
-      font-size: 18px;
-      padding: 2px 0;
-    }
-    .priority-body { flex: 1; }
-    .priority-title { font-weight: 700; font-size: 13px; }
-    .priority-sub { font-size: 12px; color: var(--muted); }
-    .priority-source {
-      font-size: 11px; font-family: monospace;
-      background: rgba(255,255,255,0.05);
-      border-radius: 4px; padding: 2px 8px;
-      color: var(--accent5);
-    }
-
-    /* Schema box */
-    .schema-box {
-      background: #12151f;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
-      font-family: 'Fira Code', 'Cascadia Code', monospace;
-      font-size: 12px;
-      overflow-x: auto;
-    }
-    .schema-box .col-name { color: var(--accent5); }
-    .schema-box .col-type { color: var(--accent4); }
-    .schema-box .col-note { color: var(--muted); }
-    .schema-box .col-pk   { color: var(--accent3); font-weight: 700; }
-
-    /* Role family */
-    .role-family {
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 16px;
-    }
-    .role-family-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .role-family-title { font-weight: 700; font-size: 13px; }
-    .role-family-count {
-      background: rgba(108,99,255,0.2);
-      color: var(--accent1);
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 1px 8px;
-    }
-    .role-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .role-tag {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 2px 8px;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    /* State machine */
-    .states { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-    .state-box {
-      border-radius: 10px;
-      padding: 10px 16px;
-      text-align: center;
-      font-weight: 700;
-      font-size: 13px;
-      min-width: 100px;
-    }
-    .state-arrow { font-size: 20px; color: var(--muted); }
 
     /* Callout */
     .callout {
@@ -232,66 +147,42 @@
       gap: 12px;
       align-items: flex-start;
     }
-    .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .callout-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
     .callout-body { flex: 1; }
-    .callout-title { font-weight: 700; margin-bottom: 4px; }
-    .callout-text { font-size: 13px; color: var(--muted); }
+    .callout-title { font-weight: 700; margin-bottom: 4px; color: var(--text); }
+    .callout-text { font-size: 13.5px; color: var(--muted); }
     .callout.warn { background: rgba(255,169,77,0.08); border: 1px solid rgba(255,169,77,0.25); }
     .callout.info { background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.25); }
     .callout.danger { background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.25); }
     .callout.success { background: rgba(81,207,102,0.08); border: 1px solid rgba(81,207,102,0.25); }
 
-    /* Feature grid */
-    .feature-pill {
+    /* Analogy box */
+    .analogy {
+      background: rgba(0,212,170,0.06);
+      border: 1px dashed rgba(0,212,170,0.35);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 14px 0;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .analogy-icon { font-size: 20px; flex-shrink: 0; }
+    .analogy strong { color: var(--accent2); }
+    .analogy .t { font-size: 14px; color: var(--text); }
+
+    /* Big concept cards */
+    .concept {
       background: var(--card2);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-family: monospace;
-      color: var(--accent5);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
     }
-    .feature-group-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-      margin-bottom: 8px;
-      margin-top: 16px;
-    }
-    .feature-group-label:first-child { margin-top: 0; }
-    .feature-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .concept .emoji { font-size: 40px; display: block; margin-bottom: 8px; }
+    .concept .name { font-weight: 800; font-size: 16px; margin-bottom: 4px; }
+    .concept .real { font-size: 11px; font-family: monospace; color: var(--muted); margin-bottom: 10px; }
+    .concept .desc { font-size: 13px; color: var(--muted); }
 
-    /* Table of contents */
-    .toc {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      margin-bottom: 48px;
-    }
-    .toc-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-    @media(max-width: 600px) { .toc-list { grid-template-columns: 1fr; } }
-    .toc-list a {
-      text-decoration: none;
-      color: var(--muted);
-      font-size: 13px;
-      display: flex; align-items: center; gap: 8px;
-      padding: 4px 0;
-      transition: color 0.2s;
-    }
-    .toc-list a:hover { color: var(--text); }
-    .toc-list .toc-num { color: var(--accent1); font-weight: 700; font-size: 11px; min-width: 20px; }
-
-    /* Divider */
-    .divider { height: 1px; background: var(--border); margin: 48px 0; }
-
-    /* Tip box */
-    .tip { background: rgba(0,212,170,0.06); border: 1px solid rgba(0,212,170,0.2); border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #63e6be; margin-top: 12px; }
-    .tip strong { color: var(--accent2); }
-
-    /* Flow */
+    /* Step flow */
     .flow { display: flex; flex-direction: column; gap: 0; }
     .flow-step {
       display: flex; align-items: flex-start; gap: 16px;
@@ -309,12 +200,72 @@
       width: 36px; height: 36px;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px; flex-shrink: 0;
+      font-size: 16px; flex-shrink: 0; font-weight: 800;
       position: relative; z-index: 1;
     }
     .flow-body { flex: 1; }
-    .flow-title { font-weight: 700; margin-bottom: 4px; }
-    .flow-desc { color: var(--muted); font-size: 13px; }
+    .flow-title { font-weight: 700; margin-bottom: 4px; color: var(--text); }
+    .flow-desc { color: var(--muted); font-size: 13.5px; }
+
+    /* Two-case compare */
+    .case {
+      border-radius: 12px;
+      padding: 18px;
+      border: 1px solid var(--border);
+    }
+    .case.login { background: rgba(108,99,255,0.06); border-color: rgba(108,99,255,0.3); }
+    .case.ext   { background: rgba(116,192,252,0.05); border-color: rgba(116,192,252,0.25); }
+    .case h3 { display: flex; align-items: center; gap: 8px; }
+    .case-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px dashed var(--border); font-size: 13.5px; }
+    .case-row:last-child { border-bottom: none; }
+    .yes { color: var(--green); font-weight: 700; }
+    .no { color: var(--red); font-weight: 700; }
+
+    /* Map / diagram */
+    .map {
+      background: #12151f;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+    .map-box {
+      display: inline-block;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-weight: 700;
+      margin: 4px;
+      font-size: 13.5px;
+    }
+    .map-arrow { font-size: 22px; color: var(--muted); margin: 6px 0; }
+    .map-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+    /* Toc */
+    .toc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 48px;
+    }
+    .toc-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    @media(max-width: 600px) { .toc-list { grid-template-columns: 1fr; } }
+    .toc-list a {
+      text-decoration: none; color: var(--muted); font-size: 13.5px;
+      display: flex; align-items: center; gap: 8px; padding: 4px 0; transition: color 0.2s;
+    }
+    .toc-list a:hover { color: var(--text); }
+    .toc-list .toc-num { color: var(--accent1); font-weight: 700; font-size: 11px; min-width: 20px; }
+
+    .divider { height: 1px; background: var(--border); margin: 48px 0; }
+    .tip { background: rgba(0,212,170,0.06); border: 1px solid rgba(0,212,170,0.2); border-radius: 8px; padding: 12px 16px; font-size: 13.5px; color: #63e6be; margin-top: 12px; }
+    .tip strong { color: var(--accent2); }
+
+    ul.plain { list-style: none; }
+    ul.plain li { padding: 5px 0 5px 26px; position: relative; color: var(--muted); font-size: 14px; }
+    ul.plain li::before { content: '→'; position: absolute; left: 0; color: var(--accent1); font-weight: 700; }
   </style>
 </head>
 <body>
@@ -322,22 +273,21 @@
 
   <!-- HERO -->
   <div class="hero">
-    <h1>CorteQS — Rol &amp; Veritabanı Sistem Dökümanı</h1>
-    <p>
-      AFS (Authenticated-as-Catalog) mimarisinin canlı durumu. Tüm kayıtlar tek tabloda
-      (<code>catalog_items</code>), roller tek kaynakta (<code>roles</code> + <code>user_role_assignments</code>),
-      attribute / feature / section kuralları rol-bazlı sistemde tanımlı.
+    <h1>CorteQS Rol Sistemi</h1>
+    <p style="color:var(--text);">
+      Bu sayfa, sistemi <strong>hiç bilmeyen birine</strong> en baştan anlatır.
+      Teknik kelime ezberlemene gerek yok — her şeyi günlük hayattan örneklerle açıklıyoruz.
+      Üç şeyi anlarsan her şeyi anlarsın: <strong>Item</strong>, <strong>Rol</strong> ve <strong>AFS</strong>.
     </p>
     <div class="hero-stats">
-      <div class="stat"><div class="stat-num">623</div><div class="stat-label">catalog_items (tek kayıt)</div></div>
-      <div class="stat"><div class="stat-num">107</div><div class="stat-label">member köprüsü</div></div>
-      <div class="stat"><div class="stat-num">82</div><div class="stat-label">rol (roles)</div></div>
-      <div class="stat"><div class="stat-num">53 / 42 / 7</div><div class="stat-label">attribute / feature / section</div></div>
+      <div class="stat"><div class="stat-num">623</div><div class="stat-label">Item (kayıt)</div></div>
+      <div class="stat"><div class="stat-num">82</div><div class="stat-label">Rol (sıfat)</div></div>
+      <div class="stat"><div class="stat-num">53 / 42 / 7</div><div class="stat-label">Attribute / Feature / Section</div></div>
+      <div class="stat"><div class="stat-num">107</div><div class="stat-label">Üye kaydı</div></div>
     </div>
     <p style="margin-top:20px;font-size:0.8rem;">
-      <span class="badge badge-teal">Üretim DB</span>
-      <span class="badge badge-purple">injprdrsklkxgnaiixzh</span>
-      <span class="badge badge-blue">Snapshot: 2026-06-09</span>
+      <span class="badge badge-teal">Canlı veriler</span>
+      <span class="badge badge-blue">9 Haziran 2026 fotoğrafı</span>
     </p>
   </div>
 
@@ -345,522 +295,488 @@
   <div class="toc">
     <h4>İçindekiler</h4>
     <ul class="toc-list">
-      <li><a href="#s1"><span class="toc-num">01</span> Mimari Özet — Tek Tablo Modeli</a></li>
-      <li><a href="#s2"><span class="toc-num">02</span> İki Paralel Rol Sistemi (Kritik)</a></li>
-      <li><a href="#s3"><span class="toc-num">03</span> Çekirdek Tablolar &amp; Satır Sayıları</a></li>
-      <li><a href="#s4"><span class="toc-num">04</span> Rol Aileleri (82 rol)</a></li>
-      <li><a href="#s5"><span class="toc-num">05</span> Rol Kontrol Fonksiyonları</a></li>
-      <li><a href="#s6"><span class="toc-num">06</span> Feature Çözümleme Zinciri</a></li>
-      <li><a href="#s7"><span class="toc-num">07</span> Member Köprüsü &amp; Trigger Akışı</a></li>
-      <li><a href="#s8"><span class="toc-num">08</span> Trigger Envanteri</a></li>
-      <li><a href="#s9"><span class="toc-num">09</span> RPC Katmanı (admin/data)</a></li>
-      <li><a href="#s10"><span class="toc-num">10</span> Haziran 2026 Regresyonları (DB + Frontend) &amp; Fix</a></li>
-      <li><a href="#s11"><span class="toc-num">11</span> Açık Riskler &amp; Teknik Borç</a></li>
+      <li><a href="#s0"><span class="toc-num">00</span> En basit haliyle: 3 kelime</a></li>
+      <li><a href="#s1"><span class="toc-num">01</span> Item nedir? (Kayıt = kart)</a></li>
+      <li><a href="#s2"><span class="toc-num">02</span> Rol nedir? (Sıfat = meslek)</a></li>
+      <li><a href="#s3"><span class="toc-num">03</span> AFS nedir? (Bilgi + Yetki + Bölüm)</a></li>
+      <li><a href="#s4"><span class="toc-num">04</span> Hepsi nasıl bağlanıyor?</a></li>
+      <li><a href="#s5"><span class="toc-num">05</span> İki durum: login vs dışarıdan</a></li>
+      <li><a href="#s6"><span class="toc-num">06</span> 82 rol neler? (Aileler)</a></li>
+      <li><a href="#s7"><span class="toc-num">07</span> Yeni üye kaydolunca ne oluyor?</a></li>
+      <li><a href="#s8"><span class="toc-num">08</span> "Admin" kim demek?</a></li>
+      <li><a href="#s9"><span class="toc-num">09</span> Sistemin altında hangi tablolar var?</a></li>
+      <li><a href="#s10"><span class="toc-num">10</span> Karışıklık yaratabilecek noktalar</a></li>
+      <li><a href="#s11"><span class="toc-num">11</span> Tek cümlelik özet</a></li>
     </ul>
   </div>
 
-  <!-- 01 MIMARI ÖZET -->
-  <div class="section" id="s1">
+  <!-- 00 EN BASIT -->
+  <div class="section" id="s0">
     <div class="section-header">
-      <div class="section-num">01</div>
-      <h2>Mimari Özet — Tek Tablo Modeli</h2>
+      <div class="section-num">00</div>
+      <h2>En basit haliyle: sadece 3 kelime</h2>
     </div>
-    <div class="callout success">
-      <div class="callout-icon">✅</div>
-      <div class="callout-body">
-        <div class="callout-title">Hedef mimari yürürlükte</div>
-        <div class="callout-text">
-          Tüm kayıtlar <code>catalog_items</code> tablosunda toplanır. Member profilleri,
-          kurumsal katalog kayıtları, doktor/işletme/organizasyon — hepsi aynı tabloda,
-          <code>item_type</code> ve <code>linked_user_id</code> ile ayrışır. Roller bu kaynakta
-          (<code>platform_role_key</code>) taşınır; attribute/feature/section eşleşmeleri rol-bazlı
-          kural tablolarında tanımlanır.
-        </div>
+    <p>Tüm sistem aslında üç kavramdan ibaret. Önce bunları aklında tut, gerisi detay:</p>
+    <div class="grid-3" style="margin-top:16px;">
+      <div class="concept">
+        <span class="emoji">🪪</span>
+        <div class="name">ITEM</div>
+        <div class="real">catalog_items</div>
+        <div class="desc">Sistemdeki <strong>her kayıt</strong> bir item'dır: bir üye, bir işletme, bir doktor, bir dernek… Hepsi birer "kart".</div>
+      </div>
+      <div class="concept">
+        <span class="emoji">🎭</span>
+        <div class="name">ROL</div>
+        <div class="real">roles</div>
+        <div class="desc">Her item'ın bir <strong>sıfatı/mesleği</strong> vardır: "bireysel kullanıcı", "doktor", "işletme"… Bu onun rolüdür.</div>
+      </div>
+      <div class="concept">
+        <span class="emoji">🧩</span>
+        <div class="name">AFS</div>
+        <div class="real">attribute · feature · section</div>
+        <div class="desc">Rolün <strong>neye sahip olduğu</strong>: hangi bilgileri tutar, hangi butonları kullanabilir, profilinde hangi bölümler görünür.</div>
       </div>
     </div>
-
-    <div class="grid-2" style="margin-top:16px;">
-      <div class="card card-accent1">
-        <h3>📦 Tek Kayıt Kaynağı</h3>
-        <p>Her şey <code>catalog_items</code> (623 satır). <code>item_type</code> dağılımı:</p>
-        <table class="tbl">
-          <thead><tr><th>item_type</th><th>Adet</th><th>Açıklama</th></tr></thead>
-          <tbody>
-            <tr><td><code>organization</code></td><td>482</td><td>Kurumsal/katalog kayıtları</td></tr>
-            <tr><td><code>member</code></td><td>107</td><td>Auth kullanıcı köprüleri (linked_user_id)</td></tr>
-            <tr><td><code>person_profile</code></td><td>14</td><td>Kişi profilleri (legacy sync)</td></tr>
-            <tr><td><code>advisor</code></td><td>10</td><td>Danışman kayıtları</td></tr>
-            <tr><td><code>community_group</code></td><td>10</td><td>Topluluk grupları</td></tr>
-          </tbody>
-        </table>
+    <div class="analogy">
+      <span class="analogy-icon">💡</span>
+      <div class="t">
+        <strong>Günlük hayat benzetmesi:</strong> Item = bir <strong>kişi</strong>. Rol = o kişinin <strong>mesleği</strong> (mesela "doktor").
+        AFS = doktor olmanın <strong>getirdikleri</strong>: hangi bilgileri doldurur (diploma no), neyi yapabilir (reçete yazma),
+        kartvizitinde hangi bölümler olur (muayene saatleri). Mesleği değişirse getirdikleri de değişir.
       </div>
-      <div class="card card-accent2">
-        <h3>🎭 Rol &amp; Kural Kaynakları</h3>
-        <p>Roller ve role→özellik eşleşmeleri ayrı (değişmez) tablolarda:</p>
-        <table class="tbl">
-          <thead><tr><th>Tablo</th><th>Satır</th><th>Görev</th></tr></thead>
-          <tbody>
-            <tr><td><code>roles</code></td><td>82</td><td>Rol tanımları (hiyerarşik)</td></tr>
-            <tr><td><code>user_role_assignments</code></td><td>108</td><td>Kullanıcı → rol bağı</td></tr>
-            <tr><td><code>role_attribute_rules</code></td><td>1.977</td><td>Rol → attribute</td></tr>
-            <tr><td><code>role_feature_flags</code></td><td>2.487</td><td>Rol → feature</td></tr>
-            <tr><td><code>role_profile_section_rules</code></td><td>574</td><td>Rol → section</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="tip" style="margin-top:16px;">
-      <strong>Kural:</strong> Bir kullanıcının verisi = <code>catalog_items</code> (member satırı) +
-      rolü <code>user_role_assignments</code>'tan; o rolün hangi attribute/feature/section'lara sahip
-      olduğu <code>role_*_rules</code> tablolarından çözülür. Kullanıcıya özel istisnalar
-      <code>user_feature_overrides</code> / <code>user_profile_attributes</code> ile yapılır.
     </div>
   </div>
 
-  <!-- 02 İKİ PARALEL ROL SİSTEMİ -->
-  <div class="section" id="s2">
+  <!-- 01 ITEM -->
+  <div class="section" id="s1">
     <div class="section-header">
-      <div class="section-num red">02</div>
-      <h2>İki Paralel Rol Sistemi (Kritik)</h2>
+      <div class="section-num blue">01</div>
+      <h2>Item nedir? — Sistemdeki her kayıt bir "kart"</h2>
     </div>
-    <div class="callout danger">
-      <div class="callout-icon">⚠️</div>
-      <div class="callout-body">
-        <div class="callout-title">Veritabanında HÂLÂ iki rol sistemi yan yana duruyor</div>
-        <div class="callout-text">
-          Yeni AFS/RolesGo sistemi (<code>user_role_assignments</code>) ana sistemdir, ama eski enum-bazlı
-          <code>user_roles</code> tablosu (11 satır) silinmedi ve <code>has_role()</code> fonksiyonu hâlâ
-          onu kullanıyor. Karışıklığı önlemek için hangi fonksiyonun hangi tabloyu okuduğu net bilinmeli.
-        </div>
+    <p>
+      Eskiden farklı şeyler farklı yerlerde tutuluyordu. Şimdi <strong>her şey tek bir defterde</strong>:
+      üye de, işletme de, doktor da, dernek de aynı listede birer satır. Bu deftere
+      <code>catalog_items</code> diyoruz ve içinde <strong>623 kart</strong> var.
+    </p>
+    <div class="analogy">
+      <span class="analogy-icon">🗂️</span>
+      <div class="t">
+        <strong>Benzetme:</strong> Tek bir kocaman <strong>rehber/telefon defteri</strong> düşün. İçinde kişiler de var, dükkanlar da,
+        hastaneler de. Hepsi aynı defterde ama her kartın üstünde "bu ne tür bir kayıt" yazıyor.
       </div>
     </div>
-
-    <div class="grid-2" style="margin-top:16px;">
-      <div class="card card-accent2">
-        <h3>🟢 Yeni Sistem — RolesGo / AFS</h3>
-        <div class="role-tags" style="margin-bottom:10px;">
-          <span class="role-tag">user_role_assignments (108)</span>
-          <span class="role-tag">roles (82)</span>
-        </div>
-        <p><strong>Kullanan fonksiyonlar:</strong></p>
-        <div class="feature-list">
-          <span class="feature-pill">is_admin()</span>
-          <span class="feature-pill">is_moderator()</span>
-          <span class="feature-pill">get_current_user_features()</span>
-          <span class="feature-pill">get_current_user_profile()</span>
-          <span class="feature-pill">sync_member_catalog_role_for_user()</span>
-        </div>
-        <p style="margin-top:10px;"><code>user_id</code> başına tek rol (PK = user_id). FK → <code>roles.id</code>.</p>
-      </div>
-      <div class="card card-accent3">
-        <h3>🔴 Eski Sistem — Legacy enum</h3>
-        <div class="role-tags" style="margin-bottom:10px;">
-          <span class="role-tag">user_roles (11)</span>
-          <span class="role-tag">app_role enum</span>
-        </div>
-        <p><strong>Kullanan fonksiyonlar:</strong></p>
-        <div class="feature-list">
-          <span class="feature-pill">has_role(uuid, app_role)</span>
-        </div>
-        <p style="margin-top:10px;">
-          <code>user_roles</code> tablosu <code>app_role</code> enum'una bağlı. Üzerinde
-          <code>trg_assign_ambassador_referral_code</code> trigger'ı aktif (INSERT'te ambasador referans kodu üretir).
-          <span class="badge badge-red">Teknik borç</span>
-        </p>
-      </div>
-    </div>
-
+    <h3 style="margin-top:20px;">623 kartın türlere göre dağılımı</h3>
+    <table class="tbl">
+      <thead><tr><th>Tür</th><th>Adet</th><th>Bu ne demek?</th></tr></thead>
+      <tbody>
+        <tr><td><strong>İşletme/Kurum</strong> <code>organization</code></td><td>482</td><td>Dükkan, şirket, kurum kayıtları (en kalabalık grup)</td></tr>
+        <tr><td><strong>Üye</strong> <code>member</code></td><td>107</td><td>Siteye <strong>kaydolmuş gerçek kişiler</strong>. Her birinin bir hesabı var.</td></tr>
+        <tr><td><strong>Kişi profili</strong> <code>person_profile</code></td><td>14</td><td>Eski sistemden gelen kişi kayıtları</td></tr>
+        <tr><td><strong>Danışman</strong> <code>advisor</code></td><td>10</td><td>Danışman kayıtları</td></tr>
+        <tr><td><strong>Topluluk</strong> <code>community_group</code></td><td>10</td><td>WhatsApp/Telegram gibi topluluk grupları</td></tr>
+      </tbody>
+    </table>
     <div class="callout info" style="margin-top:16px;">
       <div class="callout-icon">🔑</div>
       <div class="callout-body">
-        <div class="callout-title">Admin tespiti nasıl yapılıyor?</div>
+        <div class="callout-title">"Üye" kartının özel bir yanı var</div>
         <div class="callout-text">
-          <code>is_admin(uid)</code>: <code>user_role_assignments</code> → <code>roles</code> join,
-          <code>r.key ILIKE 'Admin_%'</code>. &nbsp;
-          <code>is_moderator(uid)</code>: aynı + <code>r.key = 'moderator'</code>. &nbsp;
-          Artık <code>admin_users</code> / <code>user_profiles</code> tablolarına bağlı değil (ikisi de drop edildi).
+          Bir kart "üye" türündeyse, o kartın arkasında <strong>gerçek bir giriş yapabilen hesap</strong> vardır
+          (teknik adı: <code>linked_user_id</code> dolu olması). Yani üye kartı = "bu kartın bir sahibi var, giriş yapabiliyor".
+          Diğer kartların (işletme vb.) sahibi sonradan bağlanabilir ya da hiç olmayabilir.
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 03 ÇEKİRDEK TABLOLAR -->
+  <!-- 02 ROL -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num green">02</div>
+      <h2>Rol nedir? — Her kartın bir "sıfatı"</h2>
+    </div>
+    <p>
+      Her item'ın bir <strong>rolü</strong> vardır. Rol, "bu kart ne işe yarar / kim/ne'dir" sorusunun cevabıdır.
+      Sistemde <strong>82 farklı rol</strong> tanımlı (örnek: bireysel kullanıcı, doktor, işletme, dernek, şehir elçisi…).
+    </p>
+    <div class="analogy">
+      <span class="analogy-icon">🎓</span>
+      <div class="t">
+        <strong>Benzetme:</strong> Rol = <strong>meslek/unvan</strong>. Aynı bir insanın "öğretmen" ya da "doktor" olması gibi.
+        Mesleğini bilince, o kişinin ne yapabileceğini, kartvizitinde ne yazacağını tahmin edebilirsin. İşte rol de bunu söyler.
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="card card-accent2">
+        <h3>📌 Önemli kural: 1 kişi = 1 rol</h3>
+        <p>Bir kullanıcının aynı anda <strong>tek bir rolü</strong> olur. "Hem doktor hem işletme" gibi iki rol birden olmaz.
+        Rol değişirse, eski rolün getirdiği her şey gider, yeni rolünki gelir.</p>
+        <p>Hangi kullanıcının hangi rolde olduğu ayrı bir listede tutulur (<code>user_role_assignments</code>, 108 kayıt).</p>
+      </div>
+      <div class="card card-accent1">
+        <h3>👥 Şu an gerçek dağılım</h3>
+        <p>82 rol <em>tanımlı</em> ama hepsi <em>kullanılıyor</em> demek değil. Şu anki gerçek durum:</p>
+        <ul class="plain">
+          <li><strong>104 kişi</strong> → "bireysel" rolünde (neredeyse herkes)</li>
+          <li><strong>2 kişi</strong> → Süper Admin</li>
+          <li><strong>1 kişi</strong> → danışman</li>
+          <li>Kalan ~79 rol → şu an <strong>0 kişi</strong> (ileride kullanılmak üzere hazır bekliyor)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 AFS -->
   <div class="section" id="s3">
     <div class="section-header">
-      <div class="section-num blue">03</div>
-      <h2>Çekirdek Tablolar &amp; Satır Sayıları</h2>
+      <div class="section-num orange">03</div>
+      <h2>AFS nedir? — Rolün getirdiği 3 şey</h2>
     </div>
-    <table class="tbl">
-      <thead><tr><th>Tablo</th><th>Kol.</th><th>Satır</th><th>Katman</th><th>Rol</th></tr></thead>
-      <tbody>
-        <tr><td><code>catalog_items</code></td><td>17</td><td>623</td><td><span class="badge badge-teal">Kayıt</span></td><td>Tüm kayıtların tek kaynağı</td></tr>
-        <tr><td><code>catalog_search_documents</code></td><td>12</td><td>623</td><td><span class="badge badge-teal">Kayıt</span></td><td>Arama indeksi (trigger ile senkron)</td></tr>
-        <tr><td><code>catalog_item_memberships</code></td><td>7</td><td>131</td><td><span class="badge badge-teal">Kayıt</span></td><td>Item → kullanıcı (owner/editor) erişimi</td></tr>
-        <tr><td><code>roles</code></td><td>15</td><td>82</td><td><span class="badge badge-purple">Rol</span></td><td>Rol tanımları (family, parent, flags)</td></tr>
-        <tr><td><code>user_role_assignments</code></td><td>5</td><td>108</td><td><span class="badge badge-purple">Rol</span></td><td>Kullanıcı → rol (AFS, tek rol/user)</td></tr>
-        <tr><td><code>user_roles</code></td><td>3</td><td>11</td><td><span class="badge badge-red">Legacy</span></td><td>Eski enum rol sistemi (has_role)</td></tr>
-        <tr><td><code>attribute_catalog</code></td><td>10</td><td>53</td><td><span class="badge badge-blue">Attribute</span></td><td>Attribute tanımları</td></tr>
-        <tr><td><code>role_attribute_rules</code></td><td>12</td><td>1.977</td><td><span class="badge badge-blue">Attribute</span></td><td>Rol → attribute kuralları</td></tr>
-        <tr><td><code>user_profile_attributes</code></td><td>11</td><td>197</td><td><span class="badge badge-blue">Attribute</span></td><td>Kullanıcı attribute değerleri</td></tr>
-        <tr><td><code>feature_catalog</code></td><td>11</td><td>42</td><td><span class="badge badge-orange">Feature</span></td><td>Feature tanımları (scope_role)</td></tr>
-        <tr><td><code>feature_definitions</code></td><td>5</td><td>20</td><td><span class="badge badge-orange">Feature</span></td><td>Düşük seviye feature kaydı</td></tr>
-        <tr><td><code>role_feature_flags</code></td><td>6</td><td>2.487</td><td><span class="badge badge-orange">Feature</span></td><td>Rol → feature varsayılanları</td></tr>
-        <tr><td><code>user_feature_overrides</code></td><td>7</td><td>59</td><td><span class="badge badge-orange">Feature</span></td><td>Kullanıcıya özel feature istisnaları</td></tr>
-        <tr><td><code>profile_section_catalog</code></td><td>12</td><td>7</td><td><span class="badge badge-green">Section</span></td><td>Profil bölümü tanımları</td></tr>
-        <tr><td><code>role_profile_section_rules</code></td><td>8</td><td>574</td><td><span class="badge badge-green">Section</span></td><td>Rol → section kuralları</td></tr>
-        <tr><td><code>item_type_attribute_rules</code></td><td>12</td><td>11</td><td><span class="badge badge-blue">Item-type</span></td><td>Item-type → attribute (member vb.)</td></tr>
-        <tr><td><code>item_type_feature_defaults</code></td><td>6</td><td>7</td><td><span class="badge badge-orange">Item-type</span></td><td>Item-type → feature varsayılanı</td></tr>
-        <tr><td><code>approval_requests</code></td><td>16</td><td>0 (pending)</td><td><span class="badge badge-purple">Akış</span></td><td>Rol/attribute/feature değişiklik onayı</td></tr>
-        <tr><td><code>admin_audit_logs</code></td><td>9</td><td>41</td><td><span class="badge badge-purple">Denetim</span></td><td>Admin işlem günlüğü</td></tr>
-        <tr><td><code>_member_backup_20260609</code></td><td>29</td><td>14</td><td><span class="badge badge-red">Backup</span></td><td>Migration öncesi member snapshot</td></tr>
-        <tr><td><code>independent_profiles</code></td><td>24</td><td>241</td><td><span class="badge badge-red">Legacy</span></td><td>Eski bağımsız profiller (catalog'a sync)</td></tr>
-      </tbody>
-    </table>
-    <div class="callout warn" style="margin-top:16px;">
-      <div class="callout-icon">🧹</div>
+    <p>
+      AFS, üç kelimenin baş harfleri: <strong>A</strong>ttribute, <strong>F</strong>eature, <strong>S</strong>ection.
+      Bir rolün "neye sahip olduğunu" bu üçü belirler. Tek tek bakalım:
+    </p>
+    <div class="grid-3" style="margin-top:16px;">
+      <div class="concept" style="border-left:4px solid var(--accent5);">
+        <span class="emoji">📝</span>
+        <div class="name">Attribute</div>
+        <div class="real">attribute_catalog · 53 adet</div>
+        <div class="desc"><strong>Bilgi alanları.</strong> Profilde doldurulan kutucuklar: isim, şehir, telefon, biyografi, LinkedIn linki…
+        "Bu rol hangi bilgileri tutabilir?"</div>
+      </div>
+      <div class="concept" style="border-left:4px solid var(--accent4);">
+        <span class="emoji">🎚️</span>
+        <div class="name">Feature</div>
+        <div class="real">feature_catalog · 42 adet</div>
+        <div class="desc"><strong>Yetkiler / açılıp kapanan özellikler.</strong> "Etkinlik oluşturabilir mi?", "WhatsApp gösterilsin mi?",
+        "Cadde'ye girebilir mi?" gibi aç/kapa düğmeleri.</div>
+      </div>
+      <div class="concept" style="border-left:4px solid var(--accent2);">
+        <span class="emoji">🧱</span>
+        <div class="name">Section</div>
+        <div class="real">profile_section_catalog · 7 adet</div>
+        <div class="desc"><strong>Profil bölümleri.</strong> Profil sayfasında hangi kartlar/bölümler görünsün: "Hakkında",
+        "İletişim Kartı", "Etkinlikler"… Sayfanın kutuları.</div>
+      </div>
+    </div>
+    <div class="analogy">
+      <span class="analogy-icon">🏥</span>
+      <div class="t">
+        <strong>Doktor örneği:</strong>
+        <strong style="color:var(--accent5);">Attribute</strong> = doldurduğu bilgiler (diploma no, uzmanlık, muayenehane adresi).
+        <strong style="color:var(--accent4);">Feature</strong> = yapabildikleri (randevu açma butonu açık).
+        <strong style="color:var(--accent2);">Section</strong> = profilinde görünen bölümler ("Muayene Saatleri" kutusu).
+        Hepsi "doktor" rolüne bağlı; rol "işletme" olsaydı bunların hepsi değişirdi.
+      </div>
+    </div>
+    <div class="callout info" style="margin-top:8px;">
+      <div class="callout-icon">🔗</div>
       <div class="callout-body">
-        <div class="callout-title">Temizlenmesi gereken artıklar</div>
+        <div class="callout-title">Rol ile AFS nasıl eşleşiyor?</div>
         <div class="callout-text">
-          <code>profiles</code>, <code>user_profiles</code>, <code>admin_users</code> tabloları
-          <code>20260609003000</code> migration'ında drop edildi. <code>user_roles</code> (legacy enum),
-          <code>independent_profiles</code> ve <code>_member_backup_20260609</code> hâlâ duruyor — gelecekte
-          single-source hedefini netleştirmek için ele alınmalı.
+          Her rol için "bu rol hangi attribute/feature/section'lara sahip" diye önceden hazırlanmış dev listeler var:
+          rol→attribute (<code>role_attribute_rules</code>), rol→feature (<code>role_feature_flags</code>),
+          rol→section (<code>role_profile_section_rules</code>). Sistem "bu kişinin rolü ne?" deyip o rolün listesine bakar.
+          Kişiye <strong>özel istisna</strong> gerekirse (örn. "bu kişiye normalde kapalı bir özelliği aç") ayrı bir
+          "override" kaydıyla yapılır — kişiye özel ayar her zaman rolün varsayılanını ezer.
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 04 ROL AİLELERİ -->
+  <!-- 04 BAGLANTI -->
   <div class="section" id="s4">
     <div class="section-header">
       <div class="section-num">04</div>
-      <h2>Rol Aileleri (82 rol, hepsi aktif)</h2>
+      <h2>Hepsi nasıl bağlanıyor? — Tek resimde</h2>
+    </div>
+    <p>Şimdi üçünü birleştirelim. Sistem bir kişinin ekranını şöyle hesaplar:</p>
+    <div class="map" style="margin-top:16px;">
+      <div class="map-box" style="border-color:var(--accent5);">🪪 ITEM (kart)<br><span style="font-weight:400;font-size:11px;color:var(--muted);">örn. Ahmet'in üye kartı</span></div>
+      <div class="map-arrow">⬇ kartın bir rolü var</div>
+      <div class="map-box" style="border-color:var(--accent2);">🎭 ROL<br><span style="font-weight:400;font-size:11px;color:var(--muted);">örn. "bireysel kullanıcı"</span></div>
+      <div class="map-arrow">⬇ rolün AFS listesi açılır</div>
+      <div class="map-row">
+        <div class="map-box" style="border-color:var(--accent5);">📝 Attribute<br><span style="font-weight:400;font-size:11px;color:var(--muted);">bilgiler</span></div>
+        <div class="map-box" style="border-color:var(--accent4);">🎚️ Feature<br><span style="font-weight:400;font-size:11px;color:var(--muted);">yetkiler</span></div>
+        <div class="map-box" style="border-color:var(--accent2);">🧱 Section<br><span style="font-weight:400;font-size:11px;color:var(--muted);">bölümler</span></div>
+      </div>
+      <div class="map-arrow">⬇</div>
+      <div class="map-box" style="border-color:var(--accent1);">🖥️ Kişinin gördüğü profil ekranı</div>
+    </div>
+    <div class="tip" style="margin-top:16px;">
+      <strong>Cümleyle:</strong> "Ahmet'in kartı (item) → rolü 'bireysel' → 'bireysel' rolünün izin verdiği bilgiler,
+      yetkiler ve bölümler → Ahmet'in ekranı." Sistem her seferinde bu zinciri takip eder.
+    </div>
+  </div>
+
+  <!-- 05 IKI DURUM -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <h2>İki durum: "Login olunca" vs "Dışarıdan bakınca"</h2>
     </div>
     <p>
-      <code>roles</code> tablosu <code>family_key</code> ile gruplanır ve <code>parent_role_id</code> ile
-      hiyerarşi kurar. Tüm 82 rol <code>is_active = true</code>, <code>is_assignable = true</code> ve
-      <code>is_directory_visible = true</code>. Aktif kullanıcı dağılımı: <strong>bireysel 104</strong>,
-      <strong>Admin_SuperAdmin 2</strong>, <strong>danisman 1</strong>; kalan roller şu an 0 kullanıcı.
+      Aynı kart, <strong>kim baktığına göre</strong> farklı görünür. Bu çok önemli bir nokta. İki durum var:
     </p>
-    <div class="grid-3" style="margin-top:16px;">
-      <div class="role-family"><div class="role-family-header"><span class="role-family-title">Business</span><span class="role-family-count">25</span></div><div class="role-tags"><span class="role-tag">Gym</span><span class="role-tag">RetailStore</span><span class="role-tag">LawOffice</span><span class="role-tag">Pharmacy</span><span class="role-tag">RestaurantCafe</span><span class="role-tag">+20</span></div></div>
-      <div class="role-family"><div class="role-family-header"><span class="role-family-title">Consultant</span><span class="role-family-count">11</span></div><div class="role-tags"><span class="role-tag">Financial</span><span class="role-tag">VisaImmigration</span><span class="role-tag">RealEstate</span><span class="role-tag">LawTax</span><span class="role-tag">+7</span></div></div>
-      <div class="role-family"><div class="role-family-header"><span class="role-family-title">Organization</span><span class="role-family-count">8</span></div><div class="role-tags"><span class="role-tag">EmbassyConsulate</span><span class="role-tag">AssociationFoundation</span><span class="role-tag">ChamberCouncil</span><span class="role-tag">+5</span></div></div>
-      <div class="role-family"><div class="role-family-header"><span class="role-family-title">Healthcare</span><span class="role-family-count">7</span></div><div class="role-tags"><span class="role-tag">Hospital</span><span class="role-tag">Doctor</span><span class="role-tag">Dentist</span><span class="role-tag">Psychologist</span><span class="role-tag">+3</span></div></div>
-      <div class="role-family"><div class="role-family-header"><span class="role-family-title">Marketplace</span><span class="role-family-count">5</span></div><div class="role-tags"><span class="role-tag">BusinessSeller</span><span class="role-tag">IndividualSeller</span><span class="role-tag">Landlord</span><span class="role-tag">+2</span></div></div>
-      <div class="role-family"><div class="role-family-header"><span class="role-family-title">Community</span><span class="role-family-count">5</span></div><div class="role-tags"><span class="role-tag">GroupAdmin</span><span class="role-tag">DiscordAdmin</span><span class="role-tag">TelegramAdmin</span><span class="role-tag">+2</span></div></div>
-      <div class="role-family"><div class="role-family-header"><span class="role-family-title">User</span><span class="role-family-count">5</span></div><div class="role-tags"><span class="role-tag">Standard</span><span class="role-tag">CityAmbassador</span><span class="role-tag">DiasporaMember</span><span class="role-tag">+2</span></div></div>
-      <div class="role-family"><div class="role-family-header"><span class="role-family-title">Job</span><span class="role-family-count">4</span></div><div class="role-tags"><span class="role-tag">Recruiter</span><span class="role-tag">Employer</span><span class="role-tag">Candidate</span><span class="role-tag">Agency</span></div></div>
-      <div class="role-family"><div class="role-family-header"><span class="role-family-title">Event</span><span class="role-family-count">3</span></div><div class="role-tags"><span class="role-tag">Organizer</span><span class="role-tag">Sponsor</span><span class="role-tag">Venue</span></div></div>
-      <div class="role-family"><div class="role-family-header"><span class="role-family-title">Admin</span><span class="role-family-count">3</span></div><div class="role-tags"><span class="role-tag">SuperAdmin</span><span class="role-tag">PlatformAdmin</span><span class="role-tag">ContentModerator</span></div></div>
-      <div class="role-family"><div class="role-family-header"><span class="role-family-title">Legacy slug roller</span><span class="role-family-count">6</span></div><div class="role-tags"><span class="role-tag">bireysel</span><span class="role-tag">danisman</span><span class="role-tag">isletme</span><span class="role-tag">kurulus-dernek</span><span class="role-tag">sehir-elcisi</span><span class="role-tag">blogger-...</span></div></div>
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="case login">
+        <h3>🔐 Kendisi login olduğunda</h3>
+        <p style="font-size:13px;">Kişi kendi hesabıyla girer ve kendi kartına bakar. Her şeyi görür:</p>
+        <div class="case-row"><span class="yes">✓</span> Claim eden kişinin <strong>maili</strong> (kartın sahibi kim)</div>
+        <div class="case-row"><span class="yes">✓</span> <strong>Admin</strong> (kartı yöneten kişi)</div>
+        <div class="case-row"><span class="yes">✓</span> Kartın kendisi (1 Item)</div>
+        <div class="case-row"><span class="yes">✓</span> Rolü (1 Rol)</div>
+        <div class="case-row"><span class="yes">✓</span> O rolün tüm AFS'i (bilgiler + yetkiler + bölümler)</div>
+      </div>
+      <div class="case ext">
+        <h3>👁️ Dışarıdan biri baktığında</h3>
+        <p style="font-size:13px;">Başka biri (veya giriş yapmamış ziyaretçi) o profile bakar. Daha azını görür:</p>
+        <div class="case-row"><span class="no">✗</span> Mail <strong>görünmez</strong> (gizlilik)</div>
+        <div class="case-row"><span class="no">✗</span> Admin <strong>görünmez</strong></div>
+        <div class="case-row"><span class="yes">✓</span> Kartın kendisi (1 Item)</div>
+        <div class="case-row"><span class="yes">✓</span> O role atanmış AFS (herkese açık kısmı)</div>
+      </div>
     </div>
+    <div class="callout success" style="margin-top:16px;">
+      <div class="callout-icon">🖥️</div>
+      <div class="callout-body">
+        <div class="callout-title">Bunu admin panelinde canlı görebilirsin</div>
+        <div class="callout-text">
+          Yönetici panelinde <strong>"RolesGo Genel Bakış"</strong> sayfası (<code>/admin/new-member/roles-overview</code>)
+          tam bunu gösterir: üstte tüm Itemler / Roller / AFS listesi; bir item seçince altında "Profil login olduğunda"
+          ve "Profile dışarıdan bakıldığında" diye <strong>iki kart yan yana</strong> açılır. Hangi durumda neyin
+          görünüp görünmediğini oradan deneyerek görebilirsin.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 ROLLER -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <div class="section-num green">06</div>
+      <h2>82 rol neler? — Ailelere göre gruplanır</h2>
+    </div>
+    <p>
+      82 rol tek tek ezberlenmez; <strong>ailelere</strong> (gruplara) ayrılmıştır. Her aile benzer rolleri toplar.
+      İşte aileler ve içlerinden birkaç örnek:
+    </p>
+    <table class="tbl" style="margin-top:8px;">
+      <thead><tr><th>Aile</th><th>Kaç rol</th><th>Örnek roller</th></tr></thead>
+      <tbody>
+        <tr><td><strong>İşletme</strong> (Business)</td><td>25</td><td>Spor salonu, mağaza, hukuk bürosu, eczane, restoran/kafe…</td></tr>
+        <tr><td><strong>Danışman</strong> (Consultant)</td><td>11</td><td>Finans, vize/göçmenlik, gayrimenkul, hukuk/vergi…</td></tr>
+        <tr><td><strong>Kurum</strong> (Organization)</td><td>8</td><td>Büyükelçilik/konsolosluk, dernek/vakıf, oda/konsey…</td></tr>
+        <tr><td><strong>Sağlık</strong> (Healthcare)</td><td>7</td><td>Hastane, doktor, diş hekimi, psikolog…</td></tr>
+        <tr><td><strong>Pazaryeri</strong> (Marketplace)</td><td>5</td><td>Kurumsal satıcı, bireysel satıcı, ev sahibi…</td></tr>
+        <tr><td><strong>Topluluk</strong> (Community)</td><td>5</td><td>Grup yöneticisi, Discord/Telegram yöneticisi…</td></tr>
+        <tr><td><strong>Kullanıcı</strong> (User)</td><td>5</td><td>Standart, şehir elçisi, diaspora üyesi…</td></tr>
+        <tr><td><strong>İş/Kariyer</strong> (Job)</td><td>4</td><td>İşveren, aday, ajans, işe alımcı</td></tr>
+        <tr><td><strong>Etkinlik</strong> (Event)</td><td>3</td><td>Organizatör, sponsor, mekan</td></tr>
+        <tr><td><strong>Admin</strong></td><td>3</td><td>Süper Admin, Platform Admin, İçerik Moderatörü</td></tr>
+        <tr><td><strong>Eski tip (slug) roller</strong></td><td>6</td><td>bireysel, danisman, isletme, kurulus-dernek, sehir-elcisi…</td></tr>
+      </tbody>
+    </table>
     <div class="callout warn" style="margin-top:16px;">
       <div class="callout-icon">🔀</div>
       <div class="callout-body">
-        <div class="callout-title">İki rol adlandırma kuralı bir arada</div>
+        <div class="callout-title">Şu an iki isimlendirme bir arada</div>
         <div class="callout-text">
-          Yeni roller <code>Family_SubType</code> (örn. <code>Business_Gym</code>, <code>Admin_SuperAdmin</code>)
-          formatında. Eski slug roller (<code>bireysel</code>, <code>danisman</code>, <code>isletme</code>...)
-          kendi family_key'lerinde tek başına. Gerçek kullanıcıların tamamı şu an eski slug
-          <code>bireysel</code> rolünde — yeni Family_SubType rolleri henüz boş.
+          Yeni roller "Aile_AltTip" gibi adlandırılır (örn. <code>Business_Gym</code>, <code>Admin_SuperAdmin</code>).
+          Bir de eski tip kısa adlı roller var (<code>bireysel</code>, <code>danisman</code>…). İlginç olan:
+          <strong>gerçek kullanıcıların neredeyse tamamı hâlâ eski "bireysel" rolünde</strong>; yeni detaylı roller
+          tanımlı ama henüz boş. Yani sistem geleceğe hazır, ama bugün çoğunlukla tek rol kullanılıyor.
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 05 ROL KONTROL FONKSİYONLARI -->
-  <div class="section" id="s5">
-    <div class="section-header">
-      <div class="section-num green">05</div>
-      <h2>Rol Kontrol Fonksiyonları</h2>
-    </div>
-    <p>Tüm yetki kontrolü <code>SECURITY DEFINER</code> fonksiyonlar üzerinden yapılır. RLS politikaları bunları çağırır.</p>
-    <table class="tbl">
-      <thead><tr><th>Fonksiyon</th><th>Okuduğu kaynak</th><th>Mantık</th><th>Sistem</th></tr></thead>
-      <tbody>
-        <tr><td><code>is_admin(uid)</code></td><td>user_role_assignments + roles</td><td><code>key ILIKE 'Admin_%'</code></td><td><span class="badge badge-green">AFS</span></td></tr>
-        <tr><td><code>is_admin_user(id)</code></td><td>→ is_admin()</td><td>Alias wrapper</td><td><span class="badge badge-green">AFS</span></td></tr>
-        <tr><td><code>is_moderator(uid)</code></td><td>user_role_assignments + roles</td><td><code>'Admin_%' OR 'moderator'</code></td><td><span class="badge badge-green">AFS</span></td></tr>
-        <tr><td><code>has_role(uid, app_role)</code></td><td>user_roles (enum)</td><td><code>EXISTS user_id+role</code></td><td><span class="badge badge-red">Legacy</span></td></tr>
-        <tr><td><code>get_current_user_features()</code></td><td>feature_catalog + flags + overrides</td><td>Efektif feature seti</td><td><span class="badge badge-green">AFS</span></td></tr>
-        <tr><td><code>get_current_user_profile()</code></td><td>user_role_assignments + attributes</td><td>Profil + rol + completion</td><td><span class="badge badge-green">AFS</span></td></tr>
-        <tr><td><code>can_view / can_edit / can_administer_catalog_item()</code></td><td>catalog_item_memberships</td><td>Item-bazlı yetki</td><td><span class="badge badge-teal">Catalog</span></td></tr>
-        <tr><td><code>admin_set_user_role(user, key)</code></td><td>user_role_assignments (upsert)</td><td>Rol atama + audit log</td><td><span class="badge badge-green">AFS</span></td></tr>
-      </tbody>
-    </table>
-
-    <div class="grid-2" style="margin-top:16px;">
-      <div class="card card-accent2">
-        <h4>is_admin(uid) gövdesi</h4>
-        <div class="schema-box"><span class="col-note">select exists (</span>
-  <span class="col-name">select</span> 1
-  <span class="col-name">from</span> user_role_assignments ura
-  <span class="col-name">join</span> roles r <span class="col-note">on</span> r.id = ura.role_id
-  <span class="col-name">where</span> ura.user_id = uid
-    <span class="col-name">and</span> r.key <span class="col-pk">ilike</span> <span class="col-type">'Admin_%'</span>
-<span class="col-note">);</span></div>
-      </div>
-      <div class="card card-accent4">
-        <h4>get_current_user_features() öncelik</h4>
-        <div class="priority-chain">
-          <div class="priority-item"><div class="priority-rank" style="background:rgba(255,107,107,0.25);color:#ff8787;">1</div><div class="priority-body"><div class="priority-title">user_feature_overrides</div><div class="priority-sub">Kullanıcıya özel istisna</div></div><span class="priority-source">override</span></div>
-          <div class="priority-arrow">↓ yoksa</div>
-          <div class="priority-item"><div class="priority-rank" style="background:rgba(108,99,255,0.25);color:#a78bfa;">2</div><div class="priority-body"><div class="priority-title">role_feature_flags</div><div class="priority-sub">Rolün varsayılanı</div></div><span class="priority-source">role_default</span></div>
-          <div class="priority-arrow">↓ yoksa</div>
-          <div class="priority-item"><div class="priority-rank" style="background:rgba(136,146,176,0.25);color:#8892b0;">3</div><div class="priority-body"><div class="priority-title">false</div><div class="priority-sub">+ feature_catalog.is_active_globally şartı</div></div><span class="priority-source">fallback</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 06 FEATURE ÇÖZÜMLEME -->
-  <div class="section" id="s6">
-    <div class="section-header">
-      <div class="section-num orange">06</div>
-      <h2>Feature Çözümleme Zinciri</h2>
-    </div>
-    <p>
-      Bir feature'ın bir kullanıcı için açık olması için: (1) <code>feature_catalog.is_active_globally = true</code>
-      VE (2) kullanıcı override'ı yoksa rolün flag'i true olmalı. Scope kontrolü:
-      <code>feature_catalog.scope_role</code> ya <code>'*'</code> (herkese) ya da kullanıcının rol key'i olmalı.
-    </p>
-    <div class="schema-box">
-<span class="col-name">is_enabled</span> = feature_catalog.<span class="col-type">is_active_globally</span>
-             <span class="col-note">AND</span> coalesce(
-                 user_feature_overrides.<span class="col-type">is_enabled</span>,   <span class="col-note">-- 1. öncelik</span>
-                 role_feature_flags.<span class="col-type">is_enabled</span>,        <span class="col-note">-- 2. öncelik</span>
-                 <span class="col-pk">false</span>                                   <span class="col-note">-- fallback</span>
-             )
-
-<span class="col-note">scope filtresi:</span> feature_catalog.scope_role = <span class="col-type">'*'</span>
-                <span class="col-note">OR</span> feature_catalog.scope_role = <span class="col-type">effective_role.key</span>
-    </div>
-    <div class="grid-3" style="margin-top:16px;">
-      <div class="card card-accent4"><h4>role_feature_flags</h4><div class="stat-num" style="font-size:1.6rem;">2.487</div><p>Rol×feature satırı (2.463 enabled)</p></div>
-      <div class="card card-accent4"><h4>feature_catalog</h4><div class="stat-num" style="font-size:1.6rem;">42</div><p>Feature tanımı (41 global aktif)</p></div>
-      <div class="card card-accent4"><h4>user_feature_overrides</h4><div class="stat-num" style="font-size:1.6rem;">59</div><p>Kullanıcıya özel istisna</p></div>
-    </div>
-  </div>
-
-  <!-- 07 MEMBER KÖPRÜSÜ -->
+  <!-- 07 YENI UYE -->
   <div class="section" id="s7">
     <div class="section-header">
-      <div class="section-num">07</div>
-      <h2>Member Köprüsü &amp; Yeni-Kullanıcı Akışı</h2>
+      <div class="section-num blue">07</div>
+      <h2>Yeni biri üye olunca arka planda ne oluyor?</h2>
     </div>
     <p>
-      Bir auth kullanıcısının <code>/admin/data</code>'da ve dizinde görünmesi, <code>catalog_items</code>
-      içinde <code>item_type='member'</code> + <code>linked_user_id</code> dolu bir köprü kaydına bağlıdır.
-      Bu köprü <code>2026-06-09</code> fix'inden sonra otomatik kuruluyor.
+      Biri siteye kaydolduğunda sistem otomatik bir dizi adım atar. Sen hiçbir şey yapmazsın, kendiliğinden olur.
+      Adım adım:
     </p>
     <div class="flow">
       <div class="flow-step">
         <div class="flow-icon" style="background:rgba(108,99,255,0.2);color:#a78bfa;">1</div>
-        <div class="flow-body"><div class="flow-title">auth.users INSERT</div><div class="flow-desc">Yeni kullanıcı kaydolur. <code>on_auth_user_created_assign_role</code> trigger'ı tetiklenir → <code>handle_new_auth_user_role()</code>.</div></div>
+        <div class="flow-body"><div class="flow-title">Kayıt olur</div><div class="flow-desc">Kişi e-posta/şifreyle hesap açar. Sistem "yeni biri geldi" der ve harekete geçer.</div></div>
       </div>
       <div class="flow-step">
         <div class="flow-icon" style="background:rgba(108,99,255,0.2);color:#a78bfa;">2</div>
-        <div class="flow-body"><div class="flow-title">Rol atama</div><div class="flow-desc"><code>user_role_assignments</code>'a <code>bireysel</code> rolü eklenir (on conflict do nothing).</div></div>
+        <div class="flow-body"><div class="flow-title">Rol verilir</div><div class="flow-desc">Otomatik olarak <strong>"bireysel"</strong> rolü atanır. (Herkes buradan başlar; sonra değiştirilebilir.)</div></div>
       </div>
       <div class="flow-step">
         <div class="flow-icon" style="background:rgba(0,212,170,0.2);color:#63e6be;">3</div>
-        <div class="flow-body"><div class="flow-title">Köprü oluşturma</div><div class="flow-desc"><code>sync_member_catalog_role_for_user(new.id)</code> çağrılır → köprü yoksa <code>catalog_items</code>'a member satırı INSERT edilir (published, public, claimed).</div></div>
+        <div class="flow-body"><div class="flow-title">Kartı oluşturulur</div><div class="flow-desc">Büyük deftere (<code>catalog_items</code>) bu kişi için bir <strong>"üye" kartı</strong> eklenir. Artık sistemde bir kaydı var.</div></div>
       </div>
       <div class="flow-step">
         <div class="flow-icon" style="background:rgba(0,212,170,0.2);color:#63e6be;">4</div>
-        <div class="flow-body"><div class="flow-title">Owner membership</div><div class="flow-desc"><code>catalog_item_memberships</code>'a <code>owner/active</code> kaydı eklenir. Kullanıcı kendi kaydını yönetebilir.</div></div>
+        <div class="flow-body"><div class="flow-title">Sahibi yapılır</div><div class="flow-desc">Kişi <strong>kendi kartının sahibi</strong> olarak işaretlenir. Yani kendi profilini düzenleyebilir.</div></div>
       </div>
       <div class="flow-step">
         <div class="flow-icon" style="background:rgba(116,192,252,0.2);color:#a5d8ff;">5</div>
-        <div class="flow-body"><div class="flow-title">Arama indeksi</div><div class="flow-desc"><code>trg_catalog_search_document_items</code> → <code>catalog_search_documents</code> güncellenir. Kayıt anında aranabilir/listelenebilir.</div></div>
+        <div class="flow-body"><div class="flow-title">Aranabilir olur</div><div class="flow-desc">Arama dizinine eklenir. Kayıt biter bitmez kişi <strong>dizinde aranabilir/listelenebilir</strong> hale gelir.</div></div>
       </div>
     </div>
     <div class="callout success" style="margin-top:8px;">
       <div class="callout-icon">🔁</div>
       <div class="callout-body">
-        <div class="callout-title">Çift yönlü rol senkronu</div>
+        <div class="callout-title">Rol değişirse kart da güncellenir (otomatik)</div>
         <div class="callout-text">
-          <code>user_role_assignments</code> değişince <code>trg_sync_member_catalog_role_from_user_role_assignments</code>
-          → <code>sync_member_catalog_role_for_user</code> köprünün <code>platform_role_key</code>'ini günceller.
-          Tersi yönde, <code>catalog_items.platform_role_key</code> değişince
-          <code>trg_sync_user_profile_role_from_catalog</code> tetiklenir (idempotent).
+          Bir kişinin rolünü değiştirirsen, kartındaki rol bilgisi de <strong>kendiliğinden</strong> güncellenir.
+          İki taraf birbiriyle senkron tutulur — bir yeri elle düzeltip diğerini unutman gerekmez.
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 08 TRIGGER ENVANTERİ -->
+  <!-- 08 ADMIN -->
   <div class="section" id="s8">
     <div class="section-header">
       <div class="section-num red">08</div>
-      <h2>Trigger Envanteri (rol/katalog kritik)</h2>
+      <h2>"Admin" kim demek?</h2>
     </div>
-    <table class="tbl">
-      <thead><tr><th>Tablo</th><th>Trigger</th><th>Zaman / Olay</th><th>Fonksiyon</th></tr></thead>
-      <tbody>
-        <tr><td><code>auth.users</code></td><td>on_auth_user_created_assign_role</td><td>AFTER INSERT</td><td><code>handle_new_auth_user_role()</code></td></tr>
-        <tr><td><code>user_role_assignments</code></td><td>trg_sync_member_catalog_role_from_user_role_assignments</td><td>AFTER I/U/D</td><td><code>sync_member_catalog_role_trigger()</code></td></tr>
-        <tr><td><code>catalog_items</code></td><td>trg_sync_user_profile_role_from_catalog</td><td>AFTER UPDATE</td><td><code>sync_user_profile_role_from_catalog()</code></td></tr>
-        <tr><td><code>catalog_items</code></td><td>trg_catalog_search_document_items</td><td>AFTER I/U/D</td><td><code>catalog_search_document_item_trigger()</code></td></tr>
-        <tr><td><code>catalog_items</code></td><td>trg_catalog_items_updated_at</td><td>BEFORE UPDATE</td><td><code>update_updated_at_column()</code></td></tr>
-        <tr><td><code>user_profile_attributes</code></td><td>trg_catalog_sync_person_profile_attributes</td><td>AFTER I/U/D</td><td><code>catalog_sync_person_profile_attribute_trigger()</code></td></tr>
-        <tr><td><code>user_profile_attributes</code></td><td>trg_sync_individual_public_profile_settings_from_attribute</td><td>AFTER I/U/D</td><td><code>sync_individual_public_profile_settings_from_attribute()</code></td></tr>
-        <tr><td><code>user_roles</code> <span class="badge badge-red">legacy</span></td><td>trg_assign_ambassador_referral_code</td><td>AFTER INSERT</td><td><code>assign_ambassador_referral_code()</code></td></tr>
-        <tr><td><code>catalog_item_memberships</code></td><td>trg_catalog_item_memberships_updated_at</td><td>BEFORE UPDATE</td><td><code>update_updated_at_column()</code></td></tr>
-      </tbody>
-    </table>
+    <p>
+      "Admin" kelimesi iki farklı anlamda kullanılabiliyor — karışmasın diye ikisini ayıralım:
+    </p>
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="card card-accent3">
+        <h3>🛡️ Platform Admini</h3>
+        <p>Tüm sistemi yöneten kişi. Rolü "Admin_..." ile başlar (örn. Süper Admin). Şu an <strong>2 kişi</strong>.
+        Yönetici paneline girebilen, herkesi yönetebilen kişiler bunlar.</p>
+        <p style="font-size:12px;">Sistem "bu kişi admin mi?" diye sorduğunda, rolüne bakar: adı "Admin_" ile başlıyorsa adminidir.</p>
+      </div>
+      <div class="card card-accent4">
+        <h3>👤 Kartın Sahibi/Yöneticisi</h3>
+        <p>Belirli bir kartı (item'ı) yöneten kişi. Mesela bir işletme kartını yöneten kişi.
+        "RolesGo Genel Bakış"ta gördüğün <strong>"Admin" kutusu bunu</strong> gösterir: o profili yöneten kişinin maili.</p>
+        <p style="font-size:12px;">Yani oradaki "Admin", platform yöneticisi değil; <strong>o kaydı yöneten kişidir</strong>.</p>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:16px;">
+      <strong>Kısaca:</strong> "Platform admini" = tüm siteyi yöneten. "Kart admini" = sadece o kaydı yöneten.
+      Genel Bakış sayfasındaki Admin kutusu, ikincisini (o kartın sahibi/yöneticisi) gösterir.
+    </div>
   </div>
 
-  <!-- 09 RPC KATMANI -->
+  <!-- 09 TABLOLAR -->
   <div class="section" id="s9">
     <div class="section-header">
       <div class="section-num blue">09</div>
-      <h2>RPC Katmanı — /admin/data ve Dizin</h2>
+      <h2>Altında hangi "defterler" (tablolar) var?</h2>
     </div>
-    <p>Frontend Supabase RPC'leri üzerinden veri çeker. Hepsi <code>SECURITY DEFINER</code> + yetki kontrolü.</p>
-    <div class="grid-2">
-      <div class="card card-accent5">
-        <h3>📋 admin_list_unified_records</h3>
-        <p><span class="badge badge-blue">stable</span> <span class="badge badge-green">is_moderator gate</span></p>
-        <p><code>/admin/data</code>'nın kaynağı. <strong>Sadece <code>catalog_items</code>'tan</strong> okur.
-        <code>linked_user_id IS NOT NULL → member_profile</code>, aksi → <code>catalog_item</code>.</p>
-        <p>Filtreler: kind, query, item_type, status, verification, city, country, <strong>platform_role_key</strong>. Sayfalama dahili <code>total_count</code> ile.</p>
-        <div class="tip">Şu an döndürür: <strong>107 member_profile + 516 catalog_item</strong>.</div>
-        <p style="margin-top:10px;">Frontend (<code>AdminCatalogPage</code>) artık <code>member_profile</code>'ı
-        <code>catalog_item</code> gibi işler: ikisi de <code>catalog_items</code> satırı olduğu için detay paneli
-        <code>getAdminCatalogItemDetail</code> ile yüklenir. <span class="badge badge-green">2026-06-09 fix</span>
-        — bkz. §10.</p>
-      </div>
-      <div class="card card-accent5">
-        <h3>🌐 list_public_directory_profiles</h3>
-        <p><span class="badge badge-teal">public</span></p>
-        <p>Herkese açık dizin. <code>user_role_assignments</code> + <code>user_profile_attributes</code> +
-        <code>directory.visible</code> feature'ı üzerinden filtreler. <code>profiles</code>/<code>user_profiles</code>
-        bağımlılığı kaldırıldı (legacy drop sonrası).</p>
-        <p>Diğer önemli RPC'ler: <code>get_current_user_profile</code>, <code>get_current_user_features</code>,
-        <code>admin_set_user_role</code>, <code>get_role_management_bundle</code>,
-        <code>get_catalog_item_public_profile</code>.</p>
+    <p>
+      Meraklısı için: sistemin altında veriler birden çok deftere (tabloya) dağılmış durumda. Her birinin görevini
+      <strong>tek cümleyle</strong> anlatalım. Ezberlemene gerek yok, sadece "ne nerede tutuluyor" görmek için:
+    </p>
+    <table class="tbl" style="margin-top:8px;">
+      <thead><tr><th>Defter (tablo)</th><th>Kaç kayıt</th><th>Ne işe yarar (basitçe)</th></tr></thead>
+      <tbody>
+        <tr><td><code>catalog_items</code></td><td>623</td><td><span class="badge badge-teal">Kayıt</span> Tüm kartların tutulduğu ana defter</td></tr>
+        <tr><td><code>catalog_item_memberships</code></td><td>131</td><td><span class="badge badge-teal">Kayıt</span> Hangi kartı kim yönetebilir (sahip/editör)</td></tr>
+        <tr><td><code>roles</code></td><td>82</td><td><span class="badge badge-purple">Rol</span> Tüm rollerin tanımı</td></tr>
+        <tr><td><code>user_role_assignments</code></td><td>108</td><td><span class="badge badge-purple">Rol</span> Hangi kullanıcı hangi rolde</td></tr>
+        <tr><td><code>attribute_catalog</code></td><td>53</td><td><span class="badge badge-blue">Bilgi</span> Var olan tüm bilgi alanlarının listesi</td></tr>
+        <tr><td><code>role_attribute_rules</code></td><td>1.977</td><td><span class="badge badge-blue">Bilgi</span> Hangi rol hangi bilgileri tutabilir</td></tr>
+        <tr><td><code>user_profile_attributes</code></td><td>197</td><td><span class="badge badge-blue">Bilgi</span> Kullanıcıların doldurduğu gerçek değerler</td></tr>
+        <tr><td><code>feature_catalog</code></td><td>42</td><td><span class="badge badge-orange">Yetki</span> Var olan tüm aç/kapa özelliklerin listesi</td></tr>
+        <tr><td><code>role_feature_flags</code></td><td>2.487</td><td><span class="badge badge-orange">Yetki</span> Hangi rolde hangi özellik açık</td></tr>
+        <tr><td><code>user_feature_overrides</code></td><td>59</td><td><span class="badge badge-orange">Yetki</span> Kişiye özel istisnalar (rolün üstüne)</td></tr>
+        <tr><td><code>profile_section_catalog</code></td><td>7</td><td><span class="badge badge-green">Bölüm</span> Var olan profil bölümlerinin listesi</td></tr>
+        <tr><td><code>role_profile_section_rules</code></td><td>574</td><td><span class="badge badge-green">Bölüm</span> Hangi rolde hangi bölüm görünür</td></tr>
+        <tr><td><code>catalog_search_documents</code></td><td>623</td><td><span class="badge badge-teal">Arama</span> Kartların aranabilir kopyası</td></tr>
+        <tr><td><code>admin_audit_logs</code></td><td>41</td><td><span class="badge badge-purple">Kayıt defteri</span> "Kim ne zaman ne yaptı" günlüğü</td></tr>
+      </tbody>
+    </table>
+    <div class="analogy">
+      <span class="analogy-icon">🧠</span>
+      <div class="t">
+        <strong>Hatırlatma:</strong> "<em>catalog</em>" (katalog) demek = "var olan seçeneklerin listesi".
+        "<em>...rules / flags</em>" demek = "hangi rolde ne açık" eşleştirmeleri.
+        "<em>user_...</em>" ile başlayanlar = "tek tek kullanıcıların gerçek verisi". Bu üç kalıbı bilirsen
+        tablo isimlerini görünce ne olduklarını tahmin edebilirsin.
       </div>
     </div>
   </div>
 
-  <!-- 10 REGRESYON -->
+  <!-- 10 KARISIKLIK -->
   <div class="section" id="s10">
     <div class="section-header">
-      <div class="section-num red">10</div>
-      <h2>Haziran 2026 Regresyonları (DB + Frontend) &amp; Fix</h2>
+      <div class="section-num orange">10</div>
+      <h2>Karışıklık yaratabilecek noktalar (dikkat!)</h2>
     </div>
-    <div class="callout danger">
-      <div class="callout-icon">🐛</div>
-      <div class="callout-body">
-        <div class="callout-title">Sorun: 93/107 bireysel kullanıcı /admin/data'da görünmüyordu</div>
-        <div class="callout-text">
-          Member köprüsünü kuran <code>upsert_profile_from_auth_identity()</code>, <code>profiles</code>/<code>user_profiles</code>
-          tablolarıyla birlikte cascade silindi. Yerine gelen trigger sadece rol atıyordu;
-          <code>sync_member_catalog_role_for_user</code> ise yalnızca var olan satırı UPDATE ediyor ve düşmüş
-          <code>user_profiles</code>'a referans verdiği için hata üretiyordu.
-        </div>
+    <p>Sistemde hâlâ birkaç "kafa karıştırıcı" durum var. Bunları bilmek, ileride şaşırmamanı sağlar:</p>
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="card card-accent3">
+        <h4>🔴 Eski bir rol sistemi hâlâ duruyor</h4>
+        <p>Yeni rol sistemi (asıl kullanılan) yanında, <strong>çok eski bir rol listesi</strong> de silinmeden duruyor
+        (<code>user_roles</code>, 11 kayıt). Bazı eski fonksiyonlar hâlâ ona bakıyor. Tek sisteme indirilmesi gerekiyor.</p>
+      </div>
+      <div class="card card-accent4">
+        <h4>🟠 Boş roller çok</h4>
+        <p>82 rolün <strong>79'u şu an boş</strong> (0 kullanıcı). Roller hazır ama kullanılmıyor; gerçek herkes hâlâ
+        "bireysel" rolünde. Bu yüzden "82 rol var" görünce "82 grup insan var" sanma — çoğu boş şablon.</p>
+      </div>
+      <div class="card card-accent4">
+        <h4>🟠 Üye başlıkları zayıf</h4>
+        <p>Sonradan oluşturulan 107 üye kartının başlığı çoğunlukla <strong>e-postanın baş kısmından</strong> türetildi
+        (örn. "ahmet"). İsim bilgisinden düzgün başlıkla zenginleştirilmesi gerekiyor.</p>
+      </div>
+      <div class="card card-accent1">
+        <h4>🔵 Eski yedek/artık tablolar</h4>
+        <p>Eski profillerin yedekleri ve bazı eski tablolar (<code>independent_profiles</code> gibi) hâlâ duruyor.
+        "Her şey tek defterde" hedefini tam tutturmak için bunlar temizlenmeli.</p>
       </div>
     </div>
-    <table class="tbl" style="margin-top:8px;">
-      <thead><tr><th>Migration</th><th>Etki</th></tr></thead>
-      <tbody>
-        <tr><td><code>20260607020000</code> afs_phase1</td><td>Köprü oluşturma + trigger ilk kez kuruldu ✅</td></tr>
-        <tr><td><code>20260608030000</code> source_of_truth</td><td>admin/data artık sadece catalog_items okur</td></tr>
-        <tr><td><code>20260609003000</code> drop_legacy</td><td>profiles/user_profiles drop → köprü fonksiyonu cascade silindi ❌</td></tr>
-        <tr><td><code>20260609015000</code> fix_post_drop</td><td>Trigger sadece rol atıyor, köprü kurmuyor ❌</td></tr>
-        <tr><td><code>20260609016000</code> restore_bridge</td><td><strong>FIX:</strong> idempotent köprü upsert + trigger + backfill ✅</td></tr>
-      </tbody>
-    </table>
-    <div class="states" style="margin-top:16px;">
-      <div class="state-box" style="background:rgba(255,107,107,0.15);color:#ff8787;border:1px solid rgba(255,107,107,0.3);">14 köprü<br><span style="font-weight:400;font-size:11px;">(önce)</span></div>
-      <div class="state-arrow">→</div>
-      <div class="state-box" style="background:rgba(81,207,102,0.15);color:#69db7c;border:1px solid rgba(81,207,102,0.3);">107 köprü<br><span style="font-weight:400;font-size:11px;">(sonra)</span></div>
-      <div class="state-arrow">·</div>
-      <div class="state-box" style="background:rgba(108,99,255,0.15);color:#a78bfa;border:1px solid rgba(108,99,255,0.3);">0 köprüsüz<br><span style="font-weight:400;font-size:11px;">(önce 93)</span></div>
-    </div>
-    <div class="tip" style="margin-top:16px;">
-      <strong>Doğrulandı:</strong> Yeni-kullanıcı trigger testi (rollback'li) tam 1 köprü oluşturuyor.
-      Commit <code>c6a23bc</code> — main'e push edildi, prod DB'ye uygulandı.
-    </div>
-
-    <div class="callout danger" style="margin-top:24px;">
-      <div class="callout-icon">🖥️</div>
+    <div class="callout info" style="margin-top:8px;">
+      <div class="callout-icon">📌</div>
       <div class="callout-body">
-        <div class="callout-title">İkinci regresyon (frontend): Üye kaydına tıklayınca detay paneli boş geliyordu</div>
+        <div class="callout-title">Geçmişteki büyük hata ve düzeltmesi (kısa hikaye)</div>
         <div class="callout-text">
-          DB köprüsü düzeldikten sonra 107 member <code>/admin/data</code>'da listeleniyordu, ama bir
-          <span class="badge badge-red">MEM</span> satırına tıklayınca yan panel boş açılıyordu —
-          katalog (Advisor/Doctor) satırları normal açılırken. Sebep bir <strong>veri-sözleşmesi
-          uyumsuzluğu</strong>: RPC <code>kind='member_profile'</code> döndürüyor, ama frontend yalnızca
-          <code>catalog_item</code> ve <code>profile</code> kind'larını tanıyordu; <code>member_profile</code>
-          her iki dalın dışına düşüp <code>null</code> render ediyordu (Sheet açılıyor ama içerik boş).
-          TS bunu yakalayamadı çünkü <code>UnifiedRecordKind</code> tipi RPC değişince güncellenmemişti.
+          Haziran 2026'da eski tablolar silinirken, üye kartını otomatik oluşturan parça da yanlışlıkla silindi.
+          Sonuç: 107 üyenin 93'ü panelde <strong>görünmez oldu</strong>. Düzeltmeyle hem o parça geri kondu hem de
+          eksik 93 kart toplu olarak yeniden oluşturuldu. Şimdi 107 üyenin hepsi görünüyor ve yeni kayıtlar sorunsuz.
+          Ayrıca bir üyeye tıklayınca <strong>boş açılan detay paneli</strong> sorunu da düzeltildi (sistemin "üye"yi
+          normal bir kart gibi tanıması sağlandı).
         </div>
       </div>
-    </div>
-    <table class="tbl" style="margin-top:8px;">
-      <thead><tr><th>Dosya</th><th>Düzeltme</th></tr></thead>
-      <tbody>
-        <tr><td><code>src/lib/catalog-types.ts</code></td><td><code>UnifiedRecordKind</code>'a <code>"member_profile"</code> eklendi (tip artık RPC ile eşleşiyor)</td></tr>
-        <tr><td><code>src/pages/admin/AdminCatalogPage.tsx</code></td><td>Detay-yükleme effect'i + Sheet render dalı <code>member_profile</code>'ı da <code>catalog_item</code> gibi işliyor → <code>CatalogDetailSheet</code> + <code>getAdminCatalogItemDetail</code>. Legend'a <code>MEM = Üye</code>, "Tür" filtresine "Üye" seçeneği eklendi</td></tr>
-        <tr><td><code>src/pages/admin/AdminCatalogPage.test.tsx</code></td><td>Önce başarısız (RED) test eklendi, fix sonrası 7/7 geçti</td></tr>
-        <tr><td><code>roles-overview/types.ts</code> + <code>ItemListPanel.tsx</code></td><td>Aynı kök sebep: <code>ItemListEntry.kind</code> tipi güncellendi, rozet artık member için <span class="badge badge-red">MEM</span> gösteriyor (önce yanlışlıkla "KUL")</td></tr>
-      </tbody>
-    </table>
-    <div class="tip" style="margin-top:16px;">
-      <strong>Mantık:</strong> Member kaydı zaten bir <code>catalog_items</code> satırı (<code>item_type='member'</code>)
-      olduğu için detayı katalog item RPC'siyle yüklenir; ayrı bir profil görünümü gerekmez.
-      <code>tsc --noEmit</code> temiz, data-route testleri 3/3. <span class="badge badge-green">Frontend-only — migration/RPC/RLS'e dokunulmadı</span>
     </div>
   </div>
 
-  <!-- 11 RİSKLER -->
+  <!-- 11 OZET -->
   <div class="section" id="s11">
     <div class="section-header">
-      <div class="section-num orange">11</div>
-      <h2>Açık Riskler &amp; Teknik Borç</h2>
+      <div class="section-num green">11</div>
+      <h2>Tek cümlelik özet</h2>
     </div>
-    <div class="grid-2">
-      <div class="card card-accent3">
-        <h4>🔴 Çift rol sistemi</h4>
-        <p><code>user_roles</code> (enum, has_role) + <code>user_role_assignments</code> (AFS) yan yana.
-        Tek sisteme indirgenmeli; <code>has_role</code> kullanan kod taranmalı.</p>
-      </div>
-      <div class="card card-accent3">
-        <h4>🟠 Legacy artık tablolar</h4>
-        <p><code>independent_profiles</code> (241), <code>_member_backup_20260609</code> (14),
-        <code>person_profile</code> item'ları — single-source hedefiyle uyumlu hale getirilmeli.</p>
-      </div>
-      <div class="card card-accent4">
-        <h4>🟠 Member başlıkları zayıf</h4>
-        <p>Backfill edilen 107 member kaydının <code>title</code>'ı email local-part'ından türedi.
-        <code>user_profile_attributes.full_name</code>'den zenginleştirilmeli.</p>
-      </div>
-      <div class="card card-accent4">
-        <h4>🟠 Boş roller</h4>
-        <p>82 rolün 79'u şu an 0 kullanıcı. Family_SubType rolleri tanımlı ama kullanılmıyor;
-        gerçek kullanıcılar hâlâ tek <code>bireysel</code> rolünde.</p>
-      </div>
-      <div class="card card-accent1">
-        <h4>🔵 Slug çakışması</h4>
-        <p>Köprü slug'ı <code>member-&lt;16hex&gt;</code> + 4hex fallback. Yüksek eşzamanlı kayıtta
-        teorik çakışma riski (test edilmedi).</p>
-      </div>
-      <div class="card card-accent1">
-        <h4>🔵 RLS doğrulaması</h4>
-        <p>Köprülerin visibility=public yapıldı. RLS politikalarının public member kayıtlarını
-        beklendiği gibi sızdırmadığı ayrıca denetlenmeli.</p>
+    <div class="callout success">
+      <div class="callout-icon">🎯</div>
+      <div class="callout-body">
+        <div class="callout-title">Aklında bunu tut, gerisi detay</div>
+        <div class="callout-text" style="font-size:15px;line-height:1.8;">
+          Sistemdeki her şey bir <strong style="color:var(--accent5);">Item</strong> (kart) — üye, işletme, doktor, dernek hepsi aynı defterde.
+          Her kartın bir <strong style="color:var(--accent2);">Rol</strong>'ü (sıfatı) var.
+          Rol, o karta hangi <strong style="color:var(--accent4);">AFS</strong>'in geleceğini belirler:
+          hangi <strong style="color:var(--accent5);">bilgileri</strong> (attribute) tutar,
+          hangi <strong style="color:var(--accent4);">yetkilere</strong> (feature) sahiptir,
+          profilinde hangi <strong style="color:var(--accent2);">bölümler</strong> (section) görünür.
+          Kişi <strong>kendi girince</strong> mailini ve adminini de görür; <strong>dışarıdan bakınca</strong>
+          sadece kartı ve herkese açık AFS'i görünür. Hepsi bu.
+        </div>
       </div>
     </div>
   </div>
 
   <div class="divider"></div>
   <p style="text-align:center;color:var(--muted);font-size:12px;">
-    CorteQS — Rol &amp; Veritabanı Sistem Dökümanı · Canlı snapshot 2026-06-09 ·
-    Üretim projesi <code>injprdrsklkxgnaiixzh</code> · Veriler Supabase Management API ile çekildi.
+    CorteQS — Rol Sistemi Basit Anlatım · Veriler 9 Haziran 2026 fotoğrafından ·
+    Daha teknik detay için yönetici panelindeki "RolesGo Genel Bakış" sayfasına bak.
   </p>
 
 </div>
