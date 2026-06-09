@@ -6,7 +6,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import Navbar from "@/components/Navbar";
 import DemoBadge from "@/components/DemoBadge";
 import InterestForm from "@/components/InterestForm";
 import { bloggers } from "@/data/mock";
@@ -30,7 +29,6 @@ const Bloggers = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
 

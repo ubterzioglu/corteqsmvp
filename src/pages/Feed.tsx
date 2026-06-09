@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import CreateCafeForm from "@/components/feed/CreateCafeForm";
 import DiasporaPeopleSearch from "@/components/feed/DiasporaPeopleSearch";
 import { useActiveCafes, useCafe } from "@/hooks/useCafes";
-import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
@@ -561,7 +560,6 @@ const Feed = () => {
   return (
     <CaddeProfileGate>
     <div className="min-h-screen bg-background">
-      <Navbar />
 
       {/* Rainbow banner — paletten */}
       <div className="pt-16">

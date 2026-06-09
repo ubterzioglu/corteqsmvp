@@ -4,7 +4,6 @@ import { MapPin, Users, Briefcase, Globe, Mail, Building2, Calendar, UserPlus, U
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import Navbar from "@/components/Navbar";
 import { businesses } from "@/data/mock";
 import { useToast } from "@/hooks/use-toast";
 import { markRealCouponPurchase, markRealTransaction } from "@/lib/demoFlags";
@@ -26,7 +25,6 @@ const BusinessDetail = () => {
   if (!b) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
         <div className="pt-24 text-center py-20">
           <p className="text-muted-foreground">İşletme bulunamadı.</p>
           <Link to="/businesses">
@@ -67,7 +65,6 @@ const BusinessDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <div className="pt-20">
         <DemoPageBanner categoryLabel="İşletmeler" listingHref="/businesses" />
       </div>

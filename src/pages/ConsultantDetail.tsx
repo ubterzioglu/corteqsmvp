@@ -5,7 +5,6 @@ import { Star, Bot, MessageSquare, Calendar, Video, Globe as GlobeIcon, ArrowLef
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import Navbar from "@/components/Navbar";
 import { consultants } from "@/data/mock";
 import { useToast } from "@/hooks/use-toast";
 import DemoPageBanner from "@/components/DemoPageBanner";
@@ -24,7 +23,6 @@ const ConsultantDetail = () => {
   if (!consultant) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
         <div className="pt-24 container mx-auto px-4 text-center py-20">
           <h1 className="text-2xl font-bold text-foreground mb-4">Danışman bulunamadı</h1>
           <Link to="/consultants" className="text-primary hover:underline">← Danışmanlara dön</Link>
@@ -39,7 +37,6 @@ const ConsultantDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <div className="pt-20">
         <DemoPageBanner categoryLabel="Danışmanlık" listingHref="/consultants" />
       </div>

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Users, MapPin, Calendar as CalendarIcon, Music, Stethoscope } from "lucide-react";
 import MapShareButtons from "@/components/MapShareButtons";
 import { Button } from "@/components/ui/button";
-import Navbar from "@/components/Navbar";
 import CountryCitySelector from "@/components/CountryCitySelector";
 import { useDiaspora } from "@/contexts/DiasporaContext";
 import { associations } from "@/data/mock";
@@ -115,7 +114,6 @@ const Associations = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">

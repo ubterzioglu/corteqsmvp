@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import Navbar from "@/components/Navbar";
 import { Link } from "react-router-dom";
 import { ShieldCheck, FileText, Cookie, Scale } from "lucide-react";
 
@@ -12,7 +11,6 @@ const navLinks = [
 
 const LegalLayout = ({ title, children }: { title: string; children: ReactNode }) => (
   <div className="min-h-screen bg-background">
-    <Navbar />
     <main className="pt-24 pb-16">
       <div className="container mx-auto px-4 max-w-5xl">
         <h1 className="text-3xl md:text-4xl font-extrabold text-foreground mb-2">{title}</h1>

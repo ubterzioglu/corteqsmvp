@@ -3,7 +3,6 @@ import { MapPin, Building2, Users, Store, Navigation, Search } from "lucide-reac
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import Navbar from "@/components/Navbar";
 import CountryCitySelector from "@/components/CountryCitySelector";
 import { useDiaspora } from "@/contexts/DiasporaContext";
 import { getAllMapEntities, type MapEntity } from "@/lib/mapEntities";
@@ -116,7 +115,6 @@ const MapSearch = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-6">

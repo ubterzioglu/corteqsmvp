@@ -1,9 +1,7 @@
 import { Mail, Globe, MessageCircle, MapPin } from "lucide-react";
-import Navbar from "@/components/Navbar";
 
 const ContactPage = () => (
   <div className="min-h-screen bg-background">
-    <Navbar />
     <main className="pt-24 pb-20">
       <div className="container mx-auto px-4 max-w-3xl">
         <div className="text-center mb-12">

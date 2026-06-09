@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Briefcase, Search, MapPin, Building2, Clock, Filter } from "lucide-react";
-import Navbar from "@/components/Navbar";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -80,7 +79,6 @@ const JobBoard = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 pt-24 pb-12">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">

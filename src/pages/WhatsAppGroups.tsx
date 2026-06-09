@@ -14,7 +14,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import Navbar from "@/components/Navbar";
 import CountryCitySelector from "@/components/CountryCitySelector";
 import { useDiaspora } from "@/contexts/DiasporaContext";
 
@@ -144,7 +143,6 @@ const WhatsAppGroups = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
 

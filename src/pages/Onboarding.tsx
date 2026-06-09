@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { UserCircle, Briefcase, Building2, Users, PenLine, Globe } from "lucide-react";
-import Navbar from "@/components/Navbar";
 
 const accountTypes = [
   {
@@ -95,7 +94,6 @@ const Onboarding = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-2xl">
           <div className="text-center mb-8">

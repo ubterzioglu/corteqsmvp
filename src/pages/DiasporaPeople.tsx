@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import Navbar from "@/components/Navbar";
 import {
   Users, Sparkles, MapPin, Coffee, Calendar,
   MessageSquare, ShieldCheck, Plane, Briefcase, Heart, Loader2,
@@ -111,7 +110,6 @@ const DiasporaPeople = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <div className="pt-16">
         <div className="h-2 w-full bg-gradient-to-r from-sky-500 via-violet-500 to-rose-500" />
       </div>

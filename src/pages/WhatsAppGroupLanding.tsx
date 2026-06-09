@@ -9,7 +9,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import Navbar from "@/components/Navbar";
 import { getLanding, type WhatsAppLanding } from "@/lib/whatsappLandings";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -62,7 +61,6 @@ const WhatsAppGroupLanding = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
         <main className="pt-24 pb-16 text-center text-muted-foreground">Yükleniyor...</main>
       </div>
     );
@@ -71,7 +69,6 @@ const WhatsAppGroupLanding = () => {
   if (!landing) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
         <main className="pt-24 pb-16">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-2xl font-bold mb-3">Landing sayfası bulunamadı</h1>
@@ -143,7 +140,6 @@ const WhatsAppGroupLanding = () => {
   };
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">
           <Link to="/whatsapp-groups" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4">

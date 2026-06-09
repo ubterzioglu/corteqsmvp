@@ -3,7 +3,6 @@ import { Navigate } from "react-router-dom";
 import { toPng } from "html-to-image";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -196,7 +195,6 @@ const PostGenerator = () => {
   if (!user) return <Navigate to="/login" replace />;
   if (isAdmin === false) return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       <div className="flex-1 flex items-center justify-center p-8">
         <Card className="p-8 max-w-md text-center">
           <h1 className="text-xl font-bold mb-2">Yetkisiz Erişim</h1>
@@ -209,7 +207,6 @@ const PostGenerator = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold flex items-center gap-2">

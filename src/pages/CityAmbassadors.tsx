@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -105,7 +104,6 @@ const CityAmbassadors = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
 
       {/* HERO */}
       <section className="relative pt-24 pb-20 overflow-hidden">

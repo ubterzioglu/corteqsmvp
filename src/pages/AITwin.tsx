@@ -5,7 +5,6 @@ import {
   BookOpen, Wand2, Database, Headphones, Image as ImageIcon, Upload,
   ArrowRight, CheckCircle2, AlertCircle, Percent
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -80,7 +79,6 @@ const AITwin = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-4 max-w-6xl">
           {/* Hero */}

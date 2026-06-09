@@ -5,7 +5,6 @@ import {
   CreditCard, Check, ArrowRight, Search, Filter, Heart, Stethoscope,
   Baby, Eye as EyeIcon, Bone, Brain, Pill
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -336,7 +335,6 @@ const HospitalAppointment = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
 

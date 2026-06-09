@@ -12,7 +12,6 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-import Navbar from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -58,7 +57,6 @@ const IndependentProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="container mx-auto max-w-6xl px-4 pb-16 pt-24">
         <Link to="/associations" className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition hover:text-foreground">
           <ArrowLeft className="h-4 w-4" />

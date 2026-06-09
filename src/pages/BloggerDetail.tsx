@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import Navbar from "@/components/Navbar";
 import { bloggers } from "@/data/mock";
 import { useToast } from "@/hooks/use-toast";
 import { useFollow } from "@/hooks/useFollow";
@@ -50,7 +49,6 @@ const BloggerDetail = () => {
   if (!blogger) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
         <div className="pt-24 container mx-auto px-4 text-center py-20">
           <h1 className="text-2xl font-bold text-foreground mb-4">Profil bulunamadı</h1>
           <Link to="/bloggers" className="text-primary hover:underline">← Geri dön</Link>
@@ -65,7 +63,6 @@ const BloggerDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
           <Link to="/bloggers" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors">

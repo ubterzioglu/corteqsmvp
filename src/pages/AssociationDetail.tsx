@@ -3,7 +3,6 @@ import { useParams, Link } from "react-router-dom";
 import { Users, MapPin, Calendar as CalendarIcon, Globe as GlobeIcon, ArrowLeft, ExternalLink, MessageSquare, Share2, UserPlus, UserCheck, Heart, CreditCard, Ticket, Music, Radio, Landmark, Clock, FileText, Stethoscope, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Navbar from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
 import { associations } from "@/data/mock";
 import { useToast } from "@/hooks/use-toast";
@@ -19,7 +18,6 @@ const AssociationDetail = () => {
   if (!assoc) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
         <div className="pt-24 container mx-auto px-4 text-center py-20">
           <h1 className="text-2xl font-bold text-foreground mb-4">Kuruluş bulunamadı</h1>
           <Link to="/associations" className="text-primary hover:underline">← Kuruluşlara dön</Link>
@@ -59,7 +57,6 @@ const AssociationDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <div className="pt-20">
         <DemoPageBanner categoryLabel="Kuruluşlar" listingHref="/associations" />
       </div>

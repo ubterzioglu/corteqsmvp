@@ -11,7 +11,6 @@ import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import Navbar from "@/components/Navbar";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import multiculturalHero from "@/assets/multicultural-diaspora-hero.jpg";
@@ -117,7 +116,6 @@ const RegisterDiaspora = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
 
       {/* OPENING BANNER — multicultural hero, no national flags */}
       <section className="relative pt-16 min-h-[70vh] flex items-center bg-gradient-hero overflow-hidden">

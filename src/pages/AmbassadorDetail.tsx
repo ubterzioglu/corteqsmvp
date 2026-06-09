@@ -3,7 +3,6 @@ import { Star, MapPin, MessageCircle, Users, Calendar, Target, ArrowLeft, Video,
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import Navbar from "@/components/Navbar";
 import { cityAmbassadors } from "@/data/mock";
 
 const AmbassadorDetail = () => {
@@ -13,7 +12,6 @@ const AmbassadorDetail = () => {
   if (!ambassador) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
         <div className="pt-24 pb-16 text-center">
           <p className="text-muted-foreground">Elçi bulunamadı.</p>
           <Link to="/consultants" className="text-primary underline mt-4 inline-block">Danışmanlara dön</Link>
@@ -44,7 +42,6 @@ const AmbassadorDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">
           <Link to="/consultants" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">

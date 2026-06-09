@@ -4,7 +4,6 @@ import { ArrowLeft, HandHeart, Heart, MessageSquare, MapPin, UserPlus, UserCheck
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import Navbar from "@/components/Navbar";
 import PlatformMessageDialog from "@/components/messaging/PlatformMessageDialog";
 import DetailAuthLock from "@/components/DetailAuthLock";
 
@@ -41,7 +40,6 @@ const VolunteerMentorDetail = () => {
   if (!mentor) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
         <div className="pt-24 container mx-auto px-4 text-center py-20">
           <h1 className="text-2xl font-bold text-foreground mb-4">Gönüllü mentör bulunamadı</h1>
           <Link to="/consultants?filter=gonullu" className="text-primary hover:underline">← Gönüllülere dön</Link>
@@ -70,7 +68,6 @@ const VolunteerMentorDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-5xl">
           <Link to="/consultants?filter=gonullu" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors">

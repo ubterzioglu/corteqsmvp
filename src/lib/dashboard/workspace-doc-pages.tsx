@@ -427,7 +427,6 @@ export const workspaceDocPages: WorkspaceDocPage[] = [
               <li>src/pages/CityAmbassadors.tsx</li>
               <li>src/pages/ConsultantDetail.tsx</li>
               <li>src/pages/VolunteerMentorDetail.tsx</li>
-              <li>src/components/Navbar.tsx</li>
               <li>src/components/DetailAuthLock.tsx</li>
               <li>src/components/ProfileCompletePopup.tsx</li>
               <li>src/components/ProfileSetupBanner.tsx (profiles/)</li>

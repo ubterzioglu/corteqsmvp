@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import Navbar from "@/components/Navbar";
 import { associations } from "@/data/mock";
 import { useToast } from "@/hooks/use-toast";
 
@@ -84,7 +83,6 @@ const RadioSongRequest = () => {
   if (!radio) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
         <div className="pt-24 container mx-auto px-4 text-center py-20">
           <h1 className="text-2xl font-bold text-foreground mb-4">Radyo bulunamadı</h1>
           <Link to="/associations" className="text-primary hover:underline">← Kuruluşlara dön</Link>
@@ -126,7 +124,6 @@ const RadioSongRequest = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">
           <Link to={`/association/${id}`} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">

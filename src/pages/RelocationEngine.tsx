@@ -2,7 +2,6 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -478,7 +477,6 @@ const RelocationEngine = () => {
   if (step === "survey") {
     return (
       <div className="min-h-screen bg-background flex flex-col">
-        <Navbar />
       <div className="container mx-auto px-4 py-4 max-w-2xl flex-1 overflow-y-auto">
           <div className="text-center mb-4">
             <span className="text-3xl mb-1 block">🌍</span>
@@ -693,7 +691,6 @@ const RelocationEngine = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
       <div className="flex-1 flex overflow-hidden">
         {/* LEFT: Chat Panel */}
         <div className="w-[380px] min-w-[340px] border-r border-border flex flex-col bg-card">

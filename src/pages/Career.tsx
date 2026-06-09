@@ -8,7 +8,6 @@ import {
   Sparkles,
   AlertTriangle,
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
 import InterestForm from "@/components/InterestForm";
 import { Button } from "@/components/ui/button";
 
@@ -140,7 +139,6 @@ const Career = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-20">
         {/* HERO */}
         <section className="container mx-auto px-4">

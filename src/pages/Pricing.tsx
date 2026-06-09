@@ -3,7 +3,6 @@ import { Check, X, Zap, Crown, Building2, Users, Sparkles, Landmark, Flame, Gift
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import Navbar from "@/components/Navbar";
 
 type UserType = "consultant" | "association" | "business";
 
@@ -165,7 +164,6 @@ const Pricing = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-4 max-w-5xl">
           {/* Header */}

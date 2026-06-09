@@ -4,7 +4,6 @@ import { MapPin, Users, Briefcase, Building2, UserPlus, UserCheck, Star, Stethos
 import MapShareButtons from "@/components/MapShareButtons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import Navbar from "@/components/Navbar";
 import CountryCitySelector from "@/components/CountryCitySelector";
 import { useDiaspora } from "@/contexts/DiasporaContext";
 import { businesses } from "@/data/mock";
@@ -257,7 +256,6 @@ const Businesses = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
