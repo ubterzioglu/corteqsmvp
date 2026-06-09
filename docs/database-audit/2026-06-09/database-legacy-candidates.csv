@@ -1,0 +1,71 @@
+Nesne,Tur,Eski_Sistem,Yeni_Sistem,Frontend_Ref,Migration_Ref,Est_Rows,Aktif_Veri_Olabilir,Silme_Riski,Siniflandirma,Onerilen_Gecis
+_member_backup_20260609,table,user_profile_attributes,user_profile_attributes,1,1,-1,BELIRSIZ,YUKSEK,MIGRATE_THEN_RETIRE,2026-06-09 migration backup tablosu; public schema'da kalmamalı
+advisor_social_media_links,table,?,(unified),2,4,58,EVET,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+arge_cards,table,?,(unified),1,0,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+arge_files,table,?,(unified),1,0,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+arge_links,table,?,(unified),1,0,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+cafe_memberships,table,cadde_cafe_members,cadde_cafe_members,7,2,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Olası eski cafe üyelik tablosu
+cafes,table,cadde_cafes,cadde_cafes,5,5,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Olası eski cafe tablosu (cadde_* yeni)
+catalog_audit_logs,table,?,(unified),1,4,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+catalog_claim_requests,table,?,(unified),1,9,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+catalog_item_attribute_overrides,table,?,(unified),1,4,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+catalog_item_attributes,table,?,(unified),1,4,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+catalog_item_favorites,table,?,(unified),1,2,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+catalog_item_feature_overrides,table,?,(unified),1,9,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+catalog_item_links,table,?,(unified),1,4,484,EVET,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+catalog_item_media,table,?,(unified),1,7,254,EVET,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+catalog_item_relations,table,?,(unified),1,2,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+catalog_item_reports,table,?,(unified),1,2,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+catalog_item_reviews,table,?,(unified),1,2,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+catalog_item_section_overrides,table,?,(unified),1,4,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+catalog_item_verification_records,table,?,(unified),1,2,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+catalog_search_documents,table,?,(unified),1,6,530,EVET,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+city_ambassador_applications,table,?,(unified),3,1,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+command_center_legacy_map,table,command_center_items,command_center_items,1,0,497,EVET,YUKSEK,MIGRATE_THEN_RETIRE,Legacy map; *_legacy suffix
+community_group_details,table,?,(unified),1,4,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+consultant_social_media_links,table,?,(unified),3,2,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+contacts,table,?,(unified),1,1,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+contributor_social_media_links,table,?,(unified),3,2,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+diaspora_city_scan_queue,table,?,(unified),1,1,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+diaspora_instagram_accounts,table,?,(unified),1,1,49,EVET,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+diaspora_scan_runs,table,?,(unified),1,1,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+doc_categories,table,?,(unified),1,0,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+draft_notlar,table,?,(unified),1,0,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+duplicate_candidates,table,?,(unified),1,4,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+event_details,table,?,(unified),1,4,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+feature_definitions,table,feature_catalog,feature_catalog,1,6,0,hayir,DUSUK,SAFE_RETIREMENT_CANDIDATE,Olası duplicate feature sözlüğü (0 satır)
+founding_1000_signups,table,?,(unified),1,2,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+gorevler,table,?,(unified),1,0,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+influencer_social_media_links,table,?,(unified),3,2,58,EVET,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+item_type_attribute_rules,table,?,(unified),1,6,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+item_type_feature_defaults,table,?,(unified),1,6,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+item_type_features,table,?,(unified),1,3,64,EVET,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+job_posting_details,table,?,(unified),1,4,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+links,table,?,(unified),4,7,31,EVET,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+marketplace_listing_details,table,?,(unified),1,3,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+may19_campaign_submissions,table,may19_submissions,may19_submissions,2,3,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Olası duplicate may19 gönderim tablosu
+may19_submissions,table,?,(unified),1,1,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+merge_history,table,?,(unified),1,2,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+messages,table,?,(unified),4,4,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+moderation_queue,table,?,(unified),1,2,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+person_profile_details,table,?,(unified),1,7,14,EVET,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+phone_verifications,table,?,(unified),1,1,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+profile_views,table,?,(unified),1,1,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+rag_documents,table,?,(unified),1,1,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+referral_codes_legacy,table,referral_codes,referral_codes,1,1,-1,BELIRSIZ,YUKSEK,MIGRATE_THEN_RETIRE,Eski referral kod tablosu; *_legacy suffix
+role_taxonomy_rules,table,(retired),(retired),4,3,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Taxonomy runtime kaldırıldı
+site_settings,table,?,(unified),3,1,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+social_media_links,table,?,(unified),3,1,4,EVET,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+source_records,table,?,(unified),1,11,516,EVET,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+taxonomy_groups,table,(retired),(retired),4,5,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Taxonomy runtime kaldırıldı; tablo boş kalıyor olabilir
+taxonomy_options,table,(retired),(retired),4,5,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Taxonomy runtime kaldırıldı
+todo_items,table,?,(unified),3,0,105,EVET,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+todos,table,todo_items,todo_items,1,0,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Olası duplicate todo tablosu
+turkish_mission_relations,table,?,(unified),1,1,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+turkish_mission_units,table,?,(unified),1,1,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+user_cvs,table,?,(unified),1,0,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+user_taxonomy_selections,table,(retired),(retired),3,5,-1,BELIRSIZ,YUKSEK,REVIEW_WITH_DATA_QUERY,Taxonomy runtime kaldırıldı
+wa_messages,table,?,(unified),1,0,235,EVET,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+wa_tasks,table,?,(unified),1,0,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz
+wa_users,table,?,(unified),1,2,25,EVET,YUKSEK,REVIEW_WITH_DATA_QUERY,Kod referansi yok / belirsiz
+welcome_pack_proposals,table,?,(unified),1,1,-1,BELIRSIZ,YUKSEK,UNKNOWN,Kod referansi yok / belirsiz

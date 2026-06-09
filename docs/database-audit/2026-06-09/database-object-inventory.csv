@@ -1,0 +1,155 @@
+Schema,Table,Modul,Canonical,LegacyAday,PrimaryKey,ForeignKeys,UniqueConstraints,CheckConstraints,RLS_Enabled,Policy_Sayisi,Frontend_from_Ref,Frontend_Genis_Ref,Migration_Ref,Index_Sayisi,Trigger_Sayisi,Est_Rows,Veri_Hassasiyeti,Durum,Oneri
+public,_member_backup_20260609,AUTH_PROFILE,hayir,EVET,,,,0,HAYIR,0,0,1,1,0,0,-1,HIGH,RETIREMENT_CANDIDATE,Kullanim kanitla; veri tasiyip retire et (Faz 06 taslak)
+public,admin_audit_logs,ADMIN,kismi,hayir,id,,,3,EVET,1,1,2,2,4,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,advisor_details,CATALOG,kismi,hayir,item_id,item_id->catalog_items(CASCADE),,6,EVET,2,1,2,3,1,4,-1,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,advisor_social_media_links,DIRECTORY,hayir,EVET,id,,,12,EVET,2,0,2,4,3,0,58,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,appointments,DIRECTORY,kismi,hayir,id,,,10,EVET,4,3,4,2,3,2,-1,HIGH,ACTIVE_MODULE,Koru; modul tablosu
+public,approval_requests,AUTH_PROFILE,kismi,hayir,id,target_feature_key->feature_catalog(SET NULL),,7,EVET,5,2,4,9,7,1,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,arge_cards,WORKSPACE,hayir,hayir,id,,,5,EVET,2,0,1,0,1,0,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,arge_files,WORKSPACE,hayir,hayir,id,card_id->arge_cards(SET NULL),,7,EVET,2,0,1,0,2,0,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,arge_links,WORKSPACE,hayir,hayir,id,card_id->arge_cards(SET NULL),,7,EVET,2,0,1,0,2,0,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,attribute_catalog,ROLESGO,kismi,hayir,id,,key,10,EVET,1,3,5,28,3,0,53,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,business_details,CATALOG,kismi,hayir,item_id,item_id->catalog_items(CASCADE),,6,EVET,2,1,2,3,1,4,-1,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,cadde_billboard_cards,CADDE,kismi,hayir,id,city_id->cadde_cities(SET NULL); country_id->cadde_countries(SET NULL),,15,EVET,2,1,2,1,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,cadde_cafe_members,CADDE,kismi,hayir,id,cafe_id->cadde_cafes(CASCADE),"cafe_id,user_id",4,EVET,3,1,2,2,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,cadde_cafes,CADDE,kismi,hayir,id,city_id->cadde_cities(SET NULL); country_id->cadde_countries(SET NULL),,14,EVET,4,1,2,2,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,cadde_cities,CADDE,kismi,hayir,id,country_id->cadde_countries(CASCADE),"country_id,name",7,EVET,2,1,2,1,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,cadde_countries,CADDE,kismi,hayir,id,,code,6,EVET,2,1,2,1,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,cadde_post_comments,CADDE,kismi,hayir,id,post_id->cadde_posts(CASCADE),,6,EVET,4,1,2,2,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,cadde_post_reactions,CADDE,kismi,hayir,id,post_id->cadde_posts(CASCADE),"post_id,user_id,reaction_type",6,EVET,3,1,2,2,3,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,cadde_posts,CADDE,kismi,hayir,id,city_id->cadde_cities(SET NULL); country_id->cadde_countries(SET NULL),,12,EVET,4,1,2,2,4,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,cadde_sponsored_placements,CADDE,kismi,hayir,id,city_id->cadde_cities(SET NULL); country_id->cadde_countries(SET NULL),,13,EVET,2,1,2,1,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,cafe_memberships,CADDE,hayir,EVET,id,cafe_id->cafes(CASCADE),"cafe_id,user_id",5,EVET,5,3,7,2,3,4,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,cafes,CADDE,hayir,EVET,id,,,14,EVET,4,0,5,5,4,1,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_audit_logs,CATALOG,hayir,EVET,id,item_id->catalog_items(CASCADE),,4,EVET,1,0,1,4,2,0,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_categories,CATALOG,kismi,hayir,id,module->catalog_item_types(CASCADE); parent_id->catalog_categories(SET NULL),slug,8,EVET,1,1,2,13,4,4,86,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,catalog_claim_requests,CATALOG,hayir,EVET,id,item_id->catalog_items(CASCADE),,9,EVET,4,0,1,9,3,1,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_item_attribute_overrides,CATALOG,hayir,EVET,id,attribute_key->attribute_catalog(CASCADE); item_id->catalog_items(CASCADE),"item_id,attribute_key",6,EVET,2,0,1,4,3,0,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_item_attributes,CATALOG,hayir,EVET,id,attribute_id->attribute_catalog(CASCADE); item_id->catalog_items(CASCADE),"item_id,attribute_id",10,EVET,3,0,1,4,4,1,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_item_categories,CATALOG,kismi,hayir,"item_id,category_id",category_id->catalog_categories(CASCADE); item_id->catalog_items(CASCADE),,4,EVET,2,1,3,11,3,3,515,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,catalog_item_contacts,CATALOG,kismi,hayir,id,item_id->catalog_items(CASCADE),,10,EVET,2,1,2,5,3,4,274,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,catalog_item_favorites,CATALOG,hayir,EVET,"item_id,user_id",item_id->catalog_items(CASCADE),,3,EVET,2,0,1,2,1,0,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_item_feature_overrides,CATALOG,hayir,EVET,id,feature_key->feature_catalog(CASCADE); item_id->catalog_items(CASCADE),"item_id,feature_key",6,EVET,3,0,1,9,3,3,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_item_languages,CATALOG,kismi,hayir,"item_id,language_code",item_id->catalog_items(CASCADE),,4,EVET,2,1,2,5,2,3,20,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,catalog_item_links,CATALOG,hayir,EVET,id,item_id->catalog_items(CASCADE),,8,EVET,2,0,1,4,2,4,484,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_item_locations,CATALOG,kismi,hayir,id,item_id->catalog_items(CASCADE),,5,EVET,2,1,2,15,4,6,515,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,catalog_item_media,CATALOG,hayir,EVET,id,item_id->catalog_items(CASCADE),,10,EVET,2,0,1,7,3,4,254,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_item_memberships,CATALOG,kismi,hayir,id,item_id->catalog_items(CASCADE),"item_id,user_id,role",9,EVET,3,1,2,11,4,1,131,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,catalog_item_relations,CATALOG,hayir,EVET,id,item_id->catalog_items(CASCADE); related_item_id->catalog_items(CASCADE),"item_id,related_item_id,relation_type",8,EVET,2,0,1,2,3,0,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_item_reports,CATALOG,hayir,EVET,id,item_id->catalog_items(CASCADE),,8,EVET,3,0,1,2,2,1,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_item_reviews,CATALOG,hayir,EVET,id,item_id->catalog_items(CASCADE),,9,EVET,3,0,1,2,2,1,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_item_section_overrides,CATALOG,hayir,EVET,id,item_id->catalog_items(CASCADE); section_key->profile_section_catalog(CASCADE),"item_id,section_key",6,EVET,2,0,1,4,3,0,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_item_services,CATALOG,kismi,hayir,id,item_id->catalog_items(CASCADE),"item_id,service_slug",8,EVET,2,1,2,5,3,4,17,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,catalog_item_tags,CATALOG,kismi,hayir,id,item_id->catalog_items(CASCADE),"item_id,tag_slug",5,EVET,2,1,2,4,2,3,30,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,catalog_item_types,CATALOG,kismi,hayir,key,linked_role_key->roles(SET NULL),,5,EVET,1,1,2,8,1,1,91,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,catalog_item_verification_records,CATALOG,hayir,EVET,id,item_id->catalog_items(CASCADE),,8,EVET,2,0,1,2,2,1,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,catalog_items,CATALOG,EVET,hayir,id,item_type->catalog_item_types(RESTRICT); platform_role_key->roles(SET NULL),slug,13,EVET,7,3,4,36,10,5,623,MEDIUM,ACTIVE_CORE,Koru; cekirdek tablo
+public,catalog_search_documents,CATALOG,hayir,EVET,item_id,item_id->catalog_items(CASCADE),,8,EVET,2,0,1,6,10,0,530,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,city_ambassador_applications,DIRECTORY,hayir,hayir,id,,,10,EVET,4,0,3,1,1,0,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,command_center_items,WORKSPACE,kismi,hayir,id,,,18,EVET,4,2,3,4,11,1,643,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,command_center_legacy_map,WORKSPACE,hayir,EVET,id,command_center_item_id->command_center_items(CASCADE),"legacy_table,legacy_row_id",6,EVET,2,0,1,0,2,0,497,LOW,RETIREMENT_CANDIDATE,Kullanim kanitla; veri tasiyip retire et (Faz 06 taslak)
+public,community_group_details,CATALOG,hayir,EVET,item_id,item_id->catalog_items(CASCADE),,5,EVET,2,0,1,4,1,4,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,consultant_categories,DIRECTORY,kismi,hayir,id,,"user_id,category",4,EVET,2,3,4,2,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,consultant_social_media_links,DIRECTORY,hayir,EVET,id,,,11,EVET,1,0,3,2,3,0,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,contact_messages,ADMIN,kismi,hayir,id,,,5,EVET,4,1,2,2,1,1,-1,HIGH,ACTIVE_MODULE,Koru; modul tablosu
+public,contacts,ADMIN,hayir,hayir,id,,,5,EVET,2,0,1,1,1,1,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,contributor_social_media_links,DIRECTORY,hayir,EVET,id,,,11,EVET,1,0,3,2,3,0,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,coupon_purchases,REFERRAL,kismi,hayir,id,,,8,EVET,4,1,2,1,3,1,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,diaspora_city_scan_queue,SYSTEM,hayir,hayir,id,,"country,city_slug",5,EVET,1,0,1,1,2,0,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,diaspora_instagram_accounts,SYSTEM,hayir,hayir,id,,instagram_url; username,6,EVET,1,0,1,1,3,0,49,HIGH,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,diaspora_scan_runs,SYSTEM,hayir,hayir,id,,,5,EVET,1,0,1,1,1,0,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,direct_messages,DIRECTORY,kismi,hayir,id,,,6,EVET,2,3,5,1,3,0,-1,HIGH,ACTIVE_MODULE,Koru; modul tablosu
+public,doc_categories,WORKSPACE,hayir,hayir,id,,slug,9,EVET,1,0,1,0,3,0,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,draft_notlar,WORKSPACE,hayir,hayir,id,,,2,EVET,2,0,1,0,1,0,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,duplicate_candidates,CATALOG,hayir,EVET,id,left_item_id->catalog_items(CASCADE); right_item_id->catalog_items(CASCADE),"left_item_id,right_item_id",11,EVET,2,0,1,4,3,1,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,edge_rate_limits,ADMIN,kismi,hayir,"scope,client_key",,,6,EVET,1,3,4,1,2,1,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,entity_metadata,CATALOG,kismi,hayir,id,,"entity_type,entity_key",7,EVET,2,1,2,1,3,0,78,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,event_details,CATALOG,hayir,EVET,item_id,item_id->catalog_items(CASCADE),,4,EVET,2,0,1,4,2,4,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,events,CATALOG,kismi,hayir,id,,,12,EVET,6,4,14,11,5,5,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,expenses,MUHASEBE,kismi,hayir,id,,,12,EVET,4,1,3,1,6,1,-1,HIGH,ACTIVE_MODULE,Koru; modul tablosu
+public,feature_catalog,ROLESGO,kismi,hayir,key,,,10,EVET,1,4,5,25,2,0,38,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,feature_definitions,ROLESGO,hayir,EVET,key,,,4,EVET,1,0,1,6,1,1,0,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,feed_likes,DIRECTORY,kismi,hayir,id,post_id->feed_posts(CASCADE),"post_id,user_id",4,EVET,3,1,2,1,4,2,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,feed_posts,DIRECTORY,kismi,hayir,id,cafe_id->cafes(CASCADE),,8,EVET,4,2,3,2,6,1,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,founding_1000_signups,LANSMAN,hayir,EVET,id,,user_id,5,EVET,4,0,1,2,2,1,-1,HIGH,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,generated_posts,WHATSAPP_COMMUNITIES,kismi,hayir,id,,,7,EVET,3,1,2,1,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,geo_cities,GEO,kismi,hayir,id,country_id->geo_countries(CASCADE),"country_id,name",6,EVET,1,1,2,3,4,0,76901,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,geo_countries,GEO,kismi,hayir,id,,code,6,EVET,1,1,2,5,4,0,251,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,gorevler,WORKSPACE,hayir,hayir,id,,,1,EVET,2,0,1,0,1,0,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,incomes,MUHASEBE,kismi,hayir,id,,,11,EVET,4,1,3,1,5,1,-1,HIGH,ACTIVE_MODULE,Koru; modul tablosu
+public,independent_profiles,AUTH_PROFILE,kismi,hayir,id,,slug,17,EVET,1,2,3,4,2,4,241,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,individual_profile_details,AUTH_PROFILE,kismi,hayir,user_id,,,17,EVET,6,4,6,10,1,4,-1,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,influencer_social_media_links,DIRECTORY,hayir,EVET,id,,,11,EVET,1,0,3,2,3,0,58,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,interest_registrations,LANSMAN,kismi,hayir,id,,,3,EVET,4,4,5,2,3,0,-1,HIGH,ACTIVE_MODULE,Koru; modul tablosu
+public,item_type_attribute_rules,ROLESGO,hayir,EVET,id,attribute_id->attribute_catalog(CASCADE); item_type->catalog_item_types(CASCADE),"item_type,attribute_id",12,EVET,2,0,1,6,3,1,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,item_type_feature_defaults,ROLESGO,hayir,EVET,id,feature_key->feature_definitions(CASCADE); item_type->catalog_item_types(CASCADE),"item_type,feature_key",6,EVET,2,0,1,6,3,1,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,item_type_features,ROLESGO,hayir,EVET,"item_type,feature_key",feature_key->feature_definitions(CASCADE); item_type->catalog_item_types(CASCADE),,6,EVET,1,0,1,3,1,1,64,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,job_applications,DIRECTORY,kismi,hayir,id,,,6,EVET,4,2,3,2,1,2,-1,HIGH,ACTIVE_MODULE,Koru; modul tablosu
+public,job_listings,DIRECTORY,kismi,hayir,id,,,12,EVET,7,2,3,6,4,5,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,job_posting_details,CATALOG,hayir,EVET,item_id,item_id->catalog_items(CASCADE),,3,EVET,2,0,1,4,2,4,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,lansman_registrations,LANSMAN,kismi,hayir,id,,,7,EVET,1,1,2,4,3,0,-1,HIGH,ACTIVE_MODULE,Koru; modul tablosu
+public,links,WORKSPACE,hayir,EVET,id,,,7,EVET,2,0,4,7,1,0,31,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,marketplace_listing_details,CATALOG,hayir,EVET,item_id,item_id->catalog_items(CASCADE),,3,EVET,2,0,1,3,2,4,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,marquee_items,WORKSPACE,kismi,hayir,id,,news_post_id,13,EVET,1,1,2,3,4,1,9,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,matches,DIRECTORY,kismi,hayir,id,matched_submission_id->submissions(CASCADE); source_submission_id->submissions(CASCADE),"source_submission_id,matched_submission_id",7,EVET,1,1,2,3,4,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,may19_campaign_submissions,MAY19,hayir,EVET,id,,,14,EVET,1,1,2,3,4,0,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,may19_submissions,MAY19,hayir,hayir,id,,,6,EVET,5,0,1,1,4,1,-1,HIGH,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,meeting_notes,WORKSPACE,kismi,hayir,id,,,11,EVET,2,1,4,0,4,0,411,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,merge_history,CATALOG,hayir,EVET,id,source_item_id->catalog_items(CASCADE); target_item_id->catalog_items(CASCADE),,6,EVET,1,0,1,2,2,0,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,messages,DIRECTORY,hayir,EVET,id,,,7,EVET,3,0,4,4,5,0,-1,HIGH,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,moderation_queue,CATALOG,hayir,EVET,id,item_id->catalog_items(CASCADE); source_record_id->source_records(CASCADE),,8,EVET,2,0,1,2,2,1,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,mvp_items,WORKSPACE,kismi,hayir,id,,,10,EVET,4,1,2,2,1,1,188,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,news_posts,WORKSPACE,kismi,hayir,id,,unique_hash,3,EVET,1,1,3,0,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,notifications,ADMIN,kismi,hayir,id,,,6,EVET,3,4,8,8,1,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,organization_details,CATALOG,kismi,hayir,item_id,item_id->catalog_items(CASCADE),,4,EVET,2,1,2,4,1,4,482,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,person_profile_details,AUTH_PROFILE,hayir,EVET,item_id,item_id->catalog_items(CASCADE),,5,EVET,2,0,1,7,3,4,14,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,phone_verifications,ADMIN,hayir,hayir,id,,,7,EVET,3,0,1,1,2,0,-1,HIGH,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,profile_onboarding_imports,AUTH_PROFILE,kismi,hayir,id,source_submission_id->submissions(CASCADE),"batch_id,email_normalized; batch_id,source_submission_id",11,EVET,2,2,3,2,8,1,-1,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,profile_section_catalog,ROLESGO,kismi,hayir,id,,key,11,EVET,1,3,4,13,3,0,-1,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,profile_views,AUTH_PROFILE,hayir,hayir,id,,,3,EVET,2,0,1,1,2,0,-1,MEDIUM,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,rag_documents,ADMIN,hayir,hayir,id,,,2,EVET,1,0,1,1,1,0,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,referral_code_usages,REFERRAL,kismi,hayir,id,referral_code_id->referral_codes(CASCADE); submission_id->submissions(CASCADE),submission_id,4,EVET,0,2,3,1,3,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,referral_codes,REFERRAL,kismi,hayir,id,group_id->referral_groups(NO ACTION); source_id->referral_sources(NO ACTION); type_id->referral_types(NO ACTION),code,20,EVET,0,2,4,5,6,0,45,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,referral_codes_legacy,REFERRAL,hayir,EVET,id,,code,15,EVET,0,0,1,1,5,0,-1,LOW,RETIREMENT_CANDIDATE,Kullanim kanitla; veri tasiyip retire et (Faz 06 taslak)
+public,referral_groups,REFERRAL,kismi,hayir,id,,code,6,EVET,0,1,3,2,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,referral_sources,REFERRAL,kismi,hayir,id,,code,6,EVET,0,1,3,3,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,referral_types,REFERRAL,kismi,hayir,id,,code,6,EVET,0,1,3,3,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,resource_entries,WORKSPACE,kismi,hayir,id,,,15,EVET,4,3,4,6,6,0,221,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,role_attribute_rules,ROLESGO,kismi,hayir,id,attribute_id->attribute_catalog(CASCADE); role_id->roles(CASCADE),"role_id,attribute_id",12,EVET,1,2,4,21,4,0,1977,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,role_feature_flags,ROLESGO,EVET,hayir,"role_id,feature_key",feature_key->feature_catalog(CASCADE); role_id->roles(CASCADE),,5,EVET,1,2,3,26,2,0,2487,LOW,ACTIVE_CORE,Koru; cekirdek tablo
+public,role_profile_section_rules,ROLESGO,kismi,hayir,id,role_id->roles(CASCADE); section_id->profile_section_catalog(CASCADE),"role_id,section_id",8,EVET,1,2,3,13,3,0,574,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,role_taxonomy_rules,TAXONOMY_LEGACY,hayir,EVET,id,group_id->taxonomy_groups(CASCADE); role_id->roles(CASCADE),"role_id,group_id",9,EVET,1,2,4,3,3,0,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,roles,ROLESGO,EVET,hayir,id,parent_role_id->roles(RESTRICT),key,11,EVET,1,12,15,44,5,0,82,LOW,ACTIVE_CORE,Koru; cekirdek tablo
+public,service_proposals,DIRECTORY,kismi,hayir,id,request_id->service_requests(CASCADE),,6,EVET,4,2,3,2,1,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,service_requests,DIRECTORY,kismi,hayir,id,,,8,EVET,4,4,6,6,1,1,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,site_settings,WORKSPACE,hayir,hayir,id,,,3,EVET,3,0,3,1,1,1,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,social_media_links,DIRECTORY,hayir,hayir,id,,,7,EVET,2,0,3,1,2,0,4,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,source_records,CATALOG,hayir,EVET,id,item_id->catalog_items(CASCADE),"source_type,external_id",8,EVET,2,0,1,11,3,1,516,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,spatial_ref_sys,SYSTEM,hayir,hayir,srid,,,2,HAYIR,0,0,1,0,1,0,8500,LOW,ACTIVE_COMPATIBILITY,Sistem/uyumluluk tablosu; dokunma
+public,submissions,ADMIN,EVET,hayir,id,referral_code_id->referral_codes(NO ACTION),,19,EVET,2,5,8,17,9,2,135,HIGH,ACTIVE_CORE,Koru; cekirdek tablo
+public,survey_answers,SURVEYS,kismi,hayir,id,question_id->survey_questions(CASCADE); response_id->survey_responses(CASCADE),,5,EVET,2,1,3,1,3,0,6,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,survey_questions,SURVEYS,kismi,hayir,id,survey_id->surveys(CASCADE),,11,EVET,2,2,3,2,3,1,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,survey_responses,SURVEYS,kismi,hayir,id,survey_id->surveys(CASCADE),,7,EVET,3,2,4,1,2,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,surveys,SURVEYS,kismi,hayir,id,,slug,10,EVET,5,3,6,3,4,3,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,taxonomy_groups,TAXONOMY_LEGACY,hayir,EVET,id,,key,10,EVET,1,2,4,5,2,0,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,taxonomy_options,TAXONOMY_LEGACY,hayir,EVET,id,group_id->taxonomy_groups(CASCADE),key,9,EVET,1,2,4,5,3,0,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,todo_items,WORKSPACE,hayir,hayir,id,,,11,EVET,2,0,3,0,1,1,105,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,todos,WORKSPACE,hayir,EVET,id,,,5,EVET,4,0,1,0,1,0,-1,LOW,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,turkish_mission_relations,DIRECTORY,hayir,hayir,id,child_mission_slug->turkish_missions(CASCADE); parent_mission_slug->turkish_missions(CASCADE),source_key,9,EVET,2,0,1,1,4,1,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,turkish_mission_units,DIRECTORY,hayir,hayir,id,mission_slug->turkish_missions(CASCADE),source_key,14,EVET,2,0,1,1,4,1,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,turkish_missions,DIRECTORY,kismi,hayir,id,,slug; source_url,24,EVET,2,1,2,4,10,4,241,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,user_connections,DIRECTORY,kismi,hayir,id,,"requester_id,recipient_id",5,EVET,4,1,2,2,4,2,-1,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,user_cvs,AUTH_PROFILE,hayir,hayir,id,,,9,EVET,2,0,1,0,1,0,-1,HIGH,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,user_feature_overrides,AUTH_PROFILE,kismi,hayir,"user_id,feature_key",feature_key->feature_catalog(CASCADE),,5,EVET,1,2,4,16,2,0,59,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,user_follows,DIRECTORY,kismi,hayir,id,,"follower_id,following_id",5,EVET,3,4,5,2,4,0,-1,MEDIUM,ACTIVE_MODULE,Koru; modul tablosu
+public,user_profile_attributes,AUTH_PROFILE,EVET,hayir,id,attribute_id->attribute_catalog(CASCADE),"user_id,attribute_id",10,EVET,1,7,9,16,4,6,196,HIGH,ACTIVE_CORE,Koru; cekirdek tablo
+public,user_role_assignments,AUTH_PROFILE,EVET,hayir,user_id,role_id->roles(RESTRICT),,4,EVET,1,9,11,13,2,3,107,HIGH,ACTIVE_CORE,Koru; cekirdek tablo
+public,user_taxonomy_selections,TAXONOMY_LEGACY,hayir,EVET,id,group_id->taxonomy_groups(CASCADE); option_id->taxonomy_options(CASCADE),"user_id,group_id,option_id",6,EVET,1,1,3,5,3,0,-1,MEDIUM,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,wa_messages,WHATSAPP_COMMUNITIES,hayir,hayir,id,,,2,EVET,0,0,1,0,2,0,235,HIGH,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,wa_tasks,WHATSAPP_COMMUNITIES,hayir,hayir,id,,,4,EVET,0,0,1,0,3,0,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,wa_users,WHATSAPP_COMMUNITIES,hayir,EVET,id,,wa_id,3,EVET,0,0,1,2,3,1,25,HIGH,LEGACY_REVIEW,Frontend/RPC referansini dogrula; legacy ise migrate-then-retire
+public,welcome_pack_orders,DIRECTORY,kismi,hayir,id,,,17,EVET,5,3,4,3,1,1,-1,HIGH,ACTIVE_MODULE,Koru; modul tablosu
+public,welcome_pack_proposals,DIRECTORY,hayir,hayir,id,order_id->welcome_pack_orders(CASCADE),,7,EVET,5,0,1,1,1,0,-1,LOW,UNKNOWN_MANUAL_REVIEW,"Manuel inceleme: kod referansi yok, amac belirsiz"
+public,whatsapp_join_requests,WHATSAPP_COMMUNITIES,kismi,hayir,id,landing_id->whatsapp_landings(CASCADE),,5,EVET,2,2,3,3,3,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,whatsapp_landing_editors,WHATSAPP_COMMUNITIES,kismi,hayir,id,landing_id->whatsapp_landings(CASCADE),"landing_id,user_id",5,EVET,2,1,2,3,4,0,-1,LOW,ACTIVE_MODULE,Koru; modul tablosu
+public,whatsapp_landings,WHATSAPP_COMMUNITIES,kismi,hayir,id,,slug,19,EVET,11,1,3,10,8,4,9,LOW,ACTIVE_MODULE,Koru; modul tablosu

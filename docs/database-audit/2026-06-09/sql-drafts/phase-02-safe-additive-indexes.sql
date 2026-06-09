@@ -1,0 +1,197 @@
+-- ============================================================
+-- DRAFT ONLY - DO NOT EXECUTE AUTOMATICALLY
+-- Human review, backup and staging verification are required.
+-- ============================================================
+--
+-- PHASE 02 — SAFE ADDITIVE INDEXES (proposals only)
+-- Project: injprdrsklkxgnaiixzh  | Schema: public
+--
+-- FOCUS: (a) FK columns that lack a backing index (slow cascades, slow joins,
+--            and lock amplification on parent UPDATE/DELETE), and
+--        (b) RLS scoping columns (owner_id / user_id) used in policy predicates.
+--
+-- ALL `CREATE INDEX` LINES ARE COMMENTED OUT.
+--
+-- *** EVIDENCE REQUIREMENT ***
+-- Each proposal below is a HYPOTHESIS. Before applying, capture query-plan
+-- evidence (EXPLAIN (ANALYZE, BUFFERS)) showing a seq-scan / poor join that the
+-- index would fix, AND confirm the column is actually used in hot paths / RLS.
+-- An index is not free: it adds write amplification and storage.
+--
+-- *** LOCK NOTE ***
+-- Use CREATE INDEX CONCURRENTLY to avoid an ACCESS EXCLUSIVE lock on the table.
+-- CONCURRENTLY:
+--   - cannot run inside a transaction block (so NOT inside a single migration txn);
+--   - takes longer and can leave an INVALID index if it fails (must be dropped + retried);
+--   - acquires SHARE UPDATE EXCLUSIVE (blocks schema changes/VACUUM, not reads/writes).
+-- ============================================================
+
+
+-- ------------------------------------------------------------
+-- PROPOSAL 1 — catalog_claim_requests.catalog_item_id (FK)
+-- ------------------------------------------------------------
+-- Table:            public.catalog_claim_requests
+-- Column(s):        catalog_item_id
+-- Rationale:        FK → catalog_items.id with no backing index. Parent
+--                   DELETE/UPDATE on catalog_items must seq-scan children;
+--                   admin review screens join on this column.
+-- Evidence needed:  EXPLAIN on the admin claim-list query + parent-delete plan.
+-- Expected benefit: index-only FK lookup; removes seq-scan on cascade checks.
+-- Write cost:       one btree maintained per insert/update of catalog_item_id.
+-- Lock risk:        CONCURRENTLY → SHARE UPDATE EXCLUSIVE (no read/write block).
+--
+-- CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_catalog_claim_requests_catalog_item_id
+--   ON public.catalog_claim_requests (catalog_item_id);
+--
+-- ROLLBACK:
+-- DROP INDEX CONCURRENTLY IF EXISTS public.idx_catalog_claim_requests_catalog_item_id;
+
+
+-- ------------------------------------------------------------
+-- PROPOSAL 2 — catalog_claim_requests.user_id (FK + RLS)
+-- ------------------------------------------------------------
+-- Table:            public.catalog_claim_requests
+-- Column(s):        user_id
+-- Rationale:        FK → requesting user AND the RLS scoping column ("my claims").
+--                   RLS predicate user_id = auth.uid() benefits from an index.
+-- Evidence needed:  EXPLAIN of the user-facing "my claims" query under RLS.
+-- Expected benefit: fast per-user filtering; avoids seq-scan under RLS.
+-- Write cost:       one btree per row insert.
+-- Lock risk:        CONCURRENTLY → SHARE UPDATE EXCLUSIVE.
+--
+-- CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_catalog_claim_requests_user_id
+--   ON public.catalog_claim_requests (user_id);
+--
+-- ROLLBACK:
+-- DROP INDEX CONCURRENTLY IF EXISTS public.idx_catalog_claim_requests_user_id;
+
+
+-- ------------------------------------------------------------
+-- PROPOSAL 3 — catalog_items.owner_id (RLS scoping)
+-- ------------------------------------------------------------
+-- Table:            public.catalog_items
+-- Column(s):        owner_id
+-- Rationale:        RLS owner predicate (owner_id = auth.uid()); also joined for
+--                   "items I own" listings.
+-- Evidence needed:  EXPLAIN of owner-scoped catalog query under RLS.
+-- Expected benefit: per-owner filtering without full scan.
+-- Write cost:       one btree per insert/owner change (owner change is rare).
+-- Lock risk:        CONCURRENTLY → SHARE UPDATE EXCLUSIVE.
+--
+-- CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_catalog_items_owner_id
+--   ON public.catalog_items (owner_id);
+--
+-- ROLLBACK:
+-- DROP INDEX CONCURRENTLY IF EXISTS public.idx_catalog_items_owner_id;
+
+
+-- ------------------------------------------------------------
+-- PROPOSAL 4 — user_role_assignments.user_id (FK + RLS hot path)
+-- ------------------------------------------------------------
+-- Table:            public.user_role_assignments
+-- Column(s):        user_id
+-- Rationale:        Read on EVERY auth-gated request via is_admin()/is_moderator()
+--                   and get_current_user_features(). FK → auth.users.
+-- Evidence needed:  Confirm no existing index already covers user_id (may already
+--                   exist as part of a PK/unique). Check pg_indexes first.
+-- Expected benefit: O(log n) role lookup on the hottest auth path.
+-- Write cost:       low — assignments change rarely.
+-- Lock risk:        CONCURRENTLY → SHARE UPDATE EXCLUSIVE.
+--
+-- PRECONDITION (read-only, may run):
+--   SELECT indexname, indexdef FROM pg_indexes
+--   WHERE schemaname='public' AND tablename='user_role_assignments';
+--
+-- CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_user_role_assignments_user_id
+--   ON public.user_role_assignments (user_id);
+--
+-- ROLLBACK:
+-- DROP INDEX CONCURRENTLY IF EXISTS public.idx_user_role_assignments_user_id;
+
+
+-- ------------------------------------------------------------
+-- PROPOSAL 5 — user_role_assignments.role_id (FK)
+-- ------------------------------------------------------------
+-- Table:            public.user_role_assignments
+-- Column(s):        role_id
+-- Rationale:        FK → roles.id; "who has role X" admin queries + role deletes.
+-- Evidence needed:  EXPLAIN of role-membership admin query.
+-- Expected benefit: avoids seq-scan when filtering by role.
+-- Write cost:       low.
+-- Lock risk:        CONCURRENTLY → SHARE UPDATE EXCLUSIVE.
+--
+-- CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_user_role_assignments_role_id
+--   ON public.user_role_assignments (role_id);
+--
+-- ROLLBACK:
+-- DROP INDEX CONCURRENTLY IF EXISTS public.idx_user_role_assignments_role_id;
+
+
+-- ------------------------------------------------------------
+-- PROPOSAL 6 — user_profile_attributes.user_id (FK + RLS)
+-- ------------------------------------------------------------
+-- Table:            public.user_profile_attributes
+-- Column(s):        user_id
+-- Rationale:        FK + RLS scoping; read during feature resolution.
+-- Evidence needed:  Confirm not already covered by a (user_id, key) unique index.
+-- Expected benefit: fast per-user attribute fetch.
+-- Write cost:       low.
+-- Lock risk:        CONCURRENTLY → SHARE UPDATE EXCLUSIVE.
+--
+-- PRECONDITION (read-only, may run):
+--   SELECT indexname, indexdef FROM pg_indexes
+--   WHERE schemaname='public' AND tablename='user_profile_attributes';
+--
+-- CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_user_profile_attributes_user_id
+--   ON public.user_profile_attributes (user_id);
+--
+-- ROLLBACK:
+-- DROP INDEX CONCURRENTLY IF EXISTS public.idx_user_profile_attributes_user_id;
+
+
+-- ------------------------------------------------------------
+-- PROPOSAL 7 — referral_code_usages.referral_code_id (FK)
+-- ------------------------------------------------------------
+-- Table:            public.referral_code_usages
+-- Column(s):        referral_code_id (verify exact FK column name in live schema)
+-- Rationale:        FK → referral_codes; "usages of code X" + parent deletes.
+-- Evidence needed:  Confirm column name; EXPLAIN of usage-count query.
+-- Expected benefit: fast aggregation of usages per code.
+-- Write cost:       one btree per usage insert (usages can be high-volume — weigh cost).
+-- Lock risk:        CONCURRENTLY → SHARE UPDATE EXCLUSIVE.
+--
+-- CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_referral_code_usages_referral_code_id
+--   ON public.referral_code_usages (referral_code_id);
+--
+-- ROLLBACK:
+-- DROP INDEX CONCURRENTLY IF EXISTS public.idx_referral_code_usages_referral_code_id;
+
+
+-- ------------------------------------------------------------
+-- DISCOVERY HELPER — find FK columns lacking a backing index (read-only)
+-- ------------------------------------------------------------
+-- This SELECT is read-only and MAY be run to generate the authoritative list of
+-- unindexed FK columns instead of relying on the proposals above. Run it first.
+--
+-- SELECT c.conrelid::regclass        AS table_name,
+--        a.attname                   AS fk_column,
+--        c.conname                   AS fk_constraint
+-- FROM   pg_constraint c
+-- JOIN   LATERAL unnest(c.conkey) WITH ORDINALITY AS k(attnum, ord) ON true
+-- JOIN   pg_attribute a ON a.attrelid = c.conrelid AND a.attnum = k.attnum
+-- WHERE  c.contype = 'f'
+--   AND  c.connamespace = 'public'::regnamespace
+--   AND  NOT EXISTS (
+--          SELECT 1 FROM pg_index i
+--          WHERE i.indrelid = c.conrelid
+--            AND (i.indkey::smallint[])[0] = a.attnum   -- FK col is leading index col
+--        )
+-- ORDER  BY table_name, fk_column;
+
+
+-- ------------------------------------------------------------
+-- DO NOT propose index DROPS here.
+-- idx_scan = 0 is NOT evidence (stats reset on restart; index may enforce
+-- uniqueness/FK or serve rare critical plans). Any drop candidate is
+-- "Manuel doğrulama gerekli" and lives outside this additive phase.
+-- ============================================================

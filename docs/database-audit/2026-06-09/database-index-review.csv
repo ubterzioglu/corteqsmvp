@@ -1,0 +1,453 @@
+Schema,Table,Index,Kolonlar,Unique,Scans,Olası_Unused,Duplicate_Aday,Risk,Oneri
+public,admin_audit_logs,admin_audit_logs_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,admin_audit_logs,idx_admin_audit_logs_action_created,"action, created_at DESC",hayir,2,hayir,hayir,DUSUK,Koru
+public,admin_audit_logs,idx_admin_audit_logs_actor_created,"actor_user_id, created_at DESC",hayir,2,hayir,hayir,DUSUK,Koru
+public,admin_audit_logs,idx_admin_audit_logs_target_user_created,"target_user_id, created_at DESC",hayir,2,hayir,hayir,DUSUK,Koru
+public,advisor_details,advisor_details_pkey,item_id,EVET,27,hayir,hayir,DUSUK,Koru
+public,advisor_social_media_links,advisor_social_media_links_created_at_idx,created_at DESC,hayir,2,hayir,hayir,DUSUK,Koru
+public,advisor_social_media_links,advisor_social_media_links_name_idx,name,hayir,2,hayir,hayir,DUSUK,Koru
+public,advisor_social_media_links,advisor_social_media_links_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,appointments,appointments_pkey,id,EVET,1,hayir,hayir,DUSUK,Koru
+public,appointments,idx_appointments_client,"client_id, scheduled_at",hayir,1,hayir,hayir,DUSUK,Koru
+public,appointments,idx_appointments_provider,"provider_id, scheduled_at",hayir,1,hayir,hayir,DUSUK,Koru
+public,approval_requests,approval_requests_pkey,id,EVET,1338,hayir,hayir,DUSUK,Koru
+public,approval_requests,idx_approval_requests_created_at,created_at DESC,hayir,1338,hayir,hayir,DUSUK,Koru
+public,approval_requests,idx_approval_requests_pending_unique,"user_id, request_type, COALESCE(target_role_key, ''::text",EVET,1338,hayir,hayir,DUSUK,Koru
+public,approval_requests,idx_approval_requests_status,status,hayir,1338,hayir,hayir,DUSUK,Koru
+public,approval_requests,idx_approval_requests_type_status,"request_type, status",hayir,1338,hayir,hayir,DUSUK,Koru
+public,approval_requests,idx_approval_requests_user,user_id,hayir,1338,hayir,hayir,DUSUK,Koru
+public,approval_requests,idx_approval_requests_user_status,"user_id, status",hayir,1338,hayir,hayir,DUSUK,Koru
+public,arge_cards,arge_cards_pkey,id,EVET,7,hayir,hayir,DUSUK,Koru
+public,arge_files,arge_files_card_id_idx,card_id,hayir,6,hayir,hayir,DUSUK,Koru
+public,arge_files,arge_files_pkey,id,EVET,6,hayir,hayir,DUSUK,Koru
+public,arge_links,arge_links_card_id_idx,card_id,hayir,9,hayir,hayir,DUSUK,Koru
+public,arge_links,arge_links_pkey,id,EVET,9,hayir,hayir,DUSUK,Koru
+public,attribute_catalog,attribute_catalog_key_key,key,EVET,45270,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,attribute_catalog,attribute_catalog_pkey,id,EVET,45270,hayir,hayir,DUSUK,Koru
+public,attribute_catalog,idx_attribute_catalog_key,key,hayir,45270,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,business_details,business_details_pkey,item_id,EVET,5,hayir,hayir,DUSUK,Koru
+public,cadde_billboard_cards,cadde_billboard_cards_pkey,id,EVET,3,hayir,hayir,DUSUK,Koru
+public,cadde_billboard_cards,cadde_billboard_mode_status_idx,"content_mode, status, sort_order",hayir,3,hayir,hayir,DUSUK,Koru
+public,cadde_cafe_members,cadde_cafe_members_cafe_id_user_id_key,"cafe_id, user_id",EVET,2,hayir,hayir,DUSUK,Koru
+public,cadde_cafe_members,cadde_cafe_members_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,cadde_cafes,cadde_cafes_mode_status_idx,"content_mode, status, is_active, starts_at DESC",hayir,4,hayir,hayir,DUSUK,Koru
+public,cadde_cafes,cadde_cafes_pkey,id,EVET,4,hayir,hayir,DUSUK,Koru
+public,cadde_cities,cadde_cities_country_id_name_key,"country_id, name",EVET,23,hayir,hayir,DUSUK,Koru
+public,cadde_cities,cadde_cities_pkey,id,EVET,23,hayir,hayir,DUSUK,Koru
+public,cadde_countries,cadde_countries_code_key,code,EVET,33,hayir,hayir,DUSUK,Koru
+public,cadde_countries,cadde_countries_pkey,id,EVET,33,hayir,hayir,DUSUK,Koru
+public,cadde_post_comments,cadde_comments_post_idx,"post_id, created_at DESC",hayir,2,hayir,hayir,DUSUK,Koru
+public,cadde_post_comments,cadde_post_comments_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,cadde_post_reactions,cadde_post_reactions_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,cadde_post_reactions,cadde_post_reactions_post_id_user_id_reaction_type_key,"post_id, user_id, reaction_type",EVET,2,hayir,hayir,DUSUK,Koru
+public,cadde_post_reactions,cadde_reactions_post_idx,post_id,hayir,2,hayir,hayir,DUSUK,Koru
+public,cadde_posts,cadde_posts_bridge_idx,is_bridge,hayir,4,hayir,hayir,DUSUK,Koru
+public,cadde_posts,cadde_posts_country_city_idx,"country_id, city_id",hayir,4,hayir,hayir,DUSUK,Koru
+public,cadde_posts,cadde_posts_pkey,id,EVET,4,hayir,hayir,DUSUK,Koru
+public,cadde_posts,cadde_posts_status_mode_created_idx,"status, content_mode, created_at DESC",hayir,4,hayir,hayir,DUSUK,Koru
+public,cadde_sponsored_placements,cadde_sponsored_mode_status_idx,"content_mode, status, sort_order",hayir,3,hayir,hayir,DUSUK,Koru
+public,cadde_sponsored_placements,cadde_sponsored_placements_pkey,id,EVET,3,hayir,hayir,DUSUK,Koru
+public,cafe_memberships,cafe_memberships_cafe_id_user_id_key,"cafe_id, user_id",EVET,8,hayir,hayir,DUSUK,Koru
+public,cafe_memberships,cafe_memberships_pkey,id,EVET,8,hayir,hayir,DUSUK,Koru
+public,cafe_memberships,cafe_memberships_user_idx,"user_id, joined_at DESC",hayir,8,hayir,hayir,DUSUK,Koru
+public,cafes,cafes_active_idx,closes_at,hayir,1,hayir,hayir,DUSUK,Koru
+public,cafes,cafes_country_city_idx,"country, city",hayir,1,hayir,hayir,DUSUK,Koru
+public,cafes,cafes_name_unique_lower,lower(name,EVET,1,hayir,hayir,DUSUK,Koru
+public,cafes,cafes_pkey,id,EVET,1,hayir,hayir,DUSUK,Koru
+public,catalog_audit_logs,catalog_audit_logs_pkey,id,EVET,4,hayir,hayir,DUSUK,Koru
+public,catalog_audit_logs,idx_catalog_audit_logs_item_created,"item_id, created_at DESC",hayir,4,hayir,hayir,DUSUK,Koru
+public,catalog_categories,catalog_categories_pkey,id,EVET,305090,hayir,hayir,DUSUK,Koru
+public,catalog_categories,catalog_categories_slug_key,slug,EVET,305090,hayir,hayir,DUSUK,Koru
+public,catalog_categories,idx_catalog_categories_module_sort,"module, sort_order",hayir,305090,hayir,hayir,DUSUK,Koru
+public,catalog_categories,idx_catalog_categories_parent,parent_id,hayir,305090,hayir,hayir,DUSUK,Koru
+public,catalog_claim_requests,catalog_claim_requests_pkey,id,EVET,20,hayir,hayir,DUSUK,Koru
+public,catalog_claim_requests,idx_catalog_claim_requests_item_status,"item_id, status",hayir,20,hayir,hayir,DUSUK,Koru
+public,catalog_claim_requests,idx_catalog_claim_requests_requested_by,"requested_by_user_id, status",hayir,20,hayir,hayir,DUSUK,Koru
+public,catalog_item_attribute_overrides,catalog_item_attribute_overrides_item_id_attribute_key_key,"item_id, attribute_key",EVET,36,hayir,hayir,DUSUK,Koru
+public,catalog_item_attribute_overrides,catalog_item_attribute_overrides_pkey,id,EVET,36,hayir,hayir,DUSUK,Koru
+public,catalog_item_attribute_overrides,idx_catalog_item_attribute_overrides_item,item_id,hayir,36,hayir,hayir,DUSUK,Koru
+public,catalog_item_attributes,catalog_item_attributes_item_id_attribute_id_key,"item_id, attribute_id",EVET,1077,hayir,hayir,DUSUK,Koru
+public,catalog_item_attributes,catalog_item_attributes_pkey,id,EVET,1077,hayir,hayir,DUSUK,Koru
+public,catalog_item_attributes,idx_catalog_item_attributes_attribute_id,attribute_id,hayir,1077,hayir,hayir,DUSUK,Koru
+public,catalog_item_attributes,idx_catalog_item_attributes_item_id,item_id,hayir,1077,hayir,hayir,DUSUK,Koru
+public,catalog_item_categories,catalog_item_categories_pkey,"item_id, category_id",EVET,320343,hayir,hayir,DUSUK,Koru
+public,catalog_item_categories,idx_catalog_item_categories_category,"category_id, item_id",hayir,320343,hayir,hayir,DUSUK,Koru
+public,catalog_item_categories,idx_catalog_item_categories_primary,item_id,EVET,320343,hayir,hayir,DUSUK,Koru
+public,catalog_item_contacts,catalog_item_contacts_pkey,id,EVET,2787,hayir,hayir,DUSUK,Koru
+public,catalog_item_contacts,idx_catalog_item_contacts_item_public,"item_id, is_public",hayir,2787,hayir,hayir,DUSUK,Koru
+public,catalog_item_contacts,idx_catalog_item_contacts_primary,item_id,EVET,2787,hayir,hayir,DUSUK,Koru
+public,catalog_item_favorites,catalog_item_favorites_pkey,"item_id, user_id",EVET,2,hayir,hayir,DUSUK,Koru
+public,catalog_item_feature_overrides,catalog_item_feature_overrides_item_id_feature_key_key,"item_id, feature_key",EVET,99,hayir,hayir,DUSUK,Koru
+public,catalog_item_feature_overrides,catalog_item_feature_overrides_pkey,id,EVET,99,hayir,hayir,DUSUK,Koru
+public,catalog_item_feature_overrides,idx_catalog_item_feature_overrides_item,item_id,hayir,99,hayir,hayir,DUSUK,Koru
+public,catalog_item_languages,catalog_item_languages_pkey,"item_id, language_code",EVET,1941,hayir,hayir,DUSUK,Koru
+public,catalog_item_languages,idx_catalog_item_languages_primary,item_id,EVET,1941,hayir,hayir,DUSUK,Koru
+public,catalog_item_links,catalog_item_links_pkey,id,EVET,638,hayir,hayir,DUSUK,Koru
+public,catalog_item_links,idx_catalog_item_links_item_public,"item_id, is_public",hayir,638,hayir,hayir,DUSUK,Koru
+public,catalog_item_locations,catalog_item_locations_pkey,id,EVET,326930,hayir,hayir,DUSUK,Koru
+public,catalog_item_locations,idx_catalog_item_locations_geo,geo,hayir,326930,hayir,hayir,DUSUK,Koru
+public,catalog_item_locations,idx_catalog_item_locations_item_primary,"item_id, is_primary",hayir,326930,hayir,hayir,DUSUK,Koru
+public,catalog_item_locations,idx_catalog_item_locations_primary,item_id,EVET,326930,hayir,hayir,DUSUK,Koru
+public,catalog_item_media,catalog_item_media_pkey,id,EVET,40034,hayir,hayir,DUSUK,Koru
+public,catalog_item_media,idx_catalog_item_media_item_public,"item_id, is_public",hayir,40034,hayir,hayir,DUSUK,Koru
+public,catalog_item_media,idx_catalog_item_media_primary,item_id,EVET,40034,hayir,hayir,DUSUK,Koru
+public,catalog_item_memberships,catalog_item_memberships_item_id_user_id_role_key,"item_id, user_id, role",EVET,517,hayir,hayir,DUSUK,Koru
+public,catalog_item_memberships,catalog_item_memberships_pkey,id,EVET,517,hayir,hayir,DUSUK,Koru
+public,catalog_item_memberships,idx_catalog_memberships_item_status,"item_id, status",hayir,517,hayir,hayir,DUSUK,Koru
+public,catalog_item_memberships,idx_catalog_memberships_user_status,"user_id, status",hayir,517,hayir,hayir,DUSUK,Koru
+public,catalog_item_relations,catalog_item_relations_item_id_related_item_id_relation_typ_key,"item_id, related_item_id, relation_type",EVET,5,hayir,hayir,DUSUK,Koru
+public,catalog_item_relations,catalog_item_relations_pkey,id,EVET,5,hayir,hayir,DUSUK,Koru
+public,catalog_item_relations,idx_catalog_item_relations_item_type,"item_id, relation_type",hayir,5,hayir,hayir,DUSUK,Koru
+public,catalog_item_reports,catalog_item_reports_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,catalog_item_reports,idx_catalog_item_reports_item_status,"item_id, status",hayir,2,hayir,hayir,DUSUK,Koru
+public,catalog_item_reviews,catalog_item_reviews_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,catalog_item_reviews,idx_catalog_item_reviews_item_status,"item_id, status",hayir,2,hayir,hayir,DUSUK,Koru
+public,catalog_item_section_overrides,catalog_item_section_overrides_item_id_section_key_key,"item_id, section_key",EVET,34,hayir,hayir,DUSUK,Koru
+public,catalog_item_section_overrides,catalog_item_section_overrides_pkey,id,EVET,34,hayir,hayir,DUSUK,Koru
+public,catalog_item_section_overrides,idx_catalog_item_section_overrides_item,item_id,hayir,34,hayir,hayir,DUSUK,Koru
+public,catalog_item_services,catalog_item_services_item_id_service_slug_key,"item_id, service_slug",EVET,1935,hayir,hayir,DUSUK,Koru
+public,catalog_item_services,catalog_item_services_pkey,id,EVET,1935,hayir,hayir,DUSUK,Koru
+public,catalog_item_services,idx_catalog_item_services_item_public,"item_id, is_public",hayir,1935,hayir,hayir,DUSUK,Koru
+public,catalog_item_tags,catalog_item_tags_item_id_tag_slug_key,"item_id, tag_slug",EVET,1949,hayir,hayir,DUSUK,Koru
+public,catalog_item_tags,catalog_item_tags_pkey,id,EVET,1949,hayir,hayir,DUSUK,Koru
+public,catalog_item_types,catalog_item_types_pkey,key,EVET,1322,hayir,hayir,DUSUK,Koru
+public,catalog_item_verification_records,catalog_item_verification_records_pkey,id,EVET,4,hayir,hayir,DUSUK,Koru
+public,catalog_item_verification_records,idx_catalog_verification_item_status,"item_id, verification_status",hayir,4,hayir,hayir,DUSUK,Koru
+public,catalog_items,catalog_items_pkey,id,EVET,254976,hayir,hayir,DUSUK,Koru
+public,catalog_items,catalog_items_slug_key,slug,EVET,254976,hayir,hayir,DUSUK,Koru
+public,catalog_items,idx_catalog_items_created_by,created_by_user_id,hayir,254976,hayir,hayir,DUSUK,Koru
+public,catalog_items,idx_catalog_items_item_type,item_type,hayir,254976,hayir,hayir,DUSUK,Koru
+public,catalog_items,idx_catalog_items_linked_user_id,linked_user_id,hayir,254976,hayir,hayir,DUSUK,Koru
+public,catalog_items,idx_catalog_items_platform_role_key,platform_role_key,hayir,254976,hayir,hayir,DUSUK,Koru
+public,catalog_items,idx_catalog_items_published_at,published_at DESC,hayir,254976,hayir,hayir,DUSUK,Koru
+public,catalog_items,idx_catalog_items_status,status,hayir,254976,hayir,hayir,DUSUK,Koru
+public,catalog_items,idx_catalog_items_verification_status,verification_status,hayir,254976,hayir,hayir,DUSUK,Koru
+public,catalog_items,idx_catalog_items_visibility,visibility,hayir,254976,hayir,hayir,DUSUK,Koru
+public,catalog_search_documents,catalog_search_documents_pkey,item_id,EVET,2250,hayir,hayir,DUSUK,Koru
+public,catalog_search_documents,idx_catalog_search_documents_category_slugs,category_slugs,hayir,2250,hayir,hayir,DUSUK,Koru
+public,catalog_search_documents,idx_catalog_search_documents_city,city,hayir,2250,hayir,hayir,DUSUK,Koru
+public,catalog_search_documents,idx_catalog_search_documents_country,country_code,hayir,2250,hayir,hayir,DUSUK,Koru
+public,catalog_search_documents,idx_catalog_search_documents_embedding,embedding vector_cosine_ops,hayir,2250,hayir,hayir,DUSUK,Koru
+public,catalog_search_documents,idx_catalog_search_documents_item_type,item_type,hayir,2250,hayir,hayir,DUSUK,Koru
+public,catalog_search_documents,idx_catalog_search_documents_language_codes,language_codes,hayir,2250,hayir,hayir,DUSUK,Koru
+public,catalog_search_documents,idx_catalog_search_documents_search_text_trgm,search_text gin_trgm_ops,hayir,2250,hayir,hayir,DUSUK,Koru
+public,catalog_search_documents,idx_catalog_search_documents_title_trgm,title gin_trgm_ops,hayir,2250,hayir,hayir,DUSUK,Koru
+public,catalog_search_documents,idx_catalog_search_documents_vector,search_vector,hayir,2250,hayir,hayir,DUSUK,Koru
+public,city_ambassador_applications,city_ambassador_applications_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,command_center_items,command_center_items_pkey,id,EVET,5048,hayir,hayir,DUSUK,Koru
+public,command_center_items,idx_command_center_items_archived_at,archived_at,hayir,5048,hayir,hayir,DUSUK,Koru
+public,command_center_items,idx_command_center_items_assignee,assignee,hayir,5048,hayir,hayir,DUSUK,Koru
+public,command_center_items,idx_command_center_items_category,category_label,hayir,5048,hayir,hayir,DUSUK,Koru
+public,command_center_items,idx_command_center_items_created_at,created_at DESC,hayir,5048,hayir,hayir,DUSUK,Koru
+public,command_center_items,idx_command_center_items_deleted_at,deleted_at,hayir,5048,hayir,hayir,DUSUK,Koru
+public,command_center_items,idx_command_center_items_legacy_source_code,legacy_source_code,hayir,5048,hayir,hayir,DUSUK,Koru
+public,command_center_items,idx_command_center_items_legacy_source_title_unique,legacy_source_title,EVET,5048,hayir,hayir,DUSUK,Koru
+public,command_center_items,idx_command_center_items_priority,priority DESC,hayir,5048,hayir,hayir,DUSUK,Koru
+public,command_center_items,idx_command_center_items_status,status,hayir,5048,hayir,hayir,DUSUK,Koru
+public,command_center_items,idx_command_center_items_type,item_type,hayir,5048,hayir,hayir,DUSUK,Koru
+public,command_center_legacy_map,command_center_legacy_map_pkey,id,EVET,594,hayir,hayir,DUSUK,Koru
+public,command_center_legacy_map,command_center_legacy_map_unique,"legacy_table, legacy_row_id",EVET,594,hayir,hayir,DUSUK,Koru
+public,community_group_details,community_group_details_pkey,item_id,EVET,16,hayir,hayir,DUSUK,Koru
+public,consultant_categories,consultant_categories_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,consultant_categories,consultant_categories_user_id_category_key,"user_id, category",EVET,2,hayir,hayir,DUSUK,Koru
+public,consultant_social_media_links,consultant_social_media_links_created_at_idx,created_at DESC,hayir,29,hayir,hayir,DUSUK,Koru
+public,consultant_social_media_links,consultant_social_media_links_name_idx,name,hayir,29,hayir,hayir,DUSUK,Koru
+public,consultant_social_media_links,consultant_social_media_links_pkey,id,EVET,29,hayir,hayir,DUSUK,Koru
+public,contact_messages,contact_messages_pkey,id,EVET,0,Manuel dogrulama,hayir,DUSUK,Koru
+public,contacts,contacts_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,contributor_social_media_links,contributor_social_media_links_created_at_idx,created_at DESC,hayir,28,hayir,hayir,DUSUK,Koru
+public,contributor_social_media_links,contributor_social_media_links_name_idx,name,hayir,28,hayir,hayir,DUSUK,Koru
+public,contributor_social_media_links,contributor_social_media_links_pkey,id,EVET,28,hayir,hayir,DUSUK,Koru
+public,coupon_purchases,coupon_purchases_pkey,id,EVET,0,Manuel dogrulama,hayir,DUSUK,Koru
+public,coupon_purchases,idx_coupon_purchases_business,business_user_id,hayir,0,Manuel dogrulama,hayir,DUSUK,scan=0; trafik/plan verisi olmadan SILME. Manuel dogrulama gerekli
+public,coupon_purchases,idx_coupon_purchases_buyer,buyer_id,hayir,0,Manuel dogrulama,hayir,DUSUK,scan=0; trafik/plan verisi olmadan SILME. Manuel dogrulama gerekli
+public,diaspora_city_scan_queue,diaspora_city_scan_queue_pkey,id,EVET,17,hayir,hayir,DUSUK,Koru
+public,diaspora_city_scan_queue,diaspora_city_scan_queue_unique,"country, city_slug",EVET,17,hayir,hayir,DUSUK,Koru
+public,diaspora_instagram_accounts,diaspora_instagram_accounts_instagram_url_unique,instagram_url,EVET,113,hayir,hayir,DUSUK,Koru
+public,diaspora_instagram_accounts,diaspora_instagram_accounts_pkey,id,EVET,113,hayir,hayir,DUSUK,Koru
+public,diaspora_instagram_accounts,diaspora_instagram_accounts_username_unique,username,EVET,113,hayir,hayir,DUSUK,Koru
+public,diaspora_scan_runs,diaspora_scan_runs_pkey,id,EVET,7,hayir,hayir,DUSUK,Koru
+public,direct_messages,direct_messages_pkey,id,EVET,3,hayir,hayir,DUSUK,Koru
+public,direct_messages,direct_messages_recipient_idx,"recipient_id, created_at DESC",hayir,3,hayir,hayir,DUSUK,Koru
+public,direct_messages,direct_messages_sender_idx,"sender_id, created_at DESC",hayir,3,hayir,hayir,DUSUK,Koru
+public,doc_categories,doc_categories_pkey,id,EVET,46,hayir,hayir,DUSUK,Koru
+public,doc_categories,doc_categories_slug_key,slug,EVET,46,hayir,hayir,DUSUK,Koru
+public,doc_categories,doc_categories_sort_order_idx,sort_order,hayir,46,hayir,hayir,DUSUK,Koru
+public,draft_notlar,draft_notlar_pkey,id,EVET,6,hayir,hayir,DUSUK,Koru
+public,duplicate_candidates,duplicate_candidates_left_item_id_right_item_id_key,"left_item_id, right_item_id",EVET,5,hayir,hayir,DUSUK,Koru
+public,duplicate_candidates,duplicate_candidates_pkey,id,EVET,5,hayir,hayir,DUSUK,Koru
+public,duplicate_candidates,idx_duplicate_candidates_status,"status, confidence DESC",hayir,5,hayir,hayir,DUSUK,Koru
+public,edge_rate_limits,edge_rate_limits_pkey,"scope, client_key",EVET,2,hayir,hayir,DUSUK,Koru
+public,edge_rate_limits,idx_edge_rate_limits_updated_at,updated_at,hayir,2,hayir,hayir,DUSUK,Koru
+public,entity_metadata,entity_metadata_entity_type_entity_key_key,"entity_type, entity_key",EVET,194,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,entity_metadata,entity_metadata_pkey,id,EVET,194,hayir,hayir,DUSUK,Koru
+public,entity_metadata,idx_entity_metadata_type_key,"entity_type, entity_key",hayir,194,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,event_details,event_details_pkey,item_id,EVET,2049,hayir,hayir,DUSUK,Koru
+public,event_details,idx_event_details_starts_at,starts_at,hayir,2049,hayir,hayir,DUSUK,Koru
+public,events,events_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,events,idx_events_country_city,"country, city",hayir,2,hayir,hayir,DUSUK,Koru
+public,events,idx_events_date,event_date,hayir,2,hayir,hayir,DUSUK,Koru
+public,events,idx_events_organizer_type,organizer_type,hayir,2,hayir,hayir,DUSUK,Koru
+public,events,idx_events_user,user_id,hayir,2,hayir,hayir,DUSUK,Koru
+public,expenses,expenses_pkey,id,EVET,88,hayir,hayir,DUSUK,Koru
+public,expenses,idx_expenses_category,category,hayir,88,hayir,hayir,DUSUK,Koru
+public,expenses,idx_expenses_currency,currency,hayir,88,hayir,hayir,DUSUK,Koru
+public,expenses,idx_expenses_date,expense_date DESC,hayir,88,hayir,hayir,DUSUK,Koru
+public,expenses,idx_expenses_person,person,hayir,88,hayir,hayir,DUSUK,Koru
+public,expenses,idx_expenses_status,status,hayir,88,hayir,hayir,DUSUK,Koru
+public,feature_catalog,feature_catalog_pkey,key,EVET,15683,hayir,hayir,DUSUK,Koru
+public,feature_catalog,idx_feature_catalog_scope_role,scope_role,hayir,15683,hayir,hayir,DUSUK,Koru
+public,feature_definitions,feature_definitions_pkey,key,EVET,425,hayir,hayir,DUSUK,Koru
+public,feed_likes,feed_likes_pkey,id,EVET,0,Manuel dogrulama,hayir,DUSUK,Koru
+public,feed_likes,feed_likes_post_id_user_id_key,"post_id, user_id",EVET,0,Manuel dogrulama,hayir,DUSUK,Koru
+public,feed_likes,idx_feed_likes_post,post_id,hayir,0,Manuel dogrulama,hayir,DUSUK,scan=0; trafik/plan verisi olmadan SILME. Manuel dogrulama gerekli
+public,feed_likes,idx_feed_likes_user,user_id,hayir,0,Manuel dogrulama,hayir,DUSUK,scan=0; trafik/plan verisi olmadan SILME. Manuel dogrulama gerekli
+public,feed_posts,feed_posts_cafe_idx,"cafe_id, created_at DESC",hayir,41,hayir,hayir,DUSUK,Koru
+public,feed_posts,feed_posts_pkey,id,EVET,41,hayir,hayir,DUSUK,Koru
+public,feed_posts,idx_feed_posts_city,city,hayir,41,hayir,hayir,DUSUK,Koru
+public,feed_posts,idx_feed_posts_country,country,hayir,41,hayir,hayir,DUSUK,Koru
+public,feed_posts,idx_feed_posts_created_at,created_at DESC,hayir,41,hayir,hayir,DUSUK,Koru
+public,feed_posts,idx_feed_posts_status,status,hayir,41,hayir,hayir,DUSUK,Koru
+public,founding_1000_signups,founding_1000_signups_pkey,id,EVET,1,hayir,hayir,DUSUK,Koru
+public,founding_1000_signups,founding_1000_signups_user_id_key,user_id,EVET,1,hayir,hayir,DUSUK,Koru
+public,generated_posts,generated_posts_pkey,id,EVET,0,Manuel dogrulama,hayir,DUSUK,Koru
+public,generated_posts,idx_generated_posts_created_at,created_at DESC,hayir,0,Manuel dogrulama,hayir,DUSUK,scan=0; trafik/plan verisi olmadan SILME. Manuel dogrulama gerekli
+public,geo_cities,geo_cities_country_active_sort_idx,"country_id, is_active, sort_order, name",hayir,77724,hayir,hayir,DUSUK,Koru
+public,geo_cities,geo_cities_country_id_name_key,"country_id, name",EVET,77724,hayir,hayir,DUSUK,Koru
+public,geo_cities,geo_cities_name_idx,name,hayir,77724,hayir,hayir,DUSUK,Koru
+public,geo_cities,geo_cities_pkey,id,EVET,77724,hayir,hayir,DUSUK,Koru
+public,geo_countries,geo_countries_active_sort_idx,"is_active, sort_order, name",hayir,77617,hayir,hayir,DUSUK,Koru
+public,geo_countries,geo_countries_code_key,code,EVET,77617,hayir,hayir,DUSUK,Koru
+public,geo_countries,geo_countries_name_idx,name,hayir,77617,hayir,hayir,DUSUK,Koru
+public,geo_countries,geo_countries_pkey,id,EVET,77617,hayir,hayir,DUSUK,Koru
+public,gorevler,gorevler_pkey,id,EVET,9,hayir,hayir,DUSUK,Koru
+public,incomes,idx_incomes_category,category,hayir,64,hayir,hayir,DUSUK,Koru
+public,incomes,idx_incomes_currency,currency,hayir,64,hayir,hayir,DUSUK,Koru
+public,incomes,idx_incomes_date,income_date DESC,hayir,64,hayir,hayir,DUSUK,Koru
+public,incomes,idx_incomes_status,status,hayir,64,hayir,hayir,DUSUK,Koru
+public,incomes,incomes_pkey,id,EVET,64,hayir,hayir,DUSUK,Koru
+public,independent_profiles,independent_profiles_pkey,id,EVET,739,hayir,hayir,DUSUK,Koru
+public,independent_profiles,independent_profiles_slug_key,slug,EVET,739,hayir,hayir,DUSUK,Koru
+public,individual_profile_details,individual_profile_details_pkey,user_id,EVET,176,hayir,hayir,DUSUK,Koru
+public,influencer_social_media_links,influencer_social_media_links_created_at_idx,created_at DESC,hayir,120,hayir,hayir,DUSUK,Koru
+public,influencer_social_media_links,influencer_social_media_links_name_idx,name,hayir,120,hayir,hayir,DUSUK,Koru
+public,influencer_social_media_links,influencer_social_media_links_pkey,id,EVET,120,hayir,hayir,DUSUK,Koru
+public,interest_registrations,idx_interest_category,category,hayir,4,hayir,hayir,DUSUK,Koru
+public,interest_registrations,idx_interest_created,created_at DESC,hayir,4,hayir,hayir,DUSUK,Koru
+public,interest_registrations,interest_registrations_pkey,id,EVET,4,hayir,hayir,DUSUK,Koru
+public,item_type_attribute_rules,idx_item_type_attribute_rules_item_type,item_type,hayir,43,hayir,hayir,DUSUK,Koru
+public,item_type_attribute_rules,item_type_attribute_rules_item_type_attribute_id_key,"item_type, attribute_id",EVET,43,hayir,hayir,DUSUK,Koru
+public,item_type_attribute_rules,item_type_attribute_rules_pkey,id,EVET,43,hayir,hayir,DUSUK,Koru
+public,item_type_feature_defaults,idx_item_type_feature_defaults_item_type,item_type,hayir,40,hayir,hayir,DUSUK,Koru
+public,item_type_feature_defaults,item_type_feature_defaults_item_type_feature_key_key,"item_type, feature_key",EVET,40,hayir,hayir,DUSUK,Koru
+public,item_type_feature_defaults,item_type_feature_defaults_pkey,id,EVET,40,hayir,hayir,DUSUK,Koru
+public,item_type_features,item_type_features_pkey,"item_type, feature_key",EVET,384,hayir,hayir,DUSUK,Koru
+public,job_applications,job_applications_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,job_listings,idx_job_listings_country_city,"country, city",hayir,1,hayir,hayir,DUSUK,Koru
+public,job_listings,idx_job_listings_status,status,hayir,1,hayir,hayir,DUSUK,Koru
+public,job_listings,idx_job_listings_user,user_id,hayir,1,hayir,hayir,DUSUK,Koru
+public,job_listings,job_listings_pkey,id,EVET,1,hayir,hayir,DUSUK,Koru
+public,job_posting_details,idx_job_posting_details_expires_at,expires_at,hayir,2051,hayir,hayir,DUSUK,Koru
+public,job_posting_details,job_posting_details_pkey,item_id,EVET,2051,hayir,hayir,DUSUK,Koru
+public,lansman_registrations,lansman_registrations_created_at_idx,created_at DESC,hayir,29,hayir,hayir,DUSUK,Koru
+public,lansman_registrations,lansman_registrations_pkey,id,EVET,29,hayir,hayir,DUSUK,Koru
+public,lansman_registrations,lansman_registrations_status_idx,status,hayir,29,hayir,hayir,DUSUK,Koru
+public,links,links_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,marketplace_listing_details,idx_marketplace_listing_details_expires_at,expires_at,hayir,2050,hayir,hayir,DUSUK,Koru
+public,marketplace_listing_details,marketplace_listing_details_pkey,item_id,EVET,2050,hayir,hayir,DUSUK,Koru
+public,marquee_items,marquee_items_news_post_id_key,news_post_id,EVET,865,hayir,hayir,DUSUK,Koru
+public,marquee_items,marquee_items_pkey,id,EVET,865,hayir,hayir,DUSUK,Koru
+public,marquee_items,marquee_items_public_lookup_idx,"is_active, sort_order, published_at DESC",hayir,865,hayir,hayir,DUSUK,Koru
+public,marquee_items,marquee_items_slug_unique_idx,slug,EVET,865,hayir,hayir,DUSUK,Koru
+public,matches,idx_matches_source,source_submission_id,hayir,155,hayir,hayir,DUSUK,Koru
+public,matches,idx_matches_target,matched_submission_id,hayir,155,hayir,hayir,DUSUK,Koru
+public,matches,matches_pkey,id,EVET,155,hayir,hayir,DUSUK,Koru
+public,matches,matches_source_submission_id_matched_submission_id_key,"source_submission_id, matched_submission_id",EVET,155,hayir,hayir,DUSUK,Koru
+public,may19_campaign_submissions,may19_campaign_submissions_created_at_idx,created_at DESC,hayir,464,hayir,hayir,DUSUK,Koru
+public,may19_campaign_submissions,may19_campaign_submissions_kind_idx,kind,hayir,464,hayir,hayir,DUSUK,Koru
+public,may19_campaign_submissions,may19_campaign_submissions_pkey,id,EVET,464,hayir,hayir,DUSUK,Koru
+public,may19_campaign_submissions,may19_campaign_submissions_status_idx,status,hayir,464,hayir,hayir,DUSUK,Koru
+public,may19_submissions,idx_may19_created,created_at DESC,hayir,0,Manuel dogrulama,hayir,DUSUK,scan=0; trafik/plan verisi olmadan SILME. Manuel dogrulama gerekli
+public,may19_submissions,idx_may19_kind,kind,hayir,0,Manuel dogrulama,hayir,DUSUK,scan=0; trafik/plan verisi olmadan SILME. Manuel dogrulama gerekli
+public,may19_submissions,idx_may19_status,status,hayir,0,Manuel dogrulama,hayir,DUSUK,scan=0; trafik/plan verisi olmadan SILME. Manuel dogrulama gerekli
+public,may19_submissions,may19_submissions_pkey,id,EVET,0,Manuel dogrulama,hayir,DUSUK,Koru
+public,meeting_notes,idx_meeting_notes_category,category,hayir,1066,hayir,hayir,DUSUK,Koru
+public,meeting_notes,idx_meeting_notes_content_date_unique,lower(TRIM(BOTH FROM content,EVET,1066,hayir,hayir,DUSUK,Koru
+public,meeting_notes,idx_meeting_notes_source,source,hayir,1066,hayir,hayir,DUSUK,Koru
+public,meeting_notes,meeting_notes_pkey,id,EVET,1066,hayir,hayir,DUSUK,Koru
+public,merge_history,idx_merge_history_target,"target_item_id, created_at DESC",hayir,2,hayir,hayir,DUSUK,Koru
+public,merge_history,merge_history_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,messages,idx_messages_recipient_slug,"recipient_kind, recipient_slug",hayir,1,hayir,hayir,DUSUK,Koru
+public,messages,idx_messages_recipient_user,"recipient_user_id, created_at DESC",hayir,1,hayir,hayir,DUSUK,Koru
+public,messages,idx_messages_sender,"sender_id, created_at DESC",hayir,1,hayir,hayir,DUSUK,Koru
+public,messages,idx_messages_thread,"thread_id, created_at",hayir,1,hayir,hayir,DUSUK,Koru
+public,messages,messages_pkey,id,EVET,1,hayir,hayir,DUSUK,Koru
+public,moderation_queue,idx_moderation_queue_status,"status, queue_type, created_at DESC",hayir,1,hayir,hayir,DUSUK,Koru
+public,moderation_queue,moderation_queue_pkey,id,EVET,1,hayir,hayir,DUSUK,Koru
+public,mvp_items,mvp_items_pkey,id,EVET,16,hayir,hayir,DUSUK,Koru
+public,news_posts,news_posts_pkey,id,EVET,12,hayir,hayir,DUSUK,Koru
+public,news_posts,news_posts_unique_hash_key,unique_hash,EVET,12,hayir,hayir,DUSUK,Koru
+public,notifications,notifications_pkey,id,EVET,4,hayir,hayir,DUSUK,Koru
+public,organization_details,organization_details_pkey,item_id,EVET,484,hayir,hayir,DUSUK,Koru
+public,person_profile_details,idx_person_profile_details_directory_opt_in,directory_opt_in,hayir,86180,hayir,hayir,DUSUK,Koru
+public,person_profile_details,idx_person_profile_details_linked_profile,linked_profile_id,EVET,86180,hayir,hayir,DUSUK,Koru
+public,person_profile_details,person_profile_details_pkey,item_id,EVET,86180,hayir,hayir,DUSUK,Koru
+public,phone_verifications,idx_phone_verifications_user,"user_id, created_at DESC",hayir,1,hayir,hayir,DUSUK,Koru
+public,phone_verifications,phone_verifications_pkey,id,EVET,1,hayir,hayir,DUSUK,Koru
+public,profile_onboarding_imports,idx_profile_onboarding_imports_auth_user_id,auth_user_id,hayir,3,hayir,hayir,DUSUK,Koru
+public,profile_onboarding_imports,idx_profile_onboarding_imports_batch_id,batch_id,hayir,3,hayir,hayir,DUSUK,Koru
+public,profile_onboarding_imports,idx_profile_onboarding_imports_email_normalized,email_normalized,hayir,3,hayir,hayir,DUSUK,Koru
+public,profile_onboarding_imports,idx_profile_onboarding_imports_profile_user_id,profile_user_id,hayir,3,hayir,hayir,DUSUK,Koru
+public,profile_onboarding_imports,idx_profile_onboarding_imports_status,status,hayir,3,hayir,hayir,DUSUK,Koru
+public,profile_onboarding_imports,profile_onboarding_imports_batch_id_email_normalized_key,"batch_id, email_normalized",EVET,3,hayir,hayir,DUSUK,Koru
+public,profile_onboarding_imports,profile_onboarding_imports_batch_id_source_submission_id_key,"batch_id, source_submission_id",EVET,3,hayir,hayir,DUSUK,Koru
+public,profile_onboarding_imports,profile_onboarding_imports_pkey,id,EVET,3,hayir,hayir,DUSUK,Koru
+public,profile_section_catalog,idx_profile_section_catalog_area,"section_area, sort_order",hayir,1056,hayir,hayir,DUSUK,Koru
+public,profile_section_catalog,profile_section_catalog_key_key,key,EVET,1056,hayir,hayir,DUSUK,Koru
+public,profile_section_catalog,profile_section_catalog_pkey,id,EVET,1056,hayir,hayir,DUSUK,Koru
+public,profile_views,idx_profile_views_profile,profile_id,hayir,0,Manuel dogrulama,hayir,DUSUK,scan=0; trafik/plan verisi olmadan SILME. Manuel dogrulama gerekli
+public,profile_views,profile_views_pkey,id,EVET,0,Manuel dogrulama,hayir,DUSUK,Koru
+public,rag_documents,rag_documents_pkey,id,EVET,7,hayir,hayir,DUSUK,Koru
+public,referral_code_usages,referral_code_usages_pkey,id,EVET,815,hayir,hayir,DUSUK,Koru
+public,referral_code_usages,referral_code_usages_referral_idx,"referral_code_id, used_at DESC",hayir,815,hayir,hayir,DUSUK,Koru
+public,referral_code_usages,referral_code_usages_submission_id_key,submission_id,EVET,815,hayir,hayir,DUSUK,Koru
+public,referral_codes,referral_codes_code_key1,code,EVET,20,hayir,hayir,DUSUK,Koru
+public,referral_codes,referral_codes_group_lookup_idx,"group_id, valid_from, valid_until",hayir,20,hayir,hayir,DUSUK,Koru
+public,referral_codes,referral_codes_lookup_idx,"source_id, type_id, created_at DESC",hayir,20,hayir,hayir,DUSUK,Koru
+public,referral_codes,referral_codes_pkey1,id,EVET,20,hayir,hayir,DUSUK,Koru
+public,referral_codes,referral_codes_usage_count_idx,"usage_count DESC, used_at DESC NULLS LAST",hayir,20,hayir,hayir,DUSUK,Koru
+public,referral_codes,referral_codes_usage_idx,"is_active, is_used",hayir,20,hayir,hayir,DUSUK,Koru
+public,referral_codes_legacy,referral_codes_code_idx,code,EVET,5,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,referral_codes_legacy,referral_codes_code_key,code,EVET,5,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,referral_codes_legacy,referral_codes_created_at_idx,created_at DESC,hayir,5,hayir,hayir,DUSUK,Koru
+public,referral_codes_legacy,referral_codes_pkey,id,EVET,5,hayir,hayir,DUSUK,Koru
+public,referral_codes_legacy,referral_codes_type_source_date_idx,"type_key, source_key, referral_date",hayir,5,hayir,hayir,DUSUK,Koru
+public,referral_groups,referral_groups_code_key,code,EVET,167,hayir,hayir,DUSUK,Koru
+public,referral_groups,referral_groups_pkey,id,EVET,167,hayir,hayir,DUSUK,Koru
+public,referral_sources,referral_sources_code_key,code,EVET,177,hayir,hayir,DUSUK,Koru
+public,referral_sources,referral_sources_pkey,id,EVET,177,hayir,hayir,DUSUK,Koru
+public,referral_types,referral_types_code_key,code,EVET,172,hayir,hayir,DUSUK,Koru
+public,referral_types,referral_types_pkey,id,EVET,172,hayir,hayir,DUSUK,Koru
+public,resource_entries,idx_resource_entries_is_hidden,is_hidden,hayir,66,hayir,hayir,DUSUK,Koru
+public,resource_entries,idx_resource_entries_order_no,order_no,hayir,66,hayir,hayir,DUSUK,Koru
+public,resource_entries,idx_resource_entries_section,section,hayir,66,hayir,hayir,DUSUK,Koru
+public,resource_entries,idx_resource_entries_section_subsection,"section, subsection",hayir,66,hayir,hayir,DUSUK,Koru
+public,resource_entries,resource_entries_pkey,id,EVET,66,hayir,hayir,DUSUK,Koru
+public,resource_entries,resource_entries_url_unique_idx,url,EVET,66,hayir,hayir,DUSUK,Koru
+public,role_attribute_rules,idx_role_attribute_rules_attribute_id,attribute_id,hayir,9429,hayir,hayir,DUSUK,Koru
+public,role_attribute_rules,idx_role_attribute_rules_role_id,role_id,hayir,9429,hayir,hayir,DUSUK,Koru
+public,role_attribute_rules,role_attribute_rules_pkey,id,EVET,9429,hayir,hayir,DUSUK,Koru
+public,role_attribute_rules,role_attribute_rules_role_id_attribute_id_key,"role_id, attribute_id",EVET,9429,hayir,hayir,DUSUK,Koru
+public,role_feature_flags,idx_role_feature_flags_feature_key,feature_key,hayir,37468,hayir,hayir,DUSUK,Koru
+public,role_feature_flags,role_feature_flags_pkey,"role_id, feature_key",EVET,37468,hayir,hayir,DUSUK,Koru
+public,role_profile_section_rules,idx_role_profile_section_rules_role,role_id,hayir,1810,hayir,hayir,DUSUK,Koru
+public,role_profile_section_rules,role_profile_section_rules_pkey,id,EVET,1810,hayir,hayir,DUSUK,Koru
+public,role_profile_section_rules,role_profile_section_rules_role_id_section_id_key,"role_id, section_id",EVET,1810,hayir,hayir,DUSUK,Koru
+public,role_taxonomy_rules,idx_role_taxonomy_rules_role,role_id,hayir,1137,hayir,hayir,DUSUK,Koru
+public,role_taxonomy_rules,role_taxonomy_rules_pkey,id,EVET,1137,hayir,hayir,DUSUK,Koru
+public,role_taxonomy_rules,role_taxonomy_rules_role_id_group_id_key,"role_id, group_id",EVET,1137,hayir,hayir,DUSUK,Koru
+public,roles,idx_roles_family_key,family_key,hayir,17696,hayir,hayir,DUSUK,Koru
+public,roles,idx_roles_key,key,hayir,17696,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,roles,idx_roles_parent_role_id,parent_role_id,hayir,17696,hayir,hayir,DUSUK,Koru
+public,roles,roles_key_key,key,EVET,17696,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,roles,roles_pkey,id,EVET,17696,hayir,hayir,DUSUK,Koru
+public,service_proposals,service_proposals_pkey,id,EVET,0,Manuel dogrulama,hayir,DUSUK,Koru
+public,service_requests,service_requests_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,site_settings,site_settings_pkey,id,EVET,29,hayir,hayir,DUSUK,Koru
+public,social_media_links,social_media_links_created_at_idx,created_at DESC,hayir,2,hayir,hayir,DUSUK,Koru
+public,social_media_links,social_media_links_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,source_records,idx_source_records_item,item_id,hayir,318122,hayir,hayir,DUSUK,Koru
+public,source_records,source_records_pkey,id,EVET,318122,hayir,hayir,DUSUK,Koru
+public,source_records,source_records_source_type_external_id_key,"source_type, external_id",EVET,318122,hayir,hayir,DUSUK,Koru
+public,spatial_ref_sys,spatial_ref_sys_pkey,srid,EVET,8501,hayir,hayir,DUSUK,Koru
+public,submissions,idx_submissions_onboarding_key,onboarding_key,EVET,1297,hayir,hayir,DUSUK,Koru
+public,submissions,idx_submissions_user_id,user_id,hayir,1297,hayir,hayir,DUSUK,Koru
+public,submissions,submissions_category_idx,category,hayir,1297,hayir,hayir,DUSUK,Koru
+public,submissions,submissions_created_at_idx,created_at DESC,hayir,1297,hayir,hayir,DUSUK,Koru
+public,submissions,submissions_form_type_idx,form_type,hayir,1297,hayir,hayir,DUSUK,Koru
+public,submissions,submissions_pkey,id,EVET,1297,hayir,hayir,DUSUK,Koru
+public,submissions,submissions_referral_code_id_idx,referral_code_id,hayir,1297,hayir,hayir,DUSUK,Koru
+public,submissions,submissions_source_external_unique_idx,"source_type, source_external_id",EVET,1297,hayir,hayir,DUSUK,Koru
+public,submissions,submissions_status_idx,status,hayir,1297,hayir,hayir,DUSUK,Koru
+public,survey_answers,idx_survey_answers_question_id,question_id,hayir,851,hayir,hayir,DUSUK,Koru
+public,survey_answers,idx_survey_answers_response_id,response_id,hayir,851,hayir,hayir,DUSUK,Koru
+public,survey_answers,survey_answers_pkey,id,EVET,851,hayir,hayir,DUSUK,Koru
+public,survey_questions,idx_survey_questions_sort_order,sort_order,hayir,965,hayir,hayir,DUSUK,Koru
+public,survey_questions,idx_survey_questions_survey_id,survey_id,hayir,965,hayir,hayir,DUSUK,Koru
+public,survey_questions,survey_questions_pkey,id,EVET,965,hayir,hayir,DUSUK,Koru
+public,survey_responses,idx_survey_responses_survey_id,survey_id,hayir,359,hayir,hayir,DUSUK,Koru
+public,survey_responses,survey_responses_pkey,id,EVET,359,hayir,hayir,DUSUK,Koru
+public,surveys,idx_surveys_slug,slug,hayir,403,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,surveys,idx_surveys_status,status,hayir,403,hayir,hayir,DUSUK,Koru
+public,surveys,surveys_pkey,id,EVET,403,hayir,hayir,DUSUK,Koru
+public,surveys,surveys_slug_key,slug,EVET,403,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,taxonomy_groups,taxonomy_groups_key_key,key,EVET,44,hayir,hayir,DUSUK,Koru
+public,taxonomy_groups,taxonomy_groups_pkey,id,EVET,44,hayir,hayir,DUSUK,Koru
+public,taxonomy_options,idx_taxonomy_options_group,"group_id, sort_order",hayir,17,hayir,hayir,DUSUK,Koru
+public,taxonomy_options,taxonomy_options_key_key,key,EVET,17,hayir,hayir,DUSUK,Koru
+public,taxonomy_options,taxonomy_options_pkey,id,EVET,17,hayir,hayir,DUSUK,Koru
+public,todo_items,todo_items_pkey,id,EVET,16,hayir,hayir,DUSUK,Koru
+public,todos,todos_pkey,id,EVET,7,hayir,hayir,DUSUK,Koru
+public,turkish_mission_relations,turkish_mission_relations_child_idx,child_mission_slug,hayir,5,hayir,hayir,DUSUK,Koru
+public,turkish_mission_relations,turkish_mission_relations_parent_idx,parent_mission_slug,hayir,5,hayir,hayir,DUSUK,Koru
+public,turkish_mission_relations,turkish_mission_relations_pkey,id,EVET,5,hayir,hayir,DUSUK,Koru
+public,turkish_mission_relations,turkish_mission_relations_source_key_key,source_key,EVET,5,hayir,hayir,DUSUK,Koru
+public,turkish_mission_units,turkish_mission_units_mission_idx,mission_slug,hayir,35,hayir,hayir,DUSUK,Koru
+public,turkish_mission_units,turkish_mission_units_pkey,id,EVET,35,hayir,hayir,DUSUK,Koru
+public,turkish_mission_units,turkish_mission_units_source_key_key,source_key,EVET,35,hayir,hayir,DUSUK,Koru
+public,turkish_mission_units,turkish_mission_units_type_idx,unit_type,hayir,35,hayir,hayir,DUSUK,Koru
+public,turkish_missions,turkish_missions_city_idx,city,hayir,556,hayir,hayir,DUSUK,Koru
+public,turkish_missions,turkish_missions_city_normalized_idx,city_normalized,hayir,556,hayir,hayir,DUSUK,Koru
+public,turkish_missions,turkish_missions_country_code_idx,country_code,hayir,556,hayir,hayir,DUSUK,Koru
+public,turkish_missions,turkish_missions_country_idx,country,hayir,556,hayir,hayir,DUSUK,Koru
+public,turkish_missions,turkish_missions_name_normalized_idx,mission_name_normalized,hayir,556,hayir,hayir,DUSUK,Koru
+public,turkish_missions,turkish_missions_parent_idx,parent_mission_slug,hayir,556,hayir,hayir,DUSUK,Koru
+public,turkish_missions,turkish_missions_pkey,id,EVET,556,hayir,hayir,DUSUK,Koru
+public,turkish_missions,turkish_missions_slug_key,slug,EVET,556,hayir,hayir,DUSUK,Koru
+public,turkish_missions,turkish_missions_source_url_key,source_url,EVET,556,hayir,hayir,DUSUK,Koru
+public,turkish_missions,turkish_missions_type_idx,mission_type,hayir,556,hayir,hayir,DUSUK,Koru
+public,user_connections,idx_user_connections_recipient,"recipient_id, status",hayir,1,hayir,hayir,DUSUK,Koru
+public,user_connections,idx_user_connections_requester,"requester_id, status",hayir,1,hayir,hayir,DUSUK,Koru
+public,user_connections,user_connections_pkey,id,EVET,1,hayir,hayir,DUSUK,Koru
+public,user_connections,user_connections_requester_id_recipient_id_key,"requester_id, recipient_id",EVET,1,hayir,hayir,DUSUK,Koru
+public,user_cvs,user_cvs_pkey,id,EVET,6,hayir,hayir,DUSUK,Koru
+public,user_feature_overrides,idx_user_feature_overrides_feature_key,feature_key,hayir,24877,hayir,hayir,DUSUK,Koru
+public,user_feature_overrides,user_feature_overrides_pkey,"user_id, feature_key",EVET,24877,hayir,hayir,DUSUK,Koru
+public,user_follows,idx_user_follows_follower,follower_id,hayir,23,hayir,hayir,DUSUK,Koru
+public,user_follows,idx_user_follows_following,following_id,hayir,23,hayir,hayir,DUSUK,Koru
+public,user_follows,user_follows_follower_id_following_id_key,"follower_id, following_id",EVET,23,hayir,hayir,DUSUK,Koru
+public,user_follows,user_follows_pkey,id,EVET,23,hayir,hayir,DUSUK,Koru
+public,user_profile_attributes,idx_user_profile_attributes_attribute_id,attribute_id,hayir,33469,hayir,hayir,DUSUK,Koru
+public,user_profile_attributes,idx_user_profile_attributes_user_id,user_id,hayir,33469,hayir,hayir,DUSUK,Koru
+public,user_profile_attributes,user_profile_attributes_pkey,id,EVET,33469,hayir,hayir,DUSUK,Koru
+public,user_profile_attributes,user_profile_attributes_user_id_attribute_id_key,"user_id, attribute_id",EVET,33469,hayir,hayir,DUSUK,Koru
+public,user_role_assignments,idx_user_role_assignments_role_id,role_id,hayir,4768,hayir,hayir,DUSUK,Koru
+public,user_role_assignments,user_role_assignments_pkey,user_id,EVET,4768,hayir,hayir,DUSUK,Koru
+public,user_taxonomy_selections,idx_user_taxonomy_selections_user,user_id,hayir,79,hayir,hayir,DUSUK,Koru
+public,user_taxonomy_selections,user_taxonomy_selections_pkey,id,EVET,79,hayir,hayir,DUSUK,Koru
+public,user_taxonomy_selections,user_taxonomy_selections_user_id_group_id_option_id_key,"user_id, group_id, option_id",EVET,79,hayir,hayir,DUSUK,Koru
+public,wa_messages,idx_wa_messages_wa_id,wa_id,hayir,13,hayir,hayir,DUSUK,Koru
+public,wa_messages,wa_messages_pkey,id,EVET,13,hayir,hayir,DUSUK,Koru
+public,wa_tasks,idx_wa_tasks_status,status,hayir,9,hayir,hayir,DUSUK,Koru
+public,wa_tasks,idx_wa_tasks_wa_id,wa_id,hayir,9,hayir,hayir,DUSUK,Koru
+public,wa_tasks,wa_tasks_pkey,id,EVET,9,hayir,hayir,DUSUK,Koru
+public,wa_users,idx_wa_users_wa_id,wa_id,hayir,126,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,wa_users,wa_users_pkey,id,EVET,126,hayir,hayir,DUSUK,Koru
+public,wa_users,wa_users_wa_id_key,wa_id,EVET,126,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,welcome_pack_orders,welcome_pack_orders_pkey,id,EVET,1,hayir,hayir,DUSUK,Koru
+public,welcome_pack_proposals,welcome_pack_proposals_pkey,id,EVET,2,hayir,hayir,DUSUK,Koru
+public,whatsapp_join_requests,whatsapp_join_requests_created_at_idx,created_at DESC,hayir,18,hayir,hayir,DUSUK,Koru
+public,whatsapp_join_requests,whatsapp_join_requests_landing_id_idx,landing_id,hayir,18,hayir,hayir,DUSUK,Koru
+public,whatsapp_join_requests,whatsapp_join_requests_pkey,id,EVET,18,hayir,hayir,DUSUK,Koru
+public,whatsapp_landing_editors,idx_whatsapp_landing_editors_landing_id,"landing_id, created_at DESC",hayir,22,hayir,hayir,DUSUK,Koru
+public,whatsapp_landing_editors,idx_whatsapp_landing_editors_user_id,"user_id, created_at DESC",hayir,22,hayir,hayir,DUSUK,Koru
+public,whatsapp_landing_editors,whatsapp_landing_editors_landing_id_user_id_key,"landing_id, user_id",EVET,22,hayir,hayir,DUSUK,Koru
+public,whatsapp_landing_editors,whatsapp_landing_editors_pkey,id,EVET,22,hayir,hayir,DUSUK,Koru
+public,whatsapp_landings,idx_whatsapp_landings_slug,slug,hayir,1927,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,whatsapp_landings,idx_whatsapp_landings_status,status,hayir,1927,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,whatsapp_landings,idx_whatsapp_landings_user_id,user_id,hayir,1927,hayir,hayir,DUSUK,Koru
+public,whatsapp_landings,whatsapp_landings_created_at_idx,created_at DESC,hayir,1927,hayir,hayir,DUSUK,Koru
+public,whatsapp_landings,whatsapp_landings_pkey,id,EVET,1927,hayir,hayir,DUSUK,Koru
+public,whatsapp_landings,whatsapp_landings_slug_idx,slug,hayir,1927,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,whatsapp_landings,whatsapp_landings_slug_key,slug,EVET,1927,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
+public,whatsapp_landings,whatsapp_landings_status_idx,status,hayir,1927,hayir,EVET,DUSUK,"Ayni kolon imzasi: olasi duplicate index, manuel dogrula"
