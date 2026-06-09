@@ -54,7 +54,7 @@ const DiasporaMarqueeSection = () => {
           <div className="diaspora-marquee-viewport overflow-hidden px-4 sm:px-8 lg:px-10">
             <div className="diaspora-marquee-track flex min-w-max gap-4">
               {marqueeItems.map((item, index) => (
-                <MarqueeItemCard key={`${item.id}-${index}`} item={item} className="w-[200px] sm:w-[220px]" />
+                <MarqueeItemCard key={`${item.id}-${index}`} item={item} className="w-[300px] sm:w-[360px] lg:w-[400px]" />
               ))}
             </div>
           </div>
