@@ -2,7 +2,9 @@
 
 > Bu dosya, yeni bir agent oturumunun projeyi hızla kavraması için hazırlanmıştır.
 > Diğer teknik belgelerden bilgi derleyerek token maliyetini minimize eder.
-> **Güncelleme:** 2026-06-09 (clean-code refactor sonrası repo gerçekliğiyle senkronlandı)
+> **Güncelleme:** 2026-06-10 (catalog/flat-role/AFS rebuild — Phase 1–8 tamamlandı — ve diplomatic-profiles temizliği sonrası repo gerçekliğiyle senkronlandı)
+> **Derin teknik doküman (AI-friendly):** `docs/architecture/AI_TECHNICAL_REFERENCE.md`
+> **Rebuild raporları:** `docs/catalog-role-afs-rebuild/` (00–14, canlıya alındı 2026-06-09)
 > **Refactor yol haritası:** `docs/refactor/2026-06-09-refactor-backlog.md` (ertelenen işler B1–B10)
 
 ---
@@ -14,7 +16,7 @@
 - URL: `https://corteqs.net`
 - Supabase Project ID: `injprdrsklkxgnaiixzh`
 - Deploy: Docker / Coolify → `npm run build` → `node server.mjs`
-- ~100 public sayfa, ~35 admin sayfası, ~55 lib modülü, 190+ migration, 55+ test dosyası
+- **Repo gerçekliği (2026-06-10):** 150 `*.tsx` page dosyası (65'i admin), 269 component, 81 lib modülü, **221 migration**, 83 test dosyası, 5 edge function
 
 ### Modüller (tek SPA içinde)
 
@@ -191,33 +193,47 @@ approval_requests            → Rol değişikliği, feature talep, attribute on
 
 > `profiles`, `user_profiles`, `admin_users`, `role_feature_defaults` tablolar **mevcut değil**.
 
-### Katalog
+### Katalog (REBUILD SONRASI — AFS şeması, 2026-06-09)
+
+> ⚠️ **Rebuild ile tablo adları değişti.** `*_details` tabloları ve item-type sistemi DROP edildi;
+> profil verisi artık `catalog_item_attribute_values` (typed kolonlar) + `catalog_item_roles` ile tutuluyor.
 
 ```
-catalog_items                → Tüm katalog kayıtları (item_type + platform_role_key)
-  ├── advisor_details
-  ├── business_details
-  ├── event_details
-  ├── person_profile_details → linked_profile_id ile auth user'a bağlanır
-  └── ...
-catalog_item_memberships          → owner/editor/viewer yetkileri
-catalog_claim_requests            → Sahiplenme talepleri
-catalog_audit_logs
+catalog_items                → Tüm katalog kayıtları (slug, title, country_code, city,
+                               status, visibility, is_placeholder, is_verified, created_by, deleted_at)
+                               → 239 item (163 gerçek + 76 placeholder)
+catalog_item_roles           → item ↔ rol (is_primary); *_details tablolarının yerine geçti
+catalog_item_attribute_values → Item'ın attribute değerleri (typed; eski: catalog_item_attributes)
+catalog_item_claims          → Sahiplenme talepleri (eski: catalog_claim_requests)
+catalog_item_managers        → owner/manager/editor/viewer yetkileri (eski: catalog_item_memberships)
+catalog_audit_logs           → + 15 satellite tablo (media, contacts, links, locations,
+                               services, languages, categories, reviews, reports, tags, ...)
 ```
 
-### Kural Tabloları (Rol → Attribute/Feature/Section)
+### Kural Tabloları (Rol → Attribute/Feature/Section) — AFS şeması
+
+> **AFS = Attributes / Features / Sections.** 76 FLAT rol (aile/parent YOK — `family_key`,
+> `parent_role_id` kolonları kaldırıldı). Her rol → attribute/feature/section'a explicit map.
 
 ```
-roles                        → Aktif rol tanımları
-attribute_catalog            → Attribute sözlüğü
-role_attribute_rules         → Hangi attribute hangi rolde aktif/zorunlu/onay gerekli
-feature_catalog              → Feature sözlüğü
-role_feature_flags           → Hangi feature hangi rolde açık (role_feature_defaults YOK)
-profile_section_catalog      → Section sözlüğü
-role_profile_section_rules   → Hangi section hangi rolde görünür
-taxonomy_groups / options    → Çoktan seçmeli kategori sistemi (runtime kaldırıldı)
-role_taxonomy_rules          → Hangi taxonomy grubu hangi rolde aktif
+roles                        → 76 flat rol (key, label, is_active, sort_order, deleted_at) — 0 legacy
+afs_attributes               → Attribute sözlüğü, 53 satır (eski: attribute_catalog)
+afs_features                 → Feature sözlüğü, 42 satır (eski: feature_catalog)
+afs_sections                 → Section sözlüğü, 7 satır (eski: profile_section_catalog)
+role_attributes              → Rol↔attribute kuralı (eski: role_attribute_rules)
+role_features                → Rol↔feature flag (eski: role_feature_flags)
+role_sections                → Rol↔section görünürlüğü (eski: role_profile_section_rules)
 ```
+
+> **Eski→Yeni tablo eşlemesi (rebuild rename'leri):**
+> `attribute_catalog`→`afs_attributes`, `feature_catalog`→`afs_features`,
+> `profile_section_catalog`→`afs_sections`, `role_attribute_rules`→`role_attributes`,
+> `role_feature_flags`→`role_features`, `role_profile_section_rules`→`role_sections`,
+> `catalog_item_attributes`→`catalog_item_attribute_values`,
+> `catalog_claim_requests`→`catalog_item_claims`,
+> `catalog_item_memberships`→`catalog_item_managers`.
+> **DROP edildi:** `catalog_item_types`, `item_type_attribute_rules`, `role_taxonomy_rules` ve aile/taxonomy konseptleri.
+> Runtime kodda eski adların **0 referansı** var (auto-gen `types.ts` hariç).
 
 ### Diğer Önemli Tablolar
 
@@ -305,9 +321,12 @@ npm run test                 # Vitest
 npm run test:watch
 npm run start                # node server.mjs
 BASE_URL=https://corteqs.net npm run verify:release
+supabase migrations list
+
+# Edge functions (5): chat-register, find-matches, lansman-admin,
+#                     send-submission-email, submit-survey-response
 supabase functions deploy send-submission-email
 supabase functions deploy lansman-admin
-supabase migrations list
 ```
 
 ---
@@ -363,7 +382,7 @@ supabase migrations list
 
 1. **Generated `supabase/types.ts` senkron değil** — ~164 tsc hatası; `supabase gen types` ile yenile (B1, en yüksek öncelik)
 2. **Kırık import'lar** — `@/lib/mapEntities`, `@/lib/radarNews`, `html-to-image` eksik; runtime crash riski (B2)
-3. **`AdminLayout.tsx` hâlâ büyük (721 satır)** — alt bileşenlere + `useAdminAccess` hook'una böl (B4)
+3. **`AdminLayout.tsx` hâlâ büyük (741 satır)** — alt bileşenlere + `useAdminAccess` hook'una böl (B4)
 4. **Auth shim migrasyonu** — `@/contexts/AuthContext`'ten ~39 import; canonical'a geçir, sonra shim'i sil (B5)
 5. **Karışık data fetching** — component içi `supabase.from()` hâlâ yaygın; `*-api.ts` + React Query'ye geç (B6)
 6. **TypeScript loose** — B1 sonrası kademeli sıkılaştır; ~103 `as any` temizle (B7)
@@ -391,31 +410,46 @@ supabase migrations list
 
 ---
 
-## 13. Son Migrations (2026-06-08/09)
+## 13. Catalog/Flat-Role/AFS Rebuild — Son Migrations (2026-06-09/10)
+
+**18 rebuild migration + 4 replay-safety fix canlıya alındı (Phase 1–8, 2026-06-09).** Rapor: `docs/catalog-role-afs-rebuild/12-migration-push-report.md`, `14-changed-files.md`.
 
 ```
-20260608020000_simplify_unified_records_rpc.sql
-20260608030000_catalog_as_profile_source_of_truth.sql
-20260609000000_backup_member_data.sql
-20260609001000_backfill_to_rolesgo.sql          # profiles verisi → user_profile_attributes
-20260609002000_update_rpc_remove_rfd.sql
+# ── Legacy auth temizliği (önceki temizlik) ──
 20260609003000_drop_legacy_tables.sql           # profiles, user_profiles, admin_users, role_feature_defaults DROP
-20260609003600_fix_directory_opt_in_trigger.sql
-20260609004000_set_admin_users.sql
-20260609010000_fix_is_moderator_post_legacy_drop.sql
-20260609011000_fix_unified_records_role_param.sql    # admin_list_unified_records p_platform_role_key restore
-20260609012000_fix_bucket_stats_rpc.sql              # get_submission_documents_bucket_stats → is_admin()
-20260609013000_fix_catalog_rpcs_post_legacy_drop.sql # catalog RPC'leri auth.users'a taşıdı
-20260609014000_fix_unified_records_ambiguous_columns.sql  # CTE kolon çakışması (42702) düzeltme
 20260609015000_fix_catalog_profile_trigger_post_drop.sql  # handle_auth_user_catalog_profile → user_role_assignments
+
+# ── Catalog/AFS Rebuild (002–017) ──
+20260609100000_rebuild_002_catalog_items.sql
+20260609100100_rebuild_003_flat_roles.sql            # 76 flat rol, aile yok
+20260609100200_rebuild_004_afs_catalogs.sql          # afs_attributes/features/sections
+20260609100300_rebuild_005_role_afs_relations.sql    # role_attributes/features/sections
+20260609100400_rebuild_006_item_values_and_overrides.sql
+20260609100500_rebuild_007_claims_and_managers.sql   # catalog_item_claims/managers
+20260609100600_rebuild_008_item_roles_indexes_constraints.sql
+20260609100700_rebuild_009_rls_policies.sql
+20260609100800_rebuild_010_public_owner_admin_rpc.sql
+20260609100900_rebuild_010c_backend_rewire.sql       # 40 fn → yeni tablo adları
+20260609101000..101400_rebuild_011..015              # seed: flat roles, AFS catalogs, role-AFS matrix, placeholder items, verify
+20260609101500_rebuild_016_drop_legacy_schema.sql    # eski catalog/taxonomy şeması DROP (prod-only FK blocker'lar dahil)
+20260609101600_rebuild_017_post_cleanup_verification.sql
+20260609110000_rebuild_status_report_rpc.sql         # Durum Raporu RPC
+
+# ── Sonrası ──
+20260610090000_remove_diplomatic_profiles_and_missions.sql  # /admin/consulates seed temizliği
+20260610120000_seed_command_center_meeting10.sql            # workspace meeting seed
 ```
 
-**2026-06-09 büyük temizlik özeti:**
-- Legacy tablolar `profiles`, `user_profiles`, `admin_users`, `role_feature_defaults` DROP edildi
-- Tüm RPC'ler `auth.users` + `user_profile_attributes` + `user_role_assignments` üzerinden çalışıyor
-- Profil verisi canonical olarak `user_profile_attributes` tablosunda yaşıyor
-- `is_admin()` / `is_moderator()` fonksiyonları güncellendi (artık `admin_users` tablosu yok)
-- Yeni kullanıcı kayıt trigger'ı düzeltildi: `on_auth_user_created` → otomatik `bireysel` rolü atar
+**Rebuild özeti (canlıda doğrulandı):**
+- **76 flat rol** (0 legacy) — `family_key` / `parent_role_id` kaldırıldı
+- **AFS = Attributes(53) / Features(42) / Sections(7)** — her rol → explicit map
+- 9 tablo AFS adlarına rename edildi; `*_details` ve item-type sistemi DROP edildi (bkz. §6)
+- **239 catalog item** (163 gerçek + 76 placeholder)
+- 44+ DB fonksiyonu yeni tablo adlarına rewire edildi
+- Runtime kodda eski tablo adı / aile konsepti **0 referans** (`13-post-cleanup-grep-report.md`)
+- **Durum Raporu:** `src/pages/admin/AdminDurumRaporuPage.tsx` (`/admin/new-member/durum-raporu`) → `rebuild_status_report` RPC ile canlı metrik gösterir
+
+**Önceki 2026-06-09 legacy-auth temizliği:** `profiles`/`user_profiles`/`admin_users`/`role_feature_defaults` DROP; tüm RPC'ler `auth.users` + `user_profile_attributes` + `user_role_assignments` üzerinden; `is_admin()`/`is_moderator()` güncellendi; yeni-kullanıcı trigger'ı otomatik `bireysel` rolü atar.
 
 ---
 
@@ -423,6 +457,8 @@ supabase migrations list
 
 | Konu | Dosya |
 |------|-------|
+| **AI-friendly teknik referans (derin)** | **`docs/architecture/AI_TECHNICAL_REFERENCE.md`** |
+| Catalog/Flat-Role/AFS rebuild raporları | `docs/catalog-role-afs-rebuild/` (00–14) |
 | Mimari (derin) | `docs/architecture/PROJECT_TECHNICAL_OVERVIEW.md` |
 | Sistem modeli (roller/attr/feature) | `docs/architecture/SISTEM_MIMARI.md` |
 | Aktif planlar | `docs/plans/` |

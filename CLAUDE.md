@@ -6,11 +6,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **CorteQS Landing** is a multi-feature React + Vite application with Supabase backend. It combines a public marketing site, admin dashboard, member profiles, surveys, workspace collaboration tools, and an accounting module (muhasebe) — all in a single SPA.
 
-**Key Metrics:**
-- 90+ pages, 100+ components, 40+ lib modules
-- 60+ Supabase migrations with RLS policies
+**Key Metrics (2026-06-10):**
+- 150 page `.tsx` files (65 admin), 269 components, 81 lib modules
+- **221 Supabase migrations** with RLS policies; 5 Edge Functions
 - TypeScript with relaxed strict mode (intentional trade-off)
 - Deployed via Docker (Coolify) with runtime environment injection
+
+> **Recent major change:** the catalog / flat-role / **AFS** (Attributes-Features-Sections) rebuild
+> (Phases 1–8, live 2026-06-09) renamed 9 tables and dropped the old item-type/role-family system.
+> See `docs/catalog-role-afs-rebuild/` and the **DB section below** before touching catalog/role code.
+> For a deep AI-friendly walkthrough, read `docs/architecture/AI_TECHNICAL_REFERENCE.md`.
 
 ## Quick Commands
 
@@ -216,15 +221,36 @@ npm run test -- --coverage   # Coverage report (experimental)
 
 ## Database & Migrations
 
-- **60+ migrations** in `supabase/migrations/`
+- **221 migrations** in `supabase/migrations/` (date-prefixed, immutable in prod)
 - **RLS active** — submissions require specific conditions
-- **Key tables:** `public.submissions`, `public.surveys`, `user_profiles_v2`, `rolesgo_*`, `muhasebe_*`
-- **Edge Functions:** 5 functions in `supabase/functions/`
+- **Edge Functions (5):** `chat-register`, `find-matches`, `lansman-admin`, `send-submission-email`, `submit-survey-response`
+
+### Canonical schema (after the AFS rebuild — 2026-06-09)
+
+The catalog / flat-role / **AFS** rebuild renamed 9 tables and dropped the old item-type / role-family
+system. **Do not reference the old names** — runtime code has 0 references to them.
+
+| Domain | Canonical tables |
+|--------|------------------|
+| **Auth/roles** | `auth.users`, `user_role_assignments`, `user_profile_attributes`, `user_feature_overrides` |
+| **Catalog** | `catalog_items`, `catalog_item_roles`, `catalog_item_attribute_values`, `catalog_item_claims`, `catalog_item_managers` (+ ~15 satellite tables) |
+| **AFS rules** | `roles` (76 flat, no families), `afs_attributes` (53), `afs_features` (42), `afs_sections` (7), `role_attributes`, `role_features`, `role_sections` |
+| **Other** | `submissions`, `surveys`/`survey_*`, `muhasebe_gelirler`/`muhasebe_giderler`, `lansman_basvurular`, `referral_*`, `workspace_*` |
+
+**Renamed (old → new):** `attribute_catalog`→`afs_attributes`, `feature_catalog`→`afs_features`,
+`profile_section_catalog`→`afs_sections`, `role_attribute_rules`→`role_attributes`,
+`role_feature_flags`→`role_features`, `role_profile_section_rules`→`role_sections`,
+`catalog_item_attributes`→`catalog_item_attribute_values`, `catalog_claim_requests`→`catalog_item_claims`,
+`catalog_item_memberships`→`catalog_item_managers`.
+
+**Dropped:** `profiles`, `user_profiles`, `user_profiles_v2`, `admin_users`, `role_feature_defaults`,
+`catalog_item_types`, all `*_details` tables, role-family / taxonomy concepts.
+(`rolesgo_*` was always a conceptual label for the role system, not a table prefix.)
 
 Before touching migrations:
 1. Read recent migration files to understand dependencies
 2. Test schema changes locally with `supabase db push`
-3. Never delete existing migrations
+3. Never delete or reorder existing migrations — only add new ones
 
 ## Deployment & Environment
 
@@ -304,7 +330,7 @@ Located in `docs/`:
 
 1. **Generated `supabase/types.ts` out of sync** → ~164 tsc errors; regenerate via `supabase gen types` (B1, highest priority)
 2. **Broken imports** → `@/lib/mapEntities`, `@/lib/radarNews`, `html-to-image` missing; runtime crash risk (B2)
-3. **`AdminLayout.tsx` still large (721 lines)** → split into layout sub-components + `useAdminAccess` hook (B4)
+3. **`AdminLayout.tsx` still large (741 lines)** → split into layout sub-components + `useAdminAccess` hook (B4)
 4. **Auth shim migration** → ~39 imports of `@/contexts/AuthContext`; migrate to canonical, then delete shim (B5)
 5. **Mixed data fetching** → in-component `supabase.from()` still common; standardize on `*-api.ts` + React Query (B6)
 6. **TypeScript loose** → tighten incrementally after B1; ~103 `as any` to clean up (B7)
