@@ -108,6 +108,28 @@ export interface CommandCenterItemCounts {
   team: number
 }
 
+export type CommandCenterSourceKind = 'meeting' | 'wa' | 'todo'
+
+export interface CommandCenterSourceEntry {
+  key: string
+  label: string
+  kind: CommandCenterSourceKind
+  count: number
+  sortValue: string
+}
+
+export interface CommandCenterSourceSection {
+  kind: CommandCenterSourceKind
+  label: string
+  total: number
+  entries: CommandCenterSourceEntry[]
+}
+
+export interface CommandCenterSourceBreakdown {
+  sections: CommandCenterSourceSection[]
+  total: number
+}
+
 export interface CommandCenterCategoryOption {
   value: string
   label: string
@@ -1135,4 +1157,90 @@ export async function fetchCommandCenterItemCounts(): Promise<CommandCenterItemC
     ubt: ubtResult.count ?? 0,
     team: teamResult.count ?? 0,
   }
+}
+
+const SOURCE_SECTION_ORDER: CommandCenterSourceKind[] = ['meeting', 'wa', 'todo']
+const SOURCE_SECTION_LABELS: Record<CommandCenterSourceKind, string> = {
+  meeting: 'Toplantılar',
+  wa: 'WhatsApp Yazışmaları',
+  todo: 'Todo',
+}
+
+function getSourceKindFromDateGroupLabel(label: string): CommandCenterSourceKind {
+  if (label === TODO_DATE_GROUP_LABEL) {
+    return 'todo'
+  }
+
+  return label.startsWith('WA ') ? 'wa' : 'meeting'
+}
+
+/**
+ * Builds a breakdown of how many active (non-archived, non-deleted) command
+ * center items originate from each meeting / WhatsApp source — mirroring the
+ * date-group labels shown in the "Tip" filter (e.g. "T 26 Şubat", "WA 6 Nisan").
+ * Counts cover the full active list, independent of pagination or filters.
+ */
+export async function fetchCommandCenterSourceBreakdown(): Promise<CommandCenterSourceBreakdown> {
+  const supabase = getSupabaseBrowserClient()
+  if (!supabase) {
+    return { sections: [], total: 0 }
+  }
+
+  const { data, error } = await supabase
+    .from('command_center_items')
+    .select(
+      'item_type, category_label, legacy_source_code, legacy_source_date_label, legacy_source_category'
+    )
+    .is('deleted_at', null)
+    .is('archived_at', null)
+
+  if (error || !data) {
+    return { sections: [], total: 0 }
+  }
+
+  const entryMap = new Map<string, CommandCenterSourceEntry>()
+  let total = 0
+
+  for (const row of data as Pick<
+    CommandCenterItemRow,
+    'item_type' | 'category_label' | 'legacy_source_code' | 'legacy_source_date_label' | 'legacy_source_category'
+  >[]) {
+    const dateGroup = getCommandCenterDateGroupInfo({
+      itemType: row.item_type,
+      categoryLabel: row.category_label,
+      legacySourceCode: row.legacy_source_code,
+      legacySourceDateLabel: row.legacy_source_date_label,
+    })
+
+    total += 1
+
+    const existing = entryMap.get(dateGroup.key)
+    if (existing) {
+      entryMap.set(dateGroup.key, { ...existing, count: existing.count + 1 })
+      continue
+    }
+
+    entryMap.set(dateGroup.key, {
+      key: dateGroup.key,
+      label: dateGroup.label,
+      kind: getSourceKindFromDateGroupLabel(dateGroup.label),
+      count: 1,
+      sortValue: getDateGroupSortToken(dateGroup.label),
+    })
+  }
+
+  const sections: CommandCenterSourceSection[] = SOURCE_SECTION_ORDER.map((kind) => {
+    const entries = Array.from(entryMap.values())
+      .filter((entry) => entry.kind === kind)
+      .sort((left, right) => left.sortValue.localeCompare(right.sortValue, 'tr'))
+
+    return {
+      kind,
+      label: SOURCE_SECTION_LABELS[kind],
+      total: entries.reduce((sum, entry) => sum + entry.count, 0),
+      entries,
+    }
+  }).filter((section) => section.entries.length > 0)
+
+  return { sections, total }
 }
