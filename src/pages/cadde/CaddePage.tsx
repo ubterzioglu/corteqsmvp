@@ -18,20 +18,17 @@ import {
   createCaddeComment,
   createCaddePost,
   getCaddeSponsoredPlacement,
-  injectSponsoredPlacement,
   joinCaddeCafe,
   listCaddeBillboardCards,
   listCaddeCafes,
   listCaddeCities,
   listCaddeCountries,
   listCaddeFeed,
-  parseCaddeFilters,
-  serializeCaddeFilters,
   toggleCaddeReaction,
-  type CaddeFilterState,
-  type CaddePostType,
-  type CaddeReactionType,
-} from "@/lib/cadde";
+} from "@/lib/cadde-api";
+import { injectSponsoredPlacement, parseCaddeFilters, serializeCaddeFilters } from "@/lib/cadde-format";
+import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import type { CaddeFilterState, CaddePostType, CaddeReactionType } from "@/lib/cadde-types";
 
 const WORLD_CLOCKS = [
   { label: "İstanbul", timezone: "Europe/Istanbul" },
@@ -98,41 +95,41 @@ const CaddePage = () => {
   }, []);
 
   const countriesQuery = useQuery({
-    queryKey: ["cadde", "countries"],
+    queryKey: caddeQueryKeys.countries(),
     queryFn: listCaddeCountries,
   });
 
   const citiesQuery = useQuery({
-    queryKey: ["cadde", "cities", filters.country],
+    queryKey: caddeQueryKeys.cities(filters.country),
     queryFn: () => listCaddeCities(filters.country),
   });
 
   const feedQuery = useInfiniteQuery({
-    queryKey: ["cadde", "feed", filters, user?.id ?? null],
+    queryKey: caddeQueryKeys.feed(filters, user?.id ?? null),
     initialPageParam: 1,
     queryFn: ({ pageParam }) => listCaddeFeed(filters, pageParam, user?.id ?? null),
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 
   const cafesQuery = useQuery({
-    queryKey: ["cadde", "cafes", filters, user?.id ?? null],
+    queryKey: caddeQueryKeys.cafes(filters, user?.id ?? null),
     queryFn: () => listCaddeCafes(filters, user?.id ?? null),
   });
 
   const billboardsQuery = useQuery({
-    queryKey: ["cadde", "billboards", filters],
+    queryKey: caddeQueryKeys.billboards(filters),
     queryFn: () => listCaddeBillboardCards(filters),
   });
 
   const sponsorQuery = useQuery({
-    queryKey: ["cadde", "sponsor", filters],
+    queryKey: caddeQueryKeys.sponsor(filters),
     queryFn: () => getCaddeSponsoredPlacement(filters),
   });
 
   const invalidateCadde = async () => {
     await Promise.all([
-      queryClient.invalidateQueries({ queryKey: ["cadde", "feed"] }),
-      queryClient.invalidateQueries({ queryKey: ["cadde", "cafes"] }),
+      queryClient.invalidateQueries({ queryKey: caddeQueryKeys.feedRoot }),
+      queryClient.invalidateQueries({ queryKey: caddeQueryKeys.cafesRoot }),
     ]);
   };
 

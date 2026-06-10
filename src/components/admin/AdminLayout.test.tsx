@@ -1,6 +1,9 @@
+// Admin Panel V2 shell testleri — compatibility wrapper (AdminLayout)
+// üzerinden yeni registry tabanlı sidebar/topbar deneyimini doğrular.
+
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import AdminLayout from "@/components/admin/AdminLayout";
 
@@ -48,107 +51,117 @@ function renderAdminLayout(pathname: string) {
       <Routes>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<div>Admin Home Content</div>} />
-          <Route path="members" element={<div>Members Content</div>} />
-          <Route path="surveys" element={<div>Surveys Content</div>} />
           <Route path="data" element={<div>Unified Data Content</div>} />
-          <Route path="workspace/command-center" element={<div>Workspace Command Center</div>} />
+          <Route path="surveys" element={<div>Surveys Content</div>} />
         </Route>
       </Routes>
     </MemoryRouter>,
   );
 }
 
-describe("AdminLayout", () => {
-  it("shows core admin navigation and external links inside dashboard menu", async () => {
+beforeEach(() => {
+  window.localStorage.clear();
+});
+
+describe("AdminLayout (Admin Panel V2 shell)", () => {
+  it("sidebar registry'deki ana ekran linklerini gösterir", async () => {
     renderAdminLayout("/admin");
 
     await waitFor(() => {
       expect(screen.getByText("Admin Home Content")).toBeInTheDocument();
     });
 
-    expect(screen.getByRole("link", { name: /CorteQS ana siteye git/i })).toHaveAttribute("href", "https://mvp.corteqs.net");
-    expect(screen.queryByRole("link", { name: "Demo" })).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Veritabanı/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Topluluklar/i })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /Üye Takibi \(eski\)/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("menuitem", { name: /Profil ve Rol Atama/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Dış Bağlantılar" })).not.toBeInTheDocument();
-    const dashboardButton = screen.getByRole("button", { name: /Dashboard/i });
+    // "Üyeler ve Dizin" defaultOpen olduğundan linkleri doğrudan görünür.
+    expect(screen.getByRole("link", { name: "Kayıt Veritabanı" })).toHaveAttribute("href", "/admin/data");
+    expect(screen.getByRole("link", { name: "Approval Queue" })).toHaveAttribute("href", "/admin/approvals");
 
-    const newMemberSystemButton = screen.getByRole("button", { name: /Veritabanı/i });
-    fireEvent.mouseEnter(newMemberSystemButton);
-    expect(await screen.findByRole("menuitem", { name: /^Veritabanı$/i })).toBeInTheDocument();
-    expect(screen.queryByRole("menuitem", { name: /Profil ve Rol Atama/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("menuitem", { name: /^Tüm Roller$/i })).not.toBeInTheDocument();
-    expect(await screen.findByRole("menuitem", { name: /^Tüm Roller AFS Matrisi$/i })).toBeInTheDocument();
-    expect(await screen.findByRole("menuitem", { name: /Kullanım Klavuzu/i })).toBeInTheDocument();
-    fireEvent.mouseLeave(newMemberSystemButton);
-    const communityButton = screen.getByRole("button", { name: /Topluluklar/i });
-    fireEvent.mouseEnter(communityButton);
-    expect(await screen.findByRole("menuitem", { name: /Topluluk Editörleri/i })).toBeInTheDocument();
-    expect(await screen.findByRole("menuitem", { name: /Topluluk Kullanma Kılavuzu/i })).toBeInTheDocument();
-    fireEvent.mouseLeave(communityButton);
-    fireEvent.mouseEnter(dashboardButton);
-
-    const externalLinksSubTrigger = await screen.findByText("Dış Bağlantılar");
-    fireEvent.click(externalLinksSubTrigger);
-    expect((await screen.findByRole("menuitem", { name: /Engine/i })).closest("a")).toHaveAttribute(
-      "href",
-      "https://eng.corteqs.net",
-    );
-  });
-
-  it("shows the other-records dropdown with its submenu", async () => {
-    renderAdminLayout("/admin/surveys");
-
-    await waitFor(() => {
-      expect(screen.getByText("Surveys Content")).toBeInTheDocument();
-    });
-
-    const otherRecordsButton = screen.getByRole("button", { name: /Diğer Kayıtlar/i });
-    fireEvent.mouseEnter(otherRecordsButton);
-    expect(await screen.findByRole("menuitem", { name: /Anketler/i })).toBeInTheDocument();
-    expect(screen.queryByRole("menuitem", { name: /Lansman Katılım/i })).not.toBeInTheDocument();
-    const inactiveSubTrigger = await screen.findByText("Inaktif");
-    fireEvent.click(inactiveSubTrigger);
-    expect(await screen.findByRole("menuitem", { name: /19 Mayıs Fikir/i })).toBeInTheDocument();
-    expect(await screen.findByRole("menuitem", { name: /19 Mayıs Anı/i })).toBeInTheDocument();
-  });
-
-  it("does not render the removed members global actions", async () => {
-    renderAdminLayout("/admin/surveys");
-
-    await waitFor(() => {
-      expect(screen.getByText("Surveys Content")).toBeInTheDocument();
-    });
-
-    expect(screen.queryByRole("button", { name: /Yeni kayıt ekle/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Referral oluştur/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Export \/ Import/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Toplu işlem/i })).not.toBeInTheDocument();
-  });
-
-  it("shows internal dashboard workspace links", async () => {
-    renderAdminLayout("/admin/members");
-
-    await waitFor(() => {
-      expect(screen.getByText("Members Content")).toBeInTheDocument();
-    });
-
-    const dashboardButton = screen.getByRole("button", { name: /Dashboard/i });
-    fireEvent.mouseEnter(dashboardButton);
-
-    expect(screen.getAllByText("CC")[0].closest("a")).toHaveAttribute(
+    // Kapalı gruplar başlığa tıklanınca açılır.
+    fireEvent.click(screen.getByRole("button", { name: "Operasyon Workspace" }));
+    expect(screen.getByRole("link", { name: "Command Center" })).toHaveAttribute(
       "href",
       "/admin/workspace/command-center",
     );
-    expect((await screen.findByRole("menuitem", { name: /^CC$/i })).closest("a")).toHaveAttribute(
+    fireEvent.click(screen.getByRole("button", { name: "Muhasebe" }));
+    expect(screen.getByRole("link", { name: "Muhasebe Dashboard" })).toHaveAttribute("href", "/admin/muhasebe");
+    expect(screen.getByRole("button", { name: "Roller ve AFS" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /CorteQS ana siteye git/i })).toHaveAttribute(
       "href",
-      "/admin/workspace/command-center",
+      "https://mvp.corteqs.net",
     );
-    const docsSubTrigger = await screen.findByText("Diğer Dokümanlar");
-    fireEvent.click(docsSubTrigger);
-    expect(await screen.findByText(/Kortex .* CTO, Pitch & PRD/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Proje Takibi/i)).toBeInTheDocument();
+  });
+
+  it("inactive ekranlar ayrı İnaktif bölümünde gizlidir", async () => {
+    renderAdminLayout("/admin");
+    await screen.findByText("Admin Home Content");
+
+    expect(screen.queryByRole("link", { name: "19 Mayıs Kelime" })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "İnaktif" }));
+
+    expect(screen.getByRole("link", { name: "19 Mayıs Kelime" })).toHaveAttribute("href", "/admin/may19/kelime");
+    expect(screen.getByRole("link", { name: "Roller Taslak" })).toHaveAttribute("href", "/admin/roller-taslak");
+  });
+
+  it("dış bağlantılar menüsü registry'deki external linkleri sunar", async () => {
+    renderAdminLayout("/admin");
+    await screen.findByText("Admin Home Content");
+
+    // Radix dropdown trigger'ı jsdom'da klavye ile açılır.
+    fireEvent.keyDown(screen.getByRole("button", { name: "Dış bağlantılar" }), { key: "Enter" });
+
+    const engineItem = await screen.findByRole("menuitem", { name: /Engine/i });
+    expect(engineItem.closest("a")).toHaveAttribute("href", "https://eng.corteqs.net");
+    expect((await screen.findByRole("menuitem", { name: /Founders/i })).closest("a")).toHaveAttribute(
+      "href",
+      "https://mvp.corteqs.net/founders",
+    );
+  });
+
+  it("breadcrumb aktif sayfayı grup zinciriyle gösterir", async () => {
+    renderAdminLayout("/admin/data");
+    await screen.findByText("Unified Data Content");
+
+    const breadcrumb = screen.getByRole("navigation", { name: "breadcrumb" });
+    expect(breadcrumb).toHaveTextContent("Üyeler ve Dizin");
+    expect(breadcrumb).toHaveTextContent("Kayıt Veritabanı");
+  });
+
+  it("hamburger mobil drawer'ı aynı registry ile açar", async () => {
+    renderAdminLayout("/admin");
+    await screen.findByText("Admin Home Content");
+
+    fireEvent.click(screen.getByRole("button", { name: "Admin menüsünü aç" }));
+
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveTextContent("CorteQS Admin");
+    // defaultOpen grup item'ı doğrudan görünür; kapalı grupların başlıkları görünür.
+    expect(dialog).toHaveTextContent("Kayıt Veritabanı");
+    expect(dialog).toHaveTextContent("Operasyon Workspace");
+    expect(dialog).toHaveTextContent("Muhasebe");
+    expect(dialog).toHaveTextContent("Çıkış");
+  });
+
+  it("sidebar daraltma durumu localStorage'a yazılır", async () => {
+    renderAdminLayout("/admin");
+    await screen.findByText("Admin Home Content");
+
+    fireEvent.click(screen.getByRole("button", { name: "Menüyü daralt" }));
+
+    expect(window.localStorage.getItem("corteqs.admin.sidebar.collapsed.v1")).toBe("true");
+    expect(screen.getByRole("button", { name: "Menüyü genişlet" })).toBeInTheDocument();
+  });
+
+  it("kullanıcı menüsü e-posta ve çıkış aksiyonunu içerir", async () => {
+    renderAdminLayout("/admin");
+    await screen.findByText("Admin Home Content");
+
+    fireEvent.keyDown(screen.getByRole("button", { name: "Kullanıcı menüsü" }), { key: "Enter" });
+
+    expect(await screen.findByText("admin@corteqs.test")).toBeInTheDocument();
+    expect(await screen.findByRole("menuitem", { name: /Çıkış/i })).toBeInTheDocument();
+    expect((await screen.findByRole("menuitem", { name: /Ürün Güncellemeleri/i })).closest("a")).toHaveAttribute(
+      "href",
+      "/admin/about",
+    );
   });
 });

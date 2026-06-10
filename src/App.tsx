@@ -52,7 +52,7 @@ const DirectoryPage = lazy(() => import("@/pages/DirectoryPage"));
 const DirectoryProfilePage = lazy(() => import("@/pages/DirectoryProfilePage"));
 const DirectoryCatalogItemPage = lazy(() => import("@/pages/DirectoryCatalogItemPage"));
 const WelcomeActivatePage = lazy(() => import("@/pages/WelcomeActivatePage"));
-const CaddePage = lazy(() => import("@/pages/CaddePage"));
+const CaddePage = lazy(() => import("@/pages/cadde/CaddePage"));
 const Associations = lazy(() => import("@/pages/Associations"));
 const AssociationDetail = lazy(() => import("@/pages/AssociationDetail"));
 const HospitalAppointment = lazy(() => import("@/pages/HospitalAppointment"));
