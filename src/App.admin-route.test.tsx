@@ -13,7 +13,7 @@ vi.mock("@/components/admin/AdminLayout", () => ({
   ),
 }));
 
-vi.mock("@/pages/admin/AdminHomePage", () => ({
+vi.mock("@/pages/admin/dashboard/AdminDashboardPage", () => ({
   default: () => <div>Admin landing page</div>,
 }));
 

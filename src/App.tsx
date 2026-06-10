@@ -60,7 +60,7 @@ const IndependentProfilePage = lazy(() => import("@/pages/IndependentProfilePage
 
 // Lazy — admin
 const AdminLayout = lazy(() => import("@/components/admin/AdminLayout"));
-const AdminHomePage = lazy(() => import("@/pages/admin/AdminHomePage"));
+const AdminDashboardPage = lazy(() => import("@/pages/admin/dashboard/AdminDashboardPage"));
 const AdminReferralPage = lazy(() => import("@/pages/admin/AdminReferralPage"));
 const AdminReferralSourcesPage = lazy(() => import("@/pages/admin/AdminReferralSourcesPage"));
 const AdminReferralGroupsPage = lazy(() => import("@/pages/admin/AdminReferralGroupsPage"));
@@ -224,7 +224,7 @@ const App = () => (
                 <Route path="/community-leader" element={<Navigate to="/commercial/community-leader" replace />} />
                 <Route path="/ambassador" element={<Navigate to="/commercial/ambassador" replace />} />
                 <Route path="/admin" element={<AdminLayout />}>
-                  <Route index element={<AdminHomePage />} />
+                  <Route index element={<AdminDashboardPage />} />
                   <Route path="referral" element={<AdminReferralPage />} />
                   <Route path="referral/sources" element={<AdminReferralSourcesPage />} />
                   <Route path="referral/groups" element={<AdminReferralGroupsPage />} />

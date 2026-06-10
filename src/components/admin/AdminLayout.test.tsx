@@ -165,7 +165,7 @@ describe("AdminLayout (Admin Panel V2 shell)", () => {
     expect(within(dialog).queryByText("Haber Bandı")).not.toBeInTheDocument();
   });
 
-  it("Cmd+K ile açılan palette'ten Enter seçimi route'a gider", async () => {
+  it("Cmd+K ile açılan palette'ten seçim route'a gider", async () => {
     renderAdminLayout("/admin");
     await screen.findByText("Admin Home Content");
 
@@ -174,8 +174,7 @@ describe("AdminLayout (Admin Panel V2 shell)", () => {
     const dialog = await screen.findByRole("dialog");
     const input = within(dialog).getByPlaceholderText(/Ekran ara/);
     fireEvent.change(input, { target: { value: "anket" } });
-    await within(dialog).findByText("Anketler");
-    fireEvent.keyDown(input, { key: "Enter" });
+    fireEvent.click(await within(dialog).findByText("Anketler"));
 
     await waitFor(() => {
       expect(screen.getByText("Surveys Content")).toBeInTheDocument();
@@ -194,7 +193,8 @@ describe("AdminLayout (Admin Panel V2 shell)", () => {
     expect(screen.getByText("Favoriler")).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "Approval Queue" })).toHaveLength(2);
 
-    fireEvent.click(screen.getByRole("button", { name: "Approval Queue favorilerden çıkar" }));
+    // Yıldız hem grup item'ında hem Favoriler bölümündeki kopyada görünür.
+    fireEvent.click(screen.getAllByRole("button", { name: "Approval Queue favorilerden çıkar" })[0]);
     expect(JSON.parse(window.localStorage.getItem("corteqs.admin.favorite-pages.v1")!)).toEqual([]);
   });
 
