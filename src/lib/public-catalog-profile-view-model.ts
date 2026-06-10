@@ -158,7 +158,13 @@ const CONTACT_TYPE_LABELS: Record<string, string> = {
 };
 
 function resolveContactHref(contact: PublicProfileContact): { href: string | null; external: boolean } {
-  if (contact.type === "phone" || contact.type === "whatsapp") {
+  if (contact.type === "phone") {
+    return { href: toSafePhoneHref(contact.value), external: false };
+  }
+  if (contact.type === "whatsapp") {
+    // Canlı veride whatsapp contact'ları hem telefon hem chat.whatsapp.com linki olabiliyor.
+    const url = toSafeExternalUrl(contact.value);
+    if (url) return { href: url, external: true };
     return { href: toSafePhoneHref(contact.value), external: false };
   }
   if (contact.type === "email") {

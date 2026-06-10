@@ -224,6 +224,17 @@ describe("contact/link row helpers", () => {
     expect(rows[1].href).toBe("mailto:info@example.com");
   });
 
+  it("renders whatsapp contacts as external links when the value is a url", () => {
+    const rows = buildContactRows([
+      { type: "whatsapp", value: "https://chat.whatsapp.com/Jqkc4xh5YYY8zeALR8WSAW", label: "Join Link", isPrimary: true },
+      { type: "whatsapp", value: "+49 171 123 45 67", label: null, isPrimary: false },
+    ]);
+    expect(rows[0].href).toBe("https://chat.whatsapp.com/Jqkc4xh5YYY8zeALR8WSAW");
+    expect(rows[0].external).toBe(true);
+    expect(rows[1].href).toBe("tel:+491711234567");
+    expect(rows[1].external).toBe(false);
+  });
+
   it("filters unsafe links and dedupes by url", () => {
     const rows = buildLinkRows([
       { type: "website", label: null, url: "https://example.com", isPrimary: false },
