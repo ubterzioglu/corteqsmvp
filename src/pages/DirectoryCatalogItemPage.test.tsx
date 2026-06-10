@@ -1,4 +1,6 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -6,12 +8,6 @@ import DirectoryCatalogItemPage from "@/pages/DirectoryCatalogItemPage";
 
 const useAuthMock = vi.fn();
 const rpcMock = vi.fn();
-const maybeSingleMock = vi.fn();
-const eqVisibilityMock = vi.fn();
-const eqStatusMock = vi.fn();
-const eqSlugMock = vi.fn();
-const selectMock = vi.fn();
-const fromMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
@@ -19,90 +15,109 @@ vi.mock("@/components/auth/useAuth", () => ({
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
-    from: (...args: unknown[]) => fromMock(...args),
     rpc: (...args: unknown[]) => rpcMock(...args),
   },
 }));
 
-vi.mock("@/lib/catalog-entity-api", () => ({
-  getCatalogItemProfile: vi.fn().mockResolvedValue(null),
-}));
-
-const catalogItem = {
-  id: "item-1",
-  item_type: "advisor",
-  platform_role_key: "Healthcare_Doctor",
-  slug: "dortmund-turkce-doktor-arkin-kara",
-  title: "Arkin Kara",
-  headline: "Genel Tıp",
-  short_description: "Dortmund'da Türkçe hizmet veren doktor.",
-  long_description: null,
-  verification_status: "unverified",
-  attributes: {
-    platform_role_key: "Healthcare_Doctor",
-    platform_role_label: "Doktor",
+const pagePayload = {
+  item: {
+    id: "item-1",
+    slug: "dortmund-turkce-doktor-arkin-kara",
+    title: "Arkin Kara",
+    itemType: "advisor",
+    roleKey: "Healthcare_Doctor",
+    roleLabel: "Doktor",
+    headline: "Genel Tıp",
+    shortDescription: null,
+    longDescription: null,
+    avatarUrl: null,
+    coverImageUrl: null,
+    verificationStatus: "unverified",
+    isVerified: false,
+    isClaimable: true,
+    city: "Dortmund",
+    countryCode: "DE",
+    countryLabel: "Almanya",
+    addressLine: null,
+    categories: [{ slug: "advisor-healthcare-doctor", name: "Doctor", isPrimary: true }],
   },
-  catalog_item_contacts: [{ contact_type: "phone", contact_value: "+49 231 818 687", label: "Telefon", is_primary: true }],
-  catalog_item_locations: [{ country_code: "DE", city: "Dortmund", region: "NRW", address_line: null, is_primary: true }],
-  catalog_item_services: [{ service_name: "Genel Tıp", description: null }],
-  catalog_item_languages: [{ language_code: "tr", proficiency: "native_or_fluent" }],
-  catalog_item_categories: [{ is_primary: true, catalog_categories: { slug: "advisor-healthcare-doctor", name: "Doctor" } }],
+  sections: [
+    {
+      sectionKey: "detail.hakkinda_bio",
+      label: "Hakkında",
+      description: null,
+      sectionArea: "detail_card",
+      componentKey: "rich_text",
+      sortOrder: 110,
+      content: { text: "Dortmund'da Türkçe hizmet veren doktor." },
+    },
+  ],
+  attributes: [],
+  contacts: [{ type: "phone", value: "+49 231 818 687", label: "Telefon", isPrimary: true }],
+  links: [],
+  services: [{ name: "Genel Tıp", description: null }],
+  languages: [{ code: "tr", proficiency: "native_or_fluent" }],
+  media: [],
+  claim: { canClaim: true, verificationStatus: "unverified" },
+};
+
+const renderPage = (slug = "dortmund-turkce-doktor-arkin-kara") => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+  return render(
+    <MemoryRouter initialEntries={[`/directory/catalog/${slug}`]}>
+      <Routes>
+        <Route path="/directory/catalog/:slug" element={<DirectoryCatalogItemPage />} />
+      </Routes>
+    </MemoryRouter>,
+    { wrapper },
+  );
 };
 
 describe("DirectoryCatalogItemPage", () => {
   beforeEach(() => {
     useAuthMock.mockReturnValue({ user: null, session: null, isLoading: false });
     rpcMock.mockReset();
-    rpcMock.mockImplementation((fn: string) => {
-      if (fn === "get_catalog_item_public_profile") {
-        return Promise.resolve({ data: catalogItem, error: null });
-      }
-      return Promise.resolve({ data: {}, error: null });
-    });
-    maybeSingleMock.mockResolvedValue({ data: catalogItem, error: null });
-    eqVisibilityMock.mockReturnValue({ maybeSingle: maybeSingleMock });
-    eqStatusMock.mockReturnValue({ eq: eqVisibilityMock });
-    eqSlugMock.mockReturnValue({ eq: eqStatusMock });
-    selectMock.mockReturnValue({ eq: eqSlugMock });
-    fromMock.mockReturnValue({ select: selectMock });
   });
 
-  it("renders catalog details and login claim link for guests", async () => {
-    render(
-      <MemoryRouter initialEntries={["/directory/catalog/dortmund-turkce-doktor-arkin-kara"]}>
-        <Routes>
-          <Route path="/directory/catalog/:slug" element={<DirectoryCatalogItemPage />} />
-        </Routes>
-      </MemoryRouter>,
-    );
+  it("fetches the v2 payload and renders the public profile shell", async () => {
+    rpcMock.mockResolvedValue({ data: pagePayload, error: null });
+
+    renderPage();
 
     expect(await screen.findByRole("heading", { name: "Arkin Kara", level: 1 })).toBeInTheDocument();
-    expect(screen.getAllByText(/Türkçe hizmet veren doktor/).length).toBeGreaterThan(0);
-    expect(screen.getByRole("link", { name: /Duzenleme Yetkisi Icin Giris Yap/i })).toHaveAttribute(
+    expect(rpcMock).toHaveBeenCalledWith("get_catalog_item_public_page_v2", {
+      p_slug: "dortmund-turkce-doktor-arkin-kara",
+    });
+    expect(screen.getByText("Dortmund'da Türkçe hizmet veren doktor.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Düzenleme Yetkisi Talep Et/i })).toHaveAttribute(
       "href",
       "/login?mode=signup&next=%2Fdirectory%2Fcatalog%2Fdortmund-turkce-doktor-arkin-kara",
     );
   });
 
-  it("submits editor access claim for authenticated users", async () => {
-    useAuthMock.mockReturnValue({ user: { id: "user-1" }, session: { access_token: "token" }, isLoading: false });
+  it("shows the leak-free not-found screen when the rpc returns null", async () => {
+    rpcMock.mockResolvedValue({ data: null, error: null });
 
-    render(
-      <MemoryRouter initialEntries={["/directory/catalog/dortmund-turkce-doktor-arkin-kara"]}>
-        <Routes>
-          <Route path="/directory/catalog/:slug" element={<DirectoryCatalogItemPage />} />
-        </Routes>
-      </MemoryRouter>,
-    );
+    renderPage("gizli-profil");
 
-    fireEvent.click(await screen.findByRole("button", { name: /Bu Sayfayi Duzenlemek Istiyorum/i }));
+    expect(
+      await screen.findByText(/Bu profil şu anda görüntülenemiyor/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/yayınlanmamış olabilir/i)).toBeInTheDocument();
+  });
 
-    await waitFor(() => {
-      expect(rpcMock).toHaveBeenCalledWith(
-        "submit_catalog_claim_request",
-        expect.objectContaining({ target_item_id: "item-1", claim_type: "editor_access" }),
-      );
-    });
-    expect(await screen.findByText("Talep Gonderildi")).toBeInTheDocument();
+  it("shows the same not-found screen on rpc errors", async () => {
+    rpcMock.mockResolvedValue({ data: null, error: { message: "boom" } });
+
+    renderPage();
+
+    expect(
+      await screen.findByText(/Bu profil şu anda görüntülenemiyor/i),
+    ).toBeInTheDocument();
   });
 });
