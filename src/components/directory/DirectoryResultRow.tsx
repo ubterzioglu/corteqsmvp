@@ -64,7 +64,7 @@ const DirectoryResultRow = ({ row }: DirectoryResultRowProps) => {
           ) : null}
           {row.recordType === "catalog_item" && row.isClaimable ? (
             <Badge variant="secondary" className="px-2 py-0 text-[10px]">
-              Claimable
+              Sahiplenilebilir
             </Badge>
           ) : null}
         </div>
