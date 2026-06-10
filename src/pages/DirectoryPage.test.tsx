@@ -118,7 +118,7 @@ describe("DirectoryPage", () => {
       "href",
       "/directory/catalog/dortmund-turkce-doktor-arkin-kara",
     );
-    expect(screen.getByText("Claimable")).toBeInTheDocument();
+    expect(screen.getByText("Sahiplenilebilir")).toBeInTheDocument();
   });
 
   it("passes live role filters from the URL into canonical directory loading", async () => {

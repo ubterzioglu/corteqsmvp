@@ -1,52 +1,27 @@
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 
-import { supabase } from "@/integrations/supabase/client";
+import { resolveCatalogSlugForLinkedUser } from "@/lib/public-catalog-profile-api";
 
-type RedirectRow = {
-  slug: string;
-};
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-type CatalogRedirectQueryClient = {
-  from: (
-    tableName: "catalog_items",
-  ) => {
-    select: (
-      columns: string,
-    ) => {
-      eq: (
-        column: string,
-        value: unknown,
-      ) => {
-        order: (
-          orderColumn: string,
-          options: { ascending: boolean },
-        ) => {
-          limit: (
-            count: number,
-          ) => {
-            maybeSingle: () => Promise<{
-              data: RedirectRow | null;
-              error: { message: string } | null;
-            }>;
-          };
-        };
-      };
-    };
-  };
-};
-
-const redirectQueryClient = supabase as unknown as CatalogRedirectQueryClient;
-
+/**
+ * Legacy compatibility route: `/directory/profile/:userId`.
+ * Never renders a profile itself — resolves the param (slug or UUID) and
+ * redirects to the canonical `/directory/catalog/:slug` URL.
+ */
 const DirectoryProfilePage = () => {
   const { userId } = useParams<{ userId: string }>();
   const [slug, setSlug] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
-  // catalog-directory.ts routes member items as /directory/profile/<slug> (e.g. "member-b82291bc...")
-  // instead of a UUID. Detect this and forward straight to the catalog page.
-  const isSlugParam = userId ? /^[a-z]+-[a-z0-9]+/i.test(userId) && !userId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i) : false;
+  // catalog-directory.ts routes member items as /directory/profile/<slug>
+  // (e.g. "member-b82291bc...") instead of a UUID. Detect this and forward
+  // straight to the catalog page.
+  const isSlugParam = userId
+    ? /^[a-z]+-[a-z0-9]+/i.test(userId) && !UUID_PATTERN.test(userId)
+    : false;
 
   useEffect(() => {
     if (!userId || isSlugParam) return;
@@ -56,21 +31,15 @@ const DirectoryProfilePage = () => {
       setIsLoading(true);
       setNotFound(false);
 
-      const { data, error } = await redirectQueryClient
-        .from("catalog_items")
-        .select("slug")
-        .eq("linked_user_id", userId)
-        .order("created_at", { ascending: true })
-        .limit(1)
-        .maybeSingle();
+      const resolvedSlug = await resolveCatalogSlugForLinkedUser(userId);
 
       if (!isMounted) return;
 
-      if (error || !data?.slug) {
+      if (resolvedSlug) {
+        setSlug(resolvedSlug);
+      } else {
         setNotFound(true);
         setSlug(null);
-      } else {
-        setSlug((data as RedirectRow).slug);
       }
 
       setIsLoading(false);

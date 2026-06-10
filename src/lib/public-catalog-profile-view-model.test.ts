@@ -1,0 +1,247 @@
+import { describe, expect, it } from "vitest";
+
+import type { PublicCatalogProfilePagePayload } from "@/lib/public-catalog-profile-schemas";
+import {
+  buildAttributeRows,
+  buildContactRows,
+  buildLinkRows,
+  buildPublicCatalogProfileViewModel,
+} from "@/lib/public-catalog-profile-view-model";
+
+const makePayload = (
+  overrides: Partial<PublicCatalogProfilePagePayload> = {},
+): PublicCatalogProfilePagePayload => ({
+  item: {
+    id: "item-1",
+    slug: "member-arkin-kara",
+    title: "Arkin Kara",
+    itemType: "member",
+    roleKey: "Member",
+    roleLabel: "Üye",
+    headline: "Genel Tıp",
+    shortDescription: "Kısa açıklama",
+    longDescription: "Uzun açıklama",
+    avatarUrl: null,
+    coverImageUrl: null,
+    verificationStatus: "unverified",
+    isVerified: false,
+    isClaimable: true,
+    city: "Dortmund",
+    countryCode: "DE",
+    countryLabel: "Almanya",
+    addressLine: null,
+    categories: [{ slug: "doctor", name: "Doktor", isPrimary: true }],
+    ...(overrides.item ?? {}),
+  },
+  sections: overrides.sections ?? [],
+  attributes: overrides.attributes ?? [],
+  contacts: overrides.contacts ?? [],
+  links: overrides.links ?? [],
+  services: overrides.services ?? [],
+  languages: overrides.languages ?? [],
+  media: overrides.media ?? [],
+  claim: overrides.claim ?? { canClaim: true, verificationStatus: "unverified" },
+});
+
+describe("buildPublicCatalogProfileViewModel — hero", () => {
+  it("builds hero with initials fallback when no avatar exists", () => {
+    const vm = buildPublicCatalogProfileViewModel(makePayload());
+    expect(vm.hero.title).toBe("Arkin Kara");
+    expect(vm.hero.avatarUrl).toBeNull();
+    expect(vm.hero.initials).toBe("AK");
+    expect(vm.hero.locationLabel).toBe("Dortmund • Almanya");
+  });
+
+  it("uses a safe avatar url when present", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({ item: { ...makePayload().item, avatarUrl: "https://cdn.corteqs.net/a.jpg" } }),
+    );
+    expect(vm.hero.avatarUrl).toBe("https://cdn.corteqs.net/a.jpg");
+  });
+
+  it("drops unsafe avatar urls", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({ item: { ...makePayload().item, avatarUrl: "javascript:alert(1)" } }),
+    );
+    expect(vm.hero.avatarUrl).toBeNull();
+    expect(vm.hero.initials).toBe("AK");
+  });
+
+  it("adds Turkish status badges", () => {
+    const claimable = buildPublicCatalogProfileViewModel(makePayload());
+    expect(claimable.hero.badges.map((badge) => badge.label)).toContain("Sahiplenilebilir Profil");
+
+    const managed = buildPublicCatalogProfileViewModel(
+      makePayload({
+        item: { ...makePayload().item, verificationStatus: "claimed", isVerified: true },
+        claim: { canClaim: false, verificationStatus: "claimed" },
+      }),
+    );
+    const labels = managed.hero.badges.map((badge) => badge.label);
+    expect(labels).toContain("Yönetilen Profil");
+    expect(labels).toContain("Doğrulanmış Profil");
+    expect(labels).not.toContain("Sahiplenilebilir Profil");
+  });
+
+  it("accent is deterministic per role", () => {
+    const first = buildPublicCatalogProfileViewModel(makePayload());
+    const second = buildPublicCatalogProfileViewModel(makePayload());
+    expect(first.hero.accent).toBe(second.hero.accent);
+  });
+});
+
+describe("buildPublicCatalogProfileViewModel — sections", () => {
+  const richTextSection = {
+    sectionKey: "detail.hakkinda_bio",
+    label: "Hakkında",
+    description: null,
+    sectionArea: "detail_card" as const,
+    componentKey: "rich_text",
+    sortOrder: 110,
+    content: { text: "Uzun açıklama" },
+  };
+
+  it("keeps db section order by sortOrder", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        sections: [
+          { ...richTextSection, sectionKey: "b", sortOrder: 200 },
+          { ...richTextSection, sectionKey: "a", sortOrder: 100 },
+        ],
+      }),
+    );
+    expect(vm.mainSections.map((section) => section.key)).toEqual(["a", "b"]);
+  });
+
+  it("excludes preview_card sections (hero already renders them)", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        sections: [{ ...richTextSection, sectionArea: "preview_card", sectionKey: "preview.x" }],
+      }),
+    );
+    expect(vm.mainSections).toHaveLength(0);
+  });
+
+  it("filters empty sections", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({ sections: [{ ...richTextSection, content: { text: "  " } }] }),
+    );
+    expect(vm.mainSections).toHaveLength(0);
+  });
+
+  it("routes unknown component keys to main with their content intact", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        sections: [
+          {
+            ...richTextSection,
+            sectionKey: "detail.yeni",
+            componentKey: "brand_new_widget",
+            content: { headline: "Yeni içerik" },
+          },
+        ],
+      }),
+    );
+    expect(vm.mainSections).toHaveLength(1);
+    expect(vm.mainSections[0].componentKey).toBe("brand_new_widget");
+    expect(vm.mainSections[0].placement).toBe("main");
+  });
+
+  it("derives attribute/services/contact/language sections and splits placements", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        attributes: [
+          { key: "expertise_area", label: "Uzmanlık", dataType: "text", sortOrder: 10, valueText: "Genel Tıp", valueJson: null },
+        ],
+        services: [{ name: "Genel Tıp", description: null }],
+        contacts: [{ type: "phone", value: "+49 231 818 687", label: null, isPrimary: true }],
+        languages: [{ code: "tr", proficiency: "native_or_fluent" }],
+      }),
+    );
+    expect(vm.mainSections.map((section) => section.componentKey)).toEqual(["attributes", "services"]);
+    expect(vm.sidebarSections.map((section) => section.componentKey)).toEqual(["contact_list", "languages"]);
+  });
+
+  it("does not duplicate hero attributes inside the attribute grid", () => {
+    const rows = buildAttributeRows([
+      { key: "full_name", label: "İsim", dataType: "text", sortOrder: 1, valueText: "Arkin", valueJson: null },
+      { key: "profile_photo_url", label: "Foto", dataType: "url", sortOrder: 2, valueText: "https://x.com/a.jpg", valueJson: null },
+      { key: "expertise_area", label: "Uzmanlık", dataType: "text", sortOrder: 3, valueText: "Genel Tıp", valueJson: null },
+    ]);
+    expect(rows.map((row) => row.key)).toEqual(["expertise_area"]);
+  });
+});
+
+describe("buildPublicCatalogProfileViewModel — quick actions ve claim", () => {
+  it("creates only actions whose data exists, with safe hrefs", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        contacts: [
+          { type: "website", value: "https://example.com", label: null, isPrimary: true },
+          { type: "email", value: "info@example.com", label: null, isPrimary: false },
+          { type: "phone", value: "+49 231 818 687", label: null, isPrimary: false },
+        ],
+      }),
+    );
+    const keys = vm.quickActions.map((action) => action.key);
+    expect(keys).toEqual(["website", "email", "phone", "map"]);
+    expect(vm.quickActions[0].href).toBe("https://example.com/");
+    expect(vm.quickActions[1].href).toBe("mailto:info@example.com");
+    expect(vm.quickActions[2].href).toBe("tel:+49231818687");
+  });
+
+  it("skips website action for unsafe urls", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        contacts: [{ type: "website", value: "javascript:alert(1)", label: null, isPrimary: true }],
+      }),
+    );
+    expect(vm.quickActions.find((action) => action.key === "website")).toBeUndefined();
+  });
+
+  it("claim view-model reflects managed state", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        item: { ...makePayload().item, verificationStatus: "claimed" },
+        claim: { canClaim: false, verificationStatus: "claimed" },
+      }),
+    );
+    expect(vm.claim.canClaim).toBe(false);
+    expect(vm.claim.isManaged).toBe(true);
+  });
+});
+
+describe("contact/link row helpers", () => {
+  it("dedupes contacts and resolves semantic hrefs", () => {
+    const rows = buildContactRows([
+      { type: "phone", value: "+49 231", label: null, isPrimary: true },
+      { type: "phone", value: "+49 231", label: null, isPrimary: false },
+      { type: "email", value: "info@example.com", label: "Posta", isPrimary: false },
+    ]);
+    expect(rows).toHaveLength(2);
+    expect(rows[0].href).toBe("tel:+49231");
+    expect(rows[1].label).toBe("Posta");
+    expect(rows[1].href).toBe("mailto:info@example.com");
+  });
+
+  it("renders whatsapp contacts as external links when the value is a url", () => {
+    const rows = buildContactRows([
+      { type: "whatsapp", value: "https://chat.whatsapp.com/Jqkc4xh5YYY8zeALR8WSAW", label: "Join Link", isPrimary: true },
+      { type: "whatsapp", value: "+49 171 123 45 67", label: null, isPrimary: false },
+    ]);
+    expect(rows[0].href).toBe("https://chat.whatsapp.com/Jqkc4xh5YYY8zeALR8WSAW");
+    expect(rows[0].external).toBe(true);
+    expect(rows[1].href).toBe("tel:+491711234567");
+    expect(rows[1].external).toBe(false);
+  });
+
+  it("filters unsafe links and dedupes by url", () => {
+    const rows = buildLinkRows([
+      { type: "website", label: null, url: "https://example.com", isPrimary: false },
+      { type: "website", label: null, url: "https://example.com", isPrimary: false },
+      { type: "website", label: null, url: "javascript:alert(1)", isPrimary: false },
+    ]);
+    expect(rows).toHaveLength(1);
+    expect(rows[0].url).toBe("https://example.com/");
+  });
+});
