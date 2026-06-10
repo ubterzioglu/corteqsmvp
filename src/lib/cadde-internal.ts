@@ -47,3 +47,19 @@ export async function resolveCityIdByName(cityName: string | null | undefined, c
   const { data } = await query.maybeSingle();
   return data?.id ?? null;
 }
+
+export async function resolveCountryIdsByNames(countryNames: readonly string[]): Promise<string[]> {
+  const names = countryNames.map((name) => name.trim()).filter(Boolean);
+  if (names.length === 0) return [];
+  const { data } = await db.from("cadde_countries").select("id").in("name", names);
+  return ((data ?? []) as Array<{ id: string }>).map((row) => row.id);
+}
+
+export async function resolveCityIdsByNames(cityNames: readonly string[], countryIds: readonly string[]): Promise<string[]> {
+  const names = cityNames.map((name) => name.trim()).filter(Boolean);
+  if (names.length === 0) return [];
+  let query = db.from("cadde_cities").select("id").in("name", names);
+  if (countryIds.length > 0) query = query.in("country_id", countryIds);
+  const { data } = await query;
+  return ((data ?? []) as Array<{ id: string }>).map((row) => row.id);
+}

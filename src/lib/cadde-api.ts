@@ -20,8 +20,8 @@ import {
   FALLBACK_PROFILE_NAME,
   db,
   reportCaddeApiError,
-  resolveCityIdByName,
-  resolveCountryIdByName,
+  resolveCityIdsByNames,
+  resolveCountryIdsByNames,
 } from "./cadde-internal";
 import { resolveCaddeRpcErrorMessage } from "./cadde-rules";
 import {
@@ -31,6 +31,7 @@ import {
   caddeReactionSchema,
   parseWithUserError,
 } from "./cadde-schemas";
+import { validatePostInterests } from "./cadde-targeting";
 import type {
   CaddeBillboardCard,
   CaddeBillboardRow,
@@ -43,11 +44,15 @@ import type {
   CaddeContentMode,
   CaddeCountry,
   CaddeCountryRow,
+  CaddeFeedCursor,
   CaddeFeedPage,
+  CaddeFeedPageParam,
+  CaddeFeedRpcItem,
   CaddeFilterState,
+  CaddeInterest,
+  CaddeInterestRow,
   CaddePost,
   CaddePostInput,
-  CaddePostRow,
   CaddeReactionRow,
   CaddeReactionType,
   CaddeSponsoredPlacement,
@@ -63,8 +68,8 @@ function applyDemoFilters<T extends { country: string | null; city: string | nul
   return items.filter((item) => {
     if (item.mode !== filters.mode) return false;
     if (filters.bridge && !item.isBridge) return false;
-    if (filters.country && item.country !== filters.country) return false;
-    if (filters.city && item.city !== filters.city) return false;
+    if (filters.countries.length && (!item.country || !filters.countries.includes(item.country))) return false;
+    if (filters.cities.length && (!item.city || !filters.cities.includes(item.city))) return false;
     return true;
   });
 }
@@ -82,28 +87,42 @@ export async function listCaddeCountries(): Promise<CaddeCountry[]> {
   }
 }
 
-export async function listCaddeCities(countryName = ""): Promise<CaddeCity[]> {
+/** Seçili ülkelerin şehirleri (boş liste = tüm aktif şehirler). Alfabetik (tr) sıralı döner. */
+export async function listCaddeCities(countryNames: string[] = []): Promise<CaddeCity[]> {
+  const sortAlphabetically = (cities: CaddeCity[]): CaddeCity[] =>
+    [...cities].sort((left, right) => left.name.localeCompare(right.name, "tr"));
+
   if (!isSupabaseConfigured) {
-    if (!countryName) return DEMO_CITIES;
-    const match = DEMO_COUNTRIES.find((country) => country.name === countryName);
-    return match ? DEMO_CITIES.filter((city) => city.countryId === match.id) : [];
+    if (countryNames.length === 0) return sortAlphabetically(DEMO_CITIES);
+    const countryIds = new Set(
+      DEMO_COUNTRIES.filter((country) => countryNames.includes(country.name)).map((country) => country.id),
+    );
+    return sortAlphabetically(DEMO_CITIES.filter((city) => countryIds.has(city.countryId)));
   }
 
   try {
-    const countryId = await resolveCountryIdByName(countryName);
-    let query = db.from("cadde_cities").select("id, country_id, name, timezone, sort_order").eq("is_active", true).order("sort_order", { ascending: true });
-    if (countryId) query = query.eq("country_id", countryId);
+    const countryIds = await resolveCountryIdsByNames(countryNames);
+    let query = db.from("cadde_cities").select("id, country_id, name, timezone, sort_order").eq("is_active", true);
+    if (countryIds.length > 0) query = query.in("country_id", countryIds);
     const { data, error } = await query;
     if (error) throw error;
-    return (data as CaddeCityRow[]).map((row) => ({ id: row.id, countryId: row.country_id, name: row.name, timezone: row.timezone }));
+    return sortAlphabetically(
+      (data as CaddeCityRow[]).map((row) => ({ id: row.id, countryId: row.country_id, name: row.name, timezone: row.timezone })),
+    );
   } catch (error: unknown) {
     reportCaddeApiError("listCaddeCities", error);
     return [];
   }
 }
 
-export async function listCaddeFeed(filters: CaddeFilterState, page: number, currentUserId: string | null): Promise<CaddeFeedPage> {
+/**
+ * Feed okuma (Faz 3): real mod list_cadde_feed_v1 RPC'sinden gelir — band/skor/deterministik
+ * random ve stabil cursor pagination DB'de hesaplanır (TS aynası: cadde-ranking.ts).
+ * Demo mod istemci tarafında sayfa numarasıyla çalışmaya devam eder.
+ */
+export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeFeedPageParam, currentUserId: string | null): Promise<CaddeFeedPage> {
   if (!isSupabaseConfigured || filters.mode === "demo") {
+    const page = typeof pageParam === "number" ? pageParam : 1;
     const filtered = applyDemoFilters(DEMO_POSTS, filters);
     const start = (page - 1) * CADDE_PAGE_SIZE;
     const items = filtered.slice(start, start + CADDE_PAGE_SIZE);
@@ -111,35 +130,28 @@ export async function listCaddeFeed(filters: CaddeFilterState, page: number, cur
   }
 
   try {
-    const countryId = await resolveCountryIdByName(filters.country);
-    const cityId = await resolveCityIdByName(filters.city, countryId);
-    let query = db
-      .from("cadde_posts")
-      .select("id, author_user_id, author_name_override, author_role, author_avatar_url, content_mode, status, post_type, title, body, country_id, city_id, is_bridge, pinned, created_at")
-      .eq("status", "published")
-      .eq("content_mode", "real")
-      .order("pinned", { ascending: false })
-      .order("created_at", { ascending: false })
-      .range((page - 1) * CADDE_PAGE_SIZE, page * CADDE_PAGE_SIZE - 1);
-
-    if (filters.bridge) query = query.eq("is_bridge", true);
-    if (countryId) query = query.eq("country_id", countryId);
-    if (cityId) query = query.eq("city_id", cityId);
-
-    const { data, error } = await query;
+    const cursor = pageParam !== null && typeof pageParam === "object" ? pageParam : null;
+    const { data, error } = await db.rpc("list_cadde_feed_v1", {
+      p_filters: {
+        countries: filters.countries,
+        cities: filters.cities,
+        bridge: filters.bridge,
+      },
+      p_cursor: cursor,
+      p_limit: CADDE_PAGE_SIZE,
+    });
     if (error) throw error;
 
-    const rows = (data ?? []) as CaddePostRow[];
-    const [countries, cities, reactions, comments, authorNames] = await Promise.all([
-      fetchCountryMap(),
-      fetchCityMap(),
+    const payload = (data ?? { items: [], nextCursor: null }) as { items: CaddeFeedRpcItem[]; nextCursor: CaddeFeedCursor | null };
+    const rows = payload.items ?? [];
+    const [reactions, comments, authorNames] = await Promise.all([
       fetchPostReactions(rows.map((row) => row.id)),
       fetchPostComments(rows.map((row) => row.id)),
       fetchUserNameMap(rows.map((row) => row.author_user_id).filter(Boolean) as string[], currentUserId ? [currentUserId] : []),
     ]);
 
-    const items = rows.map((row) => mapPost(row, countries, cities, reactions, comments, authorNames, currentUserId));
-    return { items, nextPage: rows.length === CADDE_PAGE_SIZE ? page + 1 : null };
+    const items = rows.map((row) => mapRpcPost(row, reactions, comments, authorNames, currentUserId));
+    return { items, nextPage: payload.nextCursor ?? null };
   } catch (error: unknown) {
     reportCaddeApiError("listCaddeFeed", error);
     return { items: [], nextPage: null };
@@ -185,10 +197,8 @@ async function fetchPostComments(postIds: string[]): Promise<CommentWithAuthor[]
   return rows.map((row) => ({ ...row, author_name: userMap.get(row.user_id) ?? FALLBACK_PROFILE_NAME }));
 }
 
-function mapPost(
-  row: CaddePostRow,
-  countries: Map<string, string>,
-  cities: Map<string, string>,
+function mapRpcPost(
+  row: CaddeFeedRpcItem,
   reactions: CaddeReactionRow[],
   comments: CommentWithAuthor[],
   authorNames: Map<string, string>,
@@ -212,11 +222,13 @@ function mapPost(
     authorRole: row.author_role,
     authorAvatarUrl: row.author_avatar_url,
     authorUserId: row.author_user_id,
-    country: row.country_id ? countries.get(row.country_id) ?? null : null,
-    city: row.city_id ? cities.get(row.city_id) ?? null : null,
+    country: row.country_name,
+    city: row.city_name,
     isBridge: row.is_bridge,
     pinned: row.pinned,
     createdAt: row.created_at,
+    needCategory: row.need_category,
+    interests: row.interests ?? [],
     reactionCounts,
     totalReactionCount: reactionCounts.like + reactionCounts.support + reactionCounts.idea,
     commentCount: postComments.length,
@@ -238,8 +250,8 @@ export async function listCaddeCafes(filters: CaddeFilterState, currentUserId: s
   }
 
   try {
-    const countryId = await resolveCountryIdByName(filters.country);
-    const cityId = await resolveCityIdByName(filters.city, countryId);
+    const countryIds = await resolveCountryIdsByNames(filters.countries);
+    const cityIds = await resolveCityIdsByNames(filters.cities, countryIds);
     let query = db
       .from("cadde_cafes")
       .select("id, host_user_id, host_name_override, title, summary, country_id, city_id, content_mode, status, is_bridge, is_free, starts_at, ends_at, is_active, created_at")
@@ -248,8 +260,8 @@ export async function listCaddeCafes(filters: CaddeFilterState, currentUserId: s
       .eq("is_active", true)
       .order("starts_at", { ascending: true });
     if (filters.bridge) query = query.eq("is_bridge", true);
-    if (countryId) query = query.eq("country_id", countryId);
-    if (cityId) query = query.eq("city_id", cityId);
+    if (countryIds.length > 0) query = query.in("country_id", countryIds);
+    if (cityIds.length > 0) query = query.in("city_id", cityIds);
     const { data, error } = await query;
     if (error) throw error;
     const rows = (data ?? []) as CaddeCafeRow[];
@@ -305,16 +317,16 @@ export async function listCaddeBillboardCards(filters: CaddeFilterState): Promis
   }
 
   try {
-    const countryId = await resolveCountryIdByName(filters.country);
-    const cityId = await resolveCityIdByName(filters.city, countryId);
+    const countryIds = await resolveCountryIdsByNames(filters.countries);
+    const cityIds = await resolveCityIdsByNames(filters.cities, countryIds);
     let query = db
       .from("cadde_billboard_cards")
       .select("id, card_type, title, subtitle, description, badge_text, cta_label, cta_url, image_url, content_mode, status, country_id, city_id, is_featured, sort_order")
       .eq("content_mode", "real")
       .eq("status", "published")
       .order("sort_order", { ascending: true });
-    if (countryId) query = query.or(`country_id.is.null,country_id.eq.${countryId}`);
-    if (cityId) query = query.or(`city_id.is.null,city_id.eq.${cityId}`);
+    if (countryIds.length > 0) query = query.or(`country_id.is.null,country_id.in.(${countryIds.join(",")})`);
+    if (cityIds.length > 0) query = query.or(`city_id.is.null,city_id.in.(${cityIds.join(",")})`);
     const { data, error } = await query;
     if (error) throw error;
     return (data as CaddeBillboardRow[]).map((row) => ({
@@ -341,8 +353,8 @@ export async function getCaddeSponsoredPlacement(filters: CaddeFilterState): Pro
   }
 
   try {
-    const countryId = await resolveCountryIdByName(filters.country);
-    const cityId = await resolveCityIdByName(filters.city, countryId);
+    const countryIds = await resolveCountryIdsByNames(filters.countries);
+    const cityIds = await resolveCityIdsByNames(filters.cities, countryIds);
     let query = db
       .from("cadde_sponsored_placements")
       .select("id, placement_key, title, description, badge_text, cta_label, cta_url, image_url, content_mode, status, country_id, city_id, sort_order")
@@ -351,8 +363,8 @@ export async function getCaddeSponsoredPlacement(filters: CaddeFilterState): Pro
       .eq("placement_key", "feed-inline")
       .order("sort_order", { ascending: true })
       .limit(1);
-    if (countryId) query = query.or(`country_id.is.null,country_id.eq.${countryId}`);
-    if (cityId) query = query.or(`city_id.is.null,city_id.eq.${cityId}`);
+    if (countryIds.length > 0) query = query.or(`country_id.is.null,country_id.in.(${countryIds.join(",")})`);
+    if (cityIds.length > 0) query = query.or(`city_id.is.null,city_id.in.(${cityIds.join(",")})`);
     const { data, error } = await query.maybeSingle();
     if (error) throw error;
     if (!data) return null;
@@ -379,6 +391,8 @@ export async function getCaddeSponsoredPlacement(filters: CaddeFilterState): Pro
  */
 export async function createCaddePost(input: CaddePostInput): Promise<string> {
   const parsed = parseWithUserError(caddePostCreateSchema, input);
+  const interests = validatePostInterests(parsed.interests ?? []);
+  const needCategory = parsed.needCategory?.trim() || interests[0] || null;
   const { data, error } = await db.rpc("create_cadde_post_v1", {
     p_post_type: parsed.type,
     p_title: parsed.title?.trim() || null,
@@ -386,9 +400,63 @@ export async function createCaddePost(input: CaddePostInput): Promise<string> {
     p_country: parsed.countryId ?? "",
     p_city: parsed.cityId ?? "",
     p_is_bridge: parsed.isBridge,
+    p_need_category: needCategory,
+    p_interests: interests,
   });
   if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
   return data as string;
+}
+
+// ── İlgi alanları (Faz 3 / spec §12) ─────────────────────────────────────────
+
+export async function listCaddeInterestCatalog(): Promise<CaddeInterest[]> {
+  if (!isSupabaseConfigured) return [];
+
+  try {
+    const { data, error } = await db
+      .from("cadde_interest_catalog")
+      .select("key, label_tr, sort_order, is_active")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+    if (error) throw error;
+    return (data as CaddeInterestRow[]).map((row) => ({ key: row.key, labelTr: row.label_tr, sortOrder: row.sort_order }));
+  } catch (error: unknown) {
+    reportCaddeApiError("listCaddeInterestCatalog", error);
+    return [];
+  }
+}
+
+export async function listMyCaddeInterests(userId: string): Promise<string[]> {
+  if (!isSupabaseConfigured || !userId) return [];
+
+  try {
+    const { data, error } = await db.from("user_cadde_interests").select("interest_key").eq("user_id", userId);
+    if (error) throw error;
+    return ((data ?? []) as Array<{ interest_key: string }>).map((row) => row.interest_key);
+  } catch (error: unknown) {
+    reportCaddeApiError("listMyCaddeInterests", error);
+    return [];
+  }
+}
+
+/** Kullanıcının ilgi alanı setini hedef listeyle eşitler (eksikleri ekler, fazlaları siler). */
+export async function saveMyCaddeInterests(userId: string, interestKeys: string[]): Promise<void> {
+  if (!userId) throw new Error("Bu işlem için giriş yapın.");
+  const desired = Array.from(new Set(interestKeys.map((key) => key.trim()).filter(Boolean)));
+
+  const current = await listMyCaddeInterests(userId);
+  const toRemove = current.filter((key) => !desired.includes(key));
+  const toAdd = desired.filter((key) => !current.includes(key));
+
+  if (toRemove.length > 0) {
+    const { error } = await db.from("user_cadde_interests").delete().eq("user_id", userId).in("interest_key", toRemove);
+    if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  }
+
+  if (toAdd.length > 0) {
+    const { error } = await db.from("user_cadde_interests").insert(toAdd.map((key) => ({ user_id: userId, interest_key: key })));
+    if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  }
 }
 
 export async function toggleCaddeReaction(postId: string, userId: string, reactionType: CaddeReactionType, currentlyActive: boolean): Promise<void> {

@@ -58,9 +58,11 @@ describe("caddeReactionSchema", () => {
 });
 
 describe("caddeFilterSchema", () => {
-  it("validates filter state shape", () => {
-    expect(caddeFilterSchema.safeParse({ mode: "real", country: "", city: "", bridge: false }).success).toBe(true);
-    expect(caddeFilterSchema.safeParse({ mode: "live", country: "", city: "", bridge: false }).success).toBe(false);
+  it("validates filter state shape (Faz 3: çoklu ülke/şehir)", () => {
+    expect(caddeFilterSchema.safeParse({ mode: "real", countries: [], cities: [], bridge: false }).success).toBe(true);
+    expect(caddeFilterSchema.safeParse({ mode: "real", countries: ["Almanya", "Hollanda"], cities: ["Berlin"], bridge: true }).success).toBe(true);
+    expect(caddeFilterSchema.safeParse({ mode: "live", countries: [], cities: [], bridge: false }).success).toBe(false);
+    expect(caddeFilterSchema.safeParse({ mode: "real", country: "", city: "", bridge: false }).success).toBe(false);
   });
 });
 

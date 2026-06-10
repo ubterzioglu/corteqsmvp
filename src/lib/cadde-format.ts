@@ -2,18 +2,32 @@
 
 import type { CaddeContentMode, CaddeFeedListItem, CaddeFilterState, CaddePost, CaddeSponsoredPlacement } from "./cadde-types";
 
-const normalizeFilter = (value: string | null): string => value?.trim() ?? "";
+/** Virgülle ayrılmış URL parametresini normalize edilmiş ad listesine çevirir. */
+const parseListParam = (value: string | null): string[] => {
+  if (!value) return [];
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const raw of value.split(",")) {
+    const item = raw.trim();
+    if (!item || seen.has(item)) continue;
+    seen.add(item);
+    result.push(item);
+  }
+  return result;
+};
 
 /**
  * URL → filtre durumu. Production default'u REAL akıştır (Cadde 3.0 / R-01);
  * demo yalnız açıkça `?mode=demo` istendiğinde açılır.
+ * Faz 3: country/city parametreleri virgülle ayrılmış ÇOKLU değer taşır;
+ * eski tekil `?country=Almanya` URL'leri tek elemanlı liste olarak okunur (geriye uyumlu).
  */
 export function parseCaddeFilters(searchParams: URLSearchParams): CaddeFilterState {
   const mode: CaddeContentMode = searchParams.get("mode") === "demo" ? "demo" : "real";
   return {
     mode,
-    country: normalizeFilter(searchParams.get("country")),
-    city: normalizeFilter(searchParams.get("city")),
+    countries: parseListParam(searchParams.get("country")),
+    cities: parseListParam(searchParams.get("city")),
     bridge: searchParams.get("bridge") === "1",
   };
 }
@@ -22,10 +36,18 @@ export function parseCaddeFilters(searchParams: URLSearchParams): CaddeFilterSta
 export function serializeCaddeFilters(filters: CaddeFilterState): URLSearchParams {
   const next = new URLSearchParams();
   if (filters.mode === "demo") next.set("mode", "demo");
-  if (filters.country) next.set("country", filters.country);
-  if (filters.city) next.set("city", filters.city);
+  if (filters.countries.length) next.set("country", filters.countries.join(","));
+  if (filters.cities.length) next.set("city", filters.cities.join(","));
   if (filters.bridge) next.set("bridge", "1");
   return next;
+}
+
+/** Başlık rozeti için kısa filtre özeti ("Berlin +2", "Almanya", "Global Akış"). */
+export function summarizeCaddeFilters(filters: CaddeFilterState): string {
+  const primary = filters.cities[0] ?? filters.countries[0];
+  if (!primary) return "Global Akış";
+  const extra = filters.cities.length + filters.countries.length - 1;
+  return extra > 0 ? `${primary} +${extra}` : primary;
 }
 
 /**

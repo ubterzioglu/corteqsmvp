@@ -56,6 +56,7 @@ import { formatBytes } from "@/lib/submissions";
 import { supabase } from "@/integrations/supabase/client";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
+import CaddeInterestsCard from "@/components/cadde/CaddeInterestsCard";
 
 type DraftValueMap = Record<string, string | boolean>;
 type DraftVisibilityMap = Record<string, AttributeVisibility>;
@@ -1351,6 +1352,8 @@ const ProfilePage = () => {
               </CardContent>
             </Card>
           ) : null}
+
+          <CaddeInterestsCard />
 
           <Card className={GOOGLE_SOFT_CARD_RED_SECTION}>
             <CardHeader className="pb-2">

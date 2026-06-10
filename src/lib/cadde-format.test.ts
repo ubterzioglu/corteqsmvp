@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { injectSponsoredPlacement, parseCaddeFilters, serializeCaddeFilters } from "@/lib/cadde-format";
+import { injectSponsoredPlacement, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
 import type { CaddePost, CaddeSponsoredPlacement } from "@/lib/cadde-types";
 
 const makePost = (id: string): CaddePost => ({
@@ -18,6 +18,8 @@ const makePost = (id: string): CaddePost => ({
   isBridge: false,
   pinned: false,
   createdAt: "2026-05-29T00:00:00.000Z",
+  needCategory: null,
+  interests: [],
   reactionCounts: { like: 0, support: 0, idea: 0 },
   totalReactionCount: 0,
   commentCount: 0,
@@ -38,7 +40,7 @@ const sponsor: CaddeSponsoredPlacement = {
 describe("parseCaddeFilters", () => {
   it("defaults to REAL mode when no mode param is present (Cadde 3.0 / R-01)", () => {
     const filters = parseCaddeFilters(new URLSearchParams(""));
-    expect(filters).toEqual({ mode: "real", country: "", city: "", bridge: false });
+    expect(filters).toEqual({ mode: "real", countries: [], cities: [], bridge: false });
   });
 
   it("enters demo mode only when explicitly requested", () => {
@@ -47,29 +49,38 @@ describe("parseCaddeFilters", () => {
     expect(parseCaddeFilters(new URLSearchParams("mode=unknown")).mode).toBe("real");
   });
 
-  it("parses country, city and bridge", () => {
+  it("parses single-value legacy URLs as one-element lists (geriye uyumluluk)", () => {
     const filters = parseCaddeFilters(new URLSearchParams("country=Almanya&city=Berlin&bridge=1"));
-    expect(filters).toEqual({ mode: "real", country: "Almanya", city: "Berlin", bridge: true });
+    expect(filters).toEqual({ mode: "real", countries: ["Almanya"], cities: ["Berlin"], bridge: true });
   });
 
-  it("trims whitespace in geo filters", () => {
-    const filters = parseCaddeFilters(new URLSearchParams("country=%20Almanya%20"));
-    expect(filters.country).toBe("Almanya");
+  it("parses comma-separated multi geo values, trims and dedupes (Faz 3)", () => {
+    const filters = parseCaddeFilters(new URLSearchParams("country=Almanya,%20Hollanda%20,Almanya&city=Berlin,K%C3%B6ln"));
+    expect(filters.countries).toEqual(["Almanya", "Hollanda"]);
+    expect(filters.cities).toEqual(["Berlin", "Köln"]);
   });
 });
 
 describe("serializeCaddeFilters", () => {
   it("omits the mode param for the real default and writes demo explicitly", () => {
-    expect(serializeCaddeFilters({ mode: "real", country: "", city: "", bridge: false }).toString()).toBe("");
-    expect(serializeCaddeFilters({ mode: "demo", country: "", city: "", bridge: false }).toString()).toBe("mode=demo");
+    expect(serializeCaddeFilters({ mode: "real", countries: [], cities: [], bridge: false }).toString()).toBe("");
+    expect(serializeCaddeFilters({ mode: "demo", countries: [], cities: [], bridge: false }).toString()).toBe("mode=demo");
   });
 
-  it("round-trips filter state through the URL", () => {
-    const original = { mode: "demo" as const, country: "Almanya", city: "Berlin", bridge: true };
+  it("round-trips multi geo filter state through the URL", () => {
+    const original = { mode: "demo" as const, countries: ["Almanya", "Hollanda"], cities: ["Berlin", "Amsterdam"], bridge: true };
     expect(parseCaddeFilters(serializeCaddeFilters(original))).toEqual(original);
 
-    const realDefault = { mode: "real" as const, country: "Hollanda", city: "", bridge: false };
+    const realDefault = { mode: "real" as const, countries: ["Hollanda"], cities: [], bridge: false };
     expect(parseCaddeFilters(serializeCaddeFilters(realDefault))).toEqual(realDefault);
+  });
+});
+
+describe("summarizeCaddeFilters", () => {
+  it("derives a short badge label from the selection", () => {
+    expect(summarizeCaddeFilters({ mode: "real", countries: [], cities: [], bridge: false })).toBe("Global Akış");
+    expect(summarizeCaddeFilters({ mode: "real", countries: ["Almanya"], cities: [], bridge: false })).toBe("Almanya");
+    expect(summarizeCaddeFilters({ mode: "real", countries: ["Almanya"], cities: ["Berlin", "Köln"], bridge: false })).toBe("Berlin +2");
   });
 });
 

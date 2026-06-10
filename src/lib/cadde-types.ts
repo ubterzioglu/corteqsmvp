@@ -40,6 +40,32 @@ export type CaddePostRow = {
   is_bridge: boolean;
   pinned: boolean;
   created_at: string;
+  need_category: Nullable<string>;
+  engagement_score: number;
+  published_at: Nullable<string>;
+};
+
+/** list_cadde_feed_v1 RPC öğesi: post satırı + çözülmüş adlar + ranking çıktıları. */
+export type CaddeFeedRpcItem = CaddePostRow & {
+  country_name: Nullable<string>;
+  city_name: Nullable<string>;
+  interests: string[];
+  band: number;
+  score: number;
+  rand: number;
+};
+
+export type CaddeInterestRow = {
+  key: string;
+  label_tr: string;
+  sort_order: number;
+  is_active: boolean;
+};
+
+export type CaddeInterest = {
+  key: string;
+  labelTr: string;
+  sortOrder: number;
 };
 
 export type CaddeReactionRow = {
@@ -128,12 +154,28 @@ export type CaddeCity = {
   timezone: string;
 };
 
+// Faz 3: çoklu ülke/şehir filtresi. Değerler cadde_countries/cities ADLARIDIR;
+// id çözümlemesi API/RPC katmanında yapılır.
 export type CaddeFilterState = {
   mode: CaddeContentMode;
-  country: string;
-  city: string;
+  countries: string[];
+  cities: string[];
   bridge: boolean;
 };
+
+/** list_cadde_feed_v1 keyset cursor'ı (SQL sıralamasının aynası — bkz. cadde-ranking.ts). */
+export type CaddeFeedCursor = {
+  band: number;
+  score: number;
+  rand: number;
+  id: string;
+};
+
+/**
+ * Infinite feed sayfa parametresi: real mod RPC cursor'ı, demo mod sayfa numarası kullanır.
+ * İlk sayfa için null verilir.
+ */
+export type CaddeFeedPageParam = CaddeFeedCursor | number | null;
 
 export type CaddeComment = {
   id: string;
@@ -159,6 +201,8 @@ export type CaddePost = {
   isBridge: boolean;
   pinned: boolean;
   createdAt: string;
+  needCategory: string | null;
+  interests: string[];
   reactionCounts: Record<CaddeReactionType, number>;
   totalReactionCount: number;
   commentCount: number;
@@ -168,7 +212,7 @@ export type CaddePost = {
 
 export type CaddeFeedPage = {
   items: CaddePost[];
-  nextPage: number | null;
+  nextPage: CaddeFeedPageParam;
 };
 
 export type CaddeCafe = {
@@ -224,6 +268,10 @@ export type CaddePostInput = {
   countryId?: string;
   cityId?: string;
   isBridge: boolean;
+  /** Birincil ihtiyaç kategorisi (cadde_interest_catalog anahtarı); boşsa ilk etiket kullanılır. */
+  needCategory?: string;
+  /** 0-3 etiket (cadde_interest_catalog anahtarları). */
+  interests?: string[];
 };
 
 export type CaddeAdminPostInput = {

@@ -15,10 +15,11 @@
 | **Faz 0** — Inventory + 4 doküman | ✅ TAMAM | `8c4c998` içine süpürüldü (bkz. §6 uyarı) |
 | **Faz 1** — `cadde.ts` modülerleştirme, real default, telemetri | ✅ TAMAM | `8c4c998` (impl) + `fc27b26` (testler) |
 | **Faz 2** — Actor context + profil kapısı + Köprü policy (RPC+RLS) | ✅ TAMAM | `60c5baf` |
-| **Faz 3** — Çoklu geo filtre + interests + ranking | ⬜ **SIRADAKİ** | — |
-| Faz 4 Cafe · Faz 5 Çarşı · Faz 6 Tanıtım · Faz 7 bildirim/moderasyon · Faz 8 diaspora · Faz 9 legacy temizlik | ⬜ | — |
+| **Faz 3** — Çoklu geo filtre + interests + ranking | ✅ KOD TAMAM — ⚠️ migration 005-007 CANLIYA HENÜZ UYGULANMADI (bkz. §5) | (bu oturum) |
+| **Faz 4 Cafe** | ⬜ **SIRADAKİ** | — |
+| Faz 5 Çarşı · Faz 6 Tanıtım · Faz 7 bildirim/moderasyon · Faz 8 diaspora · Faz 9 legacy temizlik | ⬜ | — |
 
-Doğrulama durumu (son koşum): **446/446 test geçti**, `npm run build` OK, yeni dosyalar lint-temiz. (Repo genelinde ~451 ÖNCEDEN VAR OLAN lint hatası var — backlog B7, bizim dosyalarla ilgisiz; tam `npm run lint` exit 1 döner, bu NORMALDİR. Kendi dosyalarını hedefli `npx eslint <dosyalar>` ile doğrula.)
+Doğrulama durumu (son koşum): **486/486 test geçti**, `npm run build` OK, yeni/değişen dosyalar lint-temiz. (Repo genelinde ~451 ÖNCEDEN VAR OLAN lint hatası var — backlog B7, bizim dosyalarla ilgisiz; tam `npm run lint` exit 1 döner, bu NORMALDİR. Kendi dosyalarını hedefli `npx eslint <dosyalar>` ile doğrula.)
 
 ---
 
@@ -38,27 +39,54 @@ src/lib/cadde-internal.ts     → db cast (tek izole `as any`, B1 çözülünce 
                                 reportCaddeApiError (console.error + 10sn throttle'lı sonner toast)
 src/lib/cadde.ts              → GEÇİCİ re-export barrel (yalnız AdminCaddePage kullanıyor; Faz 2 sonunda silinebilir
                                 — AdminCaddePage importunu modüllere çevirip barrel'ı sil)
+src/lib/cadde-ranking.ts      → list_cadde_feed_v1'in TS AYNASI: band A-F + skor ağırlıkları + compare/cursor
+                                (SQL ile senkron sözleşmesi — birini değiştiren diğerini günceller!)
+src/lib/cadde-targeting.ts    → ilgi alanı yardımcıları: 1-3 etiket validasyonu, toggle, overlap/need eşleşmesi
 src/hooks/cadde/useCaddeActorContext.ts → get_cadde_actor_context RPC; hata → fail-open + telemetri
 src/components/cadde/CaddeProfileGate.tsx → blur + eksik alan listesi + /profile?tab=settings CTA
-src/pages/cadde/CaddePage.tsx → aktif sayfa (gate entegre); App.tsx:55 lazy import bu yola işaret eder
+src/components/cadde/CaddeGeoFilter.tsx → Faz 3 çoklu ülke/şehir filtresi (legacy UX portu; premium/kıta YOK;
+                                tek birleşik onChange — iki ayrı callback URL state'i ezer)
+src/components/cadde/CaddeInterestsCard.tsx → profil "Bireysel İlgi Alanlarım" (ProfilePage'e monte)
+src/pages/cadde/CaddePage.tsx → aktif sayfa (gate + geo filtre + composer etiketleri); App.tsx lazy import buraya
 ```
+
+**Faz 3 notları:** `CaddeFilterState` artık `countries[]/cities[]` (URL'de virgülle: `?country=Almanya,Hollanda`;
+eski tekil URL'ler geriye uyumlu). Feed real modda `list_cadde_feed_v1` RPC + keyset cursor
+(`CaddeFeedPageParam`: real=cursor obj, demo=sayfa no, ilk sayfa=null). Composer'da 1-3 etiket;
+ilk etiket `need_category` olur. Çoklu filtre seçiliyken paylaşım hedefi İLK seçimdir (composer'a
+hedef seçici Faz 4'te). `engagement_score` reaksiyon(+1)/yorum(+2) trigger'larıyla beslenir.
 
 ### Testler
 ```text
-src/lib/cadde-format.test.ts   → real-default parse, demo round-trip, sponsor injection
-src/lib/cadde-schemas.test.ts  → Zod şema sınırları
+src/lib/cadde-format.test.ts   → real-default parse, çoklu geo round-trip, summarize, sponsor injection
+src/lib/cadde-schemas.test.ts  → Zod şema sınırları (çoklu filtre + interests max 3)
 src/lib/cadde-rules.test.ts    → CKS §7.2 Köprü truth table (10 senaryo) + hata haritası + mapActorContext
+src/lib/cadde-ranking.test.ts  → band truth table + skor ağırlıkları + deterministik rand + cursor tekrar/kayıp
+src/lib/cadde-targeting.test.ts → 1-3 etiket validasyonu + toggle + overlap/need eşleşmesi
 src/pages/cadde/CaddePage.test.tsx → 5 test (gate eksik alan, fail-open, ziyaretçi, real default, mode switch)
 src/App.cadde-routes.test.tsx  → /cadde route smoke (mock yolu: @/pages/cadde/CaddePage)
 ```
 
-### Migrations — CANLIYA UYGULANDI + schema_migrations'a kayıtlı
+### Migrations — Faz 2 (CANLIYA UYGULANDI + schema_migrations'a kayıtlı)
 ```text
 supabase/migrations/20260610180000_cadde300_001_user_verifications.sql
 supabase/migrations/20260610181000_cadde300_002_feature_seed.sql
 supabase/migrations/20260610182000_cadde300_003_actor_context.sql
 supabase/migrations/20260610183000_cadde300_004_post_rpc_rls.sql
 ```
+
+### Migrations — Faz 3 (⚠️ repoda hazır, CANLIYA HENÜZ UYGULANMADI — bkz. §5)
+```text
+supabase/migrations/20260610184000_cadde300_005_interests.sql   → katalog+13 seed, user/post interests,
+    cadde_posts(need_category, engagement_score, published_at), engagement trigger'ları,
+    create_cadde_post_v1 YENİ İMZA (eski 6-arg DROP edilir; +p_need_category, +p_interests)
+supabase/migrations/20260610185000_cadde300_006_geo_sync.sql    → D-04 link kolonları + backfill +
+    admin_import_cadde_geo_v1(country_code, city_names[])
+supabase/migrations/20260610186000_cadde300_007_feed_rpc.sql    → list_cadde_feed_v1(filters,cursor,limit)
+```
+⚠️ Bu üçü uygulanana kadar canlıda: composer etiket gönderimi `create_cadde_post_v1` parametre
+uyuşmazlığıyla, feed okuması `list_cadde_feed_v1` bulunamadığıyla düşer (reportCaddeApiError → boş feed).
+Yani Faz 3 kodu deploy edilmeden ÖNCE migration'lar canlıya girmeli.
 
 ---
 
@@ -106,17 +134,32 @@ psql -h aws-1-eu-west-2.pooler.supabase.com -p 5432 -U postgres.injprdrsklkxgnai
 
 ---
 
-## 5. SIRADAKİ İŞ: FAZ 3 — Filtre, İlgi Alanları, Ranking
+## 5. SIRADAKİ İŞ: (a) Faz 3 migration'larını canlıya uygula → (b) FAZ 4 Cafe
 
-Plan: `docs/cadde-300/03-implementation-plan.md` "Faz 3" bölümü + spec §11 (CKS band/skor) ve §12.
+### (a) ⚠️ İLK İŞ: Faz 3 migration'larını canlıya uygula
+Faz 3 kodu commit'li ama 005-007 migration'ları canlıda DEĞİL (psql erişimi izin gerektirdi).
+§4'teki komutla sırayla uygula:
+```text
+20260610184000_cadde300_005_interests.sql
+20260610185000_cadde300_006_geo_sync.sql
+20260610186000_cadde300_007_feed_rpc.sql
+```
++ her biri için `insert into supabase_migrations.schema_migrations(version, name) values ('<version>', '<dosya-adı>');`
+Sonra duman testi: `select public.list_cadde_feed_v1('{}'::jsonb, null, 5);` (authenticated bağlamı yoksa
+boş items döner — hata atmaması yeterli) ve `select count(*) from cadde_interest_catalog;` (=13).
 
-1. **Migration'lar:**
-   - `cadde_interest_catalog` (13 seed: networking, new_arrival, family_children, career, entrepreneurship, education, technology, arts_culture, sports, food, travel, volunteering, mentorship) + `user_cadde_interests` + `cadde_post_interests` (şemalar spec §9.6'da hazır).
-   - `cadde_posts`'a: `need_category text`, `engagement_score numeric default 0`, `published_at timestamptz` (+ updated_at touch trigger değil, RPC'de set).
-   - D-04: `cadde_countries/cities`'e `geo_country_id`/`geo_city_id` kolonu + geo_*'dan kontrollü genişletme sync'i (mevcut FK'leri BOZMA).
-   - `list_cadde_feed_v1(filters jsonb, cursor)` RPC: band A-F (spec §11.1) + skor (§11.2 ağırlıkları) + deterministik random `hash(post_id || current_date || viewer_scope)` (ASLA `order by random()`) + stabil cursor pagination.
-2. **Frontend:** `MultiCountryCityFilter` (legacy `src/components/feed/MultiCountryCityFilter.tsx`'ten UX port et — dosyaya DOKUNMA, kopyala/yeniden yaz; `useIsPremium` bağımlılığını TAŞIMA), çoklu seçim + URL state + alfabetik şehir; profil "Bireysel İlgi Alanlarım" bölümü; composer'da 1-3 etiket seçimi; `cadde-ranking.ts` + `cadde-targeting.ts` TS aynaları + testler.
-3. **Kabul:** aynı şehir ihtiyacı üstte; pagination tekrar/kayıp üretmez; gün içi random stabil.
+### (b) FAZ 4 — Cafe
+Plan: `docs/cadde-300/03-implementation-plan.md` "Faz 4" + spec §13.
+- Migration: `cadde_cafes` genişletme (slug, theme_key, entry_mode open/approval/referral, referral_code_hash,
+  entry_question, capacity, archived_at + check'ler); `cadde_cafe_members` genişletme (status, answer,
+  approved_at/by); RPC'ler: `create_cadde_cafe_v1`, `join_cadde_cafe_v1`, `approve_cadde_cafe_member_v1`,
+  `archive_cadde_cafe_v1`, `can_join_cadde_cafe`.
+- Cafe ülke policy: Köprü cafe=doğrulanmış herkes; TR cafe=TR yerleşik+TR telefon; diğer=doğrulanmış (RPC'de).
+  Günlük limit D-06 ürün kararına göre RPC rate-limit'i.
+- UI: tek `CreateCafeForm` (legacy alanlar port; davet kodu hash'li), `/cadde/cafe/:cafeId` rotası,
+  cafe feed (`cadde_posts.cafe_id` + `visibility='cafe'`), owner onay paneli, read-only arşiv.
+- Cafe adı moderasyonu `cadde-rules.ts`'te (R-05). Composer'a paylaşım hedefi seçici (Faz 3'te filtre
+  ilk seçimi kullanılıyor — bkz. CaddePage postMutation notu).
 
 ---
 

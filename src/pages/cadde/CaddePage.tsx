@@ -4,6 +4,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Clock3, Flame, Globe2, MapPin, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
+import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
 import CaddeProfileGate from "@/components/cadde/CaddeProfileGate";
 import { useCaddeActorContext } from "@/hooks/cadde/useCaddeActorContext";
 import { Badge } from "@/components/ui/badge";
@@ -26,11 +27,13 @@ import {
   listCaddeCities,
   listCaddeCountries,
   listCaddeFeed,
+  listCaddeInterestCatalog,
   toggleCaddeReaction,
 } from "@/lib/cadde-api";
-import { injectSponsoredPlacement, parseCaddeFilters, serializeCaddeFilters } from "@/lib/cadde-format";
+import { injectSponsoredPlacement, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-import type { CaddeFilterState, CaddePostType, CaddeReactionType } from "@/lib/cadde-types";
+import { toggleInterestSelection } from "@/lib/cadde-targeting";
+import type { CaddeFeedPageParam, CaddeFilterState, CaddePostType, CaddeReactionType } from "@/lib/cadde-types";
 
 const WORLD_CLOCKS = [
   { label: "İstanbul", timezone: "Europe/Istanbul" },
@@ -76,6 +79,7 @@ const emptyComposer = {
   type: "text" as CaddePostType,
   title: "",
   body: "",
+  interests: [] as string[],
 };
 
 const CaddePage = () => {
@@ -103,13 +107,19 @@ const CaddePage = () => {
   });
 
   const citiesQuery = useQuery({
-    queryKey: caddeQueryKeys.cities(filters.country),
-    queryFn: () => listCaddeCities(filters.country),
+    queryKey: caddeQueryKeys.cities(filters.countries),
+    queryFn: () => listCaddeCities(filters.countries),
+  });
+
+  const interestCatalogQuery = useQuery({
+    queryKey: caddeQueryKeys.interestCatalog,
+    queryFn: listCaddeInterestCatalog,
+    staleTime: 1000 * 60 * 60,
   });
 
   const feedQuery = useInfiniteQuery({
     queryKey: caddeQueryKeys.feed(filters, user?.id ?? null),
-    initialPageParam: 1,
+    initialPageParam: null as CaddeFeedPageParam,
     queryFn: ({ pageParam }) => listCaddeFeed(filters, pageParam, user?.id ?? null),
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });
@@ -140,13 +150,15 @@ const CaddePage = () => {
     mutationFn: async () => {
       if (!user) throw new Error("Bu işlem için giriş yapın.");
       if (!composer.body.trim()) throw new Error("Paylaşım metni zorunlu.");
+      // Çoklu filtre seçiliyken paylaşım hedefi ilk seçimdir; hedef seçici Faz 4'te composer'a taşınacak.
       await createCaddePost({
         type: composer.type,
         title: composer.title,
         body: composer.body,
-        countryId: filters.country,
-        cityId: filters.city,
+        countryId: filters.countries[0] ?? "",
+        cityId: filters.cities[0] ?? "",
         isBridge: filters.bridge,
+        interests: composer.interests,
       });
     },
     onSuccess: async () => {
@@ -210,21 +222,22 @@ const CaddePage = () => {
   });
 
   const updateFilters = (nextPartial: Partial<CaddeFilterState>) => {
-    const next = { ...filters, ...nextPartial };
-    if (next.country !== filters.country && !nextPartial.city) {
-      next.city = "";
-    }
-    setSearchParams(serializeCaddeFilters(next));
+    setSearchParams(serializeCaddeFilters({ ...filters, ...nextPartial }));
   };
 
   const feedItems = useMemo(() => feedQuery.data?.pages.flatMap((page) => page.items) ?? [], [feedQuery.data]);
   const feedWithSponsor = useMemo(() => injectSponsoredPlacement(feedItems, sponsorQuery.data ?? null, filters.mode), [feedItems, sponsorQuery.data, filters.mode]);
   const directoryLink = useMemo(() => {
     const params = new URLSearchParams();
-    if (filters.country) params.set("country", filters.country);
-    if (filters.city) params.set("city", filters.city);
+    if (filters.countries[0]) params.set("country", filters.countries[0]);
+    if (filters.cities[0]) params.set("city", filters.cities[0]);
     return `/directory${params.toString() ? `?${params.toString()}` : ""}`;
-  }, [filters.country, filters.city]);
+  }, [filters.countries, filters.cities]);
+
+  const interestLabelByKey = useMemo(
+    () => new Map((interestCatalogQuery.data ?? []).map((interest) => [interest.key, interest.labelTr])),
+    [interestCatalogQuery.data],
+  );
 
   return (
     <CaddeProfileGate context={actorContextQuery.data} isLoading={actorContextQuery.isLoading}>
@@ -277,37 +290,14 @@ const CaddePage = () => {
               </div>
 
               <div className="space-y-2">
-                <Label>Ülke</Label>
-                <Select value={filters.country || "__all__"} onValueChange={(value) => updateFilters({ country: value === "__all__" ? "" : value, city: "" })}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Ülke seç" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__all__">Tüm ülkeler</SelectItem>
-                    {(countriesQuery.data ?? []).map((country) => (
-                      <SelectItem key={country.id} value={country.name}>
-                        {country.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Şehir</Label>
-                <Select value={filters.city || "__all__"} onValueChange={(value) => updateFilters({ city: value === "__all__" ? "" : value })}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Şehir seç" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__all__">Tüm şehirler</SelectItem>
-                    {(citiesQuery.data ?? []).map((city) => (
-                      <SelectItem key={city.id} value={city.name}>
-                        {city.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label>Ülke ve Şehir</Label>
+                <CaddeGeoFilter
+                  countries={countriesQuery.data ?? []}
+                  cities={citiesQuery.data ?? []}
+                  selectedCountries={filters.countries}
+                  selectedCities={filters.cities}
+                  onChange={(next) => updateFilters(next)}
+                />
               </div>
 
               <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3">
@@ -370,7 +360,7 @@ const CaddePage = () => {
                   <CardTitle>Diaspora Cadde</CardTitle>
                   <CardDescription>Global Türk topluluğunun şehir bazlı sosyal akışı</CardDescription>
                 </div>
-                <Badge variant="outline">{filters.city || filters.country || "Global Akış"}</Badge>
+                <Badge variant="outline">{summarizeCaddeFilters(filters)}</Badge>
               </div>
               <div className="flex flex-wrap gap-2">
                 {WORLD_CLOCKS.map((clock) => (
@@ -455,6 +445,30 @@ const CaddePage = () => {
                     <Label>Mesaj</Label>
                     <Textarea value={composer.body} onChange={(event) => setComposer((current) => ({ ...current, body: event.target.value }))} placeholder="Şehrindeki ihtiyacını, etkinliğini veya fırsatını paylaş." rows={5} />
                   </div>
+                  {(interestCatalogQuery.data ?? []).length > 0 ? (
+                    <div className="space-y-2">
+                      <Label>Etiketler <span className="font-normal text-slate-500">(en fazla 3 — ilki birincil ihtiyaç sayılır)</span></Label>
+                      <div className="flex flex-wrap gap-2">
+                        {(interestCatalogQuery.data ?? []).map((interest) => {
+                          const selected = composer.interests.includes(interest.key);
+                          return (
+                            <button
+                              key={interest.key}
+                              type="button"
+                              onClick={() => setComposer((current) => ({ ...current, interests: toggleInterestSelection(current.interests, interest.key) }))}
+                              className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+                                selected
+                                  ? "border-slate-900 bg-slate-900 text-white"
+                                  : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
+                              }`}
+                            >
+                              {interest.labelTr}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : null}
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="text-sm text-slate-500">Akış: {filters.mode === "real" ? "Gerçek" : "Demo seçili. Gönderince Gerçek akışa geçeceksin."}</div>
                     <Button onClick={() => postMutation.mutate()} disabled={postMutation.isPending}>
@@ -507,6 +521,16 @@ const CaddePage = () => {
 
                     {item.post.title ? <h3 className="text-lg font-semibold text-slate-950">{item.post.title}</h3> : null}
                     <p className="whitespace-pre-wrap text-sm leading-7 text-slate-700">{item.post.body}</p>
+
+                    {item.post.interests.length > 0 ? (
+                      <div className="flex flex-wrap gap-1.5">
+                        {item.post.interests.map((key) => (
+                          <Badge key={key} variant="outline" className="text-xs font-normal">
+                            #{interestLabelByKey.get(key) ?? key}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : null}
 
                     <div className="flex flex-wrap gap-2">
                       {REACTION_META.map((reaction) => {

@@ -39,9 +39,10 @@
 - **Teknik plan (sağlayıcıdan bağımsız):** `public.user_verifications(user_id pk, phone_e164, phone_verified_at, phone_country_code, updated_at)` — private tablo, RLS kapalı dışa, okuma yalnız `get_cadde_actor_context()` RPC'sinden boolean olarak. `send-phone-otp`/`verify-phone-otp` Edge Function'ları yeniden yazılır. Raw `phone` attribute'u asla doğrulama sayılmaz; `phone_verified` AFS attribute'u görüntü/uyumluluk amaçlı kalabilir ama karar mercii `user_verifications`'tır.
 - **Faz 2 öncesi ek kontrol:** canlı projede eski `send-phone-otp` function'ı deploy'lu mu (`supabase functions list`) — varsa kaldırılma kararı.
 
-### D-04 — `cadde_countries/cities` ↔ `geo_countries/cities` 🟡
+### D-04 — `cadde_countries/cities` ↔ `geo_countries/cities` ✅ UYGULANDI (Faz 3)
 - **Durum (kanıtlı):** geo_* = 251 ülke / 76.990 şehir; cadde_* = 5 ülke / 6 şehir; arada FK yok; tüm cadde tabloları cadde_* mini-dünyasına bağlı.
-- **Öneri:** P0/Faz 1-2'de FK'lere dokunulmaz (mevcut feed bozulmaz). Faz 3 (filtre genişletme) ile birlikte: `cadde_countries/cities`'e `geo_country_id`/`geo_city_id` referans kolonu ekle + geo_*'dan kontrollü genişletme (sync script). Uzun vadede tek truth source geo_*; tam konsolidasyon ayrı karar dokümanıyla.
+- **Uygulanan (mig `20260610185000`):** `cadde_countries.geo_country_id` + `cadde_cities.geo_city_id` nullable link kolonları (partial unique index); mevcut satırlar code/name eşleşmesiyle backfill; `admin_import_cadde_geo_v1(country_code, city_names[])` admin RPC'si ile kontrollü genişletme (toplu 77k şehir importu bilinçli YOK; aktarılan şehir timezone'u 'UTC' default — admin düzeltir). Mevcut FK'lere dokunulmadı.
+- **Açık kalan:** uzun vadede tek truth source geo_*; tam konsolidasyon ayrı karar dokümanıyla (P2). Admin genişletme UI'ı P2.
 
 ### D-05 — Eski `feed_posts`/`cafes` verisi var mı? ✅ ÇÖZÜLDÜ
 - **Sonuç:** Veri yok (0/0/0/0; user_follows 1). **Backfill iptal.** Faz 9 = write-revoke → COMMENT → canary → ayrı drop kararı.
@@ -97,7 +98,7 @@
 | D-01 | Çıfıt/Tanıtım adı | 🟡 öneri: UI "Tanıtım" | Faz 6 öncesi |
 | D-02 | Anonim erişim | 🟡 öneri: login zorunlu | Faz 2 |
 | D-03 | SMS/OTP sağlayıcı | ✅ stub (flag kapalı); sağlayıcı seçimi açık | Altyapı kuruldu (Faz 2) |
-| D-04 | cadde↔geo konsolidasyon | 🟡 P1 sync planı | Faz 3 |
+| D-04 | cadde↔geo konsolidasyon | ✅ link kolonları + admin import RPC (Faz 3); tam konsolidasyon P2 | Uygulandı |
 | D-05 | Legacy backfill | ✅ gerekmez | Faz 9 basitleşti |
 | D-06 | Cafe limitleri | 🟡 RPC'de, trigger'sız | Faz 4 |
 | D-07 | Premium | 🟡 feature-bazlı limit | Faz 5 |

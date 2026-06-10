@@ -5,8 +5,8 @@ import { z } from "zod";
 
 export const caddeFilterSchema = z.object({
   mode: z.enum(["demo", "real"]),
-  country: z.string(),
-  city: z.string(),
+  countries: z.array(z.string()),
+  cities: z.array(z.string()),
   bridge: z.boolean(),
 });
 
@@ -22,6 +22,11 @@ export const caddePostCreateSchema = z.object({
   countryId: z.string().optional(),
   cityId: z.string().optional(),
   isBridge: z.boolean(),
+  needCategory: z.string().trim().optional(),
+  interests: z
+    .array(z.string().trim().min(1))
+    .max(3, "En fazla 3 etiket seçebilirsin.")
+    .optional(),
 });
 
 export const caddeCommentCreateSchema = z.object({

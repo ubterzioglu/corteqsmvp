@@ -144,7 +144,7 @@ describe("CaddePage", () => {
     await waitFor(() => {
       expect(listCaddeFeedMock).toHaveBeenCalledWith(
         expect.objectContaining({ mode: "real" }),
-        1,
+        null,
         "user-1",
       );
     });
@@ -167,7 +167,7 @@ describe("CaddePage", () => {
     await waitFor(() => {
       expect(listCaddeFeedMock).toHaveBeenLastCalledWith(
         expect.objectContaining({ mode: "real" }),
-        1,
+        null,
         "user-1",
       );
     });
