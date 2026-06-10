@@ -8,44 +8,16 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
+  parseDraftValue,
+  readDraftValue,
+  type CatalogAttributeDraftValue as DraftValue,
+} from "@/lib/catalog-attribute-draft";
+import {
   getCatalogItemProfile,
   updateCatalogItemAttribute,
   type CatalogEntityProfile,
   type CatalogEntityProfileAttribute,
 } from "@/lib/catalog-entity-api";
-
-type DraftValue = string | boolean;
-
-const readDraftValue = (attribute: CatalogEntityProfileAttribute): DraftValue => {
-  if (attribute.data_type === "boolean") {
-    return attribute.value_json === true;
-  }
-
-  if (Array.isArray(attribute.value_json)) {
-    return attribute.value_json.join(", ");
-  }
-
-  if (typeof attribute.value_json === "string" && attribute.value_json.trim()) {
-    return attribute.value_json;
-  }
-
-  return attribute.value_text ?? "";
-};
-
-const parseDraftValue = (attribute: CatalogEntityProfileAttribute, value: DraftValue) => {
-  if (attribute.data_type === "boolean") {
-    return Boolean(value);
-  }
-
-  if (attribute.data_type === "multi_select") {
-    return String(value)
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean);
-  }
-
-  return String(value).trim();
-};
 
 const CatalogItemEditorPage = () => {
   const { itemId } = useParams<{ itemId: string }>();

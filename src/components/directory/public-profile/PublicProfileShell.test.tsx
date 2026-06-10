@@ -10,6 +10,7 @@ import PublicProfileShell from "./PublicProfileShell";
 
 const useAuthMock = vi.fn();
 const rpcMock = vi.fn();
+const ownSlugMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
@@ -18,6 +19,18 @@ vi.mock("@/components/auth/useAuth", () => ({
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     rpc: (...args: unknown[]) => rpcMock(...args),
+    // Chain used by resolveCatalogSlugForLinkedUser (ownership lookup).
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          order: () => ({
+            limit: () => ({
+              maybeSingle: () => ownSlugMock(),
+            }),
+          }),
+        }),
+      }),
+    }),
   },
 }));
 
@@ -86,6 +99,8 @@ describe("PublicProfileShell", () => {
     useAuthMock.mockReturnValue({ user: null, session: null, isLoading: false });
     rpcMock.mockReset();
     rpcMock.mockResolvedValue({ data: { ok: true }, error: null });
+    ownSlugMock.mockReset();
+    ownSlugMock.mockResolvedValue({ data: null, error: null });
   });
 
   it("renders hero with name, role, location and initials fallback", () => {
@@ -190,6 +205,58 @@ describe("PublicProfileShell", () => {
     expect(pill).toHaveAttribute("href", "https://www.linkedin.com/in/arkin-kara");
     expect(pill).toHaveAttribute("target", "_blank");
     expect(pill).toHaveAttribute("rel", "noreferrer");
+  });
+
+  it("shows the edit toggle for the profile owner and opens the inline editor", async () => {
+    useAuthMock.mockReturnValue({ user: { id: "user-1" }, session: {}, isLoading: false });
+    ownSlugMock.mockResolvedValue({ data: { slug: "member-arkin-kara" }, error: null });
+    rpcMock.mockImplementation((fn: string) => {
+      if (fn === "get_catalog_item_profile") {
+        return Promise.resolve({
+          data: {
+            id: "item-1",
+            item_type: "member",
+            slug: "member-arkin-kara",
+            title: "Arkin Kara",
+            status: "published",
+            visibility: "public",
+            linked_user_id: "user-1",
+            attributes: [
+              {
+                attribute_key: "bio_short",
+                label: "Kısa Açıklama",
+                data_type: "textarea",
+                is_system: false,
+                sort_order: 1,
+                is_required: false,
+                is_public_default: true,
+                editor_can_edit: true,
+                editor_can_hide: true,
+                requires_admin_approval_on_change: false,
+                visibility: "public",
+                approval_status: "approved",
+                value_text: "Merhaba",
+                value_json: null,
+              },
+            ],
+            features: [],
+          },
+          error: null,
+        });
+      }
+      return Promise.resolve({ data: { ok: true }, error: null });
+    });
+
+    renderShell(makePayload());
+
+    const editButton = await screen.findByRole("button", { name: /Profili Düzenle/i });
+    expect(screen.queryByText(/Düzenleme Yetkisi Talep Et/i)).not.toBeInTheDocument();
+
+    fireEvent.click(editButton);
+
+    expect(await screen.findByText("Profil Bilgilerini Düzenle")).toBeInTheDocument();
+    expect(await screen.findByText("Kısa Açıklama")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Önizlemeye Dön/i })).toBeInTheDocument();
   });
 
   it("hides the claim CTA on managed profiles and shows the managed badge", () => {
