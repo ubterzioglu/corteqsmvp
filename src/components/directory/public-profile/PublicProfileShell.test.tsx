@@ -172,6 +172,26 @@ describe("PublicProfileShell", () => {
     ).toBeInTheDocument();
   });
 
+  it("renders opt-in hero badges, the tagline pill and social link pills", () => {
+    renderShell(
+      makePayload({
+        attributes: [
+          { key: "job_seeking_opt_in", label: "İş Arıyorum", dataType: "boolean", sortOrder: 1, valueText: null, valueJson: true },
+          { key: "volunteer_mentorship_opt_in", label: "Gönüllü Mentörlük", dataType: "boolean", sortOrder: 2, valueText: null, valueJson: true },
+          { key: "linkedin_url", label: "LinkedIn", dataType: "url", sortOrder: 3, valueText: "https://www.linkedin.com/in/arkin-kara", valueJson: null },
+        ],
+      }),
+    );
+
+    expect(screen.getByText("İş Arıyorum")).toBeInTheDocument();
+    expect(screen.getByText("Gönüllü Mentör")).toBeInTheDocument();
+    expect(screen.getByText("Genel Tıp")).toBeInTheDocument();
+    const pill = screen.getByRole("link", { name: /LinkedIn/i });
+    expect(pill).toHaveAttribute("href", "https://www.linkedin.com/in/arkin-kara");
+    expect(pill).toHaveAttribute("target", "_blank");
+    expect(pill).toHaveAttribute("rel", "noreferrer");
+  });
+
   it("hides the claim CTA on managed profiles and shows the managed badge", () => {
     renderShell(
       makePayload({

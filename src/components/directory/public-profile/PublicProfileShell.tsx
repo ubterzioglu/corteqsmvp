@@ -13,7 +13,6 @@ import PublicProfileEmptyState from "./PublicProfileEmptyState";
 import PublicProfileHero from "./PublicProfileHero";
 import PublicProfileQuickActions from "./PublicProfileQuickActions";
 import PublicProfileSectionList from "./PublicProfileSectionList";
-import PublicProfileSidebar from "./PublicProfileSidebar";
 
 const AmbientOrbs = () => (
   <>
@@ -100,24 +99,15 @@ const PublicProfileShell = ({ profile }: PublicProfileShellProps) => {
           </p>
         ) : null}
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(280px,0.9fr)]">
-          <div className="min-w-0 space-y-5">
-            {viewModel.mainSections.length > 0 ? (
-              <PublicProfileSectionList
-                sections={viewModel.mainSections}
-                accent={viewModel.hero.accent}
-              />
-            ) : !hasAnySection ? (
-              <PublicProfileEmptyState />
-            ) : null}
-          </div>
-
-          {viewModel.sidebarSections.length > 0 ? (
-            <PublicProfileSidebar
-              sections={viewModel.sidebarSections}
+        <div className="mt-5">
+          {hasAnySection ? (
+            <PublicProfileSectionList
+              sections={[...viewModel.mainSections, ...viewModel.sidebarSections]}
               accent={viewModel.hero.accent}
             />
-          ) : null}
+          ) : (
+            <PublicProfileEmptyState />
+          )}
         </div>
       </main>
     </div>
