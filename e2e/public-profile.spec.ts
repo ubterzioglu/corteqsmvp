@@ -8,7 +8,9 @@ import { expect, test, type Page } from "@playwright/test";
 
 const RPC_GLOB = "**/rest/v1/rpc/get_catalog_item_public_page_v2*";
 
-const makePayload = (overrides: { item?: Record<string, unknown>; sections?: unknown[] } = {}) => ({
+const makePayload = (
+  overrides: { item?: Record<string, unknown>; sections?: unknown[]; attributes?: unknown[] } = {},
+) => ({
   item: {
     id: "item-1",
     slug: "member-arkin-kara",
@@ -42,7 +44,7 @@ const makePayload = (overrides: { item?: Record<string, unknown>; sections?: unk
       content: { text: "Dortmund'da Türkçe hizmet veren doktor." },
     },
   ],
-  attributes: [],
+  attributes: overrides.attributes ?? [],
   contacts: [
     { type: "phone", value: "+49 231 818 687", label: null, isPrimary: true },
     { type: "website", value: "https://example.com", label: null, isPrimary: false },
@@ -183,6 +185,35 @@ test("unknown component key renders generic public section", async ({ page }) =>
 
   await expect(page.getByText("Yepyeni Bölüm")).toBeVisible();
   await expect(page.getByText("Yeni içerik")).toBeVisible();
+});
+
+test("fully populated member renders hero badges, tagline and link pills", async ({ page }) => {
+  await mockProfileRpc(
+    page,
+    makePayload({
+      attributes: [
+        { key: "job_seeking_opt_in", label: "İş Arıyorum", dataType: "boolean", sortOrder: 1, valueText: null, valueJson: true },
+        { key: "volunteer_mentorship_opt_in", label: "Gönüllü Mentörlük", dataType: "boolean", sortOrder: 2, valueText: null, valueJson: true },
+        { key: "moving_soon_opt_in", label: "Yakında Taşınacağım", dataType: "boolean", sortOrder: 3, valueText: null, valueJson: true },
+        { key: "linkedin_url", label: "LinkedIn", dataType: "url", sortOrder: 4, valueText: "https://www.linkedin.com/in/arkin-kara", valueJson: null },
+        { key: "instagram_url", label: "Instagram", dataType: "url", sortOrder: 5, valueText: "https://www.instagram.com/arkinkara", valueJson: null },
+        { key: "expertise_area", label: "Uzmanlık Alanı", dataType: "text", sortOrder: 6, valueText: "Genel Tıp", valueJson: null },
+      ],
+    }),
+  );
+
+  await page.goto("/directory/catalog/member-arkin-kara");
+
+  await expect(page.getByText("İş Arıyorum")).toBeVisible();
+  await expect(page.getByText("Gönüllü Mentör")).toBeVisible();
+  await expect(page.getByText("Yakında Taşınacak")).toBeVisible();
+  await expect(page.getByRole("link", { name: "LinkedIn", exact: true })).toHaveAttribute(
+    "href",
+    "https://www.linkedin.com/in/arkin-kara",
+  );
+  await expect(page.getByRole("link", { name: "Instagram", exact: true })).toBeVisible();
+  // Sosyal attribute grid'de tekrarlanmaz; uzmanlık alanı grid'de kalır.
+  await expect(page.getByText("Uzmanlık Alanı")).toBeVisible();
 });
 
 test("member business and organization records use same profile shell", async ({ page }) => {

@@ -4,6 +4,7 @@ import type { PublicCatalogProfilePagePayload } from "@/lib/public-catalog-profi
 import {
   buildAttributeRows,
   buildContactRows,
+  buildHeroLinkPills,
   buildLinkRows,
   buildPublicCatalogProfileViewModel,
 } from "@/lib/public-catalog-profile-view-model";
@@ -81,6 +82,32 @@ describe("buildPublicCatalogProfileViewModel — hero", () => {
     expect(labels).toContain("Yönetilen Profil");
     expect(labels).toContain("Doğrulanmış Profil");
     expect(labels).not.toContain("Sahiplenilebilir Profil");
+  });
+
+  it("maps opt-in attributes to hero badges and keeps them out of the grid", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        attributes: [
+          { key: "job_seeking_opt_in", label: "İş Arıyorum", dataType: "boolean", sortOrder: 1, valueText: null, valueJson: true },
+          { key: "volunteer_mentorship_opt_in", label: "Gönüllü Mentörlük", dataType: "boolean", sortOrder: 2, valueText: "true", valueJson: null },
+          { key: "moving_soon_opt_in", label: "Yakında Taşınacağım", dataType: "boolean", sortOrder: 3, valueText: null, valueJson: false },
+          { key: "expertise_area", label: "Uzmanlık", dataType: "text", sortOrder: 4, valueText: "Genel Tıp", valueJson: null },
+        ],
+      }),
+    );
+    const labels = vm.hero.badges.map((badge) => badge.label);
+    expect(labels).toContain("İş Arıyorum");
+    expect(labels).toContain("Gönüllü Mentör");
+    expect(labels).not.toContain("Yakında Taşınacak");
+
+    const gridSection = vm.mainSections.find((section) => section.componentKey === "attributes");
+    const rowKeys = (gridSection?.content.rows as Array<{ key: string }>).map((row) => row.key);
+    expect(rowKeys).toEqual(["expertise_area"]);
+  });
+
+  it("exposes the headline as a tagline pill", () => {
+    const vm = buildPublicCatalogProfileViewModel(makePayload());
+    expect(vm.hero.tagline).toBe("Genel Tıp");
   });
 
   it("accent is deterministic per role", () => {
@@ -208,6 +235,65 @@ describe("buildPublicCatalogProfileViewModel — quick actions ve claim", () => 
     );
     expect(vm.claim.canClaim).toBe(false);
     expect(vm.claim.isManaged).toBe(true);
+  });
+});
+
+describe("buildHeroLinkPills", () => {
+  it("merges links, social contacts and social url attributes with dedupe", () => {
+    const pills = buildHeroLinkPills(
+      makePayload({
+        links: [
+          { type: "linkedin", label: "LinkedIn", url: "https://www.linkedin.com/in/demo", isPrimary: false },
+        ],
+        contacts: [
+          { type: "instagram", value: "https://www.instagram.com/demo", label: null, isPrimary: false },
+          { type: "phone", value: "+49 231", label: null, isPrimary: true },
+        ],
+        attributes: [
+          { key: "linkedin_url", label: "LinkedIn", dataType: "url", sortOrder: 1, valueText: "https://www.linkedin.com/in/demo", valueJson: null },
+          { key: "website_url", label: "Website", dataType: "url", sortOrder: 2, valueText: "https://demo.example.com", valueJson: null },
+          { key: "x_url", label: "X", dataType: "url", sortOrder: 3, valueText: "javascript:alert(1)", valueJson: null },
+        ],
+      }),
+    );
+
+    expect(pills.map((pill) => pill.label)).toEqual(["LinkedIn", "Instagram", "Website"]);
+  });
+
+  it("keeps social attributes out of the attribute grid and drops link sections when pills exist", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        links: [
+          { type: "website", label: "Website", url: "https://demo.example.com", isPrimary: false },
+        ],
+        attributes: [
+          { key: "instagram_url", label: "Instagram", dataType: "url", sortOrder: 1, valueText: "https://www.instagram.com/demo", valueJson: null },
+          { key: "expertise_area", label: "Uzmanlık", dataType: "text", sortOrder: 2, valueText: "Genel Tıp", valueJson: null },
+        ],
+      }),
+    );
+
+    expect(vm.hero.linkPills.map((pill) => pill.label)).toEqual(["Website", "Instagram"]);
+    const gridSection = vm.mainSections.find((section) => section.componentKey === "attributes");
+    const rowKeys = (gridSection?.content.rows as Array<{ key: string }>).map((row) => row.key);
+    expect(rowKeys).toEqual(["expertise_area"]);
+    expect(
+      [...vm.mainSections, ...vm.sidebarSections].some((section) => section.componentKey === "links"),
+    ).toBe(false);
+  });
+
+  it("excludes social contact types from the derived contact list", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        contacts: [
+          { type: "phone", value: "+49 231 818 687", label: null, isPrimary: true },
+          { type: "instagram", value: "https://www.instagram.com/demo", label: null, isPrimary: false },
+        ],
+      }),
+    );
+    const contactSection = vm.sidebarSections.find((section) => section.componentKey === "contact_list");
+    const types = (contactSection?.content.contacts as Array<{ type: string }>).map((row) => row.type);
+    expect(types).toEqual(["phone"]);
   });
 });
 
