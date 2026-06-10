@@ -63,14 +63,14 @@ const HeroSection = () => {
             }}
           >
             <div className="flex max-w-[36rem] flex-col justify-center rounded-[2rem] border border-white/80 bg-[linear-gradient(90deg,rgba(255,255,255,0.96)_0%,rgba(255,255,255,0.93)_38%,rgba(255,255,255,0.82)_62%,rgba(255,255,255,0.58)_82%,rgba(255,255,255,0.18)_100%)] p-4 shadow-[0_20px_55px_-36px_rgba(15,23,42,0.32)] backdrop-blur-xl sm:p-5 lg:max-w-[34rem] lg:px-6 2xl:max-w-[38rem]">
-              <div className="mb-3 flex flex-col items-start gap-3 md:flex-row md:items-center">
-                <img src={heroLogo} alt="CorteQS Logo" className="w-full max-w-[152px] shrink-0 md:max-w-[176px]" />
+              <div className="mb-3 flex flex-col items-center gap-3 text-center md:flex-row md:items-center md:text-left">
+                <img src={heroLogo} alt="CorteQS Logo" className="mx-auto w-full max-w-[152px] shrink-0 md:mx-0 md:max-w-[176px]" />
                 <h1 className="text-2xl font-extrabold leading-[0.95] text-foreground md:text-4xl 2xl:text-[2.75rem]">
                   Dünyadaki Türkleri Bir Araya Getiren{" "}
                   <span className="text-accent">Platform</span>
                 </h1>
               </div>
-              <p className="hero-description mb-5 max-w-lg text-[12px] leading-relaxed text-muted-foreground md:text-[13px] 2xl:max-w-xl 2xl:text-[14px]">
+              <p className="hero-description mb-5 max-w-lg text-center text-[12px] leading-relaxed text-muted-foreground md:text-left md:text-[13px] 2xl:max-w-xl 2xl:text-[14px]">
                 Dünyanın farklı yerlerinde yaşayan Türkleri sosyal ve ekonomik olarak birbirine bağlıyoruz.
                 <br />
                 <strong>Ücretsiz kayıt ol! Ağını genişlet! Bağlan, keşfet, birlikte büyü!</strong>

@@ -133,7 +133,7 @@ const GlobalNetworkShowcaseSection = () => {
                 return (
                   <article
                     key={`reference-card-${card.title}`}
-                    className="group flex min-h-[232px] flex-col overflow-hidden rounded-[1.35rem] border border-slate-200/90 bg-white shadow-[0_12px_28px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(15,23,42,0.09)] sm:min-h-[248px]"
+                    className="group flex flex-row items-center overflow-hidden rounded-[1.35rem] border border-slate-200/90 bg-white shadow-[0_12px_28px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(15,23,42,0.09)] sm:min-h-[248px] sm:flex-col sm:items-stretch"
                   >
                     <div className="relative hidden h-24 overflow-hidden sm:block sm:h-28 xl:h-24 2xl:h-28">
                       <img
@@ -144,19 +144,19 @@ const GlobalNetworkShowcaseSection = () => {
                       <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_48%,rgba(255,255,255,0.14)_100%)]" />
                     </div>
 
-                    <div className="flex flex-1 flex-col px-4 py-4 text-center sm:pb-4 sm:pt-5 2xl:px-5">
-                      <div className="flex min-h-[4.3rem] flex-col items-center justify-start gap-1.5 sm:min-h-[5.1rem] sm:gap-2">
+                    <div className="flex flex-1 flex-row items-center gap-3 px-4 py-3 text-left sm:flex-col sm:gap-0 sm:py-4 sm:text-center sm:pb-4 sm:pt-5 2xl:px-5">
+                      <div className="flex shrink-0 flex-row items-center gap-3 sm:min-h-[5.1rem] sm:flex-col sm:justify-start sm:gap-2">
                         <div className={`shrink-0 rounded-full bg-gradient-to-br p-2.5 text-white shadow-[0_12px_24px_rgba(15,23,42,0.14)] ${card.accent}`}>
                           <Icon className="h-4.5 w-4.5" />
                         </div>
-                        <h4 className={`text-center text-[0.72rem] font-bold leading-[1.08] tracking-[-0.04em] xl:text-[0.76rem] 2xl:text-[0.84rem] ${card.text}`}>
+                        <h4 className={`text-left text-[0.85rem] font-bold leading-[1.08] tracking-[-0.04em] sm:text-center sm:text-[0.72rem] xl:text-[0.76rem] 2xl:text-[0.84rem] ${card.text}`}>
                           {card.title}
                         </h4>
                       </div>
-                      <p className="mt-2 flex-1 text-center text-[0.8rem] leading-5 text-slate-600 sm:min-h-[6.4rem] sm:text-[0.76rem] 2xl:text-[0.8rem]">
+                      <p className="flex-1 text-left text-[0.78rem] leading-5 text-slate-600 sm:mt-2 sm:min-h-[6.4rem] sm:text-center sm:text-[0.76rem] 2xl:text-[0.8rem]">
                         {card.description}
                       </p>
-                      <div className={`mx-auto mt-3 h-1 w-8 rounded-full sm:mt-4 ${card.line}`} />
+                      <div className={`hidden h-1 w-8 rounded-full sm:mx-auto sm:mt-4 sm:block ${card.line}`} />
                     </div>
                   </article>
                 );
@@ -165,15 +165,15 @@ const GlobalNetworkShowcaseSection = () => {
 
             <div className="mt-5 overflow-hidden rounded-[1.6rem] border border-slate-200/80 bg-white shadow-[0_16px_38px_rgba(15,23,42,0.06)]">
               <div className="grid grid-cols-2 gap-0 md:grid-cols-2 xl:grid-cols-[1.55fr_repeat(8,minmax(0,1fr))]">
-                <div className="col-span-2 flex min-h-[168px] items-start gap-4 border-b border-slate-200/80 px-6 py-5 xl:col-span-1 xl:min-h-[156px] xl:border-r xl:border-b-0">
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(244,247,255,0.95))] shadow-[0_16px_30px_rgba(15,23,42,0.08)]">
-                    <img src={logo} alt="CorteQS" className="h-16 w-16 object-contain" />
+                <div className="col-span-2 flex min-h-[96px] items-center gap-3 border-b border-slate-200/80 px-4 py-3 sm:min-h-[168px] sm:items-start sm:gap-4 sm:px-6 sm:py-5 xl:col-span-1 xl:min-h-[156px] xl:border-r xl:border-b-0">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(244,247,255,0.95))] shadow-[0_16px_30px_rgba(15,23,42,0.08)] sm:h-16 sm:w-16">
+                    <img src={logo} alt="CorteQS" className="h-12 w-12 object-contain sm:h-16 sm:w-16" />
                   </div>
-                  <div className="flex min-h-[118px] flex-col justify-between pt-1">
-                    <p className="text-[1.8rem] font-black leading-none tracking-[-0.04em] text-slate-900">
+                  <div className="flex flex-col justify-between gap-1 sm:min-h-[118px] sm:gap-0 sm:pt-1">
+                    <p className="text-[1.35rem] font-black leading-none tracking-[-0.04em] text-slate-900 sm:text-[1.8rem]">
                       CorteQS
                     </p>
-                    <p className="max-w-[14rem] text-[0.86rem] font-semibold leading-5.5 tracking-[-0.03em] text-slate-800">
+                    <p className="max-w-[14rem] text-[0.78rem] font-semibold leading-5 tracking-[-0.03em] text-slate-800 sm:text-[0.86rem] sm:leading-5.5">
                       Yurt Dışında Yaşayan Türklerin Sistemi
                     </p>
                   </div>
@@ -185,13 +185,13 @@ const GlobalNetworkShowcaseSection = () => {
                   return (
                     <div
                       key={`reference-${item.label}`}
-                      className="flex min-h-[168px] items-start justify-center border-b border-r border-slate-200/80 px-4 py-5 text-center even:border-r-0 last:border-b-0 xl:min-h-[156px] xl:border-b-0 xl:border-r xl:last:border-r-0"
+                      className="flex min-h-[96px] items-start justify-center border-b border-r border-slate-200/80 px-2 py-3 text-center even:border-r-0 last:border-b-0 sm:min-h-[168px] sm:px-4 sm:py-5 xl:min-h-[156px] xl:border-b-0 xl:border-r xl:last:border-r-0"
                     >
-                      <div className="flex min-h-[118px] w-full flex-col items-center justify-between">
-                        <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-[0_10px_28px_rgba(15,23,42,0.08)] ring-1 ${item.ring}`}>
-                          <Icon className={`h-8 w-8 ${item.color}`} />
+                      <div className="flex w-full flex-col items-center justify-between gap-1.5 sm:min-h-[118px] sm:gap-0">
+                        <div className={`mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-[0_10px_28px_rgba(15,23,42,0.08)] ring-1 sm:h-16 sm:w-16 ${item.ring}`}>
+                          <Icon className={`h-5 w-5 sm:h-8 sm:w-8 ${item.color}`} />
                         </div>
-                        <p className="flex min-h-[68px] items-start justify-center whitespace-pre-line text-[0.78rem] font-semibold leading-[1.4] tracking-[-0.02em] text-slate-800 xl:text-[0.8rem]">
+                        <p className="flex items-start justify-center whitespace-pre-line text-[0.68rem] font-semibold leading-[1.3] tracking-[-0.02em] text-slate-800 sm:min-h-[68px] sm:text-[0.78rem] sm:leading-[1.4] xl:text-[0.8rem]">
                           {item.label}
                         </p>
                       </div>

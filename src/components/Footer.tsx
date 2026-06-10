@@ -63,7 +63,7 @@ const socialLinks = [
 
 const Footer = () => {
   return (
-    <footer className="relative isolate overflow-hidden px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+    <footer className="relative isolate overflow-hidden px-4 py-8 sm:px-6 sm:py-14 lg:px-8 lg:py-20">
       <video
         className="absolute inset-0 h-full w-full object-cover"
         autoPlay
@@ -81,10 +81,10 @@ const Footer = () => {
 
       <div className="container relative z-10 mx-auto max-w-6xl">
         <div className="mx-auto max-w-5xl rounded-[2rem] border border-white/15 bg-black/25 px-5 py-8 text-center shadow-[0_36px_120px_-42px_rgba(0,0,0,0.55)] backdrop-blur-xl sm:px-8 lg:px-12 lg:py-10">
-          <div className="mx-auto mb-10 max-w-4xl py-2">
-            <p className="mb-5 text-sm font-medium tracking-[0.08em] text-white">İletişim Kanallarımız</p>
-            <div className="overflow-x-auto px-1 py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <div className="mx-auto flex min-w-max items-center justify-center gap-3 px-1 py-1 sm:gap-4">
+          <div className="mx-auto mb-6 max-w-4xl py-1 sm:mb-10 sm:py-2">
+            <p className="mb-3 text-sm font-medium tracking-[0.08em] text-white sm:mb-5">İletişim Kanallarımız</p>
+            <div className="overflow-x-auto px-1 py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:py-3">
+              <div className="mx-auto flex min-w-max items-center justify-center gap-2 px-1 py-1 sm:gap-4">
                 {socialLinks.map(({ href, label, icon: Icon, className }) => (
                   <a
                     key={label}
@@ -93,10 +93,10 @@ const Footer = () => {
                     rel="noopener noreferrer"
                     aria-label={`CorteQS ${label}`}
                     title={label}
-                    className={`group relative inline-flex h-16 w-16 items-center justify-center rounded-full border border-white/25 bg-white/8 text-[#29d3c3] shadow-[0_18px_40px_-24px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-white/40 hover:bg-white/12 sm:h-20 sm:w-20 ${className}`}
+                    className={`group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-white/8 text-[#29d3c3] shadow-[0_18px_40px_-24px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-white/40 hover:bg-white/12 sm:h-20 sm:w-20 ${className}`}
                   >
                     <span className="absolute inset-1 rounded-full border border-white/10 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.12),transparent_58%)]" />
-                    <Icon className="relative z-10 h-7 w-7 transition-transform duration-300 group-hover:scale-110 sm:h-8 sm:w-8" />
+                    <Icon className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:scale-110 sm:h-8 sm:w-8" />
                     <span className="sr-only">{label}</span>
                   </a>
                 ))}
