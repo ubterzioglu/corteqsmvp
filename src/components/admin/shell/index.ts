@@ -6,3 +6,4 @@ export { default as AdminSidebar } from "./AdminSidebar";
 export { default as AdminMobileSidebar } from "./AdminMobileSidebar";
 export { default as AdminTopbar } from "./AdminTopbar";
 export { default as AdminBreadcrumbs } from "./AdminBreadcrumbs";
+export { default as AdminCommandPalette } from "./AdminCommandPalette";

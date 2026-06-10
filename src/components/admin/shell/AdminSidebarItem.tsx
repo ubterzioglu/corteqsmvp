@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { ChevronDown, ExternalLink as ExternalLinkIcon } from "lucide-react";
+import { ChevronDown, ExternalLink as ExternalLinkIcon, Star } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import {
@@ -16,19 +16,26 @@ import type { AdminNavItem } from "@/lib/admin-shell/admin-shell-types";
 
 import { accentActiveItemClasses, accentIconClasses } from "./admin-accent";
 
+export type AdminSidebarFavorites = {
+  isFavorite: (id: string) => boolean;
+  toggleFavorite: (id: string) => void;
+};
+
 type AdminSidebarItemProps = {
   item: AdminNavItem;
   collapsed?: boolean;
   depth?: number;
   /** Mobil Sheet'te tıklamada drawer'ı kapatmak için. */
   onNavigate?: () => void;
+  /** Verilirse item üzerinde favori yıldız toggle'ı gösterilir. */
+  favorites?: AdminSidebarFavorites;
 };
 
 const baseItemClasses =
   "flex w-full items-center gap-2.5 rounded-md border-l-2 border-l-transparent px-2.5 py-2 text-sm transition-colors";
 const idleItemClasses = "text-muted-foreground hover:bg-muted hover:text-foreground";
 
-const AdminSidebarItem = ({ item, collapsed = false, depth = 0, onNavigate }: AdminSidebarItemProps) => {
+const AdminSidebarItem = ({ item, collapsed = false, depth = 0, onNavigate, favorites }: AdminSidebarItemProps) => {
   const location = useLocation();
   const childActive = isNavItemOrChildActive(item, location.pathname);
   const selfActive = isNavItemActive(item, location.pathname);
@@ -110,7 +117,13 @@ const AdminSidebarItem = ({ item, collapsed = false, depth = 0, onNavigate }: Ad
         {open && (
           <div className="mt-0.5 space-y-0.5 pl-4">
             {children.map((child) => (
-              <AdminSidebarItem key={child.id} item={child} depth={depth + 1} onNavigate={onNavigate} />
+              <AdminSidebarItem
+                key={child.id}
+                item={child}
+                depth={depth + 1}
+                onNavigate={onNavigate}
+                favorites={favorites}
+              />
             ))}
           </div>
         )}
@@ -120,7 +133,7 @@ const AdminSidebarItem = ({ item, collapsed = false, depth = 0, onNavigate }: Ad
 
   if (!item.to) return null;
 
-  return (
+  const navLink = (
     <NavLink
       to={item.to}
       end={item.to === "/admin"}
@@ -130,12 +143,37 @@ const AdminSidebarItem = ({ item, collapsed = false, depth = 0, onNavigate }: Ad
       className={cn(
         baseItemClasses,
         collapsed && "justify-center px-0",
+        !collapsed && favorites && "pr-8",
         selfActive ? accentActiveItemClasses[item.accent] : idleItemClasses,
       )}
     >
       {iconElement}
       {label}
     </NavLink>
+  );
+
+  if (collapsed || !favorites) return navLink;
+
+  const favorite = favorites.isFavorite(item.id);
+
+  return (
+    <div className="group/fav relative">
+      {navLink}
+      <button
+        type="button"
+        onClick={() => favorites.toggleFavorite(item.id)}
+        aria-label={favorite ? `${item.label} favorilerden çıkar` : `${item.label} favorilere ekle`}
+        aria-pressed={favorite}
+        className={cn(
+          "absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-0.5 transition-opacity hover:text-amber-500 focus-visible:opacity-100",
+          favorite
+            ? "text-amber-500 opacity-100"
+            : "text-muted-foreground opacity-0 group-hover/fav:opacity-100",
+        )}
+      >
+        <Star aria-hidden="true" className={cn("h-3.5 w-3.5", favorite && "fill-amber-400 text-amber-400")} />
+      </button>
+    </div>
   );
 };
 

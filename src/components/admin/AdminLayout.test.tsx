@@ -1,7 +1,7 @@
 // Admin Panel V2 shell testleri — compatibility wrapper (AdminLayout)
 // üzerinden yeni registry tabanlı sidebar/topbar deneyimini doğrular.
 
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -149,6 +149,61 @@ describe("AdminLayout (Admin Panel V2 shell)", () => {
 
     expect(window.localStorage.getItem("corteqs.admin.sidebar.collapsed.v1")).toBe("true");
     expect(screen.getByRole("button", { name: "Menüyü genişlet" })).toBeInTheDocument();
+  });
+
+  it("Ctrl+K command palette'i açar ve alias ile bulur", async () => {
+    renderAdminLayout("/admin");
+    await screen.findByText("Admin Home Content");
+
+    fireEvent.keyDown(window, { key: "k", ctrlKey: true });
+
+    const dialog = await screen.findByRole("dialog");
+    const input = within(dialog).getByPlaceholderText(/Ekran ara/);
+    fireEvent.change(input, { target: { value: "override" } });
+
+    expect(await within(dialog).findByText("Feature Override")).toBeInTheDocument();
+    expect(within(dialog).queryByText("Haber Bandı")).not.toBeInTheDocument();
+  });
+
+  it("Cmd+K ile açılan palette'ten Enter seçimi route'a gider", async () => {
+    renderAdminLayout("/admin");
+    await screen.findByText("Admin Home Content");
+
+    fireEvent.keyDown(window, { key: "k", metaKey: true });
+
+    const dialog = await screen.findByRole("dialog");
+    const input = within(dialog).getByPlaceholderText(/Ekran ara/);
+    fireEvent.change(input, { target: { value: "anket" } });
+    await within(dialog).findByText("Anketler");
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    await waitFor(() => {
+      expect(screen.getByText("Surveys Content")).toBeInTheDocument();
+    });
+  });
+
+  it("sidebar yıldızı favorilere ekler, Favoriler bölümü belirir ve persist eder", async () => {
+    renderAdminLayout("/admin");
+    await screen.findByText("Admin Home Content");
+
+    fireEvent.click(screen.getByRole("button", { name: "Approval Queue favorilere ekle" }));
+
+    expect(JSON.parse(window.localStorage.getItem("corteqs.admin.favorite-pages.v1")!)).toEqual([
+      "approvals",
+    ]);
+    expect(screen.getByText("Favoriler")).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "Approval Queue" })).toHaveLength(2);
+
+    fireEvent.click(screen.getByRole("button", { name: "Approval Queue favorilerden çıkar" }));
+    expect(JSON.parse(window.localStorage.getItem("corteqs.admin.favorite-pages.v1")!)).toEqual([]);
+  });
+
+  it("route ziyaretleri son kullanılanlara kaydedilir", async () => {
+    renderAdminLayout("/admin/data");
+    await screen.findByText("Unified Data Content");
+
+    const stored = JSON.parse(window.localStorage.getItem("corteqs.admin.recent-pages.v1")!);
+    expect(stored[0]).toEqual({ path: "/admin/data", label: "Kayıt Veritabanı" });
   });
 
   it("kullanıcı menüsü e-posta ve çıkış aksiyonunu içerir", async () => {

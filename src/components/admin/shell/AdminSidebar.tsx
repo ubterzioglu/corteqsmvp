@@ -7,6 +7,7 @@ import { ChevronDown, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { adminNavGroups } from "@/lib/admin-shell/admin-navigation-registry";
+import type { AdminFavoritesState } from "@/hooks/admin/useAdminFavorites";
 
 import AdminSidebarGroup from "./AdminSidebarGroup";
 import AdminSidebarItem from "./AdminSidebarItem";
@@ -16,13 +17,14 @@ const logo = "/newlogo.png";
 type AdminSidebarProps = {
   collapsed: boolean;
   onToggleCollapsed: () => void;
+  favorites: AdminFavoritesState;
 };
 
 const inactiveItems = adminNavGroups.flatMap((group) =>
   group.items.filter((item) => item.isInactive),
 );
 
-const AdminSidebar = ({ collapsed, onToggleCollapsed }: AdminSidebarProps) => {
+const AdminSidebar = ({ collapsed, onToggleCollapsed, favorites }: AdminSidebarProps) => {
   const [inactiveOpen, setInactiveOpen] = useState(false);
 
   return (
@@ -52,8 +54,21 @@ const AdminSidebar = ({ collapsed, onToggleCollapsed }: AdminSidebarProps) => {
       </div>
 
       <nav className={cn("flex-1 space-y-3 overflow-y-auto px-3 py-3", collapsed && "px-2")}>
+        {!collapsed && favorites.favoriteEntries.length > 0 && (
+          <div>
+            <div className="px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80">
+              Favoriler
+            </div>
+            <div className="mt-0.5 space-y-0.5">
+              {favorites.favoriteEntries.map((entry) => (
+                <AdminSidebarItem key={`fav-${entry.item.id}`} item={entry.item} favorites={favorites} />
+              ))}
+            </div>
+          </div>
+        )}
+
         {adminNavGroups.map((group) => (
-          <AdminSidebarGroup key={group.id} group={group} collapsed={collapsed} />
+          <AdminSidebarGroup key={group.id} group={group} collapsed={collapsed} favorites={favorites} />
         ))}
 
         {inactiveItems.length > 0 && !collapsed && (

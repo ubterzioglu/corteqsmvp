@@ -12,14 +12,16 @@ import { isNavItemOrChildActive } from "@/lib/admin-shell/admin-navigation-utils
 import type { AdminNavGroup } from "@/lib/admin-shell/admin-shell-types";
 
 import AdminSidebarItem from "./AdminSidebarItem";
+import type { AdminSidebarFavorites } from "./AdminSidebarItem";
 
 type AdminSidebarGroupProps = {
   group: AdminNavGroup;
   collapsed?: boolean;
   onNavigate?: () => void;
+  favorites?: AdminSidebarFavorites;
 };
 
-const AdminSidebarGroup = ({ group, collapsed = false, onNavigate }: AdminSidebarGroupProps) => {
+const AdminSidebarGroup = ({ group, collapsed = false, onNavigate, favorites }: AdminSidebarGroupProps) => {
   const location = useLocation();
   const visibleItems = group.items.filter((item) => !item.isInactive);
   const containsActive = visibleItems.some((item) => isNavItemOrChildActive(item, location.pathname));
@@ -58,7 +60,7 @@ const AdminSidebarGroup = ({ group, collapsed = false, onNavigate }: AdminSideba
       {open && (
         <div className="mt-0.5 space-y-0.5">
           {visibleItems.map((item) => (
-            <AdminSidebarItem key={item.id} item={item} onNavigate={onNavigate} />
+            <AdminSidebarItem key={item.id} item={item} onNavigate={onNavigate} favorites={favorites} />
           ))}
         </div>
       )}

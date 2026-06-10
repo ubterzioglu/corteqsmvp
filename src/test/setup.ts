@@ -29,3 +29,9 @@ Object.defineProperty(globalThis, "ResizeObserver", {
   writable: true,
   value: ResizeObserverMock,
 });
+
+// jsdom scrollIntoView implement etmez; cmdk (command palette) seçili
+// item'ı görünür kılmak için çağırır.
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = () => {};
+}
