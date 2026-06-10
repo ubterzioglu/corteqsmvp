@@ -1,7 +1,7 @@
 # Admin Panel V2 — İlerleme ve Devir Notu (Handoff)
 
 **Tarih:** 2026-06-10
-**Durum:** Faz 0–5 TAMAMLANDI · Sıradaki: Faz 6 (ortak page shell)
+**Durum:** Faz 0–6 TAMAMLANDI · Sıradaki: Faz 7 (admin route modülerizasyonu)
 **Masterplan:** `docs/plans/2026-06-10-admin-panel-v2-masterplan.md` (kökteki `CORTEQS_ADMIN_PANEL_V2_MASTERPLAN.md` ile aynı)
 **Baseline raporu:** `docs/plans/admin-v2/00-baseline-report.md`
 
@@ -86,17 +86,45 @@ bölümlerini oku.
 - **SİLİNDİ:** `src/pages/admin/AdminHomePage.tsx` + testi + `src/components/admin/admin-navigation.ts`.
 - `src/App.admin-route.test.tsx` artık `@/pages/admin/dashboard/AdminDashboardPage`'i mock'lar.
 
+### Faz 6 — Ortak page shell ✅ (`src/components/admin/page/`)
+| Dosya | İçerik |
+|---|---|
+| `AdminPageShell.tsx` | §9.1 props: `title, description?, eyebrow?, icon?, accent?, breadcrumbs?, actions?, stats?, filters?, aside?, children, contentWidth?` (wide/default/narrow). Breadcrumb normalde topbar'da; prop sadece sayfa içi ek zincir için |
+| `AdminPageHeader.tsx` | eyebrow + accent ikonlu h1 + açıklama + sağda actions |
+| `AdminFilterBar.tsx` | filtre konteyneri; `onReset` verilirse "Filtreleri sıfırla" butonu |
+| `AdminStatsGrid.tsx` | responsive grid (columns 2–5); içerik children |
+| `AdminEmptyState.tsx` / `AdminLoadingState.tsx` / `AdminErrorState.tsx` | boş/skeleton/hata durumları (role=status/alert, retry butonu) |
+| `AdminDetailDrawer.tsx` | Sheet sarmalayıcı (sağ drawer; title/description/footer) |
+| `AdminStatusBadge.tsx` | semantik rozet (`tone`: success/warning/danger/info/pending/neutral) + `statusToTone()` helper |
+| `index.ts` | barrel |
+| `AdminPageShell.test.tsx` | 10 test (shell slotları, breadcrumb, aside, filterbar reset, empty/loading/error, badge, drawer) |
+
+- `admin-accent.ts`'e `accentSoftBadgeClasses` eklendi (header ikon kutusu).
+- **Geçirilen 6 sayfa** (işlevsel davranış değişmedi; başlık/filtre/empty-state shell'e taşındı):
+  `AdminApprovalsPage` (sky/ClipboardList), `AdminAuditLogsPage` (sky/ScrollText),
+  `AdminUserOverridesPage` (sky/SlidersHorizontal), `AdminDurumRaporuPage` (emerald/ShieldCheck,
+  Yenile butonu actions slotunda), `AdminRoleManagementPage` (emerald/Shield, filtreler
+  AdminFilterBar'da, sticky legend children'da), `AdminCatalogPage` (sky/Database,
+  `contentWidth="wide"`, minimal sarmalama — iç yapı korundu).
+- **Bug fix:** `AdminApprovalsPage`'de commit'li **duplicate `AdminPageLayout` import**u
+  (derleme kırıcı, paralel oturum kalıntısı) temizlendi.
+- Dokunulan sayfalardaki 5 pre-existing `no-explicit-any` satırı tiplenerek temizlendi
+  (davranış değişmedi).
+- `AdminPageLayout.tsx` compatibility olarak duruyor — **34 sayfa hâlâ kullanıyor** (plan gereği;
+  yeni sayfalar AdminPageShell kullanmalı).
+
 ---
 
-## 2. Son Doğrulama Durumu (Faz 5 sonu)
+## 2. Son Doğrulama Durumu (Faz 6 sonu)
 
 ```text
 verify:text  ✅ (lint/test/build pre-hook'u olarak otomatik koşar)
-lint         ✅ yeni dosyalar 0 hata (genel: 452 pre-existing error, kapsam dışı)
-tsc          ✅ admin-shell / hooks/admin / shell / dashboard dosyalarında 0 hata
-             (genel tsc'de types.ts kaynaklı ~164 pre-existing hata var — B1, kapsam dışı)
-test         ✅ 451/451 (95 dosya)
-build        ✅ exit 0
+lint         ✅ yeni + dokunulan dosyalar 0 hata/uyarı (genel pre-existing sayı ~447'ye
+             düştü — dokunulan sayfalardaki 5 any tiplenip temizlendi)
+tsc          ✅ admin-shell / hooks/admin / shell / page / dashboard / geçirilen 6 sayfada
+             0 hata (genel tsc'de types.ts kaynaklı ~164 pre-existing hata — B1, kapsam dışı)
+test         ✅ 461/461 (96 dosya) — +10 page shell testi
+build        ✅ exit 0 (vite-plugin-image-optimizer'ın svgo uyarısı pre-existing, fail değil)
 ```
 
 ---
@@ -141,27 +169,17 @@ build        ✅ exit 0
 
 ---
 
-## 5. Sıradaki İş: Faz 6 — Ortak Page Shell (masterplan §9 + §17/Faz 6)
+## 5. Sıradaki İş: Faz 7 — Admin route modülerizasyonu (masterplan §17/Faz 7)
 
-Yeni dizin: `src/components/admin/page/`
+Yeni dosya: `src/pages/admin/routes.tsx`
 
-1. `AdminPageShell.tsx` — props (§9.1): `title, description?, eyebrow?, icon?, accent?,
-   breadcrumbs?, actions?, stats?, filters?, aside?, children, contentWidth?`.
-2. Alt bileşenler (§9.2): `AdminPageHeader`, `AdminFilterBar`, `AdminStatsGrid`,
-   `AdminEmptyState`, `AdminLoadingState`, `AdminErrorState`, `AdminDetailDrawer`,
-   `AdminStatusBadge` + `index.ts` barrel.
-3. Öncelikli sayfa geçişleri (sıra masterplan §13.4):
-   `AdminApprovalsPage` → `AdminAuditLogsPage` → `AdminUserOverridesPage` →
-   `AdminDurumRaporuPage` → `AdminRoleManagementPage` → `AdminCatalogPage`
-   (hepsi `src/pages/admin/`). Sayfa bazlı UX hedefleri masterplan §14'te.
-4. `AdminPageLayout.tsx` (eski ortak layout) compatibility olarak kalabilir; yeni
-   sayfalar `AdminPageShell` kullanır.
-5. Kabul: başlık/açıklama/action/filter/empty/loading/error davranışları tutarlı;
-   işlevsel davranış DEĞİŞMEZ.
+1. Admin lazy importlarını + `/admin` route ağacını App.tsx'ten çıkar,
+   `{adminRoutes}` ile bağla (muhasebe `routes.tsx` örnek; path'ler birebir korunur).
+2. Redirect'leri koru; muhasebeRoutes entegrasyonunu koru.
+3. Kabul: tüm eski URL'ler aynı sonucu verir (`ADMIN_ROUTE_PATTERNS` testleri tutmalı).
+4. DİKKAT: App.tsx paralel oturumlarca değişiyor — düzenlemeden hemen önce yeniden oku.
 
 ### Sonraki fazlar
-- **Faz 7:** `src/pages/admin/routes.tsx` — admin lazy importları + route ağacı App.tsx'ten
-  çıkar, `{adminRoutes}` ile bağla (muhasebe `routes.tsx` örnek; path'ler birebir korunur).
 - **Faz 8:** Approvals/AuditLogs/Overrides/RoleMatrix API + React Query hook'ları
   (`adminQueryKeys`'i genişlet; mutation sonrası invalidation).
 - **Faz 9:** cleanup (dead import), Playwright smoke (senaryolar §19.2: E2E-ADMIN-001…014),
@@ -190,5 +208,6 @@ src/hooks/admin/useAdminSidebarState.test.ts            collapse persist (5)
 src/hooks/admin/useAdminFavorites.test.ts               favoriler (5)
 src/hooks/admin/useAdminRecentPages.test.ts             recents (5)
 src/pages/admin/dashboard/AdminDashboardPage.test.tsx   dashboard (8)
+src/components/admin/page/AdminPageShell.test.tsx       page shell bileşenleri (10)
 src/App.admin-route.test.tsx                            /admin index route (1)
 ```

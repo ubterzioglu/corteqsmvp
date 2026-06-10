@@ -1,6 +1,7 @@
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, MapPin, Search, ShieldCheck, SlidersHorizontal, UserRound } from "lucide-react";
+import { ChevronLeft, ChevronRight, Database, MapPin, Search, ShieldCheck, SlidersHorizontal, UserRound } from "lucide-react";
 
+import { AdminPageShell } from "@/components/admin/page";
 import CatalogClaimRequestsPanel from "@/components/admin/catalog/CatalogClaimRequestsPanel";
 import CatalogEntityProfilePanel from "@/components/admin/catalog/CatalogEntityProfilePanel";
 import CatalogItemEditorsPanel from "@/components/admin/catalog/CatalogItemEditorsPanel";
@@ -395,7 +396,13 @@ const AdminCatalogPage = () => {
     }
   };
   return (
-    <>
+    <AdminPageShell
+      title="Kayıt Veritabanı"
+      description="Tüm katalog ve profil kayıtları; kullanıcı rol atama buradan yapılır."
+      icon={Database}
+      accent="sky"
+      contentWidth="wide"
+    >
       <div className="space-y-6">
         <Collapsible defaultOpen={false}>
           <Card className="border-slate-200 bg-white shadow-[0_18px_55px_-42px_rgba(15,23,42,0.24)]">
@@ -767,7 +774,7 @@ const AdminCatalogPage = () => {
           ) : null}
         </SheetContent>
       </Sheet>
-    </>
+    </AdminPageShell>
   );
 };
 

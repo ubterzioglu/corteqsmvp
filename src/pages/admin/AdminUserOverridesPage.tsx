@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
+import { SlidersHorizontal } from "lucide-react";
 
 import AdminPageGuideAccordion, { type AdminPageGuideSection } from "@/components/admin/AdminPageGuideAccordion";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AdminEmptyState, AdminPageShell, AdminStatusBadge } from "@/components/admin/page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -210,17 +210,17 @@ const AdminUserOverridesPage = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <AdminPageShell
+      title="User Feature Overrides"
+      description="Kullanıcı bazlı feature açma/kapatma, sebep yazma ve override kaldırma."
+      icon={SlidersHorizontal}
+      accent="sky"
+    >
       <AdminPageGuideAccordion
         summary="Rol varsayımını ezerek tek kullanıcı seviyesinde feature açıp kapatmak ve istisna kayıtları izlemek için bu ekranı kullan."
         sections={guideSections}
       />
-      <Card>
-        <CardHeader>
-          <CardTitle>User Feature Overrides</CardTitle>
-          <CardDescription>Kullanıcı bazlı feature açma/kapatma, sebep yazma ve override kaldırma.</CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-6 xl:grid-cols-[420px_1fr]">
+      <div className="grid gap-6 rounded-2xl border border-border bg-card p-4 xl:grid-cols-[420px_1fr]">
           <div className="space-y-3 rounded-xl border p-4">
             <Select value={selectedUserId} onValueChange={setSelectedUserId}>
               <SelectTrigger>
@@ -279,9 +279,9 @@ const AdminUserOverridesPage = () => {
                         <p className="mt-1 text-sm text-muted-foreground">Sebep: {override.reason ?? "-"}</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="rounded border px-2 py-1 text-xs">
+                        <AdminStatusBadge tone={override.is_enabled ? "success" : "neutral"}>
                           {override.is_enabled ? "Override Açık" : "Override Kapalı"}
-                        </span>
+                        </AdminStatusBadge>
                         <Button size="sm" variant="outline" onClick={() => void handleClearOverride(override)}>
                           Kaldır
                         </Button>
@@ -292,13 +292,16 @@ const AdminUserOverridesPage = () => {
               })}
 
               {filteredOverrides.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Henüz override kaydı bulunmuyor.</p>
+                <AdminEmptyState
+                  icon={SlidersHorizontal}
+                  title="Override kaydı yok"
+                  description="Henüz override kaydı bulunmuyor."
+                />
               ) : null}
             </div>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+      </div>
+    </AdminPageShell>
   );
 };
 

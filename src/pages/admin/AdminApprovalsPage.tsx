@@ -1,8 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
+import { ClipboardList } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
+import {
+  AdminEmptyState,
+  AdminFilterBar,
+  AdminPageShell,
+  AdminStatusBadge,
+  statusToTone,
+} from "@/components/admin/page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -74,7 +79,7 @@ const AdminApprovalsPage = () => {
       }
 
       // Fetch full_name attributes for all users in parallel
-      const userIds = (usersResult.data ?? []).map((u: any) => u.user_id);
+      const userIds = ((usersResult.data ?? []) as Array<{ user_id: string }>).map((u) => u.user_id);
       const attrsResult = userIds.length > 0
         ? await supabase
             .from("user_profile_attributes")
@@ -84,12 +89,12 @@ const AdminApprovalsPage = () => {
         : { data: [] };
 
       const nameByUser: Record<string, string | null> = {};
-      for (const row of (attrsResult.data ?? []) as any[]) {
+      for (const row of (attrsResult.data ?? []) as Array<{ user_id: string; value_text: string | null }>) {
         nameByUser[row.user_id] = row.value_text ?? null;
       }
 
-      const enrichedUsers: UserRow[] = (usersResult.data ?? []).map((u: any) => ({
-        user_id: u.user_id,
+      const enrichedUsers: UserRow[] = userIds.map((userId) => ({
+        user_id: userId,
         email: null,
         full_name: nameByUser[u.user_id] ?? null,
       }));
@@ -141,14 +146,14 @@ const AdminApprovalsPage = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Approval Queue</CardTitle>
-          <CardDescription>Bekleyen, onaylanan ve reddedilen talepleri tek ekranda filtreleyip yönet.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="max-w-sm">
+    <AdminPageShell
+      title="Approval Queue"
+      description="Bekleyen, onaylanan ve reddedilen talepleri tek ekranda filtreleyip yönet."
+      icon={ClipboardList}
+      accent="sky"
+      filters={
+        <AdminFilterBar>
+          <div className="w-full max-w-sm">
             <Select value={filterType} onValueChange={(value) => setFilterType(value as (typeof FILTER_OPTIONS)[number]["value"])}>
               <SelectTrigger>
                 <SelectValue placeholder="Talep türü filtrele" />
@@ -162,64 +167,68 @@ const AdminApprovalsPage = () => {
               </SelectContent>
             </Select>
           </div>
-
-          <div className="space-y-3">
-            {filteredRequests.map((request) => {
-              const user = users.find((item) => item.user_id === request.user_id);
-              const isProcessing = processingId === request.id;
-              return (
-                <div key={request.id} className="rounded-xl border p-4">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <p className="font-medium">{request.request_type}</p>
-                      <p className="text-xs text-muted-foreground">{user?.full_name ?? user?.email ?? request.user_id}</p>
-                      <p className="text-xs text-muted-foreground">{new Date(request.created_at).toLocaleString("tr-TR")}</p>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        Hedef rol: {request.target_role_key ?? "-"} • Feature: {request.target_feature_key ?? "-"}
-                      </p>
-                      <pre className="mt-2 overflow-x-auto rounded-lg bg-muted p-3 text-xs">
-                        {JSON.stringify(request.payload ?? {}, null, 2)}
-                      </pre>
-                    </div>
-                    <div className="min-w-[280px] space-y-2">
-                      <span className="rounded border px-2 py-1 text-xs">{request.status}</span>
-                      <Input
-                        value={decisionNotes[request.id] ?? request.admin_note ?? ""}
-                        onChange={(event) =>
-                          setDecisionNotes((current) => ({ ...current, [request.id]: event.target.value }))
-                        }
-                        placeholder="Admin notu"
-                      />
-                      <div className="flex gap-2">
-                        <Button
-                          className="flex-1"
-                          disabled={request.status !== "pending" || isProcessing}
-                          onClick={() => void handleDecision(request, "approved")}
-                        >
-                          {isProcessing ? "İşleniyor..." : "Onayla"}
-                        </Button>
-                        <Button
-                          className="flex-1"
-                          variant="outline"
-                          disabled={request.status !== "pending" || isProcessing}
-                          onClick={() => void handleDecision(request, "rejected")}
-                        >
-                          Reddet
-                        </Button>
-                      </div>
-                    </div>
+        </AdminFilterBar>
+      }
+    >
+      <div className="space-y-3">
+        {filteredRequests.map((request) => {
+          const user = users.find((item) => item.user_id === request.user_id);
+          const isProcessing = processingId === request.id;
+          return (
+            <div key={request.id} className="rounded-xl border p-4">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="font-medium">{request.request_type}</p>
+                  <p className="text-xs text-muted-foreground">{user?.full_name ?? user?.email ?? request.user_id}</p>
+                  <p className="text-xs text-muted-foreground">{new Date(request.created_at).toLocaleString("tr-TR")}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Hedef rol: {request.target_role_key ?? "-"} • Feature: {request.target_feature_key ?? "-"}
+                  </p>
+                  <pre className="mt-2 overflow-x-auto rounded-lg bg-muted p-3 text-xs">
+                    {JSON.stringify(request.payload ?? {}, null, 2)}
+                  </pre>
+                </div>
+                <div className="min-w-[280px] space-y-2">
+                  <AdminStatusBadge tone={statusToTone(request.status)}>{request.status}</AdminStatusBadge>
+                  <Input
+                    value={decisionNotes[request.id] ?? request.admin_note ?? ""}
+                    onChange={(event) =>
+                      setDecisionNotes((current) => ({ ...current, [request.id]: event.target.value }))
+                    }
+                    placeholder="Admin notu"
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      className="flex-1"
+                      disabled={request.status !== "pending" || isProcessing}
+                      onClick={() => void handleDecision(request, "approved")}
+                    >
+                      {isProcessing ? "İşleniyor..." : "Onayla"}
+                    </Button>
+                    <Button
+                      className="flex-1"
+                      variant="outline"
+                      disabled={request.status !== "pending" || isProcessing}
+                      onClick={() => void handleDecision(request, "rejected")}
+                    >
+                      Reddet
+                    </Button>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            </div>
+          );
+        })}
 
-            {filteredRequests.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Filtreye uygun approval request bulunamadı.</p>
-            ) : null}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+        {filteredRequests.length === 0 ? (
+          <AdminEmptyState
+            icon={ClipboardList}
+            title="Approval request bulunamadı"
+            description="Filtreye uygun approval request bulunamadı."
+          />
+        ) : null}
+      </div>
+    </AdminPageShell>
   );
 };
 

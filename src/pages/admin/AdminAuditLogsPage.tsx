@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import { ScrollText } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
+import { AdminEmptyState, AdminFilterBar, AdminPageShell } from "@/components/admin/page";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
@@ -58,7 +58,7 @@ const AdminAuditLogsPage = () => {
         return;
       }
 
-      const userIds = (usersResult.data ?? []).map((u: any) => u.user_id);
+      const userIds = ((usersResult.data ?? []) as Array<{ user_id: string }>).map((u) => u.user_id);
       const attrsResult = userIds.length > 0
         ? await supabase
             .from("user_profile_attributes")
@@ -68,7 +68,7 @@ const AdminAuditLogsPage = () => {
         : { data: [] };
 
       const nameByUser: Record<string, string | null> = {};
-      for (const row of (attrsResult.data ?? []) as any[]) {
+      for (const row of (attrsResult.data ?? []) as Array<{ user_id: string; value_text: string | null }>) {
         nameByUser[row.user_id] = row.value_text ?? null;
       }
 
@@ -110,84 +110,86 @@ const AdminAuditLogsPage = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Audit Logs</CardTitle>
-          <CardDescription>Admin işlemlerinin önce/sonra değerlerini filtreleyerek incele.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid gap-3 xl:grid-cols-4">
-            <Input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Action / entity ara" />
-            <Select value={actionFilter} onValueChange={setActionFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Action filtrele" />
-              </SelectTrigger>
-              <SelectContent>
-                {actionOptions.map((action) => (
-                  <SelectItem key={action} value={action}>
-                    {action === "all" ? "Tüm action'lar" : action}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={actorFilter} onValueChange={setActorFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Actor filtrele" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tüm actor'lar</SelectItem>
-                {users.map((user) => (
-                  <SelectItem key={user.user_id} value={user.user_id}>
-                    {user.full_name ?? user.email ?? user.user_id}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={targetFilter} onValueChange={setTargetFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Target user filtrele" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tüm target user'lar</SelectItem>
-                {users.map((user) => (
-                  <SelectItem key={user.user_id} value={user.user_id}>
-                    {user.full_name ?? user.email ?? user.user_id}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-3">
-            {filteredLogs.map((log) => (
-              <div key={log.id} className="rounded-xl border p-4">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <p className="font-medium">{log.action}</p>
-                    <p className="text-xs text-muted-foreground">Actor: {resolveUserLabel(log.actor_user_id)}</p>
-                    <p className="text-xs text-muted-foreground">Target: {resolveUserLabel(log.target_user_id)}</p>
-                    <p className="text-xs text-muted-foreground">{new Date(log.created_at).toLocaleString("tr-TR")}</p>
-                  </div>
-                  <div className="grid flex-1 gap-3 md:grid-cols-2">
-                    <pre className="overflow-x-auto rounded-lg bg-muted p-3 text-xs">
-                      {JSON.stringify(log.before_value ?? {}, null, 2)}
-                    </pre>
-                    <pre className="overflow-x-auto rounded-lg bg-muted p-3 text-xs">
-                      {JSON.stringify(log.after_value ?? {}, null, 2)}
-                    </pre>
-                  </div>
-                </div>
+    <AdminPageShell
+      title="Audit Logs"
+      description="Admin işlemlerinin önce/sonra değerlerini filtreleyerek incele."
+      icon={ScrollText}
+      accent="sky"
+      filters={
+        <AdminFilterBar className="grid gap-3 xl:grid-cols-4">
+          <Input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Action / entity ara" />
+          <Select value={actionFilter} onValueChange={setActionFilter}>
+            <SelectTrigger>
+              <SelectValue placeholder="Action filtrele" />
+            </SelectTrigger>
+            <SelectContent>
+              {actionOptions.map((action) => (
+                <SelectItem key={action} value={action}>
+                  {action === "all" ? "Tüm action'lar" : action}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={actorFilter} onValueChange={setActorFilter}>
+            <SelectTrigger>
+              <SelectValue placeholder="Actor filtrele" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tüm actor'lar</SelectItem>
+              {users.map((user) => (
+                <SelectItem key={user.user_id} value={user.user_id}>
+                  {user.full_name ?? user.email ?? user.user_id}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={targetFilter} onValueChange={setTargetFilter}>
+            <SelectTrigger>
+              <SelectValue placeholder="Target user filtrele" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tüm target user'lar</SelectItem>
+              {users.map((user) => (
+                <SelectItem key={user.user_id} value={user.user_id}>
+                  {user.full_name ?? user.email ?? user.user_id}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </AdminFilterBar>
+      }
+    >
+      <div className="space-y-3">
+        {filteredLogs.map((log) => (
+          <div key={log.id} className="rounded-xl border p-4">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="font-medium">{log.action}</p>
+                <p className="text-xs text-muted-foreground">Actor: {resolveUserLabel(log.actor_user_id)}</p>
+                <p className="text-xs text-muted-foreground">Target: {resolveUserLabel(log.target_user_id)}</p>
+                <p className="text-xs text-muted-foreground">{new Date(log.created_at).toLocaleString("tr-TR")}</p>
               </div>
-            ))}
-
-            {filteredLogs.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Filtreye uygun audit log bulunamadı.</p>
-            ) : null}
+              <div className="grid flex-1 gap-3 md:grid-cols-2">
+                <pre className="overflow-x-auto rounded-lg bg-muted p-3 text-xs">
+                  {JSON.stringify(log.before_value ?? {}, null, 2)}
+                </pre>
+                <pre className="overflow-x-auto rounded-lg bg-muted p-3 text-xs">
+                  {JSON.stringify(log.after_value ?? {}, null, 2)}
+                </pre>
+              </div>
+            </div>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+        ))}
+
+        {filteredLogs.length === 0 ? (
+          <AdminEmptyState
+            icon={ScrollText}
+            title="Audit log bulunamadı"
+            description="Filtreye uygun audit log bulunamadı."
+          />
+        ) : null}
+      </div>
+    </AdminPageShell>
   );
 };
 

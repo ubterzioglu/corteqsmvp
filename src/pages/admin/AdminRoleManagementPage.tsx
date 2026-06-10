@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Shield } from "lucide-react";
+import { AdminFilterBar, AdminLoadingState, AdminPageShell } from "@/components/admin/page";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { getRoleManagementBundle, type RoleManagementBundle } from "@/lib/admin";
@@ -130,7 +129,33 @@ const AdminRoleManagementPage = () => {
   const visibleRows = filterCatalogRows(catalogRows, { search, kind: kindFilter });
 
   return (
-    <AdminPageLayout>
+    <AdminPageShell
+      title="Rol Yönetimi"
+      description="Rol seçmeden tüm attribute, feature ve profil bölümlerini görüntüle. Rol seçince aynı tabloda düzenleme yapabilirsin."
+      icon={Shield}
+      accent="emerald"
+      filters={
+        <AdminFilterBar onReset={clearSelections} resetLabel="Seçimi temizle">
+          <RoleSearchSelect
+            roles={roles}
+            value={selectedRoleKey}
+            onValueChange={setSelectedRoleKey}
+            disabled={loadingRoles}
+            placeholder={loadingRoles ? "Roller yükleniyor..." : "Rol seç (isteğe bağlı)…"}
+            className="h-11 w-full md:w-[240px] lg:w-[280px]"
+          />
+          <EntityTypeFilter
+            search={search}
+            onSearchChange={setSearch}
+            kind={kindFilter}
+            onKindChange={setKindFilter}
+            className="flex-col gap-2 md:w-auto md:flex-row md:items-center md:flex-nowrap"
+            searchClassName="h-11 w-full max-w-none text-sm md:w-[260px] lg:w-[320px]"
+            triggerClassName="h-11 w-full text-sm md:w-[140px] lg:w-[160px]"
+          />
+        </AdminFilterBar>
+      }
+    >
       <div className="sticky top-14 z-20 -mx-4 mb-4 border-b border-border/60 bg-background/95 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-background/85 sm:-mx-6 sm:px-6">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
           <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Kısaltmalar</span>
@@ -159,57 +184,25 @@ const AdminRoleManagementPage = () => {
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Rol Yönetimi</CardTitle>
-          <CardDescription>
-            Rol seçmeden tüm attribute, feature ve profil bölümlerini görüntüle. Rol seçince
-            aynı tabloda düzenleme yapabilirsin.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex flex-col gap-2 md:flex-row md:items-center md:flex-nowrap">
-            <RoleSearchSelect
-              roles={roles}
-              value={selectedRoleKey}
-              onValueChange={setSelectedRoleKey}
-              disabled={loadingRoles}
-              placeholder={loadingRoles ? "Roller yükleniyor..." : "Rol seç (isteğe bağlı)…"}
-              className="h-11 w-full md:w-[240px] lg:w-[280px]"
-            />
-            <EntityTypeFilter
-              search={search}
-              onSearchChange={setSearch}
-              kind={kindFilter}
-              onKindChange={setKindFilter}
-              className="flex-col gap-2 md:w-auto md:flex-row md:items-center md:flex-nowrap"
-              searchClassName="h-11 w-full max-w-none text-sm md:w-[260px] lg:w-[320px]"
-              triggerClassName="h-11 w-full text-sm md:w-[140px] lg:w-[160px]"
-            />
-            <Button type="button" variant="outline" className="h-11 md:ml-auto" onClick={clearSelections}>
-              Seçimi temizle
-            </Button>
-          </div>
+      <div className="space-y-4">
+        {selectedRoleKey && loadingBundle && (
+          <p className="text-xs text-muted-foreground">Rol verisi yükleniyor...</p>
+        )}
+        {bundleError && (
+          <p className="text-sm text-destructive">Rol yüklenemedi: {bundleError}</p>
+        )}
 
-          {selectedRoleKey && loadingBundle && (
-            <p className="text-xs text-muted-foreground">Rol verisi yükleniyor...</p>
-          )}
-          {bundleError && (
-            <p className="text-sm text-destructive">Rol yüklenemedi: {bundleError}</p>
-          )}
-
-          {loadingCatalog ? (
-            <p className="text-sm text-muted-foreground">Katalog yükleniyor...</p>
-          ) : (
-            <UnifiedRulesTable
-              rows={visibleRows}
-              bundle={(!loadingBundle && bundle) ? bundle : null}
-              onBundleChange={handleBundleChange}
-            />
-          )}
-        </CardContent>
-      </Card>
-    </AdminPageLayout>
+        {loadingCatalog ? (
+          <AdminLoadingState label="Katalog yükleniyor..." />
+        ) : (
+          <UnifiedRulesTable
+            rows={visibleRows}
+            bundle={(!loadingBundle && bundle) ? bundle : null}
+            onBundleChange={handleBundleChange}
+          />
+        )}
+      </div>
+    </AdminPageShell>
   );
 };
 

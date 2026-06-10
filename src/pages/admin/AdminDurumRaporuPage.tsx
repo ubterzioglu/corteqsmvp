@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
+import { AdminPageShell, AdminStatsGrid } from "@/components/admin/page";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -149,30 +150,19 @@ const AdminDurumRaporuPage = () => {
     report.old_table_names_remaining === 0;
 
   return (
-    <AdminPageLayout>
+    <AdminPageShell
+      title="Catalog / Flat-Role / AFS Rebuild — Durum Raporu"
+      description="Rol ailesi sistemi kaldırıldı; tekil flat roller + AFS (Attributes / Features / Sections) mimarisi canlıda. Aşağıdaki metrikler veritabanından gerçek zamanlı çekilir."
+      icon={ShieldCheck}
+      accent="emerald"
+      actions={
+        <Button type="button" variant="outline" onClick={() => void load()} disabled={loading}>
+          {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+          Yenile
+        </Button>
+      }
+    >
       <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h1 className="flex items-center gap-2 text-2xl font-bold">
-              <ShieldCheck className="h-6 w-6 text-emerald-500" />
-              Catalog / Flat-Role / AFS Rebuild — Durum Raporu
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Rol ailesi sistemi kaldırıldı; tekil flat roller + AFS (Attributes / Features / Sections)
-              mimarisi canlıda. Aşağıdaki metrikler veritabanından gerçek zamanlı çekilir.
-            </p>
-          </div>
-          <button
-            onClick={() => void load()}
-            disabled={loading}
-            className="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium hover:bg-accent disabled:opacity-50"
-          >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-            Yenile
-          </button>
-        </div>
-
         {/* Overall status banner */}
         {report && (
           <Card className={allGreen ? "border-emerald-500/40 bg-emerald-500/5" : "border-amber-500/40 bg-amber-500/5"}>
@@ -203,7 +193,7 @@ const AdminDurumRaporuPage = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            <AdminStatsGrid columns={4}>
               <MetricCard label="Flat Rol" value={report?.roles_total} target={TARGETS.roles_total} />
               <MetricCard label="Legacy Rol (0 olmalı)" value={report?.legacy_roles} target={0} />
               <MetricCard label="AFS Attribute" value={report?.afs_attributes} target={TARGETS.afs_attributes} />
@@ -218,7 +208,7 @@ const AdminDurumRaporuPage = () => {
               <MetricCard label="Rol-Section Bağlantısı" value={report?.role_sections} />
               <MetricCard label="Toplam Item" value={report?.catalog_items_total} />
               <MetricCard label="Item-Rol Bağlantısı" value={report?.item_role_links} />
-            </div>
+            </AdminStatsGrid>
           </CardContent>
         </Card>
 
@@ -274,7 +264,7 @@ const AdminDurumRaporuPage = () => {
           </CardContent>
         </Card>
       </div>
-    </AdminPageLayout>
+    </AdminPageShell>
   );
 };
 
