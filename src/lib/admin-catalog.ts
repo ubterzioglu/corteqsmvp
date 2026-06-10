@@ -205,7 +205,10 @@ const ADMIN_CATALOG_SELECT = [
   "visibility",
   "verification_status",
   "attributes",
-  "created_by_user_id",
+  // Column was renamed catalog_items.created_by_user_id -> created_by in the
+  // 2026-06-09 rebuild (migration 002). PostgREST 400s on the old name; alias it
+  // back so the returned JSON key (and RawCatalogRow/mapCatalogRow) stay stable.
+  "created_by_user_id:created_by",
   "platform_role_key",
   "created_at",
   "updated_at",

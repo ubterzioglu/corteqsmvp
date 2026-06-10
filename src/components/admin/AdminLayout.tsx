@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { Link, NavLink, Outlet, useLocation, useNavigate, useOutletContext } from "react-router-dom";
-import { Bell, Check, ChevronDown, CircleHelp, Menu } from "lucide-react";
+import { Bell, Check, ChevronDown, CircleHelp, Heart, Lightbulb, Link2, Menu } from "lucide-react";
 const logo = "/newlogo.png";
 
 import { Button } from "@/components/ui/button";
@@ -98,8 +98,8 @@ const AdminLayout = () => {
   const [adminPanelMenuOpen, setAdminPanelMenuOpen] = useState(false);
   const [updatesMenuOpen, setUpdatesMenuOpen] = useState(false);
   const inactiveNavItems = [
-    { to: "/admin/may19/ani", label: "19 Mayıs Anı" },
-    { to: "/admin/may19/kelime", label: "19 Mayıs Fikir" },
+    { to: "/admin/may19/ani", label: "19 Mayıs Anı", icon: Heart },
+    { to: "/admin/may19/kelime", label: "19 Mayıs Fikir", icon: Lightbulb },
   ] as const;
 
   const syncSession = useCallback(async (nextSession: Session | null) => {
@@ -396,7 +396,10 @@ const AdminLayout = () => {
                               isNewMemberGuideItem(item.to) ? "text-[#C5221F]" : ""
                             }`}
                           >
-                            <span>{item.label}</span>
+                            <span className="inline-flex items-center gap-2">
+                              <item.icon className="h-4 w-4" />
+                              {item.label}
+                            </span>
                             {isActive ? (
                               <Check className={`h-4 w-4 ${isNewMemberGuideItem(item.to) ? "text-[#C5221F]" : "text-primary"}`} />
                             ) : null}
@@ -444,7 +447,10 @@ const AdminLayout = () => {
                       return (
                         <DropdownMenuItem key={item.to} asChild>
                           <Link to={item.to} className="flex items-center justify-between gap-3">
-                            <span>{item.label}</span>
+                            <span className="inline-flex items-center gap-2">
+                              <item.icon className="h-4 w-4" />
+                              {item.label}
+                            </span>
                             {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
                           </Link>
                         </DropdownMenuItem>
@@ -523,7 +529,10 @@ const AdminLayout = () => {
                       return (
                         <DropdownMenuItem key={item.to} asChild>
                           <Link to={item.to} className="flex items-center justify-between gap-3">
-                            <span>{item.label}</span>
+                            <span className="inline-flex items-center gap-2">
+                              <item.icon className="h-4 w-4" />
+                              {item.label}
+                            </span>
                             {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
                           </Link>
                         </DropdownMenuItem>
@@ -538,7 +547,10 @@ const AdminLayout = () => {
                           return (
                             <DropdownMenuItem key={item.to} asChild>
                               <Link to={item.to} className="flex items-center justify-between gap-3">
-                                <span>{item.label}</span>
+                                <span className="inline-flex items-center gap-2">
+                                  <item.icon className="h-4 w-4" />
+                                  {item.label}
+                                </span>
                                 {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
                               </Link>
                             </DropdownMenuItem>
@@ -556,7 +568,10 @@ const AdminLayout = () => {
                           return (
                             <DropdownMenuItem key={section.key} asChild>
                               <Link to={href} className="flex items-center justify-between gap-3">
-                                <span>{section.label}</span>
+                                <span className="inline-flex items-center gap-2">
+                                  <Link2 className="h-4 w-4" />
+                                  {section.label}
+                                </span>
                                 {isActive ? <Check className="h-4 w-4 text-primary" /> : null}
                               </Link>
                             </DropdownMenuItem>
@@ -593,7 +608,10 @@ const AdminLayout = () => {
                     {headerWorkspaceNavItems.map((item) => (
                       <DropdownMenuItem key={item.key} asChild>
                         <Link to={item.to} className="flex items-center justify-between gap-3">
-                          <span>{item.label}</span>
+                          <span className="inline-flex items-center gap-2">
+                            <item.icon className="h-4 w-4" />
+                            {item.label}
+                          </span>
                           {location.pathname === item.to ? <Check className="h-4 w-4 text-primary" /> : null}
                         </Link>
                       </DropdownMenuItem>
@@ -604,7 +622,10 @@ const AdminLayout = () => {
                         {adminPanelDocNavItems.map((item) => (
                           <DropdownMenuItem key={item.key} asChild>
                             <Link to={item.to} className="flex items-center justify-between gap-3">
-                              <span>{item.label}</span>
+                              <span className="inline-flex items-center gap-2">
+                                <item.icon className="h-4 w-4" />
+                                {item.label}
+                              </span>
                               {location.pathname === item.to ? <Check className="h-4 w-4 text-primary" /> : null}
                             </Link>
                           </DropdownMenuItem>

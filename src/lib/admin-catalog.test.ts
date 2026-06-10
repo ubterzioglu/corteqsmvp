@@ -1,17 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { rpcMock } = vi.hoisted(() => ({
+const { rpcMock, fromMock } = vi.hoisted(() => ({
   rpcMock: vi.fn(),
+  fromMock: vi.fn(),
 }));
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     rpc: rpcMock,
-    from: vi.fn(),
+    from: fromMock,
   },
 }));
 
 import {
+  getAdminCatalogItemDetail,
   listAdminUnifiedRecords,
   listCatalogClaims,
   removeCatalogItemAttributeOverride,
@@ -22,6 +24,46 @@ import {
 describe("admin-catalog rpc wrappers", () => {
   beforeEach(() => {
     rpcMock.mockReset();
+    fromMock.mockReset();
+  });
+
+  it("selects the renamed created_by column (regression: PostgREST 400)", async () => {
+    // catalog_items.created_by_user_id was renamed to created_by in the
+    // 2026-06-09 rebuild. Selecting the old name returns a 400 and breaks the
+    // catalog detail sheet ("Katalog detayı yüklenemedi").
+    const singleMock = vi.fn().mockResolvedValue({
+      data: {
+        id: "item-1",
+        item_type: "organization",
+        slug: "berlin-dernegi",
+        title: "Berlin Derneği",
+        status: "published",
+        visibility: "public",
+        verification_status: "official_source",
+        attributes: {},
+        created_by_user_id: "user-9",
+        platform_role_key: "Organization_Association",
+        created_at: "2026-06-04T10:00:00.000Z",
+        updated_at: "2026-06-04T10:15:00.000Z",
+        catalog_item_categories: [],
+        catalog_item_locations: [],
+        catalog_item_media: [],
+        source_records: [],
+      },
+      error: null,
+    });
+    const eqMock = vi.fn().mockReturnValue({ single: singleMock });
+    const selectMock = vi.fn().mockReturnValue({ eq: eqMock });
+    fromMock.mockReturnValue({ select: selectMock });
+
+    const detail = await getAdminCatalogItemDetail("item-1");
+
+    expect(fromMock).toHaveBeenCalledWith("catalog_items");
+    const selectArg = selectMock.mock.calls[0][0] as string;
+    // Must alias the real column and never request the dropped name bare.
+    expect(selectArg).toContain("created_by_user_id:created_by");
+    expect(selectArg).not.toMatch(/(^|,)created_by_user_id(,|$)/);
+    expect(detail.createdByUserId).toBe("user-9");
   });
 
   it("maps unified records and total count", async () => {
