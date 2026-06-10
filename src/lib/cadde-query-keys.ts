@@ -5,6 +5,7 @@ import type { CaddeFilterState } from "./cadde-types";
 
 export const caddeQueryKeys = {
   all: ["cadde"] as const,
+  actorContext: ["cadde", "actor-context"] as const,
   countries: () => ["cadde", "countries"] as const,
   cities: (country: string) => ["cadde", "cities", country] as const,
   feedRoot: ["cadde", "feed"] as const,

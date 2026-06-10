@@ -30,7 +30,10 @@
 - **Durum:** Bugün `/cadde` zaten `RequireAuth` arkasında; anonim hiç giremiyor.
 - **Öneri:** MVP'de login zorunlu kalsın (mevcut davranış). Landing/demo ihtiyacı ayrı bir public demo görünümle çözülür. RLS public-read'leri Faz 2'de "authenticated"e daraltılır.
 
-### D-03 — Telefon doğrulama truth source 🔴 (Faz 2 blokeri)
+### D-03 — Telefon doğrulama truth source ✅ KARAR VERİLDİ (2026-06-10: stub)
+> **Karar:** "Şimdilik ertele (stub)" seçildi. `user_verifications` + RPC + gate altyapısı kuruldu
+> (mig `20260610180000-183000`); telefon zorunluluğu `cadde_settings.cadde.phone_verification_required = false`
+> ile KAPALI. SMS sağlayıcı seçilince yalnız OTP Edge Function'ları eklenir ve flag `true` yapılır.
 - **Durum (kanıtlı):** Truth source YOK — `phone_verified=true` 0 kullanıcı, `auth.users.phone_confirmed_at` 0, OTP function'ları repoda yok, PhoneVerification.tsx dead+bozuk.
 - **Karar gerekli:** SMS/OTP sağlayıcısı (Twilio / Vonage / Supabase Auth phone provider / e-posta-fallback'li demo). Maliyet + KVKK değerlendirmesi ürün sorumlusunda.
 - **Teknik plan (sağlayıcıdan bağımsız):** `public.user_verifications(user_id pk, phone_e164, phone_verified_at, phone_country_code, updated_at)` — private tablo, RLS kapalı dışa, okuma yalnız `get_cadde_actor_context()` RPC'sinden boolean olarak. `send-phone-otp`/`verify-phone-otp` Edge Function'ları yeniden yazılır. Raw `phone` attribute'u asla doğrulama sayılmaz; `phone_verified` AFS attribute'u görüntü/uyumluluk amaçlı kalabilir ama karar mercii `user_verifications`'tır.
@@ -93,7 +96,7 @@
 |---|---|---|---|
 | D-01 | Çıfıt/Tanıtım adı | 🟡 öneri: UI "Tanıtım" | Faz 6 öncesi |
 | D-02 | Anonim erişim | 🟡 öneri: login zorunlu | Faz 2 |
-| D-03 | SMS/OTP sağlayıcı | 🔴 **bloklayıcı** | Faz 2 başlamadan |
+| D-03 | SMS/OTP sağlayıcı | ✅ stub (flag kapalı); sağlayıcı seçimi açık | Altyapı kuruldu (Faz 2) |
 | D-04 | cadde↔geo konsolidasyon | 🟡 P1 sync planı | Faz 3 |
 | D-05 | Legacy backfill | ✅ gerekmez | Faz 9 basitleşti |
 | D-06 | Cafe limitleri | 🟡 RPC'de, trigger'sız | Faz 4 |

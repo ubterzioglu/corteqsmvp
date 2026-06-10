@@ -23,6 +23,7 @@ import {
   resolveCityIdByName,
   resolveCountryIdByName,
 } from "./cadde-internal";
+import { resolveCaddeRpcErrorMessage } from "./cadde-rules";
 import {
   caddeCafeJoinSchema,
   caddeCommentCreateSchema,
@@ -371,23 +372,23 @@ export async function getCaddeSponsoredPlacement(filters: CaddeFilterState): Pro
   }
 }
 
-export async function createCaddePost(input: CaddePostInput, userId: string): Promise<void> {
+/**
+ * Post oluşturma artık security-definer RPC üzerinden yapılır (Faz 2);
+ * profil kapısı, Köprü ve TR kapsam kuralları DB'de enforce edilir.
+ * Direct insert RLS'de kapalıdır.
+ */
+export async function createCaddePost(input: CaddePostInput): Promise<string> {
   const parsed = parseWithUserError(caddePostCreateSchema, input);
-  const countryId = await resolveCountryIdByName(parsed.countryId ?? "");
-  const cityId = await resolveCityIdByName(parsed.cityId ?? "", countryId);
-  const payload = {
-    author_user_id: userId,
-    content_mode: "real" as const,
-    status: "published" as const,
-    post_type: parsed.type,
-    title: parsed.title?.trim() || null,
-    body: parsed.body,
-    country_id: countryId,
-    city_id: cityId,
-    is_bridge: parsed.isBridge,
-  };
-  const { error } = await db.from("cadde_posts").insert(payload);
-  if (error) throw error;
+  const { data, error } = await db.rpc("create_cadde_post_v1", {
+    p_post_type: parsed.type,
+    p_title: parsed.title?.trim() || null,
+    p_body: parsed.body,
+    p_country: parsed.countryId ?? "",
+    p_city: parsed.cityId ?? "",
+    p_is_bridge: parsed.isBridge,
+  });
+  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  return data as string;
 }
 
 export async function toggleCaddeReaction(postId: string, userId: string, reactionType: CaddeReactionType, currentlyActive: boolean): Promise<void> {

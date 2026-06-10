@@ -4,6 +4,7 @@
 // Bu dosya yalnız mevcut importları kırmamak için durur; Faz 2 sonunda silinecek.
 
 export * from "./cadde-types";
+export * from "./cadde-rules";
 export * from "./cadde-format";
 export * from "./cadde-schemas";
 export * from "./cadde-api";

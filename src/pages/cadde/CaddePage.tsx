@@ -4,6 +4,8 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Clock3, Flame, Globe2, MapPin, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
+import CaddeProfileGate from "@/components/cadde/CaddeProfileGate";
+import { useCaddeActorContext } from "@/hooks/cadde/useCaddeActorContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -85,6 +87,7 @@ const CaddePage = () => {
   const [composer, setComposer] = useState(emptyComposer);
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const filters = useMemo(() => parseCaddeFilters(searchParams), [searchParams]);
+  const actorContextQuery = useCaddeActorContext(Boolean(session));
 
   useEffect(() => {
     const previousTitle = document.title;
@@ -137,17 +140,14 @@ const CaddePage = () => {
     mutationFn: async () => {
       if (!user) throw new Error("Bu işlem için giriş yapın.");
       if (!composer.body.trim()) throw new Error("Paylaşım metni zorunlu.");
-      await createCaddePost(
-        {
-          type: composer.type,
-          title: composer.title,
-          body: composer.body,
-          countryId: filters.country,
-          cityId: filters.city,
-          isBridge: filters.bridge,
-        },
-        user.id,
-      );
+      await createCaddePost({
+        type: composer.type,
+        title: composer.title,
+        body: composer.body,
+        countryId: filters.country,
+        cityId: filters.city,
+        isBridge: filters.bridge,
+      });
     },
     onSuccess: async () => {
       setComposer(emptyComposer);
@@ -227,6 +227,7 @@ const CaddePage = () => {
   }, [filters.country, filters.city]);
 
   return (
+    <CaddeProfileGate context={actorContextQuery.data} isLoading={actorContextQuery.isLoading}>
     <main className="cadde-shell min-h-screen bg-[linear-gradient(180deg,#fffdf8_0%,#fff7ec_22%,#f6f8fb_100%)]">
       <section className="border-b border-orange-100/80 bg-white/80 backdrop-blur">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-6 lg:px-6">
@@ -633,6 +634,7 @@ const CaddePage = () => {
         </aside>
       </section>
     </main>
+    </CaddeProfileGate>
   );
 };
 
