@@ -1,113 +1,46 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Shield } from "lucide-react";
-import { AdminFilterBar, AdminLoadingState, AdminPageShell } from "@/components/admin/page";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { getRoleManagementBundle, type RoleManagementBundle } from "@/lib/admin";
-import RoleSearchSelect, { type RoleOption } from "@/components/admin/RoleSearchSelect";
+import {
+  AdminErrorState,
+  AdminFilterBar,
+  AdminLoadingState,
+  AdminPageShell,
+} from "@/components/admin/page";
+import { useAdminRoleMatrix } from "@/hooks/admin/useAdminRoleMatrix";
+import type { RoleManagementBundle } from "@/lib/admin";
+import RoleSearchSelect from "@/components/admin/RoleSearchSelect";
 import EntityTypeFilter from "@/components/admin/role-management/EntityTypeFilter";
 import UnifiedRulesTable from "@/components/admin/role-management/UnifiedRulesTable";
-import { fetchCatalogRows, filterCatalogRows, type CatalogRow, type EntityKind } from "@/lib/role-catalog";
+import { filterCatalogRows, type EntityKind } from "@/lib/role-catalog";
 
 const AdminRoleManagementPage = () => {
-  const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [roles, setRoles] = useState<RoleOption[]>([]);
   const [selectedRoleKey, setSelectedRoleKey] = useState<string>(
     searchParams.get("role") ?? "",
   );
-  const [catalogRows, setCatalogRows] = useState<CatalogRow[]>([]);
-  const [bundle, setBundle] = useState<RoleManagementBundle | null>(null);
-  const [loadingRoles, setLoadingRoles] = useState(true);
-  const [loadingCatalog, setLoadingCatalog] = useState(true);
-  const [loadingBundle, setLoadingBundle] = useState(false);
-  const [bundleError, setBundleError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [kindFilter, setKindFilter] = useState<EntityKind | "all">("all");
 
-  // Load roles list
+  const { rolesQuery, catalogQuery, bundleQuery } = useAdminRoleMatrix(selectedRoleKey);
+
+  // Bundle, UnifiedRulesTable tarafından lokal olarak düzenlenir; query verisi
+  // geldiğinde (veya rol temizlendiğinde) lokal kopya senkronlanır.
+  const [bundle, setBundle] = useState<RoleManagementBundle | null>(null);
   useEffect(() => {
-    let isMounted = true;
-    void (async () => {
-      const { data, error } = await supabase
-        .from("roles")
-        .select("key, label")
-        .eq("is_active", true)
-        .order("sort_order");
+    setBundle(bundleQuery.data ?? null);
+  }, [bundleQuery.data]);
 
-      if (!isMounted) return;
-      if (error) {
-        toast({ title: "Roller yüklenemedi", description: error.message, variant: "destructive" });
-        setLoadingRoles(false);
-        return;
-      }
-      setRoles(
-        ((data ?? []) as Array<{ key: string; label: string }>).map((role) => ({
-          value: role.key,
-          label: role.label,
-          hint: role.key,
-        })),
-      );
-      setLoadingRoles(false);
-    })();
-    return () => { isMounted = false; };
-  }, [toast]);
-
-  // Load full entity catalog on mount
+  // Eski davranış: seçili rol URL query param'ında korunur (masterplan §14.5).
   useEffect(() => {
-    let isMounted = true;
-    void (async () => {
-      try {
-        const rows = await fetchCatalogRows();
-        if (!isMounted) return;
-        setCatalogRows(rows);
-      } catch (err: unknown) {
-        if (!isMounted) return;
-        const msg = err instanceof Error ? err.message : "Beklenmeyen hata";
-        toast({ title: "Katalog yüklenemedi", description: msg, variant: "destructive" });
-      } finally {
-        if (isMounted) setLoadingCatalog(false);
-      }
-    })();
-    return () => { isMounted = false; };
-  }, [toast]);
-
-  // Load bundle when role is selected
-  useEffect(() => {
-    if (!selectedRoleKey) {
-      setBundle(null);
-      return;
-    }
-
+    if (!selectedRoleKey) return;
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
       next.set("role", selectedRoleKey);
       return next;
     }, { replace: true });
-
-    let isMounted = true;
-    setBundleError(null);
-    setLoadingBundle(true);
-
-    void (async () => {
-      try {
-        const data = await getRoleManagementBundle(selectedRoleKey);
-        if (!isMounted) return;
-        setBundle(data);
-      } catch (err: unknown) {
-        if (!isMounted) return;
-        const msg = err instanceof Error ? err.message : "Beklenmeyen hata";
-        setBundleError(msg);
-        toast({ title: "Rol yüklenemedi", description: msg, variant: "destructive" });
-      } finally {
-        if (isMounted) setLoadingBundle(false);
-      }
-    })();
-
-    return () => { isMounted = false; };
-  }, [selectedRoleKey, setSearchParams, toast]);
+  }, [selectedRoleKey, setSearchParams]);
 
   const handleBundleChange = (patch: Partial<RoleManagementBundle>) => {
     setBundle((prev) => (prev ? { ...prev, ...patch } : prev));
@@ -118,7 +51,6 @@ const AdminRoleManagementPage = () => {
     setSearch("");
     setKindFilter("all");
     setBundle(null);
-    setBundleError(null);
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
       next.delete("role");
@@ -126,7 +58,17 @@ const AdminRoleManagementPage = () => {
     }, { replace: true });
   };
 
-  const visibleRows = filterCatalogRows(catalogRows, { search, kind: kindFilter });
+  const loadingRoles = rolesQuery.isLoading;
+  const loadingCatalog = catalogQuery.isLoading;
+  const loadingBundle = bundleQuery.isLoading;
+  const bundleError = bundleQuery.error
+    ? bundleQuery.error instanceof Error
+      ? bundleQuery.error.message
+      : "Beklenmeyen hata"
+    : null;
+  const dataError = rolesQuery.error ?? catalogQuery.error;
+
+  const visibleRows = filterCatalogRows(catalogQuery.data ?? [], { search, kind: kindFilter });
 
   return (
     <AdminPageShell
@@ -137,7 +79,7 @@ const AdminRoleManagementPage = () => {
       filters={
         <AdminFilterBar onReset={clearSelections} resetLabel="Seçimi temizle">
           <RoleSearchSelect
-            roles={roles}
+            roles={rolesQuery.data ?? []}
             value={selectedRoleKey}
             onValueChange={setSelectedRoleKey}
             disabled={loadingRoles}
@@ -192,7 +134,16 @@ const AdminRoleManagementPage = () => {
           <p className="text-sm text-destructive">Rol yüklenemedi: {bundleError}</p>
         )}
 
-        {loadingCatalog ? (
+        {dataError ? (
+          <AdminErrorState
+            title="Katalog verisi alınamadı"
+            description={dataError instanceof Error ? dataError.message : "Beklenmeyen hata"}
+            onRetry={() => {
+              void rolesQuery.refetch();
+              void catalogQuery.refetch();
+            }}
+          />
+        ) : loadingCatalog ? (
           <AdminLoadingState label="Katalog yükleniyor..." />
         ) : (
           <UnifiedRulesTable

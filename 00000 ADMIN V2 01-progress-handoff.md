@@ -1,7 +1,8 @@
 # Admin Panel V2 — İlerleme ve Devir Notu (Handoff)
 
 **Tarih:** 2026-06-10
-**Durum:** Faz 0–6 TAMAMLANDI · Sıradaki: Faz 7 (admin route modülerizasyonu)
+**Durum:** Faz 0–9 TAMAMLANDI — Admin Panel V2 bitti (manuel görsel QA hariç)
+**Final rapor + DoD:** `docs/plans/admin-v2/09-final-report.md`
 **Masterplan:** `docs/plans/2026-06-10-admin-panel-v2-masterplan.md` (kökteki `CORTEQS_ADMIN_PANEL_V2_MASTERPLAN.md` ile aynı)
 **Baseline raporu:** `docs/plans/admin-v2/00-baseline-report.md`
 
@@ -113,18 +114,72 @@ bölümlerini oku.
 - `AdminPageLayout.tsx` compatibility olarak duruyor — **34 sayfa hâlâ kullanıyor** (plan gereği;
   yeni sayfalar AdminPageShell kullanmalı).
 
+### Faz 7 — Admin route modülerizasyonu ✅
+- **Yeni:** `src/pages/admin/routes.tsx` — `adminRoutes` export'u: AdminLayout dahil tüm
+  `/admin` route ağacı + 39 admin lazy import + `{muhasebeRoutes}` + admin `*` NotFound.
+  Path'ler App.tsx'teki eski ağaçla **birebir aynı** (redirect'ler dahil).
+- **App.tsx:** admin lazy importları (39 satır) + 63 satırlık `/admin` ağacı çıkarıldı;
+  yerine `import { adminRoutes } from "@/pages/admin/routes"` + `{adminRoutes}` geldi.
+  App.tsx ~300 → ~200 satır. `muhasebeRoutes` importu artık routes.tsx'te.
+- Suspense sınırı App.tsx'teki kök `<Suspense fallback={null}>` olarak korunuyor
+  (davranış değişmedi); muhasebe alt ağacı kendi fallback'ini taşımaya devam ediyor.
+- `App.admin-route.test.tsx` değişmeden geçiyor (modül path mock'ları taşımadan etkilenmez).
+- KURAL güncellendi: yeni admin route artık (1) `src/pages/admin/routes.tsx`'e,
+  (2) `ADMIN_ROUTE_PATTERNS`'a, (3) görünürse registry'ye eklenir.
+
+### Faz 8 — Veri erişim standardizasyonu ✅
+| Yeni dosya | İçerik |
+|---|---|
+| `lib/admin-shell/admin-user-labels.ts` | Approvals+AuditLogs ortak kullanıcı etiketi yükleyici (`fetchAdminUserLabels`, `resolveAdminUserLabel`) |
+| `lib/admin-shell/admin-approvals-api.ts` | `fetchAdminApprovalsBundle()` — requests + users |
+| `lib/admin-shell/admin-audit-logs-api.ts` | `fetchAdminAuditLogsBundle()` — son 200 log + users |
+| `lib/admin-shell/admin-overrides-api.ts` | `fetchAdminOverridesBundle()` — users (RPC) + features + overrides |
+| `lib/admin-shell/admin-role-matrix-api.ts` | `fetchAdminRoleOptions()` (catalog rows `role-catalog`'dan, bundle `lib/admin`'den) |
+| `hooks/admin/useAdminApprovals.ts` | query + `reviewMutation` (setQueryData optimistic + approvals/dashboard invalidate) |
+| `hooks/admin/useAdminAuditLogs.ts` | query |
+| `hooks/admin/useAdminUserOverrides.ts` | query + `saveMutation`/`clearMutation` (optimistic + overrides/dashboard invalidate) |
+| `hooks/admin/useAdminRoleMatrix.ts` | 3 query: roles / catalog / bundle(roleKey, enabled) |
+
+- `adminQueryKeys` genişletildi: `approvals() / auditLogs() / overrides() /
+  roleMatrixRoles() / roleMatrixCatalog() / roleMatrixBundle(roleKey)` (listeler
+  client-side filtreli; server-side filtre gelince key'lere filters eklenir).
+- 4 sayfa rewire: component içi `useEffect+supabase` veri çekme kalktı; loading →
+  `AdminLoadingState`, ilk yükleme hatası → `AdminErrorState` + retry (eskiden toast'tu),
+  mutation toast'ları birebir korundu. Role Matrix'te bundle, query verisinden senkronlanan
+  lokal state'te düzenlenmeye devam ediyor (UnifiedRulesTable onBundleChange korunur);
+  URL `?role=` senkronu aynı.
+- **Catalog gözden geçirme kararı:** `AdminCatalogPage` zaten `lib/admin-catalog` API
+  katmanını kullanıyor (component'te `supabase.from()` yok). React Query'ye taşıma 993
+  satırlık sayfada yüksek risk / düşük getiri → Faz 8 kapsamına alınmadı, backlog'a not.
+
+### Faz 9 — E2E, QA ve temizlik ✅
+- **Dead import taraması:** Admin V2 kapsamındaki 53 dosyanın tamamı import ediliyor;
+  orphan yok (eski header/mobileMainLinks Faz 3'te silinmişti).
+- **YENİ `e2e/admin-smoke.spec.ts` — 16 test:** §19.2'nin 14 senaryosu (E2E-ADMIN-001…014)
+  + QA-RESPONSIVE (390x844 yatay taşma yok) + QA-DARK (tema toggle + refresh persist).
+  Supabase auth/REST **network-mock** (public-profile.spec deseni): sahte JWT ile
+  `auth/v1/token`, `rpc/is_admin`, approval/audit/roles REST'leri mock'lanır; canlı
+  fixture/credential GEREKMEZ. `npx playwright test` dev server'ı kendisi başlatır.
+- **Tuzak:** dashboard'daki modül/quick-action linkleri sidebar ile aynı isimde →
+  Playwright strict mode çakışır; sidebar assert'lerinde `getByLabel("Admin navigasyonu")`
+  scope'u kullan.
+- Final rapor + DoD işaretlemesi: `docs/plans/admin-v2/09-final-report.md`.
+  Manuel kalan tek iş: §19.3 görsel matrisinin insan gözüyle taranması.
+
 ---
 
-## 2. Son Doğrulama Durumu (Faz 6 sonu)
+## 2. Son Doğrulama Durumu (Faz 9 sonu — FINAL)
 
 ```text
-verify:text  ✅ (lint/test/build pre-hook'u olarak otomatik koşar)
-lint         ✅ yeni + dokunulan dosyalar 0 hata/uyarı (genel pre-existing sayı ~447'ye
-             düştü — dokunulan sayfalardaki 5 any tiplenip temizlendi)
-tsc          ✅ admin-shell / hooks/admin / shell / page / dashboard / geçirilen 6 sayfada
-             0 hata (genel tsc'de types.ts kaynaklı ~164 pre-existing hata — B1, kapsam dışı)
-test         ✅ 461/461 (96 dosya) — +10 page shell testi
-build        ✅ exit 0 (vite-plugin-image-optimizer'ın svgo uyarısı pre-existing, fail değil)
+verify:text     ✅ (lint/test/build pre-hook'u olarak otomatik koşar)
+lint            ✅ yeni + dokunulan dosyalar 0 hata (genel ~447 pre-existing — B7, kapsam dışı)
+tsc             ✅ admin-shell / hooks/admin / shell / page / routes.tsx / App.tsx'te 0 hata
+                (genel tsc'de types.ts kaynaklı ~164 pre-existing hata — B1, kapsam dışı)
+test            ✅ 461/461 (96 dosya)
+playwright      ✅ 16/16 admin smoke (E2E-ADMIN-001…014 + QA-RESPONSIVE + QA-DARK)
+                ✅ 25/25 tam suite (public-profile dahil)
+build           ✅ exit 0 (svgo uyarısı pre-existing, fail değil)
+verify:release  ✅ "local dist release looks consistent" (muhasebe lazy chunk'ları dahil)
 ```
 
 ---
@@ -166,25 +221,23 @@ build        ✅ exit 0 (vite-plugin-image-optimizer'ın svgo uyarısı pre-exis
 - Supabase generated types eski (B1) ama dashboard'ın kullandığı tablolar types'ta mevcut.
   `is_admin` RPC types'ta YOK → `(supabase as any).rpc(...)` cast'i `admin-access-api.ts`'te
   bilinçli.
+- **React Query'li sayfa testleri:** render'ı `QueryClientProvider` (testte
+  `retry: false`) ile sarmala. RQ, useEffect'e göre 1-2 microtask geç çözülür —
+  combobox'a tıklamadan önce `waitFor(toBeEnabled())` bekle (sadece
+  `toBeInTheDocument` yetmez; disabled trigger'a click sessizce no-op olur).
 
 ---
 
-## 5. Sıradaki İş: Faz 7 — Admin route modülerizasyonu (masterplan §17/Faz 7)
+## 5. Sıradaki İş: Proje tamamlandı — kalan opsiyonel işler
 
-Yeni dosya: `src/pages/admin/routes.tsx`
+Admin Panel V2 fazları (0–9) bitti. DoD durumu: `docs/plans/admin-v2/09-final-report.md` §2.
 
-1. Admin lazy importlarını + `/admin` route ağacını App.tsx'ten çıkar,
-   `{adminRoutes}` ile bağla (muhasebe `routes.tsx` örnek; path'ler birebir korunur).
-2. Redirect'leri koru; muhasebeRoutes entegrasyonunu koru.
-3. Kabul: tüm eski URL'ler aynı sonucu verir (`ADMIN_ROUTE_PATTERNS` testleri tutmalı).
-4. DİKKAT: App.tsx paralel oturumlarca değişiyor — düzenlemeden hemen önce yeniden oku.
-
-### Sonraki fazlar
-- **Faz 8:** Approvals/AuditLogs/Overrides/RoleMatrix API + React Query hook'ları
-  (`adminQueryKeys`'i genişlet; mutation sonrası invalidation).
-- **Faz 9:** cleanup (dead import), Playwright smoke (senaryolar §19.2: E2E-ADMIN-001…014),
-  responsive + dark mode QA, `verify:release`, final changed-files raporu.
-  Definition of Done: masterplan §20.
+1. **Manuel görsel QA** (tek eksik DoD kalemi): §19.3 matrisi insan gözüyle
+   (iPad/1920px, uzun Türkçe label, boş veri, API hata görselleri).
+2. **Commit:** Faz 7–9 değişiklikleri working tree'de duruyor (Faz 6 paralel oturumca
+   8e14056'da commit'lendi). Kullanıcı onayıyla commit'lenecek.
+3. **Backlog (Admin V2 dışı):** B1 types regen, B5 auth shim, B6/B7 kalan sayfalar,
+   AdminCatalogPage RQ taşıması, AdminPageLayout→AdminPageShell kademeli geçiş (34 sayfa).
 
 ---
 

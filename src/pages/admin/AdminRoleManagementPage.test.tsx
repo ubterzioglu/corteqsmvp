@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -85,12 +86,19 @@ const mockBundle = {
   sections: [{ key: "about_section", label: "Hakkında", description: null, admin_note: null, section_area: "detail_card", rule: { is_enabled: true, requires_approval: false, sort_order: 5 } }],
 };
 
-const renderPage = () =>
-  render(
-    <MemoryRouter initialEntries={["/admin/new-member/role-management"]}>
-      <AdminRoleManagementPage />
-    </MemoryRouter>,
+const renderPage = () => {
+  // Her testte taze cache; testte retry kapalı ki hata senaryosu beklemesin.
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={["/admin/new-member/role-management"]}>
+        <AdminRoleManagementPage />
+      </MemoryRouter>
+    </QueryClientProvider>,
   );
+};
 
 describe("AdminRoleManagementPage", () => {
   beforeEach(() => {
@@ -126,7 +134,7 @@ describe("AdminRoleManagementPage", () => {
 
   it("loads bundle when role is selected", async () => {
     renderPage();
-    await waitFor(() => expect(getRolePicker()).toBeInTheDocument());
+    await waitFor(() => expect(getRolePicker()).toBeEnabled());
     fireEvent.click(getRolePicker());
     fireEvent.click(screen.getByText("Standart Kullanıcı"));
     await waitFor(() => {
@@ -136,7 +144,7 @@ describe("AdminRoleManagementPage", () => {
 
   it("shows edit controls in table after role selected", async () => {
     renderPage();
-    await waitFor(() => expect(getRolePicker()).toBeInTheDocument());
+    await waitFor(() => expect(getRolePicker()).toBeEnabled());
     fireEvent.click(getRolePicker());
     fireEvent.click(screen.getByText("Standart Kullanıcı"));
     await waitFor(() => {
@@ -156,7 +164,7 @@ describe("AdminRoleManagementPage", () => {
 
   it("clears role and filters with clear button", async () => {
     renderPage();
-    await waitFor(() => expect(getRolePicker()).toBeInTheDocument());
+    await waitFor(() => expect(getRolePicker()).toBeEnabled());
 
     fireEvent.click(getRolePicker());
     fireEvent.click(screen.getByText("Standart Kullanıcı"));
@@ -177,13 +185,13 @@ describe("AdminRoleManagementPage", () => {
     });
   });
 
-  it("shows error toast when catalog load fails", async () => {
+  it("shows error state with retry when catalog load fails", async () => {
     fetchCatalogRows.mockRejectedValue(new Error("Katalog hatası"));
     renderPage();
     await waitFor(() => {
-      expect(toast).toHaveBeenCalledWith(
-        expect.objectContaining({ variant: "destructive" }),
-      );
+      expect(screen.getByText("Katalog verisi alınamadı")).toBeInTheDocument();
+      expect(screen.getByText("Katalog hatası")).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Tekrar dene/i })).toBeInTheDocument();
     });
   });
 });

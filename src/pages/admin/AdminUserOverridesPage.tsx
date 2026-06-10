@@ -2,35 +2,19 @@ import { useEffect, useMemo, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 
 import AdminPageGuideAccordion, { type AdminPageGuideSection } from "@/components/admin/AdminPageGuideAccordion";
-import { AdminEmptyState, AdminPageShell, AdminStatusBadge } from "@/components/admin/page";
+import {
+  AdminEmptyState,
+  AdminErrorState,
+  AdminLoadingState,
+  AdminPageShell,
+  AdminStatusBadge,
+} from "@/components/admin/page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { clearUserFeatureOverrideAsAdmin, setUserFeatureOverrideDetailedAsAdmin } from "@/lib/admin";
-import { listAdminMemberCatalogProfiles } from "@/lib/member-catalog";
-
-type UserRow = {
-  user_id: string;
-  email: string | null;
-  full_name: string | null;
-  profile_type: string;
-};
-
-type FeatureRow = {
-  key: string;
-  label: string;
-  scope_role: string;
-};
-
-type OverrideRow = {
-  user_id: string;
-  feature_key: string;
-  is_enabled: boolean;
-  reason: string | null;
-  updated_at: string;
-};
+import { useAdminUserOverrides } from "@/hooks/admin/useAdminUserOverrides";
+import type { AdminOverrideRow } from "@/lib/admin-shell/admin-overrides-api";
 
 const guideSections: AdminPageGuideSection[] = [
   {
@@ -76,69 +60,28 @@ const guideSections: AdminPageGuideSection[] = [
 
 const AdminUserOverridesPage = () => {
   const { toast } = useToast();
-  const [users, setUsers] = useState<UserRow[]>([]);
-  const [features, setFeatures] = useState<FeatureRow[]>([]);
-  const [overrides, setOverrides] = useState<OverrideRow[]>([]);
+  const { data, isLoading, error, refetch, saveMutation, clearMutation } = useAdminUserOverrides();
   const [selectedUserId, setSelectedUserId] = useState("");
   const [selectedFeatureKey, setSelectedFeatureKey] = useState("");
   const [reason, setReason] = useState("");
   const [isEnabled, setIsEnabled] = useState(true);
   const [searchText, setSearchText] = useState("");
-  const [submitting, setSubmitting] = useState(false);
 
+  const users = useMemo(() => data?.users ?? [], [data]);
+  const features = useMemo(() => data?.features ?? [], [data]);
+  const overrides = useMemo(() => data?.overrides ?? [], [data]);
+
+  // Eski davranış: veri gelince ilk kullanıcı seçili başlar.
   useEffect(() => {
-    let isMounted = true;
-    void (async () => {
-      try {
-        const [usersResult, featuresResult, overridesResult] = await Promise.all([
-          listAdminMemberCatalogProfiles({
-            query: "",
-            provider: "all",
-            fromDate: "",
-            toDate: "",
-            sort: "created_desc",
-          }),
-          supabase.from("afs_features").select("key, label, scope_role").order("key"),
-          supabase.from("user_feature_overrides").select("user_id, feature_key, is_enabled, reason, updated_at").order("updated_at", { ascending: false }),
-        ]);
+    if (!selectedUserId && users.length > 0) {
+      setSelectedUserId(users[0].user_id);
+    }
+  }, [selectedUserId, users]);
 
-        if (!isMounted) return;
-
-        if (featuresResult.error || overridesResult.error) {
-          toast({
-            title: "Override verileri alınamadı",
-            description: featuresResult.error?.message ?? overridesResult.error?.message ?? "Bilinmeyen hata",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        const userRows = usersResult.map((row) => ({
-          user_id: row.userId,
-          email: row.email ?? null,
-          full_name: row.fullName ?? null,
-          profile_type: row.profileType ?? "bireysel",
-        })) as UserRow[];
-        setUsers(userRows);
-        setFeatures((featuresResult.data ?? []) as FeatureRow[]);
-        setOverrides((overridesResult.data ?? []) as OverrideRow[]);
-        setSelectedUserId(userRows[0]?.user_id ?? "");
-      } catch (error) {
-        if (!isMounted) return;
-        toast({
-          title: "Override verileri alınamadı",
-          description: error instanceof Error ? error.message : "Bilinmeyen hata",
-          variant: "destructive",
-        });
-      }
-    })();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [toast]);
-
-  const selectedUser = useMemo(() => users.find((user) => user.user_id === selectedUserId) ?? null, [users, selectedUserId]);
+  const selectedUser = useMemo(
+    () => users.find((user) => user.user_id === selectedUserId) ?? null,
+    [users, selectedUserId],
+  );
 
   const scopedFeatures = useMemo(() => {
     if (!selectedUser) return [];
@@ -158,56 +101,44 @@ const AdminUserOverridesPage = () => {
   const handleSaveOverride = async () => {
     if (!selectedUser || !selectedFeatureKey) return;
 
-    setSubmitting(true);
     try {
-      await setUserFeatureOverrideDetailedAsAdmin(selectedUser.user_id, selectedFeatureKey, isEnabled, reason.trim() || null);
-      const nextOverride: OverrideRow = {
-        user_id: selectedUser.user_id,
-        feature_key: selectedFeatureKey,
-        is_enabled: isEnabled,
+      await saveMutation.mutateAsync({
+        userId: selectedUser.user_id,
+        featureKey: selectedFeatureKey,
+        isEnabled,
         reason: reason.trim() || null,
-        updated_at: new Date().toISOString(),
-      };
-      setOverrides((current) => {
-        const filtered = current.filter(
-          (override) => !(override.user_id === nextOverride.user_id && override.feature_key === nextOverride.feature_key),
-        );
-        return [nextOverride, ...filtered];
       });
       setReason("");
       toast({
         title: "Override kaydedildi",
         description: `${selectedUser.full_name ?? selectedUser.email ?? selectedUser.user_id} için override güncellendi.`,
       });
-    } catch (error) {
+    } catch (mutationError) {
       toast({
         title: "Override kaydedilemedi",
-        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        description: mutationError instanceof Error ? mutationError.message : "Beklenmeyen bir hata oluştu.",
         variant: "destructive",
       });
-    } finally {
-      setSubmitting(false);
     }
   };
 
-  const handleClearOverride = async (override: OverrideRow) => {
+  const handleClearOverride = async (override: AdminOverrideRow) => {
     try {
-      await clearUserFeatureOverrideAsAdmin(override.user_id, override.feature_key);
-      setOverrides((current) =>
-        current.filter((item) => !(item.user_id === override.user_id && item.feature_key === override.feature_key)),
-      );
+      await clearMutation.mutateAsync({ userId: override.user_id, featureKey: override.feature_key });
       toast({
         title: "Override kaldırıldı",
         description: `${override.feature_key} override kaydı silindi.`,
       });
-    } catch (error) {
+    } catch (mutationError) {
       toast({
         title: "Override kaldırılamadı",
-        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        description: mutationError instanceof Error ? mutationError.message : "Beklenmeyen bir hata oluştu.",
         variant: "destructive",
       });
     }
   };
+
+  const submitting = saveMutation.isPending;
 
   return (
     <AdminPageShell
@@ -220,7 +151,19 @@ const AdminUserOverridesPage = () => {
         summary="Rol varsayımını ezerek tek kullanıcı seviyesinde feature açıp kapatmak ve istisna kayıtları izlemek için bu ekranı kullan."
         sections={guideSections}
       />
-      <div className="grid gap-6 rounded-2xl border border-border bg-card p-4 xl:grid-cols-[420px_1fr]">
+
+      {isLoading ? <AdminLoadingState label="Override verileri yükleniyor..." /> : null}
+
+      {error ? (
+        <AdminErrorState
+          title="Override verileri alınamadı"
+          description={error instanceof Error ? error.message : "Bilinmeyen hata"}
+          onRetry={() => void refetch()}
+        />
+      ) : null}
+
+      {!isLoading && !error ? (
+        <div className="grid gap-6 rounded-2xl border border-border bg-card p-4 xl:grid-cols-[420px_1fr]">
           <div className="space-y-3 rounded-xl border p-4">
             <Select value={selectedUserId} onValueChange={setSelectedUserId}>
               <SelectTrigger>
@@ -300,7 +243,8 @@ const AdminUserOverridesPage = () => {
               ) : null}
             </div>
           </div>
-      </div>
+        </div>
+      ) : null}
     </AdminPageShell>
   );
 };
