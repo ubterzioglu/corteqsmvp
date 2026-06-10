@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { describe, expect, it, vi } from "vitest";
 
-import CaddePage from "@/pages/CaddePage";
+import CaddePage from "@/pages/cadde/CaddePage";
 
 const useAuthMock = vi.fn();
 const listCaddeFeedMock = vi.fn();
@@ -21,8 +21,8 @@ vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({ toast: vi.fn() }),
 }));
 
-vi.mock("@/lib/cadde", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde")>("@/lib/cadde");
+vi.mock("@/lib/cadde-api", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde-api")>("@/lib/cadde-api");
   return {
     ...actual,
     listCaddeCountries: (...args: unknown[]) => listCaddeCountriesMock(...args),
@@ -59,6 +59,26 @@ describe("CaddePage", () => {
 
     expect(await screen.findByText(/Paylaşım ve reaksiyonlar için giriş gerekli/i)).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: /giriş yap/i }).length).toBeGreaterThan(0);
+  });
+
+  it("defaults to the real feed when no mode param is present (R-01)", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+
+    renderPage("/cadde");
+
+    await waitFor(() => {
+      expect(listCaddeFeedMock).toHaveBeenCalledWith(
+        expect.objectContaining({ mode: "real" }),
+        1,
+        "user-1",
+      );
+    });
   });
 
   it("lets authenticated users switch to real mode from the URL state", async () => {

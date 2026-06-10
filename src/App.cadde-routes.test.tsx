@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 import App from "@/App";
 
-vi.mock("@/pages/CaddePage", () => ({
+vi.mock("@/pages/cadde/CaddePage", () => ({
   default: () => <div>Cadde Public Page</div>,
 }));
 

@@ -30,7 +30,7 @@ Her satırda "Kanıt" kolonu repo dosya:satır veya canlı DB sorgusuna (2026-06
 | Demo default | `?mode` yokken **demo** açılıyor; feed %100 demo seed | `cadde.ts:463`; canlı DB (3 demo post) | Production default `real` (R-01) | P0 |
 | Feature anahtarları | Yalnız `cadde.access`, tüm 76 role açık | Canlı DB; mig `20260603170000` | 19 granular `cadde.*` anahtarı + açık role-mapping seed (R-02) | P0 |
 | Admin alanı | Tek `AdminCaddePage` 736 satır | dosya | `/admin/cadde/*` alt rotalar + dashboard + moderation + settings | P1 |
-| Test | Cadde'ye özel test yok (`*cadde*.test.*` = 0) | glob | Unit (rules/ranking/schemas) + RLS integration + Playwright persona matrisi | P0/P1 |
+| Test | İnce kapsam: 3 dosya vardı (`cadde.test.ts` format helper'ları, `CaddePage.test.tsx` 2 senaryo, `App.cadde-routes.test.tsx` route smoke); Faz 1'de modül bazlı yeniden düzenlendi (`cadde-format.test.ts`, `cadde-schemas.test.ts`, `pages/cadde/CaddePage.test.tsx`) | dosyalar | + RLS integration + Playwright persona matrisi | P0/P1 |
 
 ## Hedefe göre eksik DB nesneleri (özet)
 
