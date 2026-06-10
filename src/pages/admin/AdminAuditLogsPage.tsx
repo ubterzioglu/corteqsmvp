@@ -110,7 +110,9 @@ const AdminAuditLogsPage = () => {
                   <p className="text-xs text-muted-foreground">Target: {resolveAdminUserLabel(users, log.target_user_id)}</p>
                   <p className="text-xs text-muted-foreground">{new Date(log.created_at).toLocaleString("tr-TR")}</p>
                 </div>
-                <div className="grid flex-1 gap-3 md:grid-cols-2">
+                {/* min-w-0 + minmax(0,1fr) kolonlar: pre overflow'u kart içinde kalsın;
+                  basis-64: dar ekranda meta kolonunun altına kırılsın */}
+              <div className="grid min-w-0 flex-1 basis-64 grid-cols-1 gap-3 md:grid-cols-2">
                   <pre className="overflow-x-auto rounded-lg bg-muted p-3 text-xs">
                     {JSON.stringify(log.before_value ?? {}, null, 2)}
                   </pre>

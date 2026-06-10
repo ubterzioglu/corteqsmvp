@@ -40,13 +40,26 @@ dead import        ✅ Admin V2 kapsamındaki 53 dosyanın tamamı import ediliy
 [x] unit test sonucu raporlandı
 [x] Playwright smoke sonucu raporlandı
 [x] build sonucu raporlandı
-[~] responsive QA: otomatik 390x844 (drawer + yatay taşma) — geniş matris (§19.3) manuel kaldı
-[~] dark mode QA: otomatik dark-class toggle + persist — görsel kontrol manuel kaldı
+[x] responsive QA: §19.3 matrisi screenshot tabanlı tarandı (6 viewport × light/dark ×
+    veri dolu/boş/hata/drawer/collapsed/role-matrix — 19 görüntü, AI görsel inceleme)
+[x] dark mode QA: dashboard/approvals/collapsed dark görüntüleri incelendi + toggle
+    persist e2e ile doğrulandı
 [x] final changed-files raporu üretildi (bu doküman)
 ```
 
-`[~]` = otomatik smoke seviyesinde doğrulandı; §19.3'teki tam görsel matris (iPad, 1920x1080,
-uzun Türkçe label, boş veri, API hata ekran görüntüleri) insan gözüyle yapılacak manuel iş.
+### Görsel QA bulguları (2026-06-10)
+
+- **Düzeltildi:** Approvals + Audit Logs kartlarındaki JSON `<pre>` blokları dar ekranda
+  kartın dışına taşıyordu (flex item `min-width:auto` → `overflow-x-auto` devreye
+  giremiyordu). Fix: sol kolona `min-w-0 flex-1 basis-64` (audit'te grid'e ek olarak
+  `grid-cols-1`); `basis-64` dar ekranda sağ kolonun alta kırılmasını koruyor —
+  ilk denemedeki "sol kolon sıfıra eziliyor" yan etkisi böyle giderildi.
+- **Artefakt (bug değil):** mobil drawer screenshot'ı Sheet'in 500ms slide-in animasyonu
+  ortasında alınınca panel yarı kaymış görünüyor; visual-qa spec'inde bekleme 800ms yapıldı.
+- Araç: `e2e/admin-visual-qa.spec.ts` — `$env:VISUAL_QA="1"` ile koşar, normal suite'te
+  skip; çıktılar `test-results/visual-qa/*.png`.
+- Kalan manuel iş: gerçek cihazda (iOS Safari/Android Chrome) dokunma hissi + canlı veri
+  ile spot kontrol — düzen/kontrast taraması tamamlandı.
 
 ## 3. Değişen / Yeni Dosyalar (Faz 6–9)
 

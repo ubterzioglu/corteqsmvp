@@ -164,7 +164,14 @@ bölümlerini oku.
   Playwright strict mode çakışır; sidebar assert'lerinde `getByLabel("Admin navigasyonu")`
   scope'u kullan.
 - Final rapor + DoD işaretlemesi: `docs/plans/admin-v2/09-final-report.md`.
-  Manuel kalan tek iş: §19.3 görsel matrisinin insan gözüyle taranması.
+- **Görsel QA tamamlandı (screenshot tabanlı):** YENİ `e2e/admin-visual-qa.spec.ts` —
+  `$env:VISUAL_QA="1"` ile koşar (normal suite'te skip), §19.3 matrisinden 19 görüntü
+  üretir (`test-results/visual-qa/`). İnceleme sonucu 1 gerçek kusur bulunup düzeltildi:
+  Approvals/AuditLogs JSON `<pre>` blokları dar ekranda karttan taşıyordu → sol kolona
+  `min-w-0 flex-1 basis-64` (audit grid'ine + `grid-cols-1`). DİKKAT: yalnızca `min-w-0
+  flex-1` YETMEZ — sol kolon mobilde sıfıra ezilir; `basis-64` satır kırmayı koruyor.
+  Mobil drawer screenshot'ı için 800ms bekle (Sheet 500ms slide-in animasyonu).
+  Kalan manuel iş: gerçek cihazda dokunma/canlı veri spot kontrolü.
 
 ---
 

@@ -110,7 +110,9 @@ const AdminApprovalsPage = () => {
             return (
               <div key={request.id} className="rounded-xl border p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
+                  {/* min-w-0: payload pre'si kart içinde scroll edebilsin; basis-64: dar
+                      ekranda sağ kolon alta kırılsın (sol kolon sıfıra ezilmesin) */}
+                  <div className="min-w-0 flex-1 basis-64">
                     <p className="font-medium">{request.request_type}</p>
                     <p className="text-xs text-muted-foreground">{resolveAdminUserLabel(users, request.user_id)}</p>
                     <p className="text-xs text-muted-foreground">{new Date(request.created_at).toLocaleString("tr-TR")}</p>
