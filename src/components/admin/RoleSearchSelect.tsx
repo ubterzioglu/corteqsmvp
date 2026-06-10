@@ -40,6 +40,13 @@ const RoleSearchSelect = ({
 
   const selectedRole = roles.find((r) => r.value === value);
 
+  // Alphabetical order by label, keeping the "no role" option pinned to top.
+  const sortedRoles = [...roles].sort((a, b) => {
+    if (a.value === "no_role") return -1;
+    if (b.value === "no_role") return 1;
+    return a.label.localeCompare(b.label, "tr", { sensitivity: "base" });
+  });
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -62,7 +69,7 @@ const RoleSearchSelect = ({
           <CommandList>
             <CommandEmpty>Rol bulunamadı.</CommandEmpty>
             <CommandGroup>
-              {roles.map((role) => (
+              {sortedRoles.map((role) => (
                 <CommandItem
                   key={role.value}
                   value={`${role.label} ${role.hint ?? ""} ${role.searchText ?? ""}`.trim()}
