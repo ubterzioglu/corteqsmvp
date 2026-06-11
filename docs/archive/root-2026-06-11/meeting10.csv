@@ -1,0 +1,143 @@
+﻿Toplantı Tarihi;Kişi;TODO
+17 Mayıs 2026;Burak;[ ] Formlar ve harita pinleri için mock-up ekranlarını tamamla ve Barış'a ilet.
+17 Mayıs 2026;Burak;[ ] Seçilen topluluklarda gönderim formlarını paylaşarak soft launch sürecini başlat.
+17 Mayıs 2026;Barış;[ ] Burak tarafından gönderilen mock-up ekranlarını incele.
+17 Mayıs 2026;Barış;[ ] Google ile giriş ve veritabanı bağlantısı dahil olmak üzere backend entegrasyonlarını tamamla.
+17 Mayıs 2026;Barış & Burak;[ ] Koordineli sosyal medya duyurularını planla ve uygula.
+17 Mayıs 2026;Barış & Burak;[ ] Moderasyon yoğunluğu artarsa devreye alınacak 3–4 kişilik destek ekibini hazırla.
+17 Mayıs 2026;Barış & Burak;[ ] Sorun yaşanması halinde gönderim butonlarını devre dışı bırakabilecek acil kapatma mekanizmasını hazır tut.
+30 Mayıs 2026;Barış;[ ] Mevcut CorteQS landing page yapısını Pire ortamına taşı.
+30 Mayıs 2026;Barış;[ ] WhatsApp grup kartlarına doğrudan katılım bağlantısı ekle.
+30 Mayıs 2026;Barış;[ ] Grup koşullarını akordeon alanında göster.
+30 Mayıs 2026;Barış;[ ] Üye ve yönetici başvuru formlarını sadeleştir.
+30 Mayıs 2026;Barış;[ ] WhatsApp grup kartlarına küçük kapak görselleri ekle.
+30 Mayıs 2026;Barış;[ ] Landing page CTA alanlarını ve kullanıcı yolculuğunu sadeleştir.
+30 Mayıs 2026;Burak;[ ] WhatsApp grup özelliği taslağını incele ve geri bildirim ver.
+8 Haziran 2026;Barış & Burak;[ ] Mascot ile resmî iş birliği modelini görüşmek için temmuz ortasında takip toplantısı planla.
+8 Haziran 2026;Barış & Burak;[ ] Mascot tarafından gönderilecek startup etkinliği davetini takip et.
+8 Haziran 2026;Barış & Burak;[ ] 17 Ekim tarihinde İstanbul Arkaos'ta düzenlenecek startup etkinliği için CorteQS sunumunu hazırla.
+8 Haziran 2026;Barış & Burak;[ ] CorteQS lansmanı sonrasında karşılıklı tanıtım ve üye paylaşımı modelini Mascot ile görüş.
+8 Haziran 2026;Barış & Burak;[ ] CorteQS'in Mascot marketplace sistemine nasıl dahil olabileceğini değerlendir.
+8 Haziran 2026;Barış & Burak;[ ] Mascot ile ortak global etkinlik düzenleme alternatiflerini görüş.
+WA — 10 Haziran 2026;Barış;[ ] AFS mimarisini tamamla: Rol, Attribute, Feature ve Section atamalarını tüm profil tipleri için netleştir.
+WA — 10 Haziran 2026;Barış;[ ] Her rol için gösterilecek profil alanlarını, kart sıralamasını ve dashboard layoutlarını düzenle.
+WA — 10 Haziran 2026;Barış;"[ ] Bireysel kullanıcı panelini finalize et; ardından danışman, işletme, kuruluş ve diğer profil tiplerine uygula."
+WA — 10 Haziran 2026;Barış;[ ] Aynı kullanıcıya birden fazla profil atanması akışını test et: kişisel profil ve işletme profili gibi.
+WA — 10 Haziran 2026;Barış;[ ] Kullanıcı bazlı özel yetki verme mekanizmasını test et: role override ve feature override.
+WA — 10 Haziran 2026;Barış;[ ] Admin panelindeki rol ve yetki yönetimini sadeleştir.
+WA — 10 Haziran 2026;Barış;[ ] Admin panelindeki metinleri daha kurumsal ve audit uyumlu hale getir.
+WA — 10 Haziran 2026;Barış;[ ] Profil ekranlarında ad-soyad, telefon ve lokasyon gibi tekrar eden alanları temizle.
+WA — 10 Haziran 2026;Barış;[ ] Mevcut form kullanıcılarının sisteme aktarım yöntemini belirle ve ilk etapta bireysel kullanıcı olarak tanımla.
+WA — 10 Haziran 2026;Barış;[ ] Google login ve e-posta ile kayıt akışını finalize et.
+WA — 10 Haziran 2026;Barış;[ ] WhatsApp Bot ve Chatbot üzerinden gelen kayıtların ana kullanıcı sistemiyle eşleştirilmesini sağla.
+WA — 10 Haziran 2026;Barış;[ ] Cadde erişimi için telefon doğrulaması akışını planla ve uygula.
+WA — 10 Haziran 2026;Barış;[ ] CAPTCHA ve rate limit kullanarak SMS maliyet kontrolünü tasarla.
+WA — 10 Haziran 2026;Barış;[ ] Cadde MVP bağlantılarını mevcut CorteQS kullanıcı sistemiyle tamamla.
+WA — 10 Haziran 2026;Barış;[ ] Cadde için bireysel kullanıcı ve diğer kullanıcı türlerinin yetki matrisini oluştur.
+WA — 10 Haziran 2026;Barış;[ ] Cadde erişim kurallarını belirle: kim içerik ekleyebilir, görüntüleyebilir ve düzenleyebilir?
+WA — 10 Haziran 2026;Barış;[ ] Çıfıt modülünü feature listesine ekle ve bireysel kullanıcılar ile danışmanlara tanımla.
+WA — 10 Haziran 2026;Barış;[ ] Cadde, Cafe, Juke Box, Post-it ve Çıfıt alt modüllerinin teknik kapsamını netleştir.
+WA — 10 Haziran 2026;Barış;[ ] Burak'ın hazırlayacağı Cadde ürün dokümanını inceleyerek teknik plana dönüştür.
+WA — 10 Haziran 2026;Barış;[ ] Cadde için hazırlanacak video ve hero alanını siteye entegre et.
+WA — 10 Haziran 2026;Barış;[ ] Mevcut WhatsApp üyelerinin CorteQS üyeliğine aktarılması için pratik bir onboarding akışı oluştur.
+WA — 10 Haziran 2026;Barış;[ ] WhatsApp grup başvurularında admin paneli üzerinden görsel değiştirme sorununu çöz.
+WA — 10 Haziran 2026;Barış;[ ] Grup ön izleme ekranındaki geri butonunun yanlış sayfaya gitmesini düzelt.
+WA — 10 Haziran 2026;Barış;[ ] Grup ve topluluk isimlerinin büyük-küçük harf formatını standartlaştır.
+WA — 10 Haziran 2026;Barış;[ ] Topluluk yöneticilerinin kendi landing sayfalarını düzenleyebilmesini sağlayan claim ve topluluk editörü akışını test et.
+WA — 10 Haziran 2026;Barış;[ ] Topluluk ekleme formuna platform, ülke, şehir, tema, dil, üye sayısı ve admin bilgisi filtrelerini ekle.
+WA — 10 Haziran 2026;Barış;[ ] Popüler kategori seçeneklerini HR ve kişisel gelişim gibi alanlarla genişlet.
+WA — 10 Haziran 2026;Barış;[ ] AddCom için kalan UI ve mobil görünüm hatalarını temizle.
+WA — 10 Haziran 2026;Barış;"[ ] Konsolosluk scraping işleminden gelen 241 kaydı kontrol et; sınıflandırmaları ve hatalı kayıtları düzelt."
+WA — 10 Haziran 2026;Barış;[ ] Konsolosluk arama ve filtre yapısını admin panelinde sadeleştir.
+WA — 10 Haziran 2026;Barış;"[ ] Doktor verisi için ad-soyad, telefon, uzmanlık ve lokasyon alanlarını standartlaştır; ilk 100–150 kaydı sisteme aktar."
+WA — 10 Haziran 2026;Barış;[ ] Avukat, danışman, işletme, kuruluş, topluluk ve influencer veri kümeleri için standart alan yapısını oluştur.
+WA — 10 Haziran 2026;Barış;[ ] Burak'ın hazırlayacağı veri setlerini düzenli olarak veritabanına import et.
+WA — 10 Haziran 2026;Barış;[ ] Deep Research çıktılarının temizlenmesi ve admin paneline yüklenmesi için tekrarlanabilir bir süreç oluştur.
+WA — 10 Haziran 2026;Barış;[ ] Veri yüklemesi yapacak stajyer adayına ulaş ve ilk görüşmeyi planla.
+WA — 10 Haziran 2026;Barış;[ ] Stajyer için scraping, içerik düzenleme, kontrol ve veri temizliği görev listesini hazırla.
+WA — 10 Haziran 2026;Barış;[ ] mvp.corteqs.net üzerinde çalışmaya devam et ve ana MVP reposunu temiz tut.
+WA — 10 Haziran 2026;Barış;[ ] Önceki projelerden merge edilen gereksiz parçaları kaldır.
+WA — 10 Haziran 2026;Barış;[ ] Burak'ın Lovable tarafındaki değişikliklerini updates.md üzerinden kontrollü biçimde MVP'ye aktar.
+WA — 10 Haziran 2026;Barış;[ ] Büyük kapsamlı ürün değişiklikleri öncesinde change-freeze kuralını uygula.
+WA — 10 Haziran 2026;Barış;"[ ] AddCom sistemini stabil tut; kod değişiklikleri ile veritabanı değişikliklerini birbirinden ayır."
+WA — 10 Haziran 2026;Barış;"[ ] Neo4j üyeliğini kontrol et; kullanılmıyorsa aboneliği iptal et."
+WA — 10 Haziran 2026;Barış;[ ] Batuhan ile backlink çalışmalarını ilerlet.
+WA — 10 Haziran 2026;Barış;"[ ] Eski domainleri SEO açısından incele; yönlendirme yerine backlink verilmesi gerekenleri belirle."
+WA — 10 Haziran 2026;Barış;[ ] Açık projeler arasında CorteQS backlink standardını uygula.
+WA — 10 Haziran 2026;Barış;[ ] MVP görsellerini düzenli biçimde depola ve uygun sayfalara yerleştir.
+WA — 10 Haziran 2026;Barış;[ ] CorteQS maskotunu sayfalarda kullanılabilecek son haline getir.
+WA — 10 Haziran 2026;Barış;[ ] Maskot için alternatifler üret ve gerektiğinde topluluk anketine hazırla.
+WA — 10 Haziran 2026;Barış;[ ] Burak'ın hazırladığı kısa loop videoları hero alanına uygula.
+WA — 10 Haziran 2026;Barış;[ ] Hero videolarını yaklaşık 5–7 saniyelik, düşük boyutlu ve kesintisiz loop olacak şekilde optimize et.
+WA — 10 Haziran 2026;Barış;[ ] İş birliği toplantıları için kısa bir CorteQS one-pager hazırla.
+WA — 10 Haziran 2026;Barış;[ ] Founders gruplarında kullanılabilecek 5–6 cümlelik kısa CorteQS tanıtım metnini hazırla.
+WA — 10 Haziran 2026;Barış;[ ] Master RAG ve Corbot yapısını platform verileriyle besleyecek intelligence layer tasarımını değerlendir.
+WA — 10 Haziran 2026;Barış;[ ] Hashtag ve mention engine için admin paneli eklentisini planla.
+WA — 10 Haziran 2026;Barış;[ ] Affiliate entegrasyonları için teknik altyapıyı değerlendir.
+WA — 10 Haziran 2026;Barış;[ ] almanya101.de ile CorteQS arasındaki olası entegrasyonu MVP sonrasında tekrar incele.
+WA — 10 Haziran 2026;Barış;[ ] Ucuz ve sürdürülebilir reklam kaynaklarını araştır.
+WA — 10 Haziran 2026;Burak;[ ] Son toplantı kayıtlarını ve notlarını Drive'daki ana dosyaya ekle.
+WA — 10 Haziran 2026;Burak;[ ] Cadde için güncel bir ürün dokümanı hazırla ve Barış'a gönder.
+WA — 10 Haziran 2026;Burak;[ ] Cadde, Cafe, Juke Box, Post-it ve Çıfıt modüllerinin kapsamını netleştir.
+WA — 10 Haziran 2026;Burak;[ ] Kısa vadeli kişisel görevlerinden öncelikli 10 maddelik liste çıkar.
+WA — 10 Haziran 2026;Burak;[ ] Platformun ana söylemini netleştir: yurt dışında yaşayan Türklerin günlük olarak kullanabileceği dijital sistem.
+WA — 10 Haziran 2026;Burak;[ ] Ana ürün mesajının sosyal medya metinlerinde tutarlı biçimde kullanılmasını sağla.
+WA — 10 Haziran 2026;Burak;[ ] Lovable tarafındaki yeni projede çalışmaya devam et.
+WA — 10 Haziran 2026;Burak;[ ] Lovable tarafında yapılan değişiklikleri düzenli biçimde updates.md dosyasına yazdır.
+WA — 10 Haziran 2026;Burak;[ ] Büyük ürün değişikliklerini uygulamadan önce Barış ile görüş.
+WA — 10 Haziran 2026;Burak;[ ] Profil ekranlarını farklı rollerle test et ve bulunan sorunları tek listede ilet.
+WA — 10 Haziran 2026;Burak;[ ] AFS yapısındaki anlaşılmayan, tekrar eden veya eksik tanımları işaretle.
+WA — 10 Haziran 2026;Burak;[ ] Bireysel ve danışman feature listelerini satır satır kontrol etmeye devam et.
+WA — 10 Haziran 2026;Burak;[ ] Rol, attribute ve feature kavramlarının karıştığı noktaları not et.
+WA — 10 Haziran 2026;Burak;[ ] İşletme, doktor, avukat, danışman, kuruluş, influencer, blogger, vlogger ve sosyal medya topluluğu kategorileri için günlük veri setleri oluştur.
+WA — 10 Haziran 2026;Burak;[ ] İlk aşamada kategori başına 50–100 temiz kayıt üret.
+WA — 10 Haziran 2026;Burak;[ ] Veri dosyalarını Drive'daki Data Sets klasörüne düzenli biçimde kaydet.
+WA — 10 Haziran 2026;Burak;[ ] Her veri setinde isim, ülke, şehir, kategori, iletişim bilgisi, sosyal medya bağlantıları ve kaynak kolonlarını kullan.
+WA — 10 Haziran 2026;Burak;"[ ] İngiltere ve diğer açık veri kaynaklarından gelen listeleri doğrula; yanlış ve eksik kayıtları temizle."
+WA — 10 Haziran 2026;Burak;[ ] Uygun stajyer adaylarını belirle ve Barış'a ilet.
+WA — 10 Haziran 2026;Burak;[ ] Atınç ile yapılacak görüşmede Barış'a destek olabilecek operasyonel yapıyı konuş.
+WA — 10 Haziran 2026;Burak;[ ] WhatsApp topluluklarının kategori yapısı ve isimlendirmesi için taslak hazırla.
+WA — 10 Haziran 2026;Burak;[ ] Ana community ve alt grupların hangi sırayla açılacağını belirle.
+WA — 10 Haziran 2026;Burak;[ ] Ferman ve METU Qatar Alumni Chapter tarafına mevcut aşamada beklemeleri gerektiğini ilet.
+WA — 10 Haziran 2026;Burak;[ ] Grup adminlerine gönderilecek davet metnini, kısa açıklamayı ve CTA metnini hazırla.
+WA — 10 Haziran 2026;Burak;[ ] Topluluk adminleri için değer önerisini yaz: indekslenme, görünürlük ve yeni üyelere erişim.
+WA — 10 Haziran 2026;Burak;[ ] Mevcut toplulukları AddCom üzerinden yüklemeye devam et.
+WA — 10 Haziran 2026;Burak;[ ] Contributor ve genel gruplarda AddCom paylaşımını planla.
+WA — 10 Haziran 2026;Burak;[ ] CorteQS için metinsiz, sade ve kesintisiz kısa hero loop videosunu tamamla.
+WA — 10 Haziran 2026;Burak;[ ] Uzun reklam videolarını sosyal medya içeriği olarak ayrı tut.
+WA — 10 Haziran 2026;Burak;[ ] Güncel video çıktılarını Drive'daki SITE klasörüne yükle.
+WA — 10 Haziran 2026;Burak;[ ] Seren'in Cadde videosunu takip et ve hero veya sosyal medya kullanımı için değerlendir.
+WA — 10 Haziran 2026;Burak;[ ] Reels üretimine devam et ve farklı ülkelerden katılımcıların yer aldığı bir seri planla.
+WA — 10 Haziran 2026;Burak;[ ] AddCom için Instagram postu ve story hazırla.
+WA — 10 Haziran 2026;Burak;[ ] LinkedIn, Instagram ve gerektiğinde Reddit için paylaşım akışı oluştur.
+WA — 10 Haziran 2026;Burak;[ ] Paylaşım bağlantılarını Drive'a ekle.
+WA — 10 Haziran 2026;Burak;[ ] Görsel ve video üretimlerinde CorteQS maskotunu farklı senaryolarda kullan.
+WA — 10 Haziran 2026;Burak;[ ] Siteye entegre edilebilmesi için Barış'a hero görseli veya hafif hareketli video teslim et.
+WA — 10 Haziran 2026;Burak;[ ] Stripe kurulum sürecini tamamla.
+WA — 10 Haziran 2026;Burak;[ ] Sanal kart oluştur ve mevcut aboneliklerin ödeme yöntemlerini yeni hesaba taşı.
+WA — 10 Haziran 2026;Burak;"[ ] Kullanılmayan Neo4j aboneliğinin kim tarafından açıldığını kontrol et; gerekiyorsa iptal et."
+WA — 10 Haziran 2026;Burak;[ ] CorteQS için kullanılabilecek affiliate modellerini listele.
+WA — 10 Haziran 2026;Burak;[ ] Blogger ve vlogger çalışmaları için iki tanınmış jüri veya destekçi adayı belirle.
+WA — 10 Haziran 2026;Burak;[ ] Pazarlama ve altyapı bütçesi için kısa vadeli gider önceliklerini çıkar.
+WA — 10 Haziran 2026;Burak;[ ] CorteQS marka ve patent durumunu araştırmaya devam et.
+WA — 10 Haziran 2026;Burak;[ ] App Store ve benzeri platformlarda isim koruma yöntemlerini incele.
+WA — 10 Haziran 2026;Burak;[ ] Ucuz reklam kaynaklarını araştır.
+WA — 10 Haziran 2026;Burak;[ ] Potansiyel partner, danışman ve içerik üreticileri için aday listesi oluştur.
+WA — 10 Haziran 2026;Burak;[ ] Platform içi mesajlaşma fikrini ürün backloguna ekle.
+WA — 10 Haziran 2026;Burak;[ ] WAADD benzeri genel topluluk keşif ürünü fikrini CorteQS MVP'den ayrı değerlendir.
+WA — 10 Haziran 2026;Barış & Burak;[ ] MVP 0.5 soft launch tarihini ve yayın öncesi kontrol listesini netleştir.
+WA — 10 Haziran 2026;Barış & Burak;[ ] MVP yayınlanmadan önce uygulanacak change-freeze tarihini belirle.
+WA — 10 Haziran 2026;Barış & Burak;[ ] Cadde için telefon doğrulamasının ne zaman zorunlu hale geleceğini kararlaştır.
+WA — 10 Haziran 2026;Barış & Burak;[ ] WhatsApp ana community ve alt grup mimarisinin son halini belirle.
+WA — 10 Haziran 2026;Barış & Burak;[ ] Ana sayfa hero videosunu, süresini, mobil davranışını ve performans sınırını belirle.
+WA — 10 Haziran 2026;Barış & Burak;[ ] CorteQS maskotunun final tasarımını seç.
+WA — 10 Haziran 2026;Barış & Burak;[ ] Landing page sadeleştirmesini ve kaldırılacak eski bölümleri belirle.
+WA — 10 Haziran 2026;Barış & Burak;[ ] AddCom paylaşım sırasını belirle: kişisel ağlar, contributorlar ve genel gruplar.
+WA — 10 Haziran 2026;Barış & Burak;[ ] Haftalık sosyal medya düzenini ve PR planını oluştur.
+WA — 10 Haziran 2026;Barış & Burak;[ ] Ucuz reklam kaynaklarını ve ilk reklam bütçesini netleştir.
+WA — 10 Haziran 2026;Barış & Burak;[ ] Veri toplama hedefini belirle: kategori başına kayıt sayısı ve öncelikli ülkeler.
+WA — 10 Haziran 2026;Barış & Burak;[ ] Stajyer sayısını, görev tanımını ve bütçesini netleştir.
+WA — 10 Haziran 2026;Barış & Burak;[ ] Affiliate entegrasyonlarının öncelik sırasını belirle.
+WA — 10 Haziran 2026;Barış & Burak;[ ] Master RAG, Corbot, hashtag ve mention engine çalışmalarının başlatılacağı fazı belirle.
+WA — 10 Haziran 2026;Barış & Burak;[ ] almanya101.de ile CorteQS entegrasyonunun kapsamını belirle.
+WA — 10 Haziran 2026;Barış & Burak;[ ] Founding 1000 kampanyasının Cadde ile birlikte nasıl konumlandırılacağını kararlaştır.
