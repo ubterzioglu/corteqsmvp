@@ -1,7 +1,7 @@
 # Admin Panel V2 — İlerleme ve Devir Notu (Handoff)
 
-**Tarih:** 2026-06-10
-**Durum:** Faz 0–9 TAMAMLANDI — Admin Panel V2 bitti (manuel görsel QA hariç)
+**Tarih:** 2026-06-11 (son güncelleme)
+**Durum:** Faz 0–9 TAMAMLANDI + commit'lendi (701fb6c, b71f209) + AdminPageLayout tasfiyesi bitti — Admin Panel V2 bitti (gerçek cihaz QA hariç)
 **Final rapor + DoD:** `docs/plans/admin-v2/09-final-report.md`
 **Masterplan:** `docs/plans/2026-06-10-admin-panel-v2-masterplan.md` (kökteki `CORTEQS_ADMIN_PANEL_V2_MASTERPLAN.md` ile aynı)
 **Baseline raporu:** `docs/plans/admin-v2/00-baseline-report.md`
@@ -111,8 +111,8 @@ bölümlerini oku.
   (derleme kırıcı, paralel oturum kalıntısı) temizlendi.
 - Dokunulan sayfalardaki 5 pre-existing `no-explicit-any` satırı tiplenerek temizlendi
   (davranış değişmedi).
-- `AdminPageLayout.tsx` compatibility olarak duruyor — **34 sayfa hâlâ kullanıyor** (plan gereği;
-  yeni sayfalar AdminPageShell kullanmalı).
+- ~~`AdminPageLayout.tsx` compatibility olarak duruyor — 34 sayfa hâlâ kullanıyor~~
+  **GÜNCELLEME (2026-06-11): AdminPageLayout tamamen tasfiye edildi** — bkz. "Faz 9 sonrası" bölümü.
 
 ### Faz 7 — Admin route modülerizasyonu ✅
 - **Yeni:** `src/pages/admin/routes.tsx` — `adminRoutes` export'u: AdminLayout dahil tüm
@@ -172,6 +172,31 @@ bölümlerini oku.
   flex-1` YETMEZ — sol kolon mobilde sıfıra ezilir; `basis-64` satır kırmayı koruyor.
   Mobil drawer screenshot'ı için 800ms bekle (Sheet 500ms slide-in animasyonu).
   Kalan manuel iş: gerçek cihazda dokunma/canlı veri spot kontrolü.
+
+### Faz 9 sonrası — AdminPageLayout tasfiyesi ✅ (2026-06-11)
+
+Backlog'daki "AdminPageLayout → AdminPageShell (34 sayfa)" maddesi incelendi; gerçek durum
+çok daha küçük çıktı ve tamamı kapatıldı:
+
+- **29 dosyada import ölüydü** (component hiç kullanılmıyordu) — import satırları silindi.
+  2'sinde (AdminAdvisorLinksPage, AdminAttributesPage) üstelik **duplicate import** vardı
+  (eski base repo'dan gelme; esbuild tolere ettiği için build'i kırmıyordu).
+- **3 sayfa orphan'dı** ve silindi: `AdminEntityPreviewPage(+test)`, `AdminRolesPreviewPage(+test)`,
+  `AdminRolesListPage`. Route'ları zaten redirect (admin-route-meta: roles-list→guide#rol-listesi,
+  roles-preview/entity-preview→role-matrix); hiçbir yerden import edilmiyorlardı.
+- **AdminRolesOverviewPage** AdminPageShell'e geçirildi (title "AFS Genel Bakış", icon Layers,
+  accent emerald — registry afs-overview ile aynı). 8 pre-existing `any` temizlendi:
+  6'sı lokal satır tipleriyle (`as unknown as XRow[]`), 2'si (`supabase as any` —
+  afs_sections/role_sections types'ta yok, B1) cadde-internal.ts desenince
+  eslint-disable-next-line + açıklama ile bırakıldı.
+- **AdminNewMemberGuidePage**: özel iki kolonlu TOC layout'u (sol sticky içindekiler) shell'in
+  sağ-aside modeline uymuyor → wrapper, AdminPageLayout'un ürettiği class'ların birebir inline
+  div karşılığıyla değiştirildi (`relative mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-10`).
+  Görsel davranış değişmedi; tam shell geçişi istenirse ayrı tasarım işi.
+- **`src/components/admin/AdminPageLayout.tsx` silindi** — repo'da 0 referans.
+
+Doğrulama (2026-06-11): lint dokunulan dosyalar 0 hata · tsc scoped 0 hata ·
+test 469/469 (96 dosya; silinen 2 orphan test dosyasının 17 testi düştü) · build exit 0.
 
 ---
 
@@ -239,12 +264,13 @@ verify:release  ✅ "local dist release looks consistent" (muhasebe lazy chunk'l
 
 Admin Panel V2 fazları (0–9) bitti. DoD durumu: `docs/plans/admin-v2/09-final-report.md` §2.
 
-1. **Manuel görsel QA** (tek eksik DoD kalemi): §19.3 matrisi insan gözüyle
-   (iPad/1920px, uzun Türkçe label, boş veri, API hata görselleri).
-2. **Commit:** Faz 7–9 değişiklikleri working tree'de duruyor (Faz 6 paralel oturumca
-   8e14056'da commit'lendi). Kullanıcı onayıyla commit'lenecek.
-3. **Backlog (Admin V2 dışı):** B1 types regen, B5 auth shim, B6/B7 kalan sayfalar,
-   AdminCatalogPage RQ taşıması, AdminPageLayout→AdminPageShell kademeli geçiş (34 sayfa).
+1. **Gerçek cihaz QA** (tek eksik DoD kalemi): iOS Safari / Android Chrome'da dokunma hissi +
+   canlı veri spot kontrolü (screenshot tabanlı tarama tamamlandı).
+2. ~~Commit~~ ✅ Faz 7–9 + görsel QA commit'lendi (701fb6c, b71f209).
+3. **AdminPageLayout tasfiyesi (2026-06-11) working tree'de — commit bekliyor.**
+4. **Backlog (Admin V2 dışı):** B1 types regen, B5 auth shim (~38 import), B6/B7 kalan sayfalar,
+   AdminCatalogPage RQ taşıması. ~~AdminPageLayout→AdminPageShell~~ ✅ tasfiye edildi
+   (yalnızca AdminNewMemberGuidePage'in tam shell geçişi opsiyonel tasarım işi olarak kaldı).
 
 ---
 

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ExternalLink, Pencil, Plus, Save, Trash2, X } from "lucide-react";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

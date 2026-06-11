@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Edit, ExternalLink, ImagePlus, Loader2, Plus, Trash2 } from "lucide-react";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

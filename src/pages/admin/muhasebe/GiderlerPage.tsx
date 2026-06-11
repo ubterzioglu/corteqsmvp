@@ -3,7 +3,6 @@
 
 import { useMemo, useState } from 'react';
 import { Plus, Pencil, Trash2, ExternalLink, CreditCard, Search } from 'lucide-react';
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

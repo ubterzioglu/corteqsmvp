@@ -1,7 +1,6 @@
 import { Navigate, useParams } from "react-router-dom";
 
 import AccordionCard from "@/components/dashboard/AccordionCard";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { getWorkspaceDocPage } from "@/lib/dashboard/workspace-doc-pages";
 
 const AdminWorkspaceDocPage = () => {

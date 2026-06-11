@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import SurveyResponseDetail from "@/components/admin/surveys/SurveyResponseDetail";
 import SurveyResponsesTable, { type ResponseRow } from "@/components/admin/surveys/SurveyResponsesTable";
 import { getSurveyById } from "@/lib/surveys";

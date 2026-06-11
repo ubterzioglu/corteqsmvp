@@ -38,7 +38,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { KpiCard } from '@/components/admin/muhasebe/KpiCard';
 import {
   aggregateCashflowMonthly,

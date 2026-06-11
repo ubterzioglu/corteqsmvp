@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { BookOpen, FolderKanban, ListChecks, Network, Rocket, ScrollText } from "lucide-react";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

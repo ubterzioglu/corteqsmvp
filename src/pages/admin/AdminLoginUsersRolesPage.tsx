@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 
 import { updateUserTaxonomySelectionAsAdmin } from "@/lib/admin";
 import AdminPageGuideAccordion, { type AdminPageGuideSection } from "@/components/admin/AdminPageGuideAccordion";

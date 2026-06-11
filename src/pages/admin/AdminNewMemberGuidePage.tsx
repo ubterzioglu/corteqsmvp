@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -494,7 +493,7 @@ const AdminNewMemberGuidePage = () => {
   }, [targetSectionId]);
 
   return (
-    <AdminPageLayout className="max-w-7xl gap-10">
+    <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-10">
       <div className="grid grid-cols-[220px_minmax(0,1fr)] gap-6 lg:gap-10">
         <aside className="sticky top-28 self-start">
           <nav className="rounded-3xl border border-border/60 bg-background/95 p-3 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/85">
@@ -731,7 +730,7 @@ const AdminNewMemberGuidePage = () => {
           </section>
         </div>
       </div>
-    </AdminPageLayout>
+    </div>
   );
 };
 

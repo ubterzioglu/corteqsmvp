@@ -1,6 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Edit, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";

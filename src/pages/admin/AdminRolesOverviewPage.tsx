@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
+import { Layers } from "lucide-react";
+import { AdminPageShell } from "@/components/admin/page";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { listAdminUnifiedRecords, listCatalogItemEditors } from "@/lib/admin-catalog";
@@ -8,6 +9,19 @@ import RoleListPanel from "@/components/admin/roles-overview/RoleListPanel";
 import EntityCatalogPanel from "@/components/admin/roles-overview/EntityCatalogPanel";
 import CaseDetailPanel from "@/components/admin/roles-overview/CaseDetailPanel";
 import type { EntityCatalogItem, ItemListEntry, RoleEntityAssignment, RoleListItem } from "@/components/admin/roles-overview/types";
+
+// Generated types (B1) güncel olmadığı için sorgu sonuçları lokal satır tipleriyle daraltılır.
+type AfsAttributeRow = { key: string; label: string; description: string | null; data_type: string; sort_order: number };
+type AfsFeatureRow = { key: string; label: string; description: string | null; scope_role: string | null; sort_order: number };
+type AfsSectionRow = { key: string; label: string; description: string | null; section_area: string | null; sort_order: number };
+type RoleAttributeRuleRow = {
+  is_enabled: boolean;
+  is_required: boolean;
+  is_public_default: boolean;
+  afs_attributes: { key: string; label: string } | null;
+};
+type RoleFeatureFlagRow = { feature_key: string; is_enabled: boolean };
+type RoleSectionRuleRow = { is_enabled: boolean; afs_sections: { key: string; label: string } | null };
 
 const AdminRolesOverviewPage = () => {
   const { toast } = useToast();
@@ -42,6 +56,8 @@ const AdminRolesOverviewPage = () => {
           supabase.from("roles").select("id, key, label, is_active, sort_order").eq("is_active", true).order("sort_order"),
           supabase.from("afs_attributes").select("key, label, description, data_type, sort_order").eq("is_active", true).order("sort_order"),
           supabase.from("afs_features").select("key, label, description, scope_role, sort_order").order("sort_order"),
+          // afs_sections generated types'ta yok (B1) — B1 çözülünce cast kalkacak.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (supabase as any).from("afs_sections").select("key, label, description, section_area, sort_order").eq("is_active", true).order("sort_order"),
           listAdminUnifiedRecords({ page: 1, pageSize: 100, filters: { kind: "", query: "", itemType: "", platformRoleKey: "", status: "", verificationStatus: "", city: "", countryCode: "" } }),
         ]);
@@ -50,7 +66,7 @@ const AdminRolesOverviewPage = () => {
 
         setRoles((rolesRes.data ?? []) as RoleListItem[]);
 
-        const attrs: EntityCatalogItem[] = ((attrRes.data ?? []) as any[]).map((a) => ({
+        const attrs: EntityCatalogItem[] = ((attrRes.data ?? []) as unknown as AfsAttributeRow[]).map((a) => ({
           kind: "attribute" as const,
           key: a.key,
           label: a.label,
@@ -58,7 +74,7 @@ const AdminRolesOverviewPage = () => {
           data_type: a.data_type,
           sort_order: a.sort_order,
         }));
-        const feats: EntityCatalogItem[] = ((featRes.data ?? []) as any[]).map((f) => ({
+        const feats: EntityCatalogItem[] = ((featRes.data ?? []) as unknown as AfsFeatureRow[]).map((f) => ({
           kind: "feature" as const,
           key: f.key,
           label: f.label,
@@ -66,7 +82,7 @@ const AdminRolesOverviewPage = () => {
           scope_role: f.scope_role,
           sort_order: f.sort_order,
         }));
-        const sects: EntityCatalogItem[] = ((sectRes.data ?? []) as any[]).map((s) => ({
+        const sects: EntityCatalogItem[] = ((sectRes.data ?? []) as unknown as AfsSectionRow[]).map((s) => ({
           kind: "section" as const,
           key: s.key,
           label: s.label,
@@ -121,6 +137,8 @@ const AdminRolesOverviewPage = () => {
             .from("role_features")
             .select("feature_key, is_enabled")
             .eq("role_id", role.id),
+          // role_sections generated types'ta yok (B1) — B1 çözülünce cast kalkacak.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (supabase as any)
             .from("role_sections")
             .select("is_enabled, afs_sections(key, label)")
@@ -134,19 +152,19 @@ const AdminRolesOverviewPage = () => {
         );
 
         setAssignment({
-          attributeRules: ((attrRulesRes.data ?? []) as any[]).map((r) => ({
+          attributeRules: ((attrRulesRes.data ?? []) as unknown as RoleAttributeRuleRow[]).map((r) => ({
             attributeKey: r.afs_attributes?.key ?? "",
             attributeLabel: r.afs_attributes?.label ?? r.afs_attributes?.key ?? "",
             is_enabled: r.is_enabled,
             is_required: r.is_required,
             is_public_default: r.is_public_default,
           })),
-          featureFlags: ((featFlagsRes.data ?? []) as any[]).map((f) => ({
+          featureFlags: ((featFlagsRes.data ?? []) as unknown as RoleFeatureFlagRow[]).map((f) => ({
             featureKey: f.feature_key,
             featureLabel: featureLabelMap.get(f.feature_key) ?? f.feature_key,
             is_enabled: f.is_enabled,
           })),
-          sectionRules: ((sectRulesRes.data ?? []) as any[]).map((s) => ({
+          sectionRules: ((sectRulesRes.data ?? []) as unknown as RoleSectionRuleRow[]).map((s) => ({
             sectionKey: s.afs_sections?.key ?? "",
             sectionLabel: s.afs_sections?.label ?? "",
             is_enabled: s.is_enabled,
@@ -191,56 +209,54 @@ const AdminRolesOverviewPage = () => {
   const selectedRole = useMemo(() => roles.find((r) => r.key === selectedRoleKey) ?? null, [roles, selectedRoleKey]);
 
   return (
-    <AdminPageLayout>
-      <div className="space-y-4">
-        <div>
-          <h2 className="text-lg font-semibold">Genel Durum</h2>
-          <p className="text-sm text-muted-foreground">Sistemdeki tüm item, rol ve catalog entity'leri</p>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3" style={{ minHeight: "360px" }}>
-          <ItemListPanel
-            items={listItems}
-            selectedItemId={selectedItemId}
-            onSelectItem={handleSelectItem}
-            totalCount={totalItemCount}
-            isLoading={loadingTop}
-          />
-          <RoleListPanel
-            roles={roles}
-            selectedRoleKey={selectedRoleKey}
-            onSelectRole={setSelectedRoleKey}
-            isLoading={loadingTop}
-          />
-          <EntityCatalogPanel
-            items={entityItems}
-            isLoading={loadingTop}
-          />
-        </div>
-
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold">Örnek Case</h2>
-          <CaseDetailPanel
-            mode="login"
-            selectedItemTitle={selectedItem?.title ?? null}
-            selectedRoleLabel={selectedRole?.label ?? null}
-            claimantEmail={selectedItem?.claimantEmail ?? null}
-            adminEmail={selectedAdminEmail}
-            assignment={assignment}
-            isLoading={loadingCase}
-          />
-          <CaseDetailPanel
-            mode="external"
-            selectedItemTitle={selectedItem?.title ?? null}
-            selectedRoleLabel={selectedRole?.label ?? null}
-            claimantEmail={null}
-            adminEmail={null}
-            assignment={assignment}
-            isLoading={loadingCase}
-          />
-        </div>
+    <AdminPageShell
+      title="AFS Genel Bakış"
+      description="Sistemdeki tüm item, rol ve catalog entity'leri"
+      icon={Layers}
+      accent="emerald"
+    >
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3" style={{ minHeight: "360px" }}>
+        <ItemListPanel
+          items={listItems}
+          selectedItemId={selectedItemId}
+          onSelectItem={handleSelectItem}
+          totalCount={totalItemCount}
+          isLoading={loadingTop}
+        />
+        <RoleListPanel
+          roles={roles}
+          selectedRoleKey={selectedRoleKey}
+          onSelectRole={setSelectedRoleKey}
+          isLoading={loadingTop}
+        />
+        <EntityCatalogPanel
+          items={entityItems}
+          isLoading={loadingTop}
+        />
       </div>
-    </AdminPageLayout>
+
+      <div className="space-y-3">
+        <h2 className="text-lg font-semibold">Örnek Case</h2>
+        <CaseDetailPanel
+          mode="login"
+          selectedItemTitle={selectedItem?.title ?? null}
+          selectedRoleLabel={selectedRole?.label ?? null}
+          claimantEmail={selectedItem?.claimantEmail ?? null}
+          adminEmail={selectedAdminEmail}
+          assignment={assignment}
+          isLoading={loadingCase}
+        />
+        <CaseDetailPanel
+          mode="external"
+          selectedItemTitle={selectedItem?.title ?? null}
+          selectedRoleLabel={selectedRole?.label ?? null}
+          claimantEmail={null}
+          adminEmail={null}
+          assignment={assignment}
+          isLoading={loadingCase}
+        />
+      </div>
+    </AdminPageShell>
   );
 };
 
