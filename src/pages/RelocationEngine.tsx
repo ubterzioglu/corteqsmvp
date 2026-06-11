@@ -14,6 +14,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Send, Save, MapPin, DollarSign, CheckSquare, Briefcase, GraduationCap, Home, Users, FileText, BookOpen, Star, ExternalLink, Download, Plus, Gift, Info } from "lucide-react";
 import WelcomePackOrderForm from "@/components/WelcomePackOrderForm";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 import { Link, useNavigate } from "react-router-dom";
 import { useRelocationResearches, type RelocationResearch } from "@/hooks/useRelocationResearches";
 
@@ -36,11 +38,6 @@ interface SurveyData {
   currentCountry: string;
   wantsMentor: string;
 }
-
-const COUNTRIES = [
-  "Almanya", "Hollanda", "İngiltere", "Fransa", "ABD", "Kanada", "Avustralya",
-  "İsviçre", "Avusturya", "Belçika", "İsveç", "Norveç", "Danimarka"
-];
 
 const RelocationEngine = () => {
   const navigate = useNavigate();
@@ -493,21 +490,21 @@ const RelocationEngine = () => {
               {/* Target Country */}
               <div className="space-y-2">
                 <Label className="text-sm font-semibold">🎯 Hedef Ülke *</Label>
-                <Select value={survey.targetCountry} onValueChange={(v) => setSurvey(p => ({ ...p, targetCountry: v }))}>
-                  <SelectTrigger><SelectValue placeholder="Ülke seçin" /></SelectTrigger>
-                  <SelectContent>
-                    {COUNTRIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-                  </SelectContent>
-                </Select>
+                <SearchableCountrySelect
+                  value={survey.targetCountry}
+                  onChange={(v) => setSurvey(p => ({ ...p, targetCountry: v, targetCity: "" }))}
+                  placeholder="Ülke seçin"
+                />
               </div>
 
               {/* Target City */}
               <div className="space-y-2">
                 <Label className="text-sm font-semibold">🏙️ Hedef Şehir</Label>
-                <Input
-                  placeholder="Örn: Berlin, Amsterdam, Londra"
+                <SearchableCitySelect
                   value={survey.targetCity}
-                  onChange={(e) => setSurvey(p => ({ ...p, targetCity: e.target.value }))}
+                  onChange={(v) => setSurvey(p => ({ ...p, targetCity: v }))}
+                  countryName={survey.targetCountry || undefined}
+                  placeholder={survey.targetCountry ? "Şehir seçin" : "Önce ülke seçin"}
                 />
               </div>
 
@@ -608,10 +605,10 @@ const RelocationEngine = () => {
               {/* Current Country */}
               <div className="space-y-2">
                 <Label className="text-sm font-semibold">📍 Şu an bulunduğunuz ülke</Label>
-                <Input
-                  placeholder="Türkiye"
+                <SearchableCountrySelect
                   value={survey.currentCountry}
-                  onChange={(e) => setSurvey(p => ({ ...p, currentCountry: e.target.value }))}
+                  onChange={(v) => setSurvey(p => ({ ...p, currentCountry: v }))}
+                  placeholder="Türkiye"
                 />
               </div>
 
