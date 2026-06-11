@@ -170,7 +170,7 @@ This is intentional to avoid massive refactor burden. When adding new code, writ
 | `src/lib/muhasebe-*.ts` | Reference architecture (apis, schemas, aggregations) |
 | `src/lib/admin.ts` + `src/lib/admin/*.ts` | `admin.ts` is a 57-line barrel; real impl in `admin/` (7 domain APIs) — pattern for new admin APIs |
 | `src/integrations/supabase/client.ts` | Lovable-generated, risky to modify |
-| `vite.config.ts` | Standalone HTML injection for commercial/* routes |
+| `vite.config.ts` | Legacy `*.html` redirect stubs for commercial docs (SPA renders the content) |
 | `server.mjs` | Production runtime; env injection via `/env-config.js` |
 | `supabase/migrations/20260512103000_security_hardening_phase1.sql` | Security baseline |
 | `tsconfig.json` | Relaxed strict mode — refactor pivot point |
@@ -207,9 +207,13 @@ Renaming these breaks domain cohesion and user understanding.
    - Proxies `/api/chat` to `rag.corteqs.net`
    - Serves SPA with fallback — keep this behavior
 
-4. **Vite Plugin** (`vite.config.ts`):
-   - Injects `info-*.html` standalone documents into `dist/commercial/<slug>/`
-   - Complex but required — preserve this logic
+4. **Commercial documents** (changed 2026-06-11 — now SPA routes):
+   - `/commercial/<slug>` is rendered by `CommercialDocumentPage` from fragments in
+     `src/content/commercial/*.html`. The old standalone-HTML injection plugin was
+     removed; `vite.config.ts` only emits legacy `*.html` redirect stubs.
+   - Root `info-*.html` files are the content source — edit them and re-run
+     `node scripts/extract-commercial-docs.mjs` to regenerate the fragments.
+     Shared hero image: `public/commercial-docs/corteqs-doc-hero.png`.
 
 5. **Hardcoded Supabase Project ID:**
    - `injprdrsklkxgnaiixzh` in env examples and code
