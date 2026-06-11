@@ -14,6 +14,18 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260611-commercial-rol-sayfalari",
+    date: "11 Haziran 2026",
+    title: "Rol tanıtım sayfaları artık sitenin içinde açılıyor",
+    items: [
+      "Contributor, Influencer Partner, Strategic Partner, Community Leader ve Ambassador tanıtım sayfaları önceden siteden bağımsız, ayrı HTML dosyaları olarak açılıyordu. Artık hepsi sitenin normal birer sayfası: corteqs.net/commercial/ambassador gibi temiz adreslerden ulaşılıyor ve üstte siteye dönüş linki var.",
+      "Görünüm değişmedi — sayfaların tasarımı birebir korundu, sadece artık site çatısının altında yaşıyorlar.",
+      "Eski linkler kırılmadı: daha önce paylaşılmış tüm adresler (sondaki / işaretli veya .html'li olanlar dahil) otomatik olarak yeni adrese yönlenir.",
+      "Sayfalar ciddi hafifledi: dört sayfanın her birinin içine ayrı ayrı gömülü duran ~2 MB'lık arkaplan görseli tek ortak dosyaya çıkarıldı; ziyaretçi görseli bir kez indirir, sayfalar daha hızlı açılır.",
+      "Doküman merkezi /commercial sayfası aynı kaldı; Ambassador sayfası bilinçli olarak bu listede gizli (sadece linki bilen ulaşır).",
+    ],
+  },
+  {
     id: "20260611-ulke-sehir-tek-kaynak",
     date: "11 Haziran 2026",
     title: "Ülke/şehir menüleri düzeldi — artık hiçbir şehir eksik değil",

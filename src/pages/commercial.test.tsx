@@ -11,6 +11,14 @@ const renderAtRoute = async (path: string) => {
   await act(async () => { render(<App />); });
 };
 
+const documentHeadings: Record<string, RegExp> = {
+  contributor: /Şehrindeki Türk diasporasını/i,
+  "influencer-partner": /Kitleni CorteQS ağına bağla/i,
+  "strategic-partner": /Stratejik iş birlikleri/i,
+  "community-leader": /Şehrindeki topluluğu büyüt/i,
+  ambassador: /temsil et/i,
+};
+
 describe("commercial routes", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -48,137 +56,46 @@ describe("commercial routes", () => {
     }
   });
 
-  it("links the contributor card to the standalone HTML document", async () => {
+  it("links the document cards to the SPA routes", async () => {
     await renderAtRoute("/commercial");
 
     await waitFor(() =>
       expect(screen.getByRole("link", { name: /contributor/i })).toBeInTheDocument()
     );
 
-    expect(screen.getByRole("link", { name: /contributor/i })).toHaveAttribute(
-      "href",
-      "/commercial/contributor/",
-    );
+    for (const document of publicCommercialDocuments) {
+      expect(
+        screen.getByRole("link", { name: new RegExp(document.title, "i") }),
+      ).toHaveAttribute("href", `/commercial/${document.slug}`);
+    }
   });
 
-  it("links the influencer partner card to the standalone HTML document", async () => {
-    await renderAtRoute("/commercial");
+  for (const document of commercialDocuments) {
+    it(`renders the ${document.slug} document content on its route`, async () => {
+      await renderAtRoute(`/commercial/${document.slug}`);
 
-    await waitFor(() =>
-      expect(screen.getByRole("link", { name: /influencer partner/i })).toBeInTheDocument()
-    );
+      await waitFor(() =>
+        expect(
+          screen.getByRole("heading", { name: documentHeadings[document.slug], level: 1 }),
+        ).toBeInTheDocument()
+      );
 
-    expect(screen.getByRole("link", { name: /influencer partner/i })).toHaveAttribute(
-      "href",
-      "/commercial/influencer-partner/",
-    );
-  });
+      expect(
+        screen.getByRole("link", { name: /commercial alanına dön/i }),
+      ).toHaveAttribute("href", "/commercial");
+    });
 
-  it("renders the contributor route as a standalone HTML handoff", async () => {
-    await renderAtRoute("/commercial/contributor");
+    it(`redirects the short /${document.slug} route into the commercial flow`, async () => {
+      await renderAtRoute(`/${document.slug}`);
 
-    await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "Contributor" })).toBeInTheDocument()
-    );
-
-    expect(screen.queryByTitle(/contributor document/i)).not.toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: /standalone contributor dokümanını aç/i }),
-    ).toHaveAttribute(
-      "href",
-      "/commercial/contributor/",
-    );
-  });
-
-  it("redirects the short contributor route into the commercial flow", async () => {
-    await renderAtRoute("/contributor");
-
-    expect(window.location.pathname).toBe("/commercial/contributor");
-    await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "Contributor" })).toBeInTheDocument()
-    );
-  });
-
-  it("redirects the short influencer partner route into the commercial flow", async () => {
-    await renderAtRoute("/influencer-partner");
-
-    expect(window.location.pathname).toBe("/commercial/influencer-partner");
-    await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "Influencer Partner" })).toBeInTheDocument()
-    );
-  });
-
-  it("renders the strategic partner route as a standalone HTML handoff", async () => {
-    await renderAtRoute("/commercial/strategic-partner");
-
-    await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "Strategic Partner" })).toBeInTheDocument()
-    );
-
-    expect(
-      screen.getByRole("link", { name: /standalone strategic partner dokümanını aç/i }),
-    ).toHaveAttribute(
-      "href",
-      "/commercial/strategic-partner/",
-    );
-  });
-
-  it("redirects the short strategic partner route into the commercial flow", async () => {
-    await renderAtRoute("/strategic-partner");
-
-    expect(window.location.pathname).toBe("/commercial/strategic-partner");
-    await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "Strategic Partner" })).toBeInTheDocument()
-    );
-  });
-
-  it("renders the community leader route as a standalone HTML handoff", async () => {
-    await renderAtRoute("/commercial/community-leader");
-
-    await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "Community Leader" })).toBeInTheDocument()
-    );
-
-    expect(
-      screen.getByRole("link", { name: /standalone community leader dokümanını aç/i }),
-    ).toHaveAttribute(
-      "href",
-      "/commercial/community-leader/",
-    );
-  });
-
-  it("redirects the short community leader route into the commercial flow", async () => {
-    await renderAtRoute("/community-leader");
-
-    expect(window.location.pathname).toBe("/commercial/community-leader");
-    await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "Community Leader" })).toBeInTheDocument()
-    );
-  });
-
-  it("renders the ambassador route as a standalone HTML handoff", async () => {
-    await renderAtRoute("/commercial/ambassador");
-
-    await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "Ambassador" })).toBeInTheDocument()
-    );
-
-    expect(
-      screen.getByRole("link", { name: /standalone ambassador dokümanını aç/i }),
-    ).toHaveAttribute(
-      "href",
-      "/commercial/ambassador/",
-    );
-  });
-
-  it("redirects the short ambassador route into the commercial flow", async () => {
-    await renderAtRoute("/ambassador");
-
-    expect(window.location.pathname).toBe("/commercial/ambassador");
-    await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "Ambassador" })).toBeInTheDocument()
-    );
-  });
+      expect(window.location.pathname).toBe(`/commercial/${document.slug}`);
+      await waitFor(() =>
+        expect(
+          screen.getByRole("heading", { name: documentHeadings[document.slug], level: 1 }),
+        ).toBeInTheDocument()
+      );
+    });
+  }
 
   it("renders not found for an unknown commercial document", async () => {
     const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});

@@ -1,55 +1,29 @@
-import fs from "node:fs";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
-const standaloneDocuments = [
-  {
-    slug: "contributor",
-    sourcePath: path.resolve(__dirname, "./info-contributor.html"),
-  },
-  {
-    slug: "influencer-partner",
-    sourcePath: path.resolve(__dirname, "./info-influencer-partner.html"),
-  },
-  {
-    slug: "strategic-partner",
-    sourcePath: path.resolve(__dirname, "./info-strategic-partner.html"),
-  },
-  {
-    slug: "community-leader",
-    sourcePath: path.resolve(__dirname, "./info-community-leader.html"),
-  },
-  {
-    slug: "ambassador",
-    sourcePath: path.resolve(__dirname, "./info-ambassador.html"),
-  },
+// Commercial documents are rendered by the SPA at /commercial/<slug>
+// (CommercialDocumentPage + src/content/commercial/*.html fragments).
+// Only legacy *.html URLs still get static redirect stubs for old links.
+const commercialDocumentSlugs = [
+  "contributor",
+  "influencer-partner",
+  "strategic-partner",
+  "community-leader",
+  "ambassador",
 ];
 
-const getDocumentRoutes = (slug: string) => {
-  const commercialRoute = `/commercial/${slug}`;
-  const aliasRoute = `/${slug}`;
-
-  return [
-    commercialRoute,
-    `${commercialRoute}/`,
-    `${commercialRoute}.html`,
-    aliasRoute,
-    `${aliasRoute}/`,
-    `${aliasRoute}.html`,
-  ];
-};
-
-const standaloneRouteMap = new Map(
-  standaloneDocuments.flatMap((document) =>
-    getDocumentRoutes(document.slug).map((route) => [route, document.sourcePath] as const),
-  ),
-);
-
-const readStandaloneDocument = (sourcePath: string) =>
-  fs.readFileSync(sourcePath, "utf-8");
+const createRedirectStub = (target: string) =>
+  [
+    "<!doctype html>",
+    `<html lang="tr"><head><meta charset="utf-8" />`,
+    `<meta http-equiv="refresh" content="0;url=${target}" />`,
+    `<link rel="canonical" href="https://corteqs.net${target}" />`,
+    `<title>CorteQS</title></head>`,
+    `<body><a href="${target}">${target}</a></body></html>`,
+  ].join("");
 
 export default defineConfig(({ mode }) => ({
   server: {
@@ -76,63 +50,29 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     {
-      name: "standalone-commercial-documents",
-      configureServer(server) {
-        server.middlewares.use((req, res, next) => {
-          const requestPath = req.url?.split("?")[0];
-
-          const sourcePath = requestPath ? standaloneRouteMap.get(requestPath) : undefined;
-
-          if (sourcePath) {
-            res.setHeader("Content-Type", "text/html; charset=utf-8");
-            res.end(readStandaloneDocument(sourcePath));
-            return;
-          }
-
-          next();
-        });
-      },
+      name: "commercial-legacy-html-redirects",
       generateBundle() {
-        for (const document of standaloneDocuments) {
-          const source = readStandaloneDocument(document.sourcePath);
+        for (const slug of commercialDocumentSlugs) {
+          const stub = createRedirectStub(`/commercial/${slug}`);
 
           this.emitFile({
             type: "asset",
-            fileName: `commercial/${document.slug}/index.html`,
-            source,
+            fileName: `commercial/${slug}.html`,
+            source: stub,
           });
 
           this.emitFile({
             type: "asset",
-            fileName: `commercial/${document.slug}.html`,
-            source,
-          });
-
-          this.emitFile({
-            type: "asset",
-            fileName: `${document.slug}/index.html`,
-            source,
-          });
-
-          this.emitFile({
-            type: "asset",
-            fileName: `${document.slug}.html`,
-            source,
+            fileName: `${slug}.html`,
+            source: stub,
           });
         }
-      },
-      closeBundle() {
-        const outDir = path.resolve(__dirname, "dist");
-        const rootIndexPath = path.join(outDir, "index.html");
 
-        if (!fs.existsSync(rootIndexPath)) {
-          return;
-        }
-
-        const commercialDir = path.join(outDir, "commercial");
-        fs.mkdirSync(commercialDir, { recursive: true });
-        fs.copyFileSync(rootIndexPath, path.join(commercialDir, "index.html"));
-        fs.copyFileSync(rootIndexPath, path.join(outDir, "commercial.html"));
+        this.emitFile({
+          type: "asset",
+          fileName: "commercial.html",
+          source: createRedirectStub("/commercial"),
+        });
       },
     },
     mode === "development" && componentTagger(),

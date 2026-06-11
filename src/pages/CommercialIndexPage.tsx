@@ -32,9 +32,9 @@ const CommercialIndexPage = () => {
 
           <section className="mt-8 grid gap-5 md:grid-cols-2">
             {publicCommercialDocuments.map((document) => (
-              <a
+              <Link
                 key={document.slug}
-                href={getDocumentHref(document.slug, document.standalonePath)}
+                to={`/commercial/${document.slug}`}
                 className="group rounded-[1.75rem] border border-border/70 bg-card p-6 shadow-[0_20px_50px_rgba(15,23,42,0.06)] transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_28px_60px_rgba(15,23,42,0.1)]"
               >
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
@@ -51,7 +51,7 @@ const CommercialIndexPage = () => {
                 </h2>
                 <p className="mt-3 text-sm leading-7 text-muted-foreground">{document.summary}</p>
                 <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary">Dokümana git</div>
-              </a>
+              </Link>
             ))}
           </section>
         </div>
