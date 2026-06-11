@@ -82,8 +82,8 @@ const HeroSection = () => {
                 <CorteqsWhatIsAccordion />
               </div>
               <div className="grid w-full max-w-lg gap-2.5 sm:grid-cols-2 2xl:max-w-[38rem]">
-                <a
-                  href="/signup"
+                <Link
+                  to="/login?mode=signup"
                   className={`${heroCtaClass} whitespace-nowrap`}
                   style={heroCardStyles.register}
                 >
@@ -100,7 +100,7 @@ const HeroSection = () => {
                     aria-hidden
                   />
                   <span className="relative z-10">Ücretsiz Kayıt Ol</span>
-                </a>
+                </Link>
                 <a
                   href="https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD"
                   target="_blank"
