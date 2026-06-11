@@ -56,14 +56,37 @@ Tüm migration'lar (`20260610180000` … `20260611150000`) canlıya psql ile uyg
    useConnections|useIsPremium.ts`. (Bozuk `cafeNameModeration` importu — B2 — dosyayla birlikte gitti.)
 3. **AdminDatabaseTablesPage:** 5 legacy tablo satırı statik listeden çıkarıldı.
 
-## Kalan işler (rebuild sonrası kuyruk)
+## Kuyruk kapanışı (2026-06-11, migration 014 — `20260611160000`)
+
+Rebuild sonrası kuyruğun bitirilebilir kalemleri kapatıldı:
+
+- ✅ **Otomatik kelime/spam taraması (§18.1):** `cadde_risky_signal` + `cadde_auto_moderation_scan`
+  AFTER INSERT trigger'ları (post/yorum/cafe/çarşı ilanı). Yayın ENGELLENMEZ; riskli sinyal
+  moderasyon kuyruğuna `auto:` önekiyle düşer (insan kararı esastır). TS blocklist'in
+  (`moderateCaddeCafeName`) SQL karşılığıdır — birini güncelleyen diğerini de günceller.
+- ✅ **`cadde.carsi.item_contacted`:** ilan detayındaki "profilini ziyaret et" tıklaması
+  `record_carsi_contact_v1` ile sahibine bildirim üretir (görüntüleyen+ilan başına 24 saatte 1).
+- ✅ **`cadde.cafe.expiring`:** `cadde_notify_expiring_cafes()` hazır — 30 dk içinde bitecek canlı
+  cafe'lerin host + onaylı üyelerine tek seferlik bildirim; pg_cron varsa 10 dk'da bir zamanlanır
+  (migration pg_cron'suz ortamda hata vermez, notice düşer — zamanlanma durumu canlı çıktıda).
+- ✅ **Composer paylaşım hedefi seçici:** post composer'ında açık hedef ülke/şehir seçimi
+  (boş = aktif filtredeki ilk seçim).
+- ✅ **Panel parity:** ProfilePage'e `CaddeMyContentCard` ("Açık Cafelerim" §13.5 + "Çarşı İlanlarım")
+  — public profil YÜZEYİ (directory catalog composer) ayrı iş kaleminde kaldı.
+- ✅ **`/admin/cadde/carsi`:** ilan yönetim sayfası (durum filtresi + gizle/yayınla,
+  `admin_moderate_cadde_entity_v1` ile audit'li) admin cadde rotalarına eklendi.
+
+## Kalan işler (gerçekten açık)
 
 - **DROP kararı:** legacy 5 tablo için canary gözlemi sonrası ayrı karar dokümanı + migration (R-06 notuyla).
-- **B1 types regen:** `supabase gen types` (Docker'sız Management API ile) — bilinçli olarak bu
-  oturumda yapılmadı; `cadde-internal.ts`'teki tek izole `db as any` cast'i bununla kalkacak.
-- D-03: SMS sağlayıcı seçimi → OTP Edge Function'ları + `cadde.phone_verification_required=true`.
-- §13.5 cafe profil parity, composer paylaşım hedefi seçici, `/profile?tab=carsi` parity,
-  `/admin/cadde/carsi` sayfası, homepage-ai-bar / category-first-screen yüzeyleri,
-  `cafe.expiring` / `carsi.item_contacted` bildirim üreticileri, otomatik kelime/spam taraması (§18.1).
-- Playwright persona matrisi (spec §22.4) — unit/component kapsamı geniş (520+), e2e personaları açık.
-- D-07 premium entitlement kademesi; billboard→kampanya migrasyonu (P2).
+- **B1 types regen:** DENENDİ (2026-06-11) — `.env.local`'daki `SUPABASE_ACCESS_TOKEN` (+backup)
+  Management API'de "Unauthorized"; geçerli token gerektiriyor. Token yenilenince:
+  `npx supabase gen types typescript --project-id injprdrsklkxgnaiixzh > src/integrations/supabase/types.ts`
+  → build doğrula → `cadde-internal.ts`'teki tek izole `db as any` cast'ini kaldır.
+- **D-03:** SMS sağlayıcı seçimi (ürün kararı) → OTP Edge Function'ları + flag=true.
+- **Public profil yüzeyi:** "Açık Cafe / Etkinlik" alanının directory catalog composer'ına
+  bölüm olarak eklenmesi (ayrı subsystem; panel parity tamam).
+- **homepage-ai-bar / category-first-screen yüzeyleri:** kodda "AI bar" bileşeni yok —
+  placement'lar katalogda hazır, yüzey entegrasyonu o sayfalar yapılınca.
+- Playwright persona matrisi (spec §22.4); D-07 premium kademesi; billboard→kampanya migrasyonu (P2);
+  pg_cron yoksa cafe.expiring için scheduler kararı.

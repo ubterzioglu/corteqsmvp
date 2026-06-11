@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { deleteCarsiItem, formatCarsiPrice, getCarsiItem, updateCarsiItem } from "@/lib/cadde-carsi-api";
+import { deleteCarsiItem, formatCarsiPrice, getCarsiItem, recordCarsiContact, updateCarsiItem } from "@/lib/cadde-carsi-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 
 const formatDate = (value: string) =>
@@ -117,7 +117,11 @@ const CaddeCarsiItemPage = () => {
             ) : (
               <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
                 İlan sahibine ulaşmak için{" "}
-                <Link to={`/directory/profile/${item.ownerUserId}`} className="font-semibold underline">
+                <Link
+                  to={`/directory/profile/${item.ownerUserId}`}
+                  className="font-semibold underline"
+                  onClick={() => recordCarsiContact(item.id)}
+                >
                   profilini ziyaret et
                 </Link>
                 . Platform içi mesajlaşma tercih edilir; ödeme/teslimde topluluk güvenlik kurallarına uy.

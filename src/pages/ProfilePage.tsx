@@ -57,6 +57,7 @@ import { supabase } from "@/integrations/supabase/client";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
 import CaddeInterestsCard from "@/components/cadde/CaddeInterestsCard";
+import CaddeMyContentCard from "@/components/cadde/CaddeMyContentCard";
 import CaddeTanitimPanel from "@/components/cadde/CaddeTanitimPanel";
 
 type DraftValueMap = Record<string, string | boolean>;
@@ -1355,6 +1356,8 @@ const ProfilePage = () => {
           ) : null}
 
           <CaddeInterestsCard />
+
+          <CaddeMyContentCard />
 
           <CaddeTanitimPanel />
 

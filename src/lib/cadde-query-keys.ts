@@ -13,6 +13,7 @@ export const caddeQueryKeys = {
   cafesRoot: ["cadde", "cafes"] as const,
   cafes: (filters: CaddeFilterState, userId: string | null, diaspora = "tr") => ["cadde", "cafes", filters, userId, diaspora] as const,
   cafe: (cafeId: string, userId: string | null) => ["cadde", "cafes", "detail", cafeId, userId] as const,
+  myCafes: (userId: string | null) => ["cadde", "cafes", "mine", userId] as const,
   cafeMembers: (cafeId: string) => ["cadde", "cafes", "members", cafeId] as const,
   cafeFeed: (cafeId: string, userId: string | null) => ["cadde", "cafes", "feed", cafeId, userId] as const,
   billboards: (filters: CaddeFilterState) => ["cadde", "billboards", filters] as const,

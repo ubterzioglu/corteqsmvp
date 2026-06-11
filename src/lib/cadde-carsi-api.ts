@@ -206,6 +206,17 @@ export async function deleteCarsiItem(itemId: string): Promise<void> {
   if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
 }
 
+/**
+ * İlan sahibine "ilanınla ilgilenildi" bildirimi (cadde.carsi.item_contacted, spec §17.1).
+ * Fire-and-forget: hata UX'i kırmaz; DB tarafı görüntüleyen+ilan başına 24 saatte 1 ile sınırlar.
+ */
+export function recordCarsiContact(itemId: string): void {
+  if (!isSupabaseConfigured) return;
+  void db.rpc("record_carsi_contact_v1", { p_item_id: itemId }).then(({ error }: { error: unknown }) => {
+    if (error) console.error("[cadde_api_error] recordCarsiContact", error);
+  });
+}
+
 export function formatCarsiPrice(item: Pick<CarsiItem, "priceAmount" | "priceCurrency">): string {
   if (item.priceAmount === null || item.priceAmount === undefined) return "Fiyat belirtilmedi";
   if (item.priceAmount === 0) return "Ücretsiz";

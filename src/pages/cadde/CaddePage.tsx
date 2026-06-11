@@ -88,6 +88,9 @@ const emptyComposer = {
   title: "",
   body: "",
   interests: [] as string[],
+  // Paylaşım hedefi (Faz 4 kuyruğu): boş = aktif filtredeki ilk seçim kullanılır.
+  country: "",
+  city: "",
 };
 
 const CaddePage = () => {
@@ -124,6 +127,13 @@ const CaddePage = () => {
     queryKey: caddeQueryKeys.interestCatalog,
     queryFn: listCaddeInterestCatalog,
     staleTime: 1000 * 60 * 60,
+  });
+
+  // Composer hedef şehri seçilen hedef ülkeye göre kapsamlanır (filtreden bağımsız).
+  const composerCitiesQuery = useQuery({
+    queryKey: caddeQueryKeys.cities(composer.country ? [composer.country] : ["__composer-none__"]),
+    queryFn: () => listCaddeCities(composer.country ? [composer.country] : []),
+    enabled: Boolean(session && composer.country),
   });
 
   const feedQuery = useInfiniteQuery({
@@ -164,13 +174,13 @@ const CaddePage = () => {
     mutationFn: async () => {
       if (!user) throw new Error("Bu işlem için giriş yapın.");
       if (!composer.body.trim()) throw new Error("Paylaşım metni zorunlu.");
-      // Çoklu filtre seçiliyken paylaşım hedefi ilk seçimdir; hedef seçici Faz 4'te composer'a taşınacak.
+      // Hedef: composer'daki açık seçim; boşsa aktif filtredeki ilk seçim.
       await createCaddePost({
         type: composer.type,
         title: composer.title,
         body: composer.body,
-        countryId: filters.countries[0] ?? "",
-        cityId: filters.cities[0] ?? "",
+        countryId: composer.country || filters.countries[0] || "",
+        cityId: composer.country ? composer.city : filters.cities[0] ?? "",
         isBridge: filters.bridge,
         interests: composer.interests,
         diasporaKey,
@@ -481,6 +491,47 @@ const CaddePage = () => {
                   <div className="space-y-2">
                     <Label>Mesaj</Label>
                     <Textarea value={composer.body} onChange={(event) => setComposer((current) => ({ ...current, body: event.target.value }))} placeholder="Şehrindeki ihtiyacını, etkinliğini veya fırsatını paylaş." rows={5} />
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label>Hedef ülke <span className="font-normal text-slate-500">(boş = filtre: {filters.countries[0] || "Global"})</span></Label>
+                      <Select
+                        value={composer.country || "__filter__"}
+                        onValueChange={(value) => setComposer((current) => ({ ...current, country: value === "__filter__" ? "" : value, city: "" }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="__filter__">Filtreyi kullan</SelectItem>
+                          {(countriesQuery.data ?? []).map((country) => (
+                            <SelectItem key={country.id} value={country.name}>
+                              {country.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Hedef şehir</Label>
+                      <Select
+                        value={composer.city || "__all__"}
+                        onValueChange={(value) => setComposer((current) => ({ ...current, city: value === "__all__" ? "" : value }))}
+                        disabled={!composer.country}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Tüm şehirler" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="__all__">Tüm şehirler</SelectItem>
+                          {(composerCitiesQuery.data ?? []).map((city) => (
+                            <SelectItem key={city.id} value={city.name}>
+                              {city.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                   {(interestCatalogQuery.data ?? []).length > 0 ? (
                     <div className="space-y-2">

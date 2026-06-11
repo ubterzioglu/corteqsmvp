@@ -353,6 +353,32 @@ export async function getCaddeCafe(cafeId: string, currentUserId: string | null)
   }
 }
 
+/** Kullanıcının host olduğu aktif cafe'ler (profil paneli parity, spec §13.5). */
+export async function listMyCaddeCafes(userId: string): Promise<CaddeCafe[]> {
+  if (!isSupabaseConfigured || !userId) return [];
+
+  try {
+    const { data, error } = await db
+      .from("cadde_cafes")
+      .select(CAFE_SELECT_COLUMNS)
+      .eq("host_user_id", userId)
+      .eq("content_mode", "real")
+      .order("starts_at", { ascending: false })
+      .limit(20);
+    if (error) throw error;
+    const rows = (data ?? []) as CaddeCafeRow[];
+    const [countries, cities, members] = await Promise.all([
+      fetchCountryMap(),
+      fetchCityMap(),
+      fetchCafeMembers(rows.map((row) => row.id)),
+    ]);
+    return rows.map((row) => mapCafe(row, countries, cities, members, new Map(), userId));
+  } catch (error: unknown) {
+    reportCaddeApiError("listMyCaddeCafes", error);
+    return [];
+  }
+}
+
 /** Cafe üye listesi (owner onay paneli) — adlarla birlikte. */
 export async function listCaddeCafeMembers(cafeId: string): Promise<CaddeCafeMember[]> {
   if (!isSupabaseConfigured) return [];
