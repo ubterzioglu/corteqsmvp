@@ -17,7 +17,7 @@
 | **Faz 2** — Actor context + profil kapısı + Köprü policy (RPC+RLS) | ✅ TAMAM | `60c5baf` |
 | **Faz 3** — Çoklu geo filtre + interests + ranking | ✅ TAMAM (migration 005-007 canlıya uygulandı + schema_migrations kayıtlı, 2026-06-11) | `64fbdb1` |
 | **Faz 4 Cafe** | ✅ TAMAM (migration 008 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `48c3377` |
-| **Faz 5 Çarşı** | ✅ KOD TAMAM — migration 009 canlıya uygulanma durumunu §2'den kontrol et | (bu oturum) |
+| **Faz 5 Çarşı** | ✅ TAMAM (migration 009 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `cb116c1` |
 | **Faz 6 Tanıtım/Çıfıt** | ⬜ **SIRADAKİ** (D-01 ad kararı: UI "Tanıtım" önerisi) | — |
 | Faz 7 bildirim/moderasyon · Faz 8 diaspora · Faz 9 legacy temizlik | ⬜ | — |
 
@@ -149,22 +149,26 @@ psql -h aws-1-eu-west-2.pooler.supabase.com -p 5432 -U postgres.injprdrsklkxgnai
 
 ---
 
-## 5. SIRADAKİ İŞ: FAZ 5 — Çarşı
+## 5. SIRADAKİ İŞ: FAZ 6 — Tanıtım / Çıfıt 🔴 (D-01 ad kararı: UI "Tanıtım" önerisi)
 
-(Faz 4 tamam; migration `20260611100000` 2026-06-11'de canlıya uygulandı ve doğrulandı:
-3 cafe setting'i, yeni kolonlar, 9-arg `create_cadde_post_v1` tek overload, cafe RPC'leri yerinde.
-Canlıdaki son migration'ı her zaman `select max(version) from supabase_migrations.schema_migrations`
-ile doğrula; yeni migration'lar daha büyük timestamp ile gelmeli.)
+(Faz 5 tamam; migration `20260611110000` 2026-06-11'de canlıya uygulandı ve doğrulandı:
+7 kategori, 2 carsi setting'i, 3 RPC. Canlıdaki son migration'ı her zaman
+`select max(version) from supabase_migrations.schema_migrations` ile doğrula.)
 
-### FAZ 5 — Çarşı
-Plan: `docs/cadde-300/03-implementation-plan.md` "Faz 5" + spec §14.
-- Migration: `carsi_categories` (7 seed) + `carsi_items` + RLS + `create/update/delete_carsi_item_v1`;
-  ilan limiti feature-bazlı (D-07).
-- UI: `CarsiGlobalTicker` (desktop sol kolon üstü + mobil header altı yatay — spec §4.1), `/cadde/carsi`,
-  `/cadde/carsi/:itemId`, `/profile?tab=carsi`, `/admin/cadde/carsi`.
-- `cadde.carsi.*` feature'larıyla yetki; Tanıtım'dan tablo/panel düzeyinde AYRI (D-01 sözleşmesi:
-  marketplace ≠ sponsorlu görünürlük).
-- Faz 4 kuyruğundan devralınan: §13.5 cafe profil parity; composer'a paylaşım hedefi seçici.
+### FAZ 6 — Tanıtım / Çıfıt
+Plan: `docs/cadde-300/03-implementation-plan.md` "Faz 6" + spec §15 ve §9.7.
+- Migration: `cadde_promotion_campaigns/placements/events` + 6 placement seed
+  (homepage-ai-bar, category-first-screen, cadde-right-rail, cadde-feed-inline,
+  cafe-theme-right-rail, city-ambassador-highlight); mevcut billboard/sponsored tabloları KORUNUR.
+- UI: `/profile?tab=tanitim` kampanya paneli, admin onay akışı, `PromotionRail` + `SponsoredFeedCard`
+  (3-5 organik postta bir, frequency cap, zorunlu "Sponsorlu" badge), target URL validasyonu,
+  impression/click `record_cadde_promotion_event_v1` (abuse limitli).
+- Görünürlük yalnız `cadde.promotion.create` feature'ı ile; Şehir Elçisi highlight ücretsiz.
+- Çarşı'dan TAMAMEN ayrı kalır (D-01).
+
+### Birikmiş kuyruk (faz sırasına bağlı değil)
+- §13.5 cafe profil parity ("Açık Cafe" public profilde) + composer paylaşım hedefi seçici.
+- `/profile?tab=carsi` parity + `/admin/cadde/carsi` (Faz 7 AdminCadde modülerleştirmesiyle).
 
 ---
 
