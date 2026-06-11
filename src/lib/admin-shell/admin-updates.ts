@@ -14,6 +14,18 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260611-ulke-sehir-tek-kaynak",
+    date: "11 Haziran 2026",
+    title: "Ülke/şehir menüleri düzeldi — artık hiçbir şehir eksik değil",
+    items: [
+      "Ülke seçince şehir listesinin yarım gelmesi sorunu çözüldü: teknik bir limit yüzünden büyük ülkelerde sadece ilk 1000 şehir geliyordu. Artık 223 ülkenin 77 bine yakın şehrinin tamamı listeleniyor (Almanya'da 7 binden fazla, küçük kasabalar dahil).",
+      "Liste uzun diye kullanım zorlaşmadı: şehir menüsünde yazarak arama var, Türkçe karakter takılmaz ('munih' yazsan da Münih'i bulur). Ekranda ilk 200 sonuç gösterilir, gerisi için aramayı daraltman yeterli.",
+      "Aynı şehrin iki kere görünmesi temizlendi: listede hem 'Münih' hem 'Munich', hem 'Düsseldorf' hem 'Dusseldorf' duruyordu. 112 İngilizce/aksansız kopya kapatıldı; Türkçe adlar kaldı. Silinmediler, gerekirse geri açılabilir.",
+      "Sitedeki BÜTÜN ülke/şehir alanları artık aynı kaynaktan besleniyor: önceden serbest yazı kutusu olan 5 form (destekçi, ilgi kaydı, diaspora kaydı, WhatsApp grubu, şehir elçisi başvurusu) ve Taşınma Motoru'ndaki 13 ülkelik kısıtlı liste de aynı menülere geçti. Üyeler artık 'Koln', 'köln', 'Cologne' gibi farklı yazımlar giremez — veriler tutarlı birikir.",
+      "Bağlantı koptuğunda devreye giren yedek ülke listesindeki bozuk adlar da onarıldı (İngiltere, İtalya gibi İ ile başlayan 9 ülke adı hatalı kayıtlıydı).",
+    ],
+  },
+  {
     id: "20260611-cadde-30-tamamlandi",
     date: "11 Haziran 2026",
     title: "Cadde 3.0 tamamlandı — bildirimler, moderasyon ve fazlası",
