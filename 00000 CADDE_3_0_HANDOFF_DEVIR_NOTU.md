@@ -19,7 +19,7 @@
 | **Faz 4 Cafe** | ✅ TAMAM (migration 008 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `48c3377` |
 | **Faz 5 Çarşı** | ✅ TAMAM (migration 009 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `cb116c1` |
 | **Faz 6 Tanıtım** | ✅ TAMAM (D-01 KARAR: UI "Tanıtım"; migration 010 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `2f92754` |
-| **Faz 7 bildirim/moderasyon** | ✅ KOD TAMAM — migration 011 canlıya uygulanma durumunu §2'den kontrol et | (bu oturum) |
+| **Faz 7 bildirim/moderasyon** | ✅ TAMAM (migration 011 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `2a69250` |
 | **Faz 8 diaspora** | ⬜ **SIRADAKİ** | — |
 | Faz 9 legacy temizlik | ⬜ | — |
 
@@ -185,7 +185,8 @@ psql -h aws-1-eu-west-2.pooler.supabase.com -p 5432 -U postgres.injprdrsklkxgnai
 
 ## 5. SIRADAKİ İŞ: FAZ 8 — Çoklu Diaspora
 
-(Faz 7 kodu tamam; migration `20260611130000` canlıya uygulanma durumunu §2'den kontrol et.
+(Faz 7 tamam; migration `20260611130000` 2026-06-11'de canlıya uygulandı ve doğrulandı:
+notifications 3 yeni kolon + gevşek insert policy kalktı + 7 fonksiyon + 3 rate limit ayarı.
 Canlıdaki son migration'ı her zaman `select max(version) from supabase_migrations.schema_migrations`
 ile doğrula.)
 
