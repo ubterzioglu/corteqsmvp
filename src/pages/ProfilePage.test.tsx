@@ -36,6 +36,7 @@ const updateProfileAttributeMock = vi.fn();
 const submitFeatureRequestMock = vi.fn();
 const submitRoleChangeRequestMock = vi.fn();
 const updateProfileAvatarMock = vi.fn();
+const supabaseRpcMock = vi.fn();
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
 }));
@@ -66,6 +67,7 @@ vi.mock("@/integrations/supabase/client", () => ({
     auth: {
       signOut: vi.fn(),
     },
+    rpc: (...args: unknown[]) => supabaseRpcMock(...args),
   },
 }));
 
@@ -76,6 +78,13 @@ describe("ProfilePage", () => {
     submitFeatureRequestMock.mockResolvedValue("request-1");
     submitRoleChangeRequestMock.mockResolvedValue("request-1");
     updateProfileAvatarMock.mockResolvedValue({ status: "approved" });
+    supabaseRpcMock.mockResolvedValue({
+      data: [
+        { key: "User_CityAmbassador", label: "Şehir Elçisi", description: null, sort_order: 10 },
+        { key: "bireysel", label: "Bireysel", description: null, sort_order: 20 },
+      ],
+      error: null,
+    });
   });
 
   const baseProfile: CurrentUserProfilePayload = {
@@ -620,7 +629,7 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Gönüllü Mentörlük")).toBeInTheDocument();
     expect(screen.getByText("Rolüne Özel Alanlar")).toBeInTheDocument();
     expect(screen.queryByText("Alt Kategori / Alt Tip")).not.toBeInTheDocument();
-    expect(screen.getAllByText("Locked").length).toBeGreaterThanOrEqual(2);
+    expect(screen.queryByText("Locked")).not.toBeInTheDocument();
     const profileSummaryToggle = screen.getByRole("button", { name: "Profil Durumu" });
     expect(profileSummaryToggle).toBeInTheDocument();
     expect(profileSummaryToggle).toHaveAttribute("aria-expanded", "false");
@@ -634,26 +643,42 @@ describe("ProfilePage", () => {
     expect(screen.queryByText("Tamamlanma Durumu")).not.toBeInTheDocument();
     const accessCardToggle = screen.getByRole("button", { name: /Başvurular & Erişimler/i });
     expect(accessCardToggle).toBeInTheDocument();
-    expect(accessCardToggle).toBeDisabled();
+    expect(accessCardToggle).toBeEnabled();
     expect(accessCardToggle).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByText("Rol Başvurusu")).not.toBeInTheDocument();
     expect(screen.queryByText("Açık Dashboard Erişimleri")).not.toBeInTheDocument();
 
     fireEvent.click(accessCardToggle);
 
+    expect(accessCardToggle).toHaveAttribute("aria-expanded", "true");
+    expect(await screen.findByText("Rol Başvurusu")).toBeInTheDocument();
+    expect(screen.getByText("Feature Talepleri")).toBeInTheDocument();
+    expect(screen.getByText("Açık Dashboard Erişimleri")).toBeInTheDocument();
+    expect(screen.getByText("Bekleyen Talepler")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(supabaseRpcMock).toHaveBeenCalledWith("get_flat_roles");
+    });
+
+    fireEvent.click(accessCardToggle);
     expect(accessCardToggle).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByText("Rol Başvurusu")).not.toBeInTheDocument();
-    expect(screen.queryByText("Feature Talepleri")).not.toBeInTheDocument();
-    expect(screen.queryByText("Açık Dashboard Erişimleri")).not.toBeInTheDocument();
 
     const helpCardToggle = screen.getByRole("button", { name: /Yardım & Kılavuzlar/i });
     expect(helpCardToggle).toBeInTheDocument();
-    expect(helpCardToggle).toBeDisabled();
+    expect(helpCardToggle).toBeEnabled();
     expect(helpCardToggle).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByText("Ortak Profil Alanları Kullanım Kılavuzu")).not.toBeInTheDocument();
 
     fireEvent.click(helpCardToggle);
 
+    expect(helpCardToggle).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("Ortak Profil Alanları Kullanım Kılavuzu")).toBeInTheDocument();
+    expect(screen.getByText("Rolüne Özel Alanlar Kullanım Kılavuzu")).toBeInTheDocument();
+    expect(screen.getByText("Rol Başvurusu Kılavuzu")).toBeInTheDocument();
+    expect(screen.getByText("Feature Talepleri Kılavuzu")).toBeInTheDocument();
+    expect(screen.getByText("Bekleyen Talepler Kılavuzu")).toBeInTheDocument();
+
+    fireEvent.click(helpCardToggle);
     expect(helpCardToggle).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByText("Ortak Profil Alanları Kullanım Kılavuzu")).not.toBeInTheDocument();
     expect(screen.getByText(/Diaspora için iş birliği ve mentorluk fırsatlarına açığım\./i)).toBeInTheDocument();
@@ -671,6 +696,41 @@ describe("ProfilePage", () => {
     expect(screen.getAllByRole("switch").length).toBeGreaterThan(3);
     expect(screen.getAllByDisplayValue("firmascope")).toHaveLength(1);
   }, 15_000); // tek başına ~4sn süren geniş kapsamlı render testi; paralel suite yükünde 5sn default timeout'u aşıyor
+
+  it("submits a feature request from the access card", async () => {
+    const refreshProfileMock = vi.fn().mockResolvedValue(undefined);
+
+    useAuthMock.mockReturnValue({
+      user: { id: "u-1", email: "firmascope@gmail.com", user_metadata: { name: "firmascope" } },
+    });
+    useCurrentUserDashboardMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      items: [],
+      refreshDashboard: vi.fn(),
+    });
+    useCurrentUserProfileMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      profile: baseProfile,
+      refreshProfile: refreshProfileMock,
+    });
+
+    renderProfilePage("/profile/bireysel");
+
+    fireEvent.click(await screen.findByRole("button", { name: /Başvurular & Erişimler/i }));
+    fireEvent.click(await screen.findByText("Feature Talepleri"));
+
+    const requestButtons = await screen.findAllByRole("button", { name: "Talep Et" });
+    expect(requestButtons.length).toBeGreaterThanOrEqual(1);
+
+    fireEvent.click(requestButtons[0]);
+
+    await waitFor(() => {
+      expect(submitFeatureRequestMock).toHaveBeenCalledWith(GENERIC_FEATURE_KEYS.directoryVisible);
+    });
+    expect(refreshProfileMock).toHaveBeenCalled();
+  });
 
   it("does not render the bireysel fallback description when short bio is empty", async () => {
     useAuthMock.mockReturnValue({

@@ -31,6 +31,11 @@ export {
 export { reviewApprovalRequestAsAdmin } from "./admin/admin-approval-api";
 
 export {
+  listWorldCupRegistrationsAsAdmin,
+  reviewWorldCupRegistrationAsAdmin,
+} from "./admin/admin-dunya-kupasi-api";
+
+export {
   listReferralSources,
   listReferralTypes,
   listReferralGroups,
