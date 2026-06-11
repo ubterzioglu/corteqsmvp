@@ -83,8 +83,8 @@ const Footer = () => {
         <div className="mx-auto max-w-5xl rounded-[2rem] border border-white/15 bg-black/25 px-5 py-8 text-center shadow-[0_36px_120px_-42px_rgba(0,0,0,0.55)] backdrop-blur-xl sm:px-8 lg:px-12 lg:py-10">
           <div className="mx-auto mb-6 max-w-4xl py-1 sm:mb-10 sm:py-2">
             <p className="mb-3 text-sm font-medium tracking-[0.08em] text-white sm:mb-5">İletişim Kanallarımız</p>
-            <div className="overflow-x-auto px-1 py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:py-3">
-              <div className="mx-auto flex w-max items-center gap-2 px-1 py-1 sm:gap-4">
+            <div className="px-1 py-2 sm:py-3">
+              <div className="mx-auto grid w-max grid-cols-4 gap-2 px-1 py-1 sm:flex sm:w-auto sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
                 {socialLinks.map(({ href, label, icon: Icon, className }) => (
                   <a
                     key={label}
@@ -105,8 +105,8 @@ const Footer = () => {
           </div>
 
           <div className="mt-5 border-t border-white/10 pt-3.5">
-            <div className="overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <div className="mx-auto flex w-max items-center whitespace-nowrap px-0.5 text-[0.76rem] text-white sm:text-[0.8rem]">
+            <div className="pb-1">
+              <div className="flex flex-wrap items-center justify-center gap-y-1.5 whitespace-nowrap px-0.5 text-[0.76rem] text-white sm:text-[0.8rem]">
                 {footerFlatLinks.map((link, index) => (
                   <div
                     key={link.label}
@@ -135,11 +135,9 @@ const Footer = () => {
           </div>
 
           <div className="mt-3.5 border-t border-white/10 pt-3.5">
-            <div className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <p className="mx-auto w-max whitespace-nowrap px-0.5 text-[0.66rem] text-white sm:text-[0.72rem]">
-                © 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları saklıdır.
-              </p>
-            </div>
+            <p className="px-0.5 text-center text-[0.66rem] leading-relaxed text-white sm:text-[0.72rem]">
+              © 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları saklıdır.
+            </p>
           </div>
         </div>
       </div>
