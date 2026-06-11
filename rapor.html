@@ -95,6 +95,26 @@
 
 <!-- ============================================================ -->
 <section>
+  <h2>0. ANA TAKİP TABLOSU — Tüm İş Hatları (canlı pano)</h2>
+  <p class="muted">Projenin tek durum panosu. Bir iş hattı kapandığında/açıldığında bu tablo güncellenir. Son güncelleme: <strong>2026-06-11</strong>.</p>
+  <table>
+    <tr><th>İş Hattı</th><th>Durum</th><th>Son Adım</th><th>Sıradaki Adım</th><th>Karar / Sahip</th></tr>
+    <tr><td>Cadde 3.0 Rebuild (Faz 0–9)</td><td><span class="ok">✓ TAMAM</span></td><td>14 migration canlıda; 509/509 test</td><td>—</td><td>Kapandı (2026-06-11)</td></tr>
+    <tr><td>Cadde kuyruk (oto-tarama, eksik bildirimler, parity'ler, admin Çarşı)</td><td><span class="ok">✓ TAMAM</span></td><td>Migration 014 + pg_cron canlıda</td><td>—</td><td>Kapandı (2026-06-11)</td></tr>
+    <tr><td>Admin Panel v2</td><td><span class="ok">✓ TAMAM</span></td><td>Faz 0–9 + AdminPageLayout tasfiyesi</td><td>Gerçek cihaz QA</td><td>Detay: <code>docs/plans/admin-v2/</code></td></tr>
+    <tr><td>Public Profil v2.1</td><td><span class="ok">✓ TAMAM</span></td><td>v2 RPC canlıda, deploy doğrulandı</td><td>—</td><td>Detay: <code>docs/history/</code></td></tr>
+    <tr><td>Kök temizliği + dokümantasyon konsolidasyonu</td><td><span class="ok">✓ TAMAM</span></td><td>Kökte 4 doküman düzeni; arşivler docs/ altında</td><td>—</td><td>Kapandı (2026-06-11); harita §11</td></tr>
+    <tr><td><strong>Legacy tablo DROP'u</strong></td><td><span class="warn">⏳ CANARY</span></td><td>Soft-decommission canlıda (yazma kapalı + COMMENT)</td><td>Deploy → <strong>1–2 hafta log gözlemi</strong> → karar dokümanı → DROP migration (<code>user_follows</code> 1 satır R-06 notuyla)</td><td><strong>KARAR (2026-06-11): bekle-gözle ONAYLANDI</strong> — ürün sahibi</td></tr>
+    <tr><td>B1 — supabase types regen</td><td><span class="warn">⏳ TOKEN</span></td><td>Denendi: mevcut token'lar Unauthorized</td><td>Token yenile → gen types → build doğrula → <code>db as any</code> cast'ini kaldır</td><td>Ürün sahibi (token)</td></tr>
+    <tr><td>D-03 — SMS/OTP sağlayıcısı</td><td><span class="warn">⏳ KARAR</span></td><td>Stub hazır (flag kapalı, şema canlıda)</td><td>Sağlayıcı seç → OTP Edge Function'ları → flag=true</td><td>Ürün sahibi</td></tr>
+    <tr><td>Playwright persona matrisi</td><td><span class="warn">⏳ AÇIK</span></td><td>Unit/component kapsamı geniş (509)</td><td>Persona senaryolarını e2e'ye dök (spec §22.4)</td><td>—</td></tr>
+    <tr><td>D-07 — Premium kademesi</td><td><span class="warn">⏳ KARAR</span></td><td>Limitler ayarlardan yönetiliyor</td><td>Entitlement modeli kararı</td><td>Ürün sahibi</td></tr>
+    <tr><td>İkincil kuyruk</td><td class="muted">birikmiş</td><td colspan="2" class="muted">Public profil "Açık Cafe" yüzeyi · ai-bar/kategori placement yüzeyleri · billboard→kampanya geçişi (P2) · Çarşı görsel upload</td><td>—</td></tr>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<section>
   <h2>1. Yönetici Özeti — Ne Yapıldı?</h2>
   <p>
     <strong>Cadde</strong> (şehir bazlı diaspora sosyal akışı) iki gün içinde uçtan uca yeniden inşa edildi.
@@ -419,13 +439,42 @@
     <tr><th>Kalem</th><th>Durum / yapılacak</th></tr>
     <tr><td>B1 — <code>supabase gen types</code></td><td><span class="warn">Token bekliyor</span>: <code>.env.local</code>'daki <code>SUPABASE_ACCESS_TOKEN</code> (+backup) Management API'de “Unauthorized”. Token yenilenince: <code>npx supabase gen types typescript --project-id injprdrsklkxgnaiixzh &gt; src/integrations/supabase/types.ts</code> → build doğrula → <code>db as any</code> cast'ini kaldır.</td></tr>
     <tr><td>D-03 — SMS sağlayıcı</td><td>Ürün kararı (Twilio/Vonage/Supabase phone). Seçilince: <code>send/verify-phone-otp</code> Edge Function'ları + flag=true; başka değişiklik gerekmez.</td></tr>
-    <tr><td>Legacy DROP</td><td>En az 1 canary sürüm gözle → ayrı karar dokümanı + DROP migration'ı (user_follows 1 satırı not düşülerek).</td></tr>
+    <tr><td>Legacy DROP</td><td><span class="ok">KARAR (2026-06-11): bekle-gözle ONAYLANDI.</span> Süreç: yeni sürüm deploy edilir → 1–2 hafta loglarda legacy tablolara erişim hatası gözlenir (yazma zaten kapalı; sorun çıkarsa geri dönüş tek GRANT) → kısa karar dokümanı → DROP migration. <code>user_follows</code>'taki 1 satır (R-06) DROP kararında not düşülecek (istenirse önce yedeklenir).</td></tr>
     <tr><td>İkincil</td><td>Public profil “Açık Cafe” yüzeyi · ai-bar/kategori placement yüzeyleri · Playwright personaları · D-07 premium kademesi · billboard→kampanya geçişi (P2)</td></tr>
   </table>
 </section>
 
+<!-- ============================================================ -->
+<section>
+  <h2>11. Klasör Temizliği & Doküman Haritası (2026-06-11)</h2>
+  <p>
+    Kök dizin temizlendi: artık kökte yalnız <strong>4 bakımlı doküman</strong> + build-kritik dosyalar var.
+    Diğer her şey <code>docs/</code> altına arşivlendi.
+  </p>
+  <table>
+    <tr><th>Ne arıyorsun?</th><th>Nerede</th></tr>
+    <tr><td>Agent/katkı kuralları</td><td><code>CLAUDE.md</code> (kök)</td></tr>
+    <tr><td>Hızlı proje bağlamı (yeni oturum)</td><td><code>AGENT_CONTEXT.md</code> (kök)</td></tr>
+    <tr><td><strong>Tek ana mimari doküman</strong></td><td><code>ARCHITECTURE.md</code> (kök) — eski 9 mimari doküman <code>docs/archive/architecture/</code>'da donduruldu</td></tr>
+    <tr><td>Durum panosu + kullanım senaryoları</td><td><code>rapor.html</code> (kök — bu dosya)</td></tr>
+    <tr><td>Cadde 3.0 spec / devir notu / kapanış raporu</td><td><code>docs/cadde-300/</code></td></tr>
+    <tr><td>Admin v2 masterplan + handoff</td><td><code>docs/plans/admin-v2/</code></td></tr>
+    <tr><td>Kökten arşivlenen notlar (audit, cleancode, dbcheck, peronevera, deployerror, meeting10.csv, import-resources.ts)</td><td><code>docs/archive/root-2026-06-11/</code></td></tr>
+    <tr><td>Supabase DB yedekleri</td><td><code>docs/archive/backups/</code></td></tr>
+    <tr><td>Eski <code>docu/</code> klasörü ve arşiv görselleri</td><td><code>docs/docu/</code> + <code>docs/assets/</code></td></tr>
+    <tr><td>Referans repo kopyası (global-network-bridge)</td><td><code>docs/reference/global-network-bridge/</code></td></tr>
+    <tr><td>Eski cleanup arşivleri + import araçları</td><td><code>docs/archive/</code> (cleanup-2026-05-15/30, turkish_missions_import_builder)</td></tr>
+  </table>
+  <p class="muted">
+    Kökten silinenler: public/ ile birebir aynı olan <code>herovideo.mp4</code> / <code>whatmaskot.mp4</code> kopyaları,
+    üretilen <code>*.tsbuildinfo</code> dosyaları (artık .gitignore'da). Build-kritik <code>info-*.html</code> dosyaları
+    ve <code>lansman/</code> Vite gereği kökte kalır. Arşiv klasörleri (<code>docs/archive|reference|docu</code>)
+    encoding denetiminden (<code>verify:text</code>) muaf tutuldu.
+  </p>
+</section>
+
 <footer>
-  Cadde 3.0 E2E Rebuild · 2026-06-11 · Detay: <code>docs/cadde-300/change-report.md</code> + <code>00000 CADDE_3_0_HANDOFF_DEVIR_NOTU.md</code>
+  CorteQS Durum Panosu &amp; Cadde 3.0 Raporu · 2026-06-11 · Detay: <code>ARCHITECTURE.md</code> · <code>docs/cadde-300/change-report.md</code> · <code>docs/README.md</code>
 </footer>
 
 </div>

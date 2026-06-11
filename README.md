@@ -89,6 +89,20 @@ After a deployment, verify the published release with:
 BASE_URL=https://corteqs.net npm run verify:release
 ```
 
+## Documentation
+
+Root holds exactly 4 maintained documents (2026-06-11 layout):
+
+| File | Purpose |
+|------|---------|
+| `CLAUDE.md` | Agent/contributor rules and constraints |
+| `AGENT_CONTEXT.md` | Fast project context for a new session |
+| `ARCHITECTURE.md` | The single maintained architecture document |
+| `rapor.html` | Status board + use-case scenarios (open in a browser) |
+
+Everything else is under `docs/` — see `docs/README.md` for the index. Frozen archives live in
+`docs/archive/`, `docs/reference/`, `docs/docu/`.
+
 ## Notes
 
 - Form submission must succeed even if email delivery fails.

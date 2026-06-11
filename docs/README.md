@@ -1,95 +1,38 @@
 # CorteQS Documentation Index
 
-Bu klasor, aktif teknik dokumani, modul belgelerini, operasyon notlarini ve gecmis raporlari tek yerde toplar.
+> **Güncelleme:** 2026-06-11 — kök dizin temizliği + dokümantasyon konsolidasyonu sonrası.
+>
+> **Bakımlı dokümanlar KÖKTE yaşar (yalnız 4 dosya):**
+> `CLAUDE.md` (agent kuralları) · `AGENT_CONTEXT.md` (hızlı bağlam) ·
+> `ARCHITECTURE.md` (tek ana mimari) · `rapor.html` (durum panosu + kullanım senaryoları).
+> Bu klasördeki her şey ya **aktif yardımcı doküman** ya da **dondurulmuş arşivdir**.
 
-## Klasor Sozlugu
+## Klasör Sözlüğü
 
-| Klasor | Icerik |
-|--------|--------|
-| `architecture/` | Guncel sistem mimarisi, teknik genel bakis, schema audit ve runtime davranislari |
-| `modules/` | Belirli urun/modul belgeleri |
-| `operations/` | Deploy, database, security ve release odakli operasyon rehberleri |
-| `guides/` | Gunluk kullanim ve admin/developer rehberleri |
-| `plans/` | Aktif ve tamamlanmamis uygulama planlari (kok dizinden tasindi) |
-| `decisions/` | Teknik kararlar ve ADR'lar icin ayrilmis alan |
-| `cleanup/2026-05-30/` | Cleanup calismasinin baseline, envanter, manifest ve validation ciktisi |
-| `history/` | Tamamlanmis planlar, durum raporlari ve onceki cleanup ciktisi |
-| `assets/` | Gorseller, HTML rapor dosyalari ve diger binary varliklar |
-| `superpowers/` | Agent tarafindan olusturulan planlar ve spec'ler |
-| `archive/` | Emekliye ayrilmis, artik kullanilmayan belgeler |
-| `inbox-review/` | Guncelligi veya siniflandirmasi kesinlestirilemeyen dosyalar |
+| Klasör | İçerik | Durum |
+|--------|--------|-------|
+| `cadde-300/` | Cadde 3.0 E2E rebuild: spec, envanter, devir notu, faz dokümanları (00–03), **change-report.md** (kapanış + kalan işler) | Tamamlandı (2026-06-11) — referans |
+| `plans/` | Uygulama planları; `plans/admin-v2/` = Admin Panel v2 masterplan (md+html) + progress handoff | Aktif/yeni biten |
+| `catalog-role-afs-rebuild/` | Catalog/flat-rol/AFS rebuild raporları (00–14, canlı 2026-06-09) | Referans |
+| `refactor/` | Refactor backlog'u (B1–B10) | Aktif |
+| `modules/` | Modül belgeleri (Türkçe domain adları) | Aktif |
+| `operations/` | Deploy, database, security, release rehberleri | Aktif |
+| `guides/` | Kullanım ve admin/developer rehberleri | Aktif |
+| `decisions/` | Teknik kararlar / ADR alanı | Aktif |
+| `database-audit/`, `audits/`, `cleanup/` | Audit ve cleanup çıktıları | Referans |
+| `history/` | Tamamlanmış planlar, eski handoff'lar (public-profil v2.1 dahil), durum raporları | Arşiv |
+| `archive/` | **Dondurulmuş içerik:** `architecture/` (eski 9 mimari doküman — bakım ARCHITECTURE.md'de), `root-2026-06-11/` (kök temizliği: audit/cleancode/dbcheck/peronevera notları, deployerror, meeting10.csv, import-resources.ts), `backups/` (Supabase DB dump'ları), `cleanup-2026-05-15/`, `cleanup-2026-05-30/`, `turkish_missions_import_builder/` | Arşiv |
+| `reference/` | Referans repo kopyaları (`global-network-bridge/`) | Arşiv |
+| `docu/` | Eski kök `docu/` klasörü (info-* HTML kopyaları + referans görseller) | Arşiv |
+| `assets/` | Arşiv görselleri (sweet.png, rapor ekran görüntüleri vb.) | Arşiv |
+| `superpowers/`, `inbox-review/` | Agent planları / sınıflandırılmamış dosyalar | Arşiv |
 
-## Agent Context (buradan başla)
+> Not: `archive/`, `reference/`, `docu/` klasörleri `verify:text` encoding denetiminden muaftır
+> (donmuş içerik) — canlı doküman buralara DEĞİL, ilgili aktif klasöre eklenir.
 
-- [AGENT_CONTEXT.md](AGENT_CONTEXT.md) — Yeni oturum için tek dosya özet: stack, auth, veri katmanı, kritik dosyalar, kısıtlamalar (13 KB, ~365 satır)
+## Nereden başlamalı?
 
-## Aktif Mimari Belgeler
-
-- [architecture/PROJECT_TECHNICAL_OVERVIEW.md](architecture/PROJECT_TECHNICAL_OVERVIEW.md)
-- [architecture/CORTEQS_LANDING_TEKNIK_DOKUMANTASYON.md](architecture/CORTEQS_LANDING_TEKNIK_DOKUMANTASYON.md)
-- [architecture/CORTEQS_LANDING_TEKNIK_DOKUMANTASYON_2026-05-30.md](architecture/CORTEQS_LANDING_TEKNIK_DOKUMANTASYON_2026-05-30.md)
-- [architecture/SISTEM_MIMARI.md](architecture/SISTEM_MIMARI.md)
-- [architecture/catalog-ai-search-contract.md](architecture/catalog-ai-search-contract.md)
-- [architecture/catalog-schema-audit-2026-06-04.md](architecture/catalog-schema-audit-2026-06-04.md)
-- [architecture/mainplan-discovery-report-2026-06-04.md](architecture/mainplan-discovery-report-2026-06-04.md)
-- [architecture/simplification-inventory-report.md](architecture/simplification-inventory-report.md)
-
-## Aktif Planlar
-
-- [plans/mainplan.md](plans/mainplan.md) — Birlesik auth, profil, rol ve attribute yonetimi
-- [plans/platform-rolleri.md](plans/platform-rolleri.md) — Platform rol tanimlari
-- [plans/AFS_new.md](plans/AFS_new.md) — Catalog Item Role Sistemi yeni mimarisi
-- [plans/AFS_new_2.md](plans/AFS_new_2.md) — Unified Catalog + Users Admin View
-- [plans/AFS_Done.md](plans/AFS_Done.md) — Bridge stratejisi implementasyon plani
-- [plans/corteqs_codex_taxonomy_retirement_and_admin_simplification_plan.md](plans/corteqs_codex_taxonomy_retirement_and_admin_simplification_plan.md)
-- [plans/corteqs_codex_unified_catalog_role_owner_search_final_plan.md](plans/corteqs_codex_unified_catalog_role_owner_search_final_plan.md)
-- [plans/cleancode.md](plans/cleancode.md)
-- [plans/AFS_hadi.md](plans/AFS_hadi.md)
-
-## Modul Belgeleri
-
-- [modules/surveys/anket.md](modules/surveys/anket.md)
-- [modules/surveys/survey.md](modules/surveys/survey.md)
-- [modules/cadde/cadde.md](modules/cadde/cadde.md)
-- [modules/profiles/profil.md](modules/profiles/profil.md)
-- [modules/rolesgo/rolesgo.md](modules/rolesgo/rolesgo.md)
-- [modules/new-member/new-member-system-login-roller-featurelar.md](modules/new-member/new-member-system-login-roller-featurelar.md)
-- [modules/new-member/new-member-system-son-durum-cok-basit.md](modules/new-member/new-member-system-son-durum-cok-basit.md)
-- [modules/new-member/v2.md](modules/new-member/v2.md)
-- [modules/commercial/commercial-contributor-structure.md](modules/commercial/commercial-contributor-structure.md)
-- [modules/marquee/marquee-haber-akisi.md](modules/marquee/marquee-haber-akisi.md)
-
-## Operasyon ve Kullanim Rehberleri
-
-- [operations/database/dosyalardatabase.md](operations/database/dosyalardatabase.md)
-- [guides/anket-user-guide.md](guides/anket-user-guide.md)
-- [guides/rolesgo-mvp-kullanim-klavuzu.md](guides/rolesgo-mvp-kullanim-klavuzu.md)
-- [guides/topluluk-yonetimi-kullanma-klavuzu.md](guides/topluluk-yonetimi-kullanma-klavuzu.md)
-- [guides/workspace-resources-admin-kullanim-rehberi.md](guides/workspace-resources-admin-kullanim-rehberi.md)
-- [guides/katalog-items-roller-features-iliskisi.md](guides/katalog-items-roller-features-iliskisi.md)
-- [guides/kategori-rol-feature-yapisi.md](guides/kategori-rol-feature-yapisi.md)
-- [guides/catalog-supabase-js-queries.md](guides/catalog-supabase-js-queries.md)
-
-## History
-
-`history/` altinda tarihsel degeri olan ama aktif referans noktasi olmayan planlar, cleanup raporlari ve durum notlari tutulur.
-
-- [history/status-reports/](history/status-reports/) — Teknik durum belgeleri (tarih damgali)
-- [history/completed-plans/](history/completed-plans/) — Tamamlanmis planlar
-- [history/cleanup-reports/](history/cleanup-reports/) — Guvenlik ve kod temizligi raporlari
-- [history/deprecated/](history/deprecated/) — Gecersiz hale gelmis belgeler
-
-## Assets
-
-`assets/` altinda gorseller, HTML rapor dosyalari ve diger binary varliklar tutulur. Kaynak kod veya deployment pipeline'i tarafindan kullanilmayan dosyalar buradadir.
-
-## Yeni Dokuman Ekleme Kurallari
-
-- Kok dizine veya `docs/` kokuне MD dosyasi koymayın — uygun alt klasoru kullanin.
-- Aktif bir plan → `plans/`
-- Modul belgesi → `modules/<modul-adi>/`
-- Operasyonel runbook → `operations/` ya da `guides/`
-- Tarihsel rapor → `history/`
-- Gorsel veya HTML → `assets/`
-- Guncelligi belirsiz → `inbox-review/`
-- Isimlendirmede mevcut domain dilini koruyun (Turkish domain terms).
+1. Yeni oturum/bağlam → kökteki **`AGENT_CONTEXT.md`**
+2. Mimari soru → kökteki **`ARCHITECTURE.md`**
+3. Proje durumu / ne bitti ne açık → kökteki **`rapor.html`**
+4. Cadde 3.0 detayı → `cadde-300/change-report.md`

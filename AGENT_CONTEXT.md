@@ -2,10 +2,16 @@
 
 > Bu dosya, yeni bir agent oturumunun projeyi hızla kavraması için hazırlanmıştır.
 > Diğer teknik belgelerden bilgi derleyerek token maliyetini minimize eder.
-> **Güncelleme:** 2026-06-10 (catalog/flat-role/AFS rebuild — Phase 1–8 tamamlandı — ve diplomatic-profiles temizliği sonrası repo gerçekliğiyle senkronlandı)
-> **Derin teknik doküman (AI-friendly):** `docs/architecture/AI_TECHNICAL_REFERENCE.md`
-> **Rebuild raporları:** `docs/catalog-role-afs-rebuild/` (00–14, canlıya alındı 2026-06-09)
-> **Refactor yol haritası:** `docs/refactor/2026-06-09-refactor-backlog.md` (ertelenen işler B1–B10)
+> **Güncelleme:** 2026-06-11 (Cadde 3.0 E2E rebuild Faz 0–9 + kuyruk TAMAMLANDI; kök dizin temizliği ve dokümantasyon konsolidasyonu yapıldı)
+>
+> **Kök doküman düzeni (2026-06-11):** kökte yalnız 4 doküman yaşar —
+> `CLAUDE.md` (agent kuralları) · `AGENT_CONTEXT.md` (bu dosya) · `ARCHITECTURE.md` (tek ana mimari) · `rapor.html` (rapor + takip tablosu).
+> Geri kalan her şey `docs/` altındadır (`docs/README.md` indeksine bak).
+>
+> **Tek ana mimari doküman:** `ARCHITECTURE.md` (kök)
+> **Cadde 3.0 kapanış raporu:** `docs/cadde-300/change-report.md`
+> **Catalog/AFS rebuild raporları:** `docs/catalog-role-afs-rebuild/` (00–14, canlı 2026-06-09)
+> **Refactor yol haritası:** `docs/refactor/2026-06-09-refactor-backlog.md` (B1–B10)
 
 ---
 
@@ -33,8 +39,10 @@
 | Catalog | `/admin/data`, `/admin/new-member/profile-role-assignment` | Unified catalog + üye yönetimi |
 | RolesGo | `/admin/new-member/*` | Rol/attribute/feature/section/overview yönetimi |
 | WhatsApp | `/addcom`, `/addcom/edit/:slug`, `/admin/whatsapp-landings/*` | WhatsApp landing yönetimi |
-| Profile | `/profile`, `/profile/:type`, `/profile/catalog/:itemId` | Kullanıcı profil editörü |
+| Profile | `/profile`, `/profile/:type`, `/profile/catalog/:itemId` | Kullanıcı profil editörü (+ Cadde panelleri: ilgi alanları, içeriklerim, Tanıtım) |
 | Welcome | `/welcome/activate` | Yeni üye aktivasyon akışı |
+| **Cadde 3.0** | `/cadde`, `/cadde/cafe/:cafeId`, `/cadde/carsi`, `/cadde/carsi/:itemId` | Diaspora sosyal akışı: band/skor ranking'li feed, Köprü, Cafe odaları, Çarşı (U2U pazar), Tanıtım kartları, bildirim zili |
+| Cadde Admin | `/admin/cadde`, `/admin/cadde/promotions`, `/admin/cadde/moderation`, `/admin/cadde/carsi` | İçerik CRUD + kampanya onayı + moderasyon kuyruğu + ilan denetimi (`pages/admin/cadde/routes.tsx`) |
 
 ---
 
@@ -85,8 +93,10 @@ src/
 │   │   ├── role-management/ # AttributeRulesPanel, FeatureFlagsPanel, ProfileSectionRulesPanel
 │   │   └── roles-overview/  # RoleListPanel, ItemListPanel, EntityCatalogPanel, CaseDetailPanel
 │   ├── directory/           # DirectorySearchBar, DirectoryFilters, DirectoryResultRow, ProfileHeroCard, CatalogProfileLayout
-│   ├── profile/             # EditableProfilesSelector, IndividualPublicView
-│   └── profile/, surveys/, may19/, chat/, connections/, messaging/, feed/
+│   ├── cadde/               # CaddeProfileGate, CaddeGeoFilter, CreateCafeForm, CarsiGlobalTicker,
+│   │                        #   SponsoredFeedCard, PromotionRail, NotificationsBell, profil panelleri
+│   └── profile/, surveys/, may19/, chat/, messaging/
+│   # NOT: legacy feed/ ve connections/ klasörleri SİLİNDİ (Cadde 3.0 Faz 9, 2026-06-11)
 ├── lib/
 │   ├── muhasebe-*.ts        # api, schemas, format, aggregations — REFERANS PATTERN
 │   ├── member-profile-api.ts  # Profil API katmanı (TERCIH ET)
@@ -95,6 +105,9 @@ src/
 │   ├── admin-catalog.ts     # Admin catalog data layer
 │   ├── profile-*.ts         # profile-view-model, profile-helpers, profile-types, profile-onboarding-*
 │   ├── role-catalog.ts      # Rol tanımları veri katmanı
+│   ├── cadde-*.ts           # Cadde 3.0 katmanı: types/api/admin-api/schemas/rules/format/
+│   │                        #   ranking/targeting/query-keys/internal + carsi-api/tanitim-api/
+│   │                        #   notifications-api/moderation-api (RPC-only mutation kuralı)
 │   ├── admin.ts             # 57 satır pure barrel → src/lib/admin/'i re-export eder
 │   ├── admin/               # 7 domain API: access/role/feature/profile/taxonomy/approval/referral (+ admin-types)
 │   ├── features.ts          # Feature flag yardımcıları
@@ -235,6 +248,38 @@ role_sections                → Rol↔section görünürlüğü (eski: role_pro
 > **DROP edildi:** `catalog_item_types`, `item_type_attribute_rules`, `role_taxonomy_rules` ve aile/taxonomy konseptleri.
 > Runtime kodda eski adların **0 referansı** var (auto-gen `types.ts` hariç).
 
+### Cadde 3.0 (E2E rebuild, canlı 2026-06-11 — detay: `ARCHITECTURE.md` + `docs/cadde-300/change-report.md`)
+
+```
+cadde_settings               → TÜM ürün limitleri/flag'leri (telefon zorunluluğu D-03, cafe/carsi
+                               limitleri, rate limitler) — ürün kararı SQL update'iyle, kod gerekmez
+user_verifications           → Telefon doğrulama TEK truth source (dışa kapalı)
+cadde_countries/cities       → Cadde mini-geo kataloğu (geo_* 'a bağ kolonlu; admin_import_cadde_geo_v1)
+cadde_posts                  → need_category, engagement_score, published_at, cafe_id,
+                               visibility(public|cafe), diaspora_key(tr|in|cn|ph)
+cadde_interest_catalog (+user/post interests) → ilgi alanı hedefleme (band/skor ranking girdisi)
+cadde_cafes / cadde_cafe_members → süreli odalar: entry_mode(open|approval|referral),
+                               davet kodu sha256 hash, kapasite, arşiv
+carsi_categories / carsi_items → Çarşı (U2U pazar; Tanıtım'dan AYRI — D-01)
+cadde_promotion_*            → Tanıtım: placement kataloğu + kampanya(pending→approved) + event'ler
+notifications (genişletildi) → üretim YALNIZ cadde_notify definer'ından; realtime user_id=eq.<uid>
+cadde_reports / cadde_moderation_queue / cadde_user_bans → şikayet + otomatik tarama + ban
+```
+
+**Kurallar:** (1) Mutation'lar YALNIZ security-definer RPC — `create_cadde_post_v1`,
+`create/join/approve/archive_cadde_cafe_v1`, `create/update/delete_carsi_item_v1`,
+`create_cadde_promotion_campaign_v1`, `report_cadde_entity_v1`, `admin_moderate_cadde_entity_v1` vb.
+(2) Üç SQL↔TS ayna sözleşmesi (birini değiştiren diğerini günceller):
+`can_post_kopru`↔`cadde-rules.ts` · `list_cadde_feed_v1`↔`cadde-ranking.ts` · `can_join_cadde_cafe`↔`canJoinCafeRule`.
+(3) Ban kill-switch `has_cadde_feature` içinde — banlı kullanıcının tüm cadde yazmaları kapanır.
+(4) Hata kodları `cadde_*` → `cadde-rules.ts` haritasından Türkçe mesaja çevrilir; yeni RPC kodu eklersen haritaya da ekle.
+(5) Otomatik içerik taraması trigger'larla kuyruğa düşürür, yayını engellemez (TS blocklist ile senkron).
+
+**Legacy soft-decommission (Faz 9):** `feed_posts/feed_likes/cafes/cafe_memberships/user_follows`
+yazmaya kapalı + policy'siz + COMMENT'li; DROP **canary sonrası** ayrı kararla (bekle-gözle onaylandı
+2026-06-11; `user_follows` 1 satır R-06). Bu tablolara yeniden policy/grant AÇMA.
+Canlı son migration: `20260611160000` (cadde300 serisi 001–014).
+
 ### Diğer Önemli Tablolar
 
 ```
@@ -245,7 +290,7 @@ lansman_basvurular           → Startup başvuruları
 referral_codes / referral_uses
 marquee_items                → Haber akışı
 workspace_resources / workspace_todos / workspace_meetings
-geo_countries / geo_cities   → Global coğrafya referansı
+geo_countries / geo_cities   → Global coğrafya referansı (251 ülke / ~77k şehir)
 ```
 
 ### Feature Çözümleme Önceliği
@@ -362,7 +407,7 @@ supabase functions deploy lansman-admin
 
 ## 10. Dokunulmayacak / Kırılmayacak Şeyler
 
-1. **SEO kilitli URL'ler:** `/lansman`, `/cadde`, `/19051919`, `/anket`, `/commercial/<slug>`, `/founders`, `/directory`, `/iletisim` — path değiştirilemez
+1. **SEO kilitli URL'ler:** `/lansman`, `/cadde` (+ alt rotaları `/cadde/cafe/:id`, `/cadde/carsi[/:id]`), `/19051919`, `/anket`, `/commercial/<slug>`, `/founders`, `/directory`, `/iletisim` — path değiştirilemez
 2. **Supabase migration'ları** — silinemez, yeniden sıralanamaz; sadece yeni ekle
 3. **`server.mjs`** — env injection ve RAG proxy mantığı
 4. **`vite.config.ts`** — standalone HTML emit
@@ -372,7 +417,7 @@ supabase functions deploy lansman-admin
 
 ### Türkçe Domain Terimleri (rename etme)
 
-`muhasebe`, `gelirler`, `giderler`, `nakit akışı`, `lansman`, `cadde`, `kaynak`, `kişi`, `oda`, `referans`, `ambasador`, `yönetici`, `anket`, `üye`, `danışman`
+`muhasebe`, `gelirler`, `giderler`, `nakit akışı`, `lansman`, `cadde`, `çarşı (carsi)`, `köprü`, `tanıtım`, `kaynak`, `kişi`, `oda`, `referans`, `ambasador`, `yönetici`, `anket`, `üye`, `danışman`
 
 ---
 
@@ -380,7 +425,7 @@ supabase functions deploy lansman-admin
 
 > Konsolide, uygulanabilir yol haritası: `docs/refactor/2026-06-09-refactor-backlog.md` (B1–B10).
 
-1. **Generated `supabase/types.ts` senkron değil** — ~164 tsc hatası; `supabase gen types` ile yenile (B1, en yüksek öncelik)
+1. **Generated `supabase/types.ts` senkron değil** — `supabase gen types` ile yenile (B1, en yüksek öncelik). **2026-06-11 denemesi:** `.env.local`'daki `SUPABASE_ACCESS_TOKEN` (+backup) Unauthorized — token yenilenmeli; sonra `cadde-internal.ts`'teki tek `db as any` cast'i kalkar
 2. **Kırık import'lar** — `@/lib/mapEntities`, `@/lib/radarNews`, `html-to-image` eksik; runtime crash riski (B2)
 3. **`AdminLayout.tsx` hâlâ büyük (741 satır)** — alt bileşenlere + `useAdminAccess` hook'una böl (B4)
 4. **Auth shim migrasyonu** — `@/contexts/AuthContext`'ten ~39 import; canonical'a geçir, sonra shim'i sil (B5)
@@ -406,6 +451,9 @@ supabase functions deploy lansman-admin
 [ ] Turkish domain termler korundu mu?
 [ ] profiles / user_profiles / admin_users tablolarına referans YOK mu? (kalktı)
 [ ] Yetki için is_admin() / is_moderator() RPC mi kullanılıyor?
+[ ] Cadde içeriğine dokunuyorsa: mutation RPC'de mi? Yeni hata kodu cadde-rules.ts haritasında mı?
+[ ] Cadde'ye yeni içerik tablosu eklendiyse: diaspora_key + CHECK + feed/list filtresi var mı?
+[ ] SQL↔TS ayna sözleşmelerinden birine dokunulduysa karşı taraf da güncellendi mi?
 ```
 
 ---
@@ -457,11 +505,13 @@ supabase functions deploy lansman-admin
 
 | Konu | Dosya |
 |------|-------|
-| **AI-friendly teknik referans (derin)** | **`docs/architecture/AI_TECHNICAL_REFERENCE.md`** |
+| **Tek ana mimari doküman** | **`ARCHITECTURE.md` (kök)** |
+| Durum panosu + kullanım senaryoları | `rapor.html` (kök) |
+| Cadde 3.0 kapanış raporu + kalan işler | `docs/cadde-300/change-report.md` |
+| Cadde 3.0 spec / envanter / devir notu | `docs/cadde-300/` |
 | Catalog/Flat-Role/AFS rebuild raporları | `docs/catalog-role-afs-rebuild/` (00–14) |
-| Mimari (derin) | `docs/architecture/PROJECT_TECHNICAL_OVERVIEW.md` |
-| Sistem modeli (roller/attr/feature) | `docs/architecture/SISTEM_MIMARI.md` |
-| Aktif planlar | `docs/plans/` |
+| Eski mimari dokümanlar (arşiv) | `docs/archive/architecture/` (AI_TECHNICAL_REFERENCE, SISTEM_MIMARI, vb.) |
+| Aktif planlar | `docs/plans/` (admin-v2 masterplan + handoff burada) |
 | Modül belgeleri | `docs/modules/<modul>/` |
-| Geçmiş raporlar | `docs/history/` |
-| Cleanup audit | `docs/cleanup/2026-05-30/` |
+| Geçmiş raporlar / eski handoff'lar | `docs/history/`, `docs/archive/` |
+| docs indeksi | `docs/README.md` |

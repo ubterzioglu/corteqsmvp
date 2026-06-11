@@ -12,10 +12,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - TypeScript with relaxed strict mode (intentional trade-off)
 - Deployed via Docker (Coolify) with runtime environment injection
 
-> **Recent major change:** the catalog / flat-role / **AFS** (Attributes-Features-Sections) rebuild
-> (Phases 1–8, live 2026-06-09) renamed 9 tables and dropped the old item-type/role-family system.
-> See `docs/catalog-role-afs-rebuild/` and the **DB section below** before touching catalog/role code.
-> For a deep AI-friendly walkthrough, read `docs/architecture/AI_TECHNICAL_REFERENCE.md`.
+> **Recent major changes:**
+> 1. Catalog / flat-role / **AFS** rebuild (live 2026-06-09) — renamed 9 tables, dropped the old
+>    item-type/role-family system. See `docs/catalog-role-afs-rebuild/` and the DB section below.
+> 2. **Cadde 3.0 E2E rebuild (live 2026-06-11, Faz 0–9 + kuyruk TAMAM)** — social feed with CKS
+>    band/score ranking, Cafe rooms, Çarşı marketplace, Tanıtım campaigns, notifications + moderation,
+>    multi-diaspora. ~30 security-definer RPCs, migrations `cadde300_001–014`. **Read the Cadde rules
+>    section below before touching cadde code.** Closing report: `docs/cadde-300/change-report.md`.
+>
+> **Doküman düzeni (2026-06-11):** kökte yalnız 4 doküman — `CLAUDE.md`, `AGENT_CONTEXT.md`
+> (hızlı bağlam), **`ARCHITECTURE.md` (tek ana mimari)**, `rapor.html` (durum panosu).
+> Diğer her şey `docs/` altında (`docs/README.md` indeksi). Eski mimari dokümanlar
+> `docs/archive/architecture/` içinde dondurulmuştur — güncellemeyi ARCHITECTURE.md'ye yap.
 
 ## Quick Commands
 
@@ -111,7 +119,21 @@ muhasebe/
         └── DialogForms.tsx
 ```
 
-**Follow this structure for surveys, cadde, may19, lansman, referral modules.**
+**Follow this structure for surveys, may19, lansman, referral modules.** (Cadde already follows it — `src/lib/cadde-*.ts` is the most complete example.)
+
+### Cadde 3.0 Rules (live 2026-06-11 — full detail: `ARCHITECTURE.md` §4)
+- **RPC-only mutations:** cadde content tables have NO user INSERT policies. All writes go through
+  security-definer RPCs (`create_cadde_post_v1`, cafe/carsi/promotion/report RPC families).
+- **SQL↔TS mirror contracts** (tested; changing one side requires updating the other):
+  `can_post_kopru` ↔ `src/lib/cadde-rules.ts` · `list_cadde_feed_v1` ↔ `cadde-ranking.ts` ·
+  `can_join_cadde_cafe` ↔ `canJoinCafeRule` · auto-scan regex ↔ `CAFE_NAME_BLOCKLIST`.
+- **`cadde_settings`** holds ALL product limits/flags (phone requirement D-03, cafe/carsi limits,
+  rate limits) — product decisions are SQL updates, not code changes.
+- **Ban kill-switch** lives inside `has_cadde_feature` — new write RPCs are covered automatically.
+- New `cadde_*` RPC error codes MUST be added to the Turkish message map in `cadde-rules.ts`.
+- New cadde content tables MUST carry `diaspora_key` + CHECK + feed/list filter.
+- Legacy tables (`feed_posts/feed_likes/cafes/cafe_memberships/user_follows`) are write-revoked and
+  COMMENT'ed; **do not re-open policies/grants** — DROP happens after canary via separate decision.
 
 ### UI Components & Styling
 - **shadcn/ui primitives:** `src/components/ui/*` (auto-generated, don't edit manually)
@@ -175,7 +197,7 @@ Renaming these breaks domain cohesion and user understanding.
 ## Important Constraints & Immovable Parts
 
 1. **SEO-locked URLs** (recent commits all "seo" related):
-   - `/lansman`, `/cadre`, `/founders`, `/commercial/<slug>`, `/cadde`, `/19051919`, `/anket`
+   - `/lansman`, `/cadre`, `/founders`, `/commercial/<slug>`, `/cadde` (+ sub-routes `/cadde/cafe/:cafeId`, `/cadde/carsi[/:itemId]`), `/19051919`, `/anket`
    - Never change route paths without checking git history
 
 2. **Supabase Migrations** cannot be deleted or reordered in production. Only add new migrations.
@@ -315,8 +337,10 @@ try {
 
 ## Documentation & Runbooks
 
-Located in `docs/`:
-- `docs/architecture/` — technical overview and decisions
+Root holds exactly 4 documents: `CLAUDE.md`, `AGENT_CONTEXT.md`, `ARCHITECTURE.md`, `rapor.html`.
+Everything else lives in `docs/` (index: `docs/README.md`):
+- `docs/cadde-300/` — Cadde 3.0 spec, devir notu, faz dokümanları, change-report
+- `docs/archive/` — frozen content: old architecture docs, root cleanup archive, DB backups, import tools
 - `docs/modules/` — feature-specific documentation (Turkish domain names)
 - `docs/guides/` — user/admin guides
 - `docs/operations/` — deployment, database, security runbooks
@@ -341,7 +365,8 @@ Located in `docs/`:
 ## Additional Resources
 
 - README.md — deployment, env setup, Edge Function secrets
-- docs/CORTEQS_LANDING_TEKNIK_DOKUMANTASYON.md — deep technical overview (Turkish)
+- ARCHITECTURE.md (root) — the single maintained architecture document (Turkish)
+- docs/archive/architecture/ — frozen historical architecture docs
 - docs/cleanup/2026-05-30/ — recent cleanup audit results
 - vite.config.ts comments — explains custom plugin behavior
 - src/test/setup.ts — test environment config
