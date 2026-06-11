@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Rapor — Public Profil v2.1 Deploy Doğrulaması (2026-06-11)</title>
+<title>Rapor — Public Profil v2.1: Ne Yapıldı, Ne Yapabiliyorsunuz? (2026-06-11)</title>
 <style>
   :root {
     --bg: #0f1115;
@@ -15,6 +15,7 @@
     --green: #34c98e;
     --red: #e5654f;
     --amber: #e0a83a;
+    --blue: #5ba3e0;
     --border: #2a2f3a;
   }
   * { box-sizing: border-box; }
@@ -22,9 +23,9 @@
     margin: 0; padding: 40px 20px;
     background: var(--bg); color: var(--text);
     font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-    line-height: 1.6;
+    line-height: 1.65;
   }
-  .wrap { max-width: 900px; margin: 0 auto; }
+  .wrap { max-width: 940px; margin: 0 auto; }
   header {
     background: radial-gradient(ellipse at top left, rgba(170,140,66,.25), transparent 60%), var(--card);
     border: 1px solid var(--border); border-radius: 22px;
@@ -38,12 +39,20 @@
   }
   .pill.ok { background: rgba(52,201,142,.15); color: var(--green); border: 1px solid rgba(52,201,142,.35); }
   .pill.warn { background: rgba(224,168,58,.13); color: var(--amber); border: 1px solid rgba(224,168,58,.35); }
+  .pill.info { background: rgba(91,163,224,.13); color: var(--blue); border: 1px solid rgba(91,163,224,.35); }
+  .part {
+    margin: 40px 0 18px; padding: 14px 24px;
+    background: linear-gradient(90deg, rgba(170,140,66,.18), transparent);
+    border-left: 4px solid var(--accent); border-radius: 8px;
+  }
+  .part h2 { margin: 0; font-size: 21px; color: var(--text); }
+  .part .sub { margin-top: 2px; }
   section {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 18px; padding: 26px 30px; margin-bottom: 22px;
   }
   h2 { margin: 0 0 14px; font-size: 18px; color: var(--accent); }
-  h3 { margin: 18px 0 8px; font-size: 15px; }
+  h3 { margin: 20px 0 8px; font-size: 15.5px; }
   table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 10px 0; }
   th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
   th { color: var(--muted); font-weight: 600; font-size: 13px; }
@@ -59,8 +68,8 @@
   .ok { color: var(--green); font-weight: 600; }
   .bad { color: var(--red); font-weight: 600; }
   .warn { color: var(--amber); font-weight: 600; }
-  ul { padding-left: 22px; margin: 8px 0; }
-  li { margin: 5px 0; }
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 6px 0; }
   .timeline { list-style: none; padding: 0; margin: 0; }
   .timeline li {
     position: relative; padding: 0 0 16px 26px; margin: 0;
@@ -75,22 +84,340 @@
   .timeline .t { color: var(--muted); font-size: 12.5px; display: block; }
   footer { text-align: center; color: var(--muted); font-size: 12.5px; margin-top: 30px; }
   a { color: var(--accent); }
+
+  .toc { display: flex; flex-wrap: wrap; gap: 8px; }
+  .toc a {
+    display: inline-block; padding: 6px 14px; border-radius: 999px;
+    background: var(--card2); border: 1px solid var(--border);
+    color: var(--text); text-decoration: none; font-size: 13px;
+  }
+  .toc a:hover { border-color: var(--accent); color: var(--accent); }
+
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  @media (max-width: 700px) { .cards { grid-template-columns: 1fr; } }
+  .mini {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px 18px;
+  }
+  .mini h4 { margin: 0 0 6px; font-size: 14.5px; color: var(--accent); }
+  .mini p { margin: 0; font-size: 13.5px; color: var(--text); }
+
+  .story {
+    background: var(--card2); border: 1px solid var(--border);
+    border-left: 4px solid var(--blue);
+    border-radius: 12px; padding: 16px 20px; margin: 12px 0;
+  }
+  .story h4 { margin: 0 0 6px; font-size: 15px; color: var(--blue); }
+  .story p { margin: 4px 0; font-size: 14px; }
+  .story .who { color: var(--muted); font-size: 12.5px; }
+
+  .badge-demo {
+    display: inline-block; padding: 2px 11px; border-radius: 999px;
+    font-size: 12.5px; font-weight: 600; margin: 2px 4px 2px 0;
+    background: rgba(170,140,66,.14); color: var(--accent); border: 1px solid rgba(170,140,66,.4);
+  }
+  .screenshot-box {
+    border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden; margin: 16px 0; max-height: 720px; overflow-y: auto;
+    background: #000;
+  }
+  .screenshot-box img { width: 100%; display: block; }
+  .caption { color: var(--muted); font-size: 12.5px; text-align: center; margin-top: -8px; }
+  .lead { font-size: 15.5px; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
 <header>
-  <h1>Public Profil v2.1 — Deploy Doğrulama Raporu</h1>
-  <div class="sub">Oturum: 2026-06-11 · Repo: <code>corteqssocial-web/corfin-mvp</code> · Branch: <code>main</code> @ <code>b71f209</code></div>
-  <span class="pill ok">✅ Deploy doğrulandı — iş kapandı</span>
-  <span class="pill ok">✅ verify:release geçti</span>
-  <span class="pill ok">✅ Demo profil canlıda render oluyor</span>
-  <span class="pill warn">⚠️ corteqs.net eski uygulamada (ayrı karar konusu)</span>
+  <h1>CorteQS Public Profil v2.1 — Rapor</h1>
+  <div class="sub">2026-06-11 · Canlı adres: <a href="https://mvp.corteqs.net">mvp.corteqs.net</a> · Repo: <code>corteqssocial-web/corfin-mvp</code> @ <code>b71f209</code></div>
+  <span class="pill ok">✅ Canlıda ve doğrulandı</span>
+  <span class="pill info">📖 Bölüm A: Ne yapabiliyorsunuz? (herkes için)</span>
+  <span class="pill info">🔧 Bölüm B: Deploy doğrulama (teknik)</span>
+  <span class="pill warn">⚠️ corteqs.net eski uygulamada (ayrı karar)</span>
+  <div style="margin-top:16px" class="toc">
+    <a href="#a1">Bu sayfa nedir?</a>
+    <a href="#a2">Profil nasıl görünüyor?</a>
+    <a href="#a3">Ziyaretçi ne yapabilir?</a>
+    <a href="#a4">Üye ne yapabilir?</a>
+    <a href="#a5">Admin ne yapabilir?</a>
+    <a href="#a6">Kullanım senaryoları</a>
+    <a href="#a7">Gizlilik</a>
+    <a href="#b1">Teknik bölüm</a>
+  </div>
 </header>
 
+<!-- ============================================================ -->
+<div class="part">
+  <h2>BÖLÜM A — Ürün: Artık Ne Yapabiliyorsunuz?</h2>
+  <div class="sub">Teknik bilgi gerektirmez. Platformdaki yeni public profil sisteminin ne işe yaradığını anlatır.</div>
+</div>
+
+<section id="a1">
+  <h2>A1. Bu iş neydi, ne çözüldü?</h2>
+  <p class="lead">
+    CorteQS bir <strong>Türk diasporası rehberi</strong>: yurt dışındaki danışmanlar, işletmeler,
+    dernekler ve bireysel üyeler platformda birer <strong>profil kartı</strong> ile yer alıyor.
+    Bu çalışmada o profil kartlarının herkese açık (public) sayfası <strong>sıfırdan, modern ve
+    tek tip bir sistemle</strong> yeniden yapıldı.
+  </p>
+  <p>En önemli iki kazanım:</p>
+  <ul>
+    <li>
+      <strong>Artık üye olmayan herkes profilleri görebiliyor.</strong> Eskiden bir profil linkini
+      Google'dan ya da WhatsApp'tan alan biri, siteye <em>giriş yapmadan</em> sayfayı göremiyordu —
+      yani rehber dışarıya kapalıydı. Bu kilit kaldırıldı: profil linki artık herkese açılıyor.
+      (Rehberin asıl amacı da bu: dışarıdan bulunabilmek.)
+    </li>
+    <li>
+      <strong>Tüm profiller tek bir akıllı şablonu kullanıyor.</strong> Üye, işletme, dernek,
+      danışman... hangi türde olursa olsun aynı düzgün sayfa düzeni açılıyor; sadece içerik ve
+      vurgu rengi değişiyor. Yeni bir profil türü eklemek için sayfayı yeniden tasarlamak gerekmiyor.
+    </li>
+  </ul>
+</section>
+
+<section id="a2">
+  <h2>A2. Profil sayfası nasıl görünüyor?</h2>
+  <p>
+    Aşağıdaki görüntü <strong>canlı sistemden</strong> alındı (demo üye "Ayşe Yılmaz",
+    <a href="https://mvp.corteqs.net/directory/catalog/demo-uye-ayse-yilmaz">kendiniz de açabilirsiniz</a>).
+    Sayfa yukarıdan aşağıya şu parçalardan oluşuyor:
+  </p>
+
+  <div class="screenshot-box">
+    <img src="rapor-profil-ekran.png" alt="Demo profil — Ayşe Yılmaz, canlı ekran görüntüsü" />
+  </div>
+  <p class="caption">Canlı ekran görüntüsü — mvp.corteqs.net/directory/catalog/demo-uye-ayse-yilmaz (giriş yapmadan, 2026-06-11)</p>
+
+  <h3>1) Üst kart (Hero)</h3>
+  <ul>
+    <li><strong>Fotoğraf ve isim:</strong> yuvarlatılmış köşeli avatar, isim, ve ismin yanında kişinin kendini tek cümleyle anlattığı <em>başlık pili</em> (örn. "Yazılım Geliştirme ve Kariyer Mentörlüğü").</li>
+    <li><strong>Rozetler:</strong> kişinin durumunu bir bakışta anlatan etiketler:
+      <div style="margin-top:6px">
+        <span class="badge-demo">✔ Doğrulanmış</span>
+        <span class="badge-demo">💼 İş Arıyorum</span>
+        <span class="badge-demo">🤝 Gönüllü Mentör</span>
+        <span class="badge-demo">✈️ Yakında Taşınacak</span>
+        <span class="badge-demo">🏷 Sahiplenilebilir Profil</span>
+        <span class="badge-demo">🛡 Yönetilen Profil</span>
+      </div>
+      İlk üçünü üye kendisi açıp kapatır ("iş arıyorum" demek istemeyen kapatır, biter).
+      Son üçü profilin sahiplik/doğrulama durumunu gösterir.
+    </li>
+    <li><strong>Konum satırı:</strong> şehir + ülke (örn. "Dortmund, Almanya").</li>
+    <li><strong>Sosyal medya pilleri:</strong> LinkedIn, Instagram, X, GitHub, YouTube, web sitesi... tek tıkla açılır. Aynı link iki kez listelenmez, güvenli olmayan adresler otomatik elenir.</li>
+    <li><strong>Hızlı aksiyon düğmeleri:</strong> <em>Web Sitesi · E-posta · Telefon · Haritada Gör · Paylaş</em> — ziyaretçi tek tıkla iletişime geçer.</li>
+  </ul>
+
+  <h3>2) Bilgi kartları (içerik ızgarası)</h3>
+  <p>
+    Hero'nun altında bilgiler iki sütunlu, yuvarlak köşeli kartlar halinde dizilir
+    (telefonda tek sütuna iner). Demo profilde görünen kartlar:
+  </p>
+  <table>
+    <tr><th>Kart</th><th>İçinde ne var?</th></tr>
+    <tr><td><strong>Hakkında</strong></td><td>Kişinin kendi ağzından tanıtım yazısı.</td></tr>
+    <tr><td><strong>Profil Bilgileri</strong></td><td>Meslek, uzmanlık alanı, sektör, çalışma şekli gibi yapılandırılmış bilgiler.</td></tr>
+    <tr><td><strong>Hizmetler</strong></td><td>Verdiği hizmetler, her biri kısa açıklamasıyla (örn. "Kariyer Mentörlüğü", "CV İncelemesi").</td></tr>
+    <tr><td><strong>Uzmanlık / Alt Tip Etiketleri</strong></td><td>Anahtar kelime etiketleri.</td></tr>
+    <tr><td><strong>İletişim</strong></td><td>Halka açık bırakılan telefon, e-posta, WhatsApp vb.</td></tr>
+    <tr><td><strong>Diller</strong></td><td>Konuştuğu diller ve seviyeleri (örn. Türkçe ana dil, Almanca C1).</td></tr>
+  </table>
+  <p>
+    <strong>Püf noktası:</strong> boş kart hiç gösterilmez. Bilgisi az olan üyenin sayfası
+    "boş kutularla" dolu görünmez — sadece dolu kartlar çizilir. Veri girildikçe sayfa kendiliğinden zenginleşir.
+  </p>
+
+  <h3>3) Profil türüne göre fark</h3>
+  <p>
+    Bir <strong>işletme</strong> profili açıldığında aynı iskelet kullanılır ama içerik değişir:
+    rozetler yerine "Doğrulanmış İşletme", kartlarda çalışma saatleri/adres öne çıkar; vurgu rengi
+    profil türüne göre değişir (her tür kendi renk tonuyla açılır). Yani <em>tek şablon, çok kimlik</em>.
+  </p>
+</section>
+
+<section id="a3">
+  <h2>A3. Ziyaretçi (üye olmayan herkes) ne yapabilir?</h2>
+  <div class="cards">
+    <div class="mini">
+      <h4>🔍 Rehberde gezinir</h4>
+      <p>Dizin sayfasından danışman, işletme, dernek ve üyeleri görür; profil linkleri Google'dan ve sosyal medyadan paylaşılabilir.</p>
+    </div>
+    <div class="mini">
+      <h4>👤 Profili tam görür</h4>
+      <p>Giriş yapmadan profilin halka açık her bilgisini görür: tanıtım, hizmetler, diller, sosyal medya, iletişim.</p>
+    </div>
+    <div class="mini">
+      <h4>📞 Tek tıkla ulaşır</h4>
+      <p>"E-posta / Telefon / WhatsApp / Web Sitesi" düğmeleriyle aracısız iletişime geçer; "Haritada Gör" ile konumu açar.</p>
+    </div>
+    <div class="mini">
+      <h4>📤 Paylaşır</h4>
+      <p>"Paylaş" düğmesiyle profil linkini kopyalar veya telefonun paylaşma menüsüne gönderir.</p>
+    </div>
+    <div class="mini">
+      <h4>🏷 Profili sahiplenmeye başlar</h4>
+      <p>"Sahiplenilebilir" bir profil görürse (örn. kendi işletmesi platforma önceden eklenmişse) "Düzenleme Yetkisi Talep Et" der → üyelik kaydına yönlendirilir.</p>
+    </div>
+    <div class="mini">
+      <h4>🚫 Göremeyeceği şey</h4>
+      <p>Gizli profiller, yayından kaldırılmış kayıtlar ve üyenin "özel" işaretlediği bilgiler. Bunlar için sayfa hiçbir ipucu vermeden "bulunamadı" der.</p>
+    </div>
+  </div>
+</section>
+
+<section id="a4">
+  <h2>A4. Üye / Profil sahibi ne yapabilir?</h2>
+  <ul>
+    <li>
+      <strong>Vitrinini yönetir:</strong> tanıtım yazısı, başlık (tagline), fotoğraf, kapak görseli,
+      hizmetler, diller, sosyal medya linkleri ve iletişim bilgilerini doldurur — hepsi public sayfada
+      otomatik olarak şık kartlara dönüşür.
+    </li>
+    <li>
+      <strong>Durum rozetlerini açar/kapatır:</strong> "İş Arıyorum", "Gönüllü Mentör",
+      "Yakında Taşınacak" — birer anahtar gibi. Açınca profilinin en üstünde rozet belirir,
+      kapatınca kaybolur.
+    </li>
+    <li>
+      <strong>Neyin görüneceğine kendisi karar verir:</strong> her bilgi için "herkese açık" ya da
+      "özel" seçebilir. Özel işaretlenen şey (örn. telefon) public sayfada <u>asla</u> görünmez.
+    </li>
+    <li>
+      <strong>Kendi sayfasında yerinde düzenleme:</strong> üye kendi public profilini açtığında
+      düzenleme kalemi görür ve bilgilerini sayfadan ayrılmadan günceller (ziyaretçiler bu
+      kalemi görmez).
+    </li>
+    <li>
+      <strong>Profil sahiplenir:</strong> platforma önceden eklenmiş ama sahipsiz duran kaydı
+      (örn. kendi restoranı) "Düzenleme Yetkisi Talep Et" ile talep eder. Talep yöneticiye düşer;
+      onaylanınca profil "Yönetilen Profil" rozeti alır ve artık o kişi yönetir.
+    </li>
+  </ul>
+</section>
+
+<section id="a5">
+  <h2>A5. Admin (yönetici) ne yapabilir?</h2>
+  <p>Yöneticiler ayrı bir kontrol paneline girer ve şunları yönetir:</p>
+  <table>
+    <tr><th>Yetki</th><th>Ne demek?</th></tr>
+    <tr>
+      <td><strong>Kayıt yönetimi</strong></td>
+      <td>Rehberdeki tüm profilleri (üye, işletme, dernek...) ekler, düzenler, yayınlar veya yayından
+        kaldırır. Yayından kalkan profil dış dünyaya anında kapanır.</td>
+    </tr>
+    <tr>
+      <td><strong>Sahiplenme talepleri</strong></td>
+      <td>"Bu işletme benim" diyen kullanıcıların taleplerini görür, onaylar veya reddeder.
+        Onaylanan profil o kullanıcıya bağlanır.</td>
+    </tr>
+    <tr>
+      <td><strong>Bilgi onayı</strong></td>
+      <td>Üyelerin profillerine girdiği bilgiler onay süzgecinden geçer; yalnızca onaylı bilgiler
+        public sayfada görünür (spam/uygunsuz içerik vitrine çıkamaz).</td>
+    </tr>
+    <tr>
+      <td><strong>Rol &amp; görünüm kuralları</strong></td>
+      <td>Hangi profil türünde hangi bölümlerin görüneceğini panelden belirler. Örn. "işletme
+        profillerinde çalışma saatleri bölümü görünsün" kuralı tek yerden açılır — kod yazmaya
+        gerek yoktur, sayfa kendini buna göre çizer.</td>
+    </tr>
+    <tr>
+      <td><strong>Doğrulama rozeti</strong></td>
+      <td>İncelediği profillere "Doğrulanmış" statüsü verir; bu, ziyaretçiye güven sinyalidir.</td>
+    </tr>
+    <tr>
+      <td><strong>Toplu içe aktarma</strong></td>
+      <td>Form başvurularından gelen üyeleri topluca rehbere taşır (son aktarımda 110 üye
+        public profile kavuştu).</td>
+    </tr>
+    <tr>
+      <td><strong>Yeni bölüm türü ekleme</strong></td>
+      <td>Panelden yeni bir kart türü tanımlarsa (örn. "Sertifikalar"), sayfa bu yeni kartı
+        otomatik genel bir şablonla gösterir — hiçbir şey kırılmaz; özel tasarım sonradan eklenebilir.</td>
+    </tr>
+  </table>
+</section>
+
+<section id="a6">
+  <h2>A6. Kullanım senaryoları (gerçek hayattan)</h2>
+
+  <div class="story">
+    <h4>📦 "Berlin'e taşınıyorum, danışman lazım"</h4>
+    <p class="who">Ali — Türkiye'den Almanya'ya taşınmaya hazırlanıyor, CorteQS üyesi değil.</p>
+    <p>Ali Google'da "Berlin vize danışmanı Türk" arar, bir CorteQS profil linkine tıklar.
+    <strong>Üye olmadan</strong> danışmanın profilini açar: uzmanlık alanlarını, konuştuğu dilleri,
+    "Doğrulanmış" rozetini görür. WhatsApp düğmesine basar, ilk mesajını atar. <em>— Eski sistemde
+    bu sayfa Ali'ye hiç açılmazdı; giriş duvarına çarpardı.</em></p>
+  </div>
+
+  <div class="story">
+    <h4>💼 "İş arıyorum, görünür olmak istiyorum"</h4>
+    <p class="who">Ayşe — Dortmund'da yaşayan yazılım mühendisi, CorteQS üyesi.</p>
+    <p>Ayşe profilinde "İş Arıyorum" anahtarını açar, başlığına "Yazılım Geliştirme ve Kariyer
+    Mentörlüğü" yazar, LinkedIn ve GitHub linklerini ekler. Artık profilinin en üstünde 💼 rozeti
+    var; rehbere bakan bir işveren onu tek bakışta fark eder ve LinkedIn piline tıklayıp CV'sine ulaşır.
+    İş bulunca anahtarı kapatır, rozet kaybolur.</p>
+  </div>
+
+  <div class="story">
+    <h4>🍽 "Bu restoran benim!"</h4>
+    <p class="who">Mehmet — Köln'de restoran sahibi; işletmesi rehbere onun haberi olmadan eklenmiş.</p>
+    <p>Bir müşterisi Mehmet'e CorteQS'teki profilini gösterir. Profilde "Sahiplenilebilir Profil"
+    rozeti vardır. Mehmet "Düzenleme Yetkisi Talep Et" düğmesine basar, üye olur, talebi yöneticiye
+    düşer. Yönetici onaylayınca profil "Yönetilen Profil" olur: Mehmet artık menüsünü, çalışma
+    saatlerini ve fotoğraflarını kendisi günceller.</p>
+  </div>
+
+  <div class="story">
+    <h4>🤝 "Yeni gelenlere yardım etmek istiyorum"</h4>
+    <p class="who">Zeynep — Hamburg'da 10 yıldır yaşıyor, gönüllü mentörlük yapmak istiyor.</p>
+    <p>Zeynep profilinde "Gönüllü Mentör" anahtarını açar. Hamburg'a yeni taşınan biri rehberde
+    onu bulur, profilindeki "Hizmetler" kartında "Yeni Gelen Oryantasyonu"nu görür ve e-posta
+    düğmesiyle ulaşır. Para değil, topluluk bağı kurulur — platformun asıl amacı.</p>
+  </div>
+
+  <div class="story">
+    <h4>🏛 "Derneğimizi platforma ekleyelim"</h4>
+    <p class="who">Yönetici — CorteQS ekibinden.</p>
+    <p>Yönetici panelden yeni bir dernek kaydı açar, türünü "dernek" seçer. Sistem dernek rolüne
+    tanımlı bölümleri (hakkında, etkinlikler, iletişim...) otomatik uygular; yönetici bilgileri
+    girip "yayınla" der. Dernek sayfası saniyeler içinde, diğer tüm profillerle aynı kalitede
+    dış dünyaya açılır. Dernek başkanı sonradan profili sahiplenebilir.</p>
+  </div>
+
+  <div class="story">
+    <h4>🔒 "Telefonum herkeste olmasın"</h4>
+    <p class="who">Bir üye — iletişim bilgisi konusunda hassas.</p>
+    <p>Üye telefonunu "özel" olarak işaretler, e-postasını açık bırakır. Public sayfasında telefon
+    düğmesi hiç görünmez, e-posta düğmesi görünür. CV'si ve davet kodu gibi hassas veriler ise
+    sistem tarafından <u>hiçbir koşulda</u> public sayfaya çıkarılmaz — bu, tasarımın kuralıdır,
+    üyenin hatasıyla bile sızamaz (testlerle doğrulandı).</p>
+  </div>
+</section>
+
+<section id="a7">
+  <h2>A7. Gizlilik &amp; güven — basitçe</h2>
+  <ul>
+    <li><strong>Beyaz liste mantığı:</strong> public sayfaya çıkan her bilgi tek tek "çıkabilir" diye işaretlenmiş alanlardan seçilir. Varsayılan davranış <em>göstermemek</em>tir; unutulan bir şey "kazara" görünmez.</li>
+    <li><strong>Hassas veri sınıfı:</strong> CV, özel telefon, davet/referans kodu gibi alanlar sistem seviyesinde "özel kasa"dadır — public sayfa bu kasaya hiç bakmaz bile.</li>
+    <li><strong>Sessiz "bulunamadı":</strong> gizli ya da yayında olmayan bir profilin linkini açan kişi, profilin var olup olmadığını dahi anlayamaz; nötr bir "bulunamadı" sayfası görür.</li>
+    <li><strong>Onay süzgeci:</strong> üyelerin girdiği bilgiler yönetici onayından geçmeden vitrine çıkmaz.</li>
+    <li><strong>Güvenli linkler:</strong> profil sahibinin eklediği web linkleri süzgeçten geçer; zararlı/bozuk adresler ayıklanır.</li>
+    <li><strong>Demo ile kanıtlandı:</strong> "Ayşe Yılmaz" demo profili bilerek hem dolu (20 açık bilgi) hem de tuzaklı (CV/telefon gibi gizli alanlar kasıtlı boş) kuruldu; canlıda sızıntı olmadığı ölçülerek doğrulandı.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<div class="part" id="b1">
+  <h2>BÖLÜM B — Teknik: Deploy Doğrulama Raporu</h2>
+  <div class="sub">2026-06-11 oturumunun teşhis ve doğrulama kaydı. Teknik okuyucular için.</div>
+</div>
+
 <section>
-  <h2>1. Özet (TL;DR)</h2>
+  <h2>B1. Özet (TL;DR)</h2>
   <p>
     2026-06-10 handoff'unda tek açık iş olarak bırakılan <strong>"corteqs.net deploy'u düşmüyor"</strong>
     sorunu çözüldü: deploy aslında <span class="ok">baştan beri çalışıyordu</span>, ancak doğrulama
@@ -102,7 +429,7 @@
 </section>
 
 <section>
-  <h2>2. Başlangıç Durumu</h2>
+  <h2>B2. Başlangıç Durumu</h2>
   <p>Handoff notuna göre kod/DB/test tarafı %100 bitmişti; sadece deploy bekliyordu:</p>
   <ul>
     <li>Canlı corteqs.net 2 günlük build servis ediyordu: <code>Last-Modified: 08 Jun 2026 21:48</code>, asset <code>main-0r4KkAVF.js</code>, ETag <code>6a2738aa</code>.</li>
@@ -112,7 +439,7 @@
 </section>
 
 <section>
-  <h2>3. Teşhis Süreci (adım adım)</h2>
+  <h2>B3. Teşhis Süreci (adım adım)</h2>
   <ol class="timeline" style="margin-top:14px">
     <li>
       <span class="t">Adım 1 — Canlı ölçüm tekrarı</span>
@@ -143,7 +470,7 @@
 </section>
 
 <section>
-  <h2>4. Doğrulama Sonuçları (mvp.corteqs.net)</h2>
+  <h2>B4. Doğrulama Sonuçları (mvp.corteqs.net)</h2>
   <table>
     <tr><th>Kontrol</th><th>Sonuç</th></tr>
     <tr>
@@ -165,14 +492,14 @@
         H1 = "Ayşe Yılmaz"; hero + rozetler (İş Arıyorum / Gönüllü Mentör / Yakında Taşınacak) + sosyal pilleri +
         2 sütunlu kart ızgarası tam render. <strong>0 console hatası, 0 başarısız istek (4xx/5xx yok).</strong><br>
         → v2 RPC'nin <em>anon</em> erişimi canlıda çalışıyor (v2.1'in ana hedefi).<br>
-        Ekran görüntüsü: <code>c:\tmp\mvp-demo-profile-live.png</code>
+        Ekran görüntüsü: <code>rapor-profil-ekran.png</code> (Bölüm A2'de gömülü)
       </td>
     </tr>
   </table>
 </section>
 
 <section>
-  <h2>5. Önemli Bulgular &amp; Notlar</h2>
+  <h2>B5. Önemli Bulgular &amp; Notlar</h2>
   <ul>
     <li>
       <strong class="warn">corteqs.net hâlâ 8 Haziran build'inde.</strong> Aynı sunucudaki ayrı/eski bir
@@ -195,7 +522,7 @@
 </section>
 
 <section>
-  <h2>6. Hızlı Referans — Deploy Doğrulama Komutları</h2>
+  <h2>B6. Hızlı Referans — Deploy Doğrulama Komutları</h2>
   <pre><code># Canlı build güncel mi?
 curl -sI https://mvp.corteqs.net/ | findstr Last-Modified
 
@@ -207,7 +534,7 @@ https://mvp.corteqs.net/directory/catalog/demo-uye-ayse-yilmaz</code></pre>
 </section>
 
 <section>
-  <h2>7. Kalan Backlog (bu görevin parçası değildi)</h2>
+  <h2>B7. Kalan Backlog (bu görevin parçası değildi)</h2>
   <ul>
     <li>corteqs.net ana domain kararı: eski uygulama kapatılacak mı / mvp'ye mi yönlenecek?</li>
     <li>E2E süitini CI'a bağlama (GitHub Actions yok).</li>
@@ -218,7 +545,7 @@ https://mvp.corteqs.net/directory/catalog/demo-uye-ayse-yilmaz</code></pre>
 </section>
 
 <section>
-  <h2>8. Admin Panel V2 — AdminPageLayout Tasfiyesi (ayrı oturum, 2026-06-11)</h2>
+  <h2>B8. Admin Panel V2 — AdminPageLayout Tasfiyesi (ayrı oturum, 2026-06-11)</h2>
   <p>
     Admin V2 handoff'unda backlog olarak duran <strong>"AdminPageLayout → AdminPageShell geçişi
     (34 sayfa)"</strong> maddesi ele alındı. İnceleme, iddianın büyük ölçüde hayalet olduğunu gösterdi —
@@ -287,7 +614,7 @@ https://mvp.corteqs.net/directory/catalog/demo-uye-ayse-yilmaz</code></pre>
 </section>
 
 <footer>
-  Rapor: Claude Code oturumu · 2026-06-11 · Public Profil v2.1 handoff kapanışı + Admin V2 AdminPageLayout tasfiyesi
+  Rapor: Claude Code oturumu · 2026-06-11 · Public Profil v2.1 — fonksiyonel genel bakış + deploy doğrulaması + Admin V2 AdminPageLayout tasfiyesi
 </footer>
 
 </div>
