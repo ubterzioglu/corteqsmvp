@@ -19,7 +19,7 @@ React 18 + Vite 5 (SWC)  ·  TypeScript (strict KAPALI — bilinçli)  ·  Tailw
 @tanstack/react-query 5  ·  react-router-dom 6  ·  zod + react-hook-form
 Supabase: Postgres + RLS + security-definer RPC'ler + Auth + Realtime + 5 Edge Function
 Deploy: Docker/Coolify → npm run build → node server.mjs (env injection + RAG proxy + SPA fallback)
-Canlı: mvp.corteqs.net · Supabase proje: injprdrsklkxgnaiixzh
+Canlı: corteqs.net · Supabase proje: injprdrsklkxgnaiixzh
 ```
 
 **Temel mimari ilke:** Kural DB'de yaşar. Yazma işlemleri security-definer RPC'lerden geçer,
@@ -140,7 +140,7 @@ npm run build → dist/   ·   node server.mjs (prod)
 server.mjs: /env-config.js (runtime env injection — Coolify) · /api/chat → rag.corteqs.net proxy · SPA fallback
 Build-time env: VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY / VITE_SUPABASE_PROJECT_ID
 Runtime-only (frontend'e gitmez): SUPABASE_SERVICE_ROLE_KEY, RAG_API_SECRET
-Doğrulama: BASE_URL=https://mvp.corteqs.net npm run verify:release
+Doğrulama: BASE_URL=https://corteqs.net npm run verify:release
 ```
 
 Pre-hook: `verify:text` (encoding bekçisi) `src/public/docs/scripts` tarar — `docs/archive`,

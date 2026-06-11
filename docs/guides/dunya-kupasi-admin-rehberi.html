@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dünya Kupası Kampanyası — Admin Rehberi</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.6;
+      padding: 32px 16px;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    header {
+      background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);
+      color: #fff;
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+    }
+    header h1 { font-size: 1.3rem; }
+    header p { color: #cbd5e1; font-size: 0.9rem; margin-top: 4px; }
+    section {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+    h2 {
+      font-size: 1rem;
+      color: #0f172a;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .num {
+      background: #f59e0b;
+      color: #fff;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    ul { padding-left: 20px; }
+    li { margin-bottom: 6px; font-size: 0.92rem; }
+    code {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 0.85rem;
+      color: #b45309;
+    }
+    .note {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+    .user-section { border-left: 4px solid #34a853; }
+    .num.user { background: #34a853; }
+    a { color: #b45309; font-weight: 600; text-decoration: underline; }
+    a:hover { color: #92400e; }
+    footer { text-align: center; color: #94a3b8; font-size: 0.8rem; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>🏆 Dünya Kupası Kampanyası — Admin Rehberi</h1>
+      <p>İşletme başvurularını onaylama ve vitrini yönetme adımları</p>
+    </header>
+
+    <section class="user-section">
+      <h2><span class="num user">👤</span> Kullanıcılar nasıl üye oluyor? (arka plan bilgisi)</h2>
+      <ul>
+        <li>İşletme sahibi <a href="https://corteqs.net/dunya-kupasi" target="_blank" rel="noopener">corteqs.net/dunya-kupasi</a> kampanya sayfasından <a href="https://corteqs.net/dunya-kupasi/kayit" target="_blank" rel="noopener">corteqs.net/dunya-kupasi/kayit</a> başvuru sayfasına gelir.</li>
+        <li>Hesabı yoksa <strong>Google veya e-posta ile kayıt olur</strong>; varsa giriş yapar (başvuru hesabına bağlanır).</li>
+        <li>Formu doldurur: işletme adı, kategori, ülke/şehir, adres (opsiyonel), not (opsiyonel).</li>
+        <li>"Maçları yayınladığımızı beyan ederim" kutusunu işaretleyip <strong>Başvuruyu Gönder</strong>'e basar.</li>
+        <li>Başvuru <strong>Bekleyen</strong> duruma düşer — senin onayını bekler. Kullanıcı aynı sayfadan durumunu görür.</li>
+        <li>Reddedilirse (red notunla birlikte) bilgilerini güncelleyip <strong>yeniden başvurabilir</strong>.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2><span class="num">1</span> Panele giriş</h2>
+      <ul>
+        <li><a href="https://corteqs.net/login" target="_blank" rel="noopener">corteqs.net/login</a> adresinden admin hesabınla giriş yap.</li>
+        <li>Sol menüden veya doğrudan <a href="https://corteqs.net/admin/dunya-kupasi" target="_blank" rel="noopener">corteqs.net/admin/dunya-kupasi</a> adresine git.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2><span class="num">2</span> Başvuruları incele</h2>
+      <ul>
+        <li>Sayfa açıldığında <strong>Bekleyen</strong> sekmesi gelir — yeni başvurular burada.</li>
+        <li>Her kartta işletme adı, kategori, şehir/ülke, e-posta ve başvuru tarihi görünür.</li>
+        <li><strong>Onaylanan</strong> ve <strong>Reddedilen</strong> sekmelerinden geçmiş kayıtlara bakabilirsin.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2><span class="num">3</span> Onayla veya reddet</h2>
+      <ul>
+        <li>Karttaki not alanına istersen kısa bir açıklama yaz (başvurana iletilir/kayıtta saklanır).</li>
+        <li><strong>Onayla</strong> → kullanıcıya seçtiği işletme rolü atanır, profili dizinde işletme olarak görünür.</li>
+        <li><strong>Reddet</strong> → başvuru reddedilen sekmesine düşer, rol atanmaz.</li>
+      </ul>
+      <div class="note">
+        ⚠️ <strong>"Onaylandı — rol korundu"</strong> uyarısı görürsen: kullanıcının mevcut özel rolü
+        değiştirilmemiştir. Gerekirse rol matrisinden elle güncelle.
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="num">4</span> Sonucu kontrol et</h2>
+      <ul>
+        <li>Onaylanan işletmeler <a href="https://corteqs.net/dunya-kupasi" target="_blank" rel="noopener">corteqs.net/dunya-kupasi</a> vitrin sayfasında otomatik listelenir.</li>
+        <li>Vitrini açıp işletmenin doğru göründüğünü hızlıca doğrula.</li>
+      </ul>
+    </section>
+
+    <footer>CorteQS · Dünya Kupası Kampanyası · Haziran 2026</footer>
+  </div>
+</body>
+</html>

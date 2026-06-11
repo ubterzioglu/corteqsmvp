@@ -87,7 +87,7 @@ describe("AdminLayout (Admin Panel V2 shell)", () => {
     expect(screen.getByRole("button", { name: "Roller ve AFS" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /CorteQS ana siteye git/i })).toHaveAttribute(
       "href",
-      "https://mvp.corteqs.net",
+      "https://corteqs.net",
     );
   });
 
@@ -114,7 +114,7 @@ describe("AdminLayout (Admin Panel V2 shell)", () => {
     expect(engineItem.closest("a")).toHaveAttribute("href", "https://eng.corteqs.net");
     expect((await screen.findByRole("menuitem", { name: /Founders/i })).closest("a")).toHaveAttribute(
       "href",
-      "https://mvp.corteqs.net/founders",
+      "https://corteqs.net/founders",
     );
   });
 

@@ -38,7 +38,7 @@ const AdminSidebar = ({ collapsed, onToggleCollapsed, favorites }: AdminSidebarP
     >
       <div className={cn("flex items-center gap-3 border-b border-border px-4 py-4", collapsed && "justify-center px-2")}>
         <a
-          href="https://mvp.corteqs.net"
+          href="https://corteqs.net"
           target="_blank"
           rel="noreferrer"
           aria-label="CorteQS ana siteye git"

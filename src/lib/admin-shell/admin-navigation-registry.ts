@@ -469,7 +469,7 @@ export const adminNavGroups: AdminNavGroup[] = [
       {
         id: "external-founders",
         label: "Founders",
-        href: "https://mvp.corteqs.net/founders",
+        href: "https://corteqs.net/founders",
         icon: ExternalLink,
         accent: "red",
         isExternal: true,
