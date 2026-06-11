@@ -54,6 +54,8 @@ const DirectoryCatalogItemPage = lazy(() => import("@/pages/DirectoryCatalogItem
 const WelcomeActivatePage = lazy(() => import("@/pages/WelcomeActivatePage"));
 const CaddePage = lazy(() => import("@/pages/cadde/CaddePage"));
 const CaddeCafePage = lazy(() => import("@/pages/cadde/CaddeCafePage"));
+const CaddeCarsiPage = lazy(() => import("@/pages/cadde/CaddeCarsiPage"));
+const CaddeCarsiItemPage = lazy(() => import("@/pages/cadde/CaddeCarsiItemPage"));
 const Associations = lazy(() => import("@/pages/Associations"));
 const AssociationDetail = lazy(() => import("@/pages/AssociationDetail"));
 const HospitalAppointment = lazy(() => import("@/pages/HospitalAppointment"));
@@ -147,6 +149,26 @@ const App = () => (
                       <RequireAuth>
                         <RequireFeature feature={GENERIC_FEATURE_KEYS.caddeAccess} fallback={<Navigate to="/" replace />}>
                           <CaddeCafePage />
+                        </RequireFeature>
+                      </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path="/cadde/carsi"
+                    element={
+                      <RequireAuth>
+                        <RequireFeature feature={GENERIC_FEATURE_KEYS.caddeAccess} fallback={<Navigate to="/" replace />}>
+                          <CaddeCarsiPage />
+                        </RequireFeature>
+                      </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path="/cadde/carsi/:itemId"
+                    element={
+                      <RequireAuth>
+                        <RequireFeature feature={GENERIC_FEATURE_KEYS.caddeAccess} fallback={<Navigate to="/" replace />}>
+                          <CaddeCarsiItemPage />
                         </RequireFeature>
                       </RequireAuth>
                     }

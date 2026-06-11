@@ -136,6 +136,19 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
   cadde_cafe_not_pending: "Bu üyelik talebi zaten sonuçlanmış.",
   cadde_cafe_owner_required: "Bu işlem yalnız cafe sahibine veya moderatöre açık.",
   cadde_cafe_membership_required: "Bu cafe'de paylaşım için önce odaya katıl.",
+  // Faz 5 (mig 009) — Çarşı
+  cadde_carsi_permission_denied: "Hesabının Çarşı ilan yetkisi bulunmuyor.",
+  cadde_invalid_carsi_category: "Geçersiz ilan kategorisi.",
+  cadde_invalid_carsi_title: "İlan başlığı 3-100 karakter olmalı.",
+  cadde_invalid_carsi_description: "İlan açıklaması 1-2000 karakter olmalı.",
+  cadde_invalid_carsi_price: "Fiyat negatif olamaz.",
+  cadde_invalid_carsi_currency: "Para birimi 3 harfli kod olmalı (örn. EUR).",
+  cadde_invalid_carsi_contact_mode: "Geçersiz iletişim tercihi.",
+  cadde_invalid_carsi_image: "Görseller http(s) URL olmalı; en fazla 6 görsel eklenebilir.",
+  cadde_invalid_carsi_status: "Geçersiz ilan durumu.",
+  cadde_carsi_item_limit: "Aktif ilan limitine ulaştın. Eski bir ilanını kapatıp tekrar dene.",
+  cadde_carsi_item_not_found: "İlan bulunamadı.",
+  cadde_carsi_owner_required: "Bu işlem yalnız ilan sahibine veya moderatöre açık.",
 };
 
 /** Supabase RPC hatasını kullanıcıya gösterilebilir mesaja çevirir. */

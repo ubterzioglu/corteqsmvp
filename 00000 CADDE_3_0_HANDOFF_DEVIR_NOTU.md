@@ -17,8 +17,20 @@
 | **Faz 2** — Actor context + profil kapısı + Köprü policy (RPC+RLS) | ✅ TAMAM | `60c5baf` |
 | **Faz 3** — Çoklu geo filtre + interests + ranking | ✅ TAMAM (migration 005-007 canlıya uygulandı + schema_migrations kayıtlı, 2026-06-11) | `64fbdb1` |
 | **Faz 4 Cafe** | ✅ TAMAM (migration 008 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `48c3377` |
-| **Faz 5 Çarşı** | ⬜ **SIRADAKİ** | — |
-| Faz 6 Tanıtım · Faz 7 bildirim/moderasyon · Faz 8 diaspora · Faz 9 legacy temizlik | ⬜ | — |
+| **Faz 5 Çarşı** | ✅ KOD TAMAM — migration 009 canlıya uygulanma durumunu §2'den kontrol et | (bu oturum) |
+| **Faz 6 Tanıtım/Çıfıt** | ⬜ **SIRADAKİ** (D-01 ad kararı: UI "Tanıtım" önerisi) | — |
+| Faz 7 bildirim/moderasyon · Faz 8 diaspora · Faz 9 legacy temizlik | ⬜ | — |
+
+**Faz 5 özeti:** `carsi_categories` (7 seed: second_hand/room_rental/lesson_education/service/event_ticket/
+gift_donation/other) + `carsi_items` (fiyat/para birimi/görseller/contact_mode/status/moderation_status/
+expires_at/soft delete); mutation'lar yalnız `create/update/delete_carsi_item_v1` RPC'leri (admin'e panel
+için direct yetki). D-07: aktif ilan limiti `cadde_settings.'cadde.carsi.active_item_limit'`=5 +
+`default_expiry_days`=30 (premium kademesi D-07 kararına ertelendi; legacy useIsPremium admin=premium
+demo mantığı BİLEREK taşınmadı). RLS: yayında+onaylı+süresi geçmemiş ilanlar authenticated'a; sahibi
+hepsini görür. UI: `CarsiGlobalTicker` (CaddePage sol kolon üstü, geo filtresine göre daralır, "Tüm Çarşı"
+CTA), `/cadde/carsi` (kategori chip'leri + İlan Ver dialog'u + İlanlarım yönetimi), `/cadde/carsi/:itemId`
+(sahip kontrolleri / profil linki). Yeni lib: `cadde-carsi-api.ts` (D-01 gereği ayrı modül). KALAN:
+`/profile?tab=carsi` parity + `/admin/cadde/carsi` (Faz 7 AdminCadde modülerleştirmesiyle birlikte).
 
 Doğrulama durumu (son koşum): **487/487 test geçti**, `npm run build` OK, yeni/değişen dosyalar lint-temiz. (Repo genelinde ~451 ÖNCEDEN VAR OLAN lint hatası var — backlog B7, bizim dosyalarla ilgisiz; tam `npm run lint` exit 1 döner, bu NORMALDİR. Kendi dosyalarını hedefli `npx eslint <dosyalar>` ile doğrula.) Not: `ProfilePage.test.tsx` "bireysel" testi yavaş olduğundan 15sn açık timeout aldı (paralel suite yükünde 5sn default'u aşıyordu).
 

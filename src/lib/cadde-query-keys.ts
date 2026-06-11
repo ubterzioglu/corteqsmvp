@@ -19,4 +19,9 @@ export const caddeQueryKeys = {
   sponsor: (filters: CaddeFilterState) => ["cadde", "sponsor", filters] as const,
   interestCatalog: ["cadde", "interest-catalog"] as const,
   myInterests: (userId: string | null) => ["cadde", "my-interests", userId] as const,
+  carsiRoot: ["cadde", "carsi"] as const,
+  carsiCategories: ["cadde", "carsi", "categories"] as const,
+  carsiItems: (filters: { countries: string[]; cities: string[]; categoryKey?: string }) => ["cadde", "carsi", "items", filters] as const,
+  carsiItem: (itemId: string) => ["cadde", "carsi", "item", itemId] as const,
+  myCarsiItems: (userId: string | null) => ["cadde", "carsi", "mine", userId] as const,
 };

@@ -6,6 +6,7 @@ import { Clock3, Flame, Globe2, MapPin, MessageCircle, MessagesSquare, Sparkles,
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
 import CaddeProfileGate from "@/components/cadde/CaddeProfileGate";
+import CarsiGlobalTicker from "@/components/cadde/CarsiGlobalTicker";
 import CreateCafeForm from "@/components/cadde/CreateCafeForm";
 import { useCaddeActorContext } from "@/hooks/cadde/useCaddeActorContext";
 import { Badge } from "@/components/ui/badge";
@@ -251,6 +252,8 @@ const CaddePage = () => {
 
       <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-6 lg:grid-cols-[290px_minmax(0,1fr)_320px] lg:px-6">
         <aside className="space-y-5">
+          <CarsiGlobalTicker filters={filters} />
+
           <Card className="border-orange-100 bg-white/90 shadow-[0_20px_50px_rgba(15,23,42,0.06)]">
             <CardHeader className="space-y-3">
               <div className="flex items-center justify-between gap-3">

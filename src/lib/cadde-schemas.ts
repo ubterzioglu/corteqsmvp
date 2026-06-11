@@ -70,6 +70,27 @@ export const caddeCafeJoinInputSchema = z.object({
   answer: z.string().trim().max(500, "Yanıt en fazla 500 karakter olabilir.").optional(),
 });
 
+export const carsiItemCreateSchema = z.object({
+  categoryKey: z.string().trim().min(1, "Kategori seç."),
+  title: z.string().trim().min(3, "İlan başlığı en az 3 karakter olmalı.").max(100, "İlan başlığı en fazla 100 karakter olabilir."),
+  description: z.string().trim().min(1, "İlan açıklaması zorunlu.").max(2000, "Açıklama en fazla 2000 karakter olabilir."),
+  priceAmount: z.number().min(0, "Fiyat negatif olamaz.").optional(),
+  priceCurrency: z.string().trim().toUpperCase().regex(/^[A-Z]{3}$/, "Para birimi 3 harfli kod olmalı (örn. EUR).").optional(),
+  country: z.string().optional(),
+  city: z.string().optional(),
+  imageUrls: z.array(httpUrl).max(6, "En fazla 6 görsel ekleyebilirsin.").optional(),
+  contactMode: z.enum(["platform", "phone", "email"]).optional(),
+});
+
+export const carsiItemUpdateSchema = z.object({
+  itemId: z.string().min(1),
+  title: z.string().trim().min(3, "İlan başlığı en az 3 karakter olmalı.").max(100, "İlan başlığı en fazla 100 karakter olabilir.").optional(),
+  description: z.string().trim().min(1).max(2000, "Açıklama en fazla 2000 karakter olabilir.").optional(),
+  priceAmount: z.number().min(0, "Fiyat negatif olamaz.").optional(),
+  priceCurrency: z.string().trim().toUpperCase().regex(/^[A-Z]{3}$/, "Para birimi 3 harfli kod olmalı (örn. EUR).").optional(),
+  status: z.enum(["draft", "published", "paused", "expired"]).optional(),
+});
+
 export const caddeCommentCreateSchema = z.object({
   postId: z.string().min(1),
   body: z

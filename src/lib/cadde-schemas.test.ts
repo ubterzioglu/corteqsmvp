@@ -7,6 +7,8 @@ import {
   caddeFilterSchema,
   caddePostCreateSchema,
   caddeReactionSchema,
+  carsiItemCreateSchema,
+  carsiItemUpdateSchema,
   parseWithUserError,
 } from "@/lib/cadde-schemas";
 
@@ -118,5 +120,41 @@ describe("caddeCafeJoinInputSchema (Faz 4)", () => {
     expect(caddeCafeJoinInputSchema.safeParse({ cafeId: "c1" }).success).toBe(true);
     expect(caddeCafeJoinInputSchema.safeParse({ cafeId: "c1", referralCode: "X", answer: "ben" }).success).toBe(true);
     expect(caddeCafeJoinInputSchema.safeParse({ cafeId: "" }).success).toBe(false);
+  });
+});
+
+describe("carsiItemCreateSchema (Faz 5)", () => {
+  const base = {
+    categoryKey: "second_hand",
+    title: "IKEA calisma masasi",
+    description: "Az kullanilmis, Berlin ici teslim.",
+  };
+
+  it("gecerli ilan girdisini kabul eder", () => {
+    expect(carsiItemCreateSchema.safeParse(base).success).toBe(true);
+    expect(carsiItemCreateSchema.safeParse({ ...base, priceAmount: 0, priceCurrency: "eur" }).success).toBe(true);
+  });
+
+  it("baslik/aciklama sinirlarini uygular", () => {
+    expect(carsiItemCreateSchema.safeParse({ ...base, title: "ab" }).success).toBe(false);
+    expect(carsiItemCreateSchema.safeParse({ ...base, description: "" }).success).toBe(false);
+  });
+
+  it("negatif fiyat ve gecersiz para birimini reddeder", () => {
+    expect(carsiItemCreateSchema.safeParse({ ...base, priceAmount: -1 }).success).toBe(false);
+    expect(carsiItemCreateSchema.safeParse({ ...base, priceCurrency: "EURO" }).success).toBe(false);
+  });
+
+  it("gorseller http(s) URL olmali, en fazla 6", () => {
+    expect(carsiItemCreateSchema.safeParse({ ...base, imageUrls: ["ftp://x"] }).success).toBe(false);
+    expect(carsiItemCreateSchema.safeParse({ ...base, imageUrls: Array(7).fill("https://example.com/a.jpg") }).success).toBe(false);
+    expect(carsiItemCreateSchema.safeParse({ ...base, imageUrls: ["https://example.com/a.jpg"] }).success).toBe(true);
+  });
+});
+
+describe("carsiItemUpdateSchema (Faz 5)", () => {
+  it("durum gecisleri enum ile sinirli", () => {
+    expect(carsiItemUpdateSchema.safeParse({ itemId: "i1", status: "paused" }).success).toBe(true);
+    expect(carsiItemUpdateSchema.safeParse({ itemId: "i1", status: "archived" }).success).toBe(false);
   });
 });

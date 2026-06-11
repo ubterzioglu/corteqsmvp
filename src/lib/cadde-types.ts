@@ -311,6 +311,73 @@ export type CaddeFeedListItem =
   | { kind: "post"; post: CaddePost }
   | { kind: "sponsor"; sponsor: CaddeSponsoredPlacement };
 
+// ── Çarşı (Faz 5) — U2U marketplace; Tanıtım/sponsorlu görünürlükten AYRI (D-01) ──
+
+export type CarsiItemStatus = "draft" | "published" | "paused" | "expired";
+export type CarsiContactMode = "platform" | "phone" | "email";
+
+export type CarsiCategoryRow = {
+  key: string;
+  label_tr: string;
+  sort_order: number;
+  is_active: boolean;
+};
+
+export type CarsiCategory = {
+  key: string;
+  labelTr: string;
+  sortOrder: number;
+};
+
+export type CarsiItemRow = {
+  id: string;
+  owner_user_id: string;
+  category_key: string;
+  title: string;
+  description: string;
+  price_amount: Nullable<number>;
+  price_currency: Nullable<string>;
+  country_id: Nullable<string>;
+  city_id: Nullable<string>;
+  image_urls: string[];
+  contact_mode: CarsiContactMode;
+  status: CarsiItemStatus;
+  moderation_status: string;
+  expires_at: Nullable<string>;
+  created_at: string;
+};
+
+export type CarsiItem = {
+  id: string;
+  ownerUserId: string;
+  ownerName: string;
+  categoryKey: string;
+  categoryLabel: string;
+  title: string;
+  description: string;
+  priceAmount: number | null;
+  priceCurrency: string | null;
+  country: string | null;
+  city: string | null;
+  imageUrls: string[];
+  contactMode: CarsiContactMode;
+  status: CarsiItemStatus;
+  expiresAt: string | null;
+  createdAt: string;
+};
+
+export type CarsiItemCreateInput = {
+  categoryKey: string;
+  title: string;
+  description: string;
+  priceAmount?: number;
+  priceCurrency?: string;
+  country?: string;
+  city?: string;
+  imageUrls?: string[];
+  contactMode?: CarsiContactMode;
+};
+
 // NOT: countryId/cityId alanları tarihsel olarak ülke/şehir ADI taşır (filtre değerleri);
 // id çözümlemesi API katmanında yapılır. Faz 2'de RPC'ye geçerken yeniden adlandırılacak.
 export type CaddePostInput = {
