@@ -198,6 +198,28 @@ Backlog'daki "AdminPageLayout → AdminPageShell (34 sayfa)" maddesi incelendi; 
 Doğrulama (2026-06-11): lint dokunulan dosyalar 0 hata · tsc scoped 0 hata ·
 test 469/469 (96 dosya; silinen 2 orphan test dosyasının 17 testi düştü) · build exit 0.
 
+### Faz 9 sonrası — Guide + Güncellemeler butonları ✅ (2026-06-11)
+
+Topbar'a iki yeni yüzey + kapsamlı kılavuz sayfası eklendi:
+
+- **`/admin/guide` — Admin Kullanım Kılavuzu** (`AdminGuidePage.tsx`): 11 bölüm, tüm
+  modüllerin kullanım rehberi; sol sticky TOC + AdminPageShell. Erişim: topbar'daki
+  `CircleHelp` butonu + sidebar altındaki "Yardım" NavLink'i + registry system grubu
+  (`admin-guide` item → palette/mobil otomatik). Route 3 yere kayıtlı (routes.tsx +
+  ADMIN_ROUTE_PATTERNS + registry).
+- **Güncellemeler (bell)**: `AdminUpdatesMenu.tsx` — okunmamış sayı rozeti (9+ kısaltması),
+  menü açılınca `markAllSeen`. Veri tek kaynak: `lib/admin-shell/admin-updates.ts`
+  (`ADMIN_UPDATES`, id format `YYYYMMDD-slug`) — `/admin/about` sayfası da aynı listeden
+  beslenecek şekilde rewire edildi (AdminPageShell'e geçti). Okundu kaydı localStorage:
+  `corteqs.admin.updates-seen.v1` (`useAdminUpdates` hook'u, favorites deseni).
+  **Yeni release'te ADMIN_UPDATES'in EN ÜSTÜNE kayıt ekle** — rozet otomatik yanar.
+- Testler: `useAdminUpdates.test.ts` (5), `AdminGuidePage.test.tsx` (3), AdminLayout'a
+  +2 (guide linkleri + rozet okundu akışı), e2e `E2E-ADMIN-015` (rozet persist + guide).
+  **Playwright tuzağı:** `getByRole` name'i substring eşler — "Kullanım kılavuzu" 4 linke
+  çarpar, `exact: true` şart.
+
+Doğrulama: lint 0 · tsc scoped 0 · test 520/520 (102 dosya) · build exit 0 · e2e 17/17.
+
 ---
 
 ## 2. Son Doğrulama Durumu (Faz 9 sonu — FINAL)

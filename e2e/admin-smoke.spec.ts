@@ -270,6 +270,34 @@ test("QA-DARK tema toggle dark class uygular ve refresh sonrası korunur", async
   await expect(page.locator("html")).toHaveClass(/dark/);
 });
 
+test("E2E-ADMIN-015 güncellemeler rozeti okununca söner ve guide açılır", async ({ page }) => {
+  await mockSupabase(page);
+  await loginAsAdmin(page);
+
+  // Okunmamış güncelleme rozeti görünür (statik liste >9 ise "9+").
+  const bell = page.getByRole("button", { name: "Güncellemeler" });
+  await expect(bell).toBeVisible();
+  await expect(bell.locator("span").first()).toHaveText(/^([1-9]\d*|9\+)$/);
+
+  // Menü açılınca tümü okundu sayılır; rozet kaybolur ve refresh sonrası geri gelmez.
+  await bell.click();
+  await expect(page.getByRole("menuitem", { name: "Tümünü gör" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(bell.locator("span", { hasText: /^([1-9]\d*|9\+)$/ })).toHaveCount(0);
+
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Kullanıcı menüsü" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Güncellemeler" }).locator("span", { hasText: /^([1-9]\d*|9\+)$/ }),
+  ).toHaveCount(0);
+
+  // Topbar'daki kılavuz butonu /admin/guide'ı açar (exact: sidebar "Yardım — kullanım
+  // kılavuzu" ve registry "Admin Kullanım Kılavuzu" linkleriyle substring çakışır).
+  await page.getByRole("link", { name: "Kullanım kılavuzu", exact: true }).click();
+  await expect(page).toHaveURL(/\/admin\/guide$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Admin Kullanım Kılavuzu" })).toBeVisible();
+});
+
 test("E2E-ADMIN-014 logout login ekranına döndürür", async ({ page }) => {
   await mockSupabase(page);
   await loginAsAdmin(page);

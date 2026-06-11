@@ -28,6 +28,7 @@ const AdminReferralSourcesPage = lazy(() => import("@/pages/admin/AdminReferralS
 const AdminReferralGroupsPage = lazy(() => import("@/pages/admin/AdminReferralGroupsPage"));
 const AdminReferralTypesPage = lazy(() => import("@/pages/admin/AdminReferralTypesPage"));
 const AdminAboutPage = lazy(() => import("@/pages/admin/AdminAboutPage"));
+const AdminGuidePage = lazy(() => import("@/pages/admin/AdminGuidePage"));
 const AdminMarqueePage = lazy(() => import("@/pages/admin/AdminMarqueePage"));
 const AdminAdvisorLinksPage = lazy(() => import("@/pages/admin/AdminAdvisorLinksPage"));
 const AdminSocialMediaLinksPage = lazy(() => import("@/pages/admin/AdminSocialMediaLinksPage"));
@@ -107,6 +108,7 @@ export const adminRoutes = (
     <Route path="may19/kelime" element={<AdminMay19IdeaPage />} />
     <Route path="may19/ani" element={<AdminMay19MomentPage />} />
     <Route path="about" element={<AdminAboutPage />} />
+    <Route path="guide" element={<AdminGuidePage />} />
     <Route path="workspace" element={<AdminWorkspaceHomePage />} />
     <Route path="workspace/command-center" element={<AdminCommandCenterPage />} />
     <Route path="workspace/resources" element={<AdminResourcesPage />} />

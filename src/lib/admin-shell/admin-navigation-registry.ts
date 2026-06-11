@@ -429,6 +429,16 @@ export const adminNavGroups: AdminNavGroup[] = [
         aliases: ["güncelleme", "sürüm", "release", "about"],
       },
       {
+        id: "admin-guide",
+        label: "Admin Kullanım Kılavuzu",
+        shortLabel: "Kılavuz",
+        description: "Tüm admin fonksiyonlarının kullanım rehberi.",
+        to: "/admin/guide",
+        icon: BookOpen,
+        accent: "red",
+        aliases: ["yardım", "kılavuz", "klavuz", "guide", "help", "rehber"],
+      },
+      {
         id: "external-engine",
         label: "Engine",
         href: "https://eng.corteqs.net",

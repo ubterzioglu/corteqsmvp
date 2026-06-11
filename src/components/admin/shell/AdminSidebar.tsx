@@ -3,7 +3,8 @@
 // (useAdminSidebarState). Inactive item'lar en altta ayrı bölümde.
 
 import { useState } from "react";
-import { ChevronDown, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { ChevronDown, CircleHelp, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
 import { adminNavGroups } from "@/lib/admin-shell/admin-navigation-registry";
@@ -96,7 +97,21 @@ const AdminSidebar = ({ collapsed, onToggleCollapsed, favorites }: AdminSidebarP
         )}
       </nav>
 
-      <div className={cn("border-t border-border px-3 py-3", collapsed && "px-2")}>
+      <div className={cn("space-y-0.5 border-t border-border px-3 py-3", collapsed && "px-2")}>
+        <NavLink
+          to="/admin/guide"
+          aria-label="Yardım — kullanım kılavuzu"
+          className={({ isActive }) =>
+            cn(
+              "flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+              collapsed && "justify-center px-0",
+              isActive && "bg-muted text-foreground",
+            )
+          }
+        >
+          <CircleHelp aria-hidden="true" className="h-4 w-4 shrink-0" />
+          {!collapsed && <span>Yardım</span>}
+        </NavLink>
         <button
           type="button"
           onClick={onToggleCollapsed}

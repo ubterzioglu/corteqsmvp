@@ -7,6 +7,7 @@ export const ADMIN_STORAGE_KEYS = {
   favoritePages: "corteqs.admin.favorite-pages.v1",
   recentPages: "corteqs.admin.recent-pages.v1",
   theme: "corteqs.admin.theme.v1",
+  updatesSeen: "corteqs.admin.updates-seen.v1",
 } as const;
 
 export function readAdminStorage<T>(key: string, fallback: T): T {

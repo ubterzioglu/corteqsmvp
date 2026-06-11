@@ -6,6 +6,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import AdminLayout from "@/components/admin/AdminLayout";
+import { ADMIN_UPDATES } from "@/lib/admin-shell/admin-updates";
 
 vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({
@@ -204,6 +205,41 @@ describe("AdminLayout (Admin Panel V2 shell)", () => {
 
     const stored = JSON.parse(window.localStorage.getItem("corteqs.admin.recent-pages.v1")!);
     expect(stored[0]).toEqual({ path: "/admin/data", label: "Kayıt Veritabanı" });
+  });
+
+  it("topbar ve sidebar kılavuza (/admin/guide) link verir", async () => {
+    renderAdminLayout("/admin");
+    await screen.findByText("Admin Home Content");
+
+    expect(screen.getByRole("link", { name: "Kullanım kılavuzu" })).toHaveAttribute("href", "/admin/guide");
+    expect(screen.getByRole("link", { name: "Yardım — kullanım kılavuzu" })).toHaveAttribute(
+      "href",
+      "/admin/guide",
+    );
+  });
+
+  it("güncellemeler rozeti okunmamış sayıyı gösterir, menü açılınca okundu sayılır", async () => {
+    renderAdminLayout("/admin");
+    await screen.findByText("Admin Home Content");
+
+    const expectedBadge = ADMIN_UPDATES.length > 9 ? "9+" : String(ADMIN_UPDATES.length);
+    expect(screen.getByText(expectedBadge)).toBeInTheDocument();
+
+    // Radix dropdown trigger'ı jsdom'da klavye ile açılır.
+    fireEvent.keyDown(screen.getByRole("button", { name: "Güncellemeler" }), { key: "Enter" });
+
+    expect(await screen.findByText(ADMIN_UPDATES[0].title)).toBeInTheDocument();
+    expect((await screen.findByRole("menuitem", { name: "Tümünü gör" })).closest("a")).toHaveAttribute(
+      "href",
+      "/admin/about",
+    );
+    expect(JSON.parse(window.localStorage.getItem("corteqs.admin.updates-seen.v1")!)).toEqual(
+      ADMIN_UPDATES.map((update) => update.id),
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(expectedBadge)).not.toBeInTheDocument();
+    });
   });
 
   it("kullanıcı menüsü e-posta ve çıkış aksiyonunu içerir", async () => {

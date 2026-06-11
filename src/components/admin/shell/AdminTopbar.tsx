@@ -1,15 +1,17 @@
 // Admin Panel V2 — utility topbar.
-// Sol: mobil hamburger + breadcrumb. Sağ: global arama (Ctrl+K), tema,
-// dış bağlantılar, kullanıcı menüsü. İşlev linkleri buraya KONULMAZ;
-// navigasyon sidebar'dadır.
+// Sol: mobil hamburger + breadcrumb. Sağ: global arama (Ctrl+K), güncellemeler,
+// kılavuz, tema, dış bağlantılar, kullanıcı menüsü. İşlev linkleri buraya
+// KONULMAZ; navigasyon sidebar'dadır.
 
-import { Menu, Search } from "lucide-react";
+import { CircleHelp, Menu, Search } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 
 import AdminBreadcrumbs from "./AdminBreadcrumbs";
 import AdminExternalLinksMenu from "./AdminExternalLinksMenu";
 import AdminThemeToggle from "./AdminThemeToggle";
+import AdminUpdatesMenu from "./AdminUpdatesMenu";
 import AdminUserMenu from "./AdminUserMenu";
 
 type AdminTopbarProps = {
@@ -49,6 +51,12 @@ const AdminTopbar = ({ userEmail, onLogout, onOpenMobileSidebar, onOpenCommandPa
           <kbd className="pointer-events-none hidden rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium sm:inline-block">
             Ctrl K
           </kbd>
+        </Button>
+        <AdminUpdatesMenu />
+        <Button type="button" variant="ghost" size="icon" asChild>
+          <Link to="/admin/guide" aria-label="Kullanım kılavuzu">
+            <CircleHelp className="h-4 w-4" />
+          </Link>
         </Button>
         <AdminThemeToggle />
         <AdminExternalLinksMenu />
