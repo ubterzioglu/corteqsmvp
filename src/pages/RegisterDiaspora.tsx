@@ -14,6 +14,8 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import multiculturalHero from "@/assets/multicultural-diaspora-hero.jpg";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 
 /**
  * EN landing — "Register Diaspora" — mirrors the Turkish hero structure
@@ -309,11 +311,20 @@ const RegisterDiaspora = () => {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <Label>Country</Label>
-                      <Input value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} />
+                      <SearchableCountrySelect
+                        value={form.country}
+                        onChange={(v) => setForm({ ...form, country: v, city: "" })}
+                        placeholder="Select country"
+                      />
                     </div>
                     <div>
                       <Label>City</Label>
-                      <Input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+                      <SearchableCitySelect
+                        value={form.city}
+                        onChange={(v) => setForm({ ...form, city: v })}
+                        countryName={form.country || undefined}
+                        placeholder={form.country ? "Select city" : "Select country first"}
+                      />
                     </div>
                   </div>
 

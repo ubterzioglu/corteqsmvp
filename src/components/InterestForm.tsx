@@ -21,6 +21,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, CheckCircle2, Upload, X, Hourglass, Target, Globe2, Rocket } from "lucide-react";
 import ConsentCheckboxes, { emptyConsent, isConsentValid, type ConsentState } from "@/components/ConsentCheckboxes";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 
 export type InterestCategory =
   | "founders_1000"
@@ -256,11 +258,22 @@ const InterestForm = ({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label htmlFor="country">Ülke</Label>
-              <Input id="country" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} placeholder="Almanya" />
+              <SearchableCountrySelect
+                id="country"
+                value={form.country}
+                onChange={(v) => setForm({ ...form, country: v, city: "" })}
+                placeholder="Almanya"
+              />
             </div>
             <div>
               <Label htmlFor="city">Şehir</Label>
-              <Input id="city" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} placeholder="Berlin" />
+              <SearchableCitySelect
+                id="city"
+                value={form.city}
+                onChange={(v) => setForm({ ...form, city: v })}
+                countryName={form.country || undefined}
+                placeholder={form.country ? "Şehir seçin" : "Önce ülke seçin"}
+              />
             </div>
           </div>
 

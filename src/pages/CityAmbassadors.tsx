@@ -13,6 +13,8 @@ import {
   Network, Award, Handshake, Target, Clock, Send
 } from "lucide-react";
 import ConsentCheckboxes, { emptyConsent, isConsentValid, type ConsentState } from "@/components/ConsentCheckboxes";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 
 const priorityCities: Record<string, string[]> = {
   "🇩🇪 Almanya": ["Berlin", "Köln", "Frankfurt"],
@@ -292,12 +294,23 @@ const CityAmbassadors = () => {
                       <Input name="phone" value={form.phone} onChange={handleChange} placeholder="+49..." required />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-foreground mb-1.5 block">Şehir *</label>
-                      <Input name="city" value={form.city} onChange={handleChange} required />
+                      <label className="text-sm font-medium text-foreground mb-1.5 block">Ülke *</label>
+                      <SearchableCountrySelect
+                        name="country"
+                        value={form.country}
+                        onChange={(v) => setForm(prev => ({ ...prev, country: v, city: "" }))}
+                        placeholder="Ülke seçin"
+                      />
                     </div>
                     <div className="sm:col-span-2">
-                      <label className="text-sm font-medium text-foreground mb-1.5 block">Ülke *</label>
-                      <Input name="country" value={form.country} onChange={handleChange} required />
+                      <label className="text-sm font-medium text-foreground mb-1.5 block">Şehir *</label>
+                      <SearchableCitySelect
+                        name="city"
+                        value={form.city}
+                        onChange={(v) => setForm(prev => ({ ...prev, city: v }))}
+                        countryName={form.country || undefined}
+                        placeholder={form.country ? "Şehir seçin" : "Önce ülke seçin"}
+                      />
                     </div>
                   </div>
 

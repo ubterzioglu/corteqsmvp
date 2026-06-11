@@ -9,6 +9,8 @@ import { Award, Crown, Sparkles, Mail, Check } from "lucide-react";
 import heroNetworkLight from "@/assets/hero-network-light.jpg";
 import corteqsLogo from "@/assets/corteqs-logo-globe.png";
 import { notifySubmission } from "@/lib/mail";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 import {
   getReferralDetailLabel,
   getReferralDetailPlaceholder,
@@ -99,6 +101,8 @@ const BackerForm = ({ open, onOpenChange, defaultTier }: BackerFormProps) => {
   const [referralDetail, setReferralDetail] = useState("");
   const [documentFiles, setDocumentFiles] = useState<File[]>([]);
   const [documentError, setDocumentError] = useState("");
+  const [country, setCountry] = useState("");
+  const [city, setCity] = useState("");
   const documentInputRef = useRef<HTMLInputElement | null>(null);
 
   const validatePhone = (value: string) => {
@@ -114,6 +118,15 @@ const BackerForm = ({ open, onOpenChange, defaultTier }: BackerFormProps) => {
       return;
     }
     setPhoneError("");
+
+    if (!country || !city) {
+      toast({
+        title: "Ülke ve şehir seçin",
+        description: "Lütfen ülke ve şehir alanlarını doldurun.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const effectiveAmount = isCustom ? parseInt(customAmount, 10) : selectedTier;
     if (!effectiveAmount || effectiveAmount < 1) {
@@ -350,11 +363,24 @@ const BackerForm = ({ open, onOpenChange, defaultTier }: BackerFormProps) => {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label htmlFor="country">Ülke</Label>
-                <Input id="country" name="country" placeholder="Almanya" required />
+                <SearchableCountrySelect
+                  id="country"
+                  name="country"
+                  value={country}
+                  onChange={(v) => { setCountry(v); setCity(""); }}
+                  placeholder="Almanya"
+                />
               </div>
               <div>
                 <Label htmlFor="city">Şehir</Label>
-                <Input id="city" name="city" placeholder="Berlin" required />
+                <SearchableCitySelect
+                  id="city"
+                  name="city"
+                  value={city}
+                  onChange={setCity}
+                  countryName={country || undefined}
+                  placeholder={country ? "Şehir seçin" : "Önce ülke seçin"}
+                />
               </div>
             </div>
 

@@ -15,6 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import CountryCitySelector from "@/components/CountryCitySelector";
+import SearchableCountrySelect from "@/components/SearchableCountrySelect";
+import SearchableCitySelect from "@/components/SearchableCitySelect";
 import { useDiaspora } from "@/contexts/DiasporaContext";
 
 import { useToast } from "@/hooks/use-toast";
@@ -238,11 +240,20 @@ const WhatsAppGroups = () => {
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <Label>Ülke *</Label>
-                        <Input value={country} onChange={(e) => setCountry(e.target.value)} placeholder="Almanya" />
+                        <SearchableCountrySelect
+                          value={country}
+                          onChange={(v) => { setCountry(v); setCity(""); }}
+                          placeholder="Almanya"
+                        />
                       </div>
                       <div>
                         <Label>Şehir *</Label>
-                        <Input value={city} onChange={(e) => setCity(e.target.value)} placeholder="Berlin" />
+                        <SearchableCitySelect
+                          value={city}
+                          onChange={setCity}
+                          countryName={country || undefined}
+                          placeholder={country ? "Şehir seçin" : "Önce ülke seçin"}
+                        />
                       </div>
                     </div>
                     <div>
