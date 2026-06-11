@@ -84,7 +84,7 @@ const Footer = () => {
           <div className="mx-auto mb-6 max-w-4xl py-1 sm:mb-10 sm:py-2">
             <p className="mb-3 text-sm font-medium tracking-[0.08em] text-white sm:mb-5">İletişim Kanallarımız</p>
             <div className="overflow-x-auto px-1 py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:py-3">
-              <div className="mx-auto flex min-w-max items-center justify-center gap-2 px-1 py-1 sm:gap-4">
+              <div className="mx-auto flex w-max items-center gap-2 px-1 py-1 sm:gap-4">
                 {socialLinks.map(({ href, label, icon: Icon, className }) => (
                   <a
                     key={label}
