@@ -22,7 +22,6 @@ const DB_TABLES: TableInfo[] = [
   { name: "user_profile_attributes", description: "Profil Nitelikleri", purpose: "Kullanıcı profillerine bağlı özel nitelik değerleri.", rowCount: 28, rls: true, group: "Auth & Kullanıcı" },
   { name: "user_cvs", description: "Kullanıcı CV'leri", purpose: "Yüklenen CV dosyalarının meta verilerini tutar.", rowCount: 3, rls: true, group: "Auth & Kullanıcı" },
   { name: "user_connections", description: "Kullanıcı Bağlantıları", purpose: "Kullanıcılar arası bağlantı/arkadaşlık kayıtları.", rowCount: 0, rls: true, group: "Auth & Kullanıcı" },
-  { name: "user_follows", description: "Takip Kayıtları", purpose: "Kullanıcıların birbirini takip etme ilişkileri.", rowCount: 1, rls: true, group: "Auth & Kullanıcı" },
   { name: "user_taxonomy_selections", description: "Taksonomi Seçimleri", purpose: "Kullanıcıların seçtiği taksonomi/kategori tercihleri.", rowCount: 0, rls: true, group: "Auth & Kullanıcı" },
   { name: "phone_verifications", description: "Telefon Doğrulama", purpose: "Telefon numarası doğrulama kayıtları.", rowCount: 0, rls: true, group: "Auth & Kullanıcı" },
   { name: "profile_views", description: "Profil Görüntülemeleri", purpose: "Hangi profilin kim tarafından görüntülendiğini loglar.", rowCount: 0, rls: true, group: "Auth & Kullanıcı" },
@@ -115,8 +114,6 @@ const DB_TABLES: TableInfo[] = [
   { name: "cadde_countries", description: "Cadde Ülkeleri", purpose: "Cadde modülünde desteklenen ülkeler.", rowCount: 5, rls: true, group: "Cadde" },
   { name: "cadde_billboard_cards", description: "Billboard Kartları", purpose: "Cadde sayfasında gösterilen reklam/duyuru kartları.", rowCount: 2, rls: true, group: "Cadde" },
   { name: "cadde_sponsored_placements", description: "Sponsorlu Yerleşimler", purpose: "Cadde modülündeki sponsorlu içerik yerleşimleri.", rowCount: 1, rls: true, group: "Cadde" },
-  { name: "cafe_memberships", description: "Kafe Üyelikleri", purpose: "Kullanıcıların kafe üyelik kayıtları.", rowCount: 0, rls: true, group: "Cadde" },
-  { name: "cafes", description: "Kafeler", purpose: "Genel kafe/mekan kayıt tablosu.", rowCount: 0, rls: true, group: "Cadde" },
 
   // Anket & Başvurular
   { name: "surveys", description: "Anketler", purpose: "Oluşturulan anket şablonları.", rowCount: 1, rls: true, group: "Anket & Başvurular" },
@@ -136,8 +133,6 @@ const DB_TABLES: TableInfo[] = [
   { name: "news_posts", description: "Haber Gönderileri", purpose: "Site içi haber ve güncel içerikler.", rowCount: 10, rls: true, group: "İçerik & Yayın" },
   { name: "may19_campaign_submissions", description: "19 Mayıs Kampanya", purpose: "19 Mayıs kampanyasına yapılan katılım gönderimleri.", rowCount: 6, rls: true, group: "İçerik & Yayın" },
   { name: "may19_submissions", description: "19 Mayıs Gönderimleri", purpose: "19 Mayıs etkinliğine ait diğer gönderimler.", rowCount: 0, rls: true, group: "İçerik & Yayın" },
-  { name: "feed_posts", description: "Feed Gönderileri", purpose: "Kullanıcı akışında gösterilen içerik gönderileri.", rowCount: 0, rls: true, group: "İçerik & Yayın" },
-  { name: "feed_likes", description: "Feed Beğenileri", purpose: "Feed gönderilerine yapılan beğeniler.", rowCount: 0, rls: true, group: "İçerik & Yayın" },
   { name: "generated_posts", description: "Üretilen Gönderiler", purpose: "AI veya otomasyon ile üretilen içerik gönderileri.", rowCount: 0, rls: true, group: "İçerik & Yayın" },
   { name: "site_settings", description: "Site Ayarları", purpose: "Genel site konfigürasyon değerlerini saklar (singleton).", rowCount: 1, rls: true, group: "İçerik & Yayın" },
   { name: "social_media_links", description: "Sosyal Medya Linkleri", purpose: "Sitenin sosyal medya hesabı linkleri.", rowCount: 4, rls: true, group: "İçerik & Yayın" },

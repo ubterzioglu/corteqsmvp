@@ -20,8 +20,13 @@
 | **Faz 5 Çarşı** | ✅ TAMAM (migration 009 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `cb116c1` |
 | **Faz 6 Tanıtım** | ✅ TAMAM (D-01 KARAR: UI "Tanıtım"; migration 010 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `2f92754` |
 | **Faz 7 bildirim/moderasyon** | ✅ TAMAM (migration 011 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `2a69250` |
-| **Faz 8 diaspora** | ✅ KOD TAMAM — migration 012 canlıya uygulanma durumunu §2'den kontrol et | (bu oturum) |
-| **Faz 9 legacy temizlik** | 🔄 BU OTURUMDA | — |
+| **Faz 8 diaspora** | ✅ TAMAM (migration 012 canlıya uygulandı + duman testleri geçti, 2026-06-11) | `6d5f1e8` |
+| **Faz 9 legacy temizlik** | ✅ TAMAM (migration 013 + 22 dead dosya silindi + change-report; DROP canary sonrası ayrı karar) | (bu oturum) |
+
+🎉 **REBUILD TAMAMLANDI (Faz 0-9, 2026-06-11).** Tam kapanış raporu: `docs/cadde-300/change-report.md`
+(faz/commit/migration haritası + mimari sözleşmeler + kalan kuyruk). Kalan işler change-report
+"Kalan işler" bölümünde: legacy DROP kararı (canary sonrası), B1 types regen, D-03 SMS sağlayıcı,
+profil parity'ler, Playwright persona matrisi, D-07 premium kademesi.
 
 **Faz 8 özeti:** `cadde_posts.diaspora_key` eklendi (cafes/carsi/placements'ta Faz 4-6'da zaten vardı);
 4 tabloya tr/in/cn/ph CHECK'i. Feed + promotion RPC'leri diaspora EŞİTLİK filtresi uygular

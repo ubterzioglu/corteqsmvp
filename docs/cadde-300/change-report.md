@@ -1,0 +1,69 @@
+# Cadde 3.0 E2E Rebuild — Değişiklik Raporu
+
+**Dönem:** 2026-06-10 → 2026-06-11 · **Durum:** Faz 0-9 TAMAMLANDI
+**Spec:** `CORTEQS_CADDE_3_0_E2E_REBUILD_SPEC.md` · **Devir notu:** `00000 CADDE_3_0_HANDOFF_DEVIR_NOTU.md`
+
+## Faz / commit haritası
+
+| Faz | İçerik | Ana commit | Migration |
+|---|---|---|---|
+| 0 | Envanter + 4 karar dokümanı | `8c4c998` (süpürüldü) | — |
+| 1 | `cadde.ts` → 8 modül; real default; telemetri | `8c4c998` + `fc27b26` | — |
+| 2 | Actor context, profil kapısı, Köprü policy, post RPC | `60c5baf` | 001-004 |
+| 3 | Çoklu geo filtre, ilgi alanları, CKS band/skor ranking | `64fbdb1` | 005-007 |
+| 4 | Cafe modülü (entry policy, detay sayfası, onay paneli) | `48c3377` | 008 |
+| 5 | Çarşı (U2U marketplace; D-01: Tanıtım'dan ayrı) | `cb116c1` | 009 |
+| 6 | Tanıtım kampanya katmanı (D-01 KARAR: UI "Tanıtım") | `2f92754` | 010 |
+| 7 | Bildirim + realtime + moderasyon + ban kill-switch | `2a69250` | 011 |
+| 8 | Çoklu diaspora (tr/in/cn/ph ayrımı) | `6d5f1e8` | 012 |
+| 9 | Legacy soft-decommission (bu rapor) | (bu commit) | 013 |
+
+Tüm migration'lar (`20260610180000` … `20260611150000`) canlıya psql ile uygulandı ve
+`supabase_migrations.schema_migrations`'a kayıtlı; her biri duman testinden geçti.
+
+## Mimari sözleşmeler (Definition of Done — spec §25 "Mimari")
+
+- **Tek hat:** `/cadde` tek aktif frontend; legacy `Feed.tsx` hattı silindi (aşağıda).
+- **RPC-only mutation:** post / yorum / reaksiyon / cafe create-join-approve-archive / çarşı
+  ilanı / kampanya / şikayet / moderasyon — tamamı security-definer RPC; kullanıcı için direct
+  INSERT policy'si kalmadı (kendi yorumunu düzenleme/silme ve ilgi alanı tercihi self-scoped direct).
+- **Canonical auth:** her yeni dosya `@/components/auth/useAuth`; shim kullanılmadı.
+- **Eski tablo adlarına 0 referans:** legacy tablolara runtime referansı yok (admin tablo
+  listesinden de çıkarıldı).
+- **SQL ↔ TS ayna sözleşmeleri** (birini değiştiren diğerini günceller):
+  `can_post_kopru` ↔ `cadde-rules.ts` · `list_cadde_feed_v1` ↔ `cadde-ranking.ts` ·
+  `can_join_cadde_cafe` ↔ `canJoinCafeRule`.
+- **Ban kill-switch:** `is_cadde_banned` → `has_cadde_feature` içinde; banlı kullanıcının tüm
+  cadde yazma RPC'leri tek noktadan kapanır.
+- **Ayarlanabilir limitler:** tüm rate limit / kapasite / süre sayıları `cadde_settings`'te
+  (telefon flag'i D-03 dahil) — ürün kararı SQL'siz uygulanır.
+
+## Faz 9 — yapılanlar
+
+1. **Migration 013** (`20260611150000`): canlıdan doğrulanmış 7 legacy trigger drop edildi
+   (`trg_enforce_cafe_capacity`, `trg_enforce_daily_cafe_join`, `trg_update_cafe_member_count_ins/del`,
+   `trg_notify_followers_on_cafe`, `feed_likes_count_trigger`, `update_feed_posts_updated_at`);
+   `feed_posts` / `feed_likes` / `cafes` / `cafe_memberships` / `user_follows` tablolarına
+   write-revoke (anon+authenticated tüm yetkiler) + tüm RLS policy'leri düşürüldü + açıklayıcı
+   COMMENT. **Tablolar DROP EDİLMEDİ** — spec §20.4: en az 1 canary sürüm sonrası ayrı karar
+   dokümanı + migration ile. `user_follows` 1 satır taşıyor (R-06 — DROP kararında not düşülecek).
+2. **22 dead dosya silindi** (tamamının canlı import'u olmadığı grep ile doğrulandı):
+   `pages/Feed.tsx` (1143 satır), `pages/DiasporaPeople.tsx`, `components/feed/*` (4),
+   `components/connections/*` (4), `components/CaddeProfileGate.tsx` (eski),
+   `components/PhoneVerification.tsx` (eski), `components/NotificationsList.tsx` (eski),
+   `components/profiles/ProfileIndividual|ProfileAmbassador|IndividualPublicCard.tsx`,
+   `components/profile/IndividualPublicView.tsx` (+testi), `hooks/useCafes|useFeedSocial|
+   useConnections|useIsPremium.ts`. (Bozuk `cafeNameModeration` importu — B2 — dosyayla birlikte gitti.)
+3. **AdminDatabaseTablesPage:** 5 legacy tablo satırı statik listeden çıkarıldı.
+
+## Kalan işler (rebuild sonrası kuyruk)
+
+- **DROP kararı:** legacy 5 tablo için canary gözlemi sonrası ayrı karar dokümanı + migration (R-06 notuyla).
+- **B1 types regen:** `supabase gen types` (Docker'sız Management API ile) — bilinçli olarak bu
+  oturumda yapılmadı; `cadde-internal.ts`'teki tek izole `db as any` cast'i bununla kalkacak.
+- D-03: SMS sağlayıcı seçimi → OTP Edge Function'ları + `cadde.phone_verification_required=true`.
+- §13.5 cafe profil parity, composer paylaşım hedefi seçici, `/profile?tab=carsi` parity,
+  `/admin/cadde/carsi` sayfası, homepage-ai-bar / category-first-screen yüzeyleri,
+  `cafe.expiring` / `carsi.item_contacted` bildirim üreticileri, otomatik kelime/spam taraması (§18.1).
+- Playwright persona matrisi (spec §22.4) — unit/component kapsamı geniş (520+), e2e personaları açık.
+- D-07 premium entitlement kademesi; billboard→kampanya migrasyonu (P2).
