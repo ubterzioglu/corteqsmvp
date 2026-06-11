@@ -6,6 +6,7 @@ import {
   caddeCommentCreateSchema,
   caddeFilterSchema,
   caddePostCreateSchema,
+  caddePromotionCreateSchema,
   caddeReactionSchema,
   carsiItemCreateSchema,
   carsiItemUpdateSchema,
@@ -156,5 +157,39 @@ describe("carsiItemUpdateSchema (Faz 5)", () => {
   it("durum gecisleri enum ile sinirli", () => {
     expect(carsiItemUpdateSchema.safeParse({ itemId: "i1", status: "paused" }).success).toBe(true);
     expect(carsiItemUpdateSchema.safeParse({ itemId: "i1", status: "archived" }).success).toBe(false);
+  });
+});
+
+describe("caddePromotionCreateSchema (Faz 6)", () => {
+  const base = {
+    campaignType: "business" as const,
+    title: "Anadolu Taste Kitchen",
+    description: "Berlin'de networking masasi.",
+    targetUrl: "https://example.com",
+    placements: [{ key: "cadde-right-rail" }],
+  };
+
+  it("gecerli kampanya girdisini kabul eder (internal path dahil)", () => {
+    expect(caddePromotionCreateSchema.safeParse(base).success).toBe(true);
+    expect(caddePromotionCreateSchema.safeParse({ ...base, targetUrl: "/commercial/foo" }).success).toBe(true);
+  });
+
+  it("hedef URL zorunlu ve http(s) veya '/' ile baslamali (spec 15.4)", () => {
+    expect(caddePromotionCreateSchema.safeParse({ ...base, targetUrl: "" }).success).toBe(false);
+    expect(caddePromotionCreateSchema.safeParse({ ...base, targetUrl: "javascript:alert(1)" }).success).toBe(false);
+  });
+
+  it("en az 1, en fazla 6 placement", () => {
+    expect(caddePromotionCreateSchema.safeParse({ ...base, placements: [] }).success).toBe(false);
+    expect(caddePromotionCreateSchema.safeParse({ ...base, placements: Array(7).fill({ key: "cadde-right-rail" }) }).success).toBe(false);
+  });
+
+  it("city_highlight yalniz kendi placement'inda yayinlanir", () => {
+    expect(caddePromotionCreateSchema.safeParse({ ...base, campaignType: "city_highlight", placements: [{ key: "cadde-right-rail" }] }).success).toBe(false);
+    expect(caddePromotionCreateSchema.safeParse({ ...base, campaignType: "city_highlight", placements: [{ key: "city-ambassador-highlight" }] }).success).toBe(true);
+  });
+
+  it("bitis baslangictan sonra olmali", () => {
+    expect(caddePromotionCreateSchema.safeParse({ ...base, startsAt: "2026-07-01T00:00:00Z", endsAt: "2026-06-01T00:00:00Z" }).success).toBe(false);
   });
 });

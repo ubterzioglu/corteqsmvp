@@ -8,6 +8,8 @@ import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
 import CaddeProfileGate from "@/components/cadde/CaddeProfileGate";
 import CarsiGlobalTicker from "@/components/cadde/CarsiGlobalTicker";
 import CreateCafeForm from "@/components/cadde/CreateCafeForm";
+import PromotionRail from "@/components/cadde/PromotionRail";
+import SponsoredFeedCard from "@/components/cadde/SponsoredFeedCard";
 import { useCaddeActorContext } from "@/hooks/cadde/useCaddeActorContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,7 +33,8 @@ import {
   listCaddeInterestCatalog,
   toggleCaddeReaction,
 } from "@/lib/cadde-api";
-import { injectSponsoredPlacement, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
+import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
+import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import { toggleInterestSelection } from "@/lib/cadde-targeting";
 import type { CaddeFeedPageParam, CaddeFilterState, CaddePostType, CaddeReactionType } from "@/lib/cadde-types";
@@ -140,6 +143,11 @@ const CaddePage = () => {
     queryFn: () => getCaddeSponsoredPlacement(filters),
   });
 
+  const feedPromotionsQuery = useQuery({
+    queryKey: caddeQueryKeys.promotions("cadde-feed-inline", { countries: filters.countries, cities: filters.cities }),
+    queryFn: () => listCaddePromotions("cadde-feed-inline", { countries: filters.countries, cities: filters.cities }, 5),
+  });
+
   const invalidateCadde = async () => {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: caddeQueryKeys.feedRoot }),
@@ -212,7 +220,15 @@ const CaddePage = () => {
   };
 
   const feedItems = useMemo(() => feedQuery.data?.pages.flatMap((page) => page.items) ?? [], [feedQuery.data]);
-  const feedWithSponsor = useMemo(() => injectSponsoredPlacement(feedItems, sponsorQuery.data ?? null, filters.mode), [feedItems, sponsorQuery.data, filters.mode]);
+  const feedWithSponsor = useMemo(
+    () =>
+      interleavePromotions(
+        injectSponsoredPlacement(feedItems, sponsorQuery.data ?? null, filters.mode),
+        feedPromotionsQuery.data ?? [],
+        filters.mode,
+      ),
+    [feedItems, sponsorQuery.data, feedPromotionsQuery.data, filters.mode],
+  );
   const directoryLink = useMemo(() => {
     const params = new URLSearchParams();
     if (filters.countries[0]) params.set("country", filters.countries[0]);
@@ -475,8 +491,10 @@ const CaddePage = () => {
           </Card>
 
           <div className="space-y-4">
-            {feedWithSponsor.map((item) =>
-              item.kind === "sponsor" ? (
+            {feedWithSponsor.map((item, itemIndex) =>
+              item.kind === "promotion" ? (
+                <SponsoredFeedCard key={`promo-${item.promotion.campaignId}-${itemIndex}`} promotion={item.promotion} />
+              ) : item.kind === "sponsor" ? (
                 <Card key={item.sponsor.id} className="border-orange-200 bg-[linear-gradient(135deg,#fff7e8_0%,#fff1d6_100%)]">
                   <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
                     <div className="space-y-2">
@@ -605,6 +623,8 @@ const CaddePage = () => {
         </section>
 
         <aside className="space-y-5">
+          <PromotionRail filters={filters} />
+
           <Card className="border-slate-200 bg-white/90">
             <CardHeader>
               <CardTitle>Billboard</CardTitle>

@@ -56,6 +56,7 @@ const AdminDurumRaporuPage = lazy(() => import("@/pages/admin/AdminDurumRaporuPa
 const AdminRoleManagementPage = lazy(() => import("@/pages/admin/AdminRoleManagementPage"));
 const AdminRolesOverviewPage = lazy(() => import("@/pages/admin/AdminRolesOverviewPage"));
 const AdminCaddePage = lazy(() => import("@/pages/admin/AdminCaddePage"));
+const AdminCaddePromotionsPage = lazy(() => import("@/pages/admin/AdminCaddePromotionsPage"));
 const AdminConsulateProfilesPage = lazy(() => import("@/pages/admin/AdminConsulateProfilesPage"));
 const AdminCatalogPage = lazy(() => import("@/pages/admin/AdminCatalogPage"));
 const AdminDatabaseTablesPage = lazy(() => import("@/pages/admin/AdminDatabaseTablesPage"));
@@ -70,6 +71,7 @@ export const adminRoutes = (
     <Route path="referral/types" element={<AdminReferralTypesPage />} />
     <Route path="marquee" element={<AdminMarqueePage />} />
     <Route path="cadde" element={<AdminCaddePage />} />
+    <Route path="cadde/promotions" element={<AdminCaddePromotionsPage />} />
     <Route path="advisors">
       <Route index element={<Navigate to="/admin/advisors/consultant" replace />} />
       <Route path=":profile" element={<AdminAdvisorLinksPage />} />

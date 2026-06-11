@@ -21,10 +21,10 @@
 
 ## B. Spec §26 kararları (D-01 … D-10)
 
-### D-01 — Çıfıt adı kullanılacak mı? 🟡
-- **Durum:** Repoda `carsi`/`çıfıt` geçen hiçbir kaynak dosya yok; "ÇIFIT" yalnız legacy Feed.tsx sağ kolon metinlerindeydi.
-- **Öneri:** Kod ve tablo adlarında nötr `promotion` (`cadde_promotion_*`), UI'da **"Tanıtım"**. "Çıfıt" istenirse sonradan salt görünür-metin (i18n) değişikliğiyle eklenir.
-- **Sözleşme (kesin):** Çarşı (U2U marketplace) ile Tanıtım/Çıfıt (sponsorlu görünürlük) **asla aynı tablo/panel altında birleşmez**.
+### D-01 — Çıfıt adı kullanılacak mı? ✅ KARAR VERİLDİ (2026-06-11, ürün sahibi)
+- **Karar:** UI adı **"Tanıtım"**; kod ve tablo adlarında nötr `promotion` (`cadde_promotion_*`). "Çıfıt" istenirse sonradan salt görünür-metin (i18n) değişikliğiyle eklenir.
+- **Uygulandı (Faz 6, mig `20260611120000`):** kampanya + placement + event katmanı, admin onay akışı, rail/feed kartları — tüm UI metinleri "Tanıtım"/"Sponsorlu".
+- **Sözleşme (kesin, geçerli):** Çarşı (U2U marketplace) ile Tanıtım (sponsorlu görünürlük) **asla aynı tablo/panel altında birleşmez**.
 
 ### D-02 — Anonim kullanıcı gerçek feed okuyabilir mi? 🟡
 - **Durum:** Bugün `/cadde` zaten `RequireAuth` arkasında; anonim hiç giremiyor.
@@ -95,7 +95,7 @@
 
 | ID | Konu | Statü | Faz etkisi |
 |---|---|---|---|
-| D-01 | Çıfıt/Tanıtım adı | 🟡 öneri: UI "Tanıtım" | Faz 6 öncesi |
+| D-01 | Çıfıt/Tanıtım adı | ✅ KARAR: UI "Tanıtım" (Faz 6'da uygulandı) | Karar verildi |
 | D-02 | Anonim erişim | 🟡 öneri: login zorunlu | Faz 2 |
 | D-03 | SMS/OTP sağlayıcı | ✅ stub (flag kapalı); sağlayıcı seçimi açık | Altyapı kuruldu (Faz 2) |
 | D-04 | cadde↔geo konsolidasyon | ✅ link kolonları + admin import RPC (Faz 3); tam konsolidasyon P2 | Uygulandı |

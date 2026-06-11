@@ -82,6 +82,40 @@ export const carsiItemCreateSchema = z.object({
   contactMode: z.enum(["platform", "phone", "email"]).optional(),
 });
 
+export const caddePromotionCreateSchema = z
+  .object({
+    campaignType: z.enum(["business", "consultant", "event", "community", "city_highlight"]),
+    title: z.string().trim().min(3, "Kampanya başlığı en az 3 karakter olmalı.").max(100, "Başlık en fazla 100 karakter olabilir."),
+    description: z.string().trim().min(1, "Kampanya açıklaması zorunlu.").max(500, "Açıklama en fazla 500 karakter olabilir."),
+    targetUrl: z
+      .string()
+      .trim()
+      .min(1, "Hedef URL zorunlu.")
+      .refine((value) => value.startsWith("/") || value.startsWith("http://") || value.startsWith("https://"), "Hedef URL '/' veya http(s) ile başlamalı."),
+    imageUrl: httpUrl.optional(),
+    startsAt: z.string().optional(),
+    endsAt: z.string().optional(),
+    placements: z
+      .array(
+        z.object({
+          key: z.string().trim().min(1, "Placement seç."),
+          country: z.string().optional(),
+          city: z.string().optional(),
+          themeKeys: z.array(z.string().trim().min(1)).optional(),
+        }),
+      )
+      .min(1, "En az bir placement seç.")
+      .max(6, "En fazla 6 placement seçebilirsin."),
+  })
+  .superRefine((value, ctx) => {
+    if (value.startsAt && value.endsAt && new Date(value.endsAt) <= new Date(value.startsAt)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["endsAt"], message: "Bitiş başlangıçtan sonra olmalı." });
+    }
+    if (value.campaignType === "city_highlight" && value.placements.some((item) => item.key !== "city-ambassador-highlight")) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["placements"], message: "Şehir Elçisi öne çıkarması yalnız kendi placement'ında yayınlanır." });
+    }
+  });
+
 export const carsiItemUpdateSchema = z.object({
   itemId: z.string().min(1),
   title: z.string().trim().min(3, "İlan başlığı en az 3 karakter olmalı.").max(100, "İlan başlığı en fazla 100 karakter olabilir.").optional(),

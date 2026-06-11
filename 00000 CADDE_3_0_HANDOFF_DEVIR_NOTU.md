@@ -18,8 +18,24 @@
 | **Faz 3** — Çoklu geo filtre + interests + ranking | ✅ TAMAM (migration 005-007 canlıya uygulandı + schema_migrations kayıtlı, 2026-06-11) | `64fbdb1` |
 | **Faz 4 Cafe** | ✅ TAMAM (migration 008 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `48c3377` |
 | **Faz 5 Çarşı** | ✅ TAMAM (migration 009 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `cb116c1` |
-| **Faz 6 Tanıtım/Çıfıt** | ⬜ **SIRADAKİ** (D-01 ad kararı: UI "Tanıtım" önerisi) | — |
-| Faz 7 bildirim/moderasyon · Faz 8 diaspora · Faz 9 legacy temizlik | ⬜ | — |
+| **Faz 6 Tanıtım** | ✅ KOD TAMAM (D-01 KARAR: UI "Tanıtım") — migration 010 canlıya uygulanma durumunu §2'den kontrol et | (bu oturum) |
+| **Faz 7 bildirim/moderasyon** | ⬜ **SIRADAKİ** | — |
+| Faz 8 diaspora · Faz 9 legacy temizlik | ⬜ | — |
+
+**Faz 6 özeti (D-01: UI adı "Tanıtım", 2026-06-11 ürün sahibi kararı):**
+`cadde_promotion_placement_catalog` (6 seed) + `cadde_promotion_campaigns/placements/events`.
+Akış: `create_cadde_promotion_campaign_v1` (status=pending; feature kontrolü: `cadde.promotion.create`,
+elçi için `cadde.city.highlight_free` yalnız city-ambassador-highlight placement'ı; homepage-ai-bar max 3 ay)
+→ `admin_review_cadde_promotion_v1` (onay/red + review_note, audit'li) → tüketim `list_cadde_promotions_v1`
+(onaylı + tarih aralığı + geo eşleşme; anon boş) → `record_cadde_promotion_event_v1` (impression/click;
+saatlik 30 event abuse limiti — limitte HATA ATMAZ, false döner). Kampanya SELECT'i yalnız sahibi+admin;
+tüketim RPC'den. UI: `SponsoredFeedCard` (ZORUNLU "Sponsorlu" badge; dış URL `target=_blank rel=noopener`;
+oturum başına 1 impression sessionStorage'la), `PromotionRail` (cadde-right-rail, CaddePage sağ kolon),
+feed-inline `interleavePromotions` (4 organik postta bir, kampanya başına feed'de max 2, art arda sponsor yok),
+profilde `CaddeTanitimPanel` (kampanya oluştur + durum/istatistik), `/admin/cadde/promotions` onay kuyruğu
+(admin routes.tsx'e eklendi). Mevcut billboard/sponsored tabloları KORUNDU (kampanyaya geçiş P2).
+KALAN: homepage-ai-bar/category-first-screen yüzeyleri Cadde dışı sayfalarda (o sayfalara entegrasyon ayrı iş);
+görsel upload yok (URL ile).
 
 **Faz 5 özeti:** `carsi_categories` (7 seed: second_hand/room_rental/lesson_education/service/event_ticket/
 gift_donation/other) + `carsi_items` (fiyat/para birimi/görseller/contact_mode/status/moderation_status/

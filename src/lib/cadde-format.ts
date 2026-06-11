@@ -1,6 +1,6 @@
 // Cadde URL filtre durumu ve feed yerleşim yardımcıları.
 
-import type { CaddeContentMode, CaddeFeedListItem, CaddeFilterState, CaddePost, CaddeSponsoredPlacement } from "./cadde-types";
+import type { CaddeContentMode, CaddeFeedListItem, CaddeFilterState, CaddePost, CaddePromotionCard, CaddeSponsoredPlacement } from "./cadde-types";
 
 /** Virgülle ayrılmış URL parametresini normalize edilmiş ad listesine çevirir. */
 const parseListParam = (value: string | null): string[] => {
@@ -48,6 +48,60 @@ export function summarizeCaddeFilters(filters: CaddeFilterState): string {
   if (!primary) return "Global Akış";
   const extra = filters.cities.length + filters.countries.length - 1;
   return extra > 0 ? `${primary} +${extra}` : primary;
+}
+
+/**
+ * Tanıtım kampanya kartlarını organik akışa serpiştirir (spec §11.4 / §15):
+ * her `interval` organik postta bir kampanya kartı; aynı kampanya feed başına en fazla
+ * `maxPerCampaign` kez görünür ve iki sponsor kartı asla art arda gelmez.
+ * Sponsor kartları organik skora karışmaz — enjeksiyon tamamen istemci tarafıdır.
+ */
+export function interleavePromotions(
+  items: CaddeFeedListItem[],
+  promotions: CaddePromotionCard[],
+  mode: CaddeContentMode,
+  interval = 4,
+  maxPerCampaign = 2,
+): CaddeFeedListItem[] {
+  if (mode !== "real" || promotions.length === 0 || items.length < interval) {
+    return items;
+  }
+
+  const usage = new Map<string, number>();
+  const result: CaddeFeedListItem[] = [];
+  let organicSinceSponsor = 0;
+  let promotionIndex = 0;
+
+  const nextPromotion = (): CaddePromotionCard | null => {
+    for (let attempt = 0; attempt < promotions.length; attempt += 1) {
+      const candidate = promotions[promotionIndex % promotions.length];
+      promotionIndex += 1;
+      if ((usage.get(candidate.campaignId) ?? 0) < maxPerCampaign) {
+        usage.set(candidate.campaignId, (usage.get(candidate.campaignId) ?? 0) + 1);
+        return candidate;
+      }
+    }
+    return null;
+  };
+
+  for (const item of items) {
+    result.push(item);
+    if (item.kind === "post") {
+      organicSinceSponsor += 1;
+    } else {
+      organicSinceSponsor = 0;
+    }
+
+    if (organicSinceSponsor >= interval) {
+      const promotion = nextPromotion();
+      if (promotion) {
+        result.push({ kind: "promotion", promotion });
+        organicSinceSponsor = 0;
+      }
+    }
+  }
+
+  return result;
 }
 
 /**

@@ -149,6 +149,17 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
   cadde_carsi_item_limit: "Aktif ilan limitine ulaştın. Eski bir ilanını kapatıp tekrar dene.",
   cadde_carsi_item_not_found: "İlan bulunamadı.",
   cadde_carsi_owner_required: "Bu işlem yalnız ilan sahibine veya moderatöre açık.",
+  // Faz 6 (mig 010) — Tanıtım
+  cadde_promotion_permission_denied: "Hesabının Tanıtım kampanyası açma yetkisi bulunmuyor.",
+  cadde_invalid_promotion_type: "Geçersiz kampanya tipi.",
+  cadde_invalid_promotion_title: "Kampanya başlığı 3-100 karakter olmalı.",
+  cadde_invalid_promotion_description: "Kampanya açıklaması 1-500 karakter olmalı.",
+  cadde_invalid_promotion_url: "Hedef/görsel URL geçersiz; http(s) veya '/' ile başlamalı.",
+  cadde_invalid_promotion_dates: "Kampanya tarih aralığı geçersiz (homepage-ai-bar en fazla 3 ay).",
+  cadde_invalid_placement: "Geçersiz veya bu kampanya tipine kapalı placement seçimi.",
+  cadde_promotion_not_found: "Kampanya bulunamadı.",
+  cadde_promotion_not_pending: "Bu kampanya zaten incelenmiş.",
+  cadde_invalid_promotion_event: "Geçersiz analitik olayı.",
 };
 
 /** Supabase RPC hatasını kullanıcıya gösterilebilir mesaja çevirir. */

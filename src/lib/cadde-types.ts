@@ -309,7 +309,8 @@ export type CaddeSponsoredPlacement = {
 
 export type CaddeFeedListItem =
   | { kind: "post"; post: CaddePost }
-  | { kind: "sponsor"; sponsor: CaddeSponsoredPlacement };
+  | { kind: "sponsor"; sponsor: CaddeSponsoredPlacement }
+  | { kind: "promotion"; promotion: CaddePromotionCard };
 
 // ── Çarşı (Faz 5) — U2U marketplace; Tanıtım/sponsorlu görünürlükten AYRI (D-01) ──
 
@@ -376,6 +377,65 @@ export type CarsiItemCreateInput = {
   city?: string;
   imageUrls?: string[];
   contactMode?: CarsiContactMode;
+};
+
+// ── Tanıtım (Faz 6, D-01: UI adı "Tanıtım") — sponsorlu görünürlük; Çarşı'dan AYRI ──
+
+export type CaddePromotionStatus = "draft" | "pending" | "approved" | "rejected";
+export type CaddePromotionType = "business" | "consultant" | "event" | "community" | "city_highlight";
+
+export type CaddePromotionPlacementOption = {
+  key: string;
+  labelTr: string;
+  description: string | null;
+  sortOrder: number;
+};
+
+/** Sahip panelindeki kampanya görünümü. */
+export type CaddePromotionCampaign = {
+  id: string;
+  campaignType: CaddePromotionType;
+  title: string;
+  description: string;
+  targetUrl: string;
+  imageUrl: string | null;
+  status: CaddePromotionStatus;
+  startsAt: string | null;
+  endsAt: string | null;
+  reviewNote: string | null;
+  createdAt: string;
+  placementKeys: string[];
+  impressionCount: number;
+  clickCount: number;
+};
+
+/** Rail/feed tüketim kartı (list_cadde_promotions_v1 çıktısı). */
+export type CaddePromotionCard = {
+  campaignId: string;
+  placementKey: string;
+  campaignType: CaddePromotionType;
+  title: string;
+  description: string;
+  targetUrl: string;
+  imageUrl: string | null;
+};
+
+export type CaddePromotionPlacementInput = {
+  key: string;
+  country?: string;
+  city?: string;
+  themeKeys?: string[];
+};
+
+export type CaddePromotionCreateInput = {
+  campaignType: CaddePromotionType;
+  title: string;
+  description: string;
+  targetUrl: string;
+  imageUrl?: string;
+  startsAt?: string;
+  endsAt?: string;
+  placements: CaddePromotionPlacementInput[];
 };
 
 // NOT: countryId/cityId alanları tarihsel olarak ülke/şehir ADI taşır (filtre değerleri);
