@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Rapor — Cadde 3.0 E2E Rebuild: Ne Yapıldı, Nasıl Kullanılıyor? (2026-06-11)</title>
+<title>CorteQS Durum Panosu — Cadde 3.0 · Profil Sistemi · Dünya Kupası (2026-06-11)</title>
 <style>
   :root {
     --bg: #0f1115;
@@ -41,10 +41,24 @@
   .pill.green { color: var(--green); border-color: rgba(52,201,142,.4); }
   .pill.amber { color: var(--amber); border-color: rgba(224,168,58,.4); }
   .pill.blue  { color: var(--blue);  border-color: rgba(91,163,224,.4); }
+  .toc { margin-top: 14px; font-size: 13px; }
+  .toc a {
+    display: inline-block; margin: 3px 8px 3px 0; padding: 5px 14px;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--card2); color: var(--blue); text-decoration: none; font-weight: 600;
+  }
+  .toc a:hover { border-color: var(--blue); }
   section {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 16px; padding: 26px 30px; margin-bottom: 22px;
   }
+  .part-head {
+    background: linear-gradient(120deg, rgba(170,140,66,.18), transparent 55%), var(--card);
+    border: 1px solid var(--accent); border-radius: 16px;
+    padding: 22px 30px; margin: 34px 0 22px;
+  }
+  .part-head h2 { font-size: 22px; margin: 0 0 4px; color: var(--accent); }
+  .part-head .sub { color: var(--muted); font-size: 13.5px; }
   h2 { font-size: 19px; margin: 0 0 14px; color: var(--accent); }
   h3 { font-size: 15px; margin: 22px 0 8px; }
   h4 { font-size: 13.5px; margin: 16px 0 6px; color: var(--blue); }
@@ -81,42 +95,62 @@
 <div class="wrap">
 
 <header>
-  <h1>Cadde 3.0 — E2E Rebuild Tamamlandı 🎉</h1>
-  <div class="sub">Oturum raporu · 2026-06-10 → 2026-06-11 · repo <code>corteqs_fin</code> (main) · canlı DB <code>injprdrsklkxgnaiixzh</code></div>
+  <h1>CorteQS Durum Panosu</h1>
+  <div class="sub">Üç bağımsız iş hattının uçtan uca raporu · 2026-06-09 → 2026-06-11 · repo <code>corteqs_fin</code> (main) · canlı DB <code>injprdrsklkxgnaiixzh</code> · canlı ortam <code>mvp.corteqs.net</code></div>
   <div style="margin-top:12px">
-    <span class="pill green">Faz 0–9 + kuyruk: TAMAM</span>
-    <span class="pill green">14 migration canlıda</span>
-    <span class="pill green">509/509 test yeşil</span>
-    <span class="pill green">build OK</span>
-    <span class="pill blue">~30 RPC / 4 yeni modül</span>
-    <span class="pill amber">3 açık kalem (bkz. §10)</span>
+    <span class="pill green">Cadde 3.0: Faz 0–9 + kuyruk TAMAM</span>
+    <span class="pill green">Profil sistemi: flat-rol geçişi CANLI</span>
+    <span class="pill green">Dünya Kupası kampanyası: CANLI</span>
+    <span class="pill green">535/535 test · build OK</span>
+    <span class="pill amber">Açık kalemler: §A10 / §B5 / §C4</span>
   </div>
+  <div class="toc">
+    <a href="#takip">0 · Ana Takip Tablosu</a>
+    <a href="#cadde">A · Cadde 3.0</a>
+    <a href="#profil">B · Profil Sistemi</a>
+    <a href="#dunya-kupasi">C · Dünya Kupası Yayınları</a>
+    <a href="#dokuman">D · Doküman Haritası</a>
+  </div>
+  <p class="muted" style="margin:14px 0 0; font-size:12.5px;">
+    Her ana bölüm (A/B/C) kendi içinde bütündür: kendi özeti, yüzey/rota tablosu, uçtan uca kullanım
+    senaryoları, veri modeli ve doğrulama durumuyla <strong>bağımsız okunabilir</strong>.
+  </p>
 </header>
 
 <!-- ============================================================ -->
-<section>
+<section id="takip">
   <h2>0. ANA TAKİP TABLOSU — Tüm İş Hatları (canlı pano)</h2>
   <p class="muted">Projenin tek durum panosu. Bir iş hattı kapandığında/açıldığında bu tablo güncellenir. Son güncelleme: <strong>2026-06-11</strong>.</p>
   <table>
     <tr><th>İş Hattı</th><th>Durum</th><th>Son Adım</th><th>Sıradaki Adım</th><th>Karar / Sahip</th></tr>
-    <tr><td>Cadde 3.0 Rebuild (Faz 0–9)</td><td><span class="ok">✓ TAMAM</span></td><td>14 migration canlıda; 509/509 test</td><td>—</td><td>Kapandı (2026-06-11)</td></tr>
+    <tr><td>Cadde 3.0 Rebuild (Faz 0–9)</td><td><span class="ok">✓ TAMAM</span></td><td>14 migration canlıda; 509/509 test</td><td>—</td><td>Kapandı (2026-06-11) · Bölüm A</td></tr>
     <tr><td>Cadde kuyruk (oto-tarama, eksik bildirimler, parity'ler, admin Çarşı)</td><td><span class="ok">✓ TAMAM</span></td><td>Migration 014 + pg_cron canlıda</td><td>—</td><td>Kapandı (2026-06-11)</td></tr>
     <tr><td>Admin Panel v2</td><td><span class="ok">✓ TAMAM</span></td><td>Faz 0–9 + AdminPageLayout tasfiyesi</td><td>Gerçek cihaz QA</td><td>Detay: <code>docs/plans/admin-v2/</code></td></tr>
-    <tr><td>Public Profil v2.1</td><td><span class="ok">✓ TAMAM</span></td><td>v2 RPC canlıda, deploy doğrulandı</td><td>—</td><td>Detay: <code>docs/history/</code></td></tr>
-    <tr><td>Kök temizliği + dokümantasyon konsolidasyonu</td><td><span class="ok">✓ TAMAM</span></td><td>Kökte 4 doküman düzeni; arşivler docs/ altında</td><td>—</td><td>Kapandı (2026-06-11); harita §11</td></tr>
-    <tr><td><strong>Dünya Kupası işletme kampanyası</strong></td><td><span class="ok">✓ CANLI</span></td><td>Mig <code>20260612090000</code> canlıda; kayıt + admin onay + vitrin yüzeyleri hazır (535/535 test)</td><td>Deploy → ilk gerçek başvuru/onay turu; kampanya bitişinde <code>world_cup_campaign_settings.is_active=false</code></td><td>Detay: §12 · plan: <code>.claude/plans</code> oturumu (2026-06-11)</td></tr>
+    <tr><td><strong>Profil sistemi — flat-rol geçişi (AFS)</strong></td><td><span class="ok">✓ CANLI</span></td><td>/profile onarımı + <code>full_name→title</code> trigger canlıda; verify:release geçti</td><td>Login'li görsel QA (test hesabıyla 24 alan + isim akışı)</td><td>Detay: Bölüm B · ürün sahibi (QA)</td></tr>
+    <tr><td>Public Profil v2.1 (dinamik composer)</td><td><span class="ok">✓ TAMAM</span></td><td>v2 RPC canlıda, deploy doğrulandı; demo profil yayında</td><td>—</td><td>Detay: §B2–B3</td></tr>
+    <tr><td>Üye importu + rol backfill</td><td><span class="ok">✓ TAMAM</span></td><td>110 public üye profili canlıda; upa↔cia köprüsü + editör RPC onarımı</td><td>—</td><td>Kapandı (2026-06-10) · §B1</td></tr>
+    <tr><td>Rol konsolidasyonu (<code>User_Standard</code>)</td><td><span class="ok">✓ TAMAM</span></td><td>Mig <code>20260611190000</code> canlıda; 75 aktif rol</td><td>—</td><td>Kapandı (2026-06-11) · §B1</td></tr>
+    <tr><td>Kök temizliği + dokümantasyon konsolidasyonu</td><td><span class="ok">✓ TAMAM</span></td><td>Kökte 4 doküman düzeni; arşivler docs/ altında</td><td>—</td><td>Kapandı (2026-06-11); harita Bölüm D</td></tr>
+    <tr><td><strong>Dünya Kupası işletme kampanyası</strong></td><td><span class="ok">✓ CANLI</span></td><td>Mig <code>20260612090000</code> canlıda; kayıt + admin onay + vitrin yüzeyleri hazır (535/535 test)</td><td>Deploy → ilk gerçek başvuru/onay turu; kampanya bitişinde <code>world_cup_campaign_settings.is_active=false</code></td><td>Detay: Bölüm C · plan: <code>.claude/plans</code> oturumu (2026-06-11)</td></tr>
     <tr><td><strong>Legacy tablo DROP'u</strong></td><td><span class="warn">⏳ CANARY</span></td><td>Soft-decommission canlıda (yazma kapalı + COMMENT)</td><td>Deploy → <strong>1–2 hafta log gözlemi</strong> → karar dokümanı → DROP migration (<code>user_follows</code> 1 satır R-06 notuyla)</td><td><strong>KARAR (2026-06-11): bekle-gözle ONAYLANDI</strong> — ürün sahibi</td></tr>
     <tr><td>B1 — supabase types regen</td><td><span class="warn">⏳ TOKEN</span></td><td>Denendi: mevcut token'lar Unauthorized</td><td>Token yenile → gen types → build doğrula → <code>db as any</code> cast'ini kaldır</td><td>Ürün sahibi (token)</td></tr>
     <tr><td>D-03 — SMS/OTP sağlayıcısı</td><td><span class="warn">⏳ KARAR</span></td><td>Stub hazır (flag kapalı, şema canlıda)</td><td>Sağlayıcı seç → OTP Edge Function'ları → flag=true</td><td>Ürün sahibi</td></tr>
-    <tr><td>Playwright persona matrisi</td><td><span class="warn">⏳ AÇIK</span></td><td>Unit/component kapsamı geniş (509)</td><td>Persona senaryolarını e2e'ye dök (spec §22.4)</td><td>—</td></tr>
+    <tr><td>Playwright persona matrisi</td><td><span class="warn">⏳ AÇIK</span></td><td>Unit/component kapsamı geniş (535)</td><td>Persona senaryolarını e2e'ye dök (spec §22.4)</td><td>—</td></tr>
     <tr><td>D-07 — Premium kademesi</td><td><span class="warn">⏳ KARAR</span></td><td>Limitler ayarlardan yönetiliyor</td><td>Entitlement modeli kararı</td><td>Ürün sahibi</td></tr>
     <tr><td>İkincil kuyruk</td><td class="muted">birikmiş</td><td colspan="2" class="muted">Public profil "Açık Cafe" yüzeyi · ai-bar/kategori placement yüzeyleri · billboard→kampanya geçişi (P2) · Çarşı görsel upload</td><td>—</td></tr>
   </table>
 </section>
 
-<!-- ============================================================ -->
+<!-- ████████████████████████████████████████████████████████████ -->
+<!-- BÖLÜM A — CADDE 3.0                                          -->
+<!-- ████████████████████████████████████████████████████████████ -->
+<div class="part-head" id="cadde">
+  <h2>BÖLÜM A — Cadde 3.0: E2E Rebuild 🎉</h2>
+  <div class="sub">Şehir bazlı diaspora sosyal akışı · Faz 0–9 + kuyruk TAMAM · 14 migration canlıda · ~30 RPC / 6 alt modül · kapanış raporu: <code>docs/cadde-300/change-report.md</code></div>
+</div>
+
 <section>
-  <h2>1. Yönetici Özeti — Ne Yapıldı?</h2>
+  <h2>A1. Yönetici Özeti — Ne Yapıldı?</h2>
   <p>
     <strong>Cadde</strong> (şehir bazlı diaspora sosyal akışı) iki gün içinde uçtan uca yeniden inşa edildi.
     Tek dosyalık MVP (<code>cadde.ts</code>, 877 satır, 0 RPC) yerine artık <strong>modüler bir lib katmanı,
@@ -144,7 +178,7 @@
 
 <!-- ============================================================ -->
 <section>
-  <h2>2. Modül Haritası — Ne Nerede?</h2>
+  <h2>A2. Modül Haritası — Ne Nerede?</h2>
   <table>
     <tr><th>Yüzey</th><th>Rota</th><th>Ne işe yarar</th></tr>
     <tr><td>Cadde ana akış</td><td><code>/cadde</code></td><td>Şehir bazlı feed, geo filtre, Köprü modu, composer, cafe listesi, Çarşı ticker'ı, Tanıtım rail'i, bildirim zili</td></tr>
@@ -162,7 +196,7 @@
 
 <!-- ============================================================ -->
 <section>
-  <h2>3. Kullanım Senaryoları — Üye Tarafı</h2>
+  <h2>A3. Kullanım Senaryoları — Üye Tarafı</h2>
   <p class="muted">Aşağıdaki senaryolar canlı sistemdeki gerçek akışlardır; her adımın arkasındaki kural DB'de (RPC + RLS) zorlanır, UI yalnız yol gösterir.</p>
 
   <div class="scenario">
@@ -299,7 +333,7 @@
 
 <!-- ============================================================ -->
 <section>
-  <h2>4. Kullanım Senaryoları — Admin / Moderatör Tarafı</h2>
+  <h2>A4. Kullanım Senaryoları — Admin / Moderatör Tarafı</h2>
 
   <div class="scenario">
     <div class="who">🛡️ Senaryo A — Moderasyon kuyruğunu işlemek <span class="tag">/admin/cadde/moderation</span></div>
@@ -352,7 +386,7 @@
 
 <!-- ============================================================ -->
 <section>
-  <h2>5. Güvenlik Mimarisi — Neden Güvenli?</h2>
+  <h2>A5. Güvenlik Mimarisi — Neden Güvenli?</h2>
   <ul>
     <li><strong>RPC-only mutation:</strong> içerik üreten her işlem security-definer RPC'den geçer; tablolarda kullanıcıya açık INSERT policy'si kalmadı. UI atlatılsa bile kural atlatılamaz.</li>
     <li><strong>Çift katman doğrulama:</strong> Zod şemaları (Türkçe mesajlı) ilk hat; DB ikinci ve bağlayıcı hat. Sabit hata kodları (<code>cadde_*</code>) tek haritadan Türkçe'ye çevrilir.</li>
@@ -366,7 +400,7 @@
 
 <!-- ============================================================ -->
 <section>
-  <h2>6. Veri Modeli Özeti</h2>
+  <h2>A6. Veri Modeli Özeti</h2>
   <div class="grid2">
     <div>
       <h4>Yeni / genişletilen tablolar</h4>
@@ -397,7 +431,7 @@
 
 <!-- ============================================================ -->
 <section>
-  <h2>7. Doğrulama Durumu</h2>
+  <h2>A7. Doğrulama Durumu</h2>
   <table>
     <tr><th>Kontrol</th><th>Sonuç</th></tr>
     <tr><td>Vitest (unit + component)</td><td><span class="ok">509 / 509 yeşil</span> — band/skor truth table'ları, Köprü 10 senaryosu, cafe giriş kuralları, cursor tekrar/kayıp, şema sınırları, sayfa smoke'ları</td></tr>
@@ -410,7 +444,7 @@
 
 <!-- ============================================================ -->
 <section>
-  <h2>8. Önemli Kararlar (D-xx)</h2>
+  <h2>A8. Önemli Kararlar (D-xx)</h2>
   <table>
     <tr><th>Karar</th><th>Sonuç</th></tr>
     <tr><td>D-01 Çıfıt adı</td><td><span class="ok">KARAR</span> — UI'da “Tanıtım”; kod/tablo prefix'i <code>cadde_promotion_*</code>; Çarşı ile asla birleşmez</td></tr>
@@ -423,7 +457,7 @@
 
 <!-- ============================================================ -->
 <section>
-  <h2>9. Bilinen Sınırlar</h2>
+  <h2>A9. Bilinen Sınırlar</h2>
   <ul>
     <li>Çarşı görselleri URL ile eklenir (dosya upload akışı yok).</li>
     <li>Tanıtım'ın <code>homepage-ai-bar</code> / <code>category-first-screen</code> placement'ları katalogda hazır; o sayfalarda henüz render yüzeyi yok.</li>
@@ -435,7 +469,7 @@
 
 <!-- ============================================================ -->
 <section>
-  <h2>10. Açık Kalemler — Sırada Ne Var?</h2>
+  <h2>A10. Açık Kalemler — Sırada Ne Var?</h2>
   <table>
     <tr><th>Kalem</th><th>Durum / yapılacak</th></tr>
     <tr><td>B1 — <code>supabase gen types</code></td><td><span class="warn">Token bekliyor</span>: <code>.env.local</code>'daki <code>SUPABASE_ACCESS_TOKEN</code> (+backup) Management API'de “Unauthorized”. Token yenilenince: <code>npx supabase gen types typescript --project-id injprdrsklkxgnaiixzh &gt; src/integrations/supabase/types.ts</code> → build doğrula → <code>db as any</code> cast'ini kaldır.</td></tr>
@@ -445,9 +479,292 @@
   </table>
 </section>
 
+<!-- ████████████████████████████████████████████████████████████ -->
+<!-- BÖLÜM B — PROFİL SİSTEMİ                                     -->
+<!-- ████████████████████████████████████████████████████████████ -->
+<div class="part-head" id="profil">
+  <h2>BÖLÜM B — Profil Sistemi: Flat-Rol (AFS) Geçişi &amp; Dinamik Public Profil</h2>
+  <div class="sub">2026-06-09 → 2026-06-11 · sabit 6 profil tipinden rol-güdümlü dinamik profile · 75 aktif flat rol · 110 gerçek üye profili canlıda · mimari detay: <code>ARCHITECTURE.md</code></div>
+</div>
+
+<section>
+  <h2>B1. Yönetici Özeti — Profilde Ne Değişti?</h2>
+  <p>
+    Profil sistemi üç günde köklü biçimde değişti: eski <strong>sabit profil tipleri ve rol-ailesi/taksonomi</strong>
+    sistemi tamamen kaldırıldı; yerine <strong>flat-rol + AFS</strong> (Attribute/Feature/Section) modeli geldi.
+    Artık bir üyenin profilinde <em>hangi alanların, hangi bölümlerin ve hangi yetkilerin</em> görüneceğini
+    <strong>tek bir şey belirler: atanmış rolü</strong>. 75 aktif rolün her biri 53 öznitelik, 42 feature ve
+    7 profil bölümünden oluşan matrise bağlıdır — yeni bir rolün profili tanımlamak kod değil, veri işidir.
+    Bu altyapının üstüne <strong>dinamik public profil composer'ı</strong> (v2.1), <strong>110 gerçek üyenin
+    içe aktarımı</strong> ve <strong>kendi profilini düzenleme ↔ public görünüm senkronu</strong> inşa edildi.
+  </p>
+  <table>
+    <tr><th>Tarih</th><th>Adım</th><th>Sonuç</th><th>Migration / Kayıt</th></tr>
+    <tr><td>06-09</td><td><strong>Catalog / AFS rebuild</strong></td><td>9 tablo yeniden adlandı; eski <code>profiles / user_profiles / admin_users / role_feature_defaults</code> ve tüm rol-ailesi kavramları DÜŞTÜ; 76 flat rol + 53 attr + 42 feature + 7 section canlıda</td><td>rebuild migration seti</td></tr>
+    <tr><td>06-09</td><td>Öznitelik backfill'i</td><td>Eski <code>submissions</code> verisi <code>user_profile_attributes</code>'a taşındı; bozuk person_profile trigger'ı onarıldı</td><td><code>20260609060000</code></td></tr>
+    <tr><td>06-10</td><td><strong>Public profil v2 / v2.1</strong></td><td>Dinamik composer + anon erişim düzeltmesi + görsel dil yenilemesi; tam dolu demo profil yayında</td><td><code>20260610150000</code>, <code>20260610170000</code></td></tr>
+    <tr><td>06-10</td><td><strong>Üye importu + rol backfill</strong></td><td>110 public üye profili; kategori→flat rol eşlemesi; upa↔cia köprü trigger'ları; bozuk editör RPC'leri onarıldı; public profilde sahibe inline edit</td><td><code>20260610171000/172000/173000</code></td></tr>
+    <tr><td>06-11</td><td><strong>/profile onarımı</strong></td><td>Sonsuz redirect döngüsü çözüldü (<code>getUiProfileType</code>); profil ismi senkron trigger'ı (<code>full_name→title</code>)</td><td><code>20260611170000</code> · commit <code>0178826</code></td></tr>
+    <tr><td>06-11</td><td>Rol konsolidasyonu</td><td><code>User_Standard</code> → <code>User_DiasporaMember</code>; 75 aktif rol kaldı (pasifleştirme, hard delete yok)</td><td><code>20260611190000</code></td></tr>
+  </table>
+</section>
+
 <!-- ============================================================ -->
 <section>
-  <h2>11. Klasör Temizliği & Doküman Haritası (2026-06-11)</h2>
+  <h2>B2. Mimari — Profil Nasıl Oluşur?</h2>
+  <table>
+    <tr><th>Yüzey</th><th>Rota</th><th>Ne işe yarar</th></tr>
+    <tr><td>Kendi profilim (editör)</td><td><code>/profile</code></td><td>Rol-güdümlü alan editörü; ülke/şehir, ilgi alanları, rozetler, iletişim — Cadde kapısının ve Köprü rozetlerinin beslendiği yer</td></tr>
+    <tr><td>Public profil</td><td><code>/directory/catalog/:slug</code></td><td>Anonim erişilebilir dinamik profil sayfası (composer); hero rozetleri, bölüm kartları, sosyal linkler</td></tr>
+    <tr><td>Üye dizini</td><td><code>/directory</code></td><td>Public üyelerin kart listesi; karttan profile geçilir</td></tr>
+    <tr><td>Demo referans profili</td><td><code>/directory/catalog/demo-uye-ayse-yilmaz</code></td><td>Tam dolu örnek (20 attr / 7 section / 4 contact / 4 link) — görsel regresyon referansı</td></tr>
+    <tr><td>Admin: rol matrisi</td><td><code>/admin</code> (roller)</td><td>Rol ↔ attribute/feature/section eşlemesi; rol atamak profili anında biçimlendirir</td></tr>
+  </table>
+
+  <h3>Rol → Profil zinciri (tek doğruluk kaynağı)</h3>
+  <ul>
+    <li><strong>Roller:</strong> <code>roles</code> (75 aktif flat rol, aile/taksonomi yok). Üyenin rolü <code>user_role_assignments</code>'ta durur; yeni kayıt varsayılanı <code>User_DiasporaMember</code>.</li>
+    <li><strong>AFS matrisi:</strong> <code>afs_attributes</code> (53) / <code>afs_features</code> (42) / <code>afs_sections</code> (7), rol bağları <code>role_attributes / role_features / role_sections</code>'ta. Profilde hangi alanın görüneceği bu matristen çözülür — kodda sabit liste yok.</li>
+    <li><strong>İki veri yüzeyi, tek senkron:</strong> üyenin kendi yazdığı değerler <code>user_profile_attributes</code> (UPA), public profilin okuduğu değerler <code>catalog_item_attribute_values</code> (CIA). Aralarında <strong>çift yönlü köprü</strong> var: UPA'ya yazınca trigger CIA'yı, editör RPC'si CIA'ya yazınca mirror UPA'yı günceller — iki yüzey asla ayrışmaz.</li>
+    <li><strong>İsim senkronu:</strong> UPA'daki <code>full_name</code> değişince trigger <code>catalog_items.title</code>'ı (public profil başlığını) günceller (mig <code>20260611170000</code> + 3 kayıt backfill) — kimse e-posta önekiyle listelenmez.</li>
+    <li><strong>UI kategorisi türetilir:</strong> <code>getUiProfileType()</code> (<code>src/lib/profile-types.ts</code>) flat rolü 4 görünüm kategorisine eşler: <code>User_/Admin_→bireysel</code>, <code>Consultant_→danisman</code>, <code>Business_/Healthcare_kurum/Event_/Marketplace_→isletme</code>, <code>Organization_/Community_→kurulus-dernek</code>; bilinmeyen→bireysel. URL segmenti artık kozmetiktir; görünümü rol belirler.</li>
+    <li><strong>Public okuma RPC'si:</strong> <code>get_catalog_item_public_page_v2(p_slug)</code> — whitelist-only camelCase JSON, anon + authenticated grant (eski RPC anon'a kapalıydı; ziyaretçiler profil göremiyordu — v2 bunu çözdü).</li>
+    <li><strong>Composer:</strong> <code>src/components/directory/public-profile/</code> — <code>componentKey → renderer</code> registry'si; bilinmeyen bölüm tipi <code>GenericPublicSection</code>'a düşer (yeni section eklemek frontend'i kırmaz). Yerleşim/boşluk kararları view-model'de (<code>SECTION_PLACEMENTS</code>).</li>
+  </ul>
+  <p class="muted">Kod düzeni: <code>src/lib/profile-types.ts</code>, <code>src/components/directory/public-profile/*</code>, <code>src/pages/ProfilePage*</code>; DB: <code>roles</code>, <code>afs_*</code>, <code>role_*</code>, <code>user_role_assignments</code>, <code>user_profile_attributes</code>, <code>catalog_items</code> + <code>catalog_item_attribute_values</code>.</p>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <h2>B3. Kullanım Senaryoları — Uçtan Uca</h2>
+
+  <div class="scenario">
+    <div class="who">📝 Senaryo P1 — Üye kendi profilini dolduruyor <span class="tag">/profile · rol-güdümlü editör</span></div>
+    <ol>
+      <li>Üye <code>/profile</code>'a girer; sayfa <code>get_current_user_profile</code> RPC'sinden rolünü ve rolüne tanımlı alan listesini okur (Diaspora Üyesi için 24 alan / 60 feature çözülür).</li>
+      <li>Ad-soyad, ülke/şehir, iletişim, ilgi alanları ve rozetleri (örn. “Türkiye'den Taşınma Planı”) doldurur; her alan UPA'ya yazılır.</li>
+      <li>Kaydettiği an köprü trigger'ı değerleri public profile (CIA) aktarır; <code>full_name</code> yazdıysa public profil başlığı da otomatik güncellenir. <strong>Ayrı bir “yayınla” adımı yoktur.</strong></li>
+      <li>Görünürlük alan bazındadır: <code>public / private</code> — private alanlar public sayfaya hiç çıkmaz.</li>
+      <li>Bu form aynı zamanda diğer modüllerin kapısıdır: ülke/şehir → Cadde profil kapısı; rozetler → Köprü paylaşım izni (bkz. Bölüm A, Senaryo 4).</li>
+    </ol>
+    <div class="note">2026-06-11 öncesi buradaki kayıt akışı prod'da bozuktu (dropped tabloya referans veren editör RPC'leri) — <code>role_attributes</code> üzerinden yeniden yazıldı ve canlıda doğrulandı.</div>
+  </div>
+
+  <div class="scenario">
+    <div class="who">👀 Senaryo P2 — Ziyaretçi bir üyenin profilini görüntülüyor <span class="tag">/directory/catalog/:slug · login gerekmez</span></div>
+    <ol>
+      <li>Ziyaretçi (anonim dahil) profil linkini açar; sayfa tek RPC ile (<code>get_catalog_item_public_page_v2</code>) yalnız whitelist'lenmiş public alanları alır.</li>
+      <li>Hero alanında isim, rol rozeti (örn. “Diaspora Üyesi”), tagline pili ve ikonlu opt-in rozetleri (iş arıyor / gönüllü mentorluk / yakında taşınıyor) görünür; sosyal linkler pil olarak dizilir.</li>
+      <li>Altta rolün section matrisine göre bölüm kartları dizilir (hizmetler, diller, medya, iletişim…); boş bölümler hiç render edilmez. Hero'da gösterilen bilgi grid'de tekrarlanmaz.</li>
+      <li>WhatsApp iletişimi hem telefon hem grup URL'si biçimini destekler (canlı veride ikisi de var — view-model ikili çözümleme yapar).</li>
+    </ol>
+    <div class="note">Görsel referans: <code>/directory/catalog/demo-uye-ayse-yilmaz</code> (tam dolu demo profil, canlıda).</div>
+  </div>
+
+  <div class="scenario">
+    <div class="who">✏️ Senaryo P3 — Profil sahibi kendi public sayfasında <span class="tag">inline edit</span></div>
+    <ol>
+      <li>Üye kendi public profilini açtığında sahiplik tespit edilir (<code>usePublicProfileOwnership</code> — slug karşılaştırması) ve <strong>“Profili Düzenle”</strong> anahtarı görünür.</li>
+      <li>Anahtar açılınca alanlar yerinde düzenlenebilir olur; kayıt <code>update_catalog_item_attribute</code> RPC'sinden geçer ve mirror UPA'yı da günceller — <code>/profile</code> ile public sayfa hangi taraftan yazılırsa yazılsın senkron kalır.</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">🎭 Senaryo P4 — Rol değişince profil şekil değiştiriyor <span class="tag">rol ataması = profil dönüşümü</span></div>
+    <ol>
+      <li>Admin (rol matrisinden veya bir onay akışından) üyeye yeni rol atar — örn. <code>Business_RestaurantCafe</code>.</li>
+      <li>Üyenin <code>/profile</code> editörü bir sonraki açılışta <strong>işletme alanlarını</strong> gösterir; public profili işletme görünümüne (kategori rozeti, işletme bölümleri) döner. Kod değişikliği, manuel taşıma yoktur — AFS matrisi + <code>getUiProfileType</code> her şeyi türetir.</li>
+      <li>Bu mekanizma platformdaki diğer akışların da temelidir: <strong>Dünya Kupası kampanyası onayı</strong> tam olarak bu yoldan üye profilini işletme profiline çevirir (bkz. Bölüm C, Senaryo İ2).</li>
+    </ol>
+    <div class="note">2026-06-11 onarımı öncesi bu zincir kırıktı: RPC flat rol key'i döndürüyor, frontend yalnız 6 legacy tipi tanıyordu → <code>/profile</code> sonsuz redirect döngüsüne giriyor ve tüm kullanıcılar boş sayfa görüyordu. <code>getUiProfileType</code> eşlemesiyle çözüldü; erişilemez legacy “rol seçim ekranı” silindi.</div>
+  </div>
+
+  <div class="scenario">
+    <div class="who">📦 Senaryo P5 — Eski başvurular gerçek profillere dönüştü <span class="tag">üye importu (2026-06-10)</span></div>
+    <ol>
+      <li>Rebuild sonrası 127/129 üye kaydının rol bağı kopuktu → AFS sıfır bölüm çözüyor, profiller boş görünüyordu. İmport migration'ı eski <code>submissions</code> verisini profillere işledi ve rolleri geri bağladı.</li>
+      <li>Kategori → flat rol eşlemesi (ürün sahibi onaylı): bireysel/işletme/career/networking → <code>User_DiasporaMember</code>; danışman → <code>Consultant_PracticalLife</code>; dernek → <code>Organization_AssociationFoundation</code>; şehir elçisi → <code>User_CityAmbassador</code>; influencer → <code>User_BloggerVlogger</code>.</li>
+      <li>Canlı sonuç: <strong>110 public üye profili</strong> (telefon görünen başlık: 0), 20 private (15 wa-bot + 5 test hesabı), 129 rol ataması; ~89 mevcut üye submission verisiyle zenginleştirildi.</li>
+      <li>Geri alma güvencesi: import edilen kayıtlar <code>import_source = 'submissions-import-20260610'</code> damgası taşır — gerekirse tek sorguyla ayrıştırılır.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <h2>B4. Veri Modeli &amp; Kritik Kurallar</h2>
+  <div class="grid2">
+    <div>
+      <h4>Kanonik tablolar</h4>
+      <ul>
+        <li><code>roles</code> (75 aktif) + <code>user_role_assignments</code></li>
+        <li><code>afs_attributes</code> / <code>afs_features</code> / <code>afs_sections</code></li>
+        <li><code>role_attributes</code> / <code>role_features</code> / <code>role_sections</code></li>
+        <li><code>user_profile_attributes</code> (üye yazımı, UPA)</li>
+        <li><code>catalog_items</code> + <code>catalog_item_attribute_values</code> (public okuma, CIA)</li>
+        <li><code>user_feature_overrides</code> (kişi bazlı feature istisnası)</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Ana RPC'ler / fonksiyonlar</h4>
+      <ul>
+        <li><code>get_current_user_profile</code> (self editör payload'ı)</li>
+        <li><code>get_catalog_item_public_page_v2</code> (public sayfa, anon grant)</li>
+        <li><code>get_catalog_item_profile</code> + <code>update_catalog_item_attribute</code> (inline edit; cia→upa mirror)</li>
+        <li>UPA→CIA senkron trigger'ı + <code>full_name→title</code> trigger'ı</li>
+        <li><code>is_admin()</code> / <code>is_moderator()</code> (yetki kapıları)</li>
+        <li>TS: <code>getUiProfileType()</code> (<code>profile-types.ts</code>)</li>
+      </ul>
+    </div>
+  </div>
+  <h3>Değişiklik yapacaklar için kurallar</h3>
+  <ul>
+    <li><strong>Eski adları kullanma:</strong> <code>profiles / user_profiles / admin_users / attribute_catalog / role_feature_flags</code>… hepsi düştü ya da yeniden adlandı — kanonik adlar yukarıdaki tabloda (tam liste: <code>CLAUDE.md</code>).</li>
+    <li><strong>Yeni profil alanı eklemek</strong> = <code>afs_attributes</code>'a kayıt + ilgili rollere <code>role_attributes</code> bağı. Frontend'e sabit alan listesi yazılmaz.</li>
+    <li><strong>UPA↔CIA köprüsünü tek taraflı değiştirme:</strong> trigger ve mirror birlikte yaşar; biri değişirse diğeri ve testleri birlikte güncellenmeli.</li>
+    <li><strong><code>User_Standard</code> pasiftir</strong> (hard delete edilmedi, FK + demo seed kronolojisi nedeniyle). <code>cadde-rules.ts</code> ve <code>can_post_kopru</code> içindeki anahtarı bilinçli inert bırakıldı — SQL↔TS ayna sözleşmesi bozulmasın diye; tam temizlikte iki taraf + testler birlikte değişir.</li>
+    <li><strong>Görünürlük değerleri yalnız <code>public / private</code></strong> — üçüncü bir değer eklemeden önce backfill trigger'larını kontrol et.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <h2>B5. Doğrulama Durumu &amp; Açık Kalemler</h2>
+  <table>
+    <tr><th>Kontrol</th><th>Sonuç</th></tr>
+    <tr><td>Vitest (profil + composer + rol eşleme)</td><td><span class="ok">Yeşil</span> — <code>getUiProfileType</code> eşleme testleri, composer/registry, şema sınırları (toplam suite 535/535)</td></tr>
+    <tr><td>Playwright (public profil)</td><td><span class="ok">10/10</span> — self-contained config, Supabase REST network-mock'lu</td></tr>
+    <tr><td>Canlı DB duman testleri</td><td><span class="ok">Geçti</span> — JWT simülasyonuyla 24 attr / 60 feature çözümü; trigger rollback testi; public RPC 7 section; anon erişim</td></tr>
+    <tr><td>Canlı deploy doğrulaması</td><td><span class="ok">Geçti</span> — <code>verify:release</code> + bundle marker; logged-out QA: public profil 7 section + rol rozeti render, <code>/profile</code> temiz login redirect'i</td></tr>
+    <tr><td>Login'li görsel QA</td><td><span class="warn">Açık</span> — test hesabıyla giriş yapıp <code>/profile</code>'daki 24 alan + “full_name kaydet → public isim değişti” akışı gözle doğrulanmalı (ürün sahibi)</td></tr>
+  </table>
+  <p class="muted">
+    İkincil açık kalemler: <code>IndividualPublicView</code>/<code>usePublicIndividualProfile</code> test-only orphan (backlog) ·
+    Takip/Mesaj/takipçi özellikleri bilinçli kapsam dışı (ürün kararı) · public profil “Açık Cafe” bölümü Bölüm A ikincil kuyruğunda.
+  </p>
+</section>
+
+<!-- ████████████████████████████████████████████████████████████ -->
+<!-- BÖLÜM C — DÜNYA KUPASI YAYINLARI                             -->
+<!-- ████████████████████████████████████████████████████████████ -->
+<div class="part-head" id="dunya-kupasi">
+  <h2>BÖLÜM C — Dünya Kupası Yayınları: İşletme Kampanyası ⚽</h2>
+  <div class="sub">2026-06-11 · CANLI · maç yayını yapan işletmelerin kayıt + onay + vitrin akışı · migration <code>20260612090000</code> · Cadde Tanıtım'dan tamamen bağımsız</div>
+</div>
+
+<section>
+  <h2>C1. Yönetici Özeti &amp; Yüzeyler</h2>
+  <p>
+    Geçici kampanya: <strong>maç yayını yapan işletmeler</strong> kayıt bırakır, admin onayından sonra
+    hesapları <strong>doğrudan işletme profiline dönüşür</strong> (Bölüm B'deki rol→profil mekanizmasıyla)
+    ve özel kampanya sayfasında tanıtılırlar. Profiller kampanya bitince <strong>kalıcı kalır</strong>
+    (üye kazanımı); yalnız vitrin/kayıt penceresi süreli. Cadde Tanıtım'dan bağımsızdır
+    (ayrı tablolar, ayrı yüzey).
+  </p>
+  <table>
+    <tr><th>Yüzey</th><th>Rota</th><th>Ne işe yarar</th></tr>
+    <tr><td>Kampanya vitrini</td><td><code>/dunya-kupasi</code></td><td>Anonim erişilebilir; onaylı işletmeler "Maç Yayını" rozetiyle, ülke/şehir filtresiyle listelenir; kartlar <code>/directory/profile/:userId</code>'ye gider</td></tr>
+    <tr><td>İşletme kaydı</td><td><code>/dunya-kupasi/kayit</code></td><td>Login-first akış (Google OAuth <code>/login?next=</code> turu); form: işletme adı, 25 <code>Business_*</code> kategorisinden seçim, ülke/şehir, maç yayını beyanı</td></tr>
+    <tr><td>Admin onay paneli</td><td><code>/admin/dunya-kupasi</code></td><td>Bekleyen/Onaylanan/Reddedilen sekmeleri; notlu onay/red</td></tr>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <h2>C2. Kampanya İşleyişi — Uçtan Uca Senaryolar</h2>
+
+  <div class="scenario">
+    <div class="who">⚽ Senaryo İ1 — İşletme başvuruyor <span class="tag">/dunya-kupasi/kayit · login-first</span></div>
+    <ol>
+      <li>İşletme sahibi vitrindeki <strong>"Maç Yayını Yapıyorum — İşletmemi Kaydet"</strong> butonuyla (veya doğrudan linkle) kayıt sayfasına gelir.</li>
+      <li>Oturum yoksa iki seçenek görür: <strong>"Google veya e-posta ile kayıt ol"</strong> / <strong>"Zaten hesabım var, giriş yap"</strong>. İkisi de <code>/login?next=/dunya-kupasi/kayit</code> turundan geçer — Google OAuth dönüşünde kullanıcı otomatik olarak forma geri gelir. Form verisi localStorage'da bekletilmez; önce hesap, sonra form (basit ve kırılmaz akış).</li>
+      <li>Form doldurulur: <strong>işletme adı</strong> (3–120 karakter), <strong>kategori</strong> (25 <code>Business_*</code> rolünden seçim: Restoran/Cafe, Berber, Market…), <strong>ülke + şehir</strong> (zorunlu), adres ve not (opsiyonel) ve <strong>"maç yayını yapıyoruz" beyanı</strong> (işaretlenmeden gönderilemez — Zod + DB çift katman).</li>
+      <li>Gönderim tek RPC'dir (<code>create_world_cup_registration_v1</code>): kampanya penceresi, kategori geçerliliği, alan sınırları ve mükerrer başvuru DB'de doğrulanır; hatalar Türkçe döner (ör. "Bu hesapla zaten aktif bir başvurunuz var.").</li>
+      <li>Başvuru <strong>pending</strong> düşer; sayfa artık formu değil <strong>"Başvurunuz onay bekliyor"</strong> durum kartını gösterir. Kullanıcı başına tek aktif başvuru vardır (partial unique index).</li>
+    </ol>
+    <div class="note">Bu noktada üyenin rolü/profili henüz DEĞİŞMEZ — her şey admin onayına bağlıdır (herkes "maç yayınlıyorum" diyebilir; doğrulama insandadır).</div>
+  </div>
+
+  <div class="scenario">
+    <div class="who">🛡️ Senaryo İ2 — Admin değerlendiriyor <span class="tag">/admin/dunya-kupasi · sol menü "Dünya Kupası"</span></div>
+    <ol>
+      <li>Başvurular <strong>Bekleyen / Onaylanan / Reddedilen</strong> sekmelerinde listelenir: işletme adı, kategori, ülke/şehir, başvuranın e-postası, adres, not ve tarih.</li>
+      <li><strong>Onayla</strong> → <code>admin_review_world_cup_registration_v1</code> tek işlemde: (a) kullanıcıya seçilen <code>Business_*</code> rolü atanır, (b) mevcut member↔catalog köprüsü dizindeki profili otomatik <strong>işletme profiline</strong> çevirir (Bölüm B, Senaryo P4 mekanizması), (c) <code>business_name / business_category / country / city</code> öznitelikleri public yazılır, (d) profil başlığı placeholder ise (rakam/e-posta öneki) işletme adıyla değiştirilir — gerçek isim asla ezilmez.</li>
+      <li><strong>Rol güvenlik kuralı:</strong> yalnız varsayılan üye (<code>User_DiasporaMember</code>) veya zaten <code>Business_*</code> olan ezilir. <strong>Admin_* asla</strong>; Danışman/Kuruluş/Elçi gibi roller <strong>korunur</strong> — başvuru yine onaylanır ama panel "rol korundu" uyarısı verir; gerekirse rol matrisinden elle değiştirilir. Eski rol audit için kayda işlenir (<code>previous_role_key</code>, <code>role_assigned</code>).</li>
+      <li><strong>Reddet</strong> → not yazılabilir; bu not başvurana kayıt sayfasında gerekçe olarak gösterilir. Reddedilen işletme bilgilerini düzeltip <strong>yeniden başvurabilir</strong> (eski kayıt audit için silinmez).</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">🔎 Senaryo İ3 — Ziyaretçi maç izleyecek mekân arıyor <span class="tag">/dunya-kupasi · login gerekmez</span></div>
+    <ol>
+      <li>Vitrin <strong>anonim erişilebilir</strong> (paylaşılabilir kampanya linki). Onaylı işletmeler kart olarak listelenir: ad, kategori rozeti, <strong>"Maç Yayını"</strong> rozeti, şehir/ülke.</li>
+      <li><strong>Ülke/şehir filtreleri</strong> mevcut kayıtlardan otomatik oluşur ("Berlin'de nerede izlerim?" tek tık).</li>
+      <li>"Profili Gör" işletmenin dizindeki profil sayfasına götürür (<code>/directory/profile/:userId</code>) — iletişim ve detaylar orada (Bölüm B'deki public profil composer'ı render eder).</li>
+      <li>Liste anon-güvenli RPC'den gelir: yalnız onaylı kayıtların public alanları döner; başvuru tablosunun kendisi dışarıya tamamen kapalıdır (RLS).</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">⚙️ Senaryo İ4 — Kampanyayı yönetmek ve kapatmak <span class="tag">world_cup_campaign_settings — kod gerekmez</span></div>
+    <ol>
+      <li>Kampanya penceresi tek satırlık ayar tablosundadır (singleton <code>id=1</code>): <code>is_active</code> + opsiyonel <code>starts_at</code>/<code>ends_at</code>.</li>
+      <li>Bitiş tarihi koymak: <code>update world_cup_campaign_settings set ends_at='2026-07-20' where id=1;</code> — tarih geçince <strong>kendiliğinden</strong> kayıt kapanır ve vitrin boşalır.</li>
+      <li>Anında kapatmak: <code>...set is_active=false where id=1;</code> → kayıt sayfası "Kampanya aktif değil" der, vitrin "Kampanya sona erdi"ye döner, public liste RPC'si boş döner.</li>
+      <li><strong>Kalıcılık ilkesi:</strong> kampanya kapansa da onaylanan işletme profilleri ve rolleri platformda aynen kalır (üye kazanımı) — geri alma/temizlik gerekmez. Yeniden açmak da tek UPDATE'tir (örn. bir sonraki turnuva).</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <h2>C3. Sınır Durumlar</h2>
+  <table>
+    <tr><th>Durum</th><th>Davranış</th></tr>
+    <tr><td>Mükerrer başvuru</td><td>Engellenir — <code>worldcup_already_registered</code> (kullanıcı başına tek pending/approved)</td></tr>
+    <tr><td>Reddedilen yeniden başvuru</td><td>İzinli; eski kayıt audit için durur, ret notu kullanıcıya gösterilir</td></tr>
+    <tr><td>Zaten işletme olan üye</td><td>Onayda seçilen kategoriyle yeniden atanır (zararsız)</td></tr>
+    <tr><td>Danışman / Kuruluş / Elçi başvurusu</td><td>Listeye onaylanır, mevcut rol korunur, admin uyarılır</td></tr>
+    <tr><td>Admin hesabıyla başvuru</td><td>Rolüne asla dokunulmaz</td></tr>
+    <tr><td>Kampanya pasif/pencere dışı</td><td>Kayıt RPC'si <code>worldcup_campaign_inactive</code>; vitrin boş döner; profiller kalıcı</td></tr>
+    <tr><td>Auth'suz / anon erişim</td><td>Kayıt RPC'si <code>worldcup_auth_required</code>; başvuru tablosu anon'a görünmez (canlıda doğrulandı)</td></tr>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <h2>C4. Veri Modeli &amp; Doğrulama Durumu</h2>
+  <div class="scenario">
+    <div class="who">✅ Doğrulama özeti <span class="tag">2026-06-11</span></div>
+    <ol>
+      <li>Hata kodları <code>worldcup_*</code> tek haritadan Türkçe'ye çevrilir; mutasyonlar RPC-only (Cadde kuralı — tablolarda kullanıcı INSERT policy'si yok).</li>
+      <li>535/535 Vitest yeşil (form Zod engeli, login CTA <code>next</code> turu, onay/red akışları, rol-korundu uyarısı dahil) · build OK · yeni dosyalarda ESLint temiz.</li>
+      <li>Canlı duman testleri: RLS açık · anon 0 satır görüyor · auth'suz RPC reddi · 25 aktif Business rolü · grant'lar doğru · public liste <code>[]</code> (onay öncesi).</li>
+    </ol>
+  </div>
+  <p class="muted">
+    DB: <code>world_cup_campaign_settings</code> (singleton) + <code>world_cup_registrations</code>; migration
+    <code>20260612090000_world_cup_campaign.sql</code> canlıda ve <code>schema_migrations</code>'a kayıtlı.
+    Kod: <code>src/lib/dunya-kupasi-{schemas,api}.ts</code>, <code>src/lib/admin/admin-dunya-kupasi-api.ts</code>,
+    <code>src/pages/DunyaKupasi{Page,KayitPage}.tsx</code>, <code>src/pages/admin/AdminDunyaKupasiPage.tsx</code>.
+  </p>
+  <table>
+    <tr><th>Açık kalem</th><th>Yapılacak</th></tr>
+    <tr><td>Deploy sonrası canlı tur</td><td>mvp.corteqs.net'te <code>/dunya-kupasi</code> + kayıt + onay akışı bir gerçek başvuruyla uçtan uca doğrulanmalı</td></tr>
+    <tr><td>Kampanya kapanışı</td><td>Turnuva bitiminde tek UPDATE: <code>is_active=false</code> (veya önceden <code>ends_at</code> koy) — Senaryo İ4</td></tr>
+  </table>
+</section>
+
+<!-- ████████████████████████████████████████████████████████████ -->
+<!-- BÖLÜM D — DOKÜMAN HARİTASI                                   -->
+<!-- ████████████████████████████████████████████████████████████ -->
+<div class="part-head" id="dokuman">
+  <h2>BÖLÜM D — Klasör Temizliği &amp; Doküman Haritası</h2>
+  <div class="sub">2026-06-11 · kökte yalnız 4 bakımlı doküman; geri kalan her şey <code>docs/</code> altında</div>
+</div>
+
+<section>
+  <h2>D1. Ne Nerede?</h2>
   <p>
     Kök dizin temizlendi: artık kökte yalnız <strong>4 bakımlı doküman</strong> + build-kritik dosyalar var.
     Diğer her şey <code>docs/</code> altına arşivlendi.
@@ -474,96 +791,8 @@
   </p>
 </section>
 
-<!-- ============================================================ -->
-<section>
-  <h2>12. Dünya Kupası İşletme Kampanyası (2026-06-11 — CANLI)</h2>
-  <p>
-    Geçici kampanya: <strong>maç yayını yapan işletmeler</strong> kayıt bırakır, admin onayından sonra
-    hesapları <strong>doğrudan işletme profiline dönüşür</strong> ve özel kampanya sayfasında tanıtılırlar.
-    Profiller kampanya bitince <strong>kalıcı kalır</strong> (üye kazanımı); yalnız vitrin/kayıt penceresi süreli.
-    Cadde Tanıtım'dan bağımsızdır (ayrı tablolar, ayrı yüzey).
-  </p>
-  <table>
-    <tr><th>Yüzey</th><th>Rota</th><th>Ne işe yarar</th></tr>
-    <tr><td>Kampanya vitrini</td><td><code>/dunya-kupasi</code></td><td>Anonim erişilebilir; onaylı işletmeler "Maç Yayını" rozetiyle, ülke/şehir filtresiyle listelenir; kartlar <code>/directory/profile/:userId</code>'ye gider</td></tr>
-    <tr><td>İşletme kaydı</td><td><code>/dunya-kupasi/kayit</code></td><td>Login-first akış (Google OAuth <code>/login?next=</code> turu); form: işletme adı, 25 <code>Business_*</code> kategorisinden seçim, ülke/şehir, maç yayını beyanı</td></tr>
-    <tr><td>Admin onay paneli</td><td><code>/admin/dunya-kupasi</code></td><td>Bekleyen/Onaylanan/Reddedilen sekmeleri; notlu onay/red</td></tr>
-  </table>
-
-  <h3>Kampanya İşleyişi — Uçtan Uca</h3>
-
-  <div class="scenario">
-    <div class="who">⚽ Senaryo İ1 — İşletme başvuruyor <span class="tag">/dunya-kupasi/kayit · login-first</span></div>
-    <ol>
-      <li>İşletme sahibi vitrindeki <strong>"Maç Yayını Yapıyorum — İşletmemi Kaydet"</strong> butonuyla (veya doğrudan linkle) kayıt sayfasına gelir.</li>
-      <li>Oturum yoksa iki seçenek görür: <strong>"Google veya e-posta ile kayıt ol"</strong> / <strong>"Zaten hesabım var, giriş yap"</strong>. İkisi de <code>/login?next=/dunya-kupasi/kayit</code> turundan geçer — Google OAuth dönüşünde kullanıcı otomatik olarak forma geri gelir. Form verisi localStorage'da bekletilmez; önce hesap, sonra form (basit ve kırılmaz akış).</li>
-      <li>Form doldurulur: <strong>işletme adı</strong> (3–120 karakter), <strong>kategori</strong> (25 <code>Business_*</code> rolünden seçim: Restoran/Cafe, Berber, Market…), <strong>ülke + şehir</strong> (zorunlu), adres ve not (opsiyonel) ve <strong>"maç yayını yapıyoruz" beyanı</strong> (işaretlenmeden gönderilemez — Zod + DB çift katman).</li>
-      <li>Gönderim tek RPC'dir (<code>create_world_cup_registration_v1</code>): kampanya penceresi, kategori geçerliliği, alan sınırları ve mükerrer başvuru DB'de doğrulanır; hatalar Türkçe döner (ör. "Bu hesapla zaten aktif bir başvurunuz var.").</li>
-      <li>Başvuru <strong>pending</strong> düşer; sayfa artık formu değil <strong>"Başvurunuz onay bekliyor"</strong> durum kartını gösterir. Kullanıcı başına tek aktif başvuru vardır (partial unique index).</li>
-    </ol>
-    <div class="note">Bu noktada üyenin rolü/profili henüz DEĞİŞMEZ — her şey admin onayına bağlıdır (herkes "maç yayınlıyorum" diyebilir; doğrulama insandadır).</div>
-  </div>
-
-  <div class="scenario">
-    <div class="who">🛡️ Senaryo İ2 — Admin değerlendiriyor <span class="tag">/admin/dunya-kupasi · sol menü "Dünya Kupası"</span></div>
-    <ol>
-      <li>Başvurular <strong>Bekleyen / Onaylanan / Reddedilen</strong> sekmelerinde listelenir: işletme adı, kategori, ülke/şehir, başvuranın e-postası, adres, not ve tarih.</li>
-      <li><strong>Onayla</strong> → <code>admin_review_world_cup_registration_v1</code> tek işlemde: (a) kullanıcıya seçilen <code>Business_*</code> rolü atanır, (b) mevcut member↔catalog köprüsü dizindeki profili otomatik <strong>işletme profiline</strong> çevirir, (c) <code>business_name / business_category / country / city</code> öznitelikleri public yazılır, (d) profil başlığı placeholder ise (rakam/e-posta öneki) işletme adıyla değiştirilir — gerçek isim asla ezilmez.</li>
-      <li><strong>Rol güvenlik kuralı:</strong> yalnız varsayılan üye (<code>User_DiasporaMember</code>) veya zaten <code>Business_*</code> olan ezilir. <strong>Admin_* asla</strong>; Danışman/Kuruluş/Elçi gibi roller <strong>korunur</strong> — başvuru yine onaylanır ama panel "rol korundu" uyarısı verir; gerekirse rol matrisinden elle değiştirilir. Eski rol audit için kayda işlenir (<code>previous_role_key</code>, <code>role_assigned</code>).</li>
-      <li><strong>Reddet</strong> → not yazılabilir; bu not başvurana kayıt sayfasında gerekçe olarak gösterilir. Reddedilen işletme bilgilerini düzeltip <strong>yeniden başvurabilir</strong> (eski kayıt audit için silinmez).</li>
-    </ol>
-  </div>
-
-  <div class="scenario">
-    <div class="who">🔎 Senaryo İ3 — Ziyaretçi maç izleyecek mekân arıyor <span class="tag">/dunya-kupasi · login gerekmez</span></div>
-    <ol>
-      <li>Vitrin <strong>anonim erişilebilir</strong> (paylaşılabilir kampanya linki). Onaylı işletmeler kart olarak listelenir: ad, kategori rozeti, <strong>"Maç Yayını"</strong> rozeti, şehir/ülke.</li>
-      <li><strong>Ülke/şehir filtreleri</strong> mevcut kayıtlardan otomatik oluşur ("Berlin'de nerede izlerim?" tek tık).</li>
-      <li>"Profili Gör" işletmenin dizindeki profil sayfasına götürür (<code>/directory/profile/:userId</code>) — iletişim ve detaylar orada.</li>
-      <li>Liste anon-güvenli RPC'den gelir: yalnız onaylı kayıtların public alanları döner; başvuru tablosunun kendisi dışarıya tamamen kapalıdır (RLS).</li>
-    </ol>
-  </div>
-
-  <div class="scenario">
-    <div class="who">⚙️ Senaryo İ4 — Kampanyayı yönetmek ve kapatmak <span class="tag">world_cup_campaign_settings — kod gerekmez</span></div>
-    <ol>
-      <li>Kampanya penceresi tek satırlık ayar tablosundadır (singleton <code>id=1</code>): <code>is_active</code> + opsiyonel <code>starts_at</code>/<code>ends_at</code>.</li>
-      <li>Bitiş tarihi koymak: <code>update world_cup_campaign_settings set ends_at='2026-07-20' where id=1;</code> — tarih geçince <strong>kendiliğinden</strong> kayıt kapanır ve vitrin boşalır.</li>
-      <li>Anında kapatmak: <code>...set is_active=false where id=1;</code> → kayıt sayfası "Kampanya aktif değil" der, vitrin "Kampanya sona erdi"ye döner, public liste RPC'si boş döner.</li>
-      <li><strong>Kalıcılık ilkesi:</strong> kampanya kapansa da onaylanan işletme profilleri ve rolleri platformda aynen kalır (üye kazanımı) — geri alma/temizlik gerekmez. Yeniden açmak da tek UPDATE'tir (örn. bir sonraki turnuva).</li>
-    </ol>
-  </div>
-
-  <h3>Sınır Durumlar</h3>
-  <table>
-    <tr><th>Durum</th><th>Davranış</th></tr>
-    <tr><td>Mükerrer başvuru</td><td>Engellenir — <code>worldcup_already_registered</code> (kullanıcı başına tek pending/approved)</td></tr>
-    <tr><td>Reddedilen yeniden başvuru</td><td>İzinli; eski kayıt audit için durur, ret notu kullanıcıya gösterilir</td></tr>
-    <tr><td>Zaten işletme olan üye</td><td>Onayda seçilen kategoriyle yeniden atanır (zararsız)</td></tr>
-    <tr><td>Danışman / Kuruluş / Elçi başvurusu</td><td>Listeye onaylanır, mevcut rol korunur, admin uyarılır</td></tr>
-    <tr><td>Admin hesabıyla başvuru</td><td>Rolüne asla dokunulmaz</td></tr>
-    <tr><td>Kampanya pasif/pencere dışı</td><td>Kayıt RPC'si <code>worldcup_campaign_inactive</code>; vitrin boş döner; profiller kalıcı</td></tr>
-    <tr><td>Auth'suz / anon erişim</td><td>Kayıt RPC'si <code>worldcup_auth_required</code>; başvuru tablosu anon'a görünmez (canlıda doğrulandı)</td></tr>
-  </table>
-
-  <div class="scenario">
-    <div class="who">✅ Doğrulama özeti <span class="tag">2026-06-11</span></div>
-    <ol>
-      <li>Hata kodları <code>worldcup_*</code> tek haritadan Türkçe'ye çevrilir; mutasyonlar RPC-only (Cadde kuralı — tablolarda kullanıcı INSERT policy'si yok).</li>
-      <li>535/535 Vitest yeşil (form Zod engeli, login CTA <code>next</code> turu, onay/red akışları, rol-korundu uyarısı dahil) · build OK · yeni dosyalarda ESLint temiz.</li>
-      <li>Canlı duman testleri: RLS açık · anon 0 satır görüyor · auth'suz RPC reddi · 25 aktif Business rolü · grant'lar doğru · public liste <code>[]</code> (onay öncesi).</li>
-    </ol>
-  </div>
-  <p class="muted">
-    DB: <code>world_cup_campaign_settings</code> (singleton) + <code>world_cup_registrations</code>; migration
-    <code>20260612090000_world_cup_campaign.sql</code> canlıda ve <code>schema_migrations</code>'a kayıtlı.
-    Kod: <code>src/lib/dunya-kupasi-{schemas,api}.ts</code>, <code>src/lib/admin/admin-dunya-kupasi-api.ts</code>,
-    <code>src/pages/DunyaKupasi{Page,KayitPage}.tsx</code>, <code>src/pages/admin/AdminDunyaKupasiPage.tsx</code>.
-  </p>
-</section>
-
 <footer>
-  CorteQS Durum Panosu &amp; Cadde 3.0 Raporu · 2026-06-11 · Detay: <code>ARCHITECTURE.md</code> · <code>docs/cadde-300/change-report.md</code> · <code>docs/README.md</code>
+  CorteQS Durum Panosu · 2026-06-11 · Bölüm A: Cadde 3.0 · Bölüm B: Profil Sistemi · Bölüm C: Dünya Kupası · Detay: <code>ARCHITECTURE.md</code> · <code>docs/cadde-300/change-report.md</code> · <code>docs/README.md</code>
 </footer>
 
 </div>
