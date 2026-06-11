@@ -16,7 +16,7 @@
 | **Faz 1** — `cadde.ts` modülerleştirme, real default, telemetri | ✅ TAMAM | `8c4c998` (impl) + `fc27b26` (testler) |
 | **Faz 2** — Actor context + profil kapısı + Köprü policy (RPC+RLS) | ✅ TAMAM | `60c5baf` |
 | **Faz 3** — Çoklu geo filtre + interests + ranking | ✅ TAMAM (migration 005-007 canlıya uygulandı + schema_migrations kayıtlı, 2026-06-11) | `64fbdb1` |
-| **Faz 4 Cafe** | ✅ KOD TAMAM — ⚠️ migration 008 CANLIYA UYGULANMA durumunu §2'den kontrol et | (bu oturum) |
+| **Faz 4 Cafe** | ✅ TAMAM (migration 008 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `48c3377` |
 | **Faz 5 Çarşı** | ⬜ **SIRADAKİ** | — |
 | Faz 6 Tanıtım · Faz 7 bildirim/moderasyon · Faz 8 diaspora · Faz 9 legacy temizlik | ⬜ | — |
 
@@ -139,8 +139,9 @@ psql -h aws-1-eu-west-2.pooler.supabase.com -p 5432 -U postgres.injprdrsklkxgnai
 
 ## 5. SIRADAKİ İŞ: FAZ 5 — Çarşı
 
-(Faz 4 kodu tamam; migration `20260611100000_cadde300_008_cafe.sql` canlıya uygulanma durumu için
-§2'ye bak. Canlıdaki son migration'ı her zaman `select max(version) from supabase_migrations.schema_migrations`
+(Faz 4 tamam; migration `20260611100000` 2026-06-11'de canlıya uygulandı ve doğrulandı:
+3 cafe setting'i, yeni kolonlar, 9-arg `create_cadde_post_v1` tek overload, cafe RPC'leri yerinde.
+Canlıdaki son migration'ı her zaman `select max(version) from supabase_migrations.schema_migrations`
 ile doğrula; yeni migration'lar daha büyük timestamp ile gelmeli.)
 
 ### FAZ 5 — Çarşı
