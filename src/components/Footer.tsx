@@ -106,7 +106,7 @@ const Footer = () => {
 
           <div className="mt-5 border-t border-white/10 pt-3.5">
             <div className="overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <div className="inline-flex min-w-max items-center whitespace-nowrap px-0.5 text-[0.76rem] text-white sm:text-[0.8rem]">
+              <div className="mx-auto flex w-max items-center whitespace-nowrap px-0.5 text-[0.76rem] text-white sm:text-[0.8rem]">
                 {footerFlatLinks.map((link, index) => (
                   <div
                     key={link.label}
@@ -135,9 +135,11 @@ const Footer = () => {
           </div>
 
           <div className="mt-3.5 border-t border-white/10 pt-3.5">
-            <p className="overflow-x-auto whitespace-nowrap text-center text-[0.66rem] text-white sm:text-[0.72rem]">
-              © 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları saklıdır.
-            </p>
+            <div className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <p className="mx-auto w-max whitespace-nowrap px-0.5 text-[0.66rem] text-white sm:text-[0.72rem]">
+                © 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları saklıdır.
+              </p>
+            </div>
           </div>
         </div>
       </div>
