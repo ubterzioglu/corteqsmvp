@@ -23,9 +23,10 @@ import {
   resolveCityIdsByNames,
   resolveCountryIdsByNames,
 } from "./cadde-internal";
-import { resolveCaddeRpcErrorMessage } from "./cadde-rules";
+import { moderateCaddeCafeName, resolveCaddeRpcErrorMessage } from "./cadde-rules";
 import {
-  caddeCafeJoinSchema,
+  caddeCafeCreateSchema,
+  caddeCafeJoinInputSchema,
   caddeCommentCreateSchema,
   caddePostCreateSchema,
   caddeReactionSchema,
@@ -36,6 +37,9 @@ import type {
   CaddeBillboardCard,
   CaddeBillboardRow,
   CaddeCafe,
+  CaddeCafeCreateInput,
+  CaddeCafeJoinResult,
+  CaddeCafeMember,
   CaddeCafeMemberRow,
   CaddeCafeRow,
   CaddeCity,
@@ -244,6 +248,9 @@ function mapRpcPost(
   };
 }
 
+const CAFE_SELECT_COLUMNS =
+  "id, host_user_id, host_name_override, title, summary, country_id, city_id, content_mode, status, is_bridge, is_free, starts_at, ends_at, is_active, created_at, slug, theme_key, entry_mode, entry_question, capacity, external_links, archived_at";
+
 export async function listCaddeCafes(filters: CaddeFilterState, currentUserId: string | null): Promise<CaddeCafe[]> {
   if (!isSupabaseConfigured || filters.mode === "demo") {
     return applyDemoFilters(DEMO_CAFES, filters);
@@ -254,7 +261,7 @@ export async function listCaddeCafes(filters: CaddeFilterState, currentUserId: s
     const cityIds = await resolveCityIdsByNames(filters.cities, countryIds);
     let query = db
       .from("cadde_cafes")
-      .select("id, host_user_id, host_name_override, title, summary, country_id, city_id, content_mode, status, is_bridge, is_free, starts_at, ends_at, is_active, created_at")
+      .select(CAFE_SELECT_COLUMNS)
       .eq("content_mode", "real")
       .eq("status", "published")
       .eq("is_active", true)
@@ -280,7 +287,7 @@ export async function listCaddeCafes(filters: CaddeFilterState, currentUserId: s
 
 async function fetchCafeMembers(cafeIds: string[]): Promise<CaddeCafeMemberRow[]> {
   if (cafeIds.length === 0) return [];
-  const { data } = await db.from("cadde_cafe_members").select("id, cafe_id, user_id").in("cafe_id", cafeIds);
+  const { data } = await db.from("cadde_cafe_members").select("id, cafe_id, user_id, status, answer, joined_at").in("cafe_id", cafeIds);
   return (data ?? []) as CaddeCafeMemberRow[];
 }
 
@@ -293,6 +300,7 @@ function mapCafe(
   currentUserId: string | null,
 ): CaddeCafe {
   const cafeMembers = members.filter((member) => member.cafe_id === row.id);
+  const viewerMember = currentUserId ? cafeMembers.find((member) => member.user_id === currentUserId) ?? null : null;
   return {
     id: row.id,
     title: row.title,
@@ -305,10 +313,119 @@ function mapCafe(
     startsAt: row.starts_at,
     endsAt: row.ends_at,
     isActive: row.is_active,
-    memberCount: cafeMembers.length,
-    joinedByViewer: currentUserId ? cafeMembers.some((member) => member.user_id === currentUserId) : false,
+    memberCount: cafeMembers.filter((member) => member.status === "approved").length,
+    joinedByViewer: viewerMember?.status === "approved",
     mode: row.content_mode,
+    slug: row.slug,
+    themeKey: row.theme_key,
+    entryMode: row.entry_mode,
+    entryQuestion: row.entry_question,
+    capacity: row.capacity,
+    archivedAt: row.archived_at,
+    hostUserId: row.host_user_id,
+    viewerMemberStatus: viewerMember?.status ?? null,
   };
+}
+
+/** Tek cafe detayı — arşivlenmiş cafe de döner (read-only arşiv görünümü, spec §13.4). */
+export async function getCaddeCafe(cafeId: string, currentUserId: string | null): Promise<CaddeCafe | null> {
+  if (!isSupabaseConfigured) {
+    return DEMO_CAFES.find((cafe) => cafe.id === cafeId) ?? null;
+  }
+
+  try {
+    const { data, error } = await db.from("cadde_cafes").select(CAFE_SELECT_COLUMNS).eq("id", cafeId).maybeSingle();
+    if (error) throw error;
+    if (!data) return null;
+    const row = data as CaddeCafeRow;
+    const [countries, cities, members, hosts] = await Promise.all([
+      fetchCountryMap(),
+      fetchCityMap(),
+      fetchCafeMembers([row.id]),
+      fetchUserNameMap(row.host_user_id ? [row.host_user_id] : []),
+    ]);
+    return mapCafe(row, countries, cities, members, hosts, currentUserId);
+  } catch (error: unknown) {
+    reportCaddeApiError("getCaddeCafe", error);
+    return null;
+  }
+}
+
+/** Cafe üye listesi (owner onay paneli) — adlarla birlikte. */
+export async function listCaddeCafeMembers(cafeId: string): Promise<CaddeCafeMember[]> {
+  if (!isSupabaseConfigured) return [];
+
+  try {
+    const { data, error } = await db
+      .from("cadde_cafe_members")
+      .select("id, cafe_id, user_id, status, answer, joined_at")
+      .eq("cafe_id", cafeId)
+      .order("joined_at", { ascending: true });
+    if (error) throw error;
+    const rows = (data ?? []) as CaddeCafeMemberRow[];
+    const names = await fetchUserNameMap(rows.map((row) => row.user_id));
+    return rows.map((row) => ({
+      id: row.id,
+      userId: row.user_id,
+      status: row.status,
+      answer: row.answer,
+      joinedAt: row.joined_at,
+      displayName: names.get(row.user_id) ?? FALLBACK_PROFILE_NAME,
+    }));
+  } catch (error: unknown) {
+    reportCaddeApiError("listCaddeCafeMembers", error);
+    return [];
+  }
+}
+
+/** Cafe-içi feed: visibility='cafe' postları (yeniden eskiye). Arşivde read-only görünür. */
+export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | null): Promise<CaddePost[]> {
+  if (!isSupabaseConfigured) return [];
+
+  try {
+    const { data, error } = await db
+      .from("cadde_posts")
+      .select("id, author_user_id, author_name_override, author_role, author_avatar_url, content_mode, status, post_type, title, body, country_id, city_id, is_bridge, pinned, created_at, need_category, engagement_score, published_at")
+      .eq("cafe_id", cafeId)
+      .eq("status", "published")
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) throw error;
+    const rows = (data ?? []) as Array<CaddeFeedRpcItem>;
+    const postIds = rows.map((row) => row.id);
+    const [countries, cities, reactions, comments, authorNames, interestRows] = await Promise.all([
+      fetchCountryMap(),
+      fetchCityMap(),
+      fetchPostReactions(postIds),
+      fetchPostComments(postIds),
+      fetchUserNameMap(rows.map((row) => row.author_user_id).filter(Boolean) as string[], currentUserId ? [currentUserId] : []),
+      postIds.length > 0 ? db.from("cadde_post_interests").select("post_id, interest_key").in("post_id", postIds) : Promise.resolve({ data: [] }),
+    ]);
+    const interestsByPost = new Map<string, string[]>();
+    for (const item of ((interestRows.data ?? []) as Array<{ post_id: string; interest_key: string }>)) {
+      interestsByPost.set(item.post_id, [...(interestsByPost.get(item.post_id) ?? []), item.interest_key]);
+    }
+    return rows.map((row) =>
+      mapRpcPost(
+        {
+          ...row,
+          country_name: row.country_id ? countries.get(row.country_id) ?? null : null,
+          city_name: row.city_id ? cities.get(row.city_id) ?? null : null,
+          interests: interestsByPost.get(row.id) ?? [],
+          band: 0,
+          score: 0,
+          rand: 0,
+        },
+        reactions,
+        comments,
+        authorNames,
+        currentUserId,
+      ),
+    );
+  } catch (error: unknown) {
+    reportCaddeApiError("listCaddeCafeFeed", error);
+    return [];
+  }
 }
 
 export async function listCaddeBillboardCards(filters: CaddeFilterState): Promise<CaddeBillboardCard[]> {
@@ -402,6 +519,7 @@ export async function createCaddePost(input: CaddePostInput): Promise<string> {
     p_is_bridge: parsed.isBridge,
     p_need_category: needCategory,
     p_interests: interests,
+    p_cafe_id: parsed.cafeId ?? null,
   });
   if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
   return data as string;
@@ -485,11 +603,59 @@ export async function createCaddeComment(postId: string, userId: string, body: s
   if (error) throw error;
 }
 
-export async function joinCaddeCafe(cafeId: string, userId: string): Promise<void> {
-  const parsed = parseWithUserError(caddeCafeJoinSchema, { cafeId });
-  const { error } = await db.from("cadde_cafe_members").upsert(
-    { cafe_id: parsed.cafeId, user_id: userId },
-    { onConflict: "cafe_id,user_id", ignoreDuplicates: true },
-  );
-  if (error) throw error;
+/**
+ * Cafe katılımı (Faz 4): entry policy (§7.3) + giriş tipi (open/approval/referral)
+ * security-definer RPC'de enforce edilir; direct insert RLS'de kapalıdır.
+ */
+export async function joinCaddeCafe(input: { cafeId: string; referralCode?: string; answer?: string }): Promise<CaddeCafeJoinResult> {
+  const parsed = parseWithUserError(caddeCafeJoinInputSchema, input);
+  const { data, error } = await db.rpc("join_cadde_cafe_v1", {
+    p_cafe_id: parsed.cafeId,
+    p_referral_code: parsed.referralCode?.trim() || null,
+    p_answer: parsed.answer?.trim() || null,
+  });
+  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  const payload = (data ?? {}) as { memberId?: string; status?: string };
+  return {
+    memberId: payload.memberId ?? "",
+    status: (payload.status as CaddeCafeJoinResult["status"]) ?? "approved",
+  };
+}
+
+/** Cafe oluşturma (Faz 4): tek form + RPC; ad moderasyonu frontend ilk hattıdır (R-05). */
+export async function createCaddeCafe(input: CaddeCafeCreateInput): Promise<string> {
+  const parsed = parseWithUserError(caddeCafeCreateSchema, input);
+  const moderation = moderateCaddeCafeName(parsed.title);
+  if (!moderation.ok) throw new Error(moderation.reason);
+
+  const { data, error } = await db.rpc("create_cadde_cafe_v1", {
+    p_title: parsed.title,
+    p_summary: parsed.summary,
+    p_theme_key: parsed.themeKey,
+    p_country: parsed.country ?? "",
+    p_city: parsed.city ?? "",
+    p_is_bridge: parsed.isBridge,
+    p_entry_mode: parsed.entryMode,
+    p_referral_code: parsed.referralCode?.trim() || null,
+    p_entry_question: parsed.entryQuestion?.trim() || null,
+    p_starts_at: parsed.startsAt ?? null,
+    p_ends_at: parsed.endsAt ?? null,
+    p_capacity: parsed.capacity ?? null,
+    p_external_links: parsed.externalLinks ?? [],
+  });
+  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  return data as string;
+}
+
+export async function approveCaddeCafeMember(memberId: string, approve: boolean): Promise<void> {
+  const { error } = await db.rpc("approve_cadde_cafe_member_v1", {
+    p_member_id: memberId,
+    p_approve: approve,
+  });
+  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+}
+
+export async function archiveCaddeCafe(cafeId: string): Promise<void> {
+  const { error } = await db.rpc("archive_cadde_cafe_v1", { p_cafe_id: cafeId });
+  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
 }

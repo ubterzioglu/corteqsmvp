@@ -53,6 +53,7 @@ const DirectoryProfilePage = lazy(() => import("@/pages/DirectoryProfilePage"));
 const DirectoryCatalogItemPage = lazy(() => import("@/pages/DirectoryCatalogItemPage"));
 const WelcomeActivatePage = lazy(() => import("@/pages/WelcomeActivatePage"));
 const CaddePage = lazy(() => import("@/pages/cadde/CaddePage"));
+const CaddeCafePage = lazy(() => import("@/pages/cadde/CaddeCafePage"));
 const Associations = lazy(() => import("@/pages/Associations"));
 const AssociationDetail = lazy(() => import("@/pages/AssociationDetail"));
 const HospitalAppointment = lazy(() => import("@/pages/HospitalAppointment"));
@@ -136,6 +137,16 @@ const App = () => (
                       <RequireAuth>
                         <RequireFeature feature={GENERIC_FEATURE_KEYS.caddeAccess} fallback={<Navigate to="/" replace />}>
                           <CaddePage />
+                        </RequireFeature>
+                      </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path="/cadde/cafe/:cafeId"
+                    element={
+                      <RequireAuth>
+                        <RequireFeature feature={GENERIC_FEATURE_KEYS.caddeAccess} fallback={<Navigate to="/" replace />}>
+                          <CaddeCafePage />
                         </RequireFeature>
                       </RequireAuth>
                     }

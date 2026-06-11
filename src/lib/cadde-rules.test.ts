@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  canJoinCafeRule,
   canPostCaddeRule,
   canPostKopruRule,
   computeMissingGateFields,
   isIndividualRoleKey,
   mapActorContext,
+  moderateCaddeCafeName,
   resolveCaddeRpcErrorMessage,
+  type CafeJoinRuleInput,
   type KopruRuleInput,
 } from "@/lib/cadde-rules";
 
@@ -136,5 +139,64 @@ describe("mapActorContext", () => {
   it("geçersiz girdide null döner", () => {
     expect(mapActorContext(null)).toBeNull();
     expect(mapActorContext("x")).toBeNull();
+  });
+});
+
+const baseCafeJoin: CafeJoinRuleInput = {
+  isAdminOrModerator: false,
+  isArchivedOrInactive: false,
+  hasEnded: false,
+  capacity: null,
+  approvedCount: 0,
+  phoneRequired: false,
+  isPhoneVerified: false,
+  isTRCafe: false,
+  isTRResident: false,
+  hasTRPhone: false,
+};
+
+// SQL public.can_join_cadde_cafe ile birebir (mig 20260611100000)
+describe("canJoinCafeRule (CKS 7.3 cafe giris kurallari)", () => {
+  it("arsiv ve sona ermis cafe herkese kapali (admin dahil)", () => {
+    expect(canJoinCafeRule({ ...baseCafeJoin, isArchivedOrInactive: true, isAdminOrModerator: true })).toBe("cadde_cafe_archived");
+    expect(canJoinCafeRule({ ...baseCafeJoin, hasEnded: true, isAdminOrModerator: true })).toBe("cadde_cafe_ended");
+  });
+
+  it("admin/moderator kapasite dahil diger kurallari atlar", () => {
+    expect(canJoinCafeRule({ ...baseCafeJoin, isAdminOrModerator: true, capacity: 1, approvedCount: 5 })).toBeNull();
+  });
+
+  it("kapasite dolunca katilim kapanir", () => {
+    expect(canJoinCafeRule({ ...baseCafeJoin, capacity: 10, approvedCount: 10 })).toBe("cadde_cafe_full");
+    expect(canJoinCafeRule({ ...baseCafeJoin, capacity: 10, approvedCount: 9 })).toBeNull();
+  });
+
+  it("telefon flag'i acikken dogrulanmamis kullanici katilamaz (D-03 stub'da flag kapali)", () => {
+    expect(canJoinCafeRule({ ...baseCafeJoin, phoneRequired: true, isPhoneVerified: false })).toBe("phone_verification_required");
+    expect(canJoinCafeRule({ ...baseCafeJoin, phoneRequired: false, isPhoneVerified: false })).toBeNull();
+  });
+
+  it("TR cafe yalniz TR yerlesik uyeye acik; flag acikken TR telefonu da gerekir", () => {
+    expect(canJoinCafeRule({ ...baseCafeJoin, isTRCafe: true, isTRResident: false })).toBe("cadde_cafe_tr_only");
+    expect(canJoinCafeRule({ ...baseCafeJoin, isTRCafe: true, isTRResident: true })).toBeNull();
+    expect(canJoinCafeRule({ ...baseCafeJoin, isTRCafe: true, isTRResident: true, phoneRequired: true, isPhoneVerified: true, hasTRPhone: false })).toBe("cadde_cafe_tr_only");
+    expect(canJoinCafeRule({ ...baseCafeJoin, isTRCafe: true, isTRResident: true, phoneRequired: true, isPhoneVerified: true, hasTRPhone: true })).toBeNull();
+  });
+});
+
+describe("moderateCaddeCafeName (R-05)", () => {
+  it("gecerli adlari kabul eder", () => {
+    expect(moderateCaddeCafeName("Berlin IT Sohbeti")).toEqual({ ok: true });
+  });
+
+  it("kisa/uzun adlari reddeder", () => {
+    expect(moderateCaddeCafeName("ab").ok).toBe(false);
+    expect(moderateCaddeCafeName("a".repeat(81)).ok).toBe(false);
+  });
+
+  it("kufur, URL ve spam tekrarini reddeder", () => {
+    expect(moderateCaddeCafeName("orospu cafe").ok).toBe(false);
+    expect(moderateCaddeCafeName("https://spam.example").ok).toBe(false);
+    expect(moderateCaddeCafeName("heyyyyyyyy cafe").ok).toBe(false);
   });
 });

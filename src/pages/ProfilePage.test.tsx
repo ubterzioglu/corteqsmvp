@@ -581,7 +581,7 @@ describe("ProfilePage", () => {
     expect(screen.queryByText("Eksik veya doldurulmayı bekliyor")).not.toBeInTheDocument();
     expect(screen.getAllByRole("switch").length).toBeGreaterThan(3);
     expect(screen.getAllByDisplayValue("firmascope")).toHaveLength(1);
-  });
+  }, 15_000); // tek başına ~4sn süren geniş kapsamlı render testi; paralel suite yükünde 5sn default timeout'u aşıyor
 
   it("does not render the bireysel fallback description when short bio is empty", async () => {
     useAuthMock.mockReturnValue({

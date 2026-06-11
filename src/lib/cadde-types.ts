@@ -83,6 +83,9 @@ export type CaddeCommentRow = {
   created_at: string;
 };
 
+export type CaddeCafeEntryMode = "open" | "approval" | "referral";
+export type CaddeCafeMemberStatus = "pending" | "approved" | "rejected";
+
 export type CaddeCafeRow = {
   id: string;
   host_user_id: Nullable<string>;
@@ -99,12 +102,22 @@ export type CaddeCafeRow = {
   ends_at: string;
   is_active: boolean;
   created_at: string;
+  slug: Nullable<string>;
+  theme_key: Nullable<string>;
+  entry_mode: CaddeCafeEntryMode;
+  entry_question: Nullable<string>;
+  capacity: Nullable<number>;
+  external_links: unknown;
+  archived_at: Nullable<string>;
 };
 
 export type CaddeCafeMemberRow = {
   id: string;
   cafe_id: string;
   user_id: string;
+  status: CaddeCafeMemberStatus;
+  answer: Nullable<string>;
+  joined_at: string;
 };
 
 export type CaddeBillboardRow = {
@@ -230,6 +243,45 @@ export type CaddeCafe = {
   memberCount: number;
   joinedByViewer: boolean;
   mode: CaddeContentMode;
+  // Faz 4 alanları (demo verisinde default'lanır)
+  slug: string | null;
+  themeKey: string | null;
+  entryMode: CaddeCafeEntryMode;
+  entryQuestion: string | null;
+  capacity: number | null;
+  archivedAt: string | null;
+  hostUserId: string | null;
+  viewerMemberStatus: CaddeCafeMemberStatus | null;
+};
+
+export type CaddeCafeMember = {
+  id: string;
+  userId: string;
+  status: CaddeCafeMemberStatus;
+  answer: string | null;
+  joinedAt: string;
+  displayName: string;
+};
+
+export type CaddeCafeCreateInput = {
+  title: string;
+  summary: string;
+  themeKey: string;
+  country?: string;
+  city?: string;
+  isBridge: boolean;
+  entryMode: CaddeCafeEntryMode;
+  referralCode?: string;
+  entryQuestion?: string;
+  startsAt?: string;
+  endsAt?: string;
+  capacity?: number;
+  externalLinks?: string[];
+};
+
+export type CaddeCafeJoinResult = {
+  memberId: string;
+  status: CaddeCafeMemberStatus;
 };
 
 export type CaddeBillboardCard = {
@@ -272,6 +324,8 @@ export type CaddePostInput = {
   needCategory?: string;
   /** 0-3 etiket (cadde_interest_catalog anahtarları). */
   interests?: string[];
+  /** Cafe-içi paylaşım: hedef cafe id'si (geo cafe'den miras alınır, visibility='cafe'). */
+  cafeId?: string;
 };
 
 export type CaddeAdminPostInput = {

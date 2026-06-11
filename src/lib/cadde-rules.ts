@@ -108,6 +108,34 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
   cadde_invalid_title: "Başlık en fazla 160 karakter olabilir.",
   cadde_rate_limit: "Çok hızlı işlem yapıyorsun. Lütfen biraz bekleyip tekrar dene.",
   cadde_banned: "Hesabın Cadde'de kısıtlanmış durumda.",
+  // Faz 3 (mig 005-006)
+  cadde_invalid_interests: "En fazla 3 geçerli etiket seçebilirsin.",
+  cadde_invalid_need_category: "Geçersiz ihtiyaç kategorisi.",
+  cadde_admin_required: "Bu işlem yalnız yöneticilere açık.",
+  cadde_geo_country_not_found: "Ülke geo kataloğunda bulunamadı.",
+  // Faz 4 (mig 008) — Cafe
+  cadde_cafe_permission_denied: "Hesabının cafe açma yetkisi bulunmuyor.",
+  cadde_cafe_join_permission_denied: "Hesabının cafe katılım yetkisi bulunmuyor.",
+  cadde_invalid_cafe_title: "Cafe adı 3-80 karakter olmalı.",
+  cadde_invalid_cafe_summary: "Cafe özeti 1-500 karakter olmalı.",
+  cadde_invalid_entry_mode: "Geçersiz giriş tipi.",
+  cadde_cafe_referral_code_required: "Davet kodlu giriş için en az 4 karakterlik bir kod belirle.",
+  cadde_cafe_question_required: "Onaylı giriş için bir giriş sorusu belirle.",
+  cadde_invalid_cafe_time: "Cafe bitişi başlangıçtan sonra olmalı.",
+  cadde_cafe_duration_exceeded: "Cafe süresi izin verilen üst sınırı aşıyor.",
+  cadde_invalid_cafe_capacity: "Kapasite 1'den küçük olamaz.",
+  cadde_cafe_not_found: "Cafe bulunamadı.",
+  cadde_cafe_archived: "Bu cafe arşivlendi; yeni katılım ve paylaşım kapalı.",
+  cadde_cafe_ended: "Bu cafe sona erdi; yeni katılım ve paylaşım kapalı.",
+  cadde_cafe_full: "Cafe kapasitesi dolu.",
+  cadde_cafe_tr_only: "Bu cafe yalnız Türkiye yerleşik üyelere açık.",
+  cadde_cafe_invalid_referral: "Davet kodu geçersiz.",
+  cadde_cafe_answer_required: "Katılmak için giriş sorusunu yanıtla.",
+  cadde_cafe_join_denied: "Bu cafe'ye katılım talebin daha önce reddedilmiş.",
+  cadde_cafe_member_not_found: "Üyelik kaydı bulunamadı.",
+  cadde_cafe_not_pending: "Bu üyelik talebi zaten sonuçlanmış.",
+  cadde_cafe_owner_required: "Bu işlem yalnız cafe sahibine veya moderatöre açık.",
+  cadde_cafe_membership_required: "Bu cafe'de paylaşım için önce odaya katıl.",
 };
 
 /** Supabase RPC hatasını kullanıcıya gösterilebilir mesaja çevirir. */
@@ -117,6 +145,65 @@ export function resolveCaddeRpcErrorMessage(error: unknown, fallback = "İşlem 
     if (raw.includes(code)) return message;
   }
   return fallback;
+}
+
+// ── Cafe adı moderasyonu (R-05, spec §13.3) ─────────────────────────────────
+// Frontend ilk hat: bariz ihlalleri form'da keser. Şüpheli sinyaller Faz 7'de
+// moderasyon kuyruğuna da düşecek; buradaki liste kuyruğun yerine geçmez.
+
+export type CafeNameModerationResult = { ok: true } | { ok: false; reason: string };
+
+const CAFE_NAME_BLOCKLIST: ReadonlyArray<RegExp> = [
+  /\b(amk|aq|orospu|piç|sik|yarrak|göt|amcık)\b/i, // küfür
+  /\b(akp|chp|mhp|hdp|dem\s*parti|iyi\s*parti)\b/i, // parti propagandası
+  /\b(porn|porno|escort|bahis|casino|kumar)\b/i, // yetişkin/kumar spam
+  /(https?:\/\/|www\.)/i, // ad içinde URL
+];
+
+export function moderateCaddeCafeName(name: string): CafeNameModerationResult {
+  const trimmed = name.trim();
+  if (trimmed.length < 3) return { ok: false, reason: "Cafe adı en az 3 karakter olmalı." };
+  if (trimmed.length > 80) return { ok: false, reason: "Cafe adı en fazla 80 karakter olabilir." };
+  if (/(.)\1{5,}/.test(trimmed)) return { ok: false, reason: "Cafe adı spam benzeri tekrar içeriyor." };
+  for (const pattern of CAFE_NAME_BLOCKLIST) {
+    if (pattern.test(trimmed)) {
+      return { ok: false, reason: "Cafe adı uygunsuz veya yasaklı içerik barındırıyor." };
+    }
+  }
+  return { ok: true };
+}
+
+// ── Cafe giriş kuralı (§7.3) — public.can_join_cadde_cafe'nin TS AYNASI ─────
+// GERÇEK enforce DB'dedir; bu fonksiyon UI guard'ları ve truth-table testleri içindir.
+// SQL kaynağı: supabase/migrations/20260611100000_cadde300_008_cafe.sql
+
+export type CaddeCafeEntryMode = "open" | "approval" | "referral";
+
+export type CafeJoinRuleInput = {
+  isAdminOrModerator: boolean;
+  isArchivedOrInactive: boolean;
+  hasEnded: boolean;
+  capacity: number | null;
+  approvedCount: number;
+  phoneRequired: boolean;
+  isPhoneVerified: boolean;
+  isTRCafe: boolean;
+  isTRResident: boolean;
+  hasTRPhone: boolean;
+};
+
+/** Dönüş: null = katılabilir; aksi halde RPC hata kodu (SQL ile birebir sıra). */
+export function canJoinCafeRule(input: CafeJoinRuleInput): string | null {
+  if (input.isArchivedOrInactive) return "cadde_cafe_archived";
+  if (input.hasEnded) return "cadde_cafe_ended";
+  if (input.isAdminOrModerator) return null;
+  if (input.capacity !== null && input.approvedCount >= input.capacity) return "cadde_cafe_full";
+  if (input.phoneRequired && !input.isPhoneVerified) return "phone_verification_required";
+  if (input.isTRCafe) {
+    if (!input.isTRResident) return "cadde_cafe_tr_only";
+    if (input.phoneRequired && !input.hasTRPhone) return "cadde_cafe_tr_only";
+  }
+  return null;
 }
 
 /** RPC'den dönen jsonb'yi güvenli biçimde CaddeActorContext'e çevirir. */

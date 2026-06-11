@@ -27,6 +27,47 @@ export const caddePostCreateSchema = z.object({
     .array(z.string().trim().min(1))
     .max(3, "En fazla 3 etiket seçebilirsin.")
     .optional(),
+  cafeId: z.string().trim().min(1).optional(),
+});
+
+const httpUrl = z
+  .string()
+  .trim()
+  .url("Geçerli bir URL gir.")
+  .refine((value) => value.startsWith("http://") || value.startsWith("https://"), "URL http(s) ile başlamalı.");
+
+export const caddeCafeCreateSchema = z
+  .object({
+    title: z.string().trim().min(3, "Cafe adı en az 3 karakter olmalı.").max(80, "Cafe adı en fazla 80 karakter olabilir."),
+    summary: z.string().trim().min(1, "Cafe özeti zorunlu.").max(500, "Özet en fazla 500 karakter olabilir."),
+    themeKey: z.string().trim().min(1, "Tema seç."),
+    country: z.string().optional(),
+    city: z.string().optional(),
+    isBridge: z.boolean(),
+    entryMode: z.enum(["open", "approval", "referral"]),
+    referralCode: z.string().trim().optional(),
+    entryQuestion: z.string().trim().max(200, "Giriş sorusu en fazla 200 karakter olabilir.").optional(),
+    startsAt: z.string().optional(),
+    endsAt: z.string().optional(),
+    capacity: z.number().int().min(1, "Kapasite 1'den küçük olamaz.").optional(),
+    externalLinks: z.array(httpUrl).max(3, "En fazla 3 dış link ekleyebilirsin.").optional(),
+  })
+  .superRefine((value, ctx) => {
+    if (value.entryMode === "referral" && (value.referralCode ?? "").length < 4) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["referralCode"], message: "Davet kodu en az 4 karakter olmalı." });
+    }
+    if (value.entryMode === "approval" && !(value.entryQuestion ?? "").trim()) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["entryQuestion"], message: "Onaylı giriş için bir soru gir." });
+    }
+    if (value.startsAt && value.endsAt && new Date(value.endsAt) <= new Date(value.startsAt)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["endsAt"], message: "Bitiş başlangıçtan sonra olmalı." });
+    }
+  });
+
+export const caddeCafeJoinInputSchema = z.object({
+  cafeId: z.string().min(1),
+  referralCode: z.string().trim().optional(),
+  answer: z.string().trim().max(500, "Yanıt en fazla 500 karakter olabilir.").optional(),
 });
 
 export const caddeCommentCreateSchema = z.object({

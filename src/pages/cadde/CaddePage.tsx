@@ -6,6 +6,7 @@ import { Clock3, Flame, Globe2, MapPin, MessageCircle, MessagesSquare, Sparkles,
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
 import CaddeProfileGate from "@/components/cadde/CaddeProfileGate";
+import CreateCafeForm from "@/components/cadde/CreateCafeForm";
 import { useCaddeActorContext } from "@/hooks/cadde/useCaddeActorContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,6 @@ import {
   createCaddeComment,
   createCaddePost,
   getCaddeSponsoredPlacement,
-  joinCaddeCafe,
   listCaddeBillboardCards,
   listCaddeCafes,
   listCaddeCities,
@@ -206,21 +206,6 @@ const CaddePage = () => {
     },
   });
 
-  const joinCafeMutation = useMutation({
-    mutationFn: async (cafeId: string) => {
-      if (!user) throw new Error("Bu işlem için giriş yapın.");
-      await joinCaddeCafe(cafeId, user.id);
-    },
-    onSuccess: invalidateCadde,
-    onError: (error) => {
-      if (!user) {
-        navigate("/login");
-        return;
-      }
-      toast({ title: "Cafe katılımı başarısız", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
-    },
-  });
-
   const updateFilters = (nextPartial: Partial<CaddeFilterState>) => {
     setSearchParams(serializeCaddeFilters({ ...filters, ...nextPartial }));
   };
@@ -376,8 +361,13 @@ const CaddePage = () => {
 
           <Card className="border-slate-200 bg-white/90">
             <CardHeader>
-              <CardTitle className="text-lg">Aktif Cafeler</CardTitle>
-              <CardDescription>Kısa süreli topluluk odaları ve tema bazlı buluşmalar</CardDescription>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <CardTitle className="text-lg">Aktif Cafeler</CardTitle>
+                  <CardDescription>Kısa süreli topluluk odaları ve tema bazlı buluşmalar</CardDescription>
+                </div>
+                {session ? <CreateCafeForm trigger={<Button size="sm" variant="outline" className="rounded-2xl">+ Cafe Aç</Button>} /> : null}
+              </div>
             </CardHeader>
             <CardContent>
               <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -388,23 +378,18 @@ const CaddePage = () => {
                         <p className="font-semibold text-slate-900">{cafe.title}</p>
                         <p className="mt-1 text-xs text-slate-500">{cafe.city ?? "Global"} • {formatDateTime(cafe.startsAt)}</p>
                       </div>
-                      {cafe.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
+                      <div className="flex flex-col items-end gap-1">
+                        {cafe.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
+                        {cafe.entryMode !== "open" ? <Badge variant="outline">{cafe.entryMode === "approval" ? "Onaylı" : "Davetli"}</Badge> : null}
+                      </div>
                     </div>
                     <p className="mt-3 text-sm leading-relaxed text-slate-600">{cafe.summary}</p>
                     <div className="mt-4 flex items-center justify-between gap-3">
                       <div className="text-xs text-slate-500">Host: {cafe.hostName} • {cafe.memberCount} üye</div>
-                      <Button
-                        size="sm"
-                        variant={cafe.joinedByViewer ? "secondary" : "outline"}
-                        onClick={() => {
-                          if (!session) {
-                            navigate("/login");
-                            return;
-                          }
-                          joinCafeMutation.mutate(cafe.id);
-                        }}
-                      >
-                        {cafe.joinedByViewer ? "Katıldın" : "Katıl"}
+                      <Button size="sm" variant={cafe.joinedByViewer ? "secondary" : "outline"} asChild>
+                        <Link to={`/cadde/cafe/${cafe.id}`}>
+                          {cafe.joinedByViewer ? "Odaya Gir" : cafe.viewerMemberStatus === "pending" ? "Onay Bekliyor" : "İncele & Katıl"}
+                        </Link>
                       </Button>
                     </div>
                   </div>

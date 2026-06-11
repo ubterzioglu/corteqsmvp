@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  caddeCafeCreateSchema,
+  caddeCafeJoinInputSchema,
   caddeCommentCreateSchema,
   caddeFilterSchema,
   caddePostCreateSchema,
@@ -73,5 +75,48 @@ describe("parseWithUserError", () => {
 
   it("throws a plain Error carrying the first issue message", () => {
     expect(() => parseWithUserError(caddeCommentCreateSchema, { postId: "p1", body: "" })).toThrowError("Yorum boş olamaz.");
+  });
+});
+
+describe("caddeCafeCreateSchema (Faz 4)", () => {
+  const base = {
+    title: "Berlin IT Sohbeti",
+    summary: "Haftalik IT sohbeti",
+    themeKey: "IT",
+    isBridge: false,
+    entryMode: "open" as const,
+  };
+
+  it("gecerli open cafe girdisini kabul eder", () => {
+    expect(caddeCafeCreateSchema.safeParse(base).success).toBe(true);
+  });
+
+  it("referral modunda en az 4 karakter davet kodu ister", () => {
+    expect(caddeCafeCreateSchema.safeParse({ ...base, entryMode: "referral" }).success).toBe(false);
+    expect(caddeCafeCreateSchema.safeParse({ ...base, entryMode: "referral", referralCode: "ABC" }).success).toBe(false);
+    expect(caddeCafeCreateSchema.safeParse({ ...base, entryMode: "referral", referralCode: "BERLIN26" }).success).toBe(true);
+  });
+
+  it("approval modunda giris sorusu ister", () => {
+    expect(caddeCafeCreateSchema.safeParse({ ...base, entryMode: "approval" }).success).toBe(false);
+    expect(caddeCafeCreateSchema.safeParse({ ...base, entryMode: "approval", entryQuestion: "Neden katilmak istiyorsun?" }).success).toBe(true);
+  });
+
+  it("bitis baslangictan once olamaz", () => {
+    expect(caddeCafeCreateSchema.safeParse({ ...base, startsAt: "2026-06-11T12:00:00Z", endsAt: "2026-06-11T11:00:00Z" }).success).toBe(false);
+    expect(caddeCafeCreateSchema.safeParse({ ...base, startsAt: "2026-06-11T12:00:00Z", endsAt: "2026-06-11T14:00:00Z" }).success).toBe(true);
+  });
+
+  it("dis linkler http(s) URL olmali, en fazla 3", () => {
+    expect(caddeCafeCreateSchema.safeParse({ ...base, externalLinks: ["ftp://x"] }).success).toBe(false);
+    expect(caddeCafeCreateSchema.safeParse({ ...base, externalLinks: ["https://example.com"] }).success).toBe(true);
+  });
+});
+
+describe("caddeCafeJoinInputSchema (Faz 4)", () => {
+  it("cafeId zorunlu; referral/answer opsiyonel", () => {
+    expect(caddeCafeJoinInputSchema.safeParse({ cafeId: "c1" }).success).toBe(true);
+    expect(caddeCafeJoinInputSchema.safeParse({ cafeId: "c1", referralCode: "X", answer: "ben" }).success).toBe(true);
+    expect(caddeCafeJoinInputSchema.safeParse({ cafeId: "" }).success).toBe(false);
   });
 });

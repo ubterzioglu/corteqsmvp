@@ -16,10 +16,13 @@
 | **Faz 1** — `cadde.ts` modülerleştirme, real default, telemetri | ✅ TAMAM | `8c4c998` (impl) + `fc27b26` (testler) |
 | **Faz 2** — Actor context + profil kapısı + Köprü policy (RPC+RLS) | ✅ TAMAM | `60c5baf` |
 | **Faz 3** — Çoklu geo filtre + interests + ranking | ✅ TAMAM (migration 005-007 canlıya uygulandı + schema_migrations kayıtlı, 2026-06-11) | `64fbdb1` |
-| **Faz 4 Cafe** | ⬜ **SIRADAKİ** | — |
-| Faz 5 Çarşı · Faz 6 Tanıtım · Faz 7 bildirim/moderasyon · Faz 8 diaspora · Faz 9 legacy temizlik | ⬜ | — |
+| **Faz 4 Cafe** | ✅ KOD TAMAM — ⚠️ migration 008 CANLIYA UYGULANMA durumunu §2'den kontrol et | (bu oturum) |
+| **Faz 5 Çarşı** | ⬜ **SIRADAKİ** | — |
+| Faz 6 Tanıtım · Faz 7 bildirim/moderasyon · Faz 8 diaspora · Faz 9 legacy temizlik | ⬜ | — |
 
-Doğrulama durumu (son koşum): **486/486 test geçti**, `npm run build` OK, yeni/değişen dosyalar lint-temiz. (Repo genelinde ~451 ÖNCEDEN VAR OLAN lint hatası var — backlog B7, bizim dosyalarla ilgisiz; tam `npm run lint` exit 1 döner, bu NORMALDİR. Kendi dosyalarını hedefli `npx eslint <dosyalar>` ile doğrula.)
+Doğrulama durumu (son koşum): **487/487 test geçti**, `npm run build` OK, yeni/değişen dosyalar lint-temiz. (Repo genelinde ~451 ÖNCEDEN VAR OLAN lint hatası var — backlog B7, bizim dosyalarla ilgisiz; tam `npm run lint` exit 1 döner, bu NORMALDİR. Kendi dosyalarını hedefli `npx eslint <dosyalar>` ile doğrula.) Not: `ProfilePage.test.tsx` "bireysel" testi yavaş olduğundan 15sn açık timeout aldı (paralel suite yükünde 5sn default'u aşıyordu).
+
+**Faz 4 özeti:** `cadde_cafes` genişletildi (slug/theme_key/entry_mode open|approval|referral/referral_code_hash(sha256)/entry_question/capacity/external_links/archived_at/diaspora_key); `cadde_cafe_members` status(pending|approved|rejected)/answer/approved_at/by; `cadde_posts.cafe_id + visibility(public|cafe)` (ana feed RPC'si visibility='public' filtreler); RPC'ler: `can_join_cadde_cafe` (§7.3, TS aynası `canJoinCafeRule`), `create_cadde_cafe_v1` (sahip otomatik approved üye), `join_cadde_cafe_v1` (idempotent; rejected→hata), `approve_cadde_cafe_member_v1`, `archive_cadde_cafe_v1`; `create_cadde_post_v1` 9-arg oldu (p_cafe_id; cafe postu geo'yu cafe'den miras alır, TR-scope bypass). D-06 limitleri `cadde_settings`'te (daily_join=10, daily_create=3, max_duration=6h — ürün kararıyla değiştirilebilir). RLS: cafes self-insert→admin-insert (posts'taki admin bug fix'inin aynısı), members self-insert kaldırıldı. UI: `components/cadde/CreateCafeForm.tsx` (TEK form, R-05 moderasyon `moderateCaddeCafeName`), `/cadde/cafe/:cafeId` → `pages/cadde/CaddeCafePage.tsx` (giriş kutusu + composer + cafe feed + owner onay paneli + read-only arşiv), CaddePage kartları detaya linkler + "Cafe Aç". KALAN (Faz 4 kuyruğu): §13.5 profil parity ("Açık Cafe" public profilde) — Faz 5 öncesi veya sırasında.
 
 ---
 
@@ -134,23 +137,21 @@ psql -h aws-1-eu-west-2.pooler.supabase.com -p 5432 -U postgres.injprdrsklkxgnai
 
 ---
 
-## 5. SIRADAKİ İŞ: FAZ 4 — Cafe
+## 5. SIRADAKİ İŞ: FAZ 5 — Çarşı
 
-(Faz 3 migration'ları 2026-06-11'de canlıya uygulandı ve doğrulandı — §2'deki duman testi notuna bak.
-Canlıdaki son migration artık `20260610186000`; yeni migration'lar `20260611*`+ ile gelmeli.)
+(Faz 4 kodu tamam; migration `20260611100000_cadde300_008_cafe.sql` canlıya uygulanma durumu için
+§2'ye bak. Canlıdaki son migration'ı her zaman `select max(version) from supabase_migrations.schema_migrations`
+ile doğrula; yeni migration'lar daha büyük timestamp ile gelmeli.)
 
-### FAZ 4 — Cafe
-Plan: `docs/cadde-300/03-implementation-plan.md` "Faz 4" + spec §13.
-- Migration: `cadde_cafes` genişletme (slug, theme_key, entry_mode open/approval/referral, referral_code_hash,
-  entry_question, capacity, archived_at + check'ler); `cadde_cafe_members` genişletme (status, answer,
-  approved_at/by); RPC'ler: `create_cadde_cafe_v1`, `join_cadde_cafe_v1`, `approve_cadde_cafe_member_v1`,
-  `archive_cadde_cafe_v1`, `can_join_cadde_cafe`.
-- Cafe ülke policy: Köprü cafe=doğrulanmış herkes; TR cafe=TR yerleşik+TR telefon; diğer=doğrulanmış (RPC'de).
-  Günlük limit D-06 ürün kararına göre RPC rate-limit'i.
-- UI: tek `CreateCafeForm` (legacy alanlar port; davet kodu hash'li), `/cadde/cafe/:cafeId` rotası,
-  cafe feed (`cadde_posts.cafe_id` + `visibility='cafe'`), owner onay paneli, read-only arşiv.
-- Cafe adı moderasyonu `cadde-rules.ts`'te (R-05). Composer'a paylaşım hedefi seçici (Faz 3'te filtre
-  ilk seçimi kullanılıyor — bkz. CaddePage postMutation notu).
+### FAZ 5 — Çarşı
+Plan: `docs/cadde-300/03-implementation-plan.md` "Faz 5" + spec §14.
+- Migration: `carsi_categories` (7 seed) + `carsi_items` + RLS + `create/update/delete_carsi_item_v1`;
+  ilan limiti feature-bazlı (D-07).
+- UI: `CarsiGlobalTicker` (desktop sol kolon üstü + mobil header altı yatay — spec §4.1), `/cadde/carsi`,
+  `/cadde/carsi/:itemId`, `/profile?tab=carsi`, `/admin/cadde/carsi`.
+- `cadde.carsi.*` feature'larıyla yetki; Tanıtım'dan tablo/panel düzeyinde AYRI (D-01 sözleşmesi:
+  marketplace ≠ sponsorlu görünürlük).
+- Faz 4 kuyruğundan devralınan: §13.5 cafe profil parity; composer'a paylaşım hedefi seçici.
 
 ---
 
