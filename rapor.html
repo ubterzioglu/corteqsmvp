@@ -270,19 +270,18 @@ https://mvp.corteqs.net/directory/catalog/demo-uye-ayse-yilmaz</code></pre>
     <tr><td>Commit + push</td><td><span class="ok">✅</span> <code>466d32c</code> — <code>refactor(admin): AdminPageLayout tasfiyesi</code>, 39 dosya (+250/−790), origin/main'e push edildi</td></tr>
     <tr>
       <td>Supabase migration durumu</td>
-      <td><span class="ok">✅ Canlı şema güncel</span> — repo'daki 234 migration'ın etkilerinin tamamı canlıda
-        (en yeni: <code>20260611100000</code> cadde 008). Tek fark kayıt düzeyinde:
-        <code>20260609050000_fix_search_directory_catalog_post_legacy_drop</code> ledger'da yok ama SQL'i
-        <strong>superseded</strong> — fonksiyon sonraki rebuild migration'larında (010c + 010e, ikisi de canlıda)
-        yeniden tanımlandı; şimdi koşulması canlıyı geriletirdi. <span class="warn">Karar konusu:</span>
-        ledger'a salt-kayıt INSERT'i üretim DB yazması olduğu için onaysız yapılmadı.</td>
+      <td><span class="ok">✅ Canlı şema güncel ve repo ile birebir senkron</span> — en yeni migration
+        (<code>20260611100000</code> cadde 008) dahil hepsi canlıda. Tek fark olan
+        <code>20260609050000_fix_search_directory_catalog_post_legacy_drop</code> dosyası kullanıcı onayıyla
+        <strong>repodan silindi</strong>: ledger'da hiç kaydı yoktu, SQL'i superseded'di (fonksiyon sonraki
+        rebuild 010c + 010e'de yeniden tanımlı), hiçbir ara migration ona bağımlı değildi → sıfırdan kurulumda
+        da son durum aynı. Sonuç: repo 233 = canlı 233.</td>
     </tr>
   </table>
 
   <h3>Kalan</h3>
   <ul>
     <li><strong>Gerçek cihaz QA</strong> (Admin V2'nin tek açık DoD kalemi): iOS Safari / Android Chrome'da dokunma + canlı veri spot kontrolü.</li>
-    <li>İstenirse: <code>20260609050000</code> için ledger kayıt satırı (tek INSERT, SQL koşulmadan) — onay bekliyor.</li>
     <li>Backlog (Admin V2 dışı): B1 types regen, B5 auth shim (~38 import), AdminCatalogPage RQ taşıması.</li>
   </ul>
 </section>
