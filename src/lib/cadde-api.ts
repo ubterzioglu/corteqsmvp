@@ -577,30 +577,63 @@ export async function saveMyCaddeInterests(userId: string, interestKeys: string[
   }
 }
 
-export async function toggleCaddeReaction(postId: string, userId: string, reactionType: CaddeReactionType, currentlyActive: boolean): Promise<void> {
+/**
+ * Reaksiyon toggle'ı (Faz 7): ban + rate limit + bildirim üretimi DB'de
+ * (toggle_cadde_reaction_v1); direct insert RLS'de kapalıdır. true=eklendi, false=kaldırıldı.
+ */
+export async function toggleCaddeReaction(postId: string, reactionType: CaddeReactionType): Promise<boolean> {
   const parsed = parseWithUserError(caddeReactionSchema, { postId, reactionType });
-  if (currentlyActive) {
-    const { error } = await db.from("cadde_post_reactions").delete().eq("post_id", parsed.postId).eq("user_id", userId).eq("reaction_type", parsed.reactionType);
-    if (error) throw error;
-    return;
-  }
-
-  const { error } = await db.from("cadde_post_reactions").insert({
-    post_id: parsed.postId,
-    user_id: userId,
-    reaction_type: parsed.reactionType,
+  const { data, error } = await db.rpc("toggle_cadde_reaction_v1", {
+    p_post_id: parsed.postId,
+    p_reaction_type: parsed.reactionType,
   });
-  if (error) throw error;
+  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  return Boolean(data);
 }
 
-export async function createCaddeComment(postId: string, userId: string, body: string): Promise<void> {
+/** Yorum oluşturma (Faz 7): ban + rate limit + bildirim üretimi DB'de (create_cadde_comment_v1). */
+export async function createCaddeComment(postId: string, body: string): Promise<void> {
   const parsed = parseWithUserError(caddeCommentCreateSchema, { postId, body });
-  const { error } = await db.from("cadde_post_comments").insert({
-    post_id: parsed.postId,
-    user_id: userId,
-    body: parsed.body,
+  const { error } = await db.rpc("create_cadde_comment_v1", {
+    p_post_id: parsed.postId,
+    p_body: parsed.body,
   });
-  if (error) throw error;
+  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+}
+
+/** İçerik şikayeti (spec §18): report → moderasyon kuyruğu (rate limit DB'de). */
+export async function reportCaddeEntity(entityType: "post" | "comment" | "cafe" | "carsi_item", entityId: string, reason: string, details?: string): Promise<void> {
+  const { error } = await db.rpc("report_cadde_entity_v1", {
+    p_entity_type: entityType,
+    p_entity_id: entityId,
+    p_reason: reason,
+    p_details: details?.trim() || null,
+  });
+  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+}
+
+/**
+ * "Yeni post" chip'i için hafif sayım (spec §17.3: post stream'i açılmaz; chip + invalidate).
+ * Yalnız ana akışta görünen (public) yayınlanmış real postları sayar.
+ */
+export async function countCaddePostsSince(isoTimestamp: string): Promise<number> {
+  if (!isSupabaseConfigured || !isoTimestamp) return 0;
+
+  try {
+    const { count, error } = await db
+      .from("cadde_posts")
+      .select("id", { count: "exact", head: true })
+      .eq("content_mode", "real")
+      .eq("status", "published")
+      .eq("visibility", "public")
+      .gt("created_at", isoTimestamp);
+    if (error) throw error;
+    return count ?? 0;
+  } catch (error: unknown) {
+    // Chip dekoratiftir; sayım hatası feed'i etkilemesin diye yalnız console'a düşer.
+    console.error("[cadde_api_error] countCaddePostsSince", error);
+    return 0;
+  }
 }
 
 /**

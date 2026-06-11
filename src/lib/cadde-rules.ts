@@ -160,6 +160,15 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
   cadde_promotion_not_found: "Kampanya bulunamadı.",
   cadde_promotion_not_pending: "Bu kampanya zaten incelenmiş.",
   cadde_invalid_promotion_event: "Geçersiz analitik olayı.",
+  // Faz 7 (mig 011) — Bildirim & Moderasyon
+  cadde_invalid_comment: "Yorum 1-2000 karakter olmalı.",
+  cadde_invalid_reaction: "Geçersiz reaksiyon tipi.",
+  cadde_post_not_found: "Paylaşım bulunamadı veya yayında değil.",
+  cadde_invalid_report_entity: "Geçersiz şikayet hedefi.",
+  cadde_invalid_report_reason: "Şikayet sebebi 3-200 karakter olmalı.",
+  cadde_entity_not_found: "İçerik bulunamadı.",
+  cadde_moderation_permission_denied: "Bu işlem yalnız moderatörlere açık.",
+  cadde_invalid_moderation_action: "Geçersiz moderasyon aksiyonu.",
 };
 
 /** Supabase RPC hatasını kullanıcıya gösterilebilir mesaja çevirir. */

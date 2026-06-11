@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Clock3, Flame, Globe2, MapPin, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
+import { Clock3, Flag, Flame, Globe2, MapPin, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
 import CaddeProfileGate from "@/components/cadde/CaddeProfileGate";
 import CarsiGlobalTicker from "@/components/cadde/CarsiGlobalTicker";
 import CreateCafeForm from "@/components/cadde/CreateCafeForm";
+import NotificationsBell from "@/components/cadde/NotificationsBell";
 import PromotionRail from "@/components/cadde/PromotionRail";
 import SponsoredFeedCard from "@/components/cadde/SponsoredFeedCard";
 import { useCaddeActorContext } from "@/hooks/cadde/useCaddeActorContext";
@@ -22,6 +23,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
+  countCaddePostsSince,
   createCaddeComment,
   createCaddePost,
   getCaddeSponsoredPlacement,
@@ -31,6 +33,7 @@ import {
   listCaddeCountries,
   listCaddeFeed,
   listCaddeInterestCatalog,
+  reportCaddeEntity,
   toggleCaddeReaction,
 } from "@/lib/cadde-api";
 import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
@@ -182,9 +185,9 @@ const CaddePage = () => {
   });
 
   const reactionMutation = useMutation({
-    mutationFn: async ({ postId, reactionType, currentlyActive }: { postId: string; reactionType: CaddeReactionType; currentlyActive: boolean }) => {
+    mutationFn: async ({ postId, reactionType }: { postId: string; reactionType: CaddeReactionType }) => {
       if (!user) throw new Error("Bu işlem için giriş yapın.");
-      await toggleCaddeReaction(postId, user.id, reactionType, currentlyActive);
+      await toggleCaddeReaction(postId, reactionType);
     },
     onSuccess: invalidateCadde,
     onError: (error) => {
@@ -200,7 +203,7 @@ const CaddePage = () => {
     mutationFn: async ({ postId, body }: { postId: string; body: string }) => {
       if (!user) throw new Error("Bu işlem için giriş yapın.");
       if (!body.trim()) throw new Error("Yorum boş olamaz.");
-      await createCaddeComment(postId, user.id, body);
+      await createCaddeComment(postId, body);
     },
     onSuccess: async (_data, variables) => {
       setCommentDrafts((current) => ({ ...current, [variables.postId]: "" }));
@@ -215,9 +218,35 @@ const CaddePage = () => {
     },
   });
 
+  const reportMutation = useMutation({
+    mutationFn: async (postId: string) => {
+      if (!user) throw new Error("Bu işlem için giriş yapın.");
+      const reason = window.prompt("Şikayet sebebini kısaca yaz (3-200 karakter):");
+      if (reason === null) return false;
+      await reportCaddeEntity("post", postId, reason);
+      return true;
+    },
+    onSuccess: (submitted) => {
+      if (submitted) toast({ title: "Şikayetin moderasyona iletildi" });
+    },
+    onError: (error) => {
+      toast({ title: "Şikayet gönderilemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+    },
+  });
+
   const updateFilters = (nextPartial: Partial<CaddeFilterState>) => {
     setSearchParams(serializeCaddeFilters({ ...filters, ...nextPartial }));
   };
+
+  // "Yeni post" chip'i (spec §17.3): stream yok; 60 sn'de bir hafif sayım, tıklayınca invalidate.
+  const newestLoadedAt = feedQuery.data?.pages[0]?.items[0]?.createdAt ?? null;
+  const newPostsQuery = useQuery({
+    queryKey: ["cadde", "new-posts-since", newestLoadedAt],
+    queryFn: () => countCaddePostsSince(newestLoadedAt ?? ""),
+    enabled: filters.mode === "real" && Boolean(newestLoadedAt),
+    refetchInterval: 60_000,
+  });
+  const newPostCount = newPostsQuery.data ?? 0;
 
   const feedItems = useMemo(() => feedQuery.data?.pages.flatMap((page) => page.items) ?? [], [feedQuery.data]);
   const feedWithSponsor = useMemo(
@@ -250,7 +279,8 @@ const CaddePage = () => {
             <Badge className="bg-[#ffefe0] text-[#9a4b18] hover:bg-[#ffefe0]">CorteQS Cadde MVP</Badge>
             <p className="text-sm text-slate-600">Şehir bazlı diaspora akışı, aktif kafeler ve sponsorlu keşif alanı.</p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <NotificationsBell />
             {SECONDARY_NAV.map((item) =>
               "href" in item ? (
                 <a key={item.label} href={item.href} target="_blank" rel="noreferrer" className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">
@@ -491,6 +521,22 @@ const CaddePage = () => {
           </Card>
 
           <div className="space-y-4">
+            {newPostCount > 0 ? (
+              <div className="flex justify-center">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="rounded-full shadow"
+                  onClick={async () => {
+                    await queryClient.invalidateQueries({ queryKey: caddeQueryKeys.feedRoot });
+                    await newPostsQuery.refetch();
+                  }}
+                >
+                  {newPostCount} yeni paylaşım — yenile
+                </Button>
+              </div>
+            ) : null}
+
             {feedWithSponsor.map((item, itemIndex) =>
               item.kind === "promotion" ? (
                 <SponsoredFeedCard key={`promo-${item.promotion.campaignId}-${itemIndex}`} promotion={item.promotion} />
@@ -552,7 +598,7 @@ const CaddePage = () => {
                                 navigate("/login");
                                 return;
                               }
-                              reactionMutation.mutate({ postId: item.post.id, reactionType: reaction.key, currentlyActive: active });
+                              reactionMutation.mutate({ postId: item.post.id, reactionType: reaction.key });
                             }}
                             className={active ? "bg-slate-900 text-white hover:bg-slate-800" : ""}
                           >
@@ -565,6 +611,18 @@ const CaddePage = () => {
                         <MessageCircle className="h-4 w-4" />
                         {item.post.commentCount} yorum
                       </div>
+                      {session && item.post.authorUserId !== user?.id ? (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-slate-400 hover:text-red-600"
+                          onClick={() => reportMutation.mutate(item.post.id)}
+                          disabled={reportMutation.isPending}
+                          aria-label="Paylaşımı şikayet et"
+                        >
+                          <Flag className="h-4 w-4" />
+                        </Button>
+                      ) : null}
                     </div>
 
                     <Separator />

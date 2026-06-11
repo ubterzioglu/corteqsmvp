@@ -19,8 +19,26 @@
 | **Faz 4 Cafe** | ✅ TAMAM (migration 008 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `48c3377` |
 | **Faz 5 Çarşı** | ✅ TAMAM (migration 009 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `cb116c1` |
 | **Faz 6 Tanıtım** | ✅ TAMAM (D-01 KARAR: UI "Tanıtım"; migration 010 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `2f92754` |
-| **Faz 7 bildirim/moderasyon** | ⬜ **SIRADAKİ** | — |
-| Faz 8 diaspora · Faz 9 legacy temizlik | ⬜ | — |
+| **Faz 7 bildirim/moderasyon** | ✅ KOD TAMAM — migration 011 canlıya uygulanma durumunu §2'den kontrol et | (bu oturum) |
+| **Faz 8 diaspora** | ⬜ **SIRADAKİ** | — |
+| Faz 9 legacy temizlik | ⬜ | — |
+
+**Faz 7 özeti:** `notifications` GENİŞLETİLDİ (R-03; yeni tablo yok): actor_user_id/entity_type/payload;
+gevşek insert policy kaldırıldı — üretim yalnız `cadde_notify` definer'ından (yorum/reaksiyon→post sahibi,
+cafe talep→host, üye onayı→üye, kampanya incelemesi→sahibi, moderasyon→içerik sahibi; self-notify atlanır).
+Alıcı kolonu tarihsel `user_id`; realtime filtresi `user_id=eq.<uid>` (yalnız alıcı kanalı, §17.3).
+Moderasyon: `cadde_reports` (generic; plan 'cadde_post_reports' diyordu — bilinçli sapma) +
+`cadde_moderation_queue` (report_count) + `cadde_user_bans`; `report_cadde_entity_v1` (günlük limit) →
+`admin_moderate_cadde_entity_v1` (dismiss/hide/publish/ban_owner/unban_owner + audit + bildirim).
+⚠️ **BAN KILL-SWITCH:** `is_cadde_banned` `has_cadde_feature` İÇİNE bağlandı — banlı kullanıcıda tüm
+cadde.* feature'ları false döner, bütün yazma RPC'leri tek noktadan kapanır (okuma serbest).
+Yorum+reaksiyon RPC'ye taşındı (`create_cadde_comment_v1`, `toggle_cadde_reaction_v1`; self-insert
+policy'leri kaldırıldı; rate limitler `cadde_settings`'ten: yorum 5/dk, reaksiyon 30/dk, rapor 10/gün).
+UI: `NotificationsBell` (CaddePage üst nav; unread badge + dropdown + deep link + mark read + realtime),
+feed'de "yeni post" chip (60 sn'lik hafif sayım + invalidate; stream yok), post kartında şikayet butonu,
+`/admin/cadde/moderation` paneli. **AdminCadde modülerleştirildi:** `pages/admin/cadde/routes.tsx`
+(index=AdminCaddePage + promotions + moderation; muhasebe deseni — yeni admin cadde sayfaları buraya).
+KALAN: cafe.expiring/carsi.item_contacted eventleri; otomatik kelime/spam taraması (§18.1).
 
 **Faz 6 özeti (D-01: UI adı "Tanıtım", 2026-06-11 ürün sahibi kararı):**
 `cadde_promotion_placement_catalog` (6 seed) + `cadde_promotion_campaigns/placements/events`.
@@ -165,30 +183,25 @@ psql -h aws-1-eu-west-2.pooler.supabase.com -p 5432 -U postgres.injprdrsklkxgnai
 
 ---
 
-## 5. SIRADAKİ İŞ: FAZ 7 — Bildirim, Realtime, Moderasyon
+## 5. SIRADAKİ İŞ: FAZ 8 — Çoklu Diaspora
 
-(Faz 6 tamam; migration `20260611120000` 2026-06-11'de canlıya uygulandı ve doğrulandı:
-6 placement, 4 promotion RPC'si. Canlıdaki son migration'ı her zaman
-`select max(version) from supabase_migrations.schema_migrations` ile doğrula.)
+(Faz 7 kodu tamam; migration `20260611130000` canlıya uygulanma durumunu §2'den kontrol et.
+Canlıdaki son migration'ı her zaman `select max(version) from supabase_migrations.schema_migrations`
+ile doğrula.)
 
-### FAZ 7 — Bildirim, Realtime, Moderasyon
-Plan: `docs/cadde-300/03-implementation-plan.md` "Faz 7" + spec §17-18 ve §9.8-9.9.
-- Migration: `notifications` GENİŞLETME (R-03: actor_user_id, entity_type, payload; YENİ tablo açma —
-  mevcut tablo 0 satır, realtime açık; gevşek insert policy kaldırılır); `cadde_post_reports`,
-  `cadde_moderation_queue`, `cadde_user_bans`; RPC'ler: `report_cadde_entity_v1`,
-  `admin_moderate_cadde_entity_v1`, `is_cadde_moderator`; producer'lar (comment/reaction/cafe
-  eventleri) RPC içinden — yorum/reaksiyon mutation'ları bu fazda RPC'ye taşınır (Faz 2'den
-  beri direct insert'tü).
-- UI: `NotificationsBell` (unread badge + dropdown + deep link + mark read); Realtime yalnız
-  `recipient=auth.uid()` kanalı; feed'de "yeni post" chip + invalidate (stream yok).
-- `/admin/cadde/moderation` (filtre + aksiyonlar + audit notu); rate-limit'ler RPC'lerde.
-- `AdminCaddePage` → `pages/admin/cadde/routes.tsx` modülerleştirmesi (muhasebe deseni)
-  bu fazda tamamlanır — `/admin/cadde/carsi` ve promotions linkleri de bu şemsiyede.
+### FAZ 8 — Çoklu Diaspora
+Plan: `docs/cadde-300/03-implementation-plan.md` "Faz 8" + spec §16.
+- Migration: `cadde_posts`/`cadde_cafes`/`carsi_items`/`cadde_promotion_placements`'a
+  `diaspora_key text not null default 'tr'` — NOT: cafes/carsi/placements'ta kolon Faz 4-6'da
+  ZATEN eklendi; yalnız `cadde_posts`'a eklenecek + feed RPC'sine diaspora filtresi.
+- `DiasporaContext` → feed/cafe/carsi/promotion sorgu filtreleri + post create payload;
+  UI stringleri context'ten; TR/IN/CN/PH ayrım testleri.
 
 ### Birikmiş kuyruk (faz sırasına bağlı değil)
 - §13.5 cafe profil parity ("Açık Cafe" public profilde) + composer paylaşım hedefi seçici.
-- `/profile?tab=carsi` parity + `/admin/cadde/carsi` (Faz 7 AdminCadde modülerleştirmesiyle).
+- `/profile?tab=carsi` parity + `/admin/cadde/carsi` sayfası (admin cadde routes.tsx'e eklenecek).
 - homepage-ai-bar / category-first-screen placement yüzeyleri (Cadde dışı sayfa entegrasyonları).
+- cafe.expiring / carsi.item_contacted bildirim üreticileri; otomatik kelime/spam taraması (§18.1).
 
 ---
 
