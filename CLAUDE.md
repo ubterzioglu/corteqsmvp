@@ -256,7 +256,7 @@ system. **Do not reference the old names** — runtime code has 0 references to 
 |--------|------------------|
 | **Auth/roles** | `auth.users`, `user_role_assignments`, `user_profile_attributes`, `user_feature_overrides` |
 | **Catalog** | `catalog_items`, `catalog_item_roles`, `catalog_item_attribute_values`, `catalog_item_claims`, `catalog_item_managers` (+ ~15 satellite tables) |
-| **AFS rules** | `roles` (76 flat, no families), `afs_attributes` (53), `afs_features` (42), `afs_sections` (7), `role_attributes`, `role_features`, `role_sections` |
+| **AFS rules** | `roles` (76 flat, no families; 75 aktif — `User_Standard` 2026-06-11'de `User_DiasporaMember`'a konsolide edilip pasifleştirildi), `afs_attributes` (53), `afs_features` (42), `afs_sections` (7), `role_attributes`, `role_features`, `role_sections` |
 | **Other** | `submissions`, `surveys`/`survey_*`, `muhasebe_gelirler`/`muhasebe_giderler`, `lansman_basvurular`, `referral_*`, `workspace_*` |
 
 **Renamed (old → new):** `attribute_catalog`→`afs_attributes`, `feature_catalog`→`afs_features`,

@@ -6,39 +6,39 @@ export interface GeoCountrySeed {
 export const geoCountrySeeds: GeoCountrySeed[] = [
   {
     "code": "GB",
-    "name": "__TR_I_CAP__ngiltere"
+    "name": "İngiltere"
   },
   {
     "code": "IR",
-    "name": "__TR_I_CAP__ran"
+    "name": "İran"
   },
   {
     "code": "IE",
-    "name": "__TR_I_CAP__rlanda"
+    "name": "İrlanda"
   },
   {
     "code": "ES",
-    "name": "__TR_I_CAP__spanya"
+    "name": "İspanya"
   },
   {
     "code": "IL",
-    "name": "__TR_I_CAP__srail"
+    "name": "İsrail"
   },
   {
     "code": "SE",
-    "name": "__TR_I_CAP__sveç"
+    "name": "İsveç"
   },
   {
     "code": "CH",
-    "name": "__TR_I_CAP__sviçre"
+    "name": "İsviçre"
   },
   {
     "code": "IT",
-    "name": "__TR_I_CAP__talya"
+    "name": "İtalya"
   },
   {
     "code": "IS",
-    "name": "__TR_I_CAP__zlanda"
+    "name": "İzlanda"
   },
   {
     "code": "US",

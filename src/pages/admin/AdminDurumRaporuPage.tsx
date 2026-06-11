@@ -12,6 +12,7 @@ import {
   FileText,
   Layers,
   Loader2,
+  Megaphone,
   RefreshCw,
   ShieldCheck,
 } from "lucide-react";
@@ -38,8 +39,11 @@ interface StatusReport {
 }
 
 // Expected targets for the rebuild (used to color metrics green/red).
+// roles_total pasif rolleri de sayar (satır silinmez); roles_active 2026-06-11
+// User_Standard konsolidasyonundan beri 75'tir.
 const TARGETS = {
   roles_total: 76,
+  roles_active: 75,
   legacy_roles: 0,
   afs_attributes: 53,
   afs_features: 42,
@@ -49,6 +53,26 @@ const TARGETS = {
   family_columns_remaining: 0,
   old_table_names_remaining: 0,
 } as const;
+
+// ── Son güncellemeler (günlük dille, en yenisi üstte) ─────────────────────────
+interface UpdateNote {
+  date: string;
+  title: string;
+  lines: string[];
+}
+
+const UPDATES: UpdateNote[] = [
+  {
+    date: "11 Haziran 2026",
+    title: "“Standart Kullanıcı” ve “Diaspora Üyesi” rolleri birleştirildi",
+    lines: [
+      "İki rol kâğıt üstünde ayrı görünse de pratikte birebir aynıydı: aynı yetkiler, aynı profil görünümü, aynı Cadde hakları. İki ayrı isim sadece kafa karıştırıyordu.",
+      "Bu yüzden ikisini tek rolde birleştirdik: artık herkes “Diaspora Üyesi”. “Standart Kullanıcı” rolü kapatıldı ve hiçbir ekranda seçilemez.",
+      "Eski roldeki az sayıda kayıt (demo üye dahil 2 katalog kaydı) otomatik olarak “Diaspora Üyesi”ne taşındı. Hiçbir üyenin yetkisi veya profili değişmedi.",
+      "Yeni üyeler zaten “Diaspora Üyesi” olarak başlıyordu; bu davranış aynen devam ediyor. Aktif rol sayısı 76'dan 75'e indi (kapatılan rolün kaydı geçmişe dönük izlenebilirlik için silinmedi).",
+    ],
+  },
+];
 
 // ── Phase / report summaries (static — mirrors docs/catalog-role-afs-rebuild/00-14) ──
 interface ReportSummary {
@@ -140,6 +164,7 @@ const AdminDurumRaporuPage = () => {
   const allGreen =
     report &&
     report.roles_total === TARGETS.roles_total &&
+    report.roles_active === TARGETS.roles_active &&
     report.legacy_roles === 0 &&
     report.afs_attributes === TARGETS.afs_attributes &&
     report.afs_features === TARGETS.afs_features &&
@@ -185,6 +210,32 @@ const AdminDurumRaporuPage = () => {
           </Card>
         )}
 
+        {/* Recent updates — plain language changelog for admins */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Megaphone className="h-5 w-5" /> Son Güncellemeler
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {UPDATES.map((u) => (
+              <div key={`${u.date}-${u.title}`} className="rounded-lg border p-4">
+                <div className="mb-2 flex flex-wrap items-center gap-2">
+                  <Badge variant="outline" className="text-xs">
+                    {u.date}
+                  </Badge>
+                  <span className="font-medium">{u.title}</span>
+                </div>
+                <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+                  {u.lines.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
         {/* Live metrics */}
         <Card>
           <CardHeader>
@@ -194,7 +245,8 @@ const AdminDurumRaporuPage = () => {
           </CardHeader>
           <CardContent>
             <AdminStatsGrid columns={4}>
-              <MetricCard label="Flat Rol" value={report?.roles_total} target={TARGETS.roles_total} />
+              <MetricCard label="Toplam Rol (pasif dahil)" value={report?.roles_total} target={TARGETS.roles_total} />
+              <MetricCard label="Aktif Rol" value={report?.roles_active} target={TARGETS.roles_active} />
               <MetricCard label="Legacy Rol (0 olmalı)" value={report?.legacy_roles} target={0} />
               <MetricCard label="AFS Attribute" value={report?.afs_attributes} target={TARGETS.afs_attributes} />
               <MetricCard label="AFS Feature" value={report?.afs_features} target={TARGETS.afs_features} />
@@ -228,7 +280,7 @@ const AdminDurumRaporuPage = () => {
               <p className="text-muted-foreground">
                 Legacy roller silinirken (016), onlara bağlı 127 üye kaydının rol linki koparıldı
                 (<code>platform_role_key</code> null'landı, <code>catalog_item_roles</code> legacy bağlantıları temizlendi).
-                Bu kayıtlar korundu ancak uygun bir flat role (örn. <code>User_Standard</code>) yeniden bağlanmalı.
+                Bu kayıtlar korundu ancak uygun bir flat role (örn. <code>User_DiasporaMember</code>) yeniden bağlanmalı.
                 Detay: <code>docs/catalog-role-afs-rebuild/12-migration-push-report.md §5</code>.
               </p>
             </CardContent>

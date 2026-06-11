@@ -67,7 +67,8 @@ Yeni kodda component içi `supabase.from()` YOK — `*-api.ts` + React Query.
 Tek sistem; legacy `profiles`/`user_profiles`/`admin_users`/`role_feature_defaults` DROP edildi.
 
 ```
-auth.users → user_role_assignments (user↔rol, TEK yer) → roles (76 FLAT rol; aile/parent YOK)
+auth.users → user_role_assignments (user↔rol, TEK yer) → roles (76 FLAT rol, 75 aktif; aile/parent YOK
+                                                          — User_Standard 2026-06-11'de User_DiasporaMember'a konsolide, pasif)
 user_profile_attributes  → tüm profil verisi attribute olarak (afs_attributes sözlüğü, 53)
 user_feature_overrides   → kullanıcı bazlı feature istisnası
 AFS kuralları: role_attributes / role_features / role_sections  (afs_features 42, afs_sections 7)

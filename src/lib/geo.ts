@@ -28,6 +28,32 @@ type GeoCityRow = {
 
 const db = supabase as any;
 
+// PostgREST tek istekte en fazla 1000 satır döndürür; büyük ülkeler (DE ~7k, US ~13k şehir)
+// için tüm sayfalar range() ile dolaşılmalı.
+const GEO_PAGE_SIZE = 1000;
+
+async function fetchAllCityRows(countryIds: string[]): Promise<GeoCityRow[]> {
+  const rows: GeoCityRow[] = [];
+  for (let offset = 0; ; offset += GEO_PAGE_SIZE) {
+    const { data, error } = await db
+      .from("geo_cities")
+      .select("name, country_id, sort_order")
+      .eq("is_active", true)
+      .in("country_id", countryIds)
+      .order("country_id", { ascending: true })
+      .order("sort_order", { ascending: true })
+      .order("name", { ascending: true })
+      .range(offset, offset + GEO_PAGE_SIZE - 1);
+
+    if (error) throw error;
+
+    const page = (data ?? []) as GeoCityRow[];
+    rows.push(...page);
+    if (page.length < GEO_PAGE_SIZE) break;
+  }
+  return rows;
+}
+
 const fallbackCountryByName = new Map(geoCountrySeeds.map((country) => [country.name, country]));
 const fallbackCountryByCode = new Map(geoCountrySeeds.map((country) => [country.code, country]));
 
@@ -117,17 +143,9 @@ export async function listGeoCities(countryNameOrCode: string): Promise<GeoCity[
     if (countries.length === 0) return [];
 
     const country = countries[0];
-    const { data, error } = await db
-      .from("geo_cities")
-      .select("name, country_id, sort_order")
-      .eq("is_active", true)
-      .eq("country_id", country.id)
-      .order("sort_order", { ascending: true })
-      .order("name", { ascending: true });
+    const rows = await fetchAllCityRows([country.id]);
 
-    if (error) throw error;
-
-    return ((data ?? []) as GeoCityRow[]).map((row) => ({
+    return rows.map((row) => ({
       countryCode: country.code,
       countryName: country.name,
       name: row.name,
@@ -161,18 +179,9 @@ export async function listGeoCitiesForCountries(countryNamesOrCodes: string[]): 
     if (countries.length === 0) return [];
 
     const countryById = new Map(countries.map((country) => [country.id, country]));
-    const { data, error } = await db
-      .from("geo_cities")
-      .select("name, country_id, sort_order")
-      .eq("is_active", true)
-      .in("country_id", countries.map((country) => country.id))
-      .order("country_id", { ascending: true })
-      .order("sort_order", { ascending: true })
-      .order("name", { ascending: true });
+    const rows = await fetchAllCityRows(countries.map((country) => country.id));
 
-    if (error) throw error;
-
-    return ((data ?? []) as GeoCityRow[])
+    return rows
       .map((row) => {
         const country = countryById.get(row.country_id);
         if (!country) return null;

@@ -42,6 +42,10 @@ const sizeClasses = {
   xs: "h-7 text-xs",
 };
 
+// Büyük ülkelerde liste 7-13k şehre çıkabiliyor; cmdk'ya hepsini render etmek
+// yerine filtre sonrası ilk MAX_RENDERED öğe basılır.
+const MAX_RENDERED = 200;
+
 const SearchableCitySelect = ({
   value,
   onChange,
@@ -58,7 +62,13 @@ const SearchableCitySelect = ({
   allOptionValue = "all",
 }: SearchableCitySelectProps) => {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const citiesQuery = useGeoCities(countryName ?? "", !externalCities);
+
+  const handleOpenChange = (next: boolean) => {
+    setOpen(next);
+    if (!next) setSearch("");
+  };
 
   const cities = useMemo(() => {
     if (externalCities) return externalCities;
@@ -73,22 +83,22 @@ const SearchableCitySelect = ({
     ? includeAllOptionLabel
     : value || "";
 
-  const optionList = useMemo(
-    () => {
-      const deduped = cities.filter((item, index) => cities.indexOf(item) === index);
-      return includeAllOptionLabel
-        ? [allOptionValue, ...deduped.filter((item) => item !== allOptionValue)]
-        : deduped;
-    },
-    [allOptionValue, cities, includeAllOptionLabel],
-  );
+  const { optionList, hiddenCount } = useMemo(() => {
+    const deduped = Array.from(new Set(cities)).filter((item) => item !== allOptionValue);
+    const matched = filterByQuery(deduped, search);
+    const visible = matched.slice(0, MAX_RENDERED);
+    const withAll = includeAllOptionLabel && !search.trim()
+      ? [allOptionValue, ...visible]
+      : visible;
+    return { optionList: withAll, hiddenCount: matched.length - visible.length };
+  }, [allOptionValue, cities, includeAllOptionLabel, search]);
 
   const valueExists = value && (value === allOptionValue || cities.includes(value));
 
   return (
     <div className={cn("relative", className)}>
       <input type="hidden" id={id} name={name} value={value} />
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
@@ -130,11 +140,8 @@ const SearchableCitySelect = ({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-          <Command filter={(itemValue, search) => {
-            const normalized = filterByQuery([itemValue], search);
-            return normalized.length > 0 ? 1 : 0;
-          }}>
-            <CommandInput placeholder="Ara..." />
+          <Command shouldFilter={false}>
+            <CommandInput placeholder="Ara..." value={search} onValueChange={setSearch} />
             <CommandList>
               <CommandEmpty>Sonuç bulunamadı</CommandEmpty>
               <CommandGroup>
@@ -156,7 +163,7 @@ const SearchableCitySelect = ({
                     value={city}
                     onSelect={() => {
                       onChange(city === value ? "" : city);
-                      setOpen(false);
+                      handleOpenChange(false);
                     }}
                   >
                     <Check
@@ -169,6 +176,11 @@ const SearchableCitySelect = ({
                   </CommandItem>
                 ))}
               </CommandGroup>
+              {hiddenCount > 0 && (
+                <div className="px-3 py-2 text-xs text-muted-foreground border-t border-border">
+                  +{hiddenCount} sonuç daha — aramayı daraltın
+                </div>
+              )}
             </CommandList>
           </Command>
         </PopoverContent>
