@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Rapor — Public Profil v2.1: Ne Yapıldı, Ne Yapabiliyorsunuz? (2026-06-11)</title>
+<title>Rapor — Cadde 3.0 E2E Rebuild: Ne Yapıldı, Nasıl Kullanılıyor? (2026-06-11)</title>
 <style>
   :root {
     --bg: #0f1115;
@@ -25,596 +25,407 @@
     font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
     line-height: 1.65;
   }
-  .wrap { max-width: 940px; margin: 0 auto; }
+  .wrap { max-width: 980px; margin: 0 auto; }
   header {
     background: radial-gradient(ellipse at top left, rgba(170,140,66,.25), transparent 60%), var(--card);
-    border: 1px solid var(--border); border-radius: 22px;
+    border: 1px solid var(--border); border-radius: 16px;
     padding: 32px 36px; margin-bottom: 28px;
   }
-  h1 { margin: 0 0 6px; font-size: 26px; }
-  .sub { color: var(--muted); font-size: 14px; }
+  header h1 { margin: 0 0 6px; font-size: 26px; }
+  header .sub { color: var(--muted); font-size: 14px; }
   .pill {
     display: inline-block; padding: 3px 12px; border-radius: 999px;
-    font-size: 12.5px; font-weight: 600; margin: 10px 6px 0 0;
+    font-size: 12px; font-weight: 600; margin: 2px 4px 2px 0;
+    border: 1px solid var(--border); background: var(--card2);
   }
-  .pill.ok { background: rgba(52,201,142,.15); color: var(--green); border: 1px solid rgba(52,201,142,.35); }
-  .pill.warn { background: rgba(224,168,58,.13); color: var(--amber); border: 1px solid rgba(224,168,58,.35); }
-  .pill.info { background: rgba(91,163,224,.13); color: var(--blue); border: 1px solid rgba(91,163,224,.35); }
-  .part {
-    margin: 40px 0 18px; padding: 14px 24px;
-    background: linear-gradient(90deg, rgba(170,140,66,.18), transparent);
-    border-left: 4px solid var(--accent); border-radius: 8px;
-  }
-  .part h2 { margin: 0; font-size: 21px; color: var(--text); }
-  .part .sub { margin-top: 2px; }
+  .pill.green { color: var(--green); border-color: rgba(52,201,142,.4); }
+  .pill.amber { color: var(--amber); border-color: rgba(224,168,58,.4); }
+  .pill.blue  { color: var(--blue);  border-color: rgba(91,163,224,.4); }
   section {
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 18px; padding: 26px 30px; margin-bottom: 22px;
+    border-radius: 16px; padding: 26px 30px; margin-bottom: 22px;
   }
-  h2 { margin: 0 0 14px; font-size: 18px; color: var(--accent); }
-  h3 { margin: 20px 0 8px; font-size: 15.5px; }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 10px 0; }
-  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
-  th { color: var(--muted); font-weight: 600; font-size: 13px; }
-  tr:last-child td { border-bottom: none; }
-  code, pre {
-    font-family: Consolas, "Cascadia Code", monospace;
+  h2 { font-size: 19px; margin: 0 0 14px; color: var(--accent); }
+  h3 { font-size: 15px; margin: 22px 0 8px; }
+  h4 { font-size: 13.5px; margin: 16px 0 6px; color: var(--blue); }
+  p, li { font-size: 14px; color: var(--text); }
+  .muted { color: var(--muted); }
+  code {
     background: var(--card2); border: 1px solid var(--border);
-    border-radius: 6px; font-size: 13px;
+    border-radius: 5px; padding: 1px 6px; font-size: 12.5px;
+    font-family: Consolas, "Courier New", monospace; color: #d8c89a;
   }
-  code { padding: 1.5px 7px; }
-  pre { padding: 14px 18px; overflow-x: auto; line-height: 1.5; }
-  pre code { background: none; border: none; padding: 0; }
-  .ok { color: var(--green); font-weight: 600; }
-  .bad { color: var(--red); font-weight: 600; }
-  .warn { color: var(--amber); font-weight: 600; }
-  ul, ol { padding-left: 22px; margin: 8px 0; }
-  li { margin: 6px 0; }
-  .timeline { list-style: none; padding: 0; margin: 0; }
-  .timeline li {
-    position: relative; padding: 0 0 16px 26px; margin: 0;
-    border-left: 2px solid var(--border); margin-left: 8px;
-  }
-  .timeline li:last-child { border-left-color: transparent; padding-bottom: 0; }
-  .timeline li::before {
-    content: ""; position: absolute; left: -7px; top: 5px;
-    width: 12px; height: 12px; border-radius: 50%;
-    background: var(--accent); border: 2px solid var(--bg);
-  }
-  .timeline .t { color: var(--muted); font-size: 12.5px; display: block; }
-  footer { text-align: center; color: var(--muted); font-size: 12.5px; margin-top: 30px; }
-  a { color: var(--accent); }
-
-  .toc { display: flex; flex-wrap: wrap; gap: 8px; }
-  .toc a {
-    display: inline-block; padding: 6px 14px; border-radius: 999px;
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 6px; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .scenario {
     background: var(--card2); border: 1px solid var(--border);
-    color: var(--text); text-decoration: none; font-size: 13px;
+    border-left: 3px solid var(--accent);
+    border-radius: 10px; padding: 14px 18px; margin: 12px 0;
   }
-  .toc a:hover { border-color: var(--accent); color: var(--accent); }
-
-  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
-  @media (max-width: 700px) { .cards { grid-template-columns: 1fr; } }
-  .mini {
-    background: var(--card2); border: 1px solid var(--border);
-    border-radius: 14px; padding: 16px 18px;
-  }
-  .mini h4 { margin: 0 0 6px; font-size: 14.5px; color: var(--accent); }
-  .mini p { margin: 0; font-size: 13.5px; color: var(--text); }
-
-  .story {
-    background: var(--card2); border: 1px solid var(--border);
-    border-left: 4px solid var(--blue);
-    border-radius: 12px; padding: 16px 20px; margin: 12px 0;
-  }
-  .story h4 { margin: 0 0 6px; font-size: 15px; color: var(--blue); }
-  .story p { margin: 4px 0; font-size: 14px; }
-  .story .who { color: var(--muted); font-size: 12.5px; }
-
-  .badge-demo {
-    display: inline-block; padding: 2px 11px; border-radius: 999px;
-    font-size: 12.5px; font-weight: 600; margin: 2px 4px 2px 0;
-    background: rgba(170,140,66,.14); color: var(--accent); border: 1px solid rgba(170,140,66,.4);
-  }
-  .screenshot-box {
-    border: 1px solid var(--border); border-radius: 14px;
-    overflow: hidden; margin: 16px 0; max-height: 720px; overflow-y: auto;
-    background: #000;
-  }
-  .screenshot-box img { width: 100%; display: block; }
-  .caption { color: var(--muted); font-size: 12.5px; text-align: center; margin-top: -8px; }
-  .lead { font-size: 15.5px; }
+  .scenario .who { font-weight: 700; font-size: 14px; }
+  .scenario .who .tag { font-weight: 600; font-size: 11.5px; color: var(--muted); margin-left: 6px; }
+  .scenario ol { margin: 8px 0 4px 18px; padding: 0; }
+  .scenario ol li { margin: 4px 0; }
+  .scenario .note { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+  ul { margin: 6px 0; padding-left: 20px; }
+  li { margin: 4px 0; }
+  .ok { color: var(--green); font-weight: 700; }
+  .warn { color: var(--amber); font-weight: 700; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 18px 0 6px; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
 <header>
-  <h1>CorteQS Public Profil v2.1 — Rapor</h1>
-  <div class="sub">2026-06-11 · Canlı adres: <a href="https://mvp.corteqs.net">mvp.corteqs.net</a> · Repo: <code>corteqssocial-web/corfin-mvp</code> @ <code>b71f209</code></div>
-  <span class="pill ok">✅ Canlıda ve doğrulandı</span>
-  <span class="pill info">📖 Bölüm A: Ne yapabiliyorsunuz? (herkes için)</span>
-  <span class="pill info">🔧 Bölüm B: Deploy doğrulama (teknik)</span>
-  <span class="pill warn">⚠️ corteqs.net eski uygulamada (ayrı karar)</span>
-  <div style="margin-top:16px" class="toc">
-    <a href="#a1">Bu sayfa nedir?</a>
-    <a href="#a2">Profil nasıl görünüyor?</a>
-    <a href="#a3">Ziyaretçi ne yapabilir?</a>
-    <a href="#a4">Üye ne yapabilir?</a>
-    <a href="#a5">Admin ne yapabilir?</a>
-    <a href="#a6">Kullanım senaryoları</a>
-    <a href="#a7">Gizlilik</a>
-    <a href="#b1">Teknik bölüm</a>
+  <h1>Cadde 3.0 — E2E Rebuild Tamamlandı 🎉</h1>
+  <div class="sub">Oturum raporu · 2026-06-10 → 2026-06-11 · repo <code>corteqs_fin</code> (main) · canlı DB <code>injprdrsklkxgnaiixzh</code></div>
+  <div style="margin-top:12px">
+    <span class="pill green">Faz 0–9 + kuyruk: TAMAM</span>
+    <span class="pill green">14 migration canlıda</span>
+    <span class="pill green">509/509 test yeşil</span>
+    <span class="pill green">build OK</span>
+    <span class="pill blue">~30 RPC / 4 yeni modül</span>
+    <span class="pill amber">3 açık kalem (bkz. §10)</span>
   </div>
 </header>
 
 <!-- ============================================================ -->
-<div class="part">
-  <h2>BÖLÜM A — Ürün: Artık Ne Yapabiliyorsunuz?</h2>
-  <div class="sub">Teknik bilgi gerektirmez. Platformdaki yeni public profil sisteminin ne işe yaradığını anlatır.</div>
-</div>
-
-<section id="a1">
-  <h2>A1. Bu iş neydi, ne çözüldü?</h2>
-  <p class="lead">
-    CorteQS bir <strong>Türk diasporası rehberi</strong>: yurt dışındaki danışmanlar, işletmeler,
-    dernekler ve bireysel üyeler platformda birer <strong>profil kartı</strong> ile yer alıyor.
-    Bu çalışmada o profil kartlarının herkese açık (public) sayfası <strong>sıfırdan, modern ve
-    tek tip bir sistemle</strong> yeniden yapıldı.
-  </p>
-  <p>En önemli iki kazanım:</p>
-  <ul>
-    <li>
-      <strong>Artık üye olmayan herkes profilleri görebiliyor.</strong> Eskiden bir profil linkini
-      Google'dan ya da WhatsApp'tan alan biri, siteye <em>giriş yapmadan</em> sayfayı göremiyordu —
-      yani rehber dışarıya kapalıydı. Bu kilit kaldırıldı: profil linki artık herkese açılıyor.
-      (Rehberin asıl amacı da bu: dışarıdan bulunabilmek.)
-    </li>
-    <li>
-      <strong>Tüm profiller tek bir akıllı şablonu kullanıyor.</strong> Üye, işletme, dernek,
-      danışman... hangi türde olursa olsun aynı düzgün sayfa düzeni açılıyor; sadece içerik ve
-      vurgu rengi değişiyor. Yeni bir profil türü eklemek için sayfayı yeniden tasarlamak gerekmiyor.
-    </li>
-  </ul>
-</section>
-
-<section id="a2">
-  <h2>A2. Profil sayfası nasıl görünüyor?</h2>
+<section>
+  <h2>1. Yönetici Özeti — Ne Yapıldı?</h2>
   <p>
-    Aşağıdaki görüntü <strong>canlı sistemden</strong> alındı (demo üye "Ayşe Yılmaz",
-    <a href="https://mvp.corteqs.net/directory/catalog/demo-uye-ayse-yilmaz">kendiniz de açabilirsiniz</a>).
-    Sayfa yukarıdan aşağıya şu parçalardan oluşuyor:
-  </p>
-
-  <div class="screenshot-box">
-    <img src="rapor-profil-ekran.png" alt="Demo profil — Ayşe Yılmaz, canlı ekran görüntüsü" />
-  </div>
-  <p class="caption">Canlı ekran görüntüsü — mvp.corteqs.net/directory/catalog/demo-uye-ayse-yilmaz (giriş yapmadan, 2026-06-11)</p>
-
-  <h3>1) Üst kart (Hero)</h3>
-  <ul>
-    <li><strong>Fotoğraf ve isim:</strong> yuvarlatılmış köşeli avatar, isim, ve ismin yanında kişinin kendini tek cümleyle anlattığı <em>başlık pili</em> (örn. "Yazılım Geliştirme ve Kariyer Mentörlüğü").</li>
-    <li><strong>Rozetler:</strong> kişinin durumunu bir bakışta anlatan etiketler:
-      <div style="margin-top:6px">
-        <span class="badge-demo">✔ Doğrulanmış</span>
-        <span class="badge-demo">💼 İş Arıyorum</span>
-        <span class="badge-demo">🤝 Gönüllü Mentör</span>
-        <span class="badge-demo">✈️ Yakında Taşınacak</span>
-        <span class="badge-demo">🏷 Sahiplenilebilir Profil</span>
-        <span class="badge-demo">🛡 Yönetilen Profil</span>
-      </div>
-      İlk üçünü üye kendisi açıp kapatır ("iş arıyorum" demek istemeyen kapatır, biter).
-      Son üçü profilin sahiplik/doğrulama durumunu gösterir.
-    </li>
-    <li><strong>Konum satırı:</strong> şehir + ülke (örn. "Dortmund, Almanya").</li>
-    <li><strong>Sosyal medya pilleri:</strong> LinkedIn, Instagram, X, GitHub, YouTube, web sitesi... tek tıkla açılır. Aynı link iki kez listelenmez, güvenli olmayan adresler otomatik elenir.</li>
-    <li><strong>Hızlı aksiyon düğmeleri:</strong> <em>Web Sitesi · E-posta · Telefon · Haritada Gör · Paylaş</em> — ziyaretçi tek tıkla iletişime geçer.</li>
-  </ul>
-
-  <h3>2) Bilgi kartları (içerik ızgarası)</h3>
-  <p>
-    Hero'nun altında bilgiler iki sütunlu, yuvarlak köşeli kartlar halinde dizilir
-    (telefonda tek sütuna iner). Demo profilde görünen kartlar:
+    <strong>Cadde</strong> (şehir bazlı diaspora sosyal akışı) iki gün içinde uçtan uca yeniden inşa edildi.
+    Tek dosyalık MVP (<code>cadde.ts</code>, 877 satır, 0 RPC) yerine artık <strong>modüler bir lib katmanı,
+    ~30 security-definer RPC, RLS ile mühürlenmiş bir veri modeli ve 6 alt modül</strong> var:
+    profil kapısı + Köprü policy, akıllı feed (CKS band/skor ranking), <strong>Cafe</strong> (süreli topluluk odaları),
+    <strong>Çarşı</strong> (üyeden üyeye pazar yeri), <strong>Tanıtım</strong> (sponsorlu görünürlük kampanyaları)
+    ve <strong>bildirim + moderasyon</strong> altyapısı. Çoklu diaspora ayrımı (tr/in/cn/ph) tüm içerik hatlarına işlendi;
+    1143 satırlık ölü legacy <code>Feed.tsx</code> hattı (22 dosya) silindi ve legacy tablolar yazmaya kapatıldı.
   </p>
   <table>
-    <tr><th>Kart</th><th>İçinde ne var?</th></tr>
-    <tr><td><strong>Hakkında</strong></td><td>Kişinin kendi ağzından tanıtım yazısı.</td></tr>
-    <tr><td><strong>Profil Bilgileri</strong></td><td>Meslek, uzmanlık alanı, sektör, çalışma şekli gibi yapılandırılmış bilgiler.</td></tr>
-    <tr><td><strong>Hizmetler</strong></td><td>Verdiği hizmetler, her biri kısa açıklamasıyla (örn. "Kariyer Mentörlüğü", "CV İncelemesi").</td></tr>
-    <tr><td><strong>Uzmanlık / Alt Tip Etiketleri</strong></td><td>Anahtar kelime etiketleri.</td></tr>
-    <tr><td><strong>İletişim</strong></td><td>Halka açık bırakılan telefon, e-posta, WhatsApp vb.</td></tr>
-    <tr><td><strong>Diller</strong></td><td>Konuştuğu diller ve seviyeleri (örn. Türkçe ana dil, Almanca C1).</td></tr>
+    <tr><th>Faz</th><th>İçerik</th><th>Commit</th><th>Migration</th></tr>
+    <tr><td>0–1</td><td>Envanter + karar dokümanları; <code>cadde.ts</code> → 8 modül; real-feed default</td><td><code>8c4c998</code>, <code>fc27b26</code></td><td>—</td></tr>
+    <tr><td>2</td><td>Actor context, profil kapısı, Köprü policy, post RPC</td><td><code>60c5baf</code></td><td>001–004</td></tr>
+    <tr><td>3</td><td>Çoklu geo filtre, ilgi alanları, band/skor ranking</td><td><code>64fbdb1</code></td><td>005–007</td></tr>
+    <tr><td>4</td><td>Cafe modülü (giriş policy'leri, detay sayfası, onay paneli)</td><td><code>48c3377</code></td><td>008</td></tr>
+    <tr><td>5</td><td>Çarşı (U2U marketplace)</td><td><code>cb116c1</code></td><td>009</td></tr>
+    <tr><td>6</td><td>Tanıtım kampanya katmanı (D-01 kararı: UI adı “Tanıtım”)</td><td><code>2f92754</code></td><td>010</td></tr>
+    <tr><td>7</td><td>Bildirim + realtime + moderasyon + ban kill-switch</td><td><code>2a69250</code></td><td>011</td></tr>
+    <tr><td>8</td><td>Çoklu diaspora (tr/in/cn/ph)</td><td><code>6d5f1e8</code></td><td>012</td></tr>
+    <tr><td>9</td><td>Legacy soft-decommission (22 dead dosya + trigger/policy temizliği)</td><td><code>3b54bb3</code></td><td>013</td></tr>
+    <tr><td>Kuyruk</td><td>Otomatik içerik taraması, eksik bildirimler, parity'ler, admin Çarşı</td><td><code>a47d247</code></td><td>014</td></tr>
   </table>
-  <p>
-    <strong>Püf noktası:</strong> boş kart hiç gösterilmez. Bilgisi az olan üyenin sayfası
-    "boş kutularla" dolu görünmez — sadece dolu kartlar çizilir. Veri girildikçe sayfa kendiliğinden zenginleşir.
-  </p>
-
-  <h3>3) Profil türüne göre fark</h3>
-  <p>
-    Bir <strong>işletme</strong> profili açıldığında aynı iskelet kullanılır ama içerik değişir:
-    rozetler yerine "Doğrulanmış İşletme", kartlarda çalışma saatleri/adres öne çıkar; vurgu rengi
-    profil türüne göre değişir (her tür kendi renk tonuyla açılır). Yani <em>tek şablon, çok kimlik</em>.
-  </p>
+  <p class="muted">14 migration'ın tamamı canlıya psql ile uygulandı, <code>schema_migrations</code>'a kayıtlı ve her biri duman testinden geçti. Canlı son sürüm: <code>20260611160000</code>.</p>
 </section>
 
-<section id="a3">
-  <h2>A3. Ziyaretçi (üye olmayan herkes) ne yapabilir?</h2>
-  <div class="cards">
-    <div class="mini">
-      <h4>🔍 Rehberde gezinir</h4>
-      <p>Dizin sayfasından danışman, işletme, dernek ve üyeleri görür; profil linkleri Google'dan ve sosyal medyadan paylaşılabilir.</p>
-    </div>
-    <div class="mini">
-      <h4>👤 Profili tam görür</h4>
-      <p>Giriş yapmadan profilin halka açık her bilgisini görür: tanıtım, hizmetler, diller, sosyal medya, iletişim.</p>
-    </div>
-    <div class="mini">
-      <h4>📞 Tek tıkla ulaşır</h4>
-      <p>"E-posta / Telefon / WhatsApp / Web Sitesi" düğmeleriyle aracısız iletişime geçer; "Haritada Gör" ile konumu açar.</p>
-    </div>
-    <div class="mini">
-      <h4>📤 Paylaşır</h4>
-      <p>"Paylaş" düğmesiyle profil linkini kopyalar veya telefonun paylaşma menüsüne gönderir.</p>
-    </div>
-    <div class="mini">
-      <h4>🏷 Profili sahiplenmeye başlar</h4>
-      <p>"Sahiplenilebilir" bir profil görürse (örn. kendi işletmesi platforma önceden eklenmişse) "Düzenleme Yetkisi Talep Et" der → üyelik kaydına yönlendirilir.</p>
-    </div>
-    <div class="mini">
-      <h4>🚫 Göremeyeceği şey</h4>
-      <p>Gizli profiller, yayından kaldırılmış kayıtlar ve üyenin "özel" işaretlediği bilgiler. Bunlar için sayfa hiçbir ipucu vermeden "bulunamadı" der.</p>
-    </div>
-  </div>
-</section>
-
-<section id="a4">
-  <h2>A4. Üye / Profil sahibi ne yapabilir?</h2>
-  <ul>
-    <li>
-      <strong>Vitrinini yönetir:</strong> tanıtım yazısı, başlık (tagline), fotoğraf, kapak görseli,
-      hizmetler, diller, sosyal medya linkleri ve iletişim bilgilerini doldurur — hepsi public sayfada
-      otomatik olarak şık kartlara dönüşür.
-    </li>
-    <li>
-      <strong>Durum rozetlerini açar/kapatır:</strong> "İş Arıyorum", "Gönüllü Mentör",
-      "Yakında Taşınacak" — birer anahtar gibi. Açınca profilinin en üstünde rozet belirir,
-      kapatınca kaybolur.
-    </li>
-    <li>
-      <strong>Neyin görüneceğine kendisi karar verir:</strong> her bilgi için "herkese açık" ya da
-      "özel" seçebilir. Özel işaretlenen şey (örn. telefon) public sayfada <u>asla</u> görünmez.
-    </li>
-    <li>
-      <strong>Kendi sayfasında yerinde düzenleme:</strong> üye kendi public profilini açtığında
-      düzenleme kalemi görür ve bilgilerini sayfadan ayrılmadan günceller (ziyaretçiler bu
-      kalemi görmez).
-    </li>
-    <li>
-      <strong>Profil sahiplenir:</strong> platforma önceden eklenmiş ama sahipsiz duran kaydı
-      (örn. kendi restoranı) "Düzenleme Yetkisi Talep Et" ile talep eder. Talep yöneticiye düşer;
-      onaylanınca profil "Yönetilen Profil" rozeti alır ve artık o kişi yönetir.
-    </li>
-  </ul>
-</section>
-
-<section id="a5">
-  <h2>A5. Admin (yönetici) ne yapabilir?</h2>
-  <p>Yöneticiler ayrı bir kontrol paneline girer ve şunları yönetir:</p>
+<!-- ============================================================ -->
+<section>
+  <h2>2. Modül Haritası — Ne Nerede?</h2>
   <table>
-    <tr><th>Yetki</th><th>Ne demek?</th></tr>
-    <tr>
-      <td><strong>Kayıt yönetimi</strong></td>
-      <td>Rehberdeki tüm profilleri (üye, işletme, dernek...) ekler, düzenler, yayınlar veya yayından
-        kaldırır. Yayından kalkan profil dış dünyaya anında kapanır.</td>
-    </tr>
-    <tr>
-      <td><strong>Sahiplenme talepleri</strong></td>
-      <td>"Bu işletme benim" diyen kullanıcıların taleplerini görür, onaylar veya reddeder.
-        Onaylanan profil o kullanıcıya bağlanır.</td>
-    </tr>
-    <tr>
-      <td><strong>Bilgi onayı</strong></td>
-      <td>Üyelerin profillerine girdiği bilgiler onay süzgecinden geçer; yalnızca onaylı bilgiler
-        public sayfada görünür (spam/uygunsuz içerik vitrine çıkamaz).</td>
-    </tr>
-    <tr>
-      <td><strong>Rol &amp; görünüm kuralları</strong></td>
-      <td>Hangi profil türünde hangi bölümlerin görüneceğini panelden belirler. Örn. "işletme
-        profillerinde çalışma saatleri bölümü görünsün" kuralı tek yerden açılır — kod yazmaya
-        gerek yoktur, sayfa kendini buna göre çizer.</td>
-    </tr>
-    <tr>
-      <td><strong>Doğrulama rozeti</strong></td>
-      <td>İncelediği profillere "Doğrulanmış" statüsü verir; bu, ziyaretçiye güven sinyalidir.</td>
-    </tr>
-    <tr>
-      <td><strong>Toplu içe aktarma</strong></td>
-      <td>Form başvurularından gelen üyeleri topluca rehbere taşır (son aktarımda 110 üye
-        public profile kavuştu).</td>
-    </tr>
-    <tr>
-      <td><strong>Yeni bölüm türü ekleme</strong></td>
-      <td>Panelden yeni bir kart türü tanımlarsa (örn. "Sertifikalar"), sayfa bu yeni kartı
-        otomatik genel bir şablonla gösterir — hiçbir şey kırılmaz; özel tasarım sonradan eklenebilir.</td>
-    </tr>
+    <tr><th>Yüzey</th><th>Rota</th><th>Ne işe yarar</th></tr>
+    <tr><td>Cadde ana akış</td><td><code>/cadde</code></td><td>Şehir bazlı feed, geo filtre, Köprü modu, composer, cafe listesi, Çarşı ticker'ı, Tanıtım rail'i, bildirim zili</td></tr>
+    <tr><td>Cafe detayı</td><td><code>/cadde/cafe/:cafeId</code></td><td>Odaya katılma (açık/onaylı/davet kodlu), cafe-içi paylaşım, üye onay paneli, read-only arşiv</td></tr>
+    <tr><td>Çarşı listesi</td><td><code>/cadde/carsi</code></td><td>Kategori filtreli ilan vitrini, “İlan Ver” formu, “İlanlarım” yönetimi</td></tr>
+    <tr><td>İlan detayı</td><td><code>/cadde/carsi/:itemId</code></td><td>İlan bilgisi, sahibin profil linki (temas bildirimi tetikler), sahip kontrolleri</td></tr>
+    <tr><td>Profil paneli</td><td><code>/profile</code></td><td>“Bireysel İlgi Alanlarım” + “Cadde İçeriklerim” (açık cafe'ler/ilanlar) + “Tanıtım Kampanyalarım”</td></tr>
+    <tr><td>Admin: Cadde</td><td><code>/admin/cadde</code></td><td>Demo/real post, cafe, billboard, sponsor CRUD'u (mevcut sayfa)</td></tr>
+    <tr><td>Admin: Tanıtım onayı</td><td><code>/admin/cadde/promotions</code></td><td>Bekleyen kampanyaları onaylama/reddetme (notlu, audit'li)</td></tr>
+    <tr><td>Admin: Moderasyon</td><td><code>/admin/cadde/moderation</code></td><td>Şikayet + otomatik tarama kuyruğu; gizle/yayınla/banla aksiyonları</td></tr>
+    <tr><td>Admin: Çarşı</td><td><code>/admin/cadde/carsi</code></td><td>Tüm ilanların durumu; gizleme/yayınlama (audit'li)</td></tr>
   </table>
+  <p class="muted">Kod düzeni: <code>src/lib/cadde-*.ts</code> (types/api/rules/format/ranking/targeting/schemas/query-keys + carsi/tanitim/notifications/moderation API'leri), <code>src/components/cadde/*</code>, <code>src/pages/cadde/*</code>, <code>src/pages/admin/cadde/routes.tsx</code>. SEO rotası <code>/cadde</code> hiç değişmedi.</p>
 </section>
 
-<section id="a6">
-  <h2>A6. Kullanım senaryoları (gerçek hayattan)</h2>
+<!-- ============================================================ -->
+<section>
+  <h2>3. Kullanım Senaryoları — Üye Tarafı</h2>
+  <p class="muted">Aşağıdaki senaryolar canlı sistemdeki gerçek akışlardır; her adımın arkasındaki kural DB'de (RPC + RLS) zorlanır, UI yalnız yol gösterir.</p>
 
-  <div class="story">
-    <h4>📦 "Berlin'e taşınıyorum, danışman lazım"</h4>
-    <p class="who">Ali — Türkiye'den Almanya'ya taşınmaya hazırlanıyor, CorteQS üyesi değil.</p>
-    <p>Ali Google'da "Berlin vize danışmanı Türk" arar, bir CorteQS profil linkine tıklar.
-    <strong>Üye olmadan</strong> danışmanın profilini açar: uzmanlık alanlarını, konuştuğu dilleri,
-    "Doğrulanmış" rozetini görür. WhatsApp düğmesine basar, ilk mesajını atar. <em>— Eski sistemde
-    bu sayfa Ali'ye hiç açılmazdı; giriş duvarına çarpardı.</em></p>
+  <div class="scenario">
+    <div class="who">🚪 Senaryo 1 — Yeni üye Caddeye çıkmak istiyor <span class="tag">profil kapısı</span></div>
+    <ol>
+      <li>Üye giriş yapıp <code>/cadde</code>'ye gelir. Sayfa tek RPC ile (<code>get_cadde_actor_context</code>) kapı durumunu okur.</li>
+      <li>Profilinde <strong>ülke veya şehir</strong> eksikse içerik buzlanır (blur) ve eksik alan listesi + “Profil Ayarlarını Tamamla” butonu görünür.</li>
+      <li>Üye <code>/profile</code>'da ülke/şehir seçer, döner; kapı açılır, gerçek akış yüklenir.</li>
+      <li>Telefon doğrulama şu an <strong>kapalı</strong> (D-03 stub). SMS sağlayıcı seçilip <code>cadde_settings.'cadde.phone_verification_required'=true</code> yapılınca aynı kapı otomatik olarak telefon da ister — kod değişikliği gerekmez.</li>
+    </ol>
+    <div class="note">Fail-open ilkesi: context okunamazsa UI kullanıcıyı kilitlemez; gerçek koruma zaten DB'dedir.</div>
   </div>
 
-  <div class="story">
-    <h4>💼 "İş arıyorum, görünür olmak istiyorum"</h4>
-    <p class="who">Ayşe — Dortmund'da yaşayan yazılım mühendisi, CorteQS üyesi.</p>
-    <p>Ayşe profilinde "İş Arıyorum" anahtarını açar, başlığına "Yazılım Geliştirme ve Kariyer
-    Mentörlüğü" yazar, LinkedIn ve GitHub linklerini ekler. Artık profilinin en üstünde 💼 rozeti
-    var; rehbere bakan bir işveren onu tek bakışta fark eder ve LinkedIn piline tıklayıp CV'sine ulaşır.
-    İş bulunca anahtarı kapatır, rozet kaybolur.</p>
+  <div class="scenario">
+    <div class="who">🌍 Senaryo 2 — Berlin'deki üye akışını kişiselleştiriyor <span class="tag">filtre + ilgi alanları + ranking</span></div>
+    <ol>
+      <li>Profilde <strong>“Bireysel İlgi Alanlarım”</strong> kartından (13 başlık: Networking, Yeni Geldim, Kariyer, …) seçim yapıp kaydeder.</li>
+      <li><code>/cadde</code>'de sol kolondaki çoklu filtreden ülke/şehir seçer (arama kutulu popover, chip'ler, “Tümünü Temizle”). Seçim URL'e yazılır (<code>?country=Almanya,Hollanda&amp;city=Berlin</code>) — link paylaşılabilir.</li>
+      <li>Feed artık DB'de sıralanır: <strong>Band A</strong> (aynı şehir + ilgi alanıyla eşleşen ihtiyaç) en üstte; sonra aynı şehir, aynı ülke, yüksek/orta etkileşimli global, kalanlar. Skor: şehir +100, ülke +60, ihtiyaç +40, ilgi alanı başına +8 (maks +32), pinned +120, tazelik +25/+15/+5.</li>
+      <li>Kalan içerikler gün boyunca sabit “deterministik random” sırada kalır — sayfayı yenilemek akışı zıplatmaz; “Daha Fazla Yükle” cursor'la tekrar/kayıp üretmez.</li>
+      <li>60 saniyede bir hafif sayım yapılır; yeni içerik varsa “<em>N yeni paylaşım — yenile</em>” chip'i çıkar (akış kendiliğinden kaymaz).</li>
+    </ol>
   </div>
 
-  <div class="story">
-    <h4>🍽 "Bu restoran benim!"</h4>
-    <p class="who">Mehmet — Köln'de restoran sahibi; işletmesi rehbere onun haberi olmadan eklenmiş.</p>
-    <p>Bir müşterisi Mehmet'e CorteQS'teki profilini gösterir. Profilde "Sahiplenilebilir Profil"
-    rozeti vardır. Mehmet "Düzenleme Yetkisi Talep Et" düğmesine basar, üye olur, talebi yöneticiye
-    düşer. Yönetici onaylayınca profil "Yönetilen Profil" olur: Mehmet artık menüsünü, çalışma
-    saatlerini ve fotoğraflarını kendisi günceller.</p>
+  <div class="scenario">
+    <div class="who">✍️ Senaryo 3 — Paylaşım yapmak <span class="tag">composer + etiket + hedef</span></div>
+    <ol>
+      <li>Composer'da tip (text/question/offer/event), başlık, mesaj girilir; <strong>1–3 etiket</strong> seçilebilir (ilki “birincil ihtiyaç” sayılır ve Band A eşleşmesini besler).</li>
+      <li><strong>Hedef ülke/şehir</strong> açıkça seçilebilir; boş bırakılırsa aktif filtredeki ilk seçim kullanılır.</li>
+      <li>Gönderim tek RPC'dir (<code>create_cadde_post_v1</code>): profil kapısı, yetki, etiket doğrulaması, TR kapsam kuralı ve diaspora ayrımı DB'de doğrulanır. Hatalar kullanıcıya Türkçe döner (ör. “Türkiye yerleşik üyeler normal Cadde'de yalnız Türkiye kapsamına paylaşabilir…”).</li>
+    </ol>
   </div>
 
-  <div class="story">
-    <h4>🤝 "Yeni gelenlere yardım etmek istiyorum"</h4>
-    <p class="who">Zeynep — Hamburg'da 10 yıldır yaşıyor, gönüllü mentörlük yapmak istiyor.</p>
-    <p>Zeynep profilinde "Gönüllü Mentör" anahtarını açar. Hamburg'a yeni taşınan biri rehberde
-    onu bulur, profilindeki "Hizmetler" kartında "Yeni Gelen Oryantasyonu"nu görür ve e-posta
-    düğmesiyle ulaşır. Para değil, topluluk bağı kurulur — platformun asıl amacı.</p>
+  <div class="scenario">
+    <div class="who">🌉 Senaryo 4 — Köprü akışı: TR'den taşınmayı planlayan üye <span class="tag">CKS §7.2 truth table</span></div>
+    <ol>
+      <li>İstanbul'daki bireysel üye Köprü anahtarını açıp paylaşmayı dener → reddedilir.</li>
+      <li>Profil rozetlerinden <strong>“Türkiye'den Taşınma Planı”</strong>nı (indiv_relocating) açar → Köprü paylaşımı artık geçer.</li>
+      <li>TR'deki işletme/danışman/kuruluş/elçi için koşul farklıdır: <strong>“Dijital Topluluk Aktif”</strong> (digital_community_enabled) rozeti gerekir.</li>
+      <li>Diaspora yerleşik üye her zaman Köprü'ye paylaşabilir; admin/moderatör override eder.</li>
+    </ol>
+    <div class="note">Aynı truth table hem SQL'de (<code>can_post_kopru</code>) hem TS'te (<code>cadde-rules.ts</code>) durur ve 10 senaryoluk testle kilitlidir.</div>
   </div>
 
-  <div class="story">
-    <h4>🏛 "Derneğimizi platforma ekleyelim"</h4>
-    <p class="who">Yönetici — CorteQS ekibinden.</p>
-    <p>Yönetici panelden yeni bir dernek kaydı açar, türünü "dernek" seçer. Sistem dernek rolüne
-    tanımlı bölümleri (hakkında, etkinlikler, iletişim...) otomatik uygular; yönetici bilgileri
-    girip "yayınla" der. Dernek sayfası saniyeler içinde, diğer tüm profillerle aynı kalitede
-    dış dünyaya açılır. Dernek başkanı sonradan profili sahiplenebilir.</p>
+  <div class="scenario">
+    <div class="who">☕ Senaryo 5 — Cafe açmak ve yönetmek <span class="tag">host akışı</span></div>
+    <ol>
+      <li>“Aktif Cafeler” başlığındaki <strong>“+ Cafe Aç”</strong> ile tek form açılır: ad (küfür/URL/spam ön-denetimli), tema, özet, Köprü/ülke/şehir kapsamı, <strong>giriş tipi</strong> (Açık / Onaylı+soru / Davet kodlu), süre (1–6 saat), kapasite, dış link.</li>
+      <li>Davet kodu asla düz metin saklanmaz (sha256 hash). Host otomatik onaylı üye olur; oluşturunca detay sayfasına yönlenir.</li>
+      <li>Onaylı girişli cafe'de gelen talepler host'a <strong>bildirim</strong> düşürür; detay sayfasındaki “Üye Onay Paneli”nden yanıtlarıyla birlikte onaylanır/reddedilir (kapasite kontrolü dahil).</li>
+      <li>Cafe bitmeden 30 dk önce host ve onaylı üyelere <strong>“yakında kapanıyor”</strong> bildirimi gider (10 dakikalık pg_cron işi canlıda zamanlı).</li>
+      <li>Host istediği an “Cafe'yi Arşivle” der; oda <strong>read-only arşive</strong> döner — yeni katılım ve paylaşım kapanır, geçmiş okunur.</li>
+      <li>Günlük limitler: cafe açma 3/gün, katılım 10/gün (ayarlardan değiştirilebilir; admin muaf).</li>
+    </ol>
   </div>
 
-  <div class="story">
-    <h4>🔒 "Telefonum herkeste olmasın"</h4>
-    <p class="who">Bir üye — iletişim bilgisi konusunda hassas.</p>
-    <p>Üye telefonunu "özel" olarak işaretler, e-postasını açık bırakır. Public sayfasında telefon
-    düğmesi hiç görünmez, e-posta düğmesi görünür. CV'si ve davet kodu gibi hassas veriler ise
-    sistem tarafından <u>hiçbir koşulda</u> public sayfaya çıkarılmaz — bu, tasarımın kuralıdır,
-    üyenin hatasıyla bile sızamaz (testlerle doğrulandı).</p>
+  <div class="scenario">
+    <div class="who">🙋 Senaryo 6 — Cafe'ye katılmak <span class="tag">giriş policy'leri (CKS §7.3)</span></div>
+    <ol>
+      <li>Cadde'deki cafe kartından “İncele &amp; Katıl” ile detaya gidilir.</li>
+      <li><strong>Açık</strong> cafe: tek tık. <strong>Onaylı</strong>: giriş sorusu yanıtlanır, “Onay Bekliyor” durumuna düşer. <strong>Davet kodlu</strong>: kod girilir (hash karşılaştırması DB'de).</li>
+      <li>Ülke policy'si: Köprü cafe'ye doğrulanmış herkes; <strong>Türkiye cafe'sine yalnız TR yerleşik</strong>; kapasite doluysa katılım kapanır.</li>
+      <li>Onaylanan üye <strong>bildirim alır</strong>, cafe-içi composer açılır; bu paylaşımlar yalnız cafe akışında görünür (ana feed'e sızmaz).</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">🛍️ Senaryo 7 — Çarşı: ikinci el masa satmak <span class="tag">satıcı akışı</span></div>
+    <ol>
+      <li><code>/cadde/carsi</code>'da “İlan Ver”: kategori (İkinci El, Oda Kiralama, Ders/Eğitim, Hizmet, Etkinlik Bileti, Hediye/Bağış, Diğer), başlık, açıklama, fiyat+para birimi (0 = Ücretsiz), ülke/şehir, görsel URL'leri.</li>
+      <li>İlan anında yayınlanır ve <strong>30 gün</strong> sonra kendiliğinden görünmez olur (süre ayarlardan). Aktif ilan limiti <strong>5</strong> (D-07 premium kademesi gelince ayarla yükselir).</li>
+      <li>“İlanlarım” bölümünden <strong>Pasife Al / Yayına Al / Sil</strong> tek tıktır; profil panelindeki “Cadde İçeriklerim” kartı da ilanları özetler.</li>
+      <li>Bir alıcı ilan detayından profilini ziyaret ettiğinde satıcıya <strong>“İlanınla ilgilenen var”</strong> bildirimi düşer (kişi+ilan başına 24 saatte 1).</li>
+    </ol>
+    <div class="note">D-01 sözleşmesi: Çarşı (üyeler arası pazar) ile Tanıtım (sponsorlu reklam) ayrı tablolar, ayrı paneller — asla karışmaz.</div>
+  </div>
+
+  <div class="scenario">
+    <div class="who">🛒 Senaryo 8 — Çarşı: alıcı gözünden <span class="tag">keşif</span></div>
+    <ol>
+      <li>Cadde sol kolonunun en üstündeki <strong>Çarşı ticker'ı</strong> seçili şehre göre son ilanları yatay şeritte gösterir; “Tüm Çarşı” tam listeye götürür.</li>
+      <li>Listede kategori chip'leriyle daraltılır (URL'e yazılır); karta tıklanınca detayda fiyat, konum, görseller ve güvenlik notlu iletişim kutusu görülür.</li>
+      <li>“Profilini ziyaret et” ile satıcının public profiline geçilir; platform içi mesajlaşma önerilir.</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">📣 Senaryo 9 — İşletme Tanıtım kampanyası açıyor <span class="tag">sponsorlu görünürlük</span></div>
+    <ol>
+      <li>Yetki feature iledir (<code>cadde.promotion.create</code> — işletme/danışman/kuruluş/blogger rolleri): profilde <strong>“Tanıtım Kampanyalarım”</strong> paneli görünür.</li>
+      <li>“Yeni Kampanya”: tip, başlık, açıklama, <strong>hedef URL (zorunlu)</strong>, görsel, placement seçimi (sağ kolon / akış içi / cafe tema kolonu / ana sayfa AI bar [maks 3 ay] / kategori ilk ekran).</li>
+      <li>Kampanya <strong>“Onay bekliyor”</strong> durumunda admin kuyruğuna düşer. Onaylanınca (bildirimle haber verilir) tarih aralığında otomatik yayınlanır.</li>
+      <li>Yayında: sağ kolonda <strong>Tanıtım rail'i</strong>, akışta her 4 organik postta bir <strong>sponsor kartı</strong> (kampanya başına feed'de en çok 2; iki sponsor asla art arda gelmez; “Sponsorlu” rozeti kaldırılamaz). Dış linkler güvenli sekmede açılır.</li>
+      <li>Panelde <strong>gösterim/tıklama</strong> sayıları canlı izlenir (oturum başına 1 impression; kişi+kampanya başına saatte 30 olay sınırı — aşım sessizce yoksayılır, kullanıcı deneyimi kırılmaz).</li>
+      <li><strong>Şehir Elçisi</strong> özel durumu: ücretli paket görmez; <code>cadde.city.highlight_free</code> ile yalnız kendi şehrinin “öne çıkarma” placement'ında ücretsiz kampanya açabilir.</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">🔔 Senaryo 10 — Bildirimler <span class="tag">zil + realtime</span></div>
+    <ol>
+      <li>Cadde üst navigasyonundaki <strong>zil</strong> okunmamış rozetini taşır; dropdown son 20 bildirimi listeler.</li>
+      <li>Üretilen olaylar: paylaşımına yorum/reaksiyon, cafe katılım talebi (host'a), üyelik onayı/reddi, kampanya onayı/reddi, ilan teması, cafe kapanış uyarısı, moderasyon aksiyonu.</li>
+      <li>Bildirime tıklamak ilgili sayfaya götürür (cafe→detay, ilan→detay, kampanya→profil) ve okundu işaretler; “Tümünü okundu işaretle” tek tıktır.</li>
+      <li>Realtime yalnız <strong>kendi satırlarını</strong> dinler (<code>user_id=eq.&lt;uid&gt;</code>) — global stream açılmaz; sahte bildirim üretmek imkânsızdır (insert yalnız DB producer'larından).</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">🚩 Senaryo 11 — Uygunsuz içerik görmek <span class="tag">şikayet</span></div>
+    <ol>
+      <li>Post kartındaki bayrak ikonuna basılır (kendi postunda görünmez), kısa sebep yazılır (3–200 karakter).</li>
+      <li>Şikayet moderasyon kuyruğuna düşer; aynı içerik için tekrar şikayetler <strong>rapor sayacını</strong> artırır (kuyruk şişmez). Kişi başı 10 şikayet/gün sınırı kötüye kullanımı keser.</li>
+      <li>Ayrıca sistem her yeni post/yorum/cafe/ilanı <strong>otomatik tarar</strong> (küfür, parti propagandası, kumar/yetişkin spam'i, aşırı tekrar, 3+ URL) — yayını engellemez, şüpheliyi <code>auto:</code> etiketiyle kuyruğa düşürür. Karar her zaman insandadır.</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">🌐 Senaryo 12 — Diaspora değiştirmek <span class="tag">tr / in / cn / ph</span></div>
+    <ol>
+      <li>Global diaspora seçici “in” (Hint) diasporasına alındığında Cadde'nin feed'i, cafe'leri, Çarşı'sı ve Tanıtım kartları <strong>yalnız o diasporanın içeriğini</strong> gösterir — TR içeriği sızmaz (eşitlik filtresi DB'de).</li>
+      <li>O sırada üretilen post/cafe/ilan/kampanya da otomatik o diasporaya yazılır; cafe-içi postlar diasporayı odadan miras alır.</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">⛔ Senaryo 13 — Banlı üye <span class="tag">kill-switch</span></div>
+    <ol>
+      <li>Moderatör ban verdiğinde üye <strong>okumaya devam eder</strong> ama tüm yazma işlemleri (post, yorum, reaksiyon, cafe, ilan, kampanya, şikayet) tek noktadan kapanır — ban kontrolü feature çözümlemesinin (<code>has_cadde_feature</code>) içindedir.</li>
+      <li>Denemelerde Türkçe net mesaj alır: “Hesabın Cadde'de kısıtlanmış durumda.” Süreli ban (örn. 7 gün) dolduğunda her şey kendiliğinden açılır.</li>
+    </ol>
   </div>
 </section>
 
-<section id="a7">
-  <h2>A7. Gizlilik &amp; güven — basitçe</h2>
+<!-- ============================================================ -->
+<section>
+  <h2>4. Kullanım Senaryoları — Admin / Moderatör Tarafı</h2>
+
+  <div class="scenario">
+    <div class="who">🛡️ Senaryo A — Moderasyon kuyruğunu işlemek <span class="tag">/admin/cadde/moderation</span></div>
+    <ol>
+      <li>Kuyruk; kullanıcı şikayetleri + otomatik tarama kayıtlarını (entity tipi filtresi ve rapor sayısıyla) listeler.</li>
+      <li>Aksiyonlar: <strong>Kapat</strong> (sorun yok), <strong>Gizle</strong> (post→hidden, yorum→silinir, cafe→arşiv, ilan→pasif+ret), <strong>Geri Yayınla</strong>, <strong>Sahibini Banla (7g)</strong>. Audit notu karar kaydına ve içerik sahibine giden bildirime işlenir.</li>
+      <li>Her karar <code>resolved_by</code> + not ile loglanır; gizleme/ban içerik sahibine bildirim düşürür.</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">✅ Senaryo B — Tanıtım kampanyası onaylamak <span class="tag">/admin/cadde/promotions</span></div>
+    <ol>
+      <li>Bekleyen kampanyalar başlık, hedef URL (tıklanıp denetlenebilir), placement ve tarihleriyle listelenir.</li>
+      <li>“Onayla” → kampanya tarih aralığında rail/feed'de otomatik görünmeye başlar. “Reddet” → yazılan not sahibinin panelinde kırmızı görünür. İki durumda da sahibine bildirim gider.</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">🏪 Senaryo C — Çarşı'yı denetlemek <span class="tag">/admin/cadde/carsi</span></div>
+    <ol>
+      <li>Tüm ilanlar (taslak/pasif/ret dahil) durum filtreleriyle listelenir.</li>
+      <li>“Gizle” / “Yayınla” aksiyonları moderasyon RPC'sinden geçer — yani audit'lidir ve sahibine bildirim üretir.</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">🗺️ Senaryo D — Cadde'yi yeni şehirlere genişletmek <span class="tag">geo kataloğu (D-04)</span></div>
+    <ol>
+      <li>Cadde kendi mini ülke/şehir kataloğunda yaşar (postlar yalnız bu kapsamda); 251 ülke / ~77.000 şehirlik global geo referansına <strong>bağ kolonlarıyla</strong> bağlıdır.</li>
+      <li>Admin, SQL'siz tek çağrıyla genişletir: <code>select admin_import_cadde_geo_v1('FR', array['Paris','Lyon']);</code> → ülke ve şehirler geo kataloğundan doğrulanarak Cadde'ye eklenir (bulunamayan adlar yanıtta raporlanır).</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">⚙️ Senaryo E — Ürün ayarı değiştirmek <span class="tag">cadde_settings — kod gerekmez</span></div>
+    <ol>
+      <li>Tüm limitler tek tablodadır; örn. ilan limitini yükseltmek: <code>update cadde_settings set value='10' where key='cadde.carsi.active_item_limit';</code></li>
+      <li>Telefon zorunluluğunu açmak (SMS sağlayıcı hazır olduğunda): <code>...set value='true' where key='cadde.phone_verification_required';</code> — kapı, cafe ve TR-telefon kuralları otomatik devreye girer.</li>
+    </ol>
+    <table>
+      <tr><th>Anahtar</th><th>Default</th><th>Ne kontrol eder</th></tr>
+      <tr><td><code>cadde.phone_verification_required</code></td><td>false</td><td>Profil kapısı + cafe telefon şartları (D-03)</td></tr>
+      <tr><td><code>cadde.cafe.daily_create_limit / daily_join_limit / max_duration_hours</code></td><td>3 / 10 / 6</td><td>Cafe açma-katılma-süre sınırları (D-06)</td></tr>
+      <tr><td><code>cadde.carsi.active_item_limit / default_expiry_days</code></td><td>5 / 30</td><td>Çarşı ilan limiti ve ömrü (D-07)</td></tr>
+      <tr><td><code>cadde.comment.minute_limit / reaction.minute_limit / report.daily_limit</code></td><td>5 / 30 / 10</td><td>Spam frenleri (§18.3)</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <h2>5. Güvenlik Mimarisi — Neden Güvenli?</h2>
   <ul>
-    <li><strong>Beyaz liste mantığı:</strong> public sayfaya çıkan her bilgi tek tek "çıkabilir" diye işaretlenmiş alanlardan seçilir. Varsayılan davranış <em>göstermemek</em>tir; unutulan bir şey "kazara" görünmez.</li>
-    <li><strong>Hassas veri sınıfı:</strong> CV, özel telefon, davet/referans kodu gibi alanlar sistem seviyesinde "özel kasa"dadır — public sayfa bu kasaya hiç bakmaz bile.</li>
-    <li><strong>Sessiz "bulunamadı":</strong> gizli ya da yayında olmayan bir profilin linkini açan kişi, profilin var olup olmadığını dahi anlayamaz; nötr bir "bulunamadı" sayfası görür.</li>
-    <li><strong>Onay süzgeci:</strong> üyelerin girdiği bilgiler yönetici onayından geçmeden vitrine çıkmaz.</li>
-    <li><strong>Güvenli linkler:</strong> profil sahibinin eklediği web linkleri süzgeçten geçer; zararlı/bozuk adresler ayıklanır.</li>
-    <li><strong>Demo ile kanıtlandı:</strong> "Ayşe Yılmaz" demo profili bilerek hem dolu (20 açık bilgi) hem de tuzaklı (CV/telefon gibi gizli alanlar kasıtlı boş) kuruldu; canlıda sızıntı olmadığı ölçülerek doğrulandı.</li>
+    <li><strong>RPC-only mutation:</strong> içerik üreten her işlem security-definer RPC'den geçer; tablolarda kullanıcıya açık INSERT policy'si kalmadı. UI atlatılsa bile kural atlatılamaz.</li>
+    <li><strong>Çift katman doğrulama:</strong> Zod şemaları (Türkçe mesajlı) ilk hat; DB ikinci ve bağlayıcı hat. Sabit hata kodları (<code>cadde_*</code>) tek haritadan Türkçe'ye çevrilir.</li>
+    <li><strong>SQL ↔ TS ayna sözleşmeleri:</strong> Köprü truth table'ı, feed band/skoru ve cafe giriş kuralı hem SQL'de hem TS'te birebir durur ve testlidir — birini değiştiren diğerini de güncellemek zorundadır.</li>
+    <li><strong>Ban kill-switch:</strong> tek fonksiyonda (<code>has_cadde_feature</code>); yeni eklenen her yazma RPC'si otomatik kapsanır.</li>
+    <li><strong>Bildirim bütünlüğü:</strong> gevşek “herkes insert edebilir” policy'si kaldırıldı; bildirimler yalnız DB producer'larından doğar, realtime yalnız sahibinin kanalını dinler.</li>
+    <li><strong>Telefon truth source:</strong> <code>user_verifications</code> dışa tamamen kapalı; ham <code>phone</code> attribute'u asla doğrulama sayılmaz.</li>
+    <li><strong>Sessiz hata yok:</strong> okuma hataları telemetri + throttle'lı tek toast ile raporlanır ve boş sonuç döner — real akış asla demo veriye düşmez.</li>
   </ul>
 </section>
 
 <!-- ============================================================ -->
-<div class="part" id="b1">
-  <h2>BÖLÜM B — Teknik: Deploy Doğrulama Raporu</h2>
-  <div class="sub">2026-06-11 oturumunun teşhis ve doğrulama kaydı. Teknik okuyucular için.</div>
-</div>
-
 <section>
-  <h2>B1. Özet (TL;DR)</h2>
-  <p>
-    2026-06-10 handoff'unda tek açık iş olarak bırakılan <strong>"corteqs.net deploy'u düşmüyor"</strong>
-    sorunu çözüldü: deploy aslında <span class="ok">baştan beri çalışıyordu</span>, ancak doğrulama
-    <span class="bad">yanlış domain'e</span> (corteqs.net) karşı yapılıyordu. Bu repo'nun Coolify
-    uygulaması <strong><a href="https://mvp.corteqs.net">mvp.corteqs.net</a></strong> adresinde yayında.
-    Güncel main (<code>b71f209</code>) canlıda; public profil v2.1 işi uçtan uca tamamlandı ve
-    anon erişimle gerçek tarayıcıda doğrulandı.
-  </p>
-</section>
-
-<section>
-  <h2>B2. Başlangıç Durumu</h2>
-  <p>Handoff notuna göre kod/DB/test tarafı %100 bitmişti; sadece deploy bekliyordu:</p>
-  <ul>
-    <li>Canlı corteqs.net 2 günlük build servis ediyordu: <code>Last-Modified: 08 Jun 2026 21:48</code>, asset <code>main-0r4KkAVF.js</code>, ETag <code>6a2738aa</code>.</li>
-    <li>4+ main push'una rağmen bu değerler hiç değişmemişti.</li>
-    <li>Şüphe: Coolify webhook'u kopuk veya eski repoyu (<code>ubterzioglu/corteqslanding</code>) izliyor.</li>
-  </ul>
-</section>
-
-<section>
-  <h2>B3. Teşhis Süreci (adım adım)</h2>
-  <ol class="timeline" style="margin-top:14px">
-    <li>
-      <span class="t">Adım 1 — Canlı ölçüm tekrarı</span>
-      corteqs.net tekrar ölçüldü: hâlâ 8 Haziran build'i. Local main = origin/main (<code>b71f209</code>), push edilecek bir şey yok.
-      Repo'da Coolify token/webhook anahtarı da yok → panelsiz tetikleme imkânsız.
-    </li>
-    <li>
-      <span class="t">Adım 2 — Coolify panel ekran görüntüsü (kullanıcı paylaştı)</span>
-      Sürpriz: deploy'lar <span class="ok">Success</span>! Dün 19:07'de webhook ile, bugün 06:43'te manuel olarak
-      <code>b71f209</code> deploy edilmiş. Yani "webhook kopuk" hipotezi <span class="bad">yanlıştı</span>.
-    </li>
-    <li>
-      <span class="t">Adım 3 — Çelişkinin analizi</span>
-      Deploy başarılı ama corteqs.net değişmiyor. Kontroller:
+  <h2>6. Veri Modeli Özeti</h2>
+  <div class="grid2">
+    <div>
+      <h4>Yeni / genişletilen tablolar</h4>
       <ul>
-        <li><strong>DNS:</strong> corteqs.net → <code>87.106.222.106</code> = Coolify sunucusunun kendisi (doğru sunucu).</li>
-        <li><strong>Dockerfile:</strong> build sonrası <code>nginx:1.27-alpine</code> ile servis — canlıdaki <code>Server: nginx/1.27.5</code> başlığıyla uyumlu.</li>
-        <li><strong>Lokal build karşılaştırması:</strong> güncel kodun bundle'ı <code>main-DVApv7Oe.js</code> ≠ canlıdaki <code>main-0r4KkAVF.js</code> → canlı kesinlikle eski kod.</li>
+        <li><code>user_verifications</code>, <code>cadde_settings</code></li>
+        <li><code>cadde_interest_catalog</code> + user/post interests</li>
+        <li><code>cadde_posts</code>: need_category, engagement_score, published_at, cafe_id, visibility, diaspora_key</li>
+        <li><code>cadde_cafes</code>: slug, tema, entry_mode, kod hash'i, soru, kapasite, arşiv</li>
+        <li><code>carsi_categories</code> + <code>carsi_items</code></li>
+        <li><code>cadde_promotion_*</code> (katalog + kampanya + placement + event)</li>
+        <li><code>notifications</code> genişletme; <code>cadde_reports</code> / <code>cadde_moderation_queue</code> / <code>cadde_user_bans</code></li>
       </ul>
-      Sonuç: deploy edilen uygulama ile corteqs.net'i servis eden uygulama <strong>farklı</strong>.
-    </li>
-    <li>
-      <span class="t">Adım 4 — Çözüm (kullanıcı bilgisi)</span>
-      Uygulamanın gerçek adresi: <strong>mvp.corteqs.net</strong>. Ölçüm: <code>Last-Modified: 10 Jun 2026 19:08</code>
-      = dünkü <code>b71f209</code> webhook deploy'unun tam kendisi. <span class="ok">Güncel kod canlıda.</span>
-    </li>
-  </ol>
+    </div>
+    <div>
+      <h4>Ana RPC'ler</h4>
+      <ul>
+        <li><code>get_cadde_actor_context</code>, <code>list_cadde_feed_v1</code></li>
+        <li><code>create_cadde_post_v1</code>, <code>create_cadde_comment_v1</code>, <code>toggle_cadde_reaction_v1</code></li>
+        <li><code>create/join/approve/archive _cadde_cafe_v1</code>, <code>can_join_cadde_cafe</code></li>
+        <li><code>create/update/delete_carsi_item_v1</code>, <code>record_carsi_contact_v1</code></li>
+        <li><code>create_cadde_promotion_campaign_v1</code>, <code>admin_review_cadde_promotion_v1</code>, <code>list_cadde_promotions_v1</code>, <code>record_cadde_promotion_event_v1</code></li>
+        <li><code>report_cadde_entity_v1</code>, <code>admin_moderate_cadde_entity_v1</code>, <code>admin_import_cadde_geo_v1</code></li>
+      </ul>
+    </div>
+  </div>
+  <p class="muted">Legacy durum: <code>feed_posts / feed_likes / cafes / cafe_memberships / user_follows</code> yazmaya kapalı, policy'siz, COMMENT'li; 7 legacy trigger silindi. DROP, en az bir canary sürüm gözlendikten sonra ayrı kararla (user_follows'taki 1 satır R-06 notuyla).</p>
 </section>
 
+<!-- ============================================================ -->
 <section>
-  <h2>B4. Doğrulama Sonuçları (mvp.corteqs.net)</h2>
+  <h2>7. Doğrulama Durumu</h2>
   <table>
     <tr><th>Kontrol</th><th>Sonuç</th></tr>
-    <tr>
-      <td>Canlı build güncelliği</td>
-      <td><span class="ok">✅</span> <code>Last-Modified: 10 Jun 2026 19:08</code>, asset <code>main-DUOkOvcb.js</code> (= <code>b71f209</code>)</td>
-    </tr>
-    <tr>
-      <td><code>npm run verify:release</code><br><span class="sub">(BASE_URL=https://mvp.corteqs.net)</span></td>
-      <td><span class="ok">✅ PASSED</span> — main JS/CSS + 5 muhasebe chunk'ı uzaktan erişilebilir, lokal dist tutarlı</td>
-    </tr>
-    <tr>
-      <td><code>/env-config.js</code> runtime injection</td>
-      <td><span class="ok">✅</span> Doğru Supabase URL + anon key + project ID servis ediliyor</td>
-    </tr>
-    <tr>
-      <td>Demo profil — anon, gerçek tarayıcı<br><span class="sub">(headless Chromium / Playwright)</span></td>
-      <td>
-        <span class="ok">✅</span> <a href="https://mvp.corteqs.net/directory/catalog/demo-uye-ayse-yilmaz">/directory/catalog/demo-uye-ayse-yilmaz</a><br>
-        H1 = "Ayşe Yılmaz"; hero + rozetler (İş Arıyorum / Gönüllü Mentör / Yakında Taşınacak) + sosyal pilleri +
-        2 sütunlu kart ızgarası tam render. <strong>0 console hatası, 0 başarısız istek (4xx/5xx yok).</strong><br>
-        → v2 RPC'nin <em>anon</em> erişimi canlıda çalışıyor (v2.1'in ana hedefi).<br>
-        Ekran görüntüsü: <code>rapor-profil-ekran.png</code> (Bölüm A2'de gömülü)
-      </td>
-    </tr>
+    <tr><td>Vitest (unit + component)</td><td><span class="ok">509 / 509 yeşil</span> — band/skor truth table'ları, Köprü 10 senaryosu, cafe giriş kuralları, cursor tekrar/kayıp, şema sınırları, sayfa smoke'ları</td></tr>
+    <tr><td><code>npm run build</code></td><td><span class="ok">OK</span> (svgo uyarısı önceden var, zararsız)</td></tr>
+    <tr><td>ESLint (değişen dosyalar)</td><td><span class="ok">Temiz</span> (repodaki ~451 eski hata B7 backlog'u — bu çalışmayla ilgisiz)</td></tr>
+    <tr><td>Canlı DB duman testleri</td><td><span class="ok">14/14 migration doğrulandı</span> — katalog seed'leri, RPC imzaları, RLS durumları, cron işi (<code>cadde-cafe-expiring */10</code>), diaspora izolasyonu</td></tr>
+    <tr><td>Playwright persona matrisi</td><td><span class="warn">Açık</span> — manuel/e2e koşum ayrı kalem (spec §22.4)</td></tr>
   </table>
 </section>
 
+<!-- ============================================================ -->
 <section>
-  <h2>B5. Önemli Bulgular &amp; Notlar</h2>
-  <ul>
-    <li>
-      <strong class="warn">corteqs.net hâlâ 8 Haziran build'inde.</strong> Aynı sunucudaki ayrı/eski bir
-      uygulamadan servis ediliyor ve bu repo'nun push'larıyla <u>güncellenmiyor</u>. Ana domain'in akıbeti
-      (eski uygulamayı kapatıp mvp'ye yönlendirme vs. ayrı landing olarak bırakma) açık bir karar konusu.
-    </li>
-    <li>
-      <strong>18 saniyelik deploy normal:</strong> aynı commit'in redeploy'unda Docker tamamen layer cache'ten
-      döner; <code>Last-Modified</code> değişmez. Bu bir hata göstergesi değil.
-    </li>
-    <li>
-      <strong>Kod değişikliği yapılmadı:</strong> bu oturum salt teşhis + doğrulama idi. Çalışma ağacındaki
-      uncommitted dosyalar paralel admin-v2 oturumuna ait, dokunulmadı.
-    </li>
-    <li>
-      <strong>Hafızaya kaydedildi:</strong> bundan sonraki tüm deploy doğrulamaları
-      <code>mvp.corteqs.net</code>'e karşı yapılacak (<code>project_deploy_target_mvp_corteqs_net.md</code>).
-    </li>
-  </ul>
-</section>
-
-<section>
-  <h2>B6. Hızlı Referans — Deploy Doğrulama Komutları</h2>
-  <pre><code># Canlı build güncel mi?
-curl -sI https://mvp.corteqs.net/ | findstr Last-Modified
-
-# Release doğrulaması
-$env:BASE_URL = "https://mvp.corteqs.net"; npm run verify:release
-
-# Demo profil (tarayıcıda)
-https://mvp.corteqs.net/directory/catalog/demo-uye-ayse-yilmaz</code></pre>
-</section>
-
-<section>
-  <h2>B7. Kalan Backlog (bu görevin parçası değildi)</h2>
-  <ul>
-    <li>corteqs.net ana domain kararı: eski uygulama kapatılacak mı / mvp'ye mi yönlenecek?</li>
-    <li>E2E süitini CI'a bağlama (GitHub Actions yok).</li>
-    <li>Pre-existing lint borcu: admin sayfalarında 452 <code>no-explicit-any</code> (refactor backlog B7).</li>
-    <li><code>IndividualPublicView</code> / <code>usePublicIndividualProfile</code> test-only orphan audit'i.</li>
-    <li>Gerçek üye profillerinin attribute/iletişim verilerinin zenginleştirilmesi.</li>
-  </ul>
-</section>
-
-<section>
-  <h2>B8. Admin Panel V2 — AdminPageLayout Tasfiyesi (ayrı oturum, 2026-06-11)</h2>
-  <p>
-    Admin V2 handoff'unda backlog olarak duran <strong>"AdminPageLayout → AdminPageShell geçişi
-    (34 sayfa)"</strong> maddesi ele alındı. İnceleme, iddianın büyük ölçüde hayalet olduğunu gösterdi —
-    iş tamamlandı ve legacy <code>AdminPageLayout</code> bileşeni repodan tamamen kaldırıldı.
-  </p>
-
-  <h3>Yapılanlar</h3>
+  <h2>8. Önemli Kararlar (D-xx)</h2>
   <table>
-    <tr><th>İş</th><th>Detay</th></tr>
-    <tr>
-      <td>Ölü import temizliği</td>
-      <td><span class="ok">29 dosya</span> — component import edilip hiç kullanılmıyordu; 2'sinde
-        (<code>AdminAdvisorLinksPage</code>, <code>AdminAttributesPage</code>) üstelik <strong>duplicate
-        import</strong> vardı (eski base repo kalıntısı). 31 satır silindi.</td>
-    </tr>
-    <tr>
-      <td>Orphan sayfa silme</td>
-      <td><span class="ok">3 sayfa + 2 test</span> — <code>AdminEntityPreviewPage</code>,
-        <code>AdminRolesPreviewPage</code>, <code>AdminRolesListPage</code> hiçbir route'tan import
-        edilmiyordu; URL'leri zaten redirect (<code>admin-route-meta.ts</code>: roles-list →
-        guide#rol-listesi, roles/entity-preview → role-matrix).</td>
-    </tr>
-    <tr>
-      <td>Shell geçişi</td>
-      <td><code>AdminRolesOverviewPage</code> → <code>AdminPageShell</code> ("AFS Genel Bakış",
-        Layers ikonu, emerald accent — navigasyon registry ile birebir). Sayfadaki 8 pre-existing
-        <code>any</code> da temizlendi (6'sı lokal satır tipi, 2'si B1 kaynaklı bilinçli cast →
-        eslint-disable + açıklama).</td>
-    </tr>
-    <tr>
-      <td>Özel layout koruması</td>
-      <td><code>AdminNewMemberGuidePage</code>'in sol sticky TOC'lu iki kolonlu düzeni shell'in
-        sağ-aside modeline uymuyor → wrapper birebir eşdeğer inline container'a alındı; görsel
-        davranış değişmedi. Tam shell geçişi opsiyonel tasarım işi olarak backlog'da.</td>
-    </tr>
-    <tr>
-      <td>Bileşen silme</td>
-      <td><code>src/components/admin/AdminPageLayout.tsx</code> <span class="ok">silindi</span> —
-        repoda 0 referans.</td>
-    </tr>
+    <tr><th>Karar</th><th>Sonuç</th></tr>
+    <tr><td>D-01 Çıfıt adı</td><td><span class="ok">KARAR</span> — UI'da “Tanıtım”; kod/tablo prefix'i <code>cadde_promotion_*</code>; Çarşı ile asla birleşmez</td></tr>
+    <tr><td>D-02 Anonim erişim</td><td>Login zorunlu; sosyal SELECT'ler authenticated</td></tr>
+    <tr><td>D-03 SMS/OTP</td><td><span class="warn">Stub</span> — şema/kapı hazır, flag kapalı; sağlayıcı seçimi ürün sahibinde</td></tr>
+    <tr><td>D-04 cadde↔geo</td><td>Bağ kolonları + admin import RPC'si; tam konsolidasyon P2</td></tr>
+    <tr><td>D-06 / D-07 limitler</td><td>Tamamı <code>cadde_settings</code>'te — ürün kararı SQL'siz uygulanır; premium kademesi açık</td></tr>
   </table>
+</section>
 
-  <h3>Doğrulama &amp; Teslimat</h3>
-  <table>
-    <tr><th>Kontrol</th><th>Sonuç</th></tr>
-    <tr><td>Unit test</td><td><span class="ok">✅ 469/469</span> (96 dosya — silinen 2 orphan test dosyasının 17 testi düştü)</td></tr>
-    <tr><td>Build</td><td><span class="ok">✅ exit 0</span> (svgo uyarısı pre-existing)</td></tr>
-    <tr><td>Lint + tsc (dokunulan dosyalar)</td><td><span class="ok">✅ 0 hata</span></td></tr>
-    <tr><td>Commit + push</td><td><span class="ok">✅</span> <code>466d32c</code> — <code>refactor(admin): AdminPageLayout tasfiyesi</code>, 39 dosya (+250/−790), origin/main'e push edildi</td></tr>
-    <tr>
-      <td>Supabase migration durumu</td>
-      <td><span class="ok">✅ Canlı şema güncel ve repo ile birebir senkron</span> — en yeni migration
-        (<code>20260611100000</code> cadde 008) dahil hepsi canlıda. Tek fark olan
-        <code>20260609050000_fix_search_directory_catalog_post_legacy_drop</code> dosyası kullanıcı onayıyla
-        <strong>repodan silindi</strong>: ledger'da hiç kaydı yoktu, SQL'i superseded'di (fonksiyon sonraki
-        rebuild 010c + 010e'de yeniden tanımlı), hiçbir ara migration ona bağımlı değildi → sıfırdan kurulumda
-        da son durum aynı. Sonuç: repo 233 = canlı 233.</td>
-    </tr>
-  </table>
-
-  <h3>Kalan</h3>
+<!-- ============================================================ -->
+<section>
+  <h2>9. Bilinen Sınırlar</h2>
   <ul>
-    <li><strong>Gerçek cihaz QA</strong> (Admin V2'nin tek açık DoD kalemi): iOS Safari / Android Chrome'da dokunma + canlı veri spot kontrolü.</li>
-    <li>Backlog (Admin V2 dışı): B1 types regen, B5 auth shim (~38 import), AdminCatalogPage RQ taşıması.</li>
+    <li>Çarşı görselleri URL ile eklenir (dosya upload akışı yok).</li>
+    <li>Tanıtım'ın <code>homepage-ai-bar</code> / <code>category-first-screen</code> placement'ları katalogda hazır; o sayfalarda henüz render yüzeyi yok.</li>
+    <li>“Açık Cafe” public profil <em>yüzeyi</em> (directory catalog composer'ına bölüm olarak) açık; panel parity tamam.</li>
+    <li>Canlı içerik şu an %100 TR diasporası ve demo seed ağırlıklı — IN/CN/PH gerçek içerikle test edilmedi.</li>
+    <li>İzole tek <code>db as any</code> cast'i <code>cadde-internal.ts</code>'te B1 (types regen) bekliyor.</li>
   </ul>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <h2>10. Açık Kalemler — Sırada Ne Var?</h2>
+  <table>
+    <tr><th>Kalem</th><th>Durum / yapılacak</th></tr>
+    <tr><td>B1 — <code>supabase gen types</code></td><td><span class="warn">Token bekliyor</span>: <code>.env.local</code>'daki <code>SUPABASE_ACCESS_TOKEN</code> (+backup) Management API'de “Unauthorized”. Token yenilenince: <code>npx supabase gen types typescript --project-id injprdrsklkxgnaiixzh &gt; src/integrations/supabase/types.ts</code> → build doğrula → <code>db as any</code> cast'ini kaldır.</td></tr>
+    <tr><td>D-03 — SMS sağlayıcı</td><td>Ürün kararı (Twilio/Vonage/Supabase phone). Seçilince: <code>send/verify-phone-otp</code> Edge Function'ları + flag=true; başka değişiklik gerekmez.</td></tr>
+    <tr><td>Legacy DROP</td><td>En az 1 canary sürüm gözle → ayrı karar dokümanı + DROP migration'ı (user_follows 1 satırı not düşülerek).</td></tr>
+    <tr><td>İkincil</td><td>Public profil “Açık Cafe” yüzeyi · ai-bar/kategori placement yüzeyleri · Playwright personaları · D-07 premium kademesi · billboard→kampanya geçişi (P2)</td></tr>
+  </table>
 </section>
 
 <footer>
-  Rapor: Claude Code oturumu · 2026-06-11 · Public Profil v2.1 — fonksiyonel genel bakış + deploy doğrulaması + Admin V2 AdminPageLayout tasfiyesi
+  Cadde 3.0 E2E Rebuild · 2026-06-11 · Detay: <code>docs/cadde-300/change-report.md</code> + <code>00000 CADDE_3_0_HANDOFF_DEVIR_NOTU.md</code>
 </footer>
 
 </div>
