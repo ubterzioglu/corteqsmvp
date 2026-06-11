@@ -15,7 +15,7 @@
 | **Faz 0** — Inventory + 4 doküman | ✅ TAMAM | `8c4c998` içine süpürüldü (bkz. §6 uyarı) |
 | **Faz 1** — `cadde.ts` modülerleştirme, real default, telemetri | ✅ TAMAM | `8c4c998` (impl) + `fc27b26` (testler) |
 | **Faz 2** — Actor context + profil kapısı + Köprü policy (RPC+RLS) | ✅ TAMAM | `60c5baf` |
-| **Faz 3** — Çoklu geo filtre + interests + ranking | ✅ KOD TAMAM — ⚠️ migration 005-007 CANLIYA HENÜZ UYGULANMADI (bkz. §5) | (bu oturum) |
+| **Faz 3** — Çoklu geo filtre + interests + ranking | ✅ TAMAM (migration 005-007 canlıya uygulandı + schema_migrations kayıtlı, 2026-06-11) | `64fbdb1` |
 | **Faz 4 Cafe** | ⬜ **SIRADAKİ** | — |
 | Faz 5 Çarşı · Faz 6 Tanıtım · Faz 7 bildirim/moderasyon · Faz 8 diaspora · Faz 9 legacy temizlik | ⬜ | — |
 
@@ -75,18 +75,18 @@ supabase/migrations/20260610182000_cadde300_003_actor_context.sql
 supabase/migrations/20260610183000_cadde300_004_post_rpc_rls.sql
 ```
 
-### Migrations — Faz 3 (⚠️ repoda hazır, CANLIYA HENÜZ UYGULANMADI — bkz. §5)
+### Migrations — Faz 3 (✅ CANLIYA UYGULANDI + schema_migrations kayıtlı, 2026-06-11)
 ```text
 supabase/migrations/20260610184000_cadde300_005_interests.sql   → katalog+13 seed, user/post interests,
     cadde_posts(need_category, engagement_score, published_at), engagement trigger'ları,
-    create_cadde_post_v1 YENİ İMZA (eski 6-arg DROP edilir; +p_need_category, +p_interests)
+    create_cadde_post_v1 YENİ İMZA (eski 6-arg DROP edildi; +p_need_category, +p_interests)
 supabase/migrations/20260610185000_cadde300_006_geo_sync.sql    → D-04 link kolonları + backfill +
     admin_import_cadde_geo_v1(country_code, city_names[])
 supabase/migrations/20260610186000_cadde300_007_feed_rpc.sql    → list_cadde_feed_v1(filters,cursor,limit)
 ```
-⚠️ Bu üçü uygulanana kadar canlıda: composer etiket gönderimi `create_cadde_post_v1` parametre
-uyuşmazlığıyla, feed okuması `list_cadde_feed_v1` bulunamadığıyla düşer (reportCaddeApiError → boş feed).
-Yani Faz 3 kodu deploy edilmeden ÖNCE migration'lar canlıya girmeli.
+Duman testi sonuçları (2026-06-11): katalog=13 satır; `list_cadde_feed_v1('{}',null,5)` anon bağlamda
+hatasız boş döndü (D-02 gereği); 3 mevcut post published_at backfill'li; 5/5 ülke geo_country_id bağlı;
+cadde şehirlerinden 5/6 geo_city_id bağlı ("Londra" geo'da "London" olduğundan boşta — kozmetik).
 
 ---
 
@@ -134,21 +134,12 @@ psql -h aws-1-eu-west-2.pooler.supabase.com -p 5432 -U postgres.injprdrsklkxgnai
 
 ---
 
-## 5. SIRADAKİ İŞ: (a) Faz 3 migration'larını canlıya uygula → (b) FAZ 4 Cafe
+## 5. SIRADAKİ İŞ: FAZ 4 — Cafe
 
-### (a) ⚠️ İLK İŞ: Faz 3 migration'larını canlıya uygula
-Faz 3 kodu commit'li ama 005-007 migration'ları canlıda DEĞİL (psql erişimi izin gerektirdi).
-§4'teki komutla sırayla uygula:
-```text
-20260610184000_cadde300_005_interests.sql
-20260610185000_cadde300_006_geo_sync.sql
-20260610186000_cadde300_007_feed_rpc.sql
-```
-+ her biri için `insert into supabase_migrations.schema_migrations(version, name) values ('<version>', '<dosya-adı>');`
-Sonra duman testi: `select public.list_cadde_feed_v1('{}'::jsonb, null, 5);` (authenticated bağlamı yoksa
-boş items döner — hata atmaması yeterli) ve `select count(*) from cadde_interest_catalog;` (=13).
+(Faz 3 migration'ları 2026-06-11'de canlıya uygulandı ve doğrulandı — §2'deki duman testi notuna bak.
+Canlıdaki son migration artık `20260610186000`; yeni migration'lar `20260611*`+ ile gelmeli.)
 
-### (b) FAZ 4 — Cafe
+### FAZ 4 — Cafe
 Plan: `docs/cadde-300/03-implementation-plan.md` "Faz 4" + spec §13.
 - Migration: `cadde_cafes` genişletme (slug, theme_key, entry_mode open/approval/referral, referral_code_hash,
   entry_question, capacity, archived_at + check'ler); `cadde_cafe_members` genişletme (status, answer,
