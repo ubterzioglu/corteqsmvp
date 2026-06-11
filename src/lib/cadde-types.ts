@@ -277,6 +277,8 @@ export type CaddeCafeCreateInput = {
   endsAt?: string;
   capacity?: number;
   externalLinks?: string[];
+  /** Faz 8: diaspora ayrımı (tr/in/cn/ph, default tr). */
+  diasporaKey?: string;
 };
 
 export type CaddeCafeJoinResult = {
@@ -425,6 +427,8 @@ export type CaddePromotionPlacementInput = {
   country?: string;
   city?: string;
   themeKeys?: string[];
+  /** Faz 8: placement diaspora'sı (default tr). */
+  diaspora?: string;
 };
 
 export type CaddePromotionCreateInput = {
@@ -453,6 +457,8 @@ export type CaddePostInput = {
   interests?: string[];
   /** Cafe-içi paylaşım: hedef cafe id'si (geo cafe'den miras alınır, visibility='cafe'). */
   cafeId?: string;
+  /** Faz 8: diaspora ayrımı (tr/in/cn/ph, default tr; cafe postu cafe'den miras alır). */
+  diasporaKey?: string;
 };
 
 export type CaddeAdminPostInput = {

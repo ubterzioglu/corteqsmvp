@@ -8,6 +8,7 @@ import { ArrowRight, ShoppingBag } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { formatCarsiPrice, listCarsiItems } from "@/lib/cadde-carsi-api";
+import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import type { CaddeFilterState } from "@/lib/cadde-types";
 
@@ -16,9 +17,10 @@ interface CarsiGlobalTickerProps {
 }
 
 const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
+  const diasporaKey = useCaddeDiasporaKey();
   const itemsQuery = useQuery({
-    queryKey: caddeQueryKeys.carsiItems({ countries: filters.countries, cities: filters.cities }),
-    queryFn: () => listCarsiItems({ countries: filters.countries, cities: filters.cities }, 10),
+    queryKey: caddeQueryKeys.carsiItems({ countries: filters.countries, cities: filters.cities, diasporaKey }),
+    queryFn: () => listCarsiItems({ countries: filters.countries, cities: filters.cities, diasporaKey }, 10),
   });
 
   const items = itemsQuery.data ?? [];

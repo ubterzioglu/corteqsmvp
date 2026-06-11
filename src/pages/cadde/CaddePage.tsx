@@ -12,6 +12,7 @@ import NotificationsBell from "@/components/cadde/NotificationsBell";
 import PromotionRail from "@/components/cadde/PromotionRail";
 import SponsoredFeedCard from "@/components/cadde/SponsoredFeedCard";
 import { useCaddeActorContext } from "@/hooks/cadde/useCaddeActorContext";
+import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -98,6 +99,7 @@ const CaddePage = () => {
   const [composer, setComposer] = useState(emptyComposer);
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const filters = useMemo(() => parseCaddeFilters(searchParams), [searchParams]);
+  const diasporaKey = useCaddeDiasporaKey();
   const actorContextQuery = useCaddeActorContext(Boolean(session));
 
   useEffect(() => {
@@ -125,15 +127,15 @@ const CaddePage = () => {
   });
 
   const feedQuery = useInfiniteQuery({
-    queryKey: caddeQueryKeys.feed(filters, user?.id ?? null),
+    queryKey: caddeQueryKeys.feed(filters, user?.id ?? null, diasporaKey),
     initialPageParam: null as CaddeFeedPageParam,
-    queryFn: ({ pageParam }) => listCaddeFeed(filters, pageParam, user?.id ?? null),
+    queryFn: ({ pageParam }) => listCaddeFeed(filters, pageParam, user?.id ?? null, diasporaKey),
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 
   const cafesQuery = useQuery({
-    queryKey: caddeQueryKeys.cafes(filters, user?.id ?? null),
-    queryFn: () => listCaddeCafes(filters, user?.id ?? null),
+    queryKey: caddeQueryKeys.cafes(filters, user?.id ?? null, diasporaKey),
+    queryFn: () => listCaddeCafes(filters, user?.id ?? null, diasporaKey),
   });
 
   const billboardsQuery = useQuery({
@@ -147,8 +149,8 @@ const CaddePage = () => {
   });
 
   const feedPromotionsQuery = useQuery({
-    queryKey: caddeQueryKeys.promotions("cadde-feed-inline", { countries: filters.countries, cities: filters.cities }),
-    queryFn: () => listCaddePromotions("cadde-feed-inline", { countries: filters.countries, cities: filters.cities }, 5),
+    queryKey: caddeQueryKeys.promotions("cadde-feed-inline", { countries: filters.countries, cities: filters.cities, diaspora: diasporaKey }),
+    queryFn: () => listCaddePromotions("cadde-feed-inline", { countries: filters.countries, cities: filters.cities, diaspora: diasporaKey }, 5),
   });
 
   const invalidateCadde = async () => {
@@ -171,6 +173,7 @@ const CaddePage = () => {
         cityId: filters.cities[0] ?? "",
         isBridge: filters.bridge,
         interests: composer.interests,
+        diasporaKey,
       });
     },
     onSuccess: async () => {

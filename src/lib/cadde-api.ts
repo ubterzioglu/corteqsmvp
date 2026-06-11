@@ -124,7 +124,7 @@ export async function listCaddeCities(countryNames: string[] = []): Promise<Cadd
  * random ve stabil cursor pagination DB'de hesaplanır (TS aynası: cadde-ranking.ts).
  * Demo mod istemci tarafında sayfa numarasıyla çalışmaya devam eder.
  */
-export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeFeedPageParam, currentUserId: string | null): Promise<CaddeFeedPage> {
+export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeFeedPageParam, currentUserId: string | null, diasporaKey = "tr"): Promise<CaddeFeedPage> {
   if (!isSupabaseConfigured || filters.mode === "demo") {
     const page = typeof pageParam === "number" ? pageParam : 1;
     const filtered = applyDemoFilters(DEMO_POSTS, filters);
@@ -140,6 +140,7 @@ export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeF
         countries: filters.countries,
         cities: filters.cities,
         bridge: filters.bridge,
+        diaspora: diasporaKey,
       },
       p_cursor: cursor,
       p_limit: CADDE_PAGE_SIZE,
@@ -251,7 +252,7 @@ function mapRpcPost(
 const CAFE_SELECT_COLUMNS =
   "id, host_user_id, host_name_override, title, summary, country_id, city_id, content_mode, status, is_bridge, is_free, starts_at, ends_at, is_active, created_at, slug, theme_key, entry_mode, entry_question, capacity, external_links, archived_at";
 
-export async function listCaddeCafes(filters: CaddeFilterState, currentUserId: string | null): Promise<CaddeCafe[]> {
+export async function listCaddeCafes(filters: CaddeFilterState, currentUserId: string | null, diasporaKey = "tr"): Promise<CaddeCafe[]> {
   if (!isSupabaseConfigured || filters.mode === "demo") {
     return applyDemoFilters(DEMO_CAFES, filters);
   }
@@ -265,6 +266,7 @@ export async function listCaddeCafes(filters: CaddeFilterState, currentUserId: s
       .eq("content_mode", "real")
       .eq("status", "published")
       .eq("is_active", true)
+      .eq("diaspora_key", diasporaKey)
       .order("starts_at", { ascending: true });
     if (filters.bridge) query = query.eq("is_bridge", true);
     if (countryIds.length > 0) query = query.in("country_id", countryIds);
@@ -520,6 +522,7 @@ export async function createCaddePost(input: CaddePostInput): Promise<string> {
     p_need_category: needCategory,
     p_interests: interests,
     p_cafe_id: parsed.cafeId ?? null,
+    p_diaspora_key: parsed.diasporaKey ?? "tr",
   });
   if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
   return data as string;
@@ -675,6 +678,7 @@ export async function createCaddeCafe(input: CaddeCafeCreateInput): Promise<stri
     p_ends_at: parsed.endsAt ?? null,
     p_capacity: parsed.capacity ?? null,
     p_external_links: parsed.externalLinks ?? [],
+    p_diaspora_key: parsed.diasporaKey ?? "tr",
   });
   if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
   return data as string;

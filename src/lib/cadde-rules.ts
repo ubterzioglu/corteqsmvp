@@ -169,6 +169,8 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
   cadde_entity_not_found: "İçerik bulunamadı.",
   cadde_moderation_permission_denied: "Bu işlem yalnız moderatörlere açık.",
   cadde_invalid_moderation_action: "Geçersiz moderasyon aksiyonu.",
+  // Faz 8 (mig 012) — Çoklu diaspora
+  cadde_invalid_diaspora: "Geçersiz diaspora seçimi.",
 };
 
 /** Supabase RPC hatasını kullanıcıya gösterilebilir mesaja çevirir. */

@@ -28,6 +28,7 @@ import {
   updateCarsiItem,
 } from "@/lib/cadde-carsi-api";
 import { listCaddeCities, listCaddeCountries } from "@/lib/cadde-api";
+import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import type { CarsiItem, CarsiItemStatus } from "@/lib/cadde-types";
 
@@ -60,10 +61,11 @@ const CaddeCarsiPage = () => {
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
 
+  const diasporaKey = useCaddeDiasporaKey();
   const categoriesQuery = useQuery({ queryKey: caddeQueryKeys.carsiCategories, queryFn: listCarsiCategories });
   const itemsQuery = useQuery({
-    queryKey: caddeQueryKeys.carsiItems({ countries: [], cities: [], categoryKey: categoryKey || undefined }),
-    queryFn: () => listCarsiItems({ countries: [], cities: [], categoryKey: categoryKey || undefined }),
+    queryKey: caddeQueryKeys.carsiItems({ countries: [], cities: [], categoryKey: categoryKey || undefined, diasporaKey }),
+    queryFn: () => listCarsiItems({ countries: [], cities: [], categoryKey: categoryKey || undefined, diasporaKey }),
   });
   const myItemsQuery = useQuery({
     queryKey: caddeQueryKeys.myCarsiItems(user?.id ?? null),
@@ -92,6 +94,7 @@ const CaddeCarsiPage = () => {
         priceCurrency: form.price.trim() ? form.currency : undefined,
         country: form.country || undefined,
         city: form.city || undefined,
+        diasporaKey,
       }),
     onSuccess: async () => {
       setFormOpen(false);

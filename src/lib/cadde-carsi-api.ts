@@ -98,6 +98,8 @@ export type CarsiListFilters = {
   countries: string[];
   cities: string[];
   categoryKey?: string;
+  /** Faz 8: diaspora ayrımı (default tr) — bir diaspora'nın ilanı diğerine sızmaz. */
+  diasporaKey?: string;
 };
 
 /** Yayında + onaylı ilanlar (yeniden eskiye). RLS süresi dolanları sahibi dışında zaten gizler. */
@@ -112,6 +114,7 @@ export async function listCarsiItems(filters: CarsiListFilters, limit = 60): Pro
       .select(ITEM_SELECT_COLUMNS)
       .eq("status", "published")
       .eq("moderation_status", "approved")
+      .eq("diaspora_key", filters.diasporaKey ?? "tr")
       .is("deleted_at", null)
       .order("created_at", { ascending: false })
       .limit(limit);
@@ -178,6 +181,7 @@ export async function createCarsiItem(input: CarsiItemCreateInput): Promise<stri
     p_city: parsed.city ?? "",
     p_image_urls: parsed.imageUrls ?? [],
     p_contact_mode: parsed.contactMode ?? "platform",
+    p_diaspora_key: parsed.diasporaKey ?? "tr",
   });
   if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
   return data as string;

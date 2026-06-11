@@ -18,6 +18,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { createCaddeCafe, listCaddeCities, listCaddeCountries } from "@/lib/cadde-api";
+import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import { moderateCaddeCafeName } from "@/lib/cadde-rules";
 import type { CaddeCafeEntryMode } from "@/lib/cadde-types";
@@ -56,6 +57,7 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
+  const diasporaKey = useCaddeDiasporaKey();
 
   const countriesQuery = useQuery({ queryKey: caddeQueryKeys.countries(), queryFn: listCaddeCountries, enabled: open });
   const citiesQuery = useQuery({
@@ -87,6 +89,7 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
         endsAt: ends.toISOString(),
         capacity: form.capacity.trim() ? Number(form.capacity) : undefined,
         externalLinks: form.externalLink.trim() ? [form.externalLink.trim()] : undefined,
+        diasporaKey,
       });
     },
     onSuccess: async (cafeId) => {

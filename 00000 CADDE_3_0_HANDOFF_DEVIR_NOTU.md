@@ -20,8 +20,18 @@
 | **Faz 5 Çarşı** | ✅ TAMAM (migration 009 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `cb116c1` |
 | **Faz 6 Tanıtım** | ✅ TAMAM (D-01 KARAR: UI "Tanıtım"; migration 010 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `2f92754` |
 | **Faz 7 bildirim/moderasyon** | ✅ TAMAM (migration 011 canlıya uygulandı + schema_migrations kayıtlı + duman testleri geçti, 2026-06-11) | `2a69250` |
-| **Faz 8 diaspora** | ⬜ **SIRADAKİ** | — |
-| Faz 9 legacy temizlik | ⬜ | — |
+| **Faz 8 diaspora** | ✅ KOD TAMAM — migration 012 canlıya uygulanma durumunu §2'den kontrol et | (bu oturum) |
+| **Faz 9 legacy temizlik** | 🔄 BU OTURUMDA | — |
+
+**Faz 8 özeti:** `cadde_posts.diaspora_key` eklendi (cafes/carsi/placements'ta Faz 4-6'da zaten vardı);
+4 tabloya tr/in/cn/ph CHECK'i. Feed + promotion RPC'leri diaspora EŞİTLİK filtresi uygular
+(p_filters->>'diaspora', default 'tr' — bir diaspora'nın içeriği diğerine sızmaz, §16.1);
+cafe/carsi listeleri istemcide `.eq("diaspora_key", ...)`. create_cadde_post_v1 (10-arg) /
+create_cadde_cafe_v1 (14-arg) / create_carsi_item_v1 (10-arg) `p_diaspora_key` aldı (eski imzalar
+DROP; cafe postu diaspora'yı cafe'den miras alır); kampanya placement jsonb'sinde `diaspora` alanı.
+Frontend: `useCaddeDiasporaKey()` (DiasporaContext'ten; provider'sız render'da 'tr' fallback —
+testler kırılmaz) tüm Cadde sorgu/mutation'larına bağlandı; query key'lere diaspora eklendi.
+Hata kodu: `cadde_invalid_diaspora`.
 
 **Faz 7 özeti:** `notifications` GENİŞLETİLDİ (R-03; yeni tablo yok): actor_user_id/entity_type/payload;
 gevşek insert policy kaldırıldı — üretim yalnız `cadde_notify` definer'ından (yorum/reaksiyon→post sahibi,

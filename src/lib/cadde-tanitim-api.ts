@@ -165,6 +165,7 @@ export async function createPromotionCampaign(input: CaddePromotionCreateInput):
       country: placement.country ?? null,
       city: placement.city ?? null,
       themeKeys: placement.themeKeys ?? [],
+      diaspora: placement.diaspora ?? "tr",
     })),
   });
   if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
@@ -183,7 +184,7 @@ export async function adminReviewPromotion(campaignId: string, approve: boolean,
 /** Placement bazlı tüketim kartları (rail / feed-inline / cafe). */
 export async function listCaddePromotions(
   placementKey: string,
-  filters: { countries: string[]; cities: string[] },
+  filters: { countries: string[]; cities: string[]; diaspora?: string },
   limit = 5,
 ): Promise<CaddePromotionCard[]> {
   if (!isSupabaseConfigured) return [];
@@ -191,7 +192,7 @@ export async function listCaddePromotions(
   try {
     const { data, error } = await db.rpc("list_cadde_promotions_v1", {
       p_placement_key: placementKey,
-      p_filters: { countries: filters.countries, cities: filters.cities },
+      p_filters: { countries: filters.countries, cities: filters.cities, diaspora: filters.diaspora ?? "tr" },
       p_limit: limit,
     });
     if (error) throw error;

@@ -10,6 +10,7 @@ import { Megaphone } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { useCaddeActorContext } from "@/hooks/cadde/useCaddeActorContext";
+import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -79,7 +80,7 @@ const CaddeTanitimPanel = () => {
         description: form.description,
         targetUrl: form.targetUrl,
         imageUrl: form.imageUrl.trim() || undefined,
-        placements: form.placementKeys.map((key) => ({ key })),
+        placements: form.placementKeys.map((key) => ({ key, diaspora: diasporaKey })),
       }),
     onSuccess: async () => {
       setFormOpen(false);

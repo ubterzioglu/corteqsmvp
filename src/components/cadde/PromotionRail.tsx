@@ -5,6 +5,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import SponsoredFeedCard from "@/components/cadde/SponsoredFeedCard";
+import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
@@ -15,7 +16,8 @@ interface PromotionRailProps {
 }
 
 const PromotionRail = ({ filters }: PromotionRailProps) => {
-  const geoFilters = { countries: filters.countries, cities: filters.cities };
+  const diasporaKey = useCaddeDiasporaKey();
+  const geoFilters = { countries: filters.countries, cities: filters.cities, diaspora: diasporaKey };
   const promotionsQuery = useQuery({
     queryKey: caddeQueryKeys.promotions("cadde-right-rail", geoFilters),
     queryFn: () => listCaddePromotions("cadde-right-rail", geoFilters, 3),

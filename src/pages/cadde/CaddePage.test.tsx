@@ -146,6 +146,7 @@ describe("CaddePage", () => {
         expect.objectContaining({ mode: "real" }),
         null,
         "user-1",
+        "tr",
       );
     });
   });
@@ -169,6 +170,7 @@ describe("CaddePage", () => {
         expect.objectContaining({ mode: "real" }),
         null,
         "user-1",
+        "tr",
       );
     });
   });

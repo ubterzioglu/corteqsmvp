@@ -28,6 +28,7 @@ export const caddePostCreateSchema = z.object({
     .max(3, "En fazla 3 etiket seçebilirsin.")
     .optional(),
   cafeId: z.string().trim().min(1).optional(),
+  diasporaKey: z.enum(["tr", "in", "cn", "ph"]).optional(),
 });
 
 const httpUrl = z
@@ -51,6 +52,7 @@ export const caddeCafeCreateSchema = z
     endsAt: z.string().optional(),
     capacity: z.number().int().min(1, "Kapasite 1'den küçük olamaz.").optional(),
     externalLinks: z.array(httpUrl).max(3, "En fazla 3 dış link ekleyebilirsin.").optional(),
+    diasporaKey: z.enum(["tr", "in", "cn", "ph"]).optional(),
   })
   .superRefine((value, ctx) => {
     if (value.entryMode === "referral" && (value.referralCode ?? "").length < 4) {
@@ -80,6 +82,7 @@ export const carsiItemCreateSchema = z.object({
   city: z.string().optional(),
   imageUrls: z.array(httpUrl).max(6, "En fazla 6 görsel ekleyebilirsin.").optional(),
   contactMode: z.enum(["platform", "phone", "email"]).optional(),
+  diasporaKey: z.enum(["tr", "in", "cn", "ph"]).optional(),
 });
 
 export const caddePromotionCreateSchema = z
@@ -102,6 +105,7 @@ export const caddePromotionCreateSchema = z
           country: z.string().optional(),
           city: z.string().optional(),
           themeKeys: z.array(z.string().trim().min(1)).optional(),
+          diaspora: z.enum(["tr", "in", "cn", "ph"]).optional(),
         }),
       )
       .min(1, "En az bir placement seç.")
