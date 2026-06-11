@@ -1,0 +1,956 @@
+<!-- AUTO-GENERATED from info-strategic-partner.html by scripts/extract-commercial-docs.mjs. -->
+<!-- Edit the source document and re-run the script instead of editing this file. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+.cdoc :where(*),
+.cdoc :where(*)::before,
+.cdoc :where(*)::after { all: revert; }
+.cdoc { position: relative; isolation: isolate; overflow: clip; }
+.cdoc {
+      --navy:#061A34;
+      --deep:#031022;
+      --blue:#0078D4;
+      --cyan:#00A6D6;
+      --orange:#FF7A00;
+      --yellow:#FFC400;
+      --green:#58B800;
+      --white:#FFFFFF;
+      --soft:#F4FAFF;
+      --muted:#6B7A90;
+      --card:rgba(255,255,255,.86);
+      --line:rgba(0,120,212,.18);
+      --shadow:0 24px 70px rgba(3,16,34,.16);
+      --radius:28px;
+    }
+
+    .cdoc, .cdoc * { box-sizing:border-box; }
+    .cdoc { scroll-behavior:smooth; }
+    .cdoc {
+      margin:0;
+      font-family:"Manrope", "Aptos", "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif;
+      font-size:15px;
+      color:var(--navy);
+      background:
+        radial-gradient(circle at 18% 10%, rgba(0,166,214,.22), transparent 28%),
+        radial-gradient(circle at 90% 0%, rgba(255,122,0,.18), transparent 26%),
+        radial-gradient(circle at 75% 82%, rgba(88,184,0,.16), transparent 22%),
+        linear-gradient(180deg, #ffffff 0%, #f5fbff 44%, #ffffff 100%);
+      overflow-x:hidden;
+    }
+
+    .cdoc::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(0,120,212,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,120,212,.045) 1px, transparent 1px);
+      background-size:52px 52px;
+      mask-image:linear-gradient(to bottom, black, transparent 85%);
+      z-index:-2;
+    }
+
+    .cdoc .orbit-bg {
+      position:absolute;
+      width:740px;
+      height:740px;
+      border:2px solid rgba(255,122,0,.16);
+      border-radius:50%;
+      top:-300px;
+      right:-250px;
+      z-index:-1;
+    }
+    .cdoc .orbit-bg::before,
+.cdoc .orbit-bg::after {
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      border:2px solid rgba(0,120,212,.13);
+      inset:90px;
+    }
+    .cdoc .orbit-bg::after {
+      inset:190px;
+      border-color:rgba(88,184,0,.16);
+    }
+
+    .cdoc .container {
+      width:min(100% - 24px, 1160px);
+      margin:0 auto;
+    }
+
+    .cdoc .hero {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:26px;
+      align-items:center;
+      padding:26px 0 28px;
+    }
+
+    .cdoc .eyebrow {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:9px 14px;
+      border:1px solid rgba(255,122,0,.26);
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(255,196,0,.18), rgba(0,166,214,.12));
+      font-weight:850;
+      color:#12365c;
+      margin-bottom:20px;
+    }
+
+    .cdoc .pulse {
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 0 8px rgba(88,184,0,.15);
+    }
+
+    .cdoc h1 {
+      margin:0;
+      font-size:clamp(34px, 11vw, 68px);
+      line-height:.96;
+      letter-spacing:-.075em;
+      color:var(--navy);
+      font-weight:800;
+    }
+
+    .cdoc .gradient-text {
+      background:linear-gradient(90deg, var(--blue), var(--cyan), var(--orange));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .cdoc .lead {
+      font-size:clamp(15px, 4.2vw, 20px);
+      line-height:1.55;
+      color:#30445f;
+      margin:20px 0 24px;
+      max-width:720px;
+      font-weight:600;
+    }
+
+    .cdoc .actions {
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:22px;
+    }
+
+    .cdoc .btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:15px 21px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:900;
+      letter-spacing:-.02em;
+      border:1px solid transparent;
+      box-shadow:0 14px 34px rgba(0,120,212,.16);
+      width:100%;
+    }
+
+    .cdoc .btn.primary {
+      color:white;
+      background:linear-gradient(135deg, var(--blue), var(--cyan) 50%, var(--green));
+    }
+
+    .cdoc .btn.secondary {
+      color:var(--navy);
+      background:white;
+      border-color:rgba(255,122,0,.28);
+    }
+
+    .cdoc .hero-card {
+      position:relative;
+      min-height:340px;
+      display:grid;
+      place-items:center;
+      border-radius:30px;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,.96), rgba(255,255,255,.54) 58%, rgba(0,166,214,.08)),
+        linear-gradient(135deg, rgba(0,120,212,.11), rgba(255,122,0,.08));
+      border:1px solid rgba(0,120,212,.13);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .cdoc .hero-card::before {
+      content:"";
+      position:absolute;
+      width:86%;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:2px solid rgba(255,122,0,.16);
+      transform:rotate(-18deg);
+    }
+
+    .cdoc .hero-card::after {
+      content:"";
+      position:absolute;
+      width:68%;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:2px solid rgba(0,166,214,.14);
+      transform:rotate(24deg);
+    }
+
+    .cdoc .mascot {
+      width:min(96%, 570px);
+      position:relative;
+      z-index:2;
+      filter:drop-shadow(0 34px 36px rgba(3,16,34,.24));
+    }
+
+
+    .cdoc .stats {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+      margin:18px 0 42px;
+    }
+
+    .cdoc .stat {
+      padding:22px;
+      border-radius:24px;
+      background:white;
+      border:1px solid var(--line);
+      box-shadow:0 12px 32px rgba(3,16,34,.06);
+    }
+    .cdoc .stat strong {
+      display:block;
+      font-size:28px;
+      letter-spacing:-.05em;
+      color:var(--navy);
+    }
+    .cdoc .stat span {
+      color:var(--muted);
+      font-weight:700;
+      font-size:13px;
+    }
+
+    .cdoc section { padding:42px 0; }
+    .cdoc .section-head {
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      margin-bottom:22px;
+    }
+    .cdoc h2 {
+      margin:0;
+      font-size:clamp(24px, 7vw, 40px);
+      line-height:1.02;
+      letter-spacing:-.06em;
+      font-weight:800;
+    }
+    .cdoc .section-head p {
+      max-width:560px;
+      margin:0;
+      color:#53657b;
+      font-size:15px;
+      line-height:1.6;
+      font-weight:600;
+    }
+
+    .cdoc .grid-2 {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:20px;
+    }
+    .cdoc .grid-2.stack-always {
+      grid-template-columns:1fr;
+    }
+    .cdoc .grid-3 {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
+    }
+
+    .cdoc .card {
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:20px;
+      box-shadow:0 18px 46px rgba(3,16,34,.07);
+      backdrop-filter:blur(14px);
+    }
+
+    .cdoc .card.dark {
+      color:white;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(0,166,214,.28), transparent 34%),
+        radial-gradient(circle at 100% 0%, rgba(255,122,0,.24), transparent 28%),
+        linear-gradient(135deg, var(--deep), #092246);
+      border-color:rgba(255,255,255,.12);
+    }
+    .cdoc .card.dark p,
+.cdoc .card.dark li { color:rgba(255,255,255,.78); }
+
+    .cdoc .icon {
+      width:48px;
+      height:48px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      background:linear-gradient(135deg, rgba(0,120,212,.12), rgba(255,122,0,.14));
+      font-size:20px;
+      margin-bottom:18px;
+    }
+
+    .cdoc h3 {
+      margin:0 0 12px;
+      font-size:18px;
+      letter-spacing:-.035em;
+      font-weight:800;
+    }
+    .cdoc p {
+      font-size:15px;
+      line-height:1.65;
+    }
+    .cdoc ul {
+      padding:0;
+      margin:14px 0 0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .cdoc li {
+      color:#445872;
+      font-size:14px;
+      line-height:1.55;
+      font-weight:620;
+      position:relative;
+      padding-left:28px;
+    }
+    .cdoc li::before {
+      content:"";
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:linear-gradient(135deg, var(--cyan), var(--orange));
+      position:absolute;
+      left:0;
+      top:.48em;
+      box-shadow:0 0 0 5px rgba(0,166,214,.08);
+    }
+
+    .cdoc .pricing {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
+    }
+
+    .cdoc .price-card {
+      position:relative;
+      overflow:hidden;
+      padding:20px;
+      border-radius:22px;
+      background:white;
+      border:1px solid rgba(0,120,212,.14);
+      box-shadow:0 18px 46px rgba(3,16,34,.07);
+    }
+    .cdoc .price-card::before {
+      content:"";
+      position:absolute;
+      inset:auto -30px -80px auto;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:linear-gradient(135deg, rgba(255,196,0,.28), rgba(255,122,0,.18));
+    }
+
+    .cdoc .price {
+      font-size:40px;
+      line-height:1;
+      letter-spacing:-.08em;
+      font-weight:950;
+      color:var(--navy);
+      margin:18px 0 10px;
+    }
+    .cdoc .price small {
+      font-size:15px;
+      letter-spacing:-.02em;
+      color:var(--muted);
+    }
+
+    .cdoc table {
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:22px;
+      border:1px solid rgba(0,120,212,.14);
+      background:white;
+      box-shadow:0 16px 42px rgba(3,16,34,.06);
+    }
+    .cdoc th,
+.cdoc td {
+      padding:12px 10px;
+      text-align:left;
+      border-bottom:1px solid rgba(0,120,212,.1);
+      vertical-align:top;
+      font-size:12px;
+    }
+    .cdoc th {
+      background:linear-gradient(135deg, rgba(0,120,212,.1), rgba(255,122,0,.08));
+      color:var(--navy);
+      font-weight:900;
+    }
+    .cdoc tr:last-child td { border-bottom:0; }
+
+    .cdoc .steps {
+      counter-reset:step;
+      display:grid;
+      gap:10px;
+    }
+    .cdoc .step {
+      counter-increment:step;
+      display:grid;
+      grid-template-columns:50px 1fr;
+      gap:12px;
+      align-items:center;
+      padding:14px 16px;
+      background:white;
+      border:1px solid rgba(0,120,212,.14);
+      border-radius:22px;
+      box-shadow:0 12px 28px rgba(3,16,34,.05);
+      min-height:78px;
+    }
+    .cdoc .step::before {
+      content:counter(step);
+      width:50px;
+      height:50px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      color:white;
+      font-weight:950;
+      font-size:17px;
+      background:linear-gradient(135deg, var(--blue), var(--orange));
+    }
+
+    .cdoc .callout {
+      margin-top:22px;
+      padding:28px;
+      border-radius:32px;
+      color:white;
+      background:
+        linear-gradient(135deg, rgba(0,120,212,.94), rgba(0,166,214,.9) 48%, rgba(255,122,0,.92)),
+        url("/commercial-docs/corteqs-doc-hero.png") center/260px no-repeat;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .cdoc .callout h2 { color:white; }
+    .cdoc .callout p { max-width:760px; color:rgba(255,255,255,.9); font-weight:650; }
+    .cdoc .callout .btn { background:white; color:var(--navy); box-shadow:none; }
+
+    .cdoc .archive {
+      padding-top:28px;
+    }
+
+    .cdoc .archive-wrap {
+      padding:30px;
+      border-radius:36px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.92), rgba(244,250,255,.92)),
+        radial-gradient(circle at top right, rgba(255,122,0,.08), transparent 32%);
+      border:1px solid rgba(0,120,212,.12);
+      box-shadow:0 24px 64px rgba(3,16,34,.08);
+    }
+
+    .cdoc .archive-grid {
+      display:grid;
+      gap:14px;
+    }
+
+    .cdoc .accordion-item {
+      border-radius:24px;
+      background:white;
+      border:1px solid rgba(0,120,212,.12);
+      box-shadow:0 14px 36px rgba(3,16,34,.05);
+      overflow:hidden;
+    }
+
+    .cdoc .accordion-item summary {
+      list-style:none;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:22px 24px;
+      font-weight:900;
+      font-size:20px;
+      letter-spacing:-.03em;
+    }
+
+    .cdoc .accordion-item summary::-webkit-details-marker {
+      display:none;
+    }
+
+    .cdoc .accordion-item summary::after {
+      content:"+";
+      width:36px;
+      height:36px;
+      flex:0 0 36px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      color:var(--navy);
+      background:linear-gradient(135deg, rgba(0,120,212,.12), rgba(255,122,0,.14));
+      font-size:24px;
+      font-weight:700;
+    }
+
+    .cdoc .accordion-item[open] summary::after {
+      content:"−";
+    }
+
+    .cdoc .accordion-body {
+      padding:0 24px 24px;
+      color:#3f536e;
+    }
+
+    .cdoc .accordion-body p {
+      margin:0 0 14px;
+    }
+
+    .cdoc .accordion-body p:last-child {
+      margin-bottom:0;
+    }
+
+    .cdoc .accordion-body h4 {
+      margin:20px 0 10px;
+      font-size:16px;
+      letter-spacing:-.02em;
+      color:var(--navy);
+    }
+
+    .cdoc .accordion-body ul {
+      margin-top:8px;
+    }
+
+    .cdoc footer {
+      padding:38px 0;
+      color:#5a6b80;
+      text-align:center;
+      font-weight:650;
+    }
+
+    @media (min-width: 561px) {
+
+      .cdoc .container { width:min(100% - 40px, 1160px); }
+      .cdoc .stats,
+.cdoc .grid-3 { grid-template-columns:repeat(2, 1fr); }
+      .cdoc .actions { flex-direction:row; }
+      .cdoc .btn { width:auto; }
+      .cdoc .hero-card { min-height:420px; }
+      .cdoc .card,
+.cdoc .price-card { padding:26px; border-radius:28px; }
+      .cdoc th,
+.cdoc td { font-size:13px; padding:16px 14px; }
+      .cdoc .archive-wrap { padding:22px; }
+    
+}
+
+    @media (min-width: 921px) {
+
+      .cdoc .hero { grid-template-columns:1.06fr .94fr; gap:42px; padding:72px 0 46px; }
+      .cdoc .stats { grid-template-columns:repeat(4, 1fr); margin:18px 0 58px; }
+      .cdoc section { padding:54px 0; }
+      .cdoc .section-head { flex-direction:row; align-items:end; gap:24px; margin-bottom:26px; }
+      .cdoc .grid-2 { grid-template-columns:repeat(2, 1fr); }
+      .cdoc .grid-2.stack-always { grid-template-columns:1fr; }
+      .cdoc .grid-3 { grid-template-columns:repeat(3, 1fr); }
+      .cdoc .pricing { grid-template-columns:1fr 1fr; }
+      .cdoc .hero-card { min-height:560px; border-radius:42px; }
+    
+}
+
+    @media print {
+
+      .cdoc header,
+.cdoc .actions { display:none; }
+      .cdoc { background:white; }
+      .cdoc section,
+.cdoc .hero { padding:20px 0; }
+      .cdoc .card,
+.cdoc .price-card,
+.cdoc table { box-shadow:none; }
+    
+}
+.cdoc .container { max-width: none; padding-left: 0; padding-right: 0; }
+</style>
+<div class="cdoc">
+<div class="orbit-bg"></div>
+
+  <main id="top">
+    <div class="container hero">
+      <div>
+        <div class="eyebrow"><span class="pulse"></span> Strategic Partner Program</div>
+        <h1>Stratejik iş birlikleri <span class="gradient-text">ve ortak projeler geliştir.</span></h1>
+        <p class="lead">Diaspora kitlesine güçlü ve güvenilir erişim sağla. Marka görünürlüğü, ortak kampanyalar, referral, etkinlik ve sponsor işlerini CorteQS ekosistemiyle büyüt.</p>
+        <div class="actions">
+          <a class="btn primary" href="https://corteqs.net/" target="_blank" rel="noopener">Başvuru ve detaylar</a>
+          <a class="btn secondary" href="#kazanc">İş modelini incele</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img class="mascot" src="https://injprdrsklkxgnaiixzh.supabase.co/storage/v1/object/public/onepagers/maskot.png" alt="CorteQS maskot">
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="stats">
+        <div class="stat"><strong>164</strong><span>Ülke</span></div>
+        <div class="stat"><strong>8.8 Milyon</strong><span>Türk</span></div>
+        <div class="stat"><strong>120.000+</strong><span>Kuruluş</span></div>
+        <div class="stat"><strong>50+</strong><span>Şehir</span></div>
+      </div>
+    </div>
+
+    <section id="program">
+      <div class="container">
+        <div class="section-head">
+          <h2>Program nedir?</h2>
+          <p>CorteQS Strategic Partner Programı; daha geniş erişime, daha güçlü dağıtım kapasitesine veya daha yüksek iş birliği gücüne sahip partnerler için hazırlanmış stratejik büyüme modelidir.</p>
+        </div>
+
+        <div class="grid-2 stack-always">
+          <article class="card dark">
+            <div class="icon">🌍</div>
+            <h3>Strategic Partner kimdir?</h3>
+            <p>Strategic Partner, daha geniş kitleye sahip influencer’lar, güçlü dağıtım kanalları veya iş birliği kapasitesi olan aktörler için tasarlanmış CorteQS partnerlik rolüdür. Amaç, diaspora kitlesine güçlü ve güvenilir erişim sağlarken marka ve iş ağı fırsatları oluşturmaktır.</p>
+            <p>Bu rol klasik bir çalışan pozisyonu değildir. Referral, event revenue share ve marka işleri üzerinden büyüyen bağımsız bir stratejik iş birliği modelidir.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">🤝</div>
+            <h3>Erişim gücünü iş birliğine dönüştür</h3>
+            <p>Strategic Partner modeli, yalnızca görünürlük değil; ortak proje, kampanya, etkinlik ve güçlü dağıtım kapasitesini ölçülebilir gelire ve iş ağına dönüştürmek için tasarlanmıştır.</p>
+            <ul>
+              <li>Stratejik iş birlikleri kurar</li>
+              <li>Diaspora kitlesine güvenilir erişim sağlar</li>
+              <li>Marka ve sponsor fırsatlarını büyütür</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <h2>Strategic Partner ne yapar?</h2>
+          <p>İş birlikleri kurar, ortak projeler geliştirir, etkinlik ve kampanyaları büyütür; CorteQS için yüksek etkili bir büyüme ve erişim ortağı olarak çalışır.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card"><div class="icon">🤝</div><h3>Stratejik iş birlikleri kurar</h3><p>CorteQS ile markalar, topluluklar ve geniş erişimli ağlar arasında kalıcı ortaklıklar geliştirir.</p></article>
+          <article class="card"><div class="icon">🧩</div><h3>Ortak projeler geliştirir</h3><p>Kampanya, içerik, event ve iş geliştirme alanlarında yüksek etkili projeler oluşturur.</p></article>
+          <article class="card"><div class="icon">📣</div><h3>Erişimi büyütür</h3><p>Diaspora kitlesine güçlü ve güvenilir erişim sağlayarak görünürlüğü artırır.</p></article>
+          <article class="card"><div class="icon">🎟️</div><h3>Etkinlikleri ölçekler</h3><p>Event revenue share ve geniş kitle duyurularıyla etkinlikleri büyütür.</p></article>
+          <article class="card"><div class="icon">💼</div><h3>Marka işlerini yönetir</h3><p>Platformdan gelen sponsor ve marka işlerini stratejik düzeyde değerlendirir.</p></article>
+          <article class="card"><div class="icon">📊</div><h3>Partner performansını takip eder</h3><p>Referral, gelir, iş birliği ve campaign sonuçlarını dashboard üzerinden izler.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="kazanc">
+      <div class="container">
+        <div class="section-head">
+          <h2>Gelir ve iş birliği modeli</h2>
+          <p>Strategic Partner için referral, event revenue share ve marka işleri bir arada çalışan; erişim gücünü gelire ve ortak proje fırsatına dönüştüren bir model bulunur.</p>
+        </div>
+
+        <div class="pricing">
+          <div class="price-card">
+            <h3>Partner seviyesi</h3>
+            <div class="price">30K–500K <small>erişim</small></div>
+            <p>Strategic Partner, influencer ve community tarafındaki orta-üst erişim düzeyinde konumlanır ve daha yüksek ölçekli iş birliği fırsatları yaratır.</p>
+            <ul>
+              <li>Referral oranı: %20</li>
+              <li>Event revenue share: %20</li>
+              <li>Marka işleri: %80 partner geliri</li>
+            </ul>
+          </div>
+
+          <div class="price-card">
+            <h3>Ek değer alanları</h3>
+            <div class="price">Marka <small>+ event</small></div>
+            <p>Referral dışında event revenue share, marka kampanyaları ve sponsor fırsatları strategic partner için ana ölçeklenme alanlarıdır.</p>
+            <ul>
+              <li>Ortak kampanya ve projeler</li>
+              <li>Yüksek ölçekli event desteği</li>
+              <li>Marka görünürlüğü ve iş ağı fırsatları</li>
+            </ul>
+          </div>
+        </div>
+
+        <br>
+
+        <table aria-label="Partner kademeleri">
+          <thead>
+            <tr>
+              <th>Kademe</th>
+              <th>Referral Oranı</th>
+              <th>Event Revenue Share</th>
+              <th>Kimler İçin?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Strategic Partner</strong></td>
+              <td>%20</td>
+              <td>%20</td>
+              <td>30K–500K takipçili, daha geniş kitleye sahip partnerler.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <br>
+
+        <table aria-label="Paket ve ödeme özeti">
+          <thead>
+            <tr>
+              <th>Paket</th>
+              <th>1. Yıl</th>
+              <th>2. Yıl</th>
+              <th>2 Yıllık Toplam</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Aylık Paket</td>
+              <td>€30</td>
+              <td>€60</td>
+              <td>€90</td>
+            </tr>
+            <tr>
+              <td>Yıllık Paket</td>
+              <td>€24</td>
+              <td>€48</td>
+              <td>€72</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <h2>Strategic Partner avantajı</h2>
+          <p>Strategic Partner modeli, referral yapısının yanında event revenue share ve marka işleriyle daha yüksek ölçekli kampanya ve iş birliği potansiyeli yaratır.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <h2>Etkinlik ve marka alanı</h2>
+          <p>Strategic Partner, referral’ın ötesinde event revenue share ve sponsor işleriyle daha yüksek etkili ticari iş birlikleri kurabilir.</p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Etkinlik geliri</h3>
+            <ul>
+              <li>CorteQS etkinliklerinde partner revenue share: %20</li>
+              <li>€1,000 net etkinlik gelirinde partner kazancı: €200</li>
+              <li>Kendi etkinliğini açtığında platform fee: %10</li>
+              <li>€2,000 bilet gelirinde partner geliri: €1,800</li>
+            </ul>
+          </article>
+          <article class="card dark">
+            <h3>Marka / sponsor işleri</h3>
+            <p>Platformdan gelen marka ve sponsor işlerinde CorteQS komisyonu %20, partner geliri %80’dir. Strategic Partner bu alanı kampanya ve marka görünürlüğü açısından daha yüksek hacimde değerlendirebilir.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboard">
+      <div class="container">
+        <div class="section-head">
+          <h2>Strategic Partner Dashboard</h2>
+          <p>Her strategic partner kendi dashboard’u üzerinden referral, campaign, etkinlik ve iş birliği performansını birlikte takip eder.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card"><div class="icon">🔗</div><h3>Referral ve yönlendirme takibi</h3><p>Kazandırılan subscriber, işletme ve consultant üyeliklerinin akışını izlersin.</p></article>
+          <article class="card"><div class="icon">💶</div><h3>Gelir paneli</h3><p>Referral, etkinlik ve marka gelirlerini tek ekranda takip edersin.</p></article>
+          <article class="card"><div class="icon">📣</div><h3>İş birliği / campaign görünümü</h3><p>Kampanyaları, proje akışlarını ve partner katkılarını daha net yönetirsin.</p></article>
+          <article class="card"><div class="icon">🎟️</div><h3>Event modülü</h3><p>Etkinlikleri duyurabilir, kendi etkinliğini açabilir ve satışları izleyebilirsin.</p></article>
+          <article class="card"><div class="icon">💼</div><h3>Sponsor fırsatları</h3><p>Platformdan gelen marka ve sponsor iş birliklerini görüntüleyebilirsin.</p></article>
+          <article class="card"><div class="icon">📊</div><h3>Performans raporları</h3><p>Erişim, satış, yönlendirme ve campaign performansını aynı çerçevede değerlendirirsin.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="basvuru">
+      <div class="container">
+        <div class="section-head">
+          <h2>Strategic Partner yol haritası</h2>
+          <p>Başvurudan aktif iş birliği ve gelir takibine kadar süreç basit, takip edilebilir ve ölçeklenebilir bir partner akışı sunar.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step"><strong>Strategic Partner başvurunu yaparsın.</strong></div>
+          <div class="step"><strong>Partner potansiyelin ve erişim gücün değerlendirilir.</strong></div>
+          <div class="step"><strong>Sana özel referral ve iş birliği akışı tanımlanır.</strong></div>
+          <div class="step"><strong>Kitle ve ağını CorteQS ekosistemine aktive edersin.</strong></div>
+          <div class="step"><strong>Campaign, event ve sponsor entegrasyonlarıyla ölçek yaratırsın.</strong></div>
+          <div class="step"><strong>Performansını ve gelirini dashboard üzerinden takip edersin.</strong></div>
+        </div>
+
+        <div class="callout">
+          <h2>İş birliği kur. Ölçek yarat. CorteQS ile büyü.</h2>
+          <p>Strategic Partner olarak erişim gücünü, iş birliği kapasiteni ve marka değerini CorteQS’in referral, event ve sponsor altyapısıyla daha büyük bir ölçeğe taşırsın.</p>
+          <div class="actions">
+            <a class="btn" href="https://corteqs.net/" target="_blank" rel="noopener">corteqs.net üzerinden başvur</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="archive" id="program-arsivi">
+      <div class="container">
+        <div class="section-head">
+          <h2>Program arşivi</h2>
+          <p>Strategic Partner modelinin tüm detaylarını, aşağıda başlık başlık açılan kartlar üzerinden daha derin şekilde inceleyebilirsin.</p>
+        </div>
+
+        <div class="archive-wrap">
+          <div class="archive-grid">
+            <details class="accordion-item" open>
+              <summary>1. Strategic Partner Programı nedir?</summary>
+              <div class="accordion-body">
+                <p>CorteQS Strategic Partner Programı, daha geniş erişime sahip ve daha güçlü büyüme iş birlikleri kurabilen partnerler için hazırlanmıştır. Amaç, diaspora kitlesine güçlü ve güvenilir erişim sağlarken referral, event ve sponsor gelirlerini birlikte büyütmektir.</p>
+                <p>Strategic Partner çalışan değildir; performans ve iş birliği bazlı gelir elde eden bağımsız bir partnerdir.</p>
+                <h4>Ana görevleri</h4>
+                <ul>
+                  <li>Stratejik iş birlikleri kurmak</li>
+                  <li>Ortak projeler ve campaign akışları geliştirmek</li>
+                  <li>İşletme, consultant ve subscriber yönlendirmek</li>
+                  <li>Event ve sponsor alanlarını büyütmek</li>
+                  <li>Dashboard üzerinden partner performansını izlemek</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>2. Strategic Partner kimler için uygundur?</summary>
+              <div class="accordion-body">
+                <p>Strategic Partner modeli, daha geniş kitleye sahip influencer’lar, güçlü dağıtım ağları, topluluk sahipleri veya yüksek etki potansiyeli olan iş birliği aktörleri için uygundur.</p>
+                <ul>
+                  <li>Daha geniş kitleye sahip influencer’lar</li>
+                  <li>Marka ve kampanya gücü yüksek partnerler</li>
+                  <li>Güçlü network veya dağıtım kapasitesi olan yapılar</li>
+                  <li>Diaspora kitlesine güvenilir erişim sağlayabilen aktörler</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>3. Gelir modeli nasıl işler?</summary>
+              <div class="accordion-body">
+                <p>Strategic Partner için gelir modeli referral, event revenue share ve marka / sponsor işleri üzerinden işler. Aynı referral mantığıyla daha yüksek hacimli iş birliği ve campaign alanları birlikte çalışır.</p>
+                <ul>
+                  <li>Referral oranı: %20</li>
+                  <li>Event revenue share: %20</li>
+                  <li>Partner-owned event platform fee: %10</li>
+                  <li>Marka / sponsor işi partner geliri: %80</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>4. Referral ve paket yapısı</summary>
+              <div class="accordion-body">
+                <p>Referral geliri, kazandırılan aktif subscriber, işletme ve consultant üyeliklerinin ödediği paketler üzerinden hesaplanır. Paket yapısı influencer brief’indeki ticari modelle aynıdır.</p>
+                <ul>
+                  <li>Aylık Paket: €30 ilk yıl, €60 ikinci yıl</li>
+                  <li>Yıllık Paket: €24 ilk yıl, €48 ikinci yıl</li>
+                  <li>Referral oranı tüm partnerler için %20</li>
+                  <li>İşletme, consultant ve subscriber akışları aynı mantıkla izlenir</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>5. Etkinlik gelirleri</summary>
+              <div class="accordion-body">
+                <p>Strategic Partner, CorteQS etkinliklerini duyurarak revenue share kazanabilir veya kendi etkinliğini CorteQS altyapısıyla açabilir.</p>
+                <ul>
+                  <li>CorteQS Event Promotion partner payı: %20</li>
+                  <li>€1,000 net etkinlik gelirinde partner kazancı: €200</li>
+                  <li>Partner-Owned Event modelinde CorteQS payı: %10</li>
+                  <li>€2,000 bilet gelirinde partner geliri: €1,800</li>
+                </ul>
+                <p>Bu alan, strategic partner için yüksek hacimli topluluk veya marka etkinliklerinde güçlü bir büyüme kanalı sağlar.</p>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>6. Marka / sponsor işleri</summary>
+              <div class="accordion-body">
+                <p>Strategic Partner için marka ve sponsor işleri, referral dışındaki en önemli ticari genişleme alanlarından biridir. Platform üzerinden gelen işler %80 partner payıyla çalışır.</p>
+                <ul>
+                  <li>Platformdan gelen marka / sponsor işi komisyonu: %20</li>
+                  <li>Partner geliri: %80</li>
+                  <li>Kampanya, tanıtım ve topluluk aktivasyonu yapılabilir</li>
+                  <li>Dış marka işleri devam eder, yalnızca platform işleri komisyonlanır</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>7. Strategic Partner Dashboard’da neler olacak?</summary>
+              <div class="accordion-body">
+                <p>Dashboard, strategic partner’ın referral, campaign, etkinlik ve iş birliği performansını tek çerçevede yönetmesine imkan verir.</p>
+                <ul>
+                  <li>Referral ve yönlendirme takibi</li>
+                  <li>Gelir paneli</li>
+                  <li>Campaign / iş birliği görünümü</li>
+                  <li>Event modülü</li>
+                  <li>Sponsor fırsatları</li>
+                  <li>Performans raporları</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>8. Yol haritası ve kısa özet</summary>
+              <div class="accordion-body">
+                <h4>Basit yol haritası</h4>
+                <ul>
+                  <li>Strategic Partner başvurunu yaparsın.</li>
+                  <li>Partner potansiyelin ve erişim gücün değerlendirilir.</li>
+                  <li>Sana özel referral ve iş birliği akışı tanımlanır.</li>
+                  <li>Kitle ve ağını CorteQS ekosistemine aktive edersin.</li>
+                  <li>Campaign, event ve sponsor entegrasyonlarıyla ölçek yaratırsın.</li>
+                  <li>Performansını ve gelirini dashboard üzerinden takip edersin.</li>
+                </ul>
+                <h4>Kısa özet</h4>
+                <p>Strategic Partner modeli, referral, event ve sponsor alanlarını aynı sistemde birleştirir. Sen erişim ve iş birliği gücünü getirirsin; CorteQS sana platform, dashboard ve gelir altyapısı sağlar.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    CorteQS Strategic Partner Program · İş birliği kur, ölçek yarat, CorteQS ile büyü
+  </footer>
+</div>

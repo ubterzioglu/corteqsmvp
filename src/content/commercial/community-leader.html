@@ -1,0 +1,943 @@
+<!-- AUTO-GENERATED from info-community-leader.html by scripts/extract-commercial-docs.mjs. -->
+<!-- Edit the source document and re-run the script instead of editing this file. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+.cdoc :where(*),
+.cdoc :where(*)::before,
+.cdoc :where(*)::after { all: revert; }
+.cdoc { position: relative; isolation: isolate; overflow: clip; }
+.cdoc {
+      --navy:#061A34;
+      --deep:#031022;
+      --blue:#0078D4;
+      --cyan:#00A6D6;
+      --orange:#FF7A00;
+      --yellow:#FFC400;
+      --green:#58B800;
+      --white:#FFFFFF;
+      --soft:#F4FAFF;
+      --muted:#6B7A90;
+      --card:rgba(255,255,255,.86);
+      --line:rgba(0,120,212,.18);
+      --shadow:0 24px 70px rgba(3,16,34,.16);
+      --radius:28px;
+    }
+
+    .cdoc, .cdoc * { box-sizing:border-box; }
+    .cdoc { scroll-behavior:smooth; }
+    .cdoc {
+      margin:0;
+      font-family:"Manrope", "Aptos", "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif;
+      font-size:15px;
+      color:var(--navy);
+      background:
+        radial-gradient(circle at 18% 10%, rgba(0,166,214,.22), transparent 28%),
+        radial-gradient(circle at 90% 0%, rgba(255,122,0,.18), transparent 26%),
+        radial-gradient(circle at 75% 82%, rgba(88,184,0,.16), transparent 22%),
+        linear-gradient(180deg, #ffffff 0%, #f5fbff 44%, #ffffff 100%);
+      overflow-x:hidden;
+    }
+
+    .cdoc::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(0,120,212,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,120,212,.045) 1px, transparent 1px);
+      background-size:52px 52px;
+      mask-image:linear-gradient(to bottom, black, transparent 85%);
+      z-index:-2;
+    }
+
+    .cdoc .orbit-bg {
+      position:absolute;
+      width:740px;
+      height:740px;
+      border:2px solid rgba(255,122,0,.16);
+      border-radius:50%;
+      top:-300px;
+      right:-250px;
+      z-index:-1;
+    }
+    .cdoc .orbit-bg::before,
+.cdoc .orbit-bg::after {
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      border:2px solid rgba(0,120,212,.13);
+      inset:90px;
+    }
+    .cdoc .orbit-bg::after {
+      inset:190px;
+      border-color:rgba(88,184,0,.16);
+    }
+
+    .cdoc .container {
+      width:min(100% - 24px, 1160px);
+      margin:0 auto;
+    }
+
+    .cdoc .hero {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:26px;
+      align-items:center;
+      padding:26px 0 28px;
+    }
+
+    .cdoc .eyebrow {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:9px 14px;
+      border:1px solid rgba(255,122,0,.26);
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(255,196,0,.18), rgba(0,166,214,.12));
+      font-weight:850;
+      color:#12365c;
+      margin-bottom:20px;
+    }
+
+    .cdoc .pulse {
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 0 8px rgba(88,184,0,.15);
+    }
+
+    .cdoc h1 {
+      margin:0;
+      font-size:clamp(34px, 11vw, 68px);
+      line-height:.96;
+      letter-spacing:-.075em;
+      color:var(--navy);
+      font-weight:800;
+    }
+
+    .cdoc .gradient-text {
+      background:linear-gradient(90deg, var(--blue), var(--cyan), var(--orange));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .cdoc .lead {
+      font-size:clamp(15px, 4.2vw, 20px);
+      line-height:1.55;
+      color:#30445f;
+      margin:20px 0 24px;
+      max-width:720px;
+      font-weight:600;
+    }
+
+    .cdoc .actions {
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:22px;
+    }
+
+    .cdoc .btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:15px 21px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:900;
+      letter-spacing:-.02em;
+      border:1px solid transparent;
+      box-shadow:0 14px 34px rgba(0,120,212,.16);
+      width:100%;
+    }
+
+    .cdoc .btn.primary {
+      color:white;
+      background:linear-gradient(135deg, var(--blue), var(--cyan) 50%, var(--green));
+    }
+
+    .cdoc .btn.secondary {
+      color:var(--navy);
+      background:white;
+      border-color:rgba(255,122,0,.28);
+    }
+
+    .cdoc .hero-card {
+      position:relative;
+      min-height:340px;
+      display:grid;
+      place-items:center;
+      border-radius:30px;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,.96), rgba(255,255,255,.54) 58%, rgba(0,166,214,.08)),
+        linear-gradient(135deg, rgba(0,120,212,.11), rgba(255,122,0,.08));
+      border:1px solid rgba(0,120,212,.13);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .cdoc .hero-card::before {
+      content:"";
+      position:absolute;
+      width:86%;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:2px solid rgba(255,122,0,.16);
+      transform:rotate(-18deg);
+    }
+
+    .cdoc .hero-card::after {
+      content:"";
+      position:absolute;
+      width:68%;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:2px solid rgba(0,166,214,.14);
+      transform:rotate(24deg);
+    }
+
+    .cdoc .mascot {
+      width:min(96%, 570px);
+      position:relative;
+      z-index:2;
+      filter:drop-shadow(0 34px 36px rgba(3,16,34,.24));
+    }
+
+
+    .cdoc .stats {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+      margin:18px 0 42px;
+    }
+
+    .cdoc .stat {
+      padding:22px;
+      border-radius:24px;
+      background:white;
+      border:1px solid var(--line);
+      box-shadow:0 12px 32px rgba(3,16,34,.06);
+    }
+    .cdoc .stat strong {
+      display:block;
+      font-size:28px;
+      letter-spacing:-.05em;
+      color:var(--navy);
+    }
+    .cdoc .stat span {
+      color:var(--muted);
+      font-weight:700;
+      font-size:13px;
+    }
+
+    .cdoc section { padding:42px 0; }
+    .cdoc .section-head {
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      margin-bottom:22px;
+    }
+    .cdoc h2 {
+      margin:0;
+      font-size:clamp(24px, 7vw, 40px);
+      line-height:1.02;
+      letter-spacing:-.06em;
+      font-weight:800;
+    }
+    .cdoc .section-head p {
+      max-width:560px;
+      margin:0;
+      color:#53657b;
+      font-size:15px;
+      line-height:1.6;
+      font-weight:600;
+    }
+
+    .cdoc .grid-2 {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:20px;
+    }
+    .cdoc .grid-2.stack-always {
+      grid-template-columns:1fr;
+    }
+    .cdoc .grid-3 {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
+    }
+
+    .cdoc .card {
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:20px;
+      box-shadow:0 18px 46px rgba(3,16,34,.07);
+      backdrop-filter:blur(14px);
+    }
+
+    .cdoc .card.dark {
+      color:white;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(0,166,214,.28), transparent 34%),
+        radial-gradient(circle at 100% 0%, rgba(255,122,0,.24), transparent 28%),
+        linear-gradient(135deg, var(--deep), #092246);
+      border-color:rgba(255,255,255,.12);
+    }
+    .cdoc .card.dark p,
+.cdoc .card.dark li { color:rgba(255,255,255,.78); }
+
+    .cdoc .icon {
+      width:48px;
+      height:48px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      background:linear-gradient(135deg, rgba(0,120,212,.12), rgba(255,122,0,.14));
+      font-size:20px;
+      margin-bottom:18px;
+    }
+
+    .cdoc h3 {
+      margin:0 0 12px;
+      font-size:18px;
+      letter-spacing:-.035em;
+      font-weight:800;
+    }
+    .cdoc p {
+      font-size:15px;
+      line-height:1.65;
+    }
+    .cdoc ul {
+      padding:0;
+      margin:14px 0 0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .cdoc li {
+      color:#445872;
+      font-size:14px;
+      line-height:1.55;
+      font-weight:620;
+      position:relative;
+      padding-left:28px;
+    }
+    .cdoc li::before {
+      content:"";
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:linear-gradient(135deg, var(--cyan), var(--orange));
+      position:absolute;
+      left:0;
+      top:.48em;
+      box-shadow:0 0 0 5px rgba(0,166,214,.08);
+    }
+
+    .cdoc .pricing {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
+    }
+
+    .cdoc .price-card {
+      position:relative;
+      overflow:hidden;
+      padding:20px;
+      border-radius:22px;
+      background:white;
+      border:1px solid rgba(0,120,212,.14);
+      box-shadow:0 18px 46px rgba(3,16,34,.07);
+    }
+    .cdoc .price-card::before {
+      content:"";
+      position:absolute;
+      inset:auto -30px -80px auto;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:linear-gradient(135deg, rgba(255,196,0,.28), rgba(255,122,0,.18));
+    }
+
+    .cdoc .price {
+      font-size:40px;
+      line-height:1;
+      letter-spacing:-.08em;
+      font-weight:950;
+      color:var(--navy);
+      margin:18px 0 10px;
+    }
+    .cdoc .price small {
+      font-size:15px;
+      letter-spacing:-.02em;
+      color:var(--muted);
+    }
+
+    .cdoc table {
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:22px;
+      border:1px solid rgba(0,120,212,.14);
+      background:white;
+      box-shadow:0 16px 42px rgba(3,16,34,.06);
+    }
+    .cdoc th,
+.cdoc td {
+      padding:12px 10px;
+      text-align:left;
+      border-bottom:1px solid rgba(0,120,212,.1);
+      vertical-align:top;
+      font-size:12px;
+    }
+    .cdoc th {
+      background:linear-gradient(135deg, rgba(0,120,212,.1), rgba(255,122,0,.08));
+      color:var(--navy);
+      font-weight:900;
+    }
+    .cdoc tr:last-child td { border-bottom:0; }
+
+    .cdoc .steps {
+      counter-reset:step;
+      display:grid;
+      gap:10px;
+    }
+    .cdoc .step {
+      counter-increment:step;
+      display:grid;
+      grid-template-columns:50px 1fr;
+      gap:12px;
+      align-items:center;
+      padding:14px 16px;
+      background:white;
+      border:1px solid rgba(0,120,212,.14);
+      border-radius:22px;
+      box-shadow:0 12px 28px rgba(3,16,34,.05);
+      min-height:78px;
+    }
+    .cdoc .step::before {
+      content:counter(step);
+      width:50px;
+      height:50px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      color:white;
+      font-weight:950;
+      font-size:17px;
+      background:linear-gradient(135deg, var(--blue), var(--orange));
+    }
+
+    .cdoc .callout {
+      margin-top:22px;
+      padding:28px;
+      border-radius:32px;
+      color:white;
+      background:
+        linear-gradient(135deg, rgba(0,120,212,.94), rgba(0,166,214,.9) 48%, rgba(255,122,0,.92)),
+        url("/commercial-docs/corteqs-doc-hero.png") center/260px no-repeat;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .cdoc .callout h2 { color:white; }
+    .cdoc .callout p { max-width:760px; color:rgba(255,255,255,.9); font-weight:650; }
+    .cdoc .callout .btn { background:white; color:var(--navy); box-shadow:none; }
+
+    .cdoc .archive {
+      padding-top:28px;
+    }
+
+    .cdoc .archive-wrap {
+      padding:30px;
+      border-radius:36px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.92), rgba(244,250,255,.92)),
+        radial-gradient(circle at top right, rgba(255,122,0,.08), transparent 32%);
+      border:1px solid rgba(0,120,212,.12);
+      box-shadow:0 24px 64px rgba(3,16,34,.08);
+    }
+
+    .cdoc .archive-grid {
+      display:grid;
+      gap:14px;
+    }
+
+    .cdoc .accordion-item {
+      border-radius:24px;
+      background:white;
+      border:1px solid rgba(0,120,212,.12);
+      box-shadow:0 14px 36px rgba(3,16,34,.05);
+      overflow:hidden;
+    }
+
+    .cdoc .accordion-item summary {
+      list-style:none;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:22px 24px;
+      font-weight:900;
+      font-size:20px;
+      letter-spacing:-.03em;
+    }
+
+    .cdoc .accordion-item summary::-webkit-details-marker {
+      display:none;
+    }
+
+    .cdoc .accordion-item summary::after {
+      content:"+";
+      width:36px;
+      height:36px;
+      flex:0 0 36px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      color:var(--navy);
+      background:linear-gradient(135deg, rgba(0,120,212,.12), rgba(255,122,0,.14));
+      font-size:24px;
+      font-weight:700;
+    }
+
+    .cdoc .accordion-item[open] summary::after {
+      content:"−";
+    }
+
+    .cdoc .accordion-body {
+      padding:0 24px 24px;
+      color:#3f536e;
+    }
+
+    .cdoc .accordion-body p {
+      margin:0 0 14px;
+    }
+
+    .cdoc .accordion-body p:last-child {
+      margin-bottom:0;
+    }
+
+    .cdoc .accordion-body h4 {
+      margin:20px 0 10px;
+      font-size:16px;
+      letter-spacing:-.02em;
+      color:var(--navy);
+    }
+
+    .cdoc .accordion-body ul {
+      margin-top:8px;
+    }
+
+    .cdoc footer {
+      padding:38px 0;
+      color:#5a6b80;
+      text-align:center;
+      font-weight:650;
+    }
+
+    @media (min-width: 561px) {
+
+      .cdoc .container { width:min(100% - 40px, 1160px); }
+      .cdoc .stats,
+.cdoc .grid-3 { grid-template-columns:repeat(2, 1fr); }
+      .cdoc .actions { flex-direction:row; }
+      .cdoc .btn { width:auto; }
+      .cdoc .hero-card { min-height:420px; }
+      .cdoc .card,
+.cdoc .price-card { padding:26px; border-radius:28px; }
+      .cdoc th,
+.cdoc td { font-size:13px; padding:16px 14px; }
+      .cdoc .archive-wrap { padding:22px; }
+    
+}
+
+    @media (min-width: 921px) {
+
+      .cdoc .hero { grid-template-columns:1.06fr .94fr; gap:42px; padding:72px 0 46px; }
+      .cdoc .stats { grid-template-columns:repeat(4, 1fr); margin:18px 0 58px; }
+      .cdoc section { padding:54px 0; }
+      .cdoc .section-head { flex-direction:row; align-items:end; gap:24px; margin-bottom:26px; }
+      .cdoc .grid-2 { grid-template-columns:repeat(2, 1fr); }
+      .cdoc .grid-2.stack-always { grid-template-columns:1fr; }
+      .cdoc .grid-3 { grid-template-columns:repeat(3, 1fr); }
+      .cdoc .pricing { grid-template-columns:1fr 1fr; }
+      .cdoc .hero-card { min-height:560px; border-radius:42px; }
+    
+}
+
+    @media print {
+
+      .cdoc header,
+.cdoc .actions { display:none; }
+      .cdoc { background:white; }
+      .cdoc section,
+.cdoc .hero { padding:20px 0; }
+      .cdoc .card,
+.cdoc .price-card,
+.cdoc table { box-shadow:none; }
+    
+}
+.cdoc .container { max-width: none; padding-left: 0; padding-right: 0; }
+</style>
+<div class="cdoc">
+<div class="orbit-bg"></div>
+
+  <main id="top">
+    <div class="container hero">
+      <div>
+        <div class="eyebrow"><span class="pulse"></span> Community Leader Program</div>
+        <h1>Şehrindeki topluluğu <span class="gradient-text">büyüt ve yön ver.</span></h1>
+        <p class="lead">Türk diasporasını, işletmeleri, consultant’ları, içerik üreticilerini ve yerel aktörleri CorteQS etrafında bir araya getir. Yerel etkini global CorteQS ağıyla güçlendir.</p>
+        <div class="actions">
+          <a class="btn primary" href="https://corteqs.net/" target="_blank" rel="noopener">Başvuru ve detaylar</a>
+          <a class="btn secondary" href="#basvuru">Yol haritasını incele</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img class="mascot" src="https://injprdrsklkxgnaiixzh.supabase.co/storage/v1/object/public/onepagers/maskot.png" alt="CorteQS maskot">
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="stats">
+        <div class="stat"><strong>164</strong><span>Ülke</span></div>
+        <div class="stat"><strong>8.8 Milyon</strong><span>Türk</span></div>
+        <div class="stat"><strong>120.000+</strong><span>Kuruluş</span></div>
+        <div class="stat"><strong>50+</strong><span>Şehir</span></div>
+      </div>
+    </div>
+
+    <section id="program">
+      <div class="container">
+        <div class="section-head">
+          <h2>Program nedir?</h2>
+          <p>CorteQS Community Leader Programı, bulunduğu şehirde Türk diasporasıyla güçlü bağı olan ve topluluğu harekete geçirebilen kişiler için tasarlanmış şehir bazlı topluluk liderliği programıdır.</p>
+        </div>
+
+        <div class="grid-2 stack-always">
+          <article class="card dark">
+            <div class="icon">🌍</div>
+            <h3>Community Leader kimdir?</h3>
+            <p>Community Leader, CorteQS’in şehir bazlı topluluk yapılanmasında yerel liderlik rolü üstlenen kişidir. Şehrindeki bireyleri, işletmeleri, consultant’ları, içerik üreticilerini, toplulukları ve yerel aktörleri CorteQS ağı etrafında bir araya getirir.</p>
+            <p>Bu rol klasik bir çalışan pozisyonu değildir. Esnek, topluluk odaklı, performans ve görev bazlı ilerleyen bir yerel liderlik rolüdür.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">🤝</div>
+            <h3>Takipçi sayısı değil, topluluk kurma gücü önemli</h3>
+            <p>Community Leader olmak için yalnızca takipçi sayısı önemli değildir. Asıl değer; insanları bir araya getirebilmek, güven ilişkisi kurabilmek, şehirdeki diaspora aktörlerini tanımak ve CorteQS’in yerel topluluk yapısını büyütebilmektir.</p>
+            <ul>
+              <li>Şehirde topluluğu görünür kılar</li>
+              <li>Etkinlik, bağlantı ve yerel ağları güçlendirir</li>
+              <li>Güven ilişkisi ve sürdürülebilir iletişim kurar</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <h2>Community Leader ne yapar?</h2>
+          <p>Yerel topluluğu organize eder, şehirdeki bağlantıları güçlendirir ve CorteQS’in şehir bazlı büyümesine doğrudan katkı verir.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card"><div class="icon">🌐</div><h3>Topluluğu bir araya getirir</h3><p>Şehrindeki Türk diasporasını CorteQS etrafında bir araya getirir ve düzenli etkileşim oluşturur.</p></article>
+          <article class="card"><div class="icon">🤝</div><h3>Yerel bağ kurar</h3><p>Yerel topluluk üyeleri, işletmeler, consultant’lar ve içerik üreticileriyle güçlü bağlar kurar.</p></article>
+          <article class="card"><div class="icon">📣</div><h3>Etkinlik ve duyuru yayılımı sağlar</h3><p>Şehir bazlı etkinlik, buluşma, kampanya ve duyuruların yayılmasına destek olur.</p></article>
+          <article class="card"><div class="icon">🧩</div><h3>İçerik görünürlüğünü artırır</h3><p>CorteQS içeriklerinin yerel topluluk içinde görünür olmasına katkı sağlar.</p></article>
+          <article class="card"><div class="icon">🗺️</div><h3>İhtiyaç ve fırsatları aktarır</h3><p>Şehirdeki ihtiyaçları, fırsatları ve potansiyel iş birliklerini CorteQS ekibine aktarır.</p></article>
+          <article class="card"><div class="icon">📊</div><h3>Topluluk büyümesini izler</h3><p>Topluluk büyümesini, yönlendirmeleri ve görev performansını dashboard üzerinden takip eder.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="kazanc">
+      <div class="container">
+        <div class="section-head">
+          <h2>Değer ve etki modeli</h2>
+          <p>Community Leader rolü; şehirde görünürlük, temsil gücü, topluluk inşası ve global CorteQS ağına bağlı yerel etki üretme fırsatı sunar.</p>
+        </div>
+
+        <div class="pricing">
+          <div class="price-card">
+            <h3>Şehirde görünürlük</h3>
+            <div class="price">Yerel <small>etki</small></div>
+            <p>Şehrindeki diaspora ekosisteminde güçlü bir yerel pozisyon kazanır, güvenilir bir topluluk figürü haline gelirsin.</p>
+            <ul>
+              <li>Şehirde topluluğu görünür kılarsın</li>
+              <li>Yerel temsil gücünü artırırsın</li>
+              <li>İlk temas noktalarından biri olursun</li>
+            </ul>
+          </div>
+
+          <div class="price-card">
+            <h3>Global ağa bağlanma</h3>
+            <div class="price">CorteQS <small>ekosistemi</small></div>
+            <p>Yerel topluluğu global CorteQS ağına bağlar; etkinlikler, kampanyalar ve şehir bazlı projelerde aktif rol alırsın.</p>
+            <ul>
+              <li>İşletmeler ve consultant’larla güçlü bağ kurarsın</li>
+              <li>İçerik üreticileri ve topluluk üyeleriyle temasın artar</li>
+              <li>Yerel etkinin global görünürlüğe dönüşmesini sağlarsın</li>
+            </ul>
+          </div>
+        </div>
+
+        <br>
+
+        <table aria-label="Community leader değer alanları">
+          <thead>
+            <tr>
+              <th>Alan</th>
+              <th>Ne Sağlar?</th>
+              <th>Topluluğa Etkisi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Topluluk liderliği</strong></td>
+              <td>Şehir bazlı ilişki kurma ve yön verme</td>
+              <td>İnsanları, kurumları ve yerel aktörleri bir araya getirir</td>
+            </tr>
+            <tr>
+              <td><strong>Etkinlik ve kampanya desteği</strong></td>
+              <td>Duyuru, organizasyon ve yayılım katkısı</td>
+              <td>Şehirde etkileşimi ve görünürlüğü büyütür</td>
+            </tr>
+            <tr>
+              <td><strong>Global bağlantı</strong></td>
+              <td>Yerel ağı CorteQS ekosistemine bağlama</td>
+              <td>Yerel etkiyi global görünürlük ve iş birliğine taşır</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <br>
+
+        <div class="callout">
+          <h2>Community Leader için değer önerisi</h2>
+          <p>CorteQS, Community Leader’lara kendi şehirlerinde görünürlük, temsil gücü ve global ağa bağlı bir topluluk inşa etme fırsatı sunar. Community Leader rolü, yalnızca bir tanıtım görevi değil; şehirde güven, bağlantı ve topluluk inşa etme fırsatıdır.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <h2>Neden CorteQS?</h2>
+          <p>Community Leader rolü, şehir bazlı topluluk yapısını global bir platform desteğiyle büyütmek isteyenler için açık ve güçlü bir çalışma zemini oluşturur.</p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Temel avantajlar</h3>
+            <ul>
+              <li>Global Türk diasporasına erişim</li>
+              <li>Şehir bazlı topluluk yapısı</li>
+              <li>İçerik, kampanya ve görünürlük desteği</li>
+              <li>İş birliği ve etkinlik fırsatları</li>
+            </ul>
+          </article>
+          <article class="card dark">
+            <h3>Yerel etkiyi büyüt</h3>
+            <p>Community Leader olarak şehirde güven üretir, insanları bir araya getirir ve yerel topluluğun global CorteQS ağıyla daha güçlü bağ kurmasını sağlarsın.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboard">
+      <div class="container">
+        <div class="section-head">
+          <h2>Community Leader Dashboard</h2>
+          <p>Her Community Leader kendi dashboard’u üzerinden topluluk büyümesini, etkinlikleri, yönlendirmeleri ve performansını şeffaf şekilde takip eder.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card"><div class="icon">🗂️</div><h3>Topluluk yönlendirmeleri</h3><p>Topluluğa dahil olan kişiler, işletmeler ve yerel aktörlerle ilgili akışı daha düzenli takip edersin.</p></article>
+          <article class="card"><div class="icon">📍</div><h3>Etkinlik duyuruları</h3><p>Şehirdeki buluşma, etkinlik ve kampanya duyurularını planlar, görünür hale getirirsin.</p></article>
+          <article class="card"><div class="icon">✅</div><h3>Content görevleri</h3><p>Topluluğu büyüten içerik ve kampanya görevlerini görüntüler, yerel yayılımı desteklersin.</p></article>
+          <article class="card"><div class="icon">🔗</div><h3>Referral bağlantıları</h3><p>Topluluk büyümesini destekleyen yönlendirme akışlarını ve ilgili bağlantıları aynı ekranda yönetirsin.</p></article>
+          <article class="card"><div class="icon">📈</div><h3>Etkileşim verileri</h3><p>Şehirde yarattığın etkileşimin hangi alanlarda büyüdüğünü net biçimde izlersin.</p></article>
+          <article class="card"><div class="icon">📊</div><h3>Performans göstergeleri</h3><p>Topluluk gelişimini daha düzenli yönetmek için görünür ve ölçülebilir göstergelere sahip olursun.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="basvuru">
+      <div class="container">
+        <div class="section-head">
+          <h2>Community Leader yol haritası</h2>
+          <p>Başvurudan şehir bazlı topluluk liderliğine kadar süreç basit, takip edilebilir ve etki odaklıdır.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step"><strong>Community Leader başvurunu yaparsın.</strong></div>
+          <div class="step"><strong>CorteQS ekibi şehir, ağ ve topluluk potansiyelini değerlendirir.</strong></div>
+          <div class="step"><strong>Sana özel şehir bazlı rol ve yönlendirme akışı tanımlanır.</strong></div>
+          <div class="step"><strong>Yerel topluluk, işletme, consultant ve içerik üreticileriyle bağlantı kurarsın.</strong></div>
+          <div class="step"><strong>Etkinlik, kampanya ve duyuruların şehir içinde yayılmasına destek olursun.</strong></div>
+          <div class="step"><strong>Topluluk büyümesini ve katkılarını dashboard üzerinden takip edersin.</strong></div>
+          <div class="step"><strong>Şehrindeki etki arttıkça daha güçlü community leadership alanlarına geçebilirsin.</strong></div>
+        </div>
+
+        <div class="callout">
+          <h2>Şehrinde topluluk kur. Yerel etki yarat. Global CorteQS ağıyla güçlen.</h2>
+          <p>CorteQS, Türk diasporasının bulunduğu şehirlerde güçlü, yerel ve güvenilir topluluk yapıları oluşturmak için büyüyor. Erken dahil olan Community Leader’lar kendi şehirlerinde ilk görünenlerden biri olma ve yerel topluluğun şekillenmesine katkı verme avantajına sahip olur.</p>
+          <div class="actions">
+            <a class="btn" href="https://corteqs.net/" target="_blank" rel="noopener">corteqs.net üzerinden başvur</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="archive" id="program-arsivi">
+      <div class="container">
+        <div class="section-head">
+          <h2>Program arşivi</h2>
+          <p>Community Leader programının tüm detaylarını, aşağıda başlık başlık açılan kartlar üzerinden daha derin şekilde inceleyebilirsin.</p>
+        </div>
+
+        <div class="archive-wrap">
+          <div class="archive-grid">
+            <details class="accordion-item" open>
+              <summary>1. Community Leader nedir?</summary>
+              <div class="accordion-body">
+                <p>CorteQS Community Leader Programı, bulunduğu şehirde Türk diasporasıyla güçlü bağı olan, toplulukları harekete geçirebilen ve yerel iletişim ağlarını büyütebilen kişiler için tasarlanmış şehir bazlı topluluk liderliği programıdır.</p>
+                <p>Community Leader, CorteQS’in şehir bazlı topluluk yapılanmasında yerel liderlik rolü üstlenen kişidir. Bu rol klasik bir çalışan pozisyonu değildir; esnek, topluluk odaklı, performans ve görev bazlı ilerleyen bir yerel liderlik rolüdür.</p>
+                <h4>Community Leader ne yapar?</h4>
+                <ul>
+                  <li>Şehrindeki Türk diasporasını CorteQS etrafında bir araya getirir.</li>
+                  <li>İşletmeler, consultant’lar, içerik üreticileri ve yerel aktörlerle bağ kurar.</li>
+                  <li>Etkinlik, kampanya ve duyuruların şehir içinde görünür olmasını destekler.</li>
+                  <li>CorteQS içeriklerinin yerel toplulukta yayılmasına katkı verir.</li>
+                  <li>Şehirdeki ihtiyaçları ve fırsatları CorteQS ekibine aktarır.</li>
+                  <li>Dashboard üzerinden topluluk büyümesini ve katkılarını izler.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>2. Topluluk liderliği neden önemlidir?</summary>
+              <div class="accordion-body">
+                <p>Community Leader rolü, yalnızca duyuru yapmak için değil; şehirde güven, bağlantı ve sürdürülebilir topluluk inşa etmek için önemlidir. Yerel ağın güçlü olması, diaspora üyelerinin birbirine daha hızlı ulaşmasını ve CorteQS’in şehir bazlı etkisinin daha doğal büyümesini sağlar.</p>
+                <h4>Bu rol neden güçlü?</h4>
+                <ul>
+                  <li>İnsanları bir araya getirebilme yeteneğini görünür kılar.</li>
+                  <li>Şehir bazlı iletişimi daha organize hale getirir.</li>
+                  <li>Yerel etkiyi global CorteQS ağına bağlar.</li>
+                  <li>Topluluk büyümesini güven temelli bir yapıya oturtur.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>3. Community Leader ne yapar?</summary>
+              <div class="accordion-body">
+                <p>Community Leader şehirde yalnızca bir bağlantı noktası değil, aktif bir topluluk kolaylaştırıcısıdır. İnsanları bir araya getirir, doğru aktörleri birbirine bağlar ve yerel etkinin sürekli büyümesine katkı verir.</p>
+                <h4>Ana katkı alanları</h4>
+                <ul>
+                  <li>Topluluk üyeleriyle güven ilişkisi kurmak</li>
+                  <li>Yerel işletme ve consultant ağını toplulukla bağlamak</li>
+                  <li>Etkinlik ve buluşmaların şehirde duyulmasını sağlamak</li>
+                  <li>İçerik ve kampanya görünürlüğünü artırmak</li>
+                  <li>Şehirdeki fırsatları CorteQS ekibine taşımak</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>4. Kimler için uygundur?</summary>
+              <div class="accordion-body">
+                <p>Bu program özellikle yaşadığı şehirde Türk diasporasıyla güçlü ilişkileri olan, topluluk kurmayı ve iletişim yürütmeyi seven kişiler için uygundur.</p>
+                <h4>Özellikle kimler için?</h4>
+                <ul>
+                  <li>Toplulukları bir araya getirmeyi sevenler</li>
+                  <li>Etkinlik ve buluşma süreçlerine katkı verebilecek kişiler</li>
+                  <li>Şehirdeki işletmeler, consultant’lar ve yerel gruplarla temas kurabilenler</li>
+                  <li>Diaspora içinde güvenilir ve aktif bir yerel figür olmak isteyenler</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>5. Community Leader için değer önerisi nedir?</summary>
+              <div class="accordion-body">
+                <p>CorteQS, Community Leader’lara şehirlerinde görünürlük, temsil gücü ve global ağa bağlı bir topluluk inşa etme fırsatı sunar. Bu rol, yerel etkiyi daha kalıcı ve daha güçlü hale getirir.</p>
+                <ul>
+                  <li>Şehrindeki diaspora ekosisteminde güçlü bir yerel pozisyon kazanırsın</li>
+                  <li>Yerel topluluğu global CorteQS ağına bağlarsın</li>
+                  <li>Etkinlik, kampanya ve şehir bazlı projelerde aktif rol alırsın</li>
+                  <li>İşletmeler, consultant’lar, içerik üreticileri ve topluluk üyeleriyle daha güçlü bağlar kurarsın</li>
+                  <li>Kendi şehrinde CorteQS’in ilk temsil gücünü oluşturabilirsin</li>
+                </ul>
+                <p>Bu sayede yerel etkinin global görünürlüğe dönüşmesini sağlayabilir ve şehir bazlı büyümenin gerçek bir parçası haline gelirsin.</p>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>6. Dashboard’da neler olacak?</summary>
+              <div class="accordion-body">
+                <p>Community Leader, şehir bazlı topluluk büyümesini ve katkılarını dashboard üzerinden takip eder. Bu yapı, şehirde yarattığın etkinin somut karşılığını görmeni ve topluluk gelişimini daha düzenli yönetmeni sağlar.</p>
+                <ul>
+                  <li>Topluluk yönlendirmeleri</li>
+                  <li>Etkinlik duyuruları</li>
+                  <li>Content görevleri</li>
+                  <li>Referral bağlantıları</li>
+                  <li>Etkileşim verileri</li>
+                  <li>Performans göstergeleri</li>
+                </ul>
+                <p>Topluluk içindeki iletişimi, etkinlik akışını ve yerel büyümeyi tek bir çerçevede yönetebilmek bu rolün en güçlü taraflarından biridir.</p>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>7. Yol haritası ve kısa özet</summary>
+              <div class="accordion-body">
+                <h4>Basit yol haritası</h4>
+                <ul>
+                  <li>Community Leader başvurunu yaparsın.</li>
+                  <li>CorteQS ekibi şehir, ağ ve topluluk potansiyelini değerlendirir.</li>
+                  <li>Sana özel şehir bazlı rol ve yönlendirme akışı tanımlanır.</li>
+                  <li>Yerel topluluk, işletme, consultant ve içerik üreticileriyle bağlantı kurarsın.</li>
+                  <li>Etkinlik, kampanya ve duyuruların şehir içinde yayılmasına destek olursun.</li>
+                  <li>Topluluk büyümesini dashboard üzerinden takip eder ve etkini artırırsın.</li>
+                </ul>
+                <h4>Kısa özet</h4>
+                <p>CorteQS Community Leader Programı; şehirde topluluk kurmanı, yerel etki yaratmanı ve bu etkiyi global CorteQS ağına bağlamanı sağlar. Sen topluluğu bir araya getirirsin; CorteQS sana sistem, görünürlük ve koordinasyon altyapısı sunar.</p>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>8. Neden şimdi? Çağrı</summary>
+              <div class="accordion-body">
+                <p>CorteQS, Türk diasporasının bulunduğu şehirlerde güçlü, yerel ve güvenilir topluluk yapıları oluşturmak için büyüyor. Bu süreçte erken dahil olan Community Leader’lar kendi şehirlerinde ilk görünenlerden biri olma ve yerel topluluğun şekillenmesine katkı verme avantajına sahip olur.</p>
+                <p>Şehrindeki Türk diasporasını bir araya getirmek, yerel topluluğu büyütmek ve CorteQS’in global ağına bağlamak istiyorsan Community Leader Programı’na katıl. Şehrinde topluluk kur, yerel etki yarat ve global CorteQS ağıyla güçlen.</p>
+                <p><strong>Başvuru ve detaylar:</strong> <a href="https://corteqs.net/" target="_blank" rel="noopener">https://corteqs.net</a></p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    CorteQS Community Leader Program · Şehrinde topluluk kur, yerel etki yarat, global ağa bağlan
+  </footer>
+</div>

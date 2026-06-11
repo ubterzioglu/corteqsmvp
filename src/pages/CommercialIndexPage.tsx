@@ -1,10 +1,8 @@
 import { FileText } from "lucide-react";
+import { Link } from "react-router-dom";
 import { publicCommercialDocuments } from "@/lib/commercial-documents";
 
 const CommercialIndexPage = () => {
-  const getDocumentHref = (slug: string, standalonePath?: string) =>
-    standalonePath ?? `/commercial/${slug}`;
-
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--section-warm))_52%,hsl(var(--background))_100%)]">
       <main className="relative overflow-hidden">

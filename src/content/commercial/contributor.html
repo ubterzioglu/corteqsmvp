@@ -1,0 +1,1216 @@
+<!-- AUTO-GENERATED from info-contributor.html by scripts/extract-commercial-docs.mjs. -->
+<!-- Edit the source document and re-run the script instead of editing this file. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+.cdoc :where(*),
+.cdoc :where(*)::before,
+.cdoc :where(*)::after { all: revert; }
+.cdoc { position: relative; isolation: isolate; overflow: clip; }
+.cdoc {
+      --navy:#061A34;
+      --deep:#031022;
+      --blue:#0078D4;
+      --cyan:#00A6D6;
+      --orange:#FF7A00;
+      --yellow:#FFC400;
+      --green:#58B800;
+      --white:#FFFFFF;
+      --soft:#F4FAFF;
+      --muted:#6B7A90;
+      --card:rgba(255,255,255,.86);
+      --line:rgba(0,120,212,.18);
+      --shadow:0 24px 70px rgba(3,16,34,.16);
+      --radius:28px;
+    }
+
+    .cdoc, .cdoc * { box-sizing:border-box; }
+    .cdoc { scroll-behavior:smooth; }
+    .cdoc {
+      margin:0;
+      font-family:"Manrope", "Aptos", "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif;
+      font-size:15px;
+      color:var(--navy);
+      background:
+        radial-gradient(circle at 18% 10%, rgba(0,166,214,.22), transparent 28%),
+        radial-gradient(circle at 90% 0%, rgba(255,122,0,.18), transparent 26%),
+        radial-gradient(circle at 75% 82%, rgba(88,184,0,.16), transparent 22%),
+        linear-gradient(180deg, #ffffff 0%, #f5fbff 44%, #ffffff 100%);
+      overflow-x:hidden;
+    }
+
+    .cdoc::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(0,120,212,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,120,212,.045) 1px, transparent 1px);
+      background-size:52px 52px;
+      mask-image:linear-gradient(to bottom, black, transparent 85%);
+      z-index:-2;
+    }
+
+    .cdoc .orbit-bg {
+      position:absolute;
+      width:740px;
+      height:740px;
+      border:2px solid rgba(255,122,0,.16);
+      border-radius:50%;
+      top:-300px;
+      right:-250px;
+      z-index:-1;
+    }
+    .cdoc .orbit-bg::before,
+.cdoc .orbit-bg::after {
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      border:2px solid rgba(0,120,212,.13);
+      inset:90px;
+    }
+    .cdoc .orbit-bg::after {
+      inset:190px;
+      border-color:rgba(88,184,0,.16);
+    }
+
+    .cdoc .container {
+      width:min(100% - 24px, 1160px);
+      margin:0 auto;
+    }
+
+    .cdoc .hero {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:26px;
+      align-items:center;
+      padding:26px 0 28px;
+    }
+
+    .cdoc .eyebrow {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:9px 14px;
+      border:1px solid rgba(255,122,0,.26);
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(255,196,0,.18), rgba(0,166,214,.12));
+      font-weight:850;
+      color:#12365c;
+      margin-bottom:20px;
+    }
+
+    .cdoc .pulse {
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 0 8px rgba(88,184,0,.15);
+    }
+
+    .cdoc h1 {
+      margin:0;
+      font-size:clamp(34px, 11vw, 68px);
+      line-height:.96;
+      letter-spacing:-.075em;
+      color:var(--navy);
+      font-weight:800;
+    }
+
+    .cdoc .gradient-text {
+      background:linear-gradient(90deg, var(--blue), var(--cyan), var(--orange));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .cdoc .lead {
+      font-size:clamp(15px, 4.2vw, 20px);
+      line-height:1.55;
+      color:#30445f;
+      margin:20px 0 24px;
+      max-width:720px;
+      font-weight:600;
+    }
+
+    .cdoc .actions {
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:22px;
+    }
+
+    .cdoc .btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:15px 21px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:900;
+      letter-spacing:-.02em;
+      border:1px solid transparent;
+      box-shadow:0 14px 34px rgba(0,120,212,.16);
+      width:100%;
+    }
+
+    .cdoc .btn.primary {
+      color:white;
+      background:linear-gradient(135deg, var(--blue), var(--cyan) 50%, var(--green));
+    }
+
+    .cdoc .btn.secondary {
+      color:var(--navy);
+      background:white;
+      border-color:rgba(255,122,0,.28);
+    }
+
+    .cdoc .hero-card {
+      position:relative;
+      min-height:340px;
+      display:grid;
+      place-items:center;
+      border-radius:30px;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,.96), rgba(255,255,255,.54) 58%, rgba(0,166,214,.08)),
+        linear-gradient(135deg, rgba(0,120,212,.11), rgba(255,122,0,.08));
+      border:1px solid rgba(0,120,212,.13);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .cdoc .hero-card::before {
+      content:"";
+      position:absolute;
+      width:86%;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:2px solid rgba(255,122,0,.16);
+      transform:rotate(-18deg);
+    }
+
+    .cdoc .hero-card::after {
+      content:"";
+      position:absolute;
+      width:68%;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:2px solid rgba(0,166,214,.14);
+      transform:rotate(24deg);
+    }
+
+    .cdoc .mascot {
+      width:min(96%, 570px);
+      position:relative;
+      z-index:2;
+      filter:drop-shadow(0 34px 36px rgba(3,16,34,.24));
+    }
+
+
+    .cdoc .stats {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+      margin:18px 0 42px;
+    }
+
+    .cdoc .stat {
+      padding:22px;
+      border-radius:24px;
+      background:white;
+      border:1px solid var(--line);
+      box-shadow:0 12px 32px rgba(3,16,34,.06);
+    }
+    .cdoc .stat strong {
+      display:block;
+      font-size:28px;
+      letter-spacing:-.05em;
+      color:var(--navy);
+    }
+    .cdoc .stat span {
+      color:var(--muted);
+      font-weight:700;
+      font-size:13px;
+    }
+
+    .cdoc section { padding:16px 0; }
+    .cdoc .section-head {
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      margin-bottom:22px;
+    }
+    .cdoc h2 {
+      margin:0;
+      font-size:clamp(24px, 7vw, 40px);
+      line-height:1.02;
+      letter-spacing:-.06em;
+      font-weight:800;
+    }
+    .cdoc .section-head p {
+      max-width:560px;
+      margin:0;
+      color:#53657b;
+      font-size:15px;
+      line-height:1.6;
+      font-weight:600;
+    }
+
+    .cdoc .grid-2 {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+    }
+    .cdoc .grid-2.stack-always {
+      grid-template-columns:1fr;
+    }
+    .cdoc .grid-3 {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+    }
+
+    .cdoc .card {
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:20px;
+      box-shadow:0 18px 46px rgba(3,16,34,.07);
+      backdrop-filter:blur(14px);
+    }
+
+    .cdoc .card.dark {
+      color:white;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(0,166,214,.28), transparent 34%),
+        radial-gradient(circle at 100% 0%, rgba(255,122,0,.24), transparent 28%),
+        linear-gradient(135deg, var(--deep), #092246);
+      border-color:rgba(255,255,255,.12);
+    }
+    .cdoc .card.dark p,
+.cdoc .card.dark li { color:rgba(255,255,255,.78); }
+    .cdoc .card.dark .accordion-copy p { color:rgba(255,255,255,.76); }
+    .cdoc .card.dark .accordion-title {
+      gap:10px;
+      align-items:flex-start;
+    }
+    .cdoc .card.dark .accordion-toggle .icon {
+      width:42px;
+      height:42px;
+      margin-bottom:0;
+      border-radius:14px;
+      font-size:18px;
+      flex:0 0 42px;
+    }
+    .cdoc .card.dark .accordion-arrow {
+      background:
+        radial-gradient(circle at 28% 24%, rgba(255,255,255,.24), transparent 34%),
+        radial-gradient(circle at 72% 78%, rgba(255,255,255,.08), transparent 42%),
+        linear-gradient(145deg, rgba(255,255,255,.09), rgba(255,255,255,.18));
+      color:white;
+      border-color:rgba(255,255,255,.18);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.2),
+        inset 0 -8px 16px rgba(255,255,255,.03),
+        0 10px 24px rgba(3,16,34,.24);
+    }
+    .cdoc .card.dark .accordion-body {
+      border-top:1px solid rgba(255,255,255,.12);
+    }
+
+    .cdoc .accordion-card {
+      overflow:hidden;
+      padding:0;
+    }
+
+    .cdoc .accordion-toggle {
+      list-style:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:22px 20px;
+      cursor:pointer;
+    }
+    .cdoc .accordion-toggle::-webkit-details-marker { display:none; }
+
+    .cdoc .accordion-title {
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
+
+    .cdoc .accordion-copy h3 {
+      margin:0 0 4px;
+    }
+
+    .cdoc .accordion-copy p {
+      margin:0;
+      color:#53657b;
+      font-size:14px;
+      line-height:1.55;
+      font-weight:600;
+    }
+
+    .cdoc .accordion-arrow {
+      flex:0 0 auto;
+      width:48px;
+      height:48px;
+      display:grid;
+      place-items:center;
+      border-radius:999px;
+      border:1px solid rgba(0,120,212,.14);
+      background:
+        radial-gradient(circle at 28% 24%, rgba(255,255,255,.98), rgba(255,255,255,.18) 30%, transparent 31%),
+        radial-gradient(circle at 74% 78%, rgba(255,255,255,.24), transparent 40%),
+        linear-gradient(145deg, rgba(0,120,212,.08), rgba(255,255,255,.84) 48%, rgba(255,122,0,.09));
+      color:var(--navy);
+      font-size:16px;
+      font-weight:900;
+      line-height:1;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.96),
+        inset 0 -10px 18px rgba(255,255,255,.3),
+        0 10px 24px rgba(3,16,34,.08),
+        0 1px 2px rgba(3,16,34,.05);
+      transition:transform .24s ease, box-shadow .24s ease, border-color .24s ease, background .24s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .cdoc .accordion-glyph {
+      width:11px;
+      height:11px;
+      border-right:2.4px solid currentColor;
+      border-bottom:2.4px solid currentColor;
+      transform:rotate(45deg) translate(-1px, -1px);
+      border-radius:1px;
+      position:relative;
+      z-index:1;
+      filter:drop-shadow(0 1px 0 rgba(255,255,255,.22));
+    }
+
+    .cdoc .accordion-arrow::before {
+      content:"";
+      position:absolute;
+      inset:3px;
+      border-radius:inherit;
+      border:1px solid rgba(255,255,255,.55);
+      pointer-events:none;
+    }
+
+    .cdoc .accordion-arrow::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+      background:
+        conic-gradient(from 210deg, rgba(0,120,212,.08), rgba(255,255,255,0) 34%, rgba(255,122,0,.08) 72%, rgba(255,255,255,0));
+      opacity:.7;
+      pointer-events:none;
+    }
+
+    .cdoc .accordion-toggle:hover .accordion-arrow {
+      border-color:rgba(0,120,212,.2);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.98),
+        inset 0 -10px 18px rgba(255,255,255,.36),
+        0 14px 28px rgba(3,16,34,.12),
+        0 1px 2px rgba(3,16,34,.06);
+    }
+
+    .cdoc details[open] .accordion-arrow {
+      transform:rotate(180deg);
+    }
+
+    .cdoc .accordion-body {
+      padding:0 20px 22px;
+      border-top:1px solid rgba(0,120,212,.1);
+    }
+
+    .cdoc .accordion-list {
+      margin:18px 0 0;
+      gap:14px;
+    }
+
+    .cdoc .accordion-list li {
+      padding-left:38px;
+      color:#2f4664;
+      font-size:14px;
+      line-height:1.55;
+      font-weight:700;
+    }
+
+    .cdoc .accordion-list li::before {
+      display:block;
+      width:12px;
+      height:12px;
+      left:0;
+      top:.42em;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 38% 38%, var(--orange) 0 32%, transparent 33%),
+        linear-gradient(135deg, rgba(0,166,214,.28), rgba(0,120,212,.15));
+      box-shadow:0 0 0 6px rgba(0,166,214,.12);
+    }
+
+    .cdoc .accordion-list strong {
+      color:var(--navy);
+      font-size:15px;
+      font-weight:800;
+    }
+
+    .cdoc .icon {
+      width:48px;
+      height:48px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      background:linear-gradient(135deg, rgba(0,120,212,.12), rgba(255,122,0,.14));
+      font-size:20px;
+      margin-bottom:18px;
+    }
+
+    .cdoc .card > .icon:first-child {
+      float:left;
+      margin:2px 14px 10px 0;
+    }
+
+    .cdoc .card > .icon:first-child + h3 {
+      min-height:48px;
+      display:flex;
+      align-items:center;
+      margin:0 0 10px;
+    }
+
+    .cdoc .card > .icon:first-child ~ p:first-of-type,
+.cdoc .card > .icon:first-child ~ ul:first-of-type {
+      margin-top:0;
+    }
+
+    .cdoc .card > .icon:first-child ~ *:last-child::after {
+      content:"";
+      display:block;
+      clear:both;
+    }
+
+    .cdoc h3 {
+      margin:0 0 12px;
+      font-size:18px;
+      letter-spacing:-.035em;
+      font-weight:800;
+    }
+    .cdoc p {
+      font-size:15px;
+      line-height:1.65;
+    }
+    .cdoc ul {
+      padding:0;
+      margin:14px 0 0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .cdoc li {
+      color:#445872;
+      font-size:14px;
+      line-height:1.55;
+      font-weight:620;
+      position:relative;
+      padding-left:28px;
+    }
+    .cdoc li::before {
+      content:"";
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:linear-gradient(135deg, var(--cyan), var(--orange));
+      position:absolute;
+      left:0;
+      top:.48em;
+      box-shadow:0 0 0 5px rgba(0,166,214,.08);
+    }
+
+    .cdoc .pricing {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
+    }
+
+    .cdoc .price-card {
+      position:relative;
+      overflow:hidden;
+      padding:20px;
+      border-radius:22px;
+      background:white;
+      border:1px solid rgba(0,120,212,.14);
+      box-shadow:0 18px 46px rgba(3,16,34,.07);
+    }
+    .cdoc .price-card::before {
+      content:"";
+      position:absolute;
+      inset:auto -30px -80px auto;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:linear-gradient(135deg, rgba(255,196,0,.28), rgba(255,122,0,.18));
+    }
+
+    .cdoc .price {
+      font-size:40px;
+      line-height:1;
+      letter-spacing:-.08em;
+      font-weight:950;
+      color:var(--navy);
+      margin:18px 0 10px;
+    }
+    .cdoc .price small {
+      font-size:15px;
+      letter-spacing:-.02em;
+      color:var(--muted);
+    }
+
+    .cdoc table {
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:22px;
+      border:1px solid rgba(0,120,212,.14);
+      background:white;
+      box-shadow:0 16px 42px rgba(3,16,34,.06);
+    }
+    .cdoc th,
+.cdoc td {
+      padding:12px 10px;
+      text-align:left;
+      border-bottom:1px solid rgba(0,120,212,.1);
+      vertical-align:top;
+      font-size:12px;
+    }
+    .cdoc th {
+      background:linear-gradient(135deg, rgba(0,120,212,.1), rgba(255,122,0,.08));
+      color:var(--navy);
+      font-weight:900;
+    }
+    .cdoc tr:last-child td { border-bottom:0; }
+
+    .cdoc .steps {
+      counter-reset:step;
+      display:grid;
+      gap:10px;
+    }
+    .cdoc .step {
+      counter-increment:step;
+      display:grid;
+      grid-template-columns:50px 1fr;
+      gap:12px;
+      align-items:center;
+      padding:14px 16px;
+      background:white;
+      border:1px solid rgba(0,120,212,.14);
+      border-radius:22px;
+      box-shadow:0 12px 28px rgba(3,16,34,.05);
+      min-height:78px;
+    }
+    .cdoc .step::before {
+      content:counter(step);
+      width:50px;
+      height:50px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      color:white;
+      font-weight:950;
+      font-size:17px;
+      background:linear-gradient(135deg, var(--blue), var(--orange));
+    }
+
+    .cdoc .callout {
+      margin-top:22px;
+      padding:28px;
+      border-radius:32px;
+      color:white;
+      background:
+        linear-gradient(135deg, rgba(0,120,212,.94), rgba(0,166,214,.9) 48%, rgba(255,122,0,.92)),
+        url("/commercial-docs/corteqs-doc-hero.png") center/260px no-repeat;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .cdoc .callout h2 { color:white; }
+    .cdoc .callout p { max-width:760px; color:rgba(255,255,255,.9); font-weight:650; }
+    .cdoc .callout .btn { background:white; color:var(--navy); box-shadow:none; }
+
+    .cdoc .archive {
+      padding-top:28px;
+    }
+
+    .cdoc .archive-wrap {
+      padding:30px;
+      border-radius:36px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.92), rgba(244,250,255,.92)),
+        radial-gradient(circle at top right, rgba(255,122,0,.08), transparent 32%);
+      border:1px solid rgba(0,120,212,.12);
+      box-shadow:0 24px 64px rgba(3,16,34,.08);
+    }
+
+    .cdoc .archive-grid {
+      display:grid;
+      gap:14px;
+    }
+
+    .cdoc .accordion-item {
+      border-radius:24px;
+      background:white;
+      border:1px solid rgba(0,120,212,.12);
+      box-shadow:0 14px 36px rgba(3,16,34,.05);
+      overflow:hidden;
+    }
+
+    .cdoc .accordion-item summary {
+      list-style:none;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:22px 24px;
+      font-weight:900;
+      font-size:20px;
+      letter-spacing:-.03em;
+    }
+
+    .cdoc .accordion-item summary::-webkit-details-marker {
+      display:none;
+    }
+
+    .cdoc .accordion-item summary::after {
+      content:"+";
+      width:36px;
+      height:36px;
+      flex:0 0 36px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      color:var(--navy);
+      background:linear-gradient(135deg, rgba(0,120,212,.12), rgba(255,122,0,.14));
+      font-size:24px;
+      font-weight:700;
+    }
+
+    .cdoc .accordion-item[open] summary::after {
+      content:"−";
+    }
+
+    .cdoc .accordion-body {
+      padding:0 24px 24px;
+      color:#3f536e;
+    }
+
+    .cdoc .accordion-body p {
+      margin:0 0 14px;
+    }
+
+    .cdoc .accordion-body p:last-child {
+      margin-bottom:0;
+    }
+
+    .cdoc .accordion-body h4 {
+      margin:20px 0 10px;
+      font-size:16px;
+      letter-spacing:-.02em;
+      color:var(--navy);
+    }
+
+    .cdoc .accordion-body ul {
+      margin-top:8px;
+    }
+
+    .cdoc footer {
+      padding:38px 0;
+      color:#5a6b80;
+      text-align:center;
+      font-weight:650;
+    }
+
+    @media (min-width: 561px) {
+
+      .cdoc .container { width:min(100% - 40px, 1160px); }
+      .cdoc .stats,
+.cdoc .grid-3 { grid-template-columns:repeat(2, 1fr); }
+      .cdoc .actions { flex-direction:row; }
+      .cdoc .btn { width:auto; }
+      .cdoc .hero-card { min-height:420px; }
+      .cdoc .card,
+.cdoc .price-card { padding:26px; border-radius:28px; }
+      .cdoc .accordion-card { padding:0; }
+      .cdoc th,
+.cdoc td { font-size:13px; padding:16px 14px; }
+      .cdoc .archive-wrap { padding:22px; }
+    
+}
+
+    @media (min-width: 921px) {
+
+      .cdoc .hero { grid-template-columns:1.06fr .94fr; gap:42px; padding:72px 0 46px; }
+      .cdoc .stats { grid-template-columns:repeat(4, 1fr); margin:18px 0 58px; }
+      .cdoc section { padding:20px 0; }
+      .cdoc .section-head { flex-direction:row; align-items:end; gap:24px; margin-bottom:26px; }
+      .cdoc .grid-2 { grid-template-columns:repeat(2, 1fr); }
+      .cdoc .grid-2.stack-always { grid-template-columns:1fr; }
+      .cdoc .grid-3 { grid-template-columns:repeat(3, 1fr); }
+      .cdoc .pricing { grid-template-columns:1fr 1fr; }
+      .cdoc .hero-card { min-height:560px; border-radius:42px; }
+    
+}
+
+    @media print {
+
+      .cdoc header,
+.cdoc .actions { display:none; }
+      .cdoc { background:white; }
+      .cdoc section,
+.cdoc .hero { padding:20px 0; }
+      .cdoc .card,
+.cdoc .price-card,
+.cdoc table { box-shadow:none; }
+    
+}
+.cdoc .container { max-width: none; padding-left: 0; padding-right: 0; }
+</style>
+<div class="cdoc">
+<div class="orbit-bg"></div>
+
+  <main id="top">
+    <div class="container hero">
+      <div>
+        <div class="eyebrow"><span class="pulse"></span> Local Contributor Program</div>
+        <h1>Şehrindeki Türk diasporasını <span class="gradient-text">CorteQS ağına bağla.</span></h1>
+        <p class="lead">İşletmeleri, consultant’ları, hizmet sağlayıcıları ve yerel toplulukları CorteQS’e kazandır. Yerel bağlantılarını global bir network gücüne dönüştür.</p>
+        <div class="actions">
+          <a class="btn primary" href="https://corteqs.net/" target="_blank" rel="noopener">Başvuru ve detaylar</a>
+          <a class="btn secondary" href="#kazanc">Kazanç modelini incele</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img class="mascot" src="https://injprdrsklkxgnaiixzh.supabase.co/storage/v1/object/public/onepagers/maskot.png" alt="CorteQS maskot">
+      </div>
+    </div>
+
+    <section id="program">
+      <div class="container">
+        <details class="card accordion-card">
+          <summary class="accordion-toggle">
+            <div class="accordion-title">
+              <div class="icon">🌍</div>
+              <div class="accordion-copy">
+                <h3>Program nedir?</h3>
+                <p>CorteQS Local Contributor Programı, bulunduğu şehirde yerel çevresi güçlü olan kişiler için hazırlanmış şehir bazlı bir büyüme partnerliği modelidir.</p>
+              </div>
+            </div>
+            <span class="accordion-arrow" aria-hidden="true"><span class="accordion-glyph"></span></span>
+          </summary>
+
+          <div class="accordion-body">
+            <div class="grid-2 stack-always">
+              <article class="card">
+                <div class="icon">🌍</div>
+                <h3>Local Contributor kimdir?</h3>
+                <p>Local Contributor, CorteQS’in şehir bazlı yerel büyüme partneridir. Şehrindeki işletmeleri, consultant’ları, hizmet sağlayıcıları ve topluluk aktörlerini CorteQS ile tanıştırır. Bu rol klasik bir çalışan pozisyonu değildir; esnek, görev bazlı ve performans odaklı bir yerel büyüme partnerliğidir.</p>
+              </article>
+
+              <article class="card">
+                <div class="icon">🤝</div>
+                <h3>Takipçi sayısı değil, bağlantı gücü önemli</h3>
+                <ul>
+                  <li>Contributor olmak için yüksek takipçi sayısına sahip olmak gerekmez</li>
+                  <li>Doğru kişilere ulaşabilmek</li>
+                  <li>CorteQS’i etkili şekilde anlatabilmek</li>
+                  <li>Yerel ağı harekete geçirebilmek</li>
+                  <li>Şehirde görünürlük yaratır</li>
+                  <li>İşletme ve consultant kayıtlarını destekler</li>
+                  <li>İçerik, kampanya ve etkinlik yayılımına katkı sağlar</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <details class="card accordion-card">
+          <summary class="accordion-toggle">
+            <div class="accordion-title">
+              <div class="icon">📌</div>
+              <div class="accordion-copy">
+                <h3>Contributor ne yapar?</h3>
+                <p>Yerel bağlantıyı global CorteQS ekosistemine taşır ve şehir bazlı büyümeye doğrudan katkı verir.</p>
+              </div>
+            </div>
+            <span class="accordion-arrow" aria-hidden="true"><span class="accordion-glyph"></span></span>
+          </summary>
+
+          <div class="accordion-body">
+            <ul class="accordion-list">
+              <li><strong>İşletme daveti</strong> Şehrindeki işletmeleri, consultant’ları ve hizmet sağlayıcıları CorteQS’e davet eder.</li>
+              <li><strong>Kayıt desteği</strong> Platforma kayıt sürecinde yönlendirme ve bilgilendirme desteği sağlar.</li>
+              <li><strong>Yerel yayılım</strong> CorteQS içeriklerinin, kampanyalarının ve duyurularının yerel çevrede görünür olmasına destek olur.</li>
+              <li><strong>Referral takibi</strong> Kendi referral linki veya kodu üzerinden yönlendirmelerini takip eder.</li>
+              <li><strong>Performans izleme</strong> Dashboard üzerinden katkılarını, kazançlarını, görevlerini ve etkileşimlerini izler.</li>
+              <li><strong>Büyüme etkisi</strong> Performansı arttıkça Senior Local Contributor seviyesine geçebilir.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section id="kazanc">
+      <div class="container">
+        <details class="card accordion-card">
+          <summary class="accordion-toggle">
+            <div class="accordion-title">
+              <div class="icon">💶</div>
+              <div class="accordion-copy">
+                <h3>Paketler ve kazanç modeli</h3>
+                <p>İşletme ve consultant üyelikleri üzerinden referral geliri; content görevleri üzerinden ek gelir modeli bulunur.</p>
+              </div>
+            </div>
+            <span class="accordion-arrow" aria-hidden="true"><span class="accordion-glyph"></span></span>
+          </summary>
+
+          <div class="accordion-body">
+            <div class="pricing">
+              <div class="price-card">
+                <h3>Aylık Paket</h3>
+                <div class="price">€5 <small>/ ay</small></div>
+                <p>İlk yıl kampanyasında ilk 6 ay ücretsiz, sonraki 6 ay €5 / ay.</p>
+                <ul>
+                  <li>İlk yıl ödeme: €30</li>
+                  <li>İkinci yıl normal ödeme: €60</li>
+                  <li>2 yıllık toplam: €90</li>
+                </ul>
+              </div>
+
+              <div class="price-card">
+                <h3>Yıllık Paket</h3>
+                <div class="price">€60 <small>/ yıl</small></div>
+                <p>İlk 6 ay ücretsiz avantajı ve yıllık peşin ödemede %20 indirim.</p>
+                <ul>
+                  <li>İlk yıl ödeme: €24</li>
+                  <li>İkinci yıl indirimli ödeme: €48</li>
+                  <li>2 yıllık toplam: €72</li>
+                </ul>
+              </div>
+            </div>
+
+            <br>
+
+            <table aria-label="Contributor kademeleri">
+              <thead>
+                <tr>
+                  <th>Kademe</th>
+                  <th>Referral Oranı</th>
+                  <th>Content Görev Çarpanı</th>
+                  <th>Kimler İçin?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Local Contributor</strong></td>
+                  <td>%15</td>
+                  <td>1.0x</td>
+                  <td>Programa yeni başlayan ve aktif işletme / consultant kazandıran contributor’lar.</td>
+                </tr>
+                <tr>
+                  <td><strong>Senior Local Contributor</strong></td>
+                  <td>%20</td>
+                  <td>1.2x</td>
+                  <td>101+ üye sonrası daha yüksek performans gösteren contributor’lar.</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <br>
+
+            <table aria-label="Referral kazanç örnekleri">
+              <thead>
+                <tr>
+                  <th>Senaryo</th>
+                  <th>Local Contributor</th>
+                  <th>Senior Local Contributor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>25 üye aylık paket seçerse, 1. yıl</td>
+                  <td>25 × €4.50 = <strong>€112.50</strong></td>
+                  <td>25 × €6.00 = <strong>€150</strong></td>
+                </tr>
+                <tr>
+                  <td>25 üye yıllık paket seçerse, 1. yıl</td>
+                  <td>25 × €3.60 = <strong>€90</strong></td>
+                  <td>25 × €4.80 = <strong>€120</strong></td>
+                </tr>
+                <tr>
+                  <td>Aynı 25 üye 2. yıl devam ederse</td>
+                  <td>25 × €9.00 = <strong>€225</strong></td>
+                  <td>25 × €12.00 = <strong>€300</strong></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="callout">
+              <h2>Founding Contributor fırsatı</h2>
+              <p>Pre-lansman döneminde / founding contributor olarak 29 Ekim 2026 tarihine kadar kazandırılan işletme ve consultant üyeliklerinde, üye yenileme yaptığı sürece 3 yıl boyunca referral fee kazanma fırsatı olabilir.</p>
+            </div>
+
+            <h3 style="margin-top:28px;">Content gelirleri</h3>
+            <p>Contributor’lar yalnızca referral ile değil, şehir ve ülke bazlı content yayılım görevleriyle de ek gelir elde edebilir.</p>
+
+            <div class="grid-2">
+              <article class="card">
+                <h3>Görev tipleri</h3>
+                <ul>
+                  <li>Content paylaşımı</li>
+                  <li>Repost / story desteği</li>
+                  <li>Yerel içerik üretimi</li>
+                  <li>Etkinlik duyurusu</li>
+                  <li>Kampanya bazlı yayılım desteği</li>
+                </ul>
+              </article>
+            </div>
+
+            <article class="card" style="margin-top:14px;">
+              <h3>Ödeme mantığı</h3>
+              <ul>
+                <li>Standart content yayılım görevinde Local Contributor minimum €20 kazanabilir</li>
+                <li>Standart content yayılım görevinde Senior Local Contributor minimum €24 kazanabilir</li>
+                <li>Daha büyük kampanya görevlerinde ödeme kampanya bütçesine göre belirlenir</li>
+              </ul>
+            </article>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section id="dashboard">
+      <div class="container">
+        <details class="card accordion-card">
+          <summary class="accordion-toggle">
+            <div class="accordion-title">
+              <div class="icon">🖥️</div>
+              <div class="accordion-copy">
+                <h3>Contributor Dashboard'da Neler Var ?</h3>
+                <p>Her contributor kendi dashboard’u üzerinden süreci, yönlendirmelerini ve performansını şeffaf şekilde takip eder.</p>
+              </div>
+            </div>
+            <span class="accordion-arrow" aria-hidden="true"><span class="accordion-glyph"></span></span>
+          </summary>
+
+          <div class="accordion-body">
+            <ul class="accordion-list">
+              <li><strong>Referral link / kod</strong> Kazandırılan işletme, consultant ve kullanıcıların contributor’a bağlanmasını sağlar.</li>
+              <li><strong>Kazanç paneli</strong> Referral ve content gelirleri tek ekranda takip edilir.</li>
+              <li><strong>Yönlendirme alanı</strong> Yeni işletme ve consultant yönlendirmeleri sisteme eklenebilir.</li>
+              <li><strong>Content görevleri</strong> Açık kampanya ve paylaşım görevleri görüntülenir.</li>
+              <li><strong>Etkileşim takibi</strong> Paylaşımların performansı ve katkı etkisi izlenir.</li>
+              <li><strong>Etkinlik duyuruları</strong> Şehirdeki etkinlikler paylaşılabilir ve desteklenebilir.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section id="basvuru">
+      <div class="container">
+        <details class="card accordion-card">
+          <summary class="accordion-toggle">
+            <div class="accordion-title">
+              <div class="icon">🗺️</div>
+              <div class="accordion-copy">
+                <h3>Contributor yol haritası</h3>
+                <p>Başvurudan Senior seviyeye kadar süreç basit, takip edilebilir ve performans odaklıdır.</p>
+              </div>
+            </div>
+            <span class="accordion-arrow" aria-hidden="true"><span class="accordion-glyph"></span></span>
+          </summary>
+
+          <div class="accordion-body">
+            <div class="steps">
+              <div class="step"><strong>Contributor başvurunu yaparsın.</strong></div>
+              <div class="step"><strong>CorteQS ekibi başvurunu değerlendirir.</strong></div>
+              <div class="step"><strong>Sana özel referral link / kod tanımlanır.</strong></div>
+              <div class="step"><strong>Şehrindeki işletmeleri ve consultant’ları CorteQS’e davet edersin.</strong></div>
+              <div class="step"><strong>Content ve kampanya görevlerine katılırsın.</strong></div>
+              <div class="step"><strong>Performansın arttıkça Senior Local Contributor seviyesine geçersin.</strong></div>
+            </div>
+
+            <div class="callout">
+              <h2>Şehrinde bağlantı kur. Yerel etki yarat. Global CorteQS ağıyla büyü.</h2>
+              <p>CorteQS, global Türk diasporasını şehir bazlı bir network yapısıyla bir araya getirmek için büyüyor. Erken dahil olan Contributor’lar kendi şehirlerinde ilk görünenlerden biri olma avantajına sahip olur.</p>
+              <div class="actions">
+                <a class="btn" href="https://corteqs.net/" target="_blank" rel="noopener">corteqs.net üzerinden başvur</a>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="archive" id="program-arsivi">
+      <div class="container">
+        <details class="card accordion-card">
+          <summary class="accordion-toggle">
+            <div class="accordion-title">
+              <div class="icon">📚</div>
+              <div class="accordion-copy">
+                <h3>Detaylı Anlatım</h3>
+                <p>Programın tüm detaylarını tek bir ana kart altında, başlık başlık açarak inceleyebilirsin.</p>
+              </div>
+            </div>
+            <span class="accordion-arrow" aria-hidden="true"><span class="accordion-glyph"></span></span>
+          </summary>
+
+          <div class="accordion-body">
+            <div class="archive-wrap">
+              <div class="archive-grid">
+            <details class="accordion-item">
+              <summary>1. Local Contributor nedir?</summary>
+              <div class="accordion-body">
+                <p>CorteQS Local Contributor Programı; bulunduğu şehirde işletmelerle, consultant’larla, hizmet sağlayıcılarla ve yerel topluluklarla bağlantısı olan kişiler için tasarlanmış şehir bazlı bir büyüme programıdır. Takipçi sayısı gerekmez; önemli olan yerel çevrende doğru kişilere ulaşabilmen, CorteQS’i anlatabilmen ve platforma aktif üye kazandırabilmendir.</p>
+                <p>Local Contributor, CorteQS’in şehir bazlı yerel büyüme partneridir. Bu rol klasik bir çalışan pozisyonu değildir; esnek, görev bazlı ve performans odaklı bir partner modelidir.</p>
+                <h4>Contributor ne yapar?</h4>
+                <ul>
+                  <li>Şehrindeki işletmeleri ve consultant’ları CorteQS’e davet eder.</li>
+                  <li>Platforma kayıt sürecinde bilgilendirme ve yönlendirme desteği sağlar.</li>
+                  <li>CorteQS içeriklerinin yerel çevrede yayılmasına katkı verir.</li>
+                  <li>Etkinlik, kampanya ve duyuruların şehir içinde görünür olmasını destekler.</li>
+                  <li>Kendi referral linki veya kodu üzerinden yönlendirmelerini takip eder.</li>
+                  <li>Dashboard üzerinden performansını, görevlerini ve katkılarını izler.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>2. İşletme ve consultant paketleri nelerdir?</summary>
+              <div class="accordion-body">
+                <p>CorteQS’te işletmeler ve consultant’lar için normal abonelik ücreti aylık €5’tir. Lansman yılında işletmelere ve consultant’lara ilk 6 ay ücretsiz avantaj sunulur.</p>
+                <h4>Basit hesap ve iki yıllık simülasyon</h4>
+                <p>İlk yıl kampanyalıdır, ikinci yılda normal abonelik ücreti devreye girer. Bu nedenle ikinci yıl ödeme tutarı belirgin şekilde yükselir. Yıllık tek seferlik ödemede her zaman %20 indirim uygulanır.</p>
+                <ul>
+                  <li>İlk yıl giriş maliyeti düşüktür.</li>
+                  <li>İkinci yıl normal paket fiyatı devreye girer.</li>
+                  <li>Contributor kazancı, kazandırılan üyenin ödediği paket tutarına göre hesaplanır.</li>
+                  <li>Yıllar içinde artan paket tutarı, artan referral geliri anlamına gelir.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>3. Contributor kazancı nasıl hesaplanır?</summary>
+              <div class="accordion-body">
+                <p>Contributor referral geliri, kazandırdığı aktif işletme veya consultant’ın ödeme yaptığı paket üzerinden hesaplanır. İlk yıl kampanya fiyatları, ikinci yıl ise normal paket fiyatı baz alınır.</p>
+                <h4>Contributor kademeleri</h4>
+                <p>Performans arttıkça contributor seviyesi yükselir; bu da daha güçlü referral oranları ve daha yüksek görev ödemeleri anlamına gelir.</p>
+                <h4>İlk yıl ve ikinci yıl referral mantığı</h4>
+                <p>İlk yıl kampanyalı yapı nedeniyle daha düşük baz fiyat üzerinden hesap yapılır. İkinci yıl normal paket fiyatı devreye girdiğinde referral hesaplaması da normal ücret üzerinden devam eder.</p>
+                <h4>Örnek senaryo</h4>
+                <p>25 işletme veya danışman kazandırıldığında referral gelirinin toplam etkisi görünür hale gelir; özellikle ikinci yıl yenilemeleriyle gelir hacmi belirgin şekilde artar.</p>
+                <p>Not: Pre-launch döneminde founding contributor olarak kazandırılan işletme ve consultant üyeliklerinde, üyeler yenileme yaptığı sürece referral hakkı 3 yıl boyunca devam edebilir. Bu avantaj 29 Ekim 2026 tarihine kadar kazandırılan üyeler için geçerli kurucu katkı modeli olarak tanımlanır.</p>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>4. Content gelirleri nelerdir?</summary>
+              <div class="accordion-body">
+                <p>Contributor’lar yalnızca işletme veya consultant kazandırarak değil, content yayılım görevleriyle de gelir elde edebilir. Bu görevler CorteQS’in, işletmelerin, consultant’ların veya markaların talep ettiği şehir ya da ülke bazlı duyuru ve tanıtım kampanyaları için oluşturulur.</p>
+                <h4>Content ödeme örneği</h4>
+                <p>Örnek 100 etkileşimlik bir görevde ödeme kampanya kapsamına göre belirlenir. Senior Local Contributor aynı görevlerde daha yüksek ödeme çarpanına sahiptir.</p>
+                <ul>
+                  <li>Content paylaşımı ve repost desteği</li>
+                  <li>Story ve duyuru yayılımı</li>
+                  <li>Yerel içerik üretimi</li>
+                  <li>Kampanya bazlı görünürlük görevleri</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>5. Contributor Dashboard’da neler olacak?</summary>
+              <div class="accordion-body">
+                <p>Her contributor kendi dashboard’u üzerinden süreci baştan sona takip eder. Yapının amacı katkıyı görünür, ölçülebilir ve yönetilebilir hale getirmektir.</p>
+                <ul>
+                  <li>Referral linki veya kodu</li>
+                  <li>Yönlendirme kayıtları ve yeni başvuru alanı</li>
+                  <li>Kazanç paneli</li>
+                  <li>Açık content görevleri</li>
+                  <li>Etkileşim ve performans takibi</li>
+                  <li>Kampanya ve etkinlik duyuruları</li>
+                </ul>
+                <p>Bu sayede contributor, yaptığı katkının etkisini şeffaf şekilde görebilir ve şehir bazlı büyümenin gerçek bir parçası haline gelir.</p>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>6. Kimler için uygun?</summary>
+              <div class="accordion-body">
+                <p>Bu program özellikle yaşadığı şehirde Türk diasporasıyla bağı olan, işletmeler, danışmanlar, uzmanlar ya da hizmet sağlayıcılarla kolay iletişim kurabilen kişiler için uygundur.</p>
+                <ul>
+                  <li>Yerel topluluklarda aktif olanlar</li>
+                  <li>İçerik paylaşımı ve kampanya yayılımına destek verebilecek kişiler</li>
+                  <li>Şehrinde CorteQS’in ilk temsil gücünü oluşturmak isteyenler</li>
+                  <li>Esnek, performans bazlı ve büyüme odaklı bir rol arayanlar</li>
+                </ul>
+                <h4>Contributor için değer önerisi</h4>
+                <p>Contributor olarak şehirde görünürlük kazanır, işletmeler ve consultant’larla daha güçlü bağlar kurar, CorteQS’in global büyüme sürecinde erken rol alır ve performansın arttıkça daha ileri contributor seviyelerine geçersin.</p>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>7. Yol haritası ve kısa özet nedir?</summary>
+              <div class="accordion-body">
+                <h4>Basit yol haritası</h4>
+                <ul>
+                  <li>Contributor başvurunu yaparsın.</li>
+                  <li>CorteQS ekibi başvurunu değerlendirir.</li>
+                  <li>Sana özel referral linki veya kodu tanımlanır.</li>
+                  <li>Şehrindeki işletmeleri ve consultant’ları CorteQS’e davet edersin.</li>
+                  <li>Content ve kampanya görevlerine katılırsın.</li>
+                  <li>Performansın arttıkça daha ileri contributor seviyelerine geçersin.</li>
+                </ul>
+                <h4>Kısa özet</h4>
+                <p>CorteQS Local Contributor Programı sana üç gelir kapısı açar: işletme ve consultant referral geliri, content görev geliri ve senior kademe avantajı. Sen şehirde bağlantı kurarsın; CorteQS sana sistem, dashboard, referral modeli ve ödeme altyapısı sağlar.</p>
+              </div>
+            </details>
+
+            <details class="accordion-item">
+              <summary>8. Neden şimdi?</summary>
+              <div class="accordion-body">
+                <p>CorteQS, global Türk diasporasını şehir bazlı bir network yapısıyla bir araya getirmek için büyüyor. Bu süreçte erken dahil olan contributor’lar kendi şehirlerinde ilk görünenlerden biri olma, yerel ağı şekillendirme ve global CorteQS ekosisteminin parçası olma avantajına sahip olur.</p>
+                <p>Şehrindeki işletmeleri, consultant’ları, içerik üreticilerini ve toplulukları CorteQS ağına bağlamak istiyorsan Local Contributor Programı’na katıl. Şehrinde bağlantı kur, yerel etki yarat ve global CorteQS ağıyla büyü.</p>
+                <p><strong>Başvuru ve detaylar:</strong> <a href="https://corteqs.net/" target="_blank" rel="noopener">https://corteqs.net</a></p>
+              </div>
+            </details>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    CorteQS Local Contributor Program · Yerel bağlantıdan global network gücüne! Senin de desteğinle!
+  </footer>
+</div>
