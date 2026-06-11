@@ -490,16 +490,69 @@
     <tr><td>Admin onay paneli</td><td><code>/admin/dunya-kupasi</code></td><td>Bekleyen/Onaylanan/Reddedilen sekmeleri; notlu onay/red</td></tr>
   </table>
 
+  <h3>Kampanya İşleyişi — Uçtan Uca</h3>
+
   <div class="scenario">
-    <div class="who">⚽ Akış — başvurudan vitrine <span class="tag">RPC-only mutation (Cadde kuralı)</span></div>
+    <div class="who">⚽ Senaryo İ1 — İşletme başvuruyor <span class="tag">/dunya-kupasi/kayit · login-first</span></div>
     <ol>
-      <li>İşletme <code>/dunya-kupasi/kayit</code>'ta Google/e-posta ile giriş yapıp formu gönderir → <code>create_world_cup_registration_v1</code> (pending; kullanıcı başına tek aktif başvuru; reddedilen yeniden başvurabilir).</li>
-      <li>Admin onaylar → <code>admin_review_world_cup_registration_v1</code>: kullanıcıya seçilen <code>Business_*</code> rolü atanır; mevcut member↔catalog köprüsü dizindeki profili otomatik <strong>işletme profiline</strong> çevirir; <code>business_name / business_category / country / city</code> öznitelikleri yazılır.</li>
-      <li>Rol güvenlik kuralı: yalnız varsayılan üye (<code>User_DiasporaMember</code>) veya halihazırda <code>Business_*</code> olan ezilir; <strong>Admin_* asla</strong>; Danışman/Kuruluş vb. roller <strong>korunur</strong> (panelde "rol korundu" uyarısı + audit alanları).</li>
-      <li>Onaylı işletme <code>list_world_cup_businesses_v1</code> (anon erişimli) ile vitrine düşer.</li>
-      <li>Kampanya bitişi kod gerektirmez: <code>update world_cup_campaign_settings set is_active=false where id=1;</code> (veya <code>ends_at</code>) → kayıt kapanır, vitrin boşalır, profiller kalır.</li>
+      <li>İşletme sahibi vitrindeki <strong>"Maç Yayını Yapıyorum — İşletmemi Kaydet"</strong> butonuyla (veya doğrudan linkle) kayıt sayfasına gelir.</li>
+      <li>Oturum yoksa iki seçenek görür: <strong>"Google veya e-posta ile kayıt ol"</strong> / <strong>"Zaten hesabım var, giriş yap"</strong>. İkisi de <code>/login?next=/dunya-kupasi/kayit</code> turundan geçer — Google OAuth dönüşünde kullanıcı otomatik olarak forma geri gelir. Form verisi localStorage'da bekletilmez; önce hesap, sonra form (basit ve kırılmaz akış).</li>
+      <li>Form doldurulur: <strong>işletme adı</strong> (3–120 karakter), <strong>kategori</strong> (25 <code>Business_*</code> rolünden seçim: Restoran/Cafe, Berber, Market…), <strong>ülke + şehir</strong> (zorunlu), adres ve not (opsiyonel) ve <strong>"maç yayını yapıyoruz" beyanı</strong> (işaretlenmeden gönderilemez — Zod + DB çift katman).</li>
+      <li>Gönderim tek RPC'dir (<code>create_world_cup_registration_v1</code>): kampanya penceresi, kategori geçerliliği, alan sınırları ve mükerrer başvuru DB'de doğrulanır; hatalar Türkçe döner (ör. "Bu hesapla zaten aktif bir başvurunuz var.").</li>
+      <li>Başvuru <strong>pending</strong> düşer; sayfa artık formu değil <strong>"Başvurunuz onay bekliyor"</strong> durum kartını gösterir. Kullanıcı başına tek aktif başvuru vardır (partial unique index).</li>
     </ol>
-    <div class="note">Hata kodları <code>worldcup_*</code> tek haritadan Türkçe'ye çevrilir. Doğrulama: 535/535 Vitest, build OK, canlı duman testleri (RLS açık; anon registrations'ı göremez; auth'suz RPC <code>worldcup_auth_required</code> ile reddeder; 25 aktif Business rolü; grant'lar doğru).</div>
+    <div class="note">Bu noktada üyenin rolü/profili henüz DEĞİŞMEZ — her şey admin onayına bağlıdır (herkes "maç yayınlıyorum" diyebilir; doğrulama insandadır).</div>
+  </div>
+
+  <div class="scenario">
+    <div class="who">🛡️ Senaryo İ2 — Admin değerlendiriyor <span class="tag">/admin/dunya-kupasi · sol menü "Dünya Kupası"</span></div>
+    <ol>
+      <li>Başvurular <strong>Bekleyen / Onaylanan / Reddedilen</strong> sekmelerinde listelenir: işletme adı, kategori, ülke/şehir, başvuranın e-postası, adres, not ve tarih.</li>
+      <li><strong>Onayla</strong> → <code>admin_review_world_cup_registration_v1</code> tek işlemde: (a) kullanıcıya seçilen <code>Business_*</code> rolü atanır, (b) mevcut member↔catalog köprüsü dizindeki profili otomatik <strong>işletme profiline</strong> çevirir, (c) <code>business_name / business_category / country / city</code> öznitelikleri public yazılır, (d) profil başlığı placeholder ise (rakam/e-posta öneki) işletme adıyla değiştirilir — gerçek isim asla ezilmez.</li>
+      <li><strong>Rol güvenlik kuralı:</strong> yalnız varsayılan üye (<code>User_DiasporaMember</code>) veya zaten <code>Business_*</code> olan ezilir. <strong>Admin_* asla</strong>; Danışman/Kuruluş/Elçi gibi roller <strong>korunur</strong> — başvuru yine onaylanır ama panel "rol korundu" uyarısı verir; gerekirse rol matrisinden elle değiştirilir. Eski rol audit için kayda işlenir (<code>previous_role_key</code>, <code>role_assigned</code>).</li>
+      <li><strong>Reddet</strong> → not yazılabilir; bu not başvurana kayıt sayfasında gerekçe olarak gösterilir. Reddedilen işletme bilgilerini düzeltip <strong>yeniden başvurabilir</strong> (eski kayıt audit için silinmez).</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">🔎 Senaryo İ3 — Ziyaretçi maç izleyecek mekân arıyor <span class="tag">/dunya-kupasi · login gerekmez</span></div>
+    <ol>
+      <li>Vitrin <strong>anonim erişilebilir</strong> (paylaşılabilir kampanya linki). Onaylı işletmeler kart olarak listelenir: ad, kategori rozeti, <strong>"Maç Yayını"</strong> rozeti, şehir/ülke.</li>
+      <li><strong>Ülke/şehir filtreleri</strong> mevcut kayıtlardan otomatik oluşur ("Berlin'de nerede izlerim?" tek tık).</li>
+      <li>"Profili Gör" işletmenin dizindeki profil sayfasına götürür (<code>/directory/profile/:userId</code>) — iletişim ve detaylar orada.</li>
+      <li>Liste anon-güvenli RPC'den gelir: yalnız onaylı kayıtların public alanları döner; başvuru tablosunun kendisi dışarıya tamamen kapalıdır (RLS).</li>
+    </ol>
+  </div>
+
+  <div class="scenario">
+    <div class="who">⚙️ Senaryo İ4 — Kampanyayı yönetmek ve kapatmak <span class="tag">world_cup_campaign_settings — kod gerekmez</span></div>
+    <ol>
+      <li>Kampanya penceresi tek satırlık ayar tablosundadır (singleton <code>id=1</code>): <code>is_active</code> + opsiyonel <code>starts_at</code>/<code>ends_at</code>.</li>
+      <li>Bitiş tarihi koymak: <code>update world_cup_campaign_settings set ends_at='2026-07-20' where id=1;</code> — tarih geçince <strong>kendiliğinden</strong> kayıt kapanır ve vitrin boşalır.</li>
+      <li>Anında kapatmak: <code>...set is_active=false where id=1;</code> → kayıt sayfası "Kampanya aktif değil" der, vitrin "Kampanya sona erdi"ye döner, public liste RPC'si boş döner.</li>
+      <li><strong>Kalıcılık ilkesi:</strong> kampanya kapansa da onaylanan işletme profilleri ve rolleri platformda aynen kalır (üye kazanımı) — geri alma/temizlik gerekmez. Yeniden açmak da tek UPDATE'tir (örn. bir sonraki turnuva).</li>
+    </ol>
+  </div>
+
+  <h3>Sınır Durumlar</h3>
+  <table>
+    <tr><th>Durum</th><th>Davranış</th></tr>
+    <tr><td>Mükerrer başvuru</td><td>Engellenir — <code>worldcup_already_registered</code> (kullanıcı başına tek pending/approved)</td></tr>
+    <tr><td>Reddedilen yeniden başvuru</td><td>İzinli; eski kayıt audit için durur, ret notu kullanıcıya gösterilir</td></tr>
+    <tr><td>Zaten işletme olan üye</td><td>Onayda seçilen kategoriyle yeniden atanır (zararsız)</td></tr>
+    <tr><td>Danışman / Kuruluş / Elçi başvurusu</td><td>Listeye onaylanır, mevcut rol korunur, admin uyarılır</td></tr>
+    <tr><td>Admin hesabıyla başvuru</td><td>Rolüne asla dokunulmaz</td></tr>
+    <tr><td>Kampanya pasif/pencere dışı</td><td>Kayıt RPC'si <code>worldcup_campaign_inactive</code>; vitrin boş döner; profiller kalıcı</td></tr>
+    <tr><td>Auth'suz / anon erişim</td><td>Kayıt RPC'si <code>worldcup_auth_required</code>; başvuru tablosu anon'a görünmez (canlıda doğrulandı)</td></tr>
+  </table>
+
+  <div class="scenario">
+    <div class="who">✅ Doğrulama özeti <span class="tag">2026-06-11</span></div>
+    <ol>
+      <li>Hata kodları <code>worldcup_*</code> tek haritadan Türkçe'ye çevrilir; mutasyonlar RPC-only (Cadde kuralı — tablolarda kullanıcı INSERT policy'si yok).</li>
+      <li>535/535 Vitest yeşil (form Zod engeli, login CTA <code>next</code> turu, onay/red akışları, rol-korundu uyarısı dahil) · build OK · yeni dosyalarda ESLint temiz.</li>
+      <li>Canlı duman testleri: RLS açık · anon 0 satır görüyor · auth'suz RPC reddi · 25 aktif Business rolü · grant'lar doğru · public liste <code>[]</code> (onay öncesi).</li>
+    </ol>
   </div>
   <p class="muted">
     DB: <code>world_cup_campaign_settings</code> (singleton) + <code>world_cup_registrations</code>; migration
