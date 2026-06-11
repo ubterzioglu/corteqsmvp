@@ -6,8 +6,21 @@ export default function SiteHeader() {
   const { user } = useAuth();
   return (
     <div className="sticky top-0 z-50 border-b border-orange-100/90 bg-[linear-gradient(180deg,#fffdf9_0%,#fff8f0_100%)] backdrop-blur-sm">
-      <div className="border-b border-amber-300/70 bg-[linear-gradient(90deg,#fff1bf_0%,#ffc96b_48%,#ffb347_100%)] px-4 py-2 text-center text-[0.72rem] font-black uppercase tracking-[0.28em] text-slate-950 shadow-[inset_0_-1px_0_rgba(255,255,255,0.35)] sm:text-[0.8rem]">
-        DİKKAT! MVP!
+      <div className="border-b border-amber-400/25 bg-[linear-gradient(90deg,#0f172a_0%,#1e293b_50%,#0f172a_100%)] px-4 py-2 shadow-[inset_0_-1px_0_rgba(251,191,36,0.15)]">
+        <p className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-[0.74rem] leading-snug text-slate-300 sm:text-[0.82rem]">
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 px-2.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.18em] text-amber-300">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-400" />
+            </span>
+            Açık Beta
+          </span>
+          <span>
+            <span className="font-semibold text-white">CorteQS açık beta yayında!</span>{" "}
+            Platformu deneyebilir, görüş ve önerilerinizle gelişim sürecimize katkı
+            sağlayabilirsiniz.
+          </span>
+        </p>
       </div>
       <div className="container mx-auto px-4 py-3 lg:px-6">
         <div className="flex flex-col items-center gap-4 md:flex-row md:flex-wrap md:items-center md:justify-between">
