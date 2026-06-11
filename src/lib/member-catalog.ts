@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { defaultProfileType, isProfileType, type ProfileType } from "@/lib/profile-types";
+import { getUiProfileType, type ProfileType } from "@/lib/profile-types";
 
 type QueryError = { message: string };
 
@@ -40,8 +40,7 @@ type MemberCatalogRpcClient = {
 const memberCatalogRpcClient = supabase as unknown as MemberCatalogRpcClient;
 
 const normalizeLegacyProfileType = (value: string | null | undefined): ProfileType => {
-  if (value && isProfileType(value)) return value;
-  return defaultProfileType;
+  return getUiProfileType(value);
 };
 
 export async function getCurrentMemberCatalogProfile(): Promise<MemberCatalogProfileSummary | null> {

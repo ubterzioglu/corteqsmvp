@@ -10,12 +10,34 @@ import {
 import { roleMetas } from "@/lib/profile-types";
 
 describe("profile-view-model", () => {
-  it("defines self and public section metadata for every role", () => {
+  it("defines preview behavior metadata for every role", () => {
     for (const role of roleMetas) {
-      expect(role.selfSectionKeys.length).toBeGreaterThan(0);
-      expect(role.publicSectionKeys.length).toBeGreaterThan(0);
       expect(["compact", "rich"]).toContain(role.defaultPreviewBehavior);
     }
+  });
+
+  it("builds a view model for flat role keys using DB role label", () => {
+    const profile: CurrentUserProfilePayload = {
+      userId: "user-flat",
+      email: "flat@example.com",
+      fullName: "Diaspora Üyesi Test",
+      profileType: "User_DiasporaMember",
+      roleKey: "User_DiasporaMember",
+      roleLabel: "Diaspora Üyesi",
+      roleDescription: null,
+      roleSlug: "User_DiasporaMember",
+      features: [],
+      attributes: [],
+      pendingRequests: [],
+      profileCompletion: { requiredTotal: 4, requiredCompleted: 0, percentage: 0 },
+    };
+
+    const model = buildPublicProfileViewModelFromCurrentUser(profile);
+
+    expect(model.roleKey).toBe("User_DiasporaMember");
+    expect(model.roleLabel).toBe("Diaspora Üyesi");
+    expect(model.roleTitle).toBe("Diaspora Üyesi");
+    expect(model.displayName).toBe("Diaspora Üyesi Test");
   });
 
   it("builds a self profile preview model from current user payload", () => {

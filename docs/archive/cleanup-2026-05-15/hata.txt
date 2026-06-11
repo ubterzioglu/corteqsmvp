@@ -1,0 +1,321 @@
+2026-May-15 06:46:44.412528 Docker 29.3.0 with BuildKit and Buildx detected on deployment server (localhost).
+2026-May-15 06:46:44.417804 Starting deployment of ubterzioglu/corteqslanding:main to localhost.
+2026-May-15 06:46:44.565381 Preparing container with helper image: ghcr.io/coollabsio/coolify-helper:1.0.12
+2026-May-15 06:46:44.654400 [DEBUG] [CMD]: docker stop -t 30 u11eroeacwhkmb4vx9zkqo64
+2026-May-15 06:46:44.654400 [DEBUG] Error response from daemon: No such container: u11eroeacwhkmb4vx9zkqo64
+2026-May-15 06:46:44.753352 [DEBUG] [CMD]: docker run -d --network coolify --name u11eroeacwhkmb4vx9zkqo64  --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/coollabsio/coolify-helper:1.0.12
+2026-May-15 06:46:44.753352 [DEBUG] ac8166a5d8af2b7671c73645bc7287555528f7ba04bb20e33268d3fd8e494c4d
+2026-May-15 06:46:46.189316 [DEBUG] [CMD]: docker exec u11eroeacwhkmb4vx9zkqo64 bash -c 'GIT_SSH_COMMAND="ssh -o ConnectTimeout=30 -p 22 -o Port=22 -o LogLevel=ERROR -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git ls-remote https://x-access-token:<REDACTED>@github.com/ubterzioglu/corteqslanding.git refs/heads/main'
+2026-May-15 06:46:46.189316 [DEBUG] e57c3e7046ea9d3769858ce57609d25347c242c3	refs/heads/main
+2026-May-15 06:46:46.421483 ----------------------------------------
+2026-May-15 06:46:46.426577 Importing ubterzioglu/corteqslanding:main (commit sha e57c3e7046ea9d3769858ce57609d25347c242c3) to /artifacts/u11eroeacwhkmb4vx9zkqo64.
+2026-May-15 06:46:46.564341 [DEBUG] [CMD]: docker exec u11eroeacwhkmb4vx9zkqo64 bash -c 'git clone --depth=1 --recurse-submodules --shallow-submodules -b '\''main'\'' '\''https://x-access-token:<REDACTED>@github.com/ubterzioglu/corteqslanding.git'\'' '\''/artifacts/u11eroeacwhkmb4vx9zkqo64'\'' && cd '\''/artifacts/u11eroeacwhkmb4vx9zkqo64'\'' && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git fetch --depth=1 origin '\''e57c3e7046ea9d3769858ce57609d25347c242c3'\'' && git -c advice.detachedHead=false checkout '\''e57c3e7046ea9d3769858ce57609d25347c242c3'\'' >/dev/null 2>&1 && cd '\''/artifacts/u11eroeacwhkmb4vx9zkqo64'\'' && if [ -f .gitmodules ]; then git submodule sync && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git submodule update --init --recursive --depth=1; fi && cd '\''/artifacts/u11eroeacwhkmb4vx9zkqo64'\'' && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git lfs pull'
+2026-May-15 06:46:46.564341 [DEBUG] Cloning into '/artifacts/u11eroeacwhkmb4vx9zkqo64'...
+2026-May-15 06:46:52.029798 [DEBUG] From https://github.com/ubterzioglu/corteqslanding
+2026-May-15 06:<REDACTED>@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+2026-May-15 06:46:56.405368 [DEBUG] #5 resolve docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10 done
+2026-May-15 06:46:56.405368 [DEBUG] #5 sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10 10.33kB / 10.33kB done
+2026-May-15 06:46:56.405368 [DEBUG] #5 sha256:62223d644fa234c3a1cc785ee14242ec47a77364226f1c811d2f669f96dc2ac8 2.50kB / 2.50kB done
+2026-May-15 06:46:56.405368 [DEBUG] #5 sha256:6769dc3a703c719c1d2756bda113659be28ae16cf0da58dd5fd823d6b9a050ea 10.79kB / 10.79kB done
+2026-May-15 06:46:56.569104 [DEBUG] #5 DONE 0.1s
+2026-May-15 06:46:56.569104 [DEBUG] 
+2026-May-15 06:46:56.569104 [DEBUG] #6 [build 1/6] FROM docker.io/library/node:22-alpine@sha256:968df39aedcea65eeb078fb336ed7191baf48f972b4479711397108be0966920
+2026-May-15 06:46:56.569104 [DEBUG] #6 resolve docker.io/library/node:22-alpine@sha256:968df39aedcea65eeb078fb336ed7191baf48f972b4479711397108be0966920 done
+2026-May-15 06:46:56.569104 [DEBUG] #6 sha256:dd720352b0690b8fd0bde339dd11a4ae650bfa79f8be316a7d632377781f6cdf 6.52kB / 6.52kB done
+2026-May-15 06:46:56.569104 [DEBUG] #6 sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 0B / 52.31MB 0.2s
+2026-May-15 06:46:56.569104 [DEBUG] #6 sha256:b6816b6a041943b79e3f6e0f45fca8a0f83b376014c7525bcb108c6c7b5e9dd7 0B / 1.26MB 0.2s
+2026-May-15 06:46:56.569104 [DEBUG] #6 sha256:35cf660f63b0ddbe3c26c27dfb34eedfbc0fd96533a1df799ee586109c18ec7d 0B / 449B 0.2s
+2026-May-15 06:46:56.569104 [DEBUG] #6 sha256:968df39aedcea65eeb078fb336ed7191baf48f972b4479711397108be0966920 6.41kB / 6.41kB done
+2026-May-15 06:46:56.569104 [DEBUG] #6 sha256:757ec364de4d37cedf30871be2988927660834e656e9aa52aad9ac194814c30c 1.72kB / 1.72kB done
+2026-May-15 06:46:56.777270 [DEBUG] #6 sha256:b6816b6a041943b79e3f6e0f45fca8a0f83b376014c7525bcb108c6c7b5e9dd7 1.26MB / 1.26MB 0.3s done
+2026-May-15 06:46:56.877188 [DEBUG] #6 sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 4.19MB / 52.31MB 0.5s
+2026-May-15 06:46:57.074955 [DEBUG] #6 sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 27.26MB / 52.31MB 0.7s
+2026-May-15 06:46:57.074955 [DEBUG] #6 sha256:35cf660f63b0ddbe3c26c27dfb34eedfbc0fd96533a1df799ee586109c18ec7d 449B / 449B 0.5s done
+2026-May-15 06:46:57.170261 [DEBUG] #6 sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 42.99MB / 52.31MB 0.8s
+2026-May-15 06:46:57.278947 [DEBUG] #6 sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 50.33MB / 52.31MB 0.9s
+2026-May-15 06:46:57.376737 [DEBUG] #6 sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 52.31MB / 52.31MB 0.9s done
+2026-May-15 06:46:57.376737 [DEBUG] #6 extracting sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132
+2026-May-15 06:46:57.494893 [DEBUG] #6 ...
+2026-May-15 06:46:57.494893 [DEBUG] 
+2026-May-15 06:46:57.494893 [DEBUG] #7 [internal] load build context
+2026-May-15 06:46:57.494893 [DEBUG] #7 transferring context: 254.77MB 1.0s done
+2026-May-15 06:46:57.494893 [DEBUG] #7 DONE 1.0s
+2026-May-15 06:46:57.494893 [DEBUG] 
+2026-May-15 06:46:57.494893 [DEBUG] #6 [build 1/6] FROM docker.io/library/node:22-alpine@sha256:968df39aedcea65eeb078fb336ed7191baf48f972b4479711397108be0966920
+2026-May-15 06:46:58.703836 [DEBUG] #6 ...
+2026-May-15 06:46:58.703836 [DEBUG] 
+2026-May-15 06:46:58.703836 [DEBUG] #8 [stage-1 2/5] COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+2026-May-15 06:46:58.703836 [DEBUG] #8 DONE 1.2s
+2026-May-15 06:46:58.703836 [DEBUG] 
+2026-May-15 06:46:58.703836 [DEBUG] #9 [stage-1 3/5] COPY docker-entrypoint-env.sh /docker-entrypoint.d/40-env-config.sh
+2026-May-15 06:46:58.703836 [DEBUG] #9 DONE 0.0s
+2026-May-15 06:46:58.703836 [DEBUG] 
+2026-May-15 06:46:58.703836 [DEBUG] #6 [build 1/6] FROM docker.io/library/node:22-alpine@sha256:968df39aedcea65eeb078fb336ed7191baf48f972b4479711397108be0966920
+2026-May-15 06:46:58.890452 [DEBUG] #6 extracting sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 1.6s done
+2026-May-15 06:46:58.997986 [DEBUG] #6 extracting sha256:b6816b6a041943b79e3f6e0f45fca8a0f83b376014c7525bcb108c6c7b5e9dd7 0.0s done
+2026-May-15 06:46:59.240926 [DEBUG] #6 extracting sha256:35cf660f63b0ddbe3c26c27dfb34eedfbc0fd96533a1df799ee586109c18ec7d done
+2026-May-15 06:46:59.240926 [DEBUG] #6 DONE 2.7s
+2026-May-15 06:46:59.240926 [DEBUG] 
+2026-May-15 06:46:59.240926 [DEBUG] #10 [build 2/6] WORKDIR /app
+2026-May-15 06:46:59.240926 [DEBUG] #10 DONE 0.0s
+2026-May-15 06:46:59.240926 [DEBUG] 
+2026-May-15 06:46:59.240926 [DEBUG] #11 [build 3/6] COPY package.json package-lock.json ./
+2026-May-15 06:46:59.240926 [DEBUG] #11 DONE 0.0s
+2026-May-15 06:46:59.240926 [DEBUG] 
+2026-May-15 06:46:59.240926 [DEBUG] #12 [build 4/6] RUN npm ci
+2026-May-15 06:47:00.594275 [DEBUG] #12 1.504 npm warn deprecated whatwg-encoding@2.0.0: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-May-15 06:47:01.686014 [DEBUG] #12 2.596 npm warn deprecated domexception@4.0.0: Use your platform's native DOMException instead
+2026-May-15 06:47:01.903936 [DEBUG] #12 2.663 npm warn deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
+2026-May-15 06:47:07.828783 [DEBUG] #12 8.738
+2026-May-15 06:47:07.828783 [DEBUG] #12 8.738 added 506 packages, and audited 507 packages in 9s
+2026-May-15 06:47:07.828783 [DEBUG] #12 8.738
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.738 89 packages are looking for funding
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.739   run `npm fund` for details
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.747
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.747 10 vulnerabilities (3 low, 2 moderate, 5 high)
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.747
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.747 To address issues that do not require attention, run:
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.747   npm audit fix
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.747
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.747 To address all issues (including breaking changes), run:
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.747   npm audit fix --force
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.747
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.747 Run `npm audit` for details.
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.748 npm notice
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.748 npm notice New major version of npm available! 10.9.8 -> 11.14.1
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.748 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.14.1
+2026-May-15 06:<REDACTED>@11.14.1
+2026-May-15 06:47:07.989269 [DEBUG] #12 8.748 npm notice
+2026-May-15 06:47:08.623526 [DEBUG] #12 DONE 9.5s
+2026-May-15 06:47:08.775196 [DEBUG] #13 [build 5/6] COPY . .
+2026-May-15 06:47:09.343230 [DEBUG] #13 DONE 0.7s
+2026-May-15 06:47:09.495118 [DEBUG] #14 [build 6/6] RUN npm run build
+2026-May-15 06:47:09.516813 [DEBUG] #14 0.172
+2026-May-15 06:47:09.516813 [DEBUG] #14 0.172 > vite_react_shadcn_ts@0.0.0 build
+2026-May-15 06:47:09.516813 [DEBUG] #14 0.172 > vite build
+2026-May-15 06:47:09.516813 [DEBUG] #14 0.172
+2026-May-15 06:47:09.754018 [DEBUG] #14 0.409 vite v5.4.21 building for production...
+2026-May-15 06:47:09.969540 [DEBUG] #14 0.474 transforming...
+2026-May-15 06:47:12.258931 [DEBUG] #14 2.914 ✓ 1091 modules transformed.
+2026-May-15 06:47:12.348454 [DEBUG] #14 2.918 x Build failed in 2.49s
+2026-May-15 06:47:12.348454 [DEBUG] #14 2.918 error during build:
+2026-May-15 06:47:12.348454 [DEBUG] #14 2.918 [vite:asset] Could not load /app/src/assets/maskotanasayfa.png (imported by src/pages/NotFound.tsx): ENOENT: no such file or directory, open '/app/src/assets/maskotanasayfa.png'
+2026-May-15 06:47:12.348454 [DEBUG] #14 2.918     at async open (node:internal/fs/promises:639:25)
+2026-May-15 06:47:12.348454 [DEBUG] #14 2.918     at async Object.readFile (node:internal/fs/promises:1249:14)
+2026-May-15 06:47:12.348454 [DEBUG] #14 2.918     at async fileToBuiltUrl (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:20428:19)
+2026-May-15 06:47:12.348454 [DEBUG] #14 2.918     at async Object.load (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:20328:17)
+2026-May-15 06:47:12.348454 [DEBUG] #14 2.918     at async PluginDriver.hookFirstAndGetPlugin (file:///app/node_modules/rollup/dist/es/shared/node-entry.js:22849:28)
+2026-May-15 06:47:12.348454 [DEBUG] #14 2.918     at async file:///app/node_modules/rollup/dist/es/shared/node-entry.js:21833:33
+2026-May-15 06:47:12.348454 [DEBUG] #14 2.918     at async Queue.work (file:///app/node_modules/rollup/dist/es/shared/node-entry.js:23077:32)
+2026-May-15 06:47:12.348454 [DEBUG] #14 ERROR: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+2026-May-15 06:47:12.348454 [DEBUG] ------
+2026-May-15 06:47:12.348454 [DEBUG] > [build 6/6] RUN npm run build:
+2026-May-15 06:47:12.348454 [DEBUG] 2.918 x Build failed in 2.49s
+2026-May-15 06:47:12.348454 [DEBUG] 2.918 error during build:
+2026-May-15 06:47:12.348454 [DEBUG] 2.918 [vite:asset] Could not load /app/src/assets/maskotanasayfa.png (imported by src/pages/NotFound.tsx): ENOENT: no such file or directory, open '/app/src/assets/maskotanasayfa.png'
+2026-May-15 06:47:12.348454 [DEBUG] 2.918     at async open (node:internal/fs/promises:639:25)
+2026-May-15 06:47:12.348454 [DEBUG] 2.918     at async Object.readFile (node:internal/fs/promises:1249:14)
+2026-May-15 06:47:12.348454 [DEBUG] 2.918     at async fileToBuiltUrl (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:20428:19)
+2026-May-15 06:47:12.348454 [DEBUG] 2.918     at async Object.load (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:20328:17)
+2026-May-15 06:47:12.348454 [DEBUG] 2.918     at async PluginDriver.hookFirstAndGetPlugin (file:///app/node_modules/rollup/dist/es/shared/node-entry.js:22849:28)
+2026-May-15 06:47:12.348454 [DEBUG] 2.918     at async file:///app/node_modules/rollup/dist/es/shared/node-entry.js:21833:33
+2026-May-15 06:47:12.348454 [DEBUG] 2.918     at async Queue.work (file:///app/node_modules/rollup/dist/es/shared/node-entry.js:23077:32)
+2026-May-15 06:47:12.348454 [DEBUG] ------
+2026-May-15 06:47:12.353113 [DEBUG] 16 warnings found (use docker --debug to expand):
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "ACCESS_TOKEN") (line 11)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "SUPABASE_ACCESS_TOKEN") (line 49)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "GEMINI_API_KEY") (line 6)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "SUPABASE_ACCESS_TOKEN") (line 15)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "SUPABASE_DB_PASSWORD") (line 16)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "VERIFY_TOKEN") (line 19)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "GEMINI_API_KEY") (line 40)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "VITE_SUPABASE_PUBLISHABLE_KEY") (line 3)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "SUPABASE_SERVICE_ROLE_KEY") (line 5)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "RAG_API_SECRET") (line 21)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "SUPABASE_DB_PASSWORD") (line 50)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "VERIFY_TOKEN") (line 53)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "RAG_API_SECRET") (line 55)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "VITE_SUPABASE_PUBLISHABLE_KEY") (line 37)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "SUPABASE_SERVICE_ROLE_KEY") (line 39)
+2026-May-15 06:47:12.353113 [DEBUG] - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "ACCESS_TOKEN") (line 45)
+2026-May-15 06:47:12.355201 [DEBUG] Dockerfile:33
+2026-May-15 06:47:12.355201 [DEBUG] --------------------
+2026-May-15 06:47:12.355201 [DEBUG] 31 |
+2026-May-15 06:47:12.355201 [DEBUG] 32 |     COPY . .
+2026-May-15 06:47:12.355201 [DEBUG] 33 | >>> RUN npm run build
+2026-May-15 06:47:12.355201 [DEBUG] 34 |
+2026-May-15 06:47:12.355201 [DEBUG] 35 |     FROM nginx:1.27-alpine
+2026-May-15 06:47:12.355201 [DEBUG] --------------------
+2026-May-15 06:47:12.355201 [DEBUG] ERROR: failed to build: failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+2026-May-15 06:47:12.360136 [DEBUG] exit status 1
+2026-May-15 06:47:12.401796 ========================================
+2026-May-15 06:47:12.407554 Deployment failed: Command execution failed (exit code 1): docker exec u11eroeacwhkmb4vx9zkqo64 bash -c 'bash /artifacts/build.sh'
+2026-May-15 06:47:12.407554 Error: #0 building with "default" instance using docker driver
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #1 [internal] load build definition from Dockerfile
+2026-May-15 06:47:12.407554 #1 transferring dockerfile: 4.49kB done
+2026-May-15 06:47:12.407554 #1 DONE 0.0s
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #2 [internal] load metadata for docker.io/library/node:22-alpine
+2026-May-15 06:47:12.407554 #2 DONE 1.6s
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #3 [internal] load metadata for docker.io/library/nginx:1.27-alpine
+2026-May-15 06:47:12.407554 #3 DONE 1.6s
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #4 [internal] load .dockerignore
+2026-May-15 06:47:12.407554 #4 transferring context: 147B done
+2026-May-15 06:47:12.407554 #4 DONE 0.0s
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #5 [stage-1 1/5] FROM docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+2026-May-15 06:47:12.407554 #5 resolve docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10 done
+2026-May-15 06:47:12.407554 #5 sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10 10.33kB / 10.33kB done
+2026-May-15 06:47:12.407554 #5 sha256:62223d644fa234c3a1cc785ee14242ec47a77364226f1c811d2f669f96dc2ac8 2.50kB / 2.50kB done
+2026-May-15 06:47:12.407554 #5 sha256:6769dc3a703c719c1d2756bda113659be28ae16cf0da58dd5fd823d6b9a050ea 10.79kB / 10.79kB done
+2026-May-15 06:47:12.407554 #5 DONE 0.1s
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #6 [build 1/6] FROM docker.io/library/node:22-alpine@sha256:968df39aedcea65eeb078fb336ed7191baf48f972b4479711397108be0966920
+2026-May-15 06:47:12.407554 #6 resolve docker.io/library/node:22-alpine@sha256:968df39aedcea65eeb078fb336ed7191baf48f972b4479711397108be0966920 done
+2026-May-15 06:47:12.407554 #6 sha256:dd720352b0690b8fd0bde339dd11a4ae650bfa79f8be316a7d632377781f6cdf 6.52kB / 6.52kB done
+2026-May-15 06:47:12.407554 #6 sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 0B / 52.31MB 0.2s
+2026-May-15 06:47:12.407554 #6 sha256:b6816b6a041943b79e3f6e0f45fca8a0f83b376014c7525bcb108c6c7b5e9dd7 0B / 1.26MB 0.2s
+2026-May-15 06:47:12.407554 #6 sha256:35cf660f63b0ddbe3c26c27dfb34eedfbc0fd96533a1df799ee586109c18ec7d 0B / 449B 0.2s
+2026-May-15 06:47:12.407554 #6 sha256:968df39aedcea65eeb078fb336ed7191baf48f972b4479711397108be0966920 6.41kB / 6.41kB done
+2026-May-15 06:47:12.407554 #6 sha256:757ec364de4d37cedf30871be2988927660834e656e9aa52aad9ac194814c30c 1.72kB / 1.72kB done
+2026-May-15 06:47:12.407554 #6 sha256:b6816b6a041943b79e3f6e0f45fca8a0f83b376014c7525bcb108c6c7b5e9dd7 1.26MB / 1.26MB 0.3s done
+2026-May-15 06:47:12.407554 #6 sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 4.19MB / 52.31MB 0.5s
+2026-May-15 06:47:12.407554 #6 sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 27.26MB / 52.31MB 0.7s
+2026-May-15 06:47:12.407554 #6 sha256:35cf660f63b0ddbe3c26c27dfb34eedfbc0fd96533a1df799ee586109c18ec7d 449B / 449B 0.5s done
+2026-May-15 06:47:12.407554 #6 sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 42.99MB / 52.31MB 0.8s
+2026-May-15 06:47:12.407554 #6 sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 50.33MB / 52.31MB 0.9s
+2026-May-15 06:47:12.407554 #6 sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 52.31MB / 52.31MB 0.9s done
+2026-May-15 06:47:12.407554 #6 extracting sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132
+2026-May-15 06:47:12.407554 #6 ...
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #7 [internal] load build context
+2026-May-15 06:47:12.407554 #7 transferring context: 254.77MB 1.0s done
+2026-May-15 06:47:12.407554 #7 DONE 1.0s
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #6 [build 1/6] FROM docker.io/library/node:22-alpine@sha256:968df39aedcea65eeb078fb336ed7191baf48f972b4479711397108be0966920
+2026-May-15 06:47:12.407554 #6 ...
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #8 [stage-1 2/5] COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+2026-May-15 06:47:12.407554 #8 DONE 1.2s
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #9 [stage-1 3/5] COPY docker-entrypoint-env.sh /docker-entrypoint.d/40-env-config.sh
+2026-May-15 06:47:12.407554 #9 DONE 0.0s
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #6 [build 1/6] FROM docker.io/library/node:22-alpine@sha256:968df39aedcea65eeb078fb336ed7191baf48f972b4479711397108be0966920
+2026-May-15 06:47:12.407554 #6 extracting sha256:2ad77fb7cfd3ef9f6a6dfce0020766303fd6404c57ec5d48a336265ff0201132 1.6s done
+2026-May-15 06:47:12.407554 #6 extracting sha256:b6816b6a041943b79e3f6e0f45fca8a0f83b376014c7525bcb108c6c7b5e9dd7 0.0s done
+2026-May-15 06:47:12.407554 #6 extracting sha256:35cf660f63b0ddbe3c26c27dfb34eedfbc0fd96533a1df799ee586109c18ec7d done
+2026-May-15 06:47:12.407554 #6 DONE 2.7s
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #10 [build 2/6] WORKDIR /app
+2026-May-15 06:47:12.407554 #10 DONE 0.0s
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #11 [build 3/6] COPY package.json package-lock.json ./
+2026-May-15 06:47:12.407554 #11 DONE 0.0s
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #12 [build 4/6] RUN npm ci
+2026-May-15 06:47:12.407554 #12 1.504 npm warn deprecated whatwg-encoding@2.0.0: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-May-15 06:47:12.407554 #12 2.596 npm warn deprecated domexception@4.0.0: Use your platform's native DOMException instead
+2026-May-15 06:47:12.407554 #12 2.663 npm warn deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
+2026-May-15 06:47:12.407554 #12 8.738
+2026-May-15 06:47:12.407554 #12 8.738 added 506 packages, and audited 507 packages in 9s
+2026-May-15 06:47:12.407554 #12 8.738
+2026-May-15 06:47:12.407554 #12 8.738 89 packages are looking for funding
+2026-May-15 06:47:12.407554 #12 8.739   run `npm fund` for details
+2026-May-15 06:47:12.407554 #12 8.747
+2026-May-15 06:47:12.407554 #12 8.747 10 vulnerabilities (3 low, 2 moderate, 5 high)
+2026-May-15 06:47:12.407554 #12 8.747
+2026-May-15 06:47:12.407554 #12 8.747 To address issues that do not require attention, run:
+2026-May-15 06:47:12.407554 #12 8.747   npm audit fix
+2026-May-15 06:47:12.407554 #12 8.747
+2026-May-15 06:47:12.407554 #12 8.747 To address all issues (including breaking changes), run:
+2026-May-15 06:47:12.407554 #12 8.747   npm audit fix --force
+2026-May-15 06:47:12.407554 #12 8.747
+2026-May-15 06:47:12.407554 #12 8.747 Run `npm audit` for details.
+2026-May-15 06:47:12.407554 #12 8.748 npm notice
+2026-May-15 06:47:12.407554 #12 8.748 npm notice New major version of npm available! 10.9.8 -> 11.14.1
+2026-May-15 06:47:12.407554 #12 8.748 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.14.1
+2026-May-15 06:<REDACTED>@11.14.1
+2026-May-15 06:47:12.407554 #12 8.748 npm notice
+2026-May-15 06:47:12.407554 #12 DONE 9.5s
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #13 [build 5/6] COPY . .
+2026-May-15 06:47:12.407554 #13 DONE 0.7s
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 #14 [build 6/6] RUN npm run build
+2026-May-15 06:47:12.407554 #14 0.172
+2026-May-15 06:47:12.407554 #14 0.172 > vite_react_shadcn_ts@0.0.0 build
+2026-May-15 06:47:12.407554 #14 0.172 > vite build
+2026-May-15 06:47:12.407554 #14 0.172
+2026-May-15 06:47:12.407554 #14 0.409 vite v5.4.21 building for production...
+2026-May-15 06:47:12.407554 #14 0.474 transforming...
+2026-May-15 06:47:12.407554 #14 2.914 ✓ 1091 modules transformed.
+2026-May-15 06:47:12.407554 #14 2.918 x Build failed in 2.49s
+2026-May-15 06:47:12.407554 #14 2.918 error during build:
+2026-May-15 06:47:12.407554 #14 2.918 [vite:asset] Could not load /app/src/assets/maskotanasayfa.png (imported by src/pages/NotFound.tsx): ENOENT: no such file or directory, open '/app/src/assets/maskotanasayfa.png'
+2026-May-15 06:47:12.407554 #14 2.918     at async open (node:internal/fs/promises:639:25)
+2026-May-15 06:47:12.407554 #14 2.918     at async Object.readFile (node:internal/fs/promises:1249:14)
+2026-May-15 06:47:12.407554 #14 2.918     at async fileToBuiltUrl (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:20428:19)
+2026-May-15 06:47:12.407554 #14 2.918     at async Object.load (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:20328:17)
+2026-May-15 06:47:12.407554 #14 2.918     at async PluginDriver.hookFirstAndGetPlugin (file:///app/node_modules/rollup/dist/es/shared/node-entry.js:22849:28)
+2026-May-15 06:47:12.407554 #14 2.918     at async file:///app/node_modules/rollup/dist/es/shared/node-entry.js:21833:33
+2026-May-15 06:47:12.407554 #14 2.918     at async Queue.work (file:///app/node_modules/rollup/dist/es/shared/node-entry.js:23077:32)
+2026-May-15 06:47:12.407554 #14 ERROR: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+2026-May-15 06:47:12.407554 ------
+2026-May-15 06:47:12.407554 > [build 6/6] RUN npm run build:
+2026-May-15 06:47:12.407554 2.918 x Build failed in 2.49s
+2026-May-15 06:47:12.407554 2.918 error during build:
+2026-May-15 06:47:12.407554 2.918 [vite:asset] Could not load /app/src/assets/maskotanasayfa.png (imported by src/pages/NotFound.tsx): ENOENT: no such file or directory, open '/app/src/assets/maskotanasayfa.png'
+2026-May-15 06:47:12.407554 2.918     at async open (node:internal/fs/promises:639:25)
+2026-May-15 06:47:12.407554 2.918     at async Object.readFile (node:internal/fs/promises:1249:14)
+2026-May-15 06:47:12.407554 2.918     at async fileToBuiltUrl (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:20428:19)
+2026-May-15 06:47:12.407554 2.918     at async Object.load (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:20328:17)
+2026-May-15 06:47:12.407554 2.918     at async PluginDriver.hookFirstAndGetPlugin (file:///app/node_modules/rollup/dist/es/shared/node-entry.js:22849:28)
+2026-May-15 06:47:12.407554 2.918     at async file:///app/node_modules/rollup/dist/es/shared/node-entry.js:21833:33
+2026-May-15 06:47:12.407554 2.918     at async Queue.work (file:///app/node_modules/rollup/dist/es/shared/node-entry.js:23077:32)
+2026-May-15 06:47:12.407554 ------
+2026-May-15 06:47:12.407554 
+2026-May-15 06:47:12.407554 16 warnings found (use docker --debug to expand):
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "ACCESS_TOKEN") (line 11)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "SUPABASE_ACCESS_TOKEN") (line 49)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "GEMINI_API_KEY") (line 6)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "SUPABASE_ACCESS_TOKEN") (line 15)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "SUPABASE_DB_PASSWORD") (line 16)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "VERIFY_TOKEN") (line 19)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "GEMINI_API_KEY") (line 40)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "VITE_SUPABASE_PUBLISHABLE_KEY") (line 3)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "SUPABASE_SERVICE_ROLE_KEY") (line 5)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "RAG_API_SECRET") (line 21)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "SUPABASE_DB_PASSWORD") (line 50)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "VERIFY_TOKEN") (line 53)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "RAG_API_SECRET") (line 55)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "VITE_SUPABASE_PUBLISHABLE_KEY") (line 37)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "SUPABASE_SERVICE_ROLE_KEY") (line 39)
+2026-May-15 06:47:12.407554 - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "ACCESS_TOKEN") (line 45)
+2026-May-15 06:47:12.407554 Dockerfile:33
+2026-May-15 06:47:12.407554 --------------------
+2026-May-15 06:47:12.407554 31 |
+2026-May-15 06:47:12.407554 32 |     COPY . .
+2026-May-15 06:47:12.407554 33 | >>> RUN npm run build
+2026-May-15 06:47:12.407554 34 |
+2026-May-15 06:47:12.407554 35 |     FROM nginx:1.27-alpine
+2026-May-15 06:47:12.407554 --------------------
+2026-May-15 06:47:12.407554 ERROR: failed to build: failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+2026-May-15 06:47:12.407554 exit status 1
+2026-May-15 06:47:12.412557 [DEBUG] Error type: App\Exceptions\DeploymentException
+2026-May-15 06:47:12.418750 [DEBUG] Error code: 0
+2026-May-15 06:47:12.424499 [DEBUG] Location: /var/www/html/app/Traits/ExecuteRemoteCommand.php:237
+2026-May-15 06:47:12.429894 [DEBUG] Stack trace (first 5 lines):
+2026-May-15 06:47:12.434751 [DEBUG] #0 /var/www/html/app/Traits/ExecuteRemoteCommand.php(105): App\Jobs\ApplicationDeploymentJob->executeCommandWithProcess()
+2026-May-15 06:47:12.439455 [DEBUG] #1 /var/www/html/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(275): App\Jobs\ApplicationDeploymentJob->{closure:App\Traits\ExecuteRemoteCommand::execute_remote_command():72}()
+2026-May-15 06:47:12.444166 [DEBUG] #2 /var/www/html/app/Traits/ExecuteRemoteCommand.php(72): Illuminate\Support\Collection->each()
+2026-May-15 06:47:12.449482 [DEBUG] #3 /var/www/html/app/Jobs/ApplicationDeploymentJob.php(3243): App\Jobs\ApplicationDeploymentJob->execute_remote_command()
+2026-May-15 06:47:12.454740 [DEBUG] #4 /var/www/html/app/Jobs/ApplicationDeploymentJob.php(881): App\Jobs\ApplicationDeploymentJob->build_image()
+2026-May-15 06:47:12.459927 ========================================
+2026-May-15 06:47:12.464686 Deployment failed. Removing the new version of your application.
+2026-May-15 06:47:12.811147 Gracefully shutting down build container: u11eroeacwhkmb4vx9zkqo64
+2026-May-15 06:47:13.103117 [DEBUG] [CMD]: docker stop -t 30 u11eroeacwhkmb4vx9zkqo64
+2026-May-15 06:47:13.103117 [DEBUG] u11eroeacwhkmb4vx9zkqo64

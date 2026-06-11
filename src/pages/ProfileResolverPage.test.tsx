@@ -1,11 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
 import ProfileResolverPage from "@/pages/ProfileResolverPage";
 
 const useAuthMock = vi.fn();
-const rpcMock = vi.fn();
 const getCurrentMemberCatalogProfileMock = vi.fn();
 const getMyEditableCatalogItemsMock = vi.fn();
 
@@ -18,33 +17,31 @@ vi.mock("@/lib/member-catalog", () => ({
   getMyEditableCatalogItems: () => getMyEditableCatalogItemsMock(),
 }));
 
-vi.mock("@/integrations/supabase/client", () => ({
-  supabase: {
-    rpc: (...args: unknown[]) => rpcMock(...args),
-  },
-}));
+const memberItem = (overrides: Record<string, unknown> = {}) => ({
+  itemId: "item-1",
+  slug: "member-abc",
+  title: "Test User",
+  itemType: "member",
+  roleKey: "Consultant_PracticalLife",
+  accessLevel: "owner",
+  isPrimaryOwner: true,
+  createdAt: null,
+  legacyProfileType: "danisman",
+  ...overrides,
+});
+
+const authedUser = () => {
+  useAuthMock.mockReturnValue({
+    user: { id: "u-1", email: "user@test.com", user_metadata: {} },
+    isLoading: false,
+  });
+};
 
 describe("ProfileResolverPage", () => {
-  it("redirects to assigned profile type", async () => {
-    useAuthMock.mockReturnValue({
-      user: { id: "u-1", email: "user@test.com", user_metadata: {} },
-      isLoading: false,
-    });
-
+  it("redirects flat-role member item to its mapped UI category", async () => {
+    authedUser();
     getCurrentMemberCatalogProfileMock.mockResolvedValue(null);
-    getMyEditableCatalogItemsMock.mockResolvedValue([
-      {
-        itemId: "item-1",
-        slug: "test-user",
-        title: "Test User",
-        itemType: "member",
-        roleKey: "danisman",
-        accessLevel: "owner",
-        isPrimaryOwner: true,
-        createdAt: null,
-        legacyProfileType: "danisman",
-      },
-    ]);
+    getMyEditableCatalogItemsMock.mockResolvedValue([memberItem()]);
 
     render(
       <MemoryRouter initialEntries={["/profile"]}>
@@ -58,33 +55,64 @@ describe("ProfileResolverPage", () => {
     expect(await screen.findByText("Danisman Profil")).toBeInTheDocument();
   });
 
-  it("lets user pick type and continues", async () => {
-    useAuthMock.mockReturnValue({
-      user: { id: "u-1", email: "user@test.com", user_metadata: {} },
-      isLoading: false,
-    });
-
+  it("redirects to default category when user has no editable items", async () => {
+    authedUser();
     getCurrentMemberCatalogProfileMock.mockResolvedValue(null);
     getMyEditableCatalogItemsMock.mockResolvedValue([]);
-    rpcMock.mockResolvedValue({ error: null });
 
     render(
       <MemoryRouter initialEntries={["/profile"]}>
         <Routes>
           <Route path="/profile" element={<ProfileResolverPage />} />
-          <Route path="/profile/isletme" element={<div>Isletme Profil</div>} />
+          <Route path="/profile/bireysel" element={<div>Bireysel Profil</div>} />
         </Routes>
       </MemoryRouter>,
     );
 
-    fireEvent.click(await screen.findByRole("button", { name: /İşletme/i }));
-    fireEvent.click(screen.getByRole("button", { name: /Devam Et/i }));
+    expect(await screen.findByText("Bireysel Profil")).toBeInTheDocument();
+  });
 
-    await waitFor(() => {
-      expect(rpcMock).toHaveBeenCalledWith("set_current_member_catalog_role", {
-        p_role_key: "isletme",
-      });
+  it("maps current profile flat role key when there is no member item", async () => {
+    authedUser();
+    getCurrentMemberCatalogProfileMock.mockResolvedValue({
+      itemId: "item-9",
+      userId: "u-1",
+      fullName: "Test User",
+      profileType: "Organization_AssociationFoundation",
+      createdAt: null,
     });
-    expect(await screen.findByText("Isletme Profil")).toBeInTheDocument();
+    getMyEditableCatalogItemsMock.mockResolvedValue([]);
+
+    render(
+      <MemoryRouter initialEntries={["/profile"]}>
+        <Routes>
+          <Route path="/profile" element={<ProfileResolverPage />} />
+          <Route path="/profile/kurulus-dernek" element={<div>Kurulus Profil</div>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByText("Kurulus Profil")).toBeInTheDocument();
+  });
+
+  it("shows the selector when user has multiple editable items", async () => {
+    authedUser();
+    getCurrentMemberCatalogProfileMock.mockResolvedValue(null);
+    getMyEditableCatalogItemsMock.mockResolvedValue([
+      memberItem(),
+      memberItem({ itemId: "item-2", slug: "isletme-xyz", title: "Test Business", itemType: "business", roleKey: "Business_RestaurantCafe", legacyProfileType: "isletme" }),
+    ]);
+
+    render(
+      <MemoryRouter initialEntries={["/profile"]}>
+        <Routes>
+          <Route path="/profile" element={<ProfileResolverPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByText(/Duzenlemek istedigin profili sec/i)).toBeInTheDocument();
+    expect(screen.getByText("Test User")).toBeInTheDocument();
+    expect(screen.getByText("Test Business")).toBeInTheDocument();
   });
 });

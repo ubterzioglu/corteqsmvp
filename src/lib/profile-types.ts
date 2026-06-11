@@ -37,8 +37,6 @@ export type RoleMeta = {
     | "main_platform"
     | "ambassador_city";
   displayNameLabel: string;
-  selfSectionKeys: readonly string[];
-  publicSectionKeys: readonly string[];
   defaultPreviewBehavior: "compact" | "rich";
 };
 
@@ -53,8 +51,6 @@ export const roleMetas: RoleMeta[] = [
     sortOrder: 10,
     defaultAttributeKey: "interests",
     displayNameLabel: "Ad Soyad",
-    selfSectionKeys: ["summary", "common_attributes", "role_attributes", "requests", "dashboard"],
-    publicSectionKeys: ["hero", "about", "contact"],
     defaultPreviewBehavior: "rich",
   },
   {
@@ -67,8 +63,6 @@ export const roleMetas: RoleMeta[] = [
     sortOrder: 20,
     defaultAttributeKey: "expertise_area",
     displayNameLabel: "Ad Soyad / Uzman Adı",
-    selfSectionKeys: ["summary", "common_attributes", "role_attributes", "requests", "dashboard"],
-    publicSectionKeys: ["hero", "about", "expertise", "contact"],
     defaultPreviewBehavior: "compact",
   },
   {
@@ -81,8 +75,6 @@ export const roleMetas: RoleMeta[] = [
     sortOrder: 30,
     defaultAttributeKey: "business_category",
     displayNameLabel: "İşletme Adı",
-    selfSectionKeys: ["summary", "common_attributes", "role_attributes", "requests", "dashboard"],
-    publicSectionKeys: ["hero", "about", "services", "contact"],
     defaultPreviewBehavior: "compact",
   },
   {
@@ -95,8 +87,6 @@ export const roleMetas: RoleMeta[] = [
     sortOrder: 40,
     defaultAttributeKey: "organization_type",
     displayNameLabel: "Kuruluş Adı",
-    selfSectionKeys: ["summary", "common_attributes", "role_attributes", "requests", "dashboard"],
-    publicSectionKeys: ["hero", "about", "focus", "contact"],
     defaultPreviewBehavior: "compact",
   },
   {
@@ -109,8 +99,6 @@ export const roleMetas: RoleMeta[] = [
     sortOrder: 50,
     defaultAttributeKey: "main_platform",
     displayNameLabel: "Görünen İsim",
-    selfSectionKeys: ["summary", "common_attributes", "role_attributes", "requests", "dashboard"],
-    publicSectionKeys: ["hero", "about", "platform", "contact"],
     defaultPreviewBehavior: "compact",
   },
   {
@@ -123,8 +111,6 @@ export const roleMetas: RoleMeta[] = [
     sortOrder: 60,
     defaultAttributeKey: "ambassador_city",
     displayNameLabel: "Ad Soyad",
-    selfSectionKeys: ["summary", "common_attributes", "role_attributes", "requests", "dashboard"],
-    publicSectionKeys: ["hero", "about", "city", "contact"],
     defaultPreviewBehavior: "compact",
   },
 ] as const;
@@ -180,4 +166,48 @@ export const getRoleMeta = (value: string | null | undefined): RoleMeta | null =
 export const getCanonicalRoleSlug = (legacyKey: string | null | undefined): CanonicalRoleSlug | null => {
   const roleMeta = getRoleMeta(legacyKey);
   return roleMeta?.canonicalSlug ?? null;
+};
+
+// ── Flat rol → UI kategorisi eşlemesi ────────────────────────────────────────
+// DB'deki 76 flat rol (roles.key, örn. "User_DiasporaMember") UI'da 6 legacy
+// profil kategorisinden biri üzerinden render edilir. /profile/:type segmenti
+// kozmetik UI kategorisidir, kimlik iddiası değildir; veri her zaman RPC
+// payload'ından rol-güdümlü gelir.
+
+const FLAT_ROLE_UI_TYPE_OVERRIDES: Record<string, ProfileType> = {
+  User_CityAmbassador: "sehir-elcisi",
+  User_BloggerVlogger: "blogger-vlogger-youtuber",
+  Healthcare_Doctor: "danisman",
+  Healthcare_Dentist: "danisman",
+  Healthcare_Psychologist: "danisman",
+  Job_Recruiter: "danisman",
+  Job_Candidate: "bireysel",
+  Job_Employer: "isletme",
+  Job_Agency: "isletme",
+  Marketplace_IndividualSeller: "bireysel",
+};
+
+const FLAT_ROLE_PREFIX_UI_TYPES: ReadonlyArray<[prefix: string, uiType: ProfileType]> = [
+  ["User_", "bireysel"],
+  ["Admin_", "bireysel"],
+  ["Consultant_", "danisman"],
+  ["Business_", "isletme"],
+  ["Healthcare_", "isletme"],
+  ["Event_", "isletme"],
+  ["Marketplace_", "isletme"],
+  ["Organization_", "kurulus-dernek"],
+  ["Community_", "kurulus-dernek"],
+];
+
+export const getUiProfileType = (roleKey: string | null | undefined): ProfileType => {
+  if (!roleKey) return defaultProfileType;
+  if (isProfileType(roleKey)) return roleKey;
+
+  const override = FLAT_ROLE_UI_TYPE_OVERRIDES[roleKey];
+  if (override) return override;
+
+  const prefixMatch = FLAT_ROLE_PREFIX_UI_TYPES.find(([prefix]) => roleKey.startsWith(prefix));
+  if (prefixMatch) return prefixMatch[1];
+
+  return defaultProfileType;
 };

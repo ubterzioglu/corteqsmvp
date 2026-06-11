@@ -476,6 +476,95 @@ describe("ProfilePage", () => {
     expect(await screen.findByText("Danisman Profil")).toBeInTheDocument();
   });
 
+  it("renders flat-role User_DiasporaMember at /profile/bireysel without redirect", async () => {
+    useAuthMock.mockReturnValue({
+      user: { id: "u-1", email: "desiremapde@gmail.com", user_metadata: {} },
+    });
+    useCurrentUserDashboardMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      items: [],
+      refreshDashboard: vi.fn(),
+    });
+    useCurrentUserProfileMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      profile: {
+        ...baseProfile,
+        profileType: "User_DiasporaMember",
+        roleKey: "User_DiasporaMember",
+        roleLabel: "Diaspora Üyesi",
+        roleSlug: "User_DiasporaMember",
+      },
+      refreshProfile: vi.fn(),
+    });
+
+    renderProfilePage("/profile/bireysel");
+
+    // Redirect döngüsü yok: sayfa kendi içeriğini render eder.
+    expect(await screen.findByRole("heading", { name: "firmascope" })).toBeInTheDocument();
+    expect(screen.getByText("Profil Alanları")).toBeInTheDocument();
+  });
+
+  it("redirects flat-role user to its mapped UI category with a single redirect", async () => {
+    useAuthMock.mockReturnValue({
+      user: { id: "u-1", email: "desiremapde@gmail.com", user_metadata: {} },
+    });
+    useCurrentUserDashboardMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      items: [],
+      refreshDashboard: vi.fn(),
+    });
+    useCurrentUserProfileMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      profile: {
+        ...baseProfile,
+        profileType: "User_DiasporaMember",
+        roleKey: "User_DiasporaMember",
+        roleLabel: "Diaspora Üyesi",
+        roleSlug: "User_DiasporaMember",
+      },
+      refreshProfile: vi.fn(),
+    });
+
+    // /profile/isletme literal hedef olarak kayıtlı değil → ProfilePage eşleşir,
+    // User_DiasporaMember bireysel'e tek redirect ile düşer.
+    renderProfilePage("/profile/isletme", { includeRedirectTargets: true });
+
+    expect(await screen.findByText("Bireysel Profil")).toBeInTheDocument();
+  });
+
+  it("shows DB role label for flat consultant roles", async () => {
+    useAuthMock.mockReturnValue({
+      user: { id: "u-1", email: "consultant@test.com", user_metadata: {} },
+    });
+    useCurrentUserDashboardMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      items: [],
+      refreshDashboard: vi.fn(),
+    });
+    useCurrentUserProfileMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      profile: {
+        ...baseProfile,
+        profileType: "Consultant_PracticalLife",
+        roleKey: "Consultant_PracticalLife",
+        roleLabel: "Pratik Hayat Danışmanı",
+        roleSlug: "Consultant_PracticalLife",
+      },
+      refreshProfile: vi.fn(),
+    });
+
+    renderProfilePage("/profile/danisman");
+
+    // danisman kategorisi: kurumsal layout, rozet DB rol etiketini gösterir.
+    expect(await screen.findByText("Pratik Hayat Danışmanı")).toBeInTheDocument();
+  });
+
   it("renders role-aware profile blocks for bireysel users", async () => {
     useAuthMock.mockReturnValue({
       user: { id: "u-1", email: "firmascope@gmail.com", user_metadata: { name: "firmascope" } },

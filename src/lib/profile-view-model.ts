@@ -1,8 +1,7 @@
 import type { CurrentUserProfilePayload, ProfileAttributeState, ProfileFeatureState } from "@/lib/member-profile";
 import { getAttributeStringValue } from "@/lib/member-profile";
-import type { IndividualProfileDetailsCore } from "@/lib/individual-profile";
 import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS } from "@/lib/features";
-import { getRoleMeta, type ProfileType } from "@/lib/profile-types";
+import { getRoleMeta, getUiProfileType } from "@/lib/profile-types";
 
 export type PublicProfileSectionRow = {
   section_key: string;
@@ -26,7 +25,7 @@ export type PublicProfileSection = {
 
 export type PublicProfileViewModel = {
   userId: string;
-  roleKey: ProfileType | null;
+  roleKey: string | null;
   roleLabel: string;
   roleTitle: string;
   roleDescription: string;
@@ -42,7 +41,7 @@ export type PublicProfileViewModel = {
 
 export type SelfProfileViewModel = {
   userId: string;
-  roleKey: ProfileType;
+  roleKey: string;
   roleLabel: string;
   displayName: string;
   headline: string;
@@ -144,7 +143,7 @@ const getImageUrl = (attributes: ProfileAttributeState[]) => {
 };
 
 const buildRoleSpecificSections = (profile: CurrentUserProfilePayload, publicAttributes: ProfileAttributeState[]) => {
-  const roleMeta = getRoleMeta(profile.profileType);
+  const roleMeta = getRoleMeta(getUiProfileType(profile.profileType));
   const roleSpecificAttributes = publicAttributes.filter(
     (attribute) =>
       !COMMON_PUBLIC_ATTRIBUTE_KEYS.has(attribute.attributeKey) &&
@@ -195,14 +194,19 @@ const getBooleanAttributeValue = (attributes: ProfileAttributeState[], attribute
 export const buildPublicProfileViewModelFromCurrentUser = (
   profile: CurrentUserProfilePayload,
 ): PublicProfileViewModel => {
-  const roleMeta = getRoleMeta(profile.profileType);
+  const roleMeta = getRoleMeta(getUiProfileType(profile.profileType));
   const publicAttributes = getPublicAttributes(profile.attributes);
+  // Yeni kullanıcıda attribute listesi tamamen boş olabilir — find sonuçlarını guard'la.
+  const displayNameAttribute =
+    profile.attributes.find((attribute) => attribute.attributeKey === "full_name") ?? publicAttributes[0] ?? null;
   const displayName =
-    getStringValue(profile.attributes.find((attribute) => attribute.attributeKey === "full_name") ?? publicAttributes[0]) ||
+    (displayNameAttribute ? getStringValue(displayNameAttribute) : "") ||
     profile.fullName ||
     "CorteQS Üyesi";
+  const shortBioAttribute =
+    profile.attributes.find((attribute) => attribute.attributeKey === "bio_short") ?? publicAttributes[0] ?? null;
   const shortBio =
-    getStringValue(profile.attributes.find((attribute) => attribute.attributeKey === "bio_short") ?? publicAttributes[0]) ||
+    (shortBioAttribute ? getStringValue(shortBioAttribute) : "") ||
     roleMeta?.description ||
     "Bu profil henüz detaylandırılmadı.";
   const links = buildLinksFromAttributes(publicAttributes, profile.features);
@@ -222,7 +226,7 @@ export const buildPublicProfileViewModelFromCurrentUser = (
     userId: profile.userId,
     roleKey: profile.profileType,
     roleLabel: profile.roleLabel,
-    roleTitle: roleMeta?.title ?? profile.roleLabel,
+    roleTitle: profile.roleLabel || (roleMeta?.title ?? ""),
     roleDescription: roleMeta?.description ?? "",
     displayName,
     headline: shortBio,
@@ -365,49 +369,3 @@ export const buildPublicProfileViewModelFromSections = (
   };
 };
 
-export const buildPublicProfileViewModelFromIndividual = (
-  details: IndividualProfileDetailsCore,
-): PublicProfileViewModel => {
-  const links: PublicProfileLink[] = [];
-
-  if (details.frontCard.linkedinUrl && details.frontCard.linkedinVisible) {
-    links.push({ label: "LinkedIn", url: details.frontCard.linkedinUrl });
-  }
-  const websiteUrl = details.controlPanel.websiteLinks[0] ?? details.controlPanel.websites[0];
-  if (websiteUrl) {
-    links.push({ label: "Website", url: websiteUrl });
-  }
-
-  const sections: PublicProfileSection[] = [];
-  if (details.detailCard.aboutText) {
-    sections.push({ key: "about", label: "Hakkında", content: details.detailCard.aboutText });
-  }
-  if (details.detailCard.interests.length) {
-    sections.push({ key: "interests", label: "İlgi Alanları", content: details.detailCard.interests.join(", ") });
-  }
-  if (details.detailCard.languages.length) {
-    sections.push({ key: "languages", label: "Diller", content: details.detailCard.languages.join(", ") });
-  }
-
-  return {
-    userId: details.userId,
-    roleKey: "bireysel",
-    roleLabel: "Bireysel",
-    roleTitle: "Bireysel Kullanıcı",
-    roleDescription: details.statusText,
-    displayName: details.displayName,
-    headline: details.tagline || details.statusText,
-    locationLabel: [details.activeCity, details.activeCountry].filter((part) => part && part !== "-").join(", "),
-    imageUrl: details.frontCard.profileImageUrl,
-    badges: [
-      "Bireysel",
-      details.jobSeeking ? "İş Arıyor" : "",
-      details.mentorOptIn ? "Gönüllü Mentör" : "",
-      details.detailCard.relocation.enabled ? "Yakında Taşınacağım" : "",
-      details.controlPanel.profileVisible ? "Profil Açık" : "Profil Kilitli",
-    ].filter(Boolean),
-    links,
-    sections,
-    emptyMessage: "Bu profil için gösterilecek alan bulunmuyor.",
-  };
-};

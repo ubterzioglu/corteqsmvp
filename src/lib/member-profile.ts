@@ -1,6 +1,5 @@
 import type { Json } from "@/integrations/supabase/types";
 import type { FeatureSource, GenericFeatureKey } from "@/lib/features";
-import type { CanonicalRoleSlug, LegacyRoleKey } from "@/lib/profile-types";
 
 export type AttributeDataType = "text" | "textarea" | "select" | "multi_select" | "url" | "phone" | "boolean" | "json";
 export type AttributeVisibility = "public" | "private";
@@ -59,11 +58,13 @@ export type CurrentUserProfilePayload = {
   userId: string;
   email: string | null;
   fullName: string | null;
-  profileType: LegacyRoleKey;
-  roleKey: LegacyRoleKey;
+  // Flat rol anahtarı (DB roles.key, örn. "User_DiasporaMember"); UI kategorisi
+  // için getUiProfileType ile eşleyin.
+  profileType: string;
+  roleKey: string;
   roleLabel: string;
   roleDescription: string | null;
-  roleSlug: CanonicalRoleSlug;
+  roleSlug: string;
   features: ProfileFeatureState[];
   attributes: ProfileAttributeState[];
   pendingRequests: PendingApprovalSummary[];
@@ -192,11 +193,11 @@ export const mapCurrentUserProfilePayload = (value: Json | null): CurrentUserPro
     userId,
     email: readString(record, "email"),
     fullName: readString(record, "full_name"),
-    profileType: profileType as LegacyRoleKey,
-    roleKey: roleKey as LegacyRoleKey,
+    profileType,
+    roleKey,
     roleLabel: readString(record, "role_label") ?? roleKey,
     roleDescription: readString(record, "role_description"),
-    roleSlug: roleSlug as CanonicalRoleSlug,
+    roleSlug,
     features,
     attributes,
     pendingRequests,

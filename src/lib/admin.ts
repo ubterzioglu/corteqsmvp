@@ -16,7 +16,6 @@ export {
 } from "./admin/admin-feature-api";
 
 export {
-  setUserProfileTypeAsAdmin,
   setAttributeRuleAsAdmin,
   updateUserProfileAttributeAsAdmin,
   upsertRoleProfileSectionRuleAsAdmin,

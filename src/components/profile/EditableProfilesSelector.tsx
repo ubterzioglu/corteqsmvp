@@ -3,6 +3,7 @@ import { ArrowRight, Building2, ShieldCheck, UserCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { EditableCatalogItemSummary } from "@/lib/member-catalog";
+import { getUiProfileType, roleMetaByLegacyKey } from "@/lib/profile-types";
 
 type EditableProfilesSelectorProps = {
   items: EditableCatalogItemSummary[];
@@ -40,7 +41,7 @@ const EditableProfilesSelector = ({ items, onSelect }: EditableProfilesSelectorP
                   <div className="space-y-1">
                     <CardTitle className="text-lg">{item.title}</CardTitle>
                     <CardDescription>
-                      {item.roleKey ?? item.itemType} • {item.accessLevel}
+                      {item.roleKey ? roleMetaByLegacyKey[getUiProfileType(item.roleKey)].adminLabel : item.itemType} • {item.accessLevel}
                     </CardDescription>
                   </div>
                 </div>

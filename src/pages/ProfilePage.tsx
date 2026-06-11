@@ -50,7 +50,7 @@ import {
 } from "@/lib/member-profile-api";
 import { getAttributeStringValue, type AttributeVisibility, type ProfileAttributeState } from "@/lib/member-profile";
 import { getProfileDocumentAccessUrl, parseProfileDocumentRecord, removeProfileDocument, uploadProfileDocument, type ProfileDocumentRecord } from "@/lib/profile-documents";
-import { defaultProfileType, getRoleMeta, isProfileType } from "@/lib/profile-types";
+import { getRoleMeta, getUiProfileType, isProfileType } from "@/lib/profile-types";
 import { validateCvFile, validatePresentationFile } from "@/lib/security";
 import { formatBytes } from "@/lib/submissions";
 import { supabase } from "@/integrations/supabase/client";
@@ -333,7 +333,10 @@ const ProfilePage = () => {
     setDraftVisibilities(nextVisibilities);
   }, [profile]);
 
-  const roleMeta = useMemo(() => getRoleMeta(profile?.profileType ?? type), [profile?.profileType, type]);
+  const roleMeta = useMemo(
+    () => getRoleMeta(getUiProfileType(profile?.profileType ?? type)),
+    [profile?.profileType, type],
+  );
 
   const featureMap = useMemo(() => {
     return new Map((profile?.features ?? []).map((feature) => [feature.key, feature]));
@@ -988,16 +991,20 @@ const ProfilePage = () => {
     }
   };
 
+  // /profile/:type segmenti kozmetik UI kategorisidir; DB'deki flat rol anahtarı
+  // (örn. User_DiasporaMember) URL'e asla yazılmaz — getUiProfileType her zaman
+  // geçerli bir segment döndürdüğü için redirect döngüsü oluşamaz.
   if (!type || !isProfileType(type)) {
-    return <Navigate to={`/profile/${defaultProfileType}`} replace />;
+    return <Navigate to={`/profile/${getUiProfileType(profile?.profileType)}`} replace />;
   }
 
   if (isLoading) {
     return <div className="flex min-h-[70vh] items-center justify-center">Profiliniz hazırlanıyor...</div>;
   }
 
-  if (profile?.profileType && profile.profileType !== type) {
-    return <Navigate to={`/profile/${profile.profileType}`} replace />;
+  const expectedUiType = profile?.profileType ? getUiProfileType(profile.profileType) : null;
+  if (expectedUiType && expectedUiType !== type) {
+    return <Navigate to={`/profile/${expectedUiType}`} replace />;
   }
 
   const avatarActionButtons = (

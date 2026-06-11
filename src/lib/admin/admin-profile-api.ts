@@ -1,14 +1,4 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { ProfileType } from "@/lib/profile-types";
-
-export async function setUserProfileTypeAsAdmin(userId: string, profileType: ProfileType) {
-  const { error } = await supabase.rpc("admin_set_user_profile_type", {
-    target_user_id: userId,
-    next_profile_type: profileType,
-  });
-
-  if (error) throw error;
-}
 
 export async function setAttributeRuleAsAdmin(roleKey: string, attributeKey: string, rulePayload: Record<string, unknown>) {
   const { error } = await supabase.rpc("admin_set_attribute_rule", {
