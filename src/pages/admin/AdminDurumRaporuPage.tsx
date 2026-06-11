@@ -64,6 +64,17 @@ interface UpdateNote {
 const UPDATES: UpdateNote[] = [
   {
     date: "11 Haziran 2026",
+    title: "Dünya Kupası işletme kampanyası açıldı",
+    lines: [
+      "Maç yayını yapan işletmeler için geçici bir kampanya başlattık: işletme /dunya-kupasi/kayit sayfasından Google veya e-posta hesabıyla başvuru bırakıyor.",
+      "Başvurular /admin/dunya-kupasi panelinde toplanıyor (sol menüde “Dünya Kupası”). Onayla'ya bastığınızda kullanıcının hesabı seçtiği işletme kategorisiyle otomatik olarak işletme profiline dönüşüyor ve dizinde işletme olarak görünüyor.",
+      "Onaylanan işletmeler herkese açık /dunya-kupasi sayfasında “Maç Yayını” rozetiyle, şehir/ülke filtresiyle listeleniyor — kampanyanın vitrini burası.",
+      "Güvenlik: başvuranın mevcut rolü Danışman/Kuruluş gibi farklı bir rolse onay yine çalışır ama rolü değiştirmez; panel sizi uyarır. Admin rollerine asla dokunulmaz.",
+      "Kampanya bittiğinde tek ayarla kapatılır (kayıt durur, vitrin boşalır); işletme profilleri platformda kalıcı kalır.",
+    ],
+  },
+  {
+    date: "11 Haziran 2026",
     title: "“Standart Kullanıcı” ve “Diaspora Üyesi” rolleri birleştirildi",
     lines: [
       "İki rol kâğıt üstünde ayrı görünse de pratikte birebir aynıydı: aynı yetkiler, aynı profil görünümü, aynı Cadde hakları. İki ayrı isim sadece kafa karıştırıyordu.",

@@ -104,6 +104,7 @@
     <tr><td>Admin Panel v2</td><td><span class="ok">✓ TAMAM</span></td><td>Faz 0–9 + AdminPageLayout tasfiyesi</td><td>Gerçek cihaz QA</td><td>Detay: <code>docs/plans/admin-v2/</code></td></tr>
     <tr><td>Public Profil v2.1</td><td><span class="ok">✓ TAMAM</span></td><td>v2 RPC canlıda, deploy doğrulandı</td><td>—</td><td>Detay: <code>docs/history/</code></td></tr>
     <tr><td>Kök temizliği + dokümantasyon konsolidasyonu</td><td><span class="ok">✓ TAMAM</span></td><td>Kökte 4 doküman düzeni; arşivler docs/ altında</td><td>—</td><td>Kapandı (2026-06-11); harita §11</td></tr>
+    <tr><td><strong>Dünya Kupası işletme kampanyası</strong></td><td><span class="ok">✓ CANLI</span></td><td>Mig <code>20260612090000</code> canlıda; kayıt + admin onay + vitrin yüzeyleri hazır (535/535 test)</td><td>Deploy → ilk gerçek başvuru/onay turu; kampanya bitişinde <code>world_cup_campaign_settings.is_active=false</code></td><td>Detay: §12 · plan: <code>.claude/plans</code> oturumu (2026-06-11)</td></tr>
     <tr><td><strong>Legacy tablo DROP'u</strong></td><td><span class="warn">⏳ CANARY</span></td><td>Soft-decommission canlıda (yazma kapalı + COMMENT)</td><td>Deploy → <strong>1–2 hafta log gözlemi</strong> → karar dokümanı → DROP migration (<code>user_follows</code> 1 satır R-06 notuyla)</td><td><strong>KARAR (2026-06-11): bekle-gözle ONAYLANDI</strong> — ürün sahibi</td></tr>
     <tr><td>B1 — supabase types regen</td><td><span class="warn">⏳ TOKEN</span></td><td>Denendi: mevcut token'lar Unauthorized</td><td>Token yenile → gen types → build doğrula → <code>db as any</code> cast'ini kaldır</td><td>Ürün sahibi (token)</td></tr>
     <tr><td>D-03 — SMS/OTP sağlayıcısı</td><td><span class="warn">⏳ KARAR</span></td><td>Stub hazır (flag kapalı, şema canlıda)</td><td>Sağlayıcı seç → OTP Edge Function'ları → flag=true</td><td>Ürün sahibi</td></tr>
@@ -470,6 +471,41 @@
     üretilen <code>*.tsbuildinfo</code> dosyaları (artık .gitignore'da). Build-kritik <code>info-*.html</code> dosyaları
     ve <code>lansman/</code> Vite gereği kökte kalır. Arşiv klasörleri (<code>docs/archive|reference|docu</code>)
     encoding denetiminden (<code>verify:text</code>) muaf tutuldu.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <h2>12. Dünya Kupası İşletme Kampanyası (2026-06-11 — CANLI)</h2>
+  <p>
+    Geçici kampanya: <strong>maç yayını yapan işletmeler</strong> kayıt bırakır, admin onayından sonra
+    hesapları <strong>doğrudan işletme profiline dönüşür</strong> ve özel kampanya sayfasında tanıtılırlar.
+    Profiller kampanya bitince <strong>kalıcı kalır</strong> (üye kazanımı); yalnız vitrin/kayıt penceresi süreli.
+    Cadde Tanıtım'dan bağımsızdır (ayrı tablolar, ayrı yüzey).
+  </p>
+  <table>
+    <tr><th>Yüzey</th><th>Rota</th><th>Ne işe yarar</th></tr>
+    <tr><td>Kampanya vitrini</td><td><code>/dunya-kupasi</code></td><td>Anonim erişilebilir; onaylı işletmeler "Maç Yayını" rozetiyle, ülke/şehir filtresiyle listelenir; kartlar <code>/directory/profile/:userId</code>'ye gider</td></tr>
+    <tr><td>İşletme kaydı</td><td><code>/dunya-kupasi/kayit</code></td><td>Login-first akış (Google OAuth <code>/login?next=</code> turu); form: işletme adı, 25 <code>Business_*</code> kategorisinden seçim, ülke/şehir, maç yayını beyanı</td></tr>
+    <tr><td>Admin onay paneli</td><td><code>/admin/dunya-kupasi</code></td><td>Bekleyen/Onaylanan/Reddedilen sekmeleri; notlu onay/red</td></tr>
+  </table>
+
+  <div class="scenario">
+    <div class="who">⚽ Akış — başvurudan vitrine <span class="tag">RPC-only mutation (Cadde kuralı)</span></div>
+    <ol>
+      <li>İşletme <code>/dunya-kupasi/kayit</code>'ta Google/e-posta ile giriş yapıp formu gönderir → <code>create_world_cup_registration_v1</code> (pending; kullanıcı başına tek aktif başvuru; reddedilen yeniden başvurabilir).</li>
+      <li>Admin onaylar → <code>admin_review_world_cup_registration_v1</code>: kullanıcıya seçilen <code>Business_*</code> rolü atanır; mevcut member↔catalog köprüsü dizindeki profili otomatik <strong>işletme profiline</strong> çevirir; <code>business_name / business_category / country / city</code> öznitelikleri yazılır.</li>
+      <li>Rol güvenlik kuralı: yalnız varsayılan üye (<code>User_DiasporaMember</code>) veya halihazırda <code>Business_*</code> olan ezilir; <strong>Admin_* asla</strong>; Danışman/Kuruluş vb. roller <strong>korunur</strong> (panelde "rol korundu" uyarısı + audit alanları).</li>
+      <li>Onaylı işletme <code>list_world_cup_businesses_v1</code> (anon erişimli) ile vitrine düşer.</li>
+      <li>Kampanya bitişi kod gerektirmez: <code>update world_cup_campaign_settings set is_active=false where id=1;</code> (veya <code>ends_at</code>) → kayıt kapanır, vitrin boşalır, profiller kalır.</li>
+    </ol>
+    <div class="note">Hata kodları <code>worldcup_*</code> tek haritadan Türkçe'ye çevrilir. Doğrulama: 535/535 Vitest, build OK, canlı duman testleri (RLS açık; anon registrations'ı göremez; auth'suz RPC <code>worldcup_auth_required</code> ile reddeder; 25 aktif Business rolü; grant'lar doğru).</div>
+  </div>
+  <p class="muted">
+    DB: <code>world_cup_campaign_settings</code> (singleton) + <code>world_cup_registrations</code>; migration
+    <code>20260612090000_world_cup_campaign.sql</code> canlıda ve <code>schema_migrations</code>'a kayıtlı.
+    Kod: <code>src/lib/dunya-kupasi-{schemas,api}.ts</code>, <code>src/lib/admin/admin-dunya-kupasi-api.ts</code>,
+    <code>src/pages/DunyaKupasi{Page,KayitPage}.tsx</code>, <code>src/pages/admin/AdminDunyaKupasiPage.tsx</code>.
   </p>
 </section>
 
