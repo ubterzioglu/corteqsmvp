@@ -9,6 +9,7 @@ const AdminCaddePage = lazy(() => import("@/pages/admin/AdminCaddePage"));
 const AdminCaddePromotionsPage = lazy(() => import("@/pages/admin/AdminCaddePromotionsPage"));
 const AdminCaddeModerationPage = lazy(() => import("@/pages/admin/AdminCaddeModerationPage"));
 const AdminCaddeCarsiPage = lazy(() => import("@/pages/admin/AdminCaddeCarsiPage"));
+const AdminCaddeGuidePage = lazy(() => import("@/pages/admin/AdminCaddeGuidePage"));
 
 export const adminCaddeRoutes = (
   <Route path="cadde">
@@ -16,5 +17,6 @@ export const adminCaddeRoutes = (
     <Route path="promotions" element={<AdminCaddePromotionsPage />} />
     <Route path="moderation" element={<AdminCaddeModerationPage />} />
     <Route path="carsi" element={<AdminCaddeCarsiPage />} />
+    <Route path="rehber" element={<AdminCaddeGuidePage />} />
   </Route>
 );

@@ -258,6 +258,15 @@ export const adminNavGroups: AdminNavGroup[] = [
         aliases: ["cadde", "marketplace"],
       },
       {
+        id: "cadde-guide",
+        label: "Cadde Kural Kitabı",
+        description: "Cadde'nin üye ve admin tarafı rehberi.",
+        to: "/admin/cadde/rehber",
+        icon: BookOpen,
+        accent: "amber",
+        aliases: ["cadde rehber", "cadde kılavuz", "kural kitabı"],
+      },
+      {
         id: "surveys",
         label: "Anketler",
         description: "Survey CRUD ve cevaplar.",

@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260612-cadde-kural-kitabi",
+    date: "12 Haziran 2026",
+    title: "Cadde Kural Kitabı yayında — Cadde'nin tüm işleyişi tek sayfada",
+    items: [
+      "Sidebar'da İçerik ve Kampanyalar grubuna yeni bir menü eklendi: Cadde Kural Kitabı (/admin/cadde/rehber). Cadde'yle ilgili 'bu nasıl çalışıyordu?' sorularının tek adresi artık burası.",
+      "Rehber iki bölümden oluşuyor: önce üyenin gözünden Cadde (kim girebilir, akış neye göre sıralanır, Köprü kuralları, Cafe/Çarşı/Tanıtım nasıl işler, şikayet ne olur), sonra admin tarafı (dört yönetim ekranı, ban mantığı, limitlerin nereden değiştiği ve önerilen günlük moderasyon rutini).",
+      "Tamamı günlük dille yazıldı — teknik terim yok; yeni bir moderatöre Cadde'yi öğretmek için bu sayfayı okutman yeterli.",
+      "Genel Admin Kılavuzu'ndaki Cadde bölümüne de bu rehbere işaret eden bir satır eklendi.",
+    ],
+  },
+  {
     id: "20260612-dunya-kupasi-kart-yenilendi",
     date: "12 Haziran 2026",
     title: "Dünya Kupası vitrini yenilendi — telefon, harita, görsel ve yeni mekân kategorileri",

@@ -207,6 +207,7 @@ const guideBlocks: GuideBlock[] = [
           "Moderasyon (/admin/cadde/moderation): üye şikayetleri ve sistemin otomatik yakaladığı şüpheli içerikler tek kuyrukta toplanır. Her kayıt için Kapat (sorun yok), Gizle, Geri Yayınla veya Sahibini Banla (7 gün) seçebilirsin; yazdığın not karar kaydına işlenir ve içerik sahibine bildirimle gider.",
           "Tanıtım (/admin/cadde/promotions): üyelerin açtığı sponsorlu kampanyalar burada onay bekler. Onaylarsan kampanya tarih aralığında Cadde'de kendiliğinden yayınlanır; reddedersen notun üyenin panelinde görünür. İki durumda da üyeye bildirim gider.",
           "Çarşı (/admin/cadde/carsi): üyeler arası tüm ilanların listesi (yayında/pasif/reddedilmiş filtreleriyle). Uygunsuz ilanı Gizle ile kaldırır, düzeltilmişi Yayınla ile geri açarsın — işlemler kayıt altına alınır.",
+          "Cadde Kural Kitabı (/admin/cadde/rehber): Cadde'nin üye tarafında nasıl çalıştığını ve admin tarafında nasıl yönetildiğini günlük dille adım adım anlatan ayrıntılı rehber.",
           "İpucu: Cadde limitleri (günlük cafe açma, ilan sayısı, yorum hızı vb.) ayar tablosunda tutulur; bir limiti değiştirmek için kod gerekmez.",
         ],
       },
