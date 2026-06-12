@@ -11,6 +11,7 @@ const fetchSettingsSpy = vi.fn();
 const fetchMyRegistrationSpy = vi.fn();
 const listCategoriesSpy = vi.fn();
 const createRegistrationSpy = vi.fn();
+const uploadImageSpy = vi.fn();
 
 vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({ toast: toastSpy }),
@@ -25,6 +26,7 @@ vi.mock("@/lib/dunya-kupasi-api", () => ({
   fetchMyWorldCupRegistration: (...args: unknown[]) => fetchMyRegistrationSpy(...args),
   listBusinessCategoryOptions: (...args: unknown[]) => listCategoriesSpy(...args),
   createWorldCupRegistration: (...args: unknown[]) => createRegistrationSpy(...args),
+  uploadWorldCupImage: (...args: unknown[]) => uploadImageSpy(...args),
 }));
 
 const activeSettings = { isActive: true, startsAt: null, endsAt: null };
@@ -93,7 +95,10 @@ describe("DunyaKupasiKayitPage", () => {
 
     expect(await screen.findByText(/İşletme kategorisi seçmelisiniz/i)).toBeInTheDocument();
     expect(screen.getByText(/Maç yayını yaptığınızı onaylamalısınız/i)).toBeInTheDocument();
+    expect(screen.getByText(/Telefon numarası gerekli/i)).toBeInTheDocument();
+    expect(screen.getByText(/Adres en az 5 karakter olmalı/i)).toBeInTheDocument();
     expect(createRegistrationSpy).not.toHaveBeenCalled();
+    expect(uploadImageSpy).not.toHaveBeenCalled();
   });
 
   it("bekleyen başvuru varsa formu değil durum kartını gösterir", async () => {
@@ -105,7 +110,9 @@ describe("DunyaKupasiKayitPage", () => {
       categoryRoleKey: "Business_RestaurantCafe",
       country: "Almanya",
       city: "Berlin",
-      address: null,
+      phone: "+49 170 1234567",
+      address: "Hauptstr. 1",
+      imagePath: null,
       broadcastConfirmed: true,
       applicantNote: null,
       status: "pending",

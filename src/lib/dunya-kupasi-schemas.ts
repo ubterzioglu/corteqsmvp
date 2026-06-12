@@ -16,7 +16,21 @@ export const worldCupRegistrationFormSchema = z.object({
     .refine((value) => value.startsWith("Business_"), "Geçersiz işletme kategorisi."),
   country: z.string().trim().min(1, "Ülke gerekli."),
   city: z.string().trim().min(1, "Şehir gerekli."),
-  address: z.string().trim().max(300, "Adres en fazla 300 karakter olabilir.").optional(),
+  phone: z
+    .string()
+    .trim()
+    .min(1, "Telefon numarası gerekli.")
+    .max(30, "Telefon en fazla 30 karakter olabilir.")
+    .refine(
+      (value) => value.replace(/[^\d+]/g, "").replace(/\+/g, "").length >= 7,
+      "Geçerli bir telefon numarası girin (en az 7 rakam).",
+    ),
+  address: z
+    .string()
+    .trim()
+    .min(5, "Adres en az 5 karakter olmalı.")
+    .max(300, "Adres en fazla 300 karakter olabilir."),
+  imagePath: z.string().trim().max(300).optional(),
   broadcastConfirmed: z.literal(true, {
     errorMap: () => ({ message: "Maç yayını yaptığınızı onaylamalısınız." }),
   }),
@@ -34,7 +48,9 @@ export type WorldCupRegistration = {
   categoryRoleKey: string;
   country: string;
   city: string;
+  phone: string | null;
   address: string | null;
+  imagePath: string | null;
   broadcastConfirmed: boolean;
   applicantNote: string | null;
   status: WorldCupRegistrationStatus;
@@ -57,6 +73,9 @@ export type WorldCupBusinessListing = {
   categoryLabel: string;
   country: string;
   city: string;
+  phone: string | null;
+  address: string | null;
+  imagePath: string | null;
   userId: string;
 };
 
@@ -89,6 +108,9 @@ export const WORLD_CUP_ERROR_MESSAGES: Record<string, string> = {
   worldcup_invalid_category: "Geçersiz işletme kategorisi seçildi.",
   worldcup_invalid_business_name: "İşletme adı 3-120 karakter arasında olmalı.",
   worldcup_invalid_location: "Ülke ve şehir bilgisi gerekli.",
+  worldcup_phone_required: "Geçerli bir telefon numarası girmelisiniz.",
+  worldcup_address_required: "Adres bilgisi gerekli (5-300 karakter).",
+  worldcup_invalid_image: "Görsel yüklemesi doğrulanamadı. Lütfen görseli yeniden yükleyin.",
   worldcup_broadcast_confirmation_required: "Maç yayını yaptığınızı onaylamalısınız.",
   worldcup_already_registered: "Bu hesapla zaten aktif bir başvurunuz var.",
   worldcup_admin_required: "Bu işlem için yönetici yetkisi gerekli.",

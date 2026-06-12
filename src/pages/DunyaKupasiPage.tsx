@@ -5,14 +5,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { Flame, MapPin, PartyPopper, Trophy, Tv, Users } from "lucide-react";
+import { Flame, MapPin, PartyPopper, Phone, Trophy, Tv, Users } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toMapHref, toSafePhoneHref } from "@/components/directory/public-profile/public-profile-utils";
 import {
   fetchWorldCupCampaignSettings,
+  getWorldCupImagePublicUrl,
   listWorldCupBusinesses,
 } from "@/lib/dunya-kupasi-api";
 
@@ -274,39 +276,84 @@ const DunyaKupasiPage = () => {
             </Card>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredBusinesses.map((business) => (
-                <Card
-                  key={business.registrationId}
-                  className="group flex flex-col overflow-hidden border-t-4 border-t-[#E30A17] transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <CardHeader>
-                    <CardTitle className="text-lg transition-colors group-hover:text-[#E30A17]">
-                      {business.businessName}
-                    </CardTitle>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="secondary">{business.categoryLabel}</Badge>
-                      <Badge variant="outline" className="border-[#E30A17]/50 text-[#E30A17]">
-                        <Tv className="mr-1 h-3 w-3" />
-                        Canlı Maç Yayını
-                      </Badge>
+              {filteredBusinesses.map((business) => {
+                const imageUrl = getWorldCupImagePublicUrl(business.imagePath);
+                const phoneHref = toSafePhoneHref(business.phone);
+                const mapHref = toMapHref([
+                  business.businessName,
+                  business.address,
+                  business.city,
+                  business.country,
+                ]);
+
+                return (
+                  <Card
+                    key={business.registrationId}
+                    className="group flex flex-col overflow-hidden border-t-4 border-t-[#E30A17] transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
+                  >
+                    {/* Kart hero'su: işletme görseli; yoksa marka renkli placeholder. */}
+                    <div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-[#E30A17] via-[#c00712] to-[#8f040c]">
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt={business.businessName}
+                          loading="lazy"
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      ) : (
+                        <>
+                          <CrescentStar className="absolute -right-4 -top-4 h-24 w-24 rotate-12 text-white/15" />
+                          <Tv className="absolute bottom-3 left-3 h-7 w-7 text-white/70" />
+                        </>
+                      )}
                     </div>
-                  </CardHeader>
-                  <CardContent className="mt-auto flex items-center justify-between">
-                    <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <MapPin className="h-4 w-4" />
-                      {business.city}, {business.country}
-                    </span>
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="border-[#E30A17]/40 text-[#E30A17] hover:bg-[#E30A17] hover:text-white"
-                    >
-                      <Link to={`/directory/profile/${business.userId}`}>Profili Gör</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
+                    <CardHeader>
+                      <CardTitle className="text-lg transition-colors group-hover:text-[#E30A17]">
+                        {business.businessName}
+                      </CardTitle>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge variant="secondary">{business.categoryLabel}</Badge>
+                        <Badge variant="outline" className="border-[#E30A17]/50 text-[#E30A17]">
+                          <Tv className="mr-1 h-3 w-3" />
+                          Canlı Maç Yayını
+                        </Badge>
+                      </div>
+                      <span className="flex items-center gap-1 pt-1 text-sm text-muted-foreground">
+                        <MapPin className="h-4 w-4" />
+                        {business.city}, {business.country}
+                      </span>
+                    </CardHeader>
+                    <CardContent className="mt-auto space-y-2">
+                      <div className="flex gap-2">
+                        {phoneHref && (
+                          <Button asChild variant="outline" size="sm" className="flex-1">
+                            <a href={phoneHref}>
+                              <Phone className="mr-1.5 h-4 w-4" />
+                              Ara
+                            </a>
+                          </Button>
+                        )}
+                        {mapHref && (
+                          <Button asChild variant="outline" size="sm" className="flex-1">
+                            <a href={mapHref} target="_blank" rel="noopener noreferrer">
+                              <MapPin className="mr-1.5 h-4 w-4" />
+                              Haritada Aç
+                            </a>
+                          </Button>
+                        )}
+                      </div>
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="w-full border-[#E30A17]/40 text-[#E30A17] hover:bg-[#E30A17] hover:text-white"
+                      >
+                        <Link to={`/directory/profile/${business.userId}`}>Profili Gör</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </>

@@ -2,12 +2,12 @@
 // Akış: oturum yoksa /login?next= CTA'sı (OAuth turunu LoginPage yönetir);
 // oturum varsa başvuru durumu veya form. Mutasyon create_world_cup_registration_v1.
 
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { CheckCircle2, Clock, Trophy, XCircle } from "lucide-react";
+import { CheckCircle2, Clock, ImagePlus, Trophy, X, XCircle } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -24,6 +24,7 @@ import {
   fetchMyWorldCupRegistration,
   fetchWorldCupCampaignSettings,
   listBusinessCategoryOptions,
+  uploadWorldCupImage,
 } from "@/lib/dunya-kupasi-api";
 import {
   worldCupRegistrationFormSchema,
@@ -39,9 +40,13 @@ const DEFAULT_FORM_VALUES: Partial<WorldCupRegistrationFormValues> = {
   categoryRoleKey: "",
   country: "",
   city: "",
+  phone: "",
   address: "",
   note: "",
 };
+
+const IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+const IMAGE_ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 const DunyaKupasiKayitPage = () => {
   const { user, isLoading: isAuthLoading } = useAuth();
@@ -70,9 +75,48 @@ const DunyaKupasiKayitPage = () => {
     defaultValues: DEFAULT_FORM_VALUES as WorldCupRegistrationFormValues,
   });
 
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const clearImage = () => {
+    setImageFile(null);
+    if (imageInputRef.current) imageInputRef.current.value = "";
+  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] ?? null;
+    if (!file) {
+      setImageFile(null);
+      return;
+    }
+    if (!IMAGE_ACCEPTED_TYPES.includes(file.type)) {
+      clearImage();
+      toast({
+        title: "Desteklenmeyen görsel formatı",
+        description: "JPEG, PNG veya WebP formatında bir görsel yükleyin.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (file.size > IMAGE_MAX_BYTES) {
+      clearImage();
+      toast({
+        title: "Görsel çok büyük",
+        description: "Görsel en fazla 5MB olabilir.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setImageFile(file);
+  };
+
   const createMutation = useMutation({
-    mutationFn: createWorldCupRegistration,
+    mutationFn: async (values: WorldCupRegistrationFormValues) => {
+      const imagePath = imageFile ? await uploadWorldCupImage(imageFile, user?.id ?? "") : undefined;
+      return createWorldCupRegistration({ ...values, imagePath });
+    },
     onSuccess: async () => {
+      clearImage();
       await queryClient.invalidateQueries({ queryKey: ["world-cup", "my-registration", user?.id] });
       toast({
         title: "Başvurunuz alındı! ✅",
@@ -253,8 +297,66 @@ const DunyaKupasiKayitPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="address">Adres (opsiyonel)</Label>
+                  <Label htmlFor="phone">Telefon *</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="Örn: +49 170 1234567"
+                    {...form.register("phone")}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Kampanya sayfasındaki kartınızda "Ara" butonu olarak gösterilir.
+                  </p>
+                  {form.formState.errors.phone && (
+                    <p className="text-sm text-destructive">{form.formState.errors.phone.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="address">Adres *</Label>
                   <Input id="address" placeholder="Müşterilerin sizi bulacağı adres" {...form.register("address")} />
+                  <p className="text-xs text-muted-foreground">
+                    Kartınızdaki "Haritada Aç" butonu bu adresle Google Maps'e yönlendirir.
+                  </p>
+                  {form.formState.errors.address && (
+                    <p className="text-sm text-destructive">{form.formState.errors.address.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="businessImage">İşletme Görseli (opsiyonel)</Label>
+                  <input
+                    ref={imageInputRef}
+                    id="businessImage"
+                    type="file"
+                    accept={IMAGE_ACCEPTED_TYPES.join(",")}
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                  {imageFile ? (
+                    <div className="flex items-center justify-between gap-3 rounded-md border p-3">
+                      <span className="flex min-w-0 items-center gap-2 text-sm">
+                        <ImagePlus className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        <span className="truncate">{imageFile.name}</span>
+                      </span>
+                      <Button type="button" variant="ghost" size="sm" onClick={clearImage} aria-label="Görseli kaldır">
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => imageInputRef.current?.click()}
+                    >
+                      <ImagePlus className="mr-2 h-4 w-4" />
+                      Görsel seç (JPEG/PNG/WebP, en fazla 5MB)
+                    </Button>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Görsel, kampanya sayfasındaki kartınızın üst banner'ı olarak gösterilir.
+                  </p>
                 </div>
 
                 <div className="space-y-2">

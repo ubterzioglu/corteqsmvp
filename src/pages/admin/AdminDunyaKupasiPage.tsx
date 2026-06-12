@@ -16,6 +16,7 @@ import {
   listWorldCupRegistrationsAsAdmin,
   reviewWorldCupRegistrationAsAdmin,
 } from "@/lib/admin/admin-dunya-kupasi-api";
+import { getWorldCupImagePublicUrl } from "@/lib/dunya-kupasi-api";
 import {
   WORLD_CUP_STATUS_LABELS,
   type WorldCupAdminRegistration,
@@ -121,6 +122,24 @@ const AdminDunyaKupasiPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
+            {registration.imagePath && (
+              <a
+                href={getWorldCupImagePublicUrl(registration.imagePath) ?? undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-fit"
+              >
+                <img
+                  src={getWorldCupImagePublicUrl(registration.imagePath) ?? undefined}
+                  alt={`${registration.businessName} görseli`}
+                  loading="lazy"
+                  className="h-24 w-40 rounded-md border object-cover"
+                />
+              </a>
+            )}
+            {registration.phone && (
+              <p className="text-sm text-muted-foreground">Telefon: {registration.phone}</p>
+            )}
             {registration.address && (
               <p className="text-sm text-muted-foreground">Adres: {registration.address}</p>
             )}

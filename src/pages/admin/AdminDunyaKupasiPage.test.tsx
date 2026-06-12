@@ -17,6 +17,11 @@ vi.mock("@/lib/admin/admin-dunya-kupasi-api", () => ({
   reviewWorldCupRegistrationAsAdmin: (...args: unknown[]) => reviewRegistrationSpy(...args),
 }));
 
+vi.mock("@/lib/dunya-kupasi-api", () => ({
+  getWorldCupImagePublicUrl: (path: string | null) =>
+    path ? `https://cdn.example/world-cup-images/${path}` : null,
+}));
+
 const pendingFixture = [
   {
     id: "reg-1",
@@ -27,7 +32,9 @@ const pendingFixture = [
     categoryLabel: "Restoran / Cafe",
     country: "Almanya",
     city: "Berlin",
+    phone: "+49 170 1234567",
     address: "Hauptstr. 1",
+    imagePath: "user-1/mekan.jpg",
     broadcastConfirmed: true,
     applicantNote: "3 ekranımız var",
     status: "pending" as const,
@@ -70,6 +77,11 @@ describe("AdminDunyaKupasiPage", () => {
     expect(await screen.findByText("Boğaz Cafe")).toBeInTheDocument();
     expect(screen.getByText(/Restoran \/ Cafe/)).toBeInTheDocument();
     expect(screen.getByText(/cafe@example.com/)).toBeInTheDocument();
+    expect(screen.getByText(/\+49 170 1234567/)).toBeInTheDocument();
+    expect(screen.getByAltText("Boğaz Cafe görseli")).toHaveAttribute(
+      "src",
+      "https://cdn.example/world-cup-images/user-1/mekan.jpg",
+    );
     expect(listRegistrationsSpy).toHaveBeenCalledWith("pending");
   });
 

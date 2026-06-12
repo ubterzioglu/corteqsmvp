@@ -23,7 +23,9 @@ type AdminRegistrationRow = {
   categoryLabel: string;
   country: string;
   city: string;
+  phone: string | null;
   address: string | null;
+  imagePath: string | null;
   broadcastConfirmed: boolean;
   applicantNote: string | null;
   status: WorldCupRegistrationStatus;
@@ -53,7 +55,9 @@ export async function listWorldCupRegistrationsAsAdmin(
     categoryLabel: row.categoryLabel,
     country: row.country,
     city: row.city,
+    phone: row.phone,
     address: row.address,
+    imagePath: row.imagePath,
     broadcastConfirmed: row.broadcastConfirmed,
     applicantNote: row.applicantNote,
     status: row.status,

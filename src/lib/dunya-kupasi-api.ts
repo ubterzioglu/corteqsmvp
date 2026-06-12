@@ -26,7 +26,9 @@ type RegistrationRow = {
   category_role_key: string;
   country: string;
   city: string;
+  phone: string | null;
   address: string | null;
+  image_path: string | null;
   broadcast_confirmed: boolean;
   applicant_note: string | null;
   status: WorldCupRegistrationStatus;
@@ -42,7 +44,9 @@ const mapRegistrationRow = (row: RegistrationRow): WorldCupRegistration => ({
   categoryRoleKey: row.category_role_key,
   country: row.country,
   city: row.city,
+  phone: row.phone,
   address: row.address,
+  imagePath: row.image_path,
   broadcastConfirmed: row.broadcast_confirmed,
   applicantNote: row.applicant_note,
   status: row.status,
@@ -95,7 +99,7 @@ export async function fetchMyWorldCupRegistration(userId: string): Promise<World
   const { data, error } = await db
     .from("world_cup_registrations")
     .select(
-      "id, user_id, business_name, category_role_key, country, city, address, broadcast_confirmed, applicant_note, status, reviewed_at, review_note, created_at",
+      "id, user_id, business_name, category_role_key, country, city, phone, address, image_path, broadcast_confirmed, applicant_note, status, reviewed_at, review_note, created_at",
     )
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
@@ -114,15 +118,50 @@ export async function createWorldCupRegistration(values: WorldCupRegistrationFor
     p_category_role_key: values.categoryRoleKey,
     p_country: values.country,
     p_city: values.city,
-    p_address: values.address?.trim() || null,
+    p_phone: values.phone.trim(),
+    p_address: values.address.trim(),
     p_broadcast_confirmed: values.broadcastConfirmed,
     p_note: values.note?.trim() || null,
+    p_image_path: values.imagePath?.trim() || null,
   });
 
   if (error) {
     throw new Error(resolveWorldCupErrorMessage(error));
   }
   return data as string;
+}
+
+/** Kart görselleri public bucket'ı (mig 20260613090000; 5MB, jpeg/png/webp). */
+export const WORLD_CUP_IMAGE_BUCKET = "world-cup-images";
+
+/**
+ * İşletme görselini kullanıcının kendi klasörüne yükler (storage policy:
+ * yalnız auth.uid()/ öneki yazılabilir). Dönen path RPC'ye p_image_path olarak geçer.
+ */
+export async function uploadWorldCupImage(file: File, userId: string): Promise<string> {
+  if (!userId) {
+    throw new Error("Görsel yüklemek için giriş yapmalısınız.");
+  }
+
+  const ext = file.name.includes(".") ? file.name.split(".").pop() : "";
+  const safeExt = ext ? `.${ext.toLowerCase()}` : "";
+  const path = `${userId}/${crypto.randomUUID()}${safeExt}`;
+
+  const { error } = await supabase.storage.from(WORLD_CUP_IMAGE_BUCKET).upload(path, file, {
+    upsert: false,
+    contentType: file.type || undefined,
+  });
+  if (error) {
+    throw new Error("Görsel yüklenemedi. Lütfen tekrar deneyin.");
+  }
+
+  return path;
+}
+
+/** Public bucket'taki kart görselinin tarayıcı URL'i (path yoksa null). */
+export function getWorldCupImagePublicUrl(path: string | null | undefined): string | null {
+  if (!isSupabaseConfigured || !path) return null;
+  return supabase.storage.from(WORLD_CUP_IMAGE_BUCKET).getPublicUrl(path).data.publicUrl;
 }
 
 /** İşletme kategorisi seçenekleri (25 Business_* flat rolü; form login arkasında). */
