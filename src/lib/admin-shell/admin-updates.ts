@@ -14,6 +14,20 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260612-dunya-kupasi-kart-yenilendi",
+    date: "12 Haziran 2026",
+    title: "Dünya Kupası vitrini yenilendi — telefon, harita, görsel ve yeni mekân kategorileri",
+    items: [
+      "Kampanya sayfasındaki işletme kartları baştan tasarlandı: artık her kartın üstünde işletmenin fotoğrafı, altında da tek tıkla telefonu açan 'Ara' ve Google Maps'te adresi açan 'Haritada Aç' butonları var. 'Profili Gör' linkini kaldırdık — maç izlemeye gelen kişi için aramak ve yol tarifi almak yeterli.",
+      "Görsel yüklemeyen işletmeler boş kalmıyor: onlar için özel hazırlattığımız milli takım temalı bir görsel (bayraklar, meşaleler, stadyum) kartın üstüne otomatik geliyor.",
+      "Başvuru formu da buna göre değişti: telefon ve adres artık zorunlu (karttaki butonları besliyorlar), işletme fotoğrafı isteğe bağlı (en fazla 5MB). Onay ekranında telefon, adres ve fotoğrafın küçük önizlemesini görürsün — onaydan önce fotoğrafa mutlaka göz at.",
+      "Formdaki kategori listesi derlendi toplandı: Eczane, Hukuk Bürosu, Muhasebe Ofisi gibi maç yayınıyla alakası olmayan seçenekler formdan çıkarıldı. Yerine maça uygun mekânlar kaldı: Restoran/Cafe, Bar/Pub, Çay Bahçesi/Kahvehane, Nargile Cafe/Lounge ve Otel/Konaklama.",
+      "Bunlardan üçü (Bar/Pub, Çay Bahçesi/Kahvehane, Nargile Cafe/Lounge) platformda hiç yoktu — yeni rol olarak eklendi, rol matrisinde göreceksin. Eski kategoriler silinmedi; sadece bu formda görünmüyorlar, üye kataloğunda kullanılmaya devam ediyorlar.",
+      "Kampanya sayfasının tepesine yeni hazırlanan kampanya görseli kondu, ana sayfada da sol üste (logonun üstüne) kampanyaya götüren dikkat çekici kırmızı bir buton eklendi — siteye giren herkes kampanyayı ilk bakışta görecek.",
+      "Veritabanı tarafı canlıda hazır; site arayüzündeki yenilikler bir sonraki yayınla (deploy) görünür olacak. Mevcut başvurular etkilenmedi.",
+    ],
+  },
+  {
     id: "20260612-turkce-karakter-ve-deneysel-roller",
     date: "12 Haziran 2026",
     title: "Türkçe karakter sorunlarına kalıcı çözüm + deneme rolleri",

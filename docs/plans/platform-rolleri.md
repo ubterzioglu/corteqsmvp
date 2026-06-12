@@ -30,6 +30,9 @@
 | `Organization_HealthcareInstitution` | Sağlık Kuruluşu |
 | `Organization_DigitalCommunity` | Dijital Topluluk |
 | `Business_RestaurantCafe` | Restoran / Cafe |
+| `Business_BarPub` | Bar / Pub |
+| `Business_TeaHouse` | Çay Bahçesi / Kahvehane |
+| `Business_HookahLounge` | Nargile Cafe / Lounge |
 | `Business_MarketGrocery` | Market / Bakkal |
 | `Business_BakeryPatisserie` | Fırın / Pastane |
 | `Business_HairdresserBeauty` | Kuaför / Güzellik Merkezi |
