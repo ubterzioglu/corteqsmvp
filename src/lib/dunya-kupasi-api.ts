@@ -6,6 +6,7 @@ import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
 
 import {
   resolveWorldCupErrorMessage,
+  WORLD_CUP_CATEGORY_KEYS,
   type BusinessCategoryOption,
   type WorldCupBusinessListing,
   type WorldCupCampaignSettings,
@@ -164,20 +165,24 @@ export function getWorldCupImagePublicUrl(path: string | null | undefined): stri
   return supabase.storage.from(WORLD_CUP_IMAGE_BUCKET).getPublicUrl(path).data.publicUrl;
 }
 
-/** İşletme kategorisi seçenekleri (25 Business_* flat rolü; form login arkasında). */
+/** Maç mekânı kategorisi seçenekleri (WORLD_CUP_CATEGORY_KEYS allowlist'i; form login arkasında). */
 export async function listBusinessCategoryOptions(): Promise<BusinessCategoryOption[]> {
   if (!isSupabaseConfigured) return [];
 
   const { data, error } = await db
     .from("roles")
-    .select("key, label, sort_order")
-    .like("key", "Business\\_%")
-    .eq("is_active", true)
-    .order("sort_order", { ascending: true });
+    .select("key, label")
+    .in("key", [...WORLD_CUP_CATEGORY_KEYS])
+    .eq("is_active", true);
   if (error) throw error;
 
-  return ((data ?? []) as Array<{ key: string; label: string }>).map((row) => ({
-    key: row.key,
-    label: row.label,
-  }));
+  const rows = (data ?? []) as Array<{ key: string; label: string }>;
+  // Görüntü sırası DB sort_order'ı değil, allowlist sırası.
+  return [...rows]
+    .sort(
+      (a, b) =>
+        WORLD_CUP_CATEGORY_KEYS.indexOf(a.key as (typeof WORLD_CUP_CATEGORY_KEYS)[number]) -
+        WORLD_CUP_CATEGORY_KEYS.indexOf(b.key as (typeof WORLD_CUP_CATEGORY_KEYS)[number]),
+    )
+    .map((row) => ({ key: row.key, label: row.label }));
 }

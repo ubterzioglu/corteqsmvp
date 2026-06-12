@@ -96,6 +96,20 @@ export type BusinessCategoryOption = {
   label: string;
 };
 
+/**
+ * Kayıt formunda gösterilen maç mekânı kategorileri (sıra = görüntü sırası).
+ * Platformdaki diğer Business_* rolleri (Eczane, Hukuk Bürosu vb.) bilinçli
+ * olarak form dışı — maç yayını yapılabilecek mekânlarla sınırlı tutuyoruz.
+ * Yeni mekân rolleri: mig 20260613100000.
+ */
+export const WORLD_CUP_CATEGORY_KEYS = [
+  "Business_RestaurantCafe",
+  "Business_BarPub",
+  "Business_TeaHouse",
+  "Business_HookahLounge",
+  "Business_HotelAccommodation",
+] as const;
+
 export const WORLD_CUP_STATUS_LABELS: Record<WorldCupRegistrationStatus, string> = {
   pending: "Onay bekliyor",
   approved: "Onaylandı",
