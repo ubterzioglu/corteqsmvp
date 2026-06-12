@@ -5,7 +5,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { Flame, MapPin, PartyPopper, Phone, Trophy, Tv, Users } from "lucide-react";
+import { MapPin, PartyPopper, Phone, Trophy, Tv, Users } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,9 @@ import {
 } from "@/lib/dunya-kupasi-api";
 
 const ALL_FILTER = "__all__";
+
+// Görsel yüklemeyen işletmeler için milli takım temalı kart banner'ı (public/world-cup/).
+const CARD_PLACEHOLDER_SRC = "/world-cup/card-placeholder.webp";
 
 // Hero animasyonları sayfaya özel — global stylesheet'i kirletmemek için
 // component içinde scope'lanmış keyframe'ler.
@@ -291,21 +294,14 @@ const DunyaKupasiPage = () => {
                     key={business.registrationId}
                     className="group flex flex-col overflow-hidden border-t-4 border-t-[#E30A17] transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
                   >
-                    {/* Kart hero'su: işletme görseli; yoksa marka renkli placeholder. */}
+                    {/* Kart hero'su: işletme görseli; yoksa milli takım temalı placeholder illüstrasyonu. */}
                     <div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-[#E30A17] via-[#c00712] to-[#8f040c]">
-                      {imageUrl ? (
-                        <img
-                          src={imageUrl}
-                          alt={business.businessName}
-                          loading="lazy"
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                      ) : (
-                        <>
-                          <CrescentStar className="absolute -right-4 -top-4 h-24 w-24 rotate-12 text-white/15" />
-                          <Tv className="absolute bottom-3 left-3 h-7 w-7 text-white/70" />
-                        </>
-                      )}
+                      <img
+                        src={imageUrl ?? CARD_PLACEHOLDER_SRC}
+                        alt={imageUrl ? business.businessName : ""}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
                     </div>
                     <CardHeader>
                       <CardTitle className="text-lg transition-colors group-hover:text-[#E30A17]">
