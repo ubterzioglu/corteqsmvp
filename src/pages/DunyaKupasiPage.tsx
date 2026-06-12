@@ -83,81 +83,33 @@ const DunyaKupasiPage = () => {
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-12">
-      <style>{heroStyles}</style>
-
-      {/* ——— Kahraman bölümü: Türkiye Dünya Kupası'nda! ——— */}
-      <section className="relative mb-12 overflow-hidden rounded-3xl bg-gradient-to-br from-[#E30A17] via-[#c00712] to-[#8f040c] px-6 py-14 text-center text-white shadow-2xl sm:px-12">
-        {/* Stadyum ışığı */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 70% 50% at 50% -10%, rgba(255,255,255,0.35), transparent 60%), radial-gradient(ellipse 40% 30% at 85% 110%, rgba(255,209,102,0.25), transparent 70%)",
-          }}
+      {/* ——— Kahraman bölümü: kampanya görseli (başlık/metin görselde gömülü) ——— */}
+      <section className="relative mb-12 overflow-hidden rounded-3xl shadow-2xl">
+        <h1 className="sr-only">Türkiye Dünya Kupası'nda! Maç yayını yapan işletmeler</h1>
+        <img
+          src={HERO_IMAGE_SRC}
+          alt="Türkiye Dünya Kupası'nda! Diasporada maçları dev ekranda yayınlayan mekânı bul, tezahüratı toplulukla birlikte yap."
+          className="h-auto w-full"
         />
-        {/* Dev ay-yıldız filigranı */}
-        <CrescentStar className="pointer-events-none absolute -left-10 top-1/2 h-64 w-64 -translate-y-1/2 text-white/10 sm:h-80 sm:w-80" />
-        <CrescentStar className="pointer-events-none absolute -right-14 -top-10 h-44 w-44 rotate-12 text-white/10" />
-
-        {/* Konfeti */}
-        {CONFETTI_PIECES.map((piece, index) => (
-          <span
-            key={index}
-            className="wc-confetti pointer-events-none absolute top-0 h-2.5 w-1.5 rounded-sm"
-            style={{
-              left: piece.left,
-              backgroundColor: piece.color,
-              animation: `wc-confetti-fall ${piece.duration} linear ${piece.delay} infinite`,
-            }}
-          />
-        ))}
-
-        <div className="relative">
-          <Badge className="wc-pulse mb-5 border-white/40 bg-white/15 px-4 py-1.5 text-sm font-semibold uppercase tracking-widest text-white backdrop-blur" style={{ animation: "wc-pulse-ring 2s ease-out infinite" }}>
-            <Flame className="mr-1.5 h-4 w-4" />
-            Milliler sahada!
-          </Badge>
-
-          <Trophy
-            className="wc-float mx-auto mb-4 h-16 w-16 text-amber-300 drop-shadow-[0_0_18px_rgba(255,209,102,0.6)]"
-            style={{ animation: "wc-float 3.5s ease-in-out infinite" }}
-          />
-
-          <h1 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl">
-            Türkiye{" "}
-            <span
-              className="wc-shine bg-gradient-to-r from-amber-200 via-white to-amber-200 bg-clip-text text-transparent"
-              style={{ backgroundSize: "200% auto", animation: "wc-shine 3s linear infinite" }}
+        <div className="flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#E30A17] via-[#c00712] to-[#8f040c] px-6 py-5 text-white sm:flex-row">
+          {campaignActive && (
+            <Button
+              asChild
+              size="lg"
+              className="bg-white text-[#E30A17] shadow-lg transition-transform hover:scale-105 hover:bg-amber-50"
             >
-              Dünya Kupası'nda!
+              <Link to="/dunya-kupasi/kayit">
+                <Tv className="mr-2 h-5 w-5" />
+                Maç Yayını Yapıyorum — İşletmemi Kaydet
+              </Link>
+            </Button>
+          )}
+          {!isLoading && businesses.length > 0 && (
+            <span className="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-sm font-medium backdrop-blur">
+              <Users className="h-4 w-4 text-amber-300" />
+              {businesses.length} mekân, {countryCount} ülkede maç coşkusuna hazır
             </span>
-          </h1>
-
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-red-50/90 sm:text-xl">
-            Ay-yıldızlılar bu sene Dünya Kupası'nda ter dökecek — sen de gurbette yalnız izleme!
-            Diasporada maçları dev ekranda yayınlayan mekânı bul, tezahüratı toplulukla birlikte yap. 🇹🇷
-          </p>
-
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            {campaignActive && (
-              <Button
-                asChild
-                size="lg"
-                className="bg-white text-[#E30A17] shadow-lg transition-transform hover:scale-105 hover:bg-amber-50"
-              >
-                <Link to="/dunya-kupasi/kayit">
-                  <Tv className="mr-2 h-5 w-5" />
-                  Maç Yayını Yapıyorum — İşletmemi Kaydet
-                </Link>
-              </Button>
-            )}
-            {!isLoading && businesses.length > 0 && (
-              <span className="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-sm font-medium backdrop-blur">
-                <Users className="h-4 w-4 text-amber-300" />
-                {businesses.length} mekân, {countryCount} ülkede maç coşkusuna hazır
-              </span>
-            )}
-          </div>
+          )}
         </div>
       </section>
 
