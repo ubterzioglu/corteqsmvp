@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>CorteQS Durum Panosu — Cadde 3.0 · Profil Sistemi · Dünya Kupası · Premium Profil Pilotu (2026-06-12)</title>
+<title>CorteQS Durum Panosu — Cadde 3.0 · Profil Sistemi · Dünya Kupası · Premium Profil Pilotu · Türkçe Karakter Çözümü (2026-06-12)</title>
 <style>
   :root {
     --bg: #0f1115;
@@ -96,13 +96,15 @@
 
 <header>
   <h1>CorteQS Durum Panosu</h1>
-  <div class="sub">Üç bağımsız iş hattının uçtan uca raporu · 2026-06-09 → 2026-06-11 · repo <code>corteqs_fin</code> (main) · canlı DB <code>injprdrsklkxgnaiixzh</code> · canlı ortam <code>mvp.corteqs.net</code></div>
+  <div class="sub">Üç bağımsız iş hattının uçtan uca raporu · 2026-06-09 → 2026-06-12 · repo <code>corteqs_fin</code> (main) · canlı DB <code>injprdrsklkxgnaiixzh</code> · canlı ortam <code>mvp.corteqs.net</code></div>
   <div style="margin-top:12px">
     <span class="pill green">Cadde 3.0: Faz 0–9 + kuyruk TAMAM</span>
     <span class="pill green">Profil sistemi: flat-rol geçişi CANLI</span>
     <span class="pill green">Dünya Kupası kampanyası: CANLI</span>
+    <span class="pill green">Türkçe karakter kalıcı çözümü: main'de</span>
     <span class="pill green">560/560 test · build OK</span>
     <span class="pill blue">Premium profil pilotu: Experimental_2 (kod hazır)</span>
+    <span class="pill blue">Deneysel roller + test hesapları: CANLI</span>
     <span class="pill amber">Açık kalemler: §A10 / §B5 / §C4</span>
   </div>
   <div class="toc">
@@ -111,6 +113,7 @@
     <a href="#profil">B · Profil Sistemi</a>
     <a href="#dunya-kupasi">C · Dünya Kupası Yayınları</a>
     <a href="#dokuman">D · Doküman Haritası</a>
+    <a href="#turkce">E · Türkçe Karakter + Deneysel Roller</a>
   </div>
   <p class="muted" style="margin:14px 0 0; font-size:12.5px;">
     Her ana bölüm (A/B/C) kendi içinde bütündür: kendi özeti, yüzey/rota tablosu, uçtan uca kullanım
@@ -134,6 +137,8 @@
     <tr><td>Kök temizliği + dokümantasyon konsolidasyonu</td><td><span class="ok">✓ TAMAM</span></td><td>Kökte 4 doküman düzeni; arşivler docs/ altında</td><td>—</td><td>Kapandı (2026-06-11); harita Bölüm D</td></tr>
     <tr><td><strong>Dünya Kupası işletme kampanyası</strong></td><td><span class="ok">✓ CANLI</span></td><td>Mig <code>20260612090000</code> canlıda; kayıt + admin onay + vitrin yüzeyleri hazır (535/535 test)</td><td>Deploy → ilk gerçek başvuru/onay turu; kampanya bitişinde <code>world_cup_campaign_settings.is_active=false</code></td><td>Detay: Bölüm C · plan: <code>.claude/plans</code> oturumu (2026-06-11)</td></tr>
     <tr><td><strong>Premium profil pilotu (Experimental_2)</strong></td><td><span class="ok">✓ KOD HAZIR</span></td><td>Branch <code>feat/premium-profile-experimental-2-pilot</code>; 560/560 test, build OK, migration yok</td><td>Pilot hesapla görsel QA (experimental2 premium / experimental1 generic) → main'e merge → rol rol rollout</td><td>Detay: §B6 · plan: <code>docs/plans/profile-premium-experimental-2-pilot.md</code></td></tr>
+    <tr><td><strong>Türkçe karakter kalıcı çözümü</strong></td><td><span class="ok">✓ TAMAM</span></td><td>Kök neden bulundu (locale'siz harf çevirisi); tr yardımcıları + ~26 ekran + CSV BOM main'de (541/541 test, build OK)</td><td>Deploy sonrası canlıda birkaç aramayla göz kontrolü</td><td>Kapandı (2026-06-12) · Bölüm E</td></tr>
+    <tr><td>Deneysel roller (Experimental_1/2) + test hesapları</td><td><span class="ok">✓ CANLI</span></td><td>Mig <code>20260612120000</code> + 2 test hesabı canlıda (DiasporaMember klonu)</td><td>Rol özelleştirme denemeleri (premium pilot QA bu hesaplarda)</td><td>Geçici altyapı — iş bitince temizlenecek · §E2</td></tr>
     <tr><td><strong>Legacy tablo DROP'u</strong></td><td><span class="warn">⏳ CANARY</span></td><td>Soft-decommission canlıda (yazma kapalı + COMMENT)</td><td>Deploy → <strong>1–2 hafta log gözlemi</strong> → karar dokümanı → DROP migration (<code>user_follows</code> 1 satır R-06 notuyla)</td><td><strong>KARAR (2026-06-11): bekle-gözle ONAYLANDI</strong> — ürün sahibi</td></tr>
     <tr><td>B1 — supabase types regen</td><td><span class="warn">⏳ TOKEN</span></td><td>Denendi: mevcut token'lar Unauthorized</td><td>Token yenile → gen types → build doğrula → <code>db as any</code> cast'ini kaldır</td><td>Ürün sahibi (token)</td></tr>
     <tr><td>D-03 — SMS/OTP sağlayıcısı</td><td><span class="warn">⏳ KARAR</span></td><td>Stub hazır (flag kapalı, şema canlıda)</td><td>Sağlayıcı seç → OTP Edge Function'ları → flag=true</td><td>Ürün sahibi</td></tr>
@@ -840,8 +845,57 @@
   </p>
 </section>
 
+<!-- ████████████████████████████████████████████████████████████ -->
+<!-- BÖLÜM E — TÜRKÇE KARAKTER + DENEYSEL ROLLER                  -->
+<!-- ████████████████████████████████████████████████████████████ -->
+<div class="part-head" id="turkce">
+  <h2>BÖLÜM E — Türkçe Karakter Kalıcı Çözümü &amp; Deneysel Roller</h2>
+  <div class="sub">2026-06-12 · ikisi de main'de ve canlı DB'de · Türkçe çözümü kalıcı, deneysel roller geçici altyapı</div>
+</div>
+
+<section>
+  <h2>E1. Türkçe Karakter Sorunu — Kökten Çözüldü</h2>
+  <p>
+    Sitede tekrar tekrar karşımıza çıkan Türkçe karakter sıkıntısının <strong>asıl kaynağı bulundu</strong>:
+    dosyalar, veritabanı ve sunucu zaten tertemizdi (823 dosya UTF-8 denetiminden geçti, canlı DB'nin tüm
+    metin kolonları tarandı — sıfır bozuk kayıt). Sorun kodun kendisindeydi: tarayıcının standart
+    büyük/küçük harf çevirisi Türkçe'ye uygun değil. <code>"İstanbul"</code> küçültülünce görünmez bir işaretle
+    <code>"i̇stanbul"</code> oluyor — kullanıcı arama kutusuna <strong>"istanbul" yazınca kayıt eşleşmiyordu</strong>.
+    Sitedeki ~30 arama/filtre bu hatalı kalıptaydı.
+  </p>
+  <table>
+    <tr><th>Ne yapıldı</th><th>Sonuç</th></tr>
+    <tr><td>Türkçe kurallarıyla çalışan ortak yardımcılar yazıldı (<code>src/lib/text-normalization.ts</code>: <code>trIncludes/trUpper/trLower/trCompare</code>) — birim testli</td><td>"istanbul" → İstanbul'u, "munih" → Münih'i, "DİYARBAKIR" → diyarbakır'ı bulur; baş harf/sıralama da Türkçe kurala uyar</td></tr>
+    <tr><td>~26 ekran bu yardımcılara geçirildi: Etkinlikler, İş İlanları, Danışmanlar, Hastaneler, İşletmeler, Harita, WhatsApp Grupları, Cadde geo filtresi, şehir haberleri + tüm admin aramaları (muhasebe, referans, katalog, vlogger) + avatar baş harfleri</td><td>Aramalar her yerde aynı ve doğru davranır</td></tr>
+    <tr><td>CSV indirmelerine UTF-8 BOM eklendi (vlogger, Stripe panelleri)</td><td>Excel raporları Türkçe karakterleri bozmadan açar</td></tr>
+    <tr><td>Kural kalıcılaştırıldı: <code>CLAUDE.md</code>'ye "Türkçe Metin Kuralları (ZORUNLU)" bölümü eklendi; <code>verify:text</code> denetimi zaten her build/lint/test öncesi otomatik koşuyor</td><td>Bundan sonra yazılacak kod aynı hatayı tekrarlayamaz</td></tr>
+    <tr><td>Windows/psql tuzağı belgelendi: komut satırından geçen Türkçe karakterler bozuluyor (ı→i); Türkçe içerikli SQL artık UTF-8 dosyayla gönderiliyor</td><td>DB'ye giren veriler de güvende</td></tr>
+  </table>
+  <p class="muted">Doğrulama: 541/541 Vitest yeşil · production build OK · UTF-8 denetimi 823 dosyada temiz · değişen dosyalarda yeni lint hatası yok. Tamamı main'de (commit <code>468a588</code> + <code>af67f6e</code>).</p>
+</section>
+
+<section>
+  <h2>E2. Deneysel Roller &amp; Test Hesapları (geçici)</h2>
+  <p>
+    Rol/profil özelleştirme denemelerini canlı rollere dokunmadan yapabilmek için <strong>Bireysel
+    (Diaspora Üyesi) rolünün birebir kopyası iki deneme rolü</strong> açıldı ve iki test hesabına bağlandı.
+    Premium profil pilotu (§B6) de bu hesaplardan Experimental 2'nin üstünde koşuyor.
+  </p>
+  <table>
+    <tr><th>Rol</th><th>Test hesabı</th><th>İçerik</th></tr>
+    <tr><td><code>Experimental_1</code> ("Experimental 1")</td><td><code>experimental1@corteqs.net</code> — "Experimental Kullanıcı 1"</td><td>User_DiasporaMember'ın birebir AFS klonu (24 attribute / 44 feature / 7 section)</td></tr>
+    <tr><td><code>Experimental_2</code> ("Experimental 2")</td><td><code>experimental2@corteqs.net</code> — "Experimental Kullanıcı 2"</td><td>Aynı klon · premium profil pilotunun test zemini</td></tr>
+  </table>
+  <p class="muted">
+    Migration <code>20260612120000_add_experimental_roles.sql</code> canlıda ve <code>schema_migrations</code>'a
+    kayıtlı; hesaplar Auth Admin API ile açıldı, e-posta onaylı, giriş yapılabilir (şifre ekip içinde).
+    Denemeler bitince temizlik: hesaplar Admin API ile silinir (bağlı profiller kendiliğinden gider),
+    roller ters migration'la kaldırılır.
+  </p>
+</section>
+
 <footer>
-  CorteQS Durum Panosu · 2026-06-11 · Bölüm A: Cadde 3.0 · Bölüm B: Profil Sistemi · Bölüm C: Dünya Kupası · Detay: <code>ARCHITECTURE.md</code> · <code>docs/cadde-300/change-report.md</code> · <code>docs/README.md</code>
+  CorteQS Durum Panosu · 2026-06-12 · Bölüm A: Cadde 3.0 · Bölüm B: Profil Sistemi · Bölüm C: Dünya Kupası · Bölüm E: Türkçe Karakter + Deneysel Roller · Detay: <code>ARCHITECTURE.md</code> · <code>docs/cadde-300/change-report.md</code> · <code>docs/README.md</code>
 </footer>
 
 </div>

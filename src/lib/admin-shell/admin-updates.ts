@@ -14,6 +14,19 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260612-turkce-karakter-ve-deneysel-roller",
+    date: "12 Haziran 2026",
+    title: "Türkçe karakter sorunlarına kalıcı çözüm + deneme rolleri",
+    items: [
+      "Sitedeki aramalarda yıllardır tekrarlayan Türkçe karakter derdi kökten çözüldü: artık 'istanbul' yazınca İstanbul'lu kayıtlar bulunuyor, 'munih' yazsan Münih çıkıyor, 'DİYARBAKIR' ile 'diyarbakır' aynı sonucu veriyor. Etkinlikler, iş ilanları, danışmanlar, hastaneler, işletmeler, harita, WhatsApp grupları, Cadde ülke/şehir filtresi ve tüm admin aramaları (muhasebe dahil) — toplam ~26 ekran elden geçti.",
+      "Sorunun asıl kaynağını da bulduk: tarayıcının standart büyük/küçük harf çevirisi Türkçe'ye uygun değil (İ ve ı harflerini yanlış çeviriyor, bu yüzden aramalar tutmuyordu). Artık her yerde Türkçe kurallarıyla çalışan ortak bir yardımcı kullanılıyor ve bundan sonra yazılacak her kod için bu kural proje el kitabına (CLAUDE.md) yazıldı — sorun bir daha geri gelmesin diye.",
+      "Excel düzeltmesi: admin panelinden indirilen CSV raporları (vlogger listesi, Stripe işlemleri) artık Excel'de Türkçe karakterleri bozmadan açılıyor.",
+      "Rol listesinde iki yeni rol göreceksin: Experimental 1 ve Experimental 2. İkisi de Bireysel (Diaspora Üyesi) rolünün birebir kopyası ve sadece deneme için var — rol/profil ayarlarında denemek istediğimiz her şeyi canlı rollere dokunmadan önce bunlarda test edeceğiz.",
+      "Bu rollere bağlı iki test hesabı da açıldı: experimental1@corteqs.net ('Experimental Kullanıcı 1') ve experimental2@corteqs.net ('Experimental Kullanıcı 2'). Premium profil pilotu da Experimental 2 hesabının üstünde koşuyor. Denemeler bitince roller ve hesaplar topluca temizlenecek.",
+      "Hiçbir şey bozulmadı: tüm testler yeşil (541/541), site derlemesi sorunsuz, 823 kaynak dosyanın karakter denetimi temiz.",
+    ],
+  },
+  {
     id: "20260612-premium-profil-pilotu",
     date: "12 Haziran 2026",
     title: "Premium profil tasarımı pilota çıktı (şimdilik sadece test rolünde)",
