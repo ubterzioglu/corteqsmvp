@@ -230,33 +230,28 @@ const DunyaKupasiPage = () => {
                         {business.city}, {business.country}
                       </span>
                     </CardHeader>
-                    <CardContent className="mt-auto space-y-2">
-                      <div className="flex gap-2">
-                        {phoneHref && (
-                          <Button asChild variant="outline" size="sm" className="flex-1">
-                            <a href={phoneHref}>
-                              <Phone className="mr-1.5 h-4 w-4" />
-                              Ara
-                            </a>
-                          </Button>
-                        )}
-                        {mapHref && (
-                          <Button asChild variant="outline" size="sm" className="flex-1">
-                            <a href={mapHref} target="_blank" rel="noopener noreferrer">
-                              <MapPin className="mr-1.5 h-4 w-4" />
-                              Haritada Aç
-                            </a>
-                          </Button>
-                        )}
-                      </div>
-                      <Button
-                        asChild
-                        variant="outline"
-                        size="sm"
-                        className="w-full border-[#E30A17]/40 text-[#E30A17] hover:bg-[#E30A17] hover:text-white"
-                      >
-                        <Link to={`/directory/profile/${business.userId}`}>Profili Gör</Link>
-                      </Button>
+                    <CardContent className="mt-auto flex gap-2">
+                      {phoneHref && (
+                        <Button asChild variant="outline" size="sm" className="flex-1">
+                          <a href={phoneHref}>
+                            <Phone className="mr-1.5 h-4 w-4" />
+                            Ara
+                          </a>
+                        </Button>
+                      )}
+                      {mapHref && (
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="flex-1 border-[#E30A17]/40 text-[#E30A17] hover:bg-[#E30A17] hover:text-white"
+                        >
+                          <a href={mapHref} target="_blank" rel="noopener noreferrer">
+                            <MapPin className="mr-1.5 h-4 w-4" />
+                            Haritada Aç
+                          </a>
+                        </Button>
+                      )}
                     </CardContent>
                   </Card>
                 );
