@@ -10,6 +10,7 @@ import RequireFeature from "@/components/auth/RequireFeature";
 import { DiasporaProvider } from "@/contexts/DiasporaContext";
 import { GENERIC_FEATURE_KEYS } from "@/lib/features";
 import ScrollTopButton from "@/components/ScrollTopButton";
+import ScrollToTop from "@/components/ScrollToTop";
 import PublicLayout from "@/components/PublicLayout";
 
 // Eager — SEO-critical above-the-fold pages
@@ -91,6 +92,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <DiasporaProvider>
           <AuthProvider>
             <Suspense fallback={null}>
