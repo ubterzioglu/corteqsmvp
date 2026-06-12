@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { ChevronRight, Trophy } from "lucide-react";
 import CorteqsWhatIsAccordion from "./CorteqsWhatIsAccordion";
 const heroLogo = "/newlogo.png";
 import RegisterInterestForm from "./RegisterInterestForm";
+
+// Dünya Kupası kampanya banner'ı — küçük hero görseli butonun parçası.
+const WORLD_CUP_BANNER_IMAGE = "/world-cup/hero-kampanya.webp";
 
 const HeroSection = () => {
   const [formOpen, setFormOpen] = useState(false);
@@ -62,6 +66,37 @@ const HeroSection = () => {
               animation: "heroSlideInLeft 0.7s cubic-bezier(0.22, 1, 0.36, 1) both",
             }}
           >
+            {/* ——— Dünya Kupası kampanya butonu (premium banner) ——— */}
+            <Link
+              to="/dunya-kupasi"
+              className="group relative mb-3 flex w-full max-w-[36rem] items-center gap-3 overflow-hidden rounded-2xl border border-amber-300/70 bg-gradient-to-r from-[#E30A17] via-[#c00712] to-[#8f040c] p-2 pr-4 shadow-[0_18px_42px_-18px_rgba(227,10,23,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_24px_52px_-16px_rgba(227,10,23,0.7)] sm:gap-4 sm:p-2.5 sm:pr-5 lg:max-w-[34rem] 2xl:max-w-[38rem]"
+            >
+              {/* küçük hero görseli — butonun parçası */}
+              <img
+                src={WORLD_CUP_BANNER_IMAGE}
+                alt=""
+                className="h-14 w-[5.5rem] shrink-0 rounded-xl object-cover ring-1 ring-white/40 transition-transform duration-300 group-hover:scale-105 sm:h-16 sm:w-24"
+              />
+              <span className="min-w-0 flex-1 text-white">
+                <span className="flex items-center gap-1.5 text-[15px] font-extrabold leading-tight tracking-tight sm:text-lg">
+                  <Trophy className="h-4 w-4 shrink-0 text-amber-300 drop-shadow-[0_0_8px_rgba(255,209,102,0.7)] sm:h-5 sm:w-5" />
+                  Türkiye Dünya Kupası'nda! 🇹🇷
+                </span>
+                <span className="mt-0.5 block truncate text-[11px] font-medium text-red-50/90 sm:text-xs">
+                  Gurbette maç yayınlayan mekânı bul, tezahürata katıl
+                </span>
+              </span>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/15 backdrop-blur transition-transform duration-300 group-hover:translate-x-0.5 sm:h-9 sm:w-9">
+                <ChevronRight className="h-4 w-4 text-white sm:h-5 sm:w-5" />
+              </span>
+              {/* üst kenar parlaklığı + hover'da soldan sağa ışık süpürmesi */}
+              <span className="pointer-events-none absolute inset-x-6 top-0 h-px bg-white/30" aria-hidden />
+              <span
+                className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
+                aria-hidden
+              />
+            </Link>
+
             <div className="flex max-w-[36rem] flex-col justify-center rounded-[2rem] border border-white/80 bg-[linear-gradient(90deg,rgba(255,255,255,0.96)_0%,rgba(255,255,255,0.93)_38%,rgba(255,255,255,0.82)_62%,rgba(255,255,255,0.58)_82%,rgba(255,255,255,0.18)_100%)] p-4 shadow-[0_20px_55px_-36px_rgba(15,23,42,0.32)] backdrop-blur-xl sm:p-5 lg:max-w-[34rem] lg:px-6 2xl:max-w-[38rem]">
               <div className="mb-3 flex flex-col items-center gap-3 text-center md:flex-row md:items-center md:text-left">
                 <img src={heroLogo} alt="CorteQS Logo" className="mx-auto w-full max-w-[152px] shrink-0 md:mx-0 md:max-w-[176px]" />
