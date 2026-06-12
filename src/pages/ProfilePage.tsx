@@ -1614,7 +1614,7 @@ const ProfilePage = () => {
 
   const caddeCards = (
     <>
-      <CaddeInterestsCard />
+      <CaddeInterestsCard onSaved={() => void refreshProfile()} />
       <CaddeMyContentCard />
       <CaddeTanitimPanel />
     </>

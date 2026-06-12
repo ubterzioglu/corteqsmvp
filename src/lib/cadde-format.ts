@@ -1,6 +1,6 @@
 // Cadde URL filtre durumu ve feed yerleşim yardımcıları.
 
-import type { CaddeContentMode, CaddeFeedListItem, CaddeFilterState, CaddePost, CaddePromotionCard, CaddeSponsoredPlacement } from "./cadde-types";
+import type { CaddeContentMode, CaddeFeedListItem, CaddeFilterState, CaddeInterest, CaddePost, CaddePromotionCard, CaddeSponsoredPlacement } from "./cadde-types";
 
 /** Virgülle ayrılmış URL parametresini normalize edilmiş ad listesine çevirir. */
 const parseListParam = (value: string | null): string[] => {
@@ -40,6 +40,20 @@ export function serializeCaddeFilters(filters: CaddeFilterState): URLSearchParam
   if (filters.cities.length) next.set("city", filters.cities.join(","));
   if (filters.bridge) next.set("bridge", "1");
   return next;
+}
+
+/**
+ * Cadde ilgi alanı seçimini profil `interests` attribute'una (user_profile_attributes)
+ * aynalamak için katalog sırasında, Türkçe etiketlerle virgüllü metin üretir.
+ * Profil Tamamlanma kartı ve public profil bu attribute'u okur; boş seçim boş metin
+ * döner ve attribute temizlenir.
+ */
+export function buildCaddeInterestsMirrorText(catalog: CaddeInterest[], selectedKeys: string[]): string {
+  const selected = new Set(selectedKeys);
+  return catalog
+    .filter((interest) => selected.has(interest.key))
+    .map((interest) => interest.labelTr)
+    .join(", ");
 }
 
 /** Başlık rozeti için kısa filtre özeti ("Berlin +2", "Almanya", "Global Akış"). */

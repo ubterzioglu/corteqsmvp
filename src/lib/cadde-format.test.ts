@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
-import type { CaddeFeedListItem, CaddePost, CaddePromotionCard, CaddeSponsoredPlacement } from "@/lib/cadde-types";
+import { buildCaddeInterestsMirrorText, injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
+import type { CaddeFeedListItem, CaddeInterest, CaddePost, CaddePromotionCard, CaddeSponsoredPlacement } from "@/lib/cadde-types";
 
 const makePost = (id: string): CaddePost => ({
   id,
@@ -36,6 +36,26 @@ const sponsor: CaddeSponsoredPlacement = {
   ctaUrl: "/login?mode=signup",
   imageUrl: null,
 };
+
+describe("buildCaddeInterestsMirrorText", () => {
+  const catalog: CaddeInterest[] = [
+    { key: "networking", labelTr: "Networking", sortOrder: 10 },
+    { key: "yeni_geldim", labelTr: "Yeni Geldim", sortOrder: 20 },
+    { key: "yemek", labelTr: "Yemek", sortOrder: 30 },
+  ];
+
+  it("seçili anahtarları katalog sırasıyla Türkçe etiketlere çevirir", () => {
+    expect(buildCaddeInterestsMirrorText(catalog, ["yemek", "networking"])).toBe("Networking, Yemek");
+  });
+
+  it("boş seçim için boş metin döner (attribute temizlenir)", () => {
+    expect(buildCaddeInterestsMirrorText(catalog, [])).toBe("");
+  });
+
+  it("katalogda olmayan anahtarları yok sayar", () => {
+    expect(buildCaddeInterestsMirrorText(catalog, ["bilinmeyen", "yemek"])).toBe("Yemek");
+  });
+});
 
 describe("parseCaddeFilters", () => {
   it("defaults to REAL mode when no mode param is present (Cadde 3.0 / R-01)", () => {

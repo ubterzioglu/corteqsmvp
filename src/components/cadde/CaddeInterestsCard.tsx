@@ -12,9 +12,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { listCaddeInterestCatalog, listMyCaddeInterests, saveMyCaddeInterests } from "@/lib/cadde-api";
+import { buildCaddeInterestsMirrorText } from "@/lib/cadde-format";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import { updateProfileAttribute } from "@/lib/member-profile-api";
 
-const CaddeInterestsCard = () => {
+type CaddeInterestsCardProps = {
+  /** Aynalanan `interests` attribute'u yazıldıktan sonra üst bileşenin profil verisini tazelemesi için. */
+  onSaved?: () => void;
+};
+
+const CaddeInterestsCard = ({ onSaved }: CaddeInterestsCardProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -42,12 +49,22 @@ const CaddeInterestsCard = () => {
     mutationFn: async () => {
       if (!user) throw new Error("Bu işlem için giriş yapın.");
       await saveMyCaddeInterests(user.id, selection);
+
+      // Seçimi profil `interests` attribute'una aynala: Profil Tamamlanma kartı ve
+      // public profil user_profile_attributes'u okur, user_cadde_interests'i görmez.
+      // Ayna yazımı başarısız olursa cadde kaydı geçerli kalır (non-fatal).
+      try {
+        await updateProfileAttribute("interests", buildCaddeInterestsMirrorText(catalogQuery.data ?? [], selection));
+      } catch (mirrorError: unknown) {
+        console.error("[CaddeInterestsCard] interests attribute aynası yazılamadı", mirrorError);
+      }
     },
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: caddeQueryKeys.myInterests(user?.id ?? null) }),
         queryClient.invalidateQueries({ queryKey: caddeQueryKeys.feedRoot }),
       ]);
+      onSaved?.();
       toast({ title: "İlgi alanların kaydedildi" });
     },
     onError: (error) => {
