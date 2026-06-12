@@ -23,49 +23,8 @@ const ALL_FILTER = "__all__";
 // Görsel yüklemeyen işletmeler için milli takım temalı kart banner'ı (public/world-cup/).
 const CARD_PLACEHOLDER_SRC = "/world-cup/card-placeholder.webp";
 
-// Hero animasyonları sayfaya özel — global stylesheet'i kirletmemek için
-// component içinde scope'lanmış keyframe'ler.
-const heroStyles = `
-@keyframes wc-confetti-fall {
-  0% { transform: translateY(-10%) rotate(0deg); opacity: 0; }
-  10% { opacity: 1; }
-  100% { transform: translateY(1100%) rotate(540deg); opacity: 0; }
-}
-@keyframes wc-float {
-  0%, 100% { transform: translateY(0) rotate(-6deg); }
-  50% { transform: translateY(-12px) rotate(6deg); }
-}
-@keyframes wc-pulse-ring {
-  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.45); }
-  70% { box-shadow: 0 0 0 14px rgba(255, 255, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-}
-@keyframes wc-shine {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .wc-confetti, .wc-float, .wc-pulse, .wc-shine { animation: none !important; }
-}
-`;
-
-const CONFETTI_PIECES = [
-  { left: "6%", delay: "0s", duration: "5.5s", color: "#ffffff" },
-  { left: "16%", delay: "1.4s", duration: "6.5s", color: "#ffd166" },
-  { left: "28%", delay: "0.7s", duration: "5s", color: "#ffffff" },
-  { left: "41%", delay: "2.1s", duration: "7s", color: "#ffd166" },
-  { left: "55%", delay: "0.3s", duration: "6s", color: "#ffffff" },
-  { left: "67%", delay: "1.8s", duration: "5.2s", color: "#ffd166" },
-  { left: "78%", delay: "0.9s", duration: "6.8s", color: "#ffffff" },
-  { left: "90%", delay: "2.5s", duration: "5.6s", color: "#ffd166" },
-];
-
-const CrescentStar = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 100 100" className={className} aria-hidden="true" fill="currentColor">
-    <path d="M62 50c0-15.5-12.5-28-28-28 4.8-3 10.5-4.7 16.5-4.7 18.1 0 32.7 14.6 32.7 32.7S68.6 82.7 50.5 82.7c-6 0-11.7-1.7-16.5-4.7 15.5 0 28-12.5 28-28z" />
-    <path d="M74.5 38.5l3.6 7.3 8.1 1.2-5.9 5.7 1.4 8.1-7.2-3.8-7.2 3.8 1.4-8.1-5.9-5.7 8.1-1.2z" />
-  </svg>
-);
+// Kampanya hero görseli — başlık ve tanıtım metni görselin içinde gömülü.
+const HERO_IMAGE_SRC = "/world-cup/hero-kampanya.webp";
 
 const DunyaKupasiPage = () => {
   const [countryFilter, setCountryFilter] = useState(ALL_FILTER);
