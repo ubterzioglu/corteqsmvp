@@ -14,6 +14,19 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260612-premium-profil-pilotu",
+    date: "12 Haziran 2026",
+    title: "Premium profil tasarımı pilota çıktı (şimdilik sadece test rolünde)",
+    items: [
+      "Profil ekranları için yeni, daha şık ve mobil öncelikli bir tasarım hazırladık. Kimseyi etkilememesi için önce sadece Experimental_2 test rolünde açık: experimental2@corteqs.net ile girince yeni görünümü görürsün, diğer tüm üyeler (Experimental_1 dahil) eski görünümde kalır.",
+      "Public profil sayfası artık iki kolonlu: solda asıl içerik, sağda iletişim/diller ve yeni 'Profil Güvencesi' kartı — profilin doğrulanmış mı, sahibi tarafından mı yönetiliyor, sahiplenilebilir mi, açıklamasıyla gösterir.",
+      "Profilde WhatsApp numarası veya randevu linki varsa artık tek tıkla ulaşılan 'WhatsApp' ve 'Randevu Al' butonları çıkıyor; bilgi yoksa buton da yok. Pilot profilde telefonda ekranın altında sabit bir ara/yaz çubuğu var.",
+      "Pilot kullanıcının kendi profil ekranı da yenilendi: üstte büyük tanıtım kartı, sağda profil tamamlanma kartı (hangi alanların eksik olduğunu tek tek söyler) ve 'Public Profili Görüntüle' butonu — profilinin dışarıdan nasıl göründüğüne anında bakarsın.",
+      "Birden fazla profili olanların gördüğü profil seçim ekranındaki bozuk Türkçe metinler düzeltildi, kartlar yenilendi.",
+      "Hiçbir özellik silinmedi, veritabanına dokunulmadı; tüm testler yeşil. Tasarım beğenilirse diğer rollere tek tek, küçük bir ayarla yayılacak — pilot QA'sı bekleniyor.",
+    ],
+  },
+  {
     id: "20260611-commercial-rol-sayfalari",
     date: "11 Haziran 2026",
     title: "Rol tanıtım sayfaları artık sitenin içinde açılıyor",

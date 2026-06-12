@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>CorteQS Durum Panosu — Cadde 3.0 · Profil Sistemi · Dünya Kupası (2026-06-11)</title>
+<title>CorteQS Durum Panosu — Cadde 3.0 · Profil Sistemi · Dünya Kupası · Premium Profil Pilotu (2026-06-12)</title>
 <style>
   :root {
     --bg: #0f1115;
@@ -101,7 +101,8 @@
     <span class="pill green">Cadde 3.0: Faz 0–9 + kuyruk TAMAM</span>
     <span class="pill green">Profil sistemi: flat-rol geçişi CANLI</span>
     <span class="pill green">Dünya Kupası kampanyası: CANLI</span>
-    <span class="pill green">535/535 test · build OK</span>
+    <span class="pill green">560/560 test · build OK</span>
+    <span class="pill blue">Premium profil pilotu: Experimental_2 (kod hazır)</span>
     <span class="pill amber">Açık kalemler: §A10 / §B5 / §C4</span>
   </div>
   <div class="toc">
@@ -120,7 +121,7 @@
 <!-- ============================================================ -->
 <section id="takip">
   <h2>0. ANA TAKİP TABLOSU — Tüm İş Hatları (canlı pano)</h2>
-  <p class="muted">Projenin tek durum panosu. Bir iş hattı kapandığında/açıldığında bu tablo güncellenir. Son güncelleme: <strong>2026-06-11</strong>.</p>
+  <p class="muted">Projenin tek durum panosu. Bir iş hattı kapandığında/açıldığında bu tablo güncellenir. Son güncelleme: <strong>2026-06-12</strong>.</p>
   <table>
     <tr><th>İş Hattı</th><th>Durum</th><th>Son Adım</th><th>Sıradaki Adım</th><th>Karar / Sahip</th></tr>
     <tr><td>Cadde 3.0 Rebuild (Faz 0–9)</td><td><span class="ok">✓ TAMAM</span></td><td>14 migration canlıda; 509/509 test</td><td>—</td><td>Kapandı (2026-06-11) · Bölüm A</td></tr>
@@ -132,6 +133,7 @@
     <tr><td>Rol konsolidasyonu (<code>User_Standard</code>)</td><td><span class="ok">✓ TAMAM</span></td><td>Mig <code>20260611190000</code> canlıda; 75 aktif rol</td><td>—</td><td>Kapandı (2026-06-11) · §B1</td></tr>
     <tr><td>Kök temizliği + dokümantasyon konsolidasyonu</td><td><span class="ok">✓ TAMAM</span></td><td>Kökte 4 doküman düzeni; arşivler docs/ altında</td><td>—</td><td>Kapandı (2026-06-11); harita Bölüm D</td></tr>
     <tr><td><strong>Dünya Kupası işletme kampanyası</strong></td><td><span class="ok">✓ CANLI</span></td><td>Mig <code>20260612090000</code> canlıda; kayıt + admin onay + vitrin yüzeyleri hazır (535/535 test)</td><td>Deploy → ilk gerçek başvuru/onay turu; kampanya bitişinde <code>world_cup_campaign_settings.is_active=false</code></td><td>Detay: Bölüm C · plan: <code>.claude/plans</code> oturumu (2026-06-11)</td></tr>
+    <tr><td><strong>Premium profil pilotu (Experimental_2)</strong></td><td><span class="ok">✓ KOD HAZIR</span></td><td>Branch <code>feat/premium-profile-experimental-2-pilot</code>; 560/560 test, build OK, migration yok</td><td>Pilot hesapla görsel QA (experimental2 premium / experimental1 generic) → main'e merge → rol rol rollout</td><td>Detay: §B6 · plan: <code>docs/plans/profile-premium-experimental-2-pilot.md</code></td></tr>
     <tr><td><strong>Legacy tablo DROP'u</strong></td><td><span class="warn">⏳ CANARY</span></td><td>Soft-decommission canlıda (yazma kapalı + COMMENT)</td><td>Deploy → <strong>1–2 hafta log gözlemi</strong> → karar dokümanı → DROP migration (<code>user_follows</code> 1 satır R-06 notuyla)</td><td><strong>KARAR (2026-06-11): bekle-gözle ONAYLANDI</strong> — ürün sahibi</td></tr>
     <tr><td>B1 — supabase types regen</td><td><span class="warn">⏳ TOKEN</span></td><td>Denendi: mevcut token'lar Unauthorized</td><td>Token yenile → gen types → build doğrula → <code>db as any</code> cast'ini kaldır</td><td>Ürün sahibi (token)</td></tr>
     <tr><td>D-03 — SMS/OTP sağlayıcısı</td><td><span class="warn">⏳ KARAR</span></td><td>Stub hazır (flag kapalı, şema canlıda)</td><td>Sağlayıcı seç → OTP Edge Function'ları → flag=true</td><td>Ürün sahibi</td></tr>
@@ -641,6 +643,53 @@
   <p class="muted">
     İkincil açık kalemler: <code>IndividualPublicView</code>/<code>usePublicIndividualProfile</code> test-only orphan (backlog) ·
     Takip/Mesaj/takipçi özellikleri bilinçli kapsam dışı (ürün kararı) · public profil “Açık Cafe” bölümü Bölüm A ikincil kuyruğunda.
+  </p>
+</section>
+
+<section>
+  <h2>B6. Premium Profil Pilotu — Experimental_2 (2026-06-12)</h2>
+  <p>
+    Profil ekranlarını daha şık, daha modern ve telefonda rahat kullanılır hale getirme işine başladık.
+    Ama kimseyi riske atmadan: <strong>yeni tasarım şimdilik sadece test rolü Experimental_2'de açık</strong>.
+    Yani <code>experimental2@corteqs.net</code> ile girersen yeni premium görünümü görürsün;
+    <code>experimental1@corteqs.net</code> dahil diğer herkes eski görünümünde kalır. Beğenirsek
+    diğer rollere tek tek, küçük bir ayar ekleyerek yayacağız — kod değişikliği gerekmeden.
+  </p>
+
+  <h3>Ne değişti? (sade anlatım)</h3>
+  <ul>
+    <li><strong>Public profil sayfası</strong> (ziyaretçilerin gördüğü) artık gerçek iki kolonlu:
+      solda asıl içerik (hakkında, hizmetler...), sağda iletişim, diller ve yeni
+      <strong>"Profil Güvencesi"</strong> kartı (Doğrulanmış / Yönetilen / Sahiplenilebilir durumunu
+      açıklamasıyla gösterir). Sağ kolon kaydırırken yanında gelir.</li>
+    <li>Hızlı aksiyonlara <strong>WhatsApp</strong> ve <strong>Randevu Al</strong> eklendi — tabii sadece profilde
+      o bilgi gerçekten varsa görünürler. Pilot profilde en önemli 1-2 buton (örn. E-posta, WhatsApp)
+      dolgun renkte öne çıkar, gerisi sade kalır.</li>
+    <li>Pilot profili telefonda açınca <strong>ekranın altında sabit bir aksiyon çubuğu</strong> var:
+      ara/yaz butonları hep parmağının altında.</li>
+    <li><strong>Kendi profilini düzenleme ekranı</strong> (pilot kullanıcı için) baştan düzenlendi:
+      üstte büyük ve ferah bir tanıtım kartı (fotoğraf, isim, rol, tamamlanma yüzdesi),
+      sağda <strong>profil tamamlanma kartı</strong> ("şu alanların eksik" diye tek tek gösterir) ve
+      <strong>"Public Profili Görüntüle"</strong> butonu — profilinin dışarıdan nasıl göründüğüne tek tıkla bakarsın.</li>
+    <li>Birden fazla profili olanların gördüğü <strong>profil seçim ekranı</strong> da elden geçti;
+      oradaki bozuk Türkçe metinler ("Duzenlemek istedigin profili sec") düzeltildi.</li>
+    <li>Karanlık mod, paylaş butonu, düzenleme yetkisi talebi, avatar yükleme, CV/sunum, Cadde panelleri —
+      <strong>hepsi aynen çalışıyor</strong>, hiçbir özellik silinmedi. Veritabanına dokunulmadı (migration yok).</li>
+  </ul>
+
+  <h3>Güvenlik ve izolasyon</h3>
+  <ul>
+    <li>Yeni görünümün anahtarı UI kategorisi değil, <strong>gerçek flat rol anahtarı</strong>
+      (<code>roleKey === "Experimental_2"</code>). Kısmi eşleşme bile sızdırmaz (testli).</li>
+    <li><code>Experimental_1</code> bilerek <strong>negatif kontrol</strong>: o hesapta premium görünüm
+      açılmamalı — açılırsa izolasyon bozulmuş demektir, testler bunu da kontrol ediyor.</li>
+    <li>Doğrulama: <strong>560/560 test yeşil</strong> (25 yeni senaryo dahil), build temiz,
+      değiştirilen dosyalarda lint hatası yok.</li>
+  </ul>
+
+  <p class="muted">
+    Sırada: pilot hesapla görsel QA (masaüstü/mobil × açık/koyu) → beğenilirse rollere kademeli rollout.
+    Teknik detay ve rollout planı: <code>docs/plans/profile-premium-experimental-2-pilot.md</code>.
   </p>
 </section>
 
