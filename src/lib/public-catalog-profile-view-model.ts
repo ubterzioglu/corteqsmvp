@@ -8,6 +8,11 @@ import {
   toSafePhoneHref,
   type ProfileAccent,
 } from "@/components/directory/public-profile/public-profile-utils";
+import {
+  resolveProfilePresentation,
+  type ProfilePresentationConfig,
+  type ProfileQuickActionKey,
+} from "@/lib/profile-presentation";
 import type {
   PublicCatalogProfilePagePayload,
   PublicProfileAttribute,
@@ -34,10 +39,17 @@ export type PublicProfileLinkPill = {
 };
 
 export type PublicProfileQuickAction = {
-  key: "website" | "email" | "phone" | "map";
+  key: ProfileQuickActionKey;
   label: string;
   href: string;
   external: boolean;
+  variant: "primary" | "secondary";
+};
+
+export type PublicProfileTrustSignal = {
+  key: "verified" | "managed" | "claimable";
+  label: string;
+  description: string;
 };
 
 export type PublicProfileSectionViewModel = {
@@ -57,6 +69,7 @@ export type PublicProfileHeroViewModel = {
   avatarAlt: string;
   coverImageUrl: string | null;
   roleLabel: string | null;
+  eyebrow: string | null;
   tagline: string | null;
   headline: string | null;
   locationLabel: string | null;
@@ -75,9 +88,11 @@ export type PublicProfileClaimViewModel = {
 export type PublicCatalogProfileViewModel = {
   hero: PublicProfileHeroViewModel;
   quickActions: PublicProfileQuickAction[];
+  trustSignals: PublicProfileTrustSignal[];
   mainSections: PublicProfileSectionViewModel[];
   sidebarSections: PublicProfileSectionViewModel[];
   claim: PublicProfileClaimViewModel;
+  presentation: ProfilePresentationConfig;
 };
 
 /** Registry-level placement metadata; unknown component keys fall back to "main". */
@@ -316,8 +331,25 @@ export function buildHeroLinkPills(payload: PublicCatalogProfilePagePayload): Pu
   return pills;
 }
 
-function buildQuickActions(payload: PublicCatalogProfilePagePayload): PublicProfileQuickAction[] {
-  const actions: PublicProfileQuickAction[] = [];
+/**
+ * WhatsApp values arrive both as chat/group URLs and as phone numbers; URLs
+ * pass the http(s) gate, numbers turn into a wa.me deep link.
+ */
+export function toWhatsAppHref(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const url = toSafeExternalUrl(value);
+  if (url) return url;
+  const digits = value.replace(/[^\d]/g, "");
+  return digits.length >= 7 ? `https://wa.me/${digits}` : null;
+}
+
+type QuickActionDraft = Omit<PublicProfileQuickAction, "variant">;
+
+function buildQuickActions(
+  payload: PublicCatalogProfilePagePayload,
+  presentation: ProfilePresentationConfig,
+): PublicProfileQuickAction[] {
+  const actions: QuickActionDraft[] = [];
 
   const websiteContact = payload.contacts.find(
     (contact) => contact.type === "website" && toSafeExternalUrl(contact.value),
@@ -356,6 +388,30 @@ function buildQuickActions(payload: PublicCatalogProfilePagePayload): PublicProf
     });
   }
 
+  const whatsappContact = payload.contacts.find(
+    (contact) => contact.type === "whatsapp" && toWhatsAppHref(contact.value),
+  );
+  if (whatsappContact) {
+    actions.push({
+      key: "whatsapp",
+      label: "WhatsApp",
+      href: toWhatsAppHref(whatsappContact.value)!,
+      external: true,
+    });
+  }
+
+  const appointmentContact = payload.contacts.find(
+    (contact) => contact.type === "appointment_url" && toSafeExternalUrl(contact.value),
+  );
+  if (appointmentContact) {
+    actions.push({
+      key: "appointment",
+      label: "Randevu Al",
+      href: toSafeExternalUrl(appointmentContact.value)!,
+      external: true,
+    });
+  }
+
   const mapHref = toMapHref([
     payload.item.addressLine,
     payload.item.city,
@@ -365,7 +421,46 @@ function buildQuickActions(payload: PublicCatalogProfilePagePayload): PublicProf
     actions.push({ key: "map", label: "Haritada Aç", href: mapHref, external: true });
   }
 
-  return actions;
+  // Presentation decides which present actions become primary CTAs; the
+  // generic config has an empty priority list, so everything stays secondary.
+  const primaryKeys = new Set(
+    presentation.primaryActionPriority
+      .filter((key) => actions.some((action) => action.key === key))
+      .slice(0, presentation.maxPrimaryActions),
+  );
+
+  return actions.map((action) => ({
+    ...action,
+    variant: primaryKeys.has(action.key) ? "primary" : "secondary",
+  }));
+}
+
+function buildTrustSignals(payload: PublicCatalogProfilePagePayload): PublicProfileTrustSignal[] {
+  const signals: PublicProfileTrustSignal[] = [];
+
+  if (payload.item.isVerified) {
+    signals.push({
+      key: "verified",
+      label: "Doğrulanmış Profil",
+      description: "Bu profil CorteQS ekibi tarafından doğrulandı.",
+    });
+  }
+
+  if (payload.item.verificationStatus === "claimed") {
+    signals.push({
+      key: "managed",
+      label: "Yönetilen Profil",
+      description: "Bu profil sahibi tarafından aktif olarak yönetiliyor.",
+    });
+  } else if (payload.item.isClaimable) {
+    signals.push({
+      key: "claimable",
+      label: "Sahiplenilebilir Profil",
+      description: "Bu profilin sahibiysen düzenleme yetkisi talep edebilirsin.",
+    });
+  }
+
+  return signals;
 }
 
 function isSectionEmpty(section: PublicProfileSectionViewModel): boolean {
@@ -466,10 +561,37 @@ function buildDerivedSections(
   return derived;
 }
 
+/**
+ * Applies the presentation-preferred component order as a stable pre-sort:
+ * listed componentKeys come first (in list order), everything else keeps the
+ * DB-driven sortOrder comparator. Empty preference = untouched generic order.
+ */
+function sortSectionsWithPreference(
+  sections: PublicProfileSectionViewModel[],
+  preferredOrder: string[],
+): PublicProfileSectionViewModel[] {
+  const baseComparator = (a: PublicProfileSectionViewModel, b: PublicProfileSectionViewModel) =>
+    a.sortOrder - b.sortOrder || a.key.localeCompare(b.key);
+
+  if (preferredOrder.length === 0) {
+    return [...sections].sort(baseComparator);
+  }
+
+  const preferenceIndex = (section: PublicProfileSectionViewModel) => {
+    const index = section.componentKey ? preferredOrder.indexOf(section.componentKey) : -1;
+    return index === -1 ? preferredOrder.length : index;
+  };
+
+  return [...sections].sort(
+    (a, b) => preferenceIndex(a) - preferenceIndex(b) || baseComparator(a, b),
+  );
+}
+
 export function buildPublicCatalogProfileViewModel(
   payload: PublicCatalogProfilePagePayload,
 ): PublicCatalogProfileViewModel {
   const { item } = payload;
+  const presentation = resolveProfilePresentation(item.roleKey);
 
   const dbSections: PublicProfileSectionViewModel[] = payload.sections
     .filter((section) => !HERO_SECTION_AREAS.has(section.sectionArea))
@@ -505,9 +627,6 @@ export function buildPublicCatalogProfileViewModel(
     // they reappear automatically if no pill can be built.
     .filter((section) => !(section.componentKey === "links" && linkPills.length > 0));
 
-  const sortSections = (a: PublicProfileSectionViewModel, b: PublicProfileSectionViewModel) =>
-    a.sortOrder - b.sortOrder || a.key.localeCompare(b.key);
-
   const hasRichText = allSections.some((section) => section.componentKey === "rich_text");
 
   return {
@@ -518,23 +637,32 @@ export function buildPublicCatalogProfileViewModel(
       avatarAlt: item.title,
       coverImageUrl: toSafeExternalUrl(item.coverImageUrl),
       roleLabel: item.roleLabel ?? item.itemType ?? null,
+      eyebrow: presentation.eyebrow,
       // Tagline pill next to the name (IndividualPublicView pattern);
       // the short description only shows when no rich_text section covers it.
       tagline: item.headline,
       headline: hasRichText ? null : item.shortDescription,
       locationLabel: formatLocationLabel(item.city, item.countryLabel, item.countryCode),
-      accent: resolveProfileAccent(item.roleKey ?? item.itemType),
+      accent: presentation.accent ?? resolveProfileAccent(item.roleKey ?? item.itemType),
       badges: buildBadges(payload),
       linkPills,
     },
-    quickActions: buildQuickActions(payload),
-    mainSections: allSections.filter((section) => section.placement === "main").sort(sortSections),
-    sidebarSections: allSections.filter((section) => section.placement === "sidebar").sort(sortSections),
+    quickActions: buildQuickActions(payload, presentation),
+    trustSignals: buildTrustSignals(payload),
+    mainSections: sortSectionsWithPreference(
+      allSections.filter((section) => section.placement === "main"),
+      presentation.preferredSectionOrder,
+    ),
+    sidebarSections: sortSectionsWithPreference(
+      allSections.filter((section) => section.placement === "sidebar"),
+      presentation.preferredSectionOrder,
+    ),
     claim: {
       itemId: item.id,
       slug: item.slug,
       canClaim: payload.claim.canClaim && item.verificationStatus !== "claimed",
       isManaged: item.verificationStatus === "claimed",
     },
+    presentation,
   };
 }

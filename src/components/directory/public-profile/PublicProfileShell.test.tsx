@@ -268,7 +268,22 @@ describe("PublicProfileShell", () => {
     );
 
     expect(screen.queryByText(/Düzenleme Yetkisi Talep Et/i)).not.toBeInTheDocument();
-    expect(screen.getByText("Yönetilen Profil")).toBeInTheDocument();
-    expect(screen.getByText("Doğrulanmış Profil")).toBeInTheDocument();
+    // Hero rozetinde ve trust card'da aynı etiket bilinçli olarak iki kez görünür.
+    expect(screen.getAllByText("Yönetilen Profil").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Doğrulanmış Profil").length).toBeGreaterThan(0);
+  });
+
+  it("renders the trust card with descriptions for managed profiles", () => {
+    renderShell(
+      makePayload({
+        item: { ...makePayload().item, verificationStatus: "claimed", isVerified: true },
+        claim: { canClaim: false, verificationStatus: "claimed" },
+      }),
+    );
+
+    expect(screen.getByText("Profil Güvencesi")).toBeInTheDocument();
+    expect(
+      screen.getByText("Bu profil sahibi tarafından aktif olarak yönetiliyor."),
+    ).toBeInTheDocument();
   });
 });

@@ -1,4 +1,4 @@
-import { Globe, Mail, MapPin, Phone, Share2 } from "lucide-react";
+import { CalendarDays, Globe, Mail, MapPin, MessageCircle, Phone, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,24 @@ const ACTION_ICONS: Record<PublicProfileQuickAction["key"], typeof Globe> = {
   email: Mail,
   phone: Phone,
   map: MapPin,
+  whatsapp: MessageCircle,
+  appointment: CalendarDays,
+};
+
+/** navigator.share with clipboard fallback; silent on user-cancelled share. */
+export const sharePublicProfile = async (shareUrl: string, shareTitle: string) => {
+  try {
+    if (typeof navigator.share === "function") {
+      await navigator.share({ title: shareTitle, url: shareUrl });
+      return;
+    }
+    await navigator.clipboard.writeText(shareUrl);
+    toast.success("Profil bağlantısı kopyalandı");
+  } catch (error: unknown) {
+    // Kullanıcı paylaşım penceresini kapattıysa sessiz geç; diğer hatalarda bilgilendir.
+    if (error instanceof Error && error.name === "AbortError") return;
+    toast.error("Bağlantı paylaşılamadı");
+  }
 };
 
 interface PublicProfileQuickActionsProps {
@@ -18,30 +36,16 @@ interface PublicProfileQuickActionsProps {
 }
 
 const PublicProfileQuickActions = ({ actions, shareUrl, shareTitle }: PublicProfileQuickActionsProps) => {
-  const handleShare = async () => {
-    try {
-      if (typeof navigator.share === "function") {
-        await navigator.share({ title: shareTitle, url: shareUrl });
-        return;
-      }
-      await navigator.clipboard.writeText(shareUrl);
-      toast.success("Profil bağlantısı kopyalandı");
-    } catch (error: unknown) {
-      // Kullanıcı paylaşım penceresini kapattıysa sessiz geç; diğer hatalarda bilgilendir.
-      if (error instanceof Error && error.name === "AbortError") return;
-      toast.error("Bağlantı paylaşılamadı");
-    }
-  };
-
   return (
     <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
       {actions.map((action) => {
         const Icon = ACTION_ICONS[action.key];
+        const isPrimary = action.variant === "primary";
         return (
           <Button
             key={action.key}
             asChild
-            variant="outline"
+            variant={isPrimary ? "default" : "outline"}
             size="sm"
             className="min-h-[44px] rounded-full sm:min-h-9"
           >
@@ -60,7 +64,7 @@ const PublicProfileQuickActions = ({ actions, shareUrl, shareTitle }: PublicProf
         variant="outline"
         size="sm"
         className="min-h-[44px] rounded-full sm:min-h-9"
-        onClick={() => void handleShare()}
+        onClick={() => void sharePublicProfile(shareUrl, shareTitle)}
       >
         <Share2 className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
         Paylaş

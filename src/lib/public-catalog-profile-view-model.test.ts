@@ -331,3 +331,178 @@ describe("contact/link row helpers", () => {
     expect(rows[0].url).toBe("https://example.com/");
   });
 });
+
+describe("quick actions — whatsapp ve randevu", () => {
+  it("whatsapp telefon numarasını wa.me linkine çevirir", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        contacts: [{ type: "whatsapp", value: "+49 171 123 45 67", label: null, isPrimary: false }],
+      }),
+    );
+    const whatsapp = vm.quickActions.find((action) => action.key === "whatsapp");
+    expect(whatsapp?.href).toBe("https://wa.me/491711234567");
+    expect(whatsapp?.external).toBe(true);
+  });
+
+  it("whatsapp chat URL'sini sanitize edip korur", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        contacts: [
+          { type: "whatsapp", value: "https://chat.whatsapp.com/Jqkc4xh5YYY8", label: null, isPrimary: false },
+        ],
+      }),
+    );
+    expect(vm.quickActions.find((action) => action.key === "whatsapp")?.href).toBe(
+      "https://chat.whatsapp.com/Jqkc4xh5YYY8",
+    );
+  });
+
+  it("randevu URL'si varsa CTA oluşturur, unsafe URL'de oluşturmaz", () => {
+    const withSafe = buildPublicCatalogProfileViewModel(
+      makePayload({
+        contacts: [
+          { type: "appointment_url", value: "https://calendly.com/demo", label: null, isPrimary: false },
+        ],
+      }),
+    );
+    expect(withSafe.quickActions.find((action) => action.key === "appointment")?.label).toBe(
+      "Randevu Al",
+    );
+
+    const withUnsafe = buildPublicCatalogProfileViewModel(
+      makePayload({
+        contacts: [
+          { type: "appointment_url", value: "javascript:alert(1)", label: null, isPrimary: false },
+        ],
+      }),
+    );
+    expect(withUnsafe.quickActions.find((action) => action.key === "appointment")).toBeUndefined();
+  });
+});
+
+describe("presentation entegrasyonu — Experimental_2 pilot", () => {
+  const pilotItem = (overrides: Record<string, unknown> = {}) => ({
+    ...makePayload().item,
+    roleKey: "Experimental_2",
+    roleLabel: "Experimental 2",
+    ...overrides,
+  });
+
+  it("Experimental_2 premium presentation çözümler", () => {
+    const vm = buildPublicCatalogProfileViewModel(makePayload({ item: pilotItem() }));
+    expect(vm.presentation.key).toBe("experimental-2-premium");
+    expect(vm.hero.eyebrow).not.toBeNull();
+    expect(vm.hero.accent).toBe("purple");
+  });
+
+  it("Experimental_1 generic fallback alır (negatif kontrol)", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({ item: { ...makePayload().item, roleKey: "Experimental_1" } }),
+    );
+    expect(vm.presentation.key).toBe("generic");
+    expect(vm.hero.eyebrow).toBeNull();
+  });
+
+  it("generic rollerde aksiyonlar secondary kalır", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        contacts: [{ type: "email", value: "info@example.com", label: null, isPrimary: false }],
+      }),
+    );
+    expect(vm.quickActions.every((action) => action.variant === "secondary")).toBe(true);
+  });
+
+  it("pilotta öncelik sırasına göre en fazla 2 primary aksiyon oluşur", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        item: pilotItem(),
+        contacts: [
+          { type: "website", value: "https://example.com", label: null, isPrimary: false },
+          { type: "email", value: "info@example.com", label: null, isPrimary: false },
+          { type: "phone", value: "+49 231 818 687", label: null, isPrimary: false },
+          { type: "whatsapp", value: "+49 171 123 45 67", label: null, isPrimary: false },
+        ],
+      }),
+    );
+    const primary = vm.quickActions.filter((action) => action.variant === "primary");
+    expect(primary.map((action) => action.key)).toEqual(["email", "whatsapp"]);
+    expect(vm.quickActions.find((action) => action.key === "website")?.variant).toBe("secondary");
+  });
+
+  it("pilotta tercih edilen section sırası uygulanır, generic'te DB sırası korunur", () => {
+    const sections = [
+      {
+        sectionKey: "detail.iletisim",
+        label: "İletişim",
+        description: null,
+        sectionArea: "detail_card" as const,
+        componentKey: "contact_list",
+        sortOrder: 100,
+        content: { contacts: [{ key: "a", type: "phone", label: "Tel", value: "1", href: null, external: false }] },
+      },
+      {
+        sectionKey: "detail.diller",
+        label: "Diller",
+        description: null,
+        sectionArea: "detail_card" as const,
+        componentKey: "languages",
+        sortOrder: 50,
+        content: { languages: [{ code: "tr", proficiency: null }] },
+      },
+    ];
+
+    const generic = buildPublicCatalogProfileViewModel(makePayload({ sections }));
+    expect(generic.sidebarSections.map((section) => section.componentKey)).toEqual([
+      "languages",
+      "contact_list",
+    ]);
+
+    const pilot = buildPublicCatalogProfileViewModel(makePayload({ item: pilotItem(), sections }));
+    expect(pilot.sidebarSections.map((section) => section.componentKey)).toEqual([
+      "contact_list",
+      "languages",
+    ]);
+  });
+
+  it("main ve sidebar placement pilotta da korunur", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        item: pilotItem(),
+        attributes: [
+          { key: "expertise_area", label: "Uzmanlık", dataType: "text", sortOrder: 10, valueText: "Genel Tıp", valueJson: null },
+        ],
+        languages: [{ code: "tr", proficiency: "native_or_fluent" }],
+      }),
+    );
+    expect(vm.mainSections.map((section) => section.componentKey)).toEqual(["attributes"]);
+    expect(vm.sidebarSections.map((section) => section.componentKey)).toEqual(["languages"]);
+  });
+});
+
+describe("trust signals", () => {
+  it("claimable profil için sahiplenilebilir sinyali üretir", () => {
+    const vm = buildPublicCatalogProfileViewModel(makePayload());
+    expect(vm.trustSignals.map((signal) => signal.key)).toEqual(["claimable"]);
+    expect(vm.trustSignals[0].label).toBe("Sahiplenilebilir Profil");
+  });
+
+  it("managed + verified profil için doğru sinyalleri üretir", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        item: { ...makePayload().item, verificationStatus: "claimed", isVerified: true },
+        claim: { canClaim: false, verificationStatus: "claimed" },
+      }),
+    );
+    expect(vm.trustSignals.map((signal) => signal.key)).toEqual(["verified", "managed"]);
+  });
+
+  it("sinyal yoksa boş liste döner", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        item: { ...makePayload().item, isClaimable: false },
+        claim: { canClaim: false, verificationStatus: "unverified" },
+      }),
+    );
+    expect(vm.trustSignals).toEqual([]);
+  });
+});

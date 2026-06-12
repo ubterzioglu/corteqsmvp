@@ -12,8 +12,10 @@ import { buildPublicCatalogProfileViewModel } from "@/lib/public-catalog-profile
 import PublicProfileBreadcrumb from "./PublicProfileBreadcrumb";
 import PublicProfileEmptyState from "./PublicProfileEmptyState";
 import PublicProfileHero from "./PublicProfileHero";
-import PublicProfileQuickActions from "./PublicProfileQuickActions";
+import PublicProfileMobileActionBar from "./PublicProfileMobileActionBar";
+import PublicProfileQuickActions, { sharePublicProfile } from "./PublicProfileQuickActions";
 import PublicProfileSectionList from "./PublicProfileSectionList";
+import PublicProfileTrustCard from "./PublicProfileTrustCard";
 import PublicProfileInlineEditor from "./edit/PublicProfileInlineEditor";
 
 const AmbientOrbs = () => (
@@ -105,14 +107,24 @@ const PublicProfileShell = ({ profile }: PublicProfileShellProps) => {
 
   const hasAnySection =
     viewModel.mainSections.length > 0 || viewModel.sidebarSections.length > 0;
+  const trustCard = <PublicProfileTrustCard signals={viewModel.trustSignals} />;
+  const showMobileActionBar = viewModel.presentation.showMobileActionBar && !isEditing;
 
   return (
     <div className="landing-ambient min-h-screen">
       <AmbientOrbs />
-      <main className="relative z-10 mx-auto w-full max-w-6xl px-4 py-8 md:px-5 md:py-10">
+      <main
+        className={`relative z-10 mx-auto w-full max-w-6xl px-4 py-8 md:px-5 md:py-10 ${
+          showMobileActionBar ? "pb-28 md:pb-10" : ""
+        }`}
+      >
         <PublicProfileBreadcrumb />
 
-        <PublicProfileHero hero={viewModel.hero} actions={heroActions} />
+        <PublicProfileHero
+          hero={viewModel.hero}
+          heroVariant={viewModel.presentation.heroVariant}
+          actions={heroActions}
+        />
 
         {claimMutation.isError ? (
           <p className="mt-4 rounded-2xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
@@ -133,14 +145,26 @@ const PublicProfileShell = ({ profile }: PublicProfileShellProps) => {
             />
           ) : hasAnySection ? (
             <PublicProfileSectionList
-              sections={[...viewModel.mainSections, ...viewModel.sidebarSections]}
+              mainSections={viewModel.mainSections}
+              sidebarSections={viewModel.sidebarSections}
               accent={viewModel.hero.accent}
+              sidebarTop={trustCard}
             />
           ) : (
-            <PublicProfileEmptyState />
+            <div className="space-y-4">
+              {trustCard}
+              <PublicProfileEmptyState />
+            </div>
           )}
         </div>
       </main>
+
+      {showMobileActionBar ? (
+        <PublicProfileMobileActionBar
+          actions={viewModel.quickActions}
+          onShare={() => void sharePublicProfile(shareUrl, viewModel.hero.title)}
+        />
+      ) : null}
     </div>
   );
 };

@@ -111,7 +111,7 @@ describe("ProfileResolverPage", () => {
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText(/Duzenlemek istedigin profili sec/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Düzenlemek istediğin profili seç/i)).toBeInTheDocument();
     expect(screen.getByText("Test User")).toBeInTheDocument();
     expect(screen.getByText("Test Business")).toBeInTheDocument();
   });

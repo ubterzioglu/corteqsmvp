@@ -79,6 +79,14 @@ Feature çözümleme: override > role_features default > false   (cadde tarafın
 item-type/`*_details` sistemi kaldırıldı. Claim akışı: submit RPC → admin onay → manager kaydı.
 Detay raporlar: `docs/catalog-role-afs-rebuild/`.
 
+**Profil presentation config katmanı (2026-06-12):** `src/lib/profile-presentation.ts` —
+flat rol anahtarından yalnızca *görsel* profil kararlarını çözer (accent, hero varyantı,
+primary CTA önceliği, section sırası). Public profil view-model'i ve `/profile` editörü aynı
+resolver'ı kullanır; tanımsız roller generic fallback alır. Şu an tek özel config
+`Experimental_2` premium pilotudur (`experimental-2-premium`); yeni role premium görünüm
+vermek = config'e entry eklemek. Yetki/visibility kuralları bu katmana TAŞINMAZ.
+Plan/detay: `docs/plans/profile-premium-experimental-2-pilot.md`.
+
 ---
 
 ## 4. Cadde 3.0 (E2E rebuild — canlı 2026-06-11)

@@ -2,6 +2,7 @@ import PublicProfileBreadcrumb from "./PublicProfileBreadcrumb";
 
 const shimmer = "animate-pulse rounded-2xl bg-muted/50";
 
+/** Mirrors the final layout (hero card + 8/4 two-column grid) to minimize layout shift. */
 const PublicProfileSkeleton = () => (
   <div className="landing-ambient min-h-screen">
     <main className="relative z-10 mx-auto w-full max-w-6xl px-4 py-8 md:py-10">
@@ -22,11 +23,16 @@ const PublicProfileSkeleton = () => (
         </div>
       </div>
 
-      {/* Card grid skeleton */}
-      <div className="mt-5 grid gap-3 md:grid-cols-2">
-        <div className={`h-44 md:col-span-2 ${shimmer} rounded-[22px]`} />
-        <div className={`h-36 ${shimmer} rounded-[22px]`} />
-        <div className={`h-36 ${shimmer} rounded-[22px]`} />
+      {/* Two-column section skeleton (main ~8 / sidebar ~4) */}
+      <div className="mt-5 grid gap-4 lg:grid-cols-12">
+        <div className="space-y-4 lg:col-span-8">
+          <div className={`h-44 ${shimmer} rounded-[22px]`} />
+          <div className={`h-36 ${shimmer} rounded-[22px]`} />
+        </div>
+        <div className="space-y-4 lg:col-span-4">
+          <div className={`h-32 ${shimmer} rounded-[22px]`} />
+          <div className={`h-36 ${shimmer} rounded-[22px]`} />
+        </div>
       </div>
     </main>
   </div>

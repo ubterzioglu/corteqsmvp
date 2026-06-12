@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import type { ProfileHeroVariant } from "@/lib/profile-presentation";
 import type {
   PublicProfileBadgeViewModel,
   PublicProfileHeroViewModel,
@@ -34,6 +35,14 @@ const HEADER_SURFACE_BY_ACCENT: Record<ProfileAccent, string> = {
   purple:
     "bg-[radial-gradient(circle_at_top_left,rgba(139,92,246,0.16),transparent_38%),linear-gradient(135deg,rgba(15,23,42,0.04),rgba(15,23,42,0))]",
 };
+
+/**
+ * Premium pilot surface ("experimental" hero variant): a slightly richer but
+ * still calm two-corner glow used as the gradient fallback when no cover image
+ * exists. Light and dark mode both rely on the underlying card tokens.
+ */
+const EXPERIMENTAL_HEADER_SURFACE =
+  "bg-[radial-gradient(circle_at_top_left,rgba(139,92,246,0.22),transparent_44%),radial-gradient(circle_at_bottom_right,rgba(56,189,248,0.14),transparent_42%),linear-gradient(135deg,rgba(15,23,42,0.05),rgba(15,23,42,0))]";
 
 type StatusTone = Exclude<PublicProfileBadgeViewModel["tone"], "category">;
 
@@ -66,20 +75,26 @@ const STATUS_BADGE_STYLES: Record<StatusTone, { className: string; Icon: typeof 
 
 interface PublicProfileHeroProps {
   hero: PublicProfileHeroViewModel;
+  heroVariant?: ProfileHeroVariant;
   actions?: ReactNode;
 }
 
-const PublicProfileHero = ({ hero, actions }: PublicProfileHeroProps) => {
+const PublicProfileHero = ({ hero, heroVariant = "member", actions }: PublicProfileHeroProps) => {
   const categoryBadges = hero.badges.filter((badge) => badge.tone === "category");
   const statusBadges = hero.badges.filter(
     (badge): badge is PublicProfileBadgeViewModel & { tone: StatusTone } =>
       badge.tone !== "category",
   );
 
+  const isExperimental = heroVariant === "experimental";
+  const headerSurface = isExperimental
+    ? EXPERIMENTAL_HEADER_SURFACE
+    : HEADER_SURFACE_BY_ACCENT[hero.accent];
+
   return (
     <section className="overflow-hidden rounded-[28px] border border-border bg-card shadow-card">
       <div
-        className={`relative border-b border-border px-5 py-5 md:px-7 md:py-6 ${HEADER_SURFACE_BY_ACCENT[hero.accent]}`}
+        className={`relative border-b border-border px-5 py-5 md:px-7 md:py-6 ${headerSurface}`}
       >
         {hero.coverImageUrl ? (
           <img
@@ -96,18 +111,29 @@ const PublicProfileHero = ({ hero, actions }: PublicProfileHeroProps) => {
             <img
               src={hero.avatarUrl}
               alt={hero.avatarAlt}
-              className="h-20 w-20 shrink-0 rounded-[24px] object-cover shadow-lg md:h-24 md:w-24"
+              className={`h-20 w-20 shrink-0 rounded-[24px] object-cover shadow-lg md:h-24 md:w-24 ${
+                isExperimental ? "ring-2 ring-background/90 md:h-28 md:w-28" : ""
+              }`}
             />
           ) : (
             <div
               aria-label={hero.avatarAlt}
-              className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] bg-gradient-primary text-2xl font-bold text-primary-foreground shadow-lg md:h-24 md:w-24 md:text-3xl"
+              className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] bg-gradient-primary text-2xl font-bold text-primary-foreground shadow-lg md:h-24 md:w-24 md:text-3xl ${
+                isExperimental ? "ring-2 ring-background/90 md:h-28 md:w-28" : ""
+              }`}
             >
               {hero.initials}
             </div>
           )}
 
           <div className="min-w-0 flex-1">
+            {/* Eyebrow (pilot presentation only) */}
+            {isExperimental && hero.eyebrow ? (
+              <p className="mb-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-violet-700 dark:text-violet-400">
+                {hero.eyebrow}
+              </p>
+            ) : null}
+
             {/* Status + category badge row */}
             {statusBadges.length > 0 || categoryBadges.length > 0 ? (
               <div className="flex flex-wrap items-center gap-2">
@@ -131,7 +157,11 @@ const PublicProfileHero = ({ hero, actions }: PublicProfileHeroProps) => {
 
             {/* Name + tagline pill + role pill */}
             <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
-              <h1 className="break-words text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+              <h1
+                className={`break-words font-bold tracking-tight text-foreground ${
+                  isExperimental ? "text-2xl md:text-4xl" : "text-2xl md:text-3xl"
+                }`}
+              >
                 {hero.title}
               </h1>
               {hero.tagline ? (
@@ -164,7 +194,7 @@ const PublicProfileHero = ({ hero, actions }: PublicProfileHeroProps) => {
                     href={pill.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/85 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                    className="inline-flex min-h-[32px] items-center gap-1.5 rounded-full border border-border bg-background/85 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     {pill.label === "LinkedIn" ? (
                       <Linkedin className="h-3.5 w-3.5" aria-hidden="true" />

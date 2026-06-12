@@ -54,12 +54,20 @@ import {
 } from "@/lib/member-profile-api";
 import { getAttributeStringValue, type AttributeVisibility, type ProfileAttributeState } from "@/lib/member-profile";
 import { getProfileDocumentAccessUrl, parseProfileDocumentRecord, removeProfileDocument, uploadProfileDocument, type ProfileDocumentRecord } from "@/lib/profile-documents";
+import {
+  EXPERIMENTAL_2_PRESENTATION_KEY,
+  resolveProfilePresentation,
+} from "@/lib/profile-presentation";
 import { getRoleMeta, getUiProfileType, isProfileType } from "@/lib/profile-types";
 import { validateCvFile, validatePresentationFile } from "@/lib/security";
 import { formatBytes } from "@/lib/submissions";
 import { supabase } from "@/integrations/supabase/client";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
+import PremiumProfileHero from "@/components/profile/premium/PremiumProfileHero";
+import ProfileCompletionCard from "@/components/profile/premium/ProfileCompletionCard";
+import ProfilePublicPreviewCard from "@/components/profile/premium/ProfilePublicPreviewCard";
+import { useMemberCatalogSlug } from "@/hooks/useMemberCatalogSlug";
 import CaddeInterestsCard from "@/components/cadde/CaddeInterestsCard";
 import CaddeMyContentCard from "@/components/cadde/CaddeMyContentCard";
 import CaddeTanitimPanel from "@/components/cadde/CaddeTanitimPanel";
@@ -397,6 +405,17 @@ const ProfilePage = () => {
   const roleMeta = useMemo(
     () => getRoleMeta(getUiProfileType(profile?.profileType ?? type)),
     [profile?.profileType, type],
+  );
+
+  // Pilot izolasyonu: premium layout yalnızca flat rol anahtarından çözülür
+  // (UI kategorisi değil). Tanımsız roller generic config alır.
+  const presentation = useMemo(
+    () => resolveProfilePresentation(profile?.roleKey),
+    [profile?.roleKey],
+  );
+  const isPremiumPilot = presentation.key === EXPERIMENTAL_2_PRESENTATION_KEY;
+  const { slug: memberCatalogSlug, isLoading: isMemberSlugLoading } = useMemberCatalogSlug(
+    isPremiumPilot && Boolean(profile),
   );
 
   const featureMap = useMemo(() => {
@@ -1301,8 +1320,8 @@ const ProfilePage = () => {
     </div>
   );
 
-  return (
-    <div className={`relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 ${isIndividualProfile ? "pb-16" : ""}`}>
+  const hiddenFileInputs = (
+    <>
       <input
         ref={avatarInputRef}
         type="file"
@@ -1324,6 +1343,10 @@ const ProfilePage = () => {
         className="hidden"
         onChange={(event) => void handlePresentationFileChange(event)}
       />
+    </>
+  );
+
+  const legacyHeroCard = (
       <Card className={isIndividualProfile ? GOOGLE_SOFT_CARD_HERO : GOOGLE_SOFT_CARD_BLUE_SECTION}>
         {isIndividualProfile ? (
           <div className={GOOGLE_SOFT_HERO_SURFACE}>
@@ -1407,8 +1430,9 @@ const ProfilePage = () => {
           </>
         ) : null}
       </Card>
+  );
 
-      {isIndividualProfile ? (
+  const legacySummaryCard = isIndividualProfile ? (
         <Card className={`overflow-hidden ${GOOGLE_SOFT_CARD_BLUE_SECTION}`}>
           <CardHeader className="p-0">
             <button
@@ -1450,10 +1474,9 @@ const ProfilePage = () => {
             </CardContent>
           ) : null}
         </Card>
-      ) : null}
+  ) : null;
 
-      <div className="space-y-4">
-          {displayNameAttribute ? (
+  const profileFieldsCard = displayNameAttribute ? (
             <Card className={GOOGLE_SOFT_CARD_BLUE_SECTION}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-[11px]">Profil Alanları</CardTitle>
@@ -1565,9 +1588,9 @@ const ProfilePage = () => {
                 </div>
               </CardContent>
             </Card>
-          ) : null}
+  ) : null;
 
-          {featureToggleCards.length ? (
+  const badgesCard = featureToggleCards.length ? (
             <Card className={GOOGLE_SOFT_CARD_GREEN_SECTION}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-[11px]">Profil Rozetleri</CardTitle>
@@ -1587,14 +1610,17 @@ const ProfilePage = () => {
                 ))}
               </CardContent>
             </Card>
-          ) : null}
+  ) : null;
 
-          <CaddeInterestsCard />
+  const caddeCards = (
+    <>
+      <CaddeInterestsCard />
+      <CaddeMyContentCard />
+      <CaddeTanitimPanel />
+    </>
+  );
 
-          <CaddeMyContentCard />
-
-          <CaddeTanitimPanel />
-
+  const socialMediaCard = (
           <Card className={GOOGLE_SOFT_CARD_RED_SECTION}>
             <CardHeader className="pb-2">
               <CardTitle className="text-[11px]">Sosyal Medya Hesapları</CardTitle>
@@ -1655,7 +1681,9 @@ const ProfilePage = () => {
               )}
             </CardContent>
           </Card>
+  );
 
+  const linkCardsGrid = (
           <div className="grid gap-4 md:grid-cols-2">
             {linkedinCardEnabled && linkedinAttribute ? (
               <StandaloneLinkAttributeCard
@@ -1695,7 +1723,9 @@ const ProfilePage = () => {
               />
             ) : null}
           </div>
+  );
 
+  const documentsGrid = (
           <div className="grid gap-4 lg:grid-cols-2">
             {cvUploadEnabled ? (
               <ProfileDocumentCard
@@ -1733,7 +1763,9 @@ const ProfilePage = () => {
               />
             ) : null}
           </div>
+  );
 
+  const roleSpecificCard = (
           <Card className={GOOGLE_SOFT_CARD_GREEN_SECTION}>
             <CardHeader className="pb-2">
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -1779,9 +1811,9 @@ const ProfilePage = () => {
               )}
             </CardContent>
           </Card>
+  );
 
-      </div>
-
+  const accessCard = (
       <Card className={`overflow-hidden ${GOOGLE_SOFT_CARD_RED_SECTION}`}>
         <CardHeader className="p-0">
           <button
@@ -1929,7 +1961,9 @@ const ProfilePage = () => {
           </CardContent>
         ) : null}
       </Card>
+  );
 
+  const helpCard = (
       <Card ref={helpCardRef} className={`overflow-hidden ${GOOGLE_SOFT_CARD_BLUE_SECTION}`}>
         <CardHeader className="p-0">
           <button
@@ -1971,6 +2005,75 @@ const ProfilePage = () => {
           </CardContent>
         ) : null}
       </Card>
+  );
+
+  if (isPremiumPilot) {
+    // Experimental_2 premium pilot: owner hero + 8/4 iki kolonlu düzen.
+    // Tüm handler'lar ve veri sözleşmeleri generic layout ile birebir aynı.
+    return (
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 pb-16">
+        {hiddenFileInputs}
+        <PremiumProfileHero
+          displayName={displayName}
+          initials={initials}
+          avatarUrl={currentAvatarUrl || null}
+          roleLabel={profile?.roleLabel ?? null}
+          eyebrow={presentation.eyebrow}
+          email={profile?.email ?? user?.email ?? null}
+          locationLabel={locationLabel || null}
+          shortBio={shortBio || null}
+          completionPercentage={profile?.profileCompletion.percentage ?? 0}
+          hasPartialData={Boolean(errorMessage)}
+          publicProfileSlug={memberCatalogSlug}
+          avatarUploading={avatarUploading}
+          avatarRemoving={avatarRemoving}
+          onChangePhoto={() => avatarInputRef.current?.click()}
+          onRemovePhoto={() => void handleRemoveAvatar()}
+          onShowHelp={scrollToHelpCard}
+          onSignOut={() => void handleSignOut()}
+        />
+        <div className="grid gap-6 lg:grid-cols-12">
+          <div className="flex min-w-0 flex-col gap-4 lg:col-span-8">
+            {profileFieldsCard}
+            {badgesCard}
+            {caddeCards}
+            {socialMediaCard}
+            {linkCardsGrid}
+            {documentsGrid}
+            {roleSpecificCard}
+          </div>
+          <aside className="flex flex-col gap-4 lg:col-span-4 lg:sticky lg:top-24 lg:self-start">
+            <ProfileCompletionCard
+              requiredTotal={profile?.profileCompletion.requiredTotal ?? 0}
+              requiredCompleted={profile?.profileCompletion.requiredCompleted ?? 0}
+              percentage={profile?.profileCompletion.percentage ?? 0}
+              highlights={completionHighlights}
+            />
+            <ProfilePublicPreviewCard slug={memberCatalogSlug} isLoading={isMemberSlugLoading} />
+          </aside>
+        </div>
+        {accessCard}
+        {helpCard}
+      </div>
+    );
+  }
+
+  return (
+    <div className={`relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 ${isIndividualProfile ? "pb-16" : ""}`}>
+      {hiddenFileInputs}
+      {legacyHeroCard}
+      {legacySummaryCard}
+      <div className="space-y-4">
+        {profileFieldsCard}
+        {badgesCard}
+        {caddeCards}
+        {socialMediaCard}
+        {linkCardsGrid}
+        {documentsGrid}
+        {roleSpecificCard}
+      </div>
+      {accessCard}
+      {helpCard}
   </div>
 );
 };
