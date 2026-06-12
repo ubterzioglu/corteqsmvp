@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
 import { supabase } from "@/integrations/supabase/client";
+import { trIncludes } from "@/lib/text-normalization";
 import JobApplyDialog from "@/components/JobApplyDialog";
 import { useGeoCities, useGeoCountries } from "@/hooks/useGeo";
 
@@ -62,11 +63,10 @@ const JobBoard = () => {
   }, [country, countryCitiesQuery.data, listings]);
 
   const filtered = useMemo(() => {
-    const k = keyword.trim().toLowerCase();
     return listings.filter((l) => {
       if (country !== "all" && l.country !== country) return false;
       if (city !== "all" && l.city !== city) return false;
-      if (k && !l.title.toLowerCase().includes(k)) return false;
+      if (!trIncludes(l.title, keyword)) return false;
       return true;
     });
   }, [listings, country, city, keyword]);

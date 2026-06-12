@@ -1,4 +1,5 @@
 import { Cloud, TrendingUp, Briefcase, Newspaper } from "lucide-react";
+import { trIncludes } from "@/lib/text-normalization";
 
 export type NewsCategory = "all" | "weather" | "economy" | "jobs";
 export type NewsSourceType = "local" | "international";
@@ -214,12 +215,10 @@ export function getFilteredNews(
   category: NewsCategory = "all",
   keyword: string = ""
 ): { local: CityNewsItem[]; international: CityNewsItem[] } {
-  const kw = keyword.toLowerCase().trim();
-
   const filterFn = (n: CityNewsItem) => {
     const cityMatch = n.city === city;
     const catMatch = category === "all" || n.category === category;
-    const kwMatch = !kw || n.title.toLowerCase().includes(kw) || n.summary.toLowerCase().includes(kw) || (n.keywords || []).some(k => k.toLowerCase().includes(kw));
+    const kwMatch = trIncludes(n.title, keyword) || trIncludes(n.summary, keyword) || (n.keywords || []).some(k => trIncludes(k, keyword));
     return cityMatch && catMatch && kwMatch;
   };
 
@@ -234,12 +233,11 @@ export function searchAllNews(
   category: NewsCategory = "all",
   keyword: string = ""
 ): CityNewsItem[] {
-  const kw = keyword.toLowerCase().trim();
   const all = [...mockCityNews, ...mockInternationalNews];
 
   return all.filter(n => {
     const catMatch = category === "all" || n.category === category;
-    const kwMatch = !kw || n.title.toLowerCase().includes(kw) || n.summary.toLowerCase().includes(kw) || (n.keywords || []).some(k => k.toLowerCase().includes(kw));
+    const kwMatch = trIncludes(n.title, keyword) || trIncludes(n.summary, keyword) || (n.keywords || []).some(k => trIncludes(k, keyword));
     return catMatch && kwMatch;
   });
 }

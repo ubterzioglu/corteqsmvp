@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { trIncludes, trCompare } from "@/lib/text-normalization";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -116,14 +117,14 @@ const AmbassadorDashboard = () => {
     let list = [...ambassadors];
     if (countryFilter !== "all") list = list.filter(a => a.country === countryFilter);
     if (searchTerm) list = list.filter(a =>
-      a.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      a.city.toLowerCase().includes(searchTerm.toLowerCase())
+      trIncludes(a.name, searchTerm) ||
+      trIncludes(a.city, searchTerm)
     );
     list.sort((a, b) => {
       switch (sortBy) {
-        case "name": return a.name.localeCompare(b.name);
-        case "city": return a.city.localeCompare(b.city);
-        case "country": return a.country.localeCompare(b.country);
+        case "name": return trCompare(a.name, b.name);
+        case "city": return trCompare(a.city, b.city);
+        case "country": return trCompare(a.country, b.country);
         case "events": return b.events - a.events;
         case "participants": return b.participants - a.participants;
         case "subscriptionShare": return getSubscriptionShare(b) - getSubscriptionShare(a);

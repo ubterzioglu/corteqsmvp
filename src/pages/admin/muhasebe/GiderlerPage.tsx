@@ -2,6 +2,7 @@
 // Gider kayıtları listesi — arama, filtre, CRUD
 
 import { useMemo, useState } from 'react';
+import { trIncludes } from '@/lib/text-normalization';
 import { Plus, Pencil, Trash2, ExternalLink, CreditCard, Search } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -85,16 +86,15 @@ export default function GiderlerPage() {
   const [deleteTarget, setDeleteTarget] = useState<ExpenseRow | null>(null);
 
   const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
     return expenses.filter((e) => {
       if (personFilter !== 'all' && e.person !== personFilter) return false;
       if (statusFilter !== 'all' && e.status !== statusFilter) return false;
       if (categoryFilter !== 'all' && e.category !== categoryFilter) return false;
-      if (!q) return true;
+      if (!search.trim()) return true;
       return (
-        e.description.toLowerCase().includes(q) ||
-        (e.note?.toLowerCase().includes(q) ?? false) ||
-        (e.invoice_url?.toLowerCase().includes(q) ?? false)
+        trIncludes(e.description, search) ||
+        trIncludes(e.note, search) ||
+        trIncludes(e.invoice_url, search)
       );
     });
   }, [expenses, search, personFilter, statusFilter, categoryFilter]);

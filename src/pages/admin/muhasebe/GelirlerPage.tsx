@@ -2,6 +2,7 @@
 // Gelir kayıtları listesi — arama, filtre, CRUD
 
 import { useMemo, useState } from 'react';
+import { trIncludes } from '@/lib/text-normalization';
 import { Plus, Pencil, Trash2, ExternalLink, Search } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -81,16 +82,15 @@ export default function GelirlerPage() {
   const [deleteTarget, setDeleteTarget] = useState<IncomeRow | null>(null);
 
   const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
     return incomes.filter((e) => {
       if (statusFilter !== 'all' && e.status !== statusFilter) return false;
       if (categoryFilter !== 'all' && e.category !== categoryFilter) return false;
-      if (!q) return true;
+      if (!search.trim()) return true;
       return (
-        e.description.toLowerCase().includes(q) ||
-        e.source.toLowerCase().includes(q) ||
-        (e.note?.toLowerCase().includes(q) ?? false) ||
-        (e.link?.toLowerCase().includes(q) ?? false)
+        trIncludes(e.description, search) ||
+        trIncludes(e.source, search) ||
+        trIncludes(e.note, search) ||
+        trIncludes(e.link, search)
       );
     });
   }, [incomes, search, statusFilter, categoryFilter]);

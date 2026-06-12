@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Database } from "lucide-react";
 import { useState } from "react";
+import { trIncludes } from "@/lib/text-normalization";
 
 interface TableInfo {
   name: string;
@@ -211,9 +212,9 @@ export default function AdminDatabaseTablesPage() {
   const filtered = DB_TABLES.filter((t) => {
     const matchesSearch =
       !search ||
-      t.name.toLowerCase().includes(search.toLowerCase()) ||
-      t.description.toLowerCase().includes(search.toLowerCase()) ||
-      t.purpose.toLowerCase().includes(search.toLowerCase());
+      trIncludes(t.name, search) ||
+      trIncludes(t.description, search) ||
+      trIncludes(t.purpose, search);
     const matchesGroup = !activeGroup || t.group === activeGroup;
     return matchesSearch && matchesGroup;
   });

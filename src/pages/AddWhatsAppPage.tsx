@@ -21,6 +21,7 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
+import { trIncludes } from "@/lib/text-normalization";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -465,11 +466,10 @@ export default function AddWhatsAppPage() {
   }, [selectedLanding?.dbId, user]);
 
   const filteredLandings = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
     const mergedLandings = landings.length >= 6 ? landings : [...landings, ...placeholderLandings.slice(0, 6 - landings.length)];
 
     return mergedLandings.filter((landing) => {
-      if (query) {
+      if (searchQuery.trim()) {
         const haystack = [
           landing.groupName,
           landing.tagline,
@@ -478,10 +478,9 @@ export default function AddWhatsAppPage() {
           landing.description,
         ]
           .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
+          .join(" ");
 
-        if (!haystack.includes(query)) return false;
+        if (!trIncludes(haystack, searchQuery)) return false;
       }
 
       if (filterCategory && landing.category !== filterCategory) return false;

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { trIncludes } from "@/lib/text-normalization";
 import { Link, useSearchParams } from "react-router-dom";
 import { Search } from "lucide-react";
 
@@ -53,12 +54,13 @@ const AdminReferralPage = () => {
 
   const filteredReferralCodes = useMemo(() => {
     if (!searchQuery.trim()) return referralCodes;
-    const q = searchQuery.toLowerCase();
     return referralCodes.filter((referral) => {
-      const note = (referral.note ?? "").toLowerCase();
-      const code = referral.code.toLowerCase();
-      const sourceGroupType = `${referral.source_code}/${referral.group_code}/${referral.type_code}`.toLowerCase();
-      return note.includes(q) || code.includes(q) || sourceGroupType.includes(q);
+      const sourceGroupType = `${referral.source_code}/${referral.group_code}/${referral.type_code}`;
+      return (
+        trIncludes(referral.note, searchQuery) ||
+        trIncludes(referral.code, searchQuery) ||
+        trIncludes(sourceGroupType, searchQuery)
+      );
     });
   }, [referralCodes, searchQuery]);
 

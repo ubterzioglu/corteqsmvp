@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { PublicProfileViewModel } from "@/lib/profile-view-model";
+import { trUpper } from "@/lib/text-normalization";
 
 type Props = {
   model: PublicProfileViewModel;
@@ -9,13 +10,14 @@ type Props = {
 
 const PublicProfileSummaryView = ({ model, mode = "public" }: Props) => {
   const initials =
-    model.displayName
-      .split(/\s+/)
-      .map((part) => part[0])
-      .filter(Boolean)
-      .slice(0, 2)
-      .join("")
-      .toUpperCase() || "CQ";
+    trUpper(
+      model.displayName
+        .split(/\s+/)
+        .map((part) => part[0])
+        .filter(Boolean)
+        .slice(0, 2)
+        .join("")
+    ) || "CQ";
 
   return (
     <Card className="border-slate-200 bg-white/90 shadow-sm">

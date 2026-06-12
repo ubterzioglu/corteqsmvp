@@ -77,7 +77,7 @@ const StripeTransactionsPanel = ({
     const rows = effectiveTxns.map(t =>
       [t.id, t.date, `"${t.description}"`, t.direction, t.amount, t.status, t.source ?? "", t.stripeRef ?? ""].join(",")
     ).join("\n");
-    const blob = new Blob([header + rows], { type: "text/csv;charset=utf-8" });
+    const blob = new Blob(["﻿", header + rows], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url; a.download = "islemlerim.csv";

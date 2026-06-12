@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { trIncludes } from "@/lib/text-normalization";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -69,7 +70,7 @@ const VBloggerDashboard = () => {
     let list = vbloggers;
     if (countryFilter !== "all") list = list.filter(v => v.country === countryFilter);
     if (cityFilter !== "all") list = list.filter(v => v.city === cityFilter);
-    if (searchTerm) list = list.filter(v => v.name.toLowerCase().includes(searchTerm.toLowerCase()) || v.city.toLowerCase().includes(searchTerm.toLowerCase()));
+    if (searchTerm) list = list.filter(v => trIncludes(v.name, searchTerm) || trIncludes(v.city, searchTerm));
     return [...list].sort((a, b) => {
       if (sortBy === "revenue") return b.revenue - a.revenue;
       if (sortBy === "followers") return b.followers - a.followers;
@@ -105,7 +106,7 @@ const VBloggerDashboard = () => {
     const bloggerRows = "\n\nV/Blogger,Şehir,Ülke,Takipçi,Video,Blog,Görüntülenme,Etkileşim %,Gelir €\n" +
       filtered.map(v => `${v.name},${v.city},${v.country},${v.followers},${v.videos},${v.blogs},${v.views},${v.engagement},${v.revenue}`).join("\n");
     const csv = header + rows + bloggerRows;
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const blob = new Blob(["﻿", csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

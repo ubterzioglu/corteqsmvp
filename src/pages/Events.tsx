@@ -6,6 +6,7 @@ import {
   Radio
 } from "lucide-react";
 import MapShareButtons from "@/components/MapShareButtons";
+import { trIncludes, trUpper } from "@/lib/text-normalization";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -111,9 +112,7 @@ const Events = () => {
   const filteredLive = liveEvents.filter((e) => {
     const matchesCountry = country === "all" || e.country === country;
     const matchesCity = city === "all" || e.city === city;
-    const matchesSearch = search === "" ||
-      e.title.toLowerCase().includes(search.toLowerCase()) ||
-      (e.description || "").toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = trIncludes(e.title, search) || trIncludes(e.description || "", search);
     const matchesCategory = categoryFilter === "all" || e.category === categoryFilter;
     return matchesCountry && matchesCity && matchesSearch && matchesCategory;
   });
@@ -508,7 +507,7 @@ const Events = () => {
                       {evt.organizer_name && (
                         <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border/50">
                           <div className="w-7 h-7 rounded-full bg-gradient-primary flex items-center justify-center text-primary-foreground text-xs font-bold">
-                            {evt.organizer_name[0]?.toUpperCase()}
+                            {trUpper(evt.organizer_name[0] ?? "")}
                           </div>
                           <span className="text-xs text-muted-foreground font-body">{evt.organizer_name}</span>
                         </div>

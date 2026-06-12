@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import CountryCitySelector from "@/components/CountryCitySelector";
 import { useDiaspora } from "@/contexts/DiasporaContext";
 import { businesses } from "@/data/mock";
+import { trIncludes } from "@/lib/text-normalization";
 import { useToast } from "@/hooks/use-toast";
 import { useFollow } from "@/hooks/useFollow";
 import DemoBadge from "@/components/DemoBadge";
@@ -232,8 +233,8 @@ const Businesses = () => {
     const dataSector = sectorDataMap[sectorFilter] || sectorFilter;
     if (b.sector !== dataSector) return false;
     if (!activeSubItem) return true;
-    const haystack = `${b.name} ${b.description} ${b.sector}`.toLowerCase();
-    return activeSubItem.keywords.some((k) => haystack.includes(k.toLowerCase()));
+    const haystack = `${b.name} ${b.description} ${b.sector}`;
+    return activeSubItem.keywords.some((k) => trIncludes(haystack, k));
   };
 
   const filtered = businesses.filter((b) => {

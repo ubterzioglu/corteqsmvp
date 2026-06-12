@@ -16,6 +16,7 @@ import {
   Facebook, Instagram, Linkedin, Twitter, Send,
 } from "lucide-react";
 import PostTemplate, { ALL_TEMPLATES, TemplateType, getTemplate } from "@/components/PostTemplates";
+import { trLower } from "@/lib/text-normalization";
 
 const PLATFORMS = [
   { id: "linkedin", label: "LinkedIn", icon: Linkedin, color: "text-blue-700",
@@ -149,7 +150,7 @@ const PostGenerator = () => {
 
       const cfg = getTemplate(template);
       const finalShareText = shareText.trim() ||
-        `${recipient} ${cfg.title.toLowerCase()} ${cfg.subtitle.toLowerCase()} 🎉\n${tagline || cfg.intro}\n\n#CorteQS #Diaspora`;
+        `${recipient} ${trLower(cfg.title)} ${trLower(cfg.subtitle)} 🎉\n${tagline || cfg.intro}\n\n#CorteQS #Diaspora`;
 
       const { data: inserted, error: insErr } = await supabase
         .from("generated_posts")

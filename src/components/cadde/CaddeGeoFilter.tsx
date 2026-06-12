@@ -5,6 +5,7 @@
 // katalog genişletmesi admin_import_cadde_geo_v1 ile yapılır (D-04).
 
 import { useMemo, useState } from "react";
+import { trIncludes, trCompare } from "@/lib/text-normalization";
 import { ChevronDown, Globe, MapPin, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -41,16 +42,16 @@ const CaddeGeoFilter = ({
     () =>
       countries
         .map((country) => country.name)
-        .filter((name) => name.toLowerCase().includes(countrySearch.toLowerCase()))
-        .sort((left, right) => left.localeCompare(right, "tr")),
+        .filter((name) => trIncludes(name, countrySearch))
+        .sort((left, right) => trCompare(left, right)),
     [countries, countrySearch],
   );
 
   const availableCities = useMemo(
     () =>
       Array.from(new Set(cities.map((city) => city.name)))
-        .filter((name) => name.toLowerCase().includes(citySearch.toLowerCase()))
-        .sort((left, right) => left.localeCompare(right, "tr")),
+        .filter((name) => trIncludes(name, citySearch))
+        .sort((left, right) => trCompare(left, right)),
     [cities, citySearch],
   );
 

@@ -1,4 +1,5 @@
 import fourVisionPhoto from "@/assets/corteqs-logo.png";
+import { trLower } from "@/lib/text-normalization";
 
 export interface Consultant {
   id: string;
@@ -125,7 +126,7 @@ export const getAudienceSegments = (eventCategory: string, eventCountry: string)
     matchScore: 92,
     size: userMatch.size,
     category: eventCategory,
-    description: `${eventCountry} ve çevresindeki ${userMatch.label.toLowerCase()}`,
+    description: `${eventCountry} ve çevresindeki ${trLower(userMatch.label)}`,
   });
 
   // AI-matched WhatsApp groups

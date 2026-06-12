@@ -20,6 +20,7 @@ import SearchableCitySelect from "@/components/SearchableCitySelect";
 import { useDiaspora } from "@/contexts/DiasporaContext";
 
 import { useToast } from "@/hooks/use-toast";
+import { trIncludes } from "@/lib/text-normalization";
 import { submitLanding, listLandings, type LandingMode, type WhatsAppLanding } from "@/lib/whatsappLandings";
 import { useAuth } from "@/contexts/AuthContext";
 import ConsentCheckboxes, { emptyConsent, isConsentValid, type ConsentState } from "@/components/ConsentCheckboxes";
@@ -411,14 +412,11 @@ const WhatsAppGroups = () => {
             </div>
 
             {(() => {
-              const q = searchQuery.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
               const filteredLandings = landings.filter((g) => {
                 const matchesCountry = selectedCountry === "all" || g.country === selectedCountry;
                 const matchesCity = filterCity === "all" || g.city === filterCity;
-                if (!q) return matchesCountry && matchesCity;
-                const hay = `${g.groupName} ${g.category} ${categoryMeta[g.category]?.label ?? ""} ${g.city} ${g.country} ${g.tagline ?? ""}`
-                  .toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                return matchesCountry && matchesCity && hay.includes(q);
+                const hay = `${g.groupName} ${g.category} ${categoryMeta[g.category]?.label ?? ""} ${g.city} ${g.country} ${g.tagline ?? ""}`;
+                return matchesCountry && matchesCity && trIncludes(hay, searchQuery);
               });
               if (loadingLandings) {
                 return <p className="text-sm text-muted-foreground">Yükleniyor...</p>;

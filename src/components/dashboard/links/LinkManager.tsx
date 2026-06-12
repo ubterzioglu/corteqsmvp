@@ -19,6 +19,7 @@ import {
 import AccordionCard from '@/components/dashboard/AccordionCard'
 import { getSupabaseBrowserClient } from '@/lib/dashboard/supabase'
 import { safeHref, sanitizeError, sanitizeUrl, validateArgeFile, validateCvFile } from '@/lib/security'
+import { trIncludes } from "@/lib/text-normalization";
 import {
   createEmptyResourceFormState,
   getResourceSectionFromQuery,
@@ -174,17 +175,16 @@ export default function LinkManager() {
       const matchesSection = selectedSections.size === 0 || selectedSections.has(entry.section)
       const matchesSubsection = selectedSubsection === 'all' || entry.subsection === selectedSubsection
 
-      const term = searchTerm.toLowerCase().trim()
       const matchesSearch =
-        term === '' ||
-        entry.title.toLowerCase().includes(term) ||
-        (entry.description?.toLowerCase().includes(term) ?? false) ||
-        entry.section.toLowerCase().includes(term) ||
-        entry.subsection.toLowerCase().includes(term) ||
-        (entry.fileName?.toLowerCase().includes(term) ?? false) ||
-        (entry.personFirstName?.toLowerCase().includes(term) ?? false) ||
-        (entry.personLastName?.toLowerCase().includes(term) ?? false) ||
-        (entry.personRole?.toLowerCase().includes(term) ?? false)
+        !searchTerm.trim() ||
+        trIncludes(entry.title, searchTerm) ||
+        trIncludes(entry.description, searchTerm) ||
+        trIncludes(entry.section, searchTerm) ||
+        trIncludes(entry.subsection, searchTerm) ||
+        trIncludes(entry.fileName, searchTerm) ||
+        trIncludes(entry.personFirstName, searchTerm) ||
+        trIncludes(entry.personLastName, searchTerm) ||
+        trIncludes(entry.personRole, searchTerm)
 
       return matchesSection && matchesSubsection && matchesSearch
     },

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import CountryCitySelector from "@/components/CountryCitySelector";
 import { useDiaspora } from "@/contexts/DiasporaContext";
 import { getAllMapEntities, type MapEntity } from "@/lib/mapEntities";
+import { trIncludes } from "@/lib/text-normalization";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -75,9 +76,8 @@ const MapSearch = () => {
       if (selectedCity !== "all" && e.city !== selectedCity) return false;
       if (entityType !== "all" && e.kind !== entityType) return false;
       if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        const hay = `${e.name} ${e.category} ${e.city} ${e.country} ${e.address}`.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        if (!hay.includes(q)) return false;
+        const hay = `${e.name} ${e.category} ${e.city} ${e.country} ${e.address}`;
+        if (!trIncludes(hay, searchQuery)) return false;
       }
       return true;
     });

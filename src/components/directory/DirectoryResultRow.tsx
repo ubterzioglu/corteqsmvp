@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
 import type { UnifiedDirectoryRow } from "@/lib/catalog-directory";
+import { trUpper } from "@/lib/text-normalization";
 
 interface DirectoryResultRowProps {
   row: UnifiedDirectoryRow;
@@ -20,12 +21,13 @@ const getRoleColor = (roleKey: string) =>
   roleColorMap[roleKey] ?? roleColorMap.default;
 
 const DirectoryResultRow = ({ row }: DirectoryResultRowProps) => {
-  const initials = row.title
-    .split(" ")
-    .slice(0, 2)
-    .map((w) => w[0] ?? "")
-    .join("")
-    .toUpperCase();
+  const initials = trUpper(
+    row.title
+      .split(" ")
+      .slice(0, 2)
+      .map((w) => w[0] ?? "")
+      .join("")
+  );
   const locationLabel = [row.city, row.country].filter(Boolean).join(" • ");
 
   return (

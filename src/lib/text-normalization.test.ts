@@ -28,7 +28,7 @@ describe("trFold", () => {
 describe("trIncludes", () => {
   it("kullanıcı sade ASCII yazsa da Türkçe kaydı bulur", () => {
     expect(trIncludes("İstanbul Boğazı", "istanbul")).toBe(true);
-    expect(trIncludes("Üsküdar Çarşısı", "uskudar carsi")).toBe(false); // tek geçiş aranır
+    expect(trIncludes("Üsküdar Çarşısı", "uskudar carsi")).toBe(true);
     expect(trIncludes("Üsküdar Çarşısı", "carsi")).toBe(true);
     expect(trIncludes("Diyarbakır", "DİYARBAKIR")).toBe(true);
   });

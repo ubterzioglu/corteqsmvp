@@ -194,6 +194,24 @@ Keep these terms in Turkish throughout codebase:
 
 Renaming these breaks domain cohesion and user understanding.
 
+## Türkçe Metin Kuralları (ZORUNLU — 2026-06-12)
+
+JS'in varsayılan `toUpperCase()/toLowerCase()` dönüşümleri Türkçe'de yanlıştır
+(`"İstanbul".toLowerCase() === "i̇stanbul"` — sade "istanbul" ile eşleşmez; `i → I` olur, `İ` olmaz).
+Tekrarlayan Türkçe karakter sorunlarının kök nedeni budur. Kurallar:
+
+1. **Kullanıcıya görünen Türkçe metinlerde** `src/lib/text-normalization.ts` yardımcılarını kullan:
+   - Arama/filtre eşleşmesi → `trIncludes(haystack, query)` (aksan-toleranslı: "uskudar" → "Üsküdar" bulur)
+   - Görüntüleme amaçlı case → `trUpper(...)` / `trLower(...)` (avatar baş harfleri dahil)
+   - Sıralama → `trCompare(a, b)` veya `localeCompare(b, "tr")`
+   - Bare `toUpperCase()/toLowerCase()` SADECE teknik değerlerde doğrudur:
+     para/ülke kodu, dosya uzantısı, hex, referans kodu, `event.key`, İngilizce hata mesajı.
+2. **CSV export** Blob'larının başına UTF-8 BOM (`"﻿"`) ekle — yoksa Excel Türkçe karakterleri bozar.
+3. **`npm run verify:text`** tüm kaynak dosyaların UTF-8 + mojibake denetimini yapar; `predev/prebuild/prelint/pretest` otomatik koşar. Yeni içerik dizini eklersen scriptin `includeDirs` listesine ekle.
+4. **psql/Windows tuzağı:** PowerShell komut satırından psql'e geçen Türkçe karakterler bozulur (ı→i).
+   Türkçe içerikli SQL'i daima UTF-8 dosya olarak `psql -f` ile gönder veya `U&'...\0131...'` unicode escape kullan.
+5. `<html lang="tr">` (index.html) korunmalı — CSS `text-transform: uppercase` Türkçe i/İ kuralını bu nitelikten alır.
+
 ## Important Constraints & Immovable Parts
 
 1. **SEO-locked URLs** (recent commits all "seo" related):

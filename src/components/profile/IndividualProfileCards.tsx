@@ -24,6 +24,7 @@ import { INDIVIDUAL_FEATURE_KEYS, type IndividualFeatureMeta } from "@/lib/featu
 import type { IndividualProfileDetailsCore, IndividualProfileUpdateInput } from "@/lib/individual-profile";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
+import { trUpper } from "@/lib/text-normalization";
 
 type IndividualProfileCardsProps = {
   details: IndividualProfileDetailsCore;
@@ -235,7 +236,7 @@ export const IndividualProfileCards = ({
         <CardContent className="space-y-4 p-5">
           <div className="flex flex-wrap items-start gap-4">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-xl font-bold text-primary">
-              {details.displayName.slice(0, 1).toUpperCase()}
+              {trUpper(details.displayName.slice(0, 1))}
             </div>
             <div className="min-w-[240px] flex-1 space-y-2">
               <div className="flex flex-wrap items-center gap-2">

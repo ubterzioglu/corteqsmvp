@@ -63,6 +63,7 @@ import SearchableCitySelect from "@/components/SearchableCitySelect";
 import CaddeInterestsCard from "@/components/cadde/CaddeInterestsCard";
 import CaddeMyContentCard from "@/components/cadde/CaddeMyContentCard";
 import CaddeTanitimPanel from "@/components/cadde/CaddeTanitimPanel";
+import { trUpper, trLower } from "@/lib/text-normalization";
 
 type DraftValueMap = Record<string, string | boolean>;
 type DraftVisibilityMap = Record<string, AttributeVisibility>;
@@ -518,13 +519,15 @@ const ProfilePage = () => {
     : isIndividualProfile
       ? ""
       : roleMeta?.description || "Profil kartını, görünürlüğünü ve taleplerini tek yerden yönet.";
-  const initials = displayName
-    .split(/\s+/)
-    .map((part) => part[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase() || "CQ";
+  const initials =
+    trUpper(
+      displayName
+        .split(/\s+/)
+        .map((part) => part[0])
+        .filter(Boolean)
+        .slice(0, 2)
+        .join("")
+    ) || "CQ";
   const pendingCount = profile?.pendingRequests.length ?? 0;
   const completionHighlights = [
     { key: "full_name", label: roleMeta?.displayNameLabel ?? "Görünen isim" },
@@ -2008,7 +2011,7 @@ const DisplayNameAttributeCard = ({
   onSave,
 }: DisplayNameAttributeCardProps) => {
   const visibilityLocked = !attribute.userCanHide;
-  const saveButtonLabel = displayNameLabel.toLowerCase().includes("ad soyad")
+  const saveButtonLabel = trLower(displayNameLabel).includes("ad soyad")
     ? "Ad Soyadı Kaydet"
     : "İsmi Kaydet";
 

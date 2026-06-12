@@ -8,6 +8,7 @@ import NewsCard from "@/components/city-news/NewsCard";
 import CountryCitySelector from "@/components/CountryCitySelector";
 import { useDiaspora } from "@/contexts/DiasporaContext";
 import { getDiasporaBlogLinks } from "@/lib/diasporaBlogLinks";
+import { trIncludes } from "@/lib/text-normalization";
 
 const mediaTypeMeta = {
   magazine: { label: "Dergi", icon: BookOpen, color: "text-violet-400", bg: "bg-violet-500/10 border-violet-500/30" },
@@ -79,12 +80,10 @@ const CityNews = () => {
 
   const blogLinks = useMemo(() => {
     const items = getDiasporaBlogLinks(city !== "all" ? city : undefined, country !== "all" ? country : undefined);
-    const kw = keyword.toLowerCase().trim();
-    if (!kw) return items;
     return items.filter(b =>
-      b.title.toLowerCase().includes(kw) ||
-      (b.description || "").toLowerCase().includes(kw) ||
-      b.author.toLowerCase().includes(kw)
+      trIncludes(b.title, keyword) ||
+      trIncludes(b.description || "", keyword) ||
+      trIncludes(b.author, keyword)
     );
   }, [city, country, keyword]);
 

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import CountryCitySelector from "@/components/CountryCitySelector";
 import { useDiaspora } from "@/contexts/DiasporaContext";
 import { consultants, cityAmbassadors } from "@/data/mock";
+import { trIncludes } from "@/lib/text-normalization";
 import { useToast } from "@/hooks/use-toast";
 import { useFollow } from "@/hooks/useFollow";
 import DemoBadge from "@/components/DemoBadge";
@@ -163,13 +164,13 @@ const matchesFilter = (
   let mainMatch = false;
   if (filter.category && c.category === filter.category) mainMatch = true;
   if (!mainMatch && filter.keywords?.length) {
-    const hay = [c.role, c.bio ?? "", ...(c.specialties ?? [])].join(" ").toLowerCase();
-    mainMatch = filter.keywords.some((kw) => hay.includes(kw.toLowerCase()));
+    const hay = [c.role, c.bio ?? "", ...(c.specialties ?? [])].join(" ");
+    mainMatch = filter.keywords.some((kw) => trIncludes(hay, kw));
   }
   if (!mainMatch) return false;
   if (subKeywords?.length) {
-    const hay = [c.role, c.bio ?? "", ...(c.specialties ?? [])].join(" ").toLowerCase();
-    return subKeywords.some((kw) => hay.includes(kw.toLowerCase()));
+    const hay = [c.role, c.bio ?? "", ...(c.specialties ?? [])].join(" ");
+    return subKeywords.some((kw) => trIncludes(hay, kw));
   }
   return true;
 };
