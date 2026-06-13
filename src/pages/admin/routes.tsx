@@ -59,6 +59,7 @@ const AdminDurumRaporuPage = lazy(() => import("@/pages/admin/AdminDurumRaporuPa
 const AdminRoleManagementPage = lazy(() => import("@/pages/admin/AdminRoleManagementPage"));
 const AdminRolesOverviewPage = lazy(() => import("@/pages/admin/AdminRolesOverviewPage"));
 import { adminCaddeRoutes } from "@/pages/admin/cadde/routes";
+import { radarRoutes } from "@/pages/admin/radar/routes";
 const AdminConsulateProfilesPage = lazy(() => import("@/pages/admin/AdminConsulateProfilesPage"));
 const AdminCatalogPage = lazy(() => import("@/pages/admin/AdminCatalogPage"));
 const AdminDatabaseTablesPage = lazy(() => import("@/pages/admin/AdminDatabaseTablesPage"));
@@ -129,6 +130,7 @@ export const adminRoutes = (
     <Route path="workspace/docs/:slug" element={<AdminWorkspaceDocPage />} />
     {muhasebeRoutes}
     {serviceFinderRoutes}
+    {radarRoutes}
     <Route path="*" element={<NotFound />} />
   </Route>
 );
