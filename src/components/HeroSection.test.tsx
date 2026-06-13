@@ -20,8 +20,9 @@ describe("HeroSection", () => {
       "/dunya-kupasi",
     );
     expect(screen.getByText("Ücretsiz Kayıt Ol")).toBeInTheDocument();
+    expect(screen.getByText("Diasporada Ara")).toBeInTheDocument();
     expect(screen.getByText("Biz Kimiz")).toBeInTheDocument();
-    expect(screen.getByText(/WhatsApp Grubuna Katıl/i)).toBeInTheDocument();
+    expect(screen.getByText(/WhatsApp Grubu/i)).toBeInTheDocument();
     expect(screen.getByText(/Topluluğunu Ekle/i)).toBeInTheDocument();
   });
 });

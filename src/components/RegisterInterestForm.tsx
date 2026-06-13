@@ -106,7 +106,7 @@ const RegisterInterestForm = ({
 
       toast({
         title: "Kaydınız Alındı! ✅",
-        description: "Teşekkürler! Platform açıldığında sizinle iletişime geçeceğiz.",
+        description: "Teşekkürler! CorteQS açık beta yayında — ücretsiz hesabınızla hemen keşfetmeye başlayabilirsiniz.",
       });
 
       onOpenChange(false);
@@ -146,7 +146,7 @@ const RegisterInterestForm = ({
               <DialogDescription className="text-muted-foreground">
                 {isSupport
                   ? "💡 Diaspora Connect projesine destek vermek veya yatırım yapmak için bilgilerinizi bırakın."
-                  : "🚀 Yakında açılıyoruz! İlk erişim için bilgilerinizi bırakın."}
+                  : "🚀 CorteQS açık beta yayında! İlgi alanınızı bırakın, size özel toplulukları öne çıkaralım."}
               </DialogDescription>
             </DialogHeader>
           </div>
@@ -155,10 +155,10 @@ const RegisterInterestForm = ({
         <form onSubmit={handleSubmit} className="space-y-4 p-6 pt-2">
           <div className="flex flex-wrap gap-2 mb-2">
             <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-              {isSupport ? "🤝 Stratejik Ortaklık" : "🎯 Yakında: AI Destekli Eşleştirme"}
+              {isSupport ? "🤝 Stratejik Ortaklık" : "🎯 AI Destekli Eşleştirme"}
             </span>
             <span className="px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-semibold">
-              {isSupport ? "💰 Yatırım Fırsatı" : "🌍 Yakında: 50+ Şehir Ağı"}
+              {isSupport ? "💰 Yatırım Fırsatı" : "🌍 50+ Şehir Ağı"}
             </span>
           </div>
 
@@ -455,7 +455,7 @@ const RegisterInterestForm = ({
           </div>
 
           <div className="p-3 rounded-lg bg-accent/5 border border-accent/15 text-sm text-muted-foreground">
-            ⏳ <strong className="text-foreground">Yakında!</strong> Platform açılır açılmaz size ilk haber vereceğiz. Erken kayıt avantajlarından yararlanın.
+            ✅ <strong className="text-foreground">Açık beta yayında!</strong> Ücretsiz hesabınızla hemen başlayın; ilgi alanınıza uygun toplulukları ve fırsatları size öne çıkaralım.
           </div>
 
           <label className="flex items-start gap-2 p-3 rounded-lg bg-[#25D366]/5 border border-[#25D366]/30 cursor-pointer">

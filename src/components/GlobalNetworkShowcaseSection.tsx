@@ -8,7 +8,6 @@ import {
   MapPinned,
   MessageCircleMore,
   Plane,
-  ScanSearch,
   Store,
   Users,
 } from "lucide-react";
@@ -23,7 +22,7 @@ const rebuiltCards = [
     image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1200",
     icon: Store,
     accent: "from-[#42bf65] to-[#2da956]",
-    text: "text-[#2c9b4d]",
+    text: "text-[#15803d]",
     line: "bg-[#42bf65]",
   },
   {
@@ -33,7 +32,7 @@ const rebuiltCards = [
     image: "https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=1200",
     icon: BriefcaseBusiness,
     accent: "from-[#4a97ff] to-[#2878f2]",
-    text: "text-[#2878f2]",
+    text: "text-[#1d4ed8]",
     line: "bg-[#3c8cff]",
   },
   {
@@ -43,7 +42,7 @@ const rebuiltCards = [
     image: "https://images.pexels.com/photos/7092613/pexels-photo-7092613.jpeg?auto=compress&cs=tinysrgb&w=1200",
     icon: Landmark,
     accent: "from-[#a45af6] to-[#7c3aed]",
-    text: "text-[#7c3aed]",
+    text: "text-[#6d28d9]",
     line: "bg-[#9b5cf4]",
   },
   {
@@ -53,7 +52,7 @@ const rebuiltCards = [
     image: "https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=1200",
     icon: Users,
     accent: "from-[#52d67c] to-[#2bbf62]",
-    text: "text-[#24a454]",
+    text: "text-[#15803d]",
     line: "bg-[#35c465]",
   },
   {
@@ -63,7 +62,7 @@ const rebuiltCards = [
     image: "https://images.pexels.com/photos/5054212/pexels-photo-5054212.jpeg?auto=compress&cs=tinysrgb&w=1200",
     icon: Clapperboard,
     accent: "from-[#ff59b8] to-[#ff2b92]",
-    text: "text-[#ef2d8d]",
+    text: "text-[#be185d]",
     line: "bg-[#ff2b92]",
   },
   {
@@ -73,11 +72,13 @@ const rebuiltCards = [
     image: "https://images.pexels.com/photos/4226256/pexels-photo-4226256.jpeg?auto=compress&cs=tinysrgb&w=1200",
     icon: Globe,
     accent: "from-[#ffb249] to-[#ff7a18]",
-    text: "text-[#f97316]",
+    text: "text-[#c2410c]",
     line: "bg-[#ff7a18]",
   },
 ] as const;
 
+// Yoğunluğu düşürmek için 8 → 6 özellik. Çıkarılanlar: "Diaspora Haritası"
+// (Cadde sosyal ağı ile örtüşüyordu) ve "AI Destekli Yönlendirme" (henüz canlı değil).
 const featureItems = [
   { label: "Cadde\nSosyal Ağı", icon: Map, color: "text-[#4bbf70]", ring: "ring-[#c6f2d3]" },
   { label: "WhatsApp\nTelegram Toplulukları", icon: MessageCircleMore, color: "text-[#35c465]", ring: "ring-[#caf4d6]" },
@@ -85,8 +86,6 @@ const featureItems = [
   { label: "Relokasyon\nMentor Sistemi", icon: Plane, color: "text-[#fb923c]", ring: "ring-[#ffe0c5]" },
   { label: "Şehir Bazlı\nFeedler", icon: MapPinned, color: "text-[#3b82f6]", ring: "ring-[#d6e8ff]" },
   { label: "İşletmeler\nHizmetler", icon: BriefcaseBusiness, color: "text-[#f59e0b]", ring: "ring-[#ffecbe]" },
-  { label: "Diaspora\nHaritası", icon: Globe, color: "text-[#ec4899]", ring: "ring-[#ffd5eb]" },
-  { label: "AI Destekli\nYönlendirme", icon: ScanSearch, color: "text-[#6366f1]", ring: "ring-[#dfe0ff]" },
 ] as const;
 
 const GlobalNetworkShowcaseSection = () => {
@@ -139,6 +138,10 @@ const GlobalNetworkShowcaseSection = () => {
                       <img
                         src={card.image}
                         alt={card.title}
+                        loading="lazy"
+                        decoding="async"
+                        width={1200}
+                        height={280}
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
                       />
                       <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_48%,rgba(255,255,255,0.14)_100%)]" />
@@ -164,8 +167,8 @@ const GlobalNetworkShowcaseSection = () => {
             </div>
 
             <div className="mt-5 overflow-hidden rounded-[1.6rem] border border-slate-200/80 bg-white shadow-[0_16px_38px_rgba(15,23,42,0.06)]">
-              <div className="grid grid-cols-2 gap-0 md:grid-cols-2 xl:grid-cols-[1.55fr_repeat(8,minmax(0,1fr))]">
-                <div className="col-span-2 flex min-h-[96px] items-center gap-3 border-b border-slate-200/80 px-4 py-3 sm:min-h-[168px] sm:items-start sm:gap-4 sm:px-6 sm:py-5 xl:col-span-1 xl:min-h-[156px] xl:border-r xl:border-b-0">
+              <div className="grid grid-cols-2 gap-0 sm:grid-cols-3 xl:grid-cols-[1.55fr_repeat(6,minmax(0,1fr))]">
+                <div className="col-span-2 flex min-h-[96px] items-center gap-3 border-b border-slate-200/80 px-4 py-3 sm:col-span-3 sm:min-h-[168px] sm:items-start sm:gap-4 sm:px-6 sm:py-5 xl:col-span-1 xl:min-h-[156px] xl:border-r xl:border-b-0">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(244,247,255,0.95))] shadow-[0_16px_30px_rgba(15,23,42,0.08)] sm:h-16 sm:w-16">
                     <img src={logo} alt="CorteQS" className="h-12 w-12 object-contain sm:h-16 sm:w-16" />
                   </div>

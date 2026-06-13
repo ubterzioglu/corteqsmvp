@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Info, Search } from "lucide-react";
+import { useAuth } from "@/components/auth/useAuth";
 import WelcomePackOrderForm from "@/components/WelcomePackOrderForm";
 
 const quickPillClass =
@@ -14,12 +16,25 @@ const quickPillStyles = {
 
 const DiasporaSearchBar = () => {
   const navigate = useNavigate();
+  const { user, isLoading } = useAuth();
   const [query, setQuery] = useState("");
+
+  // Dizin yalnızca giriş yapmış kullanıcılara açık. Ziyaretçiyi boş bir sonuç
+  // sayfasına düşürmek yerine giriş/kayıt akışına yönlendirip aramayı next ile
+  // koruyoruz — böylece giriş sonrası doğrudan sonuçlara iner.
+  const goToDirectory = (search: string) => {
+    const target = search ? `/directory?${search}` : "/directory";
+    if (!isLoading && !user) {
+      navigate(`/login?next=${encodeURIComponent(target)}`);
+      return;
+    }
+    navigate(target);
+  };
 
   const handleSearch = () => {
     const trimmed = query.trim();
     if (!trimmed) return;
-    navigate(`/directory?q=${encodeURIComponent(trimmed)}`);
+    goToDirectory(`q=${encodeURIComponent(trimmed)}`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -28,27 +43,36 @@ const DiasporaSearchBar = () => {
 
   const handleQuickSearch = (term: string) => {
     setQuery(term);
-    navigate(`/directory?q=${encodeURIComponent(term)}`);
+    goToDirectory(`q=${encodeURIComponent(term)}`);
   };
 
+  const visitorHint = !isLoading && !user;
+
   return (
-    <section className="relative py-12">
+    <section id="diaspora-ara" className="relative scroll-mt-24 py-12">
       <div className="container mx-auto px-4">
         <div className="text-center">
           <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-2">
             🌍 Diasporada <span className="text-gradient-primary">Ara</span>
           </h2>
+          <p className="mx-auto mb-5 max-w-xl text-sm text-muted-foreground">
+            Şehir, kategori veya hizmet ara; 80+ kategoride binlerce profili keşfet.
+          </p>
 
-          {/* AI Chat Bar */}
-          <div className="max-w-2xl mx-auto mb-6">
+          {/* Dizin arama çubuğu */}
+          <div className="max-w-2xl mx-auto mb-3">
             <div className="relative flex items-center rounded-2xl border border-white/70 bg-white/70 shadow-[0_22px_45px_-28px_rgba(15,23,42,0.26)] px-4 py-3 gap-3 backdrop-blur-xl">
-              <span className="text-xl">🤖</span>
+              <label htmlFor="diaspora-search-input" className="sr-only">
+                Diasporada ara
+              </label>
+              <Search className="h-5 w-5 shrink-0 text-muted-foreground" aria-hidden="true" />
               <input
+                id="diaspora-search-input"
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ne arıyorsun? Örn: 'En yakın konsolosluk nerede?' veya 'Vize danışmanı bul'"
+                placeholder="Şehir, kategori veya hizmet ara"
                 className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none font-body"
               />
               <button
@@ -61,14 +85,23 @@ const DiasporaSearchBar = () => {
             </div>
           </div>
 
-          {/* Quick CTA Buttons */}
+          {visitorHint ? (
+            <p className="mx-auto mb-6 flex max-w-2xl items-center justify-center gap-1.5 text-xs text-muted-foreground">
+              <Info className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              Tam dizin için ücretsiz giriş gerekir — arama, giriş sonrası kaldığın yerden devam eder.
+            </p>
+          ) : (
+            <div className="mb-6" />
+          )}
+
+          {/* Hızlı erişim butonları */}
           <div className="mx-auto flex max-w-6xl flex-col items-center gap-3">
             <div className="flex flex-wrap items-center justify-center gap-3">
               <button onClick={() => handleQuickSearch("Konsolosluk")} className={`${quickPillClass} ${quickPillStyles.blue}`}>
                 🏛️ Konsolosluk
               </button>
               <button
-                onClick={() => navigate("/directory")}
+                onClick={() => handleQuickSearch("Şehir Elçisi")}
                 className={`${quickPillClass} ${quickPillStyles.red}`}
               >
                 🏅 Şehir Elçine Ulaş
@@ -90,10 +123,11 @@ const DiasporaSearchBar = () => {
                 }
               />
               <button
-                onClick={() => navigate("/cadde")}
+                onClick={() => navigate(visitorHint ? "/login?next=%2Fcadde" : "/cadde")}
+                title="Cadde sosyal ağı — giriş gerektirir"
                 className={`${quickPillClass} ${quickPillStyles.blue}`}
               >
-                🌍 Taşınma Motoru
+                🌍 Taşınma Motoru{visitorHint ? " (giriş gerekir)" : ""}
               </button>
             </div>
           </div>

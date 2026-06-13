@@ -1,53 +1,26 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronRight, Trophy } from "lucide-react";
+import { ChevronRight, Search, Trophy } from "lucide-react";
 import CorteqsWhatIsAccordion from "./CorteqsWhatIsAccordion";
 const heroLogo = "/newlogo.png";
-import RegisterInterestForm from "./RegisterInterestForm";
 
 // Dünya Kupası kampanya banner'ı — küçük hero görseli butonun parçası.
 const WORLD_CUP_BANNER_IMAGE = "/world-cup/hero-kampanya.webp";
 
+// İkincil CTA, sayfadaki "Diasporada Ara" bölümüne yumuşak kaydırır.
+const scrollToSearch = () => {
+  const el = document.getElementById("diaspora-ara");
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
 const HeroSection = () => {
-  const [formOpen, setFormOpen] = useState(false);
   const heroCtaClass =
-    "relative inline-flex min-h-[52px] w-full items-center justify-center rounded-xl border px-4 py-2 text-center text-[12px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:saturate-110 md:text-[13px]";
+    "relative inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl border px-4 py-2 text-center text-[13px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:saturate-110 md:text-sm";
   const heroCardStyles = {
     register: {
       background: "linear-gradient(135deg, #4285F4 0%, #3B78E7 100%)",
       borderColor: "#2f6fda",
       color: "#FFFFFF",
       boxShadow: "0 16px 34px rgba(66, 133, 244, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.18)",
-    },
-    whatsapp: {
-      background: "linear-gradient(135deg, #34A853 0%, #2F9B4D 100%)",
-      borderColor: "#278543",
-      color: "#FFFFFF",
-      boxShadow: "0 16px 34px rgba(52, 168, 83, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.18)",
-    },
-    addWhatsapp: {
-      background: "linear-gradient(135deg, #A142F4 0%, #9334E6 100%)",
-      borderColor: "#7e2fd0",
-      color: "#FFFFFF",
-      boxShadow: "0 16px 34px rgba(161, 66, 244, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.18)",
-    },
-    addContent: {
-      background: "linear-gradient(135deg, #EA4335 0%, #D93025 100%)",
-      borderColor: "#c5221f",
-      color: "#FFFFFF",
-      boxShadow: "0 16px 34px rgba(234, 67, 53, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.18)",
-    },
-    about: {
-      background: "linear-gradient(135deg, #00ACC1 0%, #0097A7 100%)",
-      borderColor: "#00838f",
-      color: "#FFFFFF",
-      boxShadow: "0 16px 34px rgba(0, 172, 193, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.18)",
-    },
-    founders: {
-      background: "linear-gradient(135deg, #FBBC05 0%, #F9AB00 100%)",
-      borderColor: "#dd9700",
-      color: "#FFFFFF",
-      boxShadow: "0 16px 34px rgba(251, 188, 5, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.18)",
     },
   } as const;
 
@@ -116,6 +89,8 @@ const HeroSection = () => {
               <div className="w-full max-w-lg 2xl:max-w-[38rem]">
                 <CorteqsWhatIsAccordion />
               </div>
+
+              {/* Birincil + ikincil CTA — net hiyerarşi */}
               <div className="grid w-full max-w-lg gap-2.5 sm:grid-cols-2 2xl:max-w-[38rem]">
                 <Link
                   to="/login?mode=signup"
@@ -136,61 +111,41 @@ const HeroSection = () => {
                   />
                   <span className="relative z-10">Ücretsiz Kayıt Ol</span>
                 </Link>
+                <button
+                  type="button"
+                  onClick={scrollToSearch}
+                  className={`${heroCtaClass} border-slate-300 bg-white/80 text-slate-800 backdrop-blur hover:bg-white`}
+                >
+                  <Search className="relative z-10 h-4 w-4" aria-hidden="true" />
+                  <span className="relative z-10">Diasporada Ara</span>
+                </button>
+              </div>
+
+              {/* Üçüncül aksiyonlar — görsel ağırlığı düşük metin link grubu */}
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[12px] font-semibold text-slate-600 md:text-[13px]">
+                <Link
+                  to="/founders"
+                  onClick={() => window.scrollTo({ top: 0, behavior: "auto" })}
+                  className="underline-offset-2 transition-colors hover:text-slate-900 hover:underline"
+                >
+                  Biz Kimiz
+                </Link>
+                <span aria-hidden="true" className="text-slate-300">·</span>
                 <a
                   href="https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`${heroCtaClass} whitespace-nowrap`}
-                  style={heroCardStyles.whatsapp}
+                  className="underline-offset-2 transition-colors hover:text-[#2F9B4D] hover:underline"
                 >
-                  <span
-                    className="pointer-events-none absolute inset-0 opacity-100"
-                    aria-hidden
-                    style={{
-                      background:
-                        "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 42%, rgba(255,255,255,0) 100%)",
-                    }}
-                  />
-                  <span
-                    className="pointer-events-none absolute inset-x-6 top-0 h-px bg-white/25"
-                    aria-hidden
-                  />
-                  <span className="relative z-10">WhatsApp Grubuna Katıl</span>
+                  WhatsApp Grubu
                 </a>
-              </div>
-
-              <div className="grid max-w-lg grid-cols-1 gap-2.5 sm:grid-cols-2 2xl:max-w-[38rem]">
+                <span aria-hidden="true" className="text-slate-300">·</span>
                 <Link
-                  to="/founders"
-                  onClick={() => window.scrollTo({ top: 0, behavior: "auto" })}
-                  className={`${heroCtaClass} font-bold`}
-                  style={heroCardStyles.founders}
+                  to="/addcom"
+                  className="underline-offset-2 transition-colors hover:text-[#9334E6] hover:underline"
                 >
-                  <span
-                    className="pointer-events-none absolute inset-0 opacity-100"
-                    aria-hidden
-                    style={{
-                      background:
-                        "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 42%, rgba(255,255,255,0) 100%)",
-                    }}
-                  />
-                  <span className="relative z-10">Biz Kimiz</span>
+                  Topluluğunu Ekle
                 </Link>
-                  <Link
-                    to="/addcom"
-                    className={`${heroCtaClass} px-4`}
-                    style={heroCardStyles.addWhatsapp}
-                  >
-                    <span
-                      className="pointer-events-none absolute inset-0 opacity-100"
-                      aria-hidden
-                      style={{
-                        background:
-                          "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 42%, rgba(255,255,255,0) 100%)",
-                      }}
-                    />
-                    <span className="relative z-10">💬 Topluluğunu Ekle!</span>
-                  </Link>
               </div>
             </div>
           </div>
@@ -209,6 +164,8 @@ const HeroSection = () => {
                   muted
                   loop
                   playsInline
+                  preload="metadata"
+                  aria-hidden="true"
                   className="h-auto w-full object-cover"
                 />
                 {/* köşe gölgelendirme */}
@@ -225,8 +182,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-
-      <RegisterInterestForm open={formOpen} onOpenChange={setFormOpen} />
     </section>
   );
 };

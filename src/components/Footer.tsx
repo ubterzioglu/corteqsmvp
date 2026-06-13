@@ -64,12 +64,16 @@ const socialLinks = [
 const Footer = () => {
   return (
     <footer className="relative isolate overflow-hidden px-4 py-8 sm:px-6 sm:py-14 lg:px-8 lg:py-20">
+      {/* Footer videosu ~49MB ve sayfanın en altında. preload="none" ile ilk
+          yüklemede ağ trafiğine girmez; yalnızca footer'a gelindiğinde autoplay
+          tetikler. Dekoratif olduğu için aria-hidden. */}
       <video
         className="absolute inset-0 h-full w-full object-cover"
         autoPlay
         muted
         loop
         playsInline
+        preload="none"
         aria-hidden="true"
       >
         <source src="/videos/footer-community.mp4" type="video/mp4" />

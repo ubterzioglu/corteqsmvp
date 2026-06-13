@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import SectionErrorBoundary from "@/components/SectionErrorBoundary";
 import HeroSection from "@/components/HeroSection";
 import DiasporaSearchBar from "@/components/DiasporaSearchBar";
+import SocialProofBar from "@/components/SocialProofBar";
 import DiasporaMarqueeSection from "@/components/DiasporaMarqueeSection";
 import ChatBot from "@/components/chat/ChatBot";
 import FAQSection from "@/components/FAQSection";
@@ -24,6 +25,9 @@ const Index = () => {
         <HeroSection />
         <SectionErrorBoundary sectionName="DiasporaSearchBar">
           <DiasporaSearchBar />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="SocialProofBar">
+          <SocialProofBar />
         </SectionErrorBoundary>
         <GlobalNetworkShowcaseSection />
 <DiasporaMarqueeSection />
