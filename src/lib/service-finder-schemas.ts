@@ -219,6 +219,7 @@ export const jobCreateSchema = z
     max_candidates: z.coerce.number().int().min(1).max(500).default(100),
     soft_cap_usd: z.coerce.number().positive("Soft cap pozitif olmalı").default(1.5),
     hard_cap_usd: z.coerce.number().positive("Hard cap pozitif olmalı").default(3),
+    seed_urls: z.array(z.string().url("Geçerli bir URL girin")).default([]),
   })
   .refine((value) => value.hard_cap_usd >= value.soft_cap_usd, {
     message: "Hard cap, soft cap'ten küçük olamaz",

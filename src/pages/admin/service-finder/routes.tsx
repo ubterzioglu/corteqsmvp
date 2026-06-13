@@ -21,6 +21,7 @@ const ServiceFinderJobDetailPage = lazy(() => import("./ServiceFinderJobDetailPa
 const ServiceFinderProvidersPage = lazy(() => import("./ServiceFinderProvidersPage"));
 const ServiceFinderTemplatesPage = lazy(() => import("./ServiceFinderTemplatesPage"));
 const ServiceFinderCostsPage = lazy(() => import("./ServiceFinderCostsPage"));
+const ServiceFinderGuidePage = lazy(() => import("./ServiceFinderGuidePage"));
 
 function PageFallback() {
   return (
@@ -77,6 +78,14 @@ export const serviceFinderRoutes = (
       element={
         <Suspense fallback={<PageFallback />}>
           <ServiceFinderCostsPage />
+        </Suspense>
+      }
+    />
+    <Route
+      path="guide"
+      element={
+        <Suspense fallback={<PageFallback />}>
+          <ServiceFinderGuidePage />
         </Suspense>
       }
     />

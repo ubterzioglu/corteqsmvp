@@ -55,6 +55,7 @@ export interface ServiceFinderJob {
   must_include_terms: string[];
   must_exclude_terms: string[];
   seed_queries: unknown;
+  seed_urls: string[];
   max_queries: number;
   max_source_urls: number;
   max_extract_urls: number;

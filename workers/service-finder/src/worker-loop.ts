@@ -251,6 +251,26 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
 
   await appendEvent(db, job.id, "search_stage_done",
     `${queryIndex} sorgu çalıştı, ${discoveredTotal} kaynak keşfedildi.`);
+
+  // Seed URL'leri arama aşamasından bağımsız olarak doğrudan kaynak kuyruğuna ekle.
+  if (job.seed_urls?.length) {
+    const validSeedUrls = job.seed_urls.filter((url) => /^https?:\/\//i.test(url));
+    if (validSeedUrls.length > 0) {
+      const seedSources = validSeedUrls.map((url) => ({
+        job_id: job.id,
+        discovery_query_id: null as string | null,
+        provider_key: "manual",
+        source_url: url,
+        normalized_url: normalizeUrl(url),
+        source_domain: extractDomain(url),
+        source_title: null as string | null,
+        source_snippet: null as string | null,
+      }));
+      await insertDiscoveredSources(db, seedSources);
+      await appendEvent(db, job.id, "seed_urls_injected",
+        `${validSeedUrls.length} ön adres ekstraksiyon kuyruğuna eklendi.`);
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------

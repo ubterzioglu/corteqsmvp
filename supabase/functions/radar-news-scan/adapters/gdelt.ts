@@ -31,15 +31,37 @@ export const gdeltAdapter: RadarNewsAdapter = {
     });
 
     const url = `${source.endpoint_url}?${params.toString()}`;
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), source.timeout_ms);
 
-    let response: Response;
-    try {
-      response = await fetch(url, { signal: controller.signal });
-    } finally {
-      clearTimeout(timer);
-    }
+    // GDELT agresif throttle yapar (429) ve bazen bağlantıyı aniden keser.
+    // User-Agent zorunlu + 429/ağ hatalarında exponential backoff ile 3 deneme.
+    const fetchWithRetry = async (): Promise<Response> => {
+      let lastError: unknown;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        if (attempt > 0) {
+          await new Promise((r) => setTimeout(r, attempt * 2000));
+        }
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), source.timeout_ms);
+        try {
+          const res = await fetch(url, {
+            signal: controller.signal,
+            headers: { "User-Agent": "CorteQS-Radar/1.0 (+https://corteqs.net)" },
+          });
+          clearTimeout(timer);
+          if (res.status === 429) {
+            lastError = new Error("GDELT HTTP 429 (rate limit)");
+            continue;
+          }
+          return res;
+        } catch (err) {
+          clearTimeout(timer);
+          lastError = err;
+        }
+      }
+      throw lastError instanceof Error ? lastError : new Error(String(lastError));
+    };
+
+    const response = await fetchWithRetry();
 
     if (!response.ok) {
       throw new Error(`GDELT HTTP ${response.status}`);

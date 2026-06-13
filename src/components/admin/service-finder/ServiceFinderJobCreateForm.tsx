@@ -12,6 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -60,6 +61,7 @@ export function ServiceFinderJobCreateForm({ onCreated, compact = false }: Servi
       max_candidates: 100,
       soft_cap_usd: 1.5,
       hard_cap_usd: 3,
+      seed_urls: [],
     },
   });
 
@@ -278,6 +280,34 @@ export function ServiceFinderJobCreateForm({ onCreated, compact = false }: Servi
                   <FormControl>
                     <Input type="number" min="1" max="50" {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="seed_urls"
+              render={({ field }) => (
+                <FormItem className="md:col-span-2">
+                  <FormLabel>Ön adresler (isteğe bağlı)</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder={"https://doktor.de/mustafa-yilmaz\nhttps://example.com/profile"}
+                      rows={3}
+                      value={field.value.join("\n")}
+                      onChange={(event) =>
+                        field.onChange(
+                          event.target.value
+                            .split("\n")
+                            .map((line) => line.trim())
+                            .filter(Boolean),
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <p className="text-[11px] text-muted-foreground">
+                    Her satıra bir URL — bu adresler arama aşamasını atlar, doğrudan taranır.
+                  </p>
                   <FormMessage />
                 </FormItem>
               )}

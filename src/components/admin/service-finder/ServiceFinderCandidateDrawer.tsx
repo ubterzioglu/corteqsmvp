@@ -2,6 +2,8 @@
 // onay/ret/yayınlama aksiyonları (scrapper_plan.md §Job detail wireframe).
 import { useEffect, useState } from "react";
 import { ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,6 +54,7 @@ export function ServiceFinderCandidateDrawer({ candidate, onClose }: ServiceFind
   const [languages, setLanguages] = useState("");
   const [website, setWebsite] = useState("");
   const [notes, setNotes] = useState("");
+  const [publishedItemId, setPublishedItemId] = useState<string | null>(null);
 
   useEffect(() => {
     if (candidate) {
@@ -61,6 +64,7 @@ export function ServiceFinderCandidateDrawer({ candidate, onClose }: ServiceFind
       setLanguages(joinList(candidate.languages));
       setWebsite(candidate.website_url ?? "");
       setNotes(candidate.review_notes ?? "");
+      setPublishedItemId(candidate.catalog_item_id ?? null);
     }
   }, [candidate]);
 
@@ -204,7 +208,14 @@ export function ServiceFinderCandidateDrawer({ candidate, onClose }: ServiceFind
               onClick={() =>
                 publish.mutate(
                   { candidateId: candidate.id, patch: buildPatch() },
-                  { onSuccess: () => onClose() },
+                  {
+                    onSuccess: (result) => {
+                      setPublishedItemId(result.catalog_item_id);
+                      toast.success("Aday kataloğa yayınlandı.", {
+                        description: `Katalog ID: ${result.catalog_item_id}`,
+                      });
+                    },
+                  },
                 )
               }
             >
@@ -213,9 +224,19 @@ export function ServiceFinderCandidateDrawer({ candidate, onClose }: ServiceFind
           </div>
         )}
 
-        {isPublished && candidate.catalog_item_id && (
-          <div className="border-t py-3 text-sm text-muted-foreground">
-            Katalog kaydı: <code className="text-xs">{candidate.catalog_item_id}</code>
+        {publishedItemId && (
+          <div className="border-t py-3 space-y-2">
+            <p className="text-xs text-muted-foreground">
+              Katalog ID: <code className="font-mono">{publishedItemId}</code>
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild variant="outline" size="sm">
+                <Link to="/admin/data">Kayıt Veritabanına Git</Link>
+              </Button>
+              <Button variant="outline" size="sm" onClick={onClose}>
+                Kapat
+              </Button>
+            </div>
           </div>
         )}
       </SheetContent>
