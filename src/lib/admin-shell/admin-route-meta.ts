@@ -19,6 +19,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/referral/groups",
   "/admin/referral/types",
   "/admin/marquee",
+  "/admin/blog",
   "/admin/cadde",
   "/admin/cadde/promotions",
   "/admin/cadde/moderation",

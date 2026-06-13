@@ -286,6 +286,15 @@ export const adminNavGroups: AdminNavGroup[] = [
         aliases: ["haber bandı", "marquee"],
       },
       {
+        id: "blog",
+        label: "Blog",
+        description: "Ülke rehberi yazıları — oluştur, düzenle, yayınla.",
+        to: "/admin/blog",
+        icon: FileText,
+        accent: "amber",
+        aliases: ["blog", "yazı", "makale", "rehber", "ülke rehberi"],
+      },
+      {
         id: "social-media",
         label: "Sosyal Medya",
         description: "Sosyal medya bağlantıları.",

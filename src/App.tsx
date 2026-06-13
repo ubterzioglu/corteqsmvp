@@ -31,6 +31,8 @@ const Pricing = lazy(() => import("./pages/Pricing.tsx"));
 const Career = lazy(() => import("./pages/Career.tsx"));
 const DiasporaDetailPage = lazy(() => import("./pages/DiasporaDetailPage.tsx"));
 const RadarPage = lazy(() => import("./pages/RadarPage.tsx"));
+const BlogPage = lazy(() => import("./pages/BlogPage.tsx"));
+const BlogPostPage = lazy(() => import("./pages/BlogPostPage.tsx"));
 const CommercialIndexPage = lazy(() => import("./pages/CommercialIndexPage.tsx"));
 const CommercialDocumentPage = lazy(() => import("./pages/CommercialDocumentPage.tsx"));
 const Founding1000Page = lazy(() => import("./pages/Founding1000Page.tsx"));
@@ -102,6 +104,8 @@ const App = () => (
                   <Route path="/hakkimizda" element={<Navigate to="/founders" replace />} />
                   <Route path="/founders" element={<FoundersCombinedPage />} />
                   <Route path="/radar" element={<RadarPage />} />
+                  <Route path="/blog" element={<BlogPage />} />
+                  <Route path="/blog/:slug" element={<BlogPostPage />} />
                   <Route path="/commercial" element={<CommercialIndexPage />} />
                   <Route path="/commercial/:slug" element={<CommercialDocumentPage />} />
                   <Route path="/diaspora/:slug" element={<DiasporaDetailPage />} />
