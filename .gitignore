@@ -83,6 +83,7 @@ turkish_missions_import_builder/output/*
 
 # Reference directory (Lovable exports)
 referans/
+reference/
 .secretdb
 
 # Build artifacts (2026-06-11 temizligi)

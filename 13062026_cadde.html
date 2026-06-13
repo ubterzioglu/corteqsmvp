@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadde Modülü Karşılaştırma &amp; Migrasyon Planı — corteqs_plus → corteqs_fin</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181b24;
+    --surface2: #1f2330;
+    --border: #2c3140;
+    --text: #e6e8ee;
+    --muted: #9aa1b2;
+    --accent: #5eb1ff;
+    --green: #4ade80;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --violet: #c084fc;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0 0 80px;
+    background: var(--bg); color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.6; font-size: 15px;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  header {
+    background: linear-gradient(135deg, #131726 0%, #1a1430 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 0 32px; margin-bottom: 40px;
+  }
+  header h1 { margin: 0 0 8px; font-size: 28px; }
+  header .sub { color: var(--muted); font-size: 15px; }
+  header .meta { margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .chip {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 999px; padding: 3px 14px; font-size: 13px; color: var(--muted);
+  }
+  h2 {
+    font-size: 21px; margin: 48px 0 16px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--border); color: var(--accent);
+  }
+  h3 { font-size: 17px; margin: 28px 0 10px; color: var(--text); }
+  p { margin: 10px 0; }
+  table {
+    width: 100%; border-collapse: collapse; margin: 16px 0;
+    background: var(--surface); border-radius: 8px; overflow: hidden;
+    font-size: 14px;
+  }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--surface2); font-weight: 600; color: var(--accent); }
+  tr:last-child td { border-bottom: none; }
+  code {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 1px 6px; font-size: 13px;
+    font-family: Consolas, "Courier New", monospace; color: #ffd28a;
+    word-break: break-all;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 22px; margin: 16px 0;
+  }
+  .card.verdict { border-left: 4px solid var(--amber); }
+  .card.danger  { border-left: 4px solid var(--red); }
+  .card.ok      { border-left: 4px solid var(--green); }
+  .card.info    { border-left: 4px solid var(--accent); }
+  .badge {
+    display: inline-block; border-radius: 5px; padding: 1px 9px;
+    font-size: 12px; font-weight: 600; white-space: nowrap;
+  }
+  .b-green  { background: rgba(74,222,128,.15); color: var(--green); }
+  .b-red    { background: rgba(248,113,113,.15); color: var(--red); }
+  .b-amber  { background: rgba(251,191,36,.15);  color: var(--amber); }
+  .b-blue   { background: rgba(94,177,255,.15);  color: var(--accent); }
+  .b-violet { background: rgba(192,132,252,.15); color: var(--violet); }
+  ul, ol { margin: 8px 0; padding-left: 24px; }
+  li { margin: 5px 0; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
+  .q {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 4px solid var(--violet); border-radius: 8px;
+    padding: 14px 18px; margin: 12px 0;
+  }
+  .q .qt { font-weight: 600; color: var(--violet); }
+  .phase {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 22px; margin: 18px 0;
+    border-left: 4px solid var(--accent);
+  }
+  .phase h4 { margin: 0 0 6px; font-size: 16px; }
+  .phase .ph-meta { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  details { margin: 10px 0; }
+  summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+  .toc { columns: 2; column-gap: 32px; font-size: 14px; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; color: var(--muted); font-size: 13px; text-align: center; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>🛣️ Cadde Modülü — Karşılaştırma &amp; Migrasyon Planı</h1>
+    <div class="sub"><code>reference/corteqs_plus</code> (Lovable, "Cadde 2.x" nesli) &nbsp;→&nbsp; <code>corteqs_fin</code> (Cadde 3.0 E2E rebuild)</div>
+    <div class="meta">
+      <span class="chip">📅 12 Haziran 2026</span>
+      <span class="chip">Kaynak: github.com/corteqssocial-web/corteqs @ 27cfcd8</span>
+      <span class="chip">Hedef: corteqs_fin @ main (Cadde 3.0, mig 001–014 canlı)</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="card info">
+  <strong>İçindekiler</strong>
+  <div class="toc" style="margin-top:8px">
+    <div><a href="#giris">0. Giriş — Durum Özeti</a></div>
+    <div><a href="#ozet">1. Yönetici Özeti</a></div>
+    <div><a href="#mimari">2. Mimari Karşılaştırma</a></div>
+    <div><a href="#envanter">3. Dosya &amp; Şema Envanteri</a></div>
+    <div><a href="#ozellik">4. Özellik Farkları Matrisi</a></div>
+    <div><a href="#sorular">5. Açık Noktalar &amp; Sorular</a></div>
+    <div><a href="#plan">6. Migrasyon Planı (Fazlar)</a></div>
+    <div><a href="#kurallar">7. Genel Adaptasyon Kuralları</a></div>
+    <div><a href="#risk">8. Risk Analizi — "Ne olur, ne ederiz?"</a></div>
+  </div>
+</nav>
+
+<!-- ============================================================ -->
+<h2 id="giris">0. Giriş — Durum Özeti (uçtan uca)</h2>
+
+<div class="card info">
+<p><strong>Bu rapor ne anlatıyor?</strong> Elimizde iki tane Cadde var ve bu doküman ikisini uçtan uca karşılaştırıp
+"eskisinden yenisine ne taşınır, taşınırsa ne gerekir, nelere dikkat ederiz" sorularına cevap veriyor.</p>
+
+<p><strong>Hikâye şu:</strong> Lovable üzerinde geliştirdiğimiz eski corteqs uygulamasını
+(<code>corteqssocial-web/corteqs</code> repo'su) referans olsun diye projenin yanına
+<code>reference/corteqs_plus</code> adıyla klonladık. Oradaki Cadde, bizim şu an canlıda koşan
+corteqs_fin'deki Cadde 3.0'ın bir önceki nesli — yani aynı ürün fikrinin iki farklı dönemde yazılmış iki hali.
+Biz Haziran başında Cadde'yi sıfırdan, çok daha sağlam bir altyapıyla yeniden inşa ettik (Cadde 3.0);
+eski repo ise o eski altyapının üzerinde yüzey/deneyim tarafını geliştirmeye devam etmiş.</p>
+
+<p><strong>Karşılaştırınca ortaya çıkan tablo gayet net:</strong></p>
+<ul>
+  <li><strong>Altyapıda biz açık ara öndeyiz.</strong> Yenisinde (bizde) yazma işlemleri tek tek kontrol edilen
+  güvenli sunucu fonksiyonlarından geçiyor, moderasyon kuyruğu, bildirim sistemi, tanıtım/kampanya backend'i,
+  akıllı feed sıralaması (CKS), çoklu diaspora desteği, ürün ayarlarının tablodan yönetimi ve 12+ test dosyası var.
+  Eskisinde bunların hiçbiri yok; hatta yetki kontrollerinin bir kısmı tarayıcının hafızasında tutuluyor —
+  bugünkü standartlarımıza göre güvenlik açığı.</li>
+  <li><strong>Deneyim/işleyiş tarafında ise eski repo daha cömert.</strong> Cafe odasına atmosfer katan post-it
+  duvarı, anket ve jukebox; cafe'lerin community/relocation/expo diye türlere ayrılması (kontenjan ve giriş
+  sorusuyla); "sana benzeyen kişiler" önerisi ve takip akışı; dünya saatleri bandı; kıta→ülke→şehir
+  çoklu filtre; profil kartında çarşı vitrini; giriş yapmadan gezilebilen demo cafe… Bunların çoğu bizde yok
+  ve kullanıcı deneyimini ciddi zenginleştirecek fikirler.</li>
+</ul>
+
+<p><strong>Taşıma nasıl olacak?</strong> Önemli bir teknik gerçek var: eski kodu kopyala-yapıştır yapamayız.
+Eski Cadde, bizim canlı veritabanında artık kapatılmış (yazmaya kapalı ya da tamamen silinmiş) tablolara yazıyor;
+kopyalanan kod derlenir, çalışır gibi görünür ama sessizce hata verir. O yüzden taşınacak her kalem
+<em>fikir ve arayüz olarak</em> alınıp bizim tarafta yeniden yazılacak. Bu backend'e hiç dokunmayacağız demek
+değil — gereken yerde yeni tablo, yeni RPC, yeni ayar anahtarı ekleyebiliriz; ama hep kendi kurallarımızı
+bozmadan: yazma işlemleri RPC'den geçer, migration yalnız eklenir, SQL ile TypeScript tarafındaki kurallar
+ayna gibi senkron tutulur, limitler <code>cadde_settings</code>'ten yönetilir.</p>
+
+<p><strong>Şu an neredeyiz?</strong> Henüz uygulamaya başlamadık; bu doküman karar ve planlama dokümanı.
+İçeride ne var: madde madde mimari karşılaştırma (Bölüm 2–3), taşımaya değer özelliklerin tek tek
+değerlendirildiği matris (Bölüm 4), cevap bekleyen 9 ürün sorusu (Bölüm 5 — özellikle takip sistemi geri
+gelsin mi, cafe atmosferi gerçek zamanlı mı olsun, cafe tür kuralları nasıl birleşsin), 4 fazlık uygulama planı
+ve kaba efor tahmini (Bölüm 6 — toplamda 2-3 hafta, küçük dilimler halinde), her aktarımda uyulacak 12 maddelik
+kontrol listesi (Bölüm 7) ve risk tablosu (Bölüm 8).</p>
+
+<p><strong>Önerilen yol:</strong> Düşük riskli görsel bileşenlerle başlamak (dünya saatleri, ticker, filtre,
+demo cafe — Faz 1), ardından çarşı vitrini ve ilan görseli (Faz 2 — bu zaten bizim açık iş listemizdeki
+"public profil yüzeyi" maddesini de kapatıyor). Cafe deneyimi ve sosyal grafik (Faz 3–4) ise Bölüm 5'teki
+sorular cevaplandıktan sonra ayrıca ele alınır.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="ozet">1. Yönetici Özeti</h2>
+
+<div class="card verdict">
+  <strong>⚖️ Ana tespit:</strong> corteqs_plus'taki Cadde modülü, mimari olarak corteqs_fin'in
+  <strong>Cadde 3.0 rebuild'inde bilinçli olarak terk edilen eski neslin</strong> (Cadde 2.x) devamıdır.
+  Kullandığı tablolar (<code>feed_posts</code>, <code>feed_likes</code>, <code>cafes</code>,
+  <code>cafe_memberships</code>, <code>user_follows</code>, <code>profiles</code>) corteqs_fin'de
+  <strong>write-revoke edilmiş legacy tablolar</strong> ya da tamamen DROP edilmiş tablolardır
+  (mig <code>cadde300_013_legacy_decommission</code>).
+  <br><br>
+  <strong>Sonuç:</strong> "Oradan buraya" taşıma asla <em>kod kopyalama</em> olamaz — taşınabilir olan şey
+  <strong>ürün fikirleri ve UI bileşenleridir</strong>. Veri katmanı her durumda corteqs_fin'in
+  RPC-only sözleşmesine yeniden yazılır.
+</div>
+
+<div class="cols">
+  <div class="card ok">
+    <strong>✅ corteqs_plus'tan almaya değer (fikir/UI):</strong>
+    <ul>
+      <li><strong>CafeAmbiance</strong> — post-it duvarı, anket, jukebox'lı cafe odası atmosferi (695 satır, tamamen localStorage)</li>
+      <li><strong>Cafe tür modeli</strong> — community / relocation / expo türleri + kontenjan + giriş sorusu + onaylı üyelik</li>
+      <li><strong>WorldClocksBand</strong> — diaspora şehirleri dünya saatleri bandı</li>
+      <li><strong>MultiCountryCityFilter</strong> — kıta → çoklu ülke → çoklu şehir filtresi</li>
+      <li><strong>DiasporaPeopleSearch</strong> — kişi arama + benzerlik önerileri</li>
+      <li><strong>Takip/öneri sistemi</strong> (useFeedSocial) — ülke&gt;şehir&gt;meslek&gt;anahtar kelime skorlu kişi önerisi</li>
+      <li><strong>Dinamik like eşiği</strong> — akış hızına göre global feed'e giriş barajı algoritması</li>
+      <li><strong>Çarşı profil vitrini</strong> (CarsiUserShowcase) + ilan görseli yükleme</li>
+    </ul>
+  </div>
+  <div class="card danger">
+    <strong>⛔ corteqs_plus'tan taşınamaz / taşınmamalı:</strong>
+    <ul>
+      <li>Tüm veri katmanı — doğrudan <code>supabase.from().insert()</code> çağrıları (fin'de cadde içerik tablolarına user INSERT policy YOK)</li>
+      <li><code>profiles</code> tablosuna bağımlı her şey (fin'de DROP edildi → <code>user_profile_attributes</code>)</li>
+      <li><code>localStorage</code> tabanlı yetki bayrakları (<code>indiv_relocating</code>, <code>tr_digital_community_kopru</code>) — güvenlik açısından kabul edilemez</li>
+      <li>Client-side-only moderasyon (fin'de SQL trigger + kuyruk var, TS regex sadece ayna)</li>
+      <li><code>AuthContext</code> üzerinden <code>profile</code> nesnesi okuma kalıbı</li>
+      <li>869 satırlık mock feed içeriği (fin'in kendi <code>cadde-demo-data.ts</code>'i var)</li>
+    </ul>
+  </div>
+</div>
+
+<p>Genel resim: <strong>corteqs_fin altyapıda ileride</strong> (RPC güvenliği, moderasyon, bildirim, tanıtım/kampanya backend'i, CKS sıralama, çoklu diaspora, test kapsamı), <strong>corteqs_plus ise ürün yüzeyi/oyunlaştırma fikirlerinde daha zengin</strong> (cafe atmosferi, takip grafiği, kişi keşfi, profil vitrini). Doğru strateji: fin'in iskeletini koruyup plus'ın yüzey fikirlerini RPC sözleşmesine uyarlayarak almak.</p>
+
+<!-- ============================================================ -->
+<h2 id="mimari">2. Mimari Karşılaştırma</h2>
+
+<table>
+  <tr><th style="width:18%">Boyut</th><th style="width:41%">corteqs_plus (referans)</th><th style="width:41%">corteqs_fin (hedef, Cadde 3.0)</th></tr>
+  <tr>
+    <td><strong>Veri yazma</strong></td>
+    <td><span class="badge b-red">Doğrudan insert</span> Component içinden <code>supabase.from("feed_posts").insert()</code>, RLS user-insert policy'lerine güvenir</td>
+    <td><span class="badge b-green">RPC-only</span> ~37 security-definer RPC (<code>create_cadde_post_v1</code>, <code>join_cadde_cafe_v1</code>, <code>create_carsi_item_v1</code>…); içerik tablolarında user INSERT policy yok</td>
+  </tr>
+  <tr>
+    <td><strong>Tablolar</strong></td>
+    <td><code>feed_posts</code>, <code>feed_likes</code>, <code>cafes</code>, <code>cafe_memberships</code>, <code>user_follows</code>, <code>carsi_items</code>, <code>profiles</code>, <code>notifications</code> (genel)</td>
+    <td>21 adet <code>cadde_*</code>/<code>carsi_*</code> tablosu: <code>cadde_posts/-comments/-reactions</code>, <code>cadde_cafes/-members</code>, <code>carsi_items/-categories</code>, <code>cadde_promotion_*</code> (4), <code>cadde_reports</code>, <code>cadde_moderation_queue</code>, <code>cadde_user_bans</code>, <code>cadde_settings</code>, <code>cadde_interest_catalog</code>…</td>
+  </tr>
+  <tr>
+    <td><strong>Kimlik &amp; yetki</strong></td>
+    <td><code>profiles.account_type</code> + <code>phone_verified</code> + <span class="badge b-red">localStorage bayrakları</span> (Köprü erişimi tarayıcıda saklanan boolean ile!)</td>
+    <td><code>user_role_assignments</code> + AFS feature'ları + <code>user_verifications</code>; <code>has_cadde_feature</code> içinde <span class="badge b-green">ban kill-switch</span>; <code>get_cadde_actor_context</code> RPC</td>
+  </tr>
+  <tr>
+    <td><strong>Kural motoru</strong></td>
+    <td><code>caddeRules.ts</code> (86 satır) — yalnız client'ta; TR-yerleşik/diaspora ayrımı telefon önekiyle (<code>+90</code>)</td>
+    <td><code>cadde-rules.ts</code> (252 satır) — <span class="badge b-blue">SQL↔TS ayna sözleşmesi</span>: <code>can_post_kopru</code>, <code>can_join_cadde_cafe</code>, blocklist regex'i SQL trigger'la senkron; testli</td>
+  </tr>
+  <tr>
+    <td><strong>Feed sıralama</strong></td>
+    <td>Dinamik like eşiği (son 60 sn akış hızı → baraj) + client-side ilgi alanı sıralaması (<code>interestTargeting.ts</code>, localStorage)</td>
+    <td>CKS band/skor sıralaması <code>list_cadde_feed_v1</code> SQL'inde; <code>cadde-ranking.ts</code> TS aynası (testli); ilgi alanları DB'de (<code>cadde_post_interests</code>, <code>user_cadde_interests</code>)</td>
+  </tr>
+  <tr>
+    <td><strong>Ürün limitleri</strong></td>
+    <td>Kodda sabit (günde 3 cafe, mesajlarda hardcoded metin)</td>
+    <td><code>cadde_settings</code> jsonb tablosu — <code>cafe.daily_join_limit=10</code>, <code>cafe.daily_create_limit=3</code>, <code>cafe.max_duration_hours=6</code>, <code>carsi.active_item_limit=5</code>, <code>comment.minute_limit=5</code>, <code>reaction.minute_limit=30</code>, <code>report.daily_limit=10</code>, <code>phone_verification_required=false</code>… ürün kararı = SQL update</td>
+  </tr>
+  <tr>
+    <td><strong>Moderasyon</strong></td>
+    <td>Yalnız <code>cafeNameModeration.ts</code> — client-side regex blocklist (küfür/siyaset/din/nefret); aşılabilir</td>
+    <td>SQL <code>cadde_auto_moderation_scan</code> AFTER INSERT trigger (post/yorum/cafe/ilan) + <code>cadde_moderation_queue</code> + <code>cadde_reports</code> + <code>cadde_user_bans</code> + admin sayfaları + audit'li <code>admin_moderate_cadde_entity_v1</code></td>
+  </tr>
+  <tr>
+    <td><strong>Bildirim</strong></td>
+    <td>Genel <code>notifications</code> tablosu, cadde'ye özgü değil</td>
+    <td><code>cadde_notify</code> RPC ailesi + <code>NotificationsBell</code>; cafe bitiş uyarısı (<code>cadde_notify_expiring_cafes</code>, pg_cron), çarşı iletişim bildirimi (24s tekilleştirme)</td>
+  </tr>
+  <tr>
+    <td><strong>Tanıtım/Reklam</strong></td>
+    <td><code>AdCampaignPanel</code> (312 satır) — <span class="badge b-amber">tamamen mock</span>, hiçbir persistence yok</td>
+    <td>Tam backend: <code>cadde_promotion_campaigns/-events/-placements/-placement_catalog</code> + onay akışı (<code>admin_review_cadde_promotion_v1</code>) + event ölçümü + SponsoredFeedCard/PromotionRail</td>
+  </tr>
+  <tr>
+    <td><strong>Çoklu diaspora</strong></td>
+    <td>Yok — serbest metin <code>country</code> string'i</td>
+    <td><code>diaspora_key</code> kolonu + CHECK + feed/list filtresi (mig <code>cadde300_012</code>); yeni içerik tablosu açmak için zorunlu kural</td>
+  </tr>
+  <tr>
+    <td><strong>Test</strong></td>
+    <td><span class="badge b-red">0 cadde testi</span></td>
+    <td>12+ test dosyası: rules, ranking, schemas, format, targeting, sayfa testleri, route testleri</td>
+  </tr>
+  <tr>
+    <td><strong>Rotalar</strong></td>
+    <td><code>/feed</code>, <code>/cadde</code>, <code>/cadde/:cafeId</code> (tek dev sayfa: Feed.tsx 1487 satır)</td>
+    <td><code>/cadde</code>, <code>/cadde/cafe/:cafeId</code>, <code>/cadde/carsi[/:itemId]</code> + 5 admin rotası (<code>/admin/cadde</code>, moderation, promotions, carsi, guide) — SEO-kilitli</td>
+  </tr>
+  <tr>
+    <td><strong>Paket yöneticisi</strong></td>
+    <td>bun (<code>bun.lock</code>) + npm karışık</td>
+    <td>npm</td>
+  </tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="envanter">3. Dosya &amp; Şema Envanteri</h2>
+
+<div class="cols">
+<div>
+<h3>corteqs_plus (21 dosya, ~6.0k satır)</h3>
+<table>
+  <tr><th>Dosya</th><th>Satır</th><th>Not</th></tr>
+  <tr><td><code>pages/Feed.tsx</code></td><td>1487</td><td>Monolit: feed + cafe + filtre + her şey</td></tr>
+  <tr><td><code>data/mockFeedPosts.ts</code></td><td>869</td><td>Demo içerik</td></tr>
+  <tr><td><code>components/feed/CafeAmbiance.tsx</code></td><td>695</td><td>Post-it/anket/jukebox — localStorage</td></tr>
+  <tr><td><code>components/feed/CreateCafeForm.tsx</code></td><td>387</td><td>kind/kontenjan/giriş sorusu</td></tr>
+  <tr><td><code>components/feed/CreatePostForm.tsx</code></td><td>317</td><td>Doğrudan insert + medya</td></tr>
+  <tr><td><code>components/promotion/AdCampaignPanel.tsx</code></td><td>312</td><td>Mock kampanya paneli</td></tr>
+  <tr><td><code>components/feed/MultiCountryCityFilter.tsx</code></td><td>285</td><td>Kıta→ülke→şehir çoklu seçim</td></tr>
+  <tr><td><code>components/feed/DiasporaPeopleSearch.tsx</code></td><td>251</td><td>Kişi arama (profiles tabanlı)</td></tr>
+  <tr><td><code>components/feed/CarsiItemsManager.tsx</code></td><td>239</td><td>İlan CRUD + görsel upload (post-archive bucket)</td></tr>
+  <tr><td><code>components/feed/CarsiGlobalTicker.tsx</code></td><td>167</td><td>Vitrin bandı</td></tr>
+  <tr><td><code>hooks/useFeedSocial.ts</code></td><td>163</td><td>Takip + skorlu kişi önerisi</td></tr>
+  <tr><td><code>components/feed/WorldClocksBand.tsx</code></td><td>152</td><td>Dünya saatleri</td></tr>
+  <tr><td><code>components/feed/CarsiGrid.tsx</code></td><td>143</td><td>İlan grid'i</td></tr>
+  <tr><td><code>hooks/useCafes.ts</code></td><td>112</td><td>Doğrudan insert ile join</td></tr>
+  <tr><td><code>components/feed/CarsiUserShowcase.tsx</code></td><td>102</td><td>Profil kartında vitrin</td></tr>
+  <tr><td><code>lib/caddeRules.ts</code></td><td>86</td><td>Client-only kurallar</td></tr>
+  <tr><td><code>components/profiles/MyOpenCafesAsEvents.tsx</code></td><td>74</td><td>Panelde açık cafeler</td></tr>
+  <tr><td><code>data/carsiDemoItems.ts</code></td><td>72</td><td>Demo ilanlar</td></tr>
+  <tr><td><code>components/profiles/CafeOpenCTA.tsx</code></td><td>51</td><td>Cafe aç CTA</td></tr>
+  <tr><td><code>lib/cafeNameModeration.ts</code></td><td>42</td><td>Regex blocklist</td></tr>
+  <tr><td><code>components/CaddeProfileGate.tsx</code></td><td>38</td><td>Profil tamamlama kapısı</td></tr>
+</table>
+</div>
+<div>
+<h3>corteqs_fin (51 dosya, ~8.5k satır + 14 migration)</h3>
+<table>
+  <tr><th>Katman</th><th>İçerik</th></tr>
+  <tr><td>Sayfalar</td><td><code>CaddePage</code> (734), <code>CaddeCarsiPage</code> (307), <code>CaddeCafePage</code> (273), <code>CaddeCarsiItemPage</code> (127) + 5 admin sayfası (<code>AdminCaddePage</code> 735…)</td></tr>
+  <tr><td>API katmanı</td><td><code>cadde-api.ts</code> (665), <code>cadde-carsi-api.ts</code> (212), <code>cadde-tanitim-api.ts</code> (215), <code>cadde-admin-api.ts</code>, <code>cadde-moderation-api.ts</code>, <code>cadde-notifications-api.ts</code> — hepsi RPC çağırır</td></tr>
+  <tr><td>Sözleşme/iş kuralı</td><td><code>cadde-rules.ts</code> (252, SQL aynası), <code>cadde-ranking.ts</code> (118, CKS aynası), <code>cadde-schemas.ts</code> (Zod), <code>cadde-types.ts</code> (474), <code>cadde-targeting.ts</code>, <code>cadde-format.ts</code>, <code>cadde-query-keys.ts</code></td></tr>
+  <tr><td>Bileşenler</td><td><code>CaddeGeoFilter</code>, <code>CaddeInterestsCard</code>, <code>CaddeMyContentCard</code>, <code>CaddeProfileGate</code>, <code>CaddeTanitimPanel</code>, <code>CarsiGlobalTicker</code>, <code>CreateCafeForm</code>, <code>NotificationsBell</code>, <code>PromotionRail</code>, <code>SponsoredFeedCard</code></td></tr>
+  <tr><td>DB</td><td>14 migration (<code>cadde300_001–014</code>), 21 tablo, ~37 RPC, auto-moderasyon trigger'ları, pg_cron job</td></tr>
+  <tr><td>Test</td><td>rules/ranking/schemas/format/targeting/notifications + 4 sayfa/route testi</td></tr>
+  <tr><td>Açık kuyruk</td><td>Legacy 5 tablo DROP kararı (canary sonrası), B1 types regen, D-03 SMS sağlayıcı, public profil yüzeyi, Playwright persona matrisi, billboard→kampanya (P2)</td></tr>
+</table>
+</div>
+</div>
+
+<div class="card danger">
+  <strong>⚠️ Kritik isim çakışması:</strong> corteqs_plus kodu <code>cafes</code>, <code>cafe_memberships</code>,
+  <code>feed_posts</code>, <code>feed_likes</code>, <code>user_follows</code> tablolarına yazar. Bu tabloların
+  <strong>aynı isimle</strong> corteqs_fin canlı DB'sinde hâlâ var olduğunu unutma (write-revoked, COMMENT'li,
+  DROP canary sonrası). Plus'tan kopyalanan bir kod parçası derlenir, çalışır gibi görünür ve
+  <strong>sessizce revoke hatası alır ya da legacy tabloya okuma yapar</strong>. CLAUDE.md kuralı: bu tabloların
+  policy/grant'leri yeniden açılamaz.
+</div>
+
+<!-- ============================================================ -->
+<h2 id="ozellik">4. Özellik Farkları Matrisi</h2>
+
+<h3>4a. corteqs_plus'ta olup corteqs_fin'de olmayanlar (migrasyon adayları)</h3>
+<table>
+  <tr><th>Özellik</th><th>Plus'taki hali</th><th>Fin'e taşıma değerlendirmesi</th><th>Öneri</th></tr>
+  <tr>
+    <td><strong>Cafe Ambiance</strong><br>(post-it duvarı, anket, jukebox, kahve ikramı)</td>
+    <td><code>CafeAmbiance.tsx</code> 695 satır; tamamen localStorage (<code>cafe:{id}:{key}</code>) — kullanıcılar birbirinin notunu GÖRMEZ</td>
+    <td>UI mükemmel ama çok-kullanıcılı değil. Gerçek değer için <code>cadde_cafe_*</code> tablosu/RPC + Realtime gerekir; ya da "kişisel atmosfer" olarak lokal kalır</td>
+    <td><span class="badge b-amber">Ürün kararı</span></td>
+  </tr>
+  <tr>
+    <td><strong>Cafe tür modeli</strong><br>community / relocation / expo</td>
+    <td><code>cafes.kind</code> + <code>open_entry</code>, <code>entry_question</code>, <code>capacity</code>, onay bekleyen üye listesi; "TR (+90) yalnız relocation/expo'ya girer" kuralı</td>
+    <td>Fin cafe modeli süre/limit odaklı; tür + kontenjan + soru-cevaplı onay zenginleştirme olur. <code>can_join_cadde_cafe</code> SQL+TS aynasına dokunur</td>
+    <td><span class="badge b-blue">Taşı (uyarla)</span></td>
+  </tr>
+  <tr>
+    <td><strong>Takip + kişi önerisi</strong></td>
+    <td><code>useFeedSocial</code>: <code>user_follows</code> + ülke(1000)&gt;şehir(100)&gt;meslek(10)&gt;okul(5)&gt;anahtar kelime skorlaması</td>
+    <td>Fin, Cadde 3.0'da follow grafiğini <strong>bilinçli bıraktı</strong> (<code>user_follows</code> legacy). Geri istenirse yeni <code>cadde_follows</code> + RPC + CKS etkisi tasarlanmalı</td>
+    <td><span class="badge b-amber">Ürün kararı</span></td>
+  </tr>
+  <tr>
+    <td><strong>Dinamik like eşiği</strong></td>
+    <td>Son 60 sn post hızı ≥1/sn ise global feed'e girişte like barajı (akışı ~2 sn/post hızında tutar)</td>
+    <td>Fikir güzel ama fin'in CKS band/skor sistemiyle çakışır; ancak CKS içinde "yoğunlukta baraj" parametresi olarak eritilirse anlamlı</td>
+    <td><span class="badge b-amber">Ürün kararı</span></td>
+  </tr>
+  <tr>
+    <td><strong>Dünya saatleri bandı</strong></td>
+    <td><code>WorldClocksBand.tsx</code> 152 satır, salt görsel</td>
+    <td>Bağımlılığı yok denecek kadar az; doğrudan uyarlanabilir ilk aday</td>
+    <td><span class="badge b-green">Taşı</span></td>
+  </tr>
+  <tr>
+    <td><strong>Kıta→ülke→şehir çoklu filtre</strong></td>
+    <td><code>MultiCountryCityFilter</code> 285 satır, sabit listeler</td>
+    <td>Fin'in <code>CaddeGeoFilter</code>'ı var (geo_countries/geo_cities DB'den, tek kaynak). Plus'ın "kıta sekmesi + çoklu seçim" UX'i fin filtresine pattern olarak eklenebilir; veri kaynağı asla sabit liste olamaz</td>
+    <td><span class="badge b-blue">UX'i taşı</span></td>
+  </tr>
+  <tr>
+    <td><strong>Kişi arama / keşif</strong></td>
+    <td><code>DiasporaPeopleSearch</code> — <code>profiles</code> üzerinden arama + CarsiGrid gömme</td>
+    <td><code>profiles</code> yok; fin'de <code>user_profile_attributes</code> + katalog dizini üzerinden yeni bir arama RPC'si gerekir (görünürlük: public/private'a saygı)</td>
+    <td><span class="badge b-blue">Taşı (yeniden yaz)</span></td>
+  </tr>
+  <tr>
+    <td><strong>Çarşı profil vitrini + ilan görseli</strong></td>
+    <td><code>CarsiUserShowcase</code> (kamu profil kartında ilanlar) + <code>CarsiItemsManager</code>'da storage upload (<code>post-archive</code> bucket)</td>
+    <td>Fin'in açık kuyruğundaki <strong>"public profil yüzeyi"</strong> kalemiyle birebir örtüşüyor; görsel desteği için <code>create/update_carsi_item_v1</code>'e image param + bucket policy eklenir</td>
+    <td><span class="badge b-green">Taşı (öncelikli)</span></td>
+  </tr>
+  <tr>
+    <td><strong>Çarşı ticker (zengin)</strong></td>
+    <td><code>CarsiGlobalTicker</code> 167 satır (fin'deki 57 satırlık sürümden zengin)</td>
+    <td>İki sürüm karşılaştırılıp fin ticker'ı zenginleştirilir; düşük risk</td>
+    <td><span class="badge b-green">Taşı</span></td>
+  </tr>
+  <tr>
+    <td><strong>Demo cafe deneyimi</strong></td>
+    <td><code>demo-it</code> sahte cafe'si (giriş yapmadan atmosferi gösterme)</td>
+    <td>Onboarding/pazarlama için iyi fikir; fin <code>cadde-demo-data.ts</code>'e demo cafe eklenebilir</td>
+    <td><span class="badge b-blue">Fikri taşı</span></td>
+  </tr>
+</table>
+
+<h3>4b. corteqs_fin'de olup corteqs_plus'ta olmayanlar (geri taşınmaz — fin üstünlüğü)</h3>
+<ul>
+  <li>Güvenlik mimarisi: RPC-only yazma, ban kill-switch, rate limit'ler, audit'li admin moderasyonu</li>
+  <li>CKS band/skor sıralaması (SQL + TS ayna, testli)</li>
+  <li>Tanıtım/kampanya backend'i (placement kataloğu, onay akışı, event ölçümü)</li>
+  <li>Bildirim sistemi (cafe bitiş uyarısı, çarşı iletişim bildirimi, zil)</li>
+  <li>Çoklu diaspora (<code>diaspora_key</code>) ve <code>cadde_settings</code> üzerinden ürün ayarları</li>
+  <li>İlgi alanı kataloğu DB'de (plus'ta localStorage)</li>
+  <li>Admin sayfaları (5 rota) ve 12+ test dosyası</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="sorular">5. Açık Noktalar &amp; Karar Bekleyen Sorular</h2>
+
+<div class="q"><span class="qt">S1 — Takip grafiği geri gelsin mi?</span><br>
+Cadde 3.0, <code>user_follows</code>'u bilinçli emekliye ayırdı. Plus'taki takip + "sana benzeyen kişiler" önerisi geri isteniyorsa: yeni <code>cadde_follows</code> tablosu (diaspora_key'li), <code>follow_cadde_user_v1</code> RPC'si, CKS skoruna takip sinyali eklenmesi ve gizlilik kuralı (kim kimi takip ediyor görünür mü?) tasarlanmalı. <strong>İstenmiyorsa öneri motoru takipsiz de çalışabilir</strong> (yalnız keşif önerisi). Hangisi?</div>
+
+<div class="q"><span class="qt">S2 — CafeAmbiance gerçek mi, oyuncak mı?</span><br>
+Post-it/anket/jukebox şu an localStorage'da: her kullanıcı yalnız kendi yazdığını görüyor. (a) Gerçek paylaşımlı deneyim → 2-3 yeni tablo + RPC + Supabase Realtime aboneliği + moderasyon kapsamına alma (post-it içeriği de taranmalı); (b) "kişisel ambiyans" olarak lokal kalır, ucuz ama yanıltıcı; (c) hiç alınmaz. Tercih?</div>
+
+<div class="q"><span class="qt">S3 — Cafe tür modeli ve TR kısıtı çatışması</span><br>
+Plus kuralı: "TR (+90) numaralı kullanıcı yalnız relocation/expo cafe'ye girer; TR cafe'lere yalnız TR-yerleşikler girer". Fin kuralı: <code>can_join_cadde_cafe</code> (limit + doğrulama odaklı, tür kavramı yok). İki kural seti birleştirilecek mi? Birleşirse <strong>SQL+TS ayna sözleşmesi ve testleri birlikte güncellenmeli</strong>. Relocation/expo türleri ürün olarak isteniyor mu?</div>
+
+<div class="q"><span class="qt">S4 — Köprü erişim bayraklarının gerçek kaynağı</span><br>
+Plus'ta Köprü erişimi <code>localStorage("indiv_relocating")</code> ve <code>localStorage("tr_digital_community_kopru")</code> ile açılıyor — fin'e bu asla bu şekilde gelemez. Fin'de bu bilgiler nereye yazılmalı: <code>user_profile_attributes</code>'a yeni AFS attribute mü (örn. <code>relocating_target_country</code>, <code>digital_community_optin</code>), yoksa <code>user_verifications</code> genişletmesi mi? AFS attribute eklemek migration + rol kuralı gerektirir.</div>
+
+<div class="q"><span class="qt">S5 — Dinamik like eşiği vs CKS</span><br>
+Plus'ın "akış hızına göre baraj" algoritması ile fin'in CKS band/skoru aynı problemi farklı çözüyor. CKS'ye "yoğunluk barajı" parametresi olarak eklensin mi (cadde_settings'te <code>feed.flow_threshold_enabled</code> gibi), yoksa görmezden mi gelinsin?</div>
+
+<div class="q"><span class="qt">S6 — Çarşı görsel yükleme ve bucket</span><br>
+Plus ilan görselini <code>post-archive</code> bucket'ına yüklüyor. Fin'de çarşı görseli için: hangi bucket (yeni <code>cadde-media</code>?), boyut/format limiti, moderasyon (görsel de taranacak mı?), ilan başına kaç görsel? <code>create_carsi_item_v1</code> imza değişikliği migration ister.</div>
+
+<div class="q"><span class="qt">S7 — Kişi arama gizlilik sınırı</span><br>
+DiasporaPeopleSearch fin'e gelirse arama hangi alanlarda yapılır? <code>user_profile_attributes.visibility</code> yalnız public/private — private alanlar öneri skorlamasına bile girmemeli mi? (Plus'ta böyle bir ayrım hiç yok.)</div>
+
+<div class="q"><span class="qt">S8 — Öncelik sırası</span><br>
+Aşağıdaki plan fazlarından hangileri isteniyor ve sıra ne? Özellikle S1–S3 ürün kararları verilmeden Faz 3–4 başlayamaz.</div>
+
+<div class="q"><span class="qt">S9 — corteqs_plus canlı bir ürün mü?</span><br>
+Plus repo'su aktif geliştiriliyorsa (son commit'ler taze: "Çarşı — Global Vitrin taşındı") iki yönlü senkron beklentisi var mı, yoksa tek seferlik fikir kaynağı mı? Tek seferlikse bu rapor yeterli; sürekli senkron isteniyorsa süreç tanımlanmalı.</div>
+
+<!-- ============================================================ -->
+<h2 id="plan">6. Migrasyon Planı — "Oradan buraya alırsak ne gerekir?"</h2>
+
+<div class="card info">
+<strong>Temel ilke:</strong> Hiçbir dosya birebir kopyalanmaz. Her aktarım üç adımdan geçer:
+<ol>
+  <li><strong>UI/UX'i al</strong> — bileşen iskeleti, akış, mikro-etkileşimler</li>
+  <li><strong>Veri katmanını yeniden yaz</strong> — doğrudan insert → mevcut/yeni <code>*_v1</code> RPC; <code>profiles</code> → <code>get_cadde_actor_context</code> / <code>user_profile_attributes</code></li>
+  <li><strong>Sözleşmeleri güncelle</strong> — gerekiyorsa SQL+TS ayna, <code>cadde_settings</code> anahtarı, Türkçe hata mesajı haritası, test</li>
+</ol>
+</div>
+
+<div class="phase">
+  <h4>Faz 0 — Ürün kararları &amp; hazırlık</h4>
+  <div class="ph-meta">Efor: toplantı + ½ gün · Risk: yok · Ön koşul: S1–S9 yanıtları</div>
+  <ul>
+    <li>Bölüm 5'teki soruların kararlaştırılması (özellikle S1 takip, S2 ambiance, S3 cafe türleri)</li>
+    <li>B1 types regen (geçerli <code>SUPABASE_ACCESS_TOKEN</code> ile) — yeni RPC'ler tip güvenli yazılabilsin diye migrasyondan önce yapılması güçlü tavsiye</li>
+    <li><code>reference/corteqs_plus</code> salt-okunur referans olarak kalır (gitignore'da, ✅ yapıldı)</li>
+  </ul>
+</div>
+
+<div class="phase">
+  <h4>Faz 1 — Zararsız UI aktarımları (backend değişikliği yok)</h4>
+  <div class="ph-meta">Efor: 1–2 gün · Risk: düşük · Bağımlılık: yok</div>
+  <ul>
+    <li><strong>WorldClocksBand</strong> → <code>src/components/cadde/</code>; saat listesi aktif diaspora ülkelerinden (geo tek kaynak) türetilir</li>
+    <li><strong>CarsiGlobalTicker zenginleştirme</strong> — plus'ın 167 satırlık sürümündeki animasyon/içerik fikirleri fin ticker'ına</li>
+    <li><strong>MultiCountryCityFilter UX'i</strong> → <code>CaddeGeoFilter</code>'a kıta sekmesi + çoklu seçim; veri <code>geo_countries/geo_cities</code>'den (sabit liste taşınmaz)</li>
+    <li><strong>Demo cafe</strong> fikri → <code>cadde-demo-data.ts</code>'e</li>
+    <li>Uyum işleri: <code>useAuth</code> importu canonical'den (<code>@/components/auth</code>), Türkçe metinler <code>trUpper/trIncludes</code> ile, asset'ler (<code>jukebox.png</code>, <code>coffee-cup.png</code>) kopyalanır</li>
+  </ul>
+</div>
+
+<div class="phase">
+  <h4>Faz 2 — Çarşı zenginleştirme (fin'in açık kuyruğuyla birleşir)</h4>
+  <div class="ph-meta">Efor: 2–4 gün · Risk: orta · Bağımlılık: S6 kararı, B1 types regen</div>
+  <ul>
+    <li><strong>İlan görseli:</strong> yeni storage bucket + policy migration'ı; <code>create_carsi_item_v1</code> / <code>update_carsi_item_v1</code>'e <code>p_image_url</code>; Zod şema + <code>cadde-carsi-api.ts</code> güncellenir; auto-moderasyon kapsamı değerlendirilir</li>
+    <li><strong>CarsiUserShowcase</strong> → public profil yüzeyi (directory catalog composer'a "Çarşı Vitrini" bölümü) — fin kuyruğundaki "public profil yüzeyi" kalemini kapatır</li>
+    <li><strong>CarsiGrid</strong> görsel dili fin <code>CaddeCarsiPage</code> grid'ine uyarlanır</li>
+    <li>Yeni RPC hata kodları <code>cadde-rules.ts</code> Türkçe mesaj haritasına eklenir (zorunlu kural)</li>
+  </ul>
+</div>
+
+<div class="phase">
+  <h4>Faz 3 — Cafe deneyimi (tür modeli + ambiance)</h4>
+  <div class="ph-meta">Efor: 4–8 gün · Risk: orta-yüksek · Bağımlılık: S2 + S3 kararları</div>
+  <ul>
+    <li><strong>Cafe türleri:</strong> <code>cadde_cafes</code>'e <code>kind</code> (community/relocation/expo), <code>capacity</code>, <code>entry_question</code>, onaylı üyelik kolonları — yeni migration; <code>create_cadde_cafe_v1</code> + <code>join_cadde_cafe_v1</code> + <code>approve_cadde_cafe_member_v1</code> imza genişletmesi</li>
+    <li><strong>Ayna sözleşme güncellemesi:</strong> <code>can_join_cadde_cafe</code> SQL + <code>canJoinCafeRule</code> TS + testler birlikte değişir (CLAUDE.md zorunlu kuralı)</li>
+    <li>Tür bazlı limitler <code>cadde_settings</code>'e (örn. <code>cafe.expo_max_capacity</code>)</li>
+    <li><strong>CafeAmbiance:</strong> S2 kararına göre — (a) Realtime'lı gerçek sürüm: <code>cadde_cafe_notes</code>/<code>cadde_cafe_polls</code> tabloları + RPC'ler + auto-moderasyon trigger kapsamı; (b) lokal sürüm: yalnız bileşen taşınır, "yalnız sen görürsün" etiketiyle</li>
+    <li><code>CreateCafeForm</code> (fin 219 satır) plus'taki alanlarla genişletilir; isim moderasyonu fin'in mevcut SQL+TS ikilisinde kalır</li>
+  </ul>
+</div>
+
+<div class="phase">
+  <h4>Faz 4 — Sosyal grafik &amp; keşif (en büyük parça)</h4>
+  <div class="ph-meta">Efor: 5–10 gün · Risk: yüksek · Bağımlılık: S1 + S7 kararları</div>
+  <ul>
+    <li><strong>Kişi arama:</strong> yeni <code>search_cadde_people_v1</code> RPC — <code>user_profile_attributes</code> (yalnız public görünürlük) + <code>user_role_assignments</code> üzerinden; ülke/şehir/meslek filtreleri; rate limit (<code>cadde_settings</code>)</li>
+    <li><strong>Öneri skorlaması:</strong> plus'ın ülke&gt;şehir&gt;meslek&gt;anahtar kelime ağırlıkları SQL'e taşınır (client'ta 80 profil çekip skorlama yerine); ağırlıklar <code>cadde_settings</code>'te</li>
+    <li><strong>Takip (S1 evet ise):</strong> <code>cadde_follows</code> tablosu (diaspora_key + CHECK), <code>follow/unfollow_cadde_user_v1</code>, CKS skor etkisi → <code>list_cadde_feed_v1</code> + <code>cadde-ranking.ts</code> ayna güncellemesi + test</li>
+    <li><strong>Dinamik baraj (S5 evet ise):</strong> CKS'ye yoğunluk parametresi — yalnız SQL tarafında, ayna testiyle</li>
+  </ul>
+</div>
+
+<div class="card ok">
+<strong>Toplam kaba efor:</strong> Faz 1–2 ≈ 1 hafta (düşük risk, hemen değer üretir) · Faz 3 ≈ 1 hafta · Faz 4 ≈ 1–2 hafta.
+Önerilen kesim: <strong>Faz 1 + Faz 2'yi hemen yap</strong> (fin'in zaten açık olan "public profil yüzeyi" kuyruğunu da kapatıyor),
+Faz 3–4'ü ürün kararlarından sonra ayrı ayrı değerlendir.
+</div>
+
+<!-- ============================================================ -->
+<h2 id="kurallar">7. Genel Adaptasyon Kuralları (her aktarımda zorunlu kontrol listesi)</h2>
+
+<table>
+  <tr><th>#</th><th>Kural</th><th>Neden</th></tr>
+  <tr><td>1</td><td>Doğrudan <code>supabase.from(...).insert/update/delete</code> taşınmaz — her yazma mevcut ya da yeni <code>*_v1</code> security-definer RPC üzerinden</td><td>Cadde içerik tablolarında user INSERT policy yok; ban kill-switch yalnız RPC yolunda çalışır</td></tr>
+  <tr><td>2</td><td><code>profiles</code>, <code>user_profiles</code>, <code>feed_posts</code>, <code>feed_likes</code>, <code>cafes</code>, <code>cafe_memberships</code>, <code>user_follows</code> referansları yasak</td><td>DROP edilmiş ya da write-revoked legacy; policy/grant yeniden açılamaz</td></tr>
+  <tr><td>3</td><td>Yeni cadde içerik tablosu = <code>diaspora_key</code> + CHECK + feed/list filtresi</td><td>Çoklu diaspora sözleşmesi (mig 012)</td></tr>
+  <tr><td>4</td><td>Yeni RPC hata kodu → <code>cadde-rules.ts</code> Türkçe mesaj haritasına eklenir</td><td>CLAUDE.md zorunlu kuralı</td></tr>
+  <tr><td>5</td><td>SQL'deki kuralı değiştiren her şey TS aynasını ve testini birlikte değiştirir (<code>can_post_kopru</code>, <code>can_join_cadde_cafe</code>, ranking, blocklist)</td><td>Ayna sözleşmeleri testli; tek taraflı değişiklik testte patlar</td></tr>
+  <tr><td>6</td><td>Limit/bayrak hardcode edilmez → <code>cadde_settings</code> anahtarı</td><td>Ürün kararı = SQL update ilkesi</td></tr>
+  <tr><td>7</td><td>Yetki bilgisi asla localStorage'da tutulmaz → AFS attribute / <code>user_verifications</code> / <code>cadde_settings</code></td><td>Plus'ın en büyük güvenlik açığı; fin'de sunucu doğrular</td></tr>
+  <tr><td>8</td><td><code>useAuth</code> canonical'den import edilir (<code>@/components/auth</code>), shim'den değil</td><td>B5 migrasyon hedefi; yeni kod shim bağımlılığı artırmasın</td></tr>
+  <tr><td>9</td><td>Kullanıcıya görünen Türkçe metinlerde <code>trUpper/trLower/trIncludes/trCompare</code>; UTF-8 doğrulaması <code>npm run verify:text</code></td><td>Türkçe metin zorunlu kuralları</td></tr>
+  <tr><td>10</td><td>Migration yalnız eklenir (rename/silme yok); canlı DB'ye psql+pooler ile UTF-8 dosyadan</td><td>221+ migration üretimde immutable; PowerShell→psql Türkçe karakter tuzağı</td></tr>
+  <tr><td>11</td><td>Veri çekme: <code>*-api.ts</code> + React Query (<code>cadde-query-keys.ts</code> düzenine uy); component içi fetch yok</td><td>Muhasebe/cadde referans deseni</td></tr>
+  <tr><td>12</td><td>Yeni iş kuralı = test (rules/ranking/schemas örneğinde olduğu gibi); sayfa eklerse route testi</td><td>Plus'ta hiç test yok; fin standardı bu</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="risk">8. Risk Analizi — "Ne olur, ne ederiz?"</h2>
+
+<table>
+  <tr><th>Senaryo</th><th>Olasılık</th><th>Etki</th><th>Önlem</th></tr>
+  <tr>
+    <td>Plus kodu kopyalanır, legacy tablolara yazmaya çalışır → sessiz üretim hatası</td>
+    <td><span class="badge b-red">Yüksek</span> (dikkatsiz kopyalamada)</td>
+    <td>Kullanıcı içeriği kaybolur gibi görünür; destek yükü</td>
+    <td>Kural #1–2; PR review'da <code>supabase.from("(feed_|cafe|user_follows|profiles)</code> grep'i; kopyala-yapıştır yerine yeniden yazım</td>
+  </tr>
+  <tr>
+    <td>Cafe kural değişikliği (Faz 3) SQL+TS aynasını bozar</td>
+    <td><span class="badge b-amber">Orta</span></td>
+    <td>Client "girebilirsin" der, RPC reddeder (ya da tersi — güvenlik deliği)</td>
+    <td>Ayna testleri zorunlu; SQL ve TS aynı PR'da; <code>cadde-rules.test.ts</code> genişletilir</td>
+  </tr>
+  <tr>
+    <td>Görsel yükleme açılınca uygunsuz içerik</td>
+    <td><span class="badge b-amber">Orta</span></td>
+    <td>Moderasyon yükü, itibar</td>
+    <td>İlan görseli rapor edilebilir olmalı (<code>report_cadde_entity_v1</code> kapsamına), bucket boyut limiti, gerekirse görsel yayını moderasyon onayına bağlama ayarı (<code>cadde_settings</code>)</td>
+  </tr>
+  <tr>
+    <td>Takip grafiği CKS'yi bozar (echo chamber / spam takip)</td>
+    <td><span class="badge b-amber">Orta</span></td>
+    <td>Feed kalitesi düşer</td>
+    <td>Takip sinyal ağırlığı <code>cadde_settings</code>'te düşük başlar; günlük takip limiti; kill-switch ayarı</td>
+  </tr>
+  <tr>
+    <td>Ambiance Realtime maliyeti / karmaşıklığı küçümsenir</td>
+    <td><span class="badge b-amber">Orta</span></td>
+    <td>Faz 3 takvimi 2-3×'e uzar</td>
+    <td>Önce lokal sürümle (b şıkkı) yüzeyi yayınla, Realtime'ı ayrı iterasyona bırak</td>
+  </tr>
+  <tr>
+    <td>types.ts (B1) regen edilmeden yeni RPC'ler <code>as any</code> cast'leriyle yazılır</td>
+    <td><span class="badge b-red">Yüksek</span> (token yenilenmezse)</td>
+    <td>~103 <code>as any</code> borcu büyür; B7 hedefi geriler</td>
+    <td>Faz 0'da token yenile + regen; olmuyorsa yeni cast'ler <code>cadde-internal.ts</code>'teki izole desene hapsedilir</td>
+  </tr>
+  <tr>
+    <td>Plus repo'su ilerlemeye devam eder, referans bayatlar</td>
+    <td><span class="badge b-blue">Kesin</span></td>
+    <td>Bu rapor zamanla eskir</td>
+    <td>S9 kararı; tek seferlikse sorun değil, değilse aktarım öncesi <code>git -C reference/corteqs_plus pull</code> + bu raporun tarihine bak</td>
+  </tr>
+  <tr>
+    <td>SEO-kilitli rotalara dokunulur (<code>/cadde</code> alt yolları)</td>
+    <td><span class="badge b-blue">Düşük</span></td>
+    <td>SEO kaybı</td>
+    <td>Yeni yüzeyler mevcut rotaların altına eklenir (<code>/cadde/kesfet</code> gibi); mevcut path'ler değişmez</td>
+  </tr>
+</table>
+
+<div class="card verdict" style="margin-top:32px">
+  <strong>🧭 Net tavsiye:</strong>
+  <ol>
+    <li><strong>Hemen:</strong> Faz 1 (UI aktarımları) + Faz 2 (çarşı görseli + profil vitrini) — düşük risk, fin'in açık kuyruğunu da kapatır.</li>
+    <li><strong>Karar sonrası:</strong> S1–S3 yanıtlanınca Faz 3 (cafe türleri + ambiance-lokal), en son Faz 4 (sosyal grafik).</li>
+    <li><strong>Asla:</strong> plus'tan veri katmanı kodu, localStorage yetki bayrağı ve legacy tablo referansı.</li>
+  </ol>
+</div>
+
+<footer>
+  cadde_migration.html · corteqs_fin çalışma raporu · 2026-06-12 ·
+  Kaynak analiz: reference/corteqs_plus @ 27cfcd8 ↔ corteqs_fin @ main (Cadde 3.0 mig 001–014)
+</footer>
+
+</div>
+</body>
+</html>

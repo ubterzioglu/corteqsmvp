@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hizmet Bulucu — Senin Yapman Gerekenler</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg-card: #171a23;
+    --bg-soft: #1e2230;
+    --border: #2a2f3e;
+    --text: #e6e9f0;
+    --text-dim: #9aa3b2;
+    --accent: #6ea8fe;
+    --accent-2: #7ee2b8;
+    --warn: #ffce6b;
+    --danger: #ff8b8b;
+    --code-bg: #0b0d13;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.7;
+    font-size: 16px;
+  }
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 56px 28px 96px;
+  }
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+  }
+  h1 {
+    font-size: 2rem;
+    line-height: 1.25;
+    margin: 0 0 14px;
+    letter-spacing: -0.02em;
+  }
+  h1 .badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: var(--accent);
+    color: #0b0d13;
+    padding: 3px 10px;
+    border-radius: 999px;
+    vertical-align: middle;
+    margin-left: 8px;
+  }
+  .meta {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+  .callout {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 24px 0;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--accent); }
+  .toc {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 28px 0 44px;
+  }
+  .toc h2 {
+    margin: 0 0 12px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+  }
+  .toc ol {
+    margin: 0;
+    padding-left: 20px;
+    columns: 2;
+    column-gap: 24px;
+  }
+  .toc a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.92rem;
+  }
+  .toc a:hover { color: var(--accent); }
+  section {
+    margin: 44px 0;
+    scroll-margin-top: 24px;
+  }
+  h2 {
+    font-size: 1.4rem;
+    margin: 0 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  h2 .num {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0b0d13;
+    background: var(--accent-2);
+    padding: 2px 10px;
+    border-radius: 6px;
+  }
+  h3 {
+    font-size: 1.05rem;
+    margin: 24px 0 8px;
+    color: var(--text);
+  }
+  p { margin: 12px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 6px 0; }
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    word-break: break-word;
+  }
+  a:hover { text-decoration: underline; }
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.86em;
+    background: var(--code-bg);
+    color: var(--accent-2);
+    padding: 2px 6px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #d7def0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 0.9rem;
+    display: block;
+    overflow-x: auto;
+  }
+  th, td {
+    text-align: left;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th {
+    background: var(--bg-soft);
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  td code { white-space: nowrap; }
+  .tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 5px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .tag-opt { background: rgba(255,206,107,0.15); color: var(--warn); }
+  .tag-time { background: rgba(110,168,254,0.14); color: var(--accent); }
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    text-align: center;
+  }
+  .strong-accent { color: var(--accent-2); font-weight: 600; }
+  .strong-warn { color: var(--warn); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Hizmet Bulucu — Senin Yapman Gerekenler (Adım Adım) <span class="badge">Rehber</span></h1>
+    <p class="meta"><strong>Tarih:</strong> 2026-06-12 · Kod tamam, migration'lar canlıda. Aşağıdaki adımlar yalnız senin yapabileceğin işler: hesap açma, sır girme, Coolify kurulumu, görsel doğrulama.</p>
+  </header>
+
+  <nav class="toc">
+    <h2>İçindekiler</h2>
+    <ol>
+      <li><a href="#adim-0">Adım 0 — Commit + push</a></li>
+      <li><a href="#adim-1">Adım 1 — Tavily hesabı + API anahtarı</a></li>
+      <li><a href="#adim-2">Adım 2 — SerpAPI hesabı</a></li>
+      <li><a href="#adim-3">Adım 3 — Coolify worker kurulumu</a></li>
+      <li><a href="#adim-4">Adım 4 — Canary işi çalıştır</a></li>
+      <li><a href="#adim-5">Adım 5 — Aday yayınla ve doğrula</a></li>
+      <li><a href="#adim-6">Adım 6 — Tip dosyasını yenile</a></li>
+      <li><a href="#adim-7">Adım 7 — Sürüm doğrulaması</a></li>
+      <li><a href="#sorun">Sorun çıkarsa</a></li>
+    </ol>
+  </nav>
+
+  <!-- Adım 0 -->
+  <section id="adim-0">
+    <h2><span class="num">0</span> Commit + push <span class="tag tag-time">5 dk</span></h2>
+    <p>Working tree'de Service Finder dosyaları commit'siz duruyor (senin <code>.gitignore</code> ve <code>deep-research-report.md</code> değişikliklerinle birlikte). Kendi değişikliklerini ayır, sonra:</p>
+<pre><code>git add supabase/migrations/20260614100000_create_service_finder_module.sql supabase/migrations/20260614103000_create_service_finder_rpcs.sql workers/ src/lib/service-finder-api.ts src/lib/service-finder-schemas.ts src/lib/service-finder-format.ts src/lib/service-finder-format.test.ts src/hooks/useServiceFinder.ts src/pages/admin/service-finder/ src/components/admin/service-finder/ src/pages/admin/routes.tsx src/lib/admin-shell/admin-route-meta.ts src/lib/admin-shell/admin-navigation-registry.ts .env.example vitest.config.ts docs/plans/service-finder/
+git commit -m "feat(service-finder): AI tarama modulu - sema, RPC, worker, admin UI"
+git push</code></pre>
+    <div class="callout">Push sonrası Coolify App 1 (web) otomatik deploy oluyorsa <code>/admin</code>'de <strong>"Hizmet Bulucu"</strong> menü grubu görünür hale gelir. Migration'lar zaten canlıda olduğu için sayfalar çalışır.</div>
+  </section>
+
+  <!-- Adım 1 -->
+  <section id="adim-1">
+    <h2><span class="num">1</span> Tavily hesabı + API anahtarı <span class="tag tag-time">10 dk</span></h2>
+    <ol>
+      <li><a href="https://app.tavily.com">app.tavily.com</a> → kayıt ol (Free plan: 1.000 kredi/ay — canary için fazlasıyla yeter).</li>
+      <li>Dashboard → <strong>API Keys</strong> → anahtar oluştur, kopyala (<code>tvly-...</code>).</li>
+      <li>Bu anahtar <span class="strong-accent">yalnız Coolify'a</span> girilecek (Adım 3) — repoya / <code>.env.example</code>'a asla yazma.</li>
+    </ol>
+  </section>
+
+  <!-- Adım 2 -->
+  <section id="adim-2">
+    <h2><span class="num">2</span> SerpAPI hesabı <span class="tag tag-opt">opsiyonel</span> <span class="tag tag-time">10 dk</span></h2>
+    <ol>
+      <li><a href="https://serpapi.com">serpapi.com</a> → kayıt ol (Free: 250 arama/ay).</li>
+      <li>Account → API Key'i kopyala.</li>
+      <li>İstemiyorsan atla: Coolify'da <code>SERVICE_FINDER_ENABLE_SERPAPI_FALLBACK=false</code> ayarla ve <code>SERPAPI_API_KEY</code>'i hiç girme. (Admin panelden de <strong>Sağlayıcılar → SerpAPI → Etkin</strong>'i kapat.)</li>
+    </ol>
+  </section>
+
+  <!-- Adım 3 -->
+  <section id="adim-3">
+    <h2><span class="num">3</span> Coolify'da worker uygulamasını kur <span class="tag tag-time">15 dk</span></h2>
+    <p>Mevcut web uygulamasına (App 1) <span class="strong-warn">DOKUNMA</span>. Yeni, ikinci bir uygulama:</p>
+    <ol>
+      <li>Coolify → <strong>+ New → Application</strong> → kaynak repo: <code>ubterzioglu/corteqsmvp</code>, branch <code>main</code>.</li>
+      <li>
+        <strong>Base Directory:</strong> <code>workers/service-finder</code>
+        <ul>
+          <li>Build Pack: Nixpacks (otomatik algılar) · Build: <code>npm ci && npm run build</code> · Start: <code>npm run start</code></li>
+          <li>Base directory sorun çıkarırsa: Build Pack = <strong>Dockerfile</strong>, Dockerfile Location = <code>workers/service-finder/Dockerfile</code>, Base Directory = <code>workers/service-finder</code>.</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Environment Variables</strong> sekmesine şunları gir:
+        <table>
+          <thead>
+            <tr><th>Değişken</th><th>Değer</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>SUPABASE_URL</code></td><td><code>https://injprdrsklkxgnaiixzh.supabase.co</code></td></tr>
+            <tr><td><code>SUPABASE_SERVICE_ROLE_KEY</code></td><td>App 1'dekiyle aynı (Supabase Dashboard → Settings → API)</td></tr>
+            <tr><td><code>GEMINI_API_KEY</code></td><td>Mevcut anahtarın (App 1 / edge function'larla aynı)</td></tr>
+            <tr><td><code>TAVILY_API_KEY</code></td><td>Adım 1'deki anahtar</td></tr>
+            <tr><td><code>SERPAPI_API_KEY</code></td><td>Adım 2'deki anahtar (opsiyonel)</td></tr>
+            <tr><td><code>SERVICE_FINDER_WORKER_ID</code></td><td><code>sf-worker-coolify-1</code></td></tr>
+          </tbody>
+        </table>
+      </li>
+      <li><strong>Health Check'i kapat</strong> (worker HTTP servis etmez; açık kalırsa Coolify sürekli restart atar).</li>
+      <li>Deploy → loglarda şunu görmelisin: <code>Service Finder worker başladı: sf-worker-coolify-1</code>.</li>
+    </ol>
+  </section>
+
+  <!-- Adım 4 -->
+  <section id="adim-4">
+    <h2><span class="num">4</span> Canary işi çalıştır <span class="tag tag-time">10 dk + ~5 dk bekleme</span></h2>
+    <ol>
+      <li><code>https://corteqs.net/admin/service-finder</code> → giriş yap (admin hesabınla).</li>
+      <li>
+        "Hızlı İş Oluştur":
+        <ul>
+          <li>Şablon: <strong>Doktor</strong> · Başlık: <code>Canary - Dortmund doktor</code></li>
+          <li>Lokasyon: <code>Dortmund, Nordrhein-Westfalen, Germany</code> · Şehir: <code>Dortmund</code> · Ülke: <code>DE</code></li>
+          <li><span class="strong-warn">Soft cap: 0.10 · Hard cap: 0.20</span> (canary'de düşük tut!)</li>
+        </ul>
+      </li>
+      <li>"İşi Kuyruğa Al" → iş listesinde <code>Kuyrukta</code> → worker alınca <code>Çalışıyor</code> olur (sayfa 4 sn'de bir kendini yeniler).</li>
+      <li>
+        İş detayında kontrol et:
+        <ul>
+          <li><strong>Maliyetler</strong> sekmesi: her arama/ekstraksiyon/sınıflandırma için satır düşüyor mu?</li>
+          <li><strong>Kaynaklar</strong> sekmesi: <code>Robots engelledi</code> durumlu kaynak varsa robots kontrolü çalışıyor demektir.</li>
+          <li>Bütçe çubuğu doluyorsa ve $0.20'ye varınca iş <code>Bütçe durdurdu</code>'ya geçiyorsa hard-stop çalışıyor.</li>
+          <li>Normal bitişte durum <code>İncelemede</code> olur ve <strong>Adaylar</strong> sekmesi dolar.</li>
+        </ul>
+      </li>
+    </ol>
+  </section>
+
+  <!-- Adım 5 -->
+  <section id="adim-5">
+    <h2><span class="num">5</span> Aday yayınla ve katalogda doğrula <span class="tag tag-time">5 dk</span></h2>
+    <ol>
+      <li>İş detayı → Adaylar → bir adaya tıkla → çekmecede kanıt alıntılarını ve alanları kontrol et.</li>
+      <li>Gerekirse isim/hizmet/dil düzelt → <strong>Kataloğa Yayınla</strong>.</li>
+      <li>Toast'ta <code>catalog_item_id</code> görünür; <code>/admin/data</code>'da kaydı ara — kayıt, iletişim, lokasyon ve dilleriyle birlikte gelmiş olmalı.</li>
+    </ol>
+  </section>
+
+  <!-- Adım 6 -->
+  <section id="adim-6">
+    <h2><span class="num">6</span> Tip dosyasını yenile <span class="tag tag-time">5 dk</span> <span class="tag tag-opt">acil değil</span></h2>
+    <p><code>.env.local</code>'deki <code>SUPABASE_ACCESS_TOKEN</code> süresi dolmuş (Unauthorized). Yenisi için:</p>
+<pre><code>supabase login          # tarayıcı açılır, onayla
+supabase gen types typescript --project-id injprdrsklkxgnaiixzh --schema public > supabase/types.ts
+npm run test            # hiçbir şeyin kırılmadığını doğrula
+git add supabase/types.ts && git commit -m "chore: regenerate supabase types (service finder)"</code></pre>
+    <div class="callout">
+      <strong>Not:</strong> <code>--db-url</code> varyantı Docker ister (makinede yok) — yukarıdaki Management API yolu Docker'sız çalışır.<br>
+      Bu adım acil değil; UI tipsiz <code>supabase.rpc(...)</code> deseniyle çalışıyor (repo geleneği, backlog B1).
+    </div>
+  </section>
+
+  <!-- Adım 7 -->
+  <section id="adim-7">
+    <h2><span class="num">7</span> Sürüm doğrulaması <span class="tag tag-time">2 dk</span></h2>
+<pre><code>$env:BASE_URL='https://corteqs.net'; npm run verify:release</code></pre>
+  </section>
+
+  <!-- Sorun çıkarsa -->
+  <section id="sorun">
+    <h2>Sorun çıkarsa</h2>
+    <table>
+      <thead>
+        <tr><th>Belirti</th><th>Muhtemel neden / çözüm</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>İş hep <code>Kuyrukta</code> kalıyor</td>
+          <td>Worker çalışmıyor → Coolify App 2 loglarına bak; env eksikse worker açılışta hangi değişkenin eksik olduğunu yazar.</td>
+        </tr>
+        <tr>
+          <td><code>Yapılandırma/yetki hatası</code> event'i</td>
+          <td>İlgili API anahtarı yanlış/eksik (<code>TAVILY_API_KEY</code> vb.) — iş <code>failed</code> olur, anahtarı düzelt, işte "Yeniden Dene".</td>
+        </tr>
+        <tr>
+          <td>Aday gelmiyor ama maliyet işliyor</td>
+          <td>Normal olabilir: güven &lt; 30 olan sayfalar <code>İlgisiz</code> sayılır; sorguları/şablonu genişlet.</td>
+        </tr>
+        <tr>
+          <td>Acil durdurma</td>
+          <td>Sağlayıcılar sayfasında üçünü de "Etkin" kapat + Coolify App 2'yi durdur.</td>
+        </tr>
+        <tr>
+          <td>Tam geri alma</td>
+          <td><code>docs/plans/service-finder/2026-06-12-e2e.md</code> → Rollback bölümü.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    Hizmet Bulucu dağıtım rehberi · 2026-06-12
+  </footer>
+
+</div>
+</body>
+</html>

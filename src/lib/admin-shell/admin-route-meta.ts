@@ -74,6 +74,12 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/muhasebe/giderler",
   "/admin/muhasebe/gelirler",
   "/admin/muhasebe/nakit-akisi",
+  "/admin/service-finder",
+  "/admin/service-finder/jobs",
+  "/admin/service-finder/jobs/:jobId",
+  "/admin/service-finder/providers",
+  "/admin/service-finder/templates",
+  "/admin/service-finder/costs",
 ];
 
 /**
