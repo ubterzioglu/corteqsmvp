@@ -7,33 +7,394 @@ export type Json =
   | Json[]
 
 export type Database = {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.4"
   }
   public: {
     Tables: {
+      _bak_org_catalog_item_categories_20260609: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          is_primary: boolean | null
+          item_id: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          is_primary?: boolean | null
+          item_id?: string | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          is_primary?: boolean | null
+          item_id?: string | null
+        }
+        Relationships: []
+      }
+      _bak_org_catalog_item_contacts_20260609: {
+        Row: {
+          contact_type: string | null
+          contact_value: string | null
+          created_at: string | null
+          id: string | null
+          is_primary: boolean | null
+          is_public: boolean | null
+          item_id: string | null
+          label: string | null
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          contact_type?: string | null
+          contact_value?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_primary?: boolean | null
+          is_public?: boolean | null
+          item_id?: string | null
+          label?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          contact_type?: string | null
+          contact_value?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_primary?: boolean | null
+          is_public?: boolean | null
+          item_id?: string | null
+          label?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      _bak_org_catalog_item_links_20260609: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          is_public: boolean | null
+          item_id: string | null
+          label: string | null
+          link_type: string | null
+          sort_order: number | null
+          updated_at: string | null
+          url: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          is_public?: boolean | null
+          item_id?: string | null
+          label?: string | null
+          link_type?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+          url?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          is_public?: boolean | null
+          item_id?: string | null
+          label?: string | null
+          link_type?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+          url?: string | null
+        }
+        Relationships: []
+      }
+      _bak_org_catalog_item_locations_20260609: {
+        Row: {
+          address_line: string | null
+          city: string | null
+          country_code: string | null
+          created_at: string | null
+          geo: unknown
+          id: string | null
+          is_primary: boolean | null
+          item_id: string | null
+          latitude: number | null
+          longitude: number | null
+          postal_code: string | null
+          region: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          address_line?: string | null
+          city?: string | null
+          country_code?: string | null
+          created_at?: string | null
+          geo?: unknown
+          id?: string | null
+          is_primary?: boolean | null
+          item_id?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          postal_code?: string | null
+          region?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          address_line?: string | null
+          city?: string | null
+          country_code?: string | null
+          created_at?: string | null
+          geo?: unknown
+          id?: string | null
+          is_primary?: boolean | null
+          item_id?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          postal_code?: string | null
+          region?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      _bak_org_catalog_item_media_20260609: {
+        Row: {
+          alt_text: string | null
+          caption: string | null
+          created_at: string | null
+          id: string | null
+          is_primary: boolean | null
+          is_public: boolean | null
+          item_id: string | null
+          media_type: string | null
+          metadata: Json | null
+          sort_order: number | null
+          storage_bucket: string | null
+          storage_path: string | null
+          thumbnail_url: string | null
+          updated_at: string | null
+          url: string | null
+        }
+        Insert: {
+          alt_text?: string | null
+          caption?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_primary?: boolean | null
+          is_public?: boolean | null
+          item_id?: string | null
+          media_type?: string | null
+          metadata?: Json | null
+          sort_order?: number | null
+          storage_bucket?: string | null
+          storage_path?: string | null
+          thumbnail_url?: string | null
+          updated_at?: string | null
+          url?: string | null
+        }
+        Update: {
+          alt_text?: string | null
+          caption?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_primary?: boolean | null
+          is_public?: boolean | null
+          item_id?: string | null
+          media_type?: string | null
+          metadata?: Json | null
+          sort_order?: number | null
+          storage_bucket?: string | null
+          storage_path?: string | null
+          thumbnail_url?: string | null
+          updated_at?: string | null
+          url?: string | null
+        }
+        Relationships: []
+      }
+      _bak_org_catalog_items_20260609: {
+        Row: {
+          attributes: Json | null
+          created_at: string | null
+          created_by_user_id: string | null
+          headline: string | null
+          id: string | null
+          item_type: string | null
+          linked_user_id: string | null
+          long_description: string | null
+          platform_role_key: string | null
+          published_at: string | null
+          short_description: string | null
+          slug: string | null
+          status: string | null
+          title: string | null
+          updated_at: string | null
+          verification_status: string | null
+          visibility: string | null
+        }
+        Insert: {
+          attributes?: Json | null
+          created_at?: string | null
+          created_by_user_id?: string | null
+          headline?: string | null
+          id?: string | null
+          item_type?: string | null
+          linked_user_id?: string | null
+          long_description?: string | null
+          platform_role_key?: string | null
+          published_at?: string | null
+          short_description?: string | null
+          slug?: string | null
+          status?: string | null
+          title?: string | null
+          updated_at?: string | null
+          verification_status?: string | null
+          visibility?: string | null
+        }
+        Update: {
+          attributes?: Json | null
+          created_at?: string | null
+          created_by_user_id?: string | null
+          headline?: string | null
+          id?: string | null
+          item_type?: string | null
+          linked_user_id?: string | null
+          long_description?: string | null
+          platform_role_key?: string | null
+          published_at?: string | null
+          short_description?: string | null
+          slug?: string | null
+          status?: string | null
+          title?: string | null
+          updated_at?: string | null
+          verification_status?: string | null
+          visibility?: string | null
+        }
+        Relationships: []
+      }
+      _bak_org_catalog_search_documents_20260609: {
+        Row: {
+          category_slugs: string[] | null
+          city: string | null
+          country_code: string | null
+          embedding: string | null
+          filter_data: Json | null
+          item_id: string | null
+          item_type: string | null
+          language_codes: string[] | null
+          search_text: string | null
+          search_vector: unknown
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          category_slugs?: string[] | null
+          city?: string | null
+          country_code?: string | null
+          embedding?: string | null
+          filter_data?: Json | null
+          item_id?: string | null
+          item_type?: string | null
+          language_codes?: string[] | null
+          search_text?: string | null
+          search_vector?: unknown
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          category_slugs?: string[] | null
+          city?: string | null
+          country_code?: string | null
+          embedding?: string | null
+          filter_data?: Json | null
+          item_id?: string | null
+          item_type?: string | null
+          language_codes?: string[] | null
+          search_text?: string | null
+          search_vector?: unknown
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      _bak_org_organization_details_20260609: {
+        Row: {
+          created_at: string | null
+          employee_count: number | null
+          founded_year: number | null
+          is_nonprofit: boolean | null
+          item_id: string | null
+          legal_name: string | null
+          metadata: Json | null
+          organization_kind: string | null
+          primary_contact_name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          employee_count?: number | null
+          founded_year?: number | null
+          is_nonprofit?: boolean | null
+          item_id?: string | null
+          legal_name?: string | null
+          metadata?: Json | null
+          organization_kind?: string | null
+          primary_contact_name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          employee_count?: number | null
+          founded_year?: number | null
+          is_nonprofit?: boolean | null
+          item_id?: string | null
+          legal_name?: string | null
+          metadata?: Json | null
+          organization_kind?: string | null
+          primary_contact_name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      _bak_org_source_records_20260609: {
+        Row: {
+          created_at: string | null
+          external_id: string | null
+          id: string | null
+          imported_at: string | null
+          item_id: string | null
+          last_seen_at: string | null
+          raw_snapshot: Json | null
+          source_type: string | null
+          source_url: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          external_id?: string | null
+          id?: string | null
+          imported_at?: string | null
+          item_id?: string | null
+          last_seen_at?: string | null
+          raw_snapshot?: Json | null
+          source_type?: string | null
+          source_url?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          external_id?: string | null
+          id?: string | null
+          imported_at?: string | null
+          item_id?: string | null
+          last_seen_at?: string | null
+          raw_snapshot?: Json | null
+          source_type?: string | null
+          source_url?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       _member_backup_20260609: {
         Row: {
           address: string | null
@@ -127,6 +488,33 @@ export type Database = {
           profile_type?: string | null
           school?: string | null
           show_on_map?: boolean | null
+        }
+        Relationships: []
+      }
+      _submission_backfill_log_20260609: {
+        Row: {
+          attribute_key: string | null
+          detail: Json | null
+          id: number
+          kind: string
+          logged_at: string
+          user_id: string | null
+        }
+        Insert: {
+          attribute_key?: string | null
+          detail?: Json | null
+          id?: never
+          kind: string
+          logged_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          attribute_key?: string | null
+          detail?: Json | null
+          id?: never
+          kind?: string
+          logged_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -521,6 +909,166 @@ export type Database = {
           },
         ]
       }
+      arge_cards: {
+        Row: {
+          content: string | null
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          title: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          title: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      arge_files: {
+        Row: {
+          card_id: string | null
+          created_at: string
+          created_by: string
+          description: string | null
+          file_name: string
+          file_path: string
+          id: string
+          title: string
+        }
+        Insert: {
+          card_id?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          file_name: string
+          file_path: string
+          id?: string
+          title: string
+        }
+        Update: {
+          card_id?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          file_name?: string
+          file_path?: string
+          id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arge_files_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "arge_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      arge_links: {
+        Row: {
+          card_id: string | null
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          title: string
+          url: string
+        }
+        Insert: {
+          card_id?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          title: string
+          url: string
+        }
+        Update: {
+          card_id?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          title?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arge_links_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "arge_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_posts: {
+        Row: {
+          category: string
+          category_label: string
+          content_markdown: string
+          country: string
+          country_label: string
+          cover_image: string | null
+          created_at: string
+          excerpt: string
+          id: string
+          published: boolean
+          published_at: string | null
+          slug: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          category_label?: string
+          content_markdown?: string
+          country?: string
+          country_label?: string
+          cover_image?: string | null
+          created_at?: string
+          excerpt?: string
+          id?: string
+          published?: boolean
+          published_at?: string | null
+          slug: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          category_label?: string
+          content_markdown?: string
+          country?: string
+          country_label?: string
+          cover_image?: string | null
+          created_at?: string
+          excerpt?: string
+          id?: string
+          published?: boolean
+          published_at?: string | null
+          slug?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       business_details: {
         Row: {
           appointment_url: string | null
@@ -645,21 +1193,36 @@ export type Database = {
       }
       cadde_cafe_members: {
         Row: {
+          answer: string | null
+          approved_at: string | null
+          approved_by: string | null
           cafe_id: string
           created_at: string
           id: string
+          joined_at: string
+          status: string
           user_id: string
         }
         Insert: {
+          answer?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           cafe_id: string
           created_at?: string
           id?: string
+          joined_at?: string
+          status?: string
           user_id: string
         }
         Update: {
+          answer?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           cafe_id?: string
           created_at?: string
           id?: string
+          joined_at?: string
+          status?: string
           user_id?: string
         }
         Relationships: [
@@ -674,56 +1237,83 @@ export type Database = {
       }
       cadde_cafes: {
         Row: {
+          archived_at: string | null
+          capacity: number | null
           city_id: string | null
           content_mode: string
           country_id: string | null
           created_at: string
+          diaspora_key: string
           ends_at: string
+          entry_mode: string
+          entry_question: string | null
+          external_links: Json
           host_name_override: string | null
           host_user_id: string | null
           id: string
           is_active: boolean
           is_bridge: boolean
           is_free: boolean
+          referral_code_hash: string | null
+          slug: string | null
           starts_at: string
           status: string
           summary: string
+          theme_key: string | null
           title: string
           updated_at: string
         }
         Insert: {
+          archived_at?: string | null
+          capacity?: number | null
           city_id?: string | null
           content_mode?: string
           country_id?: string | null
           created_at?: string
+          diaspora_key?: string
           ends_at?: string
+          entry_mode?: string
+          entry_question?: string | null
+          external_links?: Json
           host_name_override?: string | null
           host_user_id?: string | null
           id?: string
           is_active?: boolean
           is_bridge?: boolean
           is_free?: boolean
+          referral_code_hash?: string | null
+          slug?: string | null
           starts_at?: string
           status?: string
           summary: string
+          theme_key?: string | null
           title: string
           updated_at?: string
         }
         Update: {
+          archived_at?: string | null
+          capacity?: number | null
           city_id?: string | null
           content_mode?: string
           country_id?: string | null
           created_at?: string
+          diaspora_key?: string
           ends_at?: string
+          entry_mode?: string
+          entry_question?: string | null
+          external_links?: Json
           host_name_override?: string | null
           host_user_id?: string | null
           id?: string
           is_active?: boolean
           is_bridge?: boolean
           is_free?: boolean
+          referral_code_hash?: string | null
+          slug?: string | null
           starts_at?: string
           status?: string
           summary?: string
+          theme_key?: string | null
           title?: string
           updated_at?: string
         }
@@ -748,6 +1338,7 @@ export type Database = {
         Row: {
           country_id: string
           created_at: string
+          geo_city_id: string | null
           id: string
           is_active: boolean
           name: string
@@ -757,15 +1348,17 @@ export type Database = {
         Insert: {
           country_id: string
           created_at?: string
+          geo_city_id?: string | null
           id?: string
           is_active?: boolean
           name: string
           sort_order?: number
-          timezone: string
+          timezone?: string
         }
         Update: {
           country_id?: string
           created_at?: string
+          geo_city_id?: string | null
           id?: string
           is_active?: boolean
           name?: string
@@ -780,12 +1373,20 @@ export type Database = {
             referencedRelation: "cadde_countries"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cadde_cities_geo_city_id_fkey"
+            columns: ["geo_city_id"]
+            isOneToOne: false
+            referencedRelation: "geo_cities"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cadde_countries: {
         Row: {
           code: string
           created_at: string
+          geo_country_id: string | null
           id: string
           is_active: boolean
           name: string
@@ -794,6 +1395,7 @@ export type Database = {
         Insert: {
           code: string
           created_at?: string
+          geo_country_id?: string | null
           id?: string
           is_active?: boolean
           name: string
@@ -802,10 +1404,82 @@ export type Database = {
         Update: {
           code?: string
           created_at?: string
+          geo_country_id?: string | null
           id?: string
           is_active?: boolean
           name?: string
           sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cadde_countries_geo_country_id_fkey"
+            columns: ["geo_country_id"]
+            isOneToOne: false
+            referencedRelation: "geo_countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cadde_interest_catalog: {
+        Row: {
+          is_active: boolean
+          key: string
+          label_tr: string
+          sort_order: number
+        }
+        Insert: {
+          is_active?: boolean
+          key: string
+          label_tr: string
+          sort_order?: number
+        }
+        Update: {
+          is_active?: boolean
+          key?: string
+          label_tr?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      cadde_moderation_queue: {
+        Row: {
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          reason: string
+          report_count: number
+          resolution_note: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          risk_score: number | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          id?: string
+          reason: string
+          report_count?: number
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          risk_score?: number | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          reason?: string
+          report_count?: number
+          resolution_note?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          risk_score?: number | null
+          status?: string
         }
         Relationships: []
       }
@@ -837,6 +1511,36 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "cadde_post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cadde_post_interests: {
+        Row: {
+          interest_key: string
+          post_id: string
+        }
+        Insert: {
+          interest_key: string
+          post_id: string
+        }
+        Update: {
+          interest_key?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cadde_post_interests_interest_key_fkey"
+            columns: ["interest_key"]
+            isOneToOne: false
+            referencedRelation: "cadde_interest_catalog"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "cadde_post_interests_post_id_fkey"
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "cadde_posts"
@@ -883,17 +1587,23 @@ export type Database = {
           author_role: string | null
           author_user_id: string | null
           body: string
+          cafe_id: string | null
           city_id: string | null
           content_mode: string
           country_id: string | null
           created_at: string
+          diaspora_key: string
+          engagement_score: number
           id: string
           is_bridge: boolean
+          need_category: string | null
           pinned: boolean
           post_type: string
+          published_at: string | null
           status: string
           title: string | null
           updated_at: string
+          visibility: string
         }
         Insert: {
           author_avatar_url?: string | null
@@ -901,17 +1611,23 @@ export type Database = {
           author_role?: string | null
           author_user_id?: string | null
           body: string
+          cafe_id?: string | null
           city_id?: string | null
           content_mode?: string
           country_id?: string | null
           created_at?: string
+          diaspora_key?: string
+          engagement_score?: number
           id?: string
           is_bridge?: boolean
+          need_category?: string | null
           pinned?: boolean
           post_type?: string
+          published_at?: string | null
           status?: string
           title?: string | null
           updated_at?: string
+          visibility?: string
         }
         Update: {
           author_avatar_url?: string | null
@@ -919,19 +1635,32 @@ export type Database = {
           author_role?: string | null
           author_user_id?: string | null
           body?: string
+          cafe_id?: string | null
           city_id?: string | null
           content_mode?: string
           country_id?: string | null
           created_at?: string
+          diaspora_key?: string
+          engagement_score?: number
           id?: string
           is_bridge?: boolean
+          need_category?: string | null
           pinned?: boolean
           post_type?: string
+          published_at?: string | null
           status?: string
           title?: string | null
           updated_at?: string
+          visibility?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "cadde_posts_cafe_id_fkey"
+            columns: ["cafe_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_cafes"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "cadde_posts_city_id_fkey"
             columns: ["city_id"]
@@ -946,7 +1675,243 @@ export type Database = {
             referencedRelation: "cadde_countries"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cadde_posts_need_category_fkey"
+            columns: ["need_category"]
+            isOneToOne: false
+            referencedRelation: "cadde_interest_catalog"
+            referencedColumns: ["key"]
+          },
         ]
+      }
+      cadde_promotion_campaigns: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          campaign_type: string
+          created_at: string
+          description: string
+          ends_at: string | null
+          id: string
+          image_url: string | null
+          owner_user_id: string
+          review_note: string | null
+          starts_at: string | null
+          status: string
+          target_url: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          campaign_type: string
+          created_at?: string
+          description: string
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          owner_user_id: string
+          review_note?: string | null
+          starts_at?: string | null
+          status?: string
+          target_url: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          campaign_type?: string
+          created_at?: string
+          description?: string
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          owner_user_id?: string
+          review_note?: string | null
+          starts_at?: string | null
+          status?: string
+          target_url?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cadde_promotion_events: {
+        Row: {
+          campaign_id: string
+          event_type: string
+          id: number
+          occurred_at: string
+          placement_key: string
+          viewer_user_id: string | null
+        }
+        Insert: {
+          campaign_id: string
+          event_type: string
+          id?: number
+          occurred_at?: string
+          placement_key: string
+          viewer_user_id?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          event_type?: string
+          id?: number
+          occurred_at?: string
+          placement_key?: string
+          viewer_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cadde_promotion_events_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_promotion_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cadde_promotion_placement_catalog: {
+        Row: {
+          description: string | null
+          is_active: boolean
+          key: string
+          label_tr: string
+          sort_order: number
+        }
+        Insert: {
+          description?: string | null
+          is_active?: boolean
+          key: string
+          label_tr: string
+          sort_order?: number
+        }
+        Update: {
+          description?: string | null
+          is_active?: boolean
+          key?: string
+          label_tr?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      cadde_promotion_placements: {
+        Row: {
+          campaign_id: string
+          city_id: string | null
+          country_id: string | null
+          created_at: string
+          diaspora_key: string
+          id: string
+          placement_key: string
+          sort_order: number
+          theme_keys: string[]
+        }
+        Insert: {
+          campaign_id: string
+          city_id?: string | null
+          country_id?: string | null
+          created_at?: string
+          diaspora_key?: string
+          id?: string
+          placement_key: string
+          sort_order?: number
+          theme_keys?: string[]
+        }
+        Update: {
+          campaign_id?: string
+          city_id?: string | null
+          country_id?: string | null
+          created_at?: string
+          diaspora_key?: string
+          id?: string
+          placement_key?: string
+          sort_order?: number
+          theme_keys?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cadde_promotion_placements_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_promotion_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cadde_promotion_placements_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cadde_promotion_placements_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_countries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cadde_promotion_placements_placement_key_fkey"
+            columns: ["placement_key"]
+            isOneToOne: false
+            referencedRelation: "cadde_promotion_placement_catalog"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
+      cadde_reports: {
+        Row: {
+          created_at: string
+          details: string | null
+          entity_id: string
+          entity_type: string
+          id: string
+          reason: string
+          reporter_user_id: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          entity_id: string
+          entity_type: string
+          id?: string
+          reason: string
+          reporter_user_id: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          reason?: string
+          reporter_user_id?: string
+        }
+        Relationships: []
+      }
+      cadde_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
       }
       cadde_sponsored_placements: {
         Row: {
@@ -1016,6 +1981,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      cadde_user_bans: {
+        Row: {
+          created_at: string
+          created_by: string
+          ends_at: string | null
+          id: string
+          reason: string
+          scope: string
+          starts_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          ends_at?: string | null
+          id?: string
+          reason: string
+          scope?: string
+          starts_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          ends_at?: string | null
+          id?: string
+          reason?: string
+          scope?: string
+          starts_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       cafe_memberships: {
         Row: {
@@ -1121,6 +2119,112 @@ export type Database = {
         }
         Relationships: []
       }
+      carsi_categories: {
+        Row: {
+          is_active: boolean
+          key: string
+          label_tr: string
+          sort_order: number
+        }
+        Insert: {
+          is_active?: boolean
+          key: string
+          label_tr: string
+          sort_order?: number
+        }
+        Update: {
+          is_active?: boolean
+          key?: string
+          label_tr?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      carsi_items: {
+        Row: {
+          category_key: string
+          city_id: string | null
+          contact_mode: string
+          country_id: string | null
+          created_at: string
+          deleted_at: string | null
+          description: string
+          diaspora_key: string
+          expires_at: string | null
+          id: string
+          image_urls: string[]
+          moderation_status: string
+          owner_user_id: string
+          price_amount: number | null
+          price_currency: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category_key: string
+          city_id?: string | null
+          contact_mode?: string
+          country_id?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          description: string
+          diaspora_key?: string
+          expires_at?: string | null
+          id?: string
+          image_urls?: string[]
+          moderation_status?: string
+          owner_user_id: string
+          price_amount?: number | null
+          price_currency?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category_key?: string
+          city_id?: string | null
+          contact_mode?: string
+          country_id?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          description?: string
+          diaspora_key?: string
+          expires_at?: string | null
+          id?: string
+          image_urls?: string[]
+          moderation_status?: string
+          owner_user_id?: string
+          price_amount?: number | null
+          price_currency?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "carsi_items_category_key_fkey"
+            columns: ["category_key"]
+            isOneToOne: false
+            referencedRelation: "carsi_categories"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "carsi_items_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "carsi_items_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       catalog_audit_logs: {
         Row: {
           action: string
@@ -1200,13 +2304,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "catalog_categories_module_fkey"
-            columns: ["module"]
-            isOneToOne: false
-            referencedRelation: "catalog_item_types"
-            referencedColumns: ["key"]
-          },
           {
             foreignKeyName: "catalog_categories_parent_id_fkey"
             columns: ["parent_id"]
@@ -2071,44 +3168,6 @@ export type Database = {
           },
         ]
       }
-      catalog_item_types: {
-        Row: {
-          created_at: string
-          description: string | null
-          is_active: boolean
-          key: string
-          label: string
-          linked_role_key: string | null
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          is_active?: boolean
-          key: string
-          label: string
-          linked_role_key?: string | null
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          is_active?: boolean
-          key?: string
-          label?: string
-          linked_role_key?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "catalog_item_types_linked_role_key_fkey"
-            columns: ["linked_role_key"]
-            isOneToOne: false
-            referencedRelation: "roles"
-            referencedColumns: ["key"]
-          },
-        ]
-      }
       catalog_item_verification_records: {
         Row: {
           created_at: string
@@ -2233,13 +3292,6 @@ export type Database = {
           visibility?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "catalog_items_item_type_fkey"
-            columns: ["item_type"]
-            isOneToOne: false
-            referencedRelation: "catalog_item_types"
-            referencedColumns: ["key"]
-          },
           {
             foreignKeyName: "catalog_items_platform_role_key_fkey"
             columns: ["platform_role_key"]
@@ -2431,6 +3483,41 @@ export type Database = {
         }
         Relationships: []
       }
+      command_center_legacy_map: {
+        Row: {
+          command_center_item_id: string
+          created_at: string
+          id: string
+          legacy_row_id: string
+          legacy_table: string
+          migration_batch: string
+        }
+        Insert: {
+          command_center_item_id: string
+          created_at?: string
+          id?: string
+          legacy_row_id: string
+          legacy_table: string
+          migration_batch: string
+        }
+        Update: {
+          command_center_item_id?: string
+          created_at?: string
+          id?: string
+          legacy_row_id?: string
+          legacy_table?: string
+          migration_batch?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "command_center_legacy_map_command_center_item_id_fkey"
+            columns: ["command_center_item_id"]
+            isOneToOne: false
+            referencedRelation: "command_center_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       community_group_details: {
         Row: {
           admin_approved: boolean
@@ -2583,6 +3670,51 @@ export type Database = {
         }
         Relationships: []
       }
+      contacts: {
+        Row: {
+          contact: string
+          created_at: string
+          durum: string | null
+          durum_customer: string | null
+          durum_dm: string | null
+          id: string
+          sorumlu: string | null
+          telefon: string | null
+          tur: string | null
+          updated_at: string
+          websitesi: string | null
+          yorumlar: string | null
+        }
+        Insert: {
+          contact: string
+          created_at?: string
+          durum?: string | null
+          durum_customer?: string | null
+          durum_dm?: string | null
+          id?: string
+          sorumlu?: string | null
+          telefon?: string | null
+          tur?: string | null
+          updated_at?: string
+          websitesi?: string | null
+          yorumlar?: string | null
+        }
+        Update: {
+          contact?: string
+          created_at?: string
+          durum?: string | null
+          durum_customer?: string | null
+          durum_dm?: string | null
+          id?: string
+          sorumlu?: string | null
+          telefon?: string | null
+          tur?: string | null
+          updated_at?: string
+          websitesi?: string | null
+          yorumlar?: string | null
+        }
+        Relationships: []
+      }
       contributor_social_media_links: {
         Row: {
           added_by: string
@@ -2688,6 +3820,201 @@ export type Database = {
         }
         Relationships: []
       }
+      diaspora_city_scan_queue: {
+        Row: {
+          city: string
+          city_slug: string
+          country: string
+          country_tr: string | null
+          created_at: string | null
+          id: string
+          last_scan_at: string | null
+          priority: number | null
+          scan_count: number | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          city: string
+          city_slug: string
+          country?: string
+          country_tr?: string | null
+          created_at?: string | null
+          id?: string
+          last_scan_at?: string | null
+          priority?: number | null
+          scan_count?: number | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          city?: string
+          city_slug?: string
+          country?: string
+          country_tr?: string | null
+          created_at?: string | null
+          id?: string
+          last_scan_at?: string | null
+          priority?: number | null
+          scan_count?: number | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      diaspora_instagram_accounts: {
+        Row: {
+          bio: string | null
+          category: string | null
+          city: string
+          city_slug: string | null
+          classification_reason: string | null
+          confidence_score: number | null
+          country: string
+          country_tr: string | null
+          created_at: string | null
+          diaspora_usefulness: string | null
+          display_name: string | null
+          first_seen_at: string | null
+          id: string
+          instagram_url: string
+          language: string | null
+          last_checked_at: string | null
+          last_seen_at: string | null
+          raw_payload: Json | null
+          relevance_score: number | null
+          review_notes: string | null
+          source_query: string | null
+          source_snippet: string | null
+          source_title: string | null
+          source_url: string | null
+          status: string
+          subcategory: string | null
+          updated_at: string | null
+          username: string
+        }
+        Insert: {
+          bio?: string | null
+          category?: string | null
+          city: string
+          city_slug?: string | null
+          classification_reason?: string | null
+          confidence_score?: number | null
+          country?: string
+          country_tr?: string | null
+          created_at?: string | null
+          diaspora_usefulness?: string | null
+          display_name?: string | null
+          first_seen_at?: string | null
+          id?: string
+          instagram_url: string
+          language?: string | null
+          last_checked_at?: string | null
+          last_seen_at?: string | null
+          raw_payload?: Json | null
+          relevance_score?: number | null
+          review_notes?: string | null
+          source_query?: string | null
+          source_snippet?: string | null
+          source_title?: string | null
+          source_url?: string | null
+          status?: string
+          subcategory?: string | null
+          updated_at?: string | null
+          username: string
+        }
+        Update: {
+          bio?: string | null
+          category?: string | null
+          city?: string
+          city_slug?: string | null
+          classification_reason?: string | null
+          confidence_score?: number | null
+          country?: string
+          country_tr?: string | null
+          created_at?: string | null
+          diaspora_usefulness?: string | null
+          display_name?: string | null
+          first_seen_at?: string | null
+          id?: string
+          instagram_url?: string
+          language?: string | null
+          last_checked_at?: string | null
+          last_seen_at?: string | null
+          raw_payload?: Json | null
+          relevance_score?: number | null
+          review_notes?: string | null
+          source_query?: string | null
+          source_snippet?: string | null
+          source_title?: string | null
+          source_url?: string | null
+          status?: string
+          subcategory?: string | null
+          updated_at?: string | null
+          username?: string
+        }
+        Relationships: []
+      }
+      diaspora_scan_runs: {
+        Row: {
+          brave_results_checked: number | null
+          city: string
+          city_slug: string
+          country: string
+          country_tr: string | null
+          duplicate_records: number | null
+          error_message: string | null
+          finished_at: string | null
+          id: string
+          inserted_records: number | null
+          instagram_urls_found: number | null
+          needs_review_records: number | null
+          queries_executed: number | null
+          raw_report: Json | null
+          started_at: string | null
+          status: string
+          valid_candidates: number | null
+        }
+        Insert: {
+          brave_results_checked?: number | null
+          city: string
+          city_slug: string
+          country: string
+          country_tr?: string | null
+          duplicate_records?: number | null
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          inserted_records?: number | null
+          instagram_urls_found?: number | null
+          needs_review_records?: number | null
+          queries_executed?: number | null
+          raw_report?: Json | null
+          started_at?: string | null
+          status?: string
+          valid_candidates?: number | null
+        }
+        Update: {
+          brave_results_checked?: number | null
+          city?: string
+          city_slug?: string
+          country?: string
+          country_tr?: string | null
+          duplicate_records?: number | null
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          inserted_records?: number | null
+          instagram_urls_found?: number | null
+          needs_review_records?: number | null
+          queries_executed?: number | null
+          raw_report?: Json | null
+          started_at?: string | null
+          status?: string
+          valid_candidates?: number | null
+        }
+        Relationships: []
+      }
       direct_messages: {
         Row: {
           content: string
@@ -2712,6 +4039,60 @@ export type Database = {
           read_at?: string | null
           recipient_id?: string
           sender_id?: string
+        }
+        Relationships: []
+      }
+      doc_categories: {
+        Row: {
+          created_at: string
+          default_expanded: boolean
+          icon_key: string
+          id: string
+          label: string
+          short_description: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          default_expanded?: boolean
+          icon_key: string
+          id?: string
+          label: string
+          short_description: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          default_expanded?: boolean
+          icon_key?: string
+          id?: string
+          label?: string
+          short_description?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      draft_notlar: {
+        Row: {
+          created_at: string | null
+          icerik: string
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          icerik: string
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          icerik?: string
+          id?: string
         }
         Relationships: []
       }
@@ -3266,6 +4647,42 @@ export type Database = {
         }
         Relationships: []
       }
+      gorevler: {
+        Row: {
+          aciklama: string | null
+          atanan: string | null
+          baslangic: string | null
+          bitis: string | null
+          created_at: string | null
+          durum: string | null
+          gorev: string | null
+          id: string
+          link: string | null
+        }
+        Insert: {
+          aciklama?: string | null
+          atanan?: string | null
+          baslangic?: string | null
+          bitis?: string | null
+          created_at?: string | null
+          durum?: string | null
+          gorev?: string | null
+          id?: string
+          link?: string | null
+        }
+        Update: {
+          aciklama?: string | null
+          atanan?: string | null
+          baslangic?: string | null
+          bitis?: string | null
+          created_at?: string | null
+          durum?: string | null
+          gorev?: string | null
+          id?: string
+          link?: string | null
+        }
+        Relationships: []
+      }
       incomes: {
         Row: {
           amount: number
@@ -3578,150 +4995,6 @@ export type Database = {
         }
         Relationships: []
       }
-      item_type_attribute_rules: {
-        Row: {
-          attribute_id: string
-          created_at: string
-          editor_can_edit: boolean
-          editor_can_hide: boolean
-          id: string
-          is_enabled: boolean
-          is_public_default: boolean
-          is_required: boolean
-          item_type: string
-          requires_admin_approval_on_change: boolean
-          sort_order: number
-          updated_at: string
-        }
-        Insert: {
-          attribute_id: string
-          created_at?: string
-          editor_can_edit?: boolean
-          editor_can_hide?: boolean
-          id?: string
-          is_enabled?: boolean
-          is_public_default?: boolean
-          is_required?: boolean
-          item_type: string
-          requires_admin_approval_on_change?: boolean
-          sort_order?: number
-          updated_at?: string
-        }
-        Update: {
-          attribute_id?: string
-          created_at?: string
-          editor_can_edit?: boolean
-          editor_can_hide?: boolean
-          id?: string
-          is_enabled?: boolean
-          is_public_default?: boolean
-          is_required?: boolean
-          item_type?: string
-          requires_admin_approval_on_change?: boolean
-          sort_order?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "item_type_attribute_rules_attribute_id_fkey"
-            columns: ["attribute_id"]
-            isOneToOne: false
-            referencedRelation: "afs_attributes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "item_type_attribute_rules_item_type_fkey"
-            columns: ["item_type"]
-            isOneToOne: false
-            referencedRelation: "catalog_item_types"
-            referencedColumns: ["key"]
-          },
-        ]
-      }
-      item_type_feature_defaults: {
-        Row: {
-          created_at: string
-          feature_key: string
-          id: string
-          is_enabled: boolean
-          item_type: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          feature_key: string
-          id?: string
-          is_enabled?: boolean
-          item_type: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          feature_key?: string
-          id?: string
-          is_enabled?: boolean
-          item_type?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "item_type_feature_defaults_feature_key_fkey"
-            columns: ["feature_key"]
-            isOneToOne: false
-            referencedRelation: "feature_definitions"
-            referencedColumns: ["key"]
-          },
-          {
-            foreignKeyName: "item_type_feature_defaults_item_type_fkey"
-            columns: ["item_type"]
-            isOneToOne: false
-            referencedRelation: "catalog_item_types"
-            referencedColumns: ["key"]
-          },
-        ]
-      }
-      item_type_features: {
-        Row: {
-          configuration: Json
-          created_at: string
-          feature_key: string
-          is_enabled: boolean
-          item_type: string
-          updated_at: string
-        }
-        Insert: {
-          configuration?: Json
-          created_at?: string
-          feature_key: string
-          is_enabled?: boolean
-          item_type: string
-          updated_at?: string
-        }
-        Update: {
-          configuration?: Json
-          created_at?: string
-          feature_key?: string
-          is_enabled?: boolean
-          item_type?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "item_type_features_feature_key_fkey"
-            columns: ["feature_key"]
-            isOneToOne: false
-            referencedRelation: "feature_definitions"
-            referencedColumns: ["key"]
-          },
-          {
-            foreignKeyName: "item_type_features_item_type_fkey"
-            columns: ["item_type"]
-            isOneToOne: false
-            referencedRelation: "catalog_item_types"
-            referencedColumns: ["key"]
-          },
-        ]
-      }
       job_applications: {
         Row: {
           applicant_email: string | null
@@ -3940,6 +5213,33 @@ export type Database = {
           twitter?: string | null
           website?: string | null
           youtube?: string | null
+        }
+        Relationships: []
+      }
+      links: {
+        Row: {
+          added_by: string
+          created_at: string
+          description: string | null
+          id: string
+          link: string | null
+          type: string
+        }
+        Insert: {
+          added_by?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          link?: string | null
+          type?: string
+        }
+        Update: {
+          added_by?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          link?: string | null
+          type?: string
         }
         Relationships: []
       }
@@ -4239,6 +5539,42 @@ export type Database = {
         }
         Relationships: []
       }
+      meeting_notes: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          date: string
+          id: string
+          sort_order: number | null
+          source: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          content: string
+          created_at?: string
+          date: string
+          id?: string
+          sort_order?: number | null
+          source: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          date?: string
+          id?: string
+          sort_order?: number | null
+          source?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       merge_history: {
         Row: {
           created_at: string
@@ -4425,32 +5761,107 @@ export type Database = {
         }
         Relationships: []
       }
+      news_posts: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          category: string | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          id: number
+          image_url: string | null
+          ingestion_source_type: string | null
+          language: string | null
+          original_url: string | null
+          published_at: string | null
+          radar_candidate_id: string | null
+          source_name: string | null
+          source_url: string | null
+          status: string | null
+          summary: string | null
+          title: string
+          unique_hash: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          id?: never
+          image_url?: string | null
+          ingestion_source_type?: string | null
+          language?: string | null
+          original_url?: string | null
+          published_at?: string | null
+          radar_candidate_id?: string | null
+          source_name?: string | null
+          source_url?: string | null
+          status?: string | null
+          summary?: string | null
+          title: string
+          unique_hash: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          id?: never
+          image_url?: string | null
+          ingestion_source_type?: string | null
+          language?: string | null
+          original_url?: string | null
+          published_at?: string | null
+          radar_candidate_id?: string | null
+          source_name?: string | null
+          source_url?: string | null
+          status?: string | null
+          summary?: string | null
+          title?: string
+          unique_hash?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
+          actor_user_id: string | null
           created_at: string
+          entity_type: string | null
           id: string
           is_read: boolean | null
           message: string
+          payload: Json
           related_id: string | null
           title: string
           type: string
           user_id: string
         }
         Insert: {
+          actor_user_id?: string | null
           created_at?: string
+          entity_type?: string | null
           id?: string
           is_read?: boolean | null
           message: string
+          payload?: Json
           related_id?: string | null
           title: string
           type: string
           user_id: string
         }
         Update: {
+          actor_user_id?: string | null
           created_at?: string
+          entity_type?: string | null
           id?: string
           is_read?: boolean | null
           message?: string
+          payload?: Json
           related_id?: string | null
           title?: string
           type?: string
@@ -4656,6 +6067,369 @@ export type Database = {
           id?: string
           profile_id?: string
           viewer_id?: string | null
+        }
+        Relationships: []
+      }
+      radar_news_candidates: {
+        Row: {
+          approved_news_post_id: number | null
+          canonical_url: string
+          canonical_url_hash: string
+          category: string | null
+          city: string | null
+          content_hash: string
+          country: string | null
+          created_at: string
+          duplicate_of_candidate_id: string | null
+          id: string
+          image_source_url: string | null
+          language: string | null
+          normalized_title: string
+          original_url: string
+          published_at: string | null
+          raw_payload: Json
+          relevance_reasons: Json
+          relevance_score: number
+          review_note: string | null
+          review_status: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          scan_run_id: string | null
+          source_external_id: string | null
+          source_id: string
+          source_name: string
+          source_url: string | null
+          summary: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approved_news_post_id?: number | null
+          canonical_url: string
+          canonical_url_hash: string
+          category?: string | null
+          city?: string | null
+          content_hash: string
+          country?: string | null
+          created_at?: string
+          duplicate_of_candidate_id?: string | null
+          id?: string
+          image_source_url?: string | null
+          language?: string | null
+          normalized_title: string
+          original_url: string
+          published_at?: string | null
+          raw_payload?: Json
+          relevance_reasons?: Json
+          relevance_score?: number
+          review_note?: string | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          scan_run_id?: string | null
+          source_external_id?: string | null
+          source_id: string
+          source_name: string
+          source_url?: string | null
+          summary?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approved_news_post_id?: number | null
+          canonical_url?: string
+          canonical_url_hash?: string
+          category?: string | null
+          city?: string | null
+          content_hash?: string
+          country?: string | null
+          created_at?: string
+          duplicate_of_candidate_id?: string | null
+          id?: string
+          image_source_url?: string | null
+          language?: string | null
+          normalized_title?: string
+          original_url?: string
+          published_at?: string | null
+          raw_payload?: Json
+          relevance_reasons?: Json
+          relevance_score?: number
+          review_note?: string | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          scan_run_id?: string | null
+          source_external_id?: string | null
+          source_id?: string
+          source_name?: string
+          source_url?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "radar_news_candidates_duplicate_of_candidate_id_fkey"
+            columns: ["duplicate_of_candidate_id"]
+            isOneToOne: false
+            referencedRelation: "radar_news_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "radar_news_candidates_scan_run_id_fkey"
+            columns: ["scan_run_id"]
+            isOneToOne: false
+            referencedRelation: "radar_news_scan_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "radar_news_candidates_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "radar_news_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      radar_news_keywords: {
+        Row: {
+          category: string | null
+          created_at: string
+          id: string
+          is_enabled: boolean
+          is_negative: boolean
+          keyword: string
+          language: string
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          is_negative?: boolean
+          keyword: string
+          language: string
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          is_negative?: boolean
+          keyword?: string
+          language?: string
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: []
+      }
+      radar_news_review_logs: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          after_value: Json | null
+          before_value: Json | null
+          candidate_id: string
+          created_at: string
+          id: string
+          note: string | null
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          after_value?: Json | null
+          before_value?: Json | null
+          candidate_id: string
+          created_at?: string
+          id?: string
+          note?: string | null
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          after_value?: Json | null
+          before_value?: Json | null
+          candidate_id?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "radar_news_review_logs_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "radar_news_candidates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      radar_news_scan_runs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          duplicate_count: number
+          error_message: string | null
+          failed_source_count: number
+          fetched_count: number
+          filtered_count: number
+          id: string
+          inserted_count: number
+          metadata: Json
+          source_count: number
+          started_at: string
+          started_by: string | null
+          status: string
+          trigger_type: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          duplicate_count?: number
+          error_message?: string | null
+          failed_source_count?: number
+          fetched_count?: number
+          filtered_count?: number
+          id?: string
+          inserted_count?: number
+          metadata?: Json
+          source_count?: number
+          started_at?: string
+          started_by?: string | null
+          status: string
+          trigger_type: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          duplicate_count?: number
+          error_message?: string | null
+          failed_source_count?: number
+          fetched_count?: number
+          filtered_count?: number
+          id?: string
+          inserted_count?: number
+          metadata?: Json
+          source_count?: number
+          started_at?: string
+          started_by?: string | null
+          status?: string
+          trigger_type?: string
+        }
+        Relationships: []
+      }
+      radar_news_sources: {
+        Row: {
+          adapter_key: string
+          allow_public_image_hotlink: boolean
+          category_default: string | null
+          config: Json
+          country: string | null
+          created_at: string
+          endpoint_url: string
+          id: string
+          is_enabled: boolean
+          language: string | null
+          last_error_at: string | null
+          last_error_message: string | null
+          last_success_at: string | null
+          max_items_per_scan: number
+          name: string
+          query_text: string | null
+          source_type: string
+          terms_checked: boolean
+          terms_checked_at: string | null
+          terms_notes: string | null
+          timeout_ms: number
+          trust_level: string
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          adapter_key: string
+          allow_public_image_hotlink?: boolean
+          category_default?: string | null
+          config?: Json
+          country?: string | null
+          created_at?: string
+          endpoint_url: string
+          id?: string
+          is_enabled?: boolean
+          language?: string | null
+          last_error_at?: string | null
+          last_error_message?: string | null
+          last_success_at?: string | null
+          max_items_per_scan?: number
+          name: string
+          query_text?: string | null
+          source_type: string
+          terms_checked?: boolean
+          terms_checked_at?: string | null
+          terms_notes?: string | null
+          timeout_ms?: number
+          trust_level?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          adapter_key?: string
+          allow_public_image_hotlink?: boolean
+          category_default?: string | null
+          config?: Json
+          country?: string | null
+          created_at?: string
+          endpoint_url?: string
+          id?: string
+          is_enabled?: boolean
+          language?: string | null
+          last_error_at?: string | null
+          last_error_message?: string | null
+          last_success_at?: string | null
+          max_items_per_scan?: number
+          name?: string
+          query_text?: string | null
+          source_type?: string
+          terms_checked?: boolean
+          terms_checked_at?: string | null
+          terms_notes?: string | null
+          timeout_ms?: number
+          trust_level?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      rag_documents: {
+        Row: {
+          content: string
+          created_at: string | null
+          embedding: string | null
+          id: string
+          metadata: Json | null
+          source: string | null
+          title: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          embedding?: string | null
+          id?: string
+          metadata?: Json | null
+          source?: string | null
+          title?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          embedding?: string | null
+          id?: string
+          metadata?: Json | null
+          source?: string | null
+          title?: string | null
         }
         Relationships: []
       }
@@ -4940,7 +6714,7 @@ export type Database = {
           file_name: string | null
           file_type: string | null
           id: string
-          import_batch: string | null
+          import_batch: string
           import_suggestion: string | null
           instagram_url: string | null
           is_hidden: boolean
@@ -4955,7 +6729,7 @@ export type Database = {
           record_kind: string
           section: string | null
           slug: string | null
-          source_folder: string | null
+          source_folder: string
           source_path: string | null
           source_snapshot_date: string | null
           source_subfolder: string | null
@@ -4977,7 +6751,7 @@ export type Database = {
           file_name?: string | null
           file_type?: string | null
           id?: string
-          import_batch?: string | null
+          import_batch: string
           import_suggestion?: string | null
           instagram_url?: string | null
           is_hidden?: boolean
@@ -4992,7 +6766,7 @@ export type Database = {
           record_kind: string
           section?: string | null
           slug?: string | null
-          source_folder?: string | null
+          source_folder: string
           source_path?: string | null
           source_snapshot_date?: string | null
           source_subfolder?: string | null
@@ -5014,7 +6788,7 @@ export type Database = {
           file_name?: string | null
           file_type?: string | null
           id?: string
-          import_batch?: string | null
+          import_batch?: string
           import_suggestion?: string | null
           instagram_url?: string | null
           is_hidden?: boolean
@@ -5029,7 +6803,7 @@ export type Database = {
           record_kind?: string
           section?: string | null
           slug?: string | null
-          source_folder?: string | null
+          source_folder?: string
           source_path?: string | null
           source_snapshot_date?: string | null
           source_subfolder?: string | null
@@ -5212,54 +6986,6 @@ export type Database = {
           },
         ]
       }
-      role_taxonomy_rules: {
-        Row: {
-          created_at: string
-          group_id: string
-          id: string
-          is_enabled: boolean
-          is_required: boolean
-          role_id: string
-          selection_mode: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          group_id: string
-          id?: string
-          is_enabled?: boolean
-          is_required?: boolean
-          role_id: string
-          selection_mode: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          group_id?: string
-          id?: string
-          is_enabled?: boolean
-          is_required?: boolean
-          role_id?: string
-          selection_mode?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "role_taxonomy_rules_group_id_fkey"
-            columns: ["group_id"]
-            isOneToOne: false
-            referencedRelation: "taxonomy_groups"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "role_taxonomy_rules_role_id_fkey"
-            columns: ["role_id"]
-            isOneToOne: false
-            referencedRelation: "roles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       roles: {
         Row: {
           created_at: string
@@ -5305,6 +7031,718 @@ export type Database = {
           metadata?: Json
           sort_order?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      service_finder_candidates: {
+        Row: {
+          address_line: string | null
+          appointment_url: string | null
+          canonical_name: string
+          catalog_item_id: string | null
+          catalog_projection: Json
+          category_slug: string | null
+          city: string | null
+          classifier_model: string | null
+          confidence_score: number
+          contacts: Json
+          cost_total_usd: number
+          country_code: string | null
+          created_at: string
+          duplicate_key: string
+          evidence: Json
+          id: string
+          item_type: string
+          job_id: string
+          languages: string[]
+          normalized_payload: Json
+          organization_name: string | null
+          primary_source_id: string | null
+          profession_label: string | null
+          published_at: string | null
+          region: string | null
+          review_notes: string | null
+          review_status: string
+          reviewed_at: string | null
+          reviewed_by_user_id: string | null
+          role_key: string
+          services: string[]
+          source_urls: Json
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          address_line?: string | null
+          appointment_url?: string | null
+          canonical_name: string
+          catalog_item_id?: string | null
+          catalog_projection?: Json
+          category_slug?: string | null
+          city?: string | null
+          classifier_model?: string | null
+          confidence_score?: number
+          contacts?: Json
+          cost_total_usd?: number
+          country_code?: string | null
+          created_at?: string
+          duplicate_key: string
+          evidence?: Json
+          id?: string
+          item_type: string
+          job_id: string
+          languages?: string[]
+          normalized_payload?: Json
+          organization_name?: string | null
+          primary_source_id?: string | null
+          profession_label?: string | null
+          published_at?: string | null
+          region?: string | null
+          review_notes?: string | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by_user_id?: string | null
+          role_key: string
+          services?: string[]
+          source_urls?: Json
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          address_line?: string | null
+          appointment_url?: string | null
+          canonical_name?: string
+          catalog_item_id?: string | null
+          catalog_projection?: Json
+          category_slug?: string | null
+          city?: string | null
+          classifier_model?: string | null
+          confidence_score?: number
+          contacts?: Json
+          cost_total_usd?: number
+          country_code?: string | null
+          created_at?: string
+          duplicate_key?: string
+          evidence?: Json
+          id?: string
+          item_type?: string
+          job_id?: string
+          languages?: string[]
+          normalized_payload?: Json
+          organization_name?: string | null
+          primary_source_id?: string | null
+          profession_label?: string | null
+          published_at?: string | null
+          region?: string | null
+          review_notes?: string | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by_user_id?: string | null
+          role_key?: string
+          services?: string[]
+          source_urls?: Json
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_finder_candidates_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_finder_candidates_primary_source_id_fkey"
+            columns: ["primary_source_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_job_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_finder_cost_ledger: {
+        Row: {
+          amount_usd: number
+          billing_unit: string
+          candidate_id: string | null
+          created_at: string
+          currency: string
+          event_type: string
+          id: number
+          job_id: string
+          model_name: string | null
+          provider_config_id: string | null
+          provider_key: string
+          quantity: number
+          query_id: string | null
+          request_meta: Json
+          source_id: string | null
+          unit_cost_usd: number
+        }
+        Insert: {
+          amount_usd: number
+          billing_unit: string
+          candidate_id?: string | null
+          created_at?: string
+          currency?: string
+          event_type: string
+          id?: number
+          job_id: string
+          model_name?: string | null
+          provider_config_id?: string | null
+          provider_key: string
+          quantity: number
+          query_id?: string | null
+          request_meta?: Json
+          source_id?: string | null
+          unit_cost_usd: number
+        }
+        Update: {
+          amount_usd?: number
+          billing_unit?: string
+          candidate_id?: string | null
+          created_at?: string
+          currency?: string
+          event_type?: string
+          id?: number
+          job_id?: string
+          model_name?: string | null
+          provider_config_id?: string | null
+          provider_key?: string
+          quantity?: number
+          query_id?: string | null
+          request_meta?: Json
+          source_id?: string | null
+          unit_cost_usd?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_finder_cost_ledger_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_finder_cost_ledger_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_finder_cost_ledger_provider_config_id_fkey"
+            columns: ["provider_config_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_provider_configs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_finder_cost_ledger_query_id_fkey"
+            columns: ["query_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_job_queries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_finder_cost_ledger_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_job_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_finder_job_events: {
+        Row: {
+          candidate_id: string | null
+          created_at: string
+          event_level: string
+          event_payload: Json
+          event_type: string
+          id: number
+          job_id: string
+          message: string
+        }
+        Insert: {
+          candidate_id?: string | null
+          created_at?: string
+          event_level?: string
+          event_payload?: Json
+          event_type: string
+          id?: number
+          job_id: string
+          message: string
+        }
+        Update: {
+          candidate_id?: string | null
+          created_at?: string
+          event_level?: string
+          event_payload?: Json
+          event_type?: string
+          id?: number
+          job_id?: string
+          message?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_finder_job_events_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_finder_job_events_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_finder_job_queries: {
+        Row: {
+          created_at: string
+          estimated_cost_usd: number
+          executed_at: string | null
+          external_request_id: string | null
+          id: string
+          job_id: string
+          provider_key: string
+          query_text: string
+          request_payload: Json
+          response_payload: Json
+          result_count: number
+          stage: string
+          status: string
+          usage_units: number
+        }
+        Insert: {
+          created_at?: string
+          estimated_cost_usd?: number
+          executed_at?: string | null
+          external_request_id?: string | null
+          id?: string
+          job_id: string
+          provider_key: string
+          query_text: string
+          request_payload?: Json
+          response_payload?: Json
+          result_count?: number
+          stage: string
+          status?: string
+          usage_units?: number
+        }
+        Update: {
+          created_at?: string
+          estimated_cost_usd?: number
+          executed_at?: string | null
+          external_request_id?: string | null
+          id?: string
+          job_id?: string
+          provider_key?: string
+          query_text?: string
+          request_payload?: Json
+          response_payload?: Json
+          result_count?: number
+          stage?: string
+          status?: string
+          usage_units?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_finder_job_queries_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_finder_job_sources: {
+        Row: {
+          content_hash: string | null
+          crawl_allowed: boolean | null
+          created_at: string
+          discovery_query_id: string | null
+          extracted_markdown: string | null
+          extracted_text: string | null
+          fetch_status: string
+          fetched_at: string | null
+          http_status: number | null
+          id: string
+          job_id: string
+          normalized_url: string
+          provider_key: string
+          raw_metadata: Json
+          robots_evaluated_at: string | null
+          source_domain: string
+          source_language: string | null
+          source_snippet: string | null
+          source_title: string | null
+          source_url: string
+        }
+        Insert: {
+          content_hash?: string | null
+          crawl_allowed?: boolean | null
+          created_at?: string
+          discovery_query_id?: string | null
+          extracted_markdown?: string | null
+          extracted_text?: string | null
+          fetch_status?: string
+          fetched_at?: string | null
+          http_status?: number | null
+          id?: string
+          job_id: string
+          normalized_url: string
+          provider_key: string
+          raw_metadata?: Json
+          robots_evaluated_at?: string | null
+          source_domain: string
+          source_language?: string | null
+          source_snippet?: string | null
+          source_title?: string | null
+          source_url: string
+        }
+        Update: {
+          content_hash?: string | null
+          crawl_allowed?: boolean | null
+          created_at?: string
+          discovery_query_id?: string | null
+          extracted_markdown?: string | null
+          extracted_text?: string | null
+          fetch_status?: string
+          fetched_at?: string | null
+          http_status?: number | null
+          id?: string
+          job_id?: string
+          normalized_url?: string
+          provider_key?: string
+          raw_metadata?: Json
+          robots_evaluated_at?: string | null
+          source_domain?: string
+          source_language?: string | null
+          source_snippet?: string | null
+          source_title?: string | null
+          source_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_finder_job_sources_discovery_query_id_fkey"
+            columns: ["discovery_query_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_job_queries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_finder_job_sources_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_finder_jobs: {
+        Row: {
+          attempts: number
+          cancelled_at: string | null
+          catalog_publish_mode: string
+          category_slug: string | null
+          city: string | null
+          classifier_provider_id: string | null
+          classify_requests: number
+          cost_total_usd: number
+          country_code: string | null
+          created_at: string
+          created_by_user_id: string
+          extract_provider_id: string | null
+          extract_requests: number
+          finished_at: string | null
+          freeform_topic: string | null
+          hard_cap_usd: number
+          id: string
+          item_type: string
+          language_code: string
+          last_error_code: string | null
+          last_error_message: string | null
+          lease_expires_at: string | null
+          location_label: string
+          locked_by: string | null
+          max_candidates: number
+          max_extract_urls: number
+          max_queries: number
+          max_source_urls: number
+          must_exclude_terms: string[]
+          must_include_terms: string[]
+          priority: number
+          progress: Json
+          region: string | null
+          result_summary: Json
+          role_key: string
+          run_after: string
+          search_provider_id: string | null
+          search_requests: number
+          seed_queries: Json
+          seed_urls: string[]
+          soft_cap_usd: number
+          started_at: string | null
+          status: string
+          template_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          cancelled_at?: string | null
+          catalog_publish_mode?: string
+          category_slug?: string | null
+          city?: string | null
+          classifier_provider_id?: string | null
+          classify_requests?: number
+          cost_total_usd?: number
+          country_code?: string | null
+          created_at?: string
+          created_by_user_id: string
+          extract_provider_id?: string | null
+          extract_requests?: number
+          finished_at?: string | null
+          freeform_topic?: string | null
+          hard_cap_usd?: number
+          id?: string
+          item_type: string
+          language_code?: string
+          last_error_code?: string | null
+          last_error_message?: string | null
+          lease_expires_at?: string | null
+          location_label: string
+          locked_by?: string | null
+          max_candidates?: number
+          max_extract_urls?: number
+          max_queries?: number
+          max_source_urls?: number
+          must_exclude_terms?: string[]
+          must_include_terms?: string[]
+          priority?: number
+          progress?: Json
+          region?: string | null
+          result_summary?: Json
+          role_key: string
+          run_after?: string
+          search_provider_id?: string | null
+          search_requests?: number
+          seed_queries?: Json
+          seed_urls?: string[]
+          soft_cap_usd?: number
+          started_at?: string | null
+          status?: string
+          template_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          cancelled_at?: string | null
+          catalog_publish_mode?: string
+          category_slug?: string | null
+          city?: string | null
+          classifier_provider_id?: string | null
+          classify_requests?: number
+          cost_total_usd?: number
+          country_code?: string | null
+          created_at?: string
+          created_by_user_id?: string
+          extract_provider_id?: string | null
+          extract_requests?: number
+          finished_at?: string | null
+          freeform_topic?: string | null
+          hard_cap_usd?: number
+          id?: string
+          item_type?: string
+          language_code?: string
+          last_error_code?: string | null
+          last_error_message?: string | null
+          lease_expires_at?: string | null
+          location_label?: string
+          locked_by?: string | null
+          max_candidates?: number
+          max_extract_urls?: number
+          max_queries?: number
+          max_source_urls?: number
+          must_exclude_terms?: string[]
+          must_include_terms?: string[]
+          priority?: number
+          progress?: Json
+          region?: string | null
+          result_summary?: Json
+          role_key?: string
+          run_after?: string
+          search_provider_id?: string | null
+          search_requests?: number
+          seed_queries?: Json
+          seed_urls?: string[]
+          soft_cap_usd?: number
+          started_at?: string | null
+          status?: string
+          template_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_finder_jobs_classifier_provider_id_fkey"
+            columns: ["classifier_provider_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_provider_configs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_finder_jobs_extract_provider_id_fkey"
+            columns: ["extract_provider_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_provider_configs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_finder_jobs_search_provider_id_fkey"
+            columns: ["search_provider_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_provider_configs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_finder_jobs_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "service_finder_profession_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_finder_profession_templates: {
+        Row: {
+          category_slug: string | null
+          created_at: string
+          default_max_extract_urls: number
+          default_max_queries: number
+          default_max_source_urls: number
+          extraction_hints: Json
+          id: string
+          is_active: boolean
+          item_type: string
+          label: string
+          language_terms: string[]
+          location_terms: string[]
+          must_exclude_terms: string[]
+          must_include_terms: string[]
+          query_templates: Json
+          role_key: string
+          template_key: string
+          updated_at: string
+        }
+        Insert: {
+          category_slug?: string | null
+          created_at?: string
+          default_max_extract_urls?: number
+          default_max_queries?: number
+          default_max_source_urls?: number
+          extraction_hints?: Json
+          id?: string
+          is_active?: boolean
+          item_type: string
+          label: string
+          language_terms?: string[]
+          location_terms?: string[]
+          must_exclude_terms?: string[]
+          must_include_terms?: string[]
+          query_templates?: Json
+          role_key: string
+          template_key: string
+          updated_at?: string
+        }
+        Update: {
+          category_slug?: string | null
+          created_at?: string
+          default_max_extract_urls?: number
+          default_max_queries?: number
+          default_max_source_urls?: number
+          extraction_hints?: Json
+          id?: string
+          is_active?: boolean
+          item_type?: string
+          label?: string
+          language_terms?: string[]
+          location_terms?: string[]
+          must_exclude_terms?: string[]
+          must_include_terms?: string[]
+          query_templates?: Json
+          role_key?: string
+          template_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      service_finder_provider_configs: {
+        Row: {
+          base_url: string | null
+          created_at: string
+          daily_cap_usd: number | null
+          default_hard_cap_usd: number | null
+          default_model: string | null
+          default_soft_cap_usd: number | null
+          display_name: string
+          id: string
+          is_enabled: boolean
+          monthly_cap_usd: number | null
+          priority: number
+          provider_key: string
+          provider_kind: string
+          rate_limit_per_min: number | null
+          request_defaults: Json
+          secret_ref: string
+          updated_at: string
+          updated_by_user_id: string | null
+        }
+        Insert: {
+          base_url?: string | null
+          created_at?: string
+          daily_cap_usd?: number | null
+          default_hard_cap_usd?: number | null
+          default_model?: string | null
+          default_soft_cap_usd?: number | null
+          display_name: string
+          id?: string
+          is_enabled?: boolean
+          monthly_cap_usd?: number | null
+          priority?: number
+          provider_key: string
+          provider_kind: string
+          rate_limit_per_min?: number | null
+          request_defaults?: Json
+          secret_ref: string
+          updated_at?: string
+          updated_by_user_id?: string | null
+        }
+        Update: {
+          base_url?: string | null
+          created_at?: string
+          daily_cap_usd?: number | null
+          default_hard_cap_usd?: number | null
+          default_model?: string | null
+          default_soft_cap_usd?: number | null
+          display_name?: string
+          id?: string
+          is_enabled?: boolean
+          monthly_cap_usd?: number | null
+          priority?: number
+          provider_key?: string
+          provider_kind?: string
+          rate_limit_per_min?: number | null
+          request_defaults?: Json
+          secret_ref?: string
+          updated_at?: string
+          updated_by_user_id?: string | null
         }
         Relationships: []
       }
@@ -5974,6 +8412,75 @@ export type Database = {
           },
         ]
       }
+      todo_items: {
+        Row: {
+          acil: boolean
+          ayrinti: string | null
+          created_at: string
+          durum: string
+          id: string
+          kim: string
+          konu: string
+          ne_zaman: string | null
+          updated_at: string
+        }
+        Insert: {
+          acil?: boolean
+          ayrinti?: string | null
+          created_at?: string
+          durum?: string
+          id?: string
+          kim?: string
+          konu: string
+          ne_zaman?: string | null
+          updated_at?: string
+        }
+        Update: {
+          acil?: boolean
+          ayrinti?: string | null
+          created_at?: string
+          durum?: string
+          id?: string
+          kim?: string
+          konu?: string
+          ne_zaman?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      todos: {
+        Row: {
+          created_at: string
+          durum: string
+          gorev: string | null
+          id: number
+          konu: string
+          sorumlu: string | null
+          tarih: string
+          zaman: string | null
+        }
+        Insert: {
+          created_at?: string
+          durum?: string
+          gorev?: string | null
+          id?: number
+          konu: string
+          sorumlu?: string | null
+          tarih?: string
+          zaman?: string | null
+        }
+        Update: {
+          created_at?: string
+          durum?: string
+          gorev?: string | null
+          id?: number
+          konu?: string
+          sorumlu?: string | null
+          tarih?: string
+          zaman?: string | null
+        }
+        Relationships: []
+      }
       turkish_mission_relations: {
         Row: {
           child_mission_slug: string
@@ -6198,6 +8705,35 @@ export type Database = {
         }
         Relationships: []
       }
+      user_cadde_interests: {
+        Row: {
+          created_at: string
+          interest_key: string
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          created_at?: string
+          interest_key: string
+          user_id: string
+          weight?: number
+        }
+        Update: {
+          created_at?: string
+          interest_key?: string
+          user_id?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_cadde_interests_interest_key_fkey"
+            columns: ["interest_key"]
+            isOneToOne: false
+            referencedRelation: "cadde_interest_catalog"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
       user_connections: {
         Row: {
           block_reason: string | null
@@ -6225,6 +8761,45 @@ export type Database = {
           recipient_id?: string
           requester_id?: string
           status?: string
+        }
+        Relationships: []
+      }
+      user_cvs: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_path: string
+          first_name: string
+          id: string
+          instagram_url: string | null
+          last_name: string
+          linkedin_url: string | null
+          role: string | null
+          website_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_path: string
+          first_name: string
+          id?: string
+          instagram_url?: string | null
+          last_name: string
+          linkedin_url?: string | null
+          role?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_path?: string
+          first_name?: string
+          id?: string
+          instagram_url?: string | null
+          last_name?: string
+          linkedin_url?: string | null
+          role?: string | null
+          website_url?: string | null
         }
         Relationships: []
       }
@@ -6411,17 +8986,93 @@ export type Database = {
           },
         ]
       }
+      user_verifications: {
+        Row: {
+          created_at: string
+          phone_country_code: string | null
+          phone_e164: string | null
+          phone_verified_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          phone_country_code?: string | null
+          phone_e164?: string | null
+          phone_verified_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          phone_country_code?: string | null
+          phone_e164?: string | null
+          phone_verified_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wa_messages: {
+        Row: {
+          created_at: string | null
+          id: number
+          message_text: string | null
+          reply_text: string | null
+          wa_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: never
+          message_text?: string | null
+          reply_text?: string | null
+          wa_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: never
+          message_text?: string | null
+          reply_text?: string | null
+          wa_id?: string
+        }
+        Relationships: []
+      }
+      wa_tasks: {
+        Row: {
+          created_at: string | null
+          id: number
+          status: string
+          task: string
+          wa_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: never
+          status?: string
+          task: string
+          wa_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: never
+          status?: string
+          task?: string
+          wa_id?: string
+        }
+        Relationships: []
+      }
       wa_users: {
         Row: {
           category: string | null
           city: string | null
+          conversation_mode: string | null
           country: string | null
-          created_at: string
-          current_step: string | null
+          created_at: string | null
+          current_step: string
           discovery_source: string | null
           email: string | null
-          funnel_interest: string | null
-          id: string
+          funnel_interest: boolean | null
+          id: number
           name: string | null
           note: string | null
           occupation_interest: string | null
@@ -6431,22 +9082,22 @@ export type Database = {
           referral_code: string | null
           registration_completed_at: string | null
           registration_status: string | null
-          source_type: string
           surname: string | null
           updated_at: string | null
-          wa_id: string | null
+          wa_id: string
           whatsapp_group_interest: boolean | null
         }
         Insert: {
           category?: string | null
           city?: string | null
+          conversation_mode?: string | null
           country?: string | null
-          created_at?: string
-          current_step?: string | null
+          created_at?: string | null
+          current_step?: string
           discovery_source?: string | null
           email?: string | null
-          funnel_interest?: string | null
-          id?: string
+          funnel_interest?: boolean | null
+          id?: never
           name?: string | null
           note?: string | null
           occupation_interest?: string | null
@@ -6456,22 +9107,22 @@ export type Database = {
           referral_code?: string | null
           registration_completed_at?: string | null
           registration_status?: string | null
-          source_type?: string
           surname?: string | null
           updated_at?: string | null
-          wa_id?: string | null
+          wa_id: string
           whatsapp_group_interest?: boolean | null
         }
         Update: {
           category?: string | null
           city?: string | null
+          conversation_mode?: string | null
           country?: string | null
-          created_at?: string
-          current_step?: string | null
+          created_at?: string | null
+          current_step?: string
           discovery_source?: string | null
           email?: string | null
-          funnel_interest?: string | null
-          id?: string
+          funnel_interest?: boolean | null
+          id?: never
           name?: string | null
           note?: string | null
           occupation_interest?: string | null
@@ -6481,10 +9132,9 @@ export type Database = {
           referral_code?: string | null
           registration_completed_at?: string | null
           registration_status?: string | null
-          source_type?: string
           surname?: string | null
           updated_at?: string | null
-          wa_id?: string | null
+          wa_id?: string
           whatsapp_group_interest?: boolean | null
         }
         Relationships: []
@@ -6605,38 +9255,32 @@ export type Database = {
       whatsapp_join_requests: {
         Row: {
           created_at: string
-          email: string | null
-          full_name: string | null
+          email: string
+          full_name: string
           id: string
           landing_id: string
           note: string | null
           phone: string | null
-          status: string
-          updated_at: string
           user_id: string | null
         }
         Insert: {
           created_at?: string
-          email?: string | null
-          full_name?: string | null
+          email: string
+          full_name: string
           id?: string
           landing_id: string
           note?: string | null
           phone?: string | null
-          status?: string
-          updated_at?: string
           user_id?: string | null
         }
         Update: {
           created_at?: string
-          email?: string | null
-          full_name?: string | null
+          email?: string
+          full_name?: string
           id?: string
           landing_id?: string
           note?: string | null
           phone?: string | null
-          status?: string
-          updated_at?: string
           user_id?: string | null
         }
         Relationships: [
@@ -6773,6 +9417,104 @@ export type Database = {
           whatsapp_link?: string
         }
         Relationships: []
+      }
+      world_cup_campaign_settings: {
+        Row: {
+          ends_at: string | null
+          id: number
+          is_active: boolean
+          starts_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          ends_at?: string | null
+          id?: number
+          is_active?: boolean
+          starts_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ends_at?: string | null
+          id?: number
+          is_active?: boolean
+          starts_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      world_cup_registrations: {
+        Row: {
+          address: string | null
+          applicant_note: string | null
+          broadcast_confirmed: boolean
+          business_name: string
+          category_role_key: string
+          city: string
+          country: string
+          created_at: string
+          id: string
+          image_path: string | null
+          phone: string | null
+          previous_role_key: string | null
+          review_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          role_assigned: boolean | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          applicant_note?: string | null
+          broadcast_confirmed?: boolean
+          business_name: string
+          category_role_key: string
+          city: string
+          country: string
+          created_at?: string
+          id?: string
+          image_path?: string | null
+          phone?: string | null
+          previous_role_key?: string | null
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          role_assigned?: boolean | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          applicant_note?: string | null
+          broadcast_confirmed?: boolean
+          business_name?: string
+          category_role_key?: string
+          city?: string
+          country?: string
+          created_at?: string
+          id?: string
+          image_path?: string | null
+          phone?: string | null
+          previous_role_key?: string | null
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          role_assigned?: boolean | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "world_cup_registrations_category_role_key_fkey"
+            columns: ["category_role_key"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["key"]
+          },
+        ]
       }
     }
     Views: {
@@ -6997,6 +9739,10 @@ export type Database = {
         Args: { p_claim_id: string }
         Returns: Json
       }
+      admin_cancel_service_finder_job: {
+        Args: { p_job_id: string }
+        Returns: Json
+      }
       admin_change_catalog_item_role: {
         Args: { p_item_id: string; p_reason?: string; p_role_key: string }
         Returns: Json
@@ -7004,6 +9750,10 @@ export type Database = {
       admin_clear_user_feature_override: {
         Args: { feature_key: string; target_user_id: string }
         Returns: undefined
+      }
+      admin_create_service_finder_job: {
+        Args: { p_payload: Json }
+        Returns: Json
       }
       admin_delete_catalog_item_attribute_override: {
         Args: { p_attribute_key: string; p_item_id: string }
@@ -7016,6 +9766,10 @@ export type Database = {
       admin_delete_catalog_item_section_override: {
         Args: { p_item_id: string; p_section_key: string }
         Returns: undefined
+      }
+      admin_get_service_finder_job: {
+        Args: { p_job_id: string }
+        Returns: Json
       }
       admin_grant_catalog_editor: {
         Args: { p_item_id: string; p_target_user_id: string }
@@ -7033,6 +9787,10 @@ export type Database = {
       admin_grant_whatsapp_landing_editor: {
         Args: { p_landing_id: string; p_user_id: string }
         Returns: string
+      }
+      admin_import_cadde_geo_v1: {
+        Args: { p_city_names?: string[]; p_country_code: string }
+        Returns: Json
       }
       admin_list_catalog_claims: {
         Args: { p_item_id?: string; p_status?: string }
@@ -7107,6 +9865,10 @@ export type Database = {
           user_id: string
         }[]
       }
+      admin_list_service_finder_jobs: {
+        Args: { p_limit?: number; p_offset?: number; p_status?: string }
+        Returns: Json
+      }
       admin_list_unified_records: {
         Args: {
           p_city?: string
@@ -7142,6 +9904,20 @@ export type Database = {
           visibility: string
         }[]
       }
+      admin_moderate_cadde_entity_v1: {
+        Args: {
+          p_action: string
+          p_ban_days?: number
+          p_entity_id: string
+          p_entity_type: string
+          p_note?: string
+        }
+        Returns: undefined
+      }
+      admin_publish_service_finder_candidate: {
+        Args: { p_candidate_id: string; p_patch?: Json }
+        Returns: Json
+      }
       admin_reject_catalog_claim: {
         Args: { p_claim_id: string; p_review_note?: string }
         Returns: Json
@@ -7160,9 +9936,25 @@ export type Database = {
           inserted_count: number
         }[]
       }
+      admin_retry_service_finder_job: {
+        Args: { p_job_id: string; p_patch?: Json }
+        Returns: Json
+      }
       admin_review_approval_request: {
         Args: { decision: string; note?: string; request_id: string }
         Returns: undefined
+      }
+      admin_review_cadde_promotion_v1: {
+        Args: { p_approve: boolean; p_campaign_id: string; p_note?: string }
+        Returns: undefined
+      }
+      admin_review_service_finder_candidate: {
+        Args: { p_action: string; p_candidate_id: string; p_patch?: Json }
+        Returns: Json
+      }
+      admin_review_world_cup_registration_v1: {
+        Args: { p_approve: boolean; p_note?: string; p_registration_id: string }
+        Returns: Json
       }
       admin_revoke_catalog_editor: {
         Args: { p_item_id: string; p_target_user_id: string }
@@ -7332,6 +10124,43 @@ export type Database = {
         }
         Returns: undefined
       }
+      admin_upsert_service_finder_provider: {
+        Args: { p_patch: Json; p_provider_id: string }
+        Returns: Json
+      }
+      admin_upsert_service_finder_template: {
+        Args: { p_patch: Json; p_template_id: string }
+        Returns: Json
+      }
+      approve_cadde_cafe_member_v1: {
+        Args: { p_approve: boolean; p_member_id: string }
+        Returns: undefined
+      }
+      archive_cadde_cafe_v1: { Args: { p_cafe_id: string }; Returns: undefined }
+      cadde_attr_text: {
+        Args: { attr_key: string; uid: string }
+        Returns: string
+      }
+      cadde_notify: {
+        Args: {
+          p_actor: string
+          p_entity_id?: string
+          p_entity_type?: string
+          p_message: string
+          p_payload?: Json
+          p_recipient: string
+          p_title: string
+          p_type: string
+        }
+        Returns: undefined
+      }
+      cadde_notify_expiring_cafes: { Args: never; Returns: number }
+      cadde_phone_required: { Args: never; Returns: boolean }
+      cadde_risky_signal: { Args: { p_text: string }; Returns: string }
+      cadde_setting_int: {
+        Args: { p_default: number; p_key: string }
+        Returns: number
+      }
       can_administer_catalog_item: {
         Args: { p_item_id: string; p_user_id?: string }
         Returns: boolean
@@ -7340,10 +10169,16 @@ export type Database = {
         Args: { p_item_id: string; p_user_id?: string }
         Returns: boolean
       }
+      can_join_cadde_cafe: {
+        Args: { p_cafe_id: string; uid: string }
+        Returns: string
+      }
       can_manage_catalog_item_editors: {
         Args: { p_item_id: string; p_user_id?: string }
         Returns: boolean
       }
+      can_post_cadde: { Args: { uid: string }; Returns: boolean }
+      can_post_kopru: { Args: { uid: string }; Returns: boolean }
       can_view_catalog_item: {
         Args: { p_item_id: string; p_user_id?: string }
         Returns: boolean
@@ -7437,10 +10272,91 @@ export type Database = {
         Args: never
         Returns: Json
       }
+      create_cadde_cafe_v1: {
+        Args: {
+          p_capacity?: number
+          p_city: string
+          p_country: string
+          p_diaspora_key?: string
+          p_ends_at?: string
+          p_entry_mode: string
+          p_entry_question?: string
+          p_external_links?: Json
+          p_is_bridge: boolean
+          p_referral_code?: string
+          p_starts_at?: string
+          p_summary: string
+          p_theme_key: string
+          p_title: string
+        }
+        Returns: string
+      }
+      create_cadde_comment_v1: {
+        Args: { p_body: string; p_post_id: string }
+        Returns: string
+      }
+      create_cadde_post_v1: {
+        Args: {
+          p_body: string
+          p_cafe_id?: string
+          p_city: string
+          p_country: string
+          p_diaspora_key?: string
+          p_interests?: string[]
+          p_is_bridge: boolean
+          p_need_category?: string
+          p_post_type: string
+          p_title: string
+        }
+        Returns: string
+      }
+      create_cadde_promotion_campaign_v1: {
+        Args: {
+          p_campaign_type: string
+          p_description: string
+          p_ends_at?: string
+          p_image_url?: string
+          p_placements?: Json
+          p_starts_at?: string
+          p_target_url: string
+          p_title: string
+        }
+        Returns: string
+      }
+      create_carsi_item_v1: {
+        Args: {
+          p_category_key: string
+          p_city?: string
+          p_contact_mode?: string
+          p_country?: string
+          p_description: string
+          p_diaspora_key?: string
+          p_image_urls?: string[]
+          p_price_amount?: number
+          p_price_currency?: string
+          p_title: string
+        }
+        Returns: string
+      }
+      create_world_cup_registration_v1: {
+        Args: {
+          p_address?: string
+          p_broadcast_confirmed?: boolean
+          p_business_name: string
+          p_category_role_key: string
+          p_city: string
+          p_country: string
+          p_image_path?: string
+          p_note?: string
+          p_phone: string
+        }
+        Returns: string
+      }
       current_user_can_edit_whatsapp_landing: {
         Args: { p_landing_id: string }
         Returns: boolean
       }
+      delete_carsi_item_v1: { Args: { p_item_id: string }; Returns: undefined }
       disablelongtransactions: { Args: never; Returns: string }
       dropgeometrycolumn:
         | {
@@ -7573,7 +10489,12 @@ export type Database = {
         Returns: boolean
       }
       geomfromewkt: { Args: { "": string }; Returns: unknown }
+      get_cadde_actor_context: { Args: never; Returns: Json }
       get_catalog_item_profile: { Args: { p_item_id: string }; Returns: Json }
+      get_catalog_item_public_page_v2: {
+        Args: { p_slug: string }
+        Returns: Json
+      }
       get_catalog_item_public_profile: {
         Args: { p_slug: string }
         Returns: Json
@@ -7686,6 +10607,7 @@ export type Database = {
           sort_order: number
         }[]
       }
+      get_rebuild_status_report: { Args: never; Returns: Json }
       get_role_form_schema: { Args: { p_role_key: string }; Returns: Json }
       get_role_management_bundle: {
         Args: { p_role_key: string }
@@ -7702,9 +10624,31 @@ export type Database = {
         }[]
       }
       gettransactionid: { Args: never; Returns: unknown }
+      has_cadde_feature: {
+        Args: { fkey: string; uid: string }
+        Returns: boolean
+      }
       is_admin: { Args: { uid: string }; Returns: boolean }
       is_admin_user: { Args: { check_user_id: string }; Returns: boolean }
+      is_cadde_banned: { Args: { uid: string }; Returns: boolean }
+      is_cadde_moderator: { Args: { uid: string }; Returns: boolean }
+      is_cadde_profile_complete: { Args: { uid: string }; Returns: boolean }
+      is_diaspora_resident: { Args: { uid: string }; Returns: boolean }
       is_moderator: { Args: { uid: string }; Returns: boolean }
+      is_phone_verified: { Args: { uid: string }; Returns: boolean }
+      is_tr_resident: { Args: { uid: string }; Returns: boolean }
+      join_cadde_cafe_v1: {
+        Args: { p_answer?: string; p_cafe_id: string; p_referral_code?: string }
+        Returns: Json
+      }
+      list_cadde_feed_v1: {
+        Args: { p_cursor?: Json; p_filters?: Json; p_limit?: number }
+        Returns: Json
+      }
+      list_cadde_promotions_v1: {
+        Args: { p_filters?: Json; p_limit?: number; p_placement_key: string }
+        Returns: Json
+      }
       list_member_catalog_names: {
         Args: { p_user_ids: string[] }
         Returns: {
@@ -7741,7 +10685,25 @@ export type Database = {
           whatsapp: string
         }[]
       }
+      list_world_cup_businesses_v1: {
+        Args: { p_limit?: number }
+        Returns: Json
+      }
+      list_world_cup_registrations_admin_v1: {
+        Args: { p_status?: string }
+        Returns: Json
+      }
       longtransactionsenabled: { Args: never; Returns: boolean }
+      match_rag_documents: {
+        Args: { match_count?: number; query_embedding: string }
+        Returns: {
+          content: string
+          id: string
+          similarity: number
+          source: string
+          title: string
+        }[]
+      }
       normalize_profile_onboarding_email: {
         Args: { input_email: string }
         Returns: string
@@ -7796,6 +10758,24 @@ export type Database = {
       }
       postgis_version: { Args: never; Returns: string }
       postgis_wagyu_version: { Args: never; Returns: string }
+      record_cadde_promotion_event_v1: {
+        Args: {
+          p_campaign_id: string
+          p_event_type: string
+          p_placement_key: string
+        }
+        Returns: boolean
+      }
+      record_carsi_contact_v1: { Args: { p_item_id: string }; Returns: boolean }
+      report_cadde_entity_v1: {
+        Args: {
+          p_details?: string
+          p_entity_id: string
+          p_entity_type: string
+          p_reason: string
+        }
+        Returns: undefined
+      }
       resolve_approval_request_type: {
         Args: { p_feature_key: string }
         Returns: string
@@ -7863,6 +10843,9 @@ export type Database = {
           title: string
         }[]
       }
+      service_finder_require_admin: { Args: never; Returns: string }
+      service_finder_slugify: { Args: { p_value: string }; Returns: string }
+      service_finder_text_array: { Args: { p_value: Json }; Returns: string[] }
       set_catalog_search_embedding: {
         Args: { next_embedding: string; target_item_id: string }
         Returns: undefined
@@ -8493,8 +11476,23 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: undefined
       }
+      toggle_cadde_reaction_v1: {
+        Args: { p_post_id: string; p_reaction_type: string }
+        Returns: boolean
+      }
       unaccent: { Args: { "": string }; Returns: string }
       unlockrows: { Args: { "": string }; Returns: number }
+      update_carsi_item_v1: {
+        Args: {
+          p_description?: string
+          p_item_id: string
+          p_price_amount?: number
+          p_price_currency?: string
+          p_status?: string
+          p_title?: string
+        }
+        Returns: undefined
+      }
       update_catalog_item_attribute: {
         Args: {
           p_attribute_key: string
@@ -8627,16 +11625,118 @@ export type Database = {
       validate_and_bind_referral_code: {
         Args: { input_code: string; reference_time?: string }
         Returns: {
+          group_code: string
           message: string
           normalized_code: string
           referral_code_id: string
+          source_code: string
           status: string
+          type_code: string
+          valid_from: string
+          valid_until: string
         }[]
       }
       validate_profile_onboarding_referral_source: {
         Args: { input_value: string }
         Returns: string
       }
+      worker_append_service_finder_event: {
+        Args: {
+          p_candidate_id?: string
+          p_event_level?: string
+          p_event_payload?: Json
+          p_event_type: string
+          p_job_id: string
+          p_message: string
+        }
+        Returns: number
+      }
+      worker_claim_service_finder_jobs: {
+        Args: { p_limit?: number; p_worker_id: string }
+        Returns: {
+          attempts: number
+          cancelled_at: string | null
+          catalog_publish_mode: string
+          category_slug: string | null
+          city: string | null
+          classifier_provider_id: string | null
+          classify_requests: number
+          cost_total_usd: number
+          country_code: string | null
+          created_at: string
+          created_by_user_id: string
+          extract_provider_id: string | null
+          extract_requests: number
+          finished_at: string | null
+          freeform_topic: string | null
+          hard_cap_usd: number
+          id: string
+          item_type: string
+          language_code: string
+          last_error_code: string | null
+          last_error_message: string | null
+          lease_expires_at: string | null
+          location_label: string
+          locked_by: string | null
+          max_candidates: number
+          max_extract_urls: number
+          max_queries: number
+          max_source_urls: number
+          must_exclude_terms: string[]
+          must_include_terms: string[]
+          priority: number
+          progress: Json
+          region: string | null
+          result_summary: Json
+          role_key: string
+          run_after: string
+          search_provider_id: string | null
+          search_requests: number
+          seed_queries: Json
+          seed_urls: string[]
+          soft_cap_usd: number
+          started_at: string | null
+          status: string
+          template_id: string | null
+          title: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "service_finder_jobs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      worker_complete_service_finder_job: {
+        Args: {
+          p_job_id: string
+          p_result_summary?: Json
+          p_status?: string
+          p_worker_id: string
+        }
+        Returns: boolean
+      }
+      worker_fail_service_finder_job: {
+        Args: {
+          p_error_code: string
+          p_error_message: string
+          p_job_id: string
+          p_retry_delay_seconds?: number
+          p_retryable?: boolean
+          p_worker_id: string
+        }
+        Returns: boolean
+      }
+      worker_heartbeat_service_finder_job: {
+        Args: { p_job_id: string; p_progress?: Json; p_worker_id: string }
+        Returns: boolean
+      }
+      worker_record_service_finder_cost: {
+        Args: { p_payload: Json }
+        Returns: Json
+      }
+      world_cup_campaign_is_active: { Args: never; Returns: boolean }
       write_admin_audit_log: {
         Args: {
           p_action: string
@@ -8815,9 +11915,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       currency_code: ["TRY", "USD", "EUR", "GBP", "QAR"],
@@ -8858,4 +11955,3 @@ export const Constants = {
     },
   },
 } as const
-
