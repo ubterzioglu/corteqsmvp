@@ -14,6 +14,31 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260613-blog-ulke-rehberi",
+    date: "13 Haziran 2026",
+    title: "Blog yayında — 10 ülke için hazır rehber yazıları (30 makale)",
+    items: [
+      "Siteye bir Blog bölümü eklendi: corteqs.net/blog. Türkiye'den çıkış yapacak okur için on ülke (Almanya, Hollanda, Avusturya, Belçika, İsviçre, İngiltere, Kanada, ABD, İsveç, Fransa) hakkında üçer rehber yazısı hazır — toplam 30 makale. Her ülke için: 'giriş/ulaşım', 'gündelik hayat ve bütçe' ve 'kültür/sosyal akış' başlıkları var.",
+      "Public taraf iki sayfadan oluşuyor: /blog ülkeye göre gruplu yazı listesi (üstte kategori filtresiyle), /blog/<yazı-adresi> ise tek yazının okuma sayfası. Yazılar zengin metin (markdown) olarak güzelce biçimlenip gösteriliyor. Footer'a (sayfa altı menü) da Blog linki eklendi.",
+      "Yönetim sende: sol menüde İçerik ve Kampanyalar grubunda yeni 'Blog' ekranı var (/admin/blog). Buradan yeni yazı oluşturur, mevcutları düzenler, siler ve yayınla/gizle anahtarıyla görünürlüğü kontrol edersin. Gizli (taslak) yazılar public tarafta görünmez.",
+      "Yazı içeriği markdown ile yazılır (başlık, liste, kalın/italik, link) — kod bilmeden, Word'e benzer şekilde düzenlersin. Yalnızca admin yazabilir; ziyaretçiler sadece yayınlanmış yazıları okur.",
+      "30 yazının tamamı veritabanında canlıda hazır. Site arayüzündeki Blog bölümü bir sonraki yayınla (deploy) görünür olacak.",
+    ],
+  },
+  {
+    id: "20260613-radar-haber-pipeline",
+    date: "13 Haziran 2026",
+    title: "Radar Haber Pipeline — haberler artık otomatik bulunuyor, ama yayını hep sen onaylıyorsun",
+    items: [
+      "Ana sayfadaki haber bandını (marquee) besleyecek yeni bir haber keşif sistemi kuruldu. Sistem dış kaynaklardan (RSS/Atom haber akışları ve GDELT küresel haber veritabanı) diasporayı ilgilendiren haberleri kendiliğinden tarayıp aday olarak topluyor.",
+      "EN ÖNEMLİ kural: hiçbir haber kendiliğinden yayınlanmaz. Sistem sadece aday önerir; her aday senin onayından geçtikten sonra haber bandına düşer. Manipülatif veya alakasız içerik riski böylece sende kalır.",
+      "Sol menüye yeni bir 'Radar Haber Pipeline' grubu eklendi, üç ekrandan oluşuyor: Moderasyon Kuyruğu (/admin/radar/queue) — bekleyen aday haberleri tek tek incele, Onayla (banda aktar) veya Reddet; Haber Kaynakları (/admin/radar/sources) — hangi RSS/Atom/GDELT kaynaklarının taranacağını sen belirle; Tarama Geçmişi (/admin/radar/runs) — hangi tarama ne zaman koştu, kaç aday buldu.",
+      "Güvenlik önlemleri yerinde: sistem dış sitelerin görsellerini doğrudan çekip göstermiyor (sadece önizleme), aynı haberi adres ve içerik parmak iziyle tekilleştiriyor (mükerrer aday gelmez) ve zararlı adreslere istek atmasını engelleyen koruma var.",
+      "Mevcut haber bandı düzenin aynen duruyor — bu sistem onun önüne kontrollü bir keşif katmanı ekliyor, eski 'OpenClaw Haber Havuzu' akışını bozmuyor.",
+      "Not: Otomatik taramayı çalıştıran arka plan servisi (Edge Function) ve günlük zamanlanmış tetikleme henüz devreye alınmadı; kod ve veritabanı hazır, canlıya alma sırada.",
+    ],
+  },
+  {
     id: "20260612-cadde-kural-kitabi",
     date: "12 Haziran 2026",
     title: "Cadde Kural Kitabı yayında — Cadde'nin tüm işleyişi tek sayfada",

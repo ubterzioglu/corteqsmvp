@@ -38,7 +38,7 @@ export const gdeltAdapter: RadarNewsAdapter = {
       let lastError: unknown;
       for (let attempt = 0; attempt < 3; attempt++) {
         if (attempt > 0) {
-          await new Promise((r) => setTimeout(r, attempt * 2000));
+          await new Promise((r) => setTimeout(r, attempt * 5000));
         }
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), source.timeout_ms);
@@ -72,11 +72,18 @@ export const gdeltAdapter: RadarNewsAdapter = {
       throw new Error("GDELT yanıtı 2 MB sınırını aştı");
     }
 
+    // GDELT hata durumunda 200 + text/html ile düz mesaj döndürür
+    // (ör. "Queries containing OR'd terms must be surrounded by ()").
+    const trimmed = text.trim();
+    if (!trimmed.startsWith("{")) {
+      throw new Error(`GDELT JSON değil: ${trimmed.slice(0, 160)}`);
+    }
+
     let parsed: GdeltResponse;
     try {
       parsed = JSON.parse(text);
     } catch {
-      throw new Error("GDELT yanıtı JSON parse edilemedi");
+      throw new Error(`GDELT yanıtı JSON parse edilemedi: ${trimmed.slice(0, 120)}`);
     }
 
     const articles = parsed.articles ?? [];

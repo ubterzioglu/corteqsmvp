@@ -81,6 +81,10 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/service-finder/providers",
   "/admin/service-finder/templates",
   "/admin/service-finder/costs",
+  "/admin/service-finder/guide",
+  "/admin/radar/queue",
+  "/admin/radar/sources",
+  "/admin/radar/runs",
 ];
 
 /**

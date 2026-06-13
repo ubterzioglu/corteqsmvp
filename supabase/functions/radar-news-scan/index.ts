@@ -107,10 +107,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
   const sourceList = (sources ?? []) as RadarNewsSource[];
   for (let sourceIndex = 0; sourceIndex < sourceList.length; sourceIndex++) {
     const source = sourceList[sourceIndex];
-    // Kaynaklar arası gecikme — aynı sağlayıcı (ör. GDELT) art arda
-    // sorgularda rate-limit (429) döndürür. İlk kaynak hariç bekle.
+    // Kaynaklar arası gecikme — aynı sağlayıcı (ör. GDELT) paylaşımlı
+    // egress IP'sini art arda sorgularda rate-limit (429) eder. İlk kaynak
+    // hariç bekle; GDELT pratikte ~5sn'de bir istek tolere eder.
     if (sourceIndex > 0) {
-      await new Promise((r) => setTimeout(r, 1500));
+      await new Promise((r) => setTimeout(r, 6000));
     }
     const adapter = ADAPTERS[source.adapter_key];
     if (!adapter) {

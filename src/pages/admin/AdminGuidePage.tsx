@@ -226,6 +226,24 @@ const guideBlocks: GuideBlock[] = [
         ],
       },
       {
+        title: "Blog (/admin/blog)",
+        items: [
+          "Ülke rehberi blog yazılarını yönetir: yeni yazı oluştur, mevcutları düzenle veya sil. İçerik markdown (zengin metin) olarak yazılır — başlık, liste, kalın/italik ve link kullanabilirsin.",
+          "Yayınla/Gizle anahtarı yazının public tarafta (/blog) görünüp görünmeyeceğini belirler; taslak (gizli) yazılar ziyaretçilere görünmez.",
+          "Public taraf: /blog ülkeye göre gruplu liste (kategori filtreli), /blog/<adres> tek yazı sayfasıdır. Yalnızca admin yazabilir; ziyaretçiler yalnızca yayınlanmış yazıları okur.",
+        ],
+      },
+      {
+        title: "Radar Haber Pipeline (/admin/radar)",
+        items: [
+          "Haber bandına aday haberleri otomatik bulup getiren keşif katmanı. Dış kaynaklardan (RSS/Atom haber akışları ve GDELT küresel haber veritabanı) diasporayı ilgilendiren haberleri tarayıp aday olarak toplar. EN ÖNEMLİ kural: hiçbir haber kendiliğinden yayınlanmaz — her aday senin onayından sonra banda düşer.",
+          "Moderasyon Kuyruğu (/admin/radar/queue): bekleyen aday haberleri tek tek incele, Onayla (haber bandına aktarılır) veya Reddet.",
+          "Haber Kaynakları (/admin/radar/sources): hangi RSS/Atom/GDELT kaynaklarının taranacağını ekler/düzenlersin.",
+          "Tarama Geçmişi (/admin/radar/runs): hangi tarama ne zaman koştu ve kaç aday buldu — günlük cron ve manuel taramaların kaydı.",
+          "Not: Otomatik taramayı çalıştıran arka plan servisi ve günlük zamanlanmış tetikleme henüz devreye alınmadı; ekranlar ve veritabanı hazır.",
+        ],
+      },
+      {
         title: "Sosyal Medya ve Sosyal Link Profilleri",
         items: [
           "Sosyal Medya (/admin/social-media): sitenin sosyal medya bağlantıları.",
@@ -233,6 +251,11 @@ const guideBlocks: GuideBlock[] = [
           "19 Mayıs ekranları kampanya dönemine aittir ve şu an inaktiftir (sidebar'da İnaktif bölümünde).",
         ],
       },
+    ],
+    links: [
+      { label: "Cadde Kural Kitabı", to: "/admin/cadde/rehber" },
+      { label: "Blog", to: "/admin/blog" },
+      { label: "Radar Moderasyon Kuyruğu", to: "/admin/radar/queue" },
     ],
   },
   {
