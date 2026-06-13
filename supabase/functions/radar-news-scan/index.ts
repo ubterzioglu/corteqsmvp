@@ -104,7 +104,14 @@ Deno.serve(async (req: Request): Promise<Response> => {
   let failedSources = 0;
 
   // ── Her kaynak için tarama ──
-  for (const source of (sources ?? []) as RadarNewsSource[]) {
+  const sourceList = (sources ?? []) as RadarNewsSource[];
+  for (let sourceIndex = 0; sourceIndex < sourceList.length; sourceIndex++) {
+    const source = sourceList[sourceIndex];
+    // Kaynaklar arası gecikme — aynı sağlayıcı (ör. GDELT) art arda
+    // sorgularda rate-limit (429) döndürür. İlk kaynak hariç bekle.
+    if (sourceIndex > 0) {
+      await new Promise((r) => setTimeout(r, 1500));
+    }
     const adapter = ADAPTERS[source.adapter_key];
     if (!adapter) {
       results.push({ sourceId: source.id, sourceName: source.name, fetched: 0, inserted: 0, duplicate: 0, filtered: 0, error: `Adapter bulunamadı: ${source.adapter_key}` });
