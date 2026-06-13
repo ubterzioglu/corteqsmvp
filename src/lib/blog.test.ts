@@ -58,9 +58,17 @@ describe("groupBlogPostsByCountry", () => {
 });
 
 describe("blogCategoryLabels", () => {
-  it("üç ana kategori için Türkçe etiket içerir", () => {
+  it("üç ana ülke-rehberi kategorisi için Türkçe etiket içerir", () => {
     expect(blogCategoryLabels["giris-ulasim"]).toBe("Giriş ve Ulaşım");
     expect(blogCategoryLabels["gundelik-butce"]).toBe("Gündelik Hayat ve Bütçe");
     expect(blogCategoryLabels["kultur-sosyal"]).toBe("Kültür ve Sosyal Akış");
+  });
+
+  it("göç rehberi (5 konu) kategorileri için Türkçe etiket içerir", () => {
+    expect(blogCategoryLabels["oturum-izni"]).toBe("Oturum İzni");
+    expect(blogCategoryLabels["calisma-vizesi"]).toBe("Çalışma Vizesi");
+    expect(blogCategoryLabels.vatandaslik).toBe("Vatandaşlık");
+    expect(blogCategoryLabels["is-bulma"]).toBe("İş Bulmak");
+    expect(blogCategoryLabels["yasam-sartlari"]).toBe("Yaşam Şartları");
   });
 });

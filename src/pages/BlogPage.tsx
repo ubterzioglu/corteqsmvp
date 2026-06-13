@@ -17,6 +17,11 @@ const CATEGORY_FILTERS: { key: CategoryFilter; label: string }[] = [
   { key: "giris-ulasim", label: blogCategoryLabels["giris-ulasim"] },
   { key: "gundelik-butce", label: blogCategoryLabels["gundelik-butce"] },
   { key: "kultur-sosyal", label: blogCategoryLabels["kultur-sosyal"] },
+  { key: "oturum-izni", label: blogCategoryLabels["oturum-izni"] },
+  { key: "calisma-vizesi", label: blogCategoryLabels["calisma-vizesi"] },
+  { key: "vatandaslik", label: blogCategoryLabels["vatandaslik"] },
+  { key: "is-bulma", label: blogCategoryLabels["is-bulma"] },
+  { key: "yasam-sartlari", label: blogCategoryLabels["yasam-sartlari"] },
 ];
 
 const BlogPage = () => {

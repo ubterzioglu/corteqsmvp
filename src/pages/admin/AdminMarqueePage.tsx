@@ -188,6 +188,10 @@ const AdminMarqueePage = () => {
 
     if (!title) throw new Error("Başlık zorunlu.");
     if (!summary) throw new Error("Kısa bilgi zorunlu.");
+    // Radar kartları görsel + çok satırlı özet için tasarlandı; çok kısa özet
+    // kartı "içi boş" gösterir. En az 40 karakter iste ki akışta dengeli dursun.
+    if (summary.length < 40)
+      throw new Error("Kısa bilgi en az 40 karakter olmalı (kartın dengeli görünmesi için 1–2 cümle).");
     if (form.link_enabled && !slug) throw new Error("Detay sayfası açıksa slug zorunlu.");
 
     const sortOrder = Number.parseInt(form.sort_order, 10);
@@ -323,7 +327,22 @@ const AdminMarqueePage = () => {
 
           <div className="space-y-2">
             <Label>Kısa bilgi</Label>
-            <Textarea value={form.summary} onChange={(event) => updateForm("summary", event.target.value)} rows={3} />
+            <Textarea
+              value={form.summary}
+              onChange={(event) => updateForm("summary", event.target.value)}
+              rows={3}
+              placeholder="Radar kartında görünecek 1–2 cümlelik özet (en az 40 karakter)"
+            />
+            <p
+              className={
+                "text-xs " +
+                (form.summary.trim().length > 0 && form.summary.trim().length < 40
+                  ? "text-destructive"
+                  : "text-muted-foreground")
+              }
+            >
+              {form.summary.trim().length}/40 — kartın "içi boş" görünmemesi için en az 40 karakter önerilir.
+            </p>
           </div>
 
           <div className="space-y-2">

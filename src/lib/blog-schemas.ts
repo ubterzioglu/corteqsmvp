@@ -15,9 +15,22 @@ export const blogPostFormSchema = z.object({
   content_markdown: z.string().trim().min(10, "İçerik en az 10 karakter olmalı"),
   country: z.string().trim().max(60, "Ülke anahtarı çok uzun").or(z.literal("")),
   country_label: z.string().trim().max(80, "Ülke adı çok uzun").or(z.literal("")),
-  category: z.enum(["giris-ulasim", "gundelik-butce", "kultur-sosyal", "genel"], {
-    errorMap: () => ({ message: "Kategori seçiniz" }),
-  }),
+  category: z.enum(
+    [
+      "giris-ulasim",
+      "gundelik-butce",
+      "kultur-sosyal",
+      "oturum-izni",
+      "calisma-vizesi",
+      "vatandaslik",
+      "is-bulma",
+      "yasam-sartlari",
+      "genel",
+    ],
+    {
+      errorMap: () => ({ message: "Kategori seçiniz" }),
+    },
+  ),
   cover_image: z
     .string()
     .trim()

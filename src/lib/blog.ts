@@ -6,7 +6,16 @@
 
 import { supabase } from "@/integrations/supabase/client";
 
-export type BlogCategory = "giris-ulasim" | "gundelik-butce" | "kultur-sosyal" | "genel";
+export type BlogCategory =
+  | "giris-ulasim"
+  | "gundelik-butce"
+  | "kultur-sosyal"
+  | "oturum-izni"
+  | "calisma-vizesi"
+  | "vatandaslik"
+  | "is-bulma"
+  | "yasam-sartlari"
+  | "genel";
 
 export interface BlogPostRow {
   id: string;
@@ -49,6 +58,11 @@ export const blogCategoryLabels: Record<BlogCategory, string> = {
   "giris-ulasim": "Giriş ve Ulaşım",
   "gundelik-butce": "Gündelik Hayat ve Bütçe",
   "kultur-sosyal": "Kültür ve Sosyal Akış",
+  "oturum-izni": "Oturum İzni",
+  "calisma-vizesi": "Çalışma Vizesi",
+  vatandaslik: "Vatandaşlık",
+  "is-bulma": "İş Bulmak",
+  "yasam-sartlari": "Yaşam Şartları",
   genel: "Genel",
 };
 
@@ -56,6 +70,11 @@ export const blogCategoryOrder: BlogCategory[] = [
   "giris-ulasim",
   "gundelik-butce",
   "kultur-sosyal",
+  "oturum-izni",
+  "calisma-vizesi",
+  "vatandaslik",
+  "is-bulma",
+  "yasam-sartlari",
   "genel",
 ];
 
