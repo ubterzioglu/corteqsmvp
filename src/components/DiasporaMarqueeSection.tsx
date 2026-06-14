@@ -32,14 +32,25 @@ const DiasporaMarqueeSection = () => {
   return (
     <section className="overflow-hidden py-5">
       <div className="container mx-auto max-w-6xl px-4">
-        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 className="max-w-4xl text-2xl font-extrabold tracking-tight text-foreground md:text-4xl">
-              CorteQS Radar
-            </h2>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              Dünya genelindeki Türk topluluklarından sayılar, gelişmeler ve platform duyuruları.
-            </p>
+        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex min-w-0 items-center gap-4">
+            <img
+              src="/radar-hero.png"
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              width={1376}
+              height={768}
+              className="hidden h-16 w-auto shrink-0 rounded-xl object-cover shadow-[0_14px_36px_-24px_rgba(15,23,42,0.4)] sm:block lg:h-20"
+            />
+            <div className="min-w-0">
+              <h2 className="truncate text-2xl font-extrabold tracking-tight text-foreground md:text-3xl">
+                CorteQS Radar
+              </h2>
+              <p className="truncate text-sm leading-relaxed text-muted-foreground">
+                Türk topluluklarından sayılar, gelişmeler ve platform duyuruları.
+              </p>
+            </div>
           </div>
           <Button asChild variant="outline" className="w-fit shrink-0">
             <Link to="/radar">

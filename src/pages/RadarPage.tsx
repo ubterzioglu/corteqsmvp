@@ -59,17 +59,30 @@ const RadarPage = () => {
     <main className="min-h-screen bg-background">
       <section className="border-b border-border bg-[linear-gradient(90deg,hsl(var(--background)),hsl(var(--secondary)),hsl(var(--background)))]">
         <div className="container mx-auto px-4 py-8 md:py-12">
-          <div className="mt-0 max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
-              <RadioTower className="h-4 w-4" />
-              CorteQS Radar
+          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div className="min-w-0 flex-1 space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+                <RadioTower className="h-4 w-4" />
+                CorteQS Radar
+              </div>
+              <div className="space-y-2">
+                <h1 className="truncate text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl">
+                  Haberler, İstatistikler ve Duyurular
+                </h1>
+                <p className="truncate text-sm leading-relaxed text-muted-foreground md:text-base">
+                  Dünya genelindeki Türk topluluklarına dair güncel notlar, duyurular ve öne çıkan sayılar.
+                </p>
+              </div>
             </div>
-            <div className="space-y-3">
-              <h1 className="text-3xl font-extrabold tracking-tight text-foreground md:text-5xl">Haberler, İstatistikler ve Duyurular</h1>
-              <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
-                Dünya genelindeki Türk topluluklarına dair güncel notlar, platform duyuruları ve öne çıkan sayılar.
-              </p>
-            </div>
+            <img
+              src="/radar-hero.png"
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              width={1376}
+              height={768}
+              className="hidden h-28 w-auto shrink-0 rounded-2xl object-cover shadow-[0_18px_45px_-28px_rgba(15,23,42,0.4)] md:block lg:h-32"
+            />
           </div>
         </div>
       </section>
