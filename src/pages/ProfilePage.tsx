@@ -497,6 +497,21 @@ const ProfilePage = () => {
     return { common, socialMedia, roleSpecific };
   }, [profile?.attributes]);
 
+  // Grup toggle'larını yüklenen profilin gerçek görünürlüğünden türet: bir grup
+  // "public" sayılır ancak ve ancak gruptaki TÜM alanlar public ise. Aksi halde
+  // toggle "public" gösterip public profil göstermez (görünürlük tutarsızlığı).
+  // Boş grupları tutars (varsayılan açık) — kullanıcının ilk dolduruşunu engellemez.
+  useEffect(() => {
+    setCommonAttributesAllVisible(
+      groupedAttributes.common.length === 0 ||
+        groupedAttributes.common.every((attribute) => attribute.visibility === "public"),
+    );
+    setSocialMediaAllVisible(
+      groupedAttributes.socialMedia.length === 0 ||
+        groupedAttributes.socialMedia.every((attribute) => attribute.visibility === "public"),
+    );
+  }, [groupedAttributes]);
+
   const attributeMap = useMemo(() => {
     return new Map((profile?.attributes ?? []).map((attribute) => [attribute.attributeKey, attribute]));
   }, [profile?.attributes]);
@@ -1497,7 +1512,7 @@ const ProfilePage = () => {
                     className="h-8 flex-1 text-[10px] placeholder:text-[10px]"
                   />
                   <div className={`flex items-center gap-1.5 rounded-full px-2 shrink-0 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
-                    {draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility === "public" ? (
+                    {(draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility) === "public" ? (
                       <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
                     ) : (
                       <EyeOff className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
@@ -1568,6 +1583,7 @@ const ProfilePage = () => {
                         )}
                         <Switch
                           checked={commonAttributesAllVisible}
+                          aria-label="Ortak alanlar görünürlük"
                           onCheckedChange={(checked) => {
                             setCommonAttributesAllVisible(checked);
                             setDraftVisibilities((current) => {
@@ -1612,9 +1628,14 @@ const ProfilePage = () => {
             </Card>
   ) : null;
 
+  const interestsAttribute = attributeMap.get("interests") ?? null;
   const caddeCards = (
     <>
-      <CaddeInterestsCard onSaved={() => void refreshProfile()} />
+      <CaddeInterestsCard
+        onSaved={() => void refreshProfile()}
+        visibility={interestsAttribute?.visibility ?? "public"}
+        canHide={interestsAttribute?.userCanHide ?? true}
+      />
       <CaddeMyContentCard />
       <CaddeTanitimPanel />
     </>
@@ -1659,6 +1680,7 @@ const ProfilePage = () => {
                       )}
                       <Switch
                         checked={socialMediaAllVisible}
+                        aria-label="Sosyal medya görünürlük"
                         onCheckedChange={(checked) => {
                           setSocialMediaAllVisible(checked);
                           setDraftVisibilities((current) => {

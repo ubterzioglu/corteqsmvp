@@ -800,6 +800,39 @@ describe("ProfilePage", () => {
     expect(refreshProfileMock).toHaveBeenCalled();
   });
 
+  it("syncs the common-fields visibility toggle from the saved profile state", async () => {
+    useAuthMock.mockReturnValue({
+      user: { id: "u-1", email: "firmascope@gmail.com", user_metadata: { name: "firmascope" } },
+    });
+    useCurrentUserDashboardMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      items: [],
+      refreshDashboard: vi.fn(),
+    });
+    // Tüm ortak alanlar (country/city/bio_short) DB'de private kayıtlı.
+    useCurrentUserProfileMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      profile: {
+        ...baseProfile,
+        attributes: baseProfile.attributes.map((attribute) =>
+          ["country", "city", "bio_short"].includes(attribute.attributeKey)
+            ? { ...attribute, visibility: "private" as const }
+            : attribute,
+        ),
+      },
+      refreshProfile: vi.fn(),
+    });
+
+    renderProfilePage("/profile/bireysel");
+
+    // Regresyon: toggle useState(true)'a sabit kalmamalı; kayıtlı private durumu
+    // yansıtmalı (aksi halde toggle "public" derken public profil göstermez).
+    const commonToggle = await screen.findByRole("switch", { name: /Ortak alanlar görünürlük/i });
+    expect(commonToggle).not.toBeChecked();
+  });
+
   it("renders compact role-specific rows and saves referral fields without visibility switches", async () => {
     const refreshProfileMock = vi.fn().mockResolvedValue(undefined);
 

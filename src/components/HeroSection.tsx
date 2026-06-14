@@ -91,13 +91,13 @@ const HeroSection = () => {
               </p>
             </div>
 
-            <div className="mt-3 max-w-[760px] space-y-2.5 lg:max-w-[540px] xl:max-w-[590px] 2xl:max-w-[640px]">
+            <div className="mt-3 max-w-[760px] space-y-4 pb-2 lg:max-w-[540px] xl:max-w-[590px] 2xl:max-w-[640px]">
               <div className="w-full max-w-lg 2xl:max-w-[38rem]">
                 <CorteqsWhatIsAccordion />
               </div>
 
               {/* Birincil + ikincil CTA — net hiyerarşi */}
-              <div className="grid w-full max-w-lg gap-2.5 sm:grid-cols-2 2xl:max-w-[38rem]">
+              <div className="grid w-full max-w-lg gap-3 sm:grid-cols-2 2xl:max-w-[38rem]">
                 <Link
                   to="/login?mode=signup"
                   className={`${heroCtaClass} whitespace-nowrap`}

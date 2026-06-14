@@ -5,27 +5,39 @@
 
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Heart } from "lucide-react";
+import { Eye, EyeOff, Heart } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { listCaddeInterestCatalog, listMyCaddeInterests, saveMyCaddeInterests } from "@/lib/cadde-api";
 import { buildCaddeInterestsMirrorText } from "@/lib/cadde-format";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import type { AttributeVisibility } from "@/lib/member-profile";
 import { updateProfileAttribute } from "@/lib/member-profile-api";
 
 type CaddeInterestsCardProps = {
   /** Aynalanan `interests` attribute'u yazıldıktan sonra üst bileşenin profil verisini tazelemesi için. */
   onSaved?: () => void;
+  /** Kayıtlı `interests` attribute görünürlüğü; toggle bunu yansıtır (public profil ile tutarlılık). */
+  visibility?: AttributeVisibility;
+  /** Kullanıcı bu alanın görünürlüğünü değiştirebilir mi (afs role rule). Varsayılan: izinli. */
+  canHide?: boolean;
 };
 
-const CaddeInterestsCard = ({ onSaved }: CaddeInterestsCardProps) => {
+const CaddeInterestsCard = ({ onSaved, visibility = "public", canHide = true }: CaddeInterestsCardProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selection, setSelection] = useState<string[]>([]);
+  const [draftVisibility, setDraftVisibility] = useState<AttributeVisibility>(visibility);
+
+  // Üst bileşenden gelen kayıtlı görünürlük değiştiğinde toggle'ı senkronla.
+  useEffect(() => {
+    setDraftVisibility(visibility);
+  }, [visibility]);
 
   const catalogQuery = useQuery({
     queryKey: caddeQueryKeys.interestCatalog,
@@ -52,9 +64,15 @@ const CaddeInterestsCard = ({ onSaved }: CaddeInterestsCardProps) => {
 
       // Seçimi profil `interests` attribute'una aynala: Profil Tamamlanma kartı ve
       // public profil user_profile_attributes'u okur, user_cadde_interests'i görmez.
+      // Görünürlüğü açıkça geçir — aksi halde RPC is_public_default'a düşer ve
+      // toggle ile public profil tutarsızlaşır.
       // Ayna yazımı başarısız olursa cadde kaydı geçerli kalır (non-fatal).
       try {
-        await updateProfileAttribute("interests", buildCaddeInterestsMirrorText(catalogQuery.data ?? [], selection));
+        await updateProfileAttribute(
+          "interests",
+          buildCaddeInterestsMirrorText(catalogQuery.data ?? [], selection),
+          draftVisibility,
+        );
       } catch (mirrorError: unknown) {
         console.error("[CaddeInterestsCard] interests attribute aynası yazılamadı", mirrorError);
       }
@@ -83,6 +101,7 @@ const CaddeInterestsCard = ({ onSaved }: CaddeInterestsCardProps) => {
   };
 
   const isDirty =
+    draftVisibility !== visibility ||
     selection.length !== (myInterestsQuery.data ?? []).length ||
     selection.some((key) => !(myInterestsQuery.data ?? []).includes(key));
 
@@ -117,7 +136,20 @@ const CaddeInterestsCard = ({ onSaved }: CaddeInterestsCardProps) => {
             );
           })}
         </div>
-        <div className="flex justify-end">
+        <div className="flex items-center justify-end gap-2">
+          <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2" style={{ height: "32px" }}>
+            {draftVisibility === "public" ? (
+              <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
+            ) : (
+              <EyeOff className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            )}
+            <Switch
+              checked={draftVisibility === "public"}
+              disabled={!canHide}
+              onCheckedChange={(checked) => setDraftVisibility(checked ? "public" : "private")}
+              aria-label="İlgi alanları görünürlük"
+            />
+          </div>
           <Button size="sm" onClick={() => saveMutation.mutate()} disabled={!isDirty || saveMutation.isPending}>
             {saveMutation.isPending ? "Kaydediliyor..." : "İlgi Alanlarını Kaydet"}
           </Button>
