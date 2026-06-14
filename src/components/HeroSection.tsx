@@ -22,6 +22,12 @@ const HeroSection = () => {
       color: "#FFFFFF",
       boxShadow: "0 16px 34px rgba(66, 133, 244, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.18)",
     },
+    search: {
+      background: "linear-gradient(135deg, #00ACC1 0%, #0097A7 100%)",
+      borderColor: "#00838f",
+      color: "#FFFFFF",
+      boxShadow: "0 16px 34px rgba(0, 172, 193, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.18)",
+    },
   } as const;
 
   return (
@@ -114,15 +120,28 @@ const HeroSection = () => {
                 <button
                   type="button"
                   onClick={scrollToSearch}
-                  className={`${heroCtaClass} border-slate-300 bg-white/80 text-slate-800 backdrop-blur hover:bg-white`}
+                  className={heroCtaClass}
+                  style={heroCardStyles.search}
                 >
+                  <span
+                    className="pointer-events-none absolute inset-0 opacity-100"
+                    aria-hidden
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 42%, rgba(255,255,255,0) 100%)",
+                    }}
+                  />
+                  <span
+                    className="pointer-events-none absolute inset-x-6 top-0 h-px bg-white/25"
+                    aria-hidden
+                  />
                   <Search className="relative z-10 h-4 w-4" aria-hidden="true" />
                   <span className="relative z-10">Diasporada Ara</span>
                 </button>
               </div>
 
-              {/* Üçüncül aksiyonlar — görsel ağırlığı düşük metin link grubu */}
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[12px] font-semibold text-slate-600 md:text-[13px]">
+              {/* Üçüncül aksiyonlar — görsel ağırlığı düşük metin link grubu (ortalı) */}
+              <div className="flex max-w-lg flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[12px] font-semibold text-slate-600 md:text-[13px] 2xl:max-w-[38rem]">
                 <Link
                   to="/founders"
                   onClick={() => window.scrollTo({ top: 0, behavior: "auto" })}
