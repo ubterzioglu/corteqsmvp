@@ -142,6 +142,29 @@ const Footer = () => {
             <p className="px-0.5 text-center text-[0.66rem] leading-relaxed text-white sm:text-[0.72rem]">
               © 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları saklıdır.
             </p>
+            <p className="mt-1.5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 px-0.5 text-center text-[0.62rem] leading-relaxed text-white/80 sm:text-[0.68rem]">
+              <a
+                href="https://chatio.com.tr/"
+                target="_blank"
+                rel="dofollow noopener noreferrer"
+                className="transition-colors hover:text-white"
+              >
+                Canlı Destek Yazılımı
+              </a>
+              <span aria-hidden="true" className="text-white/30">·</span>
+              <a
+                href="https://www.spindorai.com/seo/izmir-seo"
+                target="_blank"
+                rel="dofollow noopener noreferrer"
+                className="transition-colors hover:text-white"
+              >
+                İzmir Seo Ajansı
+              </a>
+              <span>Spindora Tarafından Seosu Yapılmıştır.</span>
+            </p>
+            <p className="mt-1.5 px-0.5 text-center text-[0.6rem] leading-relaxed text-white/60 sm:text-[0.66rem]">
+              Son güncelleme: 15 Haziran 2026
+            </p>
           </div>
         </div>
       </div>
