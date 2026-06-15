@@ -14,6 +14,20 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260615-seo-geo-ve-arka-uc-onarimlari",
+    date: "15 Haziran 2026",
+    title: "Google görünürlüğü (SEO) güçlendirildi + iki admin ekranındaki kırık liste onarıldı",
+    items: [
+      "Site Google ve yapay zekâ aramalarına çok daha hazır hale getirildi: her sayfanın artık kendi başlığı, açıklaması ve sosyal medyada paylaşılınca çıkan önizleme kartı var. Önceden bunlar dağınık ve çoğu sayfada eksikti; şimdi tek bir merkezden yönetiliyor.",
+      "Arama motorlarına sitenin haritası (sitemap) genişletildi: önceden Google'a sadece 1 adres bildiriliyordu, artık 73 adres (ana sayfa, tüm blog yazıları, rol tanıtım sayfaları vb.) bildiriliyor — yani daha fazla sayfa aramalarda çıkabilir.",
+      "Sayfalara arama motorlarının ve yapay zekâların daha iyi anladığı 'yapılandırılmış veri' (JSON-LD) eklendi; ayrıca robots.txt ve yapay zekâlara yönelik llms.txt dosyaları düzenlendi. Alan adı ve sosyal medya bağlantıları her yerde tutarlı hale getirildi (corteqs.net).",
+      "Ana sayfa ve birkaç bölüm (hero, sosyal kanıt bandı, küresel ağ vitrini) tazelendi; sayılar artık akıcı bir 'sayma' animasyonuyla görünüyor. İçerik aynı, görünüm daha canlı.",
+      "ADMIN ONARIMI — Referans ekranı düzeldi: /admin/referral sayfasındaki açılır menüler ve kod listesi boş geliyordu. Sebebi bir veritabanı izin (RLS) düzenlemesinde admin'in görme yetkisinin yanlışlıkla kapanmasıydı; geri açıldı, ekran yeniden dolu geliyor. (Canlı veritabanında uygulandı.)",
+      "ADMIN ONARIMI — Veri ekranındaki Claim (sahiplenme) Talepleri düzeldi: /admin/data sayfasında 'Claim Talepleri' açılınca 400 hatası alınıyordu. E-posta alanının teknik bir tür uyuşmazlığından kaynaklanıyordu; üç ilgili sorgu düzeltildi, liste yeniden açılıyor. (Canlı veritabanında uygulandı.)",
+      "Not: Google görünürlüğü iyileştirmelerinin tam etkin olması için sunucu tarafında bir ön-render katmanının açılması gerekiyor; arka uç onarımları zaten canlıda, arayüz yenilikleri bir sonraki yayınla (deploy) görünür olacak.",
+    ],
+  },
+  {
     id: "20260615-mvp-beta-cila",
     date: "15 Haziran 2026",
     title: "MVP beta cilası — arama temizliği, Cadde'ye sosyal hava ve kırık butonların onarımı",
@@ -27,6 +41,17 @@ export const ADMIN_UPDATES: AdminUpdateEntry[] = [
       "Radar (haber bandı) sayfasındaki kart yazıları kısacık 'taslak' havasından çıkarıldı; kartlar biraz büyüdü ve daha dolu, gerçek bir ürün gibi görünüyor. Uydurma istatistik eklenmedi.",
       "Ufak ama can sıkan şeyler: ana sayfadaki tanıtım cümlesi düzeltildi ('ekonomik ve sosyal fırsatlarla...'), profil ekranlarındaki İngilizce kaçaklar Türkçeleştirildi ('Directory'→'Rehber', 'Feature'→'Özellik') ve bir yazım hatası ('Profil Acik'→'Profil Açık') giderildi. Cadde'deki ülke/şehir filtresini temizleyen butonlardaki bir hata da onarıldı (tıklayınca takılıyordu).",
       "Hiçbir şey bozulmadı: tüm testler yeşil (646/646), site derlemesi sorunsuz, Türkçe karakter denetimi temiz. Veritabanı değişikliği canlıda; arayüzdeki yenilikler bir sonraki yayınla (deploy) görünür olacak.",
+    ],
+  },
+  {
+    id: "20260614-profil-gorunurluk-tutarlilik",
+    date: "14 Haziran 2026",
+    title: "Profil görünürlük anahtarları düzeltildi — gizlediğin alan gerçekten gizleniyor",
+    items: [
+      "Profil düzenleme ekranındaki görünürlük (göz ikonu) anahtarlarıyla, profilin dışarıdan göründüğü hâli artık birebir uyuşuyor. Önceden bir alanı 'gizli' yapsan da public profilde görünmeye devam edebiliyordu.",
+      "Asıl bug şuydu: bir bölümün tüm alanlarını kapatan grup anahtarı, açılışta her zaman 'açık' varsayılıyor ve gerçek duruma göre güncellenmiyordu — bu yüzden gizleme tutmuyordu. Düzeltildi; anahtarlar artık kaydedilmiş gerçek durumu yansıtıyor.",
+      "İki ek tutarsızlık daha giderildi: 'Ad Soyad' alanının görünürlüğünde yanlış öncelik sırası ve 'İlgi Alanları' bölümünün görünürlük kontrolünün hiç uygulanmaması.",
+      "Hiçbir şey bozulmadı: tüm testler yeşil (645/645).",
     ],
   },
   {
