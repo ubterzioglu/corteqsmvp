@@ -31,7 +31,7 @@ const HeroSection = () => {
   } as const;
 
   return (
-    <section className="relative flex min-h-[620px] items-center overflow-hidden bg-gradient-to-br from-background via-card to-secondary/30 pt-3 lg:min-h-[680px] lg:pt-4 2xl:min-h-[720px]">
+    <section className="relative flex items-start overflow-hidden bg-gradient-to-br from-background via-card to-secondary/30 pt-3 lg:min-h-[680px] lg:items-center lg:pt-4 2xl:min-h-[720px]">
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div className="absolute left-[-10%] top-[8%] h-56 w-56 rounded-full bg-primary/8 blur-3xl lg:h-80 lg:w-80" />
         <div className="absolute bottom-[6%] right-[-8%] h-64 w-64 rounded-full bg-accent/10 blur-3xl lg:h-96 lg:w-96" />
