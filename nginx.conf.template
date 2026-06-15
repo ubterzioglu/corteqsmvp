@@ -1,3 +1,17 @@
+# Prerender (SEO/GEO): bot user-agent tespiti. Eşleşirse $is_bot=1.
+# server.mjs'teki botUserAgentPattern ile hizalı (prod nginx ile servis edildiği için
+# prerender mantığı burada, server.mjs'te değil).
+map $http_user_agent $is_bot {
+  default 0;
+  "~*googlebot|bingbot|slurp|duckduckbot|yandex|baiduspider|applebot|facebookexternalhit|facebot|twitterbot|linkedinbot|slackbot|telegrambot|whatsapp|discordbot|embedly|pinterest|redditbot|gptbot|chatgpt-user|oai-searchbot|perplexitybot|perplexity-user|claudebot|claude-web|claude-user|anthropic-ai|ccbot|google-extended|applebot-extended|amazonbot|cohere-ai|bytespider|meta-externalagent" 1;
+}
+
+# __PRERENDER_URL__ boşsa entrypoint $prerender_enabled'ı 0 yapar (prerender no-op).
+map $is_bot $prerender_target {
+  default 0;
+  1 "__PRERENDER_URL__";
+}
+
 server {
   listen 80;
   server_name _;
@@ -59,7 +73,31 @@ server {
     try_files $uri =404;
   }
 
+  # Prerender (SEO/GEO): bot + __PRERENDER_URL__ doluysa, isteği prerender servisine
+  # proxy'le (prerender.io formatı: <servis>/<hedef-url>). Hata/timeout durumunda
+  # @spa'ya düşer (graceful — bot yine de SPA kabuğu alır, asla 5xx).
   location / {
+    if ($prerender_target != 0) {
+      rewrite ^ /__prerender_internal last;
+    }
     try_files $uri $uri/ /index.html;
+  }
+
+  location = /__prerender_internal {
+    internal;
+    # proxy_pass'te değişken kullanıldığı için resolver şart (Docker iç DNS + public fallback).
+    resolver 127.0.0.11 1.1.1.1 8.8.8.8 valid=300s ipv6=off;
+    # Hedef: <PRERENDER_URL>/https%3A%2F%2Fcorteqs.net<orijinal-path>
+    # Prerender.io scheme'i ENCODED ister (ham "https://" 400 verir); path slash'leri ham kalabilir.
+    set $prerender_full "$prerender_target/https%3A%2F%2F__PRERENDER_CANONICAL_HOST__$request_uri";
+    proxy_pass $prerender_full;
+    proxy_ssl_server_name on;
+    proxy_set_header X-Prerendered "1";
+    proxy_read_timeout 25s;
+    proxy_connect_timeout 5s;
+    proxy_intercept_errors on;
+    # Prerender hata verirse SPA kabuğuna düş (graceful — asla 5xx).
+    error_page 500 502 503 504 =200 /index.html;
+    add_header X-Prerendered "1" always;
   }
 }
