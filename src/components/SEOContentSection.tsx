@@ -53,6 +53,20 @@ const featuredLinks: readonly FeaturedLink[] = [
     label: "Topluluğunu Ekle",
     scrollTop: true,
   },
+  {
+    to: "/blog",
+    className:
+      "border-[#0e7490] bg-[linear-gradient(135deg,#06B6D4_0%,#0E7490_100%)] text-white shadow-[0_16px_34px_rgba(6,182,212,0.34),inset_0_1px_0_rgba(255,255,255,0.18)]",
+    label: "Blog",
+    scrollTop: true,
+  },
+  {
+    to: "/radar",
+    className:
+      "border-[#be185d] bg-[linear-gradient(135deg,#EC4899_0%,#BE185D_100%)] text-white shadow-[0_16px_34px_rgba(236,72,153,0.34),inset_0_1px_0_rgba(255,255,255,0.18)]",
+    label: "Radar",
+    scrollTop: true,
+  },
 ] as const;
 
 const linkClass =
