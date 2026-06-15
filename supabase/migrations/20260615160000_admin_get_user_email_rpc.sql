@@ -36,6 +36,7 @@ end;
 $function$;
 
 revoke all on function public.admin_get_user_email(uuid) from public;
+revoke execute on function public.admin_get_user_email(uuid) from anon;
 grant execute on function public.admin_get_user_email(uuid) to authenticated;
 
 commit;
