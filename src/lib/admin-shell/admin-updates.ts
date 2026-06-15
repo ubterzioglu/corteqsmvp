@@ -14,6 +14,22 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260615-mvp-beta-cila",
+    date: "15 Haziran 2026",
+    title: "MVP beta cilası — arama temizliği, Cadde'ye sosyal hava ve kırık butonların onarımı",
+    items: [
+      "Public aramada artık yönetici/admin rolleri görünmüyor: 'Süper Admin', 'Yönetici', deneme rolleri (Experimental 1/2) gibi iç roller hem arama filtresindeki seçeneklerden hem de sonuç kartlarından kaldırıldı. Beta kullanıcısı dışarıda sadece gerçek üyeleri (danışman, doktor, işletme, şehir elçisi vb.) görür. Veritabanı tarafında 9 iç rol gizlendi, canlıda hazır.",
+      "Ana sayfadaki '🏅 Şehir Elçine Ulaş' butonu düzeldi: önceden tıklayınca alakasız tüm dizin geliyordu, artık doğrudan şehir elçisi profillerini getiriyor; o kategoride henüz kimse yoksa 'ilk başvurular yakında burada' diyen düzgün bir mesaj çıkıyor — boş, kafa karıştıran liste yok.",
+      "Dizin (arama) ekranına net bir 'Sonuçları Göster' butonu eklendi. Önceden kullanıcı filtreleri seçiyor ama 'şimdi ne yapacağım?' diye takılıyordu. Artık ülke/şehir/kategori seçip butona basıyor, sonuçlara kaydırıyor; yanında bir de 'Filtreleri Temizle' var. Telefonda da tam genişlikte çalışıyor.",
+      "'Taşınma Motoru' butonu doğru yere gidiyor: önceden yanlışlıkla Cadde'ye düşürüyordu, şimdi gerçek Taşınma/Relokasyon ekranını açıyor (taşınma planı, belge listesi, yaşam masrafları ve yapay zekâ sohbeti). Bu ekran zaten hazırdı ama hiçbir yere bağlı değildi — artık /relocation adresinden, giriş yaparak ulaşılıyor.",
+      "Cadde'ye sosyal medya havası verildi: 'Cadde MVP', 'People Discovery', 'Paylaşım Oluştur' gibi teknik/Excel kokan ifadeler günlük Türkçeyle değiştirildi ('Caddede Paylaş', 'İnsanları Keşfet' vb.). Paylaşım tipleri Türkçeleşti ve bireysel kullanıcının ilan/teklif (ikinci el, yardım, hizmet) paylaşabileceği netleşti. 'Gerçek/Demo' anahtarı kullanıcıdan tamamen gizlendi — herkes sadece gerçek akışı görüyor.",
+      "Cadde'de paylaşımların altındaki üç ayrı tepki butonu (Beğendim/Destek/Fikir) tek bir 'Tepki Ver' düğmesinde toplandı; tıklayınca açılıyor, sayılar görünür kalıyor, kalabalık azaldı. Sağ taraftaki pano 'CorteQS Panosu' adıyla maskotlu, daha canlı bir topluluk köşesine dönüştü.",
+      "Radar (haber bandı) sayfasındaki kart yazıları kısacık 'taslak' havasından çıkarıldı; kartlar biraz büyüdü ve daha dolu, gerçek bir ürün gibi görünüyor. Uydurma istatistik eklenmedi.",
+      "Ufak ama can sıkan şeyler: ana sayfadaki tanıtım cümlesi düzeltildi ('ekonomik ve sosyal fırsatlarla...'), profil ekranlarındaki İngilizce kaçaklar Türkçeleştirildi ('Directory'→'Rehber', 'Feature'→'Özellik') ve bir yazım hatası ('Profil Acik'→'Profil Açık') giderildi. Cadde'deki ülke/şehir filtresini temizleyen butonlardaki bir hata da onarıldı (tıklayınca takılıyordu).",
+      "Hiçbir şey bozulmadı: tüm testler yeşil (646/646), site derlemesi sorunsuz, Türkçe karakter denetimi temiz. Veritabanı değişikliği canlıda; arayüzdeki yenilikler bir sonraki yayınla (deploy) görünür olacak.",
+    ],
+  },
+  {
     id: "20260613-blog-ulke-rehberi",
     date: "13 Haziran 2026",
     title: "Blog yayında — 10 ülke için hazır rehber yazıları (30 makale)",
