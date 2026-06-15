@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { getCommercialDocumentBySlug } from "@/lib/commercial-documents";
+import { applySeo, SEO_CANONICAL_ORIGIN, SEO_SITE_NAME } from "@/lib/seo";
 
 const documentLoaders = import.meta.glob<string>("../content/commercial/*.html", {
   query: "?raw",
@@ -48,9 +49,24 @@ const CommercialDocumentPage = () => {
   }, [loader]);
 
   useEffect(() => {
-    if (document_) {
-      document.title = `CorteQS | ${document_.title}`;
-    }
+    if (!document_) return;
+    const canonicalPath = `/commercial/${document_.slug}`;
+    return applySeo({
+      title: `${SEO_SITE_NAME} | ${document_.title}`,
+      description: document_.summary,
+      canonicalPath,
+      ogType: "article",
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: document_.title,
+        description: document_.summary,
+        inLanguage: "tr",
+        url: `${SEO_CANONICAL_ORIGIN}${canonicalPath}`,
+        author: { "@id": "https://corteqs.net/#organization" },
+        publisher: { "@id": "https://corteqs.net/#organization" },
+      },
+    });
   }, [document_]);
 
   if (!slug) {

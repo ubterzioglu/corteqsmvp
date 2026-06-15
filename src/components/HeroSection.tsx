@@ -32,9 +32,12 @@ const HeroSection = () => {
 
   return (
     <section className="relative flex items-start overflow-hidden bg-gradient-to-br from-background via-card to-secondary/30 pt-3 lg:min-h-[680px] lg:items-center lg:pt-4 2xl:min-h-[720px]">
+      {/* tech katmanları: aurora + ince grid mesh (kenarlara solar) + marka blur orb'ları */}
+      <div className="tech-aurora pointer-events-none absolute inset-0" aria-hidden="true" />
+      <div className="tech-grid pointer-events-none absolute inset-0" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <div className="absolute left-[-10%] top-[8%] h-56 w-56 rounded-full bg-primary/8 blur-3xl lg:h-80 lg:w-80" />
-        <div className="absolute bottom-[6%] right-[-8%] h-64 w-64 rounded-full bg-accent/10 blur-3xl lg:h-96 lg:w-96" />
+        <div className="absolute left-[-10%] top-[8%] h-56 w-56 rounded-full bg-primary/10 blur-3xl lg:h-80 lg:w-80" />
+        <div className="absolute bottom-[6%] right-[-8%] h-64 w-64 rounded-full bg-accent/12 blur-3xl lg:h-96 lg:w-96" />
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-[1780px] px-4 py-5 md:px-6 md:py-6 2xl:px-10">
@@ -76,12 +79,12 @@ const HeroSection = () => {
               />
             </Link>
 
-            <div className="flex max-w-[36rem] flex-col justify-center rounded-[2rem] border border-white/80 bg-[linear-gradient(90deg,rgba(255,255,255,0.96)_0%,rgba(255,255,255,0.93)_38%,rgba(255,255,255,0.82)_62%,rgba(255,255,255,0.58)_82%,rgba(255,255,255,0.18)_100%)] p-4 shadow-[0_20px_55px_-36px_rgba(15,23,42,0.32)] backdrop-blur-xl sm:p-5 lg:max-w-[34rem] lg:px-6 2xl:max-w-[38rem]">
+            <div className="glass-tech flex max-w-[36rem] flex-col justify-center rounded-[2rem] p-4 sm:p-5 lg:max-w-[34rem] lg:px-6 2xl:max-w-[38rem]">
               <div className="mb-3 flex flex-col items-center gap-3 text-center md:flex-row md:items-center md:text-left">
                 <img src={heroLogo} alt="CorteQS Logo" className="mx-auto w-full max-w-[152px] shrink-0 md:mx-0 md:max-w-[176px]" />
-                <h1 className="text-2xl font-extrabold leading-[0.95] text-foreground md:text-4xl 2xl:text-[2.75rem]">
+                <h1 className="font-display text-2xl font-bold leading-[0.95] tracking-[-0.02em] text-foreground md:text-4xl 2xl:text-[2.75rem]">
                   Dünyadaki Türkleri Bir Araya Getiren{" "}
-                  <span className="text-accent">Platform</span>
+                  <span className="text-gradient-tech">Platform</span>
                 </h1>
               </div>
               <p className="hero-description mb-5 max-w-lg text-center text-[12px] leading-relaxed text-muted-foreground md:text-left md:text-[13px] 2xl:max-w-xl 2xl:text-[14px]">
@@ -100,7 +103,7 @@ const HeroSection = () => {
               <div className="grid w-full max-w-lg gap-3 sm:grid-cols-2 2xl:max-w-[38rem]">
                 <Link
                   to="/login?mode=signup"
-                  className={`${heroCtaClass} whitespace-nowrap`}
+                  className={`${heroCtaClass} whitespace-nowrap hover:shadow-glow-teal`}
                   style={heroCardStyles.register}
                 >
                   <span
@@ -120,7 +123,7 @@ const HeroSection = () => {
                 <button
                   type="button"
                   onClick={scrollToSearch}
-                  className={heroCtaClass}
+                  className={`${heroCtaClass} hover:shadow-glow-teal`}
                   style={heroCardStyles.search}
                 >
                   <span
@@ -176,7 +179,7 @@ const HeroSection = () => {
             }}
           >
             <div className="relative w-full max-w-[1180px] xl:max-w-[1320px] 2xl:max-w-[1460px]">
-              <div className="relative overflow-hidden rounded-3xl">
+              <div className="glow-border relative overflow-hidden rounded-3xl">
                 <video
                   src="/herovideo.mp4"
                   autoPlay

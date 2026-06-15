@@ -12,6 +12,7 @@ import {
   Users,
 } from "lucide-react";
 import showcasePanelImage from "@/assets/global-network-showcase-panel.png";
+import Reveal from "@/components/motion/Reveal";
 const logo = "/newlogo.png";
 
 const rebuiltCards = [
@@ -93,7 +94,7 @@ const GlobalNetworkShowcaseSection = () => {
     <section className="relative overflow-hidden py-5 lg:py-8">
       <div className="container relative z-10 mx-auto max-w-6xl px-4">
         <div className="rounded-[1.75rem] border border-slate-200/75 bg-[linear-gradient(180deg,rgba(255,255,255,0.99),rgba(252,253,255,0.96))] px-6 py-5 shadow-[0_16px_36px_rgba(15,23,42,0.05)] md:px-8 md:py-7 xl:px-6 xl:py-6">
-            <h2 className="mb-5 text-center text-[1.5rem] font-black leading-[1.15] tracking-[-0.03em] text-slate-900 sm:text-[1.85rem] lg:text-[2.2rem]">
+            <h2 className="mb-5 text-center font-display text-[1.5rem] font-bold leading-[1.15] tracking-[-0.03em] text-slate-900 sm:text-[1.85rem] lg:text-[2.2rem]">
               Dünyanın farklı yerlerinde yaşayan<br />
               <span className="bg-[linear-gradient(90deg,#23b26d_0%,#7c3aed_48%,#ff7a18_100%)] bg-clip-text text-transparent">
                 Türkleri sosyal ve ekonomik olarak
@@ -126,13 +127,15 @@ const GlobalNetworkShowcaseSection = () => {
             </p>
 
             <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-6">
-              {rebuiltCards.map((card) => {
+              {rebuiltCards.map((card, index) => {
                 const Icon = card.icon;
 
                 return (
-                  <article
+                  <Reveal
+                    as="article"
                     key={`reference-card-${card.title}`}
-                    className="group flex flex-row items-center overflow-hidden rounded-[1.35rem] border border-slate-200/90 bg-white shadow-[0_12px_28px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(15,23,42,0.09)] sm:min-h-[248px] sm:flex-col sm:items-stretch"
+                    delay={index * 0.06}
+                    className="group flex flex-row items-center overflow-hidden rounded-[1.35rem] border border-slate-200/90 bg-white shadow-[0_12px_28px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_22px_46px_-18px_hsl(var(--glow-teal)/0.45)] sm:min-h-[248px] sm:flex-col sm:items-stretch"
                   >
                     <div className="relative hidden h-24 overflow-hidden sm:block sm:h-28 xl:h-24 2xl:h-28">
                       <img
@@ -161,7 +164,7 @@ const GlobalNetworkShowcaseSection = () => {
                       </p>
                       <div className={`hidden h-1 w-8 rounded-full sm:mx-auto sm:mt-4 sm:block ${card.line}`} />
                     </div>
-                  </article>
+                  </Reveal>
                 );
               })}
             </div>
@@ -190,8 +193,8 @@ const GlobalNetworkShowcaseSection = () => {
                       key={`reference-${item.label}`}
                       className="flex min-h-[96px] items-start justify-center border-b border-r border-slate-200/80 px-2 py-3 text-center even:border-r-0 last:border-b-0 sm:min-h-[168px] sm:px-4 sm:py-5 xl:min-h-[156px] xl:border-b-0 xl:border-r xl:last:border-r-0"
                     >
-                      <div className="flex w-full flex-col items-center justify-between gap-1.5 sm:min-h-[118px] sm:gap-0">
-                        <div className={`mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-[0_10px_28px_rgba(15,23,42,0.08)] ring-1 sm:h-16 sm:w-16 ${item.ring}`}>
+                      <div className="group flex w-full flex-col items-center justify-between gap-1.5 sm:min-h-[118px] sm:gap-0">
+                        <div className={`mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-[0_10px_28px_rgba(15,23,42,0.08)] ring-1 transition-shadow duration-300 group-hover:shadow-[0_14px_32px_-8px_hsl(var(--glow-teal)/0.4)] sm:h-16 sm:w-16 ${item.ring}`}>
                           <Icon className={`h-5 w-5 sm:h-8 sm:w-8 ${item.color}`} />
                         </div>
                         <p className="flex items-start justify-center whitespace-pre-line text-[0.68rem] font-semibold leading-[1.3] tracking-[-0.02em] text-slate-800 sm:min-h-[68px] sm:text-[0.78rem] sm:leading-[1.4] xl:text-[0.8rem]">

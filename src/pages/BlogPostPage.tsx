@@ -4,6 +4,12 @@ import { ArrowLeft, BookOpen } from "lucide-react";
 
 import BlogMarkdown from "@/components/blog/BlogMarkdown";
 import { blogCategoryLabels, getPublishedBlogPostBySlug, type BlogPostRow } from "@/lib/blog";
+import {
+  applySeo,
+  SEO_CANONICAL_ORIGIN,
+  SEO_DEFAULT_OG_IMAGE,
+  SEO_SITE_NAME,
+} from "@/lib/seo";
 
 type LoadState = "loading" | "ready" | "notfound";
 
@@ -40,23 +46,43 @@ const BlogPostPage = () => {
 
   useEffect(() => {
     if (!post) return;
-    const previousTitle = document.title;
-    let meta = document.querySelector('meta[name="description"]');
-    const previousDescription = meta?.getAttribute("content");
+    const canonicalPath = `/blog/${post.slug}`;
+    const description = post.excerpt || post.title;
+    const ogImage = post.cover_image || SEO_DEFAULT_OG_IMAGE;
 
-    document.title = `CorteQS Blog | ${post.title}`;
-    if (!meta) {
-      meta = document.createElement("meta");
-      meta.setAttribute("name", "description");
-      document.head.appendChild(meta);
-    }
-    meta.setAttribute("content", post.excerpt || post.title);
-    document.dispatchEvent(new Event("render-complete"));
-
-    return () => {
-      document.title = previousTitle;
-      if (previousDescription) meta?.setAttribute("content", previousDescription);
+    // GEO: yapılandırılmış veri — AI cevap motorları (ChatGPT, Perplexity, Google AI
+    // Overviews) BlogPosting şemasından beslenir.
+    const jsonLd: Record<string, unknown> = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: post.title,
+      description,
+      inLanguage: "tr",
+      url: `${SEO_CANONICAL_ORIGIN}${canonicalPath}`,
+      mainEntityOfPage: `${SEO_CANONICAL_ORIGIN}${canonicalPath}`,
+      image: ogImage,
+      datePublished: post.published_at ?? post.created_at,
+      dateModified: post.updated_at,
+      author: { "@type": "Organization", name: SEO_SITE_NAME, url: SEO_CANONICAL_ORIGIN },
+      publisher: {
+        "@type": "Organization",
+        name: SEO_SITE_NAME,
+        logo: { "@type": "ImageObject", url: `${SEO_CANONICAL_ORIGIN}/logocorteqsbig.png` },
+      },
+      ...(post.country_label
+        ? { about: { "@type": "Thing", name: post.country_label } }
+        : {}),
+      articleSection: blogCategoryLabels[post.category],
     };
+
+    return applySeo({
+      title: `${SEO_SITE_NAME} Blog | ${post.title}`,
+      description,
+      canonicalPath,
+      ogImage,
+      ogType: "article",
+      jsonLd,
+    });
   }, [post]);
 
   return (

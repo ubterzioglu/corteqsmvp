@@ -39,6 +39,21 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
 `SUPABASE_SERVICE_ROLE_KEY` is server-only. Do not expose it to frontend code or rename it with a `VITE_` prefix.
 
+## Prerender (SEO/GEO) — optional
+
+```env
+PRERENDER_URL=https://prerender.corteqs.net          # self-hosted Rendertron/Prerender service
+PRERENDER_TOKEN=                                       # optional; sent as X-Prerender-Token
+PRERENDER_CANONICAL_HOST=corteqs.net                  # host used to build the target URL
+```
+
+When `PRERENDER_URL` is set, `server.mjs` detects search-engine and AI-answer-bot
+user-agents (Googlebot, Bingbot, GPTBot, PerplexityBot, ClaudeBot, etc.) on route
+requests and proxies them to the prerender service, returning fully-rendered HTML so
+crawlers see per-page `<title>`/`<meta>`/JSON-LD instead of an empty SPA shell. Human
+visitors always get the normal SPA. If `PRERENDER_URL` is unset, the layer is a no-op.
+Any prerender error or timeout falls back gracefully to the SPA shell (never 5xx).
+
 ## Required function secrets
 
 ```bash

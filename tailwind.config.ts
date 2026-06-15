@@ -17,6 +17,13 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        // Başlıklar için keskin, "tech" hissi veren display font. Gövde Inter kalır.
+        display: ['"Space Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
+      },
+      boxShadow: {
+        // Marka renkleriyle neon glow — CTA ve kart hover'larında kullanılır.
+        "glow-teal": "0 0 0 1px hsl(var(--glow-teal) / 0.35), 0 12px 36px -8px hsl(var(--glow-teal) / 0.5)",
+        "glow-orange": "0 0 0 1px hsl(var(--glow-orange) / 0.35), 0 12px 36px -8px hsl(var(--glow-orange) / 0.5)",
       },
       colors: {
         border: "hsl(var(--border))",

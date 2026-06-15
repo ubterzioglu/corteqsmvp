@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Info, Search } from "lucide-react";
+import { Award, Briefcase, Gift, Globe, Info, Landmark, MapPinned, Plane, Search } from "lucide-react";
 import { useAuth } from "@/components/auth/useAuth";
 import WelcomePackOrderForm from "@/components/WelcomePackOrderForm";
+import Reveal from "@/components/motion/Reveal";
 
 const quickPillClass =
   "inline-flex min-w-[168px] items-center justify-center gap-1.5 rounded-full border px-4 py-2 text-xs font-semibold shadow-[0_10px_28px_-20px_rgba(15,23,42,0.24)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_36px_-22px_rgba(15,23,42,0.3)]";
@@ -59,8 +60,9 @@ const DiasporaSearchBar = () => {
     <section id="diaspora-ara" className="relative scroll-mt-24 py-12">
       <div className="container mx-auto px-4">
         <div className="text-center">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-2">
-            🌍 Diasporada <span className="text-gradient-primary">Ara</span>
+          <h2 className="mb-2 flex items-center justify-center gap-2 font-display text-2xl font-bold tracking-[-0.02em] text-foreground md:text-3xl">
+            <Globe className="h-6 w-6 text-primary md:h-7 md:w-7" aria-hidden="true" />
+            Diasporada <span className="text-gradient-tech">Ara</span>
           </h2>
           <p className="mx-auto mb-5 max-w-xl text-sm text-muted-foreground">
             Şehir, kategori veya hizmet ara; 80+ kategoride binlerce profili keşfet.
@@ -68,7 +70,7 @@ const DiasporaSearchBar = () => {
 
           {/* Dizin arama çubuğu */}
           <div className="max-w-2xl mx-auto mb-3">
-            <div className="relative flex items-center rounded-2xl border border-white/70 bg-white/70 shadow-[0_22px_45px_-28px_rgba(15,23,42,0.26)] px-4 py-3 gap-3 backdrop-blur-xl">
+            <div className="glass-tech relative flex items-center gap-3 rounded-2xl px-4 py-3">
               <label htmlFor="diaspora-search-input" className="sr-only">
                 Diasporada ara
               </label>
@@ -101,23 +103,27 @@ const DiasporaSearchBar = () => {
             <div className="mb-6" />
           )}
 
-          {/* Hızlı erişim butonları */}
-          <div className="mx-auto flex max-w-6xl flex-col items-center gap-3">
+          {/* Hızlı erişim butonları — emoji yerine Lucide çizgi ikonları (tech görünüm) */}
+          <Reveal className="mx-auto flex max-w-6xl flex-col items-center gap-3">
             <div className="flex flex-wrap items-center justify-center gap-3">
               <button onClick={() => handleQuickSearch("Konsolosluk")} className={`${quickPillClass} ${quickPillStyles.blue}`}>
-                🏛️ Konsolosluk
+                <Landmark className="h-4 w-4" aria-hidden="true" />
+                Konsolosluk
               </button>
               <button
                 onClick={() => goToDirectoryWithParams({ role: "User_CityAmbassador" })}
                 className={`${quickPillClass} ${quickPillStyles.red}`}
               >
-                🏅 Şehir Elçine Ulaş
+                <Award className="h-4 w-4" aria-hidden="true" />
+                Şehir Elçine Ulaş
               </button>
               <button onClick={() => handleQuickSearch("Vize danışmanı")} className={`${quickPillClass} ${quickPillStyles.yellow}`}>
-                ✈️ Vize & Göçmenlik
+                <Plane className="h-4 w-4" aria-hidden="true" />
+                Vize & Göçmenlik
               </button>
               <button onClick={() => handleQuickSearch("İş İlanları")} className={`${quickPillClass} ${quickPillStyles.green}`}>
-                💼 İş İlanları
+                <Briefcase className="h-4 w-4" aria-hidden="true" />
+                İş İlanları
               </button>
             </div>
 
@@ -125,7 +131,8 @@ const DiasporaSearchBar = () => {
               <WelcomePackOrderForm
                 trigger={
                   <button className={`${quickPillClass} ${quickPillStyles.red}`}>
-                    🎁 Hoşgeldin Paketi Oluştur
+                    <Gift className="h-4 w-4" aria-hidden="true" />
+                    Hoşgeldin Paketi Oluştur
                   </button>
                 }
               />
@@ -134,10 +141,11 @@ const DiasporaSearchBar = () => {
                 title="Taşınma Motoru — taşınma planını oluştur (giriş gerektirir)"
                 className={`${quickPillClass} ${quickPillStyles.blue}`}
               >
-                🌍 Taşınma Motoru{visitorHint ? " (giriş gerekir)" : ""}
+                <MapPinned className="h-4 w-4" aria-hidden="true" />
+                Taşınma Motoru{visitorHint ? " (giriş gerekir)" : ""}
               </button>
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

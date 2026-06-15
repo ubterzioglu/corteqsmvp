@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Layers, Network, Users } from "lucide-react";
 import { getTotalDirectoryCount } from "@/lib/catalog-directory";
+import Reveal from "@/components/motion/Reveal";
+import CountUp from "@/components/motion/CountUp";
 
 /**
  * Sosyal kanıt bandı — yalnızca DB'den doğrulanan rakamı gösterir.
@@ -31,12 +33,12 @@ const SocialProofBar = () => {
   return (
     <section className="relative py-6" aria-label="CorteQS topluluğu">
       <div className="container mx-auto px-4">
-        <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-3 rounded-2xl border border-slate-200/80 bg-white/70 px-5 py-4 text-center shadow-[0_18px_45px_-32px_rgba(15,23,42,0.3)] backdrop-blur-xl sm:gap-6">
+        <Reveal className="glass-tech mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-3 rounded-2xl px-5 py-4 text-center sm:gap-6">
           {hasCount ? (
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-primary" aria-hidden="true" />
               <span className="text-sm font-bold text-foreground sm:text-base">
-                {count.toLocaleString("tr-TR")}+ kayıtlı profil
+                <CountUp to={count} />+ kayıtlı profil
               </span>
             </div>
           ) : null}
@@ -50,7 +52,7 @@ const SocialProofBar = () => {
             <Network className="h-5 w-5 text-[#34A853]" aria-hidden="true" />
             <span className="text-sm font-bold text-foreground sm:text-base">Açık beta yayında</span>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

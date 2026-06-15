@@ -156,6 +156,58 @@
     animation-delay: -18s;
   }
 
+  /* ——— Tech tasarım dili (anasayfa "genç & teknolojik" cilası) ——— */
+
+  /* İnce çizgi grid mesh — kenarlara doğru solar. Marka rengiyle çok düşük opaklık. */
+  .tech-grid {
+    background-image:
+      linear-gradient(to right, hsl(var(--primary) / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--primary) / 0.06) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 35%, transparent 100%);
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 35%, transparent 100%);
+  }
+
+  /* Yumuşak aurora — teal→turuncu çok düşük opaklıkta radyal/konik karışım. Hero arkası. */
+  .tech-aurora {
+    background:
+      radial-gradient(60% 80% at 18% 12%, hsl(var(--glow-teal) / 0.16), transparent 60%),
+      radial-gradient(55% 75% at 88% 22%, hsl(var(--glow-orange) / 0.14), transparent 62%),
+      radial-gradient(70% 90% at 60% 100%, hsl(var(--glow-teal) / 0.1), transparent 70%);
+  }
+
+  /* Cool tint'li cam yüzey — sıcak beyaz cam yerine daha "tech" his. */
+  .glass-tech {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(244, 250, 252, 0.78) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.6) inset,
+      0 18px 48px -28px hsl(var(--glow-teal) / 0.28);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  /* İnce glow border — kartlara/çerçevelere parlak kenar. */
+  .glow-border {
+    box-shadow:
+      0 0 0 1px hsl(var(--glow-teal) / 0.22),
+      0 18px 44px -22px hsl(var(--glow-teal) / 0.4);
+  }
+
+  /* Canlı/parlak başlık gradyanı (teal→turuncu) — tech vurgu. */
+  .text-gradient-tech {
+    background-image: linear-gradient(
+      92deg,
+      hsl(var(--glow-teal)) 0%,
+      hsl(170 70% 38%) 35%,
+      hsl(var(--glow-orange)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
   .commercial-prose {
     @apply text-base leading-8 text-foreground;
   }

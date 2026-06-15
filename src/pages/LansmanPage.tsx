@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { applySeo } from "@/lib/seo";
 const heroPoster = "/yeniinffffffff.png";
 const logo = "/newlogo.png";
 
@@ -18,13 +19,12 @@ const heroCtaClass =
 
 const LansmanPage = () => {
   useEffect(() => {
-    const previousTitle = document.title;
-
-    document.title = "CorteQS Lansman";
-
-    return () => {
-      document.title = previousTitle;
-    };
+    return applySeo({
+      title: "CorteQS Lansman | Erken Destekçi ve Kurucu Programı",
+      description:
+        "CorteQS lansman programı: erken destekçi olun, referral gelir akışlarına ve diaspora topluluğunda erken konuma erişin.",
+      canonicalPath: "/lansman",
+    });
   }, []);
 
   const benefitCards = [

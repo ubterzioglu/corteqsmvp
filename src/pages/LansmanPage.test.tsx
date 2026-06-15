@@ -22,7 +22,7 @@ describe("LansmanPage", () => {
     expect(screen.queryByText(/Lansmanda konuşacağımız başlıklar/i)).not.toBeInTheDocument();
     expect(screen.getByText(/Lansmanda konuşulacak konular nelerdir \?/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Lansmana Kayıt Ol/i })).toBeInTheDocument();
-    expect(document.title).toBe("CorteQS Lansman");
+    expect(document.title).toBe("CorteQS Lansman | Erken Destekçi ve Kurucu Programı");
     expect(container.firstChild).toHaveClass("min-h-screen", "overflow-hidden");
 
     document.title = previousTitle;

@@ -15,6 +15,32 @@ const ragRateLimitWindowMs = 60_000;
 const ragRateLimitMaxRequests = 12;
 const ragRateLimitStore = new Map();
 
+// Prerender (SEO/GEO): self-hosted Rendertron/Prerender servisine proxy.
+// PRERENDER_URL set degilse katman tamamen no-op'tur — normal SPA kabugu doner.
+// PRERENDER_URL ornek: "https://prerender.corteqs.net/render" (servis URL'i + "/render" + hedef URL eklenir).
+const prerenderServiceUrl = process.env.PRERENDER_URL ?? "";
+const prerenderToken = process.env.PRERENDER_TOKEN ?? "";
+const prerenderTimeoutMs = 20_000;
+const prerenderCanonicalHost = process.env.PRERENDER_CANONICAL_HOST ?? "corteqs.net";
+
+// Bilinen crawler / AI cevap motoru user-agent'lari (robots.txt ile hizali).
+const botUserAgentPattern =
+  /googlebot|bingbot|slurp|duckduckbot|yandex|baiduspider|applebot|facebookexternalhit|facebot|twitterbot|linkedinbot|slackbot|telegrambot|whatsapp|discordbot|embedly|pinterest|redditbot|gptbot|chatgpt-user|oai-searchbot|perplexitybot|perplexity-user|claudebot|claude-web|claude-user|anthropic-ai|ccbot|google-extended|applebot-extended|amazonbot|cohere-ai|bytespider|meta-externalagent/i;
+
+const isBotRequest = (req) => {
+  const userAgent = req.headers["user-agent"];
+  return typeof userAgent === "string" && botUserAgentPattern.test(userAgent);
+};
+
+// Yalnizca HTML/route istekleri prerender edilir; statik dosya, /api ve /admin haric.
+const shouldPrerender = (req, requestPath) => {
+  if (!prerenderServiceUrl) return false;
+  if ((req.method ?? "GET") !== "GET") return false;
+  if (hasFileExtension(requestPath)) return false;
+  if (requestPath.startsWith("/api") || requestPath.startsWith("/admin")) return false;
+  return isBotRequest(req);
+};
+
 const mimeTypes = new Map([
   [".css", "text/css; charset=utf-8"],
   [".gif", "image/gif"],
@@ -213,6 +239,43 @@ const handleRagProxy = async (req, res) => {
   }
 };
 
+// Bot istegini self-hosted prerender servisine proxy'ler. Herhangi bir hata/timeout
+// durumunda false doner; cagiran taraf normal SPA kabuguna duser (asla 5xx verme).
+const handlePrerender = async (req, res, requestPath) => {
+  const targetUrl = `https://${prerenderCanonicalHost}${requestPath}`;
+  const renderUrl = `${prerenderServiceUrl.replace(/\/+$/, "")}/${encodeURIComponent(targetUrl)}`;
+
+  const abortController = new AbortController();
+  const timeout = setTimeout(() => abortController.abort(), prerenderTimeoutMs);
+
+  try {
+    const upstream = await fetch(renderUrl, {
+      method: "GET",
+      headers: prerenderToken ? { "X-Prerender-Token": prerenderToken } : {},
+      signal: abortController.signal,
+    });
+
+    if (!upstream.ok) {
+      return false;
+    }
+
+    const body = Buffer.from(await upstream.arrayBuffer());
+    res.writeHead(200, {
+      ...securityHeaders,
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "public, max-age=300, s-maxage=86400",
+      "X-Prerendered": "1",
+    });
+    res.end(body);
+    return true;
+  } catch (error) {
+    console.error("Prerender proxy failed, falling back to SPA shell:", error?.name ?? error);
+    return false;
+  } finally {
+    clearTimeout(timeout);
+  }
+};
+
 const serveApp = async (req, res) => {
   try {
     const requestPath = normalizeRequestPath(req.url ?? "/");
@@ -257,6 +320,13 @@ const serveApp = async (req, res) => {
 
         // SPA fallback below.
       }
+    }
+
+    // Bot/crawler + route istegi: prerender servisine proxy dene. Basarisizsa
+    // asagidaki SPA kabuguna duser (handlePrerender false dondurur, yanit yazmaz).
+    if (shouldPrerender(req, requestPath)) {
+      const served = await handlePrerender(req, res, requestPath);
+      if (served) return;
     }
 
     const appShell = path.join(distDir, "index.html");

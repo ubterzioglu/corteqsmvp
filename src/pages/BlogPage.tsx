@@ -9,6 +9,7 @@ import {
   type BlogCategory,
   type BlogPostRow,
 } from "@/lib/blog";
+import { applySeo } from "@/lib/seo";
 
 type CategoryFilter = BlogCategory | "all";
 
@@ -49,25 +50,13 @@ const BlogPage = () => {
   }, []);
 
   useEffect(() => {
-    const previousTitle = document.title;
-    const description =
-      "Türkiye'den çıkış yapacak okur için on ülke hakkında giriş, bütçe ve kültür rehberleri.";
-    let meta = document.querySelector('meta[name="description"]');
-    const previousDescription = meta?.getAttribute("content");
-
-    document.title = "CorteQS Blog | Ülke Rehberleri";
-    if (!meta) {
-      meta = document.createElement("meta");
-      meta.setAttribute("name", "description");
-      document.head.appendChild(meta);
-    }
-    meta.setAttribute("content", description);
-    document.dispatchEvent(new Event("render-complete"));
-
-    return () => {
-      document.title = previousTitle;
-      if (previousDescription) meta?.setAttribute("content", previousDescription);
-    };
+    return applySeo({
+      title: "CorteQS Blog | Ülke Rehberleri",
+      description:
+        "Türkiye'den çıkış yapacak okur için on ülke hakkında giriş, bütçe ve kültür rehberleri.",
+      canonicalPath: "/blog",
+      ogType: "website",
+    });
   }, []);
 
   const filteredGroups = useMemo(() => {

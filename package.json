@@ -6,8 +6,9 @@
   "scripts": {
     "predev": "npm run verify:text",
     "dev": "vite",
-    "prebuild": "npm run verify:text",
+    "prebuild": "npm run verify:text && npm run generate:sitemap",
     "build": "vite build",
+    "generate:sitemap": "node scripts/generate-sitemap.mjs",
     "build:dev": "vite build --mode development",
     "start": "node server.mjs",
     "verify:release": "node scripts/verify-release.mjs",
@@ -67,6 +68,7 @@
     "d3-geo": "^3.1.0",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^12.40.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
