@@ -340,6 +340,7 @@ type CatalogRpcClient = {
       | "admin_reject_catalog_claim"
       | "admin_list_catalog_claims"
       | "admin_search_profiles"
+      | "admin_get_user_email"
       | "admin_list_unified_records",
     args: Record<string, unknown>,
   ) => Promise<{ data: unknown; error: QueryError | null }>;
@@ -412,6 +413,21 @@ export async function getAdminCatalogItemDetail(itemId: string): Promise<AdminCa
   }
 
   return mapCatalogRow(data);
+}
+
+// Email lives in auth.users and is not reachable via the PostgREST catalog_items
+// select, so the detail panel only has the creator's UUID. This moderator-gated
+// RPC resolves a single UUID to its email for display.
+export async function getUserEmail(userId: string): Promise<string | null> {
+  if (!userId) return null;
+
+  const { data, error } = await catalogRpcClient.rpc("admin_get_user_email", {
+    p_user_id: userId,
+  });
+
+  if (error) throw error;
+
+  return normalizeString(data) ?? null;
 }
 
 export async function listAdminUnifiedRecords({

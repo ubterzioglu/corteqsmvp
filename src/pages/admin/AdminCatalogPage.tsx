@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import {
   getAdminCatalogItemDetail,
+  getUserEmail,
   listAdminCatalogItemTypes,
   listAdminCatalogRoles,
   listAdminUnifiedRecords,
@@ -207,6 +208,7 @@ const AdminCatalogPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRecord, setSelectedRecord] = useState<UnifiedRecord | null>(null);
   const [selectedCatalogDetail, setSelectedCatalogDetail] = useState<AdminCatalogDetail | null>(null);
+  const [selectedCreatorEmail, setSelectedCreatorEmail] = useState<string | null>(null);
   const [isLoadingSelectedDetail, setIsLoadingSelectedDetail] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -289,6 +291,7 @@ const AdminCatalogPage = () => {
 
     if (!isCatalogBacked) {
       setSelectedCatalogDetail(null);
+      setSelectedCreatorEmail(null);
       return;
     }
 
@@ -296,14 +299,26 @@ const AdminCatalogPage = () => {
 
     const loadDetail = async () => {
       setIsLoadingSelectedDetail(true);
+      setSelectedCreatorEmail(null);
 
       try {
         const detail = await getAdminCatalogItemDetail(selectedRecord.id);
         if (isMounted) setSelectedCatalogDetail(detail);
+
+        if (detail.createdByUserId) {
+          try {
+            const email = await getUserEmail(detail.createdByUserId);
+            if (isMounted) setSelectedCreatorEmail(email);
+          } catch {
+            // Email resolution is best-effort; the UUID still shows if it fails.
+            if (isMounted) setSelectedCreatorEmail(null);
+          }
+        }
       } catch (error) {
         if (!isMounted) return;
 
         setSelectedCatalogDetail(null);
+        setSelectedCreatorEmail(null);
         toast({
           title: "Katalog detayı yüklenemedi",
           description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
@@ -758,6 +773,7 @@ const AdminCatalogPage = () => {
               selectedCatalogDetail ? (
                 <CatalogDetailSheet
                   detail={selectedCatalogDetail}
+                  creatorEmail={selectedCreatorEmail}
                   roles={roles}
                   onRoleChange={(roleKey) => handleCatalogRoleChange(selectedCatalogDetail.id, roleKey)}
                 />
@@ -853,10 +869,12 @@ const RoleChangeSection = ({
 
 const CatalogDetailSheet = ({
   detail,
+  creatorEmail,
   roles,
   onRoleChange,
 }: {
   detail: AdminCatalogDetail;
+  creatorEmail: string | null;
   roles: AdminCatalogRoleOption[];
   onRoleChange: (roleKey: string | null) => void;
 }) => (
@@ -904,6 +922,7 @@ const CatalogDetailSheet = ({
               <MetadataRow label="Güncellenme" value={formatDateTime(detail.updatedAt)} />
               <MetadataRow label="Yayına Alınma" value={formatDateTime(detail.publishedAt)} />
               <MetadataRow label="Oluşturan Kullanıcı" value={detail.createdByUserId ?? "-"} />
+              <MetadataRow label="Oluşturan E-posta" value={creatorEmail ?? "-"} />
             </CardContent>
           </Card>
 
