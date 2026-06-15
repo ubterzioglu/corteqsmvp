@@ -65,6 +65,42 @@ export type DirectoryRoleOption = {
   label: string;
 };
 
+// İç / sistem / deneysel roller public dizinde görünmemeli. is_directory_visible
+// bayrağı (DB tarafı) birincil savunma; bu guard, bayrak yanlış kalsa bile (ör.
+// Experimental rolleri kaynak rolden is_directory_visible=true miras almıştı)
+// dropdown ve sonuç listesini kesin temizler.
+const HIDDEN_DIRECTORY_ROLE_KEYS = new Set(
+  [
+    "Experimental_1",
+    "Experimental_2",
+    "Admin",
+    "Super_Admin",
+    "SUPER_ADMIN",
+    "Platform_Admin",
+    "Owner",
+  ].map((key) => key.toLowerCase()),
+);
+
+const HIDDEN_DIRECTORY_ROLE_LABEL_PATTERNS = [
+  /admin/i,
+  /super\s*admin/i,
+  /yönetici/i,
+  /yonetici/i,
+  /experimental/i,
+  /deneysel/i,
+];
+
+export function isPublicDirectoryRole(
+  key: string | null | undefined,
+  label: string | null | undefined,
+): boolean {
+  if (key && HIDDEN_DIRECTORY_ROLE_KEYS.has(key.toLowerCase())) return false;
+  if (label && HIDDEN_DIRECTORY_ROLE_LABEL_PATTERNS.some((pattern) => pattern.test(label))) {
+    return false;
+  }
+  return true;
+}
+
 export type UnifiedDirectoryRow = {
   recordType: "catalog_item" | "member";
   id: string;
@@ -138,6 +174,7 @@ export async function listDirectoryRoleOptions(): Promise<DirectoryRoleOption[]>
 
   return ((data ?? []) as Array<{ key: string; label: string; is_directory_visible?: boolean | null }>)
     .filter((role) => role.is_directory_visible !== false)
+    .filter((role) => isPublicDirectoryRole(role.key, role.label))
     .map((role) => ({
       key: role.key,
       label: role.label,
@@ -161,7 +198,9 @@ export async function listUnifiedDirectoryRows(filters: {
 
   if (error) throw error;
 
-  return ((data ?? []) as DirectorySearchRpcRow[]).map(mapDirectorySearchRow);
+  return ((data ?? []) as DirectorySearchRpcRow[])
+    .filter((row) => isPublicDirectoryRole(row.role_key, row.role_label))
+    .map(mapDirectorySearchRow);
 }
 
 type CountQueryClient = {

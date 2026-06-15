@@ -54,6 +54,7 @@ const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const ProfileResolverPage = lazy(() => import("@/pages/ProfileResolverPage"));
 const CatalogItemEditorPage = lazy(() => import("@/pages/CatalogItemEditorPage"));
 const DirectoryPage = lazy(() => import("@/pages/DirectoryPage"));
+const RelocationEngine = lazy(() => import("@/pages/RelocationEngine"));
 const DirectoryProfilePage = lazy(() => import("@/pages/DirectoryProfilePage"));
 const DirectoryCatalogItemPage = lazy(() => import("@/pages/DirectoryCatalogItemPage"));
 const WelcomeActivatePage = lazy(() => import("@/pages/WelcomeActivatePage"));
@@ -139,6 +140,14 @@ const App = () => (
                   <Route path="/welcome/activate" element={<WelcomeActivatePage />} />
                   <Route path="/directory" element={<DirectoryPage />} />
                   <Route path="/directory/catalog/:slug" element={<DirectoryCatalogItemPage />} />
+                  <Route
+                    path="/relocation"
+                    element={
+                      <RequireAuth>
+                        <RelocationEngine />
+                      </RequireAuth>
+                    }
+                  />
                   <Route path="/associations" element={<Associations />} />
                   <Route path="/association/:id" element={<AssociationDetail />} />
                   <Route path="/kurulus/:slug" element={<IndependentProfilePage />} />

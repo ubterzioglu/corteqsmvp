@@ -121,7 +121,7 @@ const featureTabMap = {
 } as const;
 
 const visibleStateLabel = {
-  open: "Profil Acik",
+  open: "Profil Açık",
   locked: "Profil Kilitli",
 } as const;
 

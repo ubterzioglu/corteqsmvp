@@ -46,6 +46,13 @@ const DiasporaSearchBar = () => {
     goToDirectory(`q=${encodeURIComponent(term)}`);
   };
 
+  // Hızlı erişim niyetini koru: bilinen bir role karşılık gelen pill'ler q yerine
+  // role paramı gönderir; böylece "Şehir Elçine Ulaş" tüm directory'i dökmez,
+  // doğrudan ilgili rolü filtreler (veya net boş-durum gösterir).
+  const goToDirectoryWithParams = (params: Record<string, string>) => {
+    goToDirectory(new URLSearchParams(params).toString());
+  };
+
   const visitorHint = !isLoading && !user;
 
   return (
@@ -101,7 +108,7 @@ const DiasporaSearchBar = () => {
                 🏛️ Konsolosluk
               </button>
               <button
-                onClick={() => handleQuickSearch("Şehir Elçisi")}
+                onClick={() => goToDirectoryWithParams({ role: "User_CityAmbassador" })}
                 className={`${quickPillClass} ${quickPillStyles.red}`}
               >
                 🏅 Şehir Elçine Ulaş
@@ -123,8 +130,8 @@ const DiasporaSearchBar = () => {
                 }
               />
               <button
-                onClick={() => navigate(visitorHint ? "/login?next=%2Fcadde" : "/cadde")}
-                title="Cadde sosyal ağı — giriş gerektirir"
+                onClick={() => navigate(visitorHint ? "/login?next=%2Frelocation" : "/relocation")}
+                title="Taşınma Motoru — taşınma planını oluştur (giriş gerektirir)"
                 className={`${quickPillClass} ${quickPillStyles.blue}`}
               >
                 🌍 Taşınma Motoru{visitorHint ? " (giriş gerekir)" : ""}

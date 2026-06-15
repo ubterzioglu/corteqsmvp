@@ -30,6 +30,14 @@ interface DirectoryFiltersProps {
   onCountryChange: (value: string) => void;
   onCityChange: (value: string) => void;
   onFeaturedChange: (value: boolean) => void;
+  /** "Sonuçları Göster" — taslak filtreleri uygula (URL'ye yaz + sonuçlara kaydır). */
+  onApply: () => void;
+  /** "Filtreleri Temizle" — tüm taslak filtreleri sıfırla. */
+  onClear: () => void;
+  /** Uygulanmamış taslak değişiklik var mı (buton vurgusu için). */
+  hasPendingChanges: boolean;
+  /** En az bir aktif filtre var mı (Temizle butonunu göstermek için). */
+  hasActiveFilters: boolean;
 }
 
 const DirectoryFilters = ({
@@ -43,6 +51,10 @@ const DirectoryFilters = ({
   onCountryChange,
   onCityChange,
   onFeaturedChange,
+  onApply,
+  onClear,
+  hasPendingChanges,
+  hasActiveFilters,
 }: DirectoryFiltersProps) => {
   const [roleOpen, setRoleOpen] = useState(false);
 
@@ -70,6 +82,7 @@ const DirectoryFilters = ({
   };
 
   return (
+    <div className="space-y-3">
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       {/* Role dropdown */}
       <Popover open={roleOpen} onOpenChange={setRoleOpen}>
@@ -138,6 +151,37 @@ const DirectoryFilters = ({
         includeAllOptionLabel={countryFilter ? `Tüm Şehirler - ${countryFilter}` : undefined}
         disabled={!countryFilter}
       />
+    </div>
+
+    {countryFilter ? (
+      <p className="px-1 text-xs text-muted-foreground">
+        Şehrini göremiyorsan "Tüm Şehirler" ile ülke geneli arayabilir veya arama kutusuna şehir adını yazabilirsin.
+      </p>
+    ) : null}
+
+    {/* Uygula / Temizle aksiyonları */}
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+      {hasActiveFilters ? (
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={onClear}
+          className="h-10 w-full rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground sm:w-auto"
+        >
+          Filtreleri Temizle
+        </Button>
+      ) : null}
+      <Button
+        type="button"
+        onClick={onApply}
+        className={cn(
+          "h-10 w-full rounded-xl px-6 text-sm font-semibold sm:w-auto",
+          hasPendingChanges && "ring-2 ring-primary/40",
+        )}
+      >
+        Sonuçları Göster
+      </Button>
+    </div>
     </div>
   );
 };

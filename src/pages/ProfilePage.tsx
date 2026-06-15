@@ -105,13 +105,13 @@ type FlatRoleOption = {
 const REQUESTABLE_FEATURES: { key: GenericFeatureKey; title: string; description: string }[] = [
   {
     key: GENERIC_FEATURE_KEYS.directoryVisible,
-    title: "Directory Görünürlüğü",
-    description: "Public directory'de görünmek için onay isteği oluştur.",
+    title: "Rehber Görünürlüğü",
+    description: "Halka açık rehberde görünmek için onay isteği oluştur.",
   },
   {
     key: GENERIC_FEATURE_KEYS.directoryFeatured,
     title: "Öne Çıkarılmış Profil",
-    description: "Profilinin directory'de öne çıkarılmış kart olarak listelenmesini iste.",
+    description: "Profilinin rehberde öne çıkarılmış kart olarak listelenmesini iste.",
   },
   {
     key: GENERIC_FEATURE_KEYS.contactShowWhatsapp,
@@ -611,10 +611,10 @@ const ProfilePage = () => {
         accentClassName: "bg-[radial-gradient(circle_at_top_left,rgba(66,133,244,0.12),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.9),rgba(243,248,255,0.84))]",
         content: (
           <div className="space-y-2 text-xs text-muted-foreground">
-            <p><strong className="text-foreground">Görünen İsim:</strong> Directory ve profil kartında gösterilecek adınız. Değişiklikler anında yansır.</p>
+            <p><strong className="text-foreground">Görünen İsim:</strong> Rehberde ve profil kartında gösterilecek adınız. Değişiklikler anında yansır.</p>
             <p><strong className="text-foreground">Ülke / Şehir:</strong> Konum bilgileriniz. Harita ve filtreleme için kullanılır. Görünürlük ayarını değiştirebilirsiniz.</p>
             <p><strong className="text-foreground">Profil Fotoğrafı:</strong> Yüklediğiniz görsel avatar ve public profil önizlemesinde birlikte kullanılır.</p>
-            <p><strong className="text-foreground">Kısa Biyografi:</strong> Kendinizi tanıtan 1-2 cümlelik özet. Directory listelemelerinde görünür.</p>
+            <p><strong className="text-foreground">Kısa Biyografi:</strong> Kendinizi tanıtan 1-2 cümlelik özet. Rehber listelemelerinde görünür.</p>
             <p><strong className="text-foreground">Görünürlük Ayarı:</strong> Her alan için <em>Görünür</em> veya <em>Gizli</em> seçebilirsiniz.</p>
             <p><strong className="text-foreground">Onay Süreci:</strong> Bazı alanlarda değişiklik yapıldığında admin onayı gerekir. Bu alanlar "Onaylı" etiketi ile işaretlenir.</p>
           </div>
@@ -647,12 +647,12 @@ const ProfilePage = () => {
       },
       {
         key: "guide-features",
-        title: "Feature Talepleri Kılavuzu",
+        title: "Özellik Talepleri Kılavuzu",
         accentClassName: "bg-[radial-gradient(circle_at_top_right,rgba(251,188,5,0.15),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(234,67,53,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,249,232,0.88))]",
         content: (
           <div className="space-y-2 text-xs text-muted-foreground">
-            <p><strong className="text-foreground">Directory Görünürlüğü:</strong> Profilinizin public dizinde görünmesini sağlar. Onaylandıktan sonra diğer üyeler sizi bulabilir.</p>
-            <p><strong className="text-foreground">Öne Çıkarılmış Profil:</strong> Profil kartınız dizinde öne çıkarılır. Daha fazla görünürlük sağlar.</p>
+            <p><strong className="text-foreground">Rehber Görünürlüğü:</strong> Profilinizin halka açık rehberde görünmesini sağlar. Onaylandıktan sonra diğer üyeler sizi bulabilir.</p>
+            <p><strong className="text-foreground">Öne Çıkarılmış Profil:</strong> Profil kartınız rehberde öne çıkarılır. Daha fazla görünürlük sağlar.</p>
             <p><strong className="text-foreground">WhatsApp Yayınlama:</strong> WhatsApp numaranızın profil kartınızda public olarak gösterilmesi için onay gerekir.</p>
             <p><strong className="text-foreground">Etkinlik Oluşturma:</strong> Platformda etkinlik yayınlama yetkisi talep edin.</p>
             <p><strong className="text-foreground">Teklif / Hizmet Oluşturma:</strong> Hizmet veya ürün tekliflerinizi yayınlama erişimi talep edin.</p>
@@ -1891,7 +1891,7 @@ const ProfilePage = () => {
 
               <AccordionItem value="feature-requests" className={`overflow-hidden rounded-lg px-3 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
                 <AccordionTrigger className="py-3 text-sm font-medium hover:no-underline">
-                  Feature Talepleri
+                  Özellik Talepleri
                 </AccordionTrigger>
                 <AccordionContent className="space-y-2 pb-3">
                   <p className="text-xs text-muted-foreground">Kapalı veya onay gerektiren akışlar için tek tıkla talep bırak.</p>

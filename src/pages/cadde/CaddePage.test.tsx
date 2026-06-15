@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -111,7 +111,7 @@ describe("CaddePage", () => {
 
     renderPage();
 
-    expect(await screen.findByText(/Cadde için şehir bazlı paylaşım ekleyebilirsin/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Şehrindeki ihtiyacını, sorunu, ilanını veya etkinliğini paylaş/i)).toBeInTheDocument();
     expect(screen.queryByText(/Caddeye çıkmak için profilini tamamla/i)).not.toBeInTheDocument();
   });
 
@@ -151,7 +151,10 @@ describe("CaddePage", () => {
     });
   });
 
-  it("lets authenticated users switch to real mode from the URL state", async () => {
+  it("hides the demo/real toggle from the public UI (sosyal akış yalnız gerçek)", async () => {
+    // Ürün kararı (2026-06-15): Gerçek/Demo switch'i public Cadde'den kaldırıldı.
+    // ?mode=demo URL'i hâlâ parse edilir (admin/QA için) ama UI'da toggle yok ve
+    // composer normal şekilde görünür.
     useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
     listCaddeCountriesMock.mockResolvedValue([{ id: "country-de", code: "DE", name: "Almanya" }]);
     listCaddeCitiesMock.mockResolvedValue([{ id: "city-berlin", countryId: "country-de", name: "Berlin", timezone: "Europe/Berlin" }]);
@@ -160,18 +163,10 @@ describe("CaddePage", () => {
     listCaddeBillboardsMock.mockResolvedValue([]);
     getCaddeSponsoredMock.mockResolvedValue(null);
 
-    renderPage("/cadde?mode=demo");
+    renderPage("/cadde");
 
-    expect(await screen.findByText(/Cadde için şehir bazlı paylaşım ekleyebilirsin/i)).toBeInTheDocument();
-    fireEvent.click(screen.getAllByRole("switch")[0]);
-
-    await waitFor(() => {
-      expect(listCaddeFeedMock).toHaveBeenLastCalledWith(
-        expect.objectContaining({ mode: "real" }),
-        null,
-        "user-1",
-        "tr",
-      );
-    });
+    expect(await screen.findByText(/Şehrindeki ihtiyacını, sorunu, ilanını veya etkinliğini paylaş/i)).toBeInTheDocument();
+    // "Gerçek / Demo" etiketi artık public UI'da görünmemeli.
+    expect(screen.queryByText(/Gerçek \/ Demo/i)).not.toBeInTheDocument();
   });
 });

@@ -85,7 +85,7 @@ const HeroSection = () => {
                 </h1>
               </div>
               <p className="hero-description mb-5 max-w-lg text-center text-[12px] leading-relaxed text-muted-foreground md:text-left md:text-[13px] 2xl:max-w-xl 2xl:text-[14px]">
-                Dünyanın farklı yerlerinde yaşayan Türkleri sosyal ve ekonomik olarak birbirine bağlıyoruz.
+                Dünyanın farklı yerlerinde yaşayan Türkleri ekonomik ve sosyal fırsatlarla birbirine bağlıyoruz.
                 <br />
                 <strong>Ücretsiz kayıt ol! Ağını genişlet! Bağlan, keşfet, birlikte büyü!</strong>
               </p>

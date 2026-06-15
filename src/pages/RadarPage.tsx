@@ -69,8 +69,8 @@ const RadarPage = () => {
                 <h1 className="truncate text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl">
                   Haberler, İstatistikler ve Duyurular
                 </h1>
-                <p className="truncate text-sm leading-relaxed text-muted-foreground md:text-base">
-                  Dünya genelindeki Türk topluluklarına dair güncel notlar, duyurular ve öne çıkan sayılar.
+                <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
+                  Türk diasporasından haberler, topluluk sinyalleri ve platform duyuruları — tek akışta.
                 </p>
               </div>
             </div>

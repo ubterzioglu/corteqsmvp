@@ -652,7 +652,7 @@ describe("ProfilePage", () => {
 
     expect(accessCardToggle).toHaveAttribute("aria-expanded", "true");
     expect(await screen.findByText("Rol Başvurusu")).toBeInTheDocument();
-    expect(screen.getByText("Feature Talepleri")).toBeInTheDocument();
+    expect(screen.getByText("Özellik Talepleri")).toBeInTheDocument();
     expect(screen.getByText("Açık Dashboard Erişimleri")).toBeInTheDocument();
     expect(screen.getByText("Bekleyen Talepler")).toBeInTheDocument();
     await waitFor(() => {
@@ -675,7 +675,7 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Ortak Profil Alanları Kullanım Kılavuzu")).toBeInTheDocument();
     expect(screen.getByText("Rolüne Özel Alanlar Kullanım Kılavuzu")).toBeInTheDocument();
     expect(screen.getByText("Rol Başvurusu Kılavuzu")).toBeInTheDocument();
-    expect(screen.getByText("Feature Talepleri Kılavuzu")).toBeInTheDocument();
+    expect(screen.getByText("Özellik Talepleri Kılavuzu")).toBeInTheDocument();
     expect(screen.getByText("Bekleyen Talepler Kılavuzu")).toBeInTheDocument();
 
     fireEvent.click(helpCardToggle);
@@ -719,7 +719,7 @@ describe("ProfilePage", () => {
     renderProfilePage("/profile/bireysel");
 
     fireEvent.click(await screen.findByRole("button", { name: /Başvurular & Erişimler/i }));
-    fireEvent.click(await screen.findByText("Feature Talepleri"));
+    fireEvent.click(await screen.findByText("Özellik Talepleri"));
 
     const requestButtons = await screen.findAllByRole("button", { name: "Talep Et" });
     expect(requestButtons.length).toBeGreaterThanOrEqual(1);

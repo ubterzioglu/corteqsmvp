@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Clock3, Flag, Flame, Globe2, MapPin, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
+import { Clock3, Flag, Flame, Globe2, Heart, MapPin, Megaphone, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
@@ -57,6 +58,23 @@ const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof
   { key: "support", label: "Destek", icon: Sparkles },
   { key: "idea", label: "Fikir", icon: Flame },
 ];
+
+// Post tipi enum'larının kullanıcıya görünen Türkçe etiketleri (composer + feed kartı).
+// "İlan / Teklif" bireysel kullanıcının ikinci el / yardım / hizmet paylaşımını kapsar.
+const POST_TYPE_LABELS: Record<CaddePostType, string> = {
+  text: "Paylaşım",
+  question: "Soru",
+  offer: "İlan / Teklif",
+  event: "Etkinlik",
+};
+
+const POST_TYPE_PLACEHOLDERS: Record<CaddePostType, string> = {
+  text: "Şehrindeki bir haberi, deneyimini veya fikrini paylaş.",
+  question: "Topluluğa bir şey sor: hangi mahalle, hangi okul, nereden alışveriş…",
+  offer:
+    "Örn: Dortmund'da ikinci el masa veriyorum · Berlin'de taşınmaya yardım arıyorum · Münih'te Türkçe bilen muhasebeci öneriniz var mı?",
+  event: "Etkinliğini duyur: tarih, yer ve katılım detaylarını yaz.",
+};
 
 const SECONDARY_NAV = [
   { label: "Cadde", to: "/cadde" },
@@ -289,8 +307,8 @@ const CaddePage = () => {
       <section className="border-b border-orange-100/80 bg-white/80 backdrop-blur">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-6 lg:px-6">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className="bg-[#ffefe0] text-[#9a4b18] hover:bg-[#ffefe0]">CorteQS Cadde MVP</Badge>
-            <p className="text-sm text-slate-600">Şehir bazlı diaspora akışı, aktif kafeler ve sponsorlu keşif alanı.</p>
+            <Badge className="bg-[#ffefe0] text-[#9a4b18] hover:bg-[#ffefe0]">CorteQS Cadde</Badge>
+            <p className="text-sm text-slate-600">Şehrindeki Türklerle tanış, sor, paylaş ve fırsatları keşfet.</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <NotificationsBell />
@@ -322,20 +340,17 @@ const CaddePage = () => {
                 </div>
                 <Globe2 className="h-5 w-5 text-orange-500" />
               </div>
-              <Button className="w-full justify-between rounded-2xl bg-slate-900 text-white hover:bg-slate-800">
+              <Button
+                onClick={() => {
+                  document.getElementById("cadde-composer")?.scrollIntoView({ behavior: "smooth", block: "center" });
+                }}
+                className="w-full justify-between rounded-2xl bg-slate-900 text-white hover:bg-slate-800"
+              >
                 Caddeye Çık
-                <span className="text-xs uppercase tracking-[0.2em] text-orange-200">{filters.mode}</span>
+                <Megaphone className="h-4 w-4 text-orange-200" />
               </Button>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Gerçek / Demo</p>
-                  <p className="text-xs text-slate-500">{filters.mode === "real" ? "Gerçek: kullanıcı paylaşımları" : "Demo: admin seed içerik"}</p>
-                </div>
-                <Switch checked={filters.mode === "real"} onCheckedChange={(checked) => updateFilters({ mode: checked ? "real" : "demo" })} />
-              </div>
-
               <div className="space-y-2">
                 <Label>Ülke ve Şehir</Label>
                 <CaddeGeoFilter
@@ -345,6 +360,9 @@ const CaddePage = () => {
                   selectedCities={filters.cities}
                   onChange={(next) => updateFilters(next)}
                 />
+                <p className="text-xs leading-relaxed text-slate-500">
+                  Şehrini göremiyorsan ülke geneli akışı keşfedebilir veya ilk paylaşımı sen yapabilirsin.
+                </p>
               </div>
 
               <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3">
@@ -363,14 +381,14 @@ const CaddePage = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <MessagesSquare className="h-4 w-4 text-orange-500" />
-                People Discovery
+                İnsanları Keşfet
               </CardTitle>
-              <CardDescription>Mevcut directory deneyimine Cadde filtreleriyle geç.</CardDescription>
+              <CardDescription>Seçtiğin şehirdeki kişi ve işletmeleri keşfet.</CardDescription>
             </CardHeader>
             <CardContent>
               <Button asChild variant="outline" className="w-full justify-between rounded-2xl">
                 <Link to={directoryLink}>
-                  Directory'ye Git
+                  Kişileri Keşfet
                   <UserPlus2 className="h-4 w-4" />
                 </Link>
               </Button>
@@ -460,26 +478,26 @@ const CaddePage = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-slate-200 bg-white/95">
+          <Card id="cadde-composer" className="scroll-mt-24 border-slate-200 bg-white/95">
             <CardHeader>
-              <CardTitle className="text-lg">Paylaşım Oluştur</CardTitle>
-              <CardDescription>{session ? "Cadde için şehir bazlı paylaşım ekleyebilirsin." : "Paylaşım ve reaksiyonlar için giriş gerekli."}</CardDescription>
+              <CardTitle className="text-lg">Caddede Paylaş</CardTitle>
+              <CardDescription>{session ? "Şehrindeki ihtiyacını, sorunu, ilanını veya etkinliğini paylaş — herkes görebilir." : "Paylaşım ve reaksiyonlar için giriş gerekli."}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {session ? (
                 <>
                   <div className="grid gap-4 md:grid-cols-[180px_1fr]">
                     <div className="space-y-2">
-                      <Label>Post tipi</Label>
+                      <Label>Ne paylaşmak istiyorsun?</Label>
                       <Select value={composer.type} onValueChange={(value) => setComposer((current) => ({ ...current, type: value as CaddePostType }))}>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="text">Text</SelectItem>
-                          <SelectItem value="question">Question</SelectItem>
-                          <SelectItem value="offer">Offer</SelectItem>
-                          <SelectItem value="event">Event</SelectItem>
+                          <SelectItem value="text">{POST_TYPE_LABELS.text}</SelectItem>
+                          <SelectItem value="question">{POST_TYPE_LABELS.question}</SelectItem>
+                          <SelectItem value="offer">{POST_TYPE_LABELS.offer}</SelectItem>
+                          <SelectItem value="event">{POST_TYPE_LABELS.event}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -489,8 +507,8 @@ const CaddePage = () => {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label>Mesaj</Label>
-                    <Textarea value={composer.body} onChange={(event) => setComposer((current) => ({ ...current, body: event.target.value }))} placeholder="Şehrindeki ihtiyacını, etkinliğini veya fırsatını paylaş." rows={5} />
+                    <Label>Paylaşım</Label>
+                    <Textarea value={composer.body} onChange={(event) => setComposer((current) => ({ ...current, body: event.target.value }))} placeholder={POST_TYPE_PLACEHOLDERS[composer.type]} rows={5} />
                   </div>
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
@@ -558,9 +576,9 @@ const CaddePage = () => {
                     </div>
                   ) : null}
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="text-sm text-slate-500">Akış: {filters.mode === "real" ? "Gerçek" : "Demo seçili. Gönderince Gerçek akışa geçeceksin."}</div>
+                    <div className="text-sm text-slate-500">Paylaşımın seçili şehir ve etiketlerle Cadde akışında görünür.</div>
                     <Button onClick={() => postMutation.mutate()} disabled={postMutation.isPending}>
-                      {postMutation.isPending ? "Gönderiliyor..." : "Cadde'de Paylaş"}
+                      {postMutation.isPending ? "Gönderiliyor..." : "Caddede Paylaş"}
                     </Button>
                   </div>
                 </>
@@ -617,7 +635,7 @@ const CaddePage = () => {
                           {item.post.authorRole ? <Badge variant="secondary">{item.post.authorRole}</Badge> : null}
                           {item.post.pinned ? <Badge className="bg-slate-900 text-white hover:bg-slate-900">Pinned</Badge> : null}
                           {item.post.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
-                          <Badge variant="outline">{item.post.type}</Badge>
+                          <Badge variant="outline">{POST_TYPE_LABELS[item.post.type] ?? item.post.type}</Badge>
                         </div>
                         <p className="text-xs text-slate-500">
                           {[item.post.country, item.post.city].filter(Boolean).join(" • ") || "Global"} • {formatDateTime(item.post.createdAt)}
@@ -638,29 +656,57 @@ const CaddePage = () => {
                       </div>
                     ) : null}
 
-                    <div className="flex flex-wrap gap-2">
-                      {REACTION_META.map((reaction) => {
-                        const Icon = reaction.icon;
-                        const active = item.post.viewerReactions.includes(reaction.key);
-                        return (
-                          <Button
-                            key={reaction.key}
-                            variant={active ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => {
-                              if (!session) {
-                                navigate("/login");
-                                return;
-                              }
-                              reactionMutation.mutate({ postId: item.post.id, reactionType: reaction.key });
-                            }}
-                            className={active ? "bg-slate-900 text-white hover:bg-slate-800" : ""}
-                          >
-                            <Icon className="mr-2 h-4 w-4" />
-                            {reaction.label} ({item.post.reactionCounts[reaction.key]})
-                          </Button>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {(() => {
+                        const totalReactions = REACTION_META.reduce(
+                          (sum, reaction) => sum + (item.post.reactionCounts[reaction.key] ?? 0),
+                          0,
                         );
-                      })}
+                        const viewerReacted = item.post.viewerReactions.length > 0;
+                        return (
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant={viewerReacted ? "default" : "outline"}
+                                size="sm"
+                                aria-label="Tepki ver"
+                                className={viewerReacted ? "bg-slate-900 text-white hover:bg-slate-800" : ""}
+                              >
+                                <Heart className={`mr-2 h-4 w-4 ${viewerReacted ? "fill-current" : ""}`} />
+                                Tepki Ver{totalReactions > 0 ? ` (${totalReactions})` : ""}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent align="start" className="w-auto p-1.5">
+                              <div className="flex items-center gap-1">
+                                {REACTION_META.map((reaction) => {
+                                  const Icon = reaction.icon;
+                                  const active = item.post.viewerReactions.includes(reaction.key);
+                                  return (
+                                    <Button
+                                      key={reaction.key}
+                                      variant={active ? "default" : "ghost"}
+                                      size="sm"
+                                      aria-label={`${reaction.label} (${item.post.reactionCounts[reaction.key] ?? 0})`}
+                                      onClick={() => {
+                                        if (!session) {
+                                          navigate("/login");
+                                          return;
+                                        }
+                                        reactionMutation.mutate({ postId: item.post.id, reactionType: reaction.key });
+                                      }}
+                                      className={active ? "bg-slate-900 text-white hover:bg-slate-800" : ""}
+                                    >
+                                      <Icon className="mr-1.5 h-4 w-4" />
+                                      {reaction.label}
+                                      <span className="ml-1 text-xs text-muted-foreground">{item.post.reactionCounts[reaction.key] ?? 0}</span>
+                                    </Button>
+                                  );
+                                })}
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        );
+                      })()}
                       <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-sm text-slate-500">
                         <MessageCircle className="h-4 w-4" />
                         {item.post.commentCount} yorum
@@ -719,7 +765,7 @@ const CaddePage = () => {
             {!feedQuery.isLoading && filters.mode === "real" && feedItems.length === 0 ? (
               <Card className="border-dashed border-slate-300 bg-white/90">
                 <CardContent className="p-8 text-center text-slate-500">
-                  Bu filtrelerde gerçek Cadde içeriği yok. Demo moda geçerek örnek akış görebilirsin.
+                  Bu şehirde henüz paylaşım yok. İlk paylaşımı sen yap veya ülke genelindeki akışı keşfet.
                 </CardContent>
               </Card>
             ) : null}
@@ -735,11 +781,36 @@ const CaddePage = () => {
         </section>
 
         <aside className="space-y-5">
+          {/* CorteQS Panosu — topluluk panosu / maskot teaser'ı */}
+          <Card className="overflow-hidden border-orange-100 bg-[linear-gradient(160deg,#fff7ec_0%,#ffffff_60%)]">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">CorteQS Panosu</CardTitle>
+              <CardDescription>Bugün Caddede öne çıkanlar</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center gap-3 rounded-2xl border border-orange-100 bg-white/70 p-3">
+                <img src="/lmaskot.png" alt="CorteQS maskot" className="h-14 w-auto shrink-0 drop-shadow" />
+                <p className="text-sm leading-relaxed text-slate-600">
+                  Şehrindeki Türk topluluğunu büyütmeye yardım et — paylaş, sor, destek ol.
+                </p>
+              </div>
+              <a
+                href="https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/70 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white"
+              >
+                Beta geri bildirimi ver
+                <Megaphone className="h-4 w-4 text-orange-500" />
+              </a>
+            </CardContent>
+          </Card>
+
           <PromotionRail filters={filters} />
 
           <Card className="border-slate-200 bg-white/90">
             <CardHeader>
-              <CardTitle>Billboard</CardTitle>
+              <CardTitle>Şehrinden Öne Çıkanlar</CardTitle>
               <CardDescription>Danışman, işletme ve etkinlik kartları</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

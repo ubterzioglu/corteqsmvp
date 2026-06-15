@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { useAuth } from "@/components/auth/useAuth";
@@ -39,10 +39,36 @@ const DirectoryPage = () => {
   const [totalCount, setTotalCount] = useState<number | null>(null);
 
   const searchText = searchParams.get("q") ?? "";
+  // Uygulanmış (applied) filtreler — veri yüklemesi bunları kaynak alır.
   const roleFilter = searchParams.get("role") ?? "all";
   const countryFilter = searchParams.get("country") ?? "";
   const cityFilter = searchParams.get("city") ?? "";
   const featuredOnly = searchParams.get("featured") === "1";
+
+  // Taslak (draft) filtreler — kullanıcı dropdown'ları değiştirir, "Sonuçları Göster"e
+  // basana kadar URL'ye ve sorguya yazılmaz. URL dışarıdan değişirse (quick search,
+  // geri/ileri) taslak yeniden senkronlanır.
+  const [draftRole, setDraftRole] = useState(roleFilter);
+  const [draftCountry, setDraftCountry] = useState(countryFilter);
+  const [draftCity, setDraftCity] = useState(cityFilter);
+  const [draftFeatured, setDraftFeatured] = useState(featuredOnly);
+  const resultsRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setDraftRole(roleFilter);
+    setDraftCountry(countryFilter);
+    setDraftCity(cityFilter);
+    setDraftFeatured(featuredOnly);
+  }, [roleFilter, countryFilter, cityFilter, featuredOnly]);
+
+  const hasPendingChanges =
+    draftRole !== roleFilter ||
+    draftCountry !== countryFilter ||
+    draftCity !== cityFilter ||
+    draftFeatured !== featuredOnly;
+
+  const hasActiveFilters =
+    draftRole !== "all" || Boolean(draftCountry) || Boolean(draftCity) || draftFeatured;
 
   useEffect(() => {
     if (isAuthLoading || !user) {
@@ -100,6 +126,37 @@ const DirectoryPage = () => {
     } else {
       next.set(key, value);
     }
+    setSearchParams(next);
+  };
+
+  // Taslak filtreleri URL'ye toplu yazar (q korunur) ve sonuç listesine kaydırır.
+  const applyDraftFilters = () => {
+    const next = new URLSearchParams(searchParams);
+    const setOrDelete = (key: string, value: string | null) => {
+      if (!value || value === "all") next.delete(key);
+      else next.set(key, value);
+    };
+    setOrDelete("role", draftRole);
+    setOrDelete("country", draftCountry);
+    setOrDelete("city", draftCity);
+    setOrDelete("featured", draftFeatured ? "1" : null);
+    setSearchParams(next);
+    // Sonuç listesi mevcut filtre kartının altında; kullanıcıyı oraya yönlendir.
+    window.requestAnimationFrame(() => {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  const clearDraftFilters = () => {
+    setDraftRole("all");
+    setDraftCountry("");
+    setDraftCity("");
+    setDraftFeatured(false);
+    const next = new URLSearchParams(searchParams);
+    next.delete("role");
+    next.delete("country");
+    next.delete("city");
+    next.delete("featured");
     setSearchParams(next);
   };
 
@@ -176,17 +233,26 @@ const DirectoryPage = () => {
             <div className="mb-6 rounded-[28px] border-4 border-orange-300 bg-white/60 p-4 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.35)] backdrop-blur-xl md:p-5">
               <DirectoryFilters
                 roleOptions={roleOptions}
-                roleFilter={roleFilter}
-                onRoleChange={(value) => updateFilter("role", value)}
-                countryFilter={countryFilter}
-                cityFilter={cityFilter}
-                featuredOnly={featuredOnly}
+                roleFilter={draftRole}
+                onRoleChange={setDraftRole}
+                countryFilter={draftCountry}
+                cityFilter={draftCity}
+                featuredOnly={draftFeatured}
                 countryOptions={(countriesQuery.data ?? []).map((country) => country.name)}
-                onCountryChange={(value) => updateFilter("country", value)}
-                onCityChange={(value) => updateFilter("city", value)}
-                onFeaturedChange={(value) => updateFilter("featured", value ? "1" : null)}
+                onCountryChange={(value) => {
+                  setDraftCountry(value === "all" ? "" : value);
+                  setDraftCity("");
+                }}
+                onCityChange={(value) => setDraftCity(value === "all" ? "" : value)}
+                onFeaturedChange={setDraftFeatured}
+                onApply={applyDraftFilters}
+                onClear={clearDraftFilters}
+                hasPendingChanges={hasPendingChanges}
+                hasActiveFilters={hasActiveFilters}
               />
             </div>
+
+            <div ref={resultsRef} className="scroll-mt-24" />
 
             {isLoading ? (
               <p className="py-8 text-center text-sm text-muted-foreground">Dizin yükleniyor...</p>
@@ -210,7 +276,9 @@ const DirectoryPage = () => {
                   </>
                 ) : (
                   <p className="py-8 text-center text-sm text-muted-foreground">
-                    Filtrelerine uygun görünür profil bulunamadı.
+                    {roleFilter !== "all"
+                      ? "Bu kategoride henüz görünür profil yok. İlk başvurular yakında burada görünecek — dilersen aramayı genişletip diğer kategorilere göz atabilirsin."
+                      : "Aramana uygun görünür profil bulunamadı. Farklı bir şehir, kategori veya anahtar kelime deneyebilirsin."}
                   </p>
                 )}
               </div>

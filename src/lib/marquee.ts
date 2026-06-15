@@ -24,7 +24,8 @@ export const fallbackMarqueeItems: MarqueeItemRow[] = [
     type: "stat",
     slug: "turk-diasporasi-164-ulke",
     title: "Türk diasporası 164 ülkede görünür",
-    summary: "CorteQS, şehir bazlı bağlantılarla küresel Türk topluluğunu tek ekosistemde toplamayı hedefliyor.",
+    summary:
+      "Dünyanın dört bir yanında yaşayan Türkler; meslek, şehir ve ihtiyaç bazında birbirini bulabilsin diye CorteQS küresel bir bağlantı katmanı kuruyor. Her şehirdeki danışmanlar, işletmeler ve topluluklar tek bir ekosistemde buluşuyor. Amaç, nereye taşınırsan taşın yanında güvenebileceğin bir ağ bırakmak.",
     detail_content: null,
     image_url: "/og-image.png",
     image_alt: "CorteQS küresel diaspora ağı",
@@ -42,7 +43,8 @@ export const fallbackMarqueeItems: MarqueeItemRow[] = [
     type: "stat",
     slug: null,
     title: "8.8 milyon kişilik küresel topluluk",
-    summary: "Yurt dışında yaşayan Türkler için şehir, meslek ve ihtiyaç bazlı bağlantı alanı kuruluyor.",
+    summary:
+      "Yurt dışındaki Türk topluluğu giderek büyüyor; öğrenciler, profesyoneller, işletmeler ve aileler aynı şehirlerde yan yana yaşıyor. CorteQS bu insanların birbirini keşfetmesini, deneyim paylaşmasını ve fırsatlara erişmesini kolaylaştırmak için hazırlanıyor. Şehrindeki Türk topluluğunu bir adım daha yakına getiriyoruz.",
     detail_content: null,
     image_url: "/logocorteqsbig.png",
     image_alt: "CorteQS diaspora bağlantı görseli",
@@ -60,7 +62,8 @@ export const fallbackMarqueeItems: MarqueeItemRow[] = [
     type: "announcement",
     slug: "erken-kayit-duyurusu",
     title: "Erken kayıt ve şehir elçisi başvuruları açık",
-    summary: "Platform açılışı öncesi danışman, işletme, içerik üreticisi ve şehir elçisi adayları kayıt bırakabiliyor.",
+    summary:
+      "Platform açılışına hazırlanırken danışmanlar, işletmeler, içerik üreticileri ve şehir elçisi adayları şimdiden yerini alabiliyor. Erken katılanlar profillerini oluşturup kendi şehirlerinde topluluğun ilk halkası oluyor. Sen de bulunduğun şehirde Türk diasporasının buluşma noktası olabilirsin.",
     detail_content: null,
     image_url: "/og-image.png",
     image_alt: "CorteQS erken kayıt duyurusu",

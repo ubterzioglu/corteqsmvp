@@ -124,10 +124,7 @@ const CaddeGeoFilter = ({
                   variant="ghost"
                   size="sm"
                   className="h-7 w-full text-xs"
-                  onClick={() => {
-                    onCountriesChange([]);
-                    onCitiesChange([]);
-                  }}
+                  onClick={() => onChange({ countries: [], cities: [] })}
                 >
                   Tümünü Temizle
                 </Button>
@@ -171,7 +168,12 @@ const CaddeGeoFilter = ({
             </div>
             {selectedCities.length > 0 ? (
               <div className="border-t border-border p-2">
-                <Button variant="ghost" size="sm" className="h-7 w-full text-xs" onClick={() => onCitiesChange([])}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-full text-xs"
+                  onClick={() => onChange({ countries: selectedCountries, cities: [] })}
+                >
                   Şehirleri Temizle
                 </Button>
               </div>
