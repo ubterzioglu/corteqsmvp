@@ -2,9 +2,10 @@
  * Diaspora ağ katmanı — dünyaya yayılmış Türk diasporasının CorteQS üzerinden
  * birbirine bağlanışını temsil eden, SVG tabanlı ince düğüm + bağlantı çizgisi ağı.
  *
+ * Bağlantı çizgileri boyunca minik ışık parçacıkları akar ("canlı veri akışı").
  * Tamamen dekoratif: pointer-events yok, aria-hidden, odaklanılamaz, z-0.
  * Düğümler yavaşça nabız atar; çizgiler ince parlaklık dalgalanması yapar.
- * `prefers-reduced-motion` CSS tarafında animasyonları durdurur.
+ * `prefers-reduced-motion` CSS tarafında tüm animasyonları durdurur.
  */
 
 type NetworkDensity = "full" | "reduced";
@@ -17,7 +18,7 @@ interface NetworkNode {
 }
 
 interface DiasporaNetworkLayerProps {
-  /** Mobilde "reduced" daha az düğüm/çizgi gösterir. */
+  /** Mobilde "reduced" daha az düğüm/çizgi/parçacık gösterir. */
   density?: NetworkDensity;
   className?: string;
 }
@@ -59,6 +60,9 @@ const LINKS: readonly [number, number][] = [
 const REDUCED_NODE_COUNT = 7;
 const REDUCED_LINK_COUNT = 6;
 
+// Akan parçacık için çizgi başına süre/gecikme çeşitliliği.
+const FLOW_DURATIONS = [5.5, 7, 6, 8, 6.5, 7.5];
+
 const DiasporaNetworkLayer = ({ density = "full", className }: DiasporaNetworkLayerProps) => {
   const nodes = density === "reduced" ? NODES.slice(0, REDUCED_NODE_COUNT) : NODES;
   const links =
@@ -90,6 +94,30 @@ const DiasporaNetworkLayer = ({ density = "full", className }: DiasporaNetworkLa
           style={{ animationDelay: `${(i % 6) * 0.7}s` }}
         />
       ))}
+
+      {/* Çizgiler boyunca akan ışık parçacıkları — "canlı veri akışı".
+          SMIL animateMotion: reduced-motion'da CSS ile devre dışı bırakılır. */}
+      {links.map(([a, b], i) => {
+        const dur = FLOW_DURATIONS[i % FLOW_DURATIONS.length];
+        const path = `M${NODES[a].x},${NODES[a].y} L${NODES[b].x},${NODES[b].y}`;
+        return (
+          <circle
+            key={`f-${i}`}
+            className="corteqs-network-flow"
+            r={0.55}
+            fill={i % 2 === 0 ? "hsl(var(--glow-orange))" : "hsl(var(--glow-teal))"}
+          >
+            <animateMotion
+              dur={`${dur}s`}
+              begin={`${(i % 5) * 0.8}s`}
+              repeatCount="indefinite"
+              path={path}
+              rotate="auto"
+            />
+          </circle>
+        );
+      })}
+
       {nodes.map((node, i) => (
         <circle
           key={`n-${i}`}

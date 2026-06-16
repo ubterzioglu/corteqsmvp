@@ -330,6 +330,13 @@
     will-change: opacity;
   }
 
+  /* Çizgiler boyunca akan ışık parçacığı — "canlı veri akışı".
+     Hareket SMIL animateMotion ile; burada yalnız parlama/yumuşaklık. */
+  .corteqs-network-flow {
+    opacity: 0.85;
+    filter: drop-shadow(0 0 0.6px hsl(var(--glow-teal) / 0.8));
+  }
+
   /* Yüzen rol çipi — cam yüzey, çok hafif sürüklenme. */
   .corteqs-floating-chip {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(240, 250, 252, 0.62) 100%);
@@ -516,6 +523,11 @@
   .corteqs-floating-chip,
   .corteqs-aurora-plus {
     animation: none !important;
+  }
+
+  /* SMIL animateMotion CSS ile durdurulamaz — parçacıkları tamamen gizle. */
+  .corteqs-network-flow {
+    display: none !important;
   }
 }
 
