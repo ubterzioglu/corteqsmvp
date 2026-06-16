@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
 import { ChevronRight, Search, Trophy } from "lucide-react";
 import CorteqsWhatIsAccordion from "./CorteqsWhatIsAccordion";
+import CorteqsAnimatedBackground from "./landing/CorteqsAnimatedBackground";
+import FloatingRoleCards from "./landing/FloatingRoleCards";
+import MouseSpotlight from "./landing/MouseSpotlight";
+import HeroNetworkStats from "./landing/HeroNetworkStats";
+import { useIsMobile } from "@/hooks/use-mobile";
 const heroLogo = "/newlogo.png";
 
 // Dünya Kupası kampanya banner'ı — küçük hero görseli butonun parçası.
@@ -13,6 +18,7 @@ const scrollToSearch = () => {
 };
 
 const HeroSection = () => {
+  const isMobile = useIsMobile();
   const heroCtaClass =
     "relative inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl border px-4 py-2 text-center text-[13px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:saturate-110 md:text-sm";
   const heroCardStyles = {
@@ -35,6 +41,10 @@ const HeroSection = () => {
       {/* tech katmanları: aurora + ince grid mesh (kenarlara solar) + marka blur orb'ları */}
       <div className="tech-aurora pointer-events-none absolute inset-0" aria-hidden="true" />
       <div className="tech-grid pointer-events-none absolute inset-0" aria-hidden="true" />
+      {/* canlı diaspora ağı + yüzen rol çipleri + imleç parlaması — hepsi dekoratif, z-0 */}
+      <CorteqsAnimatedBackground variant="hero" />
+      <FloatingRoleCards reduced={isMobile} />
+      <MouseSpotlight />
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div className="absolute left-[-10%] top-[8%] h-56 w-56 rounded-full bg-primary/10 blur-3xl lg:h-80 lg:w-80" />
         <div className="absolute bottom-[6%] right-[-8%] h-64 w-64 rounded-full bg-accent/12 blur-3xl lg:h-96 lg:w-96" />
@@ -92,6 +102,7 @@ const HeroSection = () => {
                 <br />
                 <strong>Ücretsiz kayıt ol! Ağını genişlet! Bağlan, keşfet, birlikte büyü!</strong>
               </p>
+              <HeroNetworkStats className="mt-1 justify-center md:justify-start" />
             </div>
 
             <div className="mt-3 max-w-[760px] space-y-4 pb-2 lg:max-w-[540px] xl:max-w-[590px] 2xl:max-w-[640px]">

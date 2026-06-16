@@ -307,6 +307,62 @@
   .diaspora-marquee:focus-within .diaspora-marquee-track {
     animation-play-state: paused;
   }
+
+  /* ——— CorteQS canlı diaspora ağı arka planı (anasayfa) ——— */
+
+  /* Ağ katmanı kapsayıcısı — kenarlara doğru yumuşakça solar, içeriği bölmez. */
+  .corteqs-network-bg {
+    -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 38%, #000 30%, transparent 100%);
+    mask-image: radial-gradient(ellipse 85% 75% at 50% 38%, #000 30%, transparent 100%);
+  }
+
+  /* Ağ düğümü — yavaşça nabız atan nokta. İndeks bazlı gecikme JSX'te verilir. */
+  .corteqs-network-node {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: corteqs-node-pulse 6s ease-in-out infinite;
+    will-change: opacity, transform;
+  }
+
+  /* Ağ bağlantı çizgisi — ince, yavaş parlaklık dalgalanması. */
+  .corteqs-network-line {
+    animation: corteqs-line-shimmer 9s ease-in-out infinite;
+    will-change: opacity;
+  }
+
+  /* Yüzen rol çipi — cam yüzey, çok hafif sürüklenme. */
+  .corteqs-floating-chip {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(240, 250, 252, 0.62) 100%);
+    border: 1px solid hsl(var(--glow-teal) / 0.28);
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.6) inset,
+      0 14px 36px -22px hsl(var(--glow-teal) / 0.38);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    animation: corteqs-chip-float var(--chip-duration, 16s) ease-in-out infinite;
+    animation-delay: var(--chip-delay, 0s);
+    will-change: transform;
+  }
+
+  /* İmleç takip eden yumuşak radyal parlama (yalnız masaüstü). */
+  .corteqs-spotlight {
+    background: radial-gradient(
+      circle,
+      hsl(var(--glow-teal) / 0.1) 0%,
+      hsl(var(--glow-orange) / 0.06) 35%,
+      transparent 70%
+    );
+    filter: blur(40px);
+  }
+
+  /* Ek aurora katmanı — mevcut tech-aurora üstüne çok hafif yavaş kayan renk. */
+  .corteqs-aurora-plus {
+    background:
+      radial-gradient(45% 60% at 25% 30%, hsl(var(--glow-teal) / 0.1), transparent 60%),
+      radial-gradient(50% 65% at 78% 70%, hsl(var(--glow-orange) / 0.08), transparent 64%);
+    animation: corteqs-aurora-drift 28s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
 }
 
 @keyframes diaspora-marquee {
@@ -388,6 +444,46 @@
   }
 }
 
+@keyframes corteqs-node-pulse {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.45);
+  }
+}
+
+@keyframes corteqs-line-shimmer {
+  0%, 100% {
+    opacity: 0.12;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes corteqs-chip-float {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0);
+  }
+}
+
+@keyframes corteqs-aurora-drift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate3d(-2%, 2%, 0) scale(1.05);
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .landing-ambient-orb {
     animation: none;
@@ -413,5 +509,29 @@
   [style*="heroSlideInLeft"],
   [style*="heroSlideInRight"] {
     animation: none !important;
+  }
+
+  .corteqs-network-node,
+  .corteqs-network-line,
+  .corteqs-floating-chip,
+  .corteqs-aurora-plus {
+    animation: none !important;
+  }
+}
+
+/* Mobil (<768px): bulanıklığı/parlamayı azalt, spotlight'ı gizle. Düğüm/çip
+   SAYISI React tarafında useIsMobile() ile düşürülür — burada yalnız yoğunluk. */
+@media (max-width: 767px) {
+  .corteqs-spotlight {
+    display: none;
+  }
+
+  .corteqs-floating-chip {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .corteqs-aurora-plus {
+    opacity: 0.6;
   }
 }
