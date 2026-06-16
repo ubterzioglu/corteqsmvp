@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
 import RequireAuth from "@/components/auth/RequireAuth";
@@ -10,30 +10,41 @@ vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
 }));
 
+// Login rotasında çözülen konumu (pathname + search) görünür kılar; böylece
+// redirect'in `next` parametresini koruduğunu doğrulayabiliriz.
+const LoginProbe = () => {
+  const location = useLocation();
+  return <div>Login Page{location.search}</div>;
+};
+
 describe("RequireAuth", () => {
-  it("redirects to /login when session is missing", async () => {
+  it("redirects to /login and preserves the attempted path as `next`", async () => {
     useAuthMock.mockReturnValue({
       session: null,
       isLoading: false,
     });
 
     render(
-      <MemoryRouter initialEntries={["/profile"]}>
+      <MemoryRouter initialEntries={["/directory/catalog/member-abc"]}>
         <Routes>
           <Route
-            path="/profile"
+            path="/directory/catalog/:slug"
             element={
               <RequireAuth>
                 <div>Protected Profile</div>
               </RequireAuth>
             }
           />
-          <Route path="/login" element={<div>Login Page</div>} />
+          <Route path="/login" element={<LoginProbe />} />
         </Routes>
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText("Login Page")).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        `Login Page?next=${encodeURIComponent("/directory/catalog/member-abc")}`,
+      ),
+    ).toBeInTheDocument();
   });
 
   it("renders children when session exists", () => {

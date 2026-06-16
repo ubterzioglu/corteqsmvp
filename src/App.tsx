@@ -139,7 +139,14 @@ const App = () => (
                   <Route path="/auth" element={<AuthRouteRedirect />} />
                   <Route path="/welcome/activate" element={<WelcomeActivatePage />} />
                   <Route path="/directory" element={<DirectoryPage />} />
-                  <Route path="/directory/catalog/:slug" element={<DirectoryCatalogItemPage />} />
+                  <Route
+                    path="/directory/catalog/:slug"
+                    element={
+                      <RequireAuth>
+                        <DirectoryCatalogItemPage />
+                      </RequireAuth>
+                    }
+                  />
                   <Route
                     path="/relocation"
                     element={
@@ -192,7 +199,14 @@ const App = () => (
                       </RequireAuth>
                     }
                   />
-                  <Route path="/directory/profile/:userId" element={<DirectoryProfilePage />} />
+                  <Route
+                    path="/directory/profile/:userId"
+                    element={
+                      <RequireAuth>
+                        <DirectoryProfilePage />
+                      </RequireAuth>
+                    }
+                  />
                   <Route
                     path="/profile"
                     element={
