@@ -8,6 +8,7 @@ import { lazy, Suspense } from "react";
 const AdminRadarQueuePage = lazy(() => import("../AdminRadarQueuePage"));
 const AdminRadarSourcesPage = lazy(() => import("../AdminRadarSourcesPage"));
 const AdminRadarRunsPage = lazy(() => import("../AdminRadarRunsPage"));
+const AdminRadarGuidePage = lazy(() => import("../AdminRadarGuidePage"));
 
 function PageFallback() {
   return (
@@ -48,6 +49,14 @@ export const radarRoutes = (
       element={
         <Suspense fallback={<PageFallback />}>
           <AdminRadarRunsPage />
+        </Suspense>
+      }
+    />
+    <Route
+      path="rehber"
+      element={
+        <Suspense fallback={<PageFallback />}>
+          <AdminRadarGuidePage />
         </Suspense>
       }
     />

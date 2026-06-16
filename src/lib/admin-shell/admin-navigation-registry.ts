@@ -541,6 +541,16 @@ export const adminNavGroups: AdminNavGroup[] = [
         accent: "violet",
         aliases: ["tarama geçmişi", "cron", "scan runs"],
       },
+      {
+        id: "radar-guide",
+        label: "Radar Kural Kitabı",
+        shortLabel: "Rehber",
+        description: "Radar'ın nasıl çalıştığını ve nasıl yönetildiğini anlatan rehber.",
+        to: "/admin/radar/rehber",
+        icon: BookOpen,
+        accent: "violet",
+        aliases: ["radar rehber", "haber rehber", "radar kılavuz", "haber otomasyonu rehber"],
+      },
     ],
   },
   {

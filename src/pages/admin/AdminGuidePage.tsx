@@ -240,7 +240,8 @@ const guideBlocks: GuideBlock[] = [
           "Moderasyon Kuyruğu (/admin/radar/queue): bekleyen aday haberleri tek tek incele, Onayla (haber bandına aktarılır) veya Reddet.",
           "Haber Kaynakları (/admin/radar/sources): hangi RSS/Atom/GDELT kaynaklarının taranacağını ekler/düzenlersin.",
           "Tarama Geçmişi (/admin/radar/runs): hangi tarama ne zaman koştu ve kaç aday buldu — günlük cron ve manuel taramaların kaydı.",
-          "Not: Otomatik taramayı çalıştıran arka plan servisi ve günlük zamanlanmış tetikleme henüz devreye alınmadı; ekranlar ve veritabanı hazır.",
+          "Otomatik tarama günde bir kez (05:00 UTC) zamanlanmış olarak çalışır; sabah kuyruğa baktığında gece taranmış adaylar hazır olur. Ayrıntılar için Radar Kural Kitabı'na bak.",
+          "Radar Kural Kitabı (/admin/radar/rehber): Radar'ın nasıl çalıştığını, aday haberlerin nasıl değerlendirildiğini ve yeni kaynak ekleme akışını günlük dille adım adım anlatan ayrıntılı rehber.",
         ],
       },
       {
@@ -256,6 +257,7 @@ const guideBlocks: GuideBlock[] = [
       { label: "Cadde Kural Kitabı", to: "/admin/cadde/rehber" },
       { label: "Blog", to: "/admin/blog" },
       { label: "Radar Moderasyon Kuyruğu", to: "/admin/radar/queue" },
+      { label: "Radar Kural Kitabı", to: "/admin/radar/rehber" },
     ],
   },
   {
