@@ -49,7 +49,7 @@ const HeroSection = () => {
       <div className="relative z-10 mx-auto w-full max-w-[1780px] px-4 py-5 md:px-6 md:py-6 2xl:px-10">
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,36rem)_minmax(0,1fr)] lg:gap-7 xl:grid-cols-[minmax(0,38rem)_minmax(0,1fr)] 2xl:grid-cols-[minmax(0,42rem)_minmax(0,1fr)] 2xl:gap-10">
           <div
-            className="max-w-[760px] lg:-translate-y-4 xl:-translate-y-6 2xl:-translate-y-8"
+            className="min-w-0 max-w-[760px] lg:-translate-y-4 xl:-translate-y-6 2xl:-translate-y-8"
             style={{
               animation: "heroSlideInLeft 0.7s cubic-bezier(0.22, 1, 0.36, 1) both",
             }}
