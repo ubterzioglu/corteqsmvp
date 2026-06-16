@@ -1,7 +1,7 @@
 import type { RawNewsItem, NormalizedNewsItem, RadarNewsSource } from "./types.ts";
 import { canonicalizeUrl } from "./canonicalize-url.ts";
 import { buildCanonicalUrlHash, buildContentHash, normalizeTitle } from "./hash.ts";
-import { scoreRelevance } from "./relevance-score.ts";
+import { scoreRelevance, type ScoringKeyword } from "./relevance-score.ts";
 
 const MAX_SUMMARY_LENGTH = 600;
 
@@ -25,6 +25,7 @@ function sanitizeHtml(input: string): string {
 export async function normalizeItem(
   item: RawNewsItem,
   source: RadarNewsSource,
+  dbKeywords?: ScoringKeyword[],
 ): Promise<NormalizedNewsItem | null> {
   if (!item.title?.trim() || !item.url?.trim()) return null;
 
@@ -45,7 +46,7 @@ export async function normalizeItem(
   const canonicalUrlHash = await buildCanonicalUrlHash(canonical);
   const contentHash = await buildContentHash(nt, source.name, publishedAt);
 
-  const { score, reasons } = scoreRelevance(title, summary, source);
+  const { score, reasons } = scoreRelevance(title, summary, source, dbKeywords);
 
   return {
     sourceId: source.id,

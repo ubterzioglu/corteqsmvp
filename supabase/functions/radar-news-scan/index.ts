@@ -5,6 +5,7 @@ import { atomAdapter } from "./adapters/atom.ts";
 import { normalizeItem } from "./lib/normalize-item.ts";
 import { checkDuplicate } from "./lib/dedupe.ts";
 import { acquireScanLock, closeScanRun, openScanRun } from "./lib/scan-lock.ts";
+import type { ScoringKeyword } from "./lib/relevance-score.ts";
 import type { RadarNewsAdapter, RadarNewsSource, ScanResult, ScanSummary } from "./lib/types.ts";
 
 const ADAPTERS: Record<string, RadarNewsAdapter> = {
@@ -96,6 +97,20 @@ Deno.serve(async (req: Request): Promise<Response> => {
     return json({ error: sourcesError.message }, 500);
   }
 
+  // ── Skorlama keyword'lerini yükle (admin DB'den yönetir) ──
+  // Tablo boşsa boş dizi döner; scoreRelevance hardcode fallback'e geçer.
+  const { data: keywordRows } = await supabase
+    .from("radar_news_keywords")
+    .select("keyword, category, weight, is_negative")
+    .eq("is_enabled", true);
+
+  const dbKeywords: ScoringKeyword[] = (keywordRows ?? []).map((k) => ({
+    keyword: k.keyword as string,
+    category: (k.category as string | null) ?? null,
+    weight: Number(k.weight ?? 0),
+    isNegative: k.is_negative === true,
+  }));
+
   const results: ScanResult[] = [];
   let totalFetched = 0;
   let totalInserted = 0;
@@ -132,7 +147,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       totalFetched += fetched;
 
       for (const raw of rawItems) {
-        const normalized = await normalizeItem(raw, source);
+        const normalized = await normalizeItem(raw, source, dbKeywords);
         if (!normalized) { filtered++; continue; }
 
         if (normalized.relevanceScore < MIN_SCORE_TO_QUEUE) {

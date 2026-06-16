@@ -30,8 +30,7 @@ const ContactPage = lazy(() => import("./pages/ContactPage.tsx"));
 const Pricing = lazy(() => import("./pages/Pricing.tsx"));
 const Career = lazy(() => import("./pages/Career.tsx"));
 const DiasporaDetailPage = lazy(() => import("./pages/DiasporaDetailPage.tsx"));
-const RadarPage = lazy(() => import("./pages/RadarPage.tsx"));
-const BlogPage = lazy(() => import("./pages/BlogPage.tsx"));
+const RadarHubPage = lazy(() => import("./pages/RadarHubPage.tsx"));
 const BlogPostPage = lazy(() => import("./pages/BlogPostPage.tsx"));
 const CommercialIndexPage = lazy(() => import("./pages/CommercialIndexPage.tsx"));
 const CommercialDocumentPage = lazy(() => import("./pages/CommercialDocumentPage.tsx"));
@@ -104,8 +103,9 @@ const App = () => (
                   <Route path="/" element={<Index />} />
                   <Route path="/hakkimizda" element={<Navigate to="/founders" replace />} />
                   <Route path="/founders" element={<FoundersCombinedPage />} />
-                  <Route path="/radar" element={<RadarPage />} />
-                  <Route path="/blog" element={<BlogPage />} />
+                  <Route path="/radar" element={<RadarHubPage />} />
+                  <Route path="/radar/rehberler" element={<RadarHubPage />} />
+                  <Route path="/blog" element={<Navigate to="/radar/rehberler" replace />} />
                   <Route path="/blog/:slug" element={<BlogPostPage />} />
                   <Route path="/commercial" element={<CommercialIndexPage />} />
                   <Route path="/commercial/:slug" element={<CommercialDocumentPage />} />

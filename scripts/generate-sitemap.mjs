@@ -37,8 +37,8 @@ async function loadEnvLocal() {
 const STATIC_ROUTES = [
   { path: "/", priority: "1.0", changefreq: "weekly" },
   { path: "/founders", priority: "0.8", changefreq: "monthly" },
-  { path: "/blog", priority: "0.9", changefreq: "weekly" },
   { path: "/radar", priority: "0.7", changefreq: "daily" },
+  { path: "/radar/rehberler", priority: "0.9", changefreq: "weekly" },
   { path: "/commercial", priority: "0.6", changefreq: "monthly" },
   { path: "/lansman", priority: "0.7", changefreq: "monthly" },
   { path: "/founding-1000", priority: "0.6", changefreq: "monthly" },
