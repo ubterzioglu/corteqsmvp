@@ -1,14 +1,16 @@
 /**
  * 1. Tam-viewport ağ hero (deneme landing).
  * Kategori-tanımlayıcı kısa başlık + tek birincil CTA + sessiz ikincil CTA.
- * Arka planda loop eden /herovideo.mp4 (dekoratif) + okunabilirlik için gradyan örtü.
+ * Arka planda loop eden yazısız "gece dönen dünya" videosu (NASA SVS, public domain)
+ * + okunabilirlik için gradyan örtü.
  */
 
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
-// Ana sayfa hero'sunun da kullandığı mevcut video (public/herovideo.mp4) — marka tutarlılığı.
-const HERO_VIDEO_SRC = "/herovideo.mp4";
+// Yazısız, telifsiz hero videosu: NASA "Animation of Rotating Earth at Night"
+// (Wikimedia Commons, public domain). Gece şehir ışıkları = küresel diaspora ağı.
+const HERO_VIDEO_SRC = "/landingtrial/earth-night.webm";
 
 const scrollToAtlas = () => {
   const el = document.getElementById("landingtrial-atlas");
@@ -29,13 +31,14 @@ const HeroNetworkSection = () => {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
       />
-      {/* Okunabilirlik örtüsü: içeriğin arkasını yumuşatır, kenarları zemine kaynaştırır. */}
+      {/* Okunabilirlik örtüsü: koyu gece dünyası üzerinde başlık kontrastını korur,
+          kenarları zemine kaynaştırır. */}
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"
         style={{
           background:
-            "radial-gradient(75% 80% at 50% 42%, hsl(var(--background) / 0.62) 0%, hsl(var(--background) / 0.80) 60%, hsl(var(--background) / 0.94) 100%)",
+            "radial-gradient(78% 82% at 50% 44%, hsl(var(--background) / 0.55) 0%, hsl(var(--background) / 0.78) 58%, hsl(var(--background) / 0.95) 100%)",
         }}
       />
 
