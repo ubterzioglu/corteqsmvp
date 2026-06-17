@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { LogOut } from "lucide-react";
 
 import EditableProfilesSelector from "@/components/profile/EditableProfilesSelector";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth/useAuth";
 import {
   getCurrentMemberCatalogProfile,
@@ -11,7 +13,7 @@ import {
 import { defaultProfileType, getUiProfileType, type ProfileType } from "@/lib/profile-types";
 
 const ProfileResolverPage = () => {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, signOut } = useAuth();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [initialProfileType, setInitialProfileType] = useState<ProfileType | null>(null);
@@ -68,6 +70,14 @@ const ProfileResolverPage = () => {
     handleOpenEditableItem(editableItems[0]);
   }, [editableItems, handleOpenEditableItem]);
 
+  const handleSignOut = useCallback(async () => {
+    try {
+      await signOut();
+    } finally {
+      navigate("/login", { replace: true });
+    }
+  }, [signOut, navigate]);
+
   if (!isLoading && !user) {
     return <Navigate to="/login" replace />;
   }
@@ -79,6 +89,17 @@ const ProfileResolverPage = () => {
   if (editableItems.length > 1) {
     return (
       <div className="mx-auto w-full max-w-5xl px-4 py-10">
+        <div className="mb-4 flex justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            className="gap-2 rounded-full"
+            onClick={() => void handleSignOut()}
+          >
+            <LogOut className="h-4 w-4" aria-hidden="true" />
+            Çıkış Yap
+          </Button>
+        </div>
         <EditableProfilesSelector items={editableItems} onSelect={handleOpenEditableItem} />
       </div>
     );
