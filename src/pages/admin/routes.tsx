@@ -64,6 +64,7 @@ import { radarRoutes } from "@/pages/admin/radar/routes";
 const AdminConsulateProfilesPage = lazy(() => import("@/pages/admin/AdminConsulateProfilesPage"));
 const AdminCatalogPage = lazy(() => import("@/pages/admin/AdminCatalogPage"));
 const AdminDatabaseTablesPage = lazy(() => import("@/pages/admin/AdminDatabaseTablesPage"));
+const AdminBulkImportPage = lazy(() => import("@/pages/admin/AdminBulkImportPage"));
 
 // /admin alt ağacı — App.tsx'teki <Routes> içine {adminRoutes} olarak eklenir.
 export const adminRoutes = (
@@ -90,6 +91,7 @@ export const adminRoutes = (
     <Route path="new-member/roles-overview" element={<AdminRolesOverviewPage />} />
     <Route path="new-member/users-roles" element={<Navigate to="/admin/new-member/profile-role-assignment" replace />} />
     <Route path="data" element={<AdminCatalogPage />} />
+    <Route path="bulk-import" element={<AdminBulkImportPage />} />
     <Route path="veritabani-tablolari" element={<AdminDatabaseTablesPage />} />
     <Route path="new-member/guide" element={<AdminNewMemberGuidePage />} />
     <Route path="new-member/durum-raporu" element={<AdminDurumRaporuPage />} />
