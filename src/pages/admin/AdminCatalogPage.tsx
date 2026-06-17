@@ -29,6 +29,8 @@ import {
   type AdminCatalogRoleOption,
 } from "@/lib/admin-catalog";
 import { setUserRoleAsAdmin } from "@/lib/admin";
+import { reviewCatalogImport } from "@/lib/catalog-import-api";
+import type { ReviewDecision } from "@/lib/catalog-import-schemas";
 import type { UnifiedRecord } from "@/lib/catalog-types";
 
 const PAGE_SIZE = 50;
@@ -211,6 +213,7 @@ const AdminCatalogPage = () => {
   const [selectedCreatorEmail, setSelectedCreatorEmail] = useState<string | null>(null);
   const [isLoadingSelectedDetail, setIsLoadingSelectedDetail] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [reloadKey, setReloadKey] = useState(0);
 
   const deferredQuery = useDeferredValue(filters.query);
   const effectiveFilters = useMemo(() => ({ ...filters, query: deferredQuery }), [deferredQuery, filters]);
@@ -281,7 +284,7 @@ const AdminCatalogPage = () => {
     return () => {
       isMounted = false;
     };
-  }, [currentPage, effectiveFilters, toast]);
+  }, [currentPage, effectiveFilters, toast, reloadKey]);
 
   useEffect(() => {
     // member_profile records are catalog_items rows (item_type = 'member'),
@@ -410,6 +413,25 @@ const AdminCatalogPage = () => {
       toast({ title: "Rol güncellenemedi", description: error instanceof Error ? error.message : "Beklenmeyen hata.", variant: "destructive" });
     }
   };
+
+  const handleImportReview = async (itemId: string, decision: ReviewDecision, note: string | null) => {
+    try {
+      await reviewCatalogImport(itemId, decision, note);
+      toast({
+        title: decision === "approved" ? "Kayıt onaylandı" : "Kayıt reddedildi",
+        description: decision === "approved" ? "Kayıt yayına alındı ve herkese açık." : "Kayıt reddedildi ve gizli kaldı.",
+      });
+      setSelectedRecord(null);
+      setReloadKey((key) => key + 1);
+    } catch (error) {
+      toast({
+        title: "Karar uygulanamadı",
+        description: error instanceof Error ? error.message : "Beklenmeyen hata.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <AdminPageShell
       title="Kayıt Veritabanı"
@@ -776,6 +798,7 @@ const AdminCatalogPage = () => {
                   creatorEmail={selectedCreatorEmail}
                   roles={roles}
                   onRoleChange={(roleKey) => handleCatalogRoleChange(selectedCatalogDetail.id, roleKey)}
+                  onReview={(decision, note) => handleImportReview(selectedCatalogDetail.id, decision, note)}
                 />
               ) : isLoadingSelectedDetail ? (
                 <div className="py-10 text-sm text-muted-foreground">Katalog detayı yükleniyor...</div>
@@ -867,17 +890,69 @@ const RoleChangeSection = ({
   );
 };
 
+const ImportReviewSection = ({
+  onReview,
+}: {
+  onReview: (decision: ReviewDecision, note: string | null) => void;
+}) => {
+  const [note, setNote] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const handle = async (decision: ReviewDecision) => {
+    setSubmitting(true);
+    await onReview(decision, note.trim() || null);
+    setSubmitting(false);
+  };
+
+  return (
+    <Card className="border-amber-300 bg-amber-50/50">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <ShieldCheck className="h-4 w-4 text-amber-600" />
+          İçe Aktarma Onayı
+        </CardTitle>
+        <CardDescription>
+          Bu kayıt bir toplu içe aktarmadan geldi ve incelemede. Onaylarsanız yayına alınır (herkese açık),
+          reddederseniz gizli kalır.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <Input
+          value={note}
+          onChange={(event) => setNote(event.target.value)}
+          placeholder="Karar notu (opsiyonel)"
+        />
+        <div className="flex gap-2">
+          <Button className="flex-1" disabled={submitting} onClick={() => void handle("approved")}>
+            {submitting ? "İşleniyor..." : "Onayla ve Yayınla"}
+          </Button>
+          <Button className="flex-1" variant="outline" disabled={submitting} onClick={() => void handle("rejected")}>
+            Reddet
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
 const CatalogDetailSheet = ({
   detail,
   creatorEmail,
   roles,
   onRoleChange,
+  onReview,
 }: {
   detail: AdminCatalogDetail;
   creatorEmail: string | null;
   roles: AdminCatalogRoleOption[];
   onRoleChange: (roleKey: string | null) => void;
-}) => (
+  onReview: (decision: ReviewDecision, note: string | null) => void;
+}) => {
+  const isPendingImport =
+    detail.status === "pending_review" &&
+    typeof (detail.attributes as Record<string, unknown>)?.import_source === "string";
+
+  return (
   <div className="space-y-6">
     <SheetHeader>
       <div className="flex flex-wrap items-center gap-2">
@@ -902,6 +977,8 @@ const CatalogDetailSheet = ({
       </TabsList>
 
       <TabsContent value="general" className="space-y-5">
+        {isPendingImport ? <ImportReviewSection onReview={onReview} /> : null}
+
         <RoleChangeSection
           currentRoleKey={detail.platformRoleKey}
           roles={roles}
@@ -1034,7 +1111,8 @@ const CatalogDetailSheet = ({
       </TabsContent>
     </Tabs>
   </div>
-);
+  );
+};
 
 const ProfileDetailSheet = ({
   profile,

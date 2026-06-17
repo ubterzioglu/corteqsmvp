@@ -38,6 +38,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/new-member/users-roles",
   "/admin/data",
   "/admin/data/:category",
+  "/admin/bulk-import",
   "/admin/veritabani-tablolari",
   "/admin/new-member/guide",
   "/admin/new-member/durum-raporu",
@@ -85,6 +86,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/radar/queue",
   "/admin/radar/sources",
   "/admin/radar/runs",
+  "/admin/radar/rehber",
 ];
 
 /**

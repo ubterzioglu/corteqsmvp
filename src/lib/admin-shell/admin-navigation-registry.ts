@@ -36,6 +36,7 @@ import {
   TrendingDown,
   TrendingUp,
   Trophy,
+  Upload,
   Users,
 } from "lucide-react";
 
@@ -95,6 +96,16 @@ export const adminNavGroups: AdminNavGroup[] = [
         icon: Database,
         accent: "sky",
         aliases: ["kayıt", "katalog", "veritabanı", "üyeler", "kullanıcı rol atama", "profil"],
+      },
+      {
+        id: "bulk-import",
+        label: "Toplu İçe Aktarma",
+        shortLabel: "İçe Aktar",
+        description: "CSV/JSON profesyonel listelerini beklemeye al; Kayıt Veritabanı'ndan onayla.",
+        to: "/admin/bulk-import",
+        icon: Upload,
+        accent: "sky",
+        aliases: ["içe aktar", "ice aktar", "import", "toplu", "csv", "json", "profil yükle", "deep research"],
       },
       {
         id: "approvals",
