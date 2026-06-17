@@ -131,10 +131,9 @@ const Footer = () => {
           </div>
 
           <div className="mt-3.5 border-t border-border/60 pt-3.5">
-            <p className="px-0.5 text-center text-[0.66rem] leading-relaxed text-muted-foreground sm:text-[0.72rem]">
-              © 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları saklıdır.
-            </p>
-            <p className="mt-1.5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 px-0.5 text-center text-[0.62rem] leading-relaxed text-muted-foreground/80 sm:text-[0.68rem]">
+            <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 px-0.5 text-center text-[0.62rem] leading-relaxed text-muted-foreground sm:text-[0.68rem]">
+              <span>© 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları saklıdır.</span>
+              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
               <a
                 href="https://chatio.com.tr/"
                 target="_blank"
@@ -143,7 +142,7 @@ const Footer = () => {
               >
                 Canlı Destek Yazılımı
               </a>
-              <span aria-hidden="true" className="text-muted-foreground/40">·</span>
+              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
               <a
                 href="https://www.spindorai.com/seo/izmir-seo"
                 target="_blank"
@@ -152,10 +151,10 @@ const Footer = () => {
               >
                 İzmir Seo Ajansı
               </a>
+              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
               <span>Spindora Tarafından Seosu Yapılmıştır.</span>
-            </p>
-            <p className="mt-1.5 px-0.5 text-center text-[0.6rem] leading-relaxed text-muted-foreground/60 sm:text-[0.66rem]">
-              Son güncelleme: 15 Haziran 2026
+              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
+              <span>Son güncelleme: 15 Haziran 2026</span>
             </p>
           </div>
         </div>
