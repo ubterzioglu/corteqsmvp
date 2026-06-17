@@ -11,8 +11,12 @@ export interface AtlasCity {
   lng: number;
   /** Enlem (-90..90). */
   lat: number;
-  /** Etiket kutusunun düğüme göre yatay yerleşimi (taşmayı önlemek için). */
+  /** Etiket kutusunun düğüme göre yatay hizası (taşmayı önlemek için). */
   align?: "left" | "right";
+  /** Etiketin düğüme göre x ofseti (px) — çakışan şehirleri ayırmak için override. */
+  labelDx?: number;
+  /** Etiketin düğüme göre y ofseti (px) — çakışan şehirleri ayırmak için override. */
+  labelDy?: number;
 }
 
 /** Atlas üzerinde iki şehir arasında animasyonlu route bağlantısı. */

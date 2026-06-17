@@ -1,12 +1,14 @@
 /**
  * 1. Tam-viewport ağ hero (deneme landing).
  * Kategori-tanımlayıcı kısa başlık + tek birincil CTA + sessiz ikincil CTA.
- * Arka planda WorldAtlasMap (dekoratif marka katmanı) + ambient gradyan.
+ * Arka planda loop eden /herovideo.mp4 (dekoratif) + okunabilirlik için gradyan örtü.
  */
 
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import WorldAtlasMap from "./WorldAtlasMap";
+
+// Ana sayfa hero'sunun da kullandığı mevcut video (public/herovideo.mp4) — marka tutarlılığı.
+const HERO_VIDEO_SRC = "/herovideo.mp4";
 
 const scrollToAtlas = () => {
   const el = document.getElementById("landingtrial-atlas");
@@ -16,16 +18,24 @@ const scrollToAtlas = () => {
 const HeroNetworkSection = () => {
   return (
     <section className="relative flex min-h-[88vh] items-center overflow-hidden">
-      {/* Arka plan harita katmanı — içerikten soluk, dekoratif. */}
-      <div className="pointer-events-none absolute inset-0 opacity-[0.55]" aria-hidden="true">
-        <WorldAtlasMap />
-      </div>
+      {/* Arka plan video katmanı — dekoratif, loop, sessiz, autoplay. */}
+      <video
+        src={HERO_VIDEO_SRC}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      />
+      {/* Okunabilirlik örtüsü: içeriğin arkasını yumuşatır, kenarları zemine kaynaştırır. */}
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"
         style={{
           background:
-            "radial-gradient(60% 70% at 50% 38%, transparent 0%, hsl(var(--background) / 0.55) 70%, hsl(var(--background)) 100%)",
+            "radial-gradient(75% 80% at 50% 42%, hsl(var(--background) / 0.62) 0%, hsl(var(--background) / 0.80) 60%, hsl(var(--background) / 0.94) 100%)",
         }}
       />
 

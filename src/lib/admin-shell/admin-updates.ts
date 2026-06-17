@@ -14,6 +14,20 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260617-toplu-ice-aktarma-ve-onay",
+    date: "17 Haziran 2026",
+    title: "Toplu profil içe aktarma + onay kuyruğu eklendi — ilk 122 kayıt beklemede",
+    items: [
+      "Yeni bir 'Toplu İçe Aktarma' ekranı eklendi (sol menüde Üyeler ve Dizin grubunda, /admin/bulk-import). Elindeki hazır profesyonel/influencer listelerini (CSV veya JSON) buraya yapıştırıp ya da dosya olarak yükleyip topluca sisteme alabiliyorsun. İsim, firma, şehir, meslek, telefon, e-posta, web ve adres alanlarını anlıyor; Türkçe ve İngilizce başlıkları tanıyor.",
+      "EN ÖNEMLİ kural: içe aktarılan hiçbir profil kendiliğinden yayına çıkmaz. Hepsi önce 'İncelemede' (beklemede) olarak girer ve kimse göremez. Yayına almak tamamen senin onayına bağlı — Radar haberlerindeki mantığın aynısı.",
+      "Onaylama mevcut Kayıt Veritabanı ekranından yapılıyor (/admin/data): durum filtresinden 'İncelemede'yi seç, bir kayda tıkla, açılan panelde 'Onayla ve Yayınla' (herkese açık olur) veya 'Reddet' de. Onaylanınca profil dizinde görünür, reddedilince gizli kalır.",
+      "Sistem akıllı eşleme yapıyor: mesleğe bakıp uygun rolü kendi atıyor (avukat/muhasebeci → Hukuk & Vergi Danışmanı, doktor → Doktor, emlakçı → Gayrimenkul Danışmanı, vizeci → Vize & Göçmenlik, influencer → Blogger/Vlogger gibi). Emin olamadığı kayda genel üye rolü verir; onay sırasında rolü panelden değiştirebilirsin.",
+      "Aynı listeyi yanlışlıkla iki kez yüklersen panik yok: sistem daha önce eklenen kayıtları tanıyıp atlıyor (mükerrer profil oluşmuyor). Telefon ve e-posta gizli, web/sosyal medya bağlantısı herkese açık olarak giriyor.",
+      "İlk veri yüklendi: üç Deep Research listesinden toplam 122 profil 'İncelemede' olarak sisteme alındı — Vancouver-Toronto profesyonelleri (60), Melbourne danışmanları (31) ve 30K+ Türk influencer'lar (31). Hepsi senin onayını bekliyor; /admin/data → 'İncelemede' filtresinden inceleyebilirsin. (Bazı kayıtlarda isim boştu, firma adı isim yapıldı; bir influencer yanlış role düşmüş olabilir — onayda düzeltilir.)",
+      "Arka uç (veritabanı) tarafı canlıda hazır ve uçtan uca test edildi (testler yeşil, Türkçe karakter denetimi temiz). 'Toplu İçe Aktarma' ekranının ve onay düğmelerinin arayüzde görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     id: "20260615-seo-geo-ve-arka-uc-onarimlari",
     date: "15 Haziran 2026",
     title: "Google görünürlüğü (SEO) güçlendirildi + iki admin ekranındaki kırık liste onarıldı",
