@@ -10,7 +10,10 @@ import { ArrowRight } from "lucide-react";
 
 // Yazısız, telifsiz hero videosu: NASA "Animation of Rotating Earth at Night"
 // (Wikimedia Commons, public domain). Gece şehir ışıkları = küresel diaspora ağı.
-const HERO_VIDEO_SRC = "/landingtrial/earth-night.webm";
+// NOT: route adıyla (/landingtrial) çakışmayan bir klasörde tutulur — public/landingtrial/
+// olsaydı Vite dist/landingtrial/ dizini üretir, nginx onu /landingtrial route'unun
+// önüne geçirip 403 verirdi (CLAUDE.md "dist/<slug>/ dizini oluşmamalı" uyarısı).
+const HERO_VIDEO_SRC = "/landing-assets/earth-night.webm";
 
 const scrollToAtlas = () => {
   const el = document.getElementById("landingtrial-atlas");
