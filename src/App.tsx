@@ -21,7 +21,7 @@ import AboutPage from "./pages/AboutPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 // Lazy — public pages
-const LandingTrialPage = lazy(() => import("./pages/LandingTrialPage.tsx")); // deneme landing — sitemap'e EKLENMEZ
+const LandingTrialPage = lazy(() => import("./pages/LandingTrialPage.tsx")); // ana sayfa (/) içeriği — eski /landingtrial denemesi 2026-06-18'de ana sayfa yapıldı
 const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage.tsx"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage.tsx"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
@@ -101,8 +101,8 @@ const App = () => (
             <Suspense fallback={null}>
               <Routes>
                 <Route element={<PublicLayout />}>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/landingtrial" element={<LandingTrialPage />} />
+                  <Route path="/" element={<LandingTrialPage />} />
+                  <Route path="/landingtrial" element={<Index />} />
                   <Route path="/hakkimizda" element={<Navigate to="/founders" replace />} />
                   <Route path="/founders" element={<FoundersCombinedPage />} />
                   <Route path="/radar" element={<RadarHubPage />} />

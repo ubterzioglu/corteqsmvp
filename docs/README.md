@@ -1,5 +1,14 @@
 # CorteQS Documentation Index
 
+> **Güncelleme:** 2026-06-18 — ikinci kök temizliği: köke birikmiş AI-agent prompt/plan ve
+> blog/araştırma dokümanları `docs/` altına taşındı (`git mv`, geçmiş korundu):
+> `13062026_cadde.html`→`cadde-300/`; `CorteQS_MVP_Duzeltmeler_AI_Agent_Prompt.md`,
+> `CorteQS_Radar_..._E2E_AI_Agent.md`, `corteqs-premium-profile-experimental-2-claude-code-prompt.md`,
+> `landing_page_denemesi.md`→`plans/`; `scrapper_plan.md`→`plans/service-finder/`;
+> `Corteqs_Blog_20_Makale.md`, `cortqs-blog-deep-research-report.md`→`modules/`.
+> Kökte yalnız 4 bakımlı doküman + `README.md` + `index.html` + `info-*.html` (ticari doküman
+> içerik kaynağı, taşınamaz) kalır.
+>
 > **Güncelleme:** 2026-06-11 — kök dizin temizliği + dokümantasyon konsolidasyonu sonrası.
 >
 > **Bakımlı dokümanlar KÖKTE yaşar (yalnız 4 dosya):**

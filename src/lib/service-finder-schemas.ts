@@ -1,5 +1,5 @@
 // src/lib/service-finder-schemas.ts
-// Service Finder tip ve Zod şemaları (scrapper_plan.md §TypeScript interfaces).
+// Service Finder tip ve Zod şemaları (docs/plans/service-finder/scrapper_plan.md §TypeScript interfaces).
 
 import { z } from "zod";
 

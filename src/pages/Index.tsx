@@ -1,3 +1,6 @@
+// NOT: Bu sayfa 2026-06-18'den itibaren /landingtrial adresinde servis ediliyor
+// (eski ana sayfa). Ana sayfa (/) artık LandingTrialPage.tsx anlatı tasarımıdır.
+// Dosya/bileşen adı (Index) import zinciri riski nedeniyle bilinçli korundu.
 import { useEffect } from "react";
 import SectionErrorBoundary from "@/components/SectionErrorBoundary";
 import HeroSection from "@/components/HeroSection";

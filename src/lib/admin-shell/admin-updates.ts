@@ -14,6 +14,16 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260618-deneme-landing-ana-sayfa-oldu",
+    date: "18 Haziran 2026",
+    title: "Deneme karşılama sayfası artık asıl ana sayfa oldu — eski ana sayfa /landingtrial'a taşındı",
+    items: [
+      "Vodafone tarzı anlatıyla ilerleyen deneme karşılama sayfası (gece dönen dünya videosu, manifesto, küresel atlas, ekosistem rayı, sosyal kanıt bandı, diaspora hikâyeleri ve kapanış çağrısı) beğenildiği için artık sitenin ana sayfası (corteqs.net) oldu.",
+      "Eski ana sayfa (arama çubuğu + sosyal kanıt + ağ vitrini + SSS) kaybolmadı; corteqs.net/landingtrial adresine taşındı. İki sayfanın yalnızca adresleri yer değiştirdi, içeriklere dokunulmadı.",
+      "Teknik tarafta yalnızca yönlendirme (route) eşleşmesi takas edildi; tüm kontroller temiz (lint, derleme, Türkçe karakter denetimi). Bir sonraki yayınla (deploy) corteqs.net açıldığında yeni tasarım görünür olacak.",
+    ],
+  },
+  {
     id: "20260618-landing-deneme-logo-renkleri",
     date: "18 Haziran 2026",
     title: "Deneme landing sayfası (/landingtrial) logonun 6 rengiyle canlandırıldı",

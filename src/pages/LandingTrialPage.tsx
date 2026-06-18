@@ -1,9 +1,10 @@
 /**
- * /landingtrial — DENEME landing sayfası (Vodafone tarzı anlatı ön kapısı).
+ * Ana sayfa (`/`) — Vodafone tarzı anlatı ön kapısı.
  *
- * Ana sayfadan (`/`) tamamen izole bir deneme. Beğenilirse içerik sonradan
- * Index.tsx'e taşınabilir. PublicLayout otomatik olarak SiteHeader + Footer sarar.
- * Bölümler Index.tsx desenindeki gibi <Reveal> ile staggered gelir.
+ * 2026-06-18'de eski /landingtrial denemesi ana sayfa yapıldı; eski ana sayfa
+ * (Index.tsx) /landingtrial adresine taşındı. Dosya adı uyumluluk için korundu.
+ * PublicLayout otomatik olarak SiteHeader + Footer sarar.
+ * Bölümler <Reveal> ile staggered gelir.
  */
 
 import { useEffect } from "react";

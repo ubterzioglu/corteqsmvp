@@ -1,5 +1,5 @@
 // Aday inceleme çekmecesi — kanıtlar, düzenlenebilir projeksiyon,
-// onay/ret/yayınlama aksiyonları (scrapper_plan.md §Job detail wireframe).
+// onay/ret/yayınlama aksiyonları (docs/plans/service-finder/scrapper_plan.md §Job detail wireframe).
 import { useEffect, useState } from "react";
 import { ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
