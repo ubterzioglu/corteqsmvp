@@ -64,7 +64,7 @@ const HeroNetworkSection = () => {
           <h1 className="mt-6 font-display text-5xl font-bold leading-[0.98] tracking-[-0.02em] text-slate-900 sm:text-7xl lg:text-[5.5rem]">
             Dünyanın Her Yerindeki
             <br />
-            <span className="text-gradient-tech">Türkler İçin Tek Ağ</span>
+            <span className="text-gradient-logo">Türkler İçin Tek Ağ</span>
           </h1>
 
           {/* Vodafone tarzı sol dikey vurgu çizgili açıklama. */}

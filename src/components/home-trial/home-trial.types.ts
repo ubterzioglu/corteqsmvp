@@ -34,7 +34,18 @@ export interface EcosystemCard {
   cta: string;
   /** lucide-react ikon adı yerine doğrudan ikon bileşeni iletmek için kullanılır. */
   iconKey: EcosystemIconKey;
+  /** Kartın logo paleti aksanı — ikon/CTA rengini belirler (bileşende sınıfa map'lenir). */
+  accent: EcosystemAccent;
 }
+
+/** Ekosistem kartlarına atanan logo paleti tonu (6 renk, 6 kart birebir). */
+export type EcosystemAccent =
+  | "teal"
+  | "blue"
+  | "indigo"
+  | "pink"
+  | "orange"
+  | "yellow";
 
 /** Ekosistem kartlarında kullanılan ikon anahtarları (lucide-react eşlemesi bileşende). */
 export type EcosystemIconKey =

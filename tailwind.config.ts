@@ -62,6 +62,13 @@ export default {
         "section-warm": "hsl(var(--section-warm))",
         "glow-teal": "hsl(var(--glow-teal))",
         "glow-orange": "hsl(var(--glow-orange))",
+        // Logo paleti (6 renkli fırıldak) — /landingtrial bölüm aksanları.
+        "brand-teal": "hsl(var(--glow-teal))",
+        "brand-blue": "hsl(var(--brand-blue))",
+        "brand-indigo": "hsl(var(--brand-indigo))",
+        "brand-pink": "hsl(var(--brand-pink))",
+        "brand-orange": "hsl(var(--glow-orange))",
+        "brand-yellow": "hsl(var(--brand-yellow))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

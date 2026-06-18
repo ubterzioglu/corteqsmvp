@@ -6,7 +6,7 @@
 const ManifestoSection = () => {
   return (
     <section className="relative mx-auto max-w-5xl px-6 py-24 text-center sm:py-32">
-      <p className="font-display text-sm font-semibold uppercase tracking-[0.2em] text-glow-teal">
+      <p className="font-display text-sm font-semibold uppercase tracking-[0.2em] text-brand-indigo">
         Bir manifesto
       </p>
       <h2 className="mt-6 font-display text-3xl font-bold leading-[1.1] tracking-[-0.02em] text-foreground sm:text-5xl lg:text-6xl">

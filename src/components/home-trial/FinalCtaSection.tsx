@@ -9,12 +9,21 @@ const FinalCtaSection = () => {
   return (
     <section className="relative mx-auto max-w-4xl px-6 pb-28 pt-12 text-center">
       <div className="glass-tech relative overflow-hidden rounded-3xl px-6 py-16 sm:px-12 sm:py-20">
+        {/* İnce çok renkli logo şeridi — kartın üst kenarında (kapanışta marka imzası). */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-1"
+          aria-hidden="true"
+          style={{
+            background:
+              "linear-gradient(90deg, hsl(var(--glow-teal)), hsl(var(--brand-blue)), hsl(var(--brand-indigo)), hsl(var(--brand-pink)), hsl(var(--glow-orange)), hsl(var(--brand-yellow)))",
+          }}
+        />
         <div
           className="pointer-events-none absolute inset-0"
           aria-hidden="true"
           style={{
             background:
-              "radial-gradient(50% 80% at 50% 0%, hsl(var(--glow-teal) / 0.12), transparent 70%)",
+              "radial-gradient(50% 80% at 50% 0%, hsl(var(--glow-orange) / 0.12), transparent 70%)",
           }}
         />
         <div className="relative z-10">

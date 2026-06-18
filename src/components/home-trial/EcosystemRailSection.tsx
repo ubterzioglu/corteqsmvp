@@ -16,7 +16,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { ECOSYSTEM_CARDS } from "./home-trial.data";
-import type { EcosystemIconKey } from "./home-trial.types";
+import type { EcosystemAccent, EcosystemIconKey } from "./home-trial.types";
 
 const ICONS: Record<EcosystemIconKey, LucideIcon> = {
   people: Users,
@@ -25,6 +25,20 @@ const ICONS: Record<EcosystemIconKey, LucideIcon> = {
   experts: Sparkles,
   businesses: Briefcase,
   ambassadors: MapPin,
+};
+
+// Accent → tam Tailwind sınıfları (statik — purge güvenli, string concat YOK).
+// Her kart logonun bir tonunu alır: ikon zemini, ikon ve CTA aynı renkte.
+const ACCENT_CLASSES: Record<
+  EcosystemAccent,
+  { iconWrap: string; cta: string }
+> = {
+  teal: { iconWrap: "bg-brand-teal/10 text-brand-teal", cta: "text-brand-teal" },
+  blue: { iconWrap: "bg-brand-blue/10 text-brand-blue", cta: "text-brand-blue" },
+  indigo: { iconWrap: "bg-brand-indigo/10 text-brand-indigo", cta: "text-brand-indigo" },
+  pink: { iconWrap: "bg-brand-pink/10 text-brand-pink", cta: "text-brand-pink" },
+  orange: { iconWrap: "bg-brand-orange/10 text-brand-orange", cta: "text-brand-orange" },
+  yellow: { iconWrap: "bg-brand-yellow/10 text-brand-yellow", cta: "text-brand-yellow" },
 };
 
 const EcosystemRailSection = () => {
@@ -43,13 +57,14 @@ const EcosystemRailSection = () => {
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {ECOSYSTEM_CARDS.map((card) => {
           const Icon = ICONS[card.iconKey];
+          const accent = ACCENT_CLASSES[card.accent];
           return (
             <Link
               key={card.title}
               to={card.to}
               className="glass-tech group flex flex-col rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-glow-teal"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-glow-teal/10 text-glow-teal">
+              <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${accent.iconWrap}`}>
                 <Icon className="h-5 w-5" aria-hidden="true" />
               </span>
               <h3 className="mt-5 font-display text-xl font-bold text-foreground">
@@ -58,7 +73,7 @@ const EcosystemRailSection = () => {
               <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
                 {card.description}
               </p>
-              <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-glow-teal">
+              <span className={`mt-5 inline-flex items-center gap-1 text-sm font-semibold ${accent.cta}`}>
                 {card.cta}
                 <ArrowUpRight
                   className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"

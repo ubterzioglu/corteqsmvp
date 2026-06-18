@@ -30,6 +30,16 @@ const RAW_TOP = SCALE * (Math.PI / 180) * (90 - LAT_MAX);
 const RAW_BOTTOM = SCALE * (Math.PI / 180) * (90 - LAT_MIN);
 const VIEW_HEIGHT = RAW_BOTTOM - RAW_TOP;
 
+// Akış parçacıklarının döndüğü logo paleti (turuncu hub'a saklanır — burada yok).
+// "Canlı çok renkli ağ" hissi: her route farklı bir logo tonunda akar.
+const FLOW_COLORS = [
+  "hsl(var(--glow-teal))",
+  "hsl(var(--brand-blue))",
+  "hsl(var(--brand-indigo))",
+  "hsl(var(--brand-pink))",
+  "hsl(var(--brand-yellow))",
+] as const;
+
 interface ScreenPoint {
   x: number;
   y: number;
@@ -104,7 +114,7 @@ const WorldAtlasMap = ({ className }: WorldAtlasMapProps) => {
             {!reduceMotion && (
               <motion.circle
                 r={2.4}
-                fill={i % 2 === 0 ? "hsl(var(--glow-orange))" : "hsl(var(--glow-teal))"}
+                fill={FLOW_COLORS[i % FLOW_COLORS.length]}
                 initial={{ offsetDistance: "0%", opacity: 0 }}
                 animate={{
                   offsetDistance: ["0%", "100%"],

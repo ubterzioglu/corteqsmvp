@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260618-landing-deneme-logo-renkleri",
+    date: "18 Haziran 2026",
+    title: "Deneme landing sayfası (/landingtrial) logonun 6 rengiyle canlandırıldı",
+    items: [
+      "Deneme karşılama sayfası şimdiye kadar logonun yalnızca 2 rengini (teal-yeşil ve turuncu) kullanıyordu. Logo aslında 6 renkli bir fırıldak: teal, mavi, indigo/mor, magenta/pembe, turuncu ve sarı. Sayfanın her bölümüne bu renklerden biri verildi — sayfa boydan boya logonun renklerini taşıyor.",
+      "Bölüm renkleri: hero başlığı altı tonu birden geçen çok renkli gradyan (en güçlü vurgu); Manifesto indigo/mor; Sistemin Katmanları kartlarının her biri ayrı bir logo renginde (6 kart = 6 renk); Kanıt bandı sarı/turuncu; Hikâyeler pembe; kapanış çağrısının üstünde ince çok renkli logo şeridi. Haritadaki akan bağlantı noktaları da artık tek renk yerine logonun renklerinde akıyor (canlı ağ hissi).",
+      "Teknik tarafta renkler tek bir merkezden (marka renk değişkenleri) tanımlandı; ileride logonun resmi renk kodları netleşirse tek bir yerden güncellenir, sayfa otomatik uyum sağlar. Mevcut ana sayfa (corteqs.net) ve diğer sayfalar bu değişiklikten etkilenmedi — yalnızca deneme sayfası.",
+      "Tüm kontroller temiz (lint, derleme, Türkçe karakter denetimi). Bir sonraki yayınla (deploy) /landingtrial adresinden görünür olacak.",
+    ],
+  },
+  {
     id: "20260618-header-beta-bandi-krem-ton",
     date: "18 Haziran 2026",
     title: "Sitenin üstündeki beta duyuru bandı yumuşatıldı — koyu lacivertten açık kreme",

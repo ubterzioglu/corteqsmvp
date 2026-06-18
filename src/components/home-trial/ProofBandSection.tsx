@@ -15,11 +15,11 @@ const ProofBandSection = () => {
         aria-hidden="true"
         style={{
           background:
-            "linear-gradient(135deg, hsl(var(--glow-teal) / 0.08) 0%, hsl(var(--glow-orange) / 0.06) 100%)",
+            "linear-gradient(135deg, hsl(var(--brand-yellow) / 0.10) 0%, hsl(var(--glow-orange) / 0.07) 100%)",
         }}
       />
       <div className="relative z-10 mx-auto max-w-5xl px-6">
-        <p className="text-center font-display text-sm font-semibold uppercase tracking-[0.2em] text-glow-teal">
+        <p className="text-center font-display text-sm font-semibold uppercase tracking-[0.2em] text-brand-orange">
           Büyüyen bir ağ
         </p>
         <dl className="mt-10 grid grid-cols-2 gap-y-10 sm:grid-cols-4">

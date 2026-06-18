@@ -79,6 +79,7 @@ export const ECOSYSTEM_CARDS: readonly EcosystemCard[] = [
     to: "/directory",
     cta: "Uzmanları bul",
     iconKey: "experts",
+    accent: "teal",
   },
   {
     title: "İşletmeler",
@@ -86,6 +87,7 @@ export const ECOSYSTEM_CARDS: readonly EcosystemCard[] = [
     to: "/directory",
     cta: "İşletmeleri keşfet",
     iconKey: "businesses",
+    accent: "blue",
   },
   {
     title: "Kuruluşlar",
@@ -93,6 +95,7 @@ export const ECOSYSTEM_CARDS: readonly EcosystemCard[] = [
     to: "/associations",
     cta: "Kuruluşları gör",
     iconKey: "organizations",
+    accent: "indigo",
   },
   {
     title: "Topluluklar",
@@ -100,6 +103,7 @@ export const ECOSYSTEM_CARDS: readonly EcosystemCard[] = [
     to: "/associations",
     cta: "Toplulukları gör",
     iconKey: "communities",
+    accent: "pink",
   },
   {
     title: "Şehir Elçileri",
@@ -107,6 +111,7 @@ export const ECOSYSTEM_CARDS: readonly EcosystemCard[] = [
     to: "/founders",
     cta: "Elçileri tanı",
     iconKey: "ambassadors",
+    accent: "orange",
   },
   {
     title: "İnsanlar",
@@ -114,6 +119,7 @@ export const ECOSYSTEM_CARDS: readonly EcosystemCard[] = [
     to: "/directory",
     cta: "Diasporayı keşfet",
     iconKey: "people",
+    accent: "yellow",
   },
 ];
 

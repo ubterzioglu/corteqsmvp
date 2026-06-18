@@ -22,7 +22,7 @@ const DiasporaStoriesSection = () => {
         </div>
         <Link
           to="/radar/rehberler"
-          className="inline-flex items-center gap-1 text-sm font-semibold text-glow-teal underline-offset-4 hover:underline"
+          className="inline-flex items-center gap-1 text-sm font-semibold text-brand-pink underline-offset-4 hover:underline"
         >
           Tümünü gör
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -36,7 +36,7 @@ const DiasporaStoriesSection = () => {
             to={story.to}
             className="glass-tech group flex flex-col rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-glow-teal"
           >
-            <span className="text-xs font-semibold uppercase tracking-[0.15em] text-glow-orange">
+            <span className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-pink">
               {story.eyebrow}
             </span>
             <h3 className="mt-3 font-display text-lg font-bold leading-snug text-foreground">
@@ -45,7 +45,7 @@ const DiasporaStoriesSection = () => {
             <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
               {story.excerpt}
             </p>
-            <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-glow-teal">
+            <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-pink">
               Okumaya devam et
               <ArrowRight
                 className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"

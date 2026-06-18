@@ -39,6 +39,14 @@
     --glow-teal: 170 65% 42%;
     --glow-orange: 18 85% 55%;
 
+    /* ——— Logo paleti (6 renkli fırıldak) — /landingtrial bölüm aksanları ———
+       teal/orange zaten yukarıda (geri uyumlu, başka sayfalar kullanır).
+       Aşağıdaki 4'ü logonun kalan tonları; resmi hex gelirse yalnız bunlar güncellenir. */
+    --brand-blue: 205 80% 50%;
+    --brand-indigo: 255 60% 58%;
+    --brand-pink: 330 75% 58%;
+    --brand-yellow: 45 90% 55%;
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -108,12 +116,14 @@
     will-change: transform, opacity;
   }
 
+  /* Beş orb logonun beş tonuna dağıtıldı (teal/mavi/indigo/pembe/sarı) —
+     arka planda yumuşak çok renkli logo hissi. */
   .landing-ambient-orb-one {
     top: 8rem;
     left: -5rem;
     height: 20rem;
     width: 20rem;
-    background: hsl(var(--primary) / 0.12);
+    background: hsl(var(--glow-teal) / 0.12);
   }
 
   .landing-ambient-orb-two {
@@ -121,7 +131,7 @@
     right: -4rem;
     height: 24rem;
     width: 24rem;
-    background: hsl(var(--accent) / 0.1);
+    background: hsl(var(--brand-blue) / 0.1);
     animation-duration: 30s;
     animation-delay: -8s;
   }
@@ -131,7 +141,7 @@
     left: 22%;
     height: 18rem;
     width: 18rem;
-    background: hsl(var(--primary) / 0.08);
+    background: hsl(var(--brand-indigo) / 0.09);
     animation-duration: 34s;
     animation-delay: -14s;
   }
@@ -141,7 +151,7 @@
     left: 48%;
     height: 14rem;
     width: 14rem;
-    background: hsl(var(--accent) / 0.08);
+    background: hsl(var(--brand-pink) / 0.08);
     animation-duration: 24s;
     animation-delay: -5s;
   }
@@ -151,7 +161,7 @@
     right: 12%;
     height: 16rem;
     width: 16rem;
-    background: hsl(var(--primary) / 0.09);
+    background: hsl(var(--brand-yellow) / 0.1);
     animation-duration: 36s;
     animation-delay: -18s;
   }
@@ -201,6 +211,24 @@
       hsl(var(--glow-teal)) 0%,
       hsl(170 70% 38%) 35%,
       hsl(var(--glow-orange)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Çok renkli logo gradyanı — logonun 6 tonunu sırayla geçer (teal→mavi→
+     indigo→pembe→turuncu→sarı). /landingtrial hero başlığında en güçlü vurgu. */
+  .text-gradient-logo {
+    background-image: linear-gradient(
+      95deg,
+      hsl(var(--glow-teal)) 0%,
+      hsl(var(--brand-blue)) 22%,
+      hsl(var(--brand-indigo)) 42%,
+      hsl(var(--brand-pink)) 62%,
+      hsl(var(--glow-orange)) 82%,
+      hsl(var(--brand-yellow)) 100%
     );
     -webkit-background-clip: text;
     background-clip: text;
@@ -276,6 +304,25 @@
   }
   .text-glow-orange {
     color: hsl(var(--glow-orange));
+  }
+  /* Logo paleti yardımcıları — /landingtrial bölüm aksanları. */
+  .text-brand-teal {
+    color: hsl(var(--glow-teal));
+  }
+  .text-brand-blue {
+    color: hsl(var(--brand-blue));
+  }
+  .text-brand-indigo {
+    color: hsl(var(--brand-indigo));
+  }
+  .text-brand-pink {
+    color: hsl(var(--brand-pink));
+  }
+  .text-brand-orange {
+    color: hsl(var(--glow-orange));
+  }
+  .text-brand-yellow {
+    color: hsl(var(--brand-yellow));
   }
 
   .diaspora-marquee-track {
