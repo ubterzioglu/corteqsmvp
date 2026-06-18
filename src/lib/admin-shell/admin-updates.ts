@@ -14,6 +14,35 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260618-header-beta-bandi-krem-ton",
+    date: "18 Haziran 2026",
+    title: "Sitenin üstündeki beta duyuru bandı yumuşatıldı — koyu lacivertten açık kreme",
+    items: [
+      "Her sayfanın en üstündeki 'Açık Beta yayında' duyuru bandı koyu lacivert (neredeyse siyah) bir şeritti; altındaki krem renkli başlık ve dönen dünya animasyonuyla yan yana durunca sert, 'kirli' bir kontrast oluşturuyordu. Bant artık header'la aynı dilde, açık krem tonuna çekildi; yazılar koyulaştırılıp okunaklı tutuldu, turuncu (amber) 'Açık Beta' vurgusu korundu. Görsel bütünlük arttı, içerik aynı kaldı.",
+      "Bu görsel bir düzenleme; bir sonraki yayınla (deploy) görünür olacak.",
+    ],
+  },
+  {
+    id: "20260617-deneme-landing-sayfasi",
+    date: "17 Haziran 2026",
+    title: "Yeni bir deneme ana sayfa tasarımı hazırlandı — /landingtrial (mevcut sayfaya dokunmadan)",
+    items: [
+      "Vodafone tarzı, anlatıyla ilerleyen yepyeni bir karşılama (landing) sayfası tasarlandı ve corteqs.net/landingtrial adresine kondu. Bu tamamen ayrı bir DENEME sayfası: mevcut ana sayfaya (corteqs.net) hiç dokunulmadı, ziyaretçiler kazara buraya düşmez — sadece linki bilen görür. Beğenilirse içeriği sonradan asıl ana sayfaya taşıyabiliriz.",
+      "Sayfa kayan, kademeli açılan bölümlerden oluşuyor: tepede yazısız bir 'gece dönen dünya' video arka planı (hero), ardından manifesto, küresel atlas haritası, ekosistem rayı, sosyal kanıt bandı, diaspora hikâyeleri ve kapanış çağrısı. Amaç markayı tek akışta hissettirmek.",
+      "Yayın sırasında küçük bir teknik sorun çıkıp çözüldü: hero videosunun klasör adı sayfa adresiyle çakışıp 403 (erişim engellendi) hatası veriyordu; video çakışmayan bir klasöre taşınıp sorun giderildi.",
+      "Bir sonraki yayınla (deploy) /landingtrial adresinden bakıp görüş verebilirsin.",
+    ],
+  },
+  {
+    id: "20260617-radar-cors-onarimi",
+    date: "17 Haziran 2026",
+    title: "Radar haber taraması için arka uç onarımı (CORS)",
+    items: [
+      "Radar haber tarayıcısının (otomatik haber keşfi yapan arka plan servisi) tarayıcıdan tetiklenmesini engelleyen teknik bir izin (CORS) sorunu giderildi. Artık 'Şimdi Tara' türü işlemler sorunsuz çalışabiliyor.",
+      "Tamamen perde arkası bir düzeltme; günlük kullanımı doğrudan etkilemez ama haber tarama akışını sağlamlaştırır.",
+    ],
+  },
+  {
     id: "20260617-toplu-ice-aktarma-ve-onay",
     date: "17 Haziran 2026",
     title: "Toplu profil içe aktarma + onay kuyruğu eklendi — ilk 122 kayıt beklemede",
