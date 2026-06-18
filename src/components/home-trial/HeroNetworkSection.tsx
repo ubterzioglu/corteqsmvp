@@ -62,7 +62,9 @@ const HeroNetworkSection = () => {
           </span>
 
           <h1 className="mt-6 font-display text-5xl font-bold leading-[0.98] tracking-[-0.02em] text-slate-900 sm:text-7xl lg:text-[5.5rem]">
-            Dünyanın Her Yerindeki
+            Dünyanın
+            <br />
+            Her Yerindeki
             <br />
             <span className="text-gradient-logo">Türkler İçin</span>
             <br />
