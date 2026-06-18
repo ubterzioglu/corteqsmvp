@@ -24,10 +24,17 @@ const projectRoot = path.resolve(__dirname, "..");
 const args = process.argv.slice(2);
 const envArg = args.find((arg) => arg.startsWith("--env-file="));
 const outArg = args.find((arg) => arg.startsWith("--out="));
+const singleArg = args.find((arg) => arg.startsWith("--single="));
 const publishedOnly = args.includes("--published-only");
+// --single ile tüm makaleler tek bir dosyada toplanır (ayrı dosyalar yine de yazılır, eskiler silinmez).
+const single = args.includes("--single") || Boolean(singleArg);
 
 const envFilePath = path.resolve(projectRoot, envArg ? envArg.slice("--env-file=".length) : ".env.local");
 const outDir = path.resolve(projectRoot, outArg ? outArg.slice("--out=".length) : "exports/blog-md");
+const singleFilePath = path.resolve(
+  projectRoot,
+  singleArg ? singleArg.slice("--single=".length) : "exports/blog-md/all-articles.md"
+);
 
 function parseEnvFile(content) {
   const result = {};
@@ -167,14 +174,26 @@ async function main() {
 
   const usedNames = new Set();
   const index = [];
+  const combined = [];
 
   for (const post of posts) {
     const fileName = safeFileName(post, usedNames);
     const filePath = path.join(outDir, fileName);
+    const markdown = buildMarkdown(post);
     // UTF-8 BOM ekleme: .md dosyaları için gerekmiyor; editörler UTF-8'i doğru okur.
-    await writeFile(filePath, buildMarkdown(post), "utf8");
+    await writeFile(filePath, markdown, "utf8");
     index.push({ fileName, title: post.title, country: post.country_label, published: post.published });
+    combined.push(markdown.trim());
     console.log(`OK: ${fileName}${post.published ? "" : "  (taslak)"}`);
+  }
+
+  // Tek dosyada toplama: her makale "---" ayraçlı frontmatter'ıyla ardışık yazılır.
+  if (single) {
+    await mkdir(path.dirname(singleFilePath), { recursive: true });
+    const header = `# Blog Makaleleri — Toplu (${posts.length} adet)\n`;
+    const body = combined.join("\n\n---\n\n");
+    await writeFile(singleFilePath, `${header}\n${body}\n`, "utf8");
+    console.log(`OK: ${path.relative(projectRoot, singleFilePath)}  (tek dosya, ${posts.length} makale)`);
   }
 
   // Basit bir index dosyası.
