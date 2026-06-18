@@ -9,15 +9,7 @@ import { PROOF_STATS } from "./home-trial.data";
 
 const ProofBandSection = () => {
   return (
-    <section className="relative overflow-hidden py-20 sm:py-24">
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden="true"
-        style={{
-          background:
-            "linear-gradient(135deg, hsl(var(--brand-yellow) / 0.10) 0%, hsl(var(--glow-orange) / 0.07) 100%)",
-        }}
-      />
+    <section className="relative overflow-hidden bg-white py-20 sm:py-24">
       <div className="relative z-10 mx-auto max-w-5xl px-6">
         <p className="text-center font-display text-sm font-semibold uppercase tracking-[0.2em] text-brand-orange">
           Büyüyen bir ağ
