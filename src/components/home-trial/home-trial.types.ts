@@ -40,6 +40,7 @@ export interface EcosystemCard {
 export type EcosystemIconKey =
   | "people"
   | "communities"
+  | "organizations"
   | "experts"
   | "businesses"
   | "ambassadors";

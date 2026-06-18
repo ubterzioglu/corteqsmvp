@@ -9,6 +9,7 @@ import {
   ArrowUpRight,
   Briefcase,
   Building2,
+  Landmark,
   MapPin,
   Sparkles,
   Users,
@@ -20,6 +21,7 @@ import type { EcosystemIconKey } from "./home-trial.types";
 const ICONS: Record<EcosystemIconKey, LucideIcon> = {
   people: Users,
   communities: Building2,
+  organizations: Landmark,
   experts: Sparkles,
   businesses: Briefcase,
   ambassadors: MapPin,
@@ -30,7 +32,7 @@ const EcosystemRailSection = () => {
     <section className="relative mx-auto max-w-6xl px-6 py-20 sm:py-28">
       <div className="max-w-2xl">
         <h2 className="font-display text-3xl font-bold leading-[1.1] tracking-[-0.02em] text-foreground sm:text-4xl">
-          Ağın beş katmanı
+          Sistemin 5 Katmanı
         </h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
           İnsanlardan işletmelere, topluluklardan şehir elçilerine — diasporanın her

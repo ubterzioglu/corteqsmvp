@@ -19,8 +19,8 @@ const FinalCtaSection = () => {
         />
         <div className="relative z-10">
           <h2 className="font-display text-3xl font-bold leading-[1.1] tracking-[-0.02em] text-foreground sm:text-4xl">
-            Yurt dışındaki Türk hayatını
-            <br className="hidden sm:block" /> şekillendiren ağa katıl
+            Yurt dışındaki hayatı
+            <br className="hidden sm:block" /> şekillendiren sisteme katıl
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Ücretsiz kayıt ol, kendi şehrindeki ağını keşfet ve büyümenin parçası ol.

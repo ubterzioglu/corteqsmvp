@@ -7,7 +7,7 @@
 import WorldAtlasMap from "./WorldAtlasMap";
 
 const ATLAS_PROOF: readonly { value: string; label: string }[] = [
-  { value: "8+", label: "kıtaya yayılmış şehir" },
+  { value: "6+", label: "kıtaya yayılmış şehir" },
   { value: "7/24", label: "yaşayan bağlantı akışı" },
   { value: "Tek", label: "güven ağı" },
 ];
