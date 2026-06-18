@@ -46,11 +46,12 @@ const EcosystemRailSection = () => {
     <section className="relative mx-auto max-w-6xl px-6 py-20 sm:py-28">
       <div className="max-w-2xl">
         <h2 className="font-display text-3xl font-bold leading-[1.1] tracking-[-0.02em] text-foreground sm:text-4xl">
-          Sistemin 5 Katmanı
+          Sistemin 6 Katmanı
         </h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
           İnsanlardan işletmelere, topluluklardan şehir elçilerine — diasporanın her
-          katmanı tek bir ekosistemde buluşuyor.
+          katmanı tek bir ekosistemde buluşuyor. Aradığın kişiyi, işletmeyi veya
+          topluluğu tek yerden bulup bağlanıyorsun.
         </p>
       </div>
 
