@@ -14,7 +14,16 @@ const ADAPTERS: Record<string, RadarNewsAdapter> = {
   atom: atomAdapter,
 };
 
-const MIN_SCORE_TO_QUEUE = 20;
+// Bu eşiğin ALTINDA kalan haberler doğrudan "archived" statüsüyle kaydedilir
+// (kuyruğa/pending'e gelmez). Varsayılan 0 = arşive-atma KAPALI: taranan her
+// haber önce kuyruğa düşer, eleme/onay admin'e bırakılır. Kalite filtresini
+// yeniden açmak için RADAR_NEWS_MIN_SCORE secret'ını (örn. 20) ayarla — kod
+// deploy etmeden ayarlanabilsin diye ENV'den okunur.
+const MIN_SCORE_TO_QUEUE = (() => {
+  const raw = Deno.env.get("RADAR_NEWS_MIN_SCORE");
+  const parsed = raw != null ? Number(raw) : NaN;
+  return Number.isFinite(parsed) ? parsed : 0;
+})();
 
 const ALLOWED_ORIGINS = [
   "https://corteqs.net",
