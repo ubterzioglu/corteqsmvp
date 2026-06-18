@@ -16,8 +16,7 @@ const DiasporaStoriesSection = () => {
             Ağdaki hikayeler
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Diasporada gerçek bağlantıların gündelik hayatı nasıl değiştirdiğini gösteren
-            anlatılar.
+            Gerçek bağlantıların gündelik hayatı değiştiren hikâyeleri.
           </p>
         </div>
         <Link

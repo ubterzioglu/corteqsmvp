@@ -96,7 +96,8 @@ const DiasporaSearchSection = () => {
         </span>
 
         <h2 className="mt-6 font-display text-3xl font-bold leading-[1.05] tracking-[-0.02em] text-foreground sm:text-5xl">
-          Aradığın Türk profesyoneli{" "}
+          Aradığın Türk profesyoneli
+          <br />
           <span className="text-gradient-logo">tek aramada</span> bul
         </h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">

@@ -49,9 +49,9 @@ const EcosystemRailSection = () => {
           Sistemin 6 Katmanı
         </h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-          İnsanlardan işletmelere, topluluklardan şehir elçilerine — diasporanın her
-          katmanı tek bir ekosistemde buluşuyor. Aradığın kişiyi, işletmeyi veya
-          topluluğu tek yerden bulup bağlanıyorsun.
+          İnsanlardan işletmelere, topluluklardan şehir elçilerine — diasporanın her katmanı tek ekosistemde.
+          <br />
+          Aradığın kişiyi, işletmeyi ya da topluluğu tek yerden bul ve bağlan.
         </p>
       </div>
 
