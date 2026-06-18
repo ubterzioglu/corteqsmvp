@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import Reveal from "@/components/motion/Reveal";
 import HeroNetworkSection from "@/components/home-trial/HeroNetworkSection";
 import ManifestoSection from "@/components/home-trial/ManifestoSection";
-import GlobalAtlasSection from "@/components/home-trial/GlobalAtlasSection";
+import DiasporaSearchSection from "@/components/home-trial/DiasporaSearchSection";
 import EcosystemRailSection from "@/components/home-trial/EcosystemRailSection";
 import ProofBandSection from "@/components/home-trial/ProofBandSection";
 import DiasporaStoriesSection from "@/components/home-trial/DiasporaStoriesSection";
@@ -37,7 +37,7 @@ const LandingTrialPage = () => {
           <ManifestoSection />
         </Reveal>
         <Reveal delay={0.05}>
-          <GlobalAtlasSection />
+          <DiasporaSearchSection />
         </Reveal>
         <Reveal delay={0.05}>
           <EcosystemRailSection />
