@@ -64,12 +64,14 @@ const HeroNetworkSection = () => {
           <h1 className="mt-6 font-display text-5xl font-bold leading-[0.98] tracking-[-0.02em] text-slate-900 sm:text-7xl lg:text-[5.5rem]">
             Dünyanın Her Yerindeki
             <br />
-            <span className="text-gradient-logo">Türkler İçin Tek Ağ</span>
+            <span className="text-gradient-logo">Türkler İçin</span>
+            <br />
+            <span className="text-gradient-logo">Tek Ağ</span>
           </h1>
 
           {/* Vodafone tarzı sol dikey vurgu çizgili açıklama. */}
           <p className="mt-8 max-w-xl border-l-2 border-glow-teal pl-5 text-base leading-relaxed text-slate-700 sm:text-lg">
-            Berlin'den Sidney'e, Toronto'dan Dubai'ye — insanları, toplulukları ve işletmeleri
+            Berlin'den Sidney'e, Toronto'dan Dubai'ye insanları, toplulukları ve işletmeleri
             tek bir güven ağında buluşturuyoruz. Bir dizin değil, yaşayan bir ağ.
           </p>
 
