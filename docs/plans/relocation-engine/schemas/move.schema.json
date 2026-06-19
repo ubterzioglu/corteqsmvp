@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://corteqs.net/schemas/relocation/move.json",
+  "title": "RelocationMove",
+  "type": "object",
+  "required": ["move_id", "origin", "targets", "move_window"],
+  "additionalProperties": false,
+  "properties": {
+    "move_id": { "type": "string", "pattern": "^mov_" },
+    "origin": {
+      "type": "object",
+      "required": ["country"],
+      "properties": {
+        "country": { "type": "string", "description": "ISO 3166-1 alpha-2" },
+        "city": { "type": "string" }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["country"],
+        "properties": {
+          "country": { "type": "string", "description": "ISO 3166-1 alpha-2" },
+          "city": { "type": "string" }
+        }
+      }
+    },
+    "move_window": {
+      "type": "object",
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "type": "string", "format": "date" },
+        "end": { "type": "string", "format": "date" }
+      }
+    },
+    "must_haves": { "type": "array", "items": { "type": "string" }, "examples": [["turkish_community", "family_doctor_access", "5g_coverage"]] },
+    "nice_to_haves": { "type": "array", "items": { "type": "string" }, "examples": [["direct_flight", "international_school"]] }
+  }
+}

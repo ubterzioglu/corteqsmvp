@@ -1,0 +1,24 @@
+{
+  "name": "corteqs-relocation-ingestion-worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CorteQS Relocation Ingestion worker — claims jobs from Postgres, runs source adapters, normalizes + dedupes candidates, writes a cost ledger. Pattern: workers/service-finder.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "tsc -p tsconfig.json && node dist/index.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.6.3"
+  }
+}

@@ -19,6 +19,7 @@ import { Navigate, Route } from "react-router-dom";
 import NotFound from "@/pages/NotFound";
 import { muhasebeRoutes } from "./muhasebe/routes";
 import { serviceFinderRoutes } from "./service-finder/routes";
+import { relocationAdminRoutes } from "./relocation/routes";
 
 // Code-splitting: admin sayfaları ihtiyaç anında yüklenir. Suspense sınırı
 // App.tsx'teki kök <Suspense> — muhasebe alt ağacı kendi fallback'ini taşır.
@@ -134,6 +135,7 @@ export const adminRoutes = (
     <Route path="workspace/docs/:slug" element={<AdminWorkspaceDocPage />} />
     {muhasebeRoutes}
     {serviceFinderRoutes}
+    {relocationAdminRoutes}
     {radarRoutes}
     <Route path="*" element={<NotFound />} />
   </Route>

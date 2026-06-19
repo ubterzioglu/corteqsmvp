@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://corteqs.net/schemas/relocation/bureaucratic_step.json",
+  "title": "RelocationBureaucraticStep",
+  "type": "object",
+  "required": ["step_id", "country_code", "name", "trigger", "source"],
+  "additionalProperties": false,
+  "properties": {
+    "step_id": { "type": "string", "pattern": "^bst_" },
+    "country_code": { "type": "string", "description": "ISO 3166-1 alpha-2" },
+    "city_code": { "type": "string" },
+    "name": { "type": "string" },
+    "trigger": { "type": "string", "enum": ["before_departure", "after_arrival", "ongoing"] },
+    "deadline_rule": { "type": "string", "examples": ["within_14_days"] },
+    "required_documents": { "type": "array", "items": { "type": "string" } },
+    "output_artifacts": { "type": "array", "items": { "type": "string" } },
+    "source": {
+      "type": "object",
+      "required": ["source_id", "authority_level"],
+      "additionalProperties": false,
+      "properties": {
+        "source_id": { "type": "string" },
+        "authority_level": { "type": "string", "enum": ["official", "official_city", "regulator", "licensed_commercial", "verified_community", "user_generated"] }
+      }
+    }
+  }
+}

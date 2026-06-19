@@ -54,7 +54,7 @@ const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const ProfileResolverPage = lazy(() => import("@/pages/ProfileResolverPage"));
 const CatalogItemEditorPage = lazy(() => import("@/pages/CatalogItemEditorPage"));
 const DirectoryPage = lazy(() => import("@/pages/DirectoryPage"));
-const RelocationEngine = lazy(() => import("@/pages/RelocationEngine"));
+const RelocationHomePage = lazy(() => import("@/pages/relocation/RelocationHomePage"));
 const DirectoryProfilePage = lazy(() => import("@/pages/DirectoryProfilePage"));
 const DirectoryCatalogItemPage = lazy(() => import("@/pages/DirectoryCatalogItemPage"));
 const WelcomeActivatePage = lazy(() => import("@/pages/WelcomeActivatePage"));
@@ -153,7 +153,7 @@ const App = () => (
                     path="/relocation"
                     element={
                       <RequireAuth>
-                        <RelocationEngine />
+                        <RelocationHomePage />
                       </RequireAuth>
                     }
                   />

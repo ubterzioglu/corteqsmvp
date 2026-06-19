@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://corteqs.net/schemas/relocation/service.json",
+  "title": "RelocationService",
+  "type": "object",
+  "required": ["service_id", "category", "provider_name", "location", "quality", "source"],
+  "additionalProperties": false,
+  "properties": {
+    "service_id": { "type": "string", "pattern": "^svc_" },
+    "category": { "type": "string", "enum": ["housing", "airline", "gsm_operator", "doctor", "community_hub"] },
+    "provider_name": { "type": "string" },
+    "location": {
+      "type": "object",
+      "required": ["country"],
+      "properties": {
+        "country": { "type": "string" },
+        "city": { "type": "string" },
+        "district": { "type": "string" }
+      }
+    },
+    "offer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "plan_name": { "type": "string" },
+        "price": { "type": "number", "minimum": 0 },
+        "currency": { "type": "string" },
+        "contract_months": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": ["source_trust", "freshness_at"],
+      "additionalProperties": false,
+      "properties": {
+        "coverage_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "source_trust": { "type": "number", "minimum": 0, "maximum": 1 },
+        "freshness_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["source_id"],
+      "additionalProperties": false,
+      "properties": {
+        "source_id": { "type": "string" },
+        "source_type": { "type": "string", "enum": ["official", "regulator", "licensed_commercial", "verified_community", "user_generated"] }
+      }
+    }
+  }
+}
