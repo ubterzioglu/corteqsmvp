@@ -6704,6 +6704,745 @@ export type Database = {
         }
         Relationships: []
       }
+      relocation_bureaucratic_steps: {
+        Row: {
+          city_code: string | null
+          country_code: string
+          created_at: string
+          deadline_rule: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          official_url: string | null
+          official_url_label: string | null
+          output_artifacts: string[]
+          required_documents: string[]
+          sort_order: number
+          source_id: string | null
+          trigger: string
+          updated_at: string
+        }
+        Insert: {
+          city_code?: string | null
+          country_code: string
+          created_at?: string
+          deadline_rule?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          official_url?: string | null
+          official_url_label?: string | null
+          output_artifacts?: string[]
+          required_documents?: string[]
+          sort_order?: number
+          source_id?: string | null
+          trigger: string
+          updated_at?: string
+        }
+        Update: {
+          city_code?: string | null
+          country_code?: string
+          created_at?: string
+          deadline_rule?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          official_url?: string | null
+          official_url_label?: string | null
+          output_artifacts?: string[]
+          required_documents?: string[]
+          sort_order?: number
+          source_id?: string | null
+          trigger?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_bureaucratic_steps_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_source_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_candidates: {
+        Row: {
+          confidence_score: number
+          created_at: string
+          duplicate_key: string
+          evidence: Json
+          id: string
+          job_id: string
+          normalized_payload: Json
+          published_at: string | null
+          published_entity_id: string | null
+          review_notes: string | null
+          review_status: string
+          source_url: string | null
+          target_kind: string
+          updated_at: string
+        }
+        Insert: {
+          confidence_score?: number
+          created_at?: string
+          duplicate_key: string
+          evidence?: Json
+          id?: string
+          job_id: string
+          normalized_payload: Json
+          published_at?: string | null
+          published_entity_id?: string | null
+          review_notes?: string | null
+          review_status?: string
+          source_url?: string | null
+          target_kind: string
+          updated_at?: string
+        }
+        Update: {
+          confidence_score?: number
+          created_at?: string
+          duplicate_key?: string
+          evidence?: Json
+          id?: string
+          job_id?: string
+          normalized_payload?: Json
+          published_at?: string | null
+          published_entity_id?: string | null
+          review_notes?: string | null
+          review_status?: string
+          source_url?: string | null
+          target_kind?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_candidates_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_cost_ledger: {
+        Row: {
+          amount_usd: number
+          billing_unit: string
+          created_at: string
+          event_type: string
+          id: number
+          job_id: string
+          provider_key: string
+          quantity: number
+          request_meta: Json
+          unit_cost_usd: number
+        }
+        Insert: {
+          amount_usd?: number
+          billing_unit: string
+          created_at?: string
+          event_type: string
+          id?: never
+          job_id: string
+          provider_key: string
+          quantity?: number
+          request_meta?: Json
+          unit_cost_usd?: number
+        }
+        Update: {
+          amount_usd?: number
+          billing_unit?: string
+          created_at?: string
+          event_type?: string
+          id?: never
+          job_id?: string
+          provider_key?: string
+          quantity?: number
+          request_meta?: Json
+          unit_cost_usd?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_cost_ledger_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_emergency_contacts: {
+        Row: {
+          city_code: string | null
+          country_code: string
+          created_at: string
+          id: string
+          is_active: boolean
+          label: string
+          phone: string | null
+          source_id: string | null
+          type: string
+          url: string | null
+        }
+        Insert: {
+          city_code?: string | null
+          country_code: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label: string
+          phone?: string | null
+          source_id?: string | null
+          type: string
+          url?: string | null
+        }
+        Update: {
+          city_code?: string | null
+          country_code?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label?: string
+          phone?: string | null
+          source_id?: string | null
+          type?: string
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_emergency_contacts_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_source_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_interactions: {
+        Row: {
+          context: Json
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          event_type: string
+          id: number
+          move_id: string | null
+          rank_position: number | null
+          user_id: string
+        }
+        Insert: {
+          context?: Json
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type: string
+          id?: never
+          move_id?: string | null
+          rank_position?: number | null
+          user_id?: string
+        }
+        Update: {
+          context?: Json
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type?: string
+          id?: never
+          move_id?: string | null
+          rank_position?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_interactions_move_id_fkey"
+            columns: ["move_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_moves"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_jobs: {
+        Row: {
+          attempts: number
+          city_code: string | null
+          cost_total_usd: number
+          country_code: string
+          created_at: string
+          created_by_user_id: string
+          finished_at: string | null
+          hard_cap_usd: number
+          id: string
+          last_error_code: string | null
+          last_error_message: string | null
+          lease_expires_at: string | null
+          locked_at: string | null
+          locked_by: string | null
+          next_attempt_at: string
+          priority: number
+          progress: Json
+          result_summary: Json
+          service_category: string | null
+          soft_cap_usd: number
+          source_id: string | null
+          started_at: string | null
+          status: string
+          target_kind: string
+          title: string
+        }
+        Insert: {
+          attempts?: number
+          city_code?: string | null
+          cost_total_usd?: number
+          country_code: string
+          created_at?: string
+          created_by_user_id: string
+          finished_at?: string | null
+          hard_cap_usd?: number
+          id?: string
+          last_error_code?: string | null
+          last_error_message?: string | null
+          lease_expires_at?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          next_attempt_at?: string
+          priority?: number
+          progress?: Json
+          result_summary?: Json
+          service_category?: string | null
+          soft_cap_usd?: number
+          source_id?: string | null
+          started_at?: string | null
+          status?: string
+          target_kind: string
+          title: string
+        }
+        Update: {
+          attempts?: number
+          city_code?: string | null
+          cost_total_usd?: number
+          country_code?: string
+          created_at?: string
+          created_by_user_id?: string
+          finished_at?: string | null
+          hard_cap_usd?: number
+          id?: string
+          last_error_code?: string | null
+          last_error_message?: string | null
+          lease_expires_at?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          next_attempt_at?: string
+          priority?: number
+          progress?: Json
+          result_summary?: Json
+          service_category?: string | null
+          soft_cap_usd?: number
+          source_id?: string | null
+          started_at?: string | null
+          status?: string
+          target_kind?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_jobs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_source_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_locations: {
+        Row: {
+          bureaucracy_complexity: number | null
+          city_code: string
+          city_name: string
+          community_density: number | null
+          cost_index: number | null
+          country_code: string
+          created_at: string
+          district: string | null
+          flight_access: number | null
+          freshness_at: string | null
+          gsm_coverage: number | null
+          healthcare_access: number | null
+          housing_availability: number | null
+          id: string
+          is_active: boolean
+          language_availability: string[]
+          lat: number | null
+          lon: number | null
+          safety_index: number | null
+          source_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          bureaucracy_complexity?: number | null
+          city_code: string
+          city_name: string
+          community_density?: number | null
+          cost_index?: number | null
+          country_code: string
+          created_at?: string
+          district?: string | null
+          flight_access?: number | null
+          freshness_at?: string | null
+          gsm_coverage?: number | null
+          healthcare_access?: number | null
+          housing_availability?: number | null
+          id?: string
+          is_active?: boolean
+          language_availability?: string[]
+          lat?: number | null
+          lon?: number | null
+          safety_index?: number | null
+          source_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bureaucracy_complexity?: number | null
+          city_code?: string
+          city_name?: string
+          community_density?: number | null
+          cost_index?: number | null
+          country_code?: string
+          created_at?: string
+          district?: string | null
+          flight_access?: number | null
+          freshness_at?: string | null
+          gsm_coverage?: number | null
+          healthcare_access?: number | null
+          housing_availability?: number | null
+          id?: string
+          is_active?: boolean
+          language_availability?: string[]
+          lat?: number | null
+          lon?: number | null
+          safety_index?: number | null
+          source_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_locations_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_source_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_moves: {
+        Row: {
+          allow_partner_referrals: boolean
+          allow_personalization: boolean
+          budget_monthly: number | null
+          created_at: string
+          currency: string
+          household: Json
+          id: string
+          move_window_end: string | null
+          move_window_start: string | null
+          must_haves: string[]
+          nice_to_haves: string[]
+          origin_city_code: string | null
+          origin_country_code: string | null
+          preferred_language: string
+          setup_budget_max: number | null
+          status: string
+          target_country_codes: string[]
+          updated_at: string
+          user_id: string
+          wizard_answers: Json
+        }
+        Insert: {
+          allow_partner_referrals?: boolean
+          allow_personalization?: boolean
+          budget_monthly?: number | null
+          created_at?: string
+          currency?: string
+          household?: Json
+          id?: string
+          move_window_end?: string | null
+          move_window_start?: string | null
+          must_haves?: string[]
+          nice_to_haves?: string[]
+          origin_city_code?: string | null
+          origin_country_code?: string | null
+          preferred_language?: string
+          setup_budget_max?: number | null
+          status?: string
+          target_country_codes?: string[]
+          updated_at?: string
+          user_id?: string
+          wizard_answers?: Json
+        }
+        Update: {
+          allow_partner_referrals?: boolean
+          allow_personalization?: boolean
+          budget_monthly?: number | null
+          created_at?: string
+          currency?: string
+          household?: Json
+          id?: string
+          move_window_end?: string | null
+          move_window_start?: string | null
+          must_haves?: string[]
+          nice_to_haves?: string[]
+          origin_city_code?: string | null
+          origin_country_code?: string | null
+          preferred_language?: string
+          setup_budget_max?: number | null
+          status?: string
+          target_country_codes?: string[]
+          updated_at?: string
+          user_id?: string
+          wizard_answers?: Json
+        }
+        Relationships: []
+      }
+      relocation_rank_models: {
+        Row: {
+          activated_at: string | null
+          algorithm: string
+          artifact_ref: string | null
+          blend_alpha: number
+          created_at: string
+          id: string
+          is_active: boolean
+          model_version: string
+          notes: string | null
+          offline_metrics: Json
+          policy_version: string | null
+        }
+        Insert: {
+          activated_at?: string | null
+          algorithm?: string
+          artifact_ref?: string | null
+          blend_alpha?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          model_version: string
+          notes?: string | null
+          offline_metrics?: Json
+          policy_version?: string | null
+        }
+        Update: {
+          activated_at?: string | null
+          algorithm?: string
+          artifact_ref?: string | null
+          blend_alpha?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          model_version?: string
+          notes?: string | null
+          offline_metrics?: Json
+          policy_version?: string | null
+        }
+        Relationships: []
+      }
+      relocation_recommendations: {
+        Row: {
+          created_at: string
+          entity_id: string
+          entity_type: string
+          explanations: Json
+          final_score: number | null
+          hard_filter_pass: boolean
+          id: string
+          ml_score: number | null
+          model_version: string | null
+          move_id: string
+          policy_version: string | null
+          rank_position: number | null
+          rule_score: number | null
+          score_breakdown: Json
+        }
+        Insert: {
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          explanations?: Json
+          final_score?: number | null
+          hard_filter_pass?: boolean
+          id?: string
+          ml_score?: number | null
+          model_version?: string | null
+          move_id: string
+          policy_version?: string | null
+          rank_position?: number | null
+          rule_score?: number | null
+          score_breakdown?: Json
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          explanations?: Json
+          final_score?: number | null
+          hard_filter_pass?: boolean
+          id?: string
+          ml_score?: number | null
+          model_version?: string | null
+          move_id?: string
+          policy_version?: string | null
+          rank_position?: number | null
+          rule_score?: number | null
+          score_breakdown?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_recommendations_move_id_fkey"
+            columns: ["move_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_moves"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_services: {
+        Row: {
+          appointment_url: string | null
+          category: string
+          city_code: string | null
+          contract_months: number | null
+          country_code: string
+          coverage_score: number | null
+          created_at: string
+          currency: string | null
+          district: string | null
+          freshness_at: string | null
+          id: string
+          is_active: boolean
+          languages: string[]
+          location_id: string | null
+          plan_name: string | null
+          price_max: number | null
+          price_min: number | null
+          provider_name: string
+          source_id: string | null
+          trust_score: number
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          appointment_url?: string | null
+          category: string
+          city_code?: string | null
+          contract_months?: number | null
+          country_code: string
+          coverage_score?: number | null
+          created_at?: string
+          currency?: string | null
+          district?: string | null
+          freshness_at?: string | null
+          id?: string
+          is_active?: boolean
+          languages?: string[]
+          location_id?: string | null
+          plan_name?: string | null
+          price_max?: number | null
+          price_min?: number | null
+          provider_name: string
+          source_id?: string | null
+          trust_score?: number
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          appointment_url?: string | null
+          category?: string
+          city_code?: string | null
+          contract_months?: number | null
+          country_code?: string
+          coverage_score?: number | null
+          created_at?: string
+          currency?: string | null
+          district?: string | null
+          freshness_at?: string | null
+          id?: string
+          is_active?: boolean
+          languages?: string[]
+          location_id?: string | null
+          plan_name?: string | null
+          price_max?: number | null
+          price_min?: number | null
+          provider_name?: string
+          source_id?: string | null
+          trust_score?: number
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_services_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "relocation_services_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_source_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_source_registry: {
+        Row: {
+          api_terms_summary: string | null
+          authority_level: string
+          category: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          license_type: string | null
+          provider_name: string
+          refresh_sla_hours: number
+          secret_ref: string | null
+          source_key: string
+          updated_at: string
+        }
+        Insert: {
+          api_terms_summary?: string | null
+          authority_level: string
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          license_type?: string | null
+          provider_name: string
+          refresh_sla_hours?: number
+          secret_ref?: string | null
+          source_key: string
+          updated_at?: string
+        }
+        Update: {
+          api_terms_summary?: string | null
+          authority_level?: string
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          license_type?: string | null
+          provider_name?: string
+          refresh_sla_hours?: number
+          secret_ref?: string | null
+          source_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       resource_entries: {
         Row: {
           added_by: string
@@ -9608,6 +10347,10 @@ export type Database = {
       }
     }
     Functions: {
+      _bulk_import_role_for_profession: {
+        Args: { p_fallback?: string; p_profession: string }
+        Returns: string
+      }
       _postgis_deprecate: {
         Args: { newname: string; oldname: string; version: string }
         Returns: undefined
@@ -9739,6 +10482,14 @@ export type Database = {
         Args: { p_claim_id: string }
         Returns: Json
       }
+      admin_bulk_import_catalog_items: {
+        Args: {
+          p_default_role?: string
+          p_records: Json
+          p_source_type: string
+        }
+        Returns: Json
+      }
       admin_cancel_service_finder_job: {
         Args: { p_job_id: string }
         Returns: Json
@@ -9771,6 +10522,7 @@ export type Database = {
         Args: { p_job_id: string }
         Returns: Json
       }
+      admin_get_user_email: { Args: { p_user_id: string }; Returns: string }
       admin_grant_catalog_editor: {
         Args: { p_item_id: string; p_target_user_id: string }
         Returns: undefined
@@ -9914,6 +10666,14 @@ export type Database = {
         }
         Returns: undefined
       }
+      admin_promote_relocation_model: {
+        Args: { p_model_version: string }
+        Returns: undefined
+      }
+      admin_publish_relocation_candidate: {
+        Args: { p_candidate_id: string }
+        Returns: string
+      }
       admin_publish_service_finder_candidate: {
         Args: { p_candidate_id: string; p_patch?: Json }
         Returns: Json
@@ -9946,6 +10706,14 @@ export type Database = {
       }
       admin_review_cadde_promotion_v1: {
         Args: { p_approve: boolean; p_campaign_id: string; p_note?: string }
+        Returns: undefined
+      }
+      admin_review_catalog_import: {
+        Args: { p_decision: string; p_item_id: string; p_note?: string }
+        Returns: Json
+      }
+      admin_review_relocation_candidate: {
+        Args: { p_action: string; p_candidate_id: string; p_notes: string }
         Returns: undefined
       }
       admin_review_service_finder_candidate: {
@@ -10767,6 +11535,139 @@ export type Database = {
         Returns: boolean
       }
       record_carsi_contact_v1: { Args: { p_item_id: string }; Returns: boolean }
+      relocation_active_rank_model: {
+        Args: never
+        Returns: {
+          activated_at: string | null
+          algorithm: string
+          artifact_ref: string | null
+          blend_alpha: number
+          created_at: string
+          id: string
+          is_active: boolean
+          model_version: string
+          notes: string | null
+          offline_metrics: Json
+          policy_version: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "relocation_rank_models"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      relocation_authority_trust: { Args: { p_level: string }; Returns: number }
+      relocation_build_checklist_v1: {
+        Args: { p_move_id: string }
+        Returns: {
+          city_code: string | null
+          country_code: string
+          created_at: string
+          deadline_rule: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          official_url: string | null
+          official_url_label: string | null
+          output_artifacts: string[]
+          required_documents: string[]
+          sort_order: number
+          source_id: string | null
+          trigger: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "relocation_bureaucratic_steps"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      relocation_clamp_neutral: { Args: { p_value: number }; Returns: number }
+      relocation_create_move: { Args: { p_payload: Json }; Returns: Json }
+      relocation_owned_move: {
+        Args: { p_move_id: string }
+        Returns: {
+          allow_partner_referrals: boolean
+          allow_personalization: boolean
+          budget_monthly: number | null
+          created_at: string
+          currency: string
+          household: Json
+          id: string
+          move_window_end: string | null
+          move_window_start: string | null
+          must_haves: string[]
+          nice_to_haves: string[]
+          origin_city_code: string | null
+          origin_country_code: string | null
+          preferred_language: string
+          setup_budget_max: number | null
+          status: string
+          target_country_codes: string[]
+          updated_at: string
+          user_id: string
+          wizard_answers: Json
+        }
+        SetofOptions: {
+          from: "*"
+          to: "relocation_moves"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      relocation_rank_locations_v1: {
+        Args: { p_move_id: string }
+        Returns: Json
+      }
+      relocation_rank_services_v1: {
+        Args: { p_category: string; p_move_id: string }
+        Returns: {
+          appointment_url: string | null
+          category: string
+          city_code: string | null
+          contract_months: number | null
+          country_code: string
+          coverage_score: number | null
+          created_at: string
+          currency: string | null
+          district: string | null
+          freshness_at: string | null
+          id: string
+          is_active: boolean
+          languages: string[]
+          location_id: string | null
+          plan_name: string | null
+          price_max: number | null
+          price_min: number | null
+          provider_name: string
+          source_id: string | null
+          trust_score: number
+          updated_at: string
+          website_url: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "relocation_services"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      relocation_record_interaction: {
+        Args: { p_payload: Json }
+        Returns: undefined
+      }
+      relocation_require_user: { Args: never; Returns: string }
+      relocation_save_wizard: {
+        Args: { p_move_id: string; p_payload: Json }
+        Returns: undefined
+      }
+      relocation_update_move: {
+        Args: { p_move_id: string; p_patch: Json }
+        Returns: undefined
+      }
       report_cadde_entity_v1: {
         Args: {
           p_details?: string
@@ -11651,6 +12552,42 @@ export type Database = {
         }
         Returns: number
       }
+      worker_claim_relocation_jobs: {
+        Args: { p_limit: number; p_worker_id: string }
+        Returns: {
+          attempts: number
+          city_code: string | null
+          cost_total_usd: number
+          country_code: string
+          created_at: string
+          created_by_user_id: string
+          finished_at: string | null
+          hard_cap_usd: number
+          id: string
+          last_error_code: string | null
+          last_error_message: string | null
+          lease_expires_at: string | null
+          locked_at: string | null
+          locked_by: string | null
+          next_attempt_at: string
+          priority: number
+          progress: Json
+          result_summary: Json
+          service_category: string | null
+          soft_cap_usd: number
+          source_id: string | null
+          started_at: string | null
+          status: string
+          target_kind: string
+          title: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "relocation_jobs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       worker_claim_service_finder_jobs: {
         Args: { p_limit?: number; p_worker_id: string }
         Returns: {
@@ -11708,6 +12645,15 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      worker_complete_relocation_job: {
+        Args: {
+          p_job_id: string
+          p_result_summary: Json
+          p_status: string
+          p_worker_id: string
+        }
+        Returns: boolean
+      }
       worker_complete_service_finder_job: {
         Args: {
           p_job_id: string
@@ -11716,6 +12662,17 @@ export type Database = {
           p_worker_id: string
         }
         Returns: boolean
+      }
+      worker_fail_relocation_job: {
+        Args: {
+          p_error_code: string
+          p_error_message: string
+          p_job_id: string
+          p_retry_delay_seconds: number
+          p_retryable: boolean
+          p_worker_id: string
+        }
+        Returns: undefined
       }
       worker_fail_service_finder_job: {
         Args: {
@@ -11728,13 +12685,25 @@ export type Database = {
         }
         Returns: boolean
       }
+      worker_heartbeat_relocation_job: {
+        Args: { p_job_id: string; p_progress: Json; p_worker_id: string }
+        Returns: boolean
+      }
       worker_heartbeat_service_finder_job: {
         Args: { p_job_id: string; p_progress?: Json; p_worker_id: string }
         Returns: boolean
       }
+      worker_record_relocation_cost: {
+        Args: { p_payload: Json }
+        Returns: number
+      }
       worker_record_service_finder_cost: {
         Args: { p_payload: Json }
         Returns: Json
+      }
+      worker_upsert_relocation_candidate: {
+        Args: { p_payload: Json }
+        Returns: string
       }
       world_cup_campaign_is_active: { Args: never; Returns: boolean }
       write_admin_audit_log: {
