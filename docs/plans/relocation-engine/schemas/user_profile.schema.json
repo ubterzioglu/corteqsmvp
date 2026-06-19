@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://corteqs.net/schemas/relocation/user_profile.json",
+  "title": "RelocationUserProfile",
+  "type": "object",
+  "required": ["user_id", "preferred_language", "household", "relocation_goals", "budget", "privacy_flags"],
+  "additionalProperties": false,
+  "properties": {
+    "user_id": { "type": "string", "pattern": "^usr_" },
+    "preferred_language": { "type": "string", "examples": ["tr-TR", "en-US"] },
+    "secondary_languages": { "type": "array", "items": { "type": "string" } },
+    "country_of_residence": { "type": "string", "description": "ISO 3166-1 alpha-2" },
+    "consent_version": { "type": "string" },
+    "household": {
+      "type": "object",
+      "required": ["adults"],
+      "additionalProperties": false,
+      "properties": {
+        "adults": { "type": "integer", "minimum": 1 },
+        "children": { "type": "integer", "minimum": 0 },
+        "pets": { "type": "array", "items": { "type": "string" } },
+        "accessibility_needs": {
+          "type": "array",
+          "description": "Coarse-grained etiketler — teşhis/sağlık verisi DEĞİL.",
+          "items": { "type": "string", "examples": ["elevator_preferred"] }
+        }
+      }
+    },
+    "relocation_goals": { "type": "array", "items": { "type": "string", "examples": ["work", "family_settlement"] } },
+    "budget": {
+      "type": "object",
+      "required": ["currency"],
+      "additionalProperties": false,
+      "properties": {
+        "currency": { "type": "string", "description": "ISO 4217" },
+        "monthly_housing_max": { "type": "number", "minimum": 0 },
+        "setup_budget_max": { "type": "number", "minimum": 0 }
+      }
+    },
+    "privacy_flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allow_personalization": { "type": "boolean" },
+        "allow_partner_referrals": { "type": "boolean" }
+      }
+    }
+  }
+}

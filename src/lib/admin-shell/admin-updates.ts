@@ -14,6 +14,16 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260619-relocation-engine-veri-tabanli-yeniden-yazildi",
+    date: "19 Haziran 2026",
+    title: "Taşınma Planlayıcı (/relocation) gerçek veriyle çalışacak şekilde sıfırdan yazıldı",
+    items: [
+      "Eski Taşınma ekranı sabit (kodun içine gömülü) örnek verilerle ve yapay zekâ sohbetiyle çalışıyordu — gösterdiği şehir/maliyet/belge bilgileri gerçek değildi. Yeni ekran tamamen veritabanından besleniyor: hedef ülkeye göre şehir önerileri (bütçe, bürokrasi, sağlık, GSM, topluluk, uçuş skorlarıyla), servis önerileri (konut/uçuş/GSM/doktor/topluluk), bürokrasi adımları (gitmeden önce / vardıktan sonra) ve acil numaralar.",
+      "Şehir önerileri artık 'neden' açıklamalı geliyor (ör. 'Türk topluluğu yoğun', 'konut bütçesi sınırda') ve her skorun dökümü görünüyor — şeffaf ve denetlenebilir. Henüz Berlin ve Amsterdam örnek veriyle yüklü; gerçek kaynak verisi (resmi portallar, lisanslı API'ler) ayrı bir veri toplama hattıyla dolacak.",
+      "Teknik tarafta: kullanıcı taşınma dosyaları ve etkileşimleri RLS ile korunuyor (herkes yalnız kendi verisini görür), öneri hesabı güvenli RPC'lerde yapılıyor, skor ağırlıkları SQL ve arayüzde birebir aynalanıp testle kilitlendi. Eski sayfa ve localStorage'a yazan kısım kaldırıldı. Bir sonraki yayınla (deploy) /relocation adresinden görünür olacak.",
+    ],
+  },
+  {
     id: "20260618-deneme-landing-ana-sayfa-oldu",
     date: "18 Haziran 2026",
     title: "Deneme karşılama sayfası artık asıl ana sayfa oldu — eski ana sayfa /landingtrial'a taşındı",

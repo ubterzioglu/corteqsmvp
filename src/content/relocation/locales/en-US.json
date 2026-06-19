@@ -1,0 +1,46 @@
+{
+  "title": "Relocation Planner",
+  "subtitle": "Build your city, service and bureaucracy plan for your target country",
+  "wizard": {
+    "targets": "Target countries",
+    "window": "Move window",
+    "budget": "Monthly housing budget",
+    "household": "Household",
+    "adults": "Adults",
+    "children": "Children",
+    "mustHaves": "Must-haves",
+    "next": "Next",
+    "back": "Back",
+    "submit": "Build my plan"
+  },
+  "tabs": {
+    "cities": "Cities",
+    "services": "Services",
+    "checklist": "Bureaucracy",
+    "emergency": "Emergency & Daily"
+  },
+  "cities": {
+    "empty": "No location recommendations found for your target countries.",
+    "scoreBreakdown": "Score breakdown",
+    "why": "Why"
+  },
+  "services": {
+    "housing": "Housing",
+    "airline": "Flights",
+    "gsm_operator": "Mobile",
+    "doctor": "Doctor",
+    "community_hub": "Community"
+  },
+  "checklist": {
+    "empty": "No bureaucratic steps found for your target countries.",
+    "before_departure": "Before departure",
+    "after_arrival": "After arrival",
+    "ongoing": "Ongoing",
+    "documents": "Required documents",
+    "deadline": "Deadline"
+  },
+  "emergency": {
+    "title": "Emergency numbers and daily life",
+    "empty": "No emergency contacts found for this country."
+  }
+}

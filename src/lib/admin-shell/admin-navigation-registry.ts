@@ -518,6 +518,33 @@ export const adminNavGroups: AdminNavGroup[] = [
     ],
   },
   {
+    id: "relocation-ingestion",
+    label: "Taşınma Veri Toplama",
+    accent: "sky",
+    items: [
+      {
+        id: "relocation-ingestion-jobs",
+        label: "Toplama İşleri",
+        shortLabel: "İşler",
+        description: "Taşınma kaynak toplama işleri ve worker durumu.",
+        to: "/admin/relocation-ingestion",
+        icon: ListChecks,
+        accent: "sky",
+        aliases: ["relocation", "taşınma toplama", "ingestion", "relokasyon iş"],
+      },
+      {
+        id: "relocation-ingestion-candidates",
+        label: "Aday İnceleme",
+        description: "Toplanan servis/bürokrasi/acil adaylarını onayla ve yayınla.",
+        to: "/admin/relocation-ingestion/candidates",
+        icon: ClipboardList,
+        accent: "sky",
+        aliases: ["taşınma aday", "relocation candidate", "aday onay"],
+        activePaths: ["/admin/relocation-ingestion/candidates"],
+      },
+    ],
+  },
+  {
     id: "radar",
     label: "Radar Haber Pipeline",
     accent: "violet",

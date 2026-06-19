@@ -1,0 +1,46 @@
+{
+  "title": "Taşınma Planlayıcı",
+  "subtitle": "Hedef ülkenize göre şehir, servis ve bürokrasi planınızı oluşturun",
+  "wizard": {
+    "targets": "Hedef ülkeler",
+    "window": "Taşınma penceresi",
+    "budget": "Aylık konut bütçesi",
+    "household": "Hane",
+    "adults": "Yetişkin",
+    "children": "Çocuk",
+    "mustHaves": "Olmazsa olmazlar",
+    "next": "Devam",
+    "back": "Geri",
+    "submit": "Planımı oluştur"
+  },
+  "tabs": {
+    "cities": "Şehirler",
+    "services": "Servisler",
+    "checklist": "Bürokrasi",
+    "emergency": "Acil & Günlük"
+  },
+  "cities": {
+    "empty": "Hedef ülkeleriniz için lokasyon önerisi bulunamadı.",
+    "scoreBreakdown": "Skor dökümü",
+    "why": "Neden"
+  },
+  "services": {
+    "housing": "Konut",
+    "airline": "Uçuş",
+    "gsm_operator": "GSM",
+    "doctor": "Doktor",
+    "community_hub": "Topluluk"
+  },
+  "checklist": {
+    "empty": "Hedef ülkeleriniz için bürokrasi adımı bulunamadı.",
+    "before_departure": "Gitmeden önce",
+    "after_arrival": "Vardıktan sonra",
+    "ongoing": "Süreç boyunca",
+    "documents": "Gerekli belgeler",
+    "deadline": "Süre"
+  },
+  "emergency": {
+    "title": "Acil numaralar ve günlük hayat",
+    "empty": "Bu ülke için acil iletişim bilgisi bulunamadı."
+  }
+}
