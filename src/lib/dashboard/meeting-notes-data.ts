@@ -17,6 +17,7 @@ export type MeetingSource =
   | 'T13'
   | 'T14'
   | 'T15'
+  | 'T16'
   | 'WA'
   | 'NO'
   | 'MAN'
@@ -69,6 +70,7 @@ export const MEETING_SOURCES: MeetingNoteSource[] = [
   { key: 'T13', label: 'Toplantı 13', date: '30 Mayıs 2026' },
   { key: 'T14', label: 'Toplantı 14', date: '8 Haziran 2026' },
   { key: 'T15', label: 'Toplantı 15', date: '12 Haziran 2026' },
+  { key: 'T16', label: 'Toplantı 16', date: '19 Haziran 2026' },
   { key: 'WA', label: 'WhatsApp Yazışmaları', date: '13-24 Nisan WA' },
   { key: 'NO', label: 'Notion Kararlar', date: '17 Nisan' },
   { key: 'MAN', label: 'Manuel', date: 'Dashboard' },
@@ -90,6 +92,7 @@ export const SOURCE_COLORS: Record<MeetingSource, string> = {
   T13: '#9333EA',
   T14: '#C026D3',
   T15: '#DB2777',
+  T16: '#BE185D',
   WA: '#FA7B17',
   NO: '#8B5CF6',
   MAN: '#1A73E8',
