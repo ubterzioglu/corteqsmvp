@@ -25,6 +25,9 @@ const LandingTrialPage = lazy(() => import("./pages/LandingTrialPage.tsx")); // 
 const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage.tsx"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage.tsx"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
+const RefundCancellationPolicy = lazy(() => import("./pages/RefundCancellationPolicy.tsx"));
+const ServiceDeliveryPolicy = lazy(() => import("./pages/ServiceDeliveryPolicy.tsx"));
+const BusinessInformationPage = lazy(() => import("./pages/BusinessInformationPage.tsx"));
 const KVKK = lazy(() => import("./pages/KVKK.tsx"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy.tsx"));
 const ContactPage = lazy(() => import("./pages/ContactPage.tsx"));
@@ -234,10 +237,17 @@ const App = () => (
                     }
                   />
                   <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                  <Route path="/legal/business-information" element={<BusinessInformationPage />} />
                   <Route path="/legal/privacy" element={<PrivacyPolicyPage />} />
                   <Route path="/legal/terms" element={<TermsOfService />} />
+                  <Route path="/legal/refund-cancellation" element={<RefundCancellationPolicy />} />
+                  <Route path="/legal/service-delivery" element={<ServiceDeliveryPolicy />} />
                   <Route path="/legal/kvkk" element={<KVKK />} />
                   <Route path="/legal/cookies" element={<CookiePolicy />} />
+                  <Route path="/business-information" element={<Navigate to="/legal/business-information" replace />} />
+                  <Route path="/refund-policy" element={<Navigate to="/legal/refund-cancellation" replace />} />
+                  <Route path="/cancellation-policy" element={<Navigate to="/legal/refund-cancellation" replace />} />
+                  <Route path="/delivery-policy" element={<Navigate to="/legal/service-delivery" replace />} />
                   <Route path="/iletisim" element={<ContactPage />} />
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/kariyer" element={<Career />} />
@@ -248,16 +258,25 @@ const App = () => (
                 <Route path="/whatsapp-groups" element={<Navigate to="/addcom" replace />} />
                 <Route path="/whatsapp-groups/:id" element={<WhatsAppGroupDetailRedirect />} />
                 <Route path="/contributor" element={<Navigate to="/commercial/contributor" replace />} />
-                <Route path="/influencer-partner" element={<Navigate to="/commercial/influencer-partner" replace />} />
-                <Route path="/strategic-partner" element={<Navigate to="/commercial/strategic-partner" replace />} />
-                <Route path="/community-leader" element={<Navigate to="/commercial/community-leader" replace />} />
-                <Route path="/ambassador" element={<Navigate to="/commercial/ambassador" replace />} />
-                {adminRoutes}
+                <Route path="/consultant" element={<Navigate to="/commercial/consultant" replace />} />
+                <Route path="/business" element={<Navigate to="/commercial/business" replace />} />
+                <Route path="/organization" element={<Navigate to="/commercial/organization" replace />} />
+                <Route path="/profile/:type/:userId" element={<Navigate to="/directory" replace />} />
+                <Route
+                  path="/admin/*"
+                  element={
+                    <RequireAuth>
+                      <RequireFeature feature="adminPanelAccess" fallback={<Navigate to="/" replace />}>
+                        <Routes>{adminRoutes}</Routes>
+                      </RequireFeature>
+                    </RequireAuth>
+                  }
+                />
               </Routes>
             </Suspense>
-            <ScrollTopButton />
           </AuthProvider>
         </DiasporaProvider>
+        <ScrollTopButton />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
