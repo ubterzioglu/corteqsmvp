@@ -6,6 +6,7 @@
 
 import {
   ArrowLeftRight,
+  BarChart3,
   BookOpen,
   Briefcase,
   Calculator,
@@ -588,6 +589,32 @@ export const adminNavGroups: AdminNavGroup[] = [
         icon: BookOpen,
         accent: "violet",
         aliases: ["radar rehber", "haber rehber", "radar kılavuz", "haber otomasyonu rehber"],
+      },
+    ],
+  },
+  {
+    id: "links",
+    label: "Linkler",
+    accent: "indigo",
+    items: [
+      {
+        id: "links-overview",
+        label: "Linkler",
+        description: "Admin panelinden hızlı erişilen dış araçlar ve panolar.",
+        to: "/admin/links",
+        icon: Link2,
+        accent: "indigo",
+        aliases: ["link", "linkler", "dış bağlantı", "araçlar", "kısayol"],
+      },
+      {
+        id: "external-site-traffic",
+        label: "Site Trafik Durumu",
+        description: "Microsoft Clarity — site trafik ve davranış panosu.",
+        href: "https://clarity.microsoft.com/projects/view/wdkgdje6rb/",
+        icon: BarChart3,
+        accent: "indigo",
+        isExternal: true,
+        aliases: ["trafik", "clarity", "site trafik", "analytics", "ziyaretçi", "istatistik"],
       },
     ],
   },
