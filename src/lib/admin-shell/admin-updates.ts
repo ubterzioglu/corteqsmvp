@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260622-admin-linkler-sekmesi-site-trafik",
+    date: "22 Haziran 2026",
+    title: "Admin paneline 'Linkler' sekmesi eklendi — ilk kart: Site Trafik Durumu",
+    items: [
+      "Admin panelinin sol menüsüne yeni bir 'Linkler' bölümü eklendi. Buraya admin'in sık kullandığı dış araç ve panolar kart olarak konacak; her kart tıklanınca ilgili araç yeni sekmede açılır.",
+      "İlk kart 'Site Trafik Durumu': sitenin ziyaretçi trafiğini, ısı haritalarını ve oturum kayıtlarını gösteren Microsoft Clarity panosuna gider. Böylece trafiğe bakmak için ayrı yer aramaya gerek kalmıyor — panelin içinden tek tıkla ulaşılıyor.",
+      "Site Trafik Durumu kısayolu ayrıca üst bardaki 'Dış Bağlantılar' menüsünde ve komut paletinde de aranabilir (ör. 'trafik', 'clarity', 'istatistik' yazarak bulunur).",
+      "Teknik tarafta yeni araç eklemek tek bir liste girişiyle yapılacak şekilde kuruldu; navigasyon tutarlılığı testlerle kilitli. Tüm kontroller temiz. Bir sonraki yayınla (deploy) /admin/links adresinden görünür olacak.",
+    ],
+  },
+  {
     id: "20260619-relocation-engine-veri-tabanli-yeniden-yazildi",
     date: "19 Haziran 2026",
     title: "Taşınma Planlayıcı (/relocation) gerçek veriyle çalışacak şekilde sıfırdan yazıldı",
