@@ -1,10 +1,13 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { ShieldCheck, FileText, Cookie, Scale } from "lucide-react";
+import { Building2, Cookie, FileText, RotateCcw, Scale, ShieldCheck, Truck } from "lucide-react";
 
 const navLinks = [
+  { to: "/legal/business-information", label: "Şirket Bilgileri", icon: Building2 },
   { to: "/legal/privacy", label: "Gizlilik Politikası", icon: ShieldCheck },
   { to: "/legal/terms", label: "Kullanım Şartları", icon: FileText },
+  { to: "/legal/refund-cancellation", label: "İade ve İptal", icon: RotateCcw },
+  { to: "/legal/service-delivery", label: "Hizmet Teslim", icon: Truck },
   { to: "/legal/kvkk", label: "KVKK / GDPR / CCPA", icon: Scale },
   { to: "/legal/cookies", label: "Çerez Politikası", icon: Cookie },
 ];
@@ -15,7 +18,7 @@ const LegalLayout = ({ title, children }: { title: string; children: ReactNode }
       <div className="container mx-auto px-4 max-w-5xl">
         <h1 className="text-3xl md:text-4xl font-extrabold text-foreground mb-2">{title}</h1>
         <p className="text-xs text-muted-foreground mb-6">
-          Son güncelleme: 2 Mayıs 2026 · Yürürlük tarihi: 2 Mayıs 2026
+          Son güncelleme: 22 Haziran 2026 · Yürürlük tarihi: 22 Haziran 2026
         </p>
         <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-8">
           <aside className="space-y-1">
