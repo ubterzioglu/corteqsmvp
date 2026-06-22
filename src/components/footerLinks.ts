@@ -24,8 +24,11 @@ export const footerLinkSections: FooterLinkSection[] = [
   {
     title: "Yasal",
     links: [
+      { label: "Şirket Bilgileri", to: "/legal/business-information" },
       { label: "Gizlilik Politikası", to: "/legal/privacy" },
       { label: "Kullanım Şartları", to: "/legal/terms" },
+      { label: "İade ve İptal", to: "/legal/refund-cancellation" },
+      { label: "Hizmet Teslim", to: "/legal/service-delivery" },
       { label: "KVKK / GDPR / CCPA", to: "/legal/kvkk" },
       { label: "Çerez Politikası", to: "/legal/cookies" },
     ],
