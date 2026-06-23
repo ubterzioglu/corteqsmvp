@@ -14,6 +14,52 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260623-stripe-yasal-sayfalar",
+    date: "23 Haziran 2026",
+    title: "Stripe ödeme altyapısı için yasal sayfalar hazırlandı (Şirket Bilgileri, İade & İptal, Hizmet Teslim)",
+    items: [
+      "Kartlı ödeme almaya geçebilmek için Stripe'ın istediği yasal sayfalar siteye eklendi. Üç yeni sayfa hazır: 'Şirket Bilgileri' (/legal/business-information — kimiz, hangi şirket, nasıl ulaşılır), 'İade ve İptal Politikası' (/legal/refund-cancellation — abonelik iptali, yenileme, iade koşulları) ve 'Hizmet Teslim Politikası' (/legal/service-delivery — dijital hizmetin nasıl ve ne zaman teslim edildiği). Hepsi sayfa altı (footer) menüsündeki 'Yasal' bölümünden ulaşılıyor.",
+      "Kullanım Şartları sayfasına ödeme maddeleri eklendi: ödemelerin Stripe ile güvenli işlendiği ve kart bilgilerinin bizim sunucularımızda saklanmadığı, aylık/yıllık aboneliklerin otomatik yenilenebileceği, iptal ve teslim koşullarının yeni politika sayfalarına bağlandığı açıkça yazıldı.",
+      "Tüm yasal sayfalar artık tek düzen altında (sol tarafta birbirine geçişli menü) ve girişsiz, herkese açık görüntülenebiliyor — Stripe doğrulama ekibi linklere takılmadan ulaşabilsin diye.",
+      "Stripe başvurusu için bir hazırlık dökümanı (readiness paketi) da hazırlandı: panoda kullanılacak işletme tanımı, destek e-postası/telefonu, iade/teslim/gizlilik link listesi ve gizli tutulması gereken şirket/vergi/banka bilgilerinin nereye girileceği tek yerde toplandı. Hassas belgeler repoya konmadı, doğrudan Stripe panosuna girilecek.",
+      "Yeni sayfalar arama motoru haritasına (sitemap) da eklendi. Sayfaların arayüzde görünmesi için bir sonraki yayın (deploy) gerekiyor; deploy sonrası Stripe'a başvuru yapılabilir.",
+    ],
+  },
+  {
+    id: "20260623-public-mobil-guven-ve-seo-denetimi",
+    date: "23 Haziran 2026",
+    title: "Halka açık sayfalarda mobil güven + Google görünürlüğü (SEO) denetimi ve onarımı",
+    items: [
+      "Sitenin halka açık sayfaları (ana sayfa, Kurucular, Fiyatlandırma, İletişim, Kariyer, Radar, yasal sayfalar) baştan sona gözden geçirildi; her birine kendi başlığı, açıklaması ve sosyal medya önizleme kartı tek bir merkezden verildi. Önceden her sayfa kendi yöntemiyle başlık ayarlıyordu, bazıları eksikti — artık tutarlı.",
+      "Yasal sayfalar derlenip toparlandı: Gizlilik, Kullanım Şartları, KVKK ve Çerez sayfaları artık ortak bir düzen altında, soldan birbirine geçişli menüyle. Eski /privacy-policy adresi otomatik olarak /legal/privacy'ye yönleniyor (eski linkler kırılmadı). Gizlilik sayfası dağınık İngilizce kalıntılarından temizlenip sadeleştirildi.",
+      "Üye profili ve dizin sayfaları (/directory/catalog/... ve /directory/profile/...) artık giriş yapmadan da görüntülenebiliyor. Önceden ziyaretçi bir profil linkine tıklayınca giriş duvarına çarpıyordu; bu hem kullanıcıyı kaçırıyor hem de Google'ın sayfayı görmesini engelliyordu. Artık herkese açık.",
+      "İletişim sayfası elden geçirildi ve WhatsApp topluluk linki tek bir kaynağa taşındı (footer ve iletişim aynı linki paylaşıyor; ileride değişirse tek yerden güncellenir).",
+      "Arama motoru haritasındaki (sitemap) tarihler güncellendi. Mobil görünümün doğruluğunu sürekli denetlemek için otomatik testler (Playwright) eklendi.",
+      "Arka uç tarafı yok; bunlar arayüz ve yönlendirme düzenlemeleri — bir sonraki yayınla (deploy) görünür olacak.",
+    ],
+  },
+  {
+    id: "20260623-cadde-mobil-akis-bos-durumlar",
+    date: "23 Haziran 2026",
+    title: "Cadde mobilde sıkılaştırıldı — boş ekranlar artık yol gösteriyor",
+    items: [
+      "Cadde'de içerik henüz azken görünen boş ekranlar düzgün hale getirildi. Aktif cafe yokken 'Henüz aktif bir cafe açılmadı… ilk cafe'yi sen aç' diyen davetkâr bir kart çıkıyor; tanıtım kartı yokken 'ilk tanıtım kartı burada yayınlanacak' mesajı görünüyor. Eskiden bu alanlar boş/kırık duruyordu.",
+      "Bölge filtresi seçince içerik azsa kullanıcı bilgilendiriliyor: 'Bu bölgede içerik azsa ülke geneli ve global akış da devreye girer' gibi bir ipucu gösteriliyor — kullanıcı boş ekran sanıp ayrılmıyor.",
+      "Cafe oluşturma formuna kontenjan (kaç kişi) seçimi eklendi; sınırsız da bırakılabiliyor. Cadde akış kartları ve cafe kartları mobil için yeniden tasarlandı (daha okunaklı, dokunmaya uygun).",
+      "Mobil görünümü güvence altına almak için otomatik testler eklendi. Bir sonraki yayınla (deploy) görünür olacak.",
+    ],
+  },
+  {
+    id: "20260623-ana-sayfa-diaspora-hikayeleri-bloga-baglandi",
+    date: "23 Haziran 2026",
+    title: "Ana sayfadaki 'Diaspora Hikâyeleri' bölümü artık gerçek blog yazılarını gösteriyor",
+    items: [
+      "Ana sayfanın (deneme/karşılama akışındaki) 'Diaspora Hikâyeleri' bölümü şimdiye kadar koda gömülü örnek (placeholder) metinler gösteriyordu — gerçek içerik değildi. Artık canlı Blog modülünden en güncel 3 yayınlanmış yazıyı otomatik çekiyor ve her kart ilgili /blog/<yazı> sayfasına gidiyor.",
+      "Yayınlanmış blog yazısı yoksa bu bölüm tamamen gizleniyor — ziyaretçiye sahte/uydurma sosyal kanıt gösterilmiyor. Blog'a yeni yazı ekleyip yayınladığında ana sayfada otomatik görünür.",
+      "Bir sonraki yayınla (deploy) görünür olacak.",
+    ],
+  },
+  {
     id: "20260622-admin-linkler-sekmesi-site-trafik",
     date: "22 Haziran 2026",
     title: "Admin paneline 'Linkler' sekmesi eklendi — ilk kart: Site Trafik Durumu",
