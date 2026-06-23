@@ -1,13 +1,47 @@
 /**
  * 6. Hikaye / kampanya nehri — Vodafone'un editöryel modüllerinin diaspora uyarlaması.
- * Placeholder anlatılar; devamı mevcut içerik route'larına (radar/rehberler, founders) gider.
+ * İçerik artık canlı blog modülünden gelir: en güncel 3 yayınlanmış yazı gösterilir,
+ * her kart ilgili /blog/:slug yazısına gider. Yayınlanmış yazı yoksa bölüm gizlenir.
  */
 
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { DIASPORA_STORIES } from "./home-trial.data";
+
+import { listPublishedBlogPosts } from "@/lib/blog";
+import type { DiasporaStory } from "./home-trial.types";
+
+const STORY_LIMIT = 3;
 
 const DiasporaStoriesSection = () => {
+  const [stories, setStories] = useState<DiasporaStory[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    listPublishedBlogPosts()
+      .then((posts) => {
+        if (!mounted) return;
+        const mapped: DiasporaStory[] = posts.slice(0, STORY_LIMIT).map((post) => ({
+          eyebrow: post.country_label || post.category_label || "CorteQS",
+          title: post.title,
+          excerpt: post.excerpt,
+          to: `/blog/${post.slug}`,
+        }));
+        setStories(mapped);
+      })
+      .catch((error: unknown) => {
+        console.error("Blog hikâyeleri yüklenemedi", error);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Gerçek içerik yoksa sahte sosyal kanıt göstermemek için bölümü gizle.
+  if (stories.length === 0) {
+    return null;
+  }
+
   return (
     <section className="relative mx-auto max-w-6xl px-6 py-20 sm:py-28">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -29,9 +63,9 @@ const DiasporaStoriesSection = () => {
       </div>
 
       <div className="mt-12 grid gap-6 md:grid-cols-3">
-        {DIASPORA_STORIES.map((story) => (
+        {stories.map((story) => (
           <Link
-            key={story.title}
+            key={story.to}
             to={story.to}
             className="glass-tech group flex flex-col rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-glow-teal"
           >
