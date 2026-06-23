@@ -108,7 +108,7 @@ export const ECOSYSTEM_CARDS: readonly EcosystemCard[] = [
   {
     title: "Şehir Elçileri",
     description: "Bulunduğun şehirde güveni inşa eden elçilerle tanış.",
-    to: "/founders",
+    to: "/directory?role=User_CityAmbassador",
     cta: "Elçileri tanı",
     iconKey: "ambassadors",
     accent: "orange",
@@ -153,6 +153,6 @@ export const DIASPORA_STORIES: readonly DiasporaStory[] = [
     title: "Şehir elçileri yerel güveni neden büyütüyor",
     excerpt:
       "Toronto'daki şehir elçileri, güvenilir esnaf ve hizmet önerileriyle diasporanın gündelik kararlarını kolaylaştırıyor.",
-    to: "/founders",
+    to: "/directory?role=User_CityAmbassador",
   },
 ];
