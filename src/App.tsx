@@ -27,6 +27,9 @@ const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage.tsx"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService.tsx"));
 const KVKK = lazy(() => import("./pages/KVKK.tsx"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy.tsx"));
+const BusinessInformationPage = lazy(() => import("./pages/BusinessInformationPage.tsx"));
+const RefundCancellationPolicy = lazy(() => import("./pages/RefundCancellationPolicy.tsx"));
+const ServiceDeliveryPolicy = lazy(() => import("./pages/ServiceDeliveryPolicy.tsx"));
 const ContactPage = lazy(() => import("./pages/ContactPage.tsx"));
 const Pricing = lazy(() => import("./pages/Pricing.tsx"));
 const Career = lazy(() => import("./pages/Career.tsx"));
@@ -222,6 +225,9 @@ const App = () => (
                   <Route path="/privacy-policy" element={<Navigate to="/legal/privacy" replace />} />
                   <Route path="/legal/privacy" element={<PrivacyPolicyPage />} />
                   <Route path="/legal/terms" element={<TermsOfService />} />
+                  <Route path="/legal/business-information" element={<BusinessInformationPage />} />
+                  <Route path="/legal/refund-cancellation" element={<RefundCancellationPolicy />} />
+                  <Route path="/legal/service-delivery" element={<ServiceDeliveryPolicy />} />
                   <Route path="/legal/kvkk" element={<KVKK />} />
                   <Route path="/legal/cookies" element={<CookiePolicy />} />
                   <Route path="/iletisim" element={<ContactPage />} />

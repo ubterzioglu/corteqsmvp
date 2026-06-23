@@ -36,6 +36,24 @@ const TermsOfService = () => (
       <a href="/pricing">/pricing</a> sayfasında belirtilen koşullara tabidir. AB tüketicileri
       için 14 gün <strong>cayma hakkı</strong> uygulanır (hizmet kullanılmaya başlanmadıysa).
     </p>
+    <ul>
+      <li>
+        Ödemeler <strong>Stripe</strong> veya Stripe tarafından desteklenen ödeme yöntemleriyle
+        güvenli şekilde işlenir; CorteQS hassas kart bilgilerini kendi sunucularında saklamaz.
+      </li>
+      <li>
+        Aylık veya yıllık abonelikler seçilen plana göre ücretlendirilir; yıllık planlarda indirim
+        uygulanabilir. Aboneliğiniz iptal edilmediği sürece ilgili dönem sonunda otomatik yenilenebilir.
+      </li>
+      <li>
+        İptal, yenileme ve iade koşulları{" "}
+        <a href="/legal/refund-cancellation">İade ve İptal Politikası</a> sayfasında düzenlenir.
+      </li>
+      <li>
+        Dijital hizmetlerin teslim ve erişim koşulları için{" "}
+        <a href="/legal/service-delivery">Hizmet Teslim Politikası</a> geçerlidir.
+      </li>
+    </ul>
 
     <h2>5. Sorumluluk Reddi</h2>
     <p>

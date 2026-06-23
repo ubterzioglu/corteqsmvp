@@ -102,6 +102,24 @@
     <priority>0.2</priority>
   </url>
   <url>
+    <loc>https://corteqs.net/legal/business-information</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://corteqs.net/legal/refund-cancellation</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://corteqs.net/legal/service-delivery</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
     <loc>https://corteqs.net/legal/kvkk</loc>
     <lastmod>2026-06-23</lastmod>
     <changefreq>yearly</changefreq>

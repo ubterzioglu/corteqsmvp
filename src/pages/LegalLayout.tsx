@@ -1,12 +1,15 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { ShieldCheck, FileText, Cookie, Scale } from "lucide-react";
+import { Building2, Cookie, FileText, RotateCcw, Scale, ShieldCheck, Truck } from "lucide-react";
 import { PAGE_SEO, type PageSeoKey } from "@/lib/page-seo";
 import { useSeo } from "@/lib/seo";
 
 const navLinks = [
+  { to: "/legal/business-information", label: "Şirket Bilgileri", icon: Building2 },
   { to: "/legal/privacy", label: "Gizlilik Politikası", icon: ShieldCheck },
   { to: "/legal/terms", label: "Kullanım Şartları", icon: FileText },
+  { to: "/legal/refund-cancellation", label: "İade ve İptal", icon: RotateCcw },
+  { to: "/legal/service-delivery", label: "Hizmet Teslim", icon: Truck },
   { to: "/legal/kvkk", label: "KVKK / GDPR / CCPA", icon: Scale },
   { to: "/legal/cookies", label: "Çerez Politikası", icon: Cookie },
 ];

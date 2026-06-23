@@ -73,6 +73,24 @@ export const PAGE_SEO = {
       "CorteQS çerez politikası; zorunlu, işlevsel ve analitik çerezlerin kullanımını ve tercih yönetimini açıklar.",
     canonicalPath: "/legal/cookies",
   },
+  businessInfo: {
+    title: "Şirket Bilgileri | CorteQS",
+    description:
+      "CorteQS şirket ve iletişim bilgileri; hizmet açıklaması, ödeme sonrası destek kanalları ve işletme detayları. Business information for CorteQS Global L.L.C.",
+    canonicalPath: "/legal/business-information",
+  },
+  refundCancellation: {
+    title: "İade ve İptal Politikası | CorteQS",
+    description:
+      "CorteQS iade ve iptal politikası; abonelik iptali, dijital hizmet iadeleri ve Stripe ödemeleri için koşullar. Refund & cancellation policy for digital subscriptions.",
+    canonicalPath: "/legal/refund-cancellation",
+  },
+  serviceDelivery: {
+    title: "Hizmet Teslim Politikası | CorteQS",
+    description:
+      "CorteQS hizmet teslim politikası; dijital teslimat, abonelik erişimi ve ödeme onayı süreçleri. Digital service delivery policy for CorteQS.",
+    canonicalPath: "/legal/service-delivery",
+  },
 } satisfies Record<string, SeoOptions>;
 
 export type PageSeoKey = keyof typeof PAGE_SEO;

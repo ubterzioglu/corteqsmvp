@@ -51,6 +51,9 @@ const STATIC_ROUTES = [
   { path: "/kariyer", priority: "0.4", changefreq: "monthly" },
   { path: "/legal/privacy", priority: "0.2", changefreq: "yearly" },
   { path: "/legal/terms", priority: "0.2", changefreq: "yearly" },
+  { path: "/legal/business-information", priority: "0.2", changefreq: "yearly" },
+  { path: "/legal/refund-cancellation", priority: "0.2", changefreq: "yearly" },
+  { path: "/legal/service-delivery", priority: "0.2", changefreq: "yearly" },
   { path: "/legal/kvkk", priority: "0.2", changefreq: "yearly" },
   { path: "/legal/cookies", priority: "0.2", changefreq: "yearly" },
 ];

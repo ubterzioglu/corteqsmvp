@@ -14,6 +14,7 @@ const PrivacyPolicyPage = () => (
       <li>Kimlik ve iletişim bilgileri: ad, soyad, e-posta, telefon veya WhatsApp numarası</li>
       <li>Profil ve topluluk verileri: ülke, şehir, ilgi alanları, seçtiğiniz kategoriler</li>
       <li>İçerik verileri: paylaşımlar, yorumlar, başvuru formları ve gönüllü olarak sunduğunuz bilgiler</li>
+      <li>Ödeme ve fatura verileri: abonelik planı, fatura durumu, ödeme durumu, fatura e-postası ve işlem referansı</li>
       <li>Teknik veriler: IP adresi, cihaz bilgisi, tarayıcı türü ve temel kullanım kayıtları</li>
     </ul>
 
@@ -43,43 +44,59 @@ const PrivacyPolicyPage = () => (
       talep yönetimi amaçlarıyla kullanır; üçüncü kişilere pazarlama amacıyla satmaz.
     </p>
 
-    <h2>5. Veri paylaşımı</h2>
+    <h2>5. Ödemeler ve Stripe</h2>
+    <p>
+      Ücretli aboneliklerde ödemeler <strong>Stripe</strong> veya Stripe tarafından desteklenen
+      ödeme yöntemleri üzerinden işlenir. CorteQS; tam kart numarası, kart güvenlik kodu veya
+      banka hesabı kimlik bilgileri gibi hassas ödeme verilerini kendi sunucularında saklamaz.
+      Stripe; ödeme bilgilerini, fatura ayrıntılarını, dolandırıcılık önleme sinyallerini ve işlem
+      meta verilerini kendi koşulları ve gizlilik uygulamaları çerçevesinde işleyebilir.
+    </p>
+    <p>
+      Stripe'tan; ödeme durumu, müşteri kimliği, abonelik durumu, fatura referansı, kartın son dört
+      hanesi, kart markası, fatura ülkesi veya makbuz bilgisi gibi sınırlı ödeme verileri; destek,
+      muhasebe, dolandırıcılık önleme ve abonelik yönetimi amacıyla gerekli olduğu ölçüde
+      tarafımıza iletilebilir.
+    </p>
+
+    <h2>6. Veri paylaşımı</h2>
     <p>Kişisel verilerinizi satmayız. Sınırlı paylaşım yalnızca aşağıdaki durumlarda yapılır:</p>
     <ul>
       <li>Barındırma, veri tabanı, e-posta veya analitik gibi teknik hizmet sağlayıcılarla</li>
-      <li>Ödeme, güvenlik veya yasal yükümlülük süreçlerinde gerekli iş ortaklarıyla</li>
-      <li>Kanunen yetkili kamu kurumları veya yargı mercileriyle</li>
+      <li>Stripe gibi ödeme işleyicileriyle; ödeme, fatura, abonelik, makbuz, dolandırıcılık önleme ve uyuşmazlık süreçleri için</li>
+      <li>Muhasebeci, avukat, denetçi gibi profesyonel danışmanlarla (gerektiğinde)</li>
+      <li>Kanunen yetkili kamu kurumları, düzenleyiciler, mahkemeler, bankalar veya ödeme ağlarıyla</li>
     </ul>
 
-    <h2>6. Uluslararası veri aktarımı</h2>
+    <h2>7. Uluslararası veri aktarımı</h2>
     <p>
       CorteQS global bir ürün olduğu için bazı hizmet sağlayıcılarımız farklı ülkelerde yer alabilir.
       KVKK kapsamındaki yurt dışı aktarım yükümlülükleri ile GDPR kapsamındaki uygun güvence
       mekanizmaları dikkate alınarak hareket edilir; teknik ve sözleşmesel önlemler uygulanır.
     </p>
 
-    <h2>7. Saklama süresi</h2>
+    <h2>8. Saklama süresi</h2>
     <p>
       Veriler yalnızca gerekli olduğu süre boyunca saklanır. Süreler; hizmetin niteliği,
       hukuki yükümlülükler, destek kayıtları ve güvenlik ihtiyaçları dikkate alınarak belirlenir.
       Saklama süresi sona erdiğinde veri silinir, anonimleştirilir veya erişimi kısıtlanır.
     </p>
 
-    <h2>8. Haklarınız</h2>
+    <h2>9. Haklarınız</h2>
     <p>
       Uygulanan mevzuata bağlı olarak verilerinize erişme, düzeltme, silme, işlemeyi kısıtlama,
       itiraz etme ve uygun olduğu ölçüde veri taşınabilirliği talep etme haklarına sahipsiniz.
       KVKK kapsamındaki talepleriniz için ayrıca veri sorumlusuna başvuru hakkınız bulunur.
     </p>
 
-    <h2>9. Başvuru ve iletişim</h2>
+    <h2>10. Başvuru ve iletişim</h2>
     <p>
       Gizlilik talepleri, veri hakları başvuruları veya bu politikanın yorumlanmasına ilişkin
       sorularınız için <a href="mailto:info@corteqs.net">info@corteqs.net</a> adresine yazabilirsiniz.
       Web sitemiz: <a href="https://corteqs.net/legal/privacy">https://corteqs.net/legal/privacy</a>
     </p>
 
-    <h2>10. Güncellemeler</h2>
+    <h2>11. Güncellemeler</h2>
     <p>
       Bu politika zaman zaman güncellenebilir. Esaslı değişiklikler bu sayfada yayımlanır ve
       gerektiğinde ek bildirimler sağlanır.
