@@ -1,10 +1,9 @@
-import { useEffect } from "react";
 import Founding1000Section from "@/components/Founding1000Section";
+import { PAGE_SEO } from "@/lib/page-seo";
+import { useSeo } from "@/lib/seo";
 
 const Founding1000Page = () => {
-  useEffect(() => {
-    document.dispatchEvent(new Event("render-complete"));
-  }, []);
+  useSeo(PAGE_SEO.founding1000, []);
 
   return (
     <div className="min-h-screen bg-background">

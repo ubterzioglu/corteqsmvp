@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import CorteqsWhatIsAccordion from "@/components/CorteqsWhatIsAccordion";
+import { PUBLIC_WHATSAPP_COMMUNITY } from "@/lib/contact-links";
 
 type FeaturedLink = {
   to: string;
@@ -40,7 +41,7 @@ const featuredLinks: readonly FeaturedLink[] = [
     scrollTop: true,
   },
   {
-    to: "https://chat.whatsapp.com/JDMyCOx0m2w3lqejP7vA6M",
+    to: PUBLIC_WHATSAPP_COMMUNITY,
     className:
       "border-[#1ea952] bg-[linear-gradient(135deg,#25D366_0%,#128C7E_100%)] text-white shadow-[0_16px_34px_rgba(37,211,102,0.34),inset_0_1px_0_rgba(255,255,255,0.18)]",
     label: "WhatsApp Grubu",

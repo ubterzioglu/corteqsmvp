@@ -141,14 +141,7 @@ const App = () => (
                   <Route path="/auth" element={<AuthRouteRedirect />} />
                   <Route path="/welcome/activate" element={<WelcomeActivatePage />} />
                   <Route path="/directory" element={<DirectoryPage />} />
-                  <Route
-                    path="/directory/catalog/:slug"
-                    element={
-                      <RequireAuth>
-                        <DirectoryCatalogItemPage />
-                      </RequireAuth>
-                    }
-                  />
+                  <Route path="/directory/catalog/:slug" element={<DirectoryCatalogItemPage />} />
                   <Route
                     path="/relocation"
                     element={
@@ -201,14 +194,7 @@ const App = () => (
                       </RequireAuth>
                     }
                   />
-                  <Route
-                    path="/directory/profile/:userId"
-                    element={
-                      <RequireAuth>
-                        <DirectoryProfilePage />
-                      </RequireAuth>
-                    }
-                  />
+                  <Route path="/directory/profile/:userId" element={<DirectoryProfilePage />} />
                   <Route
                     path="/profile"
                     element={
@@ -233,7 +219,7 @@ const App = () => (
                       </RequireAuth>
                     }
                   />
-                  <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                  <Route path="/privacy-policy" element={<Navigate to="/legal/privacy" replace />} />
                   <Route path="/legal/privacy" element={<PrivacyPolicyPage />} />
                   <Route path="/legal/terms" element={<TermsOfService />} />
                   <Route path="/legal/kvkk" element={<KVKK />} />

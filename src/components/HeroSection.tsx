@@ -4,6 +4,7 @@ import CorteqsWhatIsAccordion from "./CorteqsWhatIsAccordion";
 import CorteqsAnimatedBackground from "./landing/CorteqsAnimatedBackground";
 import MouseSpotlight from "./landing/MouseSpotlight";
 import HeroNetworkStats from "./landing/HeroNetworkStats";
+import { PUBLIC_WHATSAPP_COMMUNITY } from "@/lib/contact-links";
 const heroLogo = "/newlogo.png";
 
 // Dünya Kupası kampanya banner'ı — küçük hero görseli butonun parçası.
@@ -161,7 +162,7 @@ const HeroSection = () => {
                 </Link>
                 <span aria-hidden="true" className="text-slate-300">·</span>
                 <a
-                  href="https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD"
+                  href={PUBLIC_WHATSAPP_COMMUNITY}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline-offset-2 transition-colors hover:text-[#2F9B4D] hover:underline"

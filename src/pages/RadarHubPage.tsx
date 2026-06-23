@@ -5,6 +5,7 @@ import { BookOpen, RadioTower } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RadarHaberlerSection from "@/components/radar/RadarHaberlerSection";
 import RadarRehberlerSection from "@/components/radar/RadarRehberlerSection";
+import { PAGE_SEO } from "@/lib/page-seo";
 import { applySeo } from "@/lib/seo";
 
 type RadarTab = "haberler" | "rehberler";
@@ -15,16 +16,8 @@ const TAB_PATHS: Record<RadarTab, string> = {
 };
 
 const TAB_SEO: Record<RadarTab, { title: string; description: string; canonicalPath: string }> = {
-  haberler: {
-    title: "CorteQS Radar | Haberler ve Duyurular",
-    description: "CorteQS Radar haberleri, istatistikleri ve platform duyurularını tek sayfada takip edin.",
-    canonicalPath: "/radar",
-  },
-  rehberler: {
-    title: "CorteQS Radar | Ülke Rehberleri",
-    description: "Türkiye'den çıkış yapacak okur için on ülke hakkında giriş, bütçe ve kültür rehberleri.",
-    canonicalPath: "/radar/rehberler",
-  },
+  haberler: PAGE_SEO.radarNews,
+  rehberler: PAGE_SEO.radarGuides,
 };
 
 /**

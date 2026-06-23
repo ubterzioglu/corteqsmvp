@@ -1,7 +1,7 @@
 import LegalLayout from "./LegalLayout";
 
 const CookiePolicy = () => (
-  <LegalLayout title="Çerez Politikası / Cookie Policy">
+  <LegalLayout title="Çerez Politikası / Cookie Policy" seoKey="cookies">
     <p>
       CorteQS, ePrivacy Direktifi (EU 2002/58/EC), GDPR ve KVKK kapsamında çerez kullanımı
       hakkında sizi bilgilendirir.

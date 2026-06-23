@@ -3,6 +3,8 @@ import { Check, X, Zap, Crown, Building2, Users, Sparkles, Landmark, Flame, Gift
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { PAGE_SEO } from "@/lib/page-seo";
+import { useSeo } from "@/lib/seo";
 
 type UserType = "consultant" | "association" | "business";
 
@@ -152,6 +154,7 @@ const businessPlans = {
 };
 
 const Pricing = () => {
+  useSeo(PAGE_SEO.pricing, []);
   const [userType, setUserType] = useState<UserType>("consultant");
   const [isYearly, setIsYearly] = useState(false);
 

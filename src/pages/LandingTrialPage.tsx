@@ -7,7 +7,6 @@
  * Bölümler <Reveal> ile staggered gelir.
  */
 
-import { useEffect } from "react";
 import Reveal from "@/components/motion/Reveal";
 import HeroNetworkSection from "@/components/home-trial/HeroNetworkSection";
 import ManifestoSection from "@/components/home-trial/ManifestoSection";
@@ -16,12 +15,11 @@ import EcosystemRailSection from "@/components/home-trial/EcosystemRailSection";
 import ProofBandSection from "@/components/home-trial/ProofBandSection";
 import DiasporaStoriesSection from "@/components/home-trial/DiasporaStoriesSection";
 import FinalCtaSection from "@/components/home-trial/FinalCtaSection";
+import { PAGE_SEO } from "@/lib/page-seo";
+import { useSeo } from "@/lib/seo";
 
 const LandingTrialPage = () => {
-  useEffect(() => {
-    // Prerender katmanı için "içerik hazır" sinyali (Index.tsx ile aynı desen).
-    document.dispatchEvent(new Event("render-complete"));
-  }, []);
+  useSeo(PAGE_SEO.home, []);
 
   return (
     <div className="landing-ambient min-h-screen">

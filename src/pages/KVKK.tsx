@@ -1,7 +1,7 @@
 import LegalLayout from "./LegalLayout";
 
 const KVKK = () => (
-  <LegalLayout title="KVKK / GDPR / CCPA Aydınlatma Metni">
+  <LegalLayout title="KVKK / GDPR / CCPA Aydınlatma Metni" seoKey="kvkk">
     <p>
       İşbu Aydınlatma Metni; <strong>6698 sayılı KVKK m.10</strong>,{" "}
       <strong>GDPR Art. 13-14</strong>, <strong>CCPA §1798.100</strong>, <strong>PIPEDA Principle 4.8</strong>,{" "}

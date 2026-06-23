@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Linkedin } from "lucide-react";
+import { PAGE_SEO } from "@/lib/page-seo";
 import { applySeo, SEO_CANONICAL_ORIGIN } from "@/lib/seo";
 const burakPhoto = "/burak.png";
 const ubtPhoto = "/ubt.png";
@@ -146,17 +147,15 @@ const FounderPortrait = ({
 
 const FoundersPage = () => {
   useEffect(() => {
+    const seo = PAGE_SEO.founders;
     return applySeo({
-      title: "Kurucular | CorteQS",
-      description:
-        "CorteQS Diaspora Connect kurucu ekibi: şehir bazlı diaspora ağları ve güven temelli bağlantı sistemleri üzerine çalışan ekip.",
-      canonicalPath: "/founders",
+      ...seo,
       jsonLd: {
         "@context": "https://schema.org",
         "@type": "AboutPage",
         url: `${SEO_CANONICAL_ORIGIN}/founders`,
         inLanguage: "tr",
-        name: "Kurucular | CorteQS",
+        name: seo.title,
         about: { "@id": "https://corteqs.net/#organization" },
         mainEntity: [
           { "@id": "https://corteqs.net/#founder-qualtron-sinclair" },

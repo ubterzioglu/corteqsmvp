@@ -22,6 +22,7 @@ import {
   UserRoundPlus,
   Zap,
 } from "lucide-react";
+import { PUBLIC_WHATSAPP_COMMUNITY } from "@/lib/contact-links";
 const corteqsLogo = "/newlogo.png";
 import heroNetworkLight from "@/assets/hero-network-light.jpg";
 
@@ -191,7 +192,7 @@ const AboutPage = () => {
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <a
-                    href="https://chat.whatsapp.com/JDMyCOx0m2w3lqejP7vA6M"
+                    href={PUBLIC_WHATSAPP_COMMUNITY}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#25D366]/25 transition-transform hover:-translate-y-0.5 hover:bg-[#1ebe5d]"
@@ -484,7 +485,7 @@ const AboutPage = () => {
 
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
-                href="https://chat.whatsapp.com/JDMyCOx0m2w3lqejP7vA6M"
+                href={PUBLIC_WHATSAPP_COMMUNITY}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex min-w-[240px] items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#25D366]/25 transition-transform hover:-translate-y-0.5 hover:bg-[#1ebe5d]"

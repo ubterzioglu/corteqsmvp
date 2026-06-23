@@ -1,0 +1,78 @@
+import type { SeoOptions } from "@/lib/seo";
+
+export const PAGE_SEO = {
+  home: {
+    title: "CorteQS | Dünyadaki Türkleri Bir Araya Getiren Platform",
+    description:
+      "CorteQS, dünyadaki Türkleri şehir bazlı bağlantılar, topluluklar ve fırsatlar etrafında buluşturan diaspora platformudur.",
+    canonicalPath: "/",
+  },
+  founders: {
+    title: "Kurucular | CorteQS",
+    description:
+      "CorteQS kurucu ekibini, diaspora vizyonunu ve platformun güven temelli büyüme yaklaşımını keşfedin.",
+    canonicalPath: "/founders",
+  },
+  pricing: {
+    title: "Fiyatlandırma | CorteQS",
+    description:
+      "CorteQS danışman, kuruluş ve işletme paketlerini karşılaştırın; size uygun üyelik planını seçin.",
+    canonicalPath: "/pricing",
+  },
+  founding1000: {
+    title: "Founding 1000 | CorteQS",
+    description:
+      "CorteQS Founding 1000 programına katılın; erken dönem topluluk ve görünürlük avantajlarını keşfedin.",
+    canonicalPath: "/founding-1000",
+  },
+  contact: {
+    title: "İletişim | CorteQS",
+    description:
+      "CorteQS ile iletişime geçin. Destek, iş birliği ve topluluk soruları için resmi kanallarımızı kullanın.",
+    canonicalPath: "/iletisim",
+  },
+  career: {
+    title: "Kariyer | CorteQS",
+    description:
+      "CorteQS kariyer sayfasında açık rollerimizi ve global diaspora ekosistemini birlikte büyütme fırsatlarını inceleyin.",
+    canonicalPath: "/kariyer",
+  },
+  radarNews: {
+    title: "CorteQS Radar | Haberler ve Duyurular",
+    description:
+      "CorteQS Radar haberlerini, diaspora duyurularını ve platform güncellemelerini tek sayfada takip edin.",
+    canonicalPath: "/radar",
+  },
+  radarGuides: {
+    title: "CorteQS Radar | Ülke Rehberleri",
+    description:
+      "CorteQS Radar rehberlerinde ülkeler, şehirler ve diaspora yaşamına dair başlangıç bilgilerini tek sayfada bulun.",
+    canonicalPath: "/radar/rehberler",
+  },
+  privacy: {
+    title: "Gizlilik Politikası | CorteQS",
+    description:
+      "CorteQS Gizlilik Politikası; kişisel verilerin nasıl toplandığını, işlendiğini, korunduğunu ve hangi haklara sahip olduğunuzu açıklar.",
+    canonicalPath: "/legal/privacy",
+  },
+  kvkk: {
+    title: "KVKK ve Aydınlatma Metni | CorteQS",
+    description:
+      "CorteQS KVKK, GDPR ve ilgili veri koruma çerçevelerine ilişkin aydınlatma metnini inceleyin.",
+    canonicalPath: "/legal/kvkk",
+  },
+  terms: {
+    title: "Kullanım Şartları | CorteQS",
+    description:
+      "CorteQS kullanım şartlarını, platform sorumluluklarını ve üyelik kurallarını Türkçe olarak inceleyin.",
+    canonicalPath: "/legal/terms",
+  },
+  cookies: {
+    title: "Çerez Politikası | CorteQS",
+    description:
+      "CorteQS çerez politikası; zorunlu, işlevsel ve analitik çerezlerin kullanımını ve tercih yönetimini açıklar.",
+    canonicalPath: "/legal/cookies",
+  },
+} satisfies Record<string, SeoOptions>;
+
+export type PageSeoKey = keyof typeof PAGE_SEO;

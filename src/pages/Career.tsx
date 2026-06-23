@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import InterestForm from "@/components/InterestForm";
 import { Button } from "@/components/ui/button";
+import { PAGE_SEO } from "@/lib/page-seo";
+import { useSeo } from "@/lib/seo";
 
 interface Job {
   id: string;
@@ -129,6 +131,7 @@ const jobs: Job[] = [
 ];
 
 const Career = () => {
+  useSeo(PAGE_SEO.career, []);
   const [open, setOpen] = useState(false);
   const [activeJob, setActiveJob] = useState<Job | null>(null);
 

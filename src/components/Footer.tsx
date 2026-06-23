@@ -10,6 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import { footerFlatLinks } from "@/components/footerLinks";
 import DiasporaNetworkLayer from "@/components/landing/DiasporaNetworkLayer";
+import { PUBLIC_WHATSAPP_COMMUNITY } from "@/lib/contact-links";
 
 const socialLinks = [
   {
@@ -55,7 +56,7 @@ const socialLinks = [
     className: "text-[#229ed9]",
   },
   {
-    href: "https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD",
+    href: PUBLIC_WHATSAPP_COMMUNITY,
     label: "WhatsApp",
     icon: MessageCircle,
     className: "text-[#25d366]",

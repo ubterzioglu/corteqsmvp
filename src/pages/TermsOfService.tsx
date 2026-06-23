@@ -1,7 +1,7 @@
 import LegalLayout from "./LegalLayout";
 
 const TermsOfService = () => (
-  <LegalLayout title="Kullanım Şartları / Terms of Service">
+  <LegalLayout title="Kullanım Şartları / Terms of Service" seoKey="terms">
     <p>
       Bu Kullanım Şartları ("Şartlar"), CorteQS platformunu ("Platform") kullanımınızı
       düzenler. Platformu kullanarak bu Şartları kabul etmiş sayılırsınız.
