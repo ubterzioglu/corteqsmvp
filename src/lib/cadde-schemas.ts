@@ -3,6 +3,8 @@
 
 import { z } from "zod";
 
+export const CADDE_CAFE_CAPACITY_OPTIONS = [10, 25, 50] as const;
+
 export const caddeFilterSchema = z.object({
   mode: z.enum(["demo", "real"]),
   countries: z.array(z.string()),
@@ -37,6 +39,14 @@ const httpUrl = z
   .url("Geçerli bir URL gir.")
   .refine((value) => value.startsWith("http://") || value.startsWith("https://"), "URL http(s) ile başlamalı.");
 
+const caddeCafeCapacitySchema = z
+  .number()
+  .int()
+  .refine(
+    (value) => CADDE_CAFE_CAPACITY_OPTIONS.includes(value as (typeof CADDE_CAFE_CAPACITY_OPTIONS)[number]),
+    "Kapasite 10, 25 veya 50 olmalı.",
+  );
+
 export const caddeCafeCreateSchema = z
   .object({
     title: z.string().trim().min(3, "Cafe adı en az 3 karakter olmalı.").max(80, "Cafe adı en fazla 80 karakter olabilir."),
@@ -50,7 +60,7 @@ export const caddeCafeCreateSchema = z
     entryQuestion: z.string().trim().max(200, "Giriş sorusu en fazla 200 karakter olabilir.").optional(),
     startsAt: z.string().optional(),
     endsAt: z.string().optional(),
-    capacity: z.number().int().min(1, "Kapasite 1'den küçük olamaz.").optional(),
+    capacity: caddeCafeCapacitySchema.optional(),
     externalLinks: z.array(httpUrl).max(3, "En fazla 3 dış link ekleyebilirsin.").optional(),
     diasporaKey: z.enum(["tr", "in", "cn", "ph"]).optional(),
   })

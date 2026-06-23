@@ -24,8 +24,9 @@ const ScrollTopButton = () => {
       type="button"
       onClick={scrollToTop}
       aria-label="Yukarı çık"
+      data-testid="scroll-top-button"
       className={[
-        "fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-2xl",
+        "fixed z-50 flex h-11 w-11 items-center justify-center rounded-2xl sm:h-12 sm:w-auto sm:px-4",
         "border border-white/35 text-white shadow-[0_18px_40px_rgba(18,95,150,0.28)] backdrop-blur-xl",
         "transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-[0_22px_44px_rgba(249,115,22,0.28)]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2",
@@ -34,6 +35,8 @@ const ScrollTopButton = () => {
         isVisible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0",
       ].join(" ")}
       style={{
+        right: "max(0.75rem, calc(env(safe-area-inset-right) + 0.35rem))",
+        bottom: "max(0.75rem, calc(env(safe-area-inset-bottom) + 0.75rem))",
         background:
           "linear-gradient(135deg, rgba(8,105,182,0.98) 0%, rgba(16,185,129,0.96) 46%, rgba(249,115,22,0.96) 100%)",
       }}
@@ -46,9 +49,9 @@ const ScrollTopButton = () => {
         className="absolute bottom-0 right-0 h-5 w-5 rounded-tl-2xl rounded-br-2xl bg-[linear-gradient(135deg,rgba(255,214,102,0.4),rgba(251,146,60,0.65))]"
         aria-hidden
       />
-      <span className="relative z-10 flex flex-col items-center leading-none">
+      <span className="relative z-10 flex items-center gap-2 leading-none">
         <ArrowUp className="h-4 w-4" strokeWidth={2.5} />
-        <span className="mt-1 text-[10px] font-black tracking-[0.24em]">UP</span>
+        <span className="hidden text-[10px] font-black tracking-[0.24em] sm:inline">UP</span>
       </span>
     </button>
   );

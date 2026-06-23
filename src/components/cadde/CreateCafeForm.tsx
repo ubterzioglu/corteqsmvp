@@ -21,6 +21,7 @@ import { createCaddeCafe, listCaddeCities, listCaddeCountries } from "@/lib/cadd
 import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import { moderateCaddeCafeName } from "@/lib/cadde-rules";
+import { CADDE_CAFE_CAPACITY_OPTIONS } from "@/lib/cadde-schemas";
 import type { CaddeCafeEntryMode } from "@/lib/cadde-types";
 
 const THEME_SUGGESTIONS = ["IT", "Hekimler", "Profesyoneller", "İşletmeler", "Kuruluşlar", "Blogger/Vlogger", "Genel"] as const;
@@ -220,8 +221,16 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label>Kapasite</Label>
-              <Input type="number" min={1} value={form.capacity} onChange={(event) => update("capacity", event.target.value)} placeholder="Sınırsız" />
+              <Label>Kontenjan</Label>
+              <Select value={form.capacity || "__unlimited__"} onValueChange={(value) => update("capacity", value === "__unlimited__" ? "" : value)}>
+                <SelectTrigger><SelectValue placeholder="Sınırsız" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__unlimited__">Sınırsız</SelectItem>
+                  {CADDE_CAFE_CAPACITY_OPTIONS.map((capacity) => (
+                    <SelectItem key={capacity} value={String(capacity)}>{capacity} kişi</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label>Dış link</Label>

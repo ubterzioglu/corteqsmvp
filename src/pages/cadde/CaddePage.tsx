@@ -24,6 +24,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { PUBLIC_WHATSAPP_COMMUNITY } from "@/lib/contact-links";
 import {
   countCaddePostsSince,
   createCaddeComment,
@@ -119,6 +120,7 @@ const CaddePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [composer, setComposer] = useState(emptyComposer);
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
+  const [expandedCommentPostId, setExpandedCommentPostId] = useState<string | null>(null);
   const filters = useMemo(() => parseCaddeFilters(searchParams), [searchParams]);
   const diasporaKey = useCaddeDiasporaKey();
   const actorContextQuery = useCaddeActorContext(Boolean(session));
@@ -300,6 +302,12 @@ const CaddePage = () => {
     () => new Map((interestCatalogQuery.data ?? []).map((interest) => [interest.key, interest.labelTr])),
     [interestCatalogQuery.data],
   );
+  const hasGeoSelection = filters.countries.length > 0 || filters.cities.length > 0;
+  const sparseContentHint = hasGeoSelection
+    ? "Bu bölgede içerik azsa ülke geneli ve global akış da devreye girer."
+    : "İçerik az olduğunda global akışla başlayıp ilk hareketi sen başlatabilirsin.";
+  const activeCafes = cafesQuery.data ?? [];
+  const billboardCards = billboardsQuery.data ?? [];
 
   return (
     <CaddeProfileGate context={actorContextQuery.data} isLoading={actorContextQuery.isLoading}>
@@ -328,7 +336,7 @@ const CaddePage = () => {
       </section>
 
       <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-6 lg:grid-cols-[290px_minmax(0,1fr)_320px] lg:px-6">
-        <aside className="space-y-5">
+        <aside className="order-2 space-y-5 lg:order-none">
           <CarsiGlobalTicker filters={filters} />
 
           <Card className="border-orange-100 bg-white/90 shadow-[0_20px_50px_rgba(15,23,42,0.06)]">
@@ -377,7 +385,7 @@ const CaddePage = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-slate-200 bg-white/90">
+          <Card className="hidden border-slate-200 bg-white/90 lg:block">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <MessagesSquare className="h-4 w-4 text-orange-500" />
@@ -401,7 +409,7 @@ const CaddePage = () => {
               <CardDescription>Seçili filtre içindeki odalar</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {(cafesQuery.data ?? []).slice(0, 3).map((cafe) => (
+              {activeCafes.slice(0, 3).map((cafe) => (
                 <div key={cafe.id} className="rounded-2xl border border-slate-200 p-3">
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -412,12 +420,12 @@ const CaddePage = () => {
                   </div>
                 </div>
               ))}
-              {!cafesQuery.data?.length ? <p className="text-sm text-slate-500">Bu filtrelerde aktif cafe yok.</p> : null}
+              {!activeCafes.length ? <p className="text-sm text-slate-500">Bu filtrelerde aktif cafe yok.</p> : null}
             </CardContent>
           </Card>
         </aside>
 
-        <section className="space-y-5">
+        <section className="order-1 space-y-5 lg:order-none">
           <Card className="overflow-hidden border-slate-200 bg-white/90">
             <CardHeader className="gap-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -450,31 +458,48 @@ const CaddePage = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                {(cafesQuery.data ?? []).map((cafe) => (
-                  <div key={cafe.id} className="rounded-[22px] border border-slate-200 bg-[linear-gradient(180deg,#fff_0%,#f8fafc_100%)] p-4 shadow-sm">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="font-semibold text-slate-900">{cafe.title}</p>
-                        <p className="mt-1 text-xs text-slate-500">{cafe.city ?? "Global"} • {formatDateTime(cafe.startsAt)}</p>
+              {activeCafes.length > 0 ? (
+                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                  {activeCafes.map((cafe) => (
+                    <div key={cafe.id} className="rounded-[22px] border border-slate-200 bg-[linear-gradient(180deg,#fff_0%,#f8fafc_100%)] p-4 shadow-sm">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="font-semibold text-slate-900">{cafe.title}</p>
+                          <p className="mt-1 text-xs text-slate-500">{cafe.city ?? "Global"} • {formatDateTime(cafe.startsAt)}</p>
+                        </div>
+                        <div className="flex flex-col items-end gap-1">
+                          {cafe.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
+                          {cafe.entryMode !== "open" ? <Badge variant="outline">{cafe.entryMode === "approval" ? "Onaylı" : "Davetli"}</Badge> : null}
+                        </div>
                       </div>
-                      <div className="flex flex-col items-end gap-1">
-                        {cafe.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
-                        {cafe.entryMode !== "open" ? <Badge variant="outline">{cafe.entryMode === "approval" ? "Onaylı" : "Davetli"}</Badge> : null}
+                      <p className="mt-3 text-sm leading-relaxed text-slate-600">{cafe.summary}</p>
+                      <div className="mt-4 flex items-center justify-between gap-3">
+                        <div className="text-xs text-slate-500">Host: {cafe.hostName} • {cafe.memberCount} üye</div>
+                        <Button size="sm" variant={cafe.joinedByViewer ? "secondary" : "outline"} asChild>
+                          <Link to={`/cadde/cafe/${cafe.id}`}>
+                            {cafe.joinedByViewer ? "Odaya Gir" : cafe.viewerMemberStatus === "pending" ? "Onay Bekliyor" : "İncele & Katıl"}
+                          </Link>
+                        </Button>
                       </div>
                     </div>
-                    <p className="mt-3 text-sm leading-relaxed text-slate-600">{cafe.summary}</p>
-                    <div className="mt-4 flex items-center justify-between gap-3">
-                      <div className="text-xs text-slate-500">Host: {cafe.hostName} • {cafe.memberCount} üye</div>
-                      <Button size="sm" variant={cafe.joinedByViewer ? "secondary" : "outline"} asChild>
-                        <Link to={`/cadde/cafe/${cafe.id}`}>
-                          {cafe.joinedByViewer ? "Odaya Gir" : cafe.viewerMemberStatus === "pending" ? "Onay Bekliyor" : "İncele & Katıl"}
-                        </Link>
-                      </Button>
+                  ))}
+                </div>
+              ) : (
+                <div
+                  data-testid="cadde-cafes-empty-state"
+                  className="rounded-[28px] border border-dashed border-orange-200 bg-[linear-gradient(180deg,#fffaf4_0%,#fff4ea_100%)] p-6"
+                >
+                  <p className="text-sm font-semibold text-slate-900">Henüz aktif bir cafe açılmadı.</p>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    Şehir sohbetleri, tema bazlı odalar ve kısa buluşmalar burada görünür. {sparseContentHint}
+                  </p>
+                  {session ? (
+                    <div className="mt-4">
+                      <CreateCafeForm trigger={<Button size="sm" variant="outline" className="rounded-2xl">İlk Cafe'yi Aç</Button>} />
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ) : null}
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -626,8 +651,12 @@ const CaddePage = () => {
                   </CardContent>
                 </Card>
               ) : (
-                <Card key={item.post.id} className="border-slate-200 bg-white/95 shadow-sm">
-                  <CardContent className="space-y-4 p-5">
+                <Card
+                  key={item.post.id}
+                  data-testid="cadde-feed-card"
+                  className="overflow-hidden rounded-[28px] border-slate-200/90 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] shadow-[0_18px_42px_rgba(15,23,42,0.08)]"
+                >
+                  <CardContent className="space-y-4 p-5 sm:p-6">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="space-y-2">
                         <div className="flex flex-wrap items-center gap-2">
@@ -707,10 +736,19 @@ const CaddePage = () => {
                           </Popover>
                         );
                       })()}
-                      <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-sm text-slate-500">
-                        <MessageCircle className="h-4 w-4" />
-                        {item.post.commentCount} yorum
-                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        data-testid="cadde-comment-toggle"
+                        className="rounded-full"
+                        onClick={() =>
+                          setExpandedCommentPostId((current) => (current === item.post.id ? null : item.post.id))
+                        }
+                      >
+                        <MessageCircle className="mr-1.5 h-4 w-4" />
+                        {item.post.commentCount > 0 ? `${item.post.commentCount} yorum` : "Yorum yaz"}
+                      </Button>
                       {session && item.post.authorUserId !== user?.id ? (
                         <Button
                           variant="ghost"
@@ -727,34 +765,54 @@ const CaddePage = () => {
 
                     <Separator />
 
-                    <div className="space-y-3">
-                      {item.post.comments.map((comment) => (
-                        <div key={comment.id} className="rounded-2xl bg-slate-50 px-4 py-3">
-                          <p className="text-sm font-semibold text-slate-900">{comment.authorName}</p>
-                          <p className="mt-1 text-sm text-slate-700">{comment.body}</p>
-                        </div>
-                      ))}
+                    <div
+                      data-testid="cadde-comment-panel"
+                      className="rounded-[24px] border border-slate-200/90 bg-slate-50/80 p-4"
+                    >
+                      <div className="space-y-3">
+                        {(expandedCommentPostId === item.post.id ? item.post.comments : item.post.comments.slice(0, 2)).map((comment) => (
+                          <div key={comment.id} className="rounded-2xl border border-slate-200/80 bg-white px-4 py-3">
+                            <p className="text-sm font-semibold text-slate-900">{comment.authorName}</p>
+                            <p className="mt-1 text-sm text-slate-700">{comment.body}</p>
+                          </div>
+                        ))}
 
-                      <div className="flex gap-2">
-                        <Textarea
-                          value={commentDrafts[item.post.id] ?? ""}
-                          onChange={(event) => setCommentDrafts((current) => ({ ...current, [item.post.id]: event.target.value }))}
-                          placeholder={session ? "Yorum yaz" : "Yorum için giriş yap"}
-                          rows={2}
-                          disabled={!session}
-                        />
-                        <Button
-                          className="self-end"
-                          onClick={() => {
-                            if (!session) {
-                              navigate("/login");
-                              return;
-                            }
-                            commentMutation.mutate({ postId: item.post.id, body: commentDrafts[item.post.id] ?? "" });
-                          }}
-                        >
-                          Gönder
-                        </Button>
+                        {expandedCommentPostId !== item.post.id && item.post.comments.length > 2 ? (
+                          <p className="text-xs text-slate-500">
+                            +{item.post.comments.length - 2} yorum daha var. Tümünü görmek için yorumları aç.
+                          </p>
+                        ) : null}
+
+                        {expandedCommentPostId === item.post.id ? (
+                          session ? (
+                            <div className="space-y-3">
+                              {item.post.comments.length === 0 ? (
+                                <p className="text-sm text-slate-500">İlk yorumu sen bırak ve konuşmayı başlat.</p>
+                              ) : null}
+                              <div className="flex flex-col gap-2 sm:flex-row">
+                                <Textarea
+                                  value={commentDrafts[item.post.id] ?? ""}
+                                  onChange={(event) => setCommentDrafts((current) => ({ ...current, [item.post.id]: event.target.value }))}
+                                  placeholder="Yorum yaz"
+                                  rows={2}
+                                  className="min-h-[88px] bg-white"
+                                />
+                                <Button
+                                  className="self-end sm:min-w-[112px]"
+                                  onClick={() => {
+                                    commentMutation.mutate({ postId: item.post.id, body: commentDrafts[item.post.id] ?? "" });
+                                  }}
+                                >
+                                  Gönder
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="rounded-2xl border border-dashed border-orange-200 bg-white px-4 py-4 text-sm text-slate-600">
+                              Yorum yazmak için <Link to="/login" className="font-semibold text-orange-700 underline">giriş yap</Link>.
+                            </div>
+                          )
+                        ) : null}
                       </div>
                     </div>
                   </CardContent>
@@ -763,9 +821,16 @@ const CaddePage = () => {
             )}
 
             {!feedQuery.isLoading && filters.mode === "real" && feedItems.length === 0 ? (
-              <Card className="border-dashed border-slate-300 bg-white/90">
+              <Card
+                data-testid="cadde-feed-empty-state"
+                className="border-dashed border-slate-300 bg-[linear-gradient(180deg,#ffffff_0%,#fff7ee_100%)]"
+              >
                 <CardContent className="p-8 text-center text-slate-500">
-                  Bu şehirde henüz paylaşım yok. İlk paylaşımı sen yap veya ülke genelindeki akışı keşfet.
+                  <p className="text-base font-semibold text-slate-900">Bu akış henüz sessiz.</p>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    İlk paylaşımı sen yapabilir, ülke genelindeki konuşmaları izleyebilir veya köprü moduyla daha geniş akışı keşfedebilirsin.
+                  </p>
+                  <p className="mt-3 text-xs text-slate-500">{sparseContentHint}</p>
                 </CardContent>
               </Card>
             ) : null}
@@ -780,7 +845,7 @@ const CaddePage = () => {
           </div>
         </section>
 
-        <aside className="space-y-5">
+        <aside className="order-3 space-y-5 lg:order-none">
           {/* CorteQS Panosu — topluluk panosu / maskot teaser'ı */}
           <Card className="overflow-hidden border-orange-100 bg-[linear-gradient(160deg,#fff7ec_0%,#ffffff_60%)]">
             <CardHeader className="pb-3">
@@ -795,7 +860,7 @@ const CaddePage = () => {
                 </p>
               </div>
               <a
-                href="https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD"
+                href={PUBLIC_WHATSAPP_COMMUNITY}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/70 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white"
@@ -814,7 +879,7 @@ const CaddePage = () => {
               <CardDescription>Danışman, işletme ve etkinlik kartları</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {(billboardsQuery.data ?? []).map((card) => (
+              {billboardCards.length > 0 ? billboardCards.map((card) => (
                 <div key={card.id} className="rounded-[24px] border border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] p-4 shadow-sm">
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="outline">{card.type}</Badge>
@@ -827,7 +892,17 @@ const CaddePage = () => {
                     <Link to={card.ctaUrl}>{card.ctaLabel}</Link>
                   </Button>
                 </div>
-              ))}
+              )) : (
+                <div
+                  data-testid="cadde-billboards-empty-state"
+                  className="rounded-[24px] border border-dashed border-slate-200 bg-slate-50 px-4 py-5"
+                >
+                  <p className="text-sm font-semibold text-slate-900">Şehrinden öne çıkan ilk kart burada görünecek.</p>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    Danışman, işletme ve etkinlik keşfi için alan hazır. {sparseContentHint}
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 

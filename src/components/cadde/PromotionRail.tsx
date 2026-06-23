@@ -24,7 +24,6 @@ const PromotionRail = ({ filters }: PromotionRailProps) => {
   });
 
   const promotions = promotionsQuery.data ?? [];
-  if (promotions.length === 0) return null;
 
   return (
     <Card className="border-orange-100 bg-white/90">
@@ -32,11 +31,25 @@ const PromotionRail = ({ filters }: PromotionRailProps) => {
         <CardTitle className="text-base">Tanıtım</CardTitle>
         <CardDescription>Sponsorlu keşif alanı</CardDescription>
       </CardHeader>
-      <div className="space-y-3 px-4 pb-4">
-        {promotions.map((promotion) => (
-          <SponsoredFeedCard key={promotion.campaignId} promotion={promotion} compact />
-        ))}
-      </div>
+      {promotions.length > 0 ? (
+        <div className="space-y-3 px-4 pb-4">
+          {promotions.map((promotion) => (
+            <SponsoredFeedCard key={promotion.campaignId} promotion={promotion} compact />
+          ))}
+        </div>
+      ) : (
+        <div
+          data-testid="cadde-promotions-empty-state"
+          className="px-4 pb-4"
+        >
+          <div className="rounded-[22px] border border-dashed border-orange-200 bg-orange-50 px-4 py-5">
+            <p className="text-sm font-semibold text-slate-900">İlk tanıtım kartı burada yayınlanacak.</p>
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              Yerel kampanyalar, topluluk çağrıları ve sponsorlu keşif alanları bu bölümde görünür.
+            </p>
+          </div>
+        </div>
+      )}
     </Card>
   );
 };

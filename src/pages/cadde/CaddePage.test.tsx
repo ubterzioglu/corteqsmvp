@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -36,6 +36,8 @@ const listCaddeCitiesMock = vi.fn();
 const listCaddeCafesMock = vi.fn();
 const listCaddeBillboardsMock = vi.fn();
 const getCaddeSponsoredMock = vi.fn();
+const countCaddePostsSinceMock = vi.fn();
+const listCaddePromotionsMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
@@ -59,8 +61,13 @@ vi.mock("@/lib/cadde-api", async () => {
     listCaddeCafes: (...args: unknown[]) => listCaddeCafesMock(...args),
     listCaddeBillboardCards: (...args: unknown[]) => listCaddeBillboardsMock(...args),
     getCaddeSponsoredPlacement: (...args: unknown[]) => getCaddeSponsoredMock(...args),
+    countCaddePostsSince: (...args: unknown[]) => countCaddePostsSinceMock(...args),
   };
 });
+
+vi.mock("@/lib/cadde-tanitim-api", () => ({
+  listCaddePromotions: (...args: unknown[]) => listCaddePromotionsMock(...args),
+}));
 
 const renderPage = (entry = "/cadde") => {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -76,6 +83,8 @@ const renderPage = (entry = "/cadde") => {
 describe("CaddePage", () => {
   beforeEach(() => {
     actorContextMock.mockReturnValue({ data: makeActorContext(), isLoading: false });
+    countCaddePostsSinceMock.mockResolvedValue(0);
+    listCaddePromotionsMock.mockResolvedValue([]);
   });
 
   it("shows the profile gate with missing fields when the actor context is incomplete", async () => {
@@ -168,5 +177,118 @@ describe("CaddePage", () => {
     expect(await screen.findByText(/Şehrindeki ihtiyacını, sorunu, ilanını veya etkinliğini paylaş/i)).toBeInTheDocument();
     // "Gerçek / Demo" etiketi artık public UI'da görünmemeli.
     expect(screen.queryByText(/Gerçek \/ Demo/i)).not.toBeInTheDocument();
+  });
+
+  it("keeps comment composer collapsed by default and expands only for the selected post", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({
+      items: [
+        {
+          id: "post-1",
+          mode: "real",
+          type: "text",
+          title: "Berlin'de yeni bir başlangıç",
+          body: "İlk paylaşım gövdesi",
+          authorName: "Ayşe",
+          authorRole: "Üye",
+          authorAvatarUrl: null,
+          authorUserId: "user-2",
+          country: "Almanya",
+          city: "Berlin",
+          isBridge: false,
+          pinned: false,
+          createdAt: "2026-06-23T10:00:00Z",
+          needCategory: null,
+          interests: [],
+          reactionCounts: { like: 1, support: 0, idea: 0 },
+          totalReactionCount: 1,
+          commentCount: 3,
+          comments: [
+            { id: "comment-1", postId: "post-1", userId: "u1", body: "İlk yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" },
+            { id: "comment-2", postId: "post-1", userId: "u2", body: "İkinci yorum", authorName: "Mert", createdAt: "2026-06-23T10:02:00Z" },
+            { id: "comment-3", postId: "post-1", userId: "u3", body: "Üçüncü yorum", authorName: "Deniz", createdAt: "2026-06-23T10:03:00Z" },
+          ],
+          viewerReactions: [],
+        },
+      ],
+      nextPage: null,
+    });
+
+    renderPage();
+
+    expect(await screen.findByText("Berlin'de yeni bir başlangıç")).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText("Yorum yaz")).not.toBeInTheDocument();
+    expect(screen.queryByText("Üçüncü yorum")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("cadde-comment-toggle"));
+
+    expect(await screen.findByPlaceholderText("Yorum yaz")).toBeInTheDocument();
+    expect(screen.getByText("Üçüncü yorum")).toBeInTheDocument();
+  });
+
+  it("shows invitation-style empty states when cafes, promotions and billboards are empty", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+
+    renderPage();
+
+    expect(await screen.findByTestId("cadde-feed-empty-state")).toBeInTheDocument();
+    expect(screen.getByTestId("cadde-cafes-empty-state")).toBeInTheDocument();
+    expect(screen.getByTestId("cadde-promotions-empty-state")).toBeInTheDocument();
+    expect(screen.getByTestId("cadde-billboards-empty-state")).toBeInTheDocument();
+  });
+
+  it("shows a compact login CTA in the comment panel for visitors", async () => {
+    useAuthMock.mockReturnValue({ session: null, user: null, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({
+      items: [
+        {
+          id: "post-visitor",
+          mode: "real",
+          type: "question",
+          title: null,
+          body: "Burası ziyaretçi testi",
+          authorName: "Elif",
+          authorRole: null,
+          authorAvatarUrl: null,
+          authorUserId: null,
+          country: null,
+          city: null,
+          isBridge: false,
+          pinned: false,
+          createdAt: "2026-06-23T10:00:00Z",
+          needCategory: null,
+          interests: [],
+          reactionCounts: { like: 0, support: 0, idea: 0 },
+          totalReactionCount: 0,
+          commentCount: 0,
+          comments: [],
+          viewerReactions: [],
+        },
+      ],
+      nextPage: null,
+    });
+
+    renderPage();
+
+    fireEvent.click(await screen.findByTestId("cadde-comment-toggle"));
+
+    expect(await screen.findByText(/Yorum yazmak için/i)).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText("Yorum yaz")).not.toBeInTheDocument();
   });
 });
