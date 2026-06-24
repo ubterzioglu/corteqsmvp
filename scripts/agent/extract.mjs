@@ -68,6 +68,25 @@ export function extractZodRequest(source) {
 }
 
 /**
+ * Edge function dosyasında dönen HTTP status kodlarını çıkarır.
+ * jsonResponse(..., NNN, ...) / json(..., NNN) / status: NNN / , NNN, kalıpları.
+ * @param {string} source
+ * @returns {number[]} Artan sıralı benzersiz status kodları.
+ */
+export function extractHttpStatuses(source) {
+  const codes = new Set();
+  // jsonResponse({...}, 200, ...) veya json({...}, 429)
+  for (const m of source.matchAll(/(?:jsonResponse|json)\s*\([^)]*?,\s*(\d{3})\b/g)) {
+    codes.add(Number(m[1]));
+  }
+  // status: 410 / { status: 201 }
+  for (const m of source.matchAll(/\bstatus:\s*(\d{3})\b/g)) {
+    codes.add(Number(m[1]));
+  }
+  return [...codes].filter((c) => c >= 200 && c < 600).sort((a, b) => a - b);
+}
+
+/**
  * Bir edge function dosyasından tool nesnesi çıkarır.
  * @param {string} relPath supabase/functions/<name>/index.ts
  * @param {string} source
@@ -102,6 +121,8 @@ export function extractEdgeTool(relPath, source) {
     tables_read_write: tables,
     rpcs,
     limits: extractLimits(source),
+    http_statuses: extractHttpStatuses(source),
+    http_method: /OPTIONS/.test(source) ? "POST" : "POST",
     dependencies,
     version_pins: { "@supabase/supabase-js": supaPin, zod: zodPin },
     evidence_path: relPath,

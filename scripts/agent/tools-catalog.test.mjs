@@ -11,6 +11,7 @@ import {
   extractWorkerTool,
   extractLibTool,
 } from "./extract.mjs";
+import { buildOpenApi } from "./openapi.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..", "..");
@@ -143,5 +144,36 @@ describe("ui modülleri — tool-by-tool", () => {
     const t = catalog.tools.find((x) => x.tool_key === "module.muhasebe_api");
     expect(t).toBeTruthy();
     expect(t.exports.length).toBeGreaterThan(0);
+  });
+});
+
+// --- OPENAPI: sözleşme üretimi (Faz 2) -------------------------------------
+describe("openapi sözleşmesi", () => {
+  it("her edge function için bir path üretilir", () => {
+    const yaml = buildOpenApi(catalog);
+    const edges = catalog.tools.filter((t) => t.family === "edge_function");
+    for (const e of edges) {
+      expect(yaml, `${e.tool_name} path eksik`).toContain(
+        `/functions/v1/${e.tool_name}:`,
+      );
+      expect(yaml).toContain(`x-tool-key: ${e.tool_key}`);
+    }
+  });
+
+  it("deprecated edge function spec'te deprecated: true taşır", () => {
+    const yaml = buildOpenApi(catalog);
+    const block = yaml.slice(yaml.indexOf("/functions/v1/lansman-admin:"));
+    expect(block).toContain("deprecated: true");
+  });
+
+  it("find-matches required offers_needs + kısıtlar taşır", () => {
+    const yaml = buildOpenApi(catalog);
+    expect(yaml).toContain("required: [offers_needs]");
+    expect(yaml).toContain("minLength: 5");
+    expect(yaml).toContain("maxLength: 2000");
+  });
+
+  it("üretim deterministiktir (aynı katalog → aynı YAML)", () => {
+    expect(buildOpenApi(catalog)).toBe(buildOpenApi(catalog));
   });
 });

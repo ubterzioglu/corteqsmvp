@@ -24,6 +24,7 @@ const OUT_FILE = path.join(OUT_DIR, "tools.json");
 // JSON import etmek yerine src/ kapsamında temiz bir modül sağlanır.
 const TS_OUT_DIR = path.join(rootDir, "src", "lib", "agent");
 const TS_OUT_FILE = path.join(TS_OUT_DIR, "tools-catalog.generated.ts");
+const OPENAPI_FILE = path.join(OUT_DIR, "openapi.yaml");
 
 async function readSafe(relPath) {
   try {
@@ -137,12 +138,16 @@ async function main() {
     "// Kaynak doğruluk: docs/agent/tools.json\n\n" +
     `export const toolCatalog = ${json.trimEnd()} as const;\n`;
 
+  const { buildOpenApi } = await import("./agent/openapi.mjs");
+  const openapi = buildOpenApi(catalog);
+
   if (checkMode) {
     const existingJson = await readSafe("docs/agent/tools.json");
     const existingTs = await readSafe("src/lib/agent/tools-catalog.generated.ts");
-    if (existingJson !== json || existingTs !== ts) {
+    const existingApi = await readSafe("docs/agent/openapi.yaml");
+    if (existingJson !== json || existingTs !== ts || existingApi !== openapi) {
       console.error(
-        "[ingest-tools] Katalog güncel değil. `npm run ingest:tools` çalıştırıp tools.json + tools-catalog.generated.ts'i commit'leyin.",
+        "[ingest-tools] Katalog güncel değil. `npm run ingest:tools` çalıştırıp tools.json + tools-catalog.generated.ts + openapi.yaml'ı commit'leyin.",
       );
       process.exit(1);
     }
@@ -152,6 +157,7 @@ async function main() {
 
   await mkdir(OUT_DIR, { recursive: true });
   await writeFile(OUT_FILE, json, "utf-8");
+  await writeFile(OPENAPI_FILE, openapi, "utf-8");
   await mkdir(TS_OUT_DIR, { recursive: true });
   await writeFile(TS_OUT_FILE, ts, "utf-8");
   console.log(
