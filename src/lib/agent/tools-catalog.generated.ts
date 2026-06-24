@@ -992,6 +992,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/agent/telemetry-sink.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/agent/telemetry-sink.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/agent/tool-executor.ts",
       "kind": "ts",
       "module_family": "lib"
