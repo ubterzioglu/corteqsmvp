@@ -63,6 +63,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/may19/ani",
   "/admin/about",
   "/admin/tools",
+  "/admin/agent-analytics",
   "/admin/links",
   "/admin/guide",
   "/admin/workspace",

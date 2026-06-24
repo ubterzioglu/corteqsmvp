@@ -80,6 +80,16 @@ export const toolCatalog = {
         "RATE_LIMIT_MAX": 8,
         "RATE_LIMIT_WINDOW_SECONDS": 600
       },
+      "http_statuses": [
+        200,
+        400,
+        403,
+        405,
+        413,
+        429,
+        500
+      ],
+      "http_method": "POST",
       "dependencies": [
         "@supabase/supabase-js@2.45.4",
         "zod@3.25.76",
@@ -105,6 +115,12 @@ export const toolCatalog = {
       "tables_read_write": [],
       "rpcs": [],
       "limits": {},
+      "http_statuses": [
+        405,
+        410,
+        500
+      ],
+      "http_method": "POST",
       "dependencies": [
         "@supabase/supabase-js@2.45.4"
       ],
@@ -134,6 +150,15 @@ export const toolCatalog = {
         "is_admin"
       ],
       "limits": {},
+      "http_statuses": [
+        200,
+        204,
+        401,
+        403,
+        409,
+        500
+      ],
+      "http_method": "POST",
       "dependencies": [],
       "version_pins": {
         "@supabase/supabase-js": null,
@@ -158,6 +183,12 @@ export const toolCatalog = {
       ],
       "rpcs": [],
       "limits": {},
+      "http_statuses": [
+        200,
+        405,
+        500
+      ],
+      "http_method": "POST",
       "dependencies": [
         "@supabase/supabase-js@2.45.4"
       ],
@@ -190,6 +221,16 @@ export const toolCatalog = {
         "RATE_LIMIT_MAX": 4,
         "RATE_LIMIT_WINDOW_SECONDS": 3600
       },
+      "http_statuses": [
+        200,
+        400,
+        403,
+        405,
+        413,
+        429,
+        500
+      ],
+      "http_method": "POST",
       "dependencies": [
         "@supabase/supabase-js@2.45.4",
         "zod@3.25.76",
@@ -227,6 +268,18 @@ export const toolCatalog = {
         "RATE_LIMIT_MAX_SINGLE_SUBMISSION": 1,
         "RATE_LIMIT_MAX_MULTI_SUBMISSION": 10
       },
+      "http_statuses": [
+        200,
+        400,
+        403,
+        404,
+        405,
+        409,
+        413,
+        429,
+        500
+      ],
+      "http_method": "POST",
       "dependencies": [
         "@supabase/supabase-js@2.45.4"
       ],
@@ -905,6 +958,56 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/admin/admin-types.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/agent/anonymize.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/agent/anonymize.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/agent/injection-guard.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/agent/injection-guard.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/agent/resilience.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/agent/resilience.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/agent/tool-executor.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/agent/tool-orchestration.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/agent/tool-router.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/agent/tool-verifier.ts",
       "kind": "ts",
       "module_family": "lib"
     },
