@@ -1,9 +1,9 @@
 // Tool kataloğunu Supabase ingest.tools tablosuna upsert eder (opsiyonel DB projeksiyonu).
+// PostgREST `ingest` şemasını expose etmediği için yazma, Supabase Management API
+// /database/query üzerinden INSERT ... ON CONFLICT ile yapılır (PostgREST bypass).
 // scripts/import-command-center-may13.mjs env-yükleme desenini izler.
-// Service role kullanır (RLS bypass). Yalnız --push flag'i ile çağrılır.
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { createClient } from "@supabase/supabase-js";
 
 function parseEnvFile(content) {
   const result = {};
@@ -34,51 +34,97 @@ async function loadEnv(rootDir) {
   }
 }
 
+// SQL literal kaçışı (tek tırnak ikiye katlanır). Türkçe karakterler korunur.
+function sqlStr(value) {
+  if (value === null || value === undefined) return "null";
+  return `'${String(value).replace(/'/g, "''")}'`;
+}
+
+// jsonb literal: JSON.stringify + ::jsonb cast.
+function sqlJsonb(value) {
+  if (value === null || value === undefined) return "null::jsonb";
+  return `${sqlStr(JSON.stringify(value))}::jsonb`;
+}
+
 /**
- * Kataloğu ingest.tools'a upsert eder.
+ * Kataloğu ingest.tools'a upsert eder (Management API).
  * @param {string} rootDir
  * @param {{ tools: object[] }} catalog
+ * @param {string} [nowIso] Deterministik test için zaman damgası.
  */
-export async function pushCatalog(rootDir, catalog) {
+export async function pushCatalog(rootDir, catalog, nowIso) {
   const env = await loadEnv(rootDir);
-  const supabaseUrl =
-    process.env.SUPABASE_URL || env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-  const serviceRoleKey =
-    process.env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_ROLE_KEY;
+  const token =
+    process.env.SUPABASE_ACCESS_TOKEN || env.SUPABASE_ACCESS_TOKEN;
+  const ref =
+    process.env.VITE_SUPABASE_PROJECT_ID ||
+    env.VITE_SUPABASE_PROJECT_ID ||
+    env.SUPABASE_PROJECT_ID;
 
-  if (!supabaseUrl || !serviceRoleKey) {
+  if (!token || !ref) {
     throw new Error(
-      "SUPABASE_URL/VITE_SUPABASE_URL veya SUPABASE_SERVICE_ROLE_KEY eksik (.env.local veya ortam değişkeni).",
+      "SUPABASE_ACCESS_TOKEN veya VITE_SUPABASE_PROJECT_ID eksik (.env.local veya ortam değişkeni).",
     );
   }
 
-  const supabase = createClient(supabaseUrl, serviceRoleKey, {
-    auth: { persistSession: false },
-  });
+  const stamp = nowIso ?? new Date().toISOString();
+  const values = catalog.tools
+    .map((t) => {
+      const cols = [
+        sqlStr(t.tool_key),
+        sqlStr(t.tool_name),
+        sqlStr(t.family),
+        sqlStr(t.status),
+        sqlStr(t.entrypoint),
+        sqlStr(t.interface_kind),
+        sqlJsonb(t.input_schema ?? null),
+        sqlJsonb(t.tables_read_write ?? []),
+        sqlJsonb(t.rpcs ?? []),
+        sqlJsonb(t.dependencies ?? []),
+        sqlJsonb(t.version_pins ?? {}),
+        sqlStr(t.evidence_path ?? null),
+        sqlStr(stamp),
+      ];
+      return `(${cols.join(", ")})`;
+    })
+    .join(",\n  ");
 
-  const rows = catalog.tools.map((t) => ({
-    tool_key: t.tool_key,
-    tool_name: t.tool_name,
-    tool_family: t.family,
-    status: t.status,
-    entrypoint_path: t.entrypoint,
-    interface_kind: t.interface_kind,
-    input_schema: t.input_schema ?? null,
-    tables_read_write: t.tables_read_write ?? [],
-    rpcs: t.rpcs ?? [],
-    dependencies: t.dependencies ?? [],
-    version_pins: t.version_pins ?? {},
-    evidence_path: t.evidence_path ?? null,
-    updated_at: new Date().toISOString(),
-  }));
+  const sql = `
+insert into ingest.tools (
+  tool_key, tool_name, tool_family, status, entrypoint_path, interface_kind,
+  input_schema, tables_read_write, rpcs, dependencies, version_pins, evidence_path, updated_at
+) values
+  ${values}
+on conflict (tool_key) do update set
+  tool_name = excluded.tool_name,
+  tool_family = excluded.tool_family,
+  status = excluded.status,
+  entrypoint_path = excluded.entrypoint_path,
+  interface_kind = excluded.interface_kind,
+  input_schema = excluded.input_schema,
+  tables_read_write = excluded.tables_read_write,
+  rpcs = excluded.rpcs,
+  dependencies = excluded.dependencies,
+  version_pins = excluded.version_pins,
+  evidence_path = excluded.evidence_path,
+  updated_at = excluded.updated_at;
+`;
 
-  const { error } = await supabase
-    .schema("ingest")
-    .from("tools")
-    .upsert(rows, { onConflict: "tool_key" });
+  const res = await fetch(
+    `https://api.supabase.com/v1/projects/${ref}/database/query`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query: sql }),
+    },
+  );
 
-  if (error) {
-    throw new Error(`ingest.tools upsert hatası: ${error.message}`);
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`ingest.tools upsert hatası (HTTP ${res.status}): ${text}`);
   }
-  return rows.length;
+  return catalog.tools.length;
 }
