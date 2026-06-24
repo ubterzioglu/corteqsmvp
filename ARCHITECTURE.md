@@ -16,7 +16,7 @@ katalog, **Cadde** (sosyal akış + Cafe + Çarşı + Tanıtım), anketler, muha
 
 ```
 React 18 + Vite 5 (SWC)  ·  TypeScript (strict KAPALI — bilinçli)  ·  Tailwind + shadcn/ui
-@tanstack/react-query 5  ·  react-router-dom 6  ·  zod + react-hook-form
+@tanstack/react-query 5  ·  react-router-dom 7  ·  zod + react-hook-form
 Supabase: Postgres + RLS + security-definer RPC'ler + Auth + Realtime + 5 Edge Function
 Deploy: Docker/Coolify → npm run build → node server.mjs (env injection + RAG proxy + SPA fallback)
 Canlı: corteqs.net · Supabase proje: injprdrsklkxgnaiixzh

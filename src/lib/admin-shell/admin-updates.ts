@@ -14,6 +14,18 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260624-arac-katalogu-ve-drift-denetimi",
+    date: "24 Haziran 2026",
+    title: "Yeni 'Araç Kataloğu' sayfası + kodla dokümanın çeliştiği yerleri otomatik yakalayan denetim",
+    items: [
+      "Admin paneline yeni bir sayfa eklendi: Sistem → 'Araç Kataloğu'. Platformun çalışan tüm parçalarını (e-posta gönderen ve eşleştirme yapan edge fonksiyonları, arka planda çalışan worker'lar, Cadde/Muhasebe/Katalog gibi modüllerin veri katmanları ve komut satırı script'leri) tek listede topluyor. Şu an 26 araç görünüyor: 6 edge fonksiyon, 2 worker, 17 modül ve script seti. Her kart aracın ne iş yaptığını, hangi tabloları kullandığını ve aktif mi yoksa kullanımdan kalkmış mı olduğunu gösteriyor. Üstteki arama kutusuyla araç adı, dosya ya da tablo adından filtreleyebilirsiniz.",
+      "Bu liste elle yazılmıyor — doğrudan koddan otomatik üretiliyor. Yani yeni bir edge fonksiyon ya da modül eklendiğinde, tek komutla (npm run ingest:tools) liste güncelleniyor. Böylece 'kod değişti ama doküman eski kaldı' sorunu ortadan kalkıyor.",
+      "İkinci bir araç da eklendi: dokümanlarla gerçek kodun çeliştiği yerleri otomatik yakalayan bir 'drift denetimi'. İlk taramada 6 çelişki bulundu ve 4'ü düzeltildi — örneğin README hâlâ silinmiş bir tabloyu (admin_users) anlatıyordu, kullanımdan kalkmış lansman-admin fonksiyonunu deploy etmeyi öneriyordu ve yönlendirme kütüphanesinin sürümü dokümanda eski yazıyordu. Bunlar güncellendi.",
+      "Araç kataloğu ayrıca veritabanına da yazıldı (sadece yöneticilerin görebileceği güvenli bir bölümde); ileride kullanım istatistikleri ve sağlık takibi buraya bağlanabilir. Bu, yapay zekâ ajanlarının platformu kaynak kod okumadan tanıyıp güvenle kullanabilmesi için atılan ilk adım.",
+      "Tüm bunlar arka uç ve geliştirici altyapısı; sayfanın panoda görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     id: "20260623-stripe-yasal-sayfalar",
     date: "23 Haziran 2026",
     title: "Stripe ödeme altyapısı için yasal sayfalar hazırlandı (Şirket Bilgileri, İade & İptal, Hizmet Teslim)",

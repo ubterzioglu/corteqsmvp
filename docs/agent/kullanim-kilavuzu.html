@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Agent Tool Registry & Drift Detector — Teknik Kullanım Kılavuzu · CorteQS</title>
+<style>
+  :root {
+    --bg: #0b0f17;
+    --bg-soft: #111827;
+    --panel: #151c2c;
+    --panel-2: #1a2336;
+    --border: #283349;
+    --text: #e6edf6;
+    --muted: #93a1b8;
+    --accent: #4f8cff;
+    --accent-2: #6ee7b7;
+    --warn: #fbbf24;
+    --danger: #f87171;
+    --code-bg: #0d1421;
+    --radius: 16px;
+    --shadow: 0 10px 40px rgba(0,0,0,.45), 0 2px 8px rgba(0,0,0,.3);
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    color: var(--text);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(79,140,255,.12), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(110,231,183,.08), transparent 55%),
+      var(--bg);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header */
+  header.hero {
+    padding: 72px 0 40px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(21,28,44,.6), transparent);
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--accent-2); font-weight: 600;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px;
+    background: rgba(110,231,183,.06);
+  }
+  h1 { font-size: clamp(28px, 4vw, 44px); margin: 18px 0 10px; letter-spacing: -.02em; }
+  .subtitle { color: var(--muted); font-size: 18px; max-width: 70ch; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .chip {
+    font-size: 13px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 6px 12px; background: var(--panel);
+  }
+  .chip b { color: var(--text); }
+
+  /* Layout */
+  main { display: grid; grid-template-columns: 220px 1fr; gap: 40px; padding: 48px 0 96px; }
+  nav.toc {
+    position: sticky; top: 24px; align-self: start;
+    font-size: 14px; border-left: 2px solid var(--border); padding-left: 16px;
+  }
+  nav.toc a { display: block; color: var(--muted); text-decoration: none; padding: 5px 0; transition: color .15s; }
+  nav.toc a:hover { color: var(--text); }
+  nav.toc .group { color: var(--accent); font-weight: 600; margin-top: 16px; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; }
+
+  section { margin-bottom: 56px; scroll-margin-top: 24px; }
+  h2 { font-size: 26px; margin: 0 0 6px; letter-spacing: -.01em; }
+  h2 .num { color: var(--accent); font-variant-numeric: tabular-nums; margin-right: 10px; }
+  h3 { font-size: 18px; margin: 28px 0 8px; color: var(--text); }
+  p { color: #cbd5e6; }
+  .lead { color: var(--muted); margin-top: 0; }
+
+  /* Cards */
+  .card {
+    background: linear-gradient(180deg, var(--panel), var(--panel-2));
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 22px 24px; box-shadow: var(--shadow); margin: 18px 0;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 860px) { .grid-2 { grid-template-columns: 1fr; } main { grid-template-columns: 1fr; } nav.toc { display: none; } }
+
+  /* Code */
+  pre {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 18px; overflow-x: auto;
+    font-family: var(--mono); font-size: 13.5px; line-height: 1.55; color: #d7e2f4;
+    margin: 14px 0;
+  }
+  code { font-family: var(--mono); font-size: .9em; background: rgba(79,140,255,.12); color: #bcd2ff; padding: 2px 6px; border-radius: 6px; }
+  pre code { background: none; color: inherit; padding: 0; }
+  .cmt { color: #5b6b85; }
+  .kw { color: #7aa2ff; }
+  .str { color: #7ee0a8; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  td code { font-size: .85em; }
+
+  /* Badges & callouts */
+  .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; letter-spacing: .04em; }
+  .badge.active { background: rgba(110,231,183,.14); color: var(--accent-2); border: 1px solid rgba(110,231,183,.3); }
+  .badge.deprecated { background: rgba(248,113,113,.12); color: var(--danger); border: 1px solid rgba(248,113,113,.3); }
+  .callout { border-left: 3px solid var(--accent); background: rgba(79,140,255,.06); padding: 14px 18px; border-radius: 0 12px 12px 0; margin: 16px 0; }
+  .callout.warn { border-color: var(--warn); background: rgba(251,191,36,.07); }
+  .callout.warn b { color: var(--warn); }
+  .callout b { color: var(--accent); }
+
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 18px 0; }
+  @media (max-width: 720px) { .flow { grid-template-columns: 1fr 1fr; } }
+  .flow .step { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; position: relative; }
+  .flow .step .n { font-size: 11px; color: var(--accent); font-weight: 700; }
+  .flow .step .t { font-weight: 600; margin: 4px 0; font-size: 14px; }
+  .flow .step .d { font-size: 12px; color: var(--muted); }
+
+  footer { border-top: 1px solid var(--border); padding: 28px 0 48px; color: var(--muted); font-size: 13px; }
+  a.link { color: var(--accent); text-decoration: none; border-bottom: 1px dashed rgba(79,140,255,.4); }
+  ul.tight { margin: 8px 0; padding-left: 22px; }
+  ul.tight li { margin: 5px 0; color: #cbd5e6; }
+  .kbd { font-family: var(--mono); font-size: 12px; background: var(--bg-soft); border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 6px; padding: 2px 7px; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">● CorteQS · AI-Agent Altyapısı · Faz 1</span>
+    <h1>Agent Tool Registry &amp; Drift Detector</h1>
+    <p class="subtitle">Repo bilgisini canlı koddan türeten makinece-okunabilir tool kataloğu ve
+      doküman/versiyon çelişkilerini otomatik yakalayan drift dedektörünün teknik kullanım kılavuzu.</p>
+    <div class="meta-row">
+      <span class="chip">Sürüm <b>schema_version 1</b></span>
+      <span class="chip">Kapsam <b>Faz 1 — Kanonikleştirme</b></span>
+      <span class="chip">Kayıt deposu <b>PostgreSQL / Supabase</b></span>
+      <span class="chip">Tarih <b>2026-06-24</b></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="toc">
+    <div class="group">Başlangıç</div>
+    <a href="#ozet">Özet</a>
+    <a href="#hizli">Hızlı başlangıç</a>
+    <div class="group">Tool Registry</div>
+    <a href="#ingest">ingest:tools</a>
+    <a href="#tools-json">tools.json yapısı</a>
+    <a href="#push">DB'ye push</a>
+    <div class="group">Drift Detector</div>
+    <a href="#drift">check:drift</a>
+    <a href="#kurallar">Kural ekleme</a>
+    <div class="group">İşletim</div>
+    <a href="#ci">CI entegrasyonu</a>
+    <a href="#dosyalar">Dosya haritası</a>
+    <a href="#sss">SSS &amp; kısıtlar</a>
+  </nav>
+
+  <div>
+    <!-- ÖZET -->
+    <section id="ozet">
+      <h2><span class="num">01</span>Özet</h2>
+      <p class="lead">İki yeni araç eklendi. İkisi de build-time Node script'idir — runtime'a (edge function / server.mjs) hiçbir bağımlılık eklemez.</p>
+      <div class="grid-2">
+        <div class="card">
+          <span class="badge active">ingest:tools</span>
+          <h3 style="margin-top:10px">Tool Registry üretici</h3>
+          <p style="margin:0">Edge function, worker ve <code>*-api.ts</code> modüllerini tarayıp her birini
+            tek bir makinece-okunabilir kataloğa (<code>docs/agent/tools.json</code>) dönüştürür. Bir ajan
+            kaynak kod okumadan hangi tool'un aktif/deprecated olduğunu, girdi şemasını, kullandığı tabloları
+            ve versiyon pin'lerini buradan görür.</p>
+        </div>
+        <div class="card">
+          <span class="badge active">check:drift</span>
+          <h3 style="margin-top:10px">Drift dedektörü</h3>
+          <p style="margin:0">Dokümanlar ile gerçek kod arasındaki somut çelişkileri (versiyon pin'leri,
+            deprecated endpoint, kaldırılmış tablo referansı) deklaratif kurallarla yakalar.
+            <code>docs/agent/drift-report.json</code> üretir; drift varsa çıkış kodu <code>1</code> döner (CI gate).</p>
+        </div>
+      </div>
+      <div class="callout">
+        <b>Tek doğruluk kaynağı:</b> git'e commit edilen <code>docs/agent/tools.json</code>'dur.
+        Supabase <code>ingest</code> şeması, kataloğun sorgulanabilir <em>ikincil</em> projeksiyonudur — opsiyoneldir.
+      </div>
+    </section>
+
+    <!-- HIZLI BAŞLANGIÇ -->
+    <section id="hizli">
+      <h2><span class="num">02</span>Hızlı başlangıç</h2>
+      <pre><code><span class="cmt"># 1) Kataloğu üret (docs/agent/tools.json yazar)</span>
+npm run ingest:tools
+
+<span class="cmt"># 2) Drift kontrolü (rapor + bulgu varsa exit 1)</span>
+npm run check:drift
+
+<span class="cmt"># 3) Uyarı modu — bulguları yazar ama her zaman exit 0 (CI rampası)</span>
+npm run check:drift:warn
+
+<span class="cmt"># 4) Katalog güncel mi? (CI doğrulaması — bayatsa exit 1)</span>
+npm run ingest:tools:check</code></pre>
+      <div class="flow">
+        <div class="step"><div class="n">ADIM 1</div><div class="t">Tara</div><div class="d">Edge · worker · lib dosyaları</div></div>
+        <div class="step"><div class="n">ADIM 2</div><div class="t">Çıkar</div><div class="d">Şema · tablo · pin · status</div></div>
+        <div class="step"><div class="n">ADIM 3</div><div class="t">Yaz</div><div class="d">tools.json (deterministik)</div></div>
+        <div class="step"><div class="n">ADIM 4</div><div class="t">Denetle</div><div class="d">drift kuralları → rapor</div></div>
+      </div>
+    </section>
+
+    <!-- INGEST -->
+    <section id="ingest">
+      <h2><span class="num">03</span><code>ingest:tools</code> — kataloğu üretmek</h2>
+      <p>Script repo kökünden çalışır (<code>process.cwd()</code>) ve şu dört yüzeyi tarar:</p>
+      <table>
+        <thead><tr><th>Aile</th><th>Kaynak</th><th>tool_key öneki</th><th>Ne çıkarılır</th></tr></thead>
+        <tbody>
+          <tr><td>Edge function</td><td><code>supabase/functions/*/index.ts</code></td><td><code>edge.*</code></td><td>Zod request alanları, <code>RATE_LIMIT_*</code> / <code>MAX_BODY_BYTES</code>, okunan/yazılan tablolar, RPC'ler, <code>supabase-js</code> &amp; <code>zod</code> pin'i, 410→<code>deprecated</code></td></tr>
+          <tr><td>Worker</td><td><code>workers/*/package.json</code> + <code>src/**</code></td><td><code>worker.*</code></td><td>Açıklama, Node engine, bağımlılık pin'leri, kullanılan tablolar/RPC'ler</td></tr>
+          <tr><td>UI modülü</td><td><code>src/lib/*-api.ts</code></td><td><code>module.*</code></td><td>Export edilen fonksiyon/const adları, çağrılan RPC'ler, tablolar</td></tr>
+          <tr><td>CLI</td><td><code>package.json</code> scripts</td><td><code>cli.npm_scripts</code></td><td>Çalıştırılabilir komut yüzeyi</td></tr>
+        </tbody>
+      </table>
+      <div class="callout warn">
+        <b>Çıktı deterministiktir.</b> Tool'lar <code>tool_key</code>'e göre, alanlar sıralı yazılır — böylece
+        git diff'i temizdir ve <code>ingest:tools:check</code> birebir karşılaştırma yapabilir. Üretimden sonra
+        <code>tools.json</code>'ı mutlaka commit'leyin.
+      </div>
+    </section>
+
+    <!-- TOOLS JSON -->
+    <section id="tools-json">
+      <h2><span class="num">04</span><code>tools.json</code> yapısı</h2>
+      <p>Örnek bir edge function girdisi (ajanın okuyacağı sözleşme):</p>
+      <pre><code>{
+  <span class="str">"tool_key"</span>: <span class="str">"edge.find_matches"</span>,
+  <span class="str">"tool_name"</span>: <span class="str">"find-matches"</span>,
+  <span class="str">"family"</span>: <span class="str">"edge_function"</span>,
+  <span class="str">"status"</span>: <span class="str">"active"</span>,           <span class="cmt">// 410 dönerse otomatik "deprecated"</span>
+  <span class="str">"entrypoint"</span>: <span class="str">"supabase/functions/find-matches/index.ts"</span>,
+  <span class="str">"interface_kind"</span>: <span class="str">"http"</span>,
+  <span class="str">"input_schema"</span>: {
+    <span class="str">"validation"</span>: <span class="str">"zod"</span>,
+    <span class="str">"fields"</span>: [<span class="str">"sourceSubmissionId"</span>, <span class="str">"offers_needs"</span>, <span class="str">"field"</span>, <span class="str">"city"</span>, <span class="str">"country"</span>, <span class="str">"category"</span>, <span class="str">"persist"</span>]
+  },
+  <span class="str">"tables_read_write"</span>: [<span class="str">"edge_rate_limits"</span>, <span class="str">"matches"</span>, <span class="str">"submissions"</span>],
+  <span class="str">"rpcs"</span>: [],
+  <span class="str">"limits"</span>: { <span class="str">"MAX_BODY_BYTES"</span>: 16000, <span class="str">"RATE_LIMIT_MAX"</span>: 8, <span class="str">"RATE_LIMIT_WINDOW_SECONDS"</span>: 600 },
+  <span class="str">"dependencies"</span>: [<span class="str">"@supabase/supabase-js@2.45.4"</span>, <span class="str">"zod@3.25.76"</span>, <span class="str">"gemini"</span>],
+  <span class="str">"version_pins"</span>: { <span class="str">"@supabase/supabase-js"</span>: <span class="str">"2.45.4"</span>, <span class="str">"zod"</span>: <span class="str">"3.25.76"</span> },
+  <span class="str">"evidence_path"</span>: <span class="str">"supabase/functions/find-matches/index.ts"</span>
+}</code></pre>
+      <p>Üst düzeyde <code>counts</code> (toplam/edge/worker/modül sayıları) ve <code>file_index</code>
+        (her dosyanın <code>path</code> · <code>kind</code> · <code>module_family</code>) bulunur.</p>
+      <h3>Status nasıl belirlenir?</h3>
+      <ul class="tight">
+        <li><span class="badge active">active</span> — varsayılan.</li>
+        <li><span class="badge deprecated">deprecated</span> — dosya hem <code>410</code> hem de <em>"Deprecated"</em> içeriyorsa otomatik. Örn. <code>edge.lansman_admin</code>.</li>
+      </ul>
+    </section>
+
+    <!-- PUSH -->
+    <section id="push">
+      <h2><span class="num">05</span>Opsiyonel: Supabase'e push</h2>
+      <p>Kataloğu sorgulanabilir kılmak için <code>ingest.tools</code> tablosuna upsert edebilirsiniz.
+        Önce migration uygulanmalı, sonra <code>--push</code> flag'i ile çalıştırın:</p>
+      <pre><code><span class="cmt"># Migration: supabase/migrations/20260624100000_agent_ingest_schema.sql</span>
+<span class="cmt"># (ingest.repo_files · ingest.repo_symbols · ingest.tools + RLS)</span>
+
+node scripts/ingest-tools.mjs --push</code></pre>
+      <p><code>--push</code>, <code>.env.local</code>'dan (veya ortam değişkenlerinden)
+        <code>SUPABASE_URL</code> + <code>SUPABASE_SERVICE_ROLE_KEY</code> okur ve service-role ile yazar.</p>
+      <div class="callout warn">
+        <b>RLS:</b> <code>ingest</code> şeması deny-all varsayılanındadır; yalnız <code>public.is_admin(auth.uid())</code>
+        olan kullanıcı okuyabilir. Service role RLS'i bypass eder (yalnız push için). Anon/authenticated rol erişemez.
+      </div>
+    </section>
+
+    <!-- DRIFT -->
+    <section id="drift">
+      <h2><span class="num">06</span><code>check:drift</code> — çelişkileri yakalamak</h2>
+      <p>Dedektör, deklaratif kuralları çalıştırıp <code>docs/agent/drift-report.json</code> üretir.
+        Tool kataloğu varsa kurallara bağlam olarak verilir; <em>önce <code>ingest:tools</code> çalıştırmak güncel sonuç verir.</em></p>
+      <h3>Şu an aktif kurallar</h3>
+      <table>
+        <thead><tr><th>Kural</th><th>Şiddet</th><th>Ne yakalar</th></tr></thead>
+        <tbody>
+          <tr><td><code>router-version-drift</code></td><td>high</td><td><code>package.json</code> <code>react-router-dom</code> major'ı ile AGENT_CONTEXT.md / ARCHITECTURE.md metni uyuşmuyor</td></tr>
+          <tr><td><code>supabase-js-version-drift</code></td><td>medium</td><td>Frontend <code>@supabase/supabase-js</code> pin'i ile edge/worker pin'leri arası minor farkı ≥ 30</td></tr>
+          <tr><td><code>admin-users-dropped</code></td><td>high</td><td>README hâlâ DROP edilmiş <code>public.admin_users</code>'ı "aktif" gibi anlatıyor (drop bağlamı yoksa)</td></tr>
+          <tr><td><code>deprecated-edge-referenced</code></td><td>high</td><td>Deprecated edge function (410) README'de hâlâ <code>functions deploy</code> ile anılıyor</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <b>Çıkış kodları:</b> Bulgu varsa <code>check:drift</code> → <code>exit 1</code> (gate);
+        <code>check:drift:warn</code> → her zaman <code>exit 0</code> (rapor üretir, build'i kırmaz).
+      </div>
+      <p>Kalan bilinen bulgu: <code>supabase-js-version-drift</code> (edge 2.45.4 · worker 2.49.1 · frontend 2.101.1).
+        Bu <em>kod</em> durumudur, doküman değil — çözümü edge function'ları güncelleyip yeniden deploy etmektir (Faz 1 dışı).</p>
+    </section>
+
+    <!-- KURALLAR -->
+    <section id="kurallar">
+      <h2><span class="num">07</span>Yeni drift kuralı eklemek</h2>
+      <p>Kurallar <code>scripts/agent/drift-rules.mjs</code> içinde saf fonksiyonlardır:
+        <code>(ctx) =&gt; Finding[]</code>. <code>ctx</code> şunları sağlar:
+        <code>ctx.read(path)</code> · <code>ctx.pkg</code> · <code>ctx.catalog</code>.</p>
+      <pre><code><span class="kw">function</span> ruleOrnek(ctx) {
+  <span class="kw">const</span> readme = ctx.read(<span class="str">"README.md"</span>);
+  <span class="kw">if</span> (!/eski_desen/.test(readme)) <span class="kw">return</span> [];
+  <span class="kw">return</span> [{
+    rule: <span class="str">"ornek-drift"</span>,
+    severity: <span class="str">"high"</span>,        <span class="cmt">// high | medium | error</span>
+    message: <span class="str">"README eski deseni anlatıyor ama X artık geçerli."</span>,
+    evidence: [{ path: <span class="str">"README.md"</span> }]
+  }];
+}
+
+<span class="cmt">// Diziye ekle:</span>
+<span class="kw">export const</span> driftRules = [ ..., ruleOrnek ];</code></pre>
+      <p>Bir kural hata fırlatırsa dedektör çökmez; <code>severity: "error"</code> bulgusu olarak raporlanır.</p>
+    </section>
+
+    <!-- CI -->
+    <section id="ci">
+      <h2><span class="num">08</span>CI entegrasyonu</h2>
+      <p>Önerilen kademeli yaklaşım (sert gate'i erken koymayın — full-lint backlog'u hâlâ kırık):</p>
+      <table>
+        <thead><tr><th>Aşama</th><th>Komut</th><th>Davranış</th></tr></thead>
+        <tbody>
+          <tr><td>1 — Rampa</td><td><code>npm run check:drift:warn</code></td><td>Bulguları PR'a yazar, build'i kırmaz</td></tr>
+          <tr><td>2 — Tazelik</td><td><code>npm run ingest:tools:check</code></td><td>Katalog bayatsa <code>exit 1</code> — "yeniden üret ve commit'le"</td></tr>
+          <tr><td>3 — Gate</td><td><code>npm run check:drift</code></td><td>Drift backlog'u temizlenince sert gate (<code>exit 1</code>)</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <b>PR akışı:</b> Edge/worker/lib değiştiğinde geliştirici <span class="kbd">npm run ingest:tools</span>
+        çalıştırıp <code>tools.json</code>'ı commit'ler. CI <code>ingest:tools:check</code> ile bunu zorlar;
+        böylece katalog daima kodla senkron kalır.
+      </div>
+    </section>
+
+    <!-- DOSYALAR -->
+    <section id="dosyalar">
+      <h2><span class="num">09</span>Dosya haritası</h2>
+      <table>
+        <thead><tr><th>Yol</th><th>Rol</th></tr></thead>
+        <tbody>
+          <tr><td><code>scripts/ingest-tools.mjs</code></td><td>Ana ingestion script'i (<code>--check</code>, <code>--push</code>)</td></tr>
+          <tr><td><code>scripts/check-drift.mjs</code></td><td>Drift runner (<code>--warn</code>)</td></tr>
+          <tr><td><code>scripts/agent/walk.mjs</code></td><td>Dosya-yürüme + sınıflandırma (<code>moduleFamilyOf</code>, <code>kindOf</code>)</td></tr>
+          <tr><td><code>scripts/agent/extract.mjs</code></td><td>Tool-yüzeyi çıkarıcıları (edge/worker/lib/script)</td></tr>
+          <tr><td><code>scripts/agent/drift-rules.mjs</code></td><td>Deklaratif drift kuralları</td></tr>
+          <tr><td><code>scripts/agent/push.mjs</code></td><td>Supabase <code>ingest.tools</code> upsert</td></tr>
+          <tr><td><code>docs/agent/tools.json</code></td><td><b>Çıktı:</b> tek doğruluk kaynağı katalog</td></tr>
+          <tr><td><code>docs/agent/drift-report.json</code></td><td><b>Çıktı:</b> son drift raporu</td></tr>
+          <tr><td><code>supabase/migrations/20260624100000_agent_ingest_schema.sql</code></td><td><code>ingest</code> şeması + RLS</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SSS -->
+    <section id="sss">
+      <h2><span class="num">10</span>SSS &amp; kısıtlar</h2>
+      <h3>Neden tam TS AST parser yok?</h3>
+      <p>Zod şemaları edge function'larda zaten açık metin. İlk sürüm hafif regex/satır taramayla yeterli sonuç
+        veriyor (örn. <code>find-matches</code>'in 7 alanı + 3 limiti doğru çıkarıldı). İhtiyaç olursa <code>ts-morph</code>
+        sonradan <code>extract.mjs</code>'e eklenebilir — Faz 1'i bloklamaz.</p>
+      <h3>Boş edge klasörleri?</h3>
+      <p><code>chat-register</code> klasöründe <code>index.ts</code> yok; bu yüzden tool olarak <em>kataloglanmaz</em>.
+        Bu doğru davranıştır — katalog gerçeği gösterir, dizin listesini değil.</p>
+      <h3>Kapsam dışı (sonraki fazlar)</h3>
+      <ul class="tight">
+        <li>OpenAPI / iç ajan API sözleşmeleri</li>
+        <li>Agent router / executor / verifier zinciri</li>
+        <li><code>ops.*</code> analytics + anonim (DP) raporlama + admin dashboard UI</li>
+        <li>MongoDB ikincil store</li>
+      </ul>
+      <div class="callout warn">
+        <b>Türkçe metin kuralı:</b> Yeni script'ler ASCII anahtar kelimeler kullanır; kullanıcıya görünen
+        Türkçe çıktıda bare <code>toUpperCase/toLowerCase</code> yoktur. <code>npm run verify:text</code> tüm yeni
+        dosyalarda temiz geçer (UTF-8, mojibake yok).
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    CorteQS · Agent Tool Registry &amp; Drift Detector · Faz 1 (Kanonikleştirme) — 2026-06-24 ·
+    Kaynak tasarım: <code>newtools.md</code> · İlgili: <a class="link" href="../README.md">docs/README.md</a>
+  </div>
+</footer>
+
+</body>
+</html>
