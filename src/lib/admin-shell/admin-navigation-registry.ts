@@ -644,6 +644,16 @@ export const adminNavGroups: AdminNavGroup[] = [
         aliases: ["araç", "arac", "tool", "registry", "katalog", "edge", "worker"],
       },
       {
+        id: "agent-analytics",
+        label: "Agent Analitik",
+        shortLabel: "Analitik",
+        description: "Araç sağlığı, yönlendirme skorları ve gizlilik özeti.",
+        to: "/admin/agent-analytics",
+        icon: BarChart3,
+        accent: "red",
+        aliases: ["analitik", "skor", "score", "routing", "agent", "metrik", "saglik"],
+      },
+      {
         id: "admin-guide",
         label: "Admin Kullanım Kılavuzu",
         shortLabel: "Kılavuz",
