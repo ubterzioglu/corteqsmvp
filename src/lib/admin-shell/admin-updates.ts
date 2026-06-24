@@ -14,6 +14,16 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260625-agent-altyapisi-uctan-uca-baglandi",
+    date: "25 Haziran 2026",
+    title: "Yapay zekâ ajan altyapısı uçtan uca bağlandı (telemetri + güvenlik canlıya geçti)",
+    items: [
+      "Daha önce hazırlanan ajan parçaları (araç seçici, doğrulayıcı, güvenlik koruması, kayıt sistemi) tek bir 'ajan istemcisi' altında birleştirildi. Artık bir araç çağrıldığında otomatik olarak: kullanımdan kalkmış mı diye kontrol ediliyor, kullanıcı metnine gizlenmiş saldırı denemeleri taranıyor (yüksek riskliyse çağrı hiç yapılmıyor), ve sonuç gizlilik-korumalı biçimde veritabanına kaydediliyor.",
+      "Kayıt sisteminin veritabanı tarafı (record_tool_run) canlıya uygulandı ve test edildi: aynı işlem iki kez gönderilse bile tek kayıt oluşuyor (çift kayıt koruması çalışıyor). Kayda yazılmadan önce e-posta/telefon gibi kişisel veriler temizleniyor.",
+      "Toplam ~120 otomatik test bu zincirin doğru çalıştığını doğruluyor. Geriye sadece arayüzdeki çağrı noktalarını bu yeni istemciye bağlamak kaldı — altyapı hazır.",
+    ],
+  },
+  {
     id: "20260625-agent-altyapisi-faz-2-6",
     date: "25 Haziran 2026",
     title: "Yapay zekâ ajan altyapısı tamamlandı: sözleşmeler, telemetri, yönlendirme ve güvenlik",
