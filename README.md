@@ -8,7 +8,7 @@ React + Vite landing page backed by Supabase for form collection, admin review, 
 - Admin panel at `/admin`
 - Standalone lansman registration page at `/lansman`
 - Lansman admin screen at `/admin/lansman` under the shared admin shell
-- Supabase Auth based admin access with `public.admin_users`
+- Supabase Auth based admin access via `user_role_assignments` + the `is_admin()` RPC (the legacy `public.admin_users` table was dropped 2026-06-09)
 - Supabase Edge Function for email notifications
 - Additional workflow notes are indexed under `docs/README.md`.
 
@@ -17,7 +17,7 @@ React + Vite landing page backed by Supabase for form collection, admin review, 
 1. Install dependencies with `npm install`.
 2. Provide the Supabase client env vars in `.env.local`.
 3. Apply Supabase migrations.
-4. Create at least one admin auth user and insert its UUID into `public.admin_users`.
+4. Create at least one admin auth user and assign it an admin role in `user_role_assignments` (verified via the `is_admin()` RPC; `public.admin_users` no longer exists).
 5. Deploy the Edge Functions and set their secrets.
 
 ## Required app env
@@ -68,7 +68,8 @@ supabase secrets set MAIL_SEND_CONFIRMATION=true
 
 ```bash
 supabase functions deploy send-submission-email
-supabase functions deploy lansman-admin
+# Note: lansman-admin is DEPRECATED (returns HTTP 410). Admin lansman access now
+# uses direct RLS-backed table access — do not deploy or call this function.
 ```
 
 ## Docker / Coolify deployment

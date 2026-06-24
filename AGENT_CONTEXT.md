@@ -49,7 +49,7 @@
 ## 2. Tech Stack
 
 ```
-React 18.3        react-router-dom 6.30    @tanstack/react-query 5
+React 18.3        react-router-dom 7.17    @tanstack/react-query 5
 TypeScript 5.8    Vite 5.4 + SWC           @supabase/supabase-js 2.101
 Tailwind 3.4      shadcn/ui (Radix)        react-hook-form 7 + zod 3
 Vitest 3          Playwright 1.57          sonner, next-themes, lucide-react
