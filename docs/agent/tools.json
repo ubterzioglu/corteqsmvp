@@ -1,0 +1,1834 @@
+{
+  "schema_version": 1,
+  "generated_by": "scripts/ingest-tools.mjs",
+  "counts": {
+    "total": 26,
+    "edge_functions": 6,
+    "workers": 2,
+    "ui_modules": 17
+  },
+  "tools": [
+    {
+      "tool_key": "cli.npm_scripts",
+      "tool_name": "npm scripts",
+      "family": "script",
+      "status": "active",
+      "entrypoint": "package.json",
+      "interface_kind": "cli",
+      "commands": [
+        "build",
+        "build:dev",
+        "check:drift",
+        "check:drift:warn",
+        "dev",
+        "generate:sitemap",
+        "import:command-center:may13",
+        "import:command-center:may13:write",
+        "import:doctors:dortmund",
+        "import:doctors:dortmund:write",
+        "import:profiles:csv",
+        "import:resources:replace",
+        "ingest:tools",
+        "ingest:tools:check",
+        "lint",
+        "onboarding:import",
+        "onboarding:report",
+        "prebuild",
+        "predev",
+        "prelint",
+        "pretest",
+        "preview",
+        "start",
+        "test",
+        "test:e2e",
+        "test:watch",
+        "verify:release",
+        "verify:text"
+      ],
+      "evidence_path": "package.json"
+    },
+    {
+      "tool_key": "edge.find_matches",
+      "tool_name": "find-matches",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/find-matches/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "zod",
+        "fields": [
+          "sourceSubmissionId",
+          "offers_needs",
+          "field",
+          "city",
+          "country",
+          "category",
+          "persist"
+        ]
+      },
+      "tables_read_write": [
+        "edge_rate_limits",
+        "matches",
+        "submissions"
+      ],
+      "rpcs": [],
+      "limits": {
+        "MAX_BODY_BYTES": 16000,
+        "RATE_LIMIT_MAX": 8,
+        "RATE_LIMIT_WINDOW_SECONDS": 600
+      },
+      "dependencies": [
+        "@supabase/supabase-js@2.45.4",
+        "zod@3.25.76",
+        "gemini"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.45.4",
+        "zod": "3.25.76"
+      },
+      "evidence_path": "supabase/functions/find-matches/index.ts"
+    },
+    {
+      "tool_key": "edge.lansman_admin",
+      "tool_name": "lansman-admin",
+      "family": "edge_function",
+      "status": "deprecated",
+      "entrypoint": "supabase/functions/lansman-admin/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "manual",
+        "fields": []
+      },
+      "tables_read_write": [],
+      "rpcs": [],
+      "limits": {},
+      "dependencies": [
+        "@supabase/supabase-js@2.45.4"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.45.4",
+        "zod": null
+      },
+      "evidence_path": "supabase/functions/lansman-admin/index.ts"
+    },
+    {
+      "tool_key": "edge.radar_news_scan",
+      "tool_name": "radar-news-scan",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/radar-news-scan/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "manual",
+        "fields": []
+      },
+      "tables_read_write": [
+        "radar_news_candidates",
+        "radar_news_keywords",
+        "radar_news_sources"
+      ],
+      "rpcs": [
+        "is_admin"
+      ],
+      "limits": {},
+      "dependencies": [],
+      "version_pins": {
+        "@supabase/supabase-js": null,
+        "zod": null
+      },
+      "evidence_path": "supabase/functions/radar-news-scan/index.ts"
+    },
+    {
+      "tool_key": "edge.relocation_notifications",
+      "tool_name": "relocation-notifications",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/relocation-notifications/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "manual",
+        "fields": []
+      },
+      "tables_read_write": [
+        "relocation_bureaucratic_steps",
+        "relocation_moves"
+      ],
+      "rpcs": [],
+      "limits": {},
+      "dependencies": [
+        "@supabase/supabase-js@2.45.4"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.45.4",
+        "zod": null
+      },
+      "evidence_path": "supabase/functions/relocation-notifications/index.ts"
+    },
+    {
+      "tool_key": "edge.send_submission_email",
+      "tool_name": "send-submission-email",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/send-submission-email/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "zod",
+        "fields": [
+          "submissionId"
+        ]
+      },
+      "tables_read_write": [
+        "edge_rate_limits",
+        "submissions"
+      ],
+      "rpcs": [],
+      "limits": {
+        "MAX_BODY_BYTES": 1024,
+        "RATE_LIMIT_MAX": 4,
+        "RATE_LIMIT_WINDOW_SECONDS": 3600
+      },
+      "dependencies": [
+        "@supabase/supabase-js@2.45.4",
+        "zod@3.25.76",
+        "resend"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.45.4",
+        "zod": "3.25.76"
+      },
+      "evidence_path": "supabase/functions/send-submission-email/index.ts"
+    },
+    {
+      "tool_key": "edge.submit_survey_response",
+      "tool_name": "submit-survey-response",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/submit-survey-response/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "manual",
+        "fields": []
+      },
+      "tables_read_write": [
+        "edge_rate_limits",
+        "survey_answers",
+        "survey_questions",
+        "survey_responses",
+        "surveys"
+      ],
+      "rpcs": [],
+      "limits": {
+        "MAX_BODY_BYTES": 64000,
+        "MIN_SUBMIT_SECONDS": 3,
+        "RATE_LIMIT_WINDOW_SECONDS": 60,
+        "RATE_LIMIT_MAX_SINGLE_SUBMISSION": 1,
+        "RATE_LIMIT_MAX_MULTI_SUBMISSION": 10
+      },
+      "dependencies": [
+        "@supabase/supabase-js@2.45.4"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.45.4",
+        "zod": null
+      },
+      "evidence_path": "supabase/functions/submit-survey-response/index.ts"
+    },
+    {
+      "tool_key": "module.cadde_admin_api",
+      "tool_name": "cadde-admin-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/cadde-admin-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "deleteAdminCaddeBillboardCard",
+        "deleteAdminCaddeCafe",
+        "deleteAdminCaddePost",
+        "deleteAdminCaddeSponsoredPlacement",
+        "listAdminCaddeBillboardCards",
+        "listAdminCaddeCafes",
+        "listAdminCaddePosts",
+        "listAdminCaddeSponsoredPlacements",
+        "saveAdminCaddeBillboardCard",
+        "saveAdminCaddeCafe",
+        "saveAdminCaddePost",
+        "saveAdminCaddeSponsoredPlacement"
+      ],
+      "tables_read_write": [
+        "cadde_billboard_cards",
+        "cadde_cafes",
+        "cadde_posts",
+        "cadde_sponsored_placements"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/cadde-admin-api.ts"
+    },
+    {
+      "tool_key": "module.cadde_api",
+      "tool_name": "cadde-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/cadde-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "approveCaddeCafeMember",
+        "archiveCaddeCafe",
+        "countCaddePostsSince",
+        "createCaddeCafe",
+        "createCaddeComment",
+        "createCaddePost",
+        "getCaddeCafe",
+        "getCaddeSponsoredPlacement",
+        "joinCaddeCafe",
+        "listCaddeBillboardCards",
+        "listCaddeCafeFeed",
+        "listCaddeCafeMembers",
+        "listCaddeCafes",
+        "listCaddeCities",
+        "listCaddeCountries",
+        "listCaddeFeed",
+        "listCaddeInterestCatalog",
+        "listMyCaddeCafes",
+        "listMyCaddeInterests",
+        "reportCaddeEntity",
+        "saveMyCaddeInterests",
+        "toggleCaddeReaction"
+      ],
+      "tables_read_write": [
+        "cadde_billboard_cards",
+        "cadde_cafe_members",
+        "cadde_cafes",
+        "cadde_cities",
+        "cadde_countries",
+        "cadde_interest_catalog",
+        "cadde_post_comments",
+        "cadde_post_interests",
+        "cadde_post_reactions",
+        "cadde_posts",
+        "cadde_sponsored_placements",
+        "user_cadde_interests",
+        "user_profile_attributes"
+      ],
+      "rpcs": [
+        "approve_cadde_cafe_member_v1",
+        "archive_cadde_cafe_v1",
+        "create_cadde_cafe_v1",
+        "create_cadde_comment_v1",
+        "create_cadde_post_v1",
+        "join_cadde_cafe_v1",
+        "list_cadde_feed_v1",
+        "report_cadde_entity_v1",
+        "toggle_cadde_reaction_v1"
+      ],
+      "evidence_path": "src/lib/cadde-api.ts"
+    },
+    {
+      "tool_key": "module.cadde_carsi_api",
+      "tool_name": "cadde-carsi-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/cadde-carsi-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "createCarsiItem",
+        "deleteCarsiItem",
+        "formatCarsiPrice",
+        "getCarsiItem",
+        "listCarsiCategories",
+        "listCarsiItems",
+        "listMyCarsiItems",
+        "recordCarsiContact",
+        "updateCarsiItem"
+      ],
+      "tables_read_write": [
+        "cadde_cities",
+        "cadde_countries",
+        "carsi_categories",
+        "carsi_items",
+        "user_profile_attributes"
+      ],
+      "rpcs": [
+        "create_carsi_item_v1",
+        "delete_carsi_item_v1",
+        "record_carsi_contact_v1",
+        "update_carsi_item_v1"
+      ],
+      "evidence_path": "src/lib/cadde-carsi-api.ts"
+    },
+    {
+      "tool_key": "module.cadde_moderation_api",
+      "tool_name": "cadde-moderation-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/cadde-moderation-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "listModerationQueue",
+        "moderateCaddeEntity"
+      ],
+      "tables_read_write": [
+        "cadde_moderation_queue"
+      ],
+      "rpcs": [
+        "admin_moderate_cadde_entity_v1"
+      ],
+      "evidence_path": "src/lib/cadde-moderation-api.ts"
+    },
+    {
+      "tool_key": "module.cadde_notifications_api",
+      "tool_name": "cadde-notifications-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/cadde-notifications-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "listMyNotifications",
+        "markAllNotificationsRead",
+        "markNotificationRead",
+        "notificationDeepLink",
+        "subscribeToMyNotifications"
+      ],
+      "tables_read_write": [
+        "notifications"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/cadde-notifications-api.ts"
+    },
+    {
+      "tool_key": "module.cadde_tanitim_api",
+      "tool_name": "cadde-tanitim-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/cadde-tanitim-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "adminListPendingPromotions",
+        "adminReviewPromotion",
+        "createPromotionCampaign",
+        "isExternalPromotionUrl",
+        "listCaddePromotions",
+        "listMyPromotionCampaigns",
+        "listPromotionPlacementOptions",
+        "recordPromotionEvent"
+      ],
+      "tables_read_write": [
+        "cadde_promotion_campaigns",
+        "cadde_promotion_events",
+        "cadde_promotion_placement_catalog",
+        "cadde_promotion_placements"
+      ],
+      "rpcs": [
+        "admin_review_cadde_promotion_v1",
+        "create_cadde_promotion_campaign_v1",
+        "list_cadde_promotions_v1",
+        "record_cadde_promotion_event_v1"
+      ],
+      "evidence_path": "src/lib/cadde-tanitim-api.ts"
+    },
+    {
+      "tool_key": "module.catalog_entity_api",
+      "tool_name": "catalog-entity-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/catalog-entity-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "adminSetCatalogItemAttribute",
+        "adminSetCatalogItemEditor",
+        "adminSetCatalogItemFeatureOverride",
+        "getCatalogItemProfile",
+        "updateCatalogItemAttribute"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "admin_set_catalog_item_attribute",
+        "admin_set_catalog_item_editor",
+        "admin_set_catalog_item_feature_override",
+        "get_catalog_item_profile",
+        "update_catalog_item_attribute"
+      ],
+      "evidence_path": "src/lib/catalog-entity-api.ts"
+    },
+    {
+      "tool_key": "module.catalog_import_api",
+      "tool_name": "catalog-import-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/catalog-import-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "bulkImportCatalogItems",
+        "parseImportText",
+        "reviewCatalogImport"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "admin_bulk_import_catalog_items",
+        "admin_review_catalog_import"
+      ],
+      "evidence_path": "src/lib/catalog-import-api.ts"
+    },
+    {
+      "tool_key": "module.dunya_kupasi_api",
+      "tool_name": "dunya-kupasi-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/dunya-kupasi-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "WORLD_CUP_IMAGE_BUCKET",
+        "createWorldCupRegistration",
+        "fetchMyWorldCupRegistration",
+        "fetchWorldCupCampaignSettings",
+        "getWorldCupImagePublicUrl",
+        "listBusinessCategoryOptions",
+        "listWorldCupBusinesses",
+        "uploadWorldCupImage"
+      ],
+      "tables_read_write": [
+        "roles",
+        "world_cup_campaign_settings",
+        "world_cup_registrations"
+      ],
+      "rpcs": [
+        "create_world_cup_registration_v1",
+        "list_world_cup_businesses_v1"
+      ],
+      "evidence_path": "src/lib/dunya-kupasi-api.ts"
+    },
+    {
+      "tool_key": "module.member_profile_api",
+      "tool_name": "member-profile-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/member-profile-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "submitFeatureRequest",
+        "submitRoleChangeRequest",
+        "updateProfileAttribute",
+        "updateProfileAvatar"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "submit_feature_request",
+        "submit_role_change_request",
+        "update_catalog_item_attribute",
+        "update_profile_attribute",
+        "update_profile_avatar"
+      ],
+      "evidence_path": "src/lib/member-profile-api.ts"
+    },
+    {
+      "tool_key": "module.muhasebe_api",
+      "tool_name": "muhasebe-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/muhasebe-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "createExpense",
+        "createIncome",
+        "deleteExpense",
+        "deleteIncome",
+        "fetchCashflowMonthly",
+        "fetchCategorySummary",
+        "fetchExpenses",
+        "fetchIncomes",
+        "fetchKpiSummary",
+        "fetchPersonSummary",
+        "updateExpense",
+        "updateIncome"
+      ],
+      "tables_read_write": [
+        "expenses",
+        "incomes",
+        "v_muhasebe_by_category",
+        "v_muhasebe_by_person",
+        "v_muhasebe_cashflow_monthly",
+        "v_muhasebe_kpi"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/muhasebe-api.ts"
+    },
+    {
+      "tool_key": "module.pending_onboarding_api",
+      "tool_name": "pending-onboarding-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/pending-onboarding-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "activateCurrentOnboardingProfile",
+        "buildPendingOnboardingPayload",
+        "clearPendingOnboardingPayload",
+        "finalizeAuthenticatedSubmission",
+        "getCurrentOnboardingActivation",
+        "loadPendingOnboardingPayload",
+        "resendCurrentOnboardingActivationLink",
+        "resumePendingOnboarding",
+        "savePendingOnboardingPayload"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "complete_current_profile_onboarding_activation",
+        "get_current_profile_onboarding_activation"
+      ],
+      "evidence_path": "src/lib/pending-onboarding-api.ts"
+    },
+    {
+      "tool_key": "module.public_catalog_claim_api",
+      "tool_name": "public-catalog-claim-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/public-catalog-claim-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "submitCatalogClaim"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "submit_catalog_claim_request"
+      ],
+      "evidence_path": "src/lib/public-catalog-claim-api.ts"
+    },
+    {
+      "tool_key": "module.public_catalog_profile_api",
+      "tool_name": "public-catalog-profile-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/public-catalog-profile-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "getPublicCatalogProfilePage",
+        "resolveCatalogSlugForLinkedUser"
+      ],
+      "tables_read_write": [
+        "catalog_items"
+      ],
+      "rpcs": [
+        "get_catalog_item_public_page_v2"
+      ],
+      "evidence_path": "src/lib/public-catalog-profile-api.ts"
+    },
+    {
+      "tool_key": "module.relocation_admin_api",
+      "tool_name": "relocation-admin-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/relocation-admin-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "listCandidates",
+        "listIngestionJobs",
+        "publishCandidate",
+        "reviewCandidate"
+      ],
+      "tables_read_write": [
+        "relocation_candidates",
+        "relocation_jobs"
+      ],
+      "rpcs": [
+        "admin_publish_relocation_candidate",
+        "admin_review_relocation_candidate"
+      ],
+      "evidence_path": "src/lib/relocation-admin-api.ts"
+    },
+    {
+      "tool_key": "module.relocation_api",
+      "tool_name": "relocation-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/relocation-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "createMove",
+        "getChecklist",
+        "getCityRecommendations",
+        "getEmergencyContacts",
+        "getMove",
+        "getServiceRecommendations",
+        "recordInteraction",
+        "saveWizardAnswers",
+        "updateMove"
+      ],
+      "tables_read_write": [
+        "relocation_emergency_contacts",
+        "relocation_moves"
+      ],
+      "rpcs": [
+        "relocation_build_checklist_v1",
+        "relocation_create_move",
+        "relocation_rank_locations_v1",
+        "relocation_rank_services_v1",
+        "relocation_record_interaction",
+        "relocation_save_wizard",
+        "relocation_update_move"
+      ],
+      "evidence_path": "src/lib/relocation-api.ts"
+    },
+    {
+      "tool_key": "module.service_finder_api",
+      "tool_name": "service-finder-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/service-finder-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "cancelJob",
+        "createJob",
+        "fetchCostSummary",
+        "fetchProviders",
+        "fetchTemplates",
+        "getJobDetail",
+        "listJobs",
+        "publishCandidate",
+        "retryJob",
+        "reviewCandidate",
+        "upsertProvider",
+        "upsertTemplate"
+      ],
+      "tables_read_write": [
+        "service_finder_cost_ledger",
+        "service_finder_profession_templates",
+        "service_finder_provider_configs"
+      ],
+      "rpcs": [
+        "admin_cancel_service_finder_job",
+        "admin_create_service_finder_job",
+        "admin_get_service_finder_job",
+        "admin_list_service_finder_jobs",
+        "admin_publish_service_finder_candidate",
+        "admin_retry_service_finder_job",
+        "admin_review_service_finder_candidate",
+        "admin_upsert_service_finder_provider",
+        "admin_upsert_service_finder_template"
+      ],
+      "evidence_path": "src/lib/service-finder-api.ts"
+    },
+    {
+      "tool_key": "worker.relocation_ingestion",
+      "tool_name": "corteqs-relocation-ingestion-worker",
+      "family": "worker",
+      "status": "active",
+      "entrypoint": "workers/relocation-ingestion/",
+      "interface_kind": "cli",
+      "description": "CorteQS Relocation Ingestion worker — claims jobs from Postgres, runs source adapters, normalizes + dedupes candidates, writes a cost ledger. Pattern: workers/service-finder.",
+      "node_engine": ">=20",
+      "tables_read_write": [],
+      "rpcs": [
+        "worker_claim_relocation_jobs",
+        "worker_complete_relocation_job",
+        "worker_fail_relocation_job",
+        "worker_heartbeat_relocation_job",
+        "worker_record_relocation_cost",
+        "worker_upsert_relocation_candidate"
+      ],
+      "dependencies": [
+        "@supabase/supabase-js@^2.49.1",
+        "zod@^3.23.8"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "^2.49.1",
+        "zod": "^3.23.8"
+      },
+      "evidence_path": "workers/relocation-ingestion/package.json"
+    },
+    {
+      "tool_key": "worker.service_finder",
+      "tool_name": "corteqs-service-finder-worker",
+      "family": "worker",
+      "status": "active",
+      "entrypoint": "workers/service-finder/",
+      "interface_kind": "cli",
+      "description": "CorteQS Service Finder worker — claims jobs from Postgres, runs search/extract/classify providers, writes candidates and a cost ledger.",
+      "node_engine": ">=20",
+      "tables_read_write": [
+        "service_finder_candidates",
+        "service_finder_job_queries",
+        "service_finder_job_sources",
+        "service_finder_profession_templates",
+        "service_finder_provider_configs"
+      ],
+      "rpcs": [
+        "worker_append_service_finder_event",
+        "worker_claim_service_finder_jobs",
+        "worker_complete_service_finder_job",
+        "worker_fail_service_finder_job",
+        "worker_heartbeat_service_finder_job",
+        "worker_record_service_finder_cost"
+      ],
+      "dependencies": [
+        "@supabase/supabase-js@^2.49.1",
+        "zod@^3.23.8"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "^2.49.1",
+        "zod": "^3.23.8"
+      },
+      "evidence_path": "workers/service-finder/package.json"
+    }
+  ],
+  "file_index": [
+    {
+      "path": "package.json",
+      "kind": "json",
+      "module_family": "other"
+    },
+    {
+      "path": "src/lib/admin-catalog.test.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/admin-catalog.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-approvals-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-audit-logs-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-dashboard-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-utils.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-overrides-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-query-keys.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-role-matrix-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-route-meta.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-shell-types.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-storage.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-updates.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-user-labels.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/admin-access-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/admin-approval-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/admin-dunya-kupasi-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/admin-feature-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/admin-profile-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/admin-referral-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/admin-role-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/admin-taxonomy-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/admin-types.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/blog-schemas.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/blog.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/blog.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/cadde-admin-api.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-api.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-carsi-api.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-demo-data.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-format.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-format.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-internal.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-moderation-api.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-notifications-api.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-notifications-api.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-query-keys.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-ranking.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-ranking.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-rules.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-rules.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-schemas.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-schemas.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-tanitim-api.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-targeting.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-targeting.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-types.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/catalog-attribute-draft.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog-directory.test.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog-directory.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog-entity-api.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog-import-api.test.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog-import-api.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog-import-schemas.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog-types.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/chatConfig.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/chatConfig.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/commercial-documents.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/contact-links.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/country-city-search.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/meeting-notes-data.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/mvp-items.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/resource-items.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/supabase.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/todo-items.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/workspace-doc-pages.tsx",
+      "kind": "tsx",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/diasporaSearch.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dunya-kupasi-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dunya-kupasi-schemas.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/features.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/features.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/geo.pagination.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/geo.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/geo.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/independent-profiles.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/individual-profile.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/lansman.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/lansman.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/mail.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/marquee.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/marquee.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/may19-campaign.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/member-catalog.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/member-profile-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/member-profile-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/member-profile.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/member-profile.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/member-registry.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/muhasebe-aggregations.test.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/muhasebe-aggregations.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/muhasebe-api.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/muhasebe-format.test.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/muhasebe-format.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/muhasebe-schemas.test.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/muhasebe-schemas.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/page-seo.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/pending-onboarding-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/pending-onboarding-normalize.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/pending-onboarding-schemas.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-documents.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-helpers.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-onboarding-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-onboarding-normalize.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-presentation.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-presentation.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-text-health.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-types.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-types.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-view-model.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-view-model.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/public-catalog-claim-api.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/public-catalog-profile-api.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/public-catalog-profile-schemas.test.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/public-catalog-profile-schemas.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/public-catalog-profile-view-model.test.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/public-catalog-profile-view-model.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/radar-pipeline.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/radarNewsPipeline.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/ragApi.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/recoveryReload.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/referral-codes.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/referral-codes.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/relocation-admin-api.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-api.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-explanations.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-explanations.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-i18n.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-query-keys.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-ranking.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-ranking.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-schemas.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-types.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/resource-links.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/resource-links.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/role-catalog.test.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/role-catalog.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/security.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/seo.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/service-finder-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/service-finder-format.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/service-finder-format.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/service-finder-schemas.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/submissions.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/submissions.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/survey-responses.ts",
+      "kind": "ts",
+      "module_family": "surveys"
+    },
+    {
+      "path": "src/lib/surveys.ts",
+      "kind": "ts",
+      "module_family": "surveys"
+    },
+    {
+      "path": "src/lib/text-normalization.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/text-normalization.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/turkish-missions-admin.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/utils.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/whatsapp-landings.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/whatsapp-landings.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "supabase/functions/find-matches/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/lansman-admin/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/adapters/atom.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/adapters/gdelt.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/adapters/rss.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/lib/canonicalize-url.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/lib/dedupe.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/lib/hash.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/lib/normalize-item.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/lib/relevance-score.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/lib/scan-lock.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/lib/source-security.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/lib/types.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/relocation-notifications/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/send-submission-email/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/submit-survey-response/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "workers/relocation-ingestion/Dockerfile",
+      "kind": "none",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/relocation-ingestion/README.md",
+      "kind": "md",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/relocation-ingestion/package-lock.json",
+      "kind": "json",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/relocation-ingestion/package.json",
+      "kind": "json",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/relocation-ingestion/src/db.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/relocation-ingestion/src/dedupe.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/relocation-ingestion/src/env.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/relocation-ingestion/src/index.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/relocation-ingestion/src/normalize.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/relocation-ingestion/src/providers/fixture.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/relocation-ingestion/src/providers/types.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/relocation-ingestion/src/types.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/relocation-ingestion/src/worker-loop.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/relocation-ingestion/tsconfig.json",
+      "kind": "json",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/Dockerfile",
+      "kind": "none",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/package-lock.json",
+      "kind": "json",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/package.json",
+      "kind": "json",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/costs.test.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/costs.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/db.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/dedupe.test.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/dedupe.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/env.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/errors.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/index.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/prompts.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/providers/gemini.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/providers/serpapi.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/providers/tavily.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/providers/types.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/queries.test.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/queries.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/robots.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/schemas.test.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/schemas.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/src/worker-loop.ts",
+      "kind": "ts",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/tsconfig.json",
+      "kind": "json",
+      "module_family": "worker"
+    }
+  ]
+}
