@@ -962,6 +962,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/agent/agent-client.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/agent/agent-client.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/agent/anonymize.test.ts",
       "kind": "ts",
       "module_family": "lib"
