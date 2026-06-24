@@ -14,6 +14,19 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260625-agent-altyapisi-faz-2-6",
+    date: "25 Haziran 2026",
+    title: "Yapay zekâ ajan altyapısı tamamlandı: sözleşmeler, telemetri, yönlendirme ve güvenlik",
+    items: [
+      "Araç kataloğunun üstüne beş katman daha eklendi. Birincisi, e-posta/eşleştirme gibi servisler için otomatik bir 'kullanım sözleşmesi' (OpenAPI) üretiliyor — bir ajan artık bir servisi nasıl çağıracağını, hangi bilgiyi göndereceğini kaynak kodu açmadan görebiliyor.",
+      "İkincisi, ajanların ne yaptığını güvenle takip edebilmek için gizlilik-korumalı bir kayıt sistemi kuruldu (canlı veritabanına uygulandı). Kayıtlara yazılmadan önce e-posta, telefon, TC kimlik gibi kişisel bilgiler otomatik temizleniyor; kimlikler geri döndürülemez şekilde maskeleniyor; eski kayıtlar 90 gün sonra siliniyor. Bu kayıtlara sadece yöneticiler erişebiliyor.",
+      "Üçüncüsü, bir ajan birden çok aracı arasından hangisini kullanacağına karar verirken puanlama yapan bir 'yönlendirici' eklendi (niyet uyumu, sözleşme tamlığı, gizlilik, hız gibi ölçütlerle). Kullanımdan kalkmış araçlar asla seçilmiyor.",
+      "Dördüncüsü, panoya yeni bir 'Agent Analitik' sayfası eklendi (Sistem menüsü): araç sağlığını, yönlendirme puanlarını ve gizlilik/saklama özetini gösteriyor.",
+      "Beşincisi, güvenlik sertleştirmesi: geçici hatalarda akıllı yeniden deneme (yan etki riski olan işlemlerde tekrar yok), arıza durumunda devre kesici, ve kullanıcı metnine gizlenmiş 'komut enjeksiyonu' saldırılarını yakalayıp etkisizleştiren bir koruma. Ayrıca her yeni kod değişikliğinde doküman çelişkilerini uyaran otomatik denetim derleme akışına bağlandı.",
+      "Tüm bu işler test edildi (toplam ~75 yeni test geçti). Sayfaların ve menülerin panoda görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     id: "20260624-arac-katalogu-ve-drift-denetimi",
     date: "24 Haziran 2026",
     title: "Yeni 'Araç Kataloğu' sayfası + kodla dokümanın çeliştiği yerleri otomatik yakalayan denetim",
