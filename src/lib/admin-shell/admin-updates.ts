@@ -21,6 +21,7 @@ export const ADMIN_UPDATES: AdminUpdateEntry[] = [
       "Daha önce hazırlanan ajan parçaları (araç seçici, doğrulayıcı, güvenlik koruması, kayıt sistemi) tek bir 'ajan istemcisi' altında birleştirildi. Artık bir araç çağrıldığında otomatik olarak: kullanımdan kalkmış mı diye kontrol ediliyor, kullanıcı metnine gizlenmiş saldırı denemeleri taranıyor (yüksek riskliyse çağrı hiç yapılmıyor), ve sonuç gizlilik-korumalı biçimde veritabanına kaydediliyor.",
       "Kayıt sisteminin veritabanı tarafı (record_tool_run) canlıya uygulandı ve test edildi: aynı işlem iki kez gönderilse bile tek kayıt oluşuyor (çift kayıt koruması çalışıyor). Kayda yazılmadan önce e-posta/telefon gibi kişisel veriler temizleniyor.",
       "Toplam ~120 otomatik test bu zincirin doğru çalıştığını doğruluyor. Geriye sadece arayüzdeki çağrı noktalarını bu yeni istemciye bağlamak kaldı — altyapı hazır.",
+      "Bu konuların kullanım rehberi de eklendi: Admin Kullanım Kılavuzu'na (Sistem → Kılavuz) yeni bir 'Yapay Zekâ Ajan Altyapısı' bölümü geldi. Hem Araç Kataloğu hem Agent Analitik sayfalarının sağ üstündeki 'Kullanım kılavuzu' bağlantısı doğrudan o bölüme götürür.",
     ],
   },
   {

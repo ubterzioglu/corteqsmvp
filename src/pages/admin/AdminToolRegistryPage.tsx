@@ -5,7 +5,8 @@
 // Salt-okuma; düzenleme yoktur. Güncellemek için: `npm run ingest:tools`.
 
 import { useMemo, useState } from "react";
-import { Boxes, Cloud, Cpu, FileCode2, Search, Terminal } from "lucide-react";
+import { BookOpen, Boxes, Cloud, Cpu, FileCode2, Search, Terminal } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { AdminPageShell } from "@/components/admin/page";
 import { Badge } from "@/components/ui/badge";
@@ -96,6 +97,12 @@ const AdminToolRegistryPage = () => {
         {deprecatedCount > 0 && (
           <Badge variant="destructive">{deprecatedCount} kullanımdan kaldırıldı</Badge>
         )}
+        <Link
+          to="/admin/guide#agent-altyapisi"
+          className="ml-auto inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+        >
+          <BookOpen className="h-4 w-4" /> Kullanım kılavuzu
+        </Link>
       </div>
 
       <div className="relative mt-4 max-w-md">
