@@ -4,7 +4,8 @@
 // ops.* tabloları henüz boş olabilir; sayfa katalog + skor modelinden beslenir.
 
 import { useMemo } from "react";
-import { Activity, Gauge, ShieldCheck } from "lucide-react";
+import { Activity, BookOpen, Gauge, ShieldCheck } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { AdminPageShell } from "@/components/admin/page";
 import { Badge } from "@/components/ui/badge";
@@ -77,6 +78,14 @@ const AdminAgentAnalyticsPage = () => {
       icon={Activity}
       accent="red"
     >
+      <div className="mb-2 flex justify-end">
+        <Link
+          to="/admin/guide#agent-altyapisi"
+          className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+        >
+          <BookOpen className="h-4 w-4" /> Kullanım kılavuzu
+        </Link>
+      </div>
       <div className="grid gap-3 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">

@@ -307,8 +307,41 @@ const guideBlocks: GuideBlock[] = [
     links: [{ label: "Ürün Güncellemeleri", to: "/admin/about" }],
   },
   {
+    id: "agent-altyapisi",
+    heading: "11. Yapay Zekâ Ajan Altyapısı",
+    sections: [
+      {
+        title: "Araç Kataloğu (/admin/tools)",
+        items: [
+          "Platformun tüm çalıştırılabilir parçalarını tek listede gösterir: e-posta/eşleştirme gibi edge fonksiyonları, arka plan worker'ları, modüllerin veri katmanları ve komut script'leri. Şu an 26 araç.",
+          "Bu liste elle yazılmaz — doğrudan koddan otomatik üretilir. Her kart aracın ne iş yaptığını, hangi tabloları kullandığını ve aktif mi yoksa kullanımdan kalkmış mı olduğunu gösterir.",
+          "Üstteki arama kutusuyla araç adı, dosya ya da tablo adından filtreleyebilirsiniz. Bir aracı yapay zekâ ajanı da geliştirici de kaynak kod okumadan buradan tanır.",
+        ],
+      },
+      {
+        title: "Agent Analitik (/admin/agent-analytics)",
+        items: [
+          "Araç sağlığını, yönlendirme (hangi aracın seçileceği) puanlarını ve gizlilik/saklama özetini gösterir.",
+          "Puanlar çok ölçütlü bir modelle hesaplanır (niyet uyumu, sözleşme tamlığı, gizlilik, hız, belirlilik). Kullanımdan kalkmış araçlar asla seçilmez.",
+        ],
+      },
+      {
+        title: "Gizlilik ve güvenlik nasıl korunuyor?",
+        items: [
+          "Bir araç çağrıldığında otomatik olarak: kullanımdan kalkmış mı kontrol edilir, kullanıcı metnine gizlenmiş saldırı denemeleri taranır (yüksek riskliyse çağrı hiç yapılmaz), ve sonuç gizlilik-korumalı biçimde kaydedilir.",
+          "Kayıtlara yazılmadan önce e-posta, telefon, TC kimlik gibi kişisel bilgiler otomatik temizlenir; kimlikler geri döndürülemez şekilde maskelenir; eski kayıtlar 90 gün sonra silinir. Bu kayıtlara yalnız yöneticiler erişebilir.",
+          "Ayrıntılı teknik kılavuz depo içinde docs/agent/kullanim-kilavuzu.html dosyasındadır (geliştiriciler için).",
+        ],
+      },
+    ],
+    links: [
+      { label: "Araç Kataloğu", to: "/admin/tools" },
+      { label: "Agent Analitik", to: "/admin/agent-analytics" },
+    ],
+  },
+  {
     id: "sss",
-    heading: "11. İpuçları ve Sorun Giderme",
+    heading: "12. İpuçları ve Sorun Giderme",
     sections: [
       {
         title: "Sık karşılaşılan durumlar",
