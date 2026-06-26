@@ -12,6 +12,7 @@ import { getToolBySlug, requestDiasporaIntro } from "@/lib/relocation-tools-api"
 import { relocationToolsKeys } from "@/lib/relocation-tools-query-keys";
 import { useRelocationToolSession } from "@/hooks/useRelocationToolSession";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
+import { toolHeroImage } from "@/lib/relocation-tools-images";
 import type { ToolMode } from "@/lib/relocation-tools-types";
 
 export default function RelocationToolPage() {
@@ -54,9 +55,19 @@ export default function RelocationToolPage() {
   };
 
   const result = session.result;
+  // Hero görsel yalnızca karşılama ekranında (mod seçimi öncesi) gösterilir; soru/sonuç akışını sadeleştir.
+  const heroImage = toolHeroImage(tool.slug);
+  const showHero = !result && mode === null && !!heroImage;
 
   return (
     <div className="container mx-auto max-w-3xl px-4 py-6">
+      {showHero && (
+        <img
+          src={heroImage}
+          alt=""
+          className="mb-6 aspect-[16/9] w-full rounded-xl object-cover shadow-sm"
+        />
+      )}
       <div className="mb-6 text-center">
         <h1 className="text-2xl font-extrabold text-foreground">{tool.title_tr}</h1>
         <p className="text-sm text-muted-foreground">{tool.summary_tr}</p>
