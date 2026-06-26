@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260626-sosyal-paylasim-takip",
+    date: "26 Haziran 2026",
+    title: "Sosyal Paylaşım Deposu'na platform bazlı paylaşım takibi eklendi",
+    items: [
+      "Sosyal Medya Paylaşım Deposu sayfasındaki (/admin/social-share-vault) her içerik kaleminin altına tıklanabilir platform rozetleri eklendi: LinkedIn, Instagram, Reddit, X, Facebook, Threads. Bir rozete tıklayınca 'paylaşıldı' olarak işaretleniyor (yeşil ✓) ve hangi tarihte işaretlendiği rozetin üzerinde görünüyor. Tekrar tıklayınca işaret kalkıyor.",
+      "İşaretler veritabanında kalıcı tutuluyor ve TÜM yöneticiler ortak görüyor: bir yönetici 'LinkedIn'de paylaştık' diye işaretlediğinde diğer yöneticiler de bunu görüyor. Böylece hangi içeriğin hangi platformda paylaşıldığı ekipçe takip edilebiliyor.",
+      "Her içerik kalemi için opsiyonel bir 'Not / link' alanı da var (kalem başına tek not): paylaşılan gönderinin linkini ya da kısa bir not'u kaydedebiliyorsunuz.",
+      "Veritabanı tarafı: iki yeni tablo (social_share_log = rozetler, social_share_item_note = notlar) hazırlandı; yalnızca yöneticiler okuyup yazabiliyor. Migration yazıldı ve testler geçti (10 yeni test). Tablolar canlıya uygulandıktan ve site yeniden yayınlandıktan (deploy) sonra sayfada görünür olacak.",
+    ],
+  },
+  {
     id: "20260626-relocation-10-arac-ve-ortak-motor",
     date: "26 Haziran 2026",
     title: "10 yeni taşınma değerlendirme aracı + ortak puanlama motoru hazırlandı",

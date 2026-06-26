@@ -3,6 +3,7 @@
 // (her varyant = 1 Canva promptu + 1 LinkedIn postu). Veri tek kaynak:
 // lib/admin-shell/social-test-tools.ts.
 
+import type { ReactNode } from "react";
 import { Check, Copy, Linkedin, Palette } from "lucide-react";
 
 import {
@@ -22,9 +23,10 @@ type CopyFn = (text: string, id: string) => void;
 type TestToolsTabProps = {
   copiedId: string | null;
   onCopy: CopyFn;
+  renderShareBar?: (tab: "tests", itemId: string) => ReactNode;
 };
 
-export function TestToolsTab({ copiedId, onCopy }: TestToolsTabProps) {
+export function TestToolsTab({ copiedId, onCopy, renderShareBar }: TestToolsTabProps) {
   return (
     <Accordion type="single" collapsible className="space-y-2">
       {SOCIAL_TEST_TOOLS.map((tool) => (
@@ -119,6 +121,7 @@ export function TestToolsTab({ copiedId, onCopy }: TestToolsTabProps) {
                 );
               })}
             </div>
+            {renderShareBar?.("tests", tool.id)}
           </AccordionContent>
         </AccordionItem>
       ))}
