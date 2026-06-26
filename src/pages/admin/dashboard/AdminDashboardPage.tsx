@@ -50,8 +50,6 @@ const AdminDashboardPage = () => {
         <AdminRecentPages />
       </div>
 
-      <AdminUpdatesCard />
-
       <AdminModuleGrid />
     </div>
   );
