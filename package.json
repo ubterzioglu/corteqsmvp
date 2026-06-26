@@ -9,6 +9,7 @@
     "prebuild": "npm run verify:text && npm run generate:sitemap",
     "build": "vite build",
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
+    "warm:prerender": "node scripts/warm-prerender.mjs",
     "build:dev": "vite build --mode development",
     "start": "node server.mjs",
     "verify:release": "node scripts/verify-release.mjs",
