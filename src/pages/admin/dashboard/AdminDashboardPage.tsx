@@ -16,6 +16,7 @@ import AdminFavorites from "@/components/admin/dashboard/AdminFavorites";
 import AdminModuleGrid from "@/components/admin/dashboard/AdminModuleGrid";
 import AdminQuickActions from "@/components/admin/dashboard/AdminQuickActions";
 import AdminRecentPages from "@/components/admin/dashboard/AdminRecentPages";
+import AdminUpdatesCard from "@/components/admin/dashboard/AdminUpdatesCard";
 
 const AdminDashboardPage = () => {
   const { session } = useAdminOutletContext();
@@ -46,6 +47,8 @@ const AdminDashboardPage = () => {
         <AdminFavorites />
         <AdminRecentPages />
       </div>
+
+      <AdminUpdatesCard />
 
       <AdminModuleGrid />
     </div>
