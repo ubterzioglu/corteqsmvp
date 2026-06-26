@@ -14,6 +14,37 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260626-admin-guncellemeler-karti-en-uste-tasindi",
+    date: "26 Haziran 2026",
+    title: "Admin panelinde 'Güncellemeler' kartı en üste, hoş geldin kartının altına taşındı",
+    items: [
+      "Admin panosunun ana sayfasındaki (/admin) 'Güncellemeler' kartı artık en üstte: hoş geldin (selamlama) kartının hemen altında görünüyor. Önceden sayfanın aşağılarında, favoriler ile modül kartlarının arasında kalıyordu; her açılışta aşağı kaydırmak gerekiyordu. Artık panele girer girmez son yapılan işleri görüyorsun.",
+      "Kart yine kapalı (akordeon) başlıyor: her güncelleme başlık + tarih olarak listeleniyor, üzerine tıklayınca detayı açılıyor. İçerik değişmedi, yalnızca kartın yeri değişti.",
+      "Sağ üstteki zil (🔔 Güncellemeler) menüsü ve /admin/about sayfası aynı listeden besleniyor — üçü de hep aynı güncellemeleri gösterir. Bu görsel düzenleme bir sonraki yayınla (deploy) görünür olacak.",
+    ],
+  },
+  {
+    id: "20260626-tek-bireysel-profil-fix",
+    date: "26 Haziran 2026",
+    title: "Profil seçim ekranındaki çift 'Bireysel' profil hatası düzeltildi",
+    items: [
+      "Birden fazla profili olan bazı hesaplar, profil seçim ekranında (/profile) iki tane 'Bireysel' profil görüyordu — ikincisi içi boş, kullanılmayan bir kayıttı ve kafa karıştırıyordu. Bu hata düzeltildi; artık her hesap tek bir Bireysel profil görüyor.",
+      "Sebebi geçmişten kalan ölü kayıtlardı: rol/katalog sistemi 4 Haziran'da yeniden kurulmadan önceki eski yapıyla oluşturulmuş 14 boş 'kişi profili' kaydı sistemde kalmıştı ve yanlışlıkla 'Bireysel' olarak listeleniyordu. Bu 14 boş kayıt güvenle gizlendi (geri alınabilir; içlerinde hiç veri yoktu, kimsenin gerçek profili silinmedi).",
+      "Bundan sonra aynı sorunun tekrarlamaması için bir veritabanı koruması eklendi: bir kullanıcıya artık yalnızca tek aktif Bireysel profil bağlanabiliyor (çift kayıt oluşması engellendi).",
+      "Tamamı canlı veritabanında uygulandı ve doğrulandı (etkilenen 14 hesap → 0). Bu profil ekranı düzeltmesi için ön yüzde ayrı bir deploy gerekmiyor; veritabanı tarafı yeterli.",
+    ],
+  },
+  {
+    id: "20260626-relocation-araclara-gorsel-ve-mod-secici",
+    date: "26 Haziran 2026",
+    title: "Taşınma araçlarına konu görselleri eklendi + mod seçim ekranı açıklamalı kartlara dönüştü",
+    items: [
+      "10 taşınma değerlendirme aracının (/relocation/tools) her birine konuyla ilgili bir tanıtım görseli (16:9 illüstrasyon) eklendi. Hem araçların toplandığı ana sayfadaki kartların üstünde küçük bir önizleme olarak, hem de bir aracı açtığında karşılama ekranının tepesinde büyük görsel olarak çıkıyor. Görsel yalnızca araç başlarken görünüyor; soru-cevap ve sonuç akışında gizleniyor ki dikkat dağıtmasın.",
+      "Araç başında çıkan 'Hızlı mı, Detaylı mı?' mod seçimi yeniden tasarlandı: önceden yan yana iki küçük buton vardı, artık alt alta iki geniş kart şeklinde ve her birinin altında ne anlama geldiğini anlatan kısa bir açıklama var (Hızlı = kısa sürede sonuç; Detaylı = daha fazla soruyla daha kişiselleştirilmiş sonuç). Kaç soru olduğu da kartın üstünde yazıyor. Telefonda tek sütun olarak düzgün diziliyor.",
+      "Bu iki yenilik 10 aracın hepsinde geçerli (ortak bileşenler bir kez güncellendiği için). Tüm testler yeşil (877/877). Görsellerin ve yeni mod kartlarının sitede görünmesi için bir sonraki yayın (deploy) gerekiyor. Not: bir aracın (Meslek & Maaş Karşılaştırma) görseli şimdilik geçici; yenilenmiş hâliyle sonra değiştirilecek.",
+    ],
+  },
+  {
     id: "20260626-relocation-arac-soru-ux-ve-cta-fix",
     date: "26 Haziran 2026",
     title: "Taşınma araçlarında soru ekranı iyileştirildi + sonuç butonlarındaki kırık link düzeltildi",
