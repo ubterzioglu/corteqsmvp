@@ -65,6 +65,7 @@ import { supabase } from "@/integrations/supabase/client";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
 import PremiumProfileHero from "@/components/profile/premium/PremiumProfileHero";
+import PremiumProfileTabs from "@/components/profile/premium/PremiumProfileTabs";
 import ProfileCompletionCard from "@/components/profile/premium/ProfileCompletionCard";
 import ProfilePublicPreviewCard from "@/components/profile/premium/ProfilePublicPreviewCard";
 import { useMemberCatalogSlug } from "@/hooks/useMemberCatalogSlug";
@@ -2030,30 +2031,12 @@ const ProfilePage = () => {
   );
 
   if (isPremiumPilot) {
-    // Experimental_2 premium pilot: owner hero + 8/4 iki kolonlu düzen.
-    // Tüm handler'lar ve veri sözleşmeleri generic layout ile birebir aynı.
-    return (
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 pb-16">
-        {hiddenFileInputs}
-        <PremiumProfileHero
-          displayName={displayName}
-          initials={initials}
-          avatarUrl={currentAvatarUrl || null}
-          roleLabel={profile?.roleLabel ?? null}
-          eyebrow={presentation.eyebrow}
-          email={profile?.email ?? user?.email ?? null}
-          locationLabel={locationLabel || null}
-          shortBio={shortBio || null}
-          completionPercentage={profile?.profileCompletion.percentage ?? 0}
-          hasPartialData={Boolean(errorMessage)}
-          publicProfileSlug={memberCatalogSlug}
-          avatarUploading={avatarUploading}
-          avatarRemoving={avatarRemoving}
-          onChangePhoto={() => avatarInputRef.current?.click()}
-          onRemovePhoto={() => void handleRemoveAvatar()}
-          onShowHelp={scrollToHelpCard}
-          onSignOut={() => void handleSignOut()}
-        />
+    // Experimental_2 premium pilot: owner hero + altında "Bireysel Panelim"
+    // sekmeli düzen (proref). İlk kart (hero) değişmedi; bugünkü 8/4 kolonlu
+    // düzenleme içeriği "Profil Ayarları" sekmesine taşındı. Tüm handler'lar ve
+    // veri sözleşmeleri generic layout ile birebir aynı (sadece sunum değişti).
+    const premiumSettingsContent = (
+      <div className="space-y-4">
         <div className="grid gap-6 lg:grid-cols-12">
           <div className="flex min-w-0 flex-col gap-4 lg:col-span-8">
             {profileFieldsCard}
@@ -2076,6 +2059,32 @@ const ProfilePage = () => {
         </div>
         {accessCard}
         {helpCard}
+      </div>
+    );
+
+    return (
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 pb-16">
+        {hiddenFileInputs}
+        <PremiumProfileHero
+          displayName={displayName}
+          initials={initials}
+          avatarUrl={currentAvatarUrl || null}
+          roleLabel={profile?.roleLabel ?? null}
+          eyebrow={presentation.eyebrow}
+          email={profile?.email ?? user?.email ?? null}
+          locationLabel={locationLabel || null}
+          shortBio={shortBio || null}
+          completionPercentage={profile?.profileCompletion.percentage ?? 0}
+          hasPartialData={Boolean(errorMessage)}
+          publicProfileSlug={memberCatalogSlug}
+          avatarUploading={avatarUploading}
+          avatarRemoving={avatarRemoving}
+          onChangePhoto={() => avatarInputRef.current?.click()}
+          onRemovePhoto={() => void handleRemoveAvatar()}
+          onShowHelp={scrollToHelpCard}
+          onSignOut={() => void handleSignOut()}
+        />
+        <PremiumProfileTabs settingsContent={premiumSettingsContent} />
       </div>
     );
   }

@@ -58,6 +58,9 @@ const ProfileResolverPage = lazy(() => import("@/pages/ProfileResolverPage"));
 const CatalogItemEditorPage = lazy(() => import("@/pages/CatalogItemEditorPage"));
 const DirectoryPage = lazy(() => import("@/pages/DirectoryPage"));
 const RelocationHomePage = lazy(() => import("@/pages/relocation/RelocationHomePage"));
+const RelocationToolsHubPage = lazy(() => import("@/pages/relocation/tools/RelocationToolsHubPage"));
+const RelocationToolPage = lazy(() => import("@/pages/relocation/tools/RelocationToolPage"));
+const RelocationToolResultPage = lazy(() => import("@/pages/relocation/tools/RelocationToolResultPage"));
 const DirectoryProfilePage = lazy(() => import("@/pages/DirectoryProfilePage"));
 const DirectoryCatalogItemPage = lazy(() => import("@/pages/DirectoryCatalogItemPage"));
 const WelcomeActivatePage = lazy(() => import("@/pages/WelcomeActivatePage"));
@@ -150,6 +153,38 @@ const App = () => (
                     element={
                       <RequireAuth>
                         <RelocationHomePage />
+                      </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path="/relocation/tools"
+                    element={
+                      <RequireAuth>
+                        <RelocationToolsHubPage />
+                      </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path="/relocation/tools/:toolSlug"
+                    element={
+                      <RequireAuth>
+                        <RelocationToolPage />
+                      </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path="/relocation/tools/:toolSlug/session/:sessionId"
+                    element={
+                      <RequireAuth>
+                        <RelocationToolPage />
+                      </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path="/relocation/tools/:toolSlug/result/:resultId"
+                    element={
+                      <RequireAuth>
+                        <RelocationToolResultPage />
                       </RequireAuth>
                     }
                   />

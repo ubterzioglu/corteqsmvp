@@ -88,3 +88,7 @@ reference/
 
 # Build artifacts (2026-06-11 temizligi)
 *.tsbuildinfo
+
+# Relocation tools E2E paketi içindeki büyük binary'ler (repoya girmemeli)
+docs/10tool/*.exe
+docs/10tool/*.zip

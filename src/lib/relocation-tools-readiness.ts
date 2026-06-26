@@ -1,0 +1,148 @@
+// Relocation Tools — #3 Taşınma Hazırlık Skoru skorlama (SQL↔TS AYNASI).
+// GERÇEK skorlama DB'dedir (20260626150000_relocation_tool_readiness.sql:
+// relocation_score_readiness_v1). Buradaki fonksiyon UI önizlemesi + drift testi içindir.
+// Ağırlıklar/option-skorları/boyut türetme SQL ile BİREBİR (relocation-tools-readiness.test.ts kilitler).
+// docs/10tool/03-tasinma-hazirlik-skoru-e2e.md §4.
+
+import {
+  type DimensionWeights,
+  type ScoreBucket,
+  clamp01OrNeutral,
+  computeWeightedScore,
+  resolveBucket,
+  toScore100,
+} from "@/lib/relocation-tools-ranking";
+
+export type ReadinessDimension =
+  | "financial_readiness"
+  | "legal_document_readiness"
+  | "language_readiness"
+  | "housing_logistics"
+  | "job_income_readiness"
+  | "support_adaptability";
+
+/** SQL relocation_tools.weights aynası (toplam 1.0). */
+export const READINESS_WEIGHTS: DimensionWeights = {
+  financial_readiness: 0.25,
+  legal_document_readiness: 0.2,
+  language_readiness: 0.15,
+  housing_logistics: 0.15,
+  job_income_readiness: 0.15,
+  support_adaptability: 0.1,
+};
+
+/** SQL bands aynası (0..100). */
+export const READINESS_BUCKETS: ScoreBucket[] = [
+  { key: "ready", min: 80 },
+  { key: "proceed", min: 60 },
+  { key: "prepare", min: 40 },
+  { key: "high_risk", min: 0 },
+];
+
+/** single soru option → score (seed options jsonb ile BİREBİR). Eksik → 0.5. */
+const OPTION_SCORES: Record<string, Record<string, number>> = {
+  savings_months: { "6+": 1.0, "3-5": 0.7, "1-2": 0.35, "0": 0.0 },
+  passport_validity: { yes: 1.0, expiring: 0.5, no: 0.0 },
+  visa_route: { yes: 1.0, researching: 0.5, no: 0.0 },
+  diploma_docs: { ready: 1.0, partial: 0.5, no: 0.0 },
+  housing_first_month: { secured: 1.0, leads: 0.5, no: 0.0 },
+  job_income_plan: { job_offer: 1.0, remote_income: 0.85, savings_only: 0.4, no: 0.0 },
+  health_insurance: { yes: 1.0, researching: 0.5, no: 0.0 },
+  support_network: { strong: 1.0, weak: 0.5, none: 0.0 },
+  family_alignment: { not_applicable: 1.0, aligned: 1.0, partial: 0.5, conflict: 0.0 },
+  emergency_plan: { yes: 1.0, partial: 0.5, no: 0.0 },
+};
+
+function optScore(questionKey: string, value: string | undefined): number {
+  if (value === undefined) return 0.5;
+  return OPTION_SCORES[questionKey]?.[value] ?? 0.5;
+}
+
+/** scale 1..5 → 0..1; eksik → nötr 0.5. */
+function scale5(value: number | undefined): number {
+  if (value === undefined || Number.isNaN(value)) return 0.5;
+  return clamp01OrNeutral((value - 1) / 4);
+}
+
+/** language_level 0..5 → 0..1 (/5); eksik → nötr 0.5. */
+function langScale(value: number | undefined): number {
+  if (value === undefined || Number.isNaN(value)) return 0.5;
+  return clamp01OrNeutral(value / 5);
+}
+
+export interface ReadinessAnswers {
+  savings_months?: string;
+  passport_validity?: string;
+  visa_route?: string;
+  diploma_docs?: string;
+  housing_first_month?: string;
+  job_income_plan?: string;
+  health_insurance?: string;
+  support_network?: string;
+  family_alignment?: string;
+  emergency_plan?: string;
+  debt_pressure?: number;
+  language_level?: number;
+  adaptability?: number;
+  timeline_realism?: number;
+}
+
+const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
+
+/** 6 boyut feature değerlerini (0..1) hesaplar. SQL v_breakdown aynası. */
+export function computeReadinessBreakdown(
+  answers: ReadinessAnswers,
+): Record<ReadinessDimension, number> {
+  const savings = optScore("savings_months", answers.savings_months);
+  const passport = optScore("passport_validity", answers.passport_validity);
+  const visa = optScore("visa_route", answers.visa_route);
+  const diploma = optScore("diploma_docs", answers.diploma_docs);
+  const housing = optScore("housing_first_month", answers.housing_first_month);
+  const job = optScore("job_income_plan", answers.job_income_plan);
+  const health = optScore("health_insurance", answers.health_insurance);
+  const support = optScore("support_network", answers.support_network);
+  const family = optScore("family_alignment", answers.family_alignment);
+  const emergency = optScore("emergency_plan", answers.emergency_plan);
+  const debt = scale5(answers.debt_pressure);
+  const lang = langScale(answers.language_level);
+  const adapt = scale5(answers.adaptability);
+  const timeline = scale5(answers.timeline_realism);
+
+  return {
+    financial_readiness: round4(savings * 0.6 + debt * 0.4),
+    legal_document_readiness: round4(passport * 0.35 + visa * 0.35 + diploma * 0.3),
+    language_readiness: round4(lang),
+    housing_logistics: round4(housing * 0.5 + timeline * 0.3 + family * 0.2),
+    job_income_readiness: round4(job),
+    support_adaptability: round4(support * 0.35 + emergency * 0.2 + health * 0.2 + adapt * 0.25),
+  };
+}
+
+export interface ReadinessResult {
+  score100: number;
+  bucket: string | null;
+  breakdown: Record<ReadinessDimension, number>;
+  weakest3: ReadinessDimension[];
+}
+
+/** Tam hazırlık sonucu: ağırlıklı skor + bucket + en zayıf 3 boyut. */
+export function computeReadiness(answers: ReadinessAnswers): ReadinessResult {
+  const breakdown = computeReadinessBreakdown(answers);
+  const score100 = toScore100(computeWeightedScore(breakdown, READINESS_WEIGHTS));
+  const bucket = resolveBucket(score100, READINESS_BUCKETS);
+  const weakest3 = (Object.entries(breakdown) as Array<[ReadinessDimension, number]>)
+    .sort((a, b) => (a[1] !== b[1] ? a[1] - b[1] : a[0].localeCompare(b[0])))
+    .slice(0, 3)
+    .map(([key]) => key);
+  return { score100, bucket, breakdown, weakest3 };
+}
+
+/** Boyut → Türkçe etiket (SQL v_labels aynası). */
+export const READINESS_LABELS: Record<ReadinessDimension, string> = {
+  financial_readiness: "Finansal Hazırlık",
+  legal_document_readiness: "Evrak & Yasal",
+  language_readiness: "Dil",
+  housing_logistics: "Konaklama & Lojistik",
+  job_income_readiness: "İş & Gelir",
+  support_adaptability: "Destek & Uyum",
+};
