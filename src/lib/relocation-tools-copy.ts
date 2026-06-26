@@ -99,6 +99,8 @@ export const TOOLS_UI_COPY = {
   hubSubtitle: "Birkaç soruyla kişisel taşınma yol haritanı keşfet.",
   quickMode: "Hızlı",
   detailedMode: "Detaylı",
+  quickModeDesc: "En önemli sorularla kısa sürede sonuç al — hızlıca fikir edinmek için ideal.",
+  detailedModeDesc: "Daha fazla soruyla daha kişiselleştirilmiş ve doğru bir sonuç al.",
   next: "İleri",
   back: "Geri",
   finish: "Sonucu Gör",
