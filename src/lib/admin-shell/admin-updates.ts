@@ -14,6 +14,21 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260626-relocation-10-arac-ve-ortak-motor",
+    date: "26 Haziran 2026",
+    title: "10 yeni taşınma değerlendirme aracı + ortak puanlama motoru hazırlandı",
+    items: [
+      "Üyelerin yurt dışına taşınma kararlarını adım adım netleştirebilmesi için 10 ayrı 'tıkla-ilerle' değerlendirme aracı hazırlandı (/relocation/tools altında toplandı). Araçlar: 1) Ülke seçimi, 2) Meslek & maaş karşılaştırma, 3) Taşınma hazırlık skoru, 4) Şehir eşleştirme, 5) Diaspora ağı eşleştirme, 6) Yurt dışı kariyer yolu, 7) Expat yaşam tarzı (persona), 8) İlk 90 gün planlayıcı, 9) Öncelikli taşınma sorunu ve 10) İş bulma olasılığı. Her araç birkaç soruyla ilerliyor ve sonunda kişiye özel bir sonuç ekranı gösteriyor.",
+      "Sonuç ekranları araca göre farklı biçimlerde çıkıyor: sıralı liste (en uygun ülkeler/şehirler), karşılaştırma tablosu (maaş), puan göstergesi (hazırlık/iş bulma olasılığı), kişilik kartı (persona), yapılacaklar listesi (ilk 90 gün) ve eşleşme listesi (diaspora). Toplam 6 farklı sonuç tipi tek bir ortak görünüm altında toplandı.",
+      "10 aracın hepsi aynı paylaşımlı motor üzerinde çalışıyor: ortak soru-cevap akışı, ortak puanlama kuralları ve ortak veri kaydı. Böylece yeni bir araç eklemek ya da bir aracın sorularını değiştirmek çok daha kolay; her araç sıfırdan yazılmıyor.",
+      "Diaspora eşleştirme aracında (#5) gizlilik özellikle korundu: kimse otomatik olarak listelenmiyor, sadece açıkça 'havuza katılmak istiyorum' diyen üyeler eşleşmeye giriyor. Karşı tarafın adı ve iletişim bilgisi asla kendiliğinden paylaşılmıyor — yalnızca her iki taraf da tanışmayı kabul ettikten sonra açılıyor.",
+      "Araçlar giriş yapmış üyelere açık (login zorunlu); tüm veri yazma işlemleri güvenli sunucu fonksiyonları üzerinden yapılıyor. Puanlama ağırlıkları hem veritabanı hem arayüz tarafında birebir aynı tutuluyor ve otomatik testlerle kilitleniyor (toplam 855 test geçti).",
+      "Şimdilik araçlar seed (örnek/başlangıç) referans verileriyle çalışıyor; canlı API'lerden veri çekme sonraki aşamaya bırakıldı.",
+      "Veritabanı tarafı CANLIYA UYGULANDI: 13 yeni migration (6 ortak tablo + jenerik oturum fonksiyonları + 10 araca özel puanlama fonksiyonu + referans seed tabloları) canlı veritabanına geçti ve doğrulandı. 10 aracın hepsi kayıtlı ve aktif; her biri kendi puanlama fonksiyonuna bağlı. (Araçların sitede görünür olması için yine de bir sonraki yayın/deploy gerekiyor — kayıt canlı, ön yüz deploy bekliyor.)",
+      "Kurulum sırasında bir bağlanma hatası yakalanıp düzeltildi: ortak motor 5 araçta (hazırlık skoru, öncelikli sorun, kariyer yolu, ilk 90 gün, iş bulma olasılığı) yanlış puanlama fonksiyonu adı arıyordu; bu araçlar tamamlandığında gerçek sonuç yerine boş sonuç dönecekti. Açık eşleme eklenerek düzeltildi ve canlıda 10/10 aracın doğru fonksiyona bağlandığı doğrulandı.",
+    ],
+  },
+  {
     id: "20260625-agent-altyapisi-uctan-uca-baglandi",
     date: "25 Haziran 2026",
     title: "Yapay zekâ ajan altyapısı uçtan uca bağlandı (telemetri + güvenlik canlıya geçti)",
