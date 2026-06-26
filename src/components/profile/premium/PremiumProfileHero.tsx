@@ -1,4 +1,4 @@
-import { ExternalLink, HelpCircle, ImagePlus, LogOut, MapPin, Mail, Trash2 } from "lucide-react";
+import { Bell, ExternalLink, HelpCircle, ImagePlus, LogOut, MapPin, Mail, Settings, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
@@ -26,9 +26,15 @@ type PremiumProfileHeroProps = {
   avatarRemoving: boolean;
   onChangePhoto: () => void;
   onRemovePhoto: () => void;
+  onShowSettings: () => void;
+  onShowNotifications: () => void;
   onShowHelp: () => void;
   onSignOut: () => void;
 };
+
+/** Shared sizing for the hero's vertical action-button column (matches tab sizing). */
+const HERO_ACTION_BUTTON =
+  "h-8 w-full justify-start rounded-lg text-xs font-medium";
 
 const HERO_SURFACE =
   "bg-[radial-gradient(circle_at_top_left,rgba(139,92,246,0.18),transparent_44%),radial-gradient(circle_at_bottom_right,rgba(56,189,248,0.12),transparent_42%),linear-gradient(135deg,rgba(15,23,42,0.04),rgba(15,23,42,0))]";
@@ -49,6 +55,8 @@ const PremiumProfileHero = ({
   avatarRemoving,
   onChangePhoto,
   onRemovePhoto,
+  onShowSettings,
+  onShowNotifications,
   onShowHelp,
   onSignOut,
 }: PremiumProfileHeroProps) => (
@@ -149,25 +157,49 @@ const PremiumProfileHero = ({
                 {avatarRemoving ? "Kaldırılıyor..." : "Fotoğrafı Kaldır"}
               </Button>
             ) : null}
-            <Button
-              type="button"
-              variant="ghost"
-              className="min-h-[44px] rounded-full sm:min-h-9"
-              onClick={onShowHelp}
-            >
-              <HelpCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
-              Yardım
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              className="min-h-[44px] rounded-full text-muted-foreground sm:min-h-9"
-              onClick={onSignOut}
-            >
-              <LogOut className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
-              Çıkış Yap
-            </Button>
           </div>
+        </div>
+
+        {/* Vertical, equal-size action column (top-right on md+). Settings +
+            Bildirimler drive the dashboard tabs; Yardım + Çıkış Yap moved here
+            so the tab bar below collapses to a single row. */}
+        <div className="flex w-full shrink-0 flex-col gap-1.5 md:w-44">
+          <Button
+            type="button"
+            variant="outline"
+            className={HERO_ACTION_BUTTON}
+            onClick={onShowSettings}
+          >
+            <Settings className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+            Profil Ayarları
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className={HERO_ACTION_BUTTON}
+            onClick={onShowNotifications}
+          >
+            <Bell className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+            Bildirimler
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className={HERO_ACTION_BUTTON}
+            onClick={onShowHelp}
+          >
+            <HelpCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+            Yardım
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className={`${HERO_ACTION_BUTTON} text-muted-foreground`}
+            onClick={onSignOut}
+          >
+            <LogOut className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+            Çıkış Yap
+          </Button>
         </div>
       </div>
     </div>

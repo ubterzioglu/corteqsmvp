@@ -65,7 +65,7 @@ import { supabase } from "@/integrations/supabase/client";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
 import PremiumProfileHero from "@/components/profile/premium/PremiumProfileHero";
-import PremiumProfileTabs from "@/components/profile/premium/PremiumProfileTabs";
+import PremiumProfileTabs, { PREMIUM_TAB_KEYS } from "@/components/profile/premium/PremiumProfileTabs";
 import ProfileCompletionCard from "@/components/profile/premium/ProfileCompletionCard";
 import ProfilePublicPreviewCard from "@/components/profile/premium/ProfilePublicPreviewCard";
 import { useMemberCatalogSlug } from "@/hooks/useMemberCatalogSlug";
@@ -385,6 +385,9 @@ const ProfilePage = () => {
   const [flatRoleOptions, setFlatRoleOptions] = useState<FlatRoleOption[]>([]);
   const [flatRolesLoading, setFlatRolesLoading] = useState(false);
   const flatRolesLoadedRef = useRef(false);
+  // Premium pilot dashboard active tab — lifted here so the owner hero buttons
+  // (Profil Ayarları / Bildirimler) can drive the tab bar below.
+  const [premiumActiveTab, setPremiumActiveTab] = useState<string>(PREMIUM_TAB_KEYS.settings);
   const helpCardRef = useRef<HTMLDivElement | null>(null);
   const avatarInputRef = useRef<HTMLInputElement | null>(null);
   const cvInputRef = useRef<HTMLInputElement | null>(null);
@@ -2081,10 +2084,16 @@ const ProfilePage = () => {
           avatarRemoving={avatarRemoving}
           onChangePhoto={() => avatarInputRef.current?.click()}
           onRemovePhoto={() => void handleRemoveAvatar()}
+          onShowSettings={() => setPremiumActiveTab(PREMIUM_TAB_KEYS.settings)}
+          onShowNotifications={() => setPremiumActiveTab(PREMIUM_TAB_KEYS.notifications)}
           onShowHelp={scrollToHelpCard}
           onSignOut={() => void handleSignOut()}
         />
-        <PremiumProfileTabs settingsContent={premiumSettingsContent} />
+        <PremiumProfileTabs
+          settingsContent={premiumSettingsContent}
+          activeTab={premiumActiveTab}
+          onActiveTabChange={setPremiumActiveTab}
+        />
       </div>
     );
   }

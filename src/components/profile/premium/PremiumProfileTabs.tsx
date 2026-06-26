@@ -1,4 +1,4 @@
-import { type ComponentType, type ReactNode, useState } from "react";
+import { type ComponentType, type ReactNode } from "react";
 import {
   Bell,
   Calendar,
@@ -27,7 +27,17 @@ import PremiumPanelPlaceholder from "./PremiumPanelPlaceholder";
  * Tabs are data-driven: flipping a placeholder tab to a real panel later is a
  * single `kind` change here, not a structural rewrite.
  */
-const SETTINGS_TAB_KEY = "settings";
+/**
+ * Tab keys the owner hero needs to drive directly (settings + notifications are
+ * triggered from hero buttons, not from the tab bar). Exported so ProfilePage
+ * and the hero share one source of truth.
+ */
+export const PREMIUM_TAB_KEYS = {
+  settings: "settings",
+  notifications: "notifications",
+} as const;
+
+const SETTINGS_TAB_KEY = PREMIUM_TAB_KEYS.settings;
 
 type PremiumTabKind = "settings" | "messages" | "placeholder";
 
@@ -36,6 +46,8 @@ type PremiumTabConfig = {
   label: string;
   icon: ComponentType<{ className?: string }>;
   kind: PremiumTabKind;
+  /** Hidden from the tab bar but its panel still renders (driven by hero buttons). */
+  hiddenFromTabBar?: boolean;
   /** Placeholder copy (only used when kind === "placeholder"). */
   placeholder?: { title: string; description: string };
 };
@@ -50,6 +62,7 @@ const PREMIUM_TABS: PremiumTabConfig[] = [
     label: "Profil Ayarları",
     icon: Settings,
     kind: "settings",
+    hiddenFromTabBar: true,
   },
   {
     key: "messages",
@@ -146,10 +159,11 @@ const PREMIUM_TABS: PremiumTabConfig[] = [
     },
   },
   {
-    key: "notifications",
+    key: PREMIUM_TAB_KEYS.notifications,
     label: "Bildirimler",
     icon: Bell,
     kind: "placeholder",
+    hiddenFromTabBar: true,
     placeholder: {
       title: "Bildirimler",
       description:
@@ -161,17 +175,25 @@ const PREMIUM_TABS: PremiumTabConfig[] = [
 type PremiumProfileTabsProps = {
   /** Real profile-editing content (existing premium card stack) for the settings tab. */
   settingsContent: ReactNode;
+  /** Active tab key (controlled by ProfilePage so hero buttons can switch tabs). */
+  activeTab: string;
+  /** Called when the user selects a visible tab. */
+  onActiveTabChange: (value: string) => void;
 };
 
-const PremiumProfileTabs = ({ settingsContent }: PremiumProfileTabsProps) => {
-  const [activeTab, setActiveTab] = useState<string>(SETTINGS_TAB_KEY);
+const PremiumProfileTabs = ({
+  settingsContent,
+  activeTab,
+  onActiveTabChange,
+}: PremiumProfileTabsProps) => {
+  const visibleTabs = PREMIUM_TABS.filter((tab) => !tab.hiddenFromTabBar);
 
   return (
     <Card>
       <CardContent className="p-4">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs value={activeTab} onValueChange={onActiveTabChange} className="w-full">
           <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 p-1">
-            {PREMIUM_TABS.map((tab) => {
+            {visibleTabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <TabsTrigger

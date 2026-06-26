@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-import PremiumProfileTabs from "./PremiumProfileTabs";
+import PremiumProfileTabs, { PREMIUM_TAB_KEYS } from "./PremiumProfileTabs";
 
 // Project pattern (see muhasebe/MuhasebeDashboard.test.tsx): mock the shadcn
 // Tabs primitives so value-controlled switching is deterministic under jsdom —
@@ -60,31 +61,48 @@ vi.mock("@/components/messaging/MessagesInbox", () => ({
   default: () => <div data-testid="messages-inbox">Mesaj Kutusu içeriği</div>,
 }));
 
-const renderTabs = () =>
-  render(
+// The component is now controlled (active tab owned by ProfilePage). This
+// wrapper holds the state locally so tab clicks still switch panels in tests.
+const ControlledTabs = ({ initialTab = PREMIUM_TAB_KEYS.settings }: { initialTab?: string }) => {
+  const [activeTab, setActiveTab] = useState<string>(initialTab);
+  return (
     <PremiumProfileTabs
       settingsContent={<div data-testid="settings-content">Profil Ayarları içeriği</div>}
-    />,
+      activeTab={activeTab}
+      onActiveTabChange={setActiveTab}
+    />
   );
+};
+
+const renderTabs = (initialTab?: string) => render(<ControlledTabs initialTab={initialTab} />);
 
 describe("PremiumProfileTabs", () => {
-  it("renders the premium dashboard tab bar", () => {
+  it("renders the visible dashboard tabs", () => {
     renderTabs();
 
-    expect(screen.getByRole("tab", { name: /Profil Ayarları/ })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /Mesaj Kutusu/ })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /Hizmet Talepleri/ })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /Taşınma Yönetimi/ })).toBeInTheDocument();
   });
 
-  it("defaults to the Profil Ayarları tab and shows the passed settings content", () => {
+  it("does not render Profil Ayarları or Bildirimler as tabs (driven by hero buttons)", () => {
     renderTabs();
 
-    expect(screen.getByRole("tab", { name: /Profil Ayarları/ })).toHaveAttribute(
-      "data-state",
-      "active",
-    );
+    expect(screen.queryByRole("tab", { name: /Profil Ayarları/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("tab", { name: /Bildirimler/ })).not.toBeInTheDocument();
+  });
+
+  it("shows the settings content when the settings tab is active", () => {
+    renderTabs(PREMIUM_TAB_KEYS.settings);
+
     expect(screen.getByTestId("settings-content")).toBeInTheDocument();
+  });
+
+  it("shows the Bildirimler placeholder panel when its tab is active", () => {
+    renderTabs(PREMIUM_TAB_KEYS.notifications);
+
+    expect(screen.getByText("Yakında")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Bildirimler" })).toBeInTheDocument();
   });
 
   it("renders MessagesInbox when the Mesaj Kutusu tab is selected", () => {
