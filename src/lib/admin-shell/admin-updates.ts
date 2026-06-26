@@ -14,6 +14,41 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260626-relocation-arac-soru-ux-ve-cta-fix",
+    date: "26 Haziran 2026",
+    title: "Taşınma araçlarında soru ekranı iyileştirildi + sonuç butonlarındaki kırık link düzeltildi",
+    items: [
+      "Taşınma araçlarında (/relocation/tools) soru kartı artık her soruda aynı yükseklikte duruyor. Önceden kısa sorudan uzun soruya geçince ekran zıplıyordu (kullanıcı sürekli yer arıyordu); soru alanına sabit bir minimum yükseklik verilerek bu zıplama giderildi. Bu iyileştirme 10 aracın hepsinde geçerli çünkü ortak soru motoru bir kez düzeltildi.",
+      "Tek seçimlik (tek şık) sorularda artık bir şıkka tıkladığınızda araç kendiliğinden bir sonraki soruya geçiyor — ayrıca 'İleri' butonuna basmaya gerek yok. Seçiminizi görebilmeniz için çok kısa bir bekleme (çeyrek saniye) var. SON soruda otomatik geçiş YOK: yanlışlıkla sonuca atlamamak için son soruda 'Sonucu Gör' butonuna kendiniz basıyorsunuz. Kayan çubuk (1-5) ve çoklu seçim soruları eskisi gibi elle ilerliyor.",
+      "Sonuç ekranındaki yönlendirme butonlarında (CTA) bir kırık link bulunup düzeltildi: 'Öncelikli Taşınma Sorunu' ve 'Meslek & Maaş Karşılaştırma' araçlarının sonucundaki 'İş Bulma Olasılığını Hesapla' butonu yanlış adrese gidiyordu (sayfa bulunamıyordu); doğru araca yönlendirilecek şekilde düzeltildi.",
+      "Expat yaşam tarzı (persona) aracının sonucundaki 'Profil Badge'i Olarak Kaydet' butonu aslında profil rozeti kaydetmiyordu, sadece profil sayfasına götürüyordu (yanıltıcıydı). Buton etiketi gerçekte yaptığı işe göre 'Profilini Tamamla' olarak değiştirildi. (Gerçek rozet kaydı, kullanıcı onayı gerektirdiğinden ayrı bir iş olarak planlandı.)",
+      "Veritabanı tarafı (sonuç butonlarının düzeltmesi) CANLIYA UYGULANDI ve doğrulandı. Soru ekranı iyileştirmeleri ön yüzde; sitenin yeniden yayınlanmasından (deploy) sonra görünür olacak.",
+    ],
+  },
+  {
+    id: "20260626-komuta-merkezi-todo-temizligi",
+    date: "26 Haziran 2026",
+    title: "Komuta Merkezi TODO listesi temizlendi: tamamlanan işler kapatıldı, kopyalar ayıklandı",
+    items: [
+      "Komuta Merkezi'ndeki (Çalışma Alanı → Komuta Merkezi) TODO kayıtları gözden geçirildi. Listede her madde yanlışlıkla iki kez görünüyordu (toplantı notu içe aktarımlarından kaynaklı birebir kopyalar) — 43 kopya kayıt 'silindi' olarak işaretlenip listeden kaldırıldı (geri alınabilir, kalıcı silme yapılmadı). Böylece açık TODO sayısı 141'den 99'a indi.",
+      "Kodda/veritabanında gerçekten tamamlandığı doğrulanan 12 teknik iş 'Tamamlandı' olarak kapatıldı ve detayının başına '✅ Tamamlandı 26.06.2026' notu eklendi. Kapatılanlar: Google ile giriş (auth), Muhasebe modülü, Komuta Merkezi/Todo sisteminin kendisi, kayıtlı kişileri profile dönüştürme (toplu içe aktarma), referral sistemi, etkinlik yönetimi, 'Bir şey ekle' / sosyal paylaşım akışı, landing page DB bağlantıları (2 madde), landing page sadeleştirme ve public demo/showroom sayfası.",
+      "'MVP V2 merge' (hâlâ devam ediyor) ve 'kayıt olanlara hoşgeldin e-postası otomasyonu' bilinçli olarak açık bırakıldı — bunlar henüz tamamlanmadı.",
+      "Geri kalan ~84 açık madde iş/strateji/operasyon görevi (işe alım, sözleşme, pazarlama, partnerlik, bot mimarisi vb.) olduğundan ve durumları koddan doğrulanamadığından oldukları gibi açık bırakıldı; bunlar tek tek elden geçirilecek.",
+      "Not: Bu değişiklikler doğrudan canlı veritabanında yapıldı; Komuta Merkezi sayfasını açtığınızda anında görünür (ayrı bir deploy gerekmez). Bu duyuru girdisinin görünmesi için ise sitenin yeniden yayınlanması gerekir.",
+    ],
+  },
+  {
+    id: "20260626-sosyal-paylasim-takip",
+    date: "26 Haziran 2026",
+    title: "Sosyal Paylaşım Deposu'na platform bazlı paylaşım takibi eklendi",
+    items: [
+      "Sosyal Medya Paylaşım Deposu sayfasındaki (/admin/social-share-vault) her içerik kaleminin altına tıklanabilir platform rozetleri eklendi: LinkedIn, Instagram, Reddit, X, Facebook, Threads. Bir rozete tıklayınca 'paylaşıldı' olarak işaretleniyor (yeşil ✓) ve hangi tarihte işaretlendiği rozetin üzerinde görünüyor. Tekrar tıklayınca işaret kalkıyor.",
+      "İşaretler veritabanında kalıcı tutuluyor ve TÜM yöneticiler ortak görüyor: bir yönetici 'LinkedIn'de paylaştık' diye işaretlediğinde diğer yöneticiler de bunu görüyor. Böylece hangi içeriğin hangi platformda paylaşıldığı ekipçe takip edilebiliyor.",
+      "Her içerik kalemi için opsiyonel bir 'Not / link' alanı da var (kalem başına tek not): paylaşılan gönderinin linkini ya da kısa bir not'u kaydedebiliyorsunuz.",
+      "Veritabanı tarafı: iki yeni tablo (social_share_log = rozetler, social_share_item_note = notlar) hazırlandı; yalnızca yöneticiler okuyup yazabiliyor. Migration yazıldı ve testler geçti (10 yeni test). Tablolar canlıya uygulandıktan ve site yeniden yayınlandıktan (deploy) sonra sayfada görünür olacak.",
+    ],
+  },
+  {
     id: "20260626-relocation-10-arac-ve-ortak-motor",
     date: "26 Haziran 2026",
     title: "10 yeni taşınma değerlendirme aracı + ortak puanlama motoru hazırlandı",

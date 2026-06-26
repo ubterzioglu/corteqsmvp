@@ -2,7 +2,7 @@
 // 50 hazır LinkedIn postu + her biri için 1 Canva promptu; tema filtreli akordeon.
 // Veri tek kaynak: lib/admin-shell/social-diaspora-posts.ts.
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Check, Copy, Linkedin, Palette } from "lucide-react";
 
 import {
@@ -40,9 +40,10 @@ const usedThemes = (): DiasporaPostTheme[] => {
 type DiasporaPostsTabProps = {
   copiedId: string | null;
   onCopy: CopyFn;
+  renderShareBar?: (tab: "diaspora", itemId: string) => ReactNode;
 };
 
-export function DiasporaPostsTab({ copiedId, onCopy }: DiasporaPostsTabProps) {
+export function DiasporaPostsTab({ copiedId, onCopy, renderShareBar }: DiasporaPostsTabProps) {
   const [filter, setFilter] = useState<ThemeFilter>(ALL_FILTER);
 
   const themes = useMemo(usedThemes, []);
@@ -145,6 +146,7 @@ export function DiasporaPostsTab({ copiedId, onCopy }: DiasporaPostsTabProps) {
                   </CardContent>
                 </Card>
               </div>
+              {renderShareBar?.("diaspora", post.id)}
             </AccordionContent>
           </AccordionItem>
         ))}

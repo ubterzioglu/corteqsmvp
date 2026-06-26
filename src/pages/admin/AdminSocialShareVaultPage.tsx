@@ -14,6 +14,7 @@ import { AdminPageShell } from "@/components/admin/page";
 import { DiasporaPostsTab } from "@/components/admin/social-share/DiasporaPostsTab";
 import { TestToolsTab } from "@/components/admin/social-share/TestToolsTab";
 import { ToolPromotionsTab } from "@/components/admin/social-share/ToolPromotionsTab";
+import { useShareTracking } from "@/components/admin/social-share/useShareTracking";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
@@ -74,6 +75,7 @@ const AdminSocialShareVaultPage = () => {
   const { toast } = useToast();
   const [tab, setTab] = useState<TabKey>("tools");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const { renderShareBar } = useShareTracking();
 
   const handleCopy = async (text: string, id: string) => {
     try {
@@ -132,15 +134,15 @@ const AdminSocialShareVaultPage = () => {
         </TabsList>
 
         <TabsContent value="tools">
-          <ToolPromotionsTab copiedId={copiedId} onCopy={handleCopy} />
+          <ToolPromotionsTab copiedId={copiedId} onCopy={handleCopy} renderShareBar={renderShareBar} />
         </TabsContent>
 
         <TabsContent value="diaspora">
-          <DiasporaPostsTab copiedId={copiedId} onCopy={handleCopy} />
+          <DiasporaPostsTab copiedId={copiedId} onCopy={handleCopy} renderShareBar={renderShareBar} />
         </TabsContent>
 
         <TabsContent value="tests">
-          <TestToolsTab copiedId={copiedId} onCopy={handleCopy} />
+          <TestToolsTab copiedId={copiedId} onCopy={handleCopy} renderShareBar={renderShareBar} />
         </TabsContent>
       </Tabs>
     </AdminPageShell>

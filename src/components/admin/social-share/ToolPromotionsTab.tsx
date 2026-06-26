@@ -2,6 +2,7 @@
 // 10 platform aracı; her araç için 3 Canva promptu + 1 LinkedIn postu, akordeon.
 // Veri tek kaynak: lib/admin-shell/social-share-vault.ts.
 
+import type { ReactNode } from "react";
 import { Check, Copy, Linkedin, Palette } from "lucide-react";
 
 import {
@@ -32,9 +33,10 @@ const categoryBadgeClass: Record<SocialShareCategory, string> = {
 type ToolPromotionsTabProps = {
   copiedId: string | null;
   onCopy: CopyFn;
+  renderShareBar?: (tab: "tools", itemId: string) => ReactNode;
 };
 
-export function ToolPromotionsTab({ copiedId, onCopy }: ToolPromotionsTabProps) {
+export function ToolPromotionsTab({ copiedId, onCopy, renderShareBar }: ToolPromotionsTabProps) {
   return (
     <Accordion type="single" collapsible className="space-y-2">
       {SOCIAL_SHARE_TOOLS.map((tool) => (
@@ -131,6 +133,7 @@ export function ToolPromotionsTab({ copiedId, onCopy }: ToolPromotionsTabProps) 
                 </CardContent>
               </Card>
             </div>
+            {renderShareBar?.("tools", tool.id)}
           </AccordionContent>
         </AccordionItem>
       ))}
