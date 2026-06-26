@@ -14,6 +14,28 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260626-profil-hero-dikey-buton-kolonu",
+    date: "26 Haziran 2026",
+    title: "Profil panelinde üst kartın sağ üstüne 4'lü dikey buton kolonu eklendi, sekmeler tek satıra indi",
+    items: [
+      "Premium profil panelinde (/profile) en üstteki kartın (kullanıcı bilgilerinin olduğu kart) sağ üst köşesine, alt alta dizili 4 eşit boyutlu buton eklendi: 'Profil Ayarları', 'Bildirimler', 'Yardım' ve 'Çıkış Yap'. Butonların genişlik ve yükseklikleri aynı; yazı tipi büyük değil, alttaki sekmelerle aynı küçüklükte.",
+      "'Profil Ayarları' ve 'Bildirimler' artık alttaki sekme çubuğundan kaldırıldı (yukarıdaki butonlara taşındılar). Böylece kalan 9 sekme (Mesaj Kutusu, Hizmet Talepleri, Taşınma Yönetimi, Takvim, Etkinliklerim, Kuponlar, Çarşı, Takip, WhatsApp) iki satıra taşmadan tek satıra sığıyor.",
+      "Butonlar eskisi gibi çalışıyor: 'Profil Ayarları' düzenleme paneline geçiriyor, 'Bildirimler' bildirimler ('yakında') paneline geçiriyor, 'Yardım' yardım kartına kaydırıyor, 'Çıkış Yap' oturumu kapatıyor. Eskiden kartın içinde diğer butonlarla (Public Profili Görüntüle, Fotoğraf) karışık duran 'Yardım' ve 'Çıkış Yap' butonları bu yeni kolona taşındı.",
+      "Bu sadece görsel/düzen değişikliği; veri tarafında değişiklik yok. Telefonda buton kolonu tam genişliğe akıyor. Tüm testler geçti ve yapı (build) başarılı. Sitede görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
+    id: "20260626-blog-canva-gorsel-prompt-matrisi",
+    date: "26 Haziran 2026",
+    title: "Blogdaki 50 yazının tamamı için Canva AI görsel üretim prompt matrisi hazırlandı",
+    items: [
+      "Canlı blogda (corteqs.net/blog) yayında olan 50 yazının her biri için, Canva'nın yapay zekâ görsel üreticisine (Magic Media → 'Bir görsel oluştur') doğrudan yapıştırılabilecek detaylı İngilizce görsel prompt'ları hazırlandı. Amaç: her yazıya bir kapak görseli üretip 1.jpg, 2.jpg … 50.jpg olarak sırayla kullanmak.",
+      "Kapsam 50 yazı = Faz 1 (10 ülke × 3 konu: giriş-ulaşım, gündelik-bütçe, kültür-sosyal = 30 yazı) + Faz 2 (4 ülke × 5 göç/vize konusu: oturum izni, çalışma vizesi, vatandaşlık, iş bulmak, yaşam şartları = 20 yazı). Numaralandırma blogdaki görünüm sırasına göre yapıldı (1.jpg = Almanya giriş yazısı, 50.jpg = Dubai yaşam yazısı).",
+      "Görsel yönü talep doğrultusunda belirlendi: fotoğraf-gerçekçi, üzerinde hiç yazı/harf olmayan, sade DEĞİL — bol detaylı, kalabalık, izlemesi keyifli sahneler (havalimanı-tren bağlantıları, ülkeye özgü şehir/landmark, ofis/iş görüşmesi, vatandaşlık töreni, ev/market/bütçe kolajları). Her prompt'ta ortak bir 'photorealistic, ultra-detailed, no text/no letters/no logos' kuyruğu var.",
+      "Bu bir kod veya veritabanı değişikliği DEĞİLDİR; prompt matrisi sohbette teslim edildi (siteye/koda bir şey eklenmedi, deploy gerekmez). Görseller Canva'da üretilip sonra blog kapağı olarak elle yüklenecek.",
+    ],
+  },
+  {
     id: "20260626-giris-ekrani-split-screen-yenilendi",
     date: "26 Haziran 2026",
     title: "Giriş (login) ekranı iki bölmeli yeni marka tasarımına geçti",
