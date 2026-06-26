@@ -170,14 +170,14 @@ const PremiumProfileTabs = ({ settingsContent }: PremiumProfileTabsProps) => {
     <Card>
       <CardContent className="p-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="h-auto w-full justify-start gap-1 overflow-x-auto p-1">
+          <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 p-1">
             {PREMIUM_TABS.map((tab) => {
               const Icon = tab.icon;
               return (
                 <TabsTrigger
                   key={tab.key}
                   value={tab.key}
-                  className="shrink-0 gap-1.5 text-xs"
+                  className="gap-1.5 text-xs"
                 >
                   <Icon className="h-3.5 w-3.5" aria-hidden="true" /> {tab.label}
                 </TabsTrigger>
