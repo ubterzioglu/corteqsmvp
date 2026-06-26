@@ -1,11 +1,57 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/useAuth";
 const logo = "/newlogo.png";
 
 export default function SiteHeader() {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/login", { replace: true });
+  };
+
   return (
     <div className="sticky top-0 z-50 border-b border-slate-200/80 bg-white backdrop-blur-sm">
+      {/* Yeni üst bar — Profilim + Çıkış (sağ üst), beyaz zemin */}
+      <div className="border-b border-slate-200/80 bg-white px-4 py-1.5">
+        <div className="container mx-auto flex items-center justify-end gap-x-4 lg:px-6">
+          {user ? (
+            <>
+              <Link
+                to="/profile"
+                className="text-sm font-semibold text-[#34A853] transition-colors hover:text-[#2F9B4D]"
+              >
+                Profilim
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
+              >
+                Çıkış
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login?mode=login"
+                className="text-sm font-semibold text-[#34A853] transition-colors hover:text-[#2F9B4D]"
+              >
+                Giriş Yap
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              <Link
+                to="/login?mode=signup"
+                className="text-sm font-semibold text-[#ee652b] transition-colors hover:text-[#d95520]"
+              >
+                Kayıt Ol
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
       <div className="border-b border-amber-300/50 bg-white px-4 py-1.5 shadow-[inset_0_-1px_0_rgba(217,119,6,0.12)] sm:py-2">
         <p className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-[0.74rem] leading-snug text-slate-700 sm:text-[0.82rem]">
           <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-400/15 px-2.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.18em] text-amber-700">
@@ -59,36 +105,6 @@ export default function SiteHeader() {
               <p className="hidden text-sm font-semibold tracking-[0.03em] text-slate-800 sm:block sm:text-base">
                 Dünyadaki Türkleri Bir Araya Getiren Platform
               </p>
-              <span
-                aria-hidden="true"
-                className="hidden h-5 w-px bg-slate-300/80 sm:block"
-              />
-              <div className="flex items-center gap-x-3">
-                {user ? (
-                  <Link
-                    to="/profile"
-                    className="text-sm font-semibold text-[#34A853] transition-colors hover:text-[#2F9B4D]"
-                  >
-                    Profilim
-                  </Link>
-                ) : (
-                  <>
-                    <Link
-                      to="/login?mode=login"
-                      className="text-sm font-semibold text-[#34A853] transition-colors hover:text-[#2F9B4D]"
-                    >
-                      Giriş Yap
-                    </Link>
-                    <span aria-hidden="true" className="h-5 w-px bg-slate-300/80" />
-                    <Link
-                      to="/login?mode=signup"
-                      className="text-sm font-semibold text-[#ee652b] transition-colors hover:text-[#d95520]"
-                    >
-                      Kayıt Ol
-                    </Link>
-                  </>
-                )}
-              </div>
             </div>
           </div>
         </div>
