@@ -13,7 +13,26 @@ export default function SiteHeader() {
 
   return (
     <div className="sticky top-0 z-50 border-b border-slate-200/80 bg-white backdrop-blur-sm">
-      {/* Yeni üst bar — Profilim + Çıkış (sağ üst), beyaz zemin */}
+      <div className="border-b border-amber-300/50 bg-white px-4 py-1.5 shadow-[inset_0_-1px_0_rgba(217,119,6,0.12)] sm:py-2">
+        <p className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-[0.74rem] leading-snug text-slate-700 sm:text-[0.82rem]">
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-400/15 px-2.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.18em] text-amber-700">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-500 opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-500" />
+            </span>
+            Açık Beta
+          </span>
+          <span>
+            <span className="font-semibold text-slate-900">CorteQS açık beta yayında!</span>{" "}
+            {/* Uzun açıklama mobilde gizli — bandın yüksekliğini düşük tutar */}
+            <span className="hidden sm:inline">
+              Platformu deneyebilir, görüş ve önerilerinizle gelişim sürecimize katkı
+              sağlayabilirsiniz.
+            </span>
+          </span>
+        </p>
+      </div>
+      {/* Yeni üst bar — beta uyarısının altında, eski header'ın üstünde; Profilim + Çıkış (sağ üst), beyaz zemin */}
       <div className="border-b border-slate-200/80 bg-white px-4 py-1.5">
         <div className="container mx-auto flex items-center justify-end gap-x-4 lg:px-6">
           {user ? (
@@ -51,25 +70,6 @@ export default function SiteHeader() {
             </>
           )}
         </div>
-      </div>
-      <div className="border-b border-amber-300/50 bg-white px-4 py-1.5 shadow-[inset_0_-1px_0_rgba(217,119,6,0.12)] sm:py-2">
-        <p className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-[0.74rem] leading-snug text-slate-700 sm:text-[0.82rem]">
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-400/15 px-2.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.18em] text-amber-700">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-500 opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-500" />
-            </span>
-            Açık Beta
-          </span>
-          <span>
-            <span className="font-semibold text-slate-900">CorteQS açık beta yayında!</span>{" "}
-            {/* Uzun açıklama mobilde gizli — bandın yüksekliğini düşük tutar */}
-            <span className="hidden sm:inline">
-              Platformu deneyebilir, görüş ve önerilerinizle gelişim sürecimize katkı
-              sağlayabilirsiniz.
-            </span>
-          </span>
-        </p>
       </div>
       <div className="container mx-auto px-4 py-2.5 lg:px-6 lg:py-3">
         <div className="flex flex-col items-center gap-3 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-4">
