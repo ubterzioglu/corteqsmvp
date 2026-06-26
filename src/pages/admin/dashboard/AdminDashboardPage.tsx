@@ -36,6 +36,8 @@ const AdminDashboardPage = () => {
         </div>
       )}
 
+      <AdminUpdatesCard />
+
       <AdminDashboardKpis summary={summary} isLoading={isLoading} />
 
       <div className="grid gap-4 lg:grid-cols-2">
