@@ -1,9 +1,25 @@
 # Relocation Tools (10 Araç) — Handover / Devir Dokümanı
 
-> **Tarih:** 2026-06-26 · **Branch:** `main` · **Durum:** 🎉 **10/10 araç + ortak motor KOD TAMAM**, **commit YOK, canlıya UYGULANMADI**
+> **Tarih:** 2026-06-26 (güncellendi) · **Branch:** `feat/relocation-tools-10` (push'lu) ·
+> **Durum:** 🎉 **10/10 araç + ortak motor KOD TAMAM + DB CANLIYA UYGULANDI + dispatcher fix.**
+> Kalan tek iş: **Coolify frontend deploy + görsel QA** (manuel).
 > **Tek doğru kaynak:** `docs/10tool/` (00 ortak mimari + 01–10 araç E2E + README)
 > **Plan dosyası:** `~/.claude/plans/executive-summary-we-zazzy-hamming.md`
 > **Hafıza:** `project_assessment_tools_2026_06_26.md`
+>
+> **2026-06-26 deploy oturumu sonucu:**
+> - 13 migration (12 + `20260626230000` dispatch fix) **canlı DB'ye uygulandı** (Management API curl;
+>   python urllib Cloudflare 1010 verir → curl şart). 6 tablo + 10 araç kayıtlı/aktif + 10 skor RPC +
+>   seed (country_metrics=12, professions=5, salary=40, job_signals=40). RLS 6/6 tabloda açık. Read-only doğrulandı.
+> - **DISPATCHER BUG bulundu+düzeltildi:** `complete_session` skor fonksiyonunu `'relocation_score_'||tool_key||'_v1'`
+>   diye türetiyordu; 5 araçta (readiness/top_challenge/career_path/first_90_days/job_probability) gerçek
+>   kısaltılmış adla uyuşmuyordu → o araçlar nötr "skor yok" dönüyordu. `tool_key→fn` açık haritası eklendi
+>   (mig `230000`). Canlıda 10/10 doğru fonksiyona bağlı doğrulandı.
+> - Commit'ler `feat/relocation-tools-10`'a push'lu: `e3db79d` (ana iş) → `bfeba24` (fix) → `fafbdd2` (admin-updates).
+> - types regen ATLANDI (api `supabase as any` + `as unknown as T` kullanıyor; tsc 0 hata; gerekmiyor).
+> - **DİKKAT:** çalışan dizinde PARALEL IDE işi sürüyor (premium profile, social-share, ProfilePage,
+>   kökte 2 `.html`) — bunlar BENİM DEĞİL, dokunulmadı. Oturum sırasında branch dışarıdan değişti
+>   (`feat/social-share-vault`'a) — git checkout ile geri dönüldü; `stash@{0}` = social-share'in sitemap.xml'i.
 
 ---
 
@@ -100,7 +116,14 @@ build başarılı, tsc temiz, eslint temiz (relocation-tools dosyaları). `verif
 ### A) Araç geliştirme — ✅ BİTTİ
 10/10 araç + ortak motor kod tamam. Kalan tek iş: **canlıya alma** (aşağıda). Yeni araç yok.
 
-### B) Canlıya alma (HARİCİ / MANUEL — hiçbiri yapılmadı)
+### B) Canlıya alma — DURUM (2026-06-26 oturumu)
+- ✅ **git commit/push** — relocation-tools `feat/relocation-tools-10`'da izole: `e3db79d`+`bfeba24`+`fafbdd2`, push'lu.
+- ✅ **13 migration canlıya uygulandı** (12 + dispatch fix `230000`); read-only doğrulandı.
+- ✅ **types regen** — gerekmedi (atlandı; `as any` deseni + tsc 0 hata).
+- ✅ **admin-updates.ts** — 26 Haziran kaydı "DB canlıya alındı + fix" ile güncellendi (commit `fafbdd2`).
+- ⏳ **KALAN (manuel):** Coolify frontend deploy → `corteqs.net/relocation/tools` görsel QA (her slug'da 1 oturum).
+
+#### (Orijinal adımlar — referans)
 1. **git commit/push** — **DİKKAT:** çalışan dizinde benim YAZMADIĞIM değişiklikler de var (paralel iş):
    `src/lib/admin-shell/*`, `src/pages/admin/AdminSocialShareVaultPage.tsx`, `social-share-vault.ts`,
    `public/sitemap.xml`, `src/pages/admin/routes.tsx`, `admin-navigation-registry/route-meta`, kökte 2 `.html`
