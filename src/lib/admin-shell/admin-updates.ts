@@ -14,6 +14,28 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260626-giris-ekrani-split-screen-yenilendi",
+    date: "26 Haziran 2026",
+    title: "Giriş (login) ekranı iki bölmeli yeni marka tasarımına geçti",
+    items: [
+      "Giriş ekranı (/login) baştan tasarlandı. Artık ekran ikiye bölünmüş: solda koyu zeminli renkli bir marka paneli, sağda ise giriş formu var. Bu hem normal kullanıcılar hem de yöneticiler için aynı ekran — sistemde tek bir giriş kapısı var, yönetici yetkisi giriş yaptıktan sonra kontrol ediliyor (ayrı bir admin giriş ekranı yok).",
+      "Sol marka paneli: CorteQS markasının teal→turuncu renk geçişiyle koyu bir zemin, üzerinde sitenin ana sayfasındaki canlı 'diaspora ağı' animasyonu, CorteQS logosu, 'Diasporanın profesyonel ağına giriş yap' başlığı ve kısa bir tanıtım yazısı, altta da 'Güvenli giriş' rozeti yer alıyor. Telefonda bu panel üstte ince bir tanıtım şeridine küçülüyor, form altta tam genişlikte açılıyor.",
+      "Giriş yöntemlerinde hiçbir değişiklik yok: Google ile giriş, e-posta/şifre ile giriş ve 'Kayıt Ol' sekmesi aynen duruyor — yalnızca görünüm yenilendi. Tüm testler yeşil geçti.",
+      "Bu tamamen görsel bir yenileme; sitenin yeniden yayınlanmasından (deploy) sonra görünür olacak.",
+    ],
+  },
+  {
+    id: "20260626-site-ust-bar-profilim-cikis",
+    date: "26 Haziran 2026",
+    title: "Sitenin tepesine 'Profilim' ve 'Çıkış' bağlantılı yeni bir üst şerit eklendi",
+    items: [
+      "Sitenin üst kısmına (tüm public sayfalarda görünen ortak başlık), 'Açık Beta' uyarı şeridi ile CorteQS logolu ana başlığın arasına yeni, ince ve beyaz zeminli bir şerit eklendi. Sağ üst köşesinde giriş yapmış kullanıcılar için 'Profilim' ve 'Çıkış' bağlantıları bulunuyor.",
+      "'Çıkış' bağlantısı tıklanınca oturumu kapatıp giriş ekranına yönlendiriyor. Giriş yapmamış ziyaretçilerde bu şeritte bunun yerine 'Giriş Yap' ve 'Kayıt Ol' bağlantıları görünüyor.",
+      "Giriş/profil/çıkış bağlantıları artık yalnızca bu yeni şeritte; eskiden logolu başlık satırının sağında da duruyorlardı, oradan kaldırıldılar (tek yerde toplandı, tekrar önlendi). Ana başlık satırında artık sadece logo, marka adı ve 'Dünyadaki Türkleri Bir Araya Getiren Platform' sloganı var.",
+      "Bu görsel düzenleme tüm public sayfalarda geçerli ve bir sonraki yayınla (deploy) görünür olacak.",
+    ],
+  },
+  {
     id: "20260626-admin-guncellemeler-karti-en-uste-tasindi",
     date: "26 Haziran 2026",
     title: "Admin panelinde 'Güncellemeler' kartı en üste, hoş geldin kartının altına taşındı",
