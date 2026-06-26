@@ -1,7 +1,7 @@
 // Generic soru adımlayıcı — moda göre soruları teker teker gösterir, cevap toplar,
 // sonunda onComplete(answers) çağırır. İlerleme + zorunlu doğrulama. docs/10tool/00 §UX.
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { QuestionRenderer } from "@/components/relocation/tools/QuestionRenderer";
@@ -46,6 +46,18 @@ export function QuestionStepper({
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, ToolAnswerValue>>({});
   const [showError, setShowError] = useState(false);
+  // Single sorularda şık seçilince otomatik ilerleme için bekleyen timeout.
+  const pendingAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearPendingAdvance = () => {
+    if (pendingAdvanceRef.current !== null) {
+      clearTimeout(pendingAdvanceRef.current);
+      pendingAdvanceRef.current = null;
+    }
+  };
+
+  // Component unmount olursa bekleyen otomatik ilerlemeyi iptal et.
+  useEffect(() => clearPendingAdvance, []);
 
   if (steps.length === 0) {
     return <p className="text-sm text-muted-foreground">{TOOLS_UI_COPY.notFound}</p>;
@@ -59,9 +71,19 @@ export function QuestionStepper({
   const setAnswer = (v: ToolAnswerValue) => {
     setAnswers((prev) => ({ ...prev, [question.question_key]: v }));
     setShowError(false);
+    // Tek seçimlik soruda (son soru değilse) şık seçimini kısa süre göster, sonra otomatik ilerle.
+    // Hızlı yeni seçim önceki bekleyeni iptal eder; back/manuel next de iptal eder.
+    clearPendingAdvance();
+    if (question.answer_type === "single" && !isLast && !isSubmitting && !isEmpty(v)) {
+      pendingAdvanceRef.current = setTimeout(() => {
+        pendingAdvanceRef.current = null;
+        setIndex((i) => Math.min(steps.length - 1, i + 1));
+      }, 250);
+    }
   };
 
   const next = () => {
+    clearPendingAdvance();
     if (blocked) {
       setShowError(true);
       return;
@@ -74,6 +96,7 @@ export function QuestionStepper({
   };
 
   const back = () => {
+    clearPendingAdvance();
     setShowError(false);
     setIndex((i) => Math.max(0, i - 1));
   };
@@ -87,7 +110,7 @@ export function QuestionStepper({
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 min-h-[300px] sm:min-h-[340px]">
         <div>
           <h2 className="text-lg font-semibold text-foreground">{question.prompt_tr}</h2>
           {question.help_tr && question.answer_type !== "consent" && (

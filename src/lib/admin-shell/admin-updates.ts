@@ -14,6 +14,18 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260626-relocation-arac-soru-ux-ve-cta-fix",
+    date: "26 Haziran 2026",
+    title: "Taşınma araçlarında soru ekranı iyileştirildi + sonuç butonlarındaki kırık link düzeltildi",
+    items: [
+      "Taşınma araçlarında (/relocation/tools) soru kartı artık her soruda aynı yükseklikte duruyor. Önceden kısa sorudan uzun soruya geçince ekran zıplıyordu (kullanıcı sürekli yer arıyordu); soru alanına sabit bir minimum yükseklik verilerek bu zıplama giderildi. Bu iyileştirme 10 aracın hepsinde geçerli çünkü ortak soru motoru bir kez düzeltildi.",
+      "Tek seçimlik (tek şık) sorularda artık bir şıkka tıkladığınızda araç kendiliğinden bir sonraki soruya geçiyor — ayrıca 'İleri' butonuna basmaya gerek yok. Seçiminizi görebilmeniz için çok kısa bir bekleme (çeyrek saniye) var. SON soruda otomatik geçiş YOK: yanlışlıkla sonuca atlamamak için son soruda 'Sonucu Gör' butonuna kendiniz basıyorsunuz. Kayan çubuk (1-5) ve çoklu seçim soruları eskisi gibi elle ilerliyor.",
+      "Sonuç ekranındaki yönlendirme butonlarında (CTA) bir kırık link bulunup düzeltildi: 'Öncelikli Taşınma Sorunu' ve 'Meslek & Maaş Karşılaştırma' araçlarının sonucundaki 'İş Bulma Olasılığını Hesapla' butonu yanlış adrese gidiyordu (sayfa bulunamıyordu); doğru araca yönlendirilecek şekilde düzeltildi.",
+      "Expat yaşam tarzı (persona) aracının sonucundaki 'Profil Badge'i Olarak Kaydet' butonu aslında profil rozeti kaydetmiyordu, sadece profil sayfasına götürüyordu (yanıltıcıydı). Buton etiketi gerçekte yaptığı işe göre 'Profilini Tamamla' olarak değiştirildi. (Gerçek rozet kaydı, kullanıcı onayı gerektirdiğinden ayrı bir iş olarak planlandı.)",
+      "Veritabanı tarafı (sonuç butonlarının düzeltmesi) CANLIYA UYGULANDI ve doğrulandı. Soru ekranı iyileştirmeleri ön yüzde; sitenin yeniden yayınlanmasından (deploy) sonra görünür olacak.",
+    ],
+  },
+  {
     id: "20260626-komuta-merkezi-todo-temizligi",
     date: "26 Haziran 2026",
     title: "Komuta Merkezi TODO listesi temizlendi: tamamlanan işler kapatıldı, kopyalar ayıklandı",
