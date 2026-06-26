@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
+import { ShieldCheck } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
+import DiasporaNetworkLayer from "@/components/landing/DiasporaNetworkLayer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -153,13 +155,58 @@ const LoginPage = () => {
   const isBusy = oauthSubmitting || passwordSubmitting || signupSubmitting || isLoading;
 
   return (
-    <div className="flex min-h-[70vh] items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>CorteQS Hesabı</CardTitle>
-          <CardDescription>Google ile devam edin veya Supabase e-posta/şifre akışıyla giriş yapın ya da kayıt olun.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+    <div className="grid min-h-screen w-full lg:grid-cols-2">
+      {/* ——— SOL PANEL: koyu + renkli marka/branding ——— */}
+      <aside className="relative flex min-h-[30vh] flex-col justify-between overflow-hidden bg-[hsl(220_28%_10%)] px-8 py-10 text-white lg:min-h-screen lg:px-12 lg:py-14">
+        {/* Marka gradient zemin (teal→turuncu) */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{
+            background:
+              "radial-gradient(120% 90% at 12% 8%, hsl(var(--glow-teal) / 0.55), transparent 55%), radial-gradient(120% 90% at 92% 96%, hsl(var(--glow-orange) / 0.5), transparent 52%), linear-gradient(160deg, hsl(220 30% 9%) 0%, hsl(220 32% 12%) 100%)",
+          }}
+        />
+        {/* Canlı diaspora ağ animasyonu (dekoratif) */}
+        <DiasporaNetworkLayer className="z-0 opacity-60" />
+
+        <div className="relative z-10 flex items-center gap-3">
+          <img src="/logocorteqsbig.png" alt="CorteQS" className="h-9 w-auto" />
+        </div>
+
+        <div className="relative z-10 max-w-md">
+          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/55">
+            Diaspora ağı
+          </p>
+          <h1 className="mt-4 font-display text-4xl font-black leading-tight tracking-tight md:text-5xl">
+            Diasporanın profesyonel
+            <span className="bg-gradient-to-r from-[hsl(var(--glow-teal))] to-[hsl(var(--glow-orange))] bg-clip-text text-transparent">
+              {" "}ağına giriş yap
+            </span>
+          </h1>
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/65">
+            CorteQS, dünyaya yayılmış Türk diasporasını tek bir ağda buluşturur. Hesabınla
+            giriş yap, profilini yönet ve bağlantını sürdür.
+          </p>
+        </div>
+
+        <div className="relative z-10 inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-white/70 backdrop-blur-sm">
+          <ShieldCheck className="h-3.5 w-3.5 text-[hsl(var(--glow-teal))]" />
+          <span className="uppercase tracking-wider">Güvenli giriş</span>
+        </div>
+      </aside>
+
+      {/* ——— SAĞ PANEL: açık form ——— */}
+      <main className="flex items-center justify-center bg-background px-4 py-12 sm:px-8">
+        <div className="w-full max-w-md">
+          <CardHeader className="px-0">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+              Üye erişimi
+            </p>
+            <CardTitle className="font-display text-3xl">CorteQS Hesabı</CardTitle>
+            <CardDescription>Google ile devam edin veya Supabase e-posta/şifre akışıyla giriş yapın ya da kayıt olun.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4 px-0">
           <Tabs value={mode} onValueChange={(value) => updateMode(normalizeMode(value))}>
             <TabsList className="grid h-auto w-full grid-cols-2 rounded-2xl bg-orange-100/70 p-1.5">
               <TabsTrigger
@@ -183,7 +230,7 @@ const LoginPage = () => {
 
               <div className="relative">
                 <Separator />
-                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
+                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
                   veya
                 </span>
               </div>
@@ -230,7 +277,7 @@ const LoginPage = () => {
 
               <div className="relative">
                 <Separator />
-                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
+                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
                   veya
                 </span>
               </div>
@@ -273,8 +320,9 @@ const LoginPage = () => {
 
           {signupSuccessMessage ? <p className="text-sm text-emerald-700">{signupSuccessMessage}</p> : null}
           {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </div>
+      </main>
     </div>
   );
 };
