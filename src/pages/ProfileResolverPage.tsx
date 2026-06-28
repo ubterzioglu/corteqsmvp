@@ -10,6 +10,7 @@ import {
   getMyEditableCatalogItems,
   type EditableCatalogItemSummary,
 } from "@/lib/member-catalog";
+import { profileEditorPathFor } from "@/lib/profile-routing";
 import { defaultProfileType, getUiProfileType, type ProfileType } from "@/lib/profile-types";
 
 const ProfileResolverPage = () => {
@@ -57,17 +58,23 @@ const ProfileResolverPage = () => {
   }, [isLoading, user]);
 
   const handleOpenEditableItem = useCallback((item: EditableCatalogItemSummary) => {
-    if (item.itemType === "member") {
-      navigate(`/profile/${item.legacyProfileType}`, { replace: true });
-      return;
-    }
-
-    navigate(`/profile/catalog/${item.itemId}`, { replace: true });
+    navigate(profileEditorPathFor(item), { replace: true });
   }, [navigate]);
 
+  // Bireysel öncelikli açılış: tek profil VEYA (birden çok profil + bir Bireysel
+  // profil) durumunda doğrudan Bireysel'e (member) yönlendir. Diğer profillere
+  // editör içindeki "Diğer Profiller" geçişinden ulaşılır. Yalnızca hiç member'ı
+  // olmayan (sadece katalog profilleri) hesaplarda seçim ekranı gösterilir.
   useEffect(() => {
-    if (editableItems.length !== 1) return;
-    handleOpenEditableItem(editableItems[0]);
+    if (editableItems.length === 0) return;
+    if (editableItems.length === 1) {
+      handleOpenEditableItem(editableItems[0]);
+      return;
+    }
+    const memberItem = editableItems.find((item) => item.itemType === "member");
+    if (memberItem) {
+      handleOpenEditableItem(memberItem);
+    }
   }, [editableItems, handleOpenEditableItem]);
 
   const handleSignOut = useCallback(async () => {
@@ -86,6 +93,16 @@ const ProfileResolverPage = () => {
     return <div className="flex min-h-[70vh] items-center justify-center">Profil yönlendirmeniz hazırlanıyor...</div>;
   }
 
+  const hasMemberItem = editableItems.some((item) => item.itemType === "member");
+
+  // Tek profil VEYA Bireysel profili olan çok-profilli hesaplar yukarıdaki effect
+  // ile doğrudan editöre yönlendirilir; burada sadece yönlendirme beklenir.
+  if (editableItems.length === 1 || (editableItems.length > 1 && hasMemberItem)) {
+    return null;
+  }
+
+  // Yalnızca hiç Bireysel profili olmayan (sadece katalog) çok-profilli hesaplar
+  // ilk hedefi seçim ekranından belirler.
   if (editableItems.length > 1) {
     return (
       <div className="mx-auto w-full max-w-5xl px-4 py-10">
@@ -103,10 +120,6 @@ const ProfileResolverPage = () => {
         <EditableProfilesSelector items={editableItems} onSelect={handleOpenEditableItem} />
       </div>
     );
-  }
-
-  if (editableItems.length === 1) {
-    return null;
   }
 
   if (errorMessage) {

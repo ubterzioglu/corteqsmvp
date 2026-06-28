@@ -95,12 +95,34 @@ describe("ProfileResolverPage", () => {
     expect(await screen.findByText("Kurulus Profil")).toBeInTheDocument();
   });
 
-  it("shows the selector when user has multiple editable items", async () => {
+  it("opens the member profile directly when multiple items include a member (Bireysel öncelikli)", async () => {
     authedUser();
     getCurrentMemberCatalogProfileMock.mockResolvedValue(null);
     getMyEditableCatalogItemsMock.mockResolvedValue([
-      memberItem(),
       memberItem({ itemId: "item-2", slug: "isletme-xyz", title: "Test Business", itemType: "business", roleKey: "Business_RestaurantCafe", legacyProfileType: "isletme" }),
+      memberItem(),
+    ]);
+
+    render(
+      <MemoryRouter initialEntries={["/profile"]}>
+        <Routes>
+          <Route path="/profile" element={<ProfileResolverPage />} />
+          <Route path="/profile/danisman" element={<div>Danisman Profil</div>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    // Member (Bireysel) item önce açılır; boş seçim ekranı gösterilmez.
+    expect(await screen.findByText("Danisman Profil")).toBeInTheDocument();
+    expect(screen.queryByText(/Düzenlemek istediğin profili seç/i)).not.toBeInTheDocument();
+  });
+
+  it("shows the selector only when multiple items have no member profile", async () => {
+    authedUser();
+    getCurrentMemberCatalogProfileMock.mockResolvedValue(null);
+    getMyEditableCatalogItemsMock.mockResolvedValue([
+      memberItem({ itemId: "item-2", slug: "isletme-xyz", title: "Test Business", itemType: "business", roleKey: "Business_RestaurantCafe", legacyProfileType: "isletme" }),
+      memberItem({ itemId: "item-3", slug: "kurulus-abc", title: "Test Org", itemType: "organization", roleKey: "Organization_AssociationFoundation", legacyProfileType: "kurulus-dernek" }),
     ]);
 
     render(
@@ -112,7 +134,7 @@ describe("ProfileResolverPage", () => {
     );
 
     expect(await screen.findByText(/Düzenlemek istediğin profili seç/i)).toBeInTheDocument();
-    expect(screen.getByText("Test User")).toBeInTheDocument();
     expect(screen.getByText("Test Business")).toBeInTheDocument();
+    expect(screen.getByText("Test Org")).toBeInTheDocument();
   });
 });

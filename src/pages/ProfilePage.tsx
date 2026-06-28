@@ -65,6 +65,7 @@ import { supabase } from "@/integrations/supabase/client";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
 import PremiumProfileHero from "@/components/profile/premium/PremiumProfileHero";
+import ProfileSwitcherMenu from "@/components/profile/ProfileSwitcherMenu";
 import PremiumProfileTabs, { PREMIUM_TAB_KEYS } from "@/components/profile/premium/PremiumProfileTabs";
 import ProfileCompletionCard from "@/components/profile/premium/ProfileCompletionCard";
 import ProfilePublicPreviewCard from "@/components/profile/premium/ProfilePublicPreviewCard";
@@ -2080,6 +2081,12 @@ const ProfilePage = () => {
           completionPercentage={profile?.profileCompletion.percentage ?? 0}
           hasPartialData={Boolean(errorMessage)}
           publicProfileSlug={memberCatalogSlug}
+          switcherSlot={
+            <ProfileSwitcherMenu
+              currentItemId={null}
+              triggerClassName="h-8 w-full justify-start rounded-lg text-xs font-medium"
+            />
+          }
           avatarUploading={avatarUploading}
           avatarRemoving={avatarRemoving}
           onChangePhoto={() => avatarInputRef.current?.click()}

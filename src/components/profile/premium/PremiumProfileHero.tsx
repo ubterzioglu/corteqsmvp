@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Bell, ExternalLink, HelpCircle, ImagePlus, LogOut, MapPin, Mail, Settings, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -22,6 +23,11 @@ type PremiumProfileHeroProps = {
   hasPartialData: boolean;
   /** Catalog slug for the public preview CTA; CTA is hidden when null. */
   publicProfileSlug: string | null;
+  /**
+   * "Diğer Profiller" geçiş menüsü gibi sayfa-güdümlü içerik; buton kolonunun
+   * en üstünde render edilir. Hero saf sunum kalsın diye veri/route bilmez.
+   */
+  switcherSlot?: ReactNode;
   avatarUploading: boolean;
   avatarRemoving: boolean;
   onChangePhoto: () => void;
@@ -51,6 +57,7 @@ const PremiumProfileHero = ({
   completionPercentage,
   hasPartialData,
   publicProfileSlug,
+  switcherSlot,
   avatarUploading,
   avatarRemoving,
   onChangePhoto,
@@ -164,6 +171,7 @@ const PremiumProfileHero = ({
             Bildirimler drive the dashboard tabs; Yardım + Çıkış Yap moved here
             so the tab bar below collapses to a single row. */}
         <div className="flex w-full shrink-0 flex-col gap-1.5 md:w-44">
+          {switcherSlot}
           <Button
             type="button"
             variant="outline"

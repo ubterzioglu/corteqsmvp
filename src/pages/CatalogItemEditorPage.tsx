@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 
+import ProfileSwitcherMenu from "@/components/profile/ProfileSwitcherMenu";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -108,9 +109,12 @@ const CatalogItemEditorPage = () => {
             Yetkili oldugun katalog profilinin attribute degerlerini buradan duzenleyebilirsin.
           </p>
         </div>
-        <Button asChild variant="outline">
-          <Link to="/profile">Profil Secimine Don</Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <ProfileSwitcherMenu currentItemId={itemId ?? null} triggerClassName="rounded-full" />
+          <Button asChild variant="outline">
+            <Link to="/profile">Profil Secimine Don</Link>
+          </Button>
+        </div>
       </div>
 
       {isLoading ? <p className="text-sm text-muted-foreground">Profil yukleniyor...</p> : null}
