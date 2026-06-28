@@ -14,8 +14,8 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
-    id: "20260626-profil-hero-dikey-buton-kolonu",
-    date: "26 Haziran 2026",
+    id: "20260627-profil-hero-dikey-buton-kolonu",
+    date: "27 Haziran 2026",
     title: "Profil panelinde üst kartın sağ üstüne 4'lü dikey buton kolonu eklendi, sekmeler tek satıra indi",
     items: [
       "Premium profil panelinde (/profile) en üstteki kartın (kullanıcı bilgilerinin olduğu kart) sağ üst köşesine, alt alta dizili 4 eşit boyutlu buton eklendi: 'Profil Ayarları', 'Bildirimler', 'Yardım' ve 'Çıkış Yap'. Butonların genişlik ve yükseklikleri aynı; yazı tipi büyük değil, alttaki sekmelerle aynı küçüklükte.",
