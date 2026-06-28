@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Burak için — Stripe Mockup Nasıl Kullanılır?</title>
+<style>
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --orange: #f97316;
+    --stripe: #635bff;
+    --ink: #1e293b;
+    --muted: #64748b;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --green: #16a34a;
+    --amber-bg: #fffbeb;
+    --amber-border: #fcd34d;
+    --amber-ink: #92400e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px 64px; }
+
+  header.hero {
+    background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 55%, var(--orange) 130%);
+    color: #fff;
+    padding: 44px 20px 40px;
+    text-align: center;
+  }
+  header.hero .inner { max-width: 760px; margin: 0 auto; }
+  header.hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .3px;
+    margin-bottom: 16px;
+  }
+  header.hero h1 { margin: 0 0 8px; font-size: 28px; font-weight: 800; }
+  header.hero p { margin: 0; opacity: .92; font-size: 15px; }
+
+  .demo-note {
+    margin: 24px 0 8px;
+    background: var(--amber-bg);
+    border: 1px solid var(--amber-border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    color: var(--amber-ink);
+    font-size: 15px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .demo-note .ic { font-size: 22px; line-height: 1; }
+  .demo-note strong { color: #b45309; }
+
+  section.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin-top: 22px;
+    box-shadow: 0 1px 2px rgba(15,23,42,.04);
+  }
+  h2 {
+    font-size: 19px;
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h2 .num {
+    background: var(--teal);
+    color: #fff;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    flex: 0 0 28px;
+  }
+
+  table.creds { width: 100%; border-collapse: collapse; margin-top: 6px; }
+  table.creds td { padding: 11px 12px; border-bottom: 1px solid var(--border); font-size: 15px; vertical-align: top; }
+  table.creds tr:last-child td { border-bottom: none; }
+  table.creds td.k { color: var(--muted); width: 130px; font-weight: 600; }
+  code {
+    background: #f1f5f9;
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 6px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13.5px;
+    color: var(--teal-dark);
+    word-break: break-all;
+  }
+  .hint { font-size: 13.5px; color: var(--muted); margin-top: 10px; }
+
+  ol.steps { counter-reset: step; list-style: none; padding: 0; margin: 0; }
+  ol.steps li {
+    position: relative;
+    padding: 12px 0 12px 46px;
+    border-bottom: 1px dashed var(--border);
+    font-size: 15px;
+  }
+  ol.steps li:last-child { border-bottom: none; }
+  ol.steps li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 0; top: 11px;
+    width: 30px; height: 30px;
+    background: var(--teal);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  ol.steps li.pay::before { background: var(--stripe); }
+  ol.steps li.done::before { background: var(--green); content: "✓"; }
+
+  .btnlike {
+    display: inline-block;
+    background: var(--stripe);
+    color: #fff;
+    padding: 3px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13.5px;
+    white-space: nowrap;
+  }
+  .btnlike.teal { background: var(--teal); }
+
+  .quote {
+    border-left: 4px solid var(--teal);
+    background: #f0fdfa;
+    padding: 14px 18px;
+    border-radius: 0 12px 12px 0;
+    font-size: 15px;
+    color: #134e4a;
+    margin: 0;
+  }
+
+  .faq { margin-top: 6px; }
+  .faq .q { font-weight: 700; margin-top: 14px; }
+  .faq .q:first-child { margin-top: 0; }
+  .faq .a { color: #334155; font-size: 14.5px; margin-top: 3px; }
+
+  table.tech { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 14px; }
+  table.tech th, table.tech td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); }
+  table.tech th { color: var(--muted); font-weight: 600; }
+  table.tech td code { font-size: 12.5px; }
+
+  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 32px; }
+  .pill-green { color: var(--green); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <span class="badge">CorteQS · Demo Rehberi</span>
+    <h1>Stripe Mockup Nasıl Kullanılır?</h1>
+    <p>Hizmet talebi → ödeme akışını adım adım dene ve sun</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="demo-note">
+    <span class="ic">⚠️</span>
+    <div>
+      <strong>Bu bir DEMO ödemedir.</strong> Gerçek para çekilmez, girdiğin kart bilgisi
+      hiçbir yere gönderilmez. Amaç: "kullanıcı hizmet talebi verince ödemeye yönlendiriliyor"
+      senaryosunu canlı göstermek.
+    </div>
+  </div>
+
+  <section class="card">
+    <h2><span class="num">i</span> 30 saniyede özet</h2>
+    <ul style="margin:0; padding-left:20px; font-size:15px;">
+      <li>Kullanıcı bir <strong>hizmet talebi</strong> oluşturuyor → karşısına <strong>Stripe ödeme ekranı</strong> çıkıyor.</li>
+      <li>"Ödeme" yapınca talep sisteme düşüyor, danışmanlar teklif verebiliyor.</li>
+      <li>Ödeme ekranı gerçek Stripe'a <strong>benziyor</strong> ama hiçbir yere para/kart gitmiyor.</li>
+      <li>Test kartı <code>4242 4242 4242 4242</code> ekranda <strong>hazır gelir</strong> — sadece "Öde" demen yeter.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">1</span> Giriş bilgilerin</h2>
+    <table class="creds">
+      <tr><td class="k">Adres</td><td><code>https://corteqs.net/login</code></td></tr>
+      <tr><td class="k">E-posta</td><td><code>experimental3@corteqs.net</code></td></tr>
+      <tr><td class="k">Şifre</td><td><code>Demo2026!corteqs</code></td></tr>
+    </table>
+    <p class="hint">👉 Girişte <strong>"E-posta ile Giriş"</strong> sekmesini kullan (Google ile değil).</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">2</span> Adım adım gösterim</h2>
+    <ol class="steps">
+      <li><strong>Giriş yap.</strong></li>
+      <li>Sağ üstten <strong>"Profilim"</strong> → ya da doğrudan <code>corteqs.net/profile</code>.</li>
+      <li>Sekmelerden <strong>"Hizmet Talepleri"</strong>ni seç.</li>
+      <li><span class="btnlike teal">Yeni Talep</span> butonuna bas.</li>
+      <li>Formu doldur (hepsi kısa olabilir): <em>Kime yönelik</em> → Danışman · <em>Kategori</em> → ör. Vize/Göçmenlik · <em>Başlık + Açıklama</em> → birkaç kelime · <em>onay kutuları</em> (KVKK/GDPR) → işaretle.</li>
+      <li class="pay">En altta <span class="btnlike">Ödemeye Geç · €19</span> → bas.</li>
+      <li class="pay">Açılan mor <strong>Stripe ekranında</strong> kart bilgileri zaten dolu gelir → <span class="btnlike">€19.00 Öde</span> → bas.</li>
+      <li class="pay">"Ödeme işleniyor…" → <strong>"Ödeme Başarılı ✓"</strong>.</li>
+      <li class="done">Talep oluşur, listede görünür.</li>
+    </ol>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">3</span> Sunumda söyleyebileceklerin</h2>
+    <p class="quote">
+      "Diasporadaki bir kullanıcı danışmanlık almak istiyor. Talebini oluşturuyor ve
+      <strong>Stripe ile ödeme adımına yönlendiriliyor.</strong> Ödemesini yapıyor, talebi sisteme
+      düşüyor, danışmanlar teklif veriyor. Şu an ödeme ekranı <strong>demo modunda</strong> —
+      altyapı hazır, gerçek Stripe hesabı bağlanınca aynı akış canlı ödeme alacak."
+    </p>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">?</span> Sık sorulanlar</h2>
+    <div class="faq">
+      <div class="q">Gerçekten para çekiliyor mu?</div>
+      <div class="a">Hayır. Ekranda kalıcı <strong>"Demo / Test ödemesi"</strong> uyarısı var. Kart bilgisi hiçbir yere gönderilmez, kaydedilmez.</div>
+
+      <div class="q">Ödemeyi iptal edersem?</div>
+      <div class="a">Ödeme ekranında <strong>"Vazgeç"</strong> dersen talep oluşmaz. Bu demoda ödeme zorunlu adım.</div>
+
+      <div class="q">Neden €19?</div>
+      <div class="a">Göstermelik bir "hizmet talebi başvuru ücreti". İstenirse kolayca değiştirilebilir (<code>SERVICE_REQUEST_FEE</code>).</div>
+
+      <div class="q">Admin panelinde ödeme kaydı görünür mü?</div>
+      <div class="a">Hayır — bu mockup gerçek işlem yazmaz. Sadece oluşan <strong>hizmet talebi</strong>, <code>/admin → Veritabanı Tabloları → service_requests</code> altında görünür.</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">4</span> Gerçek Stripe'a geçiş (ileride)</h2>
+    <ol style="margin:0; padding-left:20px; font-size:15px;">
+      <li>Stripe hesabı + API anahtarları (hazırlık notu repoda mevcut).</li>
+      <li><code>create-checkout-session</code> adında bir edge function (server-side).</li>
+      <li>Sahte ekran yerine gerçek Stripe Checkout'a yönlendirme + webhook ile ödeme onayı.</li>
+    </ol>
+    <p class="hint">Kod buna hazır: ödeme başarılı olunca talebi oluşturan mantık zaten ayrılmış durumda; sadece "ödeme tetikleyicisi" gerçek Stripe ile değiştirilecek.</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">5</span> Teknik özet (geliştirici notu)</h2>
+    <table class="tech">
+      <tr><th>Parça</th><th>Dosya</th></tr>
+      <tr><td>Sahte Stripe ekranı</td><td><code>src/components/payments/MockStripeCheckout.tsx</code></td></tr>
+      <tr><td>Ödeme adımı + talep oluşturma</td><td><code>src/components/ServiceRequestForm.tsx</code></td></tr>
+      <tr><td>"Hizmet Talepleri" sekmesi</td><td><code>src/components/profile/premium/PremiumProfileTabs.tsx</code></td></tr>
+      <tr><td>Premium panel rol eşlemesi</td><td><code>src/lib/profile-presentation.ts</code></td></tr>
+    </table>
+    <p class="hint">Premium panel (ve bu sekme) yalnızca <code>Experimental_2</code> / <code>Experimental_3</code> rollerinde açılır. Demo kullanıcı <code>experimental3@corteqs.net</code> bu rolle hazırlandı.</p>
+  </section>
+
+  <footer>
+    <p class="pill-green">Hazır ✓</p>
+    CorteQS · Stripe Mockup Demo Rehberi · İyi sunumlar 🚀
+  </footer>
+
+</div>
+</body>
+</html>
