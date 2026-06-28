@@ -3,7 +3,6 @@ import { Navigate, useSearchParams } from "react-router-dom";
 import { ShieldCheck } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
-import DiasporaNetworkLayer from "@/components/landing/DiasporaNetworkLayer";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -155,36 +154,42 @@ const LoginPage = () => {
   const isBusy = oauthSubmitting || passwordSubmitting || signupSubmitting || isLoading;
 
   return (
-    <div className="grid min-h-screen w-full lg:grid-cols-2">
+    <div className="flex min-h-screen w-full items-center justify-center bg-muted/40 px-4 py-8 sm:px-6">
+      <div className="grid w-full max-w-4xl overflow-hidden rounded-3xl border border-border/60 bg-card shadow-2xl lg:grid-cols-2">
       {/* ——— SOL PANEL: koyu + renkli marka/branding ——— */}
-      <aside className="relative flex min-h-[30vh] flex-col justify-between overflow-hidden bg-[hsl(220_28%_10%)] px-8 py-10 text-white lg:min-h-screen lg:px-12 lg:py-14">
-        {/* Marka gradient zemin (teal→turuncu) */}
+      <aside className="relative flex min-h-[18vh] flex-col justify-between overflow-hidden bg-[hsl(220_28%_10%)] px-7 py-8 text-white lg:px-9 lg:py-10">
+        {/* Ana sayfa hero videosu — kapsayan arka plan */}
+        <video
+          src="/herovideo.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover"
+        />
+        {/* Okunabilirlik için hafif karartma örtüsü (video belli olsun) */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 z-0"
           style={{
             background:
-              "radial-gradient(120% 90% at 12% 8%, hsl(var(--glow-teal) / 0.55), transparent 55%), radial-gradient(120% 90% at 92% 96%, hsl(var(--glow-orange) / 0.5), transparent 52%), linear-gradient(160deg, hsl(220 30% 9%) 0%, hsl(220 32% 12%) 100%)",
+              "linear-gradient(180deg, hsl(220 30% 6% / 0.35) 0%, hsl(220 30% 6% / 0.15) 45%, hsl(220 30% 6% / 0.72) 100%)",
           }}
         />
-        {/* Canlı diaspora ağ animasyonu (dekoratif) */}
-        <DiasporaNetworkLayer className="z-0 opacity-60" />
 
-        <div className="relative z-10 flex items-center gap-3">
-          <img src="/logocorteqsbig.png" alt="CorteQS" className="h-9 w-auto" />
-        </div>
-
-        <div className="relative z-10 max-w-md">
-          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/55">
+        <div className="relative z-10 mt-6 max-w-md lg:mt-0">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/55">
             Diaspora ağı
           </p>
-          <h1 className="mt-4 font-display text-4xl font-black leading-tight tracking-tight md:text-5xl">
+          <h1 className="mt-3 font-display text-2xl font-black leading-tight tracking-tight md:text-3xl">
             Diasporanın profesyonel
             <span className="bg-gradient-to-r from-[hsl(var(--glow-teal))] to-[hsl(var(--glow-orange))] bg-clip-text text-transparent">
               {" "}ağına giriş yap
             </span>
           </h1>
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/65">
+          <p className="mt-3 max-w-sm text-[13px] leading-relaxed text-white/65">
             CorteQS, dünyaya yayılmış Türk diasporasını tek bir ağda buluşturur. Hesabınla
             giriş yap, profilini yönet ve bağlantını sürdür.
           </p>
@@ -197,8 +202,8 @@ const LoginPage = () => {
       </aside>
 
       {/* ——— SAĞ PANEL: açık form ——— */}
-      <main className="flex items-center justify-center bg-background px-4 py-12 sm:px-8">
-        <div className="w-full max-w-md">
+      <main className="flex items-center justify-center bg-card px-6 py-8 sm:px-9 lg:py-10">
+        <div className="w-full max-w-sm">
           <CardHeader className="px-0">
             <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
               Üye erişimi
@@ -323,6 +328,7 @@ const LoginPage = () => {
           </CardContent>
         </div>
       </main>
+      </div>
     </div>
   );
 };
