@@ -17,6 +17,13 @@ describe("resolveProfilePresentation — pilot izolasyonu", () => {
     expect(isExperimental2Presentation(presentation)).toBe(true);
   });
 
+  it("Experimental_3 de premium pilot config'ini alır (klon)", () => {
+    const presentation = resolveProfilePresentation("Experimental_3");
+    expect(presentation.key).toBe(EXPERIMENTAL_2_PRESENTATION_KEY);
+    expect(presentation.heroVariant).toBe("experimental");
+    expect(isExperimental2Presentation(presentation)).toBe(true);
+  });
+
   it("Experimental_1 generic fallback alır (negatif kontrol)", () => {
     const presentation = resolveProfilePresentation("Experimental_1");
     expect(presentation.key).toBe(GENERIC_PRESENTATION_KEY);

@@ -53,7 +53,8 @@ export const GENERIC_PRESENTATION_KEY = "generic";
 
 const EXPERIMENTAL_2_PRESENTATION: ProfilePresentationConfig = {
   key: EXPERIMENTAL_2_PRESENTATION_KEY,
-  supportedRoleKeys: ["Experimental_2"],
+  // Experimental_3, premium pilotunun bir klonudur ve aynı premium görünümü alır.
+  supportedRoleKeys: ["Experimental_2", "Experimental_3"],
   accent: "purple",
   heroVariant: "experimental",
   eyebrow: "Premium Profil",

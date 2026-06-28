@@ -14,6 +14,18 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260628-gostermelik-stripe-odeme-akisi",
+    date: "28 Haziran 2026",
+    title: "Hizmet talebi verirken göstermelik (demo) Stripe ödeme ekranı eklendi",
+    items: [
+      "Premium profil panelindeki (/profile) 'Hizmet Talepleri' sekmesi artık çalışıyor: 'Yeni Talep' butonuyla form açılıyor, talep gönderilince kullanıcı bir ödeme ekranına yönlendiriliyor. (Eskiden bu sekme 'yakında' yazan boş bir placeholder idi.)",
+      "Ödeme ekranı GÖSTERMELİKTİR (demo/mockup): Stripe'ın ödeme sayfasını taklit eden, mor şeritli, kart numarası/son kullanma/CVC alanları olan bir pencere açılıyor (test kartı 4242… ön-dolu). 'Öde' deyince kısa bir 'ödeme işleniyor' animasyonundan sonra 'Ödeme Başarılı' görünüyor. GERÇEK PARA TAHSİL EDİLMEZ; girilen kart bilgisi hiçbir yere gönderilmez. Ekranda kalıcı 'Demo / Test ödemesi' uyarısı var.",
+      "Ödeme 'başarılı' olunca hizmet talebi gerçekten oluşturuluyor ve danışmanların teklif verebileceği listeye düşüyor. Ödeme ekranında 'Vazgeç' denirse talep oluşturulmuyor (ödeme zorunlu adım). Başvuru ücreti demo olarak €19 gösteriliyor.",
+      "Denemek için bir demo müşteri hesabı açıldı: demo-musteri@corteqs.net (şifre giriş bilgileri ekibe ayrıca verildi). Akışın nasıl deneneceği docs/stripe/DEMO_SENARYO.md ve docs/stripe/MOCK_PAYMENT_FLOW_GUIDE.md dosyalarında anlatıldı.",
+      "Bu bir göstermelik sunum akışıdır; gerçek Stripe entegrasyonu (hesap + anahtar + ödeme onayı) ileride tek bir adımda bağlanacak şekilde hazırlandı. Tüm testler (880) ve yapı (build) başarılı. Sitede görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     id: "20260627-profil-hero-dikey-buton-kolonu",
     date: "27 Haziran 2026",
     title: "Profil panelinde üst kartın sağ üstüne 4'lü dikey buton kolonu eklendi, sekmeler tek satıra indi",

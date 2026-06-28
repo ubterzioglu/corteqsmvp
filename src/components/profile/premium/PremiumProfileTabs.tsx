@@ -12,9 +12,14 @@ import {
   Users,
 } from "lucide-react";
 
+import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MessagesInbox from "@/components/messaging/MessagesInbox";
+import ServiceRequestForm from "@/components/ServiceRequestForm";
+import ServiceRequestsList from "@/components/ServiceRequestsList";
 
 import PremiumPanelPlaceholder from "./PremiumPanelPlaceholder";
 
@@ -39,7 +44,7 @@ export const PREMIUM_TAB_KEYS = {
 
 const SETTINGS_TAB_KEY = PREMIUM_TAB_KEYS.settings;
 
-type PremiumTabKind = "settings" | "messages" | "placeholder";
+type PremiumTabKind = "settings" | "messages" | "service-requests" | "placeholder";
 
 type PremiumTabConfig = {
   key: string;
@@ -74,12 +79,7 @@ const PREMIUM_TABS: PremiumTabConfig[] = [
     key: "service-requests",
     label: "Hizmet Talepleri",
     icon: FileText,
-    kind: "placeholder",
-    placeholder: {
-      title: "Hizmet Talepleri",
-      description:
-        "Oluşturduğun hizmet talepleri ve durumları burada listelenecek. Bu panel yakında gerçek verilerinle çalışacak.",
-    },
+    kind: "service-requests",
   },
   {
     key: "relocation",
@@ -172,6 +172,51 @@ const PREMIUM_TABS: PremiumTabConfig[] = [
   },
 ];
 
+/**
+ * "Hizmet Talepleri" sekmesi: yeni talep oluşturma formu (göstermelik Stripe
+ * ödemesiyle) ve kullanıcının mevcut talepleri/teklifleri. Form gönderimi
+ * ServiceRequestForm içindeki MockStripeCheckout'a yönlenir; ödeme "başarılı"
+ * olunca talep gerçekten kaydedilir ve liste yenilenir.
+ */
+const ServiceRequestsPanel = () => {
+  const [showForm, setShowForm] = useState(false);
+  const [listKey, setListKey] = useState(0);
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h3 className="text-lg font-bold text-foreground">Hizmet Taleplerim</h3>
+          <p className="text-sm text-muted-foreground">
+            Danışman ve işletmelerden teklif almak için yeni bir talep oluştur.
+          </p>
+        </div>
+        {!showForm && (
+          <Button onClick={() => setShowForm(true)} className="gap-1.5 shrink-0">
+            <FileText className="h-4 w-4" /> Yeni Talep
+          </Button>
+        )}
+      </div>
+
+      {showForm ? (
+        <Card>
+          <CardContent className="p-4 sm:p-6">
+            <ServiceRequestForm
+              onSuccess={() => {
+                setShowForm(false);
+                setListKey((k) => k + 1);
+              }}
+              onCancel={() => setShowForm(false)}
+            />
+          </CardContent>
+        </Card>
+      ) : (
+        <ServiceRequestsList key={listKey} />
+      )}
+    </div>
+  );
+};
+
 type PremiumProfileTabsProps = {
   /** Real profile-editing content (existing premium card stack) for the settings tab. */
   settingsContent: ReactNode;
@@ -213,6 +258,8 @@ const PremiumProfileTabs = ({
                 settingsContent
               ) : tab.kind === "messages" ? (
                 <MessagesInbox />
+              ) : tab.kind === "service-requests" ? (
+                <ServiceRequestsPanel />
               ) : tab.placeholder ? (
                 <PremiumPanelPlaceholder
                   title={tab.placeholder.title}

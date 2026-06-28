@@ -16,6 +16,10 @@ import { Upload, X, FileText, Send, Clock, MapPin, DollarSign, Briefcase, Buildi
 import { useToast } from "@/hooks/use-toast";
 import ConsentCheckboxes, { emptyConsent, isConsentValid, type ConsentState } from "@/components/ConsentCheckboxes";
 import { markRealServiceRequest } from "@/lib/demoFlags";
+import MockStripeCheckout from "@/components/payments/MockStripeCheckout";
+
+/** Göstermelik hizmet talebi başvuru ücreti (demo Stripe ödemesi). */
+const SERVICE_REQUEST_FEE = 19;
 
 type CategoryDef = { value: string; label: string; subcategories: string[] };
 
@@ -86,6 +90,8 @@ interface ServiceRequestFormProps {
 const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [customerEmail, setCustomerEmail] = useState<string>("");
   const [files, setFiles] = useState<File[]>([]);
   const [targetType, setTargetType] = useState<string>("");
   const [category, setCategory] = useState("");
@@ -136,10 +142,13 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
     setFiles(prev => prev.filter((_, i) => i !== index));
   };
 
+  const finalCategoryLabel = isOtherCategory ? customCategory.trim() : (selectedCategory?.label || "");
+  const finalSubcategory = isOtherSubcategory ? customSubcategory.trim() : subcategory;
+
+  // Form gönderimi: önce doğrula, sonra göstermelik Stripe ödeme ekranını aç.
+  // Gerçek kayıt (submitRequest) yalnızca ödeme "başarılı" olunca yapılır.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const finalCategoryLabel = isOtherCategory ? customCategory.trim() : (selectedCategory?.label || "");
-    const finalSubcategory = isOtherSubcategory ? customSubcategory.trim() : subcategory;
     if (!targetType || !category || (isOtherCategory && !finalCategoryLabel) || !form.title || !form.description) {
       toast({ title: "Eksik bilgi", description: "Hedef tür, kategori, başlık ve açıklama zorunludur.", variant: "destructive" });
       return;
@@ -153,6 +162,18 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
       return;
     }
 
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast({ title: "Giriş yapmalısınız", variant: "destructive" });
+      return;
+    }
+
+    setCustomerEmail(user.email ?? "");
+    setPaymentOpen(true);
+  };
+
+  // Göstermelik ödeme başarılı olunca çağrılır → talebi gerçekten oluşturur.
+  const submitRequest = async () => {
     setLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -194,7 +215,7 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
       if (error) throw error;
 
       markRealServiceRequest();
-      toast({ title: "Talep oluşturuldu!", description: "Danışmanlar tekliflerini gönderecektir." });
+      toast({ title: "Ödeme alındı, talep oluşturuldu! 🎉", description: "Danışmanlar tekliflerini gönderecektir." });
       onSuccess?.();
     } catch (err: unknown) {
       toast({ title: "Hata", description: err instanceof Error ? err.message : undefined, variant: "destructive" });
@@ -398,15 +419,31 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
 
       <ConsentCheckboxes compact value={consent} onChange={setConsent} />
 
+      {/* Başvuru ücreti bilgisi */}
+      <div className="flex items-center justify-between rounded-lg border border-border bg-muted/40 px-4 py-3">
+        <span className="text-sm text-muted-foreground">Hizmet talebi başvuru ücreti</span>
+        <span className="text-base font-bold text-foreground">€{SERVICE_REQUEST_FEE.toFixed(2)}</span>
+      </div>
+
       {/* Actions */}
       <div className="flex gap-3 pt-2">
         <Button type="submit" disabled={loading || !isConsentValid(consent)} className="gap-2 flex-1 md:flex-none">
-          <Send className="h-4 w-4" /> {loading ? "Gönderiliyor..." : "Talebi Gönder"}
+          <Send className="h-4 w-4" /> {loading ? "Gönderiliyor..." : `Ödemeye Geç · €${SERVICE_REQUEST_FEE}`}
         </Button>
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>İptal</Button>
         )}
       </div>
+
+      {/* Göstermelik Stripe ödeme ekranı — ödeme başarılı olunca talep oluşturulur */}
+      <MockStripeCheckout
+        open={paymentOpen}
+        onOpenChange={setPaymentOpen}
+        amount={SERVICE_REQUEST_FEE}
+        productName="Hizmet Talebi Başvurusu"
+        customerEmail={customerEmail}
+        onPaymentSuccess={submitRequest}
+      />
     </form>
   );
 };
