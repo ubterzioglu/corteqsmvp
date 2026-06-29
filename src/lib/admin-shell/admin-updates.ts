@@ -14,6 +14,27 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260629-revizyon-istekleri-yorum-sistemi",
+    date: "29 Haziran 2026",
+    title: "Admin paneline 'Revizyon İstekleri' bölümü eklendi — talep aç, durum takip et, yorumlaş",
+    items: [
+      "Admin paneline yeni bir 'Revizyon İstekleri' bölümü eklendi (sol menüde 'Operasyon Workspace' grubunda, Command Center'ın altında; adres: /admin/revision-requests). Amaç: site veya üründe yapılmasını istediğiniz değişiklikleri tek yerde toplamak, durumlarını takip etmek ve her isteğin altında ekipçe yorumlaşmak.",
+      "'Yeni Revizyon İsteği' butonuyla bir başlık + açıklama yazıp talep açıyorsunuz. Her talebe bir durum (Açık / İnceleniyor / Yapıldı / İptal), bir öncelik (1–10) ve isterseniz bir alan etiketi (ör. 'Cadde', 'Profil') veriyorsunuz. Talepler öncelik ve tarihe göre sıralı listeleniyor; her birinde kimin açtığı (e-posta) ve tarih görünüyor.",
+      "Her talebin detayına girince sağdan açılan panelde bir YORUM AKIŞI (thread) var: adminler alt alta sırayla yorum ekleyebiliyor, kim ne zaman yazmış görünüyor, yanlış yorum silinebiliyor. Böylece bir revizyon talebi üzerinde yazışarak ilerlenebiliyor.",
+      "Tüm bölüm yalnızca adminlere açık ve tüm adminler aynı listeyi/yorumları ortak görüyor (kişiye özel değil). Veritabanı tarafı (talepler + yorumlar tabloları, güvenlik kuralları) canlıya uygulandı ve doğrulandı. Sitede görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
+    id: "20260628-burak-stripe-mockup-html-rehberi",
+    date: "28 Haziran 2026",
+    title: "Burak için, kurulum gerektirmeyen bağımsız bir Stripe mockup tanıtım rehberi (HTML) hazırlandı",
+    items: [
+      "Aynı gün eklenen göstermelik (demo) Stripe ödeme akışını dışarıya (özellikle Burak'a) anlatmak için, tek başına açılan bir tanıtım sayfası hazırlandı: corteqs.net/burak-stripe-rehberi.html. Bu sayfa siteye giriş yapmayı veya herhangi bir kurulumu GEREKTİRMEZ — linke tıklayan herkes doğrudan açıp okuyabilir.",
+      "İçeriği: demo ödeme akışının ne olduğu, nasıl deneneceği (adım adım), test kartı bilgileri ve 'gerçek para tahsil edilmez' uyarısı. Stripe'ın mor markasına uygun, tek dosyalık (bağımsız) bir HTML olarak hazırlandı; e-posta/WhatsApp ile paylaşmaya uygun.",
+      "Bu yalnızca bir tanıtım/dokümandır; sitenin çalışmasına veya verilere dokunmaz. Linkin çalışması için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     id: "20260628-gostermelik-stripe-odeme-akisi",
     date: "28 Haziran 2026",
     title: "Hizmet talebi verirken göstermelik (demo) Stripe ödeme ekranı eklendi",
