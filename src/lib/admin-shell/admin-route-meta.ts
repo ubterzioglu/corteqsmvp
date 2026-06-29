@@ -76,6 +76,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/workspace/meeting-notes",
   "/admin/workspace/mvp",
   "/admin/workspace/docs/:slug",
+  "/admin/revision-requests",
   "/admin/muhasebe",
   "/admin/muhasebe/giderler",
   "/admin/muhasebe/gelirler",

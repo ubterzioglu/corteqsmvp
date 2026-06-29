@@ -38,6 +38,7 @@ const AdminBlogPage = lazy(() => import("@/pages/admin/blog/AdminBlogPage"));
 const AdminAdvisorLinksPage = lazy(() => import("@/pages/admin/AdminAdvisorLinksPage"));
 const AdminSocialMediaLinksPage = lazy(() => import("@/pages/admin/AdminSocialMediaLinksPage"));
 const AdminSocialShareVaultPage = lazy(() => import("@/pages/admin/AdminSocialShareVaultPage"));
+const AdminRevisionRequestsPage = lazy(() => import("@/pages/admin/AdminRevisionRequestsPage"));
 const AdminRolesDraftPage = lazy(() => import("@/pages/admin/AdminRolesDraftPage"));
 const AdminWorkspaceHomePage = lazy(() => import("@/pages/admin/workspace/AdminWorkspaceHomePage"));
 const AdminCommandCenterPage = lazy(() => import("@/pages/admin/workspace/AdminCommandCenterPage"));
@@ -141,6 +142,7 @@ export const adminRoutes = (
     <Route path="workspace/meeting-notes" element={<AdminMeetingNotesWorkspacePage />} />
     <Route path="workspace/mvp" element={<AdminMvpWorkspacePage />} />
     <Route path="workspace/docs/:slug" element={<AdminWorkspaceDocPage />} />
+    <Route path="revision-requests" element={<AdminRevisionRequestsPage />} />
     {muhasebeRoutes}
     {serviceFinderRoutes}
     {relocationAdminRoutes}
