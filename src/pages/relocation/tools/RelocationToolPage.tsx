@@ -1,6 +1,8 @@
 // Araç sayfası — /relocation/tools/:toolSlug. Landing → mod seçimi → stepper → sonuç (inline).
 // Login zorunlu (App.tsx RequireAuth). docs/10tool/00 §UX akışı.
-import { useState } from "react";
+// NOT: Bazı Almanya araçları DB skorlama motoruna uymaz (deterministik hesaplayıcı / karar ağacı /
+// soru havuzu) → germany-standalone-tools registry üzerinden kendi bileşenleriyle render edilir.
+import { Suspense, lazy, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -13,6 +15,7 @@ import { relocationToolsKeys } from "@/lib/relocation-tools-query-keys";
 import { useRelocationToolSession } from "@/hooks/useRelocationToolSession";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
 import { toolHeroImage } from "@/lib/relocation-tools-images";
+import { getGermanyStandaloneTool } from "@/lib/germany-standalone-tools";
 import type { ToolMode } from "@/lib/relocation-tools-types";
 
 export default function RelocationToolPage() {
@@ -20,10 +23,18 @@ export default function RelocationToolPage() {
   const { toast } = useToast();
   const [mode, setMode] = useState<ToolMode | null>(null);
 
+  // Standalone Almanya aracı mı? Öyleyse session motorunu atla, kendi bileşenini lazy yükle.
+  // Hook sırası bozulmasın diye TÜM hook'lar koşulsuz çağrılır; standalone return en sonda.
+  const standalone = getGermanyStandaloneTool(toolSlug);
+  const StandaloneComponent = useMemo(
+    () => (standalone ? lazy(standalone.load) : null),
+    [standalone],
+  );
+
   const toolQuery = useQuery({
     queryKey: relocationToolsKeys.tool(toolSlug),
     queryFn: () => getToolBySlug(toolSlug),
-    enabled: !!toolSlug,
+    enabled: !!toolSlug && !standalone,
   });
 
   const tool = toolQuery.data;
@@ -33,6 +44,21 @@ export default function RelocationToolPage() {
     onError: (message) =>
       toast({ title: "Sonuç hesaplanamadı", description: message, variant: "destructive" }),
   });
+
+  // Standalone araç: kendi bileşenini render et (session/landing/stepper akışını atla).
+  if (StandaloneComponent) {
+    return (
+      <Suspense
+        fallback={
+          <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-muted-foreground">
+            {TOOLS_UI_COPY.loading}
+          </div>
+        }
+      >
+        <StandaloneComponent />
+      </Suspense>
+    );
+  }
 
   if (toolQuery.isLoading) {
     return (

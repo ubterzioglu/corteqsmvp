@@ -25,6 +25,39 @@ export const ADMIN_UPDATES: AdminUpdateEntry[] = [
     ],
   },
   {
+    id: "20260701-almanya-araclari-7-yeni-tasinma-araci",
+    date: "1 Temmuz 2026",
+    title: "Taşınma Araçları'na Almanya'ya özel 7 yeni araç eklendi (banka, sigorta, maaş, vize, vatandaşlık testi, para transferi, StepStone)",
+    items: [
+      "Referans aldığımız 'almanya101' sitesindeki pratik araçlardan bizde OLMAYANLARI inceleyip CorteQS'in Taşınma Araçları bölümüne (/relocation/tools) ekledik. Mevcut 10 aracın yanına, isimlerinde '(Almanya)' etiketiyle 7 yeni kart geldi; eski araçların düzeni hiç değişmedi.",
+      "Yeni araçlar: 1) Banka Seçimi — 20 soruyla Almanya'da sana en uygun 3 bankayı önerir. 2) Sigorta Seçimi — sigortalarını 'önce al / güçlü öneri / opsiyonel' diye önceliklendirir. 3) Maaş Hesaplama — brütten nete ve netten brüte 2026 hesabı (vergi sınıfı, eyalet, kilise vergisi, çocuk, sağlık sigortası). 4) Vize Seçimi — birkaç soruda hangi Almanya vizesine (Mavi Kart, Chancenkarte, Ausbildung vb.) uygun olduğunu söyler. 5) Vatandaşlık Testi — resmî BAMF havuzundan 469 soruyla Einbürgerungstest pratiği (3 mod: tüm sorular, gerçek deneme sınavı, eyalet soruları), her soru Almanca + Türkçe. 6) Para Transferi — Almanya'dan Türkiye'ye en avantajlı gönderim yöntemini ücret + kur sonrası eline geçecek TL'ye göre sıralar. 7) StepStone Maaş Karşılaştırma — maaşını StepStone 2026 raporu medyanlarıyla kıyaslar.",
+      "Vatandaşlık testinin 469 sorusu (16 eyalet + genel havuz, görselli sorular dahil) referans sitenin kendi veritabanından çekilip bizim veritabanımıza yüklendi. Tüm araçların veritabanı kayıtları canlıya uygulandı ve doğrulandı (7 araç kartı + 469 soru + skor motorları + güvenlik kuralları aktif).",
+      "Teknik not: araçlar mevcut Taşınma Araçları motoruyla uyumlu çalışıyor; hesaplama mantıkları test edildi (80 yeni otomatik test geçti). Maaş hesaplayıcı bilinen bir örnekte (brüt 4.000 € → net 2.617 €) gerçek Alman brutto-netto hesaplayıcılarıyla aynı sonucu verdi. Kartların kullanıcıya görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
+    id: "20260630-statusreport3006-cadde-premium-durum-raporu",
+    date: "30 Haziran 2026",
+    title: "Cadde 3.0 ve premium panelin eksiklerini tek sayfada toplayan bir durum/karar raporu hazırlandı (/statusreport3006)",
+    items: [
+      "Ortakla (Burak & UBT) tartışmak için, sitenin Cadde 3.0 bölümünün ve premium profil panelinin BUGÜNKÜ durumunu — neyin gerçekten çalıştığını, neyin henüz 'maket/yakında' olduğunu, nelerin eksik kaldığını ve nelere karar verilmesi gerektiğini — tek bir sayfada toplayan kapsamlı bir durum raporu hazırlandı. Adres: corteqs.net/statusreport3006 (giriş gerektirmez, linke tıklayan açar).",
+      "Rapor iki bölümden oluşuyor. Bölüm 1 (Cadde 3.0): modülün altyapı eksikleri (telefon doğrulama/SMS, eski tabloların temizliği, types yenileme, görsel moderasyonu vb.) ve kullanıcıya görünen yüzey eksikleri (public profilde çarşı vitrini, diaspora seçici, premium kademe) frontend/backend ayrı ayrı, her birine 'tamam / kısmen / açık' rozetiyle. Bölüm 2 (Premium Panel): paneldeki 11 sekmenin hangisinin çalıştığı, hangisinin boş maket olduğu sekme sekme; ayrıca 'çalışıyor görünüp aslında demo olan' parçalar (Stripe ödemesi, kupon, takip) ayrı bir uyarı kutusunda.",
+      "Ayrıca eski 'corteqs_plus' (Lovable'da yapılan önceki nesil) projesiyle karşılaştırma var: oradan fikir/arayüz olarak alınabilecek özellikler (dünya saatleri bandı, cafe atmosferi, kişi keşfi, çarşı vitrini) ve neden kodun birebir kopyalanamayacağı. Sonunda ortakla görüşülecek 16 karar başlığı (takip sistemi geri gelsin mi, SMS sağlayıcı, premium iş modeli, kupon sahipliği vb.) listelendi.",
+      "Rapor, sitenin kendi teknolojisiyle (statik dosya değil, gerçek bir sayfa/route olarak) eklendi; koyu temalı tasarımı yalnız bu sayfada geçerli, sitenin geri kalanını etkilemez. Bu bir iç değerlendirme/dokümandır, kullanıcı verisine dokunmaz. Linkin çalışması için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
+    id: "20260630-veritabani-migration-senkronu",
+    date: "30 Haziran 2026",
+    title: "Veritabanı sürüm geçmişi (migration) canlı durumla yeniden hizalandı — 33 kayıt düzeltildi, 1 eksik uygulandı",
+    items: [
+      "Veritabanı değişikliklerini takip eden sürüm sistemiyle (migration geçmişi) canlı veritabanının gerçek durumu arasında bir uyumsuzluk tespit edildi: 33 değişiklik 'uygulanmamış' görünüyordu. Tek tek kontrol edildiğinde 32'sinin aslında daha önce canlıya elle uygulandığı, fakat sistemin takip defterine işlenmediği görüldü; yalnızca 1 tanesi gerçekten eksikti.",
+      "Gerçekten eksik olan tek değişiklik (28 Haziran'da eklenen 'Sosyal Paylaşım Takibi' bölümünün veritabanı tabloları — social_share_log + notlar tablosu) canlıya uygulandı ve doğrulandı. Böylece /admin/social-share-vault sayfasının arka planı artık tam olarak canlıda.",
+      "Ardından 33 değişikliğin tamamı, resmî araç (Supabase CLI) ile takip defterine 'uygulandı' olarak işaretlendi. Artık sürüm geçmişi canlı veritabanıyla bire bir aynı; bundan sonraki değişiklikler temiz bir zemine ekleniyor. Bu işlemde mevcut hiçbir veriye dokunulmadı, hiçbir tablo silinmedi.",
+      "Not: Bu güncellemenin kendisi tamamen veritabanı/altyapı tarafıdır — site arayüzünde görünür bir değişiklik getirmez, deploy gerektirmez. Ayrıca bugün başkasının üzerinde çalıştığı yeni bir taşınma aracı migration'ı (banka seçim - Almanya) henüz tamamlanmadığı için bilinçli olarak ona dokunulmadı; o iş bitince ayrıca uygulanacak.",
+    ],
+  },
+  {
     id: "20260629-revizyon-istekleri-yorum-sistemi",
     date: "29 Haziran 2026",
     title: "Admin paneline 'Revizyon İstekleri' bölümü eklendi — talep aç, durum takip et, yorumlaş",
