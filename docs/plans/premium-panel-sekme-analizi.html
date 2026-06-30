@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Premium Profil Paneli — Sekme Eksik Analizi & Tartışma Dokümanı</title>
+<style>
+  :root {
+    --bg: #0f172a; --card: #ffffff; --ink: #1e293b; --muted: #64748b;
+    --line: #e2e8f0; --violet: #7c3aed; --violet-soft: #f5f3ff;
+    --green: #16a34a; --green-soft: #f0fdf4; --amber: #d97706; --amber-soft: #fffbeb;
+    --red: #dc2626; --red-soft: #fef2f2; --blue: #2563eb; --blue-soft: #eff6ff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink); background: #f1f5f9; line-height: 1.6; font-size: 15px;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 20px 80px; }
+  header.hero {
+    background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 55%, #2563eb 100%);
+    color: #fff; border-radius: 20px; padding: 32px 36px; margin-bottom: 28px;
+    box-shadow: 0 18px 40px -20px rgba(76,29,149,0.6);
+  }
+  header.hero h1 { margin: 0 0 6px; font-size: 26px; letter-spacing: -0.5px; }
+  header.hero p { margin: 4px 0; opacity: 0.92; font-size: 14px; }
+  .pill { display: inline-block; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3);
+    padding: 3px 10px; border-radius: 999px; font-size: 12px; margin-right: 6px; }
+  h2 { font-size: 20px; margin: 38px 0 14px; letter-spacing: -0.3px; border-left: 4px solid var(--violet); padding-left: 12px; }
+  h3 { font-size: 16px; margin: 0; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.04); }
+  .box { border-radius: 14px; padding: 16px 20px; margin: 16px 0; border: 1px solid var(--line); }
+  .box.violet { background: var(--violet-soft); border-color: #ddd6fe; }
+  .box.amber { background: var(--amber-soft); border-color: #fde68a; }
+  .box.red { background: var(--red-soft); border-color: #fecaca; }
+  .box.blue { background: var(--blue-soft); border-color: #bfdbfe; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 4px; font-size: 13.5px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #f8fafc; font-weight: 600; color: #334155; }
+  tr:last-child td { border-bottom: none; }
+  code { background: #f1f5f9; border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; color: #be185d; }
+  .badge { display: inline-block; font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+  .b-green { background: var(--green-soft); color: var(--green); border: 1px solid #bbf7d0; }
+  .b-amber { background: var(--amber-soft); color: var(--amber); border: 1px solid #fde68a; }
+  .b-red { background: var(--red-soft); color: var(--red); border: 1px solid #fecaca; }
+  .b-blue { background: var(--blue-soft); color: var(--blue); border: 1px solid #bfdbfe; }
+  .b-gray { background: #f1f5f9; color: var(--muted); border: 1px solid var(--line); }
+  .tab-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .tab-head .num { background: var(--violet); color: #fff; width: 26px; height: 26px; border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+  @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+  .mini { font-size: 13px; }
+  .mini .lbl { font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 4px; }
+  .mini ul { margin: 4px 0 0; padding-left: 18px; }
+  .mini ul li { margin-bottom: 3px; }
+  .now { background: #f8fafc; border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+  .ref { background: #fafafa; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 10px 14px; }
+  .fe { background: var(--blue-soft); border: 1px solid #bfdbfe; border-radius: 10px; padding: 10px 14px; }
+  .be { background: var(--violet-soft); border: 1px solid #ddd6fe; border-radius: 10px; padding: 10px 14px; }
+  .q-list { counter-reset: q; padding-left: 0; list-style: none; margin: 8px 0 0; }
+  .q-list li { counter-increment: q; padding: 10px 0 10px 38px; position: relative; border-bottom: 1px solid #fde68a; }
+  .q-list li:last-child { border-bottom: none; }
+  .q-list li::before { content: "S" counter(q); position: absolute; left: 0; top: 9px; background: var(--amber);
+    color: #fff; font-size: 12px; font-weight: 700; padding: 2px 7px; border-radius: 6px; }
+  .legend span { margin-right: 14px; font-size: 13px; white-space: nowrap; }
+  .foot { margin-top: 40px; font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+  .effort { font-size: 11px; color: var(--muted); }
+  strong.warn { color: var(--red); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>Premium Profil Paneli — Sekme Eksik Analizi</h1>
+  <p>Hangi sekmeler gerçekten çalışıyor, hangileri "Yakında" maketi, ref projesinde nasıl çözülmüş, frontend &amp; backend olarak ne eksik.</p>
+  <p style="margin-top:14px">
+    <span class="pill">Kapsam: Experimental_2 / Experimental_3 premium panel</span>
+    <span class="pill">11 sekme</span>
+    <span class="pill">Tarih: 30.06.2026</span>
+    <span class="pill">Amaç: ortakla tartışma</span>
+  </p>
+</header>
+
+<!-- 1. YÖNETİCİ ÖZETİ -->
+<h2>1 · Yönetici Özeti</h2>
+<div class="card">
+  <p>
+    <code>Experimental_2</code> / <code>Experimental_3</code> rolündeki kullanıcı (ör. <strong>experimental2@corteqs.net</strong>),
+    diğer rollerden farklı olarak <strong>premium profil paneli</strong> görür. Bu panel
+    <code>src/components/profile/premium/PremiumProfileTabs.tsx</code> içinde <strong>11 sekme</strong> barındırır:
+  </p>
+  <p class="legend" style="margin:14px 0;">
+    <span><span class="badge b-green">3</span> gerçekten çalışıyor</span>
+    <span><span class="badge b-amber">8</span> "Yakında" maketi (placeholder)</span>
+  </p>
+  <p style="margin-bottom:6px"><strong>Hazırlık seviyesi lejantı</strong> (bir maketi gerçeğe çevirmenin maliyeti):</p>
+  <p class="legend">
+    <span><span class="badge b-green">🟢 Backend hazır</span> sadece sekmeye bağla</span>
+    <span><span class="badge b-amber">🟡 Kısmen var</span> bir kısmı eksik</span>
+    <span><span class="badge b-red">🔴 Sıfırdan backend</span> tablo/RPC yok</span>
+  </p>
+
+  <table style="margin-top:16px">
+    <thead><tr><th>#</th><th>Sekme</th><th>Bugün</th><th>Hazırlık</th><th>İş</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Profil Ayarları</td><td><span class="badge b-green">Çalışıyor</span></td><td>—</td><td>—</td></tr>
+      <tr><td>2</td><td>Mesaj Kutusu</td><td><span class="badge b-green">Çalışıyor</span></td><td>—</td><td>—</td></tr>
+      <tr><td>3</td><td>Hizmet Talepleri</td><td><span class="badge b-amber">Çalışıyor*</span></td><td>🟡 ödeme mock</td><td>M</td></tr>
+      <tr><td>4</td><td>Çarşı</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-green">🟢</span></td><td>S</td></tr>
+      <tr><td>5</td><td>Taşınma Yönetimi</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-green">🟢</span></td><td>S–M</td></tr>
+      <tr><td>6</td><td>Etkinliklerim</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-green">🟢</span></td><td>M</td></tr>
+      <tr><td>7</td><td>Takvim</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-green">🟢</span></td><td>M</td></tr>
+      <tr><td>8</td><td>Bildirimler</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-amber">🟡</span></td><td>M</td></tr>
+      <tr><td>9</td><td>WhatsApp</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-amber">🟡</span></td><td>M</td></tr>
+      <tr><td>10</td><td>Takip</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-red">🔴</span></td><td>L</td></tr>
+      <tr><td>11</td><td>Kuponlar</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-red">🔴</span></td><td>L</td></tr>
+    </tbody>
+  </table>
+  <p class="effort" style="margin-top:8px">İş büyüklüğü: S = küçük (1 oturum) · M = orta · L = büyük (ayrı proje kalemi). *Hizmet Talepleri çalışıyor ama ödemesi maket — bkz. Bölüm 3.</p>
+</div>
+
+<!-- 2. MİMARİ NOT -->
+<h2>2 · Mimari Notu — Bir Maketi Gerçeğe Çevirmek Ne Demek?</h2>
+<div class="box violet">
+  <p style="margin-top:0">
+    Sekmeler <strong>veri güdümlü</strong> tanımlı. Her sekmenin bir <code>kind</code> değeri var:
+    <code>settings</code> · <code>messages</code> · <code>service-requests</code> · <code>placeholder</code>.
+    Bir "Yakında" sekmesini fonksiyonel yapmak için gereken:
+  </p>
+  <ol style="margin:6px 0">
+    <li><code>kind</code>'ı <code>placeholder</code>'dan gerçek bir tipe çevir,</li>
+    <li>o tip için bir <strong>panel bileşeni</strong> bağla (var olan API/RPC'yi kullanarak).</li>
+  </ol>
+  <p style="margin-bottom:0">
+    Yapısal yeniden yazım <strong>gerekmez</strong>. Ayrıca premium görünüm yalnızca
+    <code>Experimental_2</code>/<code>Experimental_3</code> rolüne izole (<code>src/lib/profile-presentation.ts</code>) —
+    yani bu sekmelerde yapılan iş <strong>diğer rolleri/üyeleri etkilemez</strong>, regresyon riski düşüktür.
+    Montaj noktası: <code>src/pages/ProfilePage.tsx</code> (<code>isPremiumPilot</code> bloğu).
+  </p>
+</div>
+
+<!-- 3. GİZLİ BORÇ UYARISI -->
+<h2>3 · ⚠️ "Çalışıyor" Görünen Ama Yarım Olan Parçalar (Gizli Borç)</h2>
+<div class="box red">
+  <p style="margin-top:0"><strong class="warn">Dikkat:</strong> Aşağıdakiler ekranda çalışır görünür ama arkada gerçek veri/işlem yoktur. Tartışmada "bunlar zaten bitti" sanılmasın:</p>
+  <table>
+    <thead><tr><th>Nerede</th><th>Görünen</th><th>Gerçek</th><th>Dosya</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Hizmet Talepleri ödeme akışı</td>
+        <td>Stripe ile ödeme alınıyormuş gibi</td>
+        <td><strong class="warn">MockStripeCheckout</strong> — gerçek tahsilat YOK; ödeme "başarılı" deyince talep kaydediliyor</td>
+        <td><code>src/components/ServiceRequestForm.tsx</code></td>
+      </tr>
+      <tr>
+        <td>Kupon yönetimi</td>
+        <td>Kupon oluştur / listele / aktif-pasif</td>
+        <td><strong class="warn">Tamamen in-memory mock</strong> — sayfa yenilenince kaybolur, DB yok</td>
+        <td><code>src/components/CouponManager.tsx</code></td>
+      </tr>
+      <tr>
+        <td>Takip ("takip et" butonları)</td>
+        <td>"Takip edildi 🔔" bildirimi</td>
+        <td><strong class="warn">Sadece localStorage</strong> — kalıcı değil, cihazlar arası senkron yok, kimse "takipçim" olduğunu görmez</td>
+        <td><code>src/hooks/useFollow.ts</code></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 4. SEKME KARTLARI -->
+<h2>4 · Sekme Sekme Analiz</h2>
+
+<!-- ÇARŞI -->
+<div class="card">
+  <div class="tab-head">
+    <span class="num">4</span><h3>Çarşı</h3>
+    <span class="badge b-green">🟢 Backend hazır</span><span class="effort">İş: S</span>
+  </div>
+  <div class="grid2">
+    <div class="now mini"><div class="lbl">Ana projede (mevcut)</div>
+      <ul>
+        <li><code>src/lib/cadde-carsi-api.ts</code> → <code>listMyCarsiItems(userId)</code> kullanıcının ilanlarını döndürür</li>
+        <li><code>src/components/cadde/CaddeMyContentCard.tsx</code> — kullanıcının açık cafe + Çarşı ilanlarını listeleyen <strong>hazır</strong> kart (bugün Profil Ayarları içinde gösteriliyor)</li>
+        <li>Yönetim sayfası: <code>/cadde/carsi</code></li>
+      </ul>
+    </div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div>
+      <ul><li>Çarşı, Cadde 3.0 ile ana projeye taşınmış; ref'te ayrı bir karşılığı kalmamış (eski sosyal sistem feed tabanlı).</li></ul>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div>
+      <ul><li>Sekme <code>kind</code>'ını gerçek panele çevir; var olan <code>CaddeMyContentCard</code>'ı ya da <code>listMyCarsiItems</code>'i kullanan kısa bir "İlanlarım" paneli bağla.</li></ul>
+    </div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div>
+      <ul><li><strong>Yok</strong> — RPC ve tablolar hazır.</li><li>"Favori ürünler" mekanizması yok (istenirse ayrı tablo).</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- TAŞINMA -->
+<div class="card">
+  <div class="tab-head">
+    <span class="num">5</span><h3>Taşınma Yönetimi</h3>
+    <span class="badge b-green">🟢 Backend hazır</span><span class="effort">İş: S–M</span>
+  </div>
+  <div class="grid2">
+    <div class="now mini"><div class="lbl">Ana projede (mevcut)</div>
+      <ul>
+        <li><code>src/lib/relocation-api.ts</code> → <code>getMove</code>, <code>getCityRecommendations</code>, <code>getChecklist</code> (kullanıcıya özel taşınma verisi)</li>
+        <li><code>src/lib/relocation-tools-api.ts</code> + 10 taşınma aracı (canlı, 21 migration)</li>
+        <li>Sayfalar: <code>/relocation</code>, <code>/relocation/tools</code></li>
+      </ul>
+    </div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div>
+      <ul><li><code>ref/src/pages/RelocationEngine.tsx</code> — ana projedekinden çok daha basit; ana proje burada ref'i geçmiş durumda.</li></ul>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div>
+      <ul><li>Panele bir <strong>"taşınma özeti" kartı</strong>: aktif plan + checklist ilerlemesi + öne çıkan şehir önerileri, "Taşınma Merkezine git" CTA'sı ile.</li></ul>
+    </div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div>
+      <ul><li><strong>Yok</strong> — fonksiyonlar mevcut. Sadece özet için varsa hafif bir aggregate sorgu.</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- ETKİNLİK -->
+<div class="card">
+  <div class="tab-head">
+    <span class="num">6</span><h3>Etkinliklerim</h3>
+    <span class="badge b-green">🟢 Backend hazır</span><span class="effort">İş: M</span>
+  </div>
+  <div class="grid2">
+    <div class="now mini"><div class="lbl">Ana projede (mevcut)</div>
+      <ul>
+        <li><code>events</code> tablosu mevcut (migration <code>20260502174058…</code>, <code>20260513000019_add_events_registration_url</code>)</li>
+        <li><code>src/pages/Events.tsx</code> gerçek <code>events</code> tablosuna bağlı; <code>src/components/PublicEventsList.tsx</code>, <code>CreateEventForm.tsx</code></li>
+        <li>Ayrıca Cadde tarafında <strong>Tanıtım/kampanya</strong>: <code>src/lib/cadde-tanitim-api.ts</code> → <code>listMyPromotionCampaigns</code></li>
+      </ul>
+    </div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div>
+      <ul><li><code>ref/src/pages/Events.tsx</code> + <code>ref</code> <code>events</code> tablosu — benzer model.</li></ul>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div>
+      <ul><li>"Katıldığım / oluşturduğum etkinlikler" listesi paneli + boş durum.</li></ul>
+    </div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div>
+      <ul><li>Kullanıcıya-özel "benim etkinliklerim" sorgusu/RPC (tablo var; user-scoped filtre/katılım ilişkisi netleşmeli — bkz. S1).</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- TAKVİM -->
+<div class="card">
+  <div class="tab-head">
+    <span class="num">7</span><h3>Takvim</h3>
+    <span class="badge b-green">🟢 Backend hazır</span><span class="effort">İş: M</span>
+  </div>
+  <div class="grid2">
+    <div class="now mini"><div class="lbl">Ana projede (mevcut)</div>
+      <ul>
+        <li><code>appointments</code> tablosu mevcut (migration <code>20260513000013_add_appointments</code>)</li>
+        <li><code>src/components/booking/AppointmentManagePanel.tsx</code>, <code>AppointmentBookingDialog.tsx</code> gerçek <code>appointments</code> tablosuna bağlı (randevu yönetimi)</li>
+      </ul>
+    </div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div>
+      <ul><li><code>ref</code> <code>appointments</code> tablosu var; ama <code>ref/src/pages/HospitalAppointment.tsx</code> tabloya değil <strong>mock veriye</strong> bağlı — yani ref bu konuda yarım.</li></ul>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div>
+      <ul><li>Randevuları/etkinlikleri takvim ya da liste görünümünde toplayan panel. "Takvim" mi yoksa "Randevularım" mı olacağı netleşmeli (S2).</li></ul>
+    </div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div>
+      <ul><li>Tablo var; kullanıcıya-özel sorgu mevcut (<code>AppointmentManagePanel</code> zaten <code>.from('appointments')</code> kullanıyor).</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- BİLDİRİMLER -->
+<div class="card">
+  <div class="tab-head">
+    <span class="num">8</span><h3>Bildirimler</h3>
+    <span class="badge b-amber">🟡 Kısmen var</span><span class="effort">İş: M</span>
+  </div>
+  <div class="grid2">
+    <div class="now mini"><div class="lbl">Ana projede (mevcut)</div>
+      <ul>
+        <li><code>notifications</code> tablosu mevcut</li>
+        <li><code>src/lib/cadde-notifications-api.ts</code> → <code>listMyNotifications(userId, limit)</code></li>
+        <li>Bir tetikleyici bileşen var: <code>NotificationsTabTrigger.tsx</code> (panel hero'daki "Bildirimler" butonu bu sekmeyi açıyor)</li>
+      </ul>
+    </div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div>
+      <ul>
+        <li><code>ref</code> <code>notifications</code> tablosu + <code>ref/src/hooks/useUnreadNotifications.ts</code> (okunmamış sayacı + realtime)</li>
+        <li>ref'te DB tetikleyicileri: etkinlik/cafe/iş bildirimleri, <code>notify_followers()</code>, doğum günü için <code>pg_cron</code></li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div>
+      <ul><li>Bildirim listesi paneli (okundu/okunmadı) + okunmamış sayaç hook'u (ref'teki <code>useUnreadNotifications</code> uyarlanabilir).</li></ul>
+    </div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div>
+      <ul><li>Bildirimleri <strong>üreten</strong> tetikleyiciler/RPC'ler eksik (tablo dolu değil → liste boş kalır). "Hangi olaylar bildirim üretsin?" kararı (S3).</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- WHATSAPP -->
+<div class="card">
+  <div class="tab-head">
+    <span class="num">9</span><h3>WhatsApp</h3>
+    <span class="badge b-amber">🟡 Kısmen var</span><span class="effort">İş: M</span>
+  </div>
+  <div class="grid2">
+    <div class="now mini"><div class="lbl">Ana projede (mevcut)</div>
+      <ul>
+        <li><code>whatsapp_landings</code> tablosu mevcut</li>
+        <li>Sayfa / lib / bileşen <strong>yok</strong> (ref'ten port edilmeli)</li>
+      </ul>
+    </div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div>
+      <ul>
+        <li><code>ref/src/pages/WhatsAppGroups.tsx</code>, <code>WhatsAppGroupLanding.tsx</code>, <code>ref/src/lib/whatsappLandings.ts</code></li>
+        <li>İki akış: hızlı link paylaşımı + tam "landing" formu; admin onayından sonra yayın. Demo fallback'li.</li>
+        <li>Not: ref de gerçek "grup üyeliği" tutmuyor — sadece <strong>link/landing</strong> paylaşımı.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div>
+      <ul><li><code>whatsappLandings.ts</code> + grup listesi/landing UI'ını ref'ten port et (Cadde stiline uyarlanmış).</li></ul>
+    </div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div>
+      <ul><li>Tablo var; gerçek <strong>grup üyeliği</strong> istenirse yeni tablo (örn. üyelik/katılma isteği) + admin onay akışı. Karar: link mi, üyelik mi? (S4)</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- TAKİP -->
+<div class="card">
+  <div class="tab-head">
+    <span class="num">10</span><h3>Takip</h3>
+    <span class="badge b-red">🔴 Sıfırdan backend</span><span class="effort">İş: L</span>
+  </div>
+  <div class="grid2">
+    <div class="now mini"><div class="lbl">Ana projede (mevcut)</div>
+      <ul><li><code>src/hooks/useFollow.ts</code> = <strong class="warn">localStorage</strong> (kalıcı değil, kimse takipçini görmez)</li>
+      <li>Kalıcı takip tablosu/RPC <strong>yok</strong></li></ul>
+    </div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div>
+      <ul>
+        <li><code>ref</code> <code>user_follows</code> tablosu + <code>ref/src/hooks/useFeedSocial.ts</code></li>
+        <li>Feed'de "Takip Ettiklerin" + "Tanıyor olabilirsin" (benzerlik skorlama) + takipçi bildirim tetikleyicileri</li>
+        <li><strong>Uyarı:</strong> ref'in sosyal sistemi <code>feed_posts</code>/<code>profiles</code> üzerine kurulu; ana projede bunlar legacy/yazıma kapalı (yerini Cadde aldı) → kod birebir taşınamaz, Cadde'ye uyarlanmalı.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div>
+      <ul><li>localStorage takibini kalıcı API'ye geçir; "Takip ettiklerim / takipçilerim" paneli.</li></ul>
+    </div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div>
+      <ul><li>Kalıcı takip tablosu + follow/unfollow + listeleme RPC'leri. Cadde sosyal grafiğine mi bağlanacak? (S5)</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- KUPON -->
+<div class="card">
+  <div class="tab-head">
+    <span class="num">11</span><h3>Kuponlar</h3>
+    <span class="badge b-red">🔴 Sıfırdan backend</span><span class="effort">İş: L</span>
+  </div>
+  <div class="grid2">
+    <div class="now mini"><div class="lbl">Ana projede (mevcut)</div>
+      <ul>
+        <li><code>src/components/CouponManager.tsx</code> + <code>CouponCheckoutDialog.tsx</code> = <strong class="warn">tamamen mock</strong> (in-memory, DB yok)</li>
+        <li>İşletme tarafı kupon arayüzü; gerçek kayıt/yenileme yok</li>
+      </ul>
+    </div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div>
+      <ul><li>ref'te kupon altyapısı <strong>yok</strong>.</li></ul>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div>
+      <ul><li>Mevcut mock UI'ı gerçek API'ye bağla; "bana özel kuponlar" görünümü.</li></ul>
+    </div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div>
+      <ul><li>Kupon tablosu + oluşturma/kullanım/limit RPC'leri sıfırdan. Kupon kime ait, kim kullanır? (S6)</li></ul>
+    </div>
+  </div>
+</div>
+
+<!-- ÇALIŞAN 3 (referans) -->
+<div class="card">
+  <div class="tab-head">
+    <span class="num">✓</span><h3>Çalışan sekmeler (referans — 1·Profil Ayarları, 2·Mesaj Kutusu, 3·Hizmet Talepleri)</h3>
+  </div>
+  <ul class="mini" style="margin:0;padding-left:18px">
+    <li><strong>Profil Ayarları:</strong> Tam profil editörü + <code>caddeCards</code> (ilgi alanları, içeriklerim, tanıtım). Sağlam.</li>
+    <li><strong>Mesaj Kutusu:</strong> <code>src/components/messaging/MessagesInbox.tsx</code> — kendi auth + Supabase fetch'i ile çalışıyor.</li>
+    <li><strong>Hizmet Talepleri:</strong> Talep oluşturma + listeleme gerçek; <strong class="warn">ama ödeme MOCK</strong> (bkz. Bölüm 3). Gerçek Stripe geçişi ayrı karar (S7).</li>
+  </ul>
+</div>
+
+<!-- 5. ÖNERİLEN SIRALAMA -->
+<h2>5 · Önerilen Sıralama (hızlı kazanımdan zora)</h2>
+<div class="box blue">
+  <ol style="margin:0">
+    <li><strong>Önce 🟢 backend-hazır olanlar (hızlı kazanım):</strong> Çarşı → Taşınma → Etkinlik → Takvim. Çoğu sadece "var olan veriyi sekmeye bağlamak". Panel birkaç gün içinde "dolu" görünmeye başlar.</li>
+    <li><strong>Sonra 🟡 kısmen var olanlar:</strong> Bildirimler (üretici tetikleyiciler) ve WhatsApp (ref'ten port).</li>
+    <li><strong>En son 🔴 sıfırdan backend:</strong> kalıcı Takip ve Kupon — ayrı proje kalemleri, ürün kararı gerektirir.</li>
+    <li><strong>Paralel temizlik:</strong> "gizli borç" mock'ları (Hizmet Talepleri ödemesi, Kupon, Takip) ya gerçeğe bağlanmalı ya da kullanıcıya "demo" olduğu açıkça belirtilmeli.</li>
+  </ol>
+</div>
+
+<!-- 6. AÇIK SORULAR -->
+<h2>6 · Açık Sorular &amp; Karar Noktaları (ortakla tartışılacak)</h2>
+<div class="box amber">
+  <ol class="q-list">
+    <li><strong>Etkinlik kaynağı:</strong> "Etkinliklerim" global <code>events</code> tablosunu mu, Cadde <code>tanitim/promotion</code> kampanyalarını mı, yoksa ikisini birden mi göstersin? Bir kullanıcı bir etkinliğe nasıl "katılır" (katılım tablosu var mı)?</li>
+    <li><strong>Takvim mi, Randevu mu:</strong> Bu sekme genel bir takvim (etkinlik+randevu birleşik) mi olsun, yoksa sadece <code>appointments</code> tabanlı "Randevularım" mı? Sekme adı "Takvim" kalsın mı?</li>
+    <li><strong>Bildirim üretimi:</strong> Hangi olaylar bildirim üretmeli (yeni mesaj, hizmet teklifi, takip, etkinlik, doğum günü…)? ref'teki tetikleyici + <code>pg_cron</code> modeli kopyalansın mı?</li>
+    <li><strong>WhatsApp kapsamı:</strong> Sadece grup linki/landing paylaşımı mı (ref gibi), yoksa gerçek "grup üyeliği / katılma isteği" akışı mı isteniyor?</li>
+    <li><strong>Takip grafiği:</strong> Kalıcı takip yeni bir <code>user_follows</code> tablosuyla mı, yoksa Cadde'nin mevcut sosyal grafiğine mi bağlanacak? "Takipçilerim beni görebilsin" gizlilik kararı?</li>
+    <li><strong>Kupon sahipliği:</strong> Kupon işletme rolüne mi ait (işletme oluşturur, üye kullanır), yoksa premium bireysel kullanıcıya gelen kuponlar mı? DB modeli ve kullanım/limit kuralları?</li>
+    <li><strong>Hizmet Talepleri ödemesi:</strong> Mock Stripe ne zaman gerçek tahsilata dönecek? Önce bu sekme MVP'de mock kalsın mı?</li>
+    <li><strong>Rol yaygınlaştırma:</strong> Bu fonksiyonel panel sadece Experimental_2/3'te mi kalacak, yoksa zamanla diğer (ör. bireysel/premium) rollere de açılacak mı? (Açmak = <code>profile-presentation.ts</code>'e config eklemek.)</li>
+  </ol>
+</div>
+
+<div class="foot">
+  <p><strong>Bu doküman nasıl üretildi:</strong> Ana proje (<code>corteqs_fin</code>) ile referans proje (<code>ref/</code> = Lovable klonu <code>corteqssocial-web/corteqs</code>) karşılaştırılarak; dosya/tablo varlıkları doğrudan kaynak kodda doğrulandı.</p>
+  <p><strong>Önemli not:</strong> Etkinlik, Takvim/Randevu, Kupon UI ve Bildirim tablosu ana projede <em>zaten</em> mevcut — "hepsi sıfırdan" değil. Asıl sıfırdan iş yalnızca kalıcı Takip ve Kupon backend'i.</p>
+  <p>Kaynak dosya: <code>docs/plans/premium-panel-sekme-analizi.html</code> · Hazırlık: 30.06.2026</p>
+</div>
+
+</div>
+</body>
+</html>
