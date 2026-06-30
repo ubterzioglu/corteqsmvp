@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CorteQS — Cadde 3.0 &amp; Premium Panel Durum / Eksik / Karar Dokümanı (Burak &amp; UBT)</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181b24;
+    --surface2: #1f2330;
+    --border: #2c3140;
+    --text: #e6e8ee;
+    --muted: #9aa1b2;
+    --accent: #5eb1ff;
+    --green: #4ade80;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --violet: #c084fc;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0 0 80px;
+    background: var(--bg); color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.6; font-size: 15px;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  header.hero {
+    background: linear-gradient(135deg, #131726 0%, #1a1430 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 0 32px; margin-bottom: 40px;
+  }
+  header.hero h1 { margin: 0 0 8px; font-size: 28px; }
+  header.hero .sub { color: var(--muted); font-size: 15px; }
+  header.hero .meta { margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .chip {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 999px; padding: 3px 14px; font-size: 13px; color: var(--muted);
+  }
+  h2 {
+    font-size: 22px; margin: 52px 0 16px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--border); color: var(--accent);
+  }
+  h2 .part { font-size: 13px; color: var(--violet); display: block; margin-bottom: 2px; letter-spacing: .08em; text-transform: uppercase; }
+  h3 { font-size: 17px; margin: 28px 0 10px; color: var(--text); }
+  h4 { font-size: 15px; margin: 20px 0 8px; color: var(--violet); }
+  p { margin: 10px 0; }
+  table {
+    width: 100%; border-collapse: collapse; margin: 16px 0;
+    background: var(--surface); border-radius: 8px; overflow: hidden;
+    font-size: 14px;
+  }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--surface2); font-weight: 600; color: var(--accent); }
+  tr:last-child td { border-bottom: none; }
+  code {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 1px 6px; font-size: 13px;
+    font-family: Consolas, "Courier New", monospace; color: #ffd28a;
+    word-break: break-all;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 22px; margin: 16px 0;
+  }
+  .card.verdict { border-left: 4px solid var(--amber); }
+  .card.danger  { border-left: 4px solid var(--red); }
+  .card.ok      { border-left: 4px solid var(--green); }
+  .card.info    { border-left: 4px solid var(--accent); }
+  .card.tab     { border-left: 4px solid var(--violet); }
+  .badge {
+    display: inline-block; border-radius: 5px; padding: 1px 9px;
+    font-size: 12px; font-weight: 600; white-space: nowrap;
+  }
+  .b-green  { background: rgba(74,222,128,.15); color: var(--green); }
+  .b-red    { background: rgba(248,113,113,.15); color: var(--red); }
+  .b-amber  { background: rgba(251,191,36,.15);  color: var(--amber); }
+  .b-blue   { background: rgba(94,177,255,.15);  color: var(--accent); }
+  .b-violet { background: rgba(192,132,252,.15); color: var(--violet); }
+  .b-gray   { background: rgba(154,161,178,.15); color: var(--muted); }
+  ul, ol { margin: 8px 0; padding-left: 24px; }
+  li { margin: 5px 0; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
+  .q {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 4px solid var(--violet); border-radius: 8px;
+    padding: 14px 18px; margin: 12px 0;
+  }
+  .q .qt { font-weight: 600; color: var(--violet); }
+  .q .rec { color: var(--green); font-size: 13px; }
+  .tab-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .tab-head .num { background: var(--violet); color: #fff; width: 26px; height: 26px; border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .tab-head h3 { margin: 0; }
+  .effort { font-size: 12px; color: var(--muted); }
+  .mini { font-size: 13px; }
+  .mini .lbl { font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 4px; }
+  .mini ul { margin: 4px 0 0; padding-left: 18px; }
+  .quad { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  @media (max-width: 720px) { .quad { grid-template-columns: 1fr; } }
+  .quad > div { border-radius: 10px; padding: 10px 14px; border: 1px solid var(--border); background: var(--surface2); }
+  .quad .fe { border-left: 3px solid var(--accent); }
+  .quad .be { border-left: 3px solid var(--violet); }
+  .quad .now { border-left: 3px solid var(--green); }
+  .quad .ref { border-left: 3px solid var(--muted); border-style: dashed; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; margin: 8px 0; }
+  details { margin: 10px 0; }
+  summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+  .toc { columns: 2; column-gap: 32px; font-size: 14px; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .warn { color: var(--red); }
+  footer { margin-top: 64px; color: var(--muted); font-size: 13px; text-align: center; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>🛣️ CorteQS — Cadde 3.0 &amp; Premium Panel: Durum · Eksik · Karar Dokümanı</h1>
+    <div class="sub">Burak &amp; UBT için tek tartışma dokümanı: Cadde modülü ne durumda, premium profil panelinin sekmeleri gerçek mi maket mi, <code>ref</code> projesinden ne alınabilir, frontend &amp; backend olarak ne eksik, neye karar vermeliyiz?</div>
+    <div class="meta">
+      <span class="chip">📅 30 Haziran 2026</span>
+      <span class="chip">Bölüm 1: Cadde 3.0 (Faz 0–9 + kuyruk TAMAM)</span>
+      <span class="chip">Bölüm 2: Premium Panel (11 sekme)</span>
+      <span class="chip">Karşılaştırma: <code>ref/corteqs_plus</code> @ 27cfcd8</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="card info">
+  <strong>Bu doküman iki tartışma notunu birleştirir:</strong>
+  <code>docs/cadde-300/30062026_cadde_eksikler_ve_karsilastirma.html</code> (Cadde 3.0 modülü) +
+  <code>docs/plans/premium-panel-sekme-analizi.html</code> (Experimental_2/3 premium profil paneli).
+  İkisi de aynı projeyi farklı açıdan anlatıyor: <strong>Bölüm 1</strong> Cadde modülünün altyapı/eksik
+  durumunu, <strong>Bölüm 2</strong> kullanıcının gördüğü premium panelin sekme sekme gerçeklik düzeyini
+  ele alır. Çakışan konular (Çarşı, Takip, Bildirim, <code>ref</code> karşılaştırması) çapraz referanslandı.
+  <br><br>
+  <strong>Yöntem:</strong> Her "açık/kısmi/tamam" işareti 30 Haziran'da <strong>canlı kaynak kod ve
+  migration'lardan</strong> teyit edildi — eski rapor metnine güvenilmedi.
+</div>
+
+<nav class="card info">
+  <strong>İçindekiler</strong>
+  <div class="toc" style="margin-top:8px">
+    <div><a href="#ozet">0. Yönetici Özeti (her iki bölüm)</a></div>
+    <div><strong>BÖLÜM 1 — Cadde 3.0</strong></div>
+    <div><a href="#a">1A. Öz-implementasyon eksikleri</a></div>
+    <div><a href="#b">1B. ref ↔ Cadde 3.0 karşılaştırması</a></div>
+    <div><strong>BÖLÜM 2 — Premium Panel</strong></div>
+    <div><a href="#p-ozet">2A. Sekme özeti (11 sekme)</a></div>
+    <div><a href="#p-borc">2B. Gizli borç (mock'lar)</a></div>
+    <div><a href="#p-sekme">2C. Sekme sekme analiz</a></div>
+    <div><a href="#p-sira">2D. Önerilen sıralama</a></div>
+    <div><strong>ORTAK</strong></div>
+    <div><a href="#kararlar">3. Soru İşaretleri &amp; Kararlar</a></div>
+    <div><a href="#d">4. Adaptasyon Kuralları &amp; Risk</a></div>
+  </div>
+  <div class="legend" style="margin-top:12px">
+    <span><span class="badge b-green">🟢 TAMAM / hazır</span></span>
+    <span><span class="badge b-amber">🟡 KISMİ</span> çekirdek var, parça/karar eksik</span>
+    <span><span class="badge b-red">🔴 AÇIK</span> yok / sıfırdan / bloke karar</span>
+  </div>
+</nav>
+
+<!-- ============================================================ -->
+<h2 id="ozet">0. Yönetici Özeti</h2>
+
+<div class="card verdict">
+  <strong>⚖️ İki cümlede:</strong> <strong>Cadde 3.0 altyapısı çekirdek olarak bitmiş ve canlıda</strong>
+  (RPC-only yazma, moderasyon, bildirim, tanıtım, çoklu diaspora; mig <code>cadde300_001–014</code>).
+  Buna karşılık <strong>kullanıcının gördüğü premium panelin 11 sekmesinden yalnız 3'ü gerçekten çalışıyor</strong>,
+  8'i "Yakında" maketi — ama bunların çoğunun <strong>backend'i zaten hazır</strong>, sadece sekmeye bağlanması
+  gerekiyor. Asıl sıfırdan iş yalnızca kalıcı Takip ve Kupon.
+</div>
+
+<div class="cols">
+  <div class="card ok">
+    <strong>✅ Gerçekten hazır / canlı</strong>
+    <ul>
+      <li><strong>Cadde:</strong> feed (CKS sıralama), cafe, çarşı, tanıtım, bildirim, moderasyon, çoklu diaspora — hepsi RPC-only + testli</li>
+      <li><strong>Panel:</strong> Profil Ayarları, Mesaj Kutusu, Hizmet Talepleri (ödeme hariç)</li>
+      <li><strong>Backend hazır, sadece bağlanacak:</strong> Çarşı, Taşınma, Etkinlik, Takvim sekmeleri (tablo/RPC mevcut)</li>
+    </ul>
+  </div>
+  <div class="card danger">
+    <strong>⛔ Açık / karar bekleyen (öne çıkanlar)</strong>
+    <ul>
+      <li><strong>Gizli borç (mock):</strong> Hizmet Talepleri <em>ödemesi</em> (MockStripe), Kupon (in-memory), Takip (localStorage) — "çalışıyor" görünür ama gerçek değil</li>
+      <li><strong>Cadde tekniği:</strong> B1 types regen, D-03 SMS sağlayıcı, legacy 5 tablo DROP, pg_cron zamanlama</li>
+      <li><strong>Cadde yüzeyi:</strong> public profil vitrini, premium kademe UI, diaspora switcher</li>
+      <li><strong>Sıfırdan backend:</strong> kalıcı Takip + Kupon</li>
+      <li><strong>ref'ten zenginleştirme:</strong> cafe atmosferi, kişi keşfi, dünya saatleri, WhatsApp grupları (ürün kararı)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ===================== BÖLÜM 1 ============================== -->
+<!-- ============================================================ -->
+<h2 id="a"><span class="part">Bölüm 1 — Cadde 3.0 Modülü</span>1A. Öz-İmplementasyon Eksikleri</h2>
+<p>Cadde 3.0'ın <em>kendi</em> kapsamında söz verilip henüz kapatılmayan veya bilinçle ertelenen kalemler.
+Kaynak: <code>change-report.md</code> "Kalan işler", <code>02-current-gap-matrix.md</code>, spec; durum
+sütunu 30 Haziran'da canlı kodda teyit edildi. Rebuild'den beri yeni cadde migration'ı yok
+(<code>cadde300_015+</code> bulunmuyor) — yani bunlar "yarım kod" değil, <strong>ürün kararı / ayrı faz</strong>
+bekleyen işler.</p>
+
+<h3>Backend eksikleri</h3>
+<table>
+  <tr><th style="width:20%">Kalem</th><th style="width:12%">Durum</th><th style="width:34%">Kanıt (canlı teyit, 30 Haz)</th><th style="width:34%">Etki / karar gerekli mi?</th></tr>
+  <tr>
+    <td><strong>B1 — types.ts regen</strong></td>
+    <td><span class="badge b-red">🔴 AÇIK</span></td>
+    <td><code>src/lib/cadde-internal.ts</code>'te hâlâ 1 izole <code>db as any</code> cast; Management API token "Unauthorized" verdiği için regen yapılamadı</td>
+    <td>Yeni RPC'ler tip-güvensiz yazılır, <code>as any</code> borcu büyür. <strong>Karar:</strong> geçerli access token → <code>supabase gen types</code> → cast'i kaldır. Operasyonel</td>
+  </tr>
+  <tr>
+    <td><strong>D-03 — Telefon doğrulama (SMS/OTP)</strong></td>
+    <td><span class="badge b-amber">🟡 KISMİ</span></td>
+    <td>Truth source kurulu (<code>user_verifications</code> + <code>is_phone_verified()</code>); zorunluluk <code>cadde_settings.phone_verification_required = false</code>; OTP Edge Function'ları <strong>yok</strong></td>
+    <td>Telefon kapısı bilinçle kapalı. <strong>Karar (ürün):</strong> SMS sağlayıcısı + maliyet/KVKK. Seçilince OTP fn yazılır, flag <code>true</code></td>
+  </tr>
+  <tr>
+    <td><strong>Legacy 5 tablo DROP</strong></td>
+    <td><span class="badge b-amber">🟡 KISMİ</span></td>
+    <td>mig 013: <code>feed_posts/feed_likes/cafes/cafe_memberships/user_follows</code> write-revoke + COMMENT; tablolar DROP edilmedi (<code>user_follows</code> 1 satır — R-06)</td>
+    <td>Sessiz hata kaynağı (kopya kod legacy'e yazabilir). <strong>Karar:</strong> canary sonrası ayrı DROP migration. Policy/grant yeniden açılmaz</td>
+  </tr>
+  <tr>
+    <td><strong>pg_cron — cafe.expiring</strong></td>
+    <td><span class="badge b-amber">🟡 KISMİ</span></td>
+    <td>mig 014: <code>cadde_notify_expiring_cafes()</code> hazır; pg_cron varsa 10 dk'da bir, yoksa "scheduler kararı açık" notice'i (hata vermez)</td>
+    <td>pg_cron yoksa bitiş bildirimi otomatik çalışmaz. <strong>Karar:</strong> canlıda pg_cron var mı; yoksa dış cron/Edge Function</td>
+  </tr>
+  <tr>
+    <td><strong>Görsel/medya auto-moderasyonu</strong></td>
+    <td><span class="badge b-red">🔴 AÇIK</span></td>
+    <td>mig 014 auto-scan trigger'ları yalnız <strong>metin</strong> tarıyor; görsel tarama yok</td>
+    <td>Çarşı görseli açılırsa uygunsuz görsel riski. <strong>Karar:</strong> görsel yükleme açılınca medya moderasyonu planlanmalı</td>
+  </tr>
+  <tr>
+    <td><strong>billboard → kampanya migrasyonu</strong></td>
+    <td><span class="badge b-amber">🟡 P2</span></td>
+    <td>mig 010: eski <code>cadde_billboard_cards</code>/sponsored tabloları korundu; yeni <code>cadde_promotion_*</code> paralel</td>
+    <td>İki tanıtım kaynağı yan yana. <strong>Karar:</strong> P2 — eski veriyi kampanya katmanına taşı</td>
+  </tr>
+</table>
+
+<h3>Frontend eksikleri</h3>
+<table>
+  <tr><th style="width:20%">Kalem</th><th style="width:12%">Durum</th><th style="width:34%">Kanıt (canlı teyit, 30 Haz)</th><th style="width:34%">Etki / karar</th></tr>
+  <tr>
+    <td><strong>Public profil yüzeyi</strong> (Çarşı vitrini + Açık Cafe)</td>
+    <td><span class="badge b-red">🔴 AÇIK</span></td>
+    <td>Panel parity TAMAM: <code>CaddeMyContentCard.tsx</code> ProfilePage'de. Dosya yorumu: <em>"Public profil yüzeyi (directory catalog composer) ayrı iş kaleminde"</em></td>
+    <td>Açık cafe / çarşı ilanları <strong>başkalarının gördüğü</strong> katalog profilinde yok. Bölüm 2'deki "Çarşı" sekmesiyle ve ref <code>CarsiUserShowcase</code> ile örtüşür</td>
+  </tr>
+  <tr>
+    <td><strong>Diaspora switcher (Cadde UI)</strong></td>
+    <td><span class="badge b-amber">🟡 KISMİ</span></td>
+    <td><code>hooks/cadde/useCaddeDiasporaKey.ts</code> tüm sorgulara bağlı (<code>'tr'</code> fallback); header'da global switcher var; <strong>Cadde içi switcher yok</strong></td>
+    <td>Altyapı çalışıyor; kullanıcı Cadde içinden diasporayı kolay değiştiremiyor. Düşük efor + IN/CN/PH içerik tohumları</td>
+  </tr>
+  <tr>
+    <td><strong>Premium kademe UI (D-07)</strong></td>
+    <td><span class="badge b-red">🔴 AÇIK</span></td>
+    <td>Cadde dosyalarında <code>premium</code>/<code>useIsPremium</code> referansı yok; limitler <code>cadde_settings</code>'te sabit</td>
+    <td>Kademeli üyelik yüzeyi yok. <strong>Karar:</strong> feature-bazlı entitlement (<code>afs_features</code>); gerçek abonelik ayrı proje. <em>(Bölüm 2 "Kupon" ile aynı iş modeli sorusu — bkz. K3)</em></td>
+  </tr>
+  <tr>
+    <td><strong>homepage-ai-bar / category-first-screen</strong></td>
+    <td><span class="badge b-red">🔴 AÇIK</span></td>
+    <td>Kodda "AI bar" bileşeni yok; placement'lar katalogda hazır</td>
+    <td>Tanıtım yerleşimleri ana sayfa/kategori ekranlarında gösterilemiyor (Cadde dışı yüzeyler)</td>
+  </tr>
+</table>
+
+<h3>Test &amp; kalite</h3>
+<table>
+  <tr><th style="width:20%">Kalem</th><th style="width:12%">Durum</th><th style="width:68%">Not</th></tr>
+  <tr><td><strong>RLS integration testleri</strong></td><td><span class="badge b-red">🔴 AÇIK</span></td><td>Birim/ayna testleri var (rules/ranking/schemas/format/targeting + sayfa/route); RPC + RLS uçtan uca entegrasyon testi yok → güvenlik regresyonu testle yakalanmıyor</td></tr>
+  <tr><td><strong>Playwright persona matrisi</strong> (spec §22.4)</td><td><span class="badge b-red">🔴 AÇIK</span></td><td>Cadde persona (TR-yerleşik / diaspora / business / banlı / admin) E2E matrisi yok → yetki yolları manuel test'e kalıyor</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="b"><span class="part">Bölüm 1 — Cadde 3.0 Modülü</span>1B. <code>ref/corteqs_plus</code> ↔ Cadde 3.0 Karşılaştırması</h2>
+
+<div class="card info">
+  <p><strong>Hikâye:</strong> Lovable üzerinde geliştirdiğimiz eski corteqs uygulamasını referans olsun
+  diye <code>ref/</code> olarak klonladık. Oradaki Cadde, bizim Cadde 3.0'ın <strong>bir önceki nesli</strong>
+  (Cadde 2.x). Altyapıda biz açık ara öndeyiz; deneyim/oyunlaştırma tarafında eski repo daha cömert.</p>
+  <p><strong>Teknik gerçek:</strong> Eski kodu kopyala-yapıştır yapamayız — eski Cadde, canlı DB'de artık
+  yazmaya kapalı (write-revoked) ya da silinmiş tablolara yazıyor; kopya kod derlenir ama
+  <strong>sessizce hata verir</strong>. Taşınacak her kalem <em>fikir ve arayüz olarak</em> alınıp
+  RPC-only sözleşmemize yeniden yazılır.</p>
+</div>
+
+<h3>Mimari karşılaştırma</h3>
+<table>
+  <tr><th style="width:18%">Boyut</th><th style="width:41%"><code>ref/corteqs_plus</code> (eski nesil)</th><th style="width:41%">corteqs_fin (Cadde 3.0)</th></tr>
+  <tr><td><strong>Veri yazma</strong></td><td><span class="badge b-red">Doğrudan insert</span> <code>supabase.from("feed_posts").insert()</code></td><td><span class="badge b-green">RPC-only</span> ~37 security-definer RPC; user INSERT policy yok</td></tr>
+  <tr><td><strong>Kimlik &amp; yetki</strong></td><td><code>profiles.account_type</code> + <span class="badge b-red">localStorage bayrakları</span></td><td><code>user_role_assignments</code> + AFS + <code>user_verifications</code>; <span class="badge b-green">ban kill-switch</span></td></tr>
+  <tr><td><strong>Kural motoru</strong></td><td><code>caddeRules.ts</code> (~86 sat) — yalnız client; TR/diaspora telefon önekiyle</td><td><code>cadde-rules.ts</code> (252 sat) — <span class="badge b-blue">SQL↔TS ayna</span>, testli</td></tr>
+  <tr><td><strong>Feed sıralama</strong></td><td>Dinamik like eşiği + client-side ilgi (localStorage)</td><td>CKS band/skor SQL'de; <code>cadde-ranking.ts</code> aynası; ilgi alanları DB'de</td></tr>
+  <tr><td><strong>Moderasyon</strong></td><td>Yalnız client-side regex; aşılabilir</td><td>SQL auto-scan trigger + kuyruk + reports + bans + admin + audit'li RPC</td></tr>
+  <tr><td><strong>Tanıtım</strong></td><td><code>AdCampaignPanel</code> — <span class="badge b-amber">tamamen mock</span></td><td>Tam backend: kampanya/event/placement + onay + ölçüm</td></tr>
+  <tr><td><strong>Çoklu diaspora</strong></td><td>Yok — serbest <code>country</code> string'i</td><td><code>diaspora_key</code> + CHECK + filtre (mig 012)</td></tr>
+  <tr><td><strong>Test</strong></td><td><span class="badge b-red">0 cadde testi</span></td><td>12+ test dosyası</td></tr>
+</table>
+
+<h3><code>ref</code>'te olup Cadde 3.0'da olmayanlar — taşıma adayları</h3>
+<p>30 Haz'da kontrol edildi: bu bileşen/RPC'lerin Cadde 3.0 kodunda karşılığı <strong>yok</strong>
+(<code>WorldClock</code>, <code>cadde_follows</code>, <code>search_cadde_people</code>, cafe notes/polls bulunamadı).</p>
+<table>
+  <tr><th style="width:22%">Özellik</th><th style="width:40%"><code>ref</code>'teki hali</th><th style="width:24%">Cadde 3.0'a taşıma</th><th style="width:14%">Öneri</th></tr>
+  <tr><td><strong>Dünya saatleri bandı</strong></td><td><code>WorldClocksBand.tsx</code> (~152 sat), salt görsel</td><td>Bağımlılığı yok; saatler aktif diaspora ülkelerinden türetilir</td><td><span class="badge b-green">Taşı</span></td></tr>
+  <tr><td><strong>Çarşı vitrini + ilan görseli</strong></td><td><code>CarsiUserShowcase</code> + <code>CarsiItemsManager</code> storage upload</td><td>Cadde'nin açık "public profil yüzeyi" + Bölüm 2 "Çarşı" sekmesiyle <strong>birebir</strong></td><td><span class="badge b-green">Taşı (öncelikli)</span></td></tr>
+  <tr><td><strong>Çarşı ticker (zengin)</strong></td><td><code>CarsiGlobalTicker</code> (~167 sat)</td><td>fin'in ~57 satırlık sürümü zenginleştirilir; düşük risk</td><td><span class="badge b-green">Taşı</span></td></tr>
+  <tr><td><strong>Kıta→ülke→şehir çoklu filtre</strong></td><td><code>MultiCountryCityFilter</code> (~285 sat), sabit listeler</td><td>Fin'in <code>CaddeGeoFilter</code>'ına UX pattern olarak; veri DB'den, sabit liste taşınmaz</td><td><span class="badge b-blue">UX'i taşı</span></td></tr>
+  <tr><td><strong>Demo cafe</strong></td><td>Sahte cafe ile girişsiz atmosfer</td><td>Onboarding için iyi; <code>cadde-demo-data.ts</code>'e</td><td><span class="badge b-blue">Fikri taşı</span></td></tr>
+  <tr><td><strong>Cafe tür modeli</strong> (community/relocation/expo)</td><td><code>cafes.kind</code> + giriş sorusu + onaylı üyelik; "TR yalnız relocation/expo'ya girer"</td><td><code>can_join_cadde_cafe</code> SQL+TS aynasını + testini etkiler</td><td><span class="badge b-amber">Ürün kararı (S-Cafe)</span></td></tr>
+  <tr><td><strong>Cafe Ambiance</strong> (post-it/anket/jukebox)</td><td><code>CafeAmbiance.tsx</code> (~695 sat), tamamen localStorage — kullanıcılar birbirini GÖRMEZ</td><td>Gerçek değer için <code>cadde_cafe_notes/polls</code> tablo+RPC+Realtime+moderasyon</td><td><span class="badge b-amber">Ürün kararı (S-Amb)</span></td></tr>
+  <tr><td><strong>Takip + kişi önerisi</strong></td><td><code>useFeedSocial</code>: <code>user_follows</code> + ülke&gt;şehir&gt;meslek skorlaması</td><td>Cadde follow grafiğini bilinçle bıraktı; geri gelirse yeni <code>cadde_follows</code> + RPC + CKS etkisi. <strong>Bölüm 2 "Takip" sekmesiyle aynı iş</strong></td><td><span class="badge b-amber">Ürün kararı (K-Takip)</span></td></tr>
+  <tr><td><strong>Kişi arama / keşif</strong></td><td><code>DiasporaPeopleSearch</code> — <code>profiles</code> üzerinden</td><td><code>profiles</code> yok; yeni <code>search_cadde_people_v1</code> (yalnız public görünürlük)</td><td><span class="badge b-blue">Yeniden yaz</span></td></tr>
+</table>
+
+<h3><code>ref</code>'ten taşınamaz / taşınmamalı</h3>
+<div class="card danger">
+  <ul>
+    <li>Tüm veri katmanı — doğrudan <code>supabase.from().insert()</code> (cadde içerik tablolarına user INSERT policy YOK)</li>
+    <li><code>profiles</code>/<code>user_profiles</code> bağımlı her şey (DROP edildi → <code>user_profile_attributes</code>)</li>
+    <li><code>localStorage</code> tabanlı yetki bayrakları (<code>indiv_relocating</code>, <code>tr_digital_community_kopru</code>) — güvenlik açısından kabul edilemez</li>
+    <li>Client-side-only moderasyon; legacy tablolara (<code>feed_posts/cafes/user_follows…</code>) her türlü referans</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<!-- ===================== BÖLÜM 2 ============================== -->
+<!-- ============================================================ -->
+<h2 id="p-ozet"><span class="part">Bölüm 2 — Premium Profil Paneli</span>2A. Sekme Özeti (11 sekme)</h2>
+<div class="card">
+  <p>
+    <code>Experimental_2</code> / <code>Experimental_3</code> rolündeki kullanıcı (ör.
+    <strong>experimental2@corteqs.net</strong>) diğer rollerden farklı olarak <strong>premium profil paneli</strong>
+    görür: <code>src/components/profile/premium/PremiumProfileTabs.tsx</code>, <strong>11 sekme</strong>.
+  </p>
+  <p class="legend" style="margin:14px 0;">
+    <span><span class="badge b-green">3</span> gerçekten çalışıyor</span>
+    <span><span class="badge b-amber">8</span> "Yakında" maketi (placeholder)</span>
+  </p>
+  <table style="margin-top:8px">
+    <tr><th>#</th><th>Sekme</th><th>Bugün</th><th>Hazırlık (maketi gerçeğe çevirme maliyeti)</th><th>İş</th></tr>
+    <tr><td>1</td><td>Profil Ayarları</td><td><span class="badge b-green">Çalışıyor</span></td><td>—</td><td>—</td></tr>
+    <tr><td>2</td><td>Mesaj Kutusu</td><td><span class="badge b-green">Çalışıyor</span></td><td>—</td><td>—</td></tr>
+    <tr><td>3</td><td>Hizmet Talepleri</td><td><span class="badge b-amber">Çalışıyor*</span></td><td>🟡 ödeme mock</td><td>M</td></tr>
+    <tr><td>4</td><td>Çarşı</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-green">🟢 backend hazır</span></td><td>S</td></tr>
+    <tr><td>5</td><td>Taşınma Yönetimi</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-green">🟢 backend hazır</span></td><td>S–M</td></tr>
+    <tr><td>6</td><td>Etkinliklerim</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-green">🟢 backend hazır</span></td><td>M</td></tr>
+    <tr><td>7</td><td>Takvim</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-green">🟢 backend hazır</span></td><td>M</td></tr>
+    <tr><td>8</td><td>Bildirimler</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-amber">🟡 kısmen var</span></td><td>M</td></tr>
+    <tr><td>9</td><td>WhatsApp</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-amber">🟡 kısmen var</span></td><td>M</td></tr>
+    <tr><td>10</td><td>Takip</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-red">🔴 sıfırdan backend</span></td><td>L</td></tr>
+    <tr><td>11</td><td>Kuponlar</td><td><span class="badge b-amber">Maket</span></td><td><span class="badge b-red">🔴 sıfırdan backend</span></td><td>L</td></tr>
+  </table>
+  <p class="effort" style="margin-top:8px">İş büyüklüğü: S = küçük (1 oturum) · M = orta · L = büyük (ayrı proje kalemi). *Hizmet Talepleri çalışıyor ama ödemesi maket — bkz. 2B.</p>
+</div>
+
+<div class="card tab">
+  <h4 style="margin-top:0">Mimari notu — bir maketi gerçeğe çevirmek ne demek?</h4>
+  <p style="margin-top:0">Sekmeler <strong>veri güdümlü</strong>: her sekmenin bir <code>kind</code> değeri var
+  (<code>settings</code> · <code>messages</code> · <code>service-requests</code> · <code>placeholder</code>).
+  Bir "Yakında" sekmesini fonksiyonel yapmak için: (1) <code>kind</code>'ı <code>placeholder</code>'dan gerçek tipe çevir,
+  (2) o tip için var olan API/RPC'yi kullanan bir panel bileşeni bağla. <strong>Yapısal yeniden yazım gerekmez.</strong></p>
+  <p style="margin-bottom:0">Premium görünüm yalnız <code>Experimental_2/3</code> rolüne izole
+  (<code>src/lib/profile-presentation.ts</code>) → bu sekmelerdeki iş <strong>diğer rolleri/üyeleri etkilemez</strong>,
+  regresyon riski düşük. Montaj noktası: <code>src/pages/ProfilePage.tsx</code> (<code>isPremiumPilot</code> bloğu).</p>
+</div>
+
+<!-- 2B GİZLİ BORÇ -->
+<h2 id="p-borc"><span class="part">Bölüm 2 — Premium Profil Paneli</span>2B. ⚠️ "Çalışıyor" Görünen Ama Yarım Parçalar (Gizli Borç)</h2>
+<div class="card danger">
+  <p style="margin-top:0"><strong class="warn">Dikkat:</strong> Aşağıdakiler ekranda çalışır görünür ama arkada gerçek veri/işlem yoktur. Tartışmada "bunlar zaten bitti" sanılmasın:</p>
+  <table>
+    <tr><th>Nerede</th><th>Görünen</th><th>Gerçek</th><th>Dosya</th></tr>
+    <tr><td>Hizmet Talepleri ödeme akışı</td><td>Stripe ile ödeme alınıyormuş gibi</td><td><strong class="warn">MockStripeCheckout</strong> — gerçek tahsilat YOK</td><td><code>src/components/ServiceRequestForm.tsx</code></td></tr>
+    <tr><td>Kupon yönetimi</td><td>Kupon oluştur / listele / aktif-pasif</td><td><strong class="warn">Tamamen in-memory mock</strong> — yenileyince kaybolur, DB yok</td><td><code>src/components/CouponManager.tsx</code></td></tr>
+    <tr><td>Takip ("takip et")</td><td>"Takip edildi 🔔"</td><td><strong class="warn">Sadece localStorage</strong> — kalıcı değil, kimse "takipçim" olduğunu görmez</td><td><code>src/hooks/useFollow.ts</code></td></tr>
+  </table>
+</div>
+
+<!-- 2C SEKME SEKME -->
+<h2 id="p-sekme"><span class="part">Bölüm 2 — Premium Profil Paneli</span>2C. Sekme Sekme Analiz</h2>
+
+<div class="card tab">
+  <div class="tab-head"><span class="num">4</span><h3>Çarşı</h3><span class="badge b-green">🟢 Backend hazır</span><span class="effort">İş: S</span></div>
+  <div class="quad">
+    <div class="now mini"><div class="lbl">Ana projede (mevcut)</div><ul>
+      <li><code>src/lib/cadde-carsi-api.ts</code> → <code>listMyCarsiItems(userId)</code></li>
+      <li><code>CaddeMyContentCard.tsx</code> — açık cafe + Çarşı ilanlarını listeleyen <strong>hazır</strong> kart (bugün Profil Ayarları'nda)</li>
+      <li>Yönetim: <code>/cadde/carsi</code></li>
+    </ul></div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div><ul><li>Çarşı, Cadde 3.0 ile ana projeye taşınmış; ref'te ayrı karşılığı kalmamış.</li></ul></div>
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div><ul><li>Sekme <code>kind</code>'ını gerçek panele çevir; <code>CaddeMyContentCard</code> ya da <code>listMyCarsiItems</code> ile "İlanlarım" paneli bağla.</li></ul></div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div><ul><li><strong>Yok</strong> — RPC/tablolar hazır. "Favori ürünler" istenirse ayrı tablo.</li></ul></div>
+  </div>
+  <p class="effort" style="margin:8px 0 0">↔ <strong>Bölüm 1 "public profil yüzeyi"</strong> ve ref <code>CarsiUserShowcase</code> ile aynı iş kalemi.</p>
+</div>
+
+<div class="card tab">
+  <div class="tab-head"><span class="num">5</span><h3>Taşınma Yönetimi</h3><span class="badge b-green">🟢 Backend hazır</span><span class="effort">İş: S–M</span></div>
+  <div class="quad">
+    <div class="now mini"><div class="lbl">Ana projede</div><ul>
+      <li><code>src/lib/relocation-api.ts</code> → <code>getMove</code>, <code>getCityRecommendations</code>, <code>getChecklist</code></li>
+      <li><code>relocation-tools-api.ts</code> + 10 taşınma aracı (canlı, 21 migration)</li>
+      <li>Sayfalar: <code>/relocation</code>, <code>/relocation/tools</code></li>
+    </ul></div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div><ul><li><code>ref/src/pages/RelocationEngine.tsx</code> — ana projeden çok daha basit; ana proje ref'i geçmiş.</li></ul></div>
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div><ul><li>Panele "taşınma özeti" kartı: aktif plan + checklist ilerlemesi + öne çıkan şehir önerileri + "Taşınma Merkezine git" CTA.</li></ul></div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div><ul><li><strong>Yok</strong>. Sadece özet için hafif aggregate sorgu.</li></ul></div>
+  </div>
+</div>
+
+<div class="card tab">
+  <div class="tab-head"><span class="num">6</span><h3>Etkinliklerim</h3><span class="badge b-green">🟢 Backend hazır</span><span class="effort">İş: M</span></div>
+  <div class="quad">
+    <div class="now mini"><div class="lbl">Ana projede</div><ul>
+      <li><code>events</code> tablosu mevcut (mig <code>20260502174058</code>, <code>…_add_events_registration_url</code>)</li>
+      <li><code>src/pages/Events.tsx</code> gerçek tabloya bağlı; <code>PublicEventsList</code>, <code>CreateEventForm</code></li>
+      <li>Cadde tarafı: <code>cadde-tanitim-api.ts</code> → <code>listMyPromotionCampaigns</code></li>
+    </ul></div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div><ul><li><code>ref/src/pages/Events.tsx</code> + <code>events</code> tablosu — benzer model.</li></ul></div>
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div><ul><li>"Katıldığım / oluşturduğum etkinlikler" listesi + boş durum.</li></ul></div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div><ul><li>Kullanıcıya-özel "benim etkinliklerim" sorgusu (tablo var; katılım ilişkisi netleşmeli — bkz. S-Etk).</li></ul></div>
+  </div>
+</div>
+
+<div class="card tab">
+  <div class="tab-head"><span class="num">7</span><h3>Takvim</h3><span class="badge b-green">🟢 Backend hazır</span><span class="effort">İş: M</span></div>
+  <div class="quad">
+    <div class="now mini"><div class="lbl">Ana projede</div><ul>
+      <li><code>appointments</code> tablosu (mig <code>20260513000013_add_appointments</code>)</li>
+      <li><code>booking/AppointmentManagePanel.tsx</code>, <code>AppointmentBookingDialog.tsx</code> gerçek tabloya bağlı</li>
+    </ul></div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div><ul><li><code>ref</code> <code>appointments</code> var ama <code>HospitalAppointment.tsx</code> <strong>mock veriye</strong> bağlı — ref burada yarım.</li></ul></div>
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div><ul><li>Randevuları/etkinlikleri takvim/liste görünümünde toplayan panel. "Takvim" mi "Randevularım" mı? (S-Tak)</li></ul></div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div><ul><li>Tablo var; kullanıcıya-özel sorgu mevcut (<code>AppointmentManagePanel</code> zaten <code>.from('appointments')</code>).</li></ul></div>
+  </div>
+</div>
+
+<div class="card tab">
+  <div class="tab-head"><span class="num">8</span><h3>Bildirimler</h3><span class="badge b-amber">🟡 Kısmen var</span><span class="effort">İş: M</span></div>
+  <div class="quad">
+    <div class="now mini"><div class="lbl">Ana projede</div><ul>
+      <li><code>notifications</code> tablosu + <code>cadde-notifications-api.ts</code> → <code>listMyNotifications</code></li>
+      <li>Tetikleyici bileşen: <code>NotificationsTabTrigger.tsx</code></li>
+    </ul></div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div><ul><li><code>ref</code> <code>notifications</code> + <code>useUnreadNotifications.ts</code> (sayaç + realtime); DB tetikleyicileri (<code>notify_followers()</code>, doğum günü <code>pg_cron</code>)</li></ul></div>
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div><ul><li>Bildirim listesi (okundu/okunmadı) + okunmamış sayaç hook'u (ref <code>useUnreadNotifications</code> uyarlanır).</li></ul></div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div><ul><li>Bildirim <strong>üreten</strong> tetikleyiciler eksik (tablo boş → liste boş). "Hangi olaylar bildirim üretir?" (S-Bil). <em>↔ Cadde'nin <code>cadde_notify</code> ailesi var ama panel kapsamı farklı.</em></li></ul></div>
+  </div>
+</div>
+
+<div class="card tab">
+  <div class="tab-head"><span class="num">9</span><h3>WhatsApp</h3><span class="badge b-amber">🟡 Kısmen var</span><span class="effort">İş: M</span></div>
+  <div class="quad">
+    <div class="now mini"><div class="lbl">Ana projede</div><ul><li><code>whatsapp_landings</code> tablosu mevcut</li><li>Sayfa/lib/bileşen <strong>yok</strong> (ref'ten port edilmeli)</li></ul></div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div><ul>
+      <li><code>WhatsAppGroups.tsx</code>, <code>WhatsAppGroupLanding.tsx</code>, <code>ref/src/lib/whatsappLandings.ts</code></li>
+      <li>İki akış: hızlı link + tam "landing" formu; admin onayından sonra yayın. Demo fallback'li.</li>
+      <li>Not: ref de gerçek "grup üyeliği" tutmuyor — sadece link/landing paylaşımı.</li>
+    </ul></div>
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div><ul><li><code>whatsappLandings.ts</code> + grup listesi/landing UI'ını ref'ten port (Cadde stiline).</li></ul></div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div><ul><li>Tablo var; gerçek <strong>grup üyeliği</strong> istenirse yeni tablo + admin onay. Karar: link mi, üyelik mi? (S-Wp)</li></ul></div>
+  </div>
+</div>
+
+<div class="card tab">
+  <div class="tab-head"><span class="num">10</span><h3>Takip</h3><span class="badge b-red">🔴 Sıfırdan backend</span><span class="effort">İş: L</span></div>
+  <div class="quad">
+    <div class="now mini"><div class="lbl">Ana projede</div><ul><li><code>src/hooks/useFollow.ts</code> = <strong class="warn">localStorage</strong> (kalıcı değil)</li><li>Kalıcı takip tablosu/RPC <strong>yok</strong></li></ul></div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div><ul>
+      <li><code>ref</code> <code>user_follows</code> + <code>useFeedSocial.ts</code> (benzerlik skorlama + takipçi bildirimi)</li>
+      <li><strong>Uyarı:</strong> ref'in sosyal sistemi <code>feed_posts</code>/<code>profiles</code> üzerine kurulu — ana projede legacy/yazıma kapalı → birebir taşınamaz, Cadde'ye uyarlanmalı.</li>
+    </ul></div>
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div><ul><li>localStorage takibini kalıcı API'ye geçir; "Takip ettiklerim / takipçilerim" paneli.</li></ul></div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div><ul><li>Kalıcı takip tablosu + follow/unfollow + listeleme RPC'leri. <strong>↔ Bölüm 1 ref-takip kalemiyle AYNI iş</strong> — tek <code>cadde_follows</code> tasarımı ikisini de karşılar (K-Takip).</li></ul></div>
+  </div>
+</div>
+
+<div class="card tab">
+  <div class="tab-head"><span class="num">11</span><h3>Kuponlar</h3><span class="badge b-red">🔴 Sıfırdan backend</span><span class="effort">İş: L</span></div>
+  <div class="quad">
+    <div class="now mini"><div class="lbl">Ana projede</div><ul><li><code>CouponManager.tsx</code> + <code>CouponCheckoutDialog.tsx</code> = <strong class="warn">tamamen mock</strong> (in-memory)</li><li>İşletme tarafı kupon arayüzü; gerçek kayıt yok</li></ul></div>
+    <div class="ref mini"><div class="lbl">ref karşılığı</div><ul><li>ref'te kupon altyapısı <strong>yok</strong>.</li></ul></div>
+    <div class="fe mini"><div class="lbl">Frontend eksiği</div><ul><li>Mevcut mock UI'ı gerçek API'ye bağla; "bana özel kuponlar".</li></ul></div>
+    <div class="be mini"><div class="lbl">Backend eksiği</div><ul><li>Kupon tablosu + oluşturma/kullanım/limit RPC'leri sıfırdan. Kime ait, kim kullanır? (S-Kup). <em>↔ premium iş modeli K3 ile bağlı.</em></li></ul></div>
+  </div>
+</div>
+
+<div class="card ok">
+  <h4 style="margin-top:0">✓ Çalışan 3 sekme (referans)</h4>
+  <ul class="mini" style="margin:0;padding-left:18px">
+    <li><strong>Profil Ayarları:</strong> Tam profil editörü + <code>caddeCards</code> (ilgi alanları, içeriklerim, tanıtım). Sağlam.</li>
+    <li><strong>Mesaj Kutusu:</strong> <code>messaging/MessagesInbox.tsx</code> — kendi auth + Supabase fetch'i ile çalışıyor.</li>
+    <li><strong>Hizmet Talepleri:</strong> Talep oluşturma + listeleme gerçek; <strong class="warn">ama ödeme MOCK</strong> (bkz. 2B). Gerçek Stripe ayrı karar (S-Ode).</li>
+  </ul>
+</div>
+
+<!-- 2D SIRALAMA -->
+<h2 id="p-sira"><span class="part">Bölüm 2 — Premium Profil Paneli</span>2D. Önerilen Sıralama (hızlı kazanımdan zora)</h2>
+<div class="card info">
+  <ol style="margin:0">
+    <li><strong>Önce 🟢 backend-hazır:</strong> Çarşı → Taşınma → Etkinlik → Takvim. Çoğu sadece "var olan veriyi sekmeye bağlamak". Panel birkaç gün içinde "dolu" görünür.</li>
+    <li><strong>Sonra 🟡 kısmen var:</strong> Bildirimler (üretici tetikleyiciler) + WhatsApp (ref'ten port).</li>
+    <li><strong>En son 🔴 sıfırdan:</strong> kalıcı Takip + Kupon — ayrı proje kalemleri, ürün kararı gerektirir.</li>
+    <li><strong>Paralel temizlik:</strong> "gizli borç" mock'ları (Hizmet Talepleri ödemesi, Kupon, Takip) ya gerçeğe bağlanmalı ya da kullanıcıya "demo" olduğu açıkça belirtilmeli.</li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<!-- ===================== ORTAK =============================== -->
+<!-- ============================================================ -->
+<h2 id="kararlar"><span class="part">Ortak</span>3. Soru İşaretleri &amp; Karar Bekleyenler</h2>
+<p>Ortakla masaya yatırılacak kararlar. <span class="rec">Yeşil satır = önerilen varsayılan.</span>
+Çakışan konular (Takip, Kupon/premium) iki bölümden tek soruda birleştirildi.</p>
+
+<h3>Premium panel soruları</h3>
+<div class="q"><span class="qt">S-Etk — Etkinlik kaynağı</span><br>
+"Etkinliklerim" global <code>events</code> tablosunu mu, Cadde <code>tanitim/promotion</code> kampanyalarını mı, ikisini birden mi göstersin? Kullanıcı bir etkinliğe nasıl "katılır" (katılım tablosu var mı)?</div>
+
+<div class="q"><span class="qt">S-Tak — Takvim mi, Randevu mu</span><br>
+Genel takvim (etkinlik+randevu birleşik) mi, yoksa sadece <code>appointments</code> tabanlı "Randevularım" mı? Sekme adı "Takvim" kalsın mı?</div>
+
+<div class="q"><span class="qt">S-Bil — Bildirim üretimi</span><br>
+Hangi olaylar bildirim üretmeli (yeni mesaj, hizmet teklifi, takip, etkinlik, doğum günü…)? ref'teki tetikleyici + <code>pg_cron</code> modeli kopyalansın mı? <span class="rec">▸ Cadde'nin mevcut <code>cadde_notify</code> ailesi temel alınıp panel kapsamına genişletilebilir.</span></div>
+
+<div class="q"><span class="qt">S-Wp — WhatsApp kapsamı</span><br>
+Sadece grup linki/landing paylaşımı mı (ref gibi), yoksa gerçek "grup üyeliği / katılma isteği" akışı mı? <span class="rec">▸ MVP: link/landing; üyelik ayrı faz.</span></div>
+
+<div class="q"><span class="qt">S-Kup — Kupon sahipliği</span><br>
+Kupon işletme rolüne mi ait (işletme oluşturur, üye kullanır), yoksa premium bireysele gelen kuponlar mı? DB modeli + kullanım/limit kuralları? <em>(premium iş modeli K3 ile birlikte karara bağlanmalı.)</em></div>
+
+<div class="q"><span class="qt">S-Ode — Hizmet Talepleri ödemesi</span><br>
+Mock Stripe ne zaman gerçek tahsilata dönecek? Önce bu sekme MVP'de mock kalsın mı?</div>
+
+<div class="q"><span class="qt">S-Rol — Rol yaygınlaştırma</span><br>
+Bu fonksiyonel panel sadece Experimental_2/3'te mi kalacak, yoksa zamanla diğer rollere de açılacak mı? (Açmak = <code>profile-presentation.ts</code>'e config eklemek.)</div>
+
+<h3>Cadde / ref soruları</h3>
+<div class="q"><span class="qt">S-Cafe — Cafe tür modeli + TR kısıtı</span><br>
+ref: "TR (+90) yalnız relocation/expo'ya girer; TR cafe'lere yalnız TR-yerleşikler". fin: <code>can_join_cadde_cafe</code> (limit/doğrulama odaklı, tür yok). Birleşecek mi? Birleşirse <strong>SQL+TS ayna + testleri birlikte</strong> güncellenir. Relocation/expo türleri isteniyor mu?</div>
+
+<div class="q"><span class="qt">S-Amb — CafeAmbiance gerçek mi, oyuncak mı?</span><br>
+Post-it/anket/jukebox şu an localStorage'da. (a) gerçek paylaşımlı → tablo+RPC+Realtime+moderasyon; (b) "kişisel ambiyans" lokal; (c) hiç alınmaz. <span class="rec">▸ Öneri: önce (b), gerçek sürüm ayrı iterasyon.</span></div>
+
+<div class="q"><span class="qt">S-Kes — Kişi arama gizlilik sınırı</span><br>
+Arama hangi alanlarda? <code>user_profile_attributes.visibility</code> yalnız public/private — private alanlar skorlamaya bile girmemeli mi? <span class="rec">▸ Öneri: yalnız public.</span></div>
+
+<div class="q"><span class="qt">S-Ref — <code>ref/corteqs_plus</code> canlı bir ürün mü?</span><br>
+Aktif geliştiriliyorsa iki yönlü senkron beklentisi var mı, yoksa tek seferlik fikir kaynağı mı? Sürekli senkron ise aktarım öncesi <code>git -C ref pull</code> + bu dokümanın tarihine bak.</div>
+
+<h3>Operasyon / iş-modeli kararları</h3>
+<div class="q"><span class="qt">K-Takip — Kalıcı takip grafiği (Panel sekme 10 + Cadde ref-takip = AYNI iş)</span><br>
+Premium panelin Takip sekmesi ve Cadde'nin ref'ten gelecek takip özelliği <strong>tek bir kalıcı sistemle</strong> çözülür. Yeni <code>cadde_follows</code> tablosu (diaspora_key'li) + <code>follow/unfollow_cadde_user_v1</code> + CKS skor etkisi + gizlilik ("takipçilerim beni görsün mü?"). <span class="rec">▸ Öneri: tek <code>cadde_follows</code>; hem panel hem feed kullanır.</span></div>
+
+<div class="q"><span class="qt">K1 — SMS/OTP sağlayıcı (D-03)</span><br>
+Altyapı kurulu, flag kapalı. Twilio / Vonage / Supabase phone / e-posta-fallback? Maliyet + KVKK. Seçilince OTP Edge Function + flag <code>true</code>.</div>
+
+<div class="q"><span class="qt">K2 — Legacy 5 tablo DROP zamanlaması</span><br>
+Write-revoked tablolar ne zaman DROP edilecek? Canary tamamlandı mı? <code>user_follows</code> 1 satır (R-06) dahil. Karar dokümanı + migration.</div>
+
+<div class="q"><span class="qt">K3 — Premium iş modeli (D-07 + Kupon)</span><br>
+Kademeli üyelik (Çarşı limiti, kupon vb.) bu fazda yüzeylenecek mi? Feature-bazlı entitlement (<code>afs_features</code>) ile mi, yoksa gerçek abonelik (Stripe/Paddle) ayrı proje mi? <em>(Panel Kupon sekmesi + Cadde premium UI bu karara bağlı.)</em></div>
+
+<div class="q"><span class="qt">K4 — B1 types regen + pg_cron</span><br>
+Geçerli <code>SUPABASE_ACCESS_TOKEN</code> ile types regen edilecek mi? Canlıda <code>pg_cron</code> var mı — yoksa cafe.expiring için dış cron/Edge Function alternatifi?</div>
+
+<!-- ============================================================ -->
+<h2 id="d"><span class="part">Ortak</span>4. Adaptasyon Kuralları &amp; Risk</h2>
+
+<h3>Her aktarımda zorunlu kontrol listesi</h3>
+<table>
+  <tr><th>#</th><th>Kural</th><th>Neden</th></tr>
+  <tr><td>1</td><td>Doğrudan <code>supabase.from(...).insert/update/delete</code> taşınmaz — her yazma <code>*_v1</code> security-definer RPC üzerinden</td><td>İçerik tablolarında user INSERT policy yok; ban kill-switch yalnız RPC yolunda</td></tr>
+  <tr><td>2</td><td><code>profiles</code>/<code>user_profiles</code>/<code>feed_posts</code>/<code>feed_likes</code>/<code>cafes</code>/<code>cafe_memberships</code>/<code>user_follows</code> referansı yasak</td><td>DROP edilmiş ya da write-revoked legacy; policy/grant yeniden açılamaz</td></tr>
+  <tr><td>3</td><td>Yeni cadde içerik tablosu = <code>diaspora_key</code> + CHECK + feed/list filtresi</td><td>Çoklu diaspora sözleşmesi (mig 012)</td></tr>
+  <tr><td>4</td><td>Yeni RPC hata kodu → <code>cadde-rules.ts</code> Türkçe mesaj haritasına</td><td>CLAUDE.md zorunlu kuralı</td></tr>
+  <tr><td>5</td><td>SQL kuralını değiştiren her şey TS aynasını + testini birlikte değiştirir (<code>can_post_kopru</code>, <code>can_join_cadde_cafe</code>, ranking, blocklist)</td><td>Ayna sözleşmeleri testli; tek taraflı değişiklik testte patlar</td></tr>
+  <tr><td>6</td><td>Limit/bayrak hardcode edilmez → <code>cadde_settings</code> anahtarı</td><td>Ürün kararı = SQL update ilkesi</td></tr>
+  <tr><td>7</td><td>Yetki bilgisi asla localStorage'da tutulmaz → AFS attribute / <code>user_verifications</code> / <code>cadde_settings</code></td><td>ref/panel'in en büyük güvenlik açığı (<code>useFollow</code>, Köprü bayrakları); fin'de sunucu doğrular</td></tr>
+  <tr><td>8</td><td><code>useAuth</code> canonical'den import edilir (<code>@/components/auth</code>), shim'den değil</td><td>B5 migrasyon hedefi</td></tr>
+  <tr><td>9</td><td>Türkçe metinlerde <code>trUpper/trLower/trIncludes/trCompare</code>; <code>npm run verify:text</code></td><td>Türkçe metin zorunlu kuralları</td></tr>
+  <tr><td>10</td><td>Migration yalnız eklenir (rename/silme yok); canlı DB'ye UTF-8 dosyadan</td><td>221+ migration üretimde immutable; PowerShell→psql Türkçe karakter tuzağı</td></tr>
+  <tr><td>11</td><td>Veri çekme: <code>*-api.ts</code> + React Query (<code>cadde-query-keys.ts</code>); component içi fetch yok</td><td>Muhasebe/cadde referans deseni</td></tr>
+  <tr><td>12</td><td>Yeni iş kuralı = test; sayfa eklerse route testi</td><td>ref/panel'de mock'lar testsiz; fin standardı bu</td></tr>
+</table>
+
+<h3>Risk tablosu</h3>
+<table>
+  <tr><th>Senaryo</th><th>Olasılık</th><th>Etki</th><th>Önlem</th></tr>
+  <tr><td>ref/panel mock kodu kopyalanır, legacy tablolara yazar → sessiz üretim hatası</td><td><span class="badge b-red">Yüksek</span></td><td>Kullanıcı içeriği kaybolmuş görünür; destek yükü</td><td>Kural #1–2; PR review'da <code>supabase.from("(feed_|cafe|user_follows|profiles)</code> grep'i; yeniden yazım</td></tr>
+  <tr><td>"Çalışıyor" sanılan mock (ödeme/kupon/takip) canlıya beklenti yaratır</td><td><span class="badge b-amber">Orta</span></td><td>Para/veri kaybı algısı, güven kaybı</td><td>Bölüm 2B; mock'a kullanıcıya görünür "demo" etiketi ya da gerçeğe bağlama önceliği</td></tr>
+  <tr><td>Cafe kural değişikliği (S-Cafe) SQL+TS aynasını bozar</td><td><span class="badge b-amber">Orta</span></td><td>Client "girebilirsin" der, RPC reddeder (ya da güvenlik deliği)</td><td>Ayna testleri zorunlu; SQL ve TS aynı PR'da</td></tr>
+  <tr><td>Görsel yükleme açılınca uygunsuz içerik (Cadde görsel-moderasyon açık)</td><td><span class="badge b-amber">Orta</span></td><td>Moderasyon yükü, itibar</td><td>Görsel rapor edilebilir (<code>report_cadde_entity_v1</code>), bucket limiti, gerekirse yayın öncesi onay</td></tr>
+  <tr><td>Takip grafiği CKS'yi bozar (echo chamber / spam)</td><td><span class="badge b-amber">Orta</span></td><td>Feed kalitesi düşer</td><td>Takip sinyal ağırlığı <code>cadde_settings</code>'te düşük; günlük limit; kill-switch</td></tr>
+  <tr><td><code>types.ts</code> (B1) regen edilmeden yeni RPC'ler <code>as any</code> ile yazılır</td><td><span class="badge b-red">Yüksek</span></td><td>~103 <code>as any</code> borcu büyür</td><td>Önce token + regen (K4); olmuyorsa <code>cadde-internal.ts</code> izole desenine hapset</td></tr>
+  <tr><td>pg_cron canlıda yoksa cafe.expiring sessizce çalışmaz</td><td><span class="badge b-amber">Orta</span></td><td>Bitiş bildirimleri gitmez</td><td>Canlıda <code>pg_extension</code> kontrolü; yoksa dış cron / Edge Function (K4)</td></tr>
+  <tr><td><code>ref</code> repo'su ilerler, referans bayatlar</td><td><span class="badge b-blue">Kesin</span></td><td>Bu doküman zamanla eskir</td><td>S-Ref kararı; aktarım öncesi <code>git -C ref pull</code></td></tr>
+  <tr><td>SEO-kilitli rotalara dokunulur (<code>/cadde</code> alt yolları)</td><td><span class="badge b-blue">Düşük</span></td><td>SEO kaybı</td><td>Yeni yüzeyler mevcut rotaların altına eklenir; path'ler değişmez</td></tr>
+</table>
+
+<div class="card verdict" style="margin-top:32px">
+  <strong>🧭 Net tavsiye (tartışmaya açık):</strong>
+  <ol>
+    <li><strong>Hemen, karar gerektirmeyen (hızlı kazanım):</strong> premium panelin 🟢 backend-hazır sekmeleri (Çarşı → Taşınma → Etkinlik → Takvim) + Cadde'nin public profil yüzeyi + dünya saatleri/ticker. Çoğu "var olan veriyi sekmeye bağlamak". Aynı anda B1 types regen (K4).</li>
+    <li><strong>Operasyon kararları:</strong> K1 (SMS), K2 (legacy DROP), K4 (pg_cron) — küçük ama net.</li>
+    <li><strong>Ürün/iş-modeli kararı sonrası:</strong> Bildirim üretimi (S-Bil) + WhatsApp (S-Wp); ardından kalıcı Takip (K-Takip — panel + Cadde tek sistem) ve Kupon/premium (K3).</li>
+    <li><strong>Asla:</strong> ref/panel'den veri katmanı kodu, localStorage yetki/takip, legacy tablo referansı; mock'u "bitti" gibi sunmak.</li>
+  </ol>
+</div>
+
+<footer>
+  burakubtstatus.html · CorteQS Cadde 3.0 + Premium Panel durum &amp; karar dokümanı · 30 Haziran 2026<br>
+  Birleştirilen kaynaklar: <code>docs/cadde-300/30062026_cadde_eksikler_ve_karsilastirma.html</code> +
+  <code>docs/plans/premium-panel-sekme-analizi.html</code> ·
+  canlı kod teyidi: <code>src/lib/cadde-*.ts</code>, <code>src/components/profile/premium/*</code>,
+  <code>supabase/migrations/*</code>, <code>ref/src/**</code>
+</footer>
+
+</div>
+</body>
+</html>
