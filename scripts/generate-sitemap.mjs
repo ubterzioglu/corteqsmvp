@@ -42,6 +42,7 @@ const STATIC_ROUTES = [
   { path: "/commercial", priority: "0.6", changefreq: "monthly" },
   { path: "/lansman", priority: "0.7", changefreq: "monthly" },
   { path: "/founding-1000", priority: "0.6", changefreq: "monthly" },
+  { path: "/campaign", priority: "0.6", changefreq: "monthly" },
   { path: "/dunya-kupasi", priority: "0.6", changefreq: "monthly" },
   { path: "/19051919", priority: "0.5", changefreq: "yearly" },
   { path: "/anket", priority: "0.6", changefreq: "weekly" },

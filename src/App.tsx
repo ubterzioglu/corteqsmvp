@@ -38,6 +38,7 @@ const RadarHubPage = lazy(() => import("./pages/RadarHubPage.tsx"));
 const BlogPostPage = lazy(() => import("./pages/BlogPostPage.tsx"));
 const CommercialIndexPage = lazy(() => import("./pages/CommercialIndexPage.tsx"));
 const CommercialDocumentPage = lazy(() => import("./pages/CommercialDocumentPage.tsx"));
+const CampaignHubPage = lazy(() => import("./pages/CampaignHubPage.tsx"));
 const Founding1000Page = lazy(() => import("./pages/Founding1000Page.tsx"));
 const BloggerContestPage = lazy(() => import("./pages/BloggerContestPage.tsx"));
 const VloggerContestPage = lazy(() => import("./pages/VloggerContestPage.tsx"));
@@ -122,6 +123,10 @@ const App = () => (
                   <Route path="/founding-1000" element={<Founding1000Page />} />
                   <Route path="/blogger-yarismasi" element={<BloggerContestPage />} />
                   <Route path="/vlogger-yarismasi" element={<VloggerContestPage />} />
+                  <Route path="/campaign" element={<CampaignHubPage />} />
+                  <Route path="/campaign/founding-1000" element={<Founding1000Page />} />
+                  <Route path="/campaign/vlogger" element={<VloggerContestPage />} />
+                  <Route path="/campaign/blogger" element={<BloggerContestPage />} />
                   <Route path="/dunya-kupasi" element={<DunyaKupasiPage />} />
                   <Route path="/dunya-kupasi/kayit" element={<DunyaKupasiKayitPage />} />
                   <Route path="/19051919" element={<May19CampaignPage />} />

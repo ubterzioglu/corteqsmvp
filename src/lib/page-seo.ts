@@ -25,6 +25,12 @@ export const PAGE_SEO = {
       "CorteQS Founding 1000 programına katılın; erken dönem topluluk ve görünürlük avantajlarını keşfedin.",
     canonicalPath: "/founding-1000",
   },
+  campaign: {
+    title: "Kampanyalar | CorteQS",
+    description:
+      "CorteQS kampanyalarını keşfedin: Founding 1000 erken üyelik programı, Vlogger ve Blogger içerik yarışmaları.",
+    canonicalPath: "/campaign",
+  },
   contact: {
     title: "İletişim | CorteQS",
     description:

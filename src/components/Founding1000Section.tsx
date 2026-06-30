@@ -289,8 +289,13 @@ const Founding1000Section = () => {
 
               <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 mb-6">
                 <p className="text-foreground text-sm leading-relaxed">
-                  <span className="font-bold text-primary">+ €399 değerinde</span> kategori vitrini ve
-                  ana sayfa carousel görünürlüğü <span className="font-semibold">6 ay boyunca dahil</span>.
+                  <span className="font-bold text-primary">+ €399 değerinde "Global Görünürlük Paketi"</span>{" "}
+                  Dahil<span className="text-primary">*</span> — kategori vitrini ve ana sayfa carousel
+                  görünürlüğü <span className="font-semibold">6 ay boyunca dahil</span>.
+                </p>
+                <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                  <span className="text-primary">*</span> CorteQS'in tüm sosyal medya kanallarında
+                  aramıza katılan İşletmeler / Profesyoneller olarak lanse edilirler.
                 </p>
               </div>
 
