@@ -73,6 +73,7 @@ const Associations = lazy(() => import("@/pages/Associations"));
 const AssociationDetail = lazy(() => import("@/pages/AssociationDetail"));
 const HospitalAppointment = lazy(() => import("@/pages/HospitalAppointment"));
 const IndependentProfilePage = lazy(() => import("@/pages/IndependentProfilePage"));
+const StatusReport3006Page = lazy(() => import("@/pages/StatusReport3006Page"));
 
 // Admin route ağacı (lazy importlar dahil) — bkz. src/pages/admin/routes.tsx
 import { adminRoutes } from "@/pages/admin/routes";
@@ -284,6 +285,7 @@ const App = () => (
                 <Route path="/strategic-partner" element={<Navigate to="/commercial/strategic-partner" replace />} />
                 <Route path="/community-leader" element={<Navigate to="/commercial/community-leader" replace />} />
                 <Route path="/ambassador" element={<Navigate to="/commercial/ambassador" replace />} />
+                <Route path="/statusreport3006" element={<StatusReport3006Page />} />
                 {adminRoutes}
               </Routes>
             </Suspense>
