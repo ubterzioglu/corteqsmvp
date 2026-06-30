@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260701-statusreport3006-sade-sutun-yorum",
+    date: "1 Temmuz 2026",
+    title: "Durum raporu sayfasına (/statusreport3006) Burak için sade açıklama sütunu + her bölüme yorum alanı eklendi",
+    items: [
+      "Bir önceki gün eklenen Cadde 3.0 / premium panel durum raporu (corteqs.net/statusreport3006) yeniden düzenlendi. Önceki hali teknik bir insan için yazılmıştı; talep üzerine her satır artık İKİ SÜTUN: solda eski teknik açıklama aynen duruyor, sağda Burak gibi teknik olmayan birinin anlayacağı sade Türkçe karşılığı var. Sayfa daha geniş hale getirildi (iki sütun rahat sığsın diye); telefonda alt alta diziliyor.",
+      "Her ana bölümün altına bir YORUM ALANI eklendi. Sayfaya giren herkes (siteye giriş yapmadan) adını yazıp o bölümle ilgili yorum bırakabiliyor; yorumlar veritabanında KALICI ve herkese görünür, böylece ortakla sayfa üzerinde yazışarak ilerlenebiliyor. Spam'e karşı basit bir hız freni ve uzunluk sınırı var.",
+      "Teknik tarafta: yorumlar için yeni bir veritabanı tablosu + güvenli kayıt fonksiyonu (RPC) oluşturuldu ve canlıya uygulandı + doğrulandı. Güvenlik: kimse tabloya doğrudan yazamaz, yalnız kontrollü fonksiyon üzerinden yazılır (anonim isim girip yorum yazma bu fonksiyonla sınırlı). Sayfanın kendisi de artık gerçek bir uygulama sayfası (statik dosya değil).",
+      "Yorum altyapısı şu anda canlıda çalışıyor; sayfanın yeni iki-sütunlu görünümünün corteqs.net'te görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     id: "20260629-revizyon-istekleri-yorum-sistemi",
     date: "29 Haziran 2026",
     title: "Admin paneline 'Revizyon İstekleri' bölümü eklendi — talep aç, durum takip et, yorumlaş",
