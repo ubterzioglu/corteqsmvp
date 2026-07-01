@@ -14,6 +14,13 @@ const TOOL_HERO_BY_SLUG: Record<string, string> = {
   "ilk-90-gun-planlayici": "/relocation-tools/ilk-90-gun-planlayici.jpg",
   "oncelikli-tasinma-sorunu": "/relocation-tools/oncelikli-tasinma-sorunu.jpg",
   "is-bulma-olasiligi": "/relocation-tools/is-bulma-olasiligi.jpg",
+  "banka-secim-almanya": "/relocation-tools/banka-secim-almanya.jpg",
+  "sigorta-secim-almanya": "/relocation-tools/sigorta-secim-almanya.jpg",
+  "maas-hesaplama-almanya": "/relocation-tools/maas-hesaplama-almanya.jpg",
+  "vize-secim-almanya": "/relocation-tools/vize-secim-almanya.jpg",
+  "vatandaslik-testi-almanya": "/relocation-tools/vatandaslik-testi-almanya.jpg",
+  "para-transferi-almanya": "/relocation-tools/para-transferi-almanya.jpg",
+  "stepstone-karsilastirma-almanya": "/relocation-tools/stepstone-karsilastirma-almanya.jpg",
 };
 
 /** Araç slug'ı için hero görsel yolunu döndürür; tanımsızsa undefined (görselsiz fallback). */
