@@ -15,6 +15,9 @@ import { lazy, Suspense } from "react";
 
 const RelocationJobsPage = lazy(() => import("./RelocationJobsPage"));
 const RelocationCandidatesPage = lazy(() => import("./RelocationCandidatesPage"));
+const RelocationToolsQuestionCountsPage = lazy(
+  () => import("./RelocationToolsQuestionCountsPage"),
+);
 
 function PageFallback() {
   return (
@@ -25,22 +28,34 @@ function PageFallback() {
 }
 
 export const relocationAdminRoutes = (
-  <Route path="relocation-ingestion">
-    <Route
-      index
-      element={
-        <Suspense fallback={<PageFallback />}>
-          <RelocationJobsPage />
-        </Suspense>
-      }
-    />
-    <Route
-      path="candidates"
-      element={
-        <Suspense fallback={<PageFallback />}>
-          <RelocationCandidatesPage />
-        </Suspense>
-      }
-    />
-  </Route>
+  <>
+    <Route path="relocation-ingestion">
+      <Route
+        index
+        element={
+          <Suspense fallback={<PageFallback />}>
+            <RelocationJobsPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="candidates"
+        element={
+          <Suspense fallback={<PageFallback />}>
+            <RelocationCandidatesPage />
+          </Suspense>
+        }
+      />
+    </Route>
+    <Route path="relocation-tools">
+      <Route
+        path="soru-sayilari"
+        element={
+          <Suspense fallback={<PageFallback />}>
+            <RelocationToolsQuestionCountsPage />
+          </Suspense>
+        }
+      />
+    </Route>
+  </>
 );

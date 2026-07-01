@@ -567,6 +567,16 @@ export const adminNavGroups: AdminNavGroup[] = [
         aliases: ["taşınma aday", "relocation candidate", "aday onay"],
         activePaths: ["/admin/relocation-ingestion/candidates"],
       },
+      {
+        id: "relocation-tools-question-counts",
+        label: "Araç Soru Sayıları",
+        shortLabel: "Soru Sayıları",
+        description: "Her relocation aracında hızlı/normal modda kaç soru/alan var, canlı DB'den.",
+        to: "/admin/relocation-tools/soru-sayilari",
+        icon: Table2,
+        accent: "sky",
+        aliases: ["soru sayısı", "relocation tool questions", "araç soru", "quiz sayısı"],
+      },
     ],
   },
   {

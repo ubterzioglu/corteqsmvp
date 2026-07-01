@@ -90,6 +90,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/service-finder/guide",
   "/admin/relocation-ingestion",
   "/admin/relocation-ingestion/candidates",
+  "/admin/relocation-tools/soru-sayilari",
   "/admin/radar/queue",
   "/admin/radar/sources",
   "/admin/radar/runs",
