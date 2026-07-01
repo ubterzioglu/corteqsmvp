@@ -27,14 +27,14 @@ const featuredLinks: readonly FeaturedLink[] = [
     scrollTop: true,
   },
   {
-    to: "/blogger-yarismasi",
+    to: "/campaign/blogger",
     className:
       "border-[#c5221f] bg-[linear-gradient(135deg,#EA4335_0%,#D93025_100%)] text-white shadow-[0_16px_34px_rgba(234,67,53,0.34),inset_0_1px_0_rgba(255,255,255,0.18)]",
     label: "Blogger Yarışması",
     scrollTop: true,
   },
   {
-    to: "/vlogger-yarismasi",
+    to: "/campaign/vlogger",
     className:
       "border-[#2f6fda] bg-[linear-gradient(135deg,#34A853_0%,#2F9B4D_100%)] text-white shadow-[0_16px_34px_rgba(52,168,83,0.34),inset_0_1px_0_rgba(255,255,255,0.18)]",
     label: "Vlogger Yarışması",

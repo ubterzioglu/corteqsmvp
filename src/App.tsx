@@ -122,8 +122,6 @@ const App = () => (
                   <Route path="/diaspora/:slug" element={<DiasporaDetailPage />} />
                   <Route path="/lansman" element={<LansmanPage />} />
                   <Route path="/founding-1000" element={<Founding1000Page />} />
-                  <Route path="/blogger-yarismasi" element={<BloggerContestPage />} />
-                  <Route path="/vlogger-yarismasi" element={<VloggerContestPage />} />
                   <Route path="/campaign" element={<CampaignHubPage />} />
                   <Route path="/campaign/founding-1000" element={<Founding1000Page />} />
                   <Route path="/campaign/vlogger" element={<VloggerContestPage />} />
