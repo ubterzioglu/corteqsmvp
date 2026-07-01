@@ -1,0 +1,135 @@
+// src/lib/relocation-tools-admin-api.ts
+// Admin — "Araç Soru Sayıları" paneli için canlı sayım sorguları.
+// relocation_tool_questions (motor tabanlı 12 araç) + germany_citizenship_questions
+// (Vatandaşlık Testi) canlı sayılır; Vize Seçimi kod-kaynaklı düğüm sayısı (VIZE_QUESTIONS.length);
+// Maaş Hesaplama/Para Transferi/StepStone sabit form-alanı sayısıdır (bunların "soru" kavramı yok).
+
+import { supabase } from "@/integrations/supabase/client";
+import type { RelocationToolRow } from "@/lib/relocation-tools-types";
+import { VIZE_QUESTIONS } from "@/lib/germany-vize-data";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const db = supabase as any;
+
+export type ToolCountKind = "question_bank" | "decision_tree" | "calculator";
+
+export interface ToolQuestionCountRow {
+  key: string;
+  slug: string;
+  title_tr: string;
+  category: string;
+  kind: ToolCountKind;
+  quick_count: number;
+  detailed_count: number;
+  total_count: number;
+  is_active: boolean;
+}
+
+/** Motor kullanmayan standalone araçların sabit sayım kaynağı (form alanı / kod-kaynaklı). */
+const STANDALONE_STATIC_COUNTS: Record<string, { kind: ToolCountKind; count: number }> = {
+  maas_hesaplama_almanya: { kind: "calculator", count: 9 },
+  para_transferi_almanya: { kind: "calculator", count: 1 },
+  stepstone_karsilastirma_almanya: { kind: "calculator", count: 5 },
+};
+
+const VIZE_TOOL_KEY = "vize_secim_almanya";
+const VATANDASLIK_TOOL_KEY = "vatandaslik_testi_almanya";
+
+interface EngineQuestionRow {
+  tool_key: string;
+  mode: "quick" | "detailed" | "both";
+}
+
+function countEngineQuestions(
+  rows: EngineQuestionRow[],
+): Record<string, { quick: number; detailed: number; total: number }> {
+  const byTool: Record<string, { quick: number; detailed: number; total: number }> = {};
+  for (const row of rows) {
+    if (!byTool[row.tool_key]) byTool[row.tool_key] = { quick: 0, detailed: 0, total: 0 };
+    if (row.mode === "quick" || row.mode === "both") byTool[row.tool_key].quick += 1;
+    if (row.mode === "detailed" || row.mode === "both") byTool[row.tool_key].detailed += 1;
+    byTool[row.tool_key].total += 1;
+  }
+  return byTool;
+}
+
+export async function listToolQuestionCounts(): Promise<ToolQuestionCountRow[]> {
+  const { data: tools, error: toolsError } = await db
+    .from("relocation_tools")
+    .select("key, slug, title_tr, category, is_active")
+    .order("sort_order", { ascending: true });
+  if (toolsError) throw toolsError;
+
+  const { data: engineQuestions, error: engineError } = await db
+    .from("relocation_tool_questions")
+    .select("tool_key, mode")
+    .eq("is_active", true);
+  if (engineError) throw engineError;
+
+  const { data: citizenshipRows, error: citizenshipError } = await db
+    .from("germany_citizenship_questions")
+    .select("id");
+  if (citizenshipError) throw citizenshipError;
+
+  const engineCounts = countEngineQuestions((engineQuestions ?? []) as EngineQuestionRow[]);
+  const citizenshipCount = (citizenshipRows ?? []).length;
+  const vizeNodeCount = VIZE_QUESTIONS.length;
+
+  return ((tools ?? []) as RelocationToolRow[]).map((tool): ToolQuestionCountRow => {
+    if (tool.key === VATANDASLIK_TOOL_KEY) {
+      return {
+        key: tool.key,
+        slug: tool.slug,
+        title_tr: tool.title_tr,
+        category: tool.category,
+        kind: "question_bank",
+        quick_count: citizenshipCount,
+        detailed_count: citizenshipCount,
+        total_count: citizenshipCount,
+        is_active: tool.is_active,
+      };
+    }
+
+    if (tool.key === VIZE_TOOL_KEY) {
+      return {
+        key: tool.key,
+        slug: tool.slug,
+        title_tr: tool.title_tr,
+        category: tool.category,
+        kind: "decision_tree",
+        quick_count: vizeNodeCount,
+        detailed_count: vizeNodeCount,
+        total_count: vizeNodeCount,
+        is_active: tool.is_active,
+      };
+    }
+
+    const staticEntry = STANDALONE_STATIC_COUNTS[tool.key];
+    if (staticEntry) {
+      return {
+        key: tool.key,
+        slug: tool.slug,
+        title_tr: tool.title_tr,
+        category: tool.category,
+        kind: staticEntry.kind,
+        quick_count: staticEntry.count,
+        detailed_count: staticEntry.count,
+        total_count: staticEntry.count,
+        is_active: tool.is_active,
+      };
+    }
+
+    const engine = engineCounts[tool.key] ?? { quick: 0, detailed: 0, total: 0 };
+    return {
+      key: tool.key,
+      slug: tool.slug,
+      title_tr: tool.title_tr,
+      category: tool.category,
+      kind: "question_bank",
+      quick_count: engine.quick,
+      detailed_count: engine.detailed,
+      total_count: engine.total,
+      is_active: tool.is_active,
+    };
+  });
+}
