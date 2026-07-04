@@ -49,6 +49,11 @@ export interface CityPreferences {
   airport_access?: number;
   industry_hub?: number;
   healthcare_priority?: number;
+  /** YENİ (+4, 2026-07-01): eksikse nötr 0.5 (expat_community_size hariç, o string). */
+  public_transport_importance?: number;
+  green_space_preference?: number;
+  expat_community_size?: string;
+  healthcare_access_urgency?: number;
 }
 
 function pref01(value: number | undefined): number {
@@ -68,6 +73,12 @@ export function computeCityBreakdown(
   const airport = pref01(prefs.airport_access);
   const industry = pref01(prefs.industry_hub);
   const health = pref01(prefs.healthcare_priority);
+  const transportPref = pref01(prefs.public_transport_importance);
+  const greenPref = pref01(prefs.green_space_preference);
+  const expatPref = prefs.expat_community_size;
+  const healthUrgency = pref01(prefs.healthcare_access_urgency);
+  const expatMultiplier =
+    expatPref === "large" ? 1.05 : expatPref === "no_preference" ? 0.95 : 1.0;
 
   return {
     budget_housing_fit: round4(
@@ -77,16 +88,21 @@ export function computeCityBreakdown(
     job_hub_fit: round4(
       clamp01OrNeutral(1 - (features.bureaucracy_complexity ?? 0.5)) * (0.5 + 0.5 * industry),
     ),
-    lifestyle_fit: round4(clamp01OrNeutral(features.gsm_coverage)),
+    lifestyle_fit: round4(
+      clamp01OrNeutral(features.gsm_coverage) * (1 - 0.2 * greenPref) + 0.2 * greenPref,
+    ),
     community_fit: round4(
-      clamp01OrNeutral(features.community_density) * (0.4 + 0.6 * community),
+      clamp01OrNeutral(features.community_density) * (0.4 + 0.6 * community) * expatMultiplier,
     ),
     safety_healthcare_fit: round4(
       clamp01OrNeutral(features.safety_index) * (0.4 + 0.6 * safety) * 0.5 +
-        clamp01OrNeutral(features.healthcare_access) * (0.4 + 0.6 * health) * 0.5,
+        clamp01OrNeutral(features.healthcare_access) *
+          (0.4 + 0.6 * Math.max(health, healthUrgency)) *
+          0.5,
     ),
     mobility_flight_fit: round4(
-      clamp01OrNeutral(features.flight_access) * (0.4 + 0.6 * airport),
+      clamp01OrNeutral(features.flight_access) * (0.4 + 0.6 * airport) * 0.8 +
+        clamp01OrNeutral(features.gsm_coverage) * transportPref * 0.2,
     ),
   };
 }

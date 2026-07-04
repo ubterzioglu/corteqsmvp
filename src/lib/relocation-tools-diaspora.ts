@@ -40,6 +40,10 @@ export interface RequesterVector {
   languages: string[];
   targetCountry: string; // upper ISO ('' = yok)
   profession: string; // lower ('' = yok)
+  /** YENİ (+4, 2026-07-01). */
+  topicInterests?: string[];
+  responseTimeExpectation?: string | null;
+  preferredGroupSize?: string | null;
 }
 
 /** Aday üyenin vektörü (diaspora_match_preferences satırı). */
@@ -52,6 +56,11 @@ export interface CandidateVector {
   professionTags: string[];
   trustSignals: string[];
   maxMonthlyIntros: number;
+  /** YENİ (+4, 2026-07-01). */
+  topicInterests?: string[];
+  experienceYearsInTarget?: number | null;
+  preferredGroupSize?: string | null;
+  responseTimeExpectation?: string | null;
 }
 
 function intersectCount(a: string[], b: string[]): number {
@@ -80,18 +89,39 @@ export function computeDiasporaBreakdown(
         ? 0.5
         : 0.3;
 
-  const field =
+  const professionField =
     me.profession !== "" && cand.professionTags.includes(me.profession)
       ? 1.0
       : cand.professionTags.length === 0
         ? 0.5
         : 0.4;
+  const myTopics = me.topicInterests ?? [];
+  const candTopics = cand.topicInterests ?? [];
+  const topicOverlap =
+    myTopics.length === 0 || candTopics.length === 0
+      ? 0.5
+      : Math.min(intersectCount(myTopics, candTopics) / Math.max(Math.min(myTopics.length, candTopics.length), 1), 1.0);
+  const field = clamp01OrNeutral(professionField * 0.7 + topicOverlap * 0.3);
 
-  const langTz = intersectCount(me.languages, cand.languages) > 0 ? 1.0 : 0.3;
+  const langMatch = intersectCount(me.languages, cand.languages) > 0 ? 1.0 : 0.3;
+  const responseMatch =
+    me.responseTimeExpectation != null && cand.responseTimeExpectation === me.responseTimeExpectation
+      ? 1.0
+      : 0.9;
+  const langTz = langMatch * responseMatch;
 
-  const trust = clamp01OrNeutral(Math.min(cand.trustSignals.length / 3, 1));
+  const trustBase = Math.min(cand.trustSignals.length / 3, 1);
+  const experienceBonus = Math.min((cand.experienceYearsInTarget ?? 0) / 5, 1);
+  const trust = clamp01OrNeutral(trustBase * 0.7 + experienceBonus * 0.3);
 
-  const reciprocity = clamp01OrNeutral(0.4 + Math.min(cand.maxMonthlyIntros / 5, 0.6));
+  const reciprocityBase = 0.4 + Math.min(cand.maxMonthlyIntros / 5, 0.6);
+  const groupMismatch =
+    me.preferredGroupSize != null &&
+    me.preferredGroupSize !== "either" &&
+    cand.preferredGroupSize != null &&
+    cand.preferredGroupSize !== "either" &&
+    cand.preferredGroupSize !== me.preferredGroupSize;
+  const reciprocity = clamp01OrNeutral(reciprocityBase * (groupMismatch ? 0.85 : 1.0));
 
   return {
     need_offer_complementarity: round4(clamp01OrNeutral(needOffer)),

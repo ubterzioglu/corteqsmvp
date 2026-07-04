@@ -37,12 +37,29 @@ const maxPrefs: CityPreferences = {
 };
 
 describe("computeCityBreakdown — ideal şehir + maksimum öncelik", () => {
-  it("tüm boyutlar 1.0, skor 100", () => {
+  it("çoğu boyut 1.0; mobility_flight_fit transport tercihi sağlanmazsa 0.9 (nötr katkı)", () => {
     const breakdown = computeCityBreakdown(idealCity, maxPrefs);
+    for (const [key, v] of Object.entries(breakdown)) {
+      if (key === "mobility_flight_fit") {
+        // flight_access(1)*(0.4+0.6*1)*0.8 + gsm(1)*transportPref(nötr 0.5)*0.2 = 0.9
+        expect(v).toBeCloseTo(0.9, 4);
+      } else {
+        expect(v).toBeCloseTo(1.0, 4);
+      }
+    }
+    // Ağırlıklı skor artık tam 100 değil (mobility_flight_fit 0.9 olduğundan) — yüksek kalmalı.
+    expect(computeCityScore(idealCity, maxPrefs)).toBeCloseTo(99.0, 1);
+  });
+
+  it("public_transport_importance de maksimumsa tüm boyutlar 1.0, skor 100", () => {
+    const breakdown = computeCityBreakdown(idealCity, {
+      ...maxPrefs,
+      public_transport_importance: 5,
+    });
     for (const v of Object.values(breakdown)) {
       expect(v).toBeCloseTo(1.0, 4);
     }
-    expect(computeCityScore(idealCity, maxPrefs)).toBe(100);
+    expect(computeCityScore(idealCity, { ...maxPrefs, public_transport_importance: 5 })).toBe(100);
   });
 });
 
@@ -62,9 +79,9 @@ describe("computeCityBreakdown — eksik veri (nötr 0.5)", () => {
     const breakdown = computeCityBreakdown({}, {});
     // budget = (1-0.5)*0.6 + 0.5*0.4 = 0.5
     expect(breakdown.budget_housing_fit).toBeCloseTo(0.5, 4);
-    // lifestyle = gsm nötr 0.5
-    expect(breakdown.lifestyle_fit).toBeCloseTo(0.5, 4);
-    // community = 0.5 * (0.4 + 0.6*0.5) = 0.5 * 0.7 = 0.35
+    // lifestyle = gsm(0.5)*(1-0.2*0.5) + 0.2*0.5 (nötr greenPref) = 0.55
+    expect(breakdown.lifestyle_fit).toBeCloseTo(0.55, 4);
+    // community = 0.5 * (0.4 + 0.6*0.5) * 1.0 (expatMultiplier, tercih yok) = 0.35
     expect(breakdown.community_fit).toBeCloseTo(0.35, 4);
   });
 });

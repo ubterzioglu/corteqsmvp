@@ -58,6 +58,11 @@ export interface JobProbAnswers {
   work_authorization?: string;
   network?: string;
   applications?: number;
+  /** YENİ (+4, 2026-07-01). */
+  linkedin_profile_quality?: number;
+  industry_specific_certifications?: string[];
+  salary_research_done?: string;
+  local_recruiter_contact?: string;
 }
 
 function scale5(value: number | undefined): number {
@@ -104,8 +109,26 @@ export function computeJobProbBreakdown(
   const interviewScore =
     answers.interviews === "multiple" ? 1.0 : answers.interviews === "one" ? 0.6 : 0.2;
   const apps = answers.applications ?? 0;
+  const salaryResearchScore =
+    answers.salary_research_done === "thorough"
+      ? 1.0
+      : answers.salary_research_done === "basic"
+        ? 0.5
+        : 0.2;
+  const linkedinQuality = scale5(answers.linkedin_profile_quality);
+  const industryCerts = answers.industry_specific_certifications ?? [];
+  const industryCertScore =
+    industryCerts.length === 0 || (industryCerts.length === 1 && industryCerts[0] === "none")
+      ? 0.5
+      : Math.min(industryCerts.length / 2, 1.0);
+  const recruiterScore =
+    answers.local_recruiter_contact === "yes"
+      ? 1.0
+      : answers.local_recruiter_contact === "in_progress"
+        ? 0.5
+        : 0.0;
 
-  const credential =
+  const credentialBase =
     answers.regulated_profession === "no"
       ? 0.9
       : answers.credential_status === "recognized"
@@ -118,6 +141,7 @@ export function computeJobProbBreakdown(
                 (answers.credential_status === "none" || answers.credential_status === undefined)
               ? 0.25
               : 0.5;
+  const credential = credentialBase * 0.85 + industryCertScore * 0.15;
 
   const workAuth =
     answers.work_authorization === "authorized"
@@ -133,19 +157,22 @@ export function computeJobProbBreakdown(
     language_fit: round4(clamp01OrNeutral(langWork * 0.65 + langEn * 0.35)),
     experience_signal: round4(
       clamp01OrNeutral(
-        Math.min(years / 10, 1) * 0.4 +
-          seniorityScore * 0.3 +
+        Math.min(years / 10, 1) * 0.35 +
+          seniorityScore * 0.25 +
           portfolioScore * 0.15 +
-          interviewScore * 0.15,
+          interviewScore * 0.15 +
+          salaryResearchScore * 0.1,
       ),
     ),
     credential_fit: round4(credential),
     work_authorization_fit: round4(workAuth),
     network_activity_fit: round4(
       clamp01OrNeutral(
-        (answers.network === "strong" ? 1.0 : answers.network === "weak" ? 0.5 : 0.2) * 0.5 +
-          Math.min(apps / 20, 1) * 0.3 +
-          interviewScore * 0.2,
+        (answers.network === "strong" ? 1.0 : answers.network === "weak" ? 0.5 : 0.2) * 0.35 +
+          Math.min(apps / 20, 1) * 0.2 +
+          interviewScore * 0.15 +
+          linkedinQuality * 0.15 +
+          recruiterScore * 0.15,
       ),
     ),
   };

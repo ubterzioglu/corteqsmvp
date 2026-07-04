@@ -55,9 +55,18 @@ describe("budget_fit — bütçe yoksa nötr 0.5", () => {
     const b = computeCountryBreakdown({ cost_index: 0 }, {});
     expect(b.budget_fit).toBe(0.5);
   });
-  it("bütçe varsa ucuz ülke yüksek budget_fit", () => {
+  it("bütçe varsa ucuz ülke yüksek budget_fit (tax_burden_tolerance nötr 0.5)", () => {
     const b = computeCountryBreakdown({ cost_index: 0.2 }, { monthly_budget: 1500 });
-    expect(b.budget_fit).toBeCloseTo(0.8, 4);
+    // (1 - 0.2) * 0.85 + 0.5 (nötr tax_burden_tolerance) * 0.15 = 0.755
+    expect(b.budget_fit).toBeCloseTo(0.755, 4);
+  });
+  it("tax_burden_tolerance yüksekse budget_fit artar", () => {
+    const b = computeCountryBreakdown(
+      { cost_index: 0.2 },
+      { monthly_budget: 1500, tax_burden_tolerance: 5 },
+    );
+    // (1 - 0.2) * 0.85 + 1.0 * 0.15 = 0.83
+    expect(b.budget_fit).toBeCloseTo(0.83, 4);
   });
 });
 

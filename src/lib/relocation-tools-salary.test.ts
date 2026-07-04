@@ -40,10 +40,23 @@ describe("computeSalaryBreakdown — boyut türetme", () => {
     const b = computeSalaryBreakdown(row, globalMax, "no");
     expect(b.salary_level).toBeCloseTo(72000 / 110000, 4);
   });
-  it("demand_fit = demand_index, tax_social_fit = net_ratio", () => {
+  it("demand_fit/tax_social_fit ek sinyaller sağlanmazsa nötr (0.5) katkıyla hesaplanır", () => {
     const b = computeSalaryBreakdown(row, globalMax, "no");
-    expect(b.demand_fit).toBeCloseTo(0.9, 4);
-    expect(b.tax_social_fit).toBeCloseTo(0.62, 4);
+    // demand_fit = 0.9*0.8 + 0.5(nötr negotiation)*0.1 + 0.5(nötr interviewReady)*0.1 = 0.82
+    expect(b.demand_fit).toBeCloseTo(0.82, 4);
+    // tax_social_fit = 0.62*0.75 + 0.5(nötr benefits)*0.25 = 0.59
+    expect(b.tax_social_fit).toBeCloseTo(0.59, 4);
+  });
+  it("negotiation/interview/benefits sağlanınca demand_fit ve tax_social_fit artar", () => {
+    const b = computeSalaryBreakdown(row, globalMax, "no", {
+      negotiation_experience: 5,
+      interview_readiness: 5,
+      benefits_priority: ["health_insurance", "pension", "bonus"],
+    });
+    // demand_fit = 0.9*0.8 + 1.0*0.1 + 1.0*0.1 = 0.92
+    expect(b.demand_fit).toBeCloseTo(0.92, 4);
+    // tax_social_fit = 0.62*0.75 + 1.0*0.25 = 0.715
+    expect(b.tax_social_fit).toBeCloseTo(0.715, 4);
   });
   it("cost_adjusted = (median*net_ratio/globalMax)/(0.4+cost)", () => {
     const b = computeSalaryBreakdown(row, globalMax, "no");

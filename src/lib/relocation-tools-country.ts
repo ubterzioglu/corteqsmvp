@@ -68,6 +68,9 @@ export interface CountryPreferences {
   climate_preference?: string;
   visa_assets?: string[];
   deal_breakers?: string[];
+  /** YENİ (+2, 2026-07-01): tax_burden_tolerance/remote_work_flexibility eksikse nötr 0.5. */
+  tax_burden_tolerance?: number;
+  remote_work_flexibility?: number;
 }
 
 function pref01(value: number | undefined): number {
@@ -92,10 +95,16 @@ function rawBreakdown(
   const inclusion = pref01(prefs.inclusion_priority);
   const climate = prefs.climate_preference;
   const tags = m.climate_tags ?? [];
+  const taxTolerance = pref01(prefs.tax_burden_tolerance);
+  const remotePref = pref01(prefs.remote_work_flexibility);
 
   return {
-    budget_fit: hasBudget ? clamp01OrNeutral(1 - (m.cost_index ?? 0.5)) : 0.5,
-    career_market_fit: clamp01OrNeutral(m.employment_index),
+    budget_fit: hasBudget
+      ? clamp01OrNeutral((1 - (m.cost_index ?? 0.5)) * 0.85 + taxTolerance * 0.15)
+      : 0.5,
+    career_market_fit: clamp01OrNeutral(
+      (m.employment_index ?? 0.5) * 0.9 + remotePref * 0.1,
+    ),
     visa_path_fit: clamp01OrNeutral(
       (1 - (m.visa_complexity ?? 0.5)) * (hasVisaAsset ? 1.0 : 0.85),
     ),

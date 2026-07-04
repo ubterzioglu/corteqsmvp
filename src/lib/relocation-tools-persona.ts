@@ -25,6 +25,16 @@ export interface PersonaAnswers {
   career_focus?: number;
   family_rhythm?: number;
   city_vs_nature?: number;
+  /** YENİ (+10, 2026-07-01): eksikse nötr 0.5. */
+  travel_frequency?: number;
+  remote_vs_office_pref?: number;
+  cuisine_openness?: number;
+  outdoor_activity_level?: number;
+  financial_risk_comfort?: number;
+  long_term_settle_intent?: number;
+  hobby_social_mix?: number;
+  pace_of_life_pref?: number;
+  cultural_curiosity?: number;
 }
 
 /** scale 1..5 → 0..1; eksik → nötr 0.5 (SQL (v-1)/4 + clamp_neutral aynası). */
@@ -62,30 +72,45 @@ export function computePersonaScores(answers: PersonaAnswers): Record<PersonaKey
   const family = scale01(answers.family_rhythm);
   const city = scale01(answers.city_vs_nature);
   const w = answers.weekend_style;
+  const travel = scale01(answers.travel_frequency);
+  const remotePref = scale01(answers.remote_vs_office_pref);
+  const cuisine = scale01(answers.cuisine_openness);
+  const outdoor = scale01(answers.outdoor_activity_level);
+  const finRisk = scale01(answers.financial_risk_comfort);
+  const settle = scale01(answers.long_term_settle_intent);
+  const hobbySocial = scale01(answers.hobby_social_mix);
+  const pace = scale01(answers.pace_of_life_pref);
+  const cultureCuriosity = scale01(answers.cultural_curiosity);
 
   const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
 
   return {
     global_networker: round4(
-      social * 0.4 + career * 0.3 + city * 0.3 + weekendBonus(w, "global_networker"),
+      social * 0.3 + career * 0.2 + city * 0.2 + pace * 0.15 + hobbySocial * 0.1 +
+        weekendBonus(w, "global_networker"),
     ),
     quiet_local: round4(
-      (1 - social) * 0.35 + (1 - city) * 0.3 + (1 - plan) * 0.2 + (1 - comfort) * 0.15 +
+      (1 - social) * 0.25 + (1 - city) * 0.2 + (1 - plan) * 0.15 + (1 - comfort) * 0.1 +
+        (1 - pace) * 0.15 + (1 - hobbySocial) * 0.1 +
         weekendBonus(w, "quiet_local"),
     ),
     adventure_seeker: round4(
-      plan * 0.35 + comfort * 0.35 + (1 - city) * 0.15 + lang * 0.15 +
+      plan * 0.25 + comfort * 0.25 + (1 - city) * 0.1 + lang * 0.1 +
+        travel * 0.1 + outdoor * 0.1 + cuisine * 0.05 + cultureCuriosity * 0.05 +
         weekendBonus(w, "adventure_seeker"),
     ),
     family_planner: round4(
-      family * 0.45 + (1 - comfort) * 0.2 + (1 - plan) * 0.2 + (1 - social) * 0.15 +
+      family * 0.35 + (1 - comfort) * 0.15 + (1 - plan) * 0.15 + (1 - social) * 0.1 +
+        settle * 0.15 + (1 - finRisk) * 0.1 +
         weekendBonus(w, "family_planner"),
     ),
     career_builder: round4(
-      career * 0.45 + city * 0.3 + social * 0.25 + weekendBonus(w, "career_builder"),
+      career * 0.3 + city * 0.2 + social * 0.15 + finRisk * 0.1 + remotePref * 0.1 + pace * 0.05 +
+        weekendBonus(w, "career_builder"),
     ),
     community_anchor: round4(
-      comm * 0.5 + lang * 0.25 + social * 0.25 + weekendBonus(w, "community_anchor"),
+      comm * 0.35 + lang * 0.2 + social * 0.15 + cultureCuriosity * 0.15 + settle * 0.05 +
+        weekendBonus(w, "community_anchor"),
     ),
   };
 }

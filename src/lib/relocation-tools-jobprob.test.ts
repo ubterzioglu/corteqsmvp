@@ -58,16 +58,31 @@ describe("computeJobProbBreakdown — net güçlü profil", () => {
   });
 });
 
-describe("credential_fit — regulated mantığı", () => {
-  it("regulated=no → 0.9; regulated=yes & none → 0.25; in_progress → 0.55", () => {
-    expect(computeJobProbBreakdown({ regulated_profession: "no" }, null).credential_fit).toBe(0.9);
+describe("credential_fit — regulated mantığı (industry_specific_certifications nötr 0.5 katkısıyla)", () => {
+  it("regulated=no → base 0.9 * 0.85 + 0.5(nötr sertifika) * 0.15 = 0.84", () => {
+    expect(computeJobProbBreakdown({ regulated_profession: "no" }, null).credential_fit).toBeCloseTo(
+      0.84,
+      4,
+    );
+  });
+  it("regulated=yes & none → base 0.25 * 0.85 + 0.5 * 0.15 = 0.2875", () => {
     expect(
       computeJobProbBreakdown({ regulated_profession: "yes", credential_status: "none" }, null)
         .credential_fit,
-    ).toBe(0.25);
+    ).toBeCloseTo(0.2875, 4);
+  });
+  it("in_progress → base 0.55 * 0.85 + 0.5 * 0.15 = 0.5425", () => {
     expect(
       computeJobProbBreakdown({ credential_status: "in_progress" }, null).credential_fit,
-    ).toBe(0.55);
+    ).toBeCloseTo(0.5425, 4);
+  });
+  it("sektöre özel sertifika sayısı arttıkça credential_fit artar", () => {
+    const withCerts = computeJobProbBreakdown(
+      { regulated_profession: "no", industry_specific_certifications: ["technical_cert", "language_cert"] },
+      null,
+    );
+    const noCerts = computeJobProbBreakdown({ regulated_profession: "no" }, null);
+    expect(withCerts.credential_fit).toBeGreaterThan(noCerts.credential_fit);
   });
 });
 

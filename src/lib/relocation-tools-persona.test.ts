@@ -11,13 +11,12 @@ import {
 describe("computePersonaScores — eksik veri (nötr fallback)", () => {
   it("hiç cevap yoksa tüm scale 0.5 nötr alınır", () => {
     const scores = computePersonaScores({});
-    // social=plan=...=0.5, weekend bonusu yok.
-    // global = 0.5*0.4 + 0.5*0.3 + 0.5*0.3 = 0.5
-    expect(scores.global_networker).toBeCloseTo(0.5, 4);
-    // quiet = 0.5*0.35 + 0.5*0.3 + 0.5*0.2 + 0.5*0.15 = 0.5
-    expect(scores.quiet_local).toBeCloseTo(0.5, 4);
-    // community = 0.5*0.5 + 0.5*0.25 + 0.5*0.25 = 0.5
-    expect(scores.community_anchor).toBeCloseTo(0.5, 4);
+    // global = 0.5*0.3 + 0.5*0.2 + 0.5*0.2 + 0.5*0.15 + 0.5*0.1 = 0.475
+    expect(scores.global_networker).toBeCloseTo(0.475, 4);
+    // quiet = 0.5*0.25 + 0.5*0.2 + 0.5*0.15 + 0.5*0.1 + 0.5*0.15 + 0.5*0.1 = 0.475
+    expect(scores.quiet_local).toBeCloseTo(0.475, 4);
+    // community = 0.5*0.35 + 0.5*0.2 + 0.5*0.15 + 0.5*0.15 + 0.5*0.05 = 0.45
+    expect(scores.community_anchor).toBeCloseTo(0.45, 4);
   });
 });
 
@@ -37,8 +36,8 @@ describe("computePersonaScores — net persona sinyalleri", () => {
     const scores = computePersonaScores(answers);
     const { topKey } = resolvePersona(scores);
     expect(["global_networker", "career_builder"]).toContain(topKey);
-    // global = 1*0.4 + 1*0.3 + 1*0.3 + 0.15 = 1.15
-    expect(scores.global_networker).toBeCloseTo(1.15, 4);
+    // global = 1*0.3 + 1*0.2 + 1*0.2 + 0.5(nötr pace)*0.15 + 0.5(nötr hobbySocial)*0.1 + 0.15 = 0.975
+    expect(scores.global_networker).toBeCloseTo(0.975, 4);
   });
 
   it("yüksek aile + düşük konfor/spontanlık → family_planner", () => {
@@ -50,8 +49,8 @@ describe("computePersonaScores — net persona sinyalleri", () => {
       social_energy: 1,
     };
     const scores = computePersonaScores(answers);
-    // family = 1*0.45 + 1*0.2 + 1*0.2 + 1*0.15 + 0.15 = 1.15
-    expect(scores.family_planner).toBeCloseTo(1.15, 4);
+    // family = 1*0.35 + 1*0.15 + 1*0.15 + 1*0.1 + 0.5(nötr settle)*0.15 + 0.5(nötr finRisk)*0.1 + 0.15 = 1.025
+    expect(scores.family_planner).toBeCloseTo(1.025, 4);
     expect(resolvePersona(scores).topKey).toBe("family_planner");
   });
 
@@ -61,8 +60,8 @@ describe("computePersonaScores — net persona sinyalleri", () => {
       local_language: 5,
       social_energy: 3,
     });
-    // community = 1*0.5 + 1*0.25 + 0.5*0.25 = 0.875
-    expect(scores.community_anchor).toBeCloseTo(0.875, 4);
+    // community = 1*0.35 + 1*0.2 + 0.5*0.15 + 0.5(nötr cultureCuriosity)*0.15 + 0.5(nötr settle)*0.05 = 0.725
+    expect(scores.community_anchor).toBeCloseTo(0.725, 4);
     expect(resolvePersona(scores).topKey).toBe("community_anchor");
   });
 
@@ -74,8 +73,9 @@ describe("computePersonaScores — net persona sinyalleri", () => {
       city_vs_nature: 1,
       local_language: 5,
     });
-    // adventure = 1*0.35 + 1*0.35 + 1*0.15 + 1*0.15 + 0.15 = 1.15
-    expect(scores.adventure_seeker).toBeCloseTo(1.15, 4);
+    // adventure = 1*0.25 + 1*0.25 + 1*0.1 + 1*0.1 + 0.5(nötr travel)*0.1 + 0.5(nötr outdoor)*0.1
+    //   + 0.5(nötr cuisine)*0.05 + 0.5(nötr cultureCuriosity)*0.05 + 0.15 = 1.0
+    expect(scores.adventure_seeker).toBeCloseTo(1.0, 4);
     expect(resolvePersona(scores).topKey).toBe("adventure_seeker");
   });
 });
@@ -110,7 +110,10 @@ describe("computePersonaScores — uç değerler kırpılır", () => {
   it("aralık dışı scale değerleri 0..1'e kırpılır (clamp_neutral)", () => {
     // social_energy = 9 → (9-1)/4 = 2 → kırp 1
     const scores = computePersonaScores({ social_energy: 9 });
-    // global'de social katkısı 1*0.4; diğerleri nötr 0.5
-    expect(scores.global_networker).toBeCloseTo(1 * 0.4 + 0.5 * 0.3 + 0.5 * 0.3, 4);
+    // global'de social katkısı 1*0.3; career/city/pace/hobbySocial nötr 0.5
+    expect(scores.global_networker).toBeCloseTo(
+      1 * 0.3 + 0.5 * 0.2 + 0.5 * 0.2 + 0.5 * 0.15 + 0.5 * 0.1,
+      4,
+    );
   });
 });

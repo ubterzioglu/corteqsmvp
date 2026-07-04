@@ -70,27 +70,42 @@ describe("geo / field / language boyutları", () => {
   it("aynı hedef ülke → geo 1.0", () => {
     expect(computeDiasporaBreakdown(me, baseCand).geo_proximity).toBe(1.0);
   });
-  it("aynı meslek → field 1.0", () => {
-    expect(computeDiasporaBreakdown(me, baseCand).field_overlap).toBe(1.0);
+  it("aynı meslek, konu ilgisi yoksa (nötr 0.5) → field 0.85", () => {
+    // field = professionField(1.0)*0.7 + topicOverlap(nötr 0.5, ikisinde de topicInterests yok)*0.3 = 0.85
+    expect(computeDiasporaBreakdown(me, baseCand).field_overlap).toBeCloseTo(0.85, 4);
   });
-  it("ortak dil → language_timezone_fit 1.0; ortak yoksa 0.3", () => {
-    expect(computeDiasporaBreakdown(me, baseCand).language_timezone_fit).toBe(1.0);
+  it("ortak dil, response_time verilmezse → language_timezone_fit 0.9 (0.9 çarpanı); ortak yoksa 0.27", () => {
+    // langMatch(1.0) * responseMatch(0.9, responseTimeExpectation verilmedi) = 0.9
+    expect(computeDiasporaBreakdown(me, baseCand).language_timezone_fit).toBeCloseTo(0.9, 4);
     const noLang = { ...baseCand, languages: ["fr"] };
-    expect(computeDiasporaBreakdown(me, noLang).language_timezone_fit).toBe(0.3);
+    // langMatch(0.3) * responseMatch(0.9) = 0.27
+    expect(computeDiasporaBreakdown(me, noLang).language_timezone_fit).toBeCloseTo(0.27, 4);
   });
 });
 
 describe("trust + reciprocity", () => {
-  it("3 trust sinyali → 1.0; reciprocity max_intros ile artar", () => {
+  it("3 trust sinyali + tecrübe yılı yoksa → 0.7; reciprocity max_intros ile artar", () => {
     const cand: CandidateVector = {
       needs: [], offers: [], languages: ["tr"], targetCountryCodes: [],
       professionTags: [], trustSignals: ["completed_profile", "catalog_claim", "phone_verified"],
       maxMonthlyIntros: 5,
     };
     const b = computeDiasporaBreakdown(me, cand);
-    expect(b.trust_profile_completeness).toBe(1.0);
-    // reciprocity = 0.4 + min(5/5,0.6) = 0.4 + 0.6 = 1.0
+    // trust = trustBase(1.0)*0.7 + experienceBonus(0, tecrübe yılı yok)*0.3 = 0.7
+    expect(b.trust_profile_completeness).toBeCloseTo(0.7, 4);
+    // reciprocity = 0.4 + min(5/5,0.6) = 1.0 (preferredGroupSize mismatch yok)
     expect(b.reciprocity_recent_activity).toBe(1.0);
+  });
+
+  it("tecrübe yılı verilirse trust_profile_completeness artar", () => {
+    const cand: CandidateVector = {
+      needs: [], offers: [], languages: ["tr"], targetCountryCodes: [],
+      professionTags: [], trustSignals: ["completed_profile", "catalog_claim", "phone_verified"],
+      maxMonthlyIntros: 5,
+      experienceYearsInTarget: 5,
+    };
+    // trust = 1.0*0.7 + min(5/5,1)*0.3 = 1.0
+    expect(computeDiasporaBreakdown(me, cand).trust_profile_completeness).toBeCloseTo(1.0, 4);
   });
 });
 

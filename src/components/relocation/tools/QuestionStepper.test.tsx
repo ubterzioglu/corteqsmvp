@@ -50,7 +50,6 @@ describe("QuestionStepper", () => {
     render(
       <QuestionStepper
         questions={[q("q1", "single", 1), q("q2", "scale", 2)]}
-        mode="quick"
         onComplete={onComplete}
       />,
     );
@@ -79,7 +78,6 @@ describe("QuestionStepper", () => {
     render(
       <QuestionStepper
         questions={[q("only", "single", 1)]}
-        mode="quick"
         onComplete={onComplete}
       />,
     );
@@ -98,7 +96,6 @@ describe("QuestionStepper", () => {
     render(
       <QuestionStepper
         questions={[q("q1", "scale", 1), q("q2", "scale", 2)]}
-        mode="quick"
         onComplete={vi.fn()}
       />,
     );
@@ -115,7 +112,6 @@ describe("QuestionStepper", () => {
     render(
       <QuestionStepper
         questions={[q("q1", "single", 1), q("q2", "single", 2), q("q3", "scale", 3)]}
-        mode="quick"
         onComplete={vi.fn()}
       />,
     );
@@ -144,7 +140,6 @@ describe("QuestionStepper", () => {
     const { container } = render(
       <QuestionStepper
         questions={[q("q1", "single", 1), q("q2", "scale", 2)]}
-        mode="quick"
         onComplete={vi.fn()}
       />,
     );

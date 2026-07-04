@@ -30,6 +30,12 @@ export interface CareerAnswers {
   favorite_work?: string[];
   work_environment?: string;
   portfolio_signal?: string;
+  /** YENİ (+5, 2026-07-01): eksikse nötr 0.5. */
+  management_interest?: number;
+  hands_on_certification_openness?: number;
+  client_facing_comfort?: number;
+  structured_vs_flexible?: number;
+  mission_driven_motivation?: number;
 }
 
 /** scale 1..5 → 0..1; eksik → nötr 0.5. */
@@ -56,6 +62,11 @@ export function computeCareerScores(answers: CareerAnswers): Record<CareerPath, 
   const research = scale5(answers.research_interest);
   const hands = scale5(answers.hands_on_interest);
   const people = scale5(answers.people_helping);
+  const management = scale5(answers.management_interest);
+  const certOpenness = scale5(answers.hands_on_certification_openness);
+  const clientFacing = scale5(answers.client_facing_comfort);
+  const flexible = scale5(answers.structured_vs_flexible);
+  const mission = scale5(answers.mission_driven_motivation);
 
   const skills = answers.core_skills ?? [];
   const fav = answers.favorite_work ?? [];
@@ -73,22 +84,39 @@ export function computeCareerScores(answers: CareerAnswers): Record<CareerPath, 
 
   return {
     international_professional: round4(
-      tech * 0.25 + lang * 0.25 + leadership * 0.2 + envIs("corporate") * 0.2 + (1 - risk) * 0.1,
+      tech * 0.2 +
+        lang * 0.2 +
+        leadership * 0.15 +
+        management * 0.1 +
+        envIs("corporate") * 0.2 +
+        (1 - risk) * 0.1 +
+        clientFacing * 0.05,
     ),
     academic_research: round4(
-      research * 0.4 + study * 0.3 + favResearch * 0.15 + envIs("academic") * 0.15,
+      research * 0.35 + study * 0.25 + favResearch * 0.15 + envIs("academic") * 0.15 + certOpenness * 0.1,
     ),
     vocational_practical: round4(
-      hands * 0.4 + favBuilding * 0.2 + study * 0.2 + envIs("field_work") * 0.2,
+      hands * 0.35 + favBuilding * 0.15 + study * 0.15 + envIs("field_work") * 0.15 + certOpenness * 0.2,
     ),
     startup_entrepreneur: round4(
-      risk * 0.3 + entre * 0.35 + salaryPref * 0.15 + envIs("startup") * 0.2,
+      risk * 0.25 +
+        entre * 0.3 +
+        salaryPref * 0.1 +
+        clientFacing * 0.1 +
+        envIs("startup") * 0.15 +
+        flexible * 0.1,
     ),
     remote_global: round4(
-      tech * 0.3 + portfolio * 0.3 + entre * 0.2 + envIs("freelance") * 0.2,
+      tech * 0.25 + portfolio * 0.25 + entre * 0.15 + flexible * 0.2 + envIs("freelance") * 0.15,
     ),
     public_ngo_community: round4(
-      people * 0.35 + favPeople * 0.2 + healthcare * 0.15 + lang * 0.15 + envIs("public") * 0.15,
+      people * 0.25 +
+        favPeople * 0.15 +
+        healthcare * 0.1 +
+        lang * 0.1 +
+        mission * 0.25 +
+        envIs("public") * 0.1 +
+        clientFacing * 0.05,
     ),
   };
 }

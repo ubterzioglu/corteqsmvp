@@ -1,31 +1,24 @@
-// Generic soru adımlayıcı — moda göre soruları teker teker gösterir, cevap toplar,
+// Generic soru adımlayıcı — tüm soruları (mode='both') teker teker gösterir, cevap toplar,
 // sonunda onComplete(answers) çağırır. İlerleme + zorunlu doğrulama. docs/10tool/00 §UX.
+// NOT: Hızlı/detaylı mod ayrımı kaldırıldı — her araç sabit 20 soruluk tek akış kullanır;
+// `mode` prop'u yalnızca oturum RPC çağrısına (session start) geçirilen sabit değer içindir.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { QuestionRenderer } from "@/components/relocation/tools/QuestionRenderer";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
-import type {
-  RelocationToolQuestionRow,
-  ToolAnswerValue,
-  ToolMode,
-} from "@/lib/relocation-tools-types";
+import type { RelocationToolQuestionRow, ToolAnswerValue } from "@/lib/relocation-tools-types";
 
 interface QuestionStepperProps {
   questions: RelocationToolQuestionRow[];
-  mode: ToolMode;
   isSubmitting?: boolean;
+  onAnswerStart?: () => void;
   onComplete: (answers: Record<string, ToolAnswerValue>) => void;
 }
 
-function questionsForMode(
-  questions: RelocationToolQuestionRow[],
-  mode: ToolMode,
-): RelocationToolQuestionRow[] {
-  return [...questions]
-    .filter((q) => q.mode === "both" || q.mode === mode)
-    .sort((a, b) => a.sort_order - b.sort_order);
+function sortedQuestions(questions: RelocationToolQuestionRow[]): RelocationToolQuestionRow[] {
+  return [...questions].sort((a, b) => a.sort_order - b.sort_order);
 }
 
 function isEmpty(value: ToolAnswerValue | undefined): boolean {
@@ -38,11 +31,11 @@ function isEmpty(value: ToolAnswerValue | undefined): boolean {
 
 export function QuestionStepper({
   questions,
-  mode,
   isSubmitting = false,
+  onAnswerStart,
   onComplete,
 }: QuestionStepperProps) {
-  const steps = useMemo(() => questionsForMode(questions, mode), [questions, mode]);
+  const steps = useMemo(() => sortedQuestions(questions), [questions]);
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, ToolAnswerValue>>({});
   const [showError, setShowError] = useState(false);
@@ -69,6 +62,7 @@ export function QuestionStepper({
   const blocked = question.is_required && isEmpty(value);
 
   const setAnswer = (v: ToolAnswerValue) => {
+    onAnswerStart?.();
     setAnswers((prev) => ({ ...prev, [question.question_key]: v }));
     setShowError(false);
     // Tek seçimlik soruda (son soru değilse) şık seçimini kısa süre göster, sonra otomatik ilerle.

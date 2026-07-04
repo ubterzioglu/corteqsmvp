@@ -51,6 +51,11 @@ const OPTION_SCORES: Record<string, Record<string, number>> = {
   support_network: { strong: 1.0, weak: 0.5, none: 0.0 },
   family_alignment: { not_applicable: 1.0, aligned: 1.0, partial: 0.5, conflict: 0.0 },
   emergency_plan: { yes: 1.0, partial: 0.5, no: 0.0 },
+  // YENİ (+5, 2026-07-01)
+  emergency_fund_access: { yes: 1.0, partial: 0.5, no: 0.0 },
+  local_bank_account: { ready: 1.0, researching: 0.5, no: 0.0 },
+  remote_work_transition: { not_applicable: 1.0, yes: 1.0, negotiating: 0.5, no: 0.0 },
+  pet_relocation_plan: { not_applicable: 1.0, ready: 1.0, researching: 0.5, no: 0.0 },
 };
 
 function optScore(questionKey: string, value: string | undefined): number {
@@ -85,6 +90,12 @@ export interface ReadinessAnswers {
   language_level?: number;
   adaptability?: number;
   timeline_realism?: number;
+  /** YENİ (+5, 2026-07-01). */
+  emergency_fund_access?: string;
+  local_bank_account?: string;
+  remote_work_transition?: string;
+  pet_relocation_plan?: string;
+  mental_health_readiness?: number;
 }
 
 const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
@@ -107,14 +118,23 @@ export function computeReadinessBreakdown(
   const lang = langScale(answers.language_level);
   const adapt = scale5(answers.adaptability);
   const timeline = scale5(answers.timeline_realism);
+  const emergencyFund = optScore("emergency_fund_access", answers.emergency_fund_access);
+  const bank = optScore("local_bank_account", answers.local_bank_account);
+  const remoteTransition = optScore("remote_work_transition", answers.remote_work_transition);
+  const pet = optScore("pet_relocation_plan", answers.pet_relocation_plan);
+  const mental = scale5(answers.mental_health_readiness);
 
   return {
-    financial_readiness: round4(savings * 0.6 + debt * 0.4),
-    legal_document_readiness: round4(passport * 0.35 + visa * 0.35 + diploma * 0.3),
+    financial_readiness: round4(savings * 0.5 + debt * 0.3 + emergencyFund * 0.2),
+    legal_document_readiness: round4(
+      passport * 0.3 + visa * 0.3 + diploma * 0.25 + bank * 0.15,
+    ),
     language_readiness: round4(lang),
-    housing_logistics: round4(housing * 0.5 + timeline * 0.3 + family * 0.2),
-    job_income_readiness: round4(job),
-    support_adaptability: round4(support * 0.35 + emergency * 0.2 + health * 0.2 + adapt * 0.25),
+    housing_logistics: round4(housing * 0.45 + timeline * 0.25 + family * 0.15 + pet * 0.15),
+    job_income_readiness: round4(job * 0.75 + remoteTransition * 0.25),
+    support_adaptability: round4(
+      support * 0.3 + emergency * 0.15 + health * 0.15 + adapt * 0.2 + mental * 0.2,
+    ),
   };
 }
 

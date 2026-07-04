@@ -33,6 +33,11 @@ describe("computeReadinessBreakdown — tam hazır", () => {
       language_level: 5,
       adaptability: 5,
       timeline_realism: 5,
+      emergency_fund_access: "yes",
+      local_bank_account: "ready",
+      remote_work_transition: "yes",
+      pet_relocation_plan: "not_applicable",
+      mental_health_readiness: 5,
     };
     const result = computeReadiness(answers);
     expect(result.score100).toBe(100);
@@ -57,6 +62,11 @@ describe("computeReadinessBreakdown — tam hazırlıksız", () => {
       language_level: 0,
       adaptability: 1,
       timeline_realism: 1,
+      emergency_fund_access: "no",
+      local_bank_account: "no",
+      remote_work_transition: "no",
+      pet_relocation_plan: "no",
+      mental_health_readiness: 1,
     };
     const result = computeReadiness(answers);
     expect(result.score100).toBe(0);
@@ -73,10 +83,10 @@ describe("computeReadiness — eksik veri (nötr fallback)", () => {
 });
 
 describe("computeReadinessBreakdown — boyut türetme doğru", () => {
-  it("financial = savings*0.6 + debt*0.4", () => {
-    // savings 3-5 → 0.7; debt scale 3 → 0.5 → 0.7*0.6 + 0.5*0.4 = 0.62
+  it("financial = savings*0.5 + debt*0.3 + emergencyFund(nötr 0.5)*0.2", () => {
+    // savings 3-5 → 0.7; debt scale 3 → 0.5 → 0.7*0.5 + 0.5*0.3 + 0.5*0.2 = 0.6
     const breakdown = computeReadinessBreakdown({ savings_months: "3-5", debt_pressure: 3 });
-    expect(breakdown.financial_readiness).toBeCloseTo(0.62, 4);
+    expect(breakdown.financial_readiness).toBeCloseTo(0.6, 4);
   });
   it("language_level 0..5 → /5 normalize", () => {
     const breakdown = computeReadinessBreakdown({ language_level: 4 });

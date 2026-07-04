@@ -15,12 +15,12 @@ describe("computeChallengeScores — net iş/gelir engeli", () => {
       stressors: ["job", "money"],
       blocked_progress: ["job"],
       urgency: "0-1m", // mult 1.0
-      confidence: 1, // risk 1.0
+      confidence: 1, // risk = (1-0)*0.85 + 0.5(nötr paralysis)*0.1 + 0.5(nötr action)*0.05 = 0.925
       income_state: "not_started", // dependency 1.0
     };
     const scores = computeChallengeScores(answers);
-    // job_income = 0.35 + 0.35 + (1.0*1.0)*0.2 + 1.0*0.1 = 1.0
-    expect(scores.job_income).toBeCloseTo(1.0, 4);
+    // job_income = 0.35 + 0.35 + (1.0*0.925)*0.2 + 1.0*0.1 = 0.985
+    expect(scores.job_income).toBeCloseTo(0.985, 4);
     expect(resolveChallenge(scores).primary).toBe("job_income");
   });
 });
@@ -29,10 +29,9 @@ describe("computeChallengeScores — urgency çarpanları", () => {
   it("uzak takvim (6m+) urgency katkısını düşürür", () => {
     const near = computeChallengeScores({ urgency: "0-1m", confidence: 1 });
     const far = computeChallengeScores({ urgency: "6m+", confidence: 1 });
-    // tüm kategoriler için sadece urgency*risk*0.2 farkı:
-    // near: 1.0*1.0*0.2 = 0.2 ; far: 0.25*1.0*0.2 = 0.05
-    expect(near.language).toBeCloseTo(0.2, 4);
-    expect(far.language).toBeCloseTo(0.05, 4);
+    // risk = 0.925 (yukarıdaki gibi); near: 1.0*0.925*0.2 = 0.185 ; far: 0.25*0.925*0.2 = 0.0463
+    expect(near.language).toBeCloseTo(0.185, 4);
+    expect(far.language).toBeCloseTo(0.0463, 4);
   });
 });
 
@@ -72,6 +71,22 @@ describe("computeChallengeScores — healthcare_family dependency", () => {
       health_family_complexity: ["none"],
     });
     expect(withComplexity.healthcare_family).toBeGreaterThan(onlyNone.healthcare_family);
+  });
+});
+
+describe("computeChallengeScores — YENİ housing/language/finance derinlik sinyalleri", () => {
+  it("housing_state=not_started housing dependency'yi 1.0 yapar", () => {
+    const scores = computeChallengeScores({ housing_state: "not_started" });
+    expect(scores.housing).toBeGreaterThan(computeChallengeScores({}).housing);
+  });
+  it("language_state=stuck language dependency'yi 1.0 yapar", () => {
+    const scores = computeChallengeScores({ language_state: "stuck" });
+    expect(scores.language).toBeGreaterThan(computeChallengeScores({}).language);
+  });
+  it("finance_state=critical + budget_buffer=no finance dependency'yi maksimize eder", () => {
+    const scores = computeChallengeScores({ finance_state: "critical", budget_buffer: "no" });
+    const baseline = computeChallengeScores({});
+    expect(scores.finance).toBeGreaterThan(baseline.finance);
   });
 });
 

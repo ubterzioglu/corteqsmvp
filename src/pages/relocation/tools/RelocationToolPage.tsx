@@ -1,13 +1,15 @@
-// Araç sayfası — /relocation/tools/:toolSlug. Landing → mod seçimi → stepper → sonuç (inline).
+// Araç sayfası — /relocation/tools/:toolSlug. Landing → stepper → sonuç (inline).
 // Login zorunlu (App.tsx RequireAuth). docs/10tool/00 §UX akışı.
 // NOT: Bazı Almanya araçları DB skorlama motoruna uymaz (deterministik hesaplayıcı / karar ağacı /
 // soru havuzu) → germany-standalone-tools registry üzerinden kendi bileşenleriyle render edilir.
+// Mod seçimi (hızlı/detaylı) kaldırıldı — her araç tek modlu sabit 20 sorudan oluşur
+// (relocation_tool_questions.mode = 'both'); session RPC'si şema uyumluluğu için sabit
+// 'detailed' mode değeriyle çağrılır.
 import { Suspense, lazy, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { QuestionStepper } from "@/components/relocation/tools/QuestionStepper";
-import { ToolModeSelector } from "@/components/relocation/tools/ToolModeSelector";
 import { ToolResultView } from "@/components/relocation/tools/ToolResultView";
 import { Button } from "@/components/ui/button";
 import { getToolBySlug, requestDiasporaIntro } from "@/lib/relocation-tools-api";
@@ -16,12 +18,13 @@ import { useRelocationToolSession } from "@/hooks/useRelocationToolSession";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
 import { toolHeroImage } from "@/lib/relocation-tools-images";
 import { getGermanyStandaloneTool } from "@/lib/germany-standalone-tools";
-import type { ToolMode } from "@/lib/relocation-tools-types";
+
+const TOOL_SESSION_MODE = "detailed" as const;
 
 export default function RelocationToolPage() {
   const { toolSlug = "" } = useParams<{ toolSlug: string }>();
   const { toast } = useToast();
-  const [mode, setMode] = useState<ToolMode | null>(null);
+  const [started, setStarted] = useState(false);
 
   // Standalone Almanya aracı mı? Öyleyse session motorunu atla, kendi bileşenini lazy yükle.
   // Hook sırası bozulmasın diye TÜM hook'lar koşulsuz çağrılır; standalone return en sonda.
@@ -76,14 +79,14 @@ export default function RelocationToolPage() {
   }
 
   const resetAll = () => {
-    setMode(null);
+    setStarted(false);
     session.reset();
   };
 
   const result = session.result;
-  // Hero görsel yalnızca karşılama ekranında (mod seçimi öncesi) gösterilir; soru/sonuç akışını sadeleştir.
+  // Hero görsel yalnızca karşılama ekranında (sorular başlamadan önce) gösterilir.
   const heroImage = toolHeroImage(tool.slug);
-  const showHero = !result && mode === null && !!heroImage;
+  const showHero = !result && !started && !!heroImage;
 
   return (
     <div className="container mx-auto max-w-3xl px-4 py-6">
@@ -126,18 +129,12 @@ export default function RelocationToolPage() {
             </Button>
           </div>
         </div>
-      ) : mode === null ? (
-        <ToolModeSelector
-          quickCount={tool.quick_question_count}
-          detailedCount={tool.detailed_question_count}
-          onSelect={setMode}
-        />
       ) : (
         <QuestionStepper
           questions={tool.questions}
-          mode={mode}
           isSubmitting={session.isRunning}
-          onComplete={(answers) => session.run({ mode, answers })}
+          onAnswerStart={() => setStarted(true)}
+          onComplete={(answers) => session.run({ mode: TOOL_SESSION_MODE, answers })}
         />
       )}
     </div>
