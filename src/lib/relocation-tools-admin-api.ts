@@ -3,6 +3,8 @@
 // relocation_tool_questions (motor tabanlı 12 araç) + germany_citizenship_questions
 // (Vatandaşlık Testi) canlı sayılır; Vize Seçimi kod-kaynaklı düğüm sayısı (VIZE_QUESTIONS.length);
 // Maaş Hesaplama/Para Transferi/StepStone sabit form-alanı sayısıdır (bunların "soru" kavramı yok).
+// NOT: Hızlı/normal mod ayrımı kaldırıldı (RelocationToolPage artık tek modlu sabit soru akışı
+// kullanıyor) — panel tek "Toplam Soru" sayısı gösterir.
 
 import { supabase } from "@/integrations/supabase/client";
 import type { RelocationToolRow } from "@/lib/relocation-tools-types";
@@ -19,8 +21,6 @@ export interface ToolQuestionCountRow {
   title_tr: string;
   category: string;
   kind: ToolCountKind;
-  quick_count: number;
-  detailed_count: number;
   total_count: number;
   is_active: boolean;
 }
@@ -37,18 +37,12 @@ const VATANDASLIK_TOOL_KEY = "vatandaslik_testi_almanya";
 
 interface EngineQuestionRow {
   tool_key: string;
-  mode: "quick" | "detailed" | "both";
 }
 
-function countEngineQuestions(
-  rows: EngineQuestionRow[],
-): Record<string, { quick: number; detailed: number; total: number }> {
-  const byTool: Record<string, { quick: number; detailed: number; total: number }> = {};
+function countEngineQuestions(rows: EngineQuestionRow[]): Record<string, number> {
+  const byTool: Record<string, number> = {};
   for (const row of rows) {
-    if (!byTool[row.tool_key]) byTool[row.tool_key] = { quick: 0, detailed: 0, total: 0 };
-    if (row.mode === "quick" || row.mode === "both") byTool[row.tool_key].quick += 1;
-    if (row.mode === "detailed" || row.mode === "both") byTool[row.tool_key].detailed += 1;
-    byTool[row.tool_key].total += 1;
+    byTool[row.tool_key] = (byTool[row.tool_key] ?? 0) + 1;
   }
   return byTool;
 }
@@ -62,7 +56,7 @@ export async function listToolQuestionCounts(): Promise<ToolQuestionCountRow[]> 
 
   const { data: engineQuestions, error: engineError } = await db
     .from("relocation_tool_questions")
-    .select("tool_key, mode")
+    .select("tool_key")
     .eq("is_active", true);
   if (engineError) throw engineError;
 
@@ -83,8 +77,6 @@ export async function listToolQuestionCounts(): Promise<ToolQuestionCountRow[]> 
         title_tr: tool.title_tr,
         category: tool.category,
         kind: "question_bank",
-        quick_count: citizenshipCount,
-        detailed_count: citizenshipCount,
         total_count: citizenshipCount,
         is_active: tool.is_active,
       };
@@ -97,8 +89,6 @@ export async function listToolQuestionCounts(): Promise<ToolQuestionCountRow[]> 
         title_tr: tool.title_tr,
         category: tool.category,
         kind: "decision_tree",
-        quick_count: vizeNodeCount,
-        detailed_count: vizeNodeCount,
         total_count: vizeNodeCount,
         is_active: tool.is_active,
       };
@@ -112,23 +102,18 @@ export async function listToolQuestionCounts(): Promise<ToolQuestionCountRow[]> 
         title_tr: tool.title_tr,
         category: tool.category,
         kind: staticEntry.kind,
-        quick_count: staticEntry.count,
-        detailed_count: staticEntry.count,
         total_count: staticEntry.count,
         is_active: tool.is_active,
       };
     }
 
-    const engine = engineCounts[tool.key] ?? { quick: 0, detailed: 0, total: 0 };
     return {
       key: tool.key,
       slug: tool.slug,
       title_tr: tool.title_tr,
       category: tool.category,
       kind: "question_bank",
-      quick_count: engine.quick,
-      detailed_count: engine.detailed,
-      total_count: engine.total,
+      total_count: engineCounts[tool.key] ?? 0,
       is_active: tool.is_active,
     };
   });

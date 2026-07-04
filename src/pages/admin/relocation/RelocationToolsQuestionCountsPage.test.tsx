@@ -28,8 +28,6 @@ describe("RelocationToolsQuestionCountsPage", () => {
         title_tr: "Ülke Seçimi",
         category: "core",
         kind: "question_bank",
-        quick_count: 12,
-        detailed_count: 20,
         total_count: 20,
         is_active: true,
       },
@@ -39,8 +37,6 @@ describe("RelocationToolsQuestionCountsPage", () => {
         title_tr: "Vatandaşlık Testi (Almanya)",
         category: "germany_tools",
         kind: "question_bank",
-        quick_count: 469,
-        detailed_count: 469,
         total_count: 469,
         is_active: true,
       },
@@ -50,8 +46,6 @@ describe("RelocationToolsQuestionCountsPage", () => {
         title_tr: "Vize Seçimi (Almanya)",
         category: "germany_tools",
         kind: "decision_tree",
-        quick_count: 15,
-        detailed_count: 15,
         total_count: 15,
         is_active: true,
       },
@@ -61,8 +55,6 @@ describe("RelocationToolsQuestionCountsPage", () => {
         title_tr: "Maaş Hesaplama (Almanya)",
         category: "germany_tools",
         kind: "calculator",
-        quick_count: 9,
-        detailed_count: 9,
         total_count: 9,
         is_active: true,
       },
@@ -80,8 +72,8 @@ describe("RelocationToolsQuestionCountsPage", () => {
     expect(screen.getByText("Karar Ağacı")).toBeInTheDocument();
     expect(screen.getByText("Hesaplayıcı")).toBeInTheDocument();
 
-    // Sayılar (Vatandaşlık Testi satırında Hızlı/Normal/Toplam üçü de 469 olduğundan üç hücrede belirir)
-    expect(screen.getAllByText("469").length).toBeGreaterThanOrEqual(1);
+    // Sayılar
+    expect(screen.getByText("469")).toBeInTheDocument();
   });
 
   it("arama kutusu araç adına göre filtreler", async () => {
@@ -92,8 +84,6 @@ describe("RelocationToolsQuestionCountsPage", () => {
         title_tr: "Ülke Seçimi",
         category: "core",
         kind: "question_bank",
-        quick_count: 12,
-        detailed_count: 20,
         total_count: 20,
         is_active: true,
       },
@@ -103,8 +93,6 @@ describe("RelocationToolsQuestionCountsPage", () => {
         title_tr: "Banka Seçimi (Almanya)",
         category: "germany_tools",
         kind: "question_bank",
-        quick_count: 20,
-        detailed_count: 20,
         total_count: 20,
         is_active: true,
       },

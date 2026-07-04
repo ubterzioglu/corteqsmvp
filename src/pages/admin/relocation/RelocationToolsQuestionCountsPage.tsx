@@ -1,5 +1,5 @@
 // src/pages/admin/relocation/RelocationToolsQuestionCountsPage.tsx
-// Admin — hangi relocation aracında kaç soru/düğüm/alan var, hızlı/normal mod kırılımıyla.
+// Admin — hangi relocation aracında kaç soru/düğüm/alan var.
 // Veri canlı DB'den (relocation_tool_questions + germany_citizenship_questions) + kod-kaynaklı
 // standalone sayılardan gelir — bkz. src/lib/relocation-tools-admin-api.ts.
 
@@ -57,7 +57,7 @@ const RelocationToolsQuestionCountsPage = () => {
   return (
     <AdminPageShell
       title="Araç Soru Sayıları"
-      description="Her relocation aracında hızlı/normal modda kaç soru, karar ağacı düğümü veya form alanı olduğunu canlı DB'den gösterir."
+      description="Her relocation aracında kaç soru, karar ağacı düğümü veya form alanı olduğunu canlı DB'den gösterir."
       icon={ListChecks}
       accent="sky"
     >
@@ -85,9 +85,7 @@ const RelocationToolsQuestionCountsPage = () => {
               <TableHead>Araç Adı</TableHead>
               <TableHead>Kategori</TableHead>
               <TableHead>Tip</TableHead>
-              <TableHead className="text-right">Hızlı</TableHead>
-              <TableHead className="text-right">Normal</TableHead>
-              <TableHead className="text-right">Toplam</TableHead>
+              <TableHead className="text-right">Toplam Soru</TableHead>
               <TableHead>Durum</TableHead>
             </TableRow>
           </TableHeader>
@@ -99,8 +97,6 @@ const RelocationToolsQuestionCountsPage = () => {
                 <TableCell>
                   <Badge variant={KIND_BADGE_VARIANT[row.kind]}>{KIND_LABEL[row.kind]}</Badge>
                 </TableCell>
-                <TableCell className="text-right">{row.quick_count}</TableCell>
-                <TableCell className="text-right">{row.detailed_count}</TableCell>
                 <TableCell className="text-right font-semibold">{row.total_count}</TableCell>
                 <TableCell>
                   <Badge variant={row.is_active ? "default" : "secondary"}>

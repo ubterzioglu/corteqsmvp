@@ -19,7 +19,7 @@ function buildQueryResult(data: unknown) {
 }
 
 describe("listToolQuestionCounts", () => {
-  it("motor tabanlı araçları relocation_tool_questions'tan mode bazlı sayar", async () => {
+  it("motor tabanlı araçları relocation_tool_questions'tan toplam soru sayısı olarak sayar", async () => {
     fromMock.mockImplementation((table: string) => {
       if (table === "relocation_tools") {
         return {
@@ -46,10 +46,10 @@ describe("listToolQuestionCounts", () => {
             eq: () =>
               Promise.resolve({
                 data: [
-                  { tool_key: "ulke_secimi", mode: "quick" },
-                  { tool_key: "ulke_secimi", mode: "quick" },
-                  { tool_key: "ulke_secimi", mode: "detailed" },
-                  { tool_key: "ulke_secimi", mode: "both" },
+                  { tool_key: "ulke_secimi" },
+                  { tool_key: "ulke_secimi" },
+                  { tool_key: "ulke_secimi" },
+                  { tool_key: "ulke_secimi" },
                 ],
                 error: null,
               }),
@@ -67,9 +67,6 @@ describe("listToolQuestionCounts", () => {
 
     expect(ulke).toBeDefined();
     expect(ulke?.kind).toBe("question_bank");
-    // quick = 2 "quick" + 1 "both" = 3; detailed = 1 "detailed" + 1 "both" = 2
-    expect(ulke?.quick_count).toBe(3);
-    expect(ulke?.detailed_count).toBe(2);
     expect(ulke?.total_count).toBe(4);
   });
 
@@ -107,8 +104,6 @@ describe("listToolQuestionCounts", () => {
     const maas = rows.find((r) => r.key === "maas_hesaplama_almanya");
 
     expect(maas?.kind).toBe("calculator");
-    expect(maas?.quick_count).toBe(9);
-    expect(maas?.detailed_count).toBe(9);
     expect(maas?.total_count).toBe(9);
   });
 
@@ -152,8 +147,6 @@ describe("listToolQuestionCounts", () => {
     const vatandaslik = rows.find((r) => r.key === "vatandaslik_testi_almanya");
 
     expect(vatandaslik?.kind).toBe("question_bank");
-    expect(vatandaslik?.quick_count).toBe(469);
-    expect(vatandaslik?.detailed_count).toBe(469);
     expect(vatandaslik?.total_count).toBe(469);
   });
 
