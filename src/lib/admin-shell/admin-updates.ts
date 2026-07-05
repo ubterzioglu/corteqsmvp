@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260705-relocation-gorseller-ve-soru-sayilari-paneli",
+    date: "5 Temmuz 2026",
+    title: "Taşınma Araçları'ndaki eksik kart görselleri tamamlandı + admin paneline 'Araç Soru Sayıları' bölümü eklendi",
+    items: [
+      "Taşınma Araçları sayfasında (/relocation/tools) Almanya'ya özel 7 aracın (Banka Seçimi, Sigorta Seçimi, Maaş Hesaplama, Vize Seçimi, Vatandaşlık Testi, Para Transferi, StepStone Maaş Karşılaştırma) kart görseli eksikti — kartlar görselsiz, boş görünüyordu. Diğer 10 aracın stiline uygun (aynı renk paleti ve çizim tarzı) 7 yeni görsel üretilip eklendi; artık sayfadaki 17 kartın tamamında görsel var.",
+      "Admin paneline yeni bir 'Araç Soru Sayıları' bölümü eklendi (Taşınma Veri Toplama grubunda; adres: /admin/relocation-tools/soru-sayilari). Bu sayfa, Taşınma Araçları'ndaki 17 aracın HER BİRİNİN kaç sorudan/adımdan oluştuğunu canlı veritabanından çekip tek bir tabloda gösteriyor: araç adı, kategori, tipi (Soru Bankası / Karar Ağacı / Hesaplayıcı) ve toplam soru sayısı. Arama kutusuyla araç adına veya kategoriye göre filtrelenebiliyor. Amaç: hangi aracın soru içeriğinin daha sonra derinleştirilebileceğini tek bakışta görebilmek.",
+      "Panel geliştirilirken aynı gün üründe yapılan bir başka değişiklik fark edildi: Taşınma Araçları'ndaki Hızlı/Detaylı mod seçimi kaldırılmıştı (bkz. aşağıdaki '20 soru tek mod' kaydı). Panel buna göre güncellendi; artık Hızlı/Normal diye ayrı iki sayı yerine tek bir 'Toplam Soru' sayısı gösteriyor, gerçek ürün davranışıyla birebir uyumlu.",
+      "Teknik tarafta: yeni panel canlı veritabanından üç farklı kaynağı birleştiriyor (ortak soru motoru, Vatandaşlık Testi'nin kendi 469 soruluk havuzu, ve soru kavramı olmayan hesaplayıcı araçlar için sabit alan sayısı) — yeni testler eklendi, tüm proje testleri (979 test) yeşil, 4 ayrı bağımsız kod incelemesinden (review) geçti. Kod deposuna gönderildi ve GitHub'da inceleme (PR #13) açıldı; arayüzün görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     id: "20260705-tasinma-araclari-20-soru-tek-mod",
     date: "5 Temmuz 2026",
     title: "Taşınma Araçları'nda Hızlı/Detaylı mod ayrımı kaldırıldı — 10 araç artık tek akışta sabit 20 soru",
