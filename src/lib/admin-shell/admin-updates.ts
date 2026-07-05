@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260705-tasinma-araclari-20-soru-tek-mod",
+    date: "5 Temmuz 2026",
+    title: "Taşınma Araçları'nda Hızlı/Detaylı mod ayrımı kaldırıldı — 10 araç artık tek akışta sabit 20 soru",
+    items: [
+      "Taşınma Araçları'ndaki (/relocation/tools) 10 genel değerlendirme aracında (Ülke Seçimi, Meslek/Maaş Karşılaştırma, Taşınma Hazırlık Skoru, Şehir Eşleştirme, Diaspora Ağı Eşleştirme, Yurtdışı Kariyer Yolu, Expat Yaşam Tarzı Persona, İlk 90 Gün Planlayıcı, Öncelikli Taşınma Sorunu, İş Bulma Olasılığı) daha önce var olan 'Hızlı / Detaylı' mod seçimi tamamen kaldırıldı. Kullanıcı artık bir araca girince mod seçmeden doğrudan tek, sabit 20 sorudan oluşan akışa düşüyor (Banka Seçimi ve Sigorta Seçimi araçları zaten böyle çalışıyordu, deneyim buna hizalandı).",
+      "Toplam soru sayısı 9 ile 18 arasında değişen 8 araca yeni sorular eklendi (en çok Expat Persona +10 ve Öncelikli Taşınma Sorunu +11 soru aldı) ki hepsi tam 20'ye tamamlansın; yeni sorular her aracın mevcut skorlama mantığına (örn. bütçe uyumu, kariyer/iş piyasası, dil, topluluk gibi boyutlara) ek sinyal olarak bağlandı — skorlama ağırlıkları/temel mantığı değişmedi, sadece daha zengin veriyle besleniyor.",
+      "Diaspora Ağı Eşleştirme aracına 4 yeni soru (hedef ülkede tecrübe yılı, tercih edilen görüşme grup boyutu, ilgi alanları, yanıt hızı beklentisi) eklendiği için eşleşme profili veritabanı tablosuna da bu alanlar eklendi; eşleştirme kalitesi bu yeni sinyallerle biraz daha isabetli hale geldi.",
+      "Teknik tarafta: hem veritabanı tarafındaki 9 aracın soru bankası + skorlama fonksiyonları hem de arayüz tarafındaki önizleme/test kodları güncellendi (106 otomatik test yeşil), veritabanı değişikliği canlıya uygulandı ve doğrulandı (her aracın tam 20 soru içerdiği teyit edildi). Kod deposuna gönderildi; arayüzdeki mod seçim ekranının kalkması için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     id: "20260701-statusreport3006-sade-sutun-yorum",
     date: "1 Temmuz 2026",
     title: "Durum raporu sayfasına (/statusreport3006) Burak için sade açıklama sütunu + her bölüme yorum alanı eklendi",
