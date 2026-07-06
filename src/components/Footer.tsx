@@ -155,6 +155,15 @@ const Footer = () => {
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
               <span>Spindora Tarafından Seosu Yapılmıştır.</span>
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
+              <a
+                href="https://ufuksoynakliyat.com.tr"
+                target="_blank"
+                rel="dofollow noopener noreferrer"
+                className="transition-colors hover:text-primary"
+              >
+                Evden Eve Nakliyat
+              </a>
+              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
               <span>Son güncelleme: 15 Haziran 2026</span>
             </p>
           </div>
