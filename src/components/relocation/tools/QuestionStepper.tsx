@@ -1,5 +1,6 @@
 // Generic soru adımlayıcı — tüm soruları (mode='both') teker teker gösterir, cevap toplar,
-// sonunda onComplete(answers) çağırır. İlerleme + zorunlu doğrulama. docs/10tool/00 §UX.
+// sonunda onComplete(answers) çağırır. Her soru cevaplanmadan ilerlenemez (is_required'dan
+// bağımsız; DB'deki flag yalnız metadata). docs/10tool/00 §UX.
 // NOT: Hızlı/detaylı mod ayrımı kaldırıldı — her araç sabit 20 soruluk tek akış kullanır;
 // `mode` prop'u yalnızca oturum RPC çağrısına (session start) geçirilen sabit değer içindir.
 
@@ -59,7 +60,7 @@ export function QuestionStepper({
   const question = steps[index];
   const isLast = index === steps.length - 1;
   const value = answers[question.question_key];
-  const blocked = question.is_required && isEmpty(value);
+  const blocked = isEmpty(value);
 
   const setAnswer = (v: ToolAnswerValue) => {
     onAnswerStart?.();

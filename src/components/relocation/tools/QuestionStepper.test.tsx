@@ -136,6 +136,64 @@ describe("QuestionStepper", () => {
     expect(screen.getByText("Soru q1")).toBeInTheDocument();
   });
 
+  it("is_required=false soruda bile cevapsız İleri ilerletmez ve uyarı gösterir", () => {
+    const onComplete = vi.fn();
+    render(
+      <QuestionStepper
+        questions={[
+          q("q1", "multi", 1, {
+            is_required: false,
+            options: [
+              { value: "a", label: "Seçenek A" },
+              { value: "b", label: "Seçenek B" },
+            ],
+          }),
+          q("q2", "single", 2),
+        ]}
+        onComplete={onComplete}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("İleri"));
+
+    // Aynı soruda kalır, zorunluluk uyarısı görünür.
+    expect(screen.getByText("Soru q1")).toBeInTheDocument();
+    expect(screen.getByText("Bu soru zorunlu")).toBeInTheDocument();
+    expect(onComplete).not.toHaveBeenCalled();
+
+    // Cevap verilince İleri çalışır.
+    fireEvent.click(screen.getByText("Seçenek A"));
+    fireEvent.click(screen.getByText("İleri"));
+    expect(screen.getByText("Soru q2")).toBeInTheDocument();
+  });
+
+  it("scale sorusunda slider'a dokunulmadan İleri ilerletmez (görünen varsayılan cevap sayılmaz)", () => {
+    render(
+      <QuestionStepper
+        questions={[q("q1", "scale", 1, { is_required: false }), q("q2", "scale", 2)]}
+        onComplete={vi.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("İleri"));
+    expect(screen.getByText("Soru q1")).toBeInTheDocument();
+    expect(screen.getByText("Bu soru zorunlu")).toBeInTheDocument();
+  });
+
+  it("son soruda cevapsız Bitir onComplete'i çağırmaz", () => {
+    const onComplete = vi.fn();
+    render(
+      <QuestionStepper
+        questions={[q("only", "single", 1, { is_required: false })]}
+        onComplete={onComplete}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("Sonucu Gör"));
+    expect(onComplete).not.toHaveBeenCalled();
+    expect(screen.getByText("Bu soru zorunlu")).toBeInTheDocument();
+  });
+
   it("soru içerik kabı sabit min-yükseklik taşır (CLS guard)", () => {
     const { container } = render(
       <QuestionStepper

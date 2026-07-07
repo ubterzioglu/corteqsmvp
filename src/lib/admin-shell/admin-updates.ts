@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260707-tasinma-araclari-sorular-zorunlu",
+    date: "7 Temmuz 2026",
+    title: "Taşınma Araçları'nda artık hiçbir soru cevaplanmadan sonraki soruya geçilemiyor",
+    items: [
+      "Taşınma Araçları'ndaki (/relocation/tools) soru akışlı araçlarda bir boşluk vardı: soruların bir kısmı 'zorunlu' işaretli değildi ve kullanıcı bu soruları hiç cevaplamadan 'İleri' ile geçebiliyordu. Bu da sonuç skorlarının eksik veriyle hesaplanmasına yol açabiliyordu. Artık İSTİSNASIZ her soru cevaplanmadan bir sonraki soruya geçilemiyor; cevapsız 'İleri' denenirse 'Bu soru zorunlu' uyarısı çıkıyor ve akış aynı soruda kalıyor.",
+      "Kural her soru tipinde geçerli: tek seçim ve çoklu seçimde en az bir şık, sayı/metin sorularında boş olmayan bir değer, onay sorusunda kutunun işaretlenmesi gerekiyor. Kaydırmalı (1-5 ölçek) sorularda ekranda ortada duran varsayılan değer cevap SAYILMIYOR — kullanıcının kaydırıcıya bilinçli olarak dokunması gerekiyor.",
+      "Almanya'ya özel araçlarda değişiklik gerekmedi: Vatandaşlık Testi ve Vize Seçimi zaten cevapsız ilerletmiyordu; Maaş Hesaplama, Para Transferi ve StepStone Karşılaştırma ise soru akışı değil hesaplayıcı/form olduğu için kapsam dışı.",
+      "Teknik tarafta: değişiklik ortak soru motorunda (QuestionStepper) tek noktadan yapıldı, veritabanına dokunulmadı — yani gelecekte eklenecek yeni araçlar da otomatik olarak bu kurala tabi. Yeni otomatik testler eklendi. Kullanıcının davranışı görmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     id: "20260705-relocation-gorseller-ve-soru-sayilari-paneli",
     date: "5 Temmuz 2026",
     title: "Taşınma Araçları'ndaki eksik kart görselleri tamamlandı + admin paneline 'Araç Soru Sayıları' bölümü eklendi",
