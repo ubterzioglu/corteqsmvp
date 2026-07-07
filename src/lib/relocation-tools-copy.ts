@@ -20,12 +20,12 @@ export const CTA_TARGETS: Record<string, ToolCta> = {
   view_relocation_plan: { key: "view_relocation_plan", label: "Taşınma Planın", href: "/relocation" },
   open_service_finder: { key: "open_service_finder", label: "Hizmet Bulucu", href: "/relocation" },
   find_mentor: { key: "find_mentor", label: "Mentor Bul", href: "/directory" },
-  start_related_tool: { key: "start_related_tool", label: "İlgili Aracı Başlat", href: "/relocation/tools" },
+  start_related_tool: { key: "start_related_tool", label: "İlgili Aracı Başlat", href: "/tools" },
 };
 
 /** Bir CTA key'ini (opsiyonel override href ile) tam ToolCta'ya çevirir. */
 export function resolveCta(key: string, overrideHref?: string): ToolCta {
-  const base = CTA_TARGETS[key] ?? { key, label: key, href: "/relocation/tools" };
+  const base = CTA_TARGETS[key] ?? { key, label: key, href: "/tools" };
   return overrideHref ? { ...base, href: overrideHref } : base;
 }
 

@@ -12,7 +12,7 @@ export function ToolLandingCard({ tool }: ToolLandingCardProps) {
   const heroImage = toolHeroImage(tool.slug);
 
   return (
-    <Link to={`/relocation/tools/${tool.slug}`}>
+    <Link to={`/tools/${tool.slug}`}>
       <Card className="h-full overflow-hidden transition-colors hover:border-primary">
         {heroImage && (
           <img

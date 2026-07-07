@@ -161,7 +161,7 @@ const App = () => (
                     }
                   />
                   <Route
-                    path="/relocation/tools"
+                    path="/tools"
                     element={
                       <RequireAuth>
                         <RelocationToolsHubPage />
@@ -169,7 +169,7 @@ const App = () => (
                     }
                   />
                   <Route
-                    path="/relocation/tools/:toolSlug"
+                    path="/tools/:toolSlug"
                     element={
                       <RequireAuth>
                         <RelocationToolPage />
@@ -177,7 +177,7 @@ const App = () => (
                     }
                   />
                   <Route
-                    path="/relocation/tools/:toolSlug/session/:sessionId"
+                    path="/tools/:toolSlug/session/:sessionId"
                     element={
                       <RequireAuth>
                         <RelocationToolPage />
@@ -185,7 +185,7 @@ const App = () => (
                     }
                   />
                   <Route
-                    path="/relocation/tools/:toolSlug/result/:resultId"
+                    path="/tools/:toolSlug/result/:resultId"
                     element={
                       <RequireAuth>
                         <RelocationToolResultPage />
