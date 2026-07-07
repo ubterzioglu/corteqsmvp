@@ -31,6 +31,7 @@ const BusinessInformationPage = lazy(() => import("./pages/BusinessInformationPa
 const RefundCancellationPolicy = lazy(() => import("./pages/RefundCancellationPolicy.tsx"));
 const ServiceDeliveryPolicy = lazy(() => import("./pages/ServiceDeliveryPolicy.tsx"));
 const ContactPage = lazy(() => import("./pages/ContactPage.tsx"));
+const FeedbackPage = lazy(() => import("./pages/FeedbackPage.tsx"));
 const Pricing = lazy(() => import("./pages/Pricing.tsx"));
 const Career = lazy(() => import("./pages/Career.tsx"));
 const DiasporaDetailPage = lazy(() => import("./pages/DiasporaDetailPage.tsx"));
@@ -143,6 +144,14 @@ const App = () => (
                     }
                   />
                   <Route path="/anket" element={<SurveysPage />} />
+                  <Route
+                    path="/feedback"
+                    element={
+                      <RequireAuth>
+                        <FeedbackPage />
+                      </RequireAuth>
+                    }
+                  />
                   <Route path="/anket/tesekkurler" element={<SurveyThankYouPage />} />
                   <Route path="/anket/:slug" element={<SurveyDetailPage />} />
                   <Route path="/aiform" element={<Navigate to="/login" replace />} />

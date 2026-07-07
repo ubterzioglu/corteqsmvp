@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260707-uye-geri-bildirim-sistemi",
+    date: "7 Temmuz 2026",
+    title: "Üye geri bildirim sistemi eklendi: sitede 'Feedback Ver' butonu + /admin/feedback yönetim sayfası",
+    items: [
+      "Giriş yapmış her üye artık sitenin üst barında (Profilim'in yanında) 'Feedback Ver' linkini görüyor. Tıklayınca /feedback sayfasındaki basit forma gidiyor: tek bir metin kutusuna hata bildirimi, öneri veya genel görüşünü yazıp gönderiyor. Gönderim sonrası teşekkür ekranı çıkıyor ve üye kaldığı sayfaya dönebiliyor. Üyenin hangi sayfadan geldiği de kayda otomatik işleniyor (geri bildirimin bağlamını görmek için).",
+      "Admin paneline yeni 'Üye Geri Bildirimleri' sayfası eklendi (/admin/feedback; menüde Revizyon İstekleri'nin yanında). Gelen her geri bildirim gönderen üyenin e-postası, tarihi ve geldiği sayfayla listeleniyor; durum üç aşamalı yönetiliyor (Yeni / Okundu / Arşiv) ve istenmeyen kayıt listeden kaldırılabiliyor. Tüm adminler aynı listeyi ortak görüyor.",
+      "Gizlilik ve güvenlik: geri bildirimleri YALNIZ adminler okuyabiliyor — üyeler birbirinin geri bildirimini göremez (veritabanı seviyesinde kural/RLS). Form giriş gerektiriyor; anonim gönderim yok. Silme işlemi kalıcı silme değil, 'gizle' (soft-delete) — kayıt veritabanında durur, gerekirse geri getirilebilir.",
+      "Teknik tarafta: yeni member_feedback tablosu + RLS politikaları tek migration'da; API katmanı 14 yeni otomatik testle korunuyor; tüm proje testleri yeşil. Butonun ve sayfaların görünmesi için bir sonraki yayın (deploy) gerekiyor; veritabanı değişikliğinin canlıya uygulanması ayrı bir onay adımı olarak bekliyor.",
+    ],
+  },
+  {
     id: "20260707-tasinma-araclari-sorular-zorunlu",
     date: "7 Temmuz 2026",
     title: "Taşınma Araçları'nda artık hiçbir soru cevaplanmadan sonraki soruya geçilemiyor",

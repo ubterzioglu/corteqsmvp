@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/useAuth";
 const logo = "/newlogo.png";
 
 export default function SiteHeader() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSignOut = async () => {
     await signOut();
@@ -37,6 +38,15 @@ export default function SiteHeader() {
         <div className="container mx-auto flex items-center justify-end gap-x-4 lg:px-6">
           {user ? (
             <>
+              {/* Feedback Ver — geldiği sayfa state.from ile /feedback'e taşınır (page_path). */}
+              <Link
+                to="/feedback"
+                state={{ from: `${location.pathname}${location.search}` }}
+                className="text-sm font-semibold text-[#ee652b] transition-colors hover:text-[#d95520]"
+              >
+                Feedback Ver
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link
                 to="/profile"
                 className="text-sm font-semibold text-[#34A853] transition-colors hover:text-[#2F9B4D]"
