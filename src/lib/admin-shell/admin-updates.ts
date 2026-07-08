@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260708-burak-buraya-bak-paylasim-bolumu",
+    date: "8 Temmuz 2026",
+    title: "Sosyal Medya Paylaşım Deposu'na Burak için yeni 'BURAK BURAYA BAK' sekmesi + görsel/video yükleme eklendi",
+    items: [
+      "Admin panelindeki Sosyal Medya Paylaşım Deposu (/admin/social-share-vault) sayfasına dördüncü bir sekme eklendi: 'BURAK BURAYA BAK'. Bu sekme, paylaşım için hazırlanmış 12 tanıtım aracının hepsini (10 genel taşınma aracı + Almanya Banka ve Almanya Sigorta) tek yerde topluyor; her araç için 3 varyant, her varyantta hazır Canva görsel promptu ve kopyala-yapıştır Türkçe LinkedIn postu var. Mevcut üç sekmeye (Araç Tanıtımları, Diaspora Postları, Test Araçları) dokunulmadı.",
+      "Yeni sekmenin farkı: her Canva promptunun altına bir 'medya paneli' geldi. Buraya (1) doğrudan bir görsel yükleyebilirsin, (2) görsel yüklemek istemezsen onun yerine Gmail/Drive görsel linki yapıştırabilirsin, (3) 'Videoyu Drive'a Yükle' butonuyla ortak Drive klasörü yeni sekmede açılıp videoyu oraya atıp linkini yapıştırabilirsin, (4) kısa bir not düşebilirsin. Alanların hepsi opsiyonel ve birbirinden bağımsız.",
+      "Yüklenen görsel ve girilen linkler veritabanında KALICI olarak saklanıyor ve tüm adminler aynı içeriği ortak görüyor — Burak bir görseli yüklediğinde diğer adminler de görüyor, cihaz/oturum fark etmiyor. Görseller yalnız adminlere açık özel bir depoda (private bucket) tutuluyor.",
+      "Teknik tarafta: yeni social_share_assets tablosu + admin-only güvenlik kuralları (RLS) + özel 'burak-share' depo tek migration'da; medya API'si otomatik testlerle korunuyor, tüm proje testleri yeşil. Sekmenin görünmesi için bir sonraki yayın (deploy) gerekiyor; veritabanı/depo değişikliğinin canlıya uygulanması ayrı bir onay adımı olarak bekliyor.",
+    ],
+  },
+  {
     id: "20260707-uye-geri-bildirim-sistemi",
     date: "7 Temmuz 2026",
     title: "Üye geri bildirim sistemi eklendi: sitede 'Feedback Ver' butonu + /admin/feedback yönetim sayfası",
