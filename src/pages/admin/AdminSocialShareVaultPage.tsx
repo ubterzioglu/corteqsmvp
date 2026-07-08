@@ -147,6 +147,10 @@ const AdminSocialShareVaultPage = () => {
             <ClipboardList className="h-4 w-4" />
             Test Araçları ({SOCIAL_TEST_TOOLS.length})
           </TabsTrigger>
+          <TabsTrigger value="burak" className="gap-2">
+            <Camera className="h-4 w-4" />
+            BURAK BURAYA BAK ({BURAK_SHARE_TOOLS.length})
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="tools">
