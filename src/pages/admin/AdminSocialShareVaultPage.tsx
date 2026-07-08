@@ -164,6 +164,10 @@ const AdminSocialShareVaultPage = () => {
         <TabsContent value="tests">
           <TestToolsTab copiedId={copiedId} onCopy={handleCopy} renderShareBar={renderShareBar} />
         </TabsContent>
+
+        <TabsContent value="burak">
+          <BurakShareTab copiedId={copiedId} onCopy={handleCopy} />
+        </TabsContent>
       </Tabs>
     </AdminPageShell>
   );

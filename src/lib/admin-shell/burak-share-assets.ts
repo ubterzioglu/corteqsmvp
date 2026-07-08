@@ -24,12 +24,14 @@ export type BurakAssetPatch = Partial<
   Pick<BurakShareAsset, "imageBucket" | "imagePath" | "imageUrl" | "videoUrl" | "note">
 >;
 
-// db: henüz supabase/types.ts'te olmayan yeni tabloya erişmek için as any köprüsü.
-const db = supabase as unknown as {
-  from: (table: string) => any;
+// social_share_assets henüz supabase/types.ts'te yok; mevcut admin/*.ts deseniyle
+// (supabase as SupabaseUntyped) köprüsüyle erişilir.
+type SupabaseUntyped = {
+  from: (table: string) => ReturnType<typeof supabase.from>;
   auth: typeof supabase.auth;
   storage: typeof supabase.storage;
 };
+const db = supabase as unknown as SupabaseUntyped;
 
 export function burakSlotKey(toolId: string, variantIndex: number): string {
   return `burak/${toolId}/variant-${variantIndex}`;
