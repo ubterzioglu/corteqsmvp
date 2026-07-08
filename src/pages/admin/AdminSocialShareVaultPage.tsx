@@ -8,9 +8,10 @@
 // Her metin tek tıkla, ayrıca sayfa başından aktif sekme için toplu kopyalanır.
 
 import { useState } from "react";
-import { Check, ClipboardList, Linkedin, Megaphone, Palette, Share2, Users } from "lucide-react";
+import { Camera, Check, ClipboardList, Linkedin, Megaphone, Palette, Share2, Users } from "lucide-react";
 
 import { AdminPageShell } from "@/components/admin/page";
+import { BurakShareTab } from "@/components/admin/social-share/BurakShareTab";
 import { DiasporaPostsTab } from "@/components/admin/social-share/DiasporaPostsTab";
 import { TestToolsTab } from "@/components/admin/social-share/TestToolsTab";
 import { ToolPromotionsTab } from "@/components/admin/social-share/ToolPromotionsTab";
@@ -21,10 +22,11 @@ import { useToast } from "@/hooks/use-toast";
 import { SOCIAL_SHARE_TOOLS } from "@/lib/admin-shell/social-share-vault";
 import { DIASPORA_POSTS } from "@/lib/admin-shell/social-diaspora-posts";
 import { SOCIAL_TEST_TOOLS } from "@/lib/admin-shell/social-test-tools";
+import { BURAK_SHARE_TOOLS } from "@/lib/admin-shell/burak-share-tools";
 
 const SEPARATOR = "\n\n———\n\n";
 
-type TabKey = "tools" | "diaspora" | "tests";
+type TabKey = "tools" | "diaspora" | "tests" | "burak";
 
 type BulkButton = { id: string; label: string; value: () => string };
 
@@ -56,6 +58,16 @@ const allTestLinkedin = (): string =>
       .join("\n\n"),
   ).join(SEPARATOR);
 
+const allBurakCanva = (): string =>
+  BURAK_SHARE_TOOLS.map((t) =>
+    t.variants.map((v, i) => `${t.order}.${i + 1} ${t.name}\n\n${v.canvaPrompt}`).join("\n\n"),
+  ).join(SEPARATOR);
+
+const allBurakLinkedin = (): string =>
+  BURAK_SHARE_TOOLS.map((t) =>
+    t.variants.map((v, i) => `${t.order}.${i + 1} ${t.name}\n\n${v.linkedinPost}`).join("\n\n"),
+  ).join(SEPARATOR);
+
 const BULK_BUTTONS: Record<TabKey, BulkButton[]> = {
   tools: [
     { id: "all-tool-canva", label: "Tüm Canva Promptları", value: allToolCanva },
@@ -68,6 +80,10 @@ const BULK_BUTTONS: Record<TabKey, BulkButton[]> = {
   tests: [
     { id: "all-test-canva", label: "Tüm Canva Promptları", value: allTestCanva },
     { id: "all-test-linkedin", label: "Tüm LinkedIn Postları", value: allTestLinkedin },
+  ],
+  burak: [
+    { id: "all-burak-canva", label: "Tüm Canva Promptları", value: allBurakCanva },
+    { id: "all-burak-linkedin", label: "Tüm LinkedIn Postları", value: allBurakLinkedin },
   ],
 };
 
