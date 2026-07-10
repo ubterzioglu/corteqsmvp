@@ -555,7 +555,7 @@ export const adminNavGroups: AdminNavGroup[] = [
   },
   {
     id: "relocation-ingestion",
-    label: "Taşınma Veri Toplama",
+    label: "Kullanıcı Araçları",
     accent: "sky",
     items: [
       {
