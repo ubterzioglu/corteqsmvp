@@ -14,6 +14,16 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260714-revizyon-istekleri-gorsel-ekleme",
+    date: "14 Temmuz 2026",
+    title: "Revizyon İstekleri'ne görsel ekleme eklendi: hem talebe hem yorumlara çoklu görsel",
+    items: [
+      "Admin panelindeki Revizyon İstekleri (/admin/revision-requests) sayfasında artık hem bir revizyon talebine hem de talebin altındaki her yoruma birden fazla görsel eklenebiliyor. Bir talep açtıktan sonra detay panelinden, ya da yorum yazarken 'Görsel Ekle' ile ekran görüntüsü/referans görsel paylaşılabiliyor.",
+      "Yüklenen görseller veritabanında KALICI olarak saklanıyor ve tüm adminler ortak görüyor — biri bir görsel eklediğinde diğer adminler de aynı anda görüyor. Görseller yalnız adminlere açık özel bir depoda (private bucket) tutuluyor; her görsel tekil olarak silinebiliyor.",
+      "Teknik tarafta: yeni revision_request_attachments tablosu + admin-only güvenlik kuralları (RLS) + özel 'revision-attachments' depo tek migration'da; ek API'si otomatik testlerle korunuyor, tüm proje testleri yeşil. Sayfanın görünmesi için bir sonraki yayın (deploy) gerekiyor; veritabanı/depo değişikliğinin canlıya uygulanması ayrı bir onay adımı olarak bekliyor.",
+    ],
+  },
+  {
     id: "20260708-burak-buraya-bak-paylasim-bolumu",
     date: "8 Temmuz 2026",
     title: "Sosyal Medya Paylaşım Deposu'na Burak için yeni 'BURAK BURAYA BAK' sekmesi + görsel/video yükleme eklendi",
