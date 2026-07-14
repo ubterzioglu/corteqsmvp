@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 
 import AdminBreadcrumbs from "./AdminBreadcrumbs";
 import AdminExternalLinksMenu from "./AdminExternalLinksMenu";
+import AdminQuickToolLinks from "./AdminQuickToolLinks";
 import AdminThemeToggle from "./AdminThemeToggle";
 import AdminUpdatesMenu from "./AdminUpdatesMenu";
 import AdminUserMenu from "./AdminUserMenu";
@@ -38,6 +39,7 @@ const AdminTopbar = ({ userEmail, onLogout, onOpenMobileSidebar, onOpenCommandPa
         <AdminBreadcrumbs />
       </div>
       <div className="flex shrink-0 items-center gap-1">
+        <AdminQuickToolLinks />
         <Button
           type="button"
           variant="outline"
