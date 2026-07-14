@@ -1,11 +1,26 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { ChevronDown } from "lucide-react";
 import { useAuth } from "@/components/auth/useAuth";
+import { listTools } from "@/lib/relocation-tools-api";
+import { relocationToolsKeys } from "@/lib/relocation-tools-query-keys";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 const logo = "/newlogo.png";
 
 export default function SiteHeader() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const toolsQuery = useQuery({
+    queryKey: relocationToolsKeys.list(),
+    queryFn: listTools,
+  });
 
   const handleSignOut = async () => {
     await signOut();
@@ -64,12 +79,31 @@ export default function SiteHeader() {
             </>
           ) : (
             <>
-              <Link
-                to="/tools"
-                className="text-sm font-semibold text-[#1E3A8A] transition-colors hover:text-[#152c69]"
-              >
-                Araçlar
-              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="inline-flex items-center gap-1 text-sm font-semibold text-[#1E3A8A] outline-none transition-colors hover:text-[#152c69]">
+                  Araçlar
+                  <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-64">
+                  {toolsQuery.isLoading && (
+                    <DropdownMenuItem disabled>Yükleniyor...</DropdownMenuItem>
+                  )}
+                  {!toolsQuery.isLoading && (toolsQuery.data?.length ?? 0) === 0 && (
+                    <DropdownMenuItem disabled>Henüz aktif araç yok</DropdownMenuItem>
+                  )}
+                  {toolsQuery.data?.map((tool) => (
+                    <DropdownMenuItem key={tool.key} asChild>
+                      <Link to={`/tools/${tool.slug}`}>{tool.title_tr}</Link>
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/tools" className="font-semibold text-[#1E3A8A]">
+                      Tüm Araçları Gör
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link
                 to="/login?mode=login"

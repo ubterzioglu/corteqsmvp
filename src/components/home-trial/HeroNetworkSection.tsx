@@ -95,9 +95,10 @@ const HeroNetworkSection = () => {
             <button
               type="button"
               onClick={scrollToAtlas}
-              className="inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-8 text-sm font-semibold text-slate-700 transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-400 hover:text-slate-900 hover:shadow-md"
+              className="group inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#34A853] to-[#2F9B4D] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_rgba(52,168,83,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_38px_-12px_rgba(52,168,83,0.65)]"
             >
               Ağı keşfet
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
             </button>
           </div>
         </div>
