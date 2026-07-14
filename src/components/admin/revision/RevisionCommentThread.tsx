@@ -1,11 +1,12 @@
 // Revizyon talebi yorum thread'i — bir talebin yorumlarını listeler ve yeni yorum ekler.
 // AdminRevisionRequestsPage'in detay drawer'ı içinde render edilir.
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Send, Trash2 } from "lucide-react";
+import { Loader2, Paperclip, Send, Trash2, X } from "lucide-react";
 
 import { AdminEmptyState } from "@/components/admin/page";
+import { RevisionAttachmentGrid } from "@/components/admin/revision/RevisionAttachmentGrid";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -14,6 +15,7 @@ import {
   deleteComment,
   fetchComments,
   fetchUserEmails,
+  uploadAttachment,
   type RevisionComment,
 } from "@/lib/admin-shell/revision-requests";
 
@@ -42,6 +44,8 @@ export function RevisionCommentThread({ requestId }: RevisionCommentThreadProps)
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [draft, setDraft] = useState("");
+  const [draftFiles, setDraftFiles] = useState<File[]>([]);
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
   const commentsQuery = useQuery({
     queryKey: commentsKey(requestId),
@@ -59,10 +63,29 @@ export function RevisionCommentThread({ requestId }: RevisionCommentThreadProps)
 
   const addMutation = useMutation({
     mutationFn: (body: string) => addComment(requestId, body),
-    onSuccess: async () => {
+    onSuccess: async (comment) => {
       setDraft("");
+      const filesToUpload = draftFiles;
+      setDraftFiles([]);
       await queryClient.invalidateQueries({ queryKey: commentsKey(requestId) });
       await queryClient.invalidateQueries({ queryKey: ["revision-requests"] });
+
+      for (const file of filesToUpload) {
+        try {
+          await uploadAttachment({ commentId: comment.id }, file);
+        } catch (error: unknown) {
+          toast({
+            title: "Görsel yüklenemedi",
+            description: error instanceof Error ? error.message : "Bilinmeyen hata",
+            variant: "destructive",
+          });
+        }
+      }
+      if (filesToUpload.length > 0) {
+        await queryClient.invalidateQueries({
+          queryKey: ["revision-attachments", "comment", comment.id],
+        });
+      }
     },
     onError: (error: unknown) => {
       toast({
@@ -127,6 +150,9 @@ export function RevisionCommentThread({ requestId }: RevisionCommentThreadProps)
                 </span>
               </div>
               <p className="whitespace-pre-wrap text-sm text-foreground">{comment.body}</p>
+              <div className="mt-2">
+                <RevisionAttachmentGrid parent={{ commentId: comment.id }} />
+              </div>
             </div>
           ))
         )}
@@ -139,7 +165,44 @@ export function RevisionCommentThread({ requestId }: RevisionCommentThreadProps)
           placeholder="Yorum yazın…"
           rows={3}
         />
-        <div className="flex justify-end">
+        {draftFiles.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5">
+            {draftFiles.map((file, index) => (
+              <span
+                key={`${file.name}-${index}`}
+                className="flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
+              >
+                {file.name}
+                <button
+                  type="button"
+                  aria-label="Dosyayı kaldır"
+                  onClick={() => setDraftFiles((prev) => prev.filter((_, i) => i !== index))}
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+        ) : null}
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          onChange={(event) => {
+            const files = event.target.files;
+            if (files && files.length > 0) {
+              setDraftFiles((prev) => [...prev, ...Array.from(files)]);
+            }
+            if (fileRef.current) fileRef.current.value = "";
+          }}
+        />
+        <div className="flex items-center justify-between">
+          <Button variant="ghost" size="sm" onClick={() => fileRef.current?.click()}>
+            <Paperclip className="mr-1.5 h-3.5 w-3.5" />
+            Görsel Ekle
+          </Button>
           <Button
             size="sm"
             onClick={handleSend}
