@@ -31,6 +31,12 @@ export type AdminCatalogRoleOption = {
   label: string;
 };
 
+export type AdminRoleRecordCount = {
+  roleKey: string;
+  roleLabel: string;
+  recordCount: number;
+};
+
 export type AdminCatalogCategory = {
   slug: string;
   name: string;
@@ -341,7 +347,8 @@ type CatalogRpcClient = {
       | "admin_list_catalog_claims"
       | "admin_search_profiles"
       | "admin_get_user_email"
-      | "admin_list_unified_records",
+      | "admin_list_unified_records"
+      | "admin_role_record_counts",
     args: Record<string, unknown>,
   ) => Promise<{ data: unknown; error: QueryError | null }>;
 };
@@ -394,6 +401,20 @@ export async function listAdminCatalogRoles(): Promise<AdminCatalogRoleOption[]>
   return (data ?? []).map((row) => ({
     key: row.key,
     label: row.label,
+  }));
+}
+
+export async function listAdminRoleRecordCounts(): Promise<AdminRoleRecordCount[]> {
+  const { data, error } = await catalogRpcClient.rpc("admin_role_record_counts", {});
+
+  if (error) throw error;
+
+  return (
+    (data as Array<{ role_key: string; role_label: string; record_count: number }> | null) ?? []
+  ).map((row) => ({
+    roleKey: row.role_key,
+    roleLabel: row.role_label,
+    recordCount: Number(row.record_count),
   }));
 }
 

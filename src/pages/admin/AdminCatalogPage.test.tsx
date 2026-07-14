@@ -7,6 +7,7 @@ const toast = vi.fn();
 const listAdminUnifiedRecordsMock = vi.fn();
 const listAdminCatalogItemTypesMock = vi.fn();
 const listAdminCatalogRolesMock = vi.fn();
+const listAdminRoleRecordCountsMock = vi.fn();
 const getAdminCatalogItemDetailMock = vi.fn();
 
 vi.mock("@/hooks/use-toast", () => ({
@@ -35,6 +36,7 @@ vi.mock("@/lib/admin-catalog", async () => {
     listAdminUnifiedRecords: (...args: unknown[]) => listAdminUnifiedRecordsMock(...args),
     listAdminCatalogItemTypes: (...args: unknown[]) => listAdminCatalogItemTypesMock(...args),
     listAdminCatalogRoles: (...args: unknown[]) => listAdminCatalogRolesMock(...args),
+    listAdminRoleRecordCounts: (...args: unknown[]) => listAdminRoleRecordCountsMock(...args),
     getAdminCatalogItemDetail: (...args: unknown[]) => getAdminCatalogItemDetailMock(...args),
   };
 });
@@ -109,6 +111,10 @@ describe("AdminCatalogPage", () => {
     listAdminCatalogRolesMock.mockResolvedValue([
       { key: "Organization_Association", label: "Dernek" },
       { key: "Community_Leader", label: "Topluluk Lideri" },
+    ]);
+    listAdminRoleRecordCountsMock.mockResolvedValue([
+      { roleKey: "User_DiasporaMember", roleLabel: "Diaspora Üyesi", recordCount: 1842 },
+      { roleKey: "Organization_Association", roleLabel: "Dernek", recordCount: 12 },
     ]);
     listAdminUnifiedRecordsMock.mockImplementation(
       ({ filters }: { filters: { kind: string; query: string; platformRoleKey?: string } }) => {
@@ -343,6 +349,30 @@ describe("AdminCatalogPage", () => {
     });
 
     expect(screen.getByText("Community_Leader")).toBeInTheDocument();
+  });
+
+  it("shows the role distribution accordion with per-role record counts", async () => {
+    render(<AdminCatalogPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Berlin Derneği")).toBeInTheDocument();
+    });
+
+    expect(screen.getByText("Kullanıcı Tipi Dağılımı")).toBeInTheDocument();
+    expect(screen.getByText("Toplam 1854 kayıt · 2 tip")).toBeInTheDocument();
+
+    // Collapsed by default: individual role rows are not yet in the DOM.
+    expect(screen.queryByText("Diaspora Üyesi")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("Toplam 1854 kayıt · 2 tip"));
+
+    const diasporaLabel = await screen.findByText("Diaspora Üyesi");
+    const roleCountRow = diasporaLabel.closest("div");
+    expect(roleCountRow).not.toBeNull();
+    expect(within(roleCountRow as HTMLDivElement).getByText("1842")).toBeInTheDocument();
+
+    const dernekRow = screen.getAllByText("Dernek").find((el) => el.closest("div")?.textContent?.includes("12"));
+    expect(dernekRow).toBeDefined();
   });
 
   it("renders legend chips in alphabetical code order", async () => {

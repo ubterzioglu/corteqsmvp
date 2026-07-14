@@ -1,11 +1,12 @@
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Database, MapPin, Search, ShieldCheck, SlidersHorizontal, UserRound } from "lucide-react";
+import { ChevronLeft, ChevronRight, Database, MapPin, Search, ShieldCheck, SlidersHorizontal, UserRound, Users } from "lucide-react";
 
 import { AdminPageShell } from "@/components/admin/page";
 import CatalogClaimRequestsPanel from "@/components/admin/catalog/CatalogClaimRequestsPanel";
 import CatalogEntityProfilePanel from "@/components/admin/catalog/CatalogEntityProfilePanel";
 import CatalogItemEditorsPanel from "@/components/admin/catalog/CatalogItemEditorsPanel";
 import RoleSearchSelect from "@/components/admin/RoleSearchSelect";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,12 +22,14 @@ import {
   getUserEmail,
   listAdminCatalogItemTypes,
   listAdminCatalogRoles,
+  listAdminRoleRecordCounts,
   listAdminUnifiedRecords,
   setCatalogItemRole,
   type AdminCatalogDetail,
   type AdminCatalogFilters,
   type AdminCatalogItemType,
   type AdminCatalogRoleOption,
+  type AdminRoleRecordCount,
 } from "@/lib/admin-catalog";
 import { setUserRoleAsAdmin } from "@/lib/admin";
 import { reviewCatalogImport } from "@/lib/catalog-import-api";
@@ -206,6 +209,7 @@ const AdminCatalogPage = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [itemTypes, setItemTypes] = useState<AdminCatalogItemType[]>([]);
   const [roles, setRoles] = useState<AdminCatalogRoleOption[]>([]);
+  const [roleCounts, setRoleCounts] = useState<AdminRoleRecordCount[]>([]);
   const [filters, setFilters] = useState<AdminCatalogFilters>(DEFAULT_FILTERS);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRecord, setSelectedRecord] = useState<UnifiedRecord | null>(null);
@@ -246,6 +250,31 @@ const AdminCatalogPage = () => {
       isMounted = false;
     };
   }, [toast]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadRoleCounts = async () => {
+      try {
+        const counts = await listAdminRoleRecordCounts();
+        if (isMounted) setRoleCounts(counts);
+      } catch (error) {
+        if (!isMounted) return;
+
+        toast({
+          title: "Rol dağılımı yüklenemedi",
+          description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+          variant: "destructive",
+        });
+      }
+    };
+
+    void loadRoleCounts();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [toast, reloadKey]);
 
   useEffect(() => {
     let isMounted = true;
@@ -483,6 +512,40 @@ const AdminCatalogPage = () => {
             </CollapsibleContent>
           </Card>
         </Collapsible>
+
+        <Card className="border-slate-200 shadow-[0_18px_55px_-42px_rgba(15,23,42,0.28)]">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5 text-slate-500" />
+              Kullanıcı Tipi Dağılımı
+            </CardTitle>
+            <CardDescription>Her rol için toplam kayıt sayısı (tüm veritabanı, filtrelerden bağımsız).</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Accordion type="single" collapsible>
+              <AccordionItem value="role-counts" className="border-0">
+                <AccordionTrigger className="py-2">
+                  <span className="text-sm text-slate-600">
+                    Toplam {roleCounts.reduce((sum, rc) => sum + rc.recordCount, 0)} kayıt · {roleCounts.length} tip
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {roleCounts.map((rc) => (
+                      <div
+                        key={rc.roleKey}
+                        className="flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2"
+                      >
+                        <span className="truncate text-sm text-slate-700">{rc.roleLabel}</span>
+                        <Badge variant="secondary">{rc.recordCount}</Badge>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </CardContent>
+        </Card>
 
         <Card className="border-slate-200 shadow-[0_18px_55px_-42px_rgba(15,23,42,0.28)]">
           <CardHeader className="gap-4">
