@@ -65,6 +65,13 @@ export default function SiteHeader() {
           ) : (
             <>
               <Link
+                to="/tools"
+                className="text-sm font-semibold text-[#1E3A8A] transition-colors hover:text-[#152c69]"
+              >
+                Araçlar
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              <Link
                 to="/login?mode=login"
                 className="text-sm font-semibold text-[#34A853] transition-colors hover:text-[#2F9B4D]"
               >

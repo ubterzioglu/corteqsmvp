@@ -85,6 +85,13 @@ const HeroNetworkSection = () => {
               Ağa Katıl
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
             </Link>
+            <Link
+              to="/tools"
+              className="group inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#F59E0B] to-[#EA580C] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_rgba(234,88,12,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_38px_-12px_rgba(234,88,12,0.65)]"
+            >
+              Araçlar!
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
+            </Link>
             <button
               type="button"
               onClick={scrollToAtlas}
