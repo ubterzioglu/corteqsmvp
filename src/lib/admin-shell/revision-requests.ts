@@ -8,7 +8,7 @@
 // created_by → e-posta gösterimi admin_get_user_email(uuid) RPC ile çözülür.
 
 import { supabase } from "@/integrations/supabase/client";
-import { sanitizeError, validateContent, validateTitle } from "@/lib/security";
+import { sanitizeError, validateContent, validateFile, validateTitle } from "@/lib/security";
 
 /** Talep durumları — DB CHECK ile eşleşir. */
 export const REVISION_STATUSES = ["acik", "inceleniyor", "yapildi", "iptal"] as const;
@@ -314,4 +314,151 @@ export async function fetchUserEmails(ids: (string | null)[]): Promise<Record<st
     }
   }
   return result;
+}
+
+export type RevisionAttachment = {
+  id: string;
+  requestId: string | null;
+  commentId: string | null;
+  storagePath: string;
+  fileName: string;
+  contentType: string | null;
+  sizeBytes: number | null;
+  createdBy: string | null;
+  createdAt: string;
+};
+
+export type AttachmentParent = { requestId: string } | { commentId: string };
+
+type AttachmentRow = {
+  id: string;
+  request_id: string | null;
+  comment_id: string | null;
+  storage_path: string;
+  file_name: string;
+  content_type: string | null;
+  size_bytes: number | null;
+  created_by: string | null;
+  created_at: string;
+};
+
+const ATTACHMENT_SELECT =
+  "id,request_id,comment_id,storage_path,file_name,content_type,size_bytes,created_by,created_at";
+const ATTACHMENTS_BUCKET = "revision-attachments";
+
+function mapAttachment(row: AttachmentRow): RevisionAttachment {
+  return {
+    id: row.id,
+    requestId: row.request_id,
+    commentId: row.comment_id,
+    storagePath: row.storage_path,
+    fileName: row.file_name,
+    contentType: row.content_type,
+    sizeBytes: row.size_bytes,
+    createdBy: row.created_by,
+    createdAt: row.created_at,
+  };
+}
+
+function attachmentParentColumn(parent: AttachmentParent): { column: "request_id" | "comment_id"; value: string } {
+  return "requestId" in parent
+    ? { column: "request_id", value: parent.requestId }
+    : { column: "comment_id", value: parent.commentId };
+}
+
+function attachmentPathPrefix(parent: AttachmentParent): string {
+  return "requestId" in parent ? `request/${parent.requestId}` : `comment/${parent.commentId}`;
+}
+
+function buildAttachmentPath(parent: AttachmentParent, file: File): string {
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const rand = Math.random().toString(36).slice(2, 8);
+  return `${attachmentPathPrefix(parent)}/${Date.now()}-${rand}-${safeName}`;
+}
+
+/** Bir talebin ya da yorumun aktif (silinmemiş) eklerini eskiden yeniye getirir. */
+export async function fetchAttachments(parent: AttachmentParent): Promise<RevisionAttachment[]> {
+  const { column, value } = attachmentParentColumn(parent);
+  const { data, error } = await table("revision_request_attachments")
+    .select(ATTACHMENT_SELECT)
+    .eq(column, value)
+    .is("deleted_at", null)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    throw new Error(sanitizeError(error, "Ekler yüklenemedi."));
+  }
+
+  return ((data as AttachmentRow[]) ?? []).map(mapAttachment);
+}
+
+/** Bir dosyayı revision-attachments bucket'ına yükler ve satır ekler (created_by = aktif admin). */
+export async function uploadAttachment(
+  parent: AttachmentParent,
+  file: File,
+): Promise<RevisionAttachment> {
+  const fileError = validateFile(file, {
+    allowedExtensions: new Set(["png", "jpg", "jpeg", "gif", "webp"]),
+    maxSize: 15 * 1024 * 1024,
+  });
+  if (fileError) {
+    throw new Error(fileError);
+  }
+
+  const path = buildAttachmentPath(parent, file);
+  const { error: uploadError } = await supabase.storage
+    .from(ATTACHMENTS_BUCKET)
+    .upload(path, file, { contentType: file.type || undefined, upsert: false });
+  if (uploadError) {
+    throw new Error(sanitizeError(uploadError, "Görsel yüklenemedi."));
+  }
+
+  const createdBy = await currentUserId();
+  const { column, value } = attachmentParentColumn(parent);
+  const { data, error } = await table("revision_request_attachments")
+    .insert({
+      [column]: value,
+      storage_path: path,
+      file_name: file.name,
+      content_type: file.type || null,
+      size_bytes: file.size,
+      created_by: createdBy,
+    })
+    .select(ATTACHMENT_SELECT)
+    .single();
+
+  if (error || !data) {
+    throw new Error(sanitizeError(error, "Görsel yüklenemedi."));
+  }
+
+  return mapAttachment(data as AttachmentRow);
+}
+
+/** Eki storage'dan siler ve satırı soft-delete eder. */
+export async function deleteAttachment(id: string, storagePath: string): Promise<void> {
+  const { error: removeError } = await supabase.storage
+    .from(ATTACHMENTS_BUCKET)
+    .remove([storagePath]);
+  if (removeError) {
+    throw new Error(sanitizeError(removeError, "Ek silinemedi."));
+  }
+
+  const { error } = await table("revision_request_attachments")
+    .update({ deleted_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (error) {
+    throw new Error(sanitizeError(error, "Ek silinemedi."));
+  }
+}
+
+/** Bir ekin görüntülenmesi için kısa ömürlü signed URL üretir. */
+export async function getAttachmentUrl(storagePath: string): Promise<string> {
+  const { data, error } = await supabase.storage
+    .from(ATTACHMENTS_BUCKET)
+    .createSignedUrl(storagePath, 300);
+  if (error || !data?.signedUrl) {
+    throw new Error(sanitizeError(error, "Görsel için erişim linki üretilemedi."));
+  }
+  return data.signedUrl;
 }

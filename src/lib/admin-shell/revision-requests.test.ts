@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { fromMock, getUserMock, rpcMock } = vi.hoisted(() => ({
+const { fromMock, getUserMock, rpcMock, storageFromMock } = vi.hoisted(() => ({
   fromMock: vi.fn(),
   getUserMock: vi.fn(),
   rpcMock: vi.fn(),
+  storageFromMock: vi.fn(),
 }));
 
 vi.mock("@/integrations/supabase/client", () => ({
@@ -11,18 +12,23 @@ vi.mock("@/integrations/supabase/client", () => ({
     from: fromMock,
     rpc: rpcMock,
     auth: { getUser: getUserMock },
+    storage: { from: storageFromMock },
   },
 }));
 
 import {
   addComment,
   createRevisionRequest,
+  deleteAttachment,
   deleteRevisionRequest,
+  fetchAttachments,
   fetchComments,
   fetchRevisionRequests,
   fetchUserEmails,
+  getAttachmentUrl,
   getRevisionStatusLabel,
   REVISION_STATUS_LABELS,
+  uploadAttachment,
   validateRevisionRequestForm,
   type RevisionRequestForm,
 } from "@/lib/admin-shell/revision-requests";
@@ -249,5 +255,186 @@ describe("fetchUserEmails", () => {
     const emails = await fetchUserEmails([null, null]);
     expect(emails).toEqual({});
     expect(rpcMock).not.toHaveBeenCalled();
+  });
+});
+
+describe("fetchAttachments", () => {
+  it("fetches attachments for a request and maps rows to camelCase", async () => {
+    fromMock.mockReturnValue(
+      chainable({
+        resolved: {
+          data: [
+            {
+              id: "a-1",
+              request_id: "r-1",
+              comment_id: null,
+              storage_path: "request/r-1/123-abc-foto.png",
+              file_name: "foto.png",
+              content_type: "image/png",
+              size_bytes: 1024,
+              created_by: "admin-1",
+              created_at: "2026-07-14T10:00:00.000Z",
+            },
+          ],
+          error: null,
+        },
+      }),
+    );
+
+    const attachments = await fetchAttachments({ requestId: "r-1" });
+
+    expect(fromMock).toHaveBeenCalledWith("revision_request_attachments");
+    expect(attachments[0]).toEqual({
+      id: "a-1",
+      requestId: "r-1",
+      commentId: null,
+      storagePath: "request/r-1/123-abc-foto.png",
+      fileName: "foto.png",
+      contentType: "image/png",
+      sizeBytes: 1024,
+      createdBy: "admin-1",
+      createdAt: "2026-07-14T10:00:00.000Z",
+    });
+  });
+
+  it("fetches attachments for a comment", async () => {
+    fromMock.mockReturnValue(chainable({ resolved: { data: [], error: null } }));
+
+    await fetchAttachments({ commentId: "c-1" });
+
+    expect(fromMock).toHaveBeenCalledWith("revision_request_attachments");
+  });
+
+  it("throws a sanitized message on error", async () => {
+    fromMock.mockReturnValue(chainable({ resolved: { data: null, error: { message: "boom" } } }));
+    await expect(fetchAttachments({ requestId: "r-1" })).rejects.toThrow(
+      "Ekler yüklenemedi.",
+    );
+  });
+});
+
+describe("uploadAttachment", () => {
+  it("uploads to storage under request/ prefix and inserts a row", async () => {
+    const uploadMock = vi.fn().mockResolvedValue({ error: null });
+    storageFromMock.mockReturnValue({ upload: uploadMock });
+
+    fromMock.mockReturnValue(
+      chainable({
+        single: {
+          data: {
+            id: "a-2",
+            request_id: "r-1",
+            comment_id: null,
+            storage_path: "request/r-1/999-xyz-test.png",
+            file_name: "test.png",
+            content_type: "image/png",
+            size_bytes: 500,
+            created_by: "admin-1",
+            created_at: "2026-07-14T11:00:00.000Z",
+          },
+          error: null,
+        },
+      }),
+    );
+
+    const file = new File(["x"], "test.png", { type: "image/png" });
+    const result = await uploadAttachment({ requestId: "r-1" }, file);
+
+    expect(storageFromMock).toHaveBeenCalledWith("revision-attachments");
+    expect(uploadMock).toHaveBeenCalled();
+    const [path] = uploadMock.mock.calls[0];
+    expect(path).toMatch(/^request\/r-1\/\d+-[a-z0-9]+-test\.png$/);
+    expect(result.id).toBe("a-2");
+    expect(result.fileName).toBe("test.png");
+  });
+
+  it("uploads to storage under comment/ prefix", async () => {
+    const uploadMock = vi.fn().mockResolvedValue({ error: null });
+    storageFromMock.mockReturnValue({ upload: uploadMock });
+    fromMock.mockReturnValue(
+      chainable({
+        single: {
+          data: {
+            id: "a-3",
+            request_id: null,
+            comment_id: "c-1",
+            storage_path: "comment/c-1/1-a-x.png",
+            file_name: "x.png",
+            content_type: "image/png",
+            size_bytes: 10,
+            created_by: "admin-1",
+            created_at: "2026-07-14T12:00:00.000Z",
+          },
+          error: null,
+        },
+      }),
+    );
+
+    const file = new File(["x"], "x.png", { type: "image/png" });
+    await uploadAttachment({ commentId: "c-1" }, file);
+
+    const [path] = uploadMock.mock.calls[0];
+    expect(path).toMatch(/^comment\/c-1\/\d+-[a-z0-9]+-x\.png$/);
+  });
+
+  it("rejects a disallowed file type before touching storage", async () => {
+    const file = new File(["x"], "malware.exe", { type: "application/x-msdownload" });
+    await expect(uploadAttachment({ requestId: "r-1" }, file)).rejects.toThrow(
+      "Geçersiz dosya uzantısı",
+    );
+    expect(storageFromMock).not.toHaveBeenCalled();
+  });
+
+  it("throws a sanitized message when storage upload fails", async () => {
+    storageFromMock.mockReturnValue({
+      upload: vi.fn().mockResolvedValue({ error: { message: "storage full" } }),
+    });
+    const file = new File(["x"], "test.png", { type: "image/png" });
+    await expect(uploadAttachment({ requestId: "r-1" }, file)).rejects.toThrow(
+      "Görsel yüklenemedi.",
+    );
+  });
+});
+
+describe("deleteAttachment", () => {
+  it("removes from storage and soft-deletes the row", async () => {
+    const removeMock = vi.fn().mockResolvedValue({ error: null });
+    storageFromMock.mockReturnValue({ remove: removeMock });
+    fromMock.mockReturnValue(chainable({ resolved: { data: null, error: null } }));
+
+    await deleteAttachment("a-1", "request/r-1/123-abc-foto.png");
+
+    expect(storageFromMock).toHaveBeenCalledWith("revision-attachments");
+    expect(removeMock).toHaveBeenCalledWith(["request/r-1/123-abc-foto.png"]);
+    expect(fromMock).toHaveBeenCalledWith("revision_request_attachments");
+  });
+
+  it("throws a sanitized message when the DB update fails", async () => {
+    storageFromMock.mockReturnValue({ remove: vi.fn().mockResolvedValue({ error: null }) });
+    fromMock.mockReturnValue(chainable({ resolved: { data: null, error: { message: "nope" } } }));
+    await expect(deleteAttachment("a-1", "path/x.png")).rejects.toThrow("Ek silinemedi.");
+  });
+});
+
+describe("getAttachmentUrl", () => {
+  it("returns a signed URL", async () => {
+    storageFromMock.mockReturnValue({
+      createSignedUrl: vi.fn().mockResolvedValue({
+        data: { signedUrl: "https://signed.example/x.png" },
+        error: null,
+      }),
+    });
+
+    const url = await getAttachmentUrl("request/r-1/x.png");
+    expect(url).toBe("https://signed.example/x.png");
+  });
+
+  it("throws when signing fails", async () => {
+    storageFromMock.mockReturnValue({
+      createSignedUrl: vi.fn().mockResolvedValue({ data: null, error: { message: "nope" } }),
+    });
+    await expect(getAttachmentUrl("request/r-1/x.png")).rejects.toThrow(
+      "Görsel için erişim linki üretilemedi.",
+    );
   });
 });
