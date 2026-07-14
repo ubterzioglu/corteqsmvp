@@ -1,4 +1,5 @@
-// Taşınma Araçları hub sayfası — /relocation/tools. Login zorunlu (App.tsx RequireAuth).
+// Taşınma Araçları hub sayfası — /tools. Login gerekmez; bir araca tıklayınca
+// /tools/:toolSlug RequireAuth'a takılır ve next parametresiyle login'e yönlenir.
 import { useQuery } from "@tanstack/react-query";
 import { RelocationToolsHub } from "@/components/relocation/tools/RelocationToolsHub";
 import { listTools } from "@/lib/relocation-tools-api";

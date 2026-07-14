@@ -1,5 +1,6 @@
-// Araç sayfası — /relocation/tools/:toolSlug. Landing → stepper → sonuç (inline).
-// Login zorunlu (App.tsx RequireAuth). docs/10tool/00 §UX akışı.
+// Araç sayfası — /tools/:toolSlug. Landing → stepper → sonuç (inline).
+// Login zorunlu (App.tsx RequireAuth); hub (/tools) login'siz, tıklayınca buraya
+// gelince guard'a takılıp next parametresiyle login'e yönlenir. docs/10tool/00 §UX akışı.
 // NOT: Bazı Almanya araçları DB skorlama motoruna uymaz (deterministik hesaplayıcı / karar ağacı /
 // soru havuzu) → germany-standalone-tools registry üzerinden kendi bileşenleriyle render edilir.
 // Mod seçimi (hızlı/detaylı) kaldırıldı — her araç tek modlu sabit 20 sorudan oluşur

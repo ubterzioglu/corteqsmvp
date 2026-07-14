@@ -169,14 +169,7 @@ const App = () => (
                       </RequireAuth>
                     }
                   />
-                  <Route
-                    path="/tools"
-                    element={
-                      <RequireAuth>
-                        <RelocationToolsHubPage />
-                      </RequireAuth>
-                    }
-                  />
+                  <Route path="/tools" element={<RelocationToolsHubPage />} />
                   <Route
                     path="/tools/:toolSlug"
                     element={

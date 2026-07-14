@@ -229,9 +229,11 @@ Tekrarlayan Türkçe karakter sorunlarının kök nedeni budur. Kurallar:
    - `/commercial/<slug>` is rendered by `CommercialDocumentPage` from fragments in
      `src/content/commercial/*.html`. The old standalone-HTML injection plugin was
      removed; `vite.config.ts` only emits legacy `*.html` redirect stubs.
-   - Root `info-*.html` files are the content source — edit them and re-run
-     `node scripts/extract-commercial-docs.mjs` to regenerate the fragments.
-     Shared hero image: `public/commercial-docs/corteqs-doc-hero.png`.
+   - `src/content/commercial/*.html` fragments are now the **single content source** —
+     edit them directly. The old root `info-*.html` files and the
+     `scripts/extract-commercial-docs.mjs` extract step were removed (2026-07-13); there is
+     no longer an intermediate generation step. Shared hero image:
+     `public/commercial-docs/corteqs-doc-hero.png`.
 
 5. **Hardcoded Supabase Project ID:**
    - `injprdrsklkxgnaiixzh` in env examples and code
