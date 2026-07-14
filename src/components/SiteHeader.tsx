@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 import { useAuth } from "@/components/auth/useAuth";
 import { listTools } from "@/lib/relocation-tools-api";
 import { relocationToolsKeys } from "@/lib/relocation-tools-query-keys";
@@ -13,10 +14,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 const logo = "/newlogo.png";
 
+// Mobilde tam başlık yerine kısa etiket gösterir ("Soru? — Kısa Ad" → "Kısa Ad").
+function mobileToolLabel(titleTr: string): string {
+  const parts = titleTr.split("—");
+  return parts.length > 1 ? parts[parts.length - 1].trim() : titleTr;
+}
+
 export default function SiteHeader() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false);
   const toolsQuery = useQuery({
     queryKey: relocationToolsKeys.list(),
     queryFn: listTools,
@@ -79,8 +87,9 @@ export default function SiteHeader() {
             </>
           ) : (
             <>
+              {/* Masaüstü: mevcut popover dropdown (sm+) */}
               <DropdownMenu>
-                <DropdownMenuTrigger className="inline-flex items-center gap-1 text-sm font-semibold text-[#1E3A8A] outline-none transition-colors hover:text-[#152c69]">
+                <DropdownMenuTrigger className="hidden items-center gap-1 text-sm font-semibold text-[#1E3A8A] outline-none transition-colors hover:text-[#152c69] sm:inline-flex">
                   Araçlar
                   <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
                 </DropdownMenuTrigger>
@@ -121,6 +130,17 @@ export default function SiteHeader() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+
+              {/* Mobil: tam genişlik aç/kapa panel */}
+              <button
+                type="button"
+                onClick={() => setIsMobileToolsOpen(true)}
+                aria-expanded={isMobileToolsOpen}
+                className="inline-flex items-center gap-1 text-sm font-semibold text-[#1E3A8A] outline-none transition-colors hover:text-[#152c69] sm:hidden"
+              >
+                Araçlar
+                <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link
                 to="/login?mode=login"
@@ -177,6 +197,54 @@ export default function SiteHeader() {
           </div>
         </div>
       </div>
+
+      {/* Mobil Araçlar paneli: tam ekran aç/kapa, kısa etiketler */}
+      {isMobileToolsOpen && (
+        <div className="fixed inset-0 z-[60] flex flex-col bg-white sm:hidden">
+          <div className="flex items-center justify-between border-b border-slate-200/80 px-4 py-3">
+            <span className="text-base font-bold text-slate-900">Araçlar</span>
+            <button
+              type="button"
+              onClick={() => setIsMobileToolsOpen(false)}
+              aria-label="Kapat"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
+            >
+              <X className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto px-2 py-2">
+            {toolsQuery.isLoading && (
+              <p className="px-3 py-2.5 text-sm text-slate-500">Yükleniyor...</p>
+            )}
+            {!toolsQuery.isLoading && (toolsQuery.data?.length ?? 0) === 0 && (
+              <p className="px-3 py-2.5 text-sm text-slate-500">Henüz aktif araç yok</p>
+            )}
+            {toolsQuery.data?.map((tool, index) => (
+              <div key={tool.key}>
+                <Link
+                  to={`/tools/${tool.slug}`}
+                  onClick={() => setIsMobileToolsOpen(false)}
+                  className="block rounded-lg px-3 py-3 text-sm font-medium text-slate-800 transition-colors active:bg-slate-100"
+                >
+                  {mobileToolLabel(tool.title_tr)}
+                </Link>
+                {index < (toolsQuery.data?.length ?? 0) - 1 && (
+                  <div className="mx-3 h-px bg-slate-100" />
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="border-t border-slate-200/80 px-4 py-3">
+            <Link
+              to="/tools"
+              onClick={() => setIsMobileToolsOpen(false)}
+              className="block rounded-lg px-3 py-2.5 text-center text-sm font-semibold text-[#1E3A8A]"
+            >
+              Tüm Araçları Gör
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
