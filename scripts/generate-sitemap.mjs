@@ -47,6 +47,9 @@ const STATIC_ROUTES = [
   { path: "/19051919", priority: "0.5", changefreq: "yearly" },
   { path: "/anket", priority: "0.6", changefreq: "weekly" },
   { path: "/directory", priority: "0.7", changefreq: "weekly" },
+  { path: "/associations", priority: "0.6", changefreq: "weekly" },
+  { path: "/tools", priority: "0.7", changefreq: "weekly" },
+  { path: "/cadde", priority: "0.6", changefreq: "daily" },
   { path: "/iletisim", priority: "0.4", changefreq: "yearly" },
   { path: "/pricing", priority: "0.5", changefreq: "monthly" },
   { path: "/kariyer", priority: "0.4", changefreq: "monthly" },
@@ -116,6 +119,43 @@ async function getBlogRoutes() {
   }
 }
 
+// Aktif relocation araçlarını Supabase REST üzerinden çek (graceful).
+async function getToolRoutes() {
+  const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
+  const key =
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    console.warn("[sitemap] Supabase env yok — araçlar atlandı.");
+    return [];
+  }
+
+  try {
+    const endpoint = `${url.replace(/\/+$/, "")}/rest/v1/relocation_tools?select=slug&is_active=eq.true`;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15_000);
+    const res = await fetch(endpoint, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    if (!res.ok) {
+      console.warn(`[sitemap] relocation_tools fetch ${res.status} — atlandı.`);
+      return [];
+    }
+    const rows = await res.json();
+    return rows
+      .filter((r) => r?.slug)
+      .map((r) => ({
+        path: `/tools/${r.slug}`,
+        priority: "0.6",
+        changefreq: "monthly",
+      }));
+  } catch (error) {
+    console.warn("[sitemap] relocation_tools fetch hatası — atlandı:", error?.name ?? error);
+    return [];
+  }
+}
+
 function escapeXml(value) {
   return value.replace(/[<>&'"]/g, (c) =>
     ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" })[c],
@@ -142,12 +182,13 @@ async function main() {
   // SITE_DATE env ile sabitlenebilir; yoksa bugünün tarihi (deterministik build için).
   const today = process.env.SITE_DATE ?? new Date().toISOString().slice(0, 10);
 
-  const [commercialRoutes, blogRoutes] = await Promise.all([
+  const [commercialRoutes, blogRoutes, toolRoutes] = await Promise.all([
     getCommercialRoutes(),
     getBlogRoutes(),
+    getToolRoutes(),
   ]);
 
-  const entries = [...STATIC_ROUTES, ...commercialRoutes, ...blogRoutes];
+  const entries = [...STATIC_ROUTES, ...commercialRoutes, ...blogRoutes, ...toolRoutes];
   // Tekilleştir (path'e göre).
   const unique = [...new Map(entries.map((e) => [e.path, e])).values()];
 
@@ -161,7 +202,7 @@ ${unique.map((e) => renderUrl(e, today)).join("\n")}
   await writeFile(OUTPUT, xml, "utf8");
   console.log(
     `[sitemap] ${unique.length} URL yazıldı → public/sitemap.xml ` +
-      `(statik: ${STATIC_ROUTES.length}, commercial: ${commercialRoutes.length}, blog: ${blogRoutes.length})`,
+      `(statik: ${STATIC_ROUTES.length}, commercial: ${commercialRoutes.length}, blog: ${blogRoutes.length}, araç: ${toolRoutes.length})`,
   );
 }
 

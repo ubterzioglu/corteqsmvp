@@ -19,6 +19,7 @@ import {
   getPublicIndependentProfile,
   type IndependentProfile,
 } from "@/lib/independent-profiles";
+import { useSeo } from "@/lib/seo";
 
 const formatAnnouncementDate = (value?: string) => {
   if (!value) return null;
@@ -53,6 +54,17 @@ const IndependentProfilePage = () => {
 
   const mapSearchQuery = encodeURIComponent(
     profile?.mapQuery || [profile?.title, profile?.city, profile?.country].filter(Boolean).join(", "),
+  );
+
+  useSeo(
+    profile
+      ? {
+          title: `${profile.title} | CorteQS`,
+          description: profile.description || `${profile.title} — ${profile.city}, ${profile.country}`,
+          canonicalPath: `/kurulus/${profile.slug}`,
+        }
+      : { canonicalPath: `/kurulus/${slug}` },
+    [profile?.slug],
   );
 
   return (

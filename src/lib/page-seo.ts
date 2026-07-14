@@ -97,6 +97,30 @@ export const PAGE_SEO = {
       "CorteQS hizmet teslim politikası; dijital teslimat, abonelik erişimi ve ödeme onayı süreçleri. Digital service delivery policy for CorteQS.",
     canonicalPath: "/legal/service-delivery",
   },
+  directory: {
+    title: "Dizin | CorteQS",
+    description:
+      "CorteQS dizininde danışmanları, işletmeleri, dernekleri ve şehir elçilerini keşfedin; şehir ve role göre filtreleyin.",
+    canonicalPath: "/directory",
+  },
+  associations: {
+    title: "Dernekler ve Kuruluşlar | CorteQS",
+    description:
+      "Dünya genelindeki Türk dernekleri, vakıfları, odaları, büyükelçilikleri ve konsoloslukları CorteQS'te keşfedin.",
+    canonicalPath: "/associations",
+  },
+  relocationToolsHub: {
+    title: "Taşınma Araçları | CorteQS",
+    description:
+      "Yurt dışına taşınma sürecinizi kolaylaştıran ücretsiz araçlar: ülke seçimi, maaş karşılaştırma, şehir eşleştirme ve daha fazlası.",
+    canonicalPath: "/tools",
+  },
+  cadde: {
+    title: "Cadde | CorteQS",
+    description:
+      "Cadde, Türk diasporasının paylaşım, cafe ve çarşı alanı — güncel gönderileri keşfedin, topluluklara katılın.",
+    canonicalPath: "/cadde",
+  },
 } satisfies Record<string, SeoOptions>;
 
 export type PageSeoKey = keyof typeof PAGE_SEO;

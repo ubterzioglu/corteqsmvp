@@ -84,21 +84,38 @@ export default function SiteHeader() {
                   Araçlar
                   <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-64">
+                <DropdownMenuContent
+                  align="start"
+                  className="w-[26rem] max-w-[90vw] rounded-xl border-slate-200/80 p-2 shadow-xl"
+                >
                   {toolsQuery.isLoading && (
-                    <DropdownMenuItem disabled>Yükleniyor...</DropdownMenuItem>
+                    <DropdownMenuItem disabled className="rounded-lg px-3 py-2.5">
+                      Yükleniyor...
+                    </DropdownMenuItem>
                   )}
                   {!toolsQuery.isLoading && (toolsQuery.data?.length ?? 0) === 0 && (
-                    <DropdownMenuItem disabled>Henüz aktif araç yok</DropdownMenuItem>
-                  )}
-                  {toolsQuery.data?.map((tool) => (
-                    <DropdownMenuItem key={tool.key} asChild>
-                      <Link to={`/tools/${tool.slug}`}>{tool.title_tr}</Link>
+                    <DropdownMenuItem disabled className="rounded-lg px-3 py-2.5">
+                      Henüz aktif araç yok
                     </DropdownMenuItem>
+                  )}
+                  {toolsQuery.data?.map((tool, index) => (
+                    <div key={tool.key}>
+                      <DropdownMenuItem asChild className="rounded-lg px-3 py-2.5 focus:bg-slate-100">
+                        <Link
+                          to={`/tools/${tool.slug}`}
+                          className="whitespace-normal text-sm font-medium leading-snug text-slate-800"
+                        >
+                          {tool.title_tr}
+                        </Link>
+                      </DropdownMenuItem>
+                      {index < (toolsQuery.data?.length ?? 0) - 1 && (
+                        <DropdownMenuSeparator className="my-1 bg-slate-100" />
+                      )}
+                    </div>
                   ))}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/tools" className="font-semibold text-[#1E3A8A]">
+                  <DropdownMenuSeparator className="my-1 bg-slate-200" />
+                  <DropdownMenuItem asChild className="rounded-lg px-3 py-2.5 focus:bg-slate-100">
+                    <Link to="/tools" className="text-sm font-semibold text-[#1E3A8A]">
                       Tüm Araçları Gör
                     </Link>
                   </DropdownMenuItem>

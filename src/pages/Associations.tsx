@@ -13,6 +13,8 @@ import {
   listPublishedIndependentProfiles,
   type IndependentProfile,
 } from "@/lib/independent-profiles";
+import { useSeo } from "@/lib/seo";
+import { PAGE_SEO } from "@/lib/page-seo";
 
 const typeFilters = [
   { key: "all", label: "Tümü" },
@@ -32,6 +34,7 @@ type DisplayAssociation = (typeof associations)[number] & {
 };
 
 const Associations = () => {
+  useSeo(PAGE_SEO.associations);
   const { selectedCountry: country } = useDiaspora();
   const [city, setCity] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");

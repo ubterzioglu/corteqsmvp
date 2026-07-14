@@ -14,6 +14,8 @@ import {
   type UnifiedDirectoryRow,
 } from "@/lib/catalog-directory";
 import { useGeoCountries } from "@/hooks/useGeo";
+import { useSeo } from "@/lib/seo";
+import { PAGE_SEO } from "@/lib/page-seo";
 const mascot = "/lmaskot.png";
 
 // Supabase RPC errors are plain objects ({ message, code, details }), not Error
@@ -29,6 +31,7 @@ function getDirectoryErrorMessage(error: unknown): string {
 }
 
 const DirectoryPage = () => {
+  useSeo(PAGE_SEO.directory);
   const { user, isLoading: isAuthLoading } = useAuth();
   const countriesQuery = useGeoCountries();
   const [searchParams, setSearchParams] = useSearchParams();

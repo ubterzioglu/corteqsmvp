@@ -19,6 +19,7 @@ import { useRelocationToolSession } from "@/hooks/useRelocationToolSession";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
 import { toolHeroImage } from "@/lib/relocation-tools-images";
 import { getGermanyStandaloneTool } from "@/lib/germany-standalone-tools";
+import { useSeo } from "@/lib/seo";
 
 const TOOL_SESSION_MODE = "detailed" as const;
 
@@ -42,6 +43,17 @@ export default function RelocationToolPage() {
   });
 
   const tool = toolQuery.data;
+
+  useSeo(
+    tool
+      ? {
+          title: `${tool.title_tr} | CorteQS`,
+          description: tool.summary_tr,
+          canonicalPath: `/tools/${tool.slug}`,
+        }
+      : { canonicalPath: `/tools/${toolSlug}` },
+    [tool?.slug],
+  );
 
   const session = useRelocationToolSession({
     toolKey: tool?.key ?? "",

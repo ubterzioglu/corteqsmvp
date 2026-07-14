@@ -44,6 +44,8 @@ import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import { toggleInterestSelection } from "@/lib/cadde-targeting";
 import type { CaddeFeedPageParam, CaddeFilterState, CaddePostType, CaddeReactionType } from "@/lib/cadde-types";
+import { useSeo } from "@/lib/seo";
+import { PAGE_SEO } from "@/lib/page-seo";
 
 const WORLD_CLOCKS = [
   { label: "İstanbul", timezone: "Europe/Istanbul" },
@@ -125,13 +127,7 @@ const CaddePage = () => {
   const diasporaKey = useCaddeDiasporaKey();
   const actorContextQuery = useCaddeActorContext(Boolean(session));
 
-  useEffect(() => {
-    const previousTitle = document.title;
-    document.title = "CorteQS Cadde";
-    return () => {
-      document.title = previousTitle;
-    };
-  }, []);
+  useSeo(PAGE_SEO.cadde);
 
   const countriesQuery = useQuery({
     queryKey: caddeQueryKeys.countries(),
