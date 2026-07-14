@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MessageSquare, MessageSquarePlus, Pencil, Plus, Trash2 } from "lucide-react";
 
+import { RevisionAttachmentGrid } from "@/components/admin/revision/RevisionAttachmentGrid";
 import { RevisionCommentThread } from "@/components/admin/revision/RevisionCommentThread";
 import { RevisionRequestForm } from "@/components/admin/revision/RevisionRequestForm";
 import {
@@ -77,11 +78,15 @@ const AdminRevisionRequestsPage = () => {
   const upsertMutation = useMutation({
     mutationFn: (form: RevisionRequestFormState) =>
       editing ? updateRevisionRequest(editing.id, form) : createRevisionRequest(form),
-    onSuccess: async () => {
+    onSuccess: async (saved) => {
+      const wasCreate = !editing;
       setFormOpen(false);
       setEditing(null);
       await queryClient.invalidateQueries({ queryKey: REQUESTS_KEY });
-      toast({ title: editing ? "Revizyon isteği güncellendi" : "Revizyon isteği oluşturuldu" });
+      toast({ title: wasCreate ? "Revizyon isteği oluşturuldu" : "Revizyon isteği güncellendi" });
+      if (wasCreate) {
+        setSelectedId(saved.id);
+      }
     },
     onError: (error: unknown) => {
       toast({
@@ -248,6 +253,7 @@ const AdminRevisionRequestsPage = () => {
                 {selected.detail}
               </p>
             ) : null}
+            <RevisionAttachmentGrid parent={{ requestId: selected.id }} />
             <RevisionCommentThread requestId={selected.id} />
           </div>
         ) : null}
