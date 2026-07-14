@@ -180,7 +180,7 @@ const LoginPage = () => {
         />
 
         <div className="relative z-10 mt-6 max-w-md rounded-2xl border border-white/15 bg-white/10 p-5 shadow-lg backdrop-blur-md lg:mt-0">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/70">
+          <p className="text-[11px] font-bold uppercase tracking-[0.32em] text-white">
             Diaspora ağı
           </p>
           <h1 className="mt-3 font-display text-2xl font-black leading-tight tracking-tight text-white drop-shadow-sm md:text-3xl">
@@ -189,7 +189,7 @@ const LoginPage = () => {
               {" "}ağına giriş yap
             </span>
           </h1>
-          <p className="mt-3 max-w-sm text-[13px] leading-relaxed text-white/85">
+          <p className="mt-3 max-w-sm text-[13px] font-bold leading-relaxed text-white">
             CorteQS, dünyaya yayılmış Türk diasporasını tek bir ağda buluşturur. Hesabınla
             giriş yap, profilini yönet ve bağlantını sürdür.
           </p>

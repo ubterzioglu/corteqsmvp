@@ -95,21 +95,25 @@ export default function SiteHeader() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="start"
-                  className="w-[26rem] max-w-[90vw] rounded-xl border-slate-200/80 p-2 shadow-xl"
+                  className="flex max-h-[75vh] w-[42rem] max-w-[90vw] flex-col overflow-hidden rounded-xl border-slate-200/80 p-2 shadow-xl"
                 >
-                  {toolsQuery.isLoading && (
-                    <DropdownMenuItem disabled className="rounded-lg px-3 py-2.5">
-                      Yükleniyor...
-                    </DropdownMenuItem>
-                  )}
-                  {!toolsQuery.isLoading && (toolsQuery.data?.length ?? 0) === 0 && (
-                    <DropdownMenuItem disabled className="rounded-lg px-3 py-2.5">
-                      Henüz aktif araç yok
-                    </DropdownMenuItem>
-                  )}
-                  {toolsQuery.data?.map((tool, index) => (
-                    <div key={tool.key}>
-                      <DropdownMenuItem asChild className="rounded-lg px-3 py-2.5 focus:bg-slate-100">
+                  <div className="grid flex-1 grid-cols-2 gap-x-2 overflow-y-auto">
+                    {toolsQuery.isLoading && (
+                      <DropdownMenuItem disabled className="col-span-2 rounded-lg px-3 py-2.5">
+                        Yükleniyor...
+                      </DropdownMenuItem>
+                    )}
+                    {!toolsQuery.isLoading && (toolsQuery.data?.length ?? 0) === 0 && (
+                      <DropdownMenuItem disabled className="col-span-2 rounded-lg px-3 py-2.5">
+                        Henüz aktif araç yok
+                      </DropdownMenuItem>
+                    )}
+                    {toolsQuery.data?.map((tool) => (
+                      <DropdownMenuItem
+                        key={tool.key}
+                        asChild
+                        className="rounded-lg border-b border-slate-100 px-3 py-2.5 last:border-b-0 focus:bg-slate-100"
+                      >
                         <Link
                           to={`/tools/${tool.slug}`}
                           className="whitespace-normal text-sm font-medium leading-snug text-slate-800"
@@ -117,11 +121,8 @@ export default function SiteHeader() {
                           {tool.title_tr}
                         </Link>
                       </DropdownMenuItem>
-                      {index < (toolsQuery.data?.length ?? 0) - 1 && (
-                        <DropdownMenuSeparator className="my-1 bg-slate-100" />
-                      )}
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                   <DropdownMenuSeparator className="my-1 bg-slate-200" />
                   <DropdownMenuItem asChild className="rounded-lg px-3 py-2.5 focus:bg-slate-100">
                     <Link to="/tools" className="text-sm font-semibold text-[#1E3A8A]">

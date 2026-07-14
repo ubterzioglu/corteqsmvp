@@ -2,7 +2,7 @@
  * 1. Tam-viewport ağ hero (deneme landing) — Vodafone "everyone.connected" tarzı.
  * Kart YOK: tam ekran soyut "geometrik ağ" videosu (açık/beyaz zemin) + soldan başlayan
  * büyük başlık, dikey vurgu çizgili kısa açıklama ve dolu birincil CTA + sessiz ikincil CTA.
- * Metin BEYAZ + kalın, okunabilirlik örtüsü soldan KOYU (lacivert/siyah) → sağa şeffaf.
+ * Video açık renkli olduğu için metin KOYU, okunabilirlik örtüsü de soldan BEYAZ.
  */
 
 import { Link } from "react-router-dom";
@@ -23,7 +23,7 @@ const scrollToAtlas = () => {
 
 const HeroNetworkSection = () => {
   return (
-    <section className="relative flex min-h-[92vh] items-center overflow-hidden bg-white">
+    <section className="relative flex min-h-[calc(100vh-8rem)] items-center overflow-hidden bg-white py-8 sm:min-h-[calc(100vh-6rem)]">
       {/* Tam ekran arka plan video — dekoratif, loop, sessiz, autoplay. */}
       <video
         src={HERO_VIDEO_SRC}
@@ -35,14 +35,14 @@ const HeroNetworkSection = () => {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
       />
-      {/* Okunabilirlik örtüsü: BEYAZ metnin okunması için soldan KOYU → sağa şeffaf.
-          Başlığın olduğu sol taraf koyu lacivert/siyaha yaklaşır, sağdaki ağ deseni görünür kalır. */}
+      {/* Okunabilirlik örtüsü: açık videoda KOYU metnin okunması için soldan beyaz → sağa şeffaf.
+          Başlığın olduğu sol taraf süt beyaza yaklaşır, sağdaki ağ deseni görünür kalır. */}
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"
         style={{
           background:
-            "linear-gradient(90deg, rgba(8,15,30,0.88) 0%, rgba(8,15,30,0.74) 38%, rgba(8,15,30,0.35) 70%, rgba(8,15,30,0.1) 100%)",
+            "linear-gradient(90deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.78) 38%, rgba(255,255,255,0.35) 70%, rgba(255,255,255,0.12) 100%)",
         }}
       />
       <div
@@ -50,18 +50,18 @@ const HeroNetworkSection = () => {
         aria-hidden="true"
         style={{
           background:
-            "linear-gradient(0deg, rgba(8,15,30,0.5) 0%, rgba(8,15,30,0) 42%)",
+            "linear-gradient(0deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 42%)",
         }}
       />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 sm:px-10">
         <div className="max-w-2xl text-left">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-4 py-1.5 text-xs font-bold text-white shadow-sm backdrop-blur">
+          <span className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/70 px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-sm backdrop-blur">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-glow-orange" aria-hidden="true" />
             Küresel Türk Diaspora Ağı
           </span>
 
-          <h1 className="mt-6 font-display text-5xl font-bold leading-[0.98] tracking-[-0.02em] text-white sm:text-7xl lg:text-[5.5rem]">
+          <h1 className="mt-4 font-display text-4xl font-bold leading-[0.98] tracking-[-0.02em] text-slate-900 sm:text-6xl lg:text-[4.5rem]">
             Dünyanın
             <br />
             Her Yerindeki
@@ -72,22 +72,22 @@ const HeroNetworkSection = () => {
           </h1>
 
           {/* Vodafone tarzı sol dikey vurgu çizgili açıklama. */}
-          <p className="mt-8 max-w-xl border-l-2 border-glow-teal pl-5 text-base font-bold leading-relaxed text-white sm:text-lg">
+          <p className="mt-6 max-w-xl border-l-2 border-glow-teal pl-5 text-sm leading-relaxed text-slate-700 sm:text-base">
             Berlin'den Sidney'e, Toronto'dan Dubai'ye insanları, toplulukları ve işletmeleri
             tek bir güven ağında buluşturuyoruz. Bir dizin değil, yaşayan bir ağ.
           </p>
 
-          <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+          <div className="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
             <Link
               to="/login?mode=signup"
-              className="group inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#00ACC1] to-[#0097A7] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_hsl(var(--glow-teal)/0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-teal"
+              className="group inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#00ACC1] to-[#0097A7] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_hsl(var(--glow-teal)/0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-teal"
             >
               Ağa Katıl
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
             </Link>
             <Link
               to="/tools"
-              className="group inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#F59E0B] to-[#EA580C] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_rgba(234,88,12,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_38px_-12px_rgba(234,88,12,0.65)]"
+              className="group inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#F59E0B] to-[#EA580C] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_rgba(234,88,12,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_38px_-12px_rgba(234,88,12,0.65)]"
             >
               Araçlar!
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
@@ -95,7 +95,7 @@ const HeroNetworkSection = () => {
             <button
               type="button"
               onClick={scrollToAtlas}
-              className="group inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#34A853] to-[#2F9B4D] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_rgba(52,168,83,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_38px_-12px_rgba(52,168,83,0.65)]"
+              className="group inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#34A853] to-[#2F9B4D] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_rgba(52,168,83,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_38px_-12px_rgba(52,168,83,0.65)]"
             >
               Ağı keşfet
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
