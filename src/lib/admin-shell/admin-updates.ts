@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260714-bireysel-tek-tip-premium-profil",
+    date: "14 Temmuz 2026",
+    title: "Tüm Bireysel kullanıcılar artık aynı 'premium' profil tasarımını görüyor",
+    items: [
+      "Daha önce sadece iki test hesabında (Experimental_2/3) denenen zengin profil görünümü — büyük fotoğraf, mor vurgu rengi, üstte 'Premium Profil' etiketi, öne çıkan hızlı aksiyon butonları (e-posta / WhatsApp / telefon), düzenli bölüm sıralaması — artık 'Bireysel' kategorisindeki HER kullanıcıya (Diaspora Üyesi ve benzeri bireysel roller) uygulandı. Danışman, İşletme, Kuruluş, Influencer, Elçi gibi diğer profil kategorileri bu değişiklikten etkilenmedi, eskisi gibi kalmaya devam ediyor.",
+      "Hem kendi profilini düzenlerken (/profile) hem başkasının herkese açık profiline bakarken (/directory/catalog/...) aynı yeni tasarım geçerli. Doldurulan bilgiler, görünürlük ayarları ve izinler HİÇBİR ŞEKİLDE değişmedi — sadece görsel sunum güncellendi.",
+      "Profil değiştirme ekranındaki 'Premium Pilot' rozeti de artık tüm Bireysel profil kartlarında görünüyor (önceden sadece iki test hesabında çıkıyordu) — aynı tasarımı paylaştıkları için bilinçli olarak aynı rozet kullanıldı, ayrı bir 'Bireysel' rozeti eklenmedi.",
+      "Teknik tarafta: src/lib/profile-presentation.ts içine yeni bir 'individual-premium' sunum config'i eklendi; hangi rolün 'Bireysel' sayıldığı zaten var olan tek kaynaktan (profile-types.ts → getUiProfileType) okunuyor, ikinci bir bakım noktası açılmadı. Deneysel_2/3 pilotu kullanıcı tercihiyle ayrı bir config olarak korundu (aynı görünüm, ayrı anahtar) — ileride ayrışma esnekliği için. Feature flag YOK, kademeli açılım yapılmadı; değişiklik deploy sonrası tüm Bireysel kullanıcılar için anında aktif olacak. Veritabanı/migration değişikliği yok, sadece frontend kodu. 1027 test + tsc kontrolü yeşil; görsel QA deploy sonrası yapılmalı.",
+    ],
+  },
+  {
     id: "20260714-admin-hizli-arac-linkleri",
     date: "14 Temmuz 2026",
     title: "Admin panel üst çubuğuna Clarity / Search Console / Drive'a tek tık erişim eklendi",
