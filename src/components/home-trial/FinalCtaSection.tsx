@@ -37,7 +37,7 @@ const FinalCtaSection = () => {
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               to="/login?mode=signup"
-              className="group inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#00ACC1] to-[#0097A7] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_hsl(var(--glow-teal)/0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-teal"
+              className="group inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#00ACC1] to-[#0097A7] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_hsl(var(--glow-teal)/0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-teal sm:w-auto"
             >
               Ücretsiz Kayıt Ol
               <ArrowRight
@@ -47,7 +47,7 @@ const FinalCtaSection = () => {
             </Link>
             <Link
               to="/founders"
-              className="inline-flex min-h-[52px] items-center justify-center rounded-xl px-6 text-sm font-semibold text-slate-600 underline-offset-4 transition-colors hover:text-slate-900 hover:underline"
+              className="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-slate-800 to-slate-950 px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_rgba(15,23,42,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-12px_rgba(15,23,42,0.65)] sm:w-auto"
             >
               Biz kimiz?
             </Link>

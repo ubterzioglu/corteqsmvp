@@ -119,42 +119,10 @@ async function getBlogRoutes() {
   }
 }
 
-// Aktif relocation araçlarını Supabase REST üzerinden çek (graceful).
-async function getToolRoutes() {
-  const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
-  const key =
-    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) {
-    console.warn("[sitemap] Supabase env yok — araçlar atlandı.");
-    return [];
-  }
-
-  try {
-    const endpoint = `${url.replace(/\/+$/, "")}/rest/v1/relocation_tools?select=slug&is_active=eq.true`;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15_000);
-    const res = await fetch(endpoint, {
-      headers: { apikey: key, Authorization: `Bearer ${key}` },
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) {
-      console.warn(`[sitemap] relocation_tools fetch ${res.status} — atlandı.`);
-      return [];
-    }
-    const rows = await res.json();
-    return rows
-      .filter((r) => r?.slug)
-      .map((r) => ({
-        path: `/tools/${r.slug}`,
-        priority: "0.6",
-        changefreq: "monthly",
-      }));
-  } catch (error) {
-    console.warn("[sitemap] relocation_tools fetch hatası — atlandı:", error?.name ?? error);
-    return [];
-  }
-}
+// NOT: /tools/:slug alt sayfaları RequireAuth ile korunur (bkz. src/App.tsx) —
+// girişsiz ziyaretçi/bot login'e redirect edilir. Bunları sitemap'e eklemek
+// GSC'de "Discovered/Crawled - currently not indexed" üretir (2026-07-14 audit).
+// Yalnızca herkese açık /tools hub'ı (STATIC_ROUTES içinde) sitemap'te kalır.
 
 function escapeXml(value) {
   return value.replace(/[<>&'"]/g, (c) =>

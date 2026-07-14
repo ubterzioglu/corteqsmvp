@@ -3,6 +3,7 @@
 import { Link } from "react-router-dom";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { toolHeroImage } from "@/lib/relocation-tools-images";
 import type { RelocationToolRow } from "@/lib/relocation-tools-types";
 
@@ -15,7 +16,14 @@ export function ToolAccordionCard({ tool }: ToolAccordionCardProps) {
 
   return (
     <AccordionItem value={tool.key}>
-      <AccordionTrigger className="text-left text-base">{tool.title_tr}</AccordionTrigger>
+      <AccordionTrigger className="text-left text-base">
+        <span className="flex flex-1 items-center justify-between gap-2 pr-2">
+          <span>{tool.title_tr}</span>
+          <Badge className="shrink-0 bg-emerald-500 text-white shadow-md hover:bg-emerald-500">
+            🎉 ÜCRETSİZ
+          </Badge>
+        </span>
+      </AccordionTrigger>
       <AccordionContent>
         <div className="space-y-3">
           {heroImage && (
