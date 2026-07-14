@@ -10,13 +10,16 @@ import { getUiProfileType } from "@/lib/profile-types";
  * - Pure presentation decisions only — no permission, visibility or backend
  *   rules belong here (those stay in RPC payloads / AFS).
  * - Resolution order: (1) exact-match on `supportedRoleKeys` (pilot roles),
- *   (2) every flat role in the "Bireysel" UI category (per profile-types.ts'
- *   getUiProfileType — the single source of truth for that classification)
- *   gets the individual premium config, (3) everything else falls back to
- *   generic.
+ *   (2) explicit presentation exclusions (roles that are Bireysel by category
+ *   but should keep the plain/generic layout), (3) every remaining flat role
+ *   in the "Bireysel" UI category (per profile-types.ts' getUiProfileType —
+ *   the single source of truth for that classification) gets the individual
+ *   premium config, (4) everything else falls back to generic.
  * - Category classification is intentionally NOT reimplemented here; it is
  *   imported from profile-types.ts so there is one place that decides "is
- *   this role Bireysel".
+ *   this role Bireysel". Presentation exclusions are a visual-only carve-out
+ *   on top of that classification — they do not change the role's category,
+ *   permissions, or data model.
  */
 
 export type ProfileHeroVariant = "member" | "professional" | "business" | "organization" | "experimental";
@@ -107,6 +110,17 @@ const PRESENTATION_BY_ROLE_KEY: ReadonlyMap<string, ProfilePresentationConfig> =
   ),
 );
 
+/**
+ * Flat role keys that are classified as "Bireysel" (per getUiProfileType) but
+ * must keep the plain/generic profile layout instead of the individual
+ * premium presentation. Today this is exactly the platform SuperAdmin role
+ * (assigned to the two founder accounts) — their profiles are kept visually
+ * separate from the member-facing premium design on request.
+ */
+const INDIVIDUAL_PRESENTATION_EXCLUDED_ROLE_KEYS: ReadonlySet<string> = new Set([
+  "Admin_SuperAdmin",
+]);
+
 export function resolveProfilePresentation(
   roleKey: string | null | undefined,
 ): ProfilePresentationConfig {
@@ -114,6 +128,8 @@ export function resolveProfilePresentation(
 
   const pilotMatch = PRESENTATION_BY_ROLE_KEY.get(roleKey);
   if (pilotMatch) return pilotMatch;
+
+  if (INDIVIDUAL_PRESENTATION_EXCLUDED_ROLE_KEYS.has(roleKey)) return GENERIC_PRESENTATION;
 
   if (getUiProfileType(roleKey) === "bireysel") return INDIVIDUAL_PRESENTATION;
 

@@ -39,7 +39,7 @@ describe("resolveProfilePresentation — pilot izolasyonu", () => {
 
 describe("resolveProfilePresentation — Bireysel kategori tek tip premium sunum", () => {
   it("Bireysel UI kategorisindeki flat roller individual premium config'i alır", () => {
-    for (const roleKey of ["User_DiasporaMember", "Admin_Platform", "Job_Candidate", "Marketplace_IndividualSeller"]) {
+    for (const roleKey of ["User_DiasporaMember", "Admin_PlatformAdmin", "Job_Candidate", "Marketplace_IndividualSeller"]) {
       const presentation = resolveProfilePresentation(roleKey);
       expect(presentation.key).toBe(INDIVIDUAL_PRESENTATION_KEY);
       expect(presentation.heroVariant).toBe("experimental");
@@ -48,6 +48,19 @@ describe("resolveProfilePresentation — Bireysel kategori tek tip premium sunum
       expect(isPremiumPresentation(presentation)).toBe(true);
       expect(isExperimental2Presentation(presentation)).toBe(false);
     }
+  });
+
+  it("Admin_SuperAdmin Bireysel kategoride olsa da premium sunum ALMAZ (kurucu hesap istisnası)", () => {
+    // Admin_SuperAdmin getUiProfileType ile "bireysel" sayılır (Admin_ prefix'i)
+    // ama iki kurucu hesap (ubterzioglu@gmail.com, burakakcakanat@gmail.com —
+    // bkz. migration 20260609004000_set_admin_users.sql) bilinçli olarak sade/
+    // generic görünümde tutulur. Sadece görsel bir istisna; rol kategorisi,
+    // izinler ve veri modeli değişmez.
+    const presentation = resolveProfilePresentation("Admin_SuperAdmin");
+    expect(presentation.key).toBe(GENERIC_PRESENTATION_KEY);
+    expect(presentation.heroVariant).toBe("member");
+    expect(presentation.eyebrow).toBeNull();
+    expect(isPremiumPresentation(presentation)).toBe(false);
   });
 
   it("Bireysel olmayan production rolleri generic fallback almaya devam eder", () => {
