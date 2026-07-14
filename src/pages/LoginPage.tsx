@@ -179,17 +179,17 @@ const LoginPage = () => {
           }}
         />
 
-        <div className="relative z-10 mt-6 max-w-md lg:mt-0">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/55">
+        <div className="relative z-10 mt-6 max-w-md rounded-2xl border border-white/15 bg-white/10 p-5 shadow-lg backdrop-blur-md lg:mt-0">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/70">
             Diaspora ağı
           </p>
-          <h1 className="mt-3 font-display text-2xl font-black leading-tight tracking-tight md:text-3xl">
+          <h1 className="mt-3 font-display text-2xl font-black leading-tight tracking-tight text-white drop-shadow-sm md:text-3xl">
             Diasporanın profesyonel
             <span className="bg-gradient-to-r from-[hsl(var(--glow-teal))] to-[hsl(var(--glow-orange))] bg-clip-text text-transparent">
               {" "}ağına giriş yap
             </span>
           </h1>
-          <p className="mt-3 max-w-sm text-[13px] leading-relaxed text-white/65">
+          <p className="mt-3 max-w-sm text-[13px] leading-relaxed text-white/85">
             CorteQS, dünyaya yayılmış Türk diasporasını tek bir ağda buluşturur. Hesabınla
             giriş yap, profilini yönet ve bağlantını sürdür.
           </p>
