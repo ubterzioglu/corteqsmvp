@@ -395,9 +395,20 @@ describe("presentation entegrasyonu — Experimental_2 pilot", () => {
     expect(vm.hero.accent).toBe("purple");
   });
 
-  it("Experimental_1 generic fallback alır (negatif kontrol)", () => {
+  it("Experimental_1 pilot exact-match'e girmez ama Bireysel kategori varsayılanı gereği premium alır", () => {
+    // "Experimental_1" ne pilot Map'inde ne de profile-types.ts eşlemesinde
+    // tanımlı — getUiProfileType varsayılanı "bireysel" döner, bu da artık
+    // individual premium config'e karşılık gelir (generic DEĞİL).
     const vm = buildPublicCatalogProfileViewModel(
       makePayload({ item: { ...makePayload().item, roleKey: "Experimental_1" } }),
+    );
+    expect(vm.presentation.key).toBe("individual-premium");
+    expect(vm.hero.eyebrow).not.toBeNull();
+  });
+
+  it("Bireysel olmayan roller generic fallback alır (negatif kontrol)", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({ item: { ...makePayload().item, roleKey: "Healthcare_Doctor" } }),
     );
     expect(vm.presentation.key).toBe("generic");
     expect(vm.hero.eyebrow).toBeNull();
@@ -406,6 +417,7 @@ describe("presentation entegrasyonu — Experimental_2 pilot", () => {
   it("generic rollerde aksiyonlar secondary kalır", () => {
     const vm = buildPublicCatalogProfileViewModel(
       makePayload({
+        item: { ...makePayload().item, roleKey: "Healthcare_Doctor" },
         contacts: [{ type: "email", value: "info@example.com", label: null, isPrimary: false }],
       }),
     );
@@ -451,7 +463,9 @@ describe("presentation entegrasyonu — Experimental_2 pilot", () => {
       },
     ];
 
-    const generic = buildPublicCatalogProfileViewModel(makePayload({ sections }));
+    const generic = buildPublicCatalogProfileViewModel(
+      makePayload({ item: { ...makePayload().item, roleKey: "Healthcare_Doctor" }, sections }),
+    );
     expect(generic.sidebarSections.map((section) => section.componentKey)).toEqual([
       "languages",
       "contact_list",

@@ -1,17 +1,22 @@
 import type { ProfileAccent } from "@/components/directory/public-profile/public-profile-utils";
+import { getUiProfileType } from "@/lib/profile-types";
 
 /**
  * Presentation config layer: resolves the *visual* profile experience from the
  * flat role key (roles.key). Public page and authenticated editor share the
  * same resolver so a role always renders with one consistent visual language.
  *
- * Scope rules (pilot contract):
+ * Scope rules:
  * - Pure presentation decisions only — no permission, visibility or backend
  *   rules belong here (those stay in RPC payloads / AFS).
- * - Resolution is exact-match on `supportedRoleKeys`; every unknown role gets
- *   the generic fallback, so production roles are never affected by a pilot.
- * - The Experimental_2 premium pilot is the only non-generic config today;
- *   rollout to other roles = adding a config entry, not touching components.
+ * - Resolution order: (1) exact-match on `supportedRoleKeys` (pilot roles),
+ *   (2) every flat role in the "Bireysel" UI category (per profile-types.ts'
+ *   getUiProfileType — the single source of truth for that classification)
+ *   gets the individual premium config, (3) everything else falls back to
+ *   generic.
+ * - Category classification is intentionally NOT reimplemented here; it is
+ *   imported from profile-types.ts so there is one place that decides "is
+ *   this role Bireysel".
  */
 
 export type ProfileHeroVariant = "member" | "professional" | "business" | "organization" | "experimental";
@@ -49,12 +54,30 @@ export type ProfilePresentationConfig = {
 };
 
 export const EXPERIMENTAL_2_PRESENTATION_KEY = "experimental-2-premium";
+export const INDIVIDUAL_PRESENTATION_KEY = "individual-premium";
 export const GENERIC_PRESENTATION_KEY = "generic";
 
 const EXPERIMENTAL_2_PRESENTATION: ProfilePresentationConfig = {
   key: EXPERIMENTAL_2_PRESENTATION_KEY,
   // Experimental_3, premium pilotunun bir klonudur ve aynı premium görünümü alır.
   supportedRoleKeys: ["Experimental_2", "Experimental_3"],
+  accent: "purple",
+  heroVariant: "experimental",
+  eyebrow: "Premium Profil",
+  primaryActionPriority: ["email", "whatsapp", "phone"],
+  maxPrimaryActions: 2,
+  preferredSectionOrder: ["rich_text", "attributes", "services", "contact_list", "languages", "badges"],
+  showMobileActionBar: true,
+};
+
+// Tüm "Bireysel" UI kategorisindeki flat roller (User_*/Admin_* prefix'leri,
+// Job_Candidate, Marketplace_IndividualSeller vb. — bkz. getUiProfileType) için
+// Experimental_2/3 pilotuyla aynı görsel değerlere sahip kalıcı config. Ayrı bir
+// config olarak tutulur (pilot ile birleştirilmez) ki ileride ayrışma esnekliği
+// korunsun; bugün ikisi aynı görünümü üretir.
+const INDIVIDUAL_PRESENTATION: ProfilePresentationConfig = {
+  key: INDIVIDUAL_PRESENTATION_KEY,
+  supportedRoleKeys: [],
   accent: "purple",
   heroVariant: "experimental",
   eyebrow: "Premium Profil",
@@ -88,9 +111,19 @@ export function resolveProfilePresentation(
   roleKey: string | null | undefined,
 ): ProfilePresentationConfig {
   if (!roleKey) return GENERIC_PRESENTATION;
-  return PRESENTATION_BY_ROLE_KEY.get(roleKey) ?? GENERIC_PRESENTATION;
+
+  const pilotMatch = PRESENTATION_BY_ROLE_KEY.get(roleKey);
+  if (pilotMatch) return pilotMatch;
+
+  if (getUiProfileType(roleKey) === "bireysel") return INDIVIDUAL_PRESENTATION;
+
+  return GENERIC_PRESENTATION;
 }
 
 export function isExperimental2Presentation(config: ProfilePresentationConfig): boolean {
   return config.key === EXPERIMENTAL_2_PRESENTATION_KEY;
+}
+
+export function isPremiumPresentation(config: ProfilePresentationConfig): boolean {
+  return config.key === EXPERIMENTAL_2_PRESENTATION_KEY || config.key === INDIVIDUAL_PRESENTATION_KEY;
 }

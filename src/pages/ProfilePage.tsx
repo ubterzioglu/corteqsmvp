@@ -55,7 +55,7 @@ import {
 import { getAttributeStringValue, type AttributeVisibility, type ProfileAttributeState } from "@/lib/member-profile";
 import { getProfileDocumentAccessUrl, parseProfileDocumentRecord, removeProfileDocument, uploadProfileDocument, type ProfileDocumentRecord } from "@/lib/profile-documents";
 import {
-  EXPERIMENTAL_2_PRESENTATION_KEY,
+  isPremiumPresentation,
   resolveProfilePresentation,
 } from "@/lib/profile-presentation";
 import { getRoleMeta, getUiProfileType, isProfileType } from "@/lib/profile-types";
@@ -418,7 +418,7 @@ const ProfilePage = () => {
     () => resolveProfilePresentation(profile?.roleKey),
     [profile?.roleKey],
   );
-  const isPremiumPilot = presentation.key === EXPERIMENTAL_2_PRESENTATION_KEY;
+  const isPremiumPilot = isPremiumPresentation(presentation);
   const { slug: memberCatalogSlug, isLoading: isMemberSlugLoading } = useMemberCatalogSlug(
     isPremiumPilot && Boolean(profile),
   );

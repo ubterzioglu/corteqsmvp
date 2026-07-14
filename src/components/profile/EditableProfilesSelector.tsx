@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { EditableCatalogItemSummary } from "@/lib/member-catalog";
 import {
-  isExperimental2Presentation,
+  isPremiumPresentation,
   resolveProfilePresentation,
 } from "@/lib/profile-presentation";
 import { getUiProfileType, roleMetaByLegacyKey } from "@/lib/profile-types";
@@ -45,7 +45,7 @@ const EditableProfilesSelector = ({ items, onSelect }: EditableProfilesSelectorP
       <div className="grid gap-4 md:grid-cols-2">
         {items.map((item) => {
           const Icon = iconByItemType[item.itemType] ?? UserCircle2;
-          const isPilotProfile = isExperimental2Presentation(
+          const isPilotProfile = isPremiumPresentation(
             resolveProfilePresentation(item.roleKey),
           );
           return (

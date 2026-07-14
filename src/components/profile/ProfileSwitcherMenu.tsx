@@ -19,7 +19,7 @@ import {
 } from "@/lib/member-catalog";
 import { profileEditorPathFor } from "@/lib/profile-routing";
 import {
-  isExperimental2Presentation,
+  isPremiumPresentation,
   resolveProfilePresentation,
 } from "@/lib/profile-presentation";
 import { getUiProfileType, roleMetaByLegacyKey } from "@/lib/profile-types";
@@ -93,7 +93,7 @@ const ProfileSwitcherMenu = ({ currentItemId, triggerClassName }: ProfileSwitche
         <DropdownMenuSeparator />
         {items.map((item) => {
           const isActive = item.itemId === activeItemId;
-          const isPremium = isExperimental2Presentation(resolveProfilePresentation(item.roleKey));
+          const isPremium = isPremiumPresentation(resolveProfilePresentation(item.roleKey));
           return (
             <DropdownMenuItem
               key={item.itemId}

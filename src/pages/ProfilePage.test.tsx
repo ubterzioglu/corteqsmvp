@@ -604,12 +604,15 @@ describe("ProfilePage", () => {
 
     renderProfilePage("/profile/bireysel");
 
+    // "bireysel" rolü artık premium sunumu alır (bkz. profile-presentation.ts
+    // INDIVIDUAL_PRESENTATION) — hero PremiumProfileHero'dan render edilir,
+    // kendi avatar kontrol etiketlerini kullanır (legacy "Profil Fotoğrafı"
+    // bloğu bu yolda render edilmez).
     expect(await screen.findByRole("heading", { name: "firmascope" })).toBeInTheDocument();
-    expect(screen.getByText("Profil Fotoğrafı")).toBeInTheDocument();
+    expect(screen.getByText("Premium Profil")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /^Yardım$/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^Değiştir$/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^Kaldır$/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Yenile/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Fotoğrafı Değiştir$/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Fotoğrafı Kaldır$/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Çıkış Yap/i })).toBeInTheDocument();
     expect(screen.getAllByRole("img", { name: "firmascope" })).toHaveLength(1);
     expect(screen.getByRole("img", { name: "firmascope" })).toHaveAttribute("src", "https://example.com/avatar.jpg");
@@ -630,15 +633,10 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Rolüne Özel Alanlar")).toBeInTheDocument();
     expect(screen.queryByText("Alt Kategori / Alt Tip")).not.toBeInTheDocument();
     expect(screen.queryByText("Locked")).not.toBeInTheDocument();
-    const profileSummaryToggle = screen.getByRole("button", { name: "Profil Durumu" });
-    expect(profileSummaryToggle).toBeInTheDocument();
-    expect(profileSummaryToggle).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByText("Profil Skoru")).not.toBeInTheDocument();
-
-    fireEvent.click(profileSummaryToggle);
-
-    expect(profileSummaryToggle).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByText("Profil Skoru")).toBeInTheDocument();
+    // Legacy "Profil Durumu" akordeonu (Profil Skoru vs.) premium yolda yok —
+    // yerine her zaman açık ProfileCompletionCard render edilir.
+    expect(screen.getByText("Profil Tamamlanma")).toBeInTheDocument();
+    expect(screen.getByRole("progressbar", { name: "Profil tamamlanma yüzdesi" })).toBeInTheDocument();
     expect(screen.queryByText("Genel Durum")).not.toBeInTheDocument();
     expect(screen.queryByText("Tamamlanma Durumu")).not.toBeInTheDocument();
     const accessCardToggle = screen.getByRole("button", { name: /Başvurular & Erişimler/i });
@@ -681,8 +679,9 @@ describe("ProfilePage", () => {
     fireEvent.click(helpCardToggle);
     expect(helpCardToggle).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByText("Ortak Profil Alanları Kullanım Kılavuzu")).not.toBeInTheDocument();
+    // Legacy hero, bio metnini "Profil özeti: ..." önekiyle ikinci kez
+    // tekrarlardı; premium hero tek kopya render eder (bkz. satır 682).
     expect(screen.getByText(/Diaspora için iş birliği ve mentorluk fırsatlarına açığım\./i)).toBeInTheDocument();
-    expect(screen.getByText("Profil özeti: Diaspora için iş birliği ve mentorluk fırsatlarına açığım.")).toBeInTheDocument();
     expect(screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için")).not.toBeInTheDocument();
     expect(screen.queryByDisplayValue("mentorluk, topluluk, networking")).not.toBeInTheDocument();
     expect(screen.getByDisplayValue("Corteqs Labs")).toBeInTheDocument();
