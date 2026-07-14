@@ -14,6 +14,35 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260714-admin-hizli-arac-linkleri",
+    date: "14 Temmuz 2026",
+    title: "Admin panel üst çubuğuna Clarity / Search Console / Drive'a tek tık erişim eklendi",
+    items: [
+      "Admin panelin üst çubuğunda (topbar), arama kutusunun solunda üç yeni ikon buton var: Microsoft Clarity, Google Search Console ve ortak Google Drive klasörü. Her birine tıklayınca ilgili sayfa yeni sekmede direkt açılıyor — artık linkleri ayrıca aramaya/yapıştırmaya gerek yok.",
+      "Sadece görsel bir eklenti; hiçbir mevcut menü veya sayfa değişmedi.",
+    ],
+  },
+  {
+    id: "20260714-admin-rol-dagilimi-karti",
+    date: "14 Temmuz 2026",
+    title: "Kayıt Veritabanı'na 'Kullanıcı Tipi Dağılımı' kartı eklendi (her rolden kaç kişi var)",
+    items: [
+      "Admin panelinde Kayıt Veritabanı (/admin/data) sayfasını açtığında artık üstte kapalı gelen yeni bir kart var: 'Kullanıcı Tipi Dağılımı'. Karta tıklayıp açınca, platformdaki HER kullanıcı/kayıt tipinin (ör. Bireysel/Diaspora Üyesi, dernekler, danışmanlar vb.) toplam sayısını tek bakışta görüyorsun — sayfa sayfa saymana gerek kalmadan, veritabanının tamamı için.",
+      "Örneğin 'kaç tane bireysel kullanıcımız var' sorusunun cevabı artık bu kartta 'Diaspora Üyesi' satırında duruyor (bireysel kullanıcı rolünün sistemdeki adı budur).",
+      "Teknik tarafta: yeni bir admin RPC'si (moderator-gated) rol bazında gruplu sayım yapıyor; otomatik testlerle korunuyor, tüm proje testleri yeşil. Veritabanı tarafının canlıya uygulanması ayrı bir onay adımı olarak bekliyor.",
+    ],
+  },
+  {
+    id: "20260714-ucretsiz-rozeti-ve-arac-menusu",
+    date: "14 Temmuz 2026",
+    title: "Sitede her yere 'Ücretsiz' vurgusu eklendi + masaüstü Araçlar menüsü sadeleşti",
+    items: [
+      "Giriş ekranında ve /tools altındaki tüm araç kartlarında (hem hub sayfasında hem araç detaylarında) artık göz alıcı yeşil bir '🎉 ÜCRETSİZ' rozeti var — ziyaretçiye ücretsiz olduğumuzu daha net anlatmak için.",
+      "Masaüstünde header'daki 'Araçlar' açılır menüsü (dropdown) kaldırıldı; artık tek tıkla doğrudan Araçlar sayfasına (/tools) götürüyor. Önceki popover menü (araç listesini önizleyen) sadeleştirme kapsamında çıkarıldı.",
+      "Ayrıca arka planda bir SEO düzeltmesi yapıldı: /tools altındaki tekil araç sayfaları (ör. /tools/xyz) giriş gerektirdiği için Google'ın site haritasından (sitemap) çıkarıldı — bunlar zaten girişsiz görülemiyordu ve Google Search Console'da 'taranmış ama indekslenmemiş' uyarısına yol açıyordu. Sadece herkese açık /tools ana sayfası site haritasında kalmaya devam ediyor.",
+    ],
+  },
+  {
     id: "20260714-revizyon-istekleri-gorsel-ekleme",
     date: "14 Temmuz 2026",
     title: "Revizyon İstekleri'ne görsel ekleme eklendi: hem talebe hem yorumlara çoklu görsel",
