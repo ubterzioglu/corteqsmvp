@@ -3,6 +3,7 @@ import { Navigate, useSearchParams } from "react-router-dom";
 import { ShieldCheck } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -180,9 +181,14 @@ const LoginPage = () => {
         />
 
         <div className="relative z-10 mt-6 max-w-md rounded-2xl border border-white/15 bg-white/10 p-5 shadow-lg backdrop-blur-md lg:mt-0">
-          <p className="text-[11px] font-bold uppercase tracking-[0.32em] text-white">
-            Diaspora ağı
-          </p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-[11px] font-bold uppercase tracking-[0.32em] text-white">
+              Diaspora ağı
+            </p>
+            <Badge className="shrink-0 bg-emerald-500 text-white shadow-md hover:bg-emerald-500">
+              🎉 ÜCRETSİZ
+            </Badge>
+          </div>
           <h1 className="mt-3 font-display text-2xl font-black leading-tight tracking-tight text-white drop-shadow-sm md:text-3xl">
             Diasporanın profesyonel
             <span className="bg-gradient-to-r from-[hsl(var(--glow-teal))] to-[hsl(var(--glow-orange))] bg-clip-text text-transparent">
