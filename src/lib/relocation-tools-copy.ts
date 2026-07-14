@@ -95,8 +95,8 @@ export function bucketLabel(bucketKey: string | null | undefined): string {
 
 /** Motor genel UI metinleri (Türkçe; araç-bağımsız). */
 export const TOOLS_UI_COPY = {
-  hubTitle: "Taşınma Araçları",
-  hubSubtitle: "Birkaç soruyla kişisel taşınma yol haritanı keşfet.",
+  hubTitle: "CorteQS Araçlar",
+  hubSubtitle: "Bir kaç soruyla yol haritanı keşfet!",
   quickMode: "Hızlı",
   detailedMode: "Detaylı",
   quickModeDesc: "En önemli sorularla kısa sürede sonuç al — hızlıca fikir edinmek için ideal.",
