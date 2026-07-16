@@ -13,7 +13,7 @@ function renderReport(entries) {
   const lines = [
     '# Sosyal Medya Görsel Üretim Raporu',
     '',
-    `Üretilen: ${total} / ${total}`,
+    `Üretilen: ${successCount} / ${total}`,
     '',
     '## Sonuçlar',
     '',

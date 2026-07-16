@@ -59,6 +59,6 @@ describe('writeManifestAndReport', () => {
     expect(report).toContain('burak-tool-1');
     expect(report).toContain('burak-tool-2');
     expect(report).toContain('Başarısız');
-    expect(report).toContain('2 / 2');
+    expect(report).toContain('1 / 2');
   });
 });
