@@ -19,8 +19,14 @@ function parseArgs(argv) {
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === '--tool') args.tool = argv[++i];
-    else if (arg === '--variant') args.variant = Number(argv[++i]);
-    else if (arg === '--all') args.all = true;
+    else if (arg === '--variant') {
+      const raw = argv[++i];
+      const value = Number(raw);
+      if (!Number.isInteger(value) || value < 1 || value > 3) {
+        throw new Error(`--variant değeri 1-3 arasında bir tam sayı olmalı, alınan: ${raw}`);
+      }
+      args.variant = value;
+    } else if (arg === '--all') args.all = true;
     else if (arg === '--force-backgrounds') args.forceBackgrounds = true;
   }
   return args;

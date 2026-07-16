@@ -17,7 +17,7 @@ export function shortDescription(description, maxLen = 90) {
   const trimmed = description.trim();
   if (trimmed.length <= maxLen) return trimmed;
 
-  const sentenceMatch = trimmed.match(/^(.{1,90}?[.;])\s/);
+  const sentenceMatch = trimmed.match(new RegExp(`^(.{1,${maxLen}}?[.;])\\s`));
   if (sentenceMatch && sentenceMatch[1].length <= maxLen) {
     return sentenceMatch[1];
   }

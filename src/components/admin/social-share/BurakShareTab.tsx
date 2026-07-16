@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { BurakMediaPanel } from "@/components/admin/social-share/BurakMediaPanel";
+import { GeneratedImagePreview } from "@/components/admin/social-share/GeneratedImagePreview";
 import { BURAK_SHARE_TOOLS } from "@/lib/admin-shell/burak-share-tools";
 import {
   burakSlotKey,
@@ -111,6 +112,7 @@ export function BurakShareTab({ copiedId, onCopy }: BurakShareTabProps) {
                             value={variant.canvaPrompt}
                             className="min-h-[140px] resize-y text-xs"
                           />
+                          <GeneratedImagePreview toolId={tool.id} variantNo={variantNo} />
                           <BurakMediaPanel
                             slotKey={slotKey}
                             toolId={tool.id}

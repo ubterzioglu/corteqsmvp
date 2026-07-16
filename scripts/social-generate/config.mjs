@@ -5,7 +5,9 @@
 export const CANVAS_SIZE = 1200;
 
 export const COLORS = {
-  navy: '#1b1e29',
+  // navy, corteqs-logo.png crop'unun ölçülen zemin rengiyle (rgb 25,29,40 ortalaması)
+  // birebir eşleşir — aksi halde logo kenarında hafif fark edilir bir seam oluşuyordu.
+  navy: '#191d28',
   bronze: '#aa8c42',
   teal: '#28a693',
   orange: '#e8703c',
