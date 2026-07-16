@@ -290,9 +290,42 @@ export const REPORT_SECTIONS: ReportSection[] = [
     ],
   },
   {
+    key: "sosyal-medya-otomasyon",
+    group: "Bölüm 3 — Sosyal Medya",
+    title: "3. LinkedIn Görsel Üretim Sistemi (16 Temmuz eklendi)",
+    intro:
+      "BURAK BURAYA BAK sekmesindeki 12 test aracı için Canva'da tek tek uğraşmadan, tek komutla 36 LinkedIn görseli üreten otomatik sistem kuruldu.",
+    rows: [
+      {
+        label: "Ne yapıldı",
+        technical:
+          "scripts/social-generate/ altında Node CLI: 12 araç x 3 varyant için deterministik SVG arka plan (12 motif, marka renkleri) + Sharp compositing (logo+başlık+açıklama+CTA+domain overlay) ile 1200x1200 PNG üretir. Görsel üretim API'si kullanılmaz — backgroundMethod hep 'deterministic-svg'. npm run social:generate -- --all komutu.",
+        plain:
+          "12 test aracımızın (Hangi Ülke Sana Uygun, Almanya Banka/Sigorta vb.) her biri için 3 farklı LinkedIn görseli artık otomatik çıkıyor — Canva'da elle uğraşmaya gerek yok. Tek komutla 36 görsel birden üretiliyor.",
+        status: "ok",
+      },
+      {
+        label: "Kalite ve düzeltmeler",
+        technical:
+          "Final code review sonrası 4 minor bulgu giderildi: CLI --variant validasyonu (0/NaN artık hata veriyor), logo çevresindeki hafif seam (navy renk kaynağı logo crop'uyla eşitlendi), shortDescription regex'i maxLen parametresine bağlandı, ve BurakShareTab'a otomatik üretilen görsel önizlemesi (GeneratedImagePreview.tsx) eklendi.",
+        plain:
+          "Bir kod incelemesinden geçirildi, küçük kusurlar (yanlış komut girilirse sessiz kalması, logo kenarında zar zor görünen çizgi) düzeltildi. Ayrıca admin panelindeki her Canva kutusunun altına üretilen görselin küçük önizlemesi + indir butonu eklendi.",
+        status: "ok",
+      },
+      {
+        label: "Kalan iş",
+        technical:
+          "public/social/generated/ altındaki 36 PNG main'de commit'li ve Coolify deploy sonrası canlıda erişilebilir olacak. Üretilen görsellerin gerçek admin oturumuyla tarayıcıda görsel QA'i yapılmadı (auth gerektiriyor).",
+        plain:
+          "Kod tarafı tamam ve main'de; kalan tek şey deploy edip panelde gözle bir kontrol etmek.",
+        status: "partial",
+      },
+    ],
+  },
+  {
     key: "kararlar",
     group: "Ortak",
-    title: "3. Karar bekleyen başlıklar (ortakla konuşulacak)",
+    title: "4. Karar bekleyen başlıklar (ortakla konuşulacak)",
     intro:
       "Aşağıdakiler teknik değil, ÜRÜN kararı. Bunlara karar verilmeden bazı işler başlayamaz.",
     rows: [
