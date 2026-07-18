@@ -81,10 +81,11 @@ tech0106.md
 turkish_missions_import_builder/output/*
 !turkish_missions_import_builder/output/.gitkeep
 
-# Reference directory (Lovable exports)
+# Reference directory (Lovable exports) — taşındı: docs/reference-clones/ (2026-07-18)
 referans/
-reference/
-ref/
+docs/reference-clones/reference/
+docs/reference-clones/ref/
+docs/reference-clones/ref101/
 .secretdb
 
 # Build artifacts (2026-06-11 temizligi)
@@ -93,3 +94,6 @@ ref/
 # Relocation tools E2E paketi içindeki büyük binary'ler (repoya girmemeli)
 docs/10tool/*.exe
 docs/10tool/*.zip
+
+# social:generate CLI çıktısı (scripts/social-generate) — repoya commit edilmez
+public/social/generated/
