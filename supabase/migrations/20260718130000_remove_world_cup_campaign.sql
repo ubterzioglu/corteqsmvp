@@ -35,14 +35,13 @@ drop function if exists public.create_world_cup_registration_v1(text, text, text
 drop function if exists public.create_world_cup_registration_v1(text, text, text, text, text, boolean, text);
 drop function if exists public.world_cup_campaign_is_active();
 
--- ─── 4. Storage: bucket + policy'ler ─────────────────────────────────────────
--- Bucket boş doğrulandı (0 nesne) — storage.objects'e direkt DELETE Supabase
--- tarafından engellenir (Storage API zorunlu); bucket satırı boşken silinebilir.
+-- ─── 4. Storage: policy'ler ───────────────────────────────────────────────────
+-- Bucket'ın kendisi (storage.buckets satırı) Storage Admin API ile ayrıca
+-- silinir — storage.buckets/objects'e direkt DELETE Supabase tarafından
+-- engellenir (Storage API zorunlu, bkz. storage.protect_delete()).
 
 drop policy if exists "World cup images user upload" on storage.objects;
 drop policy if exists "World cup images admin delete" on storage.objects;
-
-delete from storage.buckets where id = 'world-cup-images';
 
 -- ─── 5. Tablolar (RLS policy'leri tabloyla birlikte düşer) ───────────────────
 
