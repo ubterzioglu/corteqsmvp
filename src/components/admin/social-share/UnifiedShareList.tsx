@@ -5,9 +5,10 @@
 // kartlar 1'den başlayarak sürekli numaralanır; bir kaynağa filtrelenince o
 // kaynağın kendi 1..N sırası gösterilir. Veri normalize katmanı:
 // lib/admin-shell/social-share-unified.ts.
-// Görünüm sırası günlük olarak karışır (seed = bugünün tarihi) — aynı gün F5'te
-// aynı sıra, ertesi gün farklı sıra. Her kartın üzerindeki assignedDate rozeti
-// sabittir, shuffle'dan etkilenmez.
+// Görünüm sırası kartın sabit globalIndex/assignedDate alanına göre (20 Tem →
+// 21 Tem → ...) sıralanır — kaynaklar zaten UNIFIED_ITEMS'ta harmanlanmış
+// (interleaveBySource) sırada geldiği için ardışık günlerde aynı kaynaktan
+// içerik tekrarlanma olasılığı düşük.
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
@@ -52,41 +53,6 @@ const SUB_ALL_FILTER = "all" as const;
 type SubFilter = typeof SUB_ALL_FILTER | string;
 
 const FILTER_ORDER: ShareTab[] = ["tools", "diaspora", "tests", "burak"];
-
-/** Bugünün tarihinden (YYYY-MM-DD) basit bir sayısal seed türetir. */
-const seedFromDateString = (dateKey: string): number => {
-  let hash = 0;
-  for (let i = 0; i < dateKey.length; i++) {
-    hash = (hash * 31 + dateKey.charCodeAt(i)) >>> 0;
-  }
-  return hash;
-};
-
-/** mulberry32 — küçük, bağımlılıksız seedable PRNG. */
-const mulberry32 = (seed: number) => {
-  let state = seed;
-  return () => {
-    state = (state + 0x6d2b79f5) >>> 0;
-    let t = state;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-};
-
-/** Verilen seed'e göre deterministik Fisher-Yates karıştırma (girdi mutasyona uğramaz). */
-const shuffleSeeded = <T,>(items: T[], seed: number): T[] => {
-  const result = [...items];
-  const random = mulberry32(seed);
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
-};
-
-/** Bugünün tarihine göre seed — aynı gün içinde herkes aynı sırayı görür. */
-const todaySeed = (): number => seedFromDateString(new Date().toISOString().slice(0, 10));
 
 type UnifiedShareListProps = {
   copiedId: string | null;
@@ -158,10 +124,9 @@ export function UnifiedShareList({ copiedId, onCopy, renderShareBar }: UnifiedSh
     return tabFilteredItems.filter((item) => (item.categoryLabel ?? item.themeLabel) === subFilter);
   }, [tabFilteredItems, subFilter]);
 
-  // Görünüm sırası günlük olarak karışır (seed = bugünün tarihi); kartların kendi
-  // sabit order/assignedDate alanları bu karışmadan etkilenmez.
+  // Görünüm sırası kartın sabit assignedDate'ine göre (20 Tem → 21 Tem → ...) sıralanır.
   const visibleItems = useMemo(
-    () => shuffleSeeded(subFilteredItems, todaySeed()),
+    () => [...subFilteredItems].sort((a, b) => a.globalIndex - b.globalIndex),
     [subFilteredItems],
   );
 

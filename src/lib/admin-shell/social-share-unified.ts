@@ -3,9 +3,13 @@
 // UI tarafı (UnifiedShareList) bu tek listeyi render eder; kaynak verisi hâlâ
 // kendi dosyasından gelir, burada sadece ortak şekle indirgenir.
 //
-// assignedDate: her kalemin birleşik listedeki SABİT konumuna (globalIndex) göre
-// 20 Temmuz 2026'dan başlayarak ardışık atanan bir "önerilen gün" etiketi. UI'daki
-// günlük shuffle bu değeri etkilemez — kart karışsa bile üzerindeki tarih sabit kalır.
+// assignedDate: her kalemin harmanlanmış SABİT konumuna (globalIndex) göre
+// 20 Temmuz 2026'dan başlayarak ardışık atanan bir "önerilen gün" etiketi.
+// UI (UnifiedShareList) "Tümü" görünümünde kartları bu sabit sıraya göre
+// gösterir. Kaynaklar (tools/diaspora/tests/burak) art arda bloklar halinde
+// değil, interleaveBySource ile oranlarına göre harmanlanmış sırayla dizilir
+// — böylece art arda günlerde aynı kaynaktan (dolayısıyla genelde aynı
+// formattan/temadan) içerik gelme olasılığı azalır.
 
 import {
   SOCIAL_SHARE_TOOLS,
@@ -46,8 +50,10 @@ export type UnifiedItem = {
   variants: UnifiedVariant[];
   /** Medya yükleme paneli gösterilir (tüm kaynaklarda true — her kalem görsel/video eklenebilir). */
   hasMediaPanel: boolean;
-  /** "20 Tem", "21 Tem" ... — kalemin listedeki sabit konumuna göre türetilir, shuffle'dan etkilenmez. */
+  /** "20 Tem", "21 Tem" ... — kalemin listedeki sabit konumuna göre türetilir. */
   assignedDate: string;
+  /** 0-tabanlı sabit sıra (birleşik liste sırası) — assignedDate ile birebir eşleşir, görünüm sıralaması bu alana göre yapılır. */
+  globalIndex: number;
 };
 
 /** İlk kalemin (globalIndex 0) önerilen günü. */
@@ -81,8 +87,10 @@ const CATEGORY_BADGE_CLASS: Record<SocialShareCategory, string> = {
   koru: "border-pink-500/40 bg-pink-500/15 text-pink-600 dark:text-pink-300",
 };
 
-const toolItems = (startIndex: number): UnifiedItem[] =>
-  SOCIAL_SHARE_TOOLS.map((tool, i) => ({
+type UnscheduledItem = Omit<UnifiedItem, "assignedDate" | "globalIndex">;
+
+const toolItems = (): UnscheduledItem[] =>
+  SOCIAL_SHARE_TOOLS.map((tool) => ({
     tab: "tools" as const,
     id: tool.id,
     order: tool.order,
@@ -101,11 +109,10 @@ const toolItems = (startIndex: number): UnifiedItem[] =>
       },
     ],
     hasMediaPanel: true,
-    assignedDate: dateForGlobalIndex(startIndex + i),
   }));
 
-const diasporaItems = (startIndex: number): UnifiedItem[] =>
-  DIASPORA_POSTS.map((post, i) => ({
+const diasporaItems = (): UnscheduledItem[] =>
+  DIASPORA_POSTS.map((post) => ({
     tab: "diaspora" as const,
     id: post.id,
     order: post.order,
@@ -122,11 +129,10 @@ const diasporaItems = (startIndex: number): UnifiedItem[] =>
       },
     ],
     hasMediaPanel: true,
-    assignedDate: dateForGlobalIndex(startIndex + i),
   }));
 
-const testItems = (startIndex: number): UnifiedItem[] =>
-  SOCIAL_TEST_TOOLS.map((tool, i) => ({
+const testItems = (): UnscheduledItem[] =>
+  SOCIAL_TEST_TOOLS.map((tool) => ({
     tab: "tests" as const,
     id: tool.id,
     order: tool.order,
@@ -136,11 +142,10 @@ const testItems = (startIndex: number): UnifiedItem[] =>
     sourceBadgeClass: SOURCE_BADGE_CLASS.tests,
     variants: tool.variants,
     hasMediaPanel: true,
-    assignedDate: dateForGlobalIndex(startIndex + i),
   }));
 
-const burakItems = (startIndex: number): UnifiedItem[] =>
-  BURAK_SHARE_TOOLS.map((tool, i) => ({
+const burakItems = (): UnscheduledItem[] =>
+  BURAK_SHARE_TOOLS.map((tool) => ({
     tab: "burak" as const,
     id: tool.id,
     order: tool.order,
@@ -150,18 +155,51 @@ const burakItems = (startIndex: number): UnifiedItem[] =>
     sourceBadgeClass: SOURCE_BADGE_CLASS.burak,
     variants: tool.variants,
     hasMediaPanel: true,
-    assignedDate: dateForGlobalIndex(startIndex + i),
   }));
 
-/** Tüm kaynaklar, kaynak sırasına göre (tools → diaspora → tests → burak) tek liste. */
-const TOOLS_ITEMS = toolItems(0);
-const DIASPORA_ITEMS = diasporaItems(TOOLS_ITEMS.length);
-const TESTS_ITEMS = testItems(TOOLS_ITEMS.length + DIASPORA_ITEMS.length);
-const BURAK_ITEMS = burakItems(TOOLS_ITEMS.length + DIASPORA_ITEMS.length + TESTS_ITEMS.length);
+/**
+ * 4 kaynağı (tools/diaspora/tests/burak) en büyük kalan yöntemiyle (largest
+ * remainder) günlere harmanlar — art arda günlerde aynı kaynaktan içerik
+ * gelme olasılığı en aza iner. Her kaynak kendi içindeki sırayı korur
+ * (tools kendi 1..10 sırasıyla, diaspora kendi 1..68 sırasıyla ilerler),
+ * sadece kaynaklar arası geçiş oranlara göre dağıtılır.
+ */
+const interleaveBySource = (sources: UnscheduledItem[][]): UnscheduledItem[] => {
+  const total = sources.reduce((sum, list) => sum + list.length, 0);
+  const cursors = sources.map(() => 0);
+  const result: UnscheduledItem[] = [];
 
-export const UNIFIED_ITEMS: UnifiedItem[] = [
-  ...TOOLS_ITEMS,
-  ...DIASPORA_ITEMS,
-  ...TESTS_ITEMS,
-  ...BURAK_ITEMS,
-];
+  for (let slot = 0; slot < total; slot++) {
+    // Her kaynağın "hedef doluluk oranı" bu slot'a kadar ne olmalıydı — en
+    // geride kalan (hedeften en uzak) kaynak bir sonraki kalemi verir.
+    let bestSource = -1;
+    let bestDeficit = -Infinity;
+    for (let s = 0; s < sources.length; s++) {
+      if (cursors[s] >= sources[s].length) continue;
+      const targetShare = (sources[s].length / total) * (slot + 1);
+      const deficit = targetShare - cursors[s];
+      if (deficit > bestDeficit) {
+        bestDeficit = deficit;
+        bestSource = s;
+      }
+    }
+    result.push(sources[bestSource][cursors[bestSource]]);
+    cursors[bestSource] += 1;
+  }
+
+  return result;
+};
+
+const SCHEDULED_ITEMS: UnscheduledItem[] = interleaveBySource([
+  toolItems(),
+  diasporaItems(),
+  testItems(),
+  burakItems(),
+]);
+
+/** Harmanlanmış sabit sıra (globalIndex 0..N-1) + türetilen assignedDate. */
+export const UNIFIED_ITEMS: UnifiedItem[] = SCHEDULED_ITEMS.map((item, globalIndex) => ({
+  ...item,
+  globalIndex,
+  assignedDate: dateForGlobalIndex(globalIndex),
+}));
