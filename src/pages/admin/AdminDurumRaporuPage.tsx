@@ -64,6 +64,14 @@ interface UpdateNote {
 const UPDATES: UpdateNote[] = [
   {
     date: "18 Temmuz 2026",
+    title: "Sosyal paylaşım görsel prompt kataloğu CorteQS'e özel içerikle güncellendi, mükerrer dosyalar temizlendi",
+    lines: [
+      "docs/social-share-outputs/prompt-katalogu.html içindeki 288 görsel promptunun tamamı CorteQS terminolojisiyle (Dizin, AI Eşleştirme, Cadde, Çarşı, diaspora ağı vb.) yeniden yazılmış sürümle değiştirildi — dosya adları ve repo eşleştirme düzeni korundu.",
+      "Mükerrer/eskimiş dosyalar kaldırıldı: docs/corteqs-repo-uyumlu-prompt-katalogu.html (artık aynı içerikti) ve içeriği zaten /admin/revision-requests'e taşınmış docs/MVP DÜZELTMELER TEXT.docx + .xlsx kaynak dosyaları. Kod/veritabanı etkilenmedi, sadece depo hijyeni.",
+    ],
+  },
+  {
+    date: "18 Temmuz 2026",
     title: "Sosyal Medya Paylaşım Deposu 100 kaleme çıktı: günlük tarih etiketi, günlük karışan sıra, tek sütun kart",
     lines: [
       "Kalem sayısı 82'den 100'e çıktı — Diaspora Postları bölümüne 18 yeni post eklendi (site özellikleri: Cadde/Çarşı/Radar/Blog/Referans + genel diaspora konuları: ikinci kuşak, uzaktan çalışma, yalnızlık, dil kaybı, öğrencilik, mentorluk, kadın dayanışması, ambasadörlük). Toplam: 10 Araç Tanıtımı + 68 Diaspora + 10 Test + 12 Burak = 100.",

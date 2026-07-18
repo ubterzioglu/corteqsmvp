@@ -14,6 +14,16 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260718-prompt-katalogu-repo-uyumlu-senkron",
+    date: "18 Temmuz 2026",
+    title: "Sosyal paylaşım görsel prompt kataloğu CorteQS'e özel içerikle güncellendi, mükerrer dosyalar temizlendi",
+    items: [
+      "docs/social-share-outputs/prompt-katalogu.html içindeki 288 görsel promptunun tamamı, CorteQS ürün terminolojisiyle (Dizin, AI Eşleştirme, Cadde, Çarşı, diaspora ağı vb.) yeniden yazılmış 'repo uyumlu' sürümle değiştirildi. Dosya adları ve repo eşleştirme düzeni aynen korundu; sadece prompt metinleri ve masthead açıklaması güncellendi.",
+      "Bu iş sırasında oluşan mükerrer/eskimiş dosyalar depodan kaldırıldı: docs/corteqs-repo-uyumlu-prompt-katalogu.html (artık prompt-katalogu.html ile birebir aynıydı) ile içeriği zaten /admin/revision-requests'e taşınmış olan docs/MVP DÜZELTMELER TEXT.docx ve docs/MVP DÜZELTMELER.xlsx kaynak dosyaları.",
+      "Bu değişiklik yalnızca depo içi bir referans dokümanı ve depo hijyeni — uygulama kodu, veritabanı veya kullanıcıya görünen bir sayfa etkilenmedi.",
+    ],
+  },
+  {
     id: "20260718-sosyal-paylasim-vault-100-icerik-tarih-tek-sutun",
     date: "18 Temmuz 2026",
     title: "Sosyal Medya Paylaşım Deposu 100 kaleme çıktı: günlük tarih etiketi, günlük karışan sıra, tek sütun kart",
