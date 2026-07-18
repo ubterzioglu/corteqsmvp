@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
-import { ShieldCheck } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { Badge } from "@/components/ui/badge";
@@ -179,43 +178,30 @@ const LoginPage = () => {
               "linear-gradient(180deg, hsl(220 30% 6% / 0.35) 0%, hsl(220 30% 6% / 0.15) 45%, hsl(220 30% 6% / 0.72) 100%)",
           }}
         />
-
-        <div className="relative z-10 mt-6 max-w-md rounded-2xl border border-white/15 bg-white/10 p-5 shadow-lg backdrop-blur-md lg:mt-0">
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-[11px] font-bold uppercase tracking-[0.32em] text-white">
-              Diaspora ağı
-            </p>
-            <Badge className="shrink-0 bg-emerald-500 text-white shadow-md hover:bg-emerald-500">
-              🎉 ÜCRETSİZ
-            </Badge>
-          </div>
-          <h1 className="mt-3 font-display text-2xl font-black leading-tight tracking-tight text-white drop-shadow-sm md:text-3xl">
-            Diasporanın profesyonel
-            <span className="bg-gradient-to-r from-[hsl(var(--glow-teal))] to-[hsl(var(--glow-orange))] bg-clip-text text-transparent">
-              {" "}ağına giriş yap
-            </span>
-          </h1>
-          <p className="mt-3 max-w-sm text-[13px] font-bold leading-relaxed text-white">
-            CorteQS, dünyaya yayılmış Türk diasporasını tek bir ağda buluşturur. Hesabınla
-            giriş yap, profilini yönet ve bağlantını sürdür.
-          </p>
-        </div>
-
-        <div className="relative z-10 inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-white/70 backdrop-blur-sm">
-          <ShieldCheck className="h-3.5 w-3.5 text-[hsl(var(--glow-teal))]" />
-          <span className="uppercase tracking-wider">Güvenli giriş</span>
-        </div>
       </aside>
 
       {/* ——— SAĞ PANEL: açık form ——— */}
       <main className="flex items-center justify-center bg-card px-6 py-8 sm:px-9 lg:py-10">
         <div className="w-full max-w-sm">
           <CardHeader className="px-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-              Üye erişimi
-            </p>
-            <CardTitle className="font-display text-3xl">CorteQS Hesabı</CardTitle>
-            <CardDescription>Google ile devam edin veya Supabase e-posta/şifre akışıyla giriş yapın ya da kayıt olun.</CardDescription>
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+                Üye erişimi
+              </p>
+              <Badge className="shrink-0 bg-emerald-500 text-white shadow-md hover:bg-emerald-500">
+                🎉 ÜCRETSİZ
+              </Badge>
+            </div>
+            <CardTitle className="font-display text-3xl">
+              Diasporanın profesyonel{" "}
+              <span className="bg-gradient-to-r from-[hsl(var(--glow-teal))] to-[hsl(var(--glow-orange))] bg-clip-text text-transparent">
+                ağına giriş yap
+              </span>
+            </CardTitle>
+            <CardDescription>
+              CorteQS, dünyaya yayılmış Türk diasporasını tek bir ağda buluşturur. Hesabınla
+              giriş yap, profilini yönet ve bağlantını sürdür.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 px-0">
           <Tabs value={mode} onValueChange={(value) => updateMode(normalizeMode(value))}>

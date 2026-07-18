@@ -189,34 +189,37 @@ const AdminRevisionRequestsPage = () => {
                 </p>
               </button>
 
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedId(request.id)}
-                  aria-label="Yorumları gör"
-                >
-                  <MessageSquare className="mr-1.5 h-4 w-4" />
-                  Yorumlar
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => openEdit(request)}
-                  aria-label="Düzenle"
-                >
-                  <Pencil className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-muted-foreground hover:text-red-500"
-                  onClick={() => deleteMutation.mutate(request.id)}
-                  disabled={deleteMutation.isPending}
-                  aria-label="Sil"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+              <div className="flex flex-col items-stretch gap-2 sm:items-end">
+                <div className="flex items-center gap-1 self-end">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedId(request.id)}
+                    aria-label="Yorumları gör"
+                  >
+                    <MessageSquare className="mr-1.5 h-4 w-4" />
+                    Yorumlar
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => openEdit(request)}
+                    aria-label="Düzenle"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-muted-foreground hover:text-red-500"
+                    onClick={() => deleteMutation.mutate(request.id)}
+                    disabled={deleteMutation.isPending}
+                    aria-label="Sil"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <RevisionAttachmentGrid parent={{ requestId: request.id }} />
               </div>
             </div>
           ))}
@@ -253,7 +256,6 @@ const AdminRevisionRequestsPage = () => {
                 {selected.detail}
               </p>
             ) : null}
-            <RevisionAttachmentGrid parent={{ requestId: selected.id }} />
             <RevisionCommentThread requestId={selected.id} />
           </div>
         ) : null}

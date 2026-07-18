@@ -63,6 +63,14 @@ interface UpdateNote {
 
 const UPDATES: UpdateNote[] = [
   {
+    date: "18 Temmuz 2026",
+    title: "Dünya Kupası kampanyası tamamen kaldırıldı",
+    lines: [
+      "Kampanya sona erdi: /dunya-kupasi, /dunya-kupasi/kayit ve /admin/dunya-kupasi sayfaları, ilgili worldcup_* RPC'leri, world_cup_registrations/world_cup_campaign_settings tabloları ve world-cup-images bucket'ı silindi.",
+      "Kampanyaya özel 3 mekân rolü (Bar/Pub, Çay Bahçesi, Nargile) deaktif edildi; canlıdaki tek onaylı kayıt yönetici test hesabına aitti (rol ataması yapılmamıştı), gerçek kullanıcı etkisi olmadı.",
+    ],
+  },
+  {
     date: "11 Haziran 2026",
     title: "Dünya Kupası işletme kampanyası açıldı",
     lines: [
