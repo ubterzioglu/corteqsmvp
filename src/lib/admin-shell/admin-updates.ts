@@ -14,6 +14,27 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260718-repo-temizligi-uretilen-gorseller",
+    date: "18 Temmuz 2026",
+    title: "Depo temizliği: otomatik üretilen 36 görsel + kullanılmayan referans klonlar kaldırıldı",
+    items: [
+      "LinkedIn için otomatik üretilen 36 tanıtım görseli (12 araç × 3 varyant) artık git deposunda tutulmuyor — bu görseller zaten npm run social:generate komutuyla istendiğinde yeniden üretilebiliyor, depoda saklanmasına gerek yoktu. Admin panelindeki otomatik görsel önizlemesi etkilenmedi; görsel dosya bulunamadığında zaten kendiliğinden gizleniyor.",
+      "Build ve test sırasında otomatik oluşan geçici klasörler (dist/, test-results/, .playwright-mcp/) depodan temizlendi — bunlar da npm run build / npm run test çalıştırıldığında otomatik yeniden oluşuyor.",
+      "Geliştirme sürecinde referans amaçlı klonlanmış üç eski proje klasörü (ref/, ref101/, reference/) kökten docs/reference-clones/ altına taşındı — kod hâlâ duruyor, sadece proje köküne dağılmış hâlde değil, düzenli bir arşiv konumunda.",
+      "Bu bir kod/özellik değişikliği değil, tamamen depo hijyeni — kullanıcı tarafında görünür hiçbir fark yok. Sadece geliştirici tarafında depo boyutu küçüldü ve kök klasör daha düzenli hale geldi.",
+    ],
+  },
+  {
+    id: "20260718-sosyal-paylasim-vault-birlesik-liste",
+    date: "18 Temmuz 2026",
+    title: "Sosyal Medya Paylaşım Deposu'ndaki 4 sekme kaldırıldı, tek liste oldu + Burak'ın bölümüne de paylaşım rozetleri geldi",
+    items: [
+      "Admin panelindeki Sosyal Medya Paylaşım Deposu (/admin/social-share-vault) sayfasında daha önce ayrı sekmeler halinde duran dört bölüm (Araç Tanıtımları, Diaspora Postları, Test Araçları, BURAK BURAYA BAK) artık sekmesiz — tek sayfada, başlıklarıyla art arda sıralı tek liste halinde görünüyor. İçerikte hiçbir kayıp yok, sadece gezinme şekli değişti: artık sekme tıklamadan sayfayı aşağı kaydırarak hepsine ulaşılıyor. Toplu kopyalama butonları da artık tüm bölümlerdeki kalemleri birden kapsıyor.",
+      "Diğer üç bölümde zaten var olan LinkedIn / Instagram / Reddit / X / Facebook / Threads paylaşım durumu rozetleri (kırmızı-yeşil, tıklanabilir, kalıcı) artık Burak'ın bölümündeki 12 araç için de görünüyor — önceden sadece o bölümde bu rozetler eksikti, şimdi dört bölüm de aynı paylaşım takibi özelliğine sahip.",
+      "Teknik tarafta: mevcut social_share_log tablosunun izin verdiği sekme listesine 'burak' eklendi (küçük bir migration), sayfa bileşeni ve Burak'ın bölüm bileşeni buna göre güncellendi. Yeni tablo/veri kaybı yok, sadece mevcut rozet sistemi dördüncü bölüme de bağlandı. Migration canlı veritabanına uygulandı ve doğrulandı; tüm testler ve build yeşil.",
+    ],
+  },
+  {
     id: "20260714-bireysel-tek-tip-premium-profil",
     date: "14 Temmuz 2026",
     title: "Tüm Bireysel kullanıcılar artık aynı 'premium' profil tasarımını görüyor",
