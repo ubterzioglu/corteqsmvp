@@ -1,8 +1,9 @@
-// "BURAK BURAYA BAK" sekmesi: 12 aracın akordeonu; her varyant Canva + LinkedIn
+// "BURAK BURAYA BAK" bölümü: 12 aracın akordeonu; her varyant Canva + LinkedIn
 // kartı, Canva'nın altında BurakMediaPanel. Veri: burak-share-tools.ts (statik) +
 // social_share_assets (medya). Asset'ler açılışta bir kez yüklenir, slot_key ile eşlenir.
+// Paylaşım rozetleri (renderShareBar) diğer bölümlerle aynı ortak sistemi kullanır.
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Check, Copy, Linkedin, Palette } from "lucide-react";
 
 import {
@@ -28,9 +29,10 @@ import {
 type BurakShareTabProps = {
   copiedId: string | null;
   onCopy: (text: string, id: string) => void;
+  renderShareBar?: (tab: "burak", itemId: string) => ReactNode;
 };
 
-export function BurakShareTab({ copiedId, onCopy }: BurakShareTabProps) {
+export function BurakShareTab({ copiedId, onCopy, renderShareBar }: BurakShareTabProps) {
   const { toast } = useToast();
   const [assets, setAssets] = useState<Record<string, BurakShareAsset>>({});
 
@@ -157,6 +159,7 @@ export function BurakShareTab({ copiedId, onCopy }: BurakShareTabProps) {
                 );
               })}
             </div>
+            {renderShareBar?.("burak", tool.id)}
           </AccordionContent>
         </AccordionItem>
       ))}

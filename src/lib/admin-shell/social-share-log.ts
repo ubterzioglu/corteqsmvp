@@ -1,8 +1,9 @@
 // Sosyal Medya Paylaşım Takip — API katmanı.
 // /admin/social-share-vault sayfasındaki içerik kalemlerinin (araç tanıtımları,
-// diaspora postları, test araçları) hangi platformlarda paylaşıldığını DB'de tutar.
+// diaspora postları, test araçları, Burak medya kalemleri) hangi platformlarda
+// paylaşıldığını DB'de tutar.
 //
-// Tablolar (mig 20260627100000):
+// Tablolar (mig 20260627100000, 20260718100000):
 //  • social_share_log        → kalem × platform rozetleri (UNIQUE item_tab,item_id,platform)
 //  • social_share_item_note  → kalem başına tek not (UNIQUE item_tab,item_id)
 // RLS: yalnız admin okur/yazar; tüm adminler ortak durumu görür.
@@ -21,8 +22,8 @@ import {
 
 import { supabase } from "@/integrations/supabase/client";
 
-/** İçerik sekmeleri — DB CHECK ile eşleşir. */
-export type ShareTab = "tools" | "diaspora" | "tests";
+/** İçerik bölümleri — DB CHECK ile eşleşir. */
+export type ShareTab = "tools" | "diaspora" | "tests" | "burak";
 
 /** Desteklenen paylaşım platformları — DB CHECK ile eşleşir. */
 export const SHARE_PLATFORMS = [

@@ -1,14 +1,17 @@
-// Sosyal Medya Paylaşım Deposu — üç içerik paketi tek sayfada, sekmeli.
-//  • "Araç Tanıtımları": 10 platform aracı (3 Canva promptu + 1 LinkedIn postu).
+// Sosyal Medya Paylaşım Deposu — dört içerik paketi tek sayfada, sekmesiz, art arda.
+//  • "Araç Tanıtımları": 12 platform aracı (3 Canva promptu + 1 LinkedIn postu).
 //    Veri: lib/admin-shell/social-share-vault.ts
 //  • "Diaspora Postları": 50 hazır LinkedIn postu (1 Canva promptu), tema filtreli.
 //    Veri: lib/admin-shell/social-diaspora-posts.ts
 //  • "Test Araçları": 10 click-through test aracı (3 varyant × Canva+LinkedIn).
 //    Veri: lib/admin-shell/social-test-tools.ts
-// Her metin tek tıkla, ayrıca sayfa başından aktif sekme için toplu kopyalanır.
+//  • "BURAK BURAYA BAK": 12 araç × 3 varyant + medya yükleme.
+//    Veri: lib/admin-shell/burak-share-tools.ts + social_share_assets.
+// Her metin tek tıkla, ayrıca sayfa başından tüm bölümler toplu kopyalanır.
+// Her kalemde LinkedIn/Instagram/Reddit/X/Facebook/Threads paylaşım rozetleri.
 
-import { useState } from "react";
 import { Camera, Check, ClipboardList, Linkedin, Megaphone, Palette, Share2, Users } from "lucide-react";
+import { useState, type ComponentType } from "react";
 
 import { AdminPageShell } from "@/components/admin/page";
 import { BurakShareTab } from "@/components/admin/social-share/BurakShareTab";
@@ -17,7 +20,6 @@ import { TestToolsTab } from "@/components/admin/social-share/TestToolsTab";
 import { ToolPromotionsTab } from "@/components/admin/social-share/ToolPromotionsTab";
 import { useShareTracking } from "@/components/admin/social-share/useShareTracking";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { SOCIAL_SHARE_TOOLS } from "@/lib/admin-shell/social-share-vault";
 import { DIASPORA_POSTS } from "@/lib/admin-shell/social-diaspora-posts";
@@ -25,8 +27,6 @@ import { SOCIAL_TEST_TOOLS } from "@/lib/admin-shell/social-test-tools";
 import { BURAK_SHARE_TOOLS } from "@/lib/admin-shell/burak-share-tools";
 
 const SEPARATOR = "\n\n———\n\n";
-
-type TabKey = "tools" | "diaspora" | "tests" | "burak";
 
 type BulkButton = { id: string; label: string; value: () => string };
 
@@ -68,28 +68,44 @@ const allBurakLinkedin = (): string =>
     t.variants.map((v, i) => `${t.order}.${i + 1} ${t.name}\n\n${v.linkedinPost}`).join("\n\n"),
   ).join(SEPARATOR);
 
-const BULK_BUTTONS: Record<TabKey, BulkButton[]> = {
-  tools: [
-    { id: "all-tool-canva", label: "Tüm Canva Promptları", value: allToolCanva },
-    { id: "all-tool-linkedin", label: "Tüm LinkedIn Postları", value: allToolLinkedin },
-  ],
-  diaspora: [
-    { id: "all-diaspora-canva", label: "Tüm Canva Promptları", value: allDiasporaCanva },
-    { id: "all-diaspora-linkedin", label: "Tüm LinkedIn Postları", value: allDiasporaLinkedin },
-  ],
-  tests: [
-    { id: "all-test-canva", label: "Tüm Canva Promptları", value: allTestCanva },
-    { id: "all-test-linkedin", label: "Tüm LinkedIn Postları", value: allTestLinkedin },
-  ],
-  burak: [
-    { id: "all-burak-canva", label: "Tüm Canva Promptları", value: allBurakCanva },
-    { id: "all-burak-linkedin", label: "Tüm LinkedIn Postları", value: allBurakLinkedin },
-  ],
+const allPageCanva = (): string =>
+  [allToolCanva(), allDiasporaCanva(), allTestCanva(), allBurakCanva()].join(SEPARATOR);
+
+const allPageLinkedin = (): string =>
+  [allToolLinkedin(), allDiasporaLinkedin(), allTestLinkedin(), allBurakLinkedin()].join(SEPARATOR);
+
+const PAGE_BULK_BUTTONS: BulkButton[] = [
+  { id: "all-page-canva", label: "Tüm Canva Promptları", value: allPageCanva },
+  { id: "all-page-linkedin", label: "Tüm LinkedIn Postları", value: allPageLinkedin },
+];
+
+type Section = {
+  id: string;
+  title: string;
+  icon: ComponentType<{ className?: string }>;
+  count: number;
 };
+
+const SECTIONS: Section[] = [
+  { id: "tools", title: "Araç Tanıtımları", icon: Megaphone, count: SOCIAL_SHARE_TOOLS.length },
+  { id: "diaspora", title: "Diaspora Postları", icon: Users, count: DIASPORA_POSTS.length },
+  { id: "tests", title: "Test Araçları", icon: ClipboardList, count: SOCIAL_TEST_TOOLS.length },
+  { id: "burak", title: "BURAK BURAYA BAK", icon: Camera, count: BURAK_SHARE_TOOLS.length },
+];
+
+function SectionHeader({ section }: { section: Section }) {
+  const Icon = section.icon;
+  return (
+    <div className="mb-4 flex items-center gap-2 border-b pb-2">
+      <Icon className="h-5 w-5 text-muted-foreground" />
+      <h2 className="text-lg font-semibold">{section.title}</h2>
+      <span className="text-sm text-muted-foreground">({section.count})</span>
+    </div>
+  );
+}
 
 const AdminSocialShareVaultPage = () => {
   const { toast } = useToast();
-  const [tab, setTab] = useState<TabKey>("tools");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const { renderShareBar } = useShareTracking();
 
@@ -107,13 +123,13 @@ const AdminSocialShareVaultPage = () => {
   return (
     <AdminPageShell
       title="Sosyal Medya Paylaşım Deposu"
-      description="Hazır Canva görsel promptları ve kopyala-yapıştır Türkçe LinkedIn postları. Soldaki promptu Canva'ya yapıştır (stil: Illustration, metinsiz üret); sağdaki postu LinkedIn'e kopyala. Toplu kopyalama butonları aktif sekmenin içeriğini kopyalar."
+      description="Hazır Canva görsel promptları ve kopyala-yapıştır Türkçe LinkedIn postları. Soldaki promptu Canva'ya yapıştır (stil: Illustration, metinsiz üret); sağdaki postu LinkedIn'e kopyala. Toplu kopyalama butonları sayfadaki tüm içeriği kopyalar."
       icon={Share2}
       accent="amber"
       contentWidth="wide"
       actions={
         <div className="flex flex-wrap gap-2">
-          {BULK_BUTTONS[tab].map((btn) => (
+          {PAGE_BULK_BUTTONS.map((btn) => (
             <Button
               key={btn.id}
               variant="outline"
@@ -133,42 +149,27 @@ const AdminSocialShareVaultPage = () => {
         </div>
       }
     >
-      <Tabs value={tab} onValueChange={(value) => setTab(value as TabKey)}>
-        <TabsList className="mb-4 flex-wrap">
-          <TabsTrigger value="tools" className="gap-2">
-            <Megaphone className="h-4 w-4" />
-            Araç Tanıtımları ({SOCIAL_SHARE_TOOLS.length})
-          </TabsTrigger>
-          <TabsTrigger value="diaspora" className="gap-2">
-            <Users className="h-4 w-4" />
-            Diaspora Postları ({DIASPORA_POSTS.length})
-          </TabsTrigger>
-          <TabsTrigger value="tests" className="gap-2">
-            <ClipboardList className="h-4 w-4" />
-            Test Araçları ({SOCIAL_TEST_TOOLS.length})
-          </TabsTrigger>
-          <TabsTrigger value="burak" className="gap-2">
-            <Camera className="h-4 w-4" />
-            BURAK BURAYA BAK ({BURAK_SHARE_TOOLS.length})
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="tools">
+      <div className="space-y-10">
+        <section>
+          <SectionHeader section={SECTIONS[0]} />
           <ToolPromotionsTab copiedId={copiedId} onCopy={handleCopy} renderShareBar={renderShareBar} />
-        </TabsContent>
+        </section>
 
-        <TabsContent value="diaspora">
+        <section>
+          <SectionHeader section={SECTIONS[1]} />
           <DiasporaPostsTab copiedId={copiedId} onCopy={handleCopy} renderShareBar={renderShareBar} />
-        </TabsContent>
+        </section>
 
-        <TabsContent value="tests">
+        <section>
+          <SectionHeader section={SECTIONS[2]} />
           <TestToolsTab copiedId={copiedId} onCopy={handleCopy} renderShareBar={renderShareBar} />
-        </TabsContent>
+        </section>
 
-        <TabsContent value="burak">
-          <BurakShareTab copiedId={copiedId} onCopy={handleCopy} />
-        </TabsContent>
-      </Tabs>
+        <section>
+          <SectionHeader section={SECTIONS[3]} />
+          <BurakShareTab copiedId={copiedId} onCopy={handleCopy} renderShareBar={renderShareBar} />
+        </section>
+      </div>
     </AdminPageShell>
   );
 };
