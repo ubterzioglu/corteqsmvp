@@ -5,7 +5,7 @@
 
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ChevronDown, MessageSquarePlus, Pencil, Plus, Trash2 } from "lucide-react";
+import { CheckCircle2, ChevronDown, MessageSquarePlus, Pencil, Plus, Trash2 } from "lucide-react";
 
 import { RevisionAttachmentGrid } from "@/components/admin/revision/RevisionAttachmentGrid";
 import { RevisionCommentThread } from "@/components/admin/revision/RevisionCommentThread";
@@ -19,6 +19,7 @@ import {
   AdminStatusBadge,
   type AdminStatusTone,
 } from "@/components/admin/page";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -97,6 +98,15 @@ const AdminRevisionRequestsPage = () => {
 
   const hasActiveFilters = statusFilter !== "all" || areaFilter !== "all" || searchText.trim().length > 0;
 
+  const openRequests = useMemo(
+    () => filteredRequests.filter((request) => request.status !== "yapildi"),
+    [filteredRequests],
+  );
+  const completedRequests = useMemo(
+    () => filteredRequests.filter((request) => request.status === "yapildi"),
+    [filteredRequests],
+  );
+
   const emailsQuery = useQuery({
     queryKey: ["revision-request-emails", requests.map((r) => r.createdBy).join(",")],
     queryFn: () => fetchUserEmails(requests.map((r) => r.createdBy)),
@@ -160,6 +170,83 @@ const AdminRevisionRequestsPage = () => {
     setStatusFilter("all");
     setAreaFilter("all");
     setSearchText("");
+  };
+
+  const renderRequestRow = (request: RevisionRequest) => {
+    const isExpanded = expandedId === request.id;
+    return (
+      <div key={request.id} className="rounded-xl border border-border bg-card">
+        <div className="flex items-center gap-2 p-2.5">
+          <button
+            type="button"
+            className="flex min-w-0 flex-1 items-center gap-2 text-left"
+            onClick={() => toggleExpanded(request.id)}
+            aria-expanded={isExpanded}
+          >
+            <ChevronDown
+              className={cn(
+                "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
+                isExpanded && "rotate-180",
+              )}
+            />
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <AdminStatusBadge tone={STATUS_TONES[request.status]}>
+                  {getRevisionStatusLabel(request.status)}
+                </AdminStatusBadge>
+                <span className="text-xs text-muted-foreground">Ö{request.priority}</span>
+                {request.areaLabel ? (
+                  <span className="truncate rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                    {request.areaLabel}
+                  </span>
+                ) : null}
+                <span className="truncate text-sm font-medium text-foreground">{request.title}</span>
+              </div>
+              <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                {request.createdBy ? emails[request.createdBy] || "Admin" : "Bilinmeyen"} ·{" "}
+                {formatDate(request.createdAt)}
+              </p>
+            </div>
+          </button>
+
+          <div className="flex shrink-0 items-center gap-0.5">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              onClick={() => openEdit(request)}
+              aria-label="Düzenle"
+            >
+              <Pencil className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-muted-foreground hover:text-red-500"
+              onClick={() => deleteMutation.mutate(request.id)}
+              disabled={deleteMutation.isPending}
+              aria-label="Sil"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+
+        {isExpanded ? (
+          <div className="border-t border-border p-3">
+            {request.detail ? (
+              <p className="whitespace-pre-wrap rounded-lg bg-muted/40 p-3 text-sm text-foreground">
+                {request.detail}
+              </p>
+            ) : null}
+            <div className="mt-2 mb-3">
+              <RevisionAttachmentGrid parent={{ requestId: request.id }} />
+            </div>
+            <RevisionCommentThread requestId={request.id} />
+          </div>
+        ) : null}
+      </div>
+    );
   };
 
   return (
@@ -249,86 +336,28 @@ const AdminRevisionRequestsPage = () => {
           }
         />
       ) : (
-        <div className="space-y-2">
-          {filteredRequests.map((request) => {
-            const isExpanded = expandedId === request.id;
-            return (
-              <div
-                key={request.id}
-                className="rounded-xl border border-border bg-card"
-              >
-                <div className="flex items-center gap-2 p-2.5">
-                  <button
-                    type="button"
-                    className="flex min-w-0 flex-1 items-center gap-2 text-left"
-                    onClick={() => toggleExpanded(request.id)}
-                    aria-expanded={isExpanded}
-                  >
-                    <ChevronDown
-                      className={cn(
-                        "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
-                        isExpanded && "rotate-180",
-                      )}
-                    />
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <AdminStatusBadge tone={STATUS_TONES[request.status]}>
-                          {getRevisionStatusLabel(request.status)}
-                        </AdminStatusBadge>
-                        <span className="text-xs text-muted-foreground">Ö{request.priority}</span>
-                        {request.areaLabel ? (
-                          <span className="truncate rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                            {request.areaLabel}
-                          </span>
-                        ) : null}
-                        <span className="truncate text-sm font-medium text-foreground">{request.title}</span>
-                      </div>
-                      <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                        {request.createdBy ? emails[request.createdBy] || "Admin" : "Bilinmeyen"} ·{" "}
-                        {formatDate(request.createdAt)}
-                      </p>
-                    </div>
-                  </button>
+        <div className="space-y-4">
+          {openRequests.length > 0 ? (
+            <div className="space-y-2">{openRequests.map(renderRequestRow)}</div>
+          ) : null}
 
-                  <div className="flex shrink-0 items-center gap-0.5">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7"
-                      onClick={() => openEdit(request)}
-                      aria-label="Düzenle"
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 text-muted-foreground hover:text-red-500"
-                      onClick={() => deleteMutation.mutate(request.id)}
-                      disabled={deleteMutation.isPending}
-                      aria-label="Sil"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
+          {completedRequests.length === 0 ? null : (
+            <Accordion type="single" collapsible className="rounded-xl border border-border bg-card px-3">
+              <AccordionItem value="completed" className="border-b-0">
+                <AccordionTrigger className="py-3 hover:no-underline">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                    <span className="text-sm font-medium text-foreground">
+                      Tamamlanan istekler ({completedRequests.length})
+                    </span>
                   </div>
-                </div>
-
-                {isExpanded ? (
-                  <div className="border-t border-border p-3">
-                    {request.detail ? (
-                      <p className="whitespace-pre-wrap rounded-lg bg-muted/40 p-3 text-sm text-foreground">
-                        {request.detail}
-                      </p>
-                    ) : null}
-                    <div className="mt-2 mb-3">
-                      <RevisionAttachmentGrid parent={{ requestId: request.id }} />
-                    </div>
-                    <RevisionCommentThread requestId={request.id} />
-                  </div>
-                ) : null}
-              </div>
-            );
-          })}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2">{completedRequests.map(renderRequestRow)}</div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
         </div>
       )}
 
