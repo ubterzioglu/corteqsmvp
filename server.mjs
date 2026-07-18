@@ -23,8 +23,12 @@ const prerenderToken = process.env.PRERENDER_TOKEN ?? "";
 const prerenderTimeoutMs = 20_000;
 const prerenderCanonicalHost = process.env.PRERENDER_CANONICAL_HOST ?? "corteqs.net";
 
-// SEO: canonical host www.corteqs.net degil, corteqs.net'tir (src/lib/seo.ts).
+// SEO: tek canonical host corteqs.net'tir (src/lib/seo.ts). www. ve mvp. gibi
+// alternatif host'lar Coolify/DNS seviyesinde ayni uygulamaya cikiyor; buradan
+// yonlendirilmezse Google her host'u ayri site sanip "alternatif/gecici olarak
+// indekslenmedi" olarak isaretliyor (GSC: "alternatif sayfa" + "taranan, indekslenmeyen").
 const canonicalHost = "corteqs.net";
+const alternateHostPrefixes = ["www.", "mvp."];
 
 // SEO: eski client-side <Navigate replace> path'leri icin gercek HTTP 301.
 const legacyRedirectMap = new Map([
@@ -303,7 +307,10 @@ const serveApp = async (req, res) => {
     }
 
     const requestHost = (req.headers.host ?? "").split(":")[0].toLowerCase();
-    if (requestHost === `www.${canonicalHost}`) {
+    const isAlternateHost = alternateHostPrefixes.some(
+      (prefix) => requestHost === `${prefix}${canonicalHost}`,
+    );
+    if (isAlternateHost) {
       redirect301(res, `https://${canonicalHost}${req.url ?? "/"}`);
       return;
     }
