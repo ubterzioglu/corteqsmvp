@@ -2,6 +2,10 @@
 // Postları, Test Araçları, Burak) tek bir birleşik kalem listesine normalize eder.
 // UI tarafı (UnifiedShareList) bu tek listeyi render eder; kaynak verisi hâlâ
 // kendi dosyasından gelir, burada sadece ortak şekle indirgenir.
+//
+// assignedDate: her kalemin birleşik listedeki SABİT konumuna (globalIndex) göre
+// 20 Temmuz 2026'dan başlayarak ardışık atanan bir "önerilen gün" etiketi. UI'daki
+// günlük shuffle bu değeri etkilemez — kart karışsa bile üzerindeki tarih sabit kalır.
 
 import {
   SOCIAL_SHARE_TOOLS,
@@ -42,6 +46,18 @@ export type UnifiedItem = {
   variants: UnifiedVariant[];
   /** Medya yükleme paneli gösterilir (tüm kaynaklarda true — her kalem görsel/video eklenebilir). */
   hasMediaPanel: boolean;
+  /** "20 Tem", "21 Tem" ... — kalemin listedeki sabit konumuna göre türetilir, shuffle'dan etkilenmez. */
+  assignedDate: string;
+};
+
+/** İlk kalemin (globalIndex 0) önerilen günü. */
+const VAULT_START_DATE = new Date(Date.UTC(2026, 6, 20));
+
+/** globalIndex (0-tabanlı, birleşik liste sırası) → "20 Tem" gibi kısa Türkçe tarih etiketi. */
+export const dateForGlobalIndex = (globalIndex: number): string => {
+  const date = new Date(VAULT_START_DATE);
+  date.setUTCDate(date.getUTCDate() + globalIndex);
+  return date.toLocaleDateString("tr-TR", { day: "2-digit", month: "short", timeZone: "UTC" });
 };
 
 export const SOURCE_LABELS: Record<ShareTab, string> = {
@@ -65,8 +81,8 @@ const CATEGORY_BADGE_CLASS: Record<SocialShareCategory, string> = {
   koru: "border-pink-500/40 bg-pink-500/15 text-pink-600 dark:text-pink-300",
 };
 
-const toolItems = (): UnifiedItem[] =>
-  SOCIAL_SHARE_TOOLS.map((tool) => ({
+const toolItems = (startIndex: number): UnifiedItem[] =>
+  SOCIAL_SHARE_TOOLS.map((tool, i) => ({
     tab: "tools" as const,
     id: tool.id,
     order: tool.order,
@@ -85,10 +101,11 @@ const toolItems = (): UnifiedItem[] =>
       },
     ],
     hasMediaPanel: true,
+    assignedDate: dateForGlobalIndex(startIndex + i),
   }));
 
-const diasporaItems = (): UnifiedItem[] =>
-  DIASPORA_POSTS.map((post) => ({
+const diasporaItems = (startIndex: number): UnifiedItem[] =>
+  DIASPORA_POSTS.map((post, i) => ({
     tab: "diaspora" as const,
     id: post.id,
     order: post.order,
@@ -105,10 +122,11 @@ const diasporaItems = (): UnifiedItem[] =>
       },
     ],
     hasMediaPanel: true,
+    assignedDate: dateForGlobalIndex(startIndex + i),
   }));
 
-const testItems = (): UnifiedItem[] =>
-  SOCIAL_TEST_TOOLS.map((tool) => ({
+const testItems = (startIndex: number): UnifiedItem[] =>
+  SOCIAL_TEST_TOOLS.map((tool, i) => ({
     tab: "tests" as const,
     id: tool.id,
     order: tool.order,
@@ -118,10 +136,11 @@ const testItems = (): UnifiedItem[] =>
     sourceBadgeClass: SOURCE_BADGE_CLASS.tests,
     variants: tool.variants,
     hasMediaPanel: true,
+    assignedDate: dateForGlobalIndex(startIndex + i),
   }));
 
-const burakItems = (): UnifiedItem[] =>
-  BURAK_SHARE_TOOLS.map((tool) => ({
+const burakItems = (startIndex: number): UnifiedItem[] =>
+  BURAK_SHARE_TOOLS.map((tool, i) => ({
     tab: "burak" as const,
     id: tool.id,
     order: tool.order,
@@ -131,12 +150,18 @@ const burakItems = (): UnifiedItem[] =>
     sourceBadgeClass: SOURCE_BADGE_CLASS.burak,
     variants: tool.variants,
     hasMediaPanel: true,
+    assignedDate: dateForGlobalIndex(startIndex + i),
   }));
 
 /** Tüm kaynaklar, kaynak sırasına göre (tools → diaspora → tests → burak) tek liste. */
+const TOOLS_ITEMS = toolItems(0);
+const DIASPORA_ITEMS = diasporaItems(TOOLS_ITEMS.length);
+const TESTS_ITEMS = testItems(TOOLS_ITEMS.length + DIASPORA_ITEMS.length);
+const BURAK_ITEMS = burakItems(TOOLS_ITEMS.length + DIASPORA_ITEMS.length + TESTS_ITEMS.length);
+
 export const UNIFIED_ITEMS: UnifiedItem[] = [
-  ...toolItems(),
-  ...diasporaItems(),
-  ...testItems(),
-  ...burakItems(),
+  ...TOOLS_ITEMS,
+  ...DIASPORA_ITEMS,
+  ...TESTS_ITEMS,
+  ...BURAK_ITEMS,
 ];

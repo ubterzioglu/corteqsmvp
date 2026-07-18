@@ -4,7 +4,7 @@
 // (Araç Tanıtımları/Diaspora/Test/Burak).
 //  • "Araç Tanıtımları": 10 platform aracı (2 ChatGPT görsel promptu + LinkedIn +
 //    Instagram + Reddit postu). Veri: lib/admin-shell/social-share-vault.ts
-//  • "Diaspora Postları": 50 hazır post (2 ChatGPT görsel promptu + LinkedIn +
+//  • "Diaspora Postları": 68 hazır post (2 ChatGPT görsel promptu + LinkedIn +
 //    Instagram + Reddit), tema rozetli. Veri: lib/admin-shell/social-diaspora-posts.ts
 //  • "Test Araçları": 10 click-through test aracı (3 varyant × 2 görsel promptu
 //    + LinkedIn + Instagram + Reddit). Veri: lib/admin-shell/social-test-tools.ts

@@ -1,11 +1,13 @@
 // Admin Panel V2 — Diaspora LinkedIn + Instagram + Reddit Postları (statik tek kaynak).
 // /admin/social-share-vault sayfasının "Diaspora Postları" sekmesi bu listeden
-// beslenir. 50 kayıt; her biri için 2 metinsiz ChatGPT görsel promptu (İngilizce,
+// beslenir. 68 kayıt; her biri için 2 metinsiz ChatGPT görsel promptu (İngilizce,
 // square 1:1 / no-text kuralları promptun içine gömülü), 1 hazır Türkçe LinkedIn
 // postu, 1 hazır Türkçe Instagram postu ve 1 hazır Türkçe Reddit postu (daha az
 // satış dili, kişisel anekdot/soru ile açılan tartışma tonu — subreddit
 // kurallarına göre editlenmesi gerekebilir). Her post ücretsiz kayıt çağrısı, web +
 // WhatsApp linki ve CorteQS kapanışıyla biter (Reddit postu hariç — o bare URL'le biter).
+// post-51..68 (2026-07-18): site özellikleri (Cadde, Çarşı, Radar, Blog, Referans) +
+// genel diaspora temaları (ikinci kuşak, uzaktan çalışma, yalnızlık, dil kaybı) eklendi.
 //
 // İçerik düzenlemesi BU dosyadan yapılır. Metinler temiz UTF-8 Türkçe + gerçek
 // tırnak + emoji olarak tutulur; HTML-entity / mojibake KULLANILMAZ. Yeni post
@@ -38,7 +40,13 @@ export type DiasporaPostTheme =
   | "cadde"
   | "kadin"
   | "kusaklar"
-  | "manifesto";
+  | "manifesto"
+  | "radar"
+  | "blog"
+  | "referans"
+  | "kariyer"
+  | "uzaktan-calisma"
+  | "yalnizlik";
 
 export type DiasporaPost = {
   /** Benzersiz kimlik ("post-1" ... "post-50"). */
@@ -86,6 +94,12 @@ export const DIASPORA_THEME_LABELS: Record<DiasporaPostTheme, string> = {
   kadin: "Kadın",
   kusaklar: "Kuşaklar",
   manifesto: "Manifesto",
+  radar: "Radar",
+  blog: "Blog",
+  referans: "Referans",
+  kariyer: "Kariyer",
+  "uzaktan-calisma": "Uzaktan Çalışma",
+  yalnizlik: "Yalnızlık",
 };
 
 export const DIASPORA_POSTS: DiasporaPost[] = [
@@ -1938,6 +1952,636 @@ Bunca yıldır gurbetteyim ve hâlâ bazı günler "keşke daha kolay bağlanabi
 CorteQS gibi platformlar "eksik olan tek şey ilk adım" diyor, açık beta aşamasındaymış. İlk adımı atmanın gerçekten bu kadar basit olup olmadığını merak ediyorum.
 
 Siz bu "yalnız değilsin" mesajına inanıyor musunuz, yoksa gurbette yalnızlık kaçınılmaz bir gerçek mi sizce?
+
+corteqs.net`,
+  },
+  {
+    id: "post-51",
+    order: 51,
+    theme: "cadde",
+    title: "Cadde'de bugün ne konuşuluyor",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a soft rounded glossy teal street-shape winding gently across a warm cream square canvas, lined with small rounded glowing window shapes in orange, indigo, pink and yellow like a friendly evening street coming alive with conversation, all fully centered and contained within the square 1:1 frame at 1024x1024 recommended size with generous margin from every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving a warm, communal, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of several small rounded glossy speech-bubble shapes in teal, orange, indigo and pink floating in a relaxed cluster above a warm cream square background, gently overlapping like an ongoing lively conversation, with soft golden-yellow light glowing from the center of the cluster; every shape stays safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the edges; smooth gradients and soft cinematic lighting add subtle depth and an inviting, social, polished mood suited to both a small card and a hero banner; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `🛣️ Facebook grubu değil, gerçek bir cadde.
+
+CorteQS'in Cadde'sinde diaspora gündemini konuşuyorsun, oda açıyorsun, katılıyorsun — hepsi tek bir sosyal akışta. Kaybolan yorumlar, dağınık gruplar yok; tek bir yer.
+
+👉 Ücretsiz kayıt olun!
+Cadde'de bugün ne konuşuluyor, gel bak.
+🔗 https://corteqs.net/cadde
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Cadde #CorteQS`,
+    instagramPost: `🛣️ Facebook grubu değil, gerçek bir cadde!
+
+CorteQS'in Cadde'sinde diaspora gündemini konuş, oda aç, katıl — hepsi tek akışta 💬
+
+👉 Ücretsiz kayıt ol, Cadde'ye çık!
+🔗 corteqs.net/cadde
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Cadde #Gurbet #YurtDışı #Sosyal #Topluluk #CorteQS #Konuşalım #DünyadaTürkler`,
+    redditPost: `Diaspora gündemini takip etmek için Facebook grubu yerine kullandığınız bir yer var mı?
+
+Yıllardır aynı sorun: gündem hep dağınık gruplarda kayboluyor, önemli bir tartışma 3 gün sonra timeline'da bulunmuyor. CorteQS'te "Cadde" diye bir sosyal akış var, tek yerde konuşma + oda açma imkânı sunuyor.
+
+Denedim ama alışkanlık değiştirmek zor oluyor tabii. Sizde diaspora gündemini takip etmenin daha iyi bir yolu var mı?
+
+corteqs.net/cadde`,
+  },
+  {
+    id: "post-52",
+    order: 52,
+    theme: "carsi",
+    title: "Çarşı: birbirimizden alışveriş",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a soft rounded glossy teal storefront-arch shape at the center of a warm cream square canvas, with small rounded glowing product-box shapes in orange, indigo, pink and yellow arranged in a gentle row beneath it like a friendly little marketplace, everything comfortably centered and inside the square 1:1 frame at 1024x1024 recommended size, clear of all edges; soft cinematic lighting produces smooth gradients and gentle depth, giving a warm, entrepreneurial, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a balanced circular arrangement of small rounded glossy handshake-shapes and shopping-bag shapes in teal, orange, indigo, pink and yellow orbiting a soft warm golden-light core at the center of a cream square background, suggesting trusted trade between neighbors; every shape stays safely within the square 1:1 frame at 1024x1024 recommended resolution with generous clearance from the borders; smooth gradients and soft cinematic lighting add subtle depth and an optimistic, communal, polished mood; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `🛍️ Bir ürün ya da hizmete ihtiyacın olduğunda önce kime bakarsın?
+
+CorteQS'in Çarşı'sında dünyanın dört bir yanındaki Türk esnaf ve girişimcilerden alışveriş yapabilirsin. Güven, tanıdıktan tanıdığa değil, doğrulanmış bir ağdan gelir.
+
+👉 Ücretsiz kayıt olun!
+Çarşı'ya göz at, belki aradığın şey zaten orada.
+🔗 https://corteqs.net/cadde/carsi
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Çarşı #Girişimcilik #CorteQS`,
+    instagramPost: `🛍️ İhtiyacın olan şeyi önce kimden alırsın?
+
+CorteQS'in Çarşı'sında dünyanın dört bir yanındaki Türk esnaf ve girişimcilerden alışveriş yap. Güven tanıdıktan değil, doğrulanmış ağdan gelir 🤝
+
+👉 Ücretsiz kayıt ol, Çarşı'ya göz at!
+🔗 corteqs.net/cadde/carsi
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Çarşı #Esnaf #Girişimcilik #Gurbet #YurtDışı #DestekOl #CorteQS #YerelDestek`,
+    redditPost: `Yurt dışında bir hizmete ihtiyacınız olduğunda "Türk esnaf var mı" diye aramayı hâlâ yapıyor musunuz?
+
+Ben hâlâ yapıyorum, özellikle güven gerektiren işlerde (muhasebe, tadilat, hukuki danışmanlık gibi). CorteQS'te "Çarşı" diye bir bölüm var, diasporadaki esnaf/girişimcileri bir araya getiriyor.
+
+Fikir güzel ama arz tarafı (yeterli esnaf/girişimci) olmadan işe yaramaz gibi geliyor bana. Sizin bulunduğunuz yerde böyle bir ihtiyaç var mı, nasıl çözüyorsunuz şu an?
+
+corteqs.net/cadde/carsi`,
+  },
+  {
+    id: "post-53",
+    order: 53,
+    theme: "radar",
+    title: "Diaspora haberlerini tek yerde takip et",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a soft rounded glossy teal radar-dish shape at the center of a warm cream square canvas, gently sweeping a warm golden-orange beam across a scattering of small rounded news-card shapes in indigo, pink and yellow around it; the whole composition stays centered and fully inside the square 1:1 frame at 1024x1024 recommended size with clear margin from every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving an alert, informative, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of concentric soft rounded glossy ring-shapes in teal, radiating outward like calm radar pulses from a warm glowing golden core at the exact center of a cream square background, with a few small rounded pin-shapes in orange, indigo and pink resting along the outer rings to suggest detected updates; every element sits safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and a calm, trustworthy, polished technology mood; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `📡 Diasporayla ilgili haberleri onlarca kaynaktan tek tek takip etmek yorucu.
+
+CorteQS Radar, dünya çapındaki diaspora haberlerini tarayıp tek bir akışta topluyor. Kaçırdığın bir gelişme kalmasın.
+
+👉 Ücretsiz kayıt olun!
+Radar'a göz at, gündemi kaçırma.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Haber #CorteQS`,
+    instagramPost: `📡 Diaspora haberlerini onlarca kaynaktan tek tek takip etmek mi yoruyor?
+
+CorteQS Radar dünya çapındaki gelişmeleri tarayıp tek akışta topluyor. Kaçırdığın kalmasın 🌍
+
+👉 Ücretsiz kayıt ol, Radar'a göz at!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Radar #Haber #Gurbet #YurtDışı #Gündem #DünyadaTürkler #CorteQS #Bilgilen`,
+    redditPost: `Diasporayla ilgili haberleri tek bir yerden takip etmenin bir yolu var mı, yoksa herkes gibi 10 farklı kaynağı mı geziyorsunuz?
+
+Ben genelde birkaç Facebook grubu + birkaç haber sitesi arasında geziniyorum, çoğu zaman da geç kalıyorum. CorteQS'te "Radar" diye otomatik toplayan bir bölüm görmüştüm, dünya çapındaki diaspora haberlerini tarıyormuş.
+
+Böyle otomatik toplama araçlarına güveniyor musunuz, yoksa hep gecikmeli/eksik mi kalıyor sizce?
+
+corteqs.net`,
+  },
+  {
+    id: "post-54",
+    order: 54,
+    theme: "blog",
+    title: "Ülke rehberleri: ilk elden bilgi",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a soft rounded glossy teal open-book shape at the center of a warm cream square canvas, its pages glowing with a gentle warm gradient of orange and golden light, surrounded by small rounded location-pin shapes in indigo, pink and yellow floating like chapters about different places; the whole scene stays fully centered and contained within the square 1:1 frame at 1024x1024 recommended size, clear of all edges; soft cinematic lighting produces smooth gradients and gentle depth, giving a warm, informative, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a soft rounded glossy compass shape resting on a stack of small rounded page-shapes in teal, orange and indigo at the center of a warm cream square background, with a gentle golden-light glow rising from the pages like helpful guidance; every element sits safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the edges; smooth gradients and soft cinematic lighting add subtle depth and a trustworthy, welcoming, polished mood suited to both a small card and a hero banner; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `📖 Yeni bir ülkeye taşınırken en çok neye ihtiyaç duyarsın? Doğru, ilk elden bilgi.
+
+CorteQS Blog'da ülke rehberleri var — konut, sağlık sigortası, bankacılık gibi konularda pratik, güncel bilgiler. Deneme yanılma yerine hazır bir yol haritası.
+
+👉 Ücretsiz kayıt olun!
+Blog'a göz at, bir sonraki adımını kolaylaştır.
+🔗 https://corteqs.net/blog
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Rehber #CorteQS`,
+    instagramPost: `📖 Yeni bir ülkeye taşınırken en çok neye ihtiyacın var? İlk elden bilgi!
+
+CorteQS Blog'da ülke rehberleri: konut, sağlık sigortası, bankacılık... Deneme yanılma yerine hazır yol haritası 🗺️
+
+👉 Ücretsiz kayıt ol, Blog'a göz at!
+🔗 corteqs.net/blog
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Rehber #YeniGelenler #YurtDışı #Gurbet #TaşınmaRehberi #CorteQS #Bilgilen #Kolaylaştır`,
+    redditPost: `Yeni taşındığınız ülkede en çok hangi konuda "keşke önceden bilseydim" dediniz?
+
+Bende sağlık sigortası ve kira sözleşmesi konusunda resmen deneme yanılmayla öğrendim, epey pahalıya da mal oldu. CorteQS'in blog kısmında ülke bazlı pratik rehberler var, keşke ben taşınmadan önce böyle bir kaynak olsaydı diye düşünmeden edemedim.
+
+Sizin taşınma sürecinizde en çok zorlandığınız, bilgi eksikliğinden kaynaklanan konu neydi?
+
+corteqs.net/blog`,
+  },
+  {
+    id: "post-55",
+    order: 55,
+    theme: "referans",
+    title: "Tanıdığını davet et, birlikte büyüyün",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of two soft rounded glossy figure-silhouettes, one teal and one warm orange, standing close together at the center of a warm cream square canvas with a small rounded gift-box shape glowing in golden light held between them, surrounded by a few small rounded star-shapes in indigo, pink and yellow drifting gently upward to celebrate the moment; the whole scene stays centered and fully inside the square 1:1 frame at 1024x1024 recommended size with clear margin from every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving a warm, celebratory, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a soft rounded glossy chain-link shape made of two interlocking rounded loops, one teal and one warm orange, glowing gently at the center of a cream square background, with small rounded confetti-shapes in indigo, pink and yellow scattered lightly around it in a balanced pattern; every shape stays safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and an inviting, rewarding, polished mood suited to both a small card and a hero banner; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `🤝 Ağ, tek başına büyümez — birlikte büyür.
+
+CorteQS'te tanıdığını davet ettiğinde ağ güçleniyor, sen de referans avantajlarından yararlanıyorsun. Kazan-kazan basit bir fikir ama işe yarıyor.
+
+👉 Ücretsiz kayıt olun!
+Referans linkini paylaş, tanıdığını davet et.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Referans #CorteQS`,
+    instagramPost: `🤝 Ağ tek başına büyümez, birlikte büyür!
+
+CorteQS'te tanıdığını davet ettiğinde ağ güçleniyor, sen de avantajlardan yararlanıyorsun. Kazan-kazan basit ama işe yarıyor 🎁
+
+👉 Ücretsiz kayıt ol, referans linkini paylaş!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Referans #DavetEt #Gurbet #YurtDışı #BirlikteBüyü #CorteQS #KazanKazan #Topluluk`,
+    redditPost: `Diaspora platformlarında "arkadaşını davet et" mekaniğine güveniyor musunuz, yoksa spam gibi mi geliyor?
+
+CorteQS'te böyle bir referans sistemi var, davet ettiğin kişi katılınca ikinizin de avantajı oluyor diye okudum. Prensip olarak mantıklı buluyorum çünkü bu tür ağlar gerçekten "içeriden" büyüdükçe daha güvenilir oluyor.
+
+Siz böyle davet/referans sistemlerini kullanıyor musunuz, işe yarıyor mu gerçekten?
+
+corteqs.net`,
+  },
+  {
+    id: "post-56",
+    order: 56,
+    theme: "kariyer",
+    title: "Bulunduğun şehirde kariyer fırsatı",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a soft rounded glossy teal briefcase shape at the center of a warm cream square canvas, its lid gently opening to release a warm golden-orange glow with small rounded upward-arrow shapes in indigo, pink and yellow rising from it like career growth; the whole composition stays centered and fully inside the square 1:1 frame at 1024x1024 recommended size with generous clearance from every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving an ambitious, optimistic, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a balanced staircase made of small rounded glossy step-shapes in teal, orange, indigo, pink and yellow ascending gently toward a soft glowing golden light at the top, centered on a warm cream square background; every step stays safely within the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and an aspirational, encouraging, polished mood suited to both a small card and a hero banner; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `💼 Bulunduğun şehirdeki fırsatları kim biliyor? Genelde oradaki insanlar.
+
+CorteQS ağında meslektaşlarını, işverenleri ve mentorları bulunduğun şehre göre keşfedebilirsin. Kariyer fırsatları çoğu zaman doğru bağlantıdan başlar.
+
+👉 Ücretsiz kayıt olun!
+Şehrindeki profesyonelleri keşfet.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Kariyer #CorteQS`,
+    instagramPost: `💼 Bulunduğun şehirdeki fırsatları kim biliyor? Genelde oradaki insanlar!
+
+CorteQS'te meslektaşlarını, işverenleri ve mentorları şehrine göre keşfet. Kariyer fırsatları doğru bağlantıdan başlar 🚀
+
+👉 Ücretsiz kayıt ol, profesyonelleri keşfet!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Kariyer #Networking #YurtDışı #Gurbet #İşFırsatı #Mentorluk #CorteQS #Bağlan`,
+    redditPost: `Yurt dışında kariyer fırsatlarını nasıl buluyorsunuz, LinkedIn dışında bir yol var mı?
+
+Ben genelde LinkedIn'de arıyorum ama bazen bulunduğum şehirdeki Türk profesyonel ağı çok daha hızlı sonuç veriyor — özellikle referans/tavsiye gerektiren pozisyonlarda. CorteQS'te şehre göre profesyonel arama var, bunu deneyen oldu mu?
+
+Sizce diaspora ağları kariyer arayışında gerçekten fark yaratıyor mu, yoksa hep genel iş platformları mı daha etkili?
+
+corteqs.net`,
+  },
+  {
+    id: "post-57",
+    order: 57,
+    theme: "uzaktan-calisma",
+    title: "Nerede olursan ol, kariyerin seninle",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a soft rounded glossy teal laptop shape floating at the center of a warm cream square canvas, its screen glowing with a gentle warm orange-to-pink gradient, with small rounded location-pin shapes in indigo and yellow scattered lightly around it to suggest working from anywhere; the whole scene stays fully centered and contained within the square 1:1 frame at 1024x1024 recommended size, clear of every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving a modern, flexible, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a soft rounded glossy globe shape at the center of a cream square background with a small warm orange glowing dot resting comfortably on its surface, connected by a thin soft light-thread to a small rounded laptop-shape floating just above it, suggesting remote work tethered gently to home; every element sits safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and a calm, modern, polished mood; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `💻 Uzaktan çalışıyorsan, ofisin dünya. Peki ağın da öyle mi?
+
+Uzaktan çalışan diaspora üyeleri için CorteQS, hem meslektaş bulmanın hem de bulunduğun şehirdeki topluluğa bağlanmanın bir yolu. Ekran başında yalnız kalmak zorunda değilsin.
+
+👉 Ücretsiz kayıt olun!
+Nerede olursan ol, ağın seninle.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #UzaktanÇalışma #CorteQS`,
+    instagramPost: `💻 Uzaktan çalışıyorsan ofisin dünya. Peki ağın da öyle mi?
+
+CorteQS uzaktan çalışan diaspora üyeleri için hem meslektaş bulmanın hem de şehrindeki topluluğa bağlanmanın yolu. Ekran başında yalnız kalma 🌍
+
+👉 Ücretsiz kayıt ol, ağına katıl!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #UzaktanÇalışma #RemoteWork #Gurbet #YurtDışı #DijitalGöçebe #Networking #CorteQS #Bağlan`,
+    redditPost: `Uzaktan çalışanlar, bulunduğunuz şehirde sosyal/profesyonel ağ kurmak sizin için de zor mu?
+
+Uzaktan çalışınca ofis arkadaşlığı gibi doğal bir sosyalleşme yok, bu da diasporada çift kat izolasyon hissi yaratıyor bende. CorteQS'te şehre göre insan bulma özelliği var, uzaktan çalışanlar için de işe yarayabilir gibi duruyor.
+
+Siz uzaktan çalışırken bulunduğunuz şehirdeki topluluğa nasıl bağlanıyorsunuz, bir yöntem buldunuz mu?
+
+corteqs.net`,
+  },
+  {
+    id: "post-58",
+    order: 58,
+    theme: "yalnizlik",
+    title: "Kalabalık bir şehirde yalnız olmak",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a single small rounded glossy teal figure-silhouette standing at the center of a warm cream square canvas, surrounded by a soft blurred cluster of small rounded building-shapes in muted indigo and grey, with one gentle warm golden-orange light beam reaching toward the figure from the edge of the frame like a quiet invitation; the whole composition stays centered and fully inside the square 1:1 frame at 1024x1024 recommended size with generous margin from every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving a reflective yet hopeful, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a soft rounded glossy teal figure-silhouette slowly turning toward a small warm cluster of rounded figure-shapes in orange, indigo, pink and yellow gathered a short distance away on a cream square background, a thin soft golden-light path connecting them; every shape sits safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and a gentle, reassuring, polished mood suited to both a small card and a hero banner; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `🏙️ Milyonlarca insanın arasında olup yine de yalnız hissetmek — gurbetin en garip paradoksu.
+
+Kalabalık bir şehir, tanıdıklık anlamına gelmiyor. CorteQS, bulunduğun şehirdeki kökenini paylaşan insanları görünür kılarak bu paradoksu kırmaya çalışıyor.
+
+👉 Ücretsiz kayıt olun!
+Belki de aradığın bağlantı, sandığından daha yakın.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Yalnızlık #Gurbet #CorteQS`,
+    instagramPost: `🏙️ Milyonlarca insanın arasında olup yine de yalnız hissetmek — gurbetin garip paradoksu.
+
+Kalabalık şehir, tanıdıklık demek değil. CorteQS bulunduğun şehirdeki kökenini paylaşanları görünür kılıyor 🤍
+
+👉 Ücretsiz kayıt ol, bağlantını bul!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Yalnızlık #Gurbet #YurtDışı #RuhSağlığı #Topluluk #Bağlantı #CorteQS #YalnızDeğilsin`,
+    redditPost: `Kalabalık bir şehirde yaşayıp da hiç bu kadar yalnız hissetmediğiniz oldu mu?
+
+Milyonlarca insanın arasındayım ama gerçekten "tanıdığım" kimse yok gibi hissettiğim günler oluyor. Garip bir paradoks — etraf kalabalık ama bağlantı yok. CorteQS gibi platformların iddiası tam da bu boşluğu, aynı şehirdeki kökeni paylaşan insanları görünür kılarak doldurmak.
+
+Siz bu "kalabalıkta yalnızlık" hissini yaşadınız mı, nasıl aştınız (ya da aşamadınız)?
+
+corteqs.net`,
+  },
+  {
+    id: "post-59",
+    order: 59,
+    theme: "kusaklar",
+    title: "İkinci kuşağın kimlik arayışı",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of two soft rounded glossy figure-silhouettes of different sizes, a smaller warm orange one and a larger teal one, standing side by side at the center of a warm cream square canvas, with a thin soft golden-light thread connecting their hearts and a few small rounded cultural-symbol-neutral shapes (rounded stars and simple geometric motifs) in indigo, pink and yellow floating gently between them; the whole scene stays fully centered and contained within the square 1:1 frame at 1024x1024 recommended size, clear of every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving a warm, intergenerational, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a soft rounded glossy tree shape with two branches, one reaching toward a warm orange glow and one toward a cool teal glow, centered on a cream square background, its roots rendered as small rounded glossy shapes in indigo and yellow; every element sits safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and a rooted, hopeful, polished mood suited to both a small card and a hero banner; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `🌱 "Nerelisin?" sorusuna tek kelimeyle cevap veremeyenler var.
+
+Yurt dışında doğup büyüyen ikinci kuşak için kimlik, çoğu zaman iki kültür arasında bir denge kurma meselesi. CorteQS, o dengeyi kuran diğer ailelerle bağlantı kurmanın bir yolu.
+
+👉 Ücretsiz kayıt olun!
+Kökenini kendi tarzında yaşayan bir toplulukla tanış.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #İkinciKuşak #Kimlik #CorteQS`,
+    instagramPost: `🌱 "Nerelisin?" sorusuna tek kelimeyle cevap veremeyenler var.
+
+Yurt dışında büyüyen ikinci kuşak için kimlik, iki kültür arasında bir denge. CorteQS o dengeyi kuran ailelerle bağlantı kurmanın yolu 🌍
+
+👉 Ücretsiz kayıt ol, topluluğu keşfet!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #İkinciKuşak #Kimlik #YurtDışı #İkiKültür #Aidiyet #CorteQS #KökEnKimlik #Gurbet`,
+    redditPost: `Yurt dışında doğup büyüyen ikinci kuşak arkadaşlar, "nerelisin" sorusuna nasıl cevap veriyorsunuz?
+
+Ben burada doğdum ama evde tamamen farklı bir kültürle büyüdüm, iki tarafa da tam ait hissetmiyorum bazen. Bu ikili kimlik hissini paylaşan başka ailelerle tanışmak iyi geliyor. CorteQS'te bu tür bir toplulukla bağlantı kurmaya çalışan var mı?
+
+Siz bu "arada kalmışlık" hissini nasıl yönetiyorsunuz, yoksa bir noktadan sonra sorun olmaktan mı çıkıyor?
+
+corteqs.net`,
+  },
+  {
+    id: "post-60",
+    order: 60,
+    theme: "dil",
+    title: "Ana dilini kaybetme korkusu",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a soft rounded glossy teal speech-bubble shape at the center of a warm cream square canvas, slowly fading at one edge into soft translucent mist while the rest glows warmly in orange and golden light, with a few small rounded letter-like abstract shapes (non-readable, purely decorative rounded marks) in indigo, pink and yellow drifting gently around it; the whole composition stays centered and fully inside the square 1:1 frame at 1024x1024 recommended size with generous clearance from every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving a tender, reflective, polished editorial-illustration feel that reads clearly at small thumbnail size; absolutely no real text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of two soft rounded glossy speech-bubble shapes, one warm orange and one teal, gently overlapping at the center of a cream square background with a soft golden-light glow where they meet, surrounded by a light scatter of small rounded abstract decorative marks in indigo, pink and yellow; every shape sits safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and a warm, connective, polished mood; no real text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `🗣️ Bazı kelimeleri artık Türkçe değil, İngilizce düşünüyorsun. Tanıdık geliyor mu?
+
+Ana dilini kaybetme korkusu gurbette çok konuşulmayan ama çok yaygın bir his. CorteQS'te Türkçe konuşabileceğin, pratik yapabileceğin bir topluluk var.
+
+👉 Ücretsiz kayıt olun!
+Dilini yaşat, bağlantını koru.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #AnaDil #CorteQS`,
+    instagramPost: `🗣️ Bazı kelimeleri artık Türkçe değil, İngilizce düşünüyorsun. Tanıdık mı geliyor?
+
+Ana dilini kaybetme korkusu gurbette çok yaygın ama az konuşulan bir his. CorteQS'te Türkçe konuşabileceğin bir topluluk var 💬
+
+👉 Ücretsiz kayıt ol, dilini yaşat!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #AnaDil #Türkçe #Gurbet #YurtDışı #DilKaybı #Kimlik #CorteQS #KonuşmayaDevam`,
+    redditPost: `Ana dilinizi unutmaya başladığınızı hissettiğiniz oldu mu, nasıl bir his?
+
+Bazen bir kelimeyi Türkçe hatırlayamıyorum, önce İngilizcesi geliyor aklıma. Bu beni gerçekten rahatsız ediyor çünkü dilimi kimliğimin bir parçası olarak görüyorum. Düzenli Türkçe konuşacak biri olmayınca daha da hızlanıyor bu süreç sanırım.
+
+Siz bu durumu yaşadınız mı, ana dilinizi canlı tutmak için ne yapıyorsunuz?
+
+corteqs.net`,
+  },
+  {
+    id: "post-61",
+    order: 61,
+    theme: "tatil",
+    title: "Memlekete dönüş sonrası boşluk",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a soft rounded glossy teal suitcase shape at the center of a warm cream square canvas, half open with a warm golden-orange glow spilling softly out like a fading memory, and a single small rounded airplane-shape in indigo drawn faintly departing toward the edge of the frame; the whole scene stays fully centered and contained within the square 1:1 frame at 1024x1024 recommended size, clear of every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving a bittersweet, reflective, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a soft rounded glossy calendar-page shape at the center of a cream square background, one corner gently curling upward and glowing warm orange like time passing, with a small rounded heart-shape in pink resting quietly beside it; every element sits safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and a tender, nostalgic, polished mood suited to both a small card and a hero banner; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `✈️ Memleketten dönünce ilk hafta neden bu kadar zor?
+
+Tatil bitip valizler açılınca gelen o boşluk hissi, gurbetçilerin çoğunun bildiği bir şey. Bulunduğun şehirde o sıcaklığı hissettiren bir toplulukla bağlantı kurmak, geçişi biraz kolaylaştırabilir.
+
+👉 Ücretsiz kayıt olun!
+Dönüş sonrası yalnız kalma.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #MemleketÖzlemi #CorteQS`,
+    instagramPost: `✈️ Memleketten dönünce ilk hafta neden bu kadar zor?
+
+Tatil bitip valizler açılınca gelen boşluk hissi çoğu gurbetçinin bildiği bir şey. Bulunduğun şehirde o sıcaklığı hissettiren bir toplulukla bağlan 🧳
+
+👉 Ücretsiz kayıt ol, yalnız kalma!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #MemleketÖzlemi #Gurbet #TatilSonrası #YurtDışı #Özlem #CorteQS #Topluluk #DönüşZor`,
+    redditPost: `Memleketten döndükten sonraki o "boşluk haftası" sizde de oluyor mu?
+
+Her tatilden sonra aynı şey oluyor: ilk birkaç gün resmen depresif hissediyorum, valizler bile açılmıyor bazen. Ailemi, arkadaşlarımı, o sokak seslerini özlüyorum ve bulunduğum şehir birden çok "yabancı" geliyor.
+
+Siz bu geçiş dönemini nasıl atlatıyorsunuz, işe yarayan bir yöntem buldunuz mu?
+
+corteqs.net`,
+  },
+  {
+    id: "post-62",
+    order: 62,
+    theme: "isletme",
+    title: "Küçük işletmeni diasporaya duyur",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a soft rounded glossy teal shop-sign shape at the center of a warm cream square canvas, glowing warmly with orange and golden light, with small rounded megaphone-like shapes in indigo, pink and yellow gently radiating soft sound-wave arcs outward to suggest visibility spreading; the whole composition stays centered and fully inside the square 1:1 frame at 1024x1024 recommended size with generous margin from every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving an encouraging, entrepreneurial, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a small rounded glossy storefront shape in teal at the center of a cream square background, with a soft warm golden-light beam expanding outward in a gentle cone toward a scatter of small rounded figure-silhouettes in orange, indigo, pink and yellow representing potential customers; every shape stays safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and an optimistic, growth-oriented, polished mood; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `🏪 Küçük işletmeni büyütmenin en ucuz yolu: doğru topluluğa duyurmak.
+
+CorteQS'in Çarşı'sında işletmeni dünyanın dört bir yanındaki diaspora üyelerine tanıtabilirsin. Reklam bütçesi yerine, güven ağı.
+
+👉 Ücretsiz kayıt olun!
+İşletmeni ekle, diaspora seni bulsun.
+🔗 https://corteqs.net/cadde/carsi
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Girişimcilik #KüçükİşletmeCorteQS`,
+    instagramPost: `🏪 Küçük işletmeni büyütmenin en ucuz yolu: doğru topluluğa duyurmak!
+
+CorteQS'in Çarşı'sında işletmeni dünyadaki diaspora üyelerine tanıt. Reklam bütçesi yerine güven ağı 📣
+
+👉 Ücretsiz kayıt ol, işletmeni ekle!
+🔗 corteqs.net/cadde/carsi
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Girişimcilik #Küçükİşletme #Esnaf #YurtDışı #Gurbet #CorteQS #İşiniBüyüt #DestekOl`,
+    redditPost: `Yurt dışında küçük bir işletmeniz var mı, müşteri bulmak için diaspora ağlarını kullanıyor musunuz?
+
+Ben yeni bir hizmet işine başladım ve reklam bütçem çok kısıtlı. Facebook gruplarında paylaşım yapıyorum ama etkisi sınırlı kalıyor. CorteQS'te "Çarşı" diye bir bölüm var, esnaf/girişimcileri listeleyen.
+
+Böyle niş diaspora platformlarının küçük işletmelere gerçekten müşteri getirdiğini düşünüyor musunuz, yoksa hep genel platformlar mı daha etkili?
+
+corteqs.net/cadde/carsi`,
+  },
+  {
+    id: "post-63",
+    order: 63,
+    theme: "ogrenci",
+    title: "Yurt dışında öğrenci olmak",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a soft rounded glossy teal graduation-cap shape at the center of a warm cream square canvas, gently tilted with a warm golden-orange glow rising from it like fresh ambition, surrounded by a few small rounded book-shapes in indigo, pink and yellow arranged in a loose circle; the whole scene stays fully centered and contained within the square 1:1 frame at 1024x1024 recommended size, clear of every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving a hopeful, youthful, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a soft rounded glossy backpack shape in teal resting at the center of a cream square background, with a small rounded compass-shape in warm orange glowing gently on top of it, and a few small rounded paper-airplane shapes in indigo, pink and yellow drifting upward around it to suggest new beginnings; every element sits safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and an optimistic, adventurous, polished mood; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `🎓 Yeni bir ülkede öğrenci olmak heyecanlı ama yalnız da olabilir.
+
+CorteQS'te bulunduğun üniversite şehrindeki diğer Türk öğrencileri bulabilir, ders notlarından ev arkadaşı aramaya kadar birçok konuda destek alabilirsin.
+
+👉 Ücretsiz kayıt olun!
+Şehrindeki öğrenci topluluğuna katıl.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Öğrenci #CorteQS`,
+    instagramPost: `🎓 Yeni bir ülkede öğrenci olmak heyecanlı ama yalnız da olabilir.
+
+CorteQS'te üniversite şehrindeki diğer Türk öğrencileri bul, ev arkadaşından ders desteğine kadar bağlan 📚
+
+👉 Ücretsiz kayıt ol, öğrenci topluluğuna katıl!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Öğrenci #Üniversite #YurtDışıEğitim #Gurbet #TürkÖğrenciler #CorteQS #Katıl #Networking`,
+    redditPost: `Yurt dışında okuyan öğrenciler, ilk döneminizde en çok neyle zorlandınız?
+
+Bende en zoru barınma ve "kiminle takılacağım" belirsizliğiydi, üniversitenin resmi oryantasyonu yeterli gelmedi. Sonradan öğrendim ki şehirde epey Türk öğrenci varmış ama birbirimizi bulmamız zaman aldı. CorteQS gibi platformlar şehir bazlı arama sunuyor, keşke daha önce bilseydim.
+
+Siz nasıl bir yol izlediniz, aynı şehirdeki Türk öğrencileri nasıl buldunuz?
+
+corteqs.net`,
+  },
+  {
+    id: "post-64",
+    order: 64,
+    theme: "mentorluk",
+    title: "Bir adım önde olanın deneyimi",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of two soft rounded glossy figure-silhouettes standing on gently different height platforms, a taller teal figure extending a warm golden-orange light-hand down to a smaller orange figure reaching up, centered on a warm cream square canvas; the whole composition stays centered and fully inside the square 1:1 frame at 1024x1024 recommended size with generous clearance from every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving a supportive, encouraging, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a soft rounded glossy lantern shape in warm orange floating above a smaller rounded figure-silhouette in teal on a cream square background, casting a gentle golden-light path forward for the figure to follow; every shape sits safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and a guiding, warm, polished mood suited to both a small card and a hero banner; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `🕯️ Senin şu an takıldığın yerden, biri zaten geçti.
+
+CorteQS'te bulunduğun alanda ya da hedeflediğin şehirde daha önce yol almış diaspora üyeleriyle bağlantı kurabilir, onların deneyiminden faydalanabilirsin.
+
+👉 Ücretsiz kayıt olun!
+Bir adım önde olanı bul, sor, öğren.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Mentorluk #CorteQS`,
+    instagramPost: `🕯️ Senin şu an takıldığın yerden, biri zaten geçti.
+
+CorteQS'te alanında ya da hedeflediğin şehirde yol almış diaspora üyeleriyle bağlan, deneyimlerinden faydalan 💡
+
+👉 Ücretsiz kayıt ol, bir adım önde olanı bul!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Mentorluk #Deneyim #YurtDışı #Gurbet #YolGösterici #CorteQS #SorÖğren #Networking`,
+    redditPost: `Yurt dışı sürecinizde bir mentor/deneyimli birinden gerçekten fayda gördünüz mü?
+
+Ben ilk yıllarımda çoğu şeyi tek başıma çözmeye çalıştım, sonradan fark ettim ki 5 dakikalık bir tavsiye haftalar süren bir arayışı kısaltabilirmiş. CorteQS'te alan/şehir bazlı insan bulma özelliği bu tür bağlantıları kolaylaştırabilir gibi duruyor.
+
+Siz mentorluk/deneyim paylaşımını nasıl buluyorsunuz — resmi programlar mı, yoksa organik tanışıklıklar mı daha çok işe yarıyor?
+
+corteqs.net`,
+  },
+  {
+    id: "post-65",
+    order: 65,
+    theme: "etkinlik",
+    title: "Şehrindeki bir sonraki buluşma",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a soft rounded glossy teal calendar-pin shape glowing warmly at the center of a warm cream square canvas, with several small rounded glossy figure-silhouettes in orange, indigo, pink and yellow gathered in a loose friendly cluster beneath it as if arriving for a gathering; the whole scene stays fully centered and contained within the square 1:1 frame at 1024x1024 recommended size, clear of every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving a lively, communal, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a balanced circle of small rounded glossy figure-silhouettes in teal, orange, indigo, pink and yellow standing around a soft glowing warm golden-light gathering point at the center of a cream square background, as if meeting up in person; every shape stays safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and a warm, social, polished mood suited to both a small card and a hero banner; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `📍 Ekrandaki bağlantı güzel ama gerçek buluşma başka.
+
+CorteQS ağı, bulunduğun şehirdeki diaspora etkinliklerini ve buluşmaları keşfetmenin bir yolu. Bazen bir kahve buluşması, aylarca süren yazışmalardan daha değerli.
+
+👉 Ücretsiz kayıt olun!
+Şehrindeki bir sonraki buluşmayı kaçırma.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Etkinlik #CorteQS`,
+    instagramPost: `📍 Ekrandaki bağlantı güzel ama gerçek buluşma başka!
+
+CorteQS bulunduğun şehirdeki diaspora etkinliklerini keşfetmenin yolu. Bir kahve buluşması aylarca süren yazışmadan daha değerli olabilir ☕
+
+👉 Ücretsiz kayıt ol, buluşmaları kaçırma!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Etkinlik #Buluşma #YurtDışı #Gurbet #Topluluk #CorteQS #GerçekBağlantı #KahveBuluşması`,
+    redditPost: `Bulunduğunuz şehirdeki Türk topluluğu etkinliklerini nasıl takip ediyorsunuz?
+
+Ben genelde son anda, tesadüfen bir Facebook grubunda görüyorum ve çoğu zaman kaçırmış oluyorum. Online bağlantı güzel ama gerçek bir kahve buluşması bambaşka bir şey. CorteQS'te şehir bazlı etkinlik/buluşma keşfi varmış, deneyen oldu mu?
+
+Siz şehrinizdeki topluluk etkinliklerini kaçırmamak için nasıl bir sistem kurdunuz?
+
+corteqs.net`,
+  },
+  {
+    id: "post-66",
+    order: 66,
+    theme: "kadin",
+    title: "Gurbette kadın olmak, gurbette güçlenmek",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a soft rounded glossy warm orange figure-silhouette standing confidently at the center of a warm cream square canvas, gently haloed by a ring of small rounded glossy support-shapes in teal, indigo, pink and yellow forming a protective circle around her; the whole composition stays centered and fully inside the square 1:1 frame at 1024x1024 recommended size with generous margin from every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving an empowering, warm, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a soft rounded glossy flower shape made of small rounded petal-forms in teal, orange, indigo, pink and yellow blooming outward from a warm golden-light center on a cream square background, suggesting collective strength growing together; every shape stays safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and an empowering, warm, polished mood suited to both a small card and a hero banner; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `💪 Gurbette kadın olmanın kendine has zorlukları var — ve kendine has gücü.
+
+CorteQS'te bulunduğun şehirdeki kadın girişimcilerle, profesyonellerle ve annelerle bağlantı kurabilir, birbirinizden güç alabilirsiniz.
+
+👉 Ücretsiz kayıt olun!
+Sen de bu güçlü ağın parçası ol.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Kadın #CorteQS`,
+    instagramPost: `💪 Gurbette kadın olmanın kendine has zorlukları var, kendine has gücü de!
+
+CorteQS'te şehrindeki kadın girişimcilerle, profesyonellerle, annelerle bağlan. Birbirinizden güç alın 🌸
+
+👉 Ücretsiz kayıt ol, güçlü ağa katıl!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Kadın #GüçlüKadınlar #YurtDışı #Gurbet #KadınDayanışması #CorteQS #Networking #BirlikteGüçlüyüz`,
+    redditPost: `Gurbette yaşayan kadınlar, sizin için en zor kısım ne oldu — profesyonel mi, sosyal mi?
+
+Bende ikisi de oldu açıkçası: hem iş hayatında farklı bir kültürde kendimi kanıtlamak hem de yeni bir "kız arkadaş çevresi" kurmak zor geldi. Kadın-kadına dayanışma ağlarının diasporada özellikle değerli olduğunu düşünüyorum.
+
+Siz bulunduğunuz yerde böyle bir kadın topluluğu buldunuz mu, nasıl?
+
+corteqs.net`,
+  },
+  {
+    id: "post-67",
+    order: 67,
+    theme: "ambasador",
+    title: "Şehrinin gönüllü temsilcisi ol",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a soft rounded glossy teal figure-silhouette standing proudly at the center of a warm cream square canvas holding a small rounded glowing flag-shape (plain, no emblem) in warm orange, with a few small rounded location-pin shapes in indigo, pink and yellow arranged loosely around as if marking a territory of welcome; the whole scene stays fully centered and contained within the square 1:1 frame at 1024x1024 recommended size, clear of every edge; soft cinematic lighting produces smooth gradients and gentle depth, giving a proud, welcoming, polished editorial-illustration feel that reads clearly at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a soft rounded glossy compass-star shape in warm orange at the center of a cream square background, radiating a few thin soft golden-light beams toward small rounded building-silhouettes in teal, indigo and pink arranged around it like a welcoming host pointing the way; every shape sits safely inside the square 1:1 frame at 1024x1024 recommended resolution, never touching the borders; smooth gradients and soft cinematic lighting add subtle depth and a proud, hospitable, polished mood suited to both a small card and a hero banner; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `🚩 Şehrini iyi tanıyorsun. Peki yeni gelenlere rehberlik etmeye ne dersin?
+
+CorteQS'te bulunduğun şehrin gönüllü temsilcisi (ambasadörü) olabilir, yeni gelen diaspora üyelerine ilk adımlarında yardımcı olabilirsin. Küçük bir jest, büyük bir fark yaratır.
+
+👉 Ücretsiz kayıt olun!
+Şehrinin temsilcisi olmaya aday ol.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Ambasador #CorteQS`,
+    instagramPost: `🚩 Şehrini iyi tanıyorsun. Yeni gelenlere rehberlik etmeye ne dersin?
+
+CorteQS'te şehrinin gönüllü temsilcisi ol, yeni gelenlerin ilk adımlarına yardım et. Küçük jest, büyük fark 🤍
+
+👉 Ücretsiz kayıt ol, temsilci olmaya aday ol!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Ambasador #YeniGelenler #YurtDışı #Gurbet #GönüllülükEt #CorteQS #Rehberlik #Topluluk`,
+    redditPost: `Bulunduğunuz şehre yeni gelen birine gönüllü rehberlik ettiniz mi, deneyiminiz nasıldı?
+
+Ben ilk geldiğimde bana yardımcı olan birkaç kişi sayesinde çok şey öğrendim, şimdi ben de aynısını yapmak istiyorum. CorteQS'te "ambasadör" gibi bir gönüllü temsilcilik konsepti var, şehir bazlı rehberlik için.
+
+Siz böyle gönüllü rehberlik sistemlerinin gerçekten işe yaradığını düşünüyor musunuz, yoksa organik olarak mı gelişmeli bu tür yardımlaşma?
+
+corteqs.net`,
+  },
+  {
+    id: "post-68",
+    order: 68,
+    theme: "manifesto",
+    title: "251 ülke, tek bir ağ",
+    imagePrompts: [
+      "A premium modern editorial 3D illustration of a warm cream-colored world globe rendered in soft rounded geometry at the center of a warm cream square canvas, with hundreds of tiny soft glowing dot-shapes in teal, orange, indigo, pink and yellow scattered evenly across its surface like a vast connected network, a few thin soft light-threads linking nearby dots together; the globe is perfectly centered and sits safely inside the square 1:1 frame at 1024x1024 recommended resolution, with generous padding so nothing touches or crosses the edges; soft cinematic studio lighting casts smooth gradients and gentle shadows, giving the scene a grand, unifying, polished feel that reads clearly at small thumbnail size; the mood is ambitious, warm and inclusive; absolutely no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark anywhere in the image.",
+      "A premium modern editorial 3D illustration of a soft rounded glossy network-sphere shape glowing warmly at the exact center of a cream square canvas, with dozens of thin soft light-threads radiating outward to small rounded glossy location-pin shapes in teal, orange, indigo, pink and yellow scattered in a balanced pattern across the frame; every element stays fully within the square 1:1 frame at 1024x1024 recommended size, well clear of all four edges; smooth gradients and soft cinematic lighting produce subtle depth and a grand, optimistic, polished technology-brand mood that stays legible at small thumbnail size; no text, no letters, no readable numbers, no logos, no provider names, no brand names, no official seals, no watermark.",
+    ],
+    linkedinPost: `🌍 251 ülke. Tek bir ağ. Ortak bir köken.
+
+CorteQS'in vizyonu büyük ama basit: dünyanın neresinde olursan ol, kökenini paylaşan biriyle bir tık uzakta olmak. Bu ağ büyüdükçe herkes için daha değerli hale geliyor.
+
+👉 Ücretsiz kayıt olun!
+Bu büyük ağın bir parçası ol.
+🔗 https://corteqs.net/
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+#Diaspora #TürkDiasporası #Manifesto #CorteQS`,
+    instagramPost: `🌍 251 ülke. Tek bir ağ. Ortak bir köken.
+
+CorteQS'in vizyonu büyük ama basit: dünyanın neresinde olursan ol, kökenini paylaşan biri bir tık uzakta ✨
+
+👉 Ücretsiz kayıt ol, bu ağın parçası ol!
+🔗 corteqs.net
+💬 WhatsApp topluluğu bio'da.
+
+#Diaspora #TürkDiasporası #Manifesto #DünyadaTürkler #Gurbet #YurtDışı #GüvenAğı #CorteQS #BirlikteGüçlüyüz #251Ülke`,
+    redditPost: `251 ülkeye yayılmış bir diasporayı tek bir ağda birleştirmek gerçekten mümkün mü, yoksa fazla iddialı bir hedef mi?
+
+CorteQS'in vizyonu bu yönde, dünyanın her yerindeki Türkleri tek platformda buluşturmak. Rakam etkileyici ama bu kadar dağınık bir kitleyi bir araya getirmenin pratikte çok zor olduğunu düşünüyorum.
+
+Siz böyle "her yeri kapsayan" ağ iddialarına ne kadar inanıyorsunuz, yoksa hep bölgesel/yerel ağlar mı daha gerçekçi kalır sizce?
 
 corteqs.net`,
   },
