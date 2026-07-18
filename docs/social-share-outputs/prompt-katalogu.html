@@ -99,7 +99,7 @@
     background: linear-gradient(180deg, var(--surface-2), var(--bg));
   }
   .masthead-inner {
-    max-width: 920px;
+    max-width: 1400px;
     margin: 0 auto;
   }
   .eyebrow {
@@ -157,7 +157,7 @@
   }
 
   .howto {
-    max-width: 920px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 1.75rem 1.5rem 0.5rem;
   }
@@ -189,7 +189,7 @@
   }
 
   .naming {
-    max-width: 920px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 1.5rem 1.5rem 0.5rem;
   }
@@ -230,7 +230,7 @@
     font-family: 'Helvetica Neue', Arial, sans-serif;
   }
   .controls-inner {
-    max-width: 920px;
+    max-width: 1400px;
     margin: 0 auto;
     width: 100%;
     display: flex;
@@ -299,7 +299,7 @@
   }
 
   main {
-    max-width: 920px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 1.5rem 1.5rem 5rem;
   }
@@ -387,9 +387,6 @@
     white-space: pre-wrap;
     word-wrap: break-word;
     margin: 0 0 0.7rem;
-    max-height: 9.5em;
-    overflow-y: auto;
-    padding-right: 0.3em;
   }
   .copy-btn {
     font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -415,7 +412,7 @@
   }
 
   footer {
-    max-width: 920px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 2rem 1.5rem 3rem;
     color: var(--ink-faint);
@@ -452,8 +449,8 @@
 <ol>
 <li>Bir prompt kartındaki İngilizce metni <strong>Promptu Kopyala</strong> ile kopyala, görsel üretim aracına (ChatGPT görsel üretimi, DALL·E, Midjourney vb.) yapıştır ve kare (1:1, 1024×1024) görsel üret.</li>
 <li>Üretilen görseli, o kartın üstünde yazan <strong>dosya adıyla</strong> kaydet.</li>
-<li>Tüm dosyaları <code>docs/social-share-outputs/&lt;sekme&gt;/</code> klasörüne at (sekme adları: <code>tools</code>, <code>diaspora</code>, <code>tests</code>, <code>burak</code>).</li>
-<li>Dosya adı kaynak koddaki gerçek <code>id</code> alanına dayandığı için, klasördeki dosyaları gördüğümde hangi admin sekmesindeki hangi kaleme ait olduğunu otomatik eşleştirebilirim — ek açıklamaya gerek kalmaz.</li>
+<li>Tüm dosyaları tek klasöre, doğrudan <code>docs/social-share-outputs/</code> altına at — alt klasöre ayırmana gerek yok.</li>
+<li>Dosya adı kaynak koddaki gerçek <code>id</code> alanına dayandığı ve her sekmenin id öneki benzersiz olduğu için (<code>tool-</code>, <code>post-</code>, <code>test-tool-</code>, <code>burak-tool-</code>), klasördeki dosyaları gördüğümde hangi admin sekmesindeki hangi kaleme ait olduğunu adından otomatik eşleştirebilirim — ek açıklamaya ya da alt klasöre gerek kalmaz.</li>
 </ol>
 </div>
 <div class="naming">

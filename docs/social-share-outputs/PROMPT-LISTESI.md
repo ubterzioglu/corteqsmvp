@@ -10,10 +10,11 @@ listesidir. Toplam **288 prompt**.
 1. Aşağıdaki her promptu olduğu gibi (İngilizce) bir görsel üretim aracına (ör. ChatGPT
    görsel üretimi, DALL-E, Midjourney vb.) yapıştırıp kare (1:1, 1024×1024) görsel üret.
 2. Üretilen görseli, o promptun **hemen üstünde yazan dosya adıyla** kaydet.
-3. Tüm dosyaları `docs/social-share-outputs/<sekme>/` klasörüne at (sekme = tools / diaspora / tests / burak).
-4. Dosya adı zaten kaynak koddaki gerçek `id` alanına dayandığı için, klasördeki dosyaları
-   gördüğümde hangi admin sekmesindeki hangi kaleme ait olduğunu otomatik anlayıp eşleştirebilirim
-   — ek açıklama yapmana gerek kalmaz.
+3. Tüm dosyaları tek klasöre, doğrudan `docs/social-share-outputs/` altına at — alt klasöre ayırmana gerek yok.
+4. Dosya adı zaten kaynak koddaki gerçek `id` alanına dayandığı ve her sekmenin id öneki
+   benzersiz olduğu için (`tool-`, `post-`, `test-tool-`, `burak-tool-`), klasördeki dosyaları
+   gördüğümde hangi admin sekmesindeki hangi kaleme ait olduğunu adından otomatik anlayıp
+   eşleştirebilirim — ek açıklamaya ya da alt klasöre gerek kalmaz.
 
 ## Dosya adlandırma kuralı
 
