@@ -73,6 +73,12 @@ export default defineConfig(({ mode }) => ({
           fileName: "commercial.html",
           source: createRedirectStub("/commercial"),
         });
+
+        this.emitFile({
+          type: "asset",
+          fileName: "commercial/index.html",
+          source: createRedirectStub("/commercial"),
+        });
       },
     },
     mode === "development" && componentTagger(),
