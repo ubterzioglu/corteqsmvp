@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.4"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       _bak_org_catalog_item_categories_20260609: {
@@ -551,6 +576,24 @@ export type Database = {
           target_entity_id?: string | null
           target_entity_type?: string | null
           target_user_id?: string | null
+        }
+        Relationships: []
+      }
+      admin_favorite_pages: {
+        Row: {
+          admin_user_id: string
+          page_ids: string[]
+          updated_at: string
+        }
+        Insert: {
+          admin_user_id: string
+          page_ids?: string[]
+          updated_at?: string
+        }
+        Update: {
+          admin_user_id?: string
+          page_ids?: string[]
+          updated_at?: string
         }
         Relationships: []
       }
@@ -3955,6 +3998,120 @@ export type Database = {
         }
         Relationships: []
       }
+      diaspora_match_preferences: {
+        Row: {
+          availability: string | null
+          blocking_topics: string[]
+          contact_style: string | null
+          current_city: string | null
+          current_country: string | null
+          experience_years_in_target: number | null
+          hidden_fields: string[]
+          intro_text: string | null
+          languages: string[]
+          max_monthly_intros: number
+          needs: string[]
+          offers: string[]
+          preferred_group_size: string | null
+          profession_tags: string[]
+          profile_status: string | null
+          response_time_expectation: string | null
+          target_city_codes: string[]
+          target_country_codes: string[]
+          topic_interests: string[]
+          trust_signals: string[]
+          updated_at: string
+          user_id: string
+          visibility_status: string
+        }
+        Insert: {
+          availability?: string | null
+          blocking_topics?: string[]
+          contact_style?: string | null
+          current_city?: string | null
+          current_country?: string | null
+          experience_years_in_target?: number | null
+          hidden_fields?: string[]
+          intro_text?: string | null
+          languages?: string[]
+          max_monthly_intros?: number
+          needs?: string[]
+          offers?: string[]
+          preferred_group_size?: string | null
+          profession_tags?: string[]
+          profile_status?: string | null
+          response_time_expectation?: string | null
+          target_city_codes?: string[]
+          target_country_codes?: string[]
+          topic_interests?: string[]
+          trust_signals?: string[]
+          updated_at?: string
+          user_id?: string
+          visibility_status?: string
+        }
+        Update: {
+          availability?: string | null
+          blocking_topics?: string[]
+          contact_style?: string | null
+          current_city?: string | null
+          current_country?: string | null
+          experience_years_in_target?: number | null
+          hidden_fields?: string[]
+          intro_text?: string | null
+          languages?: string[]
+          max_monthly_intros?: number
+          needs?: string[]
+          offers?: string[]
+          preferred_group_size?: string | null
+          profession_tags?: string[]
+          profile_status?: string | null
+          response_time_expectation?: string | null
+          target_city_codes?: string[]
+          target_country_codes?: string[]
+          topic_interests?: string[]
+          trust_signals?: string[]
+          updated_at?: string
+          user_id?: string
+          visibility_status?: string
+        }
+        Relationships: []
+      }
+      diaspora_matches: {
+        Row: {
+          candidate_id: string
+          created_at: string
+          id: string
+          intro_context: Json
+          requester_id: string
+          score: number
+          score_breakdown: Json
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          candidate_id: string
+          created_at?: string
+          id?: string
+          intro_context?: Json
+          requester_id?: string
+          score: number
+          score_breakdown?: Json
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          candidate_id?: string
+          created_at?: string
+          id?: string
+          intro_context?: Json
+          requester_id?: string
+          score?: number
+          score_breakdown?: Json
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       diaspora_scan_runs: {
         Row: {
           brave_results_checked: number | null
@@ -4644,6 +4801,39 @@ export type Database = {
           is_active?: boolean
           name?: string
           sort_order?: number
+        }
+        Relationships: []
+      }
+      germany_citizenship_questions: {
+        Row: {
+          created_at: string
+          dogru_cevap: string
+          eyalet: string
+          id: number
+          image_url: string | null
+          secenekler: Json
+          soru_almanca: string
+          soru_turkce: string
+        }
+        Insert: {
+          created_at?: string
+          dogru_cevap: string
+          eyalet: string
+          id: number
+          image_url?: string | null
+          secenekler: Json
+          soru_almanca: string
+          soru_turkce: string
+        }
+        Update: {
+          created_at?: string
+          dogru_cevap?: string
+          eyalet?: string
+          id?: number
+          image_url?: string | null
+          secenekler?: Json
+          soru_almanca?: string
+          soru_turkce?: string
         }
         Relationships: []
       }
@@ -5571,6 +5761,39 @@ export type Database = {
           sort_order?: number | null
           source?: string
           title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      member_feedback: {
+        Row: {
+          body: string
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          id: string
+          page_path: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          page_path?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          page_path?: string
+          status?: string
           updated_at?: string
         }
         Relationships: []
@@ -6875,6 +7098,71 @@ export type Database = {
           },
         ]
       }
+      relocation_country_metrics: {
+        Row: {
+          climate_tags: string[]
+          community_density: number | null
+          cost_index: number | null
+          country_code: string
+          country_name_tr: string
+          created_at: string
+          employment_index: number | null
+          english_workability: number | null
+          freshness_at: string | null
+          healthcare_index: number | null
+          inclusion_index: number | null
+          is_active: boolean
+          safety_index: number | null
+          source_id: string | null
+          updated_at: string
+          visa_complexity: number | null
+        }
+        Insert: {
+          climate_tags?: string[]
+          community_density?: number | null
+          cost_index?: number | null
+          country_code: string
+          country_name_tr: string
+          created_at?: string
+          employment_index?: number | null
+          english_workability?: number | null
+          freshness_at?: string | null
+          healthcare_index?: number | null
+          inclusion_index?: number | null
+          is_active?: boolean
+          safety_index?: number | null
+          source_id?: string | null
+          updated_at?: string
+          visa_complexity?: number | null
+        }
+        Update: {
+          climate_tags?: string[]
+          community_density?: number | null
+          cost_index?: number | null
+          country_code?: string
+          country_name_tr?: string
+          created_at?: string
+          employment_index?: number | null
+          english_workability?: number | null
+          freshness_at?: string | null
+          healthcare_index?: number | null
+          inclusion_index?: number | null
+          is_active?: boolean
+          safety_index?: number | null
+          source_id?: string | null
+          updated_at?: string
+          visa_complexity?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_country_metrics_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_source_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       relocation_emergency_contacts: {
         Row: {
           city_code: string | null
@@ -6962,6 +7250,66 @@ export type Database = {
             columns: ["move_id"]
             isOneToOne: false
             referencedRelation: "relocation_moves"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_job_market_signals: {
+        Row: {
+          confidence: number
+          country_code: string
+          created_at: string
+          freshness_at: string | null
+          id: string
+          is_active: boolean
+          profession_id: string | null
+          regulated_profession: boolean | null
+          shortage_index: number | null
+          source_id: string | null
+          unemployment_inverse_index: number | null
+          vacancy_index: number | null
+        }
+        Insert: {
+          confidence?: number
+          country_code: string
+          created_at?: string
+          freshness_at?: string | null
+          id?: string
+          is_active?: boolean
+          profession_id?: string | null
+          regulated_profession?: boolean | null
+          shortage_index?: number | null
+          source_id?: string | null
+          unemployment_inverse_index?: number | null
+          vacancy_index?: number | null
+        }
+        Update: {
+          confidence?: number
+          country_code?: string
+          created_at?: string
+          freshness_at?: string | null
+          id?: string
+          is_active?: boolean
+          profession_id?: string | null
+          regulated_profession?: boolean | null
+          shortage_index?: number | null
+          source_id?: string | null
+          unemployment_inverse_index?: number | null
+          vacancy_index?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_job_market_signals_profession_id_fkey"
+            columns: ["profession_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_professions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "relocation_job_market_signals_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_source_registry"
             referencedColumns: ["id"]
           },
         ]
@@ -7207,6 +7555,42 @@ export type Database = {
         }
         Relationships: []
       }
+      relocation_professions: {
+        Row: {
+          created_at: string
+          esco_code: string | null
+          id: string
+          is_active: boolean
+          is_regulated_default: boolean
+          label_en: string | null
+          label_tr: string
+          normalized_family: string | null
+          profession_key: string
+        }
+        Insert: {
+          created_at?: string
+          esco_code?: string | null
+          id?: string
+          is_active?: boolean
+          is_regulated_default?: boolean
+          label_en?: string | null
+          label_tr: string
+          normalized_family?: string | null
+          profession_key: string
+        }
+        Update: {
+          created_at?: string
+          esco_code?: string | null
+          id?: string
+          is_active?: boolean
+          is_regulated_default?: boolean
+          label_en?: string | null
+          label_tr?: string
+          normalized_family?: string | null
+          profession_key?: string
+        }
+        Relationships: []
+      }
       relocation_rank_models: {
         Row: {
           activated_at: string | null
@@ -7304,6 +7688,87 @@ export type Database = {
             columns: ["move_id"]
             isOneToOne: false
             referencedRelation: "relocation_moves"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_salary_benchmarks: {
+        Row: {
+          city_code: string | null
+          confidence: number
+          country_code: string
+          created_at: string
+          currency: string
+          demand_index: number | null
+          freshness_at: string | null
+          id: string
+          is_active: boolean
+          net_ratio: number | null
+          profession_id: string | null
+          salary_max: number | null
+          salary_median: number | null
+          salary_min: number | null
+          salary_period: string
+          salary_type: string
+          sample_size: number | null
+          seniority: string | null
+          source_id: string | null
+        }
+        Insert: {
+          city_code?: string | null
+          confidence?: number
+          country_code: string
+          created_at?: string
+          currency?: string
+          demand_index?: number | null
+          freshness_at?: string | null
+          id?: string
+          is_active?: boolean
+          net_ratio?: number | null
+          profession_id?: string | null
+          salary_max?: number | null
+          salary_median?: number | null
+          salary_min?: number | null
+          salary_period?: string
+          salary_type?: string
+          sample_size?: number | null
+          seniority?: string | null
+          source_id?: string | null
+        }
+        Update: {
+          city_code?: string | null
+          confidence?: number
+          country_code?: string
+          created_at?: string
+          currency?: string
+          demand_index?: number | null
+          freshness_at?: string | null
+          id?: string
+          is_active?: boolean
+          net_ratio?: number | null
+          profession_id?: string | null
+          salary_max?: number | null
+          salary_median?: number | null
+          salary_min?: number | null
+          salary_period?: string
+          salary_type?: string
+          sample_size?: number | null
+          seniority?: string | null
+          source_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_salary_benchmarks_profession_id_fkey"
+            columns: ["profession_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_professions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "relocation_salary_benchmarks_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_source_registry"
             referencedColumns: ["id"]
           },
         ]
@@ -7443,6 +7908,324 @@ export type Database = {
         }
         Relationships: []
       }
+      relocation_tool_answers: {
+        Row: {
+          answer: Json
+          answered_at: string
+          id: string
+          question_key: string
+          session_id: string
+        }
+        Insert: {
+          answer: Json
+          answered_at?: string
+          id?: string
+          question_key: string
+          session_id: string
+        }
+        Update: {
+          answer?: Json
+          answered_at?: string
+          id?: string
+          question_key?: string
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_tool_answers_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_tool_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_tool_events: {
+        Row: {
+          context: Json
+          created_at: string
+          event_type: string
+          id: number
+          session_id: string | null
+          tool_key: string
+          user_id: string
+        }
+        Insert: {
+          context?: Json
+          created_at?: string
+          event_type: string
+          id?: never
+          session_id?: string | null
+          tool_key: string
+          user_id?: string
+        }
+        Update: {
+          context?: Json
+          created_at?: string
+          event_type?: string
+          id?: never
+          session_id?: string | null
+          tool_key?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_tool_events_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_tool_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_tool_questions: {
+        Row: {
+          answer_type: string
+          created_at: string
+          help_tr: string | null
+          id: string
+          is_active: boolean
+          is_required: boolean
+          mode: string
+          options: Json
+          prompt_tr: string
+          question_key: string
+          scoring: Json
+          section_key: string
+          sort_order: number
+          tool_key: string
+          updated_at: string
+          validation: Json
+        }
+        Insert: {
+          answer_type: string
+          created_at?: string
+          help_tr?: string | null
+          id?: string
+          is_active?: boolean
+          is_required?: boolean
+          mode: string
+          options?: Json
+          prompt_tr: string
+          question_key: string
+          scoring?: Json
+          section_key?: string
+          sort_order: number
+          tool_key: string
+          updated_at?: string
+          validation?: Json
+        }
+        Update: {
+          answer_type?: string
+          created_at?: string
+          help_tr?: string | null
+          id?: string
+          is_active?: boolean
+          is_required?: boolean
+          mode?: string
+          options?: Json
+          prompt_tr?: string
+          question_key?: string
+          scoring?: Json
+          section_key?: string
+          sort_order?: number
+          tool_key?: string
+          updated_at?: string
+          validation?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_tool_questions_tool_key_fkey"
+            columns: ["tool_key"]
+            isOneToOne: false
+            referencedRelation: "relocation_tools"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
+      relocation_tool_results: {
+        Row: {
+          created_at: string
+          ctas: Json
+          explanations: Json
+          id: string
+          model_version: string
+          policy_version: string
+          primary_result: Json
+          recommendations: Json
+          result_kind: string
+          score_bucket: string | null
+          session_id: string
+          source_quality: Json
+          sub_scores: Json
+          tool_key: string
+          total_score: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ctas?: Json
+          explanations?: Json
+          id?: string
+          model_version?: string
+          policy_version?: string
+          primary_result?: Json
+          recommendations?: Json
+          result_kind: string
+          score_bucket?: string | null
+          session_id: string
+          source_quality?: Json
+          sub_scores?: Json
+          tool_key: string
+          total_score?: number | null
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          ctas?: Json
+          explanations?: Json
+          id?: string
+          model_version?: string
+          policy_version?: string
+          primary_result?: Json
+          recommendations?: Json
+          result_kind?: string
+          score_bucket?: string | null
+          session_id?: string
+          source_quality?: Json
+          sub_scores?: Json
+          tool_key?: string
+          total_score?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_tool_results_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_tool_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "relocation_tool_results_tool_key_fkey"
+            columns: ["tool_key"]
+            isOneToOne: false
+            referencedRelation: "relocation_tools"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
+      relocation_tool_sessions: {
+        Row: {
+          completed_at: string | null
+          consent_partner_referral: boolean
+          consent_profile_write: boolean
+          expires_at: string
+          id: string
+          mode: string
+          source_move_id: string | null
+          started_at: string
+          status: string
+          tool_key: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          consent_partner_referral?: boolean
+          consent_profile_write?: boolean
+          expires_at?: string
+          id?: string
+          mode: string
+          source_move_id?: string | null
+          started_at?: string
+          status?: string
+          tool_key: string
+          user_id?: string
+        }
+        Update: {
+          completed_at?: string | null
+          consent_partner_referral?: boolean
+          consent_profile_write?: boolean
+          expires_at?: string
+          id?: string
+          mode?: string
+          source_move_id?: string | null
+          started_at?: string
+          status?: string
+          tool_key?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_tool_sessions_source_move_id_fkey"
+            columns: ["source_move_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_moves"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "relocation_tool_sessions_tool_key_fkey"
+            columns: ["tool_key"]
+            isOneToOne: false
+            referencedRelation: "relocation_tools"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
+      relocation_tools: {
+        Row: {
+          category: string
+          created_at: string
+          detailed_question_count: number
+          is_active: boolean
+          key: string
+          quick_question_count: number
+          requires_auth: boolean
+          result_kind: string
+          slug: string
+          sort_order: number
+          summary_tr: string
+          title_en: string | null
+          title_tr: string
+          updated_at: string
+          weights: Json
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          detailed_question_count?: number
+          is_active?: boolean
+          key: string
+          quick_question_count?: number
+          requires_auth?: boolean
+          result_kind: string
+          slug: string
+          sort_order?: number
+          summary_tr: string
+          title_en?: string | null
+          title_tr: string
+          updated_at?: string
+          weights?: Json
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          detailed_question_count?: number
+          is_active?: boolean
+          key?: string
+          quick_question_count?: number
+          requires_auth?: boolean
+          result_kind?: string
+          slug?: string
+          sort_order?: number
+          summary_tr?: string
+          title_en?: string | null
+          title_tr?: string
+          updated_at?: string
+          weights?: Json
+        }
+        Relationships: []
+      }
       resource_entries: {
         Row: {
           added_by: string
@@ -7554,6 +8337,134 @@ export type Database = {
           title?: string
           url?: string | null
           website_url?: string | null
+        }
+        Relationships: []
+      }
+      revision_request_attachments: {
+        Row: {
+          comment_id: string | null
+          content_type: string | null
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          file_name: string
+          id: string
+          request_id: string | null
+          size_bytes: number | null
+          storage_path: string
+        }
+        Insert: {
+          comment_id?: string | null
+          content_type?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          file_name: string
+          id?: string
+          request_id?: string | null
+          size_bytes?: number | null
+          storage_path: string
+        }
+        Update: {
+          comment_id?: string | null
+          content_type?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          file_name?: string
+          id?: string
+          request_id?: string | null
+          size_bytes?: number | null
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revision_request_attachments_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "revision_request_comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "revision_request_attachments_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "revision_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      revision_request_comments: {
+        Row: {
+          body: string
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          id: string
+          request_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          request_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          request_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revision_request_comments_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "revision_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      revision_requests: {
+        Row: {
+          area_label: string
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          detail: string
+          id: string
+          priority: number
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          area_label?: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          detail?: string
+          id?: string
+          priority?: number
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          area_label?: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          detail?: string
+          id?: string
+          priority?: number
+          status?: string
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -8643,6 +9554,108 @@ export type Database = {
         }
         Relationships: []
       }
+      social_share_assets: {
+        Row: {
+          created_at: string
+          id: string
+          image_bucket: string | null
+          image_path: string | null
+          image_url: string | null
+          note: string | null
+          slot_key: string
+          updated_at: string
+          updated_by: string | null
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_bucket?: string | null
+          image_path?: string | null
+          image_url?: string | null
+          note?: string | null
+          slot_key: string
+          updated_at?: string
+          updated_by?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_bucket?: string | null
+          image_path?: string | null
+          image_url?: string | null
+          note?: string | null
+          slot_key?: string
+          updated_at?: string
+          updated_by?: string | null
+          video_url?: string | null
+        }
+        Relationships: []
+      }
+      social_share_item_note: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          item_tab: string
+          marked_at: string
+          marked_by: string | null
+          note: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          item_tab: string
+          marked_at?: string
+          marked_by?: string | null
+          note?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_tab?: string
+          marked_at?: string
+          marked_by?: string | null
+          note?: string
+        }
+        Relationships: []
+      }
+      social_share_log: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          item_tab: string
+          marked_at: string
+          marked_by: string | null
+          platform: string
+          shared: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          item_tab: string
+          marked_at?: string
+          marked_by?: string | null
+          platform: string
+          shared?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_tab?: string
+          marked_at?: string
+          marked_by?: string | null
+          platform?: string
+          shared?: boolean
+        }
+        Relationships: []
+      }
       source_records: {
         Row: {
           created_at: string
@@ -8711,6 +9724,33 @@ export type Database = {
           proj4text?: string | null
           srid?: number
           srtext?: string | null
+        }
+        Relationships: []
+      }
+      statusreport_comments: {
+        Row: {
+          author_name: string
+          body: string
+          created_at: string
+          deleted_at: string | null
+          id: string
+          section_key: string
+        }
+        Insert: {
+          author_name?: string
+          body: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          section_key: string
+        }
+        Update: {
+          author_name?: string
+          body?: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          section_key?: string
         }
         Relationships: []
       }
@@ -10157,104 +11197,6 @@ export type Database = {
         }
         Relationships: []
       }
-      world_cup_campaign_settings: {
-        Row: {
-          ends_at: string | null
-          id: number
-          is_active: boolean
-          starts_at: string | null
-          updated_at: string
-        }
-        Insert: {
-          ends_at?: string | null
-          id?: number
-          is_active?: boolean
-          starts_at?: string | null
-          updated_at?: string
-        }
-        Update: {
-          ends_at?: string | null
-          id?: number
-          is_active?: boolean
-          starts_at?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      world_cup_registrations: {
-        Row: {
-          address: string | null
-          applicant_note: string | null
-          broadcast_confirmed: boolean
-          business_name: string
-          category_role_key: string
-          city: string
-          country: string
-          created_at: string
-          id: string
-          image_path: string | null
-          phone: string | null
-          previous_role_key: string | null
-          review_note: string | null
-          reviewed_at: string | null
-          reviewed_by: string | null
-          role_assigned: boolean | null
-          status: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          address?: string | null
-          applicant_note?: string | null
-          broadcast_confirmed?: boolean
-          business_name: string
-          category_role_key: string
-          city: string
-          country: string
-          created_at?: string
-          id?: string
-          image_path?: string | null
-          phone?: string | null
-          previous_role_key?: string | null
-          review_note?: string | null
-          reviewed_at?: string | null
-          reviewed_by?: string | null
-          role_assigned?: boolean | null
-          status?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          address?: string | null
-          applicant_note?: string | null
-          broadcast_confirmed?: boolean
-          business_name?: string
-          category_role_key?: string
-          city?: string
-          country?: string
-          created_at?: string
-          id?: string
-          image_path?: string | null
-          phone?: string | null
-          previous_role_key?: string | null
-          review_note?: string | null
-          reviewed_at?: string | null
-          reviewed_by?: string | null
-          role_assigned?: boolean | null
-          status?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "world_cup_registrations_category_role_key_fkey"
-            columns: ["category_role_key"]
-            isOneToOne: false
-            referencedRelation: "roles"
-            referencedColumns: ["key"]
-          },
-        ]
-      }
     }
     Views: {
       geography_columns: {
@@ -10440,6 +11382,23 @@ export type Database = {
         Returns: unknown
       }
       _st_within: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
+      add_statusreport_comment_v1: {
+        Args: { p_author_name: string; p_body: string; p_section_key: string }
+        Returns: {
+          author_name: string
+          body: string
+          created_at: string
+          deleted_at: string | null
+          id: string
+          section_key: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "statusreport_comments"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       addauth: { Args: { "": string }; Returns: boolean }
       addgeometrycolumn:
         | {
@@ -10720,10 +11679,6 @@ export type Database = {
         Args: { p_action: string; p_candidate_id: string; p_patch?: Json }
         Returns: Json
       }
-      admin_review_world_cup_registration_v1: {
-        Args: { p_approve: boolean; p_note?: string; p_registration_id: string }
-        Returns: Json
-      }
       admin_revoke_catalog_editor: {
         Args: { p_item_id: string; p_target_user_id: string }
         Returns: undefined
@@ -10735,6 +11690,14 @@ export type Database = {
       admin_revoke_whatsapp_landing_editor: {
         Args: { p_assignment_id: string }
         Returns: undefined
+      }
+      admin_role_record_counts: {
+        Args: never
+        Returns: {
+          record_count: number
+          role_key: string
+          role_label: string
+        }[]
       }
       admin_search_profiles: {
         Args: { p_limit?: number; p_query: string }
@@ -11106,25 +12069,23 @@ export type Database = {
         }
         Returns: string
       }
-      create_world_cup_registration_v1: {
-        Args: {
-          p_address?: string
-          p_broadcast_confirmed?: boolean
-          p_business_name: string
-          p_category_role_key: string
-          p_city: string
-          p_country: string
-          p_image_path?: string
-          p_note?: string
-          p_phone: string
-        }
-        Returns: string
-      }
       current_user_can_edit_whatsapp_landing: {
         Args: { p_landing_id: string }
         Returns: boolean
       }
       delete_carsi_item_v1: { Args: { p_item_id: string }; Returns: undefined }
+      diaspora_accept_intro_v1: {
+        Args: { p_match_id: string }
+        Returns: undefined
+      }
+      diaspora_decline_intro_v1: {
+        Args: { p_match_id: string }
+        Returns: undefined
+      }
+      diaspora_request_intro_v1: {
+        Args: { p_candidate_id: string; p_context?: Json }
+        Returns: Json
+      }
       disablelongtransactions: { Args: never; Returns: string }
       dropgeometrycolumn:
         | {
@@ -11453,14 +12414,6 @@ export type Database = {
           whatsapp: string
         }[]
       }
-      list_world_cup_businesses_v1: {
-        Args: { p_limit?: number }
-        Returns: Json
-      }
-      list_world_cup_registrations_admin_v1: {
-        Args: { p_status?: string }
-        Returns: Json
-      }
       longtransactionsenabled: { Args: never; Returns: boolean }
       match_rag_documents: {
         Args: { match_count?: number; query_embedding: string }
@@ -11535,6 +12488,19 @@ export type Database = {
         Returns: boolean
       }
       record_carsi_contact_v1: { Args: { p_item_id: string }; Returns: boolean }
+      record_tool_run: {
+        Args: {
+          p_actor_pseudo_id?: string
+          p_actor_type?: string
+          p_http_status?: number
+          p_idempotency_key?: string
+          p_latency_ms?: number
+          p_payload_redacted?: Json
+          p_status: string
+          p_tool_key: string
+        }
+        Returns: string
+      }
       relocation_active_rank_model: {
         Args: never
         Returns: {
@@ -11664,6 +12630,70 @@ export type Database = {
         Args: { p_move_id: string; p_payload: Json }
         Returns: undefined
       }
+      relocation_score_banka_secim_almanya_v1: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
+      relocation_score_career_path_v1: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
+      relocation_score_city_match_v1: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
+      relocation_score_country_match_v1: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
+      relocation_score_diaspora_matchmaker_v1: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
+      relocation_score_expat_lifestyle_persona_v1: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
+      relocation_score_first_90_days_v1: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
+      relocation_score_job_probability_v1: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
+      relocation_score_profession_salary_v1: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
+      relocation_score_readiness_v1: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
+      relocation_score_sigorta_secim_almanya_v1: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
+      relocation_score_top_challenge_v1: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
+      relocation_tool_complete_session: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
+      relocation_tool_record_event: {
+        Args: { p_context?: Json; p_event_type: string; p_session_id: string }
+        Returns: undefined
+      }
+      relocation_tool_save_answer: {
+        Args: { p_answer: Json; p_question_key: string; p_session_id: string }
+        Returns: undefined
+      }
+      relocation_tool_start_session: {
+        Args: { p_mode: string; p_source_move_id?: string; p_tool_key: string }
+        Returns: Json
+      }
       relocation_update_move: {
         Args: { p_move_id: string; p_patch: Json }
         Returns: undefined
@@ -11686,6 +12716,59 @@ export type Database = {
           decision: string
           review_note?: string
           target_claim_request_id: string
+        }
+        Returns: Json
+      }
+      rl_readiness_opt_score: {
+        Args: { p_question_key: string; p_tool_key: string; p_value: string }
+        Returns: number
+      }
+      rl_tool_answers_json: { Args: { p_session_id: string }; Returns: Json }
+      rl_tool_clamp_neutral: { Args: { p_value: number }; Returns: number }
+      rl_tool_owned_session: {
+        Args: { p_session_id: string }
+        Returns: {
+          completed_at: string | null
+          consent_partner_referral: boolean
+          consent_profile_write: boolean
+          expires_at: string
+          id: string
+          mode: string
+          source_move_id: string | null
+          started_at: string
+          status: string
+          tool_key: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "relocation_tool_sessions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      rl_tool_require_user: { Args: never; Returns: string }
+      rl_tool_resolve_bucket: {
+        Args: { p_bands: Json; p_score: number }
+        Returns: string
+      }
+      rl_tool_weighted_score: {
+        Args: { p_breakdown: Json; p_weights: Json }
+        Returns: number
+      }
+      rl_tool_write_result: {
+        Args: {
+          p_ctas: Json
+          p_explanations: Json
+          p_model_version?: string
+          p_primary_result: Json
+          p_recommendations: Json
+          p_result_kind: string
+          p_score_bucket: string
+          p_session_id: string
+          p_source_quality?: Json
+          p_sub_scores: Json
+          p_total_score: number
         }
         Returns: Json
       }
@@ -12705,7 +13788,6 @@ export type Database = {
         Args: { p_payload: Json }
         Returns: string
       }
-      world_cup_campaign_is_active: { Args: never; Returns: boolean }
       write_admin_audit_log: {
         Args: {
           p_action: string
@@ -12884,6 +13966,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       currency_code: ["TRY", "USD", "EUR", "GBP", "QAR"],

@@ -44,8 +44,6 @@ const Founding1000Page = lazy(() => import("./pages/Founding1000Page.tsx"));
 const BloggerContestPage = lazy(() => import("./pages/BloggerContestPage.tsx"));
 const VloggerContestPage = lazy(() => import("./pages/VloggerContestPage.tsx"));
 const May19CampaignPage = lazy(() => import("./pages/May19CampaignPage.tsx"));
-const DunyaKupasiPage = lazy(() => import("./pages/DunyaKupasiPage.tsx"));
-const DunyaKupasiKayitPage = lazy(() => import("./pages/DunyaKupasiKayitPage.tsx"));
 const May19MapPage = lazy(() => import("./pages/May19MapPage.tsx"));
 const May19IdeaPage = lazy(() => import("./pages/May19IdeaPage.tsx"));
 const May19MomentPage = lazy(() => import("./pages/May19MomentPage.tsx"));
@@ -127,8 +125,6 @@ const App = () => (
                   <Route path="/campaign/founding-1000" element={<Founding1000Page />} />
                   <Route path="/campaign/vlogger" element={<VloggerContestPage />} />
                   <Route path="/campaign/blogger" element={<BloggerContestPage />} />
-                  <Route path="/dunya-kupasi" element={<DunyaKupasiPage />} />
-                  <Route path="/dunya-kupasi/kayit" element={<DunyaKupasiKayitPage />} />
                   <Route path="/19051919" element={<May19CampaignPage />} />
                   <Route path="/19051919/harita" element={<May19MapPage />} />
                   <Route path="/190519idea" element={<May19IdeaPage />} />

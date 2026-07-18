@@ -38,7 +38,7 @@ const socialLinks = [
     className: "text-foreground",
   },
   {
-    href: "https://www.reddit.com/r/corteqs/",
+    href: "https://www.reddit.com/r/diasporaturks/",
     label: "Reddit",
     icon: MessageCircle,
     className: "text-[#ff4500]",

@@ -52,7 +52,6 @@ const AdminWhatsAppLandingsPage = lazy(() => import("@/pages/admin/AdminWhatsApp
 const AdminWhatsAppLandingEditorsPage = lazy(() => import("@/pages/admin/AdminWhatsAppLandingEditorsPage"));
 const AdminCommunityGuidePage = lazy(() => import("@/pages/admin/AdminCommunityGuidePage"));
 const AdminMay19IdeaPage = lazy(() => import("@/pages/admin/AdminMay19IdeaPage"));
-const AdminDunyaKupasiPage = lazy(() => import("@/pages/admin/AdminDunyaKupasiPage"));
 const AdminMay19MomentPage = lazy(() => import("@/pages/admin/AdminMay19MomentPage"));
 const AdminSurveysPage = lazy(() => import("@/pages/admin/surveys/AdminSurveysPage"));
 const AdminSurveyCreatePage = lazy(() => import("@/pages/admin/surveys/AdminSurveyCreatePage"));
@@ -120,7 +119,6 @@ export const adminRoutes = (
     <Route path="whatsapp-landings/guide" element={<AdminCommunityGuidePage />} />
     <Route path="consulates" element={<AdminConsulateProfilesPage />} />
     <Route path="data/:category" element={<Navigate to="/admin/data" replace />} />
-    <Route path="dunya-kupasi" element={<AdminDunyaKupasiPage />} />
     <Route path="may19/kelime" element={<AdminMay19IdeaPage />} />
     <Route path="may19/ani" element={<AdminMay19MomentPage />} />
     <Route path="about" element={<AdminAboutPage />} />

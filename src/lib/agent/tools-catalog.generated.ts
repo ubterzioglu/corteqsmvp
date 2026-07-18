@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 26,
+    "total": 28,
     "edge_functions": 6,
     "workers": 2,
-    "ui_modules": 17
+    "ui_modules": 19
   },
   "tools": [
     {
@@ -41,12 +41,14 @@ export const toolCatalog = {
         "prelint",
         "pretest",
         "preview",
+        "social:generate",
         "start",
         "test",
         "test:e2e",
         "test:watch",
         "verify:release",
-        "verify:text"
+        "verify:text",
+        "warm:prerender"
       ],
       "evidence_path": "package.json"
     },
@@ -525,32 +527,20 @@ export const toolCatalog = {
       "evidence_path": "src/lib/catalog-import-api.ts"
     },
     {
-      "tool_key": "module.dunya_kupasi_api",
-      "tool_name": "dunya-kupasi-api",
+      "tool_key": "module.germany_citizenship_api",
+      "tool_name": "germany-citizenship-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/dunya-kupasi-api.ts",
+      "entrypoint": "src/lib/germany-citizenship-api.ts",
       "interface_kind": "internal_api",
       "exports": [
-        "WORLD_CUP_IMAGE_BUCKET",
-        "createWorldCupRegistration",
-        "fetchMyWorldCupRegistration",
-        "fetchWorldCupCampaignSettings",
-        "getWorldCupImagePublicUrl",
-        "listBusinessCategoryOptions",
-        "listWorldCupBusinesses",
-        "uploadWorldCupImage"
+        "listGeneralQuestions",
+        "listStateQuestions",
+        "listStates"
       ],
-      "tables_read_write": [
-        "roles",
-        "world_cup_campaign_settings",
-        "world_cup_registrations"
-      ],
-      "rpcs": [
-        "create_world_cup_registration_v1",
-        "list_world_cup_businesses_v1"
-      ],
-      "evidence_path": "src/lib/dunya-kupasi-api.ts"
+      "tables_read_write": [],
+      "rpcs": [],
+      "evidence_path": "src/lib/germany-citizenship-api.ts"
     },
     {
       "tool_key": "module.member_profile_api",
@@ -722,6 +712,55 @@ export const toolCatalog = {
         "relocation_update_move"
       ],
       "evidence_path": "src/lib/relocation-api.ts"
+    },
+    {
+      "tool_key": "module.relocation_tools_admin_api",
+      "tool_name": "relocation-tools-admin-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/relocation-tools-admin-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "listToolQuestionCounts"
+      ],
+      "tables_read_write": [
+        "germany_citizenship_questions",
+        "relocation_tool_questions",
+        "relocation_tools"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/relocation-tools-admin-api.ts"
+    },
+    {
+      "tool_key": "module.relocation_tools_api",
+      "tool_name": "relocation-tools-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/relocation-tools-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "completeSession",
+        "getResult",
+        "getToolBySlug",
+        "listTools",
+        "recordEvent",
+        "requestDiasporaIntro",
+        "saveAnswer",
+        "startSession"
+      ],
+      "tables_read_write": [
+        "relocation_tool_questions",
+        "relocation_tool_results",
+        "relocation_tools"
+      ],
+      "rpcs": [
+        "diaspora_request_intro_v1",
+        "relocation_tool_complete_session",
+        "relocation_tool_record_event",
+        "relocation_tool_save_answer",
+        "relocation_tool_start_session"
+      ],
+      "evidence_path": "src/lib/relocation-tools-api.ts"
     },
     {
       "tool_key": "module.service_finder_api",
@@ -912,6 +951,61 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin-shell/burak-share-assets.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-assets.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/revision-requests.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/revision-requests.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-diaspora-posts.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-share-log.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-share-log.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-share-unified.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-share-vault.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-test-tools.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -927,7 +1021,7 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/admin/admin-dunya-kupasi-api.ts",
+      "path": "src/lib/admin/admin-favorites-api.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -1262,17 +1356,12 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/demoFlags.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/diasporaSearch.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/dunya-kupasi-api.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/dunya-kupasi-schemas.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -1283,6 +1372,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/features.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/feedback.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/feedback.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -1298,6 +1397,91 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/geo.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-citizenship-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-citizenship-exam.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-citizenship-exam.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-salary/calculator.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-salary/calculator.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-salary/company-car.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-salary/social-insurance.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-salary/tax-calculator.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-salary/types.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-salary/util.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-standalone-tools.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-stepstone.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-stepstone.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-transfer.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-transfer.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-vize-data.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany-vize-data.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -1457,6 +1641,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/profile-routing.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/profile-text-health.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1587,6 +1776,181 @@ export const toolCatalog = {
       "module_family": "relocation"
     },
     {
+      "path": "src/lib/relocation-tools-admin-api.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-admin-api.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-api.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-banka.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-banka.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-career.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-career.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-challenge.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-challenge.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-city.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-city.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-config.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-copy.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-country.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-country.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-diaspora.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-diaspora.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-images.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-jobprob.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-jobprob.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-persona.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-persona.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-planner.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-planner.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-query-keys.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-ranking.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-ranking.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-readiness.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-readiness.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-salary.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-salary.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-schemas.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-sigorta.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-sigorta.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-types.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
       "path": "src/lib/relocation-types.ts",
       "kind": "ts",
       "module_family": "relocation"
@@ -1638,6 +2002,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/service-finder-schemas.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/statusreport-comments.ts",
       "kind": "ts",
       "module_family": "lib"
     },

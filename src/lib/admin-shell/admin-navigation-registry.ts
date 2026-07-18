@@ -41,7 +41,6 @@ import {
   Table2,
   TrendingDown,
   TrendingUp,
-  Trophy,
   Upload,
   Users,
 } from "lucide-react";
@@ -339,15 +338,6 @@ export const adminNavGroups: AdminNavGroup[] = [
         accent: "amber",
         aliases: ["advisor", "consultant", "influencer", "contributor"],
         children: advisorProfileItems,
-      },
-      {
-        id: "dunya-kupasi",
-        label: "Dünya Kupası",
-        description: "Maç yayını yapan işletme başvuruları ve onayları.",
-        to: "/admin/dunya-kupasi",
-        icon: Trophy,
-        accent: "amber",
-        aliases: ["dünya kupası", "işletme kampanyası", "world cup", "maç yayını"],
       },
       {
         id: "may19-kelime",

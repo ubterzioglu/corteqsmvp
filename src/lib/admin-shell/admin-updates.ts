@@ -14,6 +14,16 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260718-dunya-kupasi-kaldirildi",
+    date: "18 Temmuz 2026",
+    title: "Dünya Kupası kampanyası tamamen kaldırıldı",
+    items: [
+      "Kampanya sona erdiği için /dunya-kupasi ve /dunya-kupasi/kayit sayfaları, /admin/dunya-kupasi onay paneli ve sol menüdeki 'Dünya Kupası' girdisi kaldırıldı.",
+      "Veritabanı tarafında worldcup_* RPC'leri, world_cup_registrations/world_cup_campaign_settings tabloları ve world-cup-images depolama (storage) bucket'ı silindi; kampanyaya özel 3 mekân rolü (Bar/Pub, Çay Bahçesi, Nargile) deaktif edildi.",
+      "Canlıda tek onaylı başvuru kaydı yönetici test hesabına aitti ve rol ataması yapılmamıştı (Admin rolleri korunur kuralı), bu yüzden gerçek kullanıcı etkisi olmadı.",
+    ],
+  },
+  {
     id: "20260718-revizyon-listesi-mvp-seed",
     date: "18 Temmuz 2026",
     title: "MVP Revizyon Listesi'ndeki 51 madde artık /admin/revision-requests içinde",
