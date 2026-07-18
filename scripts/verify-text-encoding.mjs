@@ -6,9 +6,10 @@ const decoder = new TextDecoder("utf-8", { fatal: true });
 const includeDirs = ["src", "public", "docs", "scripts"];
 const includeFiles = ["index.html", "package.json", "vite.config.ts", "tsconfig.json"];
 const extensions = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json", ".md", ".html", ".css", ".svg", ".yml", ".yaml"]);
-// "archive"/"reference"/"docu": docs altındaki dondurulmuş arşiv içerikleri —
-// encoding denetimi yalnız canlı kod/dokümanlar için anlamlıdır (2026-06-11 kök temizliği).
-const skipDirs = new Set(["node_modules", ".git", "dist", "coverage", "archive", "reference", "docu"]);
+// "archive"/"reference"/"docu"/"reference-clones": docs altındaki dondurulmuş arşiv
+// ve üçüncü parti referans içerikleri — encoding denetimi yalnız canlı kod/dokümanlar
+// için anlamlıdır (2026-06-11 kök temizliği).
+const skipDirs = new Set(["node_modules", ".git", "dist", "coverage", "archive", "reference", "docu", "reference-clones"]);
 const suspiciousTokens = [
   "\u00C3",
   "\u00C4",
