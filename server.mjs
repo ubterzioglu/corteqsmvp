@@ -23,6 +23,16 @@ const prerenderToken = process.env.PRERENDER_TOKEN ?? "";
 const prerenderTimeoutMs = 20_000;
 const prerenderCanonicalHost = process.env.PRERENDER_CANONICAL_HOST ?? "corteqs.net";
 
+// SEO: canonical host www.corteqs.net degil, corteqs.net'tir (src/lib/seo.ts).
+const canonicalHost = "corteqs.net";
+
+// SEO: eski client-side <Navigate replace> path'leri icin gercek HTTP 301.
+const legacyRedirectMap = new Map([
+  ["/hakkimizda", "/founders"],
+  ["/blog", "/radar/rehberler"],
+  ["/campaign/founding-1000", "/founding-1000"],
+]);
+
 // Bilinen crawler / AI cevap motoru user-agent'lari (robots.txt ile hizali).
 const botUserAgentPattern =
   /googlebot|bingbot|slurp|duckduckbot|yandex|baiduspider|applebot|facebookexternalhit|facebot|twitterbot|linkedinbot|slackbot|telegrambot|whatsapp|discordbot|embedly|pinterest|redditbot|gptbot|chatgpt-user|oai-searchbot|perplexitybot|perplexity-user|claudebot|claude-web|claude-user|anthropic-ai|ccbot|google-extended|applebot-extended|amazonbot|cohere-ai|bytespider|meta-externalagent/i;
@@ -278,12 +288,29 @@ const handlePrerender = async (req, res, requestPath) => {
   }
 };
 
+const redirect301 = (res, location) => {
+  res.writeHead(301, { ...securityHeaders, Location: location, "Content-Length": "0" });
+  res.end();
+};
+
 const serveApp = async (req, res) => {
   try {
     const requestPath = normalizeRequestPath(req.url ?? "/");
 
     if (!requestPath) {
       sendJson(res, 400, { error: "Bad Request" });
+      return;
+    }
+
+    const requestHost = (req.headers.host ?? "").split(":")[0].toLowerCase();
+    if (requestHost === `www.${canonicalHost}`) {
+      redirect301(res, `https://${canonicalHost}${req.url ?? "/"}`);
+      return;
+    }
+
+    const legacyTarget = legacyRedirectMap.get(requestPath);
+    if (legacyTarget) {
+      redirect301(res, legacyTarget);
       return;
     }
 
