@@ -1,15 +1,15 @@
 // Brainstorming — admin sayfası.
-// Eski public /statusreport3006 sayfasının admin sürümü: sol panelde bölüm listesi,
-// sağ panelde seçili bölümün satırları + yorum thread'i. Tüm adminler ortak
+// Eski public /statusreport3006 sayfasının admin sürümü: tek sütun akış — her
+// bölüm başlığının hemen altında o bölümün satırları + yorum thread'i art arda
+// gelir (ayrı bir sol bölüm listesi/seçim paneli yok). Tüm adminler ortak
 // görür/düzenler/yorum yazar. DB katmanı: src/lib/brainstorming-api.ts.
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Lightbulb, Plus } from "lucide-react";
+import { ArrowDown, ArrowUp, Lightbulb, Pencil, Plus, Trash2 } from "lucide-react";
 
 import { BrainstormingCommentThread } from "@/components/admin/brainstorming/BrainstormingCommentThread";
 import { BrainstormingRowTable } from "@/components/admin/brainstorming/BrainstormingRowTable";
-import { BrainstormingSectionList } from "@/components/admin/brainstorming/BrainstormingSectionList";
 import { RowFormDialog } from "@/components/admin/brainstorming/RowFormDialog";
 import { SectionFormDialog } from "@/components/admin/brainstorming/SectionFormDialog";
 import {
@@ -54,25 +54,18 @@ const AdminBrainstormingPage = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
   const [sectionFormOpen, setSectionFormOpen] = useState(false);
   const [editingSection, setEditingSection] = useState<BrainstormingSection | null>(null);
   const [rowFormOpen, setRowFormOpen] = useState(false);
   const [editingRow, setEditingRow] = useState<BrainstormingRow | null>(null);
+  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
 
   const sectionsQuery = useQuery({
     queryKey: SECTIONS_KEY,
     queryFn: fetchSections,
   });
   const sections = useMemo(() => sectionsQuery.data ?? [], [sectionsQuery.data]);
-
-  useEffect(() => {
-    if (!selectedSectionId && sections.length > 0) {
-      setSelectedSectionId(sections[0].id);
-    }
-  }, [sections, selectedSectionId]);
-
-  const selectedSection = sections.find((section) => section.id === selectedSectionId) ?? null;
+  const activeSection = sections.find((section) => section.id === activeSectionId) ?? null;
 
   const invalidateSections = () => queryClient.invalidateQueries({ queryKey: SECTIONS_KEY });
 
@@ -81,13 +74,12 @@ const AdminBrainstormingPage = () => {
       editingSection
         ? updateSection(editingSection.id, form)
         : createSection(form, sections.length),
-    onSuccess: async (saved) => {
+    onSuccess: async () => {
       const wasCreate = !editingSection;
       setSectionFormOpen(false);
       setEditingSection(null);
       await invalidateSections();
       toast({ title: wasCreate ? "Bölüm oluşturuldu" : "Bölüm güncellendi" });
-      if (wasCreate) setSelectedSectionId(saved.id);
     },
     onError: (error: unknown) => {
       toast({ title: "İşlem başarısız", description: errorMessage(error), variant: "destructive" });
@@ -96,8 +88,7 @@ const AdminBrainstormingPage = () => {
 
   const deleteSectionMutation = useMutation({
     mutationFn: (id: string) => deleteSection(id),
-    onSuccess: async (_data, id) => {
-      if (selectedSectionId === id) setSelectedSectionId(null);
+    onSuccess: async () => {
       await invalidateSections();
       toast({ title: "Bölüm silindi" });
     },
@@ -116,15 +107,16 @@ const AdminBrainstormingPage = () => {
 
   const rowMutation = useMutation({
     mutationFn: (form: BrainstormingRowForm) => {
-      if (!selectedSection) throw new Error("Önce bir bölüm seçin.");
+      if (!activeSection) throw new Error("Bölüm bulunamadı.");
       return editingRow
         ? updateRow(editingRow.id, form)
-        : createRow(selectedSection.id, form, selectedSection.rows.length);
+        : createRow(activeSection.id, form, activeSection.rows.length);
     },
     onSuccess: async () => {
       const wasCreate = !editingRow;
       setRowFormOpen(false);
       setEditingRow(null);
+      setActiveSectionId(null);
       await invalidateSections();
       toast({ title: wasCreate ? "Satır oluşturuldu" : "Satır güncellendi" });
     },
@@ -174,28 +166,28 @@ const AdminBrainstormingPage = () => {
     reorderSectionsMutation.mutate(swap(sections, index, index + 1).map((s) => s.id));
   };
 
-  const openCreateRow = () => {
+  const openCreateRow = (section: BrainstormingSection) => {
+    setActiveSectionId(section.id);
     setEditingRow(null);
     setRowFormOpen(true);
   };
 
-  const openEditRow = (row: BrainstormingRow) => {
+  const openEditRow = (section: BrainstormingSection, row: BrainstormingRow) => {
+    setActiveSectionId(section.id);
     setEditingRow(row);
     setRowFormOpen(true);
   };
 
-  const moveRowUp = (row: BrainstormingRow) => {
-    if (!selectedSection) return;
-    const index = selectedSection.rows.findIndex((r) => r.id === row.id);
+  const moveRowUp = (section: BrainstormingSection, row: BrainstormingRow) => {
+    const index = section.rows.findIndex((r) => r.id === row.id);
     if (index <= 0) return;
-    reorderRowsMutation.mutate(swap(selectedSection.rows, index, index - 1).map((r) => r.id));
+    reorderRowsMutation.mutate(swap(section.rows, index, index - 1).map((r) => r.id));
   };
 
-  const moveRowDown = (row: BrainstormingRow) => {
-    if (!selectedSection) return;
-    const index = selectedSection.rows.findIndex((r) => r.id === row.id);
-    if (index === -1 || index >= selectedSection.rows.length - 1) return;
-    reorderRowsMutation.mutate(swap(selectedSection.rows, index, index + 1).map((r) => r.id));
+  const moveRowDown = (section: BrainstormingSection, row: BrainstormingRow) => {
+    const index = section.rows.findIndex((r) => r.id === row.id);
+    if (index === -1 || index >= section.rows.length - 1) return;
+    reorderRowsMutation.mutate(swap(section.rows, index, index + 1).map((r) => r.id));
   };
 
   return (
@@ -229,76 +221,95 @@ const AdminBrainstormingPage = () => {
           }
         />
       ) : (
-        <div className="grid gap-4 lg:grid-cols-[300px_minmax(0,1fr)]">
-          <div className="min-w-0">
-            <BrainstormingSectionList
-              sections={sections}
-              selectedId={selectedSectionId}
-              onSelect={setSelectedSectionId}
-              onEdit={openEditSection}
-              onDelete={(section) => deleteSectionMutation.mutate(section.id)}
-              onMoveUp={moveSectionUp}
-              onMoveDown={moveSectionDown}
-              isReordering={reorderSectionsMutation.isPending}
-            />
-          </div>
+        <div className="space-y-6">
+          {sections.map((section, index) => (
+            <div key={section.id} className="rounded-xl border border-border bg-card p-4">
+              <div className="mb-3 flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  {section.groupLabel ? (
+                    <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                      {section.groupLabel}
+                    </p>
+                  ) : null}
+                  <h2 className="text-base font-semibold text-foreground">{section.title}</h2>
+                  {section.intro ? (
+                    <p className="mt-1 text-sm text-muted-foreground">{section.intro}</p>
+                  ) : null}
+                </div>
+                <div className="flex shrink-0 items-center gap-0.5">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => moveSectionUp(section)}
+                    disabled={reorderSectionsMutation.isPending || index === 0}
+                    aria-label="Bölümü yukarı taşı"
+                  >
+                    <ArrowUp className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => moveSectionDown(section)}
+                    disabled={reorderSectionsMutation.isPending || index === sections.length - 1}
+                    aria-label="Bölümü aşağı taşı"
+                  >
+                    <ArrowDown className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => openEditSection(section)}
+                    aria-label="Bölümü düzenle"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-muted-foreground hover:text-red-500"
+                    onClick={() => deleteSectionMutation.mutate(section.id)}
+                    aria-label="Bölümü sil"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                  <Button onClick={() => openCreateRow(section)} size="sm" className="ml-1 shrink-0">
+                    <Plus className="mr-1.5 h-3.5 w-3.5" />
+                    Yeni Satır
+                  </Button>
+                </div>
+              </div>
 
-          <div className="min-w-0 space-y-4">
-            {selectedSection ? (
-              <>
-                <div className="rounded-xl border border-border bg-card p-4">
-                  <div className="mb-3 flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      {selectedSection.groupLabel ? (
-                        <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                          {selectedSection.groupLabel}
-                        </p>
-                      ) : null}
-                      <h2 className="text-base font-semibold text-foreground">
-                        {selectedSection.title}
-                      </h2>
-                      {selectedSection.intro ? (
-                        <p className="mt-1 text-sm text-muted-foreground">{selectedSection.intro}</p>
-                      ) : null}
-                    </div>
-                    <Button onClick={openCreateRow} size="sm" className="shrink-0">
-                      <Plus className="mr-1.5 h-3.5 w-3.5" />
+              {section.rows.length === 0 ? (
+                <AdminEmptyState
+                  title="Bu bölümde henüz satır yok"
+                  description="İlk satırı oluşturarak başlayın."
+                  action={
+                    <Button onClick={() => openCreateRow(section)} size="sm" variant="outline">
+                      <Plus className="mr-2 h-4 w-4" />
                       Yeni Satır
                     </Button>
-                  </div>
+                  }
+                />
+              ) : (
+                <BrainstormingRowTable
+                  rows={section.rows}
+                  onEdit={(row) => openEditRow(section, row)}
+                  onDelete={(row) => deleteRowMutation.mutate(row.id)}
+                  onMoveUp={(row) => moveRowUp(section, row)}
+                  onMoveDown={(row) => moveRowDown(section, row)}
+                  isReordering={reorderRowsMutation.isPending}
+                />
+              )}
 
-                  {selectedSection.rows.length === 0 ? (
-                    <AdminEmptyState
-                      title="Bu bölümde henüz satır yok"
-                      description="İlk satırı oluşturarak başlayın."
-                      action={
-                        <Button onClick={openCreateRow} size="sm" variant="outline">
-                          <Plus className="mr-2 h-4 w-4" />
-                          Yeni Satır
-                        </Button>
-                      }
-                    />
-                  ) : (
-                    <BrainstormingRowTable
-                      rows={selectedSection.rows}
-                      onEdit={openEditRow}
-                      onDelete={(row) => deleteRowMutation.mutate(row.id)}
-                      onMoveUp={moveRowUp}
-                      onMoveDown={moveRowDown}
-                      isReordering={reorderRowsMutation.isPending}
-                    />
-                  )}
-                </div>
-
-                <div className="rounded-xl border border-border bg-card p-4">
-                  <h3 className="mb-3 text-sm font-semibold text-foreground">Yorumlar</h3>
-                  <BrainstormingCommentThread sectionKey={selectedSection.sectionKey} />
-                </div>
-              </>
-            ) : (
-              <AdminEmptyState title="Bir bölüm seçin" description="Soldaki listeden bir bölüm seçin." />
-            )}
-          </div>
+              <div className="mt-4 border-t border-border pt-4">
+                <h3 className="mb-3 text-sm font-semibold text-foreground">Yorumlar</h3>
+                <BrainstormingCommentThread sectionKey={section.sectionKey} />
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
@@ -317,7 +328,10 @@ const AdminBrainstormingPage = () => {
         open={rowFormOpen}
         onOpenChange={(open) => {
           setRowFormOpen(open);
-          if (!open) setEditingRow(null);
+          if (!open) {
+            setEditingRow(null);
+            setActiveSectionId(null);
+          }
         }}
         row={editingRow}
         onSubmit={(form) => rowMutation.mutate(form)}
