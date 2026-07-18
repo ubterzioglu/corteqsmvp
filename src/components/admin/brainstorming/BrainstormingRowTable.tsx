@@ -1,6 +1,6 @@
 // Brainstorming sağ panel üst — seçili bölümün satır tablosu.
 // Her satır akordeon kartı: kapalıyken sadece konu + durum rozeti görünür,
-// tıklayınca teknik/sade içerik açılır. Desen kaynağı: AdminRevisionRequestsPage.
+// tıklayınca teknik/sade içerik açılır (varsayılan: kapalı). Desen kaynağı: AdminRevisionRequestsPage.
 
 import { useState } from "react";
 import { ArrowDown, ArrowUp, ChevronDown, Pencil, Trash2 } from "lucide-react";
