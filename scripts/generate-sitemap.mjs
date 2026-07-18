@@ -150,13 +150,12 @@ async function main() {
   // SITE_DATE env ile sabitlenebilir; yoksa bugünün tarihi (deterministik build için).
   const today = process.env.SITE_DATE ?? new Date().toISOString().slice(0, 10);
 
-  const [commercialRoutes, blogRoutes, toolRoutes] = await Promise.all([
+  const [commercialRoutes, blogRoutes] = await Promise.all([
     getCommercialRoutes(),
     getBlogRoutes(),
-    getToolRoutes(),
   ]);
 
-  const entries = [...STATIC_ROUTES, ...commercialRoutes, ...blogRoutes, ...toolRoutes];
+  const entries = [...STATIC_ROUTES, ...commercialRoutes, ...blogRoutes];
   // Tekilleştir (path'e göre).
   const unique = [...new Map(entries.map((e) => [e.path, e])).values()];
 
@@ -170,7 +169,7 @@ ${unique.map((e) => renderUrl(e, today)).join("\n")}
   await writeFile(OUTPUT, xml, "utf8");
   console.log(
     `[sitemap] ${unique.length} URL yazıldı → public/sitemap.xml ` +
-      `(statik: ${STATIC_ROUTES.length}, commercial: ${commercialRoutes.length}, blog: ${blogRoutes.length}, araç: ${toolRoutes.length})`,
+      `(statik: ${STATIC_ROUTES.length}, commercial: ${commercialRoutes.length}, blog: ${blogRoutes.length})`,
   );
 }
 
