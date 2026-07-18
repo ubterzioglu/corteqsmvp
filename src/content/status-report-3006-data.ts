@@ -40,7 +40,7 @@ export const REPORT_META = {
   title: "Cadde 3.0 & Premium Panel — Durum, Eksik ve Karar Raporu",
   subtitle:
     "Burak & UBT için: neyin çalıştığı, neyin maket olduğu, neyin eksik olduğu ve neye karar verilmesi gerektiği. Her satırda solda teknik, sağda sade açıklama; her bölümün altına yorum yazabilirsiniz.",
-  date: "30 Haziran 2026",
+  date: "30 Haziran 2026 (son güncelleme: 16 Temmuz 2026)",
 };
 
 export const REPORT_SECTIONS: ReportSection[] = [
@@ -319,6 +319,138 @@ export const REPORT_SECTIONS: ReportSection[] = [
         plain:
           "Kod tarafı tamam ve main'de; kalan tek şey deploy edip panelde gözle bir kontrol etmek.",
         status: "partial",
+      },
+    ],
+  },
+  {
+    key: "revizyon-gorsel-ekleri",
+    group: "Bölüm 4 — Diğer Temmuz İşleri",
+    title: "4A. Revizyon istekleri — görsel ekleri (14 Temmuz)",
+    intro:
+      "Revizyon talebi/yorum akışına görsel ekleme yeteneği eklendi; canlıda ve testli.",
+    rows: [
+      {
+        label: "Ne yapıldı",
+        technical:
+          "revision_request_attachments tablosu + storage bucket migration'ı (talep XOR yorum CHECK kısıtı); ek API katmanı (fetch/upload/delete/signed-url); ortak RevisionAttachmentGrid bileşeni; talep detay drawer'ına ve yorum thread'ine görsel grid; compose'da çoklu dosya seçimi; yeni talep sonrası panel otomatik açılıyor.",
+        plain:
+          "Revizyon isteği açarken veya yorum yazarken artık görsel ekleyebiliyorsunuz — hem talebe hem tek tek yorumlara. Birden fazla dosya birden seçilebiliyor.",
+        status: "ok",
+      },
+    ],
+  },
+  {
+    key: "bireysel-premium-sunum",
+    group: "Bölüm 4 — Diğer Temmuz İşleri",
+    title: "4B. Bireysel profil — tek tip premium sunum (14-15 Temmuz)",
+    intro:
+      "Experimental_2/3 pilotunda denenen premium hero/kart tasarımı tüm 'Bireysel' kategorisindeki rollere yayıldı.",
+    rows: [
+      {
+        label: "Ne yapıldı",
+        technical:
+          "profile-types.ts'deki tek kaynak sınıflandırma (getUiProfileType) üzerinden User_*/Admin_* prefix'leri, Job_Candidate, Marketplace_IndividualSeller ve tanımsız rol varsayılanı dahil tüm bireysel profillere premium hero/kart tasarımı uygulandı. Deneysel_2/3 pilotu ayrı config olarak korundu (ileride ayrışma esnekliği için).",
+        plain:
+          "Herkesin bireysel profili artık daha önce sadece deneme kullanıcılarında gördüğümüz şık/premium görünümde. Kullanıcı doğrudan canlıya almayı tercih etti (kademeli açılım yerine).",
+        status: "ok",
+      },
+      {
+        label: "SuperAdmin istisnası",
+        technical:
+          "İki kurucu hesap (ubterzioglu@gmail.com, burakakcakanat@gmail.com) rol kategorisi olarak 'bireysel' sayılsa da resolveProfilePresentation içinde bilinçli olarak sade/generic görünümde tutuluyor — sadece sunum katmanı, izin/veri modeli değişmedi.",
+        plain:
+          "Umut ve Burak'ın kendi hesapları bu yeni premium görünümü almıyor, bilinçli olarak eski sade haliyle kalıyor.",
+        status: "ok",
+      },
+    ],
+  },
+  {
+    key: "burak-share-sekme",
+    group: "Bölüm 4 — Diğer Temmuz İşleri",
+    title: "4C. BURAK BURAYA BAK — 4. sekme (8 Temmuz)",
+    intro:
+      "/admin/social-share-vault sayfasına Burak için özel bir paylaşım sekmesi eklendi.",
+    rows: [
+      {
+        label: "Ne yapıldı",
+        technical:
+          "social_share_assets tablosu + RLS + burak-share storage bucket migration'ı; medya asset API'si (slot_key upsert, storage) + testleri; 12 aracın statik içerik verisi; BurakMediaPanel + BurakShareTab (12 araç akordeon + medya yuvaları); 4. sekme 'BURAK BURAYA BAK' + bulk kopyala butonları.",
+        plain:
+          "Panelde artık 4. bir sekme var: her araç için Burak'ın kullanacağı hazır metinler + görsel/video/link yükleyebileceği kutular, tek tıkla kopyalama butonlarıyla birlikte.",
+        status: "ok",
+      },
+      {
+        label: "Durum",
+        technical: "Migration canlı DB'de doğrulandı (tablo + bucket + 8 policy). Kod main'de.",
+        plain: "Bu bölüm canlıda çalışır durumda, sadece görsel QA (gözle kontrol) bekliyor.",
+        status: "ok",
+      },
+    ],
+  },
+  {
+    key: "uye-geri-bildirim",
+    group: "Bölüm 4 — Diğer Temmuz İşleri",
+    title: "4D. Üye geri bildirim sistemi (7 Temmuz)",
+    intro: "Üyelerin site hakkında geri bildirim bırakabileceği uçtan uca bir sistem eklendi.",
+    rows: [
+      {
+        label: "Ne yapıldı",
+        technical:
+          "Üst barda giriş yapmış üyeye 'Feedback Ver' linki (geldiği sayfa page_path olarak taşınır); /feedback formu (RequireAuth, submitFeedback); /admin/feedback listesi (Yeni/Okundu/Arşiv durumları + soft-delete, e-posta çözümlemesi); member_feedback tablosu + RLS migration'ı (üye kendi kaydını ekler, görme/güncelleme admin-only). 14 yeni test.",
+        plain:
+          "Üyeler artık üst menüden 'Feedback Ver'e tıklayıp kısa bir form dolduruyor; adminler bu geri bildirimleri /admin/feedback'te okuyup 'okundu/arşiv' olarak işaretleyebiliyor.",
+        status: "ok",
+      },
+      {
+        label: "Durum",
+        technical: "Kod main'de, migration canlı DB'de doğrulandı.",
+        plain: "Canlıda çalışıyor, kalan sadece görsel QA.",
+        status: "ok",
+      },
+    ],
+  },
+  {
+    key: "header-admin-iyilestirmeler",
+    group: "Bölüm 4 — Diğer Temmuz İşleri",
+    title: "4E. Header, Araçlar menüsü ve admin panel iyileştirmeleri (14 Temmuz)",
+    intro: "Aynı gün içinde yapılan bir dizi küçük ama kullanıcının doğrudan gördüğü iyileştirme.",
+    rows: [
+      {
+        label: "Araçlar açılır menüsü",
+        technical:
+          "Masaüstünde Genel/Almanya araçları gruplandıran premium tasarımlı dropdown'a geçildi, sonra doğrudan linke çevrildi (sitemap'ten korumalı /tools/:slug alt sayfalarının çıkarılması + GSC indeksleme düzeltmesiyle birlikte); mobilde tam ekran aç/kapa panele dönüştürüldü; araç kartlarına 'Ücretsiz' rozeti eklendi.",
+        plain:
+          "Üst menüdeki Araçlar açılır listesi hem masaüstünde hem mobilde daha şık ve kullanışlı hale geldi, ücretsiz araçlar artık rozetle belli.",
+        status: "ok",
+      },
+      {
+        label: "Admin panel",
+        technical:
+          "Topbara Clarity/Search Console/Drive'a tek tıkla erişim için AdminQuickToolLinks eklendi; /admin/data'ya rol bazlı kayıt sayılarını gösteren akordeon kart + admin_role_record_counts RPC'si eklendi.",
+        plain:
+          "Adminler topbardan sık kullanılan araçlara (Clarity, Search Console, Drive) tek tıkla ulaşabiliyor; /admin/data'da her role kaç kayıt düştüğünü akordeon bir kartta görebiliyor.",
+        status: "ok",
+      },
+      {
+        label: "Giriş ekranı",
+        technical: "LoginPage'e 'Ücretsiz' rozeti eklendi.",
+        plain: "Giriş ekranında ücretsiz olduğumuzu vurgulayan bir rozet var artık.",
+        status: "ok",
+      },
+    ],
+  },
+  {
+    key: "relocation-tools-temmuz",
+    group: "Bölüm 4 — Diğer Temmuz İşleri",
+    title: "4F. Taşınma araçları — küçük düzeltmeler (1-7 Temmuz)",
+    rows: [
+      {
+        label: "Soru akışı ve admin görünümü",
+        technical:
+          "QuestionStepper artık is_required bayrağına bakmaksızın her soruyu zorunlu sayıyor (slider varsayılan değeri cevap sayılmıyor); admin panelindeki hızlı/normal kolon ayrımı kaldırıldı (ürün artık tek modlu sabit soru akışı kullandığı için); /admin'e canlı soru sayısı sayfası + nav girdisi eklendi; Almanya araçlarının (banka/maaş/para transferi/sigorta) eksik hero görselleri tamamlandı.",
+        plain:
+          "Taşınma araçlarında bir soruyu cevaplamadan sonrakine geçilemiyor artık. Admin panelindeki soru sayısı ekranı gerçek ürün davranışını yansıtacak şekilde sadeleşti, 7 Almanya aracının eksik kapak görselleri eklendi.",
+        status: "ok",
       },
     ],
   },
