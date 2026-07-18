@@ -1,31 +1,36 @@
 // Revizyon İstekleri — admin sayfası.
 // Serbest revizyon talepleri (revision_requests) + talep başına çoklu yorum thread'i.
 // DB katmanı: src/lib/admin-shell/revision-requests.ts (RLS: admin-only, ortak).
+// Yorumlar drawer yerine satırın altında inline açılır (2026-07-18).
 
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { MessageSquare, MessageSquarePlus, Pencil, Plus, Trash2 } from "lucide-react";
+import { ChevronDown, MessageSquarePlus, Pencil, Plus, Trash2 } from "lucide-react";
 
 import { RevisionAttachmentGrid } from "@/components/admin/revision/RevisionAttachmentGrid";
 import { RevisionCommentThread } from "@/components/admin/revision/RevisionCommentThread";
 import { RevisionRequestForm } from "@/components/admin/revision/RevisionRequestForm";
 import {
-  AdminDetailDrawer,
   AdminEmptyState,
   AdminErrorState,
+  AdminFilterBar,
   AdminLoadingState,
   AdminPageShell,
   AdminStatusBadge,
   type AdminStatusTone,
 } from "@/components/admin/page";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 import {
   createRevisionRequest,
   deleteRevisionRequest,
   fetchRevisionRequests,
   fetchUserEmails,
   getRevisionStatusLabel,
+  REVISION_STATUSES,
   updateRevisionRequest,
   type RevisionRequest,
   type RevisionRequestForm as RevisionRequestFormState,
@@ -41,6 +46,11 @@ const STATUS_TONES: Record<RevisionStatus, AdminStatusTone> = {
   iptal: "neutral",
 };
 
+const STATUS_FILTER_OPTIONS = [
+  { value: "all", label: "Tüm durumlar" },
+  ...REVISION_STATUSES.map((status) => ({ value: status, label: getRevisionStatusLabel(status) })),
+] as const;
+
 function formatDate(value: string): string {
   return new Date(value).toLocaleDateString("tr-TR", {
     day: "numeric",
@@ -55,7 +65,11 @@ const AdminRevisionRequestsPage = () => {
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<RevisionRequest | null>(null);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  const [statusFilter, setStatusFilter] = useState<(typeof STATUS_FILTER_OPTIONS)[number]["value"]>("all");
+  const [areaFilter, setAreaFilter] = useState("all");
+  const [searchText, setSearchText] = useState("");
 
   const requestsQuery = useQuery({
     queryKey: REQUESTS_KEY,
@@ -63,17 +77,32 @@ const AdminRevisionRequestsPage = () => {
   });
   const requests = useMemo(() => requestsQuery.data ?? [], [requestsQuery.data]);
 
+  const areaOptions = useMemo(() => {
+    const labels = new Set(requests.map((r) => r.areaLabel).filter((label) => label.trim().length > 0));
+    return Array.from(labels).sort((a, b) => a.localeCompare(b, "tr"));
+  }, [requests]);
+
+  const filteredRequests = useMemo(() => {
+    const query = searchText.trim().toLowerCase();
+    return requests.filter((request) => {
+      if (statusFilter !== "all" && request.status !== statusFilter) return false;
+      if (areaFilter !== "all" && request.areaLabel !== areaFilter) return false;
+      if (query) {
+        const haystack = `${request.title} ${request.detail}`.toLowerCase();
+        if (!haystack.includes(query)) return false;
+      }
+      return true;
+    });
+  }, [requests, statusFilter, areaFilter, searchText]);
+
+  const hasActiveFilters = statusFilter !== "all" || areaFilter !== "all" || searchText.trim().length > 0;
+
   const emailsQuery = useQuery({
     queryKey: ["revision-request-emails", requests.map((r) => r.createdBy).join(",")],
     queryFn: () => fetchUserEmails(requests.map((r) => r.createdBy)),
     enabled: requests.length > 0,
   });
   const emails = emailsQuery.data ?? {};
-
-  const selected = useMemo(
-    () => requests.find((request) => request.id === selectedId) ?? null,
-    [requests, selectedId],
-  );
 
   const upsertMutation = useMutation({
     mutationFn: (form: RevisionRequestFormState) =>
@@ -85,7 +114,7 @@ const AdminRevisionRequestsPage = () => {
       await queryClient.invalidateQueries({ queryKey: REQUESTS_KEY });
       toast({ title: wasCreate ? "Revizyon isteği oluşturuldu" : "Revizyon isteği güncellendi" });
       if (wasCreate) {
-        setSelectedId(saved.id);
+        setExpandedId(saved.id);
       }
     },
     onError: (error: unknown) => {
@@ -100,7 +129,7 @@ const AdminRevisionRequestsPage = () => {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteRevisionRequest(id),
     onSuccess: async (_data, id) => {
-      if (selectedId === id) setSelectedId(null);
+      if (expandedId === id) setExpandedId(null);
       await queryClient.invalidateQueries({ queryKey: REQUESTS_KEY });
       toast({ title: "Revizyon isteği silindi" });
     },
@@ -123,6 +152,16 @@ const AdminRevisionRequestsPage = () => {
     setFormOpen(true);
   };
 
+  const toggleExpanded = (id: string) => {
+    setExpandedId((current) => (current === id ? null : id));
+  };
+
+  const resetFilters = () => {
+    setStatusFilter("all");
+    setAreaFilter("all");
+    setSearchText("");
+  };
+
   return (
     <AdminPageShell
       title="Revizyon İstekleri"
@@ -135,6 +174,49 @@ const AdminRevisionRequestsPage = () => {
           <Plus className="mr-2 h-4 w-4" />
           Yeni Revizyon İsteği
         </Button>
+      }
+      filters={
+        <AdminFilterBar onReset={hasActiveFilters ? resetFilters : undefined}>
+          <div className="w-full max-w-[220px]">
+            <Select
+              value={statusFilter}
+              onValueChange={(value) => setStatusFilter(value as (typeof STATUS_FILTER_OPTIONS)[number]["value"])}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Durum" />
+              </SelectTrigger>
+              <SelectContent>
+                {STATUS_FILTER_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="w-full max-w-[220px]">
+            <Select value={areaFilter} onValueChange={setAreaFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Alan" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tüm alanlar</SelectItem>
+                {areaOptions.map((label) => (
+                  <SelectItem key={label} value={label}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="w-full max-w-xs">
+            <Input
+              value={searchText}
+              onChange={(event) => setSearchText(event.target.value)}
+              placeholder="Başlık veya içerikte ara…"
+            />
+          </div>
+        </AdminFilterBar>
       }
     >
       {requestsQuery.isLoading ? (
@@ -156,73 +238,97 @@ const AdminRevisionRequestsPage = () => {
             </Button>
           }
         />
+      ) : filteredRequests.length === 0 ? (
+        <AdminEmptyState
+          title="Filtreyle eşleşen istek yok"
+          description="Filtreleri değiştirip tekrar deneyin."
+          action={
+            <Button onClick={resetFilters} size="sm" variant="outline">
+              Filtreleri sıfırla
+            </Button>
+          }
+        />
       ) : (
-        <div className="space-y-3">
-          {requests.map((request) => (
-            <div
-              key={request.id}
-              className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-start sm:justify-between"
-            >
-              <button
-                type="button"
-                className="flex-1 text-left"
-                onClick={() => setSelectedId(request.id)}
+        <div className="space-y-2">
+          {filteredRequests.map((request) => {
+            const isExpanded = expandedId === request.id;
+            return (
+              <div
+                key={request.id}
+                className="rounded-xl border border-border bg-card"
               >
-                <div className="mb-1 flex flex-wrap items-center gap-2">
-                  <AdminStatusBadge tone={STATUS_TONES[request.status]}>
-                    {getRevisionStatusLabel(request.status)}
-                  </AdminStatusBadge>
-                  <span className="text-xs text-muted-foreground">Öncelik {request.priority}</span>
-                  {request.areaLabel ? (
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                      {request.areaLabel}
-                    </span>
-                  ) : null}
-                </div>
-                <p className="font-medium text-foreground">{request.title}</p>
-                {request.detail ? (
-                  <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">{request.detail}</p>
-                ) : null}
-                <p className="mt-1.5 text-xs text-muted-foreground">
-                  {request.createdBy ? emails[request.createdBy] || "Admin" : "Bilinmeyen"} ·{" "}
-                  {formatDate(request.createdAt)}
-                </p>
-              </button>
+                <div className="flex items-center gap-2 p-2.5">
+                  <button
+                    type="button"
+                    className="flex min-w-0 flex-1 items-center gap-2 text-left"
+                    onClick={() => toggleExpanded(request.id)}
+                    aria-expanded={isExpanded}
+                  >
+                    <ChevronDown
+                      className={cn(
+                        "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
+                        isExpanded && "rotate-180",
+                      )}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <AdminStatusBadge tone={STATUS_TONES[request.status]}>
+                          {getRevisionStatusLabel(request.status)}
+                        </AdminStatusBadge>
+                        <span className="text-xs text-muted-foreground">Ö{request.priority}</span>
+                        {request.areaLabel ? (
+                          <span className="truncate rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                            {request.areaLabel}
+                          </span>
+                        ) : null}
+                        <span className="truncate text-sm font-medium text-foreground">{request.title}</span>
+                      </div>
+                      <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                        {request.createdBy ? emails[request.createdBy] || "Admin" : "Bilinmeyen"} ·{" "}
+                        {formatDate(request.createdAt)}
+                      </p>
+                    </div>
+                  </button>
 
-              <div className="flex flex-col items-stretch gap-2 sm:items-end">
-                <div className="flex items-center gap-1 self-end">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setSelectedId(request.id)}
-                    aria-label="Yorumları gör"
-                  >
-                    <MessageSquare className="mr-1.5 h-4 w-4" />
-                    Yorumlar
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => openEdit(request)}
-                    aria-label="Düzenle"
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-muted-foreground hover:text-red-500"
-                    onClick={() => deleteMutation.mutate(request.id)}
-                    disabled={deleteMutation.isPending}
-                    aria-label="Sil"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <div className="flex shrink-0 items-center gap-0.5">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7"
+                      onClick={() => openEdit(request)}
+                      aria-label="Düzenle"
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 text-muted-foreground hover:text-red-500"
+                      onClick={() => deleteMutation.mutate(request.id)}
+                      disabled={deleteMutation.isPending}
+                      aria-label="Sil"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
                 </div>
-                <RevisionAttachmentGrid parent={{ requestId: request.id }} />
+
+                {isExpanded ? (
+                  <div className="border-t border-border p-3">
+                    {request.detail ? (
+                      <p className="whitespace-pre-wrap rounded-lg bg-muted/40 p-3 text-sm text-foreground">
+                        {request.detail}
+                      </p>
+                    ) : null}
+                    <div className="mt-2 mb-3">
+                      <RevisionAttachmentGrid parent={{ requestId: request.id }} />
+                    </div>
+                    <RevisionCommentThread requestId={request.id} />
+                  </div>
+                ) : null}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -236,30 +342,6 @@ const AdminRevisionRequestsPage = () => {
         onSubmit={(form) => upsertMutation.mutate(form)}
         isSubmitting={upsertMutation.isPending}
       />
-
-      <AdminDetailDrawer
-        open={Boolean(selected)}
-        onOpenChange={(open) => {
-          if (!open) setSelectedId(null);
-        }}
-        title={selected?.title ?? "Revizyon İsteği"}
-        description={
-          selected
-            ? `${getRevisionStatusLabel(selected.status)} · Öncelik ${selected.priority}`
-            : undefined
-        }
-      >
-        {selected ? (
-          <div className="flex h-full flex-col gap-4">
-            {selected.detail ? (
-              <p className="whitespace-pre-wrap rounded-lg bg-muted/40 p-3 text-sm text-foreground">
-                {selected.detail}
-              </p>
-            ) : null}
-            <RevisionCommentThread requestId={selected.id} />
-          </div>
-        ) : null}
-      </AdminDetailDrawer>
     </AdminPageShell>
   );
 };

@@ -117,8 +117,8 @@ export function RevisionCommentThread({ requestId }: RevisionCommentThreadProps)
   };
 
   return (
-    <div className="flex h-full flex-col gap-4">
-      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto">
+    <div className="flex flex-col gap-3">
+      <div className="max-h-80 space-y-2.5 overflow-y-auto">
         {commentsQuery.isLoading ? (
           <div className="flex items-center justify-center py-6 text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin" />
@@ -163,7 +163,7 @@ export function RevisionCommentThread({ requestId }: RevisionCommentThreadProps)
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           placeholder="Yorum yazın…"
-          rows={3}
+          rows={2}
         />
         {draftFiles.length > 0 ? (
           <div className="flex flex-wrap gap-1.5">

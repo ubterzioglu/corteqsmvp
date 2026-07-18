@@ -64,6 +64,30 @@ interface UpdateNote {
 const UPDATES: UpdateNote[] = [
   {
     date: "18 Temmuz 2026",
+    title: "Sosyal Medya Paylaşım Deposu'ndaki 4 sekme kaldırıldı, tek liste oldu + Burak'ın bölümüne de paylaşım rozetleri geldi",
+    lines: [
+      "Admin panelindeki Sosyal Medya Paylaşım Deposu (/admin/social-share-vault) sayfasında daha önce ayrı sekmeler halinde duran dört bölüm (Araç Tanıtımları, Diaspora Postları, Test Araçları, BURAK BURAYA BAK) artık sekmesiz — tek sayfada, başlıklarıyla art arda sıralı tek liste halinde görünüyor. Toplu kopyalama butonları da artık tüm bölümlerdeki kalemleri birden kapsıyor.",
+      "Diğer üç bölümde zaten var olan LinkedIn / Instagram / Reddit / X / Facebook / Threads paylaşım durumu rozetleri artık Burak'ın bölümündeki 12 araç için de görünüyor. Migration canlı veritabanına uygulandı ve doğrulandı.",
+    ],
+  },
+  {
+    date: "18 Temmuz 2026",
+    title: "Depo temizliği: otomatik üretilen 36 görsel + kullanılmayan referans klonlar kaldırıldı",
+    lines: [
+      "LinkedIn için otomatik üretilen 36 tanıtım görseli (12 araç × 3 varyant) artık git deposunda tutulmuyor — npm run social:generate ile istendiğinde yeniden üretilebiliyor. Admin panelindeki otomatik görsel önizlemesi etkilenmedi.",
+      "Geliştirme sürecinde referans amaçlı klonlanmış üç eski proje klasörü (ref/, ref101/, reference/) kökten docs/reference-clones/ altına taşındı. Bu bir kod/özellik değişikliği değil, tamamen depo hijyeni — kullanıcı tarafında görünür fark yok.",
+    ],
+  },
+  {
+    date: "18 Temmuz 2026",
+    title: "MVP Revizyon Listesi'ndeki 51 madde artık /admin/revision-requests içinde",
+    lines: [
+      "Excel ve Word dosyalarında biriken 51 revizyon/düzeltme notu tek tek Revizyon İstekleri sayfasına (/admin/revision-requests) kayıt olarak eklendi. Her madde kendi bölüm etiketiyle (HERO, CADDE, RADAR, ARAÇLAR vb.) geldi; hepsi 'Açık' durumda başlıyor.",
+      "Mevcut Revizyon İstekleri sisteminin üzerine veri eklemekten ibaret — sayfa, formlar, yorum thread'i ve görsel ekleme özelliği zaten vardı, yeni kod yazılmadı.",
+    ],
+  },
+  {
+    date: "18 Temmuz 2026",
     title: "Dünya Kupası kampanyası tamamen kaldırıldı",
     lines: [
       "Kampanya sona erdi: /dunya-kupasi, /dunya-kupasi/kayit ve /admin/dunya-kupasi sayfaları, ilgili worldcup_* RPC'leri, world_cup_registrations/world_cup_campaign_settings tabloları ve world-cup-images bucket'ı silindi.",
