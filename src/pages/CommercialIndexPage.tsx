@@ -1,8 +1,33 @@
 import { FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { publicCommercialDocuments } from "@/lib/commercial-documents";
+import { useSeo, SEO_CANONICAL_ORIGIN, SEO_SITE_NAME } from "@/lib/seo";
+
+const PAGE_TITLE = `${SEO_SITE_NAME} | Commercial Doküman Merkezi`;
+const PAGE_DESCRIPTION =
+  "CorteQS rolleri ve iş birliği başlıkları (contributor, influencer partner, strategic partner, community leader, ambassador) hakkında kısa ön bilgi dokümanları.";
 
 const CommercialIndexPage = () => {
+  useSeo({
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    canonicalPath: "/commercial",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: PAGE_TITLE,
+      description: PAGE_DESCRIPTION,
+      url: `${SEO_CANONICAL_ORIGIN}/commercial`,
+      isPartOf: { "@id": `${SEO_CANONICAL_ORIGIN}/#website` },
+      hasPart: publicCommercialDocuments.map((document) => ({
+        "@type": "Article",
+        headline: document.title,
+        description: document.summary,
+        url: `${SEO_CANONICAL_ORIGIN}/commercial/${document.slug}`,
+      })),
+    },
+  });
+
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--section-warm))_52%,hsl(var(--background))_100%)]">
       <main className="relative overflow-hidden">

@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { getCommercialDocumentBySlug } from "@/lib/commercial-documents";
 import { applySeo, SEO_CANONICAL_ORIGIN, SEO_SITE_NAME } from "@/lib/seo";
+import NotFound from "@/pages/NotFound";
 
 const documentLoaders = import.meta.glob<string>("../content/commercial/*.html", {
   query: "?raw",
@@ -74,7 +75,7 @@ const CommercialDocumentPage = () => {
   }
 
   if (!document_ || !loader) {
-    return <Navigate to="/404" replace />;
+    return <NotFound />;
   }
 
   return (

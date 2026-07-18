@@ -1,23 +1,23 @@
-// Sosyal Medya Paylaşım Deposu — dört içerik paketi tek sayfada, sekmesiz, art arda.
+// Sosyal Medya Paylaşım Deposu — dört içerik paketi tek birleşik listede
+// (UnifiedShareList), kaynak filtre çipleriyle daraltılabilir. Her kartın
+// başlığında kaynağı gösteren rozet var (Araç Tanıtımları/Diaspora/Test/Burak).
 //  • "Araç Tanıtımları": 12 platform aracı (3 Canva promptu + 1 LinkedIn postu).
 //    Veri: lib/admin-shell/social-share-vault.ts
-//  • "Diaspora Postları": 50 hazır LinkedIn postu (1 Canva promptu), tema filtreli.
+//  • "Diaspora Postları": 50 hazır LinkedIn postu (1 Canva promptu), tema rozetli.
 //    Veri: lib/admin-shell/social-diaspora-posts.ts
 //  • "Test Araçları": 10 click-through test aracı (3 varyant × Canva+LinkedIn).
 //    Veri: lib/admin-shell/social-test-tools.ts
-//  • "BURAK BURAYA BAK": 12 araç × 3 varyant + medya yükleme.
+//  • "Burak": 12 araç × 3 varyant + medya yükleme.
 //    Veri: lib/admin-shell/burak-share-tools.ts + social_share_assets.
+// Normalize katmanı: lib/admin-shell/social-share-unified.ts.
 // Her metin tek tıkla, ayrıca sayfa başından tüm bölümler toplu kopyalanır.
 // Her kalemde LinkedIn/Instagram/Reddit/X/Facebook/Threads paylaşım rozetleri.
 
-import { Camera, Check, ClipboardList, Linkedin, Megaphone, Palette, Share2, Users } from "lucide-react";
-import { useState, type ComponentType } from "react";
+import { Check, Linkedin, Palette, Share2 } from "lucide-react";
+import { useState } from "react";
 
 import { AdminPageShell } from "@/components/admin/page";
-import { BurakShareTab } from "@/components/admin/social-share/BurakShareTab";
-import { DiasporaPostsTab } from "@/components/admin/social-share/DiasporaPostsTab";
-import { TestToolsTab } from "@/components/admin/social-share/TestToolsTab";
-import { ToolPromotionsTab } from "@/components/admin/social-share/ToolPromotionsTab";
+import { UnifiedShareList } from "@/components/admin/social-share/UnifiedShareList";
 import { useShareTracking } from "@/components/admin/social-share/useShareTracking";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -79,31 +79,6 @@ const PAGE_BULK_BUTTONS: BulkButton[] = [
   { id: "all-page-linkedin", label: "Tüm LinkedIn Postları", value: allPageLinkedin },
 ];
 
-type Section = {
-  id: string;
-  title: string;
-  icon: ComponentType<{ className?: string }>;
-  count: number;
-};
-
-const SECTIONS: Section[] = [
-  { id: "tools", title: "Araç Tanıtımları", icon: Megaphone, count: SOCIAL_SHARE_TOOLS.length },
-  { id: "diaspora", title: "Diaspora Postları", icon: Users, count: DIASPORA_POSTS.length },
-  { id: "tests", title: "Test Araçları", icon: ClipboardList, count: SOCIAL_TEST_TOOLS.length },
-  { id: "burak", title: "BURAK BURAYA BAK", icon: Camera, count: BURAK_SHARE_TOOLS.length },
-];
-
-function SectionHeader({ section }: { section: Section }) {
-  const Icon = section.icon;
-  return (
-    <div className="mb-4 flex items-center gap-2 border-b pb-2">
-      <Icon className="h-5 w-5 text-muted-foreground" />
-      <h2 className="text-lg font-semibold">{section.title}</h2>
-      <span className="text-sm text-muted-foreground">({section.count})</span>
-    </div>
-  );
-}
-
 const AdminSocialShareVaultPage = () => {
   const { toast } = useToast();
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -149,27 +124,7 @@ const AdminSocialShareVaultPage = () => {
         </div>
       }
     >
-      <div className="space-y-10">
-        <section>
-          <SectionHeader section={SECTIONS[0]} />
-          <ToolPromotionsTab copiedId={copiedId} onCopy={handleCopy} renderShareBar={renderShareBar} />
-        </section>
-
-        <section>
-          <SectionHeader section={SECTIONS[1]} />
-          <DiasporaPostsTab copiedId={copiedId} onCopy={handleCopy} renderShareBar={renderShareBar} />
-        </section>
-
-        <section>
-          <SectionHeader section={SECTIONS[2]} />
-          <TestToolsTab copiedId={copiedId} onCopy={handleCopy} renderShareBar={renderShareBar} />
-        </section>
-
-        <section>
-          <SectionHeader section={SECTIONS[3]} />
-          <BurakShareTab copiedId={copiedId} onCopy={handleCopy} renderShareBar={renderShareBar} />
-        </section>
-      </div>
+      <UnifiedShareList copiedId={copiedId} onCopy={handleCopy} renderShareBar={renderShareBar} />
     </AdminPageShell>
   );
 };

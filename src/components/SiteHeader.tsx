@@ -38,6 +38,13 @@ export default function SiteHeader() {
         <div className="container mx-auto flex items-center justify-end gap-x-4 lg:px-6">
           {user ? (
             <>
+              <Link
+                to="/tools"
+                className="text-sm font-semibold text-[#1E3A8A] transition-colors hover:text-[#152c69]"
+              >
+                Araçlar
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               {/* Feedback Ver — geldiği sayfa state.from ile /feedback'e taşınır (page_path). */}
               <Link
                 to="/feedback"

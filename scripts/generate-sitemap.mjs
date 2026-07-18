@@ -119,6 +119,51 @@ async function getBlogRoutes() {
   }
 }
 
+// Yayınlanmış anketleri Supabase REST üzerinden çek (graceful; src/lib/surveys.ts
+// getPublishedSurveys() ile aynı filtre: status=published + başlangıç/bitiş penceresi).
+async function getSurveyRoutes() {
+  const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
+  const key =
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    console.warn("[sitemap] Supabase env yok — anketler atlandı.");
+    return [];
+  }
+
+  try {
+    const nowIso = new Date().toISOString();
+    const params = new URLSearchParams({
+      select: "slug,updated_at",
+      status: "eq.published",
+      or: `(starts_at.is.null,starts_at.lte.${nowIso})`,
+    });
+    const endpoint = `${url.replace(/\/+$/, "")}/rest/v1/surveys?${params.toString()}`;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15_000);
+    const res = await fetch(endpoint, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    if (!res.ok) {
+      console.warn(`[sitemap] surveys fetch ${res.status} — atlandı.`);
+      return [];
+    }
+    const rows = await res.json();
+    return rows
+      .filter((r) => r?.slug)
+      .map((r) => ({
+        path: `/anket/${r.slug}`,
+        priority: "0.6",
+        changefreq: "weekly",
+        lastmod: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
+      }));
+  } catch (error) {
+    console.warn("[sitemap] anket fetch hatası — atlandı:", error?.name ?? error);
+    return [];
+  }
+}
+
 // NOT: /tools/:slug alt sayfaları RequireAuth ile korunur (bkz. src/App.tsx) —
 // girişsiz ziyaretçi/bot login'e redirect edilir. Bunları sitemap'e eklemek
 // GSC'de "Discovered/Crawled - currently not indexed" üretir (2026-07-14 audit).
@@ -150,12 +195,13 @@ async function main() {
   // SITE_DATE env ile sabitlenebilir; yoksa bugünün tarihi (deterministik build için).
   const today = process.env.SITE_DATE ?? new Date().toISOString().slice(0, 10);
 
-  const [commercialRoutes, blogRoutes] = await Promise.all([
+  const [commercialRoutes, blogRoutes, surveyRoutes] = await Promise.all([
     getCommercialRoutes(),
     getBlogRoutes(),
+    getSurveyRoutes(),
   ]);
 
-  const entries = [...STATIC_ROUTES, ...commercialRoutes, ...blogRoutes];
+  const entries = [...STATIC_ROUTES, ...commercialRoutes, ...blogRoutes, ...surveyRoutes];
   // Tekilleştir (path'e göre).
   const unique = [...new Map(entries.map((e) => [e.path, e])).values()];
 
@@ -169,7 +215,7 @@ ${unique.map((e) => renderUrl(e, today)).join("\n")}
   await writeFile(OUTPUT, xml, "utf8");
   console.log(
     `[sitemap] ${unique.length} URL yazıldı → public/sitemap.xml ` +
-      `(statik: ${STATIC_ROUTES.length}, commercial: ${commercialRoutes.length}, blog: ${blogRoutes.length})`,
+      `(statik: ${STATIC_ROUTES.length}, commercial: ${commercialRoutes.length}, blog: ${blogRoutes.length}, anket: ${surveyRoutes.length})`,
   );
 }
 
