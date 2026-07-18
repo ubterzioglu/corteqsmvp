@@ -39,6 +39,7 @@ const AdminAdvisorLinksPage = lazy(() => import("@/pages/admin/AdminAdvisorLinks
 const AdminSocialMediaLinksPage = lazy(() => import("@/pages/admin/AdminSocialMediaLinksPage"));
 const AdminSocialShareVaultPage = lazy(() => import("@/pages/admin/AdminSocialShareVaultPage"));
 const AdminRevisionRequestsPage = lazy(() => import("@/pages/admin/AdminRevisionRequestsPage"));
+const AdminBrainstormingPage = lazy(() => import("@/pages/admin/AdminBrainstormingPage"));
 const AdminFeedbackPage = lazy(() => import("@/pages/admin/AdminFeedbackPage"));
 const AdminRolesDraftPage = lazy(() => import("@/pages/admin/AdminRolesDraftPage"));
 const AdminWorkspaceHomePage = lazy(() => import("@/pages/admin/workspace/AdminWorkspaceHomePage"));
@@ -96,6 +97,7 @@ export const adminRoutes = (
     <Route path="new-member/profile-role-assignment" element={<AdminCatalogPage />} />
     <Route path="new-member/role-matrix" element={<AdminRoleManagementPage />} />
     <Route path="new-member/roles-overview" element={<AdminRolesOverviewPage />} />
+    <Route path="brainstorming" element={<AdminBrainstormingPage />} />
     <Route path="new-member/users-roles" element={<Navigate to="/admin/new-member/profile-role-assignment" replace />} />
     <Route path="data" element={<AdminCatalogPage />} />
     <Route path="bulk-import" element={<AdminBulkImportPage />} />

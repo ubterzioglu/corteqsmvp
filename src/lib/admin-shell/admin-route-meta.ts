@@ -36,6 +36,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/new-member/profile-role-assignment",
   "/admin/new-member/role-matrix",
   "/admin/new-member/roles-overview",
+  "/admin/brainstorming",
   "/admin/new-member/users-roles",
   "/admin/data",
   "/admin/data/:category",

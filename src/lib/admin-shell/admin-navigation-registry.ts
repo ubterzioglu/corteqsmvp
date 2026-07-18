@@ -214,6 +214,15 @@ export const adminNavGroups: AdminNavGroup[] = [
         isInactive: true,
         aliases: ["taslak", "draft"],
       },
+      {
+        id: "brainstorming",
+        label: "Brainstorming",
+        description: "Cadde 3.0 & Premium Panel durum ve karar raporu — düzenlenebilir.",
+        to: "/admin/brainstorming",
+        icon: Lightbulb,
+        accent: "emerald",
+        aliases: ["brainstorming", "durum raporu", "karar", "statusreport", "3006"],
+      },
     ],
   },
   {

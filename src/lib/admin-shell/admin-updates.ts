@@ -14,6 +14,16 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260718-brainstorming-admin-sekmesi",
+    date: "18 Temmuz 2026",
+    title: "Durum raporu (/statusreport3006) admin paneline 'Brainstorming' sekmesi olarak taşındı",
+    items: [
+      "Cadde 3.0 & Premium Panel durum ve karar raporu artık herkese açık bir sayfa değil — /admin/brainstorming altında, sol menüde 'Roller ve AFS' grubunda. Eski /statusreport3006 adresi kaldırıldı, oraya girmeye çalışan herkes artık 404 görür.",
+      "İçerik artık statik bir dosyada değil, veritabanında: tüm adminler panelden bölüm ekleyip/düzenleyip/silebiliyor, her bölümün altına konu satırı (teknik + sade açıklama + durum rozeti) ekleyebiliyor, sıralamayı yukarı/aşağı oklarla değiştirebiliyor. Mevcut 15 bölüm/35 satırlık içerik olduğu gibi taşındı.",
+      "Yorum sistemi admin kimliğine bağlandı — eskiden herkes serbest isim yazıp anonim yorum bırakabiliyordu, artık sadece giriş yapmış adminler yorum yazabiliyor ve yazan kişi otomatik (e-postasından) görünüyor.",
+    ],
+  },
+  {
     id: "20260718-dunya-kupasi-kaldirildi",
     date: "18 Temmuz 2026",
     title: "Dünya Kupası kampanyası tamamen kaldırıldı",
