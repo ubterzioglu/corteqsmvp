@@ -14,6 +14,16 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260718-revizyon-listesi-mvp-seed",
+    date: "18 Temmuz 2026",
+    title: "MVP Revizyon Listesi'ndeki 51 madde artık /admin/revision-requests içinde",
+    items: [
+      "Excel ve Word dosyalarında biriken 51 revizyon/düzeltme notu (12 Haziran ve 17-18 Temmuz tarihli) tek tek Revizyon İstekleri sayfasına (/admin/revision-requests) kayıt olarak eklendi. Her madde kendi bölüm etiketiyle (HERO, CADDE, RADAR, ARAÇLAR vb.) birlikte geldi; hepsi 'Açık' durumda ve varsayılan öncelikte başlıyor.",
+      "Bu, mevcut Revizyon İstekleri sisteminin üzerine veri eklemekten ibaret — sayfa, formlar, yorum thread'i ve görsel ekleme özelliği zaten vardı, yeni kod yazılmadı. Artık her madde ayrı ayrı düzenlenebilir, duruma göre filtrelenebilir (İnceleniyor/Yapıldı/İptal), yorum yazılabilir ve ekran görüntüsü eklenebilir.",
+      "Aynı başlık + bölüm ikilisi tekrar eklenmeye çalışılırsa migration kendini atlıyor (idempotent) — yani bu migration'ın tekrar çalışması veri çoğaltmıyor.",
+    ],
+  },
+  {
     id: "20260718-repo-temizligi-uretilen-gorseller",
     date: "18 Temmuz 2026",
     title: "Depo temizliği: otomatik üretilen 36 görsel + kullanılmayan referans klonlar kaldırıldı",
