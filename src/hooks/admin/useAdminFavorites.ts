@@ -1,11 +1,12 @@
 // Admin Panel V2 — favori ekranlar.
-// Registry item id'leri localStorage'da tutulur (corteqs.admin.favorite-pages.v1).
+// Registry item id'leri admin_favorite_pages tablosunda kullanıcı bazlı tutulur
+// (önceden localStorage'daydı — tarayıcı verisi silinince/farklı cihazda kayboluyordu).
 // State tek instance olarak AdminShell'de yaşar; sidebar ve command palette
 // prop üzerinden beslenir.
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { ADMIN_STORAGE_KEYS, readAdminStorage, writeAdminStorage } from "@/lib/admin-shell/admin-storage";
+import { fetchAdminFavoritePageIds, saveAdminFavoritePageIds } from "@/lib/admin/admin-favorites-api";
 import { flattenAdminNav } from "@/lib/admin-shell/admin-navigation-utils";
 import type { AdminNavEntry } from "@/lib/admin-shell/admin-navigation-utils";
 
@@ -22,20 +23,43 @@ export type AdminFavoritesState = {
   toggleFavorite: (id: string) => void;
 };
 
-export function useAdminFavorites(): AdminFavoritesState {
-  const [favoriteIds, setFavoriteIds] = useState<string[]>(() =>
-    sanitizeIds(readAdminStorage<unknown>(ADMIN_STORAGE_KEYS.favoritePages, [])),
-  );
+export function useAdminFavorites(userId: string | undefined): AdminFavoritesState {
+  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+  const loadedForUserId = useRef<string | undefined>(undefined);
 
-  const toggleFavorite = useCallback((id: string) => {
-    setFavoriteIds((previous) => {
-      const next = previous.includes(id)
-        ? previous.filter((existing) => existing !== id)
-        : [...previous, id];
-      writeAdminStorage(ADMIN_STORAGE_KEYS.favoritePages, next);
-      return next;
-    });
-  }, []);
+  useEffect(() => {
+    if (!userId || loadedForUserId.current === userId) return;
+    loadedForUserId.current = userId;
+    let cancelled = false;
+
+    fetchAdminFavoritePageIds(userId)
+      .then((ids) => {
+        if (!cancelled) setFavoriteIds(sanitizeIds(ids));
+      })
+      .catch((error: unknown) => {
+        console.error("Favori sayfalar yüklenemedi:", error);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
+
+  const toggleFavorite = useCallback(
+    (id: string) => {
+      if (!userId) return;
+      setFavoriteIds((previous) => {
+        const next = previous.includes(id)
+          ? previous.filter((existing) => existing !== id)
+          : [...previous, id];
+        saveAdminFavoritePageIds(userId, next).catch((error: unknown) => {
+          console.error("Favori sayfalar kaydedilemedi:", error);
+        });
+        return next;
+      });
+    },
+    [userId],
+  );
 
   const isFavorite = useCallback((id: string) => favoriteIds.includes(id), [favoriteIds]);
 

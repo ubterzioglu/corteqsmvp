@@ -8,6 +8,16 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { ADMIN_UPDATES } from "@/lib/admin-shell/admin-updates";
 
+const { fetchFavoritesMock, saveFavoritesMock } = vi.hoisted(() => ({
+  fetchFavoritesMock: vi.fn().mockResolvedValue([]),
+  saveFavoritesMock: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock("@/lib/admin/admin-favorites-api", () => ({
+  fetchAdminFavoritePageIds: fetchFavoritesMock,
+  saveAdminFavoritePageIds: saveFavoritesMock,
+}));
+
 vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({
     toast: vi.fn(),
@@ -62,6 +72,8 @@ function renderAdminLayout(pathname: string) {
 
 beforeEach(() => {
   window.localStorage.clear();
+  fetchFavoritesMock.mockClear().mockResolvedValue([]);
+  saveFavoritesMock.mockClear().mockResolvedValue(undefined);
 });
 
 describe("AdminLayout (Admin Panel V2 shell)", () => {
@@ -188,15 +200,17 @@ describe("AdminLayout (Admin Panel V2 shell)", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Approval Queue favorilere ekle" }));
 
-    expect(JSON.parse(window.localStorage.getItem("corteqs.admin.favorite-pages.v1")!)).toEqual([
-      "approvals",
-    ]);
+    await waitFor(() => {
+      expect(saveFavoritesMock).toHaveBeenCalledWith("admin-user", ["approvals"]);
+    });
     expect(screen.getByText("Favoriler")).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "Approval Queue" })).toHaveLength(2);
 
     // Yıldız hem grup item'ında hem Favoriler bölümündeki kopyada görünür.
     fireEvent.click(screen.getAllByRole("button", { name: "Approval Queue favorilerden çıkar" })[0]);
-    expect(JSON.parse(window.localStorage.getItem("corteqs.admin.favorite-pages.v1")!)).toEqual([]);
+    await waitFor(() => {
+      expect(saveFavoritesMock).toHaveBeenCalledWith("admin-user", []);
+    });
   });
 
   it("route ziyaretleri son kullanılanlara kaydedilir", async () => {

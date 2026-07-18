@@ -4,7 +4,6 @@
 
 export const ADMIN_STORAGE_KEYS = {
   sidebarCollapsed: "corteqs.admin.sidebar.collapsed.v1",
-  favoritePages: "corteqs.admin.favorite-pages.v1",
   recentPages: "corteqs.admin.recent-pages.v1",
   theme: "corteqs.admin.theme.v1",
   updatesSeen: "corteqs.admin.updates-seen.v1",

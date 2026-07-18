@@ -37,7 +37,7 @@ const AdminShell = () => {
   const access = useAdminAccess();
   const sidebar = useAdminSidebarState();
   const palette = useAdminCommandPalette();
-  const favorites = useAdminFavorites();
+  const favorites = useAdminFavorites(access.session?.user.id);
   const { recentPages, recordVisit } = useAdminRecentPages();
   const location = useLocation();
 
