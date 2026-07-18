@@ -1,9 +1,18 @@
-// /admin/social-share-vault "BURAK BURAYA BAK" sekmesi medya API'si.
+// /admin/social-share-vault sayfası genelinde (4 sekmenin tamamında — Araç
+// Tanıtımları/Diaspora/Test Araçları/Burak) her kalem için medya API'si.
 // Görsel Supabase Storage'a (private burak-share bucket), link/not/video URL
 // social_share_assets tablosuna yazılır (slot_key unique). Tüm adminler ortak
-// görür; RLS = is_admin(auth.uid()). Metin içerik DB'de değil, burak-share-tools.ts'te.
+// görür; RLS = is_admin(auth.uid()). Metin içerik DB'de değil, her sekmenin
+// kendi statik dosyasında (social-share-vault.ts, social-diaspora-posts.ts, vb.).
+//
+// Bucket/tablo adları tarihsel nedenle "burak" içeriyor (özellik ilk bu sekmede
+// çıktı) ama artık tüm sekmeleri kapsıyor — isim değişmedi, kapsam genişledi.
+// slotKey artık `${tab}/${itemId}/variant-${variantIndex}` formatında; eski
+// Burak kayıtları `burak/...` prefix'iyle üretildiği için aynı kalır (geriye
+// dönük uyumlu, veri taşıma gerekmez).
 
 import { supabase } from "@/integrations/supabase/client";
+import type { ShareTab } from "@/lib/admin-shell/social-share-log";
 
 // Video Drive klasörü — "Videoyu Drive'a Yükle" butonu bunu yeni sekmede açar.
 export const BURAK_DRIVE_FOLDER_URL =
@@ -33,8 +42,8 @@ type SupabaseUntyped = {
 };
 const db = supabase as unknown as SupabaseUntyped;
 
-export function burakSlotKey(toolId: string, variantIndex: number): string {
-  return `burak/${toolId}/variant-${variantIndex}`;
+export function burakSlotKey(tab: ShareTab, itemId: string, variantIndex: number): string {
+  return `${tab}/${itemId}/variant-${variantIndex}`;
 }
 
 function messageOf(error: unknown, fallback: string): string {
@@ -90,18 +99,19 @@ export async function upsertBurakShareAsset(
   if (error) throw new Error(messageOf(error, "Medya kaydı kaydedilemedi"));
 }
 
-function buildImagePath(toolId: string, variantIndex: number, file: File): string {
+function buildImagePath(tab: ShareTab, itemId: string, variantIndex: number, file: File): string {
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
   const rand = Math.random().toString(36).slice(2, 8);
-  return `${toolId}/variant-${variantIndex}/${Date.now()}-${rand}-${safeName}`;
+  return `${tab}/${itemId}/variant-${variantIndex}/${Date.now()}-${rand}-${safeName}`;
 }
 
 export async function uploadBurakShareImage(
-  toolId: string,
+  tab: ShareTab,
+  itemId: string,
   variantIndex: number,
   file: File,
 ): Promise<{ bucket: string; path: string }> {
-  const path = buildImagePath(toolId, variantIndex, file);
+  const path = buildImagePath(tab, itemId, variantIndex, file);
   const { error } = await db.storage
     .from(BUCKET)
     .upload(path, file, { contentType: file.type || undefined, upsert: false });

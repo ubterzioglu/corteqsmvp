@@ -1,6 +1,8 @@
-// "BURAK BURAYA BAK" sekmesinde tek bir Canva yuvasının medya paneli.
-// Görsel yükle VEYA görsel linki (Gmail/Drive) + Drive video butonu & video linki + not.
-// Hepsi opsiyonel, bağımsız; değişiklik anında social_share_assets'e upsert edilir.
+// /admin/social-share-vault genelinde (4 sekmenin tamamında) her kalem/varyant
+// için medya paneli. Görsel yükle VEYA görsel linki (Gmail/Drive) + Drive video
+// butonu & video linki + not. Hepsi opsiyonel, bağımsız; değişiklik anında
+// social_share_assets'e upsert edilir. Bileşen adı tarihsel nedenle "Burak"
+// içeriyor (özellik ilk o sekmede çıktı) ama artık tab-agnostik.
 
 import { useEffect, useRef, useState } from "react";
 import { ExternalLink, ImageIcon, Loader2, Trash2, Upload, Video } from "lucide-react";
@@ -19,10 +21,12 @@ import {
   type BurakAssetPatch,
   type BurakShareAsset,
 } from "@/lib/admin-shell/burak-share-assets";
+import type { ShareTab } from "@/lib/admin-shell/social-share-log";
 
 type BurakMediaPanelProps = {
   slotKey: string;
-  toolId: string;
+  tab: ShareTab;
+  itemId: string;
   variantIndex: number;
   asset: BurakShareAsset | undefined;
 };
@@ -30,7 +34,7 @@ type BurakMediaPanelProps = {
 const errMessage = (error: unknown): string =>
   error instanceof Error ? error.message : "Beklenmeyen hata";
 
-export function BurakMediaPanel({ slotKey, toolId, variantIndex, asset }: BurakMediaPanelProps) {
+export function BurakMediaPanel({ slotKey, tab, itemId, variantIndex, asset }: BurakMediaPanelProps) {
   const { toast } = useToast();
   const fileRef = useRef<HTMLInputElement | null>(null);
 
@@ -73,7 +77,7 @@ export function BurakMediaPanel({ slotKey, toolId, variantIndex, asset }: BurakM
   const handleUpload = async (file: File) => {
     setUploading(true);
     try {
-      const { bucket, path } = await uploadBurakShareImage(toolId, variantIndex, file);
+      const { bucket, path } = await uploadBurakShareImage(tab, itemId, variantIndex, file);
       await upsertBurakShareAsset(slotKey, { imageBucket: bucket, imagePath: path });
       setImageBucket(bucket);
       setImagePath(path);

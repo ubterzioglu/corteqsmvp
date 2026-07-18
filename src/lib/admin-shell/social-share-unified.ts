@@ -17,8 +17,10 @@ import { BURAK_SHARE_TOOLS } from "@/lib/admin-shell/burak-share-tools";
 import type { ShareTab } from "@/lib/admin-shell/social-share-log";
 
 export type UnifiedVariant = {
-  canvaPrompt: string;
+  imagePrompts: string[];
   linkedinPost: string;
+  instagramPost: string;
+  redditPost: string;
 };
 
 export type UnifiedItem = {
@@ -38,7 +40,7 @@ export type UnifiedItem = {
   themeLabel?: string;
   /** tools/diaspora tek varyant; tests/burak çoklu varyant. */
   variants: UnifiedVariant[];
-  /** Yalnızca "burak" kaynağında true — medya yükleme paneli gösterilir. */
+  /** Medya yükleme paneli gösterilir (tüm kaynaklarda true — her kalem görsel/video eklenebilir). */
   hasMediaPanel: boolean;
 };
 
@@ -74,8 +76,15 @@ const toolItems = (): UnifiedItem[] =>
     sourceBadgeClass: SOURCE_BADGE_CLASS.tools,
     categoryLabel: SOCIAL_SHARE_CATEGORY_LABELS[tool.category],
     categoryBadgeClass: CATEGORY_BADGE_CLASS[tool.category],
-    variants: [{ canvaPrompt: tool.canvaPrompts.join("\n\n"), linkedinPost: tool.linkedinPost }],
-    hasMediaPanel: false,
+    variants: [
+      {
+        imagePrompts: tool.imagePrompts,
+        linkedinPost: tool.linkedinPost,
+        instagramPost: tool.instagramPost,
+        redditPost: tool.redditPost,
+      },
+    ],
+    hasMediaPanel: true,
   }));
 
 const diasporaItems = (): UnifiedItem[] =>
@@ -87,8 +96,15 @@ const diasporaItems = (): UnifiedItem[] =>
     sourceLabel: SOURCE_LABELS.diaspora,
     sourceBadgeClass: SOURCE_BADGE_CLASS.diaspora,
     themeLabel: DIASPORA_THEME_LABELS[post.theme],
-    variants: [{ canvaPrompt: post.canvaPrompt, linkedinPost: post.linkedinPost }],
-    hasMediaPanel: false,
+    variants: [
+      {
+        imagePrompts: post.imagePrompts,
+        linkedinPost: post.linkedinPost,
+        instagramPost: post.instagramPost,
+        redditPost: post.redditPost,
+      },
+    ],
+    hasMediaPanel: true,
   }));
 
 const testItems = (): UnifiedItem[] =>
@@ -101,7 +117,7 @@ const testItems = (): UnifiedItem[] =>
     sourceLabel: SOURCE_LABELS.tests,
     sourceBadgeClass: SOURCE_BADGE_CLASS.tests,
     variants: tool.variants,
-    hasMediaPanel: false,
+    hasMediaPanel: true,
   }));
 
 const burakItems = (): UnifiedItem[] =>

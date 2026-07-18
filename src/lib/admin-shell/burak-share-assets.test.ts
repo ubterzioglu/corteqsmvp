@@ -25,8 +25,14 @@ beforeEach(() => {
 });
 
 describe("burakSlotKey", () => {
-  it("builds a deterministic slot key from tool id and variant index", () => {
-    expect(burakSlotKey("burak-tool-11", 1)).toBe("burak/burak-tool-11/variant-1");
+  it("builds a deterministic slot key from tab, item id and variant index", () => {
+    expect(burakSlotKey("burak", "burak-tool-11", 1)).toBe("burak/burak-tool-11/variant-1");
+  });
+
+  it("prefixes the slot key with the source tab for non-burak items", () => {
+    expect(burakSlotKey("tools", "tool-1", 0)).toBe("tools/tool-1/variant-0");
+    expect(burakSlotKey("diaspora", "post-1", 0)).toBe("diaspora/post-1/variant-0");
+    expect(burakSlotKey("tests", "test-tool-1", 2)).toBe("tests/test-tool-1/variant-2");
   });
 });
 
