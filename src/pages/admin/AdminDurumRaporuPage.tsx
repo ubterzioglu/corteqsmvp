@@ -64,6 +64,15 @@ interface UpdateNote {
 const UPDATES: UpdateNote[] = [
   {
     date: "18 Temmuz 2026",
+    title: "Sosyal Medya Paylaşım Deposu 100 kaleme çıktı: günlük tarih etiketi, günlük karışan sıra, tek sütun kart",
+    lines: [
+      "Kalem sayısı 82'den 100'e çıktı — Diaspora Postları bölümüne 18 yeni post eklendi (site özellikleri: Cadde/Çarşı/Radar/Blog/Referans + genel diaspora konuları: ikinci kuşak, uzaktan çalışma, yalnızlık, dil kaybı, öğrencilik, mentorluk, kadın dayanışması, ambasadörlük). Toplam: 10 Araç Tanıtımı + 68 Diaspora + 10 Test + 12 Burak = 100.",
+      "Her kartın başlığına 20 Temmuz'dan başlayan sabit bir tarih rozeti eklendi (20 Tem, 21 Tem...) — kartın listedeki sabit sırasına göre atanıyor, filtre/sıralamadan etkilenmiyor. Kartların görünüm sırası ise artık günlük olarak karışıyor: aynı gün F5'te herkes aynı sırayı görüyor, ertesi gün sıra değişiyor.",
+      "Kart açıldığında içindeki kutular (Görsel Promptu, LinkedIn, Instagram, Reddit) artık 2 sütun yerine tek sütun/tek satır halinde diziliyor — dört bölümün (Araç Tanıtımları, Diaspora, Test, Burak) hepsinde geçerli, ortak bileşen kullanıldığı için. Veritabanı değişikliği gerekmedi.",
+    ],
+  },
+  {
+    date: "18 Temmuz 2026",
     title: "Sosyal Medya Paylaşım Deposu'na Reddit postu eklendi + görsel/video yükleme artık dört bölümde de var",
     lines: [
       "82 kalemin (Araç Tanıtımları/Diaspora/Test/Burak) her varyantına LinkedIn ve Instagram'ın yanına üçüncü bir hazır metin eklendi: Reddit postu (soru/tartışma tonu, hashtag yok, çıplak link). 'Tüm Reddit Postları' toplu kopyalama butonu da eklendi.",
@@ -101,6 +110,7 @@ const UPDATES: UpdateNote[] = [
     lines: [
       "Excel ve Word dosyalarında biriken 51 revizyon/düzeltme notu tek tek Revizyon İstekleri sayfasına (/admin/revision-requests) kayıt olarak eklendi. Her madde kendi bölüm etiketiyle (HERO, CADDE, RADAR, ARAÇLAR vb.) geldi; hepsi 'Açık' durumda başlıyor.",
       "Mevcut Revizyon İstekleri sisteminin üzerine veri eklemekten ibaret — sayfa, formlar, yorum thread'i ve görsel ekleme özelliği zaten vardı, yeni kod yazılmadı.",
+      "Sonradan yapılan kontrolde kaynak dosyalardaki 5 ekran görüntüsünden 4'ü, ilk seed'de atlanmış olduğu için ilgili maddelere sonradan eklendi (Süper Admin arama bug'ı + Cadde paylaşım formu görselleri).",
     ],
   },
   {

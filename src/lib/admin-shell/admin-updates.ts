@@ -14,6 +14,18 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260718-sosyal-paylasim-vault-100-icerik-tarih-tek-sutun",
+    date: "18 Temmuz 2026",
+    title: "Sosyal Medya Paylaşım Deposu 100 kaleme çıktı: günlük tarih etiketi, günlük karışan sıra, tek sütun kart",
+    items: [
+      "Admin panelindeki Sosyal Medya Paylaşım Deposu (/admin/social-share-vault) sayfasındaki kalem sayısı 82'den 100'e çıktı. Diaspora Postları bölümüne 18 yeni post eklendi (18 Araç Tanıtımı + 68 Diaspora Postu + 10 Test Aracı + 12 Burak aracı = 100). Yeni postlar hem CorteQS'in kendi özelliklerini (Cadde, Çarşı, Radar, Blog, Referans/davet sistemi) hem de genel diaspora konularını (ikinci kuşak kimliği, uzaktan çalışma, gurbette yalnızlık, ana dil kaybı, öğrencilik, mentorluk, kadın dayanışması, ambasadörlük) kapsıyor — her biri diğerleriyle aynı formatta: 2 ChatGPT görsel promptu + LinkedIn + Instagram + Reddit postu.",
+      "Her kartın başlığına artık sabit bir tarih rozeti ekleniyor: 20 Temmuz'dan başlayarak, kartın listedeki sabit sırasına göre bir sonraki gün atanıyor (20 Tem, 21 Tem, 22 Tem...). Bu tarih kartın kendine ait sabit özelliği — hangi filtre/sıralama uygulanırsa uygulansın değişmiyor. Amaç: '100 gün boyunca her gün hangi içerik önerilsin' sorusuna kabaca bir yanıt vermek.",
+      "Kartların görünüm sırası artık günlük olarak değişiyor: sayfa aynı gün içinde kaç kez yenilenirse yenilensin (F5) herkes aynı sırayı görüyor, ama ertesi gün sıra otomatik olarak karışıyor. Böylece 'bugün üstte gördüğüm içerik' her gün farklı oluyor, tek bir kalem sürekli en üstte kalmıyor. Bu sıralama sadece görünüm sırası — kartın üzerindeki sabit tarih rozetini etkilemiyor.",
+      "Kart açıldığında içindeki kutular (Görsel Promptu 1, Görsel Promptu 2, LinkedIn, Instagram, Reddit) artık yan yana 2 sütun değil, alt alta tek sütun/tek satır halinde diziliyor — daha uzun ama tek bakışta yukarıdan aşağı okunan bir düzen. Bu değişiklik dört bölümün (Araç Tanıtımları, Diaspora, Test Araçları, Burak) hepsinde aynı şekilde geçerli, çünkü hepsi aynı ortak bileşeni kullanıyor.",
+      "Teknik tarafta: veritabanı/migration değişikliği gerekmedi — görsel/video yükleme paneli ve ortak depo (bucket) yeni 18 post için de otomatik çalışıyor. tsc/ESLint temiz, ilgili testler geçti. Sitede görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     id: "20260718-sosyal-paylasim-vault-reddit-ve-medya-genisletme",
     date: "18 Temmuz 2026",
     title: "Sosyal Medya Paylaşım Deposu'na Reddit postu eklendi + görsel/video yükleme artık dört bölümde de var",
@@ -63,6 +75,7 @@ export const ADMIN_UPDATES: AdminUpdateEntry[] = [
       "Excel ve Word dosyalarında biriken 51 revizyon/düzeltme notu (12 Haziran ve 17-18 Temmuz tarihli) tek tek Revizyon İstekleri sayfasına (/admin/revision-requests) kayıt olarak eklendi. Her madde kendi bölüm etiketiyle (HERO, CADDE, RADAR, ARAÇLAR vb.) birlikte geldi; hepsi 'Açık' durumda ve varsayılan öncelikte başlıyor.",
       "Bu, mevcut Revizyon İstekleri sisteminin üzerine veri eklemekten ibaret — sayfa, formlar, yorum thread'i ve görsel ekleme özelliği zaten vardı, yeni kod yazılmadı. Artık her madde ayrı ayrı düzenlenebilir, duruma göre filtrelenebilir (İnceleniyor/Yapıldı/İptal), yorum yazılabilir ve ekran görüntüsü eklenebilir.",
       "Aynı başlık + bölüm ikilisi tekrar eklenmeye çalışılırsa migration kendini atlıyor (idempotent) — yani bu migration'ın tekrar çalışması veri çoğaltmıyor.",
+      "Sonradan yapılan bir kontrolde, kaynak Excel/Word dosyalarında metnin yanında 5 gerçek ekran görüntüsü de bulundu ama ilk seed'de sadece metin taşınmıştı. 4 tanesi eksiği kapatmak için ilgili maddelere eklendi: arama filtresindeki 'Süper Admin' rozeti bug'ını gösteren ekran görüntüsü ile Cadde paylaşım formu/nav bar/başlık ekran görüntüleri artık kendi maddelerinin altında görünüyor.",
     ],
   },
   {
