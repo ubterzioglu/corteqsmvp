@@ -14,6 +14,28 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260718-sosyal-paylasim-vault-reddit-ve-medya-genisletme",
+    date: "18 Temmuz 2026",
+    title: "Sosyal Medya Paylaşım Deposu'na Reddit postu eklendi + görsel/video yükleme artık dört bölümde de var",
+    items: [
+      "Admin panelindeki Sosyal Medya Paylaşım Deposu (/admin/social-share-vault) sayfasındaki 82 kalemin (10 Araç Tanıtımı, 50 Diaspora Postu, 10 Test Aracı, 12 Burak aracı) her varyantına, LinkedIn ve Instagram'ın yanına üçüncü bir hazır metin eklendi: Reddit postu. Bu metin diğer ikisinden bilinçli olarak farklı bir üslupta — satış dili yerine soru/tartışma tonu, az emoji, hashtag yok, sonunda çıplak bir link var. Kendi Kopyala butonuyla ayrı bir kart olarak görünüyor, sayfa üstündeki 'Tüm Reddit Postları' toplu kopyalama butonu da eklendi.",
+      "Görsel ve video yükleme özelliği önceden yalnızca 'Burak' bölümündeydi; artık dört bölümün de her varyantında küçük 'Görsel' ve 'Video' butonlarıyla açılıp kapanan bir panel olarak mevcut. Panel içeriği aynı: doğrudan görsel yükleme, Gmail/Drive linki, Drive video linki ve bir not alanı. Aynı ortak depoyu (görsel dosyaları) ve aynı veritabanı tablosunu (kayıtları) kullanıyor — yeni bir depo/tablo açılmadı, sadece dört bölümün tamamına bağlandı. Burak bölümündeki mevcut yüklemeler hiç etkilenmedi.",
+      "'Tümü' filtresi seçiliyken kartlar artık 1'den 82'ye tek seferde sürekli numaralanıyor (önceden her bölüm kendi içinde 1'den başlıyordu, dört bölümde aynı numara tekrar ediyordu — kafa karıştırıcıydı). Bir bölüme (ör. sadece 'Diaspora Postları') filtrelenince numaralar yine o bölümün kendi sırasına dönüyor.",
+      "Kaynak filtresinin (Tümü/Araç Tanıtımları/Diaspora/Test/Burak) altına, seçtiğiniz bölüme özel ikinci bir filtre satırı eklendi: Araç Tanıtımları'nda Keşfet/Bağlan/Kullan/Koru kategori çipleri, Diaspora Postları'nda 26 tema çipi (Gurbet, Kimlik, Mutfak vb.). Böylece örneğin sadece 'Bağlan' kategorisindeki araçları ya da sadece 'Bayram' temalı diaspora postlarını görmek için ekstra tıklama yeterli.",
+      "Teknik tarafta: veritabanı/migration değişikliği gerekmedi — mevcut social_share_assets tablosu ve burak-share deposu (bucket) aynen kullanıldı, sadece kayıt anahtarları artık hangi bölümden geldiğini de içeriyor (geriye dönük uyumlu, eski Burak kayıtları bozulmadı). tsc/ESLint/testler temiz (1050 testten 3'ü bu değişiklikten bağımsız, önceden de var olan bir bilinen sorun). Sitede görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
+    id: "20260718-canva-yerine-chatgpt-instagram",
+    date: "18 Temmuz 2026",
+    title: "Sosyal Medya Paylaşım Deposu'nda Canva görsel promptları kaldırıldı, yerine ChatGPT promptu + Instagram postu geldi",
+    items: [
+      "Admin panelindeki Sosyal Medya Paylaşım Deposu (/admin/social-share-vault) sayfasındaki 82 kalemin (10 Araç Tanıtımı, 50 Diaspora Postu, 10 Test Aracı, 12 Burak aracı) her varyantındaki eski Canva görsel promptları tamamen kaldırıldı — Canva artık kullanılmıyor. Yerine her varyant için, doğrudan ChatGPT'ye yapıştırılabilecek 2 farklı İngilizce görsel promptu geldi: kare (1:1) format, ortalanmış kompozisyon ve görselde hiç yazı/harf/logo olmaması gibi katı kurallara uyuyor, aynı zamanda hepsi tutarlı bir görsel kimlikte (krem arka plan, teal ana renk, turuncu/mavi/indigo/pembe/sarı vurgu renkleri).",
+      "Aynı zamanda her varyanta, LinkedIn postunun yanına ayrı bir Instagram postu eklendi — LinkedIn'in kısaltması değil, Instagram'a özgü kendi üslubuyla (daha kısa, daha samimi, sonunda yoğun bir hashtag bloğu) yeniden yazıldı. Sayfadaki toplu kopyalama butonları da güncellendi: artık 'Tüm Görsel Promptları', 'Tüm LinkedIn Postları' ve 'Tüm Instagram Postları' olarak üç ayrı buton var.",
+      "Bu değişiklik sadece içerik ve metin — sayfanın yapısı (dört bölüm, filtre çipleri, paylaşım takip rozetleri) aynı kaldı. tsc/ESLint/testler temiz. Sitede görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     id: "20260718-brainstorming-admin-sekmesi",
     date: "18 Temmuz 2026",
     title: "Durum raporu (/statusreport3006) admin paneline 'Brainstorming' sekmesi olarak taşındı",

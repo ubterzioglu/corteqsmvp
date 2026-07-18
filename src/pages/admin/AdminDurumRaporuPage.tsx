@@ -64,6 +64,23 @@ interface UpdateNote {
 const UPDATES: UpdateNote[] = [
   {
     date: "18 Temmuz 2026",
+    title: "Sosyal Medya Paylaşım Deposu'na Reddit postu eklendi + görsel/video yükleme artık dört bölümde de var",
+    lines: [
+      "82 kalemin (Araç Tanıtımları/Diaspora/Test/Burak) her varyantına LinkedIn ve Instagram'ın yanına üçüncü bir hazır metin eklendi: Reddit postu (soru/tartışma tonu, hashtag yok, çıplak link). 'Tüm Reddit Postları' toplu kopyalama butonu da eklendi.",
+      "Görsel/video yükleme özelliği önceden yalnızca 'Burak' bölümündeydi; artık dört bölümün de her varyantında küçük Görsel/Video butonlarıyla açılıp kapanan bir panel olarak var. Aynı ortak depo/tablo kullanılıyor, veritabanı değişikliği gerekmedi.",
+      "'Tümü' filtresinde kartlar 1'den 82'ye sürekli numaralanıyor; bir bölüme filtrelenince o bölümün kendi sırasına dönüyor. Kaynak filtresinin altına bölüme özel kategori/tema alt filtreleri eklendi (Araç Tanıtımları'nda Keşfet/Bağlan/Kullan/Koru, Diaspora'da 26 tema).",
+    ],
+  },
+  {
+    date: "18 Temmuz 2026",
+    title: "Sosyal Medya Paylaşım Deposu'nda Canva kaldırıldı, yerine ChatGPT promptu + Instagram postu geldi",
+    lines: [
+      "82 kalemin her varyantındaki eski Canva görsel promptları kaldırıldı; yerine ChatGPT'ye doğrudan yapıştırılabilecek 2 İngilizce görsel promptu geldi (kare format, tutarlı görsel kimlik, görselde yazı/logo yok).",
+      "Her varyanta ayrıca LinkedIn'in yanına Instagram'a özgü kendi üslubuyla yazılmış bir Instagram postu eklendi. Toplu kopyalama butonları buna göre güncellendi.",
+    ],
+  },
+  {
+    date: "18 Temmuz 2026",
     title: "Sosyal Medya Paylaşım Deposu'ndaki 4 sekme kaldırıldı, tek liste oldu + Burak'ın bölümüne de paylaşım rozetleri geldi",
     lines: [
       "Admin panelindeki Sosyal Medya Paylaşım Deposu (/admin/social-share-vault) sayfasında daha önce ayrı sekmeler halinde duran dört bölüm (Araç Tanıtımları, Diaspora Postları, Test Araçları, BURAK BURAYA BAK) artık sekmesiz — tek sayfada, başlıklarıyla art arda sıralı tek liste halinde görünüyor. Toplu kopyalama butonları da artık tüm bölümlerdeki kalemleri birden kapsıyor.",
