@@ -63,6 +63,14 @@ interface UpdateNote {
 
 const UPDATES: UpdateNote[] = [
   {
+    date: "19 Temmuz 2026",
+    title: "Brainstorming sayfası tek sütun akışa döndü + build'i kıran iki hata giderildi",
+    lines: [
+      "/admin/brainstorming sayfasındaki ayrı sol bölüm seçim paneli kaldırıldı; artık her bölüm başlığı, konu satırları ve yorum akışı eski /statusreport3006 sayfasındaki gibi tek sütunda art arda akıyor. Sıralama/düzenleme/silme/yorum aksiyonları aynen çalışıyor. Akordeon kartların kapalı başlaması gerektiği netleştirildi (kod doğruydu, canlıda eski build çalıştığı için görünmüyordu — yeni bir yayın tetiklendi).",
+      "Build'i her seferinde başarısız kılan iki teknik sorun düzeltildi: Türkçe metin denetimi docs/reference-clones/ altındaki dondurulmuş üçüncü parti kodu tarayıp Almanca karakterleri mojibake sanıyordu (artık taramanın dışında); görsel optimizasyon eklentisi eksik svgo paketi yüzünden hata basıyordu (bağımlılık eklendi). Kullanıcıya görünen bir değişiklik yok, build'ler artık güvenilir tamamlanıyor.",
+    ],
+  },
+  {
     date: "18 Temmuz 2026",
     title: "Sosyal paylaşım görsel prompt kataloğu CorteQS'e özel içerikle güncellendi, mükerrer dosyalar temizlendi",
     lines: [

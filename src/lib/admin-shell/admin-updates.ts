@@ -14,6 +14,15 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260719-brainstorming-tek-sutun-akis-ve-build-fix",
+    date: "19 Temmuz 2026",
+    title: "Brainstorming sayfası tek sütun akışa döndü + build'i kıran iki hata giderildi",
+    items: [
+      "/admin/brainstorming sayfasındaki ayrı sol bölüm seçim paneli kaldırıldı. Artık her bölüm başlığı, altındaki konu satırları ve yorum akışı eski /statusreport3006 sayfasındaki gibi tek sütunda art arda akıyor — sayfa içi bölüm navigasyonu admin ana sol menüsüyle karışıp kafa karıştırıyordu. Sıralama/düzenleme/silme/yorum aksiyonlarının hepsi aynen çalışmaya devam ediyor; sadece sayfa düzeni sadeleşti. Ayrıca akordeon kartların kapalı başlaması gerektiği netleştirildi (kod zaten doğruydu, canlıda eski build çalıştığı için görünmüyordu — bu iş kapsamında yeni bir yayın tetiklendi).",
+      "Build'i her seferinde başarısız kılan iki teknik sorun düzeltildi: (1) Türkçe metin denetim script'i (verify-text-encoding.mjs) docs/reference-clones/ altındaki dondurulmuş üçüncü parti referans kodunu da tarıyordu, oradaki Almanca karakterleri mojibake sanıp build'i durduruyordu — bu klasör artık taramanın dışında. (2) Görsel optimizasyon eklentisi (vite-plugin-image-optimizer) svgo paketi eksik olduğu için SVG optimizasyonunu sessizce atlayıp hata basıyordu — eksik bağımlılık eklendi. Bu ikisi tamamen geliştirici/altyapı tarafı; kullanıcıya görünen bir değişiklik yok ama artık build'ler güvenilir şekilde tamamlanıyor.",
+    ],
+  },
+  {
     id: "20260718-prompt-katalogu-repo-uyumlu-senkron",
     date: "18 Temmuz 2026",
     title: "Sosyal paylaşım görsel prompt kataloğu CorteQS'e özel içerikle güncellendi, mükerrer dosyalar temizlendi",
