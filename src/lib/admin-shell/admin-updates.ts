@@ -14,6 +14,19 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260719-revizyon-listesi-51-madde-triyaj",
+    date: "19 Temmuz 2026",
+    title: "Revizyon İstekleri listesindeki 51 madde tek tek gözden geçirildi: 10 tanesi kapatıldı",
+    items: [
+      "/admin/revision-requests sayfasındaki 51 açık maddenin tamamı — hem 12 Haziran'daki ilk liste hem 17-18 Temmuz'daki ek liste — kod üzerinden tek tek kontrol edildi: her madde hâlâ geçerli mi, zaten çözülmüş mü, yoksa artık var olmayan bir ekrana mı ait, netleştirildi.",
+      "6 madde 'Yapıldı' olarak işaretlendi çünkü kodda zaten karşılandıkları doğrulandı: Cadde paylaşım kutusunun etiketi zaten 'Caddede Paylaş' (şikayetteki 'Paylaşım Oluştur' değil), Hoşgeldin Paketi formu hatasız ve eksiksiz çalışıyor, 'Ağın 5 Katmanı' başlığı zaten 'Ağın 6 Katmanı' olmuş, kategori sıralaması zaten istenen sırada (Uzmanlar-İşletmeler-Kuruluşlar-Topluluklar-Şehir Elçileri-İnsanlar), ana sayfadaki 'Şehir Elçileri' kartı zaten doğru filtrelenmiş şehir elçisi listesine gidiyor, Çarşı'daki boş-kategori metni zaten güncel haline yakın.",
+      "4 madde 'İptal' olarak işaretlendi çünkü ait oldukları ekran artık yok: bu maddeler 18 Haziran'da değiştirilen eski ana sayfa tasarımına (Index.tsx / DiasporaSearchBar) aitti — 'Şehir Elçisi araması sonrası tüm dizin geliyor', 'Taşınma Motoru tıklanınca Cadde'ye gidiyor', '8 Kıta' metni ve HERO'daki klişe yazım hatası. Yeni ana sayfa (LandingTrialPage) bu ekranların hiçbirini kullanmıyor; sorunun kendisi artık üretilemiyor.",
+      "Kalan 34 madde kod incelemesiyle hâlâ açık/geçerli olarak doğrulandı (ör. Cadde kafe kapasite seçenekleri, kafe 'tema' alanının aslında kategori olması, Cadde'deki WhatsApp geri bildirim linki, 'Aktif Cafe Özeti' başlığı, Çarşı ve Cadde paylaşımında foto/video desteğinin eksikliği) — bunlar listede açık kalmaya devam ediyor, sırayla ele alınacak.",
+      "7 madde için kod okuması yeterli kanıt vermedi (ör. sayfa yenilenince kayan scroll davranışı, öznel 'Excel gibi duruyor' tasarım eleştirisi) — bunlar görsel/manuel test gerektiriyor, şimdilik durumları değişmedi.",
+      "Bu iş yalnızca veritabanındaki durum (status) alanlarını güncelledi — kod değişikliği yapılmadı, deploy gerekmiyor.",
+    ],
+  },
+  {
     id: "20260719-brainstorming-tek-sutun-akis-ve-build-fix",
     date: "19 Temmuz 2026",
     title: "Brainstorming sayfası tek sütun akışa döndü + build'i kıran iki hata giderildi",

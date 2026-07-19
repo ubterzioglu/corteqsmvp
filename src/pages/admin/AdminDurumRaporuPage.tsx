@@ -64,6 +64,16 @@ interface UpdateNote {
 const UPDATES: UpdateNote[] = [
   {
     date: "19 Temmuz 2026",
+    title: "Revizyon İstekleri listesindeki 51 madde tek tek gözden geçirildi: 10 tanesi kapatıldı",
+    lines: [
+      "/admin/revision-requests sayfasındaki 51 açık madde (12 Haziran + 17-18 Temmuz listeleri) kod üzerinden tek tek kontrol edildi: hâlâ geçerli mi, zaten çözülmüş mü, yoksa artık var olmayan bir ekrana mı ait.",
+      "6 madde 'Yapıldı' işaretlendi — kodda zaten karşılanmışlardı: Cadde paylaşım etiketi, Hoşgeldin Paketi formu, 'Ağın 6 Katmanı' başlığı, kategori sıralaması, ana sayfa 'Şehir Elçileri' kartının doğru filtreye gitmesi, Çarşı boş-kategori metni.",
+      "4 madde 'İptal' işaretlendi — 18 Haziran'da değişen eski ana sayfa tasarımına (Index.tsx/DiasporaSearchBar) aitlerdi ve yeni ana sayfada (LandingTrialPage) o ekranlar artık yok: eski Şehir Elçisi arama bug'ı, Taşınma Motoru yönlendirme bug'ı, '8 Kıta' metni, HERO klişesi.",
+      "Kalan 34 madde hâlâ açık ve geçerli olarak doğrulandı (Cadde kafe kapasitesi, kafe tema alanı, WhatsApp geri bildirim linki, foto/video paylaşım eksikliği vb.); 7 madde görsel/manuel test gerektirdiği için şimdilik değerlendirilemedi. Bu iş sadece veritabanı durumunu güncelledi, deploy gerekmiyor.",
+    ],
+  },
+  {
+    date: "19 Temmuz 2026",
     title: "Brainstorming sayfası tek sütun akışa döndü + build'i kıran iki hata giderildi",
     lines: [
       "/admin/brainstorming sayfasındaki ayrı sol bölüm seçim paneli kaldırıldı; artık her bölüm başlığı, konu satırları ve yorum akışı eski /statusreport3006 sayfasındaki gibi tek sütunda art arda akıyor. Sıralama/düzenleme/silme/yorum aksiyonları aynen çalışıyor. Akordeon kartların kapalı başlaması gerektiği netleştirildi (kod doğruydu, canlıda eski build çalıştığı için görünmüyordu — yeni bir yayın tetiklendi).",
