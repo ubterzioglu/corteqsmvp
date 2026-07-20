@@ -27,6 +27,11 @@ describe("parseBurakImageFilename", () => {
     expect(parseBurakImageFilename("832.png")).toEqual({ toolOrder: 8, variant: 3, promptNo: 2 });
   });
 
+  it("prefers the explicit variant-digit interpretation over a 2-digit toolOrder", () => {
+    expect(parseBurakImageFilename("121.png")).toEqual({ toolOrder: 1, variant: 2, promptNo: 1 });
+    expect(parseBurakImageFilename("122.png")).toEqual({ toolOrder: 1, variant: 2, promptNo: 2 });
+  });
+
   it("parses 4-digit filenames for 2-digit tool numbers with explicit variant", () => {
     expect(parseBurakImageFilename("1221.png")).toEqual({ toolOrder: 12, variant: 2, promptNo: 1 });
     expect(parseBurakImageFilename("1222.png")).toEqual({ toolOrder: 12, variant: 2, promptNo: 2 });

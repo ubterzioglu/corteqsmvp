@@ -32,14 +32,22 @@ export function parseBurakImageFilename(filename) {
     const secondDigit = Number(digits[1]);
     const twoDigitToolOrder = Number(digits.slice(0, 2));
 
-    // Try <T'><P> interpretation first (prefer 2-digit toolOrder if valid)
+    // Try <T><V><P> interpretation first (explicit variant marker takes priority)
+    // Only if secondDigit is 2 or 3 (valid variant marker)
+    if (secondDigit === 2 || secondDigit === 3) {
+      if (firstDigit >= 1 && firstDigit <= 9) {
+        return { toolOrder: firstDigit, variant: secondDigit, promptNo: lastDigit };
+      }
+    }
+
+    // Try <T'><P> interpretation (2-digit toolOrder with variant=1)
     if (twoDigitToolOrder >= 10 && twoDigitToolOrder <= 12) {
       return { toolOrder: twoDigitToolOrder, variant: 1, promptNo: lastDigit };
     }
 
-    // Try <T><V><P> interpretation (single-digit toolOrder with explicit variant)
-    if (firstDigit >= 1 && firstDigit <= 9 && secondDigit >= 1 && secondDigit <= 3) {
-      return { toolOrder: firstDigit, variant: secondDigit, promptNo: lastDigit };
+    // Try <T><V><P> interpretation with variant=1 (secondDigit=1)
+    if (secondDigit === 1 && firstDigit >= 1 && firstDigit <= 9) {
+      return { toolOrder: firstDigit, variant: 1, promptNo: lastDigit };
     }
 
     return null;
