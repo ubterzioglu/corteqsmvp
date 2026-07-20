@@ -64,6 +64,16 @@ interface UpdateNote {
 const UPDATES: UpdateNote[] = [
   {
     date: "20 Temmuz 2026",
+    title: "Burak'ın 14 görseli otomatik yükleme script'i yazıldı ve idempotency hatası giderildi",
+    lines: [
+      "Bir önceki kayıtta sadece hazırlık aşamasında olan toplu yükleme script'i (scripts/seed-burak-share-images.mjs) bugün gerçekten yazıldı: 14 görseli dosya adından çözüp doğru araç/varyant/prompt slotuna, Supabase Storage'a ve ilgili tablolara otomatik yüklüyor.",
+      "Dosya adı çözücüde bir kenar durumu hatası düzeltildi: 2 haneli araç sırası ile açık varyant hanesi karışabiliyordu; artık açık varyant hanesi öncelikli okunuyor.",
+      "Script'i tekrar çalıştırınca aynı görseli iki kez eklemesi gereken idempotency kontrolünde hata bulunup düzeltildi (dosya yolu karşılaştırması eksikti) — script artık güvenle birden fazla kez çalıştırılabilir.",
+      "Script'in canlı veritabanına karşı gerçek çalıştırılması bu adımda yapılmadı — sadece kod yazıldı ve testlerle doğrulandı.",
+    ],
+  },
+  {
+    date: "20 Temmuz 2026",
     title: "BURAK BURAYA BAK bölümü için 14 görsel repoya eklendi + otomatik yükleme script'inin altyapısı hazırlandı",
     lines: [
       "Burak'ın hazırladığı 14 ChatGPT görseli (dosya adı olarak hangi araç/varyant/prompt'a ait olduğunu kodlayan sayısal isimlerle) depoya eklendi. Görseller henüz veritabanına/admin paneline yüklenmedi — sadece kaynak dosyalar hazır bekliyor.",

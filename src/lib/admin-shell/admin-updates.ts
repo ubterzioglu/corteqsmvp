@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260720-burak-share-gorsel-seed-script-tamamlandi",
+    date: "20 Temmuz 2026",
+    title: "Burak'ın 14 görseli otomatik yükleme script'i yazıldı ve idempotency hatası giderildi",
+    items: [
+      "Bir önceki kayıtta sadece hazırlık/tasarım aşamasında olan toplu yükleme script'i (scripts/seed-burak-share-images.mjs) bugün gerçekten yazıldı: docs/social-share-outputs/ altındaki 14 görseli dosya adından çözüp (parseBurakImageFilename) doğru araç/varyant/prompt slotuna, Supabase Storage'daki 'burak-share' deposuna ve ilgili veritabanı tablolarına otomatik yüklüyor.",
+      "Dosya adı çözücüde bir kenar durumu hatası bulunup düzeltildi: 2 haneli araç sırası (ör. '11') ile açık varyant hanesi karışabiliyordu; artık açık varyant hanesi her zaman öncelikli okunuyor, testlerle doğrulandı.",
+      "Script ilk çalıştırıldığında bir idempotency (tekrar çalıştırınca aynı görseli iki kez eklememe) hatası fark edildi: aynı slota ait ek görselleri karşılaştırırken tam dosya yolu yerine sadece dosya adının bir kısmı karşılaştırılıyordu, bu da bazı görsellerin yanlışlıkla 'zaten var' sayılıp atlanmasına yol açabiliyordu. Karşılaştırma mantığı düzeltildi — script artık güvenle birden fazla kez çalıştırılabilir, hep aynı sonucu verir.",
+      "Bu adımda script'in canlı veritabanına karşı gerçek çalıştırılması yapılmadı — sadece kod yazıldı ve testlerle doğrulandı. Görsellerin admin panelinde görünmesi için script'in çalıştırılması gerekiyor.",
+    ],
+  },
+  {
     id: "20260720-burak-share-gorsel-seed-hazirligi",
     date: "20 Temmuz 2026",
     title: "BURAK BURAYA BAK bölümü için 14 görsel repoya eklendi + otomatik yükleme script'inin altyapısı hazırlandı",
