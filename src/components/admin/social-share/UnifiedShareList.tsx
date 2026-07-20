@@ -269,8 +269,8 @@ function UnifiedAccordionItem({
                     const promptNo = promptIndex + 1;
                     const promptId = `${idPrefix}-image-${promptNo}`;
                     const simpleLabel = singleVariant
-                      ? `${displayOrder}_${promptNo}`
-                      : `${displayOrder}_${variantNo}_${promptNo}`;
+                      ? `${displayOrder} ${promptNo}`
+                      : `${displayOrder} ${variantNo} ${promptNo}`;
                     return (
                       <Card key={promptId}>
                         <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-3">
