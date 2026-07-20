@@ -32,7 +32,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { BurakMediaPanel } from "@/components/admin/social-share/BurakMediaPanel";
@@ -358,11 +357,7 @@ function UnifiedAccordionItem({
                       </Button>
                     </CardHeader>
                     <CardContent>
-                      <Textarea
-                        readOnly
-                        value={variant.linkedinPost}
-                        className="min-h-[220px] resize-y text-sm"
-                      />
+                      <Input readOnly value={variant.linkedinPost} className="text-xs" />
                     </CardContent>
                   </Card>
 
@@ -387,11 +382,7 @@ function UnifiedAccordionItem({
                       </Button>
                     </CardHeader>
                     <CardContent>
-                      <Textarea
-                        readOnly
-                        value={variant.instagramPost}
-                        className="min-h-[220px] resize-y text-sm"
-                      />
+                      <Input readOnly value={variant.instagramPost} className="text-xs" />
                     </CardContent>
                   </Card>
 
@@ -416,11 +407,7 @@ function UnifiedAccordionItem({
                       </Button>
                     </CardHeader>
                     <CardContent>
-                      <Textarea
-                        readOnly
-                        value={variant.redditPost}
-                        className="min-h-[220px] resize-y text-sm"
-                      />
+                      <Input readOnly value={variant.redditPost} className="text-xs" />
                     </CardContent>
                   </Card>
                 </div>
