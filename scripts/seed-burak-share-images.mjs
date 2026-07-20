@@ -102,9 +102,27 @@ async function run() {
   if (extrasError) {
     throw new Error(`Mevcut ek görseller okunamadı: ${extrasError.message}`);
   }
-  const existingExtraPaths = new Set(
-    (existingExtras ?? []).map((row) => `${row.slot_key}::${path.basename(row.image_path)}`),
-  );
+  const existingExtraBasenamesBySlot = new Map();
+  for (const row of existingExtras ?? []) {
+    const basenames = existingExtraBasenamesBySlot.get(row.slot_key) ?? new Set();
+    basenames.add(path.basename(row.image_path));
+    existingExtraBasenamesBySlot.set(row.slot_key, basenames);
+  }
+
+  function hasExistingExtra(slotKey, filename) {
+    const basenames = existingExtraBasenamesBySlot.get(slotKey);
+    if (!basenames) return false;
+    for (const basename of basenames) {
+      if (basename.endsWith(filename)) return true;
+    }
+    return false;
+  }
+
+  function rememberExtra(slotKey, storagePath) {
+    const basenames = existingExtraBasenamesBySlot.get(slotKey) ?? new Set();
+    basenames.add(path.basename(storagePath));
+    existingExtraBasenamesBySlot.set(slotKey, basenames);
+  }
 
   let coverUploaded = 0;
   let coverSkipped = 0;
@@ -148,8 +166,7 @@ async function run() {
         filledCoverSlots.add(slotKey);
         console.log(`Kapak yüklendi: ${item.filename} → ${slotKey}`);
       } else {
-        const dedupeKey = `${slotKey}::${item.filename}`;
-        if (existingExtraPaths.has(dedupeKey)) {
+        if (hasExistingExtra(slotKey, item.filename)) {
           extraSkipped += 1;
           console.log(`Atlandı (zaten var ek görsel): ${item.filename} → ${slotKey}`);
           continue;
@@ -171,7 +188,7 @@ async function run() {
         if (insertError) throw new Error(insertError.message);
 
         extraUploaded += 1;
-        existingExtraPaths.add(dedupeKey);
+        rememberExtra(slotKey, storagePath);
         console.log(`Ek görsel yüklendi: ${item.filename} → ${slotKey}`);
       }
     } catch (error) {
