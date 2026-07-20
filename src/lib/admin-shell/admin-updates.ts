@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260720-burak-share-gorsel-canliya-yuklendi-ve-radar-tarama-tetikleme",
+    date: "20 Temmuz 2026",
+    title: "Burak'ın 32 görseli canlıya yüklendi; bir yükleme hatası tespit edilip düzeltildi; haber tarayıcı elle tetiklenebilir hale getirildi",
+    items: [
+      "Daha önce sadece koda hazır bekleyen görsel yükleme script'i bugün gerçekten canlı veritabanına karşı çalıştırıldı: docs/social-share-outputs/ altındaki 32 görselin tamamı (14 değil, sayı 32'ye çıkmıştı) doğru araç/varyant/prompt slotuna, 'burak-share' Storage deposuna ve ilgili tablolara başarıyla yüklendi. Artık /admin/social-share-vault sayfasında BURAK BURAYA BAK bölümündeki ilgili kartların altında bu görseller görünüyor.",
+      "İlk çalıştırmada script'in 'tekrar çalıştırınca aynı görseli iki kez ekleme' korumasında gerçek bir hata bulundu: ek görseller doğru şekilde 'zaten var' diye tanınamıyordu, bu yüzden test sırasında bazı görseller yanlışlıkla 2-3 kez veritabanına eklendi (18 fazladan kayıt). Bu fazlalıklar tespit edilip, her slotta en eski (ilk yüklenen) kayıt tutularak fazlalıklar hem veritabanından hem depolama alanından temizlendi — hiçbir görsel kaybolmadı, sadece kopyalar silindi. Ardından script'teki hata da kalıcı olarak düzeltildi ve canlıda tekrar test edilerek artık güvenle tekrar tekrar çalıştırılabildiği doğrulandı.",
+      "Haber Radarı'nın arka plandaki tarama işlemini (radar-news-scan) günlük otomatik çalışmasının dışında istenildiğinde elle tetikleyebilmek için bir erişim anahtarı (cron secret) yeniden oluşturulup hem Supabase'e hem projenin yerel ayarlarına kaydedildi; fonksiyonun bu anahtarla dışarıdan çağrılabilmesi için küçük bir dağıtım (deploy) ayarı güncellendi. Yapılan test taramasında 6 kaynaktan 65 yeni haber bulunup kuyruğa eklendi (2 kaynak o an geçici olarak yanıt vermedi, sorun değil — bir sonraki taramada tekrar denenir). Kullanıcıya görünen bir arayüz değişikliği yok, bu tamamen bakım/altyapı işlemi.",
+      "Ayrıca proje için kullanılan bir yapay zeka servis anahtarı (Gemini) ve Supabase yönetim erişim anahtarı güncellendi — eskisi süresi dolmuş/geçersiz durumdaydı.",
+    ],
+  },
+  {
     id: "20260720-burak-share-gorsel-seed-script-tamamlandi",
     date: "20 Temmuz 2026",
     title: "Burak'ın 14 görseli otomatik yükleme script'i yazıldı ve idempotency hatası giderildi",

@@ -64,6 +64,16 @@ interface UpdateNote {
 const UPDATES: UpdateNote[] = [
   {
     date: "20 Temmuz 2026",
+    title: "Burak'ın 32 görseli canlıya yüklendi; bir yükleme hatası tespit edilip düzeltildi; haber tarayıcı elle tetiklenebilir hale getirildi",
+    lines: [
+      "Daha önce sadece koda hazır bekleyen görsel yükleme script'i bugün gerçekten canlı veritabanına karşı çalıştırıldı: 32 görselin tamamı (14 değil, sayı 32'ye çıkmıştı) doğru araç/varyant/prompt slotuna, 'burak-share' Storage deposuna ve ilgili tablolara başarıyla yüklendi. Artık BURAK BURAYA BAK bölümündeki ilgili kartların altında bu görseller görünüyor.",
+      "İlk çalıştırmada script'in 'tekrar çalıştırınca aynı görseli iki kez ekleme' korumasında gerçek bir hata bulundu: ek görseller doğru tanınamıyordu, test sırasında bazı görseller yanlışlıkla 2-3 kez eklendi (18 fazladan kayıt). Fazlalıklar tespit edilip her slotta en eski kayıt tutularak temizlendi — hiçbir görsel kaybolmadı. Script'teki hata kalıcı olarak düzeltildi ve canlıda tekrar test edilerek artık güvenle tekrar tekrar çalıştırılabildiği doğrulandı.",
+      "Haber Radarı'nın arka plandaki tarama işlemini istenildiğinde elle tetikleyebilmek için bir erişim anahtarı yeniden oluşturulup kaydedildi; test taramasında 6 kaynaktan 65 yeni haber bulunup kuyruğa eklendi.",
+      "Ayrıca proje için kullanılan bir yapay zeka servis anahtarı (Gemini) ve Supabase yönetim erişim anahtarı güncellendi — eskisi süresi dolmuş/geçersiz durumdaydı.",
+    ],
+  },
+  {
+    date: "20 Temmuz 2026",
     title: "Burak'ın 14 görseli otomatik yükleme script'i yazıldı ve idempotency hatası giderildi",
     lines: [
       "Bir önceki kayıtta sadece hazırlık aşamasında olan toplu yükleme script'i (scripts/seed-burak-share-images.mjs) bugün gerçekten yazıldı: 14 görseli dosya adından çözüp doğru araç/varyant/prompt slotuna, Supabase Storage'a ve ilgili tablolara otomatik yüklüyor.",
