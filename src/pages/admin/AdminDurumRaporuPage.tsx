@@ -64,6 +64,15 @@ interface UpdateNote {
 const UPDATES: UpdateNote[] = [
   {
     date: "20 Temmuz 2026",
+    title: "BURAK BURAYA BAK bölümü için 14 görsel repoya eklendi + otomatik yükleme script'inin altyapısı hazırlandı",
+    lines: [
+      "Burak'ın hazırladığı 14 ChatGPT görseli (dosya adı olarak hangi araç/varyant/prompt'a ait olduğunu kodlayan sayısal isimlerle) depoya eklendi. Görseller henüz veritabanına/admin paneline yüklenmedi — sadece kaynak dosyalar hazır bekliyor.",
+      "Sayısal dosya adlarını (araç, varyant, prompt numarası) otomatik çözen bir yardımcı fonksiyon (parseBurakImageFilename) yazıldı ve 12 senaryoyla test edildi. Bu, bir sonraki adımda yazılacak toplu yükleme script'inin temeli.",
+      "14 görseli Supabase Storage'a ve ilgili tablolara otomatik işleyecek script için ayrıntılı bir uygulama planı hazırlandı — script'in kendisi henüz yazılmadı, bu tamamen hazırlık aşaması. Kullanıcıya görünen bir değişiklik yok, deploy gerekmiyor.",
+    ],
+  },
+  {
+    date: "20 Temmuz 2026",
     title: "Sosyal Medya Paylaşım Deposu'na birden fazla görsel desteği geldi + kartlar kompaktlaştı",
     lines: [
       "Her kalem/varyanta artık kapak görselinin yanına sınırsız sayıda ek görsel eklenebiliyor (küçük resim galerisi, tek tek silinebilir). Yeni social_share_asset_images tablosu canlıda oluşturuldu ve doğrulandı; mevcut tekli kapak görseli sistemiyle birlikte çalışıyor.",

@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260720-burak-share-gorsel-seed-hazirligi",
+    date: "20 Temmuz 2026",
+    title: "BURAK BURAYA BAK bölümü için 14 görsel repoya eklendi + otomatik yükleme script'inin altyapısı hazırlandı",
+    items: [
+      "Burak'ın hazırladığı 14 ChatGPT görseli (docs/social-share-outputs/ altına, dosya adı olarak hangi araç/varyant/prompt'a ait olduğunu kodlayan sayısal isimlerle, ör. 101.png, 1221.png) depoya eklendi. Bu görseller henüz veritabanına/admin paneline YÜKLENMEDİ — sadece kaynak dosyalar depoda hazır bekliyor.",
+      "Bu sayısal dosya adlarını (hangi araç, hangi varyant, hangi prompt numarası olduğunu) otomatik çözen küçük bir yardımcı fonksiyon (parseBurakImageFilename) yazıldı ve testlerle doğrulandı (12 senaryo: 2, 3 ve 4 haneli dosya adları + geçersiz adlar). Bu fonksiyon, bir sonraki adımda yazılacak toplu yükleme script'inin temelini oluşturuyor.",
+      "14 görselin tamamını Supabase Storage'a ('burak-share' deposu) ve ilgili veritabanı tablolarına otomatik işleyecek script için ayrıntılı bir uygulama planı hazırlandı (docs/superpowers/plans/) — script'in kendisi henüz yazılmadı, bu tamamen hazırlık/tasarım aşaması.",
+      "Kullanıcıya görünen hiçbir değişiklik yok; bu iş sadece bir sonraki adımın (görsellerin admin panelinde görünmesi) altyapısını hazırlıyor. Kod/veritabanı canlıya etki etmedi, deploy gerekmiyor.",
+    ],
+  },
+  {
     id: "20260720-coklu-gorsel-ve-kompakt-kart-gorunumu",
     date: "20 Temmuz 2026",
     title: "Sosyal Medya Paylaşım Deposu'na birden fazla görsel desteği geldi + kartlar kompaktlaştı",
