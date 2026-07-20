@@ -70,7 +70,11 @@ CorteQS diye bir platformda kariyer, bütçe ve yaşam tarzı tercihlerine göre
 
 Böyle bir testin gerçekten anlamlı bir sıralama üretebileceğini düşünüyor musunuz, yoksa sonuçta ülke seçimi o kadar çok kişisel/durumsal faktöre bağlı ki hiçbir test bunu gerçekten yakalayamaz mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -101,7 +105,11 @@ Sağlık, güvenlik, dil, iş piyasası gibi faktörleri girip "senin için en u
 
 Yurt dışına çıkmadan önce bu tür faktörleri sistematik karşılaştıran biri var mı, yoksa herkes gibi siz de tek tek forum/blog okuyarak mı karar verdiniz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -132,7 +140,11 @@ Bütçe, dil, vize durumu ve kişisel öncelikleri girip en uygun 3 ülkeyi öne
 
 Böyle bir çerçevede karar vermiş olan var mı? Sonuçta gerçek hayatta işe yaradı mı yoksa kağıt üstünde iyi görünüp pratikte fark yaratmadı mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -172,7 +184,11 @@ CorteQS'te mesleğini ve deneyimini girince Berlin, Toronto gibi farklı şehir/
 
 Böyle maaş karşılaştırma araçlarını ciddiye alıyor musunuz, yoksa gerçek teklif gelene kadar hepsi kabaca tahmin mi kalıyor? Kendi deneyiminizde tahminler ne kadar tutarlı çıktı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -203,7 +219,11 @@ CorteQS'in maaş aracı sadece brüt rakamı değil, o ülkedeki yaşam maliyeti
 
 Gerçekten taşınmış olanlar: sizce bu tür hesaplamalar taşınmadan önce ne kadar isabetli çıkıyor? Hangi kalemi hep eksik hesaplıyoruz (kira, vergi, sağlık sigortası vs.)?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -234,7 +254,11 @@ CorteQS'te yazılımcıdan hemşireye, mühendisten öğretmene kadar farklı me
 
 Sizin mesleğinizde yurt dışına geçiş kolay mı oldu, yoksa maaş farkı kağıt üstünde iyi görünüp denklik/lisans süreçlerinde tıkanan bir tür mü?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -274,7 +298,11 @@ CorteQS'te finans, dil, destek ağı ve risk toleransını 5 soruyla puanlayıp 
 
 Böyle bir öz-değerlendirme testi kullanan oldu mu, sonuç sizi gerçekten şaşırttı mı yoksa zaten bildiğiniz şeyleri mi söyledi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -305,7 +333,11 @@ CorteQS'in hazırlık testi cesaretin yetip yetmediğini değil, pratik durumunu
 
 Taşınmadan önce kendinizi objektif değerlendirdiniz mi, yoksa direkt atlayıp yolda mı öğrendiniz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -336,7 +368,11 @@ CorteQS'in testi "taşınmanın en zor kısmı bavul değil, hazır olmak" diyer
 
 Bu tür çok boyutlu öz-değerlendirme testlerine güveniyor musunuz, yoksa sonuçta "git yaşa gör" demekten farksız mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -376,7 +412,11 @@ CorteQS'te "ülkeni seçtin, peki hangi şehir?" diye ayrı bir test var — iş
 
 Aynı ülke içinde şehir seçiminin gerçekten bu kadar büyük fark yarattığını düşünüyor musunuz? Yanlış şehri seçip pişman olan ya da tam tersi "doğru şehir her şeyi değiştirdi" diyen var mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -407,7 +447,11 @@ CorteQS'in şehir eşleştirme aracı "ülke büyük ama hayatın bir şehirde k
 
 Siz şehir seçerken hangi tek kritere en çok ağırlık verdiniz? Sonradan "keşke şuna daha çok önem verseydim" dediğiniz oldu mu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -438,7 +482,11 @@ CorteQS'te iş piyasası, kültür, Türk topluluğu büyüklüğü ve kira sevi
 
 Küçük ya da hiç Türk topluluğu olmayan bir şehirde yaşayanlar var mı, deneyiminiz nasıldı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -478,7 +526,11 @@ CorteQS'te mesleğine, şehrine ve ihtiyacına göre sana mentor, iş bağlantı
 
 Yeni bir şehre taşınırken mentor/yol arkadaşı bulma konusunda organik yollar mı (Facebook grupları, tanıdıklar) yoksa bu tür yapılandırılmış eşleştirme sistemleri mi daha işe yaradı sizin için?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -509,7 +561,11 @@ CorteQS'te profil listesini kendin taramak yerine bir kutuya ne aradığını ya
 
 Böyle bir sistemde arama yapan oldu mu — yazdığınız şeyle gerçekten alakalı sonuçlar mı geldi, yoksa anahtar kelime eşleşmesinden öteye geçmedi mi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -540,7 +596,11 @@ CorteQS'in eşleştiricisi hem "mentor arıyorum" hem "mentor olabilirim" taraf�
 
 Bu tür bir dengesizlik yaşayan ya da tam tersi iyi işleyen bir mentor/dayanışma ağı deneyimi olan var mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -580,7 +640,11 @@ CorteQS'te yurt dışında hangi kariyer yönünün sana uygun olduğunu analiz 
 
 Yön arayan öğrenciler/yeni mezunlar: bu kararı nasıl verdiniz, tek bir yol mu seçtiniz yoksa zamanla karışık bir şey mi oldu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -611,7 +675,11 @@ CorteQS'in kariyer testi "yetenekli olmak yetmez, doğru yöne gitmek gerekir" d
 
 Yurt dışında kariyer değiştirenler: risk toleransınız kararınızı gerçekten değiştirdi mi, yoksa sonunda hepiniz aynı mantıklı yolu mu seçtiniz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -642,7 +710,11 @@ CorteQS'in Kariyer Yolu Aracı becerilerini ve hedeflerini eşleştirip "sana ö
 
 Böyle bir kariyer testi/rehberlik aracı kullanıp "hiç düşünmediğim bir yol" önerisi alan oldu mu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -682,7 +754,11 @@ CorteQS diye bir sitede "Küresel Networker" mi "Sakin Yerli" mi gibi tiplere ay
 
 Böyle bir test yapıp sonucu gerçekten kendine uygun bulan var mı, yoksa hepimiz "beklenmedik" bir sonuç mu alıyoruz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -713,7 +789,11 @@ CorteQS'te gece hayatı/sakin kafeler, solo gezi/tur gibi tercihlerine göre bir
 
 Sizin expat/gurbet tarzınız hangisine daha yakın — gece hayatı tipi mi, sakin/ev odaklı tip mi? Yoksa zamanla değişti mi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -744,7 +824,11 @@ CorteQS'in yaşam tarzı testi "aynı şehirde yaşayıp bambaşka hayatlar kura
 
 Kendinizi hangi tipe yakın buluyorsunuz, yoksa zamanla bir tipten diğerine mi geçtiniz (mesela ilk yıl Macera Avcısı, sonra Huzurlu Yerli gibi)?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -784,7 +868,11 @@ CorteQS'te yeni gelenler için ilk 90 günde yapılması gerekenleri sıralayan 
 
 Yeni taşındığınızda ilk 90 günde en çok neyi geç fark ettiniz / keşke daha erken halletseydim dediniz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -815,7 +903,11 @@ CorteQS'in planlayıcısı birkaç soruyla sana özel, zaman bazlı bir yerleşm
 
 Kendi ilk 90 gününüzü planlı mı geçirdiniz yoksa işler zaten randevu/bürokrasi sırasına göre kendiliğinden mi dizildi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -846,7 +938,11 @@ CorteQS'in İlk 90 Gün Planlayıcı'sı bürokratik işlerin yanına sosyal çe
 
 Yeni bir yerde sosyal çevre kurmayı gerçekten "planlı" mı yaptınız, yoksa kendiliğinden mi oluştu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -886,7 +982,11 @@ CorteQS'te taşınırken kafanı en çok karıştıran şeyi belirleyip "önce b
 
 Siz taşınırken gerçekten tek bir "ana engel" yaşadınız mı, yoksa hepsi iç içe mi geçti?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -917,7 +1017,11 @@ CorteQS'in bu testi kısa bir anketle en kritik engelini (vize evrakı, iş aram
 
 Taşınma sürecinde önceliklerinizi nasıl belirlediniz — sezgisel mi gitti yoksa gerçekten sistematik bir sıralama mı yaptınız?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -948,7 +1052,11 @@ CorteQS'in testi taşınma sürecindeki en büyük tek zorluğunu bulup ona öze
 
 Böyle hızlı testlerden aldığınız önerinin gerçekten işinize yaradığı oldu mu, yoksa hep "zaten bildiğim şeyi söyledi" dediniz mi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -988,7 +1096,11 @@ CorteQS'te becerilerini, dilini ve sektör talebini girince hedef ülkede iş bu
 
 Yurt dışında iş ararken sizce beceri/dil seviyesi mi yoksa network/şans mı daha belirleyici oldu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -1019,7 +1131,11 @@ CorteQS'in aracı yeteneklerini hedef pazarın talebiyle karşılaştırıp nere
 
 İş ararken kendi güçlü/zayıf yönlerinizi önceden mi tahmin ettiniz yoksa mülakat sürecinde mi fark ettiniz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -1050,7 +1166,11 @@ CorteQS'in bu aracı beceri-pazar uyumundan dil seviyene kadar bakıp o ülkede 
 
 Siz yurt dışında iş bulmayı daha çok "doğru strateji" sonucu mu gördünüz yoksa "doğru zamanda doğru yerde olmak" mı belirleyiciydi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },

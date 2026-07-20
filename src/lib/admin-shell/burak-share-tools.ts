@@ -69,7 +69,11 @@ Uzun zamandır ülke seçimi konusunda kararsızım — internette bulduğum ço
 
 Böyle testlerin gerçekten işe yaradığını düşünüyor musunuz, yoksa sonuçta karar hep aynı birkaç ülkeye mi çıkıyor (Almanya, Kanada, Hollanda vs.)? Deneyimi olan var mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -100,7 +104,11 @@ CorteQS'in bir aracı sağlık, güvenlik, dil ve iş piyasası gibi faktörleri
 
 Birden fazla ülkede yaşamış olanlar: aynı maaşla gerçekten en büyük fark neyden kaynaklanıyor sizce, vergi mi, kira mı, yoksa başka bir şey mi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -131,7 +139,11 @@ CorteQS'te bütçe, dil becerisi, vize durumu ve kişisel değerleri hesaba kat�
 
 Göç kararı verirken siz nasıl bir yöntem izlediniz — tablo mu yaptınız, birine mi danıştınız, yoksa böyle bir test/araç kullanan oldu mu? Gerçekten karar netleştiriyor mu yoksa sadece "hoş bir oyun" olarak mı kalıyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -171,7 +183,11 @@ CorteQS'te mesleğini ve deneyimini girip farklı ülkelerdeki maaş aralığın
 
 Yurt dışında çalışanlar: sizce bu tür maaş karşılaştırma verileri gerçeği ne kadar yansıtıyor, yoksa ilan sitelerindeki abartılı rakamlardan mı besleniyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -202,7 +218,11 @@ CorteQS'in maaş karşılaştırma özelliği ham rakamı değil, yaşam maliyet
 
 Bunu deneyimleyen var mı — kağıt üzerinde düşük görünen bir maaşın gerçekte daha "zengin" hissettirdiği bir ülkeye taşınan oldu mu? Merak ediyorum bu hesaplama gerçek hayatta ne kadar tutuyor.
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -233,7 +253,11 @@ CorteQS'te birkaç soruyla mesleğinin farklı ülkelerdeki maaş seviyesini kar
 
 Kendi mesleğinizde yurt dışında beklediğinizden çok farklı bir maaş/talep gören oldu mu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -273,7 +297,11 @@ CorteQS'te finansal durum, dil becerisi, destek ağı ve risk toleransına göre
 
 Taşınmadan önce kendini objektif değerlendirmek için böyle bir test/checklist kullanan var mı? Yoksa sonuçta herkes zaten "param yetmez, param yeter" gibi kabaca kendi kafasında biliyor mu, testin katkısı sınırlı mı kalıyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -304,7 +332,11 @@ CorteQS'in testi finansal birikim ve evrak durumu gibi kalemleri ölçüp net bi
 
 Siz taşınmadan önce kendinizi "hazır" hissettiniz mi, yoksa sonradan mı öyle oldunuz? Böyle bir testin sonucuna göre karar değiştirir miydiniz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -335,7 +367,11 @@ CorteQS'in bir testi finansal güvence, dil, destek ağı ve uyum yeteneğini te
 
 Bana kalırsa insanlar genelde parayı ve evrakı düşünüp "destek ağı" ve "duygusal hazırlık" kısmını çok geç fark ediyor. Sizin deneyiminiz neydi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -375,7 +411,11 @@ CorteQS'te ülkeyi biliyorsan iş fırsatı, iklim, yaşam maliyeti ve oradaki T
 
 Aynı ülke içinde yanlış şehri seçtiği için pişman olan ya da tam tersi "aslında büyük şehri değil küçük şehri seçmeliymişim" diyen var mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -406,7 +446,11 @@ CorteQS'in şehir eşleştirme özelliği kariyer hub'ları, iklim, expat toplul
 
 Herhangi bir şehir öneri aracı kullanıp sonra gerçek kiraların tahminden çok farklı çıktığını gören oldu mu? Meraktan soruyorum, güvenilirlik ne kadar tutuyor.
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -437,7 +481,11 @@ CorteQS'in aracı iş piyasası, şehir büyüklüğü, kültür ve Türk toplul
 
 Aynı ülke içinde şehir değiştirip hayatının bambaşka bir hal aldığını yaşayan var mı? Hangi kriter sizin için en belirleyici oldu — iş mi, topluluk mu, yoksa başka bir şey mi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -477,7 +525,11 @@ CorteQS'te meslek, şehir ve ihtiyacına göre sana mentor ya da iş bağlantıs
 
 Mentor bulma konusunda hangi yöntem sizde işe yaradı — organik mi, yoksa böyle bir eşleştirme aracı mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -508,7 +560,11 @@ CorteQS'te ne sunduğunu ve ne aradığını yazınca alan/şehir/dil uyumuna g�
 
 Yurt dışında yaşayanlara soruyorum: network kurarken en çok zaman kaybettiğiniz kısım neresiydi — doğru kişiyi bulmak mı, yoksa bulduktan sonra güven inşa etmek mi? Çünkü bence araç ilk kısmı çözse bile ikincisi hâlâ zaman alıyor.
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -539,7 +595,11 @@ CorteQS'in bir özelliği ihtiyaçları ve yetenekleri eşleştirip "yeni gelens
 
 Deneyimli olanlara soruyorum: karşılıksız mentorluk yapmaya gerçekten vaktiniz oluyor mu, yoksa iyi niyetle başlayıp sonra sürdürülemez mi hale geliyor? Bu tür platformlarda "veren taraf" genelde tükenmiyor mu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -579,7 +639,11 @@ CorteQS'in testi ilgi alanları ve becerileri analiz edip yurt dışı için bir
 
 Yurt dışında kariyer değiştiren ya da yön belirlerken zorlananlar: siz nasıl karar verdiniz, test mi kullandınız yoksa deneme-yanılma mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -610,7 +674,11 @@ CorteQS'in aracı ilgi alanları, çalışma stili ve risk toleransına göre yu
 
 Kendi risk toleransınızı doğru tahmin ettiniz mi yoksa sonradan "meğer sandığımdan daha temkinliymişim/cesurmuşum" mu dediniz? Kariyer kararında bu ne kadar belirleyici oldu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -641,7 +709,11 @@ CorteQS'in aracı becerilerini ve hedeflerini eşleştirip bu üç yoldan birine
 
 Akademiye devam mı ettiniz, sektöre mi geçtiniz, yoksa girişim mi kurdunuz — ve şimdi geriye dönüp baksanız aynı kararı verir miydiniz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -681,7 +753,11 @@ CorteQS'te 8 soruluk eğlenceli bir test var, gurbetteki yaşam tarzına göre s
 
 Yurt dışında yaşayanlar, siz kendinizi hangi tipe yakın buluyorsunuz — sosyal kelebek mi, sakin/içine kapanık mı, yoksa hepsi karışık mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -712,7 +788,11 @@ CorteQS'in testi bu tür tercihlere bakıp bir "expat kişiliği" rozeti veriyor
 
 Siz taşındıktan sonra sosyal hayatınız/tarzınız değişti mi, yoksa hep aynı kaldı mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -743,7 +823,11 @@ CorteQS'te bu testi denedim (aslında henüz denemedim ama merak ettim), aynı �
 
 Siz kendinizi bu üç tipten hangisine (ya da farklı bir tipe) yakın buluyorsunuz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -783,7 +867,11 @@ CorteQS'te konaklama, banka hesabı, sigorta ve dil kursu gibi işleri kişiye �
 
 Yeni geldiğinizde ilk 90 günde en çok neyi geç fark ettiniz, "keşke önce bunu yapsaymışım" dediğiniz bir şey oldu mu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -814,7 +902,11 @@ CorteQS'in aracı birkaç soruyla kişisel bir yerleşme planı çıkarıyor. "�
 
 Siz taşındığınızda böyle bir zaman çizelgesi takip ettiniz mi, yoksa her şey zaten kendiliğinden karman çorman mı ilerledi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -845,7 +937,11 @@ CorteQS'in planlayıcısı durumuna göre (aile mi tek mi, çalışan mı öğre
 
 Yeni yerleştiğiniz yerde kontrol listesinde hiç yer almayan ama sizi çok uğraştıran bir iş oldu mu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -885,7 +981,11 @@ CorteQS'te vize, dil, iş, konut gibi seçeneklerden hangisinin sizin için en b
 
 Sizin için taşınma sürecinde gerçekten "her şeyi tıkayan" tek bir engel var mıydı, yoksa hepsi iç içe mi geçmişti?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -916,7 +1016,11 @@ CorteQS'in testi kısa sorularla en kritik engeli (vize, iş arama, dil vb.) tes
 
 Taşınma sürecinde "bunu çözmeden diğerleri anlamsız" dediğiniz bir şey oldu mu, yoksa hepsini paralel mi yürüttünüz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -947,7 +1051,11 @@ CorteQS'in testi kısa sürede taşınma sürecindeki bir numaralı zorluğu bel
 
 Siz ilk zorluğunuzu hemen mi fark ettiniz, yoksa aylar sonra mı "aslında asıl sorun buymuş" dediniz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -987,7 +1095,11 @@ CorteQS'in aracı bu üç faktörü girip hedef ülkede iş bulma ihtimalini ve 
 
 Yurt dışında iş ararken sizi en çok şaşırtan şey ne oldu — beklediğinizden kolay mı buldunuz, yoksa CV'niz güçlü olmasına rağmen çok mu zorlandınız?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -1018,7 +1130,11 @@ CorteQS'in aracı yeteneklerini pazar talebiyle eşleştirip nerede eksik kaldı
 
 Kendi alanınızda "böyle bir analiz yapılsa hangi eksiğim çıkardı" diye düşündüğünüzde aklınıza bir şey geliyor mu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -1049,7 +1165,11 @@ CorteQS'in aracı bu iki faktöre bakıp hem bir ihtimal veriyor hem de artırma
 
 Siz iş ararken en çok neyle sonuç aldınız — dil seviyenizi geliştirmek mi, network mü, yoksa daha çok başvuru yapmak mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -1089,7 +1209,11 @@ CorteQS'in aracı Almanya'da kalış süreniz, dil seviyeniz, ücret hassasiyeti
 
 Almanya'da banka değiştirenler: ilk açtığınız hesaptan neden vazgeçtiniz, yoksa hâlâ ilk bankanızda mısınız?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -1120,7 +1244,11 @@ CorteQS'te birkaç soruyla (nakit kullanımı, şube ihtiyacı, yatırım alış
 
 Siz hesap ücretlerini kontrol ettiniz mi, yoksa hâlâ "değiştirmek zahmetli" diye aynı bankada mı kalıyorsunuz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -1151,7 +1279,11 @@ CorteQS'in testi bu üç önceliği tartıp yeni gelenler için bir banka sıral
 
 İlk hesabınızı açarken en çok neye takıldınız — dil bariyeri mi, randevu almak mı, yoksa hangi bankanın "yabancı dostu" olduğunu bilmemek mi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },
@@ -1191,7 +1323,11 @@ CorteQS'in testi çalışma durumu, aile, araç, konut ve risk profiline göre 2
 
 Sonradan "keşke daha önce yaptırsaymışım" dediğiniz bir sigorta oldu mu, yoksa gereksiz yere para verdiğinizi düşündüğünüz bir poliçe var mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -1222,7 +1358,11 @@ CorteQS'in aracı bu dört profil bilgisini alıp 12 sigorta türünü öncelikl
 
 Sigorta seçerken makler mi kullandınız, kendiniz mi araştırdınız, yoksa hâlâ "hangisini yaptırmalıyım" diye kararsız mısınız?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
       {
         imagePrompts: [
@@ -1253,7 +1393,11 @@ CorteQS'in testi bu üç riski merkeze koyup gerçekten ihtiyacınız olan sigor
 
 Ailesi olanlar: sigorta önceliğiniz bekar/tek yaşayanlardan farklı oldu mu, en çok hangi poliçeyi "aile için şart" olarak gördünüz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
       },
     ],
   },

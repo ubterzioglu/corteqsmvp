@@ -14,6 +14,18 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260720-prompt-katalogu-sembolik-illustrasyon-ve-dosya-adi-etiketi",
+    date: "20 Temmuz 2026",
+    title: "Sosyal paylaşım görsel promptları insan-merkezli sembolik illüstrasyon tarzına çevrildi + kartlara dosya adı etiketi eklendi",
+    items: [
+      "Admin panelindeki Sosyal Medya Paylaşım Deposu'nun (/admin/social-share-vault) 4 kaynağındaki (Araç Tanıtımları, Diaspora Postları, Test Araçları, Burak — 100 kalem, 288 görsel promptu) tamamı, ultra-fotogerçekçi fotoğraf tarzından yeni bir görsel dile çevrildi: her sahnede bir insan figürü kompozisyonun duygusal merkezinde kalıyor, etrafında sahneyi anlatan basit yuvarlak sembolik ikonlar (büyüteç, konum iğnesi, tokalaşma, konuşma balonu vb.) bir hâle/yörünge düzeninde beliriyor. Telefon/laptop ekranları artık ana görsel odak değil, ikincil bir aksesuar. LinkedIn/Instagram metinleri değişmedi.",
+      "Kanonik referans dosyası docs/social-share-outputs/prompt-katalogu.html aynı 288 promptla senkronlandı; artık kullanılmayan sonkatalog.html kaynağı depodan kaldırıldı.",
+      "Her 'Görsel Promptu' kartının başlığına, o promptun kaydedileceği gerçek dosya adını (ör. tool-1_p1.png, test-tool-4-v2_p1.png) küçük bir etiket olarak gösteren ek eklendi — üretilen görseli hangi ad ile kaydedeceğini artık kart üzerinden görebiliyorsun, ayrıca dosya adlandırma tablosuna bakmana gerek kalmıyor.",
+      "Aynı 4 kaynaktaki 144 Reddit postunun tamamının sonuna, mevcut kısa link satırı korunarak iki yeni satır eklendi: WhatsApp topluluk linki ve https://corteqs.net/tools — Reddit'ten gelen ilgiyi doğrudan araçlar sayfasına ve topluluğa yönlendirmek için.",
+      "Bu değişiklik yalnızca içerik ve arayüz metni — sayfanın yapısı (dört bölüm, filtre çipleri, medya yükleme paneli) aynı kaldı. tsc/ESLint/UTF-8 metin denetimi/production build temiz. Sitede görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     id: "20260719-revizyon-listesi-51-madde-triyaj",
     date: "19 Temmuz 2026",
     title: "Revizyon İstekleri listesindeki 51 madde tek tek gözden geçirildi: 10 tanesi kapatıldı",

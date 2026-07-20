@@ -140,7 +140,11 @@ Bu ara CorteQS diye bir platforma denk geldim, aynı hasreti taşıyan insanlar�
 
 Sizde de böyle anlar oluyor mu, en çok hangi sıradan şey sizi oraya götürüyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-2",
@@ -179,7 +183,11 @@ Bunu düşünürken CorteQS diye bir siteye rastladım, mantığı şuymuş: ekr
 
 Sizin için görüntülü konuşmalar gerçekten yetiyor mu, yoksa siz de aynı şehirde biri arıyor musunuz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-3",
@@ -216,7 +224,11 @@ CorteQS bu boşluğu doldurmaya çalışan bir platform gibi duruyor, dağınık
 
 Siz de "aynı gökyüzü altındayız" hissini gerçek bir teselli olarak mı yaşıyorsunuz yoksa bu bana biraz naif mi geliyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-4",
@@ -253,7 +265,11 @@ CorteQS diye bir platformda ikinci/üçüncü kuşak için tam da bu "iki dünya
 
 İkinci kuşak olanlar: siz bu "ne oralısın ne buralısın" hissini nasıl bir yere oturttunuz, yoksa hâlâ çözülmemiş bir şey mi sizde de?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-5",
@@ -290,7 +306,11 @@ CorteQS'in kendini biraz da bu dayanışmayı dijital çağa taşıma iddiasıyl
 
 Sizin ailenizde de ilk kuşağın hikayeleri var mı, ve siz bugün onların kurduğu o "bir arada olma" hissini bir şekilde yaşıyor musunuz yoksa tamamen koptu mu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-6",
@@ -327,7 +347,11 @@ Bunu düşünürken CorteQS diye bir platforma denk geldim, mantığı tam da bu
 
 Sizde de böyle küçük ama etkili anlar oldu mu — bir isim telaffuzu, bir espri, bir jest, sizi bir anda rahatlatan?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-7",
@@ -364,7 +388,11 @@ Bunun sebebi gerçekten dağınıklık mı, yoksa herkesin zaten kendi küçük 
 
 Almanya'da yaşayanlar: sizin şehrinizde bu "kalabalık ama izole" hissi var mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-8",
@@ -401,7 +429,11 @@ CorteQS bu dağınık Avrupa diasporasını tek bir ağda toplamaya çalışıyo
 
 Siz başka Avrupa ülkelerindeki Türklerle bir bağlantınız var mı, yoksa herkes gerçekten kendi ülkesinde mi izole yaşıyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-9",
@@ -438,7 +470,11 @@ CorteQS diye bir platform 251 ülkeye yayılmış bu dağınık kitleyi bir yerd
 
 ABD/Kanada/Avustralya/Körfez'de yaşayan var mı burada, oradaki Türk topluluğu deneyiminiz Avrupa'dakilerden nasıl farklı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-10",
@@ -475,7 +511,11 @@ Bu konuda Türkçe etkinlikler ve anne-baba toplulukları arayan biri olarak Cor
 
 Aynı durumu yaşayan var mı, çocuğunuzla Türkçe konuşma çabanız gerçekten işe yarıyor mu yoksa zamanla İngilizce/Almanca ağır mı basıyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-11",
@@ -512,7 +552,11 @@ CorteQS'te Türkçe etkinlikler ve anne-baba toplulukları için bir alan olduğ
 
 Siz üçüncü kuşağa ninni/masal/türkü aktarabiliyor musunuz, yoksa bu iş sizde de ikinci kuşakta mı kesiliyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-12",
@@ -549,7 +593,11 @@ Bu arada bir sofra arkadaşı ya da ev yemeği yapan birini bulmanın da bir ç�
 
 Sizin de "hiç annemin gibi olmuyor" dediğiniz bir yemek var mı, tarifi tam olarak takip etmenize rağmen?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-13",
@@ -586,7 +634,11 @@ Bu tür yerel esnaf/fırın bulma işini kolaylaştıran bir Çarşı/Cadde böl
 
 Sizde de "aslında yemekten çok özlemi arıyorum" dediğiniz böyle bir arayış var mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-14",
@@ -623,7 +675,11 @@ CorteQS'in bayram zamanı şehir bazlı buluşmalar/bayramlaşmaları bir araya 
 
 Gurbette bayramı nasıl geçiriyorsunuz, aynı özlemi paylaşan biriyle bir araya gelebiliyor musunuz yoksa çoğunlukla yalnız mı geçiyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-15",
@@ -660,7 +716,11 @@ Ramazan/Kurban Bayramı gurbette hem dini hem kültürel bir şey benim için, a
 
 Siz gurbette iftar/bayram sofranızı nasıl büyütüyorsunuz, yoksa çoğunlukla küçük aile çevrenizle mi sınırlı kalıyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-16",
@@ -697,7 +757,11 @@ CorteQS gibi platformlarda düğün organizatöründen müzisyene, kına malzeme
 
 Yurt dışında Türk düğünü/kınası organize eden oldu mu, en çok nerede zorlandınız?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-17",
@@ -734,7 +798,11 @@ CorteQS gibi platformların böyle profesyonelleri yeni nesille (mentorluk vs.) 
 
 Kendi çevrenizde/şehrinizde böyle "aslında hiç bilmediğim ama çok başarılı" bir Türk hikayesine denk geldiniz mi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-18",
@@ -771,7 +839,11 @@ CorteQS gibi platformların girişimcileri yatırımcı ve danışmanlarla bulu�
 
 Siz ya da tanıdığınız biri gurbette bir iş kurdu mu, en büyük engel neydi — sermaye mi, ağ mı, yoksa bürokrasi mi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-19",
@@ -808,7 +880,11 @@ Bu süreçte daha önce aynı şehre taşınmış birinden tavsiye almanın ne k
 
 Sizin ilk hafta hikayeniz neydi, en çok neyde zorlandınız ve kim/ne yardımcı oldu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-20",
@@ -845,7 +921,11 @@ CorteQS'in "Şehir Elçisi" diye bir kavramı var, yerel hayata güven inşa ede
 
 Siz taşındığınız şehirlerde böyle bir "elçi" bulabildiniz mi, yoksa her şeyi kendi başınıza mı çözmek zorunda kaldınız?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-21",
@@ -882,7 +962,11 @@ Ama fark ettim ki bu tür yerler genelde ağızdan ağıza ya da tesadüfen bulu
 
 Sizin şehrinizde böyle keşfettiğiniz bir "köşe başı vatan" var mı, nasıl buldunuz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-22",
@@ -919,7 +1003,11 @@ Bu konuda CorteQS'in Çarşı modülü gibi bir yerde girişimcilerin diaspora i
 
 Siz ya da tanıdığınız biri gurbette iş kurdu mu, ilk müşterilerinizi/desteğinizi nereden buldunuz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-23",
@@ -956,7 +1044,11 @@ CorteQS gibi platformların öğrencileri gittikleri şehirdeki Türk topluluğu
 
 Erasmus ya da yurt dışı eğitim deneyimi olanlar, siz o ilk hafta yalnızlığını nasıl atlattınız?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-24",
@@ -993,7 +1085,11 @@ CorteQS gibi platformların öğrencileri mezunlarla/mentorlarla buluşturma idd
 
 Sizin de böyle bir "bir üst sınıftan gelen altın tavsiye" anınız oldu mu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-25",
@@ -1030,7 +1126,11 @@ CorteQS gibi platformların 80+ kategoride profesyonelleri bir araya getirip bu 
 
 Siz de yurt dışında iş ararken networking'in CV'den daha belirleyici olduğunu düşünüyor musunuz, yoksa bu abartılan bir şey mi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-26",
@@ -1067,7 +1167,11 @@ Bu tür mentorluk bağlantılarını kolaylaştırmaya çalışan CorteQS diye b
 
 Sizin de bir mentor tavsiyesinin iş arama sürecinizi kısalttığı bir an oldu mu, yoksa bu abartılan bir etki mi sizce?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-27",
@@ -1104,7 +1208,11 @@ Bu hissi araştırırken CorteQS'in tam da bu "kalabalıkta yalnızlık" durumun
 
 Siz de kalabalık bir yerde bu tuhaf yalnızlığı hissettiniz mi, ve bu hissi nasıl aştınız (ya da aşamadınız)?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-28",
@@ -1141,7 +1249,11 @@ CorteQS'in de bu fikri merkeze aldığını gördüm, şehir bazlı ama esasen i
 
 Siz kendinizi "buraya ait" hissetmenizi ne sağladı — yer mi, zaman mı, yoksa belirli insanlar mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-29",
@@ -1178,7 +1290,11 @@ CorteQS'in hem kalanları hem dönenleri aynı ağda tuttuğunu, deneyim paylaş
 
 Geri dönüp de pişman olan ya da kalıp da pişman olan var mı burada, kararınızı neye göre verdiniz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-30",
@@ -1215,7 +1331,11 @@ Kal ya da dön kararından bağımsız olarak, bu ikili aidiyeti bir topluluk i�
 
 Siz bu "iki vatan arası" hissini nasıl yönetiyorsunuz, zenginlik mi yoksa yük mü sizin için?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-31",
@@ -1252,7 +1372,11 @@ CorteQS'in dernekleri, vakıfları ve kültürel etkinlikleri tek yerde toplama 
 
 Siz şehrinizdeki etkinlikleri nasıl takip ediyorsunuz, düzenli bir kaynağınız var mı yoksa hep şansa mı kalıyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-32",
@@ -1289,7 +1413,11 @@ Bu tür kültürel etkinlikleri organize etmek ve duyurmak için CorteQS gibi bi
 
 Siz de kültürünüzü paylaştığınız, gurur duyduğunuz bir an yaşadınız mı, yerel çevrenizin tepkisi nasıldı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-33",
@@ -1326,7 +1454,11 @@ CorteQS'in Çarşı modülünün tam olarak bu "tanıdık elden alışveriş" ih
 
 Siz genel platformlar (Marketplace, eBay Kleinanzeigen vs.) yerine "sadece kendi topluluğunuzdan" alışveriş yapmayı tercih eder misiniz, yoksa fiyat/seçenek daha mı önemli?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-34",
@@ -1363,7 +1495,11 @@ CorteQS'in Çarşı kısmında bu ihtiyaçları kendi topluluğundan karşılama
 
 Siz yeni evinizi kurarken neyi ikinci elden, neyi sıfırdan aldınız, ve bu süreçte en çok zorlandığınız şey neydi?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-35",
@@ -1400,7 +1536,11 @@ CorteQS gibi platformların manevi toplulukları ve dayanışma ağlarını da g
 
 Siz de gurbette dini/manevi bir mekanın aynı zamanda güçlü bir sosyal dayanışma noktası olduğunu düşünüyor musunuz, yoksa bu ikisi sizin için ayrı mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-36",
@@ -1437,7 +1577,11 @@ CorteQS'in dayanışmayı bir "refleks" haline getirme iddiasını okuyunca bu d
 
 Sizin de gurbette zor bir anda beklemediğiniz birinin yanınızda olduğu bir hikayeniz var mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-37",
@@ -1474,7 +1618,11 @@ Milli maç gecelerinde toplu izleme mekanları/taraftar gruplarını bulmak içi
 
 Siz milli maçları nerede, kimlerle izliyorsunuz — büyük bir grupla mı yoksa genelde yalnız mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-38",
@@ -1511,7 +1659,11 @@ CorteQS'in maç gecesi buluşmalarını/taraftar gruplarını bir araya getirdi�
 
 Siz maçları genelde nasıl izliyorsunuz, yalnız mı yoksa bir grupla mı, ve fark gerçekten bu kadar büyük mü sizce?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-39",
@@ -1548,7 +1700,11 @@ CorteQS de kendini böyle bir "dijital güven ağı" olarak konumlandırıyor, 2
 
 Sizce bu tür "diasporayı dijitalde birleştirme" projeleri gerçekten işe yarıyor mu, yoksa hep aynı kaderi mi paylaşıyorlar (başlangıç heyecanı, sonra sessizlik)?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-40",
@@ -1585,7 +1741,11 @@ CorteQS diye bir platform tam da bunu vaat ediyor: şehir, meslek ya da isimle a
 
 Siz böyle bir ihtiyaç yaşadığınızda genelde nasıl çözüyorsunuz, hâlâ eski usul "tanıdığın tanıdığı" yöntemi mi işe yarıyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-41",
@@ -1622,7 +1782,11 @@ CorteQS'in ebeveynleri buluşturma, "bir köy kurma" gibi bir yaklaşımı oldu�
 
 Siz gurbette ebeveynlik yaparken bu desteği nereden buluyorsunuz, yoksa hâlâ tamamen yalnız mı ilerliyorsunuz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-42",
@@ -1659,7 +1823,11 @@ CorteQS'in anne-baba topluluklarıyla bu dayanışmayı kolaylaştırmaya çalı
 
 Siz de aynı kültürden bir ebeveynle konuşmanın, yerel çevrenizle konuşmaktan farklı bir rahatlama sağladığını düşünüyor musunuz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-43",
@@ -1696,7 +1864,11 @@ Bu yolculuk öncesi tavsiye/deneyim paylaşımı için CorteQS gibi bir topluluk
 
 Siz de bu "geri sayım" ritüelini yaşıyor musunuz, yoksa bu sadece bende mi bu kadar abartılı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-44",
@@ -1733,7 +1905,11 @@ Bu "sıla" duygusunu ve dönüş öncesi hazırlıkları paylaşmak için CorteQ
 
 Siz de bu "iniş anı" duygusunu yaşıyor musunuz, nasıl tarif edersiniz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-45",
@@ -1770,7 +1946,11 @@ CorteQS'in Çarşı modülü bu "kendi güven ağında alışveriş" fikrine day
 
 Sizce niş bir "sadece kendi topluluğundan al-sat" pazarı, genel platformlardaki güven sorununu gerçekten çözer mi, yoksa küçük ölçekte kalmaya mahkum mu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-46",
@@ -1807,7 +1987,11 @@ CorteQS'in "Cadde" diye bir bölümü tam olarak bunu hedefliyormuş — global 
 
 Sizin şehrinizde böyle nişleşmiş, sadece o şehre özel bir akış olsa gerçekten kullanır mıydınız, yoksa küçük şehirlerde bu tür şeyler kritik kütleye ulaşamadan ölüyor mu?
 
-corteqs.net/cadde`,
+corteqs.net/cadde
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-47",
@@ -1844,7 +2028,11 @@ CorteQS'in gurbetteki kadınları mentorluk ve dayanışma etrafında bir araya 
 
 Siz de bu "hem şunu hem bunu" yükünü hissediyor musunuz, ve bunu paylaşabildiğiniz bir kadın çevreniz var mı?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-48",
@@ -1881,7 +2069,11 @@ CorteQS'in kuşaklar arası köprü kurma, gençlerin enerjisini büyüklerin te
 
 Sizin ailenizde ilk kuşak nasıl yaşlanıyor, onlara sahip çıkmak için neler yapıyorsunuz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-49",
@@ -1916,7 +2108,11 @@ T.C. Dışişleri Bakanlığı verilerine göre bu rakamlara bakınca fark ettim
 
 Sizce bu kadar büyük ve dağınık bir kitleyi gerçekten "tek bir ağ" haline getirmek mümkün mü, yoksa bu hep bir hayal mi kalır?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-50",
@@ -1953,7 +2149,11 @@ CorteQS gibi platformlar "eksik olan tek şey ilk adım" diyor, açık beta aşa
 
 Siz bu "yalnız değilsin" mesajına inanıyor musunuz, yoksa gurbette yalnızlık kaçınılmaz bir gerçek mi sizce?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-51",
@@ -1988,7 +2188,11 @@ Yıllardır aynı sorun: gündem hep dağınık gruplarda kayboluyor, önemli bi
 
 Denedim ama alışkanlık değiştirmek zor oluyor tabii. Sizde diaspora gündemini takip etmenin daha iyi bir yolu var mı?
 
-corteqs.net/cadde`,
+corteqs.net/cadde
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-52",
@@ -2023,7 +2227,11 @@ Ben hâlâ yapıyorum, özellikle güven gerektiren işlerde (muhasebe, tadilat,
 
 Fikir güzel ama arz tarafı (yeterli esnaf/girişimci) olmadan işe yaramaz gibi geliyor bana. Sizin bulunduğunuz yerde böyle bir ihtiyaç var mı, nasıl çözüyorsunuz şu an?
 
-corteqs.net/cadde/carsi`,
+corteqs.net/cadde/carsi
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-53",
@@ -2058,7 +2266,11 @@ Ben genelde birkaç Facebook grubu + birkaç haber sitesi arasında geziniyorum,
 
 Böyle otomatik toplama araçlarına güveniyor musunuz, yoksa hep gecikmeli/eksik mi kalıyor sizce?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-54",
@@ -2093,7 +2305,11 @@ Bende sağlık sigortası ve kira sözleşmesi konusunda resmen deneme yanılmay
 
 Sizin taşınma sürecinizde en çok zorlandığınız, bilgi eksikliğinden kaynaklanan konu neydi?
 
-corteqs.net/blog`,
+corteqs.net/blog
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-55",
@@ -2128,7 +2344,11 @@ CorteQS'te böyle bir referans sistemi var, davet ettiğin kişi katılınca iki
 
 Siz böyle davet/referans sistemlerini kullanıyor musunuz, işe yarıyor mu gerçekten?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-56",
@@ -2163,7 +2383,11 @@ Ben genelde LinkedIn'de arıyorum ama bazen bulunduğum şehirdeki Türk profesy
 
 Sizce diaspora ağları kariyer arayışında gerçekten fark yaratıyor mu, yoksa hep genel iş platformları mı daha etkili?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-57",
@@ -2198,7 +2422,11 @@ Uzaktan çalışınca ofis arkadaşlığı gibi doğal bir sosyalleşme yok, bu 
 
 Siz uzaktan çalışırken bulunduğunuz şehirdeki topluluğa nasıl bağlanıyorsunuz, bir yöntem buldunuz mu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-58",
@@ -2233,7 +2461,11 @@ Milyonlarca insanın arasındayım ama gerçekten "tanıdığım" kimse yok gibi
 
 Siz bu "kalabalıkta yalnızlık" hissini yaşadınız mı, nasıl aştınız (ya da aşamadınız)?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-59",
@@ -2268,7 +2500,11 @@ Ben burada doğdum ama evde tamamen farklı bir kültürle büyüdüm, iki taraf
 
 Siz bu "arada kalmışlık" hissini nasıl yönetiyorsunuz, yoksa bir noktadan sonra sorun olmaktan mı çıkıyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-60",
@@ -2303,7 +2539,11 @@ Bazen bir kelimeyi Türkçe hatırlayamıyorum, önce İngilizcesi geliyor aklı
 
 Siz bu durumu yaşadınız mı, ana dilinizi canlı tutmak için ne yapıyorsunuz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-61",
@@ -2338,7 +2578,11 @@ Her tatilden sonra aynı şey oluyor: ilk birkaç gün resmen depresif hissediyo
 
 Siz bu geçiş dönemini nasıl atlatıyorsunuz, işe yarayan bir yöntem buldunuz mu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-62",
@@ -2373,7 +2617,11 @@ Ben yeni bir hizmet işine başladım ve reklam bütçem çok kısıtlı. Facebo
 
 Böyle niş diaspora platformlarının küçük işletmelere gerçekten müşteri getirdiğini düşünüyor musunuz, yoksa hep genel platformlar mı daha etkili?
 
-corteqs.net/cadde/carsi`,
+corteqs.net/cadde/carsi
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-63",
@@ -2408,7 +2656,11 @@ Bende en zoru barınma ve "kiminle takılacağım" belirsizliğiydi, üniversite
 
 Siz nasıl bir yol izlediniz, aynı şehirdeki Türk öğrencileri nasıl buldunuz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-64",
@@ -2443,7 +2695,11 @@ Ben ilk yıllarımda çoğu şeyi tek başıma çözmeye çalıştım, sonradan 
 
 Siz mentorluk/deneyim paylaşımını nasıl buluyorsunuz — resmi programlar mı, yoksa organik tanışıklıklar mı daha çok işe yarıyor?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-65",
@@ -2478,7 +2734,11 @@ Ben genelde son anda, tesadüfen bir Facebook grubunda görüyorum ve çoğu zam
 
 Siz şehrinizdeki topluluk etkinliklerini kaçırmamak için nasıl bir sistem kurdunuz?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-66",
@@ -2513,7 +2773,11 @@ Bende ikisi de oldu açıkçası: hem iş hayatında farklı bir kültürde kend
 
 Siz bulunduğunuz yerde böyle bir kadın topluluğu buldunuz mu, nasıl?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-67",
@@ -2548,7 +2812,11 @@ Ben ilk geldiğimde bana yardımcı olan birkaç kişi sayesinde çok şey öğr
 
 Siz böyle gönüllü rehberlik sistemlerinin gerçekten işe yaradığını düşünüyor musunuz, yoksa organik olarak mı gelişmeli bu tür yardımlaşma?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "post-68",
@@ -2583,6 +2851,10 @@ CorteQS'in vizyonu bu yönde, dünyanın her yerindeki Türkleri tek platformda 
 
 Siz böyle "her yeri kapsayan" ağ iddialarına ne kadar inanıyorsunuz, yoksa hep bölgesel/yerel ağlar mı daha gerçekçi kalır sizce?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
 ];

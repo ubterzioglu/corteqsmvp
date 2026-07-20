@@ -63,6 +63,16 @@ interface UpdateNote {
 
 const UPDATES: UpdateNote[] = [
   {
+    date: "20 Temmuz 2026",
+    title: "Sosyal paylaşım görsel promptları insan-merkezli sembolik illüstrasyon tarzına çevrildi + kartlara dosya adı etiketi eklendi",
+    lines: [
+      "Sosyal Medya Paylaşım Deposu'ndaki (/admin/social-share-vault) 4 kaynağın (Araç Tanıtımları, Diaspora, Test Araçları, Burak — 100 kalem, 288 görsel promptu) tamamı ultra-fotogerçekçi tarzdan yeni bir görsel dile çevrildi: insan figürü kompozisyonun merkezinde, etrafında sahneyi anlatan basit sembolik ikonlar bir hâle düzeninde. LinkedIn/Instagram metinleri değişmedi.",
+      "Kanonik referans dosyası (docs/social-share-outputs/prompt-katalogu.html) yeni promptlarla senkronlandı. Her 'Görsel Promptu' kartına, üretilen görselin kaydedileceği gerçek dosya adını gösteren küçük bir etiket eklendi (ör. tool-1_p1.png).",
+      "Aynı 4 kaynaktaki 144 Reddit postunun sonuna WhatsApp topluluk linki ve https://corteqs.net/tools eklendi — mevcut kısa link satırı korunarak.",
+      "tsc/ESLint/UTF-8 metin denetimi/production build temiz. Sitede görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     date: "19 Temmuz 2026",
     title: "Revizyon İstekleri listesindeki 51 madde tek tek gözden geçirildi: 10 tanesi kapatıldı",
     lines: [

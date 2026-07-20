@@ -77,7 +77,11 @@ Uzun zamandır aklımda olan bir soru: Bulunduğunuz şehirde belirli bir meslek
 
 CorteQS diye bir platform 80+ kategoride, 251 ülkeye yayılmış profilleri arama üzerinden bulmayı deniyor — şehir, meslek ya da isimle arıyorsunuz. Kullanan var mı, deneyimi olan var mı merak ediyorum. Böyle bir ihtiyaç gerçekten var mı yoksa herkes zaten kendi çevresinden mi hallediyor?
 
-Site: corteqs.net`,
+Site: corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "tool-2",
@@ -114,7 +118,11 @@ Genelde bu tür networking siteleri profil listesi sunup "aramanı sana bırakı
 
 Amaç profil karıştırmayı azaltmak. Merak ettiğim: bu tür bir eşleştirme gerçekten işe yarıyor mu yoksa sonuçta yine manuel filtrelemeden farksız mı oluyor? Kullanmış olan varsa deneyimini duymak isterim.
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "tool-3",
@@ -151,7 +159,11 @@ CorteQS'te profil/ilgi alanı düzenleme kısmı var — rol ve ilgi alanların�
 
 Herhangi bir networking/topluluk platformunda profil detayını doldurmanın gerçekten sonuç getirdiğini gördünüz mü, yoksa çoğu insan zaten boş bırakıp geçiyor mu?
 
-corteqs.net`,
+corteqs.net
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "tool-4",
@@ -188,7 +200,11 @@ CorteQS'in "Cadde" diye bir feed'i var; global bir akış değil, bulunduğun ş
 
 Şehir bazlı topluluk feed'i deneyimi olan var mı? Küçük şehirlerde bu tür şeyler genelde ölü kalıyor mu?
 
-corteqs.net/cadde`,
+corteqs.net/cadde
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "tool-5",
@@ -225,7 +241,11 @@ CorteQS'in Cadde bölümünde şehir bilgini doğrulamadan içerik bulanık kal�
 
 Bu tür doğrulama mekanizmalarının bot/troll sorununu gerçekten azalttığını düşünenler var mı? Yoksa sonuçta yalan beyan etmek çok kolay, bu da göstermelik bir bariyer mi oluyor?
 
-corteqs.net/cadde`,
+corteqs.net/cadde
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "tool-6",
@@ -262,7 +282,11 @@ CorteQS'te "Cadde Köprü" diye bir bölüm, yurda dönenlerin ya da Türkiye'de
 
 Geri dönüş planlayan ya da Türkiye'den diasporaya ulaşmaya çalışan biri var mı burada, böyle bir şey işinize yarar mıydı?
 
-corteqs.net/cadde`,
+corteqs.net/cadde
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "tool-7",
@@ -299,7 +323,11 @@ CorteQS'te "Cadde Cafe" diye bir özellik, süreli (1-6 saat) sohbet odaları a�
 
 Bu tür zaman-sınırlı, sonra kapanan oda formatını deneyen oldu mu, katılım gerçekten artıyor mu yoksa insanlar "zaten kapanacak" diye ciddiye almıyor mu?
 
-corteqs.net/cadde`,
+corteqs.net/cadde
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "tool-8",
@@ -336,7 +364,11 @@ CorteQS'in "Çarşı" bölümü, 7 kategoride ilan verip biri ilgilenince bildir
 
 Yurt dışında yaşayanlar için: taşınma/eşya devretme gibi ihtiyaçlarda genel platformlar (Marketplace, eBay Kleinanzeigen vs.) yeterli mi, yoksa "sadece Türklerle" niş bir pazar yerine gerçekten ihtiyaç var mı?
 
-corteqs.net/cadde/carsi`,
+corteqs.net/cadde/carsi
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "tool-9",
@@ -373,7 +405,11 @@ CorteQS'te "Cadde Tanıtım" diye bir özellik var; işletme ya da etkinliğini 
 
 Küçük işletme sahibi olanlar: bu tür niş/yerel reklam alanlarına gerçekten bütçe ayırır mısınız, yoksa genel platformlardaki reklam daha mı mantıklı geliyor?
 
-corteqs.net/cadde`,
+corteqs.net/cadde
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
   {
     id: "tool-10",
@@ -410,6 +446,10 @@ CorteQS'in Cadde bölümünde uygunsuz içeriği tek dokunuşla şikayet edebili
 
 Küçük ölçekli topluluklarda moderasyon deneyimi olan var mı — kullanıcı şikayetine dayalı sistemler yeterli mi oluyor yoksa otomatik filtreleme + insan moderasyon kombinasyonu şart mı?
 
-corteqs.net/cadde`,
+corteqs.net/cadde
+
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+🔗 https://corteqs.net/tools
+`,
   },
 ];
