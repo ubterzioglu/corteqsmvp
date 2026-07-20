@@ -41,6 +41,7 @@ import type { ShareTab } from "@/lib/admin-shell/social-share-log";
 import { SOURCE_LABELS, UNIFIED_ITEMS, type UnifiedItem } from "@/lib/admin-shell/social-share-unified";
 import {
   burakSlotKey,
+  countBurakShareExtraImagesBySlot,
   listBurakShareAssets,
   type BurakShareAsset,
 } from "@/lib/admin-shell/burak-share-assets";
@@ -66,12 +67,16 @@ export function UnifiedShareList({ copiedId, onCopy, renderShareBar }: UnifiedSh
   const [filter, setFilter] = useState<SourceFilter>(ALL_FILTER);
   const [subFilter, setSubFilter] = useState<SubFilter>(SUB_ALL_FILTER);
   const [assets, setAssets] = useState<Record<string, BurakShareAsset>>({});
+  const [extraImageCounts, setExtraImageCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
     let active = true;
-    listBurakShareAssets()
-      .then((map) => {
-        if (active) setAssets(map);
+    Promise.all([listBurakShareAssets(), countBurakShareExtraImagesBySlot()])
+      .then(([map, counts]) => {
+        if (active) {
+          setAssets(map);
+          setExtraImageCounts(counts);
+        }
       })
       .catch((error: unknown) => {
         toast({
@@ -187,6 +192,13 @@ export function UnifiedShareList({ copiedId, onCopy, renderShareBar }: UnifiedSh
             copiedId={copiedId}
             onCopy={onCopy}
             asset={item.hasMediaPanel ? assets : undefined}
+            extraImageCounts={item.hasMediaPanel ? extraImageCounts : undefined}
+            onExtraImageCountChange={
+              item.hasMediaPanel
+                ? (slotKey, count) =>
+                    setExtraImageCounts((current) => ({ ...current, [slotKey]: count }))
+                : undefined
+            }
             renderShareBar={renderShareBar}
           />
         ))}
@@ -201,6 +213,8 @@ type UnifiedAccordionItemProps = {
   copiedId: string | null;
   onCopy: CopyFn;
   asset: Record<string, BurakShareAsset> | undefined;
+  extraImageCounts: Record<string, number> | undefined;
+  onExtraImageCountChange?: (slotKey: string, count: number) => void;
   renderShareBar?: (tab: ShareTab, itemId: string) => ReactNode;
 };
 
@@ -210,9 +224,21 @@ function UnifiedAccordionItem({
   copiedId,
   onCopy,
   asset,
+  extraImageCounts,
+  onExtraImageCountChange,
   renderShareBar,
 }: UnifiedAccordionItemProps) {
   const singleVariant = item.variants.length === 1;
+
+  // Kalemin tüm varyantlarındaki toplam görsel sayısı (kapak + ek) — akordeon başlığındaki rozet için.
+  const totalImageCount = item.hasMediaPanel
+    ? item.variants.reduce((sum, _variant, index) => {
+        const slotKey = burakSlotKey(item.tab, item.id, index);
+        const hasCover = Boolean(asset?.[slotKey]?.imageBucket || asset?.[slotKey]?.imageUrl);
+        const extra = extraImageCounts?.[slotKey] ?? 0;
+        return sum + (hasCover ? 1 : 0) + extra;
+      }, 0)
+    : 0;
 
   return (
     <AccordionItem value={`${item.tab}-${item.id}`} className="rounded-xl border bg-card px-4">
@@ -242,6 +268,11 @@ function UnifiedAccordionItem({
               className="border-amber-500/40 bg-amber-500/15 text-amber-600 dark:text-amber-300"
             >
               {item.themeLabel}
+            </Badge>
+          )}
+          {totalImageCount > 0 && (
+            <Badge className="gap-1 border-emerald-500/40 bg-emerald-500/15 text-emerald-600 dark:text-emerald-300">
+              <ImageIcon className="h-3 w-3" /> {totalImageCount}
             </Badge>
           )}
         </div>
@@ -401,6 +432,10 @@ function UnifiedAccordionItem({
                     itemId={item.id}
                     variantIndex={index}
                     asset={asset?.[slotKey as string]}
+                    extraImageCount={extraImageCounts?.[slotKey as string] ?? 0}
+                    onExtraImageCountChange={(count) =>
+                      onExtraImageCountChange?.(slotKey as string, count)
+                    }
                   />
                 )}
               </div>
@@ -419,37 +454,52 @@ type MediaToggleProps = {
   itemId: string;
   variantIndex: number;
   asset: BurakShareAsset | undefined;
+  extraImageCount: number;
+  onExtraImageCountChange: (count: number) => void;
 };
 
 /** Kart altında küçük "Görsel"/"Video" ikon-butonları — tıklanınca medya paneli aç/kapat. */
-function MediaToggle({ slotKey, tab, itemId, variantIndex, asset }: MediaToggleProps) {
+function MediaToggle({
+  slotKey,
+  tab,
+  itemId,
+  variantIndex,
+  asset,
+  extraImageCount,
+  onExtraImageCountChange,
+}: MediaToggleProps) {
   const [open, setOpen] = useState(false);
-  const hasMedia = Boolean(asset?.imageBucket || asset?.imageUrl || asset?.videoUrl);
+  const hasCoverImage = Boolean(asset?.imageBucket || asset?.imageUrl);
+  const totalImageCount = (hasCoverImage ? 1 : 0) + extraImageCount;
+  const hasVideo = Boolean(asset?.videoUrl);
 
   return (
     <div>
       <div className="flex items-center gap-1.5">
         <Button
-          variant={open ? "secondary" : "ghost"}
+          variant={totalImageCount > 0 ? "default" : open ? "secondary" : "ghost"}
           size="sm"
-          className="h-7 px-2 text-xs"
+          className={cn(
+            "h-7 px-2 text-xs",
+            totalImageCount > 0 && "bg-emerald-600 text-white hover:bg-emerald-700",
+          )}
           onClick={() => setOpen((v) => !v)}
         >
           <ImageIcon className="mr-1 h-3.5 w-3.5" />
-          Görsel
+          Görsel{totalImageCount > 0 ? ` (${totalImageCount})` : ""}
         </Button>
         <Button
-          variant={open ? "secondary" : "ghost"}
+          variant={hasVideo ? "default" : open ? "secondary" : "ghost"}
           size="sm"
-          className="h-7 px-2 text-xs"
+          className={cn(
+            "h-7 px-2 text-xs",
+            hasVideo && "bg-emerald-600 text-white hover:bg-emerald-700",
+          )}
           onClick={() => setOpen((v) => !v)}
         >
           <Video className="mr-1 h-3.5 w-3.5" />
           Video
         </Button>
-        {hasMedia && !open && (
-          <span className="text-xs text-muted-foreground">Medya eklendi</span>
-        )}
       </div>
       {open && (
         <BurakMediaPanel
@@ -458,6 +508,7 @@ function MediaToggle({ slotKey, tab, itemId, variantIndex, asset }: MediaToggleP
           itemId={itemId}
           variantIndex={variantIndex}
           asset={asset}
+          onExtraImageCountChange={onExtraImageCountChange}
         />
       )}
     </div>

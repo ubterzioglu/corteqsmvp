@@ -132,3 +132,98 @@ export async function getBurakShareImageUrl(bucket: string, path: string): Promi
   }
   return data.signedUrl;
 }
+
+// ── Ek görseller (kapak görseli dışında, slot başına birden fazla) ─────────
+
+/** Her slot için ek görsel sayısı — sayfa açılışında akordeon rozetleri için tek toplu sorgu. */
+export async function countBurakShareExtraImagesBySlot(): Promise<Record<string, number>> {
+  const { data, error } = await db.from("social_share_asset_images").select("slot_key");
+
+  if (error) throw new Error(messageOf(error, "Görsel sayıları yüklenemedi"));
+
+  const counts: Record<string, number> = {};
+  for (const row of (data ?? []) as Array<Record<string, unknown>>) {
+    const slotKey = String(row.slot_key ?? "");
+    if (!slotKey) continue;
+    counts[slotKey] = (counts[slotKey] ?? 0) + 1;
+  }
+  return counts;
+}
+
+export type BurakShareExtraImage = {
+  id: string;
+  slotKey: string;
+  imageBucket: string;
+  imagePath: string;
+  sortOrder: number;
+};
+
+export async function listBurakShareExtraImages(
+  slotKey: string,
+): Promise<BurakShareExtraImage[]> {
+  const { data, error } = await db
+    .from("social_share_asset_images")
+    .select("id, slot_key, image_bucket, image_path, sort_order")
+    .eq("slot_key", slotKey)
+    .order("sort_order", { ascending: true });
+
+  if (error) throw new Error(messageOf(error, "Ek görseller yüklenemedi"));
+
+  return ((data ?? []) as Array<Record<string, unknown>>).map((row) => ({
+    id: String(row.id),
+    slotKey: String(row.slot_key),
+    imageBucket: String(row.image_bucket),
+    imagePath: String(row.image_path),
+    sortOrder: Number(row.sort_order ?? 0),
+  }));
+}
+
+export async function addBurakShareExtraImage(
+  tab: ShareTab,
+  itemId: string,
+  variantIndex: number,
+  slotKey: string,
+  file: File,
+  sortOrder: number,
+): Promise<BurakShareExtraImage> {
+  const path = buildImagePath(tab, itemId, variantIndex, file);
+  const { error: uploadError } = await db.storage
+    .from(BUCKET)
+    .upload(path, file, { contentType: file.type || undefined, upsert: false });
+  if (uploadError) throw new Error(messageOf(uploadError, "Görsel yüklenemedi"));
+
+  const { data: userData } = await db.auth.getUser();
+  const userId = userData?.user?.id ?? null;
+
+  const { data, error } = await db
+    .from("social_share_asset_images")
+    .insert({
+      slot_key: slotKey,
+      image_bucket: BUCKET,
+      image_path: path,
+      sort_order: sortOrder,
+      created_by: userId,
+    })
+    .select("id, slot_key, image_bucket, image_path, sort_order")
+    .single();
+
+  if (error || !data) {
+    await db.storage.from(BUCKET).remove([path]);
+    throw new Error(messageOf(error, "Görsel kaydedilemedi"));
+  }
+
+  const row = data as Record<string, unknown>;
+  return {
+    id: String(row.id),
+    slotKey: String(row.slot_key),
+    imageBucket: String(row.image_bucket),
+    imagePath: String(row.image_path),
+    sortOrder: Number(row.sort_order ?? 0),
+  };
+}
+
+export async function removeBurakShareExtraImage(image: BurakShareExtraImage): Promise<void> {
+  const { error } = await db.from("social_share_asset_images").delete().eq("id", image.id);
+  if (error) throw new Error(messageOf(error, "Görsel silinemedi"));
+  await db.storage.from(image.imageBucket).remove([image.imagePath]);
+}

@@ -14,6 +14,18 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260720-coklu-gorsel-ve-kompakt-kart-gorunumu",
+    date: "20 Temmuz 2026",
+    title: "Sosyal Medya Paylaşım Deposu'na birden fazla görsel desteği geldi + kartlar kompaktlaştı",
+    items: [
+      "Her kalem/varyanta artık kapak görselinin yanına sınırsız sayıda EK görsel eklenebiliyor — 'Görsel' butonunu açınca küçük resim galerisi ve '+ Ekle' kutusu görünüyor, her görsel ayrı ayrı silinebiliyor. Teknik: yeni social_share_asset_images tablosu (canlıda oluşturuldu ve doğrulandı), mevcut tekli kapak görseli sistemiyle birlikte çalışıyor, veri kaybı/taşıma yok.",
+      "Görsel eklendiğini fark etmek artık çok daha kolay: akordeon kart kapalıyken bile başlıkta yeşil bir '🖼️ N' rozeti görünüyor (kapak + ek görsellerin toplam sayısı). Kart açıldığında 'Görsel' ve 'Video' butonları, medya varsa gri yerine dolu yeşil renge dönüyor ve görsel sayısını gösteriyor — önceden sadece küçük gri bir yazı vardı, kolayca gözden kaçıyordu.",
+      "Görsel Promptu kutuları çok satırlı büyük metin alanından (140px) tek satır, kompakt bir kutuya indirildi — kopyalama butonu zaten üstte olduğu için tüm metni açık görmeye gerek yok, kartlar artık çok daha az yer kaplıyor.",
+      "Kart başlığındaki dosya adı etiketi sadeleştirildi: tool-1_p1.png gibi id-bazlı uzun addan, kartın sayfadaki sırasına dayanan kısa bir etikete geçildi (ör. tek varyantlı kalemde '52', çok varyantlı kalemde '521').",
+      "tsc/ESLint temiz, migration canlı veritabanına uygulandı ve doğrulandı (tablo + 4 RLS policy). Sitede görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
     id: "20260720-prompt-katalogu-sembolik-illustrasyon-ve-dosya-adi-etiketi",
     date: "20 Temmuz 2026",
     title: "Sosyal paylaşım görsel promptları insan-merkezli sembolik illüstrasyon tarzına çevrildi + kartlara dosya adı etiketi eklendi",

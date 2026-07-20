@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { ExtraImagesGallery } from "@/components/admin/social-share/ExtraImagesGallery";
 import {
   BURAK_DRIVE_FOLDER_URL,
   getBurakShareImageUrl,
@@ -29,12 +30,20 @@ type BurakMediaPanelProps = {
   itemId: string;
   variantIndex: number;
   asset: BurakShareAsset | undefined;
+  onExtraImageCountChange?: (count: number) => void;
 };
 
 const errMessage = (error: unknown): string =>
   error instanceof Error ? error.message : "Beklenmeyen hata";
 
-export function BurakMediaPanel({ slotKey, tab, itemId, variantIndex, asset }: BurakMediaPanelProps) {
+export function BurakMediaPanel({
+  slotKey,
+  tab,
+  itemId,
+  variantIndex,
+  asset,
+  onExtraImageCountChange,
+}: BurakMediaPanelProps) {
   const { toast } = useToast();
   const fileRef = useRef<HTMLInputElement | null>(null);
 
@@ -143,6 +152,18 @@ export function BurakMediaPanel({ slotKey, tab, itemId, variantIndex, asset }: B
             </Button>
           </div>
         )}
+      </div>
+
+      {/* Ek görseller (kapak görselinden ayrı, sınırsız sayıda) */}
+      <div className="space-y-1">
+        <Label className="text-xs text-muted-foreground">Ek görseller</Label>
+        <ExtraImagesGallery
+          slotKey={slotKey}
+          tab={tab}
+          itemId={itemId}
+          variantIndex={variantIndex}
+          onCountChange={onExtraImageCountChange}
+        />
       </div>
 
       {/* Görsel linki (foto yüklenmezse) */}

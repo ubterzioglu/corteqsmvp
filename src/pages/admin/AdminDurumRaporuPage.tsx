@@ -64,6 +64,16 @@ interface UpdateNote {
 const UPDATES: UpdateNote[] = [
   {
     date: "20 Temmuz 2026",
+    title: "Sosyal Medya Paylaşım Deposu'na birden fazla görsel desteği geldi + kartlar kompaktlaştı",
+    lines: [
+      "Her kalem/varyanta artık kapak görselinin yanına sınırsız sayıda ek görsel eklenebiliyor (küçük resim galerisi, tek tek silinebilir). Yeni social_share_asset_images tablosu canlıda oluşturuldu ve doğrulandı; mevcut tekli kapak görseli sistemiyle birlikte çalışıyor.",
+      "Görsel eklendiği artık çok daha belirgin: akordeon kapalıyken bile başlıkta yeşil '🖼️ N' rozeti görünüyor; açık kartta 'Görsel'/'Video' butonları medya varsa dolu yeşile dönüyor ve sayı gösteriyor.",
+      "Görsel Promptu kutuları tek satıra indirildi (kompakt kart), dosya adı etiketi sadeleştirildi (ör. '52', '521').",
+      "tsc/ESLint temiz, migration canlıda doğrulandı. Sitede görünmesi için bir sonraki yayın (deploy) gerekiyor.",
+    ],
+  },
+  {
+    date: "20 Temmuz 2026",
     title: "Sosyal paylaşım görsel promptları insan-merkezli sembolik illüstrasyon tarzına çevrildi + kartlara dosya adı etiketi eklendi",
     lines: [
       "Sosyal Medya Paylaşım Deposu'ndaki (/admin/social-share-vault) 4 kaynağın (Araç Tanıtımları, Diaspora, Test Araçları, Burak — 100 kalem, 288 görsel promptu) tamamı ultra-fotogerçekçi tarzdan yeni bir görsel dile çevrildi: insan figürü kompozisyonun merkezinde, etrafında sahneyi anlatan basit sembolik ikonlar bir hâle düzeninde. LinkedIn/Instagram metinleri değişmedi.",
