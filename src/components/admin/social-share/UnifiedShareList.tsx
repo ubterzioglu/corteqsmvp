@@ -268,6 +268,9 @@ function UnifiedAccordionItem({
                   {variant.imagePrompts.map((prompt, promptIndex) => {
                     const promptNo = promptIndex + 1;
                     const promptId = `${idPrefix}-image-${promptNo}`;
+                    const simpleLabel = singleVariant
+                      ? `${displayOrder}_${promptNo}`
+                      : `${displayOrder}_${variantNo}_${promptNo}`;
                     return (
                       <Card key={promptId}>
                         <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-3">
@@ -277,7 +280,7 @@ function UnifiedAccordionItem({
                               ChatGPT · metinsiz
                             </span>
                             <span className="font-mono text-[0.68rem] font-normal text-muted-foreground">
-                              {`${idPrefix}_p${promptNo}.png`}
+                              {simpleLabel}
                             </span>
                           </CardTitle>
                           <Button
