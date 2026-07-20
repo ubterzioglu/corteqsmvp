@@ -276,6 +276,9 @@ function UnifiedAccordionItem({
                             <span className="text-xs font-normal text-muted-foreground">
                               ChatGPT · metinsiz
                             </span>
+                            <span className="font-mono text-[0.68rem] font-normal text-muted-foreground">
+                              {`${idPrefix}_p${promptNo}.png`}
+                            </span>
                           </CardTitle>
                           <Button
                             variant="ghost"
