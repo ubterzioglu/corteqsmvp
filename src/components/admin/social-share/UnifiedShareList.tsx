@@ -31,6 +31,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -296,11 +297,7 @@ function UnifiedAccordionItem({
                           </Button>
                         </CardHeader>
                         <CardContent>
-                          <Textarea
-                            readOnly
-                            value={prompt}
-                            className="min-h-[140px] resize-y text-xs"
-                          />
+                          <Input readOnly value={prompt} className="text-xs" />
                           {item.tab === "burak" && promptIndex === 0 && (
                             <GeneratedImagePreview toolId={item.id} variantNo={variantNo} />
                           )}
