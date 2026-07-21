@@ -14,6 +14,36 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260721-social-share-vault-global-id-semasi",
+    date: "21 Temmuz 2026",
+    title: "Sosyal Medya Paylaşım Deposu'nda görsellerin yanlış karta düşme sorunu kökten çözüldü",
+    items: [
+      "Bir kartın görseli olduğu halde görselsiz göründüğü fark edildi (ör. 'Annenin sesi' diaspora postu) — kök neden bulundu: eski yükleme script'i, BURAK BURAYA BAK sekmesinin kendi 1-12 numaralandırmasını diğer sekmelerin (Araç Tanıtımları/Diaspora/Test) numaralandırmasıyla karıştırıp bazı görselleri yanlış karta yazmıştı.",
+      "Kalıcı çözüm: kartların hangi sekmeden geldiği artık veritabanı kimliğinin bir parçası değil. Her kalem, sekmeden bağımsız, hiç değişmeyen tek bir numara taşıyor (item-1'den item-100'e) — bu sayede aynı karışıklık bir daha oluşamaz.",
+      "Bunun sonucunda sayfanın üstündeki filtre butonları (Tümü/Araç Tanıtımları/Diaspora/Test/Burak) kaldırıldı; artık tüm kalemler karışık ama sabit bir sırada tek liste halinde görünüyor.",
+      "Mevcut 16 görsel + 16 ek görsel + 1 paylaşım notu yeni numaralandırmaya taşındı, canlı veritabanında doğrulandı — hiçbir görsel veya not kaybolmadı. Kalan ~84 kartın görseli henüz gelmedi, dosyalar gelince yükleme script'i tekrar çalıştırılacak.",
+    ],
+  },
+  {
+    id: "20260721-fallback-gorsel-havuzu-haber-radari",
+    date: "21 Temmuz 2026",
+    title: "Haber Radarı'ndaki haberler artık görselsiz kalmıyor (aynı gün içinde bir yanlış bağlantı da düzeltildi)",
+    items: [
+      "Haber Radarı'nda onaylanan bazı haberler görselsiz ya da renkli bir placeholder ile görünüyordu, çünkü dış kaynaktan görsel çekmek bilinçli olarak kapalı (telif/güvenlik). Artık böyle durumlarda önceden hazırlanmış bir görsel havuzundan sabit bir görsel otomatik atanıyor.",
+      "İlk yazılan haliyle bu havuz yanlışlıkla Hizmet Bulucu'daki mekan kayıtlarına da bağlanmıştı; sadece Haber Radarı için istenmesi üzerine bu bağlantı aynı gün içinde geri alındı — mekan için eklenen 50 görsel havuzdan silindi ve veritabanı bir daha yanlışlıkla açılamayacak şekilde kilitlendi. Hiçbir mekan kaydı bu görselle canlıya çıkmamıştı, yani geri alma tamamen risksiz oldu.",
+      "İlgili veritabanı değişiklikleri canlıya uygulandı ve doğrulandı.",
+    ],
+  },
+  {
+    id: "20260721-service-finder-evidence-quotes-kirpma",
+    date: "21 Temmuz 2026",
+    title: "Hizmet Bulucu'nun 0 aday üretme sorunu bulundu ve düzeltildi",
+    items: [
+      "Bir deneme taramasında 34 kaynak incelendi ama tek bir aday bile üretilmedi. Sebep bulundu: yapay zeka bazen izin verilenden (6) fazla alıntı döndürüyordu ve bu tek fazlalık, adayın tamamen elenmesine yol açıyordu.",
+      "Artık fazla alıntı yüzünden aday tamamen silinmiyor — sadece fazla alıntılar izin verilen sayıya kırpılıp aday korunuyor. Veri kalitesi için 6 alıntı sınırı kaldırılmadı, sadece elenme yerine kırpma tercih edildi.",
+    ],
+  },
+  {
     id: "20260720-burak-share-gorsel-canliya-yuklendi-ve-radar-tarama-tetikleme",
     date: "20 Temmuz 2026",
     title: "Burak'ın 32 görseli canlıya yüklendi; bir yükleme hatası tespit edilip düzeltildi; haber tarayıcı elle tetiklenebilir hale getirildi",
