@@ -205,6 +205,26 @@ export async function listCandidates(
   return data ?? [];
 }
 
+// pick_fallback_image RPC henüz generated types.ts'e yansımadı (radar tabloları gibi
+// B1 kapsamında). Havuz boşsa veya çağrı başarısız olursa sessizce null döner — mevcut
+// "görselsiz haber" davranışını bozmaz.
+type FallbackImageRpcClient = {
+  rpc: (
+    fn: "pick_fallback_image",
+    args: { p_category: "news_diaspora" | "mekan" },
+  ) => Promise<{ data: { public_url: string; pool_id: string }[] | null; error: { message: string } | null }>;
+};
+
+async function pickFallbackImageUrl(category: "news_diaspora" | "mekan"): Promise<string | null> {
+  const rpcClient = supabase as unknown as FallbackImageRpcClient;
+  const { data, error } = await rpcClient.rpc("pick_fallback_image", { p_category: category });
+  if (error) {
+    console.error("pick_fallback_image başarısız:", error.message);
+    return null;
+  }
+  return data?.[0]?.public_url ?? null;
+}
+
 export async function approveCandidate(
   candidateId: string,
   opts: {
@@ -222,6 +242,10 @@ export async function approveCandidate(
     .single();
   if (fetchErr) throw fetchErr;
 
+  // Harici görsel hotlink kapalı; onay anında fallback havuzundan kalıcı bir
+  // diaspora görseli atanır. Havuz boşsa (henüz seed edilmemişse) null kalır.
+  const fallbackImageUrl = await pickFallbackImageUrl("news_diaspora");
+
   // news_posts insert
   const newsPayload = {
     title: opts.editedTitle ?? candidate.title,
@@ -229,7 +253,7 @@ export async function approveCandidate(
     source_name: candidate.source_name,
     source_url: candidate.source_url,
     original_url: candidate.original_url,
-    image_url: null, // Admin isterse sonradan yükler; harici görsel hotlink kapalı
+    image_url: fallbackImageUrl,
     category: opts.editedCategory ?? candidate.category,
     city: candidate.city,
     country: candidate.country,

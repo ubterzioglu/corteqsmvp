@@ -97,3 +97,8 @@ docs/10tool/*.zip
 
 # social:generate CLI çıktısı (scripts/social-generate) — repoya commit edilmez
 public/social/generated/
+
+# Fallback görsel havuzu — indirilen Pexels görselleri Storage'a yüklendikten
+# sonra yereldeki kopya sadece staging'dir, repoya girmez.
+docs/fallback-images/*/*
+!docs/fallback-images/*/.gitkeep
