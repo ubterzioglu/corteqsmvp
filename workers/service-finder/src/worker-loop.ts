@@ -38,6 +38,27 @@ import { candidateResultSchema, type ProviderConfig, type ServiceFinderJob } fro
 const SOFT_DEGRADE_MODEL = "gemini-2.5-flash-lite";
 const MIN_CONFIDENCE_TO_KEEP = 30;
 const EXTRACT_BATCH_SIZE = 5;
+const MAX_EVIDENCE_QUOTES = 6;
+
+/**
+ * Gemini responseSchema evidence_quotes için maxItems zorlamıyor; model bazen
+ * candidateResultSchema'nın izin verdiğinden (6) fazla alıntı döndürüyor ve
+ * bu adayın tamamen düşmesine yol açıyordu. Zod doğrulamasından önce kırp.
+ */
+function clampEvidenceQuotes(parsed: unknown): unknown {
+  if (
+    typeof parsed !== "object" ||
+    parsed === null ||
+    !Array.isArray((parsed as Record<string, unknown>).evidence_quotes)
+  ) {
+    return parsed;
+  }
+  const record = parsed as Record<string, unknown>;
+  return {
+    ...record,
+    evidence_quotes: (record.evidence_quotes as unknown[]).slice(0, MAX_EVIDENCE_QUOTES),
+  };
+}
 
 interface JobRuntime {
   env: WorkerEnv;
@@ -419,7 +440,7 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
       },
     });
 
-    const validation = candidateResultSchema.safeParse(classification.parsed);
+    const validation = candidateResultSchema.safeParse(clampEvidenceQuotes(classification.parsed));
     if (!validation.success) {
       await updateSource(db, source.id, { fetch_status: "failed" });
       await appendEvent(db, job.id, "classifier_validation_failed",
