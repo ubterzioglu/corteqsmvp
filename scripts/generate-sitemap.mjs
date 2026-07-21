@@ -163,10 +163,142 @@ async function getSurveyRoutes() {
   }
 }
 
+// Yayınlanmış diaspora/haber öğelerini Supabase REST üzerinden çek (graceful;
+// src/lib/marquee.ts getPublicMarqueeItemBySlug() ile aynı filtre).
+async function getDiasporaRoutes() {
+  const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
+  const key =
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    console.warn("[sitemap] Supabase env yok — diaspora öğeleri atlandı.");
+    return [];
+  }
+
+  try {
+    const params = new URLSearchParams({
+      select: "slug,published_at",
+      is_active: "eq.true",
+      link_enabled: "eq.true",
+      slug: "not.is.null",
+    });
+    const endpoint = `${url.replace(/\/+$/, "")}/rest/v1/marquee_items?${params.toString()}`;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15_000);
+    const res = await fetch(endpoint, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    if (!res.ok) {
+      console.warn(`[sitemap] marquee_items fetch ${res.status} — atlandı.`);
+      return [];
+    }
+    const rows = await res.json();
+    return rows
+      .filter((r) => r?.slug)
+      .map((r) => ({
+        path: `/diaspora/${r.slug}`,
+        priority: "0.5",
+        changefreq: "monthly",
+        lastmod: r.published_at ? String(r.published_at).slice(0, 10) : undefined,
+      }));
+  } catch (error) {
+    console.warn("[sitemap] diaspora fetch hatası — atlandı:", error?.name ?? error);
+    return [];
+  }
+}
+
+// Herkese açık (RLS: catalog_item_is_publicly_visible) katalog profillerini çek —
+// src/lib/public-catalog-profile-api.ts'in kullandığı RPC değil, doğrudan tablo;
+// catalog_items_public_or_manager_read policy'si zaten görünürlüğü filtreliyor.
+async function getDirectoryCatalogRoutes() {
+  const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
+  const key =
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    console.warn("[sitemap] Supabase env yok — directory/catalog öğeleri atlandı.");
+    return [];
+  }
+
+  try {
+    const params = new URLSearchParams({ select: "slug,updated_at", slug: "not.is.null" });
+    const endpoint = `${url.replace(/\/+$/, "")}/rest/v1/catalog_items?${params.toString()}`;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15_000);
+    const res = await fetch(endpoint, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    if (!res.ok) {
+      console.warn(`[sitemap] catalog_items fetch ${res.status} — atlandı.`);
+      return [];
+    }
+    const rows = await res.json();
+    return rows
+      .filter((r) => r?.slug)
+      .map((r) => ({
+        path: `/directory/catalog/${r.slug}`,
+        priority: "0.6",
+        changefreq: "weekly",
+        lastmod: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
+      }));
+  } catch (error) {
+    console.warn("[sitemap] directory/catalog fetch hatası — atlandı:", error?.name ?? error);
+    return [];
+  }
+}
+
+// Yayınlanmış bağımsız (büyükelçilik/konsolosluk) profilleri çek — src/lib/
+// independent-profiles.ts listPublishedIndependentProfiles() ile aynı filtre.
+async function getIndependentProfileRoutes() {
+  const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
+  const key =
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    console.warn("[sitemap] Supabase env yok — kuruluş profilleri atlandı.");
+    return [];
+  }
+
+  try {
+    const params = new URLSearchParams({
+      select: "slug,updated_at",
+      is_published: "eq.true",
+      slug: "not.is.null",
+    });
+    const endpoint = `${url.replace(/\/+$/, "")}/rest/v1/independent_profiles?${params.toString()}`;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15_000);
+    const res = await fetch(endpoint, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    if (!res.ok) {
+      console.warn(`[sitemap] independent_profiles fetch ${res.status} — atlandı.`);
+      return [];
+    }
+    const rows = await res.json();
+    return rows
+      .filter((r) => r?.slug)
+      .map((r) => ({
+        path: `/kurulus/${r.slug}`,
+        priority: "0.5",
+        changefreq: "monthly",
+        lastmod: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
+      }));
+  } catch (error) {
+    console.warn("[sitemap] kuruluş profili fetch hatası — atlandı:", error?.name ?? error);
+    return [];
+  }
+}
+
 // NOT: /tools/:slug alt sayfaları RequireAuth ile korunur (bkz. src/App.tsx) —
 // girişsiz ziyaretçi/bot login'e redirect edilir. Bunları sitemap'e eklemek
 // GSC'de "Discovered/Crawled - currently not indexed" üretir (2026-07-14 audit).
 // Yalnızca herkese açık /tools hub'ı (STATIC_ROUTES içinde) sitemap'te kalır.
+// Aynı nedenle /association/:id de hariç: src/data/mock.ts demo verisi, gerçek
+// içerik değil (bkz. DemoPageBanner, AssociationDetail.tsx — noindex).
 
 function escapeXml(value) {
   return value.replace(/[<>&'"]/g, (c) =>
@@ -194,13 +326,31 @@ async function main() {
   // SITE_DATE env ile sabitlenebilir; yoksa bugünün tarihi (deterministik build için).
   const today = process.env.SITE_DATE ?? new Date().toISOString().slice(0, 10);
 
-  const [commercialRoutes, blogRoutes, surveyRoutes] = await Promise.all([
+  const [
+    commercialRoutes,
+    blogRoutes,
+    surveyRoutes,
+    diasporaRoutes,
+    directoryCatalogRoutes,
+    independentProfileRoutes,
+  ] = await Promise.all([
     getCommercialRoutes(),
     getBlogRoutes(),
     getSurveyRoutes(),
+    getDiasporaRoutes(),
+    getDirectoryCatalogRoutes(),
+    getIndependentProfileRoutes(),
   ]);
 
-  const entries = [...STATIC_ROUTES, ...commercialRoutes, ...blogRoutes, ...surveyRoutes];
+  const entries = [
+    ...STATIC_ROUTES,
+    ...commercialRoutes,
+    ...blogRoutes,
+    ...surveyRoutes,
+    ...diasporaRoutes,
+    ...directoryCatalogRoutes,
+    ...independentProfileRoutes,
+  ];
   // Tekilleştir (path'e göre).
   const unique = [...new Map(entries.map((e) => [e.path, e])).values()];
 
@@ -214,7 +364,9 @@ ${unique.map((e) => renderUrl(e, today)).join("\n")}
   await writeFile(OUTPUT, xml, "utf8");
   console.log(
     `[sitemap] ${unique.length} URL yazıldı → public/sitemap.xml ` +
-      `(statik: ${STATIC_ROUTES.length}, commercial: ${commercialRoutes.length}, blog: ${blogRoutes.length}, anket: ${surveyRoutes.length})`,
+      `(statik: ${STATIC_ROUTES.length}, commercial: ${commercialRoutes.length}, blog: ${blogRoutes.length}, ` +
+      `anket: ${surveyRoutes.length}, diaspora: ${diasporaRoutes.length}, ` +
+      `directory/catalog: ${directoryCatalogRoutes.length}, kurulus: ${independentProfileRoutes.length})`,
   );
 }
 

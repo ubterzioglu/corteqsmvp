@@ -8,6 +8,7 @@ import { usePublicProfileOwnership } from "@/hooks/usePublicProfileOwnership";
 import { useSubmitCatalogClaim } from "@/hooks/useSubmitCatalogClaim";
 import type { PublicCatalogProfilePagePayload } from "@/lib/public-catalog-profile-schemas";
 import { buildPublicCatalogProfileViewModel } from "@/lib/public-catalog-profile-view-model";
+import { useSeo } from "@/lib/seo";
 
 import PublicProfileBreadcrumb from "./PublicProfileBreadcrumb";
 import PublicProfileEmptyState from "./PublicProfileEmptyState";
@@ -40,6 +41,34 @@ const PublicProfileShell = ({ profile }: PublicProfileShellProps) => {
   const profilePath = `/directory/catalog/${viewModel.claim.slug}`;
   const loginHref = `/login?mode=signup&next=${encodeURIComponent(profilePath)}`;
   const shareUrl = typeof window !== "undefined" ? `${window.location.origin}${profilePath}` : profilePath;
+
+  const seoDescription =
+    viewModel.hero.tagline ||
+    viewModel.hero.headline ||
+    [viewModel.hero.roleLabel, viewModel.hero.locationLabel].filter(Boolean).join(" · ") ||
+    `${viewModel.hero.title} | CorteQS diaspora dizini profili`;
+
+  useSeo(
+    {
+      title: `${viewModel.hero.title} | CorteQS`,
+      description: seoDescription,
+      canonicalPath: profilePath,
+      ogImage: viewModel.hero.avatarUrl ?? undefined,
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: viewModel.hero.title,
+        description: seoDescription,
+        image: viewModel.hero.avatarUrl ?? undefined,
+        jobTitle: viewModel.hero.roleLabel ?? undefined,
+        address: viewModel.hero.locationLabel
+          ? { "@type": "PostalAddress", addressLocality: viewModel.hero.locationLabel }
+          : undefined,
+        url: `https://corteqs.net${profilePath}`,
+      },
+    },
+    [viewModel.claim.slug],
+  );
 
   const ownerEditToggle = isOwner ? (
     <Button

@@ -1,6 +1,17 @@
 import May19CampaignShell from "@/components/may19/May19CampaignShell";
+import { useSeo } from "@/lib/seo";
 
 export default function May19MapPage() {
+  useSeo(
+    {
+      title: "19 Mayıs Global Diaspora Haritası | CorteQS",
+      description:
+        "Global diaspora haritasında yerinizi işaretleyin ve 19 Mayıs coşkusunu dünyanın dört bir yanındaki Türk diasporasıyla paylaşın.",
+      canonicalPath: "/19051919/harita",
+    },
+    [],
+  );
+
   return (
     <May19CampaignShell
       eyebrow="GLOBAL DIASPORA HARİTASI"

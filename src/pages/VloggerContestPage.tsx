@@ -14,6 +14,7 @@ import {
   Globe2,
 } from "lucide-react";
 import RegisterInterestForm from "@/components/RegisterInterestForm";
+import { useSeo } from "@/lib/seo";
 const magicBallHero = "/lmaskot.png";
 
 const themes = [
@@ -65,6 +66,16 @@ const primaryButtonClass =
 const VloggerContestPage = () => {
   const [formOpen, setFormOpen] = useState(false);
   const openForm = () => setFormOpen(true);
+
+  useSeo(
+    {
+      title: "CorteQS Vlogger İçerik Yarışması | Kültür, Mücadele, Mizah, Gusto",
+      description:
+        "CorteQS Vlogger İçerik Yarışması'na katılın: kültür, mücadele, mizah ve gusto temalarında video üretin, global diaspora ekranlarında yer alın.",
+      canonicalPath: "/campaign/vlogger",
+    },
+    [],
+  );
 
   return (
     <div className="min-h-screen bg-background text-foreground">

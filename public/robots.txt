@@ -64,4 +64,8 @@ User-agent: Bytespider
 Allow: /
 Disallow: /admin
 
+User-agent: Meta-ExternalAgent
+Allow: /
+Disallow: /admin
+
 Sitemap: https://corteqs.net/sitemap.xml

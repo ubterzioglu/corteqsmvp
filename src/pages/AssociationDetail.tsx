@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { associations } from "@/data/mock";
 import { useToast } from "@/hooks/use-toast";
 import DemoPageBanner from "@/components/DemoPageBanner";
+import { useSeo } from "@/lib/seo";
 
 const AssociationDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,6 +15,32 @@ const AssociationDetail = () => {
   const assoc = associations.find((a) => a.id === id);
   const { isFollowed, toggle } = useFollow();
   const isFollowing = assoc ? isFollowed("association", assoc.id) : false;
+
+  // Bu sayfa şu an src/data/mock.ts demo verisiyle çalışıyor (bkz. DemoPageBanner) —
+  // gerçek kuruluş verisi olmadığı için noindex; canlı veriye geçilince kaldırılmalı.
+  useSeo(
+    assoc
+      ? {
+          title: `${assoc.name} | CorteQS`,
+          description: assoc.description || `${assoc.name} — ${assoc.city}, ${assoc.country}`,
+          canonicalPath: `/association/${assoc.id}`,
+          robots: "noindex, follow",
+          jsonLd: {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: assoc.name,
+            description: assoc.description,
+            url: assoc.website || undefined,
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: assoc.city,
+              addressCountry: assoc.country,
+            },
+          },
+        }
+      : { canonicalPath: `/association/${id}`, robots: "noindex, follow" },
+    [assoc?.id],
+  );
 
   if (!assoc) {
     return (

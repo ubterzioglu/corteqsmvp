@@ -1,5 +1,4 @@
 import LansmanForm from "@/components/LansmanForm";
-import { useEffect } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -7,7 +6,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { applySeo } from "@/lib/seo";
+import { PAGE_SEO } from "@/lib/page-seo";
+import { useSeo } from "@/lib/seo";
 const heroPoster = "/yeniinffffffff.png";
 const logo = "/newlogo.png";
 
@@ -18,14 +18,7 @@ const heroCtaClass =
   "min-w-[210px] justify-center rounded-full border border-orange-200/45 bg-[linear-gradient(135deg,#f59e0b_0%,#f97316_52%,#fb923c_100%)] px-6 text-sm font-semibold text-white shadow-[0_16px_40px_rgba(249,115,22,0.35)] transition duration-300 hover:-translate-y-0.5 hover:border-orange-100 hover:bg-[linear-gradient(135deg,#fbbf24_0%,#f97316_50%,#fdba74_100%)] hover:text-white";
 
 const LansmanPage = () => {
-  useEffect(() => {
-    return applySeo({
-      title: "CorteQS Lansman | Erken Destekçi ve Kurucu Programı",
-      description:
-        "CorteQS lansman programı: erken destekçi olun, referral gelir akışlarına ve diaspora topluluğunda erken konuma erişin.",
-      canonicalPath: "/lansman",
-    });
-  }, []);
+  useSeo(PAGE_SEO.lansman, []);
 
   const benefitCards = [
     {

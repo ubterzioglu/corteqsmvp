@@ -14,6 +14,17 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260721-google-indeksleme-sorunlari-teshisi-ve-addwa-yonlendirme",
+    date: "21 Temmuz 2026",
+    title: "Google'ın sitemizi neden bazı sayfalarda indekslemediği araştırıldı: çoğu aslında sorun değilmiş, bir gerçek eksik bulunup düzeltildi",
+    items: [
+      "Google Search Console'daki 4 farklı 'indekslenmedi' raporu tek tek incelendi. İkisi aslında sorun değil, Google'ın doğru çalıştığının kanıtı: bir sayfa başka bir sayfaya yönleniyorsa ('Sayfa yönlendirmeli') veya doğru bir canonical etiketi başka bir adrese işaret ediyorsa ('Doğru canonical etiketli alternatif sayfa'), Google bunu bilerek indekslemiyor — bu istenen davranış, düzeltilecek bir hata değil.",
+      "Gerçek bir eksik bulundu: /addwa adresi şimdiye kadar yalnızca tarayıcı içinde (JavaScript ile) başka bir sayfaya yönlendiriliyordu, sunucu seviyesinde gerçek bir yönlendirme (HTTP 301) yoktu. Artık sunucu da bu adresi doğrudan 301 ile doğru sayfaya yönlendiriyor — hem arama motorları için daha sağlam hem de biraz daha hızlı.",
+      "13 sayfanın (ör. /iletisim, /kariyer, /anket, yasal sayfalar) Google tarafından henüz hiç ziyaret edilmediği görüldü — hepsi zaten site haritasında (sitemap) yer alıyor, kodda eksik bir şey yok; bu sitenin henüz yeni/düşük öncelikli görülmesiyle ilgili, zamanla ya da Search Console'dan tek tek 'dizine ekleme' istenerek çözülür.",
+      "Daha önemli bir bulgu: eski mvp.corteqs.net adresi hâlâ canlı ve aynı siteyi yönlendirmeden gösteriyor — bu, Google'ın bazı sayfaları eski adres üzerinden bulup kafasının karışmasına yol açıyor. Bunu çözecek yönlendirme kodu aslında zaten yazılmış durumda (server.mjs içinde), ama şu an canlıda mvp.corteqs.net bu kodu çalıştırmıyor gibi görünüyor — bu bir kod eksikliği değil, bir sunucu/deploy (Coolify) konusu; Coolify panelinden mvp.corteqs.net'in ayrı bir uygulama olup olmadığının kontrol edilmesi gerekiyor.",
+    ],
+  },
+  {
     id: "20260721-social-share-vault-global-id-semasi",
     date: "21 Temmuz 2026",
     title: "Sosyal Medya Paylaşım Deposu'nda görsellerin yanlış karta düşme sorunu kökten çözüldü",

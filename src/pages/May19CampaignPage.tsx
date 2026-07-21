@@ -3,6 +3,7 @@ import May19CampaignShell from "@/components/may19/May19CampaignShell";
 import may19GlobePinsImage from "@/assets/may19-globe-pins.png";
 import may19IdeasImage from "@/assets/may19-ideas.jpg";
 import may19MomentsImage from "@/assets/may19-moments.jpg";
+import { useSeo } from "@/lib/seo";
 const heroLandmarks = "/denemeremake.png";
 const may19HeaderBg = "/newbg.png";
 const may19PoeticLayer = "/last.png";
@@ -47,6 +48,16 @@ const moduleCards = [
 ];
 
 export default function May19CampaignPage() {
+  useSeo(
+    {
+      title: "19 Mayıs Atatürk'ü Anma, Gençlik ve Spor Bayramı | CorteQS",
+      description:
+        "19 Mayıs coşkusunu global Türk diasporasıyla birlikte yaşayın: dünya haritasında yerinizi işaretleyin, fikrinizi paylaşın, anınızı gönderin.",
+      canonicalPath: "/19051919",
+    },
+    [],
+  );
+
   return (
     <May19CampaignShell
       eyebrow="19 MAYIS ATATÜRK'Ü ANMA, GENÇLİK VE SPOR BAYRAMI"

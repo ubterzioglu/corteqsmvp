@@ -35,6 +35,7 @@ const legacyRedirectMap = new Map([
   ["/hakkimizda", "/founders"],
   ["/blog", "/radar/rehberler"],
   ["/campaign/founding-1000", "/founding-1000"],
+  ["/addwa", "/addcom"],
 ]);
 
 // Bilinen crawler / AI cevap motoru user-agent'lari (robots.txt ile hizali).

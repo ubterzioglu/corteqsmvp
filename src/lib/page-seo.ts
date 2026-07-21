@@ -121,6 +121,12 @@ export const PAGE_SEO = {
       "Cadde, Türk diasporasının paylaşım, cafe ve çarşı alanı — güncel gönderileri keşfedin, topluluklara katılın.",
     canonicalPath: "/cadde",
   },
+  lansman: {
+    title: "CorteQS Lansman | Erken Destekçi ve Kurucu Programı",
+    description:
+      "CorteQS lansman programı: erken destekçi olun, referral gelir akışlarına ve diaspora topluluğunda erken konuma erişin.",
+    canonicalPath: "/lansman",
+  },
 } satisfies Record<string, SeoOptions>;
 
 export type PageSeoKey = keyof typeof PAGE_SEO;

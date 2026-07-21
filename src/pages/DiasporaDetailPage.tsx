@@ -10,6 +10,12 @@ import {
   type MarqueeItemRow,
   type MarqueeItemType,
 } from "@/lib/marquee";
+import {
+  applySeo,
+  SEO_CANONICAL_ORIGIN,
+  SEO_DEFAULT_OG_IMAGE,
+  SEO_SITE_NAME,
+} from "@/lib/seo";
 
 const getType = (type: string): MarqueeItemType =>
   type === "news" || type === "stat" || type === "announcement" ? type : "announcement";
@@ -20,16 +26,6 @@ const formatDate = (value: string) =>
     month: "long",
     year: "numeric",
   }).format(new Date(value));
-
-const upsertMetaDescription = (content: string) => {
-  let element = document.querySelector('meta[name="description"]');
-  if (!element) {
-    element = document.createElement("meta");
-    element.setAttribute("name", "description");
-    document.head.appendChild(element);
-  }
-  element.setAttribute("content", content);
-};
 
 const DiasporaDetailPage = () => {
   const { slug = "" } = useParams();
@@ -61,16 +57,38 @@ const DiasporaDetailPage = () => {
 
   useEffect(() => {
     if (!item) return;
-    const previousTitle = document.title;
-    const previousDescription = document.querySelector('meta[name="description"]')?.getAttribute("content");
+    const canonicalPath = `/diaspora/${item.slug}`;
+    const description = item.summary.slice(0, 155);
+    const ogImage = item.image_url || SEO_DEFAULT_OG_IMAGE;
 
-    document.title = `${item.title} | CorteQS`;
-    upsertMetaDescription(item.summary.slice(0, 155));
-
-    return () => {
-      document.title = previousTitle;
-      if (previousDescription) upsertMetaDescription(previousDescription);
+    // GEO: yapılandırılmış veri — AI cevap motorları NewsArticle şemasından beslenir
+    // (BlogPostPage.tsx'teki BlogPosting deseniyle tutarlı).
+    const jsonLd: Record<string, unknown> = {
+      "@context": "https://schema.org",
+      "@type": item.type === "news" ? "NewsArticle" : "Article",
+      headline: item.title,
+      description,
+      inLanguage: "tr",
+      url: `${SEO_CANONICAL_ORIGIN}${canonicalPath}`,
+      mainEntityOfPage: `${SEO_CANONICAL_ORIGIN}${canonicalPath}`,
+      image: ogImage,
+      datePublished: item.published_at,
+      author: { "@type": "Organization", name: SEO_SITE_NAME, url: SEO_CANONICAL_ORIGIN },
+      publisher: {
+        "@type": "Organization",
+        name: SEO_SITE_NAME,
+        logo: { "@type": "ImageObject", url: `${SEO_CANONICAL_ORIGIN}/logocorteqsbig.png` },
+      },
     };
+
+    return applySeo({
+      title: `${item.title} | CorteQS`,
+      description,
+      canonicalPath,
+      ogImage,
+      ogType: "article",
+      jsonLd,
+    });
   }, [item]);
 
   if (loading) {

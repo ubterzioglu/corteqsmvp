@@ -22,6 +22,19 @@ CorteQS, yurt dışındaki Türk diasporasını şehir bazlı olarak danışmanl
 - [Blog ana sayfası](https://corteqs.net/blog): On ülke için giriş/ulaşım, gündelik bütçe, kültür, oturum izni, çalışma vizesi, vatandaşlık, iş bulma ve yaşam şartları başlıklarında diaspora rehberleri. Tek tek yazılar `https://corteqs.net/blog/<slug>` adresinde, makine-okunur sitemap.xml içinde listelenir.
 - Kapsanan başlıklar: yurt dışına taşınma, vize ve oturum süreçleri, şehir bazlı ilk kurulum, yerel yaşam ve bütçe, iş arama ve diaspora topluluğuna katılım.
 
+## Dizin ve Kuruluşlar
+- [Dizin](https://corteqs.net/directory): Danışmanları, işletmeleri, dernekleri ve şehir elçilerini şehir ve role göre filtreleyerek keşfedin. Bireysel profiller `https://corteqs.net/directory/catalog/<slug>` adresinde.
+- [Dernekler ve Kuruluşlar](https://corteqs.net/associations): Dünya genelindeki Türk dernekleri, vakıfları, odaları, büyükelçilikleri ve konsoloslukları listeler.
+- [Kurucular](https://corteqs.net/founders): CorteQS kurucu ekibi ve platform vizyonu.
+
+## Araçlar ve Fiyatlandırma
+- [Taşınma Araçları](https://corteqs.net/tools): Yurt dışına taşınma sürecini kolaylaştıran ücretsiz araçlar (ülke seçimi, maaş karşılaştırma, şehir eşleştirme).
+- [Fiyatlandırma](https://corteqs.net/pricing): Danışman, kuruluş ve işletme üyelik planları.
+- [Kariyer](https://corteqs.net/kariyer): CorteQS'te açık roller.
+
+## Cadde
+- [Cadde](https://corteqs.net/cadde): Türk diasporasının paylaşım, cafe ve çarşı alanı. Giriş yapmış kullanıcılara açıktır.
+
 ## İletişim
 - E-posta: info@corteqs.net
 - LinkedIn: https://www.linkedin.com/company/corteqs-global

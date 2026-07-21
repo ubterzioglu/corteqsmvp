@@ -64,6 +64,16 @@ interface UpdateNote {
 const UPDATES: UpdateNote[] = [
   {
     date: "21 Temmuz 2026",
+    title: "Google'ın sitemizi neden bazı sayfalarda indekslemediği araştırıldı: çoğu aslında sorun değilmiş, bir gerçek eksik bulunup düzeltildi",
+    lines: [
+      "Google Search Console'daki 4 farklı 'indekslenmedi' raporu tek tek incelendi. İkisi aslında sorun değil, Google'ın doğru çalıştığının kanıtı: bir sayfa başka bir sayfaya yönleniyorsa veya doğru bir canonical etiketi başka bir adrese işaret ediyorsa, Google bunu bilerek indekslemiyor — bu istenen davranış.",
+      "Gerçek bir eksik bulundu: /addwa adresi şimdiye kadar yalnızca tarayıcı içinde (JavaScript ile) başka bir sayfaya yönlendiriliyordu, sunucu seviyesinde gerçek bir yönlendirme (HTTP 301) yoktu. Artık sunucu da bu adresi doğrudan 301 ile doğru sayfaya yönlendiriyor.",
+      "13 sayfanın (ör. /iletisim, /kariyer, /anket, yasal sayfalar) Google tarafından henüz hiç ziyaret edilmediği görüldü — hepsi zaten site haritasında yer alıyor, kodda eksik bir şey yok; zamanla ya da Search Console'dan tek tek 'dizine ekleme' istenerek çözülür.",
+      "Daha önemli bir bulgu: eski mvp.corteqs.net adresi hâlâ canlı ve aynı siteyi yönlendirmeden gösteriyor. Bunu çözecek kod aslında zaten yazılmış (server.mjs), ama canlıda mvp.corteqs.net bu kodu çalıştırmıyor gibi görünüyor — bir kod eksikliği değil, bir sunucu/deploy (Coolify) konusu.",
+    ],
+  },
+  {
+    date: "21 Temmuz 2026",
     title: "Sosyal Medya Paylaşım Deposu'nda görsellerin yanlış karta düşme sorunu kökten çözüldü",
     lines: [
       "Bir kartın görseli olduğu halde görselsiz göründüğü fark edildi (ör. 'Annenin sesi' diaspora postu) — kök neden bulundu: eski yükleme script'i, BURAK BURAYA BAK sekmesinin kendi 1-12 numaralandırmasını diğer sekmelerin numaralandırmasıyla karıştırıp bazı görselleri yanlış karta yazmıştı.",

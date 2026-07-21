@@ -1,11 +1,19 @@
 // scripts/reseed-social-share-outputs.mjs
-// docs/social-share-outputs klasöründeki dosyalar önceden yanlışlıkla tek şema
-// (burak/burak-tool-N) varsayılarak DB'ye işlenmişti. Gerçekte dosya adındaki
-// sayı "Tümü" birleşik listesindeki sabit sıra numarasıdır (globalIndex+1),
-// interleaveBySource algoritmasıyla tools/diaspora/tests/burak arasında
-// harmanlanır. Bu script:
-//   1) Eski yanlış burak/% kayıtlarını (storage + tablo) siler.
-//   2) Aynı dosyaları doğru tab/id/variant slot_key'lerine yeniden yükler.
+// docs/social-share-outputs klasöründeki dosyalar iki kez yanlış şemayla DB'ye
+// işlenmişti:
+//   - İlk seferinde tek şema (burak/burak-tool-N) varsayılmıştı.
+//   - İkinci seferinde (interleaveBySource ile) dosya adındaki sayı "Tümü"
+//     birleşik listesindeki sabit sıra numarası (globalIndex+1) sanılmıştı —
+//     ama dosya adları aslında BURAK_SHARE_TOOLS'taki "order" alanına (1..12,
+//     kartın BURAK sekmesi içindeki kendi sırası) göre kodlanmış, genel 100'lük
+//     listedeki globalIndex'e göre DEĞİL. Bu da item-1..item-12 gibi yanlış
+//     slot_key'lere yükleme yapılmasına yol açtı (gerçek Burak globalId'leri
+//     item-3, item-12, item-21, item-30, item-39, item-48, item-53, item-62,
+//     item-71, item-80, item-89, item-98 — bkz. burak-share-tools.ts).
+// Bu script BURAK_SHARE_TOOLS'un gerçek order→globalId eşlemesini doğrudan
+// kaynaktan (derlenmiş dosyadan regex ile) okur, hesaplamaz. Adımlar:
+//   1) Eski yanlış item-1..item-12 (ve varsa burak/%) kayıtlarını (storage + tablo) siler.
+//   2) Aynı dosyaları doğru globalId/variant slot_key'lerine yeniden yükler.
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -53,47 +61,40 @@ async function createAdminClient() {
   });
 }
 
-// --- interleaveBySource: social-share-unified.ts ile birebir aynı mantık ---
-function interleaveBySource(sources) {
-  const total = sources.reduce((sum, list) => sum + list.length, 0);
-  const cursors = sources.map(() => 0);
-  const result = [];
-  for (let slot = 0; slot < total; slot++) {
-    let bestSource = -1;
-    let bestDeficit = -Infinity;
-    for (let s = 0; s < sources.length; s++) {
-      if (cursors[s] >= sources[s].length) continue;
-      const targetShare = (sources[s].length / total) * (slot + 1);
-      const deficit = targetShare - cursors[s];
-      if (deficit > bestDeficit) {
-        bestDeficit = deficit;
-        bestSource = s;
-      }
-    }
-    result.push(sources[bestSource][cursors[bestSource]]);
-    cursors[bestSource] += 1;
+// --- BURAK_SHARE_TOOLS'un order→globalId eşlemesini kaynaktan oku ---
+// Dosya adlarındaki toolOrder, burak-share-tools.ts'teki her aracın "order"
+// alanına (1..12) karşılık gelir — bu alan globalId ile birebir eşleşir.
+async function loadBurakOrderToGlobalId() {
+  const filePath = path.join(
+    projectRoot,
+    "src",
+    "lib",
+    "admin-shell",
+    "burak-share-tools.ts",
+  );
+  const src = await readFile(filePath, "utf8");
+  // Her tool bloğu: id: "burak-tool-N", globalId: "item-M", order: N, ...
+  const blockRegex = /id:\s*"burak-tool-\d+",\s*globalId:\s*"(item-\d+)",\s*order:\s*(\d+),/g;
+  const map = new Map();
+  let match;
+  while ((match = blockRegex.exec(src)) !== null) {
+    const globalId = match[1];
+    const order = Number(match[2]);
+    map.set(order, globalId);
   }
-  return result;
+  if (map.size !== 12) {
+    throw new Error(
+      `burak-share-tools.ts'ten beklenen 12 order→globalId eşlemesi okunamadı (bulunan: ${map.size}). Dosya formatı değişmiş olabilir.`,
+    );
+  }
+  return map;
 }
 
-const TOOLS_COUNT = 10;
-const DIASPORA_COUNT = 68;
-const TESTS_COUNT = 10;
-const BURAK_COUNT = 12;
-
-const makeItems = (tab, prefix, count) =>
-  Array.from({ length: count }, (_, i) => ({ tab, id: `${prefix}-${i + 1}` }));
-
-const UNIFIED_ORDER = interleaveBySource([
-  makeItems("tools", "tool", TOOLS_COUNT),
-  makeItems("diaspora", "post", DIASPORA_COUNT),
-  makeItems("tests", "test-tool", TESTS_COUNT),
-  makeItems("burak", "burak-tool", BURAK_COUNT),
-]);
-
-function slotKeyFor(tab, id, variant) {
+// Gerçek DB şeması (bkz. burak-share-assets.ts burakSlotKey): "${globalId}/variant-${variantIndex}".
+// tab/id YALNIZCA storage dosya yolunu okunaklı kılmak için kullanılır, slot_key'e girmez.
+function slotKeyFor(globalId, variant) {
   const variantIndex = variant - 1;
-  return `${tab}/${id}/variant-${variantIndex}`;
+  return `${globalId}/variant-${variantIndex}`;
 }
 
 function buildImagePath(tab, id, variant, originalName) {
@@ -105,8 +106,12 @@ function buildImagePath(tab, id, variant, originalName) {
 
 async function run() {
   const client = await createAdminClient();
+  const orderToGlobalId = await loadBurakOrderToGlobalId();
 
-  // 1) Kaynak dosyaları oku + doğru unified karta çöz.
+  // 1) Kaynak dosyaları oku + doğru Burak kartına (order→globalId) çöz.
+  // NOT: docs/social-share-outputs dosya adları yalnızca Burak'ın 12 kartını
+  // kapsar (toolOrder 1..12, bkz. burak-share-image-filename.mjs) — diğer
+  // kaynaklar (tools/diaspora/tests) bu script'in kapsamı dışındadır.
   const entries = await readdir(SOURCE_DIR, { withFileTypes: true });
   const files = entries.filter((e) => e.isFile()).map((e) => e.name).sort();
 
@@ -118,30 +123,43 @@ async function run() {
       unparsed.push(name);
       continue;
     }
-    const unifiedItem = UNIFIED_ORDER[info.toolOrder - 1];
-    if (!unifiedItem) {
+    const globalId = orderToGlobalId.get(info.toolOrder);
+    if (!globalId) {
       unparsed.push(name);
       continue;
     }
-    parsed.push({ ...info, filename: name, tab: unifiedItem.tab, id: unifiedItem.id });
+    parsed.push({
+      ...info,
+      filename: name,
+      tab: "burak",
+      id: `burak-tool-${info.toolOrder}`,
+      globalId,
+    });
   }
 
   if (unparsed.length > 0) {
     console.warn(`Çözümlenemeyen ${unparsed.length} dosya atlanıyor: ${unparsed.join(", ")}`);
   }
 
-  // 2) Eski yanlış burak/% kayıtlarını (storage + tablo) sil.
+  // 2) Eski yanlış kayıtları (storage + tablo) sil.
+  // DB'de şu anda social_share_assets/social_share_asset_images'te bulunan
+  // TÜM kayıtlar bu klasördeki 32 dosyanın önceki (yanlış) reseed
+  // çalıştırmalarından geldiği doğrulandı (item-1/variant-0..item-12/variant-2
+  // aralığı, tab/id/variant biçimindeki tarihsel "burak/%" biçimiyle birlikte).
+  // Bu iki tablo başka hiçbir kaynaktan (tools/diaspora/tests) veri
+  // içermediği için tamamını temizleyip aynı 32 dosyayı doğru globalId'lere
+  // yeniden yüklemek en güvenli yoldur — kısmi pattern eşleştirmesi, item-12
+  // gibi yanlış/gerçek globalId çakışmalarında yanlışlıkla doğru bir kaydı
+  // atlama riski taşır.
   console.log("\n--- Eski yanlış kayıtlar temizleniyor ---");
   const { data: oldCovers, error: oldCoversError } = await client
     .from("social_share_assets")
-    .select("slot_key, image_bucket, image_path")
-    .like("slot_key", "burak/%");
+    .select("slot_key, image_bucket, image_path");
   if (oldCoversError) throw new Error(`Eski kapak kayıtları okunamadı: ${oldCoversError.message}`);
 
   const { data: oldExtras, error: oldExtrasError } = await client
     .from("social_share_asset_images")
-    .select("id, slot_key, image_bucket, image_path")
-    .like("slot_key", "burak/%");
+    .select("id, slot_key, image_bucket, image_path");
   if (oldExtrasError) throw new Error(`Eski ek görsel kayıtları okunamadı: ${oldExtrasError.message}`);
 
   const storagePathsToRemove = [
@@ -155,12 +173,16 @@ async function run() {
   }
 
   if ((oldCovers ?? []).length > 0) {
-    const { error } = await client.from("social_share_assets").delete().like("slot_key", "burak/%");
+    // slot_key her zaman dolu olduğundan "not null" ile tüm satırları hedefler.
+    const { error } = await client.from("social_share_assets").delete().not("slot_key", "is", null);
     if (error) throw new Error(`Eski kapak kayıtları silinemedi: ${error.message}`);
     console.log(`social_share_assets'ten silindi: ${oldCovers.length} kayıt`);
   }
   if ((oldExtras ?? []).length > 0) {
-    const { error } = await client.from("social_share_asset_images").delete().like("slot_key", "burak/%");
+    const { error } = await client
+      .from("social_share_asset_images")
+      .delete()
+      .not("slot_key", "is", null);
     if (error) throw new Error(`Eski ek görsel kayıtları silinemedi: ${error.message}`);
     console.log(`social_share_asset_images'ten silindi: ${oldExtras.length} kayıt`);
   }
@@ -172,7 +194,7 @@ async function run() {
   const failures = [];
 
   for (const item of parsed) {
-    const slotKey = slotKeyFor(item.tab, item.id, item.variant);
+    const slotKey = slotKeyFor(item.globalId, item.variant);
     const isCover = item.promptNo === 1;
 
     try {

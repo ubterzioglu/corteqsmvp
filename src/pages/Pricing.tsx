@@ -150,8 +150,32 @@ const businessPlans = {
   },
 };
 
+const ALL_YEARLY_PRICES = [
+  consultantPlans.freemium.yearlyPrice,
+  consultantPlans.premium.yearlyPrice,
+  associationPlans.freemium.yearlyPrice,
+  associationPlans.premium.yearlyPrice,
+  businessPlans.freemium.yearlyPrice,
+  businessPlans.premium.yearlyPrice,
+];
+
+const PRICING_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "AggregateOffer",
+  priceCurrency: "EUR",
+  lowPrice: String(Math.min(...ALL_YEARLY_PRICES)),
+  highPrice: String(Math.max(...ALL_YEARLY_PRICES)),
+  offerCount: ALL_YEARLY_PRICES.length,
+  url: "https://corteqs.net/pricing",
+  offers: [
+    { "@type": "Offer", name: consultantPlans.premium.name, price: String(consultantPlans.premium.yearlyPrice), priceCurrency: "EUR", category: "Danışman" },
+    { "@type": "Offer", name: associationPlans.premium.name, price: String(associationPlans.premium.yearlyPrice), priceCurrency: "EUR", category: "Kuruluş" },
+    { "@type": "Offer", name: businessPlans.premium.name, price: String(businessPlans.premium.yearlyPrice), priceCurrency: "EUR", category: "İşletme" },
+  ],
+};
+
 const Pricing = () => {
-  useSeo(PAGE_SEO.pricing, []);
+  useSeo({ ...PAGE_SEO.pricing, jsonLd: PRICING_JSON_LD }, []);
   const [userType, setUserType] = useState<UserType>("consultant");
   const [isYearly, setIsYearly] = useState(false);
 

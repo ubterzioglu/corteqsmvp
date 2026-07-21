@@ -157,6 +157,34 @@ export type BurakShareExtraImage = {
   sortOrder: number;
 };
 
+/**
+ * Her slot için "prompt 2" görseli — reseed-social-share-outputs.mjs kuralına
+ * göre kapak (social_share_assets) = prompt 1, ilk ek görsel (sort_order=0) =
+ * prompt 2. Prompt bazlı önizleme/link göstermek için tek toplu sorgu; slot
+ * başına en düşük sort_order'lı satır alınır.
+ */
+export async function listBurakShareFirstExtraImageBySlot(): Promise<
+  Record<string, { imageBucket: string; imagePath: string }>
+> {
+  const { data, error } = await db
+    .from("social_share_asset_images")
+    .select("slot_key, image_bucket, image_path, sort_order")
+    .order("sort_order", { ascending: true });
+
+  if (error) throw new Error(messageOf(error, "Görseller yüklenemedi"));
+
+  const map: Record<string, { imageBucket: string; imagePath: string }> = {};
+  for (const row of (data ?? []) as Array<Record<string, unknown>>) {
+    const slotKey = String(row.slot_key ?? "");
+    if (!slotKey || map[slotKey]) continue;
+    map[slotKey] = {
+      imageBucket: String(row.image_bucket ?? ""),
+      imagePath: String(row.image_path ?? ""),
+    };
+  }
+  return map;
+}
+
 export async function listBurakShareExtraImages(
   slotKey: string,
 ): Promise<BurakShareExtraImage[]> {

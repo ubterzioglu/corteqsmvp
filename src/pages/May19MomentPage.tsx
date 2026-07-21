@@ -2,9 +2,20 @@ import May19CampaignShell from "@/components/may19/May19CampaignShell";
 import May19SubmissionForm from "@/components/may19/May19SubmissionForm";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useSeo } from "@/lib/seo";
 const heroLandmarks = "/denemeremake.png";
 
 export default function May19MomentPage() {
+  useSeo(
+    {
+      title: "19 Mayıs Anını Paylaş | CorteQS",
+      description:
+        "19 Mayıs bayram coşkusuna dair anınızı veya notunuzu paylaşın; seçilen gönderimler CorteQS global kanallarında yayınlanır.",
+      canonicalPath: "/190519memory",
+    },
+    [],
+  );
+
   return (
     <May19CampaignShell
       eyebrow="19 MAYIS ATATÜRK'Ü ANMA, GENÇLİK VE SPOR BAYRAMI"

@@ -31,6 +31,12 @@ export interface SeoOptions {
   ogType?: string;
   /** Sayfa-özel JSON-LD. Tek nesne veya nesne dizisi. Unmount'ta temizlenir. */
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /**
+   * meta[name=robots] içeriği (örn. "noindex, follow"). Verilmezse index.html'in
+   * global "index, follow" değeri değişmeden kalır — yalnızca doğrulanmamış/
+   * kullanıcı-kaynaklı veya süresi dolmuş sayfalarda override için kullan.
+   */
+  robots?: string;
 }
 
 const SEO_JSONLD_ATTR = "data-seo-jsonld";
@@ -94,6 +100,7 @@ export function applySeo(opts: SeoOptions): () => void {
       .querySelector('meta[name="twitter:description"]')
       ?.getAttribute("content"),
     twImage: document.head.querySelector('meta[name="twitter:image"]')?.getAttribute("content"),
+    robots: document.head.querySelector('meta[name="robots"]')?.getAttribute("content"),
   };
 
   // ── Uygula ──
@@ -136,6 +143,10 @@ export function applySeo(opts: SeoOptions): () => void {
     ogImage,
   );
 
+  if (opts.robots !== undefined) {
+    upsertMeta('meta[name="robots"]', "name", "robots").setAttribute("content", opts.robots);
+  }
+
   // ── Sayfa-özel JSON-LD ──
   const jsonLdNodes: HTMLScriptElement[] = [];
   if (opts.jsonLd) {
@@ -170,6 +181,11 @@ export function applySeo(opts: SeoOptions): () => void {
     restore('meta[name="twitter:title"]', prev.twTitle);
     restore('meta[name="twitter:description"]', prev.twDescription);
     restore('meta[name="twitter:image"]', prev.twImage);
+    if (prev.robots != null) {
+      restore('meta[name="robots"]', prev.robots);
+    } else {
+      document.head.querySelector('meta[name="robots"]')?.remove();
+    }
     for (const node of jsonLdNodes) node.remove();
   };
 }

@@ -153,6 +153,10 @@ const trustBadges = [
 ] as const;
 
 const AboutPage = () => {
+  // SEO (title/canonical/JSON-LD) bilinçli olarak burada değil FoundersPage'de
+  // uygulanıyor — App.tsx'te FoundersCombinedPage bu ikisini /founders route'unda
+  // birlikte render eder. AboutPage'i FoundersPage olmadan başka bir route'a
+  // taşırsan buraya applySeo(PAGE_SEO.founders) eklemeyi unutma.
   useEffect(() => {
     document.dispatchEvent(new Event("render-complete"));
   }, []);

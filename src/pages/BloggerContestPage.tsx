@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import RegisterInterestForm from "@/components/RegisterInterestForm";
 import bloggerVisual from "@/assets/blogger-vlogger.jpg";
+import { useSeo } from "@/lib/seo";
 
 const themes = [
   { title: "Kültür", desc: "Kültürel deneyimler, diaspora gözlemleri ve kültürler arası karşılaşmalar." },
@@ -75,6 +76,16 @@ const primaryButtonClass =
 const BloggerContestPage = () => {
   const [formOpen, setFormOpen] = useState(false);
   const openForm = () => setFormOpen(true);
+
+  useSeo(
+    {
+      title: "CorteQS Blogger İçerik Yarışması | Kültür, Mücadele, Mizah, Gusto",
+      description:
+        "CorteQS Blogger İçerik Yarışması'na katılın: kültür, mücadele, mizah ve gusto temalarında yazı üretin, global diaspora okurlarına ulaşın.",
+      canonicalPath: "/campaign/blogger",
+    },
+    [],
+  );
 
   return (
     <div className="min-h-screen bg-background text-foreground">
