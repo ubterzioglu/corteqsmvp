@@ -51,6 +51,8 @@ export type DiasporaPostTheme =
 export type DiasporaPost = {
   /** Benzersiz kimlik ("post-1" ... "post-50"). */
   id: string;
+  /** Kaynaklar arası sabit tekil kimlik ("item-1".."item-100") — slot_key ve DB takibi bunu kullanır. */
+  globalId: string;
   /** Görünüm sırası (1..50). */
   order: number;
   theme: DiasporaPostTheme;
@@ -105,6 +107,7 @@ export const DIASPORA_THEME_LABELS: Record<DiasporaPostTheme, string> = {
 export const DIASPORA_POSTS: DiasporaPost[] = [
   {
     id: "post-1",
+    globalId: "item-1",
     order: 1,
     theme: "gurbet",
     title: "Köprüdeki o koku",
@@ -148,6 +151,7 @@ corteqs.net
   },
   {
     id: "post-2",
+    globalId: "item-2",
     order: 2,
     theme: "gurbet",
     title: "Annenin sesi",
@@ -191,6 +195,7 @@ corteqs.net
   },
   {
     id: "post-3",
+    globalId: "item-4",
     order: 3,
     theme: "gurbet",
     title: "Aynı ay",
@@ -232,6 +237,7 @@ corteqs.net
   },
   {
     id: "post-4",
+    globalId: "item-6",
     order: 4,
     theme: "kimlik",
     title: "İki dünya bir kalp",
@@ -273,6 +279,7 @@ corteqs.net
   },
   {
     id: "post-5",
+    globalId: "item-7",
     order: 5,
     theme: "kimlik",
     title: "Dedemin valizi",
@@ -314,6 +321,7 @@ corteqs.net
   },
   {
     id: "post-6",
+    globalId: "item-9",
     order: 6,
     theme: "kimlik",
     title: "İsmini doğru söyleyen biri",
@@ -355,6 +363,7 @@ corteqs.net
   },
   {
     id: "post-7",
+    globalId: "item-10",
     order: 7,
     theme: "ulke-dagilimi",
     title: "Almanya'da bir Türkiye",
@@ -396,6 +405,7 @@ corteqs.net
   },
   {
     id: "post-8",
+    globalId: "item-11",
     order: 8,
     theme: "ulke-dagilimi",
     title: "Avrupa'nın dört bir yanı",
@@ -437,6 +447,7 @@ corteqs.net
   },
   {
     id: "post-9",
+    globalId: "item-13",
     order: 9,
     theme: "ulke-dagilimi",
     title: "Körfez'den Pasifik'e",
@@ -478,6 +489,7 @@ corteqs.net
   },
   {
     id: "post-10",
+    globalId: "item-14",
     order: 10,
     theme: "dil",
     title: "Anne, su alabilir miyim?",
@@ -519,6 +531,7 @@ corteqs.net
   },
   {
     id: "post-11",
+    globalId: "item-16",
     order: 11,
     theme: "dil",
     title: "Ninniden masala",
@@ -560,6 +573,7 @@ corteqs.net
   },
   {
     id: "post-12",
+    globalId: "item-18",
     order: 12,
     theme: "mutfak",
     title: "Annemin sarması",
@@ -601,6 +615,7 @@ corteqs.net
   },
   {
     id: "post-13",
+    globalId: "item-19",
     order: 13,
     theme: "mutfak",
     title: "Bir simit, bir çay",
@@ -642,6 +657,7 @@ corteqs.net
   },
   {
     id: "post-14",
+    globalId: "item-20",
     order: 14,
     theme: "bayram",
     title: "Gurbette arife sabahı",
@@ -683,6 +699,7 @@ corteqs.net
   },
   {
     id: "post-15",
+    globalId: "item-22",
     order: 15,
     theme: "bayram",
     title: "Baklava kokusu",
@@ -724,6 +741,7 @@ corteqs.net
   },
   {
     id: "post-16",
+    globalId: "item-23",
     order: 16,
     theme: "gelenek",
     title: "Gurbette kına gecesi",
@@ -765,6 +783,7 @@ corteqs.net
   },
   {
     id: "post-17",
+    globalId: "item-25",
     order: 17,
     theme: "basari",
     title: "Vadideki Türkler",
@@ -806,6 +825,7 @@ corteqs.net
   },
   {
     id: "post-18",
+    globalId: "item-26",
     order: 18,
     theme: "basari",
     title: "Garajdan dünyaya",
@@ -847,6 +867,7 @@ corteqs.net
   },
   {
     id: "post-19",
+    globalId: "item-28",
     order: 19,
     theme: "yeni-gelenler",
     title: "İlk hafta",
@@ -888,6 +909,7 @@ corteqs.net
   },
   {
     id: "post-20",
+    globalId: "item-29",
     order: 20,
     theme: "yeni-gelenler",
     title: "Şehir elçisi",
@@ -929,6 +951,7 @@ corteqs.net
   },
   {
     id: "post-21",
+    globalId: "item-31",
     order: 21,
     theme: "isletme",
     title: "Mahallenin Türk esnafı",
@@ -970,6 +993,7 @@ corteqs.net
   },
   {
     id: "post-22",
+    globalId: "item-32",
     order: 22,
     theme: "isletme",
     title: "Kendi işini kur",
@@ -1011,6 +1035,7 @@ corteqs.net
   },
   {
     id: "post-23",
+    globalId: "item-33",
     order: 23,
     theme: "ogrenci",
     title: "Erasmus macerası",
@@ -1052,6 +1077,7 @@ corteqs.net
   },
   {
     id: "post-24",
+    globalId: "item-35",
     order: 24,
     theme: "ogrenci",
     title: "İlk diploma, ilk gurbet",
@@ -1093,6 +1119,7 @@ corteqs.net
   },
   {
     id: "post-25",
+    globalId: "item-37",
     order: 25,
     theme: "networking",
     title: "Doğru kişi, doğru an",
@@ -1134,6 +1161,7 @@ corteqs.net
   },
   {
     id: "post-26",
+    globalId: "item-38",
     order: 26,
     theme: "mentorluk",
     title: "Bir tavsiye, bir kariyer",
@@ -1175,6 +1203,7 @@ corteqs.net
   },
   {
     id: "post-27",
+    globalId: "item-40",
     order: 27,
     theme: "aidiyet",
     title: "Kalabalıkta yalnızlık",
@@ -1216,6 +1245,7 @@ corteqs.net
   },
   {
     id: "post-28",
+    globalId: "item-41",
     order: 28,
     theme: "aidiyet",
     title: "Buraya aitim",
@@ -1257,6 +1287,7 @@ corteqs.net
   },
   {
     id: "post-29",
+    globalId: "item-42",
     order: 29,
     theme: "geri-donus",
     title: "Geri dönsem mi?",
@@ -1298,6 +1329,7 @@ corteqs.net
   },
   {
     id: "post-30",
+    globalId: "item-44",
     order: 30,
     theme: "geri-donus",
     title: "İki vatan arası",
@@ -1339,6 +1371,7 @@ corteqs.net
   },
   {
     id: "post-31",
+    globalId: "item-45",
     order: 31,
     theme: "etkinlik",
     title: "Bir araya geldiğimizde",
@@ -1380,6 +1413,7 @@ corteqs.net
   },
   {
     id: "post-32",
+    globalId: "item-47",
     order: 32,
     theme: "etkinlik",
     title: "Kültürümüz görünür olsun",
@@ -1421,6 +1455,7 @@ corteqs.net
   },
   {
     id: "post-33",
+    globalId: "item-49",
     order: 33,
     theme: "carsi",
     title: "Taşınırken",
@@ -1462,6 +1497,7 @@ corteqs.net
   },
   {
     id: "post-34",
+    globalId: "item-50",
     order: 34,
     theme: "carsi",
     title: "Sıfırdan yuva",
@@ -1503,6 +1539,7 @@ corteqs.net
   },
   {
     id: "post-35",
+    globalId: "item-51",
     order: 35,
     theme: "dayanisma",
     title: "Cuma buluşması",
@@ -1544,6 +1581,7 @@ corteqs.net
   },
   {
     id: "post-36",
+    globalId: "item-52",
     order: 36,
     theme: "dayanisma",
     title: "Zor günde yanında",
@@ -1585,6 +1623,7 @@ corteqs.net
   },
   {
     id: "post-37",
+    globalId: "item-54",
     order: 37,
     theme: "spor",
     title: "Gurbette milli maç",
@@ -1626,6 +1665,7 @@ corteqs.net
   },
   {
     id: "post-38",
+    globalId: "item-56",
     order: 38,
     theme: "spor",
     title: "Aynı takım, aynı çatı",
@@ -1667,6 +1707,7 @@ corteqs.net
   },
   {
     id: "post-39",
+    globalId: "item-57",
     order: 39,
     theme: "teknoloji",
     title: "Görünmez ağı görünür kıl",
@@ -1708,6 +1749,7 @@ corteqs.net
   },
   {
     id: "post-40",
+    globalId: "item-59",
     order: 40,
     theme: "teknoloji",
     title: "Tek aramada bul",
@@ -1749,6 +1791,7 @@ corteqs.net
   },
   {
     id: "post-41",
+    globalId: "item-60",
     order: 41,
     theme: "ebeveyn",
     title: "Gurbette ebeveyn olmak",
@@ -1790,6 +1833,7 @@ corteqs.net
   },
   {
     id: "post-42",
+    globalId: "item-61",
     order: 42,
     theme: "ebeveyn",
     title: "Bir anne bir anneyi anlar",
@@ -1831,6 +1875,7 @@ corteqs.net
   },
   {
     id: "post-43",
+    globalId: "item-63",
     order: 43,
     theme: "tatil",
     title: "Yaz geldi, yollar açıldı",
@@ -1872,6 +1917,7 @@ corteqs.net
   },
   {
     id: "post-44",
+    globalId: "item-64",
     order: 44,
     theme: "tatil",
     title: "Sılaya selam",
@@ -1913,6 +1959,7 @@ corteqs.net
   },
   {
     id: "post-45",
+    globalId: "item-66",
     order: 45,
     theme: "carsi",
     title: "Güvenle al, güvenle sat",
@@ -1954,6 +2001,7 @@ corteqs.net
   },
   {
     id: "post-46",
+    globalId: "item-68",
     order: 46,
     theme: "cadde",
     title: "Şehrinin nabzı",
@@ -1995,6 +2043,7 @@ corteqs.net/cadde
   },
   {
     id: "post-47",
+    globalId: "item-69",
     order: 47,
     theme: "kadin",
     title: "Gurbetin güçlü kadınları",
@@ -2036,6 +2085,7 @@ corteqs.net
   },
   {
     id: "post-48",
+    globalId: "item-70",
     order: 48,
     theme: "kusaklar",
     title: "İlk kuşağın hatırı",
@@ -2077,6 +2127,7 @@ corteqs.net
   },
   {
     id: "post-49",
+    globalId: "item-72",
     order: 49,
     theme: "manifesto",
     title: "Bir dizin değil, yaşayan bir ağ",
@@ -2116,6 +2167,7 @@ corteqs.net
   },
   {
     id: "post-50",
+    globalId: "item-73",
     order: 50,
     theme: "manifesto",
     title: "Sen de bu ağın parçası ol",
@@ -2157,6 +2209,7 @@ corteqs.net
   },
   {
     id: "post-51",
+    globalId: "item-75",
     order: 51,
     theme: "cadde",
     title: "Cadde'de bugün ne konuşuluyor",
@@ -2196,6 +2249,7 @@ corteqs.net/cadde
   },
   {
     id: "post-52",
+    globalId: "item-76",
     order: 52,
     theme: "carsi",
     title: "Çarşı: birbirimizden alışveriş",
@@ -2235,6 +2289,7 @@ corteqs.net/cadde/carsi
   },
   {
     id: "post-53",
+    globalId: "item-78",
     order: 53,
     theme: "radar",
     title: "Diaspora haberlerini tek yerde takip et",
@@ -2274,6 +2329,7 @@ corteqs.net
   },
   {
     id: "post-54",
+    globalId: "item-79",
     order: 54,
     theme: "blog",
     title: "Ülke rehberleri: ilk elden bilgi",
@@ -2313,6 +2369,7 @@ corteqs.net/blog
   },
   {
     id: "post-55",
+    globalId: "item-81",
     order: 55,
     theme: "referans",
     title: "Tanıdığını davet et, birlikte büyüyün",
@@ -2352,6 +2409,7 @@ corteqs.net
   },
   {
     id: "post-56",
+    globalId: "item-82",
     order: 56,
     theme: "kariyer",
     title: "Bulunduğun şehirde kariyer fırsatı",
@@ -2391,6 +2449,7 @@ corteqs.net
   },
   {
     id: "post-57",
+    globalId: "item-83",
     order: 57,
     theme: "uzaktan-calisma",
     title: "Nerede olursan ol, kariyerin seninle",
@@ -2430,6 +2489,7 @@ corteqs.net
   },
   {
     id: "post-58",
+    globalId: "item-85",
     order: 58,
     theme: "yalnizlik",
     title: "Kalabalık bir şehirde yalnız olmak",
@@ -2469,6 +2529,7 @@ corteqs.net
   },
   {
     id: "post-59",
+    globalId: "item-87",
     order: 59,
     theme: "kusaklar",
     title: "İkinci kuşağın kimlik arayışı",
@@ -2508,6 +2569,7 @@ corteqs.net
   },
   {
     id: "post-60",
+    globalId: "item-88",
     order: 60,
     theme: "dil",
     title: "Ana dilini kaybetme korkusu",
@@ -2547,6 +2609,7 @@ corteqs.net
   },
   {
     id: "post-61",
+    globalId: "item-90",
     order: 61,
     theme: "tatil",
     title: "Memlekete dönüş sonrası boşluk",
@@ -2586,6 +2649,7 @@ corteqs.net
   },
   {
     id: "post-62",
+    globalId: "item-91",
     order: 62,
     theme: "isletme",
     title: "Küçük işletmeni diasporaya duyur",
@@ -2625,6 +2689,7 @@ corteqs.net/cadde/carsi
   },
   {
     id: "post-63",
+    globalId: "item-92",
     order: 63,
     theme: "ogrenci",
     title: "Yurt dışında öğrenci olmak",
@@ -2664,6 +2729,7 @@ corteqs.net
   },
   {
     id: "post-64",
+    globalId: "item-94",
     order: 64,
     theme: "mentorluk",
     title: "Bir adım önde olanın deneyimi",
@@ -2703,6 +2769,7 @@ corteqs.net
   },
   {
     id: "post-65",
+    globalId: "item-95",
     order: 65,
     theme: "etkinlik",
     title: "Şehrindeki bir sonraki buluşma",
@@ -2742,6 +2809,7 @@ corteqs.net
   },
   {
     id: "post-66",
+    globalId: "item-97",
     order: 66,
     theme: "kadin",
     title: "Gurbette kadın olmak, gurbette güçlenmek",
@@ -2781,6 +2849,7 @@ corteqs.net
   },
   {
     id: "post-67",
+    globalId: "item-99",
     order: 67,
     theme: "ambasador",
     title: "Şehrinin gönüllü temsilcisi ol",
@@ -2820,6 +2889,7 @@ corteqs.net
   },
   {
     id: "post-68",
+    globalId: "item-100",
     order: 68,
     theme: "manifesto",
     title: "251 ülke, tek bir ağ",

@@ -15,6 +15,8 @@ export type SocialShareCategory = "kesfet" | "baglan" | "kullan" | "koru";
 export type SocialShareTool = {
   /** Benzersiz kimlik (kebab-case, "tool-1" ... "tool-10"). */
   id: string;
+  /** Kaynaklar arası sabit tekil kimlik ("item-1".."item-100") — slot_key ve DB takibi bunu kullanır. */
+  globalId: string;
   /** Görünüm sırası (1..10). */
   order: number;
   category: SocialShareCategory;
@@ -44,6 +46,7 @@ export const SOCIAL_SHARE_CATEGORY_LABELS: Record<SocialShareCategory, string> =
 export const SOCIAL_SHARE_TOOLS: SocialShareTool[] = [
   {
     id: "tool-1",
+    globalId: "item-5",
     order: 1,
     category: "kesfet",
     name: "Dizin / Katalog Arama",
@@ -85,6 +88,7 @@ Site: corteqs.net
   },
   {
     id: "tool-2",
+    globalId: "item-15",
     order: 2,
     category: "kesfet",
     name: "AI Eşleştirme",
@@ -126,6 +130,7 @@ corteqs.net
   },
   {
     id: "tool-3",
+    globalId: "item-24",
     order: 3,
     category: "kesfet",
     name: "Profil / İlgi Alanı Editörü",
@@ -167,6 +172,7 @@ corteqs.net
   },
   {
     id: "tool-4",
+    globalId: "item-34",
     order: 4,
     category: "baglan",
     name: "Cadde Feed",
@@ -208,6 +214,7 @@ corteqs.net/cadde
   },
   {
     id: "tool-5",
+    globalId: "item-43",
     order: 5,
     category: "baglan",
     name: "Cadde Profil Kapısı",
@@ -249,6 +256,7 @@ corteqs.net/cadde
   },
   {
     id: "tool-6",
+    globalId: "item-55",
     order: 6,
     category: "baglan",
     name: "Cadde Köprü",
@@ -290,6 +298,7 @@ corteqs.net/cadde
   },
   {
     id: "tool-7",
+    globalId: "item-65",
     order: 7,
     category: "baglan",
     name: "Cadde Cafe",
@@ -331,6 +340,7 @@ corteqs.net/cadde
   },
   {
     id: "tool-8",
+    globalId: "item-74",
     order: 8,
     category: "kullan",
     name: "Cadde Çarşı",
@@ -372,6 +382,7 @@ corteqs.net/cadde/carsi
   },
   {
     id: "tool-9",
+    globalId: "item-84",
     order: 9,
     category: "kullan",
     name: "Cadde Tanıtım",
@@ -413,6 +424,7 @@ corteqs.net/cadde
   },
   {
     id: "tool-10",
+    globalId: "item-93",
     order: 10,
     category: "koru",
     name: "Cadde Şikâyet / Moderasyon",

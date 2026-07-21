@@ -30,14 +30,14 @@ beforeEach(() => {
 });
 
 describe("burakSlotKey", () => {
-  it("builds a deterministic slot key from tab, item id and variant index", () => {
-    expect(burakSlotKey("burak", "burak-tool-11", 1)).toBe("burak/burak-tool-11/variant-1");
+  it("builds a deterministic slot key from globalId and variant index", () => {
+    expect(burakSlotKey("item-98", 1)).toBe("item-98/variant-1");
   });
 
-  it("prefixes the slot key with the source tab for non-burak items", () => {
-    expect(burakSlotKey("tools", "tool-1", 0)).toBe("tools/tool-1/variant-0");
-    expect(burakSlotKey("diaspora", "post-1", 0)).toBe("diaspora/post-1/variant-0");
-    expect(burakSlotKey("tests", "test-tool-1", 2)).toBe("tests/test-tool-1/variant-2");
+  it("uses globalId as the sole identity, regardless of source", () => {
+    expect(burakSlotKey("item-5", 0)).toBe("item-5/variant-0");
+    expect(burakSlotKey("item-1", 0)).toBe("item-1/variant-0");
+    expect(burakSlotKey("item-8", 2)).toBe("item-8/variant-2");
   });
 });
 
@@ -180,8 +180,7 @@ describe("addBurakShareExtraImage", () => {
 
     const file = new File(["x"], "b.png", { type: "image/png" });
     const result = await addBurakShareExtraImage(
-      "tools",
-      "tool-1",
+      "item-5",
       0,
       "tools/tool-1/variant-0",
       file,
@@ -213,7 +212,7 @@ describe("addBurakShareExtraImage", () => {
 
     const file = new File(["x"], "b.png", { type: "image/png" });
     await expect(
-      addBurakShareExtraImage("tools", "tool-1", 0, "tools/tool-1/variant-0", file, 0),
+      addBurakShareExtraImage("item-5", 0, "tools/tool-1/variant-0", file, 0),
     ).rejects.toThrow("insert failed");
     expect(remove).toHaveBeenCalled();
   });

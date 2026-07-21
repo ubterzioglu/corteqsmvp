@@ -3,9 +3,11 @@
 // diaspora postları, test araçları, Burak medya kalemleri) hangi platformlarda
 // paylaşıldığını DB'de tutar.
 //
-// Tablolar (mig 20260627100000, 20260718100000):
-//  • social_share_log        → kalem × platform rozetleri (UNIQUE item_tab,item_id,platform)
-//  • social_share_item_note  → kalem başına tek not (UNIQUE item_tab,item_id)
+// Tablolar (mig 20260627100000, 20260718100000, 20260721140000):
+//  • social_share_log        → kalem × platform rozetleri (UNIQUE global_id,platform)
+//  • social_share_item_note  → kalem başına tek not (UNIQUE global_id)
+// Kimlik: global_id ("item-1".."item-100", social-share-unified.ts) — tab/id
+// artık DB'ye girmez, yalnız UI rozeti içindir.
 // RLS: yalnız admin okur/yazar; tüm adminler ortak durumu görür.
 //
 // types.ts henüz bu tabloları içermeyebilir → supabase çağrılarında dar `as any` cast
@@ -76,12 +78,11 @@ export type ShareState = {
   notes: Record<string, ShareNote>;
 };
 
-/** Harita anahtarı — tek yerde üretilir. */
-export const shareKey = (tab: ShareTab, itemId: string): string => `${tab}:${itemId}`;
+/** Harita anahtarı — tek yerde üretilir. globalId zaten benzersiz olduğu için doğrudan kullanılır. */
+export const shareKey = (globalId: string): string => globalId;
 
 type LogRow = {
-  item_tab: ShareTab;
-  item_id: string;
+  global_id: string;
   platform: SharePlatform;
   shared: boolean;
   marked_at: string;
@@ -89,8 +90,7 @@ type LogRow = {
 };
 
 type NoteRow = {
-  item_tab: ShareTab;
-  item_id: string;
+  global_id: string;
   note: string;
   marked_at: string;
   marked_by: string | null;
@@ -99,7 +99,7 @@ type NoteRow = {
 const errorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
 
-/** Her iki tabloyu çekip `${tab}:${itemId}` anahtarlı haritalara dönüştürür. */
+/** Her iki tabloyu çekip globalId anahtarlı haritalara dönüştürür. */
 export async function fetchShareState(): Promise<ShareState> {
   const client = supabase as unknown as {
     from: (table: string) => {
@@ -108,8 +108,8 @@ export async function fetchShareState(): Promise<ShareState> {
   };
 
   const [logRes, noteRes] = await Promise.all([
-    client.from("social_share_log").select("item_tab,item_id,platform,shared,marked_at,marked_by"),
-    client.from("social_share_item_note").select("item_tab,item_id,note,marked_at,marked_by"),
+    client.from("social_share_log").select("global_id,platform,shared,marked_at,marked_by"),
+    client.from("social_share_item_note").select("global_id,note,marked_at,marked_by"),
   ]);
 
   if (logRes.error) {
@@ -121,7 +121,7 @@ export async function fetchShareState(): Promise<ShareState> {
 
   const badges: ShareState["badges"] = {};
   for (const row of (logRes.data as LogRow[]) ?? []) {
-    const key = shareKey(row.item_tab, row.item_id);
+    const key = shareKey(row.global_id);
     (badges[key] ??= {})[row.platform] = {
       shared: row.shared,
       markedAt: row.marked_at,
@@ -131,7 +131,7 @@ export async function fetchShareState(): Promise<ShareState> {
 
   const notes: ShareState["notes"] = {};
   for (const row of (noteRes.data as NoteRow[]) ?? []) {
-    notes[shareKey(row.item_tab, row.item_id)] = {
+    notes[shareKey(row.global_id)] = {
       note: row.note,
       markedAt: row.marked_at,
       markedBy: row.marked_by,
@@ -148,8 +148,7 @@ async function currentUserId(): Promise<string | null> {
 
 /** Bir kalem × platform rozetini aç/kapatır (upsert). */
 export async function toggleShare(args: {
-  tab: ShareTab;
-  itemId: string;
+  globalId: string;
   platform: SharePlatform;
   shared: boolean;
 }): Promise<void> {
@@ -165,14 +164,13 @@ export async function toggleShare(args: {
 
   const { error } = await client.from("social_share_log").upsert(
     {
-      item_tab: args.tab,
-      item_id: args.itemId,
+      global_id: args.globalId,
       platform: args.platform,
       shared: args.shared,
       marked_by: markedBy,
       marked_at: new Date().toISOString(),
     },
-    { onConflict: "item_tab,item_id,platform" },
+    { onConflict: "global_id,platform" },
   );
 
   if (error) {
@@ -182,8 +180,7 @@ export async function toggleShare(args: {
 
 /** Bir kalemin tek notunu kaydeder (upsert). */
 export async function saveItemNote(args: {
-  tab: ShareTab;
-  itemId: string;
+  globalId: string;
   note: string;
 }): Promise<void> {
   const markedBy = await currentUserId();
@@ -198,13 +195,12 @@ export async function saveItemNote(args: {
 
   const { error } = await client.from("social_share_item_note").upsert(
     {
-      item_tab: args.tab,
-      item_id: args.itemId,
+      global_id: args.globalId,
       note: args.note,
       marked_by: markedBy,
       marked_at: new Date().toISOString(),
     },
-    { onConflict: "item_tab,item_id" },
+    { onConflict: "global_id" },
   );
 
   if (error) {

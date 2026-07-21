@@ -1,16 +1,15 @@
-// Sosyal Medya Paylaşım Deposu — tek birleşik liste. Eskiden 4 ayrı sekme
-// (ToolPromotionsTab/DiasporaPostsTab/TestToolsTab/BurakShareTab) burada tek
-// accordion'da birleşti; kaynak filtre çipleriyle daraltılabilir, kaynağa özel
-// ikinci sıra kategori/tema çipleriyle daha da daraltılabilir. "Tümü" görünümünde
-// kartlar 1'den başlayarak sürekli numaralanır; bir kaynağa filtrelenince o
-// kaynağın kendi 1..N sırası gösterilir. Veri normalize katmanı:
-// lib/admin-shell/social-share-unified.ts.
+// Sosyal Medya Paylaşım Deposu — tek sürekli liste. Eskiden 4 ayrı sekme
+// (ToolPromotionsTab/DiasporaPostsTab/TestToolsTab/BurakShareTab), sonra
+// kaynak filtre çipleriyle daraltılabilen tek accordion'du; artık filtre
+// çipleri de kalktı — 1'den N'e kadar sürekli numaralanmış tek liste.
+// Kartlar hâlâ hangi kaynaktan geldiğini gösteren bilgi rozeti taşır
+// (Araç Tanıtımları/Diaspora/Test/Burak) ama bu yalnız görsel bilgidir; DB
+// kimliği kartın sabit globalId'sidir (bkz. social-share-unified.ts).
 // Görünüm sırası kartın sabit globalIndex/assignedDate alanına göre (20 Tem →
-// 21 Tem → ...) sıralanır — kaynaklar zaten UNIFIED_ITEMS'ta harmanlanmış
-// (interleaveBySource) sırada geldiği için ardışık günlerde aynı kaynaktan
-// içerik tekrarlanma olasılığı düşük.
+// 21 Tem → ...) sıralanır — UNIFIED_ITEMS zaten kod içine gömülü deterministik
+// randomize sırada gelir (RANDOMIZED_ORDER).
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   Check,
   Copy,
@@ -37,7 +36,7 @@ import { cn } from "@/lib/utils";
 import { BurakMediaPanel } from "@/components/admin/social-share/BurakMediaPanel";
 import { GeneratedImagePreview } from "@/components/admin/social-share/GeneratedImagePreview";
 import type { ShareTab } from "@/lib/admin-shell/social-share-log";
-import { SOURCE_LABELS, UNIFIED_ITEMS, type UnifiedItem } from "@/lib/admin-shell/social-share-unified";
+import { UNIFIED_ITEMS, type UnifiedItem } from "@/lib/admin-shell/social-share-unified";
 import {
   burakSlotKey,
   countBurakShareExtraImagesBySlot,
@@ -47,24 +46,20 @@ import {
 
 type CopyFn = (text: string, id: string) => void;
 
-const ALL_FILTER = "all" as const;
-type SourceFilter = typeof ALL_FILTER | ShareTab;
-
-const SUB_ALL_FILTER = "all" as const;
-type SubFilter = typeof SUB_ALL_FILTER | string;
-
-const FILTER_ORDER: ShareTab[] = ["tools", "diaspora", "tests", "burak"];
-
 type UnifiedShareListProps = {
   copiedId: string | null;
   onCopy: CopyFn;
-  renderShareBar?: (tab: ShareTab, itemId: string) => ReactNode;
+  renderShareBar?: (globalId: string, tab: ShareTab, itemId: string) => ReactNode;
 };
+
+// Görünüm sırası kartın sabit globalIndex'ine göre (UNIFIED_ITEMS zaten bu
+// sırada gelir — bkz. social-share-unified.ts RANDOMIZED_ORDER).
+const VISIBLE_ITEMS: UnifiedItem[] = [...UNIFIED_ITEMS].sort(
+  (a, b) => a.globalIndex - b.globalIndex,
+);
 
 export function UnifiedShareList({ copiedId, onCopy, renderShareBar }: UnifiedShareListProps) {
   const { toast } = useToast();
-  const [filter, setFilter] = useState<SourceFilter>(ALL_FILTER);
-  const [subFilter, setSubFilter] = useState<SubFilter>(SUB_ALL_FILTER);
   const [assets, setAssets] = useState<Record<string, BurakShareAsset>>({});
   const [extraImageCounts, setExtraImageCounts] = useState<Record<string, number>>({});
 
@@ -89,105 +84,14 @@ export function UnifiedShareList({ copiedId, onCopy, renderShareBar }: UnifiedSh
     };
   }, [toast]);
 
-  // Sekme değişince alt filtre sıfırlanır (bir sekmenin kategori/tema seçimi diğerine taşınmaz).
-  const changeFilter = (next: SourceFilter) => {
-    setFilter(next);
-    setSubFilter(SUB_ALL_FILTER);
-  };
-
-  const counts = useMemo(() => {
-    const map: Partial<Record<ShareTab, number>> = {};
-    for (const item of UNIFIED_ITEMS) {
-      map[item.tab] = (map[item.tab] ?? 0) + 1;
-    }
-    return map;
-  }, []);
-
-  // Aktif sekmedeki kalemlerin benzersiz kategori/tema etiketleri (görünüm sırasına göre).
-  const subFilterOptions = useMemo(() => {
-    if (filter === ALL_FILTER) return [];
-    const seen = new Set<string>();
-    const options: string[] = [];
-    for (const item of UNIFIED_ITEMS) {
-      if (item.tab !== filter) continue;
-      const label = item.categoryLabel ?? item.themeLabel;
-      if (label && !seen.has(label)) {
-        seen.add(label);
-        options.push(label);
-      }
-    }
-    return options;
-  }, [filter]);
-
-  const tabFilteredItems = useMemo(
-    () => (filter === ALL_FILTER ? UNIFIED_ITEMS : UNIFIED_ITEMS.filter((i) => i.tab === filter)),
-    [filter],
-  );
-
-  const subFilteredItems = useMemo(() => {
-    if (subFilter === SUB_ALL_FILTER) return tabFilteredItems;
-    return tabFilteredItems.filter((item) => (item.categoryLabel ?? item.themeLabel) === subFilter);
-  }, [tabFilteredItems, subFilter]);
-
-  // Görünüm sırası kartın sabit assignedDate'ine göre (20 Tem → 21 Tem → ...) sıralanır.
-  const visibleItems = useMemo(
-    () => [...subFilteredItems].sort((a, b) => a.globalIndex - b.globalIndex),
-    [subFilteredItems],
-  );
-
-  // "Tümü" görünümünde 1..N sürekli numara; bir kaynağa filtrelenince o kaynağın kendi order'ı.
-  const displayOrders = useMemo(() => {
-    const map = new Map<string, number>();
-    visibleItems.forEach((item, index) => {
-      map.set(`${item.tab}-${item.id}`, filter === ALL_FILTER ? index + 1 : item.order);
-    });
-    return map;
-  }, [visibleItems, filter]);
-
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap gap-2">
-        <FilterChip
-          active={filter === ALL_FILTER}
-          label={`Tümü (${UNIFIED_ITEMS.length})`}
-          onClick={() => changeFilter(ALL_FILTER)}
-        />
-        {FILTER_ORDER.map((tab) => (
-          <FilterChip
-            key={tab}
-            active={filter === tab}
-            label={`${SOURCE_LABELS[tab]} (${counts[tab] ?? 0})`}
-            onClick={() => changeFilter(tab)}
-          />
-        ))}
-      </div>
-
-      {subFilterOptions.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 border-l-2 border-muted pl-3">
-          <FilterChip
-            active={subFilter === SUB_ALL_FILTER}
-            label="Tümü"
-            small
-            onClick={() => setSubFilter(SUB_ALL_FILTER)}
-          />
-          {subFilterOptions.map((label) => (
-            <FilterChip
-              key={label}
-              active={subFilter === label}
-              label={label}
-              small
-              onClick={() => setSubFilter(label)}
-            />
-          ))}
-        </div>
-      )}
-
       <Accordion type="single" collapsible className="space-y-2">
-        {visibleItems.map((item) => (
+        {VISIBLE_ITEMS.map((item, index) => (
           <UnifiedAccordionItem
-            key={`${item.tab}-${item.id}`}
+            key={item.globalId}
             item={item}
-            displayOrder={displayOrders.get(`${item.tab}-${item.id}`) ?? item.order}
+            displayOrder={index + 1}
             copiedId={copiedId}
             onCopy={onCopy}
             asset={item.hasMediaPanel ? assets : undefined}
@@ -285,7 +189,7 @@ function UnifiedAccordionItem({
             const variantNo = index + 1;
             const idPrefix = singleVariant ? item.id : `${item.id}-v${variantNo}`;
             const slotKey = item.hasMediaPanel
-              ? burakSlotKey(item.tab, item.id, index)
+              ? burakSlotKey(item.globalId, index)
               : undefined;
 
             return (
@@ -415,8 +319,7 @@ function UnifiedAccordionItem({
                 {item.hasMediaPanel && (
                   <MediaToggle
                     slotKey={slotKey as string}
-                    tab={item.tab}
-                    itemId={item.id}
+                    globalId={item.globalId}
                     variantIndex={index}
                     asset={asset?.[slotKey as string]}
                     extraImageCount={extraImageCounts?.[slotKey as string] ?? 0}
@@ -429,7 +332,7 @@ function UnifiedAccordionItem({
             );
           })}
         </div>
-        {renderShareBar?.(item.tab, item.id)}
+        {renderShareBar?.(item.globalId, item.tab, item.id)}
       </AccordionContent>
     </AccordionItem>
   );
@@ -437,8 +340,7 @@ function UnifiedAccordionItem({
 
 type MediaToggleProps = {
   slotKey: string;
-  tab: ShareTab;
-  itemId: string;
+  globalId: string;
   variantIndex: number;
   asset: BurakShareAsset | undefined;
   extraImageCount: number;
@@ -448,8 +350,7 @@ type MediaToggleProps = {
 /** Kart altında küçük "Görsel"/"Video" ikon-butonları — tıklanınca medya paneli aç/kapat. */
 function MediaToggle({
   slotKey,
-  tab,
-  itemId,
+  globalId,
   variantIndex,
   asset,
   extraImageCount,
@@ -491,38 +392,12 @@ function MediaToggle({
       {open && (
         <BurakMediaPanel
           slotKey={slotKey}
-          tab={tab}
-          itemId={itemId}
+          globalId={globalId}
           variantIndex={variantIndex}
           asset={asset}
           onExtraImageCountChange={onExtraImageCountChange}
         />
       )}
     </div>
-  );
-}
-
-type FilterChipProps = {
-  active: boolean;
-  label: string;
-  onClick: () => void;
-  small?: boolean;
-};
-
-function FilterChip({ active, label, onClick, small }: FilterChipProps) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "rounded-full border font-medium transition-colors",
-        small ? "px-2.5 py-0.5 text-[0.7rem]" : "px-3 py-1 text-xs",
-        active
-          ? "border-amber-500 bg-amber-500/20 text-amber-700 dark:text-amber-200"
-          : "border-border bg-muted/40 text-muted-foreground hover:bg-muted",
-      )}
-    >
-      {label}
-    </button>
   );
 }

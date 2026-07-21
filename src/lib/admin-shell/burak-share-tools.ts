@@ -22,6 +22,8 @@ export type BurakShareVariant = {
 export type BurakShareTool = {
   /** Benzersiz kimlik ("burak-tool-1" ... "burak-tool-12"). */
   id: string;
+  /** Kaynaklar arası sabit tekil kimlik ("item-1".."item-100") — slot_key ve DB takibi bunu kullanır. */
+  globalId: string;
   /** Görünüm sırası (1..12). */
   order: number;
   /** Test aracı adı, ör. "Hangi Ülke Sana Uygun?". */
@@ -35,6 +37,7 @@ export type BurakShareTool = {
 export const BURAK_SHARE_TOOLS: BurakShareTool[] = [
   {
     id: "burak-tool-1",
+    globalId: "item-3",
     order: 1,
     name: "Hangi Ülke Sana Uygun?",
     description:
@@ -149,6 +152,7 @@ corteqs.net
   },
   {
     id: "burak-tool-2",
+    globalId: "item-12",
     order: 2,
     name: "Mesleğin Dünyada Ne Kazandırıyor?",
     description:
@@ -263,6 +267,7 @@ corteqs.net
   },
   {
     id: "burak-tool-3",
+    globalId: "item-21",
     order: 3,
     name: "Yurt Dışına Taşınmaya Hazır mısın?",
     description:
@@ -377,6 +382,7 @@ corteqs.net
   },
   {
     id: "burak-tool-4",
+    globalId: "item-30",
     order: 4,
     name: "Hangi Şehir Sana Daha Uygun?",
     description:
@@ -491,6 +497,7 @@ corteqs.net
   },
   {
     id: "burak-tool-5",
+    globalId: "item-39",
     order: 5,
     name: "Diaspora Ağı Eşleştirme",
     description:
@@ -605,6 +612,7 @@ corteqs.net
   },
   {
     id: "burak-tool-6",
+    globalId: "item-48",
     order: 6,
     name: "Yurt Dışında Hangi Kariyer Sana Uygun?",
     description:
@@ -719,6 +727,7 @@ corteqs.net
   },
   {
     id: "burak-tool-7",
+    globalId: "item-53",
     order: 7,
     name: "Yurt Dışı Yaşam Tarzın Ne?",
     description:
@@ -833,6 +842,7 @@ corteqs.net
   },
   {
     id: "burak-tool-8",
+    globalId: "item-62",
     order: 8,
     name: "İlk 90 Gün Planlayıcı",
     description:
@@ -947,6 +957,7 @@ corteqs.net
   },
   {
     id: "burak-tool-9",
+    globalId: "item-71",
     order: 9,
     name: "Önce Hangi Soruna Odaklanmalısın?",
     description:
@@ -1061,6 +1072,7 @@ corteqs.net
   },
   {
     id: "burak-tool-10",
+    globalId: "item-80",
     order: 10,
     name: "Yurt Dışında İş Bulma Şansın?",
     description:
@@ -1175,6 +1187,7 @@ corteqs.net
   },
   {
     id: "burak-tool-11",
+    globalId: "item-89",
     order: 11,
     name: "Almanya'da Sana Hangi Banka Uygun?",
     description:
@@ -1289,6 +1302,7 @@ corteqs.net
   },
   {
     id: "burak-tool-12",
+    globalId: "item-98",
     order: 12,
     name: "Almanya'da Hangi Sigortalar Sana Şart?",
     description:

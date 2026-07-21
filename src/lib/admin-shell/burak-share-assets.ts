@@ -1,18 +1,18 @@
-// /admin/social-share-vault sayfası genelinde (4 sekmenin tamamında — Araç
-// Tanıtımları/Diaspora/Test Araçları/Burak) her kalem için medya API'si.
-// Görsel Supabase Storage'a (private burak-share bucket), link/not/video URL
-// social_share_assets tablosuna yazılır (slot_key unique). Tüm adminler ortak
-// görür; RLS = is_admin(auth.uid()). Metin içerik DB'de değil, her sekmenin
-// kendi statik dosyasında (social-share-vault.ts, social-diaspora-posts.ts, vb.).
+// /admin/social-share-vault sayfası genelinde (Araç Tanıtımları/Diaspora/Test
+// Araçları/Burak — 4 kaynak dosyası, tek birleşik liste) her kalem için medya
+// API'si. Görsel Supabase Storage'a (private burak-share bucket), link/not/
+// video URL social_share_assets tablosuna yazılır (slot_key unique). Tüm
+// adminler ortak görür; RLS = is_admin(auth.uid()). Metin içerik DB'de değil,
+// her kaynağın kendi statik dosyasında (social-share-vault.ts,
+// social-diaspora-posts.ts, vb.).
 //
-// Bucket/tablo adları tarihsel nedenle "burak" içeriyor (özellik ilk bu sekmede
-// çıktı) ama artık tüm sekmeleri kapsıyor — isim değişmedi, kapsam genişledi.
-// slotKey artık `${tab}/${itemId}/variant-${variantIndex}` formatında; eski
-// Burak kayıtları `burak/...` prefix'iyle üretildiği için aynı kalır (geriye
-// dönük uyumlu, veri taşıma gerekmez).
+// Bucket/tablo adları tarihsel nedenle "burak" içeriyor (özellik ilk Burak
+// sekmesinde çıktı) ama artık tüm kaynakları kapsıyor — isim değişmedi, kapsam
+// genişledi. slotKey `${globalId}/variant-${variantIndex}` formatındadır;
+// globalId ("item-1".."item-100") kaynaklar arası sabit tekil kimliktir — tab
+// ayrımı yalnız UI rozetinde kalır, DB kimliğine hiç girmez.
 
 import { supabase } from "@/integrations/supabase/client";
-import type { ShareTab } from "@/lib/admin-shell/social-share-log";
 
 // Video Drive klasörü — "Videoyu Drive'a Yükle" butonu bunu yeni sekmede açar.
 export const BURAK_DRIVE_FOLDER_URL =
@@ -42,8 +42,8 @@ type SupabaseUntyped = {
 };
 const db = supabase as unknown as SupabaseUntyped;
 
-export function burakSlotKey(tab: ShareTab, itemId: string, variantIndex: number): string {
-  return `${tab}/${itemId}/variant-${variantIndex}`;
+export function burakSlotKey(globalId: string, variantIndex: number): string {
+  return `${globalId}/variant-${variantIndex}`;
 }
 
 function messageOf(error: unknown, fallback: string): string {
@@ -99,19 +99,18 @@ export async function upsertBurakShareAsset(
   if (error) throw new Error(messageOf(error, "Medya kaydı kaydedilemedi"));
 }
 
-function buildImagePath(tab: ShareTab, itemId: string, variantIndex: number, file: File): string {
+function buildImagePath(globalId: string, variantIndex: number, file: File): string {
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
   const rand = Math.random().toString(36).slice(2, 8);
-  return `${tab}/${itemId}/variant-${variantIndex}/${Date.now()}-${rand}-${safeName}`;
+  return `${globalId}/variant-${variantIndex}/${Date.now()}-${rand}-${safeName}`;
 }
 
 export async function uploadBurakShareImage(
-  tab: ShareTab,
-  itemId: string,
+  globalId: string,
   variantIndex: number,
   file: File,
 ): Promise<{ bucket: string; path: string }> {
-  const path = buildImagePath(tab, itemId, variantIndex, file);
+  const path = buildImagePath(globalId, variantIndex, file);
   const { error } = await db.storage
     .from(BUCKET)
     .upload(path, file, { contentType: file.type || undefined, upsert: false });
@@ -179,14 +178,13 @@ export async function listBurakShareExtraImages(
 }
 
 export async function addBurakShareExtraImage(
-  tab: ShareTab,
-  itemId: string,
+  globalId: string,
   variantIndex: number,
   slotKey: string,
   file: File,
   sortOrder: number,
 ): Promise<BurakShareExtraImage> {
-  const path = buildImagePath(tab, itemId, variantIndex, file);
+  const path = buildImagePath(globalId, variantIndex, file);
   const { error: uploadError } = await db.storage
     .from(BUCKET)
     .upload(path, file, { contentType: file.type || undefined, upsert: false });

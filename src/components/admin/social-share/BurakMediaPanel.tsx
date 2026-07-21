@@ -22,12 +22,9 @@ import {
   type BurakAssetPatch,
   type BurakShareAsset,
 } from "@/lib/admin-shell/burak-share-assets";
-import type { ShareTab } from "@/lib/admin-shell/social-share-log";
-
 type BurakMediaPanelProps = {
   slotKey: string;
-  tab: ShareTab;
-  itemId: string;
+  globalId: string;
   variantIndex: number;
   asset: BurakShareAsset | undefined;
   onExtraImageCountChange?: (count: number) => void;
@@ -38,8 +35,7 @@ const errMessage = (error: unknown): string =>
 
 export function BurakMediaPanel({
   slotKey,
-  tab,
-  itemId,
+  globalId,
   variantIndex,
   asset,
   onExtraImageCountChange,
@@ -86,7 +82,7 @@ export function BurakMediaPanel({
   const handleUpload = async (file: File) => {
     setUploading(true);
     try {
-      const { bucket, path } = await uploadBurakShareImage(tab, itemId, variantIndex, file);
+      const { bucket, path } = await uploadBurakShareImage(globalId, variantIndex, file);
       await upsertBurakShareAsset(slotKey, { imageBucket: bucket, imagePath: path });
       setImageBucket(bucket);
       setImagePath(path);
@@ -159,8 +155,7 @@ export function BurakMediaPanel({
         <Label className="text-xs text-muted-foreground">Ek görseller</Label>
         <ExtraImagesGallery
           slotKey={slotKey}
-          tab={tab}
-          itemId={itemId}
+          globalId={globalId}
           variantIndex={variantIndex}
           onCountChange={onExtraImageCountChange}
         />

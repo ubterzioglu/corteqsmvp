@@ -13,12 +13,9 @@ import {
   removeBurakShareExtraImage,
   type BurakShareExtraImage,
 } from "@/lib/admin-shell/burak-share-assets";
-import type { ShareTab } from "@/lib/admin-shell/social-share-log";
-
 type ExtraImagesGalleryProps = {
   slotKey: string;
-  tab: ShareTab;
-  itemId: string;
+  globalId: string;
   variantIndex: number;
   onCountChange?: (count: number) => void;
 };
@@ -30,8 +27,7 @@ const errMessage = (error: unknown): string =>
 
 export function ExtraImagesGallery({
   slotKey,
-  tab,
-  itemId,
+  globalId,
   variantIndex,
   onCountChange,
 }: ExtraImagesGalleryProps) {
@@ -82,7 +78,7 @@ export function ExtraImagesGallery({
     setUploading(true);
     try {
       const nextOrder = entries.length;
-      const image = await addBurakShareExtraImage(tab, itemId, variantIndex, slotKey, file, nextOrder);
+      const image = await addBurakShareExtraImage(globalId, variantIndex, slotKey, file, nextOrder);
       const previewUrl = await getBurakShareImageUrl(image.imageBucket, image.imagePath).catch(
         () => null,
       );

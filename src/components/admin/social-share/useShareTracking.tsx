@@ -1,7 +1,9 @@
 // Sosyal Medya Paylaşım Takip — sayfa seviyesi durum + mutation kancası.
 // fetchShareState'i bir kez çeker (React Query), toggle/saveNote mutation'larını
 // optimistic update + hata geri alma ile yönetir ve her kalem için hazır bir
-// <ShareStatusBar> render eden `renderShareBar(tab, itemId)` döndürür.
+// <ShareStatusBar> render eden `renderShareBar(globalId, tab, itemId)` döndürür.
+// globalId DB kimliğidir (paylaşım durumu bununla eşleşir); tab/itemId yalnız
+// görüntüleme/test-id içindir.
 
 import { useCallback, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -23,14 +25,14 @@ import { ShareStatusBar } from "./ShareStatusBar";
 const QUERY_KEY = ["social-share-state"] as const;
 const EMPTY_STATE: ShareState = { badges: {}, notes: {} };
 
-type ToggleArgs = { tab: ShareTab; itemId: string; platform: SharePlatform; shared: boolean };
-type NoteArgs = { tab: ShareTab; itemId: string; note: string };
+type ToggleArgs = { globalId: string; platform: SharePlatform; shared: boolean };
+type NoteArgs = { globalId: string; note: string };
 
 export type ShareTracking = {
   isLoading: boolean;
   isError: boolean;
-  /** Bir içerik kalemi için hazır rozet çubuğunu render eder. */
-  renderShareBar: (tab: ShareTab, itemId: string) => ReactNode;
+  /** Bir içerik kalemi için hazır rozet çubuğunu render eder (globalId DB kimliğidir). */
+  renderShareBar: (globalId: string, tab: ShareTab, itemId: string) => ReactNode;
 };
 
 export function useShareTracking(): ShareTracking {
@@ -47,7 +49,7 @@ export function useShareTracking(): ShareTracking {
       const previous = queryClient.getQueryData<ShareState>(QUERY_KEY);
       queryClient.setQueryData<ShareState>(QUERY_KEY, (current) => {
         const base = current ?? EMPTY_STATE;
-        const key = shareKey(vars.tab, vars.itemId);
+        const key = shareKey(vars.globalId);
         const itemBadges = { ...(base.badges[key] ?? {}) };
         itemBadges[vars.platform] = {
           shared: vars.shared,
@@ -74,7 +76,7 @@ export function useShareTracking(): ShareTracking {
       const previous = queryClient.getQueryData<ShareState>(QUERY_KEY);
       queryClient.setQueryData<ShareState>(QUERY_KEY, (current) => {
         const base = current ?? EMPTY_STATE;
-        const key = shareKey(vars.tab, vars.itemId);
+        const key = shareKey(vars.globalId);
         const next: ShareNote = {
           note: vars.note,
           markedAt: new Date().toISOString(),
@@ -99,8 +101,8 @@ export function useShareTracking(): ShareTracking {
   const isMutating = toggleMutation.isPending || noteMutation.isPending;
 
   const renderShareBar = useCallback(
-    (tab: ShareTab, itemId: string): ReactNode => {
-      const key = shareKey(tab, itemId);
+    (globalId: string, tab: ShareTab, itemId: string): ReactNode => {
+      const key = shareKey(globalId);
       return (
         <ShareStatusBar
           tab={tab}
@@ -109,9 +111,9 @@ export function useShareTracking(): ShareTracking {
           note={state.notes[key]}
           pending={isMutating}
           onToggle={(platform, shared) =>
-            toggleMutation.mutate({ tab, itemId, platform, shared })
+            toggleMutation.mutate({ globalId, platform, shared })
           }
-          onSaveNote={(note) => noteMutation.mutate({ tab, itemId, note })}
+          onSaveNote={(note) => noteMutation.mutate({ globalId, note })}
         />
       );
     },

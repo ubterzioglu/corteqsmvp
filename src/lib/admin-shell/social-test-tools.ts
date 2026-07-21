@@ -23,6 +23,8 @@ export type SocialTestVariant = {
 export type SocialTestTool = {
   /** Benzersiz kimlik ("test-tool-1" ... "test-tool-10"). */
   id: string;
+  /** Kaynaklar arası sabit tekil kimlik ("item-1".."item-100") — slot_key ve DB takibi bunu kullanır. */
+  globalId: string;
   /** Görünüm sırası (1..10). */
   order: number;
   /** Test aracı adı, ör. "Hangi Ülke Sana Uygun?". */
@@ -36,6 +38,7 @@ export type SocialTestTool = {
 export const SOCIAL_TEST_TOOLS: SocialTestTool[] = [
   {
     id: "test-tool-1",
+    globalId: "item-8",
     order: 1,
     name: "Hangi Ülke Sana Uygun?",
     description:
@@ -150,6 +153,7 @@ corteqs.net
   },
   {
     id: "test-tool-2",
+    globalId: "item-17",
     order: 2,
     name: "Mesleğin Dünyada Ne Kazandırıyor?",
     description:
@@ -264,6 +268,7 @@ corteqs.net
   },
   {
     id: "test-tool-3",
+    globalId: "item-27",
     order: 3,
     name: "Yurt Dışına Taşınmaya Hazır mısın?",
     description:
@@ -378,6 +383,7 @@ corteqs.net
   },
   {
     id: "test-tool-4",
+    globalId: "item-36",
     order: 4,
     name: "Hangi Şehir Sana Daha Uygun?",
     description:
@@ -492,6 +498,7 @@ corteqs.net
   },
   {
     id: "test-tool-5",
+    globalId: "item-46",
     order: 5,
     name: "Diaspora Ağı Eşleştirme",
     description:
@@ -606,6 +613,7 @@ corteqs.net
   },
   {
     id: "test-tool-6",
+    globalId: "item-58",
     order: 6,
     name: "Yurt Dışında Hangi Kariyer Sana Uygun?",
     description:
@@ -720,6 +728,7 @@ corteqs.net
   },
   {
     id: "test-tool-7",
+    globalId: "item-67",
     order: 7,
     name: "Yurt Dışı Yaşam Tarzın Ne?",
     description:
@@ -834,6 +843,7 @@ corteqs.net
   },
   {
     id: "test-tool-8",
+    globalId: "item-77",
     order: 8,
     name: "İlk 90 Gün Planlayıcı",
     description:
@@ -948,6 +958,7 @@ corteqs.net
   },
   {
     id: "test-tool-9",
+    globalId: "item-86",
     order: 9,
     name: "Önce Hangi Soruna Odaklanmalısın?",
     description:
@@ -1062,6 +1073,7 @@ corteqs.net
   },
   {
     id: "test-tool-10",
+    globalId: "item-96",
     order: 10,
     name: "Yurt Dışında İş Bulma Şansın?",
     description:
