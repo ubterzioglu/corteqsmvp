@@ -1,7 +1,8 @@
 // scripts/download-pexels-fallback-images.mjs
-// Pexels API üzerinden diaspora ve mekan (cafe/dükkan/işyeri) temalı serbest lisanslı
-// görselleri indirip docs/fallback-images/<category>/ altına kaydeder. Bu script sadece
+// Pexels API üzerinden diaspora temalı serbest lisanslı görselleri indirip
+// docs/fallback-images/news-diaspora/ altına kaydeder. Bu script sadece
 // dosyaları indirir — DB'ye yükleme adımı scripts/seed-fallback-image-pool.mjs'de.
+// Yalnızca Radar News (haber) akışı için — service-finder/mekan bu havuzu kullanmaz.
 //
 // Kullanım: PEXELS_API_KEY .env.local'da tanımlı olmalı.
 //   node scripts/download-pexels-fallback-images.mjs
@@ -27,17 +28,6 @@ const CATEGORIES = [
       "multicultural community gathering",
       "people flags world",
       "international friends group",
-    ],
-  },
-  {
-    category: "mekan",
-    dir: path.join(projectRoot, "docs", "fallback-images", "mekan"),
-    queries: [
-      "cafe interior",
-      "restaurant interior",
-      "small shop storefront",
-      "office workspace",
-      "local business store",
     ],
   },
 ];

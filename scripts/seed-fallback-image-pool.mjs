@@ -1,7 +1,8 @@
 // scripts/seed-fallback-image-pool.mjs
-// docs/fallback-images/news-diaspora/ ve docs/fallback-images/mekan/ altındaki
-// dosyaları fallback-image-pool bucket'ına yükler ve fallback_image_pool tablosuna
-// idempotent şekilde satır ekler (aynı dosya tekrar çalıştırıldığında atlanır).
+// docs/fallback-images/news-diaspora/ altındaki dosyaları fallback-image-pool
+// bucket'ına yükler ve fallback_image_pool tablosuna idempotent şekilde satır
+// ekler (aynı dosya tekrar çalıştırıldığında atlanır). Yalnızca Radar News
+// (haber) akışı için — service-finder/mekan bu havuzu kullanmaz.
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -15,7 +16,6 @@ const projectRoot = path.resolve(__dirname, "..");
 const BUCKET = "fallback-image-pool";
 const CATEGORY_DIRS = [
   { category: "news_diaspora", dir: path.join(projectRoot, "docs", "fallback-images", "news-diaspora") },
-  { category: "mekan", dir: path.join(projectRoot, "docs", "fallback-images", "mekan") },
 ];
 const ALLOWED_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp"]);
 
