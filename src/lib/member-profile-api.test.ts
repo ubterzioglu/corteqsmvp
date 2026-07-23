@@ -20,7 +20,7 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-import { updateProfileAttribute } from "@/lib/member-profile-api";
+import { updateProfileAttribute, requestNewCatalogItem } from "@/lib/member-profile-api";
 
 describe("updateProfileAttribute", () => {
   beforeEach(() => {
@@ -54,5 +54,35 @@ describe("updateProfileAttribute", () => {
       attribute_value: "Kısa açıklama",
       visibility: "public",
     });
+  });
+});
+
+describe("requestNewCatalogItem", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    rpcMock.mockResolvedValue({ data: "11111111-1111-1111-1111-111111111111", error: null });
+  });
+
+  it("calls request_new_catalog_item with trimmed title", async () => {
+    const requestId = await requestNewCatalogItem(
+      "Consultant_HealthcareDoctor",
+      "  Dr. Ahmet Yılmaz Danışmanlık  ",
+      "Diş hekimiyim",
+    );
+
+    expect(rpcMock).toHaveBeenCalledWith("request_new_catalog_item", {
+      p_role_key: "Consultant_HealthcareDoctor",
+      p_title: "Dr. Ahmet Yılmaz Danışmanlık",
+      p_note: "Diş hekimiyim",
+    });
+    expect(requestId).toBe("11111111-1111-1111-1111-111111111111");
+  });
+
+  it("throws when the RPC returns an error", async () => {
+    rpcMock.mockResolvedValue({ data: null, error: { message: "a pending new profile request already exists" } });
+
+    await expect(
+      requestNewCatalogItem("Consultant_HealthcareDoctor", "Başlık", ""),
+    ).rejects.toEqual({ message: "a pending new profile request already exists" });
   });
 });
