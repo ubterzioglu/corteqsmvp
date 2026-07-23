@@ -173,7 +173,7 @@ begin
         visibility,
         verification_status,
         linked_user_id,
-        created_by_user_id,
+        created_by,
         platform_role_key,
         attributes,
         published_at
