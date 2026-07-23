@@ -12,6 +12,27 @@ import nodemailer from "nodemailer";
 
 const REPO_ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const ADMIN_UPDATES_PATH = "src/lib/admin-shell/admin-updates.ts";
+
+function loadDotEnv(relPath) {
+  const envPath = path.join(REPO_ROOT, relPath);
+  let text;
+  try {
+    text = readFileSync(envPath, "utf8");
+  } catch {
+    return;
+  }
+
+  for (const line of text.split("\n")) {
+    const match = line.match(/^\s*([^#=\s][^=]*)=("?)(.*)\2\s*$/);
+    if (!match) continue;
+    const [, key, , value] = match;
+    if (process.env[key.trim()] === undefined) {
+      process.env[key.trim()] = value;
+    }
+  }
+}
+
+loadDotEnv(".env");
 const RECIPIENTS = [
   "burakakcakanat@corteqs.net",
   "ubterzioglu@gmail.com",
