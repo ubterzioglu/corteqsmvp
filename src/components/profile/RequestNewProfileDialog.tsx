@@ -67,9 +67,6 @@ const RequestNewProfileDialog = ({ open, onOpenChange, onSuccess }: RequestNewPr
         }))
         .filter((item) => item.key && item.label);
       setRoleOptions(options);
-      if (options.length === 1) {
-        setSelectedRoleKey(options[0].key);
-      }
       setRolesLoading(false);
     })();
 

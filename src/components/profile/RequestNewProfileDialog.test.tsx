@@ -37,6 +37,9 @@ describe("RequestNewProfileDialog", () => {
 
     await waitFor(() => expect(rpcMock).toHaveBeenCalledWith("get_flat_roles"));
 
+    fireEvent.click(screen.getByRole("combobox"));
+    fireEvent.click(await screen.findByRole("option", { name: "Danışman — Doktor" }));
+
     fireEvent.change(await screen.findByLabelText("Profil Başlığı"), {
       target: { value: "Dr. Ahmet Yılmaz Danışmanlık" },
     });
@@ -66,6 +69,10 @@ describe("RequestNewProfileDialog", () => {
     render(<RequestNewProfileDialog open onOpenChange={() => {}} onSuccess={() => {}} />);
 
     await waitFor(() => expect(rpcMock).toHaveBeenCalledWith("get_flat_roles"));
+
+    fireEvent.click(screen.getByRole("combobox"));
+    fireEvent.click(await screen.findByRole("option", { name: "Danışman — Doktor" }));
+
     fireEvent.change(await screen.findByLabelText("Profil Başlığı"), {
       target: { value: "Başlık" },
     });
