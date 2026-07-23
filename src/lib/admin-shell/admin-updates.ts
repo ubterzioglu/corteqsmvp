@@ -14,13 +14,14 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
-    id: "20260723-ikinci-profil-talebi-tasarim-plan-migration",
+    id: "20260723-ikinci-profil-talebi-tamamlandi",
     date: "23 Temmuz 2026",
-    title: "İkinci profil talebi (admin onaylı) için tasarım, uygulama planı ve veritabanı altyapısı hazırlandı",
+    title: "Üyeler artık ikinci bir profil (ör. hem Bireysel hem İşletme) açmayı talep edebiliyor",
     items: [
-      "Bir kullanıcının mevcut profiline dokunmadan, admin onayıyla başka bir rol için ikinci bir profil açabilmesi talebi için önce bir tasarım dokümanı, ardından ayrıntılı bir uygulama planı yazıldı.",
-      "Veritabanı tarafında, mevcut onay kuyruğuna (approval_requests) 'new_profile' adında yeni bir talep türü eklendi ve kullanıcının bu türde talep oluşturmasını sağlayan request_new_catalog_item adlı yeni bir güvenli RPC yazıldı — mevcut submit_role_change_request deseninin bir kopyası, tek fark kullanıcının bugünkü rolüne dokunmaması.",
-      "Bu iş ayrı bir çalışma dalında (worktree) hazırlandı; migration henüz canlı veritabanına uygulanmadı ve arayüz (admin onay ekranı, kullanıcı talep formu) tarafı henüz yazılmadı — sadece temel/plan hazır.",
+      "Bir kullanıcı mevcut profiline hiç dokunmadan, başka bir rol için ikinci bir profil talep edebiliyor. Talep menüsü profil değiştirme ekranına '+ Yeni Profil' olarak eklendi.",
+      "Talep admin onayına düşüyor; admin onaylayınca kullanıcının hesabına ikinci, bağımsız bir profil ekleniyor — birinci profili etkilenmiyor. Aynı anda sadece bir bekleyen talep açılabiliyor.",
+      "Admin onay ekranına bu talepleri filtreleyip görebileceği yeni bir 'Yeni profil' filtresi eklendi.",
+      "Uçtan uca test edildi (talep → onay → ikinci profilin oluşması) ve bugün ana koda (main) alındı — özellik artık kullanıma hazır, yalnızca deploy bekliyor.",
     ],
   },
   {
