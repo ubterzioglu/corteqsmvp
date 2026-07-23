@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Check, ChevronDown, Sparkles, Users } from "lucide-react";
+import { Check, ChevronDown, Plus, Sparkles, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +23,7 @@ import {
   resolveProfilePresentation,
 } from "@/lib/profile-presentation";
 import { getUiProfileType, roleMetaByLegacyKey } from "@/lib/profile-types";
+import RequestNewProfileDialog from "@/components/profile/RequestNewProfileDialog";
 
 type ProfileSwitcherMenuProps = {
   /**
@@ -63,6 +64,7 @@ const profileTypeLabel = (item: EditableCatalogItemSummary): string => {
  */
 const ProfileSwitcherMenu = ({ currentItemId, triggerClassName }: ProfileSwitcherMenuProps) => {
   const navigate = useNavigate();
+  const [isRequestDialogOpen, setIsRequestDialogOpen] = useState(false);
   const { data, isLoading } = useQuery({
     queryKey: memberCatalogItemsKeys.mine,
     queryFn: getMyEditableCatalogItems,
@@ -71,8 +73,9 @@ const ProfileSwitcherMenu = ({ currentItemId, triggerClassName }: ProfileSwitche
 
   const items = useMemo(() => sortMemberFirst(data ?? []), [data]);
 
-  // Tek profili olan (veya henüz yüklenen) kullanıcıya geçiş gösterme.
-  if (isLoading || items.length < 2) {
+  // Henüz yüklenen kullanıcıya menü gösterme; "+ Yeni Profil" için tek
+  // profilli kullanıcıya da menü gösterilir (bkz. items.map altındaki öğe).
+  if (isLoading) {
     return null;
   }
 
@@ -80,52 +83,64 @@ const ProfileSwitcherMenu = ({ currentItemId, triggerClassName }: ProfileSwitche
     currentItemId ?? items.find((item) => item.itemType === "member")?.itemId ?? null;
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button type="button" variant="outline" className={triggerClassName}>
-          <Users className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
-          Diğer Profiller
-          <ChevronDown className="ml-auto h-3.5 w-3.5" aria-hidden="true" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-64">
-        <DropdownMenuLabel>Profillerin</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {items.map((item) => {
-          const isActive = item.itemId === activeItemId;
-          const isPremium = isPremiumPresentation(resolveProfilePresentation(item.roleKey));
-          return (
-            <DropdownMenuItem
-              key={item.itemId}
-              disabled={isActive}
-              onSelect={() => {
-                if (isActive) return;
-                navigate(profileEditorPathFor(item));
-              }}
-              className="flex items-start gap-2"
-            >
-              <span className="mt-0.5 h-3.5 w-3.5 shrink-0">
-                {isActive ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : null}
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-medium text-foreground">
-                  {item.title}
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button type="button" variant="outline" className={triggerClassName}>
+            <Users className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+            Diğer Profiller
+            <ChevronDown className="ml-auto h-3.5 w-3.5" aria-hidden="true" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-64">
+          <DropdownMenuLabel>Profillerin</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {items.map((item) => {
+            const isActive = item.itemId === activeItemId;
+            const isPremium = isPremiumPresentation(resolveProfilePresentation(item.roleKey));
+            return (
+              <DropdownMenuItem
+                key={item.itemId}
+                disabled={isActive}
+                onSelect={() => {
+                  if (isActive) return;
+                  navigate(profileEditorPathFor(item));
+                }}
+                className="flex items-start gap-2"
+              >
+                <span className="mt-0.5 h-3.5 w-3.5 shrink-0">
+                  {isActive ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : null}
                 </span>
-                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  {profileTypeLabel(item)}
-                  {isPremium ? (
-                    <span className="inline-flex items-center gap-0.5 text-violet-700 dark:text-violet-400">
-                      <Sparkles className="h-3 w-3" aria-hidden="true" />
-                      Premium
-                    </span>
-                  ) : null}
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-medium text-foreground">
+                    {item.title}
+                  </span>
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    {profileTypeLabel(item)}
+                    {isPremium ? (
+                      <span className="inline-flex items-center gap-0.5 text-violet-700 dark:text-violet-400">
+                        <Sparkles className="h-3 w-3" aria-hidden="true" />
+                        Premium
+                      </span>
+                    ) : null}
+                  </span>
                 </span>
-              </span>
-            </DropdownMenuItem>
-          );
-        })}
-      </DropdownMenuContent>
-    </DropdownMenu>
+              </DropdownMenuItem>
+            );
+          })}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onSelect={() => setIsRequestDialogOpen(true)} className="gap-2">
+            <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+            + Yeni Profil
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <RequestNewProfileDialog
+        open={isRequestDialogOpen}
+        onOpenChange={setIsRequestDialogOpen}
+        onSuccess={() => setIsRequestDialogOpen(false)}
+      />
+    </>
   );
 };
 
