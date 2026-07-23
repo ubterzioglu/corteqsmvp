@@ -14,6 +14,26 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260723-ikinci-profil-talebi-tasarim-plan-migration",
+    date: "23 Temmuz 2026",
+    title: "İkinci profil talebi (admin onaylı) için tasarım, uygulama planı ve veritabanı altyapısı hazırlandı",
+    items: [
+      "Bir kullanıcının mevcut profiline dokunmadan, admin onayıyla başka bir rol için ikinci bir profil açabilmesi talebi için önce bir tasarım dokümanı, ardından ayrıntılı bir uygulama planı yazıldı.",
+      "Veritabanı tarafında, mevcut onay kuyruğuna (approval_requests) 'new_profile' adında yeni bir talep türü eklendi ve kullanıcının bu türde talep oluşturmasını sağlayan request_new_catalog_item adlı yeni bir güvenli RPC yazıldı — mevcut submit_role_change_request deseninin bir kopyası, tek fark kullanıcının bugünkü rolüne dokunmaması.",
+      "Bu iş ayrı bir çalışma dalında (worktree) hazırlandı; migration henüz canlı veritabanına uygulanmadı ve arayüz (admin onay ekranı, kullanıcı talep formu) tarafı henüz yazılmadı — sadece temel/plan hazır.",
+    ],
+  },
+  {
+    id: "20260723-burak-gorsel-semasi-3-haneli-numaralandirma",
+    date: "23 Temmuz 2026",
+    title: "Burak'ın paylaşım görselleri için numaralandırma şeması güçlendirildi, eski görseller yedeklendi",
+    items: [
+      "docs/social-share-outputs/ altındaki bazı araçlar (tool-3/4/5) için dosya adlandırma şeması, sırayı/varyantı/prompt numarasını daha net kodlayan 3 haneli bir düzene (<sıra><varyant><promptNo>) güncellendi.",
+      "Eski 2 haneli isimlendirmeyle yüklenmiş görseller silinmeden docs/backup/ altına referans yedek olarak taşındı — docs/social-share-outputs/ artık tek doğru kaynak, dosya bir daha silinmeyecek, sadece eklenecek.",
+      "İlgili sosyal paylaşım veritabanı kayıtları (social_share_assets, social_share_asset_images) yeni şemaya göre güncellenip canlıda doğrulandı.",
+    ],
+  },
+  {
     id: "20260721-google-indeksleme-sorunlari-teshisi-ve-addwa-yonlendirme",
     date: "21 Temmuz 2026",
     title: "Google'ın sitemizi neden bazı sayfalarda indekslemediği araştırıldı: çoğu aslında sorun değilmiş, bir gerçek eksik bulunup düzeltildi",

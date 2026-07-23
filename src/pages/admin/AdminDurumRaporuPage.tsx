@@ -63,6 +63,24 @@ interface UpdateNote {
 
 const UPDATES: UpdateNote[] = [
   {
+    date: "23 Temmuz 2026",
+    title: "İkinci profil talebi (admin onaylı) için tasarım, uygulama planı ve veritabanı altyapısı hazırlandı",
+    lines: [
+      "Bir kullanıcının mevcut profiline dokunmadan, admin onayıyla başka bir rol için ikinci bir profil açabilmesi talebi için önce bir tasarım dokümanı, ardından ayrıntılı bir uygulama planı yazıldı.",
+      "Veritabanı tarafında, mevcut onay kuyruğuna (approval_requests) 'new_profile' adında yeni bir talep türü eklendi ve request_new_catalog_item adlı yeni bir güvenli RPC yazıldı — mevcut submit_role_change_request deseninin bir kopyası, tek fark kullanıcının bugünkü rolüne dokunmaması.",
+      "Bu iş ayrı bir çalışma dalında hazırlandı; migration henüz canlı veritabanına uygulanmadı ve arayüz tarafı henüz yazılmadı — sadece temel/plan hazır.",
+    ],
+  },
+  {
+    date: "23 Temmuz 2026",
+    title: "Burak'ın paylaşım görselleri için numaralandırma şeması güçlendirildi, eski görseller yedeklendi",
+    lines: [
+      "docs/social-share-outputs/ altındaki bazı araçlar için dosya adlandırma şeması, sırayı/varyantı/prompt numarasını daha net kodlayan 3 haneli bir düzene güncellendi.",
+      "Eski 2 haneli isimlendirmeyle yüklenmiş görseller silinmeden docs/backup/ altına referans yedek olarak taşındı — docs/social-share-outputs/ artık tek doğru kaynak, dosya bir daha silinmeyecek, sadece eklenecek.",
+      "İlgili sosyal paylaşım veritabanı kayıtları yeni şemaya göre güncellenip canlıda doğrulandı.",
+    ],
+  },
+  {
     date: "21 Temmuz 2026",
     title: "Google'ın sitemizi neden bazı sayfalarda indekslemediği araştırıldı: çoğu aslında sorun değilmiş, bir gerçek eksik bulunup düzeltildi",
     lines: [
