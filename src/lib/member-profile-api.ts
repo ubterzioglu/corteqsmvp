@@ -12,6 +12,17 @@ export async function submitRoleChangeRequest(targetRoleKey: string, note: strin
   return data;
 }
 
+export async function requestNewCatalogItem(roleKey: string, title: string, note: string) {
+  const { data, error } = await supabase.rpc("request_new_catalog_item", {
+    p_role_key: roleKey,
+    p_title: title.trim(),
+    p_note: note,
+  });
+
+  if (error) throw error;
+  return data as string;
+}
+
 export async function submitFeatureRequest(featureKey: string, payload: Record<string, unknown> = {}) {
   const { data, error } = await supabase.rpc("submit_feature_request", {
     feature_key: featureKey,
@@ -60,7 +71,7 @@ export async function updateProfileAttribute(attributeKey: string, value: unknow
 }
 
 export async function updateProfileAvatar(avatarUrl: string | null) {
-  const { data, error } = await (supabase as any).rpc("update_profile_avatar", {
+  const { data, error } = await supabase.rpc("update_profile_avatar", {
     next_avatar_url: avatarUrl,
   });
 

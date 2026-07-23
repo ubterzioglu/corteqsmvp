@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 28,
+    "total": 29,
     "edge_functions": 6,
     "workers": 2,
-    "ui_modules": 19
+    "ui_modules": 20
   },
   "tools": [
     {
@@ -292,6 +292,37 @@ export const toolCatalog = {
       "evidence_path": "supabase/functions/submit-survey-response/index.ts"
     },
     {
+      "tool_key": "module.brainstorming_api",
+      "tool_name": "brainstorming-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/brainstorming-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "addComment",
+        "createRow",
+        "createSection",
+        "deleteRow",
+        "deleteSection",
+        "fetchComments",
+        "fetchSections",
+        "fetchUserEmails",
+        "reorderRows",
+        "reorderSections",
+        "updateRow",
+        "updateSection"
+      ],
+      "tables_read_write": [
+        "brainstorming_rows",
+        "brainstorming_sections"
+      ],
+      "rpcs": [
+        "add_brainstorming_comment_v1",
+        "admin_get_user_email"
+      ],
+      "evidence_path": "src/lib/brainstorming-api.ts"
+    },
+    {
       "tool_key": "module.cadde_admin_api",
       "tool_name": "cadde-admin-api",
       "family": "ui_module",
@@ -550,6 +581,7 @@ export const toolCatalog = {
       "entrypoint": "src/lib/member-profile-api.ts",
       "interface_kind": "internal_api",
       "exports": [
+        "requestNewCatalogItem",
         "submitFeatureRequest",
         "submitRoleChangeRequest",
         "updateProfileAttribute",
@@ -557,6 +589,7 @@ export const toolCatalog = {
       ],
       "tables_read_write": [],
       "rpcs": [
+        "request_new_catalog_item",
         "submit_feature_request",
         "submit_role_change_request",
         "update_catalog_item_attribute",
@@ -1142,6 +1175,21 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/blog.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/brainstorming-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/brainstorming-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/brainstorming-schemas.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -2002,11 +2050,6 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/service-finder-schemas.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/statusreport-comments.ts",
       "kind": "ts",
       "module_family": "lib"
     },
