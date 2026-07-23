@@ -71,7 +71,7 @@ export async function updateProfileAttribute(attributeKey: string, value: unknow
 }
 
 export async function updateProfileAvatar(avatarUrl: string | null) {
-  const { data, error } = await (supabase as any).rpc("update_profile_avatar", {
+  const { data, error } = await supabase.rpc("update_profile_avatar", {
     next_avatar_url: avatarUrl,
   });
 
