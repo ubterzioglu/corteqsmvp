@@ -20,6 +20,7 @@ import type { AdminApprovalRequest } from "@/lib/admin-shell/admin-approvals-api
 
 const FILTER_OPTIONS = [
   { value: "all", label: "Tüm talepler" },
+  { value: "new_profile", label: "Yeni profil talebi" },
   { value: "role_change", label: "Rol başvuruları" },
   { value: "directory_visibility", label: "Directory görünürlük" },
   { value: "contact_visibility", label: "İletişim görünürlük" },
