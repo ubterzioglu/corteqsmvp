@@ -159,6 +159,7 @@ const Footer = () => {
                 href="https://tekhurdametal.com/istanbul-hurdaci/"
                 target="_blank"
                 rel="dofollow noopener noreferrer"
+                aria-label="İstanbul Hurdacı - Tek Hurda Metal A.Ş"
                 title="Tek Hurda Metal A.Ş"
                 className="transition-colors hover:text-primary"
               >

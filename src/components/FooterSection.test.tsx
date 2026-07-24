@@ -46,8 +46,11 @@ describe("FooterSection", () => {
       </MemoryRouter>,
     );
 
-    const backlink = screen.getByRole("link", { name: "İstanbul Hurdacı" });
+    const backlink = screen.getByRole("link", {
+      name: "İstanbul Hurdacı - Tek Hurda Metal A.Ş",
+    });
     expect(backlink).toHaveAttribute("href", "https://tekhurdametal.com/istanbul-hurdaci/");
+    expect(backlink).toHaveAttribute("aria-label", "İstanbul Hurdacı - Tek Hurda Metal A.Ş");
     expect(backlink).toHaveAttribute("title", "Tek Hurda Metal A.Ş");
   });
 });
