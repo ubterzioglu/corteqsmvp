@@ -156,6 +156,16 @@ const Footer = () => {
               <span>Spindora Tarafından Seosu Yapılmıştır.</span>
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
               <a
+                href="https://tekhurdametal.com/istanbul-hurdaci/"
+                target="_blank"
+                rel="dofollow noopener noreferrer"
+                title="Tek Hurda Metal A.Ş"
+                className="transition-colors hover:text-primary"
+              >
+                İstanbul Hurdacı
+              </a>
+              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
+              <a
                 href="https://ufuksoynakliyat.com.tr"
                 target="_blank"
                 rel="dofollow noopener noreferrer"
@@ -164,7 +174,7 @@ const Footer = () => {
                 Evden Eve Nakliyat
               </a>
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <span>Son güncelleme: 15 Haziran 2026</span>
+              <span>Son güncelleme: 24 Temmuz 2026</span>
             </p>
           </div>
         </div>
