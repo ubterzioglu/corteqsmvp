@@ -11,6 +11,28 @@ const DEFAULT_PATTERNS = [
   "{{profession}} {{location}} {{language_term}}",
 ];
 
+/**
+ * Şablonlar birden fazla dilde kalıp içerebilir (ör. healthcare-doctor Almanya
+ * bağlamı için yazıldığından Almanca kalıplar taşır — "türkischer Arzt Dortmund"
+ * job.country_code=DE iken doğrudur, çünkü hedef Almanya'daki Türkçe konuşanlardır).
+ * job.country_code Almanya DEĞİLSE (ör. Doha/QA) bu Almanca kalıplar anlamsızdır
+ * ve sorgu bütçesini israf eder — bu durumda eleriz.
+ */
+const GERMAN_MARKERS = /[äöüß]|\btürkische\b|\bärzte\b|\bpraxis\b|\bstellenangebot\b/i;
+
+function isGermanPattern(pattern: string): boolean {
+  return GERMAN_MARKERS.test(pattern);
+}
+
+function filterPatternsByCountry(patterns: string[], job: ServiceFinderJob): string[] {
+  const countryCode = job.country_code?.toUpperCase();
+  if (!countryCode || countryCode === "DE") return patterns;
+  const filtered = patterns.filter((pattern) => !isGermanPattern(pattern));
+  // Filtre hiçbir kalıp bırakmazsa (şablon yalnızca Almanca kalıplardan oluşuyorsa)
+  // tüm kalıplara geri dön — sessizce sıfır sorgu üretmek yerine.
+  return filtered.length > 0 ? filtered : patterns;
+}
+
 function fillTemplate(template: string, job: ServiceFinderJob, professionLabel: string, languageTerm: string): string {
   return template
     .replace(/\{\{\s*city\s*\}\}/g, job.city ?? job.location_label)
@@ -43,7 +65,8 @@ export function buildQueries(job: ServiceFinderJob, template: ProfessionTemplate
   }
 
   const templatePatterns = asStringArray(template?.query_templates);
-  const patterns = templatePatterns.length > 0 ? templatePatterns : DEFAULT_PATTERNS;
+  const rawPatterns = templatePatterns.length > 0 ? templatePatterns : DEFAULT_PATTERNS;
+  const patterns = filterPatternsByCountry(rawPatterns, job);
   for (const pattern of patterns) {
     for (const languageTerm of languageTerms) {
       queries.push(fillTemplate(pattern, job, professionLabel, languageTerm));

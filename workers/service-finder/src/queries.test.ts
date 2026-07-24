@@ -92,4 +92,39 @@ describe("buildQueries", () => {
     const queries = buildQueries(makeJob({ city: null }), makeTemplate());
     expect(queries.some((query) => query.includes("Dortmund, Nordrhein-Westfalen, Germany"))).toBe(true);
   });
+
+  it("country_code Almanya değilse Almanca kalıpları eler (Doha örneği)", () => {
+    const queries = buildQueries(
+      makeJob({
+        location_label: "Doha, Qatar",
+        country_code: "QA",
+        region: null,
+        city: "Doha",
+        language_code: "en",
+      }),
+      makeTemplate({
+        query_templates: [
+          "türkischer Arzt {{city}}",
+          "türkische Ärzte {{city}} Praxis",
+          "Türkçe konuşan doktor {{city}}",
+          "turkish speaking doctor {{city}}",
+        ],
+      }),
+    );
+    expect(queries.some((query) => /türkischer|ärzte|praxis/i.test(query))).toBe(false);
+    expect(queries).toContain("turkish speaking doctor Doha");
+  });
+
+  it("country_code Almanya ise Almanca kalıplar korunur (regresyon)", () => {
+    const queries = buildQueries(makeJob(), makeTemplate());
+    expect(queries).toContain("türkischer Arzt Dortmund");
+  });
+
+  it("şablon yalnızca Almanca kalıp içeriyorsa ve ülke Almanya değilse yine de sorgu üretir (fail-open)", () => {
+    const queries = buildQueries(
+      makeJob({ country_code: "QA", city: "Doha" }),
+      makeTemplate({ query_templates: ["türkischer Arzt {{city}}"] }),
+    );
+    expect(queries.length).toBeGreaterThan(0);
+  });
 });
