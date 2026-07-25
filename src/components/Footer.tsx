@@ -136,55 +136,6 @@ const Footer = () => {
               <span>© 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları saklıdır.</span>
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
               <a
-                href="https://chatio.com.tr/"
-                target="_blank"
-                rel="dofollow noopener noreferrer"
-                className="transition-colors hover:text-primary"
-              >
-                Canlı Destek Yazılımı
-              </a>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
-                href="https://www.spindorai.com/seo/izmir-seo"
-                target="_blank"
-                rel="dofollow noopener noreferrer"
-                className="transition-colors hover:text-primary"
-              >
-                İzmir Seo Ajansı
-              </a>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <span>Spindora Tarafından Seosu Yapılmıştır.</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
-                href="https://tekhurdametal.com/istanbul-hurdaci/"
-                rel="dofollow"
-                aria-label="İstanbul Hurdacı - Tek Hurda Metal A.Ş"
-                title="Tek Hurda Metal A.Ş"
-                className="transition-colors hover:text-primary"
-              >
-                İstanbul Hurdacı
-              </a>
-              <span>Firması Tek Hurda Metal A.Ş</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
-                href="https://tekhurdametal.com/hurda-fiyatlari/"
-                rel="dofollow"
-                className="transition-colors hover:text-primary"
-              >
-                Hurda Fiyatları
-              </a>
-              <span>Tek Hurda Metal</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
-                href="https://tekhurdametal.com/hurda-demir-fiyatlari/"
-                rel="dofollow"
-                className="transition-colors hover:text-primary"
-              >
-                Demir Hurda Fiyatları
-              </a>
-              <span>Tek Hurda Metal</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
                 href="https://tekhurdametal.com/beylikduzu-hurdaci/"
                 rel="dofollow"
                 className="transition-colors hover:text-primary"
@@ -194,33 +145,6 @@ const Footer = () => {
               <span>Firması Tek Hurda Metal A.Ş</span>
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
               <a
-                href="https://lionerotik.com/urunler/fetis-urunleri"
-                rel="dofollow"
-                className="transition-colors hover:text-primary"
-              >
-                Antalya Sex Shop
-              </a>
-              <span>Lion Erotik</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
-                href="https://lionerotik.com/urunler/fetis-urunleri"
-                rel="dofollow"
-                className="transition-colors hover:text-primary"
-              >
-                Antalya Erotik Shop
-              </a>
-              <span>Lion Erotik</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
-                href="https://lionerotik.com/urunler/fetis-urunleri"
-                rel="dofollow"
-                className="transition-colors hover:text-primary"
-              >
-                Antalya Seks Shop
-              </a>
-              <span>Lion Erotik</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
                 href="https://ufuksoynakliyat.com.tr"
                 target="_blank"
                 rel="dofollow noopener noreferrer"
@@ -228,6 +152,7 @@ const Footer = () => {
               >
                 Evden Eve Nakliyat
               </a>
+              <span>Şirketi Ufuksoy Nakliyat A.Ş</span>
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
               <span>Son güncelleme: 25 Temmuz 2026</span>
             </p>
