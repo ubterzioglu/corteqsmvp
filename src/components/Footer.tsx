@@ -165,6 +165,17 @@ const Footer = () => {
               >
                 İstanbul Hurdacı
               </a>
+              <span>Firması Tek Hurda Metal A.Ş</span>
+              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
+              <a
+                href="https://lionerotik.com/urunler/fetis-urunleri"
+                target="_blank"
+                rel="dofollow noopener noreferrer"
+                className="transition-colors hover:text-primary"
+              >
+                Antalya Sex Shop
+              </a>
+              <span>Lion Erotik</span>
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
               <a
                 href="https://ufuksoynakliyat.com.tr"
@@ -175,7 +186,7 @@ const Footer = () => {
                 Evden Eve Nakliyat
               </a>
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <span>Son güncelleme: 24 Temmuz 2026</span>
+              <span>Son güncelleme: 25 Temmuz 2026</span>
             </p>
           </div>
         </div>
