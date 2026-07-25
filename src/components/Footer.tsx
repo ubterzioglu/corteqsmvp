@@ -132,7 +132,7 @@ const Footer = () => {
           </div>
 
           <div className="mt-3.5 border-t border-border/60 pt-3.5">
-            <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 px-0.5 text-center text-[0.62rem] leading-relaxed text-muted-foreground sm:text-[0.68rem]">
+            <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 px-0.5 text-center text-[0.82rem] leading-[1.6] text-muted-foreground sm:text-base sm:leading-[1.55]">
               <span>© 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları saklıdır.</span>
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
               <a
