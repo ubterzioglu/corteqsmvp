@@ -157,8 +157,7 @@ const Footer = () => {
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
               <a
                 href="https://tekhurdametal.com/istanbul-hurdaci/"
-                target="_blank"
-                rel="dofollow noopener noreferrer"
+                rel="dofollow"
                 aria-label="İstanbul Hurdacı - Tek Hurda Metal A.Ş"
                 title="Tek Hurda Metal A.Ş"
                 className="transition-colors hover:text-primary"
@@ -168,12 +167,56 @@ const Footer = () => {
               <span>Firması Tek Hurda Metal A.Ş</span>
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
               <a
+                href="https://tekhurdametal.com/hurda-fiyatlari/"
+                rel="dofollow"
+                className="transition-colors hover:text-primary"
+              >
+                Hurda Fiyatları
+              </a>
+              <span>Tek Hurda Metal</span>
+              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
+              <a
+                href="https://tekhurdametal.com/hurda-demir-fiyatlari/"
+                rel="dofollow"
+                className="transition-colors hover:text-primary"
+              >
+                Demir Hurda Fiyatları
+              </a>
+              <span>Tek Hurda Metal</span>
+              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
+              <a
+                href="https://tekhurdametal.com/beylikduzu-hurdaci/"
+                rel="dofollow"
+                className="transition-colors hover:text-primary"
+              >
+                Beylikdüzü Hurdacı
+              </a>
+              <span>Firması Tek Hurda Metal A.Ş</span>
+              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
+              <a
                 href="https://lionerotik.com/urunler/fetis-urunleri"
-                target="_blank"
-                rel="dofollow noopener noreferrer"
+                rel="dofollow"
                 className="transition-colors hover:text-primary"
               >
                 Antalya Sex Shop
+              </a>
+              <span>Lion Erotik</span>
+              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
+              <a
+                href="https://lionerotik.com/urunler/fetis-urunleri"
+                rel="dofollow"
+                className="transition-colors hover:text-primary"
+              >
+                Antalya Erotik Shop
+              </a>
+              <span>Lion Erotik</span>
+              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
+              <a
+                href="https://lionerotik.com/urunler/fetis-urunleri"
+                rel="dofollow"
+                className="transition-colors hover:text-primary"
+              >
+                Antalya Seks Shop
               </a>
               <span>Lion Erotik</span>
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
