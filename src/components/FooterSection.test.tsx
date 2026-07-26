@@ -74,4 +74,18 @@ describe("FooterSection", () => {
       "https://lionerotik.com/urunler/fetis-urunleri",
     );
   });
+
+  it("renders the Lion Erotik destination only once", () => {
+    const { container } = render(
+      <MemoryRouter>
+        <FooterSection />
+      </MemoryRouter>,
+    );
+
+    expect(
+      container.querySelectorAll(
+        'a[href="https://lionerotik.com/urunler/fetis-urunleri"]',
+      ),
+    ).toHaveLength(1);
+  });
 });

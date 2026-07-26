@@ -198,25 +198,7 @@ const Footer = () => {
                 rel="dofollow"
                 className="transition-colors hover:text-primary"
               >
-                Antalya Sex Shop
-              </a>
-              <span>Lion Erotik</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
-                href="https://lionerotik.com/urunler/fetis-urunleri"
-                rel="dofollow"
-                className="transition-colors hover:text-primary"
-              >
                 Antalya Erotik Shop
-              </a>
-              <span>Lion Erotik</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
-                href="https://lionerotik.com/urunler/fetis-urunleri"
-                rel="dofollow"
-                className="transition-colors hover:text-primary"
-              >
-                Antalya Seks Shop
               </a>
               <span>Lion Erotik</span>
               <span aria-hidden="true" className="text-muted-foreground/40">|</span>
