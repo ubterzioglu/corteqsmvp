@@ -53,4 +53,25 @@ describe("FooterSection", () => {
     expect(backlink).toHaveAttribute("aria-label", "İstanbul Hurdacı - Tek Hurda Metal A.Ş");
     expect(backlink).toHaveAttribute("title", "Tek Hurda Metal A.Ş");
   });
+
+  it("renders the requested partner links in the footer", () => {
+    render(
+      <MemoryRouter>
+        <FooterSection />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("link", { name: "Eşya Depolama" })).toHaveAttribute(
+      "href",
+      "https://ufuksoynakliyat.com.tr/esya-depolama",
+    );
+    expect(screen.getByRole("link", { name: "Hurda Fiyatları" })).toHaveAttribute(
+      "href",
+      "https://tekhurdametal.com/hurda-fiyatlari/",
+    );
+    expect(screen.getByRole("link", { name: "Antalya Erotik Shop" })).toHaveAttribute(
+      "href",
+      "https://lionerotik.com/urunler/fetis-urunleri",
+    );
+  });
 });
