@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -9,7 +9,7 @@ vi.mock('@/lib/muhasebe-butce-api', () => ({
 }));
 
 import { fetchButceYear, upsertButceYear } from '@/lib/muhasebe-butce-api';
-import { useButceYear, useSaveButceYear } from '@/hooks/useMuhasebeButce';
+import { useButceYear, useDebouncedButceSave, useSaveButceYear } from '@/hooks/useMuhasebeButce';
 import { seedYear } from '@/lib/muhasebe-butce-schemas';
 
 function wrapper({ children }: { children: ReactNode }) {
@@ -42,5 +42,28 @@ describe('useSaveButceYear', () => {
     const state = seedYear();
     await result.current.mutateAsync(state);
     expect(upsertButceYear).toHaveBeenCalledWith(2026, state);
+  });
+});
+
+describe('useDebouncedButceSave', () => {
+  it('debounces rapid save() calls into a single upsert', async () => {
+    vi.useFakeTimers();
+    vi.mocked(upsertButceYear).mockClear();
+    vi.mocked(upsertButceYear).mockResolvedValue(undefined);
+    const { result } = renderHook(() => useDebouncedButceSave(2026, 700), { wrapper });
+    const state = seedYear();
+
+    act(() => {
+      result.current.save(state);
+      result.current.save(state);
+      result.current.save(state);
+    });
+    expect(upsertButceYear).not.toHaveBeenCalled();
+
+    await act(async () => {
+      vi.advanceTimersByTime(700);
+    });
+    expect(upsertButceYear).toHaveBeenCalledTimes(1);
+    vi.useRealTimers();
   });
 });
