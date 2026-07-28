@@ -211,6 +211,12 @@ async function getDiasporaRoutes() {
 // Herkese açık (RLS: catalog_item_is_publicly_visible) katalog profillerini çek —
 // src/lib/public-catalog-profile-api.ts'in kullandığı RPC değil, doğrudan tablo;
 // catalog_items_public_or_manager_read policy'si zaten görünürlüğü filtreliyor.
+//
+// GSC "Discovered - currently not indexed" (2026-07-28 audit, 236 sayfa): sitemap'te
+// is_placeholder=true (AFS rol şablonları, gerçek içerik değil) ve long_description'ı
+// boş "thin content" satırlar vardı — Google bunları düşük-değerli görüp crawl
+// bütçesini gerçek/dolu profillere ayırmıyordu. status=published + visibility=public +
+// is_placeholder=false + dolu long_description şartı eklendi.
 async function getDirectoryCatalogRoutes() {
   const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
   const key =
@@ -221,7 +227,14 @@ async function getDirectoryCatalogRoutes() {
   }
 
   try {
-    const params = new URLSearchParams({ select: "slug,updated_at", slug: "not.is.null" });
+    const params = new URLSearchParams({
+      select: "slug,updated_at,long_description",
+      slug: "not.is.null",
+      status: "eq.published",
+      visibility: "eq.public",
+      is_placeholder: "eq.false",
+      long_description: "not.is.null",
+    });
     const endpoint = `${url.replace(/\/+$/, "")}/rest/v1/catalog_items?${params.toString()}`;
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15_000);
@@ -236,7 +249,7 @@ async function getDirectoryCatalogRoutes() {
     }
     const rows = await res.json();
     return rows
-      .filter((r) => r?.slug)
+      .filter((r) => r?.slug && String(r.long_description ?? "").trim().length > 0)
       .map((r) => ({
         path: `/directory/catalog/${r.slug}`,
         priority: "0.6",
