@@ -14,6 +14,51 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260728-muhasebe-butce-sekmesi-temeli",
+    date: "28 Temmuz 2026",
+    title: "Muhasebe modülüne yıllık 'Bütçe' sekmesi geliyor — tasarımı, planı ve kodunun büyük bölümü bugün hazırlandı",
+    items: [
+      "Amaç: departman departman (ör. yazılım, pazarlama) 12 aylık gider bütçesini, gelir beklentisini ve ikisinin birleştiği nakit akışını tek ekrandan planlayabilmek. Ekranın üstünde 'eldeki para bu gidişle kaç ay yeter' özeti (runway) yer alıyor.",
+      "Bugün önce bir tasarım dokümanı, ardından adım adım uygulama planı yazıldı. Sonra kodun temel katmanları çıkarıldı: veritabanı tablosu, hesaplama mantığı (aylık toplamlar, bakiye, runway), Supabase bağlantısı, veri çekme kancaları, yazarken kendiliğinden kaydeden otomatik kayıt mekanizması, üç ana panel (Departman Bütçesi, Gelirler, Konsolide Nakit Akışı) ve CSV olarak dışa aktarma. Her parça için testleri de yazıldı.",
+      "Durum: bu iş ayrı bir çalışma dalında duruyor. Henüz ana koda alınmadı, admin menüsüne 'Bütçe' sekmesi olarak bağlanmadı ve veritabanı değişikliği canlıya UYGULANMADI — yani panelde şu an görünmüyor. Bir sonraki adım: sekmeyi menüye bağlamak, ana koda birleştirmek ve veritabanı değişikliğini canlıya almak.",
+    ],
+  },
+  {
+    id: "20260728-sitemap-bos-profil-temizligi",
+    date: "28 Temmuz 2026",
+    title: "Google '236 sayfayı keşfettim ama indekslemedim' diyordu — sebebi bulundu, site haritası gerçek içeriğe indirildi",
+    items: [
+      "Google Search Console 236 sayfa için 'Keşfedildi – şu anda dizine eklenmedi' uyarısı veriyordu. Kök neden bulundu: Google'a bildirdiğimiz sayfa listesinde (sitemap) gerçek profillerin yanında ~205 adet içi boş 'rol şablonu' kaydı ve 'hakkında' metni boş üye profilleri de vardı. Google bu içi boş sayfaları düşük değerli görüp, gerçek profillere ayıracağı tarama kaynağını onlara harcıyordu.",
+      "Düzeltme: listeye artık yalnızca yayınlanmış, herkese açık, şablon olmayan ve 'hakkında' metni dolu profiller giriyor. Liste 312 adresten 107 adrese indi; katalog profili sayısı ~225'ten 20 gerçek profile düştü.",
+      "Bilinmesi gereken kural: bir üye/kurum profilinin Google'a bildirilen listeye girebilmesi için 'hakkında' (uzun açıklama) metninin dolu olması gerekiyor. Bu alan boş bırakılırsa profil yayında olsa bile listeye hiç girmiyor — profil sahiplerinden bu metni istemekte fayda var.",
+      "Değişiklik ana koda alındı. Google'ın görebilmesi için bir sonraki yayın (deploy) ve ardından Search Console'dan site haritasının yeniden gönderilmesi gerekiyor.",
+    ],
+  },
+  {
+    id: "20260728-tools-noindex-karari",
+    date: "28 Temmuz 2026",
+    title: "Google'ın '16 araç sayfası noindex ile hariç tutuldu' uyarısı incelendi: hata değil, bilinçli tercih",
+    items: [
+      "Search Console 25 Temmuz'dan beri 16 taşınma aracı sayfasını (ör. /tools/sehir-eslestirme) 'noindex etiketiyle hariç tutuldu' diye raporluyor. İncelendi: bu bir hata değil. Araç sayfaları üyelere özel olduğu için giriş yapmamış bir ziyaretçi — ve Google — o adreste giriş ekranını görüyor; giriş ekranının arama motorlarına 'beni dizine ekleme' demesi de zaten doğru davranış.",
+      "Karar: araçlar üyeye özel kalıyor, giriş duvarı yerinde duruyor. Aramada görünürlük /tools ana sayfası üzerinden sağlanıyor — o sayfa herkese açık, dizine eklenebiliyor ve 17 aracın tamamının başlığını ve özetini gösteriyor.",
+      "ÖNEMLİ: Search Console'da bu rapordaki 'Doğrulamayı başlat / Sorun giderildi mi?' düğmesine BASILMAMALI. O düğme Google'dan 'noindex kalkmış mı' diye kontrol etmesini ister; sayfalar bilerek öyle kaldığı için doğrulama başarısız olur ve rapor geri döner. Aynı şekilde robots.txt ile engellemek de durumu daha kötü hale getirir. Bu rapor bilgi amaçlıdır, zaman zaman tekrar görünmesi normaldir.",
+      "İleriye not: 5 adet Almanya hesaplayıcısı (maaş, vize vb.) tamamen tarayıcı içinde çalışıyor; istenirse bunları herkese açmak, veritabanına dokunmadan yapılabilecek en ucuz SEO kazancı olarak masada duruyor. Şimdilik kapsam dışı bırakıldı.",
+      "Karar ve gerekçeleri docs/audits/2026-07-28-tools-noindex-karari.md dosyasına yazıldı.",
+    ],
+  },
+  {
+    id: "20260728-sosyal-paylasim-eksik-gorsel-raporu",
+    date: "28 Temmuz 2026",
+    title: "Sosyal Medya Paylaşım Deposu'nun görsel envanteri çıkarıldı: 100 kartın 70'i hâlâ görselsiz",
+    items: [
+      "Canlı veritabanı tek tek sorgulanıp hangi kartta görsel var hangisinde yok listelendi: 100 karttan 30'unda görsel var, 70'i tamamen boş.",
+      "İyi haber: panelin ilk 12 sırası (BURAK BURAYA BAK kartları) neredeyse tamamlanmış durumda; eksik olan yalnızca birkaç çok varyantlı kartın ek varyantı (ör. item-98'in 3. varyantı).",
+      "Bekleyen kısım 13–100 arası: Test Araçları, Diaspora Postları ve Araç Tanıtımları kartlarının neredeyse tamamı hâlâ görsel bekliyor.",
+      "Küçük bir uyumsuzluk not edildi: repo klasöründe 34 karta ait 74 dosya varken veritabanında 30 kart görünüyor — yani klasöre eklenmiş ama henüz panele işlenmemiş birkaç dosya olabilir; ayrıca kontrol edilip yüklenecek.",
+      "Hangi kartın eksik olduğunun tam listesi docs/social-share-outputs/eksik-gorsel-raporu-2026-07-28.md dosyasında.",
+    ],
+  },
+  {
     id: "20260723-ikinci-profil-talebi-tamamlandi",
     date: "23 Temmuz 2026",
     title: "Üyeler artık ikinci bir profil (ör. hem Bireysel hem İşletme) açmayı talep edebiliyor",
