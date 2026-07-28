@@ -2,7 +2,7 @@
 // /admin/muhasebe altındaki tab navigasyonu için layout
 
 import { NavLink, Outlet } from 'react-router-dom';
-import { LayoutDashboard, TrendingDown, TrendingUp, LineChart } from 'lucide-react';
+import { LayoutDashboard, TrendingDown, TrendingUp, LineChart, Wallet } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const TABS = [
@@ -10,6 +10,7 @@ const TABS = [
   { to: 'giderler', label: 'Giderler', icon: TrendingDown, end: false },
   { to: 'gelirler', label: 'Gelirler', icon: TrendingUp, end: false },
   { to: 'nakit-akisi', label: 'Nakit Akışı', icon: LineChart, end: false },
+  { to: 'butce', label: 'Bütçe', icon: Wallet, end: false },
 ] as const;
 
 export default function MuhasebeLayout() {

@@ -22,6 +22,7 @@ const MuhasebeDashboard = lazy(() => import('./MuhasebeDashboard'));
 const GiderlerPage      = lazy(() => import('./GiderlerPage'));
 const GelirlerPage      = lazy(() => import('./GelirlerPage'));
 const NakitAkisiPage    = lazy(() => import('./NakitAkisiPage'));
+const ButcePage         = lazy(() => import('./butce/ButcePage'));
 
 function PageFallback() {
   return (
@@ -70,6 +71,14 @@ export const muhasebeRoutes = (
       element={
         <Suspense fallback={<PageFallback />}>
           <NakitAkisiPage />
+        </Suspense>
+      }
+    />
+    <Route
+      path="butce"
+      element={
+        <Suspense fallback={<PageFallback />}>
+          <ButcePage />
         </Suspense>
       }
     />
