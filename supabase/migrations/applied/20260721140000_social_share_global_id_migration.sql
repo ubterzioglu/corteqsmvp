@@ -17,10 +17,17 @@
 --   2) social_share_log / social_share_item_note: item_tab + item_id iki
 --      kolonunu tek global_id koluna indirger (1 mevcut log kaydı).
 --   3) Eski item_tab CHECK constraint'lerini kaldırır (tab artık DB'de yok).
+--
+-- IDEMPOTENT: eski kolonlara dokunan her adım `item_tab` kolonunun hâlâ var
+-- olmasına bağlıdır ve dinamik EXECUTE ile çalışır. Böylece migration zaten
+-- uygulanmış bir veritabanında yeniden çalıştırılırsa 42703 ("column item_tab
+-- does not exist") yerine sessizce no-op olur.
 
 -- 1) social_share_assets + social_share_asset_images: slot_key'leri çevir ----
 -- Elle doğrulanmış (script: scripts/reseed-social-share-outputs.mjs çıktısı,
 -- 2026-07-21) eski→yeni slot_key eşlemesi. Yalnız o an dolu olan 16 slot var.
+-- Yeniden çalıştırmada eski anahtarlar artık eşleşmediği için UPDATE'ler no-op olur.
+drop table if exists _social_share_slot_migration;
 create temporary table _social_share_slot_migration (old_slot_key text primary key, new_slot_key text not null);
 insert into _social_share_slot_migration (old_slot_key, new_slot_key) values
   ('diaspora/post-1/variant-0', 'item-1/variant-0'),
@@ -55,47 +62,58 @@ drop table _social_share_slot_migration;
 -- 2) social_share_log: item_tab + item_id → global_id ------------------------
 alter table public.social_share_log add column if not exists global_id text;
 
--- Mevcut tek kayıt: (tools, tool-1) → item-5 (bkz. social-share-unified.ts globalId ataması).
-update public.social_share_log
-set global_id = case
-  when item_tab = 'tools' and item_id = 'tool-1' then 'item-5'
-  else null
-end
-where global_id is null;
-
 do $$
 begin
-  if exists (select 1 from public.social_share_log where global_id is null) then
-    raise exception 'social_share_log: eşlenemeyen satır kaldı — migration verisini genişlet';
+  -- Eski kolonlar duruyorsa: veriyi taşı, doğrula, kolonları düşür.
+  -- Zaten taşınmışsa bu blok tamamen atlanır (yeniden çalıştırma güvenliği).
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'social_share_log' and column_name = 'item_tab'
+  ) then
+    -- Mevcut tek kayıt: (tools, tool-1) → item-5 (bkz. social-share-unified.ts globalId ataması).
+    execute $sql$
+      update public.social_share_log
+      set global_id = case
+        when item_tab = 'tools' and item_id = 'tool-1' then 'item-5'
+        else null
+      end
+      where global_id is null
+    $sql$;
+
+    if exists (select 1 from public.social_share_log where global_id is null) then
+      raise exception 'social_share_log: eşlenemeyen satır kaldı — migration verisini genişlet';
+    end if;
+
+    alter table public.social_share_log drop constraint if exists social_share_log_item_platform_uniq;
+    drop index if exists social_share_log_item_idx;
+
+    -- item_tab'e dokunan CHECK constraint'leri isimsiz tanımlanmış olabilir.
+    declare
+      con_name text;
+    begin
+      for con_name in
+        select con.conname
+        from pg_constraint con
+        join pg_class rel on rel.oid = con.conrelid
+        join pg_namespace nsp on nsp.oid = rel.relnamespace
+        where nsp.nspname = 'public'
+          and rel.relname = 'social_share_log'
+          and con.contype = 'c'
+          and pg_get_constraintdef(con.oid) ilike '%item_tab%'
+      loop
+        execute format('alter table public.social_share_log drop constraint %I', con_name);
+      end loop;
+    end;
+
+    alter table public.social_share_log drop column item_tab;
+    alter table public.social_share_log drop column item_id;
   end if;
 end $$;
 
 alter table public.social_share_log alter column global_id set not null;
 
-alter table public.social_share_log drop constraint if exists social_share_log_item_platform_uniq;
-drop index if exists social_share_log_item_idx;
-
-do $$
-declare
-  con_name text;
-begin
-  for con_name in
-    select con.conname
-    from pg_constraint con
-    join pg_class rel on rel.oid = con.conrelid
-    join pg_namespace nsp on nsp.oid = rel.relnamespace
-    where nsp.nspname = 'public'
-      and rel.relname = 'social_share_log'
-      and con.contype = 'c'
-      and pg_get_constraintdef(con.oid) ilike '%item_tab%'
-  loop
-    execute format('alter table public.social_share_log drop constraint %I', con_name);
-  end loop;
-end $$;
-
-alter table public.social_share_log drop column item_tab;
-alter table public.social_share_log drop column item_id;
-
+alter table public.social_share_log
+  drop constraint if exists social_share_log_global_id_platform_uniq;
 alter table public.social_share_log
   add constraint social_share_log_global_id_platform_uniq unique (global_id, platform);
 
@@ -107,36 +125,44 @@ alter table public.social_share_item_note add column if not exists global_id tex
 
 do $$
 begin
-  if exists (select 1 from public.social_share_item_note where global_id is null) then
-    raise exception 'social_share_item_note: eşlenemeyen satır kaldı — migration verisini genişlet';
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'social_share_item_note' and column_name = 'item_tab'
+  ) then
+    -- Kaynak DB'de bu tablo boştu; eşleme verisi tanımlı değil. Satır varsa
+    -- sessizce NULL bırakmak yerine yüksek sesle patlat.
+    if exists (select 1 from public.social_share_item_note where global_id is null) then
+      raise exception 'social_share_item_note: eşlenemeyen satır kaldı — migration verisini genişlet';
+    end if;
+
+    alter table public.social_share_item_note drop constraint if exists social_share_item_note_item_uniq;
+
+    declare
+      con_name text;
+    begin
+      for con_name in
+        select con.conname
+        from pg_constraint con
+        join pg_class rel on rel.oid = con.conrelid
+        join pg_namespace nsp on nsp.oid = rel.relnamespace
+        where nsp.nspname = 'public'
+          and rel.relname = 'social_share_item_note'
+          and con.contype = 'c'
+          and pg_get_constraintdef(con.oid) ilike '%item_tab%'
+      loop
+        execute format('alter table public.social_share_item_note drop constraint %I', con_name);
+      end loop;
+    end;
+
+    alter table public.social_share_item_note drop column item_tab;
+    alter table public.social_share_item_note drop column item_id;
   end if;
 end $$;
 
 alter table public.social_share_item_note alter column global_id set not null;
 
-alter table public.social_share_item_note drop constraint if exists social_share_item_note_item_uniq;
-
-do $$
-declare
-  con_name text;
-begin
-  for con_name in
-    select con.conname
-    from pg_constraint con
-    join pg_class rel on rel.oid = con.conrelid
-    join pg_namespace nsp on nsp.oid = rel.relnamespace
-    where nsp.nspname = 'public'
-      and rel.relname = 'social_share_item_note'
-      and con.contype = 'c'
-      and pg_get_constraintdef(con.oid) ilike '%item_tab%'
-  loop
-    execute format('alter table public.social_share_item_note drop constraint %I', con_name);
-  end loop;
-end $$;
-
-alter table public.social_share_item_note drop column item_tab;
-alter table public.social_share_item_note drop column item_id;
-
+alter table public.social_share_item_note
+  drop constraint if exists social_share_item_note_global_id_uniq;
 alter table public.social_share_item_note
   add constraint social_share_item_note_global_id_uniq unique (global_id);
 
