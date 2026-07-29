@@ -118,6 +118,7 @@ export const TOOLS_UI_COPY = {
   breakdownTitle: "Puan Dağılımı",
   whyTitle: "Neden?",
   retake: "Tekrar Çöz",
+  comingSoon: "Yakında",
   loading: "Yükleniyor…",
   notFound: "Araç bulunamadı.",
   privacyNote:

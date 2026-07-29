@@ -12,7 +12,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { QuestionStepper } from "@/components/relocation/tools/QuestionStepper";
 import { ToolResultView } from "@/components/relocation/tools/ToolResultView";
-import { Button } from "@/components/ui/button";
 import { getToolBySlug, requestDiasporaIntro } from "@/lib/relocation-tools-api";
 import { relocationToolsKeys } from "@/lib/relocation-tools-query-keys";
 import { useRelocationToolSession } from "@/hooks/useRelocationToolSession";
@@ -116,32 +115,26 @@ export default function RelocationToolPage() {
       </div>
 
       {result ? (
-        <div className="space-y-4">
-          <ToolResultView
-            result={result}
-            onRequestIntro={(candidateId) => {
-              void requestDiasporaIntro(candidateId)
-                .then(() =>
-                  toast({
-                    title: "Tanışma isteği gönderildi",
-                    description: "Karşı taraf kabul ederse iletişim açılır.",
-                  }),
-                )
-                .catch((err: unknown) =>
-                  toast({
-                    title: "İstek gönderilemedi",
-                    description: err instanceof Error ? err.message : "Beklenmeyen hata",
-                    variant: "destructive",
-                  }),
-                );
-            }}
-          />
-          <div className="flex justify-end">
-            <Button variant="ghost" onClick={resetAll}>
-              {TOOLS_UI_COPY.retake}
-            </Button>
-          </div>
-        </div>
+        <ToolResultView
+          result={result}
+          onRetake={resetAll}
+          onRequestIntro={(candidateId) => {
+            void requestDiasporaIntro(candidateId)
+              .then(() =>
+                toast({
+                  title: "Tanışma isteği gönderildi",
+                  description: "Karşı taraf kabul ederse iletişim açılır.",
+                }),
+              )
+              .catch((err: unknown) =>
+                toast({
+                  title: "İstek gönderilemedi",
+                  description: err instanceof Error ? err.message : "Beklenmeyen hata",
+                  variant: "destructive",
+                }),
+              );
+          }}
+        />
       ) : (
         <QuestionStepper
           questions={tool.questions}

@@ -16,6 +16,8 @@ interface ToolResultViewProps {
   onCtaClick?: (cta: ToolCta) => void;
   /** #5 diaspora: güvenli kartta tanışma isteği (candidate_id). */
   onRequestIntro?: (candidateId: string) => void;
+  /** Verilirse "Tekrar Çöz" CTA ızgarasının son hücresi olarak gösterilir. */
+  onRetake?: () => void;
 }
 
 /** persona aracında başlık = persona etiketi; diğerlerinde skor göstergesi. */
@@ -41,7 +43,12 @@ function ResultHeadline({ result }: { result: RelocationToolResultPayload }) {
   );
 }
 
-export function ToolResultView({ result, onCtaClick, onRequestIntro }: ToolResultViewProps) {
+export function ToolResultView({
+  result,
+  onCtaClick,
+  onRequestIntro,
+  onRetake,
+}: ToolResultViewProps) {
   const labels = dimensionLabelsForResult(result.result_kind, result.tool_key);
   const rankedItems = Array.isArray(result.recommendations)
     ? (result.recommendations as Array<Record<string, unknown>>)
@@ -91,7 +98,7 @@ export function ToolResultView({ result, onCtaClick, onRequestIntro }: ToolResul
         <ScoreBreakdownCard subScores={result.sub_scores} dimensionLabels={labels} />
       )}
 
-      <ResultCtaPanel ctas={result.ctas} onCtaClick={onCtaClick} />
+      <ResultCtaPanel ctas={result.ctas} onCtaClick={onCtaClick} onRetake={onRetake} />
 
       <p className="text-xs text-muted-foreground">{TOOLS_UI_COPY.privacyNote}</p>
     </div>
