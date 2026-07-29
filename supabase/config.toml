@@ -11,3 +11,10 @@ verify_jwt = true
 
 [functions.submit-survey-response]
 verify_jwt = false
+
+# Gateway JWT doğrulaması KAPALI, çünkü fonksiyon DB'den pg_net ile de çağrılır ve
+# net.http_post bir kullanıcı JWT'si taşıyamaz. Yetki fonksiyonun kendi içinde yapılır:
+# ya x-dispatch-secret (NOTIFY_DISPATCH_SECRET ile sabit zamanlı karşılaştırma)
+# ya da geçerli bir admin JWT'si (getUser + is_admin RPC). İkisi de yoksa 401 döner.
+[functions.send-notification-emails]
+verify_jwt = false

@@ -7,6 +7,7 @@
 import {
   ArrowLeftRight,
   BarChart3,
+  BellRing,
   BookOpen,
   Boxes,
   Briefcase,
@@ -675,6 +676,16 @@ export const adminNavGroups: AdminNavGroup[] = [
         icon: Newspaper,
         accent: "red",
         aliases: ["güncelleme", "sürüm", "release", "about"],
+      },
+      {
+        id: "notification-settings",
+        label: "Bildirim Ayarları",
+        shortLabel: "Bildirimler",
+        description: "Yeni üye ve güncelleme e-postalarını aç/kapa; kendi aboneliğini yönet.",
+        to: "/admin/notifications",
+        icon: BellRing,
+        accent: "red",
+        aliases: ["bildirim", "mail", "e-posta", "eposta", "abonelik", "notification", "yeni üye"],
       },
       {
         id: "tools",

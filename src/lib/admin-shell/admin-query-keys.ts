@@ -13,4 +13,5 @@ export const adminQueryKeys = {
   roleMatrixCatalog: () => [...adminQueryKeys.all, "role-matrix", "catalog"] as const,
   roleMatrixBundle: (roleKey: string) =>
     [...adminQueryKeys.all, "role-matrix", "bundle", roleKey] as const,
+  notificationState: () => [...adminQueryKeys.all, "notification-state"] as const,
 };

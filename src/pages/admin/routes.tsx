@@ -30,6 +30,7 @@ const AdminReferralSourcesPage = lazy(() => import("@/pages/admin/AdminReferralS
 const AdminReferralGroupsPage = lazy(() => import("@/pages/admin/AdminReferralGroupsPage"));
 const AdminReferralTypesPage = lazy(() => import("@/pages/admin/AdminReferralTypesPage"));
 const AdminAboutPage = lazy(() => import("@/pages/admin/AdminAboutPage"));
+const AdminNotificationSettingsPage = lazy(() => import("@/pages/admin/AdminNotificationSettingsPage"));
 const AdminToolRegistryPage = lazy(() => import("@/pages/admin/AdminToolRegistryPage"));
 const AdminAgentAnalyticsPage = lazy(() => import("@/pages/admin/AdminAgentAnalyticsPage"));
 const AdminGuidePage = lazy(() => import("@/pages/admin/AdminGuidePage"));
@@ -124,6 +125,7 @@ export const adminRoutes = (
     <Route path="may19/kelime" element={<AdminMay19IdeaPage />} />
     <Route path="may19/ani" element={<AdminMay19MomentPage />} />
     <Route path="about" element={<AdminAboutPage />} />
+    <Route path="notifications" element={<AdminNotificationSettingsPage />} />
     <Route path="tools" element={<AdminToolRegistryPage />} />
     <Route path="agent-analytics" element={<AdminAgentAnalyticsPage />} />
     <Route path="links" element={<AdminLinksPage />} />

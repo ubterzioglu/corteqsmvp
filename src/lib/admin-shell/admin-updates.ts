@@ -14,6 +14,19 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260729-bildirim-e-postalari",
+    date: "29 Temmuz 2026",
+    title: "Yeni üye kaydı da artık mail olarak gelebiliyor — ve iki bildirimi de panelden açıp kapatabiliyorsun",
+    items: [
+      "Bugüne kadar yalnızca 'admin güncellemeleri' maili vardı; o da kodun içine gömülü 3 sabit adrese gidiyordu, sadece geliştirici bilgisayarından commit atılınca çalışıyordu ve aynı güne birden fazla kayıt girildiğinde yalnızca en üsttekini yolluyordu.",
+      "Artık iki ayrı bildirim var: (1) siteye yeni bir üye kaydolup e-postasını doğruladığında, (2) buraya yeni bir güncelleme kaydı girildiğinde. İkisi de e-posta olarak gidiyor.",
+      "Yeni sayfa: Sistem > Bildirim Ayarları. Burada iki tür bildirimin GENEL anahtarı (tüm platform için aç/kapa — yalnız admin) ve KİŞİSEL aboneliğin (sadece senin hesabın için — 'yeni üye kaydolduğunda bana mail gelsin' / 'yeni güncelleme yayınlandığında bana mail gelsin') ayrı ayrı yönetiliyor. Aynı sayfada son 20 gönderimin durumu ve alıcı sayısı da görünüyor.",
+      "Kimin mail alacağı artık koddan değil, herkesin kendi tercihinden belirleniyor. Yetkisi alınan bir yönetici, tercihi açık kalsa bile mail almayı otomatik olarak durduruyor.",
+      "Güvenlik notu: genel anahtarların ikisi de KAPALI başlıyor. Bildirimler ancak bir admin bu sayfadan anahtarı açtıktan sonra akmaya başlar.",
+      "Durum: kod ve veritabanı değişikliği hazır, testleri yazıldı. Veritabanı değişikliği canlıya HENÜZ UYGULANMADI ve mail gönderen servis yayına alınmadı — sayfa şu an panelde çalışmaz. Sıradaki adımlar devir notunda.",
+    ],
+  },
+  {
     id: "20260728-muhasebe-butce-sekmesi-temeli",
     date: "28 Temmuz 2026",
     title: "Muhasebe modülüne yıllık 'Bütçe' sekmesi geliyor — tasarımı, planı ve kodunun büyük bölümü bugün hazırlandı",
