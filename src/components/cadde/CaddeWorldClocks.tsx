@@ -111,8 +111,11 @@ const CaddeWorldClocks = ({ viewerCity, filterCity, cities }: CaddeWorldClocksPr
       { label: "İstanbul", timezone: ISTANBUL_TIMEZONE },
     ];
 
+    // 'UTC' katalogda "bilinmiyor" anlamına gelir: geo_cities'te timezone kolonu yok,
+    // yeni ülkenin ilk şehri devralacak bir dilim bulamazsa UTC kalıyor. Yanlış saat
+    // göstermektense o şehri atla — şerit fallback'lerden tamamlanır.
     const filterTimezone = filterCity ? timezoneByCityName.get(filterCity) : undefined;
-    if (filterCity && filterTimezone) {
+    if (filterCity && filterTimezone && filterTimezone !== "UTC") {
       candidates.push({ label: filterCity, timezone: filterTimezone });
     }
 
