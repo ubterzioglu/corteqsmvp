@@ -6,7 +6,6 @@
 // Yetki iki kademelidir: genel anahtarları yalnız admin değiştirebilir, kişisel abonelik
 // tüm moderator'lara açıktır. isAdmin bilgisi RPC'den gelir — UI kendi başına karar vermez.
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BellRing, Send } from "lucide-react";
 
 import {
@@ -19,18 +18,10 @@ import {
 } from "@/components/admin/page";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/hooks/use-toast";
-import { adminQueryKeys } from "@/lib/admin-shell/admin-query-keys";
+import { useNotificationSettings } from "@/hooks/admin/useNotificationSettings";
 import {
   NOTIFICATION_EVENT_LABELS,
-  NOTIFICATION_SETTING_KEYS,
   OUTBOX_STATUS_LABELS,
-  dispatchPendingNotifications,
-  fetchAdminNotificationState,
-  setMyNotificationSubscription,
-  setNotificationSetting,
-  type AdminNotificationState,
-  type NotificationSettingKey,
   type OutboxStatus,
 } from "@/lib/admin-shell/notification-settings-api";
 
@@ -81,57 +72,24 @@ function ToggleRow({ title, description, checked, disabled, onCheckedChange, lab
 }
 
 const AdminNotificationSettingsPage = () => {
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
+  // Veri ve mutation'lar topbar menüsüyle ortak (aynı query anahtarı → anında senkron).
+  const {
+    state,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    settingsBusy,
+    subscriptionBusy,
+    dispatchBusy,
+    setGlobal,
+    updateSubscription,
+    dispatchPending,
+    mutedTypes,
+    SETTING_KEYS,
+  } = useNotificationSettings();
 
-  const stateQuery = useQuery({
-    queryKey: adminQueryKeys.notificationState(),
-    queryFn: fetchAdminNotificationState,
-  });
-
-  const invalidate = () =>
-    queryClient.invalidateQueries({ queryKey: adminQueryKeys.notificationState() });
-
-  const notifyError = (error: unknown, fallback: string) => {
-    toast({
-      title: fallback,
-      description: error instanceof Error ? error.message : undefined,
-      variant: "destructive",
-    });
-  };
-
-  const settingMutation = useMutation({
-    mutationFn: ({ key, enabled }: { key: NotificationSettingKey; enabled: boolean }) =>
-      setNotificationSetting(key, enabled),
-    onSuccess: async () => {
-      await invalidate();
-      toast({ title: "Genel anahtar güncellendi" });
-    },
-    onError: (error: unknown) => notifyError(error, "Genel anahtar güncellenemedi"),
-  });
-
-  const subscriptionMutation = useMutation({
-    mutationFn: setMyNotificationSubscription,
-    onSuccess: async () => {
-      await invalidate();
-      toast({ title: "Aboneliğin güncellendi" });
-    },
-    onError: (error: unknown) => notifyError(error, "Aboneliğin güncellenemedi"),
-  });
-
-  const dispatchMutation = useMutation({
-    mutationFn: dispatchPendingNotifications,
-    onSuccess: async (result) => {
-      await invalidate();
-      toast({
-        title: "Kuyruk işlendi",
-        description: `${result.processed} kayıt işlendi — ${result.sent} gönderildi, ${result.skipped} atlandı, ${result.failed} başarısız.`,
-      });
-    },
-    onError: (error: unknown) => notifyError(error, "Kuyruk işlenemedi"),
-  });
-
-  if (stateQuery.isLoading) {
+  if (isLoading) {
     return (
       <AdminPageShell title="Bildirim Ayarları" icon={BellRing} accent="red">
         <AdminLoadingState />
@@ -139,39 +97,16 @@ const AdminNotificationSettingsPage = () => {
     );
   }
 
-  if (stateQuery.isError || !stateQuery.data) {
+  if (isError || !state) {
     return (
       <AdminPageShell title="Bildirim Ayarları" icon={BellRing} accent="red">
         <AdminErrorState
-          description={
-            stateQuery.error instanceof Error
-              ? stateQuery.error.message
-              : "Bildirim ayarları okunamadı."
-          }
-          onRetry={() => stateQuery.refetch()}
+          description={error instanceof Error ? error.message : "Bildirim ayarları okunamadı."}
+          onRetry={() => refetch()}
         />
       </AdminPageShell>
     );
   }
-
-  const state: AdminNotificationState = stateQuery.data;
-  const settingsBusy = settingMutation.isPending;
-  const subscriptionBusy = subscriptionMutation.isPending;
-
-  const updateSubscription = (patch: Partial<{ newMemberEmail: boolean; adminUpdateEmail: boolean }>) => {
-    subscriptionMutation.mutate({
-      newMemberEmail: state.myNewMemberEmail,
-      adminUpdateEmail: state.myAdminUpdateEmail,
-      ...patch,
-    });
-  };
-
-  // Kişisel tercih açık ama genel anahtar kapalıysa hiç mail gitmez — tercih silinmez,
-  // yalnız uyarılır. Kullanıcının "açtım ama gelmiyor" sorusunun cevabı budur.
-  const mutedWarnings = [
-    state.myNewMemberEmail && !state.newMemberEnabled ? "yeni üye" : null,
-    state.myAdminUpdateEmail && !state.adminUpdateEnabled ? "güncelleme" : null,
-  ].filter((value): value is string => value !== null);
 
   return (
     <AdminPageShell
@@ -184,8 +119,8 @@ const AdminNotificationSettingsPage = () => {
         state.isAdmin ? (
           <Button
             variant="outline"
-            disabled={dispatchMutation.isPending || state.pendingCount === 0}
-            onClick={() => dispatchMutation.mutate()}
+            disabled={dispatchBusy || state.pendingCount === 0}
+            onClick={dispatchPending}
           >
             <Send className="mr-2 h-4 w-4" />
             {state.pendingCount > 0
@@ -197,12 +132,12 @@ const AdminNotificationSettingsPage = () => {
       contentWidth="default"
     >
       <div className="space-y-8">
-        {mutedWarnings.length > 0 ? (
+        {mutedTypes.length > 0 ? (
           <p
             role="status"
             className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-900 dark:text-amber-200"
           >
-            Genel anahtar kapalı olduğu için {mutedWarnings.join(" ve ")} bildirimleri kimseye
+            Genel anahtar kapalı olduğu için {mutedTypes.join(" ve ")} bildirimleri kimseye
             gitmiyor. Tercihin korunuyor; anahtarı bir admin açtığında mailler akmaya başlar.
           </p>
         ) : null}
@@ -224,7 +159,7 @@ const AdminNotificationSettingsPage = () => {
             disabled={!state.isAdmin || settingsBusy}
             label="Yeni üye bildirimleri açık"
             onCheckedChange={(checked) =>
-              settingMutation.mutate({ key: NOTIFICATION_SETTING_KEYS.newMember, enabled: checked })
+              setGlobal(SETTING_KEYS.newMember, checked)
             }
           />
 
@@ -235,7 +170,7 @@ const AdminNotificationSettingsPage = () => {
             disabled={!state.isAdmin || settingsBusy}
             label="Güncelleme bildirimleri açık"
             onCheckedChange={(checked) =>
-              settingMutation.mutate({ key: NOTIFICATION_SETTING_KEYS.adminUpdate, enabled: checked })
+              setGlobal(SETTING_KEYS.adminUpdate, checked)
             }
           />
         </section>

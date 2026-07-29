@@ -3,6 +3,7 @@
 
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -30,6 +31,11 @@ vi.mock("@/lib/admin", () => ({
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
+    // Topbar'daki AdminNotificationMenu get_admin_notification_state RPC'sini çağırır.
+    // Burada yetkisiz yanıt döndürülür → menü null render eder ve layout testleri etkilenmez;
+    // menünün kendi davranışı AdminNotificationMenu.test.tsx'te doğrulanır.
+    rpc: vi.fn().mockResolvedValue({ data: null, error: { message: "forbidden" } }),
+    functions: { invoke: vi.fn() },
     auth: {
       onAuthStateChange: () => ({
         data: {
@@ -57,16 +63,21 @@ vi.mock("@/integrations/supabase/client", () => ({
 }));
 
 function renderAdminLayout(pathname: string) {
+  // App.tsx tüm ağacı QueryClientProvider ile sarar; topbar'daki React Query
+  // tüketicileri (AdminNotificationMenu) için testte de aynısı gerekli.
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
-    <MemoryRouter initialEntries={[pathname]}>
-      <Routes>
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<div>Admin Home Content</div>} />
-          <Route path="data" element={<div>Unified Data Content</div>} />
-          <Route path="surveys" element={<div>Surveys Content</div>} />
-        </Route>
-      </Routes>
-    </MemoryRouter>,
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={[pathname]}>
+        <Routes>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<div>Admin Home Content</div>} />
+            <Route path="data" element={<div>Unified Data Content</div>} />
+            <Route path="surveys" element={<div>Surveys Content</div>} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>,
   );
 }
 

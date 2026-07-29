@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import AdminShell from "@/components/admin/shell/AdminShell";
@@ -22,6 +23,10 @@ vi.mock("@/lib/admin", () => ({
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
+    // Topbar'daki AdminNotificationMenu get_admin_notification_state RPC'sini çağırır;
+    // yetkisiz yanıt → menü null render eder ve bu testler etkilenmez.
+    rpc: vi.fn().mockResolvedValue({ data: null, error: { message: "forbidden" } }),
+    functions: { invoke: vi.fn() },
     auth: {
       onAuthStateChange: () => ({
         data: { subscription: { unsubscribe: vi.fn() } },
@@ -39,14 +44,19 @@ const adminSession = {
 };
 
 function renderShell() {
+  // App.tsx tüm ağacı QueryClientProvider ile sarar; topbar'daki React Query
+  // tüketicileri (AdminNotificationMenu) için testte de aynısı gerekli.
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
-    <MemoryRouter initialEntries={["/admin"]}>
-      <Routes>
-        <Route path="/admin" element={<AdminShell />}>
-          <Route index element={<div>Admin Home Content</div>} />
-        </Route>
-      </Routes>
-    </MemoryRouter>,
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={["/admin"]}>
+        <Routes>
+          <Route path="/admin" element={<AdminShell />}>
+            <Route index element={<div>Admin Home Content</div>} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>,
   );
 }
 

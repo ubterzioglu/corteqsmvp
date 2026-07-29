@@ -1,7 +1,8 @@
 // Admin Panel V2 — utility topbar.
 // Sol: mobil hamburger + breadcrumb. Sağ: global arama (Ctrl+K), güncellemeler,
-// kılavuz, tema, dış bağlantılar, kullanıcı menüsü. İşlev linkleri buraya
-// KONULMAZ; navigasyon sidebar'dadır.
+// bildirim e-postası aç/kapa, kılavuz, tema, dış bağlantılar, kullanıcı menüsü.
+// İşlev linkleri buraya KONULMAZ; navigasyon sidebar'dadır. Buradakiler kontroldür
+// (tema, bildirim anahtarı) ya da durum göstergesidir (güncelleme rozeti).
 
 import { CircleHelp, Menu, Search } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -10,6 +11,7 @@ import { Button } from "@/components/ui/button";
 
 import AdminBreadcrumbs from "./AdminBreadcrumbs";
 import AdminExternalLinksMenu from "./AdminExternalLinksMenu";
+import AdminNotificationMenu from "./AdminNotificationMenu";
 import AdminQuickToolLinks from "./AdminQuickToolLinks";
 import AdminThemeToggle from "./AdminThemeToggle";
 import AdminUpdatesMenu from "./AdminUpdatesMenu";
@@ -55,6 +57,7 @@ const AdminTopbar = ({ userEmail, onLogout, onOpenMobileSidebar, onOpenCommandPa
           </kbd>
         </Button>
         <AdminUpdatesMenu />
+        <AdminNotificationMenu />
         <Button type="button" variant="ghost" size="icon" asChild>
           <Link to="/admin/guide" aria-label="Kullanım kılavuzu">
             <CircleHelp className="h-4 w-4" />
