@@ -138,8 +138,19 @@ export const carsiItemCreateSchema = z.object({
   country: z.string().optional(),
   city: z.string().optional(),
   imageUrls: z.array(httpUrl).max(6, "En fazla 6 görsel ekleyebilirsin.").optional(),
+  videoUrl: httpUrl.optional(),
   contactMode: z.enum(["platform", "phone", "email"]).optional(),
+  contactValue: z.string().trim().max(120).optional(),
   diasporaKey: z.enum(["tr", "in", "cn", "ph"]).optional(),
+})
+.superRefine((value, ctx) => {
+  // phone/email seçildiyse değer zorunlu — SQL tarafında da aynı kural var.
+  if (value.contactMode === "phone" && !/^\+?[0-9 ()-]{7,20}$/.test(value.contactValue ?? "")) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["contactValue"], message: "Geçerli bir telefon numarası gir." });
+  }
+  if (value.contactMode === "email" && !/^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$/.test(value.contactValue ?? "")) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["contactValue"], message: "Geçerli bir e-posta adresi gir." });
+  }
 });
 
 export const caddePromotionCreateSchema = z

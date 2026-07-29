@@ -9,19 +9,18 @@ import { Link, useSearchParams } from "react-router-dom";
 import { MapPin, Plus, ShoppingBag } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
+import CarsiItemForm from "@/components/cadde/CarsiItemForm";
+import { emptyCarsiForm } from "@/lib/cadde-composer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
   createCarsiItem,
   deleteCarsiItem,
   formatCarsiPrice,
+  getCarsiPaidMode,
   listCarsiCategories,
   listCarsiItems,
   listMyCarsiItems,
@@ -39,15 +38,6 @@ const STATUS_LABELS: Record<CarsiItemStatus, string> = {
   expired: "Süresi doldu",
 };
 
-const emptyForm = {
-  categoryKey: "",
-  title: "",
-  description: "",
-  price: "",
-  currency: "EUR",
-  country: "",
-  city: "",
-};
 
 const formatDate = (value: string) =>
   new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short" }).format(new Date(value));
@@ -59,10 +49,13 @@ const CaddeCarsiPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryKey = searchParams.get("kategori") ?? "";
   const [formOpen, setFormOpen] = useState(false);
-  const [form, setForm] = useState(emptyForm);
+  const [form, setForm] = useState(emptyCarsiForm);
 
   const diasporaKey = useCaddeDiasporaKey();
   const categoriesQuery = useQuery({ queryKey: caddeQueryKeys.carsiCategories, queryFn: listCarsiCategories });
+  // Ücretli mod ürün kararı: cadde_settings'ten okunur, kod değişmeden açılıp kapanır.
+  const paidModeQuery = useQuery({ queryKey: ["cadde", "carsi", "paid-mode"], queryFn: getCarsiPaidMode, staleTime: 1000 * 60 * 10 });
+  const paidMode = paidModeQuery.data ?? false;
   const itemsQuery = useQuery({
     queryKey: caddeQueryKeys.carsiItems({ countries: [], cities: [], categoryKey: categoryKey || undefined, diasporaKey }),
     queryFn: () => listCarsiItems({ countries: [], cities: [], categoryKey: categoryKey || undefined, diasporaKey }),
@@ -94,11 +87,15 @@ const CaddeCarsiPage = () => {
         priceCurrency: form.price.trim() ? form.currency : undefined,
         country: form.country || undefined,
         city: form.city || undefined,
+        imageUrls: form.media.filter((asset) => asset.kind === "image").map((asset) => asset.url),
+        videoUrl: form.media.find((asset) => asset.kind === "video")?.url,
+        contactMode: form.contactMode,
+        contactValue: form.contactValue || undefined,
         diasporaKey,
       }),
     onSuccess: async () => {
       setFormOpen(false);
-      setForm(emptyForm);
+      setForm(emptyCarsiForm);
       await invalidateCarsi();
       toast({ title: "İlanın Çarşı'da yayınlandı" });
     },
@@ -129,9 +126,6 @@ const CaddeCarsiPage = () => {
   const myItems = myItemsQuery.data ?? [];
   const items = useMemo(() => itemsQuery.data ?? [], [itemsQuery.data]);
 
-  const updateForm = <K extends keyof typeof emptyForm>(key: K, value: (typeof emptyForm)[K]) =>
-    setForm((current) => ({ ...current, [key]: value }));
-
   return (
     <main className="min-h-screen bg-[linear-gradient(180deg,#fffdf8_0%,#fff7ec_22%,#f6f8fb_100%)]">
       <section className="mx-auto w-full max-w-5xl space-y-5 px-4 py-8">
@@ -161,73 +155,17 @@ const CaddeCarsiPage = () => {
                       <DialogHeader>
                         <DialogTitle>Yeni İlan</DialogTitle>
                       </DialogHeader>
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <Label>Kategori *</Label>
-                          <Select value={form.categoryKey || undefined} onValueChange={(value) => updateForm("categoryKey", value)}>
-                            <SelectTrigger><SelectValue placeholder="Kategori seç" /></SelectTrigger>
-                            <SelectContent>
-                              {(categoriesQuery.data ?? []).map((category) => (
-                                <SelectItem key={category.key} value={category.key}>{category.labelTr}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Başlık *</Label>
-                          <Input value={form.title} onChange={(event) => updateForm("title", event.target.value)} maxLength={100} placeholder="Örn. IKEA çalışma masası" />
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Açıklama *</Label>
-                          <Textarea value={form.description} onChange={(event) => updateForm("description", event.target.value)} rows={4} maxLength={2000} placeholder="Durumu, teslim şekli, detaylar..." />
-                        </div>
-                        <div className="grid gap-4 sm:grid-cols-2">
-                          <div className="space-y-2">
-                            <Label>Fiyat <span className="font-normal text-slate-500">(boş = belirtilmedi, 0 = ücretsiz)</span></Label>
-                            <Input type="number" min={0} value={form.price} onChange={(event) => updateForm("price", event.target.value)} />
-                          </div>
-                          <div className="space-y-2">
-                            <Label>Para birimi</Label>
-                            <Select value={form.currency} onValueChange={(value) => updateForm("currency", value)}>
-                              <SelectTrigger><SelectValue /></SelectTrigger>
-                              <SelectContent>
-                                {["EUR", "USD", "GBP", "TRY"].map((code) => (
-                                  <SelectItem key={code} value={code}>{code}</SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                        <div className="grid gap-4 sm:grid-cols-2">
-                          <div className="space-y-2">
-                            <Label>Ülke</Label>
-                            <Select value={form.country || "__none__"} onValueChange={(value) => { updateForm("country", value === "__none__" ? "" : value); updateForm("city", ""); }}>
-                              <SelectTrigger><SelectValue placeholder="Global" /></SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="__none__">Global</SelectItem>
-                                {(countriesQuery.data ?? []).map((country) => (
-                                  <SelectItem key={country.id} value={country.name}>{country.name}</SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="space-y-2">
-                            <Label>Şehir</Label>
-                            <Select value={form.city || "__none__"} onValueChange={(value) => updateForm("city", value === "__none__" ? "" : value)} disabled={!form.country}>
-                              <SelectTrigger><SelectValue placeholder="Tüm şehirler" /></SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="__none__">Tüm şehirler</SelectItem>
-                                {(citiesQuery.data ?? []).map((city) => (
-                                  <SelectItem key={city.id} value={city.name}>{city.name}</SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                        <Button className="w-full" onClick={() => createMutation.mutate()} disabled={createMutation.isPending}>
-                          {createMutation.isPending ? "Yayınlanıyor..." : "İlanı Yayınla"}
-                        </Button>
-                      </div>
+                      <CarsiItemForm
+                        value={form}
+                        onChange={setForm}
+                        onSubmit={() => createMutation.mutate()}
+                        isSubmitting={createMutation.isPending}
+                        categories={categoriesQuery.data ?? []}
+                        countries={countriesQuery.data ?? []}
+                        cities={citiesQuery.data ?? []}
+                        paidMode={paidMode}
+                        onError={(message) => toast({ title: "Ek eklenemedi", description: message, variant: "destructive" })}
+                      />
                     </DialogContent>
                   </Dialog>
                 ) : null}

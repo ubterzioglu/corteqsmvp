@@ -1,7 +1,7 @@
 // Composer'ın veri sözleşmesi — CaddeComposer bileşeni ile CaddePage arasında paylaşılır.
 // Bileşen dosyasından ayrı durur ki React Fast Refresh bozulmasın (yalnız bileşen export'u kalsın).
 
-import type { CaddeMediaAsset, CaddePostMention, CaddePostType } from "@/lib/cadde-types";
+import type { CaddeMediaAsset, CaddePostMention, CaddePostType, CarsiContactMode } from "@/lib/cadde-types";
 
 /**
  * Post tipi enum'larının kullanıcıya görünen Türkçe etiketleri.
@@ -37,4 +37,34 @@ export const emptyCaddeComposer: CaddeComposerValue = {
   city: "",
   media: [],
   mentions: [],
+};
+
+// ── Çarşı ilan formu ────────────────────────────────────────────────────────
+// Bileşen dosyasından ayrı durur ki Fast Refresh bozulmasın (CaddeComposer ile aynı gerekçe).
+
+export type CarsiFormValue = {
+  categoryKey: string;
+  title: string;
+  description: string;
+  /** Ham metin: boş = fiyat belirtilmedi, "0" = ücretsiz. */
+  price: string;
+  currency: string;
+  country: string;
+  city: string;
+  media: CaddeMediaAsset[];
+  contactMode: CarsiContactMode;
+  contactValue: string;
+};
+
+export const emptyCarsiForm: CarsiFormValue = {
+  categoryKey: "",
+  title: "",
+  description: "",
+  price: "",
+  currency: "EUR",
+  country: "",
+  city: "",
+  media: [],
+  contactMode: "platform",
+  contactValue: "",
 };

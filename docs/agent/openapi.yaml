@@ -106,6 +106,24 @@ paths:
           description: Yöntem desteklenmiyor
         "500":
           description: Sunucu hatası
+  /functions/v1/send-notification-emails:
+    post:
+      summary: send-notification-emails aracını çalıştır
+      operationId: execute_send_notification_emails
+      x-tool-key: edge.send_notification_emails
+      x-status: active
+      x-tables: [notification_email_outbox]
+      responses:
+        "200":
+          description: Başarılı
+        "401":
+          description: Yanıt
+        "403":
+          description: Origin'e izin verilmedi
+        "405":
+          description: Yöntem desteklenmiyor
+        "500":
+          description: Sunucu hatası
   /functions/v1/send-submission-email:
     post:
       summary: send-submission-email aracını çalıştır

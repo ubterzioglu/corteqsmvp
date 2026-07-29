@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 29,
-    "edge_functions": 6,
+    "total": 32,
+    "edge_functions": 7,
     "workers": 2,
-    "ui_modules": 20
+    "ui_modules": 22
   },
   "tools": [
     {
@@ -41,8 +41,10 @@ export const toolCatalog = {
         "prelint",
         "pretest",
         "preview",
+        "preview:emails",
         "social:generate",
         "start",
+        "sync:admin-updates",
         "test",
         "test:e2e",
         "test:watch",
@@ -199,6 +201,45 @@ export const toolCatalog = {
         "zod": null
       },
       "evidence_path": "supabase/functions/relocation-notifications/index.ts"
+    },
+    {
+      "tool_key": "edge.send_notification_emails",
+      "tool_name": "send-notification-emails",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/send-notification-emails/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "manual",
+        "fields": []
+      },
+      "tables_read_write": [
+        "notification_email_outbox"
+      ],
+      "rpcs": [
+        "admin_get_notification_subscribers",
+        "claim_notification_emails",
+        "is_admin",
+        "notification_setting_enabled"
+      ],
+      "limits": {},
+      "http_statuses": [
+        200,
+        401,
+        403,
+        405,
+        500
+      ],
+      "http_method": "POST",
+      "dependencies": [
+        "@supabase/supabase-js@2.45.4",
+        "resend"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.45.4",
+        "zod": null
+      },
+      "evidence_path": "supabase/functions/send-notification-emails/index.ts"
     },
     {
       "tool_key": "edge.send_submission_email",
@@ -379,8 +420,10 @@ export const toolCatalog = {
         "listCaddeInterestCatalog",
         "listMyCaddeCafes",
         "listMyCaddeInterests",
+        "listTrendingCaddeHashtags",
         "reportCaddeEntity",
         "saveMyCaddeInterests",
+        "searchCaddeMentions",
         "toggleCaddeReaction"
       ],
       "tables_read_write": [
@@ -406,10 +449,34 @@ export const toolCatalog = {
         "create_cadde_post_v1",
         "join_cadde_cafe_v1",
         "list_cadde_feed_v1",
+        "list_trending_cadde_hashtags_v1",
         "report_cadde_entity_v1",
+        "search_cadde_mentions_v1",
         "toggle_cadde_reaction_v1"
       ],
       "evidence_path": "src/lib/cadde-api.ts"
+    },
+    {
+      "tool_key": "module.cadde_cafe_api",
+      "tool_name": "cadde-cafe-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/cadde-cafe-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "createCaddeProtectedBrand",
+        "deleteCaddeProtectedBrand",
+        "listCaddeCafeThemes",
+        "listCaddeProtectedBrands",
+        "listCaddeProtectedBrandsForAdmin",
+        "setCaddeProtectedBrandActive"
+      ],
+      "tables_read_write": [
+        "cadde_cafe_themes",
+        "cadde_protected_brands"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/cadde-cafe-api.ts"
     },
     {
       "tool_key": "module.cadde_carsi_api",
@@ -423,6 +490,7 @@ export const toolCatalog = {
         "deleteCarsiItem",
         "formatCarsiPrice",
         "getCarsiItem",
+        "getCarsiPaidMode",
         "listCarsiCategories",
         "listCarsiItems",
         "listMyCarsiItems",
@@ -432,6 +500,7 @@ export const toolCatalog = {
       "tables_read_write": [
         "cadde_cities",
         "cadde_countries",
+        "cadde_settings",
         "carsi_categories",
         "carsi_items",
         "user_profile_attributes"
@@ -629,6 +698,23 @@ export const toolCatalog = {
       ],
       "rpcs": [],
       "evidence_path": "src/lib/muhasebe-api.ts"
+    },
+    {
+      "tool_key": "module.muhasebe_butce_api",
+      "tool_name": "muhasebe-butce-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/muhasebe-butce-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "fetchButceYear",
+        "upsertButceYear"
+      ],
+      "tables_read_write": [
+        "muhasebe_butce_state"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/muhasebe-butce-api.ts"
     },
     {
       "tool_key": "module.pending_onboarding_api",
@@ -999,6 +1085,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin-shell/notification-settings-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/notification-settings-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin-shell/revision-requests.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1204,7 +1300,22 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-brands.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-cafe-api.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-carsi-api.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-composer.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
@@ -1225,6 +1336,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/cadde-internal.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-media.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
@@ -1290,6 +1406,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/cadde-targeting.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-text.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-text.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
@@ -1615,6 +1741,41 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/muhasebe-api.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/muhasebe-butce-aggregations.test.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/muhasebe-butce-aggregations.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/muhasebe-butce-api.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/muhasebe-butce-csv.test.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/muhasebe-butce-csv.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/muhasebe-butce-schemas.test.ts",
+      "kind": "ts",
+      "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/muhasebe-butce-schemas.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
@@ -2104,6 +2265,21 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "supabase/functions/_shared/emails/html.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/member-welcome.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/member-welcome.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/find-matches/index.ts",
       "kind": "ts",
       "module_family": "edge"
@@ -2175,6 +2351,11 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/relocation-notifications/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/send-notification-emails/index.ts",
       "kind": "ts",
       "module_family": "edge"
     },
@@ -2256,6 +2437,11 @@ export const toolCatalog = {
     {
       "path": "workers/relocation-ingestion/tsconfig.json",
       "kind": "json",
+      "module_family": "worker"
+    },
+    {
+      "path": "workers/service-finder/.env",
+      "kind": "none",
       "module_family": "worker"
     },
     {

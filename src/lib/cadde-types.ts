@@ -403,7 +403,10 @@ export type CarsiItemRow = {
   country_id: Nullable<string>;
   city_id: Nullable<string>;
   image_urls: string[];
+  video_url: Nullable<string>;
   contact_mode: CarsiContactMode;
+  contact_value: Nullable<string>;
+  payment_status: string;
   status: CarsiItemStatus;
   moderation_status: string;
   expires_at: Nullable<string>;
@@ -423,7 +426,11 @@ export type CarsiItem = {
   country: string | null;
   city: string | null;
   imageUrls: string[];
+  videoUrl: string | null;
   contactMode: CarsiContactMode;
+  contactValue: string | null;
+  /** free = ücretsiz dönem; pending = ödeme bekliyor (cadde.carsi.paid_mode açıkken). */
+  paymentStatus: string;
   status: CarsiItemStatus;
   expiresAt: string | null;
   createdAt: string;
@@ -438,7 +445,9 @@ export type CarsiItemCreateInput = {
   country?: string;
   city?: string;
   imageUrls?: string[];
+  videoUrl?: string;
   contactMode?: CarsiContactMode;
+  contactValue?: string;
 };
 
 // ── Tanıtım (Faz 6, D-01: UI adı "Tanıtım") — sponsorlu görünürlük; Çarşı'dan AYRI ──

@@ -25,7 +25,27 @@ import type {
 } from "./cadde-types";
 
 const ITEM_SELECT_COLUMNS =
-  "id, owner_user_id, category_key, title, description, price_amount, price_currency, country_id, city_id, image_urls, contact_mode, status, moderation_status, expires_at, created_at";
+  "id, owner_user_id, category_key, title, description, price_amount, price_currency, country_id, city_id, image_urls, video_url, contact_mode, contact_value, payment_status, status, moderation_status, expires_at, created_at";
+
+/**
+ * `cadde.carsi.paid_mode` ayarı: true olduğunda yeni ilan taslak kalır ve ödeme bekler.
+ * Ayar okunamazsa ÜCRETSİZ kabul edilir — yanlışlıkla ödeme duvarı göstermemek için.
+ */
+export async function getCarsiPaidMode(): Promise<boolean> {
+  if (!isSupabaseConfigured) return false;
+  try {
+    const { data, error } = await db
+      .from("cadde_settings")
+      .select("value")
+      .eq("key", "cadde.carsi.paid_mode")
+      .maybeSingle();
+    if (error) throw error;
+    return data?.value === true;
+  } catch (error: unknown) {
+    reportCaddeApiError("getCarsiPaidMode", error);
+    return false;
+  }
+}
 
 export async function listCarsiCategories(): Promise<CarsiCategory[]> {
   if (!isSupabaseConfigured) return [];
@@ -87,7 +107,10 @@ function mapItem(row: CarsiItemRow, maps: ReferenceMaps): CarsiItem {
     country: row.country_id ? maps.countries.get(row.country_id) ?? null : null,
     city: row.city_id ? maps.cities.get(row.city_id) ?? null : null,
     imageUrls: row.image_urls ?? [],
+    videoUrl: row.video_url ?? null,
     contactMode: row.contact_mode,
+    contactValue: row.contact_value ?? null,
+    paymentStatus: row.payment_status ?? "free",
     status: row.status,
     expiresAt: row.expires_at,
     createdAt: row.created_at,
@@ -182,6 +205,8 @@ export async function createCarsiItem(input: CarsiItemCreateInput): Promise<stri
     p_image_urls: parsed.imageUrls ?? [],
     p_contact_mode: parsed.contactMode ?? "platform",
     p_diaspora_key: parsed.diasporaKey ?? "tr",
+    p_video_url: parsed.videoUrl ?? null,
+    p_contact_value: parsed.contactValue ?? null,
   });
   if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
   return data as string;
