@@ -11,6 +11,7 @@ const fetchStateMock = vi.fn();
 const setSettingMock = vi.fn();
 const setSubscriptionMock = vi.fn();
 const dispatchMock = vi.fn();
+const welcomePreviewMock = vi.fn();
 
 vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({ toast: vi.fn() }),
@@ -26,6 +27,7 @@ vi.mock("@/lib/admin-shell/notification-settings-api", async () => {
     setNotificationSetting: (...args: unknown[]) => setSettingMock(...args),
     setMyNotificationSubscription: (...args: unknown[]) => setSubscriptionMock(...args),
     dispatchPendingNotifications: (...args: unknown[]) => dispatchMock(...args),
+    sendWelcomeEmailPreview: (...args: unknown[]) => welcomePreviewMock(...args),
   };
 });
 
@@ -33,6 +35,7 @@ const makeState = (overrides: Partial<AdminNotificationState> = {}): AdminNotifi
   isAdmin: true,
   newMemberEnabled: true,
   adminUpdateEnabled: true,
+  memberWelcomeEnabled: false,
   myNewMemberEmail: false,
   myAdminUpdateEmail: false,
   pendingCount: 0,
@@ -57,19 +60,57 @@ describe("AdminNotificationSettingsPage", () => {
     setSettingMock.mockResolvedValue(undefined);
     setSubscriptionMock.mockResolvedValue(undefined);
     dispatchMock.mockResolvedValue({ processed: 0, sent: 0, skipped: 0, failed: 0 });
+    welcomePreviewMock.mockResolvedValue("admin@corteqs.net");
   });
 
-  it("dört anahtarı da gösterir", async () => {
+  it("beş anahtarı da gösterir", async () => {
     fetchStateMock.mockResolvedValue(makeState());
 
     renderPage();
 
     expect(await screen.findByLabelText("Yeni üye bildirimleri açık")).toBeInTheDocument();
     expect(screen.getByLabelText("Güncelleme bildirimleri açık")).toBeInTheDocument();
+    expect(screen.getByLabelText("Hoş geldin maili açık")).toBeInTheDocument();
     expect(screen.getByLabelText("Yeni üye kaydolduğunda bana mail gelsin")).toBeInTheDocument();
     expect(
       screen.getByLabelText("Yeni güncelleme yayınlandığında bana mail gelsin"),
     ).toBeInTheDocument();
+  });
+
+  it("hoş geldin anahtarı üyeye giden maili yönetir ve kişisel abonelik karşılığı yoktur", async () => {
+    fetchStateMock.mockResolvedValue(makeState({ memberWelcomeEnabled: false }));
+
+    renderPage();
+    await userEvent.click(await screen.findByLabelText("Hoş geldin maili açık"));
+
+    await waitFor(() =>
+      expect(setSettingMock).toHaveBeenCalledWith("email.member_welcome.enabled", true),
+    );
+    // Mail üyeye gider; admin bu bildirime abone olamaz.
+    expect(screen.queryByLabelText(/Hoş geldin.*bana mail gelsin/i)).not.toBeInTheDocument();
+  });
+
+  it("örnek mail butonu preview gönderimini tetikler", async () => {
+    fetchStateMock.mockResolvedValue(makeState());
+    welcomePreviewMock.mockResolvedValue("admin@corteqs.net");
+
+    renderPage();
+    await userEvent.click(await screen.findByRole("button", { name: /örnek hoş geldin maili/i }));
+
+    await waitFor(() => expect(welcomePreviewMock).toHaveBeenCalledTimes(1));
+    // Önizleme kuyruğa dokunmamalı.
+    expect(dispatchMock).not.toHaveBeenCalled();
+  });
+
+  it("admin olmayan kullanıcıya örnek mail butonu gösterilmez", async () => {
+    fetchStateMock.mockResolvedValue(makeState({ isAdmin: false }));
+
+    renderPage();
+    await screen.findByLabelText("Yeni üye bildirimleri açık");
+
+    expect(
+      screen.queryByRole("button", { name: /örnek hoş geldin maili/i }),
+    ).not.toBeInTheDocument();
   });
 
   it("genel anahtarı çevirince set_notification_setting çağrılır", async () => {

@@ -6,7 +6,7 @@
 // Yetki iki kademelidir: genel anahtarları yalnız admin değiştirebilir, kişisel abonelik
 // tüm moderator'lara açıktır. isAdmin bilgisi RPC'den gelir — UI kendi başına karar vermez.
 
-import { BellRing, Send } from "lucide-react";
+import { BellRing, MailCheck, Send } from "lucide-react";
 
 import {
   AdminEmptyState,
@@ -82,9 +82,11 @@ const AdminNotificationSettingsPage = () => {
     settingsBusy,
     subscriptionBusy,
     dispatchBusy,
+    welcomePreviewBusy,
     setGlobal,
     updateSubscription,
     dispatchPending,
+    sendWelcomePreview,
     mutedTypes,
     SETTING_KEYS,
   } = useNotificationSettings();
@@ -117,16 +119,22 @@ const AdminNotificationSettingsPage = () => {
       accent="red"
       actions={
         state.isAdmin ? (
-          <Button
-            variant="outline"
-            disabled={dispatchBusy || state.pendingCount === 0}
-            onClick={dispatchPending}
-          >
-            <Send className="mr-2 h-4 w-4" />
-            {state.pendingCount > 0
-              ? `Bekleyen ${state.pendingCount} kaydı şimdi gönder`
-              : "Bekleyen kayıt yok"}
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" disabled={welcomePreviewBusy} onClick={sendWelcomePreview}>
+              <MailCheck className="mr-2 h-4 w-4" />
+              Bana örnek hoş geldin maili gönder
+            </Button>
+            <Button
+              variant="outline"
+              disabled={dispatchBusy || state.pendingCount === 0}
+              onClick={dispatchPending}
+            >
+              <Send className="mr-2 h-4 w-4" />
+              {state.pendingCount > 0
+                ? `Bekleyen ${state.pendingCount} kaydı şimdi gönder`
+                : "Bekleyen kayıt yok"}
+            </Button>
+          </div>
         ) : null
       }
       contentWidth="default"
@@ -171,6 +179,17 @@ const AdminNotificationSettingsPage = () => {
             label="Güncelleme bildirimleri açık"
             onCheckedChange={(checked) =>
               setGlobal(SETTING_KEYS.adminUpdate, checked)
+            }
+          />
+
+          <ToggleRow
+            title="Hoş geldin maili açık"
+            description="Yeni üye e-postasını doğruladığında ÜYENİN KENDİSİNE karşılama maili gider. Açmadan önce yukarıdaki örnek mail butonuyla görünümü kontrol et."
+            checked={state.memberWelcomeEnabled}
+            disabled={!state.isAdmin || settingsBusy}
+            label="Hoş geldin maili açık"
+            onCheckedChange={(checked) =>
+              setGlobal(SETTING_KEYS.memberWelcome, checked)
             }
           />
         </section>

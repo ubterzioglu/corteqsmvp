@@ -18,6 +18,7 @@ import {
   fetchAdminNotificationState,
   mapNotificationState,
   mapOutboxEntry,
+  sendWelcomeEmailPreview,
   setMyNotificationSubscription,
   setNotificationSetting,
 } from "@/lib/admin-shell/notification-settings-api";
@@ -66,6 +67,23 @@ describe("mapOutboxEntry", () => {
     expect(entry?.summary).toBe("Bütçe sekmesi yayında");
     expect(entry?.recipientCount).toBeNull();
     expect(entry?.lastError).toBe("no_subscribers");
+  });
+
+  it("hoş geldin kaydında özet olarak üyenin e-postasını kullanır", () => {
+    const entry = mapOutboxEntry({
+      id: "row-6",
+      event_type: "member_welcome",
+      status: "sent",
+      recipient_count: 1,
+      last_error: null,
+      created_at: "2026-07-29T10:00:00.000Z",
+      sent_at: "2026-07-29T10:00:04.000Z",
+      payload: { email: "yeni@corteqs.net", full_name: "Ada Lovelace" },
+    });
+
+    expect(entry?.eventType).toBe("member_welcome");
+    expect(entry?.summary).toBe("yeni@corteqs.net");
+    expect(entry?.recipientCount).toBe(1);
   });
 
   it("bilinmeyen tür/durum içeren satırı eler", () => {
@@ -122,6 +140,7 @@ describe("mapNotificationState", () => {
       isAdmin: false,
       newMemberEnabled: false,
       adminUpdateEnabled: false,
+      memberWelcomeEnabled: false,
       myNewMemberEmail: false,
       myAdminUpdateEmail: false,
       pendingCount: 0,
@@ -218,5 +237,30 @@ describe("dispatchPendingNotifications", () => {
     invokeMock.mockResolvedValue({ data: null, error: { message: "unauthorized" } });
 
     await expect(dispatchPendingNotifications()).rejects.toThrow("unauthorized");
+  });
+});
+
+describe("sendWelcomeEmailPreview", () => {
+  it("preview aksiyonunu gönderir ve alıcı adresini döndürür", async () => {
+    invokeMock.mockResolvedValue({ data: { preview: true, sentTo: "admin@corteqs.net" }, error: null });
+
+    await expect(sendWelcomeEmailPreview()).resolves.toBe("admin@corteqs.net");
+
+    // Kuyruk drenajından farklı bir gövde: bu çağrı outbox'a DOKUNMAMALI.
+    expect(invokeMock).toHaveBeenCalledWith("send-notification-emails", {
+      body: { action: "preview" },
+    });
+  });
+
+  it("gövdedeki hata alanını da hata sayar (Edge Function 200 dönse bile)", async () => {
+    invokeMock.mockResolvedValue({ data: { error: "preview_requires_admin_session" }, error: null });
+
+    await expect(sendWelcomeEmailPreview()).rejects.toThrow("preview_requires_admin_session");
+  });
+
+  it("aktarım hatasını fırlatır", async () => {
+    invokeMock.mockResolvedValue({ data: null, error: { message: "unauthorized" } });
+
+    await expect(sendWelcomeEmailPreview()).rejects.toThrow("unauthorized");
   });
 });

@@ -3,7 +3,9 @@ import path from "node:path";
 
 const rootDir = process.cwd();
 const decoder = new TextDecoder("utf-8", { fatal: true });
-const includeDirs = ["src", "public", "docs", "scripts"];
+// supabase: Edge Function'lar ve migration'lar kullanıcıya görünen Türkçe metin taşır
+// (e-posta şablonları, RPC hata mesajları) — encoding denetimi buraya da uygulanır.
+const includeDirs = ["src", "public", "docs", "scripts", "supabase"];
 const includeFiles = ["index.html", "package.json", "vite.config.ts", "tsconfig.json"];
 const extensions = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json", ".md", ".html", ".css", ".svg", ".yml", ".yaml"]);
 // "archive"/"reference"/"docu"/"reference-clones": docs altındaki dondurulmuş arşiv

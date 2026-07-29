@@ -11,6 +11,7 @@ import {
   NOTIFICATION_SETTING_KEYS,
   dispatchPendingNotifications,
   fetchAdminNotificationState,
+  sendWelcomeEmailPreview,
   setMyNotificationSubscription,
   setNotificationSetting,
   type AdminNotificationState,
@@ -80,6 +81,20 @@ export function useNotificationSettings() {
     onError: (error: unknown) => notifyError(error, "Kuyruk işlenemedi"),
   });
 
+  // Örnek mail kuyruğa dokunmaz → state'i invalidate etmeye gerek yok.
+  const welcomePreviewMutation = useMutation({
+    mutationFn: sendWelcomeEmailPreview,
+    onSuccess: (sentTo) => {
+      toast({
+        title: "Örnek mail gönderildi",
+        description: sentTo
+          ? `${sentTo} adresini kontrol et. Spam klasörüne de bak.`
+          : "Gelen kutunu kontrol et. Spam klasörüne de bak.",
+      });
+    },
+    onError: (error: unknown) => notifyError(error, "Örnek mail gönderilemedi"),
+  });
+
   const state: AdminNotificationState | undefined = query.data;
 
   /** Tek bir tercihi değiştirirken diğerini olduğu gibi korur. */
@@ -120,9 +135,11 @@ export function useNotificationSettings() {
     settingsBusy: settingMutation.isPending,
     subscriptionBusy: subscriptionMutation.isPending,
     dispatchBusy: dispatchMutation.isPending,
+    welcomePreviewBusy: welcomePreviewMutation.isPending,
     setGlobal,
     updateSubscription,
     dispatchPending: () => dispatchMutation.mutate(),
+    sendWelcomePreview: () => welcomePreviewMutation.mutate(),
     mutedTypes,
     isReceiving,
     SETTING_KEYS: NOTIFICATION_SETTING_KEYS,

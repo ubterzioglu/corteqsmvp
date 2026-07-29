@@ -17,6 +17,7 @@
     "ingest:tools": "node scripts/ingest-tools.mjs",
     "ingest:tools:check": "node scripts/ingest-tools.mjs --check",
     "social:generate": "node --experimental-strip-types scripts/social-generate/index.mjs",
+    "preview:emails": "node --experimental-strip-types scripts/preview-emails.mjs",
     "sync:admin-updates": "node --experimental-strip-types scripts/sync-admin-updates.mjs",
     "check:drift": "node scripts/check-drift.mjs",
     "check:drift:warn": "node scripts/check-drift.mjs --warn",

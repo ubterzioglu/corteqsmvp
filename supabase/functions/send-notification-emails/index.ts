@@ -1,18 +1,28 @@
 // send-notification-emails — notification_email_outbox kuyruğunun drenajı.
 //
-// İki bildirim türünü de gönderir:
-//   new_member    → siteye yeni üye kaydolduğunda (auth.users trigger'ı kuyruğa yazar)
-//   admin_update  → admin-updates.ts'e yeni kayıt girildiğinde (sync:admin-updates yazar)
+// Üç bildirim türünü gönderir:
+//   new_member      → siteye yeni üye kaydolduğunda      → alıcı: abone admin/moderator'lar
+//   admin_update    → admin-updates.ts'e kayıt girildiğinde → alıcı: abone admin/moderator'lar
+//   member_welcome  → üye e-postasını doğruladığında      → alıcı: ÜYENİN KENDİSİ
 //
-// Tetikleyiciler (üçü de aynı kuyruğu okur, claim_notification_emails `for update skip
+// member_welcome'ın alıcısı payload'dan gelir; abone listesine hiç bakılmaz. Bu ayrım
+// resolveRecipients() içinde tek yerde yapılır.
+//
+// Tetikleyiciler (hepsi aynı kuyruğu okur, claim_notification_emails `for update skip
 // locked` ile çift göndermeyi imkânsız kılar):
 //   1. DB trigger'ından pg_net poke (anlık)  → x-dispatch-secret header'ı
 //   2. Admin panelindeki "Şimdi gönder" butonu → admin JWT'si
 //   3. pg_cron (varsa, 15 dk'da bir emniyet ağı) → x-dispatch-secret header'ı
 //
+// Ayrıca `{"action":"preview"}` gövdesi: admin'in KENDİ adresine örnek hoş geldin maili
+// atar (kuyruğa dokunmaz). Gmail/Outlook'ta gerçek görünümü doğrulamanın tek yolu budur.
+//
 // send-submission-email deseni: Deno + esm.sh + CORS allowlist + service_role + Resend.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
+
+import { escapeHtml } from "../_shared/emails/html.ts";
+import { buildMemberWelcomeEmail } from "../_shared/emails/member-welcome.ts";
 
 const ALLOWED_ORIGINS = new Set([
   "https://corteqs.net",
@@ -28,17 +38,22 @@ const MAX_ATTEMPTS = 5;
 const SETTING_KEY_BY_EVENT: Record<string, string> = {
   new_member: "email.new_member.enabled",
   admin_update: "email.admin_update.enabled",
+  member_welcome: "email.member_welcome.enabled",
 };
+
+type EventType = "new_member" | "admin_update" | "member_welcome";
 
 type OutboxRow = {
   id: string;
-  event_type: "new_member" | "admin_update";
+  event_type: EventType;
   dedupe_key: string;
   payload: Record<string, unknown>;
   attempts: number;
 };
 
 type Subscriber = { user_id: string; email: string };
+
+type BuiltEmail = { subject: string; html: string; text?: string };
 
 function buildCorsHeaders(req: Request): Record<string, string> {
   const origin = req.headers.get("Origin");
@@ -74,15 +89,6 @@ function secretsMatch(provided: string | null, expected: string | undefined): bo
     diff |= a[i] ^ b[i];
   }
   return diff === 0;
-}
-
-function escapeHtml(value: unknown): string {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#x27;");
 }
 
 function formatDateTime(value: unknown): string {
@@ -140,10 +146,32 @@ function buildAdminUpdateEmail(payload: Record<string, unknown>) {
   };
 }
 
-function buildEmail(row: OutboxRow) {
-  return row.event_type === "new_member"
-    ? buildNewMemberEmail(row.payload)
-    : buildAdminUpdateEmail(row.payload);
+/** Site adresi mail içindeki tüm bağlantıların kökü; ortamdan gelmezse canlıya düşer. */
+function resolveSiteUrl(): string {
+  return Deno.env.get("PUBLIC_SITE_URL") || "https://corteqs.net";
+}
+
+/** Üyenin kendisine giden hoş geldin maili — şablon _shared/emails altında. */
+function buildWelcomeEmail(payload: Record<string, unknown>): BuiltEmail {
+  const fullName = typeof payload.full_name === "string" ? payload.full_name : null;
+
+  return buildMemberWelcomeEmail({
+    fullName,
+    email: String(payload.email ?? ""),
+    siteUrl: resolveSiteUrl(),
+    replyTo: Deno.env.get("MAIL_REPLY_TO") ?? null,
+  });
+}
+
+function buildEmail(row: OutboxRow): BuiltEmail {
+  switch (row.event_type) {
+    case "new_member":
+      return buildNewMemberEmail(row.payload);
+    case "member_welcome":
+      return buildWelcomeEmail(row.payload);
+    default:
+      return buildAdminUpdateEmail(row.payload);
+  }
 }
 
 async function sendWithResend(apiKey: string, payload: Record<string, unknown>) {
@@ -162,24 +190,38 @@ async function sendWithResend(apiKey: string, payload: Record<string, unknown>) 
   }
 }
 
-/** Header secret'i VEYA admin JWT'si. İkisi de yoksa 401. */
-async function isAuthorized(
+type Caller = {
+  authorized: boolean;
+  /** Yalnız admin JWT'si ile gelen çağrılarda dolu; pg_net/cron çağrılarında null. */
+  adminEmail: string | null;
+};
+
+const DENIED: Caller = { authorized: false, adminEmail: null };
+
+/**
+ * Header secret'i VEYA admin JWT'si. İkisi de yoksa 401.
+ * Örnek mail gönderimi adminEmail gerektirir — secret'la gelen makine çağrılarının
+ * "kendi adresi" olmadığı için o yol preview isteğinde kullanılamaz.
+ */
+async function resolveCaller(
   request: Request,
   admin: ReturnType<typeof createClient>,
-): Promise<boolean> {
+): Promise<Caller> {
   if (secretsMatch(request.headers.get("x-dispatch-secret"), Deno.env.get("NOTIFY_DISPATCH_SECRET"))) {
-    return true;
+    return { authorized: true, adminEmail: null };
   }
 
   const authHeader = request.headers.get("Authorization");
   const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
-  if (!token) return false;
+  if (!token) return DENIED;
 
   const { data: userData, error: userError } = await admin.auth.getUser(token);
-  if (userError || !userData?.user) return false;
+  if (userError || !userData?.user) return DENIED;
 
   const { data: adminFlag, error: adminError } = await admin.rpc("is_admin", { uid: userData.user.id });
-  return !adminError && adminFlag === true;
+  if (adminError || adminFlag !== true) return DENIED;
+
+  return { authorized: true, adminEmail: userData.user.email ?? null };
 }
 
 Deno.serve(async (request) => {
@@ -206,6 +248,7 @@ Deno.serve(async (request) => {
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const resendApiKey = Deno.env.get("RESEND_API_KEY");
   const mailFrom = Deno.env.get("MAIL_FROM");
+  const mailReplyTo = Deno.env.get("MAIL_REPLY_TO");
 
   if (!supabaseUrl || !serviceRoleKey) {
     console.error("send-notification-emails: SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY eksik.");
@@ -216,13 +259,55 @@ Deno.serve(async (request) => {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  if (!(await isAuthorized(request, admin))) {
+  const caller = await resolveCaller(request, admin);
+  if (!caller.authorized) {
     return jsonResponse({ error: "unauthorized" }, 401, corsHeaders);
   }
 
   if (!resendApiKey || !mailFrom) {
     console.warn("send-notification-emails: RESEND_API_KEY/MAIL_FROM eksik, gonderim atlandi.");
     return jsonResponse({ skipped: true, reason: "mail_config_missing" }, 200, corsHeaders);
+  }
+
+  // Gövde opsiyoneldir: pg_net/cron `{"source":"db"}` yollar, panel butonu gövdesiz de
+  // çağırabilir. Bozuk JSON kuyruk drenajını engellememeli.
+  let body: Record<string, unknown> = {};
+  try {
+    body = (await request.json()) as Record<string, unknown>;
+  } catch {
+    body = {};
+  }
+
+  // ── Örnek mail: kuyruğa DOKUNMAZ, yalnız çağıran admin'in kendi adresine gider ──
+  // Genel anahtar kapalıyken de çalışır; amacı zaten yayına almadan önce görsel kontrol.
+  if (body.action === "preview") {
+    if (!caller.adminEmail) {
+      return jsonResponse({ error: "preview_requires_admin_session" }, 403, corsHeaders);
+    }
+
+    const sample = buildMemberWelcomeEmail({
+      fullName: typeof body.full_name === "string" ? body.full_name : "Örnek Üye",
+      email: caller.adminEmail,
+      siteUrl: resolveSiteUrl(),
+      replyTo: mailReplyTo ?? null,
+    });
+
+    try {
+      await sendWithResend(resendApiKey, {
+        from: mailFrom,
+        to: [caller.adminEmail],
+        reply_to: mailReplyTo || undefined,
+        subject: `[ÖRNEK] ${sample.subject}`,
+        html: sample.html,
+        text: sample.text,
+      });
+    } catch (previewError: unknown) {
+      const message = previewError instanceof Error ? previewError.message : "unexpected_error";
+      console.error("send-notification-emails: ornek mail basarisiz:", message);
+      return jsonResponse({ error: "preview_failed", detail: message.slice(0, 500) }, 502, corsHeaders);
+    }
+
+    return jsonResponse({ preview: true, sentTo: caller.adminEmail }, 200, corsHeaders);
   }
 
   try {
@@ -268,6 +353,19 @@ Deno.serve(async (request) => {
       return subscribers;
     };
 
+    /**
+     * Alıcı listesi. member_welcome üyenin KENDİSİNE gider — abone RPC'sine hiç uğramaz,
+     * dolayısıyla admin aboneliklerinden bağımsızdır. Diğer iki tip abone listesini kullanır.
+     */
+    const resolveRecipients = async (row: OutboxRow): Promise<string[]> => {
+      if (row.event_type !== "member_welcome") {
+        return (await getSubscribers(row.event_type)).map((subscriber) => subscriber.email);
+      }
+
+      const email = typeof row.payload.email === "string" ? row.payload.email.trim() : "";
+      return email === "" ? [] : [email];
+    };
+
     let sent = 0;
     let skipped = 0;
     let failed = 0;
@@ -283,25 +381,30 @@ Deno.serve(async (request) => {
           continue;
         }
 
-        const subscribers = await getSubscribers(row.event_type);
-        if (subscribers.length === 0) {
+        const recipients = await resolveRecipients(row);
+        if (recipients.length === 0) {
+          // member_welcome'da bu payload'da adres yok demektir (beklenmez);
+          // diğer tiplerde kimse abone olmamış demektir.
+          const reason = row.event_type === "member_welcome" ? "no_recipient_email" : "no_subscribers";
           await admin
             .from("notification_email_outbox")
-            .update({ status: "skipped", last_error: "no_subscribers", recipient_count: 0, sent_at: new Date().toISOString() })
+            .update({ status: "skipped", last_error: reason, recipient_count: 0, sent_at: new Date().toISOString() })
             .eq("id", row.id);
           skipped += 1;
           continue;
         }
 
-        const { subject, html } = buildEmail(row);
+        const { subject, html, text } = buildEmail(row);
 
-        // Aboneler birbirinin adresini görmesin diye tek tek gönderilir.
-        for (const subscriber of subscribers) {
+        // Alıcılar birbirinin adresini görmesin diye tek tek gönderilir.
+        for (const recipient of recipients) {
           await sendWithResend(resendApiKey, {
             from: mailFrom,
-            to: [subscriber.email],
+            to: [recipient],
+            reply_to: mailReplyTo || undefined,
             subject,
             html,
+            text,
           });
         }
 
@@ -309,7 +412,7 @@ Deno.serve(async (request) => {
           .from("notification_email_outbox")
           .update({
             status: "sent",
-            recipient_count: subscribers.length,
+            recipient_count: recipients.length,
             last_error: null,
             sent_at: new Date().toISOString(),
           })

@@ -1,6 +1,16 @@
 # Bildirim E-postaları — Devir Notu (2026-07-29)
 
-Yeni üye kaydı ve admin güncellemeleri için abonelik tabanlı e-posta bildirimi.
+Yeni üye kaydı ve admin güncellemeleri için abonelik tabanlı e-posta bildirimi
+**+ üyeye giden hoş geldin maili** (aynı gün eklendi, aşağıda ayrı bölüm).
+
+| Olay tipi | Ne zaman | Alıcı | Genel anahtar |
+|---|---|---|---|
+| `new_member` | üye e-postasını doğrulayınca | abone admin/moderator'lar | `email.new_member.enabled` |
+| `admin_update` | `admin-updates.ts`'e kayıt girilince | abone admin/moderator'lar | `email.admin_update.enabled` |
+| `member_welcome` | üye e-postasını doğrulayınca | **üyenin kendisi** | `email.member_welcome.enabled` |
+
+Üçü de aynı outbox kuyruğunu, aynı dedupe/retry/claim garantilerini paylaşır. Tek fark
+`member_welcome`'ın alıcısının payload'dan gelmesidir — abone listesine hiç bakılmaz.
 
 ## DURUM (2026-07-29 son güncelleme)
 
@@ -136,6 +146,63 @@ Coolify deploy sonrası `/admin/notifications` → genel anahtarları ve kendi a
 2. `admin-updates.ts`'e **aynı commit'te iki kayıt** ekle → ikisi de mail olmalı (eski kusurun regresyon testi)
 3. Genel anahtarı kapat → yeni kayıt at → outbox `skipped`, mail gitmemeli
 4. pg_net yoksa: kayıt `pending` kalır → panelde "Şimdi gönder" → `sent` olmalı
+
+---
+
+# Hoş geldin maili (`member_welcome`) — 2026-07-29 eki
+
+Üye e-postasını doğruladığı anda **kendisine** markalı, Türkçe bir karşılama maili gider.
+Supabase Auth'un standart doğrulama maili değişmedi; bu ondan SONRA gelen ayrı bir maildir.
+
+## Dosyalar
+
+| Dosya | Durum |
+|---|---|
+| `supabase/migrations/20260729140000_member_welcome_email.sql` | YENİ — CHECK genişletme, anahtar, trigger + 2 RPC güncellemesi |
+| `supabase/functions/_shared/emails/member-welcome.ts` | YENİ — şablonun TEK kaynağı (subject + html + text) |
+| `supabase/functions/_shared/emails/html.ts` | YENİ — ortak `escapeHtml` |
+| `supabase/functions/send-notification-emails/index.ts` | `member_welcome` dallanması, `reply_to`, `text`, örnek mail uçları |
+| `scripts/preview-emails.mjs` + `npm run preview:emails` | YENİ — tarayıcı önizlemesi |
+| `notification-settings-api.ts` · `useNotificationSettings.ts` · `AdminNotificationSettingsPage.tsx` | 3. anahtar + "Bana örnek hoş geldin maili gönder" |
+| `vitest.config.ts` · `scripts/verify-text-encoding.mjs` | `supabase/` artık test ve encoding denetimine dahil |
+
+## Canlıya alma (SIRAYLA)
+
+```bash
+supabase db push        # ya da: psql -f supabase/migrations/20260729140000_member_welcome_email.sql
+supabase functions deploy send-notification-emails
+# ardından Coolify deploy (frontend)
+```
+
+Doğrula:
+```sql
+select key, value from public.notification_settings;   -- 3 anahtar, member_welcome false
+select pg_get_constraintdef(oid) from pg_constraint
+  where conrelid = 'public.notification_email_outbox'::regclass and contype = 'c';
+  -- 'member_welcome' listede görünmeli
+```
+
+Sonra `/admin/notifications` → **"Bana örnek hoş geldin maili gönder"** → Gmail + Outlook'ta
+gözle kontrol → onaylayınca **"Hoş geldin maili açık"** anahtarını aç.
+
+> Anahtar açılana kadar kuyruğa düşen `member_welcome` satırları `skipped` olur ve **bir daha
+> denenmez**. Yani anahtarı açmadan önce kaydolan üyeler bu maili hiç almaz — beklenen davranış.
+
+## Şablonu değiştirmek
+
+Metin/tasarım `supabase/functions/_shared/emails/member-welcome.ts` içindedir (DB'de değil).
+Değiştirdikten sonra:
+
+```bash
+npm run preview:emails   # .preview-emails/index.html → tarayıcıda aç
+npm run test -- supabase/functions/_shared
+supabase functions deploy send-notification-emails
+```
+
+**E-posta HTML'i web HTML'i değildir.** Outlook (Windows) Word render motoru kullanır, Gmail
+`<style>` bloğunun çoğunu siler. Şablonun başındaki kural listesini okumadan yapıyı değiştirme:
+table tabanlı 600px yerleşim, inline CSS, hex renkler, her `<img>` için `alt`, düz metin sürümü.
+Tarayıcı önizlemesi bu kırpmaları GÖSTERMEZ — yayına almadan önce mutlaka örnek mail gönder.
 
 ## Bilinen sınırlar
 

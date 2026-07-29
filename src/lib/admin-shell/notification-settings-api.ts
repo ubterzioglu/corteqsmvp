@@ -1,7 +1,11 @@
 // Bildirim E-postaları — API katmanı.
-// /admin/notifications sayfasının veri katmanı. İki bildirim türünü yönetir:
-//   new_member   → siteye yeni üye kaydolduğunda
-//   admin_update → admin-updates.ts'e yeni kayıt girildiğinde
+// /admin/notifications sayfasının veri katmanı. Üç bildirim türünü yönetir:
+//   new_member     → siteye yeni üye kaydolduğunda        → alıcı: abone admin/moderator'lar
+//   admin_update   → admin-updates.ts'e yeni kayıt girildiğinde → alıcı: abone admin/moderator'lar
+//   member_welcome → üye e-postasını doğruladığında       → alıcı: ÜYENİN KENDİSİ
+//
+// member_welcome'ın kişisel abonelik karşılığı YOKTUR: mail üyeye gider, admin abone olmaz.
+// Bu yüzden yalnız genel anahtarı vardır.
 //
 // Erişim modeli: notification_settings / admin_notification_subscriptions /
 // notification_email_outbox tabloları client'a TAMAMEN kapalıdır (RLS deny-all + grant
@@ -16,6 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const NOTIFICATION_SETTING_KEYS = {
   newMember: "email.new_member.enabled",
   adminUpdate: "email.admin_update.enabled",
+  memberWelcome: "email.member_welcome.enabled",
 } as const;
 
 export type NotificationSettingKey =
@@ -31,11 +36,12 @@ export const OUTBOX_STATUS_LABELS: Record<OutboxStatus, string> = {
   skipped: "Atlandı",
 };
 
-export type NotificationEventType = "new_member" | "admin_update";
+export type NotificationEventType = "new_member" | "admin_update" | "member_welcome";
 
 export const NOTIFICATION_EVENT_LABELS: Record<NotificationEventType, string> = {
   new_member: "Yeni üye",
   admin_update: "Güncelleme",
+  member_welcome: "Hoş geldin",
 };
 
 export type OutboxEntry = {
@@ -54,6 +60,7 @@ export type AdminNotificationState = {
   isAdmin: boolean;
   newMemberEnabled: boolean;
   adminUpdateEnabled: boolean;
+  memberWelcomeEnabled: boolean;
   myNewMemberEmail: boolean;
   myAdminUpdateEmail: boolean;
   pendingCount: number;
@@ -75,6 +82,7 @@ type RawState = {
   isAdmin?: unknown;
   newMemberEnabled?: unknown;
   adminUpdateEnabled?: unknown;
+  memberWelcomeEnabled?: unknown;
   myNewMemberEmail?: unknown;
   myAdminUpdateEmail?: unknown;
   pendingCount?: unknown;
@@ -90,7 +98,7 @@ function toNullableString(value: unknown): string | null {
 }
 
 function isEventType(value: unknown): value is NotificationEventType {
-  return value === "new_member" || value === "admin_update";
+  return value === "new_member" || value === "admin_update" || value === "member_welcome";
 }
 
 function isStatus(value: unknown): value is OutboxStatus {
@@ -104,7 +112,8 @@ function buildSummary(eventType: NotificationEventType, payload: unknown): strin
   }
 
   const record = payload as Record<string, unknown>;
-  const field = eventType === "new_member" ? record.email : record.title;
+  // Üye tarafındaki iki olayda konu üyenin adresi, güncellemede kaydın başlığıdır.
+  const field = eventType === "admin_update" ? record.title : record.email;
   return typeof field === "string" && field !== "" ? field : "-";
 }
 
@@ -138,6 +147,7 @@ export function mapNotificationState(raw: unknown): AdminNotificationState {
     isAdmin: toBoolean(state.isAdmin),
     newMemberEnabled: toBoolean(state.newMemberEnabled),
     adminUpdateEnabled: toBoolean(state.adminUpdateEnabled),
+    memberWelcomeEnabled: toBoolean(state.memberWelcomeEnabled),
     myNewMemberEmail: toBoolean(state.myNewMemberEmail),
     myAdminUpdateEmail: toBoolean(state.myAdminUpdateEmail),
     pendingCount: Number.isFinite(pendingCount) ? pendingCount : 0,
@@ -210,4 +220,28 @@ export async function dispatchPendingNotifications(): Promise<DispatchResult> {
     skipped: Number(result.skipped) || 0,
     failed: Number(result.failed) || 0,
   };
+}
+
+/**
+ * Hoş geldin mailinin bir örneğini çağıran admin'in KENDİ adresine gönderir.
+ * Kuyruğa hiç dokunmaz ve genel anahtar kapalıyken de çalışır — amacı yayına almadan önce
+ * gerçek gelen kutusunda (Gmail/Outlook) görünümü doğrulamaktır; tarayıcı önizlemesi
+ * bu istemcilerin stil kırpmasını göstermez.
+ *
+ * @returns mailin gönderildiği adres
+ */
+export async function sendWelcomeEmailPreview(): Promise<string> {
+  const { data, error } = await supabase.functions.invoke("send-notification-emails", {
+    body: { action: "preview" },
+  });
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const result = (data ?? {}) as { sentTo?: unknown; error?: unknown };
+  if (typeof result.error === "string") {
+    throw new Error(result.error);
+  }
+
+  return typeof result.sentTo === "string" ? result.sentTo : "";
 }
