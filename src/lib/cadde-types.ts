@@ -9,6 +9,23 @@ export type CaddePublishStatus = "draft" | "published" | "hidden";
 
 type Nullable<T> = T | null;
 
+// ── Medya (V1) ──────────────────────────────────────────────────────────────
+// cadde_posts.media / carsi_items medya alanlarının ortak şekli. Yükleme yardımcıları
+// src/lib/cadde-media.ts içinde; tip burada durur ki tip katmanı storage client'ına
+// bağımlı olmasın.
+
+export type CaddeMediaKind = "image" | "video";
+
+export type CaddeMediaAsset = {
+  kind: CaddeMediaKind;
+  /** Public CDN URL — feed ve ilan kartları bunu render eder. */
+  url: string;
+  /** Bucket içi yol; silme için gerekir (URL'den türetilmez). */
+  path: string;
+  width?: number;
+  height?: number;
+};
+
 export type CaddeCountryRow = {
   id: string;
   code: string;
@@ -43,6 +60,7 @@ export type CaddePostRow = {
   need_category: Nullable<string>;
   engagement_score: number;
   published_at: Nullable<string>;
+  media: CaddeMediaAsset[];
 };
 
 /** list_cadde_feed_v1 RPC öğesi: post satırı + çözülmüş adlar + ranking çıktıları. */
@@ -216,6 +234,7 @@ export type CaddePost = {
   createdAt: string;
   needCategory: string | null;
   interests: string[];
+  media: CaddeMediaAsset[];
   reactionCounts: Record<CaddeReactionType, number>;
   totalReactionCount: number;
   commentCount: number;
@@ -459,6 +478,8 @@ export type CaddePostInput = {
   cafeId?: string;
   /** Faz 8: diaspora ayrımı (tr/in/cn/ph, default tr; cafe postu cafe'den miras alır). */
   diasporaKey?: string;
+  /** V1: en fazla 4 görsel + 1 video (bkz. cadde-media.ts). */
+  media?: CaddeMediaAsset[];
 };
 
 export type CaddeAdminPostInput = {

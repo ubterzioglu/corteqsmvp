@@ -12,27 +12,6 @@ export const caddeFilterSchema = z.object({
   bridge: z.boolean(),
 });
 
-export const caddePostCreateSchema = z.object({
-  type: z.enum(["text", "question", "offer", "event"]),
-  title: z.string().trim().max(160, "Başlık en fazla 160 karakter olabilir.").optional(),
-  body: z
-    .string()
-    .trim()
-    .min(1, "Paylaşım metni zorunlu.")
-    .max(4000, "Paylaşım metni en fazla 4000 karakter olabilir."),
-  // Tarihsel sözleşme: bu alanlar ülke/şehir ADI taşır (bkz. cadde-types.ts notu).
-  countryId: z.string().optional(),
-  cityId: z.string().optional(),
-  isBridge: z.boolean(),
-  needCategory: z.string().trim().optional(),
-  interests: z
-    .array(z.string().trim().min(1))
-    .max(3, "En fazla 3 etiket seçebilirsin.")
-    .optional(),
-  cafeId: z.string().trim().min(1).optional(),
-  diasporaKey: z.enum(["tr", "in", "cn", "ph"]).optional(),
-});
-
 const httpUrl = z
   .string()
   .trim()
@@ -62,6 +41,36 @@ export const caddeMediaSchema = z
     }
     if (videos > 1) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Bir paylaşıma yalnız 1 video ekleyebilirsin." });
+    }
+  });
+
+export const caddePostCreateSchema = z
+  .object({
+    type: z.enum(["text", "question", "offer", "event"]),
+    title: z.string().trim().max(160, "Başlık en fazla 160 karakter olabilir.").optional(),
+    // min(1) YOK: salt görsel/video paylaşımı meşrudur; "gövde veya medya" kuralı
+    // aşağıdaki superRefine'da — SQL tarafındaki create_cadde_post_v1 ile aynı mantık.
+    body: z.string().trim().max(4000, "Paylaşım metni en fazla 4000 karakter olabilir."),
+    // Tarihsel sözleşme: bu alanlar ülke/şehir ADI taşır (bkz. cadde-types.ts notu).
+    countryId: z.string().optional(),
+    cityId: z.string().optional(),
+    isBridge: z.boolean(),
+    needCategory: z.string().trim().optional(),
+    interests: z
+      .array(z.string().trim().min(1))
+      .max(3, "En fazla 3 etiket seçebilirsin.")
+      .optional(),
+    cafeId: z.string().trim().min(1).optional(),
+    diasporaKey: z.enum(["tr", "in", "cn", "ph"]).optional(),
+    media: caddeMediaSchema.optional(),
+  })
+  .superRefine((value, ctx) => {
+    if (!value.body.trim() && (value.media?.length ?? 0) === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["body"],
+        message: "Paylaşım metni veya en az bir görsel/video ekle.",
+      });
     }
   });
 

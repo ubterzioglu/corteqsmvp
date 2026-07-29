@@ -120,7 +120,8 @@ describe("CaddePage", () => {
 
     renderPage();
 
-    expect(await screen.findByText(/Şehrindeki ihtiyacını, sorunu, ilanını veya etkinliğini paylaş/i)).toBeInTheDocument();
+    // Composer artık tek kutu: başlıklı kart yerine aria-label'lı metin alanı.
+    expect(await screen.findByLabelText("Paylaşım metni")).toBeInTheDocument();
     expect(screen.queryByText(/Caddeye çıkmak için profilini tamamla/i)).not.toBeInTheDocument();
   });
 
@@ -135,7 +136,9 @@ describe("CaddePage", () => {
 
     renderPage();
 
-    expect(await screen.findByText(/Paylaşım ve reaksiyonlar için giriş gerekli/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Ziyaretçiler akışı görebilir/i)).toBeInTheDocument();
+    // Girişsiz ziyaretçiye paylaşım kutusu hiç render edilmez.
+    expect(screen.queryByLabelText("Paylaşım metni")).not.toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: /giriş yap/i }).length).toBeGreaterThan(0);
   });
 
@@ -174,7 +177,8 @@ describe("CaddePage", () => {
 
     renderPage("/cadde");
 
-    expect(await screen.findByText(/Şehrindeki ihtiyacını, sorunu, ilanını veya etkinliğini paylaş/i)).toBeInTheDocument();
+    // Composer artık tek kutu: başlıklı kart yerine aria-label'lı metin alanı.
+    expect(await screen.findByLabelText("Paylaşım metni")).toBeInTheDocument();
     // "Gerçek / Demo" etiketi artık public UI'da görünmemeli.
     expect(screen.queryByText(/Gerçek \/ Demo/i)).not.toBeInTheDocument();
   });
@@ -205,6 +209,7 @@ describe("CaddePage", () => {
           createdAt: "2026-06-23T10:00:00Z",
           needCategory: null,
           interests: [],
+          media: [],
           reactionCounts: { like: 1, support: 0, idea: 0 },
           totalReactionCount: 1,
           commentCount: 3,
@@ -274,6 +279,7 @@ describe("CaddePage", () => {
           createdAt: "2026-06-23T10:00:00Z",
           needCategory: null,
           interests: [],
+          media: [],
           reactionCounts: { like: 0, support: 0, idea: 0 },
           totalReactionCount: 0,
           commentCount: 0,

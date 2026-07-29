@@ -23,6 +23,7 @@ import {
   resolveCityIdsByNames,
   resolveCountryIdsByNames,
 } from "./cadde-internal";
+import { normalizeCaddeMedia } from "./cadde-media";
 import { moderateCaddeCafeName, resolveCaddeRpcErrorMessage } from "./cadde-rules";
 import {
   caddeCafeCreateSchema,
@@ -234,6 +235,7 @@ function mapRpcPost(
     createdAt: row.created_at,
     needCategory: row.need_category,
     interests: row.interests ?? [],
+    media: normalizeCaddeMedia(row.media),
     reactionCounts,
     totalReactionCount: reactionCounts.like + reactionCounts.support + reactionCounts.idea,
     commentCount: postComments.length,
@@ -413,7 +415,7 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
   try {
     const { data, error } = await db
       .from("cadde_posts")
-      .select("id, author_user_id, author_name_override, author_role, author_avatar_url, content_mode, status, post_type, title, body, country_id, city_id, is_bridge, pinned, created_at, need_category, engagement_score, published_at")
+      .select("id, author_user_id, author_name_override, author_role, author_avatar_url, content_mode, status, post_type, title, body, country_id, city_id, is_bridge, pinned, created_at, need_category, engagement_score, published_at, media")
       .eq("cafe_id", cafeId)
       .eq("status", "published")
       .order("created_at", { ascending: false })
@@ -549,6 +551,7 @@ export async function createCaddePost(input: CaddePostInput): Promise<string> {
     p_interests: interests,
     p_cafe_id: parsed.cafeId ?? null,
     p_diaspora_key: parsed.diasporaKey ?? "tr",
+    p_media: parsed.media ?? [],
   });
   if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
   return data as string;

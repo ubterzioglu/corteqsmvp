@@ -5,6 +5,7 @@ import {
   caddeCafeJoinInputSchema,
   caddeCommentCreateSchema,
   caddeFilterSchema,
+  caddeMediaSchema,
   caddePostCreateSchema,
   caddePromotionCreateSchema,
   caddeReactionSchema,
@@ -31,13 +32,49 @@ describe("caddePostCreateSchema", () => {
     const result = caddePostCreateSchema.safeParse({ type: "text", body: "   ", isBridge: false });
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0]?.message).toBe("Paylaşım metni zorunlu.");
+      expect(result.error.issues[0]?.message).toBe("Paylaşım metni veya en az bir görsel/video ekle.");
     }
+  });
+
+  it("accepts a media-only post with an empty body", () => {
+    const result = caddePostCreateSchema.safeParse({
+      type: "text",
+      body: "",
+      isBridge: false,
+      media: [{ kind: "image", url: "https://cdn.example.com/a.jpg", path: "uid/post/a.jpg" }],
+    });
+    expect(result.success).toBe(true);
   });
 
   it("rejects unknown post types and overlong bodies", () => {
     expect(caddePostCreateSchema.safeParse({ type: "poll", body: "x", isBridge: false }).success).toBe(false);
     expect(caddePostCreateSchema.safeParse({ type: "text", body: "x".repeat(4001), isBridge: false }).success).toBe(false);
+  });
+});
+
+describe("caddeMediaSchema", () => {
+  const image = (n: number) => ({ kind: "image" as const, url: `https://cdn.example.com/${n}.jpg`, path: `uid/post/${n}.jpg` });
+  const video = { kind: "video" as const, url: "https://cdn.example.com/v.mp4", path: "uid/post/v.mp4" };
+
+  it("accepts 4 images plus 1 video", () => {
+    expect(caddeMediaSchema.safeParse([image(1), image(2), image(3), image(4), video]).success).toBe(true);
+  });
+
+  it("rejects a 5th image", () => {
+    const result = caddeMediaSchema.safeParse([image(1), image(2), image(3), image(4), image(5)]);
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects a 2nd video", () => {
+    const result = caddeMediaSchema.safeParse([video, { ...video, path: "uid/post/v2.mp4" }]);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some((issue) => issue.message.includes("yalnız 1 video"))).toBe(true);
+    }
+  });
+
+  it("rejects non-https urls", () => {
+    expect(caddeMediaSchema.safeParse([{ kind: "image", url: "ftp://x/a.jpg", path: "p" }]).success).toBe(false);
   });
 });
 

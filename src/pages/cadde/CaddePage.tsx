@@ -4,7 +4,9 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Flag, Flame, Globe2, Heart, MapPin, Megaphone, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
+import CaddeComposer from "@/components/cadde/CaddeComposer";
 import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
+import CaddeMediaGallery from "@/components/cadde/CaddeMediaGallery";
 import CaddeProfileGate from "@/components/cadde/CaddeProfileGate";
 import CaddeWorldClocks from "@/components/cadde/CaddeWorldClocks";
 import CarsiGlobalTicker from "@/components/cadde/CarsiGlobalTicker";
@@ -39,6 +41,7 @@ import {
   reportCaddeEntity,
   toggleCaddeReaction,
 } from "@/lib/cadde-api";
+import { POST_TYPE_LABELS, emptyCaddeComposer } from "@/lib/cadde-composer";
 import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
@@ -53,22 +56,8 @@ const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof
   { key: "idea", label: "Fikir", icon: Flame },
 ];
 
-// Post tipi enum'larının kullanıcıya görünen Türkçe etiketleri (composer + feed kartı).
-// "İlan / Teklif" bireysel kullanıcının ikinci el / yardım / hizmet paylaşımını kapsar.
-const POST_TYPE_LABELS: Record<CaddePostType, string> = {
-  text: "Paylaşım",
-  question: "Soru",
-  offer: "İlan / Teklif",
-  event: "Etkinlik",
-};
-
-const POST_TYPE_PLACEHOLDERS: Record<CaddePostType, string> = {
-  text: "Şehrindeki bir haberi, deneyimini veya fikrini paylaş.",
-  question: "Topluluğa bir şey sor: hangi mahalle, hangi okul, nereden alışveriş…",
-  offer:
-    "Örn: Dortmund'da ikinci el masa veriyorum · Berlin'de taşınmaya yardım arıyorum · Münih'te Türkçe bilen muhasebeci öneriniz var mı?",
-  event: "Etkinliğini duyur: tarih, yer ve katılım detaylarını yaz.",
-};
+// POST_TYPE_LABELS composer ile ortak (tek kaynak: CaddeComposer.tsx) — feed kartındaki
+// tür rozeti ve composer'daki tür seçici aynı etiketleri kullanır.
 
 const SECONDARY_NAV = [
   { label: "Cadde", to: "/cadde" },
@@ -87,23 +76,13 @@ const formatDateTime = (value: string) =>
     minute: "2-digit",
   }).format(new Date(value));
 
-const emptyComposer = {
-  type: "text" as CaddePostType,
-  title: "",
-  body: "",
-  interests: [] as string[],
-  // Paylaşım hedefi (Faz 4 kuyruğu): boş = aktif filtredeki ilk seçim kullanılır.
-  country: "",
-  city: "",
-};
-
 const CaddePage = () => {
   const { session, user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [composer, setComposer] = useState(emptyComposer);
+  const [composer, setComposer] = useState(emptyCaddeComposer);
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [expandedCommentPostId, setExpandedCommentPostId] = useState<string | null>(null);
   const filters = useMemo(() => parseCaddeFilters(searchParams), [searchParams]);
@@ -172,7 +151,10 @@ const CaddePage = () => {
   const postMutation = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error("Bu işlem için giriş yapın.");
-      if (!composer.body.trim()) throw new Error("Paylaşım metni zorunlu.");
+      // Gövde boş olabilir — salt görsel/video paylaşımı meşru (şema + RPC aynı kuralı uygular).
+      if (!composer.body.trim() && composer.media.length === 0) {
+        throw new Error("Paylaşım metni veya en az bir görsel/video ekle.");
+      }
       // Hedef: composer'daki açık seçim; boşsa aktif filtredeki ilk seçim.
       await createCaddePost({
         type: composer.type,
@@ -183,10 +165,11 @@ const CaddePage = () => {
         isBridge: filters.bridge,
         interests: composer.interests,
         diasporaKey,
+        media: composer.media,
       });
     },
     onSuccess: async () => {
-      setComposer(emptyComposer);
+      setComposer(emptyCaddeComposer);
       await invalidateCadde();
       setSearchParams(serializeCaddeFilters({ ...filters, mode: "real" }));
       toast({ title: "Paylaşım Cadde'ye eklendi" });
@@ -480,119 +463,30 @@ const CaddePage = () => {
             </CardContent>
           </Card>
 
-          <Card id="cadde-composer" className="scroll-mt-24 border-slate-200 bg-white/95">
-            <CardHeader>
-              <CardTitle className="text-lg">Caddede Paylaş</CardTitle>
-              <CardDescription>{session ? "Şehrindeki ihtiyacını, sorunu, ilanını veya etkinliğini paylaş — herkes görebilir." : "Paylaşım ve reaksiyonlar için giriş gerekli."}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {session ? (
-                <>
-                  <div className="grid gap-4 md:grid-cols-[180px_1fr]">
-                    <div className="space-y-2">
-                      <Label>Ne paylaşmak istiyorsun?</Label>
-                      <Select value={composer.type} onValueChange={(value) => setComposer((current) => ({ ...current, type: value as CaddePostType }))}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="text">{POST_TYPE_LABELS.text}</SelectItem>
-                          <SelectItem value="question">{POST_TYPE_LABELS.question}</SelectItem>
-                          <SelectItem value="offer">{POST_TYPE_LABELS.offer}</SelectItem>
-                          <SelectItem value="event">{POST_TYPE_LABELS.event}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Başlık</Label>
-                      <Input value={composer.title} onChange={(event) => setComposer((current) => ({ ...current, title: event.target.value }))} placeholder="İsteğe bağlı başlık" />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Paylaşım</Label>
-                    <Textarea value={composer.body} onChange={(event) => setComposer((current) => ({ ...current, body: event.target.value }))} placeholder={POST_TYPE_PLACEHOLDERS[composer.type]} rows={5} />
-                  </div>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label>Hedef ülke <span className="font-normal text-slate-500">(boş = filtre: {filters.countries[0] || "Global"})</span></Label>
-                      <Select
-                        value={composer.country || "__filter__"}
-                        onValueChange={(value) => setComposer((current) => ({ ...current, country: value === "__filter__" ? "" : value, city: "" }))}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="__filter__">Filtreyi kullan</SelectItem>
-                          {(countriesQuery.data ?? []).map((country) => (
-                            <SelectItem key={country.id} value={country.name}>
-                              {country.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Hedef şehir</Label>
-                      <Select
-                        value={composer.city || "__all__"}
-                        onValueChange={(value) => setComposer((current) => ({ ...current, city: value === "__all__" ? "" : value }))}
-                        disabled={!composer.country}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Tüm şehirler" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="__all__">Tüm şehirler</SelectItem>
-                          {(composerCitiesQuery.data ?? []).map((city) => (
-                            <SelectItem key={city.id} value={city.name}>
-                              {city.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  {(interestCatalogQuery.data ?? []).length > 0 ? (
-                    <div className="space-y-2">
-                      <Label>Etiketler <span className="font-normal text-slate-500">(en fazla 3 — ilki birincil ihtiyaç sayılır)</span></Label>
-                      <div className="flex flex-wrap gap-2">
-                        {(interestCatalogQuery.data ?? []).map((interest) => {
-                          const selected = composer.interests.includes(interest.key);
-                          return (
-                            <button
-                              key={interest.key}
-                              type="button"
-                              onClick={() => setComposer((current) => ({ ...current, interests: toggleInterestSelection(current.interests, interest.key) }))}
-                              className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
-                                selected
-                                  ? "border-slate-900 bg-slate-900 text-white"
-                                  : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
-                              }`}
-                            >
-                              {interest.labelTr}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ) : null}
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="text-sm text-slate-500">Paylaşımın seçili şehir ve etiketlerle Cadde akışında görünür.</div>
-                    <Button onClick={() => postMutation.mutate()} disabled={postMutation.isPending}>
-                      {postMutation.isPending ? "Gönderiliyor..." : "Caddede Paylaş"}
-                    </Button>
-                  </div>
-                </>
-              ) : (
+          {session ? (
+            <CaddeComposer
+              value={composer}
+              onChange={setComposer}
+              onSubmit={() => postMutation.mutate()}
+              isSubmitting={postMutation.isPending}
+              countries={countriesQuery.data ?? []}
+              cities={composerCitiesQuery.data ?? []}
+              interestCatalog={interestCatalogQuery.data ?? []}
+              filterCountryLabel={filters.countries[0] || "Global"}
+              onError={(message) => toast({ title: "Ek eklenemedi", description: message, variant: "destructive" })}
+            />
+          ) : (
+            <Card id="cadde-composer" className="scroll-mt-24 border-slate-200 bg-white/95">
+              <CardContent className="p-5">
                 <div className="rounded-[24px] border border-dashed border-orange-200 bg-orange-50 p-5">
                   <p className="text-sm leading-relaxed text-slate-700">
-                    Ziyaretçiler akışı görebilir. Paylaşım, yorum ve reaksiyon için <Link to="/login" className="font-semibold text-orange-700 underline">giriş yap</Link>.
+                    Ziyaretçiler akışı görebilir. Paylaşım, yorum ve reaksiyon için{" "}
+                    <Link to="/login" className="font-semibold text-orange-700 underline">giriş yap</Link>.
                   </p>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
 
           <div className="space-y-4">
             {newPostCount > 0 ? (
@@ -650,7 +544,11 @@ const CaddePage = () => {
                     </div>
 
                     {item.post.title ? <h3 className="text-lg font-semibold text-slate-950">{item.post.title}</h3> : null}
-                    <p className="whitespace-pre-wrap text-sm leading-7 text-slate-700">{item.post.body}</p>
+                    {item.post.body ? (
+                      <p className="whitespace-pre-wrap text-sm leading-7 text-slate-700">{item.post.body}</p>
+                    ) : null}
+
+                    <CaddeMediaGallery media={item.post.media} contextLabel={item.post.authorName} />
 
                     {item.post.interests.length > 0 ? (
                       <div className="flex flex-wrap gap-1.5">

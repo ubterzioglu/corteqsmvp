@@ -20,6 +20,7 @@ const makePost = (id: string): CaddePost => ({
   createdAt: "2026-05-29T00:00:00.000Z",
   needCategory: null,
   interests: [],
+  media: [],
   reactionCounts: { like: 0, support: 0, idea: 0 },
   totalReactionCount: 0,
   commentCount: 0,

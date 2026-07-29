@@ -9,19 +9,11 @@
 // bu katman kullanıcıya hızlı ve Türkçe geri bildirim verir.
 
 import { supabase } from "@/integrations/supabase/client";
+import type { CaddeMediaAsset, CaddeMediaKind } from "@/lib/cadde-types";
 
-export type CaddeMediaKind = "image" | "video";
+export type { CaddeMediaAsset, CaddeMediaKind } from "@/lib/cadde-types";
+
 export type CaddeMediaScope = "post" | "carsi" | "cafe";
-
-export type CaddeMediaAsset = {
-  kind: CaddeMediaKind;
-  /** Public CDN URL — feed ve ilan kartları bunu render eder. */
-  url: string;
-  /** Bucket içi yol; silme için gerekir (URL'den türetilmez). */
-  path: string;
-  width?: number;
-  height?: number;
-};
 
 const BUCKET = "cadde-media";
 
@@ -44,6 +36,33 @@ export const CADDE_IMAGE_MIME_TYPES = [
 export const CADDE_VIDEO_MIME_TYPES = ["video/mp4", "video/webm", "video/quicktime"] as const;
 
 export const CADDE_MEDIA_ACCEPT = [...CADDE_IMAGE_MIME_TYPES, ...CADDE_VIDEO_MIME_TYPES].join(",");
+
+/**
+ * DB'den gelen `media` jsonb'sini güvenli biçimde daraltır.
+ * Sınır validasyonu: bozuk/eksik kayıt tüm feed kartını düşürmemeli, yalnız kendisi elenmeli.
+ */
+export function normalizeCaddeMedia(raw: unknown): CaddeMediaAsset[] {
+  if (!Array.isArray(raw)) return [];
+  const assets: CaddeMediaAsset[] = [];
+  for (const entry of raw) {
+    if (entry === null || typeof entry !== "object") continue;
+    const value = entry as Record<string, unknown>;
+    const kind = value.kind;
+    const url = value.url;
+    const path = value.path;
+    if (kind !== "image" && kind !== "video") continue;
+    if (typeof url !== "string" || !url.startsWith("https://")) continue;
+    if (typeof path !== "string" || path.length === 0) continue;
+    assets.push({
+      kind,
+      url,
+      path,
+      width: typeof value.width === "number" ? value.width : undefined,
+      height: typeof value.height === "number" ? value.height : undefined,
+    });
+  }
+  return assets;
+}
 
 export function resolveCaddeMediaKind(mimeType: string): CaddeMediaKind | null {
   if ((CADDE_IMAGE_MIME_TYPES as readonly string[]).includes(mimeType)) return "image";
