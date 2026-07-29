@@ -55,7 +55,7 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
         </div>
       ) : (
         <p className="mt-2 text-xs text-amber-800/80">
-          {itemsQuery.isLoading ? "İlanlar yükleniyor..." : "Bu kapsamda ilan yok — ilk ilanı sen ver."}
+          {itemsQuery.isLoading ? "İlanlar yükleniyor..." : "İlk ilanı sen ver."}
         </p>
       )}
     </div>

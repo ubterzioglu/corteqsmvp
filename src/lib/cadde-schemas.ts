@@ -39,6 +39,32 @@ const httpUrl = z
   .url("Geçerli bir URL gir.")
   .refine((value) => value.startsWith("http://") || value.startsWith("https://"), "URL http(s) ile başlamalı.");
 
+/**
+ * Paylaşım/ilan medya eki. Limitler SQL `cadde_validate_media` ile AYNA sözleşmesidir
+ * (bkz. src/lib/cadde-media.ts CADDE_MEDIA_LIMITS) — birini değiştiren diğerini de günceller.
+ */
+export const caddeMediaAssetSchema = z.object({
+  kind: z.enum(["image", "video"]),
+  url: httpUrl,
+  path: z.string().trim().min(1),
+  width: z.number().int().positive().optional(),
+  height: z.number().int().positive().optional(),
+});
+
+export const caddeMediaSchema = z
+  .array(caddeMediaAssetSchema)
+  .max(5, "Bir paylaşıma en fazla 4 görsel ve 1 video ekleyebilirsin.")
+  .superRefine((assets, ctx) => {
+    const images = assets.filter((asset) => asset.kind === "image").length;
+    const videos = assets.filter((asset) => asset.kind === "video").length;
+    if (images > 4) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: "En fazla 4 görsel ekleyebilirsin." });
+    }
+    if (videos > 1) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Bir paylaşıma yalnız 1 video ekleyebilirsin." });
+    }
+  });
+
 const caddeCafeCapacitySchema = z
   .number()
   .int()

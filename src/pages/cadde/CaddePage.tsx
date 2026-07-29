@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Clock3, Flag, Flame, Globe2, Heart, MapPin, Megaphone, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
+import { Flag, Flame, Globe2, Heart, MapPin, Megaphone, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
 import CaddeProfileGate from "@/components/cadde/CaddeProfileGate";
+import CaddeWorldClocks from "@/components/cadde/CaddeWorldClocks";
 import CarsiGlobalTicker from "@/components/cadde/CarsiGlobalTicker";
 import CreateCafeForm from "@/components/cadde/CreateCafeForm";
 import NotificationsBell from "@/components/cadde/NotificationsBell";
@@ -24,7 +25,6 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { PUBLIC_WHATSAPP_COMMUNITY } from "@/lib/contact-links";
 import {
   countCaddePostsSince,
   createCaddeComment,
@@ -46,15 +46,6 @@ import { toggleInterestSelection } from "@/lib/cadde-targeting";
 import type { CaddeFeedPageParam, CaddeFilterState, CaddePostType, CaddeReactionType } from "@/lib/cadde-types";
 import { useSeo } from "@/lib/seo";
 import { PAGE_SEO } from "@/lib/page-seo";
-
-const WORLD_CLOCKS = [
-  { label: "İstanbul", timezone: "Europe/Istanbul" },
-  { label: "Berlin", timezone: "Europe/Berlin" },
-  { label: "Londra", timezone: "Europe/London" },
-  { label: "New York", timezone: "America/New_York" },
-  { label: "Toronto", timezone: "America/Toronto" },
-  { label: "Dubai", timezone: "Asia/Dubai" },
-] as const;
 
 const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof ThumbsUp }> = [
   { key: "like", label: "Beğendim", icon: ThumbsUp },
@@ -87,14 +78,6 @@ const SECONDARY_NAV = [
   { label: "Giriş Yap", to: "/login" },
   { label: "Kayıt Ol", to: "/login?mode=signup" },
 ] as const;
-
-const formatTimeChip = (timezone: string) =>
-  new Intl.DateTimeFormat("tr-TR", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZone: timezone,
-  }).format(new Date());
 
 const formatDateTime = (value: string) =>
   new Intl.DateTimeFormat("tr-TR", {
@@ -401,7 +384,9 @@ const CaddePage = () => {
 
           <Card className="border-slate-200 bg-white/90">
             <CardHeader>
-              <CardTitle className="text-base">Aktif Cafe Özeti</CardTitle>
+              <CardTitle className="text-base">
+                {hasGeoSelection ? `Cafeler (${summarizeCaddeFilters(filters)})` : "Cafeler"}
+              </CardTitle>
               <CardDescription>Seçili filtre içindeki odalar</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -431,15 +416,11 @@ const CaddePage = () => {
                 </div>
                 <Badge variant="outline">{summarizeCaddeFilters(filters)}</Badge>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {WORLD_CLOCKS.map((clock) => (
-                  <div key={clock.label} className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
-                    <Clock3 className="h-4 w-4 text-orange-500" />
-                    <span className="font-medium">{clock.label}</span>
-                    <span className="text-slate-500">{formatTimeChip(clock.timezone)}</span>
-                  </div>
-                ))}
-              </div>
+              <CaddeWorldClocks
+                viewerCity={actorContextQuery.data?.city ?? null}
+                filterCity={filters.cities[0] ?? null}
+                cities={citiesQuery.data ?? []}
+              />
             </CardHeader>
           </Card>
 
@@ -855,15 +836,15 @@ const CaddePage = () => {
                   Şehrindeki Türk topluluğunu büyütmeye yardım et — paylaş, sor, destek ol.
                 </p>
               </div>
-              <a
-                href={PUBLIC_WHATSAPP_COMMUNITY}
-                target="_blank"
-                rel="noopener noreferrer"
+              {/* Geri bildirim WhatsApp yerine kendi /feedback formumuza gider (kayıt altına alınır,
+                  /admin/feedback'ten takip edilir). kaynak=cadde ile nereden geldiği ayrılır. */}
+              <Link
+                to="/feedback?kaynak=cadde"
                 className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/70 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white"
               >
                 Beta geri bildirimi ver
                 <Megaphone className="h-4 w-4 text-orange-500" />
-              </a>
+              </Link>
             </CardContent>
           </Card>
 
@@ -904,8 +885,13 @@ const CaddePage = () => {
 
           <Card className="border-slate-200 bg-slate-900 text-white">
             <CardHeader>
-              <CardTitle className="text-white">Cadde İçinde Görünür Ol</CardTitle>
-              <CardDescription className="text-slate-300">Billboard veya sponsorlu akışta yer almak için talep bırak.</CardDescription>
+              {/* text-balance: "Ol" tek başına ikinci satıra düşmesin (dar sidebar'da kırılıyordu). */}
+              <CardTitle className="text-balance text-[clamp(1rem,2.2vw,1.25rem)] leading-snug text-white">
+                Cadde İçinde Görünür Ol
+              </CardTitle>
+              <CardDescription className="text-balance text-slate-300">
+                Billboard veya sponsorlu akışta yer almak için talep bırak.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-start gap-3 rounded-2xl bg-white/10 p-3">

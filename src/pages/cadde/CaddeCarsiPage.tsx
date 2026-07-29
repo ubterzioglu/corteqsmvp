@@ -313,9 +313,22 @@ const CaddeCarsiPage = () => {
         </div>
 
         {!itemsQuery.isLoading && items.length === 0 ? (
-          <Card className="border-dashed border-slate-300 bg-white/90">
-            <CardContent className="p-8 text-center text-slate-500">
-              Bu kategoride yayında ilan yok.
+          <Card data-testid="carsi-empty-state" className="border-dashed border-amber-300 bg-white/90">
+            <CardContent className="space-y-3 p-8 text-center">
+              <p className="text-base font-semibold text-slate-900">İlk ilanı sen ver.</p>
+              <p className="text-sm leading-relaxed text-slate-600">
+                İkinci el eşya, oda, ders, hizmet — şehrindeki toplulukta karşılığı olan her şey burada yer bulur.
+              </p>
+              {user ? (
+                <Button className="rounded-2xl" onClick={() => setFormOpen(true)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  İlan Ver
+                </Button>
+              ) : (
+                <Button asChild variant="outline" className="rounded-2xl">
+                  <Link to="/login">İlan vermek için giriş yap</Link>
+                </Button>
+              )}
             </CardContent>
           </Card>
         ) : null}

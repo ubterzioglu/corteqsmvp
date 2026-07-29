@@ -13,7 +13,7 @@ describe("App /aiform routing", () => {
 
     render(<App />);
 
-    expect(await screen.findByText("CorteQS Hesabı")).toBeInTheDocument();
+    expect(await screen.findByText("ağına giriş yap")).toBeInTheDocument();
   });
 
   it("redirects the legacy /form route to /login", async () => {
@@ -21,7 +21,7 @@ describe("App /aiform routing", () => {
 
     render(<App />);
 
-    expect(await screen.findByText("CorteQS Hesabı")).toBeInTheDocument();
+    expect(await screen.findByText("ağına giriş yap")).toBeInTheDocument();
   });
 
   it("redirects the legacy /auth route to /login", async () => {
@@ -29,6 +29,6 @@ describe("App /aiform routing", () => {
 
     render(<App />);
 
-    expect(await screen.findByText("CorteQS Hesabı")).toBeInTheDocument();
+    expect(await screen.findByText("ağına giriş yap")).toBeInTheDocument();
   });
 });

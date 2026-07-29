@@ -100,7 +100,10 @@ describe("CaddeCarsiPage", () => {
 
     renderPage();
 
-    expect(await screen.findByText(/yayında ilan yok/i)).toBeInTheDocument();
+    // Türkçe İ/ı nedeniyle regex+`i` bayrağı güvenilmez — tam metinle eşleştir.
+    expect(await screen.findByText("İlk ilanı sen ver.")).toBeInTheDocument();
+    // Girişsiz kullanıcıya ilan verme butonu değil, giriş bağlantısı gösterilir.
     expect(screen.queryByRole("button", { name: /İlan Ver/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "İlan vermek için giriş yap" })).toBeInTheDocument();
   });
 });
