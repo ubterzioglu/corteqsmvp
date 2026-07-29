@@ -63,6 +63,16 @@ export const caddePostCreateSchema = z
     cafeId: z.string().trim().min(1).optional(),
     diasporaKey: z.enum(["tr", "in", "cn", "ph"]).optional(),
     media: caddeMediaSchema.optional(),
+    /** Composer'ın seçtiği @mention hedefleri; doğrulama DB'de (görünmeyen hedef atlanır). */
+    mentions: z
+      .array(
+        z.object({
+          type: z.enum(["user", "catalog_item", "cafe", "carsi_item"]),
+          id: z.string().trim().min(1),
+        }),
+      )
+      .max(10, "En fazla 10 kişi/işletme etiketleyebilirsin.")
+      .optional(),
   })
   .superRefine((value, ctx) => {
     if (!value.body.trim() && (value.media?.length ?? 0) === 0) {

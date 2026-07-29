@@ -14,8 +14,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { CaddeMediaPreviewStrip } from "@/components/cadde/CaddeMediaGallery";
+import MentionTextarea from "@/components/cadde/MentionTextarea";
 import {
   CADDE_IMAGE_MIME_TYPES,
   CADDE_VIDEO_MIME_TYPES,
@@ -96,13 +96,21 @@ const CaddeComposer = ({
   return (
     <Card id="cadde-composer" className="scroll-mt-24 border-slate-200 bg-white/95">
       <CardContent className="space-y-3 p-4 sm:p-5">
-        <Textarea
+        <MentionTextarea
           value={value.body}
-          onChange={(event) => update({ body: event.target.value })}
+          onChange={(body) => update({ body })}
+          onMentionAdd={(mention) =>
+            // Aynı hedef iki kez eklenmesin; gövdede iki kez geçse de tek kayıt yeter.
+            update({
+              mentions: value.mentions.some((item) => item.type === mention.type && item.id === mention.id)
+                ? value.mentions
+                : [...value.mentions, mention],
+            })
+          }
           placeholder={PLACEHOLDER}
           rows={3}
           maxLength={4000}
-          aria-label="Paylaşım metni"
+          ariaLabel="Paylaşım metni"
           className="resize-none border-0 bg-transparent px-0 text-base shadow-none focus-visible:ring-0"
         />
 

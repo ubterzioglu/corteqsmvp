@@ -6,8 +6,11 @@ import { Flag, Flame, Globe2, Heart, MapPin, Megaphone, MessageCircle, MessagesS
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
 import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
+import CaddeFeedScopeBar from "@/components/cadde/CaddeFeedScopeBar";
 import CaddeMediaGallery from "@/components/cadde/CaddeMediaGallery";
+import CaddePostBody from "@/components/cadde/CaddePostBody";
 import CaddeProfileGate from "@/components/cadde/CaddeProfileGate";
+import CaddeTrendingHashtags from "@/components/cadde/CaddeTrendingHashtags";
 import CaddeWorldClocks from "@/components/cadde/CaddeWorldClocks";
 import CarsiGlobalTicker from "@/components/cadde/CarsiGlobalTicker";
 import CreateCafeForm from "@/components/cadde/CreateCafeForm";
@@ -488,6 +491,13 @@ const CaddePage = () => {
             </Card>
           )}
 
+          <CaddeFeedScopeBar
+            scope={filters.scope}
+            hashtag={filters.hashtag}
+            onScopeChange={(scope) => updateFilters({ scope })}
+            onClearHashtag={() => updateFilters({ hashtag: "" })}
+          />
+
           <div className="space-y-4">
             {newPostCount > 0 ? (
               <div className="flex justify-center">
@@ -544,18 +554,27 @@ const CaddePage = () => {
                     </div>
 
                     {item.post.title ? <h3 className="text-lg font-semibold text-slate-950">{item.post.title}</h3> : null}
-                    {item.post.body ? (
-                      <p className="whitespace-pre-wrap text-sm leading-7 text-slate-700">{item.post.body}</p>
-                    ) : null}
+                    <CaddePostBody body={item.post.body} mentions={item.post.mentions} />
 
                     <CaddeMediaGallery media={item.post.media} contextLabel={item.post.authorName} />
 
-                    {item.post.interests.length > 0 ? (
-                      <div className="flex flex-wrap gap-1.5">
+                    {/* Küratörlü etiketler (ranking'i besler) ve serbest hashtag'ler ayrı görünür:
+                        ilki rozet, ikincisi tıklanabilir mavi link. */}
+                    {item.post.interests.length > 0 || item.post.hashtags.length > 0 ? (
+                      <div className="flex flex-wrap items-center gap-1.5">
                         {item.post.interests.map((key) => (
                           <Badge key={key} variant="outline" className="text-xs font-normal">
-                            #{interestLabelByKey.get(key) ?? key}
+                            {interestLabelByKey.get(key) ?? key}
                           </Badge>
+                        ))}
+                        {item.post.hashtags.map((hashtag) => (
+                          <Link
+                            key={hashtag.tag}
+                            to={`/cadde?etiket=${encodeURIComponent(hashtag.tag)}`}
+                            className="text-xs font-medium text-sky-700 hover:underline"
+                          >
+                            #{hashtag.displayTag}
+                          </Link>
                         ))}
                       </div>
                     ) : null}
@@ -745,6 +764,8 @@ const CaddePage = () => {
               </Link>
             </CardContent>
           </Card>
+
+          <CaddeTrendingHashtags />
 
           <PromotionRail filters={filters} />
 

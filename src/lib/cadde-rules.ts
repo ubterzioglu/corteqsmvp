@@ -171,6 +171,12 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
   cadde_invalid_moderation_action: "Geçersiz moderasyon aksiyonu.",
   // Faz 8 (mig 012) — Çoklu diaspora
   cadde_invalid_diaspora: "Geçersiz diaspora seçimi.",
+  // V1 (mig 001-003) — Medya, hashtag, mention
+  cadde_invalid_media: "Görsel/video geçersiz. Yalnız https bağlantılı dosyalar eklenebilir.",
+  cadde_media_limit: "Bir paylaşıma en fazla 4 görsel ve 1 video ekleyebilirsin.",
+  cadde_video_disabled: "Video paylaşımı şu an kapalı.",
+  cadde_hashtag_limit: "Bir paylaşımda en fazla 8 etiket kullanabilirsin.",
+  cadde_mention_limit: "En fazla 10 kişi/işletme etiketleyebilirsin.",
 };
 
 /** Supabase RPC hatasını kullanıcıya gösterilebilir mesaja çevirir. */

@@ -54,10 +54,15 @@ import type {
   CaddeFeedPageParam,
   CaddeFeedRpcItem,
   CaddeFilterState,
+  CaddeHashtag,
   CaddeInterest,
   CaddeInterestRow,
+  CaddeMentionSuggestion,
+  CaddeMentionTargetType,
   CaddePost,
   CaddePostInput,
+  CaddePostMention,
+  CaddeTrendingHashtag,
   CaddeReactionRow,
   CaddeReactionType,
   CaddeSponsoredPlacement,
@@ -142,6 +147,8 @@ export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeF
         cities: filters.cities,
         bridge: filters.bridge,
         diaspora: diasporaKey,
+        hashtag: filters.hashtag,
+        scope: filters.scope,
       },
       p_cursor: cursor,
       p_limit: CADDE_PAGE_SIZE,
@@ -203,6 +210,29 @@ async function fetchPostComments(postIds: string[]): Promise<CommentWithAuthor[]
   return rows.map((row) => ({ ...row, author_name: userMap.get(row.user_id) ?? FALLBACK_PROFILE_NAME }));
 }
 
+/** RPC'den gelen hashtag jsonb'sini güvenli daraltır — bozuk kayıt kartı düşürmemeli. */
+function normalizeHashtagRows(raw: unknown): CaddeHashtag[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.flatMap((entry) => {
+    if (entry === null || typeof entry !== "object") return [];
+    const value = entry as Record<string, unknown>;
+    if (typeof value.tag !== "string" || !value.tag) return [];
+    return [{ tag: value.tag, displayTag: typeof value.displayTag === "string" ? value.displayTag : value.tag }];
+  });
+}
+
+function normalizeMentionRows(raw: unknown): CaddePostMention[] {
+  if (!Array.isArray(raw)) return [];
+  const allowed: CaddeMentionTargetType[] = ["user", "catalog_item", "cafe", "carsi_item"];
+  return raw.flatMap((entry) => {
+    if (entry === null || typeof entry !== "object") return [];
+    const value = entry as Record<string, unknown>;
+    const type = value.type as CaddeMentionTargetType;
+    if (!allowed.includes(type) || typeof value.id !== "string") return [];
+    return [{ type, id: value.id, label: typeof value.label === "string" ? value.label : null }];
+  });
+}
+
 function mapRpcPost(
   row: CaddeFeedRpcItem,
   reactions: CaddeReactionRow[],
@@ -235,6 +265,8 @@ function mapRpcPost(
     createdAt: row.created_at,
     needCategory: row.need_category,
     interests: row.interests ?? [],
+    hashtags: normalizeHashtagRows(row.hashtags),
+    mentions: normalizeMentionRows(row.mentions),
     media: normalizeCaddeMedia(row.media),
     reactionCounts,
     totalReactionCount: reactionCounts.like + reactionCounts.support + reactionCounts.idea,
@@ -552,9 +584,39 @@ export async function createCaddePost(input: CaddePostInput): Promise<string> {
     p_cafe_id: parsed.cafeId ?? null,
     p_diaspora_key: parsed.diasporaKey ?? "tr",
     p_media: parsed.media ?? [],
+    p_mentions: parsed.mentions ?? [],
   });
   if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
   return data as string;
+}
+
+/**
+ * Composer'daki @mention önerileri (üye / işletme / cafe / çarşı ilanı).
+ * Görünürlük kuralları DB'de: yalnız public profil, yayında katalog/cafe/ilan döner.
+ */
+export async function searchCaddeMentions(query: string, limit = 8): Promise<CaddeMentionSuggestion[]> {
+  if (!isSupabaseConfigured || query.trim().length < 2) return [];
+  try {
+    const { data, error } = await db.rpc("search_cadde_mentions_v1", { p_query: query, p_limit: limit });
+    if (error) throw error;
+    return Array.isArray(data) ? (data as CaddeMentionSuggestion[]) : [];
+  } catch (error: unknown) {
+    reportCaddeApiError("searchCaddeMentions", error);
+    return [];
+  }
+}
+
+/** Sağ kolondaki "Şu an konuşulanlar" kartı. */
+export async function listTrendingCaddeHashtags(limit = 10): Promise<CaddeTrendingHashtag[]> {
+  if (!isSupabaseConfigured) return [];
+  try {
+    const { data, error } = await db.rpc("list_trending_cadde_hashtags_v1", { p_limit: limit });
+    if (error) throw error;
+    return Array.isArray(data) ? (data as CaddeTrendingHashtag[]) : [];
+  } catch (error: unknown) {
+    reportCaddeApiError("listTrendingCaddeHashtags", error);
+    return [];
+  }
 }
 
 // ── İlgi alanları (Faz 3 / spec §12) ─────────────────────────────────────────

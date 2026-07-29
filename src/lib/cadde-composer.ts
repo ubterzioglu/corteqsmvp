@@ -1,7 +1,7 @@
 // Composer'ın veri sözleşmesi — CaddeComposer bileşeni ile CaddePage arasında paylaşılır.
 // Bileşen dosyasından ayrı durur ki React Fast Refresh bozulmasın (yalnız bileşen export'u kalsın).
 
-import type { CaddeMediaAsset, CaddePostType } from "@/lib/cadde-types";
+import type { CaddeMediaAsset, CaddePostMention, CaddePostType } from "@/lib/cadde-types";
 
 /**
  * Post tipi enum'larının kullanıcıya görünen Türkçe etiketleri.
@@ -24,6 +24,8 @@ export type CaddeComposerValue = {
   country: string;
   city: string;
   media: CaddeMediaAsset[];
+  /** @mention ile seçilen hedefler; gövdedeki metinle display_label üzerinden eşleşir. */
+  mentions: CaddePostMention[];
 };
 
 export const emptyCaddeComposer: CaddeComposerValue = {
@@ -34,4 +36,5 @@ export const emptyCaddeComposer: CaddeComposerValue = {
   country: "",
   city: "",
   media: [],
+  mentions: [],
 };

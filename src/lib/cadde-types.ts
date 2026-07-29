@@ -185,6 +185,40 @@ export type CaddeCity = {
   timezone: string;
 };
 
+// ── Hashtag & mention (V1) ──────────────────────────────────────────────────
+
+export type CaddeHashtag = {
+  /** Normalize anahtar (ASCII, küçük harf) — SQL cadde_normalize_tag çıktısı. */
+  tag: string;
+  /** İlk görülen özgün yazım (#İstanbul). */
+  displayTag: string;
+};
+
+export type CaddeMentionTargetType = "user" | "catalog_item" | "cafe" | "carsi_item";
+
+export type CaddePostMention = {
+  type: CaddeMentionTargetType;
+  id: string;
+  /** Paylaşım anındaki görünen ad — gövdedeki @metni bu satıra eşlemek için. */
+  label?: string | null;
+};
+
+/** search_cadde_mentions_v1 öneri öğesi. */
+export type CaddeMentionSuggestion = {
+  type: CaddeMentionTargetType;
+  id: string;
+  label: string;
+  subtitle: string;
+};
+
+export type CaddeTrendingHashtag = CaddeHashtag & { postCount: number };
+
+/**
+ * Feed kapsamı (list_cadde_feed_v1 p_filters->>'scope').
+ * nearby/following/jobs Faz 2'de gerçek veriye bağlanır; şu an 'all' gibi davranırlar.
+ */
+export type CaddeFeedScope = "all" | "city" | "country" | "events" | "cafes" | "nearby" | "following" | "jobs";
+
 // Faz 3: çoklu ülke/şehir filtresi. Değerler cadde_countries/cities ADLARIDIR;
 // id çözümlemesi API/RPC katmanında yapılır.
 export type CaddeFilterState = {
@@ -192,6 +226,9 @@ export type CaddeFilterState = {
   countries: string[];
   cities: string[];
   bridge: boolean;
+  /** Normalize hashtag anahtarı; boş = etiket filtresi yok. */
+  hashtag: string;
+  scope: CaddeFeedScope;
 };
 
 /** list_cadde_feed_v1 keyset cursor'ı (SQL sıralamasının aynası — bkz. cadde-ranking.ts). */
@@ -233,7 +270,11 @@ export type CaddePost = {
   pinned: boolean;
   createdAt: string;
   needCategory: string | null;
+  /** Küratörlü etiketler (cadde_interest_catalog) — ranking bunlara bağlı. */
   interests: string[];
+  /** Serbest hashtag'ler — kullanıcının gövdeye yazdıkları. */
+  hashtags: CaddeHashtag[];
+  mentions: CaddePostMention[];
   media: CaddeMediaAsset[];
   reactionCounts: Record<CaddeReactionType, number>;
   totalReactionCount: number;

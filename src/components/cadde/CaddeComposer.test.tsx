@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import CaddeComposer from "@/components/cadde/CaddeComposer";
 import { emptyCaddeComposer, type CaddeComposerValue } from "@/lib/cadde-composer";
@@ -18,19 +20,25 @@ const renderComposer = (overrides: Partial<CaddeComposerValue> = {}, props: Reco
   const value = { ...emptyCaddeComposer, ...overrides };
   const onChange = vi.fn();
   const onSubmit = vi.fn();
+  // MentionTextarea öneri sorgusu için QueryClient, hashtag/mention linkleri için Router gerekir.
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(
-    <CaddeComposer
-      value={value}
-      onChange={onChange}
-      onSubmit={onSubmit}
-      isSubmitting={false}
-      countries={[{ id: "c1", code: "DE", name: "Almanya" }]}
-      cities={[{ id: "ct1", countryId: "c1", name: "Berlin", timezone: "Europe/Berlin" }]}
-      interestCatalog={[{ key: "networking", labelTr: "Networking", sortOrder: 10 }]}
-      filterCountryLabel="Global"
-      onError={vi.fn()}
-      {...props}
-    />,
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <CaddeComposer
+          value={value}
+          onChange={onChange}
+          onSubmit={onSubmit}
+          isSubmitting={false}
+          countries={[{ id: "c1", code: "DE", name: "Almanya" }]}
+          cities={[{ id: "ct1", countryId: "c1", name: "Berlin", timezone: "Europe/Berlin" }]}
+          interestCatalog={[{ key: "networking", labelTr: "Networking", sortOrder: 10 }]}
+          filterCountryLabel="Global"
+          onError={vi.fn()}
+          {...props}
+        />
+      </MemoryRouter>
+    </QueryClientProvider>,
   );
   return { onChange, onSubmit };
 };

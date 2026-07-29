@@ -1,6 +1,7 @@
 // Cadde URL filtre durumu ve feed yerleşim yardımcıları.
 
-import type { CaddeContentMode, CaddeFeedListItem, CaddeFilterState, CaddeInterest, CaddePost, CaddePromotionCard, CaddeSponsoredPlacement } from "./cadde-types";
+import { normalizeHashtag } from "./cadde-text";
+import type { CaddeContentMode, CaddeFeedListItem, CaddeFeedScope, CaddeFilterState, CaddeInterest, CaddePost, CaddePromotionCard, CaddeSponsoredPlacement } from "./cadde-types";
 
 /** Virgülle ayrılmış URL parametresini normalize edilmiş ad listesine çevirir. */
 const parseListParam = (value: string | null): string[] => {
@@ -22,6 +23,13 @@ const parseListParam = (value: string | null): string[] => {
  * Faz 3: country/city parametreleri virgülle ayrılmış ÇOKLU değer taşır;
  * eski tekil `?country=Almanya` URL'leri tek elemanlı liste olarak okunur (geriye uyumlu).
  */
+const FEED_SCOPES: readonly CaddeFeedScope[] = ["all", "city", "country", "events", "cafes", "nearby", "following", "jobs"];
+
+const parseScopeParam = (value: string | null): CaddeFeedScope => {
+  const candidate = (value ?? "").trim() as CaddeFeedScope;
+  return FEED_SCOPES.includes(candidate) ? candidate : "all";
+};
+
 export function parseCaddeFilters(searchParams: URLSearchParams): CaddeFilterState {
   const mode: CaddeContentMode = searchParams.get("mode") === "demo" ? "demo" : "real";
   return {
@@ -29,6 +37,9 @@ export function parseCaddeFilters(searchParams: URLSearchParams): CaddeFilterSta
     countries: parseListParam(searchParams.get("country")),
     cities: parseListParam(searchParams.get("city")),
     bridge: searchParams.get("bridge") === "1",
+    // ?etiket=İstanbul ile ?etiket=istanbul AYNI akışı açsın diye URL'den okurken normalize edilir.
+    hashtag: normalizeHashtag(searchParams.get("etiket") ?? ""),
+    scope: parseScopeParam(searchParams.get("akis")),
   };
 }
 
@@ -39,6 +50,8 @@ export function serializeCaddeFilters(filters: CaddeFilterState): URLSearchParam
   if (filters.countries.length) next.set("country", filters.countries.join(","));
   if (filters.cities.length) next.set("city", filters.cities.join(","));
   if (filters.bridge) next.set("bridge", "1");
+  if (filters.hashtag) next.set("etiket", filters.hashtag);
+  if (filters.scope !== "all") next.set("akis", filters.scope);
   return next;
 }
 
