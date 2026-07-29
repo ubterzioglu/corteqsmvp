@@ -3,6 +3,8 @@
 // buradaki fonksiyonlar UI guard'ları ve truth-table testleri içindir.
 // SQL kaynağı: supabase/migrations/20260610182000_cadde300_003_actor_context.sql
 
+import { trFold } from "@/lib/text-normalization";
+
 export type CaddeMissingGateField = "country" | "city" | "phone_verification";
 
 export type CaddeActorContext = {
@@ -124,6 +126,9 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
   cadde_invalid_cafe_time: "Cafe bitişi başlangıçtan sonra olmalı.",
   cadde_cafe_duration_exceeded: "Cafe süresi izin verilen üst sınırı aşıyor.",
   cadde_invalid_cafe_capacity: "Kapasite 1'den küçük olamaz.",
+  cadde_invalid_cafe_theme: "Geçerli bir tema seç.",
+  cadde_cafe_brand_protected:
+    "Bu ad korumalı bir markaya ait. Yalnız markanın doğrulanmış sahibi bu adla cafe açabilir — önerilen adı kullanabilirsin.",
   cadde_cafe_not_found: "Cafe bulunamadı.",
   cadde_cafe_archived: "Bu cafe arşivlendi; yeni katılım ve paylaşım kapalı.",
   cadde_cafe_ended: "Bu cafe sona erdi; yeni katılım ve paylaşım kapalı.",
@@ -200,6 +205,43 @@ const CAFE_NAME_BLOCKLIST: ReadonlyArray<RegExp> = [
   /\b(porn|porno|escort|bahis|casino|kumar)\b/i, // yetişkin/kumar spam
   /(https?:\/\/|www\.)/i, // ad içinde URL
 ];
+
+// ── Marka koruması (V1) ─────────────────────────────────────────────────────
+// SQL AYNASI: public.cadde_check_brand_conflict — ikisi de kelime sınırıyla eşleşir,
+// böylece "Nike Cafe" yakalanır ama "Teknike Dair" yakalanmaz. GERÇEK enforce DB'dedir
+// (create_cadde_cafe_v1); buradaki fonksiyon formun anında geri bildirim vermesi içindir.
+// Marka listesi DB'de (cadde_protected_brands) — kod içinde sabit liste TUTULMAZ,
+// yeni marka eklemek deploy gerektirmez.
+
+/** Ad ile marka anahtarını kelime sınırında karşılaştırır (SQL `\m...\M` karşılığı). */
+export function matchesBrandPattern(name: string, matchPattern: string): boolean {
+  const folded = trFold(name);
+  const pattern = trFold(matchPattern);
+  if (!pattern) return false;
+  const escaped = pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[^\\p{L}\\p{N}])${escaped}([^\\p{L}\\p{N}]|$)`, "u").test(folded);
+}
+
+export type CaddeProtectedBrand = { brandName: string; matchPattern: string };
+
+/** Çakışan markanın görünen adı; yoksa null. En uzun eşleşme kazanır (SQL ile aynı). */
+export function checkBrandConflict(name: string, brands: readonly CaddeProtectedBrand[]): string | null {
+  const hits = brands.filter((brand) => matchesBrandPattern(name, brand.matchPattern));
+  if (hits.length === 0) return null;
+  return hits.reduce((longest, current) =>
+    current.matchPattern.length > longest.matchPattern.length ? current : longest,
+  ).brandName;
+}
+
+/**
+ * Marka çakışmasında önerilecek ad: "Starbucks Cafe" → "Parodi Starbucks Cafe".
+ * Zaten "Parodi" ile başlıyorsa iki kez eklenmez.
+ */
+export function suggestParodyCafeName(name: string): string {
+  const trimmed = name.trim();
+  if (trFold(trimmed).startsWith("parodi ")) return trimmed;
+  return `Parodi ${trimmed}`.slice(0, 80);
+}
 
 export function moderateCaddeCafeName(name: string): CafeNameModerationResult {
   const trimmed = name.trim();

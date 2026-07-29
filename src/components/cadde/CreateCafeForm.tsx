@@ -18,13 +18,13 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { createCaddeCafe, listCaddeCities, listCaddeCountries } from "@/lib/cadde-api";
+import { listCaddeCafeThemes, listCaddeProtectedBrands } from "@/lib/cadde-cafe-api";
 import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-import { moderateCaddeCafeName } from "@/lib/cadde-rules";
+import { checkBrandConflict, moderateCaddeCafeName, suggestParodyCafeName } from "@/lib/cadde-rules";
 import { CADDE_CAFE_CAPACITY_OPTIONS } from "@/lib/cadde-schemas";
 import type { CaddeCafeEntryMode } from "@/lib/cadde-types";
 
-const THEME_SUGGESTIONS = ["IT", "Hekimler", "Profesyoneller", "İşletmeler", "Kuruluşlar", "Blogger/Vlogger", "Genel"] as const;
 const DURATION_OPTIONS = [1, 2, 3, 4, 6] as const;
 
 const ENTRY_MODE_LABELS: Record<CaddeCafeEntryMode, string> = {
@@ -39,7 +39,7 @@ interface CreateCafeFormProps {
 
 const emptyForm = {
   title: "",
-  theme: "Genel",
+  theme: "",
   summary: "",
   isBridge: false,
   country: "",
@@ -60,6 +60,10 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
   const [form, setForm] = useState(emptyForm);
   const diasporaKey = useCaddeDiasporaKey();
 
+  const themesQuery = useQuery({ queryKey: ["cadde", "cafe-themes"], queryFn: listCaddeCafeThemes, enabled: open, staleTime: 1000 * 60 * 60 });
+  // Marka listesi form açılırken çekilir; anında uyarı için. Gerçek engelleme RPC'de.
+  const brandsQuery = useQuery({ queryKey: ["cadde", "protected-brands"], queryFn: listCaddeProtectedBrands, enabled: open, staleTime: 1000 * 60 * 60 });
+
   const countriesQuery = useQuery({ queryKey: caddeQueryKeys.countries(), queryFn: listCaddeCountries, enabled: open });
   const citiesQuery = useQuery({
     queryKey: caddeQueryKeys.cities(form.country ? [form.country] : []),
@@ -70,10 +74,15 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
   const update = <K extends keyof typeof emptyForm>(key: K, value: (typeof emptyForm)[K]) =>
     setForm((current) => ({ ...current, [key]: value }));
 
+  // Kullanıcı yazarken uyar; engelleme DB'de (create_cadde_cafe_v1 → cadde_cafe_brand_protected).
+  const brandConflict = checkBrandConflict(form.title, brandsQuery.data ?? []);
+  const parodySuggestion = brandConflict ? suggestParodyCafeName(form.title) : null;
+
   const createMutation = useMutation({
     mutationFn: async () => {
       const moderation = moderateCaddeCafeName(form.title);
       if (!moderation.ok) throw new Error(moderation.reason);
+      if (!form.theme) throw new Error("Tema seç.");
       const starts = new Date();
       const ends = new Date(starts.getTime() + form.durationHours * 60 * 60 * 1000);
       return createCaddeCafe({
@@ -123,17 +132,32 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
         <div className="space-y-4">
           <div className="space-y-2">
             <Label>Cafe adı *</Label>
-            <Input value={form.title} onChange={(event) => update("title", event.target.value)} placeholder="Örn. Berlin IT Sohbeti" maxLength={80} />
+            <Input value={form.title} onChange={(event) => update("title", event.target.value)} placeholder="Örn. Berlin Yazılım Sohbeti" maxLength={80} />
+            {brandConflict && parodySuggestion ? (
+              <div className="rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-900">
+                <p>
+                  <strong>{brandConflict}</strong> korumalı bir marka. Bu adla cafe açmak yalnız markanın
+                  doğrulanmış sahibine açık.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => update("title", parodySuggestion)}
+                  className="mt-1.5 font-semibold underline underline-offset-2 hover:no-underline"
+                >
+                  "{parodySuggestion}" adını kullan
+                </button>
+              </div>
+            ) : null}
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>Tema *</Label>
-              <Select value={form.theme} onValueChange={(value) => update("theme", value)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+              <Select value={form.theme || undefined} onValueChange={(value) => update("theme", value)}>
+                <SelectTrigger><SelectValue placeholder="Tema seç" /></SelectTrigger>
                 <SelectContent>
-                  {THEME_SUGGESTIONS.map((theme) => (
-                    <SelectItem key={theme} value={theme}>{theme}</SelectItem>
+                  {(themesQuery.data ?? []).map((theme) => (
+                    <SelectItem key={theme.key} value={theme.key}>{theme.labelTr}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

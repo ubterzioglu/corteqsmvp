@@ -3,7 +3,9 @@
 
 import { z } from "zod";
 
-export const CADDE_CAFE_CAPACITY_OPTIONS = [10, 25, 50] as const;
+// Kontenjan seçenekleri (V1: 10/25/50 → 50/100/250/500/999). RPC herhangi bir int ≥ 1
+// kabul ediyor; buradaki liste yalnız UI seçicisini ve ilk hat doğrulamayı belirler.
+export const CADDE_CAFE_CAPACITY_OPTIONS = [50, 100, 250, 500, 999] as const;
 
 export const caddeFilterSchema = z.object({
   mode: z.enum(["demo", "real"]),
@@ -89,7 +91,7 @@ const caddeCafeCapacitySchema = z
   .int()
   .refine(
     (value) => CADDE_CAFE_CAPACITY_OPTIONS.includes(value as (typeof CADDE_CAFE_CAPACITY_OPTIONS)[number]),
-    "Kapasite 10, 25 veya 50 olmalı.",
+    `Kapasite şu değerlerden biri olmalı: ${CADDE_CAFE_CAPACITY_OPTIONS.join(", ")}.`,
   );
 
 export const caddeCafeCreateSchema = z

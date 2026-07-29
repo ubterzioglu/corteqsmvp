@@ -24,6 +24,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/cadde/promotions",
   "/admin/cadde/moderation",
   "/admin/cadde/carsi",
+  "/admin/cadde/markalar",
   "/admin/cadde/rehber",
   "/admin/advisors",
   "/admin/advisors/:profile",
