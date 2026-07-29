@@ -14,6 +14,18 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260729-form-basvuru-maili-gitmiyormus",
+    date: "29 Temmuz 2026",
+    title: "Sessiz arıza yakalandı: siteden gelen form başvurularının bildirim maili bir süredir hiç gönderilmiyormuş",
+    items: [
+      "Bildirim sistemini kurarken tesadüfen ortaya çıktı. Mail gönderen servislerimizin çalışabilmesi için mail sağlayıcımızın anahtarının 'sunucu tarafına' ayrıca tanımlanmış olması gerekiyor. Kontrol edildi: bu anahtar orada hiç yokmuş.",
+      "Sonucu şu: /form sayfasından biri başvuru yaptığında bize gelmesi gereken 'yeni başvuru var' maili gönderilmiyormuş. Üstelik sistem hata da vermiyormuş — başvuruyu sessizce kaydedip 'tamam' diyormuş. Bu yüzden bugüne kadar kimse fark etmemiş.",
+      "ÖNEMLİ: Başvurular KAYBOLMADI. Hepsi veritabanında duruyor ve admin panelinden görülebiliyor; eksik olan yalnızca 'yeni başvuru geldi' uyarı maili.",
+      "Eksik anahtarlar bugün tanımlandı. Yeni bildirim sistemi artık sağlıklı çalışıyor, ancak form başvuru mailinin de düzeldiği bir test başvurusuyla henüz DOĞRULANMADI — sıradaki iş bu.",
+      "Ne kadar süredir gitmediği de bilinmiyor. Geçmiş başvuruların kayıtlarına bakılarak çıkarılabilir.",
+    ],
+  },
+  {
     id: "20260729-bildirim-e-postalari",
     date: "29 Temmuz 2026",
     title: "Yeni üye kaydı da artık mail olarak gelebiliyor — ve iki bildirimi de panelden açıp kapatabiliyorsun",
@@ -24,7 +36,31 @@ export const ADMIN_UPDATES: AdminUpdateEntry[] = [
       "Kısayol: üst çubuktaki zarf ikonundan dört anahtarın hepsine her admin sayfasından tek tıkla ulaşabilirsin — ayarlar sayfasına gitmene gerek yok. İkonun köşesinde yeşil nokta varsa o an gerçekten mail alıyorsun demektir.",
       "Kimin mail alacağı artık koddan değil, herkesin kendi tercihinden belirleniyor. Yetkisi alınan bir yönetici, tercihi açık kalsa bile mail almayı otomatik olarak durduruyor.",
       "Güvenlik notu: genel anahtarların ikisi de KAPALI başlıyor. Bildirimler ancak bir admin bu sayfadan anahtarı açtıktan sonra akmaya başlar.",
-      "Durum: kod ve veritabanı değişikliği hazır, testleri yazıldı. Veritabanı değişikliği canlıya HENÜZ UYGULANMADI ve mail gönderen servis yayına alınmadı — sayfa şu an panelde çalışmaz. Sıradaki adımlar devir notunda.",
+      "Durum: veritabanı değişikliği canlıya UYGULANDI, mail gönderen servis yayına alındı ve uçtan uca test edildi — çalıştığı doğrulandı. Kod da ana koda alındı. Geriye yalnız sitenin yeni sürümünün yayınlanması (deploy) kaldı; ondan sonra sayfa ve üst çubuktaki zarf ikonu panelde görünür olacak.",
+      "Güvenlik gereği iki genel anahtar da KAPALI durumda duruyor. Yani deploy sonrası sen açana kadar kimseye tek bir mail bile gitmiyor.",
+    ],
+  },
+  {
+    id: "20260729-tasinma-araci-sonuc-butonlari",
+    date: "29 Temmuz 2026",
+    title: "Taşınma araçlarının sonuç ekranındaki butonlar düzeltildi: eşit boyutlu 2×2 ızgara + çalışmayanlara 'Yakında' rozeti",
+    items: [
+      "Bir aracı çözüp sonuç ekranına geldiğinde alttaki yönlendirme butonları farklı farklı boyutlardaydı; etiketi uzun olan buton kocaman, kısa olan minicik görünüyordu. Artık hepsi 2 sütunlu bir ızgarada, birbirine eşit genişlik ve yükseklikte duruyor — en uzun etiket hepsini birlikte büyütüyor.",
+      "Daha önemlisi: bu butonların bir kısmı aslında var olmayan sayfalara götürüyordu, yani tıklayan kullanıcı boş ekranla karşılaşıyordu. Şimdi bunlar 'Yakında' rozetiyle ve tıklanamaz halde gösteriliyor — kullanıcı neyin hazır olmadığını görüyor, hataya düşmüyor.",
+      "Sonuç ekranına ayrıca 'Tekrar Çöz' butonu eklendi; o her zaman aktif ve rozetsiz.",
+      "Hedef sayfalar yayına girdiğinde tek yapılacak iş rozetleri kaldırmak — buton düzeni hazır bekliyor.",
+      "Durum: bu iş henüz ana koda alınmadı, geliştirici bilgisayarında duruyor.",
+    ],
+  },
+  {
+    id: "20260729-sosyal-paylasim-migration-hatasi",
+    date: "29 Temmuz 2026",
+    title: "Sosyal paylaşım deposunda 'sütun bulunamadı' hatası çözüldü — sebebi kayıp bir kurulum kaydıydı",
+    items: [
+      "Sosyal paylaşım deposuna ait bir veritabanı güncellemesi canlıda zaten tam olarak uygulanmıştı, ama sistemin 'hangi güncellemeler yapıldı' defterine işlenmemişti. Yani iş bitmişti, kaydı tutulmamıştı.",
+      "Bu yüzden güncelleme yapılmamış sanılıp elle tekrar çalıştırıldı ve hata verdi: silinmiş bir sütunu arıyordu. Ekranda 'column item_tab does not exist' yazıyordu.",
+      "Düzeltme: güncelleme dosyası artık önce 'bu adım daha önce yapılmış mı' diye kontrol ediyor, yapılmışsa atlıyor. Yani ikinci kez çalıştırılsa bile hata vermiyor. Eksik defter kaydı da canlıya elle eklendi.",
+      "Bilinmesi gereken kural: bir tablo ya da sütunun canlıda var olması, o güncellemenin deftere işlendiği anlamına gelmiyor. İkisi ayrı ayrı kontrol edilmeli.",
     ],
   },
   {
