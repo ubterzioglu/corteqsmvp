@@ -1,5 +1,16 @@
 # DEVİR — 30 Temmuz 2026
 
+> ## 🔄 FAZ GEÇİŞİ (30 Tem akşam, kullanıcı kararı): BACKEND KAPANDI → SIRA FRONTEND'DE
+> 25 batch'lik planın otonom yapılabilir tamamı + günlük özet maili rollout'u bitti; canlı DB,
+> Edge Function'lar ve mail hattı üretimde doğrulanmış durumda. Bundan sonraki çalışma
+> **frontend** odaklı: birincil iş listesi **Cadde redesign = workshop panosunun 48 maddesi**
+> (`/admin/workshop/cadde` + kaynak transkript `docs/cadde-300/caddeworkshdp.md`).
+> Verilmiş tasarım kararları: m42 featured=MANUEL · m20 emoji seti=NEGATİFSİZ ·
+> tepkiler doğrudan açık (m19) · Çarşı linki gizlenecek (m39-40). Açık: m3 kafe ikonu.
+> Redesign öncesi durum `cadde-pre-workshop-freeze` branch'inde donduruldu.
+> Kullanıcıda kalanlar: QA turu · örnek hoş geldin maili + anahtar · yarın 18:00-18:15
+> Berlin ilk otomatik özetin gözlenmesi.
+
 > Yeni oturuma devir dökümanı. **Bu dosya tek kaynaktır**; 29 Temmuz kapanış notu, referral planı
 > ve revizyon panosu planı burada birleştirildi.
 > Detaylı tasarımlar için: [referral planı](docs/plans/2026-07-29-profil-referral-dogrulama-admin-kullanim.md) ·
