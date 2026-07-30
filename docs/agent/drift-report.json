@@ -10,7 +10,7 @@
     {
       "rule": "supabase-js-version-drift",
       "severity": "medium",
-      "message": "@supabase/supabase-js frontend ^2.101.1 iken edge.find_matches, edge.lansman_admin, edge.relocation_notifications, edge.send_submission_email, edge.submit_survey_response 2.45.4 pinli (minor farkı 56). SDK davranış/type drift riski.",
+      "message": "@supabase/supabase-js frontend ^2.101.1 iken edge.find_matches, edge.lansman_admin, edge.relocation_notifications, edge.send_notification_emails, edge.send_submission_email, edge.submit_survey_response 2.45.4 pinli (minor farkı 56). SDK davranış/type drift riski.",
       "evidence": [
         {
           "path": "package.json"
@@ -23,6 +23,9 @@
         },
         {
           "path": "edge.relocation_notifications"
+        },
+        {
+          "path": "edge.send_notification_emails"
         },
         {
           "path": "edge.send_submission_email"

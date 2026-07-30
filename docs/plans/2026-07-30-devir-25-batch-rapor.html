@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CorteQS Yol Haritası — 25 Batch Devir Planı (30 Temmuz 2026)</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --card: #181b22;
+    --card2: #1e222b;
+    --text: #e8eaf0;
+    --muted: #9aa3b2;
+    --accent: #aa8c42;
+    --green: #34c98e;
+    --red: #e5654f;
+    --amber: #e0a83a;
+    --blue: #5ba3e0;
+    --border: #2a2f3a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 40px 20px;
+    background: var(--bg); color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.65;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  header {
+    background: radial-gradient(ellipse at top left, rgba(170,140,66,.25), transparent 60%), var(--card);
+    border: 1px solid var(--border); border-radius: 16px;
+    padding: 32px 36px; margin-bottom: 26px;
+  }
+  header h1 { margin: 0 0 6px; font-size: 26px; }
+  header .sub { color: var(--muted); font-size: 14px; }
+  .pill {
+    display: inline-block; padding: 3px 12px; border-radius: 999px;
+    font-size: 12px; font-weight: 600; margin: 2px 4px 2px 0;
+    border: 1px solid var(--border); background: var(--card2);
+  }
+  .pill.green { color: var(--green); border-color: rgba(52,201,142,.4); }
+  .pill.amber { color: var(--amber); border-color: rgba(224,168,58,.4); }
+  .pill.red   { color: var(--red);   border-color: rgba(229,101,79,.45); }
+  .pill.blue  { color: var(--blue);  border-color: rgba(91,163,224,.4); }
+  .toc { margin-top: 14px; font-size: 13px; }
+  .toc a {
+    display: inline-block; margin: 3px 8px 3px 0; padding: 5px 14px;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--card2); color: var(--blue); text-decoration: none; font-weight: 600;
+  }
+  .toc a:hover { border-color: var(--blue); }
+  section {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 26px 30px; margin-bottom: 22px;
+  }
+  h2 { font-size: 19px; margin: 0 0 14px; color: var(--accent); }
+  h3 { font-size: 15px; margin: 22px 0 8px; }
+  p, li, td, th { font-size: 14px; color: var(--text); }
+  .muted { color: var(--muted); }
+  code {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 5px; padding: 1px 6px; font-size: 12.5px;
+    font-family: Consolas, "Courier New", monospace; color: #d8c89a;
+  }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 12px; margin: 4px 0 6px; }
+  .kpi { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .kpi .n { font-size: 24px; font-weight: 700; line-height: 1.2; }
+  .kpi .l { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .kpi.green .n { color: var(--green); } .kpi.red .n { color: var(--red); }
+  .kpi.amber .n { color: var(--amber); } .kpi.blue .n { color: var(--blue); }
+  .callout {
+    border-left: 3px solid var(--red); background: rgba(229,101,79,.08);
+    border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 16px 0;
+  }
+  .callout.amber { border-left-color: var(--amber); background: rgba(224,168,58,.08); }
+  .callout.green { border-left-color: var(--green); background: rgba(52,201,142,.08); }
+  .callout.blue  { border-left-color: var(--blue);  background: rgba(91,163,224,.08); }
+  .callout strong { color: var(--text); }
+  .tablewrap { overflow-x: auto; margin: 10px 0 4px; }
+  table { width: 100%; border-collapse: collapse; min-width: 620px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; font-weight: 600; }
+  tbody tr:hover { background: rgba(255,255,255,.02); }
+  td.id { font-family: Consolas, monospace; color: var(--accent); font-weight: 700; white-space: nowrap; }
+  .grp { background: var(--card2); }
+  .grp td { font-weight: 700; color: var(--accent); font-size: 13px; letter-spacing: .02em; }
+  .st { font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap;
+        border: 1px solid var(--border); background: var(--bg); }
+  .st.done { color: var(--green); border-color: rgba(52,201,142,.45); }
+  .st.sql  { color: var(--amber); border-color: rgba(224,168,58,.45); }
+  .st.code { color: var(--blue);  border-color: rgba(91,163,224,.45); }
+  .st.ops  { color: var(--red);   border-color: rgba(229,101,79,.45); }
+  ul { margin: 8px 0 4px; padding-left: 22px; }
+  li { margin-bottom: 5px; }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+  footer { color: var(--muted); font-size: 12.5px; text-align: center; padding: 10px 0 30px; }
+  @media print {
+    body { background: #fff; color: #111; padding: 0; }
+    section, header, .kpi { border-color: #ccc; background: #fff; break-inside: avoid; }
+    h2, .part-head h2, td.id { color: #7a6220; }
+    .toc, footer { display: none; }
+    p, li, td, th { color: #111; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>CorteQS — 25 Batch Devir Planı</h1>
+  <div class="sub">30 Temmuz 2026 · toplantı raporu · kaynak: <code>SONDURUM.md</code> + iki yol haritası</div>
+  <div style="margin-top:12px">
+    <span class="pill green">Kod tarafı sağlıklı: 1236 test geçiyor</span>
+    <span class="pill red">4 iş canlıya çıkmadı</span>
+    <span class="pill amber">3 migration bekliyor</span>
+    <span class="pill blue">25 batch planlandı</span>
+  </div>
+  <div class="toc">
+    <a href="#ozet">Yönetici özeti</a>
+    <a href="#kararlar">Toplantıda karar bekleyen</a>
+    <a href="#bulgular">3 kritik bulgu</a>
+    <a href="#batch">25 batch</a>
+    <a href="#park">Park listesi</a>
+    <a href="#risk">Riskler</a>
+  </div>
+</header>
+
+<section id="ozet">
+  <h2>Yönetici özeti</h2>
+  <div class="kpis">
+    <div class="kpi green"><div class="n">1236</div><div class="l">geçen test (178 dosya)</div></div>
+    <div class="kpi green"><div class="n">0</div><div class="l">tip / lint hatası</div></div>
+    <div class="kpi red"><div class="n">4</div><div class="l">deploy kuyruğunda iş</div></div>
+    <div class="kpi amber"><div class="n">3</div><div class="l">bekleyen migration</div></div>
+    <div class="kpi blue"><div class="n">25</div><div class="l">planlanan batch</div></div>
+    <div class="kpi amber"><div class="n">14</div><div class="l">bitmiş ama "açık" görünen madde</div></div>
+  </div>
+
+  <p><strong>Tek cümlelik durum:</strong> kod tarafı sağlıklı ve tam yeşil; sorun <em>teslimde</em> —
+  son iki günün işi (Cadde V1, bildirim altyapısı, hoş geldin maili, bugünün admin işleri)
+  <strong>ana koda alındı ama canlıya çıkmadı</strong>. Bu yüzden dışarıdan bakan biri hiçbirini göremiyor.</p>
+
+  <div class="callout">
+    <strong>Toplantının ana mesajı:</strong> yeni özellik geliştirmek değil, <em>biriken teslimi kapatmak</em>
+    en yüksek getirili iş. Deploy edilmediği için: (1) tamamlanan 14 revizyon maddesi listede hâlâ "açık"
+    görünüyor, (2) hoş geldin maili hiç kimseye gitmiyor, (3) Cadde V1'in beş kalemi gerçek cihazda
+    hiç doğrulanamadı.
+  </div>
+
+  <div class="callout green">
+    <strong>Bu oturumda kapatılanlar:</strong> Muhasebe menüsüne <strong>Bütçe</strong> sekmesi bağlandı
+    (sayfa iki gündür hazırdı ama menüde bağlantısı yoktu — adresi elle yazmayan ulaşamıyordu) ·
+    durum raporu sayfası kopya listeden kurtarılıp tek kaynağa bağlandı (−317 satır) ·
+    8 durum-raporu kaydı yazıldı · üç doküman tek devir planına indirildi.
+  </div>
+</section>
+
+<section id="kararlar">
+  <h2>Toplantıda karar bekleyen 4 başlık</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Konu</th><th>Karar gereken</th><th>Bağlam</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Deploy penceresi</strong></td>
+        <td>Coolify deploy'u bugün mü, yoksa referral işi bitince tek seferde mi?</td>
+        <td>Kuyrukta 4 iş var. Tek seferde çıkmak riski yoğunlaştırır; bugün çıkmak 14 maddeyi
+            "yapıldı"ya çevirmeyi mümkün kılar.</td>
+      </tr>
+      <tr>
+        <td><strong>Hoş geldin maili anahtarı</strong></td>
+        <td>Genel anahtar ne zaman açılacak?</td>
+        <td>⚠️ Anahtar açılmadan kaydolan üyeler bu maili <strong>hiç</strong> almaz — o sırada kuyruğa
+            düşen kayıtlar "atlandı" işaretlenir ve <strong>bir daha denenmez</strong>. Yani gecikme
+            geri alınamaz bir kayıp.</td>
+      </tr>
+      <tr>
+        <td><strong>Çarşı ücretli mod</strong></td>
+        <td>Stripe akışı olmadan açılmayacak — teyit.</td>
+        <td>Altyapı kurulu ve <strong>kapalı</strong>. Tek başına açılırsa ilanlar taslakta kalır ve
+            kullanıcı ilanını hiçbir şekilde yayınlayamaz.</td>
+      </tr>
+      <tr>
+        <td><strong>Muhasebe ▸ Bütçe Ö6</strong></td>
+        <td>Panonun en yüksek öncelikli maddesi bu 25 batch'e alınsın mı?</td>
+        <td>Geçmiş gider çekme + kur çevirme + fiş/faturadan OCR. Ayrı spec gerektiriyor; şu an
+            park listesinde.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="muted">Ayrıca ~16 madde "tasarım planı nedir / konuşalım" diyor ve ürün kararı bekliyor
+  (aşağıdaki park listesi). Bunlar koda dokunmadan bekliyor.</p>
+</section>
+
+<section id="bulgular">
+  <h2>Araştırmada çıkan 3 kritik bulgu</h2>
+  <p class="muted">Üçü de canlı veritabanı ve kod okumasıyla doğrulandı — tahmin değil.</p>
+
+  <h3>1 · Profildeki referral kodu alanı çalışmıyor, dahası tüm kaydı çökertiyor</h3>
+  <ul>
+    <li>Haziran'daki yetki sistemi yenilenmesi, profil kaydetme fonksiyonundaki referral mantığını
+        <strong>kaybetmiş</strong>. Sonuç: alan yetki hatasıyla kaydedilemiyor.</li>
+    <li>Daha kötüsü: üye "Rolüne Özel Alanları Kaydet" dediğinde döngü <strong>ilk hatada kopuyor</strong>
+        — sıradaki alanlar da kaydedilmiyor. Yani bir bozuk alan, sağlam alanları da götürüyor.</li>
+    <li>Yönetici panelindeki "Kullanımlar" listesi de boş: tablonun yetki kuralı hiç yok, panel
+        403 alıyor ve <strong>hatayı sessizce yutuyor</strong>.</li>
+    <li>Ölçüm: 36 profilde referral değeri var, 35'i gerçek bir koda karşılık geliyor — hiçbiri
+        kullanım kaydına düşmemiş.</li>
+  </ul>
+
+  <h3>2 · Revizyon panosu gerçeğin gerisinde: 43 "açık" maddenin 14'ü bitmiş</h3>
+  <ul>
+    <li>Canlı sayım: 53 madde · 43 açık · 6 yapıldı · 4 iptal.</li>
+    <li>19 Temmuz'da yapılan triyaj bu maddeleri "hâlâ geçerli" işaretlemiş; ardından 29–30 Temmuz'daki
+        Cadde çalışmaları tam bu maddeleri teslim etmiş — <strong>ama panoya dönülmemiş</strong>.</li>
+    <li>Kapasite seçenekleri, temalar, marka koruması, Çarşı foto/video, tek kutulu paylaşım,
+        etiketleme, Cafeler başlığı, geri bildirim bağlantısı, saat çipleri, şehir filtresi.</li>
+    <li>Planlanan çözüm: her maddeye <em>hangi çalışmanın karşıladığı</em> kanıtıyla yazılır ve durum
+        <strong>"yapıldı" değil "inceleniyor"</strong> yapılır — çünkü canlıya çıkmadı, pano olduğundan
+        iyi görünmemeli.</li>
+  </ul>
+
+  <h3>3 · Araçlar modülünde sonuç ekranındaki CTA'ların <em>tamamı</em> tıklanamaz</h3>
+  <ul>
+    <li>Pano "CTA linklerinden ikisi çalışmıyor" diyor. Gerçek durum daha kötü: butonlar
+        <strong>sabit kodlu olarak pasif</strong> ve hiçbir yönlendirme bağlı değil — 3'ünün hiçbiri çalışmıyor.</li>
+    <li>Ayrıca iki bağlantı var olmayan bir adrese gidiyor (<code>/relocation/tools/…</code> rotası hiç yok).</li>
+    <li>"UK'de şehir bulunamadı" şikâyetinin gerçek kök nedeni ayrı: şehir tablosunda
+        <strong>dünya genelinde 2 kayıt</strong> var (1 Almanya, 1 Hollanda). Meslek tablosunda 5 kayıt.
+        Yani araç doğru çalışıyor, veri yok.</li>
+    <li>Sürpriz nokta: Araçlar modülünün soruları ve yönlendirmeleri koda değil <strong>veritabanına</strong>
+        gömülü — düzeltmelerin çoğu SQL tarafında.</li>
+  </ul>
+
+  <div class="callout amber">
+    <strong>Bir de geri dönmüş hata bulundu:</strong> daha önce düzeltilmiş bir adres hatası
+    (<code>yurtdisi-is-bulma-olasiligi</code>) sonraki bir veri güncellemesiyle <strong>geri gelmiş</strong>.
+    Aynı dosyaya dokunan her değişiklik aynı riski taşıyor — önceki düzeltmeler okunmadan
+    elle değiştirilmemeli.
+  </div>
+</section>
+
+<section id="batch">
+  <h2>25 batch — sıra, tür ve bağımlılık</h2>
+  <p class="muted">Her batch tek oturumda bitecek büyüklükte ve kendi bitti-kriteri var.
+  Sıra bağımlılığa göre; <span class="st sql">SQL</span> canlı veritabanına yazar,
+  <span class="st code">KOD</span> repo değişikliği, <span class="st ops">OPS</span> deploy/işletim.</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th style="width:56px">#</th><th>İş</th><th style="width:78px">Tür</th><th style="width:96px">Bağımlı</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="4">GRUP A — Temizlik + housekeeping (kilidi açar)</td></tr>
+      <tr><td class="id">B01</td><td>Commit'lenmemiş 4 admin-shell dosyasını commit'le + push (8 durum kaydı, Bütçe menüsü, −317 satır tekilleştirme)</td><td><span class="st done">BİTTİ</span></td><td class="muted">—</td></tr>
+      <tr><td class="id">B02</td><td>Devir dökümanı + 2 yol haritası + bu rapor commit'lensin</td><td><span class="st code">KOD</span></td><td>B01</td></tr>
+      <tr><td class="id">B03</td><td>Bütçe migration'ını <code>applied/</code>'a taşı (canlıda var, kayıtlı)</td><td><span class="st code">KOD</span></td><td>B02</td></tr>
+      <tr><td class="id">B04</td><td>Bildirim migration'ının eksik geçmiş kaydını ekle + taşı</td><td><span class="st sql">SQL</span></td><td>B03</td></tr>
+
+      <tr class="grp"><td colspan="4">GRUP B — Hoş geldin maili canlıya (kod hazır, canlı boş)</td></tr>
+      <tr><td class="id">B05</td><td>Hoş geldin maili migration'ını canlıya uygula</td><td><span class="st sql">SQL</span></td><td>B04</td></tr>
+      <tr><td class="id">B06</td><td>Edge Function deploy + mail anahtarlarının fonksiyon ortamında olduğunu doğrula</td><td><span class="st ops">OPS</span></td><td>B05</td></tr>
+      <tr><td class="id">B07</td><td>Uçtan uca tek mail testi (gerçek gelen kutusu) + genel anahtarı aç</td><td><span class="st ops">OPS</span></td><td>B06</td></tr>
+
+      <tr class="grp"><td colspan="4">GRUP C — Profil referral doğrulama + yönetici görünürlüğü (1. iş)</td></tr>
+      <tr><td class="id">B08</td><td>Kullanım tablosu şeması + eksik yetki kurallarının onarımı</td><td><span class="st sql">SQL</span></td><td>B02</td></tr>
+      <tr><td class="id">B09</td><td>Profil kaydetme fonksiyonuna doğrulama + kilit mantığını geri koy</td><td><span class="st sql">SQL</span></td><td>B08</td></tr>
+      <tr><td class="id">B10</td><td>Geçmiş 35 kaydın backfill'i + sayaçların yeniden hesabı (ön koşul assert'li)</td><td><span class="st sql">SQL</span></td><td>B09</td></tr>
+      <tr><td class="id">B11</td><td>API katmanı: mevcut doğrulayıcıyı yeniden kullan + kilit durumu okuma</td><td><span class="st code">KOD</span></td><td>B10</td></tr>
+      <tr><td class="id">B12</td><td>Profil ekranı: kilitli alan gösterimi + <strong>kaydetme döngüsünü hata-toleranslı yap</strong></td><td><span class="st code">KOD</span></td><td>B11</td></tr>
+      <tr><td class="id">B13</td><td>Yönetici panelinde kullanım listesi + hata yutmayı bitir</td><td><span class="st code">KOD</span></td><td>B11</td></tr>
+      <tr><td class="id">B14</td><td>Tipler + testler (geçerli / geçersiz / kilitli senaryoları)</td><td><span class="st code">KOD</span></td><td>B12·B13</td></tr>
+
+      <tr class="grp"><td colspan="4">GRUP D — Revizyon panosu mutabakatı</td></tr>
+      <tr><td class="id">B15</td><td>14 maddeyi kanıt yorumuyla "inceleniyor"a çek (tek SQL geçişi, önce kuru koşu)</td><td><span class="st sql">SQL</span></td><td>B02</td></tr>
+      <tr><td class="id">B16</td><td>"Muhtemelen bitmiş" 3 maddeyi gerçek cihazda doğrula (tahminle dokunulmaz)</td><td><span class="st ops">OPS</span></td><td>B15</td></tr>
+
+      <tr class="grp"><td colspan="4">GRUP E — Araçlar modülü: veri düzeltmeleri</td></tr>
+      <tr><td class="id">B17</td><td>Kırık yönlendirme adresleri + geri gelmiş adres hatası</td><td><span class="st sql">SQL</span></td><td>B15</td></tr>
+      <tr><td class="id">B18</td><td>Meslek listesini genişlet (bugün 5 kayıt)</td><td><span class="st sql">SQL</span></td><td>B17</td></tr>
+      <tr><td class="id">B19</td><td>Şehir listesini genişlet (bugün 2 kayıt — "UK'de şehir yok"un kök nedeni)</td><td><span class="st sql">SQL</span></td><td>B17</td></tr>
+      <tr><td class="id">B20</td><td>Dizin aramasından yönetici hesaplarını çıkar</td><td><span class="st sql">SQL</span></td><td>B17</td></tr>
+
+      <tr class="grp"><td colspan="4">GRUP F — Araçlar + Cadde: arayüz düzeltmeleri</td></tr>
+      <tr><td class="id">B21</td><td>Sonuç ekranındaki CTA'ları gerçekten çalıştır (+ testi güncelle)</td><td><span class="st code">KOD</span></td><td>B17</td></tr>
+      <tr><td class="id">B22</td><td>Test sonucuna geri dönüş (rota ve kalıcı kayıt zaten var — düşük maliyet)</td><td><span class="st code">KOD</span></td><td>B21</td></tr>
+      <tr><td class="id">B23</td><td>Şehir eşleşmesi boşsa en yakın N şehri göster</td><td><span class="st code">KOD</span></td><td>B19·B21</td></tr>
+      <tr><td class="id">B24</td><td>Cadde destek/like üzerine gelince liste (hazır bileşen, yeni bağımlılık yok)</td><td><span class="st code">KOD</span></td><td>B15</td></tr>
+
+      <tr class="grp"><td colspan="4">GRUP G — Yayına alma</td></tr>
+      <tr><td class="id">B25</td><td>Coolify deploy + sürüm doğrulaması + gerçek cihaz QA (Cadde V1'in 5 doğrulanmamış kalemi)</td><td><span class="st ops">OPS</span></td><td>B07·B14·B24</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout blue">
+    <strong>Paralelleştirme:</strong> Grup C (referral) ile Grup D–F (pano + Araçlar) birbirinden
+    bağımsız — B02'den sonra ikisi aynı anda yürüyebilir. Grup B (mail) de bağımsız.
+    Tek gerçek darboğaz B25: üçünün de bitmesini bekliyor.
+  </div>
+</section>
+
+<section id="park">
+  <h2>Bilinçli park edilenler</h2>
+  <div class="two">
+    <div>
+      <h3>Ürün kararı bekleyen (~16 madde)</h3>
+      <p class="muted">"Tasarım planı nedir / konuşalım" diyen maddeler — koda dokunulmuyor:</p>
+      <ul>
+        <li>Kullanıcı paneli tasarımı · kategori kart gösterimi</li>
+        <li>RADAR: ikinci el ilan fikri · item metinleri</li>
+        <li>CADDE: mascot billboard · "excel gibi duruyor" estetiği</li>
+        <li>Relokasyon "Yakında" bandı · haritada daha çok nod</li>
+        <li>Haberler ülke/şehir filtresi · aramada diaspora vs diaspora+TR ayrımı</li>
+      </ul>
+      <p class="muted">Yeri saptanamayan 2 madde tahminle düzeltilmeyecek: PROFİL yazım hataları ·
+      RADAR "Experimental kalmış" (public radar kodunda böyle bir metin yok).</p>
+    </div>
+    <div>
+      <h3>Ayrı spec gerektiren büyük iş (~7 madde)</h3>
+      <ul>
+        <li><strong>Muhasebe ▸ Bütçe Ö6</strong> — geçmiş gider çekme + kur çevirme + fiş/faturadan OCR</li>
+        <li>Billboard / sponsorlu talep formu</li>
+        <li>Hizmet sağlayıcı teklif havuzu (marketplace)</li>
+        <li>Test sonucunu profile kaydetme</li>
+        <li>Görselli renkli grafikler · ISO ülke-şehir drill-down</li>
+      </ul>
+      <h3>Cadde Faz 2/3</h3>
+      <p class="muted">Event · takip · moderasyon · bildirim genişletmesi · AI akış · presence ·
+      köprü · trust · Stripe. Plan var, kod yok.</p>
+    </div>
+  </div>
+</section>
+
+<section id="risk">
+  <h2>Riskler ve sınırlar</h2>
+  <ul>
+    <li><strong>Deploy boşluğu:</strong> bu planın Grup A–F çıktısı canlıda görünmeyecek. Bu yüzden
+        pano maddeleri "yapıldı" değil "inceleniyor" olarak kapatılıyor; deploy sonrası çevrilecek.</li>
+    <li><strong>Canlı veritabanına yazan 9 batch var.</strong> Kural: her adım önce geri-alınan bir
+        kuru koşuyla denenir, sonra tek işlem olarak uygulanır.</li>
+    <li><strong>Geri gelen düzeltme riski:</strong> Araçlar verisini tutan büyük migration daha önce
+        bir düzeltmeyi geri almış. Bu dosyaya dokunan her değişiklik önceki düzeltmeler okunmadan yapılmamalı.</li>
+    <li><strong>Migration geçmişi ≠ canlı şema:</strong> tablonun var olması, kaydının da olduğu anlamına
+        gelmiyor — bugün 2 dosyada tam bu tutarsızlık bulundu.</li>
+    <li><strong>Durum-raporu maili:</strong> otomatik gönderim yalnız en üstteki kaydı yolluyor;
+        aynı güne çok kayıt girildiğinde birleşik mail elle gönderilmeli.</li>
+    <li><strong>Gerçek cihaz QA borcu:</strong> Cadde V1'de dosya yükleme, mention bildiriminin gerçekten
+        gitmesi, F5 sonrası konum, saat çiplerinin dakika geçişi ve marka sahipliğiyle cafe açma
+        hiç doğrulanmadı.</li>
+  </ul>
+</section>
+
+<footer>
+  CorteQS · 30 Temmuz 2026 · <code>docs/plans/2026-07-30-devir-25-batch-rapor.html</code><br />
+  Kaynak dokümanlar: <code>SONDURUM.md</code> ·
+  <code>docs/plans/2026-07-29-profil-referral-dogrulama-admin-kullanim.md</code> ·
+  <code>docs/plans/2026-07-30-revizyon-istekleri-pano-mutabakati.md</code>
+</footer>
+
+</div>
+</body>
+</html>
