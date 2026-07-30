@@ -186,7 +186,10 @@ geçersiz kod → `update_profile_attribute` **çağrılmıyor** / kilitli → r
 Plan: [docs/plans/2026-07-30-revizyon-istekleri-pano-mutabakati.md](docs/plans/2026-07-30-revizyon-istekleri-pano-mutabakati.md)
 Canlı: **53 madde · 43 açık · 6 yapıldı · 4 iptal · 10 yorum · 4 ek.** 43 açığın 14'ü kodda bitmiş.
 
-**B15 · 14 maddeyi kanıtla `inceleniyor`a çek** — B02 sonrası (Grup C'den bağımsız)
+**B15 · 14 maddeyi kanıtla `inceleniyor`a çek** — ✅ **YAPILDI (30 Tem)** — kuru koşu + gerçek
+uygulama birebir: `acik` 43→29, `inceleniyor` 0→14, her maddede kanıt yorumu.
+Sonrasında B17-B21 düzeltmeleriyle 4 madde daha çekildi: **güncel durum `acik` 25 · `inceleniyor` 18.**
+(Orijinal tanım aşağıda arşiv olarak durur:)
 Tek SQL geçişi: her maddeye kanıt yorumu (`revision_request_comments`) + `status='inceleniyor'`.
 Kanıt tablosu planın Faz 1 bölümünde (kapasite · temalar · marka koruması · Çarşı foto/video ·
 composer · hashtag/mention · Cafe'ler başlığı · `/feedback` linki · saat çipleri · scroll · şehir
@@ -204,7 +207,10 @@ zaten `text-balance` + `clamp` ("'Ol' tek başına kalmış") · ABD şehir kaps
 
 Beklentiden farklı nokta: **Araçlar modülünün soruları ve CTA'ları koda değil DB'ye gömülü.**
 
-**B17 · Kırık CTA href'leri + slug regresyonu** — B15 sonrası
+**B17 · Kırık CTA href'leri + slug regresyonu** — ✅ **YAPILDI (30 Tem, mig `20260730200000`)**
+Sürpriz: CTA'lar tabloda değil 9 skorlama fonksiyonunun GÖVDESİNDE. Drift'siz onarım: canlı
+`pg_get_functiondef` → replace → execute. 9 fonksiyon + 7 kalıcı sonuç kaydı düzeltildi;
+son kontrol tüm `/tools/<slug>` hedeflerini canlı slug listesiyle doğruladı. (Orijinal tanım:)
 `/relocation/tools/<slug>` → `/tools/<slug>` (route `/relocation/tools/*` **hiç yok**,
 `App.tsx:169` `/tools/:toolSlug`) — `20260701120000_relocation_tools_20q_normalize.sql:723-727`.
 **Bonus:** `yurtdisi-is-bulma-olasiligi` → `is-bulma-olasiligi` (aynı dosya `:479, :2015, :2313`) —
@@ -213,42 +219,47 @@ Beklentiden farklı nokta: **Araçlar modülünün soruları ve CTA'ları koda d
 okunmadan değiştirilmemeli.
 ✅ `like '/relocation/tools/%'` → 0 satır; slug tek biçimde.
 
-**B18 · `relocation_professions` seed genişletme** — B17 sonrası
-Canlı tablo **5 kayıt** → "Meslek seçeneği az" maddesi literal doğru.
-✅ Yeni sayı raporlandı, araç formunda görünüyor.
+**B18-B19 · Meslek + şehir seed + ülke normalizasyonu** — ✅ **YAPILDI (30 Tem, mig `20260730210000`)**
+Meslek 5→**35** (soru seçenekleri artık tablodan türetiliyor — ikinci kopya listesi kalktı);
+şehir 2→**32** (GB=4, 12 ülke; endeksler küratörlü ilk tahmin). Üçüncü kök neden de bulundu:
+ülke girişi SERBEST METİN (QuestionRenderer MVP fallback) — "UK" yazınca ISO "GB" eşleşmiyordu.
+`city_match` artık yaygın yazımları ISO'ya çeviriyor (UK/İngiltere→GB, USA/ABD→US, Almanya→DE…)
+ve hedef ülkede veri yoksa boş dönmek yerine diğer şehirlere fallback yapıp durumu açıklamada
+söylüyor (B23'ün SQL yarısı da burada kapandı).
 
-**B19 · `relocation_locations` seed genişletme** — B17 sonrası
-Canlı tablo **2 kayıt** (1×DE, 1×NL) → "UK'de şehir bulunamadı" maddesinin **gerçek kök nedeni**.
-Fallback tek başına çözmez (bkz. B23).
-✅ UK dahil çoklu ülke şehir dönüyor.
-
-**B20 · `search_directory_catalog` admin/yönetici dışlaması** — B17 sonrası
-Canlı fonksiyonda **admin filtresi yok**; dizin listesi TS'ten değil bu RPC'den geliyor
-(`catalog-directory.ts:191`) → düzeltme SQL tarafında.
-✅ `/directory` aramasında yönetici hesapları görünmüyor.
+**B20 · `search_directory_catalog` admin/yönetici dışlaması** — ✅ **YAPILDI (30 Tem, mig `20260730220000`)**
+Bireysel dala `Admin_%`/`Moderator_%` rol sahiplerini dışlayan NOT EXISTS eklendi (çapa-tabanlı
+drift'siz yama, `is_admin` ile aynı desen). Not: ölçümde açık profilli yönetici 0'dı — koruma
+önleyici; orijinal vaka muhtemelen sonradan kapanmış. Deploy sonrası aramayla teyit edilmeli.
 
 ### Grup F — Faz 2B: frontend düzeltmeleri
 
-**B21 · `ResultCtaPanel` CTA'larını çalıştır** — B17 sonrası
+**B21 · `ResultCtaPanel` CTA'larını çalıştır** — ✅ **YAPILDI (30 Tem)** — "Yakında" kilidi
+kaldırıldı, 3 CTA gerçek `Link` (kilit koşulu B17 ile sağlandı); test yeni davranışı kilitliyor
+(link href'leri + rozet yokluğu + onCtaClick). (Orijinal tanım:)
 `src/components/relocation/tools/ResultCtaPanel.tsx:36`: `disabled` **sabit kodlu**, `Link`/`navigate`
 hiç yok, `onCtaClick` hiçbir çağırandan geçilmiyor → **3 CTA'nın tamamı tıklanamaz.** Pano "ikisi
 kırık" diyor, gerçek durum daha kötü. `ResultCtaPanel.test.tsx:25-48` bu davranışı kilitliyor → test de güncellenir.
 ✅ 4 CTA tıklanabilir ve doğru route'a gidiyor; test yeni beklentiyle geçiyor.
 
-**B22 · Sonuç sayfasına geri dönüş** — B21 sonrası
+**B22 · Sonuç sayfasına geri dönüş** — ✅ **YAPILDI (30 Tem)** — sonuç üretilince adres çubuğu
+kalıcı `/tools/:slug/result/:resultId` rotasına `replaceState` ile çevriliyor (CTA ile gidip
+GERİ dönünce ya da F5'te sonuç kaybolmuyor); kayıtlı sonuç sayfasına "Tekrar Çöz" eklendi.
+(Orijinal tanım:)
 Sonuç `relocation_tool_results`'ta kalıcı (`result_id`) ve `/tools/:toolSlug/result/:resultId` route'u
 **zaten var** (`App.tsx:185`, `useRelocationToolSession.ts:40`) → şema değişikliği yok, düşük maliyet.
 ✅ Dizine gidip geri dönünce sonuç kaybolmuyor.
 
-**B23 · `city_match` boş sonuç fallback'i** — **B19 + B21 sonrası**
-`ToolResultView.tsx:91-96` + SQL `relocation_score_city_match_v1` boşaltan filtre (`20q_normalize:891-893`).
-B19'daki şehir seed'iyle **birlikte** anlam kazanır.
-✅ Eşleşme yoksa en yakın N şehir gösteriliyor, boş ekran yok.
+**B23 · `city_match` boş sonuç fallback'i** — ✅ **YAPILDI (B18-B19 içinde, SQL tarafında)**
+Hedef ülkede veri yoksa fonksiyon tüm aktif şehirlere düşüyor, payload'a
+`fallback_no_target_match=true` koyuyor ve açıklama satırı durumu söylüyor — açıklamaları
+`ToolResultView` zaten render ettiği için ayrıca UI değişikliği gerekmedi. Boş ekran kalmadı.
 
-**B24 · Cadde like/destek hover-card** — B15 sonrası (bağımsız)
-`CaddePage.tsx:582-632` — popover var, hover yok; hazır `components/ui/hover-card.tsx` kullanılır,
-yeni bağımlılık gerekmiyor.
-✅ Hover'da destekleyenler görünüyor.
+**B24 · Cadde like/destek hover-card** — ⏭️ **BİLİNÇLİ YAPILMADI (workshop üst yazması)**
+30 Tem Cadde workshop kararı (panosu m19-20): "Tepki ver" yazısı kalkacak, tepki emojileri
+LinkedIn tarzı DOĞRUDAN açık duracak — popover/hover tamamen kalkıyor. Hover-card yazmak hemen
+silinecek kod olurdu. Pano maddesine (55a55bdf) üst-yazma yorumu düşüldü, statü bilinçli açık —
+çözüm cadde redesign kapsamında.
 
 ### Grup G — Yayına alma
 

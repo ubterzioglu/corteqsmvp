@@ -6,7 +6,7 @@
 // Mod seçimi (hızlı/detaylı) kaldırıldı — her araç tek modlu sabit 20 sorudan oluşur
 // (relocation_tool_questions.mode = 'both'); session RPC'si şema uyumluluğu için sabit
 // 'detailed' mode değeriyle çağrılır.
-import { Suspense, lazy, useMemo, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -60,6 +60,17 @@ export default function RelocationToolPage() {
       toast({ title: "Sonuç hesaplanamadı", description: message, variant: "destructive" }),
   });
 
+  // B22: sonuç üretilince adres çubuğu kalıcı sonuç rotasına çevrilir
+  // (/tools/:slug/result/:resultId — rota ve kayıt zaten var). Böylece CTA ile
+  // başka sayfaya gidip GERİ dönünce ya da F5'te sonuç kaybolmaz.
+  // replaceState router'ı yeniden render etmez; inline görünüm aynen sürer.
+  const resultId = session.result?.result_id ?? null;
+  useEffect(() => {
+    if (resultId && toolSlug) {
+      window.history.replaceState(window.history.state, "", `/tools/${toolSlug}/result/${resultId}`);
+    }
+  }, [resultId, toolSlug]);
+
   // Standalone araç: kendi bileşenini render et (session/landing/stepper akışını atla).
   if (StandaloneComponent) {
     return (
@@ -93,6 +104,8 @@ export default function RelocationToolPage() {
   const resetAll = () => {
     setStarted(false);
     session.reset();
+    // B22 simetrisi: sonuç URL'sinden araç köküne dön (yeni çözümün adresi kirlenmesin).
+    window.history.replaceState(window.history.state, "", `/tools/${toolSlug}`);
   };
 
   const result = session.result;
