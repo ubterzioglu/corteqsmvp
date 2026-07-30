@@ -17,12 +17,13 @@
 // Ayrıca `{"action":"preview"}` gövdesi: admin'in KENDİ adresine örnek hoş geldin maili
 // atar (kuyruğa dokunmaz). Gmail/Outlook'ta gerçek görünümü doğrulamanın tek yolu budur.
 //
-// send-submission-email deseni: Deno + esm.sh + CORS allowlist + service_role + Resend.
+// send-submission-email deseni: Deno + esm.sh + CORS allowlist + service_role + Zoho SMTP.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
 import { escapeHtml } from "../_shared/emails/html.ts";
 import { buildMemberWelcomeEmail } from "../_shared/emails/member-welcome.ts";
+import { resolveZohoSmtpConfig, sendMailViaZohoSmtp } from "../_shared/emails/smtp.ts";
 
 const ALLOWED_ORIGINS = new Set([
   "https://corteqs.net",
@@ -174,22 +175,6 @@ function buildEmail(row: OutboxRow): BuiltEmail {
   }
 }
 
-async function sendWithResend(apiKey: string, payload: Record<string, unknown>) {
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json; charset=utf-8",
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    const responseText = await response.text();
-    throw new Error(`Resend request failed: ${response.status} ${responseText}`);
-  }
-}
-
 type Caller = {
   authorized: boolean;
   /** Yalnız admin JWT'si ile gelen çağrılarda dolu; pg_net/cron çağrılarında null. */
@@ -246,7 +231,7 @@ Deno.serve(async (request) => {
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  const resendApiKey = Deno.env.get("RESEND_API_KEY");
+  const smtpConfig = resolveZohoSmtpConfig();
   const mailFrom = Deno.env.get("MAIL_FROM");
   const mailReplyTo = Deno.env.get("MAIL_REPLY_TO");
 
@@ -264,8 +249,8 @@ Deno.serve(async (request) => {
     return jsonResponse({ error: "unauthorized" }, 401, corsHeaders);
   }
 
-  if (!resendApiKey || !mailFrom) {
-    console.warn("send-notification-emails: RESEND_API_KEY/MAIL_FROM eksik, gonderim atlandi.");
+  if (!smtpConfig || !mailFrom) {
+    console.warn("send-notification-emails: ZOHO_SMTP_*/MAIL_FROM eksik, gonderim atlandi.");
     return jsonResponse({ skipped: true, reason: "mail_config_missing" }, 200, corsHeaders);
   }
 
@@ -293,10 +278,10 @@ Deno.serve(async (request) => {
     });
 
     try {
-      await sendWithResend(resendApiKey, {
+      await sendMailViaZohoSmtp(smtpConfig, {
         from: mailFrom,
         to: [caller.adminEmail],
-        reply_to: mailReplyTo || undefined,
+        replyTo: mailReplyTo || undefined,
         subject: `[ÖRNEK] ${sample.subject}`,
         html: sample.html,
         text: sample.text,
@@ -398,10 +383,10 @@ Deno.serve(async (request) => {
 
         // Alıcılar birbirinin adresini görmesin diye tek tek gönderilir.
         for (const recipient of recipients) {
-          await sendWithResend(resendApiKey, {
+          await sendMailViaZohoSmtp(smtpConfig, {
             from: mailFrom,
             to: [recipient],
-            reply_to: mailReplyTo || undefined,
+            replyTo: mailReplyTo || undefined,
             subject,
             html,
             text,

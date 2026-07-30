@@ -1,6 +1,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 import { z } from "https://esm.sh/zod@3.25.76";
 
+import { resolveZohoSmtpConfig, sendMailViaZohoSmtp } from "../_shared/emails/smtp.ts";
+
 const ALLOWED_ORIGINS = new Set([
   "https://corteqs.net",
   "https://www.corteqs.net",
@@ -185,22 +187,6 @@ function buildConfirmationHtml(submission: z.infer<typeof SubmissionSchema>) {
   `;
 }
 
-async function sendWithResend(apiKey: string, payload: Record<string, unknown>) {
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json; charset=utf-8",
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    const responseText = await response.text();
-    throw new Error(`Resend request failed: ${response.status} ${responseText}`);
-  }
-}
-
 Deno.serve(async (request) => {
   const corsHeaders = buildCorsHeaders(request);
   const origin = request.headers.get("Origin");
@@ -223,7 +209,7 @@ Deno.serve(async (request) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    const smtpConfig = resolveZohoSmtpConfig();
     const mailFrom = Deno.env.get("MAIL_FROM");
     const mailToAdmin = Deno.env.get("MAIL_TO_ADMIN");
     const mailReplyTo = Deno.env.get("MAIL_REPLY_TO");
@@ -238,8 +224,8 @@ Deno.serve(async (request) => {
 
     const { submissionId } = RequestSchema.parse(await readJsonWithLimit(request, MAX_BODY_BYTES));
 
-    if (!resendApiKey || !mailFrom || !mailToAdmin) {
-      console.warn("Mail function skipped because env vars are missing.");
+    if (!smtpConfig || !mailFrom || !mailToAdmin) {
+      console.warn("Mail function skipped because env vars are missing (ZOHO_SMTP_*/MAIL_FROM/MAIL_TO_ADMIN).");
       return jsonResponse({ skipped: true }, 200, corsHeaders);
     }
 
@@ -257,19 +243,19 @@ Deno.serve(async (request) => {
 
     const submission = SubmissionSchema.parse(submissionRow);
 
-    await sendWithResend(resendApiKey, {
+    await sendMailViaZohoSmtp(smtpConfig, {
       from: mailFrom,
       to: [mailToAdmin],
-      reply_to: mailReplyTo || undefined,
+      replyTo: mailReplyTo || undefined,
       subject: `Yeni CorteQS basvurusu: ${submission.fullname}`,
       html: buildAdminHtml(submission),
     });
 
     if (sendConfirmation) {
-      await sendWithResend(resendApiKey, {
+      await sendMailViaZohoSmtp(smtpConfig, {
         from: mailFrom,
         to: [submission.email],
-        reply_to: mailReplyTo || mailToAdmin,
+        replyTo: mailReplyTo || mailToAdmin,
         subject: "CorteQS basvurunuz alindi",
         html: buildConfirmationHtml(submission),
       });

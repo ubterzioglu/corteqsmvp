@@ -90,7 +90,10 @@ select extname from pg_extension where extname in ('pg_net','pg_cron');
 ```bash
 supabase functions deploy send-notification-emails
 supabase secrets set NOTIFY_DISPATCH_SECRET="<uzun rastgele değer>"
-supabase secrets set RESEND_API_KEY="..." MAIL_FROM="..." MAIL_TO_ADMIN="..." MAIL_REPLY_TO="..."
+supabase secrets set ZOHO_SMTP_HOST="smtp.zoho.eu" ZOHO_SMTP_PORT="465" ZOHO_SMTP_USER="..." ZOHO_SMTP_PASSWORD="..."
+supabase secrets set MAIL_FROM="..." MAIL_TO_ADMIN="..." MAIL_REPLY_TO="..."
+# 2026-07-30 GÜNCELLEMESİ: Resend bırakıldı, gönderici artık Zoho SMTP.
+# MAIL_FROM, ZOHO_SMTP_USER ile aynı (veya alias'ı) olmalı — aksi halde Zoho 553 döner.
 ```
 
 > ⚠️ **RESEND_API_KEY / MAIL_FROM Edge Function ortamında TANIMLI DEĞİLDİ** (2026-07-29'da

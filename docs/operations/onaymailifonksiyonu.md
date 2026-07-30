@@ -67,7 +67,9 @@ Secret'ları **doğrula** (varsaymak yasak — bir kez eksik çıkıp mailler se
 
 ```bash
 supabase secrets list
-# RESEND_API_KEY, MAIL_FROM, MAIL_REPLY_TO, NOTIFY_DISPATCH_SECRET görünmeli
+# ZOHO_SMTP_HOST, ZOHO_SMTP_PORT, ZOHO_SMTP_USER, ZOHO_SMTP_PASSWORD,
+# MAIL_FROM, MAIL_REPLY_TO, NOTIFY_DISPATCH_SECRET görünmeli
+# (2026-07-30: Resend bırakıldı, gönderim Zoho SMTP — MAIL_FROM = ZOHO_SMTP_USER olmalı)
 ```
 
 Opsiyonel: `PUBLIC_SITE_URL` tanımlı değilse mail bağlantıları `https://corteqs.net`'e düşer

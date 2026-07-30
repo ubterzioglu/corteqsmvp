@@ -95,14 +95,24 @@ Olayın tam seyri (30 Temmuz, hepsi ölçüldü):
    `update notification_email_outbox set status='pending', attempts=0 where status='failed'`
    ile diriltilip gönderilirler.
 
-Yapılacak iş (kod değişikliği — iki Edge Function Resend'e sabit kodlanmış):
-- `send-notification-emails/index.ts` ve `send-submission-email/index.ts` içindeki
-  `sendWithResend` (api.resend.com fetch) → Zoho SMTP gönderimi (Deno SMTP istemcisi, 465/TLS).
-- `supabase secrets set` ile ZOHO_* + MAIL_FROM fonksiyon ortamına yazılır; iki fonksiyon deploy edilir.
-- 9 `failed` kayıt diriltilir → sonraki cron koşusu Zoho üzerinden gönderir.
-✅ 9 kayıt `sent`; yeni durum-raporu maili Zoho'dan geliyor.
-📌 `MAX_ATTEMPTS=5 × 15 dk cron` = bir arızada ~1 saatlik pencere; alarm/telafi mekanizması yok —
-gözden geçirilmeli.
+✅ **YAPILDI (30 Tem 12:52) — kuyruk boşaldı: `{"processed":11,"sent":11,"failed":0}`.**
+9 durum-raporu + 2 yeni-üye maili Zoho üzerinden gitti (22 teslimat). Süreç:
+
+1. `_shared/emails/smtp.ts` yazıldı, iki fonksiyon `sendWithResend` → `sendMailViaZohoSmtp`'ye
+   çevrildi; ZOHO_* + `MAIL_FROM=update@corteqs.net` secret'ları yazıldı; deploy edildi.
+2. **İlk deploy ÇÖKTÜ — kritik ders:** denomailer@1.6.0, Supabase Edge'in istek başına 2 sn
+   CPU tavanını TEK gönderimde aşıyor (canlı log: "CPU Time exceeded", boot 26ms;
+   `WORKER_RESOURCE_LIMIT`). Kütüphane bu runtime'da KULLANILAMAZ.
+3. Çözüm: `smtp.ts` içine el yazımı minimal SMTP istemcisi (ham EHLO→AUTH LOGIN→MAIL FROM→
+   RCPT→DATA; TLS native `Deno.connectTls`; gövde base64 → dot-stuffing içgüdüsel çözülür;
+   Türkçe konu RFC2047; komut başına 15 sn timeout). Dış API aynı kaldı, fonksiyon kodu değişmedi.
+4. Deploy öncesi 3-mercekli adversarial inceleme koştu (0 blocker): geçersiz port sessiz-skip
+   ayrışması, boş html guard'ı, 465-dışı port uyarısı (Supabase 25/587'yi ENGELLİYOR),
+   dokümanlardaki bayat Resend talimatları (README/.env.example/2 ops runbook) düzeltildi.
+
+📌 Kalıcı kurallar: **Supabase Edge'de yalnız port 465 çalışır** (25/587 platform engelli) ·
+**MAIL_FROM = ZOHO_SMTP_USER olmalı** (Zoho 553) · ZOHO parolası app-specific password ·
+`MAX_ATTEMPTS=5 × 15 dk cron` = arızada ~1 saatlik pencere, alarm yok — gözden geçirilmeli.
 
 **B07 · Uçtan uca tek mail testi + genel anahtarı aç** — B06 sonrası
 Bildirim Ayarları → "Bana örnek hoş geldin maili gönder" → gerçek gelen kutusunda gör (tarayıcı
@@ -249,6 +259,33 @@ Gerçek cihaz QA (Cadde V1'in doğrulanmamış kalemleri): dosya yükleme uçtan
 gerçekten gitmesi · F5 sonrası scroll konumu · saat çiplerinin dakika geçişi · marka sahipliğiyle cafe açma.
 Deploy sonrası B15'te `inceleniyor` yapılan maddeler **`yapildi`**'ya çekilebilir.
 ✅ `verify:release` geçti + QA listesi işaretlendi.
+
+## 1.5 Paralel workshop oturumu entegrasyonu (30 Tem öğleden sonra)
+
+Aynı gün ikinci bir oturum Cadde workshop'unu işledi: `caddeworkshdp.md` (92 dk Zoom transkripti)
+→ 48 maddelik `/admin/workshop/cadde` panosu. Migration `20260730190000` canlıda + kayıtlı,
+kod `902cadc` ile main'de. O oturumun devir notlarındaki açık işler buraya alındı:
+
+**Çözüldü (bu oturum cevapladı):**
+- ~~"Sahipsiz staged rename / `20260729140000` history'de yok"~~ → **çelişki yok.** O sorgu bu
+  oturumun 12:2x'teki B05 uygulamasından ÖNCEYDİ. Taze teyit: `20260729140000 | member_welcome_email`
+  kayıtlı, dosya `applied/`'da, commit `aea4991`.
+- ~~`20260728090000` name boşluğu~~ → `create_muhasebe_butce_state` yazıldı.
+
+**Karar bekleyen (kullanıcıya):**
+- **Freeze branch:** workshop'ta (1:01:10) "bu haline branch açacağım, bu hali donacak" denildi.
+  Cadde redesign'ına başlanmadan `cadde-pre-workshop-freeze` gibi bir snapshot branch açılmalı mı?
+  (Ucuz + güvenli; redesign başlamadan yapılırsa anlamlı.)
+- **`caddeworkshdp.md` yeri:** kökte untracked; workshop oturumunun önerisi `docs/cadde-300/` altına
+  taşıyıp commit'lemek. Kullanıcı bu oturumda "kalsın" dedi (silinmesin anlamında) — taşıma onayı ayrı.
+- **Ürün kararları (panoda madde olarak var, cevabı yok):** m42 featured etkinlik manuel/otomatik ·
+  m3 kafe ikonu tasarım önerisi · m20 tepki emoji seti (negatifler kalsın mı) · m13 tag rezervde.
+
+**Teknik borçlar (workshop oturumundan):**
+- `workshop_items` `types.ts`'te yok → `LooseQuery` cast (B14'teki types regen'e eklenecek).
+- UBT/Burak checkbox'larında kimlik bağlaması yok — bilinçli sadelik; kısıt istenirse sonra.
+- Migration versiyonu seçmeden önce canlı `schema_migrations`'a bak (çakışma dersi: workshop mig'i
+  `…120000` → `…190000`'e taşınmak zorunda kaldı).
 
 ## 2. Bu 25 batch'in dışında — bilinçli park
 
