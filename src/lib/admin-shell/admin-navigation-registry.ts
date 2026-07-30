@@ -19,6 +19,7 @@ import {
   FolderKanban,
   FolderOpen,
   Globe,
+  Hammer,
   Heart,
   Inbox,
   LayoutDashboard,
@@ -443,6 +444,26 @@ export const adminNavGroups: AdminNavGroup[] = [
         accent: "slate",
         aliases: ["doküman", "docs"],
         children: workspaceDocItems,
+      },
+    ],
+  },
+  {
+    // Workshop panoları: her workshop kendi madde listesi + UBT/Burak onay kutuları.
+    // Veri kaynağı: workshop_items tablosu (mig 20260730190000).
+    id: "workshop",
+    label: "Workshop",
+    icon: Hammer,
+    accent: "emerald",
+    items: [
+      {
+        id: "workshop-cadde",
+        label: "Cadde",
+        shortLabel: "Cadde WS",
+        description: "30.07.2026 Cadde workshop maddeleri; UBT + Burak onay kutuları.",
+        to: "/admin/workshop/cadde",
+        icon: ClipboardList,
+        accent: "emerald",
+        aliases: ["workshop", "cadde workshop", "atölye", "madde", "checklist", "ubt", "burak"],
       },
     ],
   },

@@ -80,6 +80,8 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/workspace/docs/:slug",
   "/admin/revision-requests",
   "/admin/feedback",
+  "/admin/workshop",
+  "/admin/workshop/cadde",
   "/admin/muhasebe",
   "/admin/muhasebe/giderler",
   "/admin/muhasebe/gelirler",
@@ -131,4 +133,5 @@ export const adminRouteMeta: AdminRouteMeta[] = [
   { pattern: "/admin/data/:category", kind: "redirect", redirectTo: "/admin/data" },
   { pattern: "/admin/workspace/resources/arge", kind: "redirect", redirectTo: "/admin/workspace/resources?section=arge" },
   { pattern: "/admin/workspace/resources/insankaynaklari", kind: "redirect", redirectTo: "/admin/workspace/resources?section=insankaynaklari" },
+  { pattern: "/admin/workshop", kind: "redirect", redirectTo: "/admin/workshop/cadde" },
 ];
