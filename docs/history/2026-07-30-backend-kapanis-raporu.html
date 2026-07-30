@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CorteQS — Backend Fazı Kapanış Raporu (30 Temmuz 2026)</title>
+<style>
+  :root {
+    --bg: #0f1115; --card: #181b22; --card2: #1e222b; --text: #e8eaf0;
+    --muted: #9aa3b2; --accent: #aa8c42; --green: #34c98e; --red: #e5654f;
+    --amber: #e0a83a; --blue: #5ba3e0; --border: #2a2f3a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 40px 20px; background: var(--bg); color: var(--text);
+         font-family: "Segoe UI", system-ui, -apple-system, sans-serif; line-height: 1.65; }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  header { background: radial-gradient(ellipse at top left, rgba(52,201,142,.18), transparent 60%), var(--card);
+           border: 1px solid var(--border); border-radius: 16px; padding: 32px 36px; margin-bottom: 26px; }
+  header h1 { margin: 0 0 6px; font-size: 26px; }
+  header .sub { color: var(--muted); font-size: 14px; }
+  .pill { display: inline-block; padding: 3px 12px; border-radius: 999px; font-size: 12px;
+          font-weight: 600; margin: 2px 4px 2px 0; border: 1px solid var(--border); background: var(--card2); }
+  .pill.green { color: var(--green); border-color: rgba(52,201,142,.4); }
+  .pill.amber { color: var(--amber); border-color: rgba(224,168,58,.4); }
+  .pill.blue  { color: var(--blue);  border-color: rgba(91,163,224,.4); }
+  section { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+            padding: 26px 30px; margin-bottom: 22px; }
+  h2 { font-size: 19px; margin: 0 0 14px; color: var(--accent); }
+  h3 { font-size: 15px; margin: 18px 0 8px; }
+  p, li, td, th { font-size: 14px; }
+  .muted { color: var(--muted); }
+  code { background: var(--card2); border: 1px solid var(--border); border-radius: 5px;
+         padding: 1px 6px; font-size: 12.5px; font-family: Consolas, "Courier New", monospace; color: #d8c89a; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 4px 0 6px; }
+  .kpi { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .kpi .n { font-size: 24px; font-weight: 700; line-height: 1.2; color: var(--green); }
+  .kpi .l { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .kpi.blue .n { color: var(--blue); } .kpi.amber .n { color: var(--amber); }
+  .callout { border-left: 3px solid var(--green); background: rgba(52,201,142,.08);
+             border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 16px 0; }
+  .callout.amber { border-left-color: var(--amber); background: rgba(224,168,58,.08); }
+  .callout.blue  { border-left-color: var(--blue);  background: rgba(91,163,224,.08); }
+  .tablewrap { overflow-x: auto; margin: 10px 0 4px; }
+  table { width: 100%; border-collapse: collapse; min-width: 620px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; font-weight: 600; }
+  tbody tr:hover { background: rgba(255,255,255,.02); }
+  .ok { color: var(--green); font-weight: 700; white-space: nowrap; }
+  ul { margin: 8px 0 4px; padding-left: 22px; }
+  li { margin-bottom: 5px; }
+  footer { color: var(--muted); font-size: 12.5px; text-align: center; padding: 10px 0 30px; }
+  @media print {
+    body { background: #fff; color: #111; padding: 0; }
+    section, header, .kpi { border-color: #ccc; background: #fff; break-inside: avoid; }
+    h2, td.id { color: #7a6220; } p, li, td, th { color: #111; }
+    footer { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Backend Fazı Kapanış Raporu</h1>
+  <div class="sub">30 Temmuz 2026 · sabahki "25 Batch Devir Planı"nın sonuç raporu · karar: bundan sonra FRONTEND</div>
+  <div style="margin-top:12px">
+    <span class="pill green">Plan %100 icra edildi</span>
+    <span class="pill green">Mail hattı üretimde çalışıyor</span>
+    <span class="pill green">Deploy + verify:release geçti</span>
+    <span class="pill blue">Sıradaki faz: Cadde redesign (48 madde)</span>
+  </div>
+</header>
+
+<section>
+  <h2>Günün sayıları</h2>
+  <div class="kpis">
+    <div class="kpi"><div class="n">15</div><div class="l">main'e commit</div></div>
+    <div class="kpi"><div class="n">9</div><div class="l">canlıya migration</div></div>
+    <div class="kpi"><div class="n">4</div><div class="l">Edge Function deploy'u</div></div>
+    <div class="kpi"><div class="n">16</div><div class="l">Zoho'dan giden mail</div></div>
+    <div class="kpi blue"><div class="n">1236</div><div class="l">geçen test</div></div>
+    <div class="kpi amber"><div class="n">43→25</div><div class="l">panoda açık madde</div></div>
+  </div>
+  <div class="callout">
+    <strong>Tek cümle:</strong> Sabah "kod yeşil ama hiçbir şey teslim edilmemiş" durumundaydık;
+    akşam itibarıyla planın otonom yapılabilir <strong>tamamı</strong> canlıda, deploy doğrulandı
+    ve backend fazı bilinçli olarak kapatıldı.
+  </div>
+</section>
+
+<section>
+  <h2>Gemiye binenler</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>İş</th><th>Ne değişti</th><th style="width:110px">Durum</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Mail hattı → Zoho SMTP</strong></td>
+          <td>Resend bırakıldı; hazır kütüphane platformun 2 sn CPU tavanını aştığı için gönderim katmanı
+              sıfırdan yazıldı (3-mercekli inceleme, 0 blocker). Bekleyen 11 mail kurtarılıp gönderildi;
+              form başvuru bildirimleri de aynı hatta.</td>
+          <td class="ok">CANLIDA ✓</td></tr>
+      <tr><td><strong>Günlük özet maili</strong></td>
+          <td>"13 ayrı mail" bitti: panel kayıtları günde tek zarfta, 18:00 Berlin (acil için panelden
+              "Şimdi gönder"). Trigger + claim vadesi + tek-özet birleştirme; 3/3 prob, ilk özet gitti.</td>
+          <td class="ok">CANLIDA ✓</td></tr>
+      <tr><td><strong>Hoş geldin maili altyapısı</strong></td>
+          <td>Migration uygulandı, gönderici yayında. Anahtar bilinçli kapalı — örnek mail kontrolü bekliyor.</td>
+          <td class="ok">CANLIDA ✓<br /><span class="muted">(anahtar kapalı)</span></td></tr>
+      <tr><td><strong>Profil referral doğrulama</strong></td>
+          <td>Kaydedilemeyen alan (42501) + döngüyü kıran hata + boş "Kullanımlar" listesi kapandı;
+              kod tek-kullanım kilidi; 35 geçmiş kayıt backfill (41→76, sayaçlar birebir).</td>
+          <td class="ok">CANLIDA ✓</td></tr>
+      <tr><td><strong>Araçlar modülü onarımı</strong></td>
+          <td>Tamamı tıklanamayan sonuç butonları gerçek link oldu (hedefler 9 SQL fonksiyonunda gömülüymüş);
+              meslek 5→35, şehir 2→32; "UK/İngiltere/ABD" yazımları ISO'ya normalize; boş ekran yerine
+              dürüst fallback; sonuca kalıcı adres (geri dönüş).</td>
+          <td class="ok">CANLIDA ✓</td></tr>
+      <tr><td><strong>Dizin koruması</strong></td>
+          <td>Halka açık aramadan Admin/Moderatör hesaplarını dışlayan yapısal koşul.</td>
+          <td class="ok">CANLIDA ✓</td></tr>
+      <tr><td><strong>Revizyon panosu mutabakatı</strong></td>
+          <td>Kodda bitmiş 18 madde kanıt yorumuyla "inceleniyor"a; 1 madde workshop kararıyla üst yazıldı.
+              Pano: 25 açık · 18 inceleniyor · 6 yapıldı · 4 iptal.</td>
+          <td class="ok">CANLIDA ✓</td></tr>
+      <tr><td><strong>Bütçe sekmesi + durum raporu</strong></td>
+          <td>Menüsüz sayfa menüye bağlandı; durum raporu tek kaynağa indirildi (−317 satır kopya).</td>
+          <td class="ok">YAYINDA ✓</td></tr>
+      <tr><td><strong>Workshop panosu</strong> <span class="muted">(paralel oturum)</span></td>
+          <td>92 dk transkript → /admin/workshop/cadde, 48 madde + UBT/Burak onay kutuları.</td>
+          <td class="ok">YAYINDA ✓</td></tr>
+      <tr><td><strong>Migration housekeeping</strong></td>
+          <td>Tam denetim: dosyalar ↔ history birebir; 3 eksik kayıt tamamlandı, uygulanmamış migration 0.</td>
+          <td class="ok">TAMAM ✓</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>Verilen kararlar</h2>
+  <ul>
+    <li><strong>Mail sağlayıcı:</strong> Resend değil <strong>Zoho SMTP</strong> (kendi hesabımız). Teknik kural: Supabase Edge'de yalnız 465 portu; hazır kütüphane (denomailer) KULLANILMAZ.</li>
+    <li><strong>Bildirim sıklığı:</strong> panel kayıtları <strong>günde 1 özet</strong> (18:00 Berlin); yeni üye + hoş geldin anlık.</li>
+    <li><strong>m42 Featured etkinlik: MANUEL</strong> — admin seçer; az veride otomatik güvenilmez.</li>
+    <li><strong>m20 Tepki seti: NEGATİFSİZ</strong> — beğendim · kalp · gülme · destek · "emin olamadım".</li>
+    <li><strong>Freeze:</strong> redesign öncesi hal <code>cadde-pre-workshop-freeze</code> branch'inde donduruldu.</li>
+    <li><strong>Transkript:</strong> <code>docs/cadde-300/caddeworkshdp.md</code>'ye taşındı (kök 4-doküman kuralı).</li>
+    <li>Hâlâ açık: <strong>m3 kafe ikonu</strong> tasarımı · m13 tag rezervde.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Günün teknik dersleri <span class="muted">(bir daha yaşanmasın diye)</span></h2>
+  <ul>
+    <li><strong>denomailer Supabase Edge'de kullanılamaz:</strong> tek gönderim, istek başına 2 sn CPU tavanını aşıyor ("CPU Time exceeded", boot 26ms'ken). Çözüm el yazımı ham SMTP istemcisi — TLS native, gövde base64, CPU maliyeti ms düzeyi. Ayrıca platform giden 25/587'yi engelliyor; <strong>yalnız 465</strong>.</li>
+    <li><strong>Partial unique index + sade <code>ON CONFLICT</code> tuzağı:</strong> plan, unique constraint'i partial index'e çevirmeyi öneriyordu — trigger'ın predicate'siz <code>ON CONFLICT (submission_id)</code>'i arbiter bulamayıp <em>her ön kaydı patlatırdı</em>. NULL'lar unique'te çakışmadığından constraint'i korumak yetti.</li>
+    <li><strong>Serbest metin girdisiyle ISO kod eşleşmez:</strong> "UK" yazan kullanıcı <code>GB</code> satırlarını asla bulamıyordu — seed tek başına çözmezdi; normalizasyon + fallback şarttı.</li>
+    <li><strong>İçerik her zaman tabloda değil:</strong> araç CTA'ları 9 skorlama <em>fonksiyonunun gövdesinde</em> gömülüydü. Onarım deseni: canlı <code>pg_get_functiondef</code> → replace → execute (elle kopya = drift).</li>
+    <li><strong>Deneme sayacını cron yakar:</strong> mail retry bütçesini commit'ler değil 15 dk'lık drain cron'u tüketiyor; arıza penceresi ~1 saat. <code>failed</code> satırlar silinmez — payload durur, dirilterek kurtarılır.</li>
+    <li><strong>Tablo varlığı ≠ history kaydı:</strong> bugün 3 örnek daha; migration versiyonu seçmeden önce canlı <code>schema_migrations</code>'a bak.</li>
+    <li><strong>Tam suite yük altında flaky:</strong> eşzamanlı koşuda 40 test kırmızı, izole 21/21. Kırmızı görünce önce izole koş.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Kalanlar</h2>
+  <h3>Kullanıcıda (küçük)</h3>
+  <ul>
+    <li>🔴 Panelden <strong>örnek hoş geldin maili</strong> → gözle kontrol → genel anahtarı aç (anahtar kapalıyken kaydolan üye maili hiç almaz).</li>
+    <li>🟡 <strong>QA turu</strong> (11 madde — tarayıcı/login/gerçek cihaz) → bitince panodaki 18 "inceleniyor" → "yapıldı".</li>
+    <li>⚪ <strong>31 Tem 18:00-18:15 Berlin:</strong> ilk otomatik günlük özetin gidişini gözle (tek doğrulanmamış parça).</li>
+  </ul>
+  <h3>Sıradaki faz: FRONTEND</h3>
+  <div class="callout blue">
+    <strong>Cadde redesign — workshop panosunun 48 maddesi.</strong> Kararlar verilmiş, freeze branch hazır,
+    temalar/markalar/ayarlar DB'de (çoğu değişiklik deploy'suz). Park listesi (~16 ürün kararı + Bütçe Ö6 gibi
+    büyük işler) ve Cadde Faz 2/3 bu fazın arkasında sırada.
+  </div>
+</section>
+
+<footer>
+  CorteQS · 30 Temmuz 2026 kapanışı · <code>docs/history/2026-07-30-backend-kapanis-raporu.html</code><br />
+  Sabahki plan: <code>docs/plans/2026-07-30-devir-25-batch-rapor.html</code> · Devir: <code>SONDURUM.md</code> · Transkript: <code>docs/cadde-300/caddeworkshdp.md</code>
+</footer>
+
+</div>
+</body>
+</html>

@@ -16,6 +16,7 @@
 > Detaylı tasarımlar için: [referral planı](docs/plans/2026-07-29-profil-referral-dogrulama-admin-kullanim.md) ·
 > [revizyon panosu planı](docs/plans/2026-07-30-revizyon-istekleri-pano-mutabakati.md)
 > Toplantı sunumu: [docs/plans/2026-07-30-devir-25-batch-rapor.html](docs/plans/2026-07-30-devir-25-batch-rapor.html)
+> **Kapanış raporu: [docs/history/2026-07-30-backend-kapanis-raporu.html](docs/history/2026-07-30-backend-kapanis-raporu.html)** — günün sonuç fotoğrafı (sayılar, kararlar, teknik dersler)
 >
 > Not: `CLAUDE.md` kökte 4 doküman kuralı koyuyor. Bu dosya bilinçli 5. dosyadır (geçici devir notu);
 > 25 batch bitince `docs/history/` altına taşınır.
