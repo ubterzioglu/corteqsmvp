@@ -232,8 +232,7 @@ export const toolCatalog = {
       ],
       "http_method": "POST",
       "dependencies": [
-        "@supabase/supabase-js@2.45.4",
-        "resend"
+        "@supabase/supabase-js@2.45.4"
       ],
       "version_pins": {
         "@supabase/supabase-js": "2.45.4",
@@ -276,8 +275,7 @@ export const toolCatalog = {
       "http_method": "POST",
       "dependencies": [
         "@supabase/supabase-js@2.45.4",
-        "zod@3.25.76",
-        "resend"
+        "zod@3.25.76"
       ],
       "version_pins": {
         "@supabase/supabase-js": "2.45.4",
@@ -650,13 +648,16 @@ export const toolCatalog = {
       "entrypoint": "src/lib/member-profile-api.ts",
       "interface_kind": "internal_api",
       "exports": [
+        "getMyReferralCodeUsage",
         "requestNewCatalogItem",
         "submitFeatureRequest",
         "submitRoleChangeRequest",
         "updateProfileAttribute",
         "updateProfileAvatar"
       ],
-      "tables_read_write": [],
+      "tables_read_write": [
+        "referral_code_usages"
+      ],
       "rpcs": [
         "request_new_catalog_item",
         "submit_feature_request",
@@ -1131,6 +1132,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/admin-shell/social-test-tools.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/workshop-items.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/workshop-items.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -2265,6 +2276,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "supabase/functions/_shared/emails/admin-update-digest.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/admin-update-digest.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/_shared/emails/html.ts",
       "kind": "ts",
       "module_family": "edge"
@@ -2276,6 +2297,11 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/_shared/emails/member-welcome.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/smtp.ts",
       "kind": "ts",
       "module_family": "edge"
     },

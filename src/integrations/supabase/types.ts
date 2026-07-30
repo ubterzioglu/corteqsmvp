@@ -12,31 +12,6 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.4"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       _bak_org_catalog_item_categories_20260609: {
@@ -597,6 +572,30 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_notification_subscriptions: {
+        Row: {
+          admin_update_email: boolean
+          created_at: string
+          new_member_email: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_update_email?: boolean
+          created_at?: string
+          new_member_email?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_update_email?: boolean
+          created_at?: string
+          new_member_email?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       advisor_details: {
         Row: {
           appointment_url: string | null
@@ -1112,6 +1111,89 @@ export type Database = {
         }
         Relationships: []
       }
+      brainstorming_rows: {
+        Row: {
+          created_at: string
+          id: string
+          label: string
+          order_index: number
+          plain: string
+          section_id: string
+          status: string | null
+          technical: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label: string
+          order_index?: number
+          plain: string
+          section_id: string
+          status?: string | null
+          technical: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string
+          order_index?: number
+          plain?: string
+          section_id?: string
+          status?: string | null
+          technical?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brainstorming_rows_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "brainstorming_sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brainstorming_sections: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          group_label: string | null
+          id: string
+          intro: string | null
+          order_index: number
+          section_key: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          group_label?: string | null
+          id?: string
+          intro?: string | null
+          order_index?: number
+          section_key: string
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          group_label?: string | null
+          id?: string
+          intro?: string | null
+          order_index?: number
+          section_key?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       business_details: {
         Row: {
           appointment_url: string | null
@@ -1277,6 +1359,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      cadde_cafe_themes: {
+        Row: {
+          icon_key: string | null
+          is_active: boolean
+          key: string
+          label_tr: string
+          sort_order: number
+        }
+        Insert: {
+          icon_key?: string | null
+          is_active?: boolean
+          key: string
+          label_tr: string
+          sort_order?: number
+        }
+        Update: {
+          icon_key?: string | null
+          is_active?: boolean
+          key?: string
+          label_tr?: string
+          sort_order?: number
+        }
+        Relationships: []
       }
       cadde_cafes: {
         Row: {
@@ -1463,6 +1569,30 @@ export type Database = {
           },
         ]
       }
+      cadde_hashtags: {
+        Row: {
+          display_tag: string
+          first_seen_at: string
+          last_used_at: string
+          tag: string
+          usage_count: number
+        }
+        Insert: {
+          display_tag: string
+          first_seen_at?: string
+          last_used_at?: string
+          tag: string
+          usage_count?: number
+        }
+        Update: {
+          display_tag?: string
+          first_seen_at?: string
+          last_used_at?: string
+          tag?: string
+          usage_count?: number
+        }
+        Relationships: []
+      }
       cadde_interest_catalog: {
         Row: {
           is_active: boolean
@@ -1561,6 +1691,36 @@ export type Database = {
           },
         ]
       }
+      cadde_post_hashtags: {
+        Row: {
+          post_id: string
+          tag: string
+        }
+        Insert: {
+          post_id: string
+          tag: string
+        }
+        Update: {
+          post_id?: string
+          tag?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cadde_post_hashtags_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cadde_post_hashtags_tag_fkey"
+            columns: ["tag"]
+            isOneToOne: false
+            referencedRelation: "cadde_hashtags"
+            referencedColumns: ["tag"]
+          },
+        ]
+      }
       cadde_post_interests: {
         Row: {
           interest_key: string
@@ -1584,6 +1744,35 @@ export type Database = {
           },
           {
             foreignKeyName: "cadde_post_interests_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cadde_post_mentions: {
+        Row: {
+          display_label: string | null
+          post_id: string
+          target_id: string
+          target_type: string
+        }
+        Insert: {
+          display_label?: string | null
+          post_id: string
+          target_id: string
+          target_type: string
+        }
+        Update: {
+          display_label?: string | null
+          post_id?: string
+          target_id?: string
+          target_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cadde_post_mentions_post_id_fkey"
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "cadde_posts"
@@ -1639,6 +1828,7 @@ export type Database = {
           engagement_score: number
           id: string
           is_bridge: boolean
+          media: Json
           need_category: string | null
           pinned: boolean
           post_type: string
@@ -1663,6 +1853,7 @@ export type Database = {
           engagement_score?: number
           id?: string
           is_bridge?: boolean
+          media?: Json
           need_category?: string | null
           pinned?: boolean
           post_type?: string
@@ -1687,6 +1878,7 @@ export type Database = {
           engagement_score?: number
           id?: string
           is_bridge?: boolean
+          media?: Json
           need_category?: string | null
           pinned?: boolean
           post_type?: string
@@ -1904,6 +2096,33 @@ export type Database = {
             referencedColumns: ["key"]
           },
         ]
+      }
+      cadde_protected_brands: {
+        Row: {
+          brand_name: string
+          created_at: string
+          id: string
+          is_active: boolean
+          match_pattern: string
+          note: string | null
+        }
+        Insert: {
+          brand_name: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          match_pattern: string
+          note?: string | null
+        }
+        Update: {
+          brand_name?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          match_pattern?: string
+          note?: string | null
+        }
+        Relationships: []
       }
       cadde_reports: {
         Row: {
@@ -2188,6 +2407,7 @@ export type Database = {
           category_key: string
           city_id: string | null
           contact_mode: string
+          contact_value: string | null
           country_id: string | null
           created_at: string
           deleted_at: string | null
@@ -2198,16 +2418,20 @@ export type Database = {
           image_urls: string[]
           moderation_status: string
           owner_user_id: string
+          paid_until: string | null
+          payment_status: string
           price_amount: number | null
           price_currency: string | null
           status: string
           title: string
           updated_at: string
+          video_url: string | null
         }
         Insert: {
           category_key: string
           city_id?: string | null
           contact_mode?: string
+          contact_value?: string | null
           country_id?: string | null
           created_at?: string
           deleted_at?: string | null
@@ -2218,16 +2442,20 @@ export type Database = {
           image_urls?: string[]
           moderation_status?: string
           owner_user_id: string
+          paid_until?: string | null
+          payment_status?: string
           price_amount?: number | null
           price_currency?: string | null
           status?: string
           title: string
           updated_at?: string
+          video_url?: string | null
         }
         Update: {
           category_key?: string
           city_id?: string | null
           contact_mode?: string
+          contact_value?: string | null
           country_id?: string | null
           created_at?: string
           deleted_at?: string | null
@@ -2238,11 +2466,14 @@ export type Database = {
           image_urls?: string[]
           moderation_status?: string
           owner_user_id?: string
+          paid_until?: string | null
+          payment_status?: string
           price_amount?: number | null
           price_currency?: string | null
           status?: string
           title?: string
           updated_at?: string
+          video_url?: string | null
         }
         Relationships: [
           {
@@ -4555,6 +4786,39 @@ export type Database = {
         }
         Relationships: []
       }
+      fallback_image_pool: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          is_active: boolean
+          source_attribution: string | null
+          storage_bucket: string
+          storage_path: string
+          used_count: number
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          source_attribution?: string | null
+          storage_bucket?: string
+          storage_path: string
+          used_count?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          source_attribution?: string | null
+          storage_bucket?: string
+          storage_path?: string
+          used_count?: number
+        }
+        Relationships: []
+      }
       feature_definitions: {
         Row: {
           created_at: string
@@ -5948,6 +6212,27 @@ export type Database = {
           },
         ]
       }
+      muhasebe_butce_state: {
+        Row: {
+          id: string
+          state: Json
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          id?: string
+          state: Json
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          id?: string
+          state?: Json
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
       mvp_items: {
         Row: {
           added_by: string
@@ -6047,6 +6332,72 @@ export type Database = {
           summary?: string | null
           title?: string
           unique_hash?: string
+        }
+        Relationships: []
+      }
+      notification_email_outbox: {
+        Row: {
+          attempts: number
+          claimed_at: string | null
+          created_at: string
+          dedupe_key: string
+          deliver_after: string
+          event_type: string
+          id: string
+          last_error: string | null
+          payload: Json
+          recipient_count: number | null
+          sent_at: string | null
+          status: string
+        }
+        Insert: {
+          attempts?: number
+          claimed_at?: string | null
+          created_at?: string
+          dedupe_key: string
+          deliver_after?: string
+          event_type: string
+          id?: string
+          last_error?: string | null
+          payload?: Json
+          recipient_count?: number | null
+          sent_at?: string | null
+          status?: string
+        }
+        Update: {
+          attempts?: number
+          claimed_at?: string | null
+          created_at?: string
+          dedupe_key?: string
+          deliver_after?: string
+          event_type?: string
+          id?: string
+          last_error?: string | null
+          payload?: Json
+          recipient_count?: number | null
+          sent_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      notification_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
         }
         Relationships: []
       }
@@ -9560,6 +9911,36 @@ export type Database = {
         }
         Relationships: []
       }
+      social_share_asset_images: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          image_bucket: string
+          image_path: string
+          slot_key: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_bucket: string
+          image_path: string
+          slot_key: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_bucket?: string
+          image_path?: string
+          slot_key?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
       social_share_assets: {
         Row: {
           created_at: string
@@ -9602,27 +9983,24 @@ export type Database = {
       social_share_item_note: {
         Row: {
           created_at: string
+          global_id: string
           id: string
-          item_id: string
-          item_tab: string
           marked_at: string
           marked_by: string | null
           note: string
         }
         Insert: {
           created_at?: string
+          global_id: string
           id?: string
-          item_id: string
-          item_tab: string
           marked_at?: string
           marked_by?: string | null
           note?: string
         }
         Update: {
           created_at?: string
+          global_id?: string
           id?: string
-          item_id?: string
-          item_tab?: string
           marked_at?: string
           marked_by?: string | null
           note?: string
@@ -9632,9 +10010,8 @@ export type Database = {
       social_share_log: {
         Row: {
           created_at: string
+          global_id: string
           id: string
-          item_id: string
-          item_tab: string
           marked_at: string
           marked_by: string | null
           platform: string
@@ -9642,9 +10019,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          global_id: string
           id?: string
-          item_id: string
-          item_tab: string
           marked_at?: string
           marked_by?: string | null
           platform: string
@@ -9652,9 +10028,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          global_id?: string
           id?: string
-          item_id?: string
-          item_tab?: string
           marked_at?: string
           marked_by?: string | null
           platform?: string
@@ -9738,6 +10113,7 @@ export type Database = {
           author_name: string
           body: string
           created_at: string
+          created_by: string | null
           deleted_at: string | null
           id: string
           section_key: string
@@ -9746,6 +10122,7 @@ export type Database = {
           author_name?: string
           body: string
           created_at?: string
+          created_by?: string | null
           deleted_at?: string | null
           id?: string
           section_key: string
@@ -9754,6 +10131,7 @@ export type Database = {
           author_name?: string
           body?: string
           created_at?: string
+          created_by?: string | null
           deleted_at?: string | null
           id?: string
           section_key?: string
@@ -11203,6 +11581,54 @@ export type Database = {
         }
         Relationships: []
       }
+      workshop_items: {
+        Row: {
+          burak_done: boolean
+          burak_done_at: string | null
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          id: string
+          item_no: number
+          section: string
+          title: string
+          ubt_done: boolean
+          ubt_done_at: string | null
+          updated_at: string
+          workshop_key: string
+        }
+        Insert: {
+          burak_done?: boolean
+          burak_done_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          item_no: number
+          section?: string
+          title: string
+          ubt_done?: boolean
+          ubt_done_at?: string | null
+          updated_at?: string
+          workshop_key: string
+        }
+        Update: {
+          burak_done?: boolean
+          burak_done_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          item_no?: number
+          section?: string
+          title?: string
+          ubt_done?: boolean
+          ubt_done_at?: string | null
+          updated_at?: string
+          workshop_key?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       geography_columns: {
@@ -11388,12 +11814,13 @@ export type Database = {
         Returns: unknown
       }
       _st_within: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
-      add_statusreport_comment_v1: {
-        Args: { p_author_name: string; p_body: string; p_section_key: string }
+      add_brainstorming_comment_v1: {
+        Args: { p_body: string; p_section_key: string }
         Returns: {
           author_name: string
           body: string
           created_at: string
+          created_by: string | null
           deleted_at: string | null
           id: string
           section_key: string
@@ -11482,6 +11909,13 @@ export type Database = {
       admin_delete_catalog_item_section_override: {
         Args: { p_item_id: string; p_section_key: string }
         Returns: undefined
+      }
+      admin_get_notification_subscribers: {
+        Args: { p_event_type: string }
+        Returns: {
+          email: string
+          user_id: string
+        }[]
       }
       admin_get_service_finder_job: {
         Args: { p_job_id: string }
@@ -11878,6 +12312,13 @@ export type Database = {
         Args: { attr_key: string; uid: string }
         Returns: string
       }
+      cadde_check_brand_conflict: { Args: { p_name: string }; Returns: string }
+      cadde_ensure_geo_city: {
+        Args: { p_city_name: string; p_country_name: string }
+        Returns: string
+      }
+      cadde_fold_text: { Args: { p_text: string }; Returns: string }
+      cadde_normalize_tag: { Args: { p_tag: string }; Returns: string }
       cadde_notify: {
         Args: {
           p_actor: string
@@ -11894,10 +12335,36 @@ export type Database = {
       cadde_notify_expiring_cafes: { Args: never; Returns: number }
       cadde_phone_required: { Args: never; Returns: boolean }
       cadde_risky_signal: { Args: { p_text: string }; Returns: string }
+      cadde_setting_bool: {
+        Args: { p_default: boolean; p_key: string }
+        Returns: boolean
+      }
       cadde_setting_int: {
         Args: { p_default: number; p_key: string }
         Returns: number
       }
+      cadde_setting_text: {
+        Args: { p_default: string; p_key: string }
+        Returns: string
+      }
+      cadde_sync_post_hashtags: {
+        Args: { p_body: string; p_post_id: string }
+        Returns: number
+      }
+      cadde_sync_post_mentions: {
+        Args: {
+          p_author_user_id: string
+          p_mentions: Json
+          p_post_id: string
+          p_post_title: string
+        }
+        Returns: number
+      }
+      cadde_user_owns_brand: {
+        Args: { p_brand_name: string; p_user_id: string }
+        Returns: boolean
+      }
+      cadde_validate_media: { Args: { p_media: Json }; Returns: Json }
       can_administer_catalog_item: {
         Args: { p_item_id: string; p_user_id?: string }
         Returns: boolean
@@ -12005,6 +12472,29 @@ export type Database = {
         }
         Returns: boolean
       }
+      claim_notification_emails: {
+        Args: { p_force?: boolean; p_limit?: number }
+        Returns: {
+          attempts: number
+          claimed_at: string | null
+          created_at: string
+          dedupe_key: string
+          deliver_after: string
+          event_type: string
+          id: string
+          last_error: string | null
+          payload: Json
+          recipient_count: number | null
+          sent_at: string | null
+          status: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "notification_email_outbox"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       complete_current_profile_onboarding_activation: {
         Args: never
         Returns: Json
@@ -12041,6 +12531,8 @@ export type Database = {
           p_diaspora_key?: string
           p_interests?: string[]
           p_is_bridge: boolean
+          p_media?: Json
+          p_mentions?: Json
           p_need_category?: string
           p_post_type: string
           p_title: string
@@ -12065,6 +12557,7 @@ export type Database = {
           p_category_key: string
           p_city?: string
           p_contact_mode?: string
+          p_contact_value?: string
           p_country?: string
           p_description: string
           p_diaspora_key?: string
@@ -12072,6 +12565,7 @@ export type Database = {
           p_price_amount?: number
           p_price_currency?: string
           p_title: string
+          p_video_url?: string
         }
         Returns: string
       }
@@ -12224,6 +12718,7 @@ export type Database = {
         Returns: boolean
       }
       geomfromewkt: { Args: { "": string }; Returns: unknown }
+      get_admin_notification_state: { Args: never; Returns: Json }
       get_cadde_actor_context: { Args: never; Returns: Json }
       get_catalog_item_profile: { Args: { p_item_id: string }; Returns: Json }
       get_catalog_item_public_page_v2: {
@@ -12420,6 +12915,10 @@ export type Database = {
           whatsapp: string
         }[]
       }
+      list_trending_cadde_hashtags_v1: {
+        Args: { p_days?: number; p_limit?: number }
+        Returns: Json
+      }
       longtransactionsenabled: { Args: never; Returns: boolean }
       match_rag_documents: {
         Args: { match_count?: number; query_embedding: string }
@@ -12431,9 +12930,14 @@ export type Database = {
           title: string
         }[]
       }
+      next_admin_digest_time: { Args: never; Returns: string }
       normalize_profile_onboarding_email: {
         Args: { input_email: string }
         Returns: string
+      }
+      notification_setting_enabled: {
+        Args: { p_key: string }
+        Returns: boolean
       }
       notify_followers: {
         Args: {
@@ -12445,6 +12949,14 @@ export type Database = {
         }
         Returns: undefined
       }
+      pick_fallback_image: {
+        Args: { p_category: string }
+        Returns: {
+          pool_id: string
+          public_url: string
+        }[]
+      }
+      poke_notification_dispatcher: { Args: never; Returns: undefined }
       populate_geometry_columns:
         | { Args: { tbl_oid: unknown; use_typmod?: boolean }; Returns: number }
         | { Args: { use_typmod?: boolean }; Returns: string }
@@ -12713,6 +13225,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      request_new_catalog_item: {
+        Args: { p_note?: string; p_role_key: string; p_title: string }
+        Returns: string
+      }
       resolve_approval_request_type: {
         Args: { p_feature_key: string }
         Returns: string
@@ -12776,6 +13292,10 @@ export type Database = {
           p_sub_scores: Json
           p_total_score: number
         }
+        Returns: Json
+      }
+      search_cadde_mentions_v1: {
+        Args: { p_limit?: number; p_query: string }
         Returns: Json
       }
       search_catalog: {
@@ -12843,6 +13363,14 @@ export type Database = {
       set_current_member_catalog_role: {
         Args: { p_role_key: string }
         Returns: undefined
+      }
+      set_my_notification_subscription: {
+        Args: { p_admin_update: boolean; p_new_member: boolean }
+        Returns: Json
+      }
+      set_notification_setting: {
+        Args: { p_enabled: boolean; p_key: string }
+        Returns: boolean
       }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
@@ -13972,9 +14500,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       currency_code: ["TRY", "USD", "EUR", "GBP", "QAR"],

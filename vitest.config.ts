@@ -7,6 +7,11 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    // Tam suite paralel yük altında 5 sn'lik varsayılan zaman aşımına takılıp flaky
+    // kızarıyor (2026-07-30 ölçümü: eşzamanlı koşuda 40 test kırmızı, izole 21/21 yeşil;
+    // dosya süreleri 1 sn -> 17-53 sn'ye çıkıyordu). Testlerin kendisi hızlı — sınır,
+    // makine yükü payı bırakacak kadar gevşetildi.
+    testTimeout: 15_000,
     setupFiles: ["./src/test/setup.ts"],
     include: [
       "src/**/*.{test,spec}.{ts,tsx}",
