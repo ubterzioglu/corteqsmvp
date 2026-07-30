@@ -141,6 +141,17 @@
   <strong>ana koda alındı ama canlıya çıkmadı</strong>. Bu yüzden dışarıdan bakan biri hiçbirini göremiyor.</p>
 
   <div class="callout">
+    <strong>🔴 Toplantıda ilk ele alınması gereken — süre sınırlı:</strong>
+    mail servisinin API anahtarı <strong>geçersiz</strong>. Canlı kuyruktan ölçüldü:
+    <code>401 — API key is invalid</code>. Bugün yazılan 8 durum-raporu maili kuyrukta
+    <strong>bekliyor</strong> (kaybolmadı), ama sistem 5 denemeden sonra pes ediyor ve
+    <strong>her yeni commit bir deneme yakıyor</strong> — şu an 1 deneme kullanıldı.
+    Anahtar yenilenmezse bu mailler kalıcı olarak kaybolur. Aynı arıza 29 Temmuz'da
+    form başvuru maillerinin sessizce gitmemesine yol açmıştı; o zaman anahtarın
+    fonksiyon ortamında olmadığı düşünülüyordu — bugün anlaşıldı ki anahtar <em>var ama çürük</em>.
+  </div>
+
+  <div class="callout">
     <strong>Toplantının ana mesajı:</strong> yeni özellik geliştirmek değil, <em>biriken teslimi kapatmak</em>
     en yüksek getirili iş. Deploy edilmediği için: (1) tamamlanan 14 revizyon maddesi listede hâlâ "açık"
     görünüyor, (2) hoş geldin maili hiç kimseye gitmiyor, (3) Cadde V1'in beş kalemi gerçek cihazda
@@ -166,6 +177,13 @@
         <td>Coolify deploy'u bugün mü, yoksa referral işi bitince tek seferde mi?</td>
         <td>Kuyrukta 4 iş var. Tek seferde çıkmak riski yoğunlaştırır; bugün çıkmak 14 maddeyi
             "yapıldı"ya çevirmeyi mümkün kılar.</td>
+      </tr>
+      <tr>
+        <td><strong>🔴 Mail API anahtarı</strong></td>
+        <td>Resend anahtarı bugün yenilenecek mi?</td>
+        <td>Anahtar geçersiz (401). 8 mail kuyrukta bekliyor, 5 denemeden sonra siliniyor ve
+            <strong>her commit bir deneme harcıyor</strong>. Yenilenmeden hoş geldin maili de
+            zaten çalışmaz — Grup B'nin ön koşulu bu.</td>
       </tr>
       <tr>
         <td><strong>Hoş geldin maili anahtarı</strong></td>
@@ -258,7 +276,7 @@
 
       <tr class="grp"><td colspan="4">GRUP B — Hoş geldin maili canlıya (kod hazır, canlı boş)</td></tr>
       <tr><td class="id">B05</td><td>Hoş geldin maili migration'ını canlıya uygula</td><td><span class="st sql">SQL</span></td><td>B04</td></tr>
-      <tr><td class="id">B06</td><td>Edge Function deploy + mail anahtarlarının fonksiyon ortamında olduğunu doğrula</td><td><span class="st ops">OPS</span></td><td>B05</td></tr>
+      <tr><td class="id">B06</td><td><strong>🔴 Resend API anahtarını yenile</strong> (geçersiz — 401) + Edge Function deploy. Süre sınırlı: kuyrukta 8 kayıt, 5 denemede siliniyor</td><td><span class="st ops">OPS</span></td><td>B05</td></tr>
       <tr><td class="id">B07</td><td>Uçtan uca tek mail testi (gerçek gelen kutusu) + genel anahtarı aç</td><td><span class="st ops">OPS</span></td><td>B06</td></tr>
 
       <tr class="grp"><td colspan="4">GRUP C — Profil referral doğrulama + yönetici görünürlüğü (1. iş)</td></tr>

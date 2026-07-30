@@ -20,6 +20,7 @@
 | Çalışma ağacı | ✅ temiz — 4 dosyalık admin-shell işi (+125/−317) devir öncesinde commit'lendi ve `main`'e push'landı (B01) |
 | Bekleyen migration | 3 dosya `supabase/migrations/` kökünde → **B02–B05** |
 | Deploy | ⛔ Coolify'a **hiçbir şey** çıkmadı: bildirim altyapısı + Cadde V1 + hoş geldin maili + bugünün işleri |
+| Mail altyapısı | 🔴 `RESEND_API_KEY` **geçersiz (401)** — 8 kayıt kuyrukta `pending`, her commit bir deneme yakıyor → **B06 acil** |
 
 **Ortam notu (29 Temmuz'daki bilgi yanlıştı):** canlı DB'ye psql ile **yazma da çalışıyor** —
 pooler + `dangerouslyDisableSandbox: true` şart. Engelli olan yalnız Node HTTPS.
@@ -70,11 +71,29 @@ Canlıda **hiçbir şey yok**: `notification_email_outbox`'ta yalnız `admin_upd
 `--single-transaction` ile uygula → history INSERT → `applied/`'a taşı.
 ✅ Welcome fonksiyonu/trigger'ı canlıda; `supabase/migrations/` kökü boş.
 
-**B06 · Edge Function deploy + secret denetimi** — B05 sonrası
-`supabase functions deploy …`. **Kritik:** mail secret'ları fonksiyon ortamında olmalı
-(`RESEND_API_KEY` / `MAIL_FROM` / Zoho SMTP) — `.env.local`'de olması **yetmez**, 29 Temmuz'da
-form başvuru maillerinin sessizce gitmemesinin nedeni tam buydu.
-✅ `supabase secrets list` ilgili anahtarları gösteriyor.
+**B06 · Edge Function deploy + `RESEND_API_KEY`'i YENİLE** — B05 sonrası · 🔴 **ACİL, SÜRE SINIRLI**
+
+30 Temmuz'da canlı kuyruktan ölçüldü — sorun tahmin değil, teşhis edildi:
+
+```
+notification_email_outbox: 97 skipped · 8 pending
+last_error: Resend request failed: 401 {"statusCode":401,
+            "name":"validation_error","message":"API key is invalid"}
+```
+
+`RESEND_API_KEY` fonksiyon ortamında **var ama GEÇERSİZ** (401). Yani "secret eksik" değil,
+"secret çürük" — anahtarın Resend panelinden yenilenip `supabase secrets set` ile yazılması gerekiyor.
+
+⏳ **Süre sınırı:** `send-notification-emails/index.ts:36` `MAX_ATTEMPTS = 5`. Bugünkü 8 kayıt
+`attempts = 1`. **Her commit post-commit hook'u tetikliyor, her tetikleme bir deneme yakıyor.**
+5'e ulaşan kayıt `failed` olur ve bir daha denenmez → 8 durum-raporu maili kalıcı olarak kaybolur.
+Anahtar yenilenmeden yapılacak commit sayısı = kalan hak.
+
+✅ Anahtar yenilendikten sonra dispatcher elle tetiklenir → 8 kayıt `sent` olur
+(`pending` oldukları için hâlâ kurtarılabilir durumda) + `supabase secrets list` `MAIL_FROM` ve
+Zoho SMTP anahtarlarını da gösteriyor.
+📌 Ayrıca `MAX_ATTEMPTS` mantığı gözden geçirilmeli: bir commit'in mail denemesi yakması, "kod
+yazma hızı" ile "mail altyapısının sağlığı"nı birbirine bağlıyor — istenen davranış bu değil.
 
 **B07 · Uçtan uca tek mail testi + genel anahtarı aç** — B06 sonrası
 Bildirim Ayarları → "Bana örnek hoş geldin maili gönder" → gerçek gelen kutusunda gör (tarayıcı
