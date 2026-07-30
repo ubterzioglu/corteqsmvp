@@ -85,9 +85,10 @@ last_error: Resend request failed: 401 {"statusCode":401,
 "secret çürük" — anahtarın Resend panelinden yenilenip `supabase secrets set` ile yazılması gerekiyor.
 
 ⏳ **Süre sınırı:** `send-notification-emails/index.ts:36` `MAX_ATTEMPTS = 5`. Bugünkü 8 kayıt
-`attempts = 1`. **Her commit post-commit hook'u tetikliyor, her tetikleme bir deneme yakıyor.**
-5'e ulaşan kayıt `failed` olur ve bir daha denenmez → 8 durum-raporu maili kalıcı olarak kaybolur.
-Anahtar yenilenmeden yapılacak commit sayısı = kalan hak.
+`attempts = 1`. Deneme sayacı **yalnızca `admin-updates.ts`'e yeni kayıt ekleyen commit'lerde**
+ilerliyor — post-commit hook yeni kayıt bulmazsa dispatcher'ı hiç tetiklemiyor (ölçüldü:
+`c15732e` commit'i `0 yeni kayıt` deyip sayacı ilerletmedi). Sıradan kod commit'leri güvenli.
+5'e ulaşan kayıt `failed` olur ve bir daha denenmez → o mailler kalıcı olarak kaybolur.
 
 ✅ Anahtar yenilendikten sonra dispatcher elle tetiklenir → 8 kayıt `sent` olur
 (`pending` oldukları için hâlâ kurtarılabilir durumda) + `supabase secrets list` `MAIL_FROM` ve

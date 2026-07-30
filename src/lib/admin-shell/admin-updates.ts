@@ -14,6 +14,20 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260730-bildirim-maili-anahtari-gecersiz",
+    date: "30 Temmuz 2026",
+    title:
+      "Bildirim maillerinin neden gitmediği bulundu: mail servisinin anahtarı geçersiz — 8 mail kuyrukta bekliyor",
+    items: [
+      "Bugünün güncellemeleri kaydedildiğinde sistem 8 bildirim maili göndermeyi denedi ve 8'i de başarısız oldu. Sebep canlı kuyruktan okundu: mail servisi (Resend) 'API anahtarı geçersiz' cevabı veriyor.",
+      "Bu, 29 Temmuz'da yakalanan 'form başvuru maillerinin sessizce gitmemesi' arızasının gerçek nedenidir. O gün teşhis 'anahtar fonksiyon ortamında tanımlı değil' şeklindeydi; bugün anlaşıldı ki anahtar TANIMLI ama ÇÜRÜK. Yani eksik ayar değil, yenilenmesi gereken bir anahtar.",
+      "İyi haber: 8 mail kaybolmadı, kuyrukta 'bekliyor' durumunda duruyor. Anahtar yenilendiği anda tekrar denenip gönderilebilir.",
+      "Sınır: sistem bir maili 5 kez denedikten sonra pes ediyor ve o kaydı bir daha denemiyor. Şu an 1 deneme kullanılmış durumda, 4 hak kaldı. Deneme sayacı yalnızca yeni bir güncelleme kaydı yazıldığında ilerliyor — sıradan kod değişiklikleri sayacı harcamıyor.",
+      "YAPILACAK: mail servisinin panelinden yeni anahtar üretilip sunucu ortamına yazılması. Bu yapılmadan hoş geldin maili de çalışmaz — o iş de bu anahtara bağlı.",
+      "Durum: teşhis tamamlandı ve kayıt altına alındı; anahtarın yenilenmesi bekliyor.",
+    ],
+  },
+  {
     id: "20260730-butce-sekmesi-menude-durum-raporu-tek-kaynak",
     date: "30 Temmuz 2026",
     title:
@@ -24,6 +38,8 @@ export const ADMIN_UPDATES: AdminUpdateEntry[] = [
       "Revizyon Talepleri panosu denetlendi ve pano ile gerçek arasında ciddi bir fark bulundu: 53 maddeden 43'ü 'açık' görünüyor, ama bunların 14'ü son iki günün Cadde çalışmalarıyla zaten yapılmış (kafe kontenjanları, temalar, marka koruması, Çarşı fotoğraf/video, tek kutulu paylaşım, etiketleme, Cafeler başlığı, geri bildirim bağlantısı, saatler, şehir filtresi). Yani listeye bakan biri bitmiş işleri bekliyor sanıyor.",
       "Panoyu düzeltme işi bilinçli olarak bu kayda dahil EDİLMEDİ: her maddenin hangi çalışmayla karşılandığı kanıtıyla yazılacak ve maddeler 'yapıldı' değil 'inceleniyor' olarak işaretlenecek — çünkü bu işler henüz canlıya çıkmadı, pano da olduğundan iyi görünmemeli.",
       "Ayrıca sıradaki iki iş için yol haritası yazıldı: (1) profilde girilen referral kodunun gerçekten doğrulanması ve yönetici panelinde 'kim hangi kodu kullandı' listesinin geri gelmesi — bugün o alan kaydedilemiyor ve liste boş görünüyor; (2) revizyon panosunun gerçeğe döndürülmesi ve Araçlar modülündeki kırık yönlendirme bağlantılarının onarılması.",
+      "Bu üç ayrı doküman (dünün kapanış notu + iki yol haritası) birbirinden habersiz aynı işleri tekrar ediyordu; tek bir devir planına indirildi ve iş, her biri tek oturumda bitecek 25 adıma bölündü. Ayrıca toplantıda kullanılmak üzere tek dosyalık bir HTML durum raporu üretildi: yönetici özeti, karar bekleyen başlıklar, kritik bulgular ve 25 adımın bağımlılık sırası.",
+      "NEDEN PANELDE HENÜZ GÖRÜNMÜYOR: bu güncelleme listesi sitenin kodunun içine gömülü olarak yayınlanıyor. Yani kayıt yazılıp ana koda alınsa bile, sitenin yeni sürümü yayınlanana (deploy) kadar panelde belirmiyor. Son iki günün tüm kayıtları bu yüzden görünmüyor — eksik değil, yayınlanmamış durumda.",
       "Durum: kod ana koda alındı, deploy bekliyor. Bekleyen deploy kuyruğu artık dört kalem: bildirim altyapısı, Cadde V1, hoş geldin maili ve bu iş.",
     ],
   },

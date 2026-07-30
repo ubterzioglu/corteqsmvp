@@ -145,7 +145,8 @@
     mail servisinin API anahtarı <strong>geçersiz</strong>. Canlı kuyruktan ölçüldü:
     <code>401 — API key is invalid</code>. Bugün yazılan 8 durum-raporu maili kuyrukta
     <strong>bekliyor</strong> (kaybolmadı), ama sistem 5 denemeden sonra pes ediyor ve
-    <strong>her yeni commit bir deneme yakıyor</strong> — şu an 1 deneme kullanıldı.
+    <strong>her yeni güncelleme kaydı bir deneme yakıyor</strong> — şu an 1 deneme kullanıldı,
+    4 hak kaldı (sıradan kod değişiklikleri sayacı harcamıyor).
     Anahtar yenilenmezse bu mailler kalıcı olarak kaybolur. Aynı arıza 29 Temmuz'da
     form başvuru maillerinin sessizce gitmemesine yol açmıştı; o zaman anahtarın
     fonksiyon ortamında olmadığı düşünülüyordu — bugün anlaşıldı ki anahtar <em>var ama çürük</em>.
@@ -181,9 +182,9 @@
       <tr>
         <td><strong>🔴 Mail API anahtarı</strong></td>
         <td>Resend anahtarı bugün yenilenecek mi?</td>
-        <td>Anahtar geçersiz (401). 8 mail kuyrukta bekliyor, 5 denemeden sonra siliniyor ve
-            <strong>her commit bir deneme harcıyor</strong>. Yenilenmeden hoş geldin maili de
-            zaten çalışmaz — Grup B'nin ön koşulu bu.</td>
+        <td>Anahtar geçersiz (401). 8 mail kuyrukta bekliyor, 5 denemeden sonra siliniyor;
+            <strong>her yeni güncelleme kaydı bir deneme harcıyor</strong> (4 hak kaldı).
+            Yenilenmeden hoş geldin maili de zaten çalışmaz — Grup B'nin ön koşulu bu.</td>
       </tr>
       <tr>
         <td><strong>Hoş geldin maili anahtarı</strong></td>
