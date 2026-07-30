@@ -283,14 +283,16 @@ kod `902cadc` ile main'de. O oturumun devir notlarındaki açık işler buraya a
   kayıtlı, dosya `applied/`'da, commit `aea4991`.
 - ~~`20260728090000` name boşluğu~~ → `create_muhasebe_butce_state` yazıldı.
 
-**Karar bekleyen (kullanıcıya):**
-- **Freeze branch:** workshop'ta (1:01:10) "bu haline branch açacağım, bu hali donacak" denildi.
-  Cadde redesign'ına başlanmadan `cadde-pre-workshop-freeze` gibi bir snapshot branch açılmalı mı?
-  (Ucuz + güvenli; redesign başlamadan yapılırsa anlamlı.)
-- **`caddeworkshdp.md` yeri:** kökte untracked; workshop oturumunun önerisi `docs/cadde-300/` altına
-  taşıyıp commit'lemek. Kullanıcı bu oturumda "kalsın" dedi (silinmesin anlamında) — taşıma onayı ayrı.
-- **Ürün kararları (panoda madde olarak var, cevabı yok):** m42 featured etkinlik manuel/otomatik ·
-  m3 kafe ikonu tasarım önerisi · m20 tepki emoji seti (negatifler kalsın mı) · m13 tag rezervde.
+**KARARLAR VERİLDİ (kullanıcı, 30 Tem akşam):**
+- ✅ **Freeze branch:** `cadde-pre-workshop-freeze` açıldı ve push'landı (207bce5 üzerinden —
+  redesign öncesi Cadde'nin dondurulmuş hali).
+- ✅ **`caddeworkshdp.md`:** `docs/cadde-300/caddeworkshdp.md`'ye taşındı (transkript git güvencesinde;
+  kök 4-doküman kuralına dönüldü — geçici SONDURUM.md hariç).
+- ✅ **m42 Featured etkinlik: MANUEL** — admin panelden seçer; az veride otomatik seçim güvenilmez,
+  ileride otomatiğe geçilebilir.
+- ✅ **m20 Tepki emoji seti: NEGATİFSİZ** — beğendim · kalp · gülme · destek · "emin olamadım";
+  "beğenmedim" YOK (küçük toplulukta çekingenlik yaratır; "emin olamadım" nazik muhalefet kanalı).
+- Hâlâ açık: **m3 kafe ikonu** (tasarım önerisi üretilecek) · m13 tag rezervde (sade sürüm oturunca).
 
 **Teknik borçlar (workshop oturumundan):**
 - `workshop_items` `types.ts`'te yok → `LooseQuery` cast (B14'teki types regen'e eklenecek).
