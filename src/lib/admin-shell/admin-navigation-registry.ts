@@ -44,6 +44,7 @@ import {
   TrendingUp,
   Upload,
   Users,
+  Wallet,
 } from "lucide-react";
 
 import { advisorProfileSections } from "@/lib/resource-links";
@@ -486,6 +487,15 @@ export const adminNavGroups: AdminNavGroup[] = [
         icon: ArrowLeftRight,
         accent: "green",
         aliases: ["nakit", "cash flow", "akış"],
+      },
+      {
+        id: "muhasebe-butce",
+        label: "Bütçe",
+        description: "Yıllık departman bütçesi, gelir beklentisi ve runway.",
+        to: "/admin/muhasebe/butce",
+        icon: Wallet,
+        accent: "green",
+        aliases: ["bütçe", "butce", "budget", "runway"],
       },
     ],
   },

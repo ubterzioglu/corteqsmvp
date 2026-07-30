@@ -14,6 +14,121 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260730-butce-sekmesi-menude-durum-raporu-tek-kaynak",
+    date: "30 Temmuz 2026",
+    title:
+      "Bütçe sekmesi artık menüde, durum raporu tek kaynağa bağlandı — ve revizyon listesinin 14 maddesi aslında bitmiş çıktı",
+    items: [
+      "MUHASEBE > BÜTÇE sekmesi menüye eklendi. Sayfanın kendisi ve veritabanı iki gün önce hazırdı ama menüde hiçbir bağlantısı yoktu — yani adresi elle yazmayan kimse sayfaya ulaşamıyordu. Artık Muhasebe grubunun altında 'Bütçe' olarak duruyor ve arama kutusundan da bulunuyor.",
+      "Bu sayfanın (Durum Raporu) beslendiği güncelleme listesi iki ayrı yerde tutuluyordu: biri ortak listede, biri sayfanın içinde kopya olarak. Doğal sonucu şuydu — bir tarafa yazılan kayıt diğerinde görünmüyordu. Kopya kaldırıldı, sayfa artık doğrudan ortak listeyi okuyor. Bundan sonra bir güncelleme yazıldığında hem zil menüsünde hem burada aynı anda görünür.",
+      "Revizyon Talepleri panosu denetlendi ve pano ile gerçek arasında ciddi bir fark bulundu: 53 maddeden 43'ü 'açık' görünüyor, ama bunların 14'ü son iki günün Cadde çalışmalarıyla zaten yapılmış (kafe kontenjanları, temalar, marka koruması, Çarşı fotoğraf/video, tek kutulu paylaşım, etiketleme, Cafeler başlığı, geri bildirim bağlantısı, saatler, şehir filtresi). Yani listeye bakan biri bitmiş işleri bekliyor sanıyor.",
+      "Panoyu düzeltme işi bilinçli olarak bu kayda dahil EDİLMEDİ: her maddenin hangi çalışmayla karşılandığı kanıtıyla yazılacak ve maddeler 'yapıldı' değil 'inceleniyor' olarak işaretlenecek — çünkü bu işler henüz canlıya çıkmadı, pano da olduğundan iyi görünmemeli.",
+      "Ayrıca sıradaki iki iş için yol haritası yazıldı: (1) profilde girilen referral kodunun gerçekten doğrulanması ve yönetici panelinde 'kim hangi kodu kullandı' listesinin geri gelmesi — bugün o alan kaydedilemiyor ve liste boş görünüyor; (2) revizyon panosunun gerçeğe döndürülmesi ve Araçlar modülündeki kırık yönlendirme bağlantılarının onarılması.",
+      "Durum: kod ana koda alındı, deploy bekliyor. Bekleyen deploy kuyruğu artık dört kalem: bildirim altyapısı, Cadde V1, hoş geldin maili ve bu iş.",
+    ],
+  },
+  {
+    id: "20260729-cadde-sehir-eslestirme-onarimi",
+    date: "29 Temmuz 2026",
+    title:
+      "Cadde'de üyelerin %89'u 'şehirsiz' görünüyormuş — akışın şehir eşleştirmesi onarıldı",
+    items: [
+      "Cadde akışı sana en yakın içeriği öne çıkarmak için 'aynı şehirdeyiz' sinyalini kullanıyor. Ölçüldü: şehri kayıtlı 110 üyeden yalnızca 12'sinde (%11) bu sinyal çalışıyormuş. Yani akış, üyelerin neredeyse tamamı için şehir bilgisini yok saymış gibi davranıyordu.",
+      "İki bağımsız sebep vardı. Birincisi yine Türkçe 'İ' harfi: sistem 'İstanbul'u küçültürken sade 'istanbul' yerine farklı bir harf dizisi üretiyor ve ikisini eşleştirmiyordu. En kalabalık grup olan 13 İstanbul üyesi bu yüzden hiç eşleşmiyordu. Aynı sorun ülke tarafında da vardı: üye profilinde 'Türkiye', katalogda 'Turkiye' yazıyordu.",
+      "İkinci sebep şehir listesinin boş kalmasıydı. Sitenin genel şehir veritabanında ~77.000 şehir varken Cadde'nin kendi şehir listesinde yalnızca 6 şehir vardı. Doha (9 üye), Ankara (6), İzmir (4), Antalya (3), Frankfurt, Düsseldorf, Dortmund... hiçbiri yoktu. Liste Haziran'da elle 6 şehirle kurulmuş ve bir daha büyütülmemişti.",
+      "SONUÇ (canlıda ölçüldü): şehri tanınan üye sayısı 12'den 99'a çıktı (110 üyeden). Şehir listesi 6'dan 51'e, ülke listesi 5'ten 18'e yükseldi.",
+      "Daha da önemlisi: bir gün önce eklenen 'Şehrim' akış filtresi tam da bu üyelerde BOŞ liste döndürüyordu — yani yeni özellik çoğunluk için baştan bozuktu. Artık çalışıyor.",
+      "Listenin bir daha çürümemesi için kendini besleyen bir mekanizma kuruldu: bir üye profiline şehir yazdığında o şehir genel veritabanından Cadde listesine doğru saat dilimiyle birlikte kendiliğinden ekleniyor.",
+      "Kalan 11 üye veri girişi sorunu: profiline 'a', 'Mb', 'Vanuu' gibi anlamsız değerler ya da 'Çankaya' (ilçe), 'München' (katalogda Munich) yazmışlar. Kalıcı çözüm profilde şehri serbest metin olarak yazdırmak yerine listeden seçtirmek — bu ayrı bir iş olarak duruyor.",
+      "Durum: veritabanı değişiklikleri canlıya UYGULANDI ve doğrulandı, kod ana koda alındı. Geriye sitenin yeni sürümünün yayınlanması (deploy) kaldı.",
+    ],
+  },
+  {
+    id: "20260729-cadde-carsi-gorsel-iletisim",
+    date: "29 Temmuz 2026",
+    title:
+      "Çarşı ilanlarına fotoğraf, video ve iletişim bilgisi eklenebiliyor — ücretli ilan altyapısı da hazır (kapalı)",
+    items: [
+      "Çarşı ilanlarının veritabanında görsel alanı ilk günden beri vardı ama hiçbir forma bağlanmamıştı — yani kullanıcı ilanına görsel ekleyemiyordu. Artık ekleyebiliyor: en fazla 6 fotoğraf + 1 video.",
+      "İletişim tercihi düzeltildi. Eskiden ilan sahibi 'telefonla ulaşın' diyebiliyordu ama telefon numarasının kendisi kaydedilmiyordu — yani o ilana ulaşmanın hiçbir yolu yoktu. Artık telefon veya e-posta seçilirse değerini girmek ZORUNLU.",
+      "Ücretli ilan altyapısı kuruldu ama KAPALI: V1'de ilan vermek ücretsiz. İleride tek bir ayar açıldığında yeni ilanlar 'ödeme bekliyor' durumunda kaydedilecek, yayına girmeyecek ve kullanıcıya 'Ödemenizi tamamlayarak ilanınızı yayınlayabilirsiniz.' mesajı gösterilecek. Yöneticiler bu kuraldan muaf.",
+      "ÖNEMLİ: Bu ücretli mod anahtarı, gerçek ödeme akışı (Stripe) hazır olmadan AÇILMAMALI. Tek başına açılırsa ilanlar taslakta kalır ve kullanıcı ilanını hiçbir şekilde yayınlayamaz.",
+      "Çarşı şimdilik 'global' — tüm ülkelerin ilanları tek listede. İleride ülke bazlı Çarşı istenirse tek ayarla kullanıcının kendi ülkesine daraltılabiliyor.",
+      "Durum: veritabanı değişikliği canlıya UYGULANDI, kod ana koda alındı, deploy bekliyor. Gerçek dosya yüklemeli uçtan uca ilan verme henüz gerçek cihazda denenmedi.",
+    ],
+  },
+  {
+    id: "20260729-cadde-cafe-tema-marka-korumasi",
+    date: "29 Temmuz 2026",
+    title:
+      "Cafelere 16 gerçek tema, 999'a kadar kontenjan ve marka adı koruması geldi (96 marka)",
+    items: [
+      "Cafe temaları eskiden kodun içine gömülü 7 kategoriydi (IT, Hekimler, Profesyoneller...). Artık veritabanında 16 gerçek tema var: Girişim, Startup, Yatırım, Yazılım, AI, Meslek, HR, Networking, Eğitim, Sağlık, Spor, Gusto, Müzik, Hobi, Party, Gündem. Yeni tema eklemek artık kod değişikliği değil — deploy gerekmiyor.",
+      "Kontenjan seçenekleri 10/25/50'den 50/100/250/500/999'a çıkarıldı.",
+      "MARKA KORUMASI: Artık isteyen herkes 'Starbucks Cafe' adında bir cafe açamıyor. 96 marka (Türk + uluslararası) listeye eklendi. Bir kullanıcı o markanın yayındaki katalog kaydını yönetiyorsa açabiliyor; yönetmiyorsa kendisine 'Parodi Starbucks Cafe' adı öneriliyor ve tek tıkla uygulanıyor. Yöneticiler muaf — moderasyon için açabilmeleri gerekiyor.",
+      "Yeni sayfa: Cadde > Markalar. Marka ekle, pasifleştir, sil; ayrıca bir adın engellenip engellenmeyeceğini önceden deneyebileceğin bir test kutusu var.",
+      "Eşleşme kelime bütünlüğüne bakıyor: 'Berlin NIKE Koşu' yakalanıyor, ama 'Teknike Dair' veya 'Metropol' gibi masum adlar yakalanmıyor.",
+      "Bilinmesi gereken sınır: sistemde 'doğrulanmış işletme' diye bir kavram YOK — mevcut doğrulama yalnızca telefon doğrulaması. Marka sahipliğinin tek gerçek göstergesi, kullanıcının o markanın katalog kaydını yönetiyor olması.",
+      "Durum: veritabanı değişikliği canlıya UYGULANDI, kod ana koda alındı, deploy bekliyor.",
+    ],
+  },
+  {
+    id: "20260729-cadde-hashtag-mention-kapsam",
+    date: "29 Temmuz 2026",
+    title:
+      "Cadde'ye serbest hashtag, @etiketleme ve akış filtreleri geldi (Tümü · Şehrim · Ülkem · Etkinlikler · Cafelerim)",
+    items: [
+      "Cadde'de bugüne kadar kullanıcı kendi etiketini yazamıyor, kimseyi etiketleyemiyordu. Artık paylaşım metnine serbestçe #etiket yazılabiliyor ve @ ile birisi etiketlenebiliyor. Ayrıca trend etiketler bölümü eklendi.",
+      "Etiketlenebilecek dört şey var: üye (yalnız profili herkese açık olanlar), katalog kaydı (yayındakiler), cafe (yayında ve arşivlenmemiş), Çarşı ilanı (yayında, onaylı, süresi geçmemiş). Kimin görünür olacağına sistem karar veriyor — kullanıcı görmemesi gereken bir şeyi etiketleyemiyor.",
+      "Türkçe titizliği: '#İstanbul' ile '#istanbul' aynı etikete inmezse etiket sayfası ikiye bölünür. Hem tarayıcı hem veritabanı tarafındaki standart küçültme bunu YANLIŞ yapıyordu; iki tarafta da düzeltildi ve beklenen sonuçlar canlı veritabanında ölçülüp teste sabitlendi.",
+      "Akış filtreleri: Tümü · Şehrim · Ülkem · Etkinlikler · Cafelerim. 'Cafelerim' yalnızca ONAYLI üye olduğun cafelerin paylaşımlarını gösteriyor.",
+      "Yakınımda / Takip Ettiklerim / İş Fırsatları filtreleri görünüyor ama 'Yakında' rozetiyle tıklanamaz durumda. Bilinçli tercih: tıklanabilir olsalardı kullanıcı sessizce yanlış akış görürdü.",
+      "Etiketin metni paylaşım anındaki isimdir — etiketlenen kişi sonradan adını değiştirse bile eski paylaşımın metni değişmez.",
+      "Durum: veritabanı değişikliği canlıya UYGULANDI, kod ana koda alındı, deploy bekliyor. Etiketleme bildiriminin gerçekten gittiği henüz gerçek kullanıcıyla doğrulanmadı.",
+    ],
+  },
+  {
+    id: "20260729-cadde-paylasim-medya-composer",
+    date: "29 Temmuz 2026",
+    title:
+      "Cadde paylaşımlarına fotoğraf ve video eklenebiliyor — paylaşım kutusu 6 alanlı formdan tek kutuya indi",
+    items: [
+      "Cadde akışı bugüne kadar yalnızca metin taşıyordu. Artık bir paylaşıma en fazla 4 fotoğraf + 1 video eklenebiliyor. Akış kartında ek sayısına göre düzen kuruluyor (1 tam genişlik, 2 yan yana, 3'te ilki büyük, 4'te 2x2) ve tıklayınca ok tuşlarıyla gezilebilen büyük görüntüleyici açılıyor.",
+      "Paylaşım kutusu eskiden 6 görünür alanlı bir formdu (tür, başlık, metin, hedef ülke, hedef şehir, etiketler) ve ilk izlenimde 'form doldur' hissi veriyordu. Artık tek bir kutu; altında Fotoğraf · Video · Konum · Etkinlik şeridi var. Paylaşım türü kullanıcıdan gizlendi — seçtiği ekten kendiliğinden anlaşılıyor.",
+      "Soru ve İlan/Teklif türleri KAYBOLMADI; katlanan 'Detaylar' panelinde başlık ve hazır etiketlerle birlikte duruyor.",
+      "Sadece görsel paylaşmak da meşru sayıldı: metin boş bırakılabiliyor. Ama ne metin ne de görsel varsa paylaşım reddediliyor.",
+      "Video tek bir ayarla tamamen kapatılabiliyor — kod değişikliği gerekmiyor.",
+      "Durum: veritabanı değişikliği canlıya UYGULANDI ve doğrulandı, kod ana koda alındı, deploy bekliyor. Gerçek dosya yükleme uçtan uca henüz denenmedi.",
+    ],
+  },
+  {
+    id: "20260729-uyeye-hos-geldin-maili",
+    date: "29 Temmuz 2026",
+    title:
+      "Yeni üyeye artık markalı bir 'hoş geldin' maili gidiyor — ama bu henüz canlıda DEĞİL",
+    items: [
+      "Bir üye e-postasını doğruladığı anda kendisine Türkçe, markalı bir karşılama maili gidiyor. Bu, Supabase'in standart 'e-postanı doğrula' mailinin yerine geçmiyor — ondan SONRA gelen ayrı bir mail.",
+      "Mevcut bildirim altyapısını (kuyruk, tekrar gönderme, çift gönderme koruması) aynen kullanıyor. Tek fark: alıcı, abone listesinden değil kaydolan üyenin kendisinden geliyor.",
+      "Bildirim Ayarları sayfasına 'Bana örnek hoş geldin maili gönder' butonu eklendi — şablonu gerçek bir mail olarak kendine yollayıp gözle kontrol edebiliyorsun. Bu önemli, çünkü tarayıcı önizlemesi Gmail/Outlook'un yaptığı kırpmaları göstermiyor.",
+      "Durum: CANLIDA HENÜZ HİÇBİR ŞEY YOK. Kod ana koda alındı, ama veritabanı değişikliği uygulanmadı ve mail gönderen servis yayına alınmadı. Sıradaki iş bu.",
+      "DİKKAT: Genel anahtar açılmadan önce kaydolan üyeler bu maili HİÇ almaz — o sırada kuyruğa düşen kayıtlar 'atlandı' olarak işaretlenir ve bir daha denenmez.",
+    ],
+  },
+  {
+    id: "20260729-cadde-arayuz-onarimlari",
+    date: "29 Temmuz 2026",
+    title:
+      "Cadde'de üç can sıkıcı arayüz sorunu düzeltildi: F5 sonrası sayfa sonuna atlama, donuk saatler, yol göstermeyen boş ekranlar",
+    items: [
+      "F5'e bastığında sayfa en alta, footer'a atlıyordu. Sebep: tarayıcı eski kaydırma konumunu içerik henüz yüklenmeden geri yüklüyor, içerik sonradan büyüdüğünde kullanıcı en altta kalıyordu. Artık kaydırma konumunu tarayıcı değil uygulama yönetiyor.",
+      "Dünya saatleri şeridi donuktu — saat yalnızca sayfa çizilirken hesaplanıyordu, dakika hiç değişmiyordu. Artık gerçekten canlı: her dakika başında kendini güncelliyor. Ayrıca 6 sabit şehir yerine kendi saatin + İstanbul + filtrelediğin şehir gösteriliyor; ikonlar yerel saate göre gündoğumu / güneş / günbatımı / ay olarak değişiyor ve gece-gündüz tonu uygulanıyor.",
+      "'Aktif Cafe Özeti' başlığı 'Cafeler (Berlin +2)' oldu — ne gösterdiği başlıktan anlaşılıyor.",
+      "Çarşı'nın boş ekranı artık yol gösteriyor: 'İlk ilanı sen ver.' + ilan verme butonu.",
+      "Cadde'deki geri bildirim bağlantısı WhatsApp'tan kendi /feedback formumuza taşındı — artık kayıt altına alınıyor ve Geri Bildirim sayfasından izlenebiliyor.",
+      "Durum: kod ana koda alındı, deploy bekliyor. F5 davranışı ve saat çiplerinin dakika geçişi gerçek cihazda henüz doğrulanmadı.",
+    ],
+  },
+  {
     id: "20260729-form-basvuru-maili-gitmiyormus",
     date: "29 Temmuz 2026",
     title: "Sessiz arıza yakalandı: siteden gelen form başvurularının bildirim maili bir süredir hiç gönderilmiyormuş",
@@ -49,7 +164,7 @@ export const ADMIN_UPDATES: AdminUpdateEntry[] = [
       "Daha önemlisi: bu butonların bir kısmı aslında var olmayan sayfalara götürüyordu, yani tıklayan kullanıcı boş ekranla karşılaşıyordu. Şimdi bunlar 'Yakında' rozetiyle ve tıklanamaz halde gösteriliyor — kullanıcı neyin hazır olmadığını görüyor, hataya düşmüyor.",
       "Sonuç ekranına ayrıca 'Tekrar Çöz' butonu eklendi; o her zaman aktif ve rozetsiz.",
       "Hedef sayfalar yayına girdiğinde tek yapılacak iş rozetleri kaldırmak — buton düzeni hazır bekliyor.",
-      "Durum: bu iş henüz ana koda alınmadı, geliştirici bilgisayarında duruyor.",
+      "Durum (30 Temmuz'da güncellendi): iş ana koda alındı, deploy bekliyor. Bu kayıt ilk yazıldığında 'geliştirici bilgisayarında duruyor' diyordu; aynı gün birleştirildi.",
     ],
   },
   {
@@ -70,7 +185,7 @@ export const ADMIN_UPDATES: AdminUpdateEntry[] = [
     items: [
       "Amaç: departman departman (ör. yazılım, pazarlama) 12 aylık gider bütçesini, gelir beklentisini ve ikisinin birleştiği nakit akışını tek ekrandan planlayabilmek. Ekranın üstünde 'eldeki para bu gidişle kaç ay yeter' özeti (runway) yer alıyor.",
       "Bugün önce bir tasarım dokümanı, ardından adım adım uygulama planı yazıldı. Sonra kodun temel katmanları çıkarıldı: veritabanı tablosu, hesaplama mantığı (aylık toplamlar, bakiye, runway), Supabase bağlantısı, veri çekme kancaları, yazarken kendiliğinden kaydeden otomatik kayıt mekanizması, üç ana panel (Departman Bütçesi, Gelirler, Konsolide Nakit Akışı) ve CSV olarak dışa aktarma. Her parça için testleri de yazıldı.",
-      "Durum: bu iş ayrı bir çalışma dalında duruyor. Henüz ana koda alınmadı, admin menüsüne 'Bütçe' sekmesi olarak bağlanmadı ve veritabanı değişikliği canlıya UYGULANMADI — yani panelde şu an görünmüyor. Bir sonraki adım: sekmeyi menüye bağlamak, ana koda birleştirmek ve veritabanı değişikliğini canlıya almak.",
+      "Durum (30 Temmuz'da güncellendi): iş TAMAMLANDI. Kod ana koda alındı, veritabanı değişikliği canlıya UYGULANDI ve sekme Muhasebe menüsüne 'Bütçe' olarak bağlandı — deploy sonrası panelde görünür olacak. Bu kayıt ilk yazıldığında üç maddenin de eksik olduğunu söylüyordu; menü bağlantısı 30 Temmuz'da, diğer ikisi 28 Temmuz akşamı tamamlandı.",
     ],
   },
   {
