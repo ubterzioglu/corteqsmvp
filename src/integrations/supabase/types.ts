@@ -6662,24 +6662,30 @@ export type Database = {
           full_name: string | null
           id: string
           referral_code_id: string
-          submission_id: string
+          source: string
+          submission_id: string | null
           used_at: string
+          user_id: string | null
         }
         Insert: {
           email?: string | null
           full_name?: string | null
           id?: string
           referral_code_id: string
-          submission_id: string
+          source?: string
+          submission_id?: string | null
           used_at?: string
+          user_id?: string | null
         }
         Update: {
           email?: string | null
           full_name?: string | null
           id?: string
           referral_code_id?: string
-          submission_id?: string
+          source?: string
+          submission_id?: string | null
           used_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {

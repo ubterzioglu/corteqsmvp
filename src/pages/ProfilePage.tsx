@@ -47,10 +47,12 @@ import { useCurrentUserDashboard } from "@/hooks/useCurrentUserDashboard";
 import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS, type GenericFeatureKey } from "@/lib/features";
 import { getReferralSourceOptions } from "@/lib/pending-onboarding-normalize";
 import {
+  getMyReferralCodeUsage,
   submitFeatureRequest,
   submitRoleChangeRequest,
   updateProfileAttribute,
   updateProfileAvatar,
+  type MyReferralCodeUsage,
 } from "@/lib/member-profile-api";
 import { getAttributeStringValue, type AttributeVisibility, type ProfileAttributeState } from "@/lib/member-profile";
 import { getProfileDocumentAccessUrl, parseProfileDocumentRecord, removeProfileDocument, uploadProfileDocument, type ProfileDocumentRecord } from "@/lib/profile-documents";
@@ -364,6 +366,22 @@ const ProfilePage = () => {
 
   const [draftValues, setDraftValues] = useState<DraftValueMap>({});
   const [draftVisibilities, setDraftVisibilities] = useState<DraftVisibilityMap>({});
+  // Referral kilit durumu — kullanım kaydı varsa alan salt-okunur gösterilir (B12).
+  const [myReferralUsage, setMyReferralUsage] = useState<MyReferralCodeUsage | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getMyReferralCodeUsage()
+      .then((usage) => {
+        if (!cancelled) setMyReferralUsage(usage);
+      })
+      .catch(() => {
+        // Kilit bilgisi ikincil: okunamazsa alan düzenlenebilir kalır, SQL backstop korur.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [profile]);
   const [socialMediaAllVisible, setSocialMediaAllVisible] = useState(true);
   const [commonAttributesAllVisible, setCommonAttributesAllVisible] = useState(true);
   const [savingAttributeKey, setSavingAttributeKey] = useState<string | null>(null);
@@ -995,6 +1013,8 @@ const ProfilePage = () => {
     if (!groupedAttributes.roleSpecific.length) return;
 
     const attributesToSave = groupedAttributes.roleSpecific.filter((attribute) => {
+      // Kilitli referral kodu tekrar gönderilmez — UI'da zaten salt-okunur (B12).
+      if (attribute.attributeKey === REFERRAL_CODE_ATTRIBUTE_KEY && myReferralUsage) return false;
       const rawValue = draftValues[attribute.attributeKey];
       if (attribute.dataType === "boolean") return true;
       return String(rawValue ?? "").trim().length > 0;
@@ -1008,24 +1028,42 @@ const ProfilePage = () => {
       return;
     }
 
+    // Hata-toleranslı döngü (B12): bir alanın hatası diğerlerini engellemez; hatalar
+    // toplanır, kalanlar kaydedilir, sonda tek özet toast gösterilir. (Eski davranış
+    // ilk hatada tüm kaydı çökertiyordu — referral 42501 regresyonunun ikinci yarısı.)
     setSavingRoleSpecificAttributes(true);
+    const failures: string[] = [];
+    let savedCount = 0;
     try {
       for (const attribute of attributesToSave) {
-        const { valueToSend, visibility } = buildAttributePayload(attribute);
-        await updateProfileAttribute(attribute.attributeKey, valueToSend, visibility);
+        try {
+          const { valueToSend, visibility } = buildAttributePayload(attribute);
+          await updateProfileAttribute(attribute.attributeKey, valueToSend, visibility);
+          savedCount += 1;
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.";
+          failures.push(`${attribute.label}: ${message}`);
+        }
       }
 
-      await refreshProfile();
-      toast({
-        title: "Rolüne özel alanlar kaydedildi",
-        description: "Yeni bireysel onboarding alanları ve diğer rol özel alanlar güncellendi.",
-      });
-    } catch (error) {
-      toast({
-        title: "Rolüne özel alanlar kaydedilemedi",
-        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
-        variant: "destructive",
-      });
+      if (savedCount > 0) {
+        await refreshProfile();
+      }
+
+      if (failures.length === 0) {
+        toast({
+          title: "Rolüne özel alanlar kaydedildi",
+          description: "Yeni bireysel onboarding alanları ve diğer rol özel alanlar güncellendi.",
+        });
+      } else {
+        toast({
+          title: savedCount > 0
+            ? `${savedCount} alan kaydedildi, ${failures.length} alan kaydedilemedi`
+            : "Rolüne özel alanlar kaydedilemedi",
+          description: failures.join(" · "),
+          variant: "destructive",
+        });
+      }
     } finally {
       setSavingRoleSpecificAttributes(false);
     }
@@ -1814,23 +1852,53 @@ const ProfilePage = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               {groupedAttributes.roleSpecific.length ? (
-                groupedAttributes.roleSpecific.map((attribute) => (
-                  <ProfileAttributeEditor
-                    key={attribute.attributeKey}
-                    attribute={attribute}
-                    draftValue={draftValues[attribute.attributeKey]}
-                    draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
-                    displayNameLabel={displayNameLabel}
-                    isSaving={savingRoleSpecificAttributes}
-                    saveMode="section"
-                    visibilityMode="inline-switch"
-                    hideVisibilityControl={PRIVATE_ONLY_ONBOARDING_ATTRIBUTE_KEYS.has(attribute.attributeKey)}
-                    onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
-                    onVisibilityChange={(nextVisibility) =>
-                      setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
-                    }
-                  />
-                ))
+                groupedAttributes.roleSpecific.map((attribute) => {
+                  // B12: doğrulanmış referral kodu kilitli gösterilir — editör yerine rozet.
+                  if (attribute.attributeKey === REFERRAL_CODE_ATTRIBUTE_KEY && myReferralUsage) {
+                    const lockedCode = String(draftValues[attribute.attributeKey] ?? "").trim();
+                    const verifiedAt = myReferralUsage.usedAt
+                      ? new Date(myReferralUsage.usedAt).toLocaleDateString("tr-TR")
+                      : null;
+                    return (
+                      <div key={attribute.attributeKey} className={`rounded-lg px-2.5 py-2 ${GOOGLE_SOFT_CARD_SUBTLE}`}>
+                        <p className="text-[11px] font-medium">{attribute.label}</p>
+                        <div className="mt-1 flex flex-wrap items-center gap-2">
+                          <Input className="h-9 max-w-[220px] text-[10px]" value={lockedCode} readOnly disabled />
+                          <Badge variant="secondary" className="px-1.5 py-0 text-[11px] text-emerald-700">
+                            ✓ Doğrulandı{verifiedAt ? ` · ${verifiedAt}` : ""}
+                          </Badge>
+                        </div>
+                        <p className="mt-1 text-[10px] text-muted-foreground">
+                          Referral kodun doğrulandı ve kilitlendi; değiştirmek için yöneticiyle iletişime geç.
+                        </p>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div key={attribute.attributeKey}>
+                      <ProfileAttributeEditor
+                        attribute={attribute}
+                        draftValue={draftValues[attribute.attributeKey]}
+                        draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
+                        displayNameLabel={displayNameLabel}
+                        isSaving={savingRoleSpecificAttributes}
+                        saveMode="section"
+                        visibilityMode="inline-switch"
+                        hideVisibilityControl={PRIVATE_ONLY_ONBOARDING_ATTRIBUTE_KEYS.has(attribute.attributeKey)}
+                        onValueChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
+                        onVisibilityChange={(nextVisibility) =>
+                          setDraftVisibilities((current) => ({ ...current, [attribute.attributeKey]: nextVisibility }))
+                        }
+                      />
+                      {attribute.attributeKey === REFERRAL_CODE_ATTRIBUTE_KEY ? (
+                        <p className="mt-1 px-2.5 text-[10px] text-muted-foreground">
+                          Sizi yönlendiren admin/davet kodunu gir — kaydederken doğrulanır.
+                        </p>
+                      ) : null}
+                    </div>
+                  );
+                })
               ) : (
                 <p className="text-[11px] text-muted-foreground">
                   Bu rol için şu an kullanıcı tarafından düzenlenebilir özel alan bulunmuyor.

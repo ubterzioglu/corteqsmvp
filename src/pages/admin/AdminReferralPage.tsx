@@ -30,6 +30,9 @@ type ReferralUsageRow = {
   used_at: string;
   full_name: string | null;
   email: string | null;
+  /** Kullanım kaynağı: ön kayıt trigger'ı (submission) ya da profil doğrulaması (profile). */
+  source: "submission" | "profile";
+  user_id: string | null;
 };
 
 const AdminReferralPage = () => {
@@ -121,11 +124,20 @@ const AdminReferralPage = () => {
 
       const { data, error } = await supabase
         .from("referral_code_usages")
-        .select("id,referral_code_id,used_at,full_name,email")
+        .select("id,referral_code_id,used_at,full_name,email,source,user_id")
         .in("referral_code_id", ids)
         .order("used_at", { ascending: false });
 
-      if (cancelled || error) return;
+      if (cancelled) return;
+      if (error) {
+        // Sessiz yutma bitti (B13): 403/RLS sorunu bir daha görünmez boş liste üretmesin.
+        toast({
+          title: "Kullanım listesi yüklenemedi",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
 
       const grouped: Record<string, ReferralUsageRow[]> = {};
       for (const usage of (data ?? []) as ReferralUsageRow[]) {
@@ -497,13 +509,29 @@ const AdminReferralPage = () => {
                             />
                           </div>
                         )}
-                        <div className="md:col-span-2">
-                          Kayıtlar:
-                          <span className="text-foreground">
-                            {usages.length
-                              ? ` ${usages.map((usage) => usage.full_name || usage.email || "Isimsiz").join(", ")}`
-                              : " -"}
-                          </span>
+                        <div className="md:col-span-2 space-y-1">
+                          <div className="font-medium text-foreground">Kullanımlar ({usages.length})</div>
+                          {usages.length ? (
+                            <ul className="divide-y divide-border rounded-md border">
+                              {usages.map((usage) => (
+                                <li key={usage.id} className="flex flex-wrap items-center gap-2 px-2 py-1.5">
+                                  <span className="text-foreground">{usage.full_name || "İsimsiz"}</span>
+                                  <span className="text-muted-foreground">{usage.email || "-"}</span>
+                                  <Badge
+                                    variant={usage.source === "profile" ? "default" : "secondary"}
+                                    className="px-1.5 py-0 text-[10px]"
+                                  >
+                                    {usage.source === "profile" ? "Profil" : "Ön kayıt"}
+                                  </Badge>
+                                  <span className="ml-auto text-muted-foreground">
+                                    {new Date(usage.used_at).toLocaleDateString("tr-TR")}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className="text-muted-foreground">Henüz kullanım yok.</p>
+                          )}
                         </div>
                       </div>
                     </AccordionContent>

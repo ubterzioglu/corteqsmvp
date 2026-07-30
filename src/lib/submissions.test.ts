@@ -5,9 +5,11 @@ import {
   formatBytes,
   getCategoryLabel,
   getFormTypeLabel,
+  getReferralValidationMessage,
   getSubmissionDocuments,
   getSubmissionDocumentsBucketLevel,
   getStatusLabel,
+  resolveReferralStatusFromRpcError,
   type UploadedDocument,
   toSubmissionInsert,
   validateSubmissionDocuments,
@@ -163,5 +165,26 @@ describe("submission helpers", () => {
     expect(formatBytes(0)).toBe("0 B");
     expect(formatBytes(1024)).toBe("1 KB");
     expect(formatBytes(1536)).toBe("1.5 KB");
+  });
+});
+
+describe("referral locked status (B11)", () => {
+  it("maps the locked status to the Turkish lock message", () => {
+    expect(getReferralValidationMessage("locked")).toBe(
+      "Referral kodun zaten doğrulandı; değiştirmek için yöneticiyle iletişime geç.",
+    );
+  });
+
+  it("resolves referral statuses from the RPC error details field", () => {
+    expect(resolveReferralStatusFromRpcError({ code: "P0001", details: "locked" })).toBe("locked");
+    expect(resolveReferralStatusFromRpcError({ code: "P0001", details: "not_found" })).toBe("not_found");
+    expect(resolveReferralStatusFromRpcError({ code: "P0001", details: " expired " })).toBe("expired");
+  });
+
+  it("returns null for non-referral errors so callers rethrow the original", () => {
+    expect(resolveReferralStatusFromRpcError({ code: "42501", details: "forbidden" })).toBeNull();
+    expect(resolveReferralStatusFromRpcError({ message: "network" })).toBeNull();
+    expect(resolveReferralStatusFromRpcError(null)).toBeNull();
+    expect(resolveReferralStatusFromRpcError(new Error("x"))).toBeNull();
   });
 });

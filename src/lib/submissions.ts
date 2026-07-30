@@ -22,7 +22,7 @@ export type SubmissionDocumentsBucketStats = {
   usageRatio: number;
 };
 export type SubmissionDocumentsBucketLevel = "normal" | "info" | "warning" | "critical";
-export type ReferralValidationStatus = "missing" | "not_found" | "inactive" | "expired" | "out_of_window" | "valid";
+export type ReferralValidationStatus = "missing" | "not_found" | "inactive" | "expired" | "out_of_window" | "locked" | "valid";
 
 type ErrorWithMessage = {
   message?: string;
@@ -370,7 +370,29 @@ export function getReferralValidationMessage(status: ReferralValidationStatus) {
   if (status === "expired") return "Referral kodunun suresi dolmus.";
   if (status === "out_of_window") return "Referral kodu bu tarihte kullanilamaz.";
   if (status === "missing") return "Referral kodu bos birakilamaz.";
+  if (status === "locked") return "Referral kodun zaten doğrulandı; değiştirmek için yöneticiyle iletişime geç.";
   return "Referral kodu geçersiz.";
+}
+
+const REFERRAL_ERROR_STATUSES: readonly ReferralValidationStatus[] = [
+  "missing",
+  "not_found",
+  "inactive",
+  "expired",
+  "out_of_window",
+  "locked",
+];
+
+/**
+ * update_profile_attribute'un SQL backstop hatasından (P0001, statü DETAIL alanında)
+ * referral statüsünü çözer. Referral dışı hatalarda null döner — çağıran orijinal
+ * hatayı olduğu gibi fırlatmalı.
+ */
+export function resolveReferralStatusFromRpcError(error: unknown): ReferralValidationStatus | null {
+  const details = (error as { details?: unknown } | null)?.details;
+  if (typeof details !== "string") return null;
+  const status = details.trim() as ReferralValidationStatus;
+  return REFERRAL_ERROR_STATUSES.includes(status) ? status : null;
 }
 
 export async function validateReferralCodeBeforeSubmit(referralCode: string | null | undefined) {

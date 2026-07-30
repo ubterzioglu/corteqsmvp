@@ -56,6 +56,8 @@ vi.mock("@/hooks/use-toast", () => ({
 }));
 
 vi.mock("@/lib/member-profile-api", () => ({
+  // B12: kilit sorgusu — testlerde varsayılan "kullanım yok" (alan düzenlenebilir).
+  getMyReferralCodeUsage: () => Promise.resolve(null),
   submitFeatureRequest: (...args: unknown[]) => submitFeatureRequestMock(...args),
   submitRoleChangeRequest: (...args: unknown[]) => submitRoleChangeRequestMock(...args),
   updateProfileAttribute: (...args: unknown[]) => updateProfileAttributeMock(...args),

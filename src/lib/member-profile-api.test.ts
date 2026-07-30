@@ -57,6 +57,60 @@ describe("updateProfileAttribute", () => {
   });
 });
 
+describe("updateProfileAttribute — referral_code (B11)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("validates the code first, then saves the normalized value", async () => {
+    rpcMock.mockImplementation(async (fn: string) => {
+      if (fn === "validate_and_bind_referral_code") {
+        return { data: [{ status: "valid", normalized_code: "KOD123" }], error: null };
+      }
+      return { data: { status: "approved", visibility: "private" }, error: null };
+    });
+
+    const result = await updateProfileAttribute("referral_code", "  kod123  ");
+
+    // Sıra: önce doğrulama, sonra kayıt — ön kayıt akışıyla aynı desen.
+    expect(rpcMock.mock.calls[0][0]).toBe("validate_and_bind_referral_code");
+    expect(rpcMock.mock.calls[1][0]).toBe("update_profile_attribute");
+    expect(rpcMock.mock.calls[1][1]).toMatchObject({
+      attribute_key: "referral_code",
+      attribute_value: "KOD123",
+    });
+    expect(result).toMatchObject({ status: "approved" });
+  });
+
+  it("does NOT call update_profile_attribute for an invalid code and throws Turkish message", async () => {
+    rpcMock.mockImplementation(async (fn: string) => {
+      if (fn === "validate_and_bind_referral_code") {
+        return { data: [{ status: "not_found" }], error: null };
+      }
+      throw new Error("update_profile_attribute cagrilmamaliydi");
+    });
+
+    await expect(updateProfileAttribute("referral_code", "YOKBOYLEKOD")).rejects.toThrow(
+      "Referral kodu bulunamadi.",
+    );
+    expect(rpcMock).toHaveBeenCalledTimes(1);
+    expect(rpcMock.mock.calls[0][0]).toBe("validate_and_bind_referral_code");
+  });
+
+  it("translates the SQL locked backstop (P0001 detail) to the Turkish lock message", async () => {
+    rpcMock.mockImplementation(async (fn: string) => {
+      if (fn === "validate_and_bind_referral_code") {
+        return { data: [{ status: "valid", normalized_code: "KOD999" }], error: null };
+      }
+      return { data: null, error: { code: "P0001", message: "referral code locked", details: "locked" } };
+    });
+
+    await expect(updateProfileAttribute("referral_code", "KOD999")).rejects.toThrow(
+      "Referral kodun zaten doğrulandı; değiştirmek için yöneticiyle iletişime geç.",
+    );
+  });
+});
+
 describe("requestNewCatalogItem", () => {
   beforeEach(() => {
     vi.clearAllMocks();
