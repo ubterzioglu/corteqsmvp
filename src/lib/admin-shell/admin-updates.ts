@@ -14,6 +14,19 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260731-yapilacaklar-karti",
+    date: "31 Temmuz 2026",
+    title:
+      "Durum Raporu sayfasına butonlu 'Yapılacaklar' kartı eklendi — bekleyen el işleri artık panelde",
+    items: [
+      "Şimdiye kadar 'sende kalanlar' listesi yalnızca sohbet mesajlarında ve devir notlarında yaşıyordu — panelde görünmüyordu. Artık Durum Raporu sayfasının üstünde bir Yapılacaklar kartı var: her madde kısa açıklamasıyla listeleniyor ve seni doğrudan ilgili ekrana götüren butonlar taşıyor.",
+      "İlk beş madde: hoş geldin mailini yayına alma (kritik) · login gerektiren QA turu (Cadde/Araçlar/Referral test butonlarıyla) · kafe ikonu seçimi (5 öneri tek sayfada, buton oradan açıyor) · QA sonrası revizyon panosu çevirisi · ilk 18:00 günlük özetinin doğrulanması.",
+      "Tamamlandı işareti kişiseldir: kutucuğu işaretlediğinde madde senin tarayıcında alta düşer ve soluklaşır — başka admin'in listesi etkilenmez. Ekipçe ortak takip gerekirse veritabanına taşınacak (bilinçli sade başlangıç).",
+      "Kafe ikonu önerileri de yayına kondu: 5 varyant (CC monogram, C-kupa, ince belli çay bardağı, sohbet-fincan, asma tabela) 48/24/16 px boyutlarında ve örnek kafe kartı bağlamında tek sayfada karşılaştırılıyor.",
+      "Durum: kod ana koda alındı, deploy sonrası panelde görünür.",
+    ],
+  },
+  {
     id: "20260730-gunluk-ozet-maili",
     date: "30 Temmuz 2026",
     title:

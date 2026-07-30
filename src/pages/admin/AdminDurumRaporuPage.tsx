@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { AdminTodoListCard } from "@/components/admin/AdminTodoListCard";
 import { ADMIN_UPDATES } from "@/lib/admin-shell/admin-updates";
 import {
   AlertTriangle,
@@ -198,6 +199,9 @@ const AdminDurumRaporuPage = () => {
             </CardContent>
           </Card>
         )}
+
+        {/* Yapılacaklar — insan eli gerektiren işler, aksiyon butonlarıyla (admin-todos.ts) */}
+        <AdminTodoListCard />
 
         {/* Recent updates — plain language changelog for admins */}
         <Card>
