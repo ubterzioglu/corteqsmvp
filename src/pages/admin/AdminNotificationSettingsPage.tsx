@@ -113,7 +113,7 @@ const AdminNotificationSettingsPage = () => {
   return (
     <AdminPageShell
       title="Bildirim Ayarları"
-      description="Yeni üye kayıtları ve ürün güncellemeleri için e-posta bildirimlerini yönet."
+      description="Yeni üye kayıtları ve ürün güncellemeleri için e-posta bildirimlerini yönet. Ürün güncellemeleri her akşam 18:00'de (Avrupa saati) tek özet mail olarak gönderilir; 'Şimdi gönder' bekleyenleri erken boşaltır."
       eyebrow="Sistem"
       icon={BellRing}
       accent="red"

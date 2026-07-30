@@ -10,7 +10,10 @@
 // işlenmiş kayıtlar sessizce atlanır, yalnız gerçekten yeni olanlar kuyruğa düşer.
 //
 // Gönderimi bu script yapmaz — send-notification-emails Edge Function yapar. Buradaki
-// tek iş kuyruğa yazmak ve dispatcher'ı dürtmek.
+// tek iş kuyruğa yazmaktır. Kuyruktaki admin_update satırları DB trigger'ı ile bir
+// sonraki 18:00'e (Europe/Berlin) ertelenir ve 15 dk'lık pg_cron drenajı hepsini TEK
+// özet mail olarak gönderir (mig 20260730230000) — bu yüzden eskiden burada olan
+// "dispatcher'ı dürt" adımı bilinçli olarak kaldırıldı.
 //
 // Kullanım:
 //   node --experimental-strip-types scripts/sync-admin-updates.mjs
@@ -127,39 +130,10 @@ async function main() {
     return;
   }
 
-  // Dispatcher gateway'de verify_jwt = false ile çalışır; yetki x-dispatch-secret ile
-  // verilir (service_role key'i bir KULLANICI token'ı olmadığı için getUser'dan geçmez).
-  const dispatchSecret = process.env.NOTIFY_DISPATCH_SECRET;
-  if (!dispatchSecret) {
-    console.warn(
-      "[sync-admin-updates] NOTIFY_DISPATCH_SECRET tanımlı değil; kayıtlar kuyrukta bekliyor " +
-        "(admin panelindeki 'Şimdi gönder' ya da pg_cron gönderecek).",
-    );
-    return;
-  }
-
-  try {
-    const response = await fetch(`${supabaseUrl.replace(/\/+$/, "")}/functions/v1/send-notification-emails`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-dispatch-secret": dispatchSecret,
-      },
-      body: JSON.stringify({ source: "sync-admin-updates" }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`${response.status} ${await response.text()}`);
-    }
-
-    console.log("[sync-admin-updates] Dispatcher tetiklendi:", await response.text());
-  } catch (dispatchError) {
-    // Kuyruk yazıldı; gönderim pg_cron ya da admin panelindeki butonla tamamlanabilir.
-    console.warn(
-      "[sync-admin-updates] Dispatcher tetiklenemedi, kayıtlar kuyrukta bekliyor:",
-      dispatchError instanceof Error ? dispatchError.message : dispatchError,
-    );
-  }
+  console.log(
+    "[sync-admin-updates] Kayıtlar günlük özeti bekliyor: 18:00'de (Europe/Berlin) tek mailde " +
+      "gönderilecek. Erken göndermek için admin panelindeki 'Şimdi gönder' kullanılabilir.",
+  );
 }
 
 // Vitest bu dosyayı saf fonksiyonlar için import eder; main yalnız CLI'dan çalışır.

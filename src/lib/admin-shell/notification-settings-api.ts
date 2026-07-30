@@ -204,10 +204,14 @@ export type DispatchResult = {
 /**
  * Bekleyen kuyruğu elle boşaltır (pg_net/pg_cron yoksa ya da takılan kayıt varsa).
  * Edge Function admin JWT'sini getUser + is_admin ile doğrular.
+ *
+ * force: admin_update kayıtları normalde 18:00 (Europe/Berlin) özetini bekler
+ * (mig 20260730230000); "Şimdi gönder" bu bekleyenleri de erken ve TEK özet mail
+ * olarak boşaltır — butonun adının vaadi budur.
  */
 export async function dispatchPendingNotifications(): Promise<DispatchResult> {
   const { data, error } = await supabase.functions.invoke("send-notification-emails", {
-    body: { source: "admin-panel" },
+    body: { source: "admin-panel", force: true },
   });
   if (error) {
     throw new Error(error.message);

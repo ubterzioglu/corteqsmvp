@@ -8,6 +8,12 @@
 // member_welcome'ın alıcısı payload'dan gelir; abone listesine hiç bakılmaz. Bu ayrım
 // resolveRecipients() içinde tek yerde yapılır.
 //
+// admin_update GÜNLÜK ÖZETTİR (karar 2026-07-30, mig 20260730230000): satırlar kuyruğa
+// deliver_after = bir sonraki 18:00 Europe/Berlin ile düşer, 15 dk'lık cron vadesi gelince
+// claim eder ve aynı claim'deki TÜM admin_update satırları TEK mailde birleşir. Panel
+// butonu `{"force": true}` gövdesiyle vadesi gelmemiş satırları da erken boşaltabilir
+// (yine tek özet mail olarak).
+//
 // Tetikleyiciler (hepsi aynı kuyruğu okur, claim_notification_emails `for update skip
 // locked` ile çift göndermeyi imkânsız kılar):
 //   1. DB trigger'ından pg_net poke (anlık)  → x-dispatch-secret header'ı
@@ -21,6 +27,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
+import { buildAdminUpdateEmail } from "../_shared/emails/admin-update-digest.ts";
 import { escapeHtml } from "../_shared/emails/html.ts";
 import { buildMemberWelcomeEmail } from "../_shared/emails/member-welcome.ts";
 import { resolveZohoSmtpConfig, sendMailViaZohoSmtp } from "../_shared/emails/smtp.ts";
@@ -128,25 +135,6 @@ function buildNewMemberEmail(payload: Record<string, unknown>) {
   };
 }
 
-function buildAdminUpdateEmail(payload: Record<string, unknown>) {
-  const title = String(payload.title ?? "Yeni güncelleme");
-  const date = String(payload.date ?? "");
-  const items = Array.isArray(payload.items) ? payload.items : [];
-  const itemsHtml = items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
-
-  return {
-    subject: `CorteQS admin güncellemesi: ${title}`,
-    html: `
-      <h2>${escapeHtml(title)}</h2>
-      <p><strong>${escapeHtml(date)}</strong></p>
-      <ul>${itemsHtml}</ul>
-      <p style="color:#71717a;font-size:12px;margin-top:16px;">
-        Bu bildirimi admin panelindeki Bildirim Ayarları sayfasından kapatabilirsin.
-      </p>
-    `,
-  };
-}
-
 /** Site adresi mail içindeki tüm bağlantıların kökü; ortamdan gelmezse canlıya düşer. */
 function resolveSiteUrl(): string {
   return Deno.env.get("PUBLIC_SITE_URL") || "https://corteqs.net";
@@ -164,14 +152,13 @@ function buildWelcomeEmail(payload: Record<string, unknown>): BuiltEmail {
   });
 }
 
+// admin_update bu fonksiyona GELMEZ — o satırlar aşağıdaki toplu özet yolunda birleşir.
 function buildEmail(row: OutboxRow): BuiltEmail {
   switch (row.event_type) {
-    case "new_member":
-      return buildNewMemberEmail(row.payload);
     case "member_welcome":
       return buildWelcomeEmail(row.payload);
     default:
-      return buildAdminUpdateEmail(row.payload);
+      return buildNewMemberEmail(row.payload);
   }
 }
 
@@ -296,8 +283,11 @@ Deno.serve(async (request) => {
   }
 
   try {
+    // force: panel "Şimdi gönder" butonu — vadesi gelmemiş (deliver_after gelecekte)
+    // admin_update özet satırlarını da devralır. pg_net/cron çağrıları force göndermez.
     const { data: claimed, error: claimError } = await admin.rpc("claim_notification_emails", {
       p_limit: CLAIM_LIMIT,
+      p_force: body.force === true,
     });
     if (claimError) throw claimError;
 
@@ -355,7 +345,12 @@ Deno.serve(async (request) => {
     let skipped = 0;
     let failed = 0;
 
-    for (const row of rows) {
+    // admin_update satırları TEK özet mailde birleşir (aşağıdaki blok); kalan tipler
+    // satır başına ayrı mail olarak gider.
+    const digestRows = rows.filter((row) => row.event_type === "admin_update");
+    const singleRows = rows.filter((row) => row.event_type !== "admin_update");
+
+    for (const row of singleRows) {
       try {
         if (!(await isEventEnabled(row.event_type))) {
           await admin
@@ -417,6 +412,71 @@ Deno.serve(async (request) => {
           })
           .eq("id", row.id);
         failed += 1;
+      }
+    }
+
+    // ── admin_update günlük özeti: claim'deki tüm satırlar tek mail ────────────
+    // Alıcı başına yine ayrı gönderim yapılır (adres gizliliği); birleşen şey kayıtlardır.
+    // Sayaçlar satır bazlı tutulur ki panel logu ("processed/sent") kuyruk gerçeğini yansıtsın.
+    if (digestRows.length > 0) {
+      const digestIds = digestRows.map((row) => row.id);
+      try {
+        if (!(await isEventEnabled("admin_update"))) {
+          await admin
+            .from("notification_email_outbox")
+            .update({ status: "skipped", last_error: "global_switch_off", sent_at: new Date().toISOString() })
+            .in("id", digestIds);
+          skipped += digestRows.length;
+        } else {
+          const recipients = (await getSubscribers("admin_update")).map((subscriber) => subscriber.email);
+          if (recipients.length === 0) {
+            await admin
+              .from("notification_email_outbox")
+              .update({ status: "skipped", last_error: "no_subscribers", recipient_count: 0, sent_at: new Date().toISOString() })
+              .in("id", digestIds);
+            skipped += digestRows.length;
+          } else {
+            const { subject, html, text } = buildAdminUpdateEmail(digestRows.map((row) => row.payload));
+
+            for (const recipient of recipients) {
+              await sendMailViaZohoSmtp(smtpConfig, {
+                from: mailFrom,
+                to: [recipient],
+                replyTo: mailReplyTo || undefined,
+                subject,
+                html,
+                text,
+              });
+            }
+
+            await admin
+              .from("notification_email_outbox")
+              .update({
+                status: "sent",
+                recipient_count: recipients.length,
+                last_error: null,
+                sent_at: new Date().toISOString(),
+              })
+              .in("id", digestIds);
+            sent += digestRows.length;
+          }
+        }
+      } catch (digestError: unknown) {
+        const message = digestError instanceof Error ? digestError.message : "unexpected_error";
+        console.error("send-notification-emails: admin_update ozeti basarisiz:", message);
+
+        // Toplu gönderim çöktüyse satırlar TEK TEK geri bırakılır: attempts sınırı satır
+        // bazlıdır ve bir sonraki claim yeniden birleştirip dener.
+        for (const row of digestRows) {
+          await admin
+            .from("notification_email_outbox")
+            .update({
+              status: row.attempts + 1 >= MAX_ATTEMPTS ? "failed" : "pending",
+              last_error: message.slice(0, 2000),
+            })
+            .eq("id", row.id);
+        }
+        failed += digestRows.length;
       }
     }
 

@@ -14,6 +14,19 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260730-gunluk-ozet-maili",
+    date: "30 Temmuz 2026",
+    title:
+      "Güncelleme mailleri artık gün boyu tek tek değil, akşam 18:00'de TEK özet mail olarak gelecek",
+    items: [
+      "Bugün fark edilen sorun: panele giren her kayıt, commit anında aboneye ayrı bir mail oluyordu — bugün gelen kutusuna 13 ayrı 'admin güncellemesi' maili düştü. Sıklığı sınırlayan bir kıstas yoktu.",
+      "Yeni düzen: gün içinde girilen kayıtlar kuyrukta biriktiriliyor ve her akşam 18:00'de (Avrupa saati) hepsi tek mailde, bölüm bölüm gönderiliyor. Aboneler yine kendi maillerini ayrı ayrı alıyor; birleşen şey kayıtlar.",
+      "'Yeni üye kaydoldu' ve üyeye giden 'hoş geldin' mailleri bu değişiklikten etkilenmedi — onlar doğası gereği anlık kalıyor.",
+      "Paneldeki 'Şimdi gönder' düğmesi gücünü korudu: 18:00'i beklemeden, birikenleri yine tek özet mail olarak erken gönderebilirsin. Bildirim Ayarları sayfasının açıklamasına da bu kural yazıldı.",
+      "Teknik taraf: kuyruğa 'vadesi geldiğinde gönder' alanı eklendi, gönderim fonksiyonu bekleyen güncelleme kayıtlarını tek zarfta birleştiriyor; hâlihazırdaki 15 dakikalık otomatik drenaj özeti 18:00-18:15 arasında yola çıkarıyor. Bu kaydın kendisi de yeni düzenin ilk yolcusu — 18:00 özetiyle gelmiş olmalı.",
+    ],
+  },
+  {
     id: "20260730-mail-hatti-zohoya-gecti",
     date: "30 Temmuz 2026",
     title:

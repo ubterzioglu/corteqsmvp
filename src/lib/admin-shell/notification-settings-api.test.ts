@@ -216,8 +216,10 @@ describe("dispatchPendingNotifications", () => {
 
     const result = await dispatchPendingNotifications();
 
+    // force: buton, 18:00 özetini bekleyen admin_update satırlarını da erken boşaltır
+    // (mig 20260730230000 — günlük özet kararı).
     expect(invokeMock).toHaveBeenCalledWith("send-notification-emails", {
-      body: { source: "admin-panel" },
+      body: { source: "admin-panel", force: true },
     });
     expect(result).toEqual({ processed: 3, sent: 2, skipped: 1, failed: 0 });
   });
