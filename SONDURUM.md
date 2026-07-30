@@ -18,7 +18,7 @@
 | Tipler | ✅ `npx tsc --noEmit` → 0 hata |
 | Lint / metin | ✅ `eslint` exit 0 · `verify:text` 1242 dosya temiz |
 | Çalışma ağacı | ✅ temiz — 4 dosyalık admin-shell işi (+125/−317) devir öncesinde commit'lendi ve `main`'e push'landı (B01) |
-| Bekleyen migration | 3 dosya `supabase/migrations/` kökünde → **B02–B05** |
+| Bekleyen migration | ✅ 3 → **1 dosya** kaldı (`20260729140000_member_welcome_email.sql`) → **B05** |
 | Deploy | ⛔ Coolify'a **hiçbir şey** çıkmadı: bildirim altyapısı + Cadde V1 + hoş geldin maili + bugünün işleri |
 | Mail altyapısı | 🔴 `RESEND_API_KEY` **geçersiz (401)** — 8 kayıt kuyrukta `pending`, her commit bir deneme yakıyor → **B06 acil** |
 
@@ -50,19 +50,20 @@ Dosyalar: `src/lib/admin-shell/admin-updates.ts` · `src/pages/admin/AdminDurumR
 ✅ `npm run lint` · `npx tsc --noEmit` · `npm run test` · `npm run verify:text` temiz; `git status` temiz.
 ⚠️ Post-commit mail hook'u yalnız **en üstteki** kaydı yolluyor — 8 kayıt için birleşik maili elle gönder.
 
-**B02 · Devir dökümanı + plan dosyaları + toplantı raporunu commit'le** — B01 sonrası
-`SONDURUM.md` (bu dosya) + `docs/plans/2026-07-29-*.md` + `docs/plans/2026-07-30-*.md` +
-`docs/plans/2026-07-30-devir-25-batch-rapor.html`.
-✅ `git status`'ta `??` kalmadı.
+**B02 · Devir dökümanı + plan dosyaları + toplantı raporunu commit'le** — ✅ **YAPILDI**
+`ddb0bd8` (devir planı + 2 yol haritası + HTML rapor) · `c15732e` (mail bulgusu) ·
+`5813127` (bugünün eksik admin-updates kayıtları + panelde görünmeme nedeni).
 
-**B03 · `20260728090000_create_muhasebe_butce_state.sql` → `applied/`** — B02 sonrası
-Canlıda **var**, `schema_migrations`'ta **kayıtlı**. Tek iş: dosyayı `supabase/migrations/applied/`'a taşı.
-✅ `supabase/migrations/` kökünde 2 dosya kaldı. (Hafızadaki "migration uygulanmadı" notu yanlış, düzeltildi.)
+**B03 · `20260728090000_create_muhasebe_butce_state.sql` → `applied/`** — ✅ **YAPILDI**
+Ön koşul canlıdan doğrulandı: tablo `muhasebe_butce_state` var, `schema_migrations`'ta kayıtlı
+(`name` null). Dosya `applied/`'a taşındı.
 
-**B04 · `20260729100000_notification_emails.sql` history kaydı** — B03 sonrası
-Canlıda **var**, `schema_migrations`'ta **yok**. `insert into supabase_migrations.schema_migrations
-(version, name) values ('20260729100000', …) on conflict do nothing;` + `applied/`'a taşı.
-✅ `select … where version='20260729100000'` 1 satır döner.
+**B04 · `20260729100000_notification_emails.sql` history kaydı** — ✅ **YAPILDI**
+Ön koşul doğrulandı: `notification_email_outbox` canlıda var ama `schema_migrations`'ta kaydı yoktu.
+`insert … values ('20260729100000','notification_emails') on conflict (version) do nothing` →
+`INSERT 0 1`, toplam 325 → 326. Dosya `applied/`'a taşındı.
+📌 `name` konvansiyonu: zaman damgası olmadan slug (`cadde_v1_008_city_timezones` gibi); 313/326
+kayıtta dolu, elle INSERT ederken boş bırakma.
 
 ### Grup B — `member_welcome` maili canlıya (kod hazır, canlı boş)
 
