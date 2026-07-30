@@ -14,6 +14,63 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260730-mail-hatti-zohoya-gecti",
+    date: "30 Temmuz 2026",
+    title:
+      "Mail sistemi Zoho'ya taşındı ve ÇALIŞIYOR — bekleyen 11 bildirim maili kurtarılıp gönderildi",
+    items: [
+      "Sabahki kayıtta 'mail servisinin anahtarı geçersiz, yenilenmesi bekleniyor' demiştik. Karar değişti: eski servis (Resend) tamamen bırakıldı, gönderim artık kendi Zoho Mail hesabımız üzerinden yapılıyor. Yani dışarıdan yeni bir anahtar beklemeye gerek kalmadı.",
+      "Geçiş sırasında bir platform sınırına takıldık: hazır mail kütüphanesi, sunucumuzun izin verdiği işlem süresini tek mailde aşıp çöküyordu. Çözüm olarak gönderim katmanı sıfırdan, çok daha hafif şekilde yazıldı. Yayına almadan önce üç bağımsız kontrol turundan geçirildi.",
+      "SONUÇ (canlıda doğrulandı): kuyrukta bekleyen 11 mail — bugünün 9 durum raporu + 2 yeni üye bildirimi — tek seferde, hatasız gönderildi. Gelen kutunda olmaları lazım. Kuyrukta bekleyen mail kalmadı.",
+      "Site formlarından gelen başvuru bildirimleri de aynı hatta taşındı — yani 29 Temmuz'da yakalanan 'başvuru maili sessizce gitmiyor' arızasının kökü de kapanmış oldu.",
+      "Hoş geldin maili altyapısı da canlıya alındı: veritabanı değişikliği uygulandı, gönderici yayında. Tek eksik genel anahtarın açılması — önce panelden 'Bana örnek hoş geldin maili gönder' ile gerçek görünümü kontrol etmen bekleniyor.",
+      "Durum: mail hattı uçtan uca ÇALIŞIYOR. Hoş geldin maili anahtarı bilinçli kapalı; örnek mail kontrolünden sonra açılacak.",
+    ],
+  },
+  {
+    id: "20260730-profil-referral-dogrulama",
+    date: "30 Temmuz 2026",
+    title:
+      "Profildeki referral kodu artık gerçekten doğrulanıyor — ve yönetici panelindeki 'Kullanımlar' listesi geri geldi",
+    items: [
+      "İki eski arıza kapandı. Birincisi: üye profilindeki referral kodu alanı Haziran'daki sistem yenilemesinden beri KAYDEDİLEMİYORDU — üstelik bu hata, 'Rolüne Özel Alanları Kaydet' düğmesindeki diğer alanların kaydını da yarıda kesiyordu. Artık alan kaydediliyor ve bir alanın hatası diğerlerini engellemiyor.",
+      "Kod artık ön kayıt formundakiyle aynı sıkılıkta doğrulanıyor: geçersiz, süresi dolmuş ya da pasif kod kabul edilmiyor ve Türkçe bir açıklamayla reddediliyor.",
+      "KİLİT kuralı: bir üye kodunu bir kez doğrulattıktan sonra değiştiremiyor ve silemiyor — alan '✓ Doğrulandı' rozetiyle salt-okunur görünüyor. Değişiklik gerekirse yönetici devreye girecek.",
+      "İkinci arıza: yönetici panelindeki /admin/referral ekranında 'Kullanımlar' listesi bir yetki eksiği yüzünden hep boş görünüyor ve hata sessizce yutuluyordu. Yetki onarıldı, sessiz yutma bitti; liste artık Ad · E-posta · Kaynak rozeti (Ön kayıt / Profil) · Tarih biçiminde.",
+      "Geçmiş de tamamlandı: profillere daha önce girilmiş 36 koddan gerçek bir koda karşılık gelen 35'i kullanım kaydına işlendi; kod sayaçları yeniden hesaplandı ve satırlarla birebir tutuyor. Eşleşmeyen 1 serbest metin kaydına dokunulmadı.",
+      "Durum: veritabanı değişiklikleri canlıya UYGULANDI ve senaryo testleriyle doğrulandı; arayüz değişiklikleri ana kodda, deploy bekliyor.",
+    ],
+  },
+  {
+    id: "20260730-araclar-modulu-onarimi",
+    date: "30 Temmuz 2026",
+    title:
+      "Araçlar modülü onarıldı: kırık sonuç butonları, 5 meslek, 2 şehir ve 'UK'de şehir bulunamadı' devri kapandı",
+    items: [
+      "Sonuç ekranındaki yönlendirme butonları: pano 'ikisi çalışmıyor' diyordu, gerçek durum daha kötüydü — butonların TAMAMI tıklanamıyordu ve iki bağlantı hiç var olmayan bir adrese gidiyordu. Adresler veritabanındaki 9 hesaplama fonksiyonunun içinde gömülüymüş; hepsi onarıldı, butonlar artık gerçek birer bağlantı. Daha önce üretilmiş sonuçlardaki kırık linkler de düzeltildi.",
+      "Meslek listesi 5 kayıttan 35'e çıktı (doktor, diş hekimi, mimar, avukat, veri bilimci, elektrikçi, şoför… 12 meslek ailesi). Formdaki seçenek listesi artık tablodan besleniyor — yeni meslek eklemek deploy gerektirmiyor.",
+      "Şehir listesi 2 kayıttan 32'ye çıktı (Londra, Manchester, New York, Toronto, Dubai, Münih, Paris, Viyana… 12 ülke). 'UK seçtim, şehir bulunamadı' şikâyetinin kök nedeni buydu: araç dünyada yalnızca Berlin ve Amsterdam'ı tanıyordu.",
+      "Üçüncü ve gizli neden: ülke sorusu serbest metin — kullanıcı 'UK' yazınca sistem uluslararası kod olan 'GB' ile eşleştiremiyordu. Artık yaygın yazımlar (UK, İngiltere, USA, ABD, Almanya, Hollanda…) kendiliğinden doğru koda çevriliyor.",
+      "Yine de hedef ülkede veri yoksa ekran artık boş kalmıyor: diğer ülkelerin en uygun şehirleri sıralanıyor ve durum açıklamada dürüstçe belirtiliyor.",
+      "İki küçük kazanım daha: test sonucu artık kalıcı bir adrese sahip — başka sayfaya gidip GERİ dönünce ya da F5'te sonuç kaybolmuyor. Ve halka açık dizin aramasında yönetici/moderatör hesaplarının listelenmesini engelleyen koruma eklendi.",
+      "Şehir verilerine dair dürüst not: yeni şehirlerin puanları (maliyet, güvenlik, konut…) küratörlü İLK tahminlerdir — mevcut Berlin/Amsterdam kayıtlarıyla aynı yöntem. Veri kaynakları bağlandıkça rafine edilecek.",
+      "Durum: veritabanı değişiklikleri canlıya UYGULANDI (meslek/şehir listeleri hemen etkili); buton düzeltmeleri ana kodda, deploy bekliyor.",
+    ],
+  },
+  {
+    id: "20260730-revizyon-panosu-gercege-dondu",
+    date: "30 Temmuz 2026",
+    title:
+      "Revizyon panosu gerçeğe döndürüldü: 43 'açık' maddenin 18'i aslında yapılmıştı — hepsine kanıt yazıldı",
+    items: [
+      "Sabahki tespitin uygulaması: pano kodun gerisinde kalmıştı. 43 açık maddenin 14'ü son iki günün Cadde çalışmalarıyla, 4'ü de bugünkü Araçlar onarımıyla zaten karşılanmış durumdaydı.",
+      "18 maddenin her birine 'bunu hangi değişiklik çözdü' bilgisini içeren bir kanıt yorumu düşüldü ve durumları 'inceleniyor'a çekildi. Bilinçli olarak 'yapıldı' DENMEDİ — çünkü işlerin çoğu henüz canlıya deploy edilmedi; pano olduğundan iyi görünmemeli. Deploy + kontrol sonrası 'yapıldı'ya çevrilecekler.",
+      "Bir madde ('beğeni listesi hover ile açılsın') bugünkü Cadde workshop kararıyla üst yazıldı: workshop tepki emojilerini tamamen açık gösterme kararı aldı, hover çözümü gereksizleşti. Maddeye not düşüldü, kapatma kararı workshop uygulamasına bırakıldı.",
+      "Panonun güncel fotoğrafı: 25 açık · 18 inceleniyor · 6 yapıldı · 4 iptal. Kalan 25'in çoğu ürün kararı bekleyen ('tasarım planı nedir?', 'konuşalım') ya da ayrı proje gerektiren büyük işler (Bütçe geliştirmeleri, marketplace, grafikli sonuç ekranları).",
+      "Durum: pano güncellemeleri doğrudan canlı veritabanına işlendi — panelde şimdi görünür durumda.",
+    ],
+  },
+  {
     id: "20260730-bildirim-maili-anahtari-gecersiz",
     date: "30 Temmuz 2026",
     title:
@@ -24,7 +81,7 @@ export const ADMIN_UPDATES: AdminUpdateEntry[] = [
       "İyi haber: 8 mail kaybolmadı, kuyrukta 'bekliyor' durumunda duruyor. Anahtar yenilendiği anda tekrar denenip gönderilebilir.",
       "Sınır: sistem bir maili 5 kez denedikten sonra pes ediyor ve o kaydı bir daha denemiyor. Şu an 1 deneme kullanılmış durumda, 4 hak kaldı. Deneme sayacı yalnızca yeni bir güncelleme kaydı yazıldığında ilerliyor — sıradan kod değişiklikleri sayacı harcamıyor.",
       "YAPILACAK: mail servisinin panelinden yeni anahtar üretilip sunucu ortamına yazılması. Bu yapılmadan hoş geldin maili de çalışmaz — o iş de bu anahtara bağlı.",
-      "Durum: teşhis tamamlandı ve kayıt altına alındı; anahtarın yenilenmesi bekliyor.",
+      "Durum (aynı gün güncellendi): anahtar YENİLENMEDİ — karar değişti, Resend tamamen bırakıldı ve sistem Zoho'ya taşındı. Kuyruktaki mailler kurtarılıp gönderildi; ayrıntı 'Mail sistemi Zoho'ya taşındı' kaydında.",
     ],
   },
   {
@@ -126,7 +183,7 @@ export const ADMIN_UPDATES: AdminUpdateEntry[] = [
       "Bir üye e-postasını doğruladığı anda kendisine Türkçe, markalı bir karşılama maili gidiyor. Bu, Supabase'in standart 'e-postanı doğrula' mailinin yerine geçmiyor — ondan SONRA gelen ayrı bir mail.",
       "Mevcut bildirim altyapısını (kuyruk, tekrar gönderme, çift gönderme koruması) aynen kullanıyor. Tek fark: alıcı, abone listesinden değil kaydolan üyenin kendisinden geliyor.",
       "Bildirim Ayarları sayfasına 'Bana örnek hoş geldin maili gönder' butonu eklendi — şablonu gerçek bir mail olarak kendine yollayıp gözle kontrol edebiliyorsun. Bu önemli, çünkü tarayıcı önizlemesi Gmail/Outlook'un yaptığı kırpmaları göstermiyor.",
-      "Durum: CANLIDA HENÜZ HİÇBİR ŞEY YOK. Kod ana koda alındı, ama veritabanı değişikliği uygulanmadı ve mail gönderen servis yayına alınmadı. Sıradaki iş bu.",
+      "Durum (30 Temmuz'da güncellendi): veritabanı değişikliği canlıya UYGULANDI ve mail gönderen servis (artık Zoho üzerinden) yayına alındı. Bu kayıt ilk yazıldığında 'canlıda hiçbir şey yok' diyordu. Kalan tek adım: panelden örnek maili gözle kontrol edip genel anahtarı açmak.",
       "DİKKAT: Genel anahtar açılmadan önce kaydolan üyeler bu maili HİÇ almaz — o sırada kuyruğa düşen kayıtlar 'atlandı' olarak işaretlenir ve bir daha denenmez.",
     ],
   },
