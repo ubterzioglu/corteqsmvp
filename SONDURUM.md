@@ -67,35 +67,42 @@ kayıtta dolu, elle INSERT ederken boş bırakma.
 
 ### Grup B — `member_welcome` maili canlıya (kod hazır, canlı boş)
 
-**B05 · `20260729140000_member_welcome_email.sql` uygula** — B04 sonrası
-Canlıda **hiçbir şey yok**: `notification_email_outbox`'ta yalnız `admin_update` (97 kayıt).
-`--single-transaction` ile uygula → history INSERT → `applied/`'a taşı.
-✅ Welcome fonksiyonu/trigger'ı canlıda; `supabase/migrations/` kökü boş.
+**B05 · `20260729140000_member_welcome_email.sql` uygula** — ✅ **YAPILDI (30 Tem 12:2x)**
+Canlıya uygulandı ve doğrulandı: `event_type` CHECK'i `member_welcome`'ı içeriyor,
+`email.member_welcome.enabled = false` (tasarım gereği kapalı başlar), trigger/fonksiyonlar
+yenilendi. History kaydı `member_welcome_email` adıyla düştü, dosya `applied/`'a taşındı.
+📌 Tam denetim de yapıldı (dosyalar ↔ `schema_migrations`, CR-temizlenmiş karşılaştırma):
+uygulanmamış başka migration YOK. Yetim 2 kayıt var (DB'de kayıtlı, dosyası hiç olmamış):
+`20260718120001`, `20260718130001` — 18 Temmuz'daki elle history onarımının izleri, eylem gerekmez.
+📌 `20260730190000_workshop_items.sql` (Cadde workshop panosu, 48 madde) **paralel oturum
+tarafından** uygulanmış ve kayıtlıymış — doğrulandı (48 satır, Türkçe karakterler sağlam).
+Dosya o oturumun commit'ine ait, bu oturum taşımadı.
 
-**B06 · Edge Function deploy + `RESEND_API_KEY`'i YENİLE** — B05 sonrası · 🔴 **ACİL, SÜRE SINIRLI**
+**B06 · Mail göndericiyi Resend'den ZOHO SMTP'ye çevir + deploy** — B05 sonrası · 🔴 **KARAR NETLEŞTİ**
 
-30 Temmuz'da canlı kuyruktan ölçüldü — sorun tahmin değil, teşhis edildi:
+Olayın tam seyri (30 Temmuz, hepsi ölçüldü):
 
-```
-notification_email_outbox: 97 skipped · 8 pending
-last_error: Resend request failed: 401 {"statusCode":401,
-            "name":"validation_error","message":"API key is invalid"}
-```
+1. Commit hook'u 8 durum-raporu mailini kuyruğa aldı, 8'i de `Resend request failed: 401
+   "API key is invalid"` ile düştü.
+2. İlk teşhis "Resend anahtarı çürük, yenilensin" idi. **Kullanıcı düzeltti: Resend
+   kullanılmıyor — Zoho'ya geçilecek.** `.env.local`'de tam set hazır:
+   `ZOHO_SMTP_HOST=smtp.zoho.eu` · `ZOHO_SMTP_PORT=465` · `ZOHO_SMTP_USER` ·
+   `ZOHO_SMTP_PASSWORD` · `MAIL_FROM` (+ `SUPABASE_ACCESS_TOKEN` da var → deploy mümkün).
+3. Deneme sayacını `notification-email-drain` **cron'u (15 dk'da bir, jobid=3)** ilerletiyor —
+   commit'ler değil. Cron'u durdurma yetkisi bu ortamda yok (`permission denied for table job`).
+   Sayaç 11:28'de sıfırlandıysa da cron 12:15'e kadar 4 deneme daha yaktı → **9 kayıt `failed`**.
+4. **Kayıp yok:** `failed` satırlar tabloda, payload'ları sağlam. Zoho'ya geçilince
+   `update notification_email_outbox set status='pending', attempts=0 where status='failed'`
+   ile diriltilip gönderilirler.
 
-`RESEND_API_KEY` fonksiyon ortamında **var ama GEÇERSİZ** (401). Yani "secret eksik" değil,
-"secret çürük" — anahtarın Resend panelinden yenilenip `supabase secrets set` ile yazılması gerekiyor.
-
-⏳ **Süre sınırı:** `send-notification-emails/index.ts:36` `MAX_ATTEMPTS = 5`. Bugünkü 8 kayıt
-`attempts = 1`. Deneme sayacı **yalnızca `admin-updates.ts`'e yeni kayıt ekleyen commit'lerde**
-ilerliyor — post-commit hook yeni kayıt bulmazsa dispatcher'ı hiç tetiklemiyor (ölçüldü:
-`c15732e` commit'i `0 yeni kayıt` deyip sayacı ilerletmedi). Sıradan kod commit'leri güvenli.
-5'e ulaşan kayıt `failed` olur ve bir daha denenmez → o mailler kalıcı olarak kaybolur.
-
-✅ Anahtar yenilendikten sonra dispatcher elle tetiklenir → 8 kayıt `sent` olur
-(`pending` oldukları için hâlâ kurtarılabilir durumda) + `supabase secrets list` `MAIL_FROM` ve
-Zoho SMTP anahtarlarını da gösteriyor.
-📌 Ayrıca `MAX_ATTEMPTS` mantığı gözden geçirilmeli: bir commit'in mail denemesi yakması, "kod
-yazma hızı" ile "mail altyapısının sağlığı"nı birbirine bağlıyor — istenen davranış bu değil.
+Yapılacak iş (kod değişikliği — iki Edge Function Resend'e sabit kodlanmış):
+- `send-notification-emails/index.ts` ve `send-submission-email/index.ts` içindeki
+  `sendWithResend` (api.resend.com fetch) → Zoho SMTP gönderimi (Deno SMTP istemcisi, 465/TLS).
+- `supabase secrets set` ile ZOHO_* + MAIL_FROM fonksiyon ortamına yazılır; iki fonksiyon deploy edilir.
+- 9 `failed` kayıt diriltilir → sonraki cron koşusu Zoho üzerinden gönderir.
+✅ 9 kayıt `sent`; yeni durum-raporu maili Zoho'dan geliyor.
+📌 `MAX_ATTEMPTS=5 × 15 dk cron` = bir arızada ~1 saatlik pencere; alarm/telafi mekanizması yok —
+gözden geçirilmeli.
 
 **B07 · Uçtan uca tek mail testi + genel anahtarı aç** — B06 sonrası
 Bildirim Ayarları → "Bana örnek hoş geldin maili gönder" → gerçek gelen kutusunda gör (tarayıcı
