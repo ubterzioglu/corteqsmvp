@@ -8,8 +8,16 @@
 > Verilmiş tasarım kararları: m42 featured=MANUEL · m20 emoji seti=NEGATİFSİZ ·
 > tepkiler doğrudan açık (m19) · Çarşı linki gizlenecek (m39-40). Açık: m3 kafe ikonu.
 > Redesign öncesi durum `cadde-pre-workshop-freeze` branch'inde donduruldu.
-> Kullanıcıda kalanlar: QA turu · örnek hoş geldin maili + anahtar · yarın 18:00-18:15
-> Berlin ilk otomatik özetin gözlenmesi.
+> Kullanıcıda kalanlar: QA turu · örnek hoş geldin maili + anahtar · 18:00-18:15 Berlin
+> ilk otomatik özetin gözlenmesi.
+>
+> **31 Tem gece eklemeleri:** kullanıcıda kalan işler artık panelde — Durum Raporu sayfasında
+> butonlu **Yapılacaklar kartı** (`admin-todos.ts`, kişisel localStorage işaretleme, `/admin/*`
+> hedefleri testle doğrulanıyor). **m3 kafe ikonu: 5 öneri hazır**
+> (`/docs/kafe-ikon-onerileri.html`, karttan butonla açılıyor). Ayrıca: `types.ts` regen
+> (workshop_items tipli, tsc 0) · agent kataloğu senkron (20/20) · vitest `testTimeout` 15 sn
+> (flaky kökten çözüldü, suite 1261/1262→temiz) · ölü `RESEND_API_KEY` üretimden silindi ·
+> canlı smoke: /tools 4/4 ✓, **/cadde zaten login-gated (m32 fiilen canlıda)**.
 
 > Yeni oturuma devir dökümanı. **Bu dosya tek kaynaktır**; 29 Temmuz kapanış notu, referral planı
 > ve revizyon panosu planı burada birleştirildi.
