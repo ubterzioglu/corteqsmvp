@@ -47,6 +47,29 @@ export async function getCarsiPaidMode(): Promise<boolean> {
   }
 }
 
+/**
+ * `cadde.carsi.visible` ayarı (workshop m39, F10): false iken cadde yüzeyindeki Çarşı
+ * ticker'ı "Çarşı yakında" teaser'ına döner ve /cadde/carsi linki verilmez.
+ * Ayar okunamazsa GİZLİ kabul edilir — ürün kararı "şimdilik kapalı" olduğu için
+ * güvenli varsayılan teaser'dır (paid_mode'un tersine).
+ * Geri açmak deploy istemez: value='true' SQL update'i yeter.
+ */
+export async function getCarsiVisible(): Promise<boolean> {
+  if (!isSupabaseConfigured) return false;
+  try {
+    const { data, error } = await db
+      .from("cadde_settings")
+      .select("value")
+      .eq("key", "cadde.carsi.visible")
+      .maybeSingle();
+    if (error) throw error;
+    return data?.value === true;
+  } catch (error: unknown) {
+    reportCaddeApiError("getCarsiVisible", error);
+    return false;
+  }
+}
+
 export async function listCarsiCategories(): Promise<CarsiCategory[]> {
   if (!isSupabaseConfigured) return [];
 

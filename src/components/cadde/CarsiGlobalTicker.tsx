@@ -1,13 +1,15 @@
-// Çarşı global ticker'ı (spec §14.1): son ilanların yatay şeridi + "Tüm Çarşı" CTA.
-// CaddePage sol kolonunun en üstüne monte edilir; geo filtresine göre daralır.
-// Tanıtım/sponsor kartlarıyla karışmaz (D-01) — yalnız carsi_items okur.
+// Çarşı global ticker'ı (spec §14.1) + m39-m40 görünürlük kapısı (F10).
+// `cadde.carsi.visible=false` (bugünkü ürün kararı) iken ilan şeridi YERİNE
+// "Çarşı yakında" teaser'ı çizilir ve /cadde/carsi'ye hiç link verilmez.
+// Geri açmak SQL update'i — deploy gerektirmez. Tanıtım/sponsor kartlarıyla
+// karışmaz (D-01) — yalnız carsi_items okur.
 
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { ArrowRight, ShoppingBag } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { formatCarsiPrice, listCarsiItems } from "@/lib/cadde-carsi-api";
+import { formatCarsiPrice, getCarsiVisible, listCarsiItems } from "@/lib/cadde-carsi-api";
 import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import type { CaddeFilterState } from "@/lib/cadde-types";
@@ -18,12 +20,40 @@ interface CarsiGlobalTickerProps {
 
 const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
   const diasporaKey = useCaddeDiasporaKey();
+  const visibleQuery = useQuery({
+    queryKey: ["cadde", "carsi-visible"],
+    queryFn: getCarsiVisible,
+    staleTime: 5 * 60_000,
+  });
+  const carsiVisible = visibleQuery.data === true;
+
   const itemsQuery = useQuery({
     queryKey: caddeQueryKeys.carsiItems({ countries: filters.countries, cities: filters.cities, diasporaKey }),
     queryFn: () => listCarsiItems({ countries: filters.countries, cities: filters.cities, diasporaKey }, 10),
+    // Çarşı gizliyken ilanları hiç çekme — teaser veriye ihtiyaç duymaz.
+    enabled: carsiVisible,
   });
 
   const items = itemsQuery.data ?? [];
+
+  if (!carsiVisible) {
+    // m40: "Diaspora'nın ikinci el pazarı Çarşı yakında" — linksiz teaser.
+    return (
+      <div
+        className="rounded-2xl border border-amber-200 bg-[linear-gradient(135deg,#fffbeb_0%,#fef3c7_100%)] p-4"
+        data-testid="carsi-teaser"
+      >
+        <p className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-900">
+          <ShoppingBag className="h-4 w-4" />
+          Çarşı yakında
+        </p>
+        <p className="mt-1.5 text-xs leading-relaxed text-amber-800/90">
+          Diaspora'nın ikinci el pazarı Çarşı çok yakında burada — eşyanı sat, aradığını
+          şehrindeki üyelerden bul.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-2xl border border-amber-200 bg-[linear-gradient(135deg,#fffbeb_0%,#fef3c7_100%)] p-3">
