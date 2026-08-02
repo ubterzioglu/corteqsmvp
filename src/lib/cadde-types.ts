@@ -469,6 +469,7 @@ export type CarsiItemCreateInput = {
   videoUrl?: string;
   contactMode?: CarsiContactMode;
   contactValue?: string;
+  diasporaKey?: string;
 };
 
 // ── Tanıtım (Faz 6, D-01: UI adı "Tanıtım") — sponsorlu görünürlük; Çarşı'dan AYRI ──

@@ -12,9 +12,9 @@
 | | |
 |---|---|
 | **Faz** | Backend KAPANDI (25 batch + mail hattı canlı). Şimdi **frontend/Cadde redesign**. |
-| **Batch durumu** | **20 / 23 bitti** (F1–F20). Kalan: **F21–F23**. `F2` (footer) kullanıcının şeridinde. |
-| **Dal** | tek dal `main`; F20 uygulama commit'i **`5f5d210`**. |
-| **Kapılar** | F20 hedefli Cadde suite **56/56** · `tsc --noEmit -p tsconfig.app.json` proje geneli eski borçla düşüyor (F20 dosyalarında hata yok) · F20 eslint 0 · `npm run build` geçti; picker ayrı chunk: `CaddeEmojiPickerContent-*.js` **25.13 kB / gzip 9.01 kB** · `verify:text` temiz. |
+| **Batch durumu** | **23 / 23 bitti** (F1–F23). Kalan Cadde redesign batch'i yok. `F2` (footer) kullanıcının şeridinde. |
+| **Dal** | aktif dal `is-bulma-olasiligi`; F22 uygulama commit'i **`9813ce9`**, F23 bu commit. |
+| **Kapılar** | F23 hedefli Cadde suite · `tsc --noEmit -p tsconfig.app.json` proje geneli eski borçla düşebilir (batch dosyası hatası ayrıca kontrol edilir) · F23 eslint · `verify:text` · görsel ekran görüntüsü kapısı. |
 | **Canlıya deploy** | Coolify deploy **kullanıcıda** — kod push'lu, tarayıcıda henüz yok. |
 
 > ⚠️ **2026-08-02 kapı düzeltmesi:** Bare `npx tsc --noEmit` bu repoda sessizce **sıfır dosya**
@@ -49,16 +49,20 @@
 | F18 | m23 | `ad57a96` | Açık yorum paneli adaptif polling ile yeni yorumları sessiz alır; panel kapanınca sorgu durur. |
 | F19 | m12 | `9ba3498` | Paylaş butonu Web Share + clipboard fallback ile çalışır; `record_cadde_share_v1` loglar ve `share_count` artırır. |
 | F20 | m25 | `5f5d210` | Gerçek emoji picker `frimousse` ile lazy-load; composer ve açık yorum draft'ında imleç noktasına emoji ekler. |
+| F21 | m8+m11 | `8c738f8` | Composer kayıtlı profil konumunu default alır; serbest global çıkış engagement eşiğine bağlandı. |
+| F22 | m9+m10 | `9813ce9` | Çoklu hedef modeli eklendi; ikinci ülke/şehir premium ayarına ve feed eşleşmesine bağlandı. |
+| F23 | m26+m27 | `bu commit` | Cadde koyu shell paleti tek CSS kaynağına taşındı; inline hex/gradyanlar kalktı, boşluk ve touch alanları inceltildi. |
 
-### Panoda işaretlenebilir maddeler (birikmiş, 39)
+### Panoda işaretlenebilir maddeler (birikmiş, 44)
 
-`m1 · m2 · m3 · m4 · m5 · m6 · m7 · m12 · m13 · m14 · m15 · m16 · m17 · m18 · m29 · m30 · m31 ·
-m19 · m20 · m22 · m23 · m24 · m25 · m35 · m37 · m38 · m39 · m40 · m41 · m42 · m43 · m44 · m45 · m46` + önceden bitmiş sayılan
-`m10 · m21 · m32 · m36 · m47`. Kullanıcı QA'sından sonra "panoyu çevir" derse bunlar `yapildi`ya geçer.
+`m1 · m2 · m3 · m4 · m5 · m6 · m7 · m8 · m9 · m10 · m11 · m12 · m13 · m14 · m15 · m16 · m17 · m18 ·
+m19 · m20 · m21 · m22 · m23 · m24 · m25 · m26 · m27 · m29 · m30 · m31 · m32 · m35 · m36 · m37 · m38 ·
+m39 · m40 · m41 · m42 · m43 · m44 · m45 · m46 · m47`. Kullanıcı QA'sından sonra "panoyu çevir"
+derse bunlar `yapildi`ya geçer.
 
 ---
 
-## 2. Kalan batch'ler (uygulama sırası)
+## 2. Tamamlanan son batch'ler
 
 ### F14 · m43+m45+m46 — reklam CTA akışı [S] — ✅ **BİTTİ** (`4c3d572` + `c20dcfd`)
 
@@ -125,25 +129,24 @@ yüklenir. `npm run build` çıktısında ayrı chunk kanıtı var: `CaddeEmojiP
 **25.13 kB / gzip 9.01 kB**. Composer `MentionTextarea` ve açık yorum draft'ı seçim aralığını
 takip eder; seçilen emoji imleç noktasına eklenir, caret geri taşınır. RPC/schema değişmedi.
 
-### F21 · m8+m11 — konum default'u + global çıkış kuralı [L] ⚠️ zincir başı ← **SIRADAKİ**
-"Konum ekle" + default kullanıcının **kayıtlı** konumu (aktif filtre fallback'i silinir);
-serbest global kapanır; globale çıkış performans eşiği (`cadde_settings` anahtarları + feed
-RPC'de eşik; muhtemelen denormalize sayaç + trigger migration'ı). "Beğeni" tanımı (yalnız
-`like` mı tüm pozitif tepkiler mi) batch başında sabitlenir. `cadde-ranking.ts` aynası + testi
-birlikte güncellenir.
+### F21 · m8+m11 — konum default'u + global çıkış kuralı [L] — ✅ **BİTTİ** (`8c738f8`)
+Migration `20260802160000_cadde_global_threshold.sql` canlıya uygulandı ve `applied/` altına
+taşındı. Composer yeni postlarda aktif filtre fallback'i yerine aktörün kayıtlı profil konumunu
+default alır; Köprü filtresi artık post'u kendiliğinden globale çıkarmaz. `cadde_posts` üzerinde
+denormalize reaction/comment sayaçları ve trigger'lar eklendi; `list_cadde_feed_v1` global görünürlüğü
+`cadde.global.*` ayar eşiklerine bağlandı. Tepki eşiği F15'in negatifsiz 5'li setinin tamamını sayar.
 
-### F22 · m9+m10 — çoklu hedef (+1 ülke/şehir) [L] ⚠️ zincirin ikinci halkası
-`create_cadde_post_v1` **imzası sabit 6 parametre ve grant'ler imzaya bağlı**
-(`supabase/migrations/.../20260610183000:12-19,103-104`) → **DROP+CREATE+re-grant** ya da
-**`create_cadde_post_v2`**. Tekil model 4 katmanda: composer, RPC, `cadde_posts` kolonları,
-feed eşleşmesi + ranking aynası. m10 (premium kilidi) bu batch'in `cadde_settings` anahtarı.
+### F22 · m9+m10 — çoklu hedef (+1 ülke/şehir) [L] — ✅ **BİTTİ** (`9813ce9`)
+Migration `20260802170000_cadde_multi_targets.sql` canlıya uygulandı, history'ye yazıldı ve
+`applied/` altında. Post hedefleri `cadde_post_targets` ile çoklu modele taşındı; composer ana hedefe
+ek olarak bir ülke/şehir hedefi seçebilir. Ek hedef `cadde.multi_target.extra_city.premium_only`
+ayarına bağlıdır; feed RPC v1/v2 ve ranking aynası hedef eşleşmesini çoklu modelden okur.
 
-> **Zincir kuralı (denetçi):** F21 → F22 **ardışık ve tek elde**; paralel açılmaz. Her
-> migration canlı `pg_get_functiondef` tam gövdesi + grant kopyasıyla yazılır.
-
-### F23 · m26+m27 — palet + inceltme BİRLEŞİK [M/L] — **en son**
-Koyu/kontrast palet (4 sayfadaki inline gradyan hex'leri tek kaynağa) + buton/boşluk inceltme.
-Yapısal batch'ler bitmeden yapılırsa iş çöpe gider. Kontrast AA, dokunma alanı ≥40px.
+### F23 · m26+m27 — palet + inceltme BİRLEŞİK [M/L] — ✅ **BİTTİ** (`bu commit`)
+4 Cadde sayfasındaki inline gradyan/hex yüzeyler `src/index.css` içindeki Cadde token/utilities
+katmanına taşındı. Ana Cadde yüzeyi koyu shell paletine geçti; kart/boş/sponsor/featured/Çarşı
+yüzeyleri ortak utility class'ları kullanır. Topbar ve grid boşlukları sıkılaştırıldı; Cadde
+shell içindeki buton touch alanları en az 40px olacak şekilde sözleşmeye bağlandı.
 
 ### Park / kapsam dışı (bilinçli)
 `m33` + `m34` (telefon-bazlı erişim — ayrı kimlik-modeli planı; girerse öncesinde m36

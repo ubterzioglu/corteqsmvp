@@ -40,7 +40,7 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
     // m40: "Diaspora'nın ikinci el pazarı Çarşı yakında" — linksiz teaser.
     return (
       <div
-        className="rounded-2xl border border-amber-200 bg-[linear-gradient(135deg,#fffbeb_0%,#fef3c7_100%)] p-4"
+        className="cadde-carsi-teaser rounded-2xl border p-4"
         data-testid="carsi-teaser"
       >
         <p className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-900">
@@ -56,7 +56,7 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
   }
 
   return (
-    <div className="rounded-2xl border border-amber-200 bg-[linear-gradient(135deg,#fffbeb_0%,#fef3c7_100%)] p-3">
+    <div className="cadde-carsi-teaser rounded-2xl border p-3">
       <div className="flex items-center justify-between gap-2">
         <p className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-900">
           <ShoppingBag className="h-4 w-4" />

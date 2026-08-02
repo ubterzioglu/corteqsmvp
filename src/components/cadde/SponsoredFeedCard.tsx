@@ -42,7 +42,7 @@ const SponsoredFeedCard = ({ promotion, compact = false }: SponsoredFeedCardProp
   );
 
   return (
-    <Card className="border-orange-200 bg-[linear-gradient(135deg,#fff7e8_0%,#fff1d6_100%)]">
+    <Card className="cadde-sponsored">
       <CardContent className={compact ? "space-y-2 p-4" : "flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between"}>
         <div className="min-w-0 space-y-2">
           <Badge className="bg-orange-500 text-white hover:bg-orange-500">Sponsorlu</Badge>

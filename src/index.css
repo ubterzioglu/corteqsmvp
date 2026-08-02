@@ -299,6 +299,94 @@
   .bg-section-warm {
     background-color: hsl(var(--section-warm));
   }
+
+  /* Cadde 3.0 F23 — koyu shell + merkezi yüzey token'ları. */
+  .cadde-shell {
+    --cadde-ink: 222 47% 11%;
+    --cadde-shell-top: 222 47% 11%;
+    --cadde-shell-mid: 217 32% 17%;
+    --cadde-shell-bottom: 30 22% 96%;
+    --cadde-panel: 0 0% 100%;
+    --cadde-panel-soft: 210 40% 98%;
+    --cadde-line: 215 20% 86%;
+    --cadde-warm: 31 90% 95%;
+    --cadde-warm-strong: 30 92% 88%;
+    --cadde-accent: 24 92% 52%;
+    --cadde-accent-ink: 24 74% 24%;
+    min-height: 100vh;
+    background:
+      radial-gradient(900px 340px at 16% -8%, hsl(var(--cadde-accent) / 0.22), transparent 58%),
+      radial-gradient(760px 300px at 88% 2%, hsl(var(--glow-teal) / 0.16), transparent 62%),
+      linear-gradient(
+        180deg,
+        hsl(var(--cadde-shell-top)) 0%,
+        hsl(var(--cadde-shell-mid)) 31%,
+        hsl(var(--cadde-shell-bottom)) 72%,
+        hsl(var(--cadde-shell-bottom)) 100%
+      );
+  }
+
+  .cadde-topbar {
+    border-bottom: 1px solid hsl(30 45% 88% / 0.18);
+    background: hsl(222 47% 11% / 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .cadde-chip-brand {
+    background: hsl(var(--cadde-warm-strong));
+    color: hsl(var(--cadde-accent-ink));
+  }
+
+  .cadde-panel {
+    border-color: hsl(var(--cadde-line) / 0.86);
+    background: hsl(var(--cadde-panel) / 0.94);
+  }
+
+  .cadde-panel-soft {
+    border-color: hsl(var(--cadde-line) / 0.8);
+    background: linear-gradient(180deg, hsl(var(--cadde-panel)) 0%, hsl(var(--cadde-panel-soft)) 100%);
+  }
+
+  .cadde-shadow-soft {
+    box-shadow: 0 16px 38px -30px hsl(222 47% 11% / 0.42);
+  }
+
+  .cadde-card {
+    border-color: hsl(var(--cadde-line) / 0.86);
+    background: linear-gradient(180deg, hsl(var(--cadde-panel)) 0%, hsl(var(--cadde-panel-soft)) 100%);
+    box-shadow: 0 12px 28px -24px hsl(222 47% 11% / 0.34);
+  }
+
+  .cadde-empty {
+    border-color: hsl(var(--cadde-accent) / 0.28);
+    background: linear-gradient(180deg, hsl(var(--cadde-panel)) 0%, hsl(var(--cadde-warm)) 100%);
+  }
+
+  .cadde-featured {
+    border-color: hsl(var(--cadde-accent) / 0.18);
+    background: linear-gradient(160deg, hsl(var(--cadde-warm)) 0%, hsl(var(--cadde-panel)) 62%);
+  }
+
+  .cadde-sponsored {
+    border-color: hsl(var(--cadde-accent) / 0.26);
+    background: linear-gradient(135deg, hsl(var(--cadde-warm)) 0%, hsl(var(--cadde-warm-strong)) 100%);
+  }
+
+  .cadde-carsi-teaser {
+    border-color: hsl(43 74% 70% / 0.72);
+    background: linear-gradient(135deg, hsl(48 100% 96%) 0%, hsl(48 96% 89%) 100%);
+  }
+
+  .cadde-focus-button {
+    min-height: 40px;
+    border-radius: 1rem;
+  }
+
+  .cadde-shell button {
+    min-height: 40px;
+  }
+
   .text-glow-teal {
     color: hsl(var(--glow-teal));
   }

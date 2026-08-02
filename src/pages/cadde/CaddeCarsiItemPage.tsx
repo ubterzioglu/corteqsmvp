@@ -73,7 +73,7 @@ const CaddeCarsiItemPage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-[linear-gradient(180deg,#fffdf8_0%,#fff7ec_22%,#f6f8fb_100%)]">
+    <main className="cadde-shell">
       <section className="mx-auto w-full max-w-3xl space-y-5 px-4 py-8">
         <Card className="border-amber-200 bg-white/95">
           <CardHeader className="space-y-3">
