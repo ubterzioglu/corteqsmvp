@@ -14,6 +14,19 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260802-komuta-merkezi-summary9",
+    date: "2 Ağustos 2026",
+    title:
+      "Komuta Merkezi güncellendi: WhatsApp Summary 7-9 aktarıldı, kanıtlı tamamlanan kayıtlar kapatıldı",
+    items: [
+      "WhatsApp dökümünde 9 Haziran-2 Ağustos aralığındaki todo, karar ve kalıcı notlar Komuta Merkezi'ne işlendi. İki yeni parti oluştu: 7 Temmuz 2026 için 411 kayıt, 2 Ağustos 2026 için 329 kayıt.",
+      "Yeni 740 WA kaydının 604'ü açık takip maddesi olarak geldi; sohbette veya projede açıkça bittiği görülen 136 kayıt doğrudan Tamamlandı statüsüyle eklendi.",
+      "Eski açık pano da ayrıca tarandı. Kod/DB kanıtı veya sohbette net 'canlıda/bitti' teyidi bulunan 103 eski kayıt Tamamlandı'ya çekildi.",
+      "Kanıtı dolaylı kalan 259 madde bilinçli olarak açık bırakıldı. Bunlar özellikle partnerlik, pazarlama ritmi, hukuki/kurumsal kararlar ve net artefaktı görünmeyen eski strateji notları.",
+      "Canlı pano fotoğrafı: 772 Başlanmadı, 450 Beklemede, 3 Devam ediyor, 256 Tamamlandı. DB verisi hemen panelde görünür; bu duyuru ise deploy sonrası zilde ve Durum Raporu'nda görünür.",
+    ],
+  },
+  {
     id: "20260731-yapilacaklar-karti",
     date: "31 Temmuz 2026",
     title:

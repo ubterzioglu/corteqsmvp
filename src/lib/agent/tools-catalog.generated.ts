@@ -422,6 +422,7 @@ export const toolCatalog = {
         "reportCaddeEntity",
         "saveMyCaddeInterests",
         "searchCaddeMentions",
+        "searchCaddePeople",
         "toggleCaddeReaction"
       ],
       "tables_read_write": [
@@ -450,6 +451,7 @@ export const toolCatalog = {
         "list_trending_cadde_hashtags_v1",
         "report_cadde_entity_v1",
         "search_cadde_mentions_v1",
+        "search_cadde_people_v1",
         "toggle_cadde_reaction_v1"
       ],
       "evidence_path": "src/lib/cadde-api.ts"
@@ -489,6 +491,7 @@ export const toolCatalog = {
         "formatCarsiPrice",
         "getCarsiItem",
         "getCarsiPaidMode",
+        "getCarsiVisible",
         "listCarsiCategories",
         "listCarsiItems",
         "listMyCarsiItems",
@@ -1061,6 +1064,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin-shell/admin-todos.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-todos.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin-shell/admin-updates.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1336,6 +1349,16 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-feed-polling.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-feed-polling.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-format.test.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -1347,6 +1370,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/cadde-internal.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-links.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-media.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
