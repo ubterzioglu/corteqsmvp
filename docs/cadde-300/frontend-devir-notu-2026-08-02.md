@@ -1,8 +1,9 @@
 # Cadde Redesign — Frontend Devir Notu (2026-08-02)
 
 > **Bu doküman ne işe yarar:** yeni bir oturum bu notu okuyup hiçbir şey sormadan
-> F20'den devam edebilir. Plan dosyası ayrı yaşıyor:
+> F21'den devam edebilir. Plan dosyası ayrı yaşıyor:
 > [codex-plan-f15-f23-2026-08-02.md](./codex-plan-f15-f23-2026-08-02.md) (F15–F23 denetlenmiş sıra).
+> Kısa yeni-hesap handover: [handover-f21-f23-2026-08-02.md](./handover-f21-f23-2026-08-02.md).
 > Madde hedefleri (dosya:satır): [docs/cadde-300/redesign-calisma-haritasi.md](./redesign-calisma-haritasi.md).
 > Pano: https://corteqs.net/admin/workshop/cadde (48 madde).
 
@@ -11,9 +12,9 @@
 | | |
 |---|---|
 | **Faz** | Backend KAPANDI (25 batch + mail hattı canlı). Şimdi **frontend/Cadde redesign**. |
-| **Batch durumu** | **19 / 23 bitti** (F1–F19). Kalan: **F20–F23**. `F2` (footer) kullanıcının şeridinde. |
-| **Dal** | tek dal `main`; F19 uygulama commit'i **`9ba3498`**. |
-| **Kapılar** | F19 hedefli Cadde suite **53/53** · `tsc --noEmit -p tsconfig.app.json` proje geneli eski borçla düşüyor (F19 dosyalarında hata yok) · F19 eslint 0 · `verify:text` temiz · canlı migration `20260802150000_cadde_share` applied/history doğrulandı. |
+| **Batch durumu** | **20 / 23 bitti** (F1–F20). Kalan: **F21–F23**. `F2` (footer) kullanıcının şeridinde. |
+| **Dal** | tek dal `main`; F20 uygulama commit'i **`5f5d210`**. |
+| **Kapılar** | F20 hedefli Cadde suite **56/56** · `tsc --noEmit -p tsconfig.app.json` proje geneli eski borçla düşüyor (F20 dosyalarında hata yok) · F20 eslint 0 · `npm run build` geçti; picker ayrı chunk: `CaddeEmojiPickerContent-*.js` **25.13 kB / gzip 9.01 kB** · `verify:text` temiz. |
 | **Canlıya deploy** | Coolify deploy **kullanıcıda** — kod push'lu, tarayıcıda henüz yok. |
 
 > ⚠️ **2026-08-02 kapı düzeltmesi:** Bare `npx tsc --noEmit` bu repoda sessizce **sıfır dosya**
@@ -47,11 +48,12 @@
 | F17 | m22+m24 | `c2fe97a` | Yorum textarea'sında Enter gönderir, Shift+Enter satır atlar; yorum paneli kompakt hale geldi. |
 | F18 | m23 | `ad57a96` | Açık yorum paneli adaptif polling ile yeni yorumları sessiz alır; panel kapanınca sorgu durur. |
 | F19 | m12 | `9ba3498` | Paylaş butonu Web Share + clipboard fallback ile çalışır; `record_cadde_share_v1` loglar ve `share_count` artırır. |
+| F20 | m25 | `5f5d210` | Gerçek emoji picker `frimousse` ile lazy-load; composer ve açık yorum draft'ında imleç noktasına emoji ekler. |
 
-### Panoda işaretlenebilir maddeler (birikmiş, 38)
+### Panoda işaretlenebilir maddeler (birikmiş, 39)
 
 `m1 · m2 · m3 · m4 · m5 · m6 · m7 · m12 · m13 · m14 · m15 · m16 · m17 · m18 · m29 · m30 · m31 ·
-m19 · m20 · m22 · m23 · m24 · m35 · m37 · m38 · m39 · m40 · m41 · m42 · m43 · m44 · m45 · m46` + önceden bitmiş sayılan
+m19 · m20 · m22 · m23 · m24 · m25 · m35 · m37 · m38 · m39 · m40 · m41 · m42 · m43 · m44 · m45 · m46` + önceden bitmiş sayılan
 `m10 · m21 · m32 · m36 · m47`. Kullanıcı QA'sından sonra "panoyu çevir" derse bunlar `yapildi`ya geçer.
 
 ---
@@ -117,11 +119,13 @@ policy yok. `cadde_posts.share_count` eklendi; `record_cadde_share_v1` auth+ban+
 sonrası paylaşım loglar ve sayacı artırır. UI aksiyon satırında Paylaş butonu Web Share API
 ve clipboard fallback ile `/cadde?post=<id>` linkini kullanır. Ranking/global eşik F21'e kaldı.
 
-### F20 · m25 — emoji bankası [M] ← **SIRADAKİ**
-Lazy-load **gerçek** picker (kullanıcı kararı), yorum + composer. Ana bundle büyümesi ~0
-olmalı (dinamik import kanıtı commit'e yazılır).
+### F20 · m25 — emoji bankası [M] — ✅ **BİTTİ** (`5f5d210`)
+`frimousse@0.3.0` eklendi; picker `React.lazy` + `Suspense` ile yalnız popover açılınca
+yüklenir. `npm run build` çıktısında ayrı chunk kanıtı var: `CaddeEmojiPickerContent-*.js`
+**25.13 kB / gzip 9.01 kB**. Composer `MentionTextarea` ve açık yorum draft'ı seçim aralığını
+takip eder; seçilen emoji imleç noktasına eklenir, caret geri taşınır. RPC/schema değişmedi.
 
-### F21 · m8+m11 — konum default'u + global çıkış kuralı [L] ⚠️ zincir başı
+### F21 · m8+m11 — konum default'u + global çıkış kuralı [L] ⚠️ zincir başı ← **SIRADAKİ**
 "Konum ekle" + default kullanıcının **kayıtlı** konumu (aktif filtre fallback'i silinir);
 serbest global kapanır; globale çıkış performans eşiği (`cadde_settings` anahtarları + feed
 RPC'de eşik; muhtemelen denormalize sayaç + trigger migration'ı). "Beğeni" tanımı (yalnız
@@ -215,7 +219,7 @@ regression testi) · `m48` (Profil Workshop süreci) · `m13` yeniden değerlend
 2. **F2 · m28 footer sadeleştirme** — kullanıcının şeridi (`Footer.tsx`).
 3. **Giriş yapmalı QA turu** — tepkiler, yorum, kafe katılımı, composer akışı.
 4. **Hoş geldin maili anahtarı** — panelden örnek mail sonrası açılacak.
-5. **Pano kutularını işaretleme** — 38 madde hazır; "panoyu çevir" komutuyla asistan
+5. **Pano kutularını işaretleme** — 39 madde hazır; "panoyu çevir" komutuyla asistan
    `inceleniyor` → `yapildi` çevirebilir.
 
 ---
@@ -223,10 +227,10 @@ regression testi) · `m48` (Profil Workshop süreci) · `m13` yeniden değerlend
 ## 7. Yeni oturum için ilk üç adım
 
 ```bash
-git -C c:/temp_private/corteqs/corteqs_fin log --oneline -5      # 9ba3498 görünmeli
-npx vitest run src/components/cadde/ src/pages/cadde/ src/lib/cadde-*.test.ts   # 53/53 beklenir
-npx tsc --noEmit -p tsconfig.app.json                           # eski repo borcu; F20 dosyalarına süz
-# sonra: F20 · m25 — gerçek emoji picker lazy-load
+git -C c:/temp_private/corteqs/corteqs_fin log --oneline -5      # 5f5d210 görünmeli
+npx vitest run src/components/cadde/ src/pages/cadde/ src/lib/cadde-*.test.ts   # 56/56 beklenir
+npx tsc --noEmit -p tsconfig.app.json                           # eski repo borcu; F21 dosyalarına süz
+# sonra: F21 · m8+m11 — konum default'u + global çıkış eşiği
 ```
 
-**Devam cümlesi:** "F20'den devam et — m25: gerçek emoji picker lazy-load, yorum + composer."
+**Devam cümlesi:** "F21'den devam et — m8+m11: kayıtlı konum default'u ve global çıkış eşiği."
