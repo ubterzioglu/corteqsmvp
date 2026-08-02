@@ -14,6 +14,18 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260802-araclar-hub-gorsel-yenileme",
+    date: "2 Ağustos 2026",
+    title:
+      "/tools (Araçlar) sayfası görsel olarak yenilendi — 17 araç kartı artık birbirinden ayırt ediliyor",
+    items: [
+      "Sorun: /tools sayfasındaki 17 araç kartının hepsi birbirinin aynısıydı — tek fark eden şey her kartta tekrar eden aynı yeşil 'ÜCRETSİZ' rozetiydi. Sayfa ayrıca anasayfada zaten kullanılan marka görsel diline (aurora arka plan, gradyanlı başlıklar, glow efektleri) hiç sahip değildi, jenerik/sönük duruyordu.",
+      "Üst başlık bölümüne anasayfadaki aurora/grid arka plan efekti ve teal→turuncu gradyanlı başlık eklendi. Her kart artık verdiği sonuç türüne göre (Skor, Sıralama, Persona, Görev Planı, Eşleşme, Karşılaştırma) logonun 6 renginden birini alan ikonlu bir rozet, kart çevresinde aynı renkte ince bir halka ve üstte renkli bir şerit taşıyor — kartlar artık tek bakışta birbirinden ayrılıyor. Kart görselinin üstüne karartma gradyanı ve başlık bindirildi; üzerine gelince kart hafifçe yükseliyor, görsel yakınlaşıyor ve ince bir parlama geçişi oluyor. Her kartın altına kaç soru sorduğu da eklendi ('6 soru · birkaç dakika').",
+      "Mobildeki açılır-kapanır liste görünümü de aynı renk/ikon sistemine getirildi (sol kenarda renkli çizgi + aynı rozet).",
+      "Durum: kod ana koda alındı ve push'landı (main, commit 8b186b1 + 5e5710d). Coolify'a HENÜZ deploy edilmedi — corteqs.net/tools'ta görünmesi için deploy tetiklenmesi gerekiyor.",
+    ],
+  },
+  {
     id: "20260802-relocation-slider-radyo-butonlari",
     date: "2 Ağustos 2026",
     title:
