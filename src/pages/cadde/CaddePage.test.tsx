@@ -40,6 +40,7 @@ const countCaddePostsSinceMock = vi.fn();
 const listCaddePromotionsMock = vi.fn();
 const listCaddePostCommentsMock = vi.fn();
 const createCaddeCommentMock = vi.fn();
+const createCaddePostMock = vi.fn();
 const recordCaddeShareMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
@@ -67,6 +68,7 @@ vi.mock("@/lib/cadde-api", async () => {
     countCaddePostsSince: (...args: unknown[]) => countCaddePostsSinceMock(...args),
     listCaddePostComments: (...args: unknown[]) => listCaddePostCommentsMock(...args),
     createCaddeComment: (...args: unknown[]) => createCaddeCommentMock(...args),
+    createCaddePost: (...args: unknown[]) => createCaddePostMock(...args),
     recordCaddeShare: (...args: unknown[]) => recordCaddeShareMock(...args),
   };
 });
@@ -109,6 +111,7 @@ describe("CaddePage", () => {
     listCaddePromotionsMock.mockResolvedValue([]);
     listCaddePostCommentsMock.mockResolvedValue({ items: [], nextCursor: null });
     createCaddeCommentMock.mockResolvedValue(undefined);
+    createCaddePostMock.mockResolvedValue("post-created");
     recordCaddeShareMock.mockResolvedValue(undefined);
     Object.defineProperty(navigator, "share", { configurable: true, value: undefined });
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: undefined });
@@ -208,6 +211,39 @@ describe("CaddePage", () => {
     expect(await screen.findByLabelText("Paylaşım metni")).toBeInTheDocument();
     // "Gerçek / Demo" etiketi artık public UI'da görünmemeli.
     expect(screen.queryByText(/Gerçek \/ Demo/i)).not.toBeInTheDocument();
+  });
+
+  it("uses the registered profile location for new posts instead of the active filter or bridge toggle", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    actorContextMock.mockReturnValue({ data: makeActorContext({ country: "Almanya", city: "Berlin" }), isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([
+      { id: "country-de", code: "DE", name: "Almanya" },
+      { id: "country-nl", code: "NL", name: "Hollanda" },
+    ]);
+    listCaddeCitiesMock.mockResolvedValue([
+      { id: "city-berlin", countryId: "country-de", name: "Berlin", timezone: "Europe/Berlin" },
+      { id: "city-amsterdam", countryId: "country-nl", name: "Amsterdam", timezone: "Europe/Amsterdam" },
+    ]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+
+    renderPage("/cadde?country=Hollanda&city=Amsterdam&bridge=1");
+
+    fireEvent.change(await screen.findByLabelText("Paylaşım metni"), { target: { value: "Profil konumumdan paylaşım" } });
+    fireEvent.click(screen.getByRole("button", { name: "Paylaş" }));
+
+    await waitFor(() =>
+      expect(createCaddePostMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body: "Profil konumumdan paylaşım",
+          countryId: "Almanya",
+          cityId: "Berlin",
+          isBridge: false,
+        }),
+      ),
+    );
   });
 
   it("keeps comments lazy until the selected post is expanded", async () => {

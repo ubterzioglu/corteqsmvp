@@ -37,8 +37,8 @@ export interface CaddeComposerProps {
   isSubmitting: boolean;
   countries: readonly CaddeCountry[];
   cities: readonly CaddeCity[];
-  /** Hedef boş bırakılınca kullanılacak aktif filtre etiketi ("Global" olabilir). */
-  filterCountryLabel: string;
+  /** Hedef boş bırakılınca kullanılacak kayıtlı profil konumu etiketi. */
+  defaultLocationLabel: string;
   onError: (message: string) => void;
 }
 
@@ -49,7 +49,7 @@ const CaddeComposer = ({
   isSubmitting,
   countries,
   cities,
-  filterCountryLabel,
+  defaultLocationLabel,
   onError,
 }: CaddeComposerProps) => {
   const [locationOpen, setLocationOpen] = useState(false);
@@ -173,15 +173,15 @@ const CaddeComposer = ({
           <div className="grid gap-3 rounded-2xl bg-slate-50 p-3 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label className="text-xs">
-                Ülke <span className="font-normal text-slate-500">(boş = {filterCountryLabel})</span>
+                Ülke <span className="font-normal text-slate-500">(boş = {defaultLocationLabel})</span>
               </Label>
               <Select
-                value={value.country || "__filter__"}
-                onValueChange={(next) => update({ country: next === "__filter__" ? "" : next, city: "" })}
+                value={value.country || "__profile__"}
+                onValueChange={(next) => update({ country: next === "__profile__" ? "" : next, city: "" })}
               >
                 <SelectTrigger className="bg-white"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__filter__">Filtreyi kullan</SelectItem>
+                  <SelectItem value="__profile__">Profil konumunu kullan</SelectItem>
                   {countries.map((country) => (
                     <SelectItem key={country.id} value={country.name}>{country.name}</SelectItem>
                   ))}

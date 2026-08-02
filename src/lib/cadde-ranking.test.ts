@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import {
   CADDE_RANK_WEIGHTS,
+  CADDE_GLOBAL_THRESHOLD_SETTINGS,
   compareCaddeRank,
   computeCaddeBand,
   computeCaddeScore,
   deterministicCaddeRand,
+  isCaddeGlobalEligible,
   isAfterCaddeCursor,
   type CaddeRankInput,
   type CaddeRankedItem,
@@ -22,6 +24,42 @@ const baseInput: CaddeRankInput = {
   pinned: false,
   ageHours: 100000,
 };
+
+describe("cadde global threshold mirror", () => {
+  it("keeps the SQL-backed global threshold defaults in TS", () => {
+    expect(CADDE_GLOBAL_THRESHOLD_SETTINGS).toEqual({
+      enabled: true,
+      minReactions: 10,
+      minComments: 5,
+      minShares: 10,
+    });
+  });
+
+  it("always keeps viewer-local content eligible for its local feed", () => {
+    expect(isCaddeGlobalEligible({ sameCity: true, sameCountry: true, reactionCount: 0, commentCount: 0, shareCount: 0 })).toBe(true);
+    expect(isCaddeGlobalEligible({ sameCity: false, sameCountry: true, reactionCount: 0, commentCount: 0, shareCount: 0 })).toBe(true);
+  });
+
+  it("lets non-local content reach global when any configured engagement threshold is met", () => {
+    expect(isCaddeGlobalEligible({ sameCity: false, sameCountry: false, reactionCount: 10, commentCount: 0, shareCount: 0 })).toBe(true);
+    expect(isCaddeGlobalEligible({ sameCity: false, sameCountry: false, reactionCount: 0, commentCount: 5, shareCount: 0 })).toBe(true);
+    expect(isCaddeGlobalEligible({ sameCity: false, sameCountry: false, reactionCount: 0, commentCount: 0, shareCount: 10 })).toBe(true);
+    expect(isCaddeGlobalEligible({ sameCity: false, sameCountry: false, reactionCount: 9, commentCount: 4, shareCount: 9 })).toBe(false);
+  });
+
+  it("blocks non-local global promotion when the SQL setting disables it", () => {
+    expect(
+      isCaddeGlobalEligible({
+        sameCity: false,
+        sameCountry: false,
+        reactionCount: 99,
+        commentCount: 99,
+        shareCount: 99,
+        settings: { enabled: false, minReactions: 10, minComments: 5, minShares: 10 },
+      }),
+    ).toBe(false);
+  });
+});
 
 describe("computeCaddeBand (CKS §11.1 truth table)", () => {
   it("A: aynı şehir + ihtiyaç eşleşmesi", () => {
