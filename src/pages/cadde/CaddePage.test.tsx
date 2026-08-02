@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { createEvent, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -39,6 +39,7 @@ const getCaddeSponsoredMock = vi.fn();
 const countCaddePostsSinceMock = vi.fn();
 const listCaddePromotionsMock = vi.fn();
 const listCaddePostCommentsMock = vi.fn();
+const createCaddeCommentMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
@@ -64,6 +65,7 @@ vi.mock("@/lib/cadde-api", async () => {
     getCaddeSponsoredPlacement: (...args: unknown[]) => getCaddeSponsoredMock(...args),
     countCaddePostsSince: (...args: unknown[]) => countCaddePostsSinceMock(...args),
     listCaddePostComments: (...args: unknown[]) => listCaddePostCommentsMock(...args),
+    createCaddeComment: (...args: unknown[]) => createCaddeCommentMock(...args),
   };
 });
 
@@ -88,6 +90,7 @@ describe("CaddePage", () => {
     countCaddePostsSinceMock.mockResolvedValue(0);
     listCaddePromotionsMock.mockResolvedValue([]);
     listCaddePostCommentsMock.mockResolvedValue({ items: [], nextCursor: null });
+    createCaddeCommentMock.mockResolvedValue(undefined);
   });
 
   it("shows the profile gate with missing fields when the actor context is incomplete", async () => {
@@ -316,6 +319,76 @@ describe("CaddePage", () => {
     expect(await screen.findByText("Altıncı yorum")).toBeInTheDocument();
     expect(listCaddePostCommentsMock).toHaveBeenLastCalledWith("post-load-more", 5, "2026-06-23T10:05:00Z");
     expect(screen.queryByRole("button", { name: /Devamını yükle/i })).not.toBeInTheDocument();
+  });
+
+  it("submits comments with Enter and keeps Shift+Enter as a line break", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({
+      items: [
+        {
+          id: "post-enter",
+          mode: "real",
+          type: "text",
+          title: "Enter yorumu",
+          body: "Yorum gönderimi klavye ile çalışır.",
+          authorName: "Ayşe",
+          authorRole: "Üye",
+          authorAvatarUrl: null,
+          authorUserId: "user-2",
+          country: "Almanya",
+          city: "Berlin",
+          isBridge: false,
+          pinned: false,
+          createdAt: "2026-06-23T10:00:00Z",
+          needCategory: null,
+          interests: [],
+          hashtags: [],
+          mentions: [],
+          media: [],
+          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          totalReactionCount: 0,
+          commentCount: 1,
+          comments: [],
+          viewerReactions: [],
+        },
+      ],
+      nextPage: null,
+    });
+    listCaddePostCommentsMock.mockResolvedValue({
+      items: [{ id: "comment-enter", postId: "post-enter", userId: "u1", body: "Mevcut yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" }],
+      nextCursor: null,
+    });
+
+    renderPage();
+
+    fireEvent.click(await screen.findByTestId("cadde-comment-toggle"));
+    const textarea = await screen.findByPlaceholderText("Yorum yaz");
+    expect(textarea).toHaveClass("min-h-[64px]");
+    expect(await screen.findByTestId("cadde-comment-card")).toHaveClass("py-2.5");
+
+    fireEvent.change(textarea, { target: { value: "Satır 1" } });
+    const shiftEnter = createEvent.keyDown(textarea, { key: "Enter", code: "Enter", shiftKey: true });
+    fireEvent(textarea, shiftEnter);
+    expect(shiftEnter.defaultPrevented).toBe(false);
+    expect(createCaddeCommentMock).not.toHaveBeenCalled();
+
+    fireEvent.change(textarea, { target: { value: "   " } });
+    const emptyEnter = createEvent.keyDown(textarea, { key: "Enter", code: "Enter" });
+    fireEvent(textarea, emptyEnter);
+    expect(emptyEnter.defaultPrevented).toBe(true);
+    expect(createCaddeCommentMock).not.toHaveBeenCalled();
+
+    fireEvent.change(textarea, { target: { value: "Klavye ile yorum" } });
+    const enter = createEvent.keyDown(textarea, { key: "Enter", code: "Enter" });
+    fireEvent(textarea, enter);
+
+    expect(enter.defaultPrevented).toBe(true);
+    await waitFor(() => expect(createCaddeCommentMock).toHaveBeenCalledWith("post-enter", "Klavye ile yorum"));
   });
 
   it("shows the five reaction actions directly without a popover", async () => {

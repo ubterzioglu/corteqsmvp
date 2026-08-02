@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowUpRight, Flag, Globe2, Heart, HelpCircle, Laugh, MapPin, Megaphone, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
+import { ArrowUpRight, Flag, Globe2, Heart, HelpCircle, Laugh, MapPin, Megaphone, MessageCircle, MessagesSquare, Send, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
@@ -756,13 +756,16 @@ const CaddePage = () => {
 
                     <div
                       data-testid="cadde-comment-panel"
-                      className="rounded-[24px] border border-slate-200/90 bg-slate-50/80 p-4"
+                      className="rounded-[20px] border border-slate-200/90 bg-slate-50/80 p-3"
                     >
-                      <div className="space-y-3">
+                      <div className="space-y-2">
                         {visibleComments.map((comment) => (
-                          <div key={comment.id} className="rounded-2xl border border-slate-200/80 bg-white px-4 py-3">
-                            <p className="text-sm font-semibold text-slate-900">{comment.authorName}</p>
-                            <p className="mt-1 text-sm text-slate-700">{comment.body}</p>
+                          <div key={comment.id} data-testid="cadde-comment-card" className="rounded-xl border border-slate-200/80 bg-white px-3 py-2.5">
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                              <p className="text-sm font-semibold text-slate-900">{comment.authorName}</p>
+                              <p className="text-xs text-slate-400">{formatDateTime(comment.createdAt)}</p>
+                            </div>
+                            <p className="mt-0.5 text-sm leading-5 text-slate-700">{comment.body}</p>
                           </div>
                         ))}
 
@@ -791,16 +794,24 @@ const CaddePage = () => {
                                 <Textarea
                                   value={commentDrafts[item.post.id] ?? ""}
                                   onChange={(event) => setCommentDrafts((current) => ({ ...current, [item.post.id]: event.target.value }))}
+                                  onKeyDown={(event) => {
+                                    if (event.key !== "Enter" || event.shiftKey) return;
+                                    event.preventDefault();
+                                    const body = commentDrafts[item.post.id] ?? "";
+                                    if (!body.trim()) return;
+                                    commentMutation.mutate({ postId: item.post.id, body });
+                                  }}
                                   placeholder="Yorum yaz"
                                   rows={2}
-                                  className="min-h-[88px] bg-white"
+                                  className="min-h-[64px] bg-white"
                                 />
                                 <Button
-                                  className="self-end sm:min-w-[112px]"
+                                  className="self-end whitespace-nowrap sm:min-w-[112px]"
                                   onClick={() => {
                                     commentMutation.mutate({ postId: item.post.id, body: commentDrafts[item.post.id] ?? "" });
                                   }}
                                 >
+                                  <Send className="mr-1.5 h-4 w-4" />
                                   Gönder
                                 </Button>
                               </div>
