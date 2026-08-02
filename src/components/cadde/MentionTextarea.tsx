@@ -5,7 +5,7 @@
 // listede tutulur — gövde metni ile hedef arasındaki bağ display_label üzerinden kurulur
 // (bkz. CaddePostBody). Öneri kaynağı search_cadde_mentions_v1: görünürlük kuralları DB'de.
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ComponentType } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Building2, ShoppingBag, User } from "lucide-react";
 
@@ -16,7 +16,10 @@ import { searchCaddeMentions } from "@/lib/cadde-api";
 import { activeMentionToken } from "@/lib/cadde-text";
 import type { CaddeMentionSuggestion, CaddeMentionTargetType, CaddePostMention } from "@/lib/cadde-types";
 
-const TYPE_ICON: Record<CaddeMentionTargetType, typeof User> = {
+// Not: harita tipi lucide'a bağlanmaz (`typeof User` olurdu) — CaddeCafeIcon düz bir
+// fonksiyon bileşeni ve lucide'ın ForwardRefExoticComponent imzasını karşılamıyor.
+// Ortak sözleşme yalnız className.
+const TYPE_ICON: Record<CaddeMentionTargetType, ComponentType<{ className?: string }>> = {
   user: User,
   catalog_item: Building2,
   cafe: CaddeCafeIcon,

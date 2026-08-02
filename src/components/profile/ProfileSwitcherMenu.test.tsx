@@ -72,6 +72,6 @@ describe("ProfileSwitcherMenu — yeni profil talebi", () => {
     await user.click(screen.getByRole("button", { name: /Diğer Profiller/i }));
     await user.click(await screen.findByText("Caddeye reklam ver"));
 
-    expect(navigateSpy).toHaveBeenCalledWith("/profile/bireysel?tab=settings#cadde-tanitim");
+    expect(navigateSpy).toHaveBeenCalledWith("/profile#cadde-tanitim");
   });
 });

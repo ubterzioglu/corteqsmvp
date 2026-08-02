@@ -270,7 +270,7 @@ describe("CaddePage", () => {
     const profileLinks = screen.getAllByRole("link", { name: /Profilinden İlk Tanıtımını Yap/i });
     expect(profileLinks.length).toBeGreaterThanOrEqual(2);
     profileLinks.forEach((link) => {
-      expect(link).toHaveAttribute("href", "/profile/bireysel?tab=settings#cadde-tanitim");
+      expect(link).toHaveAttribute("href", "/profile#cadde-tanitim");
     });
   });
 

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type ComponentType, type ReactNode } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   Briefcase,
   BookOpen,
@@ -361,6 +361,7 @@ const ProfilePage = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { type } = useParams<{ type: string }>();
+  const location = useLocation();
   const { isLoading, errorMessage, profile, refreshProfile } = useCurrentUserProfile(true);
   const { items: dashboardItems, isLoading: isDashboardLoading } = useCurrentUserDashboard(true);
 
@@ -382,6 +383,26 @@ const ProfilePage = () => {
       cancelled = true;
     };
   }, [profile]);
+
+  // F14: hash'li derin bağlantı (ör. Cadde CTA'sından "/profile#cadde-tanitim").
+  // SPA'da tarayıcı bu çapaya kendiliğinden kaydırmaz — hedef kart profil verisi
+  // geldikten SONRA mount olduğu için eleman görünene kadar birkaç frame denenir.
+  useEffect(() => {
+    if (!location.hash || isLoading) return;
+    const targetId = location.hash.slice(1);
+    let attempts = 0;
+    let frame = requestAnimationFrame(function tryScroll() {
+      const target = document.getElementById(targetId);
+      if (target) {
+        if (typeof target.scrollIntoView === "function") {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        return;
+      }
+      if (attempts++ < 20) frame = requestAnimationFrame(tryScroll);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [location.hash, isLoading]);
   const [socialMediaAllVisible, setSocialMediaAllVisible] = useState(true);
   const [commonAttributesAllVisible, setCommonAttributesAllVisible] = useState(true);
   const [savingAttributeKey, setSavingAttributeKey] = useState<string | null>(null);
@@ -1298,8 +1319,11 @@ const ProfilePage = () => {
   // /profile/:type segmenti kozmetik UI kategorisidir; DB'deki flat rol anahtarı
   // (örn. User_DiasporaMember) URL'e asla yazılmaz — getUiProfileType her zaman
   // geçerli bir segment döndürdüğü için redirect döngüsü oluşamaz.
+  //
+  // F14: derin bağlantılar (ör. Cadde'den "/profile#cadde-tanitim") bu redirect'lerden
+  // geçiyor — search+hash KORUNMAZSA çapa kaybolur ve kullanıcı sayfanın tepesine düşer.
   if (!type || !isProfileType(type)) {
-    return <Navigate to={`/profile/${getUiProfileType(profile?.profileType)}`} replace />;
+    return <Navigate to={`/profile/${getUiProfileType(profile?.profileType)}${location.search}${location.hash}`} replace />;
   }
 
   if (isLoading) {
@@ -1308,7 +1332,7 @@ const ProfilePage = () => {
 
   const expectedUiType = profile?.profileType ? getUiProfileType(profile.profileType) : null;
   if (expectedUiType && expectedUiType !== type) {
-    return <Navigate to={`/profile/${expectedUiType}`} replace />;
+    return <Navigate to={`/profile/${expectedUiType}${location.search}${location.hash}`} replace />;
   }
 
   const avatarActionButtons = (

@@ -129,8 +129,11 @@ const ProfileSwitcherMenu = ({ currentItemId, triggerClassName }: ProfileSwitche
             );
           })}
           <DropdownMenuSeparator />
+          {/* m46: hedef sabit "bireysel" DEĞİL — /profile kullanıcının kendi profil tipine
+              yönlenir (danışman/işletme de olabilir) ve ProfilePage redirect'i artık hash'i
+              koruyor. "?tab=settings" kaldırıldı: ProfilePage tab parametresi okumuyor. */}
           <DropdownMenuItem
-            onSelect={() => navigate("/profile/bireysel?tab=settings#cadde-tanitim")}
+            onSelect={() => navigate("/profile#cadde-tanitim")}
             className="gap-2"
           >
             <Megaphone className="h-3.5 w-3.5" aria-hidden="true" />

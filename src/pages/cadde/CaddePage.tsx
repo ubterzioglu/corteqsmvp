@@ -329,7 +329,10 @@ const CaddePage = () => {
   const listedBillboards = (featuredBillboards.length > 0 ? featuredBillboards : billboardCards).filter(
     (card) => card.id !== spotlightBillboard?.id,
   );
-  const promotionCtaTarget = user ? "/profile/bireysel?tab=settings#cadde-tanitim" : "/login?mode=signup";
+  // m45: "talep bırak / başvuru gönder" akışı bitti — kullanıcı kendi profilindeki
+  // tanıtım panelinden bütçe verip reklamını çıkarıyor. Hedef sabit "bireysel" değil:
+  // /profile kullanıcının profil tipine yönlenir, hash redirect'te korunur (F14 fix).
+  const promotionCtaTarget = user ? "/profile#cadde-tanitim" : "/login?mode=signup";
   const promotionCtaLabel = user ? "Profilinden İlk Tanıtımını Yap" : "Profil Aç ve Tanıtıma Başla";
 
   return (
@@ -938,11 +941,14 @@ const CaddePage = () => {
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
                     Danışman, işletme ve etkinlik keşfi için alan hazır. {sparseContentHint}
                   </p>
+                  {/* m43: boş reklam yüzeyi potansiyel müşteriye "burayı alabilirsin" der.
+                      Hemen altındaki koyu kart ana CTA olduğu için bu ince bir bağlantı —
+                      aynı hedefe giden üç kalın buton üst üste yığılmıyor. */}
                   <Link
                     to={promotionCtaTarget}
-                    className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
+                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-orange-700 underline-offset-4 hover:underline"
                   >
-                    {promotionCtaLabel}
+                    Reklamını buraya verebilirsin
                     <ArrowUpRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -956,8 +962,10 @@ const CaddePage = () => {
               <CardTitle className="text-balance text-[clamp(1rem,2.2vw,1.25rem)] leading-snug text-white">
                 Cadde İçinde Görünür Ol
               </CardTitle>
+              {/* m45: "talep bırak" kalktı — kullanıcı kendi profilinden bütçe verip
+                  tanıtımını yayınlıyor (Facebook/Instagram modeli), aracı adım yok. */}
               <CardDescription className="text-balance text-slate-300">
-                Billboard veya sponsorlu akışta yer almak için talep bırak.
+                Billboard ve sponsorlu akış alanlarını profilindeki tanıtım panelinden kendin açarsın.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
