@@ -6,6 +6,7 @@ import { Flag, Flame, Globe2, Heart, MapPin, Megaphone, MessageCircle, MessagesS
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
+import CaddeBridgeInfo from "@/components/cadde/CaddeBridgeInfo";
 import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
 import CaddeFeedScopeBar from "@/components/cadde/CaddeFeedScopeBar";
 import CaddeMediaGallery from "@/components/cadde/CaddeMediaGallery";
@@ -377,11 +378,19 @@ const CaddePage = () => {
 
               <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3">
                 <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-semibold text-emerald-950">Köprü</p>
+                  <div className="min-w-0">
+                    {/* m35: tek satırlık tanım yetmiyordu — dört hedef kitle bilgi balonunda. */}
+                    <p className="flex items-center gap-1.5 text-sm font-semibold text-emerald-950">
+                      Köprü
+                      <CaddeBridgeInfo />
+                    </p>
                     <p className="text-xs leading-relaxed text-emerald-700">TR-Diaspora arasında taşınma, iş ve mentorluk akışı.</p>
                   </div>
-                  <Switch checked={filters.bridge} onCheckedChange={(checked) => updateFilters({ bridge: checked })} />
+                  <Switch
+                    checked={filters.bridge}
+                    onCheckedChange={(checked) => updateFilters({ bridge: checked })}
+                    className="shrink-0"
+                  />
                 </div>
               </div>
             </CardContent>

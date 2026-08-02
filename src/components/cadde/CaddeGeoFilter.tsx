@@ -84,16 +84,21 @@ const CaddeGeoFilter = ({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center gap-2">
+      {/* Workshop m37: iki tetikleyici 290px'lik sol kolonda flex-wrap ile alt alta
+          düşüp hizayı bozuyordu. Sabit iki sütun + min-w-0/truncate ile her genişlikte
+          yan yana ve eşit kalıyorlar; açılan panel de dar ekranı taşırmıyor. */}
+      <div className="grid grid-cols-2 gap-2">
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="sm" className="h-9 gap-1.5">
-              <Globe className="h-4 w-4 text-orange-500" />
-              {selectedCountries.length === 0 ? "Tüm Ülkeler" : `${selectedCountries.length} Ülke`}
-              <ChevronDown className="h-3 w-3 text-muted-foreground" />
+            <Button variant="outline" size="sm" className="h-9 w-full min-w-0 justify-start gap-1.5 px-2.5">
+              <Globe className="h-4 w-4 shrink-0 text-orange-500" />
+              <span className="min-w-0 flex-1 truncate text-left">
+                {selectedCountries.length === 0 ? "Tüm Ülkeler" : `${selectedCountries.length} Ülke`}
+              </span>
+              <ChevronDown className="h-3 w-3 shrink-0 text-muted-foreground" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent align="start" className="w-72 p-0">
+          <PopoverContent align="start" className="w-[min(18rem,calc(100vw-2rem))] p-0">
             <div className="border-b border-border p-2">
               <Input
                 placeholder="Ülke ara..."
@@ -135,13 +140,15 @@ const CaddeGeoFilter = ({
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="sm" className="h-9 gap-1.5">
-              <MapPin className="h-4 w-4 text-emerald-600" />
-              {selectedCities.length === 0 ? "Tüm Şehirler" : `${selectedCities.length} Şehir`}
-              <ChevronDown className="h-3 w-3 text-muted-foreground" />
+            <Button variant="outline" size="sm" className="h-9 w-full min-w-0 justify-start gap-1.5 px-2.5">
+              <MapPin className="h-4 w-4 shrink-0 text-emerald-600" />
+              <span className="min-w-0 flex-1 truncate text-left">
+                {selectedCities.length === 0 ? "Tüm Şehirler" : `${selectedCities.length} Şehir`}
+              </span>
+              <ChevronDown className="h-3 w-3 shrink-0 text-muted-foreground" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent align="start" className="w-72 p-0">
+          <PopoverContent align="start" className="w-[min(18rem,calc(100vw-2rem))] p-0">
             <div className="border-b border-border p-2">
               <Input
                 placeholder="Şehir ara..."
@@ -184,18 +191,20 @@ const CaddeGeoFilter = ({
 
       {selectedCountries.length > 0 || selectedCities.length > 0 ? (
         <div className="flex flex-wrap gap-1.5">
+          {/* m37: uzun ülke/şehir adları dar kolonda rozeti taşırıyordu — truncate + shrink-0 kapatma. */}
           {selectedCountries.map((name) => (
-            <Badge key={name} variant="outline" className="gap-1 pr-1">
-              {name}
-              <button type="button" onClick={() => toggleCountry(name)} className="rounded p-0.5 hover:bg-muted" aria-label={`${name} filtresini kaldır`}>
+            <Badge key={name} variant="outline" className="max-w-full gap-1 pr-1">
+              <span className="min-w-0 truncate">{name}</span>
+              <button type="button" onClick={() => toggleCountry(name)} className="shrink-0 rounded p-0.5 hover:bg-muted" aria-label={`${name} filtresini kaldır`}>
                 <X className="h-3 w-3" />
               </button>
             </Badge>
           ))}
           {selectedCities.map((name) => (
-            <Badge key={name} variant="secondary" className="gap-1 pr-1">
-              <MapPin className="h-3 w-3" /> {name}
-              <button type="button" onClick={() => toggleCity(name)} className="rounded p-0.5 hover:bg-muted" aria-label={`${name} filtresini kaldır`}>
+            <Badge key={name} variant="secondary" className="max-w-full gap-1 pr-1">
+              <MapPin className="h-3 w-3 shrink-0" />
+              <span className="min-w-0 truncate">{name}</span>
+              <button type="button" onClick={() => toggleCity(name)} className="shrink-0 rounded p-0.5 hover:bg-muted" aria-label={`${name} filtresini kaldır`}>
                 <X className="h-3 w-3" />
               </button>
             </Badge>
