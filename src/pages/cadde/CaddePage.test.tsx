@@ -255,6 +255,43 @@ describe("CaddePage", () => {
     expect(screen.getByTestId("cadde-billboards-empty-state")).toBeInTheDocument();
   });
 
+  it("routes authenticated promotion CTAs to the profile promotion panel", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+
+    renderPage();
+
+    expect(await screen.findByTestId("cadde-featured-empty-state")).toBeInTheDocument();
+    const profileLinks = screen.getAllByRole("link", { name: /Profilinden İlk Tanıtımını Yap/i });
+    expect(profileLinks.length).toBeGreaterThanOrEqual(2);
+    profileLinks.forEach((link) => {
+      expect(link).toHaveAttribute("href", "/profile/bireysel?tab=settings#cadde-tanitim");
+    });
+  });
+
+  it("keeps promotion CTAs signup-bound for visitors", async () => {
+    useAuthMock.mockReturnValue({ session: null, user: null, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+
+    renderPage();
+
+    const signupLinks = await screen.findAllByRole("link", { name: /Profil Aç ve Tanıtıma Başla/i });
+    expect(signupLinks.length).toBeGreaterThanOrEqual(2);
+    signupLinks.forEach((link) => {
+      expect(link).toHaveAttribute("href", "/login?mode=signup");
+    });
+  });
+
   // Workshop m41/m44: featured kayıt sağ kolonun tepesindeki yuvaya çıkar, listede tekrar etmez.
   it("routes the featured billboard to the spotlight slot and keeps the rest in the list", async () => {
     useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });

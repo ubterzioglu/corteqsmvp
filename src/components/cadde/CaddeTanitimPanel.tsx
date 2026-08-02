@@ -52,6 +52,7 @@ const CaddeTanitimPanel = () => {
   const queryClient = useQueryClient();
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
+  const diasporaKey = useCaddeDiasporaKey();
 
   const actorContextQuery = useCaddeActorContext(Boolean(user));
   const featureKeys = actorContextQuery.data?.featureKeys;
@@ -114,7 +115,7 @@ const CaddeTanitimPanel = () => {
   };
 
   return (
-    <Card>
+    <Card id="cadde-tanitim">
       <CardHeader className="pb-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>

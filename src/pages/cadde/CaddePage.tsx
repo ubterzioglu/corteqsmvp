@@ -329,6 +329,8 @@ const CaddePage = () => {
   const listedBillboards = (featuredBillboards.length > 0 ? featuredBillboards : billboardCards).filter(
     (card) => card.id !== spotlightBillboard?.id,
   );
+  const promotionCtaTarget = user ? "/profile/bireysel?tab=settings#cadde-tanitim" : "/login?mode=signup";
+  const promotionCtaLabel = user ? "Profilinden İlk Tanıtımını Yap" : "Profil Aç ve Tanıtıma Başla";
 
   return (
     <CaddeProfileGate context={actorContextQuery.data} isLoading={actorContextQuery.isLoading}>
@@ -836,7 +838,33 @@ const CaddePage = () => {
 
           {/* m41: statik "CorteQS Panosu / Bugün caddede öne çıkanlar" kartı kaldırıldı;
               yerini panelden Featured işaretlenen kayıt aldı (yoksa hiç çizilmez). */}
-          <CaddeFeaturedSpotlight card={spotlightBillboard} />
+          {spotlightBillboard ? (
+            <CaddeFeaturedSpotlight card={spotlightBillboard} />
+          ) : (
+            <Card
+              data-testid="cadde-featured-empty-state"
+              className="overflow-hidden border-orange-100 bg-[linear-gradient(160deg,#fff7ec_0%,#ffffff_62%)]"
+            >
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Sparkles className="h-4 w-4 text-orange-500" />
+                  Caddede Öne Çık
+                </CardTitle>
+                <CardDescription>İlk featured alanı profilinden başlat.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 pt-0">
+                <p className="text-sm leading-relaxed text-slate-600">
+                  Danışmanlık, etkinlik veya işletme duyurunu sağ kolondaki seçkili alana taşı.
+                </p>
+                <Button asChild variant="outline" className="w-full rounded-2xl border-orange-200 bg-white text-orange-800 hover:bg-orange-50">
+                  <Link to={promotionCtaTarget}>
+                    {promotionCtaLabel}
+                    <ArrowUpRight className="ml-1.5 h-4 w-4" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Panosu kartından KORUNAN iki parça: maskot selamı ve beta geri bildirimi.
               Geri bildirim WhatsApp yerine kendi /feedback formumuza gider (kayıt altına
@@ -910,6 +938,13 @@ const CaddePage = () => {
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
                     Danışman, işletme ve etkinlik keşfi için alan hazır. {sparseContentHint}
                   </p>
+                  <Link
+                    to={promotionCtaTarget}
+                    className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
+                  >
+                    {promotionCtaLabel}
+                    <ArrowUpRight className="h-4 w-4" />
+                  </Link>
                 </div>
               )}
             </CardContent>
@@ -931,7 +966,7 @@ const CaddePage = () => {
                 <p className="text-sm text-slate-200">Danışman, etkinlik ve topluluk kampanyalarını şehir bazlı yayınlayabilirsin.</p>
               </div>
               <Button asChild className="w-full rounded-2xl bg-white text-slate-900 hover:bg-slate-100">
-                <Link to="/login?mode=signup">Başvuru Gönder</Link>
+                <Link to={promotionCtaTarget}>{promotionCtaLabel}</Link>
               </Button>
             </CardContent>
           </Card>

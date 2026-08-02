@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Check, ChevronDown, Plus, Sparkles, Users } from "lucide-react";
+import { Check, ChevronDown, Megaphone, Plus, Sparkles, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -129,6 +129,13 @@ const ProfileSwitcherMenu = ({ currentItemId, triggerClassName }: ProfileSwitche
             );
           })}
           <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onSelect={() => navigate("/profile/bireysel?tab=settings#cadde-tanitim")}
+            className="gap-2"
+          >
+            <Megaphone className="h-3.5 w-3.5" aria-hidden="true" />
+            Caddeye reklam ver
+          </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setIsRequestDialogOpen(true)} className="gap-2">
             <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             + Yeni Profil
