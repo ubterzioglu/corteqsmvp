@@ -62,6 +62,8 @@ export type CaddePostRow = {
   engagement_score: number;
   published_at: Nullable<string>;
   media: CaddeMediaAsset[];
+  reaction_count?: number;
+  comment_count?: number;
   share_count?: number;
 };
 

@@ -104,6 +104,9 @@ const CaddePage = () => {
   const filters = useMemo(() => parseCaddeFilters(searchParams), [searchParams]);
   const diasporaKey = useCaddeDiasporaKey();
   const actorContextQuery = useCaddeActorContext(Boolean(session));
+  const registeredCountry = actorContextQuery.data?.country?.trim() ?? "";
+  const registeredCity = actorContextQuery.data?.city?.trim() ?? "";
+  const defaultComposerLocationLabel = [registeredCountry, registeredCity].filter(Boolean).join(" / ") || "profil konumun";
 
   useSeo(PAGE_SEO.cadde);
 
@@ -226,14 +229,14 @@ const CaddePage = () => {
       if (!composer.body.trim() && composer.media.length === 0) {
         throw new Error("Paylaşım metni veya en az bir görsel/video ekle.");
       }
-      // Hedef: composer'daki açık seçim; boşsa aktif filtredeki ilk seçim.
+      // Hedef: composer'daki açık seçim; boşsa kayıtlı profil konumu. Akış filtresi post hedefi değildir.
       await createCaddePost({
         type: composer.type,
         title: composer.title,
         body: composer.body,
-        countryId: composer.country || filters.countries[0] || "",
-        cityId: composer.country ? composer.city : filters.cities[0] ?? "",
-        isBridge: filters.bridge,
+        countryId: composer.country || registeredCountry,
+        cityId: composer.country ? composer.city : registeredCity,
+        isBridge: false,
         interests: composer.interests,
         diasporaKey,
         media: composer.media,
@@ -671,7 +674,7 @@ const CaddePage = () => {
               isSubmitting={postMutation.isPending}
               countries={countriesQuery.data ?? []}
               cities={composerCitiesQuery.data ?? []}
-              filterCountryLabel={filters.countries[0] || "Global"}
+              defaultLocationLabel={defaultComposerLocationLabel}
               onError={(message) => toast({ title: "Ek eklenemedi", description: message, variant: "destructive" })}
             />
           ) : (

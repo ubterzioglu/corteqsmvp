@@ -40,7 +40,7 @@ const renderComposer = (overrides: Partial<CaddeComposerValue> = {}, props: Reco
           isSubmitting={false}
           countries={[{ id: "c1", code: "DE", name: "Almanya" }]}
           cities={[{ id: "ct1", countryId: "c1", name: "Berlin", timezone: "Europe/Berlin" }]}
-          filterCountryLabel="Global"
+          defaultLocationLabel="Almanya / Berlin"
           onError={vi.fn()}
           {...props}
         />
@@ -99,6 +99,16 @@ describe("CaddeComposer", () => {
 
     expect(screen.getByText(/Ülke/)).toBeInTheDocument();
     expect(screen.getByText("Şehir")).toBeInTheDocument();
+  });
+
+  it("shows the registered profile location as the blank-location default", () => {
+    renderComposer();
+
+    fireEvent.click(screen.getByRole("button", { name: "Konum" }));
+
+    expect(screen.getByText(/boş = Almanya \/ Berlin/)).toBeInTheDocument();
+    expect(screen.getByText("Profil konumunu kullan")).toBeInTheDocument();
+    expect(screen.queryByText("Filtreyi kullan")).not.toBeInTheDocument();
   });
 
   it("inserts a selected emoji into the body at the current caret", async () => {

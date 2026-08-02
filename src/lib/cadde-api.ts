@@ -173,14 +173,13 @@ export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeF
     const payload = (data ?? { items: [], nextCursor: null }) as { items: CaddeFeedRpcItem[]; nextCursor: CaddeFeedCursor | null };
     const rows = payload.items ?? [];
     const postIds = rows.map((row) => row.id);
-    const [reactions, commentCounts, shareCounts, authorNames] = await Promise.all([
+    const [reactions, shareCounts, authorNames] = await Promise.all([
       fetchPostReactions(postIds),
-      fetchPostCommentCounts(postIds),
       fetchPostShareCounts(postIds),
       fetchUserNameMap(rows.map((row) => row.author_user_id).filter(Boolean) as string[], currentUserId ? [currentUserId] : []),
     ]);
 
-    const items = rows.map((row) => mapRpcPost(row, reactions, commentCounts, shareCounts, [], authorNames, currentUserId));
+    const items = rows.map((row) => mapRpcPost(row, reactions, new Map(), shareCounts, [], authorNames, currentUserId));
     return { items, nextPage: payload.nextCursor ?? null };
   } catch (error: unknown) {
     reportCaddeApiError("listCaddeFeed", error);
@@ -232,13 +231,6 @@ function countCommentsByPost(comments: Array<{ post_id: string }>): Map<string, 
     counts.set(comment.post_id, (counts.get(comment.post_id) ?? 0) + 1);
   }
   return counts;
-}
-
-async function fetchPostCommentCounts(postIds: string[]): Promise<Map<string, number>> {
-  if (postIds.length === 0) return new Map<string, number>();
-  const { data, error } = await db.from("cadde_post_comments").select("post_id").in("post_id", postIds);
-  if (error) throw error;
-  return countCommentsByPost((data ?? []) as Array<{ post_id: string }>);
 }
 
 async function fetchPostComments(postIds: string[]): Promise<CommentWithAuthor[]> {
@@ -312,7 +304,7 @@ function mapRpcPost(
     media: normalizeCaddeMedia(row.media),
     reactionCounts,
     totalReactionCount: CADDE_REACTION_TYPES.reduce((sum, reactionType) => sum + reactionCounts[reactionType], 0),
-    commentCount: commentCounts.get(row.id) ?? postComments.length,
+    commentCount: row.comment_count ?? commentCounts.get(row.id) ?? postComments.length,
     shareCount: shareCounts.get(row.id) ?? row.share_count ?? 0,
     comments: postComments.map((comment) => ({
       id: comment.id,

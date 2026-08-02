@@ -35,6 +35,13 @@ export const CADDE_RANK_WEIGHTS = {
   freshness7d: 5,
 } as const;
 
+export const CADDE_GLOBAL_THRESHOLD_SETTINGS = {
+  enabled: true,
+  minReactions: 10,
+  minComments: 5,
+  minShares: 10,
+} as const;
+
 export type CaddeRankInput = {
   sameCity: boolean;
   sameCountry: boolean;
@@ -51,6 +58,34 @@ export type CaddeRankInput = {
   /** coalesce(published_at, created_at)'ten bu yana geçen saat. */
   ageHours: number;
 };
+
+export type CaddeGlobalThresholdSettings = {
+  enabled: boolean;
+  minReactions: number;
+  minComments: number;
+  minShares: number;
+};
+
+export type CaddeGlobalEligibilityInput = {
+  sameCity: boolean;
+  sameCountry: boolean;
+  reactionCount: number;
+  commentCount: number;
+  shareCount: number;
+  settings?: CaddeGlobalThresholdSettings;
+};
+
+/** SQL global eşik filtresinin aynası: yerel içerik kalır, yerel olmayan içerik eşiklerden biriyle globale çıkar. */
+export function isCaddeGlobalEligible(input: CaddeGlobalEligibilityInput): boolean {
+  if (input.sameCity || input.sameCountry) return true;
+  const settings = input.settings ?? CADDE_GLOBAL_THRESHOLD_SETTINGS;
+  if (!settings.enabled) return false;
+  return (
+    input.reactionCount >= settings.minReactions ||
+    input.commentCount >= settings.minComments ||
+    input.shareCount >= settings.minShares
+  );
+}
 
 /** SQL band case'inin birebir aynası. */
 export function computeCaddeBand(input: CaddeRankInput): CaddeBand {

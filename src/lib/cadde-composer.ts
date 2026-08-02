@@ -12,7 +12,7 @@ export type CaddeComposerValue = {
   title: string;
   body: string;
   interests: string[];
-  /** Paylaşım hedefi: boş = aktif filtredeki ilk seçim kullanılır. */
+  /** Paylaşım hedefi: boş = kayıtlı profil konumu kullanılır. */
   country: string;
   city: string;
   media: CaddeMediaAsset[];
