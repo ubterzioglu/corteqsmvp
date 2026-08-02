@@ -240,6 +240,7 @@ describe("CaddePage", () => {
           body: "Profil konumumdan paylaşım",
           countryId: "Almanya",
           cityId: "Berlin",
+          targets: [{ country: "Almanya", city: "Berlin" }],
           isBridge: false,
         }),
       ),

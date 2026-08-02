@@ -179,6 +179,9 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
   cadde_invalid_moderation_action: "Geçersiz moderasyon aksiyonu.",
   // Faz 8 (mig 012) — Çoklu diaspora
   cadde_invalid_diaspora: "Geçersiz diaspora seçimi.",
+  // F22 — çoklu hedef
+  cadde_invalid_targets: "Paylaşım hedefi geçersiz. Ülke ve şehir seçimini kontrol et.",
+  cadde_multi_target_premium_required: "Birden fazla hedefe paylaşım premium kapsamdadır.",
   // V1 (mig 001-003) — Medya, hashtag, mention
   cadde_invalid_media: "Görsel/video geçersiz. Yalnız https bağlantılı dosyalar eklenebilir.",
   cadde_media_limit: "Bir paylaşıma en fazla 4 görsel ve 1 video ekleyebilirsin.",

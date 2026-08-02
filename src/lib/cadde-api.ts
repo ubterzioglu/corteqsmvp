@@ -663,7 +663,13 @@ export async function createCaddePost(input: CaddePostInput): Promise<string> {
   const parsed = parseWithUserError(caddePostCreateSchema, input);
   const interests = validatePostInterests(parsed.interests ?? []);
   const needCategory = parsed.needCategory?.trim() || interests[0] || null;
-  const { data, error } = await db.rpc("create_cadde_post_v1", {
+  const legacyTarget = { country: parsed.countryId ?? "", city: parsed.cityId ?? "" };
+  const targets = (parsed.targets?.length ? parsed.targets : [legacyTarget]).map((target) => ({
+    country: target.country.trim(),
+    city: target.city?.trim() ?? "",
+  }));
+  const rpcName = parsed.cafeId ? "create_cadde_post_v1" : "create_cadde_post_v2";
+  const rpcPayload = {
     p_post_type: parsed.type,
     p_title: parsed.title?.trim() || null,
     p_body: parsed.body,
@@ -676,7 +682,11 @@ export async function createCaddePost(input: CaddePostInput): Promise<string> {
     p_diaspora_key: parsed.diasporaKey ?? "tr",
     p_media: parsed.media ?? [],
     p_mentions: parsed.mentions ?? [],
-  });
+  };
+  const { data, error } = await db.rpc(
+    rpcName,
+    parsed.cafeId ? rpcPayload : { ...rpcPayload, p_targets: targets },
+  );
   if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
   return data as string;
 }

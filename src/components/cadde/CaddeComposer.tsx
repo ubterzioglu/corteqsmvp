@@ -7,8 +7,8 @@
 // eski postların rozeti bozulmaz, etiketleme sade sürüm oturunca yeniden değerlendirilecek
 // (m13 veto/rezervde).
 
-import { useRef, useState } from "react";
-import { ImagePlus, Loader2, MapPin, Video } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { ImagePlus, Loader2, MapPin, Plus, Trash2, Video, type LucideIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -58,8 +58,22 @@ const CaddeComposer = ({
   const textareaRef = useRef<MentionTextareaHandle>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
+  const countryIdByName = useMemo(() => new Map(countries.map((country) => [country.name, country.id])), [countries]);
+  const citiesForCountry = (countryName: string) => {
+    const countryId = countryIdByName.get(countryName);
+    return countryId ? cities.filter((city) => city.countryId === countryId) : [];
+  };
+  const primaryCities = citiesForCountry(value.country);
+  const extraTargets = value.targets ?? [];
 
   const update = (patch: Partial<CaddeComposerValue>) => onChange({ ...value, ...patch });
+  const updateTarget = (index: number, patch: Partial<(typeof extraTargets)[number]>) => {
+    update({
+      targets: extraTargets.map((target, targetIndex) =>
+        targetIndex === index ? { ...target, ...patch } : target,
+      ),
+    });
+  };
 
   const insertEmoji = (emoji: string) => {
     const next = insertTextAtSelection(value.body, emoji, bodySelection);
@@ -170,40 +184,100 @@ const CaddeComposer = ({
         </div>
 
         {locationOpen ? (
-          <div className="grid gap-3 rounded-2xl bg-slate-50 p-3 sm:grid-cols-2">
-            <div className="space-y-1.5">
-              <Label className="text-xs">
-                Ülke <span className="font-normal text-slate-500">(boş = {defaultLocationLabel})</span>
-              </Label>
-              <Select
-                value={value.country || "__profile__"}
-                onValueChange={(next) => update({ country: next === "__profile__" ? "" : next, city: "" })}
-              >
-                <SelectTrigger className="bg-white"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__profile__">Profil konumunu kullan</SelectItem>
-                  {countries.map((country) => (
-                    <SelectItem key={country.id} value={country.name}>{country.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <div className="space-y-3 rounded-2xl bg-slate-50 p-3">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label className="text-xs">
+                  Ülke <span className="font-normal text-slate-500">(boş = {defaultLocationLabel})</span>
+                </Label>
+                <Select
+                  value={value.country || "__profile__"}
+                  onValueChange={(next) => update({ country: next === "__profile__" ? "" : next, city: "" })}
+                >
+                  <SelectTrigger className="bg-white"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__profile__">Profil konumunu kullan</SelectItem>
+                    {countries.map((country) => (
+                      <SelectItem key={country.id} value={country.name}>{country.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Şehir</Label>
+                <Select
+                  value={value.city || "__all__"}
+                  onValueChange={(next) => update({ city: next === "__all__" ? "" : next })}
+                  disabled={!value.country}
+                >
+                  <SelectTrigger className="bg-white"><SelectValue placeholder="Tüm şehirler" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">Tüm şehirler</SelectItem>
+                    {primaryCities.map((city) => (
+                      <SelectItem key={city.id} value={city.name}>{city.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Şehir</Label>
-              <Select
-                value={value.city || "__all__"}
-                onValueChange={(next) => update({ city: next === "__all__" ? "" : next })}
-                disabled={!value.country}
+            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 pt-3">
+              <p className="text-xs font-medium text-slate-700">Ek hedef</p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-8 rounded-full bg-white"
+                disabled={extraTargets.length >= 1}
+                onClick={() => update({ targets: [...extraTargets, { country: "", city: "" }] })}
               >
-                <SelectTrigger className="bg-white"><SelectValue placeholder="Tüm şehirler" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__all__">Tüm şehirler</SelectItem>
-                  {cities.map((city) => (
-                    <SelectItem key={city.id} value={city.name}>{city.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <Plus className="mr-1.5 h-3.5 w-3.5" />
+                {extraTargets.length >= 1 ? "Premium ile" : "+ Hedef"}
+              </Button>
             </div>
+            {extraTargets.map((target, index) => {
+              const targetCities = citiesForCountry(target.country);
+              return (
+                <div key={index} className="grid gap-2 rounded-xl border border-slate-200 bg-white p-2 sm:grid-cols-[1fr_1fr_auto]">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Ek hedef ülke {index + 1}</Label>
+                    <Select value={target.country || "__none__"} onValueChange={(next) => updateTarget(index, { country: next === "__none__" ? "" : next, city: "" })}>
+                      <SelectTrigger><SelectValue placeholder="Ülke seç" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none__">Ülke seç</SelectItem>
+                        {countries.map((country) => (
+                          <SelectItem key={country.id} value={country.name}>{country.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Ek hedef şehir {index + 1}</Label>
+                    <Select value={target.city || "__all__"} onValueChange={(next) => updateTarget(index, { city: next === "__all__" ? "" : next })} disabled={!target.country}>
+                      <SelectTrigger><SelectValue placeholder="Tüm şehirler" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__all__">Tüm şehirler</SelectItem>
+                        {targetCities.map((city) => (
+                          <SelectItem key={city.id} value={city.name}>{city.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="self-end text-slate-500 hover:text-red-600"
+                    aria-label="Ek hedefi kaldır"
+                    onClick={() => update({ targets: extraTargets.filter((_, targetIndex) => targetIndex !== index) })}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              );
+            })}
+            {extraTargets.length > 0 ? (
+              <p className="text-xs leading-5 text-slate-500">Birden fazla hedef premium ayarıyla DB tarafında kontrol edilir.</p>
+            ) : null}
           </div>
         ) : null}
 
@@ -213,7 +287,7 @@ const CaddeComposer = ({
 };
 
 interface AttachmentChipProps {
-  icon: typeof ImagePlus;
+  icon: LucideIcon;
   label: string;
   onClick: () => void;
   active?: boolean;
