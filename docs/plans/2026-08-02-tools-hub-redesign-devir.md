@@ -52,3 +52,13 @@ bilinçli geçici 5. dosya (bkz. kendi başlığı). Yukarıdaki 4 aday bu kural
 ya da `docs/archive/root-2026-08-02/` gibi bir klasöre `git mv` ile taşı (geçmiş korunur);
 `walast.txt` ve `.secretdb` için önce içerik/hassasiyet kontrolü yap, sonra `.gitignore`'a
 kesin pattern ekle.
+
+## Sonuç (2026-08-03)
+
+- `1readme.md` ve `tab_of.json` → `docs/archive/root-2026-08-03/` (`git mv`, geçmiş korundu).
+- `.secretdb` ve `walast.txt` içerikleri kontrol edildi: `.secretdb` canlı sırlar (Supabase
+  service role key, API anahtarları) içeriyor; `walast.txt` 25.009 satırlık ham WhatsApp
+  sohbet dökümü (telefon numaraları dahil). İkisi de zaten `.gitignore`'da (satır 89, 110) —
+  **bilinçli olarak taşınmadı.** docs/ git'e commit'lendiği için bu ikisini oraya taşımak
+  sırları/kişisel veriyi repo geçmişine sokardı. Ek gitignore işlemi gerekmedi, zaten kapsanıyorlardı.
+- `docs/README.md` indeksine bu taşımayı belgeleyen bir güncelleme notu + arşiv tablosu satırı eklendi.

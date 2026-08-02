@@ -1,5 +1,11 @@
 # CorteQS Documentation Index
 
+> **Güncelleme:** 2026-08-03 — üçüncü kök temizliği: `1readme.md` (anlamsız test içeriği) ve
+> `tab_of.json` (koddan referans edilmeyen eski taslak veri) `docs/archive/root-2026-08-03/`'e
+> taşındı (`git mv`, geçmiş korundu). `.secretdb` ve `walast.txt` **bilinçli olarak taşınmadı** —
+> ilki canlı sırlar (Supabase service role key, API anahtarları), ikincisi ham WhatsApp sohbet
+> dökümü (telefon numaraları dahil) içeriyor; ikisi de zaten `.gitignore`'da, git'e hiç girmemeli.
+>
 > **Güncelleme:** 2026-06-18 — ikinci kök temizliği: köke birikmiş AI-agent prompt/plan ve
 > blog/araştırma dokümanları `docs/` altına taşındı (`git mv`, geçmiş korundu):
 > `13062026_cadde.html`→`cadde-300/`; `CorteQS_MVP_Duzeltmeler_AI_Agent_Prompt.md`,
@@ -30,7 +36,7 @@
 | `decisions/` | Teknik kararlar / ADR alanı | Aktif |
 | `database-audit/`, `audits/`, `cleanup/` | Audit ve cleanup çıktıları | Referans |
 | `history/` | Tamamlanmış planlar, eski handoff'lar (public-profil v2.1 dahil), durum raporları | Arşiv |
-| `archive/` | **Dondurulmuş içerik:** `architecture/` (eski 9 mimari doküman — bakım ARCHITECTURE.md'de), `root-2026-06-11/` (kök temizliği: audit/cleancode/dbcheck/peronevera notları, deployerror, meeting10.csv, import-resources.ts), `backups/` (Supabase DB dump'ları), `cleanup-2026-05-15/`, `cleanup-2026-05-30/`, `turkish_missions_import_builder/` | Arşiv |
+| `archive/` | **Dondurulmuş içerik:** `architecture/` (eski 9 mimari doküman — bakım ARCHITECTURE.md'de), `root-2026-06-11/` (kök temizliği: audit/cleancode/dbcheck/peronevera notları, deployerror, meeting10.csv, import-resources.ts), `root-2026-08-03/` (üçüncü kök temizliği: `1readme.md`, `tab_of.json`), `backups/` (Supabase DB dump'ları), `cleanup-2026-05-15/`, `cleanup-2026-05-30/`, `turkish_missions_import_builder/` | Arşiv |
 | `reference/` | Referans repo kopyaları (`global-network-bridge/`) | Arşiv |
 | `docu/` | Eski kök `docu/` klasörü (info-* HTML kopyaları + referans görseller) | Arşiv |
 | `assets/` | Arşiv görselleri (sweet.png, rapor ekran görüntüleri vb.) | Arşiv |
