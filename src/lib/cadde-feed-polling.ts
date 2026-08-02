@@ -27,3 +27,24 @@ export function caddeNewPostPollInterval(newPostCount: number, zeroStreak: numbe
 export function nextCaddeZeroStreak(newPostCount: number, previousStreak: number): number {
   return newPostCount > 0 ? 0 : previousStreak + 1;
 }
+
+/**
+ * Sayım tabanı: yüklü TÜM sayfalardaki en yeni createdAt (m16 fix).
+ * Feed CKS skoruyla sıralı — pinned/yüksek skorlu ESKİ bir post listenin başında
+ * durabilir; taban "ilk öğe"den alınırsa zaten yüklü postlar "yeni" sayılır ve
+ * chip yenileme sonrası sıfırlanmaz. ISO timestamptz dizgileri sözlüksel
+ * karşılaştırmayla doğru sıralanır (aynı format, UTC).
+ */
+export function newestCaddeCreatedAt(
+  pages: ReadonlyArray<{ items: ReadonlyArray<{ createdAt: string | null }> }> | undefined,
+): string | null {
+  let newest: string | null = null;
+  for (const page of pages ?? []) {
+    for (const item of page.items) {
+      if (item.createdAt && (newest === null || item.createdAt > newest)) {
+        newest = item.createdAt;
+      }
+    }
+  }
+  return newest;
+}

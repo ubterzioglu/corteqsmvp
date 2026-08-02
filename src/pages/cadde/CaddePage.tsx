@@ -45,7 +45,7 @@ import {
   toggleCaddeReaction,
 } from "@/lib/cadde-api";
 import { POST_TYPE_LABELS, emptyCaddeComposer } from "@/lib/cadde-composer";
-import { caddeNewPostPollInterval, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
+import { caddeNewPostPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
 import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
@@ -240,7 +240,12 @@ const CaddePage = () => {
   // "Yeni post" chip'i (spec §17.3): stream yok; hafif sayım, tıklayınca invalidate.
   // Adaptif aralık (cadde-feed-polling): 0 sonuç sürdükçe 60sn→2dk→5dk, chip görünürken
   // polling durur; odağa dönüşte anında tek kontrol yapılıp taban aralığa dönülür.
-  const newestLoadedAt = feedQuery.data?.pages[0]?.items[0]?.createdAt ?? null;
+  // Taban = yüklü sayfaların EN YENİ createdAt'i (m16): feed CKS-sıralı olduğundan
+  // ilk öğe pinned/eski olabilir — ilk öğeden alınan taban chip'i söndürmüyordu.
+  const newestLoadedAt = useMemo(
+    () => newestCaddeCreatedAt(feedQuery.data?.pages),
+    [feedQuery.data],
+  );
   const zeroStreakRef = useRef(0);
   useEffect(() => {
     zeroStreakRef.current = 0;
@@ -525,8 +530,12 @@ const CaddePage = () => {
                   size="sm"
                   className="rounded-full shadow"
                   onClick={async () => {
+                    // m16: chip tıklamayla ANINDA söner — eski taban anahtarındaki sayaç
+                    // sıfırlanır; feed yenilenince taban (max createdAt) ilerler ve yeni
+                    // queryKey temiz sayımla başlar. Eski anahtarı yeniden fetch etmek
+                    // bayat pozitif sayıyı geri getiriyordu — kaldırıldı.
+                    queryClient.setQueryData(["cadde", "new-posts-since", newestLoadedAt], 0);
                     await queryClient.invalidateQueries({ queryKey: caddeQueryKeys.feedRoot });
-                    await newPostsQuery.refetch();
                   }}
                 >
                   {newPostCount} yeni paylaşım — yenile
