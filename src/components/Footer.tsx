@@ -63,6 +63,9 @@ const socialLinks = [
   },
 ];
 
+const seoLinkClass =
+  "font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80";
+
 const Footer = () => {
   return (
     <footer className="relative isolate overflow-hidden bg-gradient-to-b from-background via-secondary/25 to-background px-4 py-8 sm:px-6 sm:py-14 lg:px-8 lg:py-20">
@@ -113,14 +116,14 @@ const Footer = () => {
                       <Link
                         to={link.to}
                         onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
-                        className="text-muted-foreground transition-colors hover:text-primary"
+                        className="text-muted-foreground underline underline-offset-4 transition-colors hover:text-primary"
                       >
                         {link.label}
                       </Link>
                     ) : (
                       <a
                         href={link.href}
-                        className="text-muted-foreground transition-colors hover:text-primary"
+                        className="text-muted-foreground underline underline-offset-4 transition-colors hover:text-primary"
                       >
                         {link.label}
                       </a>
@@ -132,77 +135,91 @@ const Footer = () => {
           </div>
 
           <div className="mt-3.5 border-t border-border/60 pt-3.5">
-            <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 px-0.5 text-center text-[8px] leading-[1.6] text-muted-foreground">
-              <span>© 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları saklıdır.</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
+            <p className="px-0.5 text-center text-[8px] leading-[1.9] text-muted-foreground">
+              <span className="font-semibold text-foreground/80">CorteQS</span>
+              {" · "}
+              Türk Diasporası Topluluk ve Network Platformu
+              {" · "}
+              Faydalı bağlantılar:{" "}
               <a
                 href="https://chatio.com.tr/"
                 target="_blank"
                 rel="dofollow noopener noreferrer"
-                className="transition-colors hover:text-primary"
+                className={seoLinkClass}
               >
                 Canlı Destek Yazılımı
               </a>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
-                href="https://www.spindorai.com/seo/izmir-seo"
-                target="_blank"
-                rel="dofollow noopener noreferrer"
-                className="transition-colors hover:text-primary"
-              >
-                İzmir Seo Ajansı
-              </a>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <span>Spindora Tarafından Seosu Yapılmıştır.</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
-                href="https://tekhurdametal.com/istanbul-hurdaci/"
-                rel="dofollow"
-                aria-label="İstanbul Hurdacı - Tek Hurda Metal A.Ş"
-                title="Tek Hurda Metal A.Ş"
-                className="transition-colors hover:text-primary"
-              >
-                İstanbul Hurdacı
-              </a>
-              <span>Firması Tek Hurda Metal A.Ş</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
-                href="https://tekhurdametal.com/hurda-fiyatlari/"
-                rel="dofollow"
-                className="transition-colors hover:text-primary"
-              >
-                Hurda Fiyatları
-              </a>
-              <span>Tek Hurda Metal</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
-                href="https://lionerotik.com/urunler/fetis-urunleri"
-                rel="dofollow"
-                className="transition-colors hover:text-primary"
-              >
-                Antalya Erotik Shop
-              </a>
-              <span>Lion Erotik</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <a
-                href="https://ufuksoynakliyat.com.tr/esya-depolama"
-                rel="dofollow"
-                className="transition-colors hover:text-primary"
-              >
-                Eşya Depolama
-              </a>
-              <span>Firması Ufuksoy Nakliyat A.Ş</span>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
+              {" · "}
+              <span className="whitespace-nowrap">
+                <a
+                  href="https://www.spindorai.com/seo/izmir-seo"
+                  target="_blank"
+                  rel="dofollow noopener noreferrer"
+                  className={seoLinkClass}
+                >
+                  İzmir Seo Ajansı
+                </a>{" "}
+                Spindora Tarafından Seosu Yapılmıştır
+              </span>
+              {" · "}
+              <span className="whitespace-nowrap">
+                <a
+                  href="https://tekhurdametal.com/istanbul-hurdaci/"
+                  rel="dofollow"
+                  aria-label="İstanbul Hurdacı - Tek Hurda Metal A.Ş"
+                  title="Tek Hurda Metal A.Ş"
+                  className={seoLinkClass}
+                >
+                  İstanbul Hurdacı
+                </a>{" "}
+                Firması Tek Hurda Metal A.Ş
+              </span>
+              {" · "}
+              <span className="whitespace-nowrap">
+                <a
+                  href="https://tekhurdametal.com/hurda-fiyatlari/"
+                  rel="dofollow"
+                  className={seoLinkClass}
+                >
+                  Hurda Fiyatları
+                </a>{" "}
+                Tek Hurda Metal
+              </span>
+              {" · "}
+              <span className="whitespace-nowrap">
+                <a
+                  href="https://lionerotik.com/urunler/fetis-urunleri"
+                  rel="dofollow"
+                  className={seoLinkClass}
+                >
+                  Antalya Erotik Shop
+                </a>{" "}
+                Lion Erotik
+              </span>
+              {" · "}
+              <span className="whitespace-nowrap">
+                <a
+                  href="https://ufuksoynakliyat.com.tr/esya-depolama"
+                  rel="dofollow"
+                  className={seoLinkClass}
+                >
+                  Eşya Depolama
+                </a>{" "}
+                Firması Ufuksoy Nakliyat A.Ş
+              </span>
+              {" · "}
               <a
                 href="https://ufuksoynakliyat.com.tr"
                 target="_blank"
                 rel="dofollow noopener noreferrer"
-                className="transition-colors hover:text-primary"
+                className={seoLinkClass}
               >
                 Evden Eve Nakliyat
               </a>
-              <span aria-hidden="true" className="text-muted-foreground/40">|</span>
-              <span>Son güncelleme: 25 Temmuz 2026</span>
+              {" · "}
+              © 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları saklıdır.
+              {" · "}
+              Son güncelleme: 25 Temmuz 2026
             </p>
           </div>
         </div>
