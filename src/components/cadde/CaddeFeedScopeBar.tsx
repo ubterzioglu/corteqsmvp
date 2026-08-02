@@ -1,9 +1,12 @@
 // Feed kapsam çip barı + aktif hashtag çipi.
 //
-// Kapsamların bir kısmı Faz 2'de gerçek veriye bağlanacak (Yakınımda şehir koordinatı,
-// Takip Ettiklerim takip tablosu, İş Fırsatları sınıflandırma bekliyor). Bunları gizlemek
-// yerine "Yakında" rozetiyle ve devre dışı gösteriyoruz — kullanıcı yol haritasını görsün,
-// ama tıklayıp boş akışla karşılaşmasın.
+// Workshop m15 (30 Tem): "Takip Ettiklerim yakında" ve "İş Fırsatları yakında" çipleri
+// İPTAL — kaldırıldı (RPC scope parametresi tip olarak durur, UI'dan seçilemez).
+// Workshop m14: kalan çiplere ne işe yaradığını anlatan kısa açıklama — title/tooltip +
+// aktif kapsamın açıklaması barın altında satır olarak.
+// "Etkinlikler" m14'ün koru listesinde açıkça sayıldığı için DURUR (eski etkinlik
+// paylaşımlarını süzer; Faz 2 cafe etkinlikleri de buraya dönecek).
+// "Yakınımda" Faz 2'ye kadar "Yakında" rozetiyle devre dışı (geo koordinat bekliyor).
 
 import { X } from "lucide-react";
 
@@ -13,19 +16,24 @@ import type { CaddeFeedScope } from "@/lib/cadde-types";
 type ScopeOption = {
   key: CaddeFeedScope;
   label: string;
+  /** m14: çipin ne yaptığını söyleyen tek cümle (tooltip + aktifken bar altı satırı). */
+  description: string;
   /** Faz 2'ye bırakılanlar: RPC 'all' gibi davranır, bu yüzden tıklanamaz. */
   comingSoon?: boolean;
 };
 
 const SCOPES: readonly ScopeOption[] = [
-  { key: "all", label: "Tümü" },
-  { key: "city", label: "Şehrim" },
-  { key: "country", label: "Ülkem" },
-  { key: "events", label: "Etkinlikler" },
-  { key: "cafes", label: "Cafelerim" },
-  { key: "nearby", label: "Yakınımda", comingSoon: true },
-  { key: "following", label: "Takip Ettiklerim", comingSoon: true },
-  { key: "jobs", label: "İş Fırsatları", comingSoon: true },
+  { key: "all", label: "Tümü", description: "Filtrene uyan bütün paylaşımlar." },
+  { key: "city", label: "Şehrim", description: "Yalnız senin şehrinden paylaşımlar." },
+  { key: "country", label: "Ülkem", description: "Yalnız yaşadığın ülkeden paylaşımlar." },
+  { key: "events", label: "Etkinlikler", description: "Yalnız etkinlik paylaşımları." },
+  { key: "cafes", label: "Cafelerim", description: "Üyesi olduğun cafe'lerin paylaşımları." },
+  {
+    key: "nearby",
+    label: "Yakınımda",
+    description: "Konumuna en yakın paylaşımlar — yakında.",
+    comingSoon: true,
+  },
 ];
 
 export interface CaddeFeedScopeBarProps {
@@ -47,7 +55,7 @@ const CaddeFeedScopeBar = ({ scope, hashtag, onScopeChange, onClearHashtag }: Ca
             disabled={option.comingSoon}
             aria-pressed={active}
             onClick={() => onScopeChange(option.key)}
-            title={option.comingSoon ? "Yakında" : undefined}
+            title={option.description}
             className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
               active
                 ? "border-slate-900 bg-slate-900 text-white"
@@ -60,6 +68,11 @@ const CaddeFeedScopeBar = ({ scope, hashtag, onScopeChange, onClearHashtag }: Ca
         );
       })}
     </div>
+
+    {/* m14: aktif kapsamın ne yaptığı her zaman görünür — tooltip'i keşfetmeyen de görsün. */}
+    <p className="text-xs text-slate-500" data-testid="cadde-scope-description">
+      {SCOPES.find((option) => option.key === scope)?.description ?? ""}
+    </p>
 
     {hashtag ? (
       <div className="flex items-center gap-2">
