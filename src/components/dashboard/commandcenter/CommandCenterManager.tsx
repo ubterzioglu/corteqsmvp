@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { AlertTriangle, Archive, Pencil, Plus, Save, Search, Trash2, X } from 'lucide-react'
 import AccordionCard from '@/components/dashboard/AccordionCard'
 const burakAvatar = '/burak.png'
@@ -468,6 +468,8 @@ export default function CommandCenterManager({
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
   const rangeStart = totalCount === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1
   const rangeEnd = Math.min(currentPage * PAGE_SIZE, totalCount)
+  const activeItems = items.filter((item) => item.status !== 'Tamamlandi')
+  const completedItems = items.filter((item) => item.status === 'Tamamlandi')
   return (
     <section className="space-y-6" aria-labelledby="command-center-heading">
       <AccordionCard
@@ -921,6 +923,145 @@ export default function CommandCenterManager({
               </div>
             )}
 
+            {activeItems.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-500">
+                Bu sayfadaki tüm kayıtlar tamamlandı. Tamamlanan görevleri aşağıdaki bölümden görüntüleyebilirsiniz.
+              </div>
+            ) : (
+              <CommandCenterItemsTable
+                items={activeItems}
+                editingId={editingId}
+                editingState={editingState}
+                setEditingState={setEditingState}
+                isSubmitting={isSubmitting}
+                onStartEdit={startEdit}
+                onCancelEdit={cancelEdit}
+                onUpdate={handleUpdate}
+                onArchive={handleArchive}
+                onDelete={handleDelete}
+              />
+            )}
+
+            <div className="flex flex-col gap-3 rounded-2xl border border-[rgba(66,133,244,0.08)] bg-white px-4 py-3 text-sm text-gray-600 shadow-[0_10px_20px_rgba(60,64,67,0.04)] sm:flex-row sm:items-center sm:justify-between">
+              <p>
+                {rangeStart}-{rangeEnd} / {totalCount} kayıt
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                  disabled={currentPage === 1 || isPageLoading}
+                  className="rounded-xl border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Önceki
+                </button>
+                <span className="min-w-[90px] text-center text-xs font-semibold text-gray-500">
+                  Sayfa {currentPage} / {totalPages}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                  disabled={currentPage >= totalPages || isPageLoading}
+                  className="rounded-xl border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Sonraki
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+
+        {!isLoading && (
+          <div className="space-y-4">
+            <AccordionCard
+              items={[
+                {
+                  id: 'completed-command-center-items',
+                  title: 'Tamamlanan Görevler',
+                  badge: String(completedItems.length),
+                  accentColor: '#4CAF50',
+                  children:
+                    completedItems.length === 0 ? (
+                      <div className="rounded-2xl border border-dashed border-green-200 bg-white/80 p-6 text-center text-sm text-gray-500">
+                        Tamamlanan kayıt yok.
+                      </div>
+                    ) : (
+                      <CommandCenterItemsTable
+                        items={completedItems}
+                        editingId={editingId}
+                        editingState={editingState}
+                        setEditingState={setEditingState}
+                        isSubmitting={isSubmitting}
+                        onStartEdit={startEdit}
+                        onCancelEdit={cancelEdit}
+                        onUpdate={handleUpdate}
+                        onArchive={handleArchive}
+                        onDelete={handleDelete}
+                      />
+                    ),
+                },
+              ]}
+              className="border-green-100 bg-green-50/30"
+            />
+
+            <AccordionCard
+              items={[
+                {
+                  id: 'archived-command-center-items',
+                  title: 'Arşivlenen Kayıtlar',
+                  badge: String(archivedItems.length),
+                  accentColor: '#D97706',
+                  children: <ArchivedItemsList items={archivedItems} />,
+                },
+              ]}
+              className="border-amber-100 bg-amber-50/30"
+            />
+
+            <AccordionCard
+              items={[
+                {
+                  id: 'deleted-command-center-items',
+                  title: 'Silinmiş Görevler',
+                  badge: String(deletedItems.length),
+                  accentColor: '#DC2626',
+                  children: <DeletedItemsList items={deletedItems} />,
+                },
+              ]}
+              className="border-red-100 bg-red-50/30"
+            />
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
+interface CommandCenterItemsTableProps {
+  items: CommandCenterItem[]
+  editingId: string | null
+  editingState: CommandCenterFormState
+  setEditingState: Dispatch<SetStateAction<CommandCenterFormState>>
+  isSubmitting: boolean
+  onStartEdit: (item: CommandCenterItem) => void
+  onCancelEdit: () => void
+  onUpdate: (itemId: string) => void
+  onArchive: (itemId: string) => void
+  onDelete: (itemId: string) => void
+}
+
+function CommandCenterItemsTable({
+  items,
+  editingId,
+  editingState,
+  setEditingState,
+  isSubmitting,
+  onStartEdit,
+  onCancelEdit,
+  onUpdate,
+  onArchive,
+  onDelete,
+}: CommandCenterItemsTableProps) {
+  return (
             <div className="rounded-2xl border border-[rgba(66,133,244,0.1)] bg-white shadow-[0_10px_20px_rgba(60,64,67,0.04)]">
               <div className="hidden md:block">
                 <table className="w-full table-fixed">
@@ -970,7 +1111,7 @@ export default function CommandCenterManager({
                                   <div className="flex items-center gap-2">
                                     <button
                                       type="button"
-                                      onClick={() => void handleUpdate(item.id)}
+                                      onClick={() => void onUpdate(item.id)}
                                       disabled={isSubmitting}
                                       className={`${BTN_CLS} border border-green-200 bg-green-50 text-green-700 hover:bg-green-100`}
                                     >
@@ -979,7 +1120,7 @@ export default function CommandCenterManager({
                                     </button>
                                     <button
                                       type="button"
-                                      onClick={cancelEdit}
+                                      onClick={onCancelEdit}
                                       disabled={isSubmitting}
                                       className={`${BTN_CLS} border border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:text-gray-800`}
                                     >
@@ -1230,7 +1371,7 @@ export default function CommandCenterManager({
                             <div className="flex flex-nowrap items-center justify-center gap-1.5">
                               <button
                                 type="button"
-                                onClick={() => startEdit(item)}
+                                onClick={() => onStartEdit(item)}
                                 disabled={isSubmitting || editingId !== null}
                                 className={`${BTN_CLS} border border-gray-200 text-gray-500 hover:text-gray-700`}
                                 aria-label="Düzenle"
@@ -1240,7 +1381,7 @@ export default function CommandCenterManager({
                               </button>
                               <button
                                 type="button"
-                                onClick={() => void handleArchive(item.id)}
+                                onClick={() => void onArchive(item.id)}
                                 disabled={isSubmitting || editingId !== null}
                                 className={`${BTN_CLS} border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100`}
                                 aria-label="Arşivle"
@@ -1250,7 +1391,7 @@ export default function CommandCenterManager({
                               </button>
                               <button
                                 type="button"
-                                onClick={() => void handleDelete(item.id)}
+                                onClick={() => void onDelete(item.id)}
                                 disabled={isSubmitting}
                                 className={`${BTN_CLS} border border-red-200 bg-red-50 text-red-600 hover:bg-red-100`}
                                 aria-label="Sil"
@@ -1475,7 +1616,7 @@ export default function CommandCenterManager({
                           <>
                             <button
                               type="button"
-                              onClick={() => void handleUpdate(item.id)}
+                              onClick={() => void onUpdate(item.id)}
                               disabled={isSubmitting}
                               className={`${BTN_CLS} border border-green-200 bg-green-50 text-green-700 hover:bg-green-100`}
                               aria-label="Kaydet"
@@ -1485,7 +1626,7 @@ export default function CommandCenterManager({
                             </button>
                             <button
                               type="button"
-                              onClick={cancelEdit}
+                              onClick={onCancelEdit}
                               disabled={isSubmitting}
                               className={`${BTN_CLS} border border-gray-200 text-gray-500 hover:text-gray-700`}
                               aria-label="İptal"
@@ -1497,7 +1638,7 @@ export default function CommandCenterManager({
                         ) : (
                           <button
                             type="button"
-                            onClick={() => startEdit(item)}
+                            onClick={() => onStartEdit(item)}
                             disabled={isSubmitting || editingId !== null}
                             className={`${BTN_CLS} border border-gray-200 text-gray-500 hover:text-gray-700`}
                             aria-label="Düzenle"
@@ -1508,7 +1649,7 @@ export default function CommandCenterManager({
                         )}
                         <button
                           type="button"
-                          onClick={() => void handleArchive(item.id)}
+                          onClick={() => void onArchive(item.id)}
                           disabled={isSubmitting || rowIsEditing}
                           className={`${BTN_CLS} border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100`}
                           aria-label="Arşivle"
@@ -1518,7 +1659,7 @@ export default function CommandCenterManager({
                         </button>
                         <button
                           type="button"
-                          onClick={() => void handleDelete(item.id)}
+                          onClick={() => void onDelete(item.id)}
                           disabled={isSubmitting}
                           className={`${BTN_CLS} border border-red-200 bg-red-50 text-red-600 hover:bg-red-100`}
                           aria-label="Sil"
@@ -1531,68 +1672,7 @@ export default function CommandCenterManager({
                   )
                 })}
               </div>
-            </div>
-
-            <div className="flex flex-col gap-3 rounded-2xl border border-[rgba(66,133,244,0.08)] bg-white px-4 py-3 text-sm text-gray-600 shadow-[0_10px_20px_rgba(60,64,67,0.04)] sm:flex-row sm:items-center sm:justify-between">
-              <p>
-                {rangeStart}-{rangeEnd} / {totalCount} kayıt
-              </p>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-                  disabled={currentPage === 1 || isPageLoading}
-                  className="rounded-xl border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 disabled:opacity-50"
-                >
-                  Önceki
-                </button>
-                <span className="min-w-[90px] text-center text-xs font-semibold text-gray-500">
-                  Sayfa {currentPage} / {totalPages}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
-                  disabled={currentPage >= totalPages || isPageLoading}
-                  className="rounded-xl border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 disabled:opacity-50"
-                >
-                  Sonraki
-                </button>
-              </div>
-            </div>
-          </>
-        )}
-
-        {!isLoading && (
-          <div className="space-y-4">
-            <AccordionCard
-              items={[
-                {
-                  id: 'archived-command-center-items',
-                  title: 'Arşivlenen Kayıtlar',
-                  badge: String(archivedItems.length),
-                  accentColor: '#D97706',
-                  children: <ArchivedItemsList items={archivedItems} />,
-                },
-              ]}
-              className="border-amber-100 bg-amber-50/30"
-            />
-
-            <AccordionCard
-              items={[
-                {
-                  id: 'deleted-command-center-items',
-                  title: 'Silinmiş Görevler',
-                  badge: String(deletedItems.length),
-                  accentColor: '#DC2626',
-                  children: <DeletedItemsList items={deletedItems} />,
-                },
-              ]}
-              className="border-red-100 bg-red-50/30"
-            />
-          </div>
-        )}
-      </div>
-    </section>
+    </div>
   )
 }
 
