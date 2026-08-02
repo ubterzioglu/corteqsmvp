@@ -3,6 +3,8 @@
 
 import { z } from "zod";
 
+import { CADDE_REACTION_TYPES } from "./cadde-types";
+
 // Kontenjan seçenekleri (V1: 10/25/50 → 50/100/250/500/999). RPC herhangi bir int ≥ 1
 // kabul ediyor; buradaki liste yalnız UI seçicisini ve ilk hat doğrulamayı belirler.
 export const CADDE_CAFE_CAPACITY_OPTIONS = [50, 100, 250, 500, 999] as const;
@@ -208,7 +210,7 @@ export const caddeCommentCreateSchema = z.object({
 
 export const caddeReactionSchema = z.object({
   postId: z.string().min(1),
-  reactionType: z.enum(["like", "support", "idea"]),
+  reactionType: z.enum(CADDE_REACTION_TYPES),
 });
 
 export const caddeCafeJoinSchema = z.object({

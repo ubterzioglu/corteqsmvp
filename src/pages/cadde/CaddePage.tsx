@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowUpRight, Flag, Flame, Globe2, Heart, MapPin, Megaphone, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
+import { ArrowUpRight, Flag, Globe2, Heart, HelpCircle, Laugh, MapPin, Megaphone, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
@@ -27,7 +27,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
@@ -62,8 +61,10 @@ import { PAGE_SEO } from "@/lib/page-seo";
 
 const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof ThumbsUp }> = [
   { key: "like", label: "Beğendim", icon: ThumbsUp },
+  { key: "love", label: "Kalp", icon: Heart },
+  { key: "haha", label: "Gülme", icon: Laugh },
   { key: "support", label: "Destek", icon: Sparkles },
-  { key: "idea", label: "Fikir", icon: Flame },
+  { key: "unsure", label: "Emin olamadım", icon: HelpCircle },
 ];
 
 // m29 (F9): Cadde içindeki tekrar eden ikincil menü (Cadde/İş/Sosyal/Harita/Giriş/Kayıt)
@@ -674,57 +675,34 @@ const CaddePage = () => {
                       </div>
                     ) : null}
 
-                    <div className="flex flex-wrap items-center gap-2">
-                      {(() => {
-                        const totalReactions = REACTION_META.reduce(
-                          (sum, reaction) => sum + (item.post.reactionCounts[reaction.key] ?? 0),
-                          0,
-                        );
-                        const viewerReacted = item.post.viewerReactions.length > 0;
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {REACTION_META.map((reaction) => {
+                        const Icon = reaction.icon;
+                        const active = item.post.viewerReactions.includes(reaction.key);
+                        const count = item.post.reactionCounts[reaction.key] ?? 0;
                         return (
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant={viewerReacted ? "default" : "outline"}
-                                size="sm"
-                                aria-label="Tepki ver"
-                                className={viewerReacted ? "bg-slate-900 text-white hover:bg-slate-800" : ""}
-                              >
-                                <Heart className={`mr-2 h-4 w-4 ${viewerReacted ? "fill-current" : ""}`} />
-                                Tepki Ver{totalReactions > 0 ? ` (${totalReactions})` : ""}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent align="start" className="w-auto p-1.5">
-                              <div className="flex items-center gap-1">
-                                {REACTION_META.map((reaction) => {
-                                  const Icon = reaction.icon;
-                                  const active = item.post.viewerReactions.includes(reaction.key);
-                                  return (
-                                    <Button
-                                      key={reaction.key}
-                                      variant={active ? "default" : "ghost"}
-                                      size="sm"
-                                      aria-label={`${reaction.label} (${item.post.reactionCounts[reaction.key] ?? 0})`}
-                                      onClick={() => {
-                                        if (!session) {
-                                          navigate("/login");
-                                          return;
-                                        }
-                                        reactionMutation.mutate({ postId: item.post.id, reactionType: reaction.key });
-                                      }}
-                                      className={active ? "bg-slate-900 text-white hover:bg-slate-800" : ""}
-                                    >
-                                      <Icon className="mr-1.5 h-4 w-4" />
-                                      {reaction.label}
-                                      <span className="ml-1 text-xs text-muted-foreground">{item.post.reactionCounts[reaction.key] ?? 0}</span>
-                                    </Button>
-                                  );
-                                })}
-                              </div>
-                            </PopoverContent>
-                          </Popover>
+                          <Button
+                            key={reaction.key}
+                            variant={active ? "default" : "outline"}
+                            size="sm"
+                            aria-label={`${reaction.label} (${count})`}
+                            onClick={() => {
+                              if (!session) {
+                                navigate("/login");
+                                return;
+                              }
+                              reactionMutation.mutate({ postId: item.post.id, reactionType: reaction.key });
+                            }}
+                            className={`min-h-10 rounded-full px-3 ${
+                              active ? "bg-slate-900 text-white hover:bg-slate-800" : "bg-white/80"
+                            }`}
+                          >
+                            <Icon className={`mr-1.5 h-4 w-4 ${active && reaction.key === "love" ? "fill-current" : ""}`} />
+                            <span className="text-xs font-medium sm:text-sm">{reaction.label}</span>
+                            <span className={`ml-1 text-xs ${active ? "text-white/80" : "text-muted-foreground"}`}>{count}</span>
+                          </Button>
                         );
-                      })()}
+                      })}
                       <Button
                         type="button"
                         variant="outline"

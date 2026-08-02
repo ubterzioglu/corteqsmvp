@@ -23,7 +23,7 @@ const makePost = (id: string): CaddePost => ({
   hashtags: [],
   mentions: [],
   media: [],
-  reactionCounts: { like: 0, support: 0, idea: 0 },
+  reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
   totalReactionCount: 0,
   commentCount: 0,
   comments: [],
@@ -86,24 +86,24 @@ describe("parseCaddeFilters", () => {
 
 describe("serializeCaddeFilters", () => {
   it("omits the mode param for the real default and writes demo explicitly", () => {
-    expect(serializeCaddeFilters({ mode: "real", countries: [], cities: [], bridge: false, hashtag: "", scope: "all" }).toString()).toBe("");
-    expect(serializeCaddeFilters({ mode: "demo", countries: [], cities: [], bridge: false, hashtag: "", scope: "all" }).toString()).toBe("mode=demo");
+    expect(serializeCaddeFilters({ mode: "real", countries: [], cities: [], bridge: false, hashtag: "", scope: "all" as const }).toString()).toBe("");
+    expect(serializeCaddeFilters({ mode: "demo", countries: [], cities: [], bridge: false, hashtag: "", scope: "all" as const }).toString()).toBe("mode=demo");
   });
 
   it("round-trips multi geo filter state through the URL", () => {
-    const original = { mode: "demo" as const, countries: ["Almanya", "Hollanda"], cities: ["Berlin", "Amsterdam"], bridge: true, hashtag: "", scope: "all" };
+    const original = { mode: "demo" as const, countries: ["Almanya", "Hollanda"], cities: ["Berlin", "Amsterdam"], bridge: true, hashtag: "", scope: "all" as const };
     expect(parseCaddeFilters(serializeCaddeFilters(original))).toEqual(original);
 
-    const realDefault = { mode: "real" as const, countries: ["Hollanda"], cities: [], bridge: false, hashtag: "", scope: "all" };
+    const realDefault = { mode: "real" as const, countries: ["Hollanda"], cities: [], bridge: false, hashtag: "", scope: "all" as const };
     expect(parseCaddeFilters(serializeCaddeFilters(realDefault))).toEqual(realDefault);
   });
 });
 
 describe("summarizeCaddeFilters", () => {
   it("derives a short badge label from the selection", () => {
-    expect(summarizeCaddeFilters({ mode: "real", countries: [], cities: [], bridge: false, hashtag: "", scope: "all" })).toBe("Global Akış");
-    expect(summarizeCaddeFilters({ mode: "real", countries: ["Almanya"], cities: [], bridge: false, hashtag: "", scope: "all" })).toBe("Almanya");
-    expect(summarizeCaddeFilters({ mode: "real", countries: ["Almanya"], cities: ["Berlin", "Köln"], bridge: false, hashtag: "", scope: "all" })).toBe("Berlin +2");
+    expect(summarizeCaddeFilters({ mode: "real", countries: [], cities: [], bridge: false, hashtag: "", scope: "all" as const })).toBe("Global Akış");
+    expect(summarizeCaddeFilters({ mode: "real", countries: ["Almanya"], cities: [], bridge: false, hashtag: "", scope: "all" as const })).toBe("Almanya");
+    expect(summarizeCaddeFilters({ mode: "real", countries: ["Almanya"], cities: ["Berlin", "Köln"], bridge: false, hashtag: "", scope: "all" as const })).toBe("Berlin +2");
   });
 });
 

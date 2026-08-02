@@ -212,7 +212,7 @@ describe("CaddePage", () => {
           hashtags: [],
           mentions: [],
           media: [],
-          reactionCounts: { like: 1, support: 0, idea: 0 },
+          reactionCounts: { like: 1, love: 0, haha: 0, support: 0, unsure: 0 },
           totalReactionCount: 1,
           commentCount: 3,
           comments: [
@@ -236,6 +236,56 @@ describe("CaddePage", () => {
 
     expect(await screen.findByPlaceholderText("Yorum yaz")).toBeInTheDocument();
     expect(screen.getByText("Üçüncü yorum")).toBeInTheDocument();
+  });
+
+  it("shows the five reaction actions directly without a popover", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({
+      items: [
+        {
+          id: "post-reactions",
+          mode: "real",
+          type: "text",
+          title: "Tepki seti testi",
+          body: "Tepkiler kart aksiyon satırında açık görünür.",
+          authorName: "Ayşe",
+          authorRole: "Üye",
+          authorAvatarUrl: null,
+          authorUserId: "user-2",
+          country: "Almanya",
+          city: "Berlin",
+          isBridge: false,
+          pinned: false,
+          createdAt: "2026-06-23T10:00:00Z",
+          needCategory: null,
+          interests: [],
+          hashtags: [],
+          mentions: [],
+          media: [],
+          reactionCounts: { like: 1, love: 2, haha: 3, support: 4, unsure: 5 },
+          totalReactionCount: 15,
+          commentCount: 0,
+          comments: [],
+          viewerReactions: ["love"],
+        },
+      ],
+      nextPage: null,
+    });
+
+    renderPage();
+
+    expect(await screen.findByText("Tepki seti testi")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Tepki Ver/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Beğendim (1)" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Kalp (2)" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Gülme (3)" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Destek (4)" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Emin olamadım (5)" })).toBeInTheDocument();
   });
 
   it("shows invitation-style empty states when cafes, promotions and billboards are empty", async () => {
@@ -394,7 +444,7 @@ describe("CaddePage", () => {
           hashtags: [],
           mentions: [],
           media: [],
-          reactionCounts: { like: 0, support: 0, idea: 0 },
+          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
           totalReactionCount: 0,
           commentCount: 0,
           comments: [],

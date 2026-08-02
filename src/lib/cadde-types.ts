@@ -3,7 +3,8 @@
 
 export type CaddeContentMode = "demo" | "real";
 export type CaddePostType = "text" | "question" | "offer" | "event";
-export type CaddeReactionType = "like" | "support" | "idea";
+export const CADDE_REACTION_TYPES = ["like", "love", "haha", "support", "unsure"] as const;
+export type CaddeReactionType = (typeof CADDE_REACTION_TYPES)[number];
 export type CaddeBillboardType = "consultant" | "business" | "event";
 export type CaddePublishStatus = "draft" | "published" | "hidden";
 
@@ -68,6 +69,8 @@ export type CaddeFeedRpcItem = CaddePostRow & {
   country_name: Nullable<string>;
   city_name: Nullable<string>;
   interests: string[];
+  hashtags?: unknown;
+  mentions?: unknown;
   band: number;
   score: number;
   rand: number;

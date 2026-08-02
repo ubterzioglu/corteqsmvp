@@ -34,6 +34,7 @@ import {
   parseWithUserError,
 } from "./cadde-schemas";
 import { validatePostInterests } from "./cadde-targeting";
+import { CADDE_REACTION_TYPES } from "./cadde-types";
 import type {
   CaddeBillboardCard,
   CaddeBillboardRow,
@@ -69,7 +70,8 @@ import type {
   CaddeSponsoredRow,
 } from "./cadde-types";
 
-const emptyReactions = (): Record<CaddeReactionType, number> => ({ like: 0, support: 0, idea: 0 });
+const emptyReactions = (): Record<CaddeReactionType, number> =>
+  Object.fromEntries(CADDE_REACTION_TYPES.map((reactionType) => [reactionType, 0])) as Record<CaddeReactionType, number>;
 
 function applyDemoFilters<T extends { country: string | null; city: string | null; isBridge: boolean; mode: CaddeContentMode }>(
   items: T[],
@@ -269,7 +271,7 @@ function mapRpcPost(
     mentions: normalizeMentionRows(row.mentions),
     media: normalizeCaddeMedia(row.media),
     reactionCounts,
-    totalReactionCount: reactionCounts.like + reactionCounts.support + reactionCounts.idea,
+    totalReactionCount: CADDE_REACTION_TYPES.reduce((sum, reactionType) => sum + reactionCounts[reactionType], 0),
     commentCount: postComments.length,
     comments: postComments.map((comment) => ({
       id: comment.id,
@@ -789,7 +791,7 @@ export async function joinCaddeCafe(input: { cafeId: string; referralCode?: stri
 export async function createCaddeCafe(input: CaddeCafeCreateInput): Promise<string> {
   const parsed = parseWithUserError(caddeCafeCreateSchema, input);
   const moderation = moderateCaddeCafeName(parsed.title);
-  if (!moderation.ok) throw new Error(moderation.reason);
+  if (moderation.ok === false) throw new Error(moderation.reason);
 
   const { data, error } = await db.rpc("create_cadde_cafe_v1", {
     p_title: parsed.title,

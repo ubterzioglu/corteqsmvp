@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { CADDE_REACTION_TYPES } from "@/lib/cadde-types";
 import {
   canJoinCafeRule,
   canPostCaddeRule,
@@ -12,6 +13,14 @@ import {
   type CafeJoinRuleInput,
   type KopruRuleInput,
 } from "@/lib/cadde-rules";
+
+describe("cadde reaction set", () => {
+  it("keeps the TS reaction union mirrored with the SQL CHECK list", () => {
+    const sqlReactionCheckValues = ["like", "love", "haha", "support", "unsure"] as const;
+
+    expect(CADDE_REACTION_TYPES).toEqual(sqlReactionCheckValues);
+  });
+});
 
 const baseKopru: KopruRuleInput = {
   isAdminOrModerator: false,
