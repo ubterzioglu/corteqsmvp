@@ -14,6 +14,40 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260802-relocation-slider-radyo-butonlari",
+    date: "2 Ağustos 2026",
+    title:
+      "Taşınma araçlarındaki 1-5 kaydırma çubuğu kalktı — artık her seçenek tek tek tıklanan bir kutucuk",
+    items: [
+      "10 taşınma aracının tamamı aynı soru bileşenini (QuestionRenderer) kullanıyor. '1'den 5'e kadar değerlendir' tipi sorular bu bileşende bir kaydırma çubuğuyla (slider) cevaplanıyordu — özellikle mobilde parmakla tam istenen sayıya denk getirmek zordu ve o an hangi değerde olduğun küçük bir rakamdan başka bir şeyle görünmüyordu.",
+      "Artık bu sorular 5 satırlık, her biri kendi başına tıklanabilir tek seçimli kutucuklar (radyo buton) olarak geliyor; en alttaki ve en üstteki seçeneğin yanında ne anlama geldiğini açıklayan kısa etiket de var. Bileşen paylaşımlı olduğu için tek yerde yapılan bu değişiklik otomatik olarak 10 aracın hepsini kapsıyor.",
+      "Durum: kod ana koda alındı, veritabanı değişikliği yok. Deploy sonrası canlıda görünür.",
+    ],
+  },
+  {
+    id: "20260802-meslek-maas-araci-secici-iyilestirme",
+    date: "2 Ağustos 2026",
+    title:
+      "Meslek/Maaş Karşılaştırma aracında meslek artık aranarak seçiliyor, hedef ülke seçimi 5'e kadar çoklu hale geldi",
+    items: [
+      "Meslek alanı eskiden serbest metin girişiydi — kullanıcı ne yazdığını bilmeden yazıyor, veritabanındaki gerçek meslek etiketiyle tutup tutmadığını göremiyordu. Artık aranabilir bir liste (combobox): yazmaya başlayınca eşleşen meslekler süzülüyor, listede olmayan bir meslek seçilirse 'bu meslek için veri yoksa sonuç çıkmayabilir' uyarısı görünüyor.",
+      "Hedef ülke sorusu tek ülkeden çoklu seçime geçti: en az 1, en fazla 5 ülke aynı aranabilir listeden işaretlenebiliyor. Hedef şehir sorusuna da yardımcı metin ve 'Şehir fark etmez' hızlı doldurma seçeneği eklendi — şehir belirtmek istemeyen kullanıcı artık ne yazacağını düşünmek zorunda değil.",
+      "DİKKAT — aynı commit'te ayrıca fark edilen bir değişiklik: sonuç ekranındaki yönlendirme butonları ('Tekrar Çöz' hariç) yeniden 'Yakında' rozetiyle tıklanamaz hale getirildi. Bu buton bileşeni (ResultCtaPanel) 10 aracın TAMAMI tarafından paylaşılıyor — yani değişiklik yalnız meslek/maaş aracını değil, hepsini kapsıyor. 30 Temmuz'da bu butonlar tam tersine 'artık gerçek link' diye canlıya alınmıştı; bu geri alınış commit mesajında açıklanmıyor. Bilinçli bir karar mı yoksa istemeden mi oldu netleşmedi — Yapılacaklar kartına kontrol maddesi eklendi.",
+      "Durum: kod ana koda alındı. Soru metinlerindeki veritabanı güncellemesi (yardımcı metin/placeholder) applied klasöründe görünmüyor — canlıya henüz UYGULANMAMIŞ olabilir, deploy öncesi kontrol edilmesi gerekiyor.",
+    ],
+  },
+  {
+    id: "20260802-komuta-merkezi-tamamlanan-akordiyon",
+    date: "2 Ağustos 2026",
+    title:
+      "Komuta Merkezi'nde tamamlanan görevler artık ana listeyi doldurmuyor, alttaki katlanır bölüme taşındı",
+    items: [
+      "Aktif iş tablosu 'Tamamlandı' statüsündeki kayıtlarla birlikte kalabalıklaşıyordu — devam eden işi bulmak için tamamlanmış onlarca satırı geçmek gerekiyordu.",
+      "Artık tamamlanan kayıtlar ana tablodan çıkıp, sayfanın altındaki Arşivlenmiş/Silinmiş bölümlerinin yanına 'Tamamlanan Görevler' başlıklı katlanır (accordion) bir bölüme taşınıyor. Düzenleme/arşivleme/silme aksiyonları tamamlanan kayıtlarda da aktif kalıyor — yanlışlıkla 'Tamamlandı' yapılan bir kayıt gerekirse geri alınabiliyor.",
+      "Durum: kod ana koda alındı, veritabanı değişikliği yok. Gerçek admin girişiyle tarayıcı testi bu ortamda yapılamadı (giriş bilgisi yok) — deploy sonrası kısa bir göz kontrolü öneriliyor.",
+    ],
+  },
+  {
     id: "20260802-cadde-redesign-kapandi",
     date: "2 Ağustos 2026",
     title:
