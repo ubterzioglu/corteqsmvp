@@ -16,6 +16,7 @@ export const caddeQueryKeys = {
   myCafes: (userId: string | null) => ["cadde", "cafes", "mine", userId] as const,
   cafeMembers: (cafeId: string) => ["cadde", "cafes", "members", cafeId] as const,
   cafeFeed: (cafeId: string, userId: string | null) => ["cadde", "cafes", "feed", cafeId, userId] as const,
+  postComments: (postId: string | null) => ["cadde", "post-comments", postId] as const,
   billboards: (filters: CaddeFilterState) => ["cadde", "billboards", filters] as const,
   sponsor: (filters: CaddeFilterState) => ["cadde", "sponsor", filters] as const,
   interestCatalog: ["cadde", "interest-catalog"] as const,

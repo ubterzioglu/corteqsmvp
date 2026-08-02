@@ -46,6 +46,9 @@ import type {
   CaddeCafeRow,
   CaddeCity,
   CaddeCityRow,
+  CaddeComment,
+  CaddeCommentCursor,
+  CaddeCommentPage,
   CaddeCommentRow,
   CaddeContentMode,
   CaddeCountry,
@@ -72,6 +75,14 @@ import type {
 
 const emptyReactions = (): Record<CaddeReactionType, number> =>
   Object.fromEntries(CADDE_REACTION_TYPES.map((reactionType) => [reactionType, 0])) as Record<CaddeReactionType, number>;
+
+function stripEagerComments(post: CaddePost): CaddePost {
+  return {
+    ...post,
+    commentCount: post.commentCount,
+    comments: [],
+  };
+}
 
 function applyDemoFilters<T extends { country: string | null; city: string | null; isBridge: boolean; mode: CaddeContentMode }>(
   items: T[],
@@ -137,7 +148,7 @@ export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeF
     const page = typeof pageParam === "number" ? pageParam : 1;
     const filtered = applyDemoFilters(DEMO_POSTS, filters);
     const start = (page - 1) * CADDE_PAGE_SIZE;
-    const items = filtered.slice(start, start + CADDE_PAGE_SIZE);
+    const items = filtered.slice(start, start + CADDE_PAGE_SIZE).map(stripEagerComments);
     return { items, nextPage: start + CADDE_PAGE_SIZE < filtered.length ? page + 1 : null };
   }
 
@@ -159,13 +170,13 @@ export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeF
 
     const payload = (data ?? { items: [], nextCursor: null }) as { items: CaddeFeedRpcItem[]; nextCursor: CaddeFeedCursor | null };
     const rows = payload.items ?? [];
-    const [reactions, comments, authorNames] = await Promise.all([
+    const [reactions, commentCounts, authorNames] = await Promise.all([
       fetchPostReactions(rows.map((row) => row.id)),
-      fetchPostComments(rows.map((row) => row.id)),
+      fetchPostCommentCounts(rows.map((row) => row.id)),
       fetchUserNameMap(rows.map((row) => row.author_user_id).filter(Boolean) as string[], currentUserId ? [currentUserId] : []),
     ]);
 
-    const items = rows.map((row) => mapRpcPost(row, reactions, comments, authorNames, currentUserId));
+    const items = rows.map((row) => mapRpcPost(row, reactions, commentCounts, [], authorNames, currentUserId));
     return { items, nextPage: payload.nextCursor ?? null };
   } catch (error: unknown) {
     reportCaddeApiError("listCaddeFeed", error);
@@ -203,6 +214,21 @@ async function fetchPostReactions(postIds: string[]): Promise<CaddeReactionRow[]
 
 type CommentWithAuthor = CaddeCommentRow & { author_name: string };
 
+function countCommentsByPost(comments: Array<{ post_id: string }>): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const comment of comments) {
+    counts.set(comment.post_id, (counts.get(comment.post_id) ?? 0) + 1);
+  }
+  return counts;
+}
+
+async function fetchPostCommentCounts(postIds: string[]): Promise<Map<string, number>> {
+  if (postIds.length === 0) return new Map<string, number>();
+  const { data, error } = await db.from("cadde_post_comments").select("post_id").in("post_id", postIds);
+  if (error) throw error;
+  return countCommentsByPost((data ?? []) as Array<{ post_id: string }>);
+}
+
 async function fetchPostComments(postIds: string[]): Promise<CommentWithAuthor[]> {
   if (postIds.length === 0) return [];
   const { data, error } = await db.from("cadde_post_comments").select("id, post_id, user_id, body, created_at").in("post_id", postIds).order("created_at", { ascending: true });
@@ -238,6 +264,7 @@ function normalizeMentionRows(raw: unknown): CaddePostMention[] {
 function mapRpcPost(
   row: CaddeFeedRpcItem,
   reactions: CaddeReactionRow[],
+  commentCounts: Map<string, number>,
   comments: CommentWithAuthor[],
   authorNames: Map<string, string>,
   currentUserId: string | null,
@@ -272,7 +299,7 @@ function mapRpcPost(
     media: normalizeCaddeMedia(row.media),
     reactionCounts,
     totalReactionCount: CADDE_REACTION_TYPES.reduce((sum, reactionType) => sum + reactionCounts[reactionType], 0),
-    commentCount: postComments.length,
+    commentCount: commentCounts.get(row.id) ?? postComments.length,
     comments: postComments.map((comment) => ({
       id: comment.id,
       postId: comment.post_id,
@@ -465,6 +492,7 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
       fetchUserNameMap(rows.map((row) => row.author_user_id).filter(Boolean) as string[], currentUserId ? [currentUserId] : []),
       postIds.length > 0 ? db.from("cadde_post_interests").select("post_id, interest_key").in("post_id", postIds) : Promise.resolve({ data: [] }),
     ]);
+    const commentCounts = countCommentsByPost(comments);
     const interestsByPost = new Map<string, string[]>();
     for (const item of ((interestRows.data ?? []) as Array<{ post_id: string; interest_key: string }>)) {
       interestsByPost.set(item.post_id, [...(interestsByPost.get(item.post_id) ?? []), item.interest_key]);
@@ -481,6 +509,7 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
           rand: 0,
         },
         reactions,
+        commentCounts,
         comments,
         authorNames,
         currentUserId,
@@ -489,6 +518,55 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
   } catch (error: unknown) {
     reportCaddeApiError("listCaddeCafeFeed", error);
     return [];
+  }
+}
+
+export async function listCaddePostComments(postId: string, limit = 5, cursor: CaddeCommentCursor = null): Promise<CaddeCommentPage> {
+  if (!postId) return { items: [], nextCursor: null };
+
+  const pageSize = Math.max(1, limit);
+
+  if (!isSupabaseConfigured) {
+    const post = DEMO_POSTS.find((item) => item.id === postId);
+    const sorted = [...(post?.comments ?? [])].sort((left, right) => left.createdAt.localeCompare(right.createdAt));
+    const afterCursor = cursor ? sorted.filter((comment) => comment.createdAt > cursor) : sorted;
+    const page = afterCursor.slice(0, pageSize);
+    return {
+      items: page,
+      nextCursor: afterCursor.length > pageSize ? page[page.length - 1]?.createdAt ?? null : null,
+    };
+  }
+
+  try {
+    let query = db
+      .from("cadde_post_comments")
+      .select("id, post_id, user_id, body, created_at")
+      .eq("post_id", postId)
+      .order("created_at", { ascending: true })
+      .limit(pageSize + 1);
+    if (cursor) query = query.gt("created_at", cursor);
+
+    const { data, error } = await query;
+    if (error) throw error;
+
+    const rows = ((data ?? []) as CaddeCommentRow[]).slice(0, pageSize);
+    const authorNames = await fetchUserNameMap(rows.map((row) => row.user_id));
+    const items: CaddeComment[] = rows.map((row) => ({
+      id: row.id,
+      postId: row.post_id,
+      userId: row.user_id,
+      body: row.body,
+      authorName: authorNames.get(row.user_id) ?? FALLBACK_PROFILE_NAME,
+      createdAt: row.created_at,
+    }));
+
+    return {
+      items,
+      nextCursor: (data ?? []).length > pageSize ? items[items.length - 1]?.createdAt ?? null : null,
+    };
+  } catch (error: unknown) {
+    reportCaddeApiError("listCaddePostComments", error);
+    return { items: [], nextCursor: null };
   }
 }
 

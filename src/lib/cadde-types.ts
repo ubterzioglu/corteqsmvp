@@ -257,6 +257,13 @@ export type CaddeComment = {
   createdAt: string;
 };
 
+export type CaddeCommentCursor = string | null;
+
+export type CaddeCommentPage = {
+  items: CaddeComment[];
+  nextCursor: CaddeCommentCursor;
+};
+
 export type CaddePost = {
   id: string;
   mode: CaddeContentMode;

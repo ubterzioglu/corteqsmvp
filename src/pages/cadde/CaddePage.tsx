@@ -44,6 +44,7 @@ import {
   listCaddeCountries,
   listCaddeFeed,
   listCaddeInterestCatalog,
+  listCaddePostComments,
   reportCaddeEntity,
   toggleCaddeReaction,
 } from "@/lib/cadde-api";
@@ -55,7 +56,7 @@ import { isInternalCaddeLink } from "@/lib/cadde-links";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import { toggleInterestSelection } from "@/lib/cadde-targeting";
-import type { CaddeFeedPageParam, CaddeFilterState, CaddePostType, CaddeReactionType } from "@/lib/cadde-types";
+import type { CaddeCommentCursor, CaddeFeedPageParam, CaddeFilterState, CaddePostType, CaddeReactionType } from "@/lib/cadde-types";
 import { useSeo } from "@/lib/seo";
 import { PAGE_SEO } from "@/lib/page-seo";
 
@@ -66,6 +67,8 @@ const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof
   { key: "support", label: "Destek", icon: Sparkles },
   { key: "unsure", label: "Emin olamadım", icon: HelpCircle },
 ];
+
+const COMMENT_PAGE_SIZE = 5;
 
 // m29 (F9): Cadde içindeki tekrar eden ikincil menü (Cadde/İş/Sosyal/Harita/Giriş/Kayıt)
 // kaldırıldı — üst ana menü zaten aynı hedefleri taşıyor, cadde login-gated olduğu için
@@ -159,6 +162,18 @@ const CaddePage = () => {
     queryFn: () => listCaddePromotions("cadde-feed-inline", { countries: filters.countries, cities: filters.cities, diaspora: diasporaKey }, 5),
   });
 
+  const commentsQuery = useInfiniteQuery({
+    queryKey: caddeQueryKeys.postComments(expandedCommentPostId),
+    initialPageParam: null as CaddeCommentCursor,
+    queryFn: ({ pageParam }) => listCaddePostComments(expandedCommentPostId ?? "", COMMENT_PAGE_SIZE, pageParam),
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    enabled: Boolean(expandedCommentPostId),
+  });
+  const expandedComments = useMemo(
+    () => commentsQuery.data?.pages.flatMap((page) => page.items) ?? [],
+    [commentsQuery.data],
+  );
+
   const invalidateCadde = async () => {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: caddeQueryKeys.feedRoot }),
@@ -220,7 +235,10 @@ const CaddePage = () => {
     },
     onSuccess: async (_data, variables) => {
       setCommentDrafts((current) => ({ ...current, [variables.postId]: "" }));
-      await invalidateCadde();
+      await Promise.all([
+        invalidateCadde(),
+        queryClient.invalidateQueries({ queryKey: caddeQueryKeys.postComments(variables.postId) }),
+      ]);
     },
     onError: (error) => {
       if (!user) {
@@ -626,7 +644,11 @@ const CaddePage = () => {
                     </Button>
                   </CardContent>
                 </Card>
-              ) : (
+              ) : (() => {
+                const isCommentsExpanded = expandedCommentPostId === item.post.id;
+                const visibleComments = isCommentsExpanded ? expandedComments : [];
+
+                return (
                 <Card
                   key={item.post.id}
                   data-testid="cadde-feed-card"
@@ -737,24 +759,33 @@ const CaddePage = () => {
                       className="rounded-[24px] border border-slate-200/90 bg-slate-50/80 p-4"
                     >
                       <div className="space-y-3">
-                        {(expandedCommentPostId === item.post.id ? item.post.comments : item.post.comments.slice(0, 2)).map((comment) => (
+                        {visibleComments.map((comment) => (
                           <div key={comment.id} className="rounded-2xl border border-slate-200/80 bg-white px-4 py-3">
                             <p className="text-sm font-semibold text-slate-900">{comment.authorName}</p>
                             <p className="mt-1 text-sm text-slate-700">{comment.body}</p>
                           </div>
                         ))}
 
-                        {expandedCommentPostId !== item.post.id && item.post.comments.length > 2 ? (
-                          <p className="text-xs text-slate-500">
-                            +{item.post.comments.length - 2} yorum daha var. Tümünü görmek için yorumları aç.
-                          </p>
+                        {isCommentsExpanded && commentsQuery.isLoading ? (
+                          <p className="text-sm text-slate-500">Yorumlar yükleniyor...</p>
                         ) : null}
 
-                        {expandedCommentPostId === item.post.id ? (
+                        {isCommentsExpanded ? (
                           session ? (
                             <div className="space-y-3">
-                              {item.post.comments.length === 0 ? (
+                              {!commentsQuery.isLoading && visibleComments.length === 0 ? (
                                 <p className="text-sm text-slate-500">İlk yorumu sen bırak ve konuşmayı başlat.</p>
+                              ) : null}
+                              {commentsQuery.hasNextPage ? (
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => void commentsQuery.fetchNextPage()}
+                                  disabled={commentsQuery.isFetchingNextPage}
+                                >
+                                  {commentsQuery.isFetchingNextPage ? "Yükleniyor..." : "Devamını yükle"}
+                                </Button>
                               ) : null}
                               <div className="flex flex-col gap-2 sm:flex-row">
                                 <Textarea
@@ -784,7 +815,8 @@ const CaddePage = () => {
                     </div>
                   </CardContent>
                 </Card>
-              ),
+                );
+              })(),
             )}
 
             {!feedQuery.isLoading && filters.mode === "real" && feedItems.length === 0 ? (

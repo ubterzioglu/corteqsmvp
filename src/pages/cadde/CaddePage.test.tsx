@@ -38,6 +38,7 @@ const listCaddeBillboardsMock = vi.fn();
 const getCaddeSponsoredMock = vi.fn();
 const countCaddePostsSinceMock = vi.fn();
 const listCaddePromotionsMock = vi.fn();
+const listCaddePostCommentsMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
@@ -62,6 +63,7 @@ vi.mock("@/lib/cadde-api", async () => {
     listCaddeBillboardCards: (...args: unknown[]) => listCaddeBillboardsMock(...args),
     getCaddeSponsoredPlacement: (...args: unknown[]) => getCaddeSponsoredMock(...args),
     countCaddePostsSince: (...args: unknown[]) => countCaddePostsSinceMock(...args),
+    listCaddePostComments: (...args: unknown[]) => listCaddePostCommentsMock(...args),
   };
 });
 
@@ -85,6 +87,7 @@ describe("CaddePage", () => {
     actorContextMock.mockReturnValue({ data: makeActorContext(), isLoading: false });
     countCaddePostsSinceMock.mockResolvedValue(0);
     listCaddePromotionsMock.mockResolvedValue([]);
+    listCaddePostCommentsMock.mockResolvedValue({ items: [], nextCursor: null });
   });
 
   it("shows the profile gate with missing fields when the actor context is incomplete", async () => {
@@ -183,7 +186,7 @@ describe("CaddePage", () => {
     expect(screen.queryByText(/Gerçek \/ Demo/i)).not.toBeInTheDocument();
   });
 
-  it("keeps comment composer collapsed by default and expands only for the selected post", async () => {
+  it("keeps comments lazy until the selected post is expanded", async () => {
     useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
     listCaddeCountriesMock.mockResolvedValue([]);
     listCaddeCitiesMock.mockResolvedValue([]);
@@ -215,27 +218,104 @@ describe("CaddePage", () => {
           reactionCounts: { like: 1, love: 0, haha: 0, support: 0, unsure: 0 },
           totalReactionCount: 1,
           commentCount: 3,
-          comments: [
-            { id: "comment-1", postId: "post-1", userId: "u1", body: "İlk yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" },
-            { id: "comment-2", postId: "post-1", userId: "u2", body: "İkinci yorum", authorName: "Mert", createdAt: "2026-06-23T10:02:00Z" },
-            { id: "comment-3", postId: "post-1", userId: "u3", body: "Üçüncü yorum", authorName: "Deniz", createdAt: "2026-06-23T10:03:00Z" },
-          ],
+          comments: [],
           viewerReactions: [],
         },
       ],
       nextPage: null,
     });
+    listCaddePostCommentsMock.mockResolvedValue({
+      items: [
+        { id: "comment-1", postId: "post-1", userId: "u1", body: "İlk yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" },
+        { id: "comment-2", postId: "post-1", userId: "u2", body: "İkinci yorum", authorName: "Mert", createdAt: "2026-06-23T10:02:00Z" },
+        { id: "comment-3", postId: "post-1", userId: "u3", body: "Üçüncü yorum", authorName: "Deniz", createdAt: "2026-06-23T10:03:00Z" },
+      ],
+      nextCursor: null,
+    });
 
     renderPage();
 
     expect(await screen.findByText("Berlin'de yeni bir başlangıç")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "3 yorum" })).toBeInTheDocument();
     expect(screen.queryByPlaceholderText("Yorum yaz")).not.toBeInTheDocument();
-    expect(screen.queryByText("Üçüncü yorum")).not.toBeInTheDocument();
+    expect(screen.queryByText("İlk yorum")).not.toBeInTheDocument();
+    expect(listCaddePostCommentsMock).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByTestId("cadde-comment-toggle"));
 
     expect(await screen.findByPlaceholderText("Yorum yaz")).toBeInTheDocument();
+    expect(listCaddePostCommentsMock).toHaveBeenCalledWith("post-1", 5, null);
+    expect(await screen.findByText("İlk yorum")).toBeInTheDocument();
     expect(screen.getByText("Üçüncü yorum")).toBeInTheDocument();
+  });
+
+  it("loads additional comment pages on demand", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({
+      items: [
+        {
+          id: "post-load-more",
+          mode: "real",
+          type: "text",
+          title: "Yorum sayfalama testi",
+          body: "Yorumlar panel açılınca sayfalanır.",
+          authorName: "Ayşe",
+          authorRole: "Üye",
+          authorAvatarUrl: null,
+          authorUserId: "user-2",
+          country: "Almanya",
+          city: "Berlin",
+          isBridge: false,
+          pinned: false,
+          createdAt: "2026-06-23T10:00:00Z",
+          needCategory: null,
+          interests: [],
+          hashtags: [],
+          mentions: [],
+          media: [],
+          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          totalReactionCount: 0,
+          commentCount: 6,
+          comments: [],
+          viewerReactions: [],
+        },
+      ],
+      nextPage: null,
+    });
+    listCaddePostCommentsMock
+      .mockResolvedValueOnce({
+        items: [
+          { id: "comment-1", postId: "post-load-more", userId: "u1", body: "Birinci yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" },
+          { id: "comment-2", postId: "post-load-more", userId: "u2", body: "İkinci yorum", authorName: "Mert", createdAt: "2026-06-23T10:02:00Z" },
+          { id: "comment-3", postId: "post-load-more", userId: "u3", body: "Üçüncü yorum", authorName: "Deniz", createdAt: "2026-06-23T10:03:00Z" },
+          { id: "comment-4", postId: "post-load-more", userId: "u4", body: "Dördüncü yorum", authorName: "Ece", createdAt: "2026-06-23T10:04:00Z" },
+          { id: "comment-5", postId: "post-load-more", userId: "u5", body: "Beşinci yorum", authorName: "Can", createdAt: "2026-06-23T10:05:00Z" },
+        ],
+        nextCursor: "2026-06-23T10:05:00Z",
+      })
+      .mockResolvedValueOnce({
+        items: [
+          { id: "comment-6", postId: "post-load-more", userId: "u6", body: "Altıncı yorum", authorName: "Nil", createdAt: "2026-06-23T10:06:00Z" },
+        ],
+        nextCursor: null,
+      });
+
+    renderPage();
+
+    fireEvent.click(await screen.findByTestId("cadde-comment-toggle"));
+    expect(await screen.findByText("Beşinci yorum")).toBeInTheDocument();
+    expect(screen.queryByText("Altıncı yorum")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /Devamını yükle/i }));
+
+    expect(await screen.findByText("Altıncı yorum")).toBeInTheDocument();
+    expect(listCaddePostCommentsMock).toHaveBeenLastCalledWith("post-load-more", 5, "2026-06-23T10:05:00Z");
+    expect(screen.queryByRole("button", { name: /Devamını yükle/i })).not.toBeInTheDocument();
   });
 
   it("shows the five reaction actions directly without a popover", async () => {
