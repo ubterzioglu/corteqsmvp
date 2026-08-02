@@ -363,6 +363,12 @@
     mask-image: radial-gradient(ellipse 85% 75% at 50% 38%, #000 30%, transparent 100%);
   }
 
+  /* Rota katmanı kapsayıcısı (footer bandı) — geniş-kısa banda göre kenar solması. */
+  .corteqs-routes-bg {
+    -webkit-mask-image: radial-gradient(ellipse 92% 85% at 50% 60%, #000 35%, transparent 100%);
+    mask-image: radial-gradient(ellipse 92% 85% at 50% 60%, #000 35%, transparent 100%);
+  }
+
   /* Ağ düğümü — yavaşça nabız atan nokta. İndeks bazlı gecikme JSX'te verilir. */
   .corteqs-network-node {
     transform-box: fill-box;

@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { footerFlatLinks } from "@/components/footerLinks";
-import DiasporaNetworkLayer from "@/components/landing/DiasporaNetworkLayer";
+import DiasporaRoutesLayer from "@/components/landing/DiasporaRoutesLayer";
 import { PUBLIC_WHATSAPP_COMMUNITY } from "@/lib/contact-links";
 
 const socialLinks = [
@@ -69,11 +69,11 @@ const seoLinkClass =
 const Footer = () => {
   return (
     <footer className="relative isolate select-none overflow-hidden bg-gradient-to-b from-background via-secondary/25 to-background text-muted-foreground">
-      {/* tech katmanları: aurora + ince grid mesh + canlı diaspora ağı — eski footer
-          section'ının zemini. Hepsi dekoratif: pointer-events yok, aria-hidden, z-0. */}
+      {/* tech katmanları: aurora + ince grid mesh + ufuk rotaları — banta özel zemin.
+          Hepsi dekoratif: pointer-events yok, aria-hidden, z-0. */}
       <div className="tech-aurora pointer-events-none absolute inset-0" aria-hidden="true" />
       <div className="tech-grid pointer-events-none absolute inset-0" aria-hidden="true" />
-      <DiasporaNetworkLayer />
+      <DiasporaRoutesLayer />
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div className="absolute left-[-12%] top-12 h-44 w-44 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute bottom-8 right-[-4%] h-56 w-56 rounded-full bg-accent/10 blur-3xl" />
