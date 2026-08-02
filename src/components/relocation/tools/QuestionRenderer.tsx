@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Slider } from "@/components/ui/slider";
 import { useGeoCountries } from "@/hooks/useGeo";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
 import { cn } from "@/lib/utils";
@@ -294,14 +293,26 @@ export function QuestionRenderer({ question, value, onChange }: QuestionRenderer
     case "scale": {
       const current = typeof value === "number" ? value : 3;
       return (
-        <div className="space-y-3">
-          <Slider min={1} max={5} step={1} value={[current]} onValueChange={(v) => onChange(v[0])} />
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>{TOOLS_UI_COPY.scaleLow}</span>
-            <span className="font-semibold text-foreground">{current}</span>
-            <span>{TOOLS_UI_COPY.scaleHigh}</span>
-          </div>
-        </div>
+        <RadioGroup
+          value={String(current)}
+          onValueChange={(v) => onChange(Number(v))}
+          className="space-y-2"
+        >
+          {[1, 2, 3, 4, 5].map((n) => (
+            <label
+              key={n}
+              htmlFor={`${id}-scale-${n}`}
+              className="flex cursor-pointer items-center gap-3 rounded-lg border border-border p-3 transition-colors hover:bg-accent"
+            >
+              <RadioGroupItem id={`${id}-scale-${n}`} value={String(n)} />
+              <span className="text-sm">
+                {n}
+                {n === 1 && ` — ${TOOLS_UI_COPY.scaleLow}`}
+                {n === 5 && ` — ${TOOLS_UI_COPY.scaleHigh}`}
+              </span>
+            </label>
+          ))}
+        </RadioGroup>
       );
     }
 
