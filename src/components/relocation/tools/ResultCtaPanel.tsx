@@ -1,12 +1,7 @@
 // Sonuç CTA paneli — result.ctas + "Tekrar Çöz" tek bir 2×2 ızgarada, eşit boyutlu.
 // docs/10tool/00 §CTA.
 //
-// B21 (2026-07-30): CTA'lar artık GERÇEK linkler. Eski "Yakında" kilidi, hedeflerin
-// var olmayan /relocation/tools/* rotalarına işaret ettiği dönemin korumasıydı;
-// B17 migration'ı tüm hedefleri gerçek /tools/* rotalarına çevirdi ve kilidin
-// açılma koşulu ("hedefler yayına girince disabled kaldır") sağlandı.
-// "Tekrar Çöz" değişmedi: buton, her zaman aktif.
-import { Link } from "react-router-dom";
+// CTA'lar sonuç ekranında bilerek kilitli tutulur; "Tekrar Çöz" her zaman aktif.
 import { Button } from "@/components/ui/button";
 import { resolveCta, TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
 import type { ToolCta } from "@/lib/relocation-tools-types";
@@ -22,7 +17,7 @@ interface ResultCtaPanelProps {
 const CELL_CLASS =
   "h-auto min-h-16 w-full flex-col gap-1.5 whitespace-normal px-3 py-3 text-center leading-snug";
 
-export function ResultCtaPanel({ ctas, onCtaClick, onRetake }: ResultCtaPanelProps) {
+export function ResultCtaPanel({ ctas, onRetake }: ResultCtaPanelProps) {
   if (ctas.length === 0 && !onRetake) return null;
   return (
     // 2 sütun + auto-rows-fr: tüm hücreler her ekran boyutunda aynı genişlik ve yükseklikte.
@@ -34,14 +29,14 @@ export function ResultCtaPanel({ ctas, onCtaClick, onRetake }: ResultCtaPanelPro
         return (
           <Button
             key={cta.key + idx}
-            asChild
             variant="outline"
+            disabled
             className={CELL_CLASS}
-            onClick={() => onCtaClick?.(cta)}
           >
-            <Link to={cta.href ?? "/tools"}>
-              <span>{label}</span>
-            </Link>
+            <span>{label}</span>
+            <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+              {TOOLS_UI_COPY.comingSoon}
+            </span>
           </Button>
         );
       })}

@@ -1,4 +1,4 @@
-// ResultCtaPanel — B21 sonrası: CTA'lar gerçek linkler, "Tekrar Çöz" aktif buton, tek ızgara.
+// ResultCtaPanel — CTA'lar "Yakında" kilitli, "Tekrar Çöz" aktif buton, tek ızgara.
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -21,40 +21,37 @@ function renderPanel(props: Parameters<typeof ResultCtaPanel>[0]) {
 }
 
 describe("ResultCtaPanel", () => {
-  it("CTA'ları link, Tekrar Çöz'ü buton olarak tek ızgarada gösterir", () => {
+  it("CTA'ları pasif buton, Tekrar Çöz'ü aktif buton olarak tek ızgarada gösterir", () => {
     renderPanel({ ctas: CTAS, onRetake: vi.fn() });
 
-    const links = screen.getAllByRole("link");
-    expect(links).toHaveLength(3);
+    expect(screen.queryAllByRole("link")).toHaveLength(0);
 
     const retake = screen.getByRole("button", { name: "Tekrar Çöz" });
+    const ctaButtons = screen.getAllByRole("button").filter((button) => button !== retake);
+    expect(ctaButtons).toHaveLength(3);
+    for (const button of ctaButtons) expect(button).toBeDisabled();
+    expect(retake).toBeEnabled();
+
     const grid = retake.parentElement;
-    for (const el of [...links, retake]) expect(el.parentElement).toBe(grid);
+    for (const el of [...ctaButtons, retake]) expect(el.parentElement).toBe(grid);
     expect(grid?.className).toContain("grid");
   });
 
-  it("her CTA doğru rotaya işaret eder ve 'Yakında' rozeti YOK (B21)", () => {
+  it("CTA'larda Yakında rozeti gösterir ve href üretmez", () => {
     renderPanel({ ctas: CTAS, onRetake: vi.fn() });
 
-    expect(screen.getByText("Şehir Eşleştirmeyi Başlat").closest("a")).toHaveAttribute(
-      "href",
-      "/tools/sehir-eslestirme",
-    );
-    expect(screen.getByText("Bu Ülkedeki Üyeleri Gör").closest("a")).toHaveAttribute("href", "/directory");
-    expect(screen.getByText("İlk 90 Gün Planlayıcı").closest("a")).toHaveAttribute(
-      "href",
-      "/tools/ilk-90-gun-planlayici",
-    );
-    expect(screen.queryByText("Yakında")).toBeNull();
+    expect(screen.getByText("Şehir Eşleştirmeyi Başlat").closest("a")).toBeNull();
+    expect(screen.getByText("Bu Ülkedeki Üyeleri Gör").closest("a")).toBeNull();
+    expect(screen.getByText("İlk 90 Gün Planlayıcı").closest("a")).toBeNull();
+    expect(screen.getAllByText("Yakında")).toHaveLength(3);
   });
 
-  it("CTA tıklanınca onCtaClick çözülmüş CTA ile tetiklenir", async () => {
+  it("pasif CTA tıklanınca onCtaClick tetiklenmez", async () => {
     const onCtaClick = vi.fn();
     renderPanel({ ctas: CTAS, onCtaClick, onRetake: vi.fn() });
 
     await userEvent.click(screen.getByText("Bu Ülkedeki Üyeleri Gör"));
-    expect(onCtaClick).toHaveBeenCalledTimes(1);
-    expect(onCtaClick.mock.calls[0][0]).toMatchObject({ key: "view_directory", href: "/directory" });
+    expect(onCtaClick).not.toHaveBeenCalled();
   });
 
   it("Tekrar Çöz onRetake'i çağırır", async () => {
@@ -66,7 +63,7 @@ describe("ResultCtaPanel", () => {
 
   it("onRetake verilmezse yalnız CTA'lar çıkar; CTA da yoksa hiç render etmez", () => {
     const { container, rerender } = renderPanel({ ctas: CTAS });
-    expect(screen.getAllByRole("link")).toHaveLength(3);
+    expect(screen.getAllByRole("button")).toHaveLength(3);
     rerender(
       <MemoryRouter>
         <ResultCtaPanel ctas={[]} />
