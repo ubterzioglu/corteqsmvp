@@ -44,7 +44,7 @@ import {
   reportCaddeEntity,
   toggleCaddeReaction,
 } from "@/lib/cadde-api";
-import { POST_TYPE_LABELS, emptyCaddeComposer } from "@/lib/cadde-composer";
+import { emptyCaddeComposer } from "@/lib/cadde-composer";
 import { caddeNewPostPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
 import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
@@ -59,9 +59,6 @@ const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof
   { key: "support", label: "Destek", icon: Sparkles },
   { key: "idea", label: "Fikir", icon: Flame },
 ];
-
-// POST_TYPE_LABELS composer ile ortak (tek kaynak: CaddeComposer.tsx) — feed kartındaki
-// tür rozeti ve composer'daki tür seçici aynı etiketleri kullanır.
 
 const SECONDARY_NAV = [
   { label: "Cadde", to: "/cadde" },
@@ -565,22 +562,23 @@ const CaddePage = () => {
                   className="overflow-hidden rounded-[28px] border-slate-200/90 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] shadow-[0_18px_42px_rgba(15,23,42,0.08)]"
                 >
                   <CardContent className="space-y-4 p-5 sm:p-6">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="space-y-2">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="font-semibold text-slate-900">{item.post.authorName}</p>
-                          {item.post.authorRole ? <Badge variant="secondary">{item.post.authorRole}</Badge> : null}
-                          {item.post.pinned ? <Badge className="bg-slate-900 text-white hover:bg-slate-900">Pinned</Badge> : null}
-                          {item.post.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
-                          <Badge variant="outline">{POST_TYPE_LABELS[item.post.type] ?? item.post.type}</Badge>
-                        </div>
-                        <p className="text-xs text-slate-500">
-                          {[item.post.country, item.post.city].filter(Boolean).join(" • ") || "Global"} • {formatDateTime(item.post.createdAt)}
-                        </p>
+                    {/* m18 forum hiyerarşisi: konu (varsa) büyük ve EN ÜSTTE, yazar küçük,
+                        altında ülke•şehir•tarih. m17: tip rozeti ("soru"/"ilan") kaldırıldı. */}
+                    <div className="space-y-1">
+                      {item.post.title ? (
+                        <h3 className="text-lg font-semibold leading-snug text-slate-950">{item.post.title}</h3>
+                      ) : null}
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="text-sm font-medium text-slate-700">{item.post.authorName}</p>
+                        {item.post.authorRole ? <Badge variant="secondary">{item.post.authorRole}</Badge> : null}
+                        {item.post.pinned ? <Badge className="bg-slate-900 text-white hover:bg-slate-900">Pinned</Badge> : null}
+                        {item.post.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
                       </div>
+                      <p className="text-xs text-slate-500">
+                        {[item.post.country, item.post.city].filter(Boolean).join(" • ") || "Global"} • {formatDateTime(item.post.createdAt)}
+                      </p>
                     </div>
 
-                    {item.post.title ? <h3 className="text-lg font-semibold text-slate-950">{item.post.title}</h3> : null}
                     <CaddePostBody body={item.post.body} mentions={item.post.mentions} />
 
                     <CaddeMediaGallery media={item.post.media} contextLabel={item.post.authorName} />

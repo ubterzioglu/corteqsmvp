@@ -3,17 +3,9 @@
 
 import type { CaddeMediaAsset, CaddePostMention, CaddePostType, CarsiContactMode } from "@/lib/cadde-types";
 
-/**
- * Post tipi enum'larının kullanıcıya görünen Türkçe etiketleri.
- * Composer'daki tür seçici ve feed kartındaki tür rozeti aynı kaynaktan beslenir.
- * "İlan / Teklif" bireysel kullanıcının ikinci el / yardım / hizmet paylaşımını kapsar.
- */
-export const POST_TYPE_LABELS: Record<CaddePostType, string> = {
-  text: "Paylaşım",
-  question: "Soru",
-  offer: "İlan / Teklif",
-  event: "Etkinlik",
-};
+// NOT (F6+F8, workshop m5/m17): POST_TYPE_LABELS kaldırıldı — tür seçici composer'dan,
+// tür rozeti feed kartından söküldü; tip etiketi artık hiçbir yerde gösterilmiyor.
+// CaddePostType enum'u ve type alanı VERİ SÖZLEŞMESİ olarak durur (eski postlar + RPC).
 
 export type CaddeComposerValue = {
   type: CaddePostType;
