@@ -1,7 +1,7 @@
 # Cadde Redesign — Frontend Devir Notu (2026-08-02)
 
 > **Bu doküman ne işe yarar:** yeni bir oturum bu notu okuyup hiçbir şey sormadan
-> F16'dan devam edebilir. Plan dosyası ayrı yaşıyor:
+> F18'den devam edebilir. Plan dosyası ayrı yaşıyor:
 > [codex-plan-f15-f23-2026-08-02.md](./codex-plan-f15-f23-2026-08-02.md) (F15–F23 denetlenmiş sıra).
 > Madde hedefleri (dosya:satır): [docs/cadde-300/redesign-calisma-haritasi.md](./redesign-calisma-haritasi.md).
 > Pano: https://corteqs.net/admin/workshop/cadde (48 madde).
@@ -11,9 +11,9 @@
 | | |
 |---|---|
 | **Faz** | Backend KAPANDI (25 batch + mail hattı canlı). Şimdi **frontend/Cadde redesign**. |
-| **Batch durumu** | **16 / 23 bitti** (F1–F16). Kalan: **F17–F23**. `F2` (footer) kullanıcının şeridinde. |
-| **Dal** | tek dal `main`; F16 uygulama commit'i **`ee2fdff`**. |
-| **Kapılar** | F16 hedefli Cadde suite **49/49** · `tsc --noEmit -p tsconfig.app.json` proje geneli eski borçla düşüyor (F16 dosyalarında hata yok) · F16 eslint 0 · `verify:text` temiz. |
+| **Batch durumu** | **17 / 23 bitti** (F1–F17). Kalan: **F18–F23**. `F2` (footer) kullanıcının şeridinde. |
+| **Dal** | tek dal `main`; F17 uygulama commit'i **`c2fe97a`**. |
+| **Kapılar** | F17 hedefli Cadde suite **50/50** · `tsc --noEmit -p tsconfig.app.json` proje geneli eski borçla düşüyor (F17 dosyalarında hata yok) · F17 eslint 0 · `verify:text` temiz. |
 | **Canlıya deploy** | Coolify deploy **kullanıcıda** — kod push'lu, tarayıcıda henüz yok. |
 
 > ⚠️ **2026-08-02 kapı düzeltmesi:** Bare `npx tsc --noEmit` bu repoda sessizce **sıfır dosya**
@@ -44,11 +44,12 @@
 | F14 | m43+m45+m46 | `4c3d572` + `c20dcfd` | Reklam CTA akışı: profildeki tanıtım paneline çapa, "talep bırak" kalktı, boş yüzeyde "reklamını buraya verebilirsin". |
 | F15 | m19+m20 | `9c576dd` | Tepki seti 5'li negatifsiz yapıldı; popover kalktı; canlıda `idea` → `unsure` 2 satır taşındı. |
 | F16 | m21 | `ee2fdff` | Feed yorum gövdelerini eager çekmiyor; sayaç hafif `post_id` sayımıyla kalıyor; panel açılınca ilk 5 + "Devamını yükle". |
+| F17 | m22+m24 | `c2fe97a` | Yorum textarea'sında Enter gönderir, Shift+Enter satır atlar; yorum paneli kompakt hale geldi. |
 
-### Panoda işaretlenebilir maddeler (birikmiş, 33)
+### Panoda işaretlenebilir maddeler (birikmiş, 36)
 
 `m1 · m2 · m3 · m4 · m5 · m6 · m7 · m13 · m14 · m15 · m16 · m17 · m18 · m29 · m30 · m31 ·
-m19 · m20 · m35 · m37 · m38 · m39 · m40 · m41 · m42 · m43 · m44 · m45 · m46` + önceden bitmiş sayılan
+m19 · m20 · m22 · m24 · m35 · m37 · m38 · m39 · m40 · m41 · m42 · m43 · m44 · m45 · m46` + önceden bitmiş sayılan
 `m10 · m21 · m32 · m36 · m47`. Kullanıcı QA'sından sonra "panoyu çevir" derse bunlar `yapildi`ya geçer.
 
 ---
@@ -95,10 +96,13 @@ gövdelerini eager çekmiyor; real modda `cadde_post_comments.post_id` üzerinde
 feed'de yorum gövdeleri sıyrılıyor. Yeni `listCaddePostComments(postId, 5, cursor)` panel
 açılınca çalışır; "Devamını yükle" sonraki sayfayı getirir. Cafe-içi feed davranışı korunmuştur.
 
-### F17 · m22+m24 — yorum etkileşimi [S] ← **SIRADAKİ**
-Enter ile gönder (`MentionTextarea`'daki `Enter && !shiftKey` deseni hazır) + yorum layout sıkıştırma.
+### F17 · m22+m24 — yorum etkileşimi [S] — ✅ **BİTTİ** (`c2fe97a`)
+Yorum `<Textarea>` artık `Enter && !shiftKey` ile boş olmayan metni gönderiyor; whitespace
+Enter'ı no-op bırakıyor, `Shift+Enter` satır atlama davranışını koruyor. Panel daha kompakt:
+textarea `min-h-[64px]`, yorum kartları `space-y-2`, isim+tarih tek satır, gönder butonu
+ikon+metin tek satır.
 
-### F18 · m23 — auto-refresh genişletmesi [M]
+### F18 · m23 — auto-refresh genişletmesi [M] ← **SIRADAKİ**
 Feed'in adaptif polling deseni açık yorum dizisine genişler. ⚠️ Önce `2652e32`'nin getirdiği
 `src/lib/cadde-feed-polling.ts` + F1'in `newestCaddeCreatedAt` baseline'ını oku.
 
@@ -204,7 +208,7 @@ regression testi) · `m48` (Profil Workshop süreci) · `m13` yeniden değerlend
 2. **F2 · m28 footer sadeleştirme** — kullanıcının şeridi (`Footer.tsx`).
 3. **Giriş yapmalı QA turu** — tepkiler, yorum, kafe katılımı, composer akışı.
 4. **Hoş geldin maili anahtarı** — panelden örnek mail sonrası açılacak.
-5. **Pano kutularını işaretleme** — 33 madde hazır; "panoyu çevir" komutuyla asistan
+5. **Pano kutularını işaretleme** — 36 madde hazır; "panoyu çevir" komutuyla asistan
    `inceleniyor` → `yapildi` çevirebilir.
 
 ---
@@ -212,11 +216,11 @@ regression testi) · `m48` (Profil Workshop süreci) · `m13` yeniden değerlend
 ## 7. Yeni oturum için ilk üç adım
 
 ```bash
-git -C c:/temp_private/corteqs/corteqs_fin log --oneline -5      # ee2fdff görünmeli
-npx vitest run src/components/cadde/ src/pages/cadde/ src/lib/cadde-*.test.ts   # 49/49 beklenir
-npx tsc --noEmit -p tsconfig.app.json                           # eski repo borcu; F17 dosyalarına süz
-# sonra: F17 · m22+m24 — Enter gönderimi + yorum paneli sıkıştırma
+git -C c:/temp_private/corteqs/corteqs_fin log --oneline -5      # c2fe97a görünmeli
+npx vitest run src/components/cadde/ src/pages/cadde/ src/lib/cadde-*.test.ts   # 50/50 beklenir
+npx tsc --noEmit -p tsconfig.app.json                           # eski repo borcu; F18 dosyalarına süz
+# sonra: F18 · m23 — açık yorum dizisinde auto-refresh
 ```
 
-**Devam cümlesi:** "F17'den devam et — m22+m24: yorum textarea'sında Enter gönderir,
-Shift+Enter satır atlar; yorum panelini daha kompakt hale getir."
+**Devam cümlesi:** "F18'den devam et — m23: açık yorum panelinde adaptif auto-refresh;
+panel kapalıyken sorgu yok, yeni yorum sessiz eklenir."
