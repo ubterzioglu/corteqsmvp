@@ -1,8 +1,8 @@
 # Cadde Redesign — Frontend Devir Notu (2026-08-02)
 
 > **Bu doküman ne işe yarar:** yeni bir oturum bu notu okuyup hiçbir şey sormadan
-> F15'ten devam edebilir. Plan dosyası ayrı yaşıyor:
-> `~/.claude/plans/zoho-smtp-port-zoho-smtp-user-zoho-smtp-vast-hoare.md` (F1–F23 denetlenmiş sıra).
+> F16'dan devam edebilir. Plan dosyası ayrı yaşıyor:
+> [codex-plan-f15-f23-2026-08-02.md](./codex-plan-f15-f23-2026-08-02.md) (F15–F23 denetlenmiş sıra).
 > Madde hedefleri (dosya:satır): [docs/cadde-300/redesign-calisma-haritasi.md](./redesign-calisma-haritasi.md).
 > Pano: https://corteqs.net/admin/workshop/cadde (48 madde).
 
@@ -11,16 +11,16 @@
 | | |
 |---|---|
 | **Faz** | Backend KAPANDI (25 batch + mail hattı canlı). Şimdi **frontend/Cadde redesign**. |
-| **Batch durumu** | **14 / 23 bitti** (F1–F14). Kalan: **F15–F23**. `F2` (footer) kullanıcının şeridinde. |
-| **Dal** | tek dal `main`, temiz, `origin` ile senkron — son commit **`c20dcfd`**. |
-| **Kapılar** | cadde+profile suite **57/57** · **`tsc --noEmit -p tsconfig.app.json`** · eslint 0 · `verify:text` temiz. |
+| **Batch durumu** | **15 / 23 bitti** (F1–F15). Kalan: **F16–F23**. `F2` (footer) kullanıcının şeridinde. |
+| **Dal** | tek dal `main`; F15 uygulama commit'i **`9c576dd`**. |
+| **Kapılar** | F15 hedefli Cadde suite **48/48** · `tsc --noEmit -p tsconfig.app.json` proje geneli eski borçla **104 hata satırı** (F15 dosyalarında hata yok) · F15 eslint 0 · `verify:text` temiz. |
 | **Canlıya deploy** | Coolify deploy **kullanıcıda** — kod push'lu, tarayıcıda henüz yok. |
 
 > ⚠️ **2026-08-02 kapı düzeltmesi:** Bare `npx tsc --noEmit` bu repoda sessizce **sıfır dosya**
 > denetler (kök `tsconfig.json` → `"files": []` + project references; kanıt: kasıtlı
 > `undeclaredIdentifierProbe` hatası yakalanmadı). Daha önceki batch raporlarındaki
 > "tsc 0 hata" ifadesi bu yüzden geçersizdi — **daima `-p tsconfig.app.json` kullan.**
-> Gerçek denetim proje genelinde **109 hata** gösteriyor; hepsi önceden var olan borç
+> Gerçek denetim proje genelinde artık **104 hata satırı** gösteriyor; hepsi önceden var olan borç
 > (bayat `supabase/types.ts`, eksik `@/lib/mapEntities` · `html-to-image` ·
 > `@/lib/whatsappLandings`, ProfilePage `string | boolean` draft tipi). F-batch'lerinin
 > ürettiği tek hata (F11'in `MentionTextarea` TYPE_ICON regresyonu) `c20dcfd` ile kapatıldı.
@@ -42,11 +42,12 @@
 | F12 | m37+m35 | `9656fc4` | Konum kartı yerleşimi düzeldi; Köprü'ye 4 hedef kitle balonu. |
 | F13 | m41+m42+m44 | `6444e39` | Statik Panosu kartı → panelden Featured seçilen içerik; kart tamamı tıklanabilir. |
 | F14 | m43+m45+m46 | `4c3d572` + `c20dcfd` | Reklam CTA akışı: profildeki tanıtım paneline çapa, "talep bırak" kalktı, boş yüzeyde "reklamını buraya verebilirsin". |
+| F15 | m19+m20 | `9c576dd` | Tepki seti 5'li negatifsiz yapıldı; popover kalktı; canlıda `idea` → `unsure` 2 satır taşındı. |
 
-### Panoda işaretlenebilir maddeler (birikmiş, 29)
+### Panoda işaretlenebilir maddeler (birikmiş, 33)
 
 `m1 · m2 · m3 · m4 · m5 · m6 · m7 · m13 · m14 · m15 · m16 · m17 · m18 · m29 · m30 · m31 ·
-m35 · m37 · m38 · m39 · m40 · m41 · m42 · m43 · m44 · m45 · m46` + önceden bitmiş sayılan
+m19 · m20 · m35 · m37 · m38 · m39 · m40 · m41 · m42 · m43 · m44 · m45 · m46` + önceden bitmiş sayılan
 `m10 · m32 · m36 · m47`. Kullanıcı QA'sından sonra "panoyu çevir" derse bunlar `yapildi`ya geçer.
 
 ---
@@ -80,14 +81,14 @@ duruyordu. Ayrıca billboard boş durumundaki üçüncü kalın buton ince bağl
 
 </details>
 
-### F15 · m19+m20 — tepki seti BİRLEŞİK [M + **migration**] ← **SIRADAKİ**
-Aynı JSX bloğu, ayrılmaz. **Migration önce** (CHECK genişletme + toggle RPC geriye uyumlu),
-UI aynı commit'te: popover kalkar, 5'li **negatifsiz** set doğrudan açık
-(beğendim · kalp · gülme · destek · emin-olamadım). Mevcut `idea` (Fikir) verisinin
-akıbeti batch başında karara bağlanır — **öneri: `emin-olamadım`a eşle**, commit mesajına yaz.
-SQL↔TS ayna testi güncellenir.
+### F15 · m19+m20 — tepki seti BİRLEŞİK [M + **migration**] — ✅ **BİTTİ** (`9c576dd`)
+Migration `20260802141000_cadde_reaction_set_v2.sql` canlıya uygulandı ve `applied/` altına
+taşındı. CHECK final seti: `like · love · haha · support · unsure`. Eski `idea` verisi
+kullanıcı kararına uygun biçimde `unsure` oldu (`UPDATE 2`, canlı doğrulandı; `idea` kalmadı).
+`toggle_cadde_reaction_v1` imzası korunarak whitelist ve bildirim metinleri güncellendi.
+UI'da popover kalktı; 5 tepki doğrudan aksiyon satırında açık. SQL↔TS ayna testi eklendi.
 
-### F16 · m21 — yorum sayısı + load-more [S/M]
+### F16 · m21 — yorum sayısı + load-more [S/M] ← **SIRADAKİ**
 `head:true` count sorgusu ile SQL'siz çözülür — **feed RPC'ye `comment_count` EKLENMEZ**
 (o değişiklik F21 zincirinin işi). Eager tüm-yorum çekme biter: ilk N + "devamını yükle".
 
@@ -160,7 +161,7 @@ regression testi) · `m48` (Profil Workshop süreci) · `m13` yeniden değerlend
 3. **Migration akışı:** dosyayı `supabase/migrations/`'a yaz → `psql -f` ile uygula →
    `supabase_migrations.schema_migrations`'a `(version, name)` INSERT (name = timestamp'siz
    slug) → dosyayı `applied/`e taşı → commit. **Sürüm seçmeden önce canlıdaki max version'a bak**
-   (2026-08-02 itibarıyla `20260802110000`).
+   (2026-08-02 itibarıyla canlı history'de F15 sonrası `20260802141000`).
 4. **Canlı DB:** `psql "host=aws-1-eu-west-2.pooler.supabase.com port=5432 dbname=postgres
    user=postgres.injprdrsklkxgnaiixzh sslmode=require"`, şifre `.env.local` →
    `SUPABASE_DB_PASSWORD`; Bash aracında **`dangerouslyDisableSandbox: true`** şart
@@ -200,7 +201,7 @@ regression testi) · `m48` (Profil Workshop süreci) · `m13` yeniden değerlend
 2. **F2 · m28 footer sadeleştirme** — kullanıcının şeridi (`Footer.tsx`).
 3. **Giriş yapmalı QA turu** — tepkiler, yorum, kafe katılımı, composer akışı.
 4. **Hoş geldin maili anahtarı** — panelden örnek mail sonrası açılacak.
-5. **Pano kutularını işaretleme** — 26 madde hazır; "panoyu çevir" komutuyla asistan
+5. **Pano kutularını işaretleme** — 33 madde hazır; "panoyu çevir" komutuyla asistan
    `inceleniyor` → `yapildi` çevirebilir.
 
 ---
@@ -208,12 +209,11 @@ regression testi) · `m48` (Profil Workshop süreci) · `m13` yeniden değerlend
 ## 7. Yeni oturum için ilk üç adım
 
 ```bash
-git -C c:/temp_private/corteqs/corteqs_fin log --oneline -5      # c20dcfd görünmeli
-npx vitest run src/components/cadde/ src/pages/cadde/ src/components/profile/   # 57/57 beklenir
-npx tsc --noEmit -p tsconfig.app.json | grep -c "error TS"          # 109 (hepsi eski borç)
-# sonra: F15 · m19+m20 — migration ÖNCE, idea eşlemesi kararı commit mesajına
+git -C c:/temp_private/corteqs/corteqs_fin log --oneline -5      # 9c576dd görünmeli
+npx vitest run src/components/cadde/ src/pages/cadde/ src/lib/cadde-*.test.ts   # 48/48 beklenir
+npx tsc --noEmit -p tsconfig.app.json                           # 104 eski hata satırı; F16 dosyalarına süz
+# sonra: F16 · m21 — commentCount'u eager yorum çekiminden ayır, panel açılınca lazy/load-more
 ```
 
-**Devam cümlesi:** "F15'ten devam et — m19+m20 birleşik: migration önce (CHECK genişletme +
-toggle RPC geriye uyumlu), sonra UI'da popover'ı kaldır ve negatifsiz 5'li seti doğrudan aç;
-mevcut `idea` verisini `emin-olamadım`a eşle ve SQL↔TS ayna testini güncelle."
+**Devam cümlesi:** "F16'dan devam et — m21: `commentCount`'u eager yorum gövdelerinden bağımsız
+say; feed RPC'ye `comment_count` ekleme; yorumları panel açılınca ilk 5 + devamını yükle ile çek."
