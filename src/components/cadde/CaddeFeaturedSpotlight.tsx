@@ -52,7 +52,7 @@ const CaddeFeaturedSpotlight = ({ card }: CaddeFeaturedSpotlightProps) => {
 
   return (
     <Card
-      className="overflow-hidden border-orange-100 bg-[linear-gradient(160deg,#fff7ec_0%,#ffffff_60%)]"
+      className="cadde-featured overflow-hidden"
       data-testid="cadde-featured-spotlight"
     >
       <CardHeader className="pb-2">

@@ -455,12 +455,12 @@ const CaddePage = () => {
 
   return (
     <CaddeProfileGate context={actorContextQuery.data} isLoading={actorContextQuery.isLoading}>
-    <main className="cadde-shell min-h-screen bg-[linear-gradient(180deg,#fffdf8_0%,#fff7ec_22%,#f6f8fb_100%)]">
-      <section className="border-b border-orange-100/80 bg-white/80 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-6 lg:px-6">
+    <main className="cadde-shell">
+      <section className="cadde-topbar">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-4 py-5 lg:px-6">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className="bg-[#ffefe0] text-[#9a4b18] hover:bg-[#ffefe0]">CorteQS Cadde</Badge>
-            <p className="text-sm text-slate-600">Şehrindeki Türklerle tanış, sor, paylaş ve fırsatları keşfet.</p>
+            <Badge className="cadde-chip-brand">CorteQS Cadde</Badge>
+            <p className="text-sm text-slate-200">Şehrindeki Türklerle tanış, sor, paylaş ve fırsatları keşfet.</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <NotificationsBell />
@@ -468,14 +468,14 @@ const CaddePage = () => {
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-6 lg:grid-cols-[290px_minmax(0,1fr)_320px] lg:px-6">
+      <section className="mx-auto grid w-full max-w-7xl gap-5 px-4 py-5 lg:grid-cols-[290px_minmax(0,1fr)_320px] lg:px-6">
         {/* m30 (F9): sol kolon = yalnız Konum + İnsanları Keşfet (bu sırayla).
             Çarşı ticker'ı sağ (tanıtım) kolonuna taşındı; Cafeler özet kartı m31 ile
             kaldırıldı (tek kaynak: orta kolondaki "Aktif Cafeler").
             Not: workshop'un "akordeon kart denemesi" bilinçli atlandı — kolon 2 karta
             indiği için akordeonun çözeceği kalabalık kalmadı (commit gerekçesinde). */}
         <aside className="order-2 space-y-5 lg:order-none">
-          <Card className="border-orange-100 bg-white/90 shadow-[0_20px_50px_rgba(15,23,42,0.06)]">
+          <Card className="cadde-panel cadde-shadow-soft">
             <CardHeader className="space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <div>
@@ -622,10 +622,7 @@ const CaddePage = () => {
                   {/* m2: flex-col/h-full + mt-auto footer — kartlar aynı hizada biter.
                       m3: çay bardağı ikonu = kafe kartının imzası. m4: ad bold + tema normal. */}
                   {activeCafes.map((cafe) => (
-                    <div
-                      key={cafe.id}
-                      className="flex h-full flex-col rounded-[22px] border border-slate-200 bg-[linear-gradient(180deg,#fff_0%,#f8fafc_100%)] p-4 shadow-sm"
-                    >
+                    <div key={cafe.id} className="cadde-card flex h-full flex-col rounded-[22px] p-4">
                       <div className="flex items-start gap-2.5">
                         <CaddeCafeIcon className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
                         <div className="min-w-0 flex-1">
@@ -659,7 +656,7 @@ const CaddePage = () => {
               ) : (
                 <div
                   data-testid="cadde-cafes-empty-state"
-                  className="rounded-[28px] border border-dashed border-orange-200 bg-[linear-gradient(180deg,#fffaf4_0%,#fff4ea_100%)] p-6"
+                  className="cadde-empty rounded-[28px] border border-dashed p-6"
                 >
                   <p className="text-sm font-semibold text-slate-900">Henüz aktif bir cafe açılmadı.</p>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
@@ -731,7 +728,7 @@ const CaddePage = () => {
               item.kind === "promotion" ? (
                 <SponsoredFeedCard key={`promo-${item.promotion.campaignId}-${itemIndex}`} promotion={item.promotion} />
               ) : item.kind === "sponsor" ? (
-                <Card key={item.sponsor.id} className="border-orange-200 bg-[linear-gradient(135deg,#fff7e8_0%,#fff1d6_100%)]">
+                <Card key={item.sponsor.id} className="cadde-sponsored">
                   <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
                     <div className="space-y-2">
                       <Badge className="bg-orange-500 text-white hover:bg-orange-500">{item.sponsor.badgeText ?? "Sponsorlu"}</Badge>
@@ -752,7 +749,7 @@ const CaddePage = () => {
                 <Card
                   key={item.post.id}
                   data-testid="cadde-feed-card"
-                  className="overflow-hidden rounded-[28px] border-slate-200/90 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] shadow-[0_18px_42px_rgba(15,23,42,0.08)]"
+                  className="cadde-card overflow-hidden rounded-[28px]"
                 >
                   <CardContent className="space-y-4 p-5 sm:p-6">
                     {/* m18 forum hiyerarşisi: konu (varsa) büyük ve EN ÜSTTE, yazar küçük,
@@ -962,7 +959,7 @@ const CaddePage = () => {
             {!feedQuery.isLoading && filters.mode === "real" && feedItems.length === 0 ? (
               <Card
                 data-testid="cadde-feed-empty-state"
-                className="border-dashed border-slate-300 bg-[linear-gradient(180deg,#ffffff_0%,#fff7ee_100%)]"
+                className="cadde-empty border-dashed"
               >
                 <CardContent className="p-8 text-center text-slate-500">
                   <p className="text-base font-semibold text-slate-900">Bu akış henüz sessiz.</p>
@@ -996,7 +993,7 @@ const CaddePage = () => {
           ) : (
             <Card
               data-testid="cadde-featured-empty-state"
-              className="overflow-hidden border-orange-100 bg-[linear-gradient(160deg,#fff7ec_0%,#ffffff_62%)]"
+              className="cadde-featured overflow-hidden"
             >
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-base">
@@ -1071,7 +1068,7 @@ const CaddePage = () => {
                   </>
                 );
                 const cardClassName =
-                  "group block rounded-[24px] border border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] p-4 shadow-sm transition hover:border-slate-300 hover:shadow-md";
+                  "cadde-card group block rounded-[24px] p-4 transition hover:border-slate-300 hover:shadow-md";
 
                 return isInternalCaddeLink(card.ctaUrl) ? (
                   <Link key={card.id} to={card.ctaUrl} className={cardClassName}>
