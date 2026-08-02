@@ -11,9 +11,9 @@
 | | |
 |---|---|
 | **Faz** | Backend KAPANDI (25 batch + mail hattı canlı). Şimdi **frontend/Cadde redesign**. |
-| **Batch durumu** | **15 / 23 bitti** (F1–F15). Kalan: **F16–F23**. `F2` (footer) kullanıcının şeridinde. |
-| **Dal** | tek dal `main`; F15 uygulama commit'i **`9c576dd`**. |
-| **Kapılar** | F15 hedefli Cadde suite **48/48** · `tsc --noEmit -p tsconfig.app.json` proje geneli eski borçla **104 hata satırı** (F15 dosyalarında hata yok) · F15 eslint 0 · `verify:text` temiz. |
+| **Batch durumu** | **16 / 23 bitti** (F1–F16). Kalan: **F17–F23**. `F2` (footer) kullanıcının şeridinde. |
+| **Dal** | tek dal `main`; F16 uygulama commit'i **`ee2fdff`**. |
+| **Kapılar** | F16 hedefli Cadde suite **49/49** · `tsc --noEmit -p tsconfig.app.json` proje geneli eski borçla düşüyor (F16 dosyalarında hata yok) · F16 eslint 0 · `verify:text` temiz. |
 | **Canlıya deploy** | Coolify deploy **kullanıcıda** — kod push'lu, tarayıcıda henüz yok. |
 
 > ⚠️ **2026-08-02 kapı düzeltmesi:** Bare `npx tsc --noEmit` bu repoda sessizce **sıfır dosya**
@@ -43,12 +43,13 @@
 | F13 | m41+m42+m44 | `6444e39` | Statik Panosu kartı → panelden Featured seçilen içerik; kart tamamı tıklanabilir. |
 | F14 | m43+m45+m46 | `4c3d572` + `c20dcfd` | Reklam CTA akışı: profildeki tanıtım paneline çapa, "talep bırak" kalktı, boş yüzeyde "reklamını buraya verebilirsin". |
 | F15 | m19+m20 | `9c576dd` | Tepki seti 5'li negatifsiz yapıldı; popover kalktı; canlıda `idea` → `unsure` 2 satır taşındı. |
+| F16 | m21 | `ee2fdff` | Feed yorum gövdelerini eager çekmiyor; sayaç hafif `post_id` sayımıyla kalıyor; panel açılınca ilk 5 + "Devamını yükle". |
 
 ### Panoda işaretlenebilir maddeler (birikmiş, 33)
 
 `m1 · m2 · m3 · m4 · m5 · m6 · m7 · m13 · m14 · m15 · m16 · m17 · m18 · m29 · m30 · m31 ·
 m19 · m20 · m35 · m37 · m38 · m39 · m40 · m41 · m42 · m43 · m44 · m45 · m46` + önceden bitmiş sayılan
-`m10 · m32 · m36 · m47`. Kullanıcı QA'sından sonra "panoyu çevir" derse bunlar `yapildi`ya geçer.
+`m10 · m21 · m32 · m36 · m47`. Kullanıcı QA'sından sonra "panoyu çevir" derse bunlar `yapildi`ya geçer.
 
 ---
 
@@ -88,11 +89,13 @@ kullanıcı kararına uygun biçimde `unsure` oldu (`UPDATE 2`, canlı doğrulan
 `toggle_cadde_reaction_v1` imzası korunarak whitelist ve bildirim metinleri güncellendi.
 UI'da popover kalktı; 5 tepki doğrudan aksiyon satırında açık. SQL↔TS ayna testi eklendi.
 
-### F16 · m21 — yorum sayısı + load-more [S/M] ← **SIRADAKİ**
-`head:true` count sorgusu ile SQL'siz çözülür — **feed RPC'ye `comment_count` EKLENMEZ**
-(o değişiklik F21 zincirinin işi). Eager tüm-yorum çekme biter: ilk N + "devamını yükle".
+### F16 · m21 — yorum sayısı + load-more [S/M] — ✅ **BİTTİ** (`ee2fdff`)
+Feed RPC'ye `comment_count` eklenmedi (F21 zincirine bırakıldı). `listCaddeFeed` artık yorum
+gövdelerini eager çekmiyor; real modda `cadde_post_comments.post_id` üzerinden sayıyor, demo
+feed'de yorum gövdeleri sıyrılıyor. Yeni `listCaddePostComments(postId, 5, cursor)` panel
+açılınca çalışır; "Devamını yükle" sonraki sayfayı getirir. Cafe-içi feed davranışı korunmuştur.
 
-### F17 · m22+m24 — yorum etkileşimi [S]
+### F17 · m22+m24 — yorum etkileşimi [S] ← **SIRADAKİ**
 Enter ile gönder (`MentionTextarea`'daki `Enter && !shiftKey` deseni hazır) + yorum layout sıkıştırma.
 
 ### F18 · m23 — auto-refresh genişletmesi [M]
@@ -209,11 +212,11 @@ regression testi) · `m48` (Profil Workshop süreci) · `m13` yeniden değerlend
 ## 7. Yeni oturum için ilk üç adım
 
 ```bash
-git -C c:/temp_private/corteqs/corteqs_fin log --oneline -5      # 9c576dd görünmeli
-npx vitest run src/components/cadde/ src/pages/cadde/ src/lib/cadde-*.test.ts   # 48/48 beklenir
-npx tsc --noEmit -p tsconfig.app.json                           # 104 eski hata satırı; F16 dosyalarına süz
-# sonra: F16 · m21 — commentCount'u eager yorum çekiminden ayır, panel açılınca lazy/load-more
+git -C c:/temp_private/corteqs/corteqs_fin log --oneline -5      # ee2fdff görünmeli
+npx vitest run src/components/cadde/ src/pages/cadde/ src/lib/cadde-*.test.ts   # 49/49 beklenir
+npx tsc --noEmit -p tsconfig.app.json                           # eski repo borcu; F17 dosyalarına süz
+# sonra: F17 · m22+m24 — Enter gönderimi + yorum paneli sıkıştırma
 ```
 
-**Devam cümlesi:** "F16'dan devam et — m21: `commentCount`'u eager yorum gövdelerinden bağımsız
-say; feed RPC'ye `comment_count` ekleme; yorumları panel açılınca ilk 5 + devamını yükle ile çek."
+**Devam cümlesi:** "F17'den devam et — m22+m24: yorum textarea'sında Enter gönderir,
+Shift+Enter satır atlar; yorum panelini daha kompakt hale getir."
