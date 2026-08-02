@@ -10,6 +10,7 @@ import { Link, useParams } from "react-router-dom";
 import { Archive, Clock3, KeyRound, MapPin, MessageCircle, ShieldQuestion, Users } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
+import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +28,7 @@ import {
   listCaddeCafeFeed,
   listCaddeCafeMembers,
 } from "@/lib/cadde-api";
+import { listCaddeCafeThemes } from "@/lib/cadde-cafe-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 
 const formatDateTime = (value: string) =>
@@ -48,6 +50,17 @@ const CaddeCafePage = () => {
   const [postBody, setPostBody] = useState("");
   const [joinAnswer, setJoinAnswer] = useState("");
   const [referralCode, setReferralCode] = useState("");
+
+  // m4: başlıkta tema Türkçe etiketiyle (themeKey ham anahtar).
+  const themesQuery = useQuery({
+    queryKey: ["cadde", "cafe-themes"],
+    queryFn: listCaddeCafeThemes,
+    staleTime: 60 * 60_000,
+  });
+  const themeLabelByKey = useMemo(
+    () => new Map((themesQuery.data ?? []).map((theme) => [theme.key, theme.labelTr])),
+    [themesQuery.data],
+  );
 
   const cafeQuery = useQuery({
     queryKey: caddeQueryKeys.cafe(cafeId, user?.id ?? null),
@@ -160,9 +173,17 @@ const CaddeCafePage = () => {
                 <Badge className="bg-emerald-500 text-white hover:bg-emerald-500">Canlı</Badge>
               )}
               {cafe.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
-              {cafe.themeKey ? <Badge variant="outline">{cafe.themeKey}</Badge> : null}
             </div>
-            <CardTitle className="text-2xl">{cafe.title}</CardTitle>
+            {/* m3+m4: çay bardağı ikonu + "ad bold, tema normal" tek satır (ham themeKey rozeti kalktı). */}
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <CaddeCafeIcon className="h-6 w-6 shrink-0 text-orange-600" />
+              <span className="min-w-0">
+                {cafe.title}
+                {cafe.themeKey && themeLabelByKey.get(cafe.themeKey) ? (
+                  <span className="ml-2 text-lg font-normal text-slate-500">{themeLabelByKey.get(cafe.themeKey)}</span>
+                ) : null}
+              </span>
+            </CardTitle>
             <CardDescription>{cafe.summary}</CardDescription>
             <div className="flex flex-wrap gap-3 text-sm text-slate-600">
               <span className="inline-flex items-center gap-1.5"><MapPin className="h-4 w-4 text-orange-500" />{[cafe.country, cafe.city].filter(Boolean).join(" • ") || "Global"}</span>

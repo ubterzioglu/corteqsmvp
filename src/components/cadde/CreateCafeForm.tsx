@@ -7,7 +7,7 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { Coffee } from "lucide-react";
+import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -120,7 +120,7 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
         {trigger ?? (
           <Button className="w-full justify-between rounded-2xl">
             Cafe Aç
-            <Coffee className="h-4 w-4" />
+            <CaddeCafeIcon className="h-4 w-4" />
           </Button>
         )}
       </DialogTrigger>

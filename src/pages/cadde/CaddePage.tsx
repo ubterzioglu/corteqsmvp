@@ -5,6 +5,7 @@ import { Flag, Flame, Globe2, Heart, MapPin, Megaphone, MessageCircle, MessagesS
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
+import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
 import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
 import CaddeFeedScopeBar from "@/components/cadde/CaddeFeedScopeBar";
 import CaddeMediaGallery from "@/components/cadde/CaddeMediaGallery";
@@ -45,6 +46,7 @@ import {
   reportCaddeEntity,
   toggleCaddeReaction,
 } from "@/lib/cadde-api";
+import { listCaddeCafeThemes } from "@/lib/cadde-cafe-api";
 import { emptyCaddeComposer } from "@/lib/cadde-composer";
 import { caddeNewPostPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
 import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
@@ -299,6 +301,17 @@ const CaddePage = () => {
     () => new Map((interestCatalogQuery.data ?? []).map((interest) => [interest.key, interest.labelTr])),
     [interestCatalogQuery.data],
   );
+
+  // m4: kart başlığında tema Türkçe etiketiyle görünsün (themeKey ham anahtar taşır).
+  const cafeThemesQuery = useQuery({
+    queryKey: ["cadde", "cafe-themes"],
+    queryFn: listCaddeCafeThemes,
+    staleTime: 60 * 60_000,
+  });
+  const cafeThemeLabelByKey = useMemo(
+    () => new Map((cafeThemesQuery.data ?? []).map((theme) => [theme.key, theme.labelTr])),
+    [cafeThemesQuery.data],
+  );
   const hasGeoSelection = filters.countries.length > 0 || filters.cities.length > 0;
   const sparseContentHint = hasGeoSelection
     ? "Bu bölgede içerik azsa ülke geneli ve global akış da devreye girer."
@@ -464,22 +477,35 @@ const CaddePage = () => {
             <CardContent>
               {activeCafes.length > 0 ? (
                 <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                  {/* m2: flex-col/h-full + mt-auto footer — kartlar aynı hizada biter.
+                      m3: çay bardağı ikonu = kafe kartının imzası. m4: ad bold + tema normal. */}
                   {activeCafes.map((cafe) => (
-                    <div key={cafe.id} className="rounded-[22px] border border-slate-200 bg-[linear-gradient(180deg,#fff_0%,#f8fafc_100%)] p-4 shadow-sm">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="font-semibold text-slate-900">{cafe.title}</p>
-                          <p className="mt-1 text-xs text-slate-500">{cafe.city ?? "Global"} • {formatDateTime(cafe.startsAt)}</p>
-                        </div>
-                        <div className="flex flex-col items-end gap-1">
-                          {cafe.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
-                          {cafe.entryMode !== "open" ? <Badge variant="outline">{cafe.entryMode === "approval" ? "Onaylı" : "Davetli"}</Badge> : null}
+                    <div
+                      key={cafe.id}
+                      className="flex h-full flex-col rounded-[22px] border border-slate-200 bg-[linear-gradient(180deg,#fff_0%,#f8fafc_100%)] p-4 shadow-sm"
+                    >
+                      <div className="flex items-start gap-2.5">
+                        <CaddeCafeIcon className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate">
+                            <span className="font-semibold text-slate-900">{cafe.title}</span>
+                            {cafe.themeKey && cafeThemeLabelByKey.get(cafe.themeKey) ? (
+                              <span className="ml-1.5 font-normal text-slate-500">
+                                {cafeThemeLabelByKey.get(cafe.themeKey)}
+                              </span>
+                            ) : null}
+                          </p>
+                          <p className="mt-0.5 text-xs text-slate-500">{cafe.city ?? "Global"} • {formatDateTime(cafe.startsAt)}</p>
                         </div>
                       </div>
-                      <p className="mt-3 text-sm leading-relaxed text-slate-600">{cafe.summary}</p>
-                      <div className="mt-4 flex items-center justify-between gap-3">
-                        <div className="text-xs text-slate-500">Host: {cafe.hostName} • {cafe.memberCount} üye</div>
-                        <Button size="sm" variant={cafe.joinedByViewer ? "secondary" : "outline"} asChild>
+                      <div className="mt-2 flex flex-wrap items-center gap-1">
+                        {cafe.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
+                        {cafe.entryMode !== "open" ? <Badge variant="outline">{cafe.entryMode === "approval" ? "Onaylı" : "Davetli"}</Badge> : null}
+                      </div>
+                      <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate-600">{cafe.summary}</p>
+                      <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+                        <div className="min-w-0 truncate text-xs text-slate-500">Host: {cafe.hostName} • {cafe.memberCount} üye</div>
+                        <Button size="sm" variant={cafe.joinedByViewer ? "secondary" : "outline"} asChild className="shrink-0">
                           <Link to={`/cadde/cafe/${cafe.id}`}>
                             {cafe.joinedByViewer ? "Odaya Gir" : cafe.viewerMemberStatus === "pending" ? "Onay Bekliyor" : "İncele & Katıl"}
                           </Link>

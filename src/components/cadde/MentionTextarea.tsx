@@ -7,7 +7,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Building2, Coffee, ShoppingBag, User } from "lucide-react";
+import { Building2, ShoppingBag, User } from "lucide-react";
+
+import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
 
 import { Textarea } from "@/components/ui/textarea";
 import { searchCaddeMentions } from "@/lib/cadde-api";
@@ -17,7 +19,7 @@ import type { CaddeMentionSuggestion, CaddeMentionTargetType, CaddePostMention }
 const TYPE_ICON: Record<CaddeMentionTargetType, typeof User> = {
   user: User,
   catalog_item: Building2,
-  cafe: Coffee,
+  cafe: CaddeCafeIcon,
   carsi_item: ShoppingBag,
 };
 

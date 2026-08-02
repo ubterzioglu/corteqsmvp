@@ -5,7 +5,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { Coffee, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
+
+import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { Badge } from "@/components/ui/badge";
@@ -52,7 +54,7 @@ const CaddeMyContentCard = () => {
         {activeCafes.length > 0 ? (
           <div className="space-y-2">
             <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-700">
-              <Coffee className="h-3.5 w-3.5 text-orange-500" />
+              <CaddeCafeIcon className="h-3.5 w-3.5 text-orange-500" />
               Açık Cafelerim ({activeCafes.length})
             </p>
             {activeCafes.slice(0, 3).map((cafe) => (
