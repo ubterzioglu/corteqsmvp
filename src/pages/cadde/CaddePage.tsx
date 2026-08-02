@@ -61,14 +61,9 @@ const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof
   { key: "idea", label: "Fikir", icon: Flame },
 ];
 
-const SECONDARY_NAV = [
-  { label: "Cadde", to: "/cadde" },
-  { label: "İş", to: "/commercial" },
-  { label: "Sosyal", to: "/directory" },
-  { label: "Harita", href: "https://globe.corteqs.net" },
-  { label: "Giriş Yap", to: "/login" },
-  { label: "Kayıt Ol", to: "/login?mode=signup" },
-] as const;
+// m29 (F9): Cadde içindeki tekrar eden ikincil menü (Cadde/İş/Sosyal/Harita/Giriş/Kayıt)
+// kaldırıldı — üst ana menü zaten aynı hedefleri taşıyor, cadde login-gated olduğu için
+// Giriş/Kayıt linkleri buraya hiç düşmüyordu.
 
 const formatDateTime = (value: string) =>
   new Intl.DateTimeFormat("tr-TR", {
@@ -322,25 +317,17 @@ const CaddePage = () => {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <NotificationsBell />
-            {SECONDARY_NAV.map((item) =>
-              "href" in item ? (
-                <a key={item.label} href={item.href} target="_blank" rel="noreferrer" className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">
-                  {item.label}
-                </a>
-              ) : (
-                <Link key={item.label} to={item.to} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">
-                  {item.label}
-                </Link>
-              ),
-            )}
           </div>
         </div>
       </section>
 
       <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-6 lg:grid-cols-[290px_minmax(0,1fr)_320px] lg:px-6">
+        {/* m30 (F9): sol kolon = yalnız Konum + İnsanları Keşfet (bu sırayla).
+            Çarşı ticker'ı sağ (tanıtım) kolonuna taşındı; Cafeler özet kartı m31 ile
+            kaldırıldı (tek kaynak: orta kolondaki "Aktif Cafeler").
+            Not: workshop'un "akordeon kart denemesi" bilinçli atlandı — kolon 2 karta
+            indiği için akordeonun çözeceği kalabalık kalmadı (commit gerekçesinde). */}
         <aside className="order-2 space-y-5 lg:order-none">
-          <CarsiGlobalTicker filters={filters} />
-
           <Card className="border-orange-100 bg-white/90 shadow-[0_20px_50px_rgba(15,23,42,0.06)]">
             <CardHeader className="space-y-3">
               <div className="flex items-center justify-between gap-3">
@@ -444,28 +431,6 @@ const CaddePage = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-slate-200 bg-white/90">
-            <CardHeader>
-              <CardTitle className="text-base">
-                {hasGeoSelection ? `Cafeler (${summarizeCaddeFilters(filters)})` : "Cafeler"}
-              </CardTitle>
-              <CardDescription>Seçili filtre içindeki odalar</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {activeCafes.slice(0, 3).map((cafe) => (
-                <div key={cafe.id} className="rounded-2xl border border-slate-200 p-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-semibold text-slate-900">{cafe.title}</p>
-                      <p className="text-xs text-slate-500">{cafe.city ?? "Global"} • {cafe.memberCount} üye</p>
-                    </div>
-                    {cafe.isBridge ? <Badge variant="secondary">Köprü</Badge> : null}
-                  </div>
-                </div>
-              ))}
-              {!activeCafes.length ? <p className="text-sm text-slate-500">Bu filtrelerde aktif cafe yok.</p> : null}
-            </CardContent>
-          </Card>
         </aside>
 
         <section className="order-1 space-y-5 lg:order-none">
@@ -820,7 +785,11 @@ const CaddePage = () => {
         </section>
 
         <aside className="order-3 space-y-5 lg:order-none">
-          {/* CorteQS Panosu — topluluk panosu / maskot teaser'ı */}
+          {/* m30: Çarşı ticker'ı tanıtım kolonunda yaşıyor (F10 bunu "Çarşı yakında"
+              teaser'ına çevirecek). */}
+          <CarsiGlobalTicker filters={filters} />
+
+          {/* CorteQS Panosu — F13'ün dolduracağı FEATURED SLOT placeholder'ı (silme!). */}
           <Card className="overflow-hidden border-orange-100 bg-[linear-gradient(160deg,#fff7ec_0%,#ffffff_60%)]">
             <CardHeader className="pb-3">
               <CardTitle className="text-base">CorteQS Panosu</CardTitle>
