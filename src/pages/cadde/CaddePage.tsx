@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowUpRight, Flag, Globe2, Heart, HelpCircle, Laugh, MapPin, Megaphone, MessageCircle, MessagesSquare, Send, Share2, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
+import CaddeEmojiPickerButton from "@/components/cadde/CaddeEmojiPickerButton";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
 import CaddeBridgeInfo from "@/components/cadde/CaddeBridgeInfo";
 import CaddeFeaturedSpotlight from "@/components/cadde/CaddeFeaturedSpotlight";
@@ -57,6 +58,7 @@ import { isInternalCaddeLink } from "@/lib/cadde-links";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import { toggleInterestSelection } from "@/lib/cadde-targeting";
+import { insertTextAtSelection, type TextSelection } from "@/lib/cadde-text-insert";
 import type { CaddeCommentCursor, CaddeFeedPageParam, CaddeFilterState, CaddePostType, CaddeReactionType } from "@/lib/cadde-types";
 import { useSeo } from "@/lib/seo";
 import { PAGE_SEO } from "@/lib/page-seo";
@@ -97,6 +99,7 @@ const CaddePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [composer, setComposer] = useState(emptyCaddeComposer);
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
+  const [commentSelections, setCommentSelections] = useState<Record<string, TextSelection>>({});
   const [expandedCommentPostId, setExpandedCommentPostId] = useState<string | null>(null);
   const filters = useMemo(() => parseCaddeFilters(searchParams), [searchParams]);
   const diasporaKey = useCaddeDiasporaKey();
@@ -171,6 +174,7 @@ const CaddePage = () => {
 
   const commentsZeroStreakRef = useRef(0);
   const commentsSignatureRef = useRef<string | null>(null);
+  const commentTextareaRef = useRef<HTMLTextAreaElement>(null);
   const commentsQuery = useInfiniteQuery({
     queryKey: caddeQueryKeys.postComments(expandedCommentPostId),
     initialPageParam: null as CaddeCommentCursor,
@@ -282,6 +286,27 @@ const CaddePage = () => {
       toast({ title: "Yorum gönderilemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
     },
   });
+
+  const syncCommentSelection = (postId: string, event: SyntheticEvent<HTMLTextAreaElement>) => {
+    setCommentSelections((current) => ({
+      ...current,
+      [postId]: {
+        start: event.currentTarget.selectionStart ?? 0,
+        end: event.currentTarget.selectionEnd ?? event.currentTarget.selectionStart ?? 0,
+      },
+    }));
+  };
+
+  const insertCommentEmoji = (postId: string, emoji: string) => {
+    const body = commentDrafts[postId] ?? "";
+    const next = insertTextAtSelection(body, emoji, commentSelections[postId] ?? { start: body.length, end: body.length });
+    setCommentDrafts((current) => ({ ...current, [postId]: next.value }));
+    setCommentSelections((current) => ({ ...current, [postId]: { start: next.caret, end: next.caret } }));
+    requestAnimationFrame(() => {
+      commentTextareaRef.current?.focus();
+      commentTextareaRef.current?.setSelectionRange(next.caret, next.caret);
+    });
+  };
 
   const shareMutation = useMutation({
     mutationFn: async ({ postId, title, body }: { postId: string; title: string | null; body: string }) => {
@@ -873,20 +898,30 @@ const CaddePage = () => {
                                 </Button>
                               ) : null}
                               <div className="flex flex-col gap-2 sm:flex-row">
-                                <Textarea
-                                  value={commentDrafts[item.post.id] ?? ""}
-                                  onChange={(event) => setCommentDrafts((current) => ({ ...current, [item.post.id]: event.target.value }))}
-                                  onKeyDown={(event) => {
-                                    if (event.key !== "Enter" || event.shiftKey) return;
-                                    event.preventDefault();
-                                    const body = commentDrafts[item.post.id] ?? "";
-                                    if (!body.trim()) return;
-                                    commentMutation.mutate({ postId: item.post.id, body });
-                                  }}
-                                  placeholder="Yorum yaz"
-                                  rows={2}
-                                  className="min-h-[64px] bg-white"
-                                />
+                                <div className="flex min-w-0 flex-1 items-end gap-2">
+                                  <Textarea
+                                    ref={commentTextareaRef}
+                                    value={commentDrafts[item.post.id] ?? ""}
+                                    onChange={(event) => {
+                                      syncCommentSelection(item.post.id, event);
+                                      setCommentDrafts((current) => ({ ...current, [item.post.id]: event.target.value }));
+                                    }}
+                                    onClick={(event) => syncCommentSelection(item.post.id, event)}
+                                    onKeyUp={(event) => syncCommentSelection(item.post.id, event)}
+                                    onSelect={(event) => syncCommentSelection(item.post.id, event)}
+                                    onKeyDown={(event) => {
+                                      if (event.key !== "Enter" || event.shiftKey) return;
+                                      event.preventDefault();
+                                      const body = commentDrafts[item.post.id] ?? "";
+                                      if (!body.trim()) return;
+                                      commentMutation.mutate({ postId: item.post.id, body });
+                                    }}
+                                    placeholder="Yorum yaz"
+                                    rows={2}
+                                    className="min-h-[64px] bg-white"
+                                  />
+                                  <CaddeEmojiPickerButton onSelect={(emoji) => insertCommentEmoji(item.post.id, emoji)} className="mb-0.5" />
+                                </div>
                                 <Button
                                   className="self-end whitespace-nowrap sm:min-w-[112px]"
                                   onClick={() => {

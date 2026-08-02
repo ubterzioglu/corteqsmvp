@@ -15,7 +15,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CaddeMediaPreviewStrip } from "@/components/cadde/CaddeMediaGallery";
-import MentionTextarea from "@/components/cadde/MentionTextarea";
+import CaddeEmojiPickerButton from "@/components/cadde/CaddeEmojiPickerButton";
+import MentionTextarea, { type MentionTextareaHandle } from "@/components/cadde/MentionTextarea";
 import {
   CADDE_IMAGE_MIME_TYPES,
   CADDE_VIDEO_MIME_TYPES,
@@ -24,6 +25,7 @@ import {
   validateCaddeMediaFile,
 } from "@/lib/cadde-media";
 import type { CaddeComposerValue } from "@/lib/cadde-composer";
+import { insertTextAtSelection, type TextSelection } from "@/lib/cadde-text-insert";
 import type { CaddeCity, CaddeCountry, CaddeMediaAsset } from "@/lib/cadde-types";
 
 const PLACEHOLDER = "Ne düşünüyorsun? Şehrindeki bir haberi, deneyimini veya sorunu paylaş…";
@@ -52,10 +54,19 @@ const CaddeComposer = ({
 }: CaddeComposerProps) => {
   const [locationOpen, setLocationOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [bodySelection, setBodySelection] = useState<TextSelection>({ start: value.body.length, end: value.body.length });
+  const textareaRef = useRef<MentionTextareaHandle>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
 
   const update = (patch: Partial<CaddeComposerValue>) => onChange({ ...value, ...patch });
+
+  const insertEmoji = (emoji: string) => {
+    const next = insertTextAtSelection(value.body, emoji, bodySelection);
+    update({ body: next.value });
+    setBodySelection({ start: next.caret, end: next.caret });
+    requestAnimationFrame(() => textareaRef.current?.focusAt(next.caret));
+  };
 
   const handleFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -93,8 +104,10 @@ const CaddeComposer = ({
     <Card id="cadde-composer" className="scroll-mt-24 border-slate-200 bg-white/95">
       <CardContent className="space-y-3 p-4 sm:p-5">
         <MentionTextarea
+          ref={textareaRef}
           value={value.body}
           onChange={(body) => update({ body })}
+          onSelectionChange={setBodySelection}
           onMentionAdd={(mention) =>
             // Aynı hedef iki kez eklenmesin; gövdede iki kez geçse de tek kayıt yeter.
             update({
@@ -138,6 +151,7 @@ const CaddeComposer = ({
             active={locationOpen || Boolean(value.country)}
             onClick={() => setLocationOpen((open) => !open)}
           />
+          <CaddeEmojiPickerButton onSelect={insertEmoji} disabled={isSubmitting || uploading} />
 
           <div className="ml-auto flex items-center gap-2">
             <Button onClick={onSubmit} disabled={!canSubmit} className="rounded-full px-5">

@@ -5,7 +5,7 @@
 // listede tutulur — gövde metni ile hedef arasındaki bağ display_label üzerinden kurulur
 // (bkz. CaddePostBody). Öneri kaynağı search_cadde_mentions_v1: görünürlük kuralları DB'de.
 
-import { useEffect, useMemo, useRef, useState, type ComponentType } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type ComponentType } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Building2, ShoppingBag, User } from "lucide-react";
 
@@ -13,6 +13,7 @@ import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
 
 import { Textarea } from "@/components/ui/textarea";
 import { searchCaddeMentions } from "@/lib/cadde-api";
+import type { TextSelection } from "@/lib/cadde-text-insert";
 import { activeMentionToken } from "@/lib/cadde-text";
 import type { CaddeMentionSuggestion, CaddeMentionTargetType, CaddePostMention } from "@/lib/cadde-types";
 
@@ -30,6 +31,7 @@ export interface MentionTextareaProps {
   value: string;
   onChange: (next: string) => void;
   onMentionAdd: (mention: CaddePostMention) => void;
+  onSelectionChange?: (selection: TextSelection) => void;
   placeholder?: string;
   rows?: number;
   maxLength?: number;
@@ -37,16 +39,21 @@ export interface MentionTextareaProps {
   className?: string;
 }
 
-const MentionTextarea = ({
+export interface MentionTextareaHandle {
+  focusAt: (caret: number) => void;
+}
+
+const MentionTextarea = forwardRef<MentionTextareaHandle, MentionTextareaProps>(({
   value,
   onChange,
   onMentionAdd,
+  onSelectionChange,
   placeholder,
   rows = 3,
   maxLength,
   ariaLabel,
   className,
-}: MentionTextareaProps) => {
+}, ref) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [caret, setCaret] = useState(0);
   const [highlight, setHighlight] = useState(0);
@@ -66,6 +73,15 @@ const MentionTextarea = ({
   const suggestions = enabled ? suggestionsQuery.data ?? [] : [];
 
   useEffect(() => setHighlight(0), [query]);
+  useImperativeHandle(ref, () => ({
+    focusAt: (nextCaret) => {
+      const safeCaret = Math.min(Math.max(nextCaret, 0), value.length);
+      textareaRef.current?.focus();
+      textareaRef.current?.setSelectionRange(safeCaret, safeCaret);
+      setCaret(safeCaret);
+      onSelectionChange?.({ start: safeCaret, end: safeCaret });
+    },
+  }), [onSelectionChange, value.length]);
 
   const applySuggestion = (suggestion: CaddeMentionSuggestion) => {
     if (!active) return;
@@ -82,6 +98,7 @@ const MentionTextarea = ({
       textareaRef.current?.focus();
       textareaRef.current?.setSelectionRange(nextCaret, nextCaret);
       setCaret(nextCaret);
+      onSelectionChange?.({ start: nextCaret, end: nextCaret });
     });
   };
 
@@ -101,8 +118,13 @@ const MentionTextarea = ({
     }
   };
 
-  const syncCaret = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    setCaret(event.currentTarget.selectionStart ?? 0);
+  const syncSelection = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+    const selection = {
+      start: event.currentTarget.selectionStart ?? 0,
+      end: event.currentTarget.selectionEnd ?? event.currentTarget.selectionStart ?? 0,
+    };
+    setCaret(selection.start);
+    onSelectionChange?.(selection);
   };
 
   return (
@@ -112,11 +134,12 @@ const MentionTextarea = ({
         value={value}
         onChange={(event) => {
           setDismissed(false);
-          setCaret(event.target.selectionStart ?? 0);
+          syncSelection(event);
           onChange(event.target.value);
         }}
-        onKeyUp={syncCaret}
-        onClick={syncCaret}
+        onKeyUp={syncSelection}
+        onClick={syncSelection}
+        onSelect={syncSelection}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         rows={rows}
@@ -160,6 +183,7 @@ const MentionTextarea = ({
       ) : null}
     </div>
   );
-};
+});
+MentionTextarea.displayName = "MentionTextarea";
 
 export default MentionTextarea;

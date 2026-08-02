@@ -1,4 +1,4 @@
-import { createEvent, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { createEvent, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -82,6 +82,14 @@ vi.mock("@/lib/cadde-feed-polling", async () => {
     caddeOpenCommentsPollInterval: () => 100,
   };
 });
+
+vi.mock("@/components/cadde/CaddeEmojiPickerContent", () => ({
+  default: ({ onSelect }: { onSelect: (emoji: string) => void }) => (
+    <button type="button" onClick={() => onSelect("😊")}>
+      😊
+    </button>
+  ),
+}));
 
 const renderPage = (entry = "/cadde") => {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -402,6 +410,65 @@ describe("CaddePage", () => {
 
     expect(enter.defaultPrevented).toBe(true);
     await waitFor(() => expect(createCaddeCommentMock).toHaveBeenCalledWith("post-enter", "Klavye ile yorum"));
+  });
+
+  it("inserts a selected emoji into the open comment draft at the current caret", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({
+      items: [
+        {
+          id: "post-comment-emoji",
+          mode: "real",
+          type: "text",
+          title: "Emoji yorumu",
+          body: "Yorum draft'i emoji alır.",
+          authorName: "Ayşe",
+          authorRole: "Üye",
+          authorAvatarUrl: null,
+          authorUserId: "user-2",
+          country: "Almanya",
+          city: "Berlin",
+          isBridge: false,
+          pinned: false,
+          createdAt: "2026-06-23T10:00:00Z",
+          needCategory: null,
+          interests: [],
+          hashtags: [],
+          mentions: [],
+          media: [],
+          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          totalReactionCount: 0,
+          commentCount: 0,
+          shareCount: 0,
+          comments: [],
+          viewerReactions: [],
+        },
+      ],
+      nextPage: null,
+    });
+    listCaddePostCommentsMock.mockResolvedValue({ items: [], nextCursor: null });
+
+    renderPage();
+
+    fireEvent.click(await screen.findByTestId("cadde-comment-toggle"));
+    const panel = await screen.findByTestId("cadde-comment-panel");
+    const textarea = await screen.findByPlaceholderText("Yorum yaz") as HTMLTextAreaElement;
+
+    fireEvent.change(textarea, { target: { value: "Merhaba dunya" } });
+    textarea.setSelectionRange(8, 8);
+    fireEvent.click(textarea);
+    fireEvent.click(within(panel).getByRole("button", { name: "Emoji ekle" }));
+    fireEvent.click(await screen.findByRole("button", { name: "😊" }));
+
+    await waitFor(() => expect(textarea).toHaveValue("Merhaba 😊dunya"));
+    fireEvent.click(within(panel).getByRole("button", { name: "Gönder" }));
+
+    await waitFor(() => expect(createCaddeCommentMock).toHaveBeenCalledWith("post-comment-emoji", "Merhaba 😊dunya"));
   });
 
   it("polls only the opened comment panel and merges newly fetched comments", async () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -15,6 +15,14 @@ vi.mock("@/lib/cadde-media", async () => {
     removeCaddeMedia: vi.fn(),
   };
 });
+
+vi.mock("@/components/cadde/CaddeEmojiPickerContent", () => ({
+  default: ({ onSelect }: { onSelect: (emoji: string) => void }) => (
+    <button type="button" onClick={() => onSelect("😊")}>
+      😊
+    </button>
+  ),
+}));
 
 const renderComposer = (overrides: Partial<CaddeComposerValue> = {}, props: Record<string, unknown> = {}) => {
   const value = { ...emptyCaddeComposer, ...overrides };
@@ -91,5 +99,17 @@ describe("CaddeComposer", () => {
 
     expect(screen.getByText(/Ülke/)).toBeInTheDocument();
     expect(screen.getByText("Şehir")).toBeInTheDocument();
+  });
+
+  it("inserts a selected emoji into the body at the current caret", async () => {
+    const { onChange } = renderComposer({ body: "Merhaba dunya" });
+    const textarea = screen.getByLabelText("Paylaşım metni") as HTMLTextAreaElement;
+
+    textarea.setSelectionRange(8, 8);
+    fireEvent.click(textarea);
+    fireEvent.click(screen.getByRole("button", { name: "Emoji ekle" }));
+    fireEvent.click(await screen.findByRole("button", { name: "😊" }));
+
+    await waitFor(() => expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ body: "Merhaba 😊dunya" })));
   });
 });
