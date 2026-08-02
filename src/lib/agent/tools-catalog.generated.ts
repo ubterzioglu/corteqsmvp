@@ -416,9 +416,11 @@ export const toolCatalog = {
         "listCaddeCountries",
         "listCaddeFeed",
         "listCaddeInterestCatalog",
+        "listCaddePostComments",
         "listMyCaddeCafes",
         "listMyCaddeInterests",
         "listTrendingCaddeHashtags",
+        "recordCaddeShare",
         "reportCaddeEntity",
         "saveMyCaddeInterests",
         "searchCaddeMentions",
@@ -445,10 +447,10 @@ export const toolCatalog = {
         "archive_cadde_cafe_v1",
         "create_cadde_cafe_v1",
         "create_cadde_comment_v1",
-        "create_cadde_post_v1",
         "join_cadde_cafe_v1",
         "list_cadde_feed_v1",
         "list_trending_cadde_hashtags_v1",
+        "record_cadde_share_v1",
         "report_cadde_entity_v1",
         "search_cadde_mentions_v1",
         "search_cadde_people_v1",
@@ -1369,6 +1371,11 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-global-threshold-migration.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-internal.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -1390,6 +1397,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/cadde-moderation-api.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-multi-target-migration.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
@@ -1439,6 +1451,16 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-share-migration.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-style-contract.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-tanitim-api.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -1450,6 +1472,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/cadde-targeting.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-text-insert.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-text-insert.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
