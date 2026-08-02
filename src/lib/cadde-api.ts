@@ -606,6 +606,39 @@ export async function searchCaddeMentions(query: string, limit = 8): Promise<Cad
   }
 }
 
+/** search_cadde_people_v1 satırı — "İnsanları Keşfet" araması (workshop m38). */
+export type CaddePersonHit = {
+  userId: string;
+  fullName: string;
+  city: string | null;
+  country: string | null;
+  /** true = açık profil (tıklanabilir); false = ad-onaylı kapalı üye (yalnız isim+şehir). */
+  hasProfile: boolean;
+};
+
+/**
+ * Kişi araması (m38, kapsam kararı 2026-08-02): açık profiller tam satır, ad-onaylı
+ * kapalı üyeler yalnız isim(+public şehir). Admin/Moderatör DB tarafında dışlanır.
+ */
+export async function searchCaddePeople(query: string, limit = 12): Promise<CaddePersonHit[]> {
+  if (!isSupabaseConfigured || query.trim().length < 2) return [];
+  try {
+    const { data, error } = await db.rpc("search_cadde_people_v1", { p_query: query, p_limit: limit });
+    if (error) throw error;
+    if (!Array.isArray(data)) return [];
+    return (data as Array<Record<string, unknown>>).map((row) => ({
+      userId: String(row.user_id),
+      fullName: String(row.full_name ?? ""),
+      city: (row.city as string | null) ?? null,
+      country: (row.country as string | null) ?? null,
+      hasProfile: row.has_profile === true,
+    }));
+  } catch (error: unknown) {
+    reportCaddeApiError("searchCaddePeople", error);
+    return [];
+  }
+}
+
 /** Sağ kolondaki "Şu an konuşulanlar" kartı. */
 export async function listTrendingCaddeHashtags(limit = 10): Promise<CaddeTrendingHashtag[]> {
   if (!isSupabaseConfigured) return [];

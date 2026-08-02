@@ -37,6 +37,7 @@ import {
   getCaddeSponsoredPlacement,
   listCaddeBillboardCards,
   listCaddeCafes,
+  searchCaddePeople,
   listCaddeCities,
   listCaddeCountries,
   listCaddeFeed,
@@ -100,6 +101,21 @@ const CaddePage = () => {
   const citiesQuery = useQuery({
     queryKey: caddeQueryKeys.cities(filters.countries),
     queryFn: () => listCaddeCities(filters.countries),
+  });
+
+  // m38: İnsanları Keşfet araması — 300ms debounce, 2 karakter altı sorgu atılmaz
+  // (RPC tarafında da aynı sınır var; enumerasyon koruması çift katman).
+  const [peopleQueryText, setPeopleQueryText] = useState("");
+  const [debouncedPeopleQuery, setDebouncedPeopleQuery] = useState("");
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedPeopleQuery(peopleQueryText.trim()), 300);
+    return () => clearTimeout(timer);
+  }, [peopleQueryText]);
+  const peopleSearch = useQuery({
+    queryKey: ["cadde", "people-search", debouncedPeopleQuery],
+    queryFn: () => searchCaddePeople(debouncedPeopleQuery),
+    enabled: debouncedPeopleQuery.length >= 2,
+    placeholderData: (previous) => previous,
   });
 
   const interestCatalogQuery = useQuery({
@@ -377,9 +393,48 @@ const CaddePage = () => {
                 <MessagesSquare className="h-4 w-4 text-orange-500" />
                 İnsanları Keşfet
               </CardTitle>
-              <CardDescription>Seçtiğin şehirdeki kişi ve işletmeleri keşfet.</CardDescription>
+              <CardDescription>İsimle ara ya da dizinde gezin.</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-2">
+              {/* m38: tüm kayıtlı üyeler isimle aranabilir (kapsam kararı: açık profil tam
+                  satır + ad-onaylı kapalı üye yalnız isim/şehir, tıklanamaz). */}
+              <Input
+                value={peopleQueryText}
+                onChange={(event) => setPeopleQueryText(event.target.value)}
+                placeholder="İsimle ara (en az 2 harf)"
+                aria-label="Kişi ara"
+                className="h-9 rounded-2xl"
+              />
+              {peopleSearch.data && peopleSearch.data.length > 0 ? (
+                <ul className="divide-y divide-slate-100 rounded-2xl border border-slate-200 bg-white" data-testid="cadde-people-results">
+                  {peopleSearch.data.map((person) =>
+                    person.hasProfile ? (
+                      <li key={person.userId}>
+                        <Link
+                          to={`/directory/profile/${person.userId}`}
+                          className="flex items-center justify-between gap-2 px-3 py-2 text-sm text-slate-800 transition hover:bg-slate-50"
+                        >
+                          <span className="truncate font-medium">{person.fullName}</span>
+                          <span className="shrink-0 text-xs text-slate-500">
+                            {[person.city, person.country].filter(Boolean).join(" • ")}
+                          </span>
+                        </Link>
+                      </li>
+                    ) : (
+                      <li
+                        key={person.userId}
+                        className="flex items-center justify-between gap-2 px-3 py-2 text-sm text-slate-500"
+                        title="Profil henüz açık değil"
+                      >
+                        <span className="truncate">{person.fullName}</span>
+                        <span className="shrink-0 text-xs">{person.city ?? "—"}</span>
+                      </li>
+                    ),
+                  )}
+                </ul>
+              ) : debouncedPeopleQuery.length >= 2 && !peopleSearch.isFetching ? (
+                <p className="px-1 text-xs text-slate-500">Eşleşen üye bulunamadı.</p>
+              ) : null}
               <Button asChild variant="outline" className="w-full justify-between rounded-2xl">
                 <Link to={directoryLink}>
                   Kişileri Keşfet

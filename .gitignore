@@ -105,3 +105,7 @@ public/social/generated/
 # sonra yereldeki kopya sadece staging'dir, repoya girmez.
 docs/fallback-images/*/*
 !docs/fallback-images/*/.gitkeep
+
+# Ozel WhatsApp dokumleri repoya girmez (2026-08-02 kazasi sonrasi kural)
+walast.txt
+*.wa-export.txt
