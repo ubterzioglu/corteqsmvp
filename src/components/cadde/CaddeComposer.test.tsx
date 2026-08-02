@@ -38,8 +38,14 @@ const renderComposer = (overrides: Partial<CaddeComposerValue> = {}, props: Reco
           onChange={onChange}
           onSubmit={onSubmit}
           isSubmitting={false}
-          countries={[{ id: "c1", code: "DE", name: "Almanya" }]}
-          cities={[{ id: "ct1", countryId: "c1", name: "Berlin", timezone: "Europe/Berlin" }]}
+          countries={[
+            { id: "c1", code: "DE", name: "Almanya" },
+            { id: "c2", code: "NL", name: "Hollanda" },
+          ]}
+          cities={[
+            { id: "ct1", countryId: "c1", name: "Berlin", timezone: "Europe/Berlin" },
+            { id: "ct2", countryId: "c2", name: "Amsterdam", timezone: "Europe/Amsterdam" },
+          ]}
           defaultLocationLabel="Almanya / Berlin"
           onError={vi.fn()}
           {...props}
@@ -109,6 +115,22 @@ describe("CaddeComposer", () => {
     expect(screen.getByText(/boş = Almanya \/ Berlin/)).toBeInTheDocument();
     expect(screen.getByText("Profil konumunu kullan")).toBeInTheDocument();
     expect(screen.queryByText("Filtreyi kullan")).not.toBeInTheDocument();
+  });
+
+  it("adds at most one extra target and keeps premium gating informational in the UI", () => {
+    const { onChange } = renderComposer();
+
+    fireEvent.click(screen.getByRole("button", { name: "Konum" }));
+    fireEvent.click(screen.getByRole("button", { name: "+ Hedef" }));
+
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ targets: [{ country: "", city: "" }] }));
+    renderComposer({ targets: [{ country: "Hollanda", city: "Amsterdam" }] });
+    fireEvent.click(screen.getAllByRole("button", { name: "Konum" }).at(-1)!);
+
+    expect(screen.getByText("Ek hedef ülke 1")).toBeInTheDocument();
+    expect(screen.getByText("Ek hedef şehir 1")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Premium ile/ })).toBeDisabled();
+    expect(screen.getByText(/premium ayarıyla DB tarafında kontrol edilir/i)).toBeInTheDocument();
   });
 
   it("inserts a selected emoji into the body at the current caret", async () => {

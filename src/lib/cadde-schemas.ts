@@ -48,6 +48,11 @@ export const caddeMediaSchema = z
     }
   });
 
+const caddePostTargetSchema = z.object({
+  country: z.string().trim().min(1, "Ek hedef için ülke seç."),
+  city: z.string().trim().optional(),
+});
+
 export const caddePostCreateSchema = z
   .object({
     type: z.enum(["text", "question", "offer", "event"]),
@@ -58,6 +63,10 @@ export const caddePostCreateSchema = z
     // Tarihsel sözleşme: bu alanlar ülke/şehir ADI taşır (bkz. cadde-types.ts notu).
     countryId: z.string().optional(),
     cityId: z.string().optional(),
+    targets: z
+      .array(caddePostTargetSchema)
+      .max(2, "Şu an en fazla bir ek hedef ekleyebilirsin.")
+      .optional(),
     isBridge: z.boolean(),
     needCategory: z.string().trim().optional(),
     interests: z

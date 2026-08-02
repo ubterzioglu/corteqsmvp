@@ -5,6 +5,7 @@ import {
   CADDE_GLOBAL_THRESHOLD_SETTINGS,
   compareCaddeRank,
   computeCaddeBand,
+  computeCaddeGeoMatch,
   computeCaddeScore,
   deterministicCaddeRand,
   isCaddeGlobalEligible,
@@ -58,6 +59,29 @@ describe("cadde global threshold mirror", () => {
         settings: { enabled: false, minReactions: 10, minComments: 5, minShares: 10 },
       }),
     ).toBe(false);
+  });
+});
+
+describe("cadde multi-target geo mirror", () => {
+  it("matches viewer geo against legacy columns and F22 target rows", () => {
+    expect(
+      computeCaddeGeoMatch({
+        legacyCountryId: "country-de",
+        legacyCityId: "city-berlin",
+        viewerCountryId: "country-de",
+        viewerCityId: "city-berlin",
+      }),
+    ).toEqual({ sameCity: true, sameCountry: true });
+
+    expect(
+      computeCaddeGeoMatch({
+        legacyCountryId: "country-de",
+        legacyCityId: "city-berlin",
+        targets: [{ countryId: "country-nl", cityId: "city-amsterdam" }],
+        viewerCountryId: "country-nl",
+        viewerCityId: "city-amsterdam",
+      }),
+    ).toEqual({ sameCity: true, sameCountry: true });
   });
 });
 

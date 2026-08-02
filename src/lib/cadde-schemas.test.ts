@@ -51,6 +51,30 @@ describe("caddePostCreateSchema", () => {
     expect(caddePostCreateSchema.safeParse({ type: "poll", body: "x", isBridge: false }).success).toBe(false);
     expect(caddePostCreateSchema.safeParse({ type: "text", body: "x".repeat(4001), isBridge: false }).success).toBe(false);
   });
+
+  it("accepts primary plus one extra target and rejects a second extra target", () => {
+    const base = { type: "text", body: "Merhaba", isBridge: false } as const;
+
+    expect(
+      caddePostCreateSchema.safeParse({
+        ...base,
+        targets: [
+          { country: "Almanya", city: "Berlin" },
+          { country: "Hollanda", city: "Amsterdam" },
+        ],
+      }).success,
+    ).toBe(true);
+    expect(
+      caddePostCreateSchema.safeParse({
+        ...base,
+        targets: [
+          { country: "Almanya", city: "Berlin" },
+          { country: "Hollanda", city: "Amsterdam" },
+          { country: "Belçika", city: "Brüksel" },
+        ],
+      }).success,
+    ).toBe(false);
+  });
 });
 
 describe("caddeMediaSchema", () => {
@@ -96,7 +120,7 @@ describe("caddeCommentCreateSchema", () => {
 describe("caddeReactionSchema", () => {
   it("only allows known reaction types", () => {
     expect(caddeReactionSchema.safeParse({ postId: "p1", reactionType: "like" }).success).toBe(true);
-    expect(caddeReactionSchema.safeParse({ postId: "p1", reactionType: "love" }).success).toBe(false);
+    expect(caddeReactionSchema.safeParse({ postId: "p1", reactionType: "wow" }).success).toBe(false);
   });
 });
 

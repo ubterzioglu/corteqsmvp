@@ -191,6 +191,13 @@ export type CaddeCity = {
   timezone: string;
 };
 
+export type CaddePostTargetInput = {
+  /** Country name from cadde_countries; API/RPC resolves it to id. */
+  country: string;
+  /** Optional city name from cadde_cities scoped to country. */
+  city?: string;
+};
+
 // ── Hashtag & mention (V1) ──────────────────────────────────────────────────
 
 export type CaddeHashtag = {
@@ -533,6 +540,11 @@ export type CaddePostInput = {
   body: string;
   countryId?: string;
   cityId?: string;
+  /**
+   * F22 multi-target payload. Full target list including the primary target.
+   * Omitted callers keep the legacy countryId/cityId behavior.
+   */
+  targets?: CaddePostTargetInput[];
   isBridge: boolean;
   /** Birincil ihtiyaç kategorisi (cadde_interest_catalog anahtarı); boşsa ilk etiket kullanılır. */
   needCategory?: string;
@@ -544,6 +556,7 @@ export type CaddePostInput = {
   diasporaKey?: string;
   /** V1: en fazla 4 görsel + 1 video (bkz. cadde-media.ts). */
   media?: CaddeMediaAsset[];
+  mentions?: CaddePostMention[];
 };
 
 export type CaddeAdminPostInput = {

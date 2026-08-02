@@ -115,6 +115,8 @@ describe("resolveCaddeRpcErrorMessage", () => {
     expect(resolveCaddeRpcErrorMessage(new Error("phone_verification_required"))).toContain("telefon");
     expect(resolveCaddeRpcErrorMessage(new Error("cadde_share_rate_limited"))).toContain("paylaşım");
     expect(resolveCaddeRpcErrorMessage(new Error("cadde_share_post_not_found"))).toContain("Paylaşım bulunamadı");
+    expect(resolveCaddeRpcErrorMessage(new Error("cadde_invalid_targets"))).toContain("hedefi geçersiz");
+    expect(resolveCaddeRpcErrorMessage(new Error("cadde_multi_target_premium_required"))).toContain("premium");
   });
 
   it("bilinmeyen hatada fallback döner", () => {

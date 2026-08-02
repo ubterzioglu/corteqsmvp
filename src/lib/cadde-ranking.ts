@@ -75,6 +75,33 @@ export type CaddeGlobalEligibilityInput = {
   settings?: CaddeGlobalThresholdSettings;
 };
 
+export type CaddeGeoTarget = {
+  countryId: string | null;
+  cityId: string | null;
+};
+
+export type CaddeGeoMatchInput = {
+  legacyCountryId?: string | null;
+  legacyCityId?: string | null;
+  targets?: readonly CaddeGeoTarget[];
+  viewerCountryId?: string | null;
+  viewerCityId?: string | null;
+};
+
+/**
+ * F22 SQL aynası: feed geo eşleşmesi hem cadde_posts tekil kolonlarını hem
+ * cadde_post_targets yardımcı tablosundaki ek hedefleri okur.
+ */
+export function computeCaddeGeoMatch(input: CaddeGeoMatchInput): { sameCity: boolean; sameCountry: boolean } {
+  const targets = [
+    { countryId: input.legacyCountryId ?? null, cityId: input.legacyCityId ?? null },
+    ...(input.targets ?? []),
+  ];
+  const sameCity = Boolean(input.viewerCityId && targets.some((target) => target.cityId === input.viewerCityId));
+  const sameCountry = Boolean(input.viewerCountryId && targets.some((target) => target.countryId === input.viewerCountryId));
+  return { sameCity, sameCountry };
+}
+
 /** SQL global eşik filtresinin aynası: yerel içerik kalır, yerel olmayan içerik eşiklerden biriyle globale çıkar. */
 export function isCaddeGlobalEligible(input: CaddeGlobalEligibilityInput): boolean {
   if (input.sameCity || input.sameCountry) return true;

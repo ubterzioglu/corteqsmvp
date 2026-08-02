@@ -141,11 +141,11 @@ const CaddePage = () => {
     staleTime: 1000 * 60 * 60,
   });
 
-  // Composer hedef şehri seçilen hedef ülkeye göre kapsamlanır (filtreden bağımsız).
-  const composerCitiesQuery = useQuery({
-    queryKey: caddeQueryKeys.cities(composer.country ? [composer.country] : ["__composer-none__"]),
-    queryFn: () => listCaddeCities(composer.country ? [composer.country] : []),
-    enabled: Boolean(session && composer.country),
+  // Composer ek hedefleri ülke değiştikçe yerelde süzmek için tüm aktif şehirleri taşır.
+  const allCitiesQuery = useQuery({
+    queryKey: caddeQueryKeys.cities(["__all__"]),
+    queryFn: () => listCaddeCities([]),
+    enabled: Boolean(session),
   });
 
   const feedQuery = useInfiniteQuery({
@@ -230,12 +230,21 @@ const CaddePage = () => {
         throw new Error("Paylaşım metni veya en az bir görsel/video ekle.");
       }
       // Hedef: composer'daki açık seçim; boşsa kayıtlı profil konumu. Akış filtresi post hedefi değildir.
+      const primaryCountry = composer.country || registeredCountry;
+      const primaryCity = composer.country ? composer.city : registeredCity;
+      const targets = [
+        { country: primaryCountry, city: primaryCity },
+        ...composer.targets
+          .filter((target) => target.country.trim())
+          .map((target) => ({ country: target.country.trim(), city: target.city?.trim() ?? "" })),
+      ];
       await createCaddePost({
         type: composer.type,
         title: composer.title,
         body: composer.body,
-        countryId: composer.country || registeredCountry,
-        cityId: composer.country ? composer.city : registeredCity,
+        countryId: primaryCountry,
+        cityId: primaryCity,
+        targets,
         isBridge: false,
         interests: composer.interests,
         diasporaKey,
@@ -673,7 +682,7 @@ const CaddePage = () => {
               onSubmit={() => postMutation.mutate()}
               isSubmitting={postMutation.isPending}
               countries={countriesQuery.data ?? []}
-              cities={composerCitiesQuery.data ?? []}
+              cities={allCitiesQuery.data ?? []}
               defaultLocationLabel={defaultComposerLocationLabel}
               onError={(message) => toast({ title: "Ek eklenemedi", description: message, variant: "destructive" })}
             />
