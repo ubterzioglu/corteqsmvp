@@ -113,6 +113,8 @@ describe("resolveCaddeRpcErrorMessage", () => {
     expect(resolveCaddeRpcErrorMessage(new Error("cadde_bridge_permission_denied"))).toContain("Köprü");
     expect(resolveCaddeRpcErrorMessage(new Error("cadde_tr_scope_restricted"))).toContain("Türkiye");
     expect(resolveCaddeRpcErrorMessage(new Error("phone_verification_required"))).toContain("telefon");
+    expect(resolveCaddeRpcErrorMessage(new Error("cadde_share_rate_limited"))).toContain("paylaşım");
+    expect(resolveCaddeRpcErrorMessage(new Error("cadde_share_post_not_found"))).toContain("Paylaşım bulunamadı");
   });
 
   it("bilinmeyen hatada fallback döner", () => {

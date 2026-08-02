@@ -26,6 +26,7 @@ const makePost = (id: string): CaddePost => ({
   reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
   totalReactionCount: 0,
   commentCount: 0,
+  shareCount: 0,
   comments: [],
   viewerReactions: [],
 });

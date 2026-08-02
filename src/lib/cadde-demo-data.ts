@@ -51,6 +51,7 @@ export const DEMO_POSTS: CaddePost[] = [
     reactionCounts: { like: 8, love: 4, haha: 1, support: 5, unsure: 2 },
     totalReactionCount: 15,
     commentCount: 2,
+    shareCount: 4,
     comments: [
       { id: "demo-comment-1", postId: "demo-post-1", userId: "demo", body: "Berlin product meetuplarını paylaşabilirim.", authorName: "Mert Koca", createdAt: "2026-05-28T12:00:00.000Z" },
       { id: "demo-comment-2", postId: "demo-post-1", userId: "demo", body: "Cumartesi ortak çalışma buluşmasına bekleriz.", authorName: "Seda Yalçın", createdAt: "2026-05-28T13:00:00.000Z" },
@@ -80,6 +81,7 @@ export const DEMO_POSTS: CaddePost[] = [
     reactionCounts: { like: 10, love: 6, haha: 2, support: 3, unsure: 4 },
     totalReactionCount: 17,
     commentCount: 1,
+    shareCount: 6,
     comments: [{ id: "demo-comment-3", postId: "demo-post-2", userId: "demo", body: "İlk kez gelenler için de uygun.", authorName: "Deniz O.", createdAt: "2026-05-27T18:00:00.000Z" }],
     viewerReactions: [],
   },
@@ -106,6 +108,7 @@ export const DEMO_POSTS: CaddePost[] = [
     reactionCounts: { like: 12, love: 7, haha: 3, support: 6, unsure: 5 },
     totalReactionCount: 23,
     commentCount: 0,
+    shareCount: 3,
     comments: [],
     viewerReactions: [],
   },

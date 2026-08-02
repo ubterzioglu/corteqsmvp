@@ -9,6 +9,7 @@ import {
   caddePostCreateSchema,
   caddePromotionCreateSchema,
   caddeReactionSchema,
+  caddeShareSchema,
   carsiItemCreateSchema,
   carsiItemUpdateSchema,
   parseWithUserError,
@@ -96,6 +97,14 @@ describe("caddeReactionSchema", () => {
   it("only allows known reaction types", () => {
     expect(caddeReactionSchema.safeParse({ postId: "p1", reactionType: "like" }).success).toBe(true);
     expect(caddeReactionSchema.safeParse({ postId: "p1", reactionType: "love" }).success).toBe(false);
+  });
+});
+
+describe("caddeShareSchema", () => {
+  it("yalnız bilinen paylaşım kanallarını kabul eder", () => {
+    expect(caddeShareSchema.safeParse({ postId: "p1", channel: "web_share" }).success).toBe(true);
+    expect(caddeShareSchema.safeParse({ postId: "p1", channel: "copy_link" }).success).toBe(true);
+    expect(caddeShareSchema.safeParse({ postId: "p1", channel: "email" }).success).toBe(false);
   });
 });
 

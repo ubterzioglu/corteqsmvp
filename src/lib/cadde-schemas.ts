@@ -213,6 +213,11 @@ export const caddeReactionSchema = z.object({
   reactionType: z.enum(CADDE_REACTION_TYPES),
 });
 
+export const caddeShareSchema = z.object({
+  postId: z.string().min(1),
+  channel: z.enum(["web_share", "copy_link"]),
+});
+
 export const caddeCafeJoinSchema = z.object({
   cafeId: z.string().min(1),
 });

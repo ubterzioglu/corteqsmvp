@@ -62,6 +62,7 @@ export type CaddePostRow = {
   engagement_score: number;
   published_at: Nullable<string>;
   media: CaddeMediaAsset[];
+  share_count?: number;
 };
 
 /** list_cadde_feed_v1 RPC öğesi: post satırı + çözülmüş adlar + ranking çıktıları. */
@@ -289,6 +290,7 @@ export type CaddePost = {
   reactionCounts: Record<CaddeReactionType, number>;
   totalReactionCount: number;
   commentCount: number;
+  shareCount: number;
   comments: CaddeComment[];
   viewerReactions: CaddeReactionType[];
 };

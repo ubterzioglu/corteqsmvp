@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowUpRight, Flag, Globe2, Heart, HelpCircle, Laugh, MapPin, Megaphone, MessageCircle, MessagesSquare, Send, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
+import { ArrowUpRight, Flag, Globe2, Heart, HelpCircle, Laugh, MapPin, Megaphone, MessageCircle, MessagesSquare, Send, Share2, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
@@ -45,6 +45,7 @@ import {
   listCaddeFeed,
   listCaddeInterestCatalog,
   listCaddePostComments,
+  recordCaddeShare,
   reportCaddeEntity,
   toggleCaddeReaction,
 } from "@/lib/cadde-api";
@@ -69,6 +70,12 @@ const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof
 ];
 
 const COMMENT_PAGE_SIZE = 5;
+
+const caddePostShareUrl = (postId: string): string => {
+  const url = new URL("/cadde", window.location.origin);
+  url.searchParams.set("post", postId);
+  return url.toString();
+};
 
 // m29 (F9): Cadde içindeki tekrar eden ikincil menü (Cadde/İş/Sosyal/Harita/Giriş/Kayıt)
 // kaldırıldı — üst ana menü zaten aynı hedefleri taşıyor, cadde login-gated olduğu için
@@ -273,6 +280,34 @@ const CaddePage = () => {
         return;
       }
       toast({ title: "Yorum gönderilemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+    },
+  });
+
+  const shareMutation = useMutation({
+    mutationFn: async ({ postId, title, body }: { postId: string; title: string | null; body: string }) => {
+      if (!user) throw new Error("Bu işlem için giriş yapın.");
+      const url = caddePostShareUrl(postId);
+      const text = body.trim().slice(0, 180);
+      if (typeof navigator.share === "function") {
+        await navigator.share({ title: title ?? "CorteQS Cadde", text, url });
+        await recordCaddeShare(postId, "web_share");
+        return "web_share" as const;
+      }
+      if (!navigator.clipboard?.writeText) throw new Error("Paylaşım bağlantısı kopyalanamadı.");
+      await navigator.clipboard.writeText(url);
+      await recordCaddeShare(postId, "copy_link");
+      return "copy_link" as const;
+    },
+    onSuccess: async (channel) => {
+      await invalidateCadde();
+      toast({ title: channel === "copy_link" ? "Bağlantı kopyalandı" : "Paylaşım kaydedildi" });
+    },
+    onError: (error) => {
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+      toast({ title: "Paylaşım yapılamadı", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
     },
   });
 
@@ -674,6 +709,7 @@ const CaddePage = () => {
               ) : (() => {
                 const isCommentsExpanded = expandedCommentPostId === item.post.id;
                 const visibleComments = isCommentsExpanded ? expandedComments : [];
+                const shareCount = item.post.shareCount ?? 0;
 
                 return (
                 <Card
@@ -764,6 +800,25 @@ const CaddePage = () => {
                       >
                         <MessageCircle className="mr-1.5 h-4 w-4" />
                         {item.post.commentCount > 0 ? `${item.post.commentCount} yorum` : "Yorum yaz"}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        aria-label={`Paylaş (${shareCount})`}
+                        className="rounded-full bg-white/80"
+                        disabled={shareMutation.isPending}
+                        onClick={() => {
+                          if (!session) {
+                            navigate("/login");
+                            return;
+                          }
+                          shareMutation.mutate({ postId: item.post.id, title: item.post.title, body: item.post.body });
+                        }}
+                      >
+                        <Share2 className="mr-1.5 h-4 w-4" />
+                        <span className="text-xs font-medium sm:text-sm">Paylaş</span>
+                        <span className="ml-1 text-xs text-muted-foreground">{shareCount}</span>
                       </Button>
                       {session && item.post.authorUserId !== user?.id ? (
                         <Button

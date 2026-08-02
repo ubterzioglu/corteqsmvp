@@ -40,6 +40,7 @@ const countCaddePostsSinceMock = vi.fn();
 const listCaddePromotionsMock = vi.fn();
 const listCaddePostCommentsMock = vi.fn();
 const createCaddeCommentMock = vi.fn();
+const recordCaddeShareMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
@@ -66,6 +67,7 @@ vi.mock("@/lib/cadde-api", async () => {
     countCaddePostsSince: (...args: unknown[]) => countCaddePostsSinceMock(...args),
     listCaddePostComments: (...args: unknown[]) => listCaddePostCommentsMock(...args),
     createCaddeComment: (...args: unknown[]) => createCaddeCommentMock(...args),
+    recordCaddeShare: (...args: unknown[]) => recordCaddeShareMock(...args),
   };
 });
 
@@ -99,6 +101,9 @@ describe("CaddePage", () => {
     listCaddePromotionsMock.mockResolvedValue([]);
     listCaddePostCommentsMock.mockResolvedValue({ items: [], nextCursor: null });
     createCaddeCommentMock.mockResolvedValue(undefined);
+    recordCaddeShareMock.mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "share", { configurable: true, value: undefined });
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: undefined });
   });
 
   it("shows the profile gate with missing fields when the actor context is incomplete", async () => {
@@ -514,6 +519,110 @@ describe("CaddePage", () => {
     expect(screen.getByRole("button", { name: "Gülme (3)" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Destek (4)" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Emin olamadım (5)" })).toBeInTheDocument();
+  });
+
+  it("shares a post with the Web Share API and records the share", async () => {
+    const shareMock = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "share", { configurable: true, value: shareMock });
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({
+      items: [
+        {
+          id: "post-share-web",
+          mode: "real",
+          type: "text",
+          title: "Paylaşılacak konu",
+          body: "Bu post Web Share API ile paylaşılır.",
+          authorName: "Ayşe",
+          authorRole: "Üye",
+          authorAvatarUrl: null,
+          authorUserId: "user-2",
+          country: "Almanya",
+          city: "Berlin",
+          isBridge: false,
+          pinned: false,
+          createdAt: "2026-06-23T10:00:00Z",
+          needCategory: null,
+          interests: [],
+          hashtags: [],
+          mentions: [],
+          media: [],
+          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          totalReactionCount: 0,
+          commentCount: 0,
+          shareCount: 0,
+          comments: [],
+          viewerReactions: [],
+        },
+      ],
+      nextPage: null,
+    });
+
+    renderPage();
+
+    fireEvent.click(await screen.findByRole("button", { name: "Paylaş (0)" }));
+
+    await waitFor(() => expect(shareMock).toHaveBeenCalledWith(expect.objectContaining({
+      title: "Paylaşılacak konu",
+      text: "Bu post Web Share API ile paylaşılır.",
+      url: expect.stringContaining("/cadde?post=post-share-web"),
+    })));
+    await waitFor(() => expect(recordCaddeShareMock).toHaveBeenCalledWith("post-share-web", "web_share"));
+  });
+
+  it("copies the post link when Web Share is unavailable and records the share", async () => {
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: writeTextMock } });
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({
+      items: [
+        {
+          id: "post-share-copy",
+          mode: "real",
+          type: "text",
+          title: null,
+          body: "Bu post link kopyalama ile paylaşılır.",
+          authorName: "Ayşe",
+          authorRole: "Üye",
+          authorAvatarUrl: null,
+          authorUserId: "user-2",
+          country: "Almanya",
+          city: "Berlin",
+          isBridge: false,
+          pinned: false,
+          createdAt: "2026-06-23T10:00:00Z",
+          needCategory: null,
+          interests: [],
+          hashtags: [],
+          mentions: [],
+          media: [],
+          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          totalReactionCount: 0,
+          commentCount: 0,
+          shareCount: 2,
+          comments: [],
+          viewerReactions: [],
+        },
+      ],
+      nextPage: null,
+    });
+
+    renderPage();
+
+    fireEvent.click(await screen.findByRole("button", { name: "Paylaş (2)" }));
+
+    await waitFor(() => expect(writeTextMock).toHaveBeenCalledWith(expect.stringContaining("/cadde?post=post-share-copy")));
+    await waitFor(() => expect(recordCaddeShareMock).toHaveBeenCalledWith("post-share-copy", "copy_link"));
   });
 
   it("shows invitation-style empty states when cafes, promotions and billboards are empty", async () => {

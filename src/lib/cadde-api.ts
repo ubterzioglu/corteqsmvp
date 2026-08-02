@@ -31,6 +31,7 @@ import {
   caddeCommentCreateSchema,
   caddePostCreateSchema,
   caddeReactionSchema,
+  caddeShareSchema,
   parseWithUserError,
 } from "./cadde-schemas";
 import { validatePostInterests } from "./cadde-targeting";
@@ -80,6 +81,7 @@ function stripEagerComments(post: CaddePost): CaddePost {
   return {
     ...post,
     commentCount: post.commentCount,
+    shareCount: post.shareCount,
     comments: [],
   };
 }
@@ -170,13 +172,15 @@ export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeF
 
     const payload = (data ?? { items: [], nextCursor: null }) as { items: CaddeFeedRpcItem[]; nextCursor: CaddeFeedCursor | null };
     const rows = payload.items ?? [];
-    const [reactions, commentCounts, authorNames] = await Promise.all([
-      fetchPostReactions(rows.map((row) => row.id)),
-      fetchPostCommentCounts(rows.map((row) => row.id)),
+    const postIds = rows.map((row) => row.id);
+    const [reactions, commentCounts, shareCounts, authorNames] = await Promise.all([
+      fetchPostReactions(postIds),
+      fetchPostCommentCounts(postIds),
+      fetchPostShareCounts(postIds),
       fetchUserNameMap(rows.map((row) => row.author_user_id).filter(Boolean) as string[], currentUserId ? [currentUserId] : []),
     ]);
 
-    const items = rows.map((row) => mapRpcPost(row, reactions, commentCounts, [], authorNames, currentUserId));
+    const items = rows.map((row) => mapRpcPost(row, reactions, commentCounts, shareCounts, [], authorNames, currentUserId));
     return { items, nextPage: payload.nextCursor ?? null };
   } catch (error: unknown) {
     reportCaddeApiError("listCaddeFeed", error);
@@ -187,6 +191,14 @@ export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeF
 async function fetchCountryMap(): Promise<Map<string, string>> {
   const { data } = await db.from("cadde_countries").select("id, name");
   return new Map<string, string>((data ?? []).map((row: { id: string; name: string }) => [row.id, row.name]));
+}
+
+async function fetchPostShareCounts(postIds: string[]): Promise<Map<string, number>> {
+  if (postIds.length === 0) return new Map();
+  const { data } = await db.from("cadde_posts").select("id, share_count").in("id", postIds);
+  return new Map<string, number>(
+    ((data ?? []) as Array<{ id: string; share_count: number | null }>).map((row) => [row.id, row.share_count ?? 0]),
+  );
 }
 
 async function fetchCityMap(): Promise<Map<string, string>> {
@@ -265,6 +277,7 @@ function mapRpcPost(
   row: CaddeFeedRpcItem,
   reactions: CaddeReactionRow[],
   commentCounts: Map<string, number>,
+  shareCounts: Map<string, number>,
   comments: CommentWithAuthor[],
   authorNames: Map<string, string>,
   currentUserId: string | null,
@@ -300,6 +313,7 @@ function mapRpcPost(
     reactionCounts,
     totalReactionCount: CADDE_REACTION_TYPES.reduce((sum, reactionType) => sum + reactionCounts[reactionType], 0),
     commentCount: commentCounts.get(row.id) ?? postComments.length,
+    shareCount: shareCounts.get(row.id) ?? row.share_count ?? 0,
     comments: postComments.map((comment) => ({
       id: comment.id,
       postId: comment.post_id,
@@ -476,7 +490,7 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
   try {
     const { data, error } = await db
       .from("cadde_posts")
-      .select("id, author_user_id, author_name_override, author_role, author_avatar_url, content_mode, status, post_type, title, body, country_id, city_id, is_bridge, pinned, created_at, need_category, engagement_score, published_at, media")
+      .select("id, author_user_id, author_name_override, author_role, author_avatar_url, content_mode, status, post_type, title, body, country_id, city_id, is_bridge, pinned, created_at, need_category, engagement_score, published_at, media, share_count")
       .eq("cafe_id", cafeId)
       .eq("status", "published")
       .order("created_at", { ascending: false })
@@ -484,11 +498,12 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
     if (error) throw error;
     const rows = (data ?? []) as Array<CaddeFeedRpcItem>;
     const postIds = rows.map((row) => row.id);
-    const [countries, cities, reactions, comments, authorNames, interestRows] = await Promise.all([
+    const [countries, cities, reactions, comments, shareCounts, authorNames, interestRows] = await Promise.all([
       fetchCountryMap(),
       fetchCityMap(),
       fetchPostReactions(postIds),
       fetchPostComments(postIds),
+      fetchPostShareCounts(postIds),
       fetchUserNameMap(rows.map((row) => row.author_user_id).filter(Boolean) as string[], currentUserId ? [currentUserId] : []),
       postIds.length > 0 ? db.from("cadde_post_interests").select("post_id, interest_key").in("post_id", postIds) : Promise.resolve({ data: [] }),
     ]);
@@ -510,6 +525,7 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
         },
         reactions,
         commentCounts,
+        shareCounts,
         comments,
         authorNames,
         currentUserId,
@@ -807,6 +823,16 @@ export async function createCaddeComment(postId: string, body: string): Promise<
   const { error } = await db.rpc("create_cadde_comment_v1", {
     p_post_id: parsed.postId,
     p_body: parsed.body,
+  });
+  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+}
+
+/** Paylaşım kaydı (m12): link paylaşımı/kopyalama sonrası sayaç DB'de artar. */
+export async function recordCaddeShare(postId: string, channel: "web_share" | "copy_link"): Promise<void> {
+  const parsed = parseWithUserError(caddeShareSchema, { postId, channel });
+  const { error } = await db.rpc("record_cadde_share_v1", {
+    p_post_id: parsed.postId,
+    p_channel: parsed.channel,
   });
   if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
 }
