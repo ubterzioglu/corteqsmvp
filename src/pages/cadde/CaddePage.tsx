@@ -498,7 +498,6 @@ const CaddePage = () => {
               isSubmitting={postMutation.isPending}
               countries={countriesQuery.data ?? []}
               cities={composerCitiesQuery.data ?? []}
-              interestCatalog={interestCatalogQuery.data ?? []}
               filterCountryLabel={filters.countries[0] || "Global"}
               onError={(message) => toast({ title: "Ek eklenemedi", description: message, variant: "destructive" })}
             />

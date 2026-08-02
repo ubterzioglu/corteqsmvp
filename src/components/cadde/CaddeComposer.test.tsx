@@ -32,7 +32,6 @@ const renderComposer = (overrides: Partial<CaddeComposerValue> = {}, props: Reco
           isSubmitting={false}
           countries={[{ id: "c1", code: "DE", name: "Almanya" }]}
           cities={[{ id: "ct1", countryId: "c1", name: "Berlin", timezone: "Europe/Berlin" }]}
-          interestCatalog={[{ key: "networking", labelTr: "Networking", sortOrder: 10 }]}
           filterCountryLabel="Global"
           onError={vi.fn()}
           {...props}
@@ -51,26 +50,19 @@ describe("CaddeComposer", () => {
     expect(screen.getByRole("button", { name: "Fotoğraf" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Video" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Konum" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Etkinlik" })).toBeInTheDocument();
   });
 
-  it("keeps type and title hidden until Detaylar is opened", () => {
+  it("m5+m6: Detaylar paneli ve Etkinlik çipi tamamen kalktı — tip her zaman text", () => {
     renderComposer();
 
+    // Etkinlik çipi yok (m6), Detaylar düğmesi/paneli yok (m5) — tür/başlık/etiket girişi kalmadı.
+    expect(screen.queryByRole("button", { name: "Etkinlik" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/Detaylar/)).not.toBeInTheDocument();
     expect(screen.queryByText("Tür")).not.toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: /Detaylar/ }));
-
-    expect(screen.getByText("Tür")).toBeInTheDocument();
-    expect(screen.getByText(/Başlık/)).toBeInTheDocument();
-  });
-
-  it("derives the event post type from the Etkinlik chip", () => {
-    const { onChange } = renderComposer();
-
-    fireEvent.click(screen.getByRole("button", { name: "Etkinlik" }));
-
-    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ type: "event" }));
+    expect(screen.queryByText(/Başlık/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Etiketler/)).not.toBeInTheDocument();
+    // Veri sözleşmesi: başlangıç değeri text ve composer bunu değiştiremez.
+    expect(emptyCaddeComposer.type).toBe("text");
   });
 
   it("disables submit while empty and enables it once there is text", () => {
