@@ -511,13 +511,18 @@ export default function AdminCaddePage() {
               <Input placeholder="Image URL" value={billboardForm.image_url ?? ""} onChange={(event) => setBillboardForm((current) => ({ ...current, image_url: event.target.value }))} />
               <Input placeholder="Sort order" inputMode="numeric" value={String(billboardForm.sort_order)} onChange={(event) => setBillboardForm((current) => ({ ...current, sort_order: Number(event.target.value) || 0 }))} />
             </div>
-            <div className="flex items-center gap-2"><Switch checked={billboardForm.is_featured} onCheckedChange={(checked) => setBillboardForm((current) => ({ ...current, is_featured: checked }))} /><Label>Featured</Label></div>
+            {/* m42: featured seçimi MANUEL — Cadde sağ kolonundaki "Caddede Öne Çıkan"
+                yuvası doğrudan bu anahtardan beslenir (en üstteki featured kayıt). */}
+            <div className="flex items-center gap-2">
+              <Switch checked={billboardForm.is_featured} onCheckedChange={(checked) => setBillboardForm((current) => ({ ...current, is_featured: checked }))} />
+              <Label>Featured — Cadde'de "Öne Çıkan" yuvasına çıkar</Label>
+            </div>
           </EntityEditorCard>
           <AdminSimpleTable
-            headers={["Başlık", "Tip", "Mod", "Durum", "Aksiyon"]}
+            headers={["Başlık", "Tip", "Mod", "Durum", "Öne Çıkan", "Aksiyon"]}
             rows={billboardRows.map((row) => ({
               key: row.id,
-              cells: [row.title, row.card_type, row.content_mode, row.status],
+              cells: [row.title, row.card_type, row.content_mode, row.status, row.is_featured ? "Evet" : "—"],
               actions: (
                 <>
                   <Button variant="outline" size="sm" onClick={() => {

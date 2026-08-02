@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Flag, Flame, Globe2, Heart, MapPin, Megaphone, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
+import { ArrowUpRight, Flag, Flame, Globe2, Heart, MapPin, Megaphone, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
 import CaddeBridgeInfo from "@/components/cadde/CaddeBridgeInfo";
+import CaddeFeaturedSpotlight from "@/components/cadde/CaddeFeaturedSpotlight";
 import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
 import CaddeFeedScopeBar from "@/components/cadde/CaddeFeedScopeBar";
 import CaddeMediaGallery from "@/components/cadde/CaddeMediaGallery";
@@ -51,6 +52,7 @@ import { listCaddeCafeThemes } from "@/lib/cadde-cafe-api";
 import { emptyCaddeComposer } from "@/lib/cadde-composer";
 import { caddeNewPostPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
 import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
+import { isInternalCaddeLink } from "@/lib/cadde-links";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import { toggleInterestSelection } from "@/lib/cadde-targeting";
@@ -319,6 +321,14 @@ const CaddePage = () => {
     : "İçerik az olduğunda global akışla başlayıp ilk hareketi sen başlatabilirsin.";
   const activeCafes = cafesQuery.data ?? [];
   const billboardCards = billboardsQuery.data ?? [];
+  // m41: sağ kolonun tepesindeki statik "CorteQS Panosu" yerine featured kayıt geçer.
+  // m44: liste de featured kayıtlara ayrılır; hiç featured yoksa yayındaki diğer kartlar
+  // gösterilir (yüzey boş kalmasın). Spotlight'a çıkan kart listede tekrar etmez.
+  const featuredBillboards = billboardCards.filter((card) => card.isFeatured);
+  const spotlightBillboard = featuredBillboards[0] ?? null;
+  const listedBillboards = (featuredBillboards.length > 0 ? featuredBillboards : billboardCards).filter(
+    (card) => card.id !== spotlightBillboard?.id,
+  );
 
   return (
     <CaddeProfileGate context={actorContextQuery.data} isLoading={actorContextQuery.isLoading}>
@@ -824,21 +834,21 @@ const CaddePage = () => {
               teaser'ına çevirecek). */}
           <CarsiGlobalTicker filters={filters} />
 
-          {/* CorteQS Panosu — F13'ün dolduracağı FEATURED SLOT placeholder'ı (silme!). */}
-          <Card className="overflow-hidden border-orange-100 bg-[linear-gradient(160deg,#fff7ec_0%,#ffffff_60%)]">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">CorteQS Panosu</CardTitle>
-              <CardDescription>Bugün Caddede öne çıkanlar</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center gap-3 rounded-2xl border border-orange-100 bg-white/70 p-3">
-                <img src="/lmaskot.png" alt="CorteQS maskot" className="h-14 w-auto shrink-0 drop-shadow" />
+          {/* m41: statik "CorteQS Panosu / Bugün caddede öne çıkanlar" kartı kaldırıldı;
+              yerini panelden Featured işaretlenen kayıt aldı (yoksa hiç çizilmez). */}
+          <CaddeFeaturedSpotlight card={spotlightBillboard} />
+
+          {/* Panosu kartından KORUNAN iki parça: maskot selamı ve beta geri bildirimi.
+              Geri bildirim WhatsApp yerine kendi /feedback formumuza gider (kayıt altına
+              alınır, /admin/feedback'ten takip edilir); kaynak=cadde ile ayrışır. */}
+          <Card className="border-slate-200 bg-white/90">
+            <CardContent className="space-y-3 p-4">
+              <div className="flex items-center gap-3">
+                <img src="/lmaskot.png" alt="CorteQS maskot" className="h-12 w-auto shrink-0 drop-shadow" />
                 <p className="text-sm leading-relaxed text-slate-600">
                   Şehrindeki Türk topluluğunu büyütmeye yardım et — paylaş, sor, destek ol.
                 </p>
               </div>
-              {/* Geri bildirim WhatsApp yerine kendi /feedback formumuza gider (kayıt altına alınır,
-                  /admin/feedback'ten takip edilir). kaynak=cadde ile nereden geldiği ayrılır. */}
               <Link
                 to="/feedback?kaynak=cadde"
                 className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/70 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white"
@@ -859,20 +869,39 @@ const CaddePage = () => {
               <CardDescription>Danışman, işletme ve etkinlik kartları</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {billboardCards.length > 0 ? billboardCards.map((card) => (
-                <div key={card.id} className="rounded-[24px] border border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] p-4 shadow-sm">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="outline">{card.type}</Badge>
-                    {card.badgeText ? <Badge className="bg-orange-100 text-orange-900 hover:bg-orange-100">{card.badgeText}</Badge> : null}
-                  </div>
-                  <h3 className="mt-3 text-lg font-semibold text-slate-900">{card.title}</h3>
-                  {card.subtitle ? <p className="mt-1 text-sm font-medium text-slate-500">{card.subtitle}</p> : null}
-                  <p className="mt-3 text-sm leading-6 text-slate-700">{card.description}</p>
-                  <Button asChild className="mt-4 w-full rounded-2xl bg-slate-900 text-white hover:bg-slate-800">
-                    <Link to={card.ctaUrl}>{card.ctaLabel}</Link>
-                  </Button>
-                </div>
-              )) : (
+              {/* m44: kartın TAMAMI hedefe (cta_url → profil/katalog sayfası) gider.
+                  CTA artık iç içe <a> üretmemek için görsel bir şerit; dış bağlantılar
+                  yeni sekmede açılır (isInternalCaddeLink ayrımı). */}
+              {listedBillboards.length > 0 ? listedBillboards.map((card) => {
+                const cardBody = (
+                  <>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge variant="outline">{card.type}</Badge>
+                      {card.isFeatured ? <Badge className="bg-orange-100 text-orange-900 hover:bg-orange-100">Öne Çıkan</Badge> : null}
+                      {card.badgeText ? <Badge variant="secondary">{card.badgeText}</Badge> : null}
+                    </div>
+                    <h3 className="mt-3 text-lg font-semibold text-slate-900">{card.title}</h3>
+                    {card.subtitle ? <p className="mt-1 text-sm font-medium text-slate-500">{card.subtitle}</p> : null}
+                    <p className="mt-3 text-sm leading-6 text-slate-700">{card.description}</p>
+                    <span className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition group-hover:bg-slate-800">
+                      {card.ctaLabel}
+                      <ArrowUpRight className="h-4 w-4" />
+                    </span>
+                  </>
+                );
+                const cardClassName =
+                  "group block rounded-[24px] border border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] p-4 shadow-sm transition hover:border-slate-300 hover:shadow-md";
+
+                return isInternalCaddeLink(card.ctaUrl) ? (
+                  <Link key={card.id} to={card.ctaUrl} className={cardClassName}>
+                    {cardBody}
+                  </Link>
+                ) : (
+                  <a key={card.id} href={card.ctaUrl} target="_blank" rel="noreferrer noopener" className={cardClassName}>
+                    {cardBody}
+                  </a>
+                );
+              }) : (
                 <div
                   data-testid="cadde-billboards-empty-state"
                   className="rounded-[24px] border border-dashed border-slate-200 bg-slate-50 px-4 py-5"

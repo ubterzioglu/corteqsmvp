@@ -255,6 +255,79 @@ describe("CaddePage", () => {
     expect(screen.getByTestId("cadde-billboards-empty-state")).toBeInTheDocument();
   });
 
+  // Workshop m41/m44: featured kayıt sağ kolonun tepesindeki yuvaya çıkar, listede tekrar etmez.
+  it("routes the featured billboard to the spotlight slot and keeps the rest in the list", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeBillboardsMock.mockResolvedValue([
+      {
+        id: "featured-1",
+        type: "consultant",
+        title: "Almanya 101",
+        subtitle: null,
+        description: "Taşınma rehberi",
+        badgeText: null,
+        ctaLabel: "Profili Gör",
+        ctaUrl: "/directory/profile/u-1",
+        imageUrl: null,
+        isFeatured: true,
+      },
+      {
+        id: "normal-1",
+        type: "business",
+        title: "Anadolu Mutfak",
+        subtitle: null,
+        description: "Mekan tanıtımı",
+        badgeText: null,
+        ctaLabel: "Mekanı Keşfet",
+        ctaUrl: "/commercial/community-leader",
+        imageUrl: null,
+        isFeatured: false,
+      },
+    ]);
+
+    renderPage();
+
+    expect(await screen.findByTestId("cadde-featured-spotlight")).toBeInTheDocument();
+    // Featured kayıt yalnız yuvada: başlık tek kez geçer.
+    expect(screen.getAllByText("Almanya 101")).toHaveLength(1);
+    // Featured varken liste yalnız diğer featured kayıtları gösterir (bu senaryoda boş).
+    expect(screen.getByTestId("cadde-billboards-empty-state")).toBeInTheDocument();
+    expect(screen.queryByText("Anadolu Mutfak")).not.toBeInTheDocument();
+  });
+
+  it("falls back to published billboards when nothing is featured", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeBillboardsMock.mockResolvedValue([
+      {
+        id: "normal-1",
+        type: "business",
+        title: "Anadolu Mutfak",
+        subtitle: null,
+        description: "Mekan tanıtımı",
+        badgeText: null,
+        ctaLabel: "Mekanı Keşfet",
+        ctaUrl: "/commercial/community-leader",
+        imageUrl: null,
+        isFeatured: false,
+      },
+    ]);
+
+    renderPage();
+
+    expect(await screen.findByText("Anadolu Mutfak")).toBeInTheDocument();
+    expect(screen.queryByTestId("cadde-featured-spotlight")).not.toBeInTheDocument();
+  });
+
   it("shows a compact login CTA in the comment panel for visitors", async () => {
     useAuthMock.mockReturnValue({ session: null, user: null, isLoading: false });
     listCaddeCountriesMock.mockResolvedValue([]);

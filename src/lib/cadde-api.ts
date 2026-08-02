@@ -503,6 +503,9 @@ export async function listCaddeBillboardCards(filters: CaddeFilterState): Promis
       .select("id, card_type, title, subtitle, description, badge_text, cta_label, cta_url, image_url, content_mode, status, country_id, city_id, is_featured, sort_order")
       .eq("content_mode", "real")
       .eq("status", "published")
+      // m42/m44: featured seçimi MANUEL (admin Featured anahtarı) ve öne çıkanlar
+      // listenin tepesinde gelir; eşitlikte panelde girilen sort_order karar verir.
+      .order("is_featured", { ascending: false })
       .order("sort_order", { ascending: true });
     if (countryIds.length > 0) query = query.or(`country_id.is.null,country_id.in.(${countryIds.join(",")})`);
     if (cityIds.length > 0) query = query.or(`city_id.is.null,city_id.in.(${cityIds.join(",")})`);
