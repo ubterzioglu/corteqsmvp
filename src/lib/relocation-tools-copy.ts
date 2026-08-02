@@ -93,6 +93,16 @@ export function bucketLabel(bucketKey: string | null | undefined): string {
   return BUCKET_LABELS[bucketKey] ?? bucketKey;
 }
 
+/** result_kind → hub kartındaki rozet etiketi (17 aracı görsel olarak ayırt eder). */
+export const RESULT_KIND_BADGE_LABELS: Record<string, string> = {
+  score: "Skor",
+  ranked_list: "Sıralama",
+  persona: "Persona",
+  checklist: "Görev Planı",
+  match_list: "Eşleşme",
+  comparison: "Karşılaştırma",
+};
+
 /** Motor genel UI metinleri (Türkçe; araç-bağımsız). */
 export const TOOLS_UI_COPY = {
   hubTitle: "CorteQS Araçlar",

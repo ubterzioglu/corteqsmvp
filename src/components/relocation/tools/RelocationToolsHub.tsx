@@ -16,10 +16,16 @@ interface RelocationToolsHubProps {
 export function RelocationToolsHub({ tools, isLoading, isError }: RelocationToolsHubProps) {
   return (
     <div className="space-y-4">
-      <div className="mb-2 text-center">
-        <span className="mb-1 block text-3xl">🧭</span>
-        <h1 className="text-2xl font-extrabold text-foreground">{TOOLS_UI_COPY.hubTitle}</h1>
-        <p className="text-sm text-muted-foreground">{TOOLS_UI_COPY.hubSubtitle}</p>
+      <div className="relative mb-2 overflow-hidden rounded-3xl border border-border/60 px-6 py-10 text-center">
+        <div className="tech-aurora pointer-events-none absolute inset-0" aria-hidden="true" />
+        <div className="tech-grid pointer-events-none absolute inset-0" aria-hidden="true" />
+        <div className="relative z-10">
+          <span className="mb-2 block text-4xl">🧭</span>
+          <h1 className="font-display text-3xl font-extrabold tracking-tight text-gradient-tech md:text-4xl">
+            {TOOLS_UI_COPY.hubTitle}
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground md:text-base">{TOOLS_UI_COPY.hubSubtitle}</p>
+        </div>
       </div>
 
       {isLoading && (
