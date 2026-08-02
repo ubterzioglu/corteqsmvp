@@ -5,7 +5,8 @@ import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toolHeroImage } from "@/lib/relocation-tools-images";
-import { RESULT_KIND_BADGE_LABELS } from "@/lib/relocation-tools-copy";
+import { resultKindStyle } from "@/lib/relocation-tools-result-style";
+import { cn } from "@/lib/utils";
 import type { RelocationToolRow } from "@/lib/relocation-tools-types";
 
 interface ToolAccordionCardProps {
@@ -14,19 +15,20 @@ interface ToolAccordionCardProps {
 
 export function ToolAccordionCard({ tool }: ToolAccordionCardProps) {
   const heroImage = toolHeroImage(tool.slug);
-  const resultLabel = RESULT_KIND_BADGE_LABELS[tool.result_kind] ?? tool.result_kind;
+  const { label, Icon, chipClass, accentBorderClass } = resultKindStyle(tool.result_kind);
   const questionCount = tool.quick_question_count || tool.detailed_question_count;
 
   return (
-    <AccordionItem value={tool.key}>
+    <AccordionItem value={tool.key} className={cn("border-l-4 pl-3", accentBorderClass)}>
       <AccordionTrigger className="text-left text-base">
         <span className="flex flex-1 items-center justify-between gap-2 pr-2">
           <span>{tool.title_tr}</span>
           <span className="flex shrink-0 gap-1.5">
-            <Badge variant="outline" className="shadow-sm">
-              {resultLabel}
+            <Badge className={cn("gap-1 border shadow-sm", chipClass)}>
+              <Icon className="h-3 w-3" aria-hidden="true" />
+              {label}
             </Badge>
-            <Badge className="bg-emerald-500 text-white shadow-md hover:bg-emerald-500">🎉 Ücretsiz</Badge>
+            <Badge className="rotate-2 bg-emerald-500 text-white shadow-md hover:bg-emerald-500">🎉 Ücretsiz</Badge>
           </span>
         </span>
       </AccordionTrigger>
