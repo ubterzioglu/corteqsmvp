@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Flag, Flame, Globe2, Heart, MapPin, Megaphone, MessageCircle, MessagesSquare, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
@@ -45,6 +45,7 @@ import {
   toggleCaddeReaction,
 } from "@/lib/cadde-api";
 import { POST_TYPE_LABELS, emptyCaddeComposer } from "@/lib/cadde-composer";
+import { caddeNewPostPollInterval, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
 import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
@@ -236,13 +237,31 @@ const CaddePage = () => {
     setSearchParams(serializeCaddeFilters({ ...filters, ...nextPartial }));
   };
 
-  // "Yeni post" chip'i (spec §17.3): stream yok; 60 sn'de bir hafif sayım, tıklayınca invalidate.
+  // "Yeni post" chip'i (spec §17.3): stream yok; hafif sayım, tıklayınca invalidate.
+  // Adaptif aralık (cadde-feed-polling): 0 sonuç sürdükçe 60sn→2dk→5dk, chip görünürken
+  // polling durur; odağa dönüşte anında tek kontrol yapılıp taban aralığa dönülür.
   const newestLoadedAt = feedQuery.data?.pages[0]?.items[0]?.createdAt ?? null;
+  const zeroStreakRef = useRef(0);
+  useEffect(() => {
+    zeroStreakRef.current = 0;
+  }, [newestLoadedAt]);
+  useEffect(() => {
+    const resetStreak = () => {
+      zeroStreakRef.current = 0;
+    };
+    window.addEventListener("focus", resetStreak);
+    return () => window.removeEventListener("focus", resetStreak);
+  }, []);
   const newPostsQuery = useQuery({
     queryKey: ["cadde", "new-posts-since", newestLoadedAt],
-    queryFn: () => countCaddePostsSince(newestLoadedAt ?? ""),
+    queryFn: async () => {
+      const count = await countCaddePostsSince(newestLoadedAt ?? "");
+      zeroStreakRef.current = nextCaddeZeroStreak(count, zeroStreakRef.current);
+      return count;
+    },
     enabled: filters.mode === "real" && Boolean(newestLoadedAt),
-    refetchInterval: 60_000,
+    refetchInterval: (query) => caddeNewPostPollInterval(query.state.data ?? 0, zeroStreakRef.current),
+    refetchOnWindowFocus: "always",
   });
   const newPostCount = newPostsQuery.data ?? 0;
 
