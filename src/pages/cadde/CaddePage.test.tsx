@@ -73,6 +73,14 @@ vi.mock("@/lib/cadde-tanitim-api", () => ({
   listCaddePromotions: (...args: unknown[]) => listCaddePromotionsMock(...args),
 }));
 
+vi.mock("@/lib/cadde-feed-polling", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde-feed-polling")>("@/lib/cadde-feed-polling");
+  return {
+    ...actual,
+    caddeOpenCommentsPollInterval: () => 100,
+  };
+});
+
 const renderPage = (entry = "/cadde") => {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
@@ -389,6 +397,73 @@ describe("CaddePage", () => {
 
     expect(enter.defaultPrevented).toBe(true);
     await waitFor(() => expect(createCaddeCommentMock).toHaveBeenCalledWith("post-enter", "Klavye ile yorum"));
+  });
+
+  it("polls only the opened comment panel and merges newly fetched comments", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({
+      items: [
+        {
+          id: "post-poll",
+          mode: "real",
+          type: "text",
+          title: "Auto-refresh yorumu",
+          body: "Açık panel karşı taraf yorumunu sessiz alır.",
+          authorName: "Ayşe",
+          authorRole: "Üye",
+          authorAvatarUrl: null,
+          authorUserId: "user-2",
+          country: "Almanya",
+          city: "Berlin",
+          isBridge: false,
+          pinned: false,
+          createdAt: "2026-06-23T10:00:00Z",
+          needCategory: null,
+          interests: [],
+          hashtags: [],
+          mentions: [],
+          media: [],
+          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          totalReactionCount: 0,
+          commentCount: 1,
+          comments: [],
+          viewerReactions: [],
+        },
+      ],
+      nextPage: null,
+    });
+    listCaddePostCommentsMock
+      .mockResolvedValueOnce({
+        items: [{ id: "comment-poll-1", postId: "post-poll", userId: "u1", body: "İlk yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" }],
+        nextCursor: null,
+      })
+      .mockResolvedValueOnce({
+        items: [
+          { id: "comment-poll-1", postId: "post-poll", userId: "u1", body: "İlk yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" },
+          { id: "comment-poll-2", postId: "post-poll", userId: "u2", body: "Karşı yorum", authorName: "Mert", createdAt: "2026-06-23T10:02:00Z" },
+        ],
+        nextCursor: null,
+      });
+
+    renderPage();
+
+    fireEvent.click(await screen.findByTestId("cadde-comment-toggle"));
+    expect(await screen.findByText("İlk yorum")).toBeInTheDocument();
+    expect(listCaddePostCommentsMock.mock.calls.length).toBeGreaterThanOrEqual(1);
+
+    await waitFor(() => expect(listCaddePostCommentsMock.mock.calls.length).toBeGreaterThanOrEqual(2));
+    expect(await screen.findByText("Karşı yorum")).toBeInTheDocument();
+
+    const callsAfterRefresh = listCaddePostCommentsMock.mock.calls.length;
+    fireEvent.click(screen.getByTestId("cadde-comment-toggle"));
+    await new Promise((resolve) => setTimeout(resolve, 120));
+
+    expect(listCaddePostCommentsMock).toHaveBeenCalledTimes(callsAfterRefresh);
   });
 
   it("shows the five reaction actions directly without a popover", async () => {

@@ -50,7 +50,7 @@ import {
 } from "@/lib/cadde-api";
 import { listCaddeCafeThemes } from "@/lib/cadde-cafe-api";
 import { emptyCaddeComposer } from "@/lib/cadde-composer";
-import { caddeNewPostPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
+import { caddeNewPostPollInterval, caddeOpenCommentsPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
 import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
 import { isInternalCaddeLink } from "@/lib/cadde-links";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
@@ -162,17 +162,44 @@ const CaddePage = () => {
     queryFn: () => listCaddePromotions("cadde-feed-inline", { countries: filters.countries, cities: filters.cities, diaspora: diasporaKey }, 5),
   });
 
+  const commentsZeroStreakRef = useRef(0);
+  const commentsSignatureRef = useRef<string | null>(null);
   const commentsQuery = useInfiniteQuery({
     queryKey: caddeQueryKeys.postComments(expandedCommentPostId),
     initialPageParam: null as CaddeCommentCursor,
     queryFn: ({ pageParam }) => listCaddePostComments(expandedCommentPostId ?? "", COMMENT_PAGE_SIZE, pageParam),
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     enabled: Boolean(expandedCommentPostId),
+    refetchInterval: () =>
+      expandedCommentPostId ? caddeOpenCommentsPollInterval(commentsZeroStreakRef.current) : false,
+    refetchOnWindowFocus: "always",
   });
   const expandedComments = useMemo(
     () => commentsQuery.data?.pages.flatMap((page) => page.items) ?? [],
     [commentsQuery.data],
   );
+  const commentsSignature = useMemo(
+    () => expandedComments.map((comment) => `${comment.id}:${comment.createdAt}`).join("|"),
+    [expandedComments],
+  );
+  useEffect(() => {
+    commentsZeroStreakRef.current = 0;
+    commentsSignatureRef.current = null;
+  }, [expandedCommentPostId]);
+  useEffect(() => {
+    if (!expandedCommentPostId || !commentsQuery.dataUpdatedAt) return;
+    if (commentsSignatureRef.current === null) {
+      commentsSignatureRef.current = commentsSignature;
+      commentsZeroStreakRef.current = 0;
+      return;
+    }
+    if (commentsSignatureRef.current === commentsSignature) {
+      commentsZeroStreakRef.current += 1;
+      return;
+    }
+    commentsSignatureRef.current = commentsSignature;
+    commentsZeroStreakRef.current = 0;
+  }, [commentsQuery.dataUpdatedAt, commentsSignature, expandedCommentPostId]);
 
   const invalidateCadde = async () => {
     await Promise.all([

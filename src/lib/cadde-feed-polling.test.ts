@@ -4,6 +4,7 @@ import {
   CADDE_NEW_POST_POLL_BASE_MS,
   CADDE_NEW_POST_POLL_MAX_MS,
   CADDE_NEW_POST_POLL_MID_MS,
+  caddeOpenCommentsPollInterval,
   caddeNewPostPollInterval,
   newestCaddeCreatedAt,
   nextCaddeZeroStreak,
@@ -38,6 +39,15 @@ describe("nextCaddeZeroStreak", () => {
   it("0 sonuçta streak artar", () => {
     expect(nextCaddeZeroStreak(0, 0)).toBe(1);
     expect(nextCaddeZeroStreak(0, 4)).toBe(5);
+  });
+});
+
+describe("caddeOpenCommentsPollInterval", () => {
+  it("açık yorum paneli için aynı adaptif kademeleri kullanır", () => {
+    expect(caddeOpenCommentsPollInterval(0)).toBe(CADDE_NEW_POST_POLL_BASE_MS);
+    expect(caddeOpenCommentsPollInterval(2)).toBe(CADDE_NEW_POST_POLL_BASE_MS);
+    expect(caddeOpenCommentsPollInterval(3)).toBe(CADDE_NEW_POST_POLL_MID_MS);
+    expect(caddeOpenCommentsPollInterval(6)).toBe(CADDE_NEW_POST_POLL_MAX_MS);
   });
 });
 

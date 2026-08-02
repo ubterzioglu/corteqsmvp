@@ -23,6 +23,13 @@ export function caddeNewPostPollInterval(newPostCount: number, zeroStreak: numbe
   return CADDE_NEW_POST_POLL_BASE_MS;
 }
 
+/** Açık yorum paneli için adaptif polling aralığı; panel kapalıyken query zaten disabled. */
+export function caddeOpenCommentsPollInterval(zeroStreak: number): number {
+  if (zeroStreak >= MAX_AFTER_ZERO_STREAK) return CADDE_NEW_POST_POLL_MAX_MS;
+  if (zeroStreak >= MID_AFTER_ZERO_STREAK) return CADDE_NEW_POST_POLL_MID_MS;
+  return CADDE_NEW_POST_POLL_BASE_MS;
+}
+
 /** Her sayım sonucundan sonra streak'in yeni değeri. */
 export function nextCaddeZeroStreak(newPostCount: number, previousStreak: number): number {
   return newPostCount > 0 ? 0 : previousStreak + 1;
