@@ -6,7 +6,7 @@
 // Mod seçimi (hızlı/detaylı) kaldırıldı — her araç tek modlu sabit 20 sorudan oluşur
 // (relocation_tool_questions.mode = 'both'); session RPC'si şema uyumluluğu için sabit
 // 'detailed' mode değeriyle çağrılır.
-import { Suspense, lazy, useEffect, useMemo, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -21,6 +21,41 @@ import { getGermanyStandaloneTool } from "@/lib/germany-standalone-tools";
 import { useSeo } from "@/lib/seo";
 
 const TOOL_SESSION_MODE = "detailed" as const;
+
+interface SpaceDecor {
+  emoji: string;
+  style: CSSProperties;
+}
+
+// Uzay banner'ındaki yüzen ikonlar — .profile-globe (index.css) konumsuz gelir, konum burada verilir.
+const SPACE_DECORATIONS: SpaceDecor[] = [
+  {
+    emoji: "✨",
+    style: { top: "1rem", left: "6%", "--globe-size": "30px", "--globe-opacity": "0.55", "--globe-duration": "18s" } as CSSProperties,
+  },
+  {
+    emoji: "🪐",
+    style: {
+      top: "3.25rem",
+      right: "8%",
+      "--globe-size": "26px",
+      "--globe-opacity": "0.45",
+      "--globe-duration": "24s",
+      "--globe-delay": "-8s",
+    } as CSSProperties,
+  },
+  {
+    emoji: "⭐",
+    style: {
+      bottom: "0.75rem",
+      left: "16%",
+      "--globe-size": "18px",
+      "--globe-opacity": "0.5",
+      "--globe-duration": "20s",
+      "--globe-delay": "-3s",
+    } as CSSProperties,
+  },
+];
 
 export default function RelocationToolPage() {
   const { toolSlug = "" } = useParams<{ toolSlug: string }>();
@@ -115,16 +150,27 @@ export default function RelocationToolPage() {
 
   return (
     <div className="container mx-auto max-w-3xl px-4 py-6">
-      {showHero && (
-        <img
-          src={heroImage}
-          alt=""
-          className="mb-6 aspect-[16/9] w-full rounded-xl object-cover shadow-sm"
-        />
-      )}
-      <div className="mb-6 text-center">
-        <h1 className="text-2xl font-extrabold text-foreground">{tool.title_tr}</h1>
-        <p className="text-sm text-muted-foreground">{tool.summary_tr}</p>
+      <div className="tools-space-shell relative mb-6 overflow-hidden rounded-3xl px-5 py-8 text-center sm:px-8">
+        <div className="tools-space-stars" aria-hidden="true" />
+        {SPACE_DECORATIONS.map((decor) => (
+          <span key={decor.emoji} className="profile-globe" style={decor.style} aria-hidden="true">
+            {decor.emoji}
+          </span>
+        ))}
+
+        <div className="relative z-10">
+          {showHero && (
+            <img
+              src={heroImage}
+              alt=""
+              className="mx-auto mb-5 aspect-[16/9] w-full max-w-md rounded-2xl object-cover shadow-lg ring-1 ring-white/15"
+            />
+          )}
+          <h1 className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
+            {tool.title_tr}
+          </h1>
+          <p className="mx-auto mt-2 max-w-md text-sm text-white/70">{tool.summary_tr}</p>
+        </div>
       </div>
 
       {result ? (

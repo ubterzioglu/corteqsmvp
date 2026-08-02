@@ -672,6 +672,57 @@
   }
 }
 
+/* ——— Araç sayfası "uzay" karşılama bandı (/tools/:slug girişi) ——— */
+
+.tools-space-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 160% at 15% -20%, hsl(258 55% 26% / 0.6), transparent 55%),
+    radial-gradient(90% 140% at 92% 0%, hsl(190 70% 28% / 0.45), transparent 60%),
+    radial-gradient(100% 120% at 50% 120%, hsl(24 80% 35% / 0.22), transparent 65%),
+    linear-gradient(180deg, hsl(250 48% 8%) 0%, hsl(248 42% 11%) 100%);
+}
+
+.tools-space-stars {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.6px 1.6px at 8% 22%, rgba(255, 255, 255, 0.9), transparent 60%),
+    radial-gradient(1.2px 1.2px at 22% 68%, rgba(255, 255, 255, 0.75), transparent 60%),
+    radial-gradient(1.8px 1.8px at 38% 34%, rgba(255, 255, 255, 0.9), transparent 60%),
+    radial-gradient(1px 1px at 52% 82%, rgba(255, 255, 255, 0.6), transparent 60%),
+    radial-gradient(1.4px 1.4px at 67% 18%, rgba(255, 255, 255, 0.85), transparent 60%),
+    radial-gradient(1px 1px at 78% 58%, rgba(255, 255, 255, 0.6), transparent 60%),
+    radial-gradient(1.6px 1.6px at 88% 38%, rgba(255, 255, 255, 0.9), transparent 60%),
+    radial-gradient(1.2px 1.2px at 95% 78%, rgba(255, 255, 255, 0.7), transparent 60%),
+    radial-gradient(1px 1px at 14% 92%, rgba(255, 255, 255, 0.55), transparent 60%),
+    radial-gradient(1.4px 1.4px at 45% 52%, rgba(255, 255, 255, 0.8), transparent 60%);
+  background-repeat: repeat;
+  background-size: 260px 220px;
+  animation: tools-space-twinkle 5s ease-in-out infinite;
+}
+
+@keyframes tools-space-twinkle {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tools-space-stars {
+    animation: none;
+    opacity: 0.85;
+  }
+}
+
 /* Mobil (<768px): bulanıklığı/parlamayı azalt, spotlight'ı gizle. Düğüm/çip
    SAYISI React tarafında useIsMobile() ile düşürülür — burada yalnız yoğunluk. */
 @media (max-width: 767px) {
