@@ -14,6 +14,20 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260802-cadde-redesign-kapandi",
+    date: "2 Ağustos 2026",
+    title:
+      "Cadde revizyon turu kapandı: akış, paylaşım, hedefleme ve görünüm baştan toparlandı",
+    items: [
+      "Cadde için son büyük revizyon paketi tamamlandı. Bu turda akışın davranışı, paylaşım kutusu, yorumlar, tepkiler, paylaşma butonu, emoji seçici, hedefleme, reklam alanları ve genel görünüm tek tek elden geçirildi.",
+      "Paylaşım tarafı daha sade oldu: paylaşım kutusu WhatsApp gibi tek ana alana indi, konu/etiket kalabalığı temizlendi, emoji seçici eklendi ve tepki sistemi 5 açık emojiye döndü. Yorumlarda Enter ile gönderme, devamını yükleme ve açık panelde sessiz yenileme var.",
+      "Konum ve hedefleme tarafı toparlandı: yeni paylaşım artık aktif filtreye göre değil, üyenin kendi kayıtlı konumuna göre başlıyor. İsteyen kullanıcı ana hedefe ek olarak bir ülke/şehir daha seçebiliyor; bu ek hedef premium ayarına bağlandı. Global akış da artık her şeyi serbestçe almıyor, içerik yeterli etkileşim alınca globale çıkıyor.",
+      "Paylaşma ve tanıtım akışı düzeldi: post linki Web Share veya kopyalama ile paylaşılabiliyor ve paylaşım sayacı tutuluyor. Sponsorlu/tanıtım kartları, öne çıkan pano alanı ve boş reklam alanları daha anlaşılır hale getirildi; giriş yapan kullanıcılar doğru şekilde profilindeki tanıtım paneline yönleniyor.",
+      "Görsel taraf da kapandı: Cadde koyu, daha kontrastlı bir zemin aldı; kartlar, boş durumlar, sponsorlu alanlar ve Çarşı teaser'ı aynı tasarım diline bağlandı. Küçük buton ve dar boşluklar sıkılaştırıldı; dokunma alanları mobilde de rahat kalacak şekilde kontrol edildi.",
+      "Son durum: F1-F23 Cadde redesign batch'lerinin tamamı bitti ve kod ana dala commitlendi. Sende kalan işler ayrı: Coolify deploy, giriş yaparak kısa QA turu, revizyon panosunda ilgili kutuları 'yapıldı'ya çekmek ve Footer işi; Footer bilinçli olarak bu pakete dokunulmadı.",
+    ],
+  },
+  {
     id: "20260802-komuta-merkezi-summary9",
     date: "2 Ağustos 2026",
     title:
