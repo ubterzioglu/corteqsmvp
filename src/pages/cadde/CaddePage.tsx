@@ -458,12 +458,17 @@ const CaddePage = () => {
     <main className="cadde-shell">
       <section>
         <div className="mx-auto w-full max-w-7xl px-4 pt-5 lg:px-6">
-          <div className="cadde-card flex flex-nowrap items-center gap-3 rounded-[20px] px-4 py-3 sm:px-5">
+          <div className="cadde-card flex flex-wrap items-center gap-3 rounded-[20px] px-4 py-3 sm:px-5">
             <Badge className="cadde-chip-brand shrink-0">CorteQS Cadde</Badge>
             <p className="min-w-0 flex-1 truncate text-sm text-slate-600">
               Şehrindeki Türklerle tanış, sor, paylaş ve fırsatları keşfet.
             </p>
-            <div className="shrink-0">
+            <div className="flex shrink-0 items-center gap-4">
+              <CaddeWorldClocks
+                viewerCity={actorContextQuery.data?.city ?? null}
+                filterCity={filters.cities[0] ?? null}
+                cities={citiesQuery.data ?? []}
+              />
               <NotificationsBell />
             </div>
           </div>
@@ -598,14 +603,7 @@ const CaddePage = () => {
                   <CardTitle className="font-display text-xl">Diaspora Cadde</CardTitle>
                   <CardDescription>Global Türk topluluğunun şehir bazlı sosyal akışı</CardDescription>
                 </div>
-                <div className="flex flex-wrap items-center gap-4">
-                  <Badge variant="outline">{summarizeCaddeFilters(filters)}</Badge>
-                  <CaddeWorldClocks
-                    viewerCity={actorContextQuery.data?.city ?? null}
-                    filterCity={filters.cities[0] ?? null}
-                    cities={citiesQuery.data ?? []}
-                  />
-                </div>
+                <Badge variant="outline">{summarizeCaddeFilters(filters)}</Badge>
               </div>
             </CardHeader>
           </Card>
