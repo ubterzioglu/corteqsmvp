@@ -300,11 +300,12 @@
     background-color: hsl(var(--section-warm));
   }
 
-  /* Cadde 3.0 F23 — koyu shell + merkezi yüzey token'ları. */
+  /* Cadde 3.0 F23 — açık, atmosferik shell + merkezi yüzey token'ları.
+     --cadde-ink koyu kalır (yalnız gölge tonu için kullanılır, arka plan değil). */
   .cadde-shell {
     --cadde-ink: 222 47% 11%;
-    --cadde-shell-top: 222 47% 11%;
-    --cadde-shell-mid: 217 32% 17%;
+    --cadde-shell-top: 214 62% 95%;
+    --cadde-shell-mid: 26 48% 96%;
     --cadde-shell-bottom: 30 22% 96%;
     --cadde-panel: 0 0% 100%;
     --cadde-panel-soft: 210 40% 98%;
