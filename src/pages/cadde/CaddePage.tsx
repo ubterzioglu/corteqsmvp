@@ -475,7 +475,7 @@ const CaddePage = () => {
             Not: workshop'un "akordeon kart denemesi" bilinçli atlandı — kolon 2 karta
             indiği için akordeonun çözeceği kalabalık kalmadı (commit gerekçesinde). */}
         <aside className="order-2 space-y-5 lg:order-none">
-          <Card className="cadde-panel cadde-shadow-soft">
+          <Card className="cadde-panel">
             <CardHeader className="space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <div>
@@ -1067,8 +1067,7 @@ const CaddePage = () => {
                     </span>
                   </>
                 );
-                const cardClassName =
-                  "cadde-card group block rounded-[24px] p-4 transition hover:border-slate-300 hover:shadow-md";
+                const cardClassName = "cadde-card group block rounded-[24px] p-4";
 
                 return isInternalCaddeLink(card.ctaUrl) ? (
                   <Link key={card.id} to={card.ctaUrl} className={cardClassName}>

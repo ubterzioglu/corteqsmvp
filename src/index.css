@@ -313,6 +313,14 @@
     --cadde-warm-strong: 30 92% 88%;
     --cadde-accent: 24 92% 52%;
     --cadde-accent-ink: 24 74% 24%;
+    /* Gerçek logo paleti — fırıldaktaki 5 figürden örneklenen ton (newlogo.png).
+       Kart imzası (üst şerit) ve premium vurgular buradan gelir; genel site
+       brand-* değişkenlerinden bağımsız, sadece Cadde kartlarına özgü. */
+    --cadde-logo-red: 9 82% 53%;
+    --cadde-logo-amber: 38 97% 54%;
+    --cadde-logo-green: 130 49% 42%;
+    --cadde-logo-blue: 201 78% 45%;
+    --cadde-logo-pink: 320 47% 67%;
     min-height: 100vh;
     background:
       radial-gradient(900px 340px at 16% -8%, hsl(var(--cadde-accent) / 0.22), transparent 58%),
@@ -338,24 +346,70 @@
     color: hsl(var(--cadde-accent-ink));
   }
 
-  .cadde-panel {
-    border-color: hsl(var(--cadde-line) / 0.86);
-    background: hsl(var(--cadde-panel) / 0.94);
+  /* Premium kart yüzeyi: çift katmanlı gölge + logo renklerinden üst şerit imza.
+     .cadde-panel (yan kolon) ve .cadde-card (akış/cafe/vitrin kartları) aynı
+     yüzeyi paylaşır — sayfadaki her "kart" tutarlı, markalı bir his verir. */
+  .cadde-panel,
+  .cadde-card {
+    position: relative;
+    overflow: hidden;
+    border-color: hsl(var(--cadde-line) / 0.7);
+    background: linear-gradient(180deg, hsl(var(--cadde-panel)) 0%, hsl(var(--cadde-panel-soft)) 100%);
+    box-shadow:
+      0 1px 0 0 hsl(0 0% 100% / 0.7) inset,
+      0 1px 2px 0 hsl(var(--cadde-ink) / 0.05),
+      0 20px 40px -28px hsl(var(--cadde-ink) / 0.45);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+
+  .cadde-panel::before,
+  .cadde-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      hsl(var(--cadde-logo-red)) 0%,
+      hsl(var(--cadde-logo-amber)) 25%,
+      hsl(var(--cadde-logo-green)) 50%,
+      hsl(var(--cadde-logo-blue)) 75%,
+      hsl(var(--cadde-logo-pink)) 100%
+    );
+    opacity: 0.65;
+    transition: opacity 0.25s ease;
+  }
+
+  .cadde-panel:hover,
+  .cadde-card:hover {
+    transform: translateY(-2px);
+    border-color: hsl(var(--cadde-line) / 0.5);
+    box-shadow:
+      0 1px 0 0 hsl(0 0% 100% / 0.8) inset,
+      0 1px 2px 0 hsl(var(--cadde-ink) / 0.06),
+      0 28px 54px -26px hsl(var(--cadde-ink) / 0.5);
+  }
+
+  .cadde-panel:hover::before,
+  .cadde-card:hover::before {
+    opacity: 0.95;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cadde-panel,
+    .cadde-card {
+      transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .cadde-panel:hover,
+    .cadde-card:hover {
+      transform: none;
+    }
   }
 
   .cadde-panel-soft {
     border-color: hsl(var(--cadde-line) / 0.8);
     background: linear-gradient(180deg, hsl(var(--cadde-panel)) 0%, hsl(var(--cadde-panel-soft)) 100%);
-  }
-
-  .cadde-shadow-soft {
-    box-shadow: 0 16px 38px -30px hsl(222 47% 11% / 0.42);
-  }
-
-  .cadde-card {
-    border-color: hsl(var(--cadde-line) / 0.86);
-    background: linear-gradient(180deg, hsl(var(--cadde-panel)) 0%, hsl(var(--cadde-panel-soft)) 100%);
-    box-shadow: 0 12px 28px -24px hsl(222 47% 11% / 0.34);
   }
 
   .cadde-empty {
