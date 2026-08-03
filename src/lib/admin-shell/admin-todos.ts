@@ -81,6 +81,19 @@ export const ADMIN_TODOS: AdminTodoEntry[] = [
     actions: [{ label: "Bir Aracı Dene", to: "/tools" }],
   },
   {
+    id: "20260802-supabase-custom-domain-google-ekrani",
+    title: "Google giriş ekranındaki çirkin adresi düzelt (Custom Domain)",
+    description:
+      "Google ile giriş yapan üyeler onay ekranında 'injprdrsklkxgnaiixzh.supabase.co uygulamasında oturum açın' görüyor — güven vermiyor. Kalıcı çözüm plan olarak hazır: Supabase'de Custom Domain add-on'unu aç, bir alt domain bağla (öneri: auth.corteqs.net — henüz KARARLAŞTIRILMADI), Google Cloud Console'a yeni callback URI ekle, sonunda Coolify'daki VITE_SUPABASE_URL'i yeni domaine çevirip deploy et. Kod tarafında değişiklik gerekmiyor. Tam adım listesi ve kim-ne-yapar tablosu docs/operations/2026-08-02-supabase-custom-domain-google-oauth.md dosyasında — henüz hiçbir adım başlamadı, add-on bile açılmadı.",
+    priority: "normal",
+    actions: [
+      {
+        label: "Supabase Dashboard'ı Aç",
+        href: "https://supabase.com/dashboard/project/injprdrsklkxgnaiixzh",
+      },
+    ],
+  },
+  {
     id: "20260731-ilk-1800-ozetini-dogrula",
     title: "İlk 18:00 günlük özetini doğrula",
     description:
