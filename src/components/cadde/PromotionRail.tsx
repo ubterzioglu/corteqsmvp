@@ -28,7 +28,7 @@ const PromotionRail = ({ filters }: PromotionRailProps) => {
   return (
     <Card className="border-orange-100 bg-white/90">
       <CardHeader className="pb-2">
-        <CardTitle className="text-base">Tanıtım</CardTitle>
+        <CardTitle className="font-display text-base">Tanıtım</CardTitle>
         <CardDescription>Sponsorlu keşif alanı</CardDescription>
       </CardHeader>
       {promotions.length > 0 ? (

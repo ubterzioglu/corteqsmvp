@@ -21,7 +21,7 @@ const CaddeTrendingHashtags = () => {
   return (
     <Card className="border-slate-200 bg-white/90" data-testid="cadde-trending-hashtags">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-base">
+        <CardTitle className="flex items-center gap-2 font-display text-base">
           <Hash className="h-4 w-4 text-sky-600" />
           Şu An Konuşulanlar
         </CardTitle>

@@ -56,7 +56,7 @@ const CaddeFeaturedSpotlight = ({ card }: CaddeFeaturedSpotlightProps) => {
       data-testid="cadde-featured-spotlight"
     >
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-base">
+        <CardTitle className="flex items-center gap-2 font-display text-base">
           <Sparkles className="h-4 w-4 text-orange-500" />
           Caddede Öne Çıkan
         </CardTitle>

@@ -479,7 +479,7 @@ const CaddePage = () => {
             <CardHeader className="space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <CardTitle>Konum</CardTitle>
+                  <CardTitle className="font-display text-lg">Konum</CardTitle>
                   <CardDescription>Global akış, şehir seçimi ve köprü modu</CardDescription>
                 </div>
                 <Globe2 className="h-5 w-5 text-orange-500" />
@@ -531,7 +531,7 @@ const CaddePage = () => {
 
           <Card className="hidden border-slate-200 bg-white/90 lg:block">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
+              <CardTitle className="flex items-center gap-2 font-display text-base">
                 <MessagesSquare className="h-4 w-4 text-orange-500" />
                 İnsanları Keşfet
               </CardTitle>
@@ -593,7 +593,7 @@ const CaddePage = () => {
             <CardHeader className="gap-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <CardTitle>Diaspora Cadde</CardTitle>
+                  <CardTitle className="font-display text-xl">Diaspora Cadde</CardTitle>
                   <CardDescription>Global Türk topluluğunun şehir bazlı sosyal akışı</CardDescription>
                 </div>
                 <Badge variant="outline">{summarizeCaddeFilters(filters)}</Badge>
@@ -610,7 +610,7 @@ const CaddePage = () => {
             <CardHeader>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <CardTitle className="text-lg">Aktif Cafeler</CardTitle>
+                  <CardTitle className="font-display text-lg">Aktif Cafeler</CardTitle>
                   <CardDescription>Kısa süreli topluluk odaları ve tema bazlı buluşmalar</CardDescription>
                 </div>
                 {session ? <CreateCafeForm trigger={<Button size="sm" variant="outline" className="rounded-2xl">+ Cafe Aç</Button>} /> : null}
@@ -996,7 +996,7 @@ const CaddePage = () => {
               className="cadde-featured overflow-hidden"
             >
               <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 text-base">
+                <CardTitle className="flex items-center gap-2 font-display text-base">
                   <Sparkles className="h-4 w-4 text-orange-500" />
                   Caddede Öne Çık
                 </CardTitle>
@@ -1043,7 +1043,7 @@ const CaddePage = () => {
 
           <Card className="border-slate-200 bg-white/90">
             <CardHeader>
-              <CardTitle>Şehrinden Öne Çıkanlar</CardTitle>
+              <CardTitle className="font-display text-lg">Şehrinden Öne Çıkanlar</CardTitle>
               <CardDescription>Danışman, işletme ve etkinlik kartları</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -1105,7 +1105,7 @@ const CaddePage = () => {
           <Card className="border-slate-200 bg-slate-900 text-white">
             <CardHeader>
               {/* text-balance: "Ol" tek başına ikinci satıra düşmesin (dar sidebar'da kırılıyordu). */}
-              <CardTitle className="text-balance text-[clamp(1rem,2.2vw,1.25rem)] leading-snug text-white">
+              <CardTitle className="text-balance font-display text-[clamp(1rem,2.2vw,1.25rem)] leading-snug text-white">
                 Cadde İçinde Görünür Ol
               </CardTitle>
               {/* m45: "talep bırak" kalktı — kullanıcı kendi profilinden bütçe verip
