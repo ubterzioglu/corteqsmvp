@@ -17,7 +17,7 @@ import { relocationToolsKeys } from "@/lib/relocation-tools-query-keys";
 import { useRelocationToolSession } from "@/hooks/useRelocationToolSession";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
 import { toolHeroImage } from "@/lib/relocation-tools-images";
-import { getGermanyStandaloneTool } from "@/lib/germany-standalone-tools";
+import { getStandaloneTool } from "@/lib/standalone-tools";
 import { useSeo } from "@/lib/seo";
 
 const TOOL_SESSION_MODE = "detailed" as const;
@@ -64,7 +64,7 @@ export default function RelocationToolPage() {
 
   // Standalone Almanya aracı mı? Öyleyse session motorunu atla, kendi bileşenini lazy yükle.
   // Hook sırası bozulmasın diye TÜM hook'lar koşulsuz çağrılır; standalone return en sonda.
-  const standalone = getGermanyStandaloneTool(toolSlug);
+  const standalone = getStandaloneTool(toolSlug);
   const StandaloneComponent = useMemo(
     () => (standalone ? lazy(standalone.load) : null),
     [standalone],

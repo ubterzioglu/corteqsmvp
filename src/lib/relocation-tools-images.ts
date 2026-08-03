@@ -21,6 +21,7 @@ const TOOL_HERO_BY_SLUG: Record<string, string> = {
   "vatandaslik-testi-almanya": "/relocation-tools/vatandaslik-testi-almanya.jpg",
   "para-transferi-almanya": "/relocation-tools/para-transferi-almanya.jpg",
   "stepstone-karsilastirma-almanya": "/relocation-tools/stepstone-karsilastirma-almanya.jpg",
+  "zgen-nesil-bulucu": "/relocation-tools/zgen/gen_genz_f.jpg",
 };
 
 /** Araç slug'ı için hero görsel yolunu döndürür; tanımsızsa undefined (görselsiz fallback). */
