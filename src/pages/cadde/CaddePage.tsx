@@ -598,13 +598,15 @@ const CaddePage = () => {
                   <CardTitle className="font-display text-xl">Diaspora Cadde</CardTitle>
                   <CardDescription>Global Türk topluluğunun şehir bazlı sosyal akışı</CardDescription>
                 </div>
-                <Badge variant="outline">{summarizeCaddeFilters(filters)}</Badge>
+                <div className="flex flex-wrap items-center gap-4">
+                  <Badge variant="outline">{summarizeCaddeFilters(filters)}</Badge>
+                  <CaddeWorldClocks
+                    viewerCity={actorContextQuery.data?.city ?? null}
+                    filterCity={filters.cities[0] ?? null}
+                    cities={citiesQuery.data ?? []}
+                  />
+                </div>
               </div>
-              <CaddeWorldClocks
-                viewerCity={actorContextQuery.data?.city ?? null}
-                filterCity={filters.cities[0] ?? null}
-                cities={citiesQuery.data ?? []}
-              />
             </CardHeader>
           </Card>
 
