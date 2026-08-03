@@ -334,13 +334,6 @@
       );
   }
 
-  .cadde-topbar {
-    border-bottom: 1px solid hsl(30 45% 88% / 0.18);
-    background: hsl(222 47% 11% / 0.72);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-  }
-
   .cadde-chip-brand {
     background: hsl(var(--cadde-warm-strong));
     color: hsl(var(--cadde-accent-ink));

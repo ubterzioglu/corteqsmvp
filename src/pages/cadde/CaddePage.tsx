@@ -456,14 +456,16 @@ const CaddePage = () => {
   return (
     <CaddeProfileGate context={actorContextQuery.data} isLoading={actorContextQuery.isLoading}>
     <main className="cadde-shell">
-      <section className="cadde-topbar">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-4 py-5 lg:px-6">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge className="cadde-chip-brand">CorteQS Cadde</Badge>
-            <p className="text-sm text-slate-200">Şehrindeki Türklerle tanış, sor, paylaş ve fırsatları keşfet.</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <NotificationsBell />
+      <section>
+        <div className="mx-auto w-full max-w-7xl px-4 pt-5 lg:px-6">
+          <div className="cadde-card flex flex-nowrap items-center gap-3 rounded-[20px] px-4 py-3 sm:px-5">
+            <Badge className="cadde-chip-brand shrink-0">CorteQS Cadde</Badge>
+            <p className="min-w-0 flex-1 truncate text-sm text-slate-600">
+              Şehrindeki Türklerle tanış, sor, paylaş ve fırsatları keşfet.
+            </p>
+            <div className="shrink-0">
+              <NotificationsBell />
+            </div>
           </div>
         </div>
       </section>
@@ -618,11 +620,11 @@ const CaddePage = () => {
             </CardHeader>
             <CardContent>
               {activeCafes.length > 0 ? (
-                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                  {/* m2: flex-col/h-full + mt-auto footer — kartlar aynı hizada biter.
-                      m3: çay bardağı ikonu = kafe kartının imzası. m4: ad bold + tema normal. */}
+                <div className="flex flex-col gap-3">
+                  {/* m3: çay bardağı ikonu = kafe kartının imzası. m4: ad bold + tema normal.
+                      Satır satır (tek kolon) liste — kart başlıkları artık kısaltılmıyor. */}
                   {activeCafes.map((cafe) => (
-                    <div key={cafe.id} className="cadde-card flex h-full flex-col rounded-[22px] p-4">
+                    <div key={cafe.id} className="cadde-card flex flex-col rounded-[22px] p-4">
                       <div className="flex items-start gap-2.5">
                         <CaddeCafeIcon className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
                         <div className="min-w-0 flex-1">
