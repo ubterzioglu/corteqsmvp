@@ -58,19 +58,11 @@ export const ADMIN_TODOS: AdminTodoEntry[] = [
   },
   {
     id: "20260802-coolify-deploy-birikti",
-    title: "Coolify deploy birikti — bugünün işi hâlâ görünmüyor",
+    title: "Coolify deploy birikti — 2 günün işi hâlâ görünmüyor",
     description:
-      "2 Ağustos'ta yapılan hiçbir şey canlıda görünmüyor: Cadde redesign'ın tamamı (F1-F23, 23 batch), taşınma araçlarındaki slider→radyo buton düzeltmesi, Meslek/Maaş aracı iyileştirmesi, Komuta Merkezi'nin tamamlanan-görevler akordiyonu ve bu panele az önce eklenen kayıtların kendisi. Hepsi ana kodda ve push'lu; geriye yalnız Coolify'dan yeni sürümü yayınlamak kaldı.",
+      "2-3 Ağustos'ta yapılan hiçbir şey canlıda görünmüyor: Cadde redesign'ın tamamı (F1-F23) + 4 görsel ince ayar, taşınma araçlarındaki slider→radyo buton düzeltmesi, Meslek/Maaş aracı iyileştirmesi + havuz 5→68, Komuta Merkezi'nin tamamlanan-görevler akordiyonu, /tools hub görsel yenilemesi + ZGEN Nesil Bulucu (18. araç) + uzay temalı giriş bandı, ve bu panele eklenen kayıtların kendisi. Hepsi ana kodda ve push'lu; geriye yalnız Coolify'dan yeni sürümü yayınlamak kaldı.",
     priority: "kritik",
     actions: [{ label: "İş Panosunu Aç", to: "/admin/workshop/cadde" }],
-  },
-  {
-    id: "20260802-meslek-maas-migration-kontrol",
-    title: "Meslek/Maaş soru metni güncellemesini canlıya uygula",
-    description:
-      "20260802143000_profession_salary_question_ux.sql dosyası supabase/migrations/ altında duruyor ama applied/ klasörüne taşınmamış — bu projede bir migration'ın canlıya gerçekten uygulandığının işareti odur. Yani meslek/ülke/şehir sorularındaki yeni yardımcı metinler ve seçici ayarları veritabanında henüz YOK olabilir. Deploy öncesi bunun psql ile uygulanıp uygulanmadığının teyit edilmesi gerekiyor.",
-    priority: "normal",
-    actions: [{ label: "Soru Sayıları'nı Aç", to: "/admin/relocation-tools/soru-sayilari" }],
   },
   {
     id: "20260802-sonuc-cta-karari",

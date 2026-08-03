@@ -14,6 +14,50 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260803-zgen-nesil-bulucu-eklendi",
+    date: "3 Ağustos 2026",
+    title: "ZGEN Nesil Bulucu 18. araç olarak /tools'a katıldı",
+    items: [
+      "ZGEN Nesil Bulucu şimdiye kadar ayrı, kendi başına duran bir statik HTML/CSS/JS mini-uygulamaydı — sitenin diğer 17 aracıyla aynı görünüme sahip değildi. Artık React'e taşındı ve diğer araçlarla aynı bileşenleri (kart, akordiyon, rozet) ve marka renklerini kullanıyor — /tools hub'ında 18. kart olarak diğerleriyle birebir aynı görünüyor.",
+      "Bir davranış değişti: eski standalone sayfa 'kayıt gerekmez' diye tanıtılıyordu, artık diğer 17 araçla aynı kurala uyup giriş yapılmasını istiyor. Bilinçli bir tutarlılık kararı.",
+      "Durum: kod ana koda alındı. Giriş gerektiren bir sayfa olduğu için bu ortamda gerçek oturumla gözle doğrulanamadı; deploy sonrası kısa bir QA öneriliyor. Deploy'a kadar canlıda görünmez.",
+    ],
+  },
+  {
+    id: "20260803-araclar-uzay-banner",
+    date: "3 Ağustos 2026",
+    title: "Araç sayfalarının giriş bandı 'uzay havası'na büründü",
+    items: [
+      "İstek şuydu: 'araçlara girince uzay havası yaşat.' Bir aracı açtığında üstte gördüğün başlık bandı artık koyu bir uzay kabuğu: nebula tonlu gradyan zemin, yumuşak titreşen yıldız noktaları ve üç yüzen ikon (✨🪐⭐).",
+      "Kapsam bilinçli dar tutuldu: yalnız aracı açtığında görünen üst tanıtım bandı değişti — soru adımları ve sonuç ekranı dokunulmadı, Almanya araçları (banka/sigorta/vize) bu bandı hiç kullanmıyor.",
+      "Durum: kod ana koda alındı. Sayfa giriş gerektirdiği için bu ortamda gerçek tarayıcıda görsel doğrulama yapılamadı (izole bir HTML kopyasında görsel olarak kontrol edildi) — deploy sonrası kısa bir göz kontrolü öneriliyor.",
+    ],
+  },
+  {
+    id: "20260803-cadde-gorsel-ince-ayar",
+    date: "3 Ağustos 2026",
+    title: "Cadde'de 4 küçük görsel düzeltme: koyu bant açıldı, üst çubuk sadeleşti, kafe listesi tek kolon oldu",
+    items: [
+      "Cadde sayfasının üst kısmı ekran görüntüsünde koyu, hatta siyaha yakın bir bant gibi görünüyordu — bu ton açık/atmosferik bir tona çevrildi (gün doğumu hissi korunarak, hiçbir yerde koyu/siyah kalmadı).",
+      "Rozet + açıklama + bildirim zilini taşıyan üst çubuk artık ayrı koyu bir bar değil, sayfadaki diğer kartlarla aynı beyaz kart yüzeyi ve tek satır — küçük ekranda ikinci satıra taşmıyor.",
+      "Aktif Cafeler listesi çoklu sütun yerine tek kolon akıyor — dar sütunlarda kafe başlıkları yarıda kesiliyordu, artık tam genişlikte kesilmeden görünüyor.",
+      "Konum, Diaspora Cadde ve Şehrinden Öne Çıkanlar başlıkları sayfadaki diğer kartlara göre oransız büyük kalmıştı, boyutları küçültüldü ve sitenin marka başlık fontu (Space Grotesk) Cadde'ye de eklendi. Kartlara logodan alınan renklerle ince bir üst şerit ve hafif derinlik/gölge efekti geldi.",
+      "Durum: kod ana koda alındı. Bu oturumda tarayıcı/ekran görüntüsü aracı yoktu — değişiklikler dev sunucusunda HTTP/derleme/ESLint kontrolünden geçirildi ama gerçek görsel doğrulama yapılmadı; deploy sonrası göz kontrolü öneriliyor.",
+    ],
+  },
+  {
+    id: "20260802-meslek-maas-havuz-68",
+    date: "2 Ağustos 2026",
+    title: "Meslek/Maaş karşılaştırma havuzu 5 meslekten 68'e çıktı, liste artık veritabanından besleniyor",
+    items: [
+      "Canlı veritabanı bir süredir kod dışında 35 mesleğe çıkmıştı ama bunların yalnız orijinal 5'inin maaş karşılaştırma verisi vardı — listeden diğer 30 mesleği seçen kullanıcı sessizce 'veri bulunamadı' sonucu alıyordu.",
+      "33 yeni meslek eklendi ve verisi eksik olan 63 mesleğin hepsine (8 ülke için) maaş karşılaştırma verisi işlendi. Meslek seçim listesi artık kod içine gömülü sabit bir dizi değil, doğrudan veritabanından geliyor — yeni meslek eklemek bundan sonra deploy gerektirmiyor.",
+      "Ayrıca iki eski veritabanı güncellemesi (Çarşı görünürlük ayarı ve meslek/maaş soru metni güncellemesi) canlıya uygulanmış ama 'uygulandı' klasörüne taşınmamış çıktı — bu turda taşındı, yani önceki oturumda 'canlıya uygulanmamış olabilir' diye işaretlediğimiz kayıt artık kapandı.",
+      "Dürüst not: yeni mesleklerin maaş rakamları küratörlü tahmin (orijinal 5 meslekle aynı yöntem, gerçek zamanlı bir maaş API'sinden değil) — veri kaynağı bağlandıkça rafine edilecek.",
+      "Durum: veritabanı değişikliği canlıya UYGULANDI, kod ana koda alındı, deploy bekliyor.",
+    ],
+  },
+  {
     id: "20260802-araclar-hub-gorsel-yenileme",
     date: "2 Ağustos 2026",
     title:
