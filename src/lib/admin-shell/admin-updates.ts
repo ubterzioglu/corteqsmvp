@@ -14,6 +14,31 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260804-nginx-guvenlik-seo-ve-kesinti",
+    date: "4 Ağustos 2026",
+    title:
+      "Sitenin sunucu ayarları elden geçti: güvenlik başlıkları, yönlendirmeler ve SEO düzeltmeleri — arada kısa bir kesinti yaşandı",
+    items: [
+      "Yıllardır süren bir yanlış anlaşılma ortaya çıktı: proje dokümanları canlıdaki sunucuyu `server.mjs` diye tarif ediyordu, oysa canlıda nginx çalışıyor. Yani o dosyaya yazılmış eski adres yönlendirmeleri, www→ana adres kuralı ve sohbet servisinin hız sınırı canlıda hiç çalışmamış. Somut kanıt: /hakkimizda adresinin /founders'a yönlenmesi gerekirken doğrudan açılması.",
+      "Güvenlik başlıkları (tarayıcıya 'bu sayfayı başka bir sitenin çerçevesine alma, sadece izin verilen kaynaklardan script çalıştır' diyen kurallar) /robots.txt gibi bazı adreslerde geliyordu ama sitenin ana adresinde hiç gelmiyordu — giriş ve yönetim sayfaları dahil tüm site bu korumasız haldeydi. Sebebi nginx'in bu başlıkları alt bloklara miras bırakmaması; artık gereken beş yerde de tekrarlanıyor.",
+      "Eski adres yönlendirmeleri tek bir listeye toplandı. Bundan sonra bir yönlendirme eklenirken sunucu ayarı ile uygulama tarafı birbirinden ayrı düşerse, bunu yakalayan otomatik testler var — sessizce bozulmuyor.",
+      "SEO tarafında: site haritası gerçek durumu yansıtacak şekilde düzeltildi (108 adres), bulunamayan sayfa artık arama motorlarına açıkça 'bunu dizine ekleme' diyor, ve hiçbir yerden bağlantı verilmeyen 5 ölü sayfa silindi (harita arama, şehir haberleri, post üretici ve 2 WhatsApp grup sayfası).",
+      "⚠️ Kesinti: bu değişiklikler canlıya çıkınca corteqs.net tamamen açılmaz oldu, tarayıcı 'çok fazla yönlendirme' hatası verdi. Sebep şuydu: yeni eklenen www→ana adres yönlendirme bloğu nginx'te farkında olmadan 'varsayılan' blok konumuna geçti, ana adres de kendi kendine yönlenip sonsuz döngüye girdi. Tek satırlık bir düzeltmeyle çözüldü; aynı hatanın tekrarını yakalayan bir test de eklendi.",
+      "Durum: hem asıl çalışma hem düzeltme ana koda alındı. Bu ortamda gerçek sunucu davranışı test edilemedi (test yalnız ayar dosyasının metnini denetliyor) — deploy sonrası ana adresin açıldığı, /hakkimizda gibi eski adreslerin doğru yere yönlendiği ve tarayıcı konsolunda hata çıkmadığı mutlaka gözle kontrol edilmeli.",
+    ],
+  },
+  {
+    id: "20260804-revizyon-istegi-anlik-mail",
+    date: "4 Ağustos 2026",
+    title: "Yeni bir revizyon isteği açıldığında ilgili yöneticilere anında e-posta gidiyor",
+    items: [
+      "Şimdiye kadar revizyon listesine yeni bir madde eklendiğinde kimsenin haberi olmuyordu; görmek için panele girip bakmak gerekiyordu. Artık istek açılır açılmaz e-posta gidiyor: kimin açtığı, hangi sayfa/alanla ilgili olduğu, önceliği ve açıklaması mailin içinde.",
+      "Bildirim Ayarları sayfasına dördüncü bir anahtar eklendi — her yönetici bu bildirime kendi aboneliğini açıp kapatabiliyor. Üstteki zil menüsünde de görünüyor.",
+      "Yeni bir altyapı kurulmadı: üye kaydı, başvuru ve anket bildirimlerinin kullandığı mevcut e-posta kuyruğuna dördüncü olay tipi olarak eklendi.",
+      "Durum: canlıda ve anahtarı AÇIK. Gerçek bir kayıtla uçtan uca denendi (deneme kaydı sonradan geri alındı). Şu an abone olan iki yönetici hesabı var. Ayar sayfasının yeni hâli deploy sonrası görünür.",
+    ],
+  },
+  {
     id: "20260804-komuta-merkezi-eksik-parti-ve-hiz",
     date: "4 Ağustos 2026",
     title:
@@ -24,6 +49,52 @@ export const ADMIN_UPDATES: AdminUpdateEntry[] = [
       "Artık o üç ağır okuma yerine veritabanı tarafında hazırlanan tek bir özet okunuyor. Kaynak kartında 'WA 3 Ağustos (329)' göründü, 'WA 6 Temmuz' da kesik 371 yerine gerçek 411 kaydıyla listeleniyor; kategori ve tarih filtreleri arasında geçiş de artık ağ isteği beklemiyor.",
       "Kayıt listesi varsayılan olarak 10 kayıtla açılıyor — ilk açılış belirgin biçimde hafifledi. Daha uzun liste istersen sayfalama çubuğundaki 'Sayfa boyutu' seçicisinden 50 veya 100'e geçebilirsin; seçimin tarayıcında hatırlanıyor.",
       "Durum: veritabanı tarafı canlıda ve gerçek veriyle doğrulandı (özet 320 satır, 1477 kayıt). Panonun kendisindeki değişiklikler deploy sonrası görünür.",
+    ],
+  },
+  {
+    id: "20260804-komuta-merkezi-sisman-todo-bolme",
+    date: "4 Ağustos 2026",
+    title: "Komuta Merkezi'ndeki 3 'şişman' todo 11 ayrı işe bölündü",
+    items: [
+      "Listede tek satır gibi duran ama detayında 8-13 ayrı iş barındıran 3 kayıt vardı. Bu kayıtlar pratikte hiç 'tamamlandı' olamıyordu, çünkü içlerinden biri hep açık kalıyordu — ilerleme de görünmüyordu.",
+      "Bu 3 kayıt 11 ayrı todoya bölündü. Eski kayıtlar silinmedi, arşive alındı; geçmişe bakmak isteyen bulabilir.",
+      "Hedef bilinçli olarak 'her satırda tek madde' değil, 'her satırda tek İŞ' oldu. Yeni todoların 4'ü hâlâ birkaç alt madde taşıyor — örneğin 'FAQ dokümanını yaz' tek bir iştir, maddeleri o işin adımlarıdır. Bunlar tekrar bölünmeyecek.",
+      "Küçük bir not: WhatsApp kaydından çıkan 5 todo, bölündüğü ana kaydın eski tarihini (19 Mayıs) devraldığı için gecikmiş görünüyor. Rahatsız ederse tarihleri tek hamlede boşaltılabilir.",
+      "Durum: veritabanı tarafı canlıda ve doğrulandı — panelde şimdiden görünüyor, deploy beklemiyor.",
+    ],
+  },
+  {
+    id: "20260804-araclar-olcek-cevabi-ve-ulke-limiti",
+    date: "4 Ağustos 2026",
+    title: "Araçlarda sessizce boş kaydedilen cevap düzeltildi, ülke seçimi en fazla 3'e indi",
+    items: [
+      "1-5 arası ölçek sorularında ekranda ortadaki şık seçili görünüyordu, ama kullanıcı ona hiç dokunmadan 'İleri'ye basarsa cevap boş kaydediliyordu — yani ekranda gördüğü ile kaydedilen şey farklıydı, üstelik hiçbir uyarı çıkmıyordu. Artık ekranda görünen varsayılan gerçek cevap olarak kaydediliyor.",
+      "Meslek/Maaş karşılaştırmasında hedef ülke seçimi en fazla 5 iken 3'e indirildi; çok geniş seçim hem sonucu yavaşlatıyor hem de karşılaştırmayı okunmaz hale getiriyordu. Yardım metinlerindeki sayı da artık elle yazılmıyor, tek bir yerden üretiliyor.",
+      "Durum: ölçek düzeltmesi kod tarafında, deploy sonrası geçerli olur. Ülke limitini indiren veritabanı güncellemesi yazıldı ancak canlı veritabanına uygulandığı bu turda doğrulanmadı — deploy öncesi kontrol edilmeli.",
+    ],
+  },
+  {
+    id: "20260804-workshop-ikinci-toplanti",
+    date: "4 Ağustos 2026",
+    title:
+      "Cadde workshop panosu artık iki toplantıyı birden taşıyor: 4 Ağustos'un 79 maddesi eklendi, tamamlananlar aşağı taşındı",
+    items: [
+      "Pano şimdiye kadar tek bir toplantının maddelerini tutuyordu. 4 Ağustos 2026'daki ikinci Cadde workshop toplantısının 79 maddesi 6 bölüm halinde eklendi; ilk toplantının 53 maddesi ve onayları olduğu gibi duruyor.",
+      "Filtre çubuğunun başına 'Tüm workshoplar / WS1 / WS2' seçicisi geldi. Üstteki sayaçlar ve ilerleme çubuğu seçtiğin toplantıyı yansıtıyor; her maddede ve bölüm kartında hangi toplantıdan geldiğini gösteren küçük bir rozet var — aynı adı taşıyan bölümler artık iki toplantıdan karışıp tek kartta birleşmiyor.",
+      "Madde numaraları toplantılar arasında devam ediyor (2. toplantı 54'ten 132'ye kadar), böylece 'madde 57' demek tek bir maddeyi işaret etmeye devam ediyor. Yeni madde eklerken form varsayılan olarak en son toplantıya yazıyor.",
+      "İki onayı da almış maddeler artık üst kartları şişirmiyor: en altta, varsayılan olarak kapalı duran 'Tamamlananlar (N)' akordeonuna taşındılar — içinde onay kutuları, düzenleme ve silme aynen çalışıyor. Bölüm başlığındaki tamamlanan/toplam sayacı yine tüm maddeleri sayıyor.",
+      "Üçüncü bir workshop için artık veritabanı değişikliği gerekmiyor; doğrudan panelden eklenebilir.",
+      "Durum: maddeler canlı veritabanında, sayıları doğrulandı (79). Panonun yeni hâli deploy sonrası görünür.",
+    ],
+  },
+  {
+    id: "20260804-zgen-turkce",
+    date: "4 Ağustos 2026",
+    title: "Nesil Bulucu aracının içeriği tamamen Türkçeleşti",
+    items: [
+      "Araç Türkçe bir arayüzün içinde İngilizce içerik gösteriyordu. 7 kuşak adı, 70 tipik özellik, 35 'vibe' rozeti ve 42 uyum bloğu (210 'Yap', 210 'Yapma' ve 42 espri) Türkçeye çevrildi — birebir değil, esprili ton korunarak anlamı üzerinden.",
+      "Kuşak adları artık 'X Kuşağı' gibi ekini içerdiği için profil kartındaki başlık tekrar üretmesin diye 'Sen ... kuşağındansın' yerine 'Senin kuşağın: ...' oldu.",
+      "Durum: kod ana koda alındı, deploy sonrası görünür.",
     ],
   },
   {
