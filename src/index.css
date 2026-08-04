@@ -301,19 +301,27 @@
   }
 
   /* Cadde 3.0 F23 — açık, atmosferik shell + merkezi yüzey token'ları.
-     --cadde-ink koyu kalır (yalnız gölge tonu için kullanılır, arka plan değil). */
+     --cadde-ink koyu kalır (yalnız gölge tonu için kullanılır, arka plan değil).
+
+     Workshop m82 (04.08.2026): kontrast ~%10-15 artırıldı. Artış YALNIZ buradaki
+     token değerlerinden gelir — sayfalara inline hex geri koyma (F23 sözleşmesi).
+     Yöntem: zemin katmanları 2-3 L puanı koyulaştı (kart beyazı sabit kaldı, böylece
+     kart↔zemin farkı büyüdü), çizgi ve mürekkep tonları koyulaştı.
+     m83 guardrail: YENİ renk eklenmedi, yalnız mevcut tonlar sıkıldı; kartın logo
+     şeridi de bir tık geri çekildi ki sayfa daha kontrastlı olurken daha "renkli"
+     görünmesin. */
   .cadde-shell {
     --cadde-ink: 222 47% 11%;
-    --cadde-shell-top: 214 62% 95%;
-    --cadde-shell-mid: 26 48% 96%;
-    --cadde-shell-bottom: 30 22% 96%;
+    --cadde-shell-top: 214 60% 92%;
+    --cadde-shell-mid: 26 48% 93%;
+    --cadde-shell-bottom: 30 22% 94%;
     --cadde-panel: 0 0% 100%;
     --cadde-panel-soft: 210 40% 98%;
-    --cadde-line: 215 20% 86%;
-    --cadde-warm: 31 90% 95%;
-    --cadde-warm-strong: 30 92% 88%;
-    --cadde-accent: 24 92% 52%;
-    --cadde-accent-ink: 24 74% 24%;
+    --cadde-line: 215 22% 79%;
+    --cadde-warm: 31 90% 93%;
+    --cadde-warm-strong: 30 92% 85%;
+    --cadde-accent: 24 92% 48%;
+    --cadde-accent-ink: 24 78% 21%;
     /* Gerçek logo paleti — fırıldaktaki 5 figürden örneklenen ton (newlogo.png).
        Kart imzası (üst şerit) ve premium vurgular buradan gelir; genel site
        brand-* değişkenlerinden bağımsız, sadece Cadde kartlarına özgü. */
@@ -347,7 +355,7 @@
   .cadde-card {
     position: relative;
     overflow: hidden;
-    border-color: hsl(var(--cadde-line) / 0.7);
+    border-color: hsl(var(--cadde-line) / 0.85);
     background: linear-gradient(180deg, hsl(var(--cadde-panel)) 0%, hsl(var(--cadde-panel-soft)) 100%);
     box-shadow:
       0 1px 0 0 hsl(0 0% 100% / 0.7) inset,
@@ -370,7 +378,9 @@
       hsl(var(--cadde-logo-blue)) 75%,
       hsl(var(--cadde-logo-pink)) 100%
     );
-    opacity: 0.65;
+    /* m83: zemin kontrastı arttığı için şerit daha baskın görünüyordu — bir tık
+       geri çekildi. Sayfa daha kontrastlı ama daha "renkli" değil. */
+    opacity: 0.5;
     transition: opacity 0.25s ease;
   }
 

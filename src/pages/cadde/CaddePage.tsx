@@ -1,15 +1,14 @@
 import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowUpRight, ChevronDown, Flag, Globe2, Heart, HelpCircle, Laugh, MapPin, Megaphone, MessageCircle, MessagesSquare, Send, Share2, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
+import { ArrowUpRight, Flag, Globe2, Heart, HelpCircle, Laugh, MapPin, Megaphone, MessageCircle, MessagesSquare, Send, Share2, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
 import CaddeEmojiPickerButton from "@/components/cadde/CaddeEmojiPickerButton";
-import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
+import CaddeCafesPanel from "@/components/cadde/CaddeCafesPanel";
 import CaddeComingSoon from "@/components/cadde/CaddeComingSoon";
 import CaddeBridgeInfo from "@/components/cadde/CaddeBridgeInfo";
-import CaddeInfoPopover from "@/components/cadde/CaddeInfoPopover";
 import CaddeFeaturedSpotlight from "@/components/cadde/CaddeFeaturedSpotlight";
 import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
 import CaddeFeedScopeBar from "@/components/cadde/CaddeFeedScopeBar";
@@ -18,7 +17,6 @@ import CaddePostBody from "@/components/cadde/CaddePostBody";
 import CaddeProfileGate from "@/components/cadde/CaddeProfileGate";
 import CaddeTrendingHashtags from "@/components/cadde/CaddeTrendingHashtags";
 import CarsiGlobalTicker from "@/components/cadde/CarsiGlobalTicker";
-import CreateCafeForm from "@/components/cadde/CreateCafeForm";
 import NotificationsBell from "@/components/cadde/NotificationsBell";
 import PromotionRail from "@/components/cadde/PromotionRail";
 import SponsoredFeedCard from "@/components/cadde/SponsoredFeedCard";
@@ -27,7 +25,6 @@ import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -74,8 +71,6 @@ const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof
 ];
 
 const COMMENT_PAGE_SIZE = 5;
-/** m69: akordeon açıkken ilk anda çizilen kafe satırı sayısı; gerisi tek tıkla açılır. */
-const CAFE_PREVIEW_COUNT = 3;
 
 const caddePostShareUrl = (postId: string): string => {
   const url = new URL("/cadde", window.location.origin);
@@ -451,11 +446,6 @@ const CaddePage = () => {
     ? "Bu bölgede içerik azsa ülke geneli ve global akış da devreye girer."
     : "İçerik az olduğunda global akışla başlayıp ilk hareketi sen başlatabilirsin.";
   const activeCafes = cafesQuery.data ?? [];
-  // m69: kafeler akışı ezmesin — açık akordeonda önce yalnız ilk birkaç satır çizilir.
-  // m68 (akordeon) bölümü tamamen kapatmayı, bu sınır ise açıkken yüksekliği tutmayı sağlar;
-  // ikisi farklı sorunlara bakar, o yüzden ikisi birden var.
-  const visibleCafes = showAllCafes ? activeCafes : activeCafes.slice(0, CAFE_PREVIEW_COUNT);
-  const hiddenCafeCount = activeCafes.length - visibleCafes.length;
   const billboardCards = billboardsQuery.data ?? [];
   // m41: sağ kolonun tepesindeki statik "CorteQS Panosu" yerine featured kayıt geçer.
   // m44: liste de featured kayıtlara ayrılır; hiç featured yoksa yayındaki diğer kartlar
@@ -558,6 +548,20 @@ const CaddePage = () => {
             </CardContent>
           </Card>
 
+          {/* m84: "Aktif Cafeler" orta kolondan buraya indi — orta kolon artık yalnız
+              paylaşım kutusu + akış (m85). Kullanıcı kararı 04.08.2026: 3 kolon korunur. */}
+          <CaddeCafesPanel
+            cafes={activeCafes}
+            themeLabelByKey={cafeThemeLabelByKey}
+            hasSession={Boolean(session)}
+            locationLabel={cafeLocationLabel}
+            sparseContentHint={sparseContentHint}
+            open={cafesOpen}
+            onOpenChange={setCafesOpen}
+            showAll={showAllCafes}
+            onShowAll={() => setShowAllCafes(true)}
+          />
+
           <Card className="hidden border-slate-200 bg-white/90 lg:block">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-display text-base">
@@ -617,137 +621,12 @@ const CaddePage = () => {
 
         </aside>
 
+        {/* m85: orta kolon = paylaşım kutusu + akış, başka hiçbir şey. Buradaki
+            "Diaspora Cadde" başlık kartı üst şeridin (satır ~491) birebir kopyasıydı,
+            akışı bir kart aşağı itiyordu — silindi, filtre özeti üst şeritte duruyor.
+            m84: "Aktif Cafeler" sol kolona taşındı (kullanıcı kararı 04.08.2026:
+            3 kolon korunur, yalnız içerik sırası düzelir). */}
         <section className="order-1 space-y-5 lg:order-none">
-          <Card className="overflow-hidden border-slate-200 bg-white/90">
-            <CardHeader className="gap-4">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <CardTitle className="font-display text-xl">Diaspora Cadde</CardTitle>
-                  <CardDescription>Global Türk topluluğunun şehir bazlı sosyal akışı</CardDescription>
-                </div>
-                <Badge variant="outline">{summarizeCaddeFilters(filters)}</Badge>
-              </div>
-            </CardHeader>
-          </Card>
-
-          {/* m68: bölüm akordeon (açılır/kapanır). m69: açıkken bile en fazla
-              CAFE_PREVIEW_COUNT satır çizilir — kafeler akışı ezmesin. m67: kart
-              yerine tek satırlık kompakt satır (özet 1 satıra kırpılır). */}
-          <Collapsible open={cafesOpen} onOpenChange={setCafesOpen}>
-          <Card className="border-slate-200 bg-white/90">
-            <CardHeader className="pb-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  {/* m49: "Cafe nedir?" tek satırdan anlaşılmıyordu — balon anlatıyor. */}
-                  <CardTitle className="flex items-center gap-1.5 font-display text-lg">
-                    <CollapsibleTrigger
-                      data-testid="cadde-cafes-toggle"
-                      aria-label={cafesOpen ? "Aktif Cafeler bölümünü kapat" : "Aktif Cafeler bölümünü aç"}
-                      className="inline-flex items-center gap-1.5 rounded-md transition hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
-                    >
-                      Aktif Cafeler
-                      {activeCafes.length > 0 ? (
-                        <span className="text-sm font-normal text-slate-500">({activeCafes.length})</span>
-                      ) : null}
-                      <ChevronDown
-                        aria-hidden
-                        className={`h-4 w-4 text-slate-400 transition-transform ${cafesOpen ? "rotate-180" : ""}`}
-                      />
-                    </CollapsibleTrigger>
-                    <CaddeInfoPopover
-                      label="Cafe nedir?"
-                      triggerTestId="cadde-cafe-info-trigger"
-                      contentTestId="cadde-cafe-info-content"
-                      triggerClassName="text-orange-600 hover:bg-orange-100 hover:text-orange-800 focus-visible:ring-orange-500"
-                    >
-                      <p className="text-xs font-semibold text-slate-900">Cafe nedir?</p>
-                      <p className="text-xs leading-relaxed text-slate-600">
-                        Kendi teması olan, istersen davetli ve kapalı bir sohbet uygulamasıdır.
-                        Süreli bir WhatsApp grubu gibi düşünebilirsin.
-                      </p>
-                    </CaddeInfoPopover>
-                  </CardTitle>
-                  <CardDescription>Kısa süreli topluluk odaları ve tema bazlı buluşmalar</CardDescription>
-                </div>
-                {session ? <CreateCafeForm trigger={<Button size="sm" variant="outline" className="rounded-2xl">+ Cafe Aç</Button>} /> : null}
-              </div>
-            </CardHeader>
-            <CollapsibleContent>
-            <CardContent>
-              {activeCafes.length > 0 ? (
-                <div className="flex flex-col gap-2">
-                  {/* m3: çay bardağı ikonu = kafe satırının imzası. m4: ad bold + tema normal.
-                      m67: yükseklik iki satıra indi — özet line-clamp-1, host/üye meta
-                      satırına taşındı, ayrı footer bloğu kalktı. */}
-                  {visibleCafes.map((cafe) => (
-                    <div key={cafe.id} className="cadde-card flex items-center gap-2.5 rounded-2xl px-3 py-2.5">
-                      <CaddeCafeIcon className="h-5 w-5 shrink-0 text-orange-600" />
-                      <div className="min-w-0 flex-1">
-                        <p className="flex min-w-0 items-center gap-1.5">
-                          <span className="truncate font-semibold text-slate-900">{cafe.title}</span>
-                          {cafe.themeKey && cafeThemeLabelByKey.get(cafe.themeKey) ? (
-                            <span className="shrink-0 text-xs font-normal text-slate-500">
-                              {cafeThemeLabelByKey.get(cafe.themeKey)}
-                            </span>
-                          ) : null}
-                          {cafe.isBridge ? (
-                            <Badge className="shrink-0 bg-emerald-100 px-1.5 py-0 text-[10px] text-emerald-900 hover:bg-emerald-100">Köprü</Badge>
-                          ) : null}
-                          {cafe.entryMode !== "open" ? (
-                            <Badge variant="outline" className="shrink-0 px-1.5 py-0 text-[10px]">
-                              {cafe.entryMode === "approval" ? "Onaylı" : "Davetli"}
-                            </Badge>
-                          ) : null}
-                        </p>
-                        <p className="truncate text-xs text-slate-500">
-                          {cafe.city ?? "Global"} • {formatDateTime(cafe.startsAt)} • {cafe.memberCount} üye
-                          {cafe.summary ? ` • ${cafe.summary}` : ""}
-                        </p>
-                      </div>
-                      <Button size="sm" variant={cafe.joinedByViewer ? "secondary" : "outline"} asChild className="h-8 shrink-0">
-                        <Link to={`/cadde/cafe/${cafe.id}`}>
-                          {cafe.joinedByViewer ? "Odaya Gir" : cafe.viewerMemberStatus === "pending" ? "Onay Bekliyor" : "Katıl"}
-                        </Link>
-                      </Button>
-                    </div>
-                  ))}
-                  {hiddenCafeCount > 0 ? (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      data-testid="cadde-cafes-show-all"
-                      className="self-start text-xs text-orange-700 hover:text-orange-900"
-                      onClick={() => setShowAllCafes(true)}
-                    >
-                      {hiddenCafeCount} cafe daha göster
-                    </Button>
-                  ) : null}
-                </div>
-              ) : (
-                <div
-                  data-testid="cadde-cafes-empty-state"
-                  className="cadde-empty rounded-[28px] border border-dashed p-6"
-                >
-                  <p className="text-sm font-semibold text-slate-900">
-                    {cafeLocationLabel
-                      ? `${cafeLocationLabel} için henüz aktif bir cafe açılmadı.`
-                      : "Henüz aktif bir cafe açılmadı."}
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                    Şehir sohbetleri, tema bazlı odalar ve kısa buluşmalar burada görünür. {sparseContentHint}
-                  </p>
-                  {session ? (
-                    <div className="mt-4">
-                      <CreateCafeForm trigger={<Button size="sm" variant="outline" className="rounded-2xl">İlk Cafe'yi Aç</Button>} />
-                    </div>
-                  ) : null}
-                </div>
-              )}
-            </CardContent>
-            </CollapsibleContent>
-          </Card>
-          </Collapsible>
 
           {session ? (
             <CaddeComposer
