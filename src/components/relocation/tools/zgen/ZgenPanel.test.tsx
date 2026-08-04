@@ -10,11 +10,11 @@ describe("ZgenPanel", () => {
     fireEvent.change(input, { target: { value: "1990" } });
 
     // Appears both in the profile heading and the always-visible reference chart.
-    expect(screen.getAllByText(/Millennials \(Gen Y\)/).length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByText(/Y Kuşağı \(Millennials\)/).length).toBeGreaterThanOrEqual(2);
     expect(screen.getByText("Diğer kuşaklarla nasıl geçinilir?")).toBeInTheDocument();
-    expect(screen.getByText("Gen X ile")).toBeInTheDocument();
+    expect(screen.getByText("X Kuşağı ile")).toBeInTheDocument();
     // Directional compat: shows tips for Gen Y talking to Gen Z, not the other 6 generations twice.
-    expect(screen.queryByText("Millennials (Gen Y) ile")).not.toBeInTheDocument();
+    expect(screen.queryByText("Y Kuşağı (Millennials) ile")).not.toBeInTheDocument();
   });
 
   it("hides the profile card for an out-of-range or incomplete year", () => {

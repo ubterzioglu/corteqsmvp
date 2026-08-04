@@ -2,12 +2,12 @@ import type { ZgenData } from "@/lib/zgen/zgen-types";
 
 /* =========================================================
    ZGEN – zgen-data.ts
-   Path: src/lib/zgen/zgen-data.ts
+   Yol: src/lib/zgen/zgen-data.ts
 
-   AVATARS (male + female)
-   Served from: public/relocation-tools/zgen/
+   AVATARLAR (erkek + kadın)
+   Servis edildiği yer: public/relocation-tools/zgen/
 
-   Required filenames:
+   Gerekli dosya adları:
      /relocation-tools/zgen/gen_silent_m.jpg
      /relocation-tools/zgen/gen_silent_f.jpg
      /relocation-tools/zgen/gen_boomer_m.jpg
@@ -23,954 +23,957 @@ import type { ZgenData } from "@/lib/zgen/zgen-types";
      /relocation-tools/zgen/gen_beta_m.jpg
      /relocation-tools/zgen/gen_beta_f.jpg
 
-   Compatibility is DIRECTIONAL:
-   compat[youGenId][otherGenId] => { dos: [5], donts: [5], joke: "..." }
+   Uyum tablosu YÖNLÜDÜR:
+   compat[seninKusakId][digerKusakId] => { dos: [5], donts: [5], joke: "..." }
+
+   NOT: `id` değerleri teknik anahtardır (DB/compat eşlemesi) — ÇEVRİLMEZ.
+   Kullanıcıya görünen tüm metinler Türkçedir.
    ========================================================= */
 
 export const ZGEN_DATA: ZgenData = {
   generations: [
     {
       id: "silent",
-      name: "Silent Generation",
+      name: "Sessiz Kuşak",
       range: [1928, 1945],
       avatars: { m: "/relocation-tools/zgen/gen_silent_m.jpg", f: "/relocation-tools/zgen/gen_silent_f.jpg" },
-      avatarAlt: "Silent Generation avatar"
+      avatarAlt: "Sessiz Kuşak avatarı"
     },
     {
       id: "boomer",
-      name: "Baby Boomers",
+      name: "Baby Boomer Kuşağı",
       range: [1946, 1964],
       avatars: { m: "/relocation-tools/zgen/gen_boomer_m.jpg", f: "/relocation-tools/zgen/gen_boomer_f.jpg" },
-      avatarAlt: "Baby Boomers avatar"
+      avatarAlt: "Baby Boomer Kuşağı avatarı"
     },
     {
       id: "genx",
-      name: "Gen X",
+      name: "X Kuşağı",
       range: [1965, 1980],
       avatars: { m: "/relocation-tools/zgen/gen_genx_m.jpg", f: "/relocation-tools/zgen/gen_genx_f.jpg" },
-      avatarAlt: "Gen X avatar"
+      avatarAlt: "X Kuşağı avatarı"
     },
     {
       id: "geny",
-      name: "Millennials (Gen Y)",
+      name: "Y Kuşağı (Millennials)",
       range: [1981, 1996],
       avatars: { m: "/relocation-tools/zgen/gen_geny_m.jpg", f: "/relocation-tools/zgen/gen_geny_f.jpg" },
-      avatarAlt: "Millennials avatar"
+      avatarAlt: "Y Kuşağı avatarı"
     },
     {
       id: "genz",
-      name: "Gen Z",
+      name: "Z Kuşağı",
       range: [1997, 2012],
       avatars: { m: "/relocation-tools/zgen/gen_genz_m.jpg", f: "/relocation-tools/zgen/gen_genz_f.jpg" },
-      avatarAlt: "Gen Z avatar"
+      avatarAlt: "Z Kuşağı avatarı"
     },
     {
       id: "alpha",
-      name: "Gen Alpha",
+      name: "Alfa Kuşağı",
       range: [2013, 2025],
       avatars: { m: "/relocation-tools/zgen/gen_alpha_m.jpg", f: "/relocation-tools/zgen/gen_alpha_f.jpg" },
-      avatarAlt: "Gen Alpha avatar"
+      avatarAlt: "Alfa Kuşağı avatarı"
     },
     {
       id: "beta",
-      name: "Gen Beta",
+      name: "Beta Kuşağı",
       range: [2026, 2100],
       avatars: { m: "/relocation-tools/zgen/gen_beta_m.jpg", f: "/relocation-tools/zgen/gen_beta_f.jpg" },
-      avatarAlt: "Gen Beta avatar"
+      avatarAlt: "Beta Kuşağı avatarı"
     }
   ],
 
-  /* ===== Profiles: traits + vibes (used in Card 2) ===== */
+  /* ===== Profiller: özellikler + vibe'lar (2. kartta kullanılır) ===== */
   profiles: {
     silent: {
       traits: [
-        "Duty-first, feelings-later",
-        "Polite disagreement as a sport",
-        "Trust earned slowly, kept forever",
-        "Prefers proven tools over shiny apps",
-        "Reads the room before speaking",
-        "Thrifty by reflex, not trend",
-        "Loyal to institutions, cautious with change",
-        "Understates success, overdelivers quietly",
-        "Respects expertise and seniority",
-        "Communicates with calm precision"
+        "Önce görev, duygular sonra",
+        "Kibarca karşı çıkmayı neredeyse bir spor hâline getirmiş",
+        "Güveni yavaş verir, verdi mi ömür boyu sürer",
+        "Parlak uygulamalar yerine kendini kanıtlamış araçları seçer",
+        "Konuşmadan önce ortamı okur",
+        "Tutumluluğu trend değil, refleks",
+        "Kurumlara sadık, değişime temkinli",
+        "Başarısını küçük gösterir, sessizce fazlasını verir",
+        "Uzmanlığa ve kıdeme saygı duyar",
+        "Sakin ve net bir dille iletişim kurar"
       ],
       vibes: [
-        "Quiet competence, loud results",
-        "Respect the process",
-        "Less talk, more done",
-        "Don’t waste; make it last",
-        "Steady hands, steady plans"
+        "Sessiz yetkinlik, gür sonuçlar",
+        "Sürece saygı",
+        "Az laf, çok iş",
+        "İsraf yok, uzun ömür var",
+        "Sağlam eller, sağlam planlar"
       ]
     },
 
     boomer: {
       traits: [
-        "Optimistic about hard work paying off",
-        "Meetings as a legitimate productivity unit",
-        "Phone calls beat long message threads",
-        "Network-minded and relationship-driven",
-        "Values titles, milestones, and clear ladders",
-        "Confident presenter, comfortable leading the room",
-        "Prefers big-picture narratives over micro-updates",
-        "Expects reliability and punctuality",
-        "Likes consensus, but wants closure",
-        "Practical problem-solver with a can-do reflex"
+        "Çok çalışmanın karşılığını vereceğine inanır",
+        "Toplantıyı gerçek bir verimlilik birimi sayar",
+        "Uzun mesaj zincirleri yerine telefonu tercih eder",
+        "Çevresini önemser, ilişki odaklı çalışır",
+        "Unvana, dönüm noktalarına ve net kariyer basamaklarına değer verir",
+        "Kendinden emin sunum yapar, salonu yönetmekten çekinmez",
+        "Mikro güncellemeler yerine büyük resmi anlatmayı sever",
+        "Güvenilirlik ve dakiklik bekler",
+        "Uzlaşmayı sever ama işin bir karara bağlanmasını ister",
+        "Pratik çözüm üretir, 'yaparız' refleksiyle hareket eder"
       ],
       vibes: [
-        "Let’s align and move",
-        "Call me; we’ll sort it",
-        "Strong handshake energy",
-        "Make it official",
-        "Work hard, then relax"
+        "Hizalanalım ve yola çıkalım",
+        "Ara beni, hallederiz",
+        "Sağlam tokalaşma enerjisi",
+        "Resmiyete dökelim",
+        "Önce iş, sonra keyif"
       ]
     },
 
     genx: {
       traits: [
-        "Skeptical, but not cynical—usually",
-        "Independent problem-solver, low-maintenance teammate",
-        "Prefers autonomy over applause",
-        "Allergic to corporate fluff",
-        "Direct communicator with dry humor",
-        "Values competence more than enthusiasm",
-        "Efficient multitasker from pre-tab chaos era",
-        "Trusts actions, questions promises",
-        "Adapts fast, complains quietly",
-        "Likes clear goals and minimal oversight"
+        "Şüpheci ama kinik değil — genelde",
+        "Sorunu kendi çözer, bakım gerektirmeyen takım arkadaşı",
+        "Alkıştan çok özerklik ister",
+        "Kurumsal boş lafa alerjisi var",
+        "Doğrudan konuşur, mizahı kurudur",
+        "Coşkudan çok yetkinliğe değer verir",
+        "Sekmeler icat olmadan çoklu iş yapmayı öğrendi",
+        "Eyleme güvenir, vaadi sorgular",
+        "Hızlı uyum sağlar, şikâyetini içine atar",
+        "Net hedef ve minimum gözetim ister"
       ],
       vibes: [
-        "Show me the point",
-        "Do it right, not loud",
-        "I’ve seen worse",
-        "Keep it simple, please",
-        "Results over drama"
+        "Sadede gel",
+        "Gürültüsüz ama doğru yap",
+        "Daha beterini gördüm",
+        "Lütfen basit tut",
+        "Dram değil, sonuç"
       ]
     },
 
     geny: {
       traits: [
-        "Purpose-driven, but deadline-aware",
-        "Feedback-friendly and growth-oriented",
-        "Collaborative by default, hates silos",
-        "Comfortable with change, expects context",
-        "Prefers async clarity over surprise meetings",
-        "Values flexibility as a productivity tool",
-        "Asks “why” before “how”",
-        "Balances ambition with burnout detection",
-        "Wants managers who coach, not command",
-        "Turns tools into systems and workflows"
+        "Anlam odaklı ama teslim tarihini de bilir",
+        "Geri bildirime açık, gelişim odaklı",
+        "Varsayılanı iş birliği; silolardan nefret eder",
+        "Değişimden rahatsız olmaz ama bağlam bekler",
+        "Sürpriz toplantı yerine yazılı netlik ister",
+        "Esnekliği bir verimlilik aracı olarak görür",
+        "'Nasıl'dan önce 'neden'i sorar",
+        "Hırsıyla tükenmişlik radarını dengeler",
+        "Emir veren değil, koçluk yapan yönetici ister",
+        "Araçları sisteme ve iş akışına dönüştürür"
       ],
       vibes: [
-        "Explain the why",
-        "Let’s improve the process",
-        "Sync quickly, then ship",
-        "Flexible, not flaky",
-        "Meaning plus momentum"
+        "Nedenini anlat",
+        "Süreci iyileştirelim",
+        "Kısa hizalan, sonra çıkar",
+        "Esnek ama savruk değil",
+        "Anlam artı ivme"
       ]
     },
 
     genz: {
       traits: [
-        "Fast scanner of information, low tolerance for fluff",
-        "Prefers short messages and clear asks",
-        "Comfortable challenging ideas early",
-        "Values authenticity over formality",
-        "Learns by tutorials, experiments, and iteration",
-        "Expects tools to be intuitive and immediate",
-        "Strong boundary setting around time and energy",
-        "Socially aware, risk-aware, brand-aware",
-        "Thrives with transparency and quick feedback loops",
-        "Turns side projects into portfolios"
+        "Bilgiyi hızla tarar, boş lafa tahammülü yok",
+        "Kısa mesaj ve net talep ister",
+        "Fikirlere daha baştan itiraz etmekten çekinmez",
+        "Resmiyetten çok samimiyete değer verir",
+        "Videolarla, deneyerek ve tekrar ederek öğrenir",
+        "Araçların sezgisel ve anında olmasını bekler",
+        "Zamanı ve enerjisi konusunda net sınır koyar",
+        "Toplumsal meselelere, riske ve markaya karşı uyanık",
+        "Şeffaflık ve hızlı geri bildirim döngüsüyle açılır",
+        "Yan projelerini portföye çevirir"
       ],
       vibes: [
-        "Say it in one line",
-        "Show receipts, not vibes",
-        "Ship, learn, repeat",
-        "Keep it real",
-        "Respect the boundary"
+        "Tek cümlede söyle",
+        "Hava değil, kanıt göster",
+        "Çıkar, öğren, tekrarla",
+        "Samimi ol",
+        "Sınıra saygı"
       ]
     },
 
     alpha: {
       traits: [
-        "Touch-first intuition; manuals feel optional",
-        "AI-assisted thinking is normal, not fancy",
-        "Expects personalization everywhere",
-        "Learns visually and interactively",
-        "Short attention span, sharp pattern spotting",
-        "Gamifies progress without being asked",
-        "Naturally multi-modal: voice, video, text",
-        "Comfortable co-creating rather than consuming",
-        "Impatient with slow interfaces and slow decisions",
-        "Needs guardrails because speed outruns judgment"
+        "Önce dokunur; kılavuz onun için isteğe bağlı",
+        "Yapay zekâyla düşünmeyi havalı değil, normal bulur",
+        "Her yerde kişiselleştirme bekler",
+        "Görsel ve etkileşimli öğrenir",
+        "Dikkat süresi kısa, örüntü yakalaması keskin",
+        "Kimse demeden ilerlemeyi oyunlaştırır",
+        "Doğal olarak çok kanallı: ses, video, metin",
+        "Tüketmek yerine birlikte üretmeyi sever",
+        "Yavaş arayüze ve yavaş karara sabrı yok",
+        "Hız muhakemeyi geçtiği için korkuluklara ihtiyaç duyar"
       ],
       vibes: [
-        "Instant, interactive, intuitive",
-        "Make it playable",
-        "Swipe to solve",
-        "Co-create the answer",
-        "If it’s boring, it’s broken"
+        "Anında, etkileşimli, sezgisel",
+        "Oynanabilir yap",
+        "Kaydır, çözülsün",
+        "Cevabı birlikte üretelim",
+        "Sıkıcıysa bozuktur"
       ]
     },
 
     beta: {
       traits: [
-        "Born into ambient AI and smart environments",
-        "Defaults to delegation: “system, handle it”",
-        "Expects seamless identity and privacy controls",
-        "Comfortable with synthetic media as everyday content",
-        "High standards for UX and low patience for friction",
-        "Uses agents and automation like utilities",
-        "Values verification as much as creativity",
-        "Thinks in prompts, workflows, and orchestration",
-        "Collaboration includes humans and tools equally",
-        "Treats learning as continuous, personalized streaming"
+        "Her yerde yapay zekânın ve akıllı ortamların içine doğdu",
+        "Varsayılanı devretmek: 'sistem, sen hallet'",
+        "Kimlik ve gizlilik ayarlarının kusursuz olmasını bekler",
+        "Yapay üretim içeriği gündelik içerik gibi görür",
+        "Kullanıcı deneyiminde çıtası yüksek, sürtünmeye sabrı düşük",
+        "Ajanları ve otomasyonu elektrik su gibi kullanır",
+        "Doğrulamaya en az yaratıcılık kadar değer verir",
+        "Prompt, iş akışı ve orkestrasyon diliyle düşünür",
+        "İş birliğine insanı da aracı da eşit dahil eder",
+        "Öğrenmeyi kesintisiz ve kişiselleştirilmiş bir akış sayar"
       ],
       vibes: [
-        "Agent-first lifestyle",
-        "Friction is a bug",
-        "Verify, then vibe",
-        "Orchestrate everything",
-        "Personalized by default"
+        "Önce ajan yaşam tarzı",
+        "Sürtünme bir hatadır",
+        "Önce doğrula, sonra keyfine bak",
+        "Her şeyi orkestre et",
+        "Varsayılan olarak kişiselleştirilmiş"
       ]
     }
   },
 
-  /* ===== Compatibility (directional) ===== */
+  /* ===== Uyum tablosu (yönlü) ===== */
   compat: {
     silent: {
       boomer: {
         dos: [
-          "Open with context and the point upfront.",
-          "Show respect for experience before proposing change.",
-          "Use phone or in-person for sensitive topics.",
-          "Follow through on what you promise, quickly.",
-          "Keep feedback private and factual."
+          "Bağlamı ver, sadede baştan gel.",
+          "Değişiklik önermeden önce tecrübeye saygı göster.",
+          "Hassas konularda telefonu ya da yüz yüze görüşmeyi tercih et.",
+          "Söz verdiğin şeyi hızlıca yerine getir.",
+          "Geri bildirimi baş başa ve olgulara dayalı ver."
         ],
         donts: [
-          "Assume they dislike change; ask first.",
-          "Use too much slang or sarcasm in meetings.",
-          "Challenge status in public to make a point.",
-          "Hide bad news behind vague language.",
-          "Treat titles as meaningless in formal settings."
+          "Değişimden hoşlanmadıklarını varsayma; önce sor.",
+          "Toplantıda argoyu ve iğnelemeyi abartma.",
+          "Haklı çıkmak için kimseyi herkesin önünde sıkıştırma.",
+          "Kötü haberi muğlak bir dilin arkasına saklama.",
+          "Resmi ortamlarda unvanı önemsizmiş gibi davranma."
         ],
-        joke: "If you want a Boomer’s buy-in, schedule it—spontaneity is not a calendar invite."
+        joke: "Baby Boomer'ın onayını istiyorsan takvime koy; doğaçlama diye bir toplantı daveti yok."
       },
       genx: {
         dos: [
-          "Be concise and practical.",
-          "Give autonomy and a clear outcome.",
-          "Use written notes after verbal agreements.",
-          "Acknowledge competence without overpraising.",
-          "Respect their time; keep meetings short."
+          "Kısa ve pratik ol.",
+          "Özerklik ver, sonucu net söyle.",
+          "Sözlü anlaşmayı yazılı notla kayda geçir.",
+          "Yetkinliğini abartılı övgüye kaçmadan teslim et.",
+          "Zamanına saygı göster; toplantıyı kısa tut."
         ],
         donts: [
-          "Micromanage how they get it done.",
-          "Over-explain obvious steps.",
-          "Turn everything into a committee decision.",
-          "Assume cynicism equals disengagement.",
-          "Force forced-fun team rituals."
+          "İşi nasıl yaptığına burnunu sokma.",
+          "Bariz adımları uzun uzun anlatma.",
+          "Her şeyi komisyon kararına çevirme.",
+          "İğneleyici tavrını ilgisizlik sanma.",
+          "Zoraki eğlence ritüellerine mecbur bırakma."
         ],
-        joke: "Gen X will nod at your plan and then quietly improve it while you’re still presenting slide two."
+        joke: "X Kuşağı planına başını sallar, sen daha ikinci slayttayken planı sessizce düzeltmiş olur."
       },
       geny: {
         dos: [
-          "Explain the why before the how.",
-          "Give growth-oriented feedback with next steps.",
-          "Invite ideas, then decide clearly.",
-          "Use collaborative language without vagueness.",
-          "Recognize effort when it leads to results."
+          "'Nasıl'dan önce 'neden'i anlat.",
+          "Geri bildirimi gelişim odaklı ver, sonraki adımı da söyle.",
+          "Fikir iste, sonra net karar ver.",
+          "İş birliği dilini kullan ama muğlaklığa kaçma.",
+          "Sonuca dönüşen emeği görünür kıl."
         ],
         donts: [
-          "Assume loyalty without purpose and fairness.",
-          "Use only hierarchy to justify decisions.",
-          "Delay feedback until the annual review.",
-          "Dismiss work-life boundaries as weakness.",
-          "Treat digital tools as optional in workflows."
+          "Anlam ve adalet olmadan sadakat bekleme.",
+          "Kararı sadece hiyerarşiyle gerekçelendirme.",
+          "Geri bildirimi yıllık değerlendirmeye erteleme.",
+          "İş-yaşam sınırını zayıflık sayma.",
+          "Dijital araçları iş akışında lüksmüş gibi görme."
         ],
-        joke: "Tell Gen Y the mission and they’ll sprint; tell them 'because I said so' and they’ll open LinkedIn."
+        joke: "Y Kuşağı'na amacı anlat, koşar; 'ben öyle dedim' de, LinkedIn'i açar."
       },
       genz: {
         dos: [
-          "Be direct, kind, and quick.",
-          "Set expectations in writing and repeat them once.",
-          "Ask how they prefer to receive feedback.",
-          "Offer small wins and fast learning loops.",
-          "Be transparent about constraints and tradeoffs."
+          "Doğrudan, nazik ve hızlı ol.",
+          "Beklentini yazıya dök ve bir kez tekrarla.",
+          "Geri bildirimi nasıl almak istediğini sor.",
+          "Küçük kazanımlar ve hızlı öğrenme döngüleri sun.",
+          "Kısıtlar ve ödünler konusunda şeffaf ol."
         ],
         donts: [
-          "Use long monologues as a management style.",
-          "Confuse bluntness with rudeness.",
-          "Assume silence means agreement.",
-          "Mock newer tools or formats.",
-          "Ignore mental load and context switching."
+          "Uzun monologları yönetim tarzı hâline getirme.",
+          "Açık sözlülüğü kabalıkla karıştırma.",
+          "Sessizliği onay sayma.",
+          "Yeni araçları ya da formatları küçümseme.",
+          "Zihinsel yükü ve sürekli konu değiştirmeyi yok sayma."
         ],
-        joke: "If your update takes longer than a short video, Gen Z will ask for the highlights."
+        joke: "Güncellemen kısa bir videodan uzun sürüyorsa, Z Kuşağı özetini ister."
       },
       alpha: {
         dos: [
-          "Use visual examples and concrete demos.",
-          "Chunk tasks into short, clear steps.",
-          "Give immediate feedback on attempts.",
-          "Make rules explicit and consistent.",
-          "Encourage curiosity with safe boundaries."
+          "Görsel örnek ve somut demo kullan.",
+          "İşi kısa ve net adımlara böl.",
+          "Her denemeye anında geri bildirim ver.",
+          "Kuralları açıkça söyle ve tutarlı uygula.",
+          "Merakı güvenli sınırlar içinde teşvik et."
         ],
         donts: [
-          "Rely on implied norms; spell them out.",
-          "Expect patience for slow tools or slow decisions.",
-          "Punish questions as interruptions.",
-          "Use fear-based motivation.",
-          "Assume they will infer priorities from vibes."
+          "Söylenmemiş kurallara güvenme; hepsini açıkça söyle.",
+          "Yavaş araçlara ya da yavaş kararlara sabır bekleme.",
+          "Soruyu bölücülük sayıp cezalandırma.",
+          "Korkuyla motive etmeye çalışma.",
+          "Öncelikleri havadan sezeceğini varsayma."
         ],
-        joke: "Alpha doesn’t want the manual; they want the tutorial that skips the intro."
+        joke: "Alfa Kuşağı kılavuz istemiyor; jeneriği atlayan eğitim videosunu istiyor."
       },
       beta: {
         dos: [
-          "Model calm focus and steady routines.",
-          "Teach critical thinking with simple checks.",
-          "Use short, friendly prompts and examples.",
-          "Reward consistency more than intensity.",
-          "Explain how decisions are made and changed."
+          "Sakin odaklanmayı ve düzenli rutini kendin örnekle.",
+          "Eleştirel düşünmeyi basit kontrollerle öğret.",
+          "Kısa, dostane yönlendirmeler ve örnekler kullan.",
+          "Yoğunluğu değil, istikrarı ödüllendir.",
+          "Kararların nasıl alındığını ve nasıl değiştiğini anlat."
         ],
         donts: [
-          "Overload them with choices at once.",
-          "Assume they will tolerate unclear ownership.",
-          "Delay clarification when confusion shows.",
-          "Make everything competitive by default.",
-          "Treat attention as infinite."
+          "Aynı anda seçenek yağmuruna tutma.",
+          "Sahipliğin belirsiz kalmasına katlanacağını sanma.",
+          "Kafası karıştığında açıklamayı erteleme.",
+          "Her şeyi otomatik olarak yarışa çevirme.",
+          "Dikkatini sınırsız sanma."
         ],
-        joke: "Beta will be ready to ship before the adults finish arguing about the font."
+        joke: "Yetişkinler yazı tipini tartışmayı bitiremeden Beta Kuşağı yayına hazır olur."
       }
     },
 
     boomer: {
       silent: {
         dos: [
-          "Use formal courtesy and clear boundaries.",
-          "Bring evidence and history when proposing change.",
-          "Ask for their perspective before debating.",
-          "Prefer one-on-one conversations for hard topics.",
-          "Show reliability through consistent follow-up."
+          "Resmi nezaketi ve net sınırları koru.",
+          "Değişiklik önerirken kanıtı ve geçmişi de getir.",
+          "Tartışmaya girmeden önce görüşünü sor.",
+          "Zor konuları baş başa konuş.",
+          "Güvenilirliğini düzenli takiple göster."
         ],
         donts: [
-          "Rush them into decisions without reflection time.",
-          "Assume they want to be 'modernized.'",
-          "Use aggressive confrontation as honesty.",
-          "Overuse buzzwords instead of specifics.",
-          "Skip gratitude for long-term contributions."
+          "Düşünme fırsatı vermeden karara zorlama.",
+          "'Modernleştirilmek' istediklerini varsayma.",
+          "Sert yüzleşmeyi dürüstlük diye sunma.",
+          "Somut bilgi yerine moda terimlere sığınma.",
+          "Yıllara yayılan katkıyı teşekkürsüz bırakma."
         ],
-        joke: "With Silent, the loudest move you can make is showing up prepared."
+        joke: "Sessiz Kuşak'ın yanında yapabileceğin en gürültülü hamle, hazırlıklı gelmektir."
       },
       genx: {
         dos: [
-          "State the goal, then let them choose the route.",
-          "Keep status updates short and purposeful.",
-          "Respect skepticism and answer with facts.",
-          "Give credit publicly when earned.",
-          "Align on outcomes, not hours."
+          "Hedefi söyle, rotayı kendisi seçsin.",
+          "Durum güncellemelerini kısa ve amaçlı tut.",
+          "Şüpheciliğine saygı göster, olgularla cevap ver.",
+          "Hak ettiğinde emeğini herkesin önünde teslim et.",
+          "Saat üzerinden değil, sonuç üzerinden anlaş."
         ],
         donts: [
-          "Use authority as your only argument.",
-          "Turn every issue into a meeting.",
-          "Overpromise and underdeliver.",
-          "Confuse independence with disrespect.",
-          "Demand enthusiasm on command."
+          "Tek gerekçen yetkin olmasın.",
+          "Her konuyu toplantıya çevirme.",
+          "Çok söz verip az teslim etme.",
+          "Bağımsızlığını saygısızlıkla karıştırma.",
+          "Emirle coşku talep etme."
         ],
-        joke: "Gen X doesn’t need a pep talk; they need the blocker removed."
+        joke: "X Kuşağı'na motivasyon konuşması değil, önündeki engelin kaldırılması lazım."
       },
       geny: {
         dos: [
-          "Connect tasks to impact and learning.",
-          "Give feedback early and with specifics.",
-          "Offer flexibility when results stay strong.",
-          "Invite collaboration, then commit to a decision.",
-          "Be transparent about promotion criteria."
+          "Görevi etkiyle ve öğrenmeyle ilişkilendir.",
+          "Geri bildirimi erken ve somut ver.",
+          "Sonuçlar iyi gittiği sürece esneklik tanı.",
+          "İş birliğine çağır, sonra bir karara bağlan.",
+          "Terfi kriterlerinde şeffaf ol."
         ],
         donts: [
-          "Assume long hours equal commitment.",
-          "Treat questions as challenges to authority.",
-          "Gatekeep information as power.",
-          "Ignore requests for tooling improvements.",
-          "Reward only visible work, not effective work."
+          "Uzun mesaiyi bağlılık sayma.",
+          "Soruyu otoriteye meydan okuma olarak görme.",
+          "Bilgiyi güç diye kendine saklama.",
+          "Araç iyileştirme taleplerini görmezden gelme.",
+          "Sadece görünen işi ödüllendirip işe yarayan işi atlama."
         ],
-        joke: "Gen Y can handle hard work—just don’t call it 'paying dues' forever."
+        joke: "Y Kuşağı zor işi kaldırır; yeter ki buna ömür boyu 'çıraklık' deme."
       },
       genz: {
         dos: [
-          "Use clear expectations and quick check-ins.",
-          "Give direct feedback with a path to fix it.",
-          "Be authentic; drop the corporate theater.",
-          "Support async work with written clarity.",
-          "Normalize asking for help early."
+          "Beklentiyi net söyle, kısa aralıklarla durum sor.",
+          "Doğrudan geri bildirim ver, düzeltme yolunu da göster.",
+          "Samimi ol; kurumsal tiyatroyu bırak.",
+          "Eşzamansız çalışmayı yazılı netlikle destekle.",
+          "Erken yardım istemeyi normalleştir."
         ],
         donts: [
-          "Interpret boundary-setting as laziness.",
-          "Wait weeks to address small issues.",
-          "Use sarcasm as a teaching tool.",
-          "Force camera-on as a loyalty test.",
-          "Dismiss mental health as 'not work-related.'"
+          "Sınır koymasını tembellik sanma.",
+          "Küçük sorunlar için haftalarca bekleme.",
+          "İğnelemeyi öğretme yöntemi yapma.",
+          "Kamerayı açmayı sadakat testine çevirme.",
+          "Ruh sağlığını 'işle ilgisi yok' diye geçiştirme."
         ],
-        joke: "Gen Z will respect your title more if your Wi-Fi is stable."
+        joke: "Z Kuşağı unvanına daha çok saygı duyar — yeter ki Wi-Fi'ın kopmasın."
       },
       alpha: {
         dos: [
-          "Teach by showing, then let them try fast.",
-          "Use simple rules and immediate reinforcement.",
-          "Make learning playful but goal-driven.",
-          "Keep instructions short and visual.",
-          "Set guardrails, then allow exploration."
+          "Önce göstererek öğret, sonra hemen denemesine izin ver.",
+          "Basit kurallar koy, anında pekiştir.",
+          "Öğrenmeyi oyunlu ama hedefli tut.",
+          "Yönergeleri kısa ve görsel tut.",
+          "Önce korkulukları kur, sonra keşfetmesine izin ver."
         ],
         donts: [
-          "Assume they’ll read long instructions first.",
-          "Use shame when they fail publicly.",
-          "Expect focus without breaks and variety.",
-          "Treat tech as a distraction by default.",
-          "Overcorrect every small mistake."
+          "Önce uzun yönergeleri okuyacağını varsayma.",
+          "Herkesin önünde başarısız olduğunda utandırma.",
+          "Molasız ve tekdüze bir akışta odak bekleme.",
+          "Teknolojiyi peşinen dikkat dağıtıcı sayma.",
+          "Her küçük hatayı düzeltmeye kalkma."
         ],
-        joke: "Alpha hears 'policy' and immediately asks where the skip button is."
+        joke: "Alfa Kuşağı 'prosedür' kelimesini duyar duymaz 'atla' düğmesini arar."
       },
       beta: {
         dos: [
-          "Create predictable routines and clear roles.",
-          "Encourage curiosity with safe experimentation.",
-          "Use simple checklists and reminders.",
-          "Model respectful disagreement.",
-          "Teach responsible tech habits early."
+          "Öngörülebilir rutinler ve net roller kur.",
+          "Merakı güvenli denemelerle destekle.",
+          "Basit kontrol listeleri ve hatırlatıcılar kullan.",
+          "Saygılı itirazı kendin örnekle.",
+          "Sorumlu teknoloji alışkanlıklarını erken öğret."
         ],
         donts: [
-          "Assume they’ll learn norms by osmosis.",
-          "Flood them with alerts and pings.",
-          "Reward speed over accuracy every time.",
-          "Make every task a performance.",
-          "Use fear to enforce compliance."
+          "Kuralları kendiliğinden öğreneceğini varsayma.",
+          "Bildirim ve uyarı yağmuruna tutma.",
+          "Her seferinde doğruluğun önüne hızı koyma.",
+          "Her görevi bir gösteriye çevirme.",
+          "Uyumu korkuyla sağlamaya çalışma."
         ],
-        joke: "Beta will ask for 'version history' on real life."
+        joke: "Beta Kuşağı gerçek hayat için de 'sürüm geçmişi' isteyecek."
       }
     },
 
     genx: {
       silent: {
         dos: [
-          "Lead with respect and steady tone.",
-          "Bring a solution, not just a critique.",
-          "Confirm agreements in writing.",
-          "Be punctual and consistent.",
-          "Ask for stories and lessons learned."
+          "Saygıyla ve sakin bir tonla başla.",
+          "Sadece eleştiri değil, çözüm de getir.",
+          "Anlaşmayı yazılı olarak teyit et.",
+          "Dakik ve tutarlı ol.",
+          "Yaşadıklarını ve çıkardığı dersleri sor."
         ],
         donts: [
-          "Use edgy humor in formal moments.",
-          "Assume they want rapid change without proof.",
-          "Interrupt to speed things up.",
-          "Treat tradition as irrational.",
-          "Let conflict linger without closure."
+          "Resmi anlarda sivri espriler yapma.",
+          "Kanıt olmadan hızlı değişim isteyeceğini varsayma.",
+          "İşi hızlandırmak için sözünü kesme.",
+          "Geleneği akıl dışıymış gibi görme.",
+          "Anlaşmazlığı çözümsüz bırakıp sürüncemede tutma."
         ],
-        joke: "Silent doesn’t want your hot take; they want your plan and your timeline."
+        joke: "Sessiz Kuşak senin keskin yorumunu değil, planını ve takvimini istiyor."
       },
       boomer: {
         dos: [
-          "Show results and track record.",
-          "Respect process while proposing improvements.",
-          "Use clear, confident communication.",
-          "Escalate issues early with options.",
-          "Acknowledge what already works."
+          "Sonuçlarını ve geçmiş sicilini göster.",
+          "İyileştirme önerirken süreci de gözet.",
+          "Net ve kendinden emin bir dille konuş.",
+          "Sorunu erken bildir, yanında seçenekleri de getir.",
+          "Hâlihazırda iyi işleyeni teslim et."
         ],
         donts: [
-          "Roll your eyes at 'the old way.'",
-          "Undermine decisions in side conversations.",
-          "Assume a title means they won’t listen.",
-          "Ignore stakeholder management.",
-          "Hide behind ambiguity to avoid accountability."
+          "'Eski usul' deyip gözlerini devirme.",
+          "Kararları kulis konuşmalarıyla zayıflatma.",
+          "Unvanı yüzünden dinlemeyeceğini sanma.",
+          "Paydaş yönetimini es geçme.",
+          "Sorumluluktan kaçmak için muğlaklığa sığınma."
         ],
-        joke: "Boomers love innovation—after it has a pilot, metrics, and a slide deck."
+        joke: "Baby Boomer'lar yeniliğe bayılır — pilot uygulaması, metrikleri ve sunumu olduktan sonra."
       },
       geny: {
         dos: [
-          "Be candid, but add empathy.",
-          "Offer freedom with clear accountability.",
-          "Use collaborative problem-solving.",
-          "Share decision criteria openly.",
-          "Recognize initiative, not just output."
+          "Açık konuş ama empatiyi de ekle.",
+          "Özgürlük ver, hesap verebilirliği net tut.",
+          "Sorunu birlikte çözme yöntemini kullan.",
+          "Karar kriterlerini açıkça paylaş.",
+          "Sadece çıktıyı değil, inisiyatifi de takdir et."
         ],
         donts: [
-          "Assume optimism means naivety.",
-          "Withhold feedback to avoid discomfort.",
-          "Treat flexibility as a perk you can revoke casually.",
-          "Dismiss values talk as 'soft stuff.'",
-          "Ignore the need for career path clarity."
+          "İyimserliğini saflık sanma.",
+          "Ortam gerilmesin diye geri bildirimi saklama.",
+          "Esnekliği canın istediğinde geri alabileceğin bir ayrıcalık sanma.",
+          "Değerler üzerine konuşmayı 'lüks mesele' diye geçiştirme.",
+          "Kariyer yolunun netleşmesi ihtiyacını görmezden gelme."
         ],
-        joke: "Gen Y will ask for your vision; Gen X will ask for your deadline."
+        joke: "Y Kuşağı vizyonunu sorar; X Kuşağı teslim tarihini."
       },
       genz: {
         dos: [
-          "Keep messages short with clear actions.",
-          "Use direct feedback and quick iterations.",
-          "Respect boundaries and async communication.",
-          "Explain tradeoffs without condescension.",
-          "Encourage questions without labeling them as excuses."
+          "Mesajları kısa tut, yapılacak şeyi net yaz.",
+          "Doğrudan geri bildirim ver, hızlı tur at.",
+          "Sınırlarına ve eşzamansız iletişime saygı göster.",
+          "Ödünleri tepeden bakmadan anlat.",
+          "Soru sormasını teşvik et, bahane etiketi yapıştırma."
         ],
         donts: [
-          "Use 'toughen up' as coaching.",
-          "Assume they know unwritten rules.",
-          "Gatekeep information as a rite of passage.",
-          "Treat every ping as urgent.",
-          "Mock their tools or communication style."
+          "'Sen de sertleş' demeyi koçluk sanma.",
+          "Yazılı olmayan kuralları bildiğini varsayma.",
+          "Bilgiyi 'çilesini çeksin' diye saklama.",
+          "Her bildirime acil muamelesi yapma.",
+          "Araçlarını ya da iletişim tarzını alaya alma."
         ],
-        joke: "Gen X says 'figure it out'; Gen Z says 'cool, send the docs link.'"
+        joke: "X Kuşağı 'kendin çöz' der; Z Kuşağı 'tamam, dokümanın linkini at' der."
       },
       alpha: {
         dos: [
-          "Teach with interactive examples.",
-          "Use short cycles: try, review, adjust.",
-          "Set clear boundaries and explain why.",
-          "Celebrate learning, not just winning.",
-          "Provide structure without rigidity."
+          "Etkileşimli örneklerle öğret.",
+          "Kısa döngülerle ilerle: dene, gözden geçir, ayarla.",
+          "Net sınır koy ve nedenini açıkla.",
+          "Sadece kazanmayı değil, öğrenmeyi de kutla.",
+          "Yapı kur ama katılaştırma."
         ],
         donts: [
-          "Expect long attention on one format.",
-          "Punish experimentation when outcomes are safe.",
-          "Use vague instructions like 'be professional.'",
-          "Assume silence means understanding.",
-          "Overuse lectures instead of practice."
+          "Tek formatta uzun süre odak bekleme.",
+          "Sonuç güvenliyken denemeyi cezalandırma.",
+          "'Profesyonel ol' gibi muğlak yönergeler verme.",
+          "Sessizliği anladı sanma.",
+          "Uygulama yerine nutuk çekmeyi alışkanlık yapma."
         ],
-        joke: "Alpha treats 'best practices' like a challenge prompt."
+        joke: "Alfa Kuşağı 'en iyi uygulamalar' lafını bir meydan okuma olarak görür."
       },
       beta: {
         dos: [
-          "Keep systems simple and repeatable.",
-          "Teach focus with clear single-task moments.",
-          "Use friendly checklists and rituals.",
-          "Model calm problem-solving.",
-          "Show how to verify information quickly."
+          "Sistemleri basit ve tekrarlanabilir tut.",
+          "Odaklanmayı tek işe ayrılmış net anlarla öğret.",
+          "Dostane kontrol listeleri ve ritüeller kullan.",
+          "Sorunu sakin çözmeyi kendin örnekle.",
+          "Bilgiyi hızlıca nasıl doğrulayacağını göster."
         ],
         donts: [
-          "Overcomplicate with too many tools at once.",
-          "Confuse constant activity with progress.",
-          "Make feedback only about outcomes, not habits.",
-          "Normalize being always-on.",
-          "Treat curiosity as disruption."
+          "Aynı anda çok araçla işi karmaşıklaştırma.",
+          "Sürekli hareketi ilerleme sanma.",
+          "Geri bildirimi yalnızca sonuca indirgeyip alışkanlıkları atlama.",
+          "Sürekli açık olmayı normalleştirme.",
+          "Merakı düzen bozma sayma."
         ],
-        joke: "Beta will refactor your routine before you finish your morning coffee."
+        joke: "Sen sabah kahveni bitirmeden Beta Kuşağı rutinini baştan yazmış olur."
       }
     },
 
     geny: {
       silent: {
         dos: [
-          "Use polite formality and steady pacing.",
-          "Ask for guidance and honor it visibly.",
-          "Keep commitments tight and consistent.",
-          "Prefer private feedback exchanges.",
-          "Bring practical proposals, not just ideals."
+          "Kibar bir resmiyet ve sakin bir tempo kullan.",
+          "Yol göstermesini iste ve tavsiyesine uyduğunu göster.",
+          "Verdiğin sözleri sıkı ve tutarlı tut.",
+          "Geri bildirimi baş başa alıp ver.",
+          "Sadece ideal değil, uygulanabilir öneri getir."
         ],
         donts: [
-          "Over-share personal context in formal settings.",
-          "Assume immediacy is always valued.",
-          "Turn every decision into a brainstorming session.",
-          "Use casual language for sensitive topics.",
-          "Rush closure before they feel heard."
+          "Resmi ortamlarda kişisel hayatını fazla anlatma.",
+          "Her şeyin anında olmasının makbul sayıldığını varsayma.",
+          "Her kararı beyin fırtınasına çevirme.",
+          "Hassas konularda senli benli bir dil kullanma.",
+          "Dinlenildiğini hissetmeden konuyu kapatmaya çalışma."
         ],
-        joke: "Silent doesn’t need a motivational quote; they need you to do what you said."
+        joke: "Sessiz Kuşak motivasyon sözü istemiyor; dediğini yapmanı istiyor."
       },
       boomer: {
         dos: [
-          "Show respect, then propose improvements.",
-          "Bring data and customer impact.",
-          "Align with goals and ownership clearly.",
-          "Offer options, not ultimatums.",
-          "Follow up with a short written recap."
+          "Önce saygını göster, sonra iyileştirme öner.",
+          "Veriyi ve müşteriye etkisini getir.",
+          "Hedefler ve sahiplik konusunda net şekilde hizalan.",
+          "Ültimatom değil, seçenek sun.",
+          "Ardından kısa bir yazılı özet gönder."
         ],
         donts: [
-          "Assume they oppose flexibility; negotiate it.",
-          "Use jargon without translating outcomes.",
-          "Treat hierarchy like a villain story.",
-          "Push change without acknowledging risk.",
-          "Expect instant buy-in on first conversation."
+          "Esnekliğe karşı olduklarını varsayma; müzakere et.",
+          "Sonuçları tercüme etmeden jargon kullanma.",
+          "Hiyerarşiyi kötü adam hikâyesine çevirme.",
+          "Riski kabul etmeden değişimi dayatma.",
+          "İlk konuşmada anında onay bekleme."
         ],
-        joke: "Boomers trust your idea right after they see it work twice in production."
+        joke: "Baby Boomer'lar fikrine, canlıda iki kez çalıştığını gördükten hemen sonra güvenir."
       },
       genx: {
         dos: [
-          "Be efficient and prepared.",
-          "Respect independence and avoid micromanaging.",
-          "Use humor lightly, not performatively.",
-          "Ask for their input early, then act.",
-          "Own mistakes quickly and move on."
+          "Verimli ve hazırlıklı ol.",
+          "Bağımsızlığına saygı göster, işine karışma.",
+          "Mizahı gösteriye dönüştürmeden, dozunda kullan.",
+          "Görüşünü erken al, sonra harekete geç.",
+          "Hatanı hızlıca kabul et ve yoluna devam et."
         ],
         donts: [
-          "Over-sell enthusiasm as competence.",
-          "Turn feedback into a long coaching session.",
-          "Assume they want constant alignment meetings.",
-          "Confuse quietness with lack of care.",
-          "Use vague timelines like 'soon-ish.'"
+          "Coşkuyu yetkinlik diye pazarlama.",
+          "Geri bildirimi uzun bir koçluk seansına çevirme.",
+          "Sürekli hizalanma toplantısı istediğini varsayma.",
+          "Sessizliğini umursamazlık sanma.",
+          "'Yakında bir ara' gibi muğlak tarihler verme."
         ],
-        joke: "Gen X doesn’t want your roadmap; they want your blockers list."
+        joke: "X Kuşağı yol haritanı değil, engeller listeni istiyor."
       },
       genz: {
         dos: [
-          "Write clear expectations and define 'done.'",
-          "Give feedback fast and specific.",
-          "Invite suggestions on tools and workflow.",
-          "Normalize saying 'I don’t know' and learning.",
-          "Protect focus time with async updates."
+          "Beklentileri net yaz ve 'bitti'nin tanımını yap.",
+          "Geri bildirimi hızlı ve somut ver.",
+          "Araçlar ve iş akışı için önerilerini iste.",
+          "'Bilmiyorum' demeyi ve öğrenmeyi normalleştir.",
+          "Odak zamanını eşzamansız güncellemelerle koru."
         ],
         donts: [
-          "Assume they’ll tolerate unclear priorities.",
-          "Use passive-aggressive hints instead of asks.",
-          "Treat boundaries as negotiable by default.",
-          "Overload them with meetings for visibility.",
-          "Label their directness as disrespect."
+          "Belirsiz önceliklere katlanacağını varsayma.",
+          "Açıkça istemek yerine imalı laf sokma.",
+          "Sınırlarını peşinen pazarlık konusu sayma.",
+          "Görünürlük olsun diye toplantıya boğma.",
+          "Açık sözlülüğünü saygısızlık diye etiketleme."
         ],
-        joke: "Gen Z will accept your process if it comes with fewer meetings and better docs."
+        joke: "Z Kuşağı sürecini kabul eder — daha az toplantı ve daha iyi doküman geliyorsa."
       },
       alpha: {
         dos: [
-          "Use short instructions and immediate practice.",
-          "Keep feedback frequent and positive-first.",
-          "Offer choices, but limit them to a few.",
-          "Use visuals and examples over speeches.",
-          "Build habits with small daily routines."
+          "Kısa yönergeler ver ve hemen uygulamaya geç.",
+          "Geri bildirimi sık ver, önce olumluyu söyle.",
+          "Seçenek sun ama birkaç taneyle sınırla.",
+          "Nutuk yerine görsel ve örnek kullan.",
+          "Alışkanlığı küçük günlük rutinlerle kur."
         ],
         donts: [
-          "Assume patience for slow reward cycles.",
-          "Overcorrect in the moment every time.",
-          "Make rules inconsistent across days.",
-          "Use guilt as motivation.",
-          "Treat tech use as all-good or all-bad."
+          "Yavaş ödül döngülerine sabredeceğini varsayma.",
+          "Her seferinde anında düzeltmeye kalkma.",
+          "Kuralları günden güne değiştirme.",
+          "Suçluluk duygusuyla motive etme.",
+          "Teknoloji kullanımını tamamen iyi ya da tamamen kötü diye görme."
         ],
-        joke: "Alpha doesn’t multitask—they just run multiple apps on the same brain tab."
+        joke: "Alfa Kuşağı çoklu iş yapmıyor; aynı beyin sekmesinde birden fazla uygulama çalıştırıyor."
       },
       beta: {
         dos: [
-          "Teach them to ask good questions.",
-          "Use simple guardrails for safety and focus.",
-          "Reinforce consistency and kindness.",
-          "Show how to validate sources quickly.",
-          "Keep goals small and track progress visibly."
+          "İyi soru sormayı öğret.",
+          "Güvenlik ve odak için basit korkuluklar koy.",
+          "İstikrarı ve nezaketi pekiştir.",
+          "Kaynakları hızlıca nasıl doğrulayacağını göster.",
+          "Hedefleri küçük tut, ilerlemeyi görünür şekilde takip et."
         ],
         donts: [
-          "Assume they’ll separate signal from noise alone.",
-          "Reward only speed and novelty.",
-          "Over-schedule every minute.",
-          "Turn mistakes into a public lesson.",
-          "Let devices replace actual communication."
+          "Sinyali gürültüden tek başına ayıracağını varsayma.",
+          "Sadece hızı ve yeniliği ödüllendirme.",
+          "Her dakikasını programa boğma.",
+          "Hatasını herkesin önünde ders malzemesi yapma.",
+          "Ekranların gerçek iletişimin yerini almasına izin verme."
         ],
-        joke: "Beta’s first word might be 'update' because everything else gets one."
+        joke: "Beta Kuşağı'nın ilk kelimesi 'güncelleme' olabilir; çünkü artık her şeyin bir güncellemesi var."
       }
     },
 
     genz: {
       silent: {
         dos: [
-          "Use respectful language and measured tone.",
-          "Ask permission before giving blunt feedback.",
-          "Be reliable; consistency builds trust fastest.",
-          "Prefer structured conversations over rapid-fire debate.",
-          "Show appreciation in concrete ways."
+          "Saygılı bir dil ve ölçülü bir ton kullan.",
+          "Dobra geri bildirim vermeden önce izin iste.",
+          "Güvenilir ol; güveni en hızlı istikrar inşa eder.",
+          "Seri atışlı tartışma yerine düzenli sohbeti tercih et.",
+          "Takdirini somut şekilde göster."
         ],
         donts: [
-          "Use edgy humor around serious topics.",
-          "Assume informality equals authenticity.",
-          "Interrupt to speed up the discussion.",
-          "Dismiss long-term experience as outdated.",
-          "Ghost follow-ups after asking for help."
+          "Ciddi konularda sivri espriler yapma.",
+          "Senli benli olmayı samimiyet sanma.",
+          "Tartışmayı hızlandırmak için sözünü kesme.",
+          "Yılların tecrübesini modası geçmiş sayma.",
+          "Yardım istedikten sonra ortadan kaybolma."
         ],
-        joke: "Silent reads your whole message; the flex is sending one that deserves it."
+        joke: "Sessiz Kuşak mesajını sonuna kadar okur; asıl hüner buna değecek bir mesaj yazmaktır."
       },
       boomer: {
         dos: [
-          "Lead with outcomes and business value.",
-          "Be direct, but keep it respectful.",
-          "Offer a pilot plan with clear metrics.",
-          "Communicate progress proactively.",
-          "Show accountability before asking for flexibility."
+          "Sonuçlarla ve iş değeriyle başla.",
+          "Doğrudan konuş ama saygıyı elden bırakma.",
+          "Net metrikleri olan bir pilot plan sun.",
+          "İlerlemeyi sorulmadan paylaş.",
+          "Esneklik istemeden önce sorumluluk aldığını göster."
         ],
         donts: [
-          "Assume they hate new tools; prove the benefit.",
-          "Use sarcasm when disagreeing.",
-          "Skip stakeholder alignment.",
-          "Treat deadlines as optional.",
-          "Publicly correct them to score points."
+          "Yeni araçlardan nefret ettiklerini varsayma; faydayı kanıtla.",
+          "İtiraz ederken iğneleyici olma.",
+          "Paydaşlarla hizalanmayı atlama.",
+          "Teslim tarihlerini isteğe bağlı sayma.",
+          "Puan toplamak için onları herkesin önünde düzeltme."
         ],
-        joke: "Boomers will adopt your tool faster if you rename it 'the new standard.'"
+        joke: "Baby Boomer'lar aracını daha hızlı benimser — adını 'yeni standart' koyarsan."
       },
       genx: {
         dos: [
-          "Be concise and skip the fluff.",
-          "Ask for expectations explicitly.",
-          "Show initiative without oversharing.",
-          "Accept blunt feedback and act on it.",
-          "Use async updates with clear next steps."
+          "Kısa konuş, gereksizi at.",
+          "Beklentileri açıkça sor.",
+          "İnisiyatif al ama her ayrıntıyı anlatma.",
+          "Dobra geri bildirimi kabul et ve gereğini yap.",
+          "Eşzamansız güncelleme gönder, sonraki adımı net yaz."
         ],
         donts: [
-          "Treat their cynicism as personal.",
-          "Over-explain your entire thought process.",
-          "Demand constant reassurance.",
-          "Escalate small conflicts emotionally.",
-          "Mistake independence for coldness."
+          "İğneleyici tavrını üstüne alınma.",
+          "Bütün düşünce sürecini uzun uzun anlatma.",
+          "Sürekli onay ve teselli isteme.",
+          "Küçük anlaşmazlıkları duygusal olarak büyütme.",
+          "Bağımsızlığını soğukluk sanma."
         ],
-        joke: "Gen X won’t say 'great job,' but they also won’t stop you from doing it again."
+        joke: "X Kuşağı 'harika iş' demez ama aynı işi bir daha yapmana da engel olmaz."
       },
       geny: {
         dos: [
-          "Collaborate and share credit openly.",
-          "Give honest feedback with tact.",
-          "Align on boundaries and response times.",
-          "Use modern tools, but keep workflows stable.",
-          "Ask for mentorship with specific goals."
+          "Birlikte çalış ve emeği açıkça paylaş.",
+          "Dürüst geri bildirimi incelikle ver.",
+          "Sınırlar ve yanıt süreleri konusunda anlaş.",
+          "Modern araçları kullan ama iş akışını sabit tut.",
+          "Mentorluk isterken somut hedef belirt."
         ],
         donts: [
-          "Assume they want to be on-call socially and professionally.",
-          "Treat purpose talk as performative.",
-          "Ghost threads and expect trust to remain.",
-          "Refuse process without proposing a better one.",
-          "Make everything a debate about values."
+          "Hem sosyal hem mesleki olarak 7/24 ulaşılabilir olmak istediğini varsayma.",
+          "Anlam üzerine konuşmasını gösteriş sanma.",
+          "Konuşmayı yarıda bırakıp güvenin süreceğini sanma.",
+          "Daha iyisini önermeden süreci reddetme.",
+          "Her şeyi değerler tartışmasına çevirme."
         ],
-        joke: "Gen Y loves your ambition—right until it schedules a meeting that could be a message."
+        joke: "Y Kuşağı hırsına bayılır — ta ki mesajla halledilecek bir şey için toplantı kurana kadar."
       },
       alpha: {
         dos: [
-          "Teach with quick demos and repetition.",
-          "Use simple language and clear boundaries.",
-          "Encourage creativity with safe constraints.",
-          "Make feedback immediate and actionable.",
-          "Keep sessions short and varied."
+          "Hızlı demolar ve tekrarla öğret.",
+          "Basit bir dil ve net sınırlar kullan.",
+          "Yaratıcılığı güvenli kısıtlarla teşvik et.",
+          "Geri bildirimi anında ve uygulanabilir ver.",
+          "Oturumları kısa ve çeşitli tut."
         ],
         donts: [
-          "Assume they’ll learn by watching once.",
-          "Overload with too many rules at once.",
-          "Use shame to correct mistakes.",
-          "Expect long focus without breaks.",
-          "Treat questions as interruptions."
+          "Bir kez izleyerek öğreneceğini varsayma.",
+          "Aynı anda çok kuralla boğma.",
+          "Hatayı utandırarak düzeltmeye çalışma.",
+          "Molasız uzun odak bekleme.",
+          "Soruları bölücülük sayma."
         ],
-        joke: "Alpha learns faster than you explain, then asks why your explanation was so slow."
+        joke: "Alfa Kuşağı sen anlatmayı bitiremeden öğrenir, sonra da anlatımının neden bu kadar yavaş olduğunu sorar."
       },
       beta: {
         dos: [
-          "Model healthy attention habits and pauses.",
-          "Teach simple systems: check, verify, decide.",
-          "Use short prompts and consistent routines.",
-          "Reward kindness and collaboration.",
-          "Show how to ask for help early."
+          "Sağlıklı dikkat alışkanlıklarını ve mola vermeyi kendin örnekle.",
+          "Basit sistemler öğret: bak, doğrula, karar ver.",
+          "Kısa yönlendirmeler ve tutarlı rutinler kullan.",
+          "Nezaketi ve iş birliğini ödüllendir.",
+          "Erken yardım istemeyi nasıl yapacağını göster."
         ],
         donts: [
-          "Normalize constant notifications.",
-          "Turn every task into content or performance.",
-          "Reward shortcuts over understanding.",
-          "Let misinformation slide unchallenged.",
-          "Assume tech fluency equals judgment."
+          "Sürekli bildirimi normalleştirme.",
+          "Her işi içeriğe ya da gösteriye çevirme.",
+          "Anlamak yerine kestirme yolları ödüllendirme.",
+          "Yanlış bilgiyi sorgusuz geçiştirme.",
+          "Teknolojiye hâkim olmasını sağduyu sanma."
         ],
-        joke: "Beta will have better digital hygiene than the adults who invented the mess."
+        joke: "Beta Kuşağı'nın dijital hijyeni, bu karmaşayı icat eden yetişkinlerinkinden iyi olacak."
       }
     },
 
     alpha: {
       silent: {
         dos: [
-          "Use polite phrasing and slow the pace.",
-          "Show respect through listening and patience.",
-          "Explain your intent before your opinion.",
-          "Follow up with a clear written summary.",
-          "Ask for their preferred way of communicating."
+          "Kibar bir dil kullan ve tempoyu düşür.",
+          "Saygını dinleyerek ve sabrederek göster.",
+          "Fikrinden önce niyetini anlat.",
+          "Ardından net bir yazılı özet gönder.",
+          "Nasıl iletişim kurmayı tercih ettiğini sor."
         ],
         donts: [
-          "Assume quick replies are mandatory.",
-          "Use slang in formal contexts.",
-          "Challenge them publicly for entertainment.",
-          "Treat tradition as a joke.",
-          "Switch topics rapidly without transitions."
+          "Hızlı cevabın zorunlu olduğunu varsayma.",
+          "Resmi ortamlarda argo kullanma.",
+          "Eğlence olsun diye herkesin önünde meydan okuma.",
+          "Geleneği şakaya çevirme.",
+          "Geçiş yapmadan konudan konuya atlama."
         ],
-        joke: "Silent thinks before speaking; Alpha thinks while opening three new tabs."
+        joke: "Sessiz Kuşak konuşmadan önce düşünür; Alfa Kuşağı üç yeni sekme açarken düşünür."
       },
       boomer: {
         dos: [
-          "Be respectful and clear about goals.",
-          "Show your work and logic, briefly.",
-          "Accept structure, then optimize within it.",
-          "Ask for feedback in small, frequent doses.",
-          "Use shared documents to avoid confusion."
+          "Saygılı ol ve hedefleri net söyle.",
+          "Yaptığın işi ve mantığını kısaca göster.",
+          "Yapıyı kabul et, sonra onun içinde iyileştir.",
+          "Geri bildirimi küçük ve sık dozlarda iste.",
+          "Karışıklığı önlemek için ortak dokümanlar kullan."
         ],
         donts: [
-          "Assume rules are negotiable without discussion.",
-          "Dismiss experience as irrelevant.",
-          "Use memes to make serious points.",
-          "Change tools weekly without alignment.",
-          "Treat deadlines as suggestions."
+          "Kuralların konuşulmadan esneyeceğini varsayma.",
+          "Tecrübeyi konuyla ilgisiz sayma.",
+          "Ciddi bir şeyi anlatmak için mizah görselleri kullanma.",
+          "Kimseye danışmadan her hafta araç değiştirme.",
+          "Teslim tarihlerini öneri sayma."
         ],
-        joke: "Boomers want a plan; Alpha wants a plan that updates itself."
+        joke: "Baby Boomer'lar bir plan ister; Alfa Kuşağı kendini güncelleyen bir plan."
       },
       genx: {
         dos: [
-          "Be efficient and self-directed.",
-          "Ask precise questions, not broad ones.",
-          "Deliver small results early.",
-          "Respect 'no meeting' preferences.",
-          "Take feedback without dramatizing it."
+          "Verimli ol ve kendi başına yürü.",
+          "Genel değil, net sorular sor.",
+          "Küçük sonuçları erken teslim et.",
+          "'Toplantı yok' tercihine saygı göster.",
+          "Geri bildirimi dramatize etmeden al."
         ],
         donts: [
-          "Over-share every micro-decision.",
-          "Expect constant encouragement.",
-          "Use trend language as proof.",
-          "Assume they’ll tolerate unclear ownership.",
-          "Turn work into a social performance."
+          "Her küçük kararı tek tek anlatma.",
+          "Sürekli teşvik bekleme.",
+          "Moda terimleri kanıt yerine koyma.",
+          "Sahipliğin belirsiz kalmasına katlanacağını sanma.",
+          "İşi sosyal bir gösteriye çevirme."
         ],
-        joke: "Gen X sees your five-step plan and asks which step actually ships."
+        joke: "X Kuşağı beş adımlık planına bakar ve hangi adımın gerçekten işi çıkardığını sorar."
       },
       geny: {
         dos: [
-          "Connect your work to impact and learning.",
-          "Collaborate and share credit naturally.",
-          "Ask for mentorship and accept coaching.",
-          "Use tools that reduce friction for everyone.",
-          "Clarify expectations and timelines upfront."
+          "Yaptığın işi etkiyle ve öğrenmeyle ilişkilendir.",
+          "Birlikte çalış ve emeği doğal biçimde paylaş.",
+          "Mentorluk iste ve koçluğu kabul et.",
+          "Herkesin işini kolaylaştıran araçlar kullan.",
+          "Beklentileri ve takvimi baştan netleştir."
         ],
         donts: [
-          "Treat every change as urgent.",
-          "Ignore context and jump straight to solutions.",
-          "Assume flexibility means zero structure.",
-          "Dismiss feedback as 'old school.'",
-          "Optimize for novelty over reliability."
+          "Her değişikliği acil sayma.",
+          "Bağlamı atlayıp doğrudan çözüme atlama.",
+          "Esnekliği hiç yapı yok sanma.",
+          "Geri bildirimi 'eski kafa' diye geçiştirme.",
+          "Güvenilirliğin önüne yeniliği koyma."
         ],
-        joke: "Gen Y will sponsor your growth; just don’t make them your full-time calendar."
+        joke: "Y Kuşağı gelişimine sırtını verir; yeter ki onu tam zamanlı takvimin hâline getirme."
       },
       genz: {
         dos: [
-          "Use fast feedback loops and quick iterations.",
-          "Keep communication short and explicit.",
-          "Agree on boundaries and respect them.",
-          "Share resources and templates openly.",
-          "Normalize asking for help early."
+          "Hızlı geri bildirim döngüleri ve kısa turlar kullan.",
+          "İletişimi kısa ve açık tut.",
+          "Sınırlar üzerinde anlaşın ve bunlara uy.",
+          "Kaynakları ve şablonları açıkça paylaş.",
+          "Erken yardım istemeyi normalleştir."
         ],
         donts: [
-          "Compete over who is more direct.",
-          "Assume shared slang equals shared meaning.",
-          "Treat every disagreement as identity-based.",
-          "Overload each other with constant pings.",
-          "Skip documentation because it feels slow."
+          "Kimin daha dobra olduğunu yarıştırma.",
+          "Aynı argoyu kullanmanızı aynı şeyi anlamak sanma.",
+          "Her anlaşmazlığı kimlik meselesi yapma.",
+          "Birbirinizi sürekli bildirim yağmuruna tutma.",
+          "Yavaş geliyor diye dokümantasyonu atlama."
         ],
-        joke: "Alpha and Gen Z can finish the project in a day—then spend a week picking the best tool to do it."
+        joke: "Alfa ve Z Kuşağı projeyi bir günde bitirebilir — sonra hangi araçla yapacaklarını seçmek için bir hafta harcarlar."
       },
       beta: {
         dos: [
-          "Be a calm example of focus and patience.",
-          "Use simple routines and repeat them.",
-          "Teach verification habits early.",
-          "Encourage collaboration over competition.",
-          "Keep goals small and celebrate consistency."
+          "Odak ve sabır konusunda sakin bir örnek ol.",
+          "Basit rutinler kur ve bunları tekrarla.",
+          "Doğrulama alışkanlığını erken öğret.",
+          "Rekabet yerine iş birliğini teşvik et.",
+          "Hedefleri küçük tut ve istikrarı kutla."
         ],
         donts: [
-          "Overstimulate with constant switching.",
-          "Make everything a race.",
-          "Reward attention-seeking over learning.",
-          "Normalize skipping basics.",
-          "Treat mistakes as entertainment."
+          "Sürekli konu değiştirerek aşırı uyarma.",
+          "Her şeyi yarışa çevirme.",
+          "Öğrenmenin yerine dikkat çekmeyi ödüllendirme.",
+          "Temelleri atlamayı normalleştirme.",
+          "Hataları eğlence malzemesi yapma."
         ],
-        joke: "Alpha will teach Beta the shortcut, and Beta will ask who approved it."
+        joke: "Alfa Kuşağı Beta'ya kestirme yolu öğretir, Beta da bunu kimin onayladığını sorar."
       }
     },
 
     beta: {
       silent: {
         dos: [
-          "Use respectful language and clear structure.",
-          "Listen fully before replying.",
-          "Be consistent and follow through.",
-          "Ask for rules and expectations explicitly.",
-          "Offer help in practical, concrete ways."
+          "Saygılı bir dil ve net bir yapı kullan.",
+          "Cevap vermeden önce sonuna kadar dinle.",
+          "Tutarlı ol ve söylediğini yap.",
+          "Kuralları ve beklentileri açıkça sor.",
+          "Yardımını pratik ve somut biçimde sun."
         ],
         donts: [
-          "Rush conversations with rapid topic changes.",
-          "Assume informality is always welcome.",
-          "Treat experience as optional context.",
-          "Make jokes during serious discussions.",
-          "Disappear after asking for guidance."
+          "Konudan konuya atlayarak sohbeti aceleye getirme.",
+          "Senli benli olmanın her zaman hoş karşılandığını varsayma.",
+          "Tecrübeyi isteğe bağlı bir ayrıntı sayma.",
+          "Ciddi konuşmaların ortasında espri yapma.",
+          "Akıl danıştıktan sonra ortadan kaybolma."
         ],
-        joke: "Silent values patience; Beta is still buffering the concept."
+        joke: "Sessiz Kuşak sabra değer verir; Beta Kuşağı ise bu kavramı hâlâ yüklüyor."
       },
       boomer: {
         dos: [
-          "Be polite, clear, and outcome-focused.",
-          "Show accountability and respect deadlines.",
-          "Ask for feedback and apply it fast.",
-          "Use simple tools that keep everyone aligned.",
-          "Explain your logic without sounding defensive."
+          "Kibar, net ve sonuç odaklı ol.",
+          "Sorumluluk al ve teslim tarihlerine uy.",
+          "Geri bildirim iste ve hızlıca uygula.",
+          "Herkesi aynı sayfada tutan basit araçlar kullan.",
+          "Mantığını savunmaya geçmeden anlat."
         ],
         donts: [
-          "Assume structure is oppression.",
-          "Change direction without notifying stakeholders.",
-          "Use trendy language as a substitute for clarity.",
-          "Treat meetings as optional if invited.",
-          "Push back without proposing alternatives."
+          "Kuralları baskı sayma.",
+          "Paydaşlara haber vermeden rota değiştirme.",
+          "Netliğin yerine moda terimler koyma.",
+          "Davet edildiğin toplantıyı isteğe bağlı sayma.",
+          "Alternatif önermeden itiraz etme."
         ],
-        joke: "Boomers bring the process; Beta brings the auto-update that breaks it once."
+        joke: "Baby Boomer'lar süreci getirir; Beta Kuşağı da o süreci bir kez bozan otomatik güncellemeyi."
       },
       genx: {
         dos: [
-          "Be concise and prepared.",
-          "Show independence with reliable execution.",
-          "Ask specific questions and accept short answers.",
-          "Respect boundaries and low-meeting culture.",
-          "Deliver results, then iterate quietly."
+          "Kısa konuş ve hazırlıklı gel.",
+          "Bağımsızlığını güvenilir iş çıkararak göster.",
+          "Somut sorular sor ve kısa cevapları kabul et.",
+          "Sınırlara ve az toplantı kültürüne saygı göster.",
+          "Önce sonucu teslim et, sonra sessizce geliştir."
         ],
         donts: [
-          "Expect constant praise and reassurance.",
-          "Overcomplicate the plan to sound smart.",
-          "Take blunt feedback personally.",
-          "Turn work into a popularity contest.",
-          "Ping repeatedly without new information."
+          "Sürekli övgü ve onay bekleme.",
+          "Zeki görünmek için planı karmaşıklaştırma.",
+          "Dobra geri bildirimi üstüne alınma.",
+          "İşi popülerlik yarışına çevirme.",
+          "Yeni bir bilgi yokken üst üste mesaj atma."
         ],
-        joke: "Gen X won’t read your long message, but they will fix the problem it describes."
+        joke: "X Kuşağı uzun mesajını okumaz ama içinde anlattığın sorunu çözer."
       },
       geny: {
         dos: [
-          "Align on purpose, then agree on metrics.",
-          "Use collaborative tone and shared ownership.",
-          "Be transparent about capacity and blockers.",
-          "Ask for coaching and apply it quickly.",
-          "Respect flexibility while staying accountable."
+          "Önce amaçta anlaş, sonra metrikleri belirle.",
+          "İş birliğine dayalı bir ton ve ortak sahiplik kullan.",
+          "Kapasiten ve engeller konusunda şeffaf ol.",
+          "Koçluk iste ve hızlıca uygula.",
+          "Esnekliğe saygı göster ama hesap verebilir kal."
         ],
         donts: [
-          "Assume vibes replace clear priorities.",
-          "Treat feedback as a personal rating.",
-          "Ignore team conventions and tooling.",
-          "Overcommit to look eager.",
-          "Let ambiguity linger when you’re unsure."
+          "Havanın net önceliklerin yerini tutacağını sanma.",
+          "Geri bildirimi kişisel bir not sayma.",
+          "Ekibin kurallarını ve araçlarını görmezden gelme.",
+          "Hevesli görünmek için kaldıramayacağın kadar iş alma.",
+          "Emin değilken belirsizliği öylece bırakma."
         ],
-        joke: "Gen Y will help you grow—Beta just needs to stop growing the meeting invite list."
+        joke: "Y Kuşağı gelişmene yardım eder; Beta Kuşağı'nın da toplantı davet listesini büyütmeyi bırakması yeter."
       },
       genz: {
         dos: [
-          "Keep messages short with clear next steps.",
-          "Respect boundaries and response times.",
-          "Use quick feedback loops and adjust fast.",
-          "Document decisions in a shared place.",
-          "Be honest early when something is unclear."
+          "Mesajları kısa tut, sonraki adımı net yaz.",
+          "Sınırlara ve yanıt sürelerine saygı göster.",
+          "Hızlı geri bildirim döngüleri kur ve hızlı ayarla.",
+          "Kararları ortak bir yerde kayda geçir.",
+          "Bir şey belirsizse baştan dürüstçe söyle."
         ],
         donts: [
-          "Assume speed matters more than clarity.",
-          "Turn directness into a competition.",
-          "Overreact to small conflicts.",
-          "Flood chats with constant updates.",
-          "Skip alignment and hope it works out."
+          "Hızın netlikten önemli olduğunu varsayma.",
+          "Dobralığı yarışa çevirme.",
+          "Küçük anlaşmazlıklara aşırı tepki verme.",
+          "Sohbeti sürekli güncellemeyle doldurma.",
+          "Hizalanmayı atlayıp işin kendiliğinden yürümesini bekleme."
         ],
-        joke: "Beta and Gen Z can agree on one thing: if it’s not written down, it didn’t happen."
+        joke: "Beta ve Z Kuşağı tek bir konuda hemfikir: yazılmadıysa olmamıştır."
       },
       alpha: {
         dos: [
-          "Keep routines simple and consistent.",
-          "Use short, interactive learning moments.",
-          "Model calm attention and turn-taking.",
-          "Encourage curiosity with safe boundaries.",
-          "Give immediate, kind corrections."
+          "Rutinleri basit ve tutarlı tut.",
+          "Kısa ve etkileşimli öğrenme anları kullan.",
+          "Sakin dikkati ve sıra almayı kendin örnekle.",
+          "Merakı güvenli sınırlar içinde teşvik et.",
+          "Düzeltmelerini anında ve nazikçe yap."
         ],
         donts: [
-          "Overstimulate with constant switching.",
-          "Make everything competitive.",
-          "Use sarcasm as humor in teaching.",
-          "Expect long focus without breaks.",
-          "Ignore emotions when frustration shows."
+          "Sürekli konu değiştirerek aşırı uyarma.",
+          "Her şeyi rekabete çevirme.",
+          "Öğretirken iğnelemeyi espri yerine koyma.",
+          "Molasız uzun odak bekleme.",
+          "Sinirlendiğinde duygularını yok sayma."
         ],
-        joke: "Beta will ask Alpha for help, and Alpha will respond with a tutorial they made mid-sentence."
+        joke: "Beta Kuşağı Alfa'dan yardım ister, Alfa da cümlenin ortasında çektiği bir eğitim videosuyla cevap verir."
       }
     }
   }

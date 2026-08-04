@@ -15,7 +15,7 @@ export function ZgenProfileCard({ gen }: ZgenProfileCardProps) {
     <Card className="border-brand-indigo/30 ring-1 ring-brand-indigo/20">
       <CardHeader>
         <CardTitle className="text-base">
-          Sen <span className="text-brand-indigo">{gen.name}</span> kuşağındansın
+          Senin kuşağın: <span className="text-brand-indigo">{gen.name}</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="grid gap-6 md:grid-cols-2">
