@@ -71,16 +71,21 @@ describe("CaddeWorldClocks render", () => {
     expect(screen.queryByText("ISTANBUL")).not.toBeInTheDocument();
     // m1: gün-evresi ikonları kalktı — lucide ikonların class imzası bulunmamalı.
     expect(container.querySelector(".lucide")).toBeNull();
-    // Erişilebilirlik: her kadranın yanında okunabilir dijital saat (sr-only).
-    expect(container.querySelectorAll(".sr-only")).toHaveLength(MAX_CLOCKS);
+    // Dijital saat artık GÖRÜNÜR (sr-only kopya kaldırıldı — çift okunmasın).
+    expect(container.querySelectorAll(".sr-only")).toHaveLength(0);
+    const digitals = Array.from(container.querySelectorAll(".tabular-nums")).map((n) => n.textContent ?? "");
+    expect(digitals).toHaveLength(MAX_CLOCKS);
+    digitals.forEach((value) => expect(value).toMatch(/^\d{2}:\d{2}$/));
   });
 
-  it("kadran sade kalır: yalnız 4 çeyrek tik + 2 ibre (ara tikler geri gelmemeli)", () => {
+  it("kadran sade kalır: 4 çeyrek tik + 2 baton ibre (ara tikler geri gelmemeli)", () => {
     const { container } = render(
       <CaddeWorldClocks viewerCity="Berlin" filterCity={null} cities={[]} />,
     );
     const firstFace = container.querySelector("svg");
-    expect(firstFace?.querySelectorAll("line")).toHaveLength(6);
+    // Tikler <line>, ibreler <polygon> (konik baton) — ikisi ayrı ayrı kilitleniyor.
+    expect(firstFace?.querySelectorAll("line")).toHaveLength(4);
+    expect(firstFace?.querySelectorAll("polygon")).toHaveLength(2);
   });
 
   it("aynı şehir iki kez yazılmaz — viewer dilimi fallback'lerden biriyle çakışsa bile", () => {
@@ -93,7 +98,7 @@ describe("CaddeWorldClocks render", () => {
         cities={[{ name: "Antalya", timezone: "Europe/Istanbul" } as never]}
       />,
     );
-    const labels = Array.from(container.querySelectorAll("[data-testid='cadde-world-clocks'] > div > span:first-of-type"))
+    const labels = Array.from(container.querySelectorAll("[data-testid='cadde-world-clocks'] > div > div > span:first-of-type"))
       .map((node) => node.textContent?.trim() ?? "");
     expect(labels).toHaveLength(MAX_CLOCKS);
     expect(new Set(labels).size).toBe(MAX_CLOCKS);
