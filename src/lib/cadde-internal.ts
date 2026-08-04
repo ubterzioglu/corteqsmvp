@@ -4,6 +4,8 @@
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
+// cadde-rules yalnız text-normalization'a bağlı — bu yön tek yönlü, döngü yok.
+import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
 
 // Generated types (B1) güncel olmadığı için cadde_* tabloları typed client ile uyuşmayabilir.
 // Tek izole cast burada tutulur; B1 çözülünce kaldırılacak.
@@ -30,6 +32,28 @@ export function reportCaddeApiError(context: string, error: unknown): void {
       description: "Bazı içerikler geçici olarak görüntülenemiyor. Lütfen sayfayı yenileyin.",
     });
   }
+}
+
+/**
+ * YAZMA yolu hatası — WS2 m75 araştırmasında açılan boşluk.
+ *
+ * Okuma yolları baştan sona `reportCaddeApiError` ile enstrümanteydi, yazma yolları
+ * (paylaşım, yorum, tepki, cafe, çarşı, tanıtım — 17 çağrı) TAMAMEN çıplaktı: RPC
+ * hatası Türkçe mesaja çevrilip fırlatılıyor, ham Postgres hatası hiçbir yere
+ * yazılmadan yok oluyordu. Bilinmeyen bir kod gelirse kullanıcı genel mesajı
+ * görüyor, kod ise kayboluyordu — "Paylaşım gönderilemedi" bu yüzden teşhis
+ * edilemiyordu.
+ *
+ * `reportCaddeApiError` BURADA KULLANILAMAZ: o okuma-dilinde bir toast da atıyor
+ * ("Cadde verileri yüklenirken sorun oluştu"), yazma yolunda çağıran zaten kendi
+ * toast'unu gösterdiği için kullanıcı çift ve yanlış mesaj alırdı.
+ *
+ * Error DÖNER (fırlatmaz) ki çağrı yeri tek satır kalsın ve logu atlamak mümkün
+ * olmasın: `throw caddeWriteError("createCaddePost", error)`.
+ */
+export function caddeWriteError(context: string, error: unknown, fallback?: string): Error {
+  console.error(`[cadde_write_error] ${context}`, error);
+  return new Error(resolveCaddeRpcErrorMessage(error, fallback));
 }
 
 export async function resolveCountryIdByName(countryName: string | null | undefined): Promise<string | null> {

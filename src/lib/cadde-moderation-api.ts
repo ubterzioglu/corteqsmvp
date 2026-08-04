@@ -4,8 +4,7 @@
 
 import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
-import { db, reportCaddeApiError } from "./cadde-internal";
-import { resolveCaddeRpcErrorMessage } from "./cadde-rules";
+import { caddeWriteError, db, reportCaddeApiError } from "./cadde-internal";
 
 export type CaddeModerationEntityType = "post" | "comment" | "cafe" | "carsi_item";
 export type CaddeModerationAction = "dismiss" | "hide" | "publish" | "ban_owner" | "unban_owner";
@@ -78,5 +77,5 @@ export async function moderateCaddeEntity(input: {
     p_note: input.note?.trim() || null,
     p_ban_days: input.banDays ?? 7,
   });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("moderateCaddeEntity", error);
 }

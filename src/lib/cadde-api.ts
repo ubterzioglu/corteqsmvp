@@ -19,12 +19,13 @@ import {
   CADDE_PAGE_SIZE,
   FALLBACK_PROFILE_NAME,
   db,
+  caddeWriteError,
   reportCaddeApiError,
   resolveCityIdsByNames,
   resolveCountryIdsByNames,
 } from "./cadde-internal";
 import { normalizeCaddeMedia } from "./cadde-media";
-import { moderateCaddeCafeName, resolveCaddeRpcErrorMessage } from "./cadde-rules";
+import { moderateCaddeCafeName } from "./cadde-rules";
 import {
   caddeCafeCreateSchema,
   caddeCafeJoinInputSchema,
@@ -687,7 +688,7 @@ export async function createCaddePost(input: CaddePostInput): Promise<string> {
     rpcName,
     parsed.cafeId ? rpcPayload : { ...rpcPayload, p_targets: targets },
   );
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("createCaddePost", error);
   return data as string;
 }
 
@@ -796,12 +797,12 @@ export async function saveMyCaddeInterests(userId: string, interestKeys: string[
 
   if (toRemove.length > 0) {
     const { error } = await db.from("user_cadde_interests").delete().eq("user_id", userId).in("interest_key", toRemove);
-    if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+    if (error) throw caddeWriteError("saveMyCaddeInterests", error);
   }
 
   if (toAdd.length > 0) {
     const { error } = await db.from("user_cadde_interests").insert(toAdd.map((key) => ({ user_id: userId, interest_key: key })));
-    if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+    if (error) throw caddeWriteError("saveMyCaddeInterests", error);
   }
 }
 
@@ -815,7 +816,7 @@ export async function toggleCaddeReaction(postId: string, reactionType: CaddeRea
     p_post_id: parsed.postId,
     p_reaction_type: parsed.reactionType,
   });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("toggleCaddeReaction", error);
   return Boolean(data);
 }
 
@@ -826,7 +827,7 @@ export async function createCaddeComment(postId: string, body: string): Promise<
     p_post_id: parsed.postId,
     p_body: parsed.body,
   });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("createCaddeComment", error);
 }
 
 /** Paylaşım kaydı (m12): link paylaşımı/kopyalama sonrası sayaç DB'de artar. */
@@ -836,7 +837,7 @@ export async function recordCaddeShare(postId: string, channel: "web_share" | "c
     p_post_id: parsed.postId,
     p_channel: parsed.channel,
   });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("recordCaddeShare", error);
 }
 
 /** İçerik şikayeti (spec §18): report → moderasyon kuyruğu (rate limit DB'de). */
@@ -847,7 +848,7 @@ export async function reportCaddeEntity(entityType: "post" | "comment" | "cafe" 
     p_reason: reason,
     p_details: details?.trim() || null,
   });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("reportCaddeEntity", error);
 }
 
 /**
@@ -885,7 +886,7 @@ export async function joinCaddeCafe(input: { cafeId: string; referralCode?: stri
     p_referral_code: parsed.referralCode?.trim() || null,
     p_answer: parsed.answer?.trim() || null,
   });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("joinCaddeCafe", error);
   const payload = (data ?? {}) as { memberId?: string; status?: string };
   return {
     memberId: payload.memberId ?? "",
@@ -915,7 +916,7 @@ export async function createCaddeCafe(input: CaddeCafeCreateInput): Promise<stri
     p_external_links: parsed.externalLinks ?? [],
     p_diaspora_key: parsed.diasporaKey ?? "tr",
   });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("createCaddeCafe", error);
   return data as string;
 }
 
@@ -924,10 +925,10 @@ export async function approveCaddeCafeMember(memberId: string, approve: boolean)
     p_member_id: memberId,
     p_approve: approve,
   });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("approveCaddeCafeMember", error);
 }
 
 export async function archiveCaddeCafe(cafeId: string): Promise<void> {
   const { error } = await db.rpc("archive_cadde_cafe_v1", { p_cafe_id: cafeId });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("archiveCaddeCafe", error);
 }

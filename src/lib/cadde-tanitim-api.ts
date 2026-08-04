@@ -5,8 +5,7 @@
 
 import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
-import { db, reportCaddeApiError } from "./cadde-internal";
-import { resolveCaddeRpcErrorMessage } from "./cadde-rules";
+import { caddeWriteError, db, reportCaddeApiError } from "./cadde-internal";
 import { caddePromotionCreateSchema, parseWithUserError } from "./cadde-schemas";
 import type {
   CaddePromotionCampaign,
@@ -168,7 +167,7 @@ export async function createPromotionCampaign(input: CaddePromotionCreateInput):
       diaspora: placement.diaspora ?? "tr",
     })),
   });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("createPromotionCampaign", error);
   return data as string;
 }
 
@@ -178,7 +177,7 @@ export async function adminReviewPromotion(campaignId: string, approve: boolean,
     p_approve: approve,
     p_note: note?.trim() || null,
   });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("adminReviewPromotion", error);
 }
 
 /** Placement bazlı tüketim kartları (rail / feed-inline / cafe). */

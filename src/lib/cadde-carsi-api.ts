@@ -2,18 +2,18 @@
 // D-01 sözleşmesi: Çarşı, Tanıtım/sponsorlu görünürlük (cadde_promotion_*/billboard) ile
 // ASLA aynı tablo/panel altında birleşmez; bu modül yalnız carsi_* nesneleriyle konuşur.
 // Mutation'lar security-definer RPC'lerden geçer (create/update/delete_carsi_item_v1);
-// hatalar resolveCaddeRpcErrorMessage ile Türkçe mesaja çevrilir, okumalar boş sonuçla düşer.
+// hatalar caddeWriteError ile ham haliyle loglanıp Türkçe mesaja çevrilir, okumalar boş sonuçla düşer.
 
 import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
 import {
   FALLBACK_PROFILE_NAME,
+  caddeWriteError,
   db,
   reportCaddeApiError,
   resolveCityIdsByNames,
   resolveCountryIdsByNames,
 } from "./cadde-internal";
-import { resolveCaddeRpcErrorMessage } from "./cadde-rules";
 import { carsiItemCreateSchema, carsiItemUpdateSchema, parseWithUserError } from "./cadde-schemas";
 import type {
   CarsiCategory,
@@ -231,7 +231,7 @@ export async function createCarsiItem(input: CarsiItemCreateInput): Promise<stri
     p_video_url: parsed.videoUrl ?? null,
     p_contact_value: parsed.contactValue ?? null,
   });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("createCarsiItem", error);
   return data as string;
 }
 
@@ -246,12 +246,12 @@ export async function updateCarsiItem(input: { itemId: string; title?: string; d
     p_price_currency: parsed.priceCurrency ?? null,
     p_status: parsed.status ?? null,
   });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("updateCarsiItem", error);
 }
 
 export async function deleteCarsiItem(itemId: string): Promise<void> {
   const { error } = await db.rpc("delete_carsi_item_v1", { p_item_id: itemId });
-  if (error) throw new Error(resolveCaddeRpcErrorMessage(error));
+  if (error) throw caddeWriteError("deleteCarsiItem", error);
 }
 
 /**
