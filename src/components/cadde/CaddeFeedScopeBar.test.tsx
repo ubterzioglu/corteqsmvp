@@ -18,8 +18,15 @@ describe("CaddeFeedScopeBar", () => {
     renderBar();
     expect(screen.queryByText("Takip Ettiklerim")).not.toBeInTheDocument();
     expect(screen.queryByText("İş Fırsatları")).not.toBeInTheDocument();
-    // Yakınımda "Yakında" rozetiyle devre dışı durur (Faz 2, geo koordinat bekliyor).
-    expect(screen.getByRole("button", { name: /Yakınımda/ })).toBeDisabled();
+  });
+
+  it("m88: devre dışı 'Yakında' çipi şeritte kalmaz — ortak alana taşındı", () => {
+    renderBar();
+    // Şeritte artık hiçbir disabled çip / "Yakında" rozeti olmamalı; çalışmayan
+    // fonksiyonlar CaddeComingSoon kartında toplanıyor.
+    expect(screen.queryByRole("button", { name: /Yakınımda/ })).not.toBeInTheDocument();
+    expect(screen.queryByText("Yakında")).not.toBeInTheDocument();
+    screen.getAllByRole("button").forEach((chip) => expect(chip).toBeEnabled());
   });
 
   it("2026-08-04: Etkinlikler çipi kaldırıldı — composer etkinlik postu üretemiyor", () => {

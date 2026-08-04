@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CaddeMediaPreviewStrip } from "@/components/cadde/CaddeMediaGallery";
 import CaddeEmojiPickerButton from "@/components/cadde/CaddeEmojiPickerButton";
+import CaddeInfoPopover from "@/components/cadde/CaddeInfoPopover";
 import MentionTextarea, { type MentionTextareaHandle } from "@/components/cadde/MentionTextarea";
 import {
   CADDE_IMAGE_MIME_TYPES,
@@ -185,6 +186,32 @@ const CaddeComposer = ({
 
         {locationOpen ? (
           <div className="space-y-3 rounded-2xl bg-slate-50 p-3">
+            {/* m86+m87: konum seçiminin NE İŞE YARADIĞI burada söyleniyor. Kullanıcı
+                bunu "nerede yaşıyorum" sanıyordu; oysa paylaşımın hangi ülke akışına
+                düşeceğini belirliyor. Satır kısa özet, balon uzun anlatım. */}
+            <p
+              data-testid="cadde-composer-location-hint"
+              className="flex items-start gap-1.5 text-xs leading-relaxed text-slate-600"
+            >
+              <span className="min-w-0">
+                Seçtiğin konum, paylaşımının hangi ülke ve şehir akışında görüneceğini belirler.
+              </span>
+              <CaddeInfoPopover
+                label="Konum seçimi ne işe yarar?"
+                triggerTestId="cadde-composer-location-info-trigger"
+                contentTestId="cadde-composer-location-info-content"
+                triggerClassName="shrink-0 text-orange-600 hover:bg-orange-100 hover:text-orange-800 focus-visible:ring-orange-500"
+              >
+                <p className="text-xs font-semibold text-slate-900">Konum seçimi ne işe yarar?</p>
+                <p className="text-xs leading-relaxed text-slate-600">
+                  Paylaşımın, seçtiğin ülkenin (ve şehrin) akışında gösterilir. Boş bırakırsan
+                  profilinde kayıtlı konumun kullanılır.
+                </p>
+                <p className="text-xs leading-relaxed text-slate-600">
+                  Global akışa doğrudan paylaşım yapılmaz; paylaşımın oraya etkileşimiyle taşınır.
+                </p>
+              </CaddeInfoPopover>
+            </p>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label className="text-xs">

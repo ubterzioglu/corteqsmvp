@@ -4,7 +4,10 @@
 // İPTAL — kaldırıldı (RPC scope parametresi tip olarak durur, UI'dan seçilemez).
 // Workshop m14: kalan çiplere ne işe yaradığını anlatan kısa açıklama — title/tooltip +
 // aktif kapsamın açıklaması barın altında satır olarak.
-// "Yakınımda" Faz 2'ye kadar "Yakında" rozetiyle devre dışı (geo koordinat bekliyor).
+// Workshop m88 (4 Ağu): disabled "Yakınımda" çipi bu şeritten KALKTI — çalışmayan
+// fonksiyonlar artık tek ortak alanda toplanıyor (CaddeComingSoon). Kapsam anahtarı
+// 'nearby' tipte ve RPC parametresinde DURUR (m15 deseni), yalnız UI'dan seçilemez.
+// Buraya bir daha disabled/"Yakında" çip EKLEME; yeni satır CaddeComingSoon'a gider.
 //
 // 2026-08-04 (kullanıcı kararı): "Etkinlikler" çipi KALDIRILDI — m14'ün koru listesinde
 // olmasına rağmen. Gerekçe: composer'daki Etkinlik çipi m6'da kalkınca kullanıcı artık
@@ -32,12 +35,6 @@ const SCOPES: readonly ScopeOption[] = [
   { key: "city", label: "Şehrim", description: "Yalnız senin şehrinden paylaşımlar." },
   { key: "country", label: "Ülkem", description: "Yalnız yaşadığın ülkeden paylaşımlar." },
   { key: "cafes", label: "Cafelerim", description: "Üyesi olduğun cafe'lerin paylaşımları." },
-  {
-    key: "nearby",
-    label: "Yakınımda",
-    description: "Konumuna en yakın paylaşımlar — yakında.",
-    comingSoon: true,
-  },
 ];
 
 export interface CaddeFeedScopeBarProps {

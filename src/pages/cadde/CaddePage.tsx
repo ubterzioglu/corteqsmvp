@@ -7,6 +7,7 @@ import { useAuth } from "@/components/auth/useAuth";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
 import CaddeEmojiPickerButton from "@/components/cadde/CaddeEmojiPickerButton";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
+import CaddeComingSoon from "@/components/cadde/CaddeComingSoon";
 import CaddeBridgeInfo from "@/components/cadde/CaddeBridgeInfo";
 import CaddeInfoPopover from "@/components/cadde/CaddeInfoPopover";
 import CaddeFeaturedSpotlight from "@/components/cadde/CaddeFeaturedSpotlight";
@@ -1107,6 +1108,10 @@ const CaddePage = () => {
           </Card>
 
           <CaddeTrendingHashtags />
+
+          {/* m88: çalışmayan fonksiyonlar kendi yüzeylerinde disabled durmuyor,
+              hepsi burada toplanıyor. */}
+          <CaddeComingSoon />
 
           <PromotionRail filters={filters} />
 
