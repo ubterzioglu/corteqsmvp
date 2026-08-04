@@ -207,9 +207,11 @@ export const DEMO_BILLBOARDS: CaddeBillboardCard[] = [
 export const DEMO_SPONSORED: CaddeSponsoredPlacement = {
   id: "demo-sponsored-1",
   title: "Sponsorlu Görünüm",
-  description: "Danışman, etkinlik veya topluluk teklifinizi Cadde akışında görünür hale getirin.",
+  description: "Danışman, etkinlik veya topluluk teklifini Cadde akışında görünür hale getir.",
   badgeText: "Sponsorlu",
-  ctaLabel: "Talep Bırak",
+  // m99: "Talep Bırak" aracı adımı kalktı (m45 kararı) — demo kart da canlı CTA ile
+  // aynı dili konuşur, yoksa demo modda eski akış geri geliyormuş gibi görünüyor.
+  ctaLabel: "Tanıtımını Başlat",
   ctaUrl: "/login?mode=signup",
   imageUrl: null,
 };

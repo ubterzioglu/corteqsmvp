@@ -43,9 +43,12 @@ const PromotionRail = ({ filters }: PromotionRailProps) => {
           className="px-4 pb-4"
         >
           <div className="rounded-[22px] border border-dashed border-orange-200 bg-orange-50 px-4 py-5">
-            <p className="text-sm font-semibold text-slate-900">İlk tanıtım kartı burada yayınlanacak.</p>
+            {/* m98: pasif "yayınlanacak/görünür" dili aktife çevrildi. CTA bilinçli
+                olarak YOK — ana tanıtım butonu hemen aşağıdaki kartta, üst üste üç
+                buton yığmıyoruz (F14 kararı). */}
+            <p className="text-sm font-semibold text-slate-900">Bu tanıtım alanı şu an boş.</p>
             <p className="mt-2 text-sm leading-relaxed text-slate-600">
-              Yerel kampanyalar, topluluk çağrıları ve sponsorlu keşif alanları bu bölümde görünür.
+              Yerel kampanyanı, topluluk çağrını veya sponsorlu keşif kartını buraya taşıyabilirsin.
             </p>
           </div>
         </div>

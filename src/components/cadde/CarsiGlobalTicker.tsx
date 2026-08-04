@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, ShoppingBag } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import CaddeInfoPopover from "@/components/cadde/CaddeInfoPopover";
 import { formatCarsiPrice, getCarsiVisible, listCarsiItems } from "@/lib/cadde-carsi-api";
 import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
@@ -37,7 +38,8 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
   const items = itemsQuery.data ?? [];
 
   if (!carsiVisible) {
-    // m40: "Diaspora'nın ikinci el pazarı Çarşı yakında" — linksiz teaser.
+    // m40: linksiz teaser. m51+m53: marka adı her yerde "CorteQS Çarşı" — isim hakkı
+    // alınana kadar sade "Çarşı" kullanılmıyor; hover metni de madde metninden birebir.
     return (
       <div
         className="cadde-carsi-teaser rounded-2xl border p-4"
@@ -45,10 +47,20 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
       >
         <p className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-900">
           <ShoppingBag className="h-4 w-4" />
-          Çarşı yakında
+          CorteQS Çarşı Yakında Açılıyor
+          <CaddeInfoPopover
+            label="CorteQS Çarşı nedir?"
+            triggerTestId="carsi-teaser-info-trigger"
+            contentTestId="carsi-teaser-info-content"
+            triggerClassName="text-amber-700 hover:bg-amber-100 hover:text-amber-900 focus-visible:ring-amber-500"
+          >
+            <p className="text-xs leading-relaxed text-amber-900">
+              CorteQS'in ikinci el pazarı yakında!
+            </p>
+          </CaddeInfoPopover>
         </p>
         <p className="mt-1.5 text-xs leading-relaxed text-amber-800/90">
-          Diaspora'nın ikinci el pazarı Çarşı çok yakında burada — eşyanı sat, aradığını
+          Diaspora'nın ikinci el pazarı çok yakında burada — eşyanı sat, aradığını
           şehrindeki üyelerden bul.
         </p>
       </div>
@@ -60,10 +72,10 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
       <div className="flex items-center justify-between gap-2">
         <p className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-900">
           <ShoppingBag className="h-4 w-4" />
-          Çarşı
+          CorteQS Çarşı
         </p>
         <Link to="/cadde/carsi" className="inline-flex items-center gap-1 text-xs font-semibold text-amber-800 hover:underline">
-          Tüm Çarşı
+          Tümü
           <ArrowRight className="h-3 w-3" />
         </Link>
       </div>

@@ -379,7 +379,9 @@ describe("CaddePage", () => {
     expect(screen.queryByRole("button", { name: /Devamını yükle/i })).not.toBeInTheDocument();
   });
 
-  it("submits comments with Enter and keeps Shift+Enter as a line break", async () => {
+  // WS2 m80+m81: Enter yalnız satır atlar; yorum SADECE "Gönder" butonuyla yayınlanır.
+  // Bu, WS1 m22'nin (Enter gönderir) bilinçli geri alınmasıdır — 04.08.2026 workshop kararı.
+  it("keeps Enter as a line break and publishes comments only via the send button", async () => {
     useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
     listCaddeCountriesMock.mockResolvedValue([]);
     listCaddeCitiesMock.mockResolvedValue([]);
@@ -429,24 +431,23 @@ describe("CaddePage", () => {
     expect(textarea).toHaveClass("min-h-[64px]");
     expect(await screen.findByTestId("cadde-comment-card")).toHaveClass("py-2.5");
 
+    // Enter artık gönderim tetiklemez ve varsayılanı engellemez → imleç yeni satıra iner.
     fireEvent.change(textarea, { target: { value: "Satır 1" } });
+    const enter = createEvent.keyDown(textarea, { key: "Enter", code: "Enter" });
+    fireEvent(textarea, enter);
+    expect(enter.defaultPrevented).toBe(false);
+    expect(createCaddeCommentMock).not.toHaveBeenCalled();
+
     const shiftEnter = createEvent.keyDown(textarea, { key: "Enter", code: "Enter", shiftKey: true });
     fireEvent(textarea, shiftEnter);
     expect(shiftEnter.defaultPrevented).toBe(false);
     expect(createCaddeCommentMock).not.toHaveBeenCalled();
 
-    fireEvent.change(textarea, { target: { value: "   " } });
-    const emptyEnter = createEvent.keyDown(textarea, { key: "Enter", code: "Enter" });
-    fireEvent(textarea, emptyEnter);
-    expect(emptyEnter.defaultPrevented).toBe(true);
-    expect(createCaddeCommentMock).not.toHaveBeenCalled();
+    // Yayınlamanın tek yolu Gönder butonu.
+    fireEvent.change(textarea, { target: { value: "Butonla yorum" } });
+    fireEvent.click(screen.getByRole("button", { name: /Gönder/i }));
 
-    fireEvent.change(textarea, { target: { value: "Klavye ile yorum" } });
-    const enter = createEvent.keyDown(textarea, { key: "Enter", code: "Enter" });
-    fireEvent(textarea, enter);
-
-    expect(enter.defaultPrevented).toBe(true);
-    await waitFor(() => expect(createCaddeCommentMock).toHaveBeenCalledWith("post-enter", "Klavye ile yorum"));
+    await waitFor(() => expect(createCaddeCommentMock).toHaveBeenCalledWith("post-enter", "Butonla yorum"));
   });
 
   it("inserts a selected emoji into the open comment draft at the current caret", async () => {
@@ -744,6 +745,28 @@ describe("CaddePage", () => {
     expect(screen.getByTestId("cadde-cafes-empty-state")).toBeInTheDocument();
     expect(screen.getByTestId("cadde-promotions-empty-state")).toBeInTheDocument();
     expect(screen.getByTestId("cadde-billboards-empty-state")).toBeInTheDocument();
+    // m52: konum seçili DEĞİLKEN mesaj yer adı uydurmaz.
+    expect(screen.getByTestId("cadde-cafes-empty-state")).toHaveTextContent(
+      "Henüz aktif bir cafe açılmadı.",
+    );
+  });
+
+  // m52: "Henüz cafe açılmadı" şablonu seçili ülke/şehri adıyla söyler.
+  it("names the selected location in the empty cafes state", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+
+    renderPage("/cadde?country=Almanya&city=Dortmund");
+
+    // Şehir ülkeden önce gelir; ek üretilmez (yabancı adlarda ünlü uyumu güvenilir değil).
+    expect(await screen.findByTestId("cadde-cafes-empty-state")).toHaveTextContent(
+      "Dortmund için henüz aktif bir cafe açılmadı.",
+    );
   });
 
   it("routes authenticated promotion CTAs to the profile promotion panel", async () => {

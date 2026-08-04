@@ -8,6 +8,7 @@ import CaddeComposer from "@/components/cadde/CaddeComposer";
 import CaddeEmojiPickerButton from "@/components/cadde/CaddeEmojiPickerButton";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
 import CaddeBridgeInfo from "@/components/cadde/CaddeBridgeInfo";
+import CaddeInfoPopover from "@/components/cadde/CaddeInfoPopover";
 import CaddeFeaturedSpotlight from "@/components/cadde/CaddeFeaturedSpotlight";
 import CaddeGeoFilter from "@/components/cadde/CaddeGeoFilter";
 import CaddeFeedScopeBar from "@/components/cadde/CaddeFeedScopeBar";
@@ -433,6 +434,12 @@ const CaddePage = () => {
     [cafeThemesQuery.data],
   );
   const hasGeoSelection = filters.countries.length > 0 || filters.cities.length > 0;
+  // m52: boş cafe mesajı seçili konumu adıyla söylesin ("Dortmund için henüz...").
+  // Filtre değerleri zaten ham AD taşır (CaddeGeoFilter isimle çalışır), id değil.
+  // Bilinçli olarak ek (-ta/-te/-da/-de) ÜRETİLMİYOR: yabancı şehir adlarında Türkçe
+  // ünlü uyumu + sertleşme kuralı güvenilir değil ("Dortmund'ta" ✓ ama "Nice'te/Nice'de"?).
+  // Eksiz "X için" kalıbı her ad için doğru.
+  const cafeLocationLabel = filters.cities[0] ?? filters.countries[0] ?? null;
   const sparseContentHint = hasGeoSelection
     ? "Bu bölgede içerik azsa ülke geneli ve global akış da devreye girer."
     : "İçerik az olduğunda global akışla başlayıp ilk hareketi sen başlatabilirsin.";
@@ -615,7 +622,22 @@ const CaddePage = () => {
             <CardHeader>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <CardTitle className="font-display text-lg">Aktif Cafeler</CardTitle>
+                  {/* m49: "Cafe nedir?" tek satırdan anlaşılmıyordu — balon anlatıyor. */}
+                  <CardTitle className="flex items-center gap-1.5 font-display text-lg">
+                    Aktif Cafeler
+                    <CaddeInfoPopover
+                      label="Cafe nedir?"
+                      triggerTestId="cadde-cafe-info-trigger"
+                      contentTestId="cadde-cafe-info-content"
+                      triggerClassName="text-orange-600 hover:bg-orange-100 hover:text-orange-800 focus-visible:ring-orange-500"
+                    >
+                      <p className="text-xs font-semibold text-slate-900">Cafe nedir?</p>
+                      <p className="text-xs leading-relaxed text-slate-600">
+                        Kendi teması olan, istersen davetli ve kapalı bir sohbet uygulamasıdır.
+                        Süreli bir WhatsApp grubu gibi düşünebilirsin.
+                      </p>
+                    </CaddeInfoPopover>
+                  </CardTitle>
                   <CardDescription>Kısa süreli topluluk odaları ve tema bazlı buluşmalar</CardDescription>
                 </div>
                 {session ? <CreateCafeForm trigger={<Button size="sm" variant="outline" className="rounded-2xl">+ Cafe Aç</Button>} /> : null}
@@ -663,7 +685,11 @@ const CaddePage = () => {
                   data-testid="cadde-cafes-empty-state"
                   className="cadde-empty rounded-[28px] border border-dashed p-6"
                 >
-                  <p className="text-sm font-semibold text-slate-900">Henüz aktif bir cafe açılmadı.</p>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {cafeLocationLabel
+                      ? `${cafeLocationLabel} için henüz aktif bir cafe açılmadı.`
+                      : "Henüz aktif bir cafe açılmadı."}
+                  </p>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
                     Şehir sohbetleri, tema bazlı odalar ve kısa buluşmalar burada görünür. {sparseContentHint}
                   </p>
@@ -923,13 +949,6 @@ const CaddePage = () => {
                                     onClick={(event) => syncCommentSelection(item.post.id, event)}
                                     onKeyUp={(event) => syncCommentSelection(item.post.id, event)}
                                     onSelect={(event) => syncCommentSelection(item.post.id, event)}
-                                    onKeyDown={(event) => {
-                                      if (event.key !== "Enter" || event.shiftKey) return;
-                                      event.preventDefault();
-                                      const body = commentDrafts[item.post.id] ?? "";
-                                      if (!body.trim()) return;
-                                      commentMutation.mutate({ postId: item.post.id, body });
-                                    }}
                                     placeholder="Yorum yaz"
                                     rows={2}
                                     className="min-h-[64px] bg-white"
