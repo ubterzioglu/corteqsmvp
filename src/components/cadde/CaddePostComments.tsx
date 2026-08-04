@@ -4,10 +4,20 @@
 // Panel buraya bağımsız bir bileşen olarak yazıldı; ana akıştaki (CaddePage) satır
 // içi panelle aynı API'leri kullanır: listCaddePostComments (sayfalı) + createCaddeComment.
 //
-// Davranış sözleşmeleri (ana akışla birebir aynı olmalı):
+// Davranış sözleşmeleri:
 // - m81: yorum YALNIZ "Gönder" butonuyla yayınlanır; Enter satır atlar.
 // - m21: yorumlar panel açılınca çekilir, sayfa sayfa ("Devamını yükle").
 // - m62: emoji imleç noktasına, kod noktası sınırına saygılı biçimde eklenir.
+//
+// ⚠️ Bu panel CaddePage'deki satır içi yorum paneliyle BİLEREK ayrı yaşar; ortak
+// bileşene taşımayın. Gerekçe: m58 kafe içini "sohbet benzeri akış"a çevirecek,
+// yani iki yüzey yapısal olarak ayrışacak. Ortak kalan kısım zaten ince (API,
+// Enter kuralı, emoji ekleme).
+//
+// ⚠️ BURADA POLLING YOK ve bu bir EKSİK DEĞİL. Otomatik yorum yenileme (m90)
+// WS2'de "performans değerlendirmesinden sonra" diye PARK EDİLDİ. Ana akışta
+// olmasının sebebi F18'in bu karardan önce çıkmış olması. "Kafede eksik kalmış"
+// diye refetchInterval eklemeyin — önce park kararına bakın.
 
 import { useRef, useState } from "react";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
