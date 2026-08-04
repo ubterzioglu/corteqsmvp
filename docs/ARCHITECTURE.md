@@ -150,7 +150,10 @@ DROP migration (`user_follows` 1 satır R-06 notuyla). Bu tablolara yeniden poli
 
 ## 5. Veritabanı Operasyonları
 
-- **Migration konumu ve sayısı:** 352 migration, hepsi `supabase/migrations/applied/` altında.
+- **Migration konumu ve sayısı:** 352 migration — 100'ü `supabase/migrations/applied/`, 252'si
+  `supabase/migrations/archive/` altında (2026-08-04 taban çizgisi ayrımı; arşiv SİLİNMEZ,
+  sıfırdan kurulum = `supabase/baseline/2026-08-04-public-schema.sql` + `applied/`).
+  Uygulanmamış migration kontrolü elle yapılmaz: `npm run check:migrations`.
   Repo kökündeki `supabase/migrations/` dizininde 0 adet `.sql` vardır — yeni bir migration
   ararken `applied/` alt klasörüne bak.
 - **Migration kuralı:** silme/yeniden sıralama yok — yalnız yeni dosya, artan timestamp.

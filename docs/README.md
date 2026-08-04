@@ -4,7 +4,8 @@
 > uygulama planı + backlog (`plans/`) ve kapanış raporu (`history/`) eklendi.
 > Listeleri aşağıdaki **2026-08-04 Modernizasyon Çalışması** bölümünde.
 > Bu çalışmada ölçülen gerçek envanter: **989** kaynak dosya (`src` altında `.ts`/`.tsx`),
-> **352** migration (hepsi `supabase/migrations/applied/`), **7** Edge Function,
+> **352** migration (100 `supabase/migrations/applied/` + 252 `supabase/migrations/archive/`,
+> 2026-08-04 taban çizgisi ayrımı), **7** Edge Function,
 > `App.tsx` 283 satır / 51 `lazy()`. `CLAUDE.md`'deki eski sayılar (221 migration,
 > 5 Edge Function, 150 sayfa) **bayattır** — düzeltmeler denetim raporlarında.
 >

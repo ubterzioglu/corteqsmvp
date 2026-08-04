@@ -8,7 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Key Metrics (ölçüldü 2026-08-04):**
 - 989 `.ts`/`.tsx` files under `src` — 209 pages, 429 components, 278 lib modules
-- **352 Supabase migrations**, all under `supabase/migrations/applied/`; 7 Edge Functions
+- **352 Supabase migrations** — 100 in `supabase/migrations/applied/` + 252 in
+  `supabase/migrations/archive/` (2026-08-04 baseline split); 7 Edge Functions
 - 202 test files (`src` 190, `scripts` 9, `supabase` 3, `workers` 4) + 18 Playwright `.spec.ts`
 - `src/App.tsx`: 283 lines, 51 `lazy()` imports
 - TypeScript with relaxed strict mode (intentional trade-off) — 98 remaining `tsc` errors
@@ -288,7 +289,8 @@ bozulabilen (test/build patlamayan ama canlıda zarar veren) bir sınıfı kapat
    - Never change route paths without checking git history
 
 2. **Supabase Migrations** cannot be deleted or reordered in production. Only add new migrations.
-   They live in `supabase/migrations/applied/` (352 files); the parent `supabase/migrations/`
+   They live in `supabase/migrations/applied/` (100) + `supabase/migrations/archive/` (252,
+   pre-baseline — **never delete**); the parent `supabase/migrations/`
    directory itself holds 0 `.sql` files.
 
 3. **Production runtime is nginx — NOT `server.mjs`** (corrected 2026-08-04; the old claim here
@@ -359,9 +361,38 @@ config **text** and route tables, so they fail loudly when someone edits one sid
 
 ## Database & Migrations
 
-- **352 migrations** in **`supabase/migrations/applied/`** (date-prefixed, immutable in prod).
-  Note the `applied/` subdirectory — the parent `supabase/migrations/` contains 0 `.sql` files,
-  so a glob on the parent silently finds nothing.
+- **352 migrations total, split by a baseline on 2026-08-04** (date-prefixed, immutable in prod).
+  Note the subdirectories — the parent `supabase/migrations/` contains 0 `.sql` files, so a glob
+  on the parent silently finds nothing.
+
+| Path | Count | Meaning |
+|------|-------|---------|
+| `supabase/migrations/applied/` | 100 | Post-baseline (≥ `20260615100000`) — the working set |
+| `supabase/migrations/archive/` | 252 | Pre-baseline, **applied in production, never delete** |
+| `supabase/baseline/2026-08-04-public-schema.sql` | 1 | `pg_dump --schema-only` of the live `public` schema (237 tables, 481 RLS policies, 1568 grants, 342 indexes, 115 triggers, 5 views) |
+
+**Rebuilding from zero = baseline + `applied/` in order.** That is why `archive/` is archived and
+not deleted: it is the only record of *why* the schema looks like it does (RLS has been reset
+several times here), and the only fallback if the baseline dump ever turns out incomplete.
+
+### Checking for unapplied migrations — do not do it by hand
+```bash
+npm run check:migrations        # drift → exit 1
+npm run check:migrations:warn   # reports, exit 0
+```
+Compares `applied/` + `archive/` against the live `supabase_migrations.schema_migrations`
+(psql over the session pooler; needs `SUPABASE_DB_PASSWORD` in `.env.local`). If it cannot
+connect it exits **2** and says so — a failed check is never reported as "clean".
+
+⚠️ **Two timestamps carry two files each** — this is real, not a bug:
+`20260718120000` (`brainstorming_tables` + `revision_requests_mvp_seed`) and `20260718130000`
+(`remove_world_cup_campaign` + `statusreport_comments_admin_only`). `schema_migrations.version`
+is unique, so the second of each pair is recorded as `...0001` in production. The checker models
+this (`expectedVersionsFor`); a naive filename↔DB diff reports 4 false positives. **When adding a
+migration, do not reuse a timestamp that already exists** — pick a different second.
+
+⚠️ A table or column existing in production does **not** prove a `schema_migrations` row exists —
+this repo has hit that gap twice (2026-07-18, 2026-07-20). Check the real schema before applying.
 - **RLS active** — submissions require specific conditions
 - **Edge Functions (7):** `find-matches`, `lansman-admin`, `radar-news-scan`,
   `relocation-notifications`, `send-notification-emails`, `send-submission-email`,
