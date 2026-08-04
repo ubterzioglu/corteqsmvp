@@ -475,6 +475,16 @@ const CaddePage = () => {
     : "İçerik az olduğunda global akışla başlayıp ilk hareketi sen başlatabilirsin.";
   const activeCafes = cafesQuery.data ?? [];
   const billboardCards = billboardsQuery.data ?? [];
+  // Soğuk başlangıç konsolidasyonu (04.08.2026): billboard tablosu TAMAMEN boşken sağ
+  // kolonda üç ayrı tanıtım yüzeyi aynı hedefe giden aynı çağrıyı tekrarlıyordu. Bu
+  // bayrak "hiç kart yok" durumunu üçünün de tek davet kartına düşmesi için kullanılır.
+  // Dikkat: featured'ın YOKLUĞU tek başına yetmez — featured olmayan bir kart varsa
+  // liste dolu olur ve ayrı yüzeyler korunmalıdır.
+  const hasAnyBillboard = billboardCards.length > 0;
+
+  const scrollToComposer = () => {
+    document.getElementById("cadde-composer")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
   // m41: sağ kolonun tepesindeki statik "CorteQS Panosu" yerine featured kayıt geçer.
   // m44: liste de featured kayıtlara ayrılır; hiç featured yoksa yayındaki diğer kartlar
   // gösterilir (yüzey boş kalmasın). Spotlight'a çıkan kart listede tekrar etmez.
@@ -534,9 +544,7 @@ const CaddePage = () => {
                 <Globe2 className="h-5 w-5 text-orange-500" />
               </div>
               <Button
-                onClick={() => {
-                  document.getElementById("cadde-composer")?.scrollIntoView({ behavior: "smooth", block: "center" });
-                }}
+                onClick={scrollToComposer}
                 className="w-full justify-between rounded-2xl bg-slate-900 text-white hover:bg-slate-800"
               >
                 Caddeye Çık
@@ -971,11 +979,45 @@ const CaddePage = () => {
                 data-testid="cadde-feed-empty-state"
                 className="cadde-empty border-dashed"
               >
+                {/* Soğuk başlangıç: kart eskiden üç paragraf METİNDİ ve kullanıcıya ne
+                    yapabileceğini ANLATIP yapmasını zorlaştırıyordu. ux `empty-states`
+                    kuralı "yardımcı mesaj VE eylem" diyor. Birincil eylem her zaman
+                    paylaşım; ikincil eylem akışın neden boş olduğuna göre değişir —
+                    filtre daraltıyorsa filtreyi temizler, daraltmıyorsa kapsamı genişletir. */}
                 <CardContent className="p-8 text-center text-slate-500">
                   <p className="text-base font-semibold text-slate-900">Bu akış henüz sessiz.</p>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                    İlk paylaşımı sen yapabilir, ülke genelindeki konuşmaları izleyebilir veya köprü moduyla daha geniş akışı keşfedebilirsin.
+                    İlk paylaşımı sen yapabilirsin — bir soru, bir duyuru ya da şehrinden kısa bir not yeter.
                   </p>
+                  <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                    {session ? (
+                      <Button onClick={scrollToComposer} className="rounded-2xl bg-slate-900 text-white hover:bg-slate-800">
+                        İlk paylaşımı yap
+                        <Megaphone className="ml-1.5 h-4 w-4 text-orange-200" />
+                      </Button>
+                    ) : (
+                      <Button asChild className="rounded-2xl bg-slate-900 text-white hover:bg-slate-800">
+                        <Link to="/login">Giriş yap ve ilk paylaşımı yap</Link>
+                      </Button>
+                    )}
+                    {hasGeoSelection ? (
+                      <Button
+                        variant="outline"
+                        className="rounded-2xl border-orange-200 bg-white text-orange-800 hover:bg-orange-50"
+                        onClick={() => updateFilters({ countries: [], cities: [] })}
+                      >
+                        Filtreleri temizle
+                      </Button>
+                    ) : filters.bridge ? null : (
+                      <Button
+                        variant="outline"
+                        className="rounded-2xl border-emerald-200 bg-white text-emerald-800 hover:bg-emerald-50"
+                        onClick={() => updateFilters({ bridge: true })}
+                      >
+                        Köprü modunu aç
+                      </Button>
+                    )}
+                  </div>
                   <p className="mt-3 text-xs text-slate-500">{sparseContentHint}</p>
                 </CardContent>
               </Card>
@@ -1000,7 +1042,7 @@ const CaddePage = () => {
               yerini panelden Featured işaretlenen kayıt aldı (yoksa hiç çizilmez). */}
           {spotlightBillboard ? (
             <CaddeFeaturedSpotlight card={spotlightBillboard} />
-          ) : (
+          ) : hasAnyBillboard ? (
             <Card
               data-testid="cadde-featured-empty-state"
               className="cadde-featured overflow-hidden"
@@ -1024,7 +1066,7 @@ const CaddePage = () => {
                 </Button>
               </CardContent>
             </Card>
-          )}
+          ) : null}
 
           {/* Panosu kartından KORUNAN iki parça: maskot selamı ve beta geri bildirimi.
               Geri bildirim WhatsApp yerine kendi /feedback formumuza gider (kayıt altına
@@ -1055,6 +1097,10 @@ const CaddePage = () => {
 
           <PromotionRail filters={filters} />
 
+          {/* Hiç billboard kaydı yokken bu kartın TEK içeriği kendi boş-durum kutusu
+              olurdu; aşağıdaki koyu davet kartı zaten aynı şeyi söylüyor. Bu yüzden
+              soğuk başlangıçta kart tamamen çizilmiyor (bkz. hasAnyBillboard). */}
+          {hasAnyBillboard ? (
           <Card className="border-slate-200 bg-white/90">
             <CardHeader>
               <CardTitle className="font-display text-lg">Şehrinden Öne Çıkanlar</CardTitle>
@@ -1115,8 +1161,9 @@ const CaddePage = () => {
               )}
             </CardContent>
           </Card>
+          ) : null}
 
-          <Card className="border-slate-200 bg-slate-900 text-white">
+          <Card data-testid="cadde-promotion-invite" className="border-slate-200 bg-slate-900 text-white">
             <CardHeader>
               {/* text-balance: "Ol" tek başına ikinci satıra düşmesin (dar sidebar'da kırılıyordu). */}
               <CardTitle className="text-balance font-display text-[clamp(1rem,2.2vw,1.25rem)] leading-snug text-white">

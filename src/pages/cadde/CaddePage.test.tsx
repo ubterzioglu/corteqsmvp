@@ -745,7 +745,14 @@ describe("CaddePage", () => {
     expect(await screen.findByTestId("cadde-feed-empty-state")).toBeInTheDocument();
     expect(screen.getByTestId("cadde-cafes-empty-state")).toBeInTheDocument();
     expect(screen.getByTestId("cadde-promotions-empty-state")).toBeInTheDocument();
-    expect(screen.getByTestId("cadde-billboards-empty-state")).toBeInTheDocument();
+    // Soğuk başlangıç (04.08.2026 canlı denetimi): billboard tablosu TAMAMEN boşken sağ
+    // kolonda üç ayrı tanıtım yüzeyi vardı — "Caddede Öne Çık" boş kartı, "Şehrinden Öne
+    // Çıkanlar" boş kartı ve koyu "Cadde İçinde Görünür Ol" kartı — üçü de aynı hedefe
+    // giden aynı çağrıyı tekrarlıyordu. İçerik sıfırken bu kolon reklam-için-reklam
+    // yığınına dönüyordu. Hepsi TEK davet kartında birleşti.
+    expect(screen.getByTestId("cadde-promotion-invite")).toBeInTheDocument();
+    expect(screen.queryByTestId("cadde-featured-empty-state")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("cadde-billboards-empty-state")).not.toBeInTheDocument();
     // m52: konum seçili DEĞİLKEN mesaj yer adı uydurmaz.
     expect(screen.getByTestId("cadde-cafes-empty-state")).toHaveTextContent(
       "Henüz aktif bir cafe açılmadı.",
@@ -797,6 +804,89 @@ describe("CaddePage", () => {
 
     expect(await screen.findByTestId("cadde-feed-empty-state")).toBeInTheDocument();
     expect(screen.queryByTestId("cadde-feed-error-state")).not.toBeInTheDocument();
+  });
+
+  // Soğuk başlangıç: boş akış kartı üç paragraf METİN'di ("İlk paylaşımı sen yapabilir,
+  // ülke genelindeki konuşmaları izleyebilir veya köprü moduyla...") ama tek bir eylem
+  // sunmuyordu — kullanıcıya ne yapabileceğini anlatıp yapmasını zorlaştırıyordu.
+  // ux `empty-states` kuralı: "yardımcı mesaj VE eylem".
+  it("gives the empty feed a first action that jumps to the composer", async () => {
+    const user = userEvent.setup();
+    const scrollSpy = vi.fn();
+    Object.defineProperty(Element.prototype, "scrollIntoView", {
+      configurable: true,
+      writable: true,
+      value: scrollSpy,
+    });
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+
+    renderPage();
+
+    const emptyState = await screen.findByTestId("cadde-feed-empty-state");
+    const firstAction = within(emptyState).getByRole("button", { name: "İlk paylaşımı yap" });
+
+    await user.click(firstAction);
+
+    expect(scrollSpy).toHaveBeenCalled();
+  });
+
+  // Filtre daraltması yüzünden boş kalan akışta kurtarma yolu filtreyi TEMİZLEMEKTİR;
+  // kullanıcıya "ülke geneline bak" demek yetmiyordu, tıklanacak bir şey gerekiyor.
+  it("offers to clear the geo filter when a narrowed feed comes back empty", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+
+    renderPage("/cadde?country=Almanya&city=Berlin");
+
+    const emptyState = await screen.findByTestId("cadde-feed-empty-state");
+    expect(within(emptyState).getByRole("button", { name: "Filtreleri temizle" })).toBeInTheDocument();
+  });
+
+  it("keeps the separate billboard surfaces once any billboard exists", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    // Featured DEĞİL ama yayında bir kart var → konsolidasyon devreye GİRMEMELİ.
+    listCaddeBillboardsMock.mockResolvedValue([
+      {
+        id: "bb-1",
+        type: "business",
+        title: "Anadolu Mutfak",
+        subtitle: null,
+        description: "Açıklama",
+        badgeText: null,
+        ctaLabel: "İncele",
+        ctaUrl: "/directory",
+        isFeatured: false,
+        country: null,
+        city: null,
+        isBridge: false,
+        mode: "real",
+      },
+    ]);
+
+    renderPage();
+
+    // İçerik varken ayrı yüzeyler geri gelir: featured yuvası kendi boş kartını,
+    // "Şehrinden Öne Çıkanlar" da gerçek kartı çizer. (Koyu davet kartı kalıcıdır —
+    // konsolidasyon onu KALDIRMAZ, diğer ikisini ona indirger.)
+    expect(await screen.findByTestId("cadde-featured-empty-state")).toBeInTheDocument();
+    expect(screen.getByText("Şehrinden Öne Çıkanlar")).toBeInTheDocument();
+    expect(screen.getByText("Anadolu Mutfak")).toBeInTheDocument();
   });
 
   // Üst şerit kararları (04.08.2026, kullanıcı): zil sağ uçta ve büyük, filtre
@@ -898,12 +988,13 @@ describe("CaddePage", () => {
 
     renderPage();
 
-    expect(await screen.findByTestId("cadde-featured-empty-state")).toBeInTheDocument();
+    const invite = await screen.findByTestId("cadde-promotion-invite");
     const profileLinks = screen.getAllByRole("link", { name: /Profilinden İlk Tanıtımını Yap/i });
-    expect(profileLinks.length).toBeGreaterThanOrEqual(2);
-    profileLinks.forEach((link) => {
-      expect(link).toHaveAttribute("href", "/profile#cadde-tanitim");
-    });
+    // Konsolidasyon öncesi bu sayı 3'tü (aynı hedefe üç çağrı). Artık TEK olmalı —
+    // sayının tekrar artması yığılmanın geri geldiği anlamına gelir.
+    expect(profileLinks).toHaveLength(1);
+    expect(invite).toContainElement(profileLinks[0]);
+    expect(profileLinks[0]).toHaveAttribute("href", "/profile#cadde-tanitim");
   });
 
   it("keeps promotion CTAs signup-bound for visitors", async () => {
@@ -917,8 +1008,9 @@ describe("CaddePage", () => {
 
     renderPage();
 
+    // Konsolidasyon sonrası ziyaretçi de tek çağrı görür (önce 3'tü); hedef değişmedi.
     const signupLinks = await screen.findAllByRole("link", { name: /Profil Aç ve Tanıtıma Başla/i });
-    expect(signupLinks.length).toBeGreaterThanOrEqual(2);
+    expect(signupLinks).toHaveLength(1);
     signupLinks.forEach((link) => {
       expect(link).toHaveAttribute("href", "/login?mode=signup");
     });
