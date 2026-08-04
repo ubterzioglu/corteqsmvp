@@ -6,6 +6,7 @@ import {
   filterWorkshopItems,
   groupWorkshopItems,
   isWorkshopItemComplete,
+  partitionWorkshopItems,
   validateWorkshopItemDraft,
   type WorkshopItem,
 } from "./workshop-items";
@@ -113,6 +114,25 @@ describe("filterWorkshopItems", () => {
 
   it("bölüm adında da arar", () => {
     expect(filterWorkshopItems(items, { search: "erişim" }).map((entry) => entry.itemNo)).toEqual([3]);
+  });
+});
+
+describe("partitionWorkshopItems", () => {
+  it("iki onayı olanları tamamlanan tarafına ayırır, sırayı korur", () => {
+    const { open, completed } = partitionWorkshopItems([
+      item({ itemNo: 1, ubtDone: true, burakDone: true }),
+      item({ itemNo: 2, ubtDone: true }),
+      item({ itemNo: 3, burakDone: true }),
+      item({ itemNo: 4, ubtDone: true, burakDone: true }),
+      item({ itemNo: 5 }),
+    ]);
+
+    expect(open.map((entry) => entry.itemNo)).toEqual([2, 3, 5]);
+    expect(completed.map((entry) => entry.itemNo)).toEqual([1, 4]);
+  });
+
+  it("boş listede iki boş dizi döner", () => {
+    expect(partitionWorkshopItems([])).toEqual({ open: [], completed: [] });
   });
 });
 

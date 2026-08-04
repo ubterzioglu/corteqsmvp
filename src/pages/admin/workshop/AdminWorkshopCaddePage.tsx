@@ -7,7 +7,7 @@
 
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Hammer, Plus } from "lucide-react";
+import { CheckCircle2, Hammer, Plus } from "lucide-react";
 
 import { WorkshopItemRow } from "@/components/admin/workshop/WorkshopItemRow";
 import {
@@ -18,6 +18,7 @@ import {
   AdminPageShell,
   AdminStatsGrid,
 } from "@/components/admin/page";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -32,8 +33,11 @@ import {
   fetchWorkshopItems,
   filterWorkshopItems,
   groupWorkshopItems,
+  isWorkshopItemComplete,
+  partitionWorkshopItems,
   setWorkshopItemApproval,
   updateWorkshopItem,
+  type WorkshopItem,
   type WorkshopItemDraft,
   type WorkshopOwner,
   type WorkshopStatusFilter,
@@ -83,10 +87,39 @@ const AdminWorkshopCaddePage = () => {
   const progress = useMemo(() => calculateWorkshopProgress(items), [items]);
   const sectionOptions = useMemo(() => collectWorkshopSections(items), [items]);
 
-  const visibleSections = useMemo(
-    () => groupWorkshopItems(filterWorkshopItems(items, { search: searchText, status: statusFilter })),
-    [items, searchText, statusFilter],
-  );
+  // Bekleyen maddeler üstte bölüm kartlarında; tamamlananlar en altta tek
+  // akordeon kartında toplanır (pano uzadıkça bitmiş maddeler yolu tıkamasın).
+  const { topSections, completedSections, completedCount } = useMemo(() => {
+    const visible = filterWorkshopItems(items, { search: searchText, status: statusFilter });
+
+    // "Tamamlananlar" filtresi zaten yalnız bitmişleri istiyor; onları bir de
+    // akordeonun arkasına saklamak yerine doğrudan listede göster.
+    if (statusFilter === "completed") {
+      return { topSections: groupWorkshopItems(visible), completedSections: [], completedCount: 0 };
+    }
+
+    const { open, completed } = partitionWorkshopItems(visible);
+    return {
+      topSections: groupWorkshopItems(open),
+      completedSections: groupWorkshopItems(completed),
+      completedCount: completed.length,
+    };
+  }, [items, searchText, statusFilter]);
+
+  // Bölüm başlığındaki "tamamlanan/toplam" sayacı, tamamlananlar akordeona
+  // taşındıktan sonra da anlamlı kalsın diye filtrelenmemiş listeden hesaplanır.
+  const sectionTotals = useMemo(() => {
+    const totals = new Map<string, { completed: number; total: number }>();
+    for (const item of items) {
+      const key = item.section.trim();
+      const entry = totals.get(key) ?? { completed: 0, total: 0 };
+      totals.set(key, {
+        completed: entry.completed + (isWorkshopItemComplete(item) ? 1 : 0),
+        total: entry.total + 1,
+      });
+    }
+    return totals;
+  }, [items]);
 
   const hasActiveFilters = statusFilter !== "all" || searchText.trim().length > 0;
 
@@ -139,6 +172,17 @@ const AdminWorkshopCaddePage = () => {
 
   const resolvedNewSection =
     newSection === NEW_SECTION_VALUE || newSection === "" ? customSection : newSection;
+
+  const renderItemRow = (item: WorkshopItem) => (
+    <WorkshopItemRow
+      key={item.id}
+      item={item}
+      disabled={approvalMutation.isPending || deleteMutation.isPending}
+      onToggle={(owner, done) => approvalMutation.mutate({ id: item.id, owner, done })}
+      onSave={(draft) => updateMutation.mutate({ id: item.id, draft })}
+      onDelete={() => deleteMutation.mutate(item.id)}
+    />
+  );
 
   const submitNewItem = () => {
     if (!newTitle.trim()) {
@@ -213,7 +257,10 @@ const AdminWorkshopCaddePage = () => {
         />
       ) : null}
 
-      {!itemsQuery.isLoading && !itemsQuery.isError && visibleSections.length === 0 ? (
+      {!itemsQuery.isLoading &&
+      !itemsQuery.isError &&
+      topSections.length === 0 &&
+      completedSections.length === 0 ? (
         <AdminEmptyState
           title={hasActiveFilters ? "Filtreye uyan madde yok" : "Henüz madde yok"}
           description={
@@ -224,32 +271,52 @@ const AdminWorkshopCaddePage = () => {
         />
       ) : null}
 
-      {visibleSections.map((group) => (
-        <Card key={group.section || "genel"}>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">
-              {group.section || "Genel"}
-              <span className="ml-2 text-xs font-normal text-muted-foreground">
-                {group.items.filter((item) => item.ubtDone && item.burakDone).length}/{group.items.length}
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-0 pb-1">
-            <ul className="flex flex-col">
-              {group.items.map((item) => (
-                <WorkshopItemRow
-                  key={item.id}
-                  item={item}
-                  disabled={approvalMutation.isPending || deleteMutation.isPending}
-                  onToggle={(owner, done) => approvalMutation.mutate({ id: item.id, owner, done })}
-                  onSave={(draft) => updateMutation.mutate({ id: item.id, draft })}
-                  onDelete={() => deleteMutation.mutate(item.id)}
-                />
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-      ))}
+      {topSections.map((group) => {
+        const totals = sectionTotals.get(group.section) ?? { completed: 0, total: group.items.length };
+        return (
+          <Card key={group.section || "genel"}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">
+                {group.section || "Genel"}
+                <span className="ml-2 text-xs font-normal text-muted-foreground">
+                  {totals.completed}/{totals.total}
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="px-0 pb-1">
+              <ul className="flex flex-col">{group.items.map(renderItemRow)}</ul>
+            </CardContent>
+          </Card>
+        );
+      })}
+
+      {completedSections.length > 0 ? (
+        <Accordion type="single" collapsible className="rounded-xl border border-border bg-card px-3">
+          <AccordionItem value="completed" className="border-b-0">
+            <AccordionTrigger className="py-3 hover:no-underline">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 aria-hidden="true" className="h-4 w-4 text-emerald-500" />
+                <span className="text-sm font-medium text-foreground">
+                  Tamamlananlar ({completedCount})
+                </span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-0 pb-2">
+              <div className="flex flex-col gap-3">
+                {completedSections.map((group) => (
+                  <div key={group.section || "genel"}>
+                    <p className="px-3 pb-1 text-xs font-semibold text-muted-foreground">
+                      {group.section || "Genel"}
+                      <span className="ml-2 font-normal">{group.items.length}</span>
+                    </p>
+                    <ul className="flex flex-col">{group.items.map(renderItemRow)}</ul>
+                  </div>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      ) : null}
 
       <Card>
         <CardHeader className="pb-2">

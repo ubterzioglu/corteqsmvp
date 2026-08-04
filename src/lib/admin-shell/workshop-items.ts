@@ -156,6 +156,31 @@ export function groupWorkshopItems(items: WorkshopItem[]): WorkshopSection[] {
     .sort((a, b) => a.items[0].itemNo - b.items[0].itemNo);
 }
 
+/** Bekleyen / tamamlanan ayrımı — pano alt akordeonu bu ayrımı kullanır. */
+export type WorkshopPartition = {
+  open: WorkshopItem[];
+  completed: WorkshopItem[];
+};
+
+/**
+ * Maddeleri bekleyen ve tamamlanan olarak ikiye böler. Sıralama korunur, böylece
+ * her iki liste de groupWorkshopItems ile aynı bölüm sırasını üretir.
+ */
+export function partitionWorkshopItems(items: WorkshopItem[]): WorkshopPartition {
+  const open: WorkshopItem[] = [];
+  const completed: WorkshopItem[] = [];
+
+  for (const item of items) {
+    if (isWorkshopItemComplete(item)) {
+      completed.push(item);
+    } else {
+      open.push(item);
+    }
+  }
+
+  return { open, completed };
+}
+
 export type WorkshopStatusFilter = "all" | "open" | "completed";
 
 /** Arama (Türkçe aksan-toleranslı) + durum filtresini uygular. */
