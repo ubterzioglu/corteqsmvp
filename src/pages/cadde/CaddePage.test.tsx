@@ -752,6 +752,32 @@ describe("CaddePage", () => {
     );
   });
 
+  // Üst şerit kararları (04.08.2026, kullanıcı): zil sağ uçta ve büyük, filtre
+  // özeti rozeti ("Global Akış") yok. İkisi de gözle fark edilmeden geri gelebilir.
+  it("keeps the notification bell at the right edge and drops the filter summary badge", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+
+    renderPage();
+
+    // Filtre yokken özet "Global Akış" idi; rozet tamamen kalktı.
+    expect(await screen.findByText("Diaspora Cadde")).toBeInTheDocument();
+    expect(screen.queryByText("Global Akış")).not.toBeInTheDocument();
+
+    const bell = screen.getByRole("button", { name: "Bildirimler" });
+    const tagline = screen.getByText(/Şehrindeki Türklerle tanış/);
+
+    // Zil, açıklama metninden SONRA gelir → şeridin sağ ucunda.
+    expect(tagline.compareDocumentPosition(bell) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    // "Büyüt" kararı: h-9 değil h-11.
+    expect(bell).toHaveClass("h-11");
+  });
+
   // m67+m68+m69: kafeler bölümü akordeon, açıkken ilk 3 satırı çizer, gerisi tek tıkla.
   it("collapses the cafes section and previews only the first rows", async () => {
     const user = userEvent.setup();

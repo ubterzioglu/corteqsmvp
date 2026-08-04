@@ -52,7 +52,7 @@ import {
 import { listCaddeCafeThemes } from "@/lib/cadde-cafe-api";
 import { emptyCaddeComposer } from "@/lib/cadde-composer";
 import { caddeNewPostPollInterval, caddeOpenCommentsPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
-import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
+import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters } from "@/lib/cadde-format";
 import { isInternalCaddeLink } from "@/lib/cadde-links";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
@@ -468,20 +468,22 @@ const CaddePage = () => {
         <div className="mx-auto w-full max-w-7xl px-4 pt-5 lg:px-6">
           <div className="cadde-card flex flex-col gap-4 rounded-[20px] px-4 py-3 sm:px-5">
             <div className="flex flex-wrap items-center gap-3">
-              {/* Bildirim zili kartın en solunda durur, ardından dikey ayraç gelir. */}
-              <NotificationsBell />
-              <Separator orientation="vertical" className="h-8 shrink-0" />
+              {/* Zil şeridin SAĞ ucunda durur (kullanıcı kararı 04.08.2026). Araya
+                  giren açıklama metni flex-1 ile esneyip zili sağa iter; ayraç zilin
+                  solunda kalır. */}
               <Badge className="cadde-chip-brand shrink-0">CorteQS Cadde</Badge>
               <p className="min-w-0 flex-1 truncate text-sm text-slate-600">
                 Şehrindeki Türklerle tanış, sor, paylaş ve fırsatları keşfet.
               </p>
+              <Separator orientation="vertical" className="h-8 shrink-0" />
+              <NotificationsBell />
             </div>
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <CardTitle className="font-display text-xl">Diaspora Cadde</CardTitle>
-                <CardDescription>Global Türk topluluğunun şehir bazlı sosyal akışı</CardDescription>
-              </div>
-              <Badge variant="outline">{summarizeCaddeFilters(filters)}</Badge>
+            {/* Filtre özeti rozeti ("Global Akış") kaldırıldı — kullanıcı kararı
+                04.08.2026. Aktif filtre zaten sol kolondaki Konum kartında ve akış
+                çip barında görünüyor, burada üçüncü kez tekrar ediyordu. */}
+            <div>
+              <CardTitle className="font-display text-xl">Diaspora Cadde</CardTitle>
+              <CardDescription>Global Türk topluluğunun şehir bazlı sosyal akışı</CardDescription>
             </div>
           </div>
         </div>
