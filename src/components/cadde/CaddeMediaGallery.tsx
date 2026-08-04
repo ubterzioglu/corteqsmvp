@@ -25,9 +25,21 @@ const gridClassFor = (count: number): string => {
 
 const cellClassFor = (count: number, index: number): string => {
   if (count === 3 && index === 0) return "row-span-2 aspect-[3/4]";
-  if (count === 1) return "max-h-[460px]";
+  // m64: tek görselde sabit oran YOK — görsel kendi oranıyla, büyük ve gömülü durur.
+  if (count === 1) return "";
   return "aspect-square";
 };
+
+// m64: "ek dosya gibi duruyor" şikayetinin iki kaynağı vardı:
+// (1) tek görselde yükseklik zinciri kopuktu — buton `max-h` taşıyordu ama yüksekliği
+//     yoktu, içindeki `h-full` görsel buna dayanamıyordu;
+// (2) `object-cover` dikey fotoğrafı ince bir şeride kırpıyordu.
+// Tek görsel artık `object-contain` + yüksek tavanla kendi oranında çizilir; çoklu
+// ızgarada `object-cover` doğru davranıştır (hücreler eşit kalmalı), o korunur.
+const imageClassFor = (count: number): string =>
+  count === 1
+    ? "max-h-[560px] w-full object-contain transition duration-300"
+    : "h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]";
 
 const CaddeMediaGallery = ({ media, contextLabel }: CaddeMediaGalleryProps) => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -69,7 +81,7 @@ const CaddeMediaGallery = ({ media, contextLabel }: CaddeMediaGalleryProps) => {
                 src={asset.url}
                 alt={altFor(index)}
                 loading="lazy"
-                className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                className={imageClassFor(images.length)}
               />
             </button>
           ))}

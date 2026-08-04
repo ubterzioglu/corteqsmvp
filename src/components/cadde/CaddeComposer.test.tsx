@@ -3,8 +3,11 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import { useState } from "react";
+
 import CaddeComposer from "@/components/cadde/CaddeComposer";
 import { emptyCaddeComposer, type CaddeComposerValue } from "@/lib/cadde-composer";
+import { uploadCaddeMedia } from "@/lib/cadde-media";
 
 // Yükleme yolu ayrı test edilir; burada composer'ın kendi davranışı doğrulanır.
 vi.mock("@/lib/cadde-media", async () => {
@@ -143,5 +146,74 @@ describe("CaddeComposer", () => {
     fireEvent.click(await screen.findByRole("button", { name: "😊" }));
 
     await waitFor(() => expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ body: "Merhaba 😊dunya" })));
+  });
+
+  // m63 — "görsel yüklerken donma ve görüntüleme sorunları".
+  describe("yükleme sırasında davranış (m63)", () => {
+    // Gerçek state tutan sarmalayıcı: stale-closure hatası ancak değer GERÇEKTEN
+    // güncellenirken görülür, vi.fn() onChange ile görünmez.
+    const ControlledComposer = () => {
+      const [value, setValue] = useState<CaddeComposerValue>(emptyCaddeComposer);
+      return (
+        <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+          <MemoryRouter>
+            <CaddeComposer
+              value={value}
+              onChange={setValue}
+              onSubmit={vi.fn()}
+              isSubmitting={false}
+              countries={[]}
+              cities={[]}
+              defaultLocationLabel="Almanya / Berlin"
+              onError={vi.fn()}
+            />
+          </MemoryRouter>
+        </QueryClientProvider>
+      );
+    };
+
+    const pickImage = (container: HTMLElement) => {
+      const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+      const file = new File(["x"], "foto.jpg", { type: "image/jpeg" });
+      fireEvent.change(input, { target: { files: [file] } });
+    };
+
+    it("yükleme sürerken yazılan metni geri almaz", async () => {
+      let finishUpload: ((asset: unknown) => void) | undefined;
+      vi.mocked(uploadCaddeMedia).mockImplementation(
+        () => new Promise((resolve) => { finishUpload = resolve; }) as ReturnType<typeof uploadCaddeMedia>,
+      );
+
+      const { container } = render(<ControlledComposer />);
+      pickImage(container);
+
+      // Yükleme devam ederken kullanıcı yazıyor.
+      const textarea = screen.getByLabelText("Paylaşım metni") as HTMLTextAreaElement;
+      fireEvent.change(textarea, { target: { value: "yüklenirken yazdım" } });
+
+      finishUpload?.({ kind: "image", path: "u/p/1.jpg", url: "https://cdn.example/1.jpg" });
+
+      // Hata hâlinde onChange eski snapshot'ı yazıp bu metni siliyordu.
+      await waitFor(() => expect(screen.getByTestId("cadde-media-preview")).toBeInTheDocument());
+      expect(textarea).toHaveValue("yüklenirken yazdım");
+    });
+
+    it("yükleme sürerken görünür bir gösterge çizer", async () => {
+      let finishUpload: ((asset: unknown) => void) | undefined;
+      vi.mocked(uploadCaddeMedia).mockImplementation(
+        () => new Promise((resolve) => { finishUpload = resolve; }) as ReturnType<typeof uploadCaddeMedia>,
+      );
+
+      const { container } = render(<ControlledComposer />);
+      expect(screen.queryByTestId("cadde-composer-uploading")).not.toBeInTheDocument();
+
+      pickImage(container);
+
+      // Çipler pasifken kullanıcı en azından bir şey olduğunu görmeli.
+      expect(await screen.findByTestId("cadde-composer-uploading")).toBeInTheDocument();
+
+      finishUpload?.({ kind: "image", path: "u/p/1.jpg", url: "https://cdn.example/1.jpg" });
+      await waitFor(() => expect(screen.queryByTestId("cadde-composer-uploading")).not.toBeInTheDocument());
+    });
   });
 });

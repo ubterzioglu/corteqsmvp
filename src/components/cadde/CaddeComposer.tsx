@@ -7,7 +7,7 @@
 // eski postların rozeti bozulmaz, etiketleme sade sürüm oturunca yeniden değerlendirilecek
 // (m13 veto/rezervde).
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ImagePlus, Loader2, MapPin, Plus, Trash2, Video, type LucideIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -67,6 +67,14 @@ const CaddeComposer = ({
   const primaryCities = citiesForCountry(value.country);
   const extraTargets = value.targets ?? [];
 
+  // m63: async yükleme sırasında en güncel composer değerine erişmek için. `value`
+  // closure'da donuyor; yükleme bitince onunla yazmak kullanıcının o sırada yazdığı
+  // metni geri alıyordu.
+  const valueRef = useRef(value);
+  useEffect(() => {
+    valueRef.current = value;
+  }, [value]);
+
   const update = (patch: Partial<CaddeComposerValue>) => onChange({ ...value, ...patch });
   const updateTarget = (index: number, patch: Partial<(typeof extraTargets)[number]>) => {
     update({
@@ -97,7 +105,10 @@ const CaddeComposer = ({
         }
         const asset = await uploadCaddeMedia(file, "post");
         current = [...current, asset];
-        onChange({ ...value, media: current });
+        // m63: `value` DEĞİL `valueRef.current` — `value` bu fonksiyon çağrıldığı andaki
+        // snapshot'tır. Yükleme sürerken kullanıcı yazmaya devam ederse eski gövde geri
+        // yazılıp yazdıkları siliniyordu ("bir anda kayboldu / dondu" şikayeti).
+        onChange({ ...valueRef.current, media: current });
       }
     } catch (error: unknown) {
       onError(error instanceof Error ? error.message : "Dosya yüklenemedi.");
@@ -167,6 +178,19 @@ const CaddeComposer = ({
             onClick={() => setLocationOpen((open) => !open)}
           />
           <CaddeEmojiPickerButton onSelect={insertEmoji} disabled={isSubmitting || uploading} />
+
+          {/* m63: yükleme sırasında TÜM ek çipleri ve Paylaş butonu pasifleşiyordu ama
+              hiçbir gösterge yoktu — kullanıcı bunu "donma" olarak bildiriyordu. */}
+          {uploading ? (
+            <span
+              data-testid="cadde-composer-uploading"
+              role="status"
+              className="inline-flex items-center gap-1.5 text-xs text-slate-500"
+            >
+              <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
+              Yükleniyor…
+            </span>
+          ) : null}
 
           <div className="ml-auto flex items-center gap-2">
             <Button onClick={onSubmit} disabled={!canSubmit} className="rounded-full px-5">
