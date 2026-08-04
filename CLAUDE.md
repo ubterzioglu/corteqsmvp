@@ -265,6 +265,15 @@ bozulabilen (test/build patlamayan ama canlıda zarar veren) bir sınıfı kapat
    (ör. anket `starts_at`/`ends_at` penceresi) kaynak modülle (`src/lib/surveys.ts`) birebir
    aynı olmalı — yarım kopyalanan filtre sitemap'e süresi dolmuş kayıt sızdırır.
 
+6. **nginx'te `server_name _` JOKER DEĞİLDİR — catch-all blok `default_server` olmalı.**
+   Apache'nin aksine `_` hiçbir Host ile eşleşmez; eşleşme yoksa nginx o portun
+   `default_server`'ını seçer, işaretlenmemişse "dosyadaki ilk blok"u. `nginx.conf.template`'e
+   yeni bir `server` bloğu eklerken **sıra anlam taşır**: 2026-08-04'te www/mvp→apex 301 bloğu
+   `_` bloğundan önce eklenince apex ona düştü ve kendine 301 atarak siteyi tamamen düşürdü
+   (ERR_TOO_MANY_REDIRECTS). Yönlendirme dönen bir blok asla default olamaz.
+   `src/lib/redirects.test.ts` bunu kilitler — ama test yalnız METNİ denetler, çalışan
+   nginx'i değil. Blok yapısını değiştirdiysen deploy sonrası `curl -I` ile doğrula.
+
 ## Important Constraints & Immovable Parts
 
 1. **SEO-locked URLs** (recent commits all "seo" related):

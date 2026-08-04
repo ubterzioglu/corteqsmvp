@@ -172,6 +172,23 @@ describe("nginx yapısal bütünlük", () => {
     expect(eksik, `eksik yapısal öğe: ${eksik.join(", ")}`).toEqual([]);
   });
 
+  // Regresyon: 2026-08-04 deploy'unda apex (corteqs.net) ERR_TOO_MANY_REDIRECTS verdi.
+  // Sebep: nginx'te `server_name _` joker değildir; hiçbir Host ile eşleşmez. Eşleşme
+  // olmayınca nginx default_server'ı seçer, işaretlenmemişse bu "ilk tanımlanan blok"tur.
+  // www/mvp bloğu dosyada önce geldiği için apex oraya düşüp kendine 301 attı.
+  it("apex'i yakalayan blok default_server olarak işaretli (yönlendirme döngüsü koruması)", () => {
+    expect(nginxConf, "`listen 80 default_server;` yok — apex www bloğuna düşüp döngü yapar").toMatch(
+      /listen 80 default_server;/,
+    );
+
+    // Yönlendirme yapan www/mvp bloğu default olmamalı; olursa döngü geri gelir.
+    const wwwBlok =
+      nginxConf.match(/server \{[^}]*server_name www\.corteqs\.net mvp\.corteqs\.net;[^}]*\}/s)?.[0] ?? "";
+
+    expect(wwwBlok, "www/mvp bloğu bulunamadı").not.toBe("");
+    expect(wwwBlok, "301 dönen blok default_server olamaz").not.toMatch(/default_server/);
+  });
+
   it("prerender /admin ve /api'yi dışlar", () => {
     const map = nginxConf.match(/map \$uri \$prerender_excluded \{[^}]*\}/s)?.[0] ?? "";
 

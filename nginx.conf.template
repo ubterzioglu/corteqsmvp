@@ -44,7 +44,14 @@ map $host $corteqs_csp {
 # ── www./mvp. → apex (301) ───────────────────────────────────────────────────
 # server.mjs bunu yapıyordu ama prod'da devrede değil; sonuç: https://www.corteqs.net/
 # canlıda 200 dönüyordu (apex'e 301 değil) → arama motoru için iki ayrı host, bölünmüş
-# sinyal. Bu blok aşağıdaki `server_name _` default'undan ÖNCE eşleşir.
+# sinyal.
+#
+# DİKKAT — `default_server` aşağıdaki bloktan SİLİNMEZ: nginx'te `server_name _` bir
+# joker DEĞİLDİR, hiçbir Host başlığıyla eşleşmeyen sıradan bir isimdir. Host hiçbir
+# server_name'e uymazsa nginx o port için default_server'ı seçer; işaretlenmemişse bu
+# "ilk tanımlanan blok" olur. Bu blok dosyada önce geldiği için 2026-08-04 deploy'unda
+# apex (corteqs.net) buraya düştü ve kendi kendine 301 atarak ERR_TOO_MANY_REDIRECTS
+# üretti — canlıda tüm site erişilemez oldu. Alt bloktaki `default_server` bunu kapatır.
 server {
   listen 80;
   server_name www.corteqs.net mvp.corteqs.net;
@@ -52,7 +59,7 @@ server {
 }
 
 server {
-  listen 80;
+  listen 80 default_server;
   server_name _;
 
   root /usr/share/nginx/html;
