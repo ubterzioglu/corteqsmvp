@@ -15,7 +15,6 @@ import CaddeMediaGallery from "@/components/cadde/CaddeMediaGallery";
 import CaddePostBody from "@/components/cadde/CaddePostBody";
 import CaddeProfileGate from "@/components/cadde/CaddeProfileGate";
 import CaddeTrendingHashtags from "@/components/cadde/CaddeTrendingHashtags";
-import CaddeWorldClocks from "@/components/cadde/CaddeWorldClocks";
 import CarsiGlobalTicker from "@/components/cadde/CarsiGlobalTicker";
 import CreateCafeForm from "@/components/cadde/CreateCafeForm";
 import NotificationsBell from "@/components/cadde/NotificationsBell";
@@ -467,13 +466,6 @@ const CaddePage = () => {
               <p className="min-w-0 flex-1 truncate text-sm text-slate-600">
                 Şehrindeki Türklerle tanış, sor, paylaş ve fırsatları keşfet.
               </p>
-              <div className="flex shrink-0 items-center gap-4">
-                <CaddeWorldClocks
-                  viewerCity={actorContextQuery.data?.city ?? null}
-                  filterCity={filters.cities[0] ?? null}
-                  cities={citiesQuery.data ?? []}
-                />
-              </div>
             </div>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
