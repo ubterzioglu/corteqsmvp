@@ -752,6 +752,53 @@ describe("CaddePage", () => {
     );
   });
 
+  // 04.08.2026 canlı denetimi: listCaddeFeed'in catch bloğu hatayı yutup BOŞ sayfa
+  // dönüyordu, dolayısıyla feedQuery.isError HİÇBİR ZAMAN true olmuyordu. Sonuç:
+  // RLS reddi, RPC parametre hatası veya ağ sorunu ekranda "Bu akış henüz sessiz."
+  // olarak görünüyordu — kullanıcı sistemin bozuk olduğunu değil, içeriğin olmadığını
+  // sanıyordu. Canlıda feed 9 posta düştüğü için bu ayrım gözle de fark edilemezdi.
+  // Aşağıdaki iki test "hata" ile "içerik yok" durumlarının AYRI yüzeyler olmasını kilitler.
+  it("shows a retryable error state — not the empty state — when the feed query fails", async () => {
+    const user = userEvent.setup();
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockRejectedValue(new Error("list_cadde_feed_v1 reddedildi"));
+
+    renderPage();
+
+    const errorState = await screen.findByTestId("cadde-feed-error-state");
+    expect(errorState).toBeInTheDocument();
+    // Kritik: hata varken "sessiz akış" mesajı ASLA çıkmamalı.
+    expect(screen.queryByTestId("cadde-feed-empty-state")).not.toBeInTheDocument();
+
+    // Kurtarma yolu zorunlu (ux error-recovery): tek tıkla yeniden dene.
+    const retry = within(errorState).getByRole("button", { name: "Tekrar dene" });
+    const callsBeforeRetry = listCaddeFeedMock.mock.calls.length;
+    await user.click(retry);
+    await waitFor(() => {
+      expect(listCaddeFeedMock.mock.calls.length).toBeGreaterThan(callsBeforeRetry);
+    });
+  });
+
+  it("shows the empty state — not the error state — when the feed genuinely returns no posts", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+
+    renderPage();
+
+    expect(await screen.findByTestId("cadde-feed-empty-state")).toBeInTheDocument();
+    expect(screen.queryByTestId("cadde-feed-error-state")).not.toBeInTheDocument();
+  });
+
   // Üst şerit kararları (04.08.2026, kullanıcı): zil sağ uçta ve büyük, filtre
   // özeti rozeti ("Global Akış") yok. İkisi de gözle fark edilmeden geri gelebilir.
   it("keeps the notification bell at the right edge and drops the filter summary badge", async () => {

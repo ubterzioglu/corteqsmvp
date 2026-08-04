@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowUpRight, Flag, Globe2, Heart, HelpCircle, Laugh, MapPin, Megaphone, MessageCircle, MessagesSquare, Send, Share2, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
+import { AlertTriangle, ArrowUpRight, Flag, Globe2, Heart, HelpCircle, Laugh, MapPin, Megaphone, MessageCircle, MessagesSquare, RefreshCw, Send, Share2, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
@@ -56,6 +56,7 @@ import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, seri
 import { isInternalCaddeLink } from "@/lib/cadde-links";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import { applyReactionToFeedPages } from "@/lib/cadde-reactions";
 import { toggleInterestSelection } from "@/lib/cadde-targeting";
 import { insertTextAtSelection, type TextSelection } from "@/lib/cadde-text-insert";
 import type { CaddeCommentCursor, CaddeFeedPageParam, CaddeFilterState, CaddePostType, CaddeReactionType } from "@/lib/cadde-types";
@@ -150,11 +151,19 @@ const CaddePage = () => {
     enabled: Boolean(session),
   });
 
+  // Anahtar tek yerde: optimistic reaksiyon aynı anahtara yazacağı için ikisi ayrışamaz.
+  const feedQueryKey = caddeQueryKeys.feed(filters, user?.id ?? null, diasporaKey);
+
   const feedQuery = useInfiniteQuery({
-    queryKey: caddeQueryKeys.feed(filters, user?.id ?? null, diasporaKey),
+    queryKey: feedQueryKey,
     initialPageParam: null as CaddeFeedPageParam,
     queryFn: ({ pageParam }) => listCaddeFeed(filters, pageParam, user?.id ?? null, diasporaKey),
     getNextPageParam: (lastPage) => lastPage.nextPage,
+    // Feed en pahalı sorgu (sayfa başına 1 RPC + 3 ek sorgu) ama staleTime'ı yoktu:
+    // her mount ve her sekme odağında YÜKLÜ TÜM sayfalar yeniden çekiliyordu. Yeni
+    // içerik zaten adaptif polling'li "N yeni paylaşım" chip'i ile duyuruluyor.
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   });
 
   const cafesQuery = useQuery({
@@ -264,13 +273,32 @@ const CaddePage = () => {
     },
   });
 
+  // Reaksiyon OPTIMISTIC: eskiden onSuccess: invalidateCadde idi, yani tek emoji tıklaması
+  // feedRoot + cafesRoot'u invalidate edip yüklü tüm sayfaları yeniden çektiriyordu
+  // (sayfa başına 1 RPC + 3 sorgu). Kullanıcı kendi tıklamasını ancak ağ turu bitince
+  // görüyordu. Artık sayaç anında dönüyor; hata olursa anlık görüntü geri yazılıyor.
+  // Bilinçli tercih: BAŞARIDA invalidate YOK — uygulanan delta zaten sunucudakiyle aynı,
+  // yeniden çekmek maliyeti geri getirirdi. Olası sunucu sapması bir sonraki doğal
+  // tazelemede (chip ile yenileme, filtre değişimi, staleTime dolması) kapanır.
   const reactionMutation = useMutation({
     mutationFn: async ({ postId, reactionType }: { postId: string; reactionType: CaddeReactionType }) => {
       if (!user) throw new Error("Bu işlem için giriş yapın.");
       await toggleCaddeReaction(postId, reactionType);
     },
-    onSuccess: invalidateCadde,
-    onError: (error) => {
+    onMutate: async ({ postId, reactionType }: { postId: string; reactionType: CaddeReactionType }) => {
+      if (!user) return { previousFeed: undefined };
+      // Uçuştaki bir refetch optimistic değeri ezmesin.
+      await queryClient.cancelQueries({ queryKey: feedQueryKey });
+      const previousFeed = queryClient.getQueryData(feedQueryKey);
+      queryClient.setQueryData(feedQueryKey, (current: Parameters<typeof applyReactionToFeedPages>[0]) =>
+        applyReactionToFeedPages(current, postId, reactionType),
+      );
+      return { previousFeed };
+    },
+    onError: (error, _variables, context) => {
+      if (context?.previousFeed !== undefined) {
+        queryClient.setQueryData(feedQueryKey, context.previousFeed);
+      }
       if (!user) {
         navigate("/login");
         return;
@@ -907,7 +935,38 @@ const CaddePage = () => {
               })(),
             )}
 
-            {!feedQuery.isLoading && filters.mode === "real" && feedItems.length === 0 ? (
+            {/* Hata ≠ içerik yok. listCaddeFeed eskiden hatayı yutup boş sayfa dönüyordu,
+                bu yüzden RLS reddi/RPC hatası ekranda "akış sessiz" gibi görünüyordu.
+                Artık fırlatıyor; buradaki kart o durumu AYRI yüzeyde ve kurtarma yoluyla
+                gösterir. Boş-durum kartı da isError'a bakar, ikisi asla birlikte çıkmaz. */}
+            {feedQuery.isError ? (
+              <Card
+                data-testid="cadde-feed-error-state"
+                className="cadde-card border-amber-200 bg-amber-50"
+              >
+                <CardContent className="p-6 text-center">
+                  <AlertTriangle className="mx-auto h-5 w-5 text-amber-600" aria-hidden="true" />
+                  <p className="mt-2 text-base font-semibold text-amber-900">Akış yüklenemedi.</p>
+                  <p className="mt-2 text-sm leading-relaxed text-amber-800">
+                    Bu bir içerik eksikliği değil — sunucudan yanıt alınamadı. Bağlantını kontrol edip tekrar deneyebilirsin.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="mt-4 rounded-2xl border-amber-300 bg-white text-amber-900 hover:bg-amber-100"
+                    onClick={() => void feedQuery.refetch()}
+                    disabled={feedQuery.isFetching}
+                  >
+                    <RefreshCw
+                      className={feedQuery.isFetching ? "h-4 w-4 animate-spin" : "h-4 w-4"}
+                      aria-hidden="true"
+                    />
+                    {feedQuery.isFetching ? "Deneniyor..." : "Tekrar dene"}
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : null}
+
+            {!feedQuery.isLoading && !feedQuery.isError && filters.mode === "real" && feedItems.length === 0 ? (
               <Card
                 data-testid="cadde-feed-empty-state"
                 className="cadde-empty border-dashed"

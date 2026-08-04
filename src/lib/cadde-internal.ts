@@ -15,6 +15,17 @@ export const db = supabase as any;
 export const FALLBACK_PROFILE_NAME = "CorteQS Üyesi";
 export const CADDE_PAGE_SIZE = 20;
 
+/**
+ * Cafe listesi tavanı — CLAUDE.md "Değişmez sözleşmeler" md.5.
+ *
+ * PostgREST sınırsız sorguyu 1000 satırda SESSİZCE keser: hata dönmez, eksik veri döner.
+ * `listCaddeCafes` sınırsızdı; cafe sayısı 1000'i geçtiğinde liste sessizce eksilecekti.
+ * Panel zaten ilk 3'ü önizleyip gerisini "tümünü göster" ile açtığı için tüm satırları
+ * çekmenin faydası da yoktu. Açık tavan, örtük kesmeden iyidir: sınır burada görünür ve
+ * aşıldığında tek yerden büyütülür.
+ */
+export const CADDE_CAFE_LIST_LIMIT = 200;
+
 const TOAST_THROTTLE_MS = 10_000;
 let lastErrorToastAt = 0;
 
@@ -32,6 +43,28 @@ export function reportCaddeApiError(context: string, error: unknown): void {
       description: "Bazı içerikler geçici olarak görüntülenemiyor. Lütfen sayfayı yenileyin.",
     });
   }
+}
+
+/**
+ * OKUMA yolu hatası — 04.08.2026 canlı denetiminde açılan boşluk.
+ *
+ * `reportCaddeApiError` + boş sonuç dönmek, hatayı "içerik yok"tan AYIRT EDİLEMEZ hale
+ * getiriyordu: React Query açısından boş dizi dönen bir sorgu BAŞARILIDIR, `isError`
+ * asla true olmaz. Sonuç, RLS reddi / RPC parametre hatası / ağ sorunu ekranda
+ * "Bu akış henüz sessiz." olarak görünüyordu.
+ *
+ * Bu yüzden yüzeyin TAMAMINI besleyen okuma yolları (feed gibi) boş sonuç dönmek yerine
+ * FIRLATIR; çağıran yüzey kendi satır içi hata kartını + "Tekrar dene" yolunu çizer.
+ * Yan panel/rozet gibi İKİNCİL yüzeyler `reportCaddeApiError` + boş sonuç kalıbında
+ * kalabilir — orada boş görünmek sayfayı yanıltmaz.
+ *
+ * Toast ATMAZ: hata kartı zaten görünür durumda, toast çift mesaj olurdu.
+ * Error DÖNER (fırlatmaz) ki çağrı yeri tek satır kalsın:
+ * `throw caddeReadError("listCaddeFeed", error)`.
+ */
+export function caddeReadError(context: string, error: unknown): Error {
+  console.error(`[cadde_api_error] ${context}`, error);
+  return error instanceof Error ? error : new Error(`Cadde okuma hatası: ${context}`);
 }
 
 /**

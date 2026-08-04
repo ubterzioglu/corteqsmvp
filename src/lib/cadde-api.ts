@@ -1,7 +1,9 @@
 // Cadde public API katmanı: okuma sorguları + kullanıcı mutation'ları.
 // Kurallar (Cadde 3.0 Faz 1):
 //  - Demo veri yalnız mode==='demo' veya Supabase yapılandırılmamışken döner.
-//  - Real moddaki hatalar reportCaddeApiError ile raporlanır ve BOŞ sonuç döner — sessiz demo fallback yok.
+//  - Real moddaki hatalar raporlanır; sessiz demo fallback yok.
+//    · BİRİNCİL yüzeyler (feed) `caddeReadError` ile FIRLATIR — çağıran hata kartı çizer.
+//    · İKİNCİL yüzeyler (yan panel, rozet) reportCaddeApiError + boş sonuç kalıbında kalır.
 //  - Mutation girdileri Zod şemalarından geçer.
 // Faz 2'de mutation'lar security-definer RPC'lere taşınacak.
 
@@ -16,9 +18,11 @@ import {
   DEMO_SPONSORED,
 } from "./cadde-demo-data";
 import {
+  CADDE_CAFE_LIST_LIMIT,
   CADDE_PAGE_SIZE,
   FALLBACK_PROFILE_NAME,
   db,
+  caddeReadError,
   caddeWriteError,
   reportCaddeApiError,
   resolveCityIdsByNames,
@@ -183,8 +187,9 @@ export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeF
     const items = rows.map((row) => mapRpcPost(row, reactions, new Map(), shareCounts, [], authorNames, currentUserId));
     return { items, nextPage: payload.nextCursor ?? null };
   } catch (error: unknown) {
-    reportCaddeApiError("listCaddeFeed", error);
-    return { items: [], nextPage: null };
+    // Boş sayfa DÖNMEZ: feed sayfanın tamamını besleyen birincil yüzeydir; boş dönmek
+    // hatayı "içerik yok"tan ayırt edilemez kılıyordu (bkz. caddeReadError açıklaması).
+    throw caddeReadError("listCaddeFeed", error);
   }
 }
 
@@ -337,7 +342,9 @@ export async function listCaddeCafes(filters: CaddeFilterState, currentUserId: s
       .eq("status", "published")
       .eq("is_active", true)
       .eq("diaspora_key", diasporaKey)
-      .order("starts_at", { ascending: true });
+      .order("starts_at", { ascending: true })
+      // Açık tavan: sorgu sınırsızdı ve PostgREST 1000 satırda sessizce keserdi.
+      .limit(CADDE_CAFE_LIST_LIMIT);
     if (filters.bridge) query = query.eq("is_bridge", true);
     if (countryIds.length > 0) query = query.in("country_id", countryIds);
     if (cityIds.length > 0) query = query.in("city_id", cityIds);
