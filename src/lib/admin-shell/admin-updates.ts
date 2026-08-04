@@ -14,6 +14,127 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260804-cadde-canli-denetim-soguk-baslangic",
+    date: "4 Ağustos 2026",
+    title:
+      "Cadde'nin canlı denetimi yapıldı: akış fiilen boş çıktı — sayfa 'içerik bolluğu' varsayımından çıkarıldı",
+    items: [
+      "Canlı veritabanı sayıldı: Cadde'de toplam 24 paylaşım var, bunların 10'u klavye zıbırtısı ve arkasında yalnızca 2 gerçek kişi duruyor; gerçek bir kafe içeriği yok. Yani sayfa 'akış canlı' varsayımıyla tasarlanmıştı ama gerçekte aylarca düşük içerikle yaşayacak. Bu ölçüm işin teşhisini değiştirdi — başlangıçta bir tasarım isteğiydi.",
+      "Bu tabloda görünmez kalan gerçek bir kusur ortaya çıktı: akış yüklenirken bir hata olursa (yetki reddi, sunucu hatası, ağ sorunu) ekranda 'Bu akış henüz sessiz.' yazıyordu — yani gerçek arıza ile boş akış birbirinden ayırt edilemiyordu. Artık hata ayrı bir kart olarak görünüyor ve 'Tekrar dene' butonu var.",
+      "Tek bir emoji tepkisi vermek yüklü tüm akışı baştan çektiriyordu. Artık sayaç anında dönüyor; hata olursa eski hâline geri alınıyor.",
+      "Boş akış kartı üç paragraf metin anlatıyordu ama tıklanacak hiçbir şey yoktu — kullanıcıya ne yapabileceğini ANLATIP yapmasını zorlaştırıyordu. Artık birincil buton her zaman paylaşıma götürüyor; ikincil buton akışın neden boş olduğuna göre değişiyor (filtre daraltıyorsa filtreyi temizler, daraltmıyorsa köprü modunu açar).",
+      "Sağ kolonda hiç tanıtım kaydı yokken üç ayrı boş kart aynı çağrıyı üç kez tekrarlıyordu; içerik sıfırken kolon 'reklam için reklam' yığınına dönüyordu. Tek davet kartına indi (kolon 7 karttan 5'e, aynı hedefe giden bağlantı 3'ten 1'e). Gerçek bir tanıtım kaydı olduğu anda ayrı kartlar geri geliyor.",
+      "Kafe listesi sınırsız çekiliyordu — veritabanı bu tür sorguları 1000 satırda sessizce kestiği için açık bir tavan konuldu.",
+      "Kalan iş 10 küçük parçaya bölünüp yazıldı. İki karar sende: Cadde'deki çöp verinin (klavye zıbırtısı paylaşımlar) silinip silinmeyeceği ve akışa örnek içerik konulup konulmayacağı — ikisi de birkaç parçayı bekletiyor.",
+      "Durum: kod ana koda alındı, deploy sonrası görünür. Canlı veritabanında bu turda hiçbir şey silinmedi veya eklenmedi.",
+    ],
+  },
+  {
+    id: "20260804-cadde-yazma-hatasi-teshisi",
+    date: "4 Ağustos 2026",
+    title:
+      "'Paylaşım gönderilemedi' hatası neden bir türlü çözülemiyordu: sistem kendi hatasını hiçbir yere yazmıyormuş",
+    items: [
+      "Workshop'ta bildirilen 'paylaşım gönderilemedi' maddesi araştırıldı ve yapısal bir boşluk bulundu: Cadde'nin veri OKUMA yollarının tamamı hata kaydı tutuyordu, YAZMA yollarının 17'si ise tamamen çıplaktı. Bir paylaşım gönderilirken hata olduğunda ham hata hiçbir yere yazılmadan yok oluyordu — yani bu arıza tasarım gereği teşhis edilemez durumdaydı.",
+      "17 yazma yolunun hepsi (paylaşım, yorum, tepki, kafe kurma/katılma, Çarşı ilanı, şikâyet, tanıtım kampanyası…) ortak bir sarmalayıcıya geçti; ham hata artık tarayıcı konsoluna [cadde_write_error] etiketiyle düşüyor. Boşluk elle takip edildiği için açılmıştı, artık bir test kilitliyor.",
+      "Ayrıca sunucudaki 51 Cadde hata kodundan ikisinin Türkçe karşılığı hiç yazılmamış çıktı — o iki durumda kullanıcı Türkçe mesaj yerine ham hata kodunu görüyordu. İkisi de eklendi; bundan sonra haritaya yazılmayan yeni bir kod testi düşürüyor.",
+      "DÜRÜST NOT: bu madde KAPANMADI. Paylaşım gönderme yolundaki tüm hata kodları zaten yerindeydi, yani bildirilen hata o iki eksik koddan gelmiyor. Değişiklik hatayı çözmüyor, bir sonraki oluşumunu yakalanabilir kılıyor — deploy sonrası tekrar ederse tarayıcı konsolundaki [cadde_write_error] satırını iste.",
+      "Durum: kod ana koda alındı, deploy sonrası geçerli.",
+    ],
+  },
+  {
+    id: "20260804-cadde-sehir-listesi-temizligi",
+    date: "4 Ağustos 2026",
+    title:
+      "Cadde'nin şehir listesinde 9 küçük harfli şehir ve yanlış ülkeye bağlı 2 şehir bulundu — düzeltme yazıldı ama UYGULANAMADI",
+    items: [
+      "Cadde'nin kendi şehir/ülke listesi canlıda sayıldı: 51 şehir, 18 ülke. İçinde 9 şehir küçük harfle başlıyor, 1'i tamamen büyük harf yazılmış; ayrıca Roma ve Vancouver yanlışlıkla ABD'ye bağlanmış görünüyor.",
+      "Düzeltmede toplu bir 'baş harfi büyüt' fonksiyonu KULLANILMADI — o fonksiyon Türkçe'de yanlış sonuç veriyor (noktalı/noktasız i sorunu, örneğin 'izmir' kaydını bozuyor). Her satır tek tek elle yazıldı.",
+      "Ülke adlarına bilinçli olarak dokunulmadı: canlıda 'Turkiye', 'Birlesik Krallik' gibi Türkçe karakterleri eksik yazımlar duruyor, ama Cadde filtreleri ülkeyi adıyla taşıdığı için düzeltmek paylaşılmış bağlantıları kırabilir — ayrı bir karar gerektiriyor.",
+      "Durum: dosya yazıldı ama CANLIYA UYGULANMADI — bu oturumda canlı veritabanına yazma izin katmanı tarafından engellendi. Bekleyen bir iş olarak duruyor; uygulanmadan 'uygulandı' klasörüne taşınmamalı.",
+    ],
+  },
+  {
+    id: "20260804-cadde-kafe-sosyal-katman",
+    date: "4 Ağustos 2026",
+    title: "Kafelerin içi gerçek bir sosyal alan oldu: yorum, fotoğraf, bağlantı ve emoji geldi",
+    items: [
+      "Kafe içindeki paylaşım kutusu düz bir metin kutusuydu. Artık ana akışla birebir aynı kutu: görsel/video yükleme, emoji seçici ve etiketleme kafede de çalışıyor — aynı gün yapılan yükleme düzeltmeleri de kafeye kendiliğinden taşındı. Konum çipi kafede çizilmiyor, çünkü kafe paylaşımı zaten o odaya gidiyor.",
+      "Kafe paylaşımlarında yorum SAYISI gösteriliyordu ama yorumları okuyacak ya da yazacak bir yer yoktu. Artık panel açılıyor: sayfalı yorum listesi, 'Devamını yükle' ve emoji destekli yorum kutusu var. Panel kapalıyken veritabanına hiç gidilmiyor; üye olmayan yalnızca okuyabiliyor.",
+      "Bağlantılar Cadde'nin HİÇBİR yüzeyinde tıklanabilir değildi — hem kafede hem ana akışta düz metin olarak duruyordu. Artık http/https adresleri otomatik bağlantıya dönüşüyor (yalnız bu ikisi eşleşiyor, zararlı adres biçimleri değil; dış bağlantılar yeni sekmede açılıyor).",
+      "Bilinçli bırakılan iki şey koda açıkça not düşüldü ki ileride 'eksik kalmış' diye bozulmasın: kafedeki yorum paneli ile ana akıştaki panel ayrı duruyor (kafe içi ileride sohbet benzeri bir akışa dönecek, şimdi birleştirmek birkaç hafta sonra sökmek olurdu) ve kafede otomatik yorum yenileme yok (workshop'ta performans değerlendirmesine kadar park edildi).",
+      "Durum: kod ana koda alındı, deploy sonrası görünür.",
+    ],
+  },
+  {
+    id: "20260804-cadde-medya-emoji-kusurlari",
+    date: "4 Ağustos 2026",
+    title: "Paylaşım kutusunda üç gerçek kusur bulundu — biri yazdığın metni sessizce siliyordu",
+    items: [
+      "VERİ KAYBI: fotoğraf/video yüklenirken yazmaya devam edersen, yükleme bitince sistem metni yüklemeye başladığın andaki hâline geri yazıyordu — arada yazdığın her şey uyarısız siliniyordu. Düzeltildi; düzeltme geri alınınca düşen bir test de yazıldı.",
+      "'DONMA' şikâyeti: yükleme sırasında Fotoğraf/Video/emoji butonları ve Paylaş butonu pasifleşiyordu ama bunu açıklayan hiçbir gösterge yoktu — kullanıcı bunu donma olarak bildiriyordu. Artık 'Yükleniyor…' göstergesi var.",
+      "EMOJİ BOZULMASI: emoji eklerken imlecin yeri hesaplanırken emojiler ortadan ikiye bölünebiliyor ve karakter geri dönüşü olmadan bozuluyordu. Hesaplama emoji sınırına çekildi.",
+      "Tek fotoğraflı paylaşımlarda dikey fotoğraflar ince bir şeride kırpılıyordu — 'ek dosya gibi duruyor' şikâyetinin kaynağı buydu. Artık kendi oranında, yükseklik sınırıyla çiziliyor; birden fazla fotoğrafta hücreler eşit kalsın diye ızgara düzeni korundu.",
+      "Durum: kod ana koda alındı, deploy sonrası geçerli. Üç kusur da kodda kanıtlandı, ikisi için önce düşen test yazıldı.",
+    ],
+  },
+  {
+    id: "20260804-cadde-ws2-yerlesim-ve-metinler",
+    date: "4 Ağustos 2026",
+    title:
+      "Cadde'de 4 Ağustos workshop maddelerinin ilk turu: kafeler bölümü katlandı, çalışmayan butonlar tek yere toplandı, kontrast arttı, üst şerit sadeleşti",
+    items: [
+      "Kafeler bölümü artık açılıp kapanabiliyor ve her kafe kart yerine tek satırlık kompakt bir satır — satır yüksekliği yaklaşık üçte birine indi. Açıkken ilk 3 kafe çiziliyor, gerisi 'N cafe daha göster' ile geliyor. Varsayılan AÇIK: madde kapanabilirlik istedi, gizlenme değil.",
+      "Çalışmayan özellikler kendi yüzeylerinde 'pasif buton' olarak durmayı bıraktı: filtre şeridindeki devre dışı 'Yakınımda' çipi kalktı, yerine sağ kolonda tek bir 'Yakında gelecek özellikler' kartı geldi. Akış filtresindeki 'Etkinlikler' çipi de kaldırıldı — paylaşım kutusunda etkinlik tipi üretilemediği için süzülecek bir şey kalmamıştı. İkisinde de veri tarafına dokunulmadı, eski bağlantılar çökmüyor.",
+      "Paylaşım kutusundaki konum panelinin ne işe yaradığı yazıldı: kullanıcılar bunu 'nerede yaşıyorum' sanıyordu, oysa paylaşımın hangi ülke ve şehir akışına düşeceğini belirliyor.",
+      "Yerleşim düzeldi: orta kolon artık yalnız paylaşım kutusu + akış (oradaki başlık kartı üst şeridin birebir kopyasıydı, silindi), 'Aktif Cafeler' paneli sol kolona indi. 3 kolonlu düzen korundu — iki seçenek önizlemeyle sana soruldu, 3 kolon senin kararındı.",
+      "Sayfanın genel kontrastı yaklaşık %10-15 arttı. Yeni renk EKLENMEDİ; zemin tonları koyulaştı, kart beyazı sabit kaldı, kartların üstündeki renkli şerit hafifçe geri çekildi ki sayfa daha kontrastlı olurken daha 'renkli' görünmesin.",
+      "Üst şeritte bildirim zili sağ uca alındı ve büyütüldü; başlıktaki 'Global Akış' filtre rozeti kaldırıldı — aynı bilgi zaten sol kolondaki Konum kartında ve akış çip barında, başlıkta üçüncü kez tekrar ediyordu.",
+      "Metin işleri: Çarşı her yüzeyde 'CorteQS Çarşı' oldu, boş kafe mesajı seçili şehri adıyla söylüyor ('Dortmund için henüz aktif bir cafe açılmadı'), 'Aktif Cafeler' başlığına kafenin ne olduğunu anlatan bir balon eklendi, tanıtım alanı metinleri canlı akışla aynı dile getirildi.",
+      "Yorum kutusunda Enter artık satır atlıyor; yayınlamanın tek yolu Gönder butonu. Bu, daha önce yayına alınmış 'Enter gönderir' davranışının bilinçli olarak geri alınmasıdır — 4 Ağustos workshop kararı, koda da not düşüldü.",
+      "Durum: kod ana koda alındı, deploy sonrası görünür.",
+    ],
+  },
+  {
+    id: "20260804-cadde-saat-seridi-kaldirildi",
+    date: "4 Ağustos 2026",
+    title:
+      "Cadde'deki dünya saatleri şeridi gün içinde üç tur iyileştirildi, sonra senin kararınla tamamen kaldırıldı",
+    items: [
+      "Şerit önce 3 kadrandan 5'e çıktı ve kadranlar büyütülüp sadeleştirildi: asıl okunabilirlik kazancı büyüklükten değil silinen detaydan geldi — ara çizgiler kadranı gri bir halkaya çevirip ibreleri yutuyordu.",
+      "Sonra gerçek bir hata bulundu: kadran her zaman tarayıcının saat dilimini çiziyordu ama etiket profildeki şehirden geliyordu. Yani profilinde Antalya yazan ve Almanya'dan giren biri, Berlin saatini 'Antalya' etiketiyle görüyordu — saat sessizce yanlış söylüyordu. Etiket artık çizilen dilimle aynı kaynaktan geliyor; şehir tanınmıyorsa etiket hiç iddia edilmiyor.",
+      "Üçüncü tur tarayıcıda gerçekten görülerek yapıldı (bileşen render edilip ekran görüntüsü alındı): beyaz kart üzerinde beyaz kadran neredeyse kayboluyordu. Kadran büyütüldü, saat rakamla da yazıldı, ince koyu bir kasa halkası ve tek aksan olarak pirinç merkez pimi geldi.",
+      "Ardından senin kararınla şerit Cadde başlığından tamamen kaldırıldı ve bileşen dosyası silindi — ölü kod bırakmamak için. Geri istenirse git geçmişindeki son hâlinden alınacak, sıfırdan yazılmayacak.",
+      "İlgili workshop maddeleri canlı panoda kapatıldı: 'analog saate çevrilecek', 'saat kartı büyütülecek' ve 'beş şehir gösterilecek' maddeleri yapıldı; 'saat kartı sağa taşınacak' maddesi ise taşınacak bir şey kalmadığı için kapatıldı — yapıldı anlamında değil, konusuz kaldığı için.",
+      "Durum: kod ana koda alındı, deploy sonrası görünür. Workshop panosundaki işaretlemeler canlı veritabanında — panelde şimdiden görünüyor.",
+    ],
+  },
+  {
+    id: "20260804-arac-kartlari-ve-footer",
+    date: "4 Ağustos 2026",
+    title: "Araç kartlarında okunmayan beyaz başlık düzeltildi, footer bağlantıları geniş ekranda tek satıra indi",
+    items: [
+      "/tools sayfasındaki araç kartlarında başlık görselin ÜZERİNDE beyaz yazıyordu. Araç görselleri açık/pastel çizimler olduğu için beyaz yazı zemine karışıyordu ve üstteki karartma bunu kurtarmaya yetmiyordu. Başlık görselden çıkıp kartın içine, özetin üstüne alındı — kontrast artık görselden değil kart yüzeyinden geliyor.",
+      "Altında yazı kalmayınca görselin alt kenarını lekeleyen ağır karartma katmanı da kaldırıldı (mobildeki açılır liste görünümünde de aynı gereksiz katman vardı, orada da kalktı). Kartların altındaki '6 soru · birkaç dakika' satırı kartın dibine sabitlendi; başlıklar farklı uzunlukta olduğu için yan yana kartlarda farklı hizada bitiyordu.",
+      "Footer'daki 13 yasal/kurumsal bağlantı geniş ekranda alt satıra sarıyor ve 'Çerez Politikası' tek başına ikinci satıra düşüyordu. Geniş ekranda artık tek satır; dar ekranda 13 bağlantı yatay sığmadığı için sarma bilinçli olarak korundu — yoksa sayfa yana taşardı.",
+      "Cadde üst kartındaki bildirim zili de bu turda yeri değişenlerden biriydi (gün sonunda sağ uca sabitlendi).",
+      "Durum: kod ana koda alındı, deploy sonrası görünür. Araç kartı değişikliği gerçek görsellerle tarayıcıda ekran görüntüsü alınarak doğrulandı; footer değişikliği bu ortamda gerçek tarayıcıda görülmedi — deploy sonrası göz kontrolü öneriliyor.",
+    ],
+  },
+  {
+    id: "20260804-depo-duzeni-ve-migration-taban-cizgisi",
+    date: "4 Ağustos 2026",
+    title:
+      "Depo düzeni: kök dizin temizlendi, veritabanı güncellemeleri taban çizgisine ayrıldı — 'uygulanmamış güncelleme var mı' artık elle kontrol edilmiyor",
+    items: [
+      "Depo kökünde duran dokümanlar docs/ altına taşındı; kökte artık yalnız iki dosya kalıyor (biri Claude Code'un okuduğu kural dosyası, biri GitHub giriş sayfası). Taşınmayanlar ve nedenleri de yazıldı — örneğin bir dosya taşınırsa sitenin derlemesi kırılıyor.",
+      "Veritabanı güncelleme dosyaları ikiye ayrıldı: taban çizgisi öncesi 252 dosya arşive, sonrası 100 dosya çalışma klasörüne. Hiçbiri SİLİNMEDİ — bunlar veritabanını sıfırdan kurabilmenin (yeni ortam, yerel geliştirme, felaket kurtarma) ve yetki geçmişinin tek kaydı. Yanlarına canlı şemanın tam bir fotoğrafı kondu (237 tablo, 481 yetki kuralı, 342 indeks).",
+      "Canlı veritabanı doğrulandı: UYGULANMAMIŞ GÜNCELLEME YOK — 350 sürümün hepsinin kaydı var. İlk karşılaştırma 4 sahte fark verdi; sebebi iki zaman damgasının ikişer dosya taşıması. Kontrol aracı bunu artık biliyor, her seferinde yanlış alarm üretmiyor.",
+      "Bundan sonra bu kontrol tek komutla yapılıyor ve veritabanına bağlanamazsa bunu açıkça söylüyor — başarısız bir kontrol asla 'temiz' diye raporlanmıyor.",
+      "Durum: yalnız depo düzeni ve kontrol aracı değişti; canlı veritabanına bu turda hiçbir şey uygulanmadı.",
+    ],
+  },
+  {
     id: "20260804-nginx-guvenlik-seo-ve-kesinti",
     date: "4 Ağustos 2026",
     title:
