@@ -7,7 +7,7 @@
 > başlıkları + CSP, `src/lib/redirects.ts` tek yönlendirme kaynağı, canonical/sitemap düzeltmeleri).
 > Önceki büyük güncelleme: 2026-06-11 · Cadde 3.0 E2E rebuild (Faz 0–9 + kuyruk) ve kök temizliği.
 >
-> Hızlı bağlam için: `AGENT_CONTEXT.md` · Kurallar: `CLAUDE.md` · Durum panosu: `rapor.html` · Doc indeksi: `docs/README.md`
+> Hızlı bağlam için: `docs/AGENT_CONTEXT.md` · Kurallar: `CLAUDE.md` (kök) · Durum panosu: `docs/status/rapor.html` · Doc indeksi: `docs/README.md`
 
 ---
 
@@ -341,7 +341,7 @@ Pre-hook: `verify:text` (encoding bekçisi) `src/public/docs/scripts` tarar — 
 
 | Nerede | Ne |
 |---|---|
-| **Kök (5 `.md` + 1 html)** | `CLAUDE.md` (agent kuralları) · `AGENT_CONTEXT.md` (hızlı bağlam) · `ARCHITECTURE.md` (bu dosya) · `README.md` (kurulum/deploy) · `SONDURUM.md` (faz durumu) · `rapor.html` (durum panosu + kullanım senaryoları) |
+| **Kök (yalnız 2 `.md`)** | `CLAUDE.md` (agent kuralları — Claude Code kökten okur) · `README.md` (kurulum/deploy). 2026-08-04 kök temizliğinde diğer dokümanlar `docs/` altına taşındı: `docs/ARCHITECTURE.md` (bu dosya) · `docs/AGENT_CONTEXT.md` (hızlı bağlam) · `docs/status/rapor.html` (durum panosu) · `docs/history/SONDURUM.md` (faz durumu) |
 | `docs/cadde-300/` | Cadde 3.0 spec + envanter + devir notu + faz dokümanları + **change-report.md** |
 | `docs/plans/` | Aktif planlar (admin-v2 masterplan + handoff dahil) |
 | `docs/catalog-role-afs-rebuild/` | AFS rebuild raporları (00–14) |

@@ -27,11 +27,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 >    5 ölü sayfa silindi. **Yeni "Değişmez sözleşmeler" bölümünü okumadan bu alanlara dokunma.**
 >    Plan: `docs/plans/2026-08-04-modernization-plan.md`.
 >
-> **Doküman düzeni (ölçüldü 2026-08-04):** kökte 5 `.md` — `CLAUDE.md`, `AGENT_CONTEXT.md`
-> (hızlı bağlam), **`ARCHITECTURE.md` (tek ana mimari)**, `README.md`, `SONDURUM.md` — ayrıca
-> `rapor.html` (durum panosu). `SONDURUM.md` (26 KB) kökte kalmalı mı, taşınmalı mı: **kullanıcı
-> kararı, backlog B-10**. Diğer her şey `docs/` altında (`docs/README.md` indeksi). Eski mimari
-> dokümanlar `docs/archive/architecture/` içinde dondurulmuştur — güncellemeyi ARCHITECTURE.md'ye yap.
+> **Doküman düzeni (kök temizliği 2026-08-04):** kökte YALNIZ 2 `.md` kalır — `CLAUDE.md`
+> (agent kuralları, Claude Code kökten okur) ve `README.md` (GitHub giriş sayfası). Diğer her
+> şey `docs/` altında (`docs/README.md` indeksi):
+> **`docs/ARCHITECTURE.md`** (tek ana mimari) · `docs/AGENT_CONTEXT.md` (hızlı bağlam) ·
+> `docs/status/rapor.html` (durum panosu) · `docs/history/SONDURUM.md` (faz durumu — backlog
+> B-10 böylece kapandı). Eski mimari dokümanlar `docs/archive/architecture/` içinde
+> dondurulmuştur — güncellemeyi `docs/ARCHITECTURE.md`'ye yap.
+>
+> ⚠️ `docs/AGENT_CONTEXT.md` ve `docs/ARCHITECTURE.md` yollarını **iki script sabit yazar**:
+> `scripts/check-drift.mjs` (preload listesi) ve `scripts/agent/drift-rules.mjs` (`docs` dizisi).
+> İkisi birebir eşleşmezse `ctx.read()` boş string döner ve drift kuralı **sessizce hiç bulgu
+> üretmez** — bu dosyaları taşırsan iki script de güncellenmelidir.
 
 ## Quick Commands
 
@@ -132,7 +139,7 @@ muhasebe/
 
 **Follow this structure for surveys, may19, lansman, referral modules.** (Cadde already follows it — `src/lib/cadde-*.ts` is the most complete example.)
 
-### Cadde 3.0 Rules (live 2026-06-11 — full detail: `ARCHITECTURE.md` §4)
+### Cadde 3.0 Rules (live 2026-06-11 — full detail: `docs/ARCHITECTURE.md` §4)
 - **RPC-only mutations:** cadde content tables have NO user INSERT policies. All writes go through
   security-definer RPCs (`create_cadde_post_v1`, cafe/carsi/promotion/report RPC families).
 - **SQL↔TS mirror contracts** (tested; changing one side requires updating the other):
@@ -461,16 +468,22 @@ try {
 
 ## Documentation & Runbooks
 
-Root holds 5 `.md` files (measured 2026-08-04): `CLAUDE.md`, `AGENT_CONTEXT.md`, `ARCHITECTURE.md`,
-`README.md`, `SONDURUM.md` — plus `rapor.html`. The earlier "exactly 4 documents" rule is not what
-the repo actually looks like; whether `SONDURUM.md` (26 KB) stays at root is a **user decision,
-tracked as backlog B-10**. Everything else lives in `docs/` (index: `docs/README.md`):
+Root holds exactly **2** `.md` files after the 2026-08-04 cleanup: `CLAUDE.md` (agent rules —
+Claude Code loads it from the root) and `README.md` (GitHub landing page). Backlog B-10 is closed:
+`SONDURUM.md` moved to `docs/history/`. Everything else lives in `docs/` (index: `docs/README.md`):
+- `docs/ARCHITECTURE.md` — the single maintained architecture document
+- `docs/AGENT_CONTEXT.md` — fast project context for a new session
+- `docs/status/` — `rapor.html` (status board) + `burakubtstatus.html`
 - `docs/cadde-300/` — Cadde 3.0 spec, devir notu, faz dokümanları, change-report
-- `docs/archive/` — frozen content: old architecture docs, root cleanup archive, DB backups, import tools
+- `docs/archive/` — frozen content: old architecture docs, root cleanup archive, DB backups, QA artifacts
 - `docs/modules/` — feature-specific documentation (Turkish domain names)
 - `docs/guides/` — user/admin guides
 - `docs/operations/` — deployment, database, security runbooks
-- `docs/history/` — archived plans and cleanup reports
+- `docs/history/` — archived plans, cleanup reports, `SONDURUM.md`
+- `docs/exports/blog-md/` — generated blog markdown (default output of `scripts/export-blog-md.mjs`)
+
+**Do not add new files to the repo root.** Only build/tooling config, `CLAUDE.md` and `README.md`
+belong there; documentation goes under `docs/`.
 
 **Before major changes, check docs for context and constraints.**
 
@@ -530,7 +543,7 @@ single-source redirect table.
 ## Additional Resources
 
 - README.md — deployment, env setup, Edge Function secrets
-- ARCHITECTURE.md (root) — the single maintained architecture document (Turkish)
+- docs/ARCHITECTURE.md — the single maintained architecture document (Turkish)
 - docs/archive/architecture/ — frozen historical architecture docs
 - docs/cleanup/2026-05-30/ — recent cleanup audit results
 - vite.config.ts comments — explains custom plugin behavior

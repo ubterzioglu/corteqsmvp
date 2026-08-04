@@ -53,10 +53,13 @@ async function main() {
 
   // Kurallar senkron `read` bekliyor; tüm gerekli dosyaları önceden yükleyip
   // senkron erişim sağlayan bir sarmalayıcı kullan.
+  // NOT: AGENT_CONTEXT.md ve ARCHITECTURE.md 2026-08-04'te kökten docs/ altına taşındı.
+  // Bu yollar drift-rules.mjs'teki `docs` dizisiyle BİREBİR aynı olmalı — eşleşmezse
+  // ctx.read("") döner ve kural sessizce hiç bulgu üretmez.
   const preload = [
     "README.md",
-    "AGENT_CONTEXT.md",
-    "ARCHITECTURE.md",
+    "docs/AGENT_CONTEXT.md",
+    "docs/ARCHITECTURE.md",
     "CLAUDE.md",
     "package.json",
   ];

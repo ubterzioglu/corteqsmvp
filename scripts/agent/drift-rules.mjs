@@ -25,7 +25,8 @@ function ruleRouterVersion(ctx) {
   const pinned = ctx.pkg?.dependencies?.["react-router-dom"];
   if (!pinned) return findings;
   const pinMm = majorMinor(pinned);
-  const docs = ["AGENT_CONTEXT.md", "ARCHITECTURE.md"];
+  // Yollar check-drift.mjs'teki preload listesiyle birebir eşleşmeli (2026-08-04'te docs/ altına taşındı).
+  const docs = ["docs/AGENT_CONTEXT.md", "docs/ARCHITECTURE.md"];
   for (const doc of docs) {
     const src = ctx.read(doc);
     const m = src.match(/react-router-dom[^\d]*(\d+)(?:\.(\d+))?/i);

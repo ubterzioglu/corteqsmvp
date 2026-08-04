@@ -5,10 +5,10 @@
 > **Güncelleme:** 2026-06-11 (Cadde 3.0 E2E rebuild Faz 0–9 + kuyruk TAMAMLANDI; kök dizin temizliği ve dokümantasyon konsolidasyonu yapıldı)
 >
 > **Kök doküman düzeni (2026-06-11):** kökte yalnız 4 doküman yaşar —
-> `CLAUDE.md` (agent kuralları) · `AGENT_CONTEXT.md` (bu dosya) · `ARCHITECTURE.md` (tek ana mimari) · `rapor.html` (rapor + takip tablosu).
+> `CLAUDE.md` (agent kuralları — kökte) · `docs/AGENT_CONTEXT.md` (bu dosya) · `docs/ARCHITECTURE.md` (tek ana mimari) · `docs/status/rapor.html` (rapor + takip tablosu).
 > Geri kalan her şey `docs/` altındadır (`docs/README.md` indeksine bak).
 >
-> **Tek ana mimari doküman:** `ARCHITECTURE.md` (kök)
+> **Tek ana mimari doküman:** `docs/ARCHITECTURE.md`
 > **Cadde 3.0 kapanış raporu:** `docs/cadde-300/change-report.md`
 > **Catalog/AFS rebuild raporları:** `docs/catalog-role-afs-rebuild/` (00–14, canlı 2026-06-09)
 > **Refactor yol haritası:** `docs/refactor/2026-06-09-refactor-backlog.md` (B1–B10)
@@ -248,7 +248,7 @@ role_sections                → Rol↔section görünürlüğü (eski: role_pro
 > **DROP edildi:** `catalog_item_types`, `item_type_attribute_rules`, `role_taxonomy_rules` ve aile/taxonomy konseptleri.
 > Runtime kodda eski adların **0 referansı** var (auto-gen `types.ts` hariç).
 
-### Cadde 3.0 (E2E rebuild, canlı 2026-06-11 — detay: `ARCHITECTURE.md` + `docs/cadde-300/change-report.md`)
+### Cadde 3.0 (E2E rebuild, canlı 2026-06-11 — detay: `docs/ARCHITECTURE.md` + `docs/cadde-300/change-report.md`)
 
 ```
 cadde_settings               → TÜM ürün limitleri/flag'leri (telefon zorunluluğu D-03, cafe/carsi
@@ -505,8 +505,8 @@ supabase functions deploy lansman-admin
 
 | Konu | Dosya |
 |------|-------|
-| **Tek ana mimari doküman** | **`ARCHITECTURE.md` (kök)** |
-| Durum panosu + kullanım senaryoları | `rapor.html` (kök) |
+| **Tek ana mimari doküman** | **`docs/ARCHITECTURE.md`** |
+| Durum panosu + kullanım senaryoları | `docs/status/rapor.html` |
 | Cadde 3.0 kapanış raporu + kalan işler | `docs/cadde-300/change-report.md` |
 | Cadde 3.0 spec / envanter / devir notu | `docs/cadde-300/` |
 | Catalog/Flat-Role/AFS rebuild raporları | `docs/catalog-role-afs-rebuild/` (00–14) |

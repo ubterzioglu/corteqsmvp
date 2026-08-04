@@ -5,7 +5,7 @@
 //
 // Kullanım:
 //   node scripts/export-blog-md.mjs
-//   node scripts/export-blog-md.mjs --env-file=.env.local --out=exports/blog-md
+//   node scripts/export-blog-md.mjs --env-file=.env.local --out=docs/exports/blog-md
 //   node scripts/export-blog-md.mjs --published-only
 //
 // Gerekli: SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (taslakları da çekmek için service role).
@@ -30,10 +30,11 @@ const publishedOnly = args.includes("--published-only");
 const single = args.includes("--single") || Boolean(singleArg);
 
 const envFilePath = path.resolve(projectRoot, envArg ? envArg.slice("--env-file=".length) : ".env.local");
-const outDir = path.resolve(projectRoot, outArg ? outArg.slice("--out=".length) : "exports/blog-md");
+// Varsayılan çıktı yolu 2026-08-04'te kök `exports/` yerine `docs/exports/` oldu.
+const outDir = path.resolve(projectRoot, outArg ? outArg.slice("--out=".length) : "docs/exports/blog-md");
 const singleFilePath = path.resolve(
   projectRoot,
-  singleArg ? singleArg.slice("--single=".length) : "exports/blog-md/all-articles.md"
+  singleArg ? singleArg.slice("--single=".length) : "docs/exports/blog-md/all-articles.md"
 );
 
 function parseEnvFile(content) {

@@ -23,18 +23,25 @@
 > Kökte yalnız 4 bakımlı doküman + `README.md` + `index.html` + `info-*.html` (ticari doküman
 > içerik kaynağı, taşınamaz) kalır.
 > **Düzeltme (2026-08-04):** kök `info-*.html` dosyaları 2026-07-13'te kaldırıldı; ticari doküman
-> içeriğinin tek kaynağı artık `src/content/commercial/*.html`. Kökte bugün ölçülen hâl:
-> 5 `.md` (`AGENT_CONTEXT.md`, `ARCHITECTURE.md`, `CLAUDE.md`, `README.md`, `SONDURUM.md`)
-> + `rapor.html` + `index.html`.
+> içeriğinin tek kaynağı artık `src/content/commercial/*.html`.
 >
-> **Güncelleme:** 2026-06-11 — kök dizin temizliği + dokümantasyon konsolidasyonu sonrası.
+> **Kök temizliği (2026-08-04) — bu bölümün geçerli hâli:** kökte artık YALNIZ 2 `.md` var:
+> `CLAUDE.md` (agent kuralları — Claude Code kökten okur) ve `README.md` (depo girişi).
+> Diğer bakımlı dokümanların hepsi buraya taşındı; backlog **B-10 kapandı**:
 >
-> **Bakımlı dokümanlar KÖKTE yaşar:**
-> `CLAUDE.md` (agent kuralları) · `AGENT_CONTEXT.md` (hızlı bağlam) ·
-> `ARCHITECTURE.md` (tek ana mimari) · `rapor.html` (durum panosu + kullanım senaryoları)
-> · `README.md` (depo girişi). Bunlara ek olarak `SONDURUM.md` de kökte duruyor; konumu
-> henüz karara bağlanmadı (bkz. backlog **B-10**).
-> Bu klasördeki her şey ya **aktif yardımcı doküman** ya da **dondurulmuş arşivdir**.
+> | Doküman | Yeni yer |
+> |---------|----------|
+> | Tek ana mimari | [`ARCHITECTURE.md`](ARCHITECTURE.md) |
+> | Hızlı bağlam (yeni oturum) | [`AGENT_CONTEXT.md`](AGENT_CONTEXT.md) |
+> | Durum panosu + kullanım senaryoları | [`status/rapor.html`](status/rapor.html) |
+> | Faz/devir durumu | [`history/SONDURUM.md`](history/SONDURUM.md) |
+>
+> ⚠️ `AGENT_CONTEXT.md` ve `ARCHITECTURE.md` yollarını `scripts/check-drift.mjs` ile
+> `scripts/agent/drift-rules.mjs` sabit yazar; bu iki dosyayı taşırsan ikisini de güncelle,
+> yoksa drift kuralı sessizce hiç bulgu üretmez.
+>
+> **Kök dizine yeni doküman eklenmez.** Bu klasördeki her şey ya **aktif yardımcı doküman**
+> ya da **dondurulmuş arşivdir**.
 
 ## Klasör Sözlüğü
 
@@ -50,7 +57,9 @@
 | `decisions/` | Teknik kararlar / ADR alanı | Aktif |
 | `audits/` | **Denetim raporları** (kanıta dayalı, ölçülmüş): 2026-08-04 depo sağlığı / SEO-GEO / dokümantasyon denetimleri, `2026-07-28-tools-noindex-karari.md`, `2026-06-08` kapsamlı denetim (html) | Aktif |
 | `database-audit/`, `cleanup/` | Veritabanı audit ve cleanup çıktıları | Referans |
-| `history/` | Tamamlanmış planlar, eski handoff'lar (public-profil v2.1 dahil), durum ve **değişiklik kapanış raporları** | Arşiv |
+| `status/` | Durum panoları: `rapor.html` (ana pano + kullanım senaryoları), `burakubtstatus.html` | Aktif |
+| `history/` | Tamamlanmış planlar, eski handoff'lar (public-profil v2.1 dahil), durum ve **değişiklik kapanış raporları**, `SONDURUM.md` (faz/devir durumu) | Arşiv |
+| `exports/` | Üretilen dışa aktarımlar: `blog-md/` = `scripts/export-blog-md.mjs` varsayılan çıktısı | Üretilen |
 | `archive/` | **Dondurulmuş içerik:** `architecture/` (eski 9 mimari doküman — bakım ARCHITECTURE.md'de), `root-2026-06-11/` (kök temizliği: audit/cleancode/dbcheck/peronevera notları, deployerror, meeting10.csv, import-resources.ts), `root-2026-08-03/` (üçüncü kök temizliği: `1readme.md`, `tab_of.json`), `backups/` (Supabase DB dump'ları), `cleanup-2026-05-15/`, `cleanup-2026-05-30/`, `turkish_missions_import_builder/` | Arşiv |
 | `reference/` | Referans repo kopyaları (`global-network-bridge/`) | Arşiv |
 | `docu/` | Eski kök `docu/` klasörü (info-* HTML kopyaları + referans görseller) | Arşiv |
@@ -78,9 +87,9 @@ Denetim → plan → uygulama → kapanış zinciri. Sıra bu; okumaya denetimle
 
 ## Nereden başlamalı?
 
-1. Yeni oturum/bağlam → kökteki **`AGENT_CONTEXT.md`**
-2. Mimari soru → kökteki **`ARCHITECTURE.md`**
-3. Proje durumu / ne bitti ne açık → kökteki **`rapor.html`**
+1. Yeni oturum/bağlam → **[`AGENT_CONTEXT.md`](AGENT_CONTEXT.md)**
+2. Mimari soru → **[`ARCHITECTURE.md`](ARCHITECTURE.md)**
+3. Proje durumu / ne bitti ne açık → **[`status/rapor.html`](status/rapor.html)**
 4. Cadde 3.0 detayı → `cadde-300/change-report.md`
 5. Depo/SEO'nun ölçülmüş gerçek durumu → `audits/2026-08-04-*.md`
    (kökteki `CLAUDE.md` sayıları bayat; çelişki hâlinde denetim raporu geçerlidir)

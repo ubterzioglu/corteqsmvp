@@ -263,6 +263,23 @@ yapılandırılmış içerik sunuyor — politika bu iki dosya arasında tutarl�
 Bu bir doküman düzeni kararıdır, kullanıcı verir. Hangisi olursa olsun `CLAUDE.md`
 düzeltilmeli — şu an yanlış.
 
+> ### ✅ KAPANDI — 2026-08-04 kök temizliği
+>
+> Kullanıcı (b)'den de ileri gitti: kökte **yalnız 2 `.md`** kaldı (`CLAUDE.md` — Claude Code
+> kökten okur, `README.md` — GitHub girişi). Taşınanlar:
+> `AGENT_CONTEXT.md`→`docs/`, `ARCHITECTURE.md`→`docs/`, `SONDURUM.md`→`docs/history/`,
+> `rapor.html`→`docs/status/`. Ayrıca kökteki `exports/`→`docs/exports/`,
+> `artifacts/`→`docs/archive/artifacts/`; `docs/` kökündeki 4 başıboş dosya alt klasörlere girdi.
+> `CLAUDE.md`, `README.md`, `docs/README.md`, `ARCHITECTURE.md`, `AGENT_CONTEXT.md` ve
+> `rapor.html` referansları güncellendi.
+>
+> **Taşınmayanlar ve nedeni:** `lansman/index.html` (`vite.config.ts` rollup entry point'i),
+> `CLAUDE.md` (harness kökten okur), `README.md` (GitHub), build/config dosyaları.
+>
+> ⚠️ `scripts/check-drift.mjs` ve `scripts/agent/drift-rules.mjs` bu iki doküman yolunu sabit
+> yazar; eşleşmezse `ctx.read()` boş döner ve kural **sessizce hiç bulgu üretmez**. Taşımadan
+> sonra mutasyon testiyle doğrulandı (kasten yanlış sürüm verildiğinde kural 2 bulgu üretti).
+
 ---
 
 ### B-11 · `public/burak-stripe-rehberi.html` herkese açık servis ediliyor

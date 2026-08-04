@@ -181,19 +181,23 @@ Then open the site and confirm the browser console reports no CSP violations.
 
 ## Documentation
 
-Root holds these maintained documents:
+Since the 2026-08-04 cleanup the repo root holds **only two** documents — everything else moved
+under `docs/`:
 
 | File | Purpose |
 |------|---------|
 | `README.md` | This file — setup, env, deployment |
-| `CLAUDE.md` | Agent/contributor rules and constraints |
-| `AGENT_CONTEXT.md` | Fast project context for a new session |
-| `ARCHITECTURE.md` | The single maintained architecture document |
-| `SONDURUM.md` | Current phase / handover status |
-| `rapor.html` | Status board + use-case scenarios (open in a browser) |
+| `CLAUDE.md` | Agent/contributor rules and constraints (Claude Code reads it from the root) |
 
-Everything else is under `docs/` — see `docs/README.md` for the index. Frozen archives live in
-`docs/archive/`, `docs/reference/`, `docs/docu/`.
+| Moved document | New location |
+|----------------|--------------|
+| Architecture (single maintained doc) | `docs/ARCHITECTURE.md` |
+| Fast project context for a new session | `docs/AGENT_CONTEXT.md` |
+| Status board + use-case scenarios (open in a browser) | `docs/status/rapor.html` |
+| Current phase / handover status | `docs/history/SONDURUM.md` |
+
+See `docs/README.md` for the full index. Frozen archives live in `docs/archive/`,
+`docs/reference/`, `docs/docu/`. **Do not add new documents to the repo root.**
 
 ## Notes
 
