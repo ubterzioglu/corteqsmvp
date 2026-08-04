@@ -149,6 +149,9 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
   cadde_invalid_carsi_price: "Fiyat negatif olamaz.",
   cadde_invalid_carsi_currency: "Para birimi 3 harfli kod olmalı (örn. EUR).",
   cadde_invalid_carsi_contact_mode: "Geçersiz iletişim tercihi.",
+  // Bu ikisi SQL'de vardı ama haritada yoktu — kullanıcıya ham hata kodu düşüyordu.
+  cadde_invalid_carsi_contact: "Seçtiğin iletişim yoluna uygun geçerli bir telefon veya e-posta gir.",
+  cadde_invalid_carsi_video: "Video bağlantısı https:// ile başlamalı.",
   cadde_invalid_carsi_image: "Görseller http(s) URL olmalı; en fazla 6 görsel eklenebilir.",
   cadde_invalid_carsi_status: "Geçersiz ilan durumu.",
   cadde_carsi_item_limit: "Aktif ilan limitine ulaştın. Eski bir ilanını kapatıp tekrar dene.",
