@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-import CaddeWorldClocks, { clockHandAngles, timePartsInTimezone } from "@/components/cadde/CaddeWorldClocks";
+import CaddeWorldClocks, { MAX_CLOCKS, clockHandAngles, timePartsInTimezone } from "@/components/cadde/CaddeWorldClocks";
 
 describe("clockHandAngles", () => {
   it("tam saatte akrep saat×30°, yelkovan 0°", () => {
@@ -31,17 +31,33 @@ describe("timePartsInTimezone", () => {
 });
 
 describe("CaddeWorldClocks render", () => {
-  it("3 analog kadran çizer, İstanbul şeritte, dijital saat sr-only'de kalır", () => {
+  it("MAX_CLOCKS kadar analog kadran çizer, İstanbul şeritte, dijital saat sr-only'de kalır", () => {
     const { container } = render(
       <CaddeWorldClocks viewerCity="Berlin" filterCity={null} cities={[]} />,
     );
     const strip = screen.getByTestId("cadde-world-clocks");
     expect(strip).toBeInTheDocument();
-    expect(container.querySelectorAll("svg")).toHaveLength(3);
+    expect(MAX_CLOCKS).toBe(5);
+    expect(container.querySelectorAll("svg")).toHaveLength(MAX_CLOCKS);
     expect(screen.getByText("İstanbul")).toBeInTheDocument();
     // m1: gün-evresi ikonları kalktı — lucide ikonların class imzası bulunmamalı.
     expect(container.querySelector(".lucide")).toBeNull();
     // Erişilebilirlik: her kadranın yanında okunabilir dijital saat (sr-only).
-    expect(container.querySelectorAll(".sr-only")).toHaveLength(3);
+    expect(container.querySelectorAll(".sr-only")).toHaveLength(MAX_CLOCKS);
+  });
+
+  it("kadran sade kalır: yalnız 4 çeyrek tik + 2 ibre (ara tikler geri gelmemeli)", () => {
+    const { container } = render(
+      <CaddeWorldClocks viewerCity="Berlin" filterCity={null} cities={[]} />,
+    );
+    const firstFace = container.querySelector("svg");
+    expect(firstFace?.querySelectorAll("line")).toHaveLength(6);
+  });
+
+  it("şerit mobilde gizli, md'den itibaren görünür", () => {
+    render(<CaddeWorldClocks viewerCity="Berlin" filterCity={null} cities={[]} />);
+    const strip = screen.getByTestId("cadde-world-clocks");
+    expect(strip.className).toContain("hidden");
+    expect(strip.className).toContain("md:flex");
   });
 });
