@@ -34,7 +34,9 @@ export function ToolLandingCard({ tool }: ToolLandingCardProps) {
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+          {/* Başlık görselin üstünden alındığı için ağır karartma da kalktı: tek işi beyaz
+              yazıyı okutmaktı, altında yazı yokken görselin altını lekeliyordu. Üstteki
+              rozetler bu gradyana zaten dayanmıyordu (gradyanın üst ucu şeffaftı). */}
           <div
             className="pointer-events-none absolute inset-0 -translate-x-full skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
             aria-hidden="true"
@@ -46,14 +48,18 @@ export function ToolLandingCard({ tool }: ToolLandingCardProps) {
           <Badge className="absolute right-2 top-2 z-10 rotate-2 border border-white/50 bg-emerald-500 text-white shadow-lg hover:bg-emerald-500">
             🎉 Ücretsiz
           </Badge>
-          <CardTitle className="absolute inset-x-0 bottom-0 px-4 pb-3 text-base leading-snug text-white drop-shadow-sm">
+        </div>
+        <CardContent className="flex flex-1 flex-col pt-4">
+          {/* Başlık görselin ÜZERİNDE beyazdı ve okunmuyordu: araç görselleri açık/pastel
+              illüstrasyon, beyaz yazı zemine karışıyordu. Kartın gövdesine alındı —
+              kontrast artık görselden değil kart yüzeyinden geliyor. */}
+          <CardTitle className="text-base leading-snug transition-colors group-hover:text-primary">
             {tool.title_tr}
           </CardTitle>
-        </div>
-        <CardContent className="flex flex-1 flex-col justify-between pt-4">
-          <p className="text-sm text-muted-foreground">{tool.summary_tr}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{tool.summary_tr}</p>
           {questionCount > 0 && (
-            <p className="mt-3 text-xs font-medium text-primary">{questionCount} soru · birkaç dakika</p>
+            // mt-auto: başlık uzunlukları farklı olsa da meta satırı tüm kartlarda aynı hizada biter.
+            <p className="mt-auto pt-3 text-xs font-medium text-primary">{questionCount} soru · birkaç dakika</p>
           )}
         </CardContent>
       </Card>

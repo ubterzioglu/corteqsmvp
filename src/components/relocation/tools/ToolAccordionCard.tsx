@@ -36,13 +36,14 @@ export function ToolAccordionCard({ tool }: ToolAccordionCardProps) {
         <div className="space-y-3">
           {heroImage && (
             <div className="relative overflow-hidden rounded-xl">
+              {/* Karartma gradyanı kaldırıldı: bu varyantta başlık zaten accordion
+                  tetikleyicisinde, görselin üstünde okunacak yazı yok. */}
               <img
                 src={heroImage}
                 alt=""
                 loading="lazy"
                 className="aspect-[16/9] w-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent" />
             </div>
           )}
           <p className="text-sm text-muted-foreground">{tool.summary_tr}</p>
