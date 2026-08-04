@@ -32,8 +32,13 @@ interface QuestionRendererProps {
   onChange: (value: ToolAnswerValue) => void;
 }
 
-const MAX_COUNTRY_SELECTION = 5;
+const MAX_COUNTRY_SELECTION = 3;
 const CITY_ANY_VALUE = "Şehir fark etmez";
+
+// Ölçek (1-5) sorularında ön-seçili gelen orta değer. QuestionStepper bu değeri
+// "cevap verilmiş" sayar ve dokunulmadan İleri'ye basılsa da aynen kaydeder —
+// böylece ekranda görünen seçim ile kaydedilen cevap daima aynı olur.
+export const SCALE_DEFAULT_VALUE = 3;
 
 function parseCountryCodes(value: ToolAnswerValue | undefined): string[] {
   if (typeof value !== "string") return [];
@@ -169,7 +174,7 @@ function CountryMultiCombobox({
               <CommandGroup>
                 {selectedCodes.length >= MAX_COUNTRY_SELECTION && (
                   <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                    En fazla 5 ülke seçebilirsin.
+                    En fazla {MAX_COUNTRY_SELECTION} ülke seçebilirsin.
                   </div>
                 )}
                 {countries.map((country) => {
@@ -227,7 +232,7 @@ function CountryMultiCombobox({
       )}
 
       <p className="text-xs text-muted-foreground">
-        En az 1, en fazla 5 ülke seç. Çok geniş seçim sonucu yavaşlatabilir.
+        En az 1, en fazla {MAX_COUNTRY_SELECTION} ülke seç. Çok geniş seçim sonucu yavaşlatabilir.
       </p>
     </div>
   );
@@ -291,7 +296,9 @@ export function QuestionRenderer({ question, value, onChange }: QuestionRenderer
     }
 
     case "scale": {
-      const current = typeof value === "number" ? value : 3;
+      // Ön-seçili varsayılan gösterilir. Radix, zaten seçili şıkka tıklandığında
+      // onValueChange tetiklemez; bu yüzden varsayılanı QuestionStepper geçerli cevap sayar.
+      const current = typeof value === "number" ? value : SCALE_DEFAULT_VALUE;
       return (
         <RadioGroup
           value={String(current)}

@@ -167,17 +167,45 @@ describe("QuestionStepper", () => {
     expect(screen.getByText("Soru q2")).toBeInTheDocument();
   });
 
-  it("scale sorusunda slider'a dokunulmadan İleri ilerletmez (görünen varsayılan cevap sayılmaz)", () => {
+  it("scale sorusunda dokunulmadan İleri ilerler ve görünen varsayılan (3) kaydedilir", () => {
+    const onComplete = vi.fn();
     render(
-      <QuestionStepper
-        questions={[q("q1", "scale", 1, { is_required: false }), q("q2", "scale", 2)]}
-        onComplete={vi.fn()}
-      />,
+      <QuestionStepper questions={[q("only", "scale", 1)]} onComplete={onComplete} />,
     );
 
-    fireEvent.click(screen.getByText("İleri"));
-    expect(screen.getByText("Soru q1")).toBeInTheDocument();
-    expect(screen.getByText("Bu soru zorunlu")).toBeInTheDocument();
+    // Ortadaki şık ön-seçili görünür...
+    expect(screen.getAllByRole("radio")[2]).toHaveAttribute("aria-checked", "true");
+
+    // ...ve hiç dokunulmadan bitirilse bile görünen değer cevap olarak gider.
+    fireEvent.click(screen.getByText("Sonucu Gör"));
+    expect(onComplete).toHaveBeenCalledWith({ only: 3 });
+    expect(screen.queryByText("Bu soru zorunlu")).not.toBeInTheDocument();
+  });
+
+  it("ön-seçili 3'e tıklayıp İleri denince ilerler (önce 4 sonra 3 seçmek gerekmez)", () => {
+    const onComplete = vi.fn();
+    render(
+      <QuestionStepper questions={[q("only", "scale", 1)]} onComplete={onComplete} />,
+    );
+
+    // Radix, zaten seçili şıkka tıklandığında onValueChange tetiklemez; buna rağmen
+    // görünen değer cevap sayıldığı için kullanıcı takılmamalı.
+    fireEvent.click(screen.getByText("3"));
+    fireEvent.click(screen.getByText("Sonucu Gör"));
+
+    expect(onComplete).toHaveBeenCalledWith({ only: 3 });
+  });
+
+  it("scale sorusunda başka bir şık seçilirse varsayılan yerine o değer kaydedilir", () => {
+    const onComplete = vi.fn();
+    render(
+      <QuestionStepper questions={[q("only", "scale", 1)]} onComplete={onComplete} />,
+    );
+
+    fireEvent.click(screen.getByText("5 — Yüksek"));
+    fireEvent.click(screen.getByText("Sonucu Gör"));
+
+    expect(onComplete).toHaveBeenCalledWith({ only: 5 });
   });
 
   it("son soruda cevapsız Bitir onComplete'i çağırmaz", () => {

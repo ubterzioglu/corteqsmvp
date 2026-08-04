@@ -7,7 +7,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { QuestionRenderer } from "@/components/relocation/tools/QuestionRenderer";
+import {
+  QuestionRenderer,
+  SCALE_DEFAULT_VALUE,
+} from "@/components/relocation/tools/QuestionRenderer";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
 import type { RelocationToolQuestionRow, ToolAnswerValue } from "@/lib/relocation-tools-types";
 
@@ -20,6 +23,16 @@ interface QuestionStepperProps {
 
 function sortedQuestions(questions: RelocationToolQuestionRow[]): RelocationToolQuestionRow[] {
   return [...questions].sort((a, b) => a.sort_order - b.sort_order);
+}
+
+// Ölçek (1-5) sorularında ekranda bir şık zaten ön-seçili görünür; kullanıcı hiç dokunmadan
+// ilerlerse o görünen değer kaydedilir. Diğer tiplerde cevapsız ilerleme yok.
+function effectiveAnswer(
+  question: RelocationToolQuestionRow,
+  value: ToolAnswerValue | undefined,
+): ToolAnswerValue | undefined {
+  if (value === undefined && question.answer_type === "scale") return SCALE_DEFAULT_VALUE;
+  return value;
 }
 
 function isEmpty(value: ToolAnswerValue | undefined): boolean {
@@ -60,7 +73,8 @@ export function QuestionStepper({
   const question = steps[index];
   const isLast = index === steps.length - 1;
   const value = answers[question.question_key];
-  const blocked = isEmpty(value);
+  const committedValue = effectiveAnswer(question, value);
+  const blocked = isEmpty(committedValue);
 
   const setAnswer = (v: ToolAnswerValue) => {
     onAnswerStart?.();
@@ -83,8 +97,14 @@ export function QuestionStepper({
       setShowError(true);
       return;
     }
+    // Dokunulmamış ölçek sorusunda görünen varsayılanı gerçek cevaba dönüştür.
+    const nextAnswers =
+      committedValue === value
+        ? answers
+        : { ...answers, [question.question_key]: committedValue };
+    if (nextAnswers !== answers) setAnswers(nextAnswers);
     if (isLast) {
-      onComplete(answers);
+      onComplete(nextAnswers);
       return;
     }
     setIndex((i) => i + 1);

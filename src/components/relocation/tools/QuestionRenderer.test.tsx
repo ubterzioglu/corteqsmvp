@@ -68,7 +68,7 @@ describe("QuestionRenderer", () => {
     expect(onChange).toHaveBeenCalledWith("registered_nurse");
   });
 
-  it("country sorusunda en fazla 5 ülke seçer ve ISO kodlarını virgülle üretir", async () => {
+  it("country sorusunda en fazla 3 ülke seçer ve ISO kodlarını virgülle üretir", async () => {
     const user = userEvent.setup();
     let value: ToolAnswerValue | undefined = "";
     const onChange = vi.fn((next: ToolAnswerValue) => {
@@ -79,16 +79,16 @@ describe("QuestionRenderer", () => {
       <QuestionRenderer question={question} value={value} onChange={onChange} />,
     );
 
-    for (const country of ["Almanya", "Hollanda", "ABD", "Kanada", "İngiltere"]) {
+    for (const country of ["Almanya", "Hollanda", "ABD"]) {
       await user.click(screen.getByRole("combobox", { name: /ülke seç/i }));
       await user.click(await screen.findByText(country));
       rerender(<QuestionRenderer question={question} value={value} onChange={onChange} />);
     }
 
     await user.click(screen.getByRole("combobox", { name: /ülke seç/i }));
-    expect(screen.getByText("En fazla 5 ülke seçebilirsin.")).toBeInTheDocument();
+    expect(screen.getByText("En fazla 3 ülke seçebilirsin.")).toBeInTheDocument();
     expect(screen.getByText("Fransa").closest("[cmdk-item]")).toHaveAttribute("aria-disabled", "true");
-    expect(onChange).toHaveBeenLastCalledWith("DE,NL,US,CA,GB");
+    expect(onChange).toHaveBeenLastCalledWith("DE,NL,US");
   });
 
   it("target_cities sorusunda şehir fark etmez hızlı cevabını yazar", async () => {
