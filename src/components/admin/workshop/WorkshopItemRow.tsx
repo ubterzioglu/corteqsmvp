@@ -41,7 +41,7 @@ export function WorkshopItemRow({ item, onToggle, onSave, onDelete, disabled }: 
       setEditing(false);
       return;
     }
-    onSave({ title, section: item.section });
+    onSave({ title, section: item.section, sessionKey: item.sessionKey });
     setEditing(false);
   };
 
@@ -52,8 +52,14 @@ export function WorkshopItemRow({ item, onToggle, onSave, onDelete, disabled }: 
         complete && "bg-emerald-50/60 dark:bg-emerald-950/20",
       )}
     >
-      <span className="w-8 shrink-0 pt-0.5 text-xs font-semibold tabular-nums text-muted-foreground">
-        {item.itemNo}
+      <span className="flex w-16 shrink-0 items-center gap-1.5 pt-0.5 text-xs text-muted-foreground">
+        <span
+          className="rounded bg-muted px-1 py-0.5 text-[10px] font-semibold uppercase leading-none"
+          title={`${item.sessionKey} workshop maddesi`}
+        >
+          {item.sessionKey}
+        </span>
+        <span className="font-semibold tabular-nums">{item.itemNo}</span>
       </span>
 
       <div className="min-w-0 flex-1">

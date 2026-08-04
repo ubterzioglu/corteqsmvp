@@ -26,9 +26,18 @@ export const WORKSHOP_OWNER_LABELS: Record<WorkshopOwner, string> = {
   burak: "Burak",
 };
 
+/**
+ * Workshop oturumu (toplantı) etiketi: WS1 = 1. toplantı, WS2 = 2. toplantı …
+ * Yeni toplantı için migration gerekmez, yeni madde WS3 ile eklenebilir.
+ */
+export const WORKSHOP_SESSION_PATTERN = /^WS[0-9]+$/;
+export const DEFAULT_WORKSHOP_SESSION = "WS1";
+
 export type WorkshopItem = {
   id: string;
   workshopKey: string;
+  /** Maddenin ait olduğu toplantı: "WS1", "WS2", … */
+  sessionKey: string;
   section: string;
   itemNo: number;
   title: string;
@@ -41,12 +50,14 @@ export type WorkshopItem = {
 };
 
 export type WorkshopItemDraft = {
+  sessionKey: string;
   section: string;
   title: string;
 };
 
-/** Bir bölümdeki maddeler — UI gruplaması için. */
+/** Bir oturumun bir bölümündeki maddeler — UI gruplaması için. */
 export type WorkshopSection = {
+  sessionKey: string;
   section: string;
   items: WorkshopItem[];
 };
@@ -64,6 +75,7 @@ export type WorkshopProgress = {
 type ItemRow = {
   id: string;
   workshop_key: string;
+  session_key: string;
   section: string;
   item_no: number;
   title: string;
@@ -76,7 +88,7 @@ type ItemRow = {
 };
 
 const ITEM_SELECT =
-  "id,workshop_key,section,item_no,title,ubt_done,burak_done,ubt_done_at,burak_done_at,created_at,updated_at";
+  "id,workshop_key,session_key,section,item_no,title,ubt_done,burak_done,ubt_done_at,burak_done_at,created_at,updated_at";
 
 const TABLE = "workshop_items";
 
@@ -102,6 +114,7 @@ function mapItem(row: ItemRow): WorkshopItem {
   return {
     id: row.id,
     workshopKey: row.workshop_key,
+    sessionKey: row.session_key,
     section: row.section,
     itemNo: row.item_no,
     title: row.title,
@@ -132,14 +145,20 @@ export function calculateWorkshopProgress(items: WorkshopItem[]): WorkshopProgre
   };
 }
 
+/** Gruplama anahtarı: aynı adlı bölüm iki ayrı toplantıda birleşmemeli. */
+function sectionBucketKey(sessionKey: string, section: string): string {
+  return `${sessionKey} ${section}`;
+}
+
 /**
- * Maddeleri bölümlere ayırır; bölüm sırası ilk maddenin item_no'suna göredir
- * (transkript sırası korunur), bölüm içi sıra item_no artan.
+ * Maddeleri (oturum, bölüm) çiftlerine ayırır; grup sırası ilk maddenin
+ * item_no'suna göredir (toplantı sırası korunur), grup içi sıra item_no artan.
+ * Numaralandırma oturumlar arasında devam ettiği için WS1 grupları WS2'den önce gelir.
  */
 export function groupWorkshopItems(items: WorkshopItem[]): WorkshopSection[] {
   const buckets = new Map<string, WorkshopItem[]>();
   for (const item of items) {
-    const key = item.section.trim();
+    const key = sectionBucketKey(item.sessionKey, item.section.trim());
     const bucket = buckets.get(key);
     if (bucket) {
       bucket.push(item);
@@ -148,12 +167,38 @@ export function groupWorkshopItems(items: WorkshopItem[]): WorkshopSection[] {
     }
   }
 
-  return Array.from(buckets.entries())
-    .map(([section, sectionItems]) => ({
-      section,
-      items: [...sectionItems].sort((a, b) => a.itemNo - b.itemNo),
-    }))
+  return Array.from(buckets.values())
+    .map((sectionItems) => {
+      const sorted = [...sectionItems].sort((a, b) => a.itemNo - b.itemNo);
+      return {
+        sessionKey: sorted[0].sessionKey,
+        section: sorted[0].section.trim(),
+        items: sorted,
+      };
+    })
     .sort((a, b) => a.items[0].itemNo - b.items[0].itemNo);
+}
+
+/** Mevcut oturumları sayısal sırayla döner: WS1, WS2, … WS10 (WS10 > WS9). */
+export function collectWorkshopSessions(items: WorkshopItem[]): string[] {
+  const keys = new Set(
+    items.map((item) => item.sessionKey.trim()).filter((key) => key.length > 0),
+  );
+
+  return Array.from(keys).sort((a, b) => {
+    const left = Number.parseInt(a.replace(/^WS/i, ""), 10);
+    const right = Number.parseInt(b.replace(/^WS/i, ""), 10);
+    if (Number.isFinite(left) && Number.isFinite(right) && left !== right) {
+      return left - right;
+    }
+    return trCompare(a, b);
+  });
+}
+
+/** En son toplantı — yeni madde formunun varsayılanı. */
+export function latestWorkshopSession(items: WorkshopItem[]): string {
+  const sessions = collectWorkshopSessions(items);
+  return sessions.at(-1) ?? DEFAULT_WORKSHOP_SESSION;
 }
 
 /** Bekleyen / tamamlanan ayrımı — pano alt akordeonu bu ayrımı kullanır. */
@@ -183,15 +228,17 @@ export function partitionWorkshopItems(items: WorkshopItem[]): WorkshopPartition
 
 export type WorkshopStatusFilter = "all" | "open" | "completed";
 
-/** Arama (Türkçe aksan-toleranslı) + durum filtresini uygular. */
+/** Oturum ("all" = tüm toplantılar) + arama (Türkçe aksan-toleranslı) + durum filtresi. */
 export function filterWorkshopItems(
   items: WorkshopItem[],
-  options: { search?: string; status?: WorkshopStatusFilter } = {},
+  options: { search?: string; status?: WorkshopStatusFilter; session?: string } = {},
 ): WorkshopItem[] {
   const search = options.search?.trim() ?? "";
   const status = options.status ?? "all";
+  const session = options.session ?? "all";
 
   return items.filter((item) => {
+    if (session !== "all" && item.sessionKey !== session) return false;
     if (status === "completed" && !isWorkshopItemComplete(item)) return false;
     if (status === "open" && isWorkshopItemComplete(item)) return false;
     if (search && !trIncludes(`${item.title} ${item.section}`, search)) return false;
@@ -212,6 +259,10 @@ export function validateWorkshopItemDraft(draft: WorkshopItemDraft): string | nu
   const title = draft.title.trim();
   if (!title) {
     return "Madde metni boş bırakılamaz.";
+  }
+
+  if (!WORKSHOP_SESSION_PATTERN.test(draft.sessionKey.trim())) {
+    return "Workshop oturumu WS1, WS2 gibi olmalı.";
   }
 
   const contentError = validateContent(title);
@@ -278,6 +329,7 @@ export async function createWorkshopItem(
   const { data, error } = await table()
     .insert({
       workshop_key: workshopKey,
+      session_key: draft.sessionKey.trim(),
       section: draft.section.trim(),
       item_no: itemNo,
       title: draft.title.trim(),
@@ -304,7 +356,11 @@ export async function updateWorkshopItem(
   }
 
   const { data, error } = await table()
-    .update({ title: draft.title.trim(), section: draft.section.trim() })
+    .update({
+      title: draft.title.trim(),
+      section: draft.section.trim(),
+      session_key: draft.sessionKey.trim(),
+    })
     .eq("id", id)
     .select(ITEM_SELECT)
     .single();

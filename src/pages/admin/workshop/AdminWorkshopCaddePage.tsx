@@ -28,12 +28,14 @@ import { useToast } from "@/hooks/use-toast";
 import {
   calculateWorkshopProgress,
   collectWorkshopSections,
+  collectWorkshopSessions,
   createWorkshopItem,
   deleteWorkshopItem,
   fetchWorkshopItems,
   filterWorkshopItems,
   groupWorkshopItems,
   isWorkshopItemComplete,
+  latestWorkshopSession,
   partitionWorkshopItems,
   setWorkshopItemApproval,
   updateWorkshopItem,
@@ -53,6 +55,12 @@ const STATUS_OPTIONS: { value: WorkshopStatusFilter; label: string }[] = [
 ];
 
 const NEW_SECTION_VALUE = "__new__";
+const ALL_SESSIONS_VALUE = "all";
+
+/** Sayaç anahtarı — aynı adlı bölüm iki oturumda ayrı sayılmalı. */
+function sectionTotalsKey(sessionKey: string, section: string): string {
+  return `${sessionKey} ${section}`;
+}
 
 function StatCard({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
@@ -72,9 +80,11 @@ const AdminWorkshopCaddePage = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  const [sessionFilter, setSessionFilter] = useState<string>(ALL_SESSIONS_VALUE);
   const [statusFilter, setStatusFilter] = useState<WorkshopStatusFilter>("all");
   const [searchText, setSearchText] = useState("");
   const [newTitle, setNewTitle] = useState("");
+  const [newSession, setNewSession] = useState("");
   const [newSection, setNewSection] = useState("");
   const [customSection, setCustomSection] = useState("");
 
@@ -84,13 +94,28 @@ const AdminWorkshopCaddePage = () => {
   });
   const items = useMemo(() => itemsQuery.data ?? [], [itemsQuery.data]);
 
-  const progress = useMemo(() => calculateWorkshopProgress(items), [items]);
+  const sessionOptions = useMemo(() => collectWorkshopSessions(items), [items]);
   const sectionOptions = useMemo(() => collectWorkshopSections(items), [items]);
+
+  // Sayaçlar ve ilerleme çubuğu seçili workshop oturumunu yansıtır: WS2'ye
+  // süzüldüğünde WS1'in bitmiş maddeleri oranı şişirmemeli.
+  const scopedItems = useMemo(
+    () =>
+      sessionFilter === ALL_SESSIONS_VALUE
+        ? items
+        : items.filter((item) => item.sessionKey === sessionFilter),
+    [items, sessionFilter],
+  );
+  const progress = useMemo(() => calculateWorkshopProgress(scopedItems), [scopedItems]);
 
   // Bekleyen maddeler üstte bölüm kartlarında; tamamlananlar en altta tek
   // akordeon kartında toplanır (pano uzadıkça bitmiş maddeler yolu tıkamasın).
   const { topSections, completedSections, completedCount } = useMemo(() => {
-    const visible = filterWorkshopItems(items, { search: searchText, status: statusFilter });
+    const visible = filterWorkshopItems(items, {
+      search: searchText,
+      status: statusFilter,
+      session: sessionFilter,
+    });
 
     // "Tamamlananlar" filtresi zaten yalnız bitmişleri istiyor; onları bir de
     // akordeonun arkasına saklamak yerine doğrudan listede göster.
@@ -104,14 +129,14 @@ const AdminWorkshopCaddePage = () => {
       completedSections: groupWorkshopItems(completed),
       completedCount: completed.length,
     };
-  }, [items, searchText, statusFilter]);
+  }, [items, searchText, statusFilter, sessionFilter]);
 
   // Bölüm başlığındaki "tamamlanan/toplam" sayacı, tamamlananlar akordeona
   // taşındıktan sonra da anlamlı kalsın diye filtrelenmemiş listeden hesaplanır.
   const sectionTotals = useMemo(() => {
     const totals = new Map<string, { completed: number; total: number }>();
     for (const item of items) {
-      const key = item.section.trim();
+      const key = sectionTotalsKey(item.sessionKey, item.section.trim());
       const entry = totals.get(key) ?? { completed: 0, total: 0 };
       totals.set(key, {
         completed: entry.completed + (isWorkshopItemComplete(item) ? 1 : 0),
@@ -121,7 +146,8 @@ const AdminWorkshopCaddePage = () => {
     return totals;
   }, [items]);
 
-  const hasActiveFilters = statusFilter !== "all" || searchText.trim().length > 0;
+  const hasActiveFilters =
+    sessionFilter !== ALL_SESSIONS_VALUE || statusFilter !== "all" || searchText.trim().length > 0;
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ITEMS_KEY });
 
@@ -172,6 +198,8 @@ const AdminWorkshopCaddePage = () => {
 
   const resolvedNewSection =
     newSection === NEW_SECTION_VALUE || newSection === "" ? customSection : newSection;
+  // Toplantı sırasında eklenen madde varsayılan olarak en son workshop'a düşer.
+  const resolvedNewSession = newSession || latestWorkshopSession(items);
 
   const renderItemRow = (item: WorkshopItem) => (
     <WorkshopItemRow
@@ -189,7 +217,11 @@ const AdminWorkshopCaddePage = () => {
       toast({ title: "Madde metni boş bırakılamaz.", variant: "destructive" });
       return;
     }
-    createMutation.mutate({ title: newTitle, section: resolvedNewSection });
+    createMutation.mutate({
+      title: newTitle,
+      section: resolvedNewSection,
+      sessionKey: resolvedNewSession,
+    });
   };
 
   return (
@@ -222,9 +254,24 @@ const AdminWorkshopCaddePage = () => {
       }
       filters={
         <AdminFilterBar onReset={hasActiveFilters ? () => {
+          setSessionFilter(ALL_SESSIONS_VALUE);
           setStatusFilter("all");
           setSearchText("");
         } : undefined}>
+          <Select value={sessionFilter} onValueChange={setSessionFilter}>
+            <SelectTrigger className="h-9 w-full sm:w-44">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL_SESSIONS_VALUE}>Tüm workshoplar</SelectItem>
+              {sessionOptions.map((session) => (
+                <SelectItem key={session} value={session}>
+                  {session}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
           <Input
             value={searchText}
             onChange={(event) => setSearchText(event.target.value)}
@@ -272,13 +319,19 @@ const AdminWorkshopCaddePage = () => {
       ) : null}
 
       {topSections.map((group) => {
-        const totals = sectionTotals.get(group.section) ?? { completed: 0, total: group.items.length };
+        const totals = sectionTotals.get(sectionTotalsKey(group.sessionKey, group.section)) ?? {
+          completed: 0,
+          total: group.items.length,
+        };
         return (
-          <Card key={group.section || "genel"}>
+          <Card key={`${group.sessionKey}-${group.section || "genel"}`}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-semibold">
+              <CardTitle className="flex flex-wrap items-center gap-2 text-sm font-semibold">
+                <span className="rounded bg-muted px-1.5 py-0.5 text-[11px] font-semibold text-muted-foreground">
+                  {group.sessionKey}
+                </span>
                 {group.section || "Genel"}
-                <span className="ml-2 text-xs font-normal text-muted-foreground">
+                <span className="text-xs font-normal text-muted-foreground">
                   {totals.completed}/{totals.total}
                 </span>
               </CardTitle>
@@ -304,8 +357,11 @@ const AdminWorkshopCaddePage = () => {
             <AccordionContent className="px-0 pb-2">
               <div className="flex flex-col gap-3">
                 {completedSections.map((group) => (
-                  <div key={group.section || "genel"}>
+                  <div key={`${group.sessionKey}-${group.section || "genel"}`}>
                     <p className="px-3 pb-1 text-xs font-semibold text-muted-foreground">
+                      <span className="mr-2 rounded bg-muted px-1 py-0.5 text-[10px] uppercase">
+                        {group.sessionKey}
+                      </span>
                       {group.section || "Genel"}
                       <span className="ml-2 font-normal">{group.items.length}</span>
                     </p>
@@ -323,6 +379,19 @@ const AdminWorkshopCaddePage = () => {
           <CardTitle className="text-sm font-semibold">Yeni madde ekle</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <Select value={resolvedNewSession} onValueChange={setNewSession}>
+            <SelectTrigger className="h-9 w-full sm:w-28">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {sessionOptions.map((session) => (
+                <SelectItem key={session} value={session}>
+                  {session}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
           <Select value={newSection} onValueChange={setNewSection}>
             <SelectTrigger className="h-9 w-full sm:w-56">
               <SelectValue placeholder="Bölüm seç" />

@@ -3,9 +3,11 @@ import { describe, expect, it } from "vitest";
 import {
   calculateWorkshopProgress,
   collectWorkshopSections,
+  collectWorkshopSessions,
   filterWorkshopItems,
   groupWorkshopItems,
   isWorkshopItemComplete,
+  latestWorkshopSession,
   partitionWorkshopItems,
   validateWorkshopItemDraft,
   type WorkshopItem,
@@ -15,6 +17,7 @@ function item(overrides: Partial<WorkshopItem> = {}): WorkshopItem {
   return {
     id: `id-${overrides.itemNo ?? 1}`,
     workshopKey: "cadde",
+    sessionKey: "WS1",
     section: "Akış",
     itemNo: 1,
     title: "Madde",
@@ -80,6 +83,19 @@ describe("groupWorkshopItems", () => {
     expect(groups[1].items.map((entry) => entry.itemNo)).toEqual([4, 5]);
   });
 
+  it("ayni adli bolumu iki oturumda birlestirmez", () => {
+    const groups = groupWorkshopItems([
+      item({ itemNo: 47, sessionKey: "WS1", section: "Süreç" }),
+      item({ itemNo: 120, sessionKey: "WS2", section: "Süreç" }),
+      item({ itemNo: 48, sessionKey: "WS1", section: "Süreç" }),
+    ]);
+
+    expect(groups).toHaveLength(2);
+    expect(groups.map((group) => group.sessionKey)).toEqual(["WS1", "WS2"]);
+    expect(groups[0].items.map((entry) => entry.itemNo)).toEqual([47, 48]);
+    expect(groups[1].items.map((entry) => entry.itemNo)).toEqual([120]);
+  });
+
   it("bölümsüz maddeleri tek boş grupta toplar", () => {
     const groups = groupWorkshopItems([
       item({ itemNo: 1, section: "" }),
@@ -115,6 +131,21 @@ describe("filterWorkshopItems", () => {
   it("bölüm adında da arar", () => {
     expect(filterWorkshopItems(items, { search: "erişim" }).map((entry) => entry.itemNo)).toEqual([3]);
   });
+
+  it("oturum filtresi uygular ve diger filtrelerle birlesir", () => {
+    const mixed = [
+      item({ itemNo: 1, sessionKey: "WS1", ubtDone: true, burakDone: true }),
+      item({ itemNo: 2, sessionKey: "WS1" }),
+      item({ itemNo: 49, sessionKey: "WS2" }),
+      item({ itemNo: 50, sessionKey: "WS2", ubtDone: true, burakDone: true }),
+    ];
+
+    expect(filterWorkshopItems(mixed, { session: "WS2" }).map((entry) => entry.itemNo)).toEqual([49, 50]);
+    expect(filterWorkshopItems(mixed, { session: "all" })).toHaveLength(4);
+    expect(
+      filterWorkshopItems(mixed, { session: "WS2", status: "open" }).map((entry) => entry.itemNo),
+    ).toEqual([49]);
+  });
 });
 
 describe("partitionWorkshopItems", () => {
@@ -136,6 +167,25 @@ describe("partitionWorkshopItems", () => {
   });
 });
 
+describe("collectWorkshopSessions", () => {
+  it("oturumlari sayisal sirayla dizer (WS10 > WS9)", () => {
+    const sessions = collectWorkshopSessions([
+      item({ itemNo: 1, sessionKey: "WS2" }),
+      item({ itemNo: 2, sessionKey: "WS10" }),
+      item({ itemNo: 3, sessionKey: "WS1" }),
+      item({ itemNo: 4, sessionKey: "WS9" }),
+      item({ itemNo: 5, sessionKey: "WS2" }),
+    ]);
+
+    expect(sessions).toEqual(["WS1", "WS2", "WS9", "WS10"]);
+  });
+
+  it("en son oturumu doner, bos listede WS1'e duser", () => {
+    expect(latestWorkshopSession([item({ sessionKey: "WS1" }), item({ sessionKey: "WS2" })])).toBe("WS2");
+    expect(latestWorkshopSession([])).toBe("WS1");
+  });
+});
+
 describe("collectWorkshopSections", () => {
   it("tekilleştirir, boşları atar ve Türkçe sıralar", () => {
     const sections = collectWorkshopSections([
@@ -151,18 +201,30 @@ describe("collectWorkshopSections", () => {
 
 describe("validateWorkshopItemDraft", () => {
   it("geçerli maddede null döner", () => {
-    expect(validateWorkshopItemDraft({ section: "Akış", title: "Filtre açıklaması eklenecek" })).toBeNull();
+    expect(
+      validateWorkshopItemDraft({
+        sessionKey: "WS2",
+        section: "Akış",
+        title: "Filtre açıklaması eklenecek",
+      }),
+    ).toBeNull();
   });
 
   it("boş madde metnini reddeder", () => {
-    expect(validateWorkshopItemDraft({ section: "Akış", title: "   " })).toBe(
+    expect(validateWorkshopItemDraft({ sessionKey: "WS1", section: "Akış", title: "   " })).toBe(
       "Madde metni boş bırakılamaz.",
     );
   });
 
-  it("çok uzun bölüm adını reddeder", () => {
-    expect(validateWorkshopItemDraft({ section: "a".repeat(121), title: "Madde" })).toBe(
-      "Bölüm adı en fazla 120 karakter olabilir.",
+  it("gecersiz oturum etiketini reddeder", () => {
+    expect(validateWorkshopItemDraft({ sessionKey: "ikinci", section: "Akış", title: "Madde" })).toBe(
+      "Workshop oturumu WS1, WS2 gibi olmalı.",
     );
+  });
+
+  it("çok uzun bölüm adını reddeder", () => {
+    expect(
+      validateWorkshopItemDraft({ sessionKey: "WS1", section: "a".repeat(121), title: "Madde" }),
+    ).toBe("Bölüm adı en fazla 120 karakter olabilir.");
   });
 });
