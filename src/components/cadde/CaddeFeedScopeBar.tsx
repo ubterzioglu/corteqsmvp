@@ -4,9 +4,14 @@
 // İPTAL — kaldırıldı (RPC scope parametresi tip olarak durur, UI'dan seçilemez).
 // Workshop m14: kalan çiplere ne işe yaradığını anlatan kısa açıklama — title/tooltip +
 // aktif kapsamın açıklaması barın altında satır olarak.
-// "Etkinlikler" m14'ün koru listesinde açıkça sayıldığı için DURUR (eski etkinlik
-// paylaşımlarını süzer; Faz 2 cafe etkinlikleri de buraya dönecek).
 // "Yakınımda" Faz 2'ye kadar "Yakında" rozetiyle devre dışı (geo koordinat bekliyor).
+//
+// 2026-08-04 (kullanıcı kararı): "Etkinlikler" çipi KALDIRILDI — m14'ün koru listesinde
+// olmasına rağmen. Gerekçe: composer'daki Etkinlik çipi m6'da kalkınca kullanıcı artık
+// etkinlik tipi post ÜRETEMİYOR; üretilemeyen bir tipi süzen filtre, hemen üstündeki sade
+// paylaşım kutusuyla çelişip gereksiz karmaşa yaratıyordu. m15 deseni izlendi: 'events'
+// CaddeFeedScope tipinde ve RPC parametresinde DURUR, yalnız UI'dan seçilemez.
+// Faz 2'de cafe etkinlikleri gelirse çip tek satırla geri açılır.
 
 import { X } from "lucide-react";
 
@@ -26,7 +31,6 @@ const SCOPES: readonly ScopeOption[] = [
   { key: "all", label: "Tümü", description: "Filtrene uyan bütün paylaşımlar." },
   { key: "city", label: "Şehrim", description: "Yalnız senin şehrinden paylaşımlar." },
   { key: "country", label: "Ülkem", description: "Yalnız yaşadığın ülkeden paylaşımlar." },
-  { key: "events", label: "Etkinlikler", description: "Yalnız etkinlik paylaşımları." },
   { key: "cafes", label: "Cafelerim", description: "Üyesi olduğun cafe'lerin paylaşımları." },
   {
     key: "nearby",

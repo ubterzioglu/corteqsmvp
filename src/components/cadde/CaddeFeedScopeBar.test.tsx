@@ -18,9 +18,23 @@ describe("CaddeFeedScopeBar", () => {
     renderBar();
     expect(screen.queryByText("Takip Ettiklerim")).not.toBeInTheDocument();
     expect(screen.queryByText("İş Fırsatları")).not.toBeInTheDocument();
-    // m14 koru listesi: Etkinlikler durur; Yakınımda "Yakında" rozetiyle devre dışı durur.
-    expect(screen.getByRole("button", { name: /Etkinlikler/ })).toBeEnabled();
+    // Yakınımda "Yakında" rozetiyle devre dışı durur (Faz 2, geo koordinat bekliyor).
     expect(screen.getByRole("button", { name: /Yakınımda/ })).toBeDisabled();
+  });
+
+  it("2026-08-04: Etkinlikler çipi kaldırıldı — composer etkinlik postu üretemiyor", () => {
+    renderBar();
+    expect(screen.queryByRole("button", { name: /Etkinlikler/ })).not.toBeInTheDocument();
+    expect(screen.queryByText("Etkinlikler")).not.toBeInTheDocument();
+  });
+
+  it("eski ?akis=events bağlantısı çökmez: açıklama satırı boş kalır, çipler seçilebilir durur", () => {
+    // 'events' CaddeFeedScope tipinde ve parseCaddeFilters'ta DURUYOR (m15 deseni), bu yüzden
+    // kayıtlı bir bağlantı hâlâ bu kapsamla gelebilir. Bar aktif çip göstermez ama kilitlenmez.
+    const { onScopeChange } = renderBar("events");
+    expect(screen.getByTestId("cadde-scope-description")).toHaveTextContent("");
+    fireEvent.click(screen.getByRole("button", { name: "Tümü" }));
+    expect(onScopeChange).toHaveBeenCalledWith("all");
   });
 
   it("m14: her çip title açıklaması taşır, aktif kapsamın açıklaması bar altında görünür", () => {
