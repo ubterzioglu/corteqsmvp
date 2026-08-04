@@ -2,7 +2,34 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-import CaddeWorldClocks, { MAX_CLOCKS, clockHandAngles, timePartsInTimezone } from "@/components/cadde/CaddeWorldClocks";
+import CaddeWorldClocks, {
+  MAX_CLOCKS,
+  clockHandAngles,
+  resolveViewerLabel,
+  timePartsInTimezone,
+} from "@/components/cadde/CaddeWorldClocks";
+
+describe("resolveViewerLabel", () => {
+  const cities = new Map([
+    ["Antalya", "Europe/Istanbul"],
+    ["Berlin", "Europe/Berlin"],
+  ]);
+
+  it("profil şehrinin dilimi tarayıcıyla örtüşüyorsa şehir adını korur", () => {
+    expect(resolveViewerLabel("Antalya", "Europe/Istanbul", cities)).toBe("Antalya");
+  });
+
+  it("örtüşmüyorsa dilimden türetir — Antalya profili + Almanya tarayıcısı 'Berlin' yazar", () => {
+    // Kadran her zaman tarayıcı dilimini çiziyor; etiket profil şehrinde kalırsa saat yalan söyler.
+    expect(resolveViewerLabel("Antalya", "Europe/Berlin", cities)).toBe("Berlin");
+  });
+
+  it("şehir katalogda yoksa veya boşsa dilimden türetir, İstanbul Türkçe yazılır", () => {
+    expect(resolveViewerLabel("Bilinmeyen", "Europe/Berlin", cities)).toBe("Berlin");
+    expect(resolveViewerLabel(null, "Europe/Istanbul", cities)).toBe("İstanbul");
+    expect(resolveViewerLabel(null, "America/New_York", cities)).toBe("New York");
+  });
+});
 
 describe("clockHandAngles", () => {
   it("tam saatte akrep saat×30°, yelkovan 0°", () => {
@@ -39,7 +66,9 @@ describe("CaddeWorldClocks render", () => {
     expect(strip).toBeInTheDocument();
     expect(MAX_CLOCKS).toBe(5);
     expect(container.querySelectorAll("svg")).toHaveLength(MAX_CLOCKS);
-    expect(screen.getByText("İstanbul")).toBeInTheDocument();
+    // Plaka büyük harf — trUpper: "İstanbul" → "İSTANBUL" (bare toUpperCase "ISTANBUL" verirdi).
+    expect(screen.getByText("İSTANBUL")).toBeInTheDocument();
+    expect(screen.queryByText("ISTANBUL")).not.toBeInTheDocument();
     // m1: gün-evresi ikonları kalktı — lucide ikonların class imzası bulunmamalı.
     expect(container.querySelector(".lucide")).toBeNull();
     // Erişilebilirlik: her kadranın yanında okunabilir dijital saat (sr-only).
@@ -52,6 +81,22 @@ describe("CaddeWorldClocks render", () => {
     );
     const firstFace = container.querySelector("svg");
     expect(firstFace?.querySelectorAll("line")).toHaveLength(6);
+  });
+
+  it("aynı şehir iki kez yazılmaz — viewer dilimi fallback'lerden biriyle çakışsa bile", () => {
+    // Tarayıcı dilimi test ortamına göre değişir; bu yüzden dilime bağlı olmayan değişmez
+    // kontrol ediliyor: hangi dilim gelirse gelsin şeritte tekrar eden plaka olmamalı.
+    const { container } = render(
+      <CaddeWorldClocks
+        viewerCity="Antalya"
+        filterCity={null}
+        cities={[{ name: "Antalya", timezone: "Europe/Istanbul" } as never]}
+      />,
+    );
+    const labels = Array.from(container.querySelectorAll("[data-testid='cadde-world-clocks'] > div > span:first-of-type"))
+      .map((node) => node.textContent?.trim() ?? "");
+    expect(labels).toHaveLength(MAX_CLOCKS);
+    expect(new Set(labels).size).toBe(MAX_CLOCKS);
   });
 
   it("şerit mobilde gizli, md'den itibaren görünür", () => {

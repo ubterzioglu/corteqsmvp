@@ -12,9 +12,13 @@
 // kaldı (8 ara tik silindi) ve renk amber'dan nötr slate'e çekildi — 60px'te ara tikler
 // gri bir halkaya dönüşüp ibreleri okunmaz yapıyordu. Şerit `hidden md:flex`: 5 kadran dar
 // ekranda başlık satırını taşırıyor, mobilde bilinçli olarak gizli.
+// Premium geçiş (aynı gün): çift halka gövde + gölge + iki tonlu merkez pimi, etiket
+// havaalanı panosu plakasına döndü (aralıklı büyük harf, trUpper ile Türkçe-güvenli),
+// viewer nabız animasyonu sabit noktaya indi.
 
 import { useEffect, useMemo, useState } from "react";
 
+import { trUpper } from "@/lib/text-normalization";
 import type { CaddeCity } from "@/lib/cadde-types";
 
 const ISTANBUL_TIMEZONE = "Europe/Istanbul";
@@ -76,46 +80,89 @@ const resolveLocalTimezone = (): string => {
   }
 };
 
+/** IANA son parçası Türkçe/okunur ada oturmayan dilimler. */
+const TIMEZONE_LABEL_OVERRIDES: Record<string, string> = {
+  "Europe/Istanbul": "İstanbul",
+};
+
 const timezoneToCityLabel = (timezone: string): string => {
+  const override = TIMEZONE_LABEL_OVERRIDES[timezone];
+  if (override) return override;
   const segment = timezone.split("/").pop() ?? timezone;
   return segment.replace(/_/g, " ");
 };
 
 /**
+ * "Senin saatin" kadranının etiketi — GÖSTERİLEN dilimle uyuşmak zorunda.
+ *
+ * Kadran her zaman TARAYICI dilimini çizer (nerede olduğun), etiket ise profil şehrinden
+ * geliyordu: profilinde Antalya yazan ama Almanya'dan giren kullanıcıda kadran Berlin
+ * saatini "Antalya" etiketiyle gösteriyordu — üstelik viewer dilimi Europe/Berlin olduğu
+ * için fallback Berlin dedupe'a takılıp şeritten düşüyordu. Profil şehrinin dilimi
+ * tarayıcıyla ÖRTÜŞMEDİKÇE etiket dilimden türetilir.
+ */
+export const resolveViewerLabel = (
+  viewerCity: string | null,
+  localTimezone: string,
+  timezoneByCityName: ReadonlyMap<string, string>,
+): string => {
+  const city = viewerCity?.trim();
+  if (city && timezoneByCityName.get(city) === localTimezone) return city;
+  return timezoneToCityLabel(localTimezone);
+};
+
+/**
  * Gece/gündüz tonu — kadran yüzeyine "şu an orada hayat var mı" hissi verir (m1: ikon yok).
  * Nötr paletle kalır: renk gündüz/gece ayrımını taşır, dikkat çekme işini değil.
+ * `bezel` gövde/çerçeve, `face` kadran yüzeyi, `hand` ibre+tik.
  */
-const dayPartTone = (hour: number): { face: string; hand: string } =>
+const dayPartTone = (hour: number): { bezel: string; face: string; hand: string } =>
   hour >= 7 && hour < 20
-    ? { face: "fill-white stroke-slate-300", hand: "stroke-slate-900" }
-    : { face: "fill-slate-900 stroke-slate-700", hand: "stroke-slate-100" };
+    ? { bezel: "fill-slate-200", face: "fill-white", hand: "stroke-slate-900" }
+    : { bezel: "fill-slate-700", face: "fill-slate-900", hand: "stroke-slate-100" };
 
-/** Otel/havaalanı tarzı analog kadran (m1). Yalnız 12/3/6/9 tikleri, ibreler dakika hassas. */
+/**
+ * Otel/havaalanı tarzı analog kadran (m1) — premium geçiş 2026-08-04.
+ *
+ * Derinlik SVG gradyanıyla değil, iki halkayla kuruluyor (dış gövde + iç kadran): şeritte 5
+ * kadran var, `<defs>` gradyanı 5 kez aynı id'yi DOM'a basardı. Gölge CSS drop-shadow —
+ * kadranın yüzeye oturmasını sağlar. Merkez pimi iki tonlu (koyu disk + kadran renginde
+ * nokta): gerçek saatlerdeki pim detayı, "çizilmiş" değil "yapılmış" hissini veren şey.
+ * Tik sayısı 4'te KALIR — çerçeve+pim eklenirken ara tikleri geri getirmek kalabalık yapar.
+ */
 const AnalogClockFace = ({ hour, minute, tone }: { hour: number; minute: number; tone: ReturnType<typeof dayPartTone> }) => {
   const { hourDeg, minuteDeg } = clockHandAngles(hour, minute);
+  const handFill = tone.hand.replace("stroke-", "fill-");
   // Sadece 4 çeyrek tik: 60px'te 12 tik gri bir halka gibi görünüp ibrelerin okunmasını zorlaştırıyordu.
   const ticks = [0, 90, 180, 270].map((deg) => (
     <line
       key={deg}
       x1={20}
-      y1={4.5}
+      y1={5.6}
       x2={20}
-      y2={8}
-      strokeWidth={1.8}
+      y2={8.6}
+      strokeWidth={1.6}
       strokeLinecap="round"
       className={tone.hand}
-      opacity={0.55}
+      opacity={0.5}
       transform={`rotate(${deg} 20 20)`}
     />
   ));
 
   return (
-    <svg viewBox="0 0 40 40" className="h-[3.75rem] w-[3.75rem] shrink-0" aria-hidden focusable="false">
-      <circle cx={20} cy={20} r={17} strokeWidth={1.5} className={tone.face} />
+    <svg
+      viewBox="0 0 40 40"
+      className="h-[3.75rem] w-[3.75rem] shrink-0 drop-shadow-[0_1px_2px_rgb(15_23_42_/_0.15)]"
+      aria-hidden
+      focusable="false"
+    >
+      <circle cx={20} cy={20} r={19} className={tone.bezel} stroke="none" />
+      <circle cx={20} cy={20} r={17} className={tone.face} stroke="none" />
       {ticks}
-      <line x1={20} y1={20} x2={20} y2={12} strokeWidth={3} strokeLinecap="round" className={tone.hand} transform={`rotate(${hourDeg} 20 20)`} />
-      <line x1={20} y1={20} x2={20} y2={7} strokeWidth={2} strokeLinecap="round" className={tone.hand} transform={`rotate(${minuteDeg} 20 20)`} />
-      <circle cx={20} cy={20} r={1.8} className={`${tone.hand.replace("stroke-", "fill-")}`} stroke="none" />
+      <line x1={20} y1={20} x2={20} y2={13} strokeWidth={2.8} strokeLinecap="round" className={tone.hand} transform={`rotate(${hourDeg} 20 20)`} />
+      <line x1={20} y1={20} x2={20} y2={7.6} strokeWidth={1.9} strokeLinecap="round" className={tone.hand} transform={`rotate(${minuteDeg} 20 20)`} />
+      <circle cx={20} cy={20} r={1.9} className={handFill} stroke="none" />
+      <circle cx={20} cy={20} r={0.75} className={tone.face} stroke="none" />
     </svg>
   );
 };
@@ -160,7 +207,7 @@ const CaddeWorldClocks = ({ viewerCity, filterCity, cities }: CaddeWorldClocksPr
 
     const candidates: ClockEntry[] = [
       {
-        label: viewerCity?.trim() || timezoneToCityLabel(localTimezone),
+        label: resolveViewerLabel(viewerCity, localTimezone, timezoneByCityName),
         timezone: localTimezone,
         isViewer: true,
       },
@@ -202,13 +249,13 @@ const CaddeWorldClocks = ({ viewerCity, filterCity, cities }: CaddeWorldClocksPr
             title={`${clock.isViewer ? "Senin saatin" : clock.label} · ${timeFormatter(clock.timezone).format(now)}`}
           >
             <AnalogClockFace hour={hour} minute={minute} tone={tone} />
-            <span className="flex items-center gap-1 text-[13px] font-medium leading-none text-slate-700">
-              {clock.label}
+            {/* Havaalanı panosu plakası: aralıklı büyük harf. trUpper ZORUNLU — bare
+                toUpperCase() "İstanbul"u "ISTANBUL" yapar (Türkçe i/İ kuralı). */}
+            <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase leading-none tracking-[0.12em] text-slate-600">
+              {trUpper(clock.label)}
               {clock.isViewer ? (
-                <span className="relative flex h-1.5 w-1.5" aria-label="Senin saatin">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                </span>
+                // Nabız animasyonu kaldırıldı: kadranlar zaten canlı, sabit nokta daha sakin.
+                <span className="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" aria-label="Senin saatin" />
               ) : null}
             </span>
             {/* Erişilebilirlik + testler: dijital saat görünmez ama okunur kalır. */}
