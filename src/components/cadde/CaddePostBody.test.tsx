@@ -45,4 +45,37 @@ describe("CaddePostBody", () => {
     renderBody("sade bir paylaşım");
     expect(screen.getByTestId("cadde-post-body")).toHaveTextContent("sade bir paylaşım");
   });
+
+  // m60 — bağlantılar hiçbir Cadde yüzeyinde tıklanabilir değildi.
+  describe("bağlantı linkleştirme (m60)", () => {
+    it("http(s) adresini yeni sekmede açılan güvenli bir bağlantıya çevirir", () => {
+      renderBody("Detaylar https://corteqs.net/cadde adresinde");
+
+      const link = screen.getByRole("link", { name: "https://corteqs.net/cadde" });
+      expect(link).toHaveAttribute("href", "https://corteqs.net/cadde");
+      expect(link).toHaveAttribute("target", "_blank");
+      // Sekme ele geçirme (tabnabbing) koruması.
+      expect(link).toHaveAttribute("rel", expect.stringContaining("noopener"));
+    });
+
+    it("adresin sonundaki noktalamayı bağlantıya dahil etmez", () => {
+      renderBody("Bak: https://corteqs.net/cadde.");
+
+      expect(screen.getByRole("link", { name: "https://corteqs.net/cadde" })).toBeInTheDocument();
+      expect(screen.getByTestId("cadde-post-body")).toHaveTextContent("Bak: https://corteqs.net/cadde.");
+    });
+
+    it("javascript: gibi şemaları linkleştirmez", () => {
+      renderBody("javascript:alert(1) yazsam ne olur");
+
+      expect(screen.queryAllByRole("link")).toHaveLength(0);
+    });
+
+    it("aynı gövdede hashtag, mention ve bağlantı birlikte çalışır", () => {
+      renderBody("#berlin için https://corteqs.net rehberi");
+
+      expect(screen.getByRole("link", { name: "#berlin" })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: "https://corteqs.net" })).toBeInTheDocument();
+    });
+  });
 });

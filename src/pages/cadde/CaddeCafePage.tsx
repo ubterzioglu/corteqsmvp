@@ -7,10 +7,14 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-import { Archive, Clock3, KeyRound, MapPin, MessageCircle, ShieldQuestion, Users } from "lucide-react";
+import { Archive, Clock3, KeyRound, MapPin, ShieldQuestion, Users } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
+import CaddeComposer from "@/components/cadde/CaddeComposer";
+import CaddeMediaGallery from "@/components/cadde/CaddeMediaGallery";
+import CaddePostBody from "@/components/cadde/CaddePostBody";
+import CaddePostComments from "@/components/cadde/CaddePostComments";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,6 +33,7 @@ import {
   listCaddeCafeMembers,
 } from "@/lib/cadde-api";
 import { listCaddeCafeThemes } from "@/lib/cadde-cafe-api";
+import { emptyCaddeComposer } from "@/lib/cadde-composer";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 
 const formatDateTime = (value: string) =>
@@ -47,7 +52,7 @@ const CaddeCafePage = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [postBody, setPostBody] = useState("");
+  const [composer, setComposer] = useState(emptyCaddeComposer);
   const [joinAnswer, setJoinAnswer] = useState("");
   const [referralCode, setReferralCode] = useState("");
 
@@ -109,11 +114,21 @@ const CaddeCafePage = () => {
 
   const postMutation = useMutation({
     mutationFn: async () => {
-      if (!postBody.trim()) throw new Error("Paylaşım metni zorunlu.");
-      await createCaddePost({ type: "text", body: postBody, isBridge: false, cafeId });
+      // m59: metin boş olsa da yalnız görselle paylaşıma izin verilir (ana akışla aynı kural).
+      if (!composer.body.trim() && composer.media.length === 0) {
+        throw new Error("Paylaşım metni veya en az bir görsel zorunlu.");
+      }
+      await createCaddePost({
+        type: "text",
+        body: composer.body,
+        isBridge: false,
+        cafeId,
+        media: composer.media,
+        mentions: composer.mentions,
+      });
     },
     onSuccess: async () => {
-      setPostBody("");
+      setComposer(emptyCaddeComposer);
       await invalidateCafe();
       toast({ title: "Paylaşım cafe'ye eklendi" });
     },
@@ -274,14 +289,19 @@ const CaddeCafePage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* m59+m60+m61: kafe paylaşım kutusu artık ana akışla AYNI composer.
+                Görsel/video yükleme, emoji seçici ve mention tek kaynaktan gelir;
+                konum çipi kafe varyantında çizilmez (post zaten bu odaya gider). */}
             {!isReadOnly && isApprovedMember ? (
               <div className="space-y-2">
-                <Textarea value={postBody} onChange={(event) => setPostBody(event.target.value)} placeholder="Cafe'de paylaş..." rows={3} />
-                <div className="flex justify-end">
-                  <Button onClick={() => postMutation.mutate()} disabled={postMutation.isPending}>
-                    {postMutation.isPending ? "Gönderiliyor..." : "Paylaş"}
-                  </Button>
-                </div>
+                <CaddeComposer
+                  variant="cafe"
+                  value={composer}
+                  onChange={setComposer}
+                  onSubmit={() => postMutation.mutate()}
+                  isSubmitting={postMutation.isPending}
+                  onError={(message) => toast({ title: message, variant: "destructive" })}
+                />
                 <Separator />
               </div>
             ) : null}
@@ -292,11 +312,25 @@ const CaddeCafePage = () => {
                   <p className="text-sm font-semibold text-slate-900">{post.authorName}</p>
                   <span className="text-xs text-slate-500">{formatDateTime(post.createdAt)}</span>
                 </div>
-                <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">{post.body}</p>
-                <div className="mt-2 inline-flex items-center gap-1.5 text-xs text-slate-500">
-                  <MessageCircle className="h-3.5 w-3.5" />
-                  {post.commentCount} yorum
+                {/* m60: gövde düz <p> değil CaddePostBody — bağlantılar, #etiketler ve
+                    @bahsetmeler ana akıştaki gibi tıklanabilir çizilir. */}
+                <div className="mt-2 text-sm leading-6 text-slate-700">
+                  <CaddePostBody body={post.body} mentions={post.mentions ?? []} />
                 </div>
+                {/* m59: yüklenen görseller kafe akışında da gömülü görünür. */}
+                {post.media && post.media.length > 0 ? (
+                  <div className="mt-3">
+                    <CaddeMediaGallery media={post.media} contextLabel={post.authorName} />
+                  </div>
+                ) : null}
+                {/* m57: kafe paylaşımlarına yorum. Arşiv/read-only odada ve üye
+                    olmayanlarda yalnız okuma. */}
+                <CaddePostComments
+                  postId={post.id}
+                  commentCount={post.commentCount}
+                  canComment={!isReadOnly && isApprovedMember}
+                  onCommentAdded={invalidateCafe}
+                />
               </div>
             ))}
 

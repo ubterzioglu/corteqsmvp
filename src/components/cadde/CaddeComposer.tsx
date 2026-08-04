@@ -31,16 +31,25 @@ import type { CaddeCity, CaddeCountry, CaddeMediaAsset } from "@/lib/cadde-types
 
 const PLACEHOLDER = "Ne düşünüyorsun? Şehrindeki bir haberi, deneyimini veya sorunu paylaş…";
 
+const CAFE_PLACEHOLDER = "Bu odada bir şey paylaş…";
+
 export interface CaddeComposerProps {
   value: CaddeComposerValue;
   onChange: (next: CaddeComposerValue) => void;
   onSubmit: () => void;
   isSubmitting: boolean;
-  countries: readonly CaddeCountry[];
-  cities: readonly CaddeCity[];
+  countries?: readonly CaddeCountry[];
+  cities?: readonly CaddeCity[];
   /** Hedef boş bırakılınca kullanılacak kayıtlı profil konumu etiketi. */
-  defaultLocationLabel: string;
+  defaultLocationLabel?: string;
   onError: (message: string) => void;
+  /**
+   * m59+m60+m61: kafe içi paylaşım kutusu da aynı composer'dır — medya, emoji ve
+   * mention desteği böylece tek yerden gelir. Tek fark konum: kafe postu zaten
+   * odaya gider, ülke/şehir hedefi anlamsızdır; "cafe" varyantında konum çipi ve
+   * paneli hiç çizilmez.
+   */
+  variant?: "feed" | "cafe";
 }
 
 const CaddeComposer = ({
@@ -48,11 +57,13 @@ const CaddeComposer = ({
   onChange,
   onSubmit,
   isSubmitting,
-  countries,
-  cities,
-  defaultLocationLabel,
+  countries = [],
+  cities = [],
+  defaultLocationLabel = "",
   onError,
+  variant = "feed",
 }: CaddeComposerProps) => {
+  const showLocation = variant === "feed";
   const [locationOpen, setLocationOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [bodySelection, setBodySelection] = useState<TextSelection>({ start: value.body.length, end: value.body.length });
@@ -142,7 +153,7 @@ const CaddeComposer = ({
                 : [...value.mentions, mention],
             })
           }
-          placeholder={PLACEHOLDER}
+          placeholder={showLocation ? PLACEHOLDER : CAFE_PLACEHOLDER}
           rows={3}
           maxLength={4000}
           ariaLabel="Paylaşım metni"
@@ -171,12 +182,14 @@ const CaddeComposer = ({
 
           <AttachmentChip icon={ImagePlus} label="Fotoğraf" onClick={() => imageInputRef.current?.click()} disabled={uploading} />
           <AttachmentChip icon={Video} label="Video" onClick={() => videoInputRef.current?.click()} disabled={uploading} />
-          <AttachmentChip
-            icon={MapPin}
-            label="Konum"
-            active={locationOpen || Boolean(value.country)}
-            onClick={() => setLocationOpen((open) => !open)}
-          />
+          {showLocation ? (
+            <AttachmentChip
+              icon={MapPin}
+              label="Konum"
+              active={locationOpen || Boolean(value.country)}
+              onClick={() => setLocationOpen((open) => !open)}
+            />
+          ) : null}
           <CaddeEmojiPickerButton onSelect={insertEmoji} disabled={isSubmitting || uploading} />
 
           {/* m63: yükleme sırasında TÜM ek çipleri ve Paylaş butonu pasifleşiyordu ama
@@ -208,7 +221,7 @@ const CaddeComposer = ({
           </div>
         </div>
 
-        {locationOpen ? (
+        {showLocation && locationOpen ? (
           <div className="space-y-3 rounded-2xl bg-slate-50 p-3">
             {/* m86+m87: konum seçiminin NE İŞE YARADIĞI burada söyleniyor. Kullanıcı
                 bunu "nerede yaşıyorum" sanıyordu; oysa paylaşımın hangi ülke akışına

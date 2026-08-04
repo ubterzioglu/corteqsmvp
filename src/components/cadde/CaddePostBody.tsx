@@ -27,6 +27,44 @@ const mentionHref = (mention: CaddePostMention): string | null => {
   }
 };
 
+// m60 — "kafe paylaşımlarına bağlantı ekleyebilmesi".
+//
+// Bağlantılar hiçbir Cadde yüzeyinde tıklanabilir DEĞİLDİ (kafe akışı da, ana akış da
+// düz metin basıyordu). Linkleştirme bilinçli olarak BURADA, yalnız düz metin
+// parçalarında yapılır — splitCaddeBody'ye dokunulmaz, çünkü onun hashtag ayrıştırması
+// SQL tarafıyla ayna sözleşmesidir.
+//
+// Güvenlik: yalnız http/https kabul edilir (javascript: gibi şemalar eşleşmez),
+// dış bağlantılar target=_blank + rel="noreferrer noopener" ile açılır.
+const URL_PATTERN = /(https?:\/\/[^\s<]+)/g;
+
+/** Adresin sonuna yapışan noktalama link'e dahil edilmez ("...cadde." → "...cadde"). */
+const trimTrailingPunctuation = (url: string): string => url.replace(/[.,:;!?'")\]}]+$/, "");
+
+type TextPiece = { kind: "text" | "url"; value: string };
+
+// Dışa AÇILMADI: react-refresh kuralı bileşen dosyasından sabit/fonksiyon ihracını
+// uyarıyor. Davranış bileşen üzerinden test edilir (CaddePostBody.test.tsx).
+const splitTextAndUrls = (text: string): TextPiece[] => {
+  const pieces: TextPiece[] = [];
+  let lastIndex = 0;
+
+  for (const match of text.matchAll(URL_PATTERN)) {
+    const raw = match[0];
+    const url = trimTrailingPunctuation(raw);
+    const start = match.index ?? 0;
+
+    if (start > lastIndex) pieces.push({ kind: "text", value: text.slice(lastIndex, start) });
+    pieces.push({ kind: "url", value: url });
+    // Kırpılan noktalama metin olarak geri döner.
+    if (raw.length > url.length) pieces.push({ kind: "text", value: raw.slice(url.length) });
+    lastIndex = start + raw.length;
+  }
+
+  if (lastIndex < text.length) pieces.push({ kind: "text", value: text.slice(lastIndex) });
+  return pieces;
+};
+
 export interface CaddePostBodyProps {
   body: string;
   mentions?: readonly CaddePostMention[];
@@ -77,7 +115,26 @@ const CaddePostBody = ({ body, mentions = [] }: CaddePostBodyProps) => {
           );
         }
 
-        return <span key={`t-${index}`}>{segment.value}</span>;
+        // m60: düz metin parçasındaki adresler tıklanabilir hale gelir.
+        return (
+          <span key={`t-${index}`}>
+            {splitTextAndUrls(segment.value).map((piece, pieceIndex) =>
+              piece.kind === "url" ? (
+                <a
+                  key={`u-${index}-${pieceIndex}`}
+                  href={piece.value}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="font-medium text-sky-700 underline-offset-2 hover:underline"
+                >
+                  {piece.value}
+                </a>
+              ) : (
+                <span key={`p-${index}-${pieceIndex}`}>{piece.value}</span>
+              ),
+            )}
+          </span>
+        );
       })}
     </p>
   );

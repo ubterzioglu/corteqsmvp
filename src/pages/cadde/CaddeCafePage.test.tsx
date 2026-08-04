@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -10,6 +11,8 @@ const useAuthMock = vi.fn();
 const getCaddeCafeMock = vi.fn();
 const listCafeFeedMock = vi.fn();
 const listCafeMembersMock = vi.fn();
+const listPostCommentsMock = vi.fn();
+const createCommentMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
@@ -26,8 +29,12 @@ vi.mock("@/lib/cadde-api", async () => {
     getCaddeCafe: (...args: unknown[]) => getCaddeCafeMock(...args),
     listCaddeCafeFeed: (...args: unknown[]) => listCafeFeedMock(...args),
     listCaddeCafeMembers: (...args: unknown[]) => listCafeMembersMock(...args),
+    listCaddePostComments: (...args: unknown[]) => listPostCommentsMock(...args),
+    createCaddeComment: (...args: unknown[]) => createCommentMock(...args),
   };
 });
+
+vi.mock("@/lib/cadde-cafe-api", () => ({ listCaddeCafeThemes: vi.fn().mockResolvedValue([]) }));
 
 const makeCafe = (overrides: Partial<CaddeCafe> = {}): CaddeCafe => ({
   id: "cafe-1",
@@ -74,6 +81,7 @@ describe("CaddeCafePage", () => {
     useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
     listCafeFeedMock.mockResolvedValue([]);
     listCafeMembersMock.mockResolvedValue([]);
+    listPostCommentsMock.mockResolvedValue({ items: [], nextCursor: null });
   });
 
   it("renders the cafe header with entry question for approval mode", async () => {
@@ -94,7 +102,7 @@ describe("CaddeCafePage", () => {
 
     expect(await screen.findByText(/Arşiv \(read-only\)/)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Katıl/i })).not.toBeInTheDocument();
-    expect(screen.queryByPlaceholderText(/Cafe'de paylaş/)).not.toBeInTheDocument();
+    expect(screen.queryByPlaceholderText(/Bu odada bir şey paylaş/)).not.toBeInTheDocument();
     expect(screen.getByText(/read-only arşiv/)).toBeInTheDocument();
   });
 
@@ -119,5 +127,101 @@ describe("CaddeCafePage", () => {
     renderPage();
 
     expect(await screen.findByText(/Cafe bulunamadı/)).toBeInTheDocument();
+  });
+
+  // WS2 m57/m59/m60/m61 — kafe içi sosyal katman.
+  describe("kafe içi sosyal katman (WS2)", () => {
+    const joinedCafe = () =>
+      makeCafe({ entryMode: "open", viewerMemberStatus: "approved", joinedByViewer: true });
+
+    const post = {
+      id: "cafe-post-1",
+      authorName: "Ayşe",
+      body: "Detaylar https://corteqs.net/cadde adresinde",
+      createdAt: new Date().toISOString(),
+      commentCount: 1,
+      media: [],
+      mentions: [],
+    };
+
+    it("m59+m61: kafe kutusu ana akışla aynı composer — medya ve emoji taşır", async () => {
+      getCaddeCafeMock.mockResolvedValue(joinedCafe());
+
+      renderPage();
+
+      expect(await screen.findByRole("button", { name: "Fotoğraf" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Video" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Emoji ekle" })).toBeInTheDocument();
+    });
+
+    it("kafe varyantında konum çipi çizilmez (post zaten bu odaya gider)", async () => {
+      getCaddeCafeMock.mockResolvedValue(joinedCafe());
+
+      renderPage();
+
+      await screen.findByRole("button", { name: "Fotoğraf" });
+      expect(screen.queryByRole("button", { name: "Konum" })).not.toBeInTheDocument();
+    });
+
+    it("m60: gövdedeki bağlantı tıklanabilir çizilir (düz metin değil)", async () => {
+      getCaddeCafeMock.mockResolvedValue(joinedCafe());
+      listCafeFeedMock.mockResolvedValue([post]);
+
+      renderPage();
+
+      const link = await screen.findByRole("link", { name: /corteqs\.net\/cadde/i });
+      expect(link.getAttribute("href")).toContain("corteqs.net/cadde");
+    });
+
+    it("m57: yorum paneli açılır, yorumu gösterir ve butonla gönderir", async () => {
+      const user = userEvent.setup();
+      getCaddeCafeMock.mockResolvedValue(joinedCafe());
+      listCafeFeedMock.mockResolvedValue([post]);
+      listPostCommentsMock.mockResolvedValue({
+        items: [{ id: "c1", postId: post.id, userId: "u2", body: "İlk yorum", authorName: "Zeynep", createdAt: new Date().toISOString() }],
+        nextCursor: null,
+      });
+      createCommentMock.mockResolvedValue("new-comment");
+
+      renderPage();
+
+      // m21 deseni: panel kapalıyken yorumlar DB'den HİÇ çekilmez.
+      const toggle = await screen.findByTestId("cadde-post-comments-toggle");
+      expect(listPostCommentsMock).not.toHaveBeenCalled();
+
+      await user.click(toggle);
+      expect(await screen.findByText("İlk yorum")).toBeInTheDocument();
+
+      await user.type(screen.getByPlaceholderText("Yorum yaz"), "Katılıyorum");
+      await user.click(screen.getByRole("button", { name: /Gönder/i }));
+
+      await waitFor(() => expect(createCommentMock).toHaveBeenCalledWith("cafe-post-1", "Katılıyorum"));
+    });
+
+    it("m80+m81 kafede de geçerli: Enter yorumu göndermez", async () => {
+      const user = userEvent.setup();
+      getCaddeCafeMock.mockResolvedValue(joinedCafe());
+      listCafeFeedMock.mockResolvedValue([post]);
+
+      renderPage();
+
+      await user.click(await screen.findByTestId("cadde-post-comments-toggle"));
+      await user.type(await screen.findByPlaceholderText("Yorum yaz"), "satır{Enter}");
+
+      expect(createCommentMock).not.toHaveBeenCalled();
+    });
+
+    it("üye olmayan yorum yazamaz, yalnız okur", async () => {
+      getCaddeCafeMock.mockResolvedValue(makeCafe({ viewerMemberStatus: null, joinedByViewer: false }));
+      listCafeFeedMock.mockResolvedValue([post]);
+
+      const user = userEvent.setup();
+      renderPage();
+
+      await user.click(await screen.findByTestId("cadde-post-comments-toggle"));
+
+      expect(screen.queryByPlaceholderText("Yorum yaz")).not.toBeInTheDocument();
+      expect(screen.getByText(/bu odaya katılmalısın/i)).toBeInTheDocument();
+    });
   });
 });
