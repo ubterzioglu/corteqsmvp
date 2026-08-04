@@ -460,6 +460,9 @@ const CaddePage = () => {
         <div className="mx-auto w-full max-w-7xl px-4 pt-5 lg:px-6">
           <div className="cadde-card flex flex-col gap-4 rounded-[20px] px-4 py-3 sm:px-5">
             <div className="flex flex-wrap items-center gap-3">
+              {/* Bildirim zili kartın en solunda durur, ardından dikey ayraç gelir. */}
+              <NotificationsBell />
+              <Separator orientation="vertical" className="h-8 shrink-0" />
               <Badge className="cadde-chip-brand shrink-0">CorteQS Cadde</Badge>
               <p className="min-w-0 flex-1 truncate text-sm text-slate-600">
                 Şehrindeki Türklerle tanış, sor, paylaş ve fırsatları keşfet.
@@ -470,7 +473,6 @@ const CaddePage = () => {
                   filterCity={filters.cities[0] ?? null}
                   cities={citiesQuery.data ?? []}
                 />
-                <NotificationsBell />
               </div>
             </div>
             <div className="flex flex-wrap items-center justify-between gap-3">

@@ -107,9 +107,12 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="relative z-10 mx-auto mt-4 flex max-w-6xl flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 text-[11px] font-medium tracking-wide text-muted-foreground">
+      {/* Yasal/kurumsal bağlantı şeridi: 13 bağlantı geniş ekranda TEK SATIR kalmalı.
+          xl'de max genişlik kalkar, boşluk daralır ve flex-nowrap devreye girer; xl altında
+          (13 bağlantı yatay olarak sığmaz) sarmaya geri döner — yatay taşma oluşmaz. */}
+      <div className="relative z-10 mx-auto mt-4 flex max-w-6xl flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 text-[11px] font-medium tracking-wide text-muted-foreground xl:max-w-none xl:flex-nowrap xl:gap-x-2">
         {footerFlatLinks.map((link, index) => (
-          <span key={link.label} className="flex items-center gap-x-3">
+          <span key={link.label} className="flex items-center gap-x-3 whitespace-nowrap xl:gap-x-2">
             {index > 0 && <span className="h-3 w-px bg-border" aria-hidden="true" />}
             {link.to ? (
               <Link
