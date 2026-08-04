@@ -32,8 +32,11 @@ const makeState = (overrides: Partial<AdminNotificationState> = {}): AdminNotifi
   isAdmin: true,
   newMemberEnabled: true,
   adminUpdateEnabled: true,
+  memberWelcomeEnabled: false,
+  revisionRequestEnabled: true,
   myNewMemberEmail: false,
   myAdminUpdateEmail: false,
+  myRevisionRequestEmail: false,
   pendingCount: 0,
   recent: [],
   ...overrides,
@@ -61,7 +64,7 @@ describe("AdminNotificationMenu", () => {
     setSubscriptionMock.mockResolvedValue(undefined);
   });
 
-  it("dört anahtarı da menüde gösterir", async () => {
+  it("altı anahtarı da menüde gösterir", async () => {
     fetchStateMock.mockResolvedValue(makeState());
 
     renderMenu();
@@ -69,12 +72,20 @@ describe("AdminNotificationMenu", () => {
 
     expect(await screen.findByLabelText("Yeni üye kaydolduğunda bana mail gelsin")).toBeInTheDocument();
     expect(screen.getByLabelText("Yeni güncelleme yayınlandığında bana mail gelsin")).toBeInTheDocument();
+    expect(screen.getByLabelText("Yeni revizyon isteği açıldığında bana mail gelsin")).toBeInTheDocument();
     expect(screen.getByLabelText("Yeni üye bildirimleri açık")).toBeInTheDocument();
     expect(screen.getByLabelText("Güncelleme bildirimleri açık")).toBeInTheDocument();
+    expect(screen.getByLabelText("Revizyon isteği bildirimleri açık")).toBeInTheDocument();
   });
 
-  it("kişisel aboneliği çevirince diğer tercihi korur", async () => {
-    fetchStateMock.mockResolvedValue(makeState({ myNewMemberEmail: false, myAdminUpdateEmail: true }));
+  it("kişisel aboneliği çevirince diğer tercihleri korur", async () => {
+    fetchStateMock.mockResolvedValue(
+      makeState({
+        myNewMemberEmail: false,
+        myAdminUpdateEmail: true,
+        myRevisionRequestEmail: true,
+      }),
+    );
 
     renderMenu();
     await openMenu();
@@ -84,7 +95,20 @@ describe("AdminNotificationMenu", () => {
     expect(setSubscriptionMock.mock.calls[0][0]).toEqual({
       newMemberEmail: true,
       adminUpdateEmail: true,
+      revisionRequestEmail: true,
     });
+  });
+
+  it("revizyon isteği genel anahtarını menüden çevirebilir", async () => {
+    fetchStateMock.mockResolvedValue(makeState({ revisionRequestEnabled: false }));
+
+    renderMenu();
+    await openMenu();
+    await userEvent.click(await screen.findByLabelText("Revizyon isteği bildirimleri açık"));
+
+    await waitFor(() =>
+      expect(setSettingMock).toHaveBeenCalledWith("email.revision_request.enabled", true),
+    );
   });
 
   it("genel anahtarı çevirince RPC'yi doğru anahtarla çağırır", async () => {

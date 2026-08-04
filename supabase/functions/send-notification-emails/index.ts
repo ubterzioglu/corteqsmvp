@@ -1,9 +1,10 @@
 // send-notification-emails — notification_email_outbox kuyruğunun drenajı.
 //
-// Üç bildirim türünü gönderir:
-//   new_member      → siteye yeni üye kaydolduğunda      → alıcı: abone admin/moderator'lar
-//   admin_update    → admin-updates.ts'e kayıt girildiğinde → alıcı: abone admin/moderator'lar
-//   member_welcome  → üye e-postasını doğruladığında      → alıcı: ÜYENİN KENDİSİ
+// Dört bildirim türünü gönderir:
+//   new_member       → siteye yeni üye kaydolduğunda        → alıcı: abone admin/moderator'lar
+//   admin_update     → admin-updates.ts'e kayıt girildiğinde → alıcı: abone admin/moderator'lar
+//   member_welcome   → üye e-postasını doğruladığında        → alıcı: ÜYENİN KENDİSİ
+//   revision_request → yeni revizyon isteği açıldığında      → alıcı: abone admin/moderator'lar
 //
 // member_welcome'ın alıcısı payload'dan gelir; abone listesine hiç bakılmaz. Bu ayrım
 // resolveRecipients() içinde tek yerde yapılır.
@@ -30,6 +31,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 import { buildAdminUpdateEmail } from "../_shared/emails/admin-update-digest.ts";
 import { escapeHtml } from "../_shared/emails/html.ts";
 import { buildMemberWelcomeEmail } from "../_shared/emails/member-welcome.ts";
+import { buildRevisionRequestEmail } from "../_shared/emails/revision-request.ts";
 import { resolveZohoSmtpConfig, sendMailViaZohoSmtp } from "../_shared/emails/smtp.ts";
 
 const ALLOWED_ORIGINS = new Set([
@@ -47,9 +49,10 @@ const SETTING_KEY_BY_EVENT: Record<string, string> = {
   new_member: "email.new_member.enabled",
   admin_update: "email.admin_update.enabled",
   member_welcome: "email.member_welcome.enabled",
+  revision_request: "email.revision_request.enabled",
 };
 
-type EventType = "new_member" | "admin_update" | "member_welcome";
+type EventType = "new_member" | "admin_update" | "member_welcome" | "revision_request";
 
 type OutboxRow = {
   id: string;
@@ -157,6 +160,8 @@ function buildEmail(row: OutboxRow): BuiltEmail {
   switch (row.event_type) {
     case "member_welcome":
       return buildWelcomeEmail(row.payload);
+    case "revision_request":
+      return buildRevisionRequestEmail(row.payload, resolveSiteUrl());
     default:
       return buildNewMemberEmail(row.payload);
   }

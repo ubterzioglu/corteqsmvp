@@ -36,8 +36,10 @@ const makeState = (overrides: Partial<AdminNotificationState> = {}): AdminNotifi
   newMemberEnabled: true,
   adminUpdateEnabled: true,
   memberWelcomeEnabled: false,
+  revisionRequestEnabled: true,
   myNewMemberEmail: false,
   myAdminUpdateEmail: false,
+  myRevisionRequestEmail: false,
   pendingCount: 0,
   recent: [],
   ...overrides,
@@ -63,7 +65,7 @@ describe("AdminNotificationSettingsPage", () => {
     welcomePreviewMock.mockResolvedValue("admin@corteqs.net");
   });
 
-  it("beş anahtarı da gösterir", async () => {
+  it("yedi anahtarı da gösterir", async () => {
     fetchStateMock.mockResolvedValue(makeState());
 
     renderPage();
@@ -71,9 +73,13 @@ describe("AdminNotificationSettingsPage", () => {
     expect(await screen.findByLabelText("Yeni üye bildirimleri açık")).toBeInTheDocument();
     expect(screen.getByLabelText("Güncelleme bildirimleri açık")).toBeInTheDocument();
     expect(screen.getByLabelText("Hoş geldin maili açık")).toBeInTheDocument();
+    expect(screen.getByLabelText("Revizyon isteği bildirimleri açık")).toBeInTheDocument();
     expect(screen.getByLabelText("Yeni üye kaydolduğunda bana mail gelsin")).toBeInTheDocument();
     expect(
       screen.getByLabelText("Yeni güncelleme yayınlandığında bana mail gelsin"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Yeni revizyon isteği açıldığında bana mail gelsin"),
     ).toBeInTheDocument();
   });
 
@@ -124,8 +130,14 @@ describe("AdminNotificationSettingsPage", () => {
     );
   });
 
-  it("kişisel abonelikte diğer tercihi korur", async () => {
-    fetchStateMock.mockResolvedValue(makeState({ myNewMemberEmail: false, myAdminUpdateEmail: true }));
+  it("kişisel abonelikte diğer tercihleri korur", async () => {
+    fetchStateMock.mockResolvedValue(
+      makeState({
+        myNewMemberEmail: false,
+        myAdminUpdateEmail: true,
+        myRevisionRequestEmail: true,
+      }),
+    );
 
     renderPage();
     await userEvent.click(
@@ -137,6 +149,36 @@ describe("AdminNotificationSettingsPage", () => {
     expect(setSubscriptionMock.mock.calls[0][0]).toEqual({
       newMemberEmail: true,
       adminUpdateEmail: true,
+      revisionRequestEmail: true,
+    });
+  });
+
+  it("revizyon isteği genel anahtarını çevirince doğru ayar yazılır", async () => {
+    fetchStateMock.mockResolvedValue(makeState({ revisionRequestEnabled: false }));
+
+    renderPage();
+    await userEvent.click(await screen.findByLabelText("Revizyon isteği bildirimleri açık"));
+
+    await waitFor(() =>
+      expect(setSettingMock).toHaveBeenCalledWith("email.revision_request.enabled", true),
+    );
+  });
+
+  it("revizyon isteği aboneliğini açarken diğer tercihleri korur", async () => {
+    fetchStateMock.mockResolvedValue(
+      makeState({ myRevisionRequestEmail: false, myAdminUpdateEmail: true }),
+    );
+
+    renderPage();
+    await userEvent.click(
+      await screen.findByLabelText("Yeni revizyon isteği açıldığında bana mail gelsin"),
+    );
+
+    await waitFor(() => expect(setSubscriptionMock).toHaveBeenCalledTimes(1));
+    expect(setSubscriptionMock.mock.calls[0][0]).toEqual({
+      newMemberEmail: false,
+      adminUpdateEmail: true,
+      revisionRequestEmail: true,
     });
   });
 

@@ -86,6 +86,23 @@ describe("mapOutboxEntry", () => {
     expect(entry?.recipientCount).toBe(1);
   });
 
+  it("revizyon isteği kaydında özet olarak başlığı kullanır", () => {
+    const entry = mapOutboxEntry({
+      id: "row-7",
+      event_type: "revision_request",
+      status: "sent",
+      recipient_count: 2,
+      last_error: null,
+      created_at: "2026-08-04T10:00:00.000Z",
+      sent_at: "2026-08-04T10:00:03.000Z",
+      payload: { title: "Üsküdar başlığı düzeltilsin", priority: 8, status: "acik" },
+    });
+
+    expect(entry?.eventType).toBe("revision_request");
+    expect(entry?.summary).toBe("Üsküdar başlığı düzeltilsin");
+    expect(entry?.recipientCount).toBe(2);
+  });
+
   it("bilinmeyen tür/durum içeren satırı eler", () => {
     expect(mapOutboxEntry({ id: "row-3", event_type: "unknown", status: "sent" })).toBeNull();
     expect(mapOutboxEntry({ id: "row-4", event_type: "new_member", status: "queued" })).toBeNull();
@@ -141,11 +158,23 @@ describe("mapNotificationState", () => {
       newMemberEnabled: false,
       adminUpdateEnabled: false,
       memberWelcomeEnabled: false,
+      revisionRequestEnabled: false,
       myNewMemberEmail: false,
       myAdminUpdateEmail: false,
+      myRevisionRequestEmail: false,
       pendingCount: 0,
       recent: [],
     });
+  });
+
+  it("revizyon isteği anahtarlarını da okur", () => {
+    const state = mapNotificationState({
+      revisionRequestEnabled: true,
+      myRevisionRequestEmail: true,
+    });
+
+    expect(state.revisionRequestEnabled).toBe(true);
+    expect(state.myRevisionRequestEmail).toBe(true);
   });
 
   it("boolean olmayan doğruluk değerlerini true saymaz", () => {
@@ -195,14 +224,19 @@ describe("setNotificationSetting", () => {
 });
 
 describe("setMyNotificationSubscription", () => {
-  it("iki tercihi birlikte gönderir (user_id parametresi yoktur)", async () => {
+  it("üç tercihi birlikte gönderir (user_id parametresi yoktur)", async () => {
     rpcMock.mockResolvedValue({ data: {}, error: null });
 
-    await setMyNotificationSubscription({ newMemberEmail: true, adminUpdateEmail: false });
+    await setMyNotificationSubscription({
+      newMemberEmail: true,
+      adminUpdateEmail: false,
+      revisionRequestEmail: true,
+    });
 
     expect(rpcMock).toHaveBeenCalledWith("set_my_notification_subscription", {
       p_new_member: true,
       p_admin_update: false,
+      p_revision_request: true,
     });
   });
 });

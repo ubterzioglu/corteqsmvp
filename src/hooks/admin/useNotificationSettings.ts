@@ -25,6 +25,7 @@ const STALE_TIME_MS = 60_000;
 export type NotificationSubscriptionPatch = Partial<{
   newMemberEmail: boolean;
   adminUpdateEmail: boolean;
+  revisionRequestEmail: boolean;
 }>;
 
 export function useNotificationSettings() {
@@ -103,6 +104,7 @@ export function useNotificationSettings() {
     subscriptionMutation.mutate({
       newMemberEmail: state.myNewMemberEmail,
       adminUpdateEmail: state.myAdminUpdateEmail,
+      revisionRequestEmail: state.myRevisionRequestEmail,
       ...patch,
     });
   };
@@ -116,6 +118,9 @@ export function useNotificationSettings() {
     ? [
         state.myNewMemberEmail && !state.newMemberEnabled ? "yeni üye" : null,
         state.myAdminUpdateEmail && !state.adminUpdateEnabled ? "güncelleme" : null,
+        state.myRevisionRequestEmail && !state.revisionRequestEnabled
+          ? "revizyon isteği"
+          : null,
       ].filter((value): value is string => value !== null)
     : [];
 
@@ -123,7 +128,8 @@ export function useNotificationSettings() {
   const isReceiving = Boolean(
     state &&
       ((state.myNewMemberEmail && state.newMemberEnabled) ||
-        (state.myAdminUpdateEmail && state.adminUpdateEnabled)),
+        (state.myAdminUpdateEmail && state.adminUpdateEnabled) ||
+        (state.myRevisionRequestEmail && state.revisionRequestEnabled)),
   );
 
   return {

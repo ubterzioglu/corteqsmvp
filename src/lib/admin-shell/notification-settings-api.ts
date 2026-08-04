@@ -1,8 +1,9 @@
 // Bildirim E-postaları — API katmanı.
-// /admin/notifications sayfasının veri katmanı. Üç bildirim türünü yönetir:
-//   new_member     → siteye yeni üye kaydolduğunda        → alıcı: abone admin/moderator'lar
-//   admin_update   → admin-updates.ts'e yeni kayıt girildiğinde → alıcı: abone admin/moderator'lar
-//   member_welcome → üye e-postasını doğruladığında       → alıcı: ÜYENİN KENDİSİ
+// /admin/notifications sayfasının veri katmanı. Dört bildirim türünü yönetir:
+//   new_member       → siteye yeni üye kaydolduğunda        → alıcı: abone admin/moderator'lar
+//   admin_update     → admin-updates.ts'e yeni kayıt girildiğinde → alıcı: abone admin/moderator'lar
+//   member_welcome   → üye e-postasını doğruladığında       → alıcı: ÜYENİN KENDİSİ
+//   revision_request → yeni revizyon isteği açıldığında     → alıcı: abone admin/moderator'lar
 //
 // member_welcome'ın kişisel abonelik karşılığı YOKTUR: mail üyeye gider, admin abone olmaz.
 // Bu yüzden yalnız genel anahtarı vardır.
@@ -21,6 +22,7 @@ export const NOTIFICATION_SETTING_KEYS = {
   newMember: "email.new_member.enabled",
   adminUpdate: "email.admin_update.enabled",
   memberWelcome: "email.member_welcome.enabled",
+  revisionRequest: "email.revision_request.enabled",
 } as const;
 
 export type NotificationSettingKey =
@@ -36,12 +38,17 @@ export const OUTBOX_STATUS_LABELS: Record<OutboxStatus, string> = {
   skipped: "Atlandı",
 };
 
-export type NotificationEventType = "new_member" | "admin_update" | "member_welcome";
+export type NotificationEventType =
+  | "new_member"
+  | "admin_update"
+  | "member_welcome"
+  | "revision_request";
 
 export const NOTIFICATION_EVENT_LABELS: Record<NotificationEventType, string> = {
   new_member: "Yeni üye",
   admin_update: "Güncelleme",
   member_welcome: "Hoş geldin",
+  revision_request: "Revizyon isteği",
 };
 
 export type OutboxEntry = {
@@ -61,8 +68,10 @@ export type AdminNotificationState = {
   newMemberEnabled: boolean;
   adminUpdateEnabled: boolean;
   memberWelcomeEnabled: boolean;
+  revisionRequestEnabled: boolean;
   myNewMemberEmail: boolean;
   myAdminUpdateEmail: boolean;
+  myRevisionRequestEmail: boolean;
   pendingCount: number;
   recent: OutboxEntry[];
 };
@@ -83,8 +92,10 @@ type RawState = {
   newMemberEnabled?: unknown;
   adminUpdateEnabled?: unknown;
   memberWelcomeEnabled?: unknown;
+  revisionRequestEnabled?: unknown;
   myNewMemberEmail?: unknown;
   myAdminUpdateEmail?: unknown;
+  myRevisionRequestEmail?: unknown;
   pendingCount?: unknown;
   recent?: unknown;
 };
@@ -98,7 +109,12 @@ function toNullableString(value: unknown): string | null {
 }
 
 function isEventType(value: unknown): value is NotificationEventType {
-  return value === "new_member" || value === "admin_update" || value === "member_welcome";
+  return (
+    value === "new_member" ||
+    value === "admin_update" ||
+    value === "member_welcome" ||
+    value === "revision_request"
+  );
 }
 
 function isStatus(value: unknown): value is OutboxStatus {
@@ -112,8 +128,9 @@ function buildSummary(eventType: NotificationEventType, payload: unknown): strin
   }
 
   const record = payload as Record<string, unknown>;
-  // Üye tarafındaki iki olayda konu üyenin adresi, güncellemede kaydın başlığıdır.
-  const field = eventType === "admin_update" ? record.title : record.email;
+  // Üye tarafındaki iki olayda konu üyenin adresi; güncelleme ve revizyon isteğinde başlıktır.
+  const usesTitle = eventType === "admin_update" || eventType === "revision_request";
+  const field = usesTitle ? record.title : record.email;
   return typeof field === "string" && field !== "" ? field : "-";
 }
 
@@ -148,8 +165,10 @@ export function mapNotificationState(raw: unknown): AdminNotificationState {
     newMemberEnabled: toBoolean(state.newMemberEnabled),
     adminUpdateEnabled: toBoolean(state.adminUpdateEnabled),
     memberWelcomeEnabled: toBoolean(state.memberWelcomeEnabled),
+    revisionRequestEnabled: toBoolean(state.revisionRequestEnabled),
     myNewMemberEmail: toBoolean(state.myNewMemberEmail),
     myAdminUpdateEmail: toBoolean(state.myAdminUpdateEmail),
+    myRevisionRequestEmail: toBoolean(state.myRevisionRequestEmail),
     pendingCount: Number.isFinite(pendingCount) ? pendingCount : 0,
     recent: recent
       .map((row) => mapOutboxEntry(row as RawOutboxRow))
@@ -184,10 +203,12 @@ export async function setNotificationSetting(
 export async function setMyNotificationSubscription(input: {
   newMemberEmail: boolean;
   adminUpdateEmail: boolean;
+  revisionRequestEmail: boolean;
 }): Promise<void> {
   const { error } = await supabase.rpc("set_my_notification_subscription" as never, {
     p_new_member: input.newMemberEmail,
     p_admin_update: input.adminUpdateEmail,
+    p_revision_request: input.revisionRequestEmail,
   } as never);
   if (error) {
     throw new Error(error.message);

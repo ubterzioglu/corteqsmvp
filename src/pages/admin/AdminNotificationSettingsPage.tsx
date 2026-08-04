@@ -113,7 +113,7 @@ const AdminNotificationSettingsPage = () => {
   return (
     <AdminPageShell
       title="Bildirim Ayarları"
-      description="Yeni üye kayıtları ve ürün güncellemeleri için e-posta bildirimlerini yönet. Ürün güncellemeleri her akşam 18:00'de (Avrupa saati) tek özet mail olarak gönderilir; 'Şimdi gönder' bekleyenleri erken boşaltır."
+      description="Yeni üye kayıtları, ürün güncellemeleri ve revizyon istekleri için e-posta bildirimlerini yönet. Ürün güncellemeleri her akşam 18:00'de (Avrupa saati) tek özet mail olarak gönderilir; yeni revizyon istekleri anında gider. 'Şimdi gönder' bekleyenleri erken boşaltır."
       eyebrow="Sistem"
       icon={BellRing}
       accent="red"
@@ -183,6 +183,17 @@ const AdminNotificationSettingsPage = () => {
           />
 
           <ToggleRow
+            title="Revizyon isteği bildirimleri açık"
+            description="Admin panelinde yeni bir revizyon isteği açıldığında abonelere anında mail gider."
+            checked={state.revisionRequestEnabled}
+            disabled={!state.isAdmin || settingsBusy}
+            label="Revizyon isteği bildirimleri açık"
+            onCheckedChange={(checked) =>
+              setGlobal(SETTING_KEYS.revisionRequest, checked)
+            }
+          />
+
+          <ToggleRow
             title="Hoş geldin maili açık"
             description="Yeni üye e-postasını doğruladığında ÜYENİN KENDİSİNE karşılama maili gider. Açmadan önce yukarıdaki örnek mail butonuyla görünümü kontrol et."
             checked={state.memberWelcomeEnabled}
@@ -218,6 +229,15 @@ const AdminNotificationSettingsPage = () => {
             disabled={subscriptionBusy}
             label="Yeni güncelleme yayınlandığında bana mail gelsin"
             onCheckedChange={(checked) => updateSubscription({ adminUpdateEmail: checked })}
+          />
+
+          <ToggleRow
+            title="Yeni revizyon isteği açıldığında bana mail gelsin"
+            description="Revizyon İstekleri sayfasına eklenen her talep için anında mail alırsın."
+            checked={state.myRevisionRequestEmail}
+            disabled={subscriptionBusy}
+            label="Yeni revizyon isteği açıldığında bana mail gelsin"
+            onCheckedChange={(checked) => updateSubscription({ revisionRequestEmail: checked })}
           />
         </section>
 

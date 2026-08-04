@@ -98,6 +98,12 @@ const AdminNotificationMenu = () => {
           disabled={subscriptionBusy}
           onCheckedChange={(checked) => updateSubscription({ adminUpdateEmail: checked })}
         />
+        <ToggleLine
+          label="Yeni revizyon isteği açıldığında bana mail gelsin"
+          checked={state.myRevisionRequestEmail}
+          disabled={subscriptionBusy}
+          onCheckedChange={(checked) => updateSubscription({ revisionRequestEmail: checked })}
+        />
 
         <DropdownMenuSeparator />
 
@@ -115,6 +121,12 @@ const AdminNotificationMenu = () => {
           checked={state.adminUpdateEnabled}
           disabled={!state.isAdmin || settingsBusy}
           onCheckedChange={(checked) => setGlobal(SETTING_KEYS.adminUpdate, checked)}
+        />
+        <ToggleLine
+          label="Revizyon isteği bildirimleri açık"
+          checked={state.revisionRequestEnabled}
+          disabled={!state.isAdmin || settingsBusy}
+          onCheckedChange={(checked) => setGlobal(SETTING_KEYS.revisionRequest, checked)}
         />
 
         {mutedTypes.length > 0 && (
