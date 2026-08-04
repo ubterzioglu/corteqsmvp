@@ -1,4 +1,5 @@
 import { createEvent, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -749,6 +750,50 @@ describe("CaddePage", () => {
     expect(screen.getByTestId("cadde-cafes-empty-state")).toHaveTextContent(
       "Henüz aktif bir cafe açılmadı.",
     );
+  });
+
+  // m67+m68+m69: kafeler bölümü akordeon, açıkken ilk 3 satırı çizer, gerisi tek tıkla.
+  it("collapses the cafes section and previews only the first rows", async () => {
+    const user = userEvent.setup();
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeCafesMock.mockResolvedValue(
+      Array.from({ length: 5 }, (_, index) => ({
+        id: `cafe-${index}`,
+        title: `Cafe ${index}`,
+        summary: "Kısa özet",
+        themeKey: null,
+        city: "Berlin",
+        country: "Almanya",
+        startsAt: "2026-08-10T18:00:00Z",
+        endsAt: "2026-08-10T20:00:00Z",
+        hostName: "Host",
+        memberCount: 4,
+        capacity: null,
+        isBridge: false,
+        entryMode: "open",
+        joinedByViewer: false,
+        viewerMemberStatus: null,
+      })),
+    );
+
+    renderPage();
+
+    // m69: 5 cafe var ama önce yalnız 3 satır çizilir.
+    expect(await screen.findByText("Cafe 0")).toBeInTheDocument();
+    expect(screen.getByText("Cafe 2")).toBeInTheDocument();
+    expect(screen.queryByText("Cafe 3")).not.toBeInTheDocument();
+
+    await user.click(screen.getByTestId("cadde-cafes-show-all"));
+    expect(await screen.findByText("Cafe 4")).toBeInTheDocument();
+
+    // m68: başlıktaki tetik bölümü tamamen kapatır.
+    await user.click(screen.getByTestId("cadde-cafes-toggle"));
+    await waitFor(() => expect(screen.queryByText("Cafe 0")).not.toBeInTheDocument());
   });
 
   // m52: "Henüz cafe açılmadı" şablonu seçili ülke/şehri adıyla söyler.
