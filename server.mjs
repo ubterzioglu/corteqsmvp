@@ -1,3 +1,15 @@
+// YEREL / NIXPACKS SUNUCUSU — PROD RUNTIME DEĞİLDİR.
+//
+// Prod'da uygulama nginx ile servis edilir (Dockerfile → nginx:1.27-alpine +
+// nginx.conf.template). Bu dosya yalnızca `npm run start` ve nixpacks yolunda
+// çalışır. 2026-08-04'e kadar CLAUDE.md bunu "production runtime" diye tarif
+// ediyordu; sonucu şuydu: buradaki 301 haritası, www→apex yönlendirmesi,
+// /api/chat rate-limit'i ve /admin prerender istisnası canlıda HİÇ DEVREDE
+// DEĞİLDİ ve kimse fark etmedi (canlı kanıt: /hakkimizda → 200, www → 200).
+//
+// SEO/yönlendirme/başlık davranışını BURAYA değil nginx.conf.template'e ekle.
+// Yönlendirme tablosunun tek kaynağı src/lib/redirects.ts'tir.
+
 import { createServer } from "node:http";
 import { createReadStream } from "node:fs";
 import { access, mkdir, stat, writeFile } from "node:fs/promises";
@@ -31,11 +43,28 @@ const canonicalHost = "corteqs.net";
 const alternateHostPrefixes = ["www.", "mvp."];
 
 // SEO: eski client-side <Navigate replace> path'leri icin gercek HTTP 301.
+//
+// Tek kaynak src/lib/redirects.ts'tir; bu dosya .mjs oldugu icin TS tablosunu
+// import EDEMEZ, liste elle hizali tutulur. Onceden yalnizca 4 madde vardi
+// (14 yerine) — nginx tarafi src/lib/redirects.test.ts ile korunuyor, burasi
+// yalnizca yerel/nixpacks yolunu etkiledigi icin test kapsaminda degil.
+// redirects.ts'e madde eklersen buraya da ekle.
 const legacyRedirectMap = new Map([
   ["/hakkimizda", "/founders"],
   ["/blog", "/radar/rehberler"],
   ["/campaign/founding-1000", "/founding-1000"],
+  ["/190519", "/190519memory"],
+  ["/aiform", "/login"],
+  ["/form", "/login"],
+  ["/privacy-policy", "/legal/privacy"],
   ["/addwa", "/addcom"],
+  ["/whatsapp-groups", "/addcom"],
+  ["/contributor", "/commercial/contributor"],
+  ["/influencer-partner", "/commercial/influencer-partner"],
+  ["/strategic-partner", "/commercial/strategic-partner"],
+  ["/community-leader", "/commercial/community-leader"],
+  ["/ambassador", "/commercial/ambassador"],
+  ["/auth", "/login"],
 ]);
 
 // Bilinen crawler / AI cevap motoru user-agent'lari (robots.txt ile hizali).

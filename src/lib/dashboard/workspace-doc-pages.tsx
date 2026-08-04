@@ -414,16 +414,16 @@ export const workspaceDocPages: WorkspaceDocPage[] = [
               <code>loading: true</code> alıyor — kullanıcı giriş yapmış olsa bile.
             </p>
             <p>
-              <strong>Etkilenen 38 dosya:</strong>
+              <strong>Etkilenen dosyalar</strong> (2026-08-04 güncellemesi: listedeki{" "}
+              <code>MapSearch.tsx</code>, <code>PostGenerator.tsx</code>,{" "}
+              <code>CityNews.tsx</code>, <code>WhatsAppGroups.tsx</code> ve{" "}
+              <code>WhatsAppGroupLanding.tsx</code> ölü kod olarak silindi — hiçbir route'a
+              bağlı değillerdi ve var olmayan modülleri import ediyorlardı):
             </p>
             <ul className="list-disc space-y-1 pl-5">
               <li>src/pages/Feed.tsx</li>
               <li>src/pages/Events.tsx</li>
-              <li>src/pages/MapSearch.tsx</li>
               <li>src/pages/Onboarding.tsx</li>
-              <li>src/pages/PostGenerator.tsx</li>
-              <li>src/pages/WhatsAppGroups.tsx</li>
-              <li>src/pages/WhatsAppGroupLanding.tsx</li>
               <li>src/pages/CityAmbassadors.tsx</li>
               <li>src/pages/ConsultantDetail.tsx</li>
               <li>src/pages/VolunteerMentorDetail.tsx</li>

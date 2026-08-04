@@ -6,10 +6,49 @@ map $http_user_agent $is_bot {
   "~*googlebot|bingbot|slurp|duckduckbot|yandex|baiduspider|applebot|facebookexternalhit|facebot|twitterbot|linkedinbot|slackbot|telegrambot|whatsapp|discordbot|embedly|pinterest|redditbot|gptbot|chatgpt-user|oai-searchbot|perplexitybot|perplexity-user|claudebot|claude-web|claude-user|anthropic-ai|ccbot|google-extended|applebot-extended|amazonbot|cohere-ai|bytespider|meta-externalagent" 1;
 }
 
-# __PRERENDER_URL__ boşsa entrypoint $prerender_enabled'ı 0 yapar (prerender no-op).
-map $is_bot $prerender_target {
+# /admin ve /api prerender EDİLMEZ — server.mjs'teki shouldPrerender() ile hizalı.
+# (Admin paneli auth arkasında; prerender servisine göndermek hem anlamsız hem maliyetli.)
+map $uri $prerender_excluded {
   default 0;
-  1 "__PRERENDER_URL__";
+  "~^/admin" 1;
+  "~^/api" 1;
+}
+
+# __PRERENDER_URL__ boşsa entrypoint bunu "0" yapar (prerender no-op).
+# Kaynak iki değişkenin birleşimidir: yalnız "bot VE dışlanmamış" durumunda hedef dolar.
+map "$is_bot:$prerender_excluded" $prerender_target {
+  default 0;
+  "1:0" "__PRERENDER_URL__";
+}
+
+# /api/chat rate-limit — server.mjs'teki 12 istek/dk sınırıyla hizalı.
+# Prod'da server.mjs devrede olmadığı için bu sınır 2026-08-04'e kadar canlıda YOKTU.
+limit_req_zone $binary_remote_addr zone=ragchat:1m rate=12r/m;
+
+# ── Content-Security-Policy (tek kaynak) ─────────────────────────────────────
+# Aşağıdaki location'ların HEPSİ bu değişkeni kullanır. Politika metni uzun olduğu
+# için burada tek kez tanımlanır; böylece bir host'a izin verilirken beş ayrı yeri
+# güncelleme (ve birini unutma) riski kalmaz.
+#
+# 'unsafe-inline' script-src'de YOKTUR ve eklenmemelidir. index.html'deki gtag config
+# ve Clarity yükleyicisi bu yüzden /analytics.js'e taşındı (bkz. public/analytics.js).
+# Yeni bir üçüncü taraf script'i eklerken: host'u script-src'e VE gerekiyorsa
+# connect-src/img-src'e ekle, inline yazma.
+#
+# style-src'deki 'unsafe-inline' bilinçlidir: Tailwind/shadcn runtime'da inline style
+# üretir. Kaldırmak için nonce altyapısı gerekir — bugün yok.
+map $host $corteqs_csp {
+  default "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self' https://www.googletagmanager.com https://analytics.ahrefs.com https://www.clarity.ms https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co https://*.supabase.in https://*.google-analytics.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob: https://videos.pexels.com; connect-src 'self' https://rag.corteqs.net https://*.supabase.co https://*.supabase.in https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://analytics.ahrefs.com https://*.clarity.ms; form-action 'self'; upgrade-insecure-requests";
+}
+
+# ── www./mvp. → apex (301) ───────────────────────────────────────────────────
+# server.mjs bunu yapıyordu ama prod'da devrede değil; sonuç: https://www.corteqs.net/
+# canlıda 200 dönüyordu (apex'e 301 değil) → arama motoru için iki ayrı host, bölünmüş
+# sinyal. Bu blok aşağıdaki `server_name _` default'undan ÖNCE eşleşir.
+server {
+  listen 80;
+  server_name www.corteqs.net mvp.corteqs.net;
+  return 301 https://corteqs.net$request_uri;
 }
 
 server {
@@ -19,31 +58,102 @@ server {
   root /usr/share/nginx/html;
   index index.html;
 
+  # ── GÜVENLİK BAŞLIKLARI — TEKRARLAR KOPYA DEĞİLDİR, SİLME ──────────────────
+  #
+  # nginx'te add_header KALITILMAZ: kendi add_header'ı olan bir location, üst
+  # bloktaki TÜM add_header'ları iptal eder. Bu dosyada /env-config.js,
+  # /index.html, /assets/, /api/chat ve /__prerender_internal kendi
+  # Cache-Control'lerini eklediği için, güvenlik başlıklarının o location'larda
+  # TEK TEK TEKRARLANMASI ZORUNLUDUR.
+  #
+  # 2026-08-04'e kadar bu tekrar yoktu ve sonucu şuydu: `location /` →
+  # try_files → /index.html internal redirect'i `location = /index.html`'e
+  # düşüyor, oradaki Cache-Control add_header'ı server bloğundaki 8 güvenlik
+  # başlığını birden iptal ediyordu. Yani TÜM HTML sayfaları (login ve admin
+  # dahil) CSP'siz ve clickjacking korumasız servis ediliyordu; /robots.txt gibi
+  # statik dosyalarda başlıklar görünürken / adresinde sıfır başlık dönüyordu.
+  #
+  # Yeni bir location eklerken: içinde add_header varsa bu bloğu da kopyala.
   add_header X-Frame-Options "DENY" always;
   add_header X-Content-Type-Options "nosniff" always;
   add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
   add_header Referrer-Policy "strict-origin-when-cross-origin" always;
   add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
-  add_header X-Robots-Tag "index, follow" always;
   add_header Cross-Origin-Opener-Policy "same-origin" always;
   add_header Cross-Origin-Resource-Policy "same-origin" always;
-  add_header Content-Security-Policy "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co https://*.supabase.in; font-src 'self' data:; media-src 'self' blob: https://videos.pexels.com; connect-src 'self' https://rag.corteqs.net https://*.supabase.co https://*.supabase.in; form-action 'self'; upgrade-insecure-requests" always;
+  add_header Content-Security-Policy $corteqs_csp always;
+
+  # NOT: `X-Robots-Tag: index, follow` bilinçli olarak KALDIRILDI (2026-08-04).
+  # Sayfa seviyesinde `meta robots` zaten var; blanket header hem statik
+  # dosyalarda anlamsızdı hem de 404 kabuğunda "beni indeksle" diyerek
+  # NotFound'un noindex'ini gölgeliyordu. Geri ekleme.
 
   client_max_body_size 32k;
 
+  # ── Legacy 301 yönlendirmeleri ─────────────────────────────────────────────
+  # TEK KAYNAK: src/lib/redirects.ts. Oradaki her maddenin burada karşılığı olmalı;
+  # src/lib/redirects.test.ts ikisi ayrışırsa build'i kırar.
+  #
+  # $is_args$args query string'i korur (/blog?utm=x → /radar/rehberler?utm=x).
+  # Bu yönlendirmeler 2026-08-04'e kadar yalnız client-side'dı: canlıda /hakkimizda
+  # 301 değil 200 + SPA kabuğu dönüyordu, yani yönlendirme sinyali botlara hiç ulaşmıyordu.
+  location = /hakkimizda            { return 301 /founders$is_args$args; }
+  location = /blog                  { return 301 /radar/rehberler$is_args$args; }
+  location = /campaign/founding-1000 { return 301 /founding-1000$is_args$args; }
+  location = /190519                { return 301 /190519memory$is_args$args; }
+  location = /aiform                { return 301 /login$is_args$args; }
+  location = /form                  { return 301 /login$is_args$args; }
+  location = /privacy-policy        { return 301 /legal/privacy$is_args$args; }
+  location = /addwa                 { return 301 /addcom$is_args$args; }
+  location = /whatsapp-groups       { return 301 /addcom$is_args$args; }
+  location = /contributor           { return 301 /commercial/contributor$is_args$args; }
+  location = /influencer-partner    { return 301 /commercial/influencer-partner$is_args$args; }
+  location = /strategic-partner     { return 301 /commercial/strategic-partner$is_args$args; }
+  location = /community-leader      { return 301 /commercial/community-leader$is_args$args; }
+  location = /ambassador            { return 301 /commercial/ambassador$is_args$args; }
+  location = /auth                  { return 301 /login$is_args$args; }
+
+  # Parametreli: /whatsapp-groups/<id> → /addcom?group=<id>
+  # (App.tsx'teki WhatsAppGroupDetailRedirect ile aynı davranış.)
+  # Regex location'lar tanımlama sırasına göre değerlendirilir; bu yüzden aşağıdaki
+  # genel `~* \.[a-z0-9]+$` bloğundan ÖNCE durmalı.
+  location ~ ^/whatsapp-groups/(.+)$ { return 301 /addcom?group=$1; }
+
   location = /env-config.js {
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header Cross-Origin-Opener-Policy "same-origin" always;
+    add_header Cross-Origin-Resource-Policy "same-origin" always;
+    add_header Content-Security-Policy $corteqs_csp always;
+
     add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate";
     expires -1;
     try_files $uri =404;
   }
 
   location = /index.html {
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header Cross-Origin-Opener-Policy "same-origin" always;
+    add_header Cross-Origin-Resource-Policy "same-origin" always;
+    add_header Content-Security-Policy $corteqs_csp always;
+
     add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate";
     expires -1;
     try_files $uri =404;
   }
 
   location = /api/chat {
+    # burst: kısa ard arda tıklamalar 429 yemesin; nodelay ile bekletmeden işlenir.
+    limit_req zone=ragchat burst=4 nodelay;
+    limit_req_status 429;
+
     if ($request_method != POST) {
       return 405;
     }
@@ -61,10 +171,29 @@ server {
     proxy_send_timeout 15s;
     proxy_connect_timeout 5s;
     proxy_buffering off;
+
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header Cross-Origin-Opener-Policy "same-origin" always;
+    add_header Cross-Origin-Resource-Policy "same-origin" always;
+    add_header Content-Security-Policy $corteqs_csp always;
+
     add_header Cache-Control "no-store" always;
   }
 
   location /assets/ {
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header Cross-Origin-Opener-Policy "same-origin" always;
+    add_header Cross-Origin-Resource-Policy "same-origin" always;
+    add_header Content-Security-Policy $corteqs_csp always;
+
     add_header Cache-Control "public, max-age=31536000, immutable";
     try_files $uri =404;
   }
@@ -98,6 +227,16 @@ server {
     proxy_intercept_errors on;
     # Prerender hata verirse SPA kabuğuna düş (graceful — asla 5xx).
     error_page 500 502 503 504 =200 /index.html;
+
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header Cross-Origin-Opener-Policy "same-origin" always;
+    add_header Cross-Origin-Resource-Policy "same-origin" always;
+    add_header Content-Security-Policy $corteqs_csp always;
+
     add_header X-Prerendered "1" always;
   }
 }

@@ -1,17 +1,29 @@
-import { useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Compass, Globe, Home } from "lucide-react";
+
+import { useSeo } from "@/lib/seo";
+
 const maskot = "/lmaskot.png";
 
 const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
-  }, [location.pathname]);
+  // SOFT-404 KORUMASI: SPA gerçek HTTP 404 döndüremez — olmayan bir yol 200 + bu
+  // kabuk olarak servis edilir. index.html'deki global `robots: index, follow`
+  // devrede kaldığı için, uydurma her URL indekslenebilir "sayfa" gibi görünüyordu.
+  // noindex bunu durdurur; follow, sayfadaki iç bağlantıların taranmasını sürdürür.
+  // Prerender çıktısına da yansır (applySeo render-complete'i dispatch eder).
+  //
+  // Gerçek HTTP 404 backlog'da (B-4) — sunucu tarafı route bilgisi gerektirir.
+  //
+  // Eski `console.error` kaldırıldı: her 404'te konsola kırmızı hata basmak gerçek
+  // hataları gölgeliyordu ve kullanıcıya hiçbir şey katmıyordu.
+  useSeo(
+    {
+      title: "Sayfa bulunamadı | CorteQS",
+      description: "Aradığınız sayfa bulunamadı. Ana sayfadan devam edebilirsiniz.",
+      robots: "noindex, follow",
+    },
+    [],
+  );
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-background via-card to-secondary/30">

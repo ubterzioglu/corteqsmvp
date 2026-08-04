@@ -41,13 +41,31 @@ export interface SeoOptions {
 
 const SEO_JSONLD_ATTR = "data-seo-jsonld";
 
+/**
+ * Kök dışındaki yollarda sondaki slash'i atar: `/blog/` ve `/blog` aynı canonical'a
+ * çıksın (aksi halde arama motoru iki ayrı URL görür).
+ */
+function normalizePath(pathname: string): string {
+  if (pathname === "" || pathname === "/") return "/";
+  return pathname.replace(/\/+$/, "") || "/";
+}
+
 function resolveCanonical(canonicalPath?: string): string {
   if (!canonicalPath) {
-    return typeof window !== "undefined" ? window.location.href : SEO_CANONICAL_ORIGIN;
+    if (typeof window === "undefined") return SEO_CANONICAL_ORIGIN;
+
+    // window.location.href DEĞİL — 2026-08-04'te düzeltilen iki sızıntı:
+    //   1. Query + hash canonical'a giriyordu: /directory?city=Berlin&page=2 gibi her
+    //      filtre kombinasyonu kendini "canonical" ilan ediyordu → sonsuz sayıda
+    //      yinelenen sayfa sinyali.
+    //   2. Host mevcut host'tan geliyordu: www./mvp./localhost üzerinden açılan sayfa
+    //      kendi host'unu canonical yazıyor, tek canonical host kuralı bozuluyordu.
+    // Doğrusu: sabit origin + yalnız pathname.
+    return `${SEO_CANONICAL_ORIGIN}${normalizePath(window.location.pathname)}`;
   }
   if (/^https?:\/\//i.test(canonicalPath)) return canonicalPath;
   const path = canonicalPath.startsWith("/") ? canonicalPath : `/${canonicalPath}`;
-  return `${SEO_CANONICAL_ORIGIN}${path}`;
+  return `${SEO_CANONICAL_ORIGIN}${normalizePath(path)}`;
 }
 
 function upsertMeta(selector: string, attr: "name" | "property", key: string): HTMLMetaElement {

@@ -75,6 +75,8 @@ const IndependentProfilePage = lazy(() => import("@/pages/IndependentProfilePage
 
 // Admin route ağacı (lazy importlar dahil) — bkz. src/pages/admin/routes.tsx
 import { adminRoutes } from "@/pages/admin/routes";
+// Legacy URL yönlendirmeleri — nginx ile ortak tek kaynak.
+import { LEGACY_REDIRECTS } from "@/lib/redirects";
 
 const queryClient = new QueryClient();
 
@@ -109,11 +111,9 @@ const App = () => (
                 <Route element={<PublicLayout />}>
                   <Route path="/" element={<LandingTrialPage />} />
                   <Route path="/landingtrial" element={<Index />} />
-                  <Route path="/hakkimizda" element={<Navigate to="/founders" replace />} />
                   <Route path="/founders" element={<FoundersCombinedPage />} />
                   <Route path="/radar" element={<RadarHubPage />} />
                   <Route path="/radar/rehberler" element={<RadarHubPage />} />
-                  <Route path="/blog" element={<Navigate to="/radar/rehberler" replace />} />
                   <Route path="/blog/:slug" element={<BlogPostPage />} />
                   <Route path="/commercial" element={<CommercialIndexPage />} />
                   <Route path="/commercial/:slug" element={<CommercialDocumentPage />} />
@@ -121,14 +121,12 @@ const App = () => (
                   <Route path="/lansman" element={<LansmanPage />} />
                   <Route path="/founding-1000" element={<Founding1000Page />} />
                   <Route path="/campaign" element={<CampaignHubPage />} />
-                  <Route path="/campaign/founding-1000" element={<Navigate to="/founding-1000" replace />} />
                   <Route path="/campaign/vlogger" element={<VloggerContestPage />} />
                   <Route path="/campaign/blogger" element={<BloggerContestPage />} />
                   <Route path="/19051919" element={<May19CampaignPage />} />
                   <Route path="/19051919/harita" element={<May19MapPage />} />
                   <Route path="/190519idea" element={<May19IdeaPage />} />
                   <Route path="/190519memory" element={<May19MomentPage />} />
-                  <Route path="/190519" element={<Navigate to="/190519memory" replace />} />
                   <Route path="/addcom" element={<AddWhatsAppPage />} />
                   <Route
                     path="/addcom/edit/:slug"
@@ -149,8 +147,6 @@ const App = () => (
                   />
                   <Route path="/anket/tesekkurler" element={<SurveyThankYouPage />} />
                   <Route path="/anket/:slug" element={<SurveyDetailPage />} />
-                  <Route path="/aiform" element={<Navigate to="/login" replace />} />
-                  <Route path="/form" element={<Navigate to="/login" replace />} />
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/auth" element={<AuthRouteRedirect />} />
                   <Route path="/welcome/activate" element={<WelcomeActivatePage />} />
@@ -258,7 +254,6 @@ const App = () => (
                       </RequireAuth>
                     }
                   />
-                  <Route path="/privacy-policy" element={<Navigate to="/legal/privacy" replace />} />
                   <Route path="/legal/privacy" element={<PrivacyPolicyPage />} />
                   <Route path="/legal/terms" element={<TermsOfService />} />
                   <Route path="/legal/business-information" element={<BusinessInformationPage />} />
@@ -272,14 +267,17 @@ const App = () => (
                   <Route path="/reset-password" element={<ResetPasswordPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Route>
-                <Route path="/addwa" element={<Navigate to="/addcom" replace />} />
-                <Route path="/whatsapp-groups" element={<Navigate to="/addcom" replace />} />
+                {/* Legacy yönlendirmeler — tek kaynak: src/lib/redirects.ts.
+                    Prod'da nginx 301'i zaten önce devreye girer; bunlar dev/nixpacks
+                    ve client-side gezinme için savunma katmanıdır. Yeni madde eklerken
+                    nginx.conf.template'i de güncelle (redirects.test.ts drift'i yakalar).
+                    PublicLayout DIŞINDA duruyorlar: <Navigate> hiçbir şey render etmez,
+                    layout'u boşuna mount etmenin anlamı yok. */}
+                {LEGACY_REDIRECTS.map(({ from, to }) => (
+                  <Route key={from} path={from} element={<Navigate to={to} replace />} />
+                ))}
+                {/* Parametre/query taşıdığı için tabloya sığmayanlar (DYNAMIC_LEGACY_REDIRECTS). */}
                 <Route path="/whatsapp-groups/:id" element={<WhatsAppGroupDetailRedirect />} />
-                <Route path="/contributor" element={<Navigate to="/commercial/contributor" replace />} />
-                <Route path="/influencer-partner" element={<Navigate to="/commercial/influencer-partner" replace />} />
-                <Route path="/strategic-partner" element={<Navigate to="/commercial/strategic-partner" replace />} />
-                <Route path="/community-leader" element={<Navigate to="/commercial/community-leader" replace />} />
-                <Route path="/ambassador" element={<Navigate to="/commercial/ambassador" replace />} />
                 {adminRoutes}
               </Routes>
             </Suspense>

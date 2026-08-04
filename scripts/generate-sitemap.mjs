@@ -33,7 +33,82 @@ async function loadEnvLocal() {
   }
 }
 
+// PostgREST varsayılan olarak en fazla 1000 satır döner ve BUNU SESSİZCE YAPAR —
+// hata vermez, eksik listeyi normal yanıt gibi gönderir. Bu tuzak bu projede daha önce
+// yaşandı (v_command_center_facets, 2026-08-04: "son WA kaydı 6 Temmuz" yanılgısı).
+// Aşağıdaki fetchAllRows() Range başlığıyla sayfalayarak tabloyu sonuna kadar okur.
+const PAGE_SIZE = 1000;
+const FETCH_TIMEOUT_MS = 15_000;
+
+/** Supabase REST kimlik bilgileri; eksikse null (çağıran graceful atlar). */
+function supabaseEnv() {
+  const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
+  const key =
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  return url && key ? { url: url.replace(/\/+$/, ""), key } : null;
+}
+
+/**
+ * Bir PostgREST sorgusunu 1000'lik sayfalar hâlinde sonuna kadar okur.
+ *
+ * @returns satır dizisi; hata/timeout durumunda null (build ASLA kırılmaz).
+ */
+async function fetchAllRows(baseEndpoint, key, label) {
+  const rows = [];
+
+  for (let offset = 0; ; offset += PAGE_SIZE) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+    try {
+      const res = await fetch(baseEndpoint, {
+        headers: {
+          apikey: key,
+          Authorization: `Bearer ${key}`,
+          // PostgREST sayfalama: satır aralığı 0-tabanlı ve iki uç dahildir.
+          "Range-Unit": "items",
+          Range: `${offset}-${offset + PAGE_SIZE - 1}`,
+        },
+        signal: controller.signal,
+      });
+
+      if (!res.ok) {
+        console.warn(`[sitemap] ${label} fetch ${res.status} — atlandı.`);
+        return null;
+      }
+
+      const batch = await res.json();
+      if (!Array.isArray(batch)) {
+        console.warn(`[sitemap] ${label} beklenmeyen yanıt — atlandı.`);
+        return null;
+      }
+
+      rows.push(...batch);
+
+      // Son sayfa: istenen kadar satır gelmediyse tablo bitti.
+      if (batch.length < PAGE_SIZE) break;
+    } catch (error) {
+      console.warn(`[sitemap] ${label} fetch hatası — atlandı:`, error?.name ?? error);
+      return null;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  if (rows.length >= PAGE_SIZE) {
+    console.log(`[sitemap] ${label}: ${rows.length} satır (sayfalama devrede).`);
+  }
+
+  return rows;
+}
+
 // Statik (SEO-açık) route'lar. Admin / auth / redirect-only path'ler hariç.
+//
+// EKLEMEDEN ÖNCE: rota (a) gerçekten public mi (RequireAuth/RequireFeature YOK),
+// (b) useSeo ile canonicalPath set ediyor mu, (c) thin content değil mi?
+// Üçünü de geçmeyen rota GSC'de "Crawled - currently not indexed" üretir ve crawl
+// bütçesini gerçek içerikten çalar. scripts/generate-sitemap.test.mjs (a) şıkkını
+// App.tsx'i okuyarak otomatik denetler.
 const STATIC_ROUTES = [
   { path: "/", priority: "1.0", changefreq: "weekly" },
   { path: "/founders", priority: "0.8", changefreq: "monthly" },
@@ -43,12 +118,18 @@ const STATIC_ROUTES = [
   { path: "/lansman", priority: "0.7", changefreq: "monthly" },
   { path: "/founding-1000", priority: "0.6", changefreq: "monthly" },
   { path: "/campaign", priority: "0.6", changefreq: "monthly" },
+  // Yarışma sayfaları: public, kendi canonical'ları var, dolu içerik (2026-08-04 denetimi).
+  { path: "/campaign/vlogger", priority: "0.5", changefreq: "monthly" },
+  { path: "/campaign/blogger", priority: "0.5", changefreq: "monthly" },
   { path: "/19051919", priority: "0.5", changefreq: "yearly" },
   { path: "/anket", priority: "0.6", changefreq: "weekly" },
   { path: "/directory", priority: "0.7", changefreq: "weekly" },
   { path: "/associations", priority: "0.6", changefreq: "weekly" },
   { path: "/tools", priority: "0.7", changefreq: "weekly" },
-  { path: "/cadde", priority: "0.6", changefreq: "daily" },
+  // NOT: /cadde BİLİNÇLİ OLARAK YOK (2026-08-04'te çıkarıldı). RequireAuth +
+  // RequireFeature(caddeAccess) arkasındadır (src/App.tsx) — girişsiz bot login'e
+  // yönlenir. Aşağıdaki /tools/:slug notuyla aynı gerekçe; o kural yazılmış ama
+  // /cadde atlanmıştı, canlı sitemap'te 107 URL içinde duruyordu.
   { path: "/iletisim", priority: "0.4", changefreq: "yearly" },
   { path: "/pricing", priority: "0.5", changefreq: "monthly" },
   { path: "/kariyer", priority: "0.4", changefreq: "monthly" },
@@ -82,130 +163,91 @@ async function getCommercialRoutes() {
 
 // Yayınlanmış blog yazılarını Supabase REST üzerinden çek (graceful).
 async function getBlogRoutes() {
-  const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
-  const key =
-    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) {
+  const env = supabaseEnv();
+  if (!env) {
     console.warn("[sitemap] Supabase env yok — blog yazıları atlandı.");
     return [];
   }
 
-  try {
-    const endpoint = `${url.replace(/\/+$/, "")}/rest/v1/blog_posts?select=slug,updated_at&published=eq.true`;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15_000);
-    const res = await fetch(endpoint, {
-      headers: { apikey: key, Authorization: `Bearer ${key}` },
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) {
-      console.warn(`[sitemap] blog_posts fetch ${res.status} — atlandı.`);
-      return [];
-    }
-    const rows = await res.json();
-    return rows
-      .filter((r) => r?.slug)
-      .map((r) => ({
-        path: `/blog/${r.slug}`,
-        priority: "0.7",
-        changefreq: "monthly",
-        lastmod: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
-      }));
-  } catch (error) {
-    console.warn("[sitemap] blog fetch hatası — atlandı:", error?.name ?? error);
-    return [];
-  }
+  const endpoint = `${env.url}/rest/v1/blog_posts?select=slug,updated_at&published=eq.true`;
+  const rows = await fetchAllRows(endpoint, env.key, "blog_posts");
+  if (!rows) return [];
+
+  return rows
+    .filter((r) => r?.slug)
+    .map((r) => ({
+      path: `/blog/${r.slug}`,
+      priority: "0.7",
+      changefreq: "monthly",
+      lastmod: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
+    }));
 }
 
 // Yayınlanmış anketleri Supabase REST üzerinden çek (graceful; src/lib/surveys.ts
 // getPublishedSurveys() ile aynı filtre: status=published + başlangıç/bitiş penceresi).
 async function getSurveyRoutes() {
-  const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
-  const key =
-    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) {
+  const env = supabaseEnv();
+  if (!env) {
     console.warn("[sitemap] Supabase env yok — anketler atlandı.");
     return [];
   }
 
-  try {
-    const nowIso = new Date().toISOString();
-    const params = new URLSearchParams({
-      select: "slug,updated_at",
-      status: "eq.published",
-      or: `(starts_at.is.null,starts_at.lte.${nowIso})`,
-    });
-    const endpoint = `${url.replace(/\/+$/, "")}/rest/v1/surveys?${params.toString()}`;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15_000);
-    const res = await fetch(endpoint, {
-      headers: { apikey: key, Authorization: `Bearer ${key}` },
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) {
-      console.warn(`[sitemap] surveys fetch ${res.status} — atlandı.`);
-      return [];
-    }
-    const rows = await res.json();
-    return rows
-      .filter((r) => r?.slug)
-      .map((r) => ({
-        path: `/anket/${r.slug}`,
-        priority: "0.6",
-        changefreq: "weekly",
-        lastmod: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
-      }));
-  } catch (error) {
-    console.warn("[sitemap] anket fetch hatası — atlandı:", error?.name ?? error);
-    return [];
-  }
+  const nowIso = new Date().toISOString();
+  const params = new URLSearchParams({
+    select: "slug,updated_at",
+    status: "eq.published",
+  });
+  // İKİ AYRI `or` — PostgREST bunları AND'ler (supabase-js'te zincirlenmiş .or() ile
+  // aynı davranış). Bitiş penceresi 2026-08-04'e kadar YOKTU: src/lib/surveys.ts hem
+  // starts_at hem ends_at uyguluyordu, sitemap yalnız starts_at'i uyguluyordu →
+  // süresi dolmuş anketler sitemap'te kalıyor, tıklayan kullanıcı kapalı ankete düşüyordu.
+  //
+  // `append` zorunlu: URLSearchParams constructor'ına aynı anahtarı iki kez veremezsin,
+  // ikincisi birinciyi ezer.
+  params.append("or", `(starts_at.is.null,starts_at.lte.${nowIso})`);
+  params.append("or", `(ends_at.is.null,ends_at.gte.${nowIso})`);
+
+  const endpoint = `${env.url}/rest/v1/surveys?${params.toString()}`;
+  const rows = await fetchAllRows(endpoint, env.key, "surveys");
+  if (!rows) return [];
+
+  return rows
+    .filter((r) => r?.slug)
+    .map((r) => ({
+      path: `/anket/${r.slug}`,
+      priority: "0.6",
+      changefreq: "weekly",
+      lastmod: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
+    }));
 }
 
 // Yayınlanmış diaspora/haber öğelerini Supabase REST üzerinden çek (graceful;
 // src/lib/marquee.ts getPublicMarqueeItemBySlug() ile aynı filtre).
 async function getDiasporaRoutes() {
-  const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
-  const key =
-    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) {
+  const env = supabaseEnv();
+  if (!env) {
     console.warn("[sitemap] Supabase env yok — diaspora öğeleri atlandı.");
     return [];
   }
 
-  try {
-    const params = new URLSearchParams({
-      select: "slug,published_at",
-      is_active: "eq.true",
-      link_enabled: "eq.true",
-      slug: "not.is.null",
-    });
-    const endpoint = `${url.replace(/\/+$/, "")}/rest/v1/marquee_items?${params.toString()}`;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15_000);
-    const res = await fetch(endpoint, {
-      headers: { apikey: key, Authorization: `Bearer ${key}` },
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) {
-      console.warn(`[sitemap] marquee_items fetch ${res.status} — atlandı.`);
-      return [];
-    }
-    const rows = await res.json();
-    return rows
-      .filter((r) => r?.slug)
-      .map((r) => ({
-        path: `/diaspora/${r.slug}`,
-        priority: "0.5",
-        changefreq: "monthly",
-        lastmod: r.published_at ? String(r.published_at).slice(0, 10) : undefined,
-      }));
-  } catch (error) {
-    console.warn("[sitemap] diaspora fetch hatası — atlandı:", error?.name ?? error);
-    return [];
-  }
+  const params = new URLSearchParams({
+    select: "slug,published_at",
+    is_active: "eq.true",
+    link_enabled: "eq.true",
+    slug: "not.is.null",
+  });
+  const endpoint = `${env.url}/rest/v1/marquee_items?${params.toString()}`;
+  const rows = await fetchAllRows(endpoint, env.key, "marquee_items");
+  if (!rows) return [];
+
+  return rows
+    .filter((r) => r?.slug)
+    .map((r) => ({
+      path: `/diaspora/${r.slug}`,
+      priority: "0.5",
+      changefreq: "monthly",
+      lastmod: r.published_at ? String(r.published_at).slice(0, 10) : undefined,
+    }));
 }
 
 // Herkese açık (RLS: catalog_item_is_publicly_visible) katalog profillerini çek —
@@ -218,92 +260,60 @@ async function getDiasporaRoutes() {
 // bütçesini gerçek/dolu profillere ayırmıyordu. status=published + visibility=public +
 // is_placeholder=false + dolu long_description şartı eklendi.
 async function getDirectoryCatalogRoutes() {
-  const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
-  const key =
-    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) {
+  const env = supabaseEnv();
+  if (!env) {
     console.warn("[sitemap] Supabase env yok — directory/catalog öğeleri atlandı.");
     return [];
   }
 
-  try {
-    const params = new URLSearchParams({
-      select: "slug,updated_at,long_description",
-      slug: "not.is.null",
-      status: "eq.published",
-      visibility: "eq.public",
-      is_placeholder: "eq.false",
-      long_description: "not.is.null",
-    });
-    const endpoint = `${url.replace(/\/+$/, "")}/rest/v1/catalog_items?${params.toString()}`;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15_000);
-    const res = await fetch(endpoint, {
-      headers: { apikey: key, Authorization: `Bearer ${key}` },
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) {
-      console.warn(`[sitemap] catalog_items fetch ${res.status} — atlandı.`);
-      return [];
-    }
-    const rows = await res.json();
-    return rows
-      .filter((r) => r?.slug && String(r.long_description ?? "").trim().length > 0)
-      .map((r) => ({
-        path: `/directory/catalog/${r.slug}`,
-        priority: "0.6",
-        changefreq: "weekly",
-        lastmod: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
-      }));
-  } catch (error) {
-    console.warn("[sitemap] directory/catalog fetch hatası — atlandı:", error?.name ?? error);
-    return [];
-  }
+  const params = new URLSearchParams({
+    select: "slug,updated_at,long_description",
+    slug: "not.is.null",
+    status: "eq.published",
+    visibility: "eq.public",
+    is_placeholder: "eq.false",
+    long_description: "not.is.null",
+  });
+  const endpoint = `${env.url}/rest/v1/catalog_items?${params.toString()}`;
+  const rows = await fetchAllRows(endpoint, env.key, "catalog_items");
+  if (!rows) return [];
+
+  return rows
+    .filter((r) => r?.slug && String(r.long_description ?? "").trim().length > 0)
+    .map((r) => ({
+      path: `/directory/catalog/${r.slug}`,
+      priority: "0.6",
+      changefreq: "weekly",
+      lastmod: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
+    }));
 }
 
 // Yayınlanmış bağımsız (büyükelçilik/konsolosluk) profilleri çek — src/lib/
 // independent-profiles.ts listPublishedIndependentProfiles() ile aynı filtre.
 async function getIndependentProfileRoutes() {
-  const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
-  const key =
-    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) {
+  const env = supabaseEnv();
+  if (!env) {
     console.warn("[sitemap] Supabase env yok — kuruluş profilleri atlandı.");
     return [];
   }
 
-  try {
-    const params = new URLSearchParams({
-      select: "slug,updated_at",
-      is_published: "eq.true",
-      slug: "not.is.null",
-    });
-    const endpoint = `${url.replace(/\/+$/, "")}/rest/v1/independent_profiles?${params.toString()}`;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15_000);
-    const res = await fetch(endpoint, {
-      headers: { apikey: key, Authorization: `Bearer ${key}` },
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-    if (!res.ok) {
-      console.warn(`[sitemap] independent_profiles fetch ${res.status} — atlandı.`);
-      return [];
-    }
-    const rows = await res.json();
-    return rows
-      .filter((r) => r?.slug)
-      .map((r) => ({
-        path: `/kurulus/${r.slug}`,
-        priority: "0.5",
-        changefreq: "monthly",
-        lastmod: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
-      }));
-  } catch (error) {
-    console.warn("[sitemap] kuruluş profili fetch hatası — atlandı:", error?.name ?? error);
-    return [];
-  }
+  const params = new URLSearchParams({
+    select: "slug,updated_at",
+    is_published: "eq.true",
+    slug: "not.is.null",
+  });
+  const endpoint = `${env.url}/rest/v1/independent_profiles?${params.toString()}`;
+  const rows = await fetchAllRows(endpoint, env.key, "independent_profiles");
+  if (!rows) return [];
+
+  return rows
+    .filter((r) => r?.slug)
+    .map((r) => ({
+      path: `/kurulus/${r.slug}`,
+      priority: "0.5",
+      changefreq: "monthly",
+      lastmod: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
+    }));
 }
 
 // NOT: /tools/:slug alt sayfaları RequireAuth ile korunur (bkz. src/App.tsx) —
@@ -383,8 +393,21 @@ ${unique.map((e) => renderUrl(e, today)).join("\n")}
   );
 }
 
-main().catch((error) => {
-  // Build'i kırma: hata olsa bile mevcut sitemap.xml korunur.
-  console.warn("[sitemap] üretim başarısız, mevcut sitemap.xml korunuyor:", error?.message ?? error);
-  process.exit(0);
-});
+// Yalnız doğrudan çalıştırıldığında üret. `import` edildiğinde (testler) main()
+// tetiklenmez — aksi halde her test koşusu ağa çıkıp public/sitemap.xml'i ezerdi.
+const calistirilanDosya = process.argv[1] ? path.resolve(process.argv[1]) : "";
+const buDosya = path.resolve(fileURLToPath(import.meta.url));
+
+if (calistirilanDosya === buDosya) {
+  main().catch((error) => {
+    // Build'i kırma: hata olsa bile mevcut sitemap.xml korunur.
+    console.warn(
+      "[sitemap] üretim başarısız, mevcut sitemap.xml korunuyor:",
+      error?.message ?? error,
+    );
+    process.exit(0);
+  });
+}
+
+// Test yüzeyi — bkz. scripts/generate-sitemap.test.mjs
+export { STATIC_ROUTES, escapeXml, renderUrl, fetchAllRows, PAGE_SIZE };

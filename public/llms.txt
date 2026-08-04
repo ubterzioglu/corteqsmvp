@@ -5,37 +5,55 @@
 CorteQS, yurt dışındaki Türk diasporasını şehir bazlı olarak danışmanlar (vize, emlak, iş kurma, vergi, hukuk, kariyer), işletmeler, dernekler, vakıflar, radyo/TV yayıncıları, bloggerlar/vloggerlar, şehir elçileri ve bireylerle buluşturan bir diaspora network platformudur. Platform 2026'da Istanbul merkezli kurulmuş olup küresel ölçekte Berlin, Londra, Amsterdam, Dubai, Sydney ve New York gibi yoğun diaspora şehirlerinde erken aktif olmayı planlar.
 
 ## Ana sayfa
-- [CorteQS Ana Sayfa](https://corteqs.net/): Platform tanıtımı, erken kayıt ve destek formları
-- [Hakkında bölümü](https://corteqs.net/#hakkinda): "CorteQS Nedir ve Diaspora Nasıl Birleştirilir?"
-- [Sıkça Sorulan Sorular](https://corteqs.net/#sss): 12 başlıklı SSS — platform işleyişi, katılım, ücretlendirme, ülke/şehir aktivasyonu
+- [CorteQS Ana Sayfa](https://corteqs.net/): Platform tanıtımı, diaspora atlası, manifesto, sıkça sorulan sorular ve erken kayıt çağrısı tek sayfada.
 
-## Kategoriler
-- [Kategoriler bölümü](https://corteqs.net/#kategoriler): Danışmanlar, İşletmeler & Şirketler, Dernekler & Vakıflar, Radyo/TV, Blogger/Vlogger, Şehir Elçileri, Bireyler
+## Kategoriler ve keşif
+- [Dizin](https://corteqs.net/directory): Danışmanları, işletmeleri, dernekleri ve şehir elçilerini şehir ve role göre filtreleyerek keşfedin. Bireysel profiller `https://corteqs.net/directory/catalog/<slug>` adresinde.
+- [Dernekler ve Kuruluşlar](https://corteqs.net/associations): Dünya genelindeki Türk dernekleri, vakıfları, odaları, büyükelçilikleri ve konsoloslukları listeler. Kuruluş profilleri `https://corteqs.net/kurulus/<slug>` adresinde.
 
 ## Katılım yolları
-- [Erken İlgi Kaydı](https://corteqs.net/#ilgi): Ücretsiz erken erişim listesi — kategori ve şehir seçimi ile
-- [Destekçi / Kurucu Programı](https://corteqs.net/#destek): $1.000 "Ülke Bazlı Kurucu" ve $10.000 "Onursal Kurucu" katkı seçenekleri
-- [Şehir Elçisi Başvurusu](https://corteqs.net/#elci): Bulunulan şehirde diaspora ağını temsil eden bölgesel partnerlik rolü
-- [Blogger & Vlogger Ağı](https://corteqs.net/#blogger): İçerik üreticileri için görünürlük ve topluluk ağı
+- [Founding 1000](https://corteqs.net/founding-1000): Erken kurucu üyelik programı ve katkı seçenekleri.
+- [Şehir Elçisi](https://corteqs.net/commercial/ambassador): Bulunulan şehirde diaspora ağını temsil eden bölgesel partnerlik rolü.
+- [Katkı Sağlayıcı](https://corteqs.net/commercial/contributor): İçerik ve topluluk katkısı rolü.
+- [Influencer Partnerliği](https://corteqs.net/commercial/influencer-partner): İçerik üreticileri için görünürlük ve iş birliği programı.
+- [Stratejik Ortaklık](https://corteqs.net/commercial/strategic-partner): Kurumsal iş birliği çerçevesi.
+- [Topluluk Lideri](https://corteqs.net/commercial/community-leader): Yerel topluluk yönetimi rolü.
+- [Ticari Dokümanlar](https://corteqs.net/commercial): Tüm partnerlik ve program dokümanlarının dizini.
 
-## Blog — Ülke Rehberleri
-- [Blog ana sayfası](https://corteqs.net/blog): On ülke için giriş/ulaşım, gündelik bütçe, kültür, oturum izni, çalışma vizesi, vatandaşlık, iş bulma ve yaşam şartları başlıklarında diaspora rehberleri. Tek tek yazılar `https://corteqs.net/blog/<slug>` adresinde, makine-okunur sitemap.xml içinde listelenir.
+## Kampanyalar
+- [Kampanyalar](https://corteqs.net/campaign): Aktif CorteQS kampanyalarının dizini.
+- [Vlogger Yarışması](https://corteqs.net/campaign/vlogger): Video içerik üreticileri için yarışma ve katılım koşulları.
+- [Blogger Yarışması](https://corteqs.net/campaign/blogger): Yazılı içerik üreticileri için yarışma ve katılım koşulları.
+- [19 Mayıs Kampanyası](https://corteqs.net/19051919): 19 Mayıs temalı global diaspora kampanyası.
+
+## Radar — Ülke Rehberleri ve Haberler
+- [Radar](https://corteqs.net/radar): Diaspora gündemi ve güncel içerik akışı.
+- [Ülke Rehberleri](https://corteqs.net/radar/rehberler): On ülke için giriş/ulaşım, gündelik bütçe, kültür, oturum izni, çalışma vizesi, vatandaşlık, iş bulma ve yaşam şartları başlıklarında diaspora rehberleri. Tek tek yazılar `https://corteqs.net/blog/<slug>` adresinde, makine-okunur sitemap.xml içinde listelenir.
 - Kapsanan başlıklar: yurt dışına taşınma, vize ve oturum süreçleri, şehir bazlı ilk kurulum, yerel yaşam ve bütçe, iş arama ve diaspora topluluğuna katılım.
+- [Diaspora Öğeleri](https://corteqs.net/diaspora/): Öne çıkan diaspora haber ve duyuruları `https://corteqs.net/diaspora/<slug>` adresinde.
 
-## Dizin ve Kuruluşlar
-- [Dizin](https://corteqs.net/directory): Danışmanları, işletmeleri, dernekleri ve şehir elçilerini şehir ve role göre filtreleyerek keşfedin. Bireysel profiller `https://corteqs.net/directory/catalog/<slug>` adresinde.
-- [Dernekler ve Kuruluşlar](https://corteqs.net/associations): Dünya genelindeki Türk dernekleri, vakıfları, odaları, büyükelçilikleri ve konsoloslukları listeler.
-- [Kurucular](https://corteqs.net/founders): CorteQS kurucu ekibi ve platform vizyonu.
-
-## Araçlar ve Fiyatlandırma
-- [Taşınma Araçları](https://corteqs.net/tools): Yurt dışına taşınma sürecini kolaylaştıran ücretsiz araçlar (ülke seçimi, maaş karşılaştırma, şehir eşleştirme).
+## Araçlar, anketler ve fiyatlandırma
+- [Taşınma Araçları](https://corteqs.net/tools): Yurt dışına taşınma sürecini kolaylaştıran araçlar (ülke seçimi, maaş karşılaştırma, şehir eşleştirme). Araç sayfalarının kendisi giriş gerektirir.
+- [Anketler](https://corteqs.net/anket): Diaspora araştırma anketleri; tek tek anketler `https://corteqs.net/anket/<slug>` adresinde.
+- [Lansman](https://corteqs.net/lansman): Lansman başvuru ve bilgilendirme sayfası.
 - [Fiyatlandırma](https://corteqs.net/pricing): Danışman, kuruluş ve işletme üyelik planları.
 - [Kariyer](https://corteqs.net/kariyer): CorteQS'te açık roller.
+- [Kurucular](https://corteqs.net/founders): CorteQS kurucu ekibi ve platform vizyonu.
 
 ## Cadde
-- [Cadde](https://corteqs.net/cadde): Türk diasporasının paylaşım, cafe ve çarşı alanı. Giriş yapmış kullanıcılara açıktır.
+- [Cadde](https://corteqs.net/cadde): Türk diasporasının paylaşım, cafe ve çarşı alanı. Giriş yapmış ve yetkisi olan kullanıcılara açıktır — bu nedenle sitemap.xml'de yer almaz.
+
+## Yasal
+- [Gizlilik Politikası](https://corteqs.net/legal/privacy)
+- [Kullanım Koşulları](https://corteqs.net/legal/terms)
+- [Ticari Bilgiler](https://corteqs.net/legal/business-information)
+- [İade ve İptal Politikası](https://corteqs.net/legal/refund-cancellation)
+- [Hizmet Teslimat Politikası](https://corteqs.net/legal/service-delivery)
+- [KVKK Aydınlatma Metni](https://corteqs.net/legal/kvkk)
+- [Çerez Politikası](https://corteqs.net/legal/cookies)
 
 ## İletişim
+- [İletişim sayfası](https://corteqs.net/iletisim)
 - E-posta: info@corteqs.net
 - LinkedIn: https://www.linkedin.com/company/corteqs-global
 - X (Twitter): https://x.com/corteqsx
