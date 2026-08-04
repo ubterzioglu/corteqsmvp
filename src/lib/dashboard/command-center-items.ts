@@ -108,6 +108,22 @@ export interface CommandCenterItemCounts {
   team: number
 }
 
+/**
+ * One aggregated row of `public.v_command_center_facets` — a distinct facet combination of the active
+ * (non-archived, non-deleted) items plus how many items share it. The panel derives every filter
+ * option, the source breakdown card and the badge counts from these ~320 rows, instead of reading the
+ * full table (which PostgREST truncates at 1000 rows and would silently hide the newest batches).
+ */
+export interface CommandCenterFacetRow {
+  item_type: CommandCenterItemType
+  category_label: string
+  legacy_source_code: string | null
+  legacy_source_date_label: string | null
+  legacy_source_category: string | null
+  assignee: CommandCenterAssignee
+  item_count: number
+}
+
 export type CommandCenterSourceKind = 'meeting' | 'wa' | 'todo'
 
 export interface CommandCenterSourceEntry {
@@ -406,7 +422,9 @@ function getDateGroupSortToken(label: string): string {
   return `${isTop ? '1' : isWa ? '2' : '9'}-2026-${paddedMonth}-${paddedDay}`
 }
 
-export function getCommandCenterTopCategoryLabel(item: CommandCenterItem): string {
+export function getCommandCenterTopCategoryLabel(
+  item: Pick<CommandCenterItem, 'itemType' | 'categoryLabel' | 'legacySourceCategory'>
+): string {
   if (item.itemType === 'todo') {
     return item.categoryLabel.trim() || 'Genel'
   }
@@ -739,53 +757,105 @@ export async function fetchArchivedCommandCenterItems(
   return (data as CommandCenterItemRow[]).map(mapCommandCenterRow)
 }
 
-export async function fetchCommandCenterCategoryOptions(options?: {
-  itemType?: CommandCenterItemType
-  sourceCode?: string
-}): Promise<CommandCenterCategoryOption[]> {
+export const COMMAND_CENTER_FACET_SELECT =
+  'item_type, category_label, legacy_source_code, legacy_source_date_label, legacy_source_category, assignee, item_count'
+
+/**
+ * Reads the aggregated facet view once. Everything the panel needs besides the current page (filter
+ * options, source breakdown, badge counts) is derived from this single small result.
+ */
+export async function fetchCommandCenterFacets(): Promise<CommandCenterFacetRow[]> {
   const supabase = getSupabaseBrowserClient()
   if (!supabase) {
     return []
   }
 
-  let query = supabase
-    .from('command_center_items')
-    .select('category_label, item_type, legacy_source_category')
-    .is('deleted_at', null)
-    .is('archived_at', null)
-    .order('item_type', { ascending: true })
-    .order('category_label', { ascending: true })
+  const { data, error } = await supabase
+    .from('v_command_center_facets')
+    .select(COMMAND_CENTER_FACET_SELECT)
 
-  if (options?.itemType) {
-    query = query.eq('item_type', options.itemType)
-  }
-
-  if (options?.sourceCode && options.sourceCode !== 'Tümü') {
-    query = query.eq('legacy_source_code', options.sourceCode)
-  }
-
-  const { data, error } = await query
   if (error || !data) {
     return []
   }
 
+  return (data as CommandCenterFacetRow[]).map((row) => ({
+    ...row,
+    category_label: row.category_label ?? '',
+    item_count: Number(row.item_count) || 0,
+  }))
+}
+
+/** Stable ordering so derived option lists and their merged filter values are deterministic. */
+function sortFacetRows(facets: CommandCenterFacetRow[]): CommandCenterFacetRow[] {
+  return [...facets].sort((left, right) => {
+    if (left.item_type !== right.item_type) {
+      return left.item_type.localeCompare(right.item_type)
+    }
+
+    const leftLabel = left.legacy_source_date_label ?? left.category_label ?? ''
+    const rightLabel = right.legacy_source_date_label ?? right.category_label ?? ''
+
+    return leftLabel.localeCompare(rightLabel, 'tr')
+  })
+}
+
+function matchesFacetFilters(
+  facet: CommandCenterFacetRow,
+  options?: { itemType?: CommandCenterItemType; sourceCode?: string }
+): boolean {
+  if (options?.itemType && facet.item_type !== options.itemType) {
+    return false
+  }
+
+  if (
+    options?.sourceCode &&
+    options.sourceCode !== 'Tümü' &&
+    facet.legacy_source_code !== options.sourceCode
+  ) {
+    return false
+  }
+
+  return true
+}
+
+/** Facet row -> the minimal item shape the grouping/labelling helpers need. */
+function toFacetItemShape(
+  facet: CommandCenterFacetRow
+): Pick<
+  CommandCenterItem,
+  'itemType' | 'categoryLabel' | 'legacySourceCode' | 'legacySourceDateLabel' | 'legacySourceCategory'
+> {
+  return {
+    itemType: facet.item_type,
+    categoryLabel: facet.category_label ?? '',
+    legacySourceCode: facet.legacy_source_code,
+    legacySourceDateLabel: facet.legacy_source_date_label,
+    legacySourceCategory: facet.legacy_source_category,
+  }
+}
+
+export function buildCommandCenterCategoryOptions(
+  facets: CommandCenterFacetRow[],
+  options?: { itemType?: CommandCenterItemType; sourceCode?: string }
+): CommandCenterCategoryOption[] {
   const uniqueOptions = new Map<string, CommandCenterCategoryOption>()
-  for (const row of data as Pick<
-    CommandCenterItemRow,
-    'category_label' | 'item_type' | 'legacy_source_category'
-  >[]) {
+
+  for (const facet of sortFacetRows(facets)) {
+    if (!matchesFacetFilters(facet, options)) {
+      continue
+    }
+
     const label =
-      row.item_type === 'todo'
-        ? row.category_label?.trim()
-        : getMeetingCategoryLabel(row.legacy_source_category)
+      facet.item_type === 'todo'
+        ? facet.category_label?.trim()
+        : getMeetingCategoryLabel(facet.legacy_source_category)
 
     if (!label) {
       continue
     }
 
-    const key = label
-    if (!uniqueOptions.has(key)) {
-      uniqueOptions.set(key, {
+    if (!uniqueOptions.has(label)) {
+      uniqueOptions.set(label, {
         value: label,
         label,
       })
@@ -795,71 +865,22 @@ export async function fetchCommandCenterCategoryOptions(options?: {
   return sortCommandCenterCategoryOptions(Array.from(uniqueOptions.values()))
 }
 
-export async function fetchCommandCenterDateGroupOptions(options?: {
-  itemType?: CommandCenterItemType
-  sourceCode?: string
-  topCategory?: string
-}): Promise<CommandCenterDateGroupOption[]> {
-  const supabase = getSupabaseBrowserClient()
-  if (!supabase) {
-    return []
+export function buildCommandCenterDateGroupOptions(
+  facets: CommandCenterFacetRow[],
+  options?: {
+    itemType?: CommandCenterItemType
+    sourceCode?: string
+    topCategory?: string
   }
-
-  let query = supabase
-    .from('command_center_items')
-    .select(
-      'item_type, category_label, legacy_source_code, legacy_source_date_label, legacy_source_category'
-    )
-    .is('deleted_at', null)
-    .is('archived_at', null)
-    .order('item_type', { ascending: true })
-    .order('sort_order', { ascending: true })
-    .order('created_at', { ascending: false })
-
-  if (options?.itemType) {
-    query = query.eq('item_type', options.itemType)
-  }
-
-  if (options?.sourceCode && options.sourceCode !== 'Tümü') {
-    query = query.eq('legacy_source_code', options.sourceCode)
-  }
-
-  const { data, error } = await query
-  if (error || !data) {
-    return []
-  }
-
+): CommandCenterDateGroupOption[] {
   const optionsMap = new Map<string, CommandCenterDateGroupOption>()
-  for (const row of data as Pick<
-    CommandCenterItemRow,
-    | 'item_type'
-    | 'category_label'
-    | 'legacy_source_code'
-    | 'legacy_source_date_label'
-    | 'legacy_source_category'
-  >[]) {
-    const item = mapCommandCenterRow({
-      id: '',
-      item_type: row.item_type,
-      title: '',
-      detail: '',
-      category_label: row.category_label,
-      assignee: 'Atanmadi',
-      status: 'Baslanmadi',
-      priority: 5,
-      due_date: null,
-      urgent: false,
-      legacy_source_type: null,
-      legacy_source_code: row.legacy_source_code,
-      legacy_source_date_label: row.legacy_source_date_label,
-      legacy_source_category: row.legacy_source_category,
-      legacy_source_title: null,
-      sort_order: 0,
-      archived_at: null,
-      deleted_at: null,
-      created_at: undefined,
-      updated_at: undefined,
-    })
+
+  for (const facet of sortFacetRows(facets)) {
+    if (!matchesFacetFilters(facet, options)) {
+      continue
+    }
+
+    const item = toFacetItemShape(facet)
 
     if (
       options?.topCategory?.trim() &&
@@ -1096,67 +1117,45 @@ export async function archiveCommandCenterItem(id: string): Promise<boolean> {
   return !error
 }
 
-export async function fetchCommandCenterItemCounts(): Promise<CommandCenterItemCounts> {
-  const supabase = getSupabaseBrowserClient()
-  if (!supabase) {
-    return {
-      total: 0,
-      todo: 0,
-      meetingNote: 0,
-      burak: 0,
-      ubt: 0,
-      team: 0,
+/**
+ * Badge counts, derived from the facet rows. Mirrors the six count queries this used to run:
+ * `team` intentionally equals `meetingNote` (both counted meeting notes).
+ */
+export function buildCommandCenterItemCounts(
+  facets: CommandCenterFacetRow[]
+): CommandCenterItemCounts {
+  const counts = {
+    total: 0,
+    todo: 0,
+    meetingNote: 0,
+    burak: 0,
+    ubt: 0,
+    team: 0,
+  }
+
+  for (const facet of facets) {
+    const itemCount = Number(facet.item_count) || 0
+    counts.total += itemCount
+
+    if (facet.item_type === 'todo') {
+      counts.todo += itemCount
+
+      if (facet.assignee === 'Burak') {
+        counts.burak += itemCount
+      } else if (facet.assignee === 'UBT') {
+        counts.ubt += itemCount
+      }
+
+      continue
+    }
+
+    if (facet.item_type === 'meeting_note') {
+      counts.meetingNote += itemCount
+      counts.team += itemCount
     }
   }
 
-  const [totalResult, todoResult, meetingNoteResult, burakResult, ubtResult, teamResult] = await Promise.all([
-    supabase
-      .from('command_center_items')
-      .select('id', { count: 'exact', head: true })
-      .is('deleted_at', null)
-      .is('archived_at', null),
-    supabase
-      .from('command_center_items')
-      .select('id', { count: 'exact', head: true })
-      .eq('item_type', 'todo')
-      .is('deleted_at', null)
-      .is('archived_at', null),
-    supabase
-      .from('command_center_items')
-      .select('id', { count: 'exact', head: true })
-      .eq('item_type', 'meeting_note')
-      .is('deleted_at', null)
-      .is('archived_at', null),
-    supabase
-      .from('command_center_items')
-      .select('id', { count: 'exact', head: true })
-      .eq('item_type', 'todo')
-      .eq('assignee', 'Burak')
-      .is('deleted_at', null)
-      .is('archived_at', null),
-    supabase
-      .from('command_center_items')
-      .select('id', { count: 'exact', head: true })
-      .eq('item_type', 'todo')
-      .eq('assignee', 'UBT')
-      .is('deleted_at', null)
-      .is('archived_at', null),
-    supabase
-      .from('command_center_items')
-      .select('id', { count: 'exact', head: true })
-      .eq('item_type', 'meeting_note')
-      .is('deleted_at', null)
-      .is('archived_at', null),
-  ])
-
-  return {
-    total: totalResult.count ?? 0,
-    todo: todoResult.count ?? 0,
-    meetingNote: meetingNoteResult.count ?? 0,
-    burak: burakResult.count ?? 0,
-    ubt: ubtResult.count ?? 0,
-    team: teamResult.count ?? 0,
-  }
+  return counts
 }
 
 const SOURCE_SECTION_ORDER: CommandCenterSourceKind[] = ['meeting', 'wa', 'todo']
@@ -1180,43 +1179,21 @@ function getSourceKindFromDateGroupLabel(label: string): CommandCenterSourceKind
  * date-group labels shown in the "Tip" filter (e.g. "T 26 Şubat", "WA 6 Nisan").
  * Counts cover the full active list, independent of pagination or filters.
  */
-export async function fetchCommandCenterSourceBreakdown(): Promise<CommandCenterSourceBreakdown> {
-  const supabase = getSupabaseBrowserClient()
-  if (!supabase) {
-    return { sections: [], total: 0 }
-  }
-
-  const { data, error } = await supabase
-    .from('command_center_items')
-    .select(
-      'item_type, category_label, legacy_source_code, legacy_source_date_label, legacy_source_category'
-    )
-    .is('deleted_at', null)
-    .is('archived_at', null)
-
-  if (error || !data) {
-    return { sections: [], total: 0 }
-  }
-
+export function buildCommandCenterSourceBreakdown(
+  facets: CommandCenterFacetRow[]
+): CommandCenterSourceBreakdown {
   const entryMap = new Map<string, CommandCenterSourceEntry>()
   let total = 0
 
-  for (const row of data as Pick<
-    CommandCenterItemRow,
-    'item_type' | 'category_label' | 'legacy_source_code' | 'legacy_source_date_label' | 'legacy_source_category'
-  >[]) {
-    const dateGroup = getCommandCenterDateGroupInfo({
-      itemType: row.item_type,
-      categoryLabel: row.category_label,
-      legacySourceCode: row.legacy_source_code,
-      legacySourceDateLabel: row.legacy_source_date_label,
-    })
+  for (const facet of sortFacetRows(facets)) {
+    const dateGroup = getCommandCenterDateGroupInfo(toFacetItemShape(facet))
+    const itemCount = Number(facet.item_count) || 0
 
-    total += 1
+    total += itemCount
 
     const existing = entryMap.get(dateGroup.key)
     if (existing) {
-      entryMap.set(dateGroup.key, { ...existing, count: existing.count + 1 })
+      entryMap.set(dateGroup.key, { ...existing, count: existing.count + itemCount })
       continue
     }
 
@@ -1224,7 +1201,7 @@ export async function fetchCommandCenterSourceBreakdown(): Promise<CommandCenter
       key: dateGroup.key,
       label: dateGroup.label,
       kind: getSourceKindFromDateGroupLabel(dateGroup.label),
-      count: 1,
+      count: itemCount,
       sortValue: getDateGroupSortToken(dateGroup.label),
     })
   }

@@ -1,23 +1,24 @@
 'use client'
 
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, Archive, Pencil, Plus, Save, Search, Trash2, X } from 'lucide-react'
 import AccordionCard from '@/components/dashboard/AccordionCard'
 const burakAvatar = '/burak.png'
 const ubtAvatar = '/ubt.png'
 import {
   archiveCommandCenterItem,
+  buildCommandCenterCategoryOptions,
+  buildCommandCenterDateGroupOptions,
+  buildCommandCenterItemCounts,
+  buildCommandCenterSourceBreakdown,
   COMMAND_CENTER_PRIORITY_OPTIONS,
   createCommandCenterItem,
   createEmptyCommandCenterFormState,
   deleteCommandCenterItem,
   fetchArchivedCommandCenterItems,
-  fetchCommandCenterCategoryOptions,
+  fetchCommandCenterFacets,
   fetchDeletedCommandCenterItems,
-  fetchCommandCenterDateGroupOptions,
-  fetchCommandCenterItemCounts,
   fetchCommandCenterItems,
-  fetchCommandCenterSourceBreakdown,
   getCommandCenterAssigneeLabel,
   getCommandCenterItemLabel,
   getCommandCenterStatusLabel,
@@ -26,12 +27,10 @@ import {
   toCommandCenterFormState,
   updateCommandCenterItem,
   validateCommandCenterFormState,
-  type CommandCenterCategoryOption,
-  type CommandCenterDateGroupOption,
+  type CommandCenterFacetRow,
   type CommandCenterFormState,
   type CommandCenterItem,
   type CommandCenterItemType,
-  type CommandCenterSourceBreakdown,
 } from '@/lib/dashboard/command-center-items'
 import { MEETING_CATEGORIES, MEETING_SOURCES } from '@/lib/dashboard/meeting-notes-data'
 import {
@@ -58,6 +57,40 @@ const INLINE_EDITOR_LABEL_CLS =
 
 const TODO_COLOR = '#1A6DC2'
 const MEETING_NOTE_COLOR = '#8B5CF6'
+
+/** Kayıt listesi varsayılan olarak en küçük boyutla açılır; büyük sayfalar isteğe bağlı. */
+const PAGE_SIZE_OPTIONS = [10, 50, 100] as const
+const DEFAULT_PAGE_SIZE = PAGE_SIZE_OPTIONS[0]
+const PAGE_SIZE_STORAGE_KEY = 'command-center:page-size'
+
+function isSupportedPageSize(value: number): boolean {
+  return (PAGE_SIZE_OPTIONS as readonly number[]).includes(value)
+}
+
+function readStoredPageSize(): number {
+  if (typeof window === 'undefined') {
+    return DEFAULT_PAGE_SIZE
+  }
+
+  try {
+    const stored = Number(window.localStorage.getItem(PAGE_SIZE_STORAGE_KEY))
+    return isSupportedPageSize(stored) ? stored : DEFAULT_PAGE_SIZE
+  } catch {
+    return DEFAULT_PAGE_SIZE
+  }
+}
+
+function storePageSize(value: number): void {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  try {
+    window.localStorage.setItem(PAGE_SIZE_STORAGE_KEY, String(value))
+  } catch {
+    // Depolama kapalıysa tercih sadece bu oturumda geçerli olur.
+  }
+}
 
 const STATUS_COLORS: Record<string, string> = {
   Baslanmadi: '#888888',
@@ -136,7 +169,6 @@ export default function CommandCenterManager({
   compatibilityMessage,
   lockedItemType,
 }: CommandCenterManagerProps) {
-  const PAGE_SIZE = 50
   const [items, setItems] = useState<CommandCenterItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isPageLoading, setIsPageLoading] = useState(false)
@@ -150,23 +182,11 @@ export default function CommandCenterManager({
   const [searchTerm, setSearchTerm] = useState('')
   const [urgentOnly, setUrgentOnly] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState<number>(readStoredPageSize)
   const [totalCount, setTotalCount] = useState(0)
   const [archivedItems, setArchivedItems] = useState<CommandCenterItem[]>([])
   const [deletedItems, setDeletedItems] = useState<CommandCenterItem[]>([])
-  const [categoryOptions, setCategoryOptions] = useState<CommandCenterCategoryOption[]>([])
-  const [dateGroupOptions, setDateGroupOptions] = useState<CommandCenterDateGroupOption[]>([])
-  const [itemCounts, setItemCounts] = useState({
-    total: 0,
-    todo: 0,
-    meetingNote: 0,
-    burak: 0,
-    ubt: 0,
-    team: 0,
-  })
-  const [sourceBreakdown, setSourceBreakdown] = useState<CommandCenterSourceBreakdown>({
-    sections: [],
-    total: 0,
-  })
+  const [facets, setFacets] = useState<CommandCenterFacetRow[]>([])
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formState, setFormState] = useState<CommandCenterFormState>(() =>
     createDefaultFormState(lockedItemType)
@@ -175,6 +195,24 @@ export default function CommandCenterManager({
     createEmptyCommandCenterFormState()
   )
   const activeItemType = lockedItemType
+
+  // Filtre seçenekleri, kaynak dökümü ve rozet sayıları tek facet sorgusundan türetilir —
+  // kategori değişiminde yeni istek atılmaz.
+  const categoryOptions = useMemo(
+    () => buildCommandCenterCategoryOptions(facets, { itemType: activeItemType }),
+    [facets, activeItemType]
+  )
+  const dateGroupOptions = useMemo(
+    () =>
+      buildCommandCenterDateGroupOptions(facets, {
+        itemType: activeItemType,
+        topCategory: selectedCategory,
+      }),
+    [facets, activeItemType, selectedCategory]
+  )
+  const itemCounts = useMemo(() => buildCommandCenterItemCounts(facets), [facets])
+  const sourceBreakdown = useMemo(() => buildCommandCenterSourceBreakdown(facets), [facets])
+
   const guideItems = [
     'Yeni kayıtlar aktif listede başlar, güncelliğini kaybedenleri arşivleyin.',
     'Silme işlemi yalnız gerçekten kaldırılması gereken kayıtlar için kullanılmalı.',
@@ -202,7 +240,7 @@ export default function CommandCenterManager({
     try {
       const result = await fetchCommandCenterItems({
         page: currentPage,
-        pageSize: PAGE_SIZE,
+        pageSize,
         itemType: activeItemType,
         assignee: selectedAssignee,
         topCategory: selectedCategory,
@@ -225,10 +263,10 @@ export default function CommandCenterManager({
       setIsPageLoading(false)
     }
   }, [
-    PAGE_SIZE,
     activeItemType,
     currentPage,
     items.length,
+    pageSize,
     searchTerm,
     selectedAssignee,
     selectedCategory,
@@ -259,14 +297,9 @@ export default function CommandCenterManager({
     void loadDeletedItems()
   }, [loadDeletedItems])
 
-  const refreshCounts = useCallback(async function refreshCounts() {
-    const counts = await fetchCommandCenterItemCounts()
-    setItemCounts(counts)
-  }, [])
-
-  const refreshSourceBreakdown = useCallback(async function refreshSourceBreakdown() {
-    const breakdown = await fetchCommandCenterSourceBreakdown()
-    setSourceBreakdown(breakdown)
+  const refreshFacets = useCallback(async function refreshFacets() {
+    const nextFacets = await fetchCommandCenterFacets()
+    setFacets(nextFacets)
   }, [])
 
   const loadArchivedItems = useCallback(async function loadArchivedItems() {
@@ -285,35 +318,8 @@ export default function CommandCenterManager({
   }, [loadArchivedItems])
 
   useEffect(() => {
-    void refreshCounts()
-  }, [refreshCounts])
-
-  useEffect(() => {
-    void refreshSourceBreakdown()
-  }, [refreshSourceBreakdown])
-
-  useEffect(() => {
-    async function loadCategoryOptions() {
-      const options = await fetchCommandCenterCategoryOptions({
-        itemType: activeItemType,
-      })
-      setCategoryOptions(options)
-    }
-
-    void loadCategoryOptions()
-  }, [activeItemType])
-
-  useEffect(() => {
-    async function loadDateGroupOptions() {
-      const options = await fetchCommandCenterDateGroupOptions({
-        itemType: activeItemType,
-        topCategory: selectedCategory,
-      })
-      setDateGroupOptions(options)
-    }
-
-    void loadDateGroupOptions()
-  }, [activeItemType, selectedCategory])
+    void refreshFacets()
+  }, [refreshFacets])
 
   function resetCreateForm(itemType?: CommandCenterItemType) {
     setFormState(createDefaultFormState(lockedItemType, itemType))
@@ -348,8 +354,7 @@ export default function CommandCenterManager({
       }
 
       resetCreateForm(lockedItemType ?? formState.itemType)
-      await refreshCounts()
-      await refreshSourceBreakdown()
+      await refreshFacets()
       await loadArchivedItems()
 
       if (currentPage !== 1) {
@@ -381,8 +386,7 @@ export default function CommandCenterManager({
       }
 
       cancelEdit()
-      await refreshCounts()
-      await refreshSourceBreakdown()
+      await refreshFacets()
       await loadArchivedItems()
       await loadItems()
     } catch (updateError) {
@@ -406,7 +410,7 @@ export default function CommandCenterManager({
         throw new Error('Kayıt silinemedi.')
       }
 
-      await refreshCounts()
+      await refreshFacets()
 
       if (editingId === itemId) {
         cancelEdit()
@@ -414,8 +418,7 @@ export default function CommandCenterManager({
 
       const nextPage = items.length === 1 && currentPage > 1 ? currentPage - 1 : currentPage
       await Promise.all([
-        refreshCounts(),
-        refreshSourceBreakdown(),
+        refreshFacets(),
         loadDeletedItems(),
         loadArchivedItems(),
       ])
@@ -451,7 +454,7 @@ export default function CommandCenterManager({
       }
 
       const nextPage = items.length === 1 && currentPage > 1 ? currentPage - 1 : currentPage
-      await Promise.all([refreshCounts(), refreshSourceBreakdown(), loadArchivedItems()])
+      await Promise.all([refreshFacets(), loadArchivedItems()])
 
       if (nextPage !== currentPage) {
         setCurrentPage(nextPage)
@@ -465,9 +468,19 @@ export default function CommandCenterManager({
     }
   }
 
-  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
-  const rangeStart = totalCount === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1
-  const rangeEnd = Math.min(currentPage * PAGE_SIZE, totalCount)
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize))
+  const rangeStart = totalCount === 0 ? 0 : (currentPage - 1) * pageSize + 1
+  const rangeEnd = Math.min(currentPage * pageSize, totalCount)
+
+  function handlePageSizeChange(nextPageSize: number) {
+    if (!isSupportedPageSize(nextPageSize) || nextPageSize === pageSize) {
+      return
+    }
+
+    setPageSize(nextPageSize)
+    storePageSize(nextPageSize)
+    setCurrentPage(1)
+  }
   const activeItems = items.filter((item) => item.status !== 'Tamamlandi')
   const completedItems = items.filter((item) => item.status === 'Tamamlandi')
   return (
@@ -943,9 +956,26 @@ export default function CommandCenterManager({
             )}
 
             <div className="flex flex-col gap-3 rounded-2xl border border-[rgba(66,133,244,0.08)] bg-white px-4 py-3 text-sm text-gray-600 shadow-[0_10px_20px_rgba(60,64,67,0.04)] sm:flex-row sm:items-center sm:justify-between">
-              <p>
-                {rangeStart}-{rangeEnd} / {totalCount} kayıt
-              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                <p>
+                  {rangeStart}-{rangeEnd} / {totalCount} kayıt
+                </p>
+                <label className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500">
+                  Sayfa boyutu
+                  <select
+                    value={pageSize}
+                    onChange={(event) => handlePageSizeChange(Number(event.target.value))}
+                    className="rounded-xl border border-[rgba(66,133,244,0.15)] bg-white px-2.5 py-1.5 text-xs font-semibold text-gray-700 shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    aria-label="Sayfa boyutu"
+                  >
+                    {PAGE_SIZE_OPTIONS.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
               <div className="flex items-center gap-2">
                 <button
                   type="button"

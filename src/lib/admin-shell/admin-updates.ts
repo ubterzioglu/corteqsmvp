@@ -14,6 +14,19 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260804-komuta-merkezi-eksik-parti-ve-hiz",
+    date: "4 Ağustos 2026",
+    title:
+      "Komuta Merkezi: görünmeyen 329 kayıtlık WhatsApp partisi ortaya çıktı, pano artık 10 kayıtla hızlı açılıyor",
+    items: [
+      "Panodaki WhatsApp kaynaklarının en yenisi 'WA 6 Temmuz' görünüyordu — sanki temmuz ortasından 2 Ağustos'a kadarki yazışmalar hiç işlenmemiş gibi. Veri aslında yerli yerindeydi: 2 Ağustos'ta aktarılan 329 kayıtlık parti panonun listelerine hiç girmiyordu.",
+      "Sebebi şuymuş: pano, filtre listelerini ve kaynak kartını hazırlarken tüm tabloyu baştan okuyordu; veritabanı ise bu tür yanıtları 1000 satırda kesiyor. Sıralamada 1000. satırdan sonrasına düşen ne varsa (en yeni WhatsApp partisi dahil) sessizce kayboluyordu.",
+      "Artık o üç ağır okuma yerine veritabanı tarafında hazırlanan tek bir özet okunuyor. Kaynak kartında 'WA 3 Ağustos (329)' göründü, 'WA 6 Temmuz' da kesik 371 yerine gerçek 411 kaydıyla listeleniyor; kategori ve tarih filtreleri arasında geçiş de artık ağ isteği beklemiyor.",
+      "Kayıt listesi varsayılan olarak 10 kayıtla açılıyor — ilk açılış belirgin biçimde hafifledi. Daha uzun liste istersen sayfalama çubuğundaki 'Sayfa boyutu' seçicisinden 50 veya 100'e geçebilirsin; seçimin tarayıcında hatırlanıyor.",
+      "Durum: veritabanı tarafı canlıda ve gerçek veriyle doğrulandı (özet 320 satır, 1477 kayıt). Panonun kendisindeki değişiklikler deploy sonrası görünür.",
+    ],
+  },
+  {
     id: "20260803-zgen-nesil-bulucu-eklendi",
     date: "3 Ağustos 2026",
     title: "ZGEN Nesil Bulucu 18. araç olarak /tools'a katıldı",
