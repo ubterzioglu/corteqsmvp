@@ -26,6 +26,17 @@ export type AdminTodoEntry = {
 
 export const ADMIN_TODOS: AdminTodoEntry[] = [
   {
+    id: "20260805-cadde-hedef-eslesmesi-fold",
+    title: "AÇIK BIRAKILDI: Cadde'de paylaşım üyelerin çoğu için kırık — hedef eşleşmesi",
+    description:
+      "5 Ağustos'ta teşhis edildi, düzeltmesi BİLİNÇLİ olarak ertelendi — bu kaydın amacı unutulmamasını sağlamak. Sorun: paylaşımın hedef ülkesi profilden HAM geliyor (get_cadde_actor_context), create_cadde_post_v2 ise bunu birebir isimle eşleştiriyor (c.name = country_name). Profilinde 'Türkiye' yazan üye, tabloda 'Turkiye' (diakritiksiz) kayıtlı olduğu için eşleşmiyor ve paylaşımı cadde_invalid_targets ile reddediliyor. CANLIDA ÖLÇÜLDÜ: en kalabalık grup 38 üye 'Türkiye' — hiçbiri paylaşım yapamıyor; ilk 25 değerde eşleşen 41 üyeye karşılık eşleşmeyen 72 üye var (Belirtilmedi 14, Qatar 3, türkiye 3, Deutschland, Abd, Tr, İngiltere...). Akış (okuma) tarafı 29 Temmuz'da cadde_fold_text ile aksan/harf duyarsız hale getirilmişti; create_cadde_post_v2 atlanmış. DÜZELTME: o iki join'i cadde_fold_text'e çevirecek bir migration — veri temizliği tek başına yetmez, çünkü Qatar/Deutschland/Abd gibi değerler hiçbir listede yok. Yapıldığında bu kayıt kapatılmalı. NOT: hatanın görünen yüzü (kullanıcının genel 'İşlem tamamlanamadı' mesajı görmesi) commit 1cd7ef8 ile ZATEN düzeltildi — deploy sonrası artık gerçek sebep yazıyor; kırık olan paylaşımın kendisi.",
+    priority: "kritik",
+    actions: [
+      { label: "Cadde'yi Aç", to: "/cadde" },
+      { label: "İş Panosunu Aç", to: "/admin/workshop/cadde" },
+    ],
+  },
+  {
     id: "20260731-hos-geldin-anahtarini-ac",
     title: "Hoş geldin mailini yayına al",
     description:

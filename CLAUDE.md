@@ -150,6 +150,17 @@ muhasebe/
   rate limits) — product decisions are SQL updates, not code changes.
 - **Ban kill-switch** lives inside `has_cadde_feature` — new write RPCs are covered automatically.
 - New `cadde_*` RPC error codes MUST be added to the Turkish message map in `cadde-rules.ts`.
+  RPC errors from supabase-js are **plain objects, not `Error` instances** — `resolveCaddeRpcErrorMessage`
+  reads `message`/`code`/`details`/`hint`. Never narrow it back to `instanceof Error` (that bug made the
+  whole map dead in production until 2026-08-05); tests must build the error as a plain object.
+- ⚠️ **KNOWN OPEN DEFECT (2026-08-05, deliberately deferred — do not "discover" and silently rewrite):**
+  `create_cadde_post_v2` resolves post targets by **exact name** (`c.name = country_name`) while the
+  profile supplies the raw attribute (`get_cadde_actor_context` → `cadde_attr_text`). `Türkiye` never
+  matches the stored `Turkiye`, so **38 members (the largest group) cannot post at all**; measured live,
+  41 matching vs 72 non-matching members across the top 25 values. The read/feed side was already made
+  fold-insensitive (`cadde_fold_text`) on 2026-07-29; the write side was missed. Fix = migration moving
+  those joins to `cadde_fold_text`. Tracked in `admin-todos.ts` (`20260805-cadde-hedef-eslesmesi-fold`)
+  — close both when done.
 - New cadde content tables MUST carry `diaspora_key` + CHECK + feed/list filter.
 - Legacy tables (`feed_posts/feed_likes/cafes/cafe_memberships/user_follows`) are write-revoked and
   COMMENT'ed; **do not re-open policies/grants** — DROP happens after canary via separate decision.
