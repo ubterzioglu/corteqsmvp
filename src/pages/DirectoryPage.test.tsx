@@ -7,6 +7,14 @@ import DirectoryPage from "@/pages/DirectoryPage";
 
 const listUnifiedDirectoryRowsMock = vi.fn();
 const listDirectoryRoleOptionsMock = vi.fn();
+// B5: `getTotalDirectoryCount` mock'lanmamıştı ve DirectoryPage onu koşulsuz
+// çağırıyor — her render GERÇEK bir Supabase isteği deniyor, ENOTFOUND ile ağ
+// zaman aşımına kadar sürüyordu. Bu istek dosya teardown'ından sonra çözülünce
+// `setTotalCount` sökülmüş ağaca yazıyor ve süit paralel koşarken
+// "ReferenceError: window is not defined" unhandled rejection'ı düşüyordu.
+// Ürün tarafındaki isMounted koruması ayrıca eklendi (DirectoryPage.tsx);
+// buradaki mock ise testin ağa hiç çıkmamasını sağlar.
+const getTotalDirectoryCountMock = vi.fn();
 const useGeoCountriesMock = vi.fn();
 const useGeoCitiesMock = vi.fn();
 const useAuthMock = vi.fn();
@@ -17,6 +25,7 @@ vi.mock("@/lib/catalog-directory", async () => {
     ...actual,
     listUnifiedDirectoryRows: (...args: unknown[]) => listUnifiedDirectoryRowsMock(...args),
     listDirectoryRoleOptions: (...args: unknown[]) => listDirectoryRoleOptionsMock(...args),
+    getTotalDirectoryCount: (...args: unknown[]) => getTotalDirectoryCountMock(...args),
   };
 });
 
@@ -52,6 +61,7 @@ const renderPage = (initialEntry = "/directory") => {
 describe("DirectoryPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    getTotalDirectoryCountMock.mockResolvedValue(2);
     window.HTMLElement.prototype.scrollIntoView = vi.fn();
     window.HTMLElement.prototype.hasPointerCapture = vi.fn(() => false);
     window.HTMLElement.prototype.setPointerCapture = vi.fn();

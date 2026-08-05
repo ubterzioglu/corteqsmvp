@@ -118,8 +118,22 @@ const DirectoryPage = () => {
     };
   }, [cityFilter, countryFilter, featuredOnly, isAuthLoading, roleFilter, searchText, user]);
 
+  // B5 kök nedeni: bu effect'in temizleyicisi YOKTU. Sayım isteği çözülmeden
+  // kullanıcı /directory'den ayrılırsa `setTotalCount` sökülmüş bileşen üzerinde
+  // çalışıyordu. Test süiti paralel koşarken bu, ortam yıkıldıktan SONRA
+  // gerçekleşiyor ve `ReferenceError: window is not defined` şeklinde bir
+  // "unhandled rejection" olarak düşüyordu (bkz. DirectoryPage.test.tsx notu).
+  // Hemen yukarıdaki effect aynı korumayı zaten taşıyor — burada eksikti.
   useEffect(() => {
-    void getTotalDirectoryCount().then(setTotalCount);
+    let isMounted = true;
+
+    void getTotalDirectoryCount().then((count) => {
+      if (isMounted) setTotalCount(count);
+    });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const updateFilter = (key: string, value: string | null) => {
