@@ -124,22 +124,33 @@ kaydının ta kendisi; üye verisine dokunmak karar gerektirdiği için düzelti
 Yapısal soru olarak duruyor: emniyet supabı "ülkesi çözülmeyen ama şehri çözülen"
 durumu kapsamalı mı?
 
-### Sürüm kaydı yine yazılmadı — dördüncü kez
+### Sürüm kaydı yine yazılmadı — dördüncü kez (kapatıldı)
 
-`20260804190000` canlıda çalıştı ama `schema_migrations` kaydı yok;
-`npm run check:migrations` 356 dosya / 355 kayıt diyor. Migration dosyaları bu repoda
-sürüm kaydını **kendileri yazmıyor** (`20260805130000` ve `140000`'de de yok), kayıt
-ayrıca atılıyor ve unutuluyor. Dosya `applied/` altına taşındı; eksik kayıt
-`admin-todos.ts`'e `20260805-migration-surum-kaydi-eksik` olarak yazıldı.
+`20260804190000` canlıda çalıştı ama `schema_migrations` kaydı yazılmadı;
+`npm run check:migrations` 356 dosya / 355 kayıt dedi. Kullanıcı tek satırlık INSERT'i
+çalıştırdı → **sapma yok, 356/356**. Dosya `applied/` altına taşındı.
+
+Asıl sorun tekil değil: migration dosyaları bu repoda sürüm kaydını **kendileri
+yazmıyor** (`20260805130000` ve `140000`'de de böyle bir INSERT yok), kayıt psql'den
+sonra ayrıca atılıyor ve unutuluyor — dört kez oldu (18 Temmuz, 20 Temmuz,
+`20260805120000`, `20260804190000`). `admin-todos.ts`'e
+`20260805-migration-surum-kaydi-unutuluyor` olarak, iki kalıcı çözüm seçeneğiyle
+yazıldı: (a) migration şablonuna kendi sürüm INSERT'ini koymak, (b) `supabase db push`
+kullanmak. Bu repoda migration'lar elle `psql -f` ile uygulandığı için (a) daha az
+bağımlılık getirir.
+
+## 7. Kullanıcı kararı: cenk kaydının ülkesi Kanada
+
+Boş akış gören tek hesabın ülke alanı `vancouver` → `Kanada` yapılacak. Çıkarım
+**şehirden** geliyor (`Vancouver` katalogda Kanada'ya bağlı), telefon ülke kodundan
+değil — session3'ün "telefon kodundan ülke çıkarma" yasağı ihlal edilmiyor.
+Salt-okunur prova: tek kayıt, ülke alanında `vancouver` yazan başka profil yok.
 
 ## Sende kalanlar
 
-1. Tek satırlık sürüm kaydı:
-   `INSERT INTO supabase_migrations.schema_migrations (version, name) VALUES ('20260804190000','cadde_geo_data_cleanup') ON CONFLICT (version) DO NOTHING;`
-2. `/cadde` masaüstünde **göz kontrolü** — yeni üç satırlık kart şeridi deploy edildi
+1. `/cadde` masaüstünde **göz kontrolü** — yeni üç satırlık kart şeridi deploy edildi
    ama hiç bakılmadı (jsdom testleri yerleşimi doğrulamaz)
-3. Karar: `cenkkarakuz@gmail.com` kaydının ülkesi `Kanada` yapılsın mı (çıkarım
-   şehirden, telefon kodundan değil)
+2. Cenk kaydının UPDATE'i (komut hazır) — sonrasında boş akış gören üye 1 → 0 olmalı
 
 ## Bilinçli kapsam dışı (kullanıcı kararı)
 
