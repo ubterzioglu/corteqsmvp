@@ -169,10 +169,21 @@ muhasebe/
   **17 members' country and 20 members' city have no catalog row at all** (`Belirtilmedi` 14,
   `München` vs catalog `Münih`, `Böblingen`, `Düsseldorf/Grevenbroich` = two cities in one field,
   `Çankaya` = an Ankara district, …). These members are **not broken today**: the blind-viewer
-  safety valve shows every post to the 44 members whose location cannot be resolved. The real fix
-  is the profile form, which is **still free text** — today's repairs fix existing rows, they do
-  not prevent recurrence. Needs a select list fed from `cadde_countries`/`cadde_cities` plus
-  wider catalog coverage (22 countries / 55 cities is narrow for a global diaspora product).
+  safety valve shows every post to the 44 members whose location cannot be resolved.
+  ⚠️ **The "profile form is still free text" diagnosis was WRONG — do not repeat it.** Re-measured
+  2026-08-05 evening: the form already uses select components (`ProfilePage.tsx:1610`,
+  `SearchableCountrySelect` / `SearchableCitySelect`). The actual root cause is **two disjoint
+  catalogs**: the form is fed from `geo_countries` (251) / `geo_cities` (76,990) via `useGeo`,
+  while Cadde matches against `cadde_countries` (22) / `cadde_cities` (54). A member picks a
+  perfectly valid city (`München`) that the Cadde catalog does not know (`Münih`). Converting the
+  form to a select therefore fixes nothing — it already is one; **the two lists must be
+  reconciled.** Bridge columns already exist and are partly filled: `cadde_countries.geo_country_id`
+  18/22, `cadde_cities.geo_city_id` 49/54 (the 9 empty ones are exactly the rows hand-inserted by
+  `20260805140000`). Distinct-value measurement: 60 of 68 city values and 26 of 29 country values
+  resolve. The unresolved mass is **not** catalog coverage — `Belirtilmedi` (14 country + 13 city)
+  is legacy **WhatsApp-bot registration** data (`register` / `WhatsApp Bot` / `@wa.local` rows in
+  the archived dumps); no current code writes it. Genuine catalog gaps affect **4 members**
+  (`München`, `Böblingen`, `Çankaya`, `Düsseldorf/Grevenbroich`) and junk values 4 more.
   **Do not derive country from the phone dialling code** — systematically misleading here (a `+90`
   member may well live in Berlin). Tracked in `admin-todos.ts`
   (`20260805-cadde-profil-konum-serbest-metin`).
