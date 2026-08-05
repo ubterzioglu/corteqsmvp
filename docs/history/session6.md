@@ -94,16 +94,52 @@ Beş maddenin de canlıda açık ve `workshop_key='cadde'` olduğu tek tek doğr
 
 ---
 
+## 6. Üç SQL çalıştırıldı — canlı sonuçlar
+
+Kullanıcı üçünü de çalıştırdı (`$CONN` PowerShell'de tanımsız olduğu için ilk deneme
+localhost'a düştü; bağlantı bloğuyla birlikte tekrarlandı).
+
+| Ölçüt | Önce | Sonra |
+|---|---|---|
+| `20260805120000` sürüm kaydı | yok | **var** |
+| Hedef satırı | 82 | **98** (+16) |
+| Hedeflenmemiş aktif ülke | 4 | **0** |
+| Küçük harfle başlayan şehir | 9 (+1 tamamen büyük) | **0** |
+| Fold bazlı mükerrer şehir | 1 (`Roma`) | **0** |
+| Pano işaretli | 76/133 | **81/133** |
+| Boş akış gören üye | 6 | **1** |
+
+Migration çıktısı revizyonun doğru olduğunu kanıtladı:
+`NOTICE: m78: ABD ye bagli mukerrer Roma kaydi silindi` + `INSERT 0 0` (İtalya zaten
+kayıtlıydı, guard tuttu) + doğrulama bloğu hatasız geçti.
+
+### Kalan 1 üye — beklenen sonuç değil, ama zararsız
+
+`cenkkarakuz@gmail.com` ülke alanına da şehir alanına da `vancouver` yazmış. Katalog
+temizliği sonrası **şehri** çözülüyor (Kanada/Vancouver) ama **ülkesi** çözülmüyor.
+Emniyet supabı yalnız "ne ülke ne şehir çözülüyor" dalında devreye girdiği için bu
+hesap arada kalıyor: 156 üye içinde akışta 0 post gören tek hesap. **Bugüne kadar hiç
+giriş yapmamış**, yani pratik etkisi sıfır. Bu, session3'ün "C grubu, karar bekliyor"
+kaydının ta kendisi; üye verisine dokunmak karar gerektirdiği için düzeltilmedi.
+Yapısal soru olarak duruyor: emniyet supabı "ülkesi çözülmeyen ama şehri çözülen"
+durumu kapsamalı mı?
+
+### Sürüm kaydı yine yazılmadı — dördüncü kez
+
+`20260804190000` canlıda çalıştı ama `schema_migrations` kaydı yok;
+`npm run check:migrations` 356 dosya / 355 kayıt diyor. Migration dosyaları bu repoda
+sürüm kaydını **kendileri yazmıyor** (`20260805130000` ve `140000`'de de yok), kayıt
+ayrıca atılıyor ve unutuluyor. Dosya `applied/` altına taşındı; eksik kayıt
+`admin-todos.ts`'e `20260805-migration-surum-kaydi-eksik` olarak yazıldı.
+
 ## Sende kalanlar
 
-1. `psql -f docs/operations/2026-08-05-cadde-acilis-duzeltme.sql`
-   → sürüm kaydı + 4 ülkeye hedef; sonra boş akış gören üye 6 → 0 olmalı
-2. `psql -f supabase/migrations/20260804190000_cadde_geo_data_cleanup.sql`
-   → sonra dosyayı `applied/` altına taşı, yoksa `check:migrations` görmez
-3. `psql -f docs/operations/2026-08-05-workshop-ubt-isaretleme-2.sql` (bölüm 1),
-   1 ve 2 bittiyse bölüm 2'nin yorumunu da aç → 81/133
-4. `/cadde` masaüstünde **göz kontrolü** — yeni üç satırlık kart şeridi deploy edildi
+1. Tek satırlık sürüm kaydı:
+   `INSERT INTO supabase_migrations.schema_migrations (version, name) VALUES ('20260804190000','cadde_geo_data_cleanup') ON CONFLICT (version) DO NOTHING;`
+2. `/cadde` masaüstünde **göz kontrolü** — yeni üç satırlık kart şeridi deploy edildi
    ama hiç bakılmadı (jsdom testleri yerleşimi doğrulamaz)
+3. Karar: `cenkkarakuz@gmail.com` kaydının ülkesi `Kanada` yapılsın mı (çıkarım
+   şehirden, telefon kodundan değil)
 
 ## Bilinçli kapsam dışı (kullanıcı kararı)
 
