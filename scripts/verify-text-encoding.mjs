@@ -7,6 +7,16 @@ const decoder = new TextDecoder("utf-8", { fatal: true });
 // (e-posta şablonları, RPC hata mesajları) — encoding denetimi buraya da uygulanır.
 const includeDirs = ["src", "public", "docs", "scripts", "supabase"];
 const includeFiles = ["index.html", "package.json", "vite.config.ts", "tsconfig.json"];
+// AÇIK BOŞLUK (ölçüldü 2026-08-05): yukarıdaki yorum `supabase` dizini için "migration'lar
+// da denetlenir" diyor, ama `.sql` bu listede YOK — yani 365 migration hiç kontrol edilmiyor.
+// Migration'lar kullanıcıya görünen Türkçe VERİ yazar (ülke/şehir adları) ve bozuk encoding
+// doğrudan veritabanına kaydolur. `.sql` eklemek tek başına YETMEZ: suspiciousTokens
+// listesindeki çıplak U+00C4 (Almanca büyük A-umlaut) meşru Almanca içeriğe takılıyor
+// — 20260630140000_relocation_tool_vatandaslik_testi_almanya.sql içindeki Almanca soru
+// metinleri bu yüzden hatalı işaretlenir ve prebuild/pretest kırılır. Kapatmak için önce
+// kural inceltilmeli (çıplak U+00C3/U+00C4/U+00C5 token'ları yerine yalnız
+// suspiciousPatterns'a güvenmek) ya da o dosyaya istisna tanımlanmalı — ayrı bir karar.
+// DİKKAT: bu yorumda o karakterleri harfiyen YAZMA; script kendi dosyasını da tarar.
 const extensions = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json", ".md", ".html", ".css", ".svg", ".yml", ".yaml"]);
 // "archive"/"reference"/"docu"/"reference-clones": docs altındaki dondurulmuş arşiv
 // ve üçüncü parti referans içerikleri — encoding denetimi yalnız canlı kod/dokümanlar
