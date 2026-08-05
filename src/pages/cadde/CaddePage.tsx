@@ -31,6 +31,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import {
   countCaddePostsSince,
@@ -721,79 +722,128 @@ const CaddePage = () => {
                       </div>
                     ) : null}
 
+                    {/* 05.08.2026 kullanıcı kararı: eylem şeridi SEMBOL + SAYI'ya indi,
+                        etiketler hover'daki ipucuna taşındı. Yedi buton yan yana metinli
+                        durunca şerit iki satıra taşıyor ve paylaşımın kendisiyle görsel
+                        olarak yarışıyordu.
+
+                        Metin GÖRÜNMEZ oldu, ERİŞİLEBİLİR olmaya devam ediyor: her butonda
+                        `aria-label` var (ekran okuyucu ve testler onu okur), ipucu yalnız
+                        görsel katman.
+
+                        DİKKAT — erişilebilir adlar bilerek AYNEN korundu, "düzeltilmedi":
+                        tepki ve paylaş butonlarında zaten aria-label vardı ("Beğendim (1)",
+                        "Paylaş (0)"). Yorum butonunda YOKTU, adı görünür metninden
+                        geliyordu; metin kalkınca adsız kalmasın diye eklendi ve eski metnin
+                        birebir aynısı yazıldı ("3 yorum" / "Yorum yaz"). Daha düzenli
+                        görünen "Yorumlar (3)" biçimi denendi ve GERİ ALINDI — bu adı
+                        değiştirmek hem ekran okuyucu davranışını hem de ona bağlı testi
+                        sessizce değiştiriyor. Buradaki adları değiştirmek istersen testleri
+                        de birlikte güncelle.
+
+                        TooltipProvider bilinçli olarak BURADA, sayfanın içinde. App.tsx
+                        kökte zaten bir tane sağlıyor ama CaddePage testlerde doğrudan
+                        (App olmadan) render ediliyor — provider'sız Radix Tooltip hata
+                        fırlatır. İç içe provider zararsızdır ve DOM'a düğüm basmaz. */}
+                    <TooltipProvider delayDuration={200}>
                     <div className="flex flex-wrap items-center gap-1.5">
                       {REACTION_META.map((reaction) => {
                         const Icon = reaction.icon;
                         const active = item.post.viewerReactions.includes(reaction.key);
                         const count = item.post.reactionCounts[reaction.key] ?? 0;
                         return (
+                          <Tooltip key={reaction.key}>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant={active ? "default" : "outline"}
+                                size="sm"
+                                aria-label={`${reaction.label} (${count})`}
+                                onClick={() => {
+                                  if (!session) {
+                                    navigate("/login");
+                                    return;
+                                  }
+                                  reactionMutation.mutate({ postId: item.post.id, reactionType: reaction.key });
+                                }}
+                                className={`min-h-10 rounded-full px-3 ${
+                                  active ? "bg-slate-900 text-white hover:bg-slate-800" : "bg-white/80"
+                                }`}
+                              >
+                                <Icon className={`h-4 w-4 ${active && reaction.key === "love" ? "fill-current" : ""}`} />
+                                <span className={`ml-1.5 text-xs ${active ? "text-white/80" : "text-muted-foreground"}`}>{count}</span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>{reaction.label}</TooltipContent>
+                          </Tooltip>
+                        );
+                      })}
+                      <Tooltip>
+                        <TooltipTrigger asChild>
                           <Button
-                            key={reaction.key}
-                            variant={active ? "default" : "outline"}
+                            type="button"
+                            variant="outline"
                             size="sm"
-                            aria-label={`${reaction.label} (${count})`}
+                            data-testid="cadde-comment-toggle"
+                            aria-label={
+                              item.post.commentCount > 0
+                                ? `${item.post.commentCount} yorum`
+                                : "Yorum yaz"
+                            }
+                            className="min-h-10 rounded-full px-3"
+                            onClick={() =>
+                              setExpandedCommentPostId((current) => (current === item.post.id ? null : item.post.id))
+                            }
+                          >
+                            <MessageCircle className="h-4 w-4" />
+                            <span className="ml-1.5 text-xs text-muted-foreground">{item.post.commentCount}</span>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {item.post.commentCount > 0 ? "Yorumlar" : "Yorum yaz"}
+                        </TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            aria-label={`Paylaş (${shareCount})`}
+                            className="min-h-10 rounded-full bg-white/80 px-3"
+                            disabled={shareMutation.isPending}
                             onClick={() => {
                               if (!session) {
                                 navigate("/login");
                                 return;
                               }
-                              reactionMutation.mutate({ postId: item.post.id, reactionType: reaction.key });
+                              shareMutation.mutate({ postId: item.post.id, title: item.post.title, body: item.post.body });
                             }}
-                            className={`min-h-10 rounded-full px-3 ${
-                              active ? "bg-slate-900 text-white hover:bg-slate-800" : "bg-white/80"
-                            }`}
                           >
-                            <Icon className={`mr-1.5 h-4 w-4 ${active && reaction.key === "love" ? "fill-current" : ""}`} />
-                            <span className="text-xs font-medium sm:text-sm">{reaction.label}</span>
-                            <span className={`ml-1 text-xs ${active ? "text-white/80" : "text-muted-foreground"}`}>{count}</span>
+                            <Share2 className="h-4 w-4" />
+                            <span className="ml-1.5 text-xs text-muted-foreground">{shareCount}</span>
                           </Button>
-                        );
-                      })}
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        data-testid="cadde-comment-toggle"
-                        className="rounded-full"
-                        onClick={() =>
-                          setExpandedCommentPostId((current) => (current === item.post.id ? null : item.post.id))
-                        }
-                      >
-                        <MessageCircle className="mr-1.5 h-4 w-4" />
-                        {item.post.commentCount > 0 ? `${item.post.commentCount} yorum` : "Yorum yaz"}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        aria-label={`Paylaş (${shareCount})`}
-                        className="rounded-full bg-white/80"
-                        disabled={shareMutation.isPending}
-                        onClick={() => {
-                          if (!session) {
-                            navigate("/login");
-                            return;
-                          }
-                          shareMutation.mutate({ postId: item.post.id, title: item.post.title, body: item.post.body });
-                        }}
-                      >
-                        <Share2 className="mr-1.5 h-4 w-4" />
-                        <span className="text-xs font-medium sm:text-sm">Paylaş</span>
-                        <span className="ml-1 text-xs text-muted-foreground">{shareCount}</span>
-                      </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Paylaş</TooltipContent>
+                      </Tooltip>
                       {session && item.post.authorUserId !== user?.id ? (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-slate-400 hover:text-red-600"
-                          onClick={() => reportMutation.mutate(item.post.id)}
-                          disabled={reportMutation.isPending}
-                          aria-label="Paylaşımı şikayet et"
-                        >
-                          <Flag className="h-4 w-4" />
-                        </Button>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="min-h-10 text-slate-400 hover:text-red-600"
+                              onClick={() => reportMutation.mutate(item.post.id)}
+                              disabled={reportMutation.isPending}
+                              aria-label="Paylaşımı şikayet et"
+                            >
+                              <Flag className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Şikayet et</TooltipContent>
+                        </Tooltip>
                       ) : null}
                     </div>
+                    </TooltipProvider>
 
                     <Separator />
 
