@@ -109,6 +109,18 @@ describe("nginx güvenlik başlıkları", () => {
     expect(scriptSrc).toContain("https://www.googletagmanager.com");
   });
 
+  it("connect-src Supabase Realtime için wss şemasını içerir", () => {
+    // Tarayıcılar CSP'de ws/wss şemasını https'ten AYRI değerlendirir: `https://*.supabase.co`
+    // WebSocket bağlantısına izin VERMEZ. Bu eksik yüzünden Supabase Realtime 2026-08-05'e
+    // kadar canlıda blokluydu; Cadde akışı anlık güncellenmiyor, yalnız periyodik yoklamayla
+    // tazeleniyordu. Regex map bloğunu alır — üstündeki açıklama yorumu testi geçiremez.
+    const csp = nginxConf.match(/map \$host \$corteqs_csp \{[^}]*\}/s)?.[0] ?? "";
+    const connectSrc = csp.match(/connect-src[^;]*/)?.[0] ?? "";
+
+    expect(connectSrc).toContain("wss://*.supabase.co");
+    expect(connectSrc).toContain("https://*.supabase.co");
+  });
+
   it("X-Robots-Tag blanket header'ı geri eklenmemiştir", () => {
     // Sayfa seviyesindeki meta robots yeterli; blanket "index, follow" 404 kabuğunda
     // NotFound'un noindex'ini gölgeliyordu (bkz. Batch 3).

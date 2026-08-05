@@ -37,8 +37,15 @@ limit_req_zone $binary_remote_addr zone=ragchat:1m rate=12r/m;
 #
 # style-src'deki 'unsafe-inline' bilinçlidir: Tailwind/shadcn runtime'da inline style
 # üretir. Kaldırmak için nonce altyapısı gerekir — bugün yok.
+#
+# connect-src'te `wss://*.supabase.*` AYRICA yazılır ve silinmemelidir: tarayıcılar CSP'de
+# ws/wss şemasını https'ten AYRI değerlendirir, yani `https://*.supabase.co` WebSocket'e
+# izin vermez. Bu eksik yüzünden Supabase Realtime bağlantısı 2026-08-05'e kadar canlıda
+# bloklanıyordu — Cadde akışı anlık güncellenmiyor, yalnız periyodik yoklamayla
+# tazeleniyordu (konsolda "violates ... connect-src" hatası). Yeni bir realtime/WebSocket
+# host'u eklerken de https değil wss şemasını yazmak gerekir.
 map $host $corteqs_csp {
-  default "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self' https://www.googletagmanager.com https://analytics.ahrefs.com https://www.clarity.ms https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co https://*.supabase.in https://*.google-analytics.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob: https://videos.pexels.com; connect-src 'self' https://rag.corteqs.net https://*.supabase.co https://*.supabase.in https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://analytics.ahrefs.com https://*.clarity.ms; form-action 'self'; upgrade-insecure-requests";
+  default "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self' https://www.googletagmanager.com https://analytics.ahrefs.com https://www.clarity.ms https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co https://*.supabase.in https://*.google-analytics.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob: https://videos.pexels.com; connect-src 'self' https://rag.corteqs.net https://*.supabase.co https://*.supabase.in wss://*.supabase.co wss://*.supabase.in https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://analytics.ahrefs.com https://*.clarity.ms; form-action 'self'; upgrade-insecure-requests";
 }
 
 # ── www./mvp. → apex (301) ───────────────────────────────────────────────────
