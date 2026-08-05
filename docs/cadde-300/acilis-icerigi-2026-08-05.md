@@ -1,108 +1,127 @@
-# Cadde açılış içeriği — 2026-08-05 (ONAY BEKLİYOR)
+# Cadde açılış içeriği — 2026-08-05
 
 K2 kararı (05.08): seed fixture'lar silinir, akış **gerçek bir hesaptan editöryel
 içerikle** doldurulur. Uydurma kişi kimliği ÜRETİLMEZ.
+
+Uygulama script'i: [`docs/operations/2026-08-05-cadde-acilis.sql`](../operations/2026-08-05-cadde-acilis.sql)
+— K1 + K2 + içerik **tek transaction**. Sıra kritik olduğu için birleştirildi:
+K1 `author_user_id IS NOT NULL` olan her postu siler, içerik önce eklenirse
+birlikte silinirdi.
 
 ## Kural
 
 | | |
 |---|---|
-| Yazar | Gerçek ekip hesabı (`author_user_id` dolu) — varsayılan `ubterzioglu@gmail.com` |
-| Rozet | `author_role = "CorteQS Ekibi"` — akış kartı bunu rozet olarak çizer, kimse bunu bireysel bir üye sanmaz |
+| Yazar | `ubterzioglu@gmail.com` (`bdb66bc1-…`, canlıda doğrulandı) |
+| Görünen ad | `author_name_override = "CorteQS"` |
+| Rozet | `author_role = "Resmî hesap"` — akış kartı bu alanı zaten rozet olarak çiziyor |
 | Kimlik uydurma | **Yok.** Cevap gelirse cevaplayacak gerçek biri var |
-| Tavsiye/mevzuat | **Yok.** Ekip bilmediği bir şeyi bilir gibi yazmaz — bürokrasi soruları topluluğa SORU olarak gider |
-| Sıra | **Önce K1** (çöp veri silme), sonra bu içerik. K1 `author_user_id IS NOT NULL` olan her postu siler — önce eklenirse birlikte silinir |
+| Tavsiye/mevzuat | **Yok.** Bürokrasi konuları topluluğa SORU olarak gider; cevabı bilen üye yazar |
 
-**Neden ağırlıklı soru:** akışın işi bilgi vermek değil, konuşma başlatmak. 12 how-to
-yazısı yardım merkezi gibi okunur; 9 iyi soru topluluk gibi okunur. Sorular ayrıca
-sıfır sorumluluk taşır — cevabı bilen üye yazar, ekip yanlış bilgi yaymaz.
-
----
-
-## A. Yönlendirme postları (3) — ekibin gerçekten bildiği şeyler
-
-### A1 · Global · `text` · pinned
-**Başlık:** Cadde açıldı
-**Gövde:**
-> Burası şehrindeki Türklerle tanışıp soru sorabileceğin, deneyimini paylaşabileceğin
-> ortak akış. Bir soru, bir tavsiye ya da şehrinden kısa bir not — hepsi buraya yazılır.
-> Akış şehrine göre süzülür, ama istersen ülke geneline ve globale de bakabilirsin.
-
-### A2 · Global · `text`
-**Başlık:** Cafe nedir, ne zaman açılır
-**Gövde:**
-> Cafe, kendi teması olan süreli bir sohbet odası — süreli bir WhatsApp grubu gibi
-> düşünebilirsin. İstersen herkese açık, istersen onaylı ya da davetli olur.
-> "Berlin'de yeni başlayanlar" ya da "Hollanda'da freelance çalışma" gibi bir başlık
-> aklına geldiyse odayı sen açabilirsin.
-
-### A3 · Global · `text`
-**Başlık:** Köprü modu ne işe yarar
-**Gövde:**
-> Köprü, Türkiye ile diaspora arasındaki akış: taşınma, iş ve mentorluk konuları.
-> Türkiye'den taşınmayı düşünen biriyle o şehirde yaşayan birini aynı başlıkta
-> buluşturur. Sol kolondaki anahtarla açıp kapatabilirsin.
+**Neden ağırlıklı soru:** akışın işi bilgi vermek değil konuşma başlatmak. 14 how-to
+yazısı yardım merkezi gibi okunur; iyi bir soru topluluk gibi okunur. Sorular ayrıca
+sıfır sorumluluk taşır.
 
 ---
 
-## B. Şehir bazlı açık sorular (9) — cevaplaması bir satır sürer
+## Ölçüm içeriği değiştirdi (05.08, canlı)
 
-### B1 · Almanya / Berlin · `question`
-> Berlin'de Anmeldung randevusu bulmak hâlâ bu kadar zor mu? Son randevunu ne kadar
-> beklediğini ve hangi Bürgeramt'ı denediğini yazar mısın — yeni gelenler için
-> gerçek bir tablo çıkarmak istiyoruz.
+İlk taslak Almanya/Hollanda/İngiltere diasporasına yazılmıştı. Canlı üye dağılımı
+bunu çürüttü — **üye tabanı ağırlıkla Türkiye'de**:
 
-### B2 · Almanya / Dortmund · `question`
-> Dortmund'da Türkçe konuşan bir aile hekimi arayan çok. Kendi doktorundan memnunsan
-> adını buraya bırakır mısın?
+| Şehir | Üye | | Şehir | Üye |
+|---|---|---|---|---|
+| İstanbul | 14 | | Berlin | 5+ |
+| **Doha (Katar)** | **12** | | İzmir | 5 |
+| Ankara | 7 | | Dortmund / Frankfurt / Magdeburg | 2'şer |
 
-### B3 · Almanya / Köln · `question`
-> Köln'de çocuğunu okula kaydettirenler: süreci ne zaman başlattınız ve geriye dönüp
-> bakınca neyi daha erken yapardınız?
+Sonuçlar:
+- **Türkiye tarafı için 4 post eklendi** ve hepsi `is_bridge = true` — bu kitle
+  taşınmayı düşünenler, yani tam olarak Köprü'nün hedefi. (Köprü filtresi KAPALIYKEN
+  de görünürler; `not v_bridge or p.is_bridge` sadece filtre açıkken daraltır.)
+- **Doha eklendi** — üye sayısında üçüncü sırada ve ilk taslakta hiç yoktu.
+- **Köln ve München çıkarıldı** — `cadde_cities` içinde YOKLAR. ("Münih" var ama
+  üyenin profilinde yazan "München" ona fold ile eşleşmiyor.)
+- Ülke adları canlıda **aksansız**: `Turkiye`, `Birlesik Krallik`. Şehirler karışık:
+  `Istanbul` büyük, `ankara`/`izmir` küçük harf. Script birebir eşleşme kullanır ve
+  çözülmeyen ad olursa transaction'ı düşürür (14/14 çözüldüğü doğrulandı).
 
-### B4 · Almanya / München · `question`
-> Münih'te ilk iş görüşmesine giderken Almanca seviyeniz neydi? "B1 yeter mi"
-> sorusunun gerçek cevabını sektöre göre merak ediyoruz.
+## Hedefleme neden zorunlu
 
-### B5 · Almanya · `question`
-> Diploma denkliği (Anerkennung) sürecinden geçen var mı? Hangi meslek, ne kadar
-> sürdü? Bu başlıkta herkesin duyduğu şey birbirini tutmuyor.
+`list_cadde_feed_v1` varsayılan akışta bir postu **yalnız izleyicinin şehri ya da
+ülkesi eşleşirse** gösterir; tek kaçış yolu global eşik
+(`cadde.global.min_reactions = 10`, canlıda doğrulandı). Yeni bir post o eşiği
+karşılayamaz, dolayısıyla **hedefsiz "global" bir post hiç kimseye görünmez.**
 
-### B6 · Hollanda / Amsterdam · `question`
-> Amsterdam'da BSN aldıktan sonraki ilk hafta: sırasıyla ne yaptınız? Yeni
-> taşınanların en çok takıldığı yer burası.
-
-### B7 · Birleşik Krallık / Londra · `question`
-> Londra'da GP kaydı yaptıranlar — adres kanıtı olarak neyi kabul ettiler?
-> Kiracıların en çok zorlandığı adım bu.
-
-### B8 · Almanya / Berlin · `question`
-> Berlin'de Schufa geçmişi olmadan ev tutabilen oldu mu? Ev sahibini neyle ikna
-> ettiniz?
-
-### B9 · Global · `question`
-> Yaşadığın şehirde Türkçe hizmet veren, gerçekten memnun kaldığın bir esnaf,
-> danışman ya da usta var mı? Şehir adıyla birlikte yaz — dizine ilk kayıtlar
-> buradan çıksın.
+Bu yüzden yönlendirme postları (1-3) ve dizin sorusu (14) `cadde_post_targets`'a
+**18 aktif ülkenin tamamı** için satır yazar; şehir postları kendi ülke+şehir hedefini alır.
 
 ---
 
-## Onay sonrası uygulama
+## İçerik (14 post)
 
-1. **K1 çalıştırılır** (çöp veri + kullanıcı postları silinir).
-2. Seed fixture'lar silinir (K2): `DELETE FROM cadde_posts WHERE author_user_id IS NULL`
-   ve `DELETE FROM cadde_cafes WHERE host_user_id IS NULL`.
-3. Bu 12 post UTF-8 SQL dosyası olarak `psql -f` ile eklenir — **komut satırından
-   Türkçe metin geçirilmez** (CLAUDE.md Türkçe metin kuralı md.4: PowerShell'den
-   psql'e geçen `ı` karakteri bozulur).
-4. Şehir/ülke `geo_countries`/`geo_cities` üzerinden ADA göre çözülür, UUID
-   gömülmez.
-5. `cadde_post_targets` satırları da yazılır — yoksa post şehir akışında görünmez.
-6. B6 doğrulaması: public akışta kaç post kaldı, hepsi `CorteQS Ekibi` rozetli mi.
+| # | Tip | Hedef | Konu |
+|---|---|---|---|
+| 1 | text · **pinned** | tüm ülkeler | Cadde açıldı — ne işe yarar, şehir nasıl seçilir |
+| 2 | text | tüm ülkeler | Cafe nedir, ne zaman açılır |
+| 3 | text · köprü | tüm ülkeler | Köprü modu ne işe yarar |
+| 4 | question · köprü | Türkiye / İstanbul | Hangi ülke, seni en çok ne tutuyor? |
+| 5 | question · köprü | Türkiye / Ankara | Karar aşamasında nerede tıkandınız? |
+| 6 | question · köprü | Türkiye / İzmir | Yurt dışındakine soracağın tek soru? |
+| 7 | question · köprü | Türkiye geneli | Hangi konuda mentor arıyorsun? |
+| 8 | question | Almanya / Berlin | Anmeldung randevusu ne kadar bekledi? |
+| 9 | question | Almanya / Dortmund | Türkçe konuşan aile hekimi tavsiyesi |
+| 10 | question | Almanya / Frankfurt | İlk iş görüşmesinde Almanca seviyesi |
+| 11 | question | Katar / Doha | Yeni taşınana ilk hafta tavsiyesi |
+| 12 | question | Hollanda / Amsterdam | BSN sonrası ilk hafta sırası |
+| 13 | question | B. Krallık / Londra | GP kaydında adres kanıtı |
+| 14 | question | tüm ülkeler | Şehrinde memnun kaldığın esnaf/danışman kim? |
 
-## Bu içerik eklenince soğuk başlangıç yüzeyi ne olur
+Tam metinler script'in içinde (`cadde_acilis_spec` INSERT bloğu).
 
-12 post girince `isColdStart` yine `false` olur ve B1/B2/B10 canlıda çizilmez.
-Bu bir kayıp değil, doğru sonuç: o yüzey **gerçekten boş** durumun dürüst davranışı
-olarak duruyor (yeni bir diaspora anahtarı açıldığında ilk kullanıcılar onu görecek).
-Ama bugünkü canlı ekranda görünmeyeceğini bilerek ilerliyoruz.
+---
+
+## ⚠️ İçerikle ÇÖZÜLMEYEN sorun: 156 üyenin 68'i hiçbir şey göremiyor
+
+Ölçüm (05.08): üyelerin profilindeki ülke değeri `cadde_countries.name` ile
+eşleşenler **88**, eşleşmeyenler **68**. Eşleşmeyen üye için `v_viewer_country_id`
+ve `v_viewer_city_id` NULL kalır; filtre de seçmemişse akış görünürlük kapısının
+hiçbir dalı açılmaz ve **akış boş gelir — ne kadar içerik girersek girelim.**
+
+Eşleşmeyen değerlere örnek: `Belirtilmedi` (13 üye), `Qatar` (Katar yerine),
+`Deutschland` / `Germany` (Almanya yerine), `İngiltere` (Birlesik Krallik yerine),
+`ABD` / `United States`, `Italy`, `France`, `South Africa`, `Moldova`, `vancouver`,
+`a`, `De`.
+
+Profil kapısı (`CaddeProfileGate`) bunu yakalamıyor çünkü `Belirtilmedi` **boş değil**,
+sadece geçersiz — kapı yalnız boşluğa bakıyor.
+
+İki yön (karar gerekiyor, ikisi de bu batch'in dışında):
+1. **Kök neden — profil ülke değerlerini normalize et.** Çoğu mekanik eşleme
+   (`Qatar→Katar`, `Deutschland/Germany→Almanya`, `İngiltere→Birlesik Krallik`).
+   Kalıcı çözüm için kayıt formunda serbest metin yerine `cadde_countries` seçici.
+2. **Kapıyı gevşet.** Konumu çözülemeyen izleyiciye boş akış yerine global/yeni
+   içerik göster (`list_cadde_feed_v1` içinde yeni bir dal).
+
+**B1 ile etkileşimi:** bu üyelerde `isColdStart` true olur ve konum kutusu kapalı
+açılır — oysa akışlarını dolduracak tek kontrol tam olarak o kutu. Kutu başlığı ve
+tetiği görünür kaldığı için kurtarma bir tık uzakta, ama (1) veya (2) yapılırsa
+bu kenar durum tamamen kalkar.
+
+---
+
+## Çalıştırma ve sonrası
+
+```powershell
+$pw = (Select-String -Path .env.local -Pattern '^SUPABASE_DB_PASSWORD=(.*)$').Matches[0].Groups[1].Value.Trim().Trim('"')
+$env:PGPASSWORD = $pw
+psql "host=aws-1-eu-west-2.pooler.supabase.com port=5432 dbname=postgres user=postgres.injprdrsklkxgnaiixzh sslmode=require" `
+  -f docs/operations/2026-08-05-cadde-acilis.sql
+```
+
+Script öncesi/sonrası sayımları ve son durumu kendi basar — çıktı B6 doğrulamasının
+kendisidir. Hata olursa **tamamı geri sarar**; yedek `C:\tmp\cadde-yedek-2026-08-04\*.csv`.
+
+**Bu içerik girince `isColdStart` yine `false` olur** ve B1/B2/B10 canlıda çizilmez.
+Bu bilinçli: o yüzey gerçekten boş durumun dürüst davranışıdır (yeni bir diaspora
+anahtarı açıldığında ilk kullanıcılar onu görecek).
