@@ -193,9 +193,31 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
   cadde_mention_limit: "En fazla 10 kişi/işletme etiketleyebilirsin.",
 };
 
+/**
+ * Hata nesnesinden kod aranacak METNİ çıkarır.
+ *
+ * KRİTİK (04.08.2026, m75 kök nedeni): supabase-js'in `{ data, error }` dönüşündeki
+ * `error` bir `Error` ÖRNEĞİ DEĞİLDİR — düz bir nesnedir (`PostgrestError`:
+ * `{ message, code, details, hint }`). Yalnız `instanceof Error` dalını okumak, tüm
+ * gerçek RPC hatalarında boş metin üretiyordu; yani yukarıdaki Türkçe mesaj haritası
+ * ÜRETİMDE HİÇ ÇALIŞMIYORDU ve kullanıcı her zaman genel fallback'i görüyordu.
+ * `message` dışındaki alanlar da taranır: bazı hatalar kodu `details`/`hint`'te taşır.
+ */
+function extractErrorText(error: unknown): string {
+  if (typeof error === "string") return error;
+  if (error instanceof Error) return error.message;
+  if (error && typeof error === "object") {
+    const record = error as Record<string, unknown>;
+    return [record.message, record.code, record.details, record.hint]
+      .filter((field): field is string => typeof field === "string")
+      .join(" ");
+  }
+  return "";
+}
+
 /** Supabase RPC hatasını kullanıcıya gösterilebilir mesaja çevirir. */
 export function resolveCaddeRpcErrorMessage(error: unknown, fallback = "İşlem tamamlanamadı. Lütfen tekrar dene."): string {
-  const raw = error instanceof Error ? error.message : typeof error === "string" ? error : "";
+  const raw = extractErrorText(error);
   for (const [code, message] of Object.entries(CADDE_RPC_ERROR_MESSAGES)) {
     if (raw.includes(code)) return message;
   }

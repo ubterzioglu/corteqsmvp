@@ -122,6 +122,39 @@ describe("resolveCaddeRpcErrorMessage", () => {
   it("bilinmeyen hatada fallback döner", () => {
     expect(resolveCaddeRpcErrorMessage(new Error("boom"))).toBe("İşlem tamamlanamadı. Lütfen tekrar dene.");
   });
+
+  // 04.08.2026 — m75'in KÖK NEDENİ. supabase-js RPC hatası bir Error DEĞİL, düz nesnedir
+  // ({message, code, details, hint}). Eski uygulama yalnız `error instanceof Error` dalını
+  // okuduğu için raw="" kalıyor ve 51 kodun TAMAMI genel fallback'e düşüyordu — yani bu
+  // harita üretimde hiç çalışmamıştı. Testler yalnız new Error(...) verdiği için kaçtı.
+  // Canlı kanıt (tarayıcı konsolu): {code:'P0001', message:'cadde_invalid_targets'}
+  // kullanıcıya "İşlem tamamlanamadı. Lütfen tekrar dene." olarak görünüyordu.
+  it("supabase-js düz nesne hatasından (PostgrestError) kodu çözer", () => {
+    const postgrestError = {
+      code: "P0001",
+      details: null,
+      hint: null,
+      message: "cadde_invalid_targets",
+    };
+    expect(resolveCaddeRpcErrorMessage(postgrestError)).toContain("hedefi geçersiz");
+  });
+
+  it("kodu details/hint alanında taşıyan düz nesneyi de çözer", () => {
+    expect(
+      resolveCaddeRpcErrorMessage({ message: "unexpected", details: "cadde_media_limit", hint: null }),
+    ).toContain("en fazla 4 görsel");
+    expect(
+      resolveCaddeRpcErrorMessage({ message: "unexpected", details: null, hint: "cadde_video_disabled" }),
+    ).toContain("Video");
+  });
+
+  it("kod taşımayan düz nesnede yine fallback döner", () => {
+    expect(resolveCaddeRpcErrorMessage({ code: "23505", message: "duplicate key" })).toBe(
+      "İşlem tamamlanamadı. Lütfen tekrar dene.",
+    );
+    expect(resolveCaddeRpcErrorMessage(null)).toBe("İşlem tamamlanamadı. Lütfen tekrar dene.");
+    expect(resolveCaddeRpcErrorMessage(undefined)).toBe("İşlem tamamlanamadı. Lütfen tekrar dene.");
+  });
 });
 
 describe("mapActorContext", () => {
