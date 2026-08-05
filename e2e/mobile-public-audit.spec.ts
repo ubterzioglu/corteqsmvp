@@ -94,6 +94,13 @@ test("public mobile routes keep route-specific Turkish SEO metadata", async ({ p
 test("contact and CTA surfaces use the official WhatsApp community link", async ({ page }) => {
   await page.goto("/iletisim");
 
+  // ⚠️ `evaluateAll` (ve $$eval) OTOMATİK TEKRAR DENEMEZ — `expect(locator)`'ın aksine
+  // tek atışlıktır. Rotalar lazy + `Suspense fallback={null}` olduğu için sayfa henüz
+  // boş DOM'ken çalışır ve BOŞ DİZİ döner; hata da "link yanlış" gibi görünür, oysa
+  // link doğrudur (contact-links.ts → ContactPage.tsx). İlk bağlantı çizilene kadar
+  // bekleyen bu satır olmadan test deterministik olarak başarısız oluyordu.
+  await expect(page.getByRole("link").first()).toBeVisible();
+
   const hrefs = await page.locator("a").evaluateAll((elements) =>
     elements.map((element) => element.getAttribute("href") ?? ""),
   );

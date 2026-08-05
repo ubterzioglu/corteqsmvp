@@ -159,9 +159,39 @@ test("cadde mobile shows invitation empty states and a compact scroll-top button
   await loginToCadde(page);
 
   await expect(page.getByTestId("cadde-feed-empty-state")).toBeVisible();
+
+  // 05.08.2026 yerleşim değişikliğinden sonra bu üç boş durum ÜÇ FARKLI davranışa tabi.
+  // Assert'ler silinmedi, koda uyduruldu — kapsam korunuyor.
+
+  // (1) Kafe akordeonu soğuk başlangıçta KAPALI açılır: CaddePage.tsx:528
+  //     `cafesOpen = cafesOpenOverride ?? (caddeDataResolved && !isColdStart)`.
+  //     Radix CollapsibleContent kapalıyken içeriği DOM'dan söker, yani testid "gizli"
+  //     değil HİÇ YOKTUR. Boş durum metnini görmek için önce açmak gerekir.
+  await page.getByTestId("cadde-cafes-toggle").click();
   await expect(page.getByTestId("cadde-cafes-empty-state")).toBeVisible();
-  await expect(page.getByTestId("cadde-promotions-empty-state")).toBeVisible();
-  await expect(page.getByTestId("cadde-billboards-empty-state")).toBeVisible();
+
+  // (2) Tanıtım rayı soğuk başlangıçta bilinçli olarak HİÇ ÇİZİLMEZ: CaddePage.tsx:1283
+  //     `hideWhenEmpty={isColdStart}` → PromotionRail.tsx:39 `return null`. Yokluğu doğru
+  //     davranıştır; "görünür olmalı" demek bu ürün kararını tersine çevirirdi.
+  await expect(page.getByTestId("cadde-promotions-empty-state")).toHaveCount(0);
+
+  // (3) Pano kartı soğuk başlangıçta TAMAMEN çizilmez: CaddePage.tsx:1288 `{hasAnyBillboard ? (`
+  //     (`hasAnyBillboard = billboardCards.length > 0`). Hiç kayıt yokken kart da, içindeki
+  //     boş durum da DOM'a girmez — 1287'deki yorum bunu açıkça söylüyor. Boş durum yalnız
+  //     kayıt VARKEN ama listelenecek kart kalmadığında görünür, yani bu senaryo değil.
+  await expect(page.getByTestId("cadde-billboards-empty-state")).toHaveCount(0);
+
+  // Sağ kolonun mobilde katlanması 05.08.2026'da gelen YENİ davranış
+  // (CaddePage.tsx:1201-1220). Katlamanın kendisi kapsam dışı kalmasın: aç-kapa çalışıyor mu.
+  const rightRailToggle = page.getByTestId("cadde-right-rail-toggle");
+  await expect(rightRailToggle).toHaveAttribute("aria-expanded", "false");
+  await rightRailToggle.click();
+  await expect(rightRailToggle).toHaveAttribute("aria-expanded", "true");
+
+  // Playwright `.click()` önce elemanı görünür alana KAYDIRIR. Yukarıdaki iki toggle
+  // sayfanın altındaki sağ kolonda olduğu için sayfa kaymış durumda; aşağıdaki test ise
+  // "kaydırmadan ÖNCE buton gizli" varsayımına dayanıyor. Açıkça başa dön.
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "auto" }));
 
   const scrollTopButton = page.getByTestId("scroll-top-button");
   await expect(scrollTopButton).toHaveCSS("opacity", "0");
