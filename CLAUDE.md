@@ -153,14 +153,19 @@ muhasebe/
   RPC errors from supabase-js are **plain objects, not `Error` instances** — `resolveCaddeRpcErrorMessage`
   reads `message`/`code`/`details`/`hint`. Never narrow it back to `instanceof Error` (that bug made the
   whole map dead in production until 2026-08-05); tests must build the error as a plain object.
-- ⚠️ **KNOWN OPEN DEFECT (2026-08-05, deliberately deferred — do not "discover" and silently rewrite):**
-  `create_cadde_post_v2` resolves post targets by **exact name** (`c.name = country_name`) while the
-  profile supplies the raw attribute (`get_cadde_actor_context` → `cadde_attr_text`). `Türkiye` never
-  matches the stored `Turkiye`, so **38 members (the largest group) cannot post at all**; measured live,
-  41 matching vs 72 non-matching members across the top 25 values. The read/feed side was already made
-  fold-insensitive (`cadde_fold_text`) on 2026-07-29; the write side was missed. Fix = migration moving
-  those joins to `cadde_fold_text`. Tracked in `admin-todos.ts` (`20260805-cadde-hedef-eslesmesi-fold`)
-  — close both when done.
+- **Target matching is fold-insensitive on BOTH sides (write side fixed 2026-08-05).** The read/feed
+  side moved to `cadde_fold_text` on 2026-07-29; `create_cadde_post_v2` was missed and still compared
+  by **exact name** (`c.name = country_name`) while the profile supplies the raw attribute
+  (`get_cadde_actor_context` → `cadde_attr_text`), so `Türkiye` never matched the stored `Turkiye`.
+  Migration `20260805130000_cadde_post_target_fold.sql` aligns both joins; contract test
+  `src/lib/cadde-post-target-fold.test.ts` locks it. **Do not reintroduce a bare `c.name = ...` join
+  on a user-supplied location name** — profile location is free text.
+  ⚠️ **Still open, different root cause:** measured live 2026-08-05 across all members — 45 already
+  worked, **43 unblocked by the fold fix, 38 remain blocked** because their attribute has no catalog
+  row at all (`Belirtilmedi` 14, `Qatar`, `ABD`, `Deutschland`, `South Africa`, `France`, `Germany`,
+  `İngiltere`, `Birleşik Arap Emirlikleri`, …). Folding cannot fix those; they need `cadde_countries`
+  coverage + a select list instead of free text in the profile form. Tracked in `admin-todos.ts`
+  (`20260805-cadde-hedef-eslesmesi-fold`).
 - New cadde content tables MUST carry `diaspora_key` + CHECK + feed/list filter.
 - Legacy tables (`feed_posts/feed_likes/cafes/cafe_memberships/user_follows`) are write-revoked and
   COMMENT'ed; **do not re-open policies/grants** — DROP happens after canary via separate decision.
