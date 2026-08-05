@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import CaddeInfoPopover from "@/components/cadde/CaddeInfoPopover";
 import { formatCarsiPrice, getCarsiVisible, listCarsiItems } from "@/lib/cadde-carsi-api";
 import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
+import { CADDE_PROMO_STALE_MS } from "@/lib/cadde-query-cache";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import type { CaddeFilterState } from "@/lib/cadde-types";
 
@@ -24,7 +25,7 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
   const visibleQuery = useQuery({
     queryKey: ["cadde", "carsi-visible"],
     queryFn: getCarsiVisible,
-    staleTime: 5 * 60_000,
+    staleTime: CADDE_PROMO_STALE_MS,
   });
   const carsiVisible = visibleQuery.data === true;
 
@@ -33,6 +34,7 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
     queryFn: () => listCarsiItems({ countries: filters.countries, cities: filters.cities, diasporaKey }, 10),
     // Çarşı gizliyken ilanları hiç çekme — teaser veriye ihtiyaç duymaz.
     enabled: carsiVisible,
+    staleTime: CADDE_PROMO_STALE_MS,
   });
 
   const items = itemsQuery.data ?? [];

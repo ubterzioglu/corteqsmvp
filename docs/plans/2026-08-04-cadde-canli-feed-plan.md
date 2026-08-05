@@ -49,11 +49,30 @@ bolluğu varsayar ve 9 postluk bir akışta sayfayı **daha** boş gösterir.
 |---|---|
 | `63b12f0` | Feed hata görünürlüğü · optimistic reaksiyon · feed `staleTime` · cafe sorgusuna açık tavan |
 | `26f7f8e` | Eylemli boş akış kartı · sağ kolonda tanıtım konsolidasyonu (7 kart → 5, 3 CTA → 1) |
+| _(05.08)_ | **B1 · B2 · B10** — soğuk başlangıç davranışı (aşağıda) |
+| _(05.08)_ | **B4** — tazelik bütünlüğü: 8 sorguya `staleTime`, sözleşme testi |
+| _(05.08)_ | **B5** — unhandled rejection'ın kök nedeni bulundu ve düzeltildi |
 
-Süit: 208 dosya / 1480 test yeşil. `tsc` 98 hata — taban ile aynı, yeni hata yok.
+Süit: 209 dosya / 1495 test yeşil, 0 unhandled rejection. `tsc` 98 hata — taban ile aynı.
+Dokunulan dosyalarda `eslint` 0 problem.
 
 ⚠️ **13 commit deploy bekliyor.** Ekrandaki çift başlık / çift rozet / cafe panelinin yeri
 zaten kodda düzeltilmiş; canlıda görünmesi için Coolify deploy'u gerekiyor.
+
+### ⚠️ Soğuk başlangıç işi K1 yapılmadan CANLIDA GÖRÜNMEZ
+
+`isColdStart` yalnız **akış boş VE kafe yok VE daraltan filtre yok** iken true olur.
+Canlıda herkese açık akışta **9 post** duruyor → bugün `isColdStart = false` → B1/B2/B10
+canlıda hiçbir şeyi değiştirmez. Bu iş **K1 (çöp veri silme) sonrası** görünür hale gelir.
+Bugün canlıya yansıyan tek değişiklik B4 (daha az yeniden çekim) ve B5'tir.
+
+### B1'in tanımı plandan bilinçli olarak DAR tutuldu
+
+Plan `feedItems.length === 0 && activeCafes.length === 0` diyordu. Uygulanan koşula
+`&& !hasGeoSelection && !filters.bridge && !filters.hashtag` eklendi. Gerekçe: boşluğun
+sebebi kullanıcının kendi filtresiyse, o filtreyi gizlemek kullanıcıyı **akışın neden boş
+olduğunu göremez** hale getirir. Ham koşul bu durumu da soğuk başlangıç sayardı.
+İki sınır da testle kilitli (`CaddePage.test.tsx`).
 
 ---
 
@@ -83,7 +102,17 @@ TR-Kopru Mentor Cafe) migration seed'i — uydurma içerik. Silinirse **public a
 
 Büyüklük: **XS** ≈ tek dosya/tek test · **S** ≈ 1–2 dosya · **M** ≈ karar + çok dosya.
 
-### B1 — Sol kolonun soğuk başlangıç davranışı · **S** · bağımsız
+### B1 — Sol kolonun soğuk başlangıç davranışı · ✅ **TAMAM (05.08)**
+
+Yapılan: `isColdStart` türetildi (yukarıdaki daraltmayla). Konum kartındaki ülke/şehir
+bölümü ve kafe akordeonu soğuk başlangıçta kapalı açılır; **birincil eylem "Caddeye Çık"
+ve "+ Cafe Aç" görünür kalır** — kapanan yalnız ayar/boş-kutu kısmı. Açık/kapalı durumu
+`null = kullanıcı dokunmadı` override deseniyle türetilir (effect ile senkron YOK), bir kez
+tıklandığında kullanıcının kararı kalıcı kazanır. Yükleme sırasında ikisi de kapalı durur;
+bu ayrıca kafe panelinin veri beklerken yanlış "henüz cafe yok" mesajını göstermesini de
+kapattı. Filtre sıfırlanmadığı testle kanıtlı.
+
+<details><summary>Özgün madde</summary>
 
 **Sorun:** İçerik yokken sol kolon üç kutu gösteriyor (Konum filtresi, Cafeler, İnsanları
 Keşfet) — hepsi *filtrelenecek bir şey yokken* filtre/ayar. Akıştan çok yer kaplıyorlar ve
@@ -96,8 +125,23 @@ Eşik üstünde bugünkü davranış aynen kalır.
 - Dosya: `src/pages/cadde/CaddePage.tsx:499-624`
 - Test: soğuk başlangıçta filtre kutusu kapalı, içerik varken açık
 - Dikkat: `CaddeGeoFilter` URL search-param'a yazıyor — gizlemek filtreyi **sıfırlamamalı**
+</details>
 
-### B2 — Boş kart yoğunluğu ve dikey ritim · **S** · B1'den sonra
+### B2 — Boş kart yoğunluğu ve dikey ritim · ✅ **TAMAM (05.08)**
+
+Yapılan: teşhis padding'den daha derindi — soğuk başlangıçta sağ kolon sırayla
+"Çarşı yakında / … / yakında gelecek özellikler / bu tanıtım alanı boş" diyordu, yani
+kullanıcı üst üste **üç yokluk** okuyordu. Tekrar eden yüzey düştü: `PromotionRail`
+soğuk başlangıçta hiç çizilmez (`hideWhenEmpty`) — kampanya yokken tek içeriği kendi boş
+kutusu ve iki kart aşağıdaki koyu davet kartı aynı şeyi ÜSTELİK çalışan bir butonla
+söylüyor. Aynı kural billboard yüzeyinde (`hasAnyBillboard`) zaten vardı, tutarlı hale
+getirildi. Ayrıca iki yan kolonun ritmi soğuk başlangıçta `space-y-5 → space-y-3`.
+
+**Orta kolondaki boş akış kartının `p-8`'i bilinçli olarak KORUNDU** — soğuk başlangıçta
+alan harcadığımız tek yer orası olmalı, çünkü sayfanın o durumdaki tek işi ilk paylaşımı
+aldırmak. Bu da testle kilitli.
+
+<details><summary>Özgün madde</summary>
 
 **Sorun:** Sağ kolon `space-y-5` (20px) ile ayrılmış kartlardan oluşuyor; soğuk başlangıçta
 kartların çoğu boş. Boş kart dolu kartla aynı iç boşluğu (`p-6`, `p-8`) kullanınca sayfa
@@ -108,6 +152,7 @@ kartlar arasında daha dar `space-y`. Dolu kartların ritmi değişmez.
 
 - Dosya: `src/index.css:313-446` (`.cadde-empty`), `CaddePage.tsx` aside
 - Test: `cadde-style-contract.test.ts` hâlâ geçmeli (inline değer yok)
+</details>
 
 ### B3 — İkincil okuma yollarında hata görünürlüğü · **M** · bağımsız
 
@@ -125,7 +170,22 @@ yazılı): sayfanın TAMAMINI besleyen yüzey fırlatır, yan panel/rozet boş d
 - Dosya: `src/lib/cadde-api.ts`, `src/pages/cadde/CaddeCafePage.tsx`
 - Test: `cadde-feed-error-visibility.test.ts` kalıbı çoğaltılır
 
-### B4 — Cadde sorgularında `staleTime` bütünlüğü · **S** · bağımsız
+### B4 — Cadde sorgularında `staleTime` bütünlüğü · ✅ **TAMAM (05.08)**
+
+Yapılan: planın saydığı 4 sorgu değil, **/cadde ile mount olan 8 sorgunun tamamı**
+kapsandı ("bütünlük" batch'in adıydı) — `CaddePage` (countries, cities, allCities,
+peopleSearch, cafes, billboards, sponsor, feedPromotions) + `PromotionRail`,
+`CarsiGlobalTicker`, `CaddeTrendingHashtags`, `NotificationsBell`. Pencereler tek
+kaynakta: `src/lib/cadde-query-cache.ts` (referans 1sa / liste 1dk / tanıtım 5dk).
+Global `defaultOptions` planın dediği gibi VERİLMEDİ.
+
+Yeni sözleşme testi `src/lib/cadde-query-cache.test.ts`: **her Cadde sorgusu ya
+`staleTime` ya `refetchInterval` taşımalı** — ikisi de yoksa sorgu "kazara canlı"dır.
+Bilerek canlı olan ikisi (yorum paneli, yeni-post sayacı) `refetchInterval` ile geçer.
+Bildirim zili `staleTime` aldı: realtime `invalidateQueries` staleTime'ı zaten ezer,
+pencere yalnız odak-yenilemesini keser.
+
+<details><summary>Özgün madde</summary>
 
 **Sorun:** `src/App.tsx:81` → `new QueryClient()`, `defaultOptions` YOK. React Query v5
 varsayılanları geçerli: `staleTime: 0`, `refetchOnWindowFocus: true`. `63b12f0` yalnız
@@ -137,16 +197,29 @@ hâlâ her sekme odağında yeniden çekiliyor.
 
 - Dosya: `src/pages/cadde/CaddePage.tsx:160-178`
 - Test: sözleşme testi — cadde sayfasındaki her `useQuery` `staleTime` taşımalı
+</details>
 
-### B5 — `DirectoryPage` unhandled rejection izolasyonu · **XS** · bağımsız
+### B5 — `DirectoryPage` unhandled rejection · ✅ **TAMAM (05.08) — kök neden bulundu**
 
-Tam süit paralel koşarken bir "unhandled rejection" uyarısı çıkıyor
-(`ReferenceError: window is not defined`, React teardown sonrası `setState`), kaynağı
-`src/pages/DirectoryPage.test.tsx`. O dosyanın cadde ile 0 bağı var ve yalın koşuda temiz
-geçiyor. **Önceden var olduğu kanıtlanmadı** — izolasyon denemesi yarıda kesildi.
+**Önceden vardı, `63b12f0` ile ilgisi yok.** Kanıt: `git show --stat 63b12f0` yalnız 8
+cadde dosyası değiştiriyor; `DirectoryPage.tsx`/`.test.tsx` ikisi de o commit'ten çok
+önce yazılmış ve o tarihten beri dokunulmamış.
 
-**Yapılacak:** `63b12f0` öncesine dönüp tam süiti koş, uyarı orada da var mı bak. Varsa
-ayrı bir teknik borç kaydı aç; yoksa kök nedeni bul.
+**Kök neden** — `DirectoryPage.tsx:121-123`, temizleyicisi olmayan bir effect:
+```tsx
+useEffect(() => { void getTotalDirectoryCount().then(setTotalCount); }, []);
+```
+Üç şey üst üste bindi: (a) `isMounted` koruması yok — hemen üstündeki kardeş effect'te
+var, (b) `getTotalDirectoryCount` testte **mock'lanmamıştı**, dolayısıyla her render
+GERÇEK bir Supabase isteği deniyor ve `ENOTFOUND` ile ağ zaman aşımına kadar sürüyordu,
+(c) süit paralel koşarken bu istek dosya teardown'ından SONRA çözülüyor, `setTotalCount`
+sökülmüş ağaca yazıyor, React `window`'a dokunuyor → `ReferenceError`. Yalın koşuda
+zamanlama tutmadığı için görünmüyordu.
+
+**Düzeltme iki taraflı:** ürün kodunda `isMounted` koruması (bu gerçek bir kusurdu —
+kullanıcı sayım dönmeden /directory'den ayrılırsa aynı setState oluyordu), testte
+`getTotalDirectoryCount` mock'u (dosya artık ağa hiç çıkmıyor: 3 test 238ms).
+Son tam süit: 209 dosya / 1495 test, **0 unhandled rejection**.
 
 ### B6 — Çöp veri sonrası canlı doğrulama · **XS** · **K1'e bağlı**
 
@@ -173,28 +246,36 @@ seed politikası (bir daha sahte içerik girilecek mi), çoklu-diaspora ne zaman
 kazandırmaz, sadece karmaşıklık ekler. **Tetik:** herkese açık akışta post sayısı düzenli
 olarak 40'ı (2 sayfa) geçtiğinde yeniden değerlendir.
 
-### B10 — Mobil soğuk başlangıç · **S** · B1+B2'den sonra
+### B10 — Mobil soğuk başlangıç · ✅ **TAMAM (05.08)**
 
-`lg` altında sıra: composer → scope bar → boş akış kartı → sol kolon (filtreler + cafeler)
-→ sağ kolon (5 kart). İçerik yokken mobil kullanıcı uzun bir boş kart kaydırması yapıyor.
-B1 ve B2 bunu kısmen çözer; kalan iş sağ kolonun mobilde katlanması.
+Yapılan: soğuk başlangıçta sağ kolon `lg` altında tek bir tetiğin ("Yakında gelenler ve
+tanıtım") arkasına katlanır.
+
+**Viewport bilerek JS ile ölçülmedi.** `useIsMobile` 768px'te (Cadde'nin eşiği 1024) ve
+ilk render'da `undefined` döndüğü için mobilde kolon önce açık çizilip sonra göz önünde
+katlanırdı — B1'de kaçındığımız jank'in aynısı. Bunun yerine tetik `lg:hidden`, içerik
+`lg:block`: masaüstünde React durumu ne olursa olsun CSS kazanır, kolon her zaman
+açıktır. İçerik hiçbir durumda DOM'dan sökülmez. Sıfır yeni bağımlılık, sıfır hook.
 
 ---
 
 ## 4. Önerilen sıra
 
 ```
-K1 (kullanıcı) ──> B6
+K1 (kullanıcı) ──> B6          ← SIRADAKİ, ve B1/B2/B10'u görünür kılan adım
 K2 (kullanıcı) ──> B7 ──> B8
-B1 ──> B2 ──> B10
-B3 (bağımsız)
-B4 (bağımsız)
-B5 (bağımsız, en ucuz)
-B9 (ertelendi)
+B3 (bağımsız, karar gerektirir)
+B9 (ertelendi — tetik: herkese açık akış düzenli olarak 40 postu geçince)
+
+✅ B1 ──> B2 ──> B10   (05.08)
+✅ B4                  (05.08)
+✅ B5                  (05.08)
 ```
 
-En yüksek getirili üçlü: **B1 → B2 → B10** (soğuk başlangıçta sayfanın hissi).
-En ucuz temizlik: **B5**, sonra **B4**.
+**Kalan iş artık kod değil, karar.** B1/B2/B10 soğuk başlangıç yüzeyini bitirdi ama
+canlıda 9 post durduğu için o yüzey henüz hiç çizilmiyor — sıradaki hamle **K1**.
+Kod tarafında kalan tek bağımsız madde **B3** (ikincil okuma yollarında hata
+görünürlüğü) ve o da "hangileri birincil yüzey" kararını bekliyor.
 
 ---
 

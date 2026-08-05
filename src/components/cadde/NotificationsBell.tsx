@@ -17,6 +17,7 @@ import {
   notificationDeepLink,
   subscribeToMyNotifications,
 } from "@/lib/cadde-notifications-api";
+import { CADDE_LIST_STALE_MS } from "@/lib/cadde-query-cache";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 
 const formatRelative = (value: string): string => {
@@ -37,6 +38,10 @@ const NotificationsBell = () => {
     queryKey: caddeQueryKeys.notifications(userId),
     queryFn: () => listMyNotifications(userId ?? ""),
     enabled: Boolean(userId),
+    // Canlılık realtime aboneliğinden gelir (aşağıdaki effect invalidate eder) —
+    // invalidation staleTime'ı ezer. Buradaki pencere yalnız her sekme odağında
+    // tekrarlanan gereksiz çekimi keser, bildirim gecikmesi YARATMAZ.
+    staleTime: CADDE_LIST_STALE_MS,
   });
 
   useEffect(() => {

@@ -8,22 +8,35 @@ import SponsoredFeedCard from "@/components/cadde/SponsoredFeedCard";
 import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
+import { CADDE_PROMO_STALE_MS } from "@/lib/cadde-query-cache";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import type { CaddeFilterState } from "@/lib/cadde-types";
 
 interface PromotionRailProps {
   filters: CaddeFilterState;
+  /**
+   * Soğuk başlangıçta (B2) kart hiç çizilmez. Gerekçe: kampanya yokken bu kartın
+   * TEK içeriği kendi boş-durum kutusudur ve iki kart aşağıdaki koyu "Cadde İçinde
+   * Görünür Ol" kartı aynı şeyi ÜSTELİK çalışan bir butonla söyler. Aynı kural
+   * billboard yüzeyine `hasAnyBillboard` ile zaten uygulanmıştı (CaddePage) —
+   * burada tutarlı hale getirildi. Sayfada içerik varken kutu KALIR: o bağlamda
+   * boşluk bir tekrar değil, "bu alanı alabilirsin" daveti olarak okunur.
+   */
+  hideWhenEmpty?: boolean;
 }
 
-const PromotionRail = ({ filters }: PromotionRailProps) => {
+const PromotionRail = ({ filters, hideWhenEmpty = false }: PromotionRailProps) => {
   const diasporaKey = useCaddeDiasporaKey();
   const geoFilters = { countries: filters.countries, cities: filters.cities, diaspora: diasporaKey };
   const promotionsQuery = useQuery({
     queryKey: caddeQueryKeys.promotions("cadde-right-rail", geoFilters),
     queryFn: () => listCaddePromotions("cadde-right-rail", geoFilters, 3),
+    staleTime: CADDE_PROMO_STALE_MS,
   });
 
   const promotions = promotionsQuery.data ?? [];
+
+  if (hideWhenEmpty && promotions.length === 0) return null;
 
   return (
     <Card className="border-orange-100 bg-white/90">

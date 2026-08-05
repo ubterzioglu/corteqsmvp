@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { AlertTriangle, ArrowUpRight, Flag, Globe2, Heart, HelpCircle, Laugh, MapPin, Megaphone, MessageCircle, MessagesSquare, RefreshCw, Send, Share2, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
+import { AlertTriangle, ArrowUpRight, ChevronDown, Flag, Globe2, Heart, HelpCircle, Laugh, MapPin, Megaphone, MessageCircle, MessagesSquare, RefreshCw, Send, Share2, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
@@ -25,8 +25,8 @@ import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
@@ -55,6 +55,7 @@ import { caddeNewPostPollInterval, caddeOpenCommentsPollInterval, newestCaddeCre
 import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters } from "@/lib/cadde-format";
 import { isInternalCaddeLink } from "@/lib/cadde-links";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
+import { CADDE_LIST_STALE_MS, CADDE_PROMO_STALE_MS, CADDE_REFERENCE_STALE_MS } from "@/lib/cadde-query-cache";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import { applyReactionToFeedPages } from "@/lib/cadde-reactions";
 import { toggleInterestSelection } from "@/lib/cadde-targeting";
@@ -101,8 +102,14 @@ const CaddePage = () => {
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [commentSelections, setCommentSelections] = useState<Record<string, TextSelection>>({});
   const [expandedCommentPostId, setExpandedCommentPostId] = useState<string | null>(null);
-  // m68: bölüm varsayılan AÇIK — kapanabilir olması istendi, gizlenmesi değil.
-  const [cafesOpen, setCafesOpen] = useState(true);
+  // m68: bölüm kapanabilir olmalı, gizlenmiş olmamalı. Varsayılanı SABİT `true` idi;
+  // B1 ile içeriğe bağlandı (bkz. isColdStart). `null` = kullanıcı henüz dokunmadı,
+  // varsayılan geçerli; bir kez tıklandığında kullanıcının kararı kalıcı kazanır.
+  const [cafesOpenOverride, setCafesOpenOverride] = useState<boolean | null>(null);
+  const [geoFilterOpenOverride, setGeoFilterOpenOverride] = useState<boolean | null>(null);
+  // B10: yalnız mobil (lg altı) soğuk başlangıçta anlamlı. Masaüstünde bu durum CSS
+  // ile geçersiz kılınır (aşağıya bak) — bu yüzden viewport'u JS ile ÖLÇMÜYORUZ.
+  const [coldRailOpen, setColdRailOpen] = useState(false);
   const [showAllCafes, setShowAllCafes] = useState(false);
   const filters = useMemo(() => parseCaddeFilters(searchParams), [searchParams]);
   const diasporaKey = useCaddeDiasporaKey();
@@ -116,11 +123,13 @@ const CaddePage = () => {
   const countriesQuery = useQuery({
     queryKey: caddeQueryKeys.countries(),
     queryFn: listCaddeCountries,
+    staleTime: CADDE_REFERENCE_STALE_MS,
   });
 
   const citiesQuery = useQuery({
     queryKey: caddeQueryKeys.cities(filters.countries),
     queryFn: () => listCaddeCities(filters.countries),
+    staleTime: CADDE_REFERENCE_STALE_MS,
   });
 
   // m38: İnsanları Keşfet araması — 300ms debounce, 2 karakter altı sorgu atılmaz
@@ -136,12 +145,13 @@ const CaddePage = () => {
     queryFn: () => searchCaddePeople(debouncedPeopleQuery),
     enabled: debouncedPeopleQuery.length >= 2,
     placeholderData: (previous) => previous,
+    staleTime: CADDE_LIST_STALE_MS,
   });
 
   const interestCatalogQuery = useQuery({
     queryKey: caddeQueryKeys.interestCatalog,
     queryFn: listCaddeInterestCatalog,
-    staleTime: 1000 * 60 * 60,
+    staleTime: CADDE_REFERENCE_STALE_MS,
   });
 
   // Composer ek hedefleri ülke değiştikçe yerelde süzmek için tüm aktif şehirleri taşır.
@@ -149,6 +159,7 @@ const CaddePage = () => {
     queryKey: caddeQueryKeys.cities(["__all__"]),
     queryFn: () => listCaddeCities([]),
     enabled: Boolean(session),
+    staleTime: CADDE_REFERENCE_STALE_MS,
   });
 
   // Anahtar tek yerde: optimistic reaksiyon aynı anahtara yazacağı için ikisi ayrışamaz.
@@ -169,21 +180,25 @@ const CaddePage = () => {
   const cafesQuery = useQuery({
     queryKey: caddeQueryKeys.cafes(filters, user?.id ?? null, diasporaKey),
     queryFn: () => listCaddeCafes(filters, user?.id ?? null, diasporaKey),
+    staleTime: CADDE_LIST_STALE_MS,
   });
 
   const billboardsQuery = useQuery({
     queryKey: caddeQueryKeys.billboards(filters),
     queryFn: () => listCaddeBillboardCards(filters),
+    staleTime: CADDE_PROMO_STALE_MS,
   });
 
   const sponsorQuery = useQuery({
     queryKey: caddeQueryKeys.sponsor(filters),
     queryFn: () => getCaddeSponsoredPlacement(filters),
+    staleTime: CADDE_PROMO_STALE_MS,
   });
 
   const feedPromotionsQuery = useQuery({
     queryKey: caddeQueryKeys.promotions("cadde-feed-inline", { countries: filters.countries, cities: filters.cities, diaspora: diasporaKey }),
     queryFn: () => listCaddePromotions("cadde-feed-inline", { countries: filters.countries, cities: filters.cities, diaspora: diasporaKey }, 5),
+    staleTime: CADDE_PROMO_STALE_MS,
   });
 
   const commentsZeroStreakRef = useRef(0);
@@ -243,6 +258,15 @@ const CaddePage = () => {
       // Hedef: composer'daki açık seçim; boşsa kayıtlı profil konumu. Akış filtresi post hedefi değildir.
       const primaryCountry = composer.country || registeredCountry;
       const primaryCity = composer.country ? composer.city : registeredCity;
+      // 04.08.2026 — m75'in ikinci yarısı: profilinde konum OLMAYAN üye composer'da da
+      // ülke seçmezse hedef boş gidiyor, RPC `cadde_invalid_targets` ile reddediyordu.
+      // Global akışa doğrudan paylaşım yapılamaz (kural DB'de); kullanıcı bunu ağ turu
+      // sonrası genel bir hatayla öğreniyordu. Artık gönderimden ÖNCE ne yapacağı söylenir.
+      if (!primaryCountry.trim()) {
+        throw new Error(
+          "Paylaşımın hangi şehir/ülke akışına düşeceğini seç: Konum panelinden bir ülke seç ya da profiline konumunu ekle. Global akışa doğrudan paylaşım yapılamıyor.",
+        );
+      }
       const targets = [
         { country: primaryCountry, city: primaryCity },
         ...composer.targets
@@ -457,7 +481,7 @@ const CaddePage = () => {
   const cafeThemesQuery = useQuery({
     queryKey: ["cadde", "cafe-themes"],
     queryFn: listCaddeCafeThemes,
-    staleTime: 60 * 60_000,
+    staleTime: CADDE_REFERENCE_STALE_MS,
   });
   const cafeThemeLabelByKey = useMemo(
     () => new Map((cafeThemesQuery.data ?? []).map((theme) => [theme.key, theme.labelTr])),
@@ -474,6 +498,41 @@ const CaddePage = () => {
     ? "Bu bölgede içerik azsa ülke geneli ve global akış da devreye girer."
     : "İçerik az olduğunda global akışla başlayıp ilk hareketi sen başlatabilirsin.";
   const activeCafes = cafesQuery.data ?? [];
+
+  // ── Soğuk başlangıç (B1) ────────────────────────────────────────────────────
+  // Canlı ölçüm (04.08.2026): akışta 9 herkese açık post, 0 gerçek kafe. Cadde
+  // aylarca düşük içerikle yaşayacak. Doğru tasarım hedefi "içerik dolu sosyal ağ"
+  // değil, boşluğun BOZUKLUK değil DAVET gibi okunması.
+  //
+  // Tanım bilinçli olarak plandaki ham koşuldan (`feed=0 && cafes=0`) daha dar:
+  // aktif bir filtre varsa boşluğun sebebi kullanıcının KENDİ seçimidir ve o
+  // seçimi yapan kontrol GÖRÜNÜR kalmalıdır — filtreyi gizlemek kullanıcıyı
+  // akışın neden boş olduğunu göremez hale getirir.
+  const hasNarrowingFilter = hasGeoSelection || filters.bridge || Boolean(filters.hashtag);
+  // Veri gelmeden karar verilmez: yükleme sırasında "içerik yok" DEĞİL "henüz
+  // bilinmiyor" durumundayız (aşağıda caddeDataResolved ile ayrılıyor).
+  const caddeDataResolved = !feedQuery.isLoading && !cafesQuery.isLoading;
+  const isColdStart =
+    caddeDataResolved &&
+    !feedQuery.isError &&
+    feedItems.length === 0 &&
+    activeCafes.length === 0 &&
+    !hasNarrowingFilter;
+
+  // Yükleme sırasında iki bölüm de KAPALI durur. Bu yalnız soğuk başlangıç için
+  // değil: kafe paneli açıkken veri beklerken gösterebildiği tek şey yanlış bir
+  // "henüz aktif bir cafe açılmadı" mesajıydı. Tek geçiş kalır ve o geçiş içerik
+  // GELİRKEN açılma yönündedir — göz önünde kapanma (jank) olmaz.
+  const cafesOpen = cafesOpenOverride ?? (caddeDataResolved && !isColdStart);
+  const geoFilterOpen = geoFilterOpenOverride ?? (caddeDataResolved && !isColdStart);
+
+  // B2: soğuk başlangıçta yan kolonların dikey ritmi sıkışır. Kompakt kartlar dolu
+  // kartlarla aynı 20px aralığı kullanınca sayfa uzun bir hiçlik şeridine dönüyordu.
+  // Orta kolondaki boş akış kartının cömert iç boşluğuna DOKUNULMAZ: soğuk başlangıçta
+  // alan harcadığımız tek yer orası olmalı, çünkü sayfanın o durumdaki TEK işi ilk
+  // paylaşımı aldırmak.
+  const asideRhythm = isColdStart ? "space-y-3" : "space-y-5";
+
   const billboardCards = billboardsQuery.data ?? [];
   // Soğuk başlangıç konsolidasyonu (04.08.2026): billboard tablosu TAMAMEN boşken sağ
   // kolonda üç ayrı tanıtım yüzeyi aynı hedefe giden aynı çağrıyı tekrarlıyordu. Bu
@@ -533,7 +592,7 @@ const CaddePage = () => {
             kaldırıldı (tek kaynak: orta kolondaki "Aktif Cafeler").
             Not: workshop'un "akordeon kart denemesi" bilinçli atlandı — kolon 2 karta
             indiği için akordeonun çözeceği kalabalık kalmadı (commit gerekçesinde). */}
-        <aside className="order-2 space-y-5 lg:order-none">
+        <aside className={`order-2 lg:order-none ${asideRhythm}`}>
           <Card className="cadde-panel">
             <CardHeader className="space-y-3">
               <div className="flex items-center justify-between gap-3">
@@ -552,19 +611,34 @@ const CaddePage = () => {
               </Button>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label>Ülke ve Şehir</Label>
-                <CaddeGeoFilter
-                  countries={countriesQuery.data ?? []}
-                  cities={citiesQuery.data ?? []}
-                  selectedCountries={filters.countries}
-                  selectedCities={filters.cities}
-                  onChange={(next) => updateFilters(next)}
-                />
-                <p className="text-xs leading-relaxed text-slate-500">
-                  Şehrini göremiyorsan ülke geneli akışı keşfedebilir veya ilk paylaşımı sen yapabilirsin.
-                </p>
-              </div>
+              {/* B1: filtre kutusu soğuk başlangıçta KAPALI açılır — filtrelenecek
+                  içerik yokken sayfanın en üst sol köşesini bir ayar paneli tutuyordu.
+                  Kapatmak filtreyi SIFIRLAMAZ: burada yalnız görünürlük değişir,
+                  updateFilters çağrılmaz, URL search-param'a dokunulmaz. */}
+              <Collapsible open={geoFilterOpen} onOpenChange={setGeoFilterOpenOverride}>
+                <CollapsibleTrigger
+                  data-testid="cadde-geo-toggle"
+                  className="flex w-full items-center justify-between gap-2 rounded-md text-sm font-medium text-slate-700 transition hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                >
+                  Ülke ve Şehir
+                  <ChevronDown
+                    aria-hidden
+                    className={`h-4 w-4 text-slate-400 transition-transform ${geoFilterOpen ? "rotate-180" : ""}`}
+                  />
+                </CollapsibleTrigger>
+                <CollapsibleContent className="space-y-2 pt-2">
+                  <CaddeGeoFilter
+                    countries={countriesQuery.data ?? []}
+                    cities={citiesQuery.data ?? []}
+                    selectedCountries={filters.countries}
+                    selectedCities={filters.cities}
+                    onChange={(next) => updateFilters(next)}
+                  />
+                  <p className="text-xs leading-relaxed text-slate-500">
+                    Şehrini göremiyorsan ülke geneli akışı keşfedebilir veya ilk paylaşımı sen yapabilirsin.
+                  </p>
+                </CollapsibleContent>
+              </Collapsible>
 
               <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3">
                 <div className="flex items-center justify-between gap-3">
@@ -595,7 +669,7 @@ const CaddePage = () => {
             locationLabel={cafeLocationLabel}
             sparseContentHint={sparseContentHint}
             open={cafesOpen}
-            onOpenChange={setCafesOpen}
+            onOpenChange={setCafesOpenOverride}
             showAll={showAllCafes}
             onShowAll={() => setShowAllCafes(true)}
           />
@@ -1033,7 +1107,38 @@ const CaddePage = () => {
           </div>
         </section>
 
-        <aside className="order-3 space-y-5 lg:order-none">
+        <aside data-testid="cadde-right-rail" className={`order-3 lg:order-none ${asideRhythm}`}>
+          {/* B10 — mobil soğuk başlangıç. `lg` altında sıra composer → akış → sol kolon
+              → SAĞ KOLON'dur; içerik yokken kullanıcı akışın sonunda uzun bir kart
+              kaydırmasına giriyordu.
+
+              Katlama YALNIZ mobilde ve YALNIZ soğuk başlangıçta geçerlidir. Viewport
+              bilerek JS ile ölçülmüyor: `useIsMobile` 768px'te ve ilk render'da
+              `undefined` döndüğü için mobilde önce açık çizilip sonra göz önünde
+              katlanırdı (B1'de kaçındığımız jank'in aynısı). Bunun yerine tetik
+              `lg:hidden`, içerik `lg:block` — masaüstünde React durumu ne olursa olsun
+              CSS kazanır ve kolon her zaman açıktır. İçerik DOM'dan da sökülmez. */}
+          {isColdStart ? (
+            <button
+              type="button"
+              data-testid="cadde-right-rail-toggle"
+              aria-expanded={coldRailOpen}
+              aria-controls="cadde-right-rail-content"
+              onClick={() => setColdRailOpen((open) => !open)}
+              className="flex w-full items-center justify-between gap-2 rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm font-medium text-slate-700 transition hover:border-slate-300 lg:hidden"
+            >
+              Yakında gelenler ve tanıtım
+              <ChevronDown
+                aria-hidden
+                className={`h-4 w-4 text-slate-400 transition-transform ${coldRailOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+          ) : null}
+
+          <div
+            id="cadde-right-rail-content"
+            className={`${asideRhythm} ${isColdStart && !coldRailOpen ? "hidden lg:block" : ""}`}
+          >
           {/* m30: Çarşı ticker'ı tanıtım kolonunda yaşıyor (F10 bunu "Çarşı yakında"
               teaser'ına çevirecek). */}
           <CarsiGlobalTicker filters={filters} />
@@ -1095,7 +1200,7 @@ const CaddePage = () => {
               hepsi burada toplanıyor. */}
           <CaddeComingSoon />
 
-          <PromotionRail filters={filters} />
+          <PromotionRail filters={filters} hideWhenEmpty={isColdStart} />
 
           {/* Hiç billboard kaydı yokken bu kartın TEK içeriği kendi boş-durum kutusu
               olurdu; aşağıdaki koyu davet kartı zaten aynı şeyi söylüyor. Bu yüzden
@@ -1185,6 +1290,7 @@ const CaddePage = () => {
               </Button>
             </CardContent>
           </Card>
+          </div>
         </aside>
       </section>
     </main>

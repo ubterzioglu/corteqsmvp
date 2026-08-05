@@ -31,6 +31,39 @@ const makeActorContext = (overrides: Partial<CaddeActorContext> = {}): CaddeActo
   canPostKopru: true,
   ...overrides,
 });
+/**
+ * Soğuk başlangıç testleri "akışta içerik VAR" halini de kanıtlamak zorunda —
+ * B1/B2 davranışının iki tarafı da kilitleniyor. Tek bir gerçekçi post yeter.
+ * (Eski testler kendi gövdelerini inline taşır; onlar bilerek ellenmedi.)
+ */
+const makeFeedPost = (overrides: Record<string, unknown> = {}) => ({
+  id: "post-warm",
+  mode: "real",
+  type: "text",
+  title: "Akış canlı",
+  body: "İçerik varsa sayfa bugünkü gibi davranır.",
+  authorName: "Ayşe",
+  authorRole: null,
+  authorAvatarUrl: null,
+  authorUserId: "user-2",
+  country: "Almanya",
+  city: "Berlin",
+  isBridge: false,
+  pinned: false,
+  createdAt: "2026-08-04T10:00:00Z",
+  needCategory: null,
+  interests: [],
+  hashtags: [],
+  mentions: [],
+  media: [],
+  reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+  totalReactionCount: 0,
+  commentCount: 0,
+  comments: [],
+  viewerReactions: [],
+  ...overrides,
+});
+
 const listCaddeFeedMock = vi.fn();
 const listCaddeCountriesMock = vi.fn();
 const listCaddeCitiesMock = vi.fn();
@@ -116,6 +149,33 @@ describe("CaddePage", () => {
     recordCaddeShareMock.mockResolvedValue(undefined);
     Object.defineProperty(navigator, "share", { configurable: true, value: undefined });
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: undefined });
+  });
+
+  // 04.08.2026 — m75'in ikinci yarısı. Profilinde konum olmayan (ya da actor context'i
+  // yüklenemeyen, fail-open) üye composer'da da ülke seçmezse hedef BOŞ gidiyordu; RPC
+  // `cadde_invalid_targets` ile reddediyor, kullanıcı ağ turu sonrası genel bir hata
+  // görüyordu. Artık ağa hiç çıkılmaz ve ne yapması gerektiği söylenir.
+  it("hedef ülke yokken paylaşımı ağa çıkarmadan durdurur", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    actorContextMock.mockReturnValue({
+      data: makeActorContext({ country: null, city: null }),
+      isLoading: false,
+    });
+    listCaddeCountriesMock.mockResolvedValue([{ id: "country-de", code: "DE", name: "Almanya" }]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+
+    renderPage();
+
+    const body = await screen.findByLabelText("Paylaşım metni");
+    await userEvent.type(body, "merhaba");
+    await userEvent.click(screen.getByRole("button", { name: /^Paylaş$/ }));
+
+    // Ağa HİÇ çıkılmamalı: hedef yokluğu istemcide yakalanır.
+    await waitFor(() => expect(createCaddePostMock).not.toHaveBeenCalled());
   });
 
   it("shows the profile gate with missing fields when the actor context is incomplete", async () => {
@@ -732,6 +792,7 @@ describe("CaddePage", () => {
   });
 
   it("shows invitation-style empty states when cafes, promotions and billboards are empty", async () => {
+    const user = userEvent.setup();
     useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
     listCaddeCountriesMock.mockResolvedValue([]);
     listCaddeCitiesMock.mockResolvedValue([]);
@@ -743,8 +804,16 @@ describe("CaddePage", () => {
     renderPage();
 
     expect(await screen.findByTestId("cadde-feed-empty-state")).toBeInTheDocument();
-    expect(screen.getByTestId("cadde-cafes-empty-state")).toBeInTheDocument();
-    expect(screen.getByTestId("cadde-promotions-empty-state")).toBeInTheDocument();
+    // B1: soğuk başlangıçta kafe bölümü KAPALI açılır. Boş kutu kaybolmadı, bir tık
+    // uzağa taşındı — başlık satırı ve "+ Cafe Aç" eylemi yerinde durur. Gerekçe:
+    // içerik yokken sol kolon üç ayrı "boş" kutusuna dönüşüyordu.
+    expect(screen.queryByTestId("cadde-cafes-empty-state")).not.toBeInTheDocument();
+    await user.click(screen.getByTestId("cadde-cafes-toggle"));
+    expect(await screen.findByTestId("cadde-cafes-empty-state")).toBeInTheDocument();
+    // B2: soğuk başlangıçta "Tanıtım" kartı hiç çizilmez — kampanya yokken tek
+    // içeriği kendi boş kutusudur ve hemen altındaki koyu davet kartı aynı şeyi
+    // çalışan bir butonla söyler. (Aynı kural billboard yüzeyinde zaten vardı.)
+    expect(screen.queryByTestId("cadde-promotions-empty-state")).not.toBeInTheDocument();
     // Soğuk başlangıç (04.08.2026 canlı denetimi): billboard tablosu TAMAMEN boşken sağ
     // kolonda üç ayrı tanıtım yüzeyi vardı — "Caddede Öne Çık" boş kartı, "Şehrinden Öne
     // Çıkanlar" boş kartı ve koyu "Cadde İçinde Görünür Ol" kartı — üçü de aynı hedefe
@@ -975,6 +1044,177 @@ describe("CaddePage", () => {
     expect(await screen.findByTestId("cadde-cafes-empty-state")).toHaveTextContent(
       "Dortmund için henüz aktif bir cafe açılmadı.",
     );
+  });
+
+  // ── B1 soğuk başlangıç ────────────────────────────────────────────────────────
+  // Canlı ölçüm (04.08.2026): 9 herkese açık post, 0 gerçek kafe. İçerik yokken sol
+  // kolon üç kutu gösteriyordu ve üçü de *filtrelenecek bir şey yokken* filtre/ayardı.
+  // Bu üç test soğuk başlangıç davranışını ve onun İKİ sınırını kilitler.
+  const COLD_START_HINT = /Şehrini göremiyorsan ülke geneli akışı/;
+
+  it("collapses the location filter when the street is empty and nothing is narrowing it", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+
+    renderPage();
+
+    // Birincil eylem her zaman görünür kalır — kapanan yalnız ayar bölümü.
+    expect(await screen.findByRole("button", { name: /Caddeye Çık/ })).toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.getByTestId("cadde-geo-toggle")).toHaveAttribute("aria-expanded", "false"),
+    );
+    expect(screen.queryByText(COLD_START_HINT)).not.toBeInTheDocument();
+  });
+
+  // Sınır 1: boşluğun sebebi kullanıcının KENDİ filtresiyse, o filtre görünür kalmalı —
+  // yoksa kullanıcı akışın neden boş olduğunu göremez. Planın ham koşulu
+  // (`feed=0 && cafes=0`) bu durumu da soğuk başlangıç sayardı, bilinçli olarak daraltıldı.
+  it("keeps the location filter open when a filter is what emptied the feed", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+
+    renderPage("/cadde?country=Almanya&city=Berlin");
+
+    expect(await screen.findByText(COLD_START_HINT)).toBeInTheDocument();
+    expect(screen.getByTestId("cadde-geo-toggle")).toHaveAttribute("aria-expanded", "true");
+  });
+
+  // Sınır 2: içerik geldiğinde bugünkü davranış aynen döner.
+  it("keeps the location filter open once the feed has content", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({ items: [makeFeedPost()], nextPage: null });
+
+    renderPage();
+
+    expect(await screen.findByText("Akış canlı")).toBeInTheDocument();
+    expect(await screen.findByText(COLD_START_HINT)).toBeInTheDocument();
+  });
+
+  // Planın açık uyarısı: CaddeGeoFilter URL search-param'a yazar, GİZLEMEK filtreyi
+  // SIFIRLAMAMALI. Kapatma yalnız görünürlüktür; hiçbir updateFilters çağrısı olmaz.
+  it("does not reset the active filter when the location box is collapsed", async () => {
+    const user = userEvent.setup();
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    // Dosyada global `clearMocks` yok — çağrı geçmişi testler arasında birikir.
+    // Aşağıdaki "hiçbir çağrı filtresiz olmasın" iddiası yalnız bu testin
+    // çağrılarına bakmalı.
+    listCaddeFeedMock.mockClear();
+
+    renderPage("/cadde?country=Almanya&city=Berlin");
+
+    await screen.findByText(COLD_START_HINT);
+    await user.click(screen.getByTestId("cadde-geo-toggle"));
+    await waitFor(() => expect(screen.queryByText(COLD_START_HINT)).not.toBeInTheDocument());
+
+    // Akış HÂLÂ yalnız Almanya/Berlin için sorulur — temizlenmiş bir çağrı olmamalı.
+    for (const call of listCaddeFeedMock.mock.calls) {
+      expect(call[0]).toEqual(expect.objectContaining({ countries: ["Almanya"], cities: ["Berlin"] }));
+    }
+
+    // Geri açıldığında seçim yerinde: boş akış kartı hâlâ "Filtreleri temizle" sunar.
+    await user.click(screen.getByTestId("cadde-geo-toggle"));
+    expect(await screen.findByText(COLD_START_HINT)).toBeInTheDocument();
+    const emptyState = screen.getByTestId("cadde-feed-empty-state");
+    expect(within(emptyState).getByRole("button", { name: "Filtreleri temizle" })).toBeInTheDocument();
+  });
+
+  // ── B2 boş kart yoğunluğu ─────────────────────────────────────────────────────
+  // Soğuk başlangıçta sağ kolon üst üste "yakında / yakında / bu alan boş" diyordu.
+  // Değişen şey yoğunluk: tekrar eden boş yüzey düşer, kalan kartların arası daralır.
+  // Bu ikisi de İÇERİK GELDİĞİNDE geri döner — aşağıdaki iki test o dönüşü kilitler.
+  it("thins the side rails while the street is empty", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+
+    renderPage();
+
+    await screen.findByTestId("cadde-feed-empty-state");
+    await waitFor(() => expect(screen.getByTestId("cadde-right-rail")).toHaveClass("space-y-3"));
+
+    // Orta kolondaki boş akış kartı sıkışTIRILMAZ: soğuk başlangıçta alanı
+    // harcadığımız tek yer orası (sayfanın o durumdaki tek işi ilk paylaşımı almak).
+    expect(screen.getByTestId("cadde-feed-empty-state").querySelector(".p-8")).not.toBeNull();
+  });
+
+  it("restores the full side rail once the feed has content", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddePromotionsMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [makeFeedPost()], nextPage: null });
+
+    renderPage();
+
+    expect(await screen.findByText("Akış canlı")).toBeInTheDocument();
+    expect(screen.getByTestId("cadde-right-rail")).toHaveClass("space-y-5");
+    // Kampanya yokken bile kutu döner: sayfada içerik varken boşluk tekrar değil,
+    // "bu alanı alabilirsin" davetidir.
+    expect(await screen.findByTestId("cadde-promotions-empty-state")).toBeInTheDocument();
+    // B10 tetiği yalnız soğuk başlangıçta çizilir.
+    expect(screen.queryByTestId("cadde-right-rail-toggle")).not.toBeInTheDocument();
+  });
+
+  // ── B10 mobil soğuk başlangıç ─────────────────────────────────────────────────
+  // Katlama saf CSS ile breakpoint'e bağlanır: tetik `lg:hidden`, içerik `lg:block`.
+  // jsdom Tailwind'i uygulamaz, bu yüzden test GÖRÜNÜRLÜĞÜ değil SINIFLARI denetler —
+  // kilitlenen şey zaten "masaüstünde React durumu ne olursa olsun CSS kazanır"
+  // sözleşmesidir. İçerik hiçbir durumda DOM'dan sökülmez.
+  it("folds the right rail behind one mobile-only trigger while the street is empty", async () => {
+    const user = userEvent.setup();
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+
+    renderPage();
+
+    const toggle = await screen.findByTestId("cadde-right-rail-toggle");
+    // Masaüstünde tetik hiç görünmez.
+    expect(toggle).toHaveClass("lg:hidden");
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+
+    const content = document.getElementById("cadde-right-rail-content");
+    // Mobilde gizli, `lg` ve üstünde her koşulda açık.
+    expect(content).toHaveClass("hidden", "lg:block");
+    // Sökülmediğinin kanıtı: kapalıyken bile davet kartı DOM'da.
+    expect(screen.getByTestId("cadde-promotion-invite")).toBeInTheDocument();
+
+    await user.click(toggle);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(document.getElementById("cadde-right-rail-content")).not.toHaveClass("hidden");
   });
 
   it("routes authenticated promotion CTAs to the profile promotion panel", async () => {

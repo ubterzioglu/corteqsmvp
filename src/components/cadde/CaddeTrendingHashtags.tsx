@@ -7,12 +7,13 @@ import { Hash } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { listTrendingCaddeHashtags } from "@/lib/cadde-api";
+import { CADDE_PROMO_STALE_MS } from "@/lib/cadde-query-cache";
 
 const CaddeTrendingHashtags = () => {
   const trendingQuery = useQuery({
     queryKey: ["cadde", "trending-hashtags"],
     queryFn: () => listTrendingCaddeHashtags(8),
-    staleTime: 1000 * 60 * 5,
+    staleTime: CADDE_PROMO_STALE_MS,
   });
 
   const tags = trendingQuery.data ?? [];
