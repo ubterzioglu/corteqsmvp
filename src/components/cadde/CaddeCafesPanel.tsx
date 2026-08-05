@@ -100,7 +100,19 @@ const CaddeCafesPanel = ({
                   </p>
                 </CaddeInfoPopover>
               </CardTitle>
-              <CardDescription>Kısa süreli topluluk odaları ve tema bazlı buluşmalar</CardDescription>
+              {/* m70: kafelerin AYRI bir ülke/şehir filtresi YOK — liste, akışla aynı
+                  "Konum" kartındaki seçimi izler. Bu bağ yalnız BOŞ durumda görünüyordu
+                  ("X için henüz aktif bir cafe açılmadı"); liste doluyken kullanıcı
+                  listeyi filtreden bağımsız sanabiliyordu. Seçim varken başlık altı
+                  bunu açıkça söyler.
+                  Ayrı bir kafe filtresi bilinçli olarak EKLENMEDİ: ikinci bir konum
+                  durumu + URL parametresi demek ve bugünkü yerleşimde filtre kartı
+                  zaten kafe panelinin hemen üstünde duruyor. */}
+              <CardDescription>
+                {locationLabel
+                  ? `${locationLabel} için açık odalar — Konum kartındaki seçimi izler.`
+                  : "Kısa süreli topluluk odaları ve tema bazlı buluşmalar"}
+              </CardDescription>
             </div>
             {hasSession ? (
               <CreateCafeForm trigger={<Button size="sm" variant="outline" className="rounded-2xl">+ Cafe Aç</Button>} />

@@ -221,7 +221,7 @@
     <div class="who">🌍 Senaryo 2 — Berlin'deki üye akışını kişiselleştiriyor <span class="tag">filtre + ilgi alanları + ranking</span></div>
     <ol>
       <li>Profilde <strong>“Bireysel İlgi Alanlarım”</strong> kartından (13 başlık: Networking, Yeni Geldim, Kariyer, …) seçim yapıp kaydeder.</li>
-      <li><code>/cadde</code>'de sol kolondaki çoklu filtreden ülke/şehir seçer (arama kutulu popover, chip'ler, “Tümünü Temizle”). Seçim URL'e yazılır (<code>?country=Almanya,Hollanda&amp;city=Berlin</code>) — link paylaşılabilir.</li>
+      <li><code>/cadde</code>'de <strong>“Konum”</strong> kartındaki çoklu filtreden ülke/şehir seçer (arama kutulu popover, chip'ler, “Tümünü Temizle”). Seçim URL'e yazılır (<code>?country=Almanya,Hollanda&amp;city=Berlin</code>) — link paylaşılabilir.</li>
       <li>Feed artık DB'de sıralanır: <strong>Band A</strong> (aynı şehir + ilgi alanıyla eşleşen ihtiyaç) en üstte; sonra aynı şehir, aynı ülke, yüksek/orta etkileşimli global, kalanlar. Skor: şehir +100, ülke +60, ihtiyaç +40, ilgi alanı başına +8 (maks +32), pinned +120, tazelik +25/+15/+5.</li>
       <li>Kalan içerikler gün boyunca sabit “deterministik random” sırada kalır — sayfayı yenilemek akışı zıplatmaz; “Daha Fazla Yükle” cursor'la tekrar/kayıp üretmez.</li>
       <li>60 saniyede bir hafif sayım yapılır; yeni içerik varsa “<em>N yeni paylaşım — yenile</em>” chip'i çıkar (akış kendiliğinden kaymaz).</li>
@@ -284,7 +284,7 @@
   <div class="scenario">
     <div class="who">🛒 Senaryo 8 — Çarşı: alıcı gözünden <span class="tag">keşif</span></div>
     <ol>
-      <li>Cadde sol kolonunun en üstündeki <strong>Çarşı ticker'ı</strong> seçili şehre göre son ilanları yatay şeritte gösterir; “Tüm Çarşı” tam listeye götürür.</li>
+      <li>Cadde'nin yan kolonundaki <strong>Çarşı ticker'ı</strong> seçili şehre göre son ilanları yatay şeritte gösterir; “Tüm Çarşı” tam listeye götürür.</li>
       <li>Listede kategori chip'leriyle daraltılır (URL'e yazılır); karta tıklanınca detayda fiyat, konum, görseller ve güvenlik notlu iletişim kutusu görülür.</li>
       <li>“Profilini ziyaret et” ile satıcının public profiline geçilir; platform içi mesajlaşma önerilir.</li>
     </ol>

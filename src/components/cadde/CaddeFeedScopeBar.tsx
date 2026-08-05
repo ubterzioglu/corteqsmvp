@@ -18,7 +18,9 @@
 
 import { X } from "lucide-react";
 
+import CaddeLocalClock from "@/components/cadde/CaddeLocalClock";
 import { Badge } from "@/components/ui/badge";
+import type { CaddeClockTarget } from "@/lib/cadde-local-clock";
 import type { CaddeFeedScope } from "@/lib/cadde-types";
 
 type ScopeOption = {
@@ -42,9 +44,20 @@ export interface CaddeFeedScopeBarProps {
   hashtag: string;
   onScopeChange: (scope: CaddeFeedScope) => void;
   onClearHashtag: () => void;
+  /**
+   * Workshop m133: kapsam çiplerinin sağ ucundaki yerel saat. Çözülemezse `null` gelir
+   * ve rozet hiç çizilmez — "yakında" tarzı boş bir yer tutucu BIRAKMA (m88 kuralı).
+   */
+  clockTarget?: CaddeClockTarget | null;
 }
 
-const CaddeFeedScopeBar = ({ scope, hashtag, onScopeChange, onClearHashtag }: CaddeFeedScopeBarProps) => (
+const CaddeFeedScopeBar = ({
+  scope,
+  hashtag,
+  onScopeChange,
+  onClearHashtag,
+  clockTarget = null,
+}: CaddeFeedScopeBarProps) => (
   <div className="space-y-2" data-testid="cadde-feed-scope-bar">
     <div className="flex flex-wrap items-center gap-1.5">
       {SCOPES.map((option) => {
@@ -68,6 +81,14 @@ const CaddeFeedScopeBar = ({ scope, hashtag, onScopeChange, onClearHashtag }: Ca
           </button>
         );
       })}
+
+      {/* m133: saat çiplerin SAĞ ucuna yaslanır (ml-auto). Şerit dar ekranda zaten
+          flex-wrap ile sarıyor; saat de o zaman alt satıra düşer, taşma yapmaz. */}
+      {clockTarget ? (
+        <span className="ml-auto">
+          <CaddeLocalClock target={clockTarget} />
+        </span>
+      ) : null}
     </div>
 
     {/* m14: aktif kapsamın ne yaptığı her zaman görünür — tooltip'i keşfetmeyen de görsün. */}

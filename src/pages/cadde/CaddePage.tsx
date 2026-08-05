@@ -52,6 +52,7 @@ import {
 } from "@/lib/cadde-api";
 import { listCaddeCafeThemes } from "@/lib/cadde-cafe-api";
 import { emptyCaddeComposer } from "@/lib/cadde-composer";
+import { resolveCaddeClockTarget } from "@/lib/cadde-local-clock";
 import { caddeNewPostPollInterval, caddeOpenCommentsPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
 import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters } from "@/lib/cadde-format";
 import { isInternalCaddeLink } from "@/lib/cadde-links";
@@ -559,6 +560,14 @@ const CaddePage = () => {
   const promotionCtaTarget = user ? "/profile#cadde-tanitim" : "/login?mode=signup";
   const promotionCtaLabel = user ? "Profilinden İlk Tanıtımını Yap" : "Profil Aç ve Tanıtıma Başla";
 
+  // m133: kapsam şeridindeki yerel saatin hangi şehre ait olacağı. Seçili filtre şehri
+  // profil şehrine yeğlenir (kullanıcı nereye bakıyorsa oranın saati). `allCitiesQuery`
+  // oturum yokken boştur — ziyaretçide saat çizilmez, bu kabul edilir.
+  const clockTarget = useMemo(
+    () => resolveCaddeClockTarget(filters.cities, registeredCity, allCitiesQuery.data ?? []),
+    [filters.cities, registeredCity, allCitiesQuery.data],
+  );
+
   return (
     <CaddeProfileGate context={actorContextQuery.data} isLoading={actorContextQuery.isLoading}>
     <main className="cadde-shell">
@@ -627,6 +636,7 @@ const CaddePage = () => {
           <CaddeFeedScopeBar
             scope={filters.scope}
             hashtag={filters.hashtag}
+            clockTarget={clockTarget}
             onScopeChange={(scope) => updateFilters({ scope })}
             onClearHashtag={() => updateFilters({ hashtag: "" })}
           />

@@ -60,4 +60,39 @@ describe("CaddeFeedScopeBar", () => {
     fireEvent.click(screen.getByRole("button", { name: "Cafelerim" }));
     expect(onScopeChange).toHaveBeenCalledWith("cafes");
   });
+
+  // m133 — yerel saat rozeti. Saatin kendi davranışı CaddeLocalClock.test.tsx'te.
+  describe("m133 yerel saat", () => {
+    it("hedef yokken rozet HİÇ çizilmez — boş yer tutucu bırakılmaz", () => {
+      renderBar();
+      expect(screen.queryByTestId("cadde-local-clock")).not.toBeInTheDocument();
+    });
+
+    it("hedef verilince şerit rozeti çizer", () => {
+      render(
+        <CaddeFeedScopeBar
+          scope="all"
+          hashtag=""
+          clockTarget={{ cityName: "Berlin", timeZone: "Europe/Berlin" }}
+          onScopeChange={vi.fn()}
+          onClearHashtag={vi.fn()}
+        />,
+      );
+      expect(screen.getByTestId("cadde-local-clock")).toHaveTextContent("Berlin");
+    });
+
+    it("rozet buton değildir — m88'in 'her çip tıklanabilir' kuralını bozmaz", () => {
+      render(
+        <CaddeFeedScopeBar
+          scope="all"
+          hashtag=""
+          clockTarget={{ cityName: "Berlin", timeZone: "Europe/Berlin" }}
+          onScopeChange={vi.fn()}
+          onClearHashtag={vi.fn()}
+        />,
+      );
+      screen.getAllByRole("button").forEach((chip) => expect(chip).toBeEnabled());
+      expect(screen.getByTestId("cadde-local-clock").tagName).toBe("SPAN");
+    });
+  });
 });

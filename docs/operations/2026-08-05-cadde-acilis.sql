@@ -104,7 +104,7 @@ INSERT INTO cadde_acilis_spec VALUES
   -- A) Yönlendirme — tüm aktif ülkelere hedeflenir (country_name NULL = global)
   (1, 'text', false, true, NULL, NULL,
    $t$Cadde açıldı$t$,
-   $t$Burası şehrindeki Türklerle tanışıp soru sorabileceğin ortak akış. Bir soru, bir tavsiye ya da şehrinden kısa bir not — hepsi buraya yazılır. Akış önce senin şehrine bakar; sol kolondaki "Ülke ve Şehir" kutusundan başka yerleri de gezebilirsin.$t$),
+   $t$Burası şehrindeki Türklerle tanışıp soru sorabileceğin ortak akış. Bir soru, bir tavsiye ya da şehrinden kısa bir not — hepsi buraya yazılır. Akış önce senin şehrine bakar; "Konum" kartındaki Ülke ve Şehir seçiminden başka yerleri de gezebilirsin.$t$),
 
   (2, 'text', false, false, NULL, NULL,
    $t$Cafe nedir, ne zaman açılır$t$,
@@ -112,7 +112,7 @@ INSERT INTO cadde_acilis_spec VALUES
 
   (3, 'text', true, false, NULL, NULL,
    $t$Köprü modu ne işe yarar$t$,
-   $t$Köprü, Türkiye ile diaspora arasındaki akış: taşınma, iş ve mentorluk. Türkiye'den taşınmayı düşünen biriyle o şehirde yaşayan birini aynı başlıkta buluşturur. Sol kolondaki anahtarla açıp kapatabilirsin.$t$),
+   $t$Köprü, Türkiye ile diaspora arasındaki akış: taşınma, iş ve mentorluk. Türkiye'den taşınmayı düşünen biriyle o şehirde yaşayan birini aynı başlıkta buluşturur. "Konum" kartındaki anahtarla açıp kapatabilirsin.$t$),
 
   -- B) Türkiye tarafı — en büyük üye kitlesi, hepsi Köprü
   (4, 'question', true, false, 'Turkiye', 'Istanbul', NULL,
