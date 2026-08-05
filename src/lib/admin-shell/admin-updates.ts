@@ -14,6 +14,76 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260805-workshop-panosu-isaretleme-bekliyor",
+    date: "5 Ağustos 2026",
+    title:
+      "Cadde workshop panosunda 28 madde 'yapıldı' işareti bekliyor — işaretleme bu oturumda YAPILAMADI",
+    items: [
+      "Pano canlıda sayıldı: 4 Ağustos'ta bitirilip ana koda alınan işlerin hiçbiri panoda işaretli değil. WS2 bölümünün tamamı boş görünüyor — panoda son işaretleme 4 Ağustos'ta 4 madde (dünya saatleri) ile kalmış. Sebebi basit: hem dün hem bugün canlı veritabanına yazma izni bu ortamda engellendi, o yüzden kutular kod bitmiş olmasına rağmen hiç işaretlenemedi.",
+      "İşaretlenmeyi bekleyen 28 madde tek tek eşleştirildi ve tek komutluk bir dosyaya yazıldı: docs/operations/2026-08-05-workshop-ubt-isaretleme.sql. Aynı işi panelden elle de yapabilirsin (/admin/workshop/cadde), dosya yalnızca 28 kutuyu tek seferde işaretlemek için.",
+      "Kapsam: kafe içi yorum/görsel/bağlantı/emoji, emoji ve yükleme kusurları, gömülü görsel, kafe kartlarının kompakt hâli ve akordeon, kontrast artışı, akış öncelikli yerleşim, konum açıklaması, tek 'Yakında gelecek özellikler' alanı, Enter'ın satır atlaması, reklam alanı metinleri, CorteQS Çarşı adlandırması, kafe ikonu.",
+      "İşaretlenmeyen maddeler bilinçli olarak dışarıda bırakıldı: 'paylaşım profildeki ülkenin akışında görünecek' maddesi bugünkü ölçümle ÇALIŞMADIĞI kanıtlandığı için (aşağıdaki kayda bak), şehir/ülke temizliği canlıya uygulanamadığı için, 'Paylaşım gönderilemedi' ise yalnız yarısı çözüldüğü için.",
+      "BUGÜN YAPILAN İŞLERİN KENDİSİ HİÇBİR PANO MADDESİNİ KAPATMADI — bu dürüst tablo: bugünkü işlerin bir kısmı kök neden araştırması, bir kısmı da yazılıp canlıya uygulanamayan düzeltme. Panodaki eksiklik dünün işinden geliyor.",
+      "Durum: SENDE — dosyayı çalıştırman ya da panelden 28 kutuyu işaretlemen gerekiyor. Hiçbir şey yapılmazsa 6 Ağustos toplantısına pano gerçekte olduğundan çok daha geride görünen bir tabloyla girilir.",
+    ],
+  },
+  {
+    id: "20260805-cadde-kor-izleyici-ulke-koprusu",
+    date: "5 Ağustos 2026",
+    title:
+      "Akışın bazı üyelerde sessizce boş kalmasının sebebi bulundu: sitede iki ayrı ülke listesi var ve birbirini tanımıyor",
+    items: [
+      "Profil sayfasındaki ülke listesi ile Cadde'nin kendi ülke listesi iki ayrı kaynak: profil 251 ülkelik büyük listeden besleniyor, Cadde ise kendi 18 ülkelik listesine bakıyor. İki liste iki yerde ayrışıyor — 'İngiltere' ↔ 'Birleşik Krallık' ve 'ABD' ↔ 'Amerika Birleşik Devletleri'. Cadde eşleştirmeyi düpedüz metin karşılaştırarak yaptığı için, profilinde bu iki değerden birini seçmiş HERKES ülke düzeyinde kör kalıyordu: akış boş, hata mesajı yok.",
+      "Bu bir veri hatası değil, yapı hatası — bugün bu değerleri seçen üyeler kadar gelecekte seçecek olanlar da aynı duruma düşecekti.",
+      "Çözüm için yeni bir eşleştirme yazılmadı: iki liste arasındaki köprü zaten kuruluymuş ama hiç kullanılmıyormuş (18 ülkenin 18'i, 51 şehrin 50'si karşılıklı bağlı). Artık önce bugünkü isim eşleşmesi deneniyor, tutmazsa köprüden gidiliyor. Salt okunur denemede ülke çözümlemesi 88'den 95'e çıktı.",
+      "Ayrıca bir emniyet supabı kondu: bir üyenin ne şehri ne ülkesi çözülemiyorsa artık boş ekran yerine içerik gösteriliyor. Akışın sıralama matematiğine dokunulmadı.",
+      "ÖLÇÜM DÜZELTMESİ: bu turun başında 'çalışmayan 68 üye var' demiştim, fazla güçlüydü. Akış şehir eşleşmesini ülkeden bağımsız yaptığı için 19 üye şehri üzerinden zaten kurtuluyordu. Doğru sayı 49; bunların 30'u giriş yapmış ve zaten içeriği görüyor, sessiz boşluk yaşayan 19 hesabın hiçbiri bugüne kadar hiç giriş yapmamış.",
+      "Durum: düzeltme yazıldı ve ana koda alındı ama CANLIYA UYGULANMADI — veritabanı değişikliği bu oturumda çalıştırılamadı. Uygulanana kadar kör kalma durumu devam ediyor.",
+    ],
+  },
+  {
+    id: "20260805-cadde-paylasim-gonderilemedi-kok-neden",
+    date: "5 Ağustos 2026",
+    title:
+      "'Paylaşım gönderilemedi' hatasının gerçek sebebi bulundu: en kalabalık grup olan 38 üye Türkçe 'ü' harfi yüzünden hiç paylaşım yapamıyor",
+    items: [
+      "Önce hatanın neden hiç anlaşılamadığı çözüldü: sistemin 51 Türkçe hata mesajından oluşan haritası ÜRETİMDE HİÇ ÇALIŞMAMIŞ. Tek satırlık bir tip kontrolü yüzünden gelen hata metni her seferinde boş kabul ediliyordu, dolayısıyla kullanıcı hangi hata olursa olsun hep aynı genel cümleyi görüyordu: 'İşlem tamamlanamadı, lütfen tekrar dene.' Sunucu doğru sebebi söylüyordu, ekran onu yutuyordu.",
+      "Testler bunu neden kaçırmış: hepsi hatayı gerçekte geldiğinden farklı biçimde kuruyordu. Önce düşen 3 test yazıldı, sonra düzeltildi. Artık kullanıcı 'Paylaşım hedefi geçersiz. Ülke ve şehir seçimini kontrol et.' gibi gerçek sebebi görüyor.",
+      "Doğru mesaj görünür olunca asıl sebep ortaya çıktı: paylaşımın hangi ülkeye gideceği BİREBİR isim karşılaştırmasıyla bulunuyor. Profilinde 'Türkiye' yazan üye, tabloda kayıt 'Turkiye' (Türkçe karakterler olmadan) olduğu için eşleşmiyor ve paylaşımı reddediliyor.",
+      "Canlıdan ölçüldü: en kalabalık grup olan 38 üyenin HİÇBİRİ paylaşım yapamıyor. İlk 25 değerde eşleşen 41 üyeye karşılık eşleşmeyen 72 üye var (Belirtilmedi, Qatar, küçük harfli 'turkiye', Deutschland, Abd, Tr, İngiltere...).",
+      "Okuma tarafı 29 Temmuz'da büyük/küçük harf ve aksan farkına duyarsız hale getirilmiş, yazma tarafı atlanmış. Yani hata tek taraflı bir eksiklikten geliyor.",
+      "SENİN KARARINLA DÜZELTME ERTELENDİ. Kaybolmaması için iki yere yazıldı: yönetici panelindeki açık işler listesine kritik madde olarak ve projenin kural dosyasına 'bunu keşfedip sessizce yeniden yazma' uyarısıyla. Düzeltilince ikisi birden kapatılacak.",
+      "Durum: teşhis yarısı ana koda alındı (deploy sonrası geçerli), düzeltme yarısı açık iş olarak bekliyor. Not: veri temizliği tek başına yetmez — Qatar, Deutschland, Abd gibi değerler hiçbir listede yok.",
+    ],
+  },
+  {
+    id: "20260805-cadde-acilis-icerigi-hazir",
+    date: "5 Ağustos 2026",
+    title: "Cadde'nin açılış içeriği hazırlandı: uydurma kişiler yerine ekip hesabından soru soran içerik",
+    items: [
+      "'Seed'leri sil, gerçek kullanıcı gibi içerik ekleyemez misin' sorusuna teknik cevap 'evet' ama uydurma kişi kimliği üretmek denetimin zaten işaret ettiği güvenilirlik riskini büyütürdü: gerçek bir üye 'Ayşe K., Berlin'e cevap yazıp karşılık alamazsa zarar gören platformun kendisi olur.",
+      "Seçilen yol: içerik gerçek bir ekip hesabından yayınlanıyor ve 'CorteQS Ekibi' rozetiyle işaretleniyor. Kimlik uydurulmuyor — cevap gelirse cevaplayacak gerçek biri var.",
+      "İçeriğin ağırlığı bilinçli olarak SORU: akışın işi bilgi vermek değil konuşma başlatmak. 12 tane 'nasıl yapılır' yazısı sayfayı yardım merkezi gibi okutur, 9 iyi şehir sorusu topluluk gibi. Sorular ayrıca sıfır sorumluluk taşıyor — bürokrasi cevabını bilen üye yazar, ekip bilmediği mevzuatı biliyormuş gibi yazmaz.",
+      "Toplam 3 yönlendirme paylaşımı (Cadde nedir, Cafe nedir, Köprü nedir — ekibin gerçekten bildiği şeyler) + 9 şehir bazlı açık soru.",
+      "Çöp verinin silinmesi, uydurma örnek içeriğin kaldırılması ve yeni içeriğin eklenmesi TEK bir komut dosyasında birleştirildi — ayrı ayrı çalıştırılsaydı sıra hatası yeni içeriği de sildirebilirdi. Dosya hatada kendini geri sarıyor.",
+      "Durum: içerik ve komut dosyası hazır, HENÜZ ÇALIŞTIRILMADI — canlı veritabanına yazma bu oturumda engellendi. Çalıştırılmadan Cadde'nin 'yeni açıldı' yüzeyi de ekranda görünmeyecek, çünkü akışta hâlâ 9 eski paylaşım duruyor.",
+    ],
+  },
+  {
+    id: "20260805-cadde-soguk-baslangic-ve-kararlilik",
+    date: "5 Ağustos 2026",
+    title: "Cadde boşken 'bozuk' değil 'davet' gibi okunacak şekilde yeniden düzenlendi; testlerdeki hayalet hata da çözüldü",
+    items: [
+      "Sayfa içerik yokken sol kolonda üç ayar kutusu gösteriyordu — filtrelenecek bir şey yokken filtre. Artık içerik yokken ülke/şehir bölümü ve kafe listesi kapalı açılıyor; 'Caddeye Çık' ve '+ Cafe Aç' butonları görünür kalıyor. Kullanıcı bir kez açıp kapatırsa kararı kalıcı kazanıyor.",
+      "Yan taraftaki tekrar temizlendi: sayfa boşken sağ kolon üst üste ÜÇ ayrı yokluk okutuyordu ('Çarşı yakında', 'yakında gelecek özellikler', 'bu tanıtım alanı boş'). Tanıtım şeridi içerik yokken hiç çizilmiyor artık — hemen altındaki koyu davet kartı aynı şeyi çalışan bir butonla söylüyor.",
+      "Telefonda sağ kolonun tamamı tek bir başlığın arkasına katlanıyor, böylece akış daha yukarıda başlıyor.",
+      "Sayfa açılırken yapılan 8 sorgunun tamamına tazelik penceresi kondu: sekmeler arası geçişte veriler gereksiz yere baştan çekilmiyor. Bir de sözleşme testi eklendi — bundan sonra penceresi olmayan yeni bir sorgu eklenirse test düşüyor.",
+      "Üye rehberi sayfasında gerçek bir kusur bulundu: sayım cevabı gelmeden sayfadan çıkan kullanıcı için sistem artık var olmayan ekrana yazmaya çalışıyordu. Bu aynı zamanda test paketinde aylardır görünen açıklanamayan hatanın da kaynağıydı. 209 dosya / 1495 test yeşil, hayalet hata sıfır.",
+      "DÜRÜST NOT: bu düzenlemeler canlıda HENÜZ GÖRÜNMEYECEK. 'Sayfa boş' durumu ancak akışta gerçekten hiç paylaşım kalmayınca devreye giriyor; şu an 9 eski paylaşım duruyor. Yukarıdaki açılış içeriği komutu çalıştırılınca görünür hale gelecek.",
+      "Durum: kod ana koda alındı, deploy sonrası geçerli.",
+    ],
+  },
+  {
     id: "20260804-cadde-canli-denetim-soguk-baslangic",
     date: "4 Ağustos 2026",
     title:
