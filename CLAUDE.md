@@ -8,8 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Key Metrics (ölçüldü 2026-08-04):**
 - 989 `.ts`/`.tsx` files under `src` — 209 pages, 429 components, 278 lib modules
-- **352 Supabase migrations** — 100 in `supabase/migrations/applied/` + 252 in
-  `supabase/migrations/archive/` (2026-08-04 baseline split); 7 Edge Functions
+- **357 Supabase migrations** (ölçüldü 2026-08-05) — 105 in `supabase/migrations/applied/`
+  + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split); 7 Edge Functions
 - 202 test files (`src` 190, `scripts` 9, `supabase` 3, `workers` 4) + 18 Playwright `.spec.ts`
 - `src/App.tsx`: 283 lines, 51 `lazy()` imports
 - TypeScript with relaxed strict mode (intentional trade-off) — 98 remaining `tsc` errors
@@ -398,13 +398,13 @@ config **text** and route tables, so they fail loudly when someone edits one sid
 
 ## Database & Migrations
 
-- **352 migrations total, split by a baseline on 2026-08-04** (date-prefixed, immutable in prod).
+- **357 migrations total, split by a baseline on 2026-08-04** (date-prefixed, immutable in prod).
   Note the subdirectories — the parent `supabase/migrations/` contains 0 `.sql` files, so a glob
   on the parent silently finds nothing.
 
 | Path | Count | Meaning |
 |------|-------|---------|
-| `supabase/migrations/applied/` | 100 | Post-baseline (≥ `20260615100000`) — the working set |
+| `supabase/migrations/applied/` | 105 | Post-baseline (≥ `20260615100000`) — the working set |
 | `supabase/migrations/archive/` | 252 | Pre-baseline, **applied in production, never delete** |
 | `supabase/baseline/2026-08-04-public-schema.sql` | 1 | `pg_dump --schema-only` of the live `public` schema (237 tables, 481 RLS policies, 1568 grants, 342 indexes, 115 triggers, 5 views) |
 
@@ -420,6 +420,15 @@ npm run check:migrations:warn   # reports, exit 0
 Compares `applied/` + `archive/` against the live `supabase_migrations.schema_migrations`
 (psql over the session pooler; needs `SUPABASE_DB_PASSWORD` in `.env.local`). If it cannot
 connect it exits **2** and says so — a failed check is never reported as "clean".
+
+⚠️ **Bir migration dosyası `supabase/migrations/` parent dizininde BIRAKILMAZ.** Dosyalar
+`applied/` (veya `archive/`) altında yaşar; parent dizin sürüm karşılaştırmasına **dahil
+değildir** (`MIGRATION_DIRS`). Akış: yaz → uygula → `applied/` altına **taşı**.
+2026-08-05'te `20260805200000_cadde_geo_bridge_backfill.sql` parent'ta kaldı, canlıda
+kaydı yoktu ve `check:migrations` yine de **"sapma yok"** dedi — dosyayı hiç görmemişti.
+Kontrol artık bunu ayrı bir sinyal olarak yakalar (`findStrayParentMigrations`, strict
+modda exit 1) ve bu tarama DB bağlantısından **önce** çalışır, böylece "bağlanamadım"
+hatasının arkasında kaybolmaz. Testi: `scripts/check-migrations.test.mjs` — gevşetme.
 
 ⚠️ **Two timestamps carry two files each** — this is real, not a bug:
 `20260718120000` (`brainstorming_tables` + `revision_requests_mvp_seed`) and `20260718130000`

@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { diffMigrations, expectedVersionsFor, versionOf } from "./check-migrations.mjs";
+import {
+  diffMigrations,
+  expectedVersionsFor,
+  findStrayParentMigrations,
+  versionOf,
+} from "./check-migrations.mjs";
 
 describe("versionOf", () => {
   it("dosya adından zaman damgasını ayıklar", () => {
@@ -75,6 +80,17 @@ describe("diffMigrations", () => {
     expect(result.missingInDb).toEqual(["20260718120001"]);
   });
 
+  it("parent dizinde bekleyen dosya diffMigrations'ı ETKİLEMEZ — ayrı sinyaldir", () => {
+    // Bu, 2026-08-05'te yaşanan sessiz başarısızlığın kaydı: parent dizindeki dosya
+    // applied/archive taramasına girmediği için diffMigrations onu hiç görmez ve
+    // "sapma yok" der. Doğru cevap findStrayParentMigrations'tan gelir, buradan değil.
+    const result = diffMigrations({
+      fileVersions: ["20260101000000"],
+      dbVersions: ["20260101000000"],
+    });
+    expect(result.ok).toBe(true);
+  });
+
   it("canlıdaki gerçek durumu (352 dosya / 350 benzersiz damga) temiz sayar", () => {
     // 2026-08-04'te ölçülen gerçek şekil: iki damga ikişer dosya taşıyor,
     // canlıda karşılıkları ...0000 ve ...0001 olarak duruyor.
@@ -93,5 +109,37 @@ describe("diffMigrations", () => {
       "20260804160000",
     ];
     expect(diffMigrations({ fileVersions, dbVersions }).ok).toBe(true);
+  });
+});
+
+describe("findStrayParentMigrations", () => {
+  // NEDEN VAR: 2026-08-05'te `20260805200000_cadde_geo_bridge_backfill.sql` parent
+  // dizinde (supabase/migrations/) kaldı. MIGRATION_DIRS yalnız applied/ + archive/
+  // tarıyor, dolayısıyla denetim dosyayı HİÇ görmedi ve "sapma yok" raporladı — oysa
+  // migration canlıya uygulanmamıştı. Bu, CLAUDE.md'nin "sessiz başarısızlık" sınıfı.
+
+  it("parent dizinde .sql yokken temiz döner", () => {
+    expect(findStrayParentMigrations(["applied", "archive"])).toEqual([]);
+  });
+
+  it("parent dizinde kalan .sql dosyasını yakalar", () => {
+    expect(
+      findStrayParentMigrations(["applied", "archive", "20260805200000_cadde_geo_bridge_backfill.sql"]),
+    ).toEqual(["20260805200000_cadde_geo_bridge_backfill.sql"]);
+  });
+
+  it("birden fazla dosyayı ada göre sıralı döndürür", () => {
+    expect(findStrayParentMigrations(["20260901000000_b.sql", "20260801000000_a.sql"])).toEqual([
+      "20260801000000_a.sql",
+      "20260901000000_b.sql",
+    ]);
+  });
+
+  it(".sql olmayan girdileri yok sayar", () => {
+    expect(findStrayParentMigrations(["applied", "archive", "README.md", "notlar.txt"])).toEqual([]);
+  });
+
+  it("boş listede patlamaz", () => {
+    expect(findStrayParentMigrations([])).toEqual([]);
   });
 });
