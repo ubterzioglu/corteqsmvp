@@ -586,31 +586,38 @@ const CaddePage = () => {
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-7xl gap-5 px-4 py-5 lg:grid-cols-[290px_minmax(0,1fr)_320px] lg:px-6">
-        {/* m30 (F9): sol kolon = yalnız Konum + İnsanları Keşfet (bu sırayla).
-            Çarşı ticker'ı sağ (tanıtım) kolonuna taşındı; Cafeler özet kartı m31 ile
-            kaldırıldı (tek kaynak: orta kolondaki "Aktif Cafeler").
-            Not: workshop'un "akordeon kart denemesi" bilinçli atlandı — kolon 2 karta
-            indiği için akordeonun çözeceği kalabalık kalmadı (commit gerekçesinde). */}
-        <aside className={`order-2 lg:order-none ${asideRhythm}`}>
+      {/* Kullanıcı kararı 05.08.2026: Konum + Aktif Cafeler + İnsanları Keşfet sol
+          kolondan çıkıp başlık kartının ALTINA, tam genişlikte ÜÇ SATIR olarak indi.
+          Sol kolon tamamen boşaldığı için ızgara 3 kolondan 2'ye düştü (akış + tanıtım).
+          Kartların iç düzeni 290px'lik kolona göre kurulmuştu; tam genişlikte dikey
+          yığın gibi görünmemeleri için her biri lg'de yatay okunur (başlık solda,
+          birincil eylem sağda).
+          Not: blok mobilde de akıştan ÖNCE gelir — eski sıralamada (aside order-2)
+          akıştan SONRA geliyordu. */}
+      <section className="mx-auto w-full max-w-7xl px-4 pt-5 lg:px-6">
+        <div className={asideRhythm}>
           <Card className="cadde-panel">
-            <CardHeader className="space-y-3">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <CardTitle className="font-display text-lg">Konum</CardTitle>
-                  <CardDescription>Global akış, şehir seçimi ve köprü modu</CardDescription>
+            <CardHeader className="pb-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-2">
+                  <Globe2 className="h-5 w-5 shrink-0 text-orange-500" />
+                  <div className="min-w-0">
+                    <CardTitle className="font-display text-lg">Konum</CardTitle>
+                    <CardDescription>Global akış, şehir seçimi ve köprü modu</CardDescription>
+                  </div>
                 </div>
-                <Globe2 className="h-5 w-5 text-orange-500" />
+                <Button
+                  onClick={scrollToComposer}
+                  className="w-full justify-between rounded-2xl bg-slate-900 text-white hover:bg-slate-800 sm:w-auto sm:gap-2"
+                >
+                  Caddeye Çık
+                  <Megaphone className="h-4 w-4 text-orange-200" />
+                </Button>
               </div>
-              <Button
-                onClick={scrollToComposer}
-                className="w-full justify-between rounded-2xl bg-slate-900 text-white hover:bg-slate-800"
-              >
-                Caddeye Çık
-                <Megaphone className="h-4 w-4 text-orange-200" />
-              </Button>
             </CardHeader>
-            <CardContent className="space-y-4">
+            {/* Tam genişlikte filtre ve köprü anahtarı alt alta iki ince şerit olarak
+                kalmasın diye lg'de yan yana; altında tek kolon davranışı korunur. */}
+            <CardContent className="space-y-4 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6 lg:space-y-0">
               {/* B1: filtre kutusu soğuk başlangıçta KAPALI açılır — filtrelenecek
                   içerik yokken sayfanın en üst sol köşesini bir ayar paneli tutuyordu.
                   Kapatmak filtreyi SIFIRLAMAZ: burada yalnız görünürlük değişir,
@@ -660,8 +667,10 @@ const CaddePage = () => {
             </CardContent>
           </Card>
 
-          {/* m84: "Aktif Cafeler" orta kolondan buraya indi — orta kolon artık yalnız
-              paylaşım kutusu + akış (m85). Kullanıcı kararı 04.08.2026: 3 kolon korunur. */}
+          {/* m84: "Aktif Cafeler" orta kolondan sol kolona inmişti; 05.08.2026'da üç
+              satırın ikincisi oldu. Panelin başlık satırı zaten yatay (başlık solda,
+              "+ Cafe Aç" sağda) ve kafe satırları esnek — tam genişlikte ek düzenleme
+              gerekmiyor, bu yüzden bileşene dokunulmadı. */}
           <CaddeCafesPanel
             cafes={activeCafes}
             themeLabelByKey={cafeThemeLabelByKey}
@@ -674,15 +683,29 @@ const CaddePage = () => {
             onShowAll={() => setShowAllCafes(true)}
           />
 
+          {/* `hidden lg:block` KORUNDU: kart mobilde eskiden de çizilmiyordu, taşınma
+              bunu değiştirmemeli. */}
           <Card className="hidden border-slate-200 bg-white/90 lg:block">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 font-display text-base">
-                <MessagesSquare className="h-4 w-4 text-orange-500" />
-                İnsanları Keşfet
-              </CardTitle>
-              <CardDescription>İsimle ara ya da dizinde gezin.</CardDescription>
+            <CardHeader className="pb-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <CardTitle className="flex items-center gap-2 font-display text-base">
+                    <MessagesSquare className="h-4 w-4 text-orange-500" />
+                    İnsanları Keşfet
+                  </CardTitle>
+                  <CardDescription>İsimle ara ya da dizinde gezin.</CardDescription>
+                </div>
+                {/* Dizin bağlantısı tam genişlikte bir şerit butona dönüşmesin diye
+                    başlık satırının sağ ucuna alındı (kartın içeriği arama kutusu). */}
+                <Button asChild variant="outline" className="w-full justify-between rounded-2xl sm:w-auto sm:gap-2">
+                  <Link to={directoryLink}>
+                    Kişileri Keşfet
+                    <UserPlus2 className="h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-2">
+            <CardContent className="max-w-2xl space-y-2">
               {/* m38: tüm kayıtlı üyeler isimle aranabilir (kapsam kararı: açık profil tam
                   satır + ad-onaylı kapalı üye yalnız isim/şehir, tıklanamaz). */}
               <Input
@@ -722,22 +745,17 @@ const CaddePage = () => {
               ) : debouncedPeopleQuery.length >= 2 && !peopleSearch.isFetching ? (
                 <p className="px-1 text-xs text-slate-500">Eşleşen üye bulunamadı.</p>
               ) : null}
-              <Button asChild variant="outline" className="w-full justify-between rounded-2xl">
-                <Link to={directoryLink}>
-                  Kişileri Keşfet
-                  <UserPlus2 className="h-4 w-4" />
-                </Link>
-              </Button>
             </CardContent>
           </Card>
+        </div>
+      </section>
 
-        </aside>
-
+      {/* Izgara artık 2 kolon: akış + tanıtım. Eski sol kolon (290px) yukarıdaki üç
+          satırlık şeride taşındı — buraya geri kolon eklemeden önce o bloğa bak. */}
+      <section className="mx-auto grid w-full max-w-7xl gap-5 px-4 py-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-6">
         {/* m85: orta kolon = paylaşım kutusu + akış, başka hiçbir şey. Buradaki
-            "Diaspora Cadde" başlık kartı üst şeridin (satır ~491) birebir kopyasıydı,
-            akışı bir kart aşağı itiyordu — silindi, filtre özeti üst şeritte duruyor.
-            m84: "Aktif Cafeler" sol kolona taşındı (kullanıcı kararı 04.08.2026:
-            3 kolon korunur, yalnız içerik sırası düzelir). */}
+            "Diaspora Cadde" başlık kartı üst şeridin birebir kopyasıydı, akışı bir kart
+            aşağı itiyordu — silindi, filtre özeti üst şeritte duruyor. */}
         <section className="order-1 space-y-5 lg:order-none">
 
           {session ? (
