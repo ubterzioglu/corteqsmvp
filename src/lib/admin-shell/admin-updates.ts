@@ -14,6 +14,21 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260805-bes-oturumun-kalani-tek-listede",
+    date: "5 Ağustos 2026",
+    title:
+      "Beş oturumun 'kalan işler' listeleri tek listede toplandı — en büyük madde zaten yapılmış çıktı",
+    items: [
+      "Son iki günün beş ayrı çalışma oturumu, her biri kendi sonunda bir 'kalan işler' listesi bırakmıştı. Listeler birbirini tekrar ediyor ve bir kısmı artık geçersizdi, çünkü oturumlar kısmen paralel çalıştı ve birbirinin işini devraldı. Hepsi tek listeye indirildi ve her madde canlı sisteme sorularak açık mı kapalı mı diye kontrol edildi.",
+      "EN ÖNEMLİ BULGU: beş oturumun BEŞİ DE 'Coolify deploy bekliyor' diyordu — deploy aslında yapılmış. Canlı siteden ölçüldü: Cadde sayfasının canlıdaki dosyasında dünkü yeni kart düzeni var, eskisi yok; sayfanın yayın saati 13:12, son kod değişikliği 13:11. Yani günlerin işi canlıda. Bu madde bütün listelerden düşüyor; boşuna deploy beklenmesin.",
+      "HÂLÂ AÇIK OLAN: iki veritabanı komutu çalıştırılmayı bekliyor. Birincisi 6 üyenin akışının boş kalmasını gideriyor (4 ülke hiçbir tanıtım paylaşımı tarafından hedeflenmiyor) ve bir migration'ın sürüm kaydını yazıyor. İkincisi şehir kataloğundaki yazım/eşleşme bozukluklarını temizliyor. İkisi de Yapılacaklar listesine ayrı ayrı eklendi.",
+      "Şehir temizliği komutu 4 Ağustos'ta yazılmıştı ve BAYATLAMIŞTI: dün yapılan veri onarımı katalogda eksik ülkeleri eklerken İtalya'yı ve ona bağlı doğru bir 'Roma' kaydını da eklemiş, yani şu an iki 'Roma' var. Eski komut çalıştırılsaydı ikinci bir kopya üretecek ve şehir eşleştirmesini belirsiz hâle getirecekti. Komut, taşıma yerine mükerrer kaydı silecek şekilde yeniden yazıldı; silmeden önce o kayda bağlı veri olup olmadığını sayıyor ve varsa duruyor.",
+      "Panelde yanlış bilgi gösteren bir kayıt düzeltildi: Yapılacaklar listesindeki 'Cadde hedef eşleşmesi: düzeltme yazıldı, canlıya UYGULANMADI' maddesi artık doğru değildi — düzeltme dün uygulandı ve paylaşabilen üye sayısı 42'den 104'e çıktı. Madde, kalan gerçek işe göre yeniden yazıldı: profil formu hâlâ serbest metin olduğu için bozuk konum değerleri birikmeye devam ediyor.",
+      "Workshop panosu için iki madde daha işaretlenmeye hazır (paylaşımın profildeki ülkenin akışında görünmesi ve 'Paylaşım gönderilemedi' hatası) — ikisinin de kanıtı canlıda doğrulandı. Üç madde daha var ama onlar yukarıdaki iki komut çalıştıktan sonra işaretlenecek; şimdi işaretlemek yapılmamış işi yapılmış göstermek olurdu.",
+      "Durum: kod tarafı hazır ve ana koda alındı. SENDE olan: iki komutu çalıştırmak ve panoyu işaretlemek. Ayrıca deploy edilmiş olan yeni Cadde yerleşimi hiç göz kontrolünden geçmedi — masaüstünde bir bakmakta fayda var.",
+    ],
+  },
+  {
     id: "20260805-workshop-panosu-isaretleme-bekliyor",
     date: "5 Ağustos 2026",
     title:

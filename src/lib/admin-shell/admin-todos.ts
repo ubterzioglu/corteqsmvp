@@ -26,11 +26,30 @@ export type AdminTodoEntry = {
 
 export const ADMIN_TODOS: AdminTodoEntry[] = [
   {
-    id: "20260805-cadde-hedef-eslesmesi-fold",
-    title: "Cadde hedef eşleşmesi: düzeltme YAZILDI, canlıya UYGULANMADI",
+    id: "20260805-cadde-acilis-duzeltme-sql",
+    title: "Cadde açılış düzeltme SQL'i bekliyor — 6 üye boş akış görüyor",
     description:
-      "Sorun: paylaşımın hedef ülkesi profilden HAM geliyor (get_cadde_actor_context), create_cadde_post_v2 ise bunu birebir isimle eşleştiriyordu (c.name = country_name). Profilinde 'Türkiye' yazan üye, tabloda 'Turkiye' (diakritiksiz) kayıtlı olduğu için eşleşmiyor ve paylaşımı cadde_invalid_targets ile reddediliyordu. DÜZELTME HAZIR: migration 20260805130000_cadde_post_target_fold.sql — iki join cadde_fold_text'e çevrildi (okuma tarafı 29 Temmuz'dan beri bunu kullanıyordu, yazma tarafı atlanmıştı). Fonksiyonun geri kalanı canlıdaki pg_get_functiondef çıktısıyla satır satır karşılaştırıldı; tek fark bu iki join. KALAN ADIM: migration'ı canlıya uygula (ajan ortamı canlı DB'ye YAZAMIYOR), sonra Coolify deploy. TAM ÖLÇÜM (5 Ağustos, tüm üyeler): 45 üye zaten çalışıyor, 43 üye bu migration ile açılıyor (Türkiye 38, türkiye 3, almanya 1, ...), 38 üye HÂLÂ kapalı kalıyor. İKİNCİ İŞ (bu migration'ın kapsamı DIŞINDA): kalan 38 üyenin değerleri katalogda hiç yok — Belirtilmedi 14, Qatar 3, ABD/Abd 3, Deutschland 2, South Africa 2, France, Germany, İngiltere/ingiltere 2, Birleşik Arap Emirlikleri, 'a', 'De'. Bunlar için cadde_countries kapsamı genişletilmeli ve profil formunda serbest metin yerine seçim listesi kullanılmalı; aksi halde yeni bozuk değerler birikmeye devam eder.",
+      "Çalıştırılacak dosya: docs/operations/2026-08-05-cadde-acilis-duzeltme.sql (psql -f ile, Türkçe karakterler -c'den geçmez). İki eksiği kapatır. (1) Migration 20260805120000 (izleyici geo köprüsü) canlıda ÇALIŞTI — cadde_resolve_viewer_location fonksiyonu yerinde — ama supabase_migrations.schema_migrations kaydı yazılmadı; kayıt olmadan `npm run check:migrations` sonsuza dek 'uygulanmamış' der. Bu repoda üçüncü kez oluyor (18 Temmuz, 20 Temmuz, şimdi): tablo/fonksiyon varlığı migration kaydı olduğu anlamına GELMEZ. (2) Global yönlendirme postları 4 ülkeyi hedeflemiyor. Sıra sorunu: açılış script'i çalıştığında katalogda 18 aktif ülke vardı ve 4 global posta 18'er hedef yazıldı; ardından backfill 4 ülke daha ekledi (Güney Afrika, İtalya, Moldova, Suudi Arabistan). O ülkelerdeki üyelerin konumu artık çözülüyor — yani 'konumu çözülemeyen herkese her şeyi göster' emniyet supabı devreye girmiyor — ama hiçbir post onları hedeflemiyor, akış boş kalıyor. ÖLÇÜM (5 Ağustos, canlı): 22 aktif ülke, 82 hedef satırı, hedeflenmemiş ülke 4, boş akış gören üye 6. YAPISAL NOT: 'global post' bugün N adet hedef satırıyla, yani bir ANLIK GÖRÜNTÜYLE ifade ediliyor; katalog trigger'la büyüdükçe bu her yeni ülkede yeniden bayatlayacak. Kalıcı çözüm 'global'i sayım yerine ÖZELLİK olarak ifade etmek — ayrı karar.",
     priority: "kritik",
+    actions: [
+      { label: "Cadde'yi Aç", to: "/cadde" },
+      { label: "İş Panosunu Aç", to: "/admin/workshop/cadde" },
+    ],
+  },
+  {
+    id: "20260805-cadde-geo-katalog-temizligi",
+    title: "Şehir kataloğu temizliği (m78+m79) — migration revize edildi, çalıştırılmayı bekliyor",
+    description:
+      "Çalıştırılacak dosya: supabase/migrations/20260804190000_cadde_geo_data_cleanup.sql (psql -f ile). Pano maddesi m78 (yanlış ülkeye bağlı şehirler) + m79 (büyük/küçük harf). Canlıda ölçülen bozukluk: 9 şehir küçük harfle başlıyor (ankara, izmir, ısparta, diyarbakır, bilecik, kingston, ashford, aschaffenburg, vancouver), 1'i tamamen büyük (MAXHÜTTE-HAIDHOF), Vancouver ABD'ye bağlı görünüyor. DİKKAT — migration 4 Ağustos'ta yazıldı ve 5 Ağustos'ta BAYATLADI, bu yüzden revize edildi: 20260805140000 katalogda eksik ülkeleri eklerken İtalya'yı ve ona bağlı DOĞRU bir Roma kaydını da ekledi, yani canlıda artık iki Roma var (biri ABD'ye biri İtalya'ya bağlı). Dosyanın ilk hali ABD'deki Roma'yı İtalya'ya TAŞIYORDU — çalıştırılsa ikinci bir kopya üretirdi ve fold eşleşmesi (limit 1) hangisini seçeceğini garanti etmediği için sessiz yanlış eşleşme doğardı. Revizyon: taşıma yerine SİLME, ama silmeden önce 7 FK tablosunda referans sayılıyor (6'sı ON DELETE SET NULL — sessiz veri kaybı riski) ve referans varsa migration duruyor. Salt-okunur prova canlıya karşı koşuldu: 10 harf düzeltmesi, 1 mükerrer silme, 0 bağlı satır. Türkçe dönüşümler elle yazıldı — initcap() 'izmir'i 'Izmir' yapar, doğrusu 'İzmir'. UYGULANDIKTAN SONRA: dosyayı supabase/migrations/applied/ altına taşı, yoksa check:migrations onu hiç görmez.",
+    priority: "normal",
+    actions: [{ label: "İş Panosunu Aç", to: "/admin/workshop/cadde" }],
+  },
+  {
+    id: "20260805-cadde-profil-konum-serbest-metin",
+    title: "Profil konumu hâlâ serbest metin — bozuk değer birikmeye devam ediyor",
+    description:
+      "ÇÖZÜLEN KISIM (canlıda, doğrulandı): hedef eşleşmesi artık aksan/harf-durumu duyarsız (migration 20260805130000, cadde_fold_text) ve profil konum verisinin bir kısmı onarıldı (20260805140000: 4 ülke + 4 şehir eklendi, 21 ülke + 3 şehir değeri düzeltildi). Paylaşabilen üye 42'den 104'e çıktı. KALAN GERÇEK İŞ: profil formu hâlâ SERBEST METİN. Bugünkü düzeltmeler mevcut kayıtları onarır, TEKRARINI ÖNLEMEZ — yarın biri yine 'Germany' yazacak. ÖLÇÜM (5 Ağustos, canlı, 126 profil): 17 üyenin ülkesi, 20 üyenin şehri katalogda karşılıksız (München/Münih, Böblingen, 'Düsseldorf/Grevenbroich' tek alanda iki şehir, Çankaya=Ankara ilçesi, 15 WhatsApp toplu-import kaydı 'Belirtilmedi'). Bunlar bugün zarar görmüyor: konumu çözülemeyen 44 üye emniyet supabı sayesinde tüm postları görüyor. YAPILMAYACAK: telefon ülke kodundan ülke çıkarımı — bu üründe sistematik olarak yanıltır, +90 numaralı bir diaspora üyesi Berlin'de yaşıyor olabilir. YAPILACAK: profil formunu cadde_countries/cadde_cities'ten beslenen seçim listesine çevir; katalog dar (22 ülke / 55 şehir), birlikte genişletilmeli.",
+    priority: "normal",
     actions: [
       { label: "Cadde'yi Aç", to: "/cadde" },
       { label: "İş Panosunu Aç", to: "/admin/workshop/cadde" },

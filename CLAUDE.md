@@ -160,12 +160,22 @@ muhasebe/
   Migration `20260805130000_cadde_post_target_fold.sql` aligns both joins; contract test
   `src/lib/cadde-post-target-fold.test.ts` locks it. **Do not reintroduce a bare `c.name = ...` join
   on a user-supplied location name** — profile location is free text.
-  ⚠️ **Still open, different root cause:** measured live 2026-08-05 across all members — 45 already
-  worked, **43 unblocked by the fold fix, 38 remain blocked** because their attribute has no catalog
-  row at all (`Belirtilmedi` 14, `Qatar`, `ABD`, `Deutschland`, `South Africa`, `France`, `Germany`,
-  `İngiltere`, `Birleşik Arap Emirlikleri`, …). Folding cannot fix those; they need `cadde_countries`
-  coverage + a select list instead of free text in the profile form. Tracked in `admin-todos.ts`
-  (`20260805-cadde-hedef-eslesmesi-fold`).
+  Folding alone did not close the gap: the remaining values were not spelling variants but
+  **different words** (`Qatar`/`Katar`, `Deutschland`/`Almanya`, `ABD`/`Amerika Birlesik Devletleri`).
+  Migration `20260805140000_cadde_geo_data_repair_ab.sql` repaired the data directly (4 countries +
+  4 cities added, 21 country + 3 city attribute values corrected) — deliberately **not** an
+  alias/rule table. Measured live: members able to post **42 → 83 (fold) → 104 (data repair)**.
+  ⚠️ **Still open, different root cause:** re-measured live 2026-08-05 over 126 profiles —
+  **17 members' country and 20 members' city have no catalog row at all** (`Belirtilmedi` 14,
+  `München` vs catalog `Münih`, `Böblingen`, `Düsseldorf/Grevenbroich` = two cities in one field,
+  `Çankaya` = an Ankara district, …). These members are **not broken today**: the blind-viewer
+  safety valve shows every post to the 44 members whose location cannot be resolved. The real fix
+  is the profile form, which is **still free text** — today's repairs fix existing rows, they do
+  not prevent recurrence. Needs a select list fed from `cadde_countries`/`cadde_cities` plus
+  wider catalog coverage (22 countries / 55 cities is narrow for a global diaspora product).
+  **Do not derive country from the phone dialling code** — systematically misleading here (a `+90`
+  member may well live in Berlin). Tracked in `admin-todos.ts`
+  (`20260805-cadde-profil-konum-serbest-metin`).
 - New cadde content tables MUST carry `diaspora_key` + CHECK + feed/list filter.
 - Legacy tables (`feed_posts/feed_likes/cafes/cafe_memberships/user_follows`) are write-revoked and
   COMMENT'ed; **do not re-open policies/grants** — DROP happens after canary via separate decision.
