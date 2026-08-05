@@ -585,178 +585,14 @@ const CaddePage = () => {
         </div>
       </section>
 
-      {/* Kullanıcı kararı 05.08.2026: Konum + Aktif Cafeler + İnsanları Keşfet sol
-          kolondan çıkıp başlık kartının ALTINA, tam genişlikte indi. Sol kolon
-          boşaldığı için ızgara 3 kolondan 2'ye düştü (akış + tanıtım).
-          Not: blok mobilde de akıştan ÖNCE gelir — eski sıralamada (aside order-2)
-          akıştan SONRA geliyordu.
-
-          REVİZYON (aynı gün, kullanıcı onayıyla): blok ÜÇ SATIR değil lg'de ÜÇ KOLON.
-          Konum bloğun yeri değişmedi, yalnız yüksekliği değişti. Üç kart alt alta
-          dizilince yükseklikleri TOPLANIYOR (~420px) ve paylaşım kutusunu katlamanın
-          altına itiyordu — canlıda akış zaten seyrekken kullanıcı ilk ekranda tek bir
-          paylaşım göremiyordu. Yan yana dizilince blok, toplam değil EN UZUN kartın
-          yüksekliği kadar yer kaplar (~190px).
-          Mobilde davranış aynen korunur: `lg` altında tek kolon, sıra değişmez. */}
-      <section className="mx-auto w-full max-w-7xl px-4 pt-5 lg:px-6">
-        <div className="grid gap-3 lg:grid-cols-3 lg:gap-5">
-          <Card className="cadde-panel">
-            <CardHeader className="pb-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-2">
-                  <Globe2 className="h-5 w-5 shrink-0 text-orange-500" />
-                  <div className="min-w-0">
-                    <CardTitle className="font-display text-lg">Konum</CardTitle>
-                    <CardDescription>Global akış, şehir seçimi ve köprü modu</CardDescription>
-                  </div>
-                </div>
-                <Button
-                  onClick={scrollToComposer}
-                  className="w-full justify-between rounded-2xl bg-slate-900 text-white hover:bg-slate-800 sm:w-auto sm:gap-2"
-                >
-                  Caddeye Çık
-                  <Megaphone className="h-4 w-4 text-orange-200" />
-                </Button>
-              </div>
-            </CardHeader>
-            {/* Kart artık tam genişlik DEĞİL, üç kolondan biri (~1/3). Filtreyi ve köprü
-                anahtarını yan yana koyan eski `lg:grid-cols-2` bu genişlikte ikisini de
-                sıkıştırıyordu — tek kolona döndü. */}
-            <CardContent className="space-y-4">
-              {/* B1: filtre kutusu soğuk başlangıçta KAPALI açılır — filtrelenecek
-                  içerik yokken sayfanın en üst sol köşesini bir ayar paneli tutuyordu.
-                  Kapatmak filtreyi SIFIRLAMAZ: burada yalnız görünürlük değişir,
-                  updateFilters çağrılmaz, URL search-param'a dokunulmaz. */}
-              <Collapsible open={geoFilterOpen} onOpenChange={setGeoFilterOpenOverride}>
-                <CollapsibleTrigger
-                  data-testid="cadde-geo-toggle"
-                  className="flex w-full items-center justify-between gap-2 rounded-md text-sm font-medium text-slate-700 transition hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
-                >
-                  Ülke ve Şehir
-                  <ChevronDown
-                    aria-hidden
-                    className={`h-4 w-4 text-slate-400 transition-transform ${geoFilterOpen ? "rotate-180" : ""}`}
-                  />
-                </CollapsibleTrigger>
-                <CollapsibleContent className="space-y-2 pt-2">
-                  <CaddeGeoFilter
-                    countries={countriesQuery.data ?? []}
-                    cities={citiesQuery.data ?? []}
-                    selectedCountries={filters.countries}
-                    selectedCities={filters.cities}
-                    onChange={(next) => updateFilters(next)}
-                  />
-                  <p className="text-xs leading-relaxed text-slate-500">
-                    Şehrini göremiyorsan ülke geneli akışı keşfedebilir veya ilk paylaşımı sen yapabilirsin.
-                  </p>
-                </CollapsibleContent>
-              </Collapsible>
-
-              <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    {/* m35: tek satırlık tanım yetmiyordu — dört hedef kitle bilgi balonunda. */}
-                    <p className="flex items-center gap-1.5 text-sm font-semibold text-emerald-950">
-                      Köprü
-                      <CaddeBridgeInfo />
-                    </p>
-                    <p className="text-xs leading-relaxed text-emerald-700">TR-Diaspora arasında taşınma, iş ve mentorluk akışı.</p>
-                  </div>
-                  <Switch
-                    checked={filters.bridge}
-                    onCheckedChange={(checked) => updateFilters({ bridge: checked })}
-                    className="shrink-0"
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* m84: "Aktif Cafeler" orta kolondan sol kolona inmişti; 05.08.2026'da üst
-              bloğun ortadaki KOLONU oldu. Panelin başlık satırı zaten yatay (başlık
-              solda, "+ Cafe Aç" sağda) ve kafe satırları esnek — dar kolonda da
-              okunuyor, bu yüzden bileşene dokunulmadı. */}
-          <CaddeCafesPanel
-            cafes={activeCafes}
-            themeLabelByKey={cafeThemeLabelByKey}
-            hasSession={Boolean(session)}
-            locationLabel={cafeLocationLabel}
-            sparseContentHint={sparseContentHint}
-            open={cafesOpen}
-            onOpenChange={setCafesOpenOverride}
-            showAll={showAllCafes}
-            onShowAll={() => setShowAllCafes(true)}
-          />
-
-          {/* `hidden lg:block` KORUNDU: kart mobilde eskiden de çizilmiyordu, taşınma
-              bunu değiştirmemeli. */}
-          <Card className="hidden border-slate-200 bg-white/90 lg:block">
-            <CardHeader className="pb-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <CardTitle className="flex items-center gap-2 font-display text-base">
-                    <MessagesSquare className="h-4 w-4 text-orange-500" />
-                    İnsanları Keşfet
-                  </CardTitle>
-                  <CardDescription>İsimle ara ya da dizinde gezin.</CardDescription>
-                </div>
-                {/* Dizin bağlantısı tam genişlikte bir şerit butona dönüşmesin diye
-                    başlık satırının sağ ucuna alındı (kartın içeriği arama kutusu). */}
-                <Button asChild variant="outline" className="w-full justify-between rounded-2xl sm:w-auto sm:gap-2">
-                  <Link to={directoryLink}>
-                    Kişileri Keşfet
-                    <UserPlus2 className="h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {/* m38: tüm kayıtlı üyeler isimle aranabilir (kapsam kararı: açık profil tam
-                  satır + ad-onaylı kapalı üye yalnız isim/şehir, tıklanamaz). */}
-              <Input
-                value={peopleQueryText}
-                onChange={(event) => setPeopleQueryText(event.target.value)}
-                placeholder="İsimle ara (en az 2 harf)"
-                aria-label="Kişi ara"
-                className="h-9 rounded-2xl"
-              />
-              {peopleSearch.data && peopleSearch.data.length > 0 ? (
-                <ul className="divide-y divide-slate-100 rounded-2xl border border-slate-200 bg-white" data-testid="cadde-people-results">
-                  {peopleSearch.data.map((person) =>
-                    person.hasProfile ? (
-                      <li key={person.userId}>
-                        <Link
-                          to={`/directory/profile/${person.userId}`}
-                          className="flex items-center justify-between gap-2 px-3 py-2 text-sm text-slate-800 transition hover:bg-slate-50"
-                        >
-                          <span className="truncate font-medium">{person.fullName}</span>
-                          <span className="shrink-0 text-xs text-slate-500">
-                            {[person.city, person.country].filter(Boolean).join(" • ")}
-                          </span>
-                        </Link>
-                      </li>
-                    ) : (
-                      <li
-                        key={person.userId}
-                        className="flex items-center justify-between gap-2 px-3 py-2 text-sm text-slate-500"
-                        title="Profil henüz açık değil"
-                      >
-                        <span className="truncate">{person.fullName}</span>
-                        <span className="shrink-0 text-xs">{person.city ?? "—"}</span>
-                      </li>
-                    ),
-                  )}
-                </ul>
-              ) : debouncedPeopleQuery.length >= 2 && !peopleSearch.isFetching ? (
-                <p className="px-1 text-xs text-slate-500">Eşleşen üye bulunamadı.</p>
-              ) : null}
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Izgara artık 2 kolon: akış + tanıtım. Eski sol kolon (290px) yukarıdaki üç
-          satırlık şeride taşındı — buraya geri kolon eklemeden önce o bloğa bak. */}
+      {/* Izgara 2 kolon: akış + sağ kolon. Başlık şeridi ile akış ARASINDA hiçbir blok
+          yoktur — kullanıcı kararı 05.08.2026 (üçüncü ve son revizyon): akış doğrudan
+          ikinci sırada gelir. Konum + Aktif Cafeler + İnsanları Keşfet günün ilk iki
+          denemesinde (önce üç satır, sonra üç kolon) akışın üstündeydi; ikisi de
+          paylaşım kutusunu katlamanın altında bıraktı. Üçüncü denemede üçü de SAĞ
+          kolona alındı, akışın üstü tamamen boşaldı.
+          Buraya yeni bir tam genişlik bloğu eklemeden önce bu geçmişi oku: akışın
+          üstüne konan her blok katlama sorununu geri getirir. */}
       <section className="mx-auto grid w-full max-w-7xl gap-5 px-4 py-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-6">
         {/* m85: orta kolon = paylaşım kutusu + akış, başka hiçbir şey. Buradaki
             "Diaspora Cadde" başlık kartı üst şeridin birebir kopyasıydı, akışı bir kart
@@ -1131,8 +967,169 @@ const CaddePage = () => {
         </section>
 
         <aside data-testid="cadde-right-rail" className={`order-3 lg:order-none ${asideRhythm}`}>
-          {/* B10 — mobil soğuk başlangıç. `lg` altında sıra composer → akış → sol kolon
-              → SAĞ KOLON'dur; içerik yokken kullanıcı akışın sonunda uzun bir kart
+          {/* Konum + Aktif Cafeler + İnsanları Keşfet 05.08.2026'da bu kolona alındı
+              (günün üçüncü ve son yerleşim revizyonu — bkz. ızgara yorumu).
+
+              Üçü de aşağıdaki soğuk başlangıç katlamasının (cadde-right-rail-content)
+              DIŞINDA durur; bu bilinçlidir ve iki nedeni vardır:
+              1) O kapağın etiketi "Yakında gelenler ve tanıtım" — konum filtresini ve
+                 cafe listesini o etiketin arkasına saklamak yanlış adlandırma olur.
+              2) B1 kuralı: akışı daraltan bir seçim varken filtre GÖRÜNÜR kalmalıdır,
+                 çünkü akışın neden boş olduğunu gösterebilecek tek kontrol odur.
+
+              Kartların iç düzeni zaten dar kolon için kurulmuştu (eski 290px sol kolon),
+              320px'te olduğu gibi çalışır. Tek düzeltme: başlık butonlarındaki
+              `sm:w-auto` kaldırıldı — viewport tabanlı olduğu için dar kolonda da
+              devreye girip başlıkla aynı satıra sıkışıyordu. */}
+          <Card className="cadde-panel">
+            <CardHeader className="pb-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-2">
+                  <Globe2 className="h-5 w-5 shrink-0 text-orange-500" />
+                  <div className="min-w-0">
+                    <CardTitle className="font-display text-lg">Konum</CardTitle>
+                    <CardDescription>Global akış, şehir seçimi ve köprü modu</CardDescription>
+                  </div>
+                </div>
+                <Button
+                  onClick={scrollToComposer}
+                  className="w-full justify-between rounded-2xl bg-slate-900 text-white hover:bg-slate-800"
+                >
+                  Caddeye Çık
+                  <Megaphone className="h-4 w-4 text-orange-200" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* B1: filtre kutusu soğuk başlangıçta KAPALI açılır — filtrelenecek
+                  içerik yokken sayfanın üst köşesini bir ayar paneli tutuyordu.
+                  Kapatmak filtreyi SIFIRLAMAZ: burada yalnız görünürlük değişir,
+                  updateFilters çağrılmaz, URL search-param'a dokunulmaz. */}
+              <Collapsible open={geoFilterOpen} onOpenChange={setGeoFilterOpenOverride}>
+                <CollapsibleTrigger
+                  data-testid="cadde-geo-toggle"
+                  className="flex w-full items-center justify-between gap-2 rounded-md text-sm font-medium text-slate-700 transition hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                >
+                  Ülke ve Şehir
+                  <ChevronDown
+                    aria-hidden
+                    className={`h-4 w-4 text-slate-400 transition-transform ${geoFilterOpen ? "rotate-180" : ""}`}
+                  />
+                </CollapsibleTrigger>
+                <CollapsibleContent className="space-y-2 pt-2">
+                  <CaddeGeoFilter
+                    countries={countriesQuery.data ?? []}
+                    cities={citiesQuery.data ?? []}
+                    selectedCountries={filters.countries}
+                    selectedCities={filters.cities}
+                    onChange={(next) => updateFilters(next)}
+                  />
+                  <p className="text-xs leading-relaxed text-slate-500">
+                    Şehrini göremiyorsan ülke geneli akışı keşfedebilir veya ilk paylaşımı sen yapabilirsin.
+                  </p>
+                </CollapsibleContent>
+              </Collapsible>
+
+              <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    {/* m35: tek satırlık tanım yetmiyordu — dört hedef kitle bilgi balonunda. */}
+                    <p className="flex items-center gap-1.5 text-sm font-semibold text-emerald-950">
+                      Köprü
+                      <CaddeBridgeInfo />
+                    </p>
+                    <p className="text-xs leading-relaxed text-emerald-700">TR-Diaspora arasında taşınma, iş ve mentorluk akışı.</p>
+                  </div>
+                  <Switch
+                    checked={filters.bridge}
+                    onCheckedChange={(checked) => updateFilters({ bridge: checked })}
+                    className="shrink-0"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* m84: "Aktif Cafeler" orta kolondan sol kolona, oradan üst bloğa gitmişti;
+              05.08.2026'da sağ kolona yerleşti. Panelin başlık satırı ve kafe satırları
+              esnek — dar kolonda da okunuyor, bu yüzden bileşene dokunulmadı. */}
+          <CaddeCafesPanel
+            cafes={activeCafes}
+            themeLabelByKey={cafeThemeLabelByKey}
+            hasSession={Boolean(session)}
+            locationLabel={cafeLocationLabel}
+            sparseContentHint={sparseContentHint}
+            open={cafesOpen}
+            onOpenChange={setCafesOpenOverride}
+            showAll={showAllCafes}
+            onShowAll={() => setShowAllCafes(true)}
+          />
+
+          {/* `hidden lg:block` KORUNDU: kart mobilde eskiden de çizilmiyordu, taşınma
+              bunu değiştirmemeli. */}
+          <Card className="hidden border-slate-200 bg-white/90 lg:block">
+            <CardHeader className="pb-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <CardTitle className="flex items-center gap-2 font-display text-base">
+                    <MessagesSquare className="h-4 w-4 text-orange-500" />
+                    İnsanları Keşfet
+                  </CardTitle>
+                  <CardDescription>İsimle ara ya da dizinde gezin.</CardDescription>
+                </div>
+                <Button asChild variant="outline" className="w-full justify-between rounded-2xl">
+                  <Link to={directoryLink}>
+                    Kişileri Keşfet
+                    <UserPlus2 className="h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {/* m38: tüm kayıtlı üyeler isimle aranabilir (kapsam kararı: açık profil tam
+                  satır + ad-onaylı kapalı üye yalnız isim/şehir, tıklanamaz). */}
+              <Input
+                value={peopleQueryText}
+                onChange={(event) => setPeopleQueryText(event.target.value)}
+                placeholder="İsimle ara (en az 2 harf)"
+                aria-label="Kişi ara"
+                className="h-9 rounded-2xl"
+              />
+              {peopleSearch.data && peopleSearch.data.length > 0 ? (
+                <ul className="divide-y divide-slate-100 rounded-2xl border border-slate-200 bg-white" data-testid="cadde-people-results">
+                  {peopleSearch.data.map((person) =>
+                    person.hasProfile ? (
+                      <li key={person.userId}>
+                        <Link
+                          to={`/directory/profile/${person.userId}`}
+                          className="flex items-center justify-between gap-2 px-3 py-2 text-sm text-slate-800 transition hover:bg-slate-50"
+                        >
+                          <span className="truncate font-medium">{person.fullName}</span>
+                          <span className="shrink-0 text-xs text-slate-500">
+                            {[person.city, person.country].filter(Boolean).join(" • ")}
+                          </span>
+                        </Link>
+                      </li>
+                    ) : (
+                      <li
+                        key={person.userId}
+                        className="flex items-center justify-between gap-2 px-3 py-2 text-sm text-slate-500"
+                        title="Profil henüz açık değil"
+                      >
+                        <span className="truncate">{person.fullName}</span>
+                        <span className="shrink-0 text-xs">{person.city ?? "—"}</span>
+                      </li>
+                    ),
+                  )}
+                </ul>
+              ) : debouncedPeopleQuery.length >= 2 && !peopleSearch.isFetching ? (
+                <p className="px-1 text-xs text-slate-500">Eşleşen üye bulunamadı.</p>
+              ) : null}
+            </CardContent>
+          </Card>
+
+          {/* B10 — mobil soğuk başlangıç. `lg` altında sıra composer → akış → SAĞ
+              KOLON'dur; içerik yokken kullanıcı akışın sonunda uzun bir kart
               kaydırmasına giriyordu.
 
               Katlama YALNIZ mobilde ve YALNIZ soğuk başlangıçta geçerlidir. Viewport
