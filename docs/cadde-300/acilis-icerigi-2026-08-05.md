@@ -81,32 +81,44 @@ Tam metinler script'in içinde (`cadde_acilis_spec` INSERT bloğu).
 
 ---
 
-## ⚠️ İçerikle ÇÖZÜLMEYEN sorun: 156 üyenin 68'i hiçbir şey göremiyor
+## Görünürlük sorunu — ÇÖZÜLDÜ (migration `20260805120000`)
 
-Ölçüm (05.08): üyelerin profilindeki ülke değeri `cadde_countries.name` ile
-eşleşenler **88**, eşleşmeyenler **68**. Eşleşmeyen üye için `v_viewer_country_id`
-ve `v_viewer_city_id` NULL kalır; filtre de seçmemişse akış görünürlük kapısının
-hiçbir dalı açılmaz ve **akış boş gelir — ne kadar içerik girersek girelim.**
+> ⚠️ Bu bölümün ilk hâlinde **"68 üye hiçbir şey göremiyor"** yazıyordu; bu fazla
+> güçlüydü. Feed şehir çözümlemesini ülkeden **bağımsız** yapıyor
+> (`v_country_id IS NULL` ise ülke koşulu atlanır), bu yüzden ülkesi çözülmeyen
+> 19 üye şehri üzerinden kurtuluyordu. Doğru sayı **49**.
 
-Eşleşmeyen değerlere örnek: `Belirtilmedi` (13 üye), `Qatar` (Katar yerine),
-`Deutschland` / `Germany` (Almanya yerine), `İngiltere` (Birlesik Krallik yerine),
-`ABD` / `United States`, `Italy`, `France`, `South Africa`, `Moldova`, `vancouver`,
-`a`, `De`.
+Ölçüm (05.08, canlı 156 hesap): ülkesi çözülen 88, şehri çözülen 102, **en az biri
+çözülen 107**, **tamamen kör 49**. 49'un 30'unun ülke/şehri hiç yok → zaten
+`CaddeProfileGate` görüyorlar (doğru davranış). Sessizce boş akış yaşayan 19 hesabın
+**hiçbiri hiç giriş yapmamış**, yani bugün mağdur olan gerçek kullanıcı ~0.
 
-Profil kapısı (`CaddeProfileGate`) bunu yakalamıyor çünkü `Belirtilmedi` **boş değil**,
-sadece geçersiz — kapı yalnız boşluğa bakıyor.
+**Ama hata gelecekteki her üye için canlıydı:** profil dropdown'ı `geo_countries`'ten
+besleniyor, feed `cadde_countries`'e bakıyor ve iki liste 2 yerde ayrışıyor —
+`İngiltere` ↔ `Birlesik Krallik`, `ABD` ↔ `Amerika Birlesik Devletleri`. Bu iki
+değeri seçen her üye ülke düzeyinde kör kalıyordu.
 
-İki yön (karar gerekiyor, ikisi de bu batch'in dışında):
-1. **Kök neden — profil ülke değerlerini normalize et.** Çoğu mekanik eşleme
-   (`Qatar→Katar`, `Deutschland/Germany→Almanya`, `İngiltere→Birlesik Krallik`).
-   Kalıcı çözüm için kayıt formunda serbest metin yerine `cadde_countries` seçici.
-2. **Kapıyı gevşet.** Konumu çözülemeyen izleyiciye boş akış yerine global/yeni
-   içerik göster (`list_cadde_feed_v1` içinde yeni bir dal).
+`supabase/migrations/applied/20260805120000_cadde_viewer_geo_bridge.sql` üç şey yapar:
 
-**B1 ile etkileşimi:** bu üyelerde `isColdStart` true olur ve konum kutusu kapalı
-açılır — oysa akışlarını dolduracak tek kontrol tam olarak o kutu. Kutu başlığı ve
-tetiği görünür kaldığı için kurtarma bir tık uzakta, ama (1) veya (2) yapılırsa
-bu kenar durum tamamen kalkar.
+1. `cadde_resolve_viewer_location()` — önce bugünkü ad eşleşmesi (davranış korunur),
+   bulunamazsa **geo köprüsü** (`cadde_countries.geo_country_id`, canlıda 18/18 dolu).
+   Salt-okunur simülasyonda ülke çözümlemesi **88 → 95**: `Abd`/`ABD` → Amerika
+   Birlesik Devletleri, `ingiltere`/`İngiltere` → Birlesik Krallik, ayrıca ISO
+   kodundan `Tr` → Turkiye ve `De` → Almanya.
+2. Görünürlük kapısına **emniyet supabı**: izleyicinin ne şehri ne ülkesi
+   çözülemiyorsa eşik aranmadan içerik gösterilir. Kalan 48 kör hesap ve gelecekteki
+   her çöp değer bu dalla kurtulur. Band/skor matematiğine dokunulmadı.
+3. Mevcut üyeler için **var olan** `cadde_ensure_geo_city()` ile backfill — eksik
+   katalog satırları (Köln, München, Kisinev, Capetown, RİYADH…) bağlarıyla açılır.
+   Bu mekanizma yeni kayıtlar için `trg_cadde_profile_city_sync` trigger'ıyla zaten
+   çalışıyordu; kör hesaplar trigger'dan önce yazılmış eski satırlardı.
+
+Ayna sözleşmesi gereği `src/lib/cadde-ranking.ts` → `isCaddeGlobalEligible`
+(`viewerLocationResolved`) aynı commit'te güncellendi, 3 test eklendi.
+
+**B1 ile etkileşimi:** konumu çözülemeyen üyede `isColdStart` true oluyordu ve konum
+kutusu kapalı açılıyordu — oysa akışı dolduracak tek kontrol o kutuydu. (2)'deki
+emniyet supabı bu kenar durumu tamamen kaldırır: artık o üyenin akışı boş gelmiyor.
 
 ---
 

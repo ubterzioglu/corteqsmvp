@@ -60,6 +60,55 @@ describe("cadde global threshold mirror", () => {
       }),
     ).toBe(false);
   });
+
+  // Migration 20260805120000 aynası. Ölçüm (05.08, canlı): 156 hesabın 49'unun
+  // profil ülke/şehir metni Cadde kataloğuna çözülmüyordu ('Belirtilmedi', boş,
+  // çöp değerler). Bu izleyicilerde kapının TÜM dalları kapalı kalıyor ve akış
+  // sessizce boş dönüyordu — hata mesajı yok, kullanıcı sistemi bozuk sanıyor.
+  it("shows content to a viewer whose location cannot be resolved at all", () => {
+    expect(
+      isCaddeGlobalEligible({
+        sameCity: false,
+        sameCountry: false,
+        reactionCount: 0,
+        commentCount: 0,
+        shareCount: 0,
+        viewerLocationResolved: false,
+      }),
+    ).toBe(true);
+  });
+
+  // SQL'de bu dal düz bir OR zincirinde ve global ayarından BAĞIMSIZ. Global
+  // kapatılınca bu üyeler yine tamamen boş akışa düşerse düzeltme anlamsızlaşır.
+  it("keeps the unresolved-viewer branch working even when global promotion is disabled", () => {
+    expect(
+      isCaddeGlobalEligible({
+        sameCity: false,
+        sameCountry: false,
+        reactionCount: 0,
+        commentCount: 0,
+        shareCount: 0,
+        viewerLocationResolved: false,
+        settings: { enabled: false, minReactions: 10, minComments: 5, minShares: 10 },
+      }),
+    ).toBe(true);
+  });
+
+  // Konumu ÇÖZÜLEN izleyicide hiçbir şey değişmemeli — yeni dal eşik mantığını
+  // gevşetmez, yoksa yerel olmayan içerik herkese sızar.
+  it("leaves resolved viewers on the old threshold behaviour", () => {
+    const resolved = {
+      sameCity: false,
+      sameCountry: false,
+      reactionCount: 9,
+      commentCount: 4,
+      shareCount: 9,
+    } as const;
+
+    expect(isCaddeGlobalEligible({ ...resolved, viewerLocationResolved: true })).toBe(false);
+    // Alan hiç verilmezse de "çözülmüş" varsayılır: mevcut çağrılar değişmez.
+    expect(isCaddeGlobalEligible(resolved)).toBe(false);
+  });
 });
 
 describe("cadde multi-target geo mirror", () => {

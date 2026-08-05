@@ -73,6 +73,18 @@ export type CaddeGlobalEligibilityInput = {
   commentCount: number;
   shareCount: number;
   settings?: CaddeGlobalThresholdSettings;
+  /**
+   * İzleyicinin şehri VE ülkesi çözülemediyse `false` ver. SQL'deki
+   * `v_viewer_city_id is null and v_viewer_country_id is null` dalının aynası
+   * (migration 20260805120000).
+   *
+   * Böyle bir izleyicide kapının diğer tüm dalları kapalı kalıyor ve akış SESSİZCE
+   * boş dönüyordu — hata mesajı yok, kullanıcı sistemi bozuk sanıyor. Profilinde
+   * 'Belirtilmedi' gibi geçersiz bir değer olan üyeler bu durumdaydı.
+   *
+   * Verilmezse `true` varsayılır: konumu çözülmüş izleyici, yani bugünkü davranış.
+   */
+  viewerLocationResolved?: boolean;
 };
 
 export type CaddeGeoTarget = {
@@ -105,6 +117,10 @@ export function computeCaddeGeoMatch(input: CaddeGeoMatchInput): { sameCity: boo
 /** SQL global eşik filtresinin aynası: yerel içerik kalır, yerel olmayan içerik eşiklerden biriyle globale çıkar. */
 export function isCaddeGlobalEligible(input: CaddeGlobalEligibilityInput): boolean {
   if (input.sameCity || input.sameCountry) return true;
+  // Konumu hiç çözülemeyen izleyici: eşik aranmaz. SQL tarafında bu dal global
+  // ayarından ÖNCE gelir, yani `cadde.global.enabled=false` iken bile geçerlidir —
+  // aksi halde bu üyeler için akış yine tamamen boş kalırdı.
+  if (input.viewerLocationResolved === false) return true;
   const settings = input.settings ?? CADDE_GLOBAL_THRESHOLD_SETTINGS;
   if (!settings.enabled) return false;
   return (
