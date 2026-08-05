@@ -17,8 +17,29 @@
 -- kesinti). Aşağıdaki her sorgu ya tam ad eşitliği ya da ülkeye daraltılmış fold kullanır.
 --
 -- Çalıştırma (Türkçe karakter komut satırından geçmez — dosyadan okut):
---   psql "$CONN" -v ON_ERROR_STOP=1 -f supabase/migrations/20260805200000_cadde_geo_bridge_backfill.sql
--- Sonra dosyayı supabase/migrations/applied/ altına TAŞI.
+--   psql "$CONN" -v ON_ERROR_STOP=1 -f supabase/migrations/applied/20260805200000_cadde_geo_bridge_backfill.sql
+--
+-- ═══ UYGULAMA KAYDI — 2026-08-05, canlı (injprdrsklkxgnaiixzh) ═══════════════
+-- BÖLÜM 1: UYGULANDI. Sonuç prova ile birebir aynı çıktı:
+--   UPDATE 4 (ülke köprüsü) · UPDATE 3 + UPDATE 1 (şehir köprüsü) · INSERT 1 (Böblingen)
+--   ülke köprüsü 22/22 · şehir köprüsü 53/55 · köprüsüz kalan: Böblingen, Kişinev
+--   schema_migrations kaydı atıldı, dosya applied/ altına taşındı.
+--
+-- ⚠️ 79-84. satırlardaki tahmin KISMEN yanlış çıktı: `Istanbul` fold adımında ÇÖZÜLDÜ.
+-- Açık kalan `Kişinev` (farklı kelime, karar ister — beklenen) ve `Böblingen`. Böblingen'in
+-- köprüsüz kalması yapısaldır: 3. adımdaki INSERT, köprü UPDATE'lerinden SONRA çalışıyor.
+-- Zararsız — Cadde eşleşmesi ad üzerinden yürüyor. Köprü istenirse ayrı migration ister.
+--
+-- BÖLÜM 2: AŞAĞIDAKİ HÂLİYLE ÇALIŞTIRILAMADI. `value_text = NULL` şema kısıtını ihlal eder:
+--     CHECK (value_text IS NOT NULL OR value_json IS NOT NULL)
+--   Hedef 35 satırın hiçbirinde `value_json` dolu değil (ölçüldü), yani NULL'a çekmek
+--   satırı geçersiz kılıyor. Şemanın kastı: "değer yoksa satır da olmaz" → DELETE gerekirdi.
+--   Ayrıca 122. satırdaki "4 çöp" sayımı yanlış: `a` HEM şehirde HEM ülkede var → toplam 34 değil 35.
+--
+--   KULLANICI KARARI: 32 satır (27 'Belirtilmedi' + 5 çöp) SİLİNMEDİ, olduğu gibi bırakıldı.
+--   Yalnız 3 gerçek onarım uygulandı → docs/operations/2026-08-05-uye-konum-onarim.sql
+--   Yedek (35 satır, geri yükleme) → docs/operations/2026-08-05-uye-konum-yedek.sql
+-- ═════════════════════════════════════════════════════════════════════════════
 --
 -- Geri alma:
 --   update public.cadde_countries set geo_country_id = null where name in ('Güney Afrika','İtalya','Moldova','Suudi Arabistan');
