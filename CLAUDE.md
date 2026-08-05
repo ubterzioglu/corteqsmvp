@@ -419,6 +419,35 @@ migration, do not reuse a timestamp that already exists** — pick a different s
 
 ⚠️ A table or column existing in production does **not** prove a `schema_migrations` row exists —
 this repo has hit that gap twice (2026-07-18, 2026-07-20). Check the real schema before applying.
+
+### ⚠️ The production instance has under 1 GB of RAM — a single bad query takes the site down
+
+Measured 2026-08-05 (`/customer/v1/privileged/metrics`): **904 MB total RAM, ~46% used at idle**,
+disk 7.78 GB with only 5.7% used. This is Supabase's smallest compute tier. **Memory is the
+binding constraint, not disk.**
+
+On 2026-08-05 this was not theoretical. An ad-hoc measurement query — a nested `EXISTS` calling
+`cadde_fold_text()` against `geo_cities` (**76,990 rows**) once per profile row — was run from a
+session. Minutes later Postgres died: `db`, `rest` and `auth` all went `UNHEALTHY`, the API
+returned Cloudflare **521**, and because a 521 page carries no CORS headers the browser reported
+it as a *CORS error* — which sends you hunting in nginx for a problem that is not there.
+`pg_postmaster_start_time()` confirmed the process restarted from scratch. The whole site was
+down for roughly 50 minutes.
+
+Rules that follow from this:
+1. **Never run an exploratory query that applies a function per row over a large table.** Fold /
+   normalize on the **distinct value set** first (`select distinct value …` is ~150 rows here,
+   not 126 × 76,990), then join.
+2. `geo_cities` (76,990) and `geo_countries` (251) are the big ones; `cadde_cities` (54) and
+   `cadde_countries` (22) are safe. Know which one you are touching.
+3. **A psql client timeout does not cancel the server-side query.** Killing your terminal leaves
+   the query running and the pooler connection checked out — the follow-on symptom is
+   `ECHECKOUTTIMEOUT` on every later connection.
+4. Diagnose project-level outages through the **control plane**, which stays up when the project
+   is down: `GET https://api.supabase.com/v1/projects/<ref>/health?services=db,rest,auth,pooler`
+   with `SUPABASE_ACCESS_TOKEN`. It distinguishes "project paused / billing" from
+   "instance unhealthy" in one call.
+
 - **RLS active** — submissions require specific conditions
 - **Edge Functions (7):** `find-matches`, `lansman-admin`, `radar-news-scan`,
   `relocation-notifications`, `send-notification-emails`, `send-submission-email`,
