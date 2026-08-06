@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Key Metrics (ölçüldü 2026-08-04):**
 - 989 `.ts`/`.tsx` files under `src` — 209 pages, 429 components, 278 lib modules
-- **357 Supabase migrations** (ölçüldü 2026-08-05) — 105 in `supabase/migrations/applied/`
+- **358 Supabase migrations** (ölçüldü 2026-08-06) — 106 in `supabase/migrations/applied/`
   + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split); 7 Edge Functions
 - 202 test files (`src` 190, `scripts` 9, `supabase` 3, `workers` 4) + 18 Playwright `.spec.ts`
 - `src/App.tsx`: 283 lines, 51 `lazy()` imports
@@ -398,13 +398,13 @@ config **text** and route tables, so they fail loudly when someone edits one sid
 
 ## Database & Migrations
 
-- **357 migrations total, split by a baseline on 2026-08-04** (date-prefixed, immutable in prod).
+- **358 migrations total, split by a baseline on 2026-08-04** (date-prefixed, immutable in prod).
   Note the subdirectories — the parent `supabase/migrations/` contains 0 `.sql` files, so a glob
   on the parent silently finds nothing.
 
 | Path | Count | Meaning |
 |------|-------|---------|
-| `supabase/migrations/applied/` | 105 | Post-baseline (≥ `20260615100000`) — the working set |
+| `supabase/migrations/applied/` | 106 | Post-baseline (≥ `20260615100000`) — the working set |
 | `supabase/migrations/archive/` | 252 | Pre-baseline, **applied in production, never delete** |
 | `supabase/baseline/2026-08-04-public-schema.sql` | 1 | `pg_dump --schema-only` of the live `public` schema (237 tables, 481 RLS policies, 1568 grants, 342 indexes, 115 triggers, 5 views) |
 
