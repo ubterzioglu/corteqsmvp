@@ -15,11 +15,14 @@ export default function RelocationToolsHubPage() {
   });
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-6">
+    // max-w-6xl: 3 sütunlu kart gridi max-w-4xl'de (896px) sıkışıyordu — 16/9 görselli
+    // kart ~280px'e düşüyor, başlık 3 satıra kırılıyordu.
+    <div className="container mx-auto max-w-6xl px-4 py-6">
       <RelocationToolsHub
         tools={toolsQuery.data ?? []}
         isLoading={toolsQuery.isLoading}
         isError={toolsQuery.isError}
+        onRetry={() => void toolsQuery.refetch()}
       />
     </div>
   );

@@ -183,7 +183,20 @@ export const RESULT_KIND_BADGE_LABELS: Record<string, string> = {
 /** Motor genel UI metinleri (Türkçe; araç-bağımsız). */
 export const TOOLS_UI_COPY = {
   hubTitle: "CorteQS Araçlar",
-  hubSubtitle: "Tamamen ücretsiz — bir kaç soruyla yol haritanı keşfet!",
+  // "Ücretsiz" bilgisi hero rozetinde (hubFree) bir kez veriliyor — burada tekrarlanmaz.
+  hubSubtitle: "Birkaç soruyla yurt dışı yol haritanı çıkar: ülke, şehir, maaş ve vize kararların için.",
+  hubSearchLabel: "Araçlarda ara",
+  hubSearchPlaceholder: "Araç ara — ülke, maaş, vize, şehir…",
+  hubSearchClear: "Aramayı temizle",
+  hubFilterLabel: "Kategoriye göre filtrele",
+  hubFree: "Tamamen ücretsiz",
+  hubNoAccount: "Kayıt gerekmez",
+  hubEmpty: "Henüz aktif araç yok.",
+  hubNoMatch: "aramasına uygun araç bulunamadı.",
+  hubNoMatchHint: "Farklı bir kelime deneyin ya da tüm araçlara dönün.",
+  hubResetFilters: "Tüm araçları göster",
+  hubError: "Araçlar yüklenemedi.",
+  hubRetry: "Yeniden dene",
   quickMode: "Hızlı",
   detailedMode: "Detaylı",
   quickModeDesc: "En önemli sorularla kısa sürede sonuç al — hızlıca fikir edinmek için ideal.",
