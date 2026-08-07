@@ -23,6 +23,8 @@ export const toolCatalog = {
         "build:dev",
         "check:drift",
         "check:drift:warn",
+        "check:migrations",
+        "check:migrations:warn",
         "dev",
         "generate:sitemap",
         "import:command-center:may13",
@@ -406,6 +408,7 @@ export const toolCatalog = {
         "createCaddeComment",
         "createCaddePost",
         "getCaddeCafe",
+        "getCaddeFeedReach",
         "getCaddeSponsoredPlacement",
         "joinCaddeCafe",
         "listCaddeBillboardCards",
@@ -447,6 +450,7 @@ export const toolCatalog = {
         "archive_cadde_cafe_v1",
         "create_cadde_cafe_v1",
         "create_cadde_comment_v1",
+        "get_cadde_feed_reach_v1",
         "join_cadde_cafe_v1",
         "list_cadde_feed_v1",
         "list_trending_cadde_hashtags_v1",
@@ -1351,6 +1355,16 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-error-map.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-feed-error-visibility.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-feed-polling.test.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -1386,6 +1400,16 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-local-clock.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-local-clock.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-media.test.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -1416,7 +1440,27 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-post-target-fold.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-query-cache.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-query-cache.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-query-keys.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-query-limits.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
@@ -1427,6 +1471,26 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/cadde-ranking.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-reach.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-reach.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-reactions.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-reactions.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
@@ -1501,6 +1565,11 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-write-diagnostics.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -1567,6 +1636,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/country-city-search.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -2006,6 +2080,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/redirects.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/redirects.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/referral-codes.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2206,6 +2290,11 @@ export const toolCatalog = {
       "module_family": "relocation"
     },
     {
+      "path": "src/lib/relocation-tools-result-style.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
       "path": "src/lib/relocation-tools-salary.test.ts",
       "kind": "ts",
       "module_family": "relocation"
@@ -2266,6 +2355,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/seo.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/seo.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2287,6 +2381,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/service-finder-schemas.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/standalone-tools.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -2341,6 +2440,21 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/zgen/zgen-data.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/zgen/zgen-helpers.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/zgen/zgen-types.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "supabase/functions/_shared/emails/admin-update-digest.test.ts",
       "kind": "ts",
       "module_family": "edge"
@@ -2362,6 +2476,16 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/_shared/emails/member-welcome.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/revision-request.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/revision-request.ts",
       "kind": "ts",
       "module_family": "edge"
     },

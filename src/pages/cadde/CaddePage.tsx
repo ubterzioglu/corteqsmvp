@@ -15,6 +15,7 @@ import CaddeFeedScopeBar from "@/components/cadde/CaddeFeedScopeBar";
 import CaddeMediaGallery from "@/components/cadde/CaddeMediaGallery";
 import CaddePostBody from "@/components/cadde/CaddePostBody";
 import CaddeProfileGate from "@/components/cadde/CaddeProfileGate";
+import CaddeReachCard from "@/components/cadde/CaddeReachCard";
 import CaddeTrendingHashtags from "@/components/cadde/CaddeTrendingHashtags";
 import CarsiGlobalTicker from "@/components/cadde/CarsiGlobalTicker";
 import NotificationsBell from "@/components/cadde/NotificationsBell";
@@ -1109,6 +1110,12 @@ const CaddePage = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Görünürlük kapısının kullanıcıya anlatıldığı tek yer. Konum kartının hemen
+              ALTINDA durur: üstteki kart akışı daraltan seçimi yapar, bu kart o seçimin
+              sonucunu ("paylaşımın kaç üyeye ulaşır") söyler. Soğuk başlangıç
+              katlamasının DIŞINDA — akış boşken cevabı en çok bu kart veriyor. */}
+          <CaddeReachCard />
 
           {/* m84: "Aktif Cafeler" orta kolondan sol kolona, oradan üst bloğa gitmişti;
               05.08.2026'da sağ kolona yerleşti. Panelin başlık satırı ve kafe satırları

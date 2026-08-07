@@ -20,6 +20,7 @@ export const caddeQueryKeys = {
   billboards: (filters: CaddeFilterState) => ["cadde", "billboards", filters] as const,
   sponsor: (filters: CaddeFilterState) => ["cadde", "sponsor", filters] as const,
   interestCatalog: ["cadde", "interest-catalog"] as const,
+  feedReach: (userId: string | null) => ["cadde", "feed-reach", userId] as const,
   myInterests: (userId: string | null) => ["cadde", "my-interests", userId] as const,
   notificationsRoot: ["cadde", "notifications"] as const,
   notifications: (userId: string | null) => ["cadde", "notifications", userId] as const,

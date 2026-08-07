@@ -29,6 +29,7 @@ import {
   resolveCountryIdsByNames,
 } from "./cadde-internal";
 import { normalizeCaddeMedia } from "./cadde-media";
+import type { CaddeFeedReach } from "./cadde-reach";
 import { moderateCaddeCafeName } from "./cadde-rules";
 import {
   caddeCafeCreateSchema,
@@ -938,4 +939,29 @@ export async function approveCaddeCafeMember(memberId: string, approve: boolean)
 export async function archiveCaddeCafe(cafeId: string): Promise<void> {
   const { error } = await db.rpc("archive_cadde_cafe_v1", { p_cafe_id: cafeId });
   if (error) throw caddeWriteError("archiveCaddeCafe", error);
+}
+
+// ── Akış erişimi (CaddeReachCard) ────────────────────────────────────────────
+
+/**
+ * "Akışın nasıl şekilleniyor?" kartının verisi: izleyicinin çözülmüş konumu,
+ * paylaşımının potansiyel erişimi ve global eşikler (RPC get_cadde_feed_reach_v1).
+ *
+ * İKİNCİL yüzey kalıbı: hata FIRLATMAZ, raporlar ve null döner — yan panelde bir
+ * hata kartı çizmek yerine kart hiç görünmez, akışın kendisi etkilenmez.
+ */
+export async function getCaddeFeedReach(): Promise<CaddeFeedReach | null> {
+  if (!isSupabaseConfigured) return null;
+
+  try {
+    const { data, error } = await db.rpc("get_cadde_feed_reach_v1");
+    if (error) throw error;
+
+    const payload = (data ?? null) as CaddeFeedReach | null;
+    if (!payload || payload.signedIn !== true) return null;
+    return payload;
+  } catch (error: unknown) {
+    reportCaddeApiError("getCaddeFeedReach", error);
+    return null;
+  }
 }
