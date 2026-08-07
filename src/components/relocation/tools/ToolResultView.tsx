@@ -1,6 +1,7 @@
 // Sonuç görünümü — result_kind'a göre özet + breakdown + CTA. RelocationToolPage ve
 // RelocationToolResultPage paylaşır. docs/10tool/00 §UX (sonuç ekranı).
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BackToToolsButton } from "@/components/relocation/tools/BackToToolsButton";
 import { ScoreMeter } from "@/components/relocation/tools/ScoreMeter";
 import { ScoreBreakdownCard } from "@/components/relocation/tools/ScoreBreakdownCard";
 import { RankedListCard } from "@/components/relocation/tools/RankedListCard";
@@ -8,7 +9,17 @@ import { ChecklistTimeline } from "@/components/relocation/tools/ChecklistTimeli
 import { ComparisonTable } from "@/components/relocation/tools/ComparisonTable";
 import { MatchList } from "@/components/relocation/tools/MatchList";
 import { ResultCtaPanel } from "@/components/relocation/tools/ResultCtaPanel";
-import { TOOLS_UI_COPY, bucketLabel, dimensionLabelsForResult } from "@/lib/relocation-tools-copy";
+import { WeakestAreasCard } from "@/components/relocation/tools/WeakestAreasCard";
+import { parseWeakestAreas } from "@/lib/relocation-tools-weakest";
+import {
+  TOOLS_UI_COPY,
+  bucketDescription,
+  bucketLabel,
+  dimensionActionsForResult,
+  dimensionDescriptionsForResult,
+  dimensionLabelsForResult,
+  dimensionWeightsForResult,
+} from "@/lib/relocation-tools-copy";
 import type { RelocationToolResultPayload, ToolCta } from "@/lib/relocation-tools-types";
 
 interface ToolResultViewProps {
@@ -50,6 +61,14 @@ export function ToolResultView({
   onRetake,
 }: ToolResultViewProps) {
   const labels = dimensionLabelsForResult(result.result_kind, result.tool_key);
+  const descriptions = dimensionDescriptionsForResult(result.result_kind, result.tool_key);
+  const weights = dimensionWeightsForResult(result.tool_key);
+  const dimensionActions = dimensionActionsForResult(result.tool_key);
+  // weakest3 SQL'de üretilip primary_result'a yazılıyor ama bugüne kadar hiç
+  // çizilmiyordu. persona/ranked_list gibi türlerde alan yok → boş dizi döner.
+  const weakestAreas = parseWeakestAreas(result.primary_result);
+  const bucketNote =
+    result.tool_key === "top_relocation_challenge" ? "" : bucketDescription(result.score_bucket);
   const rankedItems = Array.isArray(result.recommendations)
     ? (result.recommendations as Array<Record<string, unknown>>)
     : [];
@@ -68,6 +87,7 @@ export function ToolResultView({
         </CardHeader>
         <CardContent className="space-y-3">
           <ResultHeadline result={result} />
+          {bucketNote && <p className="text-sm text-foreground">{bucketNote}</p>}
           {result.explanations.length > 0 && (
             <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
               {result.explanations.map((line, i) => (
@@ -95,10 +115,25 @@ export function ToolResultView({
           dimensionLabels={labels}
         />
       ) : (
-        <ScoreBreakdownCard subScores={result.sub_scores} dimensionLabels={labels} />
+        <>
+          <ScoreBreakdownCard
+            subScores={result.sub_scores}
+            dimensionLabels={labels}
+            dimensionDescriptions={descriptions}
+            dimensionWeights={weights}
+          />
+          <WeakestAreasCard areas={weakestAreas} dimensionActions={dimensionActions} />
+        </>
       )}
 
       <ResultCtaPanel ctas={result.ctas} onCtaClick={onCtaClick} onRetake={onRetake} />
+
+      {/* Araç hub'ına dönüş — CTA ızgarasının ALTINDA, tam genişlikte tek satır.
+          Bilinçli olarak ResultCtaPanel'in DIŞINDA: panel 2×2 eşit hücre sözleşmesini
+          taşır ve `ResultCtaPanel.test.tsx` panelin hiç `link` üretmediğini kilitler.
+          Buradan yalnız MOTOR araçları kapsanır; standalone araçlar bu bileşenden
+          geçmez, onların dönüş butonu RelocationToolPage'dedir. */}
+      <BackToToolsButton />
 
       <p className="text-xs text-muted-foreground">{TOOLS_UI_COPY.privacyNote}</p>
     </div>

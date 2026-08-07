@@ -4,7 +4,12 @@
 
 import type { ToolCta } from "@/lib/relocation-tools-types";
 import { CHALLENGE_LABELS } from "@/lib/relocation-tools-challenge";
-import { READINESS_LABELS } from "@/lib/relocation-tools-readiness";
+import {
+  READINESS_DIMENSION_ACTIONS,
+  READINESS_DIMENSION_DESCRIPTIONS,
+  READINESS_LABELS,
+  READINESS_WEIGHTS,
+} from "@/lib/relocation-tools-readiness";
 import { CITY_LABELS } from "@/lib/relocation-tools-city";
 import { COUNTRY_LABELS } from "@/lib/relocation-tools-country";
 import { SALARY_LABELS } from "@/lib/relocation-tools-salary";
@@ -62,6 +67,73 @@ export function dimensionLabelsForResult(
   return {};
 }
 
+/**
+ * sub_scores boyut anahtarı → "bu puan neyi ölçüyor" açıklaması.
+ * `dimensionLabelsForResult` ile AYNI desen: araç bazlı, eşleşme yoksa boş harita
+ * döner ve arayüz açıklama satırını hiç çizmez. Yeni araç eklerken buraya bir
+ * satır ekle — bileşen tarafında değişiklik gerekmez.
+ */
+export function dimensionDescriptionsForResult(
+  _resultKind: string,
+  toolKey?: string,
+): Record<string, string> {
+  if (toolKey === "relocation_readiness") return READINESS_DIMENSION_DESCRIPTIONS;
+  return {};
+}
+
+/**
+ * Boyut zayıf çıktığında gösterilecek somut ilk adım (weakest3 kartı).
+ * Eşleşme yoksa kart, DB'den gelen `detail` metnine düşer.
+ */
+export function dimensionActionsForResult(toolKey?: string): Record<string, string> {
+  if (toolKey === "relocation_readiness") return READINESS_DIMENSION_ACTIONS;
+  return {};
+}
+
+/**
+ * Boyutun toplam skordaki ağırlığı (0..1). Kullanıcıya "%25" olarak gösterilir —
+ * hangi alanı düzeltmenin skoru en çok oynatacağını görebilmesi için.
+ * Kaynak, aracın SQL↔TS ağırlık aynasıdır; ayrı bir kopya TUTULMAZ.
+ */
+export function dimensionWeightsForResult(toolKey?: string): Record<string, number> {
+  if (toolKey === "relocation_readiness") return READINESS_WEIGHTS;
+  return {};
+}
+
+/**
+ * Bucket → tek cümlelik "bu ne demek" açıklaması. Rozet tek başına bant adını
+ * veriyor ama ne yapılması gerektiğini söylemiyordu.
+ */
+export const BUCKET_DESCRIPTIONS: Record<string, string> = {
+  // #3 readiness
+  ready: "Temel hazırlıkların tamam. Artık tarih belirleyip uygulamaya geçebilirsin.",
+  proceed:
+    "Yola çıkabilirsin ama açık kalan alanlar var. Aşağıdaki zayıf başlıkları taşınmadan önce kapat.",
+  prepare:
+    "Henüz taşınma tarihi vermek için erken. Önce aşağıdaki zayıf alanları güçlendir, sonra testi tekrar çöz.",
+  high_risk:
+    "Bu tabloyla taşınmak yüksek risk taşır. Finans ve evrak başlıklarını kapatmadan tarih belirleme.",
+};
+
+/** Bucket açıklaması; tanımsız bucket → boş (arayüz satırı hiç çizmez). */
+export function bucketDescription(bucketKey: string | null | undefined): string {
+  if (!bucketKey) return "";
+  return BUCKET_DESCRIPTIONS[bucketKey] ?? "";
+}
+
+/**
+ * Boyut puanının (0..1) okunabilir bandı. Eşikler toplam skorun bantlarıyla
+ * (80/60/40) bilinçli olarak aynıdır ki kullanıcı iki yerde farklı ölçek görmesin.
+ * Bu SALT GÖRÜNTÜ bandıdır — `score_bucket` ile karıştırma, o SQL'den gelir.
+ */
+export function dimensionBandLabel(value01: number): string {
+  const pct = value01 * 100;
+  if (pct >= 80) return "Güçlü";
+  if (pct >= 60) return "İyi";
+  if (pct >= 40) return "Orta";
+  return "Zayıf";
+}
+
 /** Bucket/bant anahtarı → Türkçe etiket (araçlar arası ortak; bilinmeyen anahtar boş). */
 export const BUCKET_LABELS: Record<string, string> = {
   // #3 readiness
@@ -93,7 +165,12 @@ export function bucketLabel(bucketKey: string | null | undefined): string {
   return BUCKET_LABELS[bucketKey] ?? bucketKey;
 }
 
-/** result_kind → hub kartındaki rozet etiketi (17 aracı görsel olarak ayırt eder). */
+/**
+ * result_kind → hub kartındaki rozet etiketi (araçları görsel olarak ayırt eder).
+ * Sayı vermiyoruz: canlıda 2026-08-07 itibarıyla 18 aktif araç var (12 motor + 6
+ * standalone) ve bu sayı büyümeye devam ediyor — yoruma yazılan sabit sayı bayatlıyor.
+ * Güncel sayı: `select count(*) from relocation_tools where is_active`.
+ */
 export const RESULT_KIND_BADGE_LABELS: Record<string, string> = {
   score: "Skor",
   ranked_list: "Sıralama",
@@ -126,8 +203,13 @@ export const TOOLS_UI_COPY = {
   comparisonTitle: "Ülke Bazlı Maaş Karşılaştırması",
   matchListTitle: "Güvenli Eşleşmeler",
   breakdownTitle: "Puan Dağılımı",
+  breakdownHint:
+    "Her başlık toplam skoruna farklı ağırlıkta girer. Yüzde, o başlığı düzeltmenin skorunu ne kadar oynatacağını gösterir.",
+  weakestTitle: "Önce Buraya Odaklan",
+  weakestHint: "En düşük puanlı 3 başlık ve her biri için atacağın ilk adım.",
   whyTitle: "Neden?",
   retake: "Tekrar Çöz",
+  backToHub: "Araçlar Sayfasına Dön",
   comingSoon: "Yakında",
   loading: "Yükleniyor…",
   notFound: "Araç bulunamadı.",

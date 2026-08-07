@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { QuestionStepper } from "@/components/relocation/tools/QuestionStepper";
 import { ToolResultView } from "@/components/relocation/tools/ToolResultView";
+import { BackToToolsButton } from "@/components/relocation/tools/BackToToolsButton";
 import { getToolBySlug, requestDiasporaIntro } from "@/lib/relocation-tools-api";
 import { relocationToolsKeys } from "@/lib/relocation-tools-query-keys";
 import { useRelocationToolSession } from "@/hooks/useRelocationToolSession";
@@ -109,15 +110,26 @@ export default function RelocationToolPage() {
   // Standalone araç: kendi bileşenini render et (session/landing/stepper akışını atla).
   if (StandaloneComponent) {
     return (
-      <Suspense
-        fallback={
-          <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-muted-foreground">
-            {TOOLS_UI_COPY.loading}
-          </div>
-        }
-      >
-        <StandaloneComponent />
-      </Suspense>
+      <>
+        <Suspense
+          fallback={
+            <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-muted-foreground">
+              {TOOLS_UI_COPY.loading}
+            </div>
+          }
+        >
+          <StandaloneComponent />
+        </Suspense>
+        {/* Dönüş butonu standalone araçlar için BURADA: bu araçlar ToolResultView'dan
+            geçmediği için oradaki buton onlara ulaşmıyor. Tek darboğaz olduğundan
+            yeni eklenecek standalone araçlar da otomatik kapsanır.
+            Genişlik `max-w-2xl`: 6 standalone sayfanın 4'ü bu genişlikte
+            (ikisi max-w-4xl); daha dar bir buton geniş içeriğin altında ortalanmış
+            durur, tersi (içerikten taşan buton) bozuk görünürdü. */}
+        <div className="container mx-auto max-w-2xl px-4 pb-8">
+          <BackToToolsButton />
+        </div>
+      </>
     );
   }
 

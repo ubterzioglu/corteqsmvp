@@ -166,3 +166,43 @@ export const READINESS_LABELS: Record<ReadinessDimension, string> = {
   job_income_readiness: "İş & Gelir",
   support_adaptability: "Destek & Uyum",
 };
+
+/**
+ * Boyut → "bu puan neyi ölçüyor" açıklaması. SALT GÖRÜNTÜ metnidir, skorlamaya
+ * girmez ve SQL aynası DEĞİLDİR — ama içeriği yukarıdaki
+ * `computeReadinessBreakdown` formülünden birebir türetilmiştir. Formülü
+ * değiştirirsen bu cümleyi de güncelle, yoksa kullanıcıya yanlış şey vaat eder.
+ */
+export const READINESS_DIMENSION_DESCRIPTIONS: Record<ReadinessDimension, string> = {
+  financial_readiness:
+    "Birikiminin kaç ayı karşıladığı, borç baskın ve acil duruma erişebildiğin nakit.",
+  legal_document_readiness:
+    "Pasaport geçerliliği, vize yolunun netliği, diploma/denklik evrakları ve yerel banka hesabı.",
+  language_readiness: "Hedef ülkenin iş ve günlük yaşam dilindeki seviyen.",
+  housing_logistics:
+    "İlk ay konaklaman, takviminin gerçekçiliği, ailenin uyumu ve varsa evcil hayvan planın.",
+  job_income_readiness:
+    "İlk 3 ayın gelir kaynağı ve mevcut işini uzaktana taşıyabilme durumun.",
+  support_adaptability:
+    "Yerindeki destek ağın, acil durum planın, sağlık sigortan, uyum ve ruhsal dayanıklılığın.",
+};
+
+/**
+ * Boyut zayıf çıktığında gösterilen somut ilk adım. DB'deki weakest3 `detail`
+ * alanı şablon bir cümle döndürüyor ("Bu alanı bu hafta güçlendir: X") — bu
+ * harita onun yerine geçer, eşleşme yoksa DB metnine düşülür.
+ */
+export const READINESS_DIMENSION_ACTIONS: Record<ReadinessDimension, string> = {
+  financial_readiness:
+    "En az 3 aylık yaşam gideri kadar ayrı bir tampon hesap aç ve taşınma tarihine kadar ona dokunma.",
+  legal_document_readiness:
+    "Pasaport bitiş tarihini ve vize yolunu bu hafta yaz; diploma denkliği/apostil süresi aylar alabilir, önce onu başlat.",
+  language_readiness:
+    "Hedefin günlük konuşma değil, iş görüşmesi eşiği olsun. Haftada 3 kez konuşma pratiği ekle.",
+  housing_logistics:
+    "İlk 30 gün için iptal edilebilir bir konaklama ayırt; kalıcı ev aramasını yerinde yap.",
+  job_income_readiness:
+    "Taşınmadan önce en az bir gelir kaynağını yazılı hale getir: iş teklifi, uzaktan sözleşme ya da müşteri taahhüdü.",
+  support_adaptability:
+    "Gittiğin şehirde önceden tanışacağın en az 2 kişi bul ve sağlık sigortanı taşınmadan önce başlat.",
+};
