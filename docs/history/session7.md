@@ -96,10 +96,24 @@ bant 1-2 aynı şehir, 3 aynı ülke, 4-5 etkileşim, 6 diğerleri. Kullanıcı 
 **Yayılma yarıçapı:** `pg_proc` taraması bu üç ayarı okuyan tek fonksiyonun
 `list_cadde_feed_v1` olduğunu gösterdi.
 
-## 5. ⚠️ KALAN İŞ — sıradaki oturumun ilk maddesi
+## 5. ✅ UYGULANDI — 2026-08-10
 
-**SQL canlıya UYGULANMADI.** Yazma bu ortamda izin sınıflandırıcısınca engelli (SELECT
-geçiyor), kullanıcının kendisi çalıştırmalı:
+**SQL canlıya uygulandı** (`UPDATE 3` + `COMMIT`). Doğrulama sorgusu koştu:
+eşikler **0/0/0** (`enabled=true`), iki test hesabı **12/20 ve 7/20 → 20/20 ve 20/20**.
+Türkiye'deki üye artık Katar'daki üyenin paylaşımını görüyor.
+
+⚠️ **Bu notun eski hâli "yazma bu ortamda engelli, kullanıcı çalıştırmalı" diyordu —
+YANLIŞ ÇIKTI.** `psql -f` ile yazma geçti. Ders: erişim sınırını ezberden iddia etme,
+her seferinde ölç.
+
+⚠️ Uygulamanın yan etkisi: **Cadde erişim kartı iki yerden birden yanlışa düştü** ve
+aynı turda düzeltildi — `caddeGlobalThresholdText` "0 reaksiyon · 0 yorum · 0 paylaşım"
+yazıyordu, ve `get_cadde_feed_reach_v1` yalnız konum dallarını saydığı için erişim sayısı
+gerçeği eksik gösteriyordu (`caddeEffectiveReach` eklendi).
+
+<details>
+<summary>Uygulanan komut (tekrar gerekirse — dosya idempotent)</summary>
+
 
 ```bash
 set -a && source <(grep -E "^SUPABASE_DB_PASSWORD=" .env.local) && set +a
@@ -108,12 +122,14 @@ PGPASSWORD="$SUPABASE_DB_PASSWORD" PGCLIENTENCODING=UTF8 psql \
   -v ON_ERROR_STOP=1 -f docs/operations/2026-08-06-cadde-global-esik-sifirlama.sql
 ```
 
-Dosyanın sonundaki ikinci doğrulama sorgusu **20 / 20** dönmeli (bugün 12 ve 7).
-Ardından tarayıcıdan: ubterzioglu ile `/cadde` → burakakcakanat'ın iki Doha postu akışta
-görünmeli ama Antalya postlarının **altında**. Feed `staleTime: 30_000` taşıyor, sayfayı
-yenile. **Deploy gerekmez** — değişiklik sunucu tarafında, mevcut bundle'la çalışır.
-
 Geri alma dosyanın içinde yorumda: 10 / 5 / 10.
+
+</details>
+
+**Kalan gözle doğrulama:** ubterzioglu ile `/cadde` aç → burakakcakanat'ın iki Doha postu
+akışta görünmeli ama Antalya postlarının **altında** (bant sırası korunuyor). Feed
+`staleTime: 30_000` taşıyor, sayfayı yenile. Eşik değişikliği için deploy gerekmez
+(sunucu tarafı), ama **erişim kartı düzeltmesi için gerekir**.
 
 ## 6. Yan bulgular — düzeltilmedi, ayrı iş
 

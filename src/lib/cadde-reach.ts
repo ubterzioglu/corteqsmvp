@@ -79,9 +79,51 @@ export function buildCaddeReachRows(data: CaddeFeedReach): CaddeReachRow[] {
   return rows;
 }
 
+/**
+ * Global kapı FİİLEN AÇIK mı: etkin VE üç eşik de 0/negatif.
+ *
+ * 10.08.2026'da canlı `cadde_settings` değerleri 10/5/10 → 0/0/0 yapıldı
+ * (docs/operations/2026-08-06-cadde-global-esik-sifirlama.sql). `p.reaction_count >= 0`
+ * her satırda doğru olduğu için her paylaşım global katmandan geçiyor; konum filtresi
+ * fiilen kalktı, yalnız SIRALAMA bantları kaldı.
+ *
+ * ⚠️ `CADDE_GLOBAL_THRESHOLD_SETTINGS` (10/5/10) SEED varsayılanıdır ve teste kilitli;
+ * canlı değeri yansıtmaz. Bu yüzden burada varsayılan DEĞİL, RPC'den gelen canlı
+ * `thresholds` kullanılmalıdır.
+ */
+export function isCaddeGlobalGateOpen(thresholds?: CaddeGlobalThresholdSettings): boolean {
+  const settings = thresholds ?? CADDE_GLOBAL_THRESHOLD_SETTINGS;
+  return settings.enabled && settings.minReactions <= 0 && settings.minComments <= 0 && settings.minShares <= 0;
+}
+
+/**
+ * Kartın göstereceği GERÇEK erişim.
+ *
+ * RPC (`get_cadde_feed_reach_v1`) yalnız KONUM dallarını sayar — global katmanı
+ * saymaz. Eşikler sıfırlanınca bu sayı gerçeği EKSİK gösterir: kart "90 üye" derken
+ * paylaşım aslında 158 üyenin hepsine ulaşır. Kapı açıkken payda=pay yapılır ve
+ * konum satırları görünürlüğü değil sıralama önceliğini anlatır.
+ */
+export function caddeEffectiveReach(data: CaddeFeedReach): {
+  total: number;
+  percent: number;
+  gateOpen: boolean;
+} {
+  if (isCaddeGlobalGateOpen(data.thresholds)) {
+    return {
+      total: data.reach.members,
+      percent: data.reach.members > 0 ? 100 : 0,
+      gateOpen: true,
+    };
+  }
+  return { total: data.reach.total, percent: caddeReachPercent(data.reach), gateOpen: false };
+}
+
 /** Global akışa çıkma eşiklerinin tek satırlık okunur hâli. */
 export function caddeGlobalThresholdText(thresholds?: CaddeGlobalThresholdSettings): string {
   const settings = thresholds ?? CADDE_GLOBAL_THRESHOLD_SETTINGS;
   if (!settings.enabled) return "Global akış şu an kapalı";
+  // Sıfır eşikler "0 reaksiyon · 0 yorum · 0 paylaşım" diye yazılırsa saçmalar.
+  if (isCaddeGlobalGateOpen(settings)) return "Eşik yok — her paylaşım global akışa çıkıyor";
   return `${settings.minReactions} reaksiyon · ${settings.minComments} yorum · ${settings.minShares} paylaşım`;
 }

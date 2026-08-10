@@ -20,8 +20,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { getCaddeFeedReach } from "@/lib/cadde-api";
 import {
   buildCaddeReachRows,
+  caddeEffectiveReach,
   caddeGlobalThresholdText,
-  caddeReachPercent,
   resolveCaddeReachState,
 } from "@/lib/cadde-reach";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
@@ -45,7 +45,10 @@ const CaddeReachCard = () => {
   // Veri yoksa/oturum yoksa kart hiç çizilmez — yan panel akışı bozmaz (ikincil yüzey).
   if (state === "signed-out" || !data) return null;
 
-  const percent = caddeReachPercent(data.reach);
+  // gateOpen: canlı eşikler 0'a çekildiğinde (10.08.2026) konum filtresi fiilen kalkar.
+  // RPC yalnız konum dallarını saydığı için ham `reach.total` o durumda GERÇEĞİ EKSİK
+  // gösterir; kartın anlattığı kısıt da geçersizleşir. İkisini de burada düzeltiyoruz.
+  const { total: effectiveTotal, percent, gateOpen } = caddeEffectiveReach(data);
   const rows = buildCaddeReachRows(data);
   const rawProfileValue = [data.rawCountry, data.rawCity].filter(Boolean).join(" · ");
 
@@ -57,7 +60,10 @@ const CaddeReachCard = () => {
           Akışın nasıl şekilleniyor?
         </CardTitle>
         <CardDescription className="text-[11px]">
-          Akış önce şehrini, sonra ülkeni gösterir. Yerelin dışına yalnız yüksek etkileşimli paylaşımlar çıkar.
+          Akış önce şehrini, sonra ülkeni gösterir.{" "}
+          {gateOpen
+            ? "Sonrasında diğer ülkelerdeki paylaşımlar gelir — hiçbiri gizlenmez."
+            : "Yerelin dışına yalnız yüksek etkileşimli paylaşımlar çıkar."}
         </CardDescription>
       </CardHeader>
 
@@ -84,7 +90,9 @@ const CaddeReachCard = () => {
               </p>
             ) : null}
             <p className="mt-1 pl-5 text-[11px] leading-relaxed text-amber-800">
-              Şu an akışta her şeyi görüyorsun, ama paylaşımın dar bir kitleye ulaşıyor.{" "}
+              {gateOpen
+                ? "Akışta her şeyi görüyorsun ve paylaşımın da herkese ulaşıyor. Yine de konumun tanımlı olursa sıralamada kendi şehrin öne çıkar. "
+                : "Şu an akışta her şeyi görüyorsun, ama paylaşımın dar bir kitleye ulaşıyor. "}
               <Link
                 to="/profile"
                 data-testid="cadde-reach-profile-link"
@@ -98,8 +106,17 @@ const CaddeReachCard = () => {
 
         <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
           <p className="text-[11px] leading-relaxed text-slate-700">
-            Kendi konumunu hedefleyen bir paylaşımın{" "}
-            <span className="font-semibold text-slate-900">{data.reach.total} üyeye</span> ulaşabilir.
+            {gateOpen ? (
+              <>
+                Paylaşımın şu an{" "}
+                <span className="font-semibold text-slate-900">{effectiveTotal} üyenin tamamına</span> ulaşabilir.
+              </>
+            ) : (
+              <>
+                Kendi konumunu hedefleyen bir paylaşımın{" "}
+                <span className="font-semibold text-slate-900">{effectiveTotal} üyeye</span> ulaşabilir.
+              </>
+            )}
           </p>
           <div
             role="progressbar"
@@ -132,8 +149,11 @@ const CaddeReachCard = () => {
         ) : null}
 
         <p className="text-[11px] leading-relaxed text-slate-500">
-          Yerelin dışına çıkmak için:{" "}
+          {gateOpen ? "Konum sınırı şu an kapalı" : "Yerelin dışına çıkmak için"}:{" "}
           <span className="font-medium text-slate-700">{caddeGlobalThresholdText(data.thresholds)}</span>
+          {gateOpen ? (
+            <span className="block">Yukarıdaki konum satırları görünürlüğü değil, sıralama önceliğini gösterir.</span>
+          ) : null}
         </p>
       </CardContent>
     </Card>

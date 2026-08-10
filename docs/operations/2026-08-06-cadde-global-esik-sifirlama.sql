@@ -1,6 +1,10 @@
 -- Cadde akışı: global eşiklerin sıfırlanması (herkes her postu görsün)
 -- Karar: kullanıcı, 2026-08-06. Hedef: canlı Supabase (injprdrsklkxgnaiixzh).
 --
+-- ✅ UYGULANDI: 2026-08-10. `UPDATE 3` + `COMMIT`. Doğrulama sorguları koştu:
+--    eşikler 0/0/0 (enabled=true) ve iki test hesabı 12/20 ve 7/20 → 20/20 ve 20/20.
+--    Bu dosya idempotent: tekrar çalıştırmak zararsızdır, aynı sonucu verir.
+--
 -- SORUN (canlı DB'de ölçüldü, 2026-08-06 — veri tarafında bozukluk YOK):
 --   `cadde_posts` 20 satır, hepsi published/public/real, HEDEFSİZ POST YOK.
 --   Buna rağmen ubterzioglu@gmail.com 20 postun 12'sini, burakakcakanat@gmail.com

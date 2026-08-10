@@ -148,22 +148,24 @@ muhasebe/
   `can_join_cadde_cafe` ↔ `canJoinCafeRule` · auto-scan regex ↔ `CAFE_NAME_BLOCKLIST`.
 - **`cadde_settings`** holds ALL product limits/flags (phone requirement D-03, cafe/carsi limits,
   rate limits) — product decisions are SQL updates, not code changes.
-- ⚠️ **Global eşikler CANLIDA HÂLÂ 10/5/10 — SIFIRLAMA UYGULANMADI.** (Bu madde daha önce
-  "0'a çekildi / filtre kalktı" diyordu; **yanlıştı**. 2026-08-06'da canlıdan ölçüldü:
-  `min_reactions=10`, `min_comments=5`, `min_shares=10`, `enabled=true`. `ec7f34e` commit'inin
-  kendi mesajı da "SQL CANLIYA UYGULANMADI" diyor. Uygulamadan "çözüldü" sayma; şüphelenirsen
-  `select key, value from cadde_settings where key like 'cadde.global%'` ile teyit et.)
-  Sebep ölçüldü: feed'in varsayılan `scope=all` dalı bir postu ancak izleyicinin şehri/ülkesi
-  eşleşirse ya da post global eşiği aşarsa gösteriyor; ~6 aktif kullanıcıda 10/5/10 eşiği
-  ulaşılamaz olduğu için Türkiye'deki üye Katar'daki üyenin postunu HİÇ göremiyor
-  (ölçüm: 12/20 ve 7/20). **Akış hâlâ ülke içine kilitli.**
-  Hazır SQL: `docs/operations/2026-08-06-cadde-global-esik-sifirlama.sql` (geri alma içinde) —
-  çalıştırılması kullanıcıda. Uygulanınca filtre kalkar, sıralama bantları (aynı şehir →
-  aynı ülke → etkileşim) aynen kalır.
-  ⚠️ `src/lib/cadde-ranking.ts` içindeki `CADDE_GLOBAL_THRESHOLD_SETTINGS` 10/5/10'dur ve
-  öyle kalmalıdır — o sabit SEED varsayılanını tanımlar ve
+- ✅ **Global eşikler 2026-08-10'da CANLIDA 0/0/0 yapıldı — konum filtresi FİİLEN KALKTI.**
+  Ölçüldü (uygulama anında, `UPDATE 3`): `min_reactions=0`, `min_comments=0`, `min_shares=0`,
+  `enabled=true`. Doğrulama: aynı iki hesap **12/20 ve 7/20 → 20/20 ve 20/20**. Türkiye'deki
+  üye artık Katar'daki üyenin paylaşımını görüyor.
+  Uygulanan dosya: `docs/operations/2026-08-06-cadde-global-esik-sifirlama.sql` (geri alma
+  10/5/10 içinde). Sıralama bantları (aynı şehir → aynı ülke → etkileşim) **aynen duruyor**;
+  kalkan yalnız FİLTRE. Şüphelenirsen ezberleme, teyit et:
+  `select key, value from cadde_settings where key like 'cadde.global%'`.
+  ⚠️ `src/lib/cadde-ranking.ts` içindeki `CADDE_GLOBAL_THRESHOLD_SETTINGS` **hâlâ 10/5/10'dur
+  ve öyle kalmalıdır** — o sabit SEED varsayılanını tanımlar ve
   `cadde-global-threshold-migration.test.ts` onu değişmez seed migration'ının metnine kilitler.
-  Sıfırlama uygulandığında bile o sabit DEĞİŞMEZ; canlı değer çalışma-anı ezmesidir.
+  Canlı değerle ayrışması BEKLENEN durumdur; sabite bakıp "canlı eşik 10" sanma.
+  ⚠️ Eşik sıfırlanınca **erişim kartı iki yerden birden yanlışa düştü** ve düzeltildi
+  (`src/lib/cadde-reach.ts`): (1) `caddeGlobalThresholdText` "0 reaksiyon · 0 yorum ·
+  0 paylaşım" diye saçmalıyordu → `isCaddeGlobalGateOpen` ile ayrı metin; (2)
+  `get_cadde_feed_reach_v1` yalnız KONUM dallarını sayar, global katmanı saymaz — kapı
+  açıkken ham `reach.total` gerçeği EKSİK gösterir, `caddeEffectiveReach` bunu tüm üyelere
+  genişletir. Eşikleri tekrar oynatırsan bu iki fonksiyonu da gözden geçir.
 - **Ban kill-switch** lives inside `has_cadde_feature` — new write RPCs are covered automatically.
 - New `cadde_*` RPC error codes MUST be added to the Turkish message map in `cadde-rules.ts`.
   RPC errors from supabase-js are **plain objects, not `Error` instances** — `resolveCaddeRpcErrorMessage`

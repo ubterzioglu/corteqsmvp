@@ -4,8 +4,10 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildCaddeReachRows,
+  caddeEffectiveReach,
   caddeGlobalThresholdText,
   caddeReachPercent,
+  isCaddeGlobalGateOpen,
   resolveCaddeReachState,
   type CaddeFeedReach,
 } from "./cadde-reach";
@@ -99,6 +101,54 @@ describe("caddeGlobalThresholdText", () => {
 
   it("global akış kapalıysa eşik yerine kapalı bilgisini verir", () => {
     expect(caddeGlobalThresholdText({ ...RESOLVED.thresholds, enabled: false })).toBe("Global akış şu an kapalı");
+  });
+
+  // 10.08.2026: canlı eşikler 10/5/10 -> 0/0/0 yapıldı. "0 reaksiyon · 0 yorum ·
+  // 0 paylaşım" cümlesi saçmalıyordu; sıfır hâli ayrı bir metin döndürmeli.
+  it("eşikler sıfırlanınca sıfır listelemez, kapının açık olduğunu söyler", () => {
+    expect(
+      caddeGlobalThresholdText({ enabled: true, minReactions: 0, minComments: 0, minShares: 0 }),
+    ).toBe("Eşik yok — her paylaşım global akışa çıkıyor");
+  });
+});
+
+describe("isCaddeGlobalGateOpen", () => {
+  it("üç eşik de sıfır ve akış etkinken açıktır", () => {
+    expect(isCaddeGlobalGateOpen({ enabled: true, minReactions: 0, minComments: 0, minShares: 0 })).toBe(true);
+  });
+
+  it("tek bir eşik bile pozitifse kapalıdır", () => {
+    expect(isCaddeGlobalGateOpen({ enabled: true, minReactions: 0, minComments: 1, minShares: 0 })).toBe(false);
+    expect(isCaddeGlobalGateOpen(RESOLVED.thresholds)).toBe(false);
+  });
+
+  it("enabled=false iken sıfır eşikler kapıyı AÇMAZ", () => {
+    expect(isCaddeGlobalGateOpen({ enabled: false, minReactions: 0, minComments: 0, minShares: 0 })).toBe(false);
+  });
+});
+
+describe("caddeEffectiveReach", () => {
+  it("kapı kapalıyken RPC'nin konum toplamını olduğu gibi verir", () => {
+    expect(caddeEffectiveReach(RESOLVED)).toEqual({ total: 90, percent: 57, gateOpen: false });
+  });
+
+  // RPC yalnız KONUM dallarını sayar; global katmanı saymaz. Kapı açıkken ham
+  // total (90) gerçeği eksik gösterir — paylaşım 158 üyenin hepsine ulaşır.
+  it("kapı açıkken tüm üyelere genişletir ve %100 döner", () => {
+    const open: CaddeFeedReach = {
+      ...RESOLVED,
+      thresholds: { enabled: true, minReactions: 0, minComments: 0, minShares: 0 },
+    };
+    expect(caddeEffectiveReach(open)).toEqual({ total: 158, percent: 100, gateOpen: true });
+  });
+
+  it("üye sayısı 0 iken %0 döner — sıfıra bölme yok", () => {
+    const empty: CaddeFeedReach = {
+      ...RESOLVED,
+      reach: { sameCity: 0, sameCountry: 0, unresolved: 0, total: 0, members: 0 },
+      thresholds: { enabled: true, minReactions: 0, minComments: 0, minShares: 0 },
+    };
+    expect(caddeEffectiveReach(empty)).toEqual({ total: 0, percent: 0, gateOpen: true });
   });
 });
 
