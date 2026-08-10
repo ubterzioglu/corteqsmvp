@@ -781,6 +781,72 @@
   }
 }
 
+/* ——— Araç hub'ı "gün ışığı" karşılama bandı (/tools) ———
+   KASITLI OLARAK ARAÇ DETAY SAYFASINDAN AYRI (kullanıcı kararı 10.08.2026):
+   hub bandı AÇIK, /tools/:slug girişi KOYU (.tools-space-shell) kalır. Daha önce
+   ikisi aynı yüzeyi paylaşıyordu; ayrılık artık bilinçli bir tercihtir, bu iki
+   sınıfı "tekrar var" diye birleştirme.
+
+   Hue çapaları koyu yüzeyle BİREBİR AYNI — 258 lila / 190 turkuaz / 24 şeftali —
+   yalnızca açıklık ve alfa değişir. Kimlik korunur, yüzey aydınlanır. */
+
+.tools-daylight-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 160% at 15% -20%, hsl(258 70% 88% / 0.55), transparent 55%),
+    radial-gradient(90% 140% at 92% 0%, hsl(190 65% 85% / 0.5), transparent 60%),
+    radial-gradient(100% 120% at 50% 120%, hsl(24 85% 88% / 0.45), transparent 65%),
+    linear-gradient(180deg, hsl(225 50% 99%) 0%, hsl(220 40% 96%) 100%);
+}
+
+/* Koyu yüzeydeki beyaz yıldızlar açık zeminde görünmez olurdu; aynı nokta düzeni
+   soluk lila olarak korunur — doku kalır, "uzay" iddiası kalkar. Nefes koyudakinden
+   yavaş ve dar (5s/0.65-1 yerine 8s/0.55-0.9): açık zeminde titreşen nokta kir gibi
+   okunur, yavaş nefes ise dokuyu canlı tutar. */
+.tools-daylight-dots {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* Alfa 0.12 ile başlandı, ekran görüntüsüyle ölçüldü: 1440px'de TAMAMEN görünmezdi,
+     "doku" vaadi boşa çıkıyordu. 0.22 de yetmedi. Nokta boyutları da 2px'e çıkarıldı —
+     asıl sorun alfa değil, açık zeminde 1.2px'lik bir noktanın hiç tutmamasıydı.
+     Üst sınır bilinçli: 0.40'ın üstü açık zeminde doku değil KİR gibi okunuyor. */
+  background-image:
+    radial-gradient(2px 2px at 8% 22%, hsl(258 42% 44% / 0.4), transparent 60%),
+    radial-gradient(1.6px 1.6px at 22% 68%, hsl(258 42% 44% / 0.32), transparent 60%),
+    radial-gradient(2.2px 2.2px at 38% 34%, hsl(258 42% 44% / 0.4), transparent 60%),
+    radial-gradient(1.6px 1.6px at 52% 82%, hsl(258 42% 44% / 0.28), transparent 60%),
+    radial-gradient(1.8px 1.8px at 67% 18%, hsl(258 42% 44% / 0.36), transparent 60%),
+    radial-gradient(1.6px 1.6px at 78% 58%, hsl(258 42% 44% / 0.28), transparent 60%),
+    radial-gradient(2px 2px at 88% 38%, hsl(258 42% 44% / 0.4), transparent 60%),
+    radial-gradient(1.6px 1.6px at 95% 78%, hsl(258 42% 44% / 0.3), transparent 60%),
+    radial-gradient(1.6px 1.6px at 14% 92%, hsl(258 42% 44% / 0.28), transparent 60%),
+    radial-gradient(1.8px 1.8px at 45% 52%, hsl(258 42% 44% / 0.32), transparent 60%);
+  background-repeat: repeat;
+  background-size: 260px 220px;
+  animation: tools-daylight-breathe 8s ease-in-out infinite;
+}
+
+@keyframes tools-daylight-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tools-daylight-dots {
+    animation: none;
+    opacity: 0.8;
+  }
+}
+
 /* Mobil (<768px): bulanıklığı/parlamayı azalt, spotlight'ı gizle. Düğüm/çip
    SAYISI React tarafında useIsMobile() ile düşürülür — burada yalnız yoğunluk. */
 @media (max-width: 767px) {
