@@ -14,6 +14,34 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260810-cadde-akisinda-ulke-siniri-kalkti",
+    date: "10 Ağustos 2026",
+    title:
+      "Cadde'de 'paylaşımlar birbirine yansımıyor' şikâyeti çözüldü — ülke sınırı kaldırıldı, artık herkes herkesin paylaşımını görüyor",
+    items: [
+      "Şikâyet şuydu: paylaşımlar akışa yansımıyor. Veritabanı baştan aşağı kontrol edildi ve ORTADA BOZUK VERİ YOKTU — 20 paylaşımın hepsi yayında, hepsinin hedefi tanımlı, eksik kayıt yok. Akışı kapatan şey bir arıza değil, sistemin kendi kuralıydı.",
+      "Kural şöyle çalışıyordu: bir paylaşımı ancak (a) aynı şehirdekiler, (b) aynı ülkedekiler, ya da (c) paylaşım çok etkileşim aldıysa herkes görebiliyordu. Üçüncü şartın eşiği 10 beğeni / 5 yorum / 10 paylaşımdı. Aktif kullanıcı sayısı bir elin parmakları kadarken bu eşiğe ulaşmak imkânsız. Sonuç: Türkiye'deki üye ile Katar'daki üye birbirinin paylaşımını HİÇ göremiyordu.",
+      "Ölçüldü: iki test hesabından biri 20 paylaşımın 12'sini, diğeri 7'sini görüyordu ve ikisi de birbirinin o günkü paylaşımlarını göremiyordu. Kaçış yolları da kapalıydı — ikinci bir ülkeyi hedeflemek ücretli özelliğe bağlı, Köprü paylaşımı arayüzden hiç açılmıyor, Türkiye'de yaşayan üye zaten yurt dışını hedefleyemiyor.",
+      "YAPILAN: üç eşik de sıfıra çekildi ve canlıya uygulandı. Sonuç aynı iki hesapla tekrar ölçüldü — 12/20 ve 7/20 iken artık İKİSİ DE 20/20. Türkiye'deki üye Katar'daki üyenin paylaşımını görüyor.",
+      "SIRALAMA BOZULMADI, sadece filtre kalktı: akış hâlâ önce kendi şehrini, sonra kendi ülkeni, sonra diğerlerini gösteriyor. Yani yerellik duruyor; değişen tek şey, yerelde içerik bittiğinde akışın boş kalmaması.",
+      "Bu değişiklik bir yan hasara yol açtı ve aynı gün düzeltildi: Cadde'nin sağındaki 'Akışın nasıl şekilleniyor?' kartı eşikleri canlıdan okuduğu için 'Yerelin dışına çıkmak için: 0 beğeni · 0 yorum · 0 paylaşım' gibi anlamsız bir cümle yazmaya başlamıştı. Ayrıca kartın 'paylaşımın kaç kişiye ulaşır' sayısı da eksik kalıyordu — kart 90 kişi derken paylaşım aslında 158 üyenin hepsine ulaşıyordu. İkisi de düzeltildi; kart artık iki durumu da doğru anlatıyor ve konum satırlarının artık görünürlüğü değil sıralamayı etkilediğini söylüyor.",
+      "Geri alınabilir: eski eşikler (10/5/10) uygulanan dosyanın içinde yorum olarak duruyor, tek komutla dönülür. Dosya: docs/operations/2026-08-06-cadde-global-esik-sifirlama.sql",
+      "Durum: eşik değişikliği ZATEN CANLIDA (sunucu tarafında bir ayar, yayın gerektirmedi). Kartın düzeltmesi yayın bekliyor. Yayın sonrası bakılacak: Cadde'yi aç, başka ülkedeki paylaşımların akışta göründüğünü ama kendi şehrindekilerin üstte kaldığını gözle doğrula.",
+    ],
+  },
+  {
+    id: "20260810-araclar-sayfasi-ust-bandi-acik-renk",
+    date: "10 Ağustos 2026",
+    title: "Araçlar sayfasının üst bandı açık renge çevrildi",
+    items: [
+      "/tools sayfasının en üstündeki koyu lacivert 'uzay' bandı açık renge çevrildi: açık lila, soluk turkuaz ve hafif şeftali tonlarında yumuşak bir geçiş, koyu başlık, beyaz arama kutusu.",
+      "Marka renkleri DEĞİŞMEDİ — koyu bantta kullanılan üç renk ailesinin aynısı kullanıldı, sadece açık tonda. Yani sayfa aydınlandı ama kimliği aynı kaldı.",
+      "Araçların kendi sayfaları (18 aracın giriş bandı) BİLİNÇLİ OLARAK KOYU BIRAKILDI — senin kararın. Bu ikisi eskiden aynı yüzeyi paylaşıyordu; artık ayrılar. Yayın sonrası araçlar sayfasından bir araca girerken bu açık→koyu geçişine bir bakmakta fayda var, rahatsız edici gelirse araç sayfaları da açığa çevrilebilir.",
+      "Değişiklik tarayıcıda gerçekten çizdirilip kontrol edildi: hem geniş ekranda hem telefon boyutunda görüntü alındı, yazı okunaklığı ve arama kutusunun yerleşimi doğrulandı.",
+      "Durum: yayın bekliyor.",
+    ],
+  },
+  {
     id: "20260805-bes-oturumun-kalani-tek-listede",
     date: "5 Ağustos 2026",
     title:
