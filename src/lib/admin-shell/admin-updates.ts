@@ -42,6 +42,77 @@ export const ADMIN_UPDATES: AdminUpdateEntry[] = [
     ],
   },
   {
+    id: "20260807-cadde-akis-kurali-uyeye-anlatiliyor",
+    date: "7 Ağustos 2026",
+    title:
+      "Cadde'ye 'Akışın nasıl şekilleniyor?' kartı eklendi — üye, paylaşımının kaç kişiye ulaştığını ilk kez görüyor",
+    items: [
+      "Cadde'nin akış kuralı üyeye HİÇBİR YERDE anlatılmıyordu. Üye, başka ülkedeki bir paylaşımı neden görmediğini ya da kendi paylaşımının neden yayılmadığını bilmiyordu; 'sistem bozuk' algısı buradan doğuyordu.",
+      "Ölçüldü (158 hesap üzerinden): Antalya/Türkiye hedefli, henüz etkileşim almamış bir paylaşımı aynı şehirden 3, aynı ülkeden 41, konumu tanımsız olduğu için her şeyi gören 46 kişi görebiliyordu — yani 68 üye GÖREMİYORDU. Üyelerin %43'ü. Bu bir arıza değil, kuralın kendisiydi; sadece görünmezdi.",
+      "Sağ kolona bir kart geldi: kendi konumun, paylaşımının kaç üyeye ulaşabileceği, bunun toplam üyeye oranı ve bu sayının nereden geldiği (aynı şehir / aynı ülke / konumu tanımsız üyeler) tek tek yazılı.",
+      "Kart POTANSİYEL erişimi gösterir — 'kaç kişinin akışına girebilir' demektir, kaç kişinin okuduğu DEĞİL. Etiketler bunu açıkça söylüyor, aksi halde okunma sayısı sanılırdı.",
+      "Konumu Cadde kataloğunda tanımlı olmayan üyeye ayrı bir uyarı çıkıyor: profilinde ne yazdığını gösteriyor ve profil sayfasına bağlantı veriyor.",
+      "Durum: yayın bekliyor. NOT: 10 Ağustos'ta akıştaki ülke sınırı kaldırıldığı için kartın anlattığı kısıt artık geçerli değil — kart o gün güncellendi ve şimdi iki durumu da doğru anlatıyor.",
+    ],
+  },
+  {
+    id: "20260807-arac-sonuclarina-aciklama-ve-donus-butonu",
+    date: "7 Ağustos 2026",
+    title:
+      "Araç sonuç ekranları açıklandı: hesaplanıp hiç gösterilmeyen 'en zayıf 3 alan' ortaya çıkarıldı, 18 araca dönüş butonu eklendi",
+    items: [
+      "Taşınma Hazırlık Skoru'nun sonuç ekranı çıplak sayıdan ibaretti: bir puan, altında altı çubuk ve iki genel cümle. Hangi başlığın ne ölçtüğü, iyi mi kötü mü olduğu, hangisini düzeltmenin puanı en çok oynatacağı hiçbir yerde yazmıyordu.",
+      "EN BÜYÜK BULGU BEDAVA ÇIKTI: sistem, üyenin en zayıf 3 alanını Haziran'dan beri zaten hesaplıyor ve kaydediyordu — ama ekranda HİÇ GÖSTERİLMİYORDU. Veri üretiliyor, kaydediliyor ve çöpe atılıyordu. Artık 'Önce Buraya Odaklan' kartı olarak görünüyor. Aynı durum İş Bulma Olasılığı aracında da vardı, o da kendiliğinden kazandı.",
+      "Veritabanının bu üç alan için ürettiği cümle şablondu ve bilgi taşımıyordu ('Bu alanı bu hafta güçlendir: Finansal Hazırlık'). Her başlık için gerçek bir ilk adım yazıldı — örneğin finans için 'en az 3 aylık yaşam gideri kadar ayrı bir tampon hesap aç ve taşınma tarihine kadar ona dokunma'.",
+      "Puan dağılımındaki her çubuğun altına üç bilgi geldi: o başlığın ne ölçtüğü, toplam puandaki ağırlığı ('skorun %25'i' — hangisini düzeltmenin en çok işe yarayacağını gösterir) ve durumu (Güçlü / İyi / Orta / Zayıf). Ayrıca sonuç bandının ne anlama geldiği tek cümleyle yazılıyor.",
+      "AYRI BİR KUSUR: sonuç ekranından araç listesine dönmenin hiçbir yolu yoktu. Tüm araçlara tam genişlikte 'Araçlar Sayfasına Dön' butonu eklendi. İlk denemede bu buton 18 aracın yalnız 12'sine ulaşmıştı — 6 araç (5 Almanya aracı + Nesil Bulucu) farklı bir şekilde çizildiği için kapsam dışı kalmıştı; ölçülüp düzeltildi ve artık hepsinde var.",
+      "Açıklama altyapısı 18 aracı destekliyor ama metinler şimdilik yalnız Taşınma Hazırlık Skoru için yazıldı. Metni olmayan araçta ilgili bölüm hiç çizilmiyor, ekran bozulmuyor.",
+      "Durum: yayın bekliyor.",
+    ],
+  },
+  {
+    id: "20260807-araclar-sayfasi-dizin-kurgusu",
+    date: "7 Ağustos 2026",
+    title: "Araçlar sayfası dizine dönüştü: arama kutusu ve kategori filtreleri geldi",
+    items: [
+      "18 araç olunca sayfada birincil ihtiyaç gezinmek değil ARAMAK oldu. Üst banda arama kutusu kondu; ülke, maaş, vize, şehir gibi kelimelerle arama yapılıyor.",
+      "Arama kutusunun altına kategori filtreleri geldi: Tümü (18) · Taşınma (10) · Almanya (7) · Nesil (1). Bu sekmeler elle yazılmıyor, gelen araç listesinden üretiliyor — yeni bir kategori eklenirse sekme kendiliğinden çıkar, araç kaybolmaz.",
+      "Mobildeki akordeon kart düzeni kaldırıldı, yerine her ekranda aynı çalışan kart ızgarası geldi.",
+      "Sayfa yüklenirken artık boşluk yerine kart iskeletleri görünüyor; iskeletlerin ölçüsü gerçek kartla birebir aynı olduğu için veri gelince sayfa zıplamıyor.",
+      "'Tamamen ücretsiz' bilgisi kart başına tekrarlanmaktan çıkarılıp üst banda tek bir rozete indirildi.",
+      "Durum: yayın bekliyor.",
+    ],
+  },
+  {
+    id: "20260806-komuta-merkezi-veri-yazilmamis",
+    date: "6 Ağustos 2026",
+    title:
+      "'Komuta merkezine son 5 günün işi yansımamış' şikâyeti araştırıldı — sorun gösterimde değil, veri hiç yazılmamış",
+    items: [
+      "Şikâyet: /admin/workspace/command-center tablolarında son günlerin eklemeleri görünmüyor; uygulanmamış veritabanı güncellemeleri olabilir mi?",
+      "Dört olası sebep tek tek ölçülerek elendi — bunlar bir daha araştırılmasın: (1) uygulanmamış veritabanı güncellemesi YOK, (2) yayın bekleyen kod YOK (canlı dosyanın yayın saati kontrol edildi), (3) yazma izni engellemiyor, (4) sayfa veriyi eksik çekmiyor.",
+      "KÖK NEDEN: tabloya 4 Ağustos 08:00'den beri TEK SATIR yazılmamış. Ne yeni madde eklenmiş ne bir durum değiştirilmiş. Yani menülerde ya da ekranda bir kusur yok, eksik olan verinin kendisi.",
+      "Panoda gözle görünen en yeni başlığın '2 Ağustos' olmasının ayrı bir sebebi var: 4 Ağustos'ta eklenen 11 satır eski bir tarih etiketi taşıyor, pano bu etikete göre grupladığı için yeni bir başlık oluşturmuyorlar. 'Yansımamış' hissi buradan geliyor.",
+      "İKİNCİ KUSUR: toplantı notu ekleme listesi 19 Haziran'da (Toplantı 16) donmuş. Sebep, listenin koda elle yazılmış sabit bir dizi olması — yeni toplantı ancak kod değişikliğiyle eklenebiliyor. Bu, girişi engelliyor; gizlemiyor.",
+      "GÜVENLİK NOTU: komuta merkezi tablosunun yazma izni sonuna kadar açık — giriş yapmamış ziyaretçi rolü de dahil herkes yazabiliyor durumda. Ayrıca ele alınmalı.",
+      "Durum: bu bir teşhis çalışmasıydı, kod değişikliği yapılmadı. SENDE olan: panoya madde girilecekse elle girilmesi, toplantı listesinin açılması ise ayrı bir iş olarak planlanması.",
+    ],
+  },
+  {
+    id: "20260806-uye-konumlari-katalog-yazimina-cekildi",
+    date: "6 Ağustos 2026",
+    title: "Üye profillerindeki eski serbest metin konumlar katalog yazımına çekildi (13 üye)",
+    items: [
+      "Profil formu artık seçim listesi ama serbest metin döneminden kalan değerler katalogla uyuşmuyordu: 'türkiye', 'istanbul', 'DOha', 'new york' gibi. Bu kayıtlar dropdown'da seçili görünmüyordu.",
+      "13 üyenin 25 kaydı düzeltildi. Asıl kırılan alanın şehir değil ÜLKE olduğu ölçüldü: ülke doğru yazıldığında şehir zaten kendiliğinden eşleşiyor, ülke bozuk olduğunda şehir de çözülemiyor. İkisi birlikte düzeltildi.",
+      "Sonuç: dropdown ile birebir eşleşen üye sayısı ülkede 98'den 111'e, şehirde 98'den 110'a çıktı.",
+      "DÜRÜST OLMAK GEREKİRSE Cadde erişiminde bir değişiklik OLMADI — bu ayrıca ölçüldü. Bu 13 üye Cadde tarafında zaten görülebiliyordu, çünkü Cadde eşleştirmesi büyük/küçük harf ve aksan farkına duyarsız. Kazanç veri tutarlılığında ve formun doğru görünmesinde, erişimde değil.",
+      "Ayrıca Cadde şehir kataloğundaki iki eksik şehir eklendi ve katalog köprüsü 55/55 tamamlandı.",
+      "Bilinçli olarak dokunulmayanlar: 'Belirtilmedi' gibi eski kayıt sistemi kalıntıları ve tek bir 'Kişinev' kaydı — sonuncusu düzeltilseydi profil formu düzelirdi ama Cadde eşleşmesi kırılırdı.",
+      "Durum: canlıya uygulandı, yayın gerektirmedi.",
+    ],
+  },
+  {
     id: "20260805-bes-oturumun-kalani-tek-listede",
     date: "5 Ağustos 2026",
     title:
