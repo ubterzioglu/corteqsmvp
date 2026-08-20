@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CorteQS Mevcut Profil Yapısı Raporu</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #5c667a;
+      --line: #d9e0ea;
+      --soft: #f5f7fb;
+      --panel: #ffffff;
+      --accent: #f97316;
+      --accent-2: #2563eb;
+      --ok: #047857;
+      --warn: #b45309;
+      --danger: #b91c1c;
+      --code: #101827;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #eef2f7;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 32px auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 24px 90px rgba(15, 23, 42, 0.12);
+    }
+
+    header {
+      padding: 42px 46px 28px;
+      background: linear-gradient(135deg, #ffffff 0%, #fff7ed 52%, #eaf2ff 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1, h2, h3 { margin: 0; line-height: 1.18; }
+    h1 { max-width: 880px; font-size: clamp(30px, 4vw, 52px); letter-spacing: -0.02em; }
+    h2 { margin-top: 34px; font-size: 24px; }
+    h3 { margin-top: 24px; font-size: 18px; }
+    p { margin: 10px 0 0; }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(249, 115, 22, 0.35);
+      background: rgba(255, 247, 237, 0.85);
+      color: #9a3412;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 650;
+    }
+
+    section { padding: 0 46px 10px; }
+    section:last-child { padding-bottom: 44px; }
+
+    .lead {
+      max-width: 900px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: var(--soft);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .card strong { display: block; margin-bottom: 4px; }
+    .card p { color: var(--muted); font-size: 14px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #334155;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 6px;
+      background: #eef2ff;
+      color: #1e3a8a;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.92em;
+    }
+
+    pre {
+      overflow-x: auto;
+      margin: 14px 0 0;
+      padding: 16px;
+      border-radius: 14px;
+      background: var(--code);
+      color: #e5e7eb;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    ul, ol { margin: 10px 0 0 22px; padding: 0; }
+    li { margin: 6px 0; }
+
+    .tag {
+      display: inline-flex;
+      margin: 2px 4px 2px 0;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #edf6ff;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .ok { color: var(--ok); font-weight: 700; }
+    .warn { color: var(--warn); font-weight: 700; }
+    .danger { color: var(--danger); font-weight: 700; }
+    .note {
+      margin-top: 14px;
+      border-left: 4px solid var(--accent);
+      background: #fff7ed;
+      padding: 12px 14px;
+      color: #7c2d12;
+      border-radius: 10px;
+    }
+
+    .sources {
+      columns: 2;
+      column-gap: 26px;
+      font-size: 13px;
+    }
+
+    .sources li { break-inside: avoid; }
+
+    @media (max-width: 820px) {
+      main { width: 100%; margin: 0; border-radius: 0; }
+      header, section { padding-left: 20px; padding-right: 20px; }
+      .grid { grid-template-columns: 1fr; }
+      .sources { columns: 1; }
+      table { display: block; overflow-x: auto; white-space: nowrap; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="pill">CorteQS profil mimarisi</span>
+    <h1>Mevcut Profil Yapısı Raporu</h1>
+    <p class="lead">
+      Bu rapor, repodaki güncel React/Vite frontend kodu, Supabase baseline şeması,
+      uygulanmış migration dosyaları ve mevcut teknik dokümanlar incelenerek hazırlanmıştır.
+      Canlı veritabanına ayrıca sorgu atılmamıştır; değerlendirme kod ve migration durumuna dayanır.
+    </p>
+    <div class="meta">
+      <span>Hazırlanma tarihi: 20 Ağustos 2026</span>
+      <span>Format: HTML</span>
+      <span>Kapsam: iç profil editörü, katalog profilleri, public profil, rol/AFS, onay ve dizin akışları</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>1. Yönetici Özeti</h2>
+    <div class="grid">
+      <div class="card">
+        <strong>Kaynak model</strong>
+        <p>Mevcut profil yapısının ana kaynağı artık <code>catalog_items</code> ve flat role/AFS matrisidir. Eski anlamdaki tekil <code>profiles</code> yaklaşımı tarihsel dokümanlarda kalmış, runtime çekirdeği katalog merkezli hale gelmiştir.</p>
+      </div>
+      <div class="card">
+        <strong>Rol modeli</strong>
+        <p>DB tarafında düz <code>roles</code> kullanılır; aile/parent inheritance yoktur. Frontend, bu flat rolleri hâlâ altı UI kategorisine map eder: bireysel, danışman, işletme, kuruluş, influencer ve şehir elçisi.</p>
+      </div>
+      <div class="card">
+        <strong>Profil editörü</strong>
+        <p><code>/profile</code> kullanıcının düzenleyebileceği katalog item’larını çözer. Bireysel <code>member</code> profili önceliklidir; diğer item’lar <code>/profile/catalog/:itemId</code> editörüne gider.</p>
+      </div>
+      <div class="card">
+        <strong>Public profil</strong>
+        <p>Canonical public rota <code>/directory/catalog/:slug</code>. Tek bir public composer vardır; rol başına ayrı layout yoktur. Section’lar <code>componentKey</code> registry ile render edilir.</p>
+      </div>
+    </div>
+    <p class="note">
+      En kritik mimari çıkarım: sistem artık “kullanıcı profili” ile “katalog profili”ni aynı düzlemde
+      ele alıyor. Bireysel profil de özel bir kullanıcı tablosu değil, kullanıcının <code>member</code>
+      tipindeki katalog item’ı ve ona bağlı AFS attribute/feature/section kuralları üzerinden yönetiliyor.
+    </p>
+  </section>
+
+  <section>
+    <h2>2. Ana Veri Modeli</h2>
+    <p>
+      Profil alanı dört ana katmandan oluşur: kimlik/rol, katalog item, AFS tanımları ve değer/izin
+      uygulama katmanı.
+    </p>
+    <pre><code>auth.users
+  -> user_role_assignments -> roles
+  -> catalog_items.linked_user_id
+       -> catalog_item_roles -> roles
+       -> catalog_item_managers
+       -> catalog_item_attribute_values
+       -> catalog_item_contacts / links / locations / services / languages / media
+
+roles
+  -> role_attributes -> afs_attributes
+  -> role_features   -> afs_features
+  -> role_sections   -> afs_sections
+
+member profilleri
+  -> user_profile_attributes ile köprülenir / senkronlanır
+  -> bazı yazımlar catalog_item_attribute_values tarafına da taşınır</code></pre>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tablo / Katman</th>
+          <th>Rolü</th>
+          <th>Önemli Alanlar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>catalog_items</code></td>
+          <td>Evrensel profil/katalog kaydı. Member, işletme, kuruluş, danışman vb. tüm public profillerin çekirdeği.</td>
+          <td><code>item_type</code>, <code>slug</code>, <code>title</code>, <code>status</code>, <code>visibility</code>, <code>platform_role_key</code>, <code>linked_user_id</code>, <code>deleted_at</code></td>
+        </tr>
+        <tr>
+          <td><code>roles</code></td>
+          <td>Flat rol kataloğu. Aile/parent yok; her rol açıkça tanımlı.</td>
+          <td><code>key</code>, <code>label</code>, <code>is_assignable</code>, <code>is_directory_visible</code>, <code>deleted_at</code></td>
+        </tr>
+        <tr>
+          <td><code>afs_attributes</code></td>
+          <td>Profil alan kataloğu.</td>
+          <td><code>key</code>, <code>data_type</code>, <code>storage_strategy</code>, <code>default_visibility</code>, <code>validation_schema</code></td>
+        </tr>
+        <tr>
+          <td><code>afs_features</code></td>
+          <td>Yetki/kapasite anahtarları.</td>
+          <td><code>key</code>, <code>feature_type</code>, <code>scope</code>, <code>default_visibility</code></td>
+        </tr>
+        <tr>
+          <td><code>afs_sections</code></td>
+          <td>Public profil section tanımı.</td>
+          <td><code>key</code>, <code>section_area</code>, <code>component_key</code>, <code>data_source</code>, <code>default_visibility</code></td>
+        </tr>
+        <tr>
+          <td><code>role_attributes</code></td>
+          <td>Rolün hangi alanları kullanabileceğini ve edit/görünürlük kurallarını belirler.</td>
+          <td><code>is_required</code>, <code>is_public_default</code>, <code>user_can_edit</code>, <code>user_can_hide</code>, <code>requires_admin_approval_on_change</code></td>
+        </tr>
+        <tr>
+          <td><code>role_features</code></td>
+          <td>Rol bazlı feature aç/kapat matrisi.</td>
+          <td><code>feature_key</code>, <code>is_enabled</code>, <code>visibility</code></td>
+        </tr>
+        <tr>
+          <td><code>role_sections</code></td>
+          <td>Rolün public sayfada hangi section’ları göstereceği.</td>
+          <td><code>section_id</code>, <code>is_enabled</code>, <code>sort_order</code>, <code>visibility</code></td>
+        </tr>
+        <tr>
+          <td><code>catalog_item_managers</code></td>
+          <td>Bir katalog item’ını kimlerin owner/manager/editor olarak düzenleyebileceğini tutar.</td>
+          <td><code>item_id</code>, <code>user_id</code>, <code>role</code>, <code>status</code>, <code>is_primary_owner</code></td>
+        </tr>
+        <tr>
+          <td><code>user_profile_attributes</code></td>
+          <td>Member kullanıcı profili için kullanıcı-scoped attribute değerleri. Bazı member yazımlarında katalogla senkron çalışır.</td>
+          <td><code>user_id</code>, <code>attribute_id</code>, <code>value_text</code>, <code>value_json</code>, <code>visibility</code>, <code>approval_status</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>3. Rol, Kategori ve Sunum Modeli</h2>
+    <p>
+      DB’nin rol kimliği <code>roles.key</code> ile taşınır. Frontend tarafında ise
+      <code>src/lib/profile-types.ts</code> flat rolü eski UI kategorilerinden birine map eder.
+      Bu map, rota ve metin görünümü için kullanılır; veri yetkisi veya gerçek rol kimliği değildir.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>UI Kategorisi</th>
+          <th>Canonical Slug</th>
+          <th>Örnek / Kural</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>bireysel</code></td>
+          <td><code>individual</code></td>
+          <td><code>User_*</code>, <code>Admin_*</code>, <code>Job_Candidate</code>, <code>Marketplace_IndividualSeller</code></td>
+        </tr>
+        <tr>
+          <td><code>danisman</code></td>
+          <td><code>consultant</code></td>
+          <td><code>Consultant_*</code> ve bazı sağlık/iş rolleri için override: <code>Healthcare_Doctor</code>, <code>Healthcare_Dentist</code>, <code>Healthcare_Psychologist</code>, <code>Job_Recruiter</code></td>
+        </tr>
+        <tr>
+          <td><code>isletme</code></td>
+          <td><code>business</code></td>
+          <td><code>Business_*</code>, <code>Healthcare_*</code>, <code>Event_*</code>, <code>Marketplace_*</code>, <code>Job_Employer</code>, <code>Job_Agency</code></td>
+        </tr>
+        <tr>
+          <td><code>kurulus-dernek</code></td>
+          <td><code>organization</code></td>
+          <td><code>Organization_*</code>, <code>Community_*</code></td>
+        </tr>
+        <tr>
+          <td><code>blogger-vlogger-youtuber</code></td>
+          <td><code>influencer</code></td>
+          <td><code>User_BloggerVlogger</code> override</td>
+        </tr>
+        <tr>
+          <td><code>sehir-elcisi</code></td>
+          <td><code>ambassador</code></td>
+          <td><code>User_CityAmbassador</code> override</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Sunum/premium katmanı</h3>
+    <p>
+      <code>src/lib/profile-presentation.ts</code> rolün görsel deneyimini çözer. Bireysel UI kategorisine
+      düşen roller, <code>Admin_SuperAdmin</code> hariç, premium bireysel sunumu alır. <code>Experimental_2</code>
+      ve <code>Experimental_3</code> ayrı pilot anahtarları olarak aynı premium görünüme bağlanır.
+    </p>
+    <p>
+      Bu katman bilinçli olarak sadece görseldir: permission, visibility veya kayıt güvenliği burada değil,
+      RPC/AFS/RLS sınırlarında çözülür.
+    </p>
+  </section>
+
+  <section>
+    <h2>4. Authenticated Profil Akışları</h2>
+
+    <h3>4.1 <code>/profile</code> çözümleyici</h3>
+    <ol>
+      <li>Kullanıcı giriş yapmamışsa <code>/login</code> rotasına yönlenir.</li>
+      <li><code>get_current_member_catalog_profile</code> ve <code>get_my_editable_catalog_items</code> paralel çağrılır.</li>
+      <li>Tek profil varsa doğrudan ilgili editöre gidilir.</li>
+      <li>Birden fazla profil ve aralarında <code>item_type='member'</code> varsa yine bireysel member editörü öncelikli açılır.</li>
+      <li>Hiç member yok ama çoklu katalog item varsa seçim ekranı gösterilir.</li>
+      <li>İstisnai durumda <code>/profile/:type</code> fallback’i kullanılır.</li>
+    </ol>
+    <p>
+      Bu davranış <code>ProfileResolverPage.tsx</code> ve merkezi <code>profileEditorPathFor</code> yardımcısı ile yönetilir.
+      Route kuralı: <code>member</code> için <code>/profile/&lt;legacyProfileType&gt;</code>, diğer katalog item’ları için
+      <code>/profile/catalog/:itemId</code>.
+    </p>
+
+    <h3>4.2 Bireysel/member profil editörü</h3>
+    <p>
+      <code>ProfilePage.tsx</code>, <code>useCurrentUserProfile</code> üzerinden <code>get_current_user_profile</code> RPC’sini
+      çağırır. Dönen payload; rol, feature listesi, AFS attribute listesi, bekleyen onaylar ve profil tamamlama
+      oranını içerir. Attribute editörleri <code>user_can_edit</code>, <code>user_can_hide</code>,
+      <code>requires_admin_approval_on_change</code> gibi alanlara göre davranır.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>İşlem</th>
+          <th>Teknik Yol</th>
+          <th>Not</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Alan kaydetme</td>
+          <td><code>updateProfileAttribute</code> -> <code>update_profile_attribute</code></td>
+          <td>AFS kuralı, visibility ve admin onayı DB tarafında uygulanır.</td>
+        </tr>
+        <tr>
+          <td><code>full_name</code></td>
+          <td><code>get_current_member_catalog_profile</code> -> <code>update_catalog_item_attribute</code></td>
+          <td>Public profil başlığının katalog item ile senkron kalması için özel yol kullanılır.</td>
+        </tr>
+        <tr>
+          <td>Avatar</td>
+          <td>Supabase Storage <code>avatars</code> + <code>update_profile_avatar</code></td>
+          <td>Dosya boyutu limiti frontend’de 5 MB olarak uygulanır.</td>
+        </tr>
+        <tr>
+          <td>CV / sunum dosyası</td>
+          <td><code>profile-cv-files</code>, <code>profile-presentation-files</code> bucket’ları + profile document helpers</td>
+          <td>Public payload’da private storage alanlarının sızmaması AFS/RPC sınırına bağlıdır.</td>
+        </tr>
+        <tr>
+          <td>Feature talebi</td>
+          <td><code>submitFeatureRequest</code> -> <code>submit_feature_request</code></td>
+          <td>Directory görünürlüğü, WhatsApp gösterimi, etkinlik/teklif/referral gibi talepler onay kuyruğuna düşer.</td>
+        </tr>
+        <tr>
+          <td>Rol değişikliği</td>
+          <td><code>submitRoleChangeRequest</code> -> <code>submit_role_change_request</code></td>
+          <td>Mevcut profil rolünü değiştirmeye yönelik onay akışı.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>4.3 Katalog item editörü</h3>
+    <p>
+      <code>/profile/catalog/:itemId</code>, bireysel olmayan ya da ikincil katalog profillerini düzenler.
+      <code>get_catalog_item_profile</code> payload’u <code>editor_can_edit</code> ve <code>editor_can_hide</code>
+      kurallarını içerir; kaydetme <code>update_catalog_item_attribute</code> RPC’siyle yapılır.
+    </p>
+
+    <h3>4.4 Profil değiştirici ve yeni profil talebi</h3>
+    <p>
+      <code>ProfileSwitcherMenu</code>, <code>get_my_editable_catalog_items</code> sonucunu React Query cache ile kullanır.
+      “+ Yeni Profil” dialog’u <code>get_flat_roles</code> ile rol listesini getirir ve
+      <code>request_new_catalog_item</code> ile onay kuyruğuna <code>new_profile</code> talebi yazar.
+    </p>
+    <p>
+      Admin onaylarsa <code>admin_review_approval_request</code> içinde yeni <code>catalog_items</code> satırı,
+      <code>catalog_item_roles</code> bağlantısı ve <code>catalog_item_managers</code> owner kaydı oluşturulur.
+      Kullanıcının mevcut profili değiştirilmez.
+    </p>
+  </section>
+
+  <section>
+    <h2>5. Public Profil ve Dizin Akışları</h2>
+
+    <h3>5.1 Canonical public profil</h3>
+    <p>
+      Ana public rota <code>/directory/catalog/:slug</code>. Sayfa ince bir container olan
+      <code>DirectoryCatalogItemPage</code> ile başlar ve <code>usePublicCatalogProfile</code> hook’u üzerinden
+      <code>get_catalog_item_public_page_v2</code> RPC’sine gider.
+    </p>
+    <pre><code>get_catalog_item_public_page_v2(p_slug)
+  -> public-catalog-profile-api.ts
+  -> public-catalog-profile-schemas.ts (Zod parse)
+  -> usePublicCatalogProfile (60 sn staleTime)
+  -> public-catalog-profile-view-model.ts
+  -> PublicProfileShell</code></pre>
+    <p>
+      RPC <code>null</code> döndürürse veya payload Zod doğrulamasından geçmezse aynı
+      <code>PublicProfileNotFound</code> ekranı gösterilir. Böylece missing/private/unpublished ayrımı
+      ziyaretçiye sızdırılmaz.
+    </p>
+
+    <h3>5.2 Public-safe payload sınırı</h3>
+    <ul>
+      <li>Item yalnız <code>status='published'</code>, <code>visibility='public'</code>, <code>deleted_at is null</code> ise çıkar.</li>
+      <li>Attribute’lar <code>private_storage</code> değilse, role attribute public ise ve değer <code>approved</code> ise çıkar.</li>
+      <li>Contact/link/service/media gibi uydu kayıtları sadece public işaretliyse çıkar.</li>
+      <li>Document tipindeki media public payload’dan dışlanır.</li>
+      <li>Alanlar whitelist mantığıyla seçilir; ham row dump yapılmaz.</li>
+    </ul>
+
+    <h3>5.3 Section composer</h3>
+    <p>
+      Public profil rol başına ayrı component ağacı kullanmaz. <code>PublicProfileShell</code> içinde hero,
+      quick actions, trust card ve section listesi tek omurgadır. Section render çözümü:
+    </p>
+    <pre><code>componentKey -> PUBLIC_SECTION_RENDERERS[componentKey]
+             -> yoksa GenericPublicSection</code></pre>
+    <p>
+      Mevcut renderer anahtarları:
+      <span class="tag">rich_text</span>
+      <span class="tag">attributes</span>
+      <span class="tag">contact_list</span>
+      <span class="tag">services</span>
+      <span class="tag">languages</span>
+      <span class="tag">links</span>
+      <span class="tag">badges</span>
+    </p>
+    <p>
+      Placement ve boş section filtresi registry’de değil, <code>public-catalog-profile-view-model.ts</code>
+      içinde tek kaynak olarak tutulur. DB’de section tanımı yoksa attribute, service, contact ve language
+      içerikleri derived section olarak eklenebilir.
+    </p>
+
+    <h3>5.4 Claim ve owner edit</h3>
+    <p>
+      Public sayfada claimable profil için anonim kullanıcı signup/login yönlendirmesi görür; giriş yapmış
+      kullanıcı <code>submit_catalog_claim_request</code> ile talep gönderebilir. <code>verification_status='claimed'</code>
+      olduğunda profil “yönetilen profil” olarak işaretlenir.
+    </p>
+    <p>
+      Owner inline edit modu <code>PublicProfileInlineEditor</code> ile çalışır; edit formu
+      <code>get_catalog_item_profile</code>, kayıt <code>update_catalog_item_attribute</code> üstündedir.
+    </p>
+
+    <h3>5.5 Dizin listeleme</h3>
+    <p>
+      <code>/directory</code> giriş yapmış kullanıcıya unified katalog araması sunar. Listeleme
+      <code>search_directory_catalog</code> RPC’sinden gelir; rol seçenekleri <code>roles</code> tablosundan
+      <code>is_directory_visible</code> filtresiyle çekilir. Frontend ayrıca admin/experimental etiketli rolleri
+      savunma amaçlı gizler.
+    </p>
+    <p>
+      Eski <code>/directory/profile/:userId</code> rotası artık profil render etmez; UUID veya slug parametresini
+      canonical <code>/directory/catalog/:slug</code> rotasına yönlendirir.
+    </p>
+  </section>
+
+  <section>
+    <h2>6. Onay, Referral ve Tamamlama Mekanizmaları</h2>
+
+    <h3>6.1 Genel onay kuyruğu</h3>
+    <p>
+      Profil değişiklikleri ve yetki talepleri <code>approval_requests</code> üzerinden işler. Güncel
+      migration ile <code>new_profile</code> request type’ı eklenmiştir. Admin onayı, mevcut
+      <code>admin_review_approval_request</code> fonksiyonuna eklenen dal ile yeni profili gerçekten oluşturur.
+    </p>
+
+    <h3>6.2 Referral kodu</h3>
+    <p>
+      Profil içindeki <code>referral_code</code> alanı artık ön kayıt akışıyla uyumlu doğrulanır. Frontend
+      önce <code>validateReferralCodeBeforeSubmit</code> kullanır; DB tarafında <code>update_profile_attribute</code>
+      nihai otoritedir. Başarılı profil kullanımı <code>referral_code_usages</code> içinde <code>source='profile'</code>
+      satırı oluşturur.
+    </p>
+    <ul>
+      <li><span class="ok">Kilit kuralı:</span> Bir kullanıcı doğrulanmış referral kodunu daha sonra değiştiremez.</li>
+      <li><span class="ok">Görünürlük kuralı:</span> <code>referral_code</code> ve <code>referral_source</code> her zaman private yazılır.</li>
+      <li><span class="ok">RLS kuralı:</span> Admin tüm kullanımları, kullanıcı yalnız kendi profil kaynaklı kullanımını okuyabilir.</li>
+    </ul>
+
+    <h3>6.3 Profil tamamlama</h3>
+    <p>
+      <code>get_current_user_profile</code> payload’u <code>profile_completion</code> nesnesi döndürür.
+      Zorunlu alan sayısı ve tamamlanan alan sayısı AFS role attribute kurallarından beslenir.
+      Bu değer editörde completion kartları ve premium profil UI’ı için kullanılır.
+    </p>
+  </section>
+
+  <section>
+    <h2>7. Güvenlik ve RLS Sınırları</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Alan</th>
+          <th>Mevcut Koruma</th>
+          <th>Değerlendirme</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Public profil payload</td>
+          <td>Whitelist RPC, private/unpublished için null, Zod doğrulama, document/private storage dışlama</td>
+          <td><span class="ok">Güçlü.</span> Public sızıntı yüzeyi iyi daraltılmış.</td>
+        </tr>
+        <tr>
+          <td>Attribute yazımı</td>
+          <td><code>update_profile_attribute</code> ve <code>update_catalog_item_attribute</code> AFS role kurallarını uygular.</td>
+          <td><span class="ok">Doğru katman.</span> Frontend guard’a güvenilmiyor.</td>
+        </tr>
+        <tr>
+          <td>Katalog item sahipliği</td>
+          <td><code>catalog_item_managers</code> ve helper fonksiyonlar RLS/RPC tarafında kullanılır.</td>
+          <td><span class="ok">Temel model sağlam.</span> Public inline owner detection için ayrı risk aşağıda.</td>
+        </tr>
+        <tr>
+          <td>Claim talebi</td>
+          <td>Authenticated insert, moderator/admin review, self/reviewer read politikaları.</td>
+          <td><span class="ok">Beklenen akış.</span></td>
+        </tr>
+        <tr>
+          <td>Dizin erişimi</td>
+          <td><code>/directory</code> UI’da giriş gerektirir; public profil sayfası anon açık ama public-safe RPC ile sınırlı.</td>
+          <td><span class="warn">Ürün kararı.</span> Public profil anon açık; dizin arama girişli.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>8. Legacy / Tarihsel Parçalar</h2>
+    <ul>
+      <li><code>docs/modules/profiles/profil.md</code> eski RBAC/profiles tasarımını anlatır. Mevcut runtime, bu dokümandaki basit <code>profiles</code> modelinden daha ileri ve katalog/AFS merkezlidir.</li>
+      <li><code>individual_profile_details</code>, <code>usePublicIndividualProfile</code> ve bazı eski bireysel görünüm parçaları hâlâ kodda bulunur; ana public rota artık <code>/directory/catalog/:slug</code>.</li>
+      <li><code>person_profile</code> eski item tipi için 2026-06-27 migration’ı 14 ölü kaydı soft-delete etmiş ve aktif <code>member</code> item tekilliği için partial unique index eklemiştir.</li>
+      <li><code>/kurulus/:slug</code> bağımsız büyükelçilik/konsolosluk profil sayfası ayrı <code>independent_profiles</code> modelini kullanır; genel katalog profil composer’ından farklıdır.</li>
+      <li>Referral plan dokümanı başlığında “henüz uygulanmadı” notu taşısa da applied migration’lar ve TS kodu mevcut uygulamanın tamamlandığını gösterir. Bu bir dokümantasyon güncelliği riskidir.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>9. Riskler ve İyileştirme Önerileri</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Öncelik</th>
+          <th>Bulgu</th>
+          <th>Öneri</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="danger">Yüksek</span></td>
+          <td>Public owner detection <code>resolveCatalogSlugForLinkedUser</code> ile kullanıcının ilk katalog slug’ını çözüyor. Çok profilli kullanıcı ikinci profilinin public sayfasında owner inline edit düğmesini göremeyebilir.</td>
+          <td>Owner kontrolünü slug + <code>catalog_item_managers</code> / <code>catalog_user_can_edit_item</code> temelli bir RPC’ye taşıyın. İlk slug varsayımı kaldırılmalı.</td>
+        </tr>
+        <tr>
+          <td><span class="warn">Orta</span></td>
+          <td><code>ProfilePage.tsx</code> çok büyük ve çok sorumluluk taşıyor: attribute edit, dosya upload, feature request, premium UI, Cadde kartları, referral özel durumu aynı dosyada.</td>
+          <td>Davranış değiştirmeden modülerleştirme planı çıkarın: attribute sections, document cards, access requests ve premium shell ayrı bileşen/hook’lara taşınabilir.</td>
+        </tr>
+        <tr>
+          <td><span class="warn">Orta</span></td>
+          <td>Member profillerinde <code>user_profile_attributes</code> ve katalog attribute değerleri arasında özel senkron yolları var. <code>full_name</code> özel-case’i bunun en görünür örneği.</td>
+          <td>Member attribute yazım stratejisi için tek kaynak dokümanı ve otomatik regression testleri güçlendirilmeli. Özellikle public title/name sync testleri korunmalı.</td>
+        </tr>
+        <tr>
+          <td><span class="warn">Orta</span></td>
+          <td><code>getTotalDirectoryCount</code> tüm <code>catalog_items</code> üzerinden sayım alıyor; private/deleted/placeholder kayıtlar sayıya dahil olabilir.</td>
+          <td>Sayım için public-visible kriterli RPC veya filtreli view kullanın.</td>
+        </tr>
+        <tr>
+          <td><span class="warn">Orta</span></td>
+          <td>Dokümantasyon drift’i var: eski profil/RBAC dokümanı ve referral plan notu güncel uygulanmış durumu tam yansıtmıyor.</td>
+          <td>Bu raporu güncel kaynak kabul edip eski dokümanlara “historical” etiketi ekleyin veya modül dokümanlarını yenileyin.</td>
+        </tr>
+        <tr>
+          <td><span class="ok">Düşük</span></td>
+          <td>Public section ekleme modeli iyi ama yeni section için DB migration, role_sections ve renderer testlerini unutmak kolay.</td>
+          <td>Yeni section checklist’i ve örnek migration şablonu eklenebilir.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>10. Dosya ve Fonksiyon Haritası</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Alan</th>
+          <th>Ana Dosyalar / RPC’ler</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Route tanımları</td>
+          <td><code>src/App.tsx</code></td>
+        </tr>
+        <tr>
+          <td>Profil çözümleme</td>
+          <td><code>src/pages/ProfileResolverPage.tsx</code>, <code>src/lib/profile-routing.ts</code>, <code>get_my_editable_catalog_items</code></td>
+        </tr>
+        <tr>
+          <td>Bireysel editör</td>
+          <td><code>src/pages/ProfilePage.tsx</code>, <code>src/hooks/useCurrentUserProfile.ts</code>, <code>src/lib/member-profile.ts</code>, <code>get_current_user_profile</code></td>
+        </tr>
+        <tr>
+          <td>Member profil API</td>
+          <td><code>src/lib/member-profile-api.ts</code>, <code>update_profile_attribute</code>, <code>update_profile_avatar</code>, <code>submit_feature_request</code>, <code>submit_role_change_request</code></td>
+        </tr>
+        <tr>
+          <td>Katalog editörü</td>
+          <td><code>src/pages/CatalogItemEditorPage.tsx</code>, <code>src/lib/catalog-entity-api.ts</code>, <code>get_catalog_item_profile</code>, <code>update_catalog_item_attribute</code></td>
+        </tr>
+        <tr>
+          <td>Public profil</td>
+          <td><code>src/pages/DirectoryCatalogItemPage.tsx</code>, <code>src/hooks/usePublicCatalogProfile.ts</code>, <code>src/lib/public-catalog-profile-*.ts</code>, <code>get_catalog_item_public_page_v2</code></td>
+        </tr>
+        <tr>
+          <td>Public composer</td>
+          <td><code>src/components/directory/public-profile/PublicProfileShell.tsx</code>, <code>PublicProfileSectionList.tsx</code>, <code>section-renderers/renderer-registry.ts</code></td>
+        </tr>
+        <tr>
+          <td>Dizin</td>
+          <td><code>src/pages/DirectoryPage.tsx</code>, <code>src/lib/catalog-directory.ts</code>, <code>search_directory_catalog</code></td>
+        </tr>
+        <tr>
+          <td>Yeni profil talebi</td>
+          <td><code>src/components/profile/RequestNewProfileDialog.tsx</code>, <code>request_new_catalog_item</code>, <code>admin_review_approval_request</code></td>
+        </tr>
+        <tr>
+          <td>DB şeması</td>
+          <td><code>supabase/baseline/2026-08-04-public-schema.sql</code>, <code>supabase/migrations/applied/*profile*</code>, <code>*catalog*</code>, <code>*referral*</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>11. İncelenen Kaynaklar</h2>
+    <ul class="sources">
+      <li><code>src/App.tsx</code></li>
+      <li><code>src/pages/ProfileResolverPage.tsx</code></li>
+      <li><code>src/pages/ProfilePage.tsx</code></li>
+      <li><code>src/pages/CatalogItemEditorPage.tsx</code></li>
+      <li><code>src/pages/DirectoryCatalogItemPage.tsx</code></li>
+      <li><code>src/pages/DirectoryPage.tsx</code></li>
+      <li><code>src/pages/DirectoryProfilePage.tsx</code></li>
+      <li><code>src/hooks/useCurrentUserProfile.ts</code></li>
+      <li><code>src/hooks/usePublicCatalogProfile.ts</code></li>
+      <li><code>src/hooks/usePublicProfileOwnership.ts</code></li>
+      <li><code>src/hooks/useMemberCatalogSlug.ts</code></li>
+      <li><code>src/lib/member-profile.ts</code></li>
+      <li><code>src/lib/member-profile-api.ts</code></li>
+      <li><code>src/lib/member-catalog.ts</code></li>
+      <li><code>src/lib/catalog-entity-api.ts</code></li>
+      <li><code>src/lib/catalog-directory.ts</code></li>
+      <li><code>src/lib/profile-types.ts</code></li>
+      <li><code>src/lib/profile-presentation.ts</code></li>
+      <li><code>src/lib/public-catalog-profile-api.ts</code></li>
+      <li><code>src/lib/public-catalog-profile-schemas.ts</code></li>
+      <li><code>src/lib/public-catalog-profile-view-model.ts</code></li>
+      <li><code>src/components/directory/public-profile/PublicProfileShell.tsx</code></li>
+      <li><code>src/components/directory/public-profile/section-renderers/renderer-registry.ts</code></li>
+      <li><code>docs/modules/directory/public-profile-layout.md</code></li>
+      <li><code>docs/superpowers/specs/2026-06-26-tek-bireysel-profil-design.md</code></li>
+      <li><code>docs/superpowers/specs/2026-07-23-secondary-profile-request-ozet.md</code></li>
+      <li><code>supabase/baseline/2026-08-04-public-schema.sql</code></li>
+      <li><code>supabase/migrations/applied/20260627110000_dedupe_individual_profiles.sql</code></li>
+      <li><code>supabase/migrations/applied/20260723100000_secondary_profile_request.sql</code></li>
+      <li><code>supabase/migrations/applied/20260729120000_referral_usage_profile_support.sql</code></li>
+      <li><code>supabase/migrations/applied/20260729121000_update_profile_attribute_referral_validation.sql</code></li>
+      <li><code>supabase/migrations/applied/20260729122000_referral_usage_backfill_from_profiles.sql</code></li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
