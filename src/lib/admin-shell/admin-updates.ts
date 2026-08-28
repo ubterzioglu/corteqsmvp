@@ -14,6 +14,31 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260828-27-agustos-toplantisi-komuta-merkezine",
+    date: "28 Ağustos 2026",
+    title:
+      "27 Ağustos toplantısı komuta merkezine işlendi — 12 madde, kararlar dahil",
+    items: [
+      "27 Ağustos toplantısında konuşulan her şey tek tek komuta merkezine yazıldı: 12 madde. 7'si sende, 5'i Burak'ta. Toplantı listesinde 'Toplantı 18' olarak görünüyor.",
+      "Bunların 9'u doğrudan toplantının yapılacaklar listesinden geldi. Sende olanlar: Cadde ana sayfasında 'İnsanları Keşfet' ve 'Aktif Kafeler' bloklarının yukarı taşınması, kafeye parolalı/onaylı girişte sayfanın kendini yenileme sorunu, Jukebox'ın ayrı bir modül olarak kurulması, kafenin içinden akışa dönüş butonu ve workshop panosunda açık kalan maddelerin hafta sonu kapatılması. Burak'ta olanlar: ikonların SVG olarak hazırlanması, kafeler için 3 arka plan teması, Jukebox'ın kullanıcı senaryoları ve profiller toplantısının ön hazırlığı.",
+      "Kalan 3 madde toplantıda alınan ama kimseye iş olarak düşmeyen KARARLARDAN üretildi ve 'Beklemede' işaretlendi: Çarşı'nın lansman kapsamından çıkarılması, reklamların kolon banner'ı değil akış içi sponsorlu içerik olması, Cadde ve profiller oturana kadar dış pazarlamanın durdurulması. Bunlar listeye alınmasaydı hiçbir yere yazılmamış olacaktı — komuta merkezinde 'karar' diye ayrı bir tür yok, o yüzden bekleyen iş olarak duruyorlar.",
+      "Geri kalan kararlar ilgili maddenin açıklamasına 'Karar:' diye işlendi: kafelerde anlık sohbet olmayacak (moderasyon yükü nedeniyle forum düzeni kalıyor), arka plan temaları her girişte veritabanından çekilmeyecek (sunucu maliyeti için sisteme gömülü 3-4 sabit seçenek), Jukebox ayrı modül olarak sonradan eklenecek.",
+      "Bu iş sırasında eski bir eksik ortaya çıktı ve kapatıldı: 24 Ağustos toplantısının maddeleri canlıda duruyordu ama veritabanının 'hangi değişiklik uygulandı' defterine hiç yazılmamıştı. İki kayıt da eklendi. Defter artık 361 dosya / 361 kayıt — boşluk yok.",
+      "Durum: 12 maddenin hepsi ZATEN CANLIDA, komuta merkezini açtığında görüyorsun. Yayın sadece toplantı seçme listesindeki 'Toplantı 18 — 27 Ağustos 2026' etiketi için gerekli.",
+    ],
+  },
+  {
+    id: "20260826-24-agustos-toplantisi-komuta-merkezine",
+    date: "26 Ağustos 2026",
+    title: "24 Ağustos toplantısı komuta merkezine işlendi — 12 madde",
+    items: [
+      "24 Ağustos toplantısının yapılacaklar listesi komuta merkezine yazıldı: 12 madde, 6'sı sende 6'sı Burak'ta. Toplantı listesinde 'Toplantı 17' olarak görünüyor.",
+      "Sende olanlar: PFA sitesinin test için Şahin'e yönlendirilmesi, Payal BI'ın kendi sunucusuna taşınmasının Halil'e devredilmesi, 26 ve 28 Ağustos toplantılarının hazırlıkları, Zoom davetlerinin gönderilmesi ve Burak'ın depoya bağlanması.",
+      "Burak'ta olanlar: PFA giriş bilgilerinin iletilmesi, Payal BI hostinginin 1 ay uzatılması, ortak ChatGPT hesabında yarı yarıya kullanım kuralına uyulması, profil geri bildirimlerinin yazılı iletilmesi, teknoloji giderleri tablosunun hazırlanması ve WhatsApp gruplarına içerik hatırlatması.",
+      "Durum: maddeler canlıda, panelde görünüyor.",
+    ],
+  },
+  {
     id: "20260810-cadde-akisinda-ulke-siniri-kalkti",
     date: "10 Ağustos 2026",
     title:
