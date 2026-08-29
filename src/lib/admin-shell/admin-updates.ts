@@ -14,6 +14,22 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260829-cadde-panosu-gercege-cekildi",
+    date: "29 Ağustos 2026",
+    title:
+      "Cadde workshop panosu gerçeğe çekildi — açık görünen 5 madde aslında bitmişti ya da konusu kalmamıştı",
+    items: [
+      "Panodaki açık madde sayısı yanıltıyordu. Sayıldı: 136 madde, 53'ü açık görünüyor. Ama tek tek bakılınca bunların 53 iş OLMADIĞI çıktı — yaklaşık 11'i bu projede kod işi, 12'si Burak'ın pazarlama içeriği, 10'u tarihi çoktan geçmiş toplantı maddesi, 7'si iş/altyapı konusu (WordPress, gizlilik sözleşmesi), 8'i zaten bilerek park edilmiş.",
+      "Beş madde ise açık duruyordu ama işi çoktan bitmişti veya sorusu ortadan kalkmıştı. Beşi de koda ve canlı veritabanına bakılarak DOĞRULANDI, tahminle işaretlenmedi.",
+      "Bitmiş çıkanlar: (1) 'şehir/ülke göstergesinin yanında dijital saat' — saat zaten yapılmış ve akışın üstünde çiziliyor. (2) 'yeni yorumlar sayfa yenilenmeden görünsün' — ana akışta zaten çalışıyor, yorum paneli açıkken kendi kendine tazeleniyor.",
+      "Konusu kalmayanlar: 'paylaşımların etkileşim oranına göre global akışa taşınması' maddesi iki ayrı yerde duruyordu. 10 Ağustos'ta eşikler sıfırlandığı için artık taşınacak bir kapı yok — her paylaşım zaten global katmanda. Canlıdan teyit edildi (üç eşik de 0, global katman açık). Eşikler bir gün geri alınırsa bu iki madde YENİDEN AÇILMALI, dosyaya bu not düşüldü.",
+      "Beşincisi 26 Ağustos toplantısı için durum raporu hazırlama maddesiydi; toplantı yapıldı, notları komuta merkezine işlendi, madde kendiliğinden kapandı.",
+      "Bilerek AÇIK BIRAKILAN bir madde var: 'yeni paylaşım gelince akışın kendi kendine yenilenmesi'. Bu bitmemiş bir iş değil, verilmiş bir karar — akışın altından kayması yerine 'N yeni paylaşım' düğmesi tercih edilmişti. Panoda durması doğru.",
+      "Sonuç ölçüldü: senin onayladığın madde sayısı 83'ten 88'e çıktı, açık madde 53'ten 48'e indi. Beş maddeye yalnız senin onayın atıldı — Burak'ın onay kutusuna dokunulmadı, o kendisinin.",
+      "Durum: değişiklik ZATEN CANLIDA (panodaki kutular sunucu tarafında işaretlendi, yayın gerektirmedi). Panoyu açtığında görüyorsun.",
+    ],
+  },
+  {
     id: "20260828-27-agustos-toplantisi-komuta-merkezine",
     date: "28 Ağustos 2026",
     title:
