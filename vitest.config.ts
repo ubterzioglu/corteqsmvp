@@ -1,5 +1,5 @@
 import { defineConfig } from "vitest/config";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
@@ -12,10 +12,7 @@ export default defineConfig({
     // dosya süreleri 1 sn -> 17-53 sn'ye çıkıyordu). Testlerin kendisi hızlı — sınır,
     // makine yükü payı bırakacak kadar gevşetildi.
     testTimeout: 15_000,
-    // jsdom'un dolaylı bağımlılıklarından biri Node'un yerleşik `punycode`
-    // modülünü yükleyerek her worker için aynı DEP0040 uyarısını basıyor. Bu,
-    // uygulama kodundan gelmeyen bilinen upstream gürültüdür.
-    poolOptions: { forks: { execArgv: ["--no-deprecation"] } },
+    execArgv: ["--no-deprecation"],
     setupFiles: ["./src/test/setup.ts"],
     include: [
       "src/**/*.{test,spec}.{ts,tsx}",
@@ -27,6 +24,6 @@ export default defineConfig({
     ],
   },
   resolve: {
-    alias: { "@": path.resolve(__dirname, "./src") },
+    alias: { "@": path.resolve(import.meta.dirname, "./src") },
   },
 });

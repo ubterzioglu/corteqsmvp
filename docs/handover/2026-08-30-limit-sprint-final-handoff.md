@@ -28,8 +28,9 @@ Meta hesabı veya QA hesabı isteyen kabul kapıları yapılmış gibi kapatılm
 | B2+ Contributor Admin | **İlk batch hazır** | Admin-only kaynak kuyruğu, kabul/eksik bilgi/ret akışı, deny-by-default RLS, rate limit ve audit izi eklendi. Contributor self-service ayrı batch olarak açık. |
 | B3 migration runner | **Hazır** | Tek transaction, ledger, dry-run, ad/transaction guard ve gizli parola koruması testli. |
 | B4 lint | **Hazır** | Üretim kapsamında 0 error ve 0 warning; eski state okuyabilen chat callback'i regresyon testiyle düzeltildi. |
+| B4+ bağımlılık güvenliği | **Hazır** | Vite 8, Vitest 4 ve güncel jsdom/React eklentisiyle derleme-test zinciri yenilendi; üretim + geliştirme bağımlılıklarının tam `npm audit` sonucu 0 açık. |
 | B5 public gizlilik/assets | **Hazır** | Stripe rehberi private arşive alındı; production eski URL artık 404. Referanssız 49 MB video public dağıtımdan çıkarıldı. |
-| B6 bundle/yükleme | **Hazır** | Görünür route fallback var; tüm JS chunk'ları 500 KB altında, en büyüğü 458,86 KB. |
+| B6 bundle/yükleme | **Hazır** | Görünür route fallback var; tüm JS chunk'ları 500 KB altında, en büyüğü 470,37 KB. |
 | C1–C2 VIP | **Hazır** | Hash-only, tek kullanımlık, varsayılan 30 günlük ve iptal edilebilir davet; admin ve public route production'da. Canlı invalid-token smoke `noindex,nofollow` ve “Davet bulunamadı” verdi. |
 | C3–C4 WhatsApp Cloud API | **Teknik bağımlılık bekliyor** | DB/RLS, HMAC, dedupe, rate limit, 24 saat/template kapısı ve admin kuyruğu hazır. `whatsapp-webhook` ile `whatsapp-reply`, dört Meta sırrı eksik olduğu için deploy edilmedi. |
 | C5 davranış güvenliği | **Hazır** | Genel rapor/vaka/kısıtlama/audit çekirdeği ve deny-by-default admin RLS canlı. |
@@ -51,9 +52,10 @@ Meta hesabı veya QA hesabı isteyen kabul kapıları yapılmış gibi kapatılm
 ## Nihai kalite kapısı
 
 ```text
-npm test                         241 dosya, 1.676 test — geçti
+npm test                         246 dosya, 1.687 test — geçti
 npx tsc --noEmit                 geçti
 npm run lint                     0 error, 0 warning
+npm audit                        0 güvenlik açığı
 npm run build                    geçti
 npm run check:bundle             tüm JS chunk'ları < 500 KB
 npm run check:migrations         374 dosya / 374 canlı kayıt, sapma yok

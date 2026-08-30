@@ -13,5 +13,6 @@ describe("ADMIN_UPDATES", () => {
     expect(detail).toContain("0 uyarı");
     expect(detail).toContain("22/22");
     expect(detail).toContain("Referral QR");
+    expect(detail).toContain("0 güvenlik açığı");
   });
 });
