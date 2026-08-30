@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { trIncludes } from "@/lib/text-normalization";
 import { Link, useSearchParams } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Download, QrCode, Search } from "lucide-react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +23,11 @@ import {
 import type { ReferralCodeRow, ReferralGroupRow, ReferralSourceRow, ReferralTypeRow } from "@/lib/referral-codes";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdminOutletContext } from "@/components/admin/AdminLayout";
+import {
+  buildReferralTargetUrl,
+  generateReferralQrPngDataUrl,
+  generateReferralQrSvg,
+} from "@/lib/referral-qr";
 
 type ReferralUsageRow = {
   id: string;
@@ -151,7 +156,7 @@ const AdminReferralPage = () => {
     return () => {
       cancelled = true;
     };
-  }, [referralCodes]);
+  }, [referralCodes, toast]);
 
   useEffect(() => {
     if (searchParams.get("action") === "create") {
@@ -227,6 +232,33 @@ const AdminReferralPage = () => {
       toast({ title: "Kopyalandı", description: code });
     } catch {
       toast({ title: "Kopyalama başarısız", description: "Kod panoya kopyalanamadı.", variant: "destructive" });
+    }
+  };
+
+  const downloadQr = async (code: string, format: "svg" | "png") => {
+    try {
+      const targetUrl = buildReferralTargetUrl(code);
+      const anchor = document.createElement("a");
+      anchor.download = `corteqs-referral-${code}.${format}`;
+
+      if (format === "svg") {
+        const svg = await generateReferralQrSvg(targetUrl);
+        const objectUrl = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
+        anchor.href = objectUrl;
+        anchor.click();
+        URL.revokeObjectURL(objectUrl);
+      } else {
+        anchor.href = await generateReferralQrPngDataUrl(targetUrl);
+        anchor.click();
+      }
+
+      toast({ title: `QR ${format.toUpperCase()} indirildi`, description: targetUrl });
+    } catch (error) {
+      toast({
+        title: "QR üretilemedi",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     }
   };
 
@@ -439,6 +471,12 @@ const AdminReferralPage = () => {
                           <span className="font-mono text-foreground">{referral.code}</span>
                           <Button variant="outline" size="sm" onClick={() => void copyCode(referral.code)}>
                             Kopyala
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => void downloadQr(referral.code, "svg")}>
+                            <QrCode className="mr-1 h-4 w-4" /> QR SVG indir
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => void downloadQr(referral.code, "png")}>
+                            <Download className="mr-1 h-4 w-4" /> QR PNG indir
                           </Button>
                         </div>
                         <div>Source/Group/Type: <span className="font-mono text-foreground">{referral.source_code}/{referral.group_code}/{referral.type_code}</span></div>

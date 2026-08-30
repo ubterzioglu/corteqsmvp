@@ -90,6 +90,18 @@ describe("buildMemberWelcomeEmail", () => {
     expect(html).toContain('alt="CorteQS"');
   });
 
+  it("görsel, hoş geldin mesajı ve kısa başlangıç yol haritasını birlikte içerir", () => {
+    const email = buildMemberWelcomeEmail(BASE);
+
+    expect(email.html).toContain("/sharedx/maillogo.png");
+    expect(email.subject).toContain("hoş geldin");
+    expect(email.html).toContain("Nereden başlasan?");
+    expect(email.html).toContain("Profilini tamamla");
+    expect(email.html).toContain("Cadde");
+    expect(email.html).toContain("Rehber");
+    expect(email.html).toContain("Kaynaklar");
+  });
+
   it("tüm sosyal bağlantıları hem HTML hem metin sürümüne koyar", () => {
     const email = buildMemberWelcomeEmail(BASE);
 

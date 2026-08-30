@@ -423,6 +423,7 @@ export const toolCatalog = {
         "listMyCaddeCafes",
         "listMyCaddeInterests",
         "listTrendingCaddeHashtags",
+        "mapCaddeCafeJoinRequestRow",
         "recordCaddeShare",
         "reportCaddeEntity",
         "saveMyCaddeInterests",
@@ -452,6 +453,7 @@ export const toolCatalog = {
         "create_cadde_comment_v1",
         "get_cadde_feed_reach_v1",
         "join_cadde_cafe_v1",
+        "list_cadde_cafe_join_requests_v1",
         "list_cadde_feed_v1",
         "list_trending_cadde_hashtags_v1",
         "record_cadde_share_v1",
@@ -1205,6 +1207,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin/admin-submissions-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/admin-submissions-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin/admin-taxonomy-api.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1340,6 +1352,11 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-cafe-join-requests.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-carsi-api.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -1441,6 +1458,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/cadde-post-target-fold.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-promotion-flow.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
@@ -2100,6 +2122,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/referral-qr.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/referral-qr.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/relocation-admin-api.ts",
       "kind": "ts",
       "module_family": "relocation"
@@ -2176,6 +2208,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/relocation-tools-career.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-category.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
@@ -2321,6 +2358,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/relocation-tools-types.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-weakest.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tools-weakest.ts",
       "kind": "ts",
       "module_family": "relocation"
     },

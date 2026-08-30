@@ -15,6 +15,7 @@ import type { AdminRouteMeta } from "./admin-shell-types";
 export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin",
   "/admin/referral",
+  "/admin/submissions",
   "/admin/referral/sources",
   "/admin/referral/groups",
   "/admin/referral/types",

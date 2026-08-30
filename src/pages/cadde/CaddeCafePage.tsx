@@ -7,7 +7,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-import { Archive, Clock3, KeyRound, MapPin, ShieldQuestion, Users } from "lucide-react";
+import { Archive, Clock3, ExternalLink, KeyRound, MapPin, ShieldQuestion, Users } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
@@ -262,9 +262,29 @@ const CaddeCafePage = () => {
               {pendingMembers.map((member) => (
                 <div key={member.id} className="rounded-2xl border border-amber-200 bg-white p-3">
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-slate-900">{member.displayName}</p>
+                      {member.roleLabel || member.country || member.city ? (
+                        <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-xs text-slate-500">
+                          {member.roleLabel ? <span>{member.roleLabel}</span> : null}
+                          {member.country || member.city ? (
+                            <span>{[member.country, member.city].filter(Boolean).join(" • ")}</span>
+                          ) : null}
+                        </div>
+                      ) : null}
+                      {member.shortBio ? <p className="mt-2 text-sm leading-5 text-slate-600">{member.shortBio}</p> : null}
                       {member.answer ? <p className="mt-1 text-sm text-slate-600">"{member.answer}"</p> : null}
+                      {member.hasPublicProfile ? (
+                        <Link
+                          to={`/directory/profile/${member.userId}`}
+                          className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-orange-700 hover:text-orange-800 hover:underline"
+                        >
+                          Açık profili görüntüle
+                          <ExternalLink className="h-3 w-3" aria-hidden />
+                        </Link>
+                      ) : (
+                        <p className="mt-2 text-xs text-slate-500">Profil herkese açık değil</p>
+                      )}
                     </div>
                     <div className="flex gap-2">
                       <Button size="sm" onClick={() => approveMutation.mutate({ memberId: member.id, approve: true })} disabled={approveMutation.isPending}>Onayla</Button>
@@ -273,6 +293,17 @@ const CaddeCafePage = () => {
                   </div>
                 </div>
               ))}
+            </CardContent>
+          </Card>
+        ) : null}
+
+        {isOwner && membersQuery.isError ? (
+          <Card className="border-red-200 bg-red-50/70">
+            <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
+              <p className="text-sm text-red-800">Katılım talepleri yüklenemedi.</p>
+              <Button size="sm" variant="outline" onClick={() => void membersQuery.refetch()}>
+                Tekrar dene
+              </Button>
             </CardContent>
           </Card>
         ) : null}

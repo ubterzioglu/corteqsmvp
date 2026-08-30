@@ -13,7 +13,7 @@ export const TODO_CATEGORIES = [
   'Dokümantasyon, Drive & Operasyon',
 ] as const
 
-export const TODO_ASSIGNEES = ['Atanmadi', 'UBT', 'Burak'] as const
+export const TODO_ASSIGNEES = ['Atanmadi', 'UBT', 'Burak', 'B+B'] as const
 export const TODO_STATUSES = [
   'Baslanmadi',
   'Beklemede',

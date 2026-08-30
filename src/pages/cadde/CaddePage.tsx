@@ -57,6 +57,7 @@ import { resolveCaddeClockTarget } from "@/lib/cadde-local-clock";
 import { caddeNewPostPollInterval, caddeOpenCommentsPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
 import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters } from "@/lib/cadde-format";
 import { isInternalCaddeLink } from "@/lib/cadde-links";
+import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
 import { CADDE_LIST_STALE_MS, CADDE_PROMO_STALE_MS, CADDE_REFERENCE_STALE_MS } from "@/lib/cadde-query-cache";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
@@ -352,7 +353,11 @@ const CaddePage = () => {
         navigate("/login");
         return;
       }
-      toast({ title: "Yorum gönderilemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "Yorum gönderilemedi",
+        description: error instanceof Error ? error.message : resolveCaddeRpcErrorMessage(error),
+        variant: "destructive",
+      });
     },
   });
 
@@ -582,6 +587,13 @@ const CaddePage = () => {
               Zil şeridin SAĞ ucunda KALIR (kullanıcı kararı 04.08.2026): araya giren
               açıklama metni flex-1 ile esneyip zili sağa iter, ayraç zilin solunda kalır. */}
           <div className="cadde-card flex flex-wrap items-center gap-x-3 gap-y-2 rounded-[20px] px-4 py-3 sm:px-5">
+            <img
+              src="/newlogo.png"
+              alt="CorteQS Cadde"
+              width={36}
+              height={36}
+              className="h-9 w-9 shrink-0 rounded-full object-contain"
+            />
             <CardTitle className="font-display text-xl">Diaspora Cadde</CardTitle>
             <Badge className="cadde-chip-brand shrink-0">CorteQS Cadde</Badge>
             {/* Filtre özeti rozeti ("Global Akış") kaldırıldı — kullanıcı kararı

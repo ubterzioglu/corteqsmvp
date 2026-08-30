@@ -105,6 +105,7 @@ export interface CommandCenterItemCounts {
   meetingNote: number
   burak: number
   ubt: number
+  bb: number
   team: number
 }
 
@@ -197,6 +198,7 @@ const ASSIGNEE_LABELS: Record<string, string> = {
   Atanmadi: 'Atanmadı',
   UBT: 'UBT',
   Burak: 'Burak',
+  'B+B': 'Barış + Burak',
 }
 
 const ITEM_TYPE_LABELS: Record<CommandCenterItemType, string> = {
@@ -1130,6 +1132,7 @@ export function buildCommandCenterItemCounts(
     meetingNote: 0,
     burak: 0,
     ubt: 0,
+    bb: 0,
     team: 0,
   }
 
@@ -1144,6 +1147,8 @@ export function buildCommandCenterItemCounts(
         counts.burak += itemCount
       } else if (facet.assignee === 'UBT') {
         counts.ubt += itemCount
+      } else if (facet.assignee === 'B+B') {
+        counts.bb += itemCount
       }
 
       continue

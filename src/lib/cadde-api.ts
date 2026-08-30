@@ -457,30 +457,49 @@ export async function listMyCaddeCafes(userId: string): Promise<CaddeCafe[]> {
   }
 }
 
-/** Cafe üye listesi (owner onay paneli) — adlarla birlikte. */
+type CaddeCafeJoinRequestRow = {
+  member_id: string;
+  user_id: string;
+  status: CaddeCafeMember["status"];
+  answer: string | null;
+  joined_at: string;
+  display_name: string | null;
+  country: string | null;
+  city: string | null;
+  role_key: string | null;
+  role_label: string | null;
+  short_bio: string | null;
+  has_public_profile: boolean;
+};
+
+/** RPC satırını istemcideki sınırlı, iletişim bilgisi içermeyen özete çevirir. */
+export function mapCaddeCafeJoinRequestRow(row: CaddeCafeJoinRequestRow): CaddeCafeMember {
+  return {
+    id: row.member_id,
+    userId: row.user_id,
+    status: row.status,
+    answer: row.answer,
+    joinedAt: row.joined_at,
+    displayName: row.display_name?.trim() || FALLBACK_PROFILE_NAME,
+    country: row.country,
+    city: row.city,
+    roleKey: row.role_key,
+    roleLabel: row.role_label,
+    shortBio: row.short_bio,
+    hasPublicProfile: row.has_public_profile === true,
+  };
+}
+
+/** Cafe katılım talepleri — yalnız host/admin/mod için güvenli RPC özeti. */
 export async function listCaddeCafeMembers(cafeId: string): Promise<CaddeCafeMember[]> {
   if (!isSupabaseConfigured) return [];
 
   try {
-    const { data, error } = await db
-      .from("cadde_cafe_members")
-      .select("id, cafe_id, user_id, status, answer, joined_at")
-      .eq("cafe_id", cafeId)
-      .order("joined_at", { ascending: true });
+    const { data, error } = await db.rpc("list_cadde_cafe_join_requests_v1", { p_cafe_id: cafeId });
     if (error) throw error;
-    const rows = (data ?? []) as CaddeCafeMemberRow[];
-    const names = await fetchUserNameMap(rows.map((row) => row.user_id));
-    return rows.map((row) => ({
-      id: row.id,
-      userId: row.user_id,
-      status: row.status,
-      answer: row.answer,
-      joinedAt: row.joined_at,
-      displayName: names.get(row.user_id) ?? FALLBACK_PROFILE_NAME,
-    }));
+    return ((data ?? []) as CaddeCafeJoinRequestRow[]).map(mapCaddeCafeJoinRequestRow);
   } catch (error: unknown) {
-    reportCaddeApiError("listCaddeCafeMembers", error);
-    return [];
+    throw caddeReadError("listCaddeCafeMembers", error);
   }
 }
 

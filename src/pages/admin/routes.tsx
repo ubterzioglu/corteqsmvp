@@ -27,6 +27,7 @@ import { adminWorkshopRoutes } from "./workshop/routes";
 const AdminLayout = lazy(() => import("@/components/admin/AdminLayout"));
 const AdminDashboardPage = lazy(() => import("@/pages/admin/dashboard/AdminDashboardPage"));
 const AdminReferralPage = lazy(() => import("@/pages/admin/AdminReferralPage"));
+const AdminSubmissionsPage = lazy(() => import("@/pages/admin/AdminSubmissionsPage"));
 const AdminReferralSourcesPage = lazy(() => import("@/pages/admin/AdminReferralSourcesPage"));
 const AdminReferralGroupsPage = lazy(() => import("@/pages/admin/AdminReferralGroupsPage"));
 const AdminReferralTypesPage = lazy(() => import("@/pages/admin/AdminReferralTypesPage"));
@@ -80,6 +81,7 @@ export const adminRoutes = (
   <Route path="/admin" element={<AdminLayout />}>
     <Route index element={<AdminDashboardPage />} />
     <Route path="referral" element={<AdminReferralPage />} />
+    <Route path="submissions" element={<AdminSubmissionsPage />} />
     <Route path="referral/sources" element={<AdminReferralSourcesPage />} />
     <Route path="referral/groups" element={<AdminReferralGroupsPage />} />
     <Route path="referral/types" element={<AdminReferralTypesPage />} />

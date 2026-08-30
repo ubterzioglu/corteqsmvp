@@ -29,6 +29,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { createCaddeComment, listCaddePostComments } from "@/lib/cadde-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
 import { insertTextAtSelection, type TextSelection } from "@/lib/cadde-text-insert";
 import type { CaddeCommentCursor } from "@/lib/cadde-types";
 
@@ -70,7 +71,7 @@ const CaddePostComments = ({ postId, commentCount, canComment, onCommentAdded }:
     onError: (error: unknown) => {
       toast({
         title: "Yorum gönderilemedi",
-        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        description: error instanceof Error ? error.message : resolveCaddeRpcErrorMessage(error),
         variant: "destructive",
       });
     },

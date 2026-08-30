@@ -76,6 +76,7 @@ const listCaddePostCommentsMock = vi.fn();
 const createCaddeCommentMock = vi.fn();
 const createCaddePostMock = vi.fn();
 const recordCaddeShareMock = vi.fn();
+const toastMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
@@ -86,7 +87,7 @@ vi.mock("@/hooks/cadde/useCaddeActorContext", () => ({
 }));
 
 vi.mock("@/hooks/use-toast", () => ({
-  useToast: () => ({ toast: vi.fn() }),
+  useToast: () => ({ toast: toastMock }),
 }));
 
 vi.mock("@/lib/cadde-api", async () => {
@@ -140,6 +141,7 @@ const renderPage = (entry = "/cadde") => {
 
 describe("CaddePage", () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     actorContextMock.mockReturnValue({ data: makeActorContext(), isLoading: false });
     countCaddePostsSinceMock.mockResolvedValue(0);
     listCaddePromotionsMock.mockResolvedValue([]);
@@ -213,6 +215,9 @@ describe("CaddePage", () => {
 
     // Composer artık tek kutu: başlıklı kart yerine aria-label'lı metin alanı.
     expect(await screen.findByLabelText("Paylaşım metni")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "CorteQS Cadde" })).toHaveAttribute("src", "/newlogo.png");
+    expect(screen.getByRole("img", { name: "CorteQS Cadde" })).toHaveAttribute("width", "36");
+    expect(screen.getByRole("img", { name: "CorteQS Cadde" })).toHaveAttribute("height", "36");
     expect(screen.queryByText(/Caddeye çıkmak için profilini tamamla/i)).not.toBeInTheDocument();
   });
 
@@ -509,6 +514,42 @@ describe("CaddePage", () => {
     fireEvent.click(screen.getByRole("button", { name: /Gönder/i }));
 
     await waitFor(() => expect(createCaddeCommentMock).toHaveBeenCalledWith("post-enter", "Butonla yorum"));
+  });
+
+  it("keeps the draft and maps a plain PostgREST comment error without crashing", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({ items: [makeFeedPost({ id: "post-error" })], nextPage: null });
+    listCaddePostCommentsMock.mockResolvedValue({ items: [], nextCursor: null });
+    createCaddeCommentMock.mockRejectedValue({
+      code: "P0001",
+      details: null,
+      hint: null,
+      message: "cadde_rate_limited",
+    });
+
+    renderPage();
+
+    fireEvent.click(await screen.findByTestId("cadde-comment-toggle"));
+    const textarea = await screen.findByPlaceholderText("Yorum yaz");
+    fireEvent.change(textarea, { target: { value: "Taslağım kaybolmasın" } });
+    fireEvent.click(screen.getByRole("button", { name: "Gönder" }));
+
+    await waitFor(() =>
+      expect(toastMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: "Yorum gönderilemedi",
+          description: expect.stringMatching(/çok sık|bekle/i),
+          variant: "destructive",
+        }),
+      ),
+    );
+    expect(textarea).toHaveValue("Taslağım kaybolmasın");
+    expect(screen.getByTestId("cadde-feed-card")).toBeInTheDocument();
   });
 
   it("inserts a selected emoji into the open comment draft at the current caret", async () => {

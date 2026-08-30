@@ -4,7 +4,9 @@ import {
   buildCommandCenterDateGroupOptions,
   buildCommandCenterItemCounts,
   buildCommandCenterSourceBreakdown,
+  createEmptyCommandCenterFormState,
   getCommandCenterDateGroupInfo,
+  validateCommandCenterFormState,
   type CommandCenterFacetRow,
 } from './command-center-items'
 
@@ -189,18 +191,33 @@ describe('buildCommandCenterItemCounts', () => {
     const counts = buildCommandCenterItemCounts([
       facet({ item_type: 'todo', assignee: 'UBT', item_count: 12 }),
       facet({ item_type: 'todo', assignee: 'Burak', item_count: 7 }),
+      facet({ item_type: 'todo', assignee: 'B+B', item_count: 3 }),
       facet({ item_type: 'todo', assignee: 'Atanmadi', item_count: 2 }),
       waFacet('2 Ağustos 2026', { item_count: 329 }),
     ])
 
     expect(counts).toEqual({
-      total: 350,
-      todo: 21,
+      total: 353,
+      todo: 24,
       meetingNote: 329,
       burak: 7,
       ubt: 12,
+      bb: 3,
       // Eski sorgu ikilisiyle aynı: "team" de toplantı notlarını sayar.
       team: 329,
     })
+  })
+})
+
+describe('validateCommandCenterFormState', () => {
+  it('B+B ortak atamasını kabul eder', () => {
+    const state = createEmptyCommandCenterFormState({
+      title: 'Ortak görev',
+      detail: 'Barış ve Burak birlikte tamamlayacak.',
+      categoryLabel: 'Genel',
+      assignee: 'B+B',
+    })
+
+    expect(validateCommandCenterFormState(state)).toBeNull()
   })
 })

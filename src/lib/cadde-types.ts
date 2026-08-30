@@ -342,6 +342,12 @@ export type CaddeCafeMember = {
   answer: string | null;
   joinedAt: string;
   displayName: string;
+  country: string | null;
+  city: string | null;
+  roleKey: string | null;
+  roleLabel: string | null;
+  shortBio: string | null;
+  hasPublicProfile: boolean;
 };
 
 export type CaddeCafeCreateInput = {

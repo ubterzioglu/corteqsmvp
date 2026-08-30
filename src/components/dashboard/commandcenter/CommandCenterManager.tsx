@@ -541,6 +541,9 @@ export default function CommandCenterManager({
           <span className="rounded-full bg-[rgba(14,165,233,0.14)] px-3 py-1 text-sky-700">
             Kim: UBT {itemCounts.ubt}
           </span>
+          <span className="rounded-full bg-[rgba(124,58,237,0.14)] px-3 py-1 text-violet-700">
+            Kim: B+B {itemCounts.bb}
+          </span>
           <span className="rounded-full bg-[rgba(99,102,241,0.14)] px-3 py-1 text-indigo-700">
             Kim: Takım {itemCounts.team}
           </span>

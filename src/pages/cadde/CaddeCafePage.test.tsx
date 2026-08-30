@@ -13,13 +13,14 @@ const listCafeFeedMock = vi.fn();
 const listCafeMembersMock = vi.fn();
 const listPostCommentsMock = vi.fn();
 const createCommentMock = vi.fn();
+const toastMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => useAuthMock(),
 }));
 
 vi.mock("@/hooks/use-toast", () => ({
-  useToast: () => ({ toast: vi.fn() }),
+  useToast: () => ({ toast: toastMock }),
 }));
 
 vi.mock("@/lib/cadde-api", async () => {
@@ -110,15 +111,50 @@ describe("CaddeCafePage", () => {
     useAuthMock.mockReturnValue({ session: { user: { id: "host-1" } }, user: { id: "host-1" }, isLoading: false });
     getCaddeCafeMock.mockResolvedValue(makeCafe({ hostUserId: "host-1", viewerMemberStatus: "approved", joinedByViewer: true }));
     listCafeMembersMock.mockResolvedValue([
-      { id: "m1", userId: "u2", status: "pending", answer: "Backend geliştiriciyim", joinedAt: new Date().toISOString(), displayName: "Mert K." },
+      {
+        id: "m1",
+        userId: "u2",
+        status: "pending",
+        answer: "Backend geliştiriciyim",
+        joinedAt: new Date().toISOString(),
+        displayName: "Mert K.",
+        country: "Almanya",
+        city: "Berlin",
+        roleKey: "User_Standard",
+        roleLabel: "Bireysel Üye",
+        shortBio: "Dağıtık sistemlerle ilgileniyorum.",
+        hasPublicProfile: true,
+      },
+      {
+        id: "m2",
+        userId: "u3",
+        status: "pending",
+        answer: null,
+        joinedAt: new Date().toISOString(),
+        displayName: "Zeynep T.",
+        country: null,
+        city: null,
+        roleKey: "User_Standard",
+        roleLabel: "Bireysel Üye",
+        shortBio: null,
+        hasPublicProfile: false,
+      },
     ]);
 
     renderPage();
 
     expect(await screen.findByText("Üye Onay Paneli")).toBeInTheDocument();
     expect(screen.getByText(/Backend geliştiriciyim/)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Onayla" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Reddet" })).toBeInTheDocument();
+    expect(screen.getAllByText("Almanya • Berlin")).toHaveLength(2);
+    expect(screen.getAllByText("Bireysel Üye")).toHaveLength(2);
+    expect(screen.getByText("Dağıtık sistemlerle ilgileniyorum.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Açık profili görüntüle" })).toHaveAttribute(
+      "href",
+      "/directory/profile/u2",
+    );
+    expect(screen.getByText("Profil herkese açık değil")).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "Onayla" })).toHaveLength(2);
+    expect(screen.getAllByRole("button", { name: "Reddet" })).toHaveLength(2);
   });
 
   it("renders a not-found state when the cafe does not exist", async () => {

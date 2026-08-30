@@ -116,6 +116,16 @@ export const adminNavGroups: AdminNavGroup[] = [
         aliases: ["içe aktar", "ice aktar", "import", "toplu", "csv", "json", "profil yükle", "deep research"],
       },
       {
+        id: "submissions",
+        label: "Üye Takibi",
+        shortLabel: "Başvurular",
+        description: "Kayıt açıklamalarını, ihtiyaçları, referral bilgisini ve güvenli ekleri incele.",
+        to: "/admin/submissions",
+        icon: FileText,
+        accent: "sky",
+        aliases: ["başvuru", "kayıt formu", "üye takibi", "ek dosya", "iş arıyorum"],
+      },
+      {
         id: "approvals",
         label: "Approval Queue",
         description: "Bekleyen talepleri incele, onayla veya reddet.",
