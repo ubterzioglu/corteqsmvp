@@ -1932,6 +1932,28 @@ const ProfilePage = () => {
           </Card>
   );
 
+  const contributorResourcesCard = profile?.roleKey === "User_Contributor" ? (
+    <Card className={`overflow-hidden ${GOOGLE_SOFT_CARD_GREEN_SECTION}`}>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-base">
+          <MapPin className="h-5 w-5 text-emerald-600" />
+          Contributor Kaynakları
+        </CardTitle>
+        <CardDescription>
+          Şehrinde kontrol ettiğin işletme, topluluk, etkinlik ve hizmetleri incelemeye gönder.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <a
+          href="/contributor/resources"
+          className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          Şehrinden kaynak öner
+        </a>
+      </CardContent>
+    </Card>
+  ) : null;
+
   const accessCard = (
       <Card className={`overflow-hidden ${GOOGLE_SOFT_CARD_RED_SECTION}`}>
         <CardHeader className="p-0">
@@ -2188,6 +2210,7 @@ const ProfilePage = () => {
           onShowHelp={scrollToHelpCard}
           onSignOut={() => void handleSignOut()}
         />
+        {contributorResourcesCard}
         <PremiumProfileTabs
           settingsContent={premiumSettingsContent}
           activeTab={premiumActiveTab}
@@ -2210,6 +2233,7 @@ const ProfilePage = () => {
         {linkCardsGrid}
         {documentsGrid}
         {roleSpecificCard}
+        {contributorResourcesCard}
       </div>
       {accessCard}
       {helpCard}

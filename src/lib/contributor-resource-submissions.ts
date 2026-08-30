@@ -89,6 +89,7 @@ export function validateContributorResourceInput(input: ContributorResourceInput
   try {
     const parsed = new URL(input.sourceUrl.trim());
     if (!(["http:", "https:"] as string[]).includes(parsed.protocol)) throw new Error("unsafe protocol");
+    if (parsed.username || parsed.password) return "Kaynak adresinde kullanıcı adı veya parola bulunamaz.";
   } catch {
     return "Birincil kaynak adresi http veya https ile başlayan geçerli bir URL olmalı.";
   }
@@ -145,6 +146,41 @@ export async function createContributorResourceSubmission(input: ContributorReso
     p_conflict_disclosure: input.conflictDisclosure.trim() || undefined,
   });
   if (error) throw error;
+  if (typeof data !== "string") throw new Error("Kaynak gönderimi oluşturulamadı.");
+  return data;
+}
+
+export async function listMyContributorResourceSubmissions(): Promise<ContributorResourceSubmission[]> {
+  return listContributorResourceSubmissions();
+}
+
+export async function submitContributorResourceSubmission(input: ContributorResourceInput): Promise<string> {
+  const validationError = validateContributorResourceInput(input);
+  if (validationError) throw new Error(validationError);
+
+  const { data, error } = await supabase.rpc("submit_contributor_resource_submission", {
+    p_resource_type: input.resourceType,
+    p_display_name: input.displayName.trim(),
+    p_country: input.country.trim(),
+    p_city: input.city.trim(),
+    p_source_url: input.sourceUrl.trim(),
+    p_summary: input.summary.trim(),
+    p_verified_on: input.verifiedOn,
+    p_permission_status: input.permissionStatus,
+    p_conflict_disclosure: input.conflictDisclosure.trim() || undefined,
+  });
+  if (error) {
+    if (error.message.includes("contributor_role_required")) {
+      throw new Error("Kaynak göndermek için aktif Contributor rolü gerekli.");
+    }
+    if (error.message.includes("rate_limit_exceeded")) {
+      throw new Error("Bir saatte en fazla 10 kaynak gönderebilirsin. Lütfen daha sonra tekrar dene.");
+    }
+    if (error.message.includes("source_already_submitted")) {
+      throw new Error("Bu bağlantıyı daha önce incelemeye gönderdin.");
+    }
+    throw error;
+  }
   if (typeof data !== "string") throw new Error("Kaynak gönderimi oluşturulamadı.");
   return data;
 }

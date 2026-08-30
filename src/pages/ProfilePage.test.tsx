@@ -517,6 +517,36 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Profil Alanları")).toBeInTheDocument();
   });
 
+  it("shows the source intake shortcut only for Contributor role", async () => {
+    useAuthMock.mockReturnValue({
+      user: { id: "u-1", email: "contributor@test.com", user_metadata: {} },
+    });
+    useCurrentUserDashboardMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      items: [],
+      refreshDashboard: vi.fn(),
+    });
+    useCurrentUserProfileMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      profile: {
+        ...baseProfile,
+        profileType: "User_Contributor",
+        roleKey: "User_Contributor",
+        roleLabel: "Contributor",
+        roleSlug: "User_Contributor",
+      },
+      refreshProfile: vi.fn(),
+    });
+
+    renderProfilePage("/profile/bireysel");
+
+    expect(await screen.findByText("Contributor Kaynakları")).toBeInTheDocument();
+    const shortcut = screen.getByText("Şehrinden kaynak öner");
+    expect(shortcut.closest("a")).toHaveAttribute("href", "/contributor/resources");
+  });
+
   it("redirects flat-role user to its mapped UI category with a single redirect", async () => {
     useAuthMock.mockReturnValue({
       user: { id: "u-1", email: "desiremapde@gmail.com", user_metadata: {} },

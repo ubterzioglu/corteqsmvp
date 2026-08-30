@@ -30,6 +30,10 @@ describe("contributor resource submissions", () => {
       sourceUrl: "javascript:alert(1)",
       verifiedOn: "",
     })).toMatch(/ad|http|kontrol/i);
+    expect(validateContributorResourceInput({
+      ...validInput,
+      sourceUrl: "https://user:secret@example.org/private",
+    })).toMatch(/kullanıcı adı|parola/i);
   });
 
   it("does not trust unknown database statuses", () => {

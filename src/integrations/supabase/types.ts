@@ -14373,6 +14373,20 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      submit_contributor_resource_submission: {
+        Args: {
+          p_city: string
+          p_conflict_disclosure?: string
+          p_country: string
+          p_display_name: string
+          p_permission_status?: string
+          p_resource_type: string
+          p_source_url: string
+          p_summary: string
+          p_verified_on: string
+        }
+        Returns: string
+      }
       submit_feature_request: {
         Args: { feature_key: string; payload?: Json }
         Returns: string

@@ -7,7 +7,7 @@
 ## Sonuç
 
 Sprint A0–D4 kapsamındaki uygulanabilir teknik işler ve sonraki kalan işler taraması küçük ve bağımsız commit'lerle
-tamamlandı. Canlı veritabanı 374/374 migration ile yerel ledger'a eşit. VIP, müşteri
+tamamlandı. Canlı veritabanı 375/375 migration ile yerel ledger'a eşit. VIP, müşteri
 talepleri, platform moderasyonu, konumlu araç raporu ve terk edilmiş başvuru altyapıları
 canlı veritabanında; yeni frontend route'ları da production'da. İnsan onayı, gerçek inbox,
 Meta hesabı veya QA hesabı isteyen kabul kapıları yapılmış gibi kapatılmadı.
@@ -25,7 +25,7 @@ Meta hesabı veya QA hesabı isteyen kabul kapıları yapılmış gibi kapatılm
 | A6 test gürültüsü | **Hazır** | Tam pakette açıklanmamış stderr yok. |
 | B1 WhatsApp listeleme paketi | **İnsan onayı bekliyor** | Listeleme ölçütleri ve kısa/uzun paylaşım metinleri hazır; dışarıya paylaşılmadı. |
 | B2 Contributor paketi | **İnsan onayı bekliyor** | FAQ, kaynak sınıfları ve kabul SOP'si hazır; contributor'a ulaşılmadı. |
-| B2+ Contributor Admin | **İlk batch hazır** | Admin-only kaynak kuyruğu, kabul/eksik bilgi/ret akışı, deny-by-default RLS, rate limit ve audit izi eklendi. Contributor self-service ayrı batch olarak açık. |
+| B2+ Contributor kaynak akışı | **Hazır** | Admin kabul/eksik bilgi/ret kuyruğuna ek olarak aktif Contributor kendi hesabından kaynak gönderebiliyor ve yalnız kendi durumunu görebiliyor. Rol kontrolü, saatlik limit, deny-by-default RLS ve audit izi canlı. |
 | B3 migration runner | **Hazır** | Tek transaction, ledger, dry-run, ad/transaction guard ve gizli parola koruması testli. |
 | B4 lint | **Hazır** | Üretim kapsamında 0 error ve 0 warning; eski state okuyabilen chat callback'i regresyon testiyle düzeltildi. |
 | B4+ bağımlılık güvenliği | **Hazır** | Vite 8, Vitest 4 ve güncel jsdom/React eklentisiyle derleme-test zinciri yenilendi; üretim + geliştirme bağımlılıklarının tam `npm audit` sonucu 0 açık. |
@@ -59,7 +59,7 @@ npm run lint                     0 error, 0 warning
 npm audit                        0 güvenlik açığı
 npm run build                    geçti
 npm run check:bundle             tüm JS chunk'ları < 500 KB
-npm run check:migrations         374 dosya / 374 canlı kayıt, sapma yok
+npm run check:migrations         375 dosya / 375 canlı kayıt, sapma yok
 npm run check:drift              drift yok
 npm run verify:release           yerel geçti
 BASE_URL=https://corteqs.net npm run verify:release  canlı geçti
