@@ -456,6 +456,16 @@ export const adminNavGroups: AdminNavGroup[] = [
         aliases: ["dosya", "link", "kaynak", "resources"],
       },
       {
+        id: "contributor-resources",
+        label: "Contributor Kaynakları",
+        shortLabel: "Contributor",
+        description: "Yerel kaynak gönderimlerini incele, eksik bilgi iste veya kabul et.",
+        to: "/admin/contributor-resources",
+        icon: FolderOpen,
+        accent: "emerald",
+        aliases: ["contributor", "katkı", "kaynak kuyruğu", "yerel kaynak"],
+      },
+      {
         id: "workspace-mvp",
         label: "MVP Listesi",
         description: "MVP takip listesi.",

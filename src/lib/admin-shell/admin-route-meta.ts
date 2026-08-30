@@ -33,6 +33,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/social-share-vault",
   "/admin/vip-invitations",
   "/admin/customer-requests",
+  "/admin/contributor-resources",
   "/admin/surveys",
   "/admin/surveys/new",
   "/admin/surveys/:id/edit",

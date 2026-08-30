@@ -3989,6 +3989,118 @@ export type Database = {
         }
         Relationships: []
       }
+      contributor_resource_submission_events: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          from_status: string | null
+          id: number
+          note: string | null
+          submission_id: string
+          to_status: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          from_status?: string | null
+          id?: never
+          note?: string | null
+          submission_id: string
+          to_status: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          from_status?: string | null
+          id?: never
+          note?: string | null
+          submission_id?: string
+          to_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contributor_resource_submission_events_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "contributor_resource_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contributor_resource_submissions: {
+        Row: {
+          canonical_submission_id: string | null
+          city: string
+          conflict_disclosure: string | null
+          country: string
+          created_at: string
+          decision_note: string | null
+          display_name: string
+          id: string
+          permission_status: string
+          resource_type: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          source_url: string
+          status: string
+          submitted_by: string
+          summary: string
+          updated_at: string
+          verified_on: string
+        }
+        Insert: {
+          canonical_submission_id?: string | null
+          city: string
+          conflict_disclosure?: string | null
+          country: string
+          created_at?: string
+          decision_note?: string | null
+          display_name: string
+          id?: string
+          permission_status?: string
+          resource_type: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_url: string
+          status?: string
+          submitted_by: string
+          summary: string
+          updated_at?: string
+          verified_on: string
+        }
+        Update: {
+          canonical_submission_id?: string | null
+          city?: string
+          conflict_disclosure?: string | null
+          country?: string
+          created_at?: string
+          decision_note?: string | null
+          display_name?: string
+          id?: string
+          permission_status?: string
+          resource_type?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_url?: string
+          status?: string
+          submitted_by?: string
+          summary?: string
+          updated_at?: string
+          verified_on?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contributor_resource_submissions_canonical_submission_id_fkey"
+            columns: ["canonical_submission_id"]
+            isOneToOne: false
+            referencedRelation: "contributor_resource_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contributor_social_media_links: {
         Row: {
           added_by: string
@@ -12065,6 +12177,20 @@ export type Database = {
         Args: { feature_key: string; target_user_id: string }
         Returns: undefined
       }
+      admin_create_contributor_resource_submission: {
+        Args: {
+          p_city: string
+          p_conflict_disclosure?: string
+          p_country: string
+          p_display_name: string
+          p_permission_status?: string
+          p_resource_type: string
+          p_source_url: string
+          p_summary: string
+          p_verified_on: string
+        }
+        Returns: string
+      }
       admin_create_service_finder_job: {
         Args: { p_payload: Json }
         Returns: Json
@@ -12327,6 +12453,15 @@ export type Database = {
       admin_review_catalog_import: {
         Args: { p_decision: string; p_item_id: string; p_note?: string }
         Returns: Json
+      }
+      admin_review_contributor_resource_submission: {
+        Args: {
+          p_canonical_submission_id?: string
+          p_decision_note?: string
+          p_status: string
+          p_submission_id: string
+        }
+        Returns: undefined
       }
       admin_review_relocation_candidate: {
         Args: { p_action: string; p_candidate_id: string; p_notes: string }
