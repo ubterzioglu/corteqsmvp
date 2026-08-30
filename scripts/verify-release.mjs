@@ -45,11 +45,14 @@ const ensureStatusOk = async (url, expectedContentTypes) => {
   return response;
 };
 
-const extractHtmlAssets = (html) => {
-  const scriptMatch = html.match(/<script type="module" crossorigin src="([^"]+)"><\/script>/i);
+export const extractHtmlAssets = (html) => {
+  const moduleScripts = [
+    ...html.matchAll(/<script type="module" crossorigin src="([^"]+)"><\/script>/gi),
+  ].map((match) => match[1]);
+  const mainScript = moduleScripts.find((scriptPath) => /^main-[^/]+\.js$/i.test(path.basename(scriptPath)));
   const styleMatch = html.match(/<link rel="stylesheet" crossorigin href="([^"]+)">/i);
 
-  if (!scriptMatch?.[1]) {
+  if (!mainScript) {
     fail("dist/index.html does not contain the main module script");
   }
 
@@ -58,13 +61,16 @@ const extractHtmlAssets = (html) => {
   }
 
   return {
-    mainScript: scriptMatch[1],
+    mainScript,
     mainStyle: styleMatch[1],
   };
 };
 
-const extractMuhasebeChunks = (jsSource) => {
-  const matches = jsSource.match(/(?:\/)?assets\/(?:MuhasebeLayout|MuhasebeDashboard|GiderlerPage|GelirlerPage|NakitAkisiPage)-[^"')\\\s]+\.js/g) ?? [];
+export const extractMuhasebeChunks = (jsSource) => {
+  const matches =
+    jsSource.match(
+      /(?:\/)?assets\/(?:MuhasebeLayout|MuhasebeDashboard|GiderlerPage|GelirlerPage|NakitAkisiPage)-[A-Za-z0-9_-]+\.js/g,
+    ) ?? [];
   return [...new Set(matches)].map((chunkPath) => (chunkPath.startsWith("/") ? chunkPath : `/${chunkPath}`));
 };
 
@@ -123,10 +129,12 @@ const verifyRemoteRelease = async () => {
   }
 };
 
-await verifyLocalRelease();
-ok("local dist release looks consistent");
+if (process.argv[1] && path.resolve(process.argv[1]) === __filename) {
+  await verifyLocalRelease();
+  ok("local dist release looks consistent");
 
-if (baseUrl) {
-  await verifyRemoteRelease();
-  ok(`remote release check passed for ${baseUrl}`);
+  if (baseUrl) {
+    await verifyRemoteRelease();
+    ok(`remote release check passed for ${baseUrl}`);
+  }
 }
