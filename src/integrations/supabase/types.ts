@@ -8400,6 +8400,24 @@ export type Database = {
           },
         ]
       }
+      relocation_tool_reminder_preferences: {
+        Row: {
+          opted_out: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          opted_out?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          opted_out?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       relocation_tool_results: {
         Row: {
           created_at: string
@@ -8491,7 +8509,12 @@ export type Database = {
           consent_profile_write: boolean
           expires_at: string
           id: string
+          last_activity_at: string
           mode: string
+          reminder_queued_at: string | null
+          reminder_sent_at: string | null
+          reminder_status: string
+          reminder_status_reason: string | null
           source_move_id: string | null
           started_at: string
           status: string
@@ -8504,7 +8527,12 @@ export type Database = {
           consent_profile_write?: boolean
           expires_at?: string
           id?: string
+          last_activity_at?: string
           mode: string
+          reminder_queued_at?: string | null
+          reminder_sent_at?: string | null
+          reminder_status?: string
+          reminder_status_reason?: string | null
           source_move_id?: string | null
           started_at?: string
           status?: string
@@ -8517,7 +8545,12 @@ export type Database = {
           consent_profile_write?: boolean
           expires_at?: string
           id?: string
+          last_activity_at?: string
           mode?: string
+          reminder_queued_at?: string | null
+          reminder_sent_at?: string | null
+          reminder_status?: string
+          reminder_status_reason?: string | null
           source_move_id?: string | null
           started_at?: string
           status?: string
@@ -13336,6 +13369,14 @@ export type Database = {
         Returns: undefined
       }
       relocation_require_user: { Args: never; Returns: string }
+      get_relocation_tool_reminder_preference: {
+        Args: never
+        Returns: Json
+      }
+      enqueue_relocation_tool_abandonment_reminders: {
+        Args: { p_limit?: number }
+        Returns: number
+      }
       relocation_save_wizard: {
         Args: { p_move_id: string; p_payload: Json }
         Returns: undefined
@@ -13402,6 +13443,10 @@ export type Database = {
       }
       relocation_tool_start_session: {
         Args: { p_mode: string; p_source_move_id?: string; p_tool_key: string }
+        Returns: Json
+      }
+      set_relocation_tool_reminder_opt_out: {
+        Args: { p_opted_out: boolean }
         Returns: Json
       }
       relocation_update_move: {

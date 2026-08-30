@@ -235,4 +235,32 @@ describe("QuestionStepper", () => {
     );
     expect(hasMinHeight).toBe(true);
   });
+
+  it("kayıtlı cevaplarla ilk eksik sorudan devam eder", () => {
+    render(
+      <QuestionStepper
+        questions={[q("q1", "single", 1), q("q2", "single", 2), q("q3", "scale", 3)]}
+        initialAnswers={{ q1: "a", q2: "b" }}
+        onComplete={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("Soru q3")).toBeInTheDocument();
+    expect(screen.getByText("3 / 3")).toBeInTheDocument();
+  });
+
+  it("her gerçek cevap değişikliğini incremental kayıt callback'ine yollar", () => {
+    const onAnswerChange = vi.fn();
+    render(
+      <QuestionStepper
+        questions={[q("q1", "single", 1)]}
+        onAnswerChange={onAnswerChange}
+        onComplete={vi.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("Seçenek B"));
+
+    expect(onAnswerChange).toHaveBeenCalledWith("q1", "b");
+  });
 });

@@ -16,8 +16,10 @@ import type { RelocationToolQuestionRow, ToolAnswerValue } from "@/lib/relocatio
 
 interface QuestionStepperProps {
   questions: RelocationToolQuestionRow[];
+  initialAnswers?: Record<string, ToolAnswerValue>;
   isSubmitting?: boolean;
   onAnswerStart?: () => void;
+  onAnswerChange?: (questionKey: string, answer: ToolAnswerValue) => void;
   onComplete: (answers: Record<string, ToolAnswerValue>) => void;
 }
 
@@ -45,13 +47,18 @@ function isEmpty(value: ToolAnswerValue | undefined): boolean {
 
 export function QuestionStepper({
   questions,
+  initialAnswers = {},
   isSubmitting = false,
   onAnswerStart,
+  onAnswerChange,
   onComplete,
 }: QuestionStepperProps) {
   const steps = useMemo(() => sortedQuestions(questions), [questions]);
-  const [index, setIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, ToolAnswerValue>>({});
+  const [index, setIndex] = useState(() => {
+    const firstMissing = steps.findIndex((step) => initialAnswers[step.question_key] === undefined);
+    return firstMissing === -1 ? Math.max(0, steps.length - 1) : firstMissing;
+  });
+  const [answers, setAnswers] = useState<Record<string, ToolAnswerValue>>(initialAnswers);
   const [showError, setShowError] = useState(false);
   // Single sorularda şık seçilince otomatik ilerleme için bekleyen timeout.
   const pendingAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -78,6 +85,7 @@ export function QuestionStepper({
 
   const setAnswer = (v: ToolAnswerValue) => {
     onAnswerStart?.();
+    onAnswerChange?.(question.question_key, v);
     setAnswers((prev) => ({ ...prev, [question.question_key]: v }));
     setShowError(false);
     // Tek seçimlik soruda (son soru değilse) şık seçimini kısa süre göster, sonra otomatik ilerle.

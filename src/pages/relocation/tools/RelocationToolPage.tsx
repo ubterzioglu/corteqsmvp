@@ -13,7 +13,11 @@ import { useToast } from "@/hooks/use-toast";
 import { QuestionStepper } from "@/components/relocation/tools/QuestionStepper";
 import { ToolResultView } from "@/components/relocation/tools/ToolResultView";
 import { BackToToolsButton } from "@/components/relocation/tools/BackToToolsButton";
-import { getToolBySlug, requestDiasporaIntro } from "@/lib/relocation-tools-api";
+import {
+  getSessionForResume,
+  getToolBySlug,
+  requestDiasporaIntro,
+} from "@/lib/relocation-tools-api";
 import { relocationToolsKeys } from "@/lib/relocation-tools-query-keys";
 import { useRelocationToolSession } from "@/hooks/useRelocationToolSession";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
@@ -59,7 +63,10 @@ const SPACE_DECORATIONS: SpaceDecor[] = [
 ];
 
 export default function RelocationToolPage() {
-  const { toolSlug = "" } = useParams<{ toolSlug: string }>();
+  const { toolSlug = "", sessionId: routeSessionId = "" } = useParams<{
+    toolSlug: string;
+    sessionId: string;
+  }>();
   const { toast } = useToast();
   const [started, setStarted] = useState(false);
 
@@ -75,6 +82,12 @@ export default function RelocationToolPage() {
     queryKey: relocationToolsKeys.tool(toolSlug),
     queryFn: () => getToolBySlug(toolSlug),
     enabled: !!toolSlug && !standalone,
+  });
+
+  const resumeQuery = useQuery({
+    queryKey: relocationToolsKeys.session(routeSessionId),
+    queryFn: () => getSessionForResume(routeSessionId),
+    enabled: !!routeSessionId && !standalone,
   });
 
   const tool = toolQuery.data;
@@ -95,12 +108,30 @@ export default function RelocationToolPage() {
     onError: (message) =>
       toast({ title: "Sonuç hesaplanamadı", description: message, variant: "destructive" }),
   });
+  const attachSession = session.attachSession;
+
+  useEffect(() => {
+    if (resumeQuery.data?.session_id) {
+      attachSession(resumeQuery.data.session_id);
+      setStarted(true);
+    }
+  }, [attachSession, resumeQuery.data?.session_id]);
 
   // B22: sonuç üretilince adres çubuğu kalıcı sonuç rotasına çevrilir
   // (/tools/:slug/result/:resultId — rota ve kayıt zaten var). Böylece CTA ile
   // başka sayfaya gidip GERİ dönünce ya da F5'te sonuç kaybolmaz.
   // replaceState router'ı yeniden render etmez; inline görünüm aynen sürer.
   const resultId = session.result?.result_id ?? null;
+  useEffect(() => {
+    if (session.sessionId && !resultId && toolSlug && !routeSessionId) {
+      window.history.replaceState(
+        window.history.state,
+        "",
+        `/tools/${toolSlug}/session/${session.sessionId}`,
+      );
+    }
+  }, [resultId, routeSessionId, session.sessionId, toolSlug]);
+
   useEffect(() => {
     if (resultId && toolSlug) {
       window.history.replaceState(window.history.state, "", `/tools/${toolSlug}/result/${resultId}`);
@@ -133,7 +164,7 @@ export default function RelocationToolPage() {
     );
   }
 
-  if (toolQuery.isLoading) {
+  if (toolQuery.isLoading || (!!routeSessionId && resumeQuery.isLoading)) {
     return (
       <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-muted-foreground">
         {TOOLS_UI_COPY.loading}
@@ -144,6 +175,16 @@ export default function RelocationToolPage() {
     return (
       <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-destructive">
         {TOOLS_UI_COPY.notFound}
+      </div>
+    );
+  }
+  if (
+    routeSessionId
+    && (!resumeQuery.data || resumeQuery.data.tool_key !== tool.key)
+  ) {
+    return (
+      <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-destructive">
+        Devam edilecek araç oturumu bulunamadı.
       </div>
     );
   }
@@ -208,9 +249,16 @@ export default function RelocationToolPage() {
         />
       ) : (
         <QuestionStepper
+          key={routeSessionId || "new-session"}
           questions={tool.questions}
+          initialAnswers={resumeQuery.data?.answers}
           isSubmitting={session.isRunning}
           onAnswerStart={() => setStarted(true)}
+          onAnswerChange={(questionKey, answer) => session.saveProgress({
+            mode: TOOL_SESSION_MODE,
+            questionKey,
+            answer,
+          })}
           onComplete={(answers) => session.run({ mode: TOOL_SESSION_MODE, answers })}
         />
       )}

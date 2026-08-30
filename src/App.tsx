@@ -74,6 +74,7 @@ const AssociationDetail = lazy(() => import("@/pages/AssociationDetail"));
 const HospitalAppointment = lazy(() => import("@/pages/HospitalAppointment"));
 const IndependentProfilePage = lazy(() => import("@/pages/IndependentProfilePage"));
 const VipInvitationPage = lazy(() => import("@/pages/VipInvitationPage"));
+const NotificationPreferencesPage = lazy(() => import("@/pages/NotificationPreferencesPage"));
 
 // Admin route ağacı (lazy importlar dahil) — bkz. src/pages/admin/routes.tsx
 import { adminRoutes } from "@/pages/admin/routes";
@@ -254,6 +255,14 @@ const App = () => (
                     element={
                       <RequireAuth>
                         <CatalogItemEditorPage />
+                      </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path="/settings/notifications"
+                    element={
+                      <RequireAuth>
+                        <NotificationPreferencesPage />
                       </RequireAuth>
                     }
                   />

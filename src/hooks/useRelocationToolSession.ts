@@ -1,8 +1,8 @@
 // Relocation Tools — oturum yaşam döngüsü hook'u.
-// start (lazy) → save answers → complete. Lokal cevap state'i tutar; RPC'leri sarar.
+// ilk cevapta start → incremental save → complete. RPC'leri tek bir kuyrukta sarar.
 // Sözleşme: docs/10tool/00 §"Ortak UX akışı".
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
   completeSession,
@@ -27,27 +27,68 @@ interface RunArgs {
   sourceMoveId?: string;
 }
 
+interface SaveProgressArgs {
+  mode: ToolMode;
+  questionKey: string;
+  answer: ToolAnswerValue;
+  sourceMoveId?: string;
+}
+
 function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : "Beklenmeyen hata";
 }
 
 /**
- * Tüm akışı tek mutasyonda yürütür: start → her cevabı save → complete.
- * Cevaplar generic stepper'dan toplu gelir; resumable senaryolar için ileride
- * incremental save eklenebilir (answers tablosu zaten upsert destekler).
+ * İlk cevapta oturum açılır ve her değişiklik sırayla kaydedilir. Final mutasyonu
+ * bekleyen kayıtları tamamlar, bütün cevapları idempotent upsert eder ve skoru üretir.
  */
 export function useRelocationToolSession({ toolKey, onError }: UseRelocationToolSessionArgs) {
   const [result, setResult] = useState<RelocationToolResultPayload | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const sessionIdRef = useRef<string | null>(null);
+  const startPromiseRef = useRef<Promise<string> | null>(null);
+  const saveQueueRef = useRef<Promise<void>>(Promise.resolve());
+
+  const ensureSession = useCallback(async (mode: ToolMode, sourceMoveId?: string) => {
+    if (sessionIdRef.current) return sessionIdRef.current;
+    if (!startPromiseRef.current) {
+      startPromiseRef.current = startSession(toolKey, mode, sourceMoveId).then((session) => {
+        sessionIdRef.current = session.session_id;
+        setSessionId(session.session_id);
+        return session.session_id;
+      });
+    }
+    try {
+      return await startPromiseRef.current;
+    } finally {
+      startPromiseRef.current = null;
+    }
+  }, [toolKey]);
+
+  const saveProgress = useCallback(({ mode, questionKey, answer, sourceMoveId }: SaveProgressArgs) => {
+    const operation = saveQueueRef.current
+      .catch(() => undefined)
+      .then(async () => {
+        const activeSessionId = await ensureSession(mode, sourceMoveId);
+        await saveAnswer(activeSessionId, questionKey, answer);
+      });
+    saveQueueRef.current = operation;
+    void operation.catch((error: unknown) => onError?.(errorMessage(error)));
+  }, [ensureSession, onError]);
+
+  const attachSession = useCallback((existingSessionId: string) => {
+    sessionIdRef.current = existingSessionId;
+    setSessionId(existingSessionId);
+  }, []);
 
   const runMutation = useMutation({
     mutationFn: async ({ mode, answers, sourceMoveId }: RunArgs) => {
-      const session = await startSession(toolKey, mode, sourceMoveId);
-      setSessionId(session.session_id);
+      await saveQueueRef.current;
+      const activeSessionId = await ensureSession(mode, sourceMoveId);
       for (const [questionKey, value] of Object.entries(answers)) {
-        await saveAnswer(session.session_id, questionKey, value);
+        await saveAnswer(activeSessionId, questionKey, value);
       }
-      return completeSession(session.session_id);
+      return completeSession(activeSessionId);
     },
     onSuccess: (payload) => {
       setResult(payload);
@@ -61,6 +102,9 @@ export function useRelocationToolSession({ toolKey, onError }: UseRelocationTool
   const reset = useCallback(() => {
     setResult(null);
     setSessionId(null);
+    sessionIdRef.current = null;
+    startPromiseRef.current = null;
+    saveQueueRef.current = Promise.resolve();
     runMutation.reset();
   }, [runMutation]);
 
@@ -69,6 +113,8 @@ export function useRelocationToolSession({ toolKey, onError }: UseRelocationTool
     sessionId,
     isRunning: runMutation.isPending,
     run: runMutation.mutate,
+    saveProgress,
+    attachSession,
     reset,
   };
 }

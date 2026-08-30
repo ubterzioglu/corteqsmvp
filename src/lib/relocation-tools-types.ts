@@ -96,6 +96,13 @@ export interface ToolSessionStart {
   mode: ToolMode;
 }
 
+export interface ToolSessionResume {
+  session_id: string;
+  tool_key: string;
+  mode: ToolMode;
+  answers: Record<string, ToolAnswerValue>;
+}
+
 /** Bir CTA (result.ctas öğesi). */
 export interface ToolCta {
   key: string;

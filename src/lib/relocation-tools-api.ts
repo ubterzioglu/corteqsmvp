@@ -15,6 +15,7 @@ import type {
   ToolEventType,
   ToolMode,
   ToolSessionStart,
+  ToolSessionResume,
 } from "@/lib/relocation-tools-types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -87,6 +88,36 @@ export async function saveAnswer(
     p_answer: answer,
   });
   if (error) throw error;
+}
+
+export async function getSessionForResume(sessionId: string): Promise<ToolSessionResume | null> {
+  const { data: session, error: sessionError } = await db
+    .from("relocation_tool_sessions")
+    .select("id, tool_key, mode, status")
+    .eq("id", sessionId)
+    .maybeSingle();
+  if (sessionError) throw sessionError;
+  if (!session || session.status !== "in_progress") return null;
+
+  const { data: answerRows, error: answersError } = await db
+    .from("relocation_tool_answers")
+    .select("question_key, answer")
+    .eq("session_id", sessionId);
+  if (answersError) throw answersError;
+
+  const answers = Object.fromEntries(
+    (answerRows ?? []).map((row: { question_key: string; answer: ToolAnswerValue }) => [
+      row.question_key,
+      row.answer,
+    ]),
+  );
+
+  return {
+    session_id: session.id as string,
+    tool_key: session.tool_key as string,
+    mode: session.mode as ToolMode,
+    answers,
+  };
 }
 
 export async function completeSession(
