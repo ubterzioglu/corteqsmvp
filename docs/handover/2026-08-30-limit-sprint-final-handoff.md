@@ -2,7 +2,7 @@
 
 **Tarih:** 30 Ağustos 2026  
 **Dal:** `codex/limit-sprint-2026-08-30`  
-**Production:** `main` fast-forward edildi; Coolify 30 Ağustos 16:29 UTC'de yeni frontend'i yayınladı.
+**Production:** `main` fast-forward edildi; son paket 30 Ağustos 20:07 UTC'de production'da doğrulandı.
 
 ## Sonuç
 
@@ -43,8 +43,9 @@ Meta hesabı veya QA hesabı isteyen kabul kapıları yapılmış gibi kapatılm
 ## Production kanıtı
 
 - `main` ve sprint dalı GitHub'a pushlandı.
-- Coolify öncesi bundle `main-BMcCuPv0.js`; deploy sonrası `main-CYvw4EMz.js`.
+- Son deploy öncesi bundle `main-BBG9YXyz.js`; deploy sonrası `main-BXMPIw25.js`.
 - `BASE_URL=https://corteqs.net npm run verify:release` canlı ana JS/CSS ve beş muhasebe lazy chunk'ı için geçti.
+- Contributor kaynak ekranının `AdminContributorResourcesPage-CV_t0_p_.js` lazy chunk'ı production'da `200` döndürdü; yeni admin duyurusundaki bağımlılık güvenliği metni canlı dosyada doğrulandı.
 - `https://corteqs.net/burak-stripe-rehberi.html` production'da `404` döndürüyor.
 - `/vip/invalid-limit-sprint-token` Chromium smoke testinde doğru terminal durumu ve `noindex,nofollow` üretti.
 - `send-notification-emails` Edge Function v11 aktiftir. WhatsApp Edge Function'ları sırlar gelene kadar deploy edilmemiştir.
@@ -71,6 +72,9 @@ okuması da regresyon testiyle kilitlendi.
 
 `supabase/manual/2026-08-30_mark_ws2_102_103_112_ubt_done.sql` canlıda guarded olarak
 çalıştırıldı. WS2 102, 103 ve 112 için `ubt_done=true`, `burak_done=false` doğrulandı.
+Contributor Admin ilk batch'i production'da doğrulandıktan sonra
+`supabase/manual/2026-08-30_mark_contributor_admin_in_progress.sql` çalıştırıldı;
+epic self-service batch'i açık olduğu için `Devam ediyor` durumuna alındı, tamamlanmış gösterilmedi.
 Cadde gerçek multi-user kabulü ve hoş geldin inbox kabulü sonuçlanmadan ilgili diğer
 işaretleme SQL'leri çalıştırılmayacaktır.
 
