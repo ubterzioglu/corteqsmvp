@@ -18,3 +18,8 @@ verify_jwt = false
 # ya da geçerli bir admin JWT'si (getUser + is_admin RPC). İkisi de yoksa 401 döner.
 [functions.send-notification-emails]
 verify_jwt = false
+
+# Meta gateway Supabase JWT gondermez. GET verify token ve POST HMAC-SHA256
+# dogrulamasi fonksiyonun kendi icinde zorunludur.
+[functions.whatsapp-webhook]
+verify_jwt = false

@@ -21,7 +21,7 @@ export default defineConfig({
       "src/**/*.{test,spec}.{ts,tsx}",
       "scripts/**/*.test.mjs",
       "workers/service-finder/src/**/*.test.ts",
-      // Edge Function'ların paylaşılan saf modülleri (e-posta şablonları) — Deno API'si
+      // Edge Function'ların paylaşılan saf modülleri — Deno API'si
       // kullanmadıkları için Node/jsdom altında da koşarlar.
       "supabase/functions/_shared/**/*.test.ts",
     ],
