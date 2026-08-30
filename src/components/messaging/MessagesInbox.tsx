@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { MessageSquare, Inbox, Send, Mail, MailOpen, RefreshCcw } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { tr } from "date-fns/locale";
@@ -30,6 +30,7 @@ const fmtAgo = (d: string) => {
 
 const MessagesInbox = () => {
   const { user } = useAuth();
+  const userId = user?.id;
   const { toast } = useToast();
   const [inbox, setInbox] = useState<DirectMessage[]>([]);
   const [sent, setSent] = useState<DirectMessage[]>([]);
@@ -39,21 +40,21 @@ const MessagesInbox = () => {
   const [replyText, setReplyText] = useState("");
   const [sending, setSending] = useState(false);
 
-  const load = async () => {
-    if (!user) return;
+  const load = useCallback(async () => {
+    if (!userId) return;
     setLoading(true);
 
     const [recv, sentRes] = await Promise.all([
       supabase
         .from("direct_messages")
         .select("id, sender_id, recipient_id, content, created_at, read_at")
-        .eq("recipient_id", user.id)
+        .eq("recipient_id", userId)
         .order("created_at", { ascending: false })
         .limit(200),
       supabase
         .from("direct_messages")
         .select("id, sender_id, recipient_id, content, created_at, read_at")
-        .eq("sender_id", user.id)
+        .eq("sender_id", userId)
         .order("created_at", { ascending: false })
         .limit(200),
     ]);
@@ -121,17 +122,17 @@ const MessagesInbox = () => {
 
     setProfileMap(nextMap);
     setLoading(false);
-  };
+  }, [toast, userId]);
 
   useEffect(() => {
     void load();
-    if (!user) return;
+    if (!userId) return;
 
     const channel = supabase
-      .channel(`direct-messages-${user.id}`)
+      .channel(`direct-messages-${userId}`)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "direct_messages" }, (payload) => {
         const message = payload.new as Partial<DirectMessage>;
-        if (message.sender_id === user.id || message.recipient_id === user.id) {
+        if (message.sender_id === userId || message.recipient_id === userId) {
           void load();
         }
       })
@@ -140,7 +141,7 @@ const MessagesInbox = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user?.id]);
+  }, [load, userId]);
 
   const markRead = async (message: DirectMessage) => {
     if (message.read_at || !user || message.recipient_id !== user.id) return;

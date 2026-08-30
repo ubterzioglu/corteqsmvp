@@ -10,6 +10,7 @@ interface Props {
 
 const BloggerAnalytics = ({ authorName }: Props) => {
   const { user } = useAuth();
+  const userId = user?.id;
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     blogLinks: 0,
@@ -25,28 +26,28 @@ const BloggerAnalytics = ({ authorName }: Props) => {
       let appts = 0;
       let confirmed = 0;
       let events = 0;
-      if (user) {
+      if (userId) {
         const { count: a } = await supabase
           .from("appointments")
           .select("id", { count: "exact", head: true })
-          .eq("provider_id", user.id);
+          .eq("provider_id", userId);
         appts = a || 0;
         const { count: c } = await supabase
           .from("appointments")
           .select("id", { count: "exact", head: true })
-          .eq("provider_id", user.id)
+          .eq("provider_id", userId)
           .eq("status", "confirmed");
         confirmed = c || 0;
         const { count: e } = await supabase
           .from("events")
           .select("id", { count: "exact", head: true })
-          .eq("user_id", user.id);
+          .eq("user_id", userId);
         events = e || 0;
       }
       setStats({ blogLinks: links.length, appointments: appts, confirmed, events });
       setLoading(false);
     })();
-  }, [user?.id, authorName]);
+  }, [userId, authorName]);
 
   const kpis = [
     { label: "Yayınlanan Blog Linki", value: stats.blogLinks, icon: PenLine, color: "text-primary" },

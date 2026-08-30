@@ -20,9 +20,10 @@ const CityDropdown = ({ country, city, onCityChange }: CityDropdownProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const citiesQuery = useGeoCities(country === "all" ? "" : country, country !== "all");
 
-  const cities = country === "all"
-    ? []
-    : (citiesQuery.data ?? []).map((item) => item.name);
+  const cities = useMemo(
+    () => country === "all" ? [] : (citiesQuery.data ?? []).map((item) => item.name),
+    [citiesQuery.data, country],
+  );
 
   const { visibleCities, hiddenCount } = useMemo(() => {
     const matched = filterByQuery(cities, search);

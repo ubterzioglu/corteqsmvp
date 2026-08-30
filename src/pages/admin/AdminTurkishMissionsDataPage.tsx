@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Plus, Save } from "lucide-react";
 
@@ -231,16 +231,15 @@ export default function AdminTurkishMissionsDataPage() {
 
   const pageTitle = `${getAdminTurkishMissionTypeLabel(routeMissionType)} Verisi`;
 
-  const loadRecords = async (nextSelectedId?: string | null) => {
+  const loadRecords = useCallback(async (nextSelectedId: string | null) => {
     setIsLoading(true);
 
     try {
       const nextRecords = await listTurkishMissionsAsAdmin(routeMissionType);
       setRecords(nextRecords);
 
-      const effectiveId = nextSelectedId === undefined ? selectedId : nextSelectedId;
-      if (effectiveId) {
-        const nextSelectedRecord = nextRecords.find((record) => record.id === effectiveId) ?? null;
+      if (nextSelectedId) {
+        const nextSelectedRecord = nextRecords.find((record) => record.id === nextSelectedId) ?? null;
         setSelectedId(nextSelectedRecord?.id ?? null);
         setForm(
           nextSelectedRecord
@@ -259,13 +258,13 @@ export default function AdminTurkishMissionsDataPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [routeMissionType, toast]);
 
   useEffect(() => {
     setSelectedId(null);
     setForm({ ...EMPTY_FORM, missionType: routeMissionType });
     void loadRecords(null);
-  }, [routeMissionType]);
+  }, [loadRecords, routeMissionType]);
 
   const updateForm = (key: keyof FormState, value: string) => {
     setForm((current) => ({ ...current, [key]: value }));

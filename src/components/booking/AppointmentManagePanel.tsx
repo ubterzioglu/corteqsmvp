@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -35,23 +35,24 @@ const statusLabels: Record<string, string> = {
 
 const AppointmentManagePanel = () => {
   const { user } = useAuth();
+  const userId = user?.id;
   const { toast } = useToast();
   const [items, setItems] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const load = async () => {
-    if (!user) return;
+  const load = useCallback(async () => {
+    if (!userId) return;
     setLoading(true);
     const { data } = await supabase
       .from("appointments")
       .select("id,client_name,client_email,client_timezone,scheduled_at,duration_minutes,topic,notes,status")
-      .eq("provider_id", user.id)
+      .eq("provider_id", userId)
       .order("scheduled_at", { ascending: true });
     setItems((data as Appointment[]) || []);
     setLoading(false);
-  };
+  }, [userId]);
 
-  useEffect(() => { load(); }, [user?.id]);
+  useEffect(() => { void load(); }, [load]);
 
   const updateStatus = async (id: string, status: string) => {
     const { error } = await supabase.from("appointments").update({ status }).eq("id", id);
@@ -60,7 +61,7 @@ const AppointmentManagePanel = () => {
       return;
     }
     toast({ title: status === "confirmed" ? "Randevu onaylandı" : "Randevu güncellendi" });
-    load();
+    void load();
   };
 
   const myTz = Intl.DateTimeFormat().resolvedOptions().timeZone;

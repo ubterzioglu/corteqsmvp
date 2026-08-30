@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Check, ExternalLink, Heart, Lightbulb, RefreshCw, Save, Trash2, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -53,7 +53,7 @@ export default function May19SubmissionsModeration({ kind }: May19SubmissionsMod
   const [notesById, setNotesById] = useState<Record<string, string>>({});
   const meta = kindMeta[kind];
 
-  const load = async (status: May19SubmissionStatus) => {
+  const load = useCallback(async (status: May19SubmissionStatus) => {
     setLoading(true);
 
     try {
@@ -65,11 +65,11 @@ export default function May19SubmissionsModeration({ kind }: May19SubmissionsMod
     } finally {
       setLoading(false);
     }
-  };
+  }, [kind]);
 
   useEffect(() => {
     void load(tab);
-  }, [kind, tab]);
+  }, [load, tab]);
 
   const handleStatus = async (id: string, status: May19SubmissionStatus) => {
     try {

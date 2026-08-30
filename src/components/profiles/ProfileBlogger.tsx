@@ -49,7 +49,7 @@ const ProfileBlogger = () => {
 
   useEffect(() => {
     setMyBlogLinks(getDiasporaBlogLinksByAuthor(blogger.name));
-  }, []);
+  }, [blogger.name]);
 
   const handleAddLink = () => {
     if (!linkUrl.trim() || !linkTitle.trim()) {

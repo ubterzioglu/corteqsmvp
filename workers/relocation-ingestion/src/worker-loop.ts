@@ -73,7 +73,6 @@ async function processJob(env: WorkerEnv, db: Db, job: RelocationJob): Promise<v
 
 export async function runWorkerLoop(env: WorkerEnv, db: Db): Promise<void> {
   console.log(`Relocation ingestion worker başladı: ${env.RELOCATION_WORKER_ID}`);
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     let jobs: RelocationJob[] = [];
     try {

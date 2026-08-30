@@ -45,14 +45,13 @@ const RelocationToolsQuestionCountsPage = () => {
     staleTime: 0,
   });
 
-  const rows = data ?? [];
-
   const filtered = useMemo(() => {
+    const rows = data ?? [];
     if (!query.trim()) return rows;
     return rows.filter(
       (row) => trIncludes(row.title_tr, query) || trIncludes(row.category, query),
     );
-  }, [rows, query]);
+  }, [data, query]);
 
   return (
     <AdminPageShell

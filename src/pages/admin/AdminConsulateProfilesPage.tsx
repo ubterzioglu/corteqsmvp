@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Plus, Save } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -159,15 +159,14 @@ export default function AdminConsulateProfilesPage() {
     [profiles, selectedId],
   );
 
-  const loadProfiles = async (nextSelectedId?: string | null) => {
+  const loadProfiles = useCallback(async (nextSelectedId: string | null) => {
     setIsLoading(true);
     try {
       const nextProfiles = await listIndependentProfilesAsAdmin();
       setProfiles(nextProfiles);
 
-      const effectiveId = nextSelectedId ?? selectedId;
-      if (effectiveId) {
-        const nextSelectedProfile = nextProfiles.find((profile) => profile.id === effectiveId) ?? null;
+      if (nextSelectedId) {
+        const nextSelectedProfile = nextProfiles.find((profile) => profile.id === nextSelectedId) ?? null;
         setSelectedId(nextSelectedProfile?.id ?? null);
         setForm(nextSelectedProfile ? profileToFormState(nextSelectedProfile) : EMPTY_FORM);
       } else {
@@ -182,11 +181,11 @@ export default function AdminConsulateProfilesPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
-    void loadProfiles();
-  }, []);
+    void loadProfiles(null);
+  }, [loadProfiles]);
 
   const updateForm = (key: keyof FormState, value: string | boolean) => {
     setForm((current) => ({ ...current, [key]: value as never }));

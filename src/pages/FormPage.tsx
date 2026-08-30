@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -103,7 +103,7 @@ const FormPage = () => {
     });
   };
 
-  const applyPendingPayloadToForm = (payload: ReturnType<typeof loadPendingOnboardingPayload>) => {
+  const applyPendingPayloadToForm = useCallback((payload: ReturnType<typeof loadPendingOnboardingPayload>) => {
     if (!payload || !formRef.current) return;
 
     const values = payload.form;
@@ -150,12 +150,12 @@ const FormPage = () => {
     setReferralDetail(values.referral_detail);
     setReferralCode(values.referral_code || prefilledReferralCode);
     setConsent(values.consent);
-  };
+  }, [prefilledReferralCode]);
 
   // Restore state from versioned onboarding storage
   useEffect(() => {
     applyPendingPayloadToForm(loadPendingOnboardingPayload());
-  }, [prefilledReferralCode]);
+  }, [applyPendingPayloadToForm]);
 
   // Pre-fill user data
   useEffect(() => {

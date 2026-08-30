@@ -390,7 +390,7 @@ export function useChatMachine() {
     }
 
     dispatch({ type: "SEND_MESSAGE", payload: input });
-  }, []);
+  }, [state.loading, state.step, state.submitted]);
 
   const selectQuickReply = useCallback((value: string) => {
     dispatch({ type: "SELECT_QUICK_REPLY", payload: value });
@@ -435,7 +435,7 @@ export function useChatMachine() {
       type: "SUBMIT_ERROR",
       payload: "Bu asistan artık kayıt almıyor. Lütfen hesabını /login üzerinden oluştur.",
     });
-  }, [state]);
+  }, []);
 
   return {
     state,

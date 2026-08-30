@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Plus } from 'lucide-react'
 import AccordionCard from '@/components/dashboard/AccordionCard'
 import KonuCard from './KonuCard'
@@ -31,11 +31,7 @@ export default function MvpManager() {
 
   const konuGroups = useMemo(() => groupItemsByKonu(items), [items])
 
-  useEffect(() => {
-    void loadItems()
-  }, [])
-
-  async function loadItems() {
+  const loadItems = useCallback(async () => {
     if (!supabase) {
       setError('Supabase bağlantısı yapılandırılmamış.')
       setIsLoading(false)
@@ -55,7 +51,11 @@ export default function MvpManager() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [supabase])
+
+  useEffect(() => {
+    void loadItems()
+  }, [loadItems])
 
   async function handleCreate(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()

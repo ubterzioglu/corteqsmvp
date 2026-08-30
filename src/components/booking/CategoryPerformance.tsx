@@ -7,17 +7,18 @@ interface Row { category: string; count: number; pct: number; }
 
 const CategoryPerformance = () => {
   const { user } = useAuth();
+  const userId = user?.id;
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
     (async () => {
       setLoading(true);
       const { data: cats } = await supabase
         .from("consultant_categories")
         .select("category")
-        .eq("user_id", user.id);
+        .eq("user_id", userId);
       const categories = (cats || []).map((c) => c.category);
       if (categories.length === 0) { setRows([]); setLoading(false); return; }
       // Count open service_requests per category in the last 30 days
@@ -40,7 +41,7 @@ const CategoryPerformance = () => {
       setRows(rowsArr);
       setLoading(false);
     })();
-  }, [user?.id]);
+  }, [userId]);
 
   return (
     <div className="bg-card rounded-2xl border border-border p-6 shadow-card">
