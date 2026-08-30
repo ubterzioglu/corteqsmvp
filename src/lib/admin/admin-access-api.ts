@@ -10,9 +10,7 @@ export async function userIsAdmin(userId: string) {
   // exact source of truth as the admin RPCs (is_admin/is_moderator over
   // user_role_assignments), so a `bireysel` user can never slip into the admin
   // shell and trigger 400s from admin-only RPCs.
-  // `is_admin` is a server-defined function not present in the generated client
-  // types, so cast like the other untyped admin RPCs in this module.
-  const { data, error } = await (supabase as any).rpc("is_admin", { uid: userId });
+  const { data, error } = await supabase.rpc("is_admin", { uid: userId });
 
   if (error) throw error;
   return Boolean(data);

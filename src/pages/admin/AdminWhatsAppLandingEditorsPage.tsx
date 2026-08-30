@@ -49,7 +49,7 @@ export default function AdminWhatsAppLandingEditorsPage() {
 
         if (usersResult.error) throw usersResult.error;
 
-        const userIds = (usersResult.data ?? []).map((u: any) => u.user_id);
+        const userIds = (usersResult.data ?? []).map((user) => user.user_id);
         const attrsResult = userIds.length > 0
           ? await supabase
               .from("user_profile_attributes")
@@ -59,7 +59,7 @@ export default function AdminWhatsAppLandingEditorsPage() {
           : { data: [] };
 
         const nameByUser: Record<string, string | null> = {};
-        for (const row of (attrsResult.data ?? []) as any[]) {
+        for (const row of attrsResult.data ?? []) {
           nameByUser[row.user_id] = row.value_text ?? null;
         }
 

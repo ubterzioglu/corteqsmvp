@@ -104,17 +104,17 @@ const AdminTaxonomyPage = () => {
 
     void (async () => {
       const [rolesResult, groupsResult, optionsResult, rulesResult] = await Promise.all([
-        (supabase as any).from("roles").select("id, key, label").eq("is_active", true).order("sort_order"),
-        (supabase as any)
+        supabase.from("roles").select("id, key, label").eq("is_active", true).order("sort_order"),
+        supabase
           .from("taxonomy_groups")
           .select("id, key, label, description, selection_mode")
           .eq("is_active", true)
           .order("sort_order"),
-        (supabase as any)
+        supabase
           .from("taxonomy_options")
           .select("id, group_id, key, label, description, is_active")
           .order("sort_order"),
-        (supabase as any)
+        supabase
           .from("role_taxonomy_rules")
           .select("role_id, group_id, is_enabled, is_required, selection_mode"),
       ]);

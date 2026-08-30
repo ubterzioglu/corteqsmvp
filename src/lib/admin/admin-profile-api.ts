@@ -33,7 +33,7 @@ export async function upsertRoleProfileSectionRuleAsAdmin(params: {
   requiresApproval: boolean;
   sortOrder: number;
 }) {
-  const { error } = await (supabase as any).rpc("admin_upsert_role_profile_section_rule", {
+  const { error } = await supabase.rpc("admin_upsert_role_profile_section_rule", {
     role_key: params.roleKey,
     section_key: params.sectionKey,
     is_enabled: params.isEnabled,
@@ -50,7 +50,7 @@ export async function upsertEntityMetadataAsAdmin(params: {
   description?: string | null;
   adminNote?: string | null;
 }): Promise<void> {
-  const { error } = await (supabase as any).rpc("admin_upsert_entity_metadata", {
+  const { error } = await supabase.rpc("admin_upsert_entity_metadata", {
     p_entity_type: params.entityType,
     p_entity_key:  params.entityKey,
     p_description: params.description ?? null,

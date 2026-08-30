@@ -11,7 +11,7 @@ export async function setUserRoleAsAdmin(userId: string, roleKey: string) {
 }
 
 export async function getRoleManagementBundle(roleKey: string): Promise<RoleManagementBundle> {
-  const { data, error } = await (supabase as any).rpc("get_role_management_bundle", {
+  const { data, error } = await supabase.rpc("get_role_management_bundle", {
     p_role_key: roleKey,
   });
 
