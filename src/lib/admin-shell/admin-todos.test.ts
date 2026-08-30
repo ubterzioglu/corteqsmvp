@@ -44,4 +44,10 @@ describe("ADMIN_TODOS", () => {
       "20260805-migration-surum-kaydi-unutuluyor",
     );
   });
+
+  it("tamamlanmış Cadde konum köprüsü işini açık iş olarak göstermiyor", () => {
+    expect(ADMIN_TODOS.map((todo) => todo.id)).not.toContain(
+      "20260805-cadde-profil-konum-serbest-metin",
+    );
+  });
 });
