@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 32,
-    "edge_functions": 7,
+    "total": 35,
+    "edge_functions": 9,
     "workers": 2,
-    "ui_modules": 22
+    "ui_modules": 23
   },
   "tools": [
     {
@@ -21,6 +21,7 @@ export const toolCatalog = {
       "commands": [
         "build",
         "build:dev",
+        "check:bundle",
         "check:drift",
         "check:drift:warn",
         "check:migrations",
@@ -36,6 +37,7 @@ export const toolCatalog = {
         "ingest:tools",
         "ingest:tools:check",
         "lint",
+        "migrate:apply",
         "onboarding:import",
         "onboarding:report",
         "prebuild",
@@ -333,6 +335,66 @@ export const toolCatalog = {
         "zod": null
       },
       "evidence_path": "supabase/functions/submit-survey-response/index.ts"
+    },
+    {
+      "tool_key": "edge.whatsapp_reply",
+      "tool_name": "whatsapp-reply",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/whatsapp-reply/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "manual",
+        "fields": []
+      },
+      "tables_read_write": [],
+      "rpcs": [
+        "admin_finalize_whatsapp_reply",
+        "admin_prepare_whatsapp_reply"
+      ],
+      "limits": {},
+      "http_statuses": [
+        500
+      ],
+      "http_method": "POST",
+      "dependencies": [
+        "@supabase/supabase-js@2.108.2"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.108.2",
+        "zod": null
+      },
+      "evidence_path": "supabase/functions/whatsapp-reply/index.ts"
+    },
+    {
+      "tool_key": "edge.whatsapp_webhook",
+      "tool_name": "whatsapp-webhook",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/whatsapp-webhook/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "manual",
+        "fields": []
+      },
+      "tables_read_write": [],
+      "rpcs": [
+        "claim_whatsapp_webhook_rate_limit",
+        "ingest_whatsapp_webhook_event"
+      ],
+      "limits": {},
+      "http_statuses": [
+        500
+      ],
+      "http_method": "POST",
+      "dependencies": [
+        "@supabase/supabase-js@2.108.2"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.108.2",
+        "zod": null
+      },
+      "evidence_path": "supabase/functions/whatsapp-webhook/index.ts"
     },
     {
       "tool_key": "module.brainstorming_api",
@@ -847,6 +909,24 @@ export const toolCatalog = {
       "evidence_path": "src/lib/relocation-api.ts"
     },
     {
+      "tool_key": "module.relocation_reminders_api",
+      "tool_name": "relocation-reminders-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/relocation-reminders-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "getRelocationReminderPreference",
+        "setRelocationReminderOptOut"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "get_relocation_tool_reminder_preference",
+        "set_relocation_tool_reminder_opt_out"
+      ],
+      "evidence_path": "src/lib/relocation-reminders-api.ts"
+    },
+    {
       "tool_key": "module.relocation_tools_admin_api",
       "tool_name": "relocation-tools-admin-api",
       "family": "ui_module",
@@ -874,16 +954,20 @@ export const toolCatalog = {
       "exports": [
         "completeSession",
         "getResult",
+        "getSessionForResume",
         "getToolBySlug",
         "listTools",
         "recordEvent",
         "requestDiasporaIntro",
+        "requestRelocationToolReport",
         "saveAnswer",
         "startSession"
       ],
       "tables_read_write": [
+        "relocation_tool_answers",
         "relocation_tool_questions",
         "relocation_tool_results",
+        "relocation_tool_sessions",
         "relocation_tools"
       ],
       "rpcs": [
@@ -891,7 +975,8 @@ export const toolCatalog = {
         "relocation_tool_complete_session",
         "relocation_tool_record_event",
         "relocation_tool_save_answer",
-        "relocation_tool_start_session"
+        "relocation_tool_start_session",
+        "request_relocation_tool_report"
       ],
       "evidence_path": "src/lib/relocation-tools-api.ts"
     },
@@ -1664,6 +1749,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/customer-requests.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/dashboard/command-center-items.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2174,7 +2264,17 @@ export const toolCatalog = {
       "module_family": "relocation"
     },
     {
+      "path": "src/lib/relocation-reminders-api.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
       "path": "src/lib/relocation-schemas.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-tool-report-errors.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
@@ -2479,6 +2579,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/vip-invitations.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/whatsapp-landings.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2529,6 +2634,26 @@ export const toolCatalog = {
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/_shared/emails/relocation-tool-abandonment.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/relocation-tool-abandonment.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/relocation-tool-report.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/relocation-tool-report.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/_shared/emails/revision-request.test.ts",
       "kind": "ts",
       "module_family": "edge"
@@ -2540,6 +2665,26 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/_shared/emails/smtp.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/whatsapp-reply.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/whatsapp-reply.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/whatsapp-webhook.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/whatsapp-webhook.ts",
       "kind": "ts",
       "module_family": "edge"
     },
@@ -2630,6 +2775,16 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/submit-survey-response/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/whatsapp-reply/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/whatsapp-webhook/index.ts",
       "kind": "ts",
       "module_family": "edge"
     },
