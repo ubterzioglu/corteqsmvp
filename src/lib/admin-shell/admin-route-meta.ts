@@ -31,6 +31,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/advisors/:profile",
   "/admin/social-media",
   "/admin/social-share-vault",
+  "/admin/vip-invitations",
   "/admin/surveys",
   "/admin/surveys/new",
   "/admin/surveys/:id/edit",

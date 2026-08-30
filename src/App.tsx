@@ -73,6 +73,7 @@ const Associations = lazy(() => import("@/pages/Associations"));
 const AssociationDetail = lazy(() => import("@/pages/AssociationDetail"));
 const HospitalAppointment = lazy(() => import("@/pages/HospitalAppointment"));
 const IndependentProfilePage = lazy(() => import("@/pages/IndependentProfilePage"));
+const VipInvitationPage = lazy(() => import("@/pages/VipInvitationPage"));
 
 // Admin route ağacı (lazy importlar dahil) — bkz. src/pages/admin/routes.tsx
 import { adminRoutes } from "@/pages/admin/routes";
@@ -151,6 +152,7 @@ const App = () => (
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/auth" element={<AuthRouteRedirect />} />
                   <Route path="/welcome/activate" element={<WelcomeActivatePage />} />
+                  <Route path="/vip/:token" element={<VipInvitationPage />} />
                   <Route path="/directory" element={<DirectoryPage />} />
                   <Route path="/directory/catalog/:slug" element={<DirectoryCatalogItemPage />} />
                   <Route

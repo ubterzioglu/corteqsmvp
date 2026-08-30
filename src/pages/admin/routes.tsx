@@ -41,6 +41,7 @@ const AdminBlogPage = lazy(() => import("@/pages/admin/blog/AdminBlogPage"));
 const AdminAdvisorLinksPage = lazy(() => import("@/pages/admin/AdminAdvisorLinksPage"));
 const AdminSocialMediaLinksPage = lazy(() => import("@/pages/admin/AdminSocialMediaLinksPage"));
 const AdminSocialShareVaultPage = lazy(() => import("@/pages/admin/AdminSocialShareVaultPage"));
+const AdminVipInvitationsPage = lazy(() => import("@/pages/admin/AdminVipInvitationsPage"));
 const AdminRevisionRequestsPage = lazy(() => import("@/pages/admin/AdminRevisionRequestsPage"));
 const AdminBrainstormingPage = lazy(() => import("@/pages/admin/AdminBrainstormingPage"));
 const AdminFeedbackPage = lazy(() => import("@/pages/admin/AdminFeedbackPage"));
@@ -94,6 +95,7 @@ export const adminRoutes = (
     </Route>
     <Route path="social-media" element={<AdminSocialMediaLinksPage />} />
     <Route path="social-share-vault" element={<AdminSocialShareVaultPage />} />
+    <Route path="vip-invitations" element={<AdminVipInvitationsPage />} />
     <Route path="surveys" element={<AdminSurveysPage />} />
     <Route path="surveys/new" element={<AdminSurveyCreatePage />} />
     <Route path="surveys/:id/edit" element={<AdminSurveyEditPage />} />

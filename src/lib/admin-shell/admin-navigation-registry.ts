@@ -13,6 +13,7 @@ import {
   Briefcase,
   Calculator,
   ClipboardList,
+  Crown,
   Database,
   ExternalLink,
   FileText,
@@ -350,6 +351,15 @@ export const adminNavGroups: AdminNavGroup[] = [
         icon: Share2,
         accent: "amber",
         aliases: ["sosyal medya deposu", "paylaşım", "canva", "linkedin", "prompt", "içerik paketi", "post", "diaspora", "gurbet", "test aracı", "varyant"],
+      },
+      {
+        id: "vip-invitations",
+        label: "VIP Davetleri",
+        description: "Tek kullanımlık kişisel VIP davetlerini oluştur ve iptal et.",
+        to: "/admin/vip-invitations",
+        icon: Crown,
+        accent: "amber",
+        aliases: ["vip", "davet", "invitation", "özel bağlantı"],
       },
       {
         id: "advisor-profiles",

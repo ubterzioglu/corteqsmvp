@@ -11302,6 +11302,90 @@ export type Database = {
         }
         Relationships: []
       }
+      vip_invitation_resolve_attempts: {
+        Row: {
+          attempted_at: string
+          candidate_hash: string
+          id: number
+          requester_hash: string
+        }
+        Insert: {
+          attempted_at?: string
+          candidate_hash: string
+          id?: never
+          requester_hash: string
+        }
+        Update: {
+          attempted_at?: string
+          candidate_hash?: string
+          id?: never
+          requester_hash?: string
+        }
+        Relationships: []
+      }
+      vip_invitations: {
+        Row: {
+          created_at: string
+          created_by: string
+          expires_at: string
+          id: string
+          invitation_type: string
+          message: string | null
+          metadata: Json
+          recipient_email: string | null
+          recipient_name: string | null
+          redeemed_at: string | null
+          redeemed_by: string | null
+          revoke_reason: string | null
+          revoked_at: string | null
+          revoked_by: string | null
+          title: string
+          token_hash: string
+          updated_at: string
+          use_count: number
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          expires_at?: string
+          id?: string
+          invitation_type?: string
+          message?: string | null
+          metadata?: Json
+          recipient_email?: string | null
+          recipient_name?: string | null
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          revoke_reason?: string | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          title?: string
+          token_hash: string
+          updated_at?: string
+          use_count?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          expires_at?: string
+          id?: string
+          invitation_type?: string
+          message?: string | null
+          metadata?: Json
+          recipient_email?: string | null
+          recipient_name?: string | null
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          revoke_reason?: string | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          title?: string
+          token_hash?: string
+          updated_at?: string
+          use_count?: number
+        }
+        Relationships: []
+      }
       welcome_pack_orders: {
         Row: {
           adults: number
@@ -11898,6 +11982,22 @@ export type Database = {
         Args: { p_payload: Json }
         Returns: Json
       }
+      admin_create_vip_invitation: {
+        Args: {
+          p_invitation_type?: string
+          p_message?: string
+          p_metadata?: Json
+          p_recipient_email?: string
+          p_recipient_name?: string
+          p_title?: string
+          p_valid_days?: number
+        }
+        Returns: {
+          expires_at: string
+          invitation_id: string
+          token: string
+        }[]
+      }
       admin_delete_catalog_item_attribute_override: {
         Args: { p_attribute_key: string; p_item_id: string }
         Returns: undefined
@@ -12125,6 +12225,10 @@ export type Database = {
       }
       admin_revoke_catalog_item_access: {
         Args: { p_item_id: string; p_user_id: string }
+        Returns: undefined
+      }
+      admin_revoke_vip_invitation: {
+        Args: { p_invitation_id: string; p_reason?: string }
         Returns: undefined
       }
       admin_revoke_whatsapp_landing_editor: {
@@ -13229,9 +13333,28 @@ export type Database = {
         Args: { p_note?: string; p_role_key: string; p_title: string }
         Returns: string
       }
+      redeem_vip_invitation: {
+        Args: { p_token: string }
+        Returns: {
+          invitation_id: string
+          status: string
+        }[]
+      }
       resolve_approval_request_type: {
         Args: { p_feature_key: string }
         Returns: string
+      }
+      resolve_vip_invitation: {
+        Args: { p_token: string }
+        Returns: {
+          expires_at: string
+          invitation_id: string
+          invitation_type: string
+          message: string
+          recipient_name: string
+          status: string
+          title: string
+        }[]
       }
       review_catalog_claim_request: {
         Args: {
