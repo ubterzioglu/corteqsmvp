@@ -1,11 +1,22 @@
 import { describe, expect, it } from "vitest";
+import jsQR from "jsqr";
+import sharp from "sharp";
 
 import {
   buildReferralTargetUrl,
+  generateReferralQrPngDataUrl,
   generateReferralQrSvg,
   normalizeReferralCode,
   readReferralCodeFromSearch,
 } from "./referral-qr";
+
+async function decodeQrImage(image: Buffer): Promise<string | undefined> {
+  const { data, info } = await sharp(image)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  return jsQR(new Uint8ClampedArray(data), info.width, info.height)?.data;
+}
 
 describe("referral QR", () => {
   it("kodu normalize edip kayıt URL'ine güvenli query parametresi olarak ekler", () => {
@@ -33,5 +44,15 @@ describe("referral QR", () => {
     expect(first).toMatch(/^<svg/);
     expect(first).toContain("viewBox");
     expect(first).not.toContain("<script");
+  });
+
+  it("indirilen SVG ve PNG gerçek kayıt hedefini decode eder", async () => {
+    const targetUrl = buildReferralTargetUrl("LISCTY-ABC123", "https://corteqs.net");
+    const svg = await generateReferralQrSvg(targetUrl);
+    const pngDataUrl = await generateReferralQrPngDataUrl(targetUrl);
+    const png = Buffer.from(pngDataUrl.split(",", 2)[1], "base64");
+
+    await expect(decodeQrImage(Buffer.from(svg))).resolves.toBe(targetUrl);
+    await expect(decodeQrImage(png)).resolves.toBe(targetUrl);
   });
 });
