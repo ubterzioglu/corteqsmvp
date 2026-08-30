@@ -6,8 +6,8 @@
 
 ## Sonuç
 
-Sprint A0–D4 kapsamındaki uygulanabilir teknik işler küçük ve bağımsız commit'lerle
-tamamlandı. Canlı veritabanı 373/373 migration ile yerel ledger'a eşit. VIP, müşteri
+Sprint A0–D4 kapsamındaki uygulanabilir teknik işler ve sonraki kalan işler taraması küçük ve bağımsız commit'lerle
+tamamlandı. Canlı veritabanı 374/374 migration ile yerel ledger'a eşit. VIP, müşteri
 talepleri, platform moderasyonu, konumlu araç raporu ve terk edilmiş başvuru altyapıları
 canlı veritabanında; yeni frontend route'ları da production'da. İnsan onayı, gerçek inbox,
 Meta hesabı veya QA hesabı isteyen kabul kapıları yapılmış gibi kapatılmadı.
@@ -25,8 +25,9 @@ Meta hesabı veya QA hesabı isteyen kabul kapıları yapılmış gibi kapatılm
 | A6 test gürültüsü | **Hazır** | Tam pakette açıklanmamış stderr yok. |
 | B1 WhatsApp listeleme paketi | **İnsan onayı bekliyor** | Listeleme ölçütleri ve kısa/uzun paylaşım metinleri hazır; dışarıya paylaşılmadı. |
 | B2 Contributor paketi | **İnsan onayı bekliyor** | FAQ, kaynak sınıfları ve kabul SOP'si hazır; contributor'a ulaşılmadı. |
+| B2+ Contributor Admin | **İlk batch hazır** | Admin-only kaynak kuyruğu, kabul/eksik bilgi/ret akışı, deny-by-default RLS, rate limit ve audit izi eklendi. Contributor self-service ayrı batch olarak açık. |
 | B3 migration runner | **Hazır** | Tek transaction, ledger, dry-run, ad/transaction guard ve gizli parola koruması testli. |
-| B4 lint | **Hazır** | Üretim kapsamında 0 error; 34 mevcut warning kayıtlı. |
+| B4 lint | **Hazır** | Üretim kapsamında 0 error ve 0 warning; eski state okuyabilen chat callback'i regresyon testiyle düzeltildi. |
 | B5 public gizlilik/assets | **Hazır** | Stripe rehberi private arşive alındı; production eski URL artık 404. Referanssız 49 MB video public dağıtımdan çıkarıldı. |
 | B6 bundle/yükleme | **Hazır** | Görünür route fallback var; tüm JS chunk'ları 500 KB altında, en büyüğü 458,86 KB. |
 | C1–C2 VIP | **Hazır** | Hash-only, tek kullanımlık, varsayılan 30 günlük ve iptal edilebilir davet; admin ve public route production'da. Canlı invalid-token smoke `noindex,nofollow` ve “Davet bulunamadı” verdi. |
@@ -52,10 +53,10 @@ Meta hesabı veya QA hesabı isteyen kabul kapıları yapılmış gibi kapatılm
 ```text
 npm test                         241 dosya, 1.676 test — geçti
 npx tsc --noEmit                 geçti
-npm run lint                     0 error, 34 warning
+npm run lint                     0 error, 0 warning
 npm run build                    geçti
 npm run check:bundle             tüm JS chunk'ları < 500 KB
-npm run check:migrations         373 dosya / 373 canlı kayıt, sapma yok
+npm run check:migrations         374 dosya / 374 canlı kayıt, sapma yok
 npm run check:drift              drift yok
 npm run verify:release           yerel geçti
 BASE_URL=https://corteqs.net npm run verify:release  canlı geçti

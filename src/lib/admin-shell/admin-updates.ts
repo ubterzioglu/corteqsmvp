@@ -14,6 +14,19 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260830-kalan-isler-temizlendi",
+    date: "30 Ağustos 2026",
+    title: "Kalan işler yeniden tarandı — Contributor kuyruğu geldi, bayat kayıtlar temizlendi",
+    items: [
+      "KOMUTA MERKEZİ GERÇEĞE ÇEKİLDİ: Referral QR işi daha önce canlıda doğrulanmış olmasına rağmen açık görünüyordu; artık tamamlandı. Video komutları, LinkedIn metinleri, kafe tanıtım paketi, kontrollü topluluk mesajı ve Cadde logosu için yalnız UBT tarafındaki beş doğrulanmış kutu işaretlendi. Burak'ın onay kutularına dokunulmadı.",
+      "CADDE KONUM MADDESİ ARTIK BAYAT DEĞİL: Canlı veritabanı yeniden ölçüldü. Ülke bağlantıları 22/22, şehir bağlantıları 57/57 dolu. Kalan eski 'Belirtilmedi', boş veya hatalı profil değerleri katalog eksiği değil; Cadde bunlarda boş ekran bırakmayan güvenli akışı kullanıyor. Bu yüzden eski ve yanıltıcı yapılacak maddesi panelden kaldırıldı.",
+      "CONTRIBUTOR KAYNAK KUYRUĞU: Admin menüsüne yeni bir ekran eklendi. Yerel işletme, danışman, dernek, grup, etkinlik ve benzeri kaynaklar; ülke, şehir, birincil bağlantı, kontrol tarihi, paylaşım izni ve çıkar ilişkisiyle kaydedilebiliyor. Admin kaynağı kabul edebiliyor, eksik bilgi isteyebiliyor veya gerekçesiyle reddedebiliyor.",
+      "CONTRIBUTOR GÜVENLİĞİ: İlk sürüm yalnız admin kullanımına açık. Tarayıcı tabloya doğrudan yazamıyor; her işlem admin yetkisiyle çalışan kontrollü fonksiyonlardan geçiyor. Adres, tarih ve metin sınırları veri tabanında da kontrol ediliyor; işlem hızı sınırlı ve her karar denetim geçmişine yazılıyor.",
+      "KOD KALİTESİ: Üretim kodundaki 34 ESLint uyarısının tamamı temizlendi; sonuç 0 hata ve 0 uyarı. Bu sırada sohbet kayıt akışında güncel adım yerine eski adımı okuyabilen bir durum da düzeltildi ve tekrarını yakalayan test eklendi.",
+      "BİLEREK AÇIK KALANLAR: Contributor'ın kendi hesabından doğrudan kaynak göndermesi bu ilk batch'te yok; admin kaydıyla başlanıyor. Meta WhatsApp anahtarları, iki gerçek Cadde deneme hesabı, hoş geldin e-postasının gerçek gelen kutusu kontrolü ve hukuk/izin kararları yine dış erişim veya insan onayı bekliyor; tamamlanmış gösterilmedi.",
+    ],
+  },
+  {
     id: "20260830-limit-sprinti-canliya-alindi",
     date: "30 Ağustos 2026",
     title:
