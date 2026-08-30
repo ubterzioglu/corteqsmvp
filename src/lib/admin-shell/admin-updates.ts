@@ -14,6 +14,26 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260830-limit-sprinti-canliya-alindi",
+    date: "30 Ağustos 2026",
+    title:
+      "Büyük bakım paketi yayında — VIP davetleri, daha güvenli araç raporları ve daha hızlı açılan sayfalar",
+    items: [
+      "SON SÜRÜM CANLIDA: Uzun süredir bekleyen teknik işler küçük parçalar halinde tamamlandı ve site yeniden yayınlandı. Veritabanındaki 373 güncellemenin tamamı canlıyla eşleşiyor; eksik veya yarım kalmış bir adım görünmüyor.",
+      "KİŞİYE ÖZEL VIP DAVETLERİ: Admin panelinde VIP davet oluşturma ve iptal etme ekranı hazır. Her bağlantı tek kişilik, varsayılan olarak 30 gün geçerli ve yalnızca bir kez kullanılabiliyor. Davet bağlantısının kendisi sistemde açık biçimde saklanmıyor; yalnız oluşturulduğu anda kopyalanabiliyor.",
+      "ARAÇ RAPORLARI DAHA GÜVENLİ: Üye artık ülke veya şehir bilgisi olmadan araç sonucunu e-postayla isteyemiyor. Raporda, sonucun alındığı andaki ülke ve şehir ayrıca saklanıyor; profil daha sonra değişse bile eski raporun hangi konuma göre hazırlandığı kaybolmuyor.",
+      "YARIM KALAN ARAÇLARA GERİ DÖNÜŞ: Üye bir aracı yarıda bırakırsa kaldığı yer kaydediliyor ve aynı bağlantıdan devam edebiliyor. Hatırlatma sistemi, e-postası doğrulanmış ve izin veren üyeye yalnızca bir kez gönderecek şekilde hazırlandı. Hukuk ve izin kontrolü bitene kadar genel gönderim anahtarı kapalı tutuluyor.",
+      "WHATSAPP MÜŞTERİ TALEPLERİ İÇİN YENİ KUYRUK: Admin paneline gelen WhatsApp taleplerini sorumluya verme, durumunu değiştirme ve yanıt hazırlama ekranı eklendi. Aynı mesaj ikinci kez kaydolmuyor, telefon bilgisi açık biçimde tutulmuyor ve 24 saat dışındaki yanıtlar onaylı şablon gerektiriyor. Meta hesap bilgileri henüz verilmediği için WhatsApp bağlantısı şimdilik kapalı; ekran ve güvenlik altyapısı hazır.",
+      "ŞİKÂYET VE MODERASYON İÇİN ORTAK TEMEL: Cadde'ye özel kalmayacak biçimde şikâyet, inceleme, geçici kısıtlama ve işlem geçmişi yapısı hazırlandı. Böylece yeni bölümler açıldığında aynı güvenlik düzeni tekrar tekrar kurulmayacak.",
+      "SAYFALAR DAHA HIZLI VE DAHA ANLAŞILIR AÇILIYOR: Boş beyaz ekran yerine görünür bir “Sayfa yükleniyor” durumu geldi. Büyük admin ve grafik dosyaları yalnız ihtiyaç olduğunda yükleniyor. Yayındaki hiçbir JavaScript dosyası belirlenen 500 KB sınırını aşmıyor.",
+      "KAMUYA AÇIK OLMAMASI GEREKEN DOSYALAR KALDIRILDI: İç kullanım için hazırlanmış Stripe rehberi artık eski adresinden açılamıyor ve 404 dönüyor. Kullanılmayan 49 MB'lık video da sitenin herkese açık dosyalarından çıkarıldı.",
+      "KOMUTA MERKEZİ TEMİZLENDİ: Aynı işi anlatan tekrar kayıtlar geçmişleri kaybolmadan birleştirildi, görev olmayan notlar ayrıldı ve büyük başlıklar daha küçük işlere bölündü. Araç raporu ve yarım kalan araç hatırlatması maddelerinde yalnız teknik onay işaretlendi; Burak'ın onay kutusuna dokunulmadı.",
+      "PAYLAŞIMA HAZIR İÇERİKLER: 18 araç için tanıtım metinleri, görsel fikirleri, video komutları, LinkedIn ve kafe kampanyası metinleri hazırlandı. WhatsApp topluluk listeleme kuralları ile contributor soru-cevap paketi de hazır; hiçbiri insan onayı olmadan dışarıya paylaşılmadı.",
+      "BİLEREK AÇIK BIRAKILANLAR: Cadde'nin iki gerçek deneme hesabıyla son kabulü, hoş geldin e-postasının gerçek gelen kutusu kontrolü, WhatsApp için Meta anahtarları, hatırlatma e-postasının hukuk onayı ve Clarity'den gerçek veri alınması hâlâ bekliyor. Bunlar yapılmış gibi kapatılmadı.",
+      "KALİTE KONTROLÜ: 1.676 otomatik test geçti; tip kontrolü, üretim derlemesi, veri tabanı karşılaştırması ve canlı site kontrolü temiz sonuç verdi. Admin panelindeki yeni ekranlar ve VIP bağlantısı canlı sürümde ayrıca kontrol edildi.",
+    ],
+  },
+  {
     id: "20260830-komuta-merkezi-teknik-isler-canliya-alindi",
     date: "30 Ağustos 2026",
     title:
