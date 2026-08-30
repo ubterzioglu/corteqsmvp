@@ -1,10 +1,11 @@
 // send-notification-emails — notification_email_outbox kuyruğunun drenajı.
 //
-// Dört bildirim türünü gönderir:
+// Beş bildirim türünü gönderir:
 //   new_member       → siteye yeni üye kaydolduğunda        → alıcı: abone admin/moderator'lar
 //   admin_update     → admin-updates.ts'e kayıt girildiğinde → alıcı: abone admin/moderator'lar
 //   member_welcome   → üye e-postasını doğruladığında        → alıcı: ÜYENİN KENDİSİ
 //   revision_request → yeni revizyon isteği açıldığında      → alıcı: abone admin/moderator'lar
+//   relocation_tool_report → kullanıcının istediği araç raporu → alıcı: ÜYENİN KENDİSİ
 //
 // member_welcome'ın alıcısı payload'dan gelir; abone listesine hiç bakılmaz. Bu ayrım
 // resolveRecipients() içinde tek yerde yapılır.
@@ -31,6 +32,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 import { buildAdminUpdateEmail } from "../_shared/emails/admin-update-digest.ts";
 import { escapeHtml } from "../_shared/emails/html.ts";
 import { buildMemberWelcomeEmail } from "../_shared/emails/member-welcome.ts";
+import { buildRelocationToolReportEmail } from "../_shared/emails/relocation-tool-report.ts";
 import { buildRevisionRequestEmail } from "../_shared/emails/revision-request.ts";
 import { resolveZohoSmtpConfig, sendMailViaZohoSmtp } from "../_shared/emails/smtp.ts";
 
@@ -52,7 +54,12 @@ const SETTING_KEY_BY_EVENT: Record<string, string> = {
   revision_request: "email.revision_request.enabled",
 };
 
-type EventType = "new_member" | "admin_update" | "member_welcome" | "revision_request";
+type EventType =
+  | "new_member"
+  | "admin_update"
+  | "member_welcome"
+  | "revision_request"
+  | "relocation_tool_report";
 
 type OutboxRow = {
   id: string;
@@ -162,6 +169,8 @@ function buildEmail(row: OutboxRow): BuiltEmail {
       return buildWelcomeEmail(row.payload);
     case "revision_request":
       return buildRevisionRequestEmail(row.payload, resolveSiteUrl());
+    case "relocation_tool_report":
+      return buildRelocationToolReportEmail(row.payload, resolveSiteUrl());
     default:
       return buildNewMemberEmail(row.payload);
   }
@@ -306,6 +315,10 @@ Deno.serve(async (request) => {
     const subscriberCache = new Map<string, Subscriber[]>();
 
     const isEventEnabled = async (eventType: string): Promise<boolean> => {
+      // Kullanıcının sonuç ekranında açıkça istediği transactional rapor;
+      // admin pazarlama/bildirim aboneliklerinden bağımsızdır.
+      if (eventType === "relocation_tool_report") return true;
+
       const cached = enabledCache.get(eventType);
       if (cached !== undefined) return cached;
 
@@ -338,7 +351,7 @@ Deno.serve(async (request) => {
      * dolayısıyla admin aboneliklerinden bağımsızdır. Diğer iki tip abone listesini kullanır.
      */
     const resolveRecipients = async (row: OutboxRow): Promise<string[]> => {
-      if (row.event_type !== "member_welcome") {
+      if (row.event_type !== "member_welcome" && row.event_type !== "relocation_tool_report") {
         return (await getSubscribers(row.event_type)).map((subscriber) => subscriber.email);
       }
 
@@ -370,7 +383,8 @@ Deno.serve(async (request) => {
         if (recipients.length === 0) {
           // member_welcome'da bu payload'da adres yok demektir (beklenmez);
           // diğer tiplerde kimse abone olmamış demektir.
-          const reason = row.event_type === "member_welcome" ? "no_recipient_email" : "no_subscribers";
+          const directRecipient = row.event_type === "member_welcome" || row.event_type === "relocation_tool_report";
+          const reason = directRecipient ? "no_recipient_email" : "no_subscribers";
           await admin
             .from("notification_email_outbox")
             .update({ status: "skipped", last_error: reason, recipient_count: 0, sent_at: new Date().toISOString() })

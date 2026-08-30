@@ -10,6 +10,7 @@ import { ComparisonTable } from "@/components/relocation/tools/ComparisonTable";
 import { MatchList } from "@/components/relocation/tools/MatchList";
 import { ResultCtaPanel } from "@/components/relocation/tools/ResultCtaPanel";
 import { WeakestAreasCard } from "@/components/relocation/tools/WeakestAreasCard";
+import { ReportDeliveryCard } from "@/components/relocation/tools/ReportDeliveryCard";
 import { parseWeakestAreas } from "@/lib/relocation-tools-weakest";
 import {
   TOOLS_UI_COPY,
@@ -127,6 +128,8 @@ export function ToolResultView({
       )}
 
       <ResultCtaPanel ctas={result.ctas} onCtaClick={onCtaClick} onRetake={onRetake} />
+
+      <ReportDeliveryCard result={result} />
 
       {/* Araç hub'ına dönüş — CTA ızgarasının ALTINDA, tam genişlikte tek satır.
           Bilinçli olarak ResultCtaPanel'in DIŞINDA: panel 2×2 eşit hücre sözleşmesini

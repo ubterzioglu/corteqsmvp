@@ -46,6 +46,7 @@ const RESULT: RelocationToolResultPayload = {
   recommendations: [],
   explanations: ["Hazırlık skorun: 56.75/100."],
   ctas: [{ key: "find_mentor", label: "Mentor/Topluluk Desteği Bul", href: "/directory" }],
+  location_snapshot: { country: "Almanya", city: "Berlin", source: "approved_attributes" },
 };
 
 function renderView(overrides: Partial<RelocationToolResultPayload> = {}, onRetake?: () => void) {
@@ -88,6 +89,20 @@ describe("ToolResultView", () => {
 
     expect(screen.queryByRole("button", { name: TOOLS_UI_COPY.retake })).toBeNull();
     expect(screen.getByRole("link", { name: new RegExp(TOOLS_UI_COPY.backToHub) })).toBeInTheDocument();
+  });
+
+  it("sonucun oluşturma anı konumunu rapor kartında gösterir", () => {
+    renderView();
+
+    expect(screen.getByText(/Berlin, Almanya/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Raporu gönder" })).toBeEnabled();
+  });
+
+  it("konum snapshot'ı yoksa gönderim yerine profil yönlendirmesi gösterir", () => {
+    renderView({ location_snapshot: null });
+
+    expect(screen.queryByRole("button", { name: "Raporu gönder" })).toBeNull();
+    expect(screen.getByRole("link", { name: "Profili aç" })).toHaveAttribute("href", "/profile");
   });
 });
 

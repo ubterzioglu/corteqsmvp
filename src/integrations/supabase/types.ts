@@ -8406,6 +8406,10 @@ export type Database = {
           ctas: Json
           explanations: Json
           id: string
+          location_city: string | null
+          location_country: string | null
+          location_resolved_at: string | null
+          location_source: string | null
           model_version: string
           policy_version: string
           primary_result: Json
@@ -8424,6 +8428,10 @@ export type Database = {
           ctas?: Json
           explanations?: Json
           id?: string
+          location_city?: string | null
+          location_country?: string | null
+          location_resolved_at?: string | null
+          location_source?: string | null
           model_version?: string
           policy_version?: string
           primary_result?: Json
@@ -8442,6 +8450,10 @@ export type Database = {
           ctas?: Json
           explanations?: Json
           id?: string
+          location_city?: string | null
+          location_country?: string | null
+          location_resolved_at?: string | null
+          location_source?: string | null
           model_version?: string
           policy_version?: string
           primary_result?: Json

@@ -115,4 +115,16 @@ export interface RelocationToolResultPayload {
   recommendations: Array<Record<string, unknown>>;
   explanations: string[];
   ctas: ToolCta[];
+  location_snapshot: {
+    country: string;
+    city: string;
+    source: "approved_attributes" | "profile_core" | "mixed_profile";
+  } | null;
+}
+
+export interface RelocationToolReportRequest {
+  result_id: string;
+  status: "pending" | "sent" | "failed" | "skipped";
+  location_country: string;
+  location_city: string;
 }

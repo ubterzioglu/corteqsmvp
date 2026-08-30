@@ -7,6 +7,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type {
   RelocationToolQuestionRow,
+  RelocationToolReportRequest,
   RelocationToolResultPayload,
   RelocationToolRow,
   RelocationToolWithQuestions,
@@ -151,5 +152,29 @@ export async function getResult(resultId: string): Promise<RelocationToolResultP
     recommendations: (row.recommendations as Array<Record<string, unknown>>) ?? [],
     explanations: (row.explanations as string[]) ?? [],
     ctas: (row.ctas as RelocationToolResultPayload["ctas"]) ?? [],
+    location_snapshot:
+      typeof row.location_country === "string" && typeof row.location_city === "string"
+        ? {
+            country: row.location_country,
+            city: row.location_city,
+            source: row.location_source as NonNullable<
+              RelocationToolResultPayload["location_snapshot"]
+            >["source"],
+          }
+        : null,
   };
+}
+
+/**
+ * Sonuç raporunu doğrulanmış kullanıcı e-postasına tek-seferlik kuyruğa alır.
+ * Konum/e-posta/sahiplik/rate-limit kontrollerinin tamamı RPC sınırındadır.
+ */
+export async function requestRelocationToolReport(
+  resultId: string,
+): Promise<RelocationToolReportRequest> {
+  const { data, error } = await db.rpc("request_relocation_tool_report", {
+    p_result_id: resultId,
+  });
+  if (error) throw error;
+  return data as unknown as RelocationToolReportRequest;
 }
