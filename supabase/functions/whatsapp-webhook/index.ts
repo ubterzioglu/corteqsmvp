@@ -34,6 +34,7 @@ const handler = createWhatsAppWebhookHandler({
       p_provider_message_id: event.providerMessageId,
       p_event_type: event.eventType,
       p_wa_id_hash: event.waIdHash,
+      p_wa_id_ciphertext: event.waIdCiphertext,
       p_phone_number_id_hash: event.phoneNumberIdHash,
       p_message_type: event.messageType,
       p_message_text: event.messageText,

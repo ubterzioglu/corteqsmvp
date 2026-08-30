@@ -15,6 +15,7 @@ export type StoredWhatsAppWebhookEvent = Omit<
   "waId" | "phoneNumberId"
 > & {
   waIdHash: string | null;
+  waIdCiphertext: string | null;
   phoneNumberIdHash: string | null;
 };
 
@@ -90,6 +91,43 @@ export async function verifyMetaSignature(
 
 export async function opaqueHash(value: string, secret: string): Promise<string> {
   return bytesToHex(await hmacSha256(new TextEncoder().encode(value), secret));
+}
+
+function base64UrlEncode(bytes: Uint8Array): string {
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/u, "");
+}
+
+function base64UrlDecode(value: string): Uint8Array {
+  const padded = value.replaceAll("-", "+").replaceAll("_", "/").padEnd(Math.ceil(value.length / 4) * 4, "=");
+  return Uint8Array.from(atob(padded), (character) => character.charCodeAt(0));
+}
+
+async function deriveEncryptionKey(secret: string): Promise<CryptoKey> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`corteqs-whatsapp-pii:v1:${secret}`));
+  return crypto.subtle.importKey("raw", digest, { name: "AES-GCM" }, false, ["encrypt", "decrypt"]);
+}
+
+export async function encryptWhatsAppIdentifier(value: string, secret: string): Promise<string> {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ciphertext = new Uint8Array(await crypto.subtle.encrypt(
+    { name: "AES-GCM", iv },
+    await deriveEncryptionKey(secret),
+    new TextEncoder().encode(value),
+  ));
+  return `v1.${base64UrlEncode(iv)}.${base64UrlEncode(ciphertext)}`;
+}
+
+export async function decryptWhatsAppIdentifier(value: string, secret: string): Promise<string> {
+  const [version, encodedIv, encodedCiphertext] = value.split(".");
+  if (version !== "v1" || !encodedIv || !encodedCiphertext) throw new Error("invalid_ciphertext");
+  const plaintext = await crypto.subtle.decrypt(
+    { name: "AES-GCM", iv: base64UrlDecode(encodedIv) },
+    await deriveEncryptionKey(secret),
+    base64UrlDecode(encodedCiphertext),
+  );
+  return new TextDecoder().decode(plaintext);
 }
 
 function extractMessageText(message: Record<string, unknown>): string | null {
@@ -227,6 +265,9 @@ export function createWhatsAppWebhookHandler(dependencies: WhatsAppWebhookDepend
         providerMessageId: event.providerMessageId,
         eventType: event.eventType,
         waIdHash: event.waId ? await opaqueHash(event.waId, dependencies.appSecret) : null,
+        waIdCiphertext: event.waId
+          ? await encryptWhatsAppIdentifier(event.waId, dependencies.appSecret)
+          : null,
         phoneNumberIdHash: event.phoneNumberId
           ? await opaqueHash(event.phoneNumberId, dependencies.appSecret)
           : null,

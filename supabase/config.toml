@@ -23,3 +23,6 @@ verify_jwt = false
 # dogrulamasi fonksiyonun kendi icinde zorunludur.
 [functions.whatsapp-webhook]
 verify_jwt = false
+
+[functions.whatsapp-reply]
+verify_jwt = true

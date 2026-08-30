@@ -362,6 +362,15 @@ export const adminNavGroups: AdminNavGroup[] = [
         aliases: ["vip", "davet", "invitation", "özel bağlantı"],
       },
       {
+        id: "customer-requests",
+        label: "Müşteri Talepleri",
+        description: "WhatsApp taleplerini ata, durumunu yönet ve denetimli yanıtla.",
+        to: "/admin/customer-requests",
+        icon: Inbox,
+        accent: "emerald",
+        aliases: ["müşteri", "talep", "whatsapp", "destek", "inbox", "cevap"],
+      },
+      {
         id: "advisor-profiles",
         label: "Sosyal Link Profilleri",
         description: "Profil bazlı sosyal link içerikleri.",

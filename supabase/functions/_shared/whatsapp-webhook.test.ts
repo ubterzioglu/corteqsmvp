@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import {
   createWhatsAppWebhookHandler,
+  decryptWhatsAppIdentifier,
   extractWhatsAppWebhookEvents,
   verifyMetaSignature,
   type StoredWhatsAppWebhookEvent,
@@ -150,6 +151,8 @@ describe("WhatsApp webhook ingestion", () => {
     expect(ingestEvent).toHaveBeenCalledOnce();
     const stored = ingestEvent.mock.calls[0][0] as StoredWhatsAppWebhookEvent;
     expect(stored.waIdHash).toMatch(/^[0-9a-f]{64}$/);
+    expect(stored.waIdCiphertext).toMatch(/^v1\./);
+    await expect(decryptWhatsAppIdentifier(stored.waIdCiphertext!, APP_SECRET)).resolves.toBe("49123456789");
     expect(stored.phoneNumberIdHash).toMatch(/^[0-9a-f]{64}$/);
     expect(JSON.stringify(stored)).not.toContain("49123456789");
     expect(JSON.stringify(stored)).not.toContain("business-phone-id");

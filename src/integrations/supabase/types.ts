@@ -11540,6 +11540,48 @@ export type Database = {
           },
         ]
       }
+      whatsapp_message_templates: {
+        Row: {
+          approval_status: string
+          body_preview: string | null
+          category: string
+          created_at: string
+          id: string
+          language: string
+          meta_template_id: string | null
+          name: string
+          parameter_count: number
+          updated_at: string
+          verified_at: string | null
+        }
+        Insert: {
+          approval_status?: string
+          body_preview?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          language: string
+          meta_template_id?: string | null
+          name: string
+          parameter_count?: number
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Update: {
+          approval_status?: string
+          body_preview?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          language?: string
+          meta_template_id?: string | null
+          name?: string
+          parameter_count?: number
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
       whatsapp_landing_editors: {
         Row: {
           created_at: string
@@ -12116,6 +12158,36 @@ export type Database = {
           user_id: string
         }[]
       }
+      admin_list_whatsapp_customer_messages: {
+        Args: { p_thread_id: string }
+        Returns: {
+          body: string | null
+          created_at: string
+          created_by: string | null
+          delivery_status: string
+          direction: string
+          error_code: string | null
+          id: string
+          message_type: string
+          template_language: string | null
+          template_name: string | null
+        }[]
+      }
+      admin_list_whatsapp_customer_threads: {
+        Args: never
+        Returns: {
+          assigned_to: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          last_inbound_at: string
+          last_message_at: string
+          latest_direction: string | null
+          latest_message_preview: string | null
+          message_count: number
+          status: string
+        }[]
+      }
       admin_list_service_finder_jobs: {
         Args: { p_limit?: number; p_offset?: number; p_status?: string }
         Returns: Json
@@ -12233,6 +12305,10 @@ export type Database = {
       }
       admin_revoke_whatsapp_landing_editor: {
         Args: { p_assignment_id: string }
+        Returns: undefined
+      }
+      admin_update_whatsapp_customer_thread: {
+        Args: { p_assigned_to?: string; p_status: string; p_thread_id: string }
         Returns: undefined
       }
       admin_role_record_counts: {
