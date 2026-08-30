@@ -18,50 +18,46 @@ export type DirectoryProfile = {
   recentEvents: Array<{ title: string; date: string; city: string }>;
 };
 
-const DIRECTORY_SELECT = [
-  "user_id",
-  "tagline",
-  "active_city",
-  "active_country",
-  "follower_count",
-  "following_count",
-  "job_seeking",
-  "front_card",
-  "detail_card",
-].join(", ");
+const DIRECTORY_SELECT = "user_id, tagline, active_city, active_country, follower_count, following_count, job_seeking, front_card, detail_card" as const;
 
-const readStr = (obj: any, key: string, fallback = ""): string => {
-  const v = obj?.[key];
+const asRecord = (value: unknown): Record<string, unknown> | null =>
+  value !== null && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+
+const readStr = (value: unknown, key: string, fallback = ""): string => {
+  const v = asRecord(value)?.[key];
   return typeof v === "string" && v.trim() ? v.trim() : fallback;
 };
 
-const readBool = (obj: any, key: string, fallback = false): boolean => {
-  const v = obj?.[key];
+const readBool = (value: unknown, key: string, fallback = false): boolean => {
+  const v = asRecord(value)?.[key];
   return typeof v === "boolean" ? v : fallback;
 };
 
-const readRelocation = (detailCard: any) => {
-  const r = detailCard?.relocation;
-  if (!r || typeof r !== "object") return null;
-  const enabled = typeof r.enabled === "boolean" ? r.enabled : false;
+const readRelocation = (detailCard: unknown) => {
+  const relocation = asRecord(asRecord(detailCard)?.relocation);
+  if (!relocation) return null;
+  const enabled = typeof relocation.enabled === "boolean" ? relocation.enabled : false;
   if (!enabled) return null;
   return {
     enabled: true,
-    city: typeof r.city === "string" ? r.city : "",
-    country: typeof r.country === "string" ? r.country : "",
+    city: typeof relocation.city === "string" ? relocation.city : "",
+    country: typeof relocation.country === "string" ? relocation.country : "",
   };
 };
 
-const readRecentEvents = (detailCard: any): DirectoryProfile["recentEvents"] => {
-  const events = detailCard?.recent_events;
+const readRecentEvents = (detailCard: unknown): DirectoryProfile["recentEvents"] => {
+  const events = asRecord(detailCard)?.recent_events;
   if (!Array.isArray(events)) return [];
   return events
-    .filter((e: any) => typeof e?.title === "string" && e.title.trim())
+    .map(asRecord)
+    .filter((event): event is Record<string, unknown> => Boolean(event) && typeof event.title === "string" && event.title.trim().length > 0)
     .slice(0, 4)
-    .map((e: any) => ({
-      title: e.title,
-      date: typeof e.date === "string" ? e.date : "",
-      city: typeof e.city === "string" ? e.city : "",
+    .map((event) => ({
+      title: event.title as string,
+      date: typeof event.date === "string" ? event.date : "",
+      city: typeof event.city === "string" ? event.city : "",
     }));
 };
 
@@ -98,25 +94,25 @@ export const useIndividualDirectory = (limit = 20) => {
         return;
       }
 
-      const userIds = rows.map((r: any) => r.user_id as string);
+      const userIds = rows.map((row) => row.user_id);
 
       const nameMap = await listMemberCatalogNames(userIds);
       if (!isMounted) return;
 
-      const mapped: DirectoryProfile[] = rows.map((r: any) => {
-        const front = r.front_card ?? {};
-        const detail = r.detail_card ?? {};
+      const mapped: DirectoryProfile[] = rows.map((row) => {
+        const front = row.front_card ?? {};
+        const detail = row.detail_card ?? {};
         return {
-          userId: r.user_id,
-          displayName: nameMap.get(r.user_id) ?? "CorteQS Üyesi",
-          tagline: r.tagline ?? "",
+          userId: row.user_id,
+          displayName: nameMap.get(row.user_id) ?? "CorteQS Üyesi",
+          tagline: row.tagline ?? "",
           worldMessage: readStr(front, "world_message"),
           profileImageUrl: readStr(front, "profile_image_url") || null,
-          activeCity: r.active_city ?? "-",
-          activeCountry: r.active_country ?? "-",
-          followerCount: typeof r.follower_count === "number" ? r.follower_count : 0,
-          followingCount: typeof r.following_count === "number" ? r.following_count : 0,
-          jobSeeking: typeof r.job_seeking === "boolean" ? r.job_seeking : false,
+          activeCity: row.active_city ?? "-",
+          activeCountry: row.active_country ?? "-",
+          followerCount: typeof row.follower_count === "number" ? row.follower_count : 0,
+          followingCount: typeof row.following_count === "number" ? row.following_count : 0,
+          jobSeeking: typeof row.job_seeking === "boolean" ? row.job_seeking : false,
           corteqsPassport: readBool(front, "corteqs_passport"),
           relocation: readRelocation(detail),
           recentEvents: readRecentEvents(detail),

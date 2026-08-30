@@ -218,7 +218,7 @@ export const slugifyTurkishMission = (value: string) =>
 export async function listTurkishMissionsAsAdmin(
   missionType?: AdminTurkishMissionType,
 ): Promise<TurkishMissionAdminRecord[]> {
-  let query = (supabase as any)
+  let query = supabase
     .from("turkish_missions")
     .select("*")
     .in("mission_type", [...ADMIN_TURKISH_MISSION_TYPES]);
@@ -237,7 +237,7 @@ export async function listTurkishMissionsAsAdmin(
 }
 
 export async function createTurkishMissionAsAdmin(input: TurkishMissionAdminInput): Promise<TurkishMissionAdminRecord> {
-  const { data, error } = await (supabase as any)
+  const { data, error } = await supabase
     .from("turkish_missions")
     .insert(inputToPayload(input))
     .select("*")
@@ -251,7 +251,7 @@ export async function updateTurkishMissionAsAdmin(
   id: string,
   input: TurkishMissionAdminInput,
 ): Promise<TurkishMissionAdminRecord> {
-  const { data, error } = await (supabase as any)
+  const { data, error } = await supabase
     .from("turkish_missions")
     .update(inputToPayload(input))
     .eq("id", id)

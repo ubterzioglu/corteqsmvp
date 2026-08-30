@@ -201,7 +201,9 @@ const sectorDataMap: Record<string, string> = {
   Medya: "Teknoloji",
 };
 
-const offeringFilters = [
+type BusinessOffering = (typeof businesses)[number]["offerings"][number];
+
+const offeringFilters: Array<{ key: "all" | BusinessOffering; label: string }> = [
   { key: "all", label: "Tümü" },
   { key: "iş ilanı", label: "💼 İş İlanları" },
   { key: "franchise", label: "🏪 Franchise" },
@@ -219,7 +221,7 @@ const Businesses = () => {
   const [city, setCity] = useState("all");
   const [sectorFilter, setSectorFilter] = useState("all");
   const [activeSub, setActiveSub] = useState<string | null>(null);
-  const [offeringFilter, setOfferingFilter] = useState("all");
+  const [offeringFilter, setOfferingFilter] = useState<"all" | BusinessOffering>("all");
   const { isFollowed: isFollowedFn, toggle: toggleFollowState } = useFollow();
   const { toast } = useToast();
 
@@ -240,7 +242,7 @@ const Businesses = () => {
   const filtered = businesses.filter((b) => {
     const matchesCountry = country === "all" || b.country === country;
     const matchesCity = city === "all" || b.city === city;
-    const matchesOffering = offeringFilter === "all" || b.offerings.includes(offeringFilter as any);
+    const matchesOffering = offeringFilter === "all" || b.offerings.includes(offeringFilter);
     return matchesCountry && matchesCity && matchesSector(b) && matchesOffering;
   });
 

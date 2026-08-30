@@ -353,7 +353,7 @@ export async function getLanding(slug: string): Promise<WhatsAppLanding | undefi
 }
 
 export async function getEditableLandingForCurrentUser(slug: string): Promise<WhatsAppLanding | undefined> {
-  const { data, error } = await (supabase as any).rpc("get_current_user_editable_whatsapp_landing", {
+  const { data, error } = await supabase.rpc("get_current_user_editable_whatsapp_landing", {
     p_slug: slug,
   });
 
@@ -362,7 +362,7 @@ export async function getEditableLandingForCurrentUser(slug: string): Promise<Wh
 }
 
 export async function canCurrentUserEditLanding(landingDbId: string): Promise<boolean> {
-  const { data, error } = await (supabase as any).rpc("current_user_can_edit_whatsapp_landing", {
+  const { data, error } = await supabase.rpc("current_user_can_edit_whatsapp_landing", {
     p_landing_id: landingDbId,
   });
 
@@ -555,7 +555,7 @@ export async function updateCurrentUserEditableLanding(params: {
   language?: LandingLanguage;
   origin?: LandingOrigin;
 }) {
-  const { data, error } = await (supabase as any).rpc("update_current_user_editable_whatsapp_landing", {
+  const { data, error } = await supabase.rpc("update_current_user_editable_whatsapp_landing", {
     p_landing_id: params.landingId,
     p_group_name: normalizeCommunityText(params.groupName),
     p_category: params.category,
@@ -579,7 +579,7 @@ export async function updateCurrentUserEditableLanding(params: {
 }
 
 export async function listLandingEditorAssignmentsAsAdmin(): Promise<LandingEditorAssignment[]> {
-  const { data, error } = await (supabase as any)
+  const { data, error } = await supabase
     .from("whatsapp_landing_editors")
     .select(`
       id,
@@ -594,7 +594,7 @@ export async function listLandingEditorAssignmentsAsAdmin(): Promise<LandingEdit
 
   if (error) throw error;
 
-  return ((data ?? []) as any[]).map((row) => ({
+  return (data ?? []).map((row) => ({
     id: String(row.id),
     landingId: String(row.landing_id),
     landingSlug: String(row.whatsapp_landings.slug),
@@ -608,7 +608,7 @@ export async function listLandingEditorAssignmentsAsAdmin(): Promise<LandingEdit
 }
 
 export async function grantLandingEditorAsAdmin(landingId: string, userId: string) {
-  const { error } = await (supabase as any).rpc("admin_grant_whatsapp_landing_editor", {
+  const { error } = await supabase.rpc("admin_grant_whatsapp_landing_editor", {
     p_landing_id: landingId,
     p_user_id: userId,
   });
@@ -617,7 +617,7 @@ export async function grantLandingEditorAsAdmin(landingId: string, userId: strin
 }
 
 export async function revokeLandingEditorAsAdmin(assignmentId: string) {
-  const { error } = await (supabase as any).rpc("admin_revoke_whatsapp_landing_editor", {
+  const { error } = await supabase.rpc("admin_revoke_whatsapp_landing_editor", {
     p_assignment_id: assignmentId,
   });
 

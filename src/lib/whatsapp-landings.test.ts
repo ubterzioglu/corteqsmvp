@@ -97,7 +97,7 @@ describe("whatsapp landing helpers", () => {
       created_at: "2026-05-31T10:00:00.000Z",
       updated_at: "2026-05-31T10:00:00.000Z",
       user_id: "user-1",
-    } as any);
+    } as unknown as Parameters<typeof rowToLanding>[0]);
 
     expect(landing.memberApproved).toBe(true);
     expect(landing.adminApproved).toBe(false);
@@ -126,7 +126,7 @@ describe("whatsapp landing helpers", () => {
       created_at: "2026-05-31T10:00:00.000Z",
       updated_at: "2026-05-31T10:00:00.000Z",
       user_id: "user-1",
-    } as any);
+    } as unknown as Parameters<typeof rowToLanding>[0]);
 
     expect(landing.memberApproved).toBe(false);
     expect(landing.adminApproved).toBe(true);
@@ -154,7 +154,7 @@ describe("whatsapp landing helpers", () => {
       created_at: "2026-05-31T10:00:00.000Z",
       updated_at: "2026-05-31T10:00:00.000Z",
       user_id: "user-1",
-    } as any);
+    } as unknown as Parameters<typeof rowToLanding>[0]);
 
     expect(landing.adminApproved).toBe(true);
     expect(landing.memberApproved).toBe(false);

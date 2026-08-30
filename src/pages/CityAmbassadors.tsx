@@ -79,7 +79,7 @@ const CityAmbassadors = () => {
     }
     setLoading(true);
     try {
-      const { error } = await supabase.from("city_ambassador_applications" as any).insert({
+      const { error } = await supabase.from("city_ambassador_applications").insert({
         user_id: user.id,
         full_name: form.full_name,
         email: form.email,
@@ -93,7 +93,7 @@ const CityAmbassadors = () => {
         first_week_plan: form.first_week_plan || null,
         weekly_hours: form.weekly_hours || null,
         motivation: form.motivation || null,
-      } as any);
+      });
       if (error) throw error;
       setSubmitted(true);
       toast({ title: "Başvurunuz alındı! 🎉", description: "En kısa sürede sizinle iletişime geçeceğiz." });

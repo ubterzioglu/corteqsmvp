@@ -9,10 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import type { Tables } from "@/integrations/supabase/types";
+
+type AmbassadorApplication = Tables<"city_ambassador_applications">;
+type AmbassadorApplicationStatus = "approved" | "rejected";
 
 const ProfileAdmin = () => {
   const { toast } = useToast();
-  const [ambassadorApps, setAmbassadorApps] = useState<any[]>([]);
+  const [ambassadorApps, setAmbassadorApps] = useState<AmbassadorApplication[]>([]);
   const [appsLoading, setAppsLoading] = useState(false);
 
   useEffect(() => {
@@ -21,13 +25,13 @@ const ProfileAdmin = () => {
 
   const fetchAmbassadorApps = async () => {
     setAppsLoading(true);
-    const { data } = await supabase.from("city_ambassador_applications" as any).select("*").order("created_at", { ascending: false });
-    setAmbassadorApps((data as any[]) || []);
+    const { data } = await supabase.from("city_ambassador_applications").select("*").order("created_at", { ascending: false });
+    setAmbassadorApps(data ?? []);
     setAppsLoading(false);
   };
 
-  const updateAppStatus = async (id: string, status: string) => {
-    const { error } = await supabase.from("city_ambassador_applications" as any).update({ status } as any).eq("id", id);
+  const updateAppStatus = async (id: string, status: AmbassadorApplicationStatus) => {
+    const { error } = await supabase.from("city_ambassador_applications").update({ status }).eq("id", id);
     if (error) {
       toast({ title: "Hata", description: error.message, variant: "destructive" });
     } else {
@@ -156,7 +160,7 @@ const ProfileAdmin = () => {
               <p className="text-muted-foreground text-sm">Henüz başvuru yok.</p>
             ) : (
               <div className="space-y-4">
-                {ambassadorApps.map((app: any) => (
+                {ambassadorApps.map((app) => (
                   <div key={app.id} className="p-4 rounded-xl bg-muted/50 space-y-2">
                     <div className="flex items-center justify-between">
                       <div>

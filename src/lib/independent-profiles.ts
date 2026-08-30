@@ -215,7 +215,7 @@ export const getConsulateSlugForAssociationId = (associationId: string) =>
   CONSULATE_SLUG_BY_ASSOCIATION_ID[associationId] ?? null;
 
 export async function getPublicIndependentProfile(slug: string): Promise<IndependentProfile | null> {
-  const { data, error } = await (supabase as any).rpc("get_public_independent_profile", {
+  const { data, error } = await supabase.rpc("get_public_independent_profile", {
     p_slug: slug,
   });
 
@@ -226,7 +226,7 @@ export async function getPublicIndependentProfile(slug: string): Promise<Indepen
 export async function listPublishedIndependentProfiles(
   profileKind: IndependentProfileKindFilter = "all",
 ): Promise<IndependentProfile[]> {
-  let query = (supabase as any)
+  let query = supabase
     .from("independent_profiles")
     .select("*")
     .eq("is_published", true);
@@ -244,7 +244,7 @@ export async function listPublishedIndependentProfiles(
 }
 
 export async function listIndependentProfilesAsAdmin(): Promise<IndependentProfile[]> {
-  const { data, error } = await (supabase as any)
+  const { data, error } = await supabase
     .from("independent_profiles")
     .select("*")
     .order("sort_order", { ascending: true })
@@ -255,7 +255,7 @@ export async function listIndependentProfilesAsAdmin(): Promise<IndependentProfi
 }
 
 export async function createIndependentProfileAsAdmin(input: IndependentProfileInput): Promise<IndependentProfile> {
-  const { data, error } = await (supabase as any)
+  const { data, error } = await supabase
     .from("independent_profiles")
     .insert(inputToPayload(input))
     .select("*")
@@ -269,7 +269,7 @@ export async function updateIndependentProfileAsAdmin(
   id: string,
   input: IndependentProfileInput,
 ): Promise<IndependentProfile> {
-  const { data, error } = await (supabase as any)
+  const { data, error } = await supabase
     .from("independent_profiles")
     .update(inputToPayload(input))
     .eq("id", id)
