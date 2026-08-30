@@ -30,12 +30,16 @@ const BusinessOpportunitiesPanel = () => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) setItems(JSON.parse(raw));
-    } catch {}
+    } catch {
+      // Bozuk veya erişilemeyen yerel veri yerine boş liste kullanılır.
+    }
   }, []);
 
   const persist = (next: Opportunity[]) => {
     setItems(next);
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch {}
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch {
+      // Yerel depolama kapalı olsa da oturum içi state güncel kalır.
+    }
   };
 
   const handleAdd = () => {

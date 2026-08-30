@@ -28,7 +28,11 @@ interface ServiceRequest {
   status: string;
   created_at: string;
   user_name?: string;
-  my_proposal?: any;
+  my_proposal?: {
+    message: string;
+    price: number | null;
+    status: string;
+  } | null;
 }
 
 const URGENCY_MAP: Record<string, { label: string; color: string }> = {

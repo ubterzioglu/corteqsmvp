@@ -93,8 +93,7 @@ function toBase64Lines(value: string): string {
 
 /** Başlık değeri ASCII dışı karakter içeriyorsa RFC 2047 UTF-8/B ile kodlar (Türkçe konular). */
 function encodeHeaderValue(value: string): string {
-  // deno-lint-ignore no-control-regex
-  if (!/[^\x00-\x7F]/.test(value)) return value;
+  if (![...value].some((character) => (character.codePointAt(0) ?? 0) > 0x7f)) return value;
   return `=?UTF-8?B?${bytesToBase64(encoder.encode(value))}?=`;
 }
 

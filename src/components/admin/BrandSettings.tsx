@@ -28,7 +28,8 @@ const BrandSettings = () => {
 
   useEffect(() => {
     (async () => {
-      const { data } = await (supabase.from("site_settings" as any) as any)
+      const { data } = await supabase
+        .from("site_settings")
         .select("*")
         .eq("id", 1)
         .maybeSingle();
@@ -68,7 +69,8 @@ const BrandSettings = () => {
 
   const save = async () => {
     setSaving(true);
-    const { error } = await (supabase.from("site_settings" as any) as any)
+    const { error } = await supabase
+      .from("site_settings")
       .upsert({ id: 1, ...settings, updated_at: new Date().toISOString() });
     setSaving(false);
     if (error) {

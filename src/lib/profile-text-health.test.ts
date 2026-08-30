@@ -4,6 +4,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 const projectRoot = process.cwd();
+// eslint-disable-next-line no-control-regex -- Mojibake kontrolü C0/Latin-1 bayt aralığını bilerek tarar.
 const suspiciousPatterns = [/\u00C3[\u0080-\u00BF]/u, /\u00C4[\u0080-\u00BF]/u, /\u00C5[\u0080-\u00BF]/u, /\u00E2\u20AC[\u0000-\u00FF]?/u, /\uFFFD/u];
 
 describe("profile text health", () => {

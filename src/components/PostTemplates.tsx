@@ -4,6 +4,7 @@ import {
   Shield, Network, Eye, TrendingUp, Radio, Play, BarChart3,
   Sparkles, Heart, Globe2,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 export type TemplateType =
   | "consultant"
@@ -19,8 +20,8 @@ export type TemplateConfig = {
   subtitle: string;
   intro: string;
   quote: string;
-  pillars: { icon: any; label: string; desc: string }[];
-  topIcon: any;
+  pillars: { icon: LucideIcon; label: string; desc: string }[];
+  topIcon: LucideIcon;
   // Tailwind classes
   bg: string;          // page background
   accent: string;      // accent color (text)

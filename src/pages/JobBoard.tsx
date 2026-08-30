@@ -48,7 +48,7 @@ const JobBoard = () => {
         .select("*")
         .eq("status", "published")
         .order("created_at", { ascending: false });
-      setListings((data as any) || []);
+      setListings(data ?? []);
       setLoading(false);
     })();
   }, []);

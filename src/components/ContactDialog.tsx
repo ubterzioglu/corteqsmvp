@@ -38,7 +38,7 @@ const ContactDialog = ({ trigger, className }: Props) => {
       return;
     }
     setLoading(true);
-    const { error } = await (supabase.from("contact_messages") as any).insert({
+    const { error } = await supabase.from("contact_messages").insert({
       full_name: parsed.data.full_name,
       email: parsed.data.email,
       country: parsed.data.country || null,

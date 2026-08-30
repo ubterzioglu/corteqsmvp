@@ -57,7 +57,8 @@ const ConsultantCampaign = () => {
   const togglePackage = (id: string) => {
     setSelectedPackages(prev => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   };
@@ -65,7 +66,8 @@ const ConsultantCampaign = () => {
   const togglePlatform = (key: string) => {
     setSelectedPlatforms(prev => {
       const next = new Set(prev);
-      next.has(key) ? next.delete(key) : next.add(key);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
       return next;
     });
   };

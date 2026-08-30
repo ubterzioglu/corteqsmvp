@@ -18,7 +18,9 @@ const write = (map: FollowMap) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
     window.dispatchEvent(new CustomEvent("corteqs:follow-change"));
-  } catch {}
+  } catch {
+    // Yerel depolama kapalıysa takip durumu yalnız bellekte kalır.
+  }
 };
 
 const makeKey = (kind: string, id: string) => `${kind}:${id}`;

@@ -45,7 +45,7 @@ const JobListingsManager = () => {
       .select("id,title,employment_type,status,package,hide_business_name,created_at")
       .eq("user_id", auth.user.id)
       .order("created_at", { ascending: false });
-    setListings((data as any) || []);
+    setListings(data ?? []);
     setLoading(false);
   };
 
@@ -57,7 +57,7 @@ const JobListingsManager = () => {
       .select("id,applicant_name,applicant_email,applicant_phone,message,link_url,attachment_url,attachment_name,created_at")
       .eq("listing_id", listingId)
       .order("created_at", { ascending: false });
-    setApps((p) => ({ ...p, [listingId]: (data as any) || [] }));
+    setApps((previous) => ({ ...previous, [listingId]: data ?? [] }));
   };
 
   const toggleApps = (id: string) => {

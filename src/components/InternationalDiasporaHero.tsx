@@ -278,8 +278,8 @@ const InternationalDiasporaHero = () => {
       if (error) throw error;
       setDone(true);
       toast({ title: c.thanks, description: c.success });
-    } catch (err: any) {
-      toast({ title: c.somethingWrong, description: err.message, variant: "destructive" });
+    } catch (error: unknown) {
+      toast({ title: c.somethingWrong, description: error instanceof Error ? error.message : c.somethingWrong, variant: "destructive" });
     } finally {
       setSubmitting(false);
     }

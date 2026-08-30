@@ -30,9 +30,9 @@ const HeroCityCounters = () => {
         return;
       }
       const map = new Map<string, CityCount>();
-      data.forEach((r: any) => {
-        const city = (r.city || "").trim();
-        const country = (r.country || "").trim();
+      data.forEach((row) => {
+        const city = (row.city || "").trim();
+        const country = (row.country || "").trim();
         if (!city) return;
         const key = `${city}|${country}`;
         const cur = map.get(key);

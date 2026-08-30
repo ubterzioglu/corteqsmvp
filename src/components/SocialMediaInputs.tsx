@@ -45,13 +45,17 @@ const SocialMediaInputs = ({ defaultValues = {}, title = "Sosyal Medya Hesaplar�
     try {
       const raw = localStorage.getItem(storageKey);
       if (raw) return JSON.parse(raw);
-    } catch {}
+    } catch {
+      // Bozuk yerel tercihleri güvenli varsayılanlarla değiştir.
+    }
     // default: all visible
     return FIELDS.reduce((acc, f) => ({ ...acc, [f.key]: true }), {} as SocialMediaVisibility);
   });
 
   useEffect(() => {
-    try { localStorage.setItem(storageKey, JSON.stringify(visibility)); } catch {}
+    try { localStorage.setItem(storageKey, JSON.stringify(visibility)); } catch {
+      // Gizli mod veya kota hatasında görünürlük yine bellekte çalışır.
+    }
   }, [visibility, storageKey]);
 
   const isVisible = (k: keyof SocialMediaValues) => visibility[k] ?? true;

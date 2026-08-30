@@ -69,7 +69,9 @@ export function useConsultantFeatures(consultantId: string | undefined) {
         if (consultantId) {
           try {
             localStorage.setItem(storageKey(consultantId), JSON.stringify(next));
-          } catch {}
+          } catch {
+            // Yerel depolama kapalı olsa da state güncellemesi geçerlidir.
+          }
         }
         return next;
       });

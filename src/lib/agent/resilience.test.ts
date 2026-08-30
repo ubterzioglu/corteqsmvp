@@ -99,7 +99,7 @@ describe("CircuitBreaker", () => {
   });
 
   it("eşiğe ulaşınca open olur ve istekleri engeller", () => {
-    let t = 0;
+    const t = 0;
     const cb = new CircuitBreaker(3, 1000, () => t);
     cb.recordFailure();
     cb.recordFailure();

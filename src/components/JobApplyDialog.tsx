@@ -74,8 +74,8 @@ const JobApplyDialog = ({ open, onOpenChange, listing }: JobApplyDialogProps) =>
       toast({ title: "Başvurun iletildi! 🎉", description: "İlan sahibine bildirim gönderildi." });
       onOpenChange(false);
       setName(""); setEmail(""); setPhone(""); setMessage(""); setLinkUrl(""); setFile(null);
-    } catch (e: any) {
-      toast({ title: "Hata", description: e?.message || "Başvuru gönderilemedi", variant: "destructive" });
+    } catch (error: unknown) {
+      toast({ title: "Hata", description: error instanceof Error ? error.message : "Başvuru gönderilemedi", variant: "destructive" });
     } finally {
       setSubmitting(false);
     }

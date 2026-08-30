@@ -47,7 +47,7 @@ const FeaturedConsultants = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-          {featured.map((c: any) => {
+          {featured.map((c) => {
             const kind = c.isAmbassador ? "ambassador" : "consultant";
             const isFollowed = isFollowedFn(kind, c.id);
             const linkTo = "/directory";

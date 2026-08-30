@@ -111,6 +111,14 @@ const chartTooltipStyle = {
 };
 
 const dataKeys = ["subscription", "ai_twin", "live_session", "event_ticket", "event_boost", "showcase", "social_campaign", "radio", "hospital", "coupon", "job_listing", "whatsapp", "service_fee"] as const;
+type RevenueKey = (typeof dataKeys)[number];
+type MonthlyChartRow = { month: string; total: number } & Record<RevenueKey, number>;
+
+const readRevenue = (row: object, key: string, fallbackKey = "other") => {
+  const values = row as Record<string, unknown>;
+  const value = values[key] ?? values[fallbackKey];
+  return typeof value === "number" ? value : 0;
+};
 
 const RevenueTracker = () => {
   const [period, setPeriod] = useState("monthly");
@@ -129,10 +137,10 @@ const RevenueTracker = () => {
       countryFilter === "ABD" ? 0.1 : 0.09;
 
     return sliced.map(row => {
-      const newRow: any = { month: row.month };
+      const newRow = { month: row.month, total: 0 } as MonthlyChartRow;
       let total = 0;
       dataKeys.forEach(k => {
-        const val = Math.round((row as any)[k] * countryMultiplier);
+        const val = Math.round(row[k] * countryMultiplier);
         if (featureFilter === "all" || featureFilter === k) {
           newRow[k] = val;
           total += val;
@@ -152,7 +160,7 @@ const RevenueTracker = () => {
     if (featureFilter !== "all") {
       return allRevenueByCountry.map(c => ({
         country: c.country,
-        revenue: (c as any)[featureFilter] || (c as any).other || 0,
+        revenue: readRevenue(c, featureFilter),
       }));
     }
     return allRevenueByCountry.map(c => ({
@@ -171,7 +179,7 @@ const RevenueTracker = () => {
       country: c.country,
       revenue: featureFilter === "all"
         ? c.subscription + c.ai_twin + c.live_session + c.event_ticket + c.hospital + c.other
-        : (c as any)[featureFilter] || (c as any).other || 0,
+        : readRevenue(c, featureFilter),
     }));
   }, [countryFilter, featureFilter]);
 
@@ -229,7 +237,7 @@ const RevenueTracker = () => {
           <SelectTrigger className="w-44 h-8 text-xs"><SelectValue /></SelectTrigger>
           <SelectContent>
             {revenueCategories.map(c => (
-              <SelectItem key={c.key} value={c.key === "all" ? "all" : (c as any).dataKey}>{c.label}</SelectItem>
+              <SelectItem key={c.key} value={c.dataKey ?? "all"}>{c.label}</SelectItem>
             ))}
           </SelectContent>
         </Select>
