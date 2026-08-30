@@ -151,5 +151,6 @@ describe("DirectoryPage", () => {
 
     expect(screen.getByText(/Tam dizin için giriş gerekiyor/i)).toBeInTheDocument();
     expect(listUnifiedDirectoryRowsMock).not.toHaveBeenCalled();
+    await waitFor(() => expect(getTotalDirectoryCountMock).toHaveBeenCalledTimes(1));
   });
 });

@@ -38,9 +38,12 @@ describe("useAdminSidebarState", () => {
   });
 
   it("bozuk localStorage JSON'unda graceful fallback yapar", () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     window.localStorage.setItem(STORAGE_KEY, "{bozuk-json");
     const { result } = renderHook(() => useAdminSidebarState());
     expect(result.current.collapsed).toBe(false);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining("Admin storage okunamadı"), expect.any(Error));
+    consoleErrorSpy.mockRestore();
   });
 
   it("mobil drawer durumu yönetilir", () => {

@@ -49,11 +49,14 @@ describe("useAdminUpdates", () => {
   });
 
   it("bozuk JSON'da çökmez, tümü okunmamış kabul edilir", () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     window.localStorage.setItem(ADMIN_STORAGE_KEYS.updatesSeen, "{bozuk-json");
 
     const { result } = renderHook(() => useAdminUpdates());
 
     expect(result.current.unreadCount).toBe(ADMIN_UPDATES.length);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining("Admin storage okunamadı"), expect.any(Error));
+    consoleErrorSpy.mockRestore();
   });
 
   it("dizi olmayan değer fallback'e düşer, string olmayan id'ler atlanır", () => {

@@ -853,6 +853,10 @@ const AdminCatalogPage = () => {
 
       <Sheet open={Boolean(selectedRecord)} onOpenChange={(open) => (!open ? setSelectedRecord(null) : undefined)}>
         <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
+          <SheetHeader className="sr-only">
+            <SheetTitle>Katalog kayıt detayı</SheetTitle>
+            <SheetDescription>Seçilen katalog veya profil kaydının yönetim ayrıntıları.</SheetDescription>
+          </SheetHeader>
           {selectedRecord ? (
             selectedRecord.kind === "catalog_item" || selectedRecord.kind === "member_profile" ? (
               selectedCatalogDetail ? (

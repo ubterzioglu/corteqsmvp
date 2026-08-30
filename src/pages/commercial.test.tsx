@@ -98,13 +98,10 @@ describe("commercial routes", () => {
   }
 
   it("renders not found for an unknown commercial document", async () => {
-    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
     await renderAtRoute("/commercial/unknown-doc");
 
     await waitFor(() =>
       expect(screen.getByRole("heading", { name: /bu sayfa/i })).toBeInTheDocument()
     );
-    expect(consoleErrorSpy).toHaveBeenCalled();
   });
 });

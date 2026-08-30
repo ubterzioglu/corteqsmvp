@@ -21,6 +21,12 @@ vi.mock("@/lib/admin", () => ({
   userIsAdmin: mocks.userIsAdmin,
 }));
 
+vi.mock("@/lib/admin/admin-favorites-api", () => ({
+  fetchAdminFavoritePageIds: vi.fn().mockResolvedValue([]),
+  addAdminFavoritePage: vi.fn().mockResolvedValue(undefined),
+  removeAdminFavoritePage: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     // Topbar'daki AdminNotificationMenu get_admin_notification_state RPC'sini çağırır;
@@ -100,6 +106,7 @@ describe("AdminAccessGate / AdminShell erişim akışı", () => {
   });
 
   it("is_admin RPC hatasında error state gösterir, denied'a düşmez", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     mocks.userIsAdmin.mockRejectedValue(new Error("RPC failure"));
     renderShell();
 
@@ -107,15 +114,20 @@ describe("AdminAccessGate / AdminShell erişim akışı", () => {
     expect(screen.getByRole("button", { name: "Tekrar Dene" })).toBeInTheDocument();
     expect(screen.queryByText("Bu hesabın yönetici yetkisi bulunmuyor")).not.toBeInTheDocument();
     expect(screen.queryByText("Admin Home Content")).not.toBeInTheDocument();
+    expect(consoleErrorSpy).toHaveBeenCalledWith("Admin yetki kontrolü başarısız:", expect.any(Error));
+    consoleErrorSpy.mockRestore();
   });
 
   it("error state'te Tekrar Dene yetki kontrolünü yeniden çalıştırır", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     mocks.userIsAdmin.mockRejectedValueOnce(new Error("RPC failure")).mockResolvedValue(true);
     renderShell();
 
     fireEvent.click(await screen.findByRole("button", { name: "Tekrar Dene" }));
 
     expect(await screen.findByText("Admin Home Content")).toBeInTheDocument();
+    expect(consoleErrorSpy).toHaveBeenCalledWith("Admin yetki kontrolü başarısız:", expect.any(Error));
+    consoleErrorSpy.mockRestore();
   });
 
   it("logout sonrası login formuna döner", async () => {

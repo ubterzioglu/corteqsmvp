@@ -76,6 +76,8 @@ const listCaddePostCommentsMock = vi.fn();
 const createCaddeCommentMock = vi.fn();
 const createCaddePostMock = vi.fn();
 const recordCaddeShareMock = vi.fn();
+const listTrendingCaddeHashtagsMock = vi.fn();
+const listMyNotificationsMock = vi.fn();
 const toastMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({
@@ -105,6 +107,20 @@ vi.mock("@/lib/cadde-api", async () => {
     createCaddeComment: (...args: unknown[]) => createCaddeCommentMock(...args),
     createCaddePost: (...args: unknown[]) => createCaddePostMock(...args),
     recordCaddeShare: (...args: unknown[]) => recordCaddeShareMock(...args),
+    listTrendingCaddeHashtags: (...args: unknown[]) => listTrendingCaddeHashtagsMock(...args),
+  };
+});
+
+vi.mock("@/lib/cadde-notifications-api", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde-notifications-api")>(
+    "@/lib/cadde-notifications-api",
+  );
+  return {
+    ...actual,
+    listMyNotifications: (...args: unknown[]) => listMyNotificationsMock(...args),
+    markAllNotificationsRead: vi.fn().mockResolvedValue(undefined),
+    markNotificationRead: vi.fn().mockResolvedValue(undefined),
+    subscribeToMyNotifications: vi.fn(() => () => {}),
   };
 });
 
@@ -149,6 +165,8 @@ describe("CaddePage", () => {
     createCaddeCommentMock.mockResolvedValue(undefined);
     createCaddePostMock.mockResolvedValue("post-created");
     recordCaddeShareMock.mockResolvedValue(undefined);
+    listTrendingCaddeHashtagsMock.mockResolvedValue([]);
+    listMyNotificationsMock.mockResolvedValue([]);
     Object.defineProperty(navigator, "share", { configurable: true, value: undefined });
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: undefined });
   });

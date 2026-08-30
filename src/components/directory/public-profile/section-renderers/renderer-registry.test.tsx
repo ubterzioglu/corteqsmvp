@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import type { PublicProfileSectionViewModel } from "@/lib/public-catalog-profile-view-model";
 
@@ -59,9 +59,12 @@ describe("resolvePublicSectionRenderer", () => {
   });
 
   it("generic fallback shows a friendly message for empty content", () => {
+    const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const section = makeSection({ componentKey: "brand_new_widget", content: {} });
     const { Component } = resolvePublicSectionRenderer(section.componentKey);
     render(<Component section={section} />);
     expect(screen.getByText(/yakında eklenecek/i)).toBeInTheDocument();
+    expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining("has no renderable public content"));
+    consoleWarnSpy.mockRestore();
   });
 });

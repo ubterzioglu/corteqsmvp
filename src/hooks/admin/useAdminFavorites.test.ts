@@ -67,10 +67,13 @@ describe("useAdminFavorites", () => {
   });
 
   it("DB okuması hata verirse boş listeyle graceful fallback yapar", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     fetchMock.mockRejectedValue(new Error("network error"));
     const { result } = renderHook(() => useAdminFavorites(USER_ID));
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalled());
     expect(result.current.favoriteIds).toEqual([]);
+    expect(consoleErrorSpy).toHaveBeenCalledWith("Favori sayfalar yüklenemedi:", expect.any(Error));
+    consoleErrorSpy.mockRestore();
   });
 });

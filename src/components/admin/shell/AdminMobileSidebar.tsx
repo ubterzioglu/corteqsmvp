@@ -2,7 +2,7 @@
 // Desktop sidebar ile AYNI registry'den üretilir; ayrı statik link listesi
 // tutulmaz (masterplan Risk 3 önlemi). Navigasyonda Sheet kapanır.
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { adminNavGroups } from "@/lib/admin-shell/admin-navigation-registry";
 
 import AdminSidebarGroup from "./AdminSidebarGroup";
@@ -26,6 +26,7 @@ const AdminMobileSidebar = ({ open, onOpenChange, onLogout }: AdminMobileSidebar
       <SheetContent side="left" className="w-[86vw] max-w-sm overflow-y-auto p-4">
         <SheetHeader>
           <SheetTitle>CorteQS Admin</SheetTitle>
+          <SheetDescription>Yönetim ekranları arasında gezinme menüsü.</SheetDescription>
         </SheetHeader>
         <nav aria-label="Admin navigasyonu" className="mt-4 space-y-3">
           {adminNavGroups.map((group) => (

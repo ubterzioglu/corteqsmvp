@@ -4,6 +4,14 @@ import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { formatCurrency } from '@/lib/muhasebe-format';
 import MuhasebeDashboard from '@/pages/admin/muhasebe/MuhasebeDashboard';
 
+vi.mock('recharts', async () => {
+  const actual = await vi.importActual<typeof import('recharts')>('recharts');
+  return {
+    ...actual,
+    ResponsiveContainer: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
+  };
+});
+
 vi.mock('@/components/ui/tabs', async () => {
   const React = await import('react');
   const TabsContext = React.createContext<{ onValueChange?: (value: string) => void }>({});

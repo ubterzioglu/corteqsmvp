@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import CatalogEntityProfilePanel from "@/components/admin/catalog/CatalogEntityProfilePanel";
@@ -264,6 +264,12 @@ describe("CatalogEntityProfilePanel", () => {
       expect(screen.getByDisplayValue("Umut Baris Terzioglu")).toBeDisabled();
     });
 
-    resolveSetAttribute!();
+    await act(async () => {
+      resolveSetAttribute!();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue("Umut Baris Terzioglu")).not.toBeDisabled();
+    });
   });
 });

@@ -125,9 +125,15 @@ describe("uploadCaddeMedia", () => {
   });
 
   it("storage hatasında kullanıcı-dostu mesajla fırlatır", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     uploadMock.mockResolvedValue({ error: { message: "boom" } });
     await expect(uploadCaddeMedia(fakeFile("a.jpg", "image/jpeg", 10), "carsi")).rejects.toThrow(
       "Dosya yüklenemedi",
     );
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "[cadde_media_upload_error]",
+      expect.objectContaining({ scope: "carsi" }),
+    );
+    consoleErrorSpy.mockRestore();
   });
 });

@@ -46,9 +46,12 @@ describe("useAdminRecentPages", () => {
   });
 
   it("bozuk JSON'da graceful fallback yapar", () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     window.localStorage.setItem(STORAGE_KEY, "[bozuk");
     const { result } = renderHook(() => useAdminRecentPages());
     expect(result.current.recentPages).toEqual([]);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining("Admin storage okunamadı"), expect.any(Error));
+    consoleErrorSpy.mockRestore();
   });
 
   it("geçersiz kayıtları filtreler", () => {

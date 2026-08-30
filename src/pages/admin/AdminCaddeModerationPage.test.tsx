@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -65,7 +66,7 @@ describe("AdminCaddeModerationPage", () => {
     renderPage();
 
     expect(await screen.findByText(/Sebep: spam içerik/)).toBeInTheDocument();
-    screen.getByRole("button", { name: "Cafe" }).click();
+    await userEvent.click(screen.getByRole("button", { name: "Cafe" }));
     expect(await screen.findByText(/uygunsuz cafe adı/)).toBeInTheDocument();
   });
 

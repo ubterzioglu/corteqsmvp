@@ -59,3 +59,11 @@ Object.defineProperty(globalThis, "IntersectionObserver", {
 if (!Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = () => {};
 }
+
+// jsdom pencere kaydırmasını da uygulamaz. Route değişimlerinde ScrollToTop
+// bunu çağırdığı için test ortamında sessiz ve deterministik bir no-op kullan.
+Object.defineProperty(window, "scrollTo", {
+  configurable: true,
+  writable: true,
+  value: () => {},
+});

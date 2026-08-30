@@ -50,6 +50,7 @@ describe("cadde feed okuma yolu hata görünürlüğü", () => {
   });
 
   it("RPC hatası fırlatır — sessizce boş sayfa DÖNMEZ", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const { listCaddeFeed } = await import("@/lib/cadde-api");
     rpcMock.mockResolvedValue({
       data: null,
@@ -57,13 +58,18 @@ describe("cadde feed okuma yolu hata görünürlüğü", () => {
     });
 
     await expect(listCaddeFeed(realFilters(), null, null, "tr")).rejects.toThrow();
+    expect(consoleErrorSpy).toHaveBeenCalledWith("[cadde_api_error] listCaddeFeed", expect.anything());
+    consoleErrorSpy.mockRestore();
   });
 
   it("ağ/istisna hatası da fırlatır", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const { listCaddeFeed } = await import("@/lib/cadde-api");
     rpcMock.mockRejectedValue(new Error("Failed to fetch"));
 
     await expect(listCaddeFeed(realFilters(), null, null, "tr")).rejects.toThrow();
+    expect(consoleErrorSpy).toHaveBeenCalledWith("[cadde_api_error] listCaddeFeed", expect.any(Error));
+    consoleErrorSpy.mockRestore();
   });
 
   it("caddeReadError ham hatayı loglar, kullanıcıya toast atmaz ve Error döner", () => {
