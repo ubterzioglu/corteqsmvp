@@ -26,14 +26,6 @@ export type AdminTodoEntry = {
 
 export const ADMIN_TODOS: AdminTodoEntry[] = [
   {
-    id: "20260805-migration-surum-kaydi-unutuluyor",
-    title: "Migration'lar sürüm kaydını kendileri yazmıyor — 4 kez unutuldu, şablona eklensin",
-    description:
-      "TEKRARLAYAN SORUN, tekil bir hata değil. Bu repoda migration dosyaları supabase_migrations.schema_migrations'a KENDİLERİ yazmıyor (örnek: 20260805130000 ve 140000 dosyalarında böyle bir INSERT yok); kayıt psql çalıştırıldıktan sonra ayrıca atılıyor ve unutuluyor. Dört kez yaşandı: 18 Temmuz, 20 Temmuz, 20260805120000, 20260804190000. Her seferinde `npm run check:migrations` migration'ı 'uygulanmamış' göstererek yanlış yönlendirdi — bir sonraki oturum uygulanmış bir migration'ı yeniden uygulamaya kalkıyor (idempotent oldukları için zarar vermedi ama şans eseri). Not: tablo/fonksiyon canlıda VAR olması sürüm kaydı olduğu anlamına gelmez; bunun tersini varsaymak da aynı tuzağın diğer yüzü. KALICI ÇÖZÜM SEÇENEKLERİ: (a) migration şablonuna sonda bir `insert into supabase_migrations.schema_migrations (version, name) values (...) on conflict do nothing;` satırı koy — dosya kendi kaydını yazar, unutulamaz; (b) uygulamayı supabase CLI (`supabase db push`) üzerinden yap, kaydı CLI atar. (a) daha az bağımlılık getirir, çünkü bu repoda migration'lar elle `psql -f` ile uygulanıyor. Şu an sapma YOK (356 dosya / 356 kayıt, 5 Ağustos'ta doğrulandı) — bu madde bir sonraki migration'da tekrarı önlemek için duruyor.",
-    priority: "normal",
-    actions: [{ label: "İş Panosunu Aç", to: "/admin/workshop/cadde" }],
-  },
-  {
     id: "20260805-cadde-profil-konum-serbest-metin",
     title: "Profil formu ile Cadde katalogu AYRI listeler — konum eşleşmesi bu yüzden kopuyor",
     description:

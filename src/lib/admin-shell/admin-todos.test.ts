@@ -38,4 +38,10 @@ describe("ADMIN_TODOS", () => {
       }
     }
   });
+
+  it("tamamlanmış migration runner işini açık iş olarak göstermiyor", () => {
+    expect(ADMIN_TODOS.map((todo) => todo.id)).not.toContain(
+      "20260805-migration-surum-kaydi-unutuluyor",
+    );
+  });
 });
