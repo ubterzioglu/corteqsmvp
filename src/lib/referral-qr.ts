@@ -14,10 +14,20 @@ export function buildReferralTargetUrl(
   code: string,
   baseOrigin = typeof window === "undefined" ? "https://corteqs.net" : window.location.origin,
 ): string {
-  const target = new URL("/login", baseOrigin);
-  target.searchParams.set("mode", "signup");
+  const target = new URL("/founding-1000", baseOrigin);
   target.searchParams.set("ref", normalizeReferralCode(code));
   return target.toString();
+}
+
+export function readReferralCodeFromSearch(search: string): string | undefined {
+  const code = new URLSearchParams(search).get("ref");
+  if (!code) return undefined;
+
+  try {
+    return normalizeReferralCode(code);
+  } catch {
+    return undefined;
+  }
 }
 
 const qrOptions = {
