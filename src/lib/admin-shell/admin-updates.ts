@@ -14,6 +14,25 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260830-komuta-merkezi-teknik-isler-canliya-alindi",
+    date: "30 Ağustos 2026",
+    title:
+      "Komuta Merkezi'ndeki teknik işler topluca ele alındı — üye takibi, ortak sorumlu ve referral QR canlıda",
+    items: [
+      "KOMUTA MERKEZİ TOPARLANDI: Açık teknik maddeler tek tek incelendi. Gerçekten tamamlanan dört görev kapatıldı, deneme amaçlı açılmış anlamsız kayıt kaldırıldı. Kod işi olmayan veya son karar bekleyen maddeler ise yapılmış gibi gösterilmedi; açık bırakıldı.",
+      "YENİ ÜYE TAKİBİ EKRANI: Admin paneline, topluluk başvurularını tek yerde görmeyi sağlayan yeni bir ekran eklendi. Şu anda 138 başvuru ve 27 ekli dosya; başvuru türü, durum, tarih, kategori ve dosya durumuna göre süzülebiliyor. Üyenin açıklaması, ihtiyacı, davet kodu ve ilk adımlardaki ilerlemesi de aynı ekranda görülebiliyor.",
+      "EK DOSYALAR DAHA GÜVENLİ: Üyelerin yüklediği dosyalar artık herkese açık bir bağlantıyla sunulmuyor. Admin indirme istediğinde yalnızca beş dakika çalışan özel bir bağlantı oluşturuluyor; eski kayıtların bağlantıları da bu yeni düzene uyumlu biçimde ele alınıyor.",
+      "B+B GÖREVLERİNE İKİ SORUMLU: Komuta Merkezi'nde B+B etiketli görevlerde artık ikinci sorumlu seçmek zorunlu. Bu kontrol yalnızca ekranda değil, veri tarafında da uygulanıyor; böylece eksik sorumlu bilgisiyle kayıt oluşamıyor.",
+      "REFERRAL QR KODU HAZIR: Her referral kodunun yanında SVG ve PNG indirme düğmeleri var. QR kodu doğrudan gerçek kayıt formuna yönlendiriyor ve geçerli davet kodunu forma hazır getiriyor. Geçersiz kodlar sessizce yok sayılıyor; QR üretimi için dışarıya veri gönderilmiyor.",
+      "CADDE'DEKİ EKSİK PARÇALAR TAMAMLANDI: Kafe katılım istekleri ile görsel ve yorum akışındaki yarım kalan teknik parçalar ana koda alındı. Otomatik kontroller geçti. İki gerçek deneme kullanıcısıyla yapılması gereken son kabul kontrolü için ayrı görevler açık bırakıldı.",
+      "SOSYAL MEDYA TALEBİ MEVCUT KATEGORİYLE EŞLEŞTİRİLDİ: Yeni ve aynı işi yapan ikinci bir kategori açmak yerine mevcut “İçerik, SEO & Sosyal Medya” kategorisinin bu talebi zaten karşıladığı doğrulandı. Böylece listede gereksiz tekrar oluşmadı.",
+      "VERİ TABANI GÜNCEL: Projedeki 364 veri tabanı güncellemesinin tamamının canlı ortamda uygulandığı doğrulandı. Eksik veya fazladan kalmış bir güncelleme bulunmadı; bugün eklenen üye takibi, güvenlik ve B+B kuralları da canlıda kontrol edildi.",
+      "HOŞ GELDİN E-POSTASI BİLEREK AÇILMADI: Yeni e-posta tasarımı ve kısa yönlendirme listesi kodda hazır. Ancak ön izleme ve gerçek test posta kutusu kontrolü tamamlanmadan canlı gönderim açılmadı; daha önce gönderilmemiş 16 eski kayıt için de geriye dönük gönderim yapılmadı.",
+      "AÇIK KALAN SON KONTROLLER: Cadde'de iki gerçek kullanıcıyla uçtan uca deneme, admin oturumunda QR indirme düğmesine gerçek tıklama ve VIP QR kodlarının tek mi kişiye özel mi olacağı kararı hâlâ açık. Bunlar doğrulanmadan ilgili görevler kapatılmayacak.",
+      "KALİTE KONTROLLERİ: 1.608 otomatik test, tip kontrolü, üretim derlemesi, yayın öncesi denetimler ve güvenlik başlıkları kontrolü başarıyla geçti. Değişiklikler canlı ortama gönderildi.",
+    ],
+  },
+  {
     id: "20260829-cadde-panosu-gercege-cekildi",
     date: "29 Ağustos 2026",
     title:
