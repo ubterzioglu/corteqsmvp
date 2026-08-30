@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 import { gdeltAdapter } from "./adapters/gdelt.ts";
 import { rssAdapter } from "./adapters/rss.ts";
 import { atomAdapter } from "./adapters/atom.ts";

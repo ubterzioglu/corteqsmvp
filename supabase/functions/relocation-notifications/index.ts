@@ -7,7 +7,7 @@
 // NOT: Gerçek e-posta/push entegrasyonu Faz 1'de stub'tır; bildirimler relocation_interactions'a
 // 'impression' olarak loglanır ve in-app gösterim için döndürülür. Push sonraki faz.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 
 const ALLOWED_ORIGINS = new Set([
   "https://corteqs.net",

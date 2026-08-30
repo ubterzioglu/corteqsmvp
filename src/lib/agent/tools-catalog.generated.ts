@@ -97,12 +97,12 @@ export const toolCatalog = {
       ],
       "http_method": "POST",
       "dependencies": [
-        "@supabase/supabase-js@2.45.4",
+        "@supabase/supabase-js@2.108.2",
         "zod@3.25.76",
         "gemini"
       ],
       "version_pins": {
-        "@supabase/supabase-js": "2.45.4",
+        "@supabase/supabase-js": "2.108.2",
         "zod": "3.25.76"
       },
       "evidence_path": "supabase/functions/find-matches/index.ts"
@@ -128,10 +128,10 @@ export const toolCatalog = {
       ],
       "http_method": "POST",
       "dependencies": [
-        "@supabase/supabase-js@2.45.4"
+        "@supabase/supabase-js@2.108.2"
       ],
       "version_pins": {
-        "@supabase/supabase-js": "2.45.4",
+        "@supabase/supabase-js": "2.108.2",
         "zod": null
       },
       "evidence_path": "supabase/functions/lansman-admin/index.ts"
@@ -165,9 +165,11 @@ export const toolCatalog = {
         500
       ],
       "http_method": "POST",
-      "dependencies": [],
+      "dependencies": [
+        "@supabase/supabase-js@2.108.2"
+      ],
       "version_pins": {
-        "@supabase/supabase-js": null,
+        "@supabase/supabase-js": "2.108.2",
         "zod": null
       },
       "evidence_path": "supabase/functions/radar-news-scan/index.ts"
@@ -196,10 +198,10 @@ export const toolCatalog = {
       ],
       "http_method": "POST",
       "dependencies": [
-        "@supabase/supabase-js@2.45.4"
+        "@supabase/supabase-js@2.108.2"
       ],
       "version_pins": {
-        "@supabase/supabase-js": "2.45.4",
+        "@supabase/supabase-js": "2.108.2",
         "zod": null
       },
       "evidence_path": "supabase/functions/relocation-notifications/index.ts"
@@ -234,10 +236,10 @@ export const toolCatalog = {
       ],
       "http_method": "POST",
       "dependencies": [
-        "@supabase/supabase-js@2.45.4"
+        "@supabase/supabase-js@2.108.2"
       ],
       "version_pins": {
-        "@supabase/supabase-js": "2.45.4",
+        "@supabase/supabase-js": "2.108.2",
         "zod": null
       },
       "evidence_path": "supabase/functions/send-notification-emails/index.ts"
@@ -276,11 +278,11 @@ export const toolCatalog = {
       ],
       "http_method": "POST",
       "dependencies": [
-        "@supabase/supabase-js@2.45.4",
+        "@supabase/supabase-js@2.108.2",
         "zod@3.25.76"
       ],
       "version_pins": {
-        "@supabase/supabase-js": "2.45.4",
+        "@supabase/supabase-js": "2.108.2",
         "zod": "3.25.76"
       },
       "evidence_path": "supabase/functions/send-submission-email/index.ts"
@@ -324,10 +326,10 @@ export const toolCatalog = {
       ],
       "http_method": "POST",
       "dependencies": [
-        "@supabase/supabase-js@2.45.4"
+        "@supabase/supabase-js@2.108.2"
       ],
       "version_pins": {
-        "@supabase/supabase-js": "2.45.4",
+        "@supabase/supabase-js": "2.108.2",
         "zod": null
       },
       "evidence_path": "supabase/functions/submit-survey-response/index.ts"
@@ -951,11 +953,11 @@ export const toolCatalog = {
         "worker_upsert_relocation_candidate"
       ],
       "dependencies": [
-        "@supabase/supabase-js@^2.49.1",
+        "@supabase/supabase-js@2.108.2",
         "zod@^3.23.8"
       ],
       "version_pins": {
-        "@supabase/supabase-js": "^2.49.1",
+        "@supabase/supabase-js": "2.108.2",
         "zod": "^3.23.8"
       },
       "evidence_path": "workers/relocation-ingestion/package.json"
@@ -985,11 +987,11 @@ export const toolCatalog = {
         "worker_record_service_finder_cost"
       ],
       "dependencies": [
-        "@supabase/supabase-js@^2.49.1",
+        "@supabase/supabase-js@2.108.2",
         "zod@^3.23.8"
       ],
       "version_pins": {
-        "@supabase/supabase-js": "^2.49.1",
+        "@supabase/supabase-js": "2.108.2",
         "zod": "^3.23.8"
       },
       "evidence_path": "workers/service-finder/package.json"

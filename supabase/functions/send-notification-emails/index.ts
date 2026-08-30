@@ -26,7 +26,7 @@
 //
 // send-submission-email deseni: Deno + esm.sh + CORS allowlist + service_role + Zoho SMTP.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 
 import { buildAdminUpdateEmail } from "../_shared/emails/admin-update-digest.ts";
 import { escapeHtml } from "../_shared/emails/html.ts";

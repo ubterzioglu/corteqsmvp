@@ -2,54 +2,7 @@
   "schema_version": 1,
   "generated_by": "scripts/check-drift.mjs",
   "catalog_present": true,
-  "total": 2,
-  "by_severity": {
-    "medium": 2
-  },
-  "findings": [
-    {
-      "rule": "supabase-js-version-drift",
-      "severity": "medium",
-      "message": "@supabase/supabase-js frontend ^2.101.1 iken edge.find_matches, edge.lansman_admin, edge.relocation_notifications, edge.send_notification_emails, edge.send_submission_email, edge.submit_survey_response 2.45.4 pinli (minor farkı 56). SDK davranış/type drift riski.",
-      "evidence": [
-        {
-          "path": "package.json"
-        },
-        {
-          "path": "edge.find_matches"
-        },
-        {
-          "path": "edge.lansman_admin"
-        },
-        {
-          "path": "edge.relocation_notifications"
-        },
-        {
-          "path": "edge.send_notification_emails"
-        },
-        {
-          "path": "edge.send_submission_email"
-        },
-        {
-          "path": "edge.submit_survey_response"
-        }
-      ]
-    },
-    {
-      "rule": "supabase-js-version-drift",
-      "severity": "medium",
-      "message": "@supabase/supabase-js frontend ^2.101.1 iken worker.relocation_ingestion, worker.service_finder 2.49.1 pinli (minor farkı 52). SDK davranış/type drift riski.",
-      "evidence": [
-        {
-          "path": "package.json"
-        },
-        {
-          "path": "worker.relocation_ingestion"
-        },
-        {
-          "path": "worker.service_finder"
-        }
-      ]
-    }
-  ]
+  "total": 0,
+  "by_severity": {},
+  "findings": []
 }
