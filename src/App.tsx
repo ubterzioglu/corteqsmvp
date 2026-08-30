@@ -12,6 +12,7 @@ import { GENERIC_FEATURE_KEYS } from "@/lib/features";
 import ScrollTopButton from "@/components/ScrollTopButton";
 import ScrollToTop from "@/components/ScrollToTop";
 import PublicLayout from "@/components/PublicLayout";
+import RouteLoadingFallback from "@/components/RouteLoadingFallback";
 
 // Eager — SEO-critical above-the-fold pages
 import Index from "./pages/Index.tsx";
@@ -106,7 +107,7 @@ const App = () => (
         <ScrollToTop />
         <DiasporaProvider>
           <AuthProvider>
-            <Suspense fallback={null}>
+            <Suspense fallback={<RouteLoadingFallback />}>
               <Routes>
                 <Route element={<PublicLayout />}>
                   <Route path="/" element={<LandingTrialPage />} />

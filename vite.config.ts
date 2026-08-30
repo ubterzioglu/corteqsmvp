@@ -45,6 +45,31 @@ export default defineConfig(({ mode }) => ({
         main: path.resolve(__dirname, "index.html"),
         lansman: path.resolve(__dirname, "lansman/index.html"),
       },
+      output: {
+        manualChunks(id) {
+          const normalizedId = id.replace(/\\/g, "/");
+
+          if (normalizedId.includes("/src/lib/admin-shell/social-diaspora-posts.ts")) return "social-vault-diaspora";
+          if (normalizedId.includes("/src/lib/admin-shell/social-test-tools.ts")) return "social-vault-tests";
+          if (normalizedId.includes("/src/lib/admin-shell/burak-share-tools.ts")) return "social-vault-burak";
+          if (normalizedId.includes("/src/lib/admin-shell/social-share-vault.ts")) return "social-vault-tools";
+
+          if (!normalizedId.includes("/node_modules/")) return undefined;
+          if (/\/(react|react-dom|react-router|react-router-dom|scheduler)\//.test(normalizedId)) return "vendor-react";
+          if (normalizedId.includes("/@supabase/")) return "vendor-supabase";
+          if (normalizedId.includes("/@radix-ui/")) return "vendor-radix";
+          if (normalizedId.includes("/lucide-react/")) return "vendor-icons";
+          if (normalizedId.includes("/framer-motion/")) return "vendor-motion";
+          if (normalizedId.includes("/recharts/") || normalizedId.includes("/d3-")) return "vendor-charts";
+          if (normalizedId.includes("/date-fns/")) return "vendor-date";
+          if (normalizedId.includes("/@tanstack/")) return "vendor-query";
+          if (normalizedId.includes("/zod/") || normalizedId.includes("/react-hook-form/") || normalizedId.includes("/@hookform/")) return "vendor-forms";
+          if (/\/(react-markdown|remark-|rehype-|unified|micromark|mdast-|hast-|property-information|vfile)\//.test(normalizedId)) return "vendor-markdown";
+          if (normalizedId.includes("/react-day-picker/") || normalizedId.includes("/frimousse/")) return "vendor-pickers";
+          if (normalizedId.includes("/qrcode/")) return "vendor-qrcode";
+          return undefined;
+        },
+      },
     },
   },
   plugins: [
