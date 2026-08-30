@@ -94,7 +94,7 @@ const MessagesInbox = () => {
       .eq("afs_attributes.key", "full_name");
     const profilesError = attrsData.error;
     const nameByUser: Record<string, string | null> = {};
-    for (const row of (attrsData.data ?? []) as any[]) {
+    for (const row of attrsData.data ?? []) {
       nameByUser[row.user_id] = row.value_text ?? null;
     }
     const profiles: UserProfile[] = counterpartIds.map((uid) => ({

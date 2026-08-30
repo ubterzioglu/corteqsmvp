@@ -24,9 +24,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const attrs = attrsResult.data ?? [];
     const getValue = (key: string) =>
-      (attrs.find((a: any) => a.afs_attributes?.key === key)?.value_text ?? null);
+      (attrs.find((attribute) => attribute.afs_attributes?.key === key)?.value_text ?? null);
 
-    const roleKey = (roleResult.data as any)?.roles?.key ?? null;
+    const roleKey = roleResult.data?.roles?.key ?? null;
     const onboardingCompleted = Boolean(getValue("full_name"));
 
     setProfile({

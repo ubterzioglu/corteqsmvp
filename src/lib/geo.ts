@@ -26,8 +26,6 @@ type GeoCityRow = {
   sort_order: number;
 };
 
-const db = supabase as any;
-
 // PostgREST tek istekte en fazla 1000 satır döndürür; büyük ülkeler (DE ~7k, US ~13k şehir)
 // için tüm sayfalar range() ile dolaşılmalı.
 const GEO_PAGE_SIZE = 1000;
@@ -35,7 +33,7 @@ const GEO_PAGE_SIZE = 1000;
 async function fetchAllCityRows(countryIds: string[]): Promise<GeoCityRow[]> {
   const rows: GeoCityRow[] = [];
   for (let offset = 0; ; offset += GEO_PAGE_SIZE) {
-    const { data, error } = await db
+    const { data, error } = await supabase
       .from("geo_cities")
       .select("name, country_id, sort_order")
       .eq("is_active", true)
@@ -72,12 +70,12 @@ async function resolveCountryRows(countryNamesOrCodes: string[]) {
   if (normalized.length === 0) return [] as GeoCountryRow[];
 
   const [byNameResult, byCodeResult] = await Promise.all([
-    db
+    supabase
       .from("geo_countries")
       .select("id, code, name, sort_order")
       .eq("is_active", true)
       .in("name", normalized),
-    db
+    supabase
       .from("geo_countries")
       .select("id, code, name, sort_order")
       .eq("is_active", true)
@@ -105,7 +103,7 @@ export async function listGeoCountries(): Promise<GeoCountry[]> {
   }
 
   try {
-    const { data, error } = await db
+    const { data, error } = await supabase
       .from("geo_countries")
       .select("code, name, sort_order")
       .eq("is_active", true)

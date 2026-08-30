@@ -40,13 +40,13 @@ export async function fetchCatalogRows(): Promise<CatalogRow[]> {
       .select("key, label, description, is_active_globally")
       .order("key"),
 
-    (supabase as any)
+    supabase
       .from("afs_sections")
       .select("key, label, description, section_area, sort_order")
       .eq("is_active", true)
       .order("sort_order"),
 
-    (supabase as any)
+    supabase
       .from("entity_metadata")
       .select("entity_type, entity_key, description, admin_note"),
   ]);
@@ -64,7 +64,7 @@ export async function fetchCatalogRows(): Promise<CatalogRow[]> {
   const getMeta = (kind: EntityKind, key: string) =>
     metaMap.get(`${kind}:${key}`) ?? null;
 
-  const attrs: CatalogRow[] = ((attrResult.data ?? []) as any[]).map((a) => {
+  const attrs: CatalogRow[] = (attrResult.data ?? []).map((a) => {
     const meta = getMeta("attribute", a.key);
     return {
       kind: "attribute",
@@ -77,7 +77,7 @@ export async function fetchCatalogRows(): Promise<CatalogRow[]> {
     };
   });
 
-  const feats: CatalogRow[] = ((featResult.data ?? []) as any[]).map((f) => {
+  const feats: CatalogRow[] = (featResult.data ?? []).map((f) => {
     const meta = getMeta("feature", f.key);
     return {
       kind: "feature",
@@ -90,7 +90,7 @@ export async function fetchCatalogRows(): Promise<CatalogRow[]> {
     };
   });
 
-  const sects: CatalogRow[] = ((sectResult.data ?? []) as any[]).map((s) => {
+  const sects: CatalogRow[] = (sectResult.data ?? []).map((s) => {
     const meta = getMeta("profile_section", s.key);
     return {
       kind: "profile_section",

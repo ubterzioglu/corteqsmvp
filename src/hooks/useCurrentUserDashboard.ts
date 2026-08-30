@@ -31,7 +31,7 @@ export const useCurrentUserDashboard = (enabled = true) => {
     setIsLoading(true);
     setErrorMessage(null);
 
-    const { data, error } = await (supabase as any).rpc("get_current_user_dashboard");
+    const { data, error } = await supabase.rpc("get_current_user_dashboard");
 
     if (error) {
       setItems([]);
@@ -40,7 +40,7 @@ export const useCurrentUserDashboard = (enabled = true) => {
       return;
     }
 
-    setItems(((data ?? []) as CurrentUserDashboardFeature[]).filter((item) => item.is_enabled));
+    setItems((data ?? []).filter((item) => item.is_enabled));
     setIsLoading(false);
   }, [enabled, user]);
 

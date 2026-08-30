@@ -55,7 +55,7 @@ const scoreMatch = (haystack: string, terms: string[]) =>
   terms.reduce((score, term) => score + (haystack.includes(term) ? 1 : 0), 0);
 
 const queryIndependentConsulates = async (terms: string[], country?: string | null): Promise<DiasporaSearchResult[]> => {
-  const { data, error } = await (supabase as any)
+  const { data, error } = await supabase
     .from("independent_profiles")
     .select("slug, title, type_label, description, country, city")
     .eq("is_published", true)
@@ -64,7 +64,7 @@ const queryIndependentConsulates = async (terms: string[], country?: string | nu
 
   if (error || !Array.isArray(data)) return [];
 
-  return (data as Array<Record<string, string>>)
+  return data
     .filter((row) => !country || row.country === country)
     .map((row) => {
       const haystack = normalizeText(
@@ -75,9 +75,9 @@ const queryIndependentConsulates = async (terms: string[], country?: string | nu
         score: scoreMatch(haystack, terms),
         result: {
           title: row.title,
-          description: row.description,
+          description: row.description ?? "",
           category: row.type_label,
-          location: `${row.city}, ${row.country}`,
+          location: [row.city, row.country].filter(Boolean).join(", "),
           type: "association" as const,
           icon: "🏛️",
           href: `/kurulus/${row.slug}`,

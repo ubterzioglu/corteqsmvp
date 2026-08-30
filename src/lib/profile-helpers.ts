@@ -23,13 +23,13 @@ export async function getProfileBasic(userId: string): Promise<ProfileBasic | nu
 
   const attrs = attrsResult.data ?? [];
   const getValue = (key: string) =>
-    (attrs.find((a: any) => a.afs_attributes?.key === key)?.value_text ?? null);
+    (attrs.find((attribute) => attribute.afs_attributes?.key === key)?.value_text ?? null);
 
   return {
     user_id: userId,
     full_name: getValue("full_name"),
     avatar_url: getValue("avatar_url"),
-    role_key: (roleResult.data as any)?.roles?.key ?? null,
+    role_key: roleResult.data?.roles?.key ?? null,
   };
 }
 
@@ -41,7 +41,7 @@ export async function getAttributeValue(userId: string, key: string): Promise<st
     .eq("afs_attributes.key", key)
     .maybeSingle();
 
-  return (data as any)?.value_text ?? null;
+  return data?.value_text ?? null;
 }
 
 export async function getAttributesBatch(
@@ -59,8 +59,8 @@ export async function getAttributesBatch(
     result[key] = null;
   }
   for (const row of data ?? []) {
-    const k = (row as any).afs_attributes?.key;
-    if (k) result[k] = (row as any).value_text ?? null;
+    const key = row.afs_attributes?.key;
+    if (key) result[key] = row.value_text ?? null;
   }
   return result;
 }
@@ -82,17 +82,15 @@ export async function getProfilesBasicBatch(userIds: string[]): Promise<ProfileB
 
   const attrsByUser: Record<string, Record<string, string>> = {};
   for (const row of attrsResult.data ?? []) {
-    const r = row as any;
-    const uid = r.user_id;
-    const k = r.afs_attributes?.key;
-    if (!attrsByUser[uid]) attrsByUser[uid] = {};
-    if (k && r.value_text) attrsByUser[uid][k] = r.value_text;
+    const key = row.afs_attributes?.key;
+    if (!attrsByUser[row.user_id]) attrsByUser[row.user_id] = {};
+    if (key && row.value_text) attrsByUser[row.user_id][key] = row.value_text;
   }
 
   const roleByUser: Record<string, string> = {};
   for (const row of rolesResult.data ?? []) {
-    const r = row as any;
-    roleByUser[r.user_id] = r.roles?.key ?? null;
+    const roleKey = row.roles?.key;
+    if (roleKey) roleByUser[row.user_id] = roleKey;
   }
 
   return userIds.map((uid) => ({
