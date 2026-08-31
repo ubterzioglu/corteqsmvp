@@ -25,7 +25,7 @@ Meta hesabı veya QA hesabı isteyen kabul kapıları yapılmış gibi kapatılm
 | A6 test gürültüsü | **Hazır** | Tam pakette açıklanmamış stderr yok. |
 | B1 WhatsApp listeleme paketi | **İnsan onayı bekliyor** | Listeleme ölçütleri ve kısa/uzun paylaşım metinleri hazır; dışarıya paylaşılmadı. |
 | B2 Contributor paketi | **İnsan onayı bekliyor** | FAQ, kaynak sınıfları ve kabul SOP'si hazır; contributor'a ulaşılmadı. |
-| B2+ Contributor kaynak akışı | **Hazır** | Admin kabul/eksik bilgi/ret kuyruğuna ek olarak aktif Contributor kendi hesabından kaynak gönderebiliyor ve yalnız kendi durumunu görebiliyor. Rol kontrolü, saatlik limit, deny-by-default RLS ve audit izi canlı. |
+| B2+ Contributor kaynak akışı | **Canlı frontend kabulü bekliyor** | Admin kuyruğu production'da doğrulandı. Aktif Contributor self-service akışının DB migration'ı canlı, kodu `8e3ae4a` ile pushlandı ve odaklı testleri geçti; son frontend deploy'u ayrıca doğrulanmalı. |
 | B3 migration runner | **Hazır** | Tek transaction, ledger, dry-run, ad/transaction guard ve gizli parola koruması testli. |
 | B4 lint | **Hazır** | Üretim kapsamında 0 error ve 0 warning; eski state okuyabilen chat callback'i regresyon testiyle düzeltildi. |
 | B4+ bağımlılık güvenliği | **Hazır** | Vite 8, Vitest 4 ve güncel jsdom/React eklentisiyle derleme-test zinciri yenilendi; üretim + geliştirme bağımlılıklarının tam `npm audit` sonucu 0 açık. |
@@ -43,6 +43,7 @@ Meta hesabı veya QA hesabı isteyen kabul kapıları yapılmış gibi kapatılm
 ## Production kanıtı
 
 - `main` ve sprint dalı GitHub'a pushlandı.
+- Son Contributor self-service commit'i `8e3ae4a` iki dala da pushlandı; bu commit'in frontend deploy sonrası canlı kabulü henüz kaydedilmedi.
 - Son deploy öncesi bundle `main-BBG9YXyz.js`; deploy sonrası `main-BXMPIw25.js`.
 - `BASE_URL=https://corteqs.net npm run verify:release` canlı ana JS/CSS ve beş muhasebe lazy chunk'ı için geçti.
 - Contributor kaynak ekranının `AdminContributorResourcesPage-CV_t0_p_.js` lazy chunk'ı production'da `200` döndürdü; yeni admin duyurusundaki bağımlılık güvenliği metni canlı dosyada doğrulandı.
