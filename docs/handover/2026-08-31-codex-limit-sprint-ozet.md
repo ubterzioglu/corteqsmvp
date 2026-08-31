@@ -1,8 +1,11 @@
 # Codex limit sprinti — kısa devir özeti
 
-**Devir tarihi:** 31 Ağustos 2026  
-**Son commit:** `8e3ae4a feat(contributor): uye kaynak gonderimini ac`  
-**Dallar:** `main` ve `codex/limit-sprint-2026-08-30` aynı commit'e pushlandı.  
+**Devir tarihi:** 31 Ağustos 2026
+
+**Son commit:** `8e3ae4a feat(contributor): uye kaynak gonderimini ac`
+
+**Dallar:** `main` ve `codex/limit-sprint-2026-08-30` aynı commit'e pushlandı.
+
 **Ayrıntılı kayıt:** `docs/handover/2026-08-30-limit-sprint-final-handoff.md`
 
 ## Kısa sonuç
