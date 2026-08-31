@@ -14,6 +14,20 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260831-30-agustos-eksik-teknik-isler",
+    date: "31 Ağustos 2026",
+    title:
+      "30 Ağustos'un eksik kalan teknik işleri eklendi — veri işlemleri ve yayın kontrolleri güçlendi",
+    items: [
+      "GÜVENLİ MIGRATION ÇALIŞTIRICISI: Yeni veritabanı değişikliği ile uygulandığını gösteren ledger kaydı artık tek işlemde yazılıyor. İşlem yarıda kalırsa ikisi birlikte geri alınıyor. Çalıştırmadan önce dosya adı, konumu ve güvenlik kuralları denetlenebiliyor; geçmiş bir migration'ın yanlışlıkla yeniden çalıştırılması engelleniyor.",
+      "SUPABASE SDK SÜRÜMLERİ HİZALANDI: Site, sunucu fonksiyonları ve arka plan işçileri aynı güncel SDK sürümüne çekildi. Böylece farklı parçaların farklı istemci davranışı göstermesine yol açabilecek sürüm sapması kaldırıldı.",
+      "VERİ SINIRLARI DAHA SIKI TİPLENDİ: Admin, oturum, profil ve WhatsApp akışlarında veritabanından gelen değerler açık türlerle sınırlandı. Beklenmeyen veya eksik verinin ekrana sessizce taşınması yerine daha erken yakalanmasını sağlayan ortak kontroller güçlendirildi.",
+      "TEST GÜRÜLTÜSÜ TEMİZLENDİ: Otomatik testlerde gerçek hata olmadığı hâlde konsola düşen açıklamasız uyarılar kaldırıldı. Böylece yeni bir hata veya uyarı çıktığında yüzlerce satır arasında kaybolmadan görülebiliyor.",
+      "YAYIN DOĞRULAMASI GÜNCELLENDİ: Üretim sayfasında birden fazla JavaScript giriş dosyası olduğunda doğrulama artık doğru ana dosyayı seçiyor; muhasebe sayfalarının sonradan yüklenen parçalarını da denetliyor. Çoklu giriş düzeni tekrar bozulmasın diye otomatik testle kilitlendi.",
+      "KAPSAM NOTU: Bunlar yeni bir kullanıcı ekranı açmayan teknik bakım işleri. Amaç; veritabanı uygulamalarını, veri okuma sınırlarını, test sinyallerini ve canlı yayın kontrolünü daha güvenilir hâle getirmek.",
+    ],
+  },
+  {
     id: "20260830-kalan-isler-temizlendi",
     date: "30 Ağustos 2026",
     title: "Kalan işler yeniden tarandı — Contributor kuyruğu geldi, bayat kayıtlar temizlendi",
