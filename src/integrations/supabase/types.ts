@@ -3688,6 +3688,57 @@ export type Database = {
         }
         Relationships: []
       }
+      command_center_hot_fixes: {
+        Row: {
+          archived_at: string | null
+          assignee: string
+          category_label: string
+          created_at: string
+          deleted_at: string | null
+          detail: string
+          due_date: string | null
+          id: string
+          priority: number
+          sort_order: number
+          status: string
+          title: string
+          updated_at: string
+          urgent: boolean
+        }
+        Insert: {
+          archived_at?: string | null
+          assignee?: string
+          category_label?: string
+          created_at?: string
+          deleted_at?: string | null
+          detail?: string
+          due_date?: string | null
+          id?: string
+          priority?: number
+          sort_order?: number
+          status?: string
+          title: string
+          updated_at?: string
+          urgent?: boolean
+        }
+        Update: {
+          archived_at?: string | null
+          assignee?: string
+          category_label?: string
+          created_at?: string
+          deleted_at?: string | null
+          detail?: string
+          due_date?: string | null
+          id?: string
+          priority?: number
+          sort_order?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          urgent?: boolean
+        }
+        Relationships: []
+      }
       command_center_items: {
         Row: {
           archived_at: string | null

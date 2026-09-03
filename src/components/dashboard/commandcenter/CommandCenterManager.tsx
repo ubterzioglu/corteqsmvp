@@ -3,6 +3,7 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, Archive, Pencil, Plus, Save, Search, Trash2, X } from 'lucide-react'
 import AccordionCard from '@/components/dashboard/AccordionCard'
+import HotFixPanel from './HotFixPanel'
 const burakAvatar = '/burak.png'
 const ubtAvatar = '/ubt.png'
 import {
@@ -549,6 +550,13 @@ export default function CommandCenterManager({
           </span>
         </div>
       </div>
+
+      {/*
+        TOP 10 HOT FIX yalnız tam Komuta Merkezi ekranında görünür. Todo ve Toplantı Notları
+        sayfaları da bu bileşeni kullanıyor (lockedItemType ile); aynı 10 maddelik liste üç ekranda
+        birden tekrarlanmasın diye orada gizlenir.
+      */}
+      {!lockedItemType && <HotFixPanel />}
 
       {compatibilityMessage && (
         <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
