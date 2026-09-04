@@ -1,6 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
 
-export async function setAttributeRuleAsAdmin(roleKey: string, attributeKey: string, rulePayload: Record<string, unknown>) {
+// jsonb RPC argümanları `Json` olarak tiplenir. `Record<string, unknown>` veya
+// `unknown` kullanmak derleyiciyi susturmuyor, tersine RPC imzasıyla uyuşmazlık
+// üretiyordu: `unknown` Json'ın hiçbir dalına atanamaz.
+export async function setAttributeRuleAsAdmin(roleKey: string, attributeKey: string, rulePayload: Json) {
   const { error } = await supabase.rpc("admin_set_attribute_rule", {
     role_key: roleKey,
     attribute_key: attributeKey,
@@ -13,7 +17,7 @@ export async function setAttributeRuleAsAdmin(roleKey: string, attributeKey: str
 export async function updateUserProfileAttributeAsAdmin(
   userId: string,
   attributeKey: string,
-  attributeValue: unknown,
+  attributeValue: Json,
   visibility?: "public" | "private" | null,
 ) {
   const { error } = await supabase.rpc("admin_update_user_profile_attribute", {

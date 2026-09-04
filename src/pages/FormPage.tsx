@@ -91,14 +91,13 @@ const FormPage = () => {
       facebook: String(values.facebook ?? ""),
       twitter: String(values.twitter ?? ""),
       website: String(values.website ?? ""),
+      // `values` FormData girdileridir: her değer `string | File`. `=== true`
+      // karşılaştırması hiçbir zaman doğru olamazdı (ölü dal) — kaldırıldı.
+      // İşaretli checkbox tarayıcıdan "on" olarak gelir.
       contest_interest:
-        values.contest_interest === "yes" ||
-        values.contest_interest === "on" ||
-        values.contest_interest === true,
+        values.contest_interest === "yes" || values.contest_interest === "on",
       whatsapp_interest:
-        values.whatsapp_interest === "yes" ||
-        values.whatsapp_interest === "on" ||
-        values.whatsapp_interest === true,
+        values.whatsapp_interest === "yes" || values.whatsapp_interest === "on",
       consent,
     });
   };

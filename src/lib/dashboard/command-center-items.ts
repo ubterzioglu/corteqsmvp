@@ -184,6 +184,12 @@ export interface CommandCenterTopCategoryGroup {
   itemTypeGroups: CommandCenterItemTypeGroup[]
 }
 
+// DİKKAT: burada `: string` ANOTASYONU DENENDİ ve GERİ ALINDI (2026-09-04).
+// Amaç `query = query.eq(...)` atamasındaki TS2589'u kırmaktı; select metninin
+// literal tipi kalkınca 3 hata gitti ama yerine 5 YENİ hata çıktı (45 → 50):
+// insert/update zincirleri ve sayaç sorguları çıkarsanan satır tipine
+// güveniyor. Literal tip KALSIN. Kalan 3 TS2589 bilinen ve kabul edilmiş
+// durumdur — çalışma zamanını etkilemez, build ve testler yeşildir.
 export const COMMAND_CENTER_SELECT =
   'id, item_type, title, detail, category_label, assignee, status, priority, due_date, urgent, legacy_source_type, legacy_source_code, legacy_source_date_label, legacy_source_category, legacy_source_title, sort_order, archived_at, deleted_at, created_at, updated_at'
 
@@ -550,19 +556,30 @@ export function sortCommandCenterItems(items: CommandCenterItem[]): CommandCente
   })
 }
 
-function applyCommandCenterFilters<
-  TQuery extends {
-    eq: (column: string, value: unknown) => TQuery
-    neq: (column: string, value: unknown) => TQuery
-    or: (filters: string) => TQuery
-  },
->(query: TQuery, options?: FetchCommandCenterItemsOptions): TQuery {
+/**
+ * Tek bir PostgREST filtresi — veri olarak. Eskiden bu mantık `TQuery` jenerigiyle
+ * doğrudan builder üzerinde çalışıyordu; kısıt kendine referans verdiği için
+ * (`eq: (...) => TQuery`) derin `.select().order()...` zinciriyle çağrıldığında
+ * TypeScript "Type instantiation is excessively deep" (TS2589) veriyordu — üç
+ * çağrı yerinde birden. Filtreleri veri olarak üretip uygulamayı çağrı yerine
+ * bırakmak jenerigi tamamen kaldırır; mantık ve sıra aynen korunur.
+ */
+type CommandCenterFilterOp =
+  | { kind: 'eq'; column: string; value: unknown }
+  | { kind: 'neq'; column: string; value: unknown }
+  | { kind: 'or'; filters: string }
+
+function buildCommandCenterFilters(
+  options?: FetchCommandCenterItemsOptions
+): CommandCenterFilterOp[] {
+  const ops: CommandCenterFilterOp[] = []
+
   if (options?.itemType) {
-    query = query.eq('item_type', options.itemType)
+    ops.push({ kind: 'eq', column: 'item_type', value: options.itemType })
   }
 
   if (options?.assignee && options.assignee !== 'Tümü') {
-    query = query.eq('assignee', options.assignee)
+    ops.push({ kind: 'eq', column: 'assignee', value: options.assignee })
   }
 
   if (options?.topCategory?.trim()) {
@@ -589,66 +606,68 @@ function applyCommandCenterFilters<
     }
 
     if (categoryConditions.length > 0) {
-      query = query.or(categoryConditions.join(','))
+      ops.push({ kind: 'or', filters: categoryConditions.join(',') })
     }
   }
 
   if (options?.status && options.status !== 'Tümü') {
-    query = query.eq('status', options.status)
+    ops.push({ kind: 'eq', column: 'status', value: options.status })
   }
 
   if (options?.priority && Number.isInteger(options.priority)) {
-    query = query.eq('priority', options.priority)
+    ops.push({ kind: 'eq', column: 'priority', value: options.priority })
   }
 
   if (options?.urgentOnly) {
-    query = query.eq('urgent', true)
+    ops.push({ kind: 'eq', column: 'urgent', value: true })
   }
 
   if (options?.sourceCode && options.sourceCode !== 'Tümü') {
-    query = query.eq('legacy_source_code', options.sourceCode)
+    ops.push({ kind: 'eq', column: 'legacy_source_code', value: options.sourceCode })
   }
 
   if (options?.dateGroup?.trim()) {
     const [kind, payload] = options.dateGroup.split('::')
 
     if (kind === 'TODO') {
-      query = query.eq('item_type', 'todo')
+      ops.push({ kind: 'eq', column: 'item_type', value: 'todo' })
     } else if (kind === 'TOP' && payload) {
-      query = query.eq('item_type', 'meeting_note')
-      query = query.neq('legacy_source_code', 'WA')
-      query = query.eq('category_label', payload)
+      ops.push({ kind: 'eq', column: 'item_type', value: 'meeting_note' })
+      ops.push({ kind: 'neq', column: 'legacy_source_code', value: 'WA' })
+      ops.push({ kind: 'eq', column: 'category_label', value: payload })
     } else if (kind === 'WA' && payload) {
       const rawLabels = payload.split('||').filter(Boolean)
-      query = query.eq('item_type', 'meeting_note')
-      query = query.eq('legacy_source_code', 'WA')
+      ops.push({ kind: 'eq', column: 'item_type', value: 'meeting_note' })
+      ops.push({ kind: 'eq', column: 'legacy_source_code', value: 'WA' })
       if (rawLabels.length === 1) {
-        query = query.eq('category_label', rawLabels[0])
+        ops.push({ kind: 'eq', column: 'category_label', value: rawLabels[0] })
       } else if (rawLabels.length > 1) {
-        query = query.or(
-          rawLabels
+        ops.push({
+          kind: 'or',
+          filters: rawLabels
             .map((rawLabel) => `category_label.eq.${quoteFilterValue(rawLabel)}`)
-            .join(',')
-        )
+            .join(','),
+        })
       }
     }
   }
 
   if (options?.searchTerm?.trim()) {
     const searchValue = `%${escapeIlikeValue(options.searchTerm.trim())}%`
-    query = query.or(
-      [
+    ops.push({
+      kind: 'or',
+      filters: [
         `title.ilike.${searchValue}`,
         `detail.ilike.${searchValue}`,
         `category_label.ilike.${searchValue}`,
         `legacy_source_date_label.ilike.${searchValue}`,
         `legacy_source_category.ilike.${searchValue}`,
         `legacy_source_title.ilike.${searchValue}`,
-      ].join(',')
-    )
+      ].join(','),
+    })
   }
 
-  return query
+  return ops
 }
 
 export async function fetchCommandCenterItems(
@@ -675,15 +694,23 @@ export async function fetchCommandCenterItems(
     .select(COMMAND_CENTER_SELECT, { count: 'exact' })
     .is('deleted_at', null)
     .is('archived_at', null)
+
+  // Filtreler .order()/.range() zincirinden ONCE uygulanir. TS2589'un gercek
+  // sebebi jenerik degil, DERIN builder tipine yeniden atamaydi: her .eq() yeni
+  // bir derin tip uretiyor, `query`ye geri atamak tipi tekrar tekrar cozduruyordu.
+  // Siralama/sayfalama zinciri artik sorgunun SONUNDA, tek seferde eklenir.
+  for (const op of buildCommandCenterFilters(options)) {
+    if (op.kind === 'eq') query = query.eq(op.column, op.value)
+    else if (op.kind === 'neq') query = query.neq(op.column, op.value)
+    else query = query.or(op.filters)
+  }
+
+  const { data, error, count } = await query
     .order('priority', { ascending: false })
     .order('item_type', { ascending: true })
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false })
     .range(from, to)
-
-  query = applyCommandCenterFilters(query, options)
-
-  const { data, error, count } = await query
   if (error || !data) {
     return {
       items: [],
@@ -714,15 +741,23 @@ export async function fetchDeletedCommandCenterItems(
     .select(COMMAND_CENTER_SELECT)
     .is('archived_at', null)
     .not('deleted_at', 'is', null)
+
+  // Filtreler .order()/.range() zincirinden ONCE uygulanir. TS2589'un gercek
+  // sebebi jenerik degil, DERIN builder tipine yeniden atamaydi: her .eq() yeni
+  // bir derin tip uretiyor, `query`ye geri atamak tipi tekrar tekrar cozduruyordu.
+  // Siralama/sayfalama zinciri artik sorgunun SONUNDA, tek seferde eklenir.
+  for (const op of buildCommandCenterFilters(options)) {
+    if (op.kind === 'eq') query = query.eq(op.column, op.value)
+    else if (op.kind === 'neq') query = query.neq(op.column, op.value)
+    else query = query.or(op.filters)
+  }
+
+  const { data, error } = await query
     .order('deleted_at', { ascending: false })
     .order('priority', { ascending: false })
     .order('item_type', { ascending: true })
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false })
-
-  query = applyCommandCenterFilters(query, options)
-
-  const { data, error } = await query
   if (error || !data) {
     return []
   }
@@ -743,15 +778,23 @@ export async function fetchArchivedCommandCenterItems(
     .select(COMMAND_CENTER_SELECT)
     .is('deleted_at', null)
     .not('archived_at', 'is', null)
+
+  // Filtreler .order()/.range() zincirinden ONCE uygulanir. TS2589'un gercek
+  // sebebi jenerik degil, DERIN builder tipine yeniden atamaydi: her .eq() yeni
+  // bir derin tip uretiyor, `query`ye geri atamak tipi tekrar tekrar cozduruyordu.
+  // Siralama/sayfalama zinciri artik sorgunun SONUNDA, tek seferde eklenir.
+  for (const op of buildCommandCenterFilters(options)) {
+    if (op.kind === 'eq') query = query.eq(op.column, op.value)
+    else if (op.kind === 'neq') query = query.neq(op.column, op.value)
+    else query = query.or(op.filters)
+  }
+
+  const { data, error } = await query
     .order('archived_at', { ascending: false })
     .order('priority', { ascending: false })
     .order('item_type', { ascending: true })
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false })
-
-  query = applyCommandCenterFilters(query, options)
-
-  const { data, error } = await query
   if (error || !data) {
     return []
   }

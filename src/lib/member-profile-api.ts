@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
 import type { AttributeVisibility } from "@/lib/member-profile";
 import { getCurrentMemberCatalogProfile } from "@/lib/member-catalog";
 import {
@@ -28,7 +29,7 @@ export async function requestNewCatalogItem(roleKey: string, title: string, note
   return data as string;
 }
 
-export async function submitFeatureRequest(featureKey: string, payload: Record<string, unknown> = {}) {
+export async function submitFeatureRequest(featureKey: string, payload: Json = {}) {
   const { data, error } = await supabase.rpc("submit_feature_request", {
     feature_key: featureKey,
     payload,
@@ -38,7 +39,7 @@ export async function submitFeatureRequest(featureKey: string, payload: Record<s
   return data;
 }
 
-export async function updateProfileAttribute(attributeKey: string, value: unknown, visibility?: AttributeVisibility) {
+export async function updateProfileAttribute(attributeKey: string, value: Json, visibility?: AttributeVisibility) {
   if (attributeKey === "full_name") {
     const currentMemberProfile = await getCurrentMemberCatalogProfile();
     if (!currentMemberProfile?.itemId) {

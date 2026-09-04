@@ -3,6 +3,7 @@
 // Mutasyonlar security-definer RPC'ler üzerinden; listeler RLS'li SELECT.
 
 import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
 import type {
   CandidatePatch,
   JobCreateInput,
@@ -45,7 +46,9 @@ export async function getJobDetail(jobId: string): Promise<ServiceFinderJobDetai
 }
 
 export async function createJob(input: JobCreateInput): Promise<{ job_id: string }> {
-  const payload: Record<string, unknown> = {
+  // jsonb RPC argümanı — `Record<string, unknown>` Json'a atanamaz (unknown Json'ın
+  // hiçbir dalı değil). Taze nesne değişmezi doğrudan Json olarak tiplenebilir.
+  const payload: Json = {
     ...input,
     template_id: input.template_id || undefined,
     country_code: input.country_code || undefined,

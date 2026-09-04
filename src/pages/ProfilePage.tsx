@@ -29,6 +29,7 @@ import {
   Youtube,
 } from "lucide-react";
 
+import type { Json } from "@/integrations/supabase/types";
 import { useAuth } from "@/components/auth/useAuth";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
@@ -915,7 +916,9 @@ const ProfilePage = () => {
     const rawValue = draftValues[attribute.attributeKey];
     const visibility = draftVisibilities[attribute.attributeKey] ?? attribute.visibility;
 
-    let valueToSend: unknown = rawValue;
+    // Her dal boolean, string[] veya string üretir — hepsi geçerli Json.
+    // `unknown` yazmak RPC imzasıyla uyuşmuyordu (unknown Json'a atanamaz).
+    let valueToSend: Json = rawValue ?? null;
     if (attribute.dataType === "boolean") {
       valueToSend = Boolean(rawValue);
     } else if (attribute.dataType === "multi_select") {

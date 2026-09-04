@@ -139,7 +139,9 @@ const parseCtas = (value: unknown): IndependentProfileCta[] =>
   Array.isArray(value)
     ? value
         .filter((item): item is Record<string, unknown> => Boolean(item) && typeof item === "object")
-        .map((item) => ({
+        // Dönüş tipi açıkça yazılır: aksi hâlde `variant` `string`e genişliyor ve
+        // IndependentProfileCta'nın dar union'ına atanamıyordu.
+        .map((item): IndependentProfileCta => ({
           label: typeof item.label === "string" ? item.label : "",
           url: typeof item.url === "string" ? item.url : "",
           variant: item.variant === "default" ? "default" : "outline",

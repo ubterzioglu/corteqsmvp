@@ -1,5 +1,5 @@
 import type { Json, Tables } from "@/integrations/supabase/types";
-import type { IndividualFeatureMeta } from "@/lib/features";
+import type { FeatureMeta, IndividualFeatureKey } from "@/lib/features";
 
 type JsonRecord = Record<string, Json | undefined>;
 
@@ -141,7 +141,7 @@ export type IndividualProfileUpdateInput = {
 };
 
 export type IndividualProfileModuleState = {
-  visibleModules: IndividualFeatureMeta[];
+  visibleModules: FeatureMeta<IndividualFeatureKey>[];
   featuresLoading: boolean;
   featureErrorMessage: string | null;
   featureSourceByKey: Record<string, string>;

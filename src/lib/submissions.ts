@@ -56,8 +56,15 @@ export const categoryOptions = [
 
 export const referralSourceOptions = REFERRAL_SOURCE_OPTIONS;
 
-const categoryLabelMap = new Map(categoryOptions.map((option) => [option.value, option.label]));
-const referralLabelMap = new Map(referralSourceOptions.map((option) => [option.value, option.label]));
+// Anahtar tipi bilerek `string`: bu haritalar DB'den gelen SERBEST metni sorgular ve
+// bilinmeyen değerde `?? value` ile ham değere düşer. Dar union anahtar, çağıranı
+// olmayan bir garantiye zorlar (getCategoryLabel'a `string | null` geliyor).
+const categoryLabelMap = new Map<string, string>(
+  categoryOptions.map((option) => [option.value, option.label]),
+);
+const referralLabelMap = new Map<string, string>(
+  referralSourceOptions.map((option) => [option.value, option.label]),
+);
 
 const statusLabelMap: Record<SubmissionStatus, string> = {
   new: "Yeni",
@@ -150,8 +157,11 @@ export function buildSubmissionSearchText(submission: Submission) {
     submission.facebook,
     submission.twitter,
     submission.website,
-    submission.documents
-      ?.map((document) => {
+    // documents jsonb; şeması DB'ce garanti değil. Aynı dosyadaki
+    // resolveSubmissionDocuments ile aynı Array.isArray guard'ı kullanılır —
+    // optional chaining tek başına dizi olmayan bir jsonb değerini elemiyor.
+    (Array.isArray(submission.documents) ? submission.documents : [])
+      .map((document) => {
         if (!document || typeof document !== "object") return "";
         return "name" in document && typeof document.name === "string" ? document.name : "";
       })

@@ -27,6 +27,7 @@ export const fallbackMarqueeItems: MarqueeItemRow[] = [
     summary:
       "Dünyanın dört bir yanında yaşayan Türkler; meslek, şehir ve ihtiyaç bazında birbirini bulabilsin diye CorteQS küresel bir bağlantı katmanı kuruyor. Her şehirdeki danışmanlar, işletmeler ve topluluklar tek bir ekosistemde buluşuyor. Amaç, nereye taşınırsan taşın yanında güvenebileceğin bir ağ bırakmak.",
     detail_content: null,
+    external_url: null,
     image_url: "/og-image.png",
     image_alt: "CorteQS küresel diaspora ağı",
     metric_value: "164 ülke",
@@ -46,6 +47,7 @@ export const fallbackMarqueeItems: MarqueeItemRow[] = [
     summary:
       "Yurt dışındaki Türk topluluğu giderek büyüyor; öğrenciler, profesyoneller, işletmeler ve aileler aynı şehirlerde yan yana yaşıyor. CorteQS bu insanların birbirini keşfetmesini, deneyim paylaşmasını ve fırsatlara erişmesini kolaylaştırmak için hazırlanıyor. Şehrindeki Türk topluluğunu bir adım daha yakına getiriyoruz.",
     detail_content: null,
+    external_url: null,
     image_url: "/logocorteqsbig.png",
     image_alt: "CorteQS diaspora bağlantı görseli",
     metric_value: "8.8 milyon",
@@ -65,6 +67,7 @@ export const fallbackMarqueeItems: MarqueeItemRow[] = [
     summary:
       "Platform açılışına hazırlanırken danışmanlar, işletmeler, içerik üreticileri ve şehir elçisi adayları şimdiden yerini alabiliyor. Erken katılanlar profillerini oluşturup kendi şehirlerinde topluluğun ilk halkası oluyor. Sen de bulunduğun şehirde Türk diasporasının buluşma noktası olabilirsin.",
     detail_content: null,
+    external_url: null,
     image_url: "/og-image.png",
     image_alt: "CorteQS erken kayıt duyurusu",
     metric_value: null,

@@ -209,7 +209,13 @@ export function shouldStartRegistration(input: string) {
   ].some((pattern) => folded.includes(foldForComparison(pattern)));
 }
 
-export function getStepMessage(step: ChatStep, data: ChatCollectedData): { content: string; quickReplies?: QuickReply[] } {
+// `isSummary` dönüş tipinde EKSİKTİ: buildSummaryMessage onu `true` döndürüyor ama
+// tip düşürdüğü için useChatMachine'de her zaman undefined oluyordu — özet mesajı
+// ChatMessage.tsx'teki monospace stilini hiç almıyordu.
+export function getStepMessage(
+  step: ChatStep,
+  data: ChatCollectedData,
+): { content: string; quickReplies?: QuickReply[]; isSummary?: boolean } {
   switch (step) {
     case "welcome":
       return {
@@ -356,7 +362,12 @@ function buildSummaryMessage(data: ChatCollectedData): { content: string; quickR
   };
 }
 
-export type ValidationResult = { ok: true } | { ok: false; message: string };
+// Düz nesne, ayrık birleşim DEĞİL. Projede `strict`/`strictNullChecks` kapalı
+// olduğu için `if (!validation.ok)` içinde birleşim daraltması çalışmıyor ve
+// çağrı yeri `Property 'message' does not exist` alıyordu. Aynı karar
+// command-center-hot-fixes.ts'teki HotFixMutationResult için de verilmişti.
+// Ayrık birleşime geri çevirme.
+export type ValidationResult = { ok: boolean; message?: string };
 
 export function validateStep(step: ChatStep, input: string, _data: ChatCollectedData): ValidationResult {
   const trimmed = input.trim();

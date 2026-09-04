@@ -291,7 +291,10 @@ export function moderateCaddeCafeName(name: string): CafeNameModerationResult {
 // GERÇEK enforce DB'dedir; bu fonksiyon UI guard'ları ve truth-table testleri içindir.
 // SQL kaynağı: supabase/migrations/20260611100000_cadde300_008_cafe.sql
 
-export type CaddeCafeEntryMode = "open" | "approval" | "referral";
+// CaddeCafeEntryMode kanonik olarak cadde-types.ts icinde tanimlidir. Burada da
+// bire bir ayni tanim vardi; cadde.ts barrel'i iki modulu birden re-export ettigi
+// icin TS2308 ("already exported a member") veriyordu. Kopya kaldirildi — bu dosyada
+// hic kullanilmiyordu, tum tuketiciler zaten cadde-types'tan aliyor.
 
 export type CafeJoinRuleInput = {
   isAdminOrModerator: boolean;

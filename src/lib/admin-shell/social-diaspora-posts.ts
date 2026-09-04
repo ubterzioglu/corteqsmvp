@@ -46,6 +46,9 @@ export type DiasporaPostTheme =
   | "referans"
   | "kariyer"
   | "uzaktan-calisma"
+  // post-67 zaten `theme: "ambasador"` kullanıyordu ama union'da yoktu; etiket
+  // haritası Record<DiasporaPostTheme, string> olduğu için etiketi de eksikti.
+  | "ambasador"
   | "yalnizlik";
 
 export type DiasporaPost = {
@@ -99,6 +102,7 @@ export const DIASPORA_THEME_LABELS: Record<DiasporaPostTheme, string> = {
   radar: "Radar",
   blog: "Blog",
   referans: "Referans",
+  ambasador: "Ambasador",
   kariyer: "Kariyer",
   "uzaktan-calisma": "Uzaktan Çalışma",
   yalnizlik: "Yalnızlık",
