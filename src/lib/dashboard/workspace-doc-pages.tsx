@@ -420,6 +420,18 @@ export const workspaceDocPages: WorkspaceDocPage[] = [
               <code>WhatsAppGroupLanding.tsx</code> ölü kod olarak silindi — hiçbir route'a
               bağlı değillerdi ve var olmayan modülleri import ediyorlardı):
             </p>
+            <p>
+              <strong>2026-09-04 güncellemesi:</strong> aşağıdaki 11 dosya da ölü kod olarak
+              silindi — hiçbiri (lazy/dynamic dahil) hiçbir yerden erişilebilir değildi ve
+              testleri yoktu: <code>profiles/</code> dizininin tamamı (ProfileAdmin,
+              ProfileAssociation, ProfileBlogger, ProfileBusiness, ProfileConsultant,
+              ProfileSetupBanner, MyFollowsSection, WhatsAppGroupsTab, WelcomePack),{" "}
+              <code>WelcomePackCTA.tsx</code> ve <code>booking/BloggerAnalytics.tsx</code>.
+              İkisi var olmayan <code>@/lib/diasporaBlogLinks</code> modülünü import ediyordu;{" "}
+              <code>ProfileSetupBanner</code> ise AuthProvider'ın hiç çekmediği alanları
+              okuduğu için her kullanıcıya kalıcı "Panel Kilitli" gösterecek durumdaydı.
+              Aşağıdaki liste bu dosyaları hâlâ içeriyor — tarihsel kayıt olarak bırakıldı.
+            </p>
             <ul className="list-disc space-y-1 pl-5">
               <li>src/pages/Feed.tsx</li>
               <li>src/pages/Events.tsx</li>
