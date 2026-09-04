@@ -15,6 +15,7 @@ export type AdminAccent =
   | "amber" // İçerik ve Kampanyalar
   | "slate" // Operasyon Workspace
   | "green" // Muhasebe
+  | "violet" // Radar Haber Pipeline
   | "red"; // Sistem ve Güvenlik
 
 /** Sidebar / palette item'larında gösterilebilecek dinamik badge türleri. */

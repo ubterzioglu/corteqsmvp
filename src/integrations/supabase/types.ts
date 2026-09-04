@@ -12007,6 +12007,18 @@ export type Database = {
         }
         Relationships: []
       }
+      v_command_center_facets: {
+        Row: {
+          assignee: string | null
+          category_label: string | null
+          item_count: number | null
+          item_type: string | null
+          legacy_source_category: string | null
+          legacy_source_code: string | null
+          legacy_source_date_label: string | null
+        }
+        Relationships: []
+      }
       v_muhasebe_by_category: {
         Row: {
           category: Database["public"]["Enums"]["expense_category"] | null

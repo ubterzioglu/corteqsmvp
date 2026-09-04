@@ -1,23 +1,12 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 
-// Radar tabloları henüz generated types.ts'e yansımadı (B1: types regen bekliyor).
-// Types üretildikten sonra `db` doğrudan `supabase` ile değiştirilebilir.
-// Tek noktada cast — dosya genelinde dağınık `as any` yerine tipli zincir sağlar.
-type PostgrestResult<T> = Promise<{ data: T; error: { message: string; code?: string } | null }>;
-interface RadarQueryChain {
-  select: (columns?: string) => RadarQueryChain;
-  insert: (values: Record<string, unknown>) => RadarQueryChain;
-  update: (values: Record<string, unknown>) => RadarQueryChain;
-  eq: (column: string, value: unknown) => RadarQueryChain;
-  in: (column: string, values: unknown[]) => RadarQueryChain;
-  order: (column: string, opts?: { ascending?: boolean }) => RadarQueryChain;
-  limit: (count: number) => RadarQueryChain;
-  single: () => PostgrestResult<Record<string, unknown>>;
-  maybeSingle: () => PostgrestResult<Record<string, unknown> | null>;
-  then: <R>(onfulfilled: (value: { data: unknown; error: { message: string; code?: string } | null }) => R) => Promise<R>;
-}
-type RadarTableClient = { from: (table: string) => RadarQueryChain };
-const db = supabase as unknown as RadarTableClient;
+// Radar tabloları artık generated types.ts'te tanımlı, bu yüzden eski
+// `supabase as unknown as RadarTableClient` köprüsü kaldırıldı (dosyanın kendi
+// notu da "types üretildikten sonra doğrudan supabase kullanılabilir" diyordu).
+// Köprünün `from: (table: string) => …` imzası tablo adını kaybediyor ve satır
+// tipini `Record<string, unknown>`'a düşürüyordu.
+const db = supabase;
 
 // ─── Tipler ───────────────────────────────────────────────────────────────────
 
@@ -27,50 +16,17 @@ export type RadarReviewStatus = "pending" | "approved" | "rejected" | "duplicate
 export type RadarTriggerType = "cron" | "manual" | "retry";
 export type RadarScanStatus = "running" | "completed" | "partial" | "failed";
 
-export type RadarNewsSource = {
-  id: string;
-  name: string;
-  source_type: RadarSourceType;
-  adapter_key: string;
-  endpoint_url: string;
-  website_url: string | null;
-  language: string | null;
-  country: string | null;
-  category_default: string | null;
-  query_text: string | null;
-  trust_level: RadarTrustLevel;
-  is_enabled: boolean;
-  allow_public_image_hotlink: boolean;
-  terms_checked: boolean;
-  terms_checked_at: string | null;
-  terms_notes: string | null;
-  max_items_per_scan: number;
-  timeout_ms: number;
-  config: Record<string, unknown>;
-  last_success_at: string | null;
-  last_error_at: string | null;
-  last_error_message: string | null;
-  created_at: string;
-  updated_at: string;
-};
-
-export type RadarScanRun = {
-  id: string;
-  trigger_type: RadarTriggerType;
-  status: RadarScanStatus;
-  started_at: string;
-  completed_at: string | null;
-  started_by: string | null;
-  source_count: number;
-  fetched_count: number;
-  inserted_count: number;
-  duplicate_count: number;
-  filtered_count: number;
-  failed_source_count: number;
-  error_message: string | null;
-  metadata: Record<string, unknown>;
-  created_at: string;
-};
+// Satır tipleri ÜRETİLEN şemadan türetilir; elle kopyalanmaz. Daha önce elle
+// yazılmışlardı ve canlı şemayla sessizce ayrışmışlardı (köprü kaldırılınca 7
+// gerçek uyuşmazlık ortaya çıktı). Kolon eklenince/çıkınca burası kendiliğinden
+// takip eder. Yukarıdaki dar union'lar (RadarReviewStatus vb.) filtre/seçim
+// değeri olarak kullanılmaya devam eder — DB kolonu serbest `text` olduğu için
+// satır tipine gömülmezler.
+export type RadarNewsSource = Tables<"radar_news_sources">;
+export type RadarScanRun = Tables<"radar_news_scan_runs">;
+export type RadarCandidate = Tables<"radar_news_candidates">;
+export type RadarReviewLog = Tables<"radar_news_review_logs">;
+export type RadarNewsKeyword = Tables<"radar_news_keywords">;
 
 export type RelevanceReason = {
   rule: string;
@@ -78,61 +34,21 @@ export type RelevanceReason = {
   score: number;
 };
 
-export type RadarCandidate = {
-  id: string;
-  source_id: string;
-  scan_run_id: string | null;
-  source_external_id: string | null;
-  source_name: string;
-  source_url: string | null;
-  original_url: string;
-  canonical_url: string;
-  title: string;
-  normalized_title: string;
-  summary: string | null;
-  image_source_url: string | null;
-  category: string | null;
-  language: string | null;
-  country: string | null;
-  city: string | null;
-  published_at: string | null;
-  relevance_score: number;
-  relevance_reasons: RelevanceReason[];
-  canonical_url_hash: string;
-  content_hash: string;
-  review_status: RadarReviewStatus;
-  approved_news_post_id: number | null;
-  duplicate_of_candidate_id: string | null;
-  reviewed_by: string | null;
-  reviewed_at: string | null;
-  review_note: string | null;
-  raw_payload: Record<string, unknown>;
-  created_at: string;
-  updated_at: string;
-};
-
-export type RadarReviewLog = {
-  id: string;
-  candidate_id: string;
-  action: string;
-  actor_user_id: string | null;
-  note: string | null;
-  before_value: Record<string, unknown> | null;
-  after_value: Record<string, unknown> | null;
-  created_at: string;
-};
-
-export type RadarNewsKeyword = {
-  id: string;
-  keyword: string;
-  language: string;
-  category: string | null;
-  weight: number;
-  is_negative: boolean;
-  is_enabled: boolean;
-  created_at: string;
-  updated_at: string;
-};
+/**
+ * `relevance_reasons` kolonu jsonb'dir; şeması DB tarafından garanti EDİLMEZ.
+ * Okuma sınırında doğrula — bozuk/eski bir satır kartı çökertmek yerine boş
+ * listeye düşsün.
+ */
+export function toRelevanceReasons(value: unknown): RelevanceReason[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(
+    (entry): entry is RelevanceReason =>
+      typeof entry === "object" &&
+      entry !== null &&
+      typeof (entry as RelevanceReason).rule === "string" &&
+      typeof (entry as RelevanceReason).score === "number",
+  );
+}
 
 // ─── Kaynak API ───────────────────────────────────────────────────────────────
 
@@ -205,19 +121,11 @@ export async function listCandidates(
   return data ?? [];
 }
 
-// pick_fallback_image RPC henüz generated types.ts'e yansımadı (radar tabloları gibi
-// B1 kapsamında). Havuz boşsa veya çağrı başarısız olursa sessizce null döner — mevcut
-// "görselsiz haber" davranışını bozmaz.
-type FallbackImageRpcClient = {
-  rpc: (
-    fn: "pick_fallback_image",
-    args: { p_category: "news_diaspora" | "mekan" },
-  ) => Promise<{ data: { public_url: string; pool_id: string }[] | null; error: { message: string } | null }>;
-};
-
+// pick_fallback_image RPC artık generated types.ts'te; eski FallbackImageRpcClient
+// cast'i kaldırıldı. Havuz boşsa veya çağrı başarısız olursa sessizce null döner —
+// mevcut "görselsiz haber" davranışını bozmaz.
 async function pickFallbackImageUrl(category: "news_diaspora" | "mekan"): Promise<string | null> {
-  const rpcClient = supabase as unknown as FallbackImageRpcClient;
-  const { data, error } = await rpcClient.rpc("pick_fallback_image", { p_category: category });
+  const { data, error } = await supabase.rpc("pick_fallback_image", { p_category: category });
   if (error) {
     console.error("pick_fallback_image başarısız:", error.message);
     return null;

@@ -367,6 +367,15 @@ const ProfilePage = () => {
 
   const [draftValues, setDraftValues] = useState<DraftValueMap>({});
   const [draftVisibilities, setDraftVisibilities] = useState<DraftVisibilityMap>({});
+
+  // DraftValueMap değeri `string | boolean` taşır (checkbox alanları için).
+  // Daraltmayı satır içinde koşullu ifadeyle yapmak ÇALIŞMAZ: dinamik indeksli
+  // erişimde (`draftValues[key]`) daraltma ifadenin ikinci yarısına taşınmaz,
+  // tip `string | boolean` kalır ve input `value`'suna uymaz. Tek yerde daralt.
+  const draftText = (key: string): string => {
+    const value = draftValues[key];
+    return typeof value === "string" ? value : "";
+  };
   // Referral kilit durumu — kullanım kaydı varsa alan salt-okunur gösterilir (B12).
   const [myReferralUsage, setMyReferralUsage] = useState<MyReferralCodeUsage | null>(null);
 
@@ -1573,7 +1582,7 @@ const ProfilePage = () => {
                   </div>
                   <Input
                     type="text"
-                    value={typeof draftValues[displayNameAttribute.attributeKey] === "string" ? draftValues[displayNameAttribute.attributeKey] : ""}
+                    value={draftText(displayNameAttribute.attributeKey)}
                     onChange={(event) => handleDraftChange(displayNameAttribute.attributeKey, event.target.value)}
                     placeholder={displayNameAttribute.label}
                     className="h-8 flex-1 text-[10px] placeholder:text-[10px]"
@@ -1609,15 +1618,15 @@ const ProfilePage = () => {
                           </label>
                           {attribute.attributeKey === "country" ? (
                             <SearchableCountrySelect
-                              value={typeof draftValues[attribute.attributeKey] === "string" ? draftValues[attribute.attributeKey] : ""}
+                              value={draftText(attribute.attributeKey)}
                               onChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
                               size="sm"
                             />
                           ) : (
                             <SearchableCitySelect
-                              value={typeof draftValues[attribute.attributeKey] === "string" ? draftValues[attribute.attributeKey] : ""}
+                              value={draftText(attribute.attributeKey)}
                               onChange={(nextValue) => handleDraftChange(attribute.attributeKey, nextValue)}
-                              countryName={typeof draftValues["country"] === "string" ? draftValues["country"] : undefined}
+                              countryName={draftText("country") || undefined}
                               size="sm"
                             />
                           )}
@@ -1634,7 +1643,7 @@ const ProfilePage = () => {
                         <Input
                           key={attribute.attributeKey}
                           type="text"
-                          value={typeof draftValues[attribute.attributeKey] === "string" ? draftValues[attribute.attributeKey] : ""}
+                          value={draftText(attribute.attributeKey)}
                           onChange={(event) => handleDraftChange(attribute.attributeKey, event.target.value)}
                           placeholder={attribute.label}
                           className="h-8 text-[10px] placeholder:text-[10px]"
@@ -1729,7 +1738,7 @@ const ProfilePage = () => {
                             <span className="text-[10px] font-medium text-foreground truncate">{config.label}</span>
                           </div>
                           <Input
-                            value={typeof draftValues[attribute.attributeKey] === "string" ? String(draftValues[attribute.attributeKey] ?? "") : ""}
+                            value={draftText(attribute.attributeKey)}
                             onChange={(event) => handleDraftChange(attribute.attributeKey, event.target.value)}
                             placeholder={config.placeholder}
                             className="h-8 flex-1 text-[10px] placeholder:text-[10px]"

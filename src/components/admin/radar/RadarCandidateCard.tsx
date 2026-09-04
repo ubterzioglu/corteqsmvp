@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { toRelevanceReasons } from "@/lib/radarNewsPipeline";
 import type { RadarCandidate, RelevanceReason } from "@/lib/radarNewsPipeline";
 
 type Props = {
@@ -106,7 +107,7 @@ export function RadarCandidateCard({ candidate, onApprovePool, onApprovePublish,
           <p className="text-sm text-muted-foreground line-clamp-3">{candidate.summary}</p>
         )}
 
-        <ReasonTags reasons={candidate.relevance_reasons} />
+        <ReasonTags reasons={toRelevanceReasons(candidate.relevance_reasons)} />
 
         {candidate.image_source_url && (
           <div className="overflow-hidden rounded-md border border-border">

@@ -592,7 +592,7 @@ export const adminNavGroups: AdminNavGroup[] = [
         icon: ListChecks,
         accent: "sky",
         aliases: ["tarama işi", "job", "kuyruk"],
-        activePaths: ["/admin/service-finder/jobs"],
+        match: ["/admin/service-finder/jobs"],
       },
       {
         id: "service-finder-providers",
@@ -656,7 +656,7 @@ export const adminNavGroups: AdminNavGroup[] = [
         icon: ClipboardList,
         accent: "sky",
         aliases: ["taşınma aday", "relocation candidate", "aday onay"],
-        activePaths: ["/admin/relocation-ingestion/candidates"],
+        match: ["/admin/relocation-ingestion/candidates"],
       },
       {
         id: "relocation-tools-question-counts",

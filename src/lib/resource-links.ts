@@ -62,6 +62,21 @@ export type AdvisorResourceLinkFormState = {
   added_by: ResourceLinkAuthor;
 };
 
+// DB kolonları serbest `text`; form state'i dar union bekler. Sınırda daraltıyoruz
+// ki eski/yanlış bir satır formu bozmak yerine varsayılana düşsün. `as` ile
+// susturmak, geçersiz değeri select'e taşıyıp boş bir seçim bırakırdı.
+function toResourceLinkPlatform(value: string | null): ResourceLinkPlatform {
+  return (resourceLinkPlatforms as readonly string[]).includes(value ?? "")
+    ? (value as ResourceLinkPlatform)
+    : "Diğer";
+}
+
+function toResourceLinkAuthor(value: string | null): ResourceLinkAuthor {
+  return (resourceLinkAuthors as readonly string[]).includes(value ?? "")
+    ? (value as ResourceLinkAuthor)
+    : "UBT";
+}
+
 export function createEmptyResourceLinkFormState(): ResourceLinkFormState {
   return {
     platform: "Diğer",
@@ -135,10 +150,10 @@ export function toAdvisorResourceLinkPayload(form: AdvisorResourceLinkFormState)
 
 export function toResourceLinkFormState(row: ResourceLinkRow): ResourceLinkFormState {
   return {
-    platform: row.platform,
+    platform: toResourceLinkPlatform(row.platform),
     description: row.description ?? "",
     link: row.link ?? "",
-    added_by: row.added_by,
+    added_by: toResourceLinkAuthor(row.added_by),
   };
 }
 
@@ -154,7 +169,7 @@ export function toAdvisorResourceLinkFormState(row: AdvisorResourceLinkRow): Adv
     contacted_instagram: row.contacted_instagram,
     contacted_email: row.contacted_email,
     contacted_phone: row.contacted_phone,
-    added_by: row.added_by,
+    added_by: toResourceLinkAuthor(row.added_by),
   };
 }
 

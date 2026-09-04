@@ -13,6 +13,10 @@
 // ayrımı yalnız UI rozetinde kalır, DB kimliğine hiç girmez.
 
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+/** Üretilen tabloya birebir bağlı upsert gövdesi — kolon adı değişirse burada patlar. */
+type ShareAssetUpsert = Database["public"]["Tables"]["social_share_assets"]["Insert"];
 
 // Video Drive klasörü — "Videoyu Drive'a Yükle" butonu bunu yeni sekmede açar.
 export const BURAK_DRIVE_FOLDER_URL =
@@ -33,14 +37,12 @@ export type BurakAssetPatch = Partial<
   Pick<BurakShareAsset, "imageBucket" | "imagePath" | "imageUrl" | "videoUrl" | "note">
 >;
 
-// social_share_assets henüz supabase/types.ts'te yok; mevcut admin/*.ts deseniyle
-// (supabase as SupabaseUntyped) köprüsüyle erişilir.
-type SupabaseUntyped = {
-  from: (table: string) => ReturnType<typeof supabase.from>;
-  auth: typeof supabase.auth;
-  storage: typeof supabase.storage;
-};
-const db = supabase as unknown as SupabaseUntyped;
+// social_share_assets ve social_share_asset_images artık supabase/types.ts'te
+// tanımlı; eski `supabase as SupabaseUntyped` köprüsü kaldırıldı. Köprünün
+// `from: (table: string) => …` imzası tablo adını kaybediyor ve tip çözümlemesini
+// TÜM tabloların birleşimine düşürüyordu (hatalarda `geography_columns` görünmesinin
+// sebebi buydu). Tabloyu types.ts tanıyorsa doğrudan `supabase` kullan.
+const db = supabase;
 
 export function burakSlotKey(globalId: string, variantIndex: number): string {
   return `${globalId}/variant-${variantIndex}`;
@@ -81,7 +83,7 @@ export async function upsertBurakShareAsset(
   const { data: userData } = await db.auth.getUser();
   const userId = userData?.user?.id ?? null;
 
-  const values: Record<string, unknown> = {
+  const values: ShareAssetUpsert = {
     slot_key: slotKey,
     updated_by: userId,
     updated_at: new Date().toISOString(),
