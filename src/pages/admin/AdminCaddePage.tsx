@@ -122,7 +122,7 @@ export default function AdminCaddePage() {
   const [sponsoredForm, setSponsoredForm] = useState<SponsoredFormState>(sponsoredDefaults);
 
   const countriesQuery = useQuery({ queryKey: ["cadde", "countries"], queryFn: listCaddeCountries });
-  const allCitiesQuery = useQuery({ queryKey: ["cadde", "all-cities"], queryFn: () => listCaddeCities("") });
+  const allCitiesQuery = useQuery({ queryKey: ["cadde", "all-cities"], queryFn: () => listCaddeCities([]) });
 
   const postsQuery = useQuery({ queryKey: ["admin", "cadde", "posts"], queryFn: listAdminCaddePosts });
   const cafesQuery = useQuery({ queryKey: ["admin", "cadde", "cafes"], queryFn: listAdminCaddeCafes });

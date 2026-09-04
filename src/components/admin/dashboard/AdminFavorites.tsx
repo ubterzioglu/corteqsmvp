@@ -1,13 +1,17 @@
 // Admin Panel V2 — favoriler widget'ı (masterplan §8.1.G).
-// localStorage'daki favorileri listeler; sidebar yıldızlarıyla yönetilir.
+// Favoriler admin_favorite_pages tablosunda tutulur; sidebar yıldızlarıyla yönetilir.
 
 import { Star } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { useAdminFavorites } from "@/hooks/admin/useAdminFavorites";
 
-const AdminFavorites = () => {
-  const { favoriteEntries } = useAdminFavorites();
+// Hook kullanıcı kimliğini ZORUNLU alır; burası argümansız çağırıyordu ve widget
+// HER ZAMAN boş listeyle dönüyordu (AdminShell aynı hook'u doğru çağırıyor).
+// Kimlik prop olarak alınır: useAuth ile context'ten çekmek bileşeni AuthProvider'a
+// bağlardı ve sağlayıcısız render edildiği yerlerde (pano testleri) patlıyordu.
+const AdminFavorites = ({ userId }: { userId?: string }) => {
+  const { favoriteEntries } = useAdminFavorites(userId);
 
   return (
     <section aria-label="Favoriler" className="rounded-2xl border border-border bg-card p-4">

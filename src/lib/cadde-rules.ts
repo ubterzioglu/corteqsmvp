@@ -228,7 +228,11 @@ export function resolveCaddeRpcErrorMessage(error: unknown, fallback = "İşlem 
 // Frontend ilk hat: bariz ihlalleri form'da keser. Şüpheli sinyaller Faz 7'de
 // moderasyon kuyruğuna da düşecek; buradaki liste kuyruğun yerine geçmez.
 
-export type CafeNameModerationResult = { ok: true } | { ok: false; reason: string };
+// Düz nesne, ayrık birleşim DEĞİL — bkz. chatConfig.ts'teki ValidationResult ve
+// command-center-hot-fixes.ts'teki HotFixMutationResult. Projede `strict`/
+// `strictNullChecks` kapalı olduğu için `if (!result.ok)` içinde birleşim
+// daraltması çalışmıyor ve çağıran `Property 'reason' does not exist` alıyordu.
+export type CafeNameModerationResult = { ok: boolean; reason?: string };
 
 const CAFE_NAME_BLOCKLIST: ReadonlyArray<RegExp> = [
   /\b(amk|aq|orospu|piç|sik|yarrak|göt|amcık)\b/i, // küfür

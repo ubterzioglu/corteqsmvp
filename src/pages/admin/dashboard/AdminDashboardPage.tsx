@@ -46,7 +46,7 @@ const AdminDashboardPage = () => {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <AdminFavorites />
+        <AdminFavorites userId={session?.user.id} />
         <AdminRecentPages />
       </div>
 

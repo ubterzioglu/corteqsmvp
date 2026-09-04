@@ -198,9 +198,7 @@ describe("submitLanding", () => {
 
     const result = await submitLanding({
       groupName: "Berlin Girisim",
-      // "girisim" geçerli bir LandingCategory değil (canlıda da hiç kullanılmamış);
-      // bu testte kategori zaten iddia edilmiyor, yalnız dolgu girdisi.
-      category: "is",
+      category: "girisim",
       country: "Almanya",
       city: "Berlin",
       mode: "text",

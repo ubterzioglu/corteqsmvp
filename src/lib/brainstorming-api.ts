@@ -16,6 +16,11 @@ import {
   type BrainstormingStatus,
 } from "@/lib/brainstorming-schemas";
 
+// Form tipleri şemalarda tanımlıdır ama bu modülün açık API'sinin parçası:
+// createSection/updateRow gibi fonksiyonların imzaları bunları kullanıyor ve
+// çağıranlar (testler dahil) buradan import ediyordu. Re-export edilmemişti.
+export type { BrainstormingRowForm, BrainstormingSectionForm };
+
 export type BrainstormingRow = {
   id: string;
   sectionId: string;

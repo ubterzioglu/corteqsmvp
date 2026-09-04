@@ -18,7 +18,7 @@ import {
   listAllSubmissions,
   parseAdminContact,
   setLandingStatus,
-  type LandingCategory,
+  type LandingCategoryInput,
   type LandingStatus,
   type UpdateLandingInput,
   type WhatsAppLanding,
@@ -37,7 +37,9 @@ const statusLabel: Record<LandingStatus, string> = {
   rejected: "Reddedildi",
 };
 
-const categoryOptions: Array<{ value: LandingCategory; label: string }> = [
+// Liste 'girisim' takma adini da sunuyor (kaydederken 'yatirim'a cevrilir),
+// bu yuzden kanonik LandingCategory degil girdi tipi kullanilir.
+const categoryOptions: Array<{ value: LandingCategoryInput; label: string }> = [
   { value: "alumni", label: "Alumni" },
   { value: "hobi", label: "Hobi" },
   { value: "is", label: "İş Grubu" },
@@ -401,7 +403,7 @@ export default function WhatsAppLandingsModeration() {
 
               <div className="space-y-1.5">
                 <Label>Kategori</Label>
-                <Select value={editState.category} onValueChange={(value) => updateEditState("category", value as LandingCategory)}>
+                <Select value={editState.category} onValueChange={(value) => updateEditState("category", value as LandingCategoryInput)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>

@@ -18,7 +18,12 @@ export const REFERRAL_SOURCE_OPTIONS = [
   { value: "diger", label: "Diger" },
 ] as const;
 
-const ALLOWED_REFERRAL_SOURCE_VALUES = new Set(REFERRAL_SOURCE_OPTIONS.map((option) => option.value));
+// Anahtar tipi `string`: bu Set DB'den/formdan gelen SERBEST metni dogrular ve
+// zaten gecersiz degeri reddetmek icin var. Dar union anahtar, kontrolun kendisini
+// anlamsiz kilardi (cagirana zaten dogrulanmis deger sarti kosardi).
+const ALLOWED_REFERRAL_SOURCE_VALUES = new Set<string>(
+  REFERRAL_SOURCE_OPTIONS.map((option) => option.value),
+);
 const E164_PHONE_PATTERN = /^\+[1-9]\d{7,14}$/;
 
 export type ReferralSourceOption = (typeof REFERRAL_SOURCE_OPTIONS)[number];

@@ -144,7 +144,9 @@ const LEGEND_ITEMS = [
   ...Object.values(KIND_ABBREVIATIONS),
   ...Object.values(STATUS_ABBREVIATIONS),
   ...Object.values(VERIFICATION_ABBREVIATIONS),
-].sort((left, right) => left.code.localeCompare(right.code, "tr")) as const;
+// `as const` fonksiyon cagrisi sonucuna uygulanamaz (TS1355); sort() zaten yeni
+// dizi donduruyor, sabitleme burada bir sey kazandirmiyordu.
+].sort((left, right) => left.code.localeCompare(right.code, "tr"));
 
 const DEFAULT_FILTERS: AdminCatalogFilters = {
   kind: "",

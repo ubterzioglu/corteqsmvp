@@ -53,9 +53,18 @@ export interface WhatsAppLanding {
   createdAt: string;
 }
 
+/**
+ * Formlardan/moderasyon ekranından gelebilen kategori girdisi: kanonik değerler
+ * + takma adlar. Takma adlar LANDING_CATEGORY_ALIASES ile kanonik değere çevrilir
+ * (ör. "girisim" -> "yatirim"), yani saklanan değer her zaman LandingCategory'dir.
+ * Girdi ile saklanan değeri ayırmak gerekiyordu: `SaveLandingInput.category`
+ * kanonik tiple yazılmıştı ama çağıranlar takma ad geçiyordu.
+ */
+export type LandingCategoryInput = LandingCategory | "girisim";
+
 export interface SaveLandingInput {
   groupName: string;
-  category: LandingCategory;
+  category: LandingCategoryInput;
   country: string;
   city: string;
   mode: LandingMode;

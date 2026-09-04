@@ -133,7 +133,10 @@ type UnifiedAccordionItemProps = {
   extraImageCounts: Record<string, number> | undefined;
   firstExtraImages: Record<string, { imageBucket: string; imagePath: string }> | undefined;
   onExtraImageCountChange?: (slotKey: string, count: number) => void;
-  renderShareBar?: (tab: ShareTab, itemId: string) => ReactNode;
+  // Imza 3 argumanliydi (globalId eklendi) ama alt bilesenin prop tipi 2
+  // argumanda kalmisti; ust bilesen (satir 57) ve cagri yeri (satir 384) zaten
+  // 3 arguman kullaniyor.
+  renderShareBar?: (globalId: string, tab: ShareTab, itemId: string) => ReactNode;
 };
 
 function UnifiedAccordionItem({

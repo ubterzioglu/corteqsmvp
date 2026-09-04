@@ -20,7 +20,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { INDIVIDUAL_FEATURE_KEYS, type IndividualFeatureMeta } from "@/lib/features";
+import { INDIVIDUAL_FEATURE_KEYS, type FeatureMeta, type IndividualFeatureKey } from "@/lib/features";
 import type { IndividualProfileDetailsCore, IndividualProfileUpdateInput } from "@/lib/individual-profile";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
@@ -28,7 +28,7 @@ import { trUpper } from "@/lib/text-normalization";
 
 type IndividualProfileCardsProps = {
   details: IndividualProfileDetailsCore;
-  visibleModules: IndividualFeatureMeta[];
+  visibleModules: FeatureMeta<IndividualFeatureKey>[];
   featureSources: Record<string, string>;
   isFeaturesLoading: boolean;
   featureErrorMessage: string | null;
