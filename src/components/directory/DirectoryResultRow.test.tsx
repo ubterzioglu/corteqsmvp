@@ -6,7 +6,10 @@ import DirectoryResultRow from "@/components/directory/DirectoryResultRow";
 import type { UnifiedDirectoryRow } from "@/lib/catalog-directory";
 
 const mockRow: UnifiedDirectoryRow = {
-  recordType: "user_profile",
+  // Uretim kodu uye satirlari icin "member" uretiyor (catalog-directory.ts:147);
+  // "user_profile" AFS yeniden yapilandirmasi oncesinden kalma bayat degerdi.
+  recordType: "member",
+  itemType: "member",
   id: "user-123",
   href: "/directory/profile/user-123",
   title: "Ahmet Yilmaz",

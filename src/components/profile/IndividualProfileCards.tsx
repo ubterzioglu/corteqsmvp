@@ -162,7 +162,12 @@ export const IndividualProfileCards = ({
   const [isEditingSettings, setIsEditingSettings] = useState(false);
   const [settingsForm, setSettingsForm] = useState<SettingsFormState>(() => mapDetailsToForm(details));
 
-  const moduleKeySet = useMemo(() => new Set(visibleModules.map((module) => module.key)), [visibleModules]);
+  // Set<string>: asagida Object.entries'ten gelen `string` anahtarla sorgulaniyor,
+  // dar IndividualFeatureKey anahtar tipi cagriyi imkansiz kiliyordu.
+  const moduleKeySet = useMemo(
+    () => new Set<string>(visibleModules.map((module) => module.key)),
+    [visibleModules],
+  );
   const shouldShowFeatureTabs = !isFeaturesLoading && !featureErrorMessage;
 
   const tabs = useMemo(() => {

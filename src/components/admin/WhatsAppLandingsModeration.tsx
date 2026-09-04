@@ -18,6 +18,7 @@ import {
   listAllSubmissions,
   parseAdminContact,
   setLandingStatus,
+  normalizeLandingCategory,
   type LandingCategoryInput,
   type LandingStatus,
   type UpdateLandingInput,
@@ -403,7 +404,12 @@ export default function WhatsAppLandingsModeration() {
 
               <div className="space-y-1.5">
                 <Label>Kategori</Label>
-                <Select value={editState.category} onValueChange={(value) => updateEditState("category", value as LandingCategoryInput)}>
+                <Select value={editState.category} onValueChange={(value) =>
+                    // Liste takma ad ("girisim") da sunuyor; SAKLANAN deger kanonik
+                    // olmali, bu yuzden secim aninda normallestirilir ("girisim" -> "yatirim").
+                    // Eski `as LandingCategory` cast'i bu donusumu gizliyordu.
+                    updateEditState("category", normalizeLandingCategory(value))
+                  }>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>

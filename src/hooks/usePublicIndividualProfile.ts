@@ -9,26 +9,12 @@ import {
 } from "@/lib/individual-profile";
 import { listMemberCatalogNames } from "@/lib/member-catalog";
 
-const PROFILE_DETAILS_SELECT = [
-  "user_id",
-  "tagline",
-  "status_text",
-  "presence_status",
-  "visibility_status",
-  "follower_count",
-  "following_count",
-  "event_count",
-  "active_city",
-  "active_country",
-  "hometown",
-  "phone_verified",
-  "job_seeking",
-  "mentor_opt_in",
-  "front_card",
-  "detail_card",
-  "control_panel",
-  "profile_settings",
-].join(", ");
+const PROFILE_DETAILS_SELECT =
+  // Tek parca literal: `[...].join(", ")` sonucu `string` oluyordu ve supabase-js
+  // literal olmayan select metnini ayristiramayip satir tipini GenericStringError'a
+  // dusuruyordu. Kolonlarin tamami canli tabloda mevcut (dogrulandi), sorun yalniz
+  // tip duzeyindeydi.
+  "user_id, tagline, status_text, presence_status, visibility_status, follower_count, following_count, event_count, active_city, active_country, hometown, phone_verified, job_seeking, mentor_opt_in, front_card, detail_card, control_panel, profile_settings, created_at, updated_at";
 
 export const usePublicIndividualProfile = (targetUserId: string | undefined) => {
   const { isLoading: isAuthLoading } = useAuth();
