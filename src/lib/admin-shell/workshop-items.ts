@@ -14,8 +14,14 @@ import { sanitizeError, validateContent } from "@/lib/security";
 import { trCompare, trIncludes } from "@/lib/text-normalization";
 
 /** Tanımlı workshop'lar — yeni workshop eklenince buraya ve nav registry'ye eklenir. */
-export const WORKSHOP_KEYS = ["cadde"] as const;
+export const WORKSHOP_KEYS = ["cadde", "profil"] as const;
 export type WorkshopKey = (typeof WORKSHOP_KEYS)[number];
+
+/** Pano başlığında görünen workshop adı. */
+export const WORKSHOP_LABELS: Record<WorkshopKey, string> = {
+  cadde: "Cadde Workshop",
+  profil: "Profil Workshop",
+};
 
 /** Onay kutusu sahipleri — DB'deki iki bool kolonuna karşılık gelir. */
 export const WORKSHOP_OWNERS = ["ubt", "burak"] as const;

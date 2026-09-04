@@ -86,6 +86,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/feedback",
   "/admin/workshop",
   "/admin/workshop/cadde",
+  "/admin/workshop/profil",
   "/admin/muhasebe",
   "/admin/muhasebe/giderler",
   "/admin/muhasebe/gelirler",

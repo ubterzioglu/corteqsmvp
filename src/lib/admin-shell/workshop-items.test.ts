@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  WORKSHOP_KEYS,
+  WORKSHOP_LABELS,
   calculateWorkshopProgress,
   collectWorkshopSections,
   collectWorkshopSessions,
@@ -12,6 +14,7 @@ import {
   validateWorkshopItemDraft,
   type WorkshopItem,
 } from "./workshop-items";
+import { ADMIN_ROUTE_PATTERNS } from "./admin-route-meta";
 
 function item(overrides: Partial<WorkshopItem> = {}): WorkshopItem {
   return {
@@ -226,5 +229,28 @@ describe("validateWorkshopItemDraft", () => {
     expect(
       validateWorkshopItemDraft({ sessionKey: "WS1", section: "a".repeat(121), title: "Madde" }),
     ).toBe("Bölüm adı en fazla 120 karakter olabilir.");
+  });
+});
+
+// Yeni workshop eklemek 4 dosyaya dokunur: WORKSHOP_KEYS, WORKSHOP_LABELS,
+// pages/admin/workshop/routes.tsx ve admin-route-meta + nav registry. Aşağıdaki
+// testler bunlardan birini unutmayı build/test kırarak yakalar; gevşetmeyin.
+describe("workshop kayıt defteri", () => {
+  it("her workshop anahtarının bir etiketi vardır", () => {
+    for (const key of WORKSHOP_KEYS) {
+      expect(WORKSHOP_LABELS[key]).toBeTruthy();
+    }
+    expect(Object.keys(WORKSHOP_LABELS).sort()).toEqual([...WORKSHOP_KEYS].sort());
+  });
+
+  it("her workshop anahtarının bir admin route'u vardır", () => {
+    for (const key of WORKSHOP_KEYS) {
+      expect(ADMIN_ROUTE_PATTERNS).toContain(`/admin/workshop/${key}`);
+    }
+  });
+
+  it("cadde ve profil panoları tanımlıdır", () => {
+    expect(WORKSHOP_KEYS).toContain("cadde");
+    expect(WORKSHOP_KEYS).toContain("profil");
   });
 });

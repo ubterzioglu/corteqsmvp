@@ -504,6 +504,16 @@ export const adminNavGroups: AdminNavGroup[] = [
         accent: "emerald",
         aliases: ["workshop", "cadde workshop", "atölye", "madde", "checklist", "ubt", "burak"],
       },
+      {
+        id: "workshop-profil",
+        label: "Profil",
+        shortLabel: "Profil WS",
+        description: "03.09.2026 Profiller toplantısı maddeleri; UBT + Burak onay kutuları.",
+        to: "/admin/workshop/profil",
+        icon: ClipboardList,
+        accent: "emerald",
+        aliases: ["profil workshop", "profiller", "rol etiketi", "doğrulama", "referans", "paket"],
+      },
     ],
   },
   {
