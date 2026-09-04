@@ -14,6 +14,37 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260904-profil-toplantisi-ve-workshop-panosu",
+    date: "4 Eylül 2026",
+    title:
+      "3 Eylül Profiller toplantısı panele işlendi — kararlar Komuta Merkezi'nde, profil maddeleri yeni Profil Workshop panosunda",
+    items: [
+      "KOMUTA MERKEZİ'NE 3 EYLÜL TOPLANTISI EKLENDİ: Toplantının tamamı 24 kayıt olarak girildi — 17 yapılacak iş ve 7 karar. Kayıtlar 'Toplantı 19 / 3 Eylül 2026' etiketiyle süzülebiliyor. UBT'de 14, Burak'ta 3 iş var.",
+      "ORTAK KARARLAR ARTIK ORTAK SORUMLUYLA GİRİLİYOR: Toplantıda birlikte alınan 7 karar, tek bir kişiye yazılmak yerine ilk kez 'B+B' etiketiyle kaydedildi. Böylece bunlar kimsenin kişisel yapılacak listesini şişirmiyor ama kapsam kaydı olarak panelde duruyor.",
+      "YENİ PROFİL WORKSHOP PANOSU: Menüye Workshop > Profil eklendi. Toplantının yalnız profil ile ilgili 26 maddesi, Cadde workshop'uyla birebir aynı düzende burada duruyor: madde listesi, yanında UBT ve Burak için iki ayrı onay kutusu, iki onay tamamsa madde bitmiş sayılıyor.",
+      "MADDELER ALTI BAŞLIKTA TOPLANDI: Profil formu ve alanlar (6), doğrulama ve giriş (6), rol ve etiket mimarisi (4), referans sistemi (3), paketleme ve yetkiler (4), operasyon (3).",
+      "NEDEN İKİ AYRI YERDE DURUYOR: Komuta Merkezi toplantının TAMAMINI tutuyor (WordPress taşıma, Excel dokümantasyonu, operasyon dahil). Profil Workshop ise yalnız profil maddelerinin kopyasını, iki onay kutulu workshop düzeninde tutuyor. Amaçları farklı olduğu için kopya bilerek bırakıldı.",
+      "İKİ WORKSHOP TEK ALTYAPIDAN BESLENİYOR: Cadde ve Profil panoları artık aynı ortak bileşeni kullanıyor. Birinde yapılan iyileştirme diğerine de geliyor; ileride üçüncü bir workshop açmak tek satırlık iş.",
+      "ZATEN BİTMİŞ TEK MADDE İŞARETLENDİ: Burak'ın yönetici yetkisinin geri verilmesi 3 Eylül'de tamamlandığı için 'Tamamlandı' girildi. Burak'ın panelde kendi doğrulamasını yapması ayrıca bekleniyor.",
+      "KONTROLLER: 1.718 otomatik test geçti, kod denetimi temiz, 379 veri tabanı güncellemesinin tamamının canlıda kayıtlı olduğu doğrulandı.",
+    ],
+  },
+  {
+    id: "20260903-top-10-hot-fix-ve-yonetici-yetkisi",
+    date: "3 Eylül 2026",
+    title: "Komuta Merkezi'ne TOP 10 HOT FIX listesi eklendi, Burak'ın yönetici yetkisi geri verildi",
+    items: [
+      "TOP 10 HOT FIX BLOĞU: Komuta Merkezi'nin üstüne, platformda acilen yapılması gereken işlerin durduğu ayrı bir liste eklendi. Amaç, yüzlerce kaydın arasında 'önce şunlar' diyebilmek.",
+      "SINIR: AYNI ANDA EN FAZLA 10 AÇIK MADDE: Onbirinci açık madde eklenmek istendiğinde sistem izin vermiyor. Sınır yalnız ekranda değil veri tarafında da uygulanıyor, yani başka bir yoldan da aşılamıyor.",
+      "TAMAMLANAN MADDE YER İŞGAL ETMİYOR: Bir işi bitirir bitirmez yenisini girebiliyorsunuz. Tamamlanan madde listeden kaybolmuyor, sadece en alta iniyor — bu yüzden tablo geçici olarak 10'dan fazla satır gösterebilir, bu normal.",
+      "ANA TABLODAN BİLEREK FARKLI: Komuta Merkezi'nin ana tablosunda tamamlanan işler en alttaki ayrı 'Tamamlanan Görevler' kutusuna taşınıyor. Hot fix listesinde bu yapılmıyor; ne yapıldığı bir bakışta görünsün diye bitmiş maddeler aynı listede kalıyor.",
+      "AYRI LİSTE OLARAK KURULDU: Hot fix kayıtları ana tabloya karışmıyor. Böylece filtrelere, kaynak dağılım kartına, rozet sayaçlarına ve Todo / Toplantı Notları ekranlarına sızmıyorlar.",
+      "LİSTE ŞU AN BOŞ: İlk 10 maddenin önceliklendirilip girilmesi Burak'ta.",
+      "BURAK'IN YÖNETİCİ YETKİSİ GERİ VERİLDİ: Yanlışlıkla silinen yetki geri verildi; hesap en yüksek yönetici seviyesine (SuperAdmin) alındı ve admin paneline erişimi açıldı.",
+      "BİR KİŞİ, BİR ROL: Sistemde her kullanıcı aynı anda tek rol taşıyor. Bu yüzden yeni rol vermek eskisinin üzerine yazmak demek — yetki değişikliklerinde bu kural akılda tutulmalı.",
+    ],
+  },
+  {
     id: "20260831-30-agustos-eksik-teknik-isler",
     date: "31 Ağustos 2026",
     title:
