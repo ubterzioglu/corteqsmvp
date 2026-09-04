@@ -579,6 +579,12 @@ export async function updateCurrentUserEditableLanding(params: {
 }
 
 export async function listLandingEditorAssignmentsAsAdmin(): Promise<LandingEditorAssignment[]> {
+  // `user_profiles` AFS yeniden yapılandırmasında DÜŞÜRÜLDÜ (CLAUDE.md kanonik
+  // şema tablosu). Buradaki `user_profiles!inner(...)` gömmesi bu yüzden canlıda
+  // PostgREST hatası veriyordu ve /admin/whatsapp-landings/editors sayfası hiç
+  // yüklenmiyordu. İsim artık kanonik kaynaktan (user_profile_attributes +
+  // afs_attributes.key='full_name') ayrı sorguyla çözülür; e-posta client'a
+  // açılmadığı için null kalır — admin-user-labels.ts ile aynı sözleşme.
   const { data, error } = await supabase
     .from("whatsapp_landing_editors")
     .select(`
@@ -587,21 +593,37 @@ export async function listLandingEditorAssignmentsAsAdmin(): Promise<LandingEdit
       user_id,
       created_at,
       updated_at,
-      whatsapp_landings!inner(id, slug, group_name),
-      user_profiles!inner(user_id, full_name, email)
+      whatsapp_landings!inner(id, slug, group_name)
     `)
     .order("created_at", { ascending: false });
 
   if (error) throw error;
 
-  return (data ?? []).map((row) => ({
+  const rows = data ?? [];
+  const userIds = Array.from(new Set(rows.map((row) => String(row.user_id))));
+
+  const nameByUser: Record<string, string | null> = {};
+  if (userIds.length > 0) {
+    const { data: attrRows, error: attrsError } = await supabase
+      .from("user_profile_attributes")
+      .select("user_id, value_text, afs_attributes!inner(key)")
+      .in("user_id", userIds)
+      .eq("afs_attributes.key", "full_name");
+    if (attrsError) throw attrsError;
+
+    for (const attr of (attrRows ?? []) as Array<{ user_id: string; value_text: string | null }>) {
+      nameByUser[attr.user_id] = attr.value_text ?? null;
+    }
+  }
+
+  return rows.map((row) => ({
     id: String(row.id),
     landingId: String(row.landing_id),
     landingSlug: String(row.whatsapp_landings.slug),
     landingGroupName: normalizeCommunityText(String(row.whatsapp_landings.group_name)),
     userId: String(row.user_id),
-    userFullName: row.user_profiles.full_name ?? null,
-    userEmail: row.user_profiles.email ?? null,
+    userFullName: nameByUser[String(row.user_id)] ?? null,
+    userEmail: null,
     createdAt: String(row.created_at),
     updatedAt: String(row.updated_at),
   }));
