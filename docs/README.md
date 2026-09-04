@@ -63,11 +63,11 @@
 | `exports/` | Üretilen dışa aktarımlar: `blog-md/` = `scripts/export-blog-md.mjs` varsayılan çıktısı | Üretilen |
 | `archive/` | **Dondurulmuş içerik:** `architecture/` (eski 9 mimari doküman — bakım ARCHITECTURE.md'de), `root-2026-06-11/` (kök temizliği: audit/cleancode/dbcheck/peronevera notları, deployerror, meeting10.csv, import-resources.ts), `root-2026-08-03/` (üçüncü kök temizliği: `1readme.md`, `tab_of.json`), `backups/` (Supabase DB dump'ları), `cleanup-2026-05-15/`, `cleanup-2026-05-30/`, `turkish_missions_import_builder/` | Arşiv |
 | `reference/` | Referans repo kopyaları (`global-network-bridge/`) | Arşiv |
-| `docu/` | Eski kök `docu/` klasörü (info-* HTML kopyaları + referans görseller) | Arşiv |
+| `partner-materials/` | Influencer / Strategic Partner tanıtım materyalleri (`.docx`, `.png`) + referans görseller. 2026-09-04'te `docu/`'dan adlandırıldı; alt klasörler `.html` uzantılı isim taşıyordu (2026-06-11 kök temizliğinden kalma kaza), `influencer-partner/` ve `strategic-partner/` olarak düzeltildi. | Arşiv |
 | `assets/` | Arşiv görselleri (sweet.png, rapor ekran görüntüleri vb.) | Arşiv |
 | `superpowers/`, `inbox-review/` | Agent planları / sınıflandırılmamış dosyalar | Arşiv |
 
-> Not: `archive/`, `reference/`, `docu/` klasörleri `verify:text` encoding denetiminden muaftır
+> Not: `archive/`, `reference/`, `partner-materials/` klasörleri `verify:text` encoding denetiminden muaftır
 > (donmuş içerik) — canlı doküman buralara DEĞİL, ilgili aktif klasöre eklenir.
 
 ## 2026-08-04 Modernizasyon Çalışması

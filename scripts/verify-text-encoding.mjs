@@ -18,10 +18,12 @@ const includeFiles = ["index.html", "package.json", "vite.config.ts", "tsconfig.
 // suspiciousPatterns'a güvenmek) ya da o dosyaya istisna tanımlanmalı — ayrı bir karar.
 // DİKKAT: bu yorumda o karakterleri harfiyen YAZMA; script kendi dosyasını da tarar.
 const extensions = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json", ".md", ".html", ".css", ".svg", ".yml", ".yaml"]);
-// "archive"/"reference"/"docu"/"reference-clones": docs altındaki dondurulmuş arşiv
-// ve üçüncü parti referans içerikleri — encoding denetimi yalnız canlı kod/dokümanlar
-// için anlamlıdır (2026-06-11 kök temizliği).
-const skipDirs = new Set(["node_modules", ".git", "dist", "coverage", "archive", "reference", "docu", "reference-clones"]);
+// "archive"/"reference"/"partner-materials"/"reference-clones": docs altındaki
+// dondurulmuş arşiv ve üçüncü parti referans içerikleri — encoding denetimi yalnız
+// canlı kod/dokümanlar için anlamlıdır (2026-06-11 kök temizliği).
+// "partner-materials" 2026-09-04'te "docu"dan yeniden adlandırıldı; klasör adını
+// değiştirirsen BURAYI da değiştir, yoksa muafiyet sessizce düşer.
+const skipDirs = new Set(["node_modules", ".git", "dist", "coverage", "archive", "reference", "partner-materials", "reference-clones"]);
 const suspiciousTokens = [
   "\u00C3",
   "\u00C4",
