@@ -116,6 +116,31 @@ const CaddePostComments = ({ postId, commentCount, canComment, onCommentAdded }:
         <div className="mt-2 space-y-2 rounded-[20px] border border-slate-200/90 bg-slate-50/80 p-3">
           {commentsQuery.isLoading ? <p className="text-sm text-slate-500">Yorumlar yükleniyor…</p> : null}
 
+          {/* Yükleme hatası "hiç yorum yok"tan AYIRT EDİLEBİLİR olmalı. Bu kusur
+              cadde-internal.ts'te (caddeReadError notu, 04.08.2026) okuma yolları için
+              zaten belgelenmişti: hata + boş sonuç ekranda "sessiz akış" gibi görünüyordu.
+              listCaddePostComments fırlatıyor, yani isError doğru kuruluyordu — eksik olan
+              yalnız burada çizilmesiydi. Kural gereği toast ATILMAZ; satır içi kart +
+              "Tekrar dene" yolu. */}
+          {commentsQuery.isError ? (
+            <div
+              data-testid="cadde-post-comments-error"
+              className="rounded-xl border border-amber-300/70 bg-amber-50/80 px-3 py-2"
+            >
+              <p className="text-sm text-amber-900">Yorumlar yüklenemedi.</p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="mt-2"
+                onClick={() => void commentsQuery.refetch()}
+                disabled={commentsQuery.isFetching}
+              >
+                {commentsQuery.isFetching ? "Deneniyor…" : "Tekrar dene"}
+              </Button>
+            </div>
+          ) : null}
+
           {comments.map((comment) => (
             <div
               key={comment.id}
@@ -127,7 +152,7 @@ const CaddePostComments = ({ postId, commentCount, canComment, onCommentAdded }:
             </div>
           ))}
 
-          {!commentsQuery.isLoading && comments.length === 0 ? (
+          {!commentsQuery.isLoading && !commentsQuery.isError && comments.length === 0 ? (
             <p className="text-sm text-slate-500">İlk yorumu sen bırak ve konuşmayı başlat.</p>
           ) : null}
 

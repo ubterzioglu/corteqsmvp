@@ -136,10 +136,21 @@ dönük inceleyecek kanıt üretilmemiş.
 **Çözmek için gereken:** tarayıcı konsolundaki hata metni · hangi ekran (ana akış mı
 kafe mi) · "netlik gidiyor" neye benziyor (bulanık / kırpılmış / küçülmüş).
 
-**Yolda bulunan ayrı kusur (henüz düzeltilmedi):** `CaddePostComments`'te
-`commentsQuery.isError` ele alınmıyor — yorum listesi yüklenemezse kullanıcıya
-"İlk yorumu sen bırak" yazılıyor, yani **yükleme hatası "hiç yorum yok" gibi
-gösteriliyor**. Kullanıcı bu turda "düzelt" dedi, uygulanmadı.
+**Yolda bulunan ayrı kusur — DÜZELTİLDİ:** `CaddePostComments`'te
+`commentsQuery.isError` ele alınmıyordu; yorum listesi yüklenemezse kullanıcıya
+"İlk yorumu sen bırak" yazılıyordu, yani **yükleme hatası "hiç yorum yok" gibi
+gösteriliyordu**.
+
+Bu kusur sınıfı depoda ZATEN belgeliymiş: `cadde-internal.ts`'teki `caddeReadError`
+notu (04.08.2026) aynı şeyi okuma yolları için anlatıyor — *"hata + boş sonuç ekranda
+'Bu akış henüz sessiz.' olarak görünüyordu"*. Konulan kural: yüzeyin tamamını besleyen
+okuma yolu FIRLATIR, çağıran satır içi hata kartı + "Tekrar dene" çizer, **toast
+ATMAZ** (kart zaten görünür).
+
+`listCaddePostComments` zaten fırlatıyordu (`if (error) throw error`), yani `isError`
+doğru kuruluyordu — eksik olan yalnız panelin onu çizmesiydi. Emsale birebir uyularak
+satır içi kart + "Tekrar dene" eklendi, boş durum mesajı `!isError` ile korundu.
+Yeni test `CaddePostComments.test.tsx` iki durumu ayırt ediyor (hata ≠ boşluk).
 
 ## 5) Klasör düzeni
 
