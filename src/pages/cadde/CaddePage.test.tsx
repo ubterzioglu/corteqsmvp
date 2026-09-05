@@ -76,6 +76,7 @@ const listCaddePostCommentsMock = vi.fn();
 const createCaddeCommentMock = vi.fn();
 const createCaddePostMock = vi.fn();
 const recordCaddeShareMock = vi.fn();
+const toggleCaddeReactionMock = vi.fn();
 const listTrendingCaddeHashtagsMock = vi.fn();
 const listMyNotificationsMock = vi.fn();
 const toastMock = vi.fn();
@@ -107,6 +108,7 @@ vi.mock("@/lib/cadde-api", async () => {
     createCaddeComment: (...args: unknown[]) => createCaddeCommentMock(...args),
     createCaddePost: (...args: unknown[]) => createCaddePostMock(...args),
     recordCaddeShare: (...args: unknown[]) => recordCaddeShareMock(...args),
+    toggleCaddeReaction: (...args: unknown[]) => toggleCaddeReactionMock(...args),
     listTrendingCaddeHashtags: (...args: unknown[]) => listTrendingCaddeHashtagsMock(...args),
   };
 });
@@ -165,6 +167,7 @@ describe("CaddePage", () => {
     createCaddeCommentMock.mockResolvedValue(undefined);
     createCaddePostMock.mockResolvedValue("post-created");
     recordCaddeShareMock.mockResolvedValue(undefined);
+    toggleCaddeReactionMock.mockResolvedValue(undefined);
     listTrendingCaddeHashtagsMock.mockResolvedValue([]);
     listMyNotificationsMock.mockResolvedValue([]);
     Object.defineProperty(navigator, "share", { configurable: true, value: undefined });
@@ -696,54 +699,153 @@ describe("CaddePage", () => {
     expect(listCaddePostCommentsMock).toHaveBeenCalledTimes(callsAfterRefresh);
   });
 
-  it("shows the five reaction actions directly without a popover", async () => {
+  // ── Tepki kartı (revizyon 55a55bdf, 05.09.2026) ───────────────────────────────
+  // Buradaki testin ATASI "shows the five reaction actions directly without a popover"
+  // adıyla TAM TERSİNİ kilitliyordu (beş buton hep açık, /Tepki Ver/ tetiği YOK).
+  // O davranış ürün kararıyla değişti; test SİLİNMEDİ, doğru davranışı kilitleyecek
+  // biçimde yeniden yazıldı — gevşetilmedi, aksine erişilebilirlik iddiaları eklendi.
+  //
+  // Kilitlenen sözleşme: beş tepki tek tetiğin arkasında, tetik GERÇEK <button>,
+  // `aria-expanded` durumu söylüyor, TIKLAMA da açıyor (dokunmatiğin tek yolu) ve
+  // tepki verme + sayaç davranışı değişmiyor.
+  const reactionFeedPost = {
+    id: "post-reactions",
+    mode: "real",
+    type: "text",
+    title: "Tepki seti testi",
+    body: "Tepkiler tek tetiğin arkasındaki kartta toplanır.",
+    authorName: "Ayşe",
+    authorRole: "Üye",
+    authorAvatarUrl: null,
+    authorUserId: "user-2",
+    country: "Almanya",
+    city: "Berlin",
+    isBridge: false,
+    pinned: false,
+    createdAt: "2026-06-23T10:00:00Z",
+    needCategory: null,
+    interests: [],
+    hashtags: [],
+    mentions: [],
+    media: [],
+    reactionCounts: { like: 1, love: 2, haha: 3, support: 4, unsure: 5 },
+    totalReactionCount: 15,
+    commentCount: 0,
+    shareCount: 0,
+    comments: [],
+    viewerReactions: ["love"],
+  };
+
+  const mountReactionPost = () => {
     useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
     listCaddeCountriesMock.mockResolvedValue([]);
     listCaddeCitiesMock.mockResolvedValue([]);
     listCaddeCafesMock.mockResolvedValue([]);
     listCaddeBillboardsMock.mockResolvedValue([]);
     getCaddeSponsoredMock.mockResolvedValue(null);
-    listCaddeFeedMock.mockResolvedValue({
-      items: [
-        {
-          id: "post-reactions",
-          mode: "real",
-          type: "text",
-          title: "Tepki seti testi",
-          body: "Tepkiler kart aksiyon satırında açık görünür.",
-          authorName: "Ayşe",
-          authorRole: "Üye",
-          authorAvatarUrl: null,
-          authorUserId: "user-2",
-          country: "Almanya",
-          city: "Berlin",
-          isBridge: false,
-          pinned: false,
-          createdAt: "2026-06-23T10:00:00Z",
-          needCategory: null,
-          interests: [],
-          hashtags: [],
-          mentions: [],
-          media: [],
-          reactionCounts: { like: 1, love: 2, haha: 3, support: 4, unsure: 5 },
-          totalReactionCount: 15,
-          commentCount: 0,
-          comments: [],
-          viewerReactions: ["love"],
-        },
-      ],
-      nextPage: null,
-    });
-
+    listCaddeFeedMock.mockResolvedValue({ items: [reactionFeedPost], nextPage: null });
     renderPage();
+  };
+
+  it("keeps the five reactions behind one trigger that a tap can also open", async () => {
+    mountReactionPost();
 
     expect(await screen.findByText("Tepki seti testi")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Tepki Ver/i })).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Beğendim (1)" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Kalp (2)" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Gülme (3)" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Destek (4)" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Emin olamadım (5)" })).toBeInTheDocument();
+
+    const trigger = screen.getByTestId("cadde-reaction-trigger");
+    // Tetik gerçek bir <button>: klavyeyle odaklanabilir, Enter/Space onu tetikler.
+    expect(trigger.tagName).toBe("BUTTON");
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    // Toplam sayaç tetikte görünür kalır — beş buton kalkarken etkileşim kaybolmaz.
+    expect(trigger).toHaveAccessibleName("Beğen (15)");
+
+    // Kapalıyken beş tepki DOM'da YOK (yığılmanın geri gelmesi buradan yakalanır).
+    expect(screen.queryByRole("button", { name: "Beğendim (1)" })).not.toBeInTheDocument();
+    expect(screen.queryByTestId("cadde-reaction-panel")).not.toBeInTheDocument();
+
+    // DOKUNMATİK YOLU — bu testin asıl sebebi. Dokunmatik tarayıcılar tap sırasında
+    // ÖNCE pointerover/mouseenter üretir; hover açsaydı hemen ardından gelen click
+    // paneli kapatır ve dokunmatikte panel HİÇ açılamazdı. Bu yüzden hover-açma
+    // `pointerType === "mouse"` ile sınırlı: dokunmatik pointerover hiçbir şey yapmaz.
+    fireEvent.pointerOver(trigger, { pointerType: "touch" });
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+
+    fireEvent.click(trigger);
+
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    const panel = screen.getByTestId("cadde-reaction-panel");
+    // Erişilebilir adlar eskisiyle BİREBİR aynı kaldı.
+    expect(within(panel).getByRole("button", { name: "Beğendim (1)" })).toBeInTheDocument();
+    expect(within(panel).getByRole("button", { name: "Kalp (2)" })).toBeInTheDocument();
+    expect(within(panel).getByRole("button", { name: "Gülme (3)" })).toBeInTheDocument();
+    expect(within(panel).getByRole("button", { name: "Destek (4)" })).toBeInTheDocument();
+    expect(within(panel).getByRole("button", { name: "Emin olamadım (5)" })).toBeInTheDocument();
+    // Görüntüleyenin mevcut tepkisi basılı durumda duyurulur.
+    expect(within(panel).getByRole("button", { name: "Kalp (2)" })).toHaveAttribute("aria-pressed", "true");
+    // Radix HoverCard yerine satır içi disclosure seçilmesinin ASIL sebebi:
+    // butonlar tabIndex'ini korumalı, yoksa klavyeyle tepki verilemez.
+    expect(within(panel).getByRole("button", { name: "Beğendim (1)" })).not.toHaveAttribute("tabindex", "-1");
+
+    // Tetiğe yeniden dokunmak kapatır (dokunmatikte kapatmanın tek yolu).
+    fireEvent.click(trigger);
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("still toggles the reaction and updates the counters from inside the card", async () => {
+    const user = userEvent.setup();
+    mountReactionPost();
+
+    expect(await screen.findByText("Tepki seti testi")).toBeInTheDocument();
+    await user.click(screen.getByTestId("cadde-reaction-trigger"));
+    expect(screen.getByTestId("cadde-reaction-trigger")).toHaveAttribute("aria-expanded", "true");
+
+    // Fare tetikten karta GEÇERKEN panel kapanmamalı: kart tetiğin DOM çocuğu olduğu
+    // için pointerleave sarmalayıcıda tetiklenmez. Bu satır olmadan "tıklayamıyorum"
+    // sınıfı bir gerileme sessizce geçerdi.
+    await user.hover(screen.getByRole("button", { name: "Beğendim (1)" }));
+    expect(screen.getByTestId("cadde-reaction-panel")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Beğendim (1)" }));
+
+    await waitFor(() => expect(toggleCaddeReactionMock).toHaveBeenCalledWith("post-reactions", "like"));
+    // Optimistic sayaç: like 1 → 2, toplam 15 → 16. Kart açık kalır ki kullanıcı
+    // kendi tıklamasının sonucunu görebilsin.
+    await waitFor(() => expect(screen.getByRole("button", { name: "Beğendim (2)" })).toBeInTheDocument());
+    expect(screen.getByTestId("cadde-reaction-trigger")).toHaveAccessibleName("Beğen (16)");
+  });
+
+  it("opens the reaction card on mouse hover and on keyboard focus, and Escape closes it", async () => {
+    const user = userEvent.setup();
+    mountReactionPost();
+
+    expect(await screen.findByText("Tepki seti testi")).toBeInTheDocument();
+    const trigger = screen.getByTestId("cadde-reaction-trigger");
+
+    // Fare: üzerine gelmek açar, ayrılmak kapatır.
+    await user.hover(trigger);
+    await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "true"));
+    // Fareyle açılmış panelde İLK tıklama yutulur — düz toggle olsaydı kullanıcı
+    // paneli kendi açtığı anda kapatırdı (pointerenter → pointerdown → click sırası).
+    await user.click(trigger);
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    // İkinci tıklama normal toggle.
+    await user.click(trigger);
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+
+    await user.click(trigger);
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await user.unhover(trigger);
+    await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "false"));
+
+    // Klavye: odak açar, Esc kapatır ve odak tetikte kalır.
+    // Önce blur şart: yukarıdaki tıklamalar tetiği zaten odaklamıştı ve odaklı bir
+    // elemana `.focus()` demek focus olayını YENİDEN fırlatmaz.
+    trigger.blur();
+    trigger.focus();
+    await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "true"));
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "false"));
+    expect(trigger).toHaveFocus();
   });
 
   it("shares a post with the Web Share API and records the share", async () => {
@@ -1358,6 +1460,48 @@ describe("CaddePage", () => {
     // Featured varken liste yalnız diğer featured kayıtları gösterir (bu senaryoda boş).
     expect(screen.getByTestId("cadde-billboards-empty-state")).toBeInTheDocument();
     expect(screen.queryByText("Anadolu Mutfak")).not.toBeInTheDocument();
+  });
+
+  // Revizyon c1a3aaf0 (05.09.2026): "Sağdaki billboard bölgesine maskot görseli konsun".
+  // Maskot o güne kadar yalnız sağ rail'deki küçük selam kartında (h-12) kullanılıyordu;
+  // boş billboard kutusu düz metindi.
+  it("puts the mascot into the empty billboard slot as a decorative image", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeFeedMock.mockResolvedValue({ items: [makeFeedPost()], nextPage: null });
+    listCaddeCafesMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    // Yalnız featured kayıt var → spotlight dolar, LİSTE boş kalır (boş-durum kutusu çizilir).
+    listCaddeBillboardsMock.mockResolvedValue([
+      {
+        id: "featured-1",
+        type: "consultant",
+        title: "Almanya 101",
+        subtitle: null,
+        description: "Taşınma rehberi",
+        badgeText: null,
+        ctaLabel: "Profili Gör",
+        ctaUrl: "/directory/profile/u-1",
+        imageUrl: null,
+        isFeatured: true,
+      },
+    ]);
+
+    renderPage();
+
+    const emptyState = await screen.findByTestId("cadde-billboards-empty-state");
+    const mascot = emptyState.querySelector('img[src="/lmaskot.png"]');
+    expect(mascot).not.toBeNull();
+    // Dekoratif: erişilebilirlik ağacında HİÇ görünmemeli — metin zaten her şeyi söylüyor.
+    expect(mascot).toHaveAttribute("alt", "");
+    expect(mascot).toHaveAttribute("aria-hidden", "true");
+    expect(within(emptyState).queryByRole("img")).not.toBeInTheDocument();
+    // Ölçülü boyut: iki eksen de sabit, yoksa 320px'lik rail'de metni ezerdi.
+    expect(mascot).toHaveClass("h-16", "w-16", "shrink-0", "object-contain");
+    // Metin ve CTA yerinde kalmalı — görsel metnin YERİNE geçmiyor, yanına geliyor.
+    expect(emptyState).toHaveTextContent("Şehrinden öne çıkan ilk kart burada görünecek.");
+    expect(within(emptyState).getByRole("link", { name: /Reklamını buraya verebilirsin/i })).toBeInTheDocument();
   });
 
   it("falls back to published billboards when nothing is featured", async () => {

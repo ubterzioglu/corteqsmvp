@@ -55,14 +55,33 @@ const PromotionRail = ({ filters, hideWhenEmpty = false }: PromotionRailProps) =
           data-testid="cadde-promotions-empty-state"
           className="px-4 pb-4"
         >
-          <div className="rounded-[22px] border border-dashed border-orange-200 bg-orange-50 px-4 py-5">
+          <div className="flex items-center gap-3 rounded-[22px] border border-dashed border-orange-200 bg-orange-50 px-4 py-5">
+            {/* 05.09.2026 revizyon c1a3aaf0 ("Sağdaki billboard bölgesine maskot görseli
+                konsun"): boş tanıtım kutusu düz metindi. Maskot DEKORATİF — `alt=""` +
+                `aria-hidden` ile erişilebilirlik ağacından çıkarılır; metnin söylemediği
+                bir şey söylemiyor. Boyut iki eksende de sabit (`h-14 w-14` +
+                `object-contain`): rail 320px, `w-auto` bırakılsaydı görselin en/boy oranı
+                metni ezebilirdi. Billboard kutusundakinden bir kademe küçük, çünkü bu
+                kutunun metni daha kısa ve kart daha dar. */}
+            <img
+              src="/lmaskot.png"
+              alt=""
+              aria-hidden="true"
+              width={56}
+              height={56}
+              loading="lazy"
+              decoding="async"
+              className="h-14 w-14 shrink-0 object-contain drop-shadow"
+            />
             {/* m98: pasif "yayınlanacak/görünür" dili aktife çevrildi. CTA bilinçli
                 olarak YOK — ana tanıtım butonu hemen aşağıdaki kartta, üst üste üç
                 buton yığmıyoruz (F14 kararı). */}
-            <p className="text-sm font-semibold text-slate-900">Bu tanıtım alanı şu an boş.</p>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600">
-              Yerel kampanyanı, topluluk çağrını veya sponsorlu keşif kartını buraya taşıyabilirsin.
-            </p>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-slate-900">Bu tanıtım alanı şu an boş.</p>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                Yerel kampanyanı, topluluk çağrını veya sponsorlu keşif kartını buraya taşıyabilirsin.
+              </p>
+            </div>
           </div>
         </div>
       )}

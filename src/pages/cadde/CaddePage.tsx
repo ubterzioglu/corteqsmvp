@@ -78,6 +78,16 @@ const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof
 
 const COMMENT_PAGE_SIZE = 5;
 
+// Tepki kartının kapanış gecikmesi (revizyon 55a55bdf). Fare tetikten kartın içine
+// geçerken React'in `onPointerLeave`'i tetiklenebiliyor: React bu olayı `pointerout`ın
+// `relatedTarget`inden türetir ve relatedTarget çözülemediğinde (jsdom'da HER ZAMAN
+// `window` gelir, bazı tarayıcılarda da boş kalır) "her yerden çıkıldı" sayar.
+// ANINDA kapatan ilk sürümde bunun sonucu şuydu: kart, üzerine gitmeye çalıştığın anda
+// kapanıyor ve tepki butonlarına fareyle HİÇ tıklanamıyordu. Gecikme bu boşluğu
+// köprüler; karta girmek bekleyen kapanışı iptal eder (Radix HoverCard'ın `closeDelay`
+// fikri). Düşürmeden önce bunu oku — 0'a çekmek hatayı geri getirir.
+const CADDE_REACTION_CLOSE_DELAY_MS = 180;
+
 const caddePostShareUrl = (postId: string): string => {
   const url = new URL("/cadde", window.location.origin);
   url.searchParams.set("post", postId);
@@ -115,6 +125,23 @@ const CaddePage = () => {
   // ile geçersiz kılınır (aşağıya bak) — bu yüzden viewport'u JS ile ÖLÇMÜYORUZ.
   const [coldRailOpen, setColdRailOpen] = useState(false);
   const [showAllCafes, setShowAllCafes] = useState(false);
+  // 05.09.2026 revizyon 55a55bdf — beş tepki butonu tek tetiğin arkasına alındı.
+  // Aynı anda YALNIZ bir postun tepki kartı açık olabilir: tek bir postId tutmak,
+  // her kart için ayrı state tutmaktan hem ucuz hem de "başka postun kartını açınca
+  // bu kapanır" davranışını bedava verir.
+  const [openReactionsPostId, setOpenReactionsPostId] = useState<string | null>(null);
+  // İşaretçiden gelen odak paneli AÇMAMALI ve fareyle açılmış paneli ilk tıklama
+  // KAPATMAMALI (aşağıdaki uzun yorum ikisini de anlatıyor). Aynı anda tek etkileşim
+  // olduğu için tüm kartlar için tek ref yeter.
+  const reactionPointerDownRef = useRef(false);
+  const reactionOpenedByHoverRef = useRef(false);
+  const reactionCloseTimerRef = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (reactionCloseTimerRef.current !== null) window.clearTimeout(reactionCloseTimerRef.current);
+    },
+    [],
+  );
   const filters = useMemo(() => parseCaddeFilters(searchParams), [searchParams]);
   const diasporaKey = useCaddeDiasporaKey();
   const actorContextQuery = useCaddeActorContext(Boolean(session));
@@ -770,36 +797,191 @@ const CaddePage = () => {
                         fırlatır. İç içe provider zararsızdır ve DOM'a düğüm basmaz. */}
                     <TooltipProvider delayDuration={200}>
                     <div className="flex flex-wrap items-center gap-1.5">
-                      {REACTION_META.map((reaction) => {
-                        const Icon = reaction.icon;
-                        const active = item.post.viewerReactions.includes(reaction.key);
-                        const count = item.post.reactionCounts[reaction.key] ?? 0;
+                      {/* 05.09.2026 revizyon 55a55bdf ("Like destek vs pop over hoover olsun"):
+                          beş tepki butonu artık HER ZAMAN yan yana durmuyor — tek bir "Beğen"
+                          tetiğinin arkasında, üzerine gelince / odaklanınca / tıklanınca açılan
+                          bir kartta toplanıyor. Tepki verme davranışı ve sayaçlar (optimistic
+                          `applyReactionToFeedPages`) AYNEN korundu; değişen yalnız görünürlük.
+
+                          NEDEN `src/components/ui/hover-card.tsx` (Radix HoverCard) KULLANILMADI —
+                          bu bilinçli bir ret, eksik değil; geri çevirmeden önce oku:
+                          1) Radix HoverCard'ın içerik bileşeni HER render'da içindeki tüm
+                             odaklanabilir düğümlere `tabindex="-1"` yazar
+                             (`node_modules/@radix-ui/react-hover-card/dist/index.mjs` →
+                             `getTabbableNodes(...).forEach(n => n.setAttribute("tabindex","-1"))`).
+                             Beş tepki BUTONU oraya konsaydı klavyeyle hiç ulaşılamazdı —
+                             WCAG 2.1.1 ihlali. Radix'in kendi dokümanı da HoverCard'ı
+                             "etkileşimli olmayan önizleme" için tanımlar.
+                          2) Aynı bileşenin Trigger'ı `onTouchStart` üzerinde `preventDefault()`
+                             çağırır; dokunmatikte tıklama fallback'i de güvenilmez olurdu.
+                          Bu yüzden kart burada SATIR İÇİ (portalsız) bir disclosure olarak
+                          yazıldı: DOM sırası = sekme sırası, butonlar tabIndex'ini korur.
+
+                          Açma yolları: (1) fare ile üzerine gelme — `pointerType === "mouse"`
+                          ile sınırlı, çünkü dokunmatikte tap ÖNCE mouseenter üretir ve hemen
+                          ardından gelen click paneli kapatıp dokunmatiği tamamen kırardı;
+                          (2) klavye odağı; (3) tıklama — dokunmatiğin tek yolu.
+                          Kapanma: fare ayrılması, Esc, tetiğe yeniden tıklama, başka bir
+                          postun kartını açma.
+
+                          `reactionOpenedByHoverRef` ne işe yarar: masaüstünde sıra
+                          pointerenter (panel AÇILIR) → pointerdown → click. Click düz bir
+                          toggle olsaydı fareyle tetiğe tıklayan kullanıcı paneli kendi
+                          açtığı anda kapatırdı. Bu yüzden fareyle açılmış paneldeki İLK
+                          tıklama yutulur; ikinci tıklama normal toggle'dır. Dokunmatikte
+                          hover hiç olmadığı için bayrak kapalıdır ve ilk tap paneli açar. */}
+                      {(() => {
+                        const isReactionsOpen = openReactionsPostId === item.post.id;
+                        const viewerReaction =
+                          REACTION_META.find((reaction) => item.post.viewerReactions.includes(reaction.key)) ?? null;
+                        const TriggerIcon = viewerReaction?.icon ?? ThumbsUp;
+                        const totalReactions = item.post.totalReactionCount ?? 0;
+                        const reactionsPanelId = `cadde-reactions-${item.post.id}`;
+                        const cancelScheduledClose = () => {
+                          if (reactionCloseTimerRef.current === null) return;
+                          window.clearTimeout(reactionCloseTimerRef.current);
+                          reactionCloseTimerRef.current = null;
+                        };
+                        const forgetThisPost = () =>
+                          setOpenReactionsPostId((current) => (current === item.post.id ? null : current));
+                        const openReactions = () => {
+                          cancelScheduledClose();
+                          setOpenReactionsPostId(item.post.id);
+                        };
+                        const closeReactions = () => {
+                          cancelScheduledClose();
+                          forgetThisPost();
+                        };
+                        // Fare ayrılışı GECİKMELİ kapatır (bkz. CADDE_REACTION_CLOSE_DELAY_MS);
+                        // karta girmek bekleyen kapanışı iptal eder.
+                        const scheduleReactionsClose = () => {
+                          cancelScheduledClose();
+                          reactionCloseTimerRef.current = window.setTimeout(() => {
+                            reactionCloseTimerRef.current = null;
+                            forgetThisPost();
+                          }, CADDE_REACTION_CLOSE_DELAY_MS);
+                        };
+
                         return (
-                          <Tooltip key={reaction.key}>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant={active ? "default" : "outline"}
-                                size="sm"
-                                aria-label={`${reaction.label} (${count})`}
-                                onClick={() => {
-                                  if (!session) {
-                                    navigate("/login");
-                                    return;
-                                  }
-                                  reactionMutation.mutate({ postId: item.post.id, reactionType: reaction.key });
-                                }}
-                                className={`min-h-10 rounded-full px-3 ${
-                                  active ? "bg-slate-900 text-white hover:bg-slate-800" : "bg-white/80"
-                                }`}
+                          <div
+                            className="relative"
+                            onPointerEnter={(event) => {
+                              if (event.pointerType !== "mouse") return;
+                              reactionOpenedByHoverRef.current = !isReactionsOpen;
+                              openReactions();
+                            }}
+                            onPointerLeave={(event) => {
+                              if (event.pointerType !== "mouse") return;
+                              reactionOpenedByHoverRef.current = false;
+                              scheduleReactionsClose();
+                            }}
+                            onKeyDown={(event) => {
+                              if (event.key !== "Escape" || !isReactionsOpen) return;
+                              event.stopPropagation();
+                              closeReactions();
+                            }}
+                          >
+                            <Button
+                              type="button"
+                              data-testid="cadde-reaction-trigger"
+                              variant={viewerReaction ? "default" : "outline"}
+                              size="sm"
+                              aria-label={`Beğen (${totalReactions})`}
+                              aria-expanded={isReactionsOpen}
+                              aria-controls={reactionsPanelId}
+                              onPointerDown={() => {
+                                reactionPointerDownRef.current = true;
+                              }}
+                              onFocus={() => {
+                                // İşaretçi kaynaklı odak paneli AÇMAZ. Sıra pointerdown →
+                                // focus → click olduğu için odak açsaydı hemen ardından gelen
+                                // click onu kapatır, dokunmatikte panel hiç açılamazdı.
+                                if (reactionPointerDownRef.current) {
+                                  reactionPointerDownRef.current = false;
+                                  return;
+                                }
+                                openReactions();
+                              }}
+                              onClick={() => {
+                                reactionPointerDownRef.current = false;
+                                // Fareyle zaten açılmış paneli ilk tıklama kapatmaz.
+                                // (Bekleyen kapanış varsa iptal edilir; yoksa tıklama
+                                // sonrası zamanlayıcı paneli arkadan kapatırdı.)
+                                if (reactionOpenedByHoverRef.current) {
+                                  reactionOpenedByHoverRef.current = false;
+                                  cancelScheduledClose();
+                                  return;
+                                }
+                                if (isReactionsOpen) closeReactions();
+                                else openReactions();
+                              }}
+                              className={`min-h-10 rounded-full px-3 ${
+                                viewerReaction ? "bg-slate-900 text-white hover:bg-slate-800" : "bg-white/80"
+                              }`}
+                            >
+                              <TriggerIcon
+                                className={`h-4 w-4 ${viewerReaction?.key === "love" ? "fill-current" : ""}`}
+                              />
+                              <span
+                                className={`ml-1.5 text-xs ${viewerReaction ? "text-white/80" : "text-muted-foreground"}`}
                               >
-                                <Icon className={`h-4 w-4 ${active && reaction.key === "love" ? "fill-current" : ""}`} />
-                                <span className={`ml-1.5 text-xs ${active ? "text-white/80" : "text-muted-foreground"}`}>{count}</span>
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>{reaction.label}</TooltipContent>
-                          </Tooltip>
+                                {totalReactions}
+                              </span>
+                            </Button>
+
+                            {isReactionsOpen ? (
+                              // Dış sarmalayıcının `pb-2`'si tetikle kart arasındaki boşluğu
+                              // KENDİ kutusuyla kapatır: fare geçerken pointerleave tetiklenmez.
+                              <div className="absolute bottom-full left-0 z-30 pb-2">
+                                <div
+                                  id={reactionsPanelId}
+                                  data-testid="cadde-reaction-panel"
+                                  role="group"
+                                  aria-label="Tepkini seç"
+                                  className="flex items-center gap-1 rounded-full border border-slate-200 bg-white p-1 shadow-lg"
+                                >
+                                  {REACTION_META.map((reaction) => {
+                                    const Icon = reaction.icon;
+                                    const active = item.post.viewerReactions.includes(reaction.key);
+                                    const count = item.post.reactionCounts[reaction.key] ?? 0;
+                                    return (
+                                      <Button
+                                        key={reaction.key}
+                                        type="button"
+                                        variant={active ? "default" : "ghost"}
+                                        size="sm"
+                                        // Erişilebilir ad ESKİSİYLE BİREBİR AYNI ("Beğendim (1)"):
+                                        // ekran okuyucu davranışı ve ona bağlı testler değişmesin.
+                                        aria-label={`${reaction.label} (${count})`}
+                                        aria-pressed={active}
+                                        onClick={() => {
+                                          if (!session) {
+                                            navigate("/login");
+                                            return;
+                                          }
+                                          reactionMutation.mutate({ postId: item.post.id, reactionType: reaction.key });
+                                        }}
+                                        className={`min-h-10 rounded-full px-2.5 ${
+                                          active ? "bg-slate-900 text-white hover:bg-slate-800" : ""
+                                        }`}
+                                      >
+                                        <Icon
+                                          className={`h-4 w-4 ${active && reaction.key === "love" ? "fill-current" : ""}`}
+                                        />
+                                        <span
+                                          className={`ml-1 text-xs ${active ? "text-white/80" : "text-muted-foreground"}`}
+                                        >
+                                          {count}
+                                        </span>
+                                      </Button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            ) : null}
+                          </div>
                         );
-                      })}
+                      })()}
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
@@ -1347,10 +1529,32 @@ const CaddePage = () => {
                   data-testid="cadde-billboards-empty-state"
                   className="rounded-[24px] border border-dashed border-slate-200 bg-slate-50 px-4 py-5"
                 >
-                  <p className="text-sm font-semibold text-slate-900">Şehrinden öne çıkan ilk kart burada görünecek.</p>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                    Danışman, işletme ve etkinlik keşfi için alan hazır. {sparseContentHint}
-                  </p>
+                  {/* 05.09.2026 revizyon c1a3aaf0 ("Sağdaki billboard bölgesine maskot
+                      görseli konsun"): boş billboard kutusu düz metindi. Maskot DEKORATİF —
+                      `alt=""` + `aria-hidden` ile erişilebilirlik ağacından çıkarılır, çünkü
+                      metnin söylemediği hiçbir şeyi söylemiyor; ekran okuyucuya "CorteQS
+                      maskot" diye okutmak gürültüden ibaret olurdu.
+                      Boyut ÖLÇÜLÜ ve iki eksende de sabit (`h-16 w-16` + `object-contain`):
+                      sağ kolon 320px, `w-auto` bırakılsaydı görselin en/boy oranı metni
+                      ezebilirdi. `shrink-0` metin sütununun daralmasına izin verir. */}
+                  <div className="flex items-center gap-3">
+                    <img
+                      src="/lmaskot.png"
+                      alt=""
+                      aria-hidden="true"
+                      width={64}
+                      height={64}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-16 w-16 shrink-0 object-contain drop-shadow"
+                    />
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-slate-900">Şehrinden öne çıkan ilk kart burada görünecek.</p>
+                      <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                        Danışman, işletme ve etkinlik keşfi için alan hazır. {sparseContentHint}
+                      </p>
+                    </div>
+                  </div>
                   {/* m43: boş reklam yüzeyi potansiyel müşteriye "burayı alabilirsin" der.
                       Hemen altındaki koyu kart ana CTA olduğu için bu ince bir bağlantı —
                       aynı hedefe giden üç kalın buton üst üste yığılmıyor. */}
