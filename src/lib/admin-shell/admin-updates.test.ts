@@ -6,11 +6,29 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260905-profil-formu-ilk-parti");
+    expect(ADMIN_UPDATES[0].id).toBe("20260905-ikinci-parti-cadde-carsi-araclar");
     expect(ADMIN_UPDATES[0].date).toBe("5 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("günün ikinci partisini günlük dille, ölçülen sonuçlarla duyurur", () => {
+    const update = ADMIN_UPDATES.find(
+      ({ id }) => id === "20260905-ikinci-parti-cadde-carsi-araclar",
+    );
+    const detail = update?.items.join(" ") ?? "";
+
+    // Üç sessiz canlı kusur da adıyla anlatılmalı: bunlar build/test kırmadan
+    // aylarca sürebilen sınıf, duyuruda kaybolmamalı.
+    expect(detail).toContain("YAZI TİPLERİ AYLARDIR HİÇ YÜKLENMİYORDU");
+    expect(detail).toContain("6 ÜYE HİÇ PAYLAŞIM YAPAMIYORDU");
+    expect(detail).toContain("'EK HEDEF' DÜĞMESİ PAYLAŞIMI KAYBETTİRİYORDU");
+
+    // Sayılar ölçülmüş olmalı — "iyileştirildi" demek yetmez.
+    expect(detail).toContain("107");
+    expect(detail).toContain("113");
+    expect(detail).toMatch(/KONTROLLER:.*1\.881/);
   });
 
   it("profil formu ilk partisini günlük dille duyurur", () => {

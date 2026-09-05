@@ -14,6 +14,28 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260905-ikinci-parti-cadde-carsi-araclar",
+    date: "5 Eylül 2026",
+    title:
+      "Günün ikinci yarısı: aylardır sessizce bozuk olan üç şey düzeldi, Çarşı rozetleri tıklanır oldu, taşınma araçlarına şehir seçimi ve renkli sonuçlar geldi",
+    items: [
+      "YAZI TİPLERİ AYLARDIR HİÇ YÜKLENMİYORDU: Site, tasarlanan yazı tipi yerine bilgisayarın varsayılan yazı tipiyle görünüyormuş. Sebep, yazı tipini çağıran satırın güvenlik ayarımız yüzünden hiç çalışmaması. Kimse fark etmemişti çünkü sayfa 'bozuk' görünmüyor, sadece yanlış görünüyordu. Düzeltildi ve canlı sitede yazı tipinin gerçekten yüklendiği ölçülerek doğrulandı.",
+      "6 ÜYE HİÇ PAYLAŞIM YAPAMIYORDU: Profil formunda ülkesini 'ABD' seçen üyenin paylaşımı reddediliyordu, çünkü Cadde tarafı aynı ülkeyi 'Amerika Birleşik Devletleri' adıyla tanıyor. Yazım farkı değil, apayrı kelimeler. İki listeyi birbirine bağlayan bir köprü kuruldu; artık formun ürettiği her eş-ad kalıcı olarak çözülüyor. Paylaşım yapabilen üye 107'den 113'e çıktı.",
+      "'EK HEDEF' DÜĞMESİ PAYLAŞIMI KAYBETTİRİYORDU: Normal bir üye Cadde'de 'Ek hedef' ekleyip paylaşmaya çalıştığında sunucu paylaşımı reddediyor ve yazılan içerik gidiyordu. Yöneticiler bu kontrolden muaf olduğu için sorun test hesaplarında hiç görünmemiş. Düğme artık yetkisi olmayan üyeye kapalı, yani kayıp durdu. Özelliğin kimlere açılacağı ayrı bir karar olarak bekliyor.",
+      "KAFE AÇARKEN 'İŞ' TEMASI YOKTU: Tema listesinde olması gereken 'İş' hiç yoktu; 'İK' ise İngilizce 'HR' etiketiyle duruyordu. İkisi de düzeltildi. Mevcut kafeler etkilenmedi ve bu değişiklik için yeni sürüm çıkmasına gerek yok, liste doğrudan veritabanından okunuyor.",
+      "TEPKİLER TEK DÜĞMENİN ARKASINDA TOPLANDI: Paylaşımın altındaki beş tepki düğmesi yan yana durmak yerine 'Beğen' düğmesinin üzerine gelince açılan küçük bir kartta toplanıyor. Klavyeyle de erişilebiliyor. Yol boyunca gerçek bir kusur da bulundu: kart, üzerine gitmeye çalıştığınız anda kapanıyordu, yani tepki düğmelerine fareyle hiç tıklanamıyordu.",
+      "BOŞ ALANLARA MASKOT KONDU: Sağdaki tanıtım ve öne çıkanlar kutuları boşken düz metin yerine maskot görselini gösteriyor.",
+      "ÇARŞI KATEGORİ ROZETLERİ ARTIK TIKLANIYOR: İlan kartındaki, üstteki kayan şeritteki ve ilan detayındaki kategori rozeti sadece etiketti. Artık tıklayınca o kategorideki ilanların listesine gidiyor.",
+      "TAŞINMA SİHİRBAZINDA ÜLKE ADI GÖRÜNÜYOR: Ülke seçim listesinde 'DE', 'GB', 'US' gibi kodlar yazıyordu; artık 'Almanya', 'İngiltere', 'ABD' yazıyor.",
+      "ARAÇLARDA ŞEHİR ARTIK LİSTEDEN SEÇİLİYOR: Şehir adını elle yazmak gerekiyordu ve yazım hatası sessizce kaydediliyordu. Artık önce ülke, sonra şehir seçiliyor. Listede olmayan bir şehri hâlâ elle yazabiliyorsunuz, yani kimse tıkanmıyor.",
+      "ŞEHİR ADIMI ARTIK ÜLKENİZİ HATIRLIYOR: Testin 4. sorusunda ülkelerinizi seçiyordunuz ama 12. sorudaki şehir adımı bunu bilmiyordu; ülkeyi ikinci kez seçmeden hiçbir şehir göremiyordunuz. Artık seçtiğiniz ülkelerin şehirleri doğrudan geliyor, istersen başka bir ülkeye de geçebiliyorsun.",
+      "TESTTEN ÇIKINCA SONUCA DÖNÜŞ KOLAYLAŞTI: Sonuç ekranındaki bir düğmeye basıp Cadde'ye veya dizine gittiğinizde test sonucuna dönmenin hiçbir yolu yoktu. Artık üstte ince bir 'Test sonucuna dön' şeridi çıkıyor; istemezseniz kapatabiliyorsunuz.",
+      "SONUÇ GRAFİKLERİ RENKLENDİ: Puan çubukları tek renkti; 0,35 ile 0,92 aynı gri görünüyordu ve hangi alanın zayıf olduğunu ancak sayıyı okuyarak anlıyordunuz. Artık her çubuk puanına göre renk, ikon ve 'Güçlü / İyi / Orta / Zayıf' etiketi taşıyor. Renkler gözle seçilmedi: renk körlüğü ve kontrast denetiminden geçirilerek belirlendi, bu yüzden bilgi renk görülmese de etiketten okunuyor.",
+      "RADAR REHBERLERİNE ÜLKE FİLTRESİ ve dizinde kurum kayıtlarının kart görünümü de bu turda eklendi.",
+      "KONTROLLER: 1.881 otomatik test geçti (sabah 1.768'di), kod denetimi temiz, veri tabanı güncellemelerinin tamamı canlıda kayıtlı (383/383).",
+    ],
+  },
+  {
     id: "20260905-profil-formu-ilk-parti",
     date: "5 Eylül 2026",
     title:
