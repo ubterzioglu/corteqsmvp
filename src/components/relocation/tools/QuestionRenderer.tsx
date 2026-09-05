@@ -31,6 +31,13 @@ interface QuestionRendererProps {
   question: RelocationToolQuestionRow;
   value: ToolAnswerValue | undefined;
   onChange: (value: ToolAnswerValue) => void;
+  /**
+   * Şehir sorusunun ülke kapsamı — kullanıcının `target_countries` sorusuna verdiği
+   * cevaptan türer (`cityScopeFromAnswers`, `QuestionStepper` geçirir). Boş dizi
+   * "daraltma yok" demektir. Renderer başka hiçbir soruya bakmaz: cevap torbasının
+   * tamamını buraya vermek yerine tek ve dar bir sözleşme tutuldu.
+   */
+  scopeCountryCodes?: string[];
 }
 
 const MAX_COUNTRY_SELECTION = 3;
@@ -268,10 +275,12 @@ function CityDrilldownCombobox({
   id,
   value,
   onChange,
+  scopeCountryCodes,
 }: {
   id: string;
   value: ToolAnswerValue | undefined;
   onChange: (value: ToolAnswerValue) => void;
+  scopeCountryCodes: string[];
 }) {
   const [countryOpen, setCountryOpen] = useState(false);
   const [cityOpen, setCityOpen] = useState(false);
@@ -281,17 +290,37 @@ function CityDrilldownCombobox({
 
   const countriesQuery = useGeoCountries(true);
   const countries = useMemo(() => countriesQuery.data ?? [], [countriesQuery.data]);
-  const citiesQuery = useGeoCitiesForCountries(countryCode ? [countryCode] : []);
+
+  // Kullanıcı 1. adımda ülke seçtiyse O ülke geçerlidir; seçmediyse `target_countries`
+  // cevabından gelen kapsam kullanılır. Kapsam da boşsa hiçbir şehir çekilmez (kanca
+  // enabled=false) — 76.990 satırlık geo_cities asla toptan indirilmez.
+  const activeCountryCodes = countryCode ? [countryCode] : scopeCountryCodes;
+  const citiesQuery = useGeoCitiesForCountries(activeCountryCodes);
 
   const isAnyCity = typeof value === "string" && value.trim() === CITY_ANY_VALUE;
   const selectedCities = isAnyCity ? [] : parseCsvList(value);
 
   const selectedCountryName = countries.find((country) => country.code === countryCode)?.name ?? "";
+  // Kapsam devredeyken tetik "hangi ülkeler" sorusunu cevaplamalı, yoksa kullanıcı
+  // listeyi neyin daralttığını göremez ve ülkeyi gereksiz yere ikinci kez seçer.
+  const countryTriggerLabel =
+    selectedCountryName
+    || (scopeCountryCodes.length ? `Seçtiğin ülkeler (${scopeCountryCodes.length})` : "");
 
-  const visibleCountries = useMemo(
-    () => countries.filter((country) => trIncludes(`${country.name} ${country.code}`, countryQuery)),
-    [countries, countryQuery],
-  );
+  const visibleCountries = useMemo(() => {
+    const matched = countries.filter((country) =>
+      trIncludes(`${country.name} ${country.code}`, countryQuery),
+    );
+    if (scopeCountryCodes.length === 0) return matched;
+    // Kapsam ülkeleri BAŞA alınır, kapsam dışındakiler GİZLENMEZ: ülke bir kapı değil,
+    // daraltmadır (aynı ilke serbest metin çıkışında da geçerli). Kullanıcı 4. soruda
+    // yazmadığı bir ülkenin şehrini de arayabilmeli.
+    const inScope = new Set(scopeCountryCodes);
+    return [
+      ...matched.filter((country) => inScope.has(country.code)),
+      ...matched.filter((country) => !inScope.has(country.code)),
+    ];
+  }, [countries, countryQuery, scopeCountryCodes]);
 
   const cityNames = useMemo(() => {
     const names = (citiesQuery.data ?? []).map((city) => city.name).filter(Boolean);
@@ -351,8 +380,8 @@ function CityDrilldownCombobox({
               aria-label="Şehir için ülke seç"
               className="h-auto min-h-11 w-full justify-between gap-3 whitespace-normal px-3 py-2 text-left font-normal"
             >
-              <span className={cn("truncate", !selectedCountryName && "text-muted-foreground")}>
-                {selectedCountryName || "Ülke seç veya ara"}
+              <span className={cn("truncate", !countryTriggerLabel && "text-muted-foreground")}>
+                {countryTriggerLabel || "Ülke seç veya ara"}
               </span>
               <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
             </Button>
@@ -432,7 +461,7 @@ function CityDrilldownCombobox({
               />
               <CommandList>
                 <CommandEmpty>
-                  {countryCode
+                  {activeCountryCodes.length
                     ? "Şehir bulunamadı. Yazdığın adı elle ekleyebilirsin."
                     : "Önce ülke seç ya da şehir adını yazıp elle ekle."}
                 </CommandEmpty>
@@ -505,14 +534,20 @@ function CityDrilldownCombobox({
       </Button>
 
       <p className="text-xs text-muted-foreground">
-        Şehir listesi seçtiğin ülkeye göre daralır. Listede yoksa arama kutusuna yazıp elle
-        ekleyebilirsin.
+        {scopeCountryCodes.length && !countryCode
+          ? "Şehir listesi daha önce seçtiğin ülkelerden geliyor. Tek ülkeye indirmek için yukarıdan seçebilir, listede olmayan şehri arama kutusuna yazıp elle ekleyebilirsin."
+          : "Şehir listesi seçtiğin ülkeye göre daralır. Listede yoksa arama kutusuna yazıp elle ekleyebilirsin."}
       </p>
     </div>
   );
 }
 
-export function QuestionRenderer({ question, value, onChange }: QuestionRendererProps) {
+export function QuestionRenderer({
+  question,
+  value,
+  onChange,
+  scopeCountryCodes = [],
+}: QuestionRendererProps) {
   const { answer_type, options, id } = question;
 
   switch (answer_type) {
@@ -648,7 +683,14 @@ export function QuestionRenderer({ question, value, onChange }: QuestionRenderer
     // İSTİSNA: target_cities (ve answer_type='city') artık ülke→şehir drill-down'u kullanır.
     default: {
       if (question.question_key === "target_cities" || answer_type === "city") {
-        return <CityDrilldownCombobox id={id} value={value} onChange={onChange} />;
+        return (
+          <CityDrilldownCombobox
+            id={id}
+            value={value}
+            onChange={onChange}
+            scopeCountryCodes={scopeCountryCodes}
+          />
+        );
       }
       return (
         <div className="space-y-2">

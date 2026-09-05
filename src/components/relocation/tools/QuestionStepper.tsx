@@ -11,6 +11,7 @@ import {
   QuestionRenderer,
   SCALE_DEFAULT_VALUE,
 } from "@/components/relocation/tools/QuestionRenderer";
+import { cityScopeFromAnswers } from "@/lib/relocation-city-scope";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
 import type { RelocationToolQuestionRow, ToolAnswerValue } from "@/lib/relocation-tools-types";
 
@@ -141,7 +142,15 @@ export function QuestionStepper({
           )}
         </div>
 
-        <QuestionRenderer question={question} value={value} onChange={setAnswer} />
+        {/* Şehir sorusu, kullanıcının daha önce `target_countries`'e verdiği cevabı
+            görmelidir; cevaplar burada tutulduğu için kapsamı stepper türetir. Cevap
+            torbasının tamamı DEĞİL, yalnız türetilmiş kod listesi geçirilir. */}
+        <QuestionRenderer
+          question={question}
+          value={value}
+          onChange={setAnswer}
+          scopeCountryCodes={cityScopeFromAnswers(answers)}
+        />
 
         {showError && blocked && (
           <p className="text-sm text-destructive">{TOOLS_UI_COPY.required}</p>

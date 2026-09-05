@@ -193,4 +193,103 @@ describe("QuestionRenderer", () => {
       expect(onChange).toHaveBeenLastCalledWith("");
     });
   });
+
+  // Takip işi (2026-09-05): drill-down'ın 1. adımı, kullanıcının 4. soruda
+  // (`target_countries`) verdiği cevabı okumuyordu — `QuestionStepper` cevapları kendi
+  // state'inde tutuyor, renderer yalnız sıradaki sorunun değerini alıyordu. Sonuç:
+  // kullanıcı ülkesini İKİNCİ KEZ seçmeden hiçbir şehir göremiyordu.
+  describe("target_cities kapsamı 4. sorunun cevabından gelir", () => {
+    const cityQuestion = q("target_cities", "text");
+
+    it("ülke seçilmeden kapsam ülkelerinin şehirlerini listeler", async () => {
+      const user = userEvent.setup();
+
+      render(
+        <QuestionRenderer
+          question={cityQuestion}
+          value={undefined}
+          onChange={vi.fn()}
+          scopeCountryCodes={["DE", "NL"]}
+        />,
+      );
+
+      await user.click(screen.getByRole("combobox", { name: "Şehir seç" }));
+
+      // İki ülkenin şehirleri de tek listede — ikinci bir ülke seçimi gerekmiyor.
+      expect(await screen.findByText("Berlin")).toBeInTheDocument();
+      expect(screen.getByText("Amsterdam")).toBeInTheDocument();
+    });
+
+    it("kapsamı ülke tetiğinde görünür kılar", async () => {
+      render(
+        <QuestionRenderer
+          question={cityQuestion}
+          value={undefined}
+          onChange={vi.fn()}
+          scopeCountryCodes={["DE", "NL"]}
+        />,
+      );
+
+      expect(
+        screen.getByRole("combobox", { name: "Şehir için ülke seç" }),
+      ).toHaveTextContent("Seçtiğin ülkeler (2)");
+    });
+
+    it("kapsam ülkelerini listenin başına alır ama diğerlerini GİZLEMEZ", async () => {
+      const user = userEvent.setup();
+
+      render(
+        <QuestionRenderer
+          question={cityQuestion}
+          value={undefined}
+          onChange={vi.fn()}
+          scopeCountryCodes={["NL"]}
+        />,
+      );
+
+      await user.click(screen.getByRole("combobox", { name: "Şehir için ülke seç" }));
+
+      const labels = screen
+        .getAllByRole("option")
+        .map((option) => option.textContent ?? "");
+      // Kapsam başta...
+      expect(labels[0]).toContain("Hollanda");
+      // ...ama kapsam dışı ülke hâlâ seçilebilir: ülke bir KAPI değil, daraltmadır.
+      expect(labels.some((label) => label.includes("Fransa"))).toBe(true);
+    });
+
+    it("1. adımda ülke seçilirse kapsamın yerini o ülke alır", async () => {
+      const user = userEvent.setup();
+
+      render(
+        <QuestionRenderer
+          question={cityQuestion}
+          value={undefined}
+          onChange={vi.fn()}
+          scopeCountryCodes={["DE", "NL"]}
+        />,
+      );
+
+      await user.click(screen.getByRole("combobox", { name: "Şehir için ülke seç" }));
+      await user.click(await screen.findByText("Hollanda"));
+
+      await user.click(screen.getByRole("combobox", { name: "Şehir seç" }));
+      expect(await screen.findByText("Amsterdam")).toBeInTheDocument();
+      expect(screen.queryByText("Berlin")).not.toBeInTheDocument();
+    });
+
+    it("kapsam boşsa eski davranış korunur (ülke seçilmeden şehir gelmez)", async () => {
+      const user = userEvent.setup();
+
+      render(
+        <QuestionRenderer question={cityQuestion} value={undefined} onChange={vi.fn()} />,
+      );
+
+      await user.click(screen.getByRole("combobox", { name: "Şehir seç" }));
+      expect(
+        await screen.findByText("Önce ülke seç ya da şehir adını yazıp elle ekle."),
+      ).toBeInTheDocument();
+      expect(screen.queryByText("Berlin")).not.toBeInTheDocument();
+    });
+  });
 });
