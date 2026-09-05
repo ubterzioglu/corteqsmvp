@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  INITIAL_DATA,
+  STEP_ORDER,
+  getNextStep,
+  getStepMessage,
   resolveCategoryInput,
   shouldRedirectToKnowledgeAssistant,
   shouldStartRegistration,
@@ -33,5 +37,24 @@ describe("chatConfig helpers", () => {
     expect(shouldStartRegistration("Kayıt olmak istiyorum")).toBe(true);
     expect(shouldStartRegistration("Beni ekleyin lütfen")).toBe(true);
     expect(shouldStartRegistration("Berlin hakkında bilgi verir misin?")).toBe(false);
+  });
+});
+
+// `referral_source` adımı kayıt akışından kaldırıldı (T19, 3 Eylül 2026).
+describe("chat kayıt akışı referans kaynağını sormaz", () => {
+  it("adım sırasında referral_source / referral_detail bulunmaz", () => {
+    const stepNames: string[] = STEP_ORDER.map((step) => String(step));
+    expect(stepNames).not.toContain("referral_source");
+    expect(stepNames).not.toContain("referral_detail");
+  });
+
+  it("telefondan sonra doğrudan davet koduna geçer", () => {
+    expect(getNextStep("phone", { ...INITIAL_DATA })).toBe("referral_code");
+  });
+
+  it("özet mesajında kaynak satırı yer almaz", () => {
+    const summary = getStepMessage("summary", { ...INITIAL_DATA, fullname: "Ada Lovelace" });
+    expect(summary.content).not.toContain("Kaynak:");
+    expect(summary.content).toContain("Referral:");
   });
 });

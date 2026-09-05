@@ -1,7 +1,6 @@
 import { useReducer, useCallback, useRef } from "react";
 import {
   getCategoryLabel,
-  getReferralSourceLabel,
   validateSubmissionDocuments,
 } from "@/lib/submissions";
 import {
@@ -34,7 +33,6 @@ type ChatAction =
   | { type: "SEND_MESSAGE"; payload: string }
   | { type: "SELECT_QUICK_REPLY"; payload: string }
   | { type: "SELECT_CATEGORY"; payload: string }
-  | { type: "SELECT_SOURCE"; payload: string }
   | { type: "UPLOAD_FILES"; payload: File[] }
   | { type: "REMOVE_FILE"; payload: number }
   | { type: "CONFIRM_SUBMIT" }
@@ -199,14 +197,6 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
         return { ...st, ...advanced };
       }
 
-      if (state.step === "referral_source") {
-        const newData = { ...state.data, referral_source: value, referral_detail: null };
-        const msgs = addUserMessage(state.messages, getReferralSourceLabel(value));
-        const st: ChatState = { ...state, messages: msgs, data: newData, stepHistory: [...state.stepHistory] };
-        const advanced = advanceStep(st, "referral_source");
-        return { ...st, ...advanced };
-      }
-
       if (state.step === "consent") {
         const newData = { ...state.data, consent: value === "yes" };
         const msgs = addUserMessage(state.messages, "Onayl\u0131yorum \u2705");
@@ -281,9 +271,6 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
           break;
         case "phone":
           newData.phone = input.trim().replace(/[\s\-().]/g, "");
-          break;
-        case "referral_detail":
-          newData.referral_detail = input.trim();
           break;
         case "referral_code":
           newData.referral_code = input.trim().toUpperCase();

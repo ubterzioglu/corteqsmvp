@@ -51,14 +51,26 @@ describe("profile onboarding normalize helpers", () => {
     expect(result.formEntries.contest_interest).toBe("");
   });
 
-  it("requires whatsapp referral detail when whatsapp is selected", () => {
-    expect(() =>
-      normalizePendingFormPayload(
-        makePayload({
-          referral_source: "whatsapp",
-          referral_detail: "",
-        }),
-      ),
-    ).toThrow(/detay gerekli/i);
+  // `referral_source` alani kayit akisindan kaldirildi (T19, 3 Eylul 2026).
+  // Form artik bu degerleri toplamiyor; eski taslaklar dogrulamaya takilmadan
+  // gecmeli, aksi halde kayitli bir taslak aktive edilemez hale gelir.
+  it("carries historical referral values through without validating them", () => {
+    const result = normalizePendingFormPayload(
+      makePayload({
+        referral_source: "whatsapp",
+        referral_detail: "",
+      }),
+    );
+
+    expect(result.form.referral_source).toBe("whatsapp");
+    expect(result.form.referral_detail).toBe("");
+  });
+
+  it("accepts a referral source that is not in the catalog anymore", () => {
+    const result = normalizePendingFormPayload(
+      makePayload({ referral_source: "artik-olmayan-kaynak" }),
+    );
+
+    expect(result.form.referral_source).toBe("artik-olmayan-kaynak");
   });
 });

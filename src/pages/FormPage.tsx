@@ -25,11 +25,6 @@ import SearchableCitySelect from "@/components/SearchableCitySelect";
 import {
   categoryOptions,
   getReadableErrorMessage,
-  getReferralDetailLabel,
-  getReferralDetailPlaceholder,
-  isReferralDetailRequired,
-  referralSourceOptions,
-  shouldShowReferralDetail,
 } from "@/lib/submissions";
 
 const FormPage = () => {
@@ -52,8 +47,6 @@ const FormPage = () => {
   const [phone, setPhone] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [referralCode, setReferralCode] = useState(prefilledReferralCode);
-  const [referralSource, setReferralSource] = useState("");
-  const [referralDetail, setReferralDetail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [formCountry, setFormCountry] = useState("");
   const [formCity, setFormCity] = useState("");
@@ -82,8 +75,6 @@ const FormPage = () => {
       donation_amount: String(values.donation_amount ?? ""),
       document_url: String(values.document_url ?? ""),
       document_name: String(values.document_name ?? ""),
-      referral_source: referralSource,
-      referral_detail: referralDetail,
       referral_code: referralCode,
       linkedin: String(values.linkedin ?? ""),
       instagram: String(values.instagram ?? ""),
@@ -145,8 +136,6 @@ const FormPage = () => {
 
     setSelectedCat(values.category);
     setPhone(values.phone);
-    setReferralSource(values.referral_source);
-    setReferralDetail(values.referral_detail);
     setReferralCode(values.referral_code || prefilledReferralCode);
     setConsent(values.consent);
   }, [prefilledReferralCode]);
@@ -219,8 +208,6 @@ const FormPage = () => {
         setPhone("");
         setPhoneError("");
         setReferralCode(prefilledReferralCode);
-        setReferralSource("");
-        setReferralDetail("");
         setSelectedCat("");
       },
       onError: (error) => {
@@ -357,8 +344,6 @@ const FormPage = () => {
       setPhone("");
       setPhoneError("");
       setReferralCode(prefilledReferralCode);
-      setReferralSource("");
-      setReferralDetail("");
       setSelectedCat("");
     } catch (err: unknown) {
       console.error("Submission error:", err);
@@ -588,61 +573,22 @@ const FormPage = () => {
             </div>
           )}
 
-          <div className="space-y-3">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div>
-                <Label htmlFor="referral_source">Bizi nereden buldunuz?</Label>
-                <select
-                  id="referral_source"
-                  name="referral_source"
-                  value={referralSource}
-                  onChange={(event) => {
-                    setReferralSource(event.target.value);
-                    setReferralDetail("");
-                  }}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                >
-                  <option value="">Seçiniz...</option>
-                  {referralSourceOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <Label htmlFor="referral_code">Referral Kodu (opsiyonel)</Label>
-                <Input
-                  id="referral_code"
-                  name="referral_code"
-                  placeholder="Admin / davet kodu"
-                  maxLength={32}
-                  className="uppercase"
-                  value={referralCode}
-                  onChange={(event) => setReferralCode(event.target.value.toUpperCase())}
-                  readOnly={Boolean(prefilledReferralCode)}
-                />
-                {prefilledReferralCode ? (
-                  <p className="mt-1 text-xs font-medium text-emerald-600">🎁 Bu link için referral kodu otomatik uygulandı.</p>
-                ) : (
-                  <p className="mt-1 text-xs text-muted-foreground">Sizi yönlendiren admin veya davet kodunu girebilirsiniz.</p>
-                )}
-              </div>
-            </div>
-
-            {shouldShowReferralDetail(referralSource) && (
-              <div>
-                <Label htmlFor="referral_detail">{getReferralDetailLabel(referralSource)}</Label>
-                <Input
-                  id="referral_detail"
-                  name="referral_detail"
-                  value={referralDetail}
-                  onChange={(event) => setReferralDetail(event.target.value)}
-                  placeholder={getReferralDetailPlaceholder(referralSource)}
-                  maxLength={120}
-                  required={isReferralDetailRequired(referralSource)}
-                />
-              </div>
+          <div>
+            <Label htmlFor="referral_code">Referral Kodu (opsiyonel)</Label>
+            <Input
+              id="referral_code"
+              name="referral_code"
+              placeholder="Admin / davet kodu"
+              maxLength={32}
+              className="uppercase"
+              value={referralCode}
+              onChange={(event) => setReferralCode(event.target.value.toUpperCase())}
+              readOnly={Boolean(prefilledReferralCode)}
+            />
+            {prefilledReferralCode ? (
+              <p className="mt-1 text-xs font-medium text-emerald-600">🎁 Bu link için referral kodu otomatik uygulandı.</p>
+            ) : (
+              <p className="mt-1 text-xs text-muted-foreground">Sizi yönlendiren admin veya davet kodunu girebilirsiniz.</p>
             )}
           </div>
 

@@ -18,12 +18,6 @@ export const REFERRAL_SOURCE_OPTIONS = [
   { value: "diger", label: "Diger" },
 ] as const;
 
-// Anahtar tipi `string`: bu Set DB'den/formdan gelen SERBEST metni dogrular ve
-// zaten gecersiz degeri reddetmek icin var. Dar union anahtar, kontrolun kendisini
-// anlamsiz kilardi (cagirana zaten dogrulanmis deger sarti kosardi).
-const ALLOWED_REFERRAL_SOURCE_VALUES = new Set<string>(
-  REFERRAL_SOURCE_OPTIONS.map((option) => option.value),
-);
 const E164_PHONE_PATTERN = /^\+[1-9]\d{7,14}$/;
 
 export type ReferralSourceOption = (typeof REFERRAL_SOURCE_OPTIONS)[number];
@@ -103,14 +97,6 @@ export const normalizePendingFormPayload = (
 
   if (!E164_PHONE_PATTERN.test(form.phone)) {
     throw new Error("Telefon ulke kodu ile baslamali.");
-  }
-
-  if (form.referral_source && !ALLOWED_REFERRAL_SOURCE_VALUES.has(form.referral_source)) {
-    throw new Error("Referral kaynagi gecersiz.");
-  }
-
-  if (form.referral_source === "whatsapp" && !form.referral_detail) {
-    throw new Error("WhatsApp kaynagi secildiginde detay gerekli.");
   }
 
   const formEntries: Record<string, FormDataEntryValue> = {

@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -14,7 +13,6 @@ import {
   useCurrentOnboardingActivation,
   useResendCurrentOnboardingActivationLink,
 } from "@/hooks/use-profile-onboarding";
-import { getReferralSourceOptions } from "@/lib/pending-onboarding-normalize";
 
 const WelcomeActivatePage = () => {
   const navigate = useNavigate();
@@ -32,7 +30,6 @@ const WelcomeActivatePage = () => {
   const [businessVisibility, setBusinessVisibility] = useState<"public" | "private">("public");
   const [interestVisibility, setInterestVisibility] = useState<"public" | "private">("public");
   const [referralCode, setReferralCode] = useState("");
-  const [referralSource, setReferralSource] = useState("");
 
   useEffect(() => {
     if (!data) return;
@@ -42,7 +39,6 @@ const WelcomeActivatePage = () => {
     setBusinessOrOrganization(data.submission.business);
     setInterestFocus(data.submission.field);
     setReferralCode(data.submission.referralCode);
-    setReferralSource(data.submission.referralSource);
   }, [data]);
 
   if (!isAuthLoading && !user) {
@@ -60,7 +56,6 @@ const WelcomeActivatePage = () => {
         businessVisibility,
         interestVisibility,
         referralCode,
-        referralSource,
       });
 
       toast({
@@ -196,34 +191,15 @@ const WelcomeActivatePage = () => {
                 </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="activation-referral-code">Referral Kodu</Label>
-                  <Input
-                    id="activation-referral-code"
-                    value={referralCode}
-                    onChange={(event) => setReferralCode(event.target.value.toUpperCase())}
-                    placeholder="Opsiyonel"
-                  />
-                  <p className="text-xs text-muted-foreground">Bu alan backend tarafından her durumda private tutulur.</p>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="activation-referral-source">Bizi nereden buldunuz?</Label>
-                  <Select value={referralSource || "__empty__"} onValueChange={(value) => setReferralSource(value === "__empty__" ? "" : value)}>
-                    <SelectTrigger id="activation-referral-source">
-                      <SelectValue placeholder="Seçiniz..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="__empty__">Seçiniz...</SelectItem>
-                      {getReferralSourceOptions().map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-muted-foreground">Bu alan backend tarafından her durumda private tutulur.</p>
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="activation-referral-code">Referral Kodu</Label>
+                <Input
+                  id="activation-referral-code"
+                  value={referralCode}
+                  onChange={(event) => setReferralCode(event.target.value.toUpperCase())}
+                  placeholder="Opsiyonel"
+                />
+                <p className="text-xs text-muted-foreground">Bu alan backend tarafından her durumda private tutulur.</p>
               </div>
 
               <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">

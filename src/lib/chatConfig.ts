@@ -1,10 +1,6 @@
 import {
   categoryOptions,
-  referralSourceOptions,
-  shouldShowReferralDetail,
-  getReferralDetailLabel,
   getCategoryLabel,
-  getReferralSourceLabel,
 } from "@/lib/submissions";
 
 export type ChatStep =
@@ -18,8 +14,6 @@ export type ChatStep =
   | "field"
   | "email"
   | "phone"
-  | "referral_source"
-  | "referral_detail"
   | "referral_code"
   | "offers_needs"
   | "documents"
@@ -51,6 +45,9 @@ export type ChatCollectedData = {
   field: string | null;
   email: string | null;
   phone: string | null;
+  // `referral_source` sorusu kayıt akışından kaldırıldı (T19, 3 Eylül 2026).
+  // Alanlar `toSubmissionInsert` payload uyumluluğu için duruyor; sohbet artık
+  // hiçbir zaman doldurmaz, her zaman null kalır.
   referral_source: string | null;
   referral_detail: string | null;
   referral_code: string | null;
@@ -89,8 +86,6 @@ export const STEP_ORDER: ChatStep[] = [
   "field",
   "email",
   "phone",
-  "referral_source",
-  "referral_detail",
   "referral_code",
   "offers_needs",
   "documents",
@@ -114,11 +109,6 @@ export const REQUIRED_STEPS: ChatStep[] = [
 const CATEGORY_QUICK_REPLIES: QuickReply[] = categoryOptions
   .filter((c) => c.value !== "support")
   .map((c) => ({ label: c.label, value: c.value }));
-
-const SOURCE_QUICK_REPLIES: QuickReply[] = [
-  ...referralSourceOptions.map((s) => ({ label: s.label, value: s.value })),
-  { label: "Ge\u00e7 \u23ed\ufe0f", value: "__skip__" },
-];
 
 const SKIP_REPLY: QuickReply = { label: "Ge\u00e7 \u23ed\ufe0f", value: "__skip__" };
 
@@ -275,17 +265,6 @@ export function getStepMessage(
         content: "WhatsApp kulland\u0131\u011f\u0131n telefon numaran\u0131 \u00fclke koduyla yaz l\u00fctfen\n(\u00f6rn: +49 170 1234567)",
       };
 
-    case "referral_source":
-      return {
-        content: "Bizi nereden buldun? (opsiyonel)",
-        quickReplies: SOURCE_QUICK_REPLIES,
-      };
-
-    case "referral_detail":
-      return {
-        content: data.referral_source ? getReferralDetailLabel(data.referral_source) : "Detay yaz\u0131n",
-      };
-
     case "referral_code":
       return {
         content: "Davet kodun varsa yazabilirsin. Yoksa 'ge\u00e7' yaz.",
@@ -345,7 +324,6 @@ function buildSummaryMessage(data: ChatCollectedData): { content: string; quickR
     `\u0130\u015ftigal: ${data.field || "\u2014"}`,
     `E-posta: ${data.email || "\u2014"}`,
     `Telefon: ${data.phone || "\u2014"}`,
-    `Kaynak: ${data.referral_source ? getReferralSourceLabel(data.referral_source) : "\u2014"}`,
     `Referral: ${data.referral_code || "\u2014"}`,
     `Arz/Talep: ${data.offers_needs || "\u2014"}`,
     "",
@@ -450,11 +428,6 @@ export function getNextStep(currentStep: ChatStep, data: ChatCollectedData): Cha
   const skipSet = new Set<ChatStep>();
 
   if (data.category !== "blogger-vlogger") skipSet.add("contest_interest");
-  if (!data.referral_source || data.referral_source === "__skip__") {
-    skipSet.add("referral_detail");
-  } else if (!shouldShowReferralDetail(data.referral_source)) {
-    skipSet.add("referral_detail");
-  }
 
   for (let i = idx + 1; i < STEP_ORDER.length; i++) {
     const candidate = STEP_ORDER[i];

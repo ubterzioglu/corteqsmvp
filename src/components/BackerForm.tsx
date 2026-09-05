@@ -12,14 +12,9 @@ import { notifySubmission } from "@/lib/mail";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
 import {
-  getReferralDetailLabel,
-  getReferralDetailPlaceholder,
   getReadableErrorMessage,
   insertSubmissionWithCompatibility,
-  isReferralDetailRequired,
   maxSubmissionDocumentCount,
-  referralSourceOptions,
-  shouldShowReferralDetail,
   toSubmissionInsert,
   uploadSubmissionDocuments,
   validateReferralCodeBeforeSubmit,
@@ -97,8 +92,6 @@ const BackerForm = ({ open, onOpenChange, defaultTier }: BackerFormProps) => {
   }, [open, defaultTier, presetAmounts]);
   const [phone, setPhone] = useState("");
   const [phoneError, setPhoneError] = useState("");
-  const [referralSource, setReferralSource] = useState("");
-  const [referralDetail, setReferralDetail] = useState("");
   const [documentFiles, setDocumentFiles] = useState<File[]>([]);
   const [documentError, setDocumentError] = useState("");
   const [country, setCountry] = useState("");
@@ -141,8 +134,6 @@ const BackerForm = ({ open, onOpenChange, defaultTier }: BackerFormProps) => {
     setLoading(true);
     const formData = new FormData(e.currentTarget);
     const values = Object.fromEntries(formData.entries());
-    values.referral_source = referralSource;
-    values.referral_detail = referralDetail;
 
     try {
       const uploadedDocs = await uploadSubmissionDocuments(documentFiles);
@@ -184,8 +175,6 @@ const BackerForm = ({ open, onOpenChange, defaultTier }: BackerFormProps) => {
       setIsCustom(false);
       setCustomAmount("");
       setDonorType("individual");
-      setReferralSource("");
-      setReferralDetail("");
       setDocumentFiles([]);
       setDocumentError("");
     } catch (err: unknown) {
@@ -440,55 +429,16 @@ const BackerForm = ({ open, onOpenChange, defaultTier }: BackerFormProps) => {
               </p>
             </div>
 
-            <div className="space-y-3">
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div>
-                  <Label htmlFor="referral_source">Bizi nereden buldunuz?</Label>
-                  <select
-                    id="referral_source"
-                    name="referral_source"
-                    value={referralSource}
-                    onChange={(event) => {
-                      setReferralSource(event.target.value);
-                      setReferralDetail("");
-                    }}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  >
-                    <option value="">Seçiniz...</option>
-                    {referralSourceOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <Label htmlFor="referral_code">Referral Kodu (opsiyonel)</Label>
-                  <Input
-                    id="referral_code"
-                    name="referral_code"
-                    placeholder="Admin / davet kodu"
-                    maxLength={32}
-                    className="uppercase"
-                  />
-                  <p className="mt-1 text-xs text-muted-foreground">Sizi yönlendiren admin veya davet kodunu girebilirsiniz.</p>
-                </div>
-              </div>
-
-              {shouldShowReferralDetail(referralSource) && (
-                <div>
-                  <Label htmlFor="referral_detail">{getReferralDetailLabel(referralSource)}</Label>
-                  <Input
-                    id="referral_detail"
-                    name="referral_detail"
-                    value={referralDetail}
-                    onChange={(event) => setReferralDetail(event.target.value)}
-                    placeholder={getReferralDetailPlaceholder(referralSource)}
-                    maxLength={120}
-                    required={isReferralDetailRequired(referralSource)}
-                  />
-                </div>
-              )}
+            <div>
+              <Label htmlFor="referral_code">Referral Kodu (opsiyonel)</Label>
+              <Input
+                id="referral_code"
+                name="referral_code"
+                placeholder="Admin / davet kodu"
+                maxLength={32}
+                className="uppercase"
+              />
+              <p className="mt-1 text-xs text-muted-foreground">Sizi yönlendiren admin veya davet kodunu girebilirsiniz.</p>
             </div>
 
             <div className="rounded-lg border border-primary/15 bg-primary/5 p-3">

@@ -51,7 +51,6 @@ type ActivationDraftInput = {
   businessVisibility: "public" | "private";
   interestVisibility: "public" | "private";
   referralCode: string;
-  referralSource: string;
 };
 
 const hasWindow = () => typeof window !== "undefined";
@@ -229,7 +228,6 @@ export const activateCurrentOnboardingProfile = async (draft: ActivationDraftInp
   const trimmedBusiness = draft.businessOrOrganization.trim();
   const trimmedInterest = draft.interestFocus.trim();
   const trimmedReferralCode = draft.referralCode.trim().toUpperCase();
-  const trimmedReferralSource = draft.referralSource.trim();
 
   if (!trimmedFullName || !trimmedCountry || !trimmedCity) {
     throw new Error("Ad Soyad, ulke ve sehir gerekli.");
@@ -249,10 +247,6 @@ export const activateCurrentOnboardingProfile = async (draft: ActivationDraftInp
 
   if (trimmedReferralCode) {
     await updateProfileAttribute("referral_code", trimmedReferralCode, "private");
-  }
-
-  if (trimmedReferralSource) {
-    await updateProfileAttribute("referral_source", trimmedReferralSource, "private");
   }
 
   const { data, error } = await supabase.rpc("complete_current_profile_onboarding_activation");

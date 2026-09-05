@@ -43,19 +43,6 @@ export const INTEREST_CATEGORIES: { value: string; label: string }[] = [
   { value: "kariyer", label: "CorteQS Kariyer" },
 ];
 
-const HEARD_FROM_OPTIONS = [
-  "Instagram",
-  "LinkedIn",
-  "X / Twitter",
-  "TikTok",
-  "YouTube",
-  "Arkadaş tavsiyesi",
-  "Google",
-  "WhatsApp grubu",
-  "Etkinlik / podcast",
-  "Diğer",
-];
-
 interface InterestFormProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -107,7 +94,6 @@ const InterestForm = ({
     organization: "",
     interest_area: "",
     supply_demand: "",
-    heard_from: "",
   });
 
   const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,7 +154,6 @@ const InterestForm = ({
         organization: form.organization,
         interest_area: form.interest_area,
         supply_demand: form.supply_demand,
-        heard_from: form.heard_from,
         referral_code: referralCode || null,
         source: source || null,
         attachment_urls,
@@ -197,7 +182,6 @@ const InterestForm = ({
       organization: "",
       interest_area: "",
       supply_demand: "",
-      heard_from: "",
     });
   };
 
@@ -299,21 +283,10 @@ const InterestForm = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label htmlFor="heard">Bizi nereden buldunuz?</Label>
-              <Select value={form.heard_from} onValueChange={(v) => setForm({ ...form, heard_from: v })}>
-                <SelectTrigger id="heard"><SelectValue placeholder="Seçiniz..." /></SelectTrigger>
-                <SelectContent>
-                  {HEARD_FROM_OPTIONS.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="ref">Referral Kodu (opsiyonel)</Label>
-              <Input id="ref" defaultValue={referralCode} placeholder="ADMİN / DAVET KODU" />
-              <p className="text-[11px] text-muted-foreground mt-1">Sizi davet eden admin/influencer kodu varsa girin.</p>
-            </div>
+          <div>
+            <Label htmlFor="ref">Referral Kodu (opsiyonel)</Label>
+            <Input id="ref" defaultValue={referralCode} placeholder="ADMİN / DAVET KODU" />
+            <p className="text-[11px] text-muted-foreground mt-1">Sizi davet eden admin/influencer kodu varsa girin.</p>
           </div>
 
           <div>
