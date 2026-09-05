@@ -74,6 +74,8 @@ export type WorkshopProgress = {
   burakDone: number;
   /** İki onayı da almış maddeler — "bitmiş" tanımı. */
   completed: number;
+  /** UBT işaretlemiş ama Burak henüz onaylamamış — Burak'ın onay kuyruğu. */
+  awaitingBurak: number;
   /** Tamamlanma yüzdesi (0-100, tam sayı). */
   percent: number;
 };
@@ -147,6 +149,7 @@ export function calculateWorkshopProgress(items: WorkshopItem[]): WorkshopProgre
     ubtDone: items.filter((item) => item.ubtDone).length,
     burakDone: items.filter((item) => item.burakDone).length,
     completed,
+    awaitingBurak: items.filter(isAwaitingBurak).length,
     percent: total === 0 ? 0 : Math.round((completed / total) * 100),
   };
 }
@@ -232,7 +235,22 @@ export function partitionWorkshopItems(items: WorkshopItem[]): WorkshopPartition
   return { open, completed };
 }
 
-export type WorkshopStatusFilter = "all" | "open" | "completed";
+/**
+ * Durum filtresi. "open"/"completed" iki onayın birleşimine bakar; "burak_pending" ve
+ * "ubt_pending" ise onay KUYRUĞUNU gösterir — 2026-09-04'te Cadde panosunda 65 madde
+ * "UBT ✓, Burak bekliyor" durumundaydı ve bunu panodan süzmenin bir yolu yoktu.
+ */
+export type WorkshopStatusFilter = "all" | "open" | "completed" | "burak_pending" | "ubt_pending";
+
+/** UBT işaretlemiş, Burak'ın onayı bekleniyor. */
+export function isAwaitingBurak(item: WorkshopItem): boolean {
+  return item.ubtDone && !item.burakDone;
+}
+
+/** UBT henüz işaretlememiş (Burak'ın tek başına onayı da bunu kapatmaz). */
+export function isAwaitingUbt(item: WorkshopItem): boolean {
+  return !item.ubtDone;
+}
 
 /** Oturum ("all" = tüm toplantılar) + arama (Türkçe aksan-toleranslı) + durum filtresi. */
 export function filterWorkshopItems(
@@ -247,6 +265,8 @@ export function filterWorkshopItems(
     if (session !== "all" && item.sessionKey !== session) return false;
     if (status === "completed" && !isWorkshopItemComplete(item)) return false;
     if (status === "open" && isWorkshopItemComplete(item)) return false;
+    if (status === "burak_pending" && !isAwaitingBurak(item)) return false;
+    if (status === "ubt_pending" && !isAwaitingUbt(item)) return false;
     if (search && !trIncludes(`${item.title} ${item.section}`, search)) return false;
     return true;
   });

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 
 import { useAuth } from "@/components/auth/useAuth";
+import { describeSignInError, describeSignUpResult } from "@/lib/auth-messages";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +24,10 @@ const LoginPage = () => {
   const [signupSubmitting, setSignupSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [signupSuccessMessage, setSignupSuccessMessage] = useState<string | null>(null);
+  // WS1 madde 7: doğrulanmamış hesapla giriş denendiğinde adresi tut ve
+  // "yeniden gönder" yolunu aç. Doğrulama kapalıyken (autoconfirm) hiç dolmaz.
+  const [unconfirmedEmail, setUnconfirmedEmail] = useState<string | null>(null);
+  const [resendSubmitting, setResendSubmitting] = useState(false);
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
@@ -110,6 +115,7 @@ const LoginPage = () => {
     setPasswordSubmitting(true);
     setErrorMessage(null);
     setSignupSuccessMessage(null);
+    setUnconfirmedEmail(null);
 
     const { error } = await supabase.auth.signInWithPassword({
       email: loginEmail.trim(),
@@ -117,10 +123,34 @@ const LoginPage = () => {
     });
 
     if (error) {
-      setErrorMessage(error.message);
+      // WS1 madde 7: e-posta doğrulaması açıldığında "Email not confirmed" artık
+      // İngilizce ham metin yerine yol gösteren Türkçe mesaj + yeniden gönder düğmesi.
+      const info = describeSignInError(error);
+      setErrorMessage(info.message);
+      setUnconfirmedEmail(info.kind === "email_not_confirmed" ? loginEmail.trim() : null);
       setPasswordSubmitting(false);
       return;
     }
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!unconfirmedEmail) return;
+    setResendSubmitting(true);
+    setErrorMessage(null);
+
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: unconfirmedEmail,
+      options: { emailRedirectTo: redirectTo },
+    });
+
+    setResendSubmitting(false);
+    if (error) {
+      setErrorMessage(error.message);
+      return;
+    }
+    setSignupSuccessMessage(`Doğrulama e-postası ${unconfirmedEmail} adresine yeniden gönderildi.`);
+    setUnconfirmedEmail(null);
   };
 
   const handlePasswordSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -128,8 +158,9 @@ const LoginPage = () => {
     setSignupSubmitting(true);
     setErrorMessage(null);
     setSignupSuccessMessage(null);
+    setUnconfirmedEmail(null);
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: signupEmail.trim(),
       password: signupPassword,
       options: {
@@ -144,7 +175,14 @@ const LoginPage = () => {
     }
 
     setSignupSubmitting(false);
-    setSignupSuccessMessage("Doğrulama bağlantısını e-posta adresine gönderdik. E-postanı onayladıktan sonra aynı hesapla giriş yapabilirsin.");
+    // Autoconfirm açıkken session hemen gelir — "doğrulama e-postası gönderdik" demek
+    // yanlış olurdu; kapalıyken session yoktur ve e-posta gerçekten yoldadır.
+    const outcome = describeSignUpResult(data);
+    if (outcome.outcome === "already_registered") {
+      setErrorMessage(outcome.message);
+      return;
+    }
+    setSignupSuccessMessage(outcome.message);
   };
 
   if (!isLoading && session) {
@@ -317,6 +355,17 @@ const LoginPage = () => {
 
           {signupSuccessMessage ? <p className="text-sm text-emerald-700">{signupSuccessMessage}</p> : null}
           {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
+          {unconfirmedEmail ? (
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => void handleResendConfirmation()}
+              disabled={resendSubmitting || isBusy}
+            >
+              {resendSubmitting ? "Gönderiliyor..." : "Doğrulama e-postasını yeniden gönder"}
+            </Button>
+          ) : null}
           </CardContent>
         </div>
       </main>

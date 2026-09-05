@@ -14,6 +14,27 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260905-profil-formu-ilk-parti",
+    date: "5 Eylül 2026",
+    title:
+      "Profil formunun ilk partisi yapıldı: telefon en üstte, profil tipi görünür, rozetlerde açıklama; kayıt formu kısaldı",
+    items: [
+      "TELEFON ARTIK PROFİL FORMUNUN İLK KUTUSU: Toplantı kararı gereği telefon numarası en üste alındı. Numara her zaman gizli tutuluyor; yanında görünürlük anahtarı yerine 'Yalnız sen' kilidi duruyor ve herkese açık profilde hiçbir koşulda gösterilmiyor.",
+      "TELEFON ALANI ÖNCEDEN HİÇ GÖRÜNMÜYORDU: 116 üyenin kayıtlı numarası olmasına rağmen alan profil ekranında yoktu, çünkü hiçbir role tanımlanmamıştı. 78 aktif rolün tamamına eklendi.",
+      "NUMARA BİÇİMİ KONTROL EDİLİYOR: Ülke kodu olmayan veya eksik numara kaydedilmiyor, ekranda ne yapılması gerektiğini söyleyen kısa bir uyarı çıkıyor. Boşluk, tire ve parantez otomatik temizleniyor.",
+      "ÜLKE TELEFONDAN TAHMİN EDİLMİYOR: +90 numaralı bir üye Berlin'de yaşıyor olabilir. Ülke yalnız üyenin kendi seçimiyle belirleniyor; bu kural artık otomatik bir denetimle korunuyor, ileride yanlışlıkla eklenirse testler düşer.",
+      "PROFİL TİPİ ARTIK NET GÖRÜNÜYOR: Profil başlığında 'Profil tipi: …' etiketi ve yanında ne anlama geldiğini anlatan bilgi (i) ikonu var. Profil durumu kartına da ayrı bir satır olarak eklendi.",
+      "ROZETLERE AÇIKLAMA EKLENDİ: 'İş Arıyorum', 'Yakında Taşınacağım' ve 'Gönüllü Mentörlük' rozetlerinin yanındaki (i) ikonuna gelince rozetin ne işe yaradığı yazıyor.",
+      "İLGİ ALANLARI HERKESE AÇIK OLDU: Toplantı kararı gereği bireysel ilgi alanları artık gizlenemiyor; eşleştirme ve ağ önerileri bu bilgiyle çalıştığı için gizleme anahtarı kaldırılıp yerine 'Herkese açık' rozeti kondu.",
+      "LINKEDIN OPSİYONEL KALDI AMA ÖNE ÇIKTI: Kartta 'Tavsiye edilir' rozeti ve nedenini anlatan kısa bir açıklama var. Zorunlu değil.",
+      "'BİZİ NEREDEN BULDUNUZ?' SORUSU KALDIRILDI: Kayıt formu, davet aktivasyon ekranı, destek formları ve yapay zekâ sohbet akışı dahil olmak üzere sorunun sorulduğu her yerden çıkarıldı; sohbet akışı iki adım kısaldı. Geçmiş cevaplar silinmedi, başvuru detayında görünmeye devam ediyor.",
+      "GİRİŞ EKRANI DOĞRULAMAYA HAZIRLANDI: E-posta doğrulaması açıldığında kullanıcı ham İngilizce hata yerine ne yapması gerektiğini Türkçe görecek ve 'Doğrulama e-postasını yeniden gönder' düğmesini kullanabilecek. Kayıt sonrası mesaj da artık gerçek sonuca göre yazılıyor.",
+      "TARAYICI HATALARI ARTIK KAYBOLMUYOR: Cadde'de paylaşım/yorum gönderilemediğinde veya bir sayfa 'Bir hata oluştu' ekranına düştüğünde hata kaydı veritabanına yazılıyor. Yeni 'İstemci Hataları' ekranından (Roller ve Yetkiler menüsü) kaynak ve metne göre filtrelenebiliyor. Kayıtlar 90 gün saklanıyor, kişisel içerik gönderilmiyor.",
+      "WORKSHOP PANOSUNA ONAY KUYRUĞU FİLTRESİ: Cadde panosunda 65 madde 'UBT tamam, Burak bekliyor' durumundaydı ve bunu süzmenin yolu yoktu. Artık 'Burak onayı bekleyenler' ve 'UBT onayı bekleyenler' filtreleri var; Burak onayı kartı da kaç maddenin onunla beklediğini yazıyor.",
+      "KONTROLLER: 1.760'tan fazla otomatik test geçti, kod denetimi temiz, veri tabanı güncellemelerinin tamamı canlıda kayıtlı (381/381).",
+    ],
+  },
+  {
     id: "20260904-profil-toplantisi-ve-workshop-panosu",
     date: "4 Eylül 2026",
     title:

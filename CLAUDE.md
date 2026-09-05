@@ -8,11 +8,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Key Metrics (ölçüldü 2026-08-04):**
 - 989 `.ts`/`.tsx` files under `src` — 209 pages, 429 components, 278 lib modules
-- **358 Supabase migrations** (ölçüldü 2026-08-06) — 106 in `supabase/migrations/applied/`
+- **381 Supabase migrations** (ölçüldü 2026-09-05) — 129 in `supabase/migrations/applied/`
   + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split); 7 Edge Functions
-- 202 test files (`src` 190, `scripts` 9, `supabase` 3, `workers` 4) + 18 Playwright `.spec.ts`
+- 232 test files under `src` (+ `scripts`/`supabase`/`workers`) + 18 Playwright `.spec.ts`;
+  `npm run test` → **1.768 test** (ölçüldü 2026-09-05)
 - `src/App.tsx`: 283 lines, 51 `lazy()` imports
-- TypeScript with relaxed strict mode (intentional trade-off) — 98 remaining `tsc` errors
+- TypeScript with relaxed strict mode (intentional trade-off) — **22 remaining `tsc` errors**
+  (109'dan indirildi 2026-09-04; kalanların hepsi karar bekliyor, bkz. "Known Limitations")
 - **Production runtime is nginx** (Dockerfile → `nginx.conf.template`), deployed via Docker (Coolify).
   `server.mjs` is the local/nixpacks path only — see the Deployment section.
 
@@ -115,6 +117,47 @@ The canonical `useAuth` lives in `src/components/auth/useAuth.ts` → reads from
 - **Feature flags:** `RequireFeature` / `useFeatureFlags` resolve via `get_current_user_features()` (`role_feature_flags` + `user_feature_overrides`).
 - `RequireAuth` guards admin routes (checks canonical session).
 - **Do not reference `profiles` / `user_profiles` / `admin_users`** — use `user_role_assignments` + `user_profile_attributes` and the `is_admin()`/`is_moderator()` RPCs.
+
+### Profil formu kuralları (Profil Workshop WS1 — canlı 2026-09-05)
+
+Kaynak: 3 Eylül 2026 "Profiller" toplantısı (T19). Pano: `/admin/workshop/profil`.
+Migration: `20260904200000_profil_ws1_form_alanlari.sql`.
+
+1. **Bir alanın profil formunda görünmesi `role_attributes` kuralına bağlıdır.**
+   `get_current_user_profile` yalnız o rol için `is_enabled` kuralı OLAN alanları döner.
+   `phone` attribute'u aylardır tanımlıydı ve 116 üyede değer vardı ama **hiçbir rolde
+   kuralı yoktu** → alan hiç çizilmiyordu. Yeni alan eklerken migration'da tüm aktif
+   rollere kural ekle (ölçüm: 78 aktif rol), yoksa kod canlıda sessizce görünmez.
+2. **`user_can_hide=false` bir alanı "her zaman public" yapar, "her zaman private" YAPMAZ.**
+   `update_profile_attribute`, `user_can_hide=false` iken `'public'` dışı görünürlüğü
+   `42501` ile reddeder. Telefon bu yüzden `user_can_hide=true` + her yazımda açık
+   `'private'` ile kaydedilir; gizlilik garantisi `afs_attributes.storage_strategy =
+   'private_storage'`tan gelir (public sayfa RPC'si bu stratejiyi baştan eler).
+3. **Ülke telefon alan kodundan TÜRETİLMEZ** (+90 numaralı üye Berlin'de yaşıyor olabilir).
+   `src/lib/phone-country-derivation.test.ts` `src/` ağacını tarar: `countryFromPhone`,
+   `dialCode`, `callingCode`, `libphonenumber` girerse test düşer. `src/lib/profile-phone.ts`
+   yalnız E.164 biçim doğrular, ülke üretmez.
+4. **İlgi alanları (`interests`) herkese açıktır ve gizlenemez** (T19 kararı) — 82 rolde
+   `user_can_hide=false`. `CaddeInterestsCard` bu durumda anahtar yerine rozet çizer.
+5. **"Bizi nereden buldunuz?" (`referral_source`) kayıt akışından kaldırıldı.** Attribute
+   canlıda `is_active=false`; veri SİLİNMEDİ (112 üyede geçmiş değer, admin başvuru
+   detayında görünür). `REFERRAL_SOURCE_OPTIONS` etiket sözlüğü olarak DURUR — geçmiş
+   satırları göstermek için gerekir, silme.
+
+### İstemci hata kayıtları (m134 tanısı — canlı 2026-09-05)
+
+`public.client_error_reports` + `report_client_error` RPC (mig `20260904210000`).
+Tarayıcıda yakalanan hata artık yalnız `console.error`'a değil, DB'ye de yazılır;
+`/admin/client-errors` ekranından okunur (RLS: yalnız admin SELECT).
+
+- **Tek giriş noktası `src/lib/client-error-reports.ts`.** Doğrudan RPC çağırma.
+  Bağlı yerler: `caddeWriteError` / `caddeReadError` (`cadde-internal.ts`),
+  `AppErrorBoundary`, `SectionErrorBoundary`.
+- **Payload ASLA gönderilmez** — yalnız hata nesnesinin `message/code/details/hint`'i,
+  rota (yalnız `pathname`) ve user-agent. Yorum metni, medya, kişisel veri gitmez.
+- Fren: aynı (kaynak, bağlam, mesaj) 60 sn içinde tekrar gönderilmez, sayfa yaşamı
+  boyunca 20 kayıt tavanı, RPC tarafında kullanıcı başına saatte 30. 90 gün saklanır.
+- `reportClientError` **asla fırlatmaz ve beklemez** — hata yolunu bozamaz.
 
 ### Feature Modules (Copy Muhasebe Pattern)
 Muhasebe module is the architectural template:
@@ -390,7 +433,7 @@ npm run test -- --coverage   # Coverage report (experimental)
 
 ### Test Organization
 - **Unit/integration:** `src/**/*.test.ts(x)` (vitest + Testing Library + jsdom)
-- **202 test files total** (`src` 190, `scripts` 9, `supabase` 3, `workers` 4)
+- **232 test files under `src`** (+ `scripts`/`supabase`/`workers`) — 1.768 test
 - **E2E:** Playwright configured but underutilized (18 `.spec.ts`)
 - **Setup:** `src/test/setup.ts` (jest-dom matchers)
 - **Coverage target:** 80%+ for new code
@@ -416,13 +459,13 @@ config **text** and route tables, so they fail loudly when someone edits one sid
 
 ## Database & Migrations
 
-- **358 migrations total, split by a baseline on 2026-08-04** (date-prefixed, immutable in prod).
+- **381 migrations total, split by a baseline on 2026-08-04** (date-prefixed, immutable in prod).
   Note the subdirectories — the parent `supabase/migrations/` contains 0 `.sql` files, so a glob
   on the parent silently finds nothing.
 
 | Path | Count | Meaning |
 |------|-------|---------|
-| `supabase/migrations/applied/` | 106 | Post-baseline (≥ `20260615100000`) — the working set |
+| `supabase/migrations/applied/` | 129 | Post-baseline (≥ `20260615100000`) — the working set |
 | `supabase/migrations/archive/` | 252 | Pre-baseline, **applied in production, never delete** |
 | `supabase/baseline/2026-08-04-public-schema.sql` | 1 | `pg_dump --schema-only` of the live `public` schema (237 tables, 481 RLS policies, 1568 grants, 342 indexes, 115 triggers, 5 views) |
 

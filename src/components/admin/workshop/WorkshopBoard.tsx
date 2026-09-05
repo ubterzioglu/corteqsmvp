@@ -50,6 +50,8 @@ import {
 const STATUS_OPTIONS: { value: WorkshopStatusFilter; label: string }[] = [
   { value: "all", label: "Tüm maddeler" },
   { value: "open", label: "Bekleyenler" },
+  { value: "burak_pending", label: "Burak onayı bekleyenler" },
+  { value: "ubt_pending", label: "UBT onayı bekleyenler" },
   { value: "completed", label: "Tamamlananlar" },
 ];
 
@@ -254,7 +256,11 @@ export function WorkshopBoard({ workshopKey, title, description }: WorkshopBoard
           <StatCard
             label="Burak onayı"
             value={`${progress.burakDone}/${progress.total}`}
-            hint="Burak işaretledi"
+            hint={
+              progress.awaitingBurak > 0
+                ? `${progress.awaitingBurak} madde UBT'den geçti, Burak'ı bekliyor`
+                : "Burak işaretledi"
+            }
           />
           <StatCard
             label="Tamamlanan"

@@ -8,6 +8,8 @@ import {
   collectWorkshopSessions,
   filterWorkshopItems,
   groupWorkshopItems,
+  isAwaitingBurak,
+  isAwaitingUbt,
   isWorkshopItemComplete,
   latestWorkshopSession,
   partitionWorkshopItems,
@@ -57,6 +59,7 @@ describe("calculateWorkshopProgress", () => {
       ubtDone: 2,
       burakDone: 2,
       completed: 1,
+      awaitingBurak: 1,
       percent: 25,
     });
   });
@@ -67,8 +70,24 @@ describe("calculateWorkshopProgress", () => {
       ubtDone: 0,
       burakDone: 0,
       completed: 0,
+      awaitingBurak: 0,
       percent: 0,
     });
+  });
+});
+
+describe("onay kuyruğu yardımcıları", () => {
+  it("isAwaitingBurak yalnız UBT ✓ + Burak boş durumunu sayar", () => {
+    expect(isAwaitingBurak(item({ ubtDone: true, burakDone: false }))).toBe(true);
+    expect(isAwaitingBurak(item({ ubtDone: true, burakDone: true }))).toBe(false);
+    expect(isAwaitingBurak(item({ ubtDone: false, burakDone: true }))).toBe(false);
+    expect(isAwaitingBurak(item())).toBe(false);
+  });
+
+  it("isAwaitingUbt UBT işaretlememişse doğrudur; Burak'ın tek onayı bunu kapatmaz", () => {
+    expect(isAwaitingUbt(item())).toBe(true);
+    expect(isAwaitingUbt(item({ burakDone: true }))).toBe(true);
+    expect(isAwaitingUbt(item({ ubtDone: true }))).toBe(false);
   });
 });
 
@@ -124,6 +143,20 @@ describe("filterWorkshopItems", () => {
   it("durum filtresi uygular", () => {
     expect(filterWorkshopItems(items, { status: "completed" }).map((entry) => entry.itemNo)).toEqual([1]);
     expect(filterWorkshopItems(items, { status: "open" }).map((entry) => entry.itemNo)).toEqual([2, 3]);
+  });
+
+  it("onay kuyruğu filtreleri: Burak'ı bekleyenler ile UBT'yi bekleyenler ayrışır", () => {
+    const queue = [
+      item({ itemNo: 1, ubtDone: true, burakDone: true }),
+      item({ itemNo: 2, ubtDone: true, burakDone: false }),
+      item({ itemNo: 3, ubtDone: false, burakDone: true }),
+      item({ itemNo: 4 }),
+    ];
+
+    expect(filterWorkshopItems(queue, { status: "burak_pending" }).map((entry) => entry.itemNo)).toEqual([2]);
+    expect(filterWorkshopItems(queue, { status: "ubt_pending" }).map((entry) => entry.itemNo)).toEqual([3, 4]);
+    // Arama ile birleşir: "Madde" başlığı hepsinde var, kuyruk daraltması korunur.
+    expect(filterWorkshopItems(queue, { status: "burak_pending", search: "madde" })).toHaveLength(1);
   });
 
   it("Türkçe aramada aksan-toleranslı eşleşir", () => {
