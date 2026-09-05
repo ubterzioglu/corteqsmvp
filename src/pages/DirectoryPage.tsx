@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { Button } from "@/components/ui/button";
 import DirectoryFilters from "@/components/directory/DirectoryFilters";
+import DirectoryResultCard from "@/components/directory/DirectoryResultCard";
 import DirectoryResultRow from "@/components/directory/DirectoryResultRow";
+import { groupDirectoryResults } from "@/lib/directory-grouping";
 import DirectorySearchBar from "@/components/directory/DirectorySearchBar";
 import {
   getTotalDirectoryCount,
@@ -40,6 +42,9 @@ const DirectoryPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [totalCount, setTotalCount] = useState<number | null>(null);
+
+  // Kurum kaydı kart, kişi kaydı satır olarak çizilir (revizyon 32ae55b9).
+  const { catalogItems, members } = useMemo(() => groupDirectoryResults(rows), [rows]);
 
   const searchText = searchParams.get("q") ?? "";
   // Uygulanmış (applied) filtreler — veri yüklemesi bunları kaynak alır.
@@ -287,9 +292,35 @@ const DirectoryPage = () => {
                     <p className="pb-1 text-xs font-medium text-muted-foreground">
                       {rows.length.toLocaleString("tr-TR")} sonuç bulundu
                     </p>
-                    {rows.map((row) => (
-                      <DirectoryResultRow key={`${row.recordType}-${row.id}`} row={row} />
-                    ))}
+                    {/* m32ae55b9: kurum kaydı kartta, kişi kaydı satırda. Kurumun
+                        taşıdığı bilgi (logo, açıklama, hizmet etiketi) satıra
+                        sığmıyordu; kişi ise kartta boş duruyordu. Başlıklar yalnız
+                        İKİ grup da doluyken çizilir — tek tip sonuçta gereksiz. */}
+                    {catalogItems.length > 0 ? (
+                      <section className="space-y-3">
+                        {members.length > 0 ? (
+                          <h2 className="text-sm font-semibold text-foreground">Kuruluşlar ve işletmeler</h2>
+                        ) : null}
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {catalogItems.map((row) => (
+                            <DirectoryResultCard key={`${row.recordType}-${row.id}`} row={row} />
+                          ))}
+                        </div>
+                      </section>
+                    ) : null}
+
+                    {members.length > 0 ? (
+                      <section className="space-y-3">
+                        {catalogItems.length > 0 ? (
+                          <h2 className="pt-2 text-sm font-semibold text-foreground">Kişiler</h2>
+                        ) : null}
+                        <div className="space-y-3">
+                          {members.map((row) => (
+                            <DirectoryResultRow key={`${row.recordType}-${row.id}`} row={row} />
+                          ))}
+                        </div>
+                      </section>
+                    ) : null}
                   </>
                 ) : (
                   <p className="py-8 text-center text-sm text-muted-foreground">

@@ -2,17 +2,21 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   blogCategoryLabels,
   groupBlogPostsByCountry,
   listPublishedBlogPosts,
-  type BlogCategory,
   type BlogPostRow,
 } from "@/lib/blog";
+import {
+  ALL_GUIDE_COUNTRIES,
+  collectGuideCountries,
+  filterGuidePosts,
+  type GuideCategoryFilter,
+} from "@/lib/radar-guides";
 
-type CategoryFilter = BlogCategory | "all";
-
-const CATEGORY_FILTERS: { key: CategoryFilter; label: string }[] = [
+const CATEGORY_FILTERS: { key: GuideCategoryFilter; label: string }[] = [
   { key: "all", label: "Tümü" },
   { key: "giris-ulasim", label: blogCategoryLabels["giris-ulasim"] },
   { key: "gundelik-butce", label: blogCategoryLabels["gundelik-butce"] },
@@ -31,7 +35,8 @@ const CATEGORY_FILTERS: { key: CategoryFilter; label: string }[] = [
 const RadarRehberlerSection = () => {
   const [posts, setPosts] = useState<BlogPostRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<CategoryFilter>("all");
+  const [filter, setFilter] = useState<GuideCategoryFilter>("all");
+  const [country, setCountry] = useState<string>(ALL_GUIDE_COUNTRIES);
 
   useEffect(() => {
     let mounted = true;
@@ -52,13 +57,45 @@ const RadarRehberlerSection = () => {
     };
   }, []);
 
-  const filteredGroups = useMemo(() => {
-    const filtered = filter === "all" ? posts : posts.filter((post) => post.category === filter);
-    return groupBlogPostsByCountry(filtered);
-  }, [posts, filter]);
+  const countryOptions = useMemo(() => collectGuideCountries(posts), [posts]);
+
+  const filteredGroups = useMemo(
+    () => groupBlogPostsByCountry(filterGuidePosts(posts, { category: filter, country })),
+    [posts, filter, country],
+  );
+
+  // Kategori değişince seçili ülkede yazı kalmayabilir; kullanıcıyı sessiz boş
+  // ekranda bırakmamak için ülke seçimi geçersizleşirse "tümü"ne döner.
+  useEffect(() => {
+    if (country === ALL_GUIDE_COUNTRIES) return;
+    if (!countryOptions.some((option) => option.value === country)) {
+      setCountry(ALL_GUIDE_COUNTRIES);
+    }
+  }, [country, countryOptions]);
 
   return (
     <div>
+      {countryOptions.length > 1 ? (
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <label htmlFor="rehber-ulke" className="text-sm font-medium text-muted-foreground">
+            Ülke
+          </label>
+          <Select value={country} onValueChange={setCountry}>
+            <SelectTrigger id="rehber-ulke" className="h-9 w-full sm:w-64" aria-label="Ülke filtresi">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL_GUIDE_COUNTRIES}>Tüm ülkeler</SelectItem>
+              {countryOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      ) : null}
+
       <div className="mb-8 flex flex-wrap gap-2">
         {CATEGORY_FILTERS.map((item) => (
           <button
@@ -81,7 +118,9 @@ const RadarRehberlerSection = () => {
         <div className="rounded-lg border border-border bg-card p-6 text-muted-foreground">Yükleniyor...</div>
       ) : filteredGroups.length === 0 ? (
         <div className="rounded-lg border border-border bg-card p-6 text-muted-foreground">
-          Bu kategoride henüz yazı bulunmuyor.
+          {country === ALL_GUIDE_COUNTRIES
+            ? "Bu kategoride henüz yazı bulunmuyor."
+            : "Seçilen ülke ve kategoride henüz yazı bulunmuyor."}
         </div>
       ) : (
         <div className="space-y-12">
