@@ -6,13 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **CorteQS Landing** is a multi-feature React + Vite application with Supabase backend. It combines a public marketing site, admin dashboard, member profiles, surveys, workspace collaboration tools, and an accounting module (muhasebe) — all in a single SPA.
 
-**Key Metrics (ölçüldü 2026-08-04):**
-- 989 `.ts`/`.tsx` files under `src` — 209 pages, 429 components, 278 lib modules
-- **381 Supabase migrations** (ölçüldü 2026-09-05) — 129 in `supabase/migrations/applied/`
+**Key Metrics (ölçüldü 2026-09-05, gün sonu):**
+- **1.092** `.ts`/`.tsx` files under `src` — 228 pages, 439 components, 335 lib modules
+- **383 Supabase migrations** — 131 in `supabase/migrations/applied/`
   + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split); 7 Edge Functions
-- 232 test files under `src` (+ `scripts`/`supabase`/`workers`) + 18 Playwright `.spec.ts`;
-  `npm run test` → **1.768 test** (ölçüldü 2026-09-05)
-- `src/App.tsx`: 283 lines, 51 `lazy()` imports
+- **246** test files under `src` (+ `scripts`/`supabase`/`workers`) + 21 Playwright `.spec.ts`;
+  `npm run test` → **271 dosya / 1.881 test** yeşil
+- `npm run lint` → **0 problem** (eski "1280 problem" notu bayattı)
+- `src/App.tsx`: 313 lines, 51 `lazy()` imports
 - TypeScript with relaxed strict mode (intentional trade-off) — **22 remaining `tsc` errors**
   (109'dan indirildi 2026-09-04; kalanların hepsi karar bekliyor, bkz. "Known Limitations")
 - **Production runtime is nginx** (Dockerfile → `nginx.conf.template`), deployed via Docker (Coolify).
@@ -668,31 +669,49 @@ belong there; documentation goes under `docs/`.
 - ~~B4 `AdminLayout.tsx` 741 lines, must be split~~ → **RESOLVED.**
   `src/components/admin/AdminLayout.tsx` is now a 6-line barrel.
 
+> ⚠️ **Yeniden ölçüldü 2026-09-05.** Aşağıdaki rakamların ÇOĞU bayattı ve gelecek oturumları
+> çoktan ödenmiş borcu yeniden ödemeye yönlendiriyordu. Her satır artık ölçülmüş değerdir;
+> ezberleme, değiştirmeden önce komutu tekrar çalıştır.
+>
+> | İddia (eski) | Ölçüm (2026-09-05) |
+> |---|---|
+> | ESLint 1280 problem | **0** |
+> | 89 `as any` | **15** |
+> | 83 `from(` + 42 `rpc(` bileşende | **32** + **4** |
+> | 21 auth shim import'u | **18** |
+> | 98 `tsc` hatası | **22** |
+> | ~78 MB video | **16,4 MB** |
+
+**CLOSED (do not re-open):**
+- ~~ESLint debt: 1280 problems~~ → **RESOLVED.** `npm run lint` **0 problem** (ölçüldü 2026-09-05).
+- ~~`public/burak-stripe-rehberi.html` publicly served~~ → **OBSOLETE.** Dosya artık yok.
+- ~~~78 MB video in `public/`~~ → **BÜYÜK ÖLÇÜDE KAPANDI.** Toplam video **16,4 MB**
+  (`hero-network.mp4` 7,8 MB · `whatmaskot.mp4` 5,4 MB · `herovideo.mp4` 3,5 MB).
+  `footer-community.mp4` (48 MB) ve `hero-people.mp4` (11 MB) silinmiş. `public/` toplamı 28 MB.
+
 **Open:**
 1. **Broken imports (B2) — partially fixed, claim was partly wrong.** `@/lib/radarNews` was never
    the real name: the module is `src/lib/radarNewsPipeline.ts` and it **exists**. The
    `@/lib/mapEntities` and `html-to-image` problems were real, and the 5 dead pages that caused
    them were deleted 2026-08-04 (`MapSearch`, `PostGenerator`, `CityNews`, `WhatsAppGroupLanding`,
    `WhatsAppGroups` — all had zero importers and no route).
-2. **Auth shim migration (B5)** → **21** imports of `@/contexts/AuthContext`; migrate to canonical,
-   then delete shim.
-3. **Mixed data fetching (B6)** → 83 `supabase.from(` + 42 `supabase.rpc(` calls still sit inside
-   components; standardize on `*-api.ts` + React Query.
-4. **TypeScript loose (B7)** → **89** `as any` to clean up (not ~103).
-5. **98 remaining `tsc -p tsconfig.app.json --noEmit` errors** (down from 103). Not a types.ts
-   problem: variant/accent prop types, `ProfilePage` boolean assignments, and a reference to a
-   `role_taxonomy_rules` table that does not exist.
-6. **ESLint debt** → `npm run lint` reports **1280 problems (1060 error, 220 warning)**, mostly
-   `no-explicit-any`. Pre-existing; a cleanup item of its own.
-7. **Test coverage spotty** → activate Playwright for critical flows.
-8. **Large files** → 112 files exceed 300 lines (`ProfilePage.tsx` 2511, `CommandCenterManager.tsx`
-   1987, `AddWhatsAppPage.tsx` 1611).
-9. **Repo weight** → ~78 MB of video in `public/` ships into the Docker image
-   (`footer-community.mp4` 48 MB, `hero-people.mp4` 11 MB, `hero-network.mp4` 7.9 MB, …) plus
-   duplicate images (`sweet.png`/`sweet.jpg`, `last.png`/`newbg.png`, `og-image.png`/`og-image-new.jpg`).
-10. **`public/burak-stripe-rehberi.html` is publicly served** at
-    `https://corteqs.net/burak-stripe-rehberi.html` and tracked in git; `robots.txt` only blocks
-    `/admin`. Decide whether this is intended.
+2. **Auth shim migration (B5)** → **18** imports of `@/contexts/AuthContext` (ölçüldü 2026-09-05,
+   21 değil); migrate to canonical `@/components/auth/useAuth` (`loading`→`isLoading`), then delete
+   the shim. Mekanik ve düşük riskli.
+3. **Mixed data fetching (B6)** → **32** `supabase.from(` + **4** `supabase.rpc(` calls still sit
+   inside components (ölçüldü 2026-09-05; eski iddia 83+42 idi). Standardize on `*-api.ts` +
+   React Query.
+4. **TypeScript loose (B7)** → **15** `as any` kaldı (89 değil).
+5. **22 remaining `tsc -p tsconfig.app.json --noEmit` errors** (109'dan indirildi 2026-09-04).
+   Hepsi karar bekliyor; **dökümü hâlâ yazılmadı** — bir sonraki tur bunu çıkarıp her hatayı
+   "düzelt" ya da "bilinçli bırak + gerekçe" diye kapatmalı.
+6. **Test coverage spotty** → activate Playwright for critical flows.
+7. **Large files** → **126** files exceed 300 lines (2026-08-04'te 112 idi — **artıyor**, tek
+   gerçekten kötüleşen kalem). En büyük gerçek kaynak dosyalar `src/lib/admin-shell/social-diaspora-posts.ts`
+   (2934) ve `ProfilePage.tsx`. `src/integrations/supabase/types.ts` (15.010) ve
+   `src/lib/agent/tools-catalog.generated.ts` (3139) ÜRETİLEN dosyalardır, bu sayıma dahil edilmez.
+8. **Duplicate images in `public/`** → `sweet.png`/`sweet.jpg`, `last.png`/`newbg.png`,
+   `og-image.png`/`og-image-new.jpg` altısı da hâlâ duruyor (video temizliğinin aksine bu kapanmadı).
 
 **Deferred by user decision (report only, do not change):** `index.html` JSON-LD scope (12-question
 FAQPage, `Offer` 99 EUR, hardcoded `dateModified 2026-07-06`, `BreadcrumbList` inherited by every

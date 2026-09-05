@@ -57,14 +57,6 @@ export const ADMIN_TODOS: AdminTodoEntry[] = [
     actions: [{ label: "Revizyon Panosu", to: "/admin/revision-requests" }],
   },
   {
-    id: "20260802-sonuc-cta-karari",
-    title: "Taşınma araçları sonuç butonları: gerçek link mi, 'Yakında' mı?",
-    description:
-      "30 Temmuz'da tüm araçların sonuç ekranındaki yönlendirme butonları gerçek linke çevrilmişti. 2 Ağustos'taki meslek/maaş güncellemesiyle aynı commit'te bu butonlar (Tekrar Çöz hariç) sessizce yeniden 'Yakında' rozetiyle kilitlendi — hem meslek/maaş hem diğer 9 araç için, çünkü bileşen paylaşımlı. Bilinçli bir geri alma mı yoksa istemeden mi oldu belli değil; hangisi doğruysa ona göre ya butonlar tekrar açılmalı ya da bu kayıt kapatılmalı.",
-    priority: "normal",
-    actions: [{ label: "Bir Aracı Dene", to: "/tools" }],
-  },
-  {
     id: "20260802-supabase-custom-domain-google-ekrani",
     title: "Google giriş ekranındaki çirkin adresi düzelt (Custom Domain)",
     description:

@@ -50,4 +50,11 @@ describe("ADMIN_TODOS", () => {
       "20260805-cadde-profil-konum-serbest-metin",
     );
   });
+
+  it("cevaplanmış sonuç CTA kararını açık iş olarak göstermiyor", () => {
+    // Karar 2026-09-05'te verildi: butonlar GERÇEK link, "Yakında" kilidi bir
+    // regresyondu ve onarıldı (gerekçe ResultCtaPanel.tsx başındaki yorumda).
+    // Kayıt panelde açık kalırsa cevaplanmış bir soru iş gibi görünür.
+    expect(ADMIN_TODOS.map((todo) => todo.id)).not.toContain("20260802-sonuc-cta-karari");
+  });
 });
