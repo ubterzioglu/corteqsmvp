@@ -10,8 +10,8 @@ import { supabase } from "@/integrations/supabase/client";
 import type { RelocationToolRow } from "@/lib/relocation-tools-types";
 import { VIZE_QUESTIONS } from "@/lib/germany-vize-data";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = supabase as any;
+ 
+const db = supabase;
 
 export type ToolCountKind = "question_bank" | "decision_tree" | "calculator";
 

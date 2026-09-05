@@ -29,8 +29,8 @@ import { ServiceRecommendationCard } from "@/components/relocation/ServiceRecomm
 import { BureaucracyTimeline } from "@/components/relocation/BureaucracyTimeline";
 import { EmergencyContactsPanel } from "@/components/relocation/EmergencyContactsPanel";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = supabase as any;
+ 
+const db = supabase;
 
 const SERVICE_CATEGORIES: RelocationServiceCategory[] = [
   "housing",

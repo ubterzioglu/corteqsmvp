@@ -57,8 +57,8 @@ const AdminRolesOverviewPage = () => {
           supabase.from("afs_attributes").select("key, label, description, data_type, sort_order").eq("is_active", true).order("sort_order"),
           supabase.from("afs_features").select("key, label, description, scope_role, sort_order").order("sort_order"),
           // afs_sections generated types'ta yok (B1) — B1 çözülünce cast kalkacak.
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (supabase as any).from("afs_sections").select("key, label, description, section_area, sort_order").eq("is_active", true).order("sort_order"),
+           
+          supabase.from("afs_sections").select("key, label, description, section_area, sort_order").eq("is_active", true).order("sort_order"),
           listAdminUnifiedRecords({ page: 1, pageSize: 100, filters: { kind: "", query: "", itemType: "", platformRoleKey: "", status: "", verificationStatus: "", city: "", countryCode: "" } }),
         ]);
 
@@ -138,8 +138,8 @@ const AdminRolesOverviewPage = () => {
             .select("feature_key, is_enabled")
             .eq("role_id", role.id),
           // role_sections generated types'ta yok (B1) — B1 çözülünce cast kalkacak.
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (supabase as any)
+           
+          supabase
             .from("role_sections")
             .select("is_enabled, afs_sections(key, label)")
             .eq("role_id", role.id),
