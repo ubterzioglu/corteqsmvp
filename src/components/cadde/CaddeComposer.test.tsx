@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -146,6 +147,42 @@ describe("CaddeComposer", () => {
     fireEvent.click(await screen.findByRole("button", { name: "😊" }));
 
     await waitFor(() => expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ body: "Merhaba 😊dunya" })));
+  });
+
+  // Revizyon 587595fa — "Paylaşım yaparken tagleme olayını netleştirelim".
+  //
+  // @mention ve #hashtag kod tarafında zaten çalışıyordu; eksik olan tek şey
+  // kullanıcıya bunu SÖYLEYEN satırdı. Bu testler o satırın (ve balonun) varlığını
+  // kilitler — silinirse özellik yine keşfedilemez hâle döner.
+  describe("etiketleme ipucu (587595fa)", () => {
+    it("metin alanının altında @ ve # ipucunu gösterir", () => {
+      renderComposer();
+
+      expect(screen.getByTestId("cadde-composer-tag-hint")).toHaveTextContent(
+        "@ ile üye etiketle, # ile konu etiketi ekle.",
+      );
+    });
+
+    it("kafe varyantında da görünür — etiketleme orada da çalışır", () => {
+      renderComposer({}, { variant: "cafe" });
+
+      expect(screen.getByTestId("cadde-composer-tag-hint")).toBeInTheDocument();
+      // Kafe varyantında konum çipi yoktur; ipucu ondan bağımsız çizilmelidir.
+      expect(screen.queryByRole("button", { name: "Konum" })).not.toBeInTheDocument();
+    });
+
+    it("balon kapalıyken içerik DOM'da yoktur, tıklanınca ayrıntı açılır", async () => {
+      const user = userEvent.setup();
+      renderComposer();
+
+      expect(screen.queryByTestId("cadde-composer-tag-info-content")).not.toBeInTheDocument();
+
+      await user.click(screen.getByTestId("cadde-composer-tag-info-trigger"));
+
+      const content = await screen.findByTestId("cadde-composer-tag-info-content");
+      expect(content).toHaveTextContent(/öneri listesi açılır/);
+      expect(content).toHaveTextContent(/konu etiketi eklersin/);
+    });
   });
 
   // m63 — "görsel yüklerken donma ve görüntüleme sorunları".

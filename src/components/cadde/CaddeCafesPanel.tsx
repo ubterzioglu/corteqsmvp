@@ -1,4 +1,10 @@
-// "Aktif Cafeler" paneli — workshop m66/m67/m68/m69 + m49 + m84.
+// "Cafeler" paneli — workshop m66/m67/m68/m69 + m49 + m84 + revizyon 2b9a8d04.
+//
+// 2b9a8d04 (toplantı kararı): başlık "Aktif Cafe Özeti" / "Aktif Cafeler" değil,
+// SEÇİLEN FİLTREYİ söyleyen biçim olacak — "Cafeler · Berlin (2)". Liste zaten
+// akışla aynı "Konum" kartının seçimini izliyordu (m70) ama bunu yalnız kart
+// açıklaması söylüyordu; başlık "aktif" diyerek yanlış bir ikinci boyut ("aktif
+// olmayan cafeler de var mı?") ima ediyordu. Seçim yokken kapsam "tüm konumlar".
 //
 // m84 (04.08.2026 kullanıcı kararı): panel orta kolondan SOL kolona taşındı; orta
 // kolon artık yalnız paylaşım kutusu + akış (m85). Taşınırken CaddePage'den kendi
@@ -35,6 +41,9 @@ const formatDateTime = (value: string) =>
 /** m69: akordeon açıkken ilk anda çizilen kafe satırı sayısı; gerisi tek tıkla açılır. */
 const CAFE_PREVIEW_COUNT = 3;
 
+/** Konum filtresi boşken başlıkta kapsamı adlandıran ifade (2b9a8d04). */
+export const CAFES_ALL_LOCATIONS_LABEL = "tüm konumlar";
+
 export interface CaddeCafesPanelProps {
   cafes: readonly CaddeCafe[];
   /** themeKey ham anahtar taşır — Türkçe etiket dışarıdan gelir (m4). */
@@ -64,6 +73,10 @@ const CaddeCafesPanel = ({
 }: CaddeCafesPanelProps) => {
   const visibleCafes = showAll ? cafes : cafes.slice(0, CAFE_PREVIEW_COUNT);
   const hiddenCount = cafes.length - visibleCafes.length;
+  // Başlık ve aria-label TEK kaynaktan üretilir; ikisi ayrı yazılırsa biri
+  // güncellenip diğeri unutuluyordu (eski hâlde ikisi de "Aktif Cafeler" idi).
+  const scopeLabel = locationLabel ?? CAFES_ALL_LOCATIONS_LABEL;
+  const headingText = `Cafeler · ${scopeLabel}`;
 
   return (
     <Collapsible open={open} onOpenChange={onOpenChange}>
@@ -75,10 +88,10 @@ const CaddeCafesPanel = ({
               <CardTitle className="flex items-center gap-1.5 font-display text-lg">
                 <CollapsibleTrigger
                   data-testid="cadde-cafes-toggle"
-                  aria-label={open ? "Aktif Cafeler bölümünü kapat" : "Aktif Cafeler bölümünü aç"}
+                  aria-label={`${headingText} bölümünü ${open ? "kapat" : "aç"}`}
                   className="inline-flex items-center gap-1.5 rounded-md transition hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
                 >
-                  Aktif Cafeler
+                  <span data-testid="cadde-cafes-heading">{headingText}</span>
                   {cafes.length > 0 ? (
                     <span className="text-sm font-normal text-slate-500">({cafes.length})</span>
                   ) : null}
@@ -101,16 +114,14 @@ const CaddeCafesPanel = ({
                 </CaddeInfoPopover>
               </CardTitle>
               {/* m70: kafelerin AYRI bir ülke/şehir filtresi YOK — liste, akışla aynı
-                  "Konum" kartındaki seçimi izler. Bu bağ yalnız BOŞ durumda görünüyordu
-                  ("X için henüz aktif bir cafe açılmadı"); liste doluyken kullanıcı
-                  listeyi filtreden bağımsız sanabiliyordu. Seçim varken başlık altı
-                  bunu açıkça söyler.
-                  Ayrı bir kafe filtresi bilinçli olarak EKLENMEDİ: ikinci bir konum
-                  durumu + URL parametresi demek ve bugünkü yerleşimde filtre kartı
-                  zaten kafe panelinin hemen üstünde duruyor. */}
+                  "Konum" kartındaki seçimi izler. Ayrı bir kafe filtresi bilinçli olarak
+                  EKLENMEDİ: ikinci bir konum durumu + URL parametresi demek ve bugünkü
+                  yerleşimde filtre kartı zaten kafe panelinin hemen üstünde duruyor.
+                  2b9a8d04: seçim adı artık BAŞLIKTA duruyor; buradaki cümle onu tekrar
+                  etmez, yalnız seçimin NEREDEN geldiğini söyler. */}
               <CardDescription>
                 {locationLabel
-                  ? `${locationLabel} için açık odalar — Konum kartındaki seçimi izler.`
+                  ? "Konum kartındaki seçimi izler."
                   : "Kısa süreli topluluk odaları ve tema bazlı buluşmalar"}
               </CardDescription>
             </div>

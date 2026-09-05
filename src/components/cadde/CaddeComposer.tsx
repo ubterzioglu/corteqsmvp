@@ -6,6 +6,11 @@
 // alanları (type/title/interests) ve caddePostCreateSchema enum'u aynen durur —
 // eski postların rozeti bozulmaz, etiketleme sade sürüm oturunca yeniden değerlendirilecek
 // (m13 veto/rezervde).
+//
+// DİKKAT — m13'ün kaldırdığı "Etiketler" AYRI BİR ALANDI (interests). Gövde içi
+// "@mention" ve "#hashtag" hiç kaldırılmadı, bugün de çalışıyor; 587595fa revizyonuyla
+// metin alanının altındaki ipucu satırı bunu görünür kılar. İkisini karıştırıp ipucunu
+// "m13 zaten kaldırmıştı" diyerek silme.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ImagePlus, Loader2, MapPin, Plus, Trash2, Video, type LucideIcon } from "lucide-react";
@@ -159,6 +164,35 @@ const CaddeComposer = ({
           ariaLabel="Paylaşım metni"
           className="resize-none border-0 bg-transparent px-0 text-base shadow-none focus-visible:ring-0"
         />
+
+        {/* Revizyon 587595fa: "@" mention (MentionTextarea + search_cadde_mentions_v1) ve
+            "#" hashtag (cadde-text.ts) ÇALIŞIYORDU ama composer'da bunu söyleyen tek
+            satır yoktu — özellik keşfedilemez olduğu için yok sayılıyordu. Konum ipucu
+            (aşağıda) ile AYNI desen: kısa satır + uzun anlatım balonu.
+            Satır her iki varyantta da çizilir: kafe içi paylaşımda da etiketleme çalışır. */}
+        <p
+          data-testid="cadde-composer-tag-hint"
+          className="flex items-start gap-1.5 text-xs leading-relaxed text-slate-500"
+        >
+          <span className="min-w-0">@ ile üye etiketle, # ile konu etiketi ekle.</span>
+          <CaddeInfoPopover
+            label="Etiketleme nasıl çalışır?"
+            triggerTestId="cadde-composer-tag-info-trigger"
+            contentTestId="cadde-composer-tag-info-content"
+            triggerClassName="shrink-0 text-orange-600 hover:bg-orange-100 hover:text-orange-800 focus-visible:ring-orange-500"
+          >
+            <p className="text-xs font-semibold text-slate-900">Etiketleme nasıl çalışır?</p>
+            <p className="text-xs leading-relaxed text-slate-600">
+              <strong>@</strong> yazıp en az iki harf girince öneri listesi açılır; üyeleri,
+              işletmeleri, cafe'leri ve Çarşı ilanlarını etiketleyebilirsin. Seçtiğin ad
+              paylaşımda bağlantıya dönüşür.
+            </p>
+            <p className="text-xs leading-relaxed text-slate-600">
+              <strong>#</strong> ile konu etiketi eklersin (ör. #İstanbul). Türkçe harfler
+              desteklenir; etikete tıklayan o konunun akışını görür.
+            </p>
+          </CaddeInfoPopover>
+        </p>
 
         <CaddeMediaPreviewStrip media={value.media} onRemove={handleRemove} disabled={isSubmitting} />
 
