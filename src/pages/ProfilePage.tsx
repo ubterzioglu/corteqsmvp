@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type ComponentType, type ReactNode } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
+  BadgeCheck,
   Briefcase,
   BookOpen,
   CheckCircle2,
@@ -46,7 +47,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCurrentUserProfile } from "@/hooks/useCurrentUserProfile";
 import { useCurrentUserDashboard } from "@/hooks/useCurrentUserDashboard";
 import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS, type GenericFeatureKey } from "@/lib/features";
-import { getReferralSourceOptions } from "@/lib/pending-onboarding-normalize";
+import { PHONE_ATTRIBUTE_KEY, PHONE_INVALID_MESSAGE, normalizePhoneE164 } from "@/lib/profile-phone";
 import {
   getMyReferralCodeUsage,
   submitFeatureRequest,
@@ -72,6 +73,8 @@ import ProfileSwitcherMenu from "@/components/profile/ProfileSwitcherMenu";
 import PremiumProfileTabs, { PREMIUM_TAB_KEYS } from "@/components/profile/premium/PremiumProfileTabs";
 import ProfileCompletionCard from "@/components/profile/premium/ProfileCompletionCard";
 import ProfilePublicPreviewCard from "@/components/profile/premium/ProfilePublicPreviewCard";
+import { ProfileInfoTip } from "@/components/profile/ProfileInfoTip";
+import { ProfilePhoneField } from "@/components/profile/ProfilePhoneField";
 import { useMemberCatalogSlug } from "@/hooks/useMemberCatalogSlug";
 import CaddeInterestsCard from "@/components/cadde/CaddeInterestsCard";
 import CaddeMyContentCard from "@/components/cadde/CaddeMyContentCard";
@@ -200,11 +203,16 @@ const PRIVATE_ONLY_ONBOARDING_ATTRIBUTE_KEYS = new Set([
   REFERRAL_CODE_ATTRIBUTE_KEY,
   REFERRAL_SOURCE_ATTRIBUTE_KEY,
 ]);
+// WS1 madde 4 (T19): "Bizi nereden buldunuz?" kayıt akışından tamamen kaldırıldı.
+// Attribute canlıda pasif (mig 20260904200000); eski veri taşıyan bir profilde bile
+// düzenleyici gösterilmez.
 const HIDDEN_ROLE_SPECIFIC_ATTRIBUTE_KEYS = new Set([
   "full_name",
   "interests",
+  REFERRAL_SOURCE_ATTRIBUTE_KEY,
 ]);
 const SPECIAL_PROFILE_ATTRIBUTE_KEYS = new Set([
+  PHONE_ATTRIBUTE_KEY,
   PROFILE_PHOTO_ATTRIBUTE_KEY,
   LINKEDIN_ATTRIBUTE_KEY,
   WEBSITE_ATTRIBUTE_KEY,
@@ -214,6 +222,9 @@ const SPECIAL_PROFILE_ATTRIBUTE_KEYS = new Set([
   CV_DOCUMENT_ATTRIBUTE_KEY,
   PRESENTATION_DOCUMENT_ATTRIBUTE_KEY,
 ]);
+// WS1 madde 2 (T19): profil tipi kullanıcıya net görünsün — çip + açıklama.
+const PROFILE_TYPE_TIP =
+  "Profil tipin hangi alanları doldurabileceğini ve hangi özellikleri kullanabileceğini belirler. Değiştirmek için aşağıdaki \"Başvurular & Erişimler\" kartından rol başvurusu yap.";
 const AVATARS_BUCKET = "avatars";
 const PROFILE_CV_BUCKET = "profile-cv-files";
 const PROFILE_PRESENTATION_BUCKET = "profile-presentation-files";
@@ -416,6 +427,7 @@ const ProfilePage = () => {
   const [socialMediaAllVisible, setSocialMediaAllVisible] = useState(true);
   const [commonAttributesAllVisible, setCommonAttributesAllVisible] = useState(true);
   const [savingAttributeKey, setSavingAttributeKey] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
   const [savingCommonAttributes, setSavingCommonAttributes] = useState(false);
   const [savingSocialMedia, setSavingSocialMedia] = useState(false);
   const [savingRoleSpecificAttributes, setSavingRoleSpecificAttributes] = useState(false);
@@ -570,6 +582,8 @@ const ProfilePage = () => {
     return new Map((profile?.attributes ?? []).map((attribute) => [attribute.attributeKey, attribute]));
   }, [profile?.attributes]);
   const displayNameAttribute = attributeMap.get("full_name") ?? null;
+  // WS1 madde 1: telefon kuralı role_attributes'ta yoksa alan hiç çizilmez (RPC döndürmez).
+  const phoneAttribute = attributeMap.get(PHONE_ATTRIBUTE_KEY) ?? null;
 
   const readAttributeValue = useCallback((attributeKey: string) => {
     const attribute = attributeMap.get(attributeKey);
@@ -617,7 +631,9 @@ const ProfilePage = () => {
         .join("")
     ) || "CQ";
   const pendingCount = profile?.pendingRequests.length ?? 0;
+  const profileTypeLabel = profile?.roleLabel ?? roleMeta?.adminLabel ?? "Bireysel";
   const completionHighlights = [
+    ...(phoneAttribute ? [{ key: PHONE_ATTRIBUTE_KEY, label: "Telefon" }] : []),
     { key: "full_name", label: roleMeta?.displayNameLabel ?? "Görünen isim" },
     { key: "country", label: "Ülke" },
     { key: "city", label: "Şehir" },
@@ -634,6 +650,7 @@ const ProfilePage = () => {
       checked: readBooleanAttributeValue(jobSeekingOptInAttribute),
       title: "İş Arıyorum Badge'i",
       description: "Profilinde \"İş Arıyorum\" etiketi görünür.",
+      info: "Açıkken herkese açık profilinde ve Cadde'de \"İş Arıyorum\" rozeti görünür; işverenler ve topluluk seni bu rozetle bulur. İstediğin zaman kapatabilirsin.",
       icon: Briefcase,
       toneClassName: GOOGLE_SOFT_CARD_SUBTLE,
     },
@@ -643,6 +660,7 @@ const ProfilePage = () => {
       checked: readBooleanAttributeValue(movingSoonOptInAttribute),
       title: "Yakında Taşınacağım",
       description: "Profilinde yakında taşınacağını belirten rozet görünür.",
+      info: "Yeni bir şehre ya da ülkeye taşınmayı planladığını gösterir. Taşınma araçları ve hedef şehirdeki üyeler için eşleştirme sinyalidir.",
       icon: Plane,
       toneClassName: GOOGLE_SOFT_WARNING_PANEL,
     },
@@ -652,6 +670,7 @@ const ProfilePage = () => {
       checked: readBooleanAttributeValue(volunteerMentorshipOptInAttribute),
       title: "Gönüllü Mentörlük",
       description: "Açıldığında profilinden gönüllü mentör görünürlüğü aktif olur.",
+      info: "Topluluğa gönüllü mentörlük verebileceğini duyurur; profilinde mentör rozeti görünür ve mentör arayan üyeler sana ulaşabilir.",
       icon: UserCheck,
       toneClassName: GOOGLE_SOFT_SUCCESS_PANEL,
     },
@@ -967,6 +986,37 @@ const ProfilePage = () => {
     } catch (error) {
       toast({
         title: "Alan kaydedilemedi",
+        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingAttributeKey(null);
+    }
+  };
+
+  // WS1 madde 1: telefon her zaman private yazılır; biçim E.164'e indirgenir.
+  // Ülke bilgisi numaradan TÜRETİLMEZ (madde 10) — yalnız biçim doğrulanır.
+  const handleSavePhone = async () => {
+    if (!phoneAttribute) return;
+    const normalized = normalizePhoneE164(draftText(PHONE_ATTRIBUTE_KEY));
+    if (!normalized) {
+      setPhoneError(PHONE_INVALID_MESSAGE);
+      return;
+    }
+
+    setPhoneError(null);
+    setSavingAttributeKey(PHONE_ATTRIBUTE_KEY);
+    try {
+      await updateProfileAttribute(PHONE_ATTRIBUTE_KEY, normalized, "private");
+      handleDraftChange(PHONE_ATTRIBUTE_KEY, normalized);
+      await refreshProfile();
+      toast({
+        title: "Telefon kaydedildi",
+        description: "Numaran yalnız sana ve yöneticilere görünür; herkese açık profilde gösterilmez.",
+      });
+    } catch (error) {
+      toast({
+        title: "Telefon kaydedilemedi",
         description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
         variant: "destructive",
       });
@@ -1475,6 +1525,11 @@ const ProfilePage = () => {
                     <span className="inline-flex items-center gap-1.5">
                       <UserCircle2 className="h-3.5 w-3.5" /> {profile?.email ?? user?.email ?? "-"}
                     </span>
+                    <span className="inline-flex items-center gap-1.5" data-testid="profile-type-chip">
+                      <BadgeCheck className="h-3.5 w-3.5 text-emerald-600" /> Profil tipi:
+                      <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">{profileTypeLabel}</Badge>
+                      <ProfileInfoTip label="Profil tipi" text={PROFILE_TYPE_TIP} />
+                    </span>
                     {locationLabel ? (
                       <span className="inline-flex items-center gap-1.5">
                         <MapPin className="h-3.5 w-3.5" /> {locationLabel}
@@ -1497,8 +1552,10 @@ const ProfilePage = () => {
             <CardHeader className="flex flex-col gap-3 pb-3 md:flex-row md:items-center md:justify-between">
               <div className="space-y-1">
                 <CardTitle className="text-[11px]">{roleMeta?.title ?? "Profilim"}</CardTitle>
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <Badge variant="secondary" className="text-[11px]">{profile?.roleLabel ?? roleMeta?.adminLabel ?? "Rol"}</Badge>
+                <div className="flex flex-wrap items-center gap-1.5" data-testid="profile-type-chip">
+                  <span className="text-[11px] text-muted-foreground">Profil tipi:</span>
+                  <Badge variant="secondary" className="text-[11px]">{profileTypeLabel}</Badge>
+                  <ProfileInfoTip label="Profil tipi" text={PROFILE_TYPE_TIP} />
                   <Badge variant="outline" className="text-[11px]">Tamamlanma %{profile?.profileCompletion.percentage ?? 0}</Badge>
                   {errorMessage ? <Badge variant="destructive" className="text-[11px]">Kısmi veri yüklendi</Badge> : null}
                 </div>
@@ -1546,6 +1603,10 @@ const ProfilePage = () => {
             <CardContent id="profile-summary-content" className="pt-0 pb-4">
               <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-6">
                 <div className={`flex items-center gap-2 rounded-[20px] px-2.5 py-1.5 text-[11px] ${GOOGLE_SOFT_CARD_SUBTLE}`}>
+                  <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Profil Tipi</p>
+                  <p className="font-bold text-slate-950">{profileTypeLabel}</p>
+                </div>
+                <div className={`flex items-center gap-2 rounded-[20px] px-2.5 py-1.5 text-[11px] ${GOOGLE_SOFT_CARD_SUBTLE}`}>
                   <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Profil Skoru</p>
                   <p className="font-bold text-slate-950">%{profile?.profileCompletion.percentage ?? 0}</p>
                 </div>
@@ -1576,6 +1637,26 @@ const ProfilePage = () => {
                 <CardTitle className="text-[11px]">Profil Alanları</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
+                {phoneAttribute ? (
+                  <>
+                    <ProfilePhoneField
+                      value={draftText(PHONE_ATTRIBUTE_KEY)}
+                      error={phoneError}
+                      isRequired={phoneAttribute.isRequired}
+                      isSaving={savingAttributeKey === PHONE_ATTRIBUTE_KEY}
+                      canEdit={phoneAttribute.userCanEdit}
+                      onChange={(nextValue) => {
+                        if (phoneError) setPhoneError(null);
+                        handleDraftChange(PHONE_ATTRIBUTE_KEY, nextValue);
+                      }}
+                      onSave={() => void handleSavePhone()}
+                      saveButtonClassName={AMBER_BUTTON_PRIMARY}
+                      lockPanelClassName={GOOGLE_SOFT_SWITCH_PANEL}
+                    />
+                    <Separator className="my-2" />
+                  </>
+                ) : null}
+
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1.5 shrink-0 w-32">
                     <span className="text-[10px] font-medium text-foreground truncate">{roleMeta?.displayNameLabel ?? "Görünen İsim"}</span>
@@ -1696,6 +1777,7 @@ const ProfilePage = () => {
                     key={item.key}
                     title={item.title}
                     description={item.description}
+                    info={item.info}
                     checked={item.checked}
                     toneClassName={item.toneClassName}
                     icon={item.icon}
@@ -1710,10 +1792,12 @@ const ProfilePage = () => {
   const interestsAttribute = attributeMap.get("interests") ?? null;
   const caddeCards = (
     <>
+      {/* WS1 madde 5 (T19 kararı): ilgi alanları herkese açık. Kural role_attributes'ta
+          (user_can_hide=false, mig 20260904200000); kural yoksa da varsayılan "gizlenemez". */}
       <CaddeInterestsCard
         onSaved={() => void refreshProfile()}
         visibility={interestsAttribute?.visibility ?? "public"}
-        canHide={interestsAttribute?.userCanHide ?? true}
+        canHide={interestsAttribute?.userCanHide ?? false}
       />
       <CaddeMyContentCard />
       <CaddeTanitimPanel />
@@ -1791,7 +1875,8 @@ const ProfilePage = () => {
                 attribute={linkedinAttribute}
                 cardClassName={GOOGLE_SOFT_CARD_BLUE_SECTION}
                 title="LinkedIn"
-                description="LinkedIn profil linkini ayrı kartta yönet ve istersen public göster."
+                description="Opsiyonel — ama şiddetle tavsiye ederiz: LinkedIn profilin, eşleştirme ve ağ önerilerinin en güçlü kaynağı."
+                recommended
                 icon={Linkedin}
                 iconClassName="text-sky-700"
                 draftValue={draftValues[linkedinAttribute.attributeKey]}
@@ -2199,7 +2284,8 @@ const ProfilePage = () => {
           displayName={displayName}
           initials={initials}
           avatarUrl={currentAvatarUrl || null}
-          roleLabel={profile?.roleLabel ?? null}
+          roleLabel={profileTypeLabel}
+          roleTip={PROFILE_TYPE_TIP}
           eyebrow={presentation.eyebrow}
           email={profile?.email ?? user?.email ?? null}
           locationLabel={locationLabel || null}
@@ -2514,6 +2600,8 @@ const ProfileAttributeEditor = ({
 type PreferenceToggleCardProps = {
   title: string;
   description: string;
+  /** WS1 madde 3: rozetin ne yaptığını anlatan (i) balonu. */
+  info?: string;
   checked: boolean;
   disabled: boolean;
   toneClassName: string;
@@ -2524,6 +2612,7 @@ type PreferenceToggleCardProps = {
 const PreferenceToggleCard = ({
   title,
   description,
+  info,
   checked,
   disabled,
   toneClassName,
@@ -2536,7 +2625,10 @@ const PreferenceToggleCard = ({
         <div className="flex items-start gap-2">
           <Icon className="mt-0.5 h-4 w-4 text-foreground" />
           <div>
-            <p className="text-[11px] font-medium text-foreground">{title}</p>
+            <p className="flex items-center gap-1 text-[11px] font-medium text-foreground">
+              {title}
+              {info ? <ProfileInfoTip label={title} text={info} /> : null}
+            </p>
             <p className="text-[11px] text-muted-foreground">{description}</p>
           </div>
         </div>
@@ -2551,6 +2643,8 @@ type StandaloneLinkAttributeCardProps = {
   cardClassName?: string;
   title: string;
   description: string;
+  /** WS1 madde 6: opsiyonel ama şiddetle tavsiye edilen alan — "Tavsiye edilir" rozeti. */
+  recommended?: boolean;
   icon: ComponentType<{ className?: string }>;
   iconClassName: string;
   draftValue: string | boolean | undefined;
@@ -2566,6 +2660,7 @@ const StandaloneLinkAttributeCard = ({
   cardClassName,
   title,
   description,
+  recommended = false,
   icon: Icon,
   iconClassName,
   draftValue,
@@ -2583,7 +2678,17 @@ const StandaloneLinkAttributeCard = ({
         <CardTitle className="flex items-center gap-2 text-[11px]">
           <Icon className={`h-4 w-4 ${iconClassName}`} />
           {title}
+          {recommended ? (
+            <Badge variant="secondary" className="px-1.5 py-0 text-[9px] text-sky-800">
+              Tavsiye edilir
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="px-1.5 py-0 text-[9px] text-muted-foreground">
+              Opsiyonel
+            </Badge>
+          )}
         </CardTitle>
+        <CardDescription className="text-[11px]">{description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-0">
         <div className="flex items-center gap-2">
@@ -2696,24 +2801,6 @@ const AttributeInput = ({ attribute, value, onChange, compact = false }: Attribu
         <p className={`${compact ? "text-[11px]" : "text-[11px]"} font-medium`}>{attribute.label}</p>
         <Switch checked={Boolean(value)} onCheckedChange={(checked) => onChange(checked)} />
       </div>
-    );
-  }
-
-  if (attribute.dataType === "select" && attribute.attributeKey === REFERRAL_SOURCE_ATTRIBUTE_KEY) {
-    return (
-      <Select value={typeof value === "string" && value.trim() ? value : "__empty__"} onValueChange={(nextValue) => onChange(nextValue === "__empty__" ? "" : nextValue)}>
-        <SelectTrigger className={compact ? "h-9 text-[10px]" : undefined}>
-          <SelectValue placeholder={attribute.label} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="__empty__">Seçiniz...</SelectItem>
-          {getReferralSourceOptions().map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
     );
   }
 

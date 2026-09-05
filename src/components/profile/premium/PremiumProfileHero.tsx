@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Bell, ExternalLink, HelpCircle, ImagePlus, LogOut, MapPin, Mail, Settings, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import { ProfileInfoTip } from "@/components/profile/ProfileInfoTip";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -15,6 +16,11 @@ type PremiumProfileHeroProps = {
   initials: string;
   avatarUrl: string | null;
   roleLabel: string | null;
+  /**
+   * WS1 madde 2 (T19): profil tipi kullanıcıya net görünsün — rozet "Profil tipi:"
+   * etiketiyle çizilir ve verilirse (i) balonunda bu açıklama gösterilir.
+   */
+  roleTip?: string;
   eyebrow: string | null;
   email: string | null;
   locationLabel: string | null;
@@ -50,6 +56,7 @@ const PremiumProfileHero = ({
   initials,
   avatarUrl,
   roleLabel,
+  roleTip,
   eyebrow,
   email,
   locationLabel,
@@ -98,9 +105,13 @@ const PremiumProfileHero = ({
               {displayName}
             </h1>
             {roleLabel ? (
-              <Badge variant="outline" className="rounded-full text-xs font-medium">
-                {roleLabel}
-              </Badge>
+              <span className="inline-flex items-center gap-1.5" data-testid="profile-type-chip">
+                <span className="text-xs text-muted-foreground">Profil tipi:</span>
+                <Badge variant="outline" className="rounded-full text-xs font-medium">
+                  {roleLabel}
+                </Badge>
+                {roleTip ? <ProfileInfoTip label="Profil tipi" text={roleTip} /> : null}
+              </span>
             ) : null}
             <Badge className="rounded-full border-violet-500/30 bg-violet-500/15 text-xs font-medium text-violet-700 dark:text-violet-400">
               Tamamlanma %{completionPercentage}

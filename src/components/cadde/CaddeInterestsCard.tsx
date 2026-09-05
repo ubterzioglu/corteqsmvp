@@ -114,6 +114,9 @@ const CaddeInterestsCard = ({ onSaved, visibility = "public", canHide = true }: 
         </CardTitle>
         <CardDescription className="text-[11px]">
           Cadde akışın bu seçimlere göre kişiselleşir; şehrindeki eşleşen ihtiyaçlar üstte görünür.
+          {canHide
+            ? null
+            : " İlgi alanların herkese açık görünür — eşleştirme ve ağ önerileri bunlarla çalışır."}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -137,19 +140,30 @@ const CaddeInterestsCard = ({ onSaved, visibility = "public", canHide = true }: 
           })}
         </div>
         <div className="flex items-center justify-end gap-2">
-          <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2" style={{ height: "32px" }}>
-            {draftVisibility === "public" ? (
-              <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
-            ) : (
-              <EyeOff className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-            )}
-            <Switch
-              checked={draftVisibility === "public"}
-              disabled={!canHide}
-              onCheckedChange={(checked) => setDraftVisibility(checked ? "public" : "private")}
-              aria-label="İlgi alanları görünürlük"
-            />
-          </div>
+          {canHide ? (
+            <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2" style={{ height: "32px" }}>
+              {draftVisibility === "public" ? (
+                <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
+              ) : (
+                <EyeOff className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+              )}
+              <Switch
+                checked={draftVisibility === "public"}
+                onCheckedChange={(checked) => setDraftVisibility(checked ? "public" : "private")}
+                aria-label="İlgi alanları görünürlük"
+              />
+            </div>
+          ) : (
+            // WS1 madde 5 (T19 kararı): ilgi alanları herkese açık — anahtar yerine sabit rozet.
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 text-[11px] font-medium text-emerald-800"
+              style={{ height: "32px" }}
+              title="İlgi alanları herkese açık; gizlenemez"
+            >
+              <Eye className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              Herkese açık
+            </span>
+          )}
           <Button size="sm" onClick={() => saveMutation.mutate()} disabled={!isDirty || saveMutation.isPending}>
             {saveMutation.isPending ? "Kaydediliyor..." : "İlgi Alanlarını Kaydet"}
           </Button>

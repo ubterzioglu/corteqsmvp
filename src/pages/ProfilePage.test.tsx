@@ -111,6 +111,26 @@ describe("ProfilePage", () => {
     ],
     attributes: [
       {
+        // WS1 madde 1: telefon kuralı (mig 20260904200000) — private, gizlenemez değil
+        // (RPC user_can_hide=false'ta private'ı reddeder), her zaman private yazılır.
+        attributeKey: "phone",
+        label: "Telefon",
+        description: "Telefon numarası",
+        dataType: "phone",
+        isSystem: false,
+        sortOrder: 5,
+        isRequired: true,
+        isPublicDefault: false,
+        userCanEdit: true,
+        userCanHide: true,
+        requiresAdminApprovalOnChange: false,
+        visibility: "private",
+        approvalStatus: "approved",
+        valueText: "+49 170 1234567",
+        valueJson: null,
+        displayValue: "+49 170 1234567",
+      },
+      {
         attributeKey: "full_name",
         label: "Görünen İsim",
         description: "Profil ismi",
@@ -898,11 +918,14 @@ describe("ProfilePage", () => {
     expect(roleCardScope.getByText("İşletme / Kuruluş")).toBeInTheDocument();
     expect(roleCardScope.getByText("İştigal / İlgi Sahası")).toBeInTheDocument();
     expect(roleCardScope.queryByRole("switch", { name: /Referral Kodu görünürlük/i })).not.toBeInTheDocument();
-    expect(roleCardScope.queryByRole("switch", { name: /Bizi nereden buldunuz\\? görünürlük/i })).not.toBeInTheDocument();
     expect(roleCardScope.getByRole("switch", { name: /İşletme \/ Kuruluş görünürlük/i })).toBeInTheDocument();
     expect(roleCardScope.getByRole("switch", { name: /İştigal \/ İlgi Sahası görünürlük/i })).toBeInTheDocument();
     expect(roleCardScope.queryByText("Rol özel alan")).not.toBeInTheDocument();
     expect(roleCardScope.queryByText("Referral alanı")).not.toBeInTheDocument();
+    // WS1 madde 4: "Bizi nereden buldunuz?" hiçbir yerde çizilmez (eski veri taşısa bile).
+    expect(screen.queryByText("Bizi nereden buldunuz?")).not.toBeInTheDocument();
+    // WS1 madde 1: telefon rol-özel karta DÜŞMEZ, kendi satırında durur.
+    expect(roleCardScope.queryByDisplayValue("+49 170 1234567")).not.toBeInTheDocument();
 
     fireEvent.click(roleCardButton);
 
@@ -911,10 +934,95 @@ describe("ProfilePage", () => {
         "business_or_organization",
         "interest_focus",
         "referral_code",
-        "referral_source",
       ]);
     });
 
     expect(refreshProfileMock).toHaveBeenCalled();
+  });
+
+  // ── Profil Workshop WS1 (T19, 3 Eylül 2026) ──────────────────────────────────
+
+  const mountBireysel = (refreshProfile = vi.fn().mockResolvedValue(undefined)) => {
+    useAuthMock.mockReturnValue({
+      user: { id: "u-1", email: "firmascope@gmail.com", user_metadata: { name: "firmascope" } },
+    });
+    useCurrentUserDashboardMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      items: [],
+      refreshDashboard: vi.fn(),
+    });
+    useCurrentUserProfileMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      profile: baseProfile,
+      refreshProfile,
+    });
+    renderProfilePage("/profile/bireysel");
+    return refreshProfile;
+  };
+
+  it("WS1-1: telefon Profil Alanları kartının ilk kutusudur; E.164'e indirgenip private kaydedilir", async () => {
+    const refreshProfileMock = mountBireysel();
+
+    const fieldsCard = screen.getByText("Profil Alanları").closest("div[class*='rounded']") as HTMLElement | null;
+    expect(fieldsCard).not.toBeNull();
+    const firstInput = within(fieldsCard as HTMLElement).getAllByRole("textbox")[0];
+    expect(firstInput).toHaveAttribute("aria-label", "Telefon");
+    expect(firstInput).toHaveValue("+49 170 1234567");
+    // Görünürlük anahtarı yok, kilit rozeti var.
+    expect(screen.queryByRole("switch", { name: /Telefon görünürlük/i })).not.toBeInTheDocument();
+    expect(screen.getByText("Yalnız sen")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Telefon hakkında bilgi" })).toBeInTheDocument();
+
+    fireEvent.change(firstInput, { target: { value: "0049 (170) 765-4321" } });
+    fireEvent.click(screen.getByRole("button", { name: "Telefonu Kaydet" }));
+
+    await waitFor(() => {
+      expect(updateProfileAttributeMock).toHaveBeenCalledWith("phone", "+491707654321", "private");
+    });
+    expect(refreshProfileMock).toHaveBeenCalled();
+  });
+
+  it("WS1-1: ülke kodu olmayan telefonu satır içi hatayla reddeder, RPC çağırmaz", async () => {
+    mountBireysel();
+
+    const phoneInput = screen.getByRole("textbox", { name: "Telefon" });
+    fireEvent.change(phoneInput, { target: { value: "0170 1234567" } });
+    fireEvent.click(screen.getByRole("button", { name: "Telefonu Kaydet" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(/ülke koduyla başlamalı/i);
+    expect(updateProfileAttributeMock).not.toHaveBeenCalled();
+
+    // Yazmaya devam edince hata kalkar, ipucu geri gelir.
+    fireEvent.change(phoneInput, { target: { value: "+49 170" } });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("WS1-2: bireysel kullanıcı profil tipini çip ve açıklama ikonuyla görür", () => {
+    mountBireysel();
+
+    const chip = screen.getAllByTestId("profile-type-chip")[0];
+    expect(chip).toHaveTextContent("Profil tipi:");
+    expect(within(chip).getByText("Bireysel")).toBeInTheDocument();
+    expect(within(chip).getByRole("button", { name: "Profil tipi hakkında bilgi" })).toBeInTheDocument();
+  });
+
+  it("WS1-3: her rozetin yanında açıklama veren bilgi (i) ikonu vardır", () => {
+    mountBireysel();
+
+    expect(screen.getByRole("button", { name: "İş Arıyorum Badge'i hakkında bilgi" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Yakında Taşınacağım hakkında bilgi" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Gönüllü Mentörlük hakkında bilgi" })).toBeInTheDocument();
+  });
+
+  it("WS1-6: LinkedIn kartı opsiyonel kalır ama 'Tavsiye edilir' rozeti ve gerekçesiyle gelir", () => {
+    mountBireysel();
+
+    expect(screen.getByText("Tavsiye edilir")).toBeInTheDocument();
+    expect(screen.getByText(/şiddetle tavsiye ederiz/i)).toBeInTheDocument();
+    // Web sitesi kartı düz opsiyonel — tavsiye rozeti yalnız LinkedIn'de (tek adet).
+    expect(screen.getAllByText("Opsiyonel").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Tavsiye edilir")).toHaveLength(1);
   });
 });
