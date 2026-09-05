@@ -165,7 +165,7 @@ suçsuz, cwd suçlu**.
 | tsc | 22 (taban, artmadı) |
 | Build | yeşil |
 | Migration | 383 dosya / 383 canlı kayıt, sapma yok |
-| Dal | `main`, `2455860`'e kadar push edildi; `dea913c` push bekliyor |
+| Dal | `main`, **`d5f7d4f`'e kadar push edildi** (uzak `git ls-remote` ile doğrulandı) |
 
 ⚠️ `public/sitemap.xml` (yalnız `lastmod` tazelenmesi) ve
 `docs/status/mevcut-profil-yapisi-raporu-2026-08-20-sade-anlatim.html` çalışma dizininde
