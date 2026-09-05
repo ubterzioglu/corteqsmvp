@@ -18,6 +18,7 @@
 // "Tekrar Çöz" bu kuralın dışında: her zaman aktif buton.
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { rememberToolResult } from "@/lib/relocation-result-return";
 import { resolveCta, TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
 import type { ToolCta } from "@/lib/relocation-tools-types";
 
@@ -43,6 +44,24 @@ function toInternalHref(href: string | undefined): string {
   return href;
 }
 
+/**
+ * CTA'ya basmadan ÖNCE sonucun yerini bırak (revizyon 0838da0b) — hedef sayfada
+ * `ToolResultReturnBar` bunu okuyup "Test sonucuna dön" şeridini çizer.
+ *
+ * NEDEN `useLocation()` DEĞİL de `window.location`: sonuç adresini `RelocationToolPage`
+ * doğrudan `window.history.replaceState` ile yazıyor ve bu react-router'ın location'ını
+ * GÜNCELLEMEZ — `useLocation().pathname` hâlâ `/tools/:slug` derdi ve iz yanlış adrese
+ * çıkardı. Adres çubuğundaki gerçek değer yalnız `window.location`'da.
+ *
+ * `/result/` içermeyen bir yolda hiç iz bırakılmaz: sonuç henüz kalıcı adrese
+ * taşınmadıysa yarım bir şerit üretmektense hiç üretmemek doğrudur.
+ */
+function rememberCurrentResult(): void {
+  const pathname = window.location.pathname;
+  if (!pathname.includes("/result/")) return;
+  rememberToolResult({ href: pathname });
+}
+
 export function ResultCtaPanel({ ctas, onCtaClick, onRetake }: ResultCtaPanelProps) {
   if (ctas.length === 0 && !onRetake) return null;
   return (
@@ -58,7 +77,10 @@ export function ResultCtaPanel({ ctas, onCtaClick, onRetake }: ResultCtaPanelPro
             asChild
             variant="outline"
             className={CELL_CLASS}
-            onClick={() => onCtaClick?.(cta)}
+            onClick={() => {
+              rememberCurrentResult();
+              onCtaClick?.(cta);
+            }}
           >
             <Link to={toInternalHref(cta.href)}>
               <span>{label}</span>

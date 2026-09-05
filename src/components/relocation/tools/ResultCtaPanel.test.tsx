@@ -5,11 +5,12 @@
 // yani canlı regresyonu (revizyon 9eaba8da) test yeşil kalarak koruyordu. Testler
 // artık doğru davranışı kilitler: her CTA gezilebilir bir <a>, href'i App.tsx'te
 // gerçekten var olan bir rotaya işaret eder ve "Yakında" rozeti hiç çıkmaz.
-import { describe, it, expect, vi } from "vitest";
+import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { ResultCtaPanel } from "@/components/relocation/tools/ResultCtaPanel";
+import { readToolResultReturn } from "@/lib/relocation-result-return";
 import type { ToolCta } from "@/lib/relocation-tools-types";
 
 const CTAS: ToolCta[] = [
@@ -102,5 +103,42 @@ describe("ResultCtaPanel", () => {
       </MemoryRouter>,
     );
     expect(container).toBeEmptyDOMElement();
+  });
+
+  // Revizyon 0838da0b: CTA kullanıcıyı başka sayfaya götürüyordu ve orada test
+  // sonucuna dönmenin hiçbir yolu yoktu. Panel, ayrılmadan önce sonucun yerini
+  // bırakır; şeridi `ToolResultReturnBar` çizer.
+  describe("sonuca dönüş izi", () => {
+    beforeEach(() => {
+      window.sessionStorage.clear();
+      window.history.replaceState({}, "", "/tools/city-match/result/abc-123");
+    });
+
+    afterEach(() => {
+      window.history.replaceState({}, "", "/");
+    });
+
+    it("CTA'ya tıklanınca sonucun adresini bırakır", async () => {
+      const user = userEvent.setup();
+      renderPanel({ ctas: CTAS });
+
+      await user.click(screen.getAllByRole("link")[0]);
+
+      expect(readToolResultReturn("/directory")).toEqual({
+        href: "/tools/city-match/result/abc-123",
+        toolLabel: "",
+      });
+    });
+
+    it("sonuç kalıcı adrese taşınmadıysa HİÇ iz bırakmaz", async () => {
+      // Adres hâlâ araç sayfası: yarım bir şerit üretmektense hiç üretme.
+      window.history.replaceState({}, "", "/tools/city-match");
+      const user = userEvent.setup();
+      renderPanel({ ctas: CTAS });
+
+      await user.click(screen.getAllByRole("link")[0]);
+
+      expect(readToolResultReturn("/directory")).toBeNull();
+    });
   });
 });
