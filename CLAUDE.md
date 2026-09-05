@@ -99,16 +99,24 @@ npm run test -- src/lib/muhasebe-api.test.ts  # Run single test file
 
 ### Authentication & Roles
 
-**Canonical auth + a backward-compat shim**
+**Tek auth sistemi — shim 2026-09-06'da KALDIRILDI (B5 kapandı)**
 
-| | `src/components/auth/` | `src/contexts/AuthContext.tsx` |
-|---|---|---|
-| Mounted in App.tsx | **YES** (canonical) | N/A — re-exports the canonical `AuthProvider` |
-| Role | Source of truth (`session`, `user`, `isLoading`) | **Backward-compat shim**: `useAuth` delegates to canonical; provides a correct `loading` alias |
+Auth için **tek yol** vardır: `src/components/auth/`.
+- `AuthProvider` App.tsx'te mount edilir; `useAuth` → `@/components/auth/useAuth`
+  → `@/components/auth/auth-context`.
+- Sözleşme yüzeyi: `session · user · isLoading · profile · accountType ·
+  onboardingCompleted · signOut · refreshProfile`.
+- **`loading` diye bir alan YOKTUR** — `isLoading` kullan.
 
-`src/contexts/AuthContext.tsx` is **not** an orphan. It is a backward-compatibility shim: its `useAuth` delegates to the canonical `@/components/auth/useAuth`, and it re-exports the canonical `AuthProvider`. The `loading` field is a correct alias for `isLoading`. **21 files still import from this shim** (measured 2026-08-04) and see real session state.
+~~`src/contexts/AuthContext.tsx`~~ backward-compat shim'i **silindi**; onu import eden
+16 dosya kanonik yola geçirildi. Göç risksiz çıktı çünkü shim'in kattığı tek şey
+`loading` alias'ıydı ve ölçüldüğünde **hiçbir dosya onu kullanmıyordu** (hepsi yalnız
+`{ user }`, biri ayrıca `refreshProfile` alıyordu).
 
-**Migration (deferred, low-risk):** point those 21 imports at `@/components/auth/useAuth` (rename `loading`→`isLoading` where used), then delete the shim once imports hit 0. See `docs/refactor/2026-06-09-refactor-backlog.md` (B5).
+⚠️ **Test yazarken:** `vi.mock` yolu bileşenin GERÇEKTEN import ettiği yol olmalı —
+`@/components/auth/useAuth`. Yanlış yolu mock'lamak sessizce hiçbir şeyi değiştirmez
+ve test gerçek provider'ı arayıp `"useAuth must be used within AuthProvider"` ile
+patlar. (`MessagesInbox.test.tsx` tam olarak bu yüzden güncellendi.)
 
 The canonical `useAuth` lives in `src/components/auth/useAuth.ts` → reads from `src/components/auth/auth-context.ts`. For new code, always import from here.
 
@@ -695,9 +703,10 @@ belong there; documentation goes under `docs/`.
    `@/lib/mapEntities` and `html-to-image` problems were real, and the 5 dead pages that caused
    them were deleted 2026-08-04 (`MapSearch`, `PostGenerator`, `CityNews`, `WhatsAppGroupLanding`,
    `WhatsAppGroups` — all had zero importers and no route).
-2. **Auth shim migration (B5)** → **18** imports of `@/contexts/AuthContext` (ölçüldü 2026-09-05,
-   21 değil); migrate to canonical `@/components/auth/useAuth` (`loading`→`isLoading`), then delete
-   the shim. Mekanik ve düşük riskli.
+2. ~~**Auth shim migration (B5)**~~ → **KAPANDI 2026-09-06.** 16 dosya kanonik
+   `@/components/auth/useAuth` yoluna geçirildi, `src/contexts/AuthContext.tsx` silindi.
+   Belgelenen `loading`→`isLoading` riski hiç gerçekleşmedi: alias'ı kullanan dosya yoktu.
+   Ayrıntı ve test tuzağı için "Authentication & Roles" bölümüne bak.
 3. **Mixed data fetching (B6)** → **32** `supabase.from(` + **4** `supabase.rpc(` calls still sit
    inside components (ölçüldü 2026-09-05; eski iddia 83+42 idi). Standardize on `*-api.ts` +
    React Query.
