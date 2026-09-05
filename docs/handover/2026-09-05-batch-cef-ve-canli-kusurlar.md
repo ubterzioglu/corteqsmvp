@@ -124,19 +124,54 @@ kart görünümü.
 3. Kalan yapılabilir revizyon maddeleri: renkli sonuç grafikleri (`a275f131`), CTA'dan
    test sonucuna geri dönüş (`0838da0b`), araç sonucunu profile kaydetme (`50362e2a`).
 4. WS1-7 (SMTP → e-posta doğrulaması) ve WS1-8/11 (OTP sağlayıcı) hâlâ dış karar bekliyor.
-5. Takip işi: araçlardaki şehir drill-down'ın 1. adımı, kullanıcının 4. soruda verdiği
-   `target_countries` cevabını okumuyor — `QuestionStepper` state'i ayrı tutuluyor.
+5. ~~Takip işi: araçlardaki şehir drill-down'ın 1. adımı, kullanıcının 4. soruda verdiği
+   `target_countries` cevabını okumuyor~~ → **KAPANDI** (`dea913c`). Kapsam
+   `src/lib/relocation-city-scope.ts` ile türetilip `QuestionRenderer`'a dar bir
+   `scopeCountryCodes` prop'u olarak geçiyor. Kapsam dışı ülkeler **gizlenmez**, yalnız
+   başa alınır — ülke bir kapı değil daraltmadır; kapsam boşsa eski davranış korunur.
+
+## ⚠️ Windows tuzağı: küçük harfli `c:` çalışma dizini testleri sahte kırar
+
+`npm run test` **266 dosyanın 262'sinde** şu hatayı verirse tek bir gerçek kusur yoktur:
+
+```
+TypeError: Cannot read properties of undefined (reading 'config')
+  at initSuite (@vitest/runner/dist/chunk-artifact.js:1848)
+```
+
+Sebep sürücü harfinin küçük olmasıdır. Node'un ESM yükleyicisi `file:///c:/...` ile
+`file:///C:/...` adreslerini **farklı modül** sayar, böylece `@vitest/runner` worker
+sürecinde İKİ KEZ örneklenir (modül gövdesine log konarak doğrulandı: aynı pid'de iki
+"INSTANTIATE"). Vitest `runner`'ı bir örnekte kurar; test dosyasının `import { describe }
+from "vitest"` ile aldığı diğer örnekte `runner` tanımsız kalır ve `describe` daha ilk
+satırda patlar. Yani hata **toplama (collection) aşamasındadır**, testlerle ilgisi yoktur.
+
+**Çözüm:** komutu büyük harfli dizinden çalıştır (`C:\temp_private\corteqs\corteqs_fin`).
+Aynı komut küçük harfte 262 başarısız, büyük harfte 266 başarılı — ikisi de ölçüldü.
+`npm run test` çıktısının ilk satırındaki `RUN v4.1.11 c:/...` / `C:/...` yolu hangi
+durumda olduğunu tek bakışta söyler; **önce oraya bak**.
+
+⚠️ Bunu "vitest 4 / jsdom 29 yükseltmesi bozdu" diye teşhis etme ve bağımlılık düşürme.
+Yükseltme (`5c75dca`, vitest 3.2.4→4.1.11, jsdom 20→29) masumdur: eklentisiz minimal
+config, `--environment=node` ve `--pool=forks` ile de aynen tekrarlanır — **config
+suçsuz, cwd suçlu**.
 
 ## Son durum (ölçüldü)
 
 | Kontrol | Sonuç |
 |---|---|
-| Test | 1841 geçti (gün başı 1768) |
+| Test | **1852 geçti** / 267 dosya (gün başı 1768 → 1841 → 1852) |
 | ESLint | 0 problem |
 | tsc | 22 (taban, artmadı) |
 | Build | yeşil |
 | Migration | 383 dosya / 383 canlı kayıt, sapma yok |
-| Dal | `main`, `ee46608`'e kadar push edildi |
+| Dal | `main`, `2455860`'e kadar push edildi; `dea913c` push bekliyor |
+
+⚠️ `public/sitemap.xml` (yalnız `lastmod` tazelenmesi) ve
+`docs/status/mevcut-profil-yapisi-raporu-2026-08-20-sade-anlatim.html` çalışma dizininde
+commit edilmemiş duruyor. **İki oturumun da ilk `git status` anlık görüntüsünde zaten
+vardılar**, yani daha önceki bir oturumdan kalmışlar; ikisi de dokunmadı. Commit edilip
+edilmeyecekleri kullanıcı kararı.
 
 ## Bu turda öğrenilen üç şey
 
