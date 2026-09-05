@@ -106,6 +106,53 @@ describe("ToolResultView", () => {
   });
 });
 
+// city_match'in "hedef ülkede veri yok" fallback'i. SQL bu bayrağı 2026-07-30'dan beri
+// primary_result içine yazıyor (migration 20260730210000) ama arayüz hiç okumuyordu;
+// kullanıcı sıralamanın neden başka ülkelerden geldiğini anlamıyordu (revizyon 371da675).
+const CITY_MATCH_FALLBACK: Partial<RelocationToolResultPayload> = {
+  tool_key: "city_match",
+  result_kind: "ranked_list",
+  score_bucket: null,
+  primary_result: { ranked_cities: [], fallback_no_target_match: true },
+  recommendations: [{ key: "BER", title: "Berlin", score: 71 }],
+  explanations: [],
+};
+
+describe("ToolResultView — hedef ülkede veri yok uyarısı", () => {
+  it("fallback_no_target_match true iken açık bir uyarı şeridi çizer", () => {
+    renderView(CITY_MATCH_FALLBACK);
+
+    const strip = screen.getByRole("status");
+    expect(strip).toHaveTextContent("Hedef ülkende henüz şehir verimiz yok");
+    expect(strip).toHaveTextContent("DİĞER ülkelerdeki şehirlerle");
+  });
+
+  it("uyarı şeridi sonuç listesinin ÜSTÜNDE durur", () => {
+    const { container } = renderView(CITY_MATCH_FALLBACK);
+
+    const root = container.firstElementChild as HTMLElement;
+    const children = Array.from(root.children);
+    const stripIndex = children.findIndex((el) => el.getAttribute("role") === "status");
+    const listIndex = children.findIndex((el) =>
+      el.textContent?.includes(TOOLS_UI_COPY.rankedListTitle),
+    );
+
+    expect(stripIndex).toBeGreaterThanOrEqual(0);
+    expect(listIndex).toBeGreaterThan(stripIndex);
+  });
+
+  it("bayrak yok/false iken uyarı çizilmez — normal sonuçta gürültü yapmaz", () => {
+    renderView({ ...CITY_MATCH_FALLBACK, primary_result: { ranked_cities: [] } });
+    expect(screen.queryByRole("status")).toBeNull();
+
+    renderView({
+      ...CITY_MATCH_FALLBACK,
+      primary_result: { ranked_cities: [], fallback_no_target_match: false },
+    });
+    expect(screen.queryByRole("status")).toBeNull();
+  });
+});
+
 describe("ToolResultView — sonuç açıklamaları", () => {
   it("primary_result.weakest3'ü çizer — bu veri üretiliyordu ama gösterilmiyordu", () => {
     renderView({ primary_result: { score: 56.75, weakest3: WEAKEST3 } });

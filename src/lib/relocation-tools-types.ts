@@ -103,11 +103,17 @@ export interface ToolSessionResume {
   answers: Record<string, ToolAnswerValue>;
 }
 
-/** Bir CTA (result.ctas öğesi). */
+/**
+ * Bir CTA (result.ctas öğesi).
+ * `label`/`href` OPSİYONEL: kayıt DB'de jsonb tutulur ve skorlama fonksiyonları bazı
+ * CTA'ları yalnız `key` ile yazar; eksik alanlar `resolveCta` ile CTA_TARGETS
+ * haritasından tamamlanır. Zorunlu yazmak, ResultCtaPanel'deki `raw.label ?? cta.label`
+ * savunmasını tip düzeyinde ölü koda çeviriyordu.
+ */
 export interface ToolCta {
   key: string;
-  label: string;
-  href: string;
+  label?: string;
+  href?: string;
 }
 
 /** complete_session / score RPC dönüşü = result payload. */
@@ -127,6 +133,35 @@ export interface RelocationToolResultPayload {
     city: string;
     source: "approved_attributes" | "profile_core" | "mixed_profile";
   } | null;
+}
+
+/**
+ * `primary_result` içinde TİP DÜZEYİNDE tanınan alanlar. Alan serbest jsonb olduğu için
+ * payload tipi `Record<string, unknown>` kalır (SQL her araçta farklı anahtar yazar);
+ * burası yalnız arayüzün okuduğu anahtarları belgeler.
+ */
+export interface ToolPrimaryResultFlags {
+  /**
+   * true → sonuç, kullanıcının HEDEF ÜLKESİNDE veri olmadığı için diğer ülkelerdeki
+   * şehirlerle üretildi. SQL kaynağı (city_match):
+   * `20260730210000_relocation_seed_expansion_city_match_fallback.sql` →
+   * `rl_tool_write_result(..., p_primary_result := jsonb_build_object(
+   *    'ranked_cities', v_ranked, 'fallback_no_target_match', v_fallback), ...)`.
+   * Yani bayrak `payload.primary_result` İÇİNDE taşınır, üst seviyede DEĞİL.
+   */
+  fallback_no_target_match?: boolean;
+}
+
+/**
+ * SQL↔TS ayna okuyucusu: yukarıdaki bayrağı payload'dan güvenle çıkarır.
+ * 2026-07-30'da SQL bu bayrağı yazmaya başladı ama arayüz hiç okumuyordu (src altında
+ * 0 eşleşme) — kullanıcı "aradığın kriterde şehir bulunamadı" diye anlamsız bir sonuç
+ * görüyordu (revizyon 371da675). Bayrağın adını değiştirirsen migration'ı da değiştir.
+ */
+export function hasNoTargetMatchFallback(
+  primaryResult: Record<string, unknown> | null | undefined,
+): boolean {
+  return primaryResult?.fallback_no_target_match === true;
 }
 
 export interface RelocationToolReportRequest {

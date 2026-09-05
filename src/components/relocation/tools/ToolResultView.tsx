@@ -1,5 +1,6 @@
 // Sonuç görünümü — result_kind'a göre özet + breakdown + CTA. RelocationToolPage ve
 // RelocationToolResultPage paylaşır. docs/10tool/00 §UX (sonuç ekranı).
+import { AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BackToToolsButton } from "@/components/relocation/tools/BackToToolsButton";
 import { ScoreMeter } from "@/components/relocation/tools/ScoreMeter";
@@ -21,7 +22,25 @@ import {
   dimensionLabelsForResult,
   dimensionWeightsForResult,
 } from "@/lib/relocation-tools-copy";
-import type { RelocationToolResultPayload, ToolCta } from "@/lib/relocation-tools-types";
+import {
+  hasNoTargetMatchFallback,
+  type RelocationToolResultPayload,
+  type ToolCta,
+} from "@/lib/relocation-tools-types";
+
+/**
+ * "Hedef ülkede veri yok" şeridinin metni. TOOLS_UI_COPY'de DEĞİL çünkü yalnız bu
+ * görünüm kullanır; ikinci bir kullanıcı çıkarsa copy dosyasına taşınmalıdır.
+ * SQL zaten iki açıklama satırı yazıyor ama onlar gri madde listesinde kayboluyordu —
+ * kullanıcı bu yüzden sonucu "şehir bulunamadı" sanıyordu (revizyon 371da675).
+ */
+const NO_TARGET_MATCH_COPY = {
+  title: "Hedef ülkende henüz şehir verimiz yok",
+  body:
+    "Bu sıralama, seçtiğin ülke için veri bulunmadığından DİĞER ülkelerdeki şehirlerle " +
+    "üretildi. Tercihlerine göre puanlama doğrudur; ancak aşağıdaki şehirler seçtiğin " +
+    "ülkeden değildir. Ülke verisi eklendiğinde testi tekrar çözersen sonuç değişecektir.",
+} as const;
 
 interface ToolResultViewProps {
   result: RelocationToolResultPayload;
@@ -70,6 +89,8 @@ export function ToolResultView({
   const weakestAreas = parseWeakestAreas(result.primary_result);
   const bucketNote =
     result.tool_key === "top_relocation_challenge" ? "" : bucketDescription(result.score_bucket);
+  // SQL 2026-07-30'dan beri bu bayrağı yazıyor; arayüz bugüne kadar hiç okumuyordu.
+  const noTargetMatchFallback = hasNoTargetMatchFallback(result.primary_result);
   const rankedItems = Array.isArray(result.recommendations)
     ? (result.recommendations as Array<Record<string, unknown>>)
     : [];
@@ -98,6 +119,21 @@ export function ToolResultView({
           )}
         </CardContent>
       </Card>
+
+      {/* Sonuç gövdesinin ÜSTÜNDE: kullanıcı listeyi okumadan önce listenin neden
+          başka ülkelerden geldiğini görmeli. */}
+      {noTargetMatchFallback && (
+        <div
+          role="status"
+          className="flex items-start gap-3 rounded-lg border border-amber-400 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-100"
+        >
+          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+          <div className="space-y-1">
+            <p className="font-semibold">{NO_TARGET_MATCH_COPY.title}</p>
+            <p className="leading-snug">{NO_TARGET_MATCH_COPY.body}</p>
+          </div>
+        </div>
+      )}
 
       {result.result_kind === "checklist" ? (
         <ChecklistTimeline title={TOOLS_UI_COPY.checklistTitle} tasks={checklistTasks} />
@@ -133,7 +169,9 @@ export function ToolResultView({
 
       {/* Araç hub'ına dönüş — CTA ızgarasının ALTINDA, tam genişlikte tek satır.
           Bilinçli olarak ResultCtaPanel'in DIŞINDA: panel 2×2 eşit hücre sözleşmesini
-          taşır ve `ResultCtaPanel.test.tsx` panelin hiç `link` üretmediğini kilitler.
+          taşır, bu satır ise tam genişlikte durur. (Eski yorum "panel hiç link
+          üretmez" diyordu — 6aa64b5'in CTA'ları kilitlediği döneme aitti; 2026-09-05
+          onarımından sonra panel her CTA için gerçek bir link üretir.)
           Buradan yalnız MOTOR araçları kapsanır; standalone araçlar bu bileşenden
           geçmez, onların dönüş butonu RelocationToolPage'dedir. */}
       <BackToToolsButton />
