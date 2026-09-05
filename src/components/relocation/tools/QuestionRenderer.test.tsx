@@ -5,6 +5,13 @@ import { describe, expect, it, vi } from "vitest";
 import { QuestionRenderer } from "@/components/relocation/tools/QuestionRenderer";
 import type { RelocationToolQuestionRow, ToolAnswerValue } from "@/lib/relocation-tools-types";
 
+// geo_cities canlıda 76.990 satır; kanca ülkeye göre daraltır, mock da öyle davranır.
+// Ülke seçilmeden çağrılırsa boş liste döner (kanca enabled=false).
+const CITIES_BY_COUNTRY: Record<string, string[]> = {
+  DE: ["Berlin", "Hamburg", "München"],
+  NL: ["Amsterdam", "Rotterdam"],
+};
+
 vi.mock("@/hooks/useGeo", () => ({
   useGeoCountries: () => ({
     data: [
@@ -15,6 +22,16 @@ vi.mock("@/hooks/useGeo", () => ({
       { code: "GB", name: "İngiltere" },
       { code: "FR", name: "Fransa" },
     ],
+    isLoading: false,
+  }),
+  useGeoCitiesForCountries: (codes: string[]) => ({
+    data: codes.flatMap((code) =>
+      (CITIES_BY_COUNTRY[code] ?? []).map((name) => ({
+        countryCode: code,
+        countryName: code,
+        name,
+      })),
+    ),
     isLoading: false,
   }),
 }));
@@ -91,22 +108,89 @@ describe("QuestionRenderer", () => {
     expect(onChange).toHaveBeenLastCalledWith("DE,NL,US");
   });
 
-  it("target_cities sorusunda şehir fark etmez hızlı cevabını yazar", async () => {
-    const user = userEvent.setup();
-    const onChange = vi.fn();
+  // Revizyon 2b1c1960: target_cities eskiden düz <Input type="text"> idi ve testi
+  // "Örn: Berlin, Amsterdam veya Şehir fark etmez" placeholder'ını kilitliyordu.
+  // O placeholder testi YANLIŞ davranışı (elle yazım zorunluluğunu) kilitliyordu;
+  // aşağıdaki testler doğru davranışı — ülke→şehir drill-down'unu — kilitler.
+  describe("target_cities drill-down", () => {
+    const cityQuestion = q("target_cities", "text", {
+      help_tr: "Şehir adlarını virgülle ayır.",
+    });
 
-    render(
-      <QuestionRenderer
-        question={q("target_cities", "text", {
-          help_tr: "Şehir adlarını virgülle ayır.",
-        })}
-        value={undefined}
-        onChange={onChange}
-      />,
-    );
+    it("şehir listesini seçilen ülkeye daraltır", async () => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
 
-    expect(screen.getByPlaceholderText("Örn: Berlin, Amsterdam veya Şehir fark etmez")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Şehir fark etmez" }));
-    expect(onChange).toHaveBeenCalledWith("Şehir fark etmez");
+      render(<QuestionRenderer question={cityQuestion} value={undefined} onChange={onChange} />);
+
+      await user.click(screen.getByRole("combobox", { name: "Şehir için ülke seç" }));
+      await user.click(await screen.findByText("Almanya"));
+
+      await user.click(screen.getByRole("combobox", { name: "Şehir seç" }));
+      expect(await screen.findByText("Berlin")).toBeInTheDocument();
+      expect(screen.queryByText("Amsterdam")).not.toBeInTheDocument();
+
+      await user.click(screen.getByText("Berlin"));
+      expect(onChange).toHaveBeenCalledWith("Berlin");
+    });
+
+    it("birden fazla şehri virgülle biriktirir ve kaldırabilir", async () => {
+      const user = userEvent.setup();
+      let value: ToolAnswerValue | undefined = "";
+      const onChange = vi.fn((next: ToolAnswerValue) => {
+        value = next;
+      });
+      const { rerender } = render(
+        <QuestionRenderer question={cityQuestion} value={value} onChange={onChange} />,
+      );
+
+      await user.click(screen.getByRole("combobox", { name: "Şehir için ülke seç" }));
+      await user.click(await screen.findByText("Almanya"));
+
+      // Çoklu seçimde liste açık kalır — her şehir için yeniden açmak gerekmez.
+      await user.click(screen.getByRole("combobox", { name: "Şehir seç" }));
+      for (const city of ["Berlin", "Hamburg"]) {
+        await user.click(await screen.findByText(city));
+        rerender(<QuestionRenderer question={cityQuestion} value={value} onChange={onChange} />);
+      }
+
+      expect(onChange).toHaveBeenLastCalledWith("Berlin, Hamburg");
+
+      await user.keyboard("{Escape}");
+      await user.click(screen.getByRole("button", { name: "Berlin kaldır" }));
+      expect(onChange).toHaveBeenLastCalledWith("Hamburg");
+    });
+
+    it("katalogda olmayan şehri serbest metin olarak ekletir (kullanıcı tıkanmaz)", async () => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
+
+      render(<QuestionRenderer question={cityQuestion} value={undefined} onChange={onChange} />);
+
+      // Ülke hiç seçilmedi: liste boş ama serbest metin çıkışı yine de açık olmalı.
+      await user.click(screen.getByRole("combobox", { name: "Şehir seç" }));
+      await user.type(await screen.findByPlaceholderText("Şehir ara veya yaz..."), "Böblingen");
+      await user.click(screen.getByText('"Böblingen" şehrini elle ekle'));
+
+      expect(onChange).toHaveBeenCalledWith("Böblingen");
+    });
+
+    it("şehir fark etmez hızlı cevabını yazar ve tekrar basınca temizler", async () => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
+
+      const { rerender } = render(
+        <QuestionRenderer question={cityQuestion} value={undefined} onChange={onChange} />,
+      );
+
+      await user.click(screen.getByRole("button", { name: "Şehir fark etmez" }));
+      expect(onChange).toHaveBeenCalledWith("Şehir fark etmez");
+
+      rerender(
+        <QuestionRenderer question={cityQuestion} value="Şehir fark etmez" onChange={onChange} />,
+      );
+      await user.click(screen.getByRole("button", { name: "Şehir fark etmez" }));
+      expect(onChange).toHaveBeenLastCalledWith("");
+    });
   });
 });

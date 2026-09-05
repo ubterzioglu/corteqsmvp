@@ -1,5 +1,8 @@
 // Taşınma wizard'ı — hedef ülke, pencere, bütçe, hane, must-haves topla → createMove.
 // Ülke seçenekleri relocation_locations'tan gelir (veri-tabanlı; kontrat ISO alpha-2 kodu).
+// `label` kullanıcıya görünen ülke ADIdır (RelocationHomePage.buildCountryOptions üretir);
+// `code` gönderilen değerdir. İkisi eşitse katalogda ad bulunamamış demektir — o durumda
+// yalnız kod gösterilir, yanına ikinci kez kod rozeti basılmaz.
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -94,13 +97,18 @@ export function RelocationWizard({
             {countryOptions.map((opt) => (
               <label
                 key={opt.code}
-                className="flex items-center gap-2 rounded-md border border-border p-2 text-sm"
+                htmlFor={`relocation-target-${opt.code}`}
+                className="flex cursor-pointer items-center gap-2 rounded-md border border-border p-2 text-sm"
               >
                 <Checkbox
+                  id={`relocation-target-${opt.code}`}
                   checked={targets.includes(opt.code)}
                   onCheckedChange={() => toggleTarget(opt.code)}
                 />
-                {opt.label}
+                <span className="truncate">{opt.label}</span>
+                {opt.label !== opt.code && (
+                  <span className="ml-auto shrink-0 text-xs text-muted-foreground">{opt.code}</span>
+                )}
               </label>
             ))}
           </div>

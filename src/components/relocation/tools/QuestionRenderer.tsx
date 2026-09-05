@@ -17,8 +17,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useGeoCountries } from "@/hooks/useGeo";
+import { useGeoCitiesForCountries, useGeoCountries } from "@/hooks/useGeo";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
+import { trCompare, trFold, trIncludes } from "@/lib/text-normalization";
 import { cn } from "@/lib/utils";
 import type {
   RelocationToolQuestionRow,
@@ -35,17 +36,30 @@ interface QuestionRendererProps {
 const MAX_COUNTRY_SELECTION = 3;
 const CITY_ANY_VALUE = "Şehir fark etmez";
 
+// geo_cities 76.990 satır; tek ülke bile 7-13 bin şehre çıkabiliyor (DE ~7k, US ~13k).
+// Veri çekimi zaten ülkeye göre daraltılır (listGeoCitiesForCountries → range() sayfalama,
+// PostgREST'in 1000 satırda sessiz kesmesi orada çözülü), ama cmdk'ya binlerce öğe
+// basmak listeyi kilitler: filtre sonrası yalnız ilk MAX_RENDERED_CITIES öğe render edilir.
+const MAX_RENDERED_CITIES = 200;
+
 // Ölçek (1-5) sorularında ön-seçili gelen orta değer. QuestionStepper bu değeri
 // "cevap verilmiş" sayar ve dokunulmadan İleri'ye basılsa da aynen kaydeder —
 // böylece ekranda görünen seçim ile kaydedilen cevap daima aynı olur.
 export const SCALE_DEFAULT_VALUE = 3;
 
-function parseCountryCodes(value: ToolAnswerValue | undefined): string[] {
+/** "DE, NL" → ["DE","NL"]. Hem ülke kodu hem şehir adı cevapları virgülle saklanır. */
+function parseCsvList(value: ToolAnswerValue | undefined): string[] {
   if (typeof value !== "string") return [];
   return value
     .split(",")
     .map((part) => part.trim())
     .filter(Boolean);
+}
+
+/** Aksan/Türkçe-i duyarsız eşitlik — "Munchen" ile "München" aynı şehirdir. */
+function containsFolded(list: string[], candidate: string): boolean {
+  const folded = trFold(candidate);
+  return list.some((item) => trFold(item) === folded);
 }
 
 function ProfessionCombobox({
@@ -127,7 +141,7 @@ function CountryMultiCombobox({
   const [open, setOpen] = useState(false);
   const countriesQuery = useGeoCountries(true);
   const countries = useMemo(() => countriesQuery.data ?? [], [countriesQuery.data]);
-  const selectedCodes = parseCountryCodes(value);
+  const selectedCodes = parseCsvList(value);
   const selectedSet = useMemo(() => new Set(selectedCodes), [selectedCodes]);
 
   const countryByCode = useMemo(
@@ -233,6 +247,266 @@ function CountryMultiCombobox({
 
       <p className="text-xs text-muted-foreground">
         En az 1, en fazla {MAX_COUNTRY_SELECTION} ülke seç. Çok geniş seçim sonucu yavaşlatabilir.
+      </p>
+    </div>
+  );
+}
+
+/**
+ * Şehir sorusu — "önce ülke, sonra şehir" drill-down'u (revizyon 2b1c1960).
+ *
+ * Eskiden düz `<Input type="text">` idi: kullanıcı ISO kodu/şehir adını elle yazmak
+ * zorundaydı ve yazım hatası sessizce kaydediliyordu. Artık ülke bir kademe daraltma
+ * adımıdır ve şehirler `useGeoCitiesForCountries` ile YALNIZ o ülke(ler) için çekilir —
+ * 76.990 satırlık geo_cities asla toptan indirilmez.
+ *
+ * Ülke seçimi bir KAPI DEĞİL, daraltmadır: ülke seçilmeden de arama kutusuna yazılıp
+ * "elle ekle" ile katalogda olmayan şehir girilebilir. Böylece katalog boşluğu
+ * (München/Böblingen gibi) kullanıcıyı tıkamaz.
+ */
+function CityDrilldownCombobox({
+  id,
+  value,
+  onChange,
+}: {
+  id: string;
+  value: ToolAnswerValue | undefined;
+  onChange: (value: ToolAnswerValue) => void;
+}) {
+  const [countryOpen, setCountryOpen] = useState(false);
+  const [cityOpen, setCityOpen] = useState(false);
+  const [countryQuery, setCountryQuery] = useState("");
+  const [cityQuery, setCityQuery] = useState("");
+  const [countryCode, setCountryCode] = useState("");
+
+  const countriesQuery = useGeoCountries(true);
+  const countries = useMemo(() => countriesQuery.data ?? [], [countriesQuery.data]);
+  const citiesQuery = useGeoCitiesForCountries(countryCode ? [countryCode] : []);
+
+  const isAnyCity = typeof value === "string" && value.trim() === CITY_ANY_VALUE;
+  const selectedCities = isAnyCity ? [] : parseCsvList(value);
+
+  const selectedCountryName = countries.find((country) => country.code === countryCode)?.name ?? "";
+
+  const visibleCountries = useMemo(
+    () => countries.filter((country) => trIncludes(`${country.name} ${country.code}`, countryQuery)),
+    [countries, countryQuery],
+  );
+
+  const cityNames = useMemo(() => {
+    const names = (citiesQuery.data ?? []).map((city) => city.name).filter(Boolean);
+    return Array.from(new Set(names)).sort(trCompare);
+  }, [citiesQuery.data]);
+
+  const matchedCities = useMemo(
+    () => cityNames.filter((name) => trIncludes(name, cityQuery)),
+    [cityNames, cityQuery],
+  );
+  const visibleCities = matchedCities.slice(0, MAX_RENDERED_CITIES);
+  const hiddenCityCount = matchedCities.length - visibleCities.length;
+
+  const typedCity = cityQuery.trim();
+  // Katalogda karşılığı olmayan (ya da ülke henüz seçilmemiş) şehir için serbest metin çıkışı.
+  const canAddTypedCity =
+    typedCity.length > 0
+    && !containsFolded(matchedCities, typedCity)
+    && !containsFolded(selectedCities, typedCity);
+
+  const commitCities = (next: string[]) => onChange(next.join(", "));
+
+  const addCity = (name: string) => {
+    const trimmed = name.trim();
+    if (!trimmed || containsFolded(selectedCities, trimmed)) return;
+    commitCities([...selectedCities, trimmed]);
+    setCityQuery("");
+  };
+
+  // Kaldırma da aksan-duyarsız: kullanıcı "Munchen" yazıp eklediyse katalogdaki
+  // "München" satırına tekrar tıklayınca seçim gerçekten kalkmalı.
+  const removeCity = (name: string) => {
+    const folded = trFold(name);
+    commitCities(selectedCities.filter((city) => trFold(city) !== folded));
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="space-y-1">
+        <Label htmlFor={`${id}-country`} className="text-xs text-muted-foreground">
+          1. Ülke (listeyi daraltır)
+        </Label>
+        <Popover
+          open={countryOpen}
+          onOpenChange={(next) => {
+            setCountryOpen(next);
+            if (!next) setCountryQuery("");
+          }}
+        >
+          <PopoverTrigger asChild>
+            <Button
+              id={`${id}-country`}
+              type="button"
+              variant="outline"
+              role="combobox"
+              aria-expanded={countryOpen}
+              aria-label="Şehir için ülke seç"
+              className="h-auto min-h-11 w-full justify-between gap-3 whitespace-normal px-3 py-2 text-left font-normal"
+            >
+              <span className={cn("truncate", !selectedCountryName && "text-muted-foreground")}>
+                {selectedCountryName || "Ülke seç veya ara"}
+              </span>
+              <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+            <Command shouldFilter={false}>
+              <CommandInput
+                placeholder="Ülke ara..."
+                value={countryQuery}
+                onValueChange={setCountryQuery}
+              />
+              <CommandList>
+                <CommandEmpty>Ülke bulunamadı.</CommandEmpty>
+                <CommandGroup>
+                  {visibleCountries.map((country) => (
+                    <CommandItem
+                      key={country.code}
+                      value={country.code}
+                      onSelect={() => {
+                        setCountryCode(country.code === countryCode ? "" : country.code);
+                        setCityQuery("");
+                        setCountryOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          countryCode === country.code ? "opacity-100" : "opacity-0",
+                        )}
+                      />
+                      <span>{country.name}</span>
+                      <span className="ml-auto text-xs text-muted-foreground">{country.code}</span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      <div className="space-y-1">
+        <Label htmlFor={`${id}-city`} className="text-xs text-muted-foreground">
+          2. Şehir (birden fazla seçebilirsin)
+        </Label>
+        <Popover
+          open={cityOpen}
+          onOpenChange={(next) => {
+            setCityOpen(next);
+            if (!next) setCityQuery("");
+          }}
+        >
+          <PopoverTrigger asChild>
+            <Button
+              id={`${id}-city`}
+              type="button"
+              variant="outline"
+              role="combobox"
+              aria-expanded={cityOpen}
+              aria-label="Şehir seç"
+              className="h-auto min-h-11 w-full justify-between gap-3 whitespace-normal px-3 py-2 text-left font-normal"
+            >
+              <span className={cn("truncate", !selectedCities.length && "text-muted-foreground")}>
+                {selectedCities.length
+                  ? `${selectedCities.length} şehir seçildi`
+                  : "Şehir seç veya yaz"}
+              </span>
+              <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+            <Command shouldFilter={false}>
+              <CommandInput
+                placeholder="Şehir ara veya yaz..."
+                value={cityQuery}
+                onValueChange={setCityQuery}
+              />
+              <CommandList>
+                <CommandEmpty>
+                  {countryCode
+                    ? "Şehir bulunamadı. Yazdığın adı elle ekleyebilirsin."
+                    : "Önce ülke seç ya da şehir adını yazıp elle ekle."}
+                </CommandEmpty>
+                <CommandGroup>
+                  {canAddTypedCity && (
+                    <CommandItem
+                      value={`manual-${typedCity}`}
+                      onSelect={() => addCity(typedCity)}
+                    >
+                      <Check className="mr-2 h-4 w-4 opacity-0" />
+                      <span>{`"${typedCity}" şehrini elle ekle`}</span>
+                    </CommandItem>
+                  )}
+                  {visibleCities.map((name) => {
+                    const selected = containsFolded(selectedCities, name);
+                    return (
+                      <CommandItem
+                        key={name}
+                        value={name}
+                        onSelect={() => (selected ? removeCity(name) : addCity(name))}
+                      >
+                        <Check
+                          className={cn("mr-2 h-4 w-4", selected ? "opacity-100" : "opacity-0")}
+                        />
+                        <span>{name}</span>
+                      </CommandItem>
+                    );
+                  })}
+                  {hiddenCityCount > 0 && (
+                    <div className="px-2 py-1.5 text-xs text-muted-foreground">
+                      +{hiddenCityCount} şehir daha — aramayı daraltmak için yazmaya devam et.
+                    </div>
+                  )}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      {selectedCities.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {selectedCities.map((city) => (
+            <span
+              key={city}
+              className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-2 py-1 text-xs text-foreground"
+            >
+              {city}
+              <button
+                type="button"
+                className="rounded-sm text-muted-foreground hover:text-foreground"
+                aria-label={`${city} kaldır`}
+                onClick={() => removeCity(city)}
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      <Button
+        type="button"
+        variant={isAnyCity ? "default" : "outline"}
+        className="h-9"
+        aria-pressed={isAnyCity}
+        onClick={() => onChange(isAnyCity ? "" : CITY_ANY_VALUE)}
+      >
+        {CITY_ANY_VALUE}
+      </Button>
+
+      <p className="text-xs text-muted-foreground">
+        Şehir listesi seçtiğin ülkeye göre daralır. Listede yoksa arama kutusuna yazıp elle
+        ekleyebilirsin.
       </p>
     </div>
   );
@@ -371,7 +645,11 @@ export function QuestionRenderer({ question, value, onChange }: QuestionRenderer
       );
 
     // text / date / city / profession → serbest metin fallback.
-    default:
+    // İSTİSNA: target_cities (ve answer_type='city') artık ülke→şehir drill-down'u kullanır.
+    default: {
+      if (question.question_key === "target_cities" || answer_type === "city") {
+        return <CityDrilldownCombobox id={id} value={value} onChange={onChange} />;
+      }
       return (
         <div className="space-y-2">
           {question.help_tr && (
@@ -384,23 +662,9 @@ export function QuestionRenderer({ question, value, onChange }: QuestionRenderer
             type={answer_type === "date" ? "date" : "text"}
             value={typeof value === "string" ? value : ""}
             onChange={(e) => onChange(e.target.value)}
-            placeholder={
-              question.question_key === "target_cities"
-                ? "Örn: Berlin, Amsterdam veya Şehir fark etmez"
-                : undefined
-            }
           />
-          {question.question_key === "target_cities" && (
-            <Button
-              type="button"
-              variant="outline"
-              className="h-9"
-              onClick={() => onChange(CITY_ANY_VALUE)}
-            >
-              {CITY_ANY_VALUE}
-            </Button>
-          )}
         </div>
       );
+    }
   }
 }

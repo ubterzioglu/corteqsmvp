@@ -15,12 +15,15 @@ import {
 } from "@/lib/relocation-api";
 import { relocationKeys } from "@/lib/relocation-query-keys";
 import { getRelocationDict } from "@/lib/relocation-i18n";
+import { useGeoCountries } from "@/hooks/useGeo";
+import { trCompare } from "@/lib/text-normalization";
 import type { MoveCreateInput } from "@/lib/relocation-schemas";
 import type {
   RelocationServiceCategory,
   RelocationStepTrigger,
 } from "@/lib/relocation-types";
-import { RelocationWizard, type CountryOption } from "@/components/relocation/RelocationWizard";
+import { RelocationWizard } from "@/components/relocation/RelocationWizard";
+import { buildCountryOptions } from "@/lib/relocation-country-options";
 import { CityComparisonTable } from "@/components/relocation/CityComparisonTable";
 import { ServiceRecommendationCard } from "@/components/relocation/ServiceRecommendationCard";
 import { BureaucracyTimeline } from "@/components/relocation/BureaucracyTimeline";
@@ -37,18 +40,19 @@ const SERVICE_CATEGORIES: RelocationServiceCategory[] = [
   "community_hub",
 ];
 
-/** Aktif lokasyonlardan distinct (country_code, ilk şehir adı) seçenekleri. */
-async function fetchCountryOptions(): Promise<CountryOption[]> {
+/** Aktif lokasyonlardaki distinct ISO alpha-2 ülke kodları. */
+async function fetchCountryCodes(): Promise<string[]> {
   const { data, error } = await db
     .from("relocation_locations")
-    .select("country_code, city_name")
+    .select("country_code")
     .eq("is_active", true);
   if (error) throw error;
-  const seen = new Map<string, string>();
-  for (const row of (data ?? []) as Array<{ country_code: string; city_name: string }>) {
-    if (!seen.has(row.country_code)) seen.set(row.country_code, row.country_code);
+  const codes = new Set<string>();
+  for (const row of (data ?? []) as Array<{ country_code: string | null }>) {
+    const code = row.country_code?.trim();
+    if (code) codes.add(code);
   }
-  return Array.from(seen.entries()).map(([code]) => ({ code, label: code }));
+  return Array.from(codes);
 }
 
 export default function RelocationHomePage() {
@@ -59,10 +63,15 @@ export default function RelocationHomePage() {
   const [activeTab, setActiveTab] = useState("cities");
   const [serviceCategory, setServiceCategory] = useState<RelocationServiceCategory>("housing");
 
-  const countryOptionsQuery = useQuery({
-    queryKey: [...relocationKeys.all, "country-options"],
-    queryFn: fetchCountryOptions,
+  const countryCodesQuery = useQuery({
+    queryKey: [...relocationKeys.all, "country-codes"],
+    queryFn: fetchCountryCodes,
   });
+  const geoCountriesQuery = useGeoCountries(true);
+  const countryOptions = useMemo(
+    () => buildCountryOptions(countryCodesQuery.data ?? [], geoCountriesQuery.data ?? []),
+    [countryCodesQuery.data, geoCountriesQuery.data],
+  );
 
   const createMoveMutation = useMutation({
     mutationFn: (input: MoveCreateInput) => createMove(input),
@@ -140,7 +149,7 @@ export default function RelocationHomePage() {
 
       {!moveId ? (
         <RelocationWizard
-          countryOptions={countryOptionsQuery.data ?? []}
+          countryOptions={countryOptions}
           labels={{
             targets: dict.wizard.targets,
             window: dict.wizard.window,
