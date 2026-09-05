@@ -65,10 +65,37 @@ export type DirectoryRoleOption = {
   label: string;
 };
 
+/**
+ * Rol anahtarları teknik ASCII değerlerdir (`Admin_SuperAdmin`, `Moderator_Cadde`) —
+ * kullanıcıya gösterilen Türkçe metin DEĞİLDİR. Yine de bare `toLowerCase()` yerine
+ * yalnızca A–Z aralığını eşleyen açık bir katlama kullanıyoruz: anahtar içine bir gün
+ * Türkçe karakter sızsa bile (`İ` → `i̇` gibi noktalı-i tuzağı) karşılaştırma bozulmaz
+ * ve davranış SQL tarafındaki `ilike` ile birebir aynı kalır.
+ */
+const foldRoleKey = (key: string): string =>
+  key.trim().replace(/[A-Z]/g, (char) => String.fromCharCode(char.charCodeAt(0) + 32));
+
+/**
+ * Yönetici/moderatör rolleri ÖNEK ile tanınır — is_admin() (`r.key ilike 'Admin_%'`)
+ * ve is_moderator() (`... or r.key = 'moderator'`) ile AYNI mantık; dizin RPC'sindeki
+ * B20 koşulu da (applied/20260730220000_directory_exclude_admin_accounts.sql)
+ * `Admin_%` + `Moderator_%` kullanır.
+ *
+ * Neden önek: aşağıdaki tam-eşleşmeli Set tek başına yetersizdi — canlıdaki gerçek
+ * anahtar `Admin_SuperAdmin` listede yoktu, bu yüzden süper admin hesabı /directory
+ * aramasında görünüyordu (revizyon 7dd35147).
+ *
+ * SQL `ilike 'Admin_%'` içinde `_` joker karakterdir; buradaki kontrol literal alt
+ * çizgi arar (daha dar, bilinçli). Gerçek rol anahtarlarının tamamı zaten `Admin_`
+ * / `Moderator_` biçimindedir.
+ */
+const HIDDEN_DIRECTORY_ROLE_KEY_PREFIXES = ["admin_", "moderator_"];
+
 // İç / sistem / deneysel roller public dizinde görünmemeli. is_directory_visible
 // bayrağı (DB tarafı) birincil savunma; bu guard, bayrak yanlış kalsa bile (ör.
 // Experimental rolleri kaynak rolden is_directory_visible=true miras almıştı)
 // dropdown ve sonuç listesini kesin temizler.
+// Önek kontrolünün yakalayamadığı tekil/eski anahtarlar burada kalır — silme.
 const HIDDEN_DIRECTORY_ROLE_KEYS = new Set(
   [
     "Experimental_1",
@@ -78,7 +105,9 @@ const HIDDEN_DIRECTORY_ROLE_KEYS = new Set(
     "SUPER_ADMIN",
     "Platform_Admin",
     "Owner",
-  ].map((key) => key.toLowerCase()),
+    // is_moderator() bu anahtarı da yükseltilmiş sayar (`r.key = 'moderator'`).
+    "moderator",
+  ].map(foldRoleKey),
 );
 
 const HIDDEN_DIRECTORY_ROLE_LABEL_PATTERNS = [
@@ -94,7 +123,13 @@ export function isPublicDirectoryRole(
   key: string | null | undefined,
   label: string | null | undefined,
 ): boolean {
-  if (key && HIDDEN_DIRECTORY_ROLE_KEYS.has(key.toLowerCase())) return false;
+  if (key) {
+    const foldedKey = foldRoleKey(key);
+    if (HIDDEN_DIRECTORY_ROLE_KEY_PREFIXES.some((prefix) => foldedKey.startsWith(prefix))) {
+      return false;
+    }
+    if (HIDDEN_DIRECTORY_ROLE_KEYS.has(foldedKey)) return false;
+  }
   if (label && HIDDEN_DIRECTORY_ROLE_LABEL_PATTERNS.some((pattern) => pattern.test(label))) {
     return false;
   }
