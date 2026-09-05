@@ -15,9 +15,15 @@
     <link rel="alternate" hreflang="x-default" href="https://corteqs.net/" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fontlar: preload + DOĞRUDAN stylesheet. `media="print" onload="this.media='all'"`
+         hilesi 05.09.2026'da KALDIRILDI — CSP script-src'inde 'unsafe-inline' olmadığı için
+         (bilinçli, bkz. "Değişmez sözleşmeler" md.3) tarayıcı o inline onload'ı hiç
+         çalıştırmıyordu; stylesheet media="print" olarak kalıyor ve Inter/Space Grotesk
+         CANLIDA HİÇ UYGULANMIYORDU. Canlı ölçüm: document.fonts boş, link.media="print".
+         Buraya inline `onload`/`onclick` EKLEME — CSP sessizce yutar, hata görünmez.
+         Render-blocking maliyeti preload + display=swap ile karşılanır. -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" /></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" />
     <!-- LCP görseli: hero'daki logo. (Eski /og-image.png preload'u kaldırıldı —
          o görsel yalnızca sosyal paylaşım meta'sında kullanılıyor, sayfada render
          edilmiyordu; yüksek öncelikli preload LCP'yi gereksiz yere geciktiriyordu.) -->
