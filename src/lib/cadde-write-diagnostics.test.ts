@@ -74,4 +74,18 @@ describe("cadde yazma yolu teşhis sözleşmesi", () => {
     expect(fnBody).not.toContain("reportCaddeApiError");
     expect(fnBody).not.toContain("toast");
   });
+
+  it("yazma ve okuma yolu hatası kalıcı kayda (client_error_reports) düşer — m134 kanıtı", () => {
+    const source = read("src/lib/cadde-internal.ts");
+
+    const writeBody = source.slice(source.indexOf("export function caddeWriteError"));
+    expect(writeBody.slice(0, writeBody.indexOf("\n}"))).toContain(
+      'reportClientError({ source: "cadde_write", context, error })',
+    );
+
+    const readBody = source.slice(source.indexOf("export function caddeReadError"));
+    expect(readBody.slice(0, readBody.indexOf("\n}"))).toContain(
+      'reportClientError({ source: "cadde_read", context, error })',
+    );
+  });
 });

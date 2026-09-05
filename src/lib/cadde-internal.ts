@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 // cadde-rules yalnız text-normalization'a bağlı — bu yön tek yönlü, döngü yok.
 import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
+// client-error-reports yalnız supabase client'a bağlı — döngü yok. Kalıcı kanıt (m134).
+import { reportClientError } from "@/lib/client-error-reports";
 
 // Generated types (B1) güncel olmadığı için cadde_* tabloları typed client ile uyuşmayabilir.
 // Tek izole cast burada tutulur; B1 çözülünce kaldırılacak.
@@ -64,6 +66,7 @@ export function reportCaddeApiError(context: string, error: unknown): void {
  */
 export function caddeReadError(context: string, error: unknown): Error {
   console.error(`[cadde_api_error] ${context}`, error);
+  reportClientError({ source: "cadde_read", context, error });
   return error instanceof Error ? error : new Error(`Cadde okuma hatası: ${context}`);
 }
 
@@ -83,9 +86,14 @@ export function caddeReadError(context: string, error: unknown): Error {
  *
  * Error DÖNER (fırlatmaz) ki çağrı yeri tek satır kalsın ve logu atlamak mümkün
  * olmasın: `throw caddeWriteError("createCaddePost", error)`.
+ *
+ * 2026-09-04 (m134): console.error tek başına kanıt üretmiyordu — hata artık
+ * `client_error_reports`'a da yazılır (ham Postgres kodu/detayı dahil, payload hariç).
+ * Kayıt fire-and-forget'tir; başarısız olsa da bu fonksiyonun dönüşünü etkilemez.
  */
 export function caddeWriteError(context: string, error: unknown, fallback?: string): Error {
   console.error(`[cadde_write_error] ${context}`, error);
+  reportClientError({ source: "cadde_write", context, error });
   return new Error(resolveCaddeRpcErrorMessage(error, fallback));
 }
 

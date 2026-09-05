@@ -8,6 +8,7 @@ export const adminQueryKeys = {
   dashboard: () => [...adminQueryKeys.all, "dashboard"] as const,
   approvals: () => [...adminQueryKeys.all, "approvals"] as const,
   auditLogs: () => [...adminQueryKeys.all, "audit-logs"] as const,
+  clientErrors: () => [...adminQueryKeys.all, "client-errors"] as const,
   overrides: () => [...adminQueryKeys.all, "overrides"] as const,
   roleMatrixRoles: () => [...adminQueryKeys.all, "role-matrix", "roles"] as const,
   roleMatrixCatalog: () => [...adminQueryKeys.all, "role-matrix", "catalog"] as const,

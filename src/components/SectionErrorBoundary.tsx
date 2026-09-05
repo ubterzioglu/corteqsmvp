@@ -1,5 +1,7 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 
+import { reportClientError } from "@/lib/client-error-reports";
+
 interface SectionErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
@@ -21,6 +23,12 @@ class SectionErrorBoundary extends Component<SectionErrorBoundaryProps, SectionE
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error(`${this.props.sectionName ?? "Section"} render error:`, error, errorInfo);
+    reportClientError({
+      source: "render",
+      context: `SectionErrorBoundary:${this.props.sectionName ?? "Section"}`,
+      error,
+      componentStack: errorInfo.componentStack ?? null,
+    });
   }
 
   render() {

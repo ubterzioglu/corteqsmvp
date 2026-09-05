@@ -67,6 +67,7 @@ const AdminSurveyResponsesPage = lazy(() => import("@/pages/admin/surveys/AdminS
 const AdminUserOverridesPage = lazy(() => import("@/pages/admin/AdminUserOverridesPage"));
 const AdminApprovalsPage = lazy(() => import("@/pages/admin/AdminApprovalsPage"));
 const AdminAuditLogsPage = lazy(() => import("@/pages/admin/AdminAuditLogsPage"));
+const AdminClientErrorsPage = lazy(() => import("@/pages/admin/AdminClientErrorsPage"));
 const AdminNewMemberGuidePage = lazy(() => import("@/pages/admin/AdminNewMemberGuidePage"));
 const AdminDurumRaporuPage = lazy(() => import("@/pages/admin/AdminDurumRaporuPage"));
 const AdminRoleManagementPage = lazy(() => import("@/pages/admin/AdminRoleManagementPage"));
@@ -125,6 +126,7 @@ export const adminRoutes = (
     <Route path="new-member/entity-preview" element={<Navigate to="/admin/new-member/role-matrix" replace />} />
     <Route path="approvals" element={<AdminApprovalsPage />} />
     <Route path="audit-logs" element={<AdminAuditLogsPage />} />
+    <Route path="client-errors" element={<AdminClientErrorsPage />} />
     <Route path="roller-taslak" element={<AdminRolesDraftPage />} />
     <Route path="whatsapp-landings" element={<AdminWhatsAppLandingsPage />} />
     <Route path="whatsapp-landings/editors" element={<AdminWhatsAppLandingEditorsPage />} />

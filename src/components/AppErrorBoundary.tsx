@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { reportClientError } from "@/lib/client-error-reports";
 import { recoverFromWhiteScreen } from "@/lib/recoveryReload";
 
 interface AppErrorBoundaryProps {
@@ -21,6 +22,14 @@ class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorBoundary
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("Application render error:", error, errorInfo);
+    // "Bir hata oluştu" kartı m134'ün muhtemel yüzü — componentStack'i hiçbir
+    // mutation onError'ı görmez, kalıcı kayıt yalnız buradan üretilebilir.
+    reportClientError({
+      source: "render",
+      context: "AppErrorBoundary",
+      error,
+      componentStack: errorInfo.componentStack ?? null,
+    });
   }
 
   handleReload = () => {

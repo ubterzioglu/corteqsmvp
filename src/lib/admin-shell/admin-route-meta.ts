@@ -60,6 +60,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/new-member/entity-preview",
   "/admin/approvals",
   "/admin/audit-logs",
+  "/admin/client-errors",
   "/admin/roller-taslak",
   "/admin/whatsapp-landings",
   "/admin/whatsapp-landings/editors",
