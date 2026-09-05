@@ -14,8 +14,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `npm run test` → **270 dosya / 1.878 test** yeşil
 - `npm run lint` → **0 problem** (eski "1280 problem" notu bayattı)
 - `src/App.tsx`: 313 lines, 51 `lazy()` imports
-- TypeScript with relaxed strict mode (intentional trade-off) — **16 remaining `tsc` errors**
-  (109 → 22 → 16; kalanların dökümü ve sınıfları "Known Limitations" md.5'te)
+- TypeScript with relaxed strict mode (intentional trade-off) — **12 remaining `tsc` errors**
+  (109 → 22 → 16 → 12; kalanların dökümü ve sınıfları "Known Limitations" md.5'te)
 - **Production runtime is nginx** (Dockerfile → `nginx.conf.template`), deployed via Docker (Coolify).
   `server.mjs` is the local/nixpacks path only — see the Deployment section.
 
@@ -714,15 +714,19 @@ belong there; documentation goes under `docs/`.
    `const db = supabase as any` (cadde-internal · relocation-api · relocation-tools-api):
    kaldırmak tsc'yi 16 → 37 yapıyor, yani hâlâ gerçek iş yapıyorlar. Gereksiz olan 5 tanesi
    2026-09-06'da kaldırıldı. Kalan 6 satır yorum/açıklama.
-5. **16 remaining `tsc -p tsconfig.app.json --noEmit` errors** (109 → 22 → **16**, son indirim
-   2026-09-05'te ölü kod silinerek). Kalanlar üç sınıfa ayrılıyor — hiçbiri canlı kusur değil,
-   hepsi `types.ts`'in çalışma zamanı yükünden daha katı olmasından:
+5. **12 remaining `tsc -p tsconfig.app.json --noEmit` errors** (109 → 22 → 16 → **12**).
+   Hiçbiri canlı kusur değil; hepsi `types.ts`'in çalışma zamanı yükünden daha katı
+   olmasından. Kalan iki sınıf:
 
    | Sınıf | Adet | Nerede | Ne yapmalı |
    |---|---|---|---|
    | **A. Supabase insert/update yükü** (TS2345) | 7 | `resource-links.ts` (2) · `turkish-missions-admin.ts` (2) · `LinkManager.tsx` · `MvpManager.tsx` · `submissions.test.ts` | Yükü satır tipiyle açıkça tiple; en mekanik sınıf. |
-   | **B. `Json` sütununa tipli nesne** (TS2322/TS2352) | 5 | `muhasebe-butce-api.ts` (2) · `service-finder-api.ts` (2) · `marquee.test.ts` | Tek bir `toJson<T>()` yardımcısı ile kapanır. |
    | **C. Sorgu kurucusu özyinelemesi** (TS2589/TS2769) | 4 | `command-center-items.ts` (3) · `diasporaSearch.ts` | "Type instantiation is excessively deep" — zinciri bölmek veya ara tip vermek gerekir. |
+   | *(artık)* `marquee.test.ts` (TS2322) | 1 | test fixture'ı | A sınıfıyla aynı kökten. |
+
+   ✅ **B sınıfı (`Json` sütununa tipli nesne) 2026-09-06'da KAPANDI** — `src/lib/supabase-json.ts`
+   (`toJson` / `fromJson`). Yeni bir `jsonb` yazması eklerken `toJson` kullan. ⚠️ `fromJson`
+   bir DOĞRULAMA DEĞİLDİR; okunan veriye güvenmiyorsan zod şemasıyla parse et.
 
    ⚠️ **Bu listeyi "karar bekliyor" diye bırakma alışkanlığı bitti**: her sınıfın ne olduğu ve
    nasıl kapanacağı yukarıda yazılı. Sayı değişirse komutu tekrar çalıştırıp tabloyu güncelle.
