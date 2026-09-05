@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/components/auth/useAuth";
 
 /**
  * Detay sayfalarının üstünde gösterilen ortak uyarı.

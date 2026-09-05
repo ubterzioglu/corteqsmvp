@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MessageSquare, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/components/auth/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import PlatformMessageDialog, { RecipientKind } from "./PlatformMessageDialog";
 

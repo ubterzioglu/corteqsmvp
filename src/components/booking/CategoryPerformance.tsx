@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/components/auth/useAuth";
 import { BarChart3, Inbox } from "lucide-react";
 
 interface Row { category: string; count: number; pct: number; }

@@ -10,7 +10,7 @@ import DetailAuthLock from "@/components/DetailAuthLock";
 import { consultants } from "@/data/mock";
 import { useFollow } from "@/hooks/useFollow";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/components/auth/useAuth";
 
 type Comment = { id: string; name: string; avatar: string; text: string; date: string; likes: number };
 

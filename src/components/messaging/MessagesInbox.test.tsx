@@ -35,7 +35,11 @@ const mocks = vi.hoisted(() => ({
   toast: vi.fn(),
 }));
 
-vi.mock("@/contexts/AuthContext", () => ({
+// Kanonik modül taklit edilir; `@/contexts/AuthContext` shim'i 2026-09-06'da silindi.
+// Mock yolu bileşenin GERÇEKTEN import ettiği yol olmalı — aksi hâlde vi.mock sessizce
+// hiçbir şeyi değiştirmez ve test gerçek AuthProvider'ı arayıp "must be used within
+// AuthProvider" ile patlar.
+vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => ({ user: mocks.user }),
 }));
 

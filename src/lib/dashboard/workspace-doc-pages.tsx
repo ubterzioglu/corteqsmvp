@@ -468,28 +468,23 @@ export const workspaceDocPages: WorkspaceDocPage[] = [
               <li>src/hooks/useCafes.ts</li>
             </ul>
             <p>
-              <strong>Zamanı gelince yapılacak:</strong>
+              <strong>KAPANDI (6 Eylül 2026) — Seçenek B uygulandı.</strong> Kalan 16 dosyanın
+              tamamı canonical <code>@/components/auth/useAuth</code>'a geçirildi ve{" "}
+              <code>src/contexts/AuthContext.tsx</code> silindi.
             </p>
-            <ul className="list-disc space-y-1 pl-5">
-              <li>
-                <strong>Seçenek A (bu sayfalar gerçek auth gerektiriyor):</strong>{" "}
-                <code>src/contexts/AuthContext.tsx</code>'teki AuthProvider'ı App.tsx'e ekle —{" "}
-                canonical AuthProvider'ın altına, iç içe değil yan yana. Sonra 38 dosyadaki{" "}
-                <code>useAuth</code> import'larının doğru context'i kullandığını doğrula.
-                <br />
-                Not: İki context'in field adları farklı (<code>isLoading</code> vs <code>loading</code>) —
-                geçiş sırasında tip hatalarını kontrol et.
-              </li>
-              <li>
-                <strong>Seçenek B (bu sayfalar zaten auth gerektirmiyor):</strong>{" "}
-                38 dosyayı sil ya da canonical <code>src/components/auth/useAuth</code>'a geçir.
-                Orphaned context'i tamamen kaldır.
-              </li>
-              <li>
-                <strong>Seçenek C (live'a geçildi, hala kullanılmıyor):</strong>{" "}
-                38 dosyayı ve <code>src/contexts/AuthContext.tsx</code>'i sil.
-              </li>
-            </ul>
+            <p>
+              Geçiş beklenenden risksiz çıktı: shim'in canonical'a kattığı TEK şey{" "}
+              <code>loading</code> alias'ıydı ve ölçüldüğünde <strong>hiçbir dosya onu
+              kullanmıyordu</strong> — 16 dosyanın hepsi yalnız <code>{"{ user }"}</code> (biri
+              ayrıca <code>refreshProfile</code>) alıyordu. Yani yukarıda uyarılan{" "}
+              <code>isLoading</code> / <code>loading</code> tip çakışması pratikte hiç yaşanmadı;
+              göç düz bir import yolu değişimiydi.
+            </p>
+            <p>
+              Tek gerçek tuzak testteydi: <code>MessagesInbox.test.tsx</code> shim yolunu{" "}
+              <code>vi.mock</code>'luyordu. Mock yolu bileşenin gerçekten import ettiği yol
+              olmazsa sessizce hiçbir şeyi değiştirmez — o da kanonik yola çevrildi.
+            </p>
           </div>
         ),
       },

@@ -17,7 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import CountryCitySelector from "@/components/CountryCitySelector";
 import CreateEventForm from "@/components/CreateEventForm";
 import { useDiaspora } from "@/contexts/DiasporaContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/components/auth/useAuth";
 import { useNavigate } from "react-router-dom";
 import { events, countries } from "@/data/mock";
 import { useToast } from "@/hooks/use-toast";
