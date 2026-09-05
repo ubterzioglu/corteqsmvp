@@ -121,14 +121,35 @@ describe("CaddeComposer", () => {
     expect(screen.queryByText("Filtreyi kullan")).not.toBeInTheDocument();
   });
 
-  it("adds at most one extra target and keeps premium gating informational in the UI", () => {
+  // 05.09.2026: ek hedef VARSAYILAN OLARAK kapalı. Sunucu (create_cadde_post_v2) ilk ek
+  // hedefte bile `cadde_multi_target_premium_required` fırlatıyor çünkü gereken yetki
+  // anahtarı afs_features sözlüğünde yok. Buton açık kalırsa üye yazdığı paylaşımı
+  // KAYBEDİYOR. Bu iki test o kapıyı kilitler.
+  it("yetki yokken ek hedef eklenemez ve nedeni ekranda yazar", () => {
     const { onChange } = renderComposer();
 
     fireEvent.click(screen.getByRole("button", { name: "Konum" }));
+
+    const button = screen.getByRole("button", { name: /Yakında/ });
+    expect(button).toBeDisabled();
+    expect(screen.getByTestId("cadde-extra-target-locked")).toHaveTextContent(
+      /Şimdilik tek konuma paylaşabilirsin/i,
+    );
+
+    fireEvent.click(button);
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it("yetki verilince en fazla bir ek hedef eklenir, ikincisi premium ile kilitlenir", () => {
+    const { onChange } = renderComposer({}, { canAddExtraTarget: true });
+
+    fireEvent.click(screen.getByRole("button", { name: "Konum" }));
+    expect(screen.queryByTestId("cadde-extra-target-locked")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "+ Hedef" }));
 
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ targets: [{ country: "", city: "" }] }));
-    renderComposer({ targets: [{ country: "Hollanda", city: "Amsterdam" }] });
+
+    renderComposer({ targets: [{ country: "Hollanda", city: "Amsterdam" }] }, { canAddExtraTarget: true });
     fireEvent.click(screen.getAllByRole("button", { name: "Konum" }).at(-1)!);
 
     expect(screen.getByText("Ek hedef ülke 1")).toBeInTheDocument();

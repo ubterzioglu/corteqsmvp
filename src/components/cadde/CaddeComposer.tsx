@@ -55,6 +55,21 @@ export interface CaddeComposerProps {
    * paneli hiç çizilmez.
    */
   variant?: "feed" | "cafe";
+  /**
+   * Ek hedef (birden fazla ülke/şehir) ekleme yetkisi. VARSAYILAN KAPALI ve bu bilinçli.
+   *
+   * 05.09.2026'da ölçüldü: buton bir ek hedefe izin veriyordu ama `create_cadde_post_v2`
+   * ilk ek hedefte bile reddediyor — `cadde.post.multi_target_requires_premium` canlıda
+   * `true` ve gereken yetki anahtarı (`cadde.post.multi_target`) `afs_features` sözlüğüne
+   * HİÇ eklenmemiş, dolayısıyla `has_cadde_feature` her üyede false döner. Sonuç: üye
+   * hedefi ekliyor, gönder'e basıyor, `cadde_multi_target_premium_required` alıyor ve
+   * YAZDIĞI PAYLAŞIMI KAYBEDİYOR. Yöneticiler `is_admin`/`is_moderator` ile muaf olduğu
+   * için kusur test hesaplarında hiç görünmüyordu.
+   *
+   * Kapı burada kapalı tutulur ki kullanıcı gönderemeyeceği bir şeyi kurmasın. Ürün
+   * kararı verilip anahtar sözlüğe eklenince bu prop `true` geçilir.
+   */
+  canAddExtraTarget?: boolean;
 }
 
 const CaddeComposer = ({
@@ -67,6 +82,7 @@ const CaddeComposer = ({
   defaultLocationLabel = "",
   onError,
   variant = "feed",
+  canAddExtraTarget = false,
 }: CaddeComposerProps) => {
   const showLocation = variant === "feed";
   const [locationOpen, setLocationOpen] = useState(false);
@@ -319,17 +335,26 @@ const CaddeComposer = ({
               </div>
             </div>
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 pt-3">
-              <p className="text-xs font-medium text-slate-700">Ek hedef</p>
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-slate-700">Ek hedef</p>
+                {canAddExtraTarget ? null : (
+                  // Sunucu ek hedefi reddediyor; kullanıcı gönderemeyeceği bir şeyi
+                  // kurmasın diye kapı burada kapalı ve nedeni açıkça yazılı.
+                  <p className="text-[11px] text-slate-500" data-testid="cadde-extra-target-locked">
+                    Şimdilik tek konuma paylaşabilirsin. Birden fazla ülke/şehir yakında.
+                  </p>
+                )}
+              </div>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 className="h-8 rounded-full bg-white"
-                disabled={extraTargets.length >= 1}
+                disabled={!canAddExtraTarget || extraTargets.length >= 1}
                 onClick={() => update({ targets: [...extraTargets, { country: "", city: "" }] })}
               >
                 <Plus className="mr-1.5 h-3.5 w-3.5" />
-                {extraTargets.length >= 1 ? "Premium ile" : "+ Hedef"}
+                {!canAddExtraTarget ? "Yakında" : extraTargets.length >= 1 ? "Premium ile" : "+ Hedef"}
               </Button>
             </div>
             {extraTargets.map((target, index) => {
