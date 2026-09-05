@@ -48,7 +48,6 @@ test.describe("canlı revizyon taraması", () => {
       await page.screenshot({ path: `test-results/canli-${slug}.png`, fullPage: true });
 
       // Bulguları rapora yaz — test DÜŞMEZ, çünkü bu bir tanı taraması, bir kapı değil.
-      // eslint-disable-next-line no-console
       console.log(
         JSON.stringify({ route, leaks: hits, consoleErrors: consoleErrors.slice(0, 5) }, null, 1),
       );

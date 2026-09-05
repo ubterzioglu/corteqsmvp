@@ -41,7 +41,6 @@ test.describe("canlı font/CSP tanısı", () => {
       return { links, family, bodyFamily, loaded: loaded.slice(0, 12) };
     });
 
-    // eslint-disable-next-line no-console
     console.log(JSON.stringify({ report, cspViolations }, null, 1));
 
     expect(report.links.length).toBeGreaterThan(0);

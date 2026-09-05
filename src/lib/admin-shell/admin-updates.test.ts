@@ -6,11 +6,26 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260904-profil-toplantisi-ve-workshop-panosu");
-    expect(ADMIN_UPDATES[0].date).toBe("4 Eylül 2026");
+    expect(ADMIN_UPDATES[0].id).toBe("20260905-profil-formu-ilk-parti");
+    expect(ADMIN_UPDATES[0].date).toBe("5 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("profil formu ilk partisini günlük dille duyurur", () => {
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260905-profil-formu-ilk-parti");
+    const detail = update?.items.join(" ") ?? "";
+
+    // Madde başlıkları büyük harfle yazılır ("TELEFON ARTIK…", "BİZİ NEREDEN BULDUNUZ?").
+    // Türkçe'de bare toLowerCase güvenli değil (İ→i̇), o yüzden aramayı metinde geçtiği
+    // hâliyle yapıyoruz.
+    expect(detail).toContain("TELEFON");
+    expect(detail).toContain("Yalnız sen");
+    expect(detail).toContain("NEREDEN BULDUNUZ");
+    // Telefon alanının "yok olan alanı var etme" işi olduğu kaydı: 78 rol + 116 üye.
+    expect(detail).toContain("78 aktif rol");
+    expect(detail).toContain("116");
   });
 
   it("3 Eylül Profiller toplantısının panele işlendiğini duyurur", () => {

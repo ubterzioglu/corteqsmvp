@@ -11,9 +11,16 @@ işaretlendi. İki migration canlıda; `check:migrations` → **381 dosya / 381 
 Testler **1.768 geçti** (öncesi 1.721 — 47 yeni test), ESLint 0 problem, `tsc` 22 (taban
 çizgisi korundu, artmadı).
 
-⚠️ **Coolify deploy YAPILMADI.** Şema ve veri canlıda, uygulama kodu değil.
-Deploy edilene kadar profil formundaki telefon alanı, `/admin/client-errors` ekranı ve
-pano filtreleri kullanıcıya görünmez.
+✅ **Deploy CANLIDA ve doğrulandı** (5 Eylül 18:22 GMT, commit `c5d2dee` push'undan sonra
+Coolify webhook'u kendiliğinden çalıştı). Kanıt — canlı paketten string araması:
+`ProfilePage-C84MS-eA.js` içinde "Telefonu Kaydet" / "Tavsiye edilir" / "Profil tipi" **var**;
+`AdminClientErrorsPage-BedLEkLI.js` chunk'ı ve `client-errors` rotası **var**;
+`WelcomeActivatePage` içinde "nereden buldunuz" **yok**; `/` adresinde 6 güvenlik başlığı
+(CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, HSTS, Permissions-Policy) **var**.
+
+⚠️ Doğrulama **paket metnine** dayanır, gerçek kullanıcı akışına değil. Gözle kontrol
+kalan: `/profile` telefon satırı, `/admin/client-errors` ekranı, `/admin/workshop/cadde`
+onay kuyruğu filtresi.
 
 ---
 
