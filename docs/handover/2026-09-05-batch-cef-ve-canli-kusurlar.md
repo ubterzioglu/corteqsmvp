@@ -85,6 +85,29 @@ eşleşme bakıyordu → `Admin_SuperAdmin` kaçıyordu) · cafe başlığı · 
 ipucu · fallback uyarı şeridi · Radar rehberlerine ülke filtresi · dizinde kurum kayıtları
 kart görünümü.
 
+**İkinci parti düzeltmeler (commit `5908ad4` … `ee46608`):**
+- **Kafe temaları** — "İş" teması hiç yoktu, "İK" `hr` anahtarıyla ve İngilizce "HR"
+  etiketiyle duruyordu (mig `20260905160000`). ⚠️ Anahtar `hr` **bilinçli bırakıldı**:
+  `cadde_cafes.theme_key='hr'` olan kayıtlar var ve RPC temayı bu tabloya karşı
+  doğruluyor; yeniden adlandırmak eski kafeleri geçersiz temaya düşürürdü.
+  Frontend değişmedi ve değişmesi gerekmedi — liste sabit değil, tablodan okunuyor,
+  yani yeni tema **deploy beklemeden** görünür.
+- **Tepkiler tek tetiğin arkasında + boş kutulara maskot.** ⚠️ Hazır `HoverCard`
+  bileşeni **kullanılmadı**: Radix her render'da içindeki odaklanabilir öğeye
+  `tabindex="-1"` veriyor, beş tepki **düğmesi** oraya konsaydı klavyeyle hiç
+  ulaşılamazdı. Yerine satır içi disclosure yazıldı, test bunu kilitliyor.
+  Yolda gerçek bir kusur bulundu: fare tetikten panele geçerken panel kapanıyordu,
+  yani tepki düğmelerine fareyle hiç tıklanamıyordu (180 ms gecikmeli kapanışla çözüldü).
+- **Çarşı kategori rozetleri** tıklanabilir; sayfa URL parametresini okuyor (link
+  "görünür ama işe yaramaz" olmasın diye).
+- **Araçlarda şehir drill-down** + sihirbazda ISO kodu yerine ülke adı. Değer hâlâ
+  alpha-2 kod; değişen yalnız görünen etiket.
+- **Radar rehberlerine ülke filtresi** ve **dizinde kurum kayıtları kart görünümü**.
+
+⚠️ **Ajan tool kataloğu drift'i:** `cadde-carsi-api.ts`'e iki export eklenince
+`scripts/agent/tools-catalog.test.mjs` kırıldı. Çözüm testi gevşetmek değil,
+`npm run ingest:tools` çalıştırmak. `check:drift` bunu **görmez** — ayrı mekanizma.
+
 **Ölçümle kod işi olmadığı anlaşılanlar (not düşüldü, status korundu):**
 - `fb174151` Cadde şehir filtresi: katalog dar seçilmiş değil, **üye konumlarından
   türüyor** (`cadde_profile_city_sync` trigger'ı). ABD'de 2 şehir görünmesinin sebebi
@@ -98,9 +121,22 @@ kart görünümü.
 
 1. **Üç ürün kararı** — (a) unvan yetki mi verir, (b) ek hedef ücretli mi, (c) m22 kapatılsın mı.
 2. **45 maddeyi Burak'a tek turda sun** (rapor hazır).
-3. Kalan yapılabilir revizyon maddeleri: renkli sonuç grafikleri, CTA'dan test sonucuna
-   geri dönüş, kafe temaları, maskot, Çarşı etiket bağlantıları, araçlarda şehir seçimi.
+3. Kalan yapılabilir revizyon maddeleri: renkli sonuç grafikleri (`a275f131`), CTA'dan
+   test sonucuna geri dönüş (`0838da0b`), araç sonucunu profile kaydetme (`50362e2a`).
 4. WS1-7 (SMTP → e-posta doğrulaması) ve WS1-8/11 (OTP sağlayıcı) hâlâ dış karar bekliyor.
+5. Takip işi: araçlardaki şehir drill-down'ın 1. adımı, kullanıcının 4. soruda verdiği
+   `target_countries` cevabını okumuyor — `QuestionStepper` state'i ayrı tutuluyor.
+
+## Son durum (ölçüldü)
+
+| Kontrol | Sonuç |
+|---|---|
+| Test | 1841 geçti (gün başı 1768) |
+| ESLint | 0 problem |
+| tsc | 22 (taban, artmadı) |
+| Build | yeşil |
+| Migration | 383 dosya / 383 canlı kayıt, sapma yok |
+| Dal | `main`, `ee46608`'e kadar push edildi |
 
 ## Bu turda öğrenilen üç şey
 
