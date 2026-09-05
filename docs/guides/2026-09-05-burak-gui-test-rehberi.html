@@ -1,0 +1,411 @@
+<title>Burak Test Kılavuzu</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #f2f4f7;
+    --card: #ffffff;
+    --ink: #0d1117;
+    --ink-2: #46505f;
+    --ink-3: #7c8797;
+    --rule: #d9dfe7;
+    --accent: #1d4ed8;
+    --accent-soft: #e8eefc;
+    --live: #0f7b3d;
+    --live-soft: #e3f4ea;
+    --pending: #9a5b06;
+    --pending-soft: #fbf0dc;
+    --alarm: #b3123c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0a0d12;
+      --card: #121820;
+      --ink: #e9eef6;
+      --ink-2: #a3aebd;
+      --ink-3: #78838f;
+      --rule: #232c38;
+      --accent: #7aa2f7;
+      --accent-soft: #16233d;
+      --live: #4ade80;
+      --live-soft: #10261a;
+      --pending: #fbbf24;
+      --pending-soft: #2a1f08;
+      --alarm: #fb7185;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0a0d12;
+    --card: #121820;
+    --ink: #e9eef6;
+    --ink-2: #a3aebd;
+    --ink-3: #78838f;
+    --rule: #232c38;
+    --accent: #7aa2f7;
+    --accent-soft: #16233d;
+    --live: #4ade80;
+    --live-soft: #10261a;
+    --pending: #fbbf24;
+    --pending-soft: #2a1f08;
+    --alarm: #fb7185;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Source Sans 3", system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.62;
+  }
+  .wrap { max-width: 56rem; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; display: flex; flex-direction: column; gap: 2.5rem; }
+
+  h1, h2, h3 { font-family: Archivo, system-ui, sans-serif; margin: 0; text-wrap: balance; }
+  h1 { font-size: clamp(1.8rem, 1.3rem + 2vw, 2.5rem); font-weight: 700; letter-spacing: -.02em; line-height: 1.1; }
+  h2 { font-size: 1.3rem; font-weight: 600; letter-spacing: -.01em; }
+  h3 { font-size: 1rem; font-weight: 600; }
+  p { margin: 0; max-width: 64ch; }
+  code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .88em; }
+
+  .kicker {
+    font-family: "JetBrains Mono", monospace;
+    font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3);
+  }
+  header { display: flex; flex-direction: column; gap: .75rem; }
+  header p.lead { color: var(--ink-2); font-size: 1.05rem; }
+
+  /* canary */
+  .canary {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-top: 4px solid var(--accent);
+    border-radius: 3px;
+    padding: 1.25rem 1.4rem;
+    display: flex; flex-direction: column; gap: .8rem;
+  }
+  .canary ol { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: .4rem; color: var(--ink-2); }
+  .canary strong { color: var(--ink); }
+
+  .verdicts { display: grid; gap: .6rem; margin-top: .3rem; }
+  .verdict { display: grid; grid-template-columns: auto 1fr; gap: .7rem; align-items: start; font-size: .93rem; }
+  .verdict .mark { font-family: "JetBrains Mono", monospace; font-weight: 500; }
+  .v-yes .mark { color: var(--live); }
+  .v-no .mark { color: var(--pending); }
+
+  /* group heading */
+  .group { display: flex; flex-direction: column; gap: 1rem; }
+  .group-head { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; padding-bottom: .55rem; border-bottom: 2px solid var(--rule); }
+  .tag {
+    font-family: "JetBrains Mono", monospace; font-size: .68rem; letter-spacing: .06em; text-transform: uppercase;
+    padding: .18rem .5rem; border-radius: 2px; font-weight: 500; white-space: nowrap;
+  }
+  .tag-live { background: var(--live-soft); color: var(--live); }
+  .tag-pending { background: var(--pending-soft); color: var(--pending); }
+
+  /* test steps */
+  .steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .8rem; }
+  .step {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 3px;
+    display: grid; grid-template-columns: 3rem 1fr; align-items: start;
+  }
+  .step-no {
+    font-family: Archivo, sans-serif; font-weight: 700; font-size: 1rem;
+    color: var(--accent); background: var(--accent-soft);
+    align-self: stretch; display: flex; align-items: flex-start; justify-content: center;
+    padding-top: 1rem; border-right: 1px solid var(--rule);
+    font-variant-numeric: tabular-nums;
+  }
+  .step-body { padding: .95rem 1.15rem 1.05rem; display: flex; flex-direction: column; gap: .55rem; min-width: 0; }
+  .step-title { display: flex; align-items: flex-start; gap: .6rem; }
+  .step-title h3 { flex: 1; }
+  .step-title input[type="checkbox"] { width: 1.15rem; height: 1.15rem; margin-top: .2rem; accent-color: var(--accent); flex: none; cursor: pointer; }
+
+  dl { margin: 0; display: grid; grid-template-columns: 6.5rem 1fr; gap: .35rem .9rem; font-size: .93rem; }
+  dt { font-family: "JetBrains Mono", monospace; font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); padding-top: .22rem; }
+  dd { margin: 0; color: var(--ink-2); min-width: 0; }
+  dd strong { color: var(--ink); font-weight: 600; }
+  dd.bad { color: var(--alarm); }
+
+  @media (max-width: 32rem) {
+    dl { grid-template-columns: 1fr; gap: .1rem; }
+    dt { padding-top: .5rem; }
+    .step { grid-template-columns: 2.2rem 1fr; }
+  }
+
+  footer { border-top: 1px solid var(--rule); padding-top: 1.1rem; color: var(--ink-3); font-size: .85rem; display: flex; flex-direction: column; gap: .3rem; }
+  a { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <p class="kicker">5 Eylül 2026 · corteqs.net · elle GUI testi</p>
+    <h1>Burak test kılavuzu</h1>
+    <p class="lead">
+      Bugün değişen her şeyi tarayıcıdan, geliştirici aracı açmadan sınamak için.
+      Her adımda ne yapacağın, ne görmen gerektiği ve <em>görmezsen bunun ne anlama
+      geldiği</em> yazıyor. İşaretlediklerin tarayıcında saklanır.
+    </p>
+  </header>
+
+  <section class="canary">
+    <h2>Önce şunu yap: yeni sürüm yayında mı?</h2>
+    <p>
+      Bugünün değişikliklerinin bir kısmı <strong>veritabanında</strong> (anında geçerli),
+      bir kısmı <strong>kodda</strong> (ancak yeni sürüm yayınlanınca görünür). Hangi
+      listeyi test edebileceğini şu tek adım söyler:
+    </p>
+    <ol>
+      <li>Şuraya git: <code>corteqs.net/cadde/carsi</code></li>
+      <li>Herhangi bir ilan kartındaki turuncu <strong>kategori rozetine</strong> tıkla.</li>
+    </ol>
+    <div class="verdicts">
+      <div class="verdict v-yes">
+        <span class="mark">→ Tıklandı</span>
+        <span>Yeni sürüm yayında. <strong>A ve B listesinin tamamını</strong> test edebilirsin.</span>
+      </div>
+      <div class="verdict v-no">
+        <span class="mark">→ Tıklanmadı</span>
+        <span>Yeni sürüm henüz yayınlanmamış. Yalnız <strong>A listesini</strong> test et; B listesi yayından sonra.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="group-head">
+      <h2>A listesi — şimdi test edilebilir</h2>
+      <span class="tag tag-live">yayın gerekmez</span>
+    </div>
+    <p>Bu üçü veritabanında değişti, yani yeni sürüm beklemeden çalışıyor.</p>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-no">1</span>
+        <div class="step-body">
+          <div class="step-title">
+            <input type="checkbox" id="t1" aria-label="1. adımı tamamlandı olarak işaretle">
+            <h3>Kafe açarken “İş” teması var mı?</h3>
+          </div>
+          <dl>
+            <dt>Nerede</dt><dd><code>corteqs.net/cadde</code> → “Kafe Aç”</dd>
+            <dt>Ne yap</dt><dd>Tema listesini aç, baştan sona oku.</dd>
+            <dt>Görmeli</dt><dd>Listede <strong>“İş”</strong> var. Ayrıca eskiden “HR” yazan satır artık <strong>“İK”</strong> yazıyor.</dd>
+            <dt>Yoksa</dt><dd class="bad">Veritabanı güncellemesi uygulanmamış demektir — bu bir yayın sorunu değildir, haber ver.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="step-no">2</span>
+        <div class="step-body">
+          <div class="step-title">
+            <input type="checkbox" id="t2" aria-label="2. adımı tamamlandı olarak işaretle">
+            <h3>“ABD” ülkesini seçmiş bir üye paylaşım yapabiliyor mu?</h3>
+          </div>
+          <dl>
+            <dt>Nerede</dt><dd>Profilinde ülkesi <strong>ABD</strong> ya da <strong>İngiltere</strong> olan bir hesapla <code>corteqs.net/cadde</code></dd>
+            <dt>Ne yap</dt><dd>Kısa bir paylaşım yaz ve gönder.</dd>
+            <dt>Görmeli</dt><dd>Paylaşım <strong>akışa düşüyor</strong>.</dd>
+            <dt>Yoksa</dt><dd class="bad">“Hedef geçersiz” benzeri bir hata çıkarsa o ülke adı hâlâ eşleşmiyordur — hangi ülke olduğunu yaz, aynı yöntemle kapatılır.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="step-no">3</span>
+        <div class="step-body">
+          <div class="step-title">
+            <input type="checkbox" id="t3" aria-label="3. adımı tamamlandı olarak işaretle">
+            <h3>Yazı tipi doğru mu?</h3>
+          </div>
+          <dl>
+            <dt>Nerede</dt><dd>Herhangi bir sayfa, ör. <code>corteqs.net</code></dd>
+            <dt>Ne yap</dt><dd>Sayfayı bir kez sert yenile (<code>Ctrl+F5</code>) ve başlıklara bak.</dd>
+            <dt>Görmeli</dt><dd>Yazılar <strong>markanın yazı tipiyle</strong> görünüyor; Windows’un varsayılan arayüz yazısı gibi durmuyor.</dd>
+            <dt>Yoksa</dt><dd class="bad">Aylardır süren bir kusurdu, düzeltildi ve ölçüldü. Yine eski görünüyorsa ekran görüntüsü al.</dd>
+          </dl>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="group">
+    <div class="group-head">
+      <h2>B listesi — yeni sürüm yayınlandıktan sonra</h2>
+      <span class="tag tag-pending">yayın sonrası</span>
+    </div>
+    <p>Bunların hepsi kod değişikliği; kanarya adımı “tıklandı” dediyse hazırlar.</p>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-no">4</span>
+        <div class="step-body">
+          <div class="step-title">
+            <input type="checkbox" id="t4" aria-label="4. adımı tamamlandı olarak işaretle">
+            <h3>Çarşı kategori rozetleri filtreliyor mu?</h3>
+          </div>
+          <dl>
+            <dt>Nerede</dt><dd><code>corteqs.net/cadde/carsi</code></dd>
+            <dt>Ne yap</dt><dd>Bir ilan kartındaki kategori rozetine tıkla. Sonra bir ilanın detayına gir, oradaki rozete de tıkla.</dd>
+            <dt>Görmeli</dt><dd>Liste <strong>o kategoriye filtreleniyor</strong>, adres çubuğunda <code>?kategori=…</code> beliriyor.</dd>
+            <dt>Yoksa</dt><dd class="bad">Rozete tıklayınca ilanın detayına gidiyorsa rozet linki çalışmıyordur.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="step-no">5</span>
+        <div class="step-body">
+          <div class="step-title">
+            <input type="checkbox" id="t5" aria-label="5. adımı tamamlandı olarak işaretle">
+            <h3>Tepki kartı açılıyor ve tıklanabiliyor mu?</h3>
+          </div>
+          <dl>
+            <dt>Nerede</dt><dd><code>corteqs.net/cadde</code>, herhangi bir paylaşım</dd>
+            <dt>Ne yap</dt><dd>“Beğen” düğmesinin <strong>üzerine gel</strong>, açılan karta doğru fareyi kaydır ve bir tepkiye tıkla. Sonra aynısını <code>Tab</code> + <code>Enter</code> ile klavyeden dene.</dd>
+            <dt>Görmeli</dt><dd>Kart açık kalıyor, tepki <strong>sayılıyor</strong>. Klavyeyle de beş tepkiye ulaşılıyor.</dd>
+            <dt>Yoksa</dt><dd class="bad">Kart, üzerine gitmeye çalışırken kapanıyorsa bu tam olarak düzeltilen kusurdur — haber ver.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="step-no">6</span>
+        <div class="step-body">
+          <div class="step-title">
+            <input type="checkbox" id="t6" aria-label="6. adımı tamamlandı olarak işaretle">
+            <h3>“Ek hedef” düğmesi normal üyede görünmüyor mu?</h3>
+          </div>
+          <dl>
+            <dt>Nerede</dt><dd><strong>Yönetici olmayan</strong> bir hesapla <code>corteqs.net/cadde</code> paylaşım kutusu</dd>
+            <dt>Ne yap</dt><dd>Paylaşım kutusunu aç ve hedef seçeneklerine bak.</dd>
+            <dt>Görmeli</dt><dd>“Ek hedef” düğmesi <strong>yok</strong>. Paylaşım normal şekilde gönderiliyor.</dd>
+            <dt>Yoksa</dt><dd class="bad">Düğme görünüyor ve basınca paylaşım gitmiyorsa, kaybettiren eski davranış geri gelmiş demektir.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="step-no">7</span>
+        <div class="step-body">
+          <div class="step-title">
+            <input type="checkbox" id="t7" aria-label="7. adımı tamamlandı olarak işaretle">
+            <h3>Boş tanıtım kutusunda maskot çıkıyor mu?</h3>
+          </div>
+          <dl>
+            <dt>Nerede</dt><dd><code>corteqs.net/cadde</code>, sağ kolon (geniş ekranda)</dd>
+            <dt>Ne yap</dt><dd>Tanıtım ve “öne çıkanlar” kutularına bak.</dd>
+            <dt>Görmeli</dt><dd>Kutu boşsa yanında <strong>maskot görseli</strong> var, metin taşmıyor.</dd>
+            <dt>Yoksa</dt><dd class="bad">Kutuda kampanya varsa maskot çıkmaz — bu doğrudur, kusur değil.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="step-no">8</span>
+        <div class="step-body">
+          <div class="step-title">
+            <input type="checkbox" id="t8" aria-label="8. adımı tamamlandı olarak işaretle">
+            <h3>Taşınma sihirbazında ülke adı yazıyor mu?</h3>
+          </div>
+          <dl>
+            <dt>Nerede</dt><dd><code>corteqs.net/relocation</code></dd>
+            <dt>Ne yap</dt><dd>Hedef ülke listesini aç.</dd>
+            <dt>Görmeli</dt><dd><strong>“Almanya”, “İngiltere”</strong> gibi adlar; kod (<code>DE</code>, <code>GB</code>) sadece sağda küçük rozet olarak.</dd>
+            <dt>Yoksa</dt><dd class="bad">Yalnız iki harfli kodlar görünüyorsa eski hâli duruyordur.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="step-no">9</span>
+        <div class="step-body">
+          <div class="step-title">
+            <input type="checkbox" id="t9" aria-label="9. adımı tamamlandı olarak işaretle">
+            <h3>Şehir seçimi listeden yapılıyor mu?</h3>
+          </div>
+          <dl>
+            <dt>Nerede</dt><dd><code>corteqs.net/tools</code> → <strong>Meslek &amp; Maaş</strong> aracı</dd>
+            <dt>Ne yap</dt><dd>Testi başlat. <strong>4. soruda</strong> ülke olarak Almanya’yı seç, ilerle. <strong>12. soruda</strong> şehir adımına gel.</dd>
+            <dt>Görmeli</dt><dd>Ülkeyi ikinci kez seçmene <strong>gerek kalmadan</strong> Alman şehirleri listeleniyor; üstteki kutu “Seçtiğin ülkeler (1)” diyor.</dd>
+            <dt>Yoksa</dt><dd class="bad">Liste boşsa ve “önce ülke seç” diyorsa, 4. sorunun cevabı okunmuyordur.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="step-no">10</span>
+        <div class="step-body">
+          <div class="step-title">
+            <input type="checkbox" id="t10" aria-label="10. adımı tamamlandı olarak işaretle">
+            <h3>Listede olmayan şehir elle eklenebiliyor mu?</h3>
+          </div>
+          <dl>
+            <dt>Nerede</dt><dd>Aynı şehir adımı</dd>
+            <dt>Ne yap</dt><dd>Arama kutusuna <code>Böblingen</code> yaz.</dd>
+            <dt>Görmeli</dt><dd><strong>“Böblingen” şehrini elle ekle</strong> seçeneği çıkıyor ve tıklayınca aşağıda rozet olarak birikiyor.</dd>
+            <dt>Yoksa</dt><dd class="bad">Bu çıkış olmazsa katalogda olmayan şehri olan üye tıkanır — önemlidir.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="step-no">11</span>
+        <div class="step-body">
+          <div class="step-title">
+            <input type="checkbox" id="t11" aria-label="11. adımı tamamlandı olarak işaretle">
+            <h3>Sonuç grafikleri renkli mi?</h3>
+          </div>
+          <dl>
+            <dt>Nerede</dt><dd>Aynı testi sonuna kadar bitir, sonuç ekranı</dd>
+            <dt>Ne yap</dt><dd>“Puan dağılımı” kartındaki çubuklara bak.</dd>
+            <dt>Görmeli</dt><dd>Çubuklar puana göre <strong>farklı renkte</strong> ve yanlarında ikonlu <strong>“Güçlü / İyi / Orta / Zayıf”</strong> etiketi var.</dd>
+            <dt>Yoksa</dt><dd class="bad">Hepsi aynı gri/mavi ise eski hâli duruyordur.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="step-no">12</span>
+        <div class="step-body">
+          <div class="step-title">
+            <input type="checkbox" id="t12" aria-label="12. adımı tamamlandı olarak işaretle">
+            <h3>Sonuçtan çıkınca geri dönebiliyor musun?</h3>
+          </div>
+          <dl>
+            <dt>Nerede</dt><dd>Aynı sonuç ekranı</dd>
+            <dt>Ne yap</dt><dd>Alttaki düğmelerden birine bas (ör. <strong>Bu Ülkedeki Üyeleri Gör</strong>). Gittiğin sayfada bir adım daha derine gir.</dd>
+            <dt>Görmeli</dt><dd>Sayfanın en üstünde ince bir <strong>“Test sonucuna dön”</strong> şeridi var; derine indiğinde de duruyor. Tıklayınca sonuca dönüyorsun, <code>×</code> ile kapanıyor ve geri gelmiyor.</dd>
+            <dt>Yoksa</dt><dd class="bad">Şerit hiç çıkmıyorsa, sonuç adresi kalıcı hâle gelmeden düğmeye basılmış olabilir; sonucu bir kez yenileyip tekrar dene.</dd>
+          </dl>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <footer>
+    <span>Bir şey beklediğin gibi değilse: adım numarası + ekran görüntüsü + hangi hesapla denediğin yeterli.</span>
+    <span>Ayrıntılı teknik kayıt: <code>docs/handover/2026-09-05-batch-cef-ve-canli-kusurlar.md</code></span>
+  </footer>
+
+</div>
+
+<script>
+  // İşaretler yalnız bu tarayıcıda saklanır (kimseyle paylaşılmaz, sunucuya gitmez).
+  // Depolama gizli sekmede erişilemeyebilir; her okuma/yazma sessizce korunur.
+  (function () {
+    var KEY = "corteqs.burakTestChecklist.20260905";
+    var boxes = Array.prototype.slice.call(document.querySelectorAll('input[type="checkbox"]'));
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { saved = {}; }
+
+    boxes.forEach(function (box) {
+      if (saved[box.id]) box.checked = true;
+      box.addEventListener("change", function () {
+        saved[box.id] = box.checked;
+        try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) { /* yoksay */ }
+      });
+    });
+  })();
+</script>
