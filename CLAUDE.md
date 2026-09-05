@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **CorteQS Landing** is a multi-feature React + Vite application with Supabase backend. It combines a public marketing site, admin dashboard, member profiles, surveys, workspace collaboration tools, and an accounting module (muhasebe) — all in a single SPA.
 
 **Key Metrics (ölçüldü 2026-09-05, gün sonu):**
-- **1.092** `.ts`/`.tsx` files under `src` — 228 pages, 439 components, 335 lib modules
+- **1.073** `.ts`/`.tsx` files under `src` — 220 pages, 429 components, 335 lib modules
 - **383 Supabase migrations** — 131 in `supabase/migrations/applied/`
   + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split); 7 Edge Functions
 - **245** test files under `src` (+ `scripts`/`supabase`/`workers`) + 21 Playwright `.spec.ts`;
@@ -684,7 +684,7 @@ belong there; documentation goes under `docs/`.
 > | İddia (eski) | Ölçüm (2026-09-05) |
 > |---|---|
 > | ESLint 1280 problem | **0** |
-> | 89 `as any` | **15** |
+> | 89 `as any` | **9** |
 > | 83 `from(` + 42 `rpc(` bileşende | **32** + **4** |
 > | 21 auth shim import'u | **18** |
 > | 98 `tsc` hatası | **22** |
@@ -710,7 +710,10 @@ belong there; documentation goes under `docs/`.
 3. **Mixed data fetching (B6)** → **32** `supabase.from(` + **4** `supabase.rpc(` calls still sit
    inside components (ölçüldü 2026-09-05; eski iddia 83+42 idi). Standardize on `*-api.ts` +
    React Query.
-4. **TypeScript loose (B7)** → **15** `as any` kaldı (89 değil).
+4. **TypeScript loose (B7)** → **9** `as any` kaldı (89 değil). Bunların 3'ü bilinçli
+   `const db = supabase as any` (cadde-internal · relocation-api · relocation-tools-api):
+   kaldırmak tsc'yi 16 → 37 yapıyor, yani hâlâ gerçek iş yapıyorlar. Gereksiz olan 5 tanesi
+   2026-09-06'da kaldırıldı. Kalan 6 satır yorum/açıklama.
 5. **16 remaining `tsc -p tsconfig.app.json --noEmit` errors** (109 → 22 → **16**, son indirim
    2026-09-05'te ölü kod silinerek). Kalanlar üç sınıfa ayrılıyor — hiçbiri canlı kusur değil,
    hepsi `types.ts`'in çalışma zamanı yükünden daha katı olmasından:
@@ -724,8 +727,8 @@ belong there; documentation goes under `docs/`.
    ⚠️ **Bu listeyi "karar bekliyor" diye bırakma alışkanlığı bitti**: her sınıfın ne olduğu ve
    nasıl kapanacağı yukarıda yazılı. Sayı değişirse komutu tekrar çalıştırıp tabloyu güncelle.
 6. **Test coverage spotty** → activate Playwright for critical flows.
-7. **Large files** → **126** files exceed 300 lines (2026-08-04'te 112 idi — **artıyor**, tek
-   gerçekten kötüleşen kalem). En büyük gerçek kaynak dosyalar `src/lib/admin-shell/social-diaspora-posts.ts`
+7. **Large files** → **119** files exceed 300 lines (112 → 126 → 119; 2026-09-06 ölü kod
+   temizliğiyle geriledi). En büyük gerçek kaynak dosyalar `src/lib/admin-shell/social-diaspora-posts.ts`
    (2934) ve `ProfilePage.tsx`. `src/integrations/supabase/types.ts` (15.010) ve
    `src/lib/agent/tools-catalog.generated.ts` (3139) ÜRETİLEN dosyalardır, bu sayıma dahil edilmez.
 8. **Duplicate images in `public/`** → `sweet.png`/`sweet.jpg`, `last.png`/`newbg.png`,
