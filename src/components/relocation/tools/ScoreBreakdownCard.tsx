@@ -4,8 +4,8 @@
 // skordaki ağırlığı (%) ve puanın bandı (Güçlü/İyi/Orta/Zayıf). Üçü de opsiyoneldir:
 // araç için copy tanımlı değilse ilgili parça hiç çizilmez, kart eski haline döner.
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { TOOLS_UI_COPY, dimensionBandLabel } from "@/lib/relocation-tools-copy";
+import { ScoreBandBar, ScoreBandChip } from "@/components/relocation/tools/ScoreBand";
+import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
 
 interface ScoreBreakdownCardProps {
   subScores: Record<string, number>;
@@ -54,14 +54,19 @@ export function ScoreBreakdownCard({
                     </span>
                   )}
                 </span>
-                <span className="flex items-baseline gap-2">
-                  <span className="text-xs text-muted-foreground">
-                    {dimensionBandLabel(value ?? 0)}
-                  </span>
-                  <span className="text-muted-foreground">{pct}</span>
+                <span className="flex items-center gap-2">
+                  {/* Bant artık renkli rozet: ikon + etiket + bandın rengi.
+                      Sayı metin tokenında kalır — renk barda ve rozette taşınır,
+                      rakamın kendisi renklenmez. */}
+                  <ScoreBandChip value01={value ?? 0} />
+                  <span className="tabular-nums text-muted-foreground">{pct}</span>
                 </span>
               </div>
-              <Progress value={pct} className="h-1.5" />
+              <ScoreBandBar
+                value01={value ?? 0}
+                ariaLabel={dimensionLabels[dim] ?? dim}
+                className="h-1.5"
+              />
               {description && (
                 <p className="text-xs leading-relaxed text-muted-foreground">{description}</p>
               )}

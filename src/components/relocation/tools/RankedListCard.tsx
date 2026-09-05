@@ -2,7 +2,7 @@
 // recommendations öğelerini sıralı kart listesi olarak gösterir (başlık + skor + opsiyonel kırılım).
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { ScoreBandBar } from "@/components/relocation/tools/ScoreBand";
 
 interface RankedItem {
   key?: string;
@@ -47,8 +47,15 @@ export function RankedListCard({ title, items, dimensionLabels = {} }: RankedLis
                       <span className="w-32 shrink-0 text-xs text-muted-foreground">
                         {dimensionLabels[dim] ?? dim}
                       </span>
-                      <Progress value={pct} className="h-1" />
-                      <span className="w-8 shrink-0 text-right text-xs text-muted-foreground">
+                      {/* Bant rengi burada da geçerli: sıralı listede zayıf boyut
+                          bir bakışta ayırt edilebilmeli. Rozet YOK — satır dar ve
+                          etiket zaten solda; renk + sayı yeterli, rozet satırı kırardı. */}
+                      <ScoreBandBar
+                        value01={value ?? 0}
+                        ariaLabel={dimensionLabels[dim] ?? dim}
+                        className="h-1"
+                      />
+                      <span className="w-8 shrink-0 text-right text-xs tabular-nums text-muted-foreground">
                         {pct}
                       </span>
                     </div>

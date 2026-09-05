@@ -4,6 +4,7 @@
 
 import type { ToolCta } from "@/lib/relocation-tools-types";
 import { CHALLENGE_LABELS } from "@/lib/relocation-tools-challenge";
+import { SCORE_BAND_LABELS, scoreBand } from "@/lib/relocation-score-bands";
 import {
   READINESS_DIMENSION_ACTIONS,
   READINESS_DIMENSION_DESCRIPTIONS,
@@ -127,11 +128,10 @@ export function bucketDescription(bucketKey: string | null | undefined): string 
  * Bu SALT GÖRÜNTÜ bandıdır — `score_bucket` ile karıştırma, o SQL'den gelir.
  */
 export function dimensionBandLabel(value01: number): string {
-  const pct = value01 * 100;
-  if (pct >= 80) return "Güçlü";
-  if (pct >= 60) return "İyi";
-  if (pct >= 40) return "Orta";
-  return "Zayıf";
+  // Eşikler ve etiketler TEK KAYNAKTAN gelir (`relocation-score-bands`). Burada
+  // ikinci bir kopya dursaydı biri değiştiğinde aynı puan için kart bir bant,
+  // rozet başka bir bant gösterirdi.
+  return SCORE_BAND_LABELS[scoreBand(value01)];
 }
 
 /** Bucket/bant anahtarı → Türkçe etiket (araçlar arası ortak; bilinmeyen anahtar boş). */
