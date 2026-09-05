@@ -2706,6 +2706,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/supabase-json.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/survey-responses.ts",
       "kind": "ts",
       "module_family": "surveys"

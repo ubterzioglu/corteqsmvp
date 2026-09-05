@@ -2,6 +2,7 @@
 // Supabase RPC + okuma çağrıları — muhasebe-api deseni.
 // Mutasyonlar security-definer RPC'ler üzerinden; listeler RLS'li SELECT.
 
+import { toJson } from "@/lib/supabase-json";
 import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
 import type {
@@ -87,7 +88,7 @@ export async function reviewCandidate(
   const { error } = await supabase.rpc("admin_review_service_finder_candidate", {
     p_candidate_id: candidateId,
     p_action: action,
-    p_patch: patch,
+    p_patch: toJson(patch),
   });
   if (error) throw error;
 }
@@ -98,7 +99,7 @@ export async function publishCandidate(
 ): Promise<{ catalog_item_id: string }> {
   const { data, error } = await supabase.rpc("admin_publish_service_finder_candidate", {
     p_candidate_id: candidateId,
-    p_patch: patch,
+    p_patch: toJson(patch),
   });
   if (error) throw error;
   return data as unknown as { catalog_item_id: string };
@@ -124,7 +125,7 @@ export async function upsertProvider(
 ): Promise<void> {
   const { error } = await supabase.rpc("admin_upsert_service_finder_provider", {
     p_provider_id: providerId,
-    p_patch: patch,
+    p_patch: toJson(patch),
   });
   if (error) throw error;
 }
@@ -144,7 +145,7 @@ export async function upsertTemplate(
 ): Promise<void> {
   const { error } = await supabase.rpc("admin_upsert_service_finder_template", {
     p_template_id: templateId,
-    p_patch: patch,
+    p_patch: toJson(patch),
   });
   if (error) throw error;
 }
