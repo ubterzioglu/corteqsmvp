@@ -558,6 +558,8 @@ export const toolCatalog = {
       "entrypoint": "src/lib/cadde-carsi-api.ts",
       "interface_kind": "internal_api",
       "exports": [
+        "CARSI_CATEGORY_PARAM",
+        "carsiCategoryHref",
         "createCarsiItem",
         "deleteCarsiItem",
         "formatCarsiPrice",
@@ -1109,6 +1111,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin-shell/admin-client-errors-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-client-errors-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin-shell/admin-dashboard-api.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1165,6 +1177,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/admin-shell/admin-todos.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-updates.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -1389,6 +1406,16 @@ export const toolCatalog = {
       "module_family": "catalog"
     },
     {
+      "path": "src/lib/auth-messages.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/auth-messages.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/blog-schemas.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1440,6 +1467,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/cadde-cafe-join-requests.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-cafe-themes.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-carsi-api.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
@@ -1734,6 +1771,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/client-error-reports.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/client-error-reports.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/commercial-documents.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1744,12 +1791,42 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/contributor-resource-self-service-migration.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/contributor-resource-submissions-migration.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/contributor-resource-submissions.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/contributor-resource-submissions.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/country-city-search.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
       "path": "src/lib/customer-requests.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-hot-fixes.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-hot-fixes.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -1765,6 +1842,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/dashboard/meeting-notes-data.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/meeting-t19-profil-workshop-seed.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -1800,6 +1882,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/diasporaSearch.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/directory-grouping.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/directory-grouping.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -1925,6 +2017,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/independent-profiles.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/index-html-csp.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -2084,6 +2181,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/phone-country-derivation.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/profile-documents.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2100,6 +2202,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/profile-onboarding-normalize.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-phone.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-phone.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -2172,6 +2284,16 @@ export const toolCatalog = {
       "path": "src/lib/public-catalog-profile-view-model.ts",
       "kind": "ts",
       "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/radar-guides.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/radar-guides.ts",
+      "kind": "ts",
+      "module_family": "lib"
     },
     {
       "path": "src/lib/radar-pipeline.test.ts",
