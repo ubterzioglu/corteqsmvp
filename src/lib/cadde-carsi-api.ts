@@ -265,6 +265,24 @@ export function recordCarsiContact(itemId: string): void {
   });
 }
 
+/**
+ * Çarşı liste sayfasının kategori filtresini taşıyan query parametresi.
+ * TEK KAYNAK: `CaddeCarsiPage` filtreyi bu sabitle URL'den okur, kategori rozetleri
+ * `carsiCategoryHref` ile aynı sabitten link üretir. Adı burada değişirse iki taraf
+ * birden uyar — rozet "görünür ama işe yaramaz" duruma düşemez.
+ */
+export const CARSI_CATEGORY_PARAM = "kategori";
+
+/**
+ * Bir kategori rozetinin gideceği adres: /cadde/carsi?kategori=<key>.
+ * Boş/eksik key filtresiz listeye düşer (rozet asla kırık link üretmez).
+ */
+export function carsiCategoryHref(categoryKey: string | null | undefined): string {
+  const key = (categoryKey ?? "").trim();
+  if (!key) return "/cadde/carsi";
+  return `/cadde/carsi?${CARSI_CATEGORY_PARAM}=${encodeURIComponent(key)}`;
+}
+
 export function formatCarsiPrice(item: Pick<CarsiItem, "priceAmount" | "priceCurrency">): string {
   if (item.priceAmount === null || item.priceAmount === undefined) return "Fiyat belirtilmedi";
   if (item.priceAmount === 0) return "Ücretsiz";

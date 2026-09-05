@@ -17,6 +17,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import {
+  CARSI_CATEGORY_PARAM,
+  carsiCategoryHref,
   createCarsiItem,
   deleteCarsiItem,
   formatCarsiPrice,
@@ -47,7 +49,9 @@ const CaddeCarsiPage = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
-  const categoryKey = searchParams.get("kategori") ?? "";
+  // Filtre URL'den beslenir: kategori rozetleri (ticker, kart, ilan detayı) buraya
+  // ?kategori=<key> ile gelir; parametre adı cadde-carsi-api'deki tek sabitten okunur.
+  const categoryKey = searchParams.get(CARSI_CATEGORY_PARAM) ?? "";
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState(emptyCarsiForm);
 
@@ -184,7 +188,7 @@ const CaddeCarsiPage = () => {
                 <button
                   key={category.key}
                   type="button"
-                  onClick={() => setSearchParams(new URLSearchParams({ kategori: category.key }))}
+                  onClick={() => setSearchParams(new URLSearchParams({ [CARSI_CATEGORY_PARAM]: category.key }))}
                   className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${categoryKey === category.key ? "border-amber-600 bg-amber-600 text-white" : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"}`}
                 >
                   {category.labelTr}
@@ -208,7 +212,17 @@ const CaddeCarsiPage = () => {
                       <Link to={`/cadde/carsi/${item.id}`} className="font-semibold text-slate-900 hover:underline">{item.title}</Link>
                       <Badge variant={item.status === "published" ? "default" : "secondary"}>{STATUS_LABELS[item.status]}</Badge>
                     </div>
-                    <p className="text-xs text-slate-500">{item.categoryLabel} • {formatCarsiPrice(item)}{item.expiresAt ? ` • Bitiş: ${formatDate(item.expiresAt)}` : ""}</p>
+                    <p className="text-xs text-slate-500">
+                      <Link
+                        to={carsiCategoryHref(item.categoryKey)}
+                        className="font-medium text-slate-600 hover:text-amber-800 hover:underline"
+                        title={`${item.categoryLabel} kategorisindeki ilanlar`}
+                        data-testid={`carsi-mine-category-${item.id}`}
+                      >
+                        {item.categoryLabel}
+                      </Link>
+                      {` • ${formatCarsiPrice(item)}${item.expiresAt ? ` • Bitiş: ${formatDate(item.expiresAt)}` : ""}`}
+                    </p>
                   </div>
                   <div className="flex gap-2">
                     {item.status === "published" ? (
@@ -226,27 +240,50 @@ const CaddeCarsiPage = () => {
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item: CarsiItem) => (
-            <Link key={item.id} to={`/cadde/carsi/${item.id}`}>
-              <Card className="h-full border-slate-200 bg-white/95 transition hover:border-amber-300 hover:shadow-md">
-                <CardContent className="space-y-2 p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <Badge variant="outline" className="border-amber-300 text-amber-800">{item.categoryLabel}</Badge>
-                    <span className="text-xs text-slate-400">{formatDate(item.createdAt)}</span>
-                  </div>
+            // Kart eskiden tümüyle tek bir <Link> idi; kategori rozeti de link olunca
+            // bu iç içe <a> üretirdi (geçersiz HTML, tarayıcı DOM'u bozar). Bu yüzden
+            // dış Link kaldırıldı: kartın tamamı başlıktaki "stretched link"
+            // (after:inset-0) ile tıklanabilir kalır, rozet `relative z-10` ile
+            // kaplamanın üstünde kendi hedefine gider.
+            <Card
+              key={item.id}
+              className="relative h-full border-slate-200 bg-white/95 transition hover:border-amber-300 hover:shadow-md"
+            >
+              <CardContent className="space-y-2 p-4">
+                <div className="flex items-center justify-between gap-2">
+                  <Link
+                    to={carsiCategoryHref(item.categoryKey)}
+                    className="relative z-10 inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                    title={`${item.categoryLabel} kategorisindeki ilanlar`}
+                    data-testid={`carsi-card-category-${item.id}`}
+                  >
+                    <Badge
+                      variant="outline"
+                      className="border-amber-300 text-amber-800 transition hover:border-amber-500 hover:bg-amber-50"
+                    >
+                      {item.categoryLabel}
+                    </Badge>
+                  </Link>
+                  <span className="text-xs text-slate-400">{formatDate(item.createdAt)}</span>
+                </div>
+                <Link
+                  to={`/cadde/carsi/${item.id}`}
+                  className="block after:absolute after:inset-0 after:rounded-lg after:content-['']"
+                >
                   <h3 className="line-clamp-2 font-semibold text-slate-900">{item.title}</h3>
-                  <p className="line-clamp-2 text-sm text-slate-600">{item.description}</p>
-                  <div className="flex items-center justify-between gap-2 pt-1">
-                    <span className="font-semibold text-amber-900">{formatCarsiPrice(item)}</span>
-                    {item.city ? (
-                      <span className="inline-flex items-center gap-1 text-xs text-slate-500">
-                        <MapPin className="h-3 w-3" />
-                        {item.city}
-                      </span>
-                    ) : null}
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+                </Link>
+                <p className="line-clamp-2 text-sm text-slate-600">{item.description}</p>
+                <div className="flex items-center justify-between gap-2 pt-1">
+                  <span className="font-semibold text-amber-900">{formatCarsiPrice(item)}</span>
+                  {item.city ? (
+                    <span className="inline-flex items-center gap-1 text-xs text-slate-500">
+                      <MapPin className="h-3 w-3" />
+                      {item.city}
+                    </span>
+                  ) : null}
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
 

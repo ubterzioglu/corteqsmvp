@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { deleteCarsiItem, formatCarsiPrice, getCarsiItem, recordCarsiContact, updateCarsiItem } from "@/lib/cadde-carsi-api";
+import { carsiCategoryHref, deleteCarsiItem, formatCarsiPrice, getCarsiItem, recordCarsiContact, updateCarsiItem } from "@/lib/cadde-carsi-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 
 const formatDate = (value: string) =>
@@ -78,10 +78,21 @@ const CaddeCarsiItemPage = () => {
         <Card className="border-amber-200 bg-white/95">
           <CardHeader className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="outline" className="border-amber-300 text-amber-800">
-                <ShoppingBag className="mr-1 h-3 w-3" />
-                {item.categoryLabel}
-              </Badge>
+              {/* Rozet burada hiçbir Link'in içinde değil — doğrudan link yapılabilir. */}
+              <Link
+                to={carsiCategoryHref(item.categoryKey)}
+                className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                title={`${item.categoryLabel} kategorisindeki ilanlar`}
+                data-testid="carsi-detail-category"
+              >
+                <Badge
+                  variant="outline"
+                  className="border-amber-300 text-amber-800 transition hover:border-amber-500 hover:bg-amber-50"
+                >
+                  <ShoppingBag className="mr-1 h-3 w-3" />
+                  {item.categoryLabel}
+                </Badge>
+              </Link>
               {item.status !== "published" ? <Badge variant="secondary">Yayında değil</Badge> : null}
             </div>
             <CardTitle className="text-2xl">{item.title}</CardTitle>

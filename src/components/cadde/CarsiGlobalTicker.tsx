@@ -10,7 +10,7 @@ import { ArrowRight, ShoppingBag } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import CaddeInfoPopover from "@/components/cadde/CaddeInfoPopover";
-import { formatCarsiPrice, getCarsiVisible, listCarsiItems } from "@/lib/cadde-carsi-api";
+import { carsiCategoryHref, formatCarsiPrice, getCarsiVisible, listCarsiItems } from "@/lib/cadde-carsi-api";
 import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { CADDE_PROMO_STALE_MS } from "@/lib/cadde-query-cache";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
@@ -85,16 +85,36 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
       {items.length > 0 ? (
         <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
           {items.map((item) => (
-            <Link
+            // Kart artık tek bir <Link> DEĞİL: kategori rozeti de link olduğu için
+            // iç içe <a> üretmemek adına kart bir <div>'e alındı. Kartın tamamının
+            // tıklanabilirliği başlıktaki "stretched link" (after:inset-0) ile korunur;
+            // rozet `relative z-10` ile o kaplamanın üstünde kalır.
+            <div
               key={item.id}
-              to={`/cadde/carsi/${item.id}`}
-              className="min-w-[150px] max-w-[180px] shrink-0 rounded-xl border border-amber-200/70 bg-white/90 p-2.5 transition hover:border-amber-300"
+              className="relative min-w-[150px] max-w-[180px] shrink-0 rounded-xl border border-amber-200/70 bg-white/90 p-2.5 transition hover:border-amber-300"
             >
-              <Badge variant="outline" className="border-amber-300 text-[10px] text-amber-800">{item.categoryLabel}</Badge>
-              <p className="mt-1.5 line-clamp-2 text-xs font-medium leading-4 text-slate-900">{item.title}</p>
+              <Link
+                to={carsiCategoryHref(item.categoryKey)}
+                className="relative z-10 inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                title={`${item.categoryLabel} kategorisindeki ilanlar`}
+                data-testid={`carsi-ticker-category-${item.id}`}
+              >
+                <Badge
+                  variant="outline"
+                  className="border-amber-300 text-[10px] text-amber-800 transition hover:border-amber-500 hover:bg-amber-50"
+                >
+                  {item.categoryLabel}
+                </Badge>
+              </Link>
+              <Link
+                to={`/cadde/carsi/${item.id}`}
+                className="block after:absolute after:inset-0 after:rounded-xl after:content-['']"
+              >
+                <p className="mt-1.5 line-clamp-2 text-xs font-medium leading-4 text-slate-900">{item.title}</p>
+              </Link>
               <p className="mt-1 text-[11px] font-semibold text-amber-900">{formatCarsiPrice(item)}</p>
               {item.city ? <p className="text-[10px] text-slate-500">{item.city}</p> : null}
-            </Link>
+            </div>
           ))}
         </div>
       ) : (
