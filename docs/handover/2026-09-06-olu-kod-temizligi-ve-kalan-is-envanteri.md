@@ -2,9 +2,9 @@
 
 **Devir tarihi:** 6 Eylül 2026 (gece)
 **Öncül:** `docs/handover/2026-09-05-batch-cef-ve-canli-kusurlar.md`
-**Dal:** `main` · `9eb9317` … `b4cb544`
-**Push durumu:** `d5f7d4f..22c360e` (15 commit) **push edildi**; `73fe373`, `e5083a1`,
-`b4cb544` (3 commit) **bekliyor**. Ayrıntı için aşağıdaki EK bölümüne bak.
+**Dal:** `main` · `9eb9317` … `c655922`
+**Push durumu:** `d5f7d4f..22c360e` (15 commit) **push edildi**; **4 commit BEKLİYOR**
+(`73fe373`, `e5083a1`, `b4cb544`, `c655922`). Ayrıntı için aşağıdaki EK bölümüne bak.
 
 ## Kısa sonuç
 
@@ -198,24 +198,40 @@ Oturumun tamamı (`0771f13..HEAD`): **203 dosya, +3.591 / −29.210 satır.**
 
 ---
 
-## Sıradaki adımlar
+## Sıradaki adımlar — YARIN BURADAN BAŞLA
 
-1. **11 commit'i push et** — `9eb9317` … `b67ebf6`. Diğer oturum main'e yazmayı bıraktı.
-2. **Dağıtımı doğrula** — kanarya adımı (yukarıda). Son dağıtım 5 Eylül 23:06:37 Berlin.
-3. **T4 — bileşen içi Supabase çağrıları:** 32 `from(` + 4 `rpc(` → `*-api.ts` +
-   React Query. Büyük ve yüzeyi geniş; push'tan SONRA başla.
-4. **Üç ürün kararı** — (a) unvan yetki mi verir *(Batch C bunsuz uygulanamaz)*,
-   (b) ek hedef ücretli mi, (c) m22 kapatılsın mı.
-5. **`50362e2a`** araç sonucunu profile kaydetme — önce ürün kararı (hangi nitelik,
-   açık rıza metni).
-6. **WS1-7** (SMTP → e-posta doğrulaması) ve **WS1-8/11** (OTP sağlayıcı) dış karar
-   bekliyor.
-7. **Operasyon:** hoş geldin maili anahtarı (**kritik** — kapalıyken kaydolan üye maili
-   hiç almıyor), login'li QA turu, revizyon panosunu "yapıldı"ya çevirme, Supabase
-   custom domain.
+1. **4 commit'i push et** (`73fe373`, `e5083a1`, `b4cb544`, `c655922`). Bunlar
+   temizliğin 1–3. partileri ve belge kapanışı. Push öncesi `git fetch` + `git log
+   HEAD..origin/main` ile uzakta yeni iş var mı bak.
+2. **Dağıtımı doğrula** — Burak test kılavuzundaki kanarya adımı: `/cadde/carsi`'de
+   kategori rozetine tıkla, gidiyorsa yeni sürüm yayında.
+3. **İki ürün kararı bekliyor** (kod işi değil, karar işi):
+   - **Ajan yürütme katmanı** (7 modül + 9 test: `agent-client`, `tool-executor`,
+     `tool-verifier`, `anonymize`, `injection-guard`, `telemetry-sink`, `resilience`)
+     silinsin mi, yoksa tamamlanacak iş olarak mı dursun? Erişilemez ama kazara ölü
+     kod DEĞİL — testleri var, ikisi güvenlik amaçlı, merge edilmemiş bir PR'a bağlı.
+   - **`src/components/ui/*`** — 20 kullanılmayan shadcn primitifi temizlensin mi?
+     Vendored kit; kullanılmayanları tutmak yaygın pratiktir.
+4. **T4 — bileşen içi Supabase çağrıları.** Temizlik sayesinde **yarıya indi**:
+   29 çağrı / 21 dosya → **18 çağrı (15 `from(` + 3 `rpc(`) / 13 dosya**.
+   `*-api.ts` + React Query desenine taşınacak. Sıradaki en büyük kod işi.
+5. **Kalan `tsc` hataları: 9.** İki sınıf, ikisi de belgeli (CLAUDE.md "Known
+   Limitations" md.5): A — Supabase insert/update yükü (mekanik), C — sorgu kurucusu
+   özyinelemesi (`command-center-items`, `diasporaSearch`).
+6. **Üç eski ürün kararı** — (a) unvan yetki mi verir *(Batch C bunsuz uygulanamaz)*,
+   (b) ek hedef ücretli mi, (c) m22 kapatılsın mı. Ayrıca `50362e2a` (araç sonucunu
+   profile kaydetme) hangi nitelik + açık rıza metni kararını bekliyor.
+7. **WS1-7** (SMTP → e-posta doğrulaması) ve **WS1-8/11** (OTP sağlayıcı) dış karar.
+8. **Operasyon:** hoş geldin maili anahtarı (**kritik** — kapalıyken kaydolan üye
+   maili hiç almıyor ve telafi edilmiyor), login'li QA turu, revizyon panosunu
+   "yapıldı"ya çevirme, Supabase custom domain.
 
 **Tam envanter** (K1–K5 kararlar · T4–T6 teknik borç · O1–O9 operasyon):
 `~/.claude/plans/yap-lacak-kalanlarla-ilgili-yeni-zazzy-canyon.md`
+
+**Ölü kod analizörü** oturumluk bir scratchpad script'iydi, depoya alınmadı. Tekrar
+gerekirse: `src/main.tsx` kökünden BFS, `@/`→`src/` çözümlemesi, test dosyaları hariç.
+Kör noktası: config **dizeleriyle** anılan dosyalar (bkz. EK bölümü).
 
 ⚠️ `public/sitemap.xml` (yalnız `lastmod`) ve
 `docs/status/mevcut-profil-yapisi-raporu-2026-08-20-sade-anlatim.html` hâlâ commit
