@@ -2226,16 +2226,6 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-view-model.test.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/profile-view-model.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
       "path": "src/lib/public-catalog-claim-api.ts",
       "kind": "ts",
       "module_family": "catalog"
@@ -2351,16 +2341,6 @@ export const toolCatalog = {
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-explanations.test.ts",
-      "kind": "ts",
-      "module_family": "relocation"
-    },
-    {
-      "path": "src/lib/relocation-explanations.ts",
-      "kind": "ts",
-      "module_family": "relocation"
-    },
-    {
       "path": "src/lib/relocation-i18n.ts",
       "kind": "ts",
       "module_family": "relocation"
@@ -2427,16 +2407,6 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/relocation-tools-api.ts",
-      "kind": "ts",
-      "module_family": "relocation"
-    },
-    {
-      "path": "src/lib/relocation-tools-banka.test.ts",
-      "kind": "ts",
-      "module_family": "relocation"
-    },
-    {
-      "path": "src/lib/relocation-tools-banka.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
@@ -2516,16 +2486,6 @@ export const toolCatalog = {
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-persona.test.ts",
-      "kind": "ts",
-      "module_family": "relocation"
-    },
-    {
-      "path": "src/lib/relocation-tools-persona.ts",
-      "kind": "ts",
-      "module_family": "relocation"
-    },
-    {
       "path": "src/lib/relocation-tools-planner.test.ts",
       "kind": "ts",
       "module_family": "relocation"
@@ -2572,16 +2532,6 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/relocation-tools-salary.ts",
-      "kind": "ts",
-      "module_family": "relocation"
-    },
-    {
-      "path": "src/lib/relocation-tools-sigorta.test.ts",
-      "kind": "ts",
-      "module_family": "relocation"
-    },
-    {
-      "path": "src/lib/relocation-tools-sigorta.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
