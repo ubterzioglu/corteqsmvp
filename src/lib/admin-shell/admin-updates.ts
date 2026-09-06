@@ -14,6 +14,25 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260906-buyuk-temizlik",
+    date: "6 Eylül 2026",
+    title:
+      "Büyük temizlik: artık kullanılmayan 150 dosya kaldırıldı, panelde açılmayan üç ekran silindi, belgelerdeki yanlış rakamlar düzeltildi",
+    items: [
+      "ÖNCE EN ÖNEMLİSİ: KULLANICININ GÖREBİLDİĞİ HİÇBİR ŞEY SİLİNMEDİ. Silinen her dosya, uygulamanın hiçbir yerinden ulaşılamayan koddu — yani zaten kimse açamıyordu. Bunu tahminle değil, uygulamanın giriş noktasından başlayıp hangi dosyanın hangisini çağırdığını adım adım izleyerek doğruladık; ayrıca her partiden sonra tüm testler, tip denetimi ve gerçek bir üretim derlemesi çalıştırıldı.",
+      "PANELDE AÇILMAYAN ÜÇ EKRANIN DOSYALARI KALMIŞTI: 'Roller ve Özellikler', 'Nitelikler' ve 'Profil Bölümleri' ekranları bir süre önce tek bir 'Rol Matrisi' ekranında birleştirilmişti. Adresleri hâlâ çalışıyor ama sizi doğrudan Rol Matrisi'ne gönderiyor — yani o eski ekranlar zaten açılmıyordu. Kodları ortada duruyordu, temizlendi.",
+      "ARTIK VAR OLMAYAN BİR VERİ TABLOSUNA BAĞLI EKRANLAR: Üç ekran daha, aylar önce kaldırılmış bir tabloyu sorguluyordu. Bunlardan biri panele bağlansaydı hiçbir veri yükleyemeyecek, sadece hata verecekti. Üçü de kaldırıldı.",
+      "İKİ GİRİŞ SİSTEMİNDEN BİRİ KAPATILDI: Oturum bilgisine ulaşmanın iki ayrı yolu vardı; ikincisi geçiş dönemi için bırakılmış bir köprüydü. 16 dosya tek ve asıl sisteme taşındı, köprü kaldırıldı. Kullanıcı tarafında hiçbir değişiklik yok — amaç, ileride 'hangisini kullanacağım' sorusunun bir daha sorulmaması.",
+      "ESKİ ÜRÜN SAYFALARI: Danışmanlar, Bloggerlar, İşletmeler, Etkinlik Detayı, İş İlanları, Radyo Şarkı İsteği gibi bir dönem denenip menüden çıkarılmış sayfaların dosyaları da duruyordu. Hiçbirine bağlantı yoktu; kaldırıldılar.",
+      "TEST SAYISI NEDEN AZALDI: 1.881'den 1.816'ya indi ve bu iyi bir haber. Silinen kodun kendi testleri de birlikte gitti — yani artık kimsenin kullanmadığı kodu kontrol eden testler. Çalışan hiçbir test kaybedilmedi, hepsi yeşil.",
+      "BELGELERDEKİ RAKAMLAR YANLIŞTI, DÜZELTİLDİ: Geliştirici belgesi 'kod denetiminde 1.280 sorun var' diyordu; ölçtük, gerçek sayı SIFIRDI. Aynı şekilde 'temizlenecek 89 yer' denilen şey 9'du, '78 MB video' 16 MB'tı, 'yayında olan bir dosya' zaten silinmişti. Bu yanlış rakamlar, ileride birinin çoktan bitmiş bir işi yeniden yapmasına yol açacaktı.",
+      "TİP HATALARI YARIYA İNDİ: 22'den 9'a düştü. Bunların 6'sı aslında hata değil, yukarıdaki ölü ekranların ihbarıymış — dosyalar silinince kendiliğinden kapandılar. Kalanların her biri de artık 'ne olduğu ve nasıl kapanacağı' yazılı hâlde belgede duruyor.",
+      "SİTE HAFİFLEDİ: Toplamda yaklaşık 29 bin satır kod ve 150 dosya kaldırıldı. 300 satırdan uzun dosya sayısı 126'dan 92'ye indi. Daha az dosya, bozulacak daha az yer demek.",
+      "KONTROLLER: 259 dosyadaki 1.816 otomatik testin tamamı geçti, kod denetimi temiz (0 sorun), üretim derlemesi yeşil, veri tabanı güncellemelerinin tamamı canlıda kayıtlı.",
+      "NOT: 5 Eylül'de yapılan işler (Cadde tepki kartı, Çarşı kategori bağlantıları, taşınma araçlarında şehir seçimi, sonuca dönüş şeridi, renkli sonuç grafikleri ve üç sessiz canlı kusur) aşağıdaki iki kayıtta duruyor.",
+    ],
+  },
+  {
     id: "20260905-ikinci-parti-cadde-carsi-araclar",
     date: "5 Eylül 2026",
     title:

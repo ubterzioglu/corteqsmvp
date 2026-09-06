@@ -2,7 +2,9 @@
 
 **Devir tarihi:** 6 Eylül 2026 (gece)
 **Öncül:** `docs/handover/2026-09-05-batch-cef-ve-canli-kusurlar.md`
-**Dal:** `main` · `9eb9317` … `b67ebf6` — **11 commit PUSH EDİLMEDİ**
+**Dal:** `main` · `9eb9317` … `b4cb544`
+**Push durumu:** `d5f7d4f..22c360e` (15 commit) **push edildi**; `73fe373`, `e5083a1`,
+`b4cb544` (3 commit) **bekliyor**. Ayrıntı için aşağıdaki EK bölümüne bak.
 
 ## Kısa sonuç
 
@@ -101,6 +103,98 @@ bu yüzden güncellendi.
   kategori rozetine tıkla — gidiyorsa yeni sürüm yayında.
 - **Admin panel duyurusu** (`046ba4d`): günün ikinci partisi günlük dille, 14 madde.
   18:00 Berlin günlük özetine kuyruklandı.
+
+---
+
+---
+
+## EK — Temizlik kampanyası (aynı gün, `b1586a5` … `b4cb544`)
+
+Yukarıdaki bölüm yazıldıktan SONRA devam edildi. Bu ek, o turu anlatır.
+
+## Yöntem değişti: ajan yerine statik grafik
+
+İlk iki parti (`cf5ed73`, `b3752d8`, `22c360e`) ajanlarla **dosya başına** doğrulanmıştı.
+Sonrası için statik import grafiği yazıldı — bu iş için **kesin**, ajan örneklemesi
+olasılıksal. Grafiğin geçerli olması üç koşula bağlıydı ve üçü de doğrulandı:
+
+- tek giriş noktası (`index.html` → `src/main.tsx`),
+- değişken yollu dinamik `import()` **yok**,
+- tek `import.meta.glob` kod değil HTML hedefliyor.
+
+Ayrıca `scripts/` ve `workers/` `src`'den **hiç import etmiyor** — yani ikinci bir kök yok.
+
+**Çapraz doğrulama:** ajanların bağımsız olarak "erişilebilir" dediği 6 dosyanın altısı
+da grafikte erişilebilir çıktı. İki bağımsız yöntem uyuştu.
+
+⚠️ **Analizörün bilinen kör noktası:** config **dizeleriyle** anılan dosyaları göremez.
+`src/test/setup.ts` (vitest.config içinde dize) ve `src/vite-env.d.ts` (ambient bildirim)
+yanlış pozitif çıktı. Bu yüzden her partiden önce `src` dışı ayrıca tarandı.
+
+## Sonuç: 820 dosyanın 134'ü erişilemezdi
+
+Üç partide silindi (her partiden sonra test + tsc + lint, 1. partide ayrıca build):
+
+| Parti | Ne | Dosya |
+|---|---|---|
+| 1 (`73fe373`) | hiç import edeni yok, testi yok, `ui/` dışı | 82 |
+| 2 (`e5083a1`) | 1. partinin açtığı kaskad + öksüz kalan üreteç script'i | 15 |
+| 3 (`b4cb544`) | testi olan ölü modüller, **testleriyle birlikte** | 18 |
+
+Öne çıkanlar: `home-trial` atlas dalı tamamen ölüymüş (`GlobalAtlasSection` →
+`WorldAtlasMap` → `world-geojson` + üreteci `scripts/generate-world-geojson.mjs`,
+npm script'i bile yoktu) · rota birleştirmesinde arkada kalan üç admin ekranı ·
+`Consultants`, `Bloggers`, `Businesses`, `EventDetail`, `JobBoard`, `AITwin` gibi
+menüden çıkarılmış eski ürün sayfaları.
+
+## ⚠️ Bu turda yapılan hata — tekrarlanmaması için
+
+**Partileri "testi var / yok" diye bölmek bir bağımlılık kenarını ortadan kesti.**
+`individual-profile.ts` (testsiz) silindi; onu import eden `usePublicIndividualProfile.ts`
+— kendisi de ölü ama *testli* olduğu için sonraki partiye bırakılmıştı — yerinde kaldı ve
+testi `Failed to resolve import` ile kırıldı. İkisi de ölü olduğu için çift birlikte
+silinerek düzeltildi.
+
+**Kural: ölü kodu test varlığına göre değil, TAM ALT GRAFİK olarak parçala.**
+
+İkinci ders: doğrulamada `grep -rn "<ad>"` yanıltıcıdır. `profile-view-model` "10 canlı
+referans" gösterdi; hepsi `public-catalog-profile-view-model` adlı **başka** bir modüldü
+(alt dize eşleşmesi). Tam import yolunu ara.
+
+## Dokunulmayanlar ve nedenleri
+
+- **Ajan yürütme katmanı** (7 modül + 9 test: `agent-client`, `tool-executor`,
+  `tool-verifier`, `anonymize`, `injection-guard`, `telemetry-sink`, `resilience`).
+  Erişilemez ama **kazara ölü kod değil**: testleri var, ikisi güvenlik amaçlı, henüz
+  merge edilmemiş bir PR'a bağlı tamamlanmamış altyapı. Aynı ailenin canlı iki parçası
+  (`tool-router`, `tools-catalog.generated`) admin sayfalarından kullanılıyor.
+  **Silinmesi ürün kararıdır, temizlik işlemi değil.**
+- **`src/components/ui/*`** — 20 kullanılmayan shadcn primitifi. Vendored kit; ayrı karar.
+- **`admin/shell/index.ts`** — kullanılmıyor ama `AdminLayout.tsx` yorumu onu "yeni kodda
+  tercih edilen giriş" diye gösteriyor; silmek belgelenmiş niyetle çelişirdi.
+
+## Ayrıca bu turda
+
+- **tsc B sınıfı kapandı** (`b1586a5`): `src/lib/supabase-json.ts` → `toJson` / `fromJson`.
+  Yol boyunca gerçek bir yanlışlık bulundu: `muhasebe-butce-api` satırın tamamını, `state`
+  alanını `ButceYearState` diye tarif eden **sahte** bir arayüze çeviriyordu; oysa sütun
+  `jsonb`. TypeScript haklıydı, belge yanlıştı. ⚠️ `fromJson` bir **doğrulama değildir**.
+- **15 commit push edildi** (`d5f7d4f..22c360e`), `git ls-remote` ile doğrulandı.
+
+## Kapanış ölçümü (tur sonu)
+
+| Ölçü | Tur başı | Tur sonu |
+|---|---|---|
+| Test | 271 dosya / 1.881 | **259 dosya / 1.816** yeşil |
+| ESLint | 0 | **0** |
+| `tsc` | 22 | **9** |
+| Kaynak dosya | 1.092 | **950** |
+| 300+ satır dosya | 126 | **92** |
+| Erişilemez dosya | 134 | **30** |
+
+Oturumun tamamı (`0771f13..HEAD`): **203 dosya, +3.591 / −29.210 satır.**
+
+⚠️ Bu ek yazıldığında **3 commit push edilmemişti** (`73fe373`, `e5083a1`, `b4cb544`).
 
 ---
 

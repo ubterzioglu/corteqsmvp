@@ -6,11 +6,22 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260905-ikinci-parti-cadde-carsi-araclar");
-    expect(ADMIN_UPDATES[0].date).toBe("5 Eylül 2026");
+    expect(ADMIN_UPDATES[0].id).toBe("20260906-buyuk-temizlik");
+    expect(ADMIN_UPDATES[0].date).toBe("6 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("büyük temizliği günlük dille duyurur ve kullanıcı etkisini net söyler", () => {
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260906-buyuk-temizlik");
+    const detail = update?.items.join(" ") ?? "";
+
+    // En kritik cümle: okuyan kişi "bir şeyim silindi mi" diye korkmamalı.
+    expect(detail).toContain("KULLANICININ GÖREBİLDİĞİ HİÇBİR ŞEY SİLİNMEDİ");
+    // Test sayısının DÜŞMESİ açıklanmalı; açıklanmazsa kötü haber gibi okunur.
+    expect(detail).toContain("TEST SAYISI NEDEN AZALDI");
+    expect(detail).toMatch(/KONTROLLER:.*1\.816/);
   });
 
   it("günün ikinci partisini günlük dille, ölçülen sonuçlarla duyurur", () => {

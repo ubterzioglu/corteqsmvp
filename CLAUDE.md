@@ -7,15 +7,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **CorteQS Landing** is a multi-feature React + Vite application with Supabase backend. It combines a public marketing site, admin dashboard, member profiles, surveys, workspace collaboration tools, and an accounting module (muhasebe) — all in a single SPA.
 
 **Key Metrics (ölçüldü 2026-09-05, gün sonu):**
-- **1.073** `.ts`/`.tsx` files under `src` — 220 pages, 429 components, 335 lib modules
+- **950** `.ts`/`.tsx` files under `src` — 199 pages, 356 components (2026-09-06 ölü kod
+  temizliğiyle 1.092'den indi; 150 erişilemez dosya silindi)
 - **383 Supabase migrations** — 131 in `supabase/migrations/applied/`
   + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split); 7 Edge Functions
 - **245** test files under `src` (+ `scripts`/`supabase`/`workers`) + 21 Playwright `.spec.ts`;
-  `npm run test` → **270 dosya / 1.878 test** yeşil
+  `npm run test` → **259 dosya / 1.816 test** yeşil (sayı düştü çünkü silinen ölü
+  kodun testleri de gitti — çalışan hiçbir test kaybedilmedi)
 - `npm run lint` → **0 problem** (eski "1280 problem" notu bayattı)
 - `src/App.tsx`: 313 lines, 51 `lazy()` imports
-- TypeScript with relaxed strict mode (intentional trade-off) — **12 remaining `tsc` errors**
-  (109 → 22 → 16 → 12; kalanların dökümü ve sınıfları "Known Limitations" md.5'te)
+- TypeScript with relaxed strict mode (intentional trade-off) — **9 remaining `tsc` errors**
+  (109 → 22 → 16 → 12 → 9; dökümü ve sınıfları "Known Limitations" md.5'te)
 - **Production runtime is nginx** (Dockerfile → `nginx.conf.template`), deployed via Docker (Coolify).
   `server.mjs` is the local/nixpacks path only — see the Deployment section.
 
@@ -731,8 +733,8 @@ belong there; documentation goes under `docs/`.
    ⚠️ **Bu listeyi "karar bekliyor" diye bırakma alışkanlığı bitti**: her sınıfın ne olduğu ve
    nasıl kapanacağı yukarıda yazılı. Sayı değişirse komutu tekrar çalıştırıp tabloyu güncelle.
 6. **Test coverage spotty** → activate Playwright for critical flows.
-7. **Large files** → **119** files exceed 300 lines (112 → 126 → 119; 2026-09-06 ölü kod
-   temizliğiyle geriledi). En büyük gerçek kaynak dosyalar `src/lib/admin-shell/social-diaspora-posts.ts`
+7. **Large files** → **92** files exceed 300 lines (112 → 126 → **92**; 2026-09-06 ölü kod
+   temizliği 34 dosya düşürdü). En büyük gerçek kaynak dosyalar `src/lib/admin-shell/social-diaspora-posts.ts`
    (2934) ve `ProfilePage.tsx`. `src/integrations/supabase/types.ts` (15.010) ve
    `src/lib/agent/tools-catalog.generated.ts` (3139) ÜRETİLEN dosyalardır, bu sayıma dahil edilmez.
 8. **Duplicate images in `public/`** → `sweet.png`/`sweet.jpg`, `last.png`/`newbg.png`,
