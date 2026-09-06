@@ -1416,11 +1416,6 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/blog-schemas.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
       "path": "src/lib/blog.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1881,11 +1876,6 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/diasporaSearch.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
       "path": "src/lib/directory-grouping.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2026,11 +2016,6 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/individual-profile.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
       "path": "src/lib/lansman.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2082,11 +2067,6 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/member-profile.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/member-registry.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -2496,11 +2476,6 @@ export const toolCatalog = {
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-config.ts",
-      "kind": "ts",
-      "module_family": "relocation"
-    },
-    {
       "path": "src/lib/relocation-tools-copy.ts",
       "kind": "ts",
       "module_family": "relocation"
@@ -2597,11 +2572,6 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/relocation-tools-salary.ts",
-      "kind": "ts",
-      "module_family": "relocation"
-    },
-    {
-      "path": "src/lib/relocation-tools-schemas.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
@@ -2727,11 +2697,6 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/text-normalization.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/turkish-missions-admin.ts",
       "kind": "ts",
       "module_family": "lib"
     },
