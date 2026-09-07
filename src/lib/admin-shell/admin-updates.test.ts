@@ -6,11 +6,33 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260906-buyuk-temizlik");
-    expect(ADMIN_UPDATES[0].date).toBe("6 Eylül 2026");
+    expect(ADMIN_UPDATES[0].id).toBe("20260907-atlanan-uc-duzeltme");
+    expect(ADMIN_UPDATES[0].date).toBe("7 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("geriye dönük kaydı 'ne zaman yapıldı / şu an canlı mı' sorularını kapatarak yazar", () => {
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260907-atlanan-uc-duzeltme");
+    const detail = update?.items.join(" ") ?? "";
+
+    // Bu kayıt 5 Eylül işini 7 Eylül'de duyuruyor. Tarih farkı açıklanmazsa okuyan
+    // kişi "bugün mü bozuldu?" diye okur — geriye dönük olduğu ilk maddede yazmalı.
+    expect(detail).toContain("BU KAYIT NEDEN GERİYE DÖNÜK");
+    // Yayın durumu ölçülerek yazıldı; "muhtemelen canlıdadır" demek bu repoda
+    // tekrar eden bir yanılgı sınıfı (bkz. canlı bundle doğrulaması).
+    expect(detail).toContain("TAHMİN DEĞİL, ÖLÇÜLDÜ");
+
+    // Üç düzeltmenin her biri adıyla geçmeli; biri düşerse duyuru eksik kalır.
+    expect(detail).toContain("DİZİN ARAMASINDA YÖNETİCİ HESABI ÇIKIYORDU");
+    expect(detail).toContain("TAŞINMA TESTİ SONUCUNDAKİ DÜĞMELER TIKLANMIYORDU");
+    expect(detail).toContain("CAFE BAŞLIĞI ARTIK HANGİ KONUMU GÖSTERDİĞİNİ SÖYLÜYOR");
+
+    // Kapatılmamış iş dürüstçe yazılmalı: tıklama ölçümü hâlâ beslenmiyor.
+    expect(detail).toContain("canlıda henüz üretilmiyor");
+    // Ölçüm yerine şablon bırakılmış olmasın.
+    expect(detail).not.toContain("KONTROL_TEST_SAYISI");
   });
 
   it("büyük temizliği günlük dille duyurur ve kullanıcı etkisini net söyler", () => {
