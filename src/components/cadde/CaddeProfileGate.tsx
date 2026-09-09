@@ -27,8 +27,8 @@ const CaddeProfileGate = ({ context, isLoading, children }: CaddeProfileGateProp
         {children}
       </div>
       <div className="absolute inset-0 z-30 flex items-start justify-center px-4 pt-32">
-        <div className="pointer-events-auto w-full max-w-md rounded-2xl border border-border bg-card p-6 text-center shadow-xl">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+        <div className="pointer-events-auto w-full max-w-md rounded-lg border border-border bg-card p-6 text-center shadow-xl">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <Lock className="h-6 w-6" />
           </div>
           <Badge variant="outline" className="mb-3 border-amber-500/40 text-amber-600">

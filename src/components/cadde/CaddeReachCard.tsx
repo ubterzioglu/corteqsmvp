@@ -70,7 +70,7 @@ const CaddeReachCard = () => {
       <CardContent className="space-y-3">
         {state === "resolved" ? (
           <p className="flex items-center gap-1.5 text-[11px] font-medium text-slate-700">
-            <MapPin className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+            <MapPin className="h-3.5 w-3.5 shrink-0 text-slate-500" />
             <span>
               Konumun:{" "}
               <span className="font-semibold text-slate-900">
@@ -79,7 +79,7 @@ const CaddeReachCard = () => {
             </span>
           </p>
         ) : (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2">
+          <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2">
             <p className="flex items-start gap-1.5 text-[11px] font-medium text-amber-900">
               <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
               <span>Konumun Cadde kataloğunda tanımlı değil.</span>
@@ -104,7 +104,7 @@ const CaddeReachCard = () => {
           </div>
         )}
 
-        <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+        <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
           <p className="text-[11px] leading-relaxed text-slate-700">
             {gateOpen ? (
               <>

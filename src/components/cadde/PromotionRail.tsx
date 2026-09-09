@@ -55,7 +55,7 @@ const PromotionRail = ({ filters, hideWhenEmpty = false }: PromotionRailProps) =
           data-testid="cadde-promotions-empty-state"
           className="px-4 pb-4"
         >
-          <div className="flex items-center gap-3 rounded-[22px] border border-dashed border-orange-200 bg-orange-50 px-4 py-5">
+          <div className="flex items-center gap-3 rounded-lg border border-dashed border-orange-200 bg-orange-50 px-4 py-5">
             {/* 05.09.2026 revizyon c1a3aaf0 ("Sağdaki billboard bölgesine maskot görseli
                 konsun"): boş tanıtım kutusu düz metindi. Maskot DEKORATİF — `alt=""` +
                 `aria-hidden` ile erişilebilirlik ağacından çıkarılır; metnin söylemediği

@@ -107,7 +107,7 @@ const CaddeCarsiItemPage = () => {
             {item.imageUrls.length > 0 ? (
               <div className="grid gap-2 sm:grid-cols-2">
                 {item.imageUrls.map((url) => (
-                  <img key={url} src={url} alt={item.title} className="h-44 w-full rounded-xl border border-slate-200 object-cover" loading="lazy" />
+                  <img key={url} src={url} alt={item.title} className="h-44 w-full rounded-lg border border-slate-200 object-cover" loading="lazy" />
                 ))}
               </div>
             ) : null}
@@ -126,7 +126,7 @@ const CaddeCarsiItemPage = () => {
                 <Button variant="ghost" className="text-red-600 hover:text-red-700" onClick={() => deleteMutation.mutate()} disabled={deleteMutation.isPending}>İlanı Sil</Button>
               </div>
             ) : (
-              <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+              <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
                 İlan sahibine ulaşmak için{" "}
                 <Link
                   to={`/directory/profile/${item.ownerUserId}`}

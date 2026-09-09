@@ -206,7 +206,7 @@ const CaddeCarsiPage = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               {myItems.map((item) => (
-                <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 p-3">
+                <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 p-3">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <Link to={`/cadde/carsi/${item.id}`} className="font-semibold text-slate-900 hover:underline">{item.title}</Link>
@@ -264,7 +264,7 @@ const CaddeCarsiPage = () => {
                       {item.categoryLabel}
                     </Badge>
                   </Link>
-                  <span className="text-xs text-slate-400">{formatDate(item.createdAt)}</span>
+                  <span className="text-xs text-slate-500">{formatDate(item.createdAt)}</span>
                 </div>
                 <Link
                   to={`/cadde/carsi/${item.id}`}
@@ -295,12 +295,12 @@ const CaddeCarsiPage = () => {
                 İkinci el eşya, oda, ders, hizmet — şehrindeki toplulukta karşılığı olan her şey burada yer bulur.
               </p>
               {user ? (
-                <Button variant="outline" className="cadde-secondary-action rounded-2xl" onClick={() => setFormOpen(true)}>
+                <Button variant="outline" className="cadde-secondary-action rounded-lg" onClick={() => setFormOpen(true)}>
                   <Plus className="mr-2 h-4 w-4" />
                   İlan Ver
                 </Button>
               ) : (
-                <Button asChild variant="outline" className="cadde-secondary-action rounded-2xl">
+                <Button asChild variant="outline" className="cadde-secondary-action rounded-lg">
                   <Link to="/login">İlan vermek için giriş yap</Link>
                 </Button>
               )}

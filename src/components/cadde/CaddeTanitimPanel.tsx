@@ -179,7 +179,7 @@ const CaddeTanitimPanel = () => {
                             key={placement.key}
                             type="button"
                             onClick={() => togglePlacement(placement.key)}
-                            className={`w-full rounded-xl border px-3 py-2 text-left text-xs transition ${
+                            className={`w-full rounded-lg border px-3 py-2 text-left text-xs transition ${
                               selected ? "border-orange-500 bg-orange-50" : "border-slate-200 bg-white hover:bg-slate-50"
                             }`}
                           >
@@ -204,7 +204,7 @@ const CaddeTanitimPanel = () => {
           <p className="text-[11px] text-muted-foreground">Henüz kampanyan yok.</p>
         ) : (
           campaigns.map((campaign) => (
-            <div key={campaign.id} className="rounded-xl border border-slate-200 p-3">
+            <div key={campaign.id} className="rounded-lg border border-slate-200 p-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="text-xs font-semibold text-slate-900">{campaign.title}</p>

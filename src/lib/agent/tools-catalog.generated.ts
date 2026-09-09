@@ -1627,6 +1627,11 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-surface-contract.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-tanitim-api.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -1798,6 +1803,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/dashboard/command-center-items.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/hot-fix-comments.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },

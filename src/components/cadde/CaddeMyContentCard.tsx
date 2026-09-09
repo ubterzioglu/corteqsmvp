@@ -58,7 +58,7 @@ const CaddeMyContentCard = () => {
               Açık Cafelerim ({activeCafes.length})
             </p>
             {activeCafes.slice(0, 3).map((cafe) => (
-              <Link key={cafe.id} to={`/cadde/cafe/${cafe.id}`} className="flex items-center justify-between gap-2 rounded-xl border border-slate-200 px-3 py-2 transition hover:border-orange-300">
+              <Link key={cafe.id} to={`/cadde/cafe/${cafe.id}`} className="flex items-center justify-between gap-2 rounded-lg border border-slate-200 px-3 py-2 transition hover:border-orange-300">
                 <span className="truncate text-xs font-medium text-slate-900">{cafe.title}</span>
                 <span className="shrink-0 text-[10px] text-slate-500">{cafe.memberCount} üye • bitiş {formatDate(cafe.endsAt)}</span>
               </Link>
@@ -73,7 +73,7 @@ const CaddeMyContentCard = () => {
               Çarşı İlanlarım ({items.length})
             </p>
             {items.slice(0, 3).map((item) => (
-              <Link key={item.id} to={`/cadde/carsi/${item.id}`} className="flex items-center justify-between gap-2 rounded-xl border border-slate-200 px-3 py-2 transition hover:border-amber-300">
+              <Link key={item.id} to={`/cadde/carsi/${item.id}`} className="flex items-center justify-between gap-2 rounded-lg border border-slate-200 px-3 py-2 transition hover:border-amber-300">
                 <span className="truncate text-xs font-medium text-slate-900">{item.title}</span>
                 <span className="flex shrink-0 items-center gap-1.5">
                   <Badge variant={item.status === "published" ? "default" : "secondary"} className="text-[10px]">

@@ -44,7 +44,7 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
     // alınana kadar sade "Çarşı" kullanılmıyor; hover metni de madde metninden birebir.
     return (
       <div
-        className="cadde-carsi-teaser rounded-2xl border p-4"
+        className="cadde-carsi-teaser rounded-lg border p-4"
         data-testid="carsi-teaser"
       >
         <p className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-900">
@@ -70,7 +70,7 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
   }
 
   return (
-    <div className="cadde-carsi-teaser rounded-2xl border p-3">
+    <div className="cadde-carsi-teaser rounded-lg border p-3">
       <div className="flex items-center justify-between gap-2">
         <p className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-900">
           <ShoppingBag className="h-4 w-4" />
@@ -91,7 +91,7 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
             // rozet `relative z-10` ile o kaplamanın üstünde kalır.
             <div
               key={item.id}
-              className="relative min-w-[150px] max-w-[180px] shrink-0 rounded-xl border border-amber-200/70 bg-white/90 p-2.5 transition hover:border-amber-300"
+              className="relative min-w-[150px] max-w-[180px] shrink-0 rounded-lg border border-amber-200/70 bg-white/90 p-2.5 transition hover:border-amber-300"
             >
               <Link
                 to={carsiCategoryHref(item.categoryKey)}
@@ -108,7 +108,7 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
               </Link>
               <Link
                 to={`/cadde/carsi/${item.id}`}
-                className="block after:absolute after:inset-0 after:rounded-xl after:content-['']"
+                className="block after:absolute after:inset-0 after:rounded-lg after:content-['']"
               >
                 <p className="mt-1.5 line-clamp-2 text-xs font-medium leading-4 text-slate-900">{item.title}</p>
               </Link>

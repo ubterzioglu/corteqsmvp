@@ -89,7 +89,7 @@ const CaddeCafesPanel = ({
                 <CollapsibleTrigger
                   data-testid="cadde-cafes-toggle"
                   aria-label={`${headingText} bölümünü ${open ? "kapat" : "aç"}`}
-                  className="inline-flex items-center gap-1.5 rounded-md transition hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                  className="inline-flex items-center gap-1.5 rounded-lg transition hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
                 >
                   <span data-testid="cadde-cafes-heading">{headingText}</span>
                   {cafes.length > 0 ? (
@@ -97,7 +97,7 @@ const CaddeCafesPanel = ({
                   ) : null}
                   <ChevronDown
                     aria-hidden
-                    className={`h-4 w-4 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`}
+                    className={`h-4 w-4 text-slate-500 transition-transform ${open ? "rotate-180" : ""}`}
                   />
                 </CollapsibleTrigger>
                 <CaddeInfoPopover
@@ -126,7 +126,7 @@ const CaddeCafesPanel = ({
               </CardDescription>
             </div>
             {hasSession ? (
-              <CreateCafeForm trigger={<Button size="sm" variant="outline" className="cadde-secondary-action rounded-2xl">+ Cafe Aç</Button>} />
+              <CreateCafeForm trigger={<Button size="sm" variant="outline" className="cadde-secondary-action rounded-lg">+ Cafe Aç</Button>} />
             ) : null}
           </div>
         </CardHeader>
@@ -138,7 +138,7 @@ const CaddeCafesPanel = ({
                     m67: yükseklik iki satıra indi — özet meta satırına taşındı (truncate),
                     ayrı footer bloğu kalktı. */}
                 {visibleCafes.map((cafe) => (
-                  <div key={cafe.id} className="cadde-card cadde-card--cafe flex items-center gap-2.5 rounded-2xl px-3 py-2.5">
+                  <div key={cafe.id} className="cadde-card cadde-card--cafe flex items-center gap-2.5 rounded-lg px-3 py-2.5">
                     <CaddeCafeIcon className="h-5 w-5 shrink-0 text-orange-600" />
                     <div className="min-w-0 flex-1">
                       <p className="flex min-w-0 items-center gap-1.5">
@@ -187,7 +187,7 @@ const CaddeCafesPanel = ({
             ) : (
               <div
                 data-testid="cadde-cafes-empty-state"
-                className="cadde-empty rounded-[24px] border border-dashed p-4"
+                className="cadde-empty rounded-lg border border-dashed p-4"
               >
                 {/* m52: mesaj seçili konumu adıyla söyler; Türkçe bulunma eki bilinçli
                     üretilmiyor (yabancı adlarda ünlü uyumu güvenilir değil). */}
@@ -202,7 +202,7 @@ const CaddeCafesPanel = ({
                 {hasSession ? (
                   <div className="mt-4">
                     <CreateCafeForm
-                      trigger={<Button size="sm" variant="outline" className="cadde-secondary-action rounded-2xl">İlk Cafe'yi Aç</Button>}
+                      trigger={<Button size="sm" variant="outline" className="cadde-secondary-action rounded-lg">İlk Cafe'yi Aç</Button>}
                     />
                   </div>
                 ) : null}

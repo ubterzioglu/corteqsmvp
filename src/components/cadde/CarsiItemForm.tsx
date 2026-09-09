@@ -103,7 +103,7 @@ const CarsiItemForm = ({
   return (
     <div className="space-y-4">
       {paidMode ? (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           Ödemenizi tamamlayarak ilanınızı yayınlayabilirsiniz. İlanınız ödeme onaylanana kadar
           taslak olarak kaydedilir.
         </div>
@@ -161,7 +161,7 @@ const CarsiItemForm = ({
             type="button"
             variant="outline"
             size="sm"
-            className="rounded-2xl"
+            className="rounded-lg"
             onClick={() => imageInputRef.current?.click()}
             disabled={uploading || imageCount >= MAX_CARSI_IMAGES}
           >
@@ -172,7 +172,7 @@ const CarsiItemForm = ({
             type="button"
             variant="outline"
             size="sm"
-            className="rounded-2xl"
+            className="rounded-lg"
             onClick={() => videoInputRef.current?.click()}
             disabled={uploading || hasVideo}
           >

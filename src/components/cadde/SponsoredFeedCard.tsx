@@ -29,14 +29,14 @@ const SponsoredFeedCard = ({ promotion, compact = false }: SponsoredFeedCardProp
   };
 
   const cta = isExternalPromotionUrl(promotion.targetUrl) ? (
-    <Button asChild size={compact ? "sm" : "default"} variant="outline" className="cadde-secondary-action rounded-2xl">
+    <Button asChild size={compact ? "sm" : "default"} variant="outline" className="cadde-secondary-action rounded-lg">
       <a href={promotion.targetUrl} target="_blank" rel="noopener noreferrer" onClick={handleClick}>
         İncele
         <ExternalLink className="ml-2 h-3.5 w-3.5" />
       </a>
     </Button>
   ) : (
-    <Button asChild size={compact ? "sm" : "default"} variant="outline" className="cadde-secondary-action rounded-2xl">
+    <Button asChild size={compact ? "sm" : "default"} variant="outline" className="cadde-secondary-action rounded-lg">
       <Link to={promotion.targetUrl} onClick={handleClick}>İncele</Link>
     </Button>
   );
@@ -47,7 +47,7 @@ const SponsoredFeedCard = ({ promotion, compact = false }: SponsoredFeedCardProp
         <div className="min-w-0 space-y-2">
           <Badge className="bg-orange-500 text-white hover:bg-orange-500">Sponsorlu</Badge>
           {promotion.imageUrl && !compact ? (
-            <img src={promotion.imageUrl} alt={promotion.title} className="h-32 w-full rounded-xl border border-orange-200/60 object-cover" loading="lazy" />
+            <img src={promotion.imageUrl} alt={promotion.title} className="h-32 w-full rounded-lg border border-orange-200/60 object-cover" loading="lazy" />
           ) : null}
           <h3 className={`font-semibold text-slate-900 ${compact ? "text-sm" : "text-lg"}`}>{promotion.title}</h3>
           <p className={`text-slate-700 ${compact ? "line-clamp-2 text-xs" : "text-sm"}`}>{promotion.description}</p>

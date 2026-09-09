@@ -39,7 +39,7 @@ const CaddeComingSoon = () => {
     <Card className="border-slate-200 bg-white/90" data-testid="cadde-coming-soon">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-1.5 font-display text-base">
-          <Clock3 className="h-4 w-4 text-slate-400" />
+          <Clock3 className="h-4 w-4 text-slate-500" />
           Yakında gelecek özellikler
         </CardTitle>
       </CardHeader>

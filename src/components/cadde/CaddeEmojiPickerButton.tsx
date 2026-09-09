@@ -30,7 +30,7 @@ const CaddeEmojiPickerButton = ({ onSelect, disabled, className }: CaddeEmojiPic
           <SmilePlus className="h-4 w-4" aria-hidden />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-[320px] overflow-hidden rounded-2xl border-slate-200 p-0">
+      <PopoverContent align="start" className="w-[320px] overflow-hidden rounded-lg border-slate-200 p-0">
         <Suspense fallback={<div className="p-4 text-sm text-slate-500">Emoji bankası yükleniyor...</div>}>
           <CaddeEmojiPickerContent
             onSelect={(emoji) => {

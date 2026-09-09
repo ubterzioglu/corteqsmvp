@@ -119,7 +119,7 @@ const NotificationsBell = () => {
               >
                 <div className="flex items-start justify-between gap-2">
                   <p className="text-xs font-semibold text-slate-900">{notification.title}</p>
-                  <span className="shrink-0 text-[10px] text-slate-400">{formatRelative(notification.createdAt)}</span>
+                  <span className="shrink-0 text-[10px] text-slate-500">{formatRelative(notification.createdAt)}</span>
                 </div>
                 <p className="mt-0.5 line-clamp-2 text-xs text-slate-600">{notification.message}</p>
               </Link>

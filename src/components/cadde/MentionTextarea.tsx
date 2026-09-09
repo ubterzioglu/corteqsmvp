@@ -152,7 +152,7 @@ const MentionTextarea = forwardRef<MentionTextareaHandle, MentionTextareaProps>(
         <ul
           role="listbox"
           aria-label="Etiketleme önerileri"
-          className="absolute z-30 mt-1 max-h-64 w-full max-w-sm overflow-y-auto rounded-2xl border border-slate-200 bg-white p-1 shadow-lg"
+          className="absolute z-30 mt-1 max-h-64 w-full max-w-sm overflow-y-auto rounded-lg border border-slate-200 bg-white p-1 shadow-lg"
         >
           {suggestions.map((suggestion, index) => {
             const Icon = TYPE_ICON[suggestion.type];
@@ -168,11 +168,11 @@ const MentionTextarea = forwardRef<MentionTextareaHandle, MentionTextareaProps>(
                     applySuggestion(suggestion);
                   }}
                   onMouseEnter={() => setHighlight(index)}
-                  className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm transition ${
+                  className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition ${
                     index === highlight ? "bg-slate-100" : "hover:bg-slate-50"
                   }`}
                 >
-                  <Icon className="h-4 w-4 shrink-0 text-slate-400" aria-hidden />
+                  <Icon className="h-4 w-4 shrink-0 text-slate-500" aria-hidden />
                   <span className="min-w-0 flex-1 truncate font-medium text-slate-900">{suggestion.label}</span>
                   <span className="shrink-0 text-xs text-slate-500">{suggestion.subtitle}</span>
                 </button>

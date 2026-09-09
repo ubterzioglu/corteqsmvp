@@ -521,7 +521,10 @@
 
   .cadde-focus-button {
     min-height: 40px;
-    border-radius: 1rem;
+    /* T7 (m143): yarıçap TOKEN'dan gelir. Eskiden sabit 1rem (16px) yazılıydı ve
+       Cadde'deki diğer her yüzey 12px iken bu buton tek başına ayrışıyordu.
+       var(--radius) kullanmak ayrıca ölçek ileride değişirse birlikte kaymasını sağlar. */
+    border-radius: var(--radius);
   }
 
   .cadde-shell button {

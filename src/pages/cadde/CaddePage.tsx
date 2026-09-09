@@ -711,7 +711,7 @@ const CaddePage = () => {
           ) : (
             <Card id="cadde-composer" className="scroll-mt-24 border-slate-200 bg-white/95">
               <CardContent className="p-5">
-                <div className="rounded-[24px] border border-dashed border-orange-200 bg-orange-50 p-5">
+                <div className="rounded-lg border border-dashed border-orange-200 bg-orange-50 p-5">
                   <p className="text-sm leading-relaxed text-slate-700">
                     Ziyaretçiler akışı görebilir. Paylaşım, yorum ve reaksiyon için{" "}
                     <Link to="/login" className="font-semibold text-orange-700 underline">giriş yap</Link>.
@@ -765,7 +765,7 @@ const CaddePage = () => {
                       <h3 className="text-lg font-semibold text-slate-900">{item.sponsor.title}</h3>
                       <p className="text-sm text-slate-700">{item.sponsor.description}</p>
                     </div>
-                    <Button asChild variant="outline" className="cadde-secondary-action rounded-2xl">
+                    <Button asChild variant="outline" className="cadde-secondary-action rounded-lg">
                       <Link to={item.sponsor.ctaUrl}>{item.sponsor.ctaLabel}</Link>
                     </Button>
                   </CardContent>
@@ -779,7 +779,7 @@ const CaddePage = () => {
                 <Card
                   key={item.post.id}
                   data-testid="cadde-feed-card"
-                  className="cadde-card cadde-card--cadde overflow-hidden rounded-[28px]"
+                  className="cadde-card cadde-card--cadde overflow-hidden rounded-lg"
                 >
                   <CardContent className="space-y-4 p-5 sm:p-6">
                     {/* m18 forum hiyerarşisi: konu (varsa) büyük ve EN ÜSTTE, yazar küçük,
@@ -1108,7 +1108,7 @@ const CaddePage = () => {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="min-h-10 text-slate-400 hover:text-red-600"
+                              className="min-h-10 text-slate-500 hover:text-red-600"
                               onClick={() => reportMutation.mutate(item.post.id)}
                               disabled={reportMutation.isPending}
                               aria-label="Paylaşımı şikayet et"
@@ -1126,14 +1126,14 @@ const CaddePage = () => {
 
                     <div
                       data-testid="cadde-comment-panel"
-                      className="rounded-[20px] border border-slate-200/90 bg-slate-50/80 p-3"
+                      className="rounded-lg border border-slate-200/90 bg-slate-50/80 p-3"
                     >
                       <div className="space-y-2">
                         {visibleComments.map((comment) => (
-                          <div key={comment.id} data-testid="cadde-comment-card" className="rounded-xl border border-slate-200/80 bg-white px-3 py-2.5">
+                          <div key={comment.id} data-testid="cadde-comment-card" className="rounded-lg border border-slate-200/80 bg-white px-3 py-2.5">
                             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                               <p className="text-sm font-semibold text-slate-900">{comment.authorName}</p>
-                              <p className="text-xs text-slate-400">{formatDateTime(comment.createdAt)}</p>
+                              <p className="text-xs text-slate-500">{formatDateTime(comment.createdAt)}</p>
                             </div>
                             <p className="mt-0.5 text-sm leading-5 text-slate-700">{comment.body}</p>
                           </div>
@@ -1190,7 +1190,7 @@ const CaddePage = () => {
                               </div>
                             </div>
                           ) : (
-                            <div className="rounded-2xl border border-dashed border-orange-200 bg-white px-4 py-4 text-sm text-slate-600">
+                            <div className="rounded-lg border border-dashed border-orange-200 bg-white px-4 py-4 text-sm text-slate-600">
                               Yorum yazmak için <Link to="/login" className="font-semibold text-orange-700 underline">giriş yap</Link>.
                             </div>
                           )
@@ -1220,7 +1220,7 @@ const CaddePage = () => {
                   </p>
                   <Button
                     variant="outline"
-                    className="cadde-secondary-action mt-4 rounded-2xl"
+                    className="cadde-secondary-action mt-4 rounded-lg"
                     onClick={() => void feedQuery.refetch()}
                     disabled={feedQuery.isFetching}
                   >
@@ -1262,7 +1262,7 @@ const CaddePage = () => {
                         data-testid="cadde-widen-feed"
                         onClick={() => setSearchParams(serializeCaddeFilters(widenTarget!.next))}
                         variant="outline"
-                        className="cadde-secondary-action rounded-2xl"
+                        className="cadde-secondary-action rounded-lg"
                       >
                         {widenTarget!.label} akışındaki{" "}
                         {describeCaddeWidenCount(widenedCount, Boolean(widenedPage?.nextPage))} → gör
@@ -1274,15 +1274,15 @@ const CaddePage = () => {
                         variant={canWiden ? "outline" : "default"}
                         className={
                           canWiden
-                            ? "rounded-2xl border-slate-300 bg-white text-slate-800 hover:bg-slate-50"
-                            : "cadde-secondary-action rounded-2xl"
+                            ? "rounded-lg border-slate-300 bg-white text-slate-800 hover:bg-slate-50"
+                            : "cadde-secondary-action rounded-lg"
                         }
                       >
                         İlk paylaşımı yap
                         <Megaphone className={`ml-1.5 h-4 w-4 ${canWiden ? "text-orange-500" : "text-orange-200"}`} />
                       </Button>
                     ) : (
-                      <Button asChild className="cadde-primary-action rounded-2xl">
+                      <Button asChild className="cadde-primary-action rounded-lg">
                         <Link to="/login">Giriş yap ve ilk paylaşımı yap</Link>
                       </Button>
                     )}
@@ -1292,7 +1292,7 @@ const CaddePage = () => {
                     {canWiden ? null : hasGeoSelection ? (
                       <Button
                         variant="outline"
-                        className="cadde-secondary-action rounded-2xl"
+                        className="cadde-secondary-action rounded-lg"
                         onClick={() => updateFilters({ countries: [], cities: [] })}
                       >
                         Filtreleri temizle
@@ -1300,7 +1300,7 @@ const CaddePage = () => {
                     ) : filters.bridge ? null : (
                       <Button
                         variant="outline"
-                        className="cadde-secondary-action rounded-2xl"
+                        className="cadde-secondary-action rounded-lg"
                         onClick={() => updateFilters({ bridge: true })}
                       >
                         Köprü modunu aç
@@ -1366,12 +1366,12 @@ const CaddePage = () => {
               <Collapsible open={geoFilterOpen} onOpenChange={setGeoFilterOpenOverride}>
                 <CollapsibleTrigger
                   data-testid="cadde-geo-toggle"
-                  className="flex w-full items-center justify-between gap-2 rounded-md text-sm font-medium text-slate-700 transition hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                  className="flex w-full items-center justify-between gap-2 rounded-lg text-sm font-medium text-slate-700 transition hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
                 >
                   Ülke ve Şehir
                   <ChevronDown
                     aria-hidden
-                    className={`h-4 w-4 text-slate-400 transition-transform ${geoFilterOpen ? "rotate-180" : ""}`}
+                    className={`h-4 w-4 text-slate-500 transition-transform ${geoFilterOpen ? "rotate-180" : ""}`}
                   />
                 </CollapsibleTrigger>
                 <CollapsibleContent className="space-y-2 pt-2">
@@ -1388,7 +1388,7 @@ const CaddePage = () => {
                 </CollapsibleContent>
               </Collapsible>
 
-              <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3">
+              <div className="rounded-lg border border-emerald-100 bg-emerald-50 px-4 py-3">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     {/* m35: tek satırlık tanım yetmiyordu — dört hedef kitle bilgi balonunda. */}
@@ -1441,7 +1441,7 @@ const CaddePage = () => {
                   </CardTitle>
                   <CardDescription>İsimle ara ya da dizinde gezin.</CardDescription>
                 </div>
-                <Button asChild variant="outline" className="cadde-secondary-action w-full justify-between rounded-2xl">
+                <Button asChild variant="outline" className="cadde-secondary-action w-full justify-between rounded-lg">
                   <Link to={directoryLink}>
                     Kişileri Keşfet
                     <UserPlus2 className="h-4 w-4" />
@@ -1457,10 +1457,10 @@ const CaddePage = () => {
                 onChange={(event) => setPeopleQueryText(event.target.value)}
                 placeholder="İsimle ara (en az 2 harf)"
                 aria-label="Kişi ara"
-                className="h-9 rounded-2xl"
+                className="h-9 rounded-lg"
               />
               {peopleSearch.data && peopleSearch.data.length > 0 ? (
-                <ul className="divide-y divide-slate-100 rounded-2xl border border-slate-200 bg-white" data-testid="cadde-people-results">
+                <ul className="divide-y divide-slate-100 rounded-lg border border-slate-200 bg-white" data-testid="cadde-people-results">
                   {peopleSearch.data.map((person) =>
                     person.hasProfile ? (
                       <li key={person.userId}>
@@ -1509,12 +1509,12 @@ const CaddePage = () => {
               aria-expanded={coldRailOpen}
               aria-controls="cadde-right-rail-content"
               onClick={() => setColdRailOpen((open) => !open)}
-              className="flex w-full items-center justify-between gap-2 rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm font-medium text-slate-700 transition hover:border-slate-300 lg:hidden"
+              className="flex w-full items-center justify-between gap-2 rounded-lg border border-slate-200 bg-white/90 px-4 py-3 text-sm font-medium text-slate-700 transition hover:border-slate-300 lg:hidden"
             >
               Yakında gelenler ve tanıtım
               <ChevronDown
                 aria-hidden
-                className={`h-4 w-4 text-slate-400 transition-transform ${coldRailOpen ? "rotate-180" : ""}`}
+                className={`h-4 w-4 text-slate-500 transition-transform ${coldRailOpen ? "rotate-180" : ""}`}
               />
             </button>
           ) : null}
@@ -1547,7 +1547,7 @@ const CaddePage = () => {
                 <p className="text-sm leading-relaxed text-slate-600">
                   Danışmanlık, etkinlik veya işletme duyurunu sağ kolondaki seçkili alana taşı.
                 </p>
-                <Button asChild variant="outline" className="cadde-secondary-action w-full rounded-2xl">
+                <Button asChild variant="outline" className="cadde-secondary-action w-full rounded-lg">
                   <Link to={promotionCtaTarget}>
                     {promotionCtaLabel}
                     <ArrowUpRight className="ml-1.5 h-4 w-4" />
@@ -1570,7 +1570,7 @@ const CaddePage = () => {
               </div>
               <Link
                 to="/feedback?kaynak=cadde"
-                className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/70 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white"
+                className="flex items-center justify-between rounded-lg border border-slate-200 bg-white/70 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white"
               >
                 Beta geri bildirimi ver
                 <Megaphone className="h-4 w-4 text-orange-500" />
@@ -1610,13 +1610,13 @@ const CaddePage = () => {
                     <h3 className="mt-3 text-lg font-semibold text-slate-900">{card.title}</h3>
                     {card.subtitle ? <p className="mt-1 text-sm font-medium text-slate-500">{card.subtitle}</p> : null}
                     <p className="mt-3 text-sm leading-6 text-slate-700">{card.description}</p>
-                    <span className="cadde-tertiary-action mt-4 flex w-full items-center justify-center gap-1.5 rounded-2xl px-4 py-2.5 text-sm font-medium transition">
+                    <span className="cadde-tertiary-action mt-4 flex w-full items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium transition">
                       {card.ctaLabel}
                       <ArrowUpRight className="h-4 w-4" />
                     </span>
                   </>
                 );
-                const cardClassName = "cadde-card group block rounded-[24px] p-4";
+                const cardClassName = "cadde-card group block rounded-lg p-4";
 
                 return isInternalCaddeLink(card.ctaUrl) ? (
                   <Link key={card.id} to={card.ctaUrl} className={cardClassName}>
@@ -1630,7 +1630,7 @@ const CaddePage = () => {
               }) : (
                 <div
                   data-testid="cadde-billboards-empty-state"
-                  className="rounded-[24px] border border-dashed border-slate-200 bg-slate-50 px-4 py-5"
+                  className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-4 py-5"
                 >
                   {/* 05.09.2026 revizyon c1a3aaf0 ("Sağdaki billboard bölgesine maskot
                       görseli konsun"): boş billboard kutusu düz metindi. Maskot DEKORATİF —
@@ -1682,16 +1682,16 @@ const CaddePage = () => {
               </CardTitle>
               {/* m45: "talep bırak" kalktı — kullanıcı kendi profilinden bütçe verip
                   tanıtımını yayınlıyor (Facebook/Instagram modeli), aracı adım yok. */}
-              <CardDescription className="text-balance text-slate-300">
+              <CardDescription className="text-balance text-slate-500">
                 Billboard ve sponsorlu akış alanlarını profilindeki tanıtım panelinden kendin açarsın.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex items-start gap-3 rounded-2xl bg-white/10 p-3">
+              <div className="flex items-start gap-3 rounded-lg bg-white/10 p-3">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-orange-300" />
                 <p className="text-sm text-slate-200">Danışman, etkinlik ve topluluk kampanyalarını şehir bazlı yayınlayabilirsin.</p>
               </div>
-              <Button asChild variant="outline" className="cadde-secondary-action w-full rounded-2xl">
+              <Button asChild variant="outline" className="cadde-secondary-action w-full rounded-lg">
                 <Link to={promotionCtaTarget}>{promotionCtaLabel}</Link>
               </Button>
             </CardContent>

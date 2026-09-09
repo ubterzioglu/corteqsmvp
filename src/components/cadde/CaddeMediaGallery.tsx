@@ -68,7 +68,7 @@ const CaddeMediaGallery = ({ media, contextLabel }: CaddeMediaGalleryProps) => {
   return (
     <div className="space-y-3" data-testid="cadde-media-gallery">
       {images.length > 0 ? (
-        <div className={`grid gap-1.5 overflow-hidden rounded-2xl ${gridClassFor(images.length)}`}>
+        <div className={`grid gap-1.5 overflow-hidden rounded-lg ${gridClassFor(images.length)}`}>
           {images.map((asset, index) => (
             <button
               key={asset.path}
@@ -89,7 +89,7 @@ const CaddeMediaGallery = ({ media, contextLabel }: CaddeMediaGalleryProps) => {
       ) : null}
 
       {videos.map((asset) => (
-        <div key={asset.path} className="overflow-hidden rounded-2xl bg-slate-900">
+        <div key={asset.path} className="overflow-hidden rounded-lg bg-slate-900">
           <video
             src={asset.url}
             controls
@@ -112,7 +112,7 @@ const CaddeMediaGallery = ({ media, contextLabel }: CaddeMediaGalleryProps) => {
               <img
                 src={images[lightboxIndex].url}
                 alt={altFor(lightboxIndex)}
-                className="max-h-[85vh] w-full rounded-2xl object-contain"
+                className="max-h-[85vh] w-full rounded-lg object-contain"
               />
               {images.length > 1 ? (
                 <div className="mt-3 flex items-center justify-center gap-2">
@@ -151,7 +151,7 @@ export const CaddeMediaPreviewStrip = ({ media, onRemove, disabled }: CaddeMedia
   return (
     <div className="flex flex-wrap gap-2" data-testid="cadde-media-preview">
       {media.map((asset) => (
-        <div key={asset.path} className="relative h-20 w-20 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
+        <div key={asset.path} className="relative h-20 w-20 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
           {asset.kind === "image" ? (
             <img src={asset.url} alt="Yüklenen görsel" className="h-full w-full object-cover" />
           ) : (

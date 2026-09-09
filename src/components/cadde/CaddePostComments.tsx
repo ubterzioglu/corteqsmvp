@@ -106,14 +106,14 @@ const CaddePostComments = ({ postId, commentCount, canComment, onCommentAdded }:
         type="button"
         data-testid="cadde-post-comments-toggle"
         onClick={() => setOpen((current) => !current)}
-        className="inline-flex items-center gap-1.5 rounded-md text-xs text-slate-500 transition hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+        className="inline-flex items-center gap-1.5 rounded-lg text-xs text-slate-500 transition hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
       >
         <MessageCircle className="h-3.5 w-3.5" aria-hidden />
         {commentCount} yorum
       </button>
 
       {open ? (
-        <div className="mt-2 space-y-2 rounded-[20px] border border-slate-200/90 bg-slate-50/80 p-3">
+        <div className="mt-2 space-y-2 rounded-lg border border-slate-200/90 bg-slate-50/80 p-3">
           {commentsQuery.isLoading ? <p className="text-sm text-slate-500">Yorumlar yükleniyor…</p> : null}
 
           {/* Yükleme hatası "hiç yorum yok"tan AYIRT EDİLEBİLİR olmalı. Bu kusur
@@ -125,7 +125,7 @@ const CaddePostComments = ({ postId, commentCount, canComment, onCommentAdded }:
           {commentsQuery.isError ? (
             <div
               data-testid="cadde-post-comments-error"
-              className="rounded-xl border border-amber-300/70 bg-amber-50/80 px-3 py-2"
+              className="rounded-lg border border-amber-300/70 bg-amber-50/80 px-3 py-2"
             >
               <p className="text-sm text-amber-900">Yorumlar yüklenemedi.</p>
               <Button
@@ -145,7 +145,7 @@ const CaddePostComments = ({ postId, commentCount, canComment, onCommentAdded }:
             <div
               key={comment.id}
               data-testid="cadde-post-comment"
-              className="rounded-xl border border-slate-200/80 bg-white px-3 py-2"
+              className="rounded-lg border border-slate-200/80 bg-white px-3 py-2"
             >
               <p className="text-xs font-medium text-slate-700">{comment.authorName}</p>
               <p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">{comment.body}</p>

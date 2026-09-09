@@ -272,7 +272,7 @@ const CaddeComposer = ({
         </div>
 
         {showLocation && locationOpen ? (
-          <div className="space-y-3 rounded-2xl bg-slate-50 p-3">
+          <div className="space-y-3 rounded-lg bg-slate-50 p-3">
             {/* m86+m87: konum seçiminin NE İŞE YARADIĞI burada söyleniyor. Kullanıcı
                 bunu "nerede yaşıyorum" sanıyordu; oysa paylaşımın hangi ülke akışına
                 düşeceğini belirliyor. Satır kısa özet, balon uzun anlatım. */}
@@ -360,7 +360,7 @@ const CaddeComposer = ({
             {extraTargets.map((target, index) => {
               const targetCities = citiesForCountry(target.country);
               return (
-                <div key={index} className="grid gap-2 rounded-xl border border-slate-200 bg-white p-2 sm:grid-cols-[1fr_1fr_auto]">
+                <div key={index} className="grid gap-2 rounded-lg border border-slate-200 bg-white p-2 sm:grid-cols-[1fr_1fr_auto]">
                   <div className="space-y-1.5">
                     <Label className="text-xs">Ek hedef ülke {index + 1}</Label>
                     <Select value={target.country || "__none__"} onValueChange={(next) => updateTarget(index, { country: next === "__none__" ? "" : next, city: "" })}>

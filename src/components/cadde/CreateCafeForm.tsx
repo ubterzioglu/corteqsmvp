@@ -118,7 +118,7 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger ?? (
-          <Button variant="outline" className="cadde-secondary-action w-full justify-between rounded-2xl">
+          <Button variant="outline" className="cadde-secondary-action w-full justify-between rounded-lg">
             Cafe Aç
             <CaddeCafeIcon className="h-4 w-4" />
           </Button>
@@ -134,7 +134,7 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
             <Label>Cafe adı *</Label>
             <Input value={form.title} onChange={(event) => update("title", event.target.value)} placeholder="Örn. Berlin Yazılım Sohbeti" maxLength={80} />
             {brandConflict && parodySuggestion ? (
-              <div className="rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-900">
+              <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-900">
                 <p>
                   <strong>{brandConflict}</strong> korumalı bir marka. Bu adla cafe açmak yalnız markanın
                   doğrulanmış sahibine açık.
@@ -180,7 +180,7 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
             <Textarea value={form.summary} onChange={(event) => update("summary", event.target.value)} placeholder="Bu odada ne konuşulacak?" rows={3} maxLength={500} />
           </div>
 
-          <div className="flex items-center justify-between rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3">
+          <div className="flex items-center justify-between rounded-lg border border-emerald-100 bg-emerald-50 px-4 py-3">
             <div>
               <p className="text-sm font-semibold text-emerald-950">Köprü cafe</p>
               <p className="text-xs text-emerald-700">TR-Diaspora ortak odası; ülke/şehir kapsamı olmaz.</p>

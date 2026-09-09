@@ -293,7 +293,7 @@ const CaddeCafePage = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               {pendingMembers.map((member) => (
-                <div key={member.id} className="rounded-2xl border border-amber-200 bg-white p-3">
+                <div key={member.id} className="rounded-lg border border-amber-200 bg-white p-3">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-slate-900">{member.displayName}</p>
@@ -371,7 +371,7 @@ const CaddeCafePage = () => {
             ) : null}
 
             {(feedQuery.data ?? []).map((post) => (
-              <div key={post.id} className="cadde-card cadde-card--cafe rounded-2xl border border-slate-200 bg-white p-4">
+              <div key={post.id} className="cadde-card cadde-card--cafe rounded-lg border border-slate-200 bg-white p-4">
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="text-sm font-semibold text-slate-900">{post.authorName}</p>
                   <span className="text-xs text-slate-500">{formatDateTime(post.createdAt)}</span>
