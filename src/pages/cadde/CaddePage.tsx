@@ -922,11 +922,17 @@ const CaddePage = () => {
                               <TriggerIcon
                                 className={`h-4 w-4 ${viewerReaction?.key === "love" ? "fill-current" : ""}`}
                               />
-                              <span
-                                className={`ml-1.5 text-xs ${viewerReaction ? "text-white/80" : "text-muted-foreground"}`}
-                              >
-                                {totalReactions}
-                              </span>
+                              {/* H1 (m155): sıfır sayaç GÖRSEL olarak gizlenir — boş bir
+                                  akışta her kartta bağıran "0" kalkar. Yukarıdaki
+                                  aria-label AYNEN duruyor: ekran okuyucu sayıyı okumaya
+                                  devam eder, bilgi kaybı yok. */}
+                              {totalReactions > 0 ? (
+                                <span
+                                  className={`ml-1.5 text-xs ${viewerReaction ? "text-white/80" : "text-muted-foreground"}`}
+                                >
+                                  {totalReactions}
+                                </span>
+                              ) : null}
                             </Button>
 
                             {isReactionsOpen ? (
@@ -968,11 +974,16 @@ const CaddePage = () => {
                                         <Icon
                                           className={`h-4 w-4 ${active && reaction.key === "love" ? "fill-current" : ""}`}
                                         />
-                                        <span
-                                          className={`ml-1 text-xs ${active ? "text-white/80" : "text-muted-foreground"}`}
-                                        >
-                                          {count}
-                                        </span>
+                                        {/* Sıfır sayaç görsel olarak gizli; hemen
+                                            yukarıdaki aria-label sayıyı taşımayı
+                                            SÜRDÜRÜR (testler oradan okuyor). */}
+                                        {count > 0 ? (
+                                          <span
+                                            className={`ml-1 text-xs ${active ? "text-white/80" : "text-muted-foreground"}`}
+                                          >
+                                            {count}
+                                          </span>
+                                        ) : null}
                                       </Button>
                                     );
                                   })}
@@ -1000,7 +1011,11 @@ const CaddePage = () => {
                             }
                           >
                             <MessageCircle className="h-4 w-4" />
-                            <span className="ml-1.5 text-xs text-muted-foreground">{item.post.commentCount}</span>
+                            {/* Sıfırken sayı basılmaz; aria-label zaten 0 iken
+                                "Yorum yaz" diyor, ekran okuyucu bilgi kaybetmez. */}
+                            {item.post.commentCount > 0 ? (
+                              <span className="ml-1.5 text-xs text-muted-foreground">{item.post.commentCount}</span>
+                            ) : null}
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -1025,7 +1040,12 @@ const CaddePage = () => {
                             }}
                           >
                             <Share2 className="h-4 w-4" />
-                            <span className="ml-1.5 text-xs text-muted-foreground">{shareCount}</span>
+                            {/* Tepki ve yorumla aynı kural: sıfır sayaç gizli, aria-label
+                                ("Paylaş (0)") sayıyı taşımayı sürdürür. Bunu dışarıda
+                                bırakmak tutarsız olurdu — kartta tek başına "0" kalırdı. */}
+                            {shareCount > 0 ? (
+                              <span className="ml-1.5 text-xs text-muted-foreground">{shareCount}</span>
+                            ) : null}
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>Paylaş</TooltipContent>

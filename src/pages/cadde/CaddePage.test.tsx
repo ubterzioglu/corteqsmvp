@@ -855,6 +855,76 @@ describe("CaddePage", () => {
     expect(trigger).toHaveFocus();
   });
 
+  // H1 (m155) — sıfır sayaçlar GÖRSEL olarak gizlenir. Bu testin ikinci yarısı asıl
+  // koruma: `aria-label`'lar sayıyı taşımayı SÜRDÜRMELİ. Görsel span'i gizlerken
+  // aria-label'a da dokunmak ekran okuyucuyu geriletirdi; bu test onu kilitler.
+  it("sıfır tepki/yorum/paylaşım sayısını görsel olarak gizler, erişilebilir adı korur", async () => {
+    const user = userEvent.setup();
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({
+      items: [
+        {
+          ...reactionFeedPost,
+          id: "post-zero-counters",
+          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          totalReactionCount: 0,
+          commentCount: 0,
+          shareCount: 0,
+          viewerReactions: [],
+        },
+      ],
+      nextPage: null,
+    });
+    renderPage();
+
+    expect(await screen.findByText("Tepki seti testi")).toBeInTheDocument();
+
+    // Tetikte görsel "0" YOK ama erişilebilir ad sayıyı söylemeye devam ediyor.
+    const zeroTrigger = screen.getByTestId("cadde-reaction-trigger");
+    expect(within(zeroTrigger).queryAllByText("0")).toHaveLength(0);
+    expect(zeroTrigger).toHaveAccessibleName("Beğen (0)");
+
+    // Yorum sayacı da aynı: rakam gizli, buton adı (0 iken "Yorum yaz") duruyor.
+    const commentToggle = screen.getByTestId("cadde-comment-toggle");
+    expect(within(commentToggle).queryAllByText("0")).toHaveLength(0);
+    expect(commentToggle).toHaveAccessibleName("Yorum yaz");
+
+    // Paylaş sayacı da aynı kurala tabi — tek başına "0" kalırsa tutarsız olurdu.
+    const shareButton = screen.getByRole("button", { name: "Paylaş (0)" });
+    expect(within(shareButton).queryAllByText("0")).toHaveLength(0);
+
+    // Panelde beş tepkinin hiçbiri rakam çizmez; adları "(0)"ı BİREBİR taşır.
+    await user.click(zeroTrigger);
+    const zeroPanel = screen.getByTestId("cadde-reaction-panel");
+    expect(within(zeroPanel).queryAllByText("0")).toHaveLength(0);
+    expect(within(zeroPanel).getByRole("button", { name: "Beğendim (0)" })).toBeInTheDocument();
+    expect(within(zeroPanel).getByRole("button", { name: "Kalp (0)" })).toBeInTheDocument();
+    expect(within(zeroPanel).getByRole("button", { name: "Emin olamadım (0)" })).toBeInTheDocument();
+  });
+
+  // Gizlemenin YALNIZ sıfırda olduğunu kanıtlar — koşulu yanlışlıkla `>= 0` yapmak ya da
+  // ters çevirmek bu testi düşürür.
+  it("sayı 1'e ulaşınca görsel sayacı yeniden gösterir", async () => {
+    const user = userEvent.setup();
+    mountReactionPost();
+
+    expect(await screen.findByText("Tepki seti testi")).toBeInTheDocument();
+
+    const visibleTrigger = screen.getByTestId("cadde-reaction-trigger");
+    expect(within(visibleTrigger).getByText("15")).toBeInTheDocument();
+
+    await user.click(visibleTrigger);
+    const visiblePanel = screen.getByTestId("cadde-reaction-panel");
+    for (const shown of ["1", "2", "3", "4", "5"]) {
+      expect(within(visiblePanel).getByText(shown)).toBeInTheDocument();
+    }
+  });
+
   it("shares a post with the Web Share API and records the share", async () => {
     const shareMock = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, "share", { configurable: true, value: shareMock });
