@@ -29,14 +29,14 @@ const SponsoredFeedCard = ({ promotion, compact = false }: SponsoredFeedCardProp
   };
 
   const cta = isExternalPromotionUrl(promotion.targetUrl) ? (
-    <Button asChild size={compact ? "sm" : "default"} className="rounded-2xl bg-slate-900 text-white hover:bg-slate-800">
+    <Button asChild size={compact ? "sm" : "default"} className="cadde-primary-action rounded-2xl">
       <a href={promotion.targetUrl} target="_blank" rel="noopener noreferrer" onClick={handleClick}>
         İncele
         <ExternalLink className="ml-2 h-3.5 w-3.5" />
       </a>
     </Button>
   ) : (
-    <Button asChild size={compact ? "sm" : "default"} className="rounded-2xl bg-slate-900 text-white hover:bg-slate-800">
+    <Button asChild size={compact ? "sm" : "default"} className="cadde-primary-action rounded-2xl">
       <Link to={promotion.targetUrl} onClick={handleClick}>İncele</Link>
     </Button>
   );

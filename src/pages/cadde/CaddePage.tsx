@@ -765,7 +765,7 @@ const CaddePage = () => {
                       <h3 className="text-lg font-semibold text-slate-900">{item.sponsor.title}</h3>
                       <p className="text-sm text-slate-700">{item.sponsor.description}</p>
                     </div>
-                    <Button asChild className="rounded-2xl bg-slate-900 text-white hover:bg-slate-800">
+                    <Button asChild className="cadde-primary-action rounded-2xl">
                       <Link to={item.sponsor.ctaUrl}>{item.sponsor.ctaLabel}</Link>
                     </Button>
                   </CardContent>
@@ -1261,7 +1261,7 @@ const CaddePage = () => {
                       <Button
                         data-testid="cadde-widen-feed"
                         onClick={() => setSearchParams(serializeCaddeFilters(widenTarget!.next))}
-                        className="rounded-2xl bg-slate-900 text-white hover:bg-slate-800"
+                        className="cadde-primary-action rounded-2xl"
                       >
                         {widenTarget!.label} akışındaki{" "}
                         {describeCaddeWidenCount(widenedCount, Boolean(widenedPage?.nextPage))} → gör
@@ -1274,14 +1274,14 @@ const CaddePage = () => {
                         className={
                           canWiden
                             ? "rounded-2xl border-slate-300 bg-white text-slate-800 hover:bg-slate-50"
-                            : "rounded-2xl bg-slate-900 text-white hover:bg-slate-800"
+                            : "cadde-primary-action rounded-2xl"
                         }
                       >
                         İlk paylaşımı yap
                         <Megaphone className={`ml-1.5 h-4 w-4 ${canWiden ? "text-orange-500" : "text-orange-200"}`} />
                       </Button>
                     ) : (
-                      <Button asChild className="rounded-2xl bg-slate-900 text-white hover:bg-slate-800">
+                      <Button asChild className="cadde-primary-action rounded-2xl">
                         <Link to="/login">Giriş yap ve ilk paylaşımı yap</Link>
                       </Button>
                     )}
@@ -1609,7 +1609,7 @@ const CaddePage = () => {
                     <h3 className="mt-3 text-lg font-semibold text-slate-900">{card.title}</h3>
                     {card.subtitle ? <p className="mt-1 text-sm font-medium text-slate-500">{card.subtitle}</p> : null}
                     <p className="mt-3 text-sm leading-6 text-slate-700">{card.description}</p>
-                    <span className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition group-hover:bg-slate-800">
+                    <span className="cadde-primary-action mt-4 flex w-full items-center justify-center gap-1.5 rounded-2xl px-4 py-2.5 text-sm font-medium transition">
                       {card.ctaLabel}
                       <ArrowUpRight className="h-4 w-4" />
                     </span>

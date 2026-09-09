@@ -15,6 +15,9 @@ import { describe, expect, it } from "vitest";
 
 const CSS = readFileSync("src/index.css", "utf8");
 const SOCIAL_CONFIG = readFileSync("scripts/social-generate/config.mjs", "utf8");
+const CADDE_PAGE = readFileSync("src/pages/cadde/CaddePage.tsx", "utf8");
+const SPONSORED_CARD = readFileSync("src/components/cadde/SponsoredFeedCard.tsx", "utf8");
+const SCOPE_BAR = readFileSync("src/components/cadde/CaddeFeedScopeBar.tsx", "utf8");
 
 /** `--cadde-brand: 43 44% 46%;` -> [43, 44, 46] */
 function readHslToken(name: string): [number, number, number] {
@@ -33,6 +36,24 @@ function hslToHex(h: number, s: number, l: number): string {
     h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
   const toByte = (v: number) => Math.round((v + m) * 255).toString(16).padStart(2, "0");
   return `#${toByte(r)}${toByte(g)}${toByte(b)}`;
+}
+
+function hslToRgb(h: number, s: number, l: number): [number, number, number] {
+  const hex = hslToHex(h, s, l);
+  return [1, 3, 5].map((index) => parseInt(hex.slice(index, index + 2), 16) / 255) as [number, number, number];
+}
+
+function contrastRatio(first: [number, number, number], second: [number, number, number]): number {
+  const luminance = (rgb: [number, number, number]) =>
+    rgb
+      .map((channel) => (channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4))
+      .reduce((sum, channel, index) => sum + channel * [0.2126, 0.7152, 0.0722][index], 0);
+  const [lighter, darker] = [luminance(first), luminance(second)].sort((a, b) => b - a);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function countClass(source: string, className: string): number {
+  return [...source.matchAll(new RegExp(`\\b${className}\\b`, "g"))].length;
 }
 
 describe("marka rengi sözleşmesi", () => {
@@ -60,6 +81,27 @@ describe("marka rengi sözleşmesi", () => {
       // Ton kayarsa varyant artık aynı rengin tonu değil, BAŞKA bir renk olur.
       expect(Math.abs(h - base[0])).toBeLessThanOrEqual(2);
     }
+  });
+
+  it("T2: beyaz metinli güçlü marka zemini AA kontrastını güvenli marjla geçer", () => {
+    const white: [number, number, number] = [1, 1, 1];
+    expect(contrastRatio(hslToRgb(...readHslToken("cadde-brand")), white)).toBeLessThan(4.5);
+    expect(contrastRatio(hslToRgb(...readHslToken("cadde-brand-strong")), white)).toBeGreaterThanOrEqual(4.8);
+  });
+
+  it("T2: ayrılmış birincil eylemlerin tamamı ortak güçlü marka sınıfını kullanır", () => {
+    expect(countClass(CADDE_PAGE, "cadde-primary-action")).toBe(5);
+    expect(countClass(SPONSORED_CARD, "cadde-primary-action")).toBe(2);
+    expect(CSS).toMatch(/\.cadde-primary-action\s*{[^}]*var\(--cadde-brand-strong\)[^}]*color:\s*white/s);
+    expect(CSS).toMatch(/\.cadde-primary-action:hover\s*{[^}]*var\(--cadde-brand-ink\)/s);
+  });
+
+  it("T2: aktif kapsam çipi kimlik bronzunu erişilebilir koyu mürekkeple kullanır", () => {
+    expect(SCOPE_BAR).toMatch(/active[\s\S]*?"cadde-filter-active"/);
+    expect(CSS).toMatch(
+      /\.cadde-filter-active\s*{[^}]*border-color:\s*hsl\(var\(--cadde-brand\)\)[^}]*background-color:\s*hsl\(var\(--cadde-brand\)\)[^}]*color:\s*hsl\(var\(--cadde-ink\)\)/s,
+    );
+    expect(contrastRatio(hslToRgb(...readHslToken("cadde-brand")), hslToRgb(...readHslToken("cadde-ink")))).toBeGreaterThanOrEqual(4.5);
   });
 
   it("dekoratif turuncu aksan SİLİNMEDİ", () => {

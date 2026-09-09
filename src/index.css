@@ -332,7 +332,7 @@
        ⚠️ --cadde-accent (turuncu) SİLİNMEZ; o dekoratif aksan, bu kimlik.
        Biri diğerinin yerine geçmez, yan yana dururlar. */
     --cadde-brand: 43 44% 46%;
-    --cadde-brand-strong: 43 46% 38%;
+    --cadde-brand-strong: 43 46% 36%;
     --cadde-brand-soft: 43 52% 94%;
     --cadde-brand-ink: 43 60% 22%;
     /* Gerçek logo paleti — fırıldaktaki 5 figürden örneklenen ton (newlogo.png).
@@ -359,6 +359,24 @@
   .cadde-chip-brand {
     background: hsl(var(--cadde-warm-strong));
     color: hsl(var(--cadde-accent-ink));
+  }
+
+  /* T2 (m138): beyaz metinli primary zeminde ham bronze AA'yı geçmez (3.23:1).
+     Güçlü varyant 4.8:1 üstü güvenli marj verir; hover aynı tonun koyu mürekkebidir. */
+  .cadde-primary-action {
+    background-color: hsl(var(--cadde-brand-strong));
+    color: white;
+  }
+
+  .cadde-primary-action:hover {
+    background-color: hsl(var(--cadde-brand-ink));
+  }
+
+  /* Seçili kapsam kimlik rengini doğrudan taşır; koyu shell mürekkebiyle 5.9:1. */
+  .cadde-filter-active {
+    border-color: hsl(var(--cadde-brand));
+    background-color: hsl(var(--cadde-brand));
+    color: hsl(var(--cadde-ink));
   }
 
   /* Premium kart yüzeyi: çift katmanlı gölge + logo renklerinden üst şerit imza.

@@ -1,6 +1,6 @@
 # Devir notu — 9 Eylül 2026
 
-> **Nasıl kullanılır:** yeni bir oturumda yalnız batch numarasını söyle (ör. `T2`).
+> **Nasıl kullanılır:** yeni bir oturumda yalnız batch numarasını söyle (ör. `T3`).
 > Ajan bu dosyayı ve `docs/plans/2026-09-09-cadde-ux-ui-batch-plani.md`'yi açar,
 > o batch'i okur ve yapar. Batch'ler arasında bilgi taşınmaz.
 
@@ -60,34 +60,19 @@ doğru varsayılmaz.** Önce oku, sonra uygula.
 Kaynak: `docs/plans/2026-09-09-cadde-ux-ui-batch-plani.md`. Pano: `/admin/workshop/cadde`
 (WS3 sekmesi, **14/31**).
 
-### T — Tasarım sistemi *(9 batch kaldı; T1 temeli attı)*
+### T — Tasarım sistemi *(6 batch kaldı)*
 
-T1 token'ları tanımladı ama **hiçbiri kullanılmıyor** — görünüm bugün değişmedi.
+Token'lar tanımlı ve birincil eylem/aktif kapsam yüzeylerinde kullanılmaya başladı.
 Kural: `docs/modules/cadde-design-tokens.md`.
 
 | Batch | İş | Süre | Not |
 |---|---|---|---|
-| **T2** | Marka bronzunu birincil eyleme bağla | ~20 dk | ⚠️ Aşağıdaki kontrast ölçümünü oku |
-| **T3** | Buton hiyerarşisini üçe indir | ~25 dk | T2'den sonra |
+| **T3** | Buton hiyerarşisini üçe indir | ~25 dk | |
 | **T4** | Üst nav'ı tek nötr renge indir | ~10 dk | `SiteHeader.tsx`, 4 farklı renk |
 | **T5** | Gökkuşağı şeridi pillar renk koduna çevir | ~25 dk | ⚠️ `.cadde-panel` yan kolonda da kullanılıyor |
 | **T6** | Rozetleri üç tipe indir | ~25 dk | H3 "Sabit"i yaptı, stili burada |
 | **T7** | Yüzey: tek yarıçap, iki gölge, gri alt sınırı | ~20 dk | |
 | **T8** | Cafe kartındaki çelişen sinyali gider | ~10 dk | T6'dan sonra |
-
-**⚠️ T2 için ölçülmüş kritik bilgi (bugün hesaplandı):**
-Marka bronzu `#aa8c42` beyaz metinle **3.22:1** — AA'yı **geçmiyor**. Primary buton zemini
-için en az **%38 koyuluk** gerekiyor (`4.54:1`), güvenli marj için %36 (`4.98:1`).
-`--cadde-brand` kimlik rengi olarak kalır; buton zemini `--cadde-brand-strong` olmalı.
-Uygularken kontrast oranını **teste bağla** — `src/lib/cadde-brand-token.test.ts` içinde
-HSL→hex çevirimi için hazır yardımcı var.
-
-**T2 için ayrılmış yüzeyler** (bugün ölçüldü, 16 `bg-slate-900` var ama hepsi primary değil):
-- *Primary olacaklar:* `CaddePage.tsx` :768, :1264, :1277, :1284, :1612 · `SponsoredFeedCard.tsx` :32, :39
-- *Primary OLMAYANLAR (dokunma):* `:794` Sabit rozeti (T6'nın işi) · `:971`, `:1023` seçili
-  tepki (durum, eylem değil) · `:1676` tanıtım kartı zemini · `CaddeMediaGallery` ×3 (medya
-  letterbox) · `CaddeComposer:427` seçili araç
-- *Aktif kapsam çipi* (`CaddeFeedScopeBar:84`) → token dokümanına göre **brand olmalı**
 
 ### C — Cafe *(2 batch kaldı)*
 

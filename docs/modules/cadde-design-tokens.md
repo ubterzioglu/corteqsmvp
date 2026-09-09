@@ -42,12 +42,16 @@ logo kaldırılsa arayüzün CorteQS'e ait olduğu anlaşılmıyordu.
 
 | Token | Değer | Kullanım |
 |---|---|---|
-| `--cadde-brand` | `43 44% 46%` | primary buton zemini, aktif sekme, seçili filtre |
-| `--cadde-brand-strong` | `43 46% 38%` | primary hover/active |
+| `--cadde-brand` | `43 44% 46%` | kimlik rengi, aktif sekme, seçili filtre |
+| `--cadde-brand-strong` | `43 46% 36%` | beyaz metinli primary buton zemini |
 | `--cadde-brand-soft` | `43 52% 94%` | seçili satır zemini, hafif vurgu |
 | `--cadde-brand-ink` | `43 60% 22%` | `brand-soft` üstündeki metin |
 
 Sayfa başına **en fazla bir** primary. İkiden fazlaysa hiyerarşi yok demektir.
+
+`--cadde-brand` beyaz metinle 3.23:1 kaldığı için buton zemini olamaz. Primary buton
+`--cadde-brand-strong` + beyaz metin (4.8:1 üstü), hover ise `--cadde-brand-ink`
+kullanır. Seçili filtre ham marka rengini `--cadde-ink` metinle taşır (5.9:1).
 
 ⚠️ `--cadde-accent` (turuncu, `24 92% 48%`) DURUYOR ve silinmeyecek: dekoratif
 aksan olarak (ikonlar, kart parıltısı) kullanılıyor. `brand` onun yerine geçmez,

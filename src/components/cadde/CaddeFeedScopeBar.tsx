@@ -81,7 +81,7 @@ const CaddeFeedScopeBar = ({
             title={option.description}
             className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
               active
-                ? "border-slate-900 bg-slate-900 text-white"
+                ? "cadde-filter-active"
                 : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
             } ${option.comingSoon ? "cursor-not-allowed opacity-50" : ""}`}
           >
