@@ -124,14 +124,19 @@ export default function SiteHeader() {
             </div>
           </Link>
 
-          <div className="min-w-0 w-full md:flex-1">
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 text-center md:justify-end md:text-right">
-              {/* Uzun slogan mobilde gizli — yalnızca sm+ ekranlarda */}
-              <p className="hidden text-sm font-semibold tracking-[0.03em] text-slate-800 sm:block sm:text-base">
-                Dünyadaki Türkleri Bir Araya Getiren Platform
-              </p>
+          {/* Pazarlama sloganı yalnız giriş yapmamış ziyaretçiye gösterilir.
+              Koşul <p> yerine DIŞ sarmalayıcıya konur: aksi halde girişli üyede
+              boş bir md:flex-1 kolonu ve ebeveynin boşluğu kalırdı. */}
+          {!user && (
+            <div className="min-w-0 w-full md:flex-1">
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 text-center md:justify-end md:text-right">
+                {/* Uzun slogan mobilde gizli — yalnızca sm+ ekranlarda */}
+                <p className="hidden text-sm font-semibold tracking-[0.03em] text-slate-800 sm:block sm:text-base">
+                  Dünyadaki Türkleri Bir Araya Getiren Platform
+                </p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
