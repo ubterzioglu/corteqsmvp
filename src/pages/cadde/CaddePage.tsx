@@ -56,6 +56,7 @@ import { emptyCaddeComposer } from "@/lib/cadde-composer";
 import { resolveCaddeClockTarget } from "@/lib/cadde-local-clock";
 import { caddeNewPostPollInterval, caddeOpenCommentsPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
 import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters } from "@/lib/cadde-format";
+import { describeCaddeWidenCount, widenCaddeFilters } from "@/lib/cadde-feed-widen";
 import { isInternalCaddeLink } from "@/lib/cadde-links";
 import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
@@ -491,6 +492,48 @@ const CaddePage = () => {
   const newPostCount = newPostsQuery.data ?? 0;
 
   const feedItems = useMemo(() => feedQuery.data?.pages.flatMap((page) => page.items) ?? [], [feedQuery.data]);
+
+  // ── Daraltılmış akış boşsa bir üst kapsamı YOKLA (B1/B2, m157-m158) ─────────
+  // Ölçüldü 09.09.2026: 58 Cadde şehrinin yalnız 10'unda paylaşım var. Elle şehir
+  // seçen üye %83 ihtimalle boş akış görüyor ve ona bugün "ilk paylaşımı sen yap"
+  // deniyor — kullanıcı ilk paylaşımı yapmaz.
+  const widenTarget = useMemo(
+    () =>
+      widenCaddeFilters(
+        filters,
+        citiesQuery.data ?? allCitiesQuery.data ?? [],
+        countriesQuery.data ?? [],
+      ),
+    [filters, citiesQuery.data, allCitiesQuery.data, countriesQuery.data],
+  );
+
+  // ⚠️ `useInfiniteQuery` OLMASI ZORUNLU ve anahtar ana feed'in fabrikasından gelmeli.
+  // Düz `useQuery` + aynı anahtar, tek cache girdisine `{items,nextPage}` yazar ve
+  // yukarıdaki `feedQuery.data?.pages.flatMap(...)` TypeError fırlatır (optional
+  // chaining yalnız `data` üzerinde). Aynı fabrika sayesinde kullanıcı butona
+  // tıklayınca URL değişir, anahtar YOKLAMANINKİYLE BİREBİR eşleşir ve AĞA YENİ
+  // İSTEK GİTMEZ — bu tasarımın "ekstra sorgu açma" şartını karşılayan tek şey budur.
+  const widenedFeedQuery = useInfiniteQuery({
+    queryKey: caddeQueryKeys.feed(widenTarget?.next ?? filters, user?.id ?? null, diasporaKey),
+    initialPageParam: null as CaddeFeedPageParam,
+    queryFn: ({ pageParam }) =>
+      listCaddeFeed(widenTarget!.next, pageParam, user?.id ?? null, diasporaKey),
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
+    // Yalnız GERÇEKTEN gerekliyken koşar: filtresiz /cadde'de (kullanıcıların çoğu)
+    // widenTarget null olduğu için hiç ek sorgu açılmaz.
+    enabled:
+      widenTarget !== null &&
+      filters.mode === "real" &&
+      !feedQuery.isLoading &&
+      !feedQuery.isError &&
+      feedItems.length === 0,
+  });
+  const widenedPage = widenedFeedQuery.data?.pages[0];
+  const widenedCount = widenedPage?.items.length ?? 0;
+  // Yoklama hata verirse buton çizilmez: "içerik yok" iddiası ile hata karışmamalı.
+  const canWiden = widenTarget !== null && !widenedFeedQuery.isError && widenedCount > 0;
   const feedWithSponsor = useMemo(
     () =>
       interleavePromotions(
@@ -529,9 +572,6 @@ const CaddePage = () => {
   // ünlü uyumu + sertleşme kuralı güvenilir değil ("Dortmund'ta" ✓ ama "Nice'te/Nice'de"?).
   // Eksiz "X için" kalıbı her ad için doğru.
   const cafeLocationLabel = filters.cities[0] ?? filters.countries[0] ?? null;
-  const sparseContentHint = hasGeoSelection
-    ? "Bu bölgede içerik azsa ülke geneli ve global akış da devreye girer."
-    : "İçerik az olduğunda global akışla başlayıp ilk hareketi sen başlatabilirsin.";
   const activeCafes = cafesQuery.data ?? [];
 
   // ── Soğuk başlangıç (B1) ────────────────────────────────────────────────────
@@ -543,7 +583,22 @@ const CaddePage = () => {
   // aktif bir filtre varsa boşluğun sebebi kullanıcının KENDİ seçimidir ve o
   // seçimi yapan kontrol GÖRÜNÜR kalmalıdır — filtreyi gizlemek kullanıcıyı
   // akışın neden boş olduğunu göremez hale getirir.
-  const hasNarrowingFilter = hasGeoSelection || filters.bridge || Boolean(filters.hashtag);
+  // ⚠️ `filters.scope !== "all"` ÖLÇÜLEN BİR KUSURU kapatır: kapsam çipi ("Şehrim")
+  // SQL'de ayrı ve SERT bir filtredir (20260805120000:220-233) ve izleyicinin şehri
+  // Cadde kataloğunda çözülemiyorsa akış GARANTİ boş kalır. Bu koşul olmadan o durum
+  // "soğuk başlangıç" sanılıyor, Konum paneli katlanıyor ve kullanıcıya akışı DAHA DA
+  // daraltan "Köprü modunu aç" öneriliyordu.
+  const hasNarrowingFilter =
+    hasGeoSelection || filters.bridge || Boolean(filters.hashtag) || filters.scope !== "all";
+  // Boş durumda ne söyleneceği. Eski metin ("Bu bölgede içerik azsa ülke geneli ve global
+  // akış da devreye girer.") EKRANDA DURAN BİR YALANDI: SQL'de öyle bir devreye girme
+  // yok, geo filtresi sert bir AND (a.g.e. 241-245). Akış daralınca daralır, kendiliğinden
+  // genişlemez. Artık duruma göre DOĞRU olan söyleniyor.
+  const sparseContentHint = canWiden
+    ? `Daraltılmış akışın boş; ${widenTarget!.label} akışına tek dokunuşla geçebilirsin.`
+    : hasNarrowingFilter
+      ? "Bu seçimde ve bir üst kapsamda henüz paylaşım yok."
+      : "İçerik az olduğunda global akışla başlayıp ilk hareketi sen başlatabilirsin.";
   // Veri gelmeden karar verilmez: yükleme sırasında "içerik yok" DEĞİL "henüz
   // bilinmiyor" durumundayız (aşağıda caddeDataResolved ile ayrılıyor).
   const caddeDataResolved = !feedQuery.isLoading && !cafesQuery.isLoading;
@@ -1193,22 +1248,50 @@ const CaddePage = () => {
                     paylaşım; ikincil eylem akışın neden boş olduğuna göre değişir —
                     filtre daraltıyorsa filtreyi temizler, daraltmıyorsa kapsamı genişletir. */}
                 <CardContent className="p-8 text-center text-slate-500">
-                  <p className="text-base font-semibold text-slate-900">Bu akış henüz sessiz.</p>
+                  <p className="text-base font-semibold text-slate-900">
+                    {canWiden
+                      ? `${cafeLocationLabel ?? "Bu akış"} için henüz paylaşım yok.`
+                      : "Bu akış henüz sessiz."}
+                  </p>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
                     İlk paylaşımı sen yapabilirsin — bir soru, bir duyuru ya da şehrinden kısa bir not yeter.
                   </p>
                   <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                    {/* Genişletme birincil eylem olur: dolu bir alternatif, boş bir davetten
+                        iyidir. Sayı yoklamadan gelir — SIFIR yeni ağ isteği (yoklama zaten
+                        koştu) ve tıklayınca anahtar eşleştiği için üçüncü bir istek de gitmez. */}
+                    {canWiden ? (
+                      <Button
+                        data-testid="cadde-widen-feed"
+                        onClick={() => setSearchParams(serializeCaddeFilters(widenTarget!.next))}
+                        className="rounded-2xl bg-slate-900 text-white hover:bg-slate-800"
+                      >
+                        {widenTarget!.label} akışındaki{" "}
+                        {describeCaddeWidenCount(widenedCount, Boolean(widenedPage?.nextPage))} → gör
+                      </Button>
+                    ) : null}
                     {session ? (
-                      <Button onClick={scrollToComposer} className="rounded-2xl bg-slate-900 text-white hover:bg-slate-800">
+                      <Button
+                        onClick={scrollToComposer}
+                        variant={canWiden ? "outline" : "default"}
+                        className={
+                          canWiden
+                            ? "rounded-2xl border-slate-300 bg-white text-slate-800 hover:bg-slate-50"
+                            : "rounded-2xl bg-slate-900 text-white hover:bg-slate-800"
+                        }
+                      >
                         İlk paylaşımı yap
-                        <Megaphone className="ml-1.5 h-4 w-4 text-orange-200" />
+                        <Megaphone className={`ml-1.5 h-4 w-4 ${canWiden ? "text-orange-500" : "text-orange-200"}`} />
                       </Button>
                     ) : (
                       <Button asChild className="rounded-2xl bg-slate-900 text-white hover:bg-slate-800">
                         <Link to="/login">Giriş yap ve ilk paylaşımı yap</Link>
                       </Button>
                     )}
-                    {hasGeoSelection ? (
+                    {/* Genişletme varken üçüncü buton çizilmez — karar felci. Filtre paneli
+                        o durumda zaten açıktır (hasNarrowingFilter true → isColdStart false),
+                        temizleme oradan yapılabilir. */}
+                    {canWiden ? null : hasGeoSelection ? (
                       <Button
                         variant="outline"
                         className="rounded-2xl border-orange-200 bg-white text-orange-800 hover:bg-orange-50"

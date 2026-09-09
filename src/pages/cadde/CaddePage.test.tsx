@@ -435,23 +435,35 @@ describe("CaddePage", () => {
       ],
       nextPage: null,
     });
-    listCaddePostCommentsMock
-      .mockResolvedValueOnce({
-        items: [
-          { id: "comment-1", postId: "post-load-more", userId: "u1", body: "Birinci yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" },
-          { id: "comment-2", postId: "post-load-more", userId: "u2", body: "İkinci yorum", authorName: "Mert", createdAt: "2026-06-23T10:02:00Z" },
-          { id: "comment-3", postId: "post-load-more", userId: "u3", body: "Üçüncü yorum", authorName: "Deniz", createdAt: "2026-06-23T10:03:00Z" },
-          { id: "comment-4", postId: "post-load-more", userId: "u4", body: "Dördüncü yorum", authorName: "Ece", createdAt: "2026-06-23T10:04:00Z" },
-          { id: "comment-5", postId: "post-load-more", userId: "u5", body: "Beşinci yorum", authorName: "Can", createdAt: "2026-06-23T10:05:00Z" },
-        ],
-        nextCursor: "2026-06-23T10:05:00Z",
-      })
-      .mockResolvedValueOnce({
-        items: [
-          { id: "comment-6", postId: "post-load-more", userId: "u6", body: "Altıncı yorum", authorName: "Nil", createdAt: "2026-06-23T10:06:00Z" },
-        ],
-        nextCursor: null,
-      });
+    // ⚠️ Mock SIRAYA değil İMLECE bağlıdır. `mockResolvedValueOnce` zinciri çağrı
+    // sırasına güvenir; arka plandaki bir yenileme araya girdiğinde ikinci "Once"
+    // değerini yanlış çağrı tüketir ve test tam paket yükü altında düzensiz kırılır
+    // (ölçüldü 09.09.2026: tek başına geçiyor, tam pakette düşüyor — önce
+    // `toHaveBeenLastCalledWith`, sonra `toHaveBeenNthCalledWith(2, …)` denendi,
+    // ikisi de sıra varsayımına dayandığı için yetmedi). İmlece bakan mock kaç kez
+    // ve hangi sırada çağrıldığından BAĞIMSIZ olarak doğru sayfayı döndürür.
+    const FIRST_PAGE_CURSOR = "2026-06-23T10:05:00Z";
+    listCaddePostCommentsMock.mockImplementation((_postId, _limit, cursor) =>
+      Promise.resolve(
+        cursor === FIRST_PAGE_CURSOR
+          ? {
+              items: [
+                { id: "comment-6", postId: "post-load-more", userId: "u6", body: "Altıncı yorum", authorName: "Nil", createdAt: "2026-06-23T10:06:00Z" },
+              ],
+              nextCursor: null,
+            }
+          : {
+              items: [
+                { id: "comment-1", postId: "post-load-more", userId: "u1", body: "Birinci yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" },
+                { id: "comment-2", postId: "post-load-more", userId: "u2", body: "İkinci yorum", authorName: "Mert", createdAt: "2026-06-23T10:02:00Z" },
+                { id: "comment-3", postId: "post-load-more", userId: "u3", body: "Üçüncü yorum", authorName: "Deniz", createdAt: "2026-06-23T10:03:00Z" },
+                { id: "comment-4", postId: "post-load-more", userId: "u4", body: "Dördüncü yorum", authorName: "Ece", createdAt: "2026-06-23T10:04:00Z" },
+                { id: "comment-5", postId: "post-load-more", userId: "u5", body: "Beşinci yorum", authorName: "Can", createdAt: "2026-06-23T10:05:00Z" },
+              ],
+              nextCursor: FIRST_PAGE_CURSOR,
+            },
+      ),
+    );
 
     renderPage();
 
@@ -462,14 +474,13 @@ describe("CaddePage", () => {
     fireEvent.click(screen.getByRole("button", { name: /Devamını yükle/i }));
 
     expect(await screen.findByText("Altıncı yorum")).toBeInTheDocument();
-    // 2. çağrı = "Devamını yükle" ve imleci ilk sayfadan devralmalı.
-    // ⚠️ Burada `toHaveBeenLastCalledWith` KULLANMA: arka plandaki yenileme
-    // (adaptif polling / React Query refetch) imleçsiz bir çağrıyı SONA
-    // ekleyebiliyor ve test tam paket yükü altında kırılgan hale geliyordu
-    // (ölçüldü 09.09.2026: tek başına 3/3 geçiyor, tam pakette düşüyor).
-    // `Nth` hem sırayı asıl önemli olduğu yerde çiviler hem sonraki
-    // çağrılardan etkilenmez — yani gevşetme değil, daralt.
-    expect(listCaddePostCommentsMock).toHaveBeenNthCalledWith(2, "post-load-more", 5, "2026-06-23T10:05:00Z");
+    // "Devamını yükle" imleci ilk sayfadan devralarak sordu.
+    // ⚠️ SIRA İDDİASI KULLANMA (`toHaveBeenLastCalledWith` / `toHaveBeenNthCalledWith`):
+    // ikisi de denendi ve ikisi de tam paket yükünde düştü, çünkü arka plandaki yenileme
+    // araya ya da sona imleçsiz bir çağrı ekleyebiliyor. Bileşen çağrı SIRASI ya da
+    // SAYISI konusunda bir söz vermiyor; verdiği söz "sonraki sayfayı imleçle ister".
+    // Test tam olarak o sözü denetler — bu bir gevşetme değil, doğru sözleşmeye nişan almak.
+    expect(listCaddePostCommentsMock).toHaveBeenCalledWith("post-load-more", 5, FIRST_PAGE_CURSOR);
     expect(screen.queryByRole("button", { name: /Devamını yükle/i })).not.toBeInTheDocument();
   });
 
@@ -1395,9 +1406,36 @@ describe("CaddePage", () => {
     await user.click(screen.getByTestId("cadde-geo-toggle"));
     await waitFor(() => expect(screen.queryByText(COLD_START_HINT)).not.toBeInTheDocument());
 
-    // Akış HÂLÂ yalnız Almanya/Berlin için sorulur — temizlenmiş bir çağrı olmamalı.
-    for (const call of listCaddeFeedMock.mock.calls) {
-      expect(call[0]).toEqual(expect.objectContaining({ countries: ["Almanya"], cities: ["Berlin"] }));
+    // Bu testin KORUDUĞU sözleşme: "katlamak filtreyi SIFIRLAMAZ".
+    // Sözleşme RPC şekliyle değil URL ile ölçülür — B1 ile birlikte artık boş kalan
+    // daraltılmış akış için bir üst kapsam YOKLANIYOR ve o yoklama bilinçli olarak
+    // `cities: []` taşıyor. Eski "her çağrı Berlin taşır" döngüsü bu yüzden düştü.
+    // Yerine üç DAHA GÜÇLÜ iddia geliyor:
+
+    // (i) Merdiven TAM OLARAK BİR ADIM gevşetti: yoklama şehri düşürdü ama ülkeyi
+    // KORUDU. Filtreyi sıfırlayan bir çağrı (countries ve cities ikisi de boş) olsaydı
+    // bu iddia düşerdi. URL'i doğrudan okuyamıyoruz (MemoryRouter), ama filtrenin
+    // sıfırlanmadığının gözlenebilir kanıtı budur.
+    expect(
+      listCaddeFeedMock.mock.calls.some(
+        ([callFilters]) => callFilters.cities.length === 0 && callFilters.countries.join() === "Almanya",
+      ),
+    ).toBe(true);
+    expect(
+      listCaddeFeedMock.mock.calls.every(
+        ([callFilters]) => !(callFilters.cities.length === 0 && callFilters.countries.length === 0),
+      ),
+    ).toBe(true);
+
+    // (ii) Daraltılmış akış hâlâ TAM filtreyle soruldu.
+    expect(
+      listCaddeFeedMock.mock.calls.some(([callFilters]) => callFilters.cities.join() === "Berlin"),
+    ).toBe(true);
+
+    // (iii) HİÇBİR çağrı ülkeyi düşürmedi — yoklama yalnız bir adım gevşetir, filtreyi
+    // temizlemez. Tamamen filtresiz bir çağrı olsaydı bu iddia düşerdi.
+    for (const [callFilters] of listCaddeFeedMock.mock.calls) {
+      expect(callFilters.countries).toEqual(["Almanya"]);
     }
 
     // Geri açıldığında seçim yerinde: boş akış kartı hâlâ "Filtreleri temizle" sunar.
@@ -1449,6 +1487,105 @@ describe("CaddePage", () => {
     expect(await screen.findByTestId("cadde-promotions-empty-state")).toBeInTheDocument();
     // B10 tetiği yalnız soğuk başlangıçta çizilir.
     expect(screen.queryByTestId("cadde-right-rail-toggle")).not.toBeInTheDocument();
+  });
+
+  // ── B1/B2: daraltılmış akış boşken bir üst kapsamı sun ───────────────────────
+  // Ölçüldü 09.09.2026 (canlı): 58 Cadde şehrinin yalnız 10'unda paylaşım var. Elle
+  // şehir seçen üye %83 ihtimalle boş akış görüyordu ve ona "ilk paylaşımı sen yap"
+  // deniyordu. Kullanıcı ilk paylaşımı yapmaz; dolu bir alternatif gösterilmeli.
+  describe("boş daraltılmış akışta genişletme", () => {
+    /** Şehir sorgusu boş, ülke sorgusu dolu dönen bir akış mock'u kurar. */
+    const mountNarrowEmptyFeed = (countryItems = 3, nextPage: string | null = null) => {
+      useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+      listCaddeCountriesMock.mockResolvedValue([{ id: "c-de", code: "DE", name: "Almanya" }]);
+      listCaddeCitiesMock.mockResolvedValue([
+        { id: "ci-berlin", countryId: "c-de", name: "Berlin", timezone: "Europe/Berlin" },
+      ]);
+      listCaddeCafesMock.mockResolvedValue([]);
+      listCaddeBillboardsMock.mockResolvedValue([]);
+      getCaddeSponsoredMock.mockResolvedValue(null);
+      listCaddeFeedMock.mockImplementation((callFilters) =>
+        Promise.resolve(
+          callFilters.cities.length > 0
+            ? { items: [], nextPage: null }
+            : {
+                items: Array.from({ length: countryItems }, (_, index) =>
+                  makeFeedPost({ id: `de-${index}`, title: `Almanya ${index}` }),
+                ),
+                nextPage,
+              },
+        ),
+      );
+      listCaddeFeedMock.mockClear();
+    };
+
+    it("boş şehir akışında ülke akışını GERÇEK sayısıyla sunar", async () => {
+      mountNarrowEmptyFeed(3);
+
+      renderPage("/cadde?city=Berlin");
+
+      const widen = await screen.findByTestId("cadde-widen-feed");
+      // Sayı yoklamanın sayfa uzunluğundan gelir; sıfır ek ağ isteği.
+      expect(widen).toHaveTextContent("Almanya akışındaki 3 paylaşım");
+      // Başlık da seçili konumu adıyla söyler (ek üretmeden, "X için" kalıbı).
+      expect(screen.getByText("Berlin için henüz paylaşım yok.")).toBeInTheDocument();
+    });
+
+    it("sayfa dolduysa tavanı kesin sayı gibi YAZMAZ", async () => {
+      mountNarrowEmptyFeed(20, "cursor-2");
+
+      renderPage("/cadde?city=Berlin");
+
+      const widen = await screen.findByTestId("cadde-widen-feed");
+      expect(widen).toHaveTextContent("20+ paylaşım");
+      expect(widen).not.toHaveTextContent("akışındaki 20 paylaşım");
+    });
+
+    // MALİYET SÖZLEŞMESİ — bu tasarımın tamamı buna dayanıyor.
+    it("genişletmeye tıklayınca ÜÇÜNCÜ bir RPC gitmez (anahtar eşleşir)", async () => {
+      const user = userEvent.setup();
+      mountNarrowEmptyFeed(3);
+
+      renderPage("/cadde?city=Berlin");
+
+      await screen.findByTestId("cadde-widen-feed");
+      // 1) daraltılmış akış, 2) yoklama.
+      await waitFor(() => expect(listCaddeFeedMock).toHaveBeenCalledTimes(2));
+
+      await user.click(screen.getByTestId("cadde-widen-feed"));
+
+      // Genişletilmiş içerik ekrana geldi...
+      expect(await screen.findByText("Almanya 0")).toBeInTheDocument();
+      // ...ama yoklama anahtarı tıklama sonrası anahtarla BİREBİR aynı olduğu için
+      // cache'ten geldi: yeni istek YOK. Anahtar fabrikası ayrışırsa bu düşer.
+      expect(listCaddeFeedMock).toHaveBeenCalledTimes(2);
+    });
+
+    it("üst kapsam da boşsa buton HİÇ çizilmez, bugünkü kart kalır", async () => {
+      mountNarrowEmptyFeed(0);
+
+      renderPage("/cadde?city=Berlin");
+
+      const emptyState = await screen.findByTestId("cadde-feed-empty-state");
+      expect(screen.queryByTestId("cadde-widen-feed")).not.toBeInTheDocument();
+      // Boş bir akıştan boş bir akışa yollamak çıkmazdır; eski ikincil eylem kalır.
+      expect(within(emptyState).getByRole("button", { name: "Filtreleri temizle" })).toBeInTheDocument();
+    });
+
+    // MALİYET SÖZLEŞMESİ — kullanıcıların çoğunluğu filtresiz geziyor.
+    it("filtresiz boş akışta HİÇ yoklama sorgusu açmaz", async () => {
+      mountNarrowEmptyFeed(3);
+      listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
+      listCaddeFeedMock.mockClear();
+
+      renderPage("/cadde");
+
+      await screen.findByTestId("cadde-feed-empty-state");
+      // Global kapı canlıda 0/0/0 + enabled; filtresiz akış zaten daraltılmıyor,
+      // yani genişletilecek bir şey de yok. Tek çağrı = ana akış.
+      await waitFor(() => expect(listCaddeFeedMock).toHaveBeenCalledTimes(1));
+      expect(screen.queryByTestId("cadde-widen-feed")).not.toBeInTheDocument();
+    });
   });
 
   // ── B10 mobil soğuk başlangıç ─────────────────────────────────────────────────
