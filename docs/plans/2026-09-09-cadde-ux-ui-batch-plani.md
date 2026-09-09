@@ -138,14 +138,26 @@ K1  tepki seti 5 → 3 mü?           m156      ⚠ sözleşme testini kırar
 
 ---
 
-## H — Hızlı kazanımlar *(en başta; hepsi küçük ve hemen görünür)*
+## H — Hızlı kazanımlar ✅ *(H1–H5 TAMAMLANDI 09.09.2026)*
+
+> **Durum:** beşi de yapıldı ve ayrı ayrı commit'lendi — `cdfa100` (H1) · `60d1df8` (H2) ·
+> `765fb7c` (H3) · `08225f7` (H4) · `9021507` (H5). Kapanış: 256 dosya / **1.776** test
+> (8 yeni regresyon testi), lint 0, `tsc` 6, build yeşil.
+>
+> **Uygulama sırasında plandaki üç reçete ölçülerek YANLIŞ çıktı** — aşağıda düzeltildi.
+> Ders: batch metnindeki satır numarası ve "şunu da sil" talimatı, dosya açılmadan
+> doğru varsayılmamalı.
 
 ### H1 — Sıfır tepki/yorum sayılarını gizle · ~10 dk · `m155`
 
 Boş bir ağda her kartta yazan `0`'lar boşluğu bağırıyor. `CaddePage.tsx:974` (`{count}`)
 ve `:1003` (`{item.post.commentCount}`) sayıyı **koşulsuz** basıyor.
 
-**Adımlar:** iki yerde de görsel `<span>`'i `count > 0 &&` ile koşulla.
+**Adımlar:** görsel `<span>`'leri `> 0` ile koşulla.
+⚠️ **Plandaki adres EKSİKTİ (09.09'da ölçüldü):** `:974` yalnız tepki paneli AÇIKKEN
+çiziliyor; kapalı kartta görünen sayaç ayrı bir yerdeki `{totalReactions}`. Paylaş sayacı
+(`{shareCount}`) da aynı desende — dördü birden koşullanmalı, yoksa kartta tek başına
+"0" kalır.
 **Dosya:** `src/pages/cadde/CaddePage.tsx`
 **Kabul:** sıfırken yalnız ikon görünür; sayı 1 olunca sayı çıkar; test tabanı düşmez.
 **Tuzak (bu planın en önemlisi):** `:955`'teki
@@ -164,10 +176,15 @@ gerçek işleve göre adlandır ("Paylaşımını Öne Çıkar" gibi) — ama bu
 "aşağı kaydır" olduğu için kaldırmak dürüst olan.
 **Dosya:** `src/pages/cadde/CaddePage.tsx`
 **Kabul:** sağ kolonda anlamsız CTA yok.
-**Tuzak:** `CaddePage.test.tsx:1228` bu butonu **isimle arıyor**
-(`findByRole("button", { name: /Caddeye Çık/ })`). Butonu kaldırıyorsan testi de kaldır;
-`toBeInTheDocument()`'i `not.toBeInTheDocument()`'e çevirmek yetmez — testin adı ve niyeti
-de güncellenmeli.
+**Tuzak (bu reçete YANLIŞTI, 09.09'da ölçülerek düzeltildi):** plan "testi de kaldır"
+diyordu. O satır **ayrı bir test değil** — adı `collapses the location filter when the
+street is empty` olan testin içindeki üç iddiadan yalnız biri; testi silmek B1 soğuk
+başlangıç kapsamını da götürürdü. Yalnız ilgili iddia kaldırıldı.
+Ayrıca `scrollToComposer` ve `Megaphone` **ölü kod değildi** (boş akış kartı ikisini de
+kullanıyor) — silinseydi derleme kırılırdı.
+⚠️ Kaldırılan `await findByRole(...)` yerine bir **veri bariyeri** konmalı
+(`await findByTestId("cadde-feed-empty-state")`): `geoFilterOpen` veri çözülmemişken de
+`false`, o yüzden bariyersiz `aria-expanded` iddiası yüklenme anında bedavaya geçer.
 
 ### H3 — Arayüzdeki üç İngilizce etiketi Türkçeleştir · ~10 dk · `m146` `m147` `m148`
 
@@ -178,6 +195,10 @@ de güncellenmeli.
 | `Host:` | `Ev Sahibi:` | `CaddeCafePage.tsx:206` |
 
 **Kabul:** bu üç dize kullanıcıya görünen hiçbir yerde İngilizce kalmaz.
+⚠️ **Tablo EKSİKTİ (09.09'da ölçüldü): beş değil SEKİZ yer var.** Ek üçü:
+`AdminFeedbackPage.tsx` ×2 (sayfa + boş durum açıklaması) ve `admin-navigation-registry.ts`
+— bunlar **şimdiki zaman** cümleler, ad değişince olgusal olarak yanlış olurlar; geçmiş
+kayıt değiller. Ayrıca `AdminCaddePage.tsx` `placeholder="Host görünen adı"`.
 **Tuzak 1:** `src/lib/admin-shell/admin-updates.ts` içinde "Feedback Ver" geçen satırlar
 (1354, 1356 vb.) **geçmiş duyuru kayıtlarıdır** — tarihsel metin, DEĞİŞTİRME. Yalnız
 kullanıcıya bugün görünen etiketleri değiştir.
