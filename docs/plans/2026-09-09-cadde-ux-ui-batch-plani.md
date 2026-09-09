@@ -7,9 +7,10 @@
 
 ## Context
 
-7 Eylül'de iki denetim dokümanının (`cadde ve cafe-ux-degerlendirme.md`,
-`cadde-cafe-ui-kritigi.md`, ikisi de 27.08.2026) her maddesi koda karşı tek tek
-doğrulandı. **Yapılmış olanlar dışarıda bırakıldı**, açık kalanlar iki panoya işlendi
+7 Eylül'de iki denetim dokümanının her maddesi koda karşı tek tek doğrulandı.
+Kaynak dokümanlar (9 Eylül'de kökten `docs/` altına taşındı — kökte yalnız `CLAUDE.md`
+ve `README.md` durur):
+`docs/cadde-300/2026-08-27-ux-degerlendirme.md` · `docs/cadde-300/2026-08-27-ui-kritigi.md`. **Yapılmış olanlar dışarıda bırakıldı**, açık kalanlar iki panoya işlendi
 (commit `12303e1`):
 
 - **Cadde Workshop WS3** → 31 madde, `m137`–`m167` (`/admin/workshop/cadde`)

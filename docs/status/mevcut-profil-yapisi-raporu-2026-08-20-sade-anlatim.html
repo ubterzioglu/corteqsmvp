@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CorteQS Mevcut Profil Yapısı Raporu - Sade Anlatım</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #5c667a;
+      --line: #d9e0ea;
+      --soft: #f5f7fb;
+      --panel: #ffffff;
+      --accent: #f97316;
+      --accent-2: #2563eb;
+      --ok: #047857;
+      --warn: #b45309;
+      --danger: #b91c1c;
+      --code: #101827;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #eef2f7;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 32px auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 24px 90px rgba(15, 23, 42, 0.12);
+    }
+
+    header {
+      padding: 42px 46px 28px;
+      background: linear-gradient(135deg, #ffffff 0%, #fff7ed 52%, #eaf2ff 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1, h2, h3 { margin: 0; line-height: 1.18; }
+    h1 { max-width: 900px; font-size: clamp(30px, 4vw, 52px); }
+    h2 { margin-top: 34px; font-size: 24px; }
+    h3 { margin-top: 24px; font-size: 18px; }
+    p { margin: 10px 0 0; }
+
+    section { padding: 0 46px 10px; }
+    section:last-child { padding-bottom: 44px; }
+
+    .lead {
+      max-width: 900px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(249, 115, 22, 0.35);
+      background: rgba(255, 247, 237, 0.85);
+      color: #9a3412;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 650;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: var(--soft);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .card strong { display: block; margin-bottom: 4px; }
+    .card p { color: var(--muted); font-size: 14px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #334155;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 6px;
+      background: #eef2ff;
+      color: #1e3a8a;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.92em;
+    }
+
+    ul, ol { margin: 10px 0 0 22px; padding: 0; }
+    li { margin: 6px 0; }
+
+    .note {
+      margin-top: 14px;
+      border-left: 4px solid var(--accent);
+      background: #fff7ed;
+      padding: 12px 14px;
+      color: #7c2d12;
+      border-radius: 10px;
+    }
+
+    .ok { color: var(--ok); font-weight: 700; }
+    .warn { color: var(--warn); font-weight: 700; }
+    .danger { color: var(--danger); font-weight: 700; }
+
+    .term {
+      display: inline-flex;
+      margin: 2px 4px 2px 0;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #edf6ff;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    @media (max-width: 820px) {
+      main { width: 100%; margin: 0; border-radius: 0; }
+      header, section { padding-left: 20px; padding-right: 20px; }
+      .grid { grid-template-columns: 1fr; }
+      table { display: block; overflow-x: auto; white-space: nowrap; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="pill">Teknik bilmeyenler için sade anlatım</span>
+    <h1>Mevcut Profil Yapısı Raporu</h1>
+    <p class="lead">
+      Bu belge, aynı raporun daha sade yazılmış kopyasıdır. Amaç; yazılım geliştirme,
+      veritabanı veya frontend bilmeyen birinin de CorteQS profil sisteminin nasıl çalıştığını,
+      nerelerde güçlü olduğunu ve hangi noktalarda dikkat gerektiğini anlayabilmesidir.
+    </p>
+    <div class="meta">
+      <span>Kaynak rapor tarihi: 20 Ağustos 2026</span>
+      <span>Bu kopya: sade anlatım</span>
+      <span>Kapsam: kullanıcı profili, katalog profili, public sayfa, onay akışları ve riskler</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>1. Kısa Özet</h2>
+    <p>
+      CorteQS'te profil sistemi artık sadece "bir kullanıcının hesabındaki bilgiler" gibi çalışmıyor.
+      Sistem, profilleri daha geniş bir yapı içinde ele alıyor. Bir kişi, işletme, danışman,
+      kuruluş ya da farklı bir görünür kayıt, sistemde "katalog kaydı" gibi tutuluyor.
+    </p>
+    <div class="grid">
+      <div class="card">
+        <strong>Profil ne demek?</strong>
+        <p>Profil; kişinin, işletmenin veya kuruluşun sistemde görünen kimlik kartıdır. İsim, açıklama, iletişim, hizmetler, linkler ve görünürlük bilgileri burada toplanır.</p>
+      </div>
+      <div class="card">
+        <strong>Katalog kaydı ne demek?</strong>
+        <p>Katalog kaydı; sistemin profilleri saklamak için kullandığı ana kayıt tipidir. Bir kullanıcı profili de, bir işletme profili de bu mantığın içine girer.</p>
+      </div>
+      <div class="card">
+        <strong>Rol ne işe yarar?</strong>
+        <p>Rol, profilin türünü anlatır. Örneğin kişi, danışman, işletme, kuruluş veya şehir elçisi gibi. Rol, hangi alanların gösterileceğini ve hangi özelliklerin açılacağını belirler.</p>
+      </div>
+      <div class="card">
+        <strong>Public profil nedir?</strong>
+        <p>Public profil, dışarıdan görülebilen profil sayfasıdır. Ziyaretçiler bu sayfada yalnızca görünmesine izin verilen bilgileri görür.</p>
+      </div>
+    </div>
+    <p class="note">
+      En önemli fikir şu: CorteQS artık profilleri tek tek, dağınık yapılar olarak değil; ortak bir
+      katalog sistemi içinde yönetiyor. Bu, ileride yeni profil türü eklemeyi ve public sayfaları
+      daha düzenli üretmeyi kolaylaştırıyor.
+    </p>
+  </section>
+
+  <section>
+    <h2>2. Sistem Bunu Nasıl Düşünüyor?</h2>
+    <p>
+      Bu yapıyı bir bina rehberi gibi düşünebiliriz. Rehberde kişiler, işletmeler, kurumlar ve
+      danışmanlar olabilir. Her birinin bir kartı vardır. Her kartta adı, açıklaması, iletişim
+      bilgisi, sunduğu hizmetler ve görünür olacak diğer bilgiler yer alır.
+    </p>
+    <p>
+      Yazılım tarafında bu kartların ana yeri <code>catalog_items</code> denen tablodur.
+      Bu teknik bir isimdir; günlük dille "profil kartlarının ana defteri" gibi düşünebiliriz.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Teknik Ad</th>
+          <th>Sade Anlamı</th>
+          <th>Ne İşe Yarar?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>catalog_items</code></td>
+          <td>Profil kartlarının ana defteri</td>
+          <td>Kişi, işletme, kuruluş veya danışman gibi tüm profil kayıtlarının temel bilgisini tutar.</td>
+        </tr>
+        <tr>
+          <td><code>roles</code></td>
+          <td>Profil tipi listesi</td>
+          <td>Bu profil kişi mi, işletme mi, danışman mı gibi soruların cevabını verir.</td>
+        </tr>
+        <tr>
+          <td><code>afs_attributes</code></td>
+          <td>Profil alanları</td>
+          <td>Ad, açıklama, telefon, uzmanlık, sosyal link gibi hangi bilgilerin tutulabileceğini tanımlar.</td>
+        </tr>
+        <tr>
+          <td><code>afs_features</code></td>
+          <td>Özellik izinleri</td>
+          <td>Bir profilin WhatsApp gösterebilmesi, dizinde çıkabilmesi veya özel bir özellik kullanabilmesi gibi izinleri yönetir.</td>
+        </tr>
+        <tr>
+          <td><code>afs_sections</code></td>
+          <td>Public sayfa bölümleri</td>
+          <td>Public profil sayfasında "hakkında", "hizmetler", "iletişim", "linkler" gibi bölümlerin nasıl çıkacağını belirler.</td>
+        </tr>
+        <tr>
+          <td><code>catalog_item_managers</code></td>
+          <td>Bu profili kim yönetebilir?</td>
+          <td>Bir profil kartını hangi kullanıcının sahibi, yöneticisi veya editörü olarak düzenleyebileceğini tutar.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>3. Kullanıcının Gördüğü Profil Ekranı</h2>
+    <p>
+      Kullanıcı sisteme girip profil sayfasına gittiğinde sistem önce şu soruyu sorar:
+      "Bu kullanıcının düzenleyebileceği hangi profiller var?"
+    </p>
+    <ol>
+      <li>Kullanıcı giriş yapmadıysa giriş sayfasına yönlendirilir.</li>
+      <li>Kullanıcının kendi bireysel profili var mı diye bakılır.</li>
+      <li>Kullanıcının yönettiği işletme, kuruluş veya başka katalog profilleri var mı diye bakılır.</li>
+      <li>Tek profil varsa doğrudan o profil açılır.</li>
+      <li>Birden fazla profil varsa ve bireysel profil de varsa önce bireysel profil açılır.</li>
+      <li>Kullanıcının birden fazla işletme veya kuruluş profili varsa seçim ekranı gösterilebilir.</li>
+    </ol>
+    <p>
+      Yani sistem kullanıcının önüne rastgele bir sayfa getirmez. Önce kullanıcının hangi profiller
+      üzerinde hakkı olduğunu anlar, sonra doğru düzenleme ekranını açar.
+    </p>
+  </section>
+
+  <section>
+    <h2>4. Bireysel Profil ile Diğer Profillerin Farkı</h2>
+    <p>
+      Bireysel profil, kullanıcının kendi kişisel profilidir. İşletme, kuruluş veya danışman profilleri
+      ise ayrı katalog profilleri gibi çalışır. Bir kullanıcı hem kendi bireysel profiline sahip olabilir,
+      hem de bir işletme veya kuruluş profilini yönetebilir.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Profil Türü</th>
+          <th>Sade Açıklama</th>
+          <th>Örnek</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Bireysel profil</td>
+          <td>Kullanıcının kendi kişisel kimlik kartı.</td>
+          <td>Ad, profil fotoğrafı, kişisel açıklama, uzmanlık, CV gibi bilgiler.</td>
+        </tr>
+        <tr>
+          <td>İşletme profili</td>
+          <td>Bir işletmenin public sayfası ve yönetilebilir kartı.</td>
+          <td>Restoran, klinik, mağaza, hizmet sağlayıcı.</td>
+        </tr>
+        <tr>
+          <td>Kuruluş profili</td>
+          <td>Dernek, topluluk veya kurum benzeri yapıların profili.</td>
+          <td>Dernek, topluluk, organizasyon.</td>
+        </tr>
+        <tr>
+          <td>Danışman profili</td>
+          <td>Uzmanlık veya danışmanlık veren kişinin/profilin görünümü.</td>
+          <td>Doktor, diş hekimi, psikolog, iş danışmanı.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note">
+      Buradaki önemli nokta: Kullanıcı hesabı ile profil aynı şey değildir. Bir kullanıcı hesabı,
+      birden fazla profili yönetebilir.
+    </p>
+  </section>
+
+  <section>
+    <h2>5. Public Profil Sayfası Nasıl Çalışıyor?</h2>
+    <p>
+      Public profil, dışarıdan görülen profil sayfasıdır. Örneğin bir işletmenin veya kişinin
+      paylaşılabilir sayfası gibi düşünebilirsiniz.
+    </p>
+    <p>
+      Sistem bu sayfayı açarken önce profilin gerçekten yayında olup olmadığına bakar. Profil yayında
+      değilse, gizliyse veya silinmişse ziyaretçiye detay verilmez. Genellikle "bulunamadı" gibi
+      güvenli bir sonuç gösterilir. Böylece sistem, gizli bilgilerin varlığını bile dışarıya belli etmez.
+    </p>
+    <h3>Public sayfada ne gösterilir?</h3>
+    <ul>
+      <li>Yalnızca public olarak işaretlenmiş bilgiler gösterilir.</li>
+      <li>Onay bekleyen veya özel kalması gereken bilgiler gösterilmez.</li>
+      <li>Gizli dosyalar ve özel belgeler dışarıya açılmaz.</li>
+      <li>İletişim, link, hizmet, dil ve benzeri bilgiler sadece görünmesine izin varsa çıkar.</li>
+    </ul>
+    <p>
+      Kısaca public sayfa, veritabanındaki her şeyi olduğu gibi dökmez. Önce "bunu ziyaretçi görmeli mi?"
+      diye süzer, sonra sayfayı oluşturur.
+    </p>
+  </section>
+
+  <section>
+    <h2>6. Sayfa Bölümleri Nasıl Oluşuyor?</h2>
+    <p>
+      Public profil sayfasını hazır kalıplardan oluşan bir vitrin gibi düşünebiliriz. Her profilin
+      ihtiyacına göre bazı bölümler açılır, bazıları kapalı kalır.
+    </p>
+    <p>
+      Kullanılan ana bölüm türleri şunlardır:
+      <span class="term">yazı alanı</span>
+      <span class="term">profil bilgileri</span>
+      <span class="term">iletişim</span>
+      <span class="term">hizmetler</span>
+      <span class="term">diller</span>
+      <span class="term">linkler</span>
+      <span class="term">rozetler</span>
+    </p>
+    <p>
+      Bu yaklaşımın faydası şu: Her rol için sıfırdan ayrı bir sayfa yapmak yerine, ortak bir sayfa
+      sistemi kullanılıyor. Rolün ihtiyacına göre uygun bölümler yerleştiriliyor.
+    </p>
+  </section>
+
+  <section>
+    <h2>7. Onay Mekanizması</h2>
+    <p>
+      Sistemde bazı değişiklikler hemen yayına alınmaz. Örneğin kullanıcı yeni bir profil talep ederse,
+      bazı özellikleri açmak isterse veya hassas bir alanı değiştirirse bu istek onaya düşebilir.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>İstek</th>
+          <th>Ne Olur?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Yeni profil talebi</td>
+          <td>Kullanıcı yeni bir işletme, kuruluş veya benzeri profil ister. Admin onaylarsa sistem gerçekten yeni profil kaydını oluşturur.</td>
+        </tr>
+        <tr>
+          <td>Özellik talebi</td>
+          <td>Kullanıcı bazı özel görünürlük veya özellikleri açmak ister. İstek incelemeye gider.</td>
+        </tr>
+        <tr>
+          <td>Rol değişikliği</td>
+          <td>Kullanıcı profilinin türünü değiştirmek ister. Bu da kontrollü şekilde değerlendirilir.</td>
+        </tr>
+        <tr>
+          <td>Önemli alan değişikliği</td>
+          <td>Bazı alanlar değiştiğinde doğrudan yayınlanmak yerine onay bekleyebilir.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      Bu yapı, kötüye kullanımı azaltır ve public tarafta yanlış veya izinsiz bilgilerin görünmesini
+      engellemeye yardımcı olur.
+    </p>
+  </section>
+
+  <section>
+    <h2>8. Referral Kodu Mantığı</h2>
+    <p>
+      Referral kodu, bir kullanıcının sisteme hangi davet veya yönlendirme üzerinden geldiğini anlamaya
+      yarayan özel bir koddur.
+    </p>
+    <ul>
+      <li>Kod kaydedilmeden önce geçerli mi diye kontrol edilir.</li>
+      <li>Kullanıcı doğrulanmış referral kodunu sonradan değiştiremez.</li>
+      <li>Referral bilgisi public profil sayfasında gösterilmez.</li>
+      <li>Adminler genel kullanımları görebilir; kullanıcı ise kendi profilinden gelen kullanımı görebilir.</li>
+    </ul>
+    <p>
+      Basitçe: Referral kodu kullanıcıya açık bir vitrin bilgisi değil, sistemin arka tarafta takip ettiği
+      özel bir kayıt bilgisidir.
+    </p>
+  </section>
+
+  <section>
+    <h2>9. Güvenlik Açısından Durum</h2>
+    <p>
+      Raporun genel sonucu olumlu: Public sayfaya bilgi gönderilirken sistem epey kontrollü davranıyor.
+      Gizli veya onaysız bilgilerin dışarıya çıkmaması için birkaç katmanda kontrol var.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Konu</th>
+          <th>Sade Değerlendirme</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Public profil bilgileri</td>
+          <td><span class="ok">Güçlü.</span> Ziyaretçilere sadece gösterilmesi uygun olan bilgiler gönderiliyor.</td>
+        </tr>
+        <tr>
+          <td>Profil düzenleme</td>
+          <td><span class="ok">Doğru yerde korunuyor.</span> Kullanıcının ekranda gördüğü düğmelere değil, sistemin arka tarafındaki kurallara güveniliyor.</td>
+        </tr>
+        <tr>
+          <td>Profil sahipliği</td>
+          <td><span class="ok">Temel yapı sağlam.</span> Hangi kullanıcı hangi profili yönetebilir bilgisi ayrı tutuluyor.</td>
+        </tr>
+        <tr>
+          <td>Dizin ve public sayfa ayrımı</td>
+          <td><span class="warn">Ürün kararı.</span> Public profil herkese açık olabilir; dizin araması ise giriş isteyen bir deneyim olarak tasarlanmış.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>10. Dikkat Edilmesi Gereken Riskler</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Öncelik</th>
+          <th>Sorun</th>
+          <th>Sade Öneri</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="danger">Yüksek</span></td>
+          <td>Bir kullanıcının birden fazla profili varsa, public sayfada "bu profilin sahibi benim" kontrolü her zaman doğru profili bulamayabilir.</td>
+          <td>Sahiplik kontrolü, kullanıcının ilk profiline bakarak değil, doğrudan açılan profil üzerinden yapılmalı.</td>
+        </tr>
+        <tr>
+          <td><span class="warn">Orta</span></td>
+          <td>Bireysel profil düzenleme ekranı çok fazla işi aynı yerde yapıyor.</td>
+          <td>Bu ekran daha küçük parçalara ayrılmalı: bilgi alanları, dosyalar, istekler ve özel görünüm ayrı yönetilebilir.</td>
+        </tr>
+        <tr>
+          <td><span class="warn">Orta</span></td>
+          <td>Bireysel profil bilgileri ile katalog profil bilgileri arasında bazı özel eşleştirmeler var.</td>
+          <td>Hangi bilginin nerede ana kaynak olduğu net yazılmalı ve testlerle korunmalı.</td>
+        </tr>
+        <tr>
+          <td><span class="warn">Orta</span></td>
+          <td>Dizin toplam sayısı, sadece public ve aktif profilleri saymak yerine daha geniş kayıtları sayıyor olabilir.</td>
+          <td>Toplam sayı, yalnızca gerçekten görünür profilleri sayacak şekilde netleştirilmeli.</td>
+        </tr>
+        <tr>
+          <td><span class="warn">Orta</span></td>
+          <td>Bazı eski dokümanlar güncel sistemi tam anlatmıyor.</td>
+          <td>Eski belgeler "tarihsel" diye işaretlenmeli veya bu rapora göre güncellenmeli.</td>
+        </tr>
+        <tr>
+          <td><span class="ok">Düşük</span></td>
+          <td>Yeni public sayfa bölümü eklerken bazı adımların unutulması mümkün.</td>
+          <td>Yeni bölüm ekleme için kısa bir kontrol listesi hazırlanmalı.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>11. Bu Rapor Ne Söylüyor?</h2>
+    <p>
+      Mevcut profil sistemi, eski ve basit "her kullanıcının bir profili vardır" yaklaşımından çıkmış.
+      Daha esnek, katalog merkezli bir yapıya geçmiş. Bu sayede aynı sistem içinde kişi, işletme,
+      kuruluş, danışman ve benzeri farklı profil türleri yönetilebiliyor.
+    </p>
+    <p>
+      Public sayfalar için ortak bir yapı kullanılması iyi bir karar. Bilgilerin görünürlük kontrolünden
+      geçerek dışarı verilmesi de güvenlik açısından doğru. En önemli iyileştirme alanı ise çok profilli
+      kullanıcılar, büyük profil düzenleme ekranının sadeleştirilmesi ve eski dokümanların güncellenmesi.
+    </p>
+    <p class="note">
+      Yönetici gözüyle kısa karar: Sistem doğru yöne evrilmiş. Şimdi yapılması gereken, kritik sahiplik
+      kontrolünü güçlendirmek, büyük ekranları daha yönetilebilir parçalara ayırmak ve dokümanları güncel
+      mimariye göre hizalamaktır.
+    </p>
+  </section>
+</main>
+</body>
+</html>
