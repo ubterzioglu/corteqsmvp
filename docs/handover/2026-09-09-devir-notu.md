@@ -180,8 +180,11 @@ PowerShell komut satırından geçen Türkçe karakter bozulur (`0xc7 0x69` hata
 
 ## 5. Acil işler listesi (TOP 10 HOT FIX) — kod değil, **cevap** bekliyor
 
-Panoda 4 madde var, dördü de 5 Eylül'den, hiçbiri başlanmamış. **Ölçtüm; dördü de
-yazılandan farklı çıktı:**
+Panoda **9 madde** var (tavan 10, bir slot boş). İlk 4'ü 5 Eylül'den; kalan 5'i
+13 Mayıs toplantı paketinden 10 Eylül'de taşındı (mig `20260910010000`).
+Dokuzunun her birinde **6 soru** var — toplam **54 soru**.
+
+### İlk dört madde — **ölçtüm; dördü de yazılandan farklı çıktı:**
 
 | Yazılan | Gerçek durum |
 |---|---|
@@ -190,11 +193,43 @@ yazılandan farklı çıktı:**
 | Etkinlik "kolayca eklenir" | `events`/`event_details` tabloları var ama **tamamen boş**. Cadde'deki "Etkinlikler" süzgeci 4 Ağustos'ta **kullanıcının kendi kararıyla** kaldırılmış. |
 | Google Auth | Planı **2 Ağustos'ta yazılmış** (`docs/operations/2026-08-02-supabase-custom-domain-google-oauth.md`), hiçbir adımı başlamamış. Çoğu ayar işi. |
 
+### Sonradan eklenen beş madde — 13 Mayıs paketi *(10 Eylül)*
+
+`GRUP EKLEME POLİTİKASI` · `GRUP ONAY AKIŞI` · `GRUP FORMU ALANLARI` ·
+`ŞEHİR GRUPLARINI TOPLAMA` · `GRUP EKLEME ÇAĞRISI` — hepsi `Burak`, priority 9.
+Kaynağı: Komuta Merkezi'nde priority 9 + urgent olan tam olarak bu beş todo'ydu
+(ölçüldü, hepsi `sort_order 13018`). **Kaynak todo'lar silinmedi** — bu depoda bir
+işin iki yüzeyde birlikte durması yerleşik desen.
+
+⚠️ **Ölçüm bu beş maddenin gerekçesini çürüttü — bunu okumadan koda dokunma.**
+Maddeler "şunu belirle / şunu yaz" diye yazılmış ama grup ekleme özelliği
+**canlıda çalışıyor**: `/addcom` production'da **200**, ana sayfadan link var,
+üye giriş yapıp grup gönderebiliyor, gönderi admin onayına düşüyor
+(`status` pending/approved/rejected + `rejection_reason`), moderasyon ekranı
+`/admin/whatsapp-landings` admin menüsünde, gönderen rolü ayrımı
+(`submitterRole: manager | member`) formda. Yani sorulan kararların çoğu koda girmiş.
+
+| Ölçülen gerçek kusur | Sayı |
+|---|---|
+| `whatsapp_landings.city = 'Genel'` | **10/10** — şehir bilgisi fiilen yok |
+| `country` serbest metin | `GCC` · `Global` · `GCC-Global` · `EU+MENA` · `KATAR` · biri **şehir** (`İstanbul`) |
+| `member_approved = false` | **10/10** — "Üye onaylı!" rozeti canlıda **hiç** görünmemiş |
+| `whatsapp_join_requests` | **0 satır** — bugüne kadar tek katılma talebi yok |
+| `whatsapp_link` boş | **1/10** (METU QATAR) — sayfa açılır, katılınamaz |
+| `member_count` dolu | **1/10** · `whatsapp_message_templates` **boş** |
+| Yazılı kural metni | **yok** · `/addcom` sitemap'te de **yok** |
+
+10 grubun tamamı iki yönetici hesabımızdan eklenmiş — dışarıdan gelen başvuru yok.
+Sözleşme testi: `src/lib/dashboard/hot-fix-whatsapp-seed.test.ts` (8 test). En çok
+işe yarayan ikisi **liste tavanını** (10) ve **soru sayısının sessizce eksilmesini**
+kilitliyor; ikisi de bozulsa hiçbir şey patlamaz, kimse fark etmezdi.
+
 **✅ Sorular artık panonun İÇİNDE — ayrı belgeye bakmaya gerek yok.** Dört maddenin
 her birinin altındaki **"Soru / cevap"** bölümüne birer yorum yazıldı: önce
-"DURUM (9 Eylül'de bakıldı)" paragrafı, sonra **6'şar numaralı soru** (anlaşılan
-aralık madde başına 5–10). Toplam 24 soru, günlük dille — cevaplayacak kişi
-geliştirici değil. Yedek kopya: `docs/plans/2026-09-09-hotfix-sorulari.md`.
+"DURUM (… bakıldı)" paragrafı, sonra **6'şar numaralı soru** (anlaşılan aralık
+madde başına 5–10). **Dokuz madde × 6 = 54 soru**, günlük dille — cevaplayacak kişi
+geliştirici değil. İlk dördünün yedek kopyası:
+`docs/plans/2026-09-09-hotfix-sorulari.md`.
 
 Sistem veritabanı bağlantılı: `command_center_hot_fix_comments` (mig
 `20260909210000`), RLS yalnız admin, silme *soft*. Hem soruyu hem cevabı iki taraf

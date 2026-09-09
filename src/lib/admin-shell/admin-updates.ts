@@ -14,6 +14,26 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260910-whatsapp-grup-maddeleri",
+    date: "10 Eylül 2026",
+    title: "13 Mayıs'tan kalan beş WhatsApp grup maddesi acil listesine taşındı — ve ölçüm hepsini değiştirdi",
+    items: [
+      "NE YAPILDI: Komuta Merkezi'ndeki todo listesinde bekleyen beş madde (WhatsApp grubu ekleme politikası, onay akışı, form alanları, şehir gruplarını toplama, sosyal medya çağrısı) acil işler listesine taşındı. Liste artık 4 yerine 9 madde; tavan 10, yani bir slot boş duruyor.",
+      "HER MADDEYE 6 SORU YAZILDI: Dokuz maddenin her birinin altında artık 6 soru var — toplam 54 soru. Hepsi günlük dille, teknik terim yok. Cevaplar aynı yere yazılıyor.",
+      "⚠️ EN ÖNEMLİ BULGU — BU BEŞ MADDE ZATEN YAPILMIŞ: Maddeler 'şunu belirle, şunu yaz, şunu netleştir' diye yazılmış ama 13 Mayıs'tan bu yana kod onları geçmiş. Grup ekleme özelliği CANLIDA ÇALIŞIYOR: adresi açık, ana sayfadan link veriliyor, üye giriş yapıp grup gönderebiliyor, gönderi admin onayına düşüyor, onaylanmadan görünmüyor, reddedilirse gerekçe yazılabiliyor, moderasyon ekranı da yönetici menüsünde duruyor. 'Grup yöneticisi miyim / sadece üyeyim' ayrımı bile formda var. Yani sorulan kararların çoğu koda çoktan girmiş.",
+      "O YÜZDEN SORULAR DEĞİŞTİ: 'Yapalım mı?' diye sormak anlamsız olurdu. Sorular 'hazır olanı nasıl kullanacağız, hangi kararı veriyorsun' biçiminde yazıldı. Yanlış soru sorsaydık, yapılmış işi yeniden yaptırıyor olacaktık.",
+      "GERÇEK KUSUR 1 — ŞEHİR BİLGİSİ YOK: Listedeki 10 grubun 10'unda şehir alanı 'Genel' yazıyor. Yani 'şehrindeki grubu ekle' çağrısı yapılsa bilgi hiçbir yere düzgün yazılmıyor. 'Berlin'deki gruplar' gibi bir filtre bugün kurulamaz.",
+      "GERÇEK KUSUR 2 — ÜLKE ALANI KONTROLSÜZ: Serbest metin olduğu için içine ne isterse yazılmış: 'GCC', 'Global', 'GCC-Global', 'EU+MENA', 'KATAR' ve bir kayıtta ülke alanına şehir yazılmış ('İstanbul'). Bu, Cadde tarafında da yaşadığımız aynı sorunun ikinci kopyası.",
+      "GERÇEK KUSUR 3 — HİÇ KULLANILMAYAN ONAY: Grup sayfasında 'Üye onaylı!' diye bir rozet çizilebiliyor ama 10 grubun 10'unda o alan boş — rozet canlıda bugüne kadar HİÇ görünmemiş. Alan var, hiç kullanılmamış.",
+      "GERÇEK KUSUR 4 — SIFIR TALEP: 'Gruba katılma talebi' kaydı bugüne kadar tek bir tane bile yok. Ayrıca 10 gruptan birinin WhatsApp linki hiç yok — sayfası açılıyor ama kullanıcı gruba katılamıyor. Üye sayısı da 10 grubun sadece 1'inde dolu.",
+      "GERÇEK KUSUR 5 — YAZILI KURAL YOK: Hangi grubun kabul, hangisinin ret edileceği hiçbir yerde yazılı değil. Çağrı yapılıp başvurular gelmeye başlarsa 'neden reddettiniz' sorusuna yazılı cevabımız olmayacak. Bir de: bu sayfa arama motorlarına bildirilmiyor, yani çağrı sadece bizim paylaşımımız kadar duyulur.",
+      "MEVCUT 10 GRUBUN TAMAMI BİZDEN: Dışarıdan gelen tek bir grup başvurusu yok; 10 grubun hepsi bizim iki hesabımızdan eklenmiş. Yani planlanan çağrı, sistemin ilk gerçek sınavı olacak.",
+      "TODO'LAR SİLİNMEDİ: Beş madde artık acil listesinde ama todo listesinden kaldırılmadı — bu depoda bir işin iki yerde birlikte durması yerleşik düzen. Silmek geri alınması zor bir karar, istenmeden yapılmaz.",
+      "KORUMA: Bu düzeni koruyan 8 maddelik bir sözleşme testi eklendi. En çok işe yarayan ikisi: liste tavanının (10) aşılmasını ve bir maddenin sorularının sessizce eksilmesini engelliyor — ikisi de bozulsa hiçbir şey patlamaz, kimse fark etmezdi.",
+      "KONTROLLER: Otomatik testlerin tamamı yeşil, kod ve yazı denetimi temiz, veritabanı sapması yok. Türkçe karakterler kayıt sonrası tek tek kontrol edildi.",
+    ],
+  },
+  {
     id: "20260910-gorsel-dil-ve-acil-liste",
     date: "10 Eylül 2026",
     title:

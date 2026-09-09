@@ -6,11 +6,32 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260910-gorsel-dil-ve-acil-liste");
+    expect(ADMIN_UPDATES[0].id).toBe("20260910-whatsapp-grup-maddeleri");
     expect(ADMIN_UPDATES[0].date).toBe("10 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("WhatsApp grup kaydı 'zaten yapılmış' bulgusunu ve ölçümleri birlikte söyler", () => {
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260910-whatsapp-grup-maddeleri");
+    const detail = update?.items.join(" ") ?? "";
+
+    // ⚠️ Kaydın ASIL değeri bu: maddeler "yapılacak iş" diye yazılmıştı ama özellik
+    // canlıda çalışıyor. Bu cümle düşerse yapılmış iş yeniden yaptırılır.
+    expect(detail).toContain("BU BEŞ MADDE ZATEN YAPILMIŞ");
+    expect(detail).toContain("CANLIDA ÇALIŞIYOR");
+
+    // Sorular bu ölçümlere dayanıyor; ölçüm düşerse sorular dayanaksız kalır.
+    expect(detail).toContain("10'unda şehir alanı 'Genel'");
+    expect(detail).toContain("GCC-Global");
+    expect(detail).toContain("tek bir tane bile yok");
+
+    // Kapsam: 9 madde × 6 soru. Sayı duyuruda geçmeli, "sorular eklendi" yetmez.
+    expect(detail).toContain("54 soru");
+
+    // Todo'ların silinmediği açıkça yazılmalı — okuyan kişi kaybolduğunu sanmasın.
+    expect(detail).toContain("TODO'LAR SİLİNMEDİ");
   });
 
   it("10 Eylül kaydı kök nedeni, ölçümü ve doğrulanmamış olanı birlikte söyler", () => {
