@@ -25,6 +25,7 @@
     "sync:admin-updates": "node --experimental-strip-types scripts/sync-admin-updates.mjs",
     "check:drift": "node scripts/check-drift.mjs",
     "check:bundle": "node scripts/check-bundle-size.mjs",
+    "check:dead": "node scripts/check-dead-code.mjs",
     "check:drift:warn": "node scripts/check-drift.mjs --warn",
     "check:migrations": "node scripts/check-migrations.mjs",
     "check:migrations:warn": "node scripts/check-migrations.mjs --warn",
