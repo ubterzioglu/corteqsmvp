@@ -1,4 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
+
+import type { TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 
 import {
   advisorProfileSections,
@@ -7,7 +9,16 @@ import {
   toAdvisorResourceLinkPayload,
   validateAdvisorResourceLinkForm,
   type AdvisorResourceLinkRow,
+  type ResourceLinkInsert,
+  type ResourceLinkUpdate,
 } from "@/lib/resource-links";
+
+describe("resource link database contracts", () => {
+  it("uses the general social media table payload types", () => {
+    expectTypeOf<ResourceLinkInsert>().toEqualTypeOf<TablesInsert<"social_media_links">>();
+    expectTypeOf<ResourceLinkUpdate>().toEqualTypeOf<TablesUpdate<"social_media_links">>();
+  });
+});
 
 describe("advisor resource link helpers", () => {
   it("maps advisor profile tabs to their dedicated tables", () => {

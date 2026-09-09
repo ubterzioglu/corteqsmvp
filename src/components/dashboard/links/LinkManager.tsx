@@ -17,6 +17,7 @@ import {
   X,
 } from 'lucide-react'
 import AccordionCard from '@/components/dashboard/AccordionCard'
+import type { TablesInsert } from '@/integrations/supabase/types'
 import { getSupabaseBrowserClient } from '@/lib/dashboard/supabase'
 import { safeHref, sanitizeError, sanitizeUrl, validateArgeFile, validateCvFile } from '@/lib/security'
 import { trIncludes } from "@/lib/text-normalization";
@@ -272,7 +273,7 @@ export default function LinkManager() {
         uploadedStoragePath = filePath
       }
 
-      const payload = {
+      const payload: TablesInsert<'resource_entries'> = {
         section: formState.section.trim(),
         subsection: formState.subsection.trim(),
         department: formState.section.trim(),
@@ -283,6 +284,7 @@ export default function LinkManager() {
         url: needsUrl ? sanitizeUrl(formState.url) : null,
         source_subfolder: formState.subsection.trim(),
         source_folder: `${formState.section.trim()} / ${formState.subsection.trim()}`,
+        import_batch: 'dashboard-manual',
         storage_bucket: uploadedStoragePath ? bucket : null,
         storage_path: uploadedStoragePath,
         file_name: uploadedStoragePath ? selectedFile?.name ?? null : null,
