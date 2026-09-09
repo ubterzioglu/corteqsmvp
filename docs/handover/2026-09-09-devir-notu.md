@@ -11,27 +11,44 @@
 | | |
 |---|---|
 | Depo | `C:\temp_private\corteqs\corteqs_fin` · branch `main` |
-| Son commit | `050a2b2` · `origin/main` ile senkron · çalışma ağacı **temiz** |
-| Test tabanı | **264 dosya / 1.862 test** yeşil |
+| Son commit | `06d17cd` · `origin/main` ile senkron · çalışma ağacı **temiz** |
+| Test tabanı | **264 dosya / 1.863 test** yeşil |
 | `tsc` | **6** hata (taban — artmamalı, hiçbiri canlı kusur değil) |
 | ESLint | **0** |
 | Migration | sapma yok |
-| Pano | `/admin/workshop/cadde` → WS3 sekmesi · **18/31** |
+| Pano | `/admin/workshop/cadde` → WS3 sekmesi · **23/31** |
 
-**⚠️ AÇIK TEK OPERASYON İŞİ:** son commit (`1e0d65f`, acil maddelere yorum sistemi)
-**canlıya çıkmadı**. Ölçüldü:
-`curl -sI https://corteqs.net/assets/CommandCenterManager-B177ZBk0.js` → **404**.
-Commit 21:19 UTC'de atıldı, o sıradaki deploy 21:20:15'te *bitti* — yani build
-commit'ten önce başlamış ve bu commit kuyruğa girmemiş. Coolify'dan yeniden yayın
-gerekiyor; kullanıcı bunu üstlendi. **Yayından sonra doğrulama:** aynı komut **200**
-dönmeli.
+**✅ DEPLOY KAPANDI (10 Eylül 00:35'te ölçüldü).** Önceki turdaki "canlıya çıkmadı"
+maddesi çözüldü; kullanıcı Coolify'dan yeniden yayınladı ve soru/cevap sistemi
+canlıda doğrulandı.
+
+⚠️ **Ama doğrulama yöntemi değişti — eski reçete yanıltıcıydı.** Devir notunun
+önceki hâli "chunk adını yerelde derle, canlıda `curl` ile ara" diyordu. Bu **geçersiz**:
+JS chunk adları içeriğe göre türetiliyor ve build `VITE_*` değişkenlerini dosyaya
+gömüyor, dolayısıyla yereldeki ad ile Coolify'daki ad **aynı commit'te bile farklı
+çıkabiliyor**. Bugün tam bu tuzağa düşüldü — iki farklı yerel chunk adı da 404 döndü
+ve deploy "olmamış" sanıldı, oysa olmuştu. (CSS adı env gömmediği için eşleşiyordu:
+canlı ve yerel `main-C9HatNXQ.css` aynı.)
+
+**Doğru reçete — canlı dosyanın adını canlıdan öğren:**
+
+```text
+# 1) index.html'deki giriş chunk'ını al, 2) içinden gerçek chunk adını çıkar,
+# 3) o chunk'ta kendi metnini ara.
+main = /assets/main-*.js            (index.html içinde yazılı)
+grep 'CommandCenterManager-[A-Za-z0-9_-]+\.js'  <main>   -> canlı chunk adı
+grep 'Soru / cevap ('                            <chunk> -> kendi metnin
+```
+
+Bugün böyle ölçüldü: canlı chunk `CommandCenterManager-09PZbAa-.js`, içinde
+`Soru / cevap (${S.length})` **var** → `dfa50ef` yayında.
 
 ---
 
 ## 1. Bugün ne yapıldı
 
 27 Ağustos'ta yapılan iki dış denetimin (`docs/cadde-300/2026-08-27-ux-degerlendirme.md`,
-`2026-08-27-ui-kritigi.md`) **31 açık maddesinden 18'i** kapatıldı.
+`2026-08-27-ui-kritigi.md`) **31 açık maddesinden 23'ü** kapatıldı.
 
 | Commit | İş |
 |---|---|
@@ -50,6 +67,11 @@ dönmeli.
 | `0af23bf` | T4 — üst nav tek nötr renk |
 | `1e0d65f` | Acil maddelere soru/cevap yorum sistemi |
 | `dce73ad` | T5 — gökkuşağı şerit pillar renk koduna çevrildi |
+| `f0c1740` | T6 — 13 rozet stili 3 tipe indi (`CaddeBadge`) |
+| `8faa22a` | T7 — 9 yarıçap değeri 1'e indi + AA kontrast alt sınırı |
+| `050a2b2` | T8 — cafe kartındaki çelişen renk sinyali giderildi |
+| `dfa50ef` | Yorum sayısı kapalıyken de görünüyor (kendi kusurum) |
+| `06d17cd` | 10 Eylül duyurusu + günlük özet maili tetiklendi |
 
 Yol üstünde kapatılan eski borçlar: `74b16fb` S1 · `5493de7` S2 · `088d12d` S3 ·
 `01fa683` tip borcu · `60d03ed` O2 güvenlik · `f376a4f` araç kataloğu ·
@@ -168,10 +190,17 @@ yazılandan farklı çıktı:**
 | Etkinlik "kolayca eklenir" | `events`/`event_details` tabloları var ama **tamamen boş**. Cadde'deki "Etkinlikler" süzgeci 4 Ağustos'ta **kullanıcının kendi kararıyla** kaldırılmış. |
 | Google Auth | Planı **2 Ağustos'ta yazılmış** (`docs/operations/2026-08-02-supabase-custom-domain-google-oauth.md`), hiçbir adımı başlamamış. Çoğu ayar işi. |
 
-Sorular hazır: **`docs/plans/2026-09-09-hotfix-sorulari.md`** (20 soru, günlük dille,
-şıklı — cevaplayacak kişi geliştirici değil).
+**✅ Sorular artık panonun İÇİNDE — ayrı belgeye bakmaya gerek yok.** Dört maddenin
+her birinin altındaki **"Soru / cevap"** bölümüne birer yorum yazıldı: önce
+"DURUM (9 Eylül'de bakıldı)" paragrafı, sonra **6'şar numaralı soru** (anlaşılan
+aralık madde başına 5–10). Toplam 24 soru, günlük dille — cevaplayacak kişi
+geliştirici değil. Yedek kopya: `docs/plans/2026-09-09-hotfix-sorulari.md`.
 
-Cevaplar panodaki **"Soru / cevap"** bölümüne yazılacak (bugün eklendi, `1e0d65f`).
+Sistem veritabanı bağlantılı: `command_center_hot_fix_comments` (mig
+`20260909210000`), RLS yalnız admin, silme *soft*. Hem soruyu hem cevabı iki taraf
+da aynı yere yapıştırabiliyor. Düğme yorum sayısını **kapalıyken de** gösteriyor —
+"Soru / cevap (6)".
+
 **Cevaplar gelmeden bu dört madde için kod yazma** — dördünde de yanlış işe girişilir.
 
 ---
@@ -189,6 +218,15 @@ hesaplamıyor). Yayından sonra `/cadde`'ye girip bak:
    düğmesi çıkıyor mu, tıklayınca çalışıyor mu?
 6. **Cafe odası** — payda gitti mi, Arşivle üç nokta menüsünde mi?
 7. **Bronz butonlar** — kontrast okunur mu, sayfa başına tek primary kuralı tutuyor mu?
+8. **Kart şeritleri (T5)** — artık pillar rengi: Cadde bronz, Cafe yeşil, Çarşı
+   terracotta. Karışık akışta bağlam renkten okunuyor mu, yoksa gürültü mü oldu?
+9. **Rozetler (T6)** — 13 stil 3 tipe indi. En kritik ikisi: "Sabit" artık siyah
+   değil, "Sponsorlu" artık turuncu değil. ⚠️ **Sponsorlu'nun nötre inmesi reklam
+   görünürlüğünü düşürür** — bu bir ürün kararı, gözle bakıp onayla ya da geri al.
+10. **Köşeler (T7)** — tek yarıçap 48 kartı birden etkiledi. Daha az yuvarlak
+    duruyor; "sert" mi hissettiriyor, yoksa daha derli toplu mu?
+11. **Gri metinler (T7)** — açık gri açıklamalar koyulaştı (2.56 → 4.76 kontrast).
+    Fazla mı koyu oldu, hiyerarşi kayboldu mu?
 
 ⚠️ İddia edilen **~90px** kazanç hesapla çıkarıldı, **ekranda ölçülmedi**. DevTools'ta
 375 / 1366 / 1920 genişlikte, beta bandı açık ve kapalı hâlde ilk gönderi kartının üst
@@ -213,8 +251,16 @@ kenarını ölç.
 5. **supabase-js hataları DÜZ NESNEDİR**, `Error` değil. `sanitizeError` yalnız
    `instanceof Error` bakıyor — supabase hatalarında mesajı yutar. Kardeş modüllerdeki
    `message`/`details`/`hint` okuyan eşleyiciyi kullan.
-6. **Deploy'u "oldu" sayma, canlı bundle'da kendi metnini ara.** Bugün son commit
-   push'luydu ve deploy zaman damgası taze görünüyordu ama chunk **404** döndü.
+6. **Deploy'u "oldu" sayma, canlı bundle'da kendi metnini ara — ama chunk adını
+   YERELDE ÜRETME.** Bu ders bugün iki kez, iki farklı yönde öğrenildi.
+   Önce doğru tarafı: deploy zaman damgası taze görünüyordu, oysa commit kuyruğa
+   girmemişti. Sonra yanlış tarafı: yerelde derleyip bulduğum chunk adını canlıda
+   arayınca **404** aldım ve "hâlâ çıkmamış" dedim — halbuki çıkmıştı. JS chunk
+   adları içerik hash'i taşır ve build `VITE_*` değişkenlerini dosyaya gömer, bu
+   yüzden **aynı commit yerelde ve Coolify'da farklı ad üretebilir**. Doğru yol:
+   canlı `index.html` → canlı `main-*.js` → onun içinden gerçek chunk adını
+   oku → o chunk'ta kendi metnini ara. (Ayrıntı ve komut: bu notun başındaki
+   "Doğru reçete" bloğu.)
 
 ---
 
