@@ -52,8 +52,16 @@ export default function SiteHeader() {
     navigate("/login", { replace: true });
   };
 
+  // ⚠️ Y2 (m153) SÖZLEŞMESİ: aşağıdaki dört sınıf adı — site-header,
+  // site-header__nav, site-header__brand, site-header__logo — src/index.css'teki
+  // `:root[data-header-compact="on"]` bloğuyla EŞLEŞİR. Bu dosyada scroll mantığı
+  // BİLİNÇLİ OLARAK YOKTUR: SiteHeader 61 public rotanın paylaştığı bileşen, ona
+  // state eklemek her scroll tikinde tüm public ağacı yeniden render ettirirdi.
+  // Küçültmeyi CSS yapar, anahtarı useCompactHeaderOnScroll yazar.
+  // Bu adları yeniden adlandırmak Y2'yi SESSİZCE öldürür (test kırılmaz, sadece
+  // hiçbir kural eşleşmez) — src/index.css'i de birlikte güncelle.
   return (
-    <div className="sticky top-0 z-50 border-b border-slate-200/80 bg-white backdrop-blur-sm">
+    <div className="site-header sticky top-0 z-50 border-b border-slate-200/80 bg-white backdrop-blur-sm">
       {!betaBannerDismissed && (
         <div className="relative border-b border-amber-300/50 bg-white px-4 py-1.5 shadow-[inset_0_-1px_0_rgba(217,119,6,0.12)] sm:py-2">
           {/* pr-9/sm:pr-10: ortalanan metin dar ekranda kapatma düğmesinin altına girmesin. */}
@@ -88,7 +96,7 @@ export default function SiteHeader() {
         </div>
       )}
       {/* Yeni üst bar — beta uyarısının altında, eski header'ın üstünde; Profilim + Çıkış (sağ üst), beyaz zemin */}
-      <div className="border-b border-slate-200/80 bg-white px-4 py-1.5">
+      <div className="site-header__nav border-b border-slate-200/80 bg-white px-4 py-1.5">
         <div className="container mx-auto flex items-center justify-end gap-x-4 lg:px-6">
           {user ? (
             <>
@@ -150,13 +158,13 @@ export default function SiteHeader() {
           )}
         </div>
       </div>
-      <div className="container mx-auto px-4 py-2.5 lg:px-6 lg:py-3">
+      <div className="site-header__brand container mx-auto px-4 py-2.5 lg:px-6 lg:py-3">
         <div className="flex flex-col items-center gap-3 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-4">
           <Link
             to="/"
             className="inline-flex w-full shrink-0 items-center justify-center gap-2.5 text-center transition-transform duration-200 hover:-translate-y-0.5 md:w-fit md:justify-start md:gap-3 md:text-left"
           >
-            <div className="flex h-[46px] w-[46px] items-center justify-center rounded-full bg-white shadow-[0_14px_30px_rgba(15,23,42,0.16)] ring-1 ring-slate-100 sm:h-[58px] sm:w-[58px]">
+            <div className="site-header__logo flex h-[46px] w-[46px] items-center justify-center rounded-full bg-white shadow-[0_14px_30px_rgba(15,23,42,0.16)] ring-1 ring-slate-100 sm:h-[58px] sm:w-[58px]">
               <img
                 src={logo}
                 alt="CorteQS"

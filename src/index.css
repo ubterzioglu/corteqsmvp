@@ -863,3 +863,57 @@
     opacity: 0.6;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Y2 (m153) — scroll'da header daralması.
+
+   SÖZLEŞME: buradaki dört sınıf adı src/components/SiteHeader.tsx ile eşleşir
+   (site-header, site-header__nav, site-header__brand, site-header__logo).
+   Birini yeniden adlandırmak Y2'yi SESSİZCE öldürür — build patlamaz, lint susar,
+   yalnızca header artık daralmaz. src/lib/header-compact-contract.test.ts bu
+   anlaşmayı metin düzeyinde kilitler; iki dosyayı birlikte güncelle.
+
+   Anahtarı `useCompactHeaderOnScroll` yazar (documentElement'e data-header-compact).
+   ⚠️ GEÇİŞ BİLDİRİMİ DE öznitelik altında: öznitelik hiç yokken (yani hook'u
+   çağırmayan 60 rotada) buradaki HİÇBİR kural eşleşmez, header bugünkü davranışını
+   birebir korur ve bedava bir transition maliyeti de doğmaz.
+   ───────────────────────────────────────────────────────────────────────────── */
+@layer components {
+  :root[data-header-compact] .site-header__brand,
+  :root[data-header-compact] .site-header__logo,
+  :root[data-header-compact] .site-header__logo img,
+  :root[data-header-compact] .site-header__nav {
+    transition:
+      padding-block 180ms ease,
+      height 180ms ease,
+      width 180ms ease;
+  }
+
+  /* Kullanıcı hareketi azaltmayı seçtiyse boyut yine değişir ama ANİ olur. */
+  @media (prefers-reduced-motion: reduce) {
+    :root[data-header-compact] .site-header__brand,
+    :root[data-header-compact] .site-header__logo,
+    :root[data-header-compact] .site-header__logo img,
+    :root[data-header-compact] .site-header__nav {
+      transition: none;
+    }
+  }
+
+  :root[data-header-compact="on"] .site-header__brand {
+    padding-block: 0.25rem;
+  }
+
+  :root[data-header-compact="on"] .site-header__nav {
+    padding-block: 0.125rem;
+  }
+
+  :root[data-header-compact="on"] .site-header__logo {
+    height: 36px;
+    width: 36px;
+  }
+
+  :root[data-header-compact="on"] .site-header__logo img {
+    height: 30px;
+    width: 30px;
+  }
+}

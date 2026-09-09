@@ -57,6 +57,7 @@ import { resolveCaddeClockTarget } from "@/lib/cadde-local-clock";
 import { caddeNewPostPollInterval, caddeOpenCommentsPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
 import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters } from "@/lib/cadde-format";
 import { describeCaddeWidenCount, widenCaddeFilters } from "@/lib/cadde-feed-widen";
+import { useCompactHeaderOnScroll } from "@/hooks/useCompactHeaderOnScroll";
 import { isInternalCaddeLink } from "@/lib/cadde-links";
 import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
 import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
@@ -112,6 +113,11 @@ const CaddePage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  // Y2 (m153): scroll'da header daralır. Anahtar documentElement'e yazılır, SiteHeader'a
+  // hiç dokunulmaz — küçültmeyi src/index.css yapar. Hook'u ÇAĞIRAN sayfa küçülmeyi alır;
+  // bugün yalnız /cadde çağırıyor, kritiğin şikâyeti oradaydı (~300px yığın).
+  useCompactHeaderOnScroll();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [composer, setComposer] = useState(emptyCaddeComposer);
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
