@@ -236,7 +236,15 @@ değer okunamıyorsa **bandı göster** (varsayılan açık). Prerender bu proje
 
 ---
 
-## B — Boş durumlar *(soğuk başlangıcın kod tarafı)*
+## B — Boş durumlar ✅ *(B1+B2 TAMAMLANDI 09.09.2026, commit `d90350d`)*
+
+> **Ölçüm bu batch'i baştan şekillendirdi (canlı, 09.09):** 58 Cadde şehrinin yalnız
+> **10'unda** paylaşım var — 21 yayınlanmış public gönderi, en dolu şehir 4, Berlin 1,
+> en dolu ülke Türkiye 8. Global kapı teyit edildi (`enabled=true`, üç eşik de **0**).
+> Yani elle şehir seçen üye **%83** ihtimalle boş akış görüyordu.
+>
+> **Plandaki B1 reçetesi iki yerden yanlıştı, ölçülerek düzeltildi** — aşağıda.
+> Yeni modül: `src/lib/cadde-feed-widen.ts` (+16 birim testi, +5 davranış testi).
 
 ### B1 — Boş şehirde otomatik olarak ülke akışına düş · ~25 dk · `m157`
 
@@ -249,8 +257,24 @@ düş ve ne olduğunu tek satırla söyle ("Şehrinde henüz paylaşım yok — 
 gösteriyoruz"). Filtreyi **sıfırlama**; yalnız gösterilen akışı genişlet.
 **Dosya:** `src/pages/cadde/CaddePage.tsx` (+ gerekirse `CaddeFeedScopeBar.tsx`)
 **Kabul:** boş şehirli bir hesapla `/cadde` açıldığında ekranda gönderi **var**.
-**Tuzak:** `CaddePage.test.tsx:1214`'te `COLD_START_HINT` regex'i eski metni kilitliyor —
-davranış değişince o testi de güncelle.
+**⚠️ Bu reçete İKİ YERDEN YANLIŞTI (09.09'da ölçülerek düzeltildi):**
+
+1. **Satır adresi bayattı ve yüzey yanlıştı.** Metin `:1283`'te değil **`:1305`**'te ve
+   boş durum kartında **değil**, sağ raildeki katlanabilir geo panelinin içinde. Dört
+   test `COLD_START_HINT` ile ona bağlı — değiştirmek üçünü kırardı. **DOKUNULMADI**;
+   cümle zaten "keşfedebilir" diyor ve bu değişiklikten sonra doğru hâle geliyor.
+2. **Daraltma İKİ bağımsız mekanizma, plan birini anlatıyordu.** Geo filtresi (`?city=`)
+   yanında bir de **kapsam çipi** (`?akis=city`) var; SQL'de ayrı ve sert bir filtre
+   (`20260805120000:220-233`). İzleyicinin şehri Cadde kataloğunda çözülemiyorsa akış
+   **garanti** boş kalır — bu durum bugüne kadar "soğuk başlangıç" sanılıp Konum paneli
+   katlanıyor ve kullanıcıya akışı **daha da daraltan** "Köprü modunu aç" öneriliyordu.
+
+**Yol üstünde:** ekranda duran bir yalan kaldırıldı — "Bu bölgede içerik azsa ülke geneli
+ve global akış da devreye girer." SQL'de öyle bir devreye girme yok (sert AND).
+
+**Maliyet sözleşmesi (gevşetme):** yoklama ana feed ile **aynı hook tipi ve aynı anahtar
+fabrikasını** kullanır → tıklayınca üçüncü RPC gitmez. Filtresiz `/cadde`de hiç yoklama
+açılmaz. Testle kilitli.
 **Bağımlılık:** B2 bunun üstüne biner, **B1 önce**.
 
 ### B2 — Boş durum metni dolu bir alternatif sunsun · ~15 dk · `m158`
@@ -262,6 +286,13 @@ gerçek sayı taşıyan** bir alternatif.
 **Kabul:** boş durumda en az bir dolu hedef, gerçek sayısıyla ve tıklanabilir görünür.
 **Tuzak:** sayıyı uydurma — B1'de zaten çekilen veriden türet, **ayrı sorgu açma.** Canlı
 örnek 904 MB RAM'de çalışıyor; gereksiz sorgudan kaçın.
+**⚠️ Plandaki "Berlin'deki 12 paylaşım" örneği gerçekçi DEĞİL** (ölçüm: Berlin'de 1, en
+dolu şehirde 4 gönderi var). Uygulanan kural: sayı yoklamanın sayfa uzunluğundan gelir;
+sayfa dolduysa `20+` yazılır (tavan kesin sayı gibi gösterilmez); **üst kapsam da boşsa
+buton hiç çizilmez** — boş akıştan boş akışa yollamak çıkmazdır.
+**⚠️ İstemciden sayım sorgusu AÇMA:** `cadde_post_targets` RLS'i açık ve policy'si YOK,
+düz `count` çok hedefli postları sistematik olarak eksik sayar; ayrıca feed'in görünürlük
+kapısını taklit etmez. Ucuz ama **yanlış** sayı üretir.
 **Bağımlılık:** B1.
 
 ---
