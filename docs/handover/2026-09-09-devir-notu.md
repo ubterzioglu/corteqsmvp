@@ -11,12 +11,12 @@
 | | |
 |---|---|
 | Depo | `C:\temp_private\corteqs\corteqs_fin` · branch `main` |
-| Son commit | `1e0d65f` · `origin/main` ile senkron · çalışma ağacı **temiz** |
-| Test tabanı | **262 dosya / 1.847 test** yeşil |
+| Son commit | `dce73ad` · `origin/main` ile senkron · çalışma ağacı **temiz** |
+| Test tabanı | **262 dosya / 1.851 test** yeşil |
 | `tsc` | **6** hata (taban — artmamalı, hiçbiri canlı kusur değil) |
 | ESLint | **0** |
 | Migration | sapma yok |
-| Pano | `/admin/workshop/cadde` → WS3 sekmesi · **17/31** |
+| Pano | `/admin/workshop/cadde` → WS3 sekmesi · **18/31** |
 
 **⚠️ AÇIK TEK OPERASYON İŞİ:** son commit (`1e0d65f`, acil maddelere yorum sistemi)
 **canlıya çıkmadı**. Ölçüldü:
@@ -31,7 +31,7 @@ dönmeli.
 ## 1. Bugün ne yapıldı
 
 27 Ağustos'ta yapılan iki dış denetimin (`docs/cadde-300/2026-08-27-ux-degerlendirme.md`,
-`2026-08-27-ui-kritigi.md`) **31 açık maddesinden 17'si** kapatıldı.
+`2026-08-27-ui-kritigi.md`) **31 açık maddesinden 18'i** kapatıldı.
 
 | Commit | İş |
 |---|---|
@@ -49,6 +49,7 @@ dönmeli.
 | `2aa4dab` | T3 — buton hiyerarşisi |
 | `0af23bf` | T4 — üst nav tek nötr renk |
 | `1e0d65f` | Acil maddelere soru/cevap yorum sistemi |
+| `dce73ad` | T5 — gökkuşağı şerit pillar renk koduna çevrildi |
 
 Yol üstünde kapatılan eski borçlar: `74b16fb` S1 · `5493de7` S2 · `088d12d` S3 ·
 `01fa683` tip borcu · `60d03ed` O2 güvenlik · `f376a4f` araç kataloğu ·
@@ -80,7 +81,7 @@ varsayılsaydı zarar verecekti:
 ## 3. Her batch'in değişmez kapanış turu
 
 ```
-npm run test        # taban 262 dosya / 1.847 — DÜŞERSE DUR
+npm run test        # taban 262 dosya / 1.851 — DÜŞERSE DUR
 npm run lint        # taban 0
 npx tsc -p tsconfig.app.json --noEmit   # taban 6 — ARTMAMALI
 ```
@@ -102,21 +103,13 @@ sayar). Bağımlılık düşürme.
 Kaynak plan: `docs/plans/2026-09-09-cadde-ux-ui-batch-plani.md`.
 Tasarım kuralı: `docs/modules/cadde-design-tokens.md`.
 
-### T — Tasarım sistemi *(4 batch)*
+### T — Tasarım sistemi *(3 batch)*
 
 | Batch | Madde | İş | Süre |
 |---|---|---|---|
-| **T5** | m141 | Gökkuşağı şeridi pillar renk koduna çevir | ~25 dk |
 | **T6** | m142 | Rozetleri üç tipe indir | ~25 dk |
 | **T7** | m143-145 | Tek köşe yarıçapı + iki gölge + `#6b7280` gri alt sınırı | ~20 dk |
 | **T8** | m149 | Cafe kartındaki çelişen sinyali gider | ~10 dk |
-
-**T5 detay ve tuzak:** `src/index.css`'te `.cadde-panel::before` / `.cadde-card::before`
-her kartta 5 duraklı gradient çiziyor (`--cadde-logo-red/amber/green/blue/pink`).
-Gökkuşağı **logoda kalsın**; şerit pillar rengine dönüşsün (Cadde bronz / Cafe yeşil /
-Çarşı terracotta).
-⚠️ `.cadde-panel` yalnız gönderi kartlarında değil **yan kolon panellerinde de**
-kullanılıyor (7 yer). Panelde şerit muhtemelen hiç olmamalı — karar ver, sessizce geçme.
 
 **T6 detay:** bugün 6 ayrı rozet stili var. Üç tip, üç sabit kural: **durum** (dolu renk),
 **kimlik** (tek ikon + nötr), **kategori** (outline). Paylaşılan bir rozet bileşeni
