@@ -236,9 +236,13 @@ describe("CaddePage", () => {
 
     // Composer artık tek kutu: başlıklı kart yerine aria-label'lı metin alanı.
     expect(await screen.findByLabelText("Paylaşım metni")).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "CorteQS Cadde" })).toHaveAttribute("src", "/newlogo.png");
-    expect(screen.getByRole("img", { name: "CorteQS Cadde" })).toHaveAttribute("width", "36");
-    expect(screen.getByRole("img", { name: "CorteQS Cadde" })).toHaveAttribute("height", "36");
+    // Y1 (09.09.2026): sayfanın çizildiğinin vekili artık ikinci logo DEĞİL (kimlik
+    // şeridi kaldırıldı) — sr-only h1. Testin asıl niyeti "bağlam yüklenemese de sayfa
+    // normal çizilir"; vekil değişti, niyet aynı.
+    expect(screen.getByRole("heading", { level: 1, name: "Diaspora Cadde" })).toBeInTheDocument();
+    // (Buradaki iki satır ikinci logonun width/height'ını kilitliyordu — CLS koruması.
+    // Logo Y1 ile kaldırıldı, korunacak öge kalmadı. Sayfada CLS riski taşıyan başka
+    // bir görsel eklenirse guard YENİDEN yazılmalı.)
     expect(screen.queryByText(/Caddeye çıkmak için profilini tamamla/i)).not.toBeInTheDocument();
   });
 
@@ -1235,7 +1239,11 @@ describe("CaddePage", () => {
 
   // Üst şerit kararları (04.08.2026, kullanıcı): zil sağ uçta ve büyük, filtre
   // özeti rozeti ("Global Akış") yok. İkisi de gözle fark edilmeden geri gelebilir.
-  it("keeps the notification bell at the right edge and drops the filter summary badge", async () => {
+  // Y1 (m151, 09.09.2026): kimlik şeridi KALDIRILDI. Bu test eskiden zilin şeridin sağ
+  // ucunda durduğunu kilitliyordu; şerit gidince niyeti korunarak yeniden yazıldı —
+  // kilitlenen şey artık "kimlik erişilebilir kaldı AMA piksel yemiyor" ve "zil
+  // kaybolmadı, kapsam şeridine taşındı".
+  it("kimliği sr-only h1'e indirir ve zili kapsam şeridine taşır", async () => {
     useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
     listCaddeCountriesMock.mockResolvedValue([]);
     listCaddeCitiesMock.mockResolvedValue([]);
@@ -1246,16 +1254,20 @@ describe("CaddePage", () => {
 
     renderPage();
 
-    // Filtre yokken özet "Global Akış" idi; rozet tamamen kalktı.
-    expect(await screen.findByText("Diaspora Cadde")).toBeInTheDocument();
+    // Kimlik ekran okuyucuya duruyor ve artık gerçek bir h1 (sayfada önceden HİÇ h1 yoktu).
+    const heading = await screen.findByRole("heading", { level: 1, name: "Diaspora Cadde" });
+    expect(heading).toHaveClass("sr-only");
+
+    // Şeridin görsel parçaları gitti: ikinci logo, marka rozeti, tanıtım cümlesi.
+    expect(screen.queryByRole("img", { name: "CorteQS Cadde" })).not.toBeInTheDocument();
+    expect(screen.queryByText("CorteQS Cadde")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Şehrindeki Türklerle tanış/)).not.toBeInTheDocument();
     expect(screen.queryByText("Global Akış")).not.toBeInTheDocument();
 
-    const bell = screen.getByRole("button", { name: "Bildirimler" });
-    const tagline = screen.getByText(/Şehrindeki Türklerle tanış/);
-
-    // Zil, açıklama metninden SONRA gelir → şeridin sağ ucunda.
-    expect(tagline.compareDocumentPosition(bell) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    // "Büyüt" kararı: h-9 değil h-11.
+    // Zil KAYBOLMADI — tek işlevsel öge olduğu için kapsam şeridine taşındı.
+    const scopeBar = screen.getByTestId("cadde-feed-scope-bar");
+    const bell = within(scopeBar).getByRole("button", { name: "Bildirimler" });
+    // "Büyüt" kararı (04.08.2026) korunuyor: h-9 değil h-11.
     expect(bell).toHaveClass("h-11");
   });
 

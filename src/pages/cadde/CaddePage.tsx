@@ -659,46 +659,33 @@ const CaddePage = () => {
   return (
     <CaddeProfileGate context={actorContextQuery.data} isLoading={actorContextQuery.isLoading}>
     <main className="cadde-shell">
-      <section>
-        <div className="mx-auto w-full max-w-7xl px-4 pt-5 lg:px-6">
-          {/* 05.08.2026 katlama optimizasyonu: şerit iki satırdan TEK satıra indi.
-              Başlık, rozet ve tanıtım cümlesi aynı hizada duruyor; silinen tek şey
-              "Global Türk topluluğunun şehir bazlı sosyal akışı" alt başlığıydı —
-              yanındaki cümlenin ("Şehrindeki Türklerle tanış, sor, paylaş...") daha
-              zayıf bir tekrarıydı ve kendi satırını hak etmiyordu.
-              Zil şeridin SAĞ ucunda KALIR (kullanıcı kararı 04.08.2026): araya giren
-              açıklama metni flex-1 ile esneyip zili sağa iter, ayraç zilin solunda kalır. */}
-          <div className="cadde-card flex flex-wrap items-center gap-x-3 gap-y-2 rounded-[20px] px-4 py-3 sm:px-5">
-            <img
-              src="/newlogo.png"
-              alt="CorteQS Cadde"
-              width={36}
-              height={36}
-              className="h-9 w-9 shrink-0 rounded-full object-contain"
-            />
-            <CardTitle className="font-display text-xl">Diaspora Cadde</CardTitle>
-            <Badge className="cadde-chip-brand shrink-0">CorteQS Cadde</Badge>
-            {/* Filtre özeti rozeti ("Global Akış") kaldırıldı — kullanıcı kararı
-                04.08.2026. Aktif filtre zaten Konum kartında ve akış çip barında
-                görünüyor, burada üçüncü kez tekrar ediyordu. */}
-            <p className="min-w-0 flex-1 truncate text-sm text-slate-600">
-              Şehrindeki Türklerle tanış, sor, paylaş ve fırsatları keşfet.
-            </p>
-            <Separator orientation="vertical" className="h-8 shrink-0" />
-            <NotificationsBell />
-          </div>
-        </div>
-      </section>
+      {/* Y1 (m151, 09.09.2026): kimlik şeridi KALDIRILDI.
+          Kritik "logo bandı ile sayfa başlığını birleştir" diyordu, ama ölçünce
+          birleştirilecek bir şey olmadığı çıktı: şeridin yüksekliğini metin değil
+          ZİL belirliyordu (h-11 = 44px + kart py-3 + kenarlık). Yani başlığı paylaşılan
+          SiteHeader'a taşımak ~0px kazandırır, kart yerinde kalırdı — üstelik zil
+          Cadde'ye özgü bir widget (realtime abonelik + feature gate) ve onu header'a
+          koymak 61 rotayı etkilerdi.
+          Şeritteki her şey ya kopyaydı ya dekor: ikinci logo (header'da zaten var),
+          "Diaspora Cadde" (SEO başlığı zaten söylüyor), "CorteQS Cadde" rozeti,
+          tanıtım cümlesi. Tek işlevsel öge zildi ve kapsam şeridine taşındı.
+          ⚠️ Akışın üstüne yeni bir tam genişlik bloğu ekleme — aşağıdaki 05.08.2026
+          notunu oku. */}
+      {/* Sayfanın ilk ve tek h1'i. Bugüne kadar /cadde'de HİÇ h1 yoktu (başlık bir
+          CardTitle = h3'tü); şerit kalkarken bu a11y/SEO açığı 0px maliyetle kapandı. */}
+      <h1 className="sr-only">Diaspora Cadde</h1>
 
-      {/* Izgara 2 kolon: akış + sağ kolon. Başlık şeridi ile akış ARASINDA hiçbir blok
+      {/* Izgara 2 kolon: akış + sağ kolon. Akışın ÜSTÜNDE hiçbir tam genişlik bloğu
           yoktur — kullanıcı kararı 05.08.2026 (üçüncü ve son revizyon): akış doğrudan
-          ikinci sırada gelir. Konum + Aktif Cafeler + İnsanları Keşfet günün ilk iki
+          ilk sırada gelir. Konum + Aktif Cafeler + İnsanları Keşfet günün ilk iki
           denemesinde (önce üç satır, sonra üç kolon) akışın üstündeydi; ikisi de
           paylaşım kutusunu katlamanın altında bıraktı. Üçüncü denemede üçü de SAĞ
           kolona alındı, akışın üstü tamamen boşaldı.
+          09.09.2026 (Y1): kimlik şeridi de kalktı, artık üstte gerçekten hiçbir şey yok.
           Buraya yeni bir tam genişlik bloğu eklemeden önce bu geçmişi oku: akışın
-          üstüne konan her blok katlama sorununu geri getirir. */}
-      <section className="mx-auto grid w-full max-w-7xl gap-5 px-4 py-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-6">
+          üstüne konan her blok katlama sorununu geri getirir.
+          pt-4/pb-5: şerit gidince üstteki 20px boşluk fazla kaldı, 16px'e indi. */}
+      <section className="mx-auto grid w-full max-w-7xl gap-5 px-4 pb-5 pt-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-6">
         {/* m85: orta kolon = paylaşım kutusu + akış, başka hiçbir şey. Buradaki
             "Diaspora Cadde" başlık kartı üst şeridin birebir kopyasıydı, akışı bir kart
             aşağı itiyordu — silindi, filtre özeti üst şeritte duruyor. */}
@@ -728,10 +715,14 @@ const CaddePage = () => {
             </Card>
           )}
 
+          {/* Y1: zil kimlik şeridinden buraya taşındı — sayfadaki tek işlevsel öge oydu,
+              şeridin geri kalanı kopya ve dekordu. Slot isteğe bağlı, o yüzden aynı
+              bileşeni kullanan /cadde/cafe ve /cadde/carsi etkilenmez. */}
           <CaddeFeedScopeBar
             scope={filters.scope}
             hashtag={filters.hashtag}
             clockTarget={clockTarget}
+            notificationsSlot={<NotificationsBell />}
             onScopeChange={(scope) => updateFilters({ scope })}
             onClearHashtag={() => updateFilters({ hashtag: "" })}
           />

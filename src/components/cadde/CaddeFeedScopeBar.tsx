@@ -16,6 +16,8 @@
 // CaddeFeedScope tipinde ve RPC parametresinde DURUR, yalnız UI'dan seçilemez.
 // Faz 2'de cafe etkinlikleri gelirse çip tek satırla geri açılır.
 
+import type { ReactNode } from "react";
+
 import { X } from "lucide-react";
 
 import CaddeLocalClock from "@/components/cadde/CaddeLocalClock";
@@ -49,6 +51,12 @@ export interface CaddeFeedScopeBarProps {
    * ve rozet hiç çizilmez — "yakında" tarzı boş bir yer tutucu BIRAKMA (m88 kuralı).
    */
   clockTarget?: CaddeClockTarget | null;
+  /**
+   * Y1 (m151): kimlik şeridi kaldırılınca bildirim zili buraya taşındı.
+   * İSTEĞE BAĞLI ve varsayılanı yok — prop verilmezse DOM birebir eskisi gibi kalır,
+   * yani /cadde/cafe ve /cadde/carsi bu değişiklikten hiç etkilenmez.
+   */
+  notificationsSlot?: ReactNode;
 }
 
 const CaddeFeedScopeBar = ({
@@ -57,6 +65,7 @@ const CaddeFeedScopeBar = ({
   onScopeChange,
   onClearHashtag,
   clockTarget = null,
+  notificationsSlot,
 }: CaddeFeedScopeBarProps) => (
   <div className="space-y-2" data-testid="cadde-feed-scope-bar">
     <div className="flex flex-wrap items-center gap-1.5">
@@ -83,10 +92,14 @@ const CaddeFeedScopeBar = ({
       })}
 
       {/* m133: saat çiplerin SAĞ ucuna yaslanır (ml-auto). Şerit dar ekranda zaten
-          flex-wrap ile sarıyor; saat de o zaman alt satıra düşer, taşma yapmaz. */}
-      {clockTarget ? (
-        <span className="ml-auto">
-          <CaddeLocalClock target={clockTarget} />
+          flex-wrap ile sarıyor; saat de o zaman alt satıra düşer, taşma yapmaz.
+          Y1 (m151): zil de aynı sağ uca katıldı. İkisi TEK bir ml-auto kabında durur —
+          ayrı ayrı ml-auto verilseydi araya boşluk girip saat ortada kalırdı. Biri
+          yoksa diğeri kabı tek başına doldurur. */}
+      {clockTarget || notificationsSlot ? (
+        <span className="ml-auto flex items-center gap-2">
+          {clockTarget ? <CaddeLocalClock target={clockTarget} /> : null}
+          {notificationsSlot}
         </span>
       ) : null}
     </div>
