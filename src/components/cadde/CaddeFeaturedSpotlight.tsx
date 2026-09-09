@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { isInternalCaddeLink } from "@/lib/cadde-links";
 import type { CaddeBillboardCard } from "@/lib/cadde-types";
@@ -32,7 +33,7 @@ const CaddeFeaturedSpotlight = ({ card }: CaddeFeaturedSpotlightProps) => {
         <img src={card.imageUrl} alt="" className="h-28 w-full rounded-lg object-cover" loading="lazy" />
       ) : null}
       <div className="flex flex-wrap items-center gap-2">
-        <Badge className="bg-orange-100 text-orange-900 hover:bg-orange-100">Öne Çıkan</Badge>
+        <CaddeBadge tone="durum" intent="neutral">Öne Çıkan</CaddeBadge>
         <Badge variant="outline">{card.type}</Badge>
         {card.badgeText ? <Badge variant="secondary">{card.badgeText}</Badge> : null}
       </div>

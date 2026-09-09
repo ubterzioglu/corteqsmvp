@@ -7,7 +7,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Clock3, MapPin, ShoppingBag, User2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
-import { Badge } from "@/components/ui/badge";
+import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -85,15 +85,15 @@ const CaddeCarsiItemPage = () => {
                 title={`${item.categoryLabel} kategorisindeki ilanlar`}
                 data-testid="carsi-detail-category"
               >
-                <Badge
-                  variant="outline"
-                  className="border-amber-300 text-amber-800 transition hover:border-amber-500 hover:bg-amber-50"
-                >
+                {/* KATEGORİ: ilanın sınıfı. Amber outline Çarşı'nın pillar rengiydi
+                    ama rozet düzeyinde ikinci bir renk sistemi doğuruyordu; pillar
+                    kimliği artık kartın üst şeridinde (T5). */}
+                <CaddeBadge tone="kategori" className="transition hover:bg-slate-50">
                   <ShoppingBag className="mr-1 h-3 w-3" />
                   {item.categoryLabel}
-                </Badge>
+                </CaddeBadge>
               </Link>
-              {item.status !== "published" ? <Badge variant="secondary">Yayında değil</Badge> : null}
+              {item.status !== "published" ? <CaddeBadge tone="durum" intent="neutral">Yayında değil</CaddeBadge> : null}
             </div>
             <CardTitle className="text-2xl">{item.title}</CardTitle>
             <p className="text-xl font-bold text-amber-900">{formatCarsiPrice(item)}</p>

@@ -1387,6 +1387,11 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-badge-contract.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-brand-token.test.ts",
       "kind": "ts",
       "module_family": "cadde"

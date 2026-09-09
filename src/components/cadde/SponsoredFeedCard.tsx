@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { isExternalPromotionUrl, recordPromotionEvent } from "@/lib/cadde-tanitim-api";
@@ -45,7 +45,9 @@ const SponsoredFeedCard = ({ promotion, compact = false }: SponsoredFeedCardProp
     <Card className="cadde-sponsored">
       <CardContent className={compact ? "space-y-2 p-4" : "flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between"}>
         <div className="min-w-0 space-y-2">
-          <Badge className="bg-orange-500 text-white hover:bg-orange-500">Sponsorlu</Badge>
+          {/* KİMLİK: kartın ne olduğunu söyler, değişen bir hâl değil. Turuncu dolgu
+              reklam içeriğini akıştaki en ağır rozet yapıyordu — yanlış sinyal. */}
+          <CaddeBadge tone="kimlik">Sponsorlu</CaddeBadge>
           {promotion.imageUrl && !compact ? (
             <img src={promotion.imageUrl} alt={promotion.title} className="h-32 w-full rounded-lg border border-orange-200/60 object-cover" loading="lazy" />
           ) : null}

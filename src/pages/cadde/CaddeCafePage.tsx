@@ -15,7 +15,7 @@ import CaddeComposer from "@/components/cadde/CaddeComposer";
 import CaddeMediaGallery from "@/components/cadde/CaddeMediaGallery";
 import CaddePostBody from "@/components/cadde/CaddePostBody";
 import CaddePostComments from "@/components/cadde/CaddePostComments";
-import { Badge } from "@/components/ui/badge";
+import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -190,11 +190,13 @@ const CaddeCafePage = () => {
           <CardHeader className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               {isReadOnly ? (
-                <Badge variant="secondary" className="gap-1"><Archive className="h-3 w-3" /> Arşiv (read-only)</Badge>
+                <CaddeBadge tone="durum" intent="neutral">Arşiv (read-only)</CaddeBadge>
               ) : (
-                <Badge className="bg-emerald-500 text-white hover:bg-emerald-500">Canlı</Badge>
+                <CaddeBadge tone="durum" intent="positive">Canlı</CaddeBadge>
               )}
-              {cafe.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
+              {/* Köprü bir DURUM değil, odanın türü — kategori tipinde. Eskiden yeşil
+                  dolguyla "Canlı" ile aynı aileye giriyor ve ikisi karışıyordu. */}
+              {cafe.isBridge ? <CaddeBadge tone="kategori">Köprü</CaddeBadge> : null}
             </div>
             {/* m3+m4: çay bardağı ikonu + "ad bold, tema normal" tek satır (ham themeKey rozeti kalktı). */}
             <CardTitle className="flex items-center gap-2 text-2xl">

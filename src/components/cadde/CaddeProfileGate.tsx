@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Lock, Settings } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Button } from "@/components/ui/button";
 import { missingGateFieldLabel, type CaddeActorContext } from "@/lib/cadde-rules";
 
@@ -31,9 +31,11 @@ const CaddeProfileGate = ({ context, isLoading, children }: CaddeProfileGateProp
           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <Lock className="h-6 w-6" />
           </div>
-          <Badge variant="outline" className="mb-3 border-amber-500/40 text-amber-600">
+          {/* DURUM: kullanıcı sınırlı bir hâlde. Uyarı tonunu kilit ikonu, başlık ve
+              kapının kendisi zaten taşıyor — rozetin ayrıca renk bağırmasına gerek yok. */}
+          <CaddeBadge tone="durum" intent="neutral" className="mb-3">
             Önizleme Görünümü
-          </Badge>
+          </CaddeBadge>
           <h2 className="mb-2 text-xl font-bold text-foreground">Caddeye çıkmak için profilini tamamla</h2>
           <p className="mb-4 text-sm text-muted-foreground">
             Gerçek topluluğa katılmak için aşağıdaki bilgileri tamamlaman gerekiyor:

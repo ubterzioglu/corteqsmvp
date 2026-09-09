@@ -23,7 +23,7 @@ import { ChevronDown } from "lucide-react";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
 import CaddeInfoPopover from "@/components/cadde/CaddeInfoPopover";
 import CreateCafeForm from "@/components/cadde/CreateCafeForm";
-import { Badge } from "@/components/ui/badge";
+import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -149,14 +149,14 @@ const CaddeCafesPanel = ({
                           </span>
                         ) : null}
                         {cafe.isBridge ? (
-                          <Badge className="shrink-0 bg-emerald-100 px-1.5 py-0 text-[10px] text-emerald-900 hover:bg-emerald-100">
+                          <CaddeBadge tone="kategori" className="shrink-0 px-1.5 py-0 text-[10px]">
                             Köprü
-                          </Badge>
+                          </CaddeBadge>
                         ) : null}
                         {cafe.entryMode !== "open" ? (
-                          <Badge variant="outline" className="shrink-0 px-1.5 py-0 text-[10px]">
+                          <CaddeBadge tone="kategori" className="shrink-0 px-1.5 py-0 text-[10px]">
                             {cafe.entryMode === "approval" ? "Onaylı" : "Davetli"}
-                          </Badge>
+                          </CaddeBadge>
                         ) : null}
                       </p>
                       <p className="truncate text-xs text-slate-500">

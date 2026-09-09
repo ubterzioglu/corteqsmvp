@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { ArrowRight, ShoppingBag } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import CaddeBadge from "@/components/cadde/CaddeBadge";
 import CaddeInfoPopover from "@/components/cadde/CaddeInfoPopover";
 import { carsiCategoryHref, formatCarsiPrice, getCarsiVisible, listCarsiItems } from "@/lib/cadde-carsi-api";
 import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
@@ -99,12 +99,9 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
                 title={`${item.categoryLabel} kategorisindeki ilanlar`}
                 data-testid={`carsi-ticker-category-${item.id}`}
               >
-                <Badge
-                  variant="outline"
-                  className="border-amber-300 text-[10px] text-amber-800 transition hover:border-amber-500 hover:bg-amber-50"
-                >
+                <CaddeBadge tone="kategori" className="text-[10px] transition hover:bg-slate-50">
                   {item.categoryLabel}
-                </Badge>
+                </CaddeBadge>
               </Link>
               <Link
                 to={`/cadde/carsi/${item.id}`}

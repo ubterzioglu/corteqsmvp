@@ -23,7 +23,7 @@ import PromotionRail from "@/components/cadde/PromotionRail";
 import SponsoredFeedCard from "@/components/cadde/SponsoredFeedCard";
 import { useCaddeActorContext } from "@/hooks/cadde/useCaddeActorContext";
 import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
-import { Badge } from "@/components/ui/badge";
+import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -761,7 +761,11 @@ const CaddePage = () => {
                 <Card key={item.sponsor.id} className="cadde-sponsored">
                   <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
                     <div className="space-y-2">
-                      <Badge className="bg-orange-500 text-white hover:bg-orange-500">{item.sponsor.badgeText ?? "Sponsorlu"}</Badge>
+                      {/* "Sponsorlu" bir KİMLİK etiketi — kartın ne olduğunu söyler,
+                          değişen bir hâl değil. Turuncu dolgu onu akıştaki en ağır
+                          rozet yapıyordu; reklam içeriğinin en yüksek görsel ağırlığa
+                          sahip olması yanlış sinyaldi. */}
+                      <CaddeBadge tone="kimlik">{item.sponsor.badgeText ?? "Sponsorlu"}</CaddeBadge>
                       <h3 className="text-lg font-semibold text-slate-900">{item.sponsor.title}</h3>
                       <p className="text-sm text-slate-700">{item.sponsor.description}</p>
                     </div>
@@ -790,9 +794,12 @@ const CaddePage = () => {
                       ) : null}
                       <div className="flex flex-wrap items-center gap-2">
                         <p className="text-sm font-medium text-slate-700">{item.post.authorName}</p>
-                        {item.post.authorRole ? <Badge variant="secondary">{item.post.authorRole}</Badge> : null}
-                        {item.post.pinned ? <Badge className="bg-slate-900 text-white hover:bg-slate-900">Sabit</Badge> : null}
-                        {item.post.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
+                        {/* Rol = KİMLİK (kim yazdı), Sabit = DURUM (değişen hâl),
+                            Köprü = KATEGORİ (gönderinin türü). Eskiden üçü de farklı
+                            ağırlıktaydı ve "Sabit" en ağır stildeyken en az bilgi taşıyordu. */}
+                        {item.post.authorRole ? <CaddeBadge tone="kimlik">{item.post.authorRole}</CaddeBadge> : null}
+                        {item.post.pinned ? <CaddeBadge tone="durum" intent="neutral">Sabit</CaddeBadge> : null}
+                        {item.post.isBridge ? <CaddeBadge tone="kategori">Köprü</CaddeBadge> : null}
                       </div>
                       <p className="text-xs text-slate-500">
                         {[item.post.country, item.post.city].filter(Boolean).join(" • ") || "Global"} • {formatDateTime(item.post.createdAt)}
@@ -808,9 +815,9 @@ const CaddePage = () => {
                     {item.post.interests.length > 0 || item.post.hashtags.length > 0 ? (
                       <div className="flex flex-wrap items-center gap-1.5">
                         {item.post.interests.map((key) => (
-                          <Badge key={key} variant="outline" className="text-xs font-normal">
+                          <CaddeBadge key={key} tone="kategori" className="text-xs">
                             {interestLabelByKey.get(key) ?? key}
-                          </Badge>
+                          </CaddeBadge>
                         ))}
                         {item.post.hashtags.map((hashtag) => (
                           <Link
@@ -1603,9 +1610,9 @@ const CaddePage = () => {
                 const cardBody = (
                   <>
                     <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="outline">{card.type}</Badge>
-                      {card.isFeatured ? <Badge className="bg-orange-100 text-orange-900 hover:bg-orange-100">Öne Çıkan</Badge> : null}
-                      {card.badgeText ? <Badge variant="secondary">{card.badgeText}</Badge> : null}
+                      <CaddeBadge tone="kategori">{card.type}</CaddeBadge>
+                      {card.isFeatured ? <CaddeBadge tone="durum" intent="neutral">Öne Çıkan</CaddeBadge> : null}
+                      {card.badgeText ? <CaddeBadge tone="kategori">{card.badgeText}</CaddeBadge> : null}
                     </div>
                     <h3 className="mt-3 text-lg font-semibold text-slate-900">{card.title}</h3>
                     {card.subtitle ? <p className="mt-1 text-sm font-medium text-slate-500">{card.subtitle}</p> : null}

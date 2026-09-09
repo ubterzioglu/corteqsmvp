@@ -11,7 +11,7 @@ import { MapPin, Plus, ShoppingBag } from "lucide-react";
 import { useAuth } from "@/components/auth/useAuth";
 import CarsiItemForm from "@/components/cadde/CarsiItemForm";
 import { emptyCarsiForm } from "@/lib/cadde-composer";
-import { Badge } from "@/components/ui/badge";
+import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -210,7 +210,9 @@ const CaddeCarsiPage = () => {
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <Link to={`/cadde/carsi/${item.id}`} className="font-semibold text-slate-900 hover:underline">{item.title}</Link>
-                      <Badge variant={item.status === "published" ? "default" : "secondary"}>{STATUS_LABELS[item.status]}</Badge>
+                      <CaddeBadge tone="durum" intent={item.status === "published" ? "positive" : "neutral"}>
+                        {STATUS_LABELS[item.status]}
+                      </CaddeBadge>
                     </div>
                     <p className="text-xs text-slate-500">
                       <Link
@@ -257,12 +259,9 @@ const CaddeCarsiPage = () => {
                     title={`${item.categoryLabel} kategorisindeki ilanlar`}
                     data-testid={`carsi-card-category-${item.id}`}
                   >
-                    <Badge
-                      variant="outline"
-                      className="border-amber-300 text-amber-800 transition hover:border-amber-500 hover:bg-amber-50"
-                    >
+                    <CaddeBadge tone="kategori" className="transition hover:bg-slate-50">
                       {item.categoryLabel}
-                    </Badge>
+                    </CaddeBadge>
                   </Link>
                   <span className="text-xs text-slate-500">{formatDate(item.createdAt)}</span>
                 </div>

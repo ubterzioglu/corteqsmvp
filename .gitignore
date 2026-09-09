@@ -109,3 +109,6 @@ docs/fallback-images/*/*
 # Ozel WhatsApp dokumleri repoya girmez (2026-08-02 kazasi sonrasi kural)
 walast.txt
 *.wa-export.txt
+
+# git worktree'leri depo kokune acilirsa commit'e karismasin (09.09.2026)
+.worktrees/

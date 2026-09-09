@@ -5,7 +5,11 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist/**", "referans/**", "docs/archive/**", "docs/reference/**", "docs/reference-clones/**"] },
+  // .worktrees/**: git worktree'leri depo KÖKÜNÜN İÇİNE açıldığında ESLint onların
+  // tüm ağacını da tarar ve o worktree'deki arşiv/referans kodu lint tabanını
+  // kirletir (09.09.2026'da tam olarak bu oldu: src temizken "1 error" raporlandı).
+  // Worktree kendi checkout'unda zaten kendi lint'ini koşar.
+  { ignores: ["dist/**", ".worktrees/**", "referans/**", "docs/archive/**", "docs/reference/**", "docs/reference-clones/**"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
