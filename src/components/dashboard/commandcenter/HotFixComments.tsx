@@ -47,8 +47,11 @@ const HotFixComments = ({ hotFixId, defaultAuthorName = "" }: HotFixCommentsProp
   const commentsQuery = useQuery({
     queryKey,
     queryFn: () => listHotFixComments(hotFixId),
-    // Kapalıyken sorgu açılmaz: 10 madde × sürekli sorgu gereksiz yük olurdu.
-    enabled: open,
+    // ⚠️ Bir zamanlar `enabled: open` idi — "kapalıyken sorgu açılmasın" diye.
+    // Bu, ÖZELLİĞİ İŞE YARAMAZ HALE GETİRİYORDU: kapalıyken yorum sayısı bilinmediği
+    // için sayı rozeti hiç çizilmiyor, kullanıcı yorum OLDUĞUNU göremiyordu — her
+    // maddeyi tek tek açmak zorunda kalıyordu. Tablo en fazla 10 satır ve yorumlar
+    // küçük; maliyet endişesi yersizdi.
     staleTime: 30_000,
   });
 
@@ -88,12 +91,13 @@ const HotFixComments = ({ hotFixId, defaultAuthorName = "" }: HotFixCommentsProp
         className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-2.5 py-1 text-[11px] font-medium text-gray-600 transition hover:border-gray-300 hover:text-gray-900"
       >
         <MessageSquare className="h-3.5 w-3.5" />
-        {open ? "Soru / cevabı gizle" : "Soru / cevap"}
-        {comments.length > 0 ? (
-          <span className="rounded-full bg-gray-100 px-1.5 text-[10px] font-semibold text-gray-700">
-            {comments.length}
-          </span>
-        ) : null}
+        {/* Sayı ETİKETİN İÇİNDE: yalnız rozet göstermek "4 ne demek?" sorusunu
+            doğuruyordu ve kapalıyken hiç okunmuyordu. */}
+        {open
+          ? "Soru / cevabı gizle"
+          : comments.length > 0
+            ? `Soru / cevap (${comments.length})`
+            : "Soru / cevap ekle"}
       </button>
 
       {open ? (

@@ -11,8 +11,8 @@
 | | |
 |---|---|
 | Depo | `C:\temp_private\corteqs\corteqs_fin` · branch `main` |
-| Son commit | `dce73ad` · `origin/main` ile senkron · çalışma ağacı **temiz** |
-| Test tabanı | **262 dosya / 1.851 test** yeşil |
+| Son commit | `050a2b2` · `origin/main` ile senkron · çalışma ağacı **temiz** |
+| Test tabanı | **264 dosya / 1.862 test** yeşil |
 | `tsc` | **6** hata (taban — artmamalı, hiçbiri canlı kusur değil) |
 | ESLint | **0** |
 | Migration | sapma yok |
@@ -103,25 +103,11 @@ sayar). Bağımlılık düşürme.
 Kaynak plan: `docs/plans/2026-09-09-cadde-ux-ui-batch-plani.md`.
 Tasarım kuralı: `docs/modules/cadde-design-tokens.md`.
 
-### T — Tasarım sistemi *(3 batch)*
+### ✅ T — Tasarım sistemi *(T1–T8 TAMAMLANDI)*
 
-| Batch | Madde | İş | Süre |
-|---|---|---|---|
-| **T6** | m142 | Rozetleri üç tipe indir | ~25 dk |
-| **T7** | m143-145 | Tek köşe yarıçapı + iki gölge + `#6b7280` gri alt sınırı | ~20 dk |
-| **T8** | m149 | Cafe kartındaki çelişen sinyali gider | ~10 dk |
-
-**T6 detay:** bugün 6 ayrı rozet stili var. Üç tip, üç sabit kural: **durum** (dolu renk),
-**kimlik** (tek ikon + nötr), **kategori** (outline). Paylaşılan bir rozet bileşeni
-üzerinden geçir. H3 "Pinned"i "Sabit" yaptı; **stili** burada değişecek.
-
-**T8 detay:** `CaddeCafePage.tsx:188` yeşil `bg-emerald-500` "Canlı" rozeti ile karttaki
-turuncu/amber çerçeve çelişiyor. Tek sinyal, tek renk. **T6'dan sonra yap.**
-
-⚠️ **T grubunun tamamı `src/lib/cadde-style-contract.test.ts` ile çevrili:** 7 Cadde
-yüzey dosyasında `bg-[#...]`, `text-[#...]`, `border-[#...]`,
-`bg-[linear-gradient...]` **yasak**. Renk token'dan gelmek zorunda. **Testi gevşetme**,
-`src/index.css`'e token ekle.
+Tüm grup kapandı. Üç sözleşme testi bu sistemi kilitliyor — **gevşetme**:
+`cadde-style-contract` (renk token'dan gelir) · `cadde-surface-contract`
+(tek yarıçap, kontrast tabanı) · `cadde-badge-contract` (üç rozet tipi).
 
 ### C — Cafe *(2 batch)*
 
