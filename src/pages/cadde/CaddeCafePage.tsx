@@ -186,7 +186,11 @@ const CaddeCafePage = () => {
   return (
     <main className="cadde-shell">
       <section className="mx-auto w-full max-w-3xl space-y-4 px-4 py-7">
-        <Card className="cadde-card cadde-card--cafe border-orange-100 bg-white/95">
+        {/* T8 (m149): `border-orange-100` KALDIRILDI. Kart turuncu çerçeve taşırken
+            içindeki "Canlı" rozeti ve üstündeki pillar şeridi YEŞİLDİ — üç ayrı sinyal,
+            iki farklı renk. Cafe kimliğini artık yalnız pillar şeridi taşıyor (T5),
+            çerçeve nötr. Tek sinyal, tek renk. */}
+        <Card className="cadde-card cadde-card--cafe bg-white/95">
           <CardHeader className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               {isReadOnly ? (
@@ -288,14 +292,14 @@ const CaddeCafePage = () => {
         ) : null}
 
         {isOwner && pendingMembers.length > 0 ? (
-          <Card className="border-amber-200 bg-amber-50/60">
+          <Card className="cadde-card border-slate-200 bg-slate-50/60">
             <CardHeader>
               <CardTitle className="text-base">Üye Onay Paneli</CardTitle>
               <CardDescription>{pendingMembers.length} bekleyen katılım talebi</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {pendingMembers.map((member) => (
-                <div key={member.id} className="rounded-lg border border-amber-200 bg-white p-3">
+                <div key={member.id} className="rounded-lg border border-slate-200 bg-white p-3">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-slate-900">{member.displayName}</p>
