@@ -6,11 +6,30 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260907-atlanan-uc-duzeltme");
-    expect(ADMIN_UPDATES[0].date).toBe("7 Eylül 2026");
+    expect(ADMIN_UPDATES[0].id).toBe("20260909-cadde-sadelestirme");
+    expect(ADMIN_UPDATES[0].date).toBe("9 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("9 Eylül kaydı ölçümü, kapsamı ve DOĞRULANMAMIŞ olanı birlikte söyler", () => {
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260909-cadde-sadelestirme");
+    const detail = update?.items.join(" ") ?? "";
+
+    // Günün asıl işi: boş şehirde çıkmaz yerine dolu bir alternatif.
+    expect(detail).toContain("BOŞ ŞEHİRDE ARTIK ÇIKMAZ YOK");
+    // İddia değil ölçüm: %83 rakamı canlı veriden geldi, duyuruda da geçmeli.
+    expect(detail).toContain("58 şehrimizin yalnız 10'unda");
+
+    // Ekranda duran yanlış cümlenin kaldırıldığı duyurulmalı — kullanıcı ona
+    // güvenip bekliyordu.
+    expect(detail).toContain("EKRANDA DURAN BİR YANLIŞ CÜMLE KALDIRILDI");
+
+    // ⚠️ EN ÖNEMLİ İDDİA: gün boyu yapılan iş görsel ve gözle görülmedi.
+    // Bunu duyurudan düşürmek, doğrulanmamış işi doğrulanmış gibi sunmak olur.
+    expect(detail).toContain("GÖZLE KONTROL BEKLİYOR");
+    expect(detail).toContain("ekranda ölçülmedi");
   });
 
   it("geriye dönük kaydı 'ne zaman yapıldı / şu an canlı mı' sorularını kapatarak yazar", () => {

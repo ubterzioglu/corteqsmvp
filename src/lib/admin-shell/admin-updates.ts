@@ -14,6 +14,30 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260909-cadde-sadelestirme",
+    date: "9 Eylül 2026",
+    title:
+      "Cadde sadeleştirme günü: boş sayfada artık dolu bir yol gösteriliyor, üstteki gereksiz katmanlar kalktı, her kartta yazan sıfırlar gizlendi",
+    items: [
+      "GÜNÜN ÖZETİ: 27 Ağustos'ta dışarıdan yapılan iki değerlendirme (biri kullanım kolaylığı, biri görsel dil) 31 açık madde çıkarmıştı. Bugün bunların 14'ü kapatıldı. Hepsi Cadde'nin üst yarısıyla ve boş sayfa deneyimiyle ilgili — yani üyenin siteye girdiğinde ilk gördüğü yer.",
+      "EN ÖNEMLİSİ — BOŞ ŞEHİRDE ARTIK ÇIKMAZ YOK: Üye filtreden bir şehir seçtiğinde, o şehirde paylaşım yoksa ekranda tek yazan şey 'ilk paylaşımı sen yapabilirsin' idi. Ölçtük: 58 şehrimizin yalnız 10'unda paylaşım var, yani şehir seçen üyenin yaklaşık %83'ü boş ekranla karşılaşıyordu. Ve kullanıcı ilk paylaşımı yapmıyor. Artık sistem bir üst kapsama bakıyor ve doluysa gerçek sayısıyla öneriyor: 'Almanya akışındaki 3 paylaşım → gör'. Üst kapsam da boşsa düğme hiç çıkmıyor — boş bir yerden boş bir yere yollamanın anlamı yok.",
+      "BU ÖNERİ SİTEYE EK YÜK BİNDİRMİYOR: Sayı, zaten yapılan tek bir sorgudan geliyor; tıklandığında da yeni bir sorgu gitmiyor, hazır veri gösteriliyor. Filtre kullanmayan üyelerde ise bu kontrol hiç çalışmıyor. Sunucumuz küçük olduğu için buna özellikle dikkat edildi ve otomatik testlerle kilitlendi.",
+      "EKRANDA DURAN BİR YANLIŞ CÜMLE KALDIRILDI: Boş akışta 'Bu bölgede içerik azsa ülke geneli ve global akış da devreye girer' yazıyordu. Böyle bir şey olmuyordu — akış daraltılınca daralıyor, kendiliğinden genişlemiyordu. Yani sisteme güvenip bekleyen üyeye yanlış bilgi veriliyordu. Metin artık duruma göre doğru olanı söylüyor.",
+      "HER KARTTA YAZAN SIFIRLAR GİZLENDİ: Beğeni, yorum ve paylaşım sayaçları henüz kimse etkileşmemişken bile '0' yazıyordu. Boş bir platformda bu, boşluğu bağıran bir ayrıntı. Artık sayı ancak 1'e ulaşınca görünüyor. Ekran okuyucu kullananlar için sayı yine okunuyor — yalnız görsel rakam gizlendi, bilgi kaybı yok.",
+      "'CADDEYE ÇIK' DÜĞMESİ KALDIRILDI: Sağ kolonda siyah, dikkat çeken bir düğme vardı ama kullanıcı zaten Cadde'deydi ve düğme sadece sayfayı biraz aşağı kaydırıyordu — yani hiçbir yere götürmüyordu. Kaldırıldı.",
+      "ÜSTTEKİ KALABALIK AZALDI: İçerik başlamadan önce dört ayrı katman vardı ve ilk paylaşım ekranın altında kalıyordu. Üçü ele alındı: (1) 'CorteQS açık beta yayında' bandı artık kapatılabiliyor ve kapattığınızda bir daha gelmiyor, (2) giriş yapmış üyeye artık pazarlama sloganı gösterilmiyor — o slogan siteye ilk gelen ziyaretçi için anlamlı, (3) Cadde'nin kendi kimlik şeridi (ikinci bir logo, 'Diaspora Cadde' başlığı, rozet ve tanıtım cümlesi) tamamen kaldırıldı.",
+      "O ŞERİTTEKİ TEK İŞE YARAR ŞEY KORUNDU: Bildirim zili siliniyor değil, hemen altındaki filtre satırına taşındı. Sayfanın kimliği ise ekran okuyuculara görünmeye devam ediyor; hatta Cadde sayfasının daha önce hiç olmayan ana başlığı bu vesileyle eklendi, arama motorları açısından da doğrusu bu.",
+      "SAYFAYI AŞAĞI KAYDIRINCA ÜST BAR İNCELİYOR: Kaydırdıkça logo ve menü küçülüyor, yukarı dönünce eski haline geliyor. Titreme olmaması için iki ayrı eşik kullanıldı. Bu davranış şimdilik yalnız Cadde sayfasında; sitenin diğer 60 sayfası hiç etkilenmedi.",
+      "ARAYÜZDEKİ İNGİLİZCE KALINTILAR TÜRKÇELEŞTİ: Sabitlenmiş gönderilerdeki 'Pinned' → 'Sabit', üst bardaki 'Feedback Ver' → 'Geri Bildirim', Cafe sayfasındaki 'Host' → 'Ev Sahibi'. Sekiz ayrı yerde düzeltildi — beş yer bekliyorduk, tarayınca sekiz çıktı.",
+      "CAFE ODASINDA İKİ DÜZELTME: (1) '2/100 üye' yazısındaki payda kaldırıldı. Payda, olması gereken 100 kişiden 2'sinin geldiğini söylüyordu — davet değil, başarısızlık ilanı. Oda gerçekten dolmaya başlayınca (beşte bir) payda kendiliğinden geri geliyor. (2) Oda canlıyken sayfadaki en görünür düğme 'Cafe'yi Arşivle' idi; yani oda sahibine sunulan ilk davranış odasını kapatmaktı. Bu işlem artık sağ üstteki üç nokta menüsünün içinde.",
+      "GÖRSEL DİL İÇİN TEMEL ATILDI: Değerlendirmenin ana tespiti, tek tek kusurlardan çok 'tanımlı bir tasarım kuralının olmaması'ydı — aynı ekranda dört ayrı düğme stili, altı ayrı rozet stili dolaşıyor. Bugün bu kural yazıldı (renk, düğme, rozet, köşe/gölge, dil). Uygulaması sonraki adımlarda. Bu arada markanın imza rengi olan bronzun arayüzde hiç kullanılmadığı ölçüldü; kural sayfası onu birincil düğme rengi olarak tanımlıyor.",
+      "ARKA PLANDA KAPANAN ESKİ İŞLER: Önceki oturumlardan commit'lenmemiş kalan işler de bugün tamamlandı — kullanılmayan 33 dosyanın temizliği, bildirim gönderim şifresinin düz metinden güvenli kasaya taşınması ve iki tip hatası. Silme işleminden önce geri dönüş noktası işaretlendi.",
+      "DÜZENSİZ ÇALIŞAN DÖRT TEST DÜZELTİLDİ: Bazı otomatik testler tek başına çalışınca geçip, hepsi bir arada koşunca rastgele düşüyordu. Böyle testler her seferinde 'bir şey mi bozuldu?' diye durup bakmaya yol açıyor. Dördünün de asıl sebebi bulunup kökten çözüldü, üstünü örtmek yerine.",
+      "DÜRÜST NOT — GÖZLE KONTROL BEKLİYOR: Bugünkü değişikliklerin büyük kısmı görsel ve otomatik testler görsel yerleşimi ölçemiyor. Özellikle üst barın kaydırmadaki incelmesi, kimlik şeridi kalktıktan sonraki üst boşluk ve zilin yeni yeri gerçek tarayıcıda gözden geçirilmeli. Kazanç olarak söylenen yükseklik rakamları da hesapla çıkarıldı, ekranda ölçülmedi.",
+      "KONTROLLER: 260 dosyadaki 1.822 otomatik testin tamamı geçti (gün başında 256 dosya / 1.768 idi), kod denetimi temiz, yazı denetimi temiz, üretim derlemesi başarılı.",
+    ],
+  },
+  {
     id: "20260907-atlanan-uc-duzeltme",
     date: "7 Eylül 2026",
     title:
