@@ -451,7 +451,7 @@ export const adminNavGroups: AdminNavGroup[] = [
         id: "member-feedback",
         label: "Üye Geri Bildirimleri",
         shortLabel: "Feedback",
-        description: "Üyelerin 'Feedback Ver' formundan gelen geri bildirimler — durum + arşiv.",
+        description: "Üyelerin 'Geri Bildirim' formundan gelen geri bildirimler — durum + arşiv.",
         to: "/admin/feedback",
         icon: Inbox,
         accent: "slate",

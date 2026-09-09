@@ -739,7 +739,7 @@ const CaddePage = () => {
                       <div className="flex flex-wrap items-center gap-2">
                         <p className="text-sm font-medium text-slate-700">{item.post.authorName}</p>
                         {item.post.authorRole ? <Badge variant="secondary">{item.post.authorRole}</Badge> : null}
-                        {item.post.pinned ? <Badge className="bg-slate-900 text-white hover:bg-slate-900">Pinned</Badge> : null}
+                        {item.post.pinned ? <Badge className="bg-slate-900 text-white hover:bg-slate-900">Sabit</Badge> : null}
                         {item.post.isBridge ? <Badge className="bg-emerald-100 text-emerald-900 hover:bg-emerald-100">Köprü</Badge> : null}
                       </div>
                       <p className="text-xs text-slate-500">

@@ -357,7 +357,7 @@ export default function AdminCaddePage() {
               </div>
               <div className="flex flex-wrap gap-6">
                 <div className="flex items-center gap-2"><Switch checked={postForm.is_bridge} onCheckedChange={(checked) => setPostForm((current) => ({ ...current, is_bridge: checked }))} /><Label>Köprü</Label></div>
-                <div className="flex items-center gap-2"><Switch checked={postForm.pinned} onCheckedChange={(checked) => setPostForm((current) => ({ ...current, pinned: checked }))} /><Label>Pinned</Label></div>
+                <div className="flex items-center gap-2"><Switch checked={postForm.pinned} onCheckedChange={(checked) => setPostForm((current) => ({ ...current, pinned: checked }))} /><Label>Sabit</Label></div>
               </div>
               <div className="flex gap-3">
                 <Button onClick={() => postMutation.mutate()} disabled={postMutation.isPending}>{editingPostId ? "Güncelle" : "Kaydet"}</Button>
@@ -430,7 +430,7 @@ export default function AdminCaddePage() {
               <Input type="datetime-local" value={cafeForm.starts_at} onChange={(event) => setCafeForm((current) => ({ ...current, starts_at: event.target.value }))} />
               <Input type="datetime-local" value={cafeForm.ends_at} onChange={(event) => setCafeForm((current) => ({ ...current, ends_at: event.target.value }))} />
             </div>
-            <Input placeholder="Host görünen adı" value={cafeForm.host_name_override ?? ""} onChange={(event) => setCafeForm((current) => ({ ...current, host_name_override: event.target.value }))} />
+            <Input placeholder="Ev sahibi görünen adı" value={cafeForm.host_name_override ?? ""} onChange={(event) => setCafeForm((current) => ({ ...current, host_name_override: event.target.value }))} />
             <div className="flex flex-wrap gap-6">
               <div className="flex items-center gap-2"><Switch checked={cafeForm.is_bridge} onCheckedChange={(checked) => setCafeForm((current) => ({ ...current, is_bridge: checked }))} /><Label>Köprü</Label></div>
               <div className="flex items-center gap-2"><Switch checked={cafeForm.is_free} onCheckedChange={(checked) => setCafeForm((current) => ({ ...current, is_free: checked }))} /><Label>Ücretsiz</Label></div>

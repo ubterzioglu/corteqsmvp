@@ -203,7 +203,7 @@ const CaddeCafePage = () => {
             <div className="flex flex-wrap gap-3 text-sm text-slate-600">
               <span className="inline-flex items-center gap-1.5"><MapPin className="h-4 w-4 text-orange-500" />{[cafe.country, cafe.city].filter(Boolean).join(" • ") || "Global"}</span>
               <span className="inline-flex items-center gap-1.5"><Clock3 className="h-4 w-4 text-orange-500" />{formatDateTime(cafe.startsAt)} → {formatDateTime(cafe.endsAt)} ({remainingLabel(cafe.endsAt)})</span>
-              <span className="inline-flex items-center gap-1.5"><Users className="h-4 w-4 text-orange-500" />{cafe.memberCount}{cafe.capacity ? `/${cafe.capacity}` : ""} üye • Host: {cafe.hostName}</span>
+              <span className="inline-flex items-center gap-1.5"><Users className="h-4 w-4 text-orange-500" />{cafe.memberCount}{cafe.capacity ? `/${cafe.capacity}` : ""} üye • Ev Sahibi: {cafe.hostName}</span>
             </div>
             {isOwner && !isArchived ? (
               <div>

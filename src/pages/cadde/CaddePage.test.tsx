@@ -907,6 +907,26 @@ describe("CaddePage", () => {
     expect(within(zeroPanel).getByRole("button", { name: "Emin olamadım (0)" })).toBeInTheDocument();
   });
 
+  // H3 (m146) — sabitlenmiş gönderi rozeti TÜRKÇE. Bu testten önce hiçbir fixture
+  // `pinned: true` değildi, yani rozet hiçbir testte çizilmiyordu ve etiket sessizce
+  // "Pinned"e geri dönebilirdi. Arayüz dili sözleşmesini kilitleyen tek yer burası.
+  it("sabitlenmiş gönderide rozeti Türkçe yazar", async () => {
+    useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
+    listCaddeCountriesMock.mockResolvedValue([]);
+    listCaddeCitiesMock.mockResolvedValue([]);
+    listCaddeCafesMock.mockResolvedValue([]);
+    listCaddeBillboardsMock.mockResolvedValue([]);
+    getCaddeSponsoredMock.mockResolvedValue(null);
+    listCaddeFeedMock.mockResolvedValue({
+      items: [{ ...reactionFeedPost, id: "post-pinned", pinned: true }],
+      nextPage: null,
+    });
+    renderPage();
+
+    expect(await screen.findByText("Sabit")).toBeInTheDocument();
+    expect(screen.queryByText("Pinned")).not.toBeInTheDocument();
+  });
+
   // Gizlemenin YALNIZ sıfırda olduğunu kanıtlar — koşulu yanlışlıkla `>= 0` yapmak ya da
   // ters çevirmek bu testi düşürür.
   it("sayı 1'e ulaşınca görsel sayacı yeniden gösterir", async () => {

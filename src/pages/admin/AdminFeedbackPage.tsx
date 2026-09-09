@@ -103,7 +103,7 @@ const AdminFeedbackPage = () => {
   return (
     <AdminPageShell
       title="Üye Geri Bildirimleri"
-      description="Üyelerin sitedeki 'Feedback Ver' formundan gönderdiği geri bildirimler. Durumu güncelleyin (Yeni / Okundu / Arşiv) veya listeden kaldırın. Tüm adminler ortak görür."
+      description="Üyelerin sitedeki 'Geri Bildirim' formundan gönderdiği geri bildirimler. Durumu güncelleyin (Yeni / Okundu / Arşiv) veya listeden kaldırın. Tüm adminler ortak görür."
       icon={Inbox}
       accent="violet"
       contentWidth="wide"
@@ -119,7 +119,7 @@ const AdminFeedbackPage = () => {
         <AdminEmptyState
           icon={Inbox}
           title="Henüz geri bildirim yok"
-          description="Üyeler sitedeki 'Feedback Ver' butonunu kullandığında kayıtlar burada listelenir."
+          description="Üyeler sitedeki 'Geri Bildirim' butonunu kullandığında kayıtlar burada listelenir."
         />
       ) : (
         <div className="space-y-3">

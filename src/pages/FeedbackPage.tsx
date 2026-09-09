@@ -1,5 +1,5 @@
 // Üye Geri Bildirimi — /feedback (RequireAuth ile korunur, PublicLayout içinde).
-// SiteHeader'daki "Feedback Ver" linkinden gelinir; linkin bulunduğu sayfa
+// SiteHeader'daki "Geri Bildirim" linkinden gelinir; linkin bulunduğu sayfa
 // location.state.from ile taşınır ve page_path olarak kaydedilir.
 // DB katmanı: src/lib/feedback.ts (member_feedback INSERT, RLS: auth.uid() = created_by).
 
@@ -71,7 +71,7 @@ export default function FeedbackPage() {
             <div className="mb-5 flex items-start gap-3">
               <MessageSquareHeart className="mt-1 h-6 w-6 shrink-0 text-primary" />
               <div>
-                <h1 className="text-xl font-bold text-foreground">Feedback Ver</h1>
+                <h1 className="text-xl font-bold text-foreground">Geri Bildirim</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Hata bildirimi, öneri veya genel görüş — aklındaki her şeyi yazabilirsin.
                   Geri bildirimini yalnız CorteQS ekibi görür.

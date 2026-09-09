@@ -45,13 +45,13 @@ export default function SiteHeader() {
                 Araçlar
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              {/* Feedback Ver — geldiği sayfa state.from ile /feedback'e taşınır (page_path). */}
+              {/* Geri Bildirim — geldiği sayfa state.from ile /feedback'e taşınır (page_path). */}
               <Link
                 to="/feedback"
                 state={{ from: `${location.pathname}${location.search}` }}
                 className="text-sm font-semibold text-[#ee652b] transition-colors hover:text-[#d95520]"
               >
-                Feedback Ver
+                Geri Bildirim
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link
