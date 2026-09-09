@@ -3,6 +3,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import { useAuth } from "@/components/auth/useAuth";
 const logo = "/newlogo.png";
+const NAV_ACTION_CLASS =
+  "text-sm font-semibold text-slate-700 transition-colors hover:text-slate-950";
 
 // Beta bandı kapatma tercihi.
 // Desen kaynağı: src/lib/admin-shell/admin-storage.ts (ADMIN_STORAGE_KEYS.updatesSeen +
@@ -102,7 +104,7 @@ export default function SiteHeader() {
             <>
               <Link
                 to="/tools"
-                className="text-sm font-semibold text-[#1E3A8A] transition-colors hover:text-[#152c69]"
+                className={NAV_ACTION_CLASS}
               >
                 Araçlar
               </Link>
@@ -111,14 +113,14 @@ export default function SiteHeader() {
               <Link
                 to="/feedback"
                 state={{ from: `${location.pathname}${location.search}` }}
-                className="text-sm font-semibold text-[#ee652b] transition-colors hover:text-[#d95520]"
+                className={NAV_ACTION_CLASS}
               >
                 Geri Bildirim
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link
                 to="/profile"
-                className="text-sm font-semibold text-[#34A853] transition-colors hover:text-[#2F9B4D]"
+                className={NAV_ACTION_CLASS}
               >
                 Profilim
               </Link>
@@ -126,7 +128,7 @@ export default function SiteHeader() {
               <button
                 type="button"
                 onClick={handleSignOut}
-                className="text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
+                className={NAV_ACTION_CLASS}
               >
                 Çıkış
               </button>
@@ -136,21 +138,21 @@ export default function SiteHeader() {
               {/* Araçlar: dropdown kaldırıldı, hem masaüstü hem mobilde direkt /tools sayfasına gider */}
               <Link
                 to="/tools"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-[#1E3A8A] outline-none transition-colors hover:text-[#152c69]"
+                className={`inline-flex items-center gap-1 outline-none ${NAV_ACTION_CLASS}`}
               >
                 Araçlar
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link
                 to="/login?mode=login"
-                className="text-sm font-semibold text-[#34A853] transition-colors hover:text-[#2F9B4D]"
+                className={NAV_ACTION_CLASS}
               >
                 Giriş Yap
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link
                 to="/login?mode=signup"
-                className="text-sm font-semibold text-[#ee652b] transition-colors hover:text-[#d95520]"
+                className={NAV_ACTION_CLASS}
               >
                 Kayıt Ol
               </Link>

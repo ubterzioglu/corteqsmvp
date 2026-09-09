@@ -1,6 +1,6 @@
 # Devir notu — 9 Eylül 2026
 
-> **Nasıl kullanılır:** yeni bir oturumda yalnız batch numarasını söyle (ör. `T4`).
+> **Nasıl kullanılır:** yeni bir oturumda yalnız batch numarasını söyle (ör. `T5`).
 > Ajan bu dosyayı ve `docs/plans/2026-09-09-cadde-ux-ui-batch-plani.md`'yi açar,
 > o batch'i okur ve yapar. Batch'ler arasında bilgi taşınmaz.
 
@@ -60,14 +60,13 @@ doğru varsayılmaz.** Önce oku, sonra uygula.
 Kaynak: `docs/plans/2026-09-09-cadde-ux-ui-batch-plani.md`. Pano: `/admin/workshop/cadde`
 (WS3 sekmesi, **14/31**).
 
-### T — Tasarım sistemi *(5 batch kaldı)*
+### T — Tasarım sistemi *(4 batch kaldı)*
 
 Token'lar tanımlı ve birincil eylem/aktif kapsam yüzeylerinde kullanılmaya başladı.
 Kural: `docs/modules/cadde-design-tokens.md`.
 
 | Batch | İş | Süre | Not |
 |---|---|---|---|
-| **T4** | Üst nav'ı tek nötr renge indir | ~10 dk | `SiteHeader.tsx`, 4 farklı renk |
 | **T5** | Gökkuşağı şeridi pillar renk koduna çevir | ~25 dk | ⚠️ `.cadde-panel` yan kolonda da kullanılıyor |
 | **T6** | Rozetleri üç tipe indir | ~25 dk | H3 "Sabit"i yaptı, stili burada |
 | **T7** | Yüzey: tek yarıçap, iki gölge, gri alt sınırı | ~20 dk | |

@@ -75,6 +75,31 @@ describe("SiteHeader", () => {
     expect(screen.queryByRole("link", { name: "Giriş Yap" })).not.toBeInTheDocument();
   });
 
+  describe("üst navigasyon renk sözleşmesi", () => {
+    const expectNeutralNavigationColor = (element: HTMLElement) => {
+      expect(element).toHaveClass("text-slate-700", "hover:text-slate-950");
+      expect(element.className).not.toMatch(/text-\[#/);
+    };
+
+    it("ziyaretçi navigasyonundaki tüm eylemleri aynı koyu gri renkte gösterir", () => {
+      renderHeader();
+
+      ["Araçlar", "Giriş Yap", "Kayıt Ol"].forEach((name) => {
+        expectNeutralNavigationColor(screen.getByRole("link", { name }));
+      });
+    });
+
+    it("üye navigasyonundaki tüm eylemleri aynı koyu gri renkte gösterir", () => {
+      authState.user = { id: "user-1" };
+      renderHeader();
+
+      ["Araçlar", "Geri Bildirim", "Profilim"].forEach((name) => {
+        expectNeutralNavigationColor(screen.getByRole("link", { name }));
+      });
+      expectNeutralNavigationColor(screen.getByRole("button", { name: "Çıkış" }));
+    });
+  });
+
   // H5 (m150): beta bandı her sayfada ~40px yiyordu ve kapatılamıyordu.
   describe("beta bandı", () => {
     it("varsayılan olarak görünür ve kapatma düğmesi taşır", () => {
