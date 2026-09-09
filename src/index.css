@@ -322,6 +322,19 @@
     --cadde-warm-strong: 30 92% 85%;
     --cadde-accent: 24 92% 48%;
     --cadde-accent-ink: 24 78% 21%;
+    /* T1 (m137) — MARKA RENGİ. Kod tabanındaki adı `bronze` (#aa8c42); adı
+       scripts/social-generate/config.mjs'te tanımlı ve LinkedIn görsellerinde
+       dışarıya çıkıyor. Kritik ona "altın" diyor ama İKİNCİ BİR AD EKLEME.
+       Ölçüldü 07.09.2026: #aa8c42 src/ ağacında HİÇ geçmiyordu — markanın en
+       değerli görsel varlığı boştaydı.
+       KURAL: "her yerde" değil, "birincil eylem neredeyse orada". Sayfa başına
+       en fazla BİR primary. Ayrıntı: docs/modules/cadde-design-tokens.md
+       ⚠️ --cadde-accent (turuncu) SİLİNMEZ; o dekoratif aksan, bu kimlik.
+       Biri diğerinin yerine geçmez, yan yana dururlar. */
+    --cadde-brand: 43 44% 46%;
+    --cadde-brand-strong: 43 46% 38%;
+    --cadde-brand-soft: 43 52% 94%;
+    --cadde-brand-ink: 43 60% 22%;
     /* Gerçek logo paleti — fırıldaktaki 5 figürden örneklenen ton (newlogo.png).
        Kart imzası (üst şerit) ve premium vurgular buradan gelir; genel site
        brand-* değişkenlerinden bağımsız, sadece Cadde kartlarına özgü. */
