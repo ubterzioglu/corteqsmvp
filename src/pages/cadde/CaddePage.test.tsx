@@ -1301,8 +1301,18 @@ describe("CaddePage", () => {
 
     renderPage();
 
-    // Birincil eylem her zaman görünür kalır — kapanan yalnız ayar bölümü.
-    expect(await screen.findByRole("button", { name: /Caddeye Çık/ })).toBeInTheDocument();
+    // H2 (09.09.2026): buradaki "Caddeye Çık" birincil-eylem iddiası KALDIRILDI, çünkü
+    // buton kaldırıldı — kullanıcı zaten Cadde'de ve buton yalnız composer'a kaydırıyordu.
+    // Testin adı ve asıl niyeti KONUM FİLTRESİNİN soğuk başlangıçta katlanması; o iddia
+    // ve onu tamamlayan iki sınır testi aynen duruyor.
+    //
+    // ⚠️ Bu satırı silip doğrudan waitFor ile BAŞLAMA. `geoFilterOpen`, veri henüz
+    // çözülmemişken de false'tur (caddeDataResolved false) ve profil kapısı fail-open
+    // olduğu için `cadde-geo-toggle` t=0'da zaten DOM'da. O yüzden aria-expanded iddiası
+    // yüklenme anında bedavaya geçer ve testi asıl koruyan şey kaybolur. Kaldırılan
+    // findByRole'un sağladığı sıralama garantisini, akışın çözüldüğünü kanıtlayan bir
+    // veri bariyeriyle geri koyuyoruz:
+    await screen.findByTestId("cadde-feed-empty-state");
     await waitFor(() =>
       expect(screen.getByTestId("cadde-geo-toggle")).toHaveAttribute("aria-expanded", "false"),
     );

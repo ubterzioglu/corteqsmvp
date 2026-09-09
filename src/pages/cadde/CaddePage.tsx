@@ -1258,21 +1258,23 @@ const CaddePage = () => {
               devreye girip başlıkla aynı satıra sıkışıyordu. */}
           <Card className="cadde-panel">
             <CardHeader className="pb-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-2">
-                  <Globe2 className="h-5 w-5 shrink-0 text-orange-500" />
-                  <div className="min-w-0">
-                    <CardTitle className="font-display text-lg">Konum</CardTitle>
-                    <CardDescription>Global akış, şehir seçimi ve köprü modu</CardDescription>
-                  </div>
+              {/* 09.09.2026 (H2): başlıktaki siyah "Caddeye Çık" pill'i KALDIRILDI.
+                  Kullanıcı zaten Cadde'de ve buton yalnız scrollToComposer çağırıyordu —
+                  composer aynı sayfada, birkaç ekran yukarıda duruyor; yani buton hiçbir
+                  yere götürmüyordu (bkz. docs/cadde-300/2026-08-27-ux-degerlendirme.md §2).
+                  DİKKAT: scrollToComposer ÖLÜ KOD DEĞİLDİR — boş akış kartındaki
+                  "İlk paylaşımı yap" birincil eylemi aynı fonksiyonu kullanır ve
+                  CaddePage.test.tsx'teki "gives the empty feed a first action that jumps
+                  to the composer" testi onu kilitler. Silme.
+                  Buton gidince dış flex sarmalayıcısı (justify-between) tek çocuklu ve
+                  işlevsiz kalıyordu; başlık ikon+metin hizası bozulmasın diye sarmalayıcı
+                  da kaldırıldı, iç hizalama satırı olduğu gibi korundu. */}
+              <div className="flex min-w-0 items-center gap-2">
+                <Globe2 className="h-5 w-5 shrink-0 text-orange-500" />
+                <div className="min-w-0">
+                  <CardTitle className="font-display text-lg">Konum</CardTitle>
+                  <CardDescription>Global akış, şehir seçimi ve köprü modu</CardDescription>
                 </div>
-                <Button
-                  onClick={scrollToComposer}
-                  className="w-full justify-between rounded-2xl bg-slate-900 text-white hover:bg-slate-800"
-                >
-                  Caddeye Çık
-                  <Megaphone className="h-4 w-4 text-orange-200" />
-                </Button>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
