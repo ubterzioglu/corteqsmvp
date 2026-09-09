@@ -22,6 +22,7 @@ export const toolCatalog = {
         "build",
         "build:dev",
         "check:bundle",
+        "check:dead",
         "check:drift",
         "check:drift:warn",
         "check:migrations",
@@ -1446,6 +1447,16 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-feed-widen.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-feed-widen.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-format.test.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -1747,6 +1758,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/customer-requests.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/cadde-ux-ui-audit-seed.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },

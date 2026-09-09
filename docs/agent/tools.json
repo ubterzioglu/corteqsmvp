@@ -19,6 +19,7 @@
         "build",
         "build:dev",
         "check:bundle",
+        "check:dead",
         "check:drift",
         "check:drift:warn",
         "check:migrations",
@@ -1443,6 +1444,16 @@
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-feed-widen.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-feed-widen.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-format.test.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -1744,6 +1755,11 @@
     },
     {
       "path": "src/lib/customer-requests.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/cadde-ux-ui-audit-seed.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
