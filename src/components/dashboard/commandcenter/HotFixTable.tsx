@@ -15,6 +15,7 @@ import {
   type HotFixItem,
 } from '@/lib/dashboard/command-center-hot-fixes'
 import { normalizeTodoAssignee } from '@/lib/dashboard/todo-items'
+import HotFixComments from '@/components/dashboard/commandcenter/HotFixComments'
 
 const burakAvatar = '/burak.png'
 const ubtAvatar = '/ubt.png'
@@ -205,6 +206,14 @@ export default function HotFixTable({
                         onArchive={() => onArchive(item.id)}
                         onDelete={() => onDelete(item.id)}
                       />
+                    </td>
+                  </tr>
+                  {/* Soru/cevap satırı: maddenin hemen altında, aynı satırın devamı gibi
+                      okunsun diye üst kenarlığı yok. Kapalıyken yalnız tek bir düğme
+                      çizer ve sorgu AÇILMAZ — 10 madde × sürekli sorgu gereksiz yük. */}
+                  <tr className={completed ? 'bg-green-50/40' : undefined}>
+                    <td colSpan={COLUMN_COUNT} className="border-t-0 p-0">
+                      <HotFixComments hotFixId={item.id} />
                     </td>
                   </tr>
                 </Fragment>

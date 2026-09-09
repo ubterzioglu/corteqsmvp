@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.4"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -577,6 +577,7 @@ export type Database = {
           admin_update_email: boolean
           created_at: string
           new_member_email: boolean
+          revision_request_email: boolean
           updated_at: string
           user_id: string
         }
@@ -584,6 +585,7 @@ export type Database = {
           admin_update_email?: boolean
           created_at?: string
           new_member_email?: boolean
+          revision_request_email?: boolean
           updated_at?: string
           user_id: string
         }
@@ -591,6 +593,7 @@ export type Database = {
           admin_update_email?: boolean
           created_at?: string
           new_member_email?: boolean
+          revision_request_email?: boolean
           updated_at?: string
           user_id?: string
         }
@@ -1812,6 +1815,84 @@ export type Database = {
           },
         ]
       }
+      cadde_post_shares: {
+        Row: {
+          channel: string
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          channel: string
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cadde_post_shares_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cadde_post_targets: {
+        Row: {
+          city_id: string | null
+          country_id: string
+          created_at: string
+          id: string
+          post_id: string
+        }
+        Insert: {
+          city_id?: string | null
+          country_id: string
+          created_at?: string
+          id?: string
+          post_id: string
+        }
+        Update: {
+          city_id?: string | null
+          country_id?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cadde_post_targets_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cadde_post_targets_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_countries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cadde_post_targets_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "cadde_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cadde_posts: {
         Row: {
           author_avatar_url: string | null
@@ -1821,6 +1902,7 @@ export type Database = {
           body: string
           cafe_id: string | null
           city_id: string | null
+          comment_count: number
           content_mode: string
           country_id: string | null
           created_at: string
@@ -1833,6 +1915,8 @@ export type Database = {
           pinned: boolean
           post_type: string
           published_at: string | null
+          reaction_count: number
+          share_count: number
           status: string
           title: string | null
           updated_at: string
@@ -1846,6 +1930,7 @@ export type Database = {
           body: string
           cafe_id?: string | null
           city_id?: string | null
+          comment_count?: number
           content_mode?: string
           country_id?: string | null
           created_at?: string
@@ -1858,6 +1943,8 @@ export type Database = {
           pinned?: boolean
           post_type?: string
           published_at?: string | null
+          reaction_count?: number
+          share_count?: number
           status?: string
           title?: string | null
           updated_at?: string
@@ -1871,6 +1958,7 @@ export type Database = {
           body?: string
           cafe_id?: string | null
           city_id?: string | null
+          comment_count?: number
           content_mode?: string
           country_id?: string | null
           created_at?: string
@@ -1883,6 +1971,8 @@ export type Database = {
           pinned?: boolean
           post_type?: string
           published_at?: string | null
+          reaction_count?: number
+          share_count?: number
           status?: string
           title?: string | null
           updated_at?: string
@@ -3687,6 +3777,92 @@ export type Database = {
           weekly_hours?: string | null
         }
         Relationships: []
+      }
+      client_error_reports: {
+        Row: {
+          component_stack: string | null
+          context: string
+          created_at: string
+          details: string | null
+          error_code: string | null
+          extra: Json | null
+          hint: string | null
+          id: string
+          message: string
+          route: string | null
+          source: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          component_stack?: string | null
+          context: string
+          created_at?: string
+          details?: string | null
+          error_code?: string | null
+          extra?: Json | null
+          hint?: string | null
+          id?: string
+          message: string
+          route?: string | null
+          source: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          component_stack?: string | null
+          context?: string
+          created_at?: string
+          details?: string | null
+          error_code?: string | null
+          extra?: Json | null
+          hint?: string | null
+          id?: string
+          message?: string
+          route?: string | null
+          source?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      command_center_hot_fix_comments: {
+        Row: {
+          author_name: string
+          body: string
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          hot_fix_id: string
+          id: string
+        }
+        Insert: {
+          author_name?: string
+          body: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          hot_fix_id: string
+          id?: string
+        }
+        Update: {
+          author_name?: string
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          hot_fix_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "command_center_hot_fix_comments_hot_fix_id_fkey"
+            columns: ["hot_fix_id"]
+            isOneToOne: false
+            referencedRelation: "command_center_hot_fixes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       command_center_hot_fixes: {
         Row: {
@@ -9249,6 +9425,182 @@ export type Database = {
         }
         Relationships: []
       }
+      safety_audit_events: {
+        Row: {
+          action: string
+          actor_id: string | null
+          after_state: Json
+          before_state: Json
+          case_id: string | null
+          created_at: string
+          id: number
+          note: string | null
+          target_user_id: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          after_state?: Json
+          before_state?: Json
+          case_id?: string | null
+          created_at?: string
+          id?: never
+          note?: string | null
+          target_user_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          after_state?: Json
+          before_state?: Json
+          case_id?: string | null
+          created_at?: string
+          id?: never
+          note?: string | null
+          target_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "safety_audit_events_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "safety_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      safety_cases: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          decision_note: string | null
+          id: string
+          isolation_state: string
+          report_count: number
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+          subject_id: string
+          subject_type: string
+          surface: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          decision_note?: string | null
+          id?: string
+          isolation_state?: string
+          report_count?: number
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          subject_id: string
+          subject_type: string
+          surface: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          decision_note?: string | null
+          id?: string
+          isolation_state?: string
+          report_count?: number
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          subject_id?: string
+          subject_type?: string
+          surface?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      safety_reports: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          reason: string
+          reporter_id: string
+          resolved_at: string | null
+          status: string
+          subject_id: string
+          subject_type: string
+          surface: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason: string
+          reporter_id: string
+          resolved_at?: string | null
+          status?: string
+          subject_id: string
+          subject_type: string
+          surface: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason?: string
+          reporter_id?: string
+          resolved_at?: string | null
+          status?: string
+          subject_id?: string
+          subject_type?: string
+          surface?: string
+        }
+        Relationships: []
+      }
+      safety_restrictions: {
+        Row: {
+          created_at: string
+          created_by: string
+          expires_at: string | null
+          id: string
+          reason: string
+          restriction_type: string
+          revoke_reason: string | null
+          revoked_at: string | null
+          revoked_by: string | null
+          scope: string
+          starts_at: string
+          subject_user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          expires_at?: string | null
+          id?: string
+          reason: string
+          restriction_type: string
+          revoke_reason?: string | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          scope: string
+          starts_at?: string
+          subject_user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          expires_at?: string | null
+          id?: string
+          reason?: string
+          restriction_type?: string
+          revoke_reason?: string | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          scope?: string
+          starts_at?: string
+          subject_user_id?: string
+        }
+        Relationships: []
+      }
       service_finder_candidates: {
         Row: {
           address_line: string | null
@@ -11384,6 +11736,90 @@ export type Database = {
         }
         Relationships: []
       }
+      vip_invitation_resolve_attempts: {
+        Row: {
+          attempted_at: string
+          candidate_hash: string
+          id: number
+          requester_hash: string
+        }
+        Insert: {
+          attempted_at?: string
+          candidate_hash: string
+          id?: never
+          requester_hash: string
+        }
+        Update: {
+          attempted_at?: string
+          candidate_hash?: string
+          id?: never
+          requester_hash?: string
+        }
+        Relationships: []
+      }
+      vip_invitations: {
+        Row: {
+          created_at: string
+          created_by: string
+          expires_at: string
+          id: string
+          invitation_type: string
+          message: string | null
+          metadata: Json
+          recipient_email: string | null
+          recipient_name: string | null
+          redeemed_at: string | null
+          redeemed_by: string | null
+          revoke_reason: string | null
+          revoked_at: string | null
+          revoked_by: string | null
+          title: string
+          token_hash: string
+          updated_at: string
+          use_count: number
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          expires_at?: string
+          id?: string
+          invitation_type?: string
+          message?: string | null
+          metadata?: Json
+          recipient_email?: string | null
+          recipient_name?: string | null
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          revoke_reason?: string | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          title?: string
+          token_hash: string
+          updated_at?: string
+          use_count?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          expires_at?: string
+          id?: string
+          invitation_type?: string
+          message?: string | null
+          metadata?: Json
+          recipient_email?: string | null
+          recipient_name?: string | null
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          revoke_reason?: string | null
+          revoked_at?: string | null
+          revoked_by?: string | null
+          title?: string
+          token_hash?: string
+          updated_at?: string
+          use_count?: number
+        }
+        Relationships: []
+      }
       wa_messages: {
         Row: {
           created_at: string | null
@@ -11510,90 +11946,6 @@ export type Database = {
         }
         Relationships: []
       }
-      vip_invitation_resolve_attempts: {
-        Row: {
-          attempted_at: string
-          candidate_hash: string
-          id: number
-          requester_hash: string
-        }
-        Insert: {
-          attempted_at?: string
-          candidate_hash: string
-          id?: never
-          requester_hash: string
-        }
-        Update: {
-          attempted_at?: string
-          candidate_hash?: string
-          id?: never
-          requester_hash?: string
-        }
-        Relationships: []
-      }
-      vip_invitations: {
-        Row: {
-          created_at: string
-          created_by: string
-          expires_at: string
-          id: string
-          invitation_type: string
-          message: string | null
-          metadata: Json
-          recipient_email: string | null
-          recipient_name: string | null
-          redeemed_at: string | null
-          redeemed_by: string | null
-          revoke_reason: string | null
-          revoked_at: string | null
-          revoked_by: string | null
-          title: string
-          token_hash: string
-          updated_at: string
-          use_count: number
-        }
-        Insert: {
-          created_at?: string
-          created_by: string
-          expires_at?: string
-          id?: string
-          invitation_type?: string
-          message?: string | null
-          metadata?: Json
-          recipient_email?: string | null
-          recipient_name?: string | null
-          redeemed_at?: string | null
-          redeemed_by?: string | null
-          revoke_reason?: string | null
-          revoked_at?: string | null
-          revoked_by?: string | null
-          title?: string
-          token_hash: string
-          updated_at?: string
-          use_count?: number
-        }
-        Update: {
-          created_at?: string
-          created_by?: string
-          expires_at?: string
-          id?: string
-          invitation_type?: string
-          message?: string | null
-          metadata?: Json
-          recipient_email?: string | null
-          recipient_name?: string | null
-          redeemed_at?: string | null
-          redeemed_by?: string | null
-          revoke_reason?: string | null
-          revoked_at?: string | null
-          revoked_by?: string | null
-          title?: string
-          token_hash?: string
-          updated_at?: string
-          use_count?: number
-        }
-        Relationships: []
-      }
       welcome_pack_orders: {
         Row: {
           adults: number
@@ -11707,6 +12059,125 @@ export type Database = {
           },
         ]
       }
+      whatsapp_admin_reply_rate_limits: {
+        Row: {
+          admin_user_id: string
+          request_count: number
+          window_started_at: string
+        }
+        Insert: {
+          admin_user_id: string
+          request_count?: number
+          window_started_at: string
+        }
+        Update: {
+          admin_user_id?: string
+          request_count?: number
+          window_started_at?: string
+        }
+        Relationships: []
+      }
+      whatsapp_customer_messages: {
+        Row: {
+          body: string | null
+          created_at: string
+          created_by: string | null
+          delivery_status: string
+          direction: string
+          error_code: string | null
+          expires_at: string
+          id: string
+          message_type: string
+          provider_message_id: string | null
+          provider_timestamp: string | null
+          template_language: string | null
+          template_name: string | null
+          thread_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          delivery_status: string
+          direction: string
+          error_code?: string | null
+          expires_at?: string
+          id?: string
+          message_type: string
+          provider_message_id?: string | null
+          provider_timestamp?: string | null
+          template_language?: string | null
+          template_name?: string | null
+          thread_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          delivery_status?: string
+          direction?: string
+          error_code?: string | null
+          expires_at?: string
+          id?: string
+          message_type?: string
+          provider_message_id?: string | null
+          provider_timestamp?: string | null
+          template_language?: string | null
+          template_name?: string | null
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_customer_messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "whatsapp_customer_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      whatsapp_customer_threads: {
+        Row: {
+          assigned_to: string | null
+          channel: string
+          created_at: string
+          expires_at: string
+          id: string
+          last_inbound_at: string
+          last_message_at: string
+          recipient_ciphertext: string
+          status: string
+          updated_at: string
+          wa_id_hash: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          channel?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          last_inbound_at?: string
+          last_message_at?: string
+          recipient_ciphertext: string
+          status?: string
+          updated_at?: string
+          wa_id_hash: string
+        }
+        Update: {
+          assigned_to?: string | null
+          channel?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          last_inbound_at?: string
+          last_message_at?: string
+          recipient_ciphertext?: string
+          status?: string
+          updated_at?: string
+          wa_id_hash?: string
+        }
+        Relationships: []
+      }
       whatsapp_join_requests: {
         Row: {
           created_at: string
@@ -11747,48 +12218,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      whatsapp_message_templates: {
-        Row: {
-          approval_status: string
-          body_preview: string | null
-          category: string
-          created_at: string
-          id: string
-          language: string
-          meta_template_id: string | null
-          name: string
-          parameter_count: number
-          updated_at: string
-          verified_at: string | null
-        }
-        Insert: {
-          approval_status?: string
-          body_preview?: string | null
-          category?: string
-          created_at?: string
-          id?: string
-          language: string
-          meta_template_id?: string | null
-          name: string
-          parameter_count?: number
-          updated_at?: string
-          verified_at?: string | null
-        }
-        Update: {
-          approval_status?: string
-          body_preview?: string | null
-          category?: string
-          created_at?: string
-          id?: string
-          language?: string
-          meta_template_id?: string | null
-          name?: string
-          parameter_count?: number
-          updated_at?: string
-          verified_at?: string | null
-        }
-        Relationships: []
       }
       whatsapp_landing_editors: {
         Row: {
@@ -11915,6 +12344,152 @@ export type Database = {
         }
         Relationships: []
       }
+      whatsapp_message_templates: {
+        Row: {
+          approval_status: string
+          body_preview: string | null
+          category: string
+          created_at: string
+          id: string
+          language: string
+          meta_template_id: string | null
+          name: string
+          parameter_count: number
+          updated_at: string
+          verified_at: string | null
+        }
+        Insert: {
+          approval_status?: string
+          body_preview?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          language: string
+          meta_template_id?: string | null
+          name: string
+          parameter_count?: number
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Update: {
+          approval_status?: string
+          body_preview?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          language?: string
+          meta_template_id?: string | null
+          name?: string
+          parameter_count?: number
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
+      whatsapp_webhook_audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json
+          id: number
+          outcome: string
+          webhook_event_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json
+          id?: never
+          outcome: string
+          webhook_event_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json
+          id?: never
+          outcome?: string
+          webhook_event_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_webhook_audit_logs_webhook_event_id_fkey"
+            columns: ["webhook_event_id"]
+            isOneToOne: false
+            referencedRelation: "whatsapp_webhook_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      whatsapp_webhook_events: {
+        Row: {
+          event_type: string
+          expires_at: string
+          id: string
+          message_status: string | null
+          message_text: string | null
+          message_type: string | null
+          phone_number_id_hash: string | null
+          processed_at: string | null
+          provider_event_key: string
+          provider_message_id: string
+          provider_timestamp: string | null
+          received_at: string
+          wa_id_ciphertext: string | null
+          wa_id_hash: string | null
+        }
+        Insert: {
+          event_type: string
+          expires_at?: string
+          id?: string
+          message_status?: string | null
+          message_text?: string | null
+          message_type?: string | null
+          phone_number_id_hash?: string | null
+          processed_at?: string | null
+          provider_event_key: string
+          provider_message_id: string
+          provider_timestamp?: string | null
+          received_at?: string
+          wa_id_ciphertext?: string | null
+          wa_id_hash?: string | null
+        }
+        Update: {
+          event_type?: string
+          expires_at?: string
+          id?: string
+          message_status?: string | null
+          message_text?: string | null
+          message_type?: string | null
+          phone_number_id_hash?: string | null
+          processed_at?: string | null
+          provider_event_key?: string
+          provider_message_id?: string
+          provider_timestamp?: string | null
+          received_at?: string
+          wa_id_ciphertext?: string | null
+          wa_id_hash?: string | null
+        }
+        Relationships: []
+      }
+      whatsapp_webhook_rate_limits: {
+        Row: {
+          request_count: number
+          requester_hash: string
+          window_started_at: string
+        }
+        Insert: {
+          request_count?: number
+          requester_hash: string
+          window_started_at: string
+        }
+        Update: {
+          request_count?: number
+          requester_hash?: string
+          window_started_at?: string
+        }
+        Relationships: []
+      }
       workshop_items: {
         Row: {
           burak_done: boolean
@@ -11925,6 +12500,7 @@ export type Database = {
           id: string
           item_no: number
           section: string
+          session_key: string
           title: string
           ubt_done: boolean
           ubt_done_at: string | null
@@ -11940,6 +12516,7 @@ export type Database = {
           id?: string
           item_no: number
           section?: string
+          session_key?: string
           title: string
           ubt_done?: boolean
           ubt_done_at?: string | null
@@ -11955,6 +12532,7 @@ export type Database = {
           id?: string
           item_no?: number
           section?: string
+          session_key?: string
           title?: string
           ubt_done?: boolean
           ubt_done_at?: string | null
@@ -12286,6 +12864,15 @@ export type Database = {
         Args: { p_item_id: string; p_section_key: string }
         Returns: undefined
       }
+      admin_finalize_whatsapp_reply: {
+        Args: {
+          p_error_code?: string
+          p_message_id: string
+          p_provider_message_id?: string
+          p_success: boolean
+        }
+        Returns: undefined
+      }
       admin_get_notification_subscribers: {
         Args: { p_event_type: string }
         Returns: {
@@ -12392,36 +12979,6 @@ export type Database = {
           user_id: string
         }[]
       }
-      admin_list_whatsapp_customer_messages: {
-        Args: { p_thread_id: string }
-        Returns: {
-          body: string | null
-          created_at: string
-          created_by: string | null
-          delivery_status: string
-          direction: string
-          error_code: string | null
-          id: string
-          message_type: string
-          template_language: string | null
-          template_name: string | null
-        }[]
-      }
-      admin_list_whatsapp_customer_threads: {
-        Args: never
-        Returns: {
-          assigned_to: string | null
-          created_at: string
-          expires_at: string
-          id: string
-          last_inbound_at: string
-          last_message_at: string
-          latest_direction: string | null
-          latest_message_preview: string | null
-          message_count: number
-          status: string
-        }[]
-      }
       admin_list_service_finder_jobs: {
         Args: { p_limit?: number; p_offset?: number; p_status?: string }
         Returns: Json
@@ -12461,6 +13018,36 @@ export type Database = {
           visibility: string
         }[]
       }
+      admin_list_whatsapp_customer_messages: {
+        Args: { p_thread_id: string }
+        Returns: {
+          body: string
+          created_at: string
+          created_by: string
+          delivery_status: string
+          direction: string
+          error_code: string
+          id: string
+          message_type: string
+          template_language: string
+          template_name: string
+        }[]
+      }
+      admin_list_whatsapp_customer_threads: {
+        Args: never
+        Returns: {
+          assigned_to: string
+          created_at: string
+          expires_at: string
+          id: string
+          last_inbound_at: string
+          last_message_at: string
+          latest_direction: string
+          latest_message_preview: string
+          message_count: number
+          status: string
+        }[]
+      }
       admin_moderate_cadde_entity_v1: {
         Args: {
           p_action: string
@@ -12470,6 +13057,34 @@ export type Database = {
           p_note?: string
         }
         Returns: undefined
+      }
+      admin_moderate_safety_case: {
+        Args: {
+          p_action: string
+          p_case_id: string
+          p_duration_days?: number
+          p_note?: string
+          p_target_user_id?: string
+        }
+        Returns: undefined
+      }
+      admin_prepare_whatsapp_reply: {
+        Args: {
+          p_body?: string
+          p_request_id: string
+          p_template_language?: string
+          p_template_name?: string
+          p_thread_id: string
+        }
+        Returns: {
+          message_body: string
+          message_id: string
+          recipient_ciphertext: string
+          send_mode: string
+          should_send: boolean
+          template_language: string
+          template_name: string
+        }[]
       }
       admin_promote_relocation_model: {
         Args: { p_model_version: string }
@@ -12548,10 +13163,6 @@ export type Database = {
       }
       admin_revoke_whatsapp_landing_editor: {
         Args: { p_assignment_id: string }
-        Returns: undefined
-      }
-      admin_update_whatsapp_customer_thread: {
-        Args: { p_assigned_to?: string; p_status: string; p_thread_id: string }
         Returns: undefined
       }
       admin_role_record_counts: {
@@ -12662,6 +13273,10 @@ export type Database = {
         }
         Returns: Json
       }
+      admin_update_whatsapp_customer_thread: {
+        Args: { p_assigned_to?: string; p_status: string; p_thread_id: string }
+        Returns: undefined
+      }
       admin_upsert_catalog_item_attribute_override: {
         Args: {
           p_attribute_key: string
@@ -12757,6 +13372,14 @@ export type Database = {
       }
       cadde_notify_expiring_cafes: { Args: never; Returns: number }
       cadde_phone_required: { Args: never; Returns: boolean }
+      cadde_resolve_location_text: {
+        Args: { p_city_text: string; p_country_text: string }
+        Returns: Record<string, unknown>
+      }
+      cadde_resolve_viewer_location: {
+        Args: { p_uid: string }
+        Returns: Record<string, unknown>
+      }
       cadde_risky_signal: { Args: { p_text: string }; Returns: string }
       cadde_setting_bool: {
         Args: { p_default: boolean; p_key: string }
@@ -12918,6 +13541,10 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      claim_whatsapp_webhook_rate_limit: {
+        Args: { p_max_requests?: number; p_requester_hash: string }
+        Returns: boolean
+      }
       complete_current_profile_onboarding_activation: {
         Args: never
         Returns: Json
@@ -12958,6 +13585,24 @@ export type Database = {
           p_mentions?: Json
           p_need_category?: string
           p_post_type: string
+          p_title: string
+        }
+        Returns: string
+      }
+      create_cadde_post_v2: {
+        Args: {
+          p_body: string
+          p_cafe_id?: string
+          p_city: string
+          p_country: string
+          p_diaspora_key?: string
+          p_interests?: string[]
+          p_is_bridge: boolean
+          p_media?: Json
+          p_mentions?: Json
+          p_need_category?: string
+          p_post_type: string
+          p_targets?: Json
           p_title: string
         }
         Returns: string
@@ -13041,6 +13686,10 @@ export type Database = {
         | { Args: { schema_name: string; table_name: string }; Returns: string }
         | { Args: { table_name: string }; Returns: string }
       enablelongtransactions: { Args: never; Returns: string }
+      enqueue_relocation_tool_abandonment_reminders: {
+        Args: { p_limit?: number }
+        Returns: number
+      }
       equals: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
       generate_ambassador_referral_code: { Args: never; Returns: string }
       geometry: { Args: { "": string }; Returns: unknown }
@@ -13143,6 +13792,7 @@ export type Database = {
       geomfromewkt: { Args: { "": string }; Returns: unknown }
       get_admin_notification_state: { Args: never; Returns: Json }
       get_cadde_actor_context: { Args: never; Returns: Json }
+      get_cadde_feed_reach_v1: { Args: never; Returns: Json }
       get_catalog_item_profile: { Args: { p_item_id: string }; Returns: Json }
       get_catalog_item_public_page_v2: {
         Args: { p_slug: string }
@@ -13261,6 +13911,7 @@ export type Database = {
         }[]
       }
       get_rebuild_status_report: { Args: never; Returns: Json }
+      get_relocation_tool_reminder_preference: { Args: never; Returns: Json }
       get_role_form_schema: { Args: { p_role_key: string }; Returns: Json }
       get_role_management_bundle: {
         Args: { p_role_key: string }
@@ -13281,6 +13932,21 @@ export type Database = {
         Args: { fkey: string; uid: string }
         Returns: boolean
       }
+      ingest_whatsapp_webhook_event: {
+        Args: {
+          p_event_type: string
+          p_message_status?: string
+          p_message_text?: string
+          p_message_type?: string
+          p_phone_number_id_hash?: string
+          p_provider_event_key: string
+          p_provider_message_id: string
+          p_provider_timestamp?: string
+          p_wa_id_ciphertext?: string
+          p_wa_id_hash?: string
+        }
+        Returns: boolean
+      }
       is_admin: { Args: { uid: string }; Returns: boolean }
       is_admin_user: { Args: { check_user_id: string }; Returns: boolean }
       is_cadde_banned: { Args: { uid: string }; Returns: boolean }
@@ -13289,10 +13955,35 @@ export type Database = {
       is_diaspora_resident: { Args: { uid: string }; Returns: boolean }
       is_moderator: { Args: { uid: string }; Returns: boolean }
       is_phone_verified: { Args: { uid: string }; Returns: boolean }
+      is_safety_actor_restricted: {
+        Args: {
+          p_restriction_type?: string
+          p_scope: string
+          p_user_id?: string
+        }
+        Returns: boolean
+      }
       is_tr_resident: { Args: { uid: string }; Returns: boolean }
       join_cadde_cafe_v1: {
         Args: { p_answer?: string; p_cafe_id: string; p_referral_code?: string }
         Returns: Json
+      }
+      list_cadde_cafe_join_requests_v1: {
+        Args: { p_cafe_id: string }
+        Returns: {
+          answer: string
+          city: string
+          country: string
+          display_name: string
+          has_public_profile: boolean
+          joined_at: string
+          member_id: string
+          role_key: string
+          role_label: string
+          short_bio: string
+          status: string
+          user_id: string
+        }[]
       }
       list_cadde_feed_v1: {
         Args: { p_cursor?: Json; p_filters?: Json; p_limit?: number }
@@ -13420,6 +14111,7 @@ export type Database = {
       }
       postgis_version: { Args: never; Returns: string }
       postgis_wagyu_version: { Args: never; Returns: string }
+      purge_expired_whatsapp_webhook_data: { Args: never; Returns: number }
       record_cadde_promotion_event_v1: {
         Args: {
           p_campaign_id: string
@@ -13427,6 +14119,10 @@ export type Database = {
           p_placement_key: string
         }
         Returns: boolean
+      }
+      record_cadde_share_v1: {
+        Args: { p_channel: string; p_post_id: string }
+        Returns: undefined
       }
       record_carsi_contact_v1: { Args: { p_item_id: string }; Returns: boolean }
       record_tool_run: {
@@ -13441,6 +14137,13 @@ export type Database = {
           p_tool_key: string
         }
         Returns: string
+      }
+      redeem_vip_invitation: {
+        Args: { p_token: string }
+        Returns: {
+          invitation_id: string
+          status: string
+        }[]
       }
       relocation_active_rank_model: {
         Args: never
@@ -13567,14 +14270,6 @@ export type Database = {
         Returns: undefined
       }
       relocation_require_user: { Args: never; Returns: string }
-      get_relocation_tool_reminder_preference: {
-        Args: never
-        Returns: Json
-      }
-      enqueue_relocation_tool_abandonment_reminders: {
-        Args: { p_limit?: number }
-        Returns: number
-      }
       relocation_save_wizard: {
         Args: { p_move_id: string; p_payload: Json }
         Returns: undefined
@@ -13643,10 +14338,6 @@ export type Database = {
         Args: { p_mode: string; p_source_move_id?: string; p_tool_key: string }
         Returns: Json
       }
-      set_relocation_tool_reminder_opt_out: {
-        Args: { p_opted_out: boolean }
-        Returns: Json
-      }
       relocation_update_move: {
         Args: { p_move_id: string; p_patch: Json }
         Returns: undefined
@@ -13660,16 +14351,38 @@ export type Database = {
         }
         Returns: undefined
       }
+      report_client_error: {
+        Args: {
+          p_component_stack?: string
+          p_context: string
+          p_details?: string
+          p_error_code?: string
+          p_extra?: Json
+          p_hint?: string
+          p_message: string
+          p_route?: string
+          p_source: string
+          p_user_agent?: string
+        }
+        Returns: string
+      }
+      report_safety_subject: {
+        Args: {
+          p_details?: string
+          p_reason: string
+          p_subject_id: string
+          p_subject_type: string
+          p_surface: string
+        }
+        Returns: string
+      }
       request_new_catalog_item: {
         Args: { p_note?: string; p_role_key: string; p_title: string }
         Returns: string
       }
-      redeem_vip_invitation: {
-        Args: { p_token: string }
-        Returns: {
-          invitation_id: string
-          status: string
-        }[]
+      request_relocation_tool_report: {
+        Args: { p_result_id: string }
+        Returns: Json
       }
       resolve_approval_request_type: {
         Args: { p_feature_key: string }
@@ -13695,9 +14408,18 @@ export type Database = {
         }
         Returns: Json
       }
+      rl_clean_location_value: { Args: { p_value: string }; Returns: string }
       rl_readiness_opt_score: {
         Args: { p_question_key: string; p_tool_key: string; p_value: string }
         Returns: number
+      }
+      rl_resolve_user_location_snapshot: {
+        Args: { p_user_id: string }
+        Returns: {
+          city: string
+          country: string
+          source: string
+        }[]
       }
       rl_tool_answers_json: { Args: { p_session_id: string }; Returns: Json }
       rl_tool_clamp_neutral: { Args: { p_value: number }; Returns: number }
@@ -13709,7 +14431,12 @@ export type Database = {
           consent_profile_write: boolean
           expires_at: string
           id: string
+          last_activity_at: string
           mode: string
+          reminder_queued_at: string | null
+          reminder_sent_at: string | null
+          reminder_status: string
+          reminder_status_reason: string | null
           source_move_id: string | null
           started_at: string
           status: string
@@ -13748,9 +14475,27 @@ export type Database = {
         }
         Returns: Json
       }
+      safety_subject_is_visible: {
+        Args: {
+          p_subject_id: string
+          p_subject_type: string
+          p_surface: string
+        }
+        Returns: boolean
+      }
       search_cadde_mentions_v1: {
         Args: { p_limit?: number; p_query: string }
         Returns: Json
+      }
+      search_cadde_people_v1: {
+        Args: { p_limit?: number; p_query: string }
+        Returns: {
+          city: string
+          country: string
+          full_name: string
+          has_profile: boolean
+          user_id: string
+        }[]
       }
       search_catalog: {
         Args: {
@@ -13819,12 +14564,20 @@ export type Database = {
         Returns: undefined
       }
       set_my_notification_subscription: {
-        Args: { p_admin_update: boolean; p_new_member: boolean }
+        Args: {
+          p_admin_update: boolean
+          p_new_member: boolean
+          p_revision_request?: boolean
+        }
         Returns: Json
       }
       set_notification_setting: {
         Args: { p_enabled: boolean; p_key: string }
         Returns: boolean
+      }
+      set_relocation_tool_reminder_opt_out: {
+        Args: { p_opted_out: boolean }
+        Returns: Json
       }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
@@ -14858,12 +15611,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -14887,11 +15640,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -14912,11 +15665,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -14937,11 +15690,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -14954,11 +15707,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -15008,3 +15761,4 @@ export const Constants = {
     },
   },
 } as const
+

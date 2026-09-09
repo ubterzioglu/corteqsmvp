@@ -1802,6 +1802,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/dashboard/hot-fix-comments.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/dashboard/meeting-notes-data.ts",
       "kind": "ts",
       "module_family": "lib"
