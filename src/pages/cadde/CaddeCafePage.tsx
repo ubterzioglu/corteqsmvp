@@ -7,7 +7,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-import { Archive, Clock3, ExternalLink, KeyRound, MapPin, ShieldQuestion, Users } from "lucide-react";
+import { Archive, Clock3, ExternalLink, KeyRound, MapPin, MoreHorizontal, ShieldQuestion, Users } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
@@ -18,11 +18,18 @@ import CaddePostComments from "@/components/cadde/CaddePostComments";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { formatCafeOccupancy } from "@/lib/cadde-cafe-occupancy";
 import {
   approveCaddeCafeMember,
   archiveCaddeCafe,
@@ -203,14 +210,40 @@ const CaddeCafePage = () => {
             <div className="flex flex-wrap gap-3 text-sm text-slate-600">
               <span className="inline-flex items-center gap-1.5"><MapPin className="h-4 w-4 text-orange-500" />{[cafe.country, cafe.city].filter(Boolean).join(" • ") || "Global"}</span>
               <span className="inline-flex items-center gap-1.5"><Clock3 className="h-4 w-4 text-orange-500" />{formatDateTime(cafe.startsAt)} → {formatDateTime(cafe.endsAt)} ({remainingLabel(cafe.endsAt)})</span>
-              <span className="inline-flex items-center gap-1.5"><Users className="h-4 w-4 text-orange-500" />{cafe.memberCount}{cafe.capacity ? `/${cafe.capacity}` : ""} üye • Ev Sahibi: {cafe.hostName}</span>
+              <span className="inline-flex items-center gap-1.5"><Users className="h-4 w-4 text-orange-500" />{formatCafeOccupancy(cafe.memberCount, cafe.capacity)} • Ev Sahibi: {cafe.hostName}</span>
             </div>
+            {/* C2 (m161): Arşivleme artık kebab (⋯) menüsünde.
+                Eskiden oda CANLIYKEN sayfadaki en görünür eylem "odayı kapat"tı —
+                ev sahibine sunulan birincil davranış odasını sonlandırmak olmamalı.
+                Yıkıcı ve geri alınamaz bir eylem, menünün arkasında durur.
+                NOT: kritik bu pozisyonda "Davet Et / Paylaş" istiyor; bu sayfada öyle
+                butonlar HENÜZ YOK (davet kodu aşağıdaki formda). Yeni buton icat etmek
+                bu batch'in kapsamı değil — pozisyon bilinçli olarak boş bırakıldı. */}
             {isOwner && !isArchived ? (
-              <div>
-                <Button variant="outline" size="sm" onClick={() => archiveMutation.mutate()} disabled={archiveMutation.isPending}>
-                  <Archive className="mr-2 h-4 w-4" />
-                  {archiveMutation.isPending ? "Arşivleniyor..." : "Cafe'yi Arşivle"}
-                </Button>
+              <div className="flex justify-end">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      aria-label="Cafe yönetimi"
+                      data-testid="cadde-cafe-owner-menu"
+                      className="h-8 w-8 rounded-full p-0"
+                    >
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onSelect={() => archiveMutation.mutate()}
+                      disabled={archiveMutation.isPending}
+                      className="text-red-700 focus:text-red-800"
+                    >
+                      <Archive className="mr-2 h-4 w-4" />
+                      {archiveMutation.isPending ? "Arşivleniyor..." : "Cafe'yi Arşivle"}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ) : null}
           </CardHeader>

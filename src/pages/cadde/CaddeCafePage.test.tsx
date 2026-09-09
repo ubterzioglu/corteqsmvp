@@ -107,6 +107,35 @@ describe("CaddeCafePage", () => {
     expect(screen.getByText(/read-only arşiv/)).toBeInTheDocument();
   });
 
+  // C1 (m160): "2/100 üye" paydası boşluğu VURGULUYORDU. Fixture 5/50 = %10, yani
+  // eşiğin (%20) altında → payda yazılmaz. Sağ raydaki cafe kartı zaten böyleydi;
+  // bu test iki yüzeyin tekrar ayrışmasını engeller.
+  it("düşük dolulukta kapasite paydasını yazmaz", async () => {
+    renderPage();
+
+    expect(await screen.findByText(/5 üye/)).toBeInTheDocument();
+    expect(screen.queryByText(/5\/50 üye/)).not.toBeInTheDocument();
+  });
+
+  // C2 (m161): oda CANLIYKEN en görünür eylem "odayı kapat" olmamalı.
+  it("arşivlemeyi kebab menüsünün arkasına alır, ana pozisyonda bırakmaz", async () => {
+    const user = userEvent.setup();
+    useAuthMock.mockReturnValue({ session: { user: { id: "host-1" } }, user: { id: "host-1" }, isLoading: false });
+    getCaddeCafeMock.mockResolvedValue(makeCafe({ hostUserId: "host-1", viewerMemberStatus: "approved", joinedByViewer: true }));
+    listCafeMembersMock.mockResolvedValue([]);
+
+    renderPage();
+
+    const menu = await screen.findByTestId("cadde-cafe-owner-menu");
+    // Menü kapalıyken yıkıcı eylem DOM'da değil — sayfaya bakan ev sahibi önce
+    // odasını kapatma davetiyle karşılaşmıyor.
+    expect(screen.queryByText(/Cafe'yi Arşivle/)).not.toBeInTheDocument();
+
+    await user.click(menu);
+
+    expect(await screen.findByText(/Cafe'yi Arşivle/)).toBeInTheDocument();
+  });
+
   it("shows the owner approval panel with pending members", async () => {
     useAuthMock.mockReturnValue({ session: { user: { id: "host-1" } }, user: { id: "host-1" }, isLoading: false });
     getCaddeCafeMock.mockResolvedValue(makeCafe({ hostUserId: "host-1", viewerMemberStatus: "approved", joinedByViewer: true }));

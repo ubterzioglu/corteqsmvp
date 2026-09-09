@@ -641,8 +641,14 @@ describe("CaddePage", () => {
     fireEvent.change(textarea, { target: { value: "Merhaba dunya" } });
     textarea.setSelectionRange(8, 8);
     fireEvent.click(textarea);
-    fireEvent.click(within(panel).getByRole("button", { name: "Emoji ekle" }));
-    fireEvent.click(await screen.findByRole("button", { name: "😊" }));
+    // ⚠️ Emoji seçici Radix popover'ı: tetiğe `fireEvent.click` YETMEZ. Radix tam bir
+    // pointer dizisi (pointerdown/mousedown/…) dinler; tek `click` olayı popover'ı
+    // açmayabiliyor ve test tam paket yükü altında düzensiz kırılıyordu
+    // ("Unable to find role=button name=😊", ölçüldü 09.09.2026: tek başına 3/3
+    // geçiyor, tam pakette düşüyor). `userEvent` gerçek diziyi gönderir —
+    // dosyadaki diğer popover testleri de zaten onu kullanıyor, bu test ayrışmıştı.
+    await userEvent.click(within(panel).getByRole("button", { name: "Emoji ekle" }));
+    await userEvent.click(await screen.findByRole("button", { name: "😊" }));
 
     await waitFor(() => expect(textarea).toHaveValue("Merhaba 😊dunya"));
     fireEvent.click(within(panel).getByRole("button", { name: "Gönder" }));

@@ -1402,6 +1402,16 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-cafe-occupancy.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-cafe-occupancy.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-cafe-themes.test.ts",
       "kind": "ts",
       "module_family": "cadde"
