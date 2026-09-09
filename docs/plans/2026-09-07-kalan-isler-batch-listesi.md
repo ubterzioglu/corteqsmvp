@@ -4,6 +4,12 @@
 > Ajan bu dosyayı açar, o batch'i okur ve **başka belge okumadan** yapar.
 > Önceki plan (`2026-09-06-kalan-isler-10dk-batch-plani.md`) bunun yerini bıraktı;
 > çelişki olursa **bu dosya geçerlidir**.
+>
+> **Kardeş plan:** `2026-09-09-cadde-ux-ui-batch-plani.md` — 27.08 Cadde/Cafe UX+UI
+> denetiminin 31 açık maddesi (Workshop WS3 `m137`–`m167`). Bu dosyanın yerine geçmez,
+> yanında durur: burada genel teknik borç, orada Cadde arayüz/içerik işi.
+> Harf çakışması var (`T` burada tip borcu, orada tasarım sistemi) — batch numarası
+> söylerken hangi plandan olduğunu belirt.
 
 ## Context
 
