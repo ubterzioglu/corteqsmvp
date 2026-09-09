@@ -164,7 +164,7 @@ const CaddeInterestsCard = ({ onSaved, visibility = "public", canHide = true }: 
               Herkese açık
             </span>
           )}
-          <Button size="sm" onClick={() => saveMutation.mutate()} disabled={!isDirty || saveMutation.isPending}>
+          <Button size="sm" variant="outline" className="cadde-secondary-action" onClick={() => saveMutation.mutate()} disabled={!isDirty || saveMutation.isPending}>
             {saveMutation.isPending ? "Kaydediliyor..." : "İlgi Alanlarını Kaydet"}
           </Button>
         </div>

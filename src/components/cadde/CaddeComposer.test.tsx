@@ -86,6 +86,7 @@ describe("CaddeComposer", () => {
   it("disables submit while empty and enables it once there is text", () => {
     const { onSubmit } = renderComposer();
     const submit = screen.getByRole("button", { name: "Paylaş" });
+    expect(submit).toHaveClass("cadde-primary-action");
     expect(submit).toBeDisabled();
     fireEvent.click(submit);
     expect(onSubmit).not.toHaveBeenCalled();

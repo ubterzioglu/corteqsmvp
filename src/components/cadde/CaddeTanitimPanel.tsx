@@ -130,7 +130,7 @@ const CaddeTanitimPanel = () => {
           {canCreate ? (
             <Dialog open={formOpen} onOpenChange={setFormOpen}>
               <DialogTrigger asChild>
-                <Button size="sm">Yeni Kampanya</Button>
+                <Button size="sm" variant="outline" className="cadde-secondary-action">Yeni Kampanya</Button>
               </DialogTrigger>
               <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
                 <DialogHeader>
@@ -190,7 +190,7 @@ const CaddeTanitimPanel = () => {
                       })}
                     </div>
                   </div>
-                  <Button className="w-full" onClick={() => createMutation.mutate()} disabled={createMutation.isPending}>
+                  <Button className="cadde-primary-action w-full" onClick={() => createMutation.mutate()} disabled={createMutation.isPending}>
                     {createMutation.isPending ? "Gönderiliyor..." : "Onaya Gönder"}
                   </Button>
                 </div>

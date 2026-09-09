@@ -39,6 +39,18 @@
     --glow-teal: 170 65% 42%;
     --glow-orange: 18 85% 55%;
 
+    /* Cadde action/surface token'ları kökte yaşar: Radix dialog'ları body altına
+       portal açtığı için yalnız `.cadde-shell` altında tanımlansalar modal CTA'ları
+       global turkuaz Button stiline geri düşer. Adlar namespaced; tek başlarına
+       Cadde dışındaki hiçbir yüzeyi boyamaz. */
+    --cadde-ink: 222 47% 11%;
+    --cadde-panel: 0 0% 100%;
+    --cadde-line: 215 22% 79%;
+    --cadde-brand: 43 44% 46%;
+    --cadde-brand-strong: 43 46% 36%;
+    --cadde-brand-soft: 43 52% 94%;
+    --cadde-brand-ink: 43 60% 22%;
+
     /* ——— Logo paleti (6 renkli fırıldak) — /landingtrial bölüm aksanları ———
        teal/orange zaten yukarıda (geri uyumlu, başka sayfalar kullanır).
        Aşağıdaki 4'ü logonun kalan tonları; resmi hex gelirse yalnız bunlar güncellenir. */
@@ -311,30 +323,14 @@
      şeridi de bir tık geri çekildi ki sayfa daha kontrastlı olurken daha "renkli"
      görünmesin. */
   .cadde-shell {
-    --cadde-ink: 222 47% 11%;
     --cadde-shell-top: 214 60% 92%;
     --cadde-shell-mid: 26 48% 93%;
     --cadde-shell-bottom: 30 22% 94%;
-    --cadde-panel: 0 0% 100%;
     --cadde-panel-soft: 210 40% 98%;
-    --cadde-line: 215 22% 79%;
     --cadde-warm: 31 90% 93%;
     --cadde-warm-strong: 30 92% 85%;
     --cadde-accent: 24 92% 48%;
     --cadde-accent-ink: 24 78% 21%;
-    /* T1 (m137) — MARKA RENGİ. Kod tabanındaki adı `bronze` (#aa8c42); adı
-       scripts/social-generate/config.mjs'te tanımlı ve LinkedIn görsellerinde
-       dışarıya çıkıyor. Kritik ona "altın" diyor ama İKİNCİ BİR AD EKLEME.
-       Ölçüldü 07.09.2026: #aa8c42 src/ ağacında HİÇ geçmiyordu — markanın en
-       değerli görsel varlığı boştaydı.
-       KURAL: "her yerde" değil, "birincil eylem neredeyse orada". Sayfa başına
-       en fazla BİR primary. Ayrıntı: docs/modules/cadde-design-tokens.md
-       ⚠️ --cadde-accent (turuncu) SİLİNMEZ; o dekoratif aksan, bu kimlik.
-       Biri diğerinin yerine geçmez, yan yana dururlar. */
-    --cadde-brand: 43 44% 46%;
-    --cadde-brand-strong: 43 46% 36%;
-    --cadde-brand-soft: 43 52% 94%;
-    --cadde-brand-ink: 43 60% 22%;
     /* Gerçek logo paleti — fırıldaktaki 5 figürden örneklenen ton (newlogo.png).
        Kart imzası (üst şerit) ve premium vurgular buradan gelir; genel site
        brand-* değişkenlerinden bağımsız, sadece Cadde kartlarına özgü. */
@@ -370,6 +366,34 @@
 
   .cadde-primary-action:hover {
     background-color: hsl(var(--cadde-brand-ink));
+  }
+
+  /* T3 (m139): Cadde eylemleri yalnız bu üç seviyeyi kullanır. Secondary her
+     yüzeyde aynı nötr outline; tertiary dolgusuz metin bağlantısıdır. */
+  .cadde-secondary-action {
+    border: 1px solid hsl(var(--cadde-line));
+    background-color: hsl(var(--cadde-panel));
+    color: hsl(var(--cadde-ink));
+  }
+
+  .cadde-secondary-action:hover {
+    border-color: hsl(var(--cadde-brand));
+    background-color: hsl(var(--cadde-brand-soft));
+    color: hsl(var(--cadde-brand-ink));
+  }
+
+  .cadde-tertiary-action {
+    border-color: transparent;
+    background-color: transparent;
+    color: hsl(var(--cadde-brand-ink));
+    box-shadow: none;
+  }
+
+  .cadde-tertiary-action:hover,
+  .group:hover .cadde-tertiary-action {
+    background-color: transparent;
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   /* Seçili kapsam kimlik rengini doğrudan taşır; koyu shell mürekkebiyle 5.9:1. */

@@ -132,7 +132,7 @@ const CaddePostComments = ({ postId, commentCount, canComment, onCommentAdded }:
                 type="button"
                 variant="outline"
                 size="sm"
-                className="mt-2"
+                className="cadde-secondary-action mt-2"
                 onClick={() => void commentsQuery.refetch()}
                 disabled={commentsQuery.isFetching}
               >
@@ -189,7 +189,8 @@ const CaddePostComments = ({ postId, commentCount, canComment, onCommentAdded }:
                 <CaddeEmojiPickerButton onSelect={insertEmoji} className="mb-0.5" />
               </div>
               <Button
-                className="self-end whitespace-nowrap sm:min-w-[112px]"
+                variant="outline"
+                className="cadde-secondary-action self-end whitespace-nowrap sm:min-w-[112px]"
                 onClick={submit}
                 disabled={commentMutation.isPending}
               >

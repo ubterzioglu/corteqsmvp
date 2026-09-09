@@ -126,7 +126,7 @@ const CaddeCafesPanel = ({
               </CardDescription>
             </div>
             {hasSession ? (
-              <CreateCafeForm trigger={<Button size="sm" variant="outline" className="rounded-2xl">+ Cafe Aç</Button>} />
+              <CreateCafeForm trigger={<Button size="sm" variant="outline" className="cadde-secondary-action rounded-2xl">+ Cafe Aç</Button>} />
             ) : null}
           </div>
         </CardHeader>
@@ -164,7 +164,7 @@ const CaddeCafesPanel = ({
                         {cafe.summary ? ` • ${cafe.summary}` : ""}
                       </p>
                     </div>
-                    <Button size="sm" variant={cafe.joinedByViewer ? "secondary" : "outline"} asChild className="h-8 shrink-0">
+                    <Button size="sm" variant="outline" asChild className="cadde-secondary-action h-8 shrink-0">
                       <Link to={`/cadde/cafe/${cafe.id}`}>
                         {cafe.joinedByViewer ? "Odaya Gir" : cafe.viewerMemberStatus === "pending" ? "Onay Bekliyor" : "Katıl"}
                       </Link>
@@ -177,7 +177,7 @@ const CaddeCafesPanel = ({
                     variant="ghost"
                     size="sm"
                     data-testid="cadde-cafes-show-all"
-                    className="self-start text-xs text-orange-700 hover:text-orange-900"
+                    className="cadde-tertiary-action self-start text-xs"
                     onClick={onShowAll}
                   >
                     {hiddenCount} cafe daha göster
@@ -202,7 +202,7 @@ const CaddeCafesPanel = ({
                 {hasSession ? (
                   <div className="mt-4">
                     <CreateCafeForm
-                      trigger={<Button size="sm" variant="outline" className="rounded-2xl">İlk Cafe'yi Aç</Button>}
+                      trigger={<Button size="sm" variant="outline" className="cadde-secondary-action rounded-2xl">İlk Cafe'yi Aç</Button>}
                     />
                   </div>
                 ) : null}

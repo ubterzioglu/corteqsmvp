@@ -765,7 +765,7 @@ const CaddePage = () => {
                       <h3 className="text-lg font-semibold text-slate-900">{item.sponsor.title}</h3>
                       <p className="text-sm text-slate-700">{item.sponsor.description}</p>
                     </div>
-                    <Button asChild className="cadde-primary-action rounded-2xl">
+                    <Button asChild variant="outline" className="cadde-secondary-action rounded-2xl">
                       <Link to={item.sponsor.ctaUrl}>{item.sponsor.ctaLabel}</Link>
                     </Button>
                   </CardContent>
@@ -1179,7 +1179,7 @@ const CaddePage = () => {
                                   <CaddeEmojiPickerButton onSelect={(emoji) => insertCommentEmoji(item.post.id, emoji)} className="mb-0.5" />
                                 </div>
                                 <Button
-                                  className="self-end whitespace-nowrap sm:min-w-[112px]"
+                                  className="cadde-secondary-action self-end whitespace-nowrap sm:min-w-[112px]"
                                   onClick={() => {
                                     commentMutation.mutate({ postId: item.post.id, body: commentDrafts[item.post.id] ?? "" });
                                   }}
@@ -1220,7 +1220,7 @@ const CaddePage = () => {
                   </p>
                   <Button
                     variant="outline"
-                    className="mt-4 rounded-2xl border-amber-300 bg-white text-amber-900 hover:bg-amber-100"
+                    className="cadde-secondary-action mt-4 rounded-2xl"
                     onClick={() => void feedQuery.refetch()}
                     disabled={feedQuery.isFetching}
                   >
@@ -1261,7 +1261,8 @@ const CaddePage = () => {
                       <Button
                         data-testid="cadde-widen-feed"
                         onClick={() => setSearchParams(serializeCaddeFilters(widenTarget!.next))}
-                        className="cadde-primary-action rounded-2xl"
+                        variant="outline"
+                        className="cadde-secondary-action rounded-2xl"
                       >
                         {widenTarget!.label} akışındaki{" "}
                         {describeCaddeWidenCount(widenedCount, Boolean(widenedPage?.nextPage))} → gör
@@ -1274,7 +1275,7 @@ const CaddePage = () => {
                         className={
                           canWiden
                             ? "rounded-2xl border-slate-300 bg-white text-slate-800 hover:bg-slate-50"
-                            : "cadde-primary-action rounded-2xl"
+                            : "cadde-secondary-action rounded-2xl"
                         }
                       >
                         İlk paylaşımı yap
@@ -1291,7 +1292,7 @@ const CaddePage = () => {
                     {canWiden ? null : hasGeoSelection ? (
                       <Button
                         variant="outline"
-                        className="rounded-2xl border-orange-200 bg-white text-orange-800 hover:bg-orange-50"
+                        className="cadde-secondary-action rounded-2xl"
                         onClick={() => updateFilters({ countries: [], cities: [] })}
                       >
                         Filtreleri temizle
@@ -1299,7 +1300,7 @@ const CaddePage = () => {
                     ) : filters.bridge ? null : (
                       <Button
                         variant="outline"
-                        className="rounded-2xl border-emerald-200 bg-white text-emerald-800 hover:bg-emerald-50"
+                        className="cadde-secondary-action rounded-2xl"
                         onClick={() => updateFilters({ bridge: true })}
                       >
                         Köprü modunu aç
@@ -1313,7 +1314,7 @@ const CaddePage = () => {
 
             {feedQuery.hasNextPage ? (
               <div className="flex justify-center">
-                <Button variant="outline" onClick={() => feedQuery.fetchNextPage()} disabled={feedQuery.isFetchingNextPage}>
+                <Button variant="outline" className="cadde-secondary-action" onClick={() => feedQuery.fetchNextPage()} disabled={feedQuery.isFetchingNextPage}>
                   {feedQuery.isFetchingNextPage ? "Yükleniyor..." : "Daha Fazla Yükle"}
                 </Button>
               </div>
@@ -1440,7 +1441,7 @@ const CaddePage = () => {
                   </CardTitle>
                   <CardDescription>İsimle ara ya da dizinde gezin.</CardDescription>
                 </div>
-                <Button asChild variant="outline" className="w-full justify-between rounded-2xl">
+                <Button asChild variant="outline" className="cadde-secondary-action w-full justify-between rounded-2xl">
                   <Link to={directoryLink}>
                     Kişileri Keşfet
                     <UserPlus2 className="h-4 w-4" />
@@ -1546,7 +1547,7 @@ const CaddePage = () => {
                 <p className="text-sm leading-relaxed text-slate-600">
                   Danışmanlık, etkinlik veya işletme duyurunu sağ kolondaki seçkili alana taşı.
                 </p>
-                <Button asChild variant="outline" className="w-full rounded-2xl border-orange-200 bg-white text-orange-800 hover:bg-orange-50">
+                <Button asChild variant="outline" className="cadde-secondary-action w-full rounded-2xl">
                   <Link to={promotionCtaTarget}>
                     {promotionCtaLabel}
                     <ArrowUpRight className="ml-1.5 h-4 w-4" />
@@ -1609,7 +1610,7 @@ const CaddePage = () => {
                     <h3 className="mt-3 text-lg font-semibold text-slate-900">{card.title}</h3>
                     {card.subtitle ? <p className="mt-1 text-sm font-medium text-slate-500">{card.subtitle}</p> : null}
                     <p className="mt-3 text-sm leading-6 text-slate-700">{card.description}</p>
-                    <span className="cadde-primary-action mt-4 flex w-full items-center justify-center gap-1.5 rounded-2xl px-4 py-2.5 text-sm font-medium transition">
+                    <span className="cadde-tertiary-action mt-4 flex w-full items-center justify-center gap-1.5 rounded-2xl px-4 py-2.5 text-sm font-medium transition">
                       {card.ctaLabel}
                       <ArrowUpRight className="h-4 w-4" />
                     </span>
@@ -1690,7 +1691,7 @@ const CaddePage = () => {
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-orange-300" />
                 <p className="text-sm text-slate-200">Danışman, etkinlik ve topluluk kampanyalarını şehir bazlı yayınlayabilirsin.</p>
               </div>
-              <Button asChild className="w-full rounded-2xl bg-white text-slate-900 hover:bg-slate-100">
+              <Button asChild variant="outline" className="cadde-secondary-action w-full rounded-2xl">
                 <Link to={promotionCtaTarget}>{promotionCtaLabel}</Link>
               </Button>
             </CardContent>

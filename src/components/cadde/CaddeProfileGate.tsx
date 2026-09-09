@@ -45,7 +45,7 @@ const CaddeProfileGate = ({ context, isLoading, children }: CaddeProfileGateProp
               </li>
             ))}
           </ul>
-          <Button asChild className="w-full gap-2">
+          <Button asChild className="cadde-primary-action w-full gap-2">
             <Link to="/profile?tab=settings">
               <Settings className="h-4 w-4" /> Profil Ayarlarını Tamamla
               <ArrowRight className="h-4 w-4" />

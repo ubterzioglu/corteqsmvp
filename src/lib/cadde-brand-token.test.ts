@@ -18,6 +18,11 @@ const SOCIAL_CONFIG = readFileSync("scripts/social-generate/config.mjs", "utf8")
 const CADDE_PAGE = readFileSync("src/pages/cadde/CaddePage.tsx", "utf8");
 const SPONSORED_CARD = readFileSync("src/components/cadde/SponsoredFeedCard.tsx", "utf8");
 const SCOPE_BAR = readFileSync("src/components/cadde/CaddeFeedScopeBar.tsx", "utf8");
+const COMPOSER = readFileSync("src/components/cadde/CaddeComposer.tsx", "utf8");
+const CAFES_PANEL = readFileSync("src/components/cadde/CaddeCafesPanel.tsx", "utf8");
+const CAFE_PAGE = readFileSync("src/pages/cadde/CaddeCafePage.tsx", "utf8");
+const CARSI_PAGE = readFileSync("src/pages/cadde/CaddeCarsiPage.tsx", "utf8");
+const CARSI_ITEM_PAGE = readFileSync("src/pages/cadde/CaddeCarsiItemPage.tsx", "utf8");
 
 /** `--cadde-brand: 43 44% 46%;` -> [43, 44, 46] */
 function readHslToken(name: string): [number, number, number] {
@@ -90,10 +95,30 @@ describe("marka rengi sözleşmesi", () => {
   });
 
   it("T2: ayrılmış birincil eylemlerin tamamı ortak güçlü marka sınıfını kullanır", () => {
-    expect(countClass(CADDE_PAGE, "cadde-primary-action")).toBe(5);
-    expect(countClass(SPONSORED_CARD, "cadde-primary-action")).toBe(2);
+    expect(countClass(CADDE_PAGE, "cadde-primary-action")).toBeGreaterThan(0);
     expect(CSS).toMatch(/\.cadde-primary-action\s*{[^}]*var\(--cadde-brand-strong\)[^}]*color:\s*white/s);
     expect(CSS).toMatch(/\.cadde-primary-action:hover\s*{[^}]*var\(--cadde-brand-ink\)/s);
+  });
+
+  it("T3: üç seviyeli eylem dili ortak token sınıflarında tanımlıdır", () => {
+    expect(CSS).toMatch(/\.cadde-secondary-action\s*{[^}]*border[^}]*var\(--cadde-line\)[^}]*background-color:\s*hsl\(var\(--cadde-panel\)\)[^}]*color:\s*hsl\(var\(--cadde-ink\)\)/s);
+    expect(CSS).toMatch(/\.cadde-tertiary-action\s*{[^}]*background-color:\s*transparent[^}]*color:\s*hsl\(var\(--cadde-brand-ink\)\)/s);
+  });
+
+  it("T3: eylem token'ları portallı modal içeriklerinde de kökten erişilebilir", () => {
+    const rootBlock = CSS.match(/:root\s*{([^}]*)}/s)?.[1] ?? "";
+    for (const token of ["cadde-ink", "cadde-panel", "cadde-line", "cadde-brand", "cadde-brand-strong", "cadde-brand-soft", "cadde-brand-ink"]) {
+      expect(rootBlock).toMatch(new RegExp(`--${token}:\\s`));
+    }
+  });
+
+  it("T3: her Cadde giriş yüzeyi en fazla bir primary bildirir", () => {
+    for (const source of [CADDE_PAGE, COMPOSER, CAFE_PAGE, CARSI_PAGE, CARSI_ITEM_PAGE]) {
+      expect(countClass(source, "cadde-primary-action")).toBeLessThanOrEqual(1);
+    }
+    expect(countClass(COMPOSER, "cadde-primary-action")).toBe(1);
+    expect(countClass(SPONSORED_CARD, "cadde-primary-action")).toBe(0);
+    expect(countClass(CAFES_PANEL, "cadde-primary-action")).toBe(0);
   });
 
   it("T2: aktif kapsam çipi kimlik bronzunu erişilebilir koyu mürekkeple kullanır", () => {

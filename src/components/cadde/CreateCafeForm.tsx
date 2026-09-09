@@ -118,7 +118,7 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger ?? (
-          <Button className="w-full justify-between rounded-2xl">
+          <Button variant="outline" className="cadde-secondary-action w-full justify-between rounded-2xl">
             Cafe Aç
             <CaddeCafeIcon className="h-4 w-4" />
           </Button>
@@ -262,7 +262,7 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
             </div>
           </div>
 
-          <Button className="w-full" onClick={() => createMutation.mutate()} disabled={createMutation.isPending}>
+          <Button className="cadde-primary-action w-full" onClick={() => createMutation.mutate()} disabled={createMutation.isPending}>
             {createMutation.isPending ? "Açılıyor..." : "Cafe'yi Aç"}
           </Button>
         </div>

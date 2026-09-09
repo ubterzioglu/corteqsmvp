@@ -256,7 +256,7 @@ const CaddeComposer = ({
           ) : null}
 
           <div className="ml-auto flex items-center gap-2">
-            <Button onClick={onSubmit} disabled={!canSubmit} className="rounded-full px-5">
+            <Button onClick={onSubmit} disabled={!canSubmit} className="cadde-primary-action rounded-full px-5">
               {uploading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

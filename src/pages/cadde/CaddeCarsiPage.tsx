@@ -144,13 +144,13 @@ const CaddeCarsiPage = () => {
                 <CardDescription>Topluluk içi ikinci el, oda, ders, hizmet ve daha fazlası.</CardDescription>
               </div>
               <div className="flex gap-2">
-                <Button asChild variant="outline">
+                <Button asChild variant="outline" className="cadde-secondary-action">
                   <Link to="/cadde">← Cadde</Link>
                 </Button>
                 {user ? (
                   <Dialog open={formOpen} onOpenChange={setFormOpen}>
                     <DialogTrigger asChild>
-                      <Button>
+                      <Button className="cadde-primary-action">
                         <Plus className="mr-2 h-4 w-4" />
                         İlan Ver
                       </Button>
@@ -226,9 +226,9 @@ const CaddeCarsiPage = () => {
                   </div>
                   <div className="flex gap-2">
                     {item.status === "published" ? (
-                      <Button size="sm" variant="outline" onClick={() => statusMutation.mutate({ itemId: item.id, status: "paused" })} disabled={statusMutation.isPending}>Pasife Al</Button>
+                      <Button size="sm" variant="outline" className="cadde-secondary-action" onClick={() => statusMutation.mutate({ itemId: item.id, status: "paused" })} disabled={statusMutation.isPending}>Pasife Al</Button>
                     ) : (
-                      <Button size="sm" variant="outline" onClick={() => statusMutation.mutate({ itemId: item.id, status: "published" })} disabled={statusMutation.isPending}>Yayına Al</Button>
+                      <Button size="sm" variant="outline" className="cadde-secondary-action" onClick={() => statusMutation.mutate({ itemId: item.id, status: "published" })} disabled={statusMutation.isPending}>Yayına Al</Button>
                     )}
                     <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700" onClick={() => deleteMutation.mutate(item.id)} disabled={deleteMutation.isPending}>Sil</Button>
                   </div>
@@ -295,12 +295,12 @@ const CaddeCarsiPage = () => {
                 İkinci el eşya, oda, ders, hizmet — şehrindeki toplulukta karşılığı olan her şey burada yer bulur.
               </p>
               {user ? (
-                <Button className="rounded-2xl" onClick={() => setFormOpen(true)}>
+                <Button variant="outline" className="cadde-secondary-action rounded-2xl" onClick={() => setFormOpen(true)}>
                   <Plus className="mr-2 h-4 w-4" />
                   İlan Ver
                 </Button>
               ) : (
-                <Button asChild variant="outline" className="rounded-2xl">
+                <Button asChild variant="outline" className="cadde-secondary-action rounded-2xl">
                   <Link to="/login">İlan vermek için giriş yap</Link>
                 </Button>
               )}

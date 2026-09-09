@@ -266,7 +266,7 @@ const CarsiItemForm = ({
         ) : null}
       </div>
 
-      <Button className="w-full" onClick={onSubmit} disabled={isSubmitting || uploading}>
+      <Button className="cadde-primary-action w-full" onClick={onSubmit} disabled={isSubmitting || uploading}>
         {isSubmitting ? "Yayınlanıyor…" : paidMode ? "Taslak Olarak Kaydet" : "İlanı Yayınla"}
       </Button>
     </div>

@@ -65,6 +65,11 @@ aksan olarak (ikonlar, kart parıltısı) kullanılıyor. `brand` onun yerine ge
 | **secondary** | nötr outline, beyaz zemin | Yan eylemler |
 | **tertiary** | metin link, zemin yok | Üçüncül / geri alınabilir |
 
+Uygulama sınıfları sırasıyla `cadde-primary-action`, `cadde-secondary-action` ve
+`cadde-tertiary-action`dır. Cadde bileşenlerinde global `Button` varsayılanının turkuaz
+dolgu stiline güvenilmez; seviye bu sınıflardan biriyle açıkça belirtilir. Tekrarlanan
+sponsor/kart CTA'ları primary olamaz.
+
 Yıkıcı eylemler bu üçlünün dışındadır: kırmızı **metin**, ve mümkünse bir kebab (⋯)
 menüsünün arkasında (bkz. C2 — "Cafe'yi Arşivle").
 

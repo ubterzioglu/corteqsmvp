@@ -176,7 +176,7 @@ const CaddeCafePage = () => {
     return (
       <main className="mx-auto max-w-3xl px-4 py-16 text-center">
         <p className="text-slate-600">Cafe bulunamadı veya kaldırılmış.</p>
-        <Button asChild variant="outline" className="mt-4">
+        <Button asChild variant="outline" className="cadde-secondary-action mt-4">
           <Link to="/cadde">Cadde'ye Dön</Link>
         </Button>
       </main>
@@ -277,7 +277,7 @@ const CaddeCafePage = () => {
                     <Input value={referralCode} onChange={(event) => setReferralCode(event.target.value)} placeholder="Kodunu gir" />
                   </div>
                 ) : null}
-                <Button onClick={() => joinMutation.mutate()} disabled={joinMutation.isPending}>
+                <Button className="cadde-primary-action" onClick={() => joinMutation.mutate()} disabled={joinMutation.isPending}>
                   {joinMutation.isPending ? "Gönderiliyor..." : cafe.entryMode === "approval" ? "Katılım Talebi Gönder" : "Katıl"}
                 </Button>
               </CardContent>
@@ -320,8 +320,8 @@ const CaddeCafePage = () => {
                       )}
                     </div>
                     <div className="flex gap-2">
-                      <Button size="sm" onClick={() => approveMutation.mutate({ memberId: member.id, approve: true })} disabled={approveMutation.isPending}>Onayla</Button>
-                      <Button size="sm" variant="outline" onClick={() => approveMutation.mutate({ memberId: member.id, approve: false })} disabled={approveMutation.isPending}>Reddet</Button>
+                      <Button size="sm" variant="outline" className="cadde-secondary-action" onClick={() => approveMutation.mutate({ memberId: member.id, approve: true })} disabled={approveMutation.isPending}>Onayla</Button>
+                      <Button size="sm" variant="outline" className="cadde-secondary-action" onClick={() => approveMutation.mutate({ memberId: member.id, approve: false })} disabled={approveMutation.isPending}>Reddet</Button>
                     </div>
                   </div>
                 </div>
@@ -334,7 +334,7 @@ const CaddeCafePage = () => {
           <Card className="border-red-200 bg-red-50/70">
             <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
               <p className="text-sm text-red-800">Katılım talepleri yüklenemedi.</p>
-              <Button size="sm" variant="outline" onClick={() => void membersQuery.refetch()}>
+              <Button size="sm" variant="outline" className="cadde-secondary-action" onClick={() => void membersQuery.refetch()}>
                 Tekrar dene
               </Button>
             </CardContent>
@@ -405,7 +405,7 @@ const CaddeCafePage = () => {
         </Card>
 
         <div className="flex justify-center">
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" className="cadde-secondary-action">
             <Link to="/cadde">← Cadde'ye Dön</Link>
           </Button>
         </div>

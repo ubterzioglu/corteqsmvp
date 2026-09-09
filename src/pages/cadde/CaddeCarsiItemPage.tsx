@@ -65,7 +65,7 @@ const CaddeCarsiItemPage = () => {
     return (
       <main className="mx-auto max-w-3xl px-4 py-16 text-center">
         <p className="text-slate-600">İlan bulunamadı, kaldırılmış veya süresi dolmuş.</p>
-        <Button asChild variant="outline" className="mt-4">
+        <Button asChild variant="outline" className="cadde-secondary-action mt-4">
           <Link to="/cadde/carsi">Çarşı'ya Dön</Link>
         </Button>
       </main>
@@ -119,9 +119,9 @@ const CaddeCarsiItemPage = () => {
             {isOwner ? (
               <div className="flex flex-wrap gap-2">
                 {item.status === "published" ? (
-                  <Button variant="outline" onClick={() => statusMutation.mutate("paused")} disabled={statusMutation.isPending}>Pasife Al</Button>
+                  <Button variant="outline" className="cadde-secondary-action" onClick={() => statusMutation.mutate("paused")} disabled={statusMutation.isPending}>Pasife Al</Button>
                 ) : (
-                  <Button onClick={() => statusMutation.mutate("published")} disabled={statusMutation.isPending}>Yayına Al</Button>
+                  <Button className="cadde-primary-action" onClick={() => statusMutation.mutate("published")} disabled={statusMutation.isPending}>Yayına Al</Button>
                 )}
                 <Button variant="ghost" className="text-red-600 hover:text-red-700" onClick={() => deleteMutation.mutate()} disabled={deleteMutation.isPending}>İlanı Sil</Button>
               </div>
@@ -142,7 +142,7 @@ const CaddeCarsiItemPage = () => {
         </Card>
 
         <div className="flex justify-center">
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" className="cadde-secondary-action">
             <Link to="/cadde/carsi">← Çarşı'ya Dön</Link>
           </Button>
         </div>

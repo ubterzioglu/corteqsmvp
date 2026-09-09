@@ -9,6 +9,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import CaddeCafesPanel from "@/components/cadde/CaddeCafesPanel";
 import type { CaddeCafe } from "@/lib/cadde-types";
@@ -114,5 +115,28 @@ describe("CaddeCafesPanel — 2b9a8d04 başlık filtreyi söyler", () => {
 
     expect(screen.getByText("Kısa süreli topluluk odaları ve tema bazlı buluşmalar")).toBeInTheDocument();
     expect(screen.queryByText(/Konum kartındaki seçimi izler/)).not.toBeInTheDocument();
+  });
+
+  it("T3: cafe açma ve odaya girme yan eylemleri ortak secondary stildedir", () => {
+    render(
+      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+        <MemoryRouter>
+          <CaddeCafesPanel
+            cafes={[cafe({ joinedByViewer: true, viewerMemberStatus: "approved" })]}
+            themeLabelByKey={new Map()}
+            hasSession
+            locationLabel="Berlin"
+            sparseContentHint="İçerik az."
+            open
+            onOpenChange={vi.fn()}
+            showAll={false}
+            onShowAll={vi.fn()}
+          />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    expect(screen.getByRole("button", { name: "+ Cafe Aç" })).toHaveClass("cadde-secondary-action");
+    expect(screen.getByRole("link", { name: "Odaya Gir" })).toHaveClass("cadde-secondary-action");
   });
 });
