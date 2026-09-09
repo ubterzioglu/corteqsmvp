@@ -462,7 +462,14 @@ describe("CaddePage", () => {
     fireEvent.click(screen.getByRole("button", { name: /Devamını yükle/i }));
 
     expect(await screen.findByText("Altıncı yorum")).toBeInTheDocument();
-    expect(listCaddePostCommentsMock).toHaveBeenLastCalledWith("post-load-more", 5, "2026-06-23T10:05:00Z");
+    // 2. çağrı = "Devamını yükle" ve imleci ilk sayfadan devralmalı.
+    // ⚠️ Burada `toHaveBeenLastCalledWith` KULLANMA: arka plandaki yenileme
+    // (adaptif polling / React Query refetch) imleçsiz bir çağrıyı SONA
+    // ekleyebiliyor ve test tam paket yükü altında kırılgan hale geliyordu
+    // (ölçüldü 09.09.2026: tek başına 3/3 geçiyor, tam pakette düşüyor).
+    // `Nth` hem sırayı asıl önemli olduğu yerde çiviler hem sonraki
+    // çağrılardan etkilenmez — yani gevşetme değil, daralt.
+    expect(listCaddePostCommentsMock).toHaveBeenNthCalledWith(2, "post-load-more", 5, "2026-06-23T10:05:00Z");
     expect(screen.queryByRole("button", { name: /Devamını yükle/i })).not.toBeInTheDocument();
   });
 
