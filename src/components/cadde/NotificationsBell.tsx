@@ -29,6 +29,12 @@ const formatRelative = (value: string): string => {
   return `${Math.floor(hours / 24)} g`;
 };
 
+const notificationPillarClass = (entityType: string | null): string => {
+  if (entityType === "cafe") return "cadde-pillar--cafe";
+  if (entityType === "carsi_item") return "cadde-pillar--carsi";
+  return "cadde-pillar--cadde";
+};
+
 const NotificationsBell = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -109,7 +115,7 @@ const NotificationsBell = () => {
                 onClick={() => {
                   if (!notification.isRead) markOneMutation.mutate(notification.id);
                 }}
-                className={`block border-b border-border/60 px-3 py-2.5 transition hover:bg-accent ${notification.isRead ? "opacity-70" : "bg-orange-50/50"}`}
+                className={`cadde-pillar-indicator ${notificationPillarClass(notification.entityType)} block border-b border-border/60 px-3 py-2.5 transition hover:bg-accent ${notification.isRead ? "opacity-70" : "bg-orange-50/50"}`}
               >
                 <div className="flex items-start justify-between gap-2">
                   <p className="text-xs font-semibold text-slate-900">{notification.title}</p>

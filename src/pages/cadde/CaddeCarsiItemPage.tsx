@@ -75,7 +75,7 @@ const CaddeCarsiItemPage = () => {
   return (
     <main className="cadde-shell">
       <section className="mx-auto w-full max-w-3xl space-y-5 px-4 py-8">
-        <Card className="border-amber-200 bg-white/95">
+        <Card className="cadde-card cadde-card--carsi border-amber-200 bg-white/95">
           <CardHeader className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               {/* Rozet burada hiçbir Link'in içinde değil — doğrudan link yapılabilir. */}

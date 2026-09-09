@@ -186,7 +186,7 @@ const CaddeCafePage = () => {
   return (
     <main className="cadde-shell">
       <section className="mx-auto w-full max-w-3xl space-y-4 px-4 py-7">
-        <Card className="border-orange-100 bg-white/95">
+        <Card className="cadde-card cadde-card--cafe border-orange-100 bg-white/95">
           <CardHeader className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               {isReadOnly ? (
@@ -371,7 +371,7 @@ const CaddeCafePage = () => {
             ) : null}
 
             {(feedQuery.data ?? []).map((post) => (
-              <div key={post.id} className="rounded-2xl border border-slate-200 bg-white p-4">
+              <div key={post.id} className="cadde-card cadde-card--cafe rounded-2xl border border-slate-200 bg-white p-4">
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="text-sm font-semibold text-slate-900">{post.authorName}</p>
                   <span className="text-xs text-slate-500">{formatDateTime(post.createdAt)}</span>

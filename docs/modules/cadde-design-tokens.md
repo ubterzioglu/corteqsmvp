@@ -57,6 +57,13 @@ kullanır. Seçili filtre ham marka rengini `--cadde-ink` metinle taşır (5.9:1
 aksan olarak (ikonlar, kart parıltısı) kullanılıyor. `brand` onun yerine geçmez,
 **yanına** gelir — biri kimlik, diğeri vurgu.
 
+### Pillar renk kodu
+
+Gökkuşağı yalnız logoda kalır. İçerik kartının 3px üst şeridi ve bildirim satırının
+başlangıç çizgisi içeriğin ailesini gösterir: `--cadde-pillar-cadde` (bronze),
+`--cadde-pillar-cafe` (yeşil), `--cadde-pillar-carsi` (terracotta). Yan kolon panelleri,
+hata/boş durumlar ve pillar bağlamı olmayan tanıtım kartları şerit taşımaz.
+
 ## 2. Buton — üç seviye, başka yok
 
 | Seviye | Görünüm | Ne zaman |

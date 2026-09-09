@@ -779,7 +779,7 @@ const CaddePage = () => {
                 <Card
                   key={item.post.id}
                   data-testid="cadde-feed-card"
-                  className="cadde-card overflow-hidden rounded-[28px]"
+                  className="cadde-card cadde-card--cadde overflow-hidden rounded-[28px]"
                 >
                   <CardContent className="space-y-4 p-5 sm:p-6">
                     {/* m18 forum hiyerarşisi: konu (varsa) büyük ve EN ÜSTTE, yazar küçük,

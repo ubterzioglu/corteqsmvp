@@ -50,6 +50,11 @@
     --cadde-brand-strong: 43 46% 36%;
     --cadde-brand-soft: 43 52% 94%;
     --cadde-brand-ink: 43 60% 22%;
+    /* T5: içerik ailesi kodu. Portal içindeki bildirimler de aynı token'ları
+       kullandığı için `.cadde-shell` yerine kökte yaşarlar. */
+    --cadde-pillar-cadde: 43 44% 46%;
+    --cadde-pillar-cafe: 142 45% 36%;
+    --cadde-pillar-carsi: 18 55% 45%;
 
     /* ——— Logo paleti (6 renkli fırıldak) — /landingtrial bölüm aksanları ———
        teal/orange zaten yukarıda (geri uyumlu, başka sayfalar kullanır).
@@ -332,8 +337,8 @@
     --cadde-accent: 24 92% 48%;
     --cadde-accent-ink: 24 78% 21%;
     /* Gerçek logo paleti — fırıldaktaki 5 figürden örneklenen ton (newlogo.png).
-       Kart imzası (üst şerit) ve premium vurgular buradan gelir; genel site
-       brand-* değişkenlerinden bağımsız, sadece Cadde kartlarına özgü. */
+       Gökkuşağı görsel kimlikte kalır; T5 sonrası içerik şeritleri bu paleti değil
+       yukarıdaki tek renkli pillar token'larını kullanır. */
     --cadde-logo-red: 9 82% 53%;
     --cadde-logo-amber: 38 97% 54%;
     --cadde-logo-green: 130 49% 42%;
@@ -403,9 +408,9 @@
     color: hsl(var(--cadde-ink));
   }
 
-  /* Premium kart yüzeyi: çift katmanlı gölge + logo renklerinden üst şerit imza.
-     .cadde-panel (yan kolon) ve .cadde-card (akış/cafe/vitrin kartları) aynı
-     yüzeyi paylaşır — sayfadaki her "kart" tutarlı, markalı bir his verir. */
+  /* Premium kart yüzeyi: panel ve içerik kartı aynı yüzey dilini paylaşır.
+     T5'ten itibaren yalnız semantik içerik kartları pillar şeridi taşır; yan kolon
+     panelleri ve bağlamsız/hata kartları dekoratif şerit çizmez. */
   .cadde-panel,
   .cadde-card {
     position: relative;
@@ -419,24 +424,27 @@
     transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   }
 
-  .cadde-panel::before,
-  .cadde-card::before {
+  .cadde-card--cadde::before,
+  .cadde-card--cafe::before,
+  .cadde-card--carsi::before {
     content: "";
     position: absolute;
     inset: 0 0 auto 0;
     height: 3px;
-    background: linear-gradient(
-      90deg,
-      hsl(var(--cadde-logo-red)) 0%,
-      hsl(var(--cadde-logo-amber)) 25%,
-      hsl(var(--cadde-logo-green)) 50%,
-      hsl(var(--cadde-logo-blue)) 75%,
-      hsl(var(--cadde-logo-pink)) 100%
-    );
-    /* m83: zemin kontrastı arttığı için şerit daha baskın görünüyordu — bir tık
-       geri çekildi. Sayfa daha kontrastlı ama daha "renkli" değil. */
-    opacity: 0.5;
+    opacity: 0.78;
     transition: opacity 0.25s ease;
+  }
+
+  .cadde-card--cadde::before {
+    background-color: hsl(var(--cadde-pillar-cadde));
+  }
+
+  .cadde-card--cafe::before {
+    background-color: hsl(var(--cadde-pillar-cafe));
+  }
+
+  .cadde-card--carsi::before {
+    background-color: hsl(var(--cadde-pillar-carsi));
   }
 
   .cadde-panel:hover,
@@ -449,9 +457,29 @@
       0 28px 54px -26px hsl(var(--cadde-ink) / 0.5);
   }
 
-  .cadde-panel:hover::before,
-  .cadde-card:hover::before {
-    opacity: 0.95;
+  .cadde-card--cadde:hover::before,
+  .cadde-card--cafe:hover::before,
+  .cadde-card--carsi:hover::before {
+    opacity: 1;
+  }
+
+  /* Bildirim popover'ı kart değil; aynı pillar kodunu ince başlangıç çizgisiyle
+     taşır. border-inline-start RTL düzenlerde de doğru kenara geçer. */
+  .cadde-pillar-indicator {
+    border-inline-start-style: solid;
+    border-inline-start-width: 3px;
+  }
+
+  .cadde-pillar--cadde {
+    border-inline-start-color: hsl(var(--cadde-pillar-cadde));
+  }
+
+  .cadde-pillar--cafe {
+    border-inline-start-color: hsl(var(--cadde-pillar-cafe));
+  }
+
+  .cadde-pillar--carsi {
+    border-inline-start-color: hsl(var(--cadde-pillar-carsi));
   }
 
   @media (prefers-reduced-motion: reduce) {

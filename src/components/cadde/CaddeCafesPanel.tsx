@@ -138,7 +138,7 @@ const CaddeCafesPanel = ({
                     m67: yükseklik iki satıra indi — özet meta satırına taşındı (truncate),
                     ayrı footer bloğu kalktı. */}
                 {visibleCafes.map((cafe) => (
-                  <div key={cafe.id} className="cadde-card flex items-center gap-2.5 rounded-2xl px-3 py-2.5">
+                  <div key={cafe.id} className="cadde-card cadde-card--cafe flex items-center gap-2.5 rounded-2xl px-3 py-2.5">
                     <CaddeCafeIcon className="h-5 w-5 shrink-0 text-orange-600" />
                     <div className="min-w-0 flex-1">
                       <p className="flex min-w-0 items-center gap-1.5">

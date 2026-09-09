@@ -23,6 +23,7 @@ const CAFES_PANEL = readFileSync("src/components/cadde/CaddeCafesPanel.tsx", "ut
 const CAFE_PAGE = readFileSync("src/pages/cadde/CaddeCafePage.tsx", "utf8");
 const CARSI_PAGE = readFileSync("src/pages/cadde/CaddeCarsiPage.tsx", "utf8");
 const CARSI_ITEM_PAGE = readFileSync("src/pages/cadde/CaddeCarsiItemPage.tsx", "utf8");
+const NOTIFICATIONS = readFileSync("src/components/cadde/NotificationsBell.tsx", "utf8");
 
 /** `--cadde-brand: 43 44% 46%;` -> [43, 44, 46] */
 function readHslToken(name: string): [number, number, number] {
@@ -127,6 +128,34 @@ describe("marka rengi sözleşmesi", () => {
       /\.cadde-filter-active\s*{[^}]*border-color:\s*hsl\(var\(--cadde-brand\)\)[^}]*background-color:\s*hsl\(var\(--cadde-brand\)\)[^}]*color:\s*hsl\(var\(--cadde-ink\)\)/s,
     );
     expect(contrastRatio(hslToRgb(...readHslToken("cadde-brand")), hslToRgb(...readHslToken("cadde-ink")))).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("T5: içerik şeritleri Cadde, Cafe ve Çarşı pillar token'larına bağlıdır", () => {
+    const rootBlock = CSS.match(/:root\s*{([^}]*)}/s)?.[1] ?? "";
+    for (const pillar of ["cadde", "cafe", "carsi"]) {
+      expect(rootBlock).toMatch(new RegExp(`--cadde-pillar-${pillar}:\\s`));
+      expect(CSS).toMatch(new RegExp(`\\.cadde-card--${pillar}::before[\\s\\S]*?var\\(--cadde-pillar-${pillar}\\)`));
+    }
+  });
+
+  it("T5: yan kolon panelleri ve bağlamsız kartlar dekoratif şerit çizmez", () => {
+    expect(CSS).not.toMatch(/\.cadde-panel::before/);
+    expect(CSS).not.toMatch(/\.cadde-card::before/);
+  });
+
+  it("T5: ana akış, Cafe ve Çarşı içerikleri doğru pillar sınıfını bildirir", () => {
+    expect(CADDE_PAGE).toMatch(/cadde-card cadde-card--cadde/);
+    expect(CAFES_PANEL).toMatch(/cadde-card cadde-card--cafe/);
+    expect(CAFE_PAGE).toMatch(/cadde-card cadde-card--cafe/);
+    expect(CARSI_PAGE).toMatch(/cadde-card cadde-card--carsi/);
+    expect(CARSI_ITEM_PAGE).toMatch(/cadde-card cadde-card--carsi/);
+  });
+
+  it("T5: bildirim satırları entity türünü aynı üç pillar sınıfına eşler", () => {
+    expect(NOTIFICATIONS).toMatch(/entityType === "cafe"[\s\S]*?cadde-pillar--cafe/);
+    expect(NOTIFICATIONS).toMatch(/entityType === "carsi_item"[\s\S]*?cadde-pillar--carsi/);
+    expect(NOTIFICATIONS).toMatch(/cadde-pillar--cadde/);
+    expect(NOTIFICATIONS).toMatch(/cadde-pillar-indicator/);
   });
 
   it("dekoratif turuncu aksan SİLİNMEDİ", () => {

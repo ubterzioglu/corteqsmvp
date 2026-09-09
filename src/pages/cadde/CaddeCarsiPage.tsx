@@ -133,7 +133,7 @@ const CaddeCarsiPage = () => {
   return (
     <main className="cadde-shell">
       <section className="mx-auto w-full max-w-5xl space-y-4 px-4 py-7">
-        <Card className="border-amber-200 bg-white/95">
+        <Card className="cadde-card cadde-card--carsi border-amber-200 bg-white/95">
           <CardHeader>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
@@ -247,7 +247,7 @@ const CaddeCarsiPage = () => {
             // kaplamanın üstünde kendi hedefine gider.
             <Card
               key={item.id}
-              className="relative h-full border-slate-200 bg-white/95 transition hover:border-amber-300 hover:shadow-md"
+              className="cadde-card cadde-card--carsi relative h-full border-slate-200 bg-white/95 transition hover:border-amber-300 hover:shadow-md"
             >
               <CardContent className="space-y-2 p-4">
                 <div className="flex items-center justify-between gap-2">
