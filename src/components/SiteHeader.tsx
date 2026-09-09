@@ -1,11 +1,51 @@
+import { useCallback, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { X } from "lucide-react";
 import { useAuth } from "@/components/auth/useAuth";
 const logo = "/newlogo.png";
+
+// Beta bandı kapatma tercihi.
+// Desen kaynağı: src/lib/admin-shell/admin-storage.ts (ADMIN_STORAGE_KEYS.updatesSeen +
+// readAdminStorage/writeAdminStorage). Aynı sözleşme burada da geçerlidir:
+//   1) `typeof window === "undefined"` guard — prerender/SSR yolunda patlamaz,
+//   2) try/catch — gizli mod, kısıtlı depolama veya bozuk JSON sessizce yutulmaz,
+//   3) okunamıyorsa VARSAYILAN "kapatılmadı" → band GÖSTERİLİR (boş/eksik sayfa üretmez).
+// Anahtar adlandırması admin tarafıyla aynı biçimde: corteqs.<kapsam>.<ad>.v<sürüm>
+const BETA_BANNER_STORAGE_KEY = "corteqs.site.beta-banner-dismissed.v1";
+
+function readBetaBannerDismissed(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const raw = window.localStorage.getItem(BETA_BANNER_STORAGE_KEY);
+    if (raw === null) return false;
+    return JSON.parse(raw) === true;
+  } catch (error: unknown) {
+    console.error(`Beta bandı tercihi okunamadı (${BETA_BANNER_STORAGE_KEY}):`, error);
+    return false;
+  }
+}
+
+function writeBetaBannerDismissed(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(BETA_BANNER_STORAGE_KEY, JSON.stringify(true));
+  } catch (error: unknown) {
+    console.error(`Beta bandı tercihi yazılamadı (${BETA_BANNER_STORAGE_KEY}):`, error);
+  }
+}
 
 export default function SiteHeader() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  // Lazy initializer: değer İLK render'da okunur; band önce görünüp sonra kaybolmaz
+  // (flash yok). useEffect içinde okumak tam olarak o kusuru üretirdi.
+  const [betaBannerDismissed, setBetaBannerDismissed] = useState<boolean>(readBetaBannerDismissed);
+
+  const dismissBetaBanner = useCallback(() => {
+    writeBetaBannerDismissed();
+    setBetaBannerDismissed(true);
+  }, []);
 
   const handleSignOut = async () => {
     await signOut();
@@ -14,25 +54,39 @@ export default function SiteHeader() {
 
   return (
     <div className="sticky top-0 z-50 border-b border-slate-200/80 bg-white backdrop-blur-sm">
-      <div className="border-b border-amber-300/50 bg-white px-4 py-1.5 shadow-[inset_0_-1px_0_rgba(217,119,6,0.12)] sm:py-2">
-        <p className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-[0.74rem] leading-snug text-slate-700 sm:text-[0.82rem]">
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-400/15 px-2.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.18em] text-amber-700">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-500 opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-500" />
+      {!betaBannerDismissed && (
+        <div className="relative border-b border-amber-300/50 bg-white px-4 py-1.5 shadow-[inset_0_-1px_0_rgba(217,119,6,0.12)] sm:py-2">
+          {/* pr-9/sm:pr-10: ortalanan metin dar ekranda kapatma düğmesinin altına girmesin. */}
+          <p className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-1 pr-9 text-center text-[0.74rem] leading-snug text-slate-700 sm:pr-10 sm:text-[0.82rem]">
+            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-400/15 px-2.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.18em] text-amber-700">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-500 opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-500" />
+              </span>
+              Açık Beta
             </span>
-            Açık Beta
-          </span>
-          <span>
-            <span className="font-semibold text-slate-900">CorteQS açık beta yayında!</span>{" "}
-            {/* Uzun açıklama mobilde gizli — bandın yüksekliğini düşük tutar */}
-            <span className="hidden sm:inline">
-              Platformu deneyebilir, görüş ve önerilerinizle gelişim sürecimize katkı
-              sağlayabilirsiniz.
+            <span>
+              <span className="font-semibold text-slate-900">CorteQS açık beta yayında!</span>{" "}
+              {/* Uzun açıklama mobilde gizli — bandın yüksekliğini düşük tutar */}
+              <span className="hidden sm:inline">
+                Platformu deneyebilir, görüş ve önerilerinizle gelişim sürecimize katkı
+                sağlayabilirsiniz.
+              </span>
             </span>
-          </span>
-        </p>
-      </div>
+          </p>
+          {/* Kapatma: gerçek <button> — Tab ile odaklanılır, Enter/Space ile çalışır.
+              Tercih localStorage'da kalıcıdır; anlatım için title, ekran okuyucu için aria-label. */}
+          <button
+            type="button"
+            onClick={dismissBetaBanner}
+            aria-label="Beta duyurusunu kapat"
+            title="Beta duyurusunu kapat"
+            className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-amber-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-1"
+          >
+            <X aria-hidden="true" className="h-4 w-4" />
+          </button>
+        </div>
+      )}
       {/* Yeni üst bar — beta uyarısının altında, eski header'ın üstünde; Profilim + Çıkış (sağ üst), beyaz zemin */}
       <div className="border-b border-slate-200/80 bg-white px-4 py-1.5">
         <div className="container mx-auto flex items-center justify-end gap-x-4 lg:px-6">

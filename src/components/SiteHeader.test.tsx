@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -19,9 +19,19 @@ vi.mock("@/components/auth/useAuth", () => ({
   }),
 }));
 
+const BETA_BANNER_STORAGE_KEY = "corteqs.site.beta-banner-dismissed.v1";
+const BETA_BANNER_TEXT = "CorteQS açık beta yayında!";
+const renderHeader = () =>
+  render(
+    <MemoryRouter>
+      <SiteHeader />
+    </MemoryRouter>,
+  );
+
 describe("SiteHeader", () => {
   beforeEach(() => {
     authState.user = null;
+    window.localStorage.clear();
   });
 
   it("shows the brand header, slogan and auth links for a signed-out visitor", () => {
@@ -63,5 +73,44 @@ describe("SiteHeader", () => {
     expect(screen.getByRole("link", { name: "Profilim" })).toHaveAttribute("href", "/profile");
     expect(screen.getByRole("button", { name: "Çıkış" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Giriş Yap" })).not.toBeInTheDocument();
+  });
+
+  // H5 (m150): beta bandı her sayfada ~40px yiyordu ve kapatılamıyordu.
+  describe("beta bandı", () => {
+    it("varsayılan olarak görünür ve kapatma düğmesi taşır", () => {
+      renderHeader();
+
+      expect(screen.getByText(BETA_BANNER_TEXT)).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Beta duyurusunu kapat" })).toBeInTheDocument();
+    });
+
+    it("kapatınca bandı gizler ve tercihi localStorage'a yazar", () => {
+      renderHeader();
+
+      fireEvent.click(screen.getByRole("button", { name: "Beta duyurusunu kapat" }));
+
+      expect(screen.queryByText(BETA_BANNER_TEXT)).not.toBeInTheDocument();
+      expect(window.localStorage.getItem(BETA_BANNER_STORAGE_KEY)).toBe("true");
+    });
+
+    it("tercih kayıtlıysa ilk render'da hiç çizmez (flash yok)", () => {
+      window.localStorage.setItem(BETA_BANNER_STORAGE_KEY, "true");
+
+      renderHeader();
+
+      // İLK render'da yok: lazy initializer yerine useEffect kullanılsaydı band bir kare
+      // görünüp kaybolurdu ve bu iddia düşerdi.
+      expect(screen.queryByText(BETA_BANNER_TEXT)).not.toBeInTheDocument();
+    });
+
+    // Fail-open sözleşmesi: depolama okunamıyorsa (gizli mod, kısıtlı depolama, bozuk
+    // değer) band GÖSTERİLİR. Ters davranış sessizce duyuruyu yutardı.
+    it("bozuk depolama değerinde bandı yine de gösterir", () => {
+      window.localStorage.setItem(BETA_BANNER_STORAGE_KEY, "{bozuk-json");
+
+      renderHeader();
+
+      expect(screen.getByText(BETA_BANNER_TEXT)).toBeInTheDocument();
+    });
   });
 });
