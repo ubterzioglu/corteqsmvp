@@ -1,5 +1,6 @@
 -- Bildirim dispatcher config: DB'den Edge Function'a pg_net ile anlik poke atabilmek icin
--- gereken URL + paylasilan sir.
+-- gereken URL + paylasilan sir. Sir generic notification_settings tablosuna degil,
+-- Supabase Vault'a sifreli olarak yazilir.
 --
 -- Sir bu dosyaya YAZILMAZ. psql degiskeni olarak disaridan gecilir, psql :'secret' sozdizimi
 -- degeri guvenli bir SQL literaline cevirir:
@@ -8,8 +9,7 @@
 --   psql "$env:SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -v secret="$env:NOTIFY_DISPATCH_SECRET" `
 --     -f supabase\manual\2026-07-29_notification_dispatch_config.sql
 --
--- notification_settings tablosu client'a tamamen kapalidir (RLS deny-all + grant revoke);
--- sir yalnizca security-definer poke_notification_dispatcher() tarafindan okunur.
+-- Sir yalnizca security-definer poke_notification_dispatcher() tarafindan Vault'tan okunur.
 
 \if :{?secret}
 \else
@@ -42,21 +42,43 @@ select
 begin;
 
 insert into public.notification_settings (key, value)
-values
-  ('dispatch.url', to_jsonb('https://injprdrsklkxgnaiixzh.supabase.co/functions/v1/send-notification-emails'::text)),
-  ('dispatch.secret', to_jsonb(:'secret'::text))
+values ('dispatch.url', to_jsonb('https://injprdrsklkxgnaiixzh.supabase.co/functions/v1/send-notification-emails'::text))
 on conflict (key) do update
   set value = excluded.value,
       updated_at = now();
 
+select id as dispatch_secret_id
+from vault.decrypted_secrets
+where name = 'notification_dispatch_secret'
+order by created_at desc
+limit 1
+\gset
+
+\if :{?dispatch_secret_id}
+  select vault.update_secret(
+    :'dispatch_secret_id'::uuid,
+    :'secret',
+    'notification_dispatch_secret',
+    'DB to send-notification-emails shared dispatch credential'
+  );
+\else
+  select vault.create_secret(
+    :'secret',
+    'notification_dispatch_secret',
+    'DB to send-notification-emails shared dispatch credential'
+  );
+\endif
+
+delete from public.notification_settings where key = 'dispatch.secret';
+
 commit;
 
 \echo '--- config yazildi (sir gosterilmez) ---'
-select key,
-       case when key = 'dispatch.secret'
-            then '***' || length(value #>> '{}')::text || ' karakter***'
-            else value #>> '{}'
-       end as deger
+select key, value #>> '{}' as deger
 from public.notification_settings
-where key like 'dispatch.%'
+where key = 'dispatch.url'
 order by key;
+
+select name, '***' || length(decrypted_secret)::text || ' karakter***' as deger
+from vault.decrypted_secrets
+where name = 'notification_dispatch_secret';

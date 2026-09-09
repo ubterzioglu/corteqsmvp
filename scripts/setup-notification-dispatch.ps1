@@ -6,8 +6,8 @@
 # Yaptiklari:
 #   1. .env.local'i yukler (Supabase anahtarlari orada yasar)
 #   2. NOTIFY_DISPATCH_SECRET'i dogrular (bos / cok kisa / yer tutucu ise durur)
-#   3. dispatch.url + dispatch.secret satirlarini notification_settings'e yazar
-#   4. Edge Function'i secret ile cagirip 3 yerin (fonksiyon / .env.local / DB) eslestigini kanitlar
+#   3. dispatch.url'yi ayar tablosuna, notification_dispatch_secret'i Vault'a yazar
+#   4. Edge Function'i secret ile cagirip 3 yerin (fonksiyon / .env.local / Vault) eslestigini kanitlar
 #
 # Sir hicbir yerde ekrana basilmaz. Cok satirli komut yapistirma derdini ortadan kaldirmak
 # icin yazildi — konsola yapistirilan cok satirli bloklar PS prompt'lariyla birlikte
@@ -15,7 +15,7 @@
 
 param(
   # Kriptografik rastgele bir sir uretir, .env.local'e yazar, `supabase secrets set` ile
-  # Edge Function'a tanimlar ve DB'ye yazar. Sir hicbir yerde ekrana basilmaz.
+  # Edge Function'a tanimlar ve DB Vault'a yazar. Sir hicbir yerde ekrana basilmaz.
   [switch]$GenerateSecret
 )
 
@@ -104,7 +104,7 @@ if ($LASTEXITCODE -ne 0) {
   Write-Host "HATA: dispatch config yazilamadi (psql cikis kodu $LASTEXITCODE)." -ForegroundColor Red
   exit 1
 }
-Write-Host "[3/4] dispatch.url + dispatch.secret yazildi." -ForegroundColor Green
+Write-Host "[3/4] dispatch.url + Vault notification_dispatch_secret yazildi." -ForegroundColor Green
 
 # --- 4. Uctan uca kimlik testi --------------------------------------------
 # Kuyrukta bekleyen kayit yok (94'unun hepsi 'skipped'), bu yuzden bu cagri
@@ -117,7 +117,7 @@ Write-Host ""
 if ($response.StatusCode -eq 200) {
   Write-Host "[4/4] BASARILI - Edge Function 200 dondu: $($response.Content)" -ForegroundColor Green
   Write-Host ""
-  Write-Host "Fonksiyon secret'i, .env.local ve DB birbirine uyuyor. Boru hatti hazir." -ForegroundColor Green
+  Write-Host "Fonksiyon secret'i, .env.local ve DB Vault birbirine uyuyor. Boru hatti hazir." -ForegroundColor Green
   Write-Host "Kalan: commit + Coolify deploy, sonra /admin/notifications'tan anahtarlari ac."
 } elseif ($response.StatusCode -eq 401) {
   Write-Host "[4/4] BASARISIZ - Edge Function 401 dondu." -ForegroundColor Red
