@@ -6,11 +6,36 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260909-cadde-sadelestirme");
-    expect(ADMIN_UPDATES[0].date).toBe("9 Eylül 2026");
+    expect(ADMIN_UPDATES[0].id).toBe("20260910-gorsel-dil-ve-acil-liste");
+    expect(ADMIN_UPDATES[0].date).toBe("10 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("10 Eylül kaydı kök nedeni, ölçümü ve doğrulanmamış olanı birlikte söyler", () => {
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260910-gorsel-dil-ve-acil-liste");
+    const detail = update?.items.join(" ") ?? "";
+
+    // Günün kök teşhisi tek tek kusurlar değil, kuralsızlıktı. Ölçülen iki sayı
+    // (9 yarıçap · 13 rozet) duyurunun kanıtı — düşerse duyuru iddiaya döner.
+    expect(detail).toContain("DOKUZ farklı köşe yuvarlaklığı");
+    expect(detail).toContain("ONÜÇ farklı rozet stili");
+
+    // Erişilebilirlik düzeltmesi ölçümle anlatılmalı, "iyileştirildi" ile değil.
+    expect(detail).toContain("2.56");
+    expect(detail).toContain("4.5");
+
+    // Radar maddesi bu turun en önemli bulgusu: "kapalı" sanılan iş aslında
+    // yedi haftadır sessizce bozuk. Duyurudan düşerse yanlış iş planlanır.
+    expect(detail).toContain("20 Temmuz'dan beri");
+
+    // Kendi kusurumu kendim buldum — bunu duyurudan çıkarmak, düzeltmeyi
+    // hiç olmamış bir sorunun çözümü gibi göstermek olur.
+    expect(detail).toContain("BİR KUSURU KENDİM YAPIP KENDİM BULDUM");
+
+    // ⚠️ Gün boyunca yapılan işin tamamı görsel; otomatik test yerleşimi ölçemez.
+    expect(detail).toContain("GÖZLE KONTROL BEKLİYOR");
   });
 
   it("9 Eylül kaydı ölçümü, kapsamı ve DOĞRULANMAMIŞ olanı birlikte söyler", () => {

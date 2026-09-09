@@ -14,6 +14,28 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260910-gorsel-dil-ve-acil-liste",
+    date: "10 Eylül 2026",
+    title:
+      "Cadde'nin görsel dili tek kurala bağlandı, acil işler listesine soru-cevap bölümü eklendi",
+    items: [
+      "GÜNÜN ÖZETİ: 27 Ağustos denetiminin 31 maddesinden 23'ü artık kapandı (dün 14'tü). Bugün kapatılanların tamamı görsel dille ilgili — yani sitenin dağınık görünmesinin asıl sebebiyle.",
+      "SORUNUN KÖKÜ NEYDİ: Denetim, tek tek kusurlardan çok 'tanımlı bir tasarım kuralının olmaması'nı işaret ediyordu. Ölçtük, haklıydı: Cadde sayfalarında DOKUZ farklı köşe yuvarlaklığı ve ONÜÇ farklı rozet stili aynı anda dolaşıyordu. Her sayfa kendi kuralını uydurmuştu.",
+      "KÖŞE YUVARLAKLIĞI TEKE İNDİ: Dokuz farklı değer vardı (kimi kart çok yuvarlak, kimi köşeli). Artık tek bir değer var; istisna yalnız yuvarlak düğmeler ve profil fotoğrafları. Ayrıca bu değer artık tek bir yerden geliyor, ileride değiştirmek istersek tüm site birlikte değişecek.",
+      "OKUNMAYAN GRİ YAZILAR DÜZELTİLDİ: Bazı açıklama metinleri o kadar açık griydi ki erişilebilirlik ölçütünü karşılamıyordu — hesapladık, beyaz zeminde 2.56 kontrast veriyordu (geçer not 4.5). Bu metinler koyulaştırıldı; artık 4.76. Görme zorluğu olan ya da güneş altında telefona bakan kullanıcı için gerçek bir fark.",
+      "ROZETLER ÜÇ TİPE İNDİ: Onüç ayrı rozet stili vardı ve hiçbirinin görsel ağırlığı önemiyle örtüşmüyordu. En çarpıcı iki örnek: 'Sabit' rozeti siyah dolguyla sayfadaki EN dikkat çekici rozetti ama en az bilgi taşıyordu; 'Sponsorlu' turuncu dolguyla akıştaki en göze batan şeydi — yani reklam içeriği en yüksek görsel önceliğe sahipti, ki bu yanlış bir sinyal. Artık üç tip var: durum (Canlı, Arşiv, Sabit), kimlik (rol, Sponsorlu), kategori (ilgi alanı, tür).",
+      "KARTLARDAKİ GÖKKUŞAĞI ŞERİT ANLAM KAZANDI: Her kartın üstünde beş renkli bir şerit vardı; güzel duruyordu ama hiçbir bilgi taşımıyor, her kartta tekrarlandığı için de kartlar arası farkı siliyordu. Artık şerit kartın hangi bölüme ait olduğunu söylüyor (Cadde / Cafe / Çarşı). Gökkuşağı logoda duruyor.",
+      "CAFE KARTINDAKİ ÇELİŞKİ GİDERİLDİ: Kart turuncu çerçeveliyken içindeki 'Canlı' rozeti ve üstündeki şerit yeşildi — aynı kartta iki farklı renk, üç ayrı sinyal. Artık kimliği yalnız şerit taşıyor.",
+      "MARKA RENGİ ARAYÜZE GİRDİ: Markanın imza rengi (bronz) sitenin hiçbir yerinde kullanılmıyordu; ölçtük, kod tabanında tek bir yerde bile geçmiyordu. Artık birincil düğmelerde. Bir de kontrast hesabı yaptık: bu rengin açık tonu beyaz yazıyla okunaklı değil, o yüzden düğme zemininde daha koyu tonu kullanılıyor.",
+      "ACİL İŞLER LİSTESİNE SORU-CEVAP BÖLÜMÜ: Komuta Merkezi'ndeki her acil maddenin altında artık bir 'Soru / cevap' bölümü var. Bugüne kadar bir maddenin ne demek istediği sohbette ya da mailde konuşuluyor, sonra madde ile cevabı birbirinden kopuyordu. Artık ikisi aynı yerde duruyor.",
+      "DÖRT ACİL MADDE İNCELENDİ VE DÖRDÜ DE YAZILANDAN FARKLI ÇIKTI: Her maddenin gerçek durumu tek tek ölçüldü ve altına 6'şar soru yazıldı. En çarpıcısı Radar: 'kapattığımızı açalım' diye yazılmıştı ama Radar kapalı değil — günlük görevi her sabah çalışıyor ve 'başarılı' diyor, buna rağmen 20 Temmuz'dan beri tek bir haber taraması yapmamış. Yaklaşık yedi haftadır sessizce bozuk ve hata vermediği için kimse fark etmemiş. Bu bir 'aç' işi değil, tamir işi.",
+      "DİĞER ÜÇ MADDE: WhatsApp grup sayfaları 4 Ağustos'ta silinmiş (kimse ulaşamadığı için), verisi duruyor. Etkinlik altyapısı yarım ve içi tamamen boş; üstelik Cadde'deki süzgeci yine 4 Ağustos'ta kaldırılmış. Google giriş ekranı için hazırlanmış bir plan zaten var (2 Ağustos'ta yazılmış) ama hiçbir adımı başlamamış.",
+      "BİR KUSURU KENDİM YAPIP KENDİM BULDUM: Soru-cevap bölümünü ilk kurduğumda, yorumları yalnız bölüm açıldığında yüklenecek şekilde ayarlamıştım (gereksiz yük olmasın diye). Sonuç: dört maddeye 6'şar soru yazılmasına rağmen panoda hiçbiri belli olmuyordu, çünkü kapalıyken sayı bilinmiyordu. Endişem yersizdi — liste en fazla 10 satır. Düzeltildi; düğme artık 'Soru / cevap (6)' diyor.",
+      "DÜRÜST NOT — HÂLÂ GÖZLE KONTROL BEKLİYOR: Bugünün işlerinin tamamı görsel ve otomatik testler görsel yerleşimi ölçemiyor. Özellikle köşelerin daha az yuvarlak olması 48 kartı birden etkiledi, rozetlerin sadeleşmesi de akışın görünümünü değiştirdi. Ayrıca 'Sponsorlu' rozetinin nötr tona inmesi reklam görünürlüğünü düşürür — bu bir ürün kararı olarak gözden geçirilmeli.",
+      "KONTROLLER: 264 dosyadaki 1.862 otomatik testin tamamı geçti (dün 262/1.851), kod denetimi temiz, yazı denetimi temiz, üretim derlemesi başarılı. Bugünkü kuralları koruyan üç yeni sözleşme testi de eklendi — biri kasten bozularak gerçekten koruduğu doğrulandı.",
+    ],
+  },
+  {
     id: "20260909-cadde-sadelestirme",
     date: "9 Eylül 2026",
     title:
