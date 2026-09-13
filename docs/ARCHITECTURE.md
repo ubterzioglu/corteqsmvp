@@ -69,7 +69,8 @@ Yeni kodda component içi `supabase.from()` YOK — `*-api.ts` + React Query.
 
 - Canonical: `src/components/auth/` (AuthProvider, `useAuth`, RequireAuth, RequireFeature).
   Yeni kod **yalnız** `@/components/auth/useAuth` import eder.
-- `src/contexts/AuthContext.tsx` geriye-uyum shim'idir (canonical'a delege; 21 eski import) — B5'te kalkacak.
+- ~~`src/contexts/AuthContext.tsx` geriye-uyum shim'i~~ — **B5 2026-09-06'da KAPANDI**, shim
+  silindi, 16 dosya kanonik `@/components/auth/useAuth` yoluna geçirildi.
 - Yetki zinciri: Supabase Auth → session context → `RequireAuth` (route) → `RequireFeature`/
   `useFeatureFlags` (feature) → DB'de `is_admin()`/`is_moderator()`/`has_cadde_feature()`.
 
@@ -166,9 +167,9 @@ DROP migration (`user_follows` 1 satır R-06 notuyla). Bu tablolara yeniden poli
 - **Types regen (B1 — ÇÖZÜLDÜ):** `src/integrations/supabase/types.ts` güncel (cadde ve
   revision_request tabloları tanımlı). Yenilemek gerekirse:
   `npx supabase gen types typescript --project-id injprdrsklkxgnaiixzh` — geçerli
-  `SUPABASE_ACCESS_TOKEN` gerekir. `tsc -p tsconfig.app.json --noEmit` bugün **98 hata**
-  döner ve bunların hiçbiri types.ts kaynaklı değildir (varyant/accent tipleri, ProfilePage
-  boolean atamaları, mevcut olmayan `role_taxonomy_rules` tablosu).
+  `SUPABASE_ACCESS_TOKEN` gerekir. `tsc -p tsconfig.app.json --noEmit` **0 hata** döner
+  (2026-09-13'te sıfırlandı; 109 → 22 → 16 → 12 → 9 → 0 — ayrıntı ve kapanan sınıflar
+  için kök `CLAUDE.md` "Known Limitations" md.5'e bak).
 - **Edge Function (7):** `find-matches`, `lansman-admin`, `radar-news-scan`,
   `relocation-notifications`, `send-notification-emails`, `send-submission-email`,
   `submit-survey-response`.
@@ -334,9 +335,9 @@ Pre-hook: `verify:text` (encoding bekçisi) `src/public/docs/scripts` tarar — 
   `scripts/generate-sitemap.test.mjs` (STATIC_ROUTES ↔ App.tsx route tablosu),
   `src/lib/cadde-rules` ayna testleri (SQL ↔ TS).
 - **Playwright** yapılandırılmış: 18 `.spec.ts`; persona matrisi (spec §22.4) açık kalem.
-- Tam `npm run lint` bugün **1280 problem (1060 error, 220 warning)** ile exit 1 döner
-  (çoğu `no-explicit-any`; B7 backlog) — **kendi dosyalarını hedefli `npx eslint <dosyalar>` ile
-  doğrula.** `tsc -p tsconfig.app.json --noEmit`: 98 hata (§5).
+- Tam `npm run lint` **0 problem** döner (eski "1280 problem" iddiası bayattı, 2026-09-05'te
+  ölçülüp kapandı — CLAUDE.md "Known Limitations"). `tsc -p tsconfig.app.json --noEmit`:
+  **0 hata** (2026-09-13'te sıfırlandı, §5 eski A/B/C sınıf dökümü artık tarihsel).
 
 ---
 

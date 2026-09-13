@@ -116,28 +116,24 @@ src/
 ├── hooks/                   # useFeatureFlags, useMuhasebe, usePublicIndividualProfile, vb.
 ├── integrations/supabase/
 │   └── client.ts            # Lovable-generated — RİSKLİ, DOKUNMA
-└── contexts/
-    └── AuthContext.tsx       # BACKWARD-COMPAT SHIM — canonical useAuth'a delege eder; yeni kodda @/components/auth/useAuth kullan
+│   # NOT: src/contexts/AuthContext.tsx (backward-compat shim) 2026-09-06'da SİLİNDİ (B5)
 ```
 
 ---
 
 ## 4. Auth & Yetkilendirme
 
-### ÖNEMLİ: Canonical auth + backward-compat shim
+### Tek auth sistemi — shim 2026-09-06'da KALDIRILDI (B5 kapandı)
 
-| | `src/components/auth/` | `src/contexts/AuthContext.tsx` |
-|--|------------------------|-------------------------------|
-| App.tsx'e mount? | **EVET** (canonical) | Canonical AuthProvider'ı re-export eder |
-| Rol | Kaynak (`session`/`user`/`isLoading`) | **Shim**: `useAuth` canonical'a delege; `loading` alias'ı doğru |
-| Yeni kodda kullan? | **EVET** | Hayır — ama orphan/ölü DEĞİL (39 dosya hâlâ buradan import ediyor, gerçek session görüyorlar) |
+Auth için **tek yol** vardır: `src/components/auth/` (AuthProvider, `useAuth`, RequireAuth,
+RequireFeature). ~~`src/contexts/AuthContext.tsx`~~ backward-compat shim'i **silindi**; onu
+import eden 16 dosya kanonik yola geçirildi. Belgelenen `loading`→`isLoading` riski hiç
+gerçekleşmedi: alias'ı kullanan dosya yoktu.
 
-**Doğru import (yeni kod):**
+**Doğru import (tüm kod):**
 ```ts
 import { useAuth } from "@/components/auth/useAuth";
 ```
-
-> Shim migrasyonu ertelendi (39 import → canonical, `loading`→`isLoading`, sonra shim sil). Bkz. refactor backlog **B5**.
 
 ### Yetki Katmanları
 
@@ -384,7 +380,6 @@ supabase functions deploy lansman-admin
 | `src/main.tsx` | hydrateRoot/createRoot switch |
 | `src/components/auth/AuthProvider.tsx` | Session yönetiminin kalbi |
 | `src/components/auth/useAuth.ts` | Canonical auth hook — buradan import et |
-| `src/contexts/AuthContext.tsx` | Backward-compat shim — canonical'a delege; yeni kodda `@/components/auth/useAuth` kullan |
 | `src/integrations/supabase/client.ts` | Lovable-generated — değiştirme (tek client) |
 | `src/lib/muhasebe-*.ts` | Referans mimari pattern |
 | `src/lib/admin.ts` + `src/lib/admin/` | `admin.ts` = barrel; `admin/` = 7 domain API (yeni admin API'leri için pattern) |
@@ -428,7 +423,8 @@ supabase functions deploy lansman-admin
 1. **Generated `supabase/types.ts` senkron değil** — `supabase gen types` ile yenile (B1, en yüksek öncelik). **2026-06-11 denemesi:** `.env.local`'daki `SUPABASE_ACCESS_TOKEN` (+backup) Unauthorized — token yenilenmeli; sonra `cadde-internal.ts`'teki tek `db as any` cast'i kalkar
 2. **Kırık import'lar** — `@/lib/mapEntities`, `@/lib/radarNews`, `html-to-image` eksik; runtime crash riski (B2)
 3. **`AdminLayout.tsx` hâlâ büyük (741 satır)** — alt bileşenlere + `useAdminAccess` hook'una böl (B4)
-4. **Auth shim migrasyonu** — `@/contexts/AuthContext`'ten ~39 import; canonical'a geçir, sonra shim'i sil (B5)
+4. ~~**Auth shim migrasyonu**~~ — **KAPANDI 2026-09-06** (B5). `@/contexts/AuthContext` silindi,
+  16 dosya kanonik `@/components/auth/useAuth` yoluna geçirildi.
 5. **Karışık data fetching** — component içi `supabase.from()` hâlâ yaygın; `*-api.ts` + React Query'ye geç (B6)
 6. **TypeScript loose** — B1 sonrası kademeli sıkılaştır; ~103 `as any` temizle (B7)
 7. **`no-unused-vars` ESLint kapalı** — warn seviyesinde aç (B8)
