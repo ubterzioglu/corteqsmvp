@@ -14,7 +14,13 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-const makeNewsPost = (overrides: Partial<NewsPostRow> = {}): NewsPostRow => ({
+// Q4 (tsc TS2322): `{ ...base, ...overrides }` ile Partial<NewsPostRow>'un
+// spread edilmesi TS'i her alanı "T | undefined" gibi genişletmeye zorluyor
+// (bilinen bir TS sınırlaması — spread edilen opsiyonel alanlar dönüş tipini
+// bulanıklaştırıyor), oysa base HER alanı zaten dolduruyor. Sabit `base`
+// nesnesi önce kendi tipiyle doğrulanır, sonra tek satırlık cast fixture
+// sınırında güvenli — üretim kodu değil, test verisi.
+const baseNewsPost: NewsPostRow = {
   id: 42,
   title: "Berlin'de Türk girişimciler buluştu",
   summary: null,
@@ -30,8 +36,14 @@ const makeNewsPost = (overrides: Partial<NewsPostRow> = {}): NewsPostRow => ({
   unique_hash: "abc",
   status: "active",
   created_at: "2026-05-01T10:00:00Z",
-  ...overrides,
-});
+  approved_at: null,
+  approved_by: null,
+  ingestion_source_type: null,
+  radar_candidate_id: null,
+};
+
+const makeNewsPost = (overrides: Partial<NewsPostRow> = {}): NewsPostRow =>
+  ({ ...baseNewsPost, ...overrides }) as NewsPostRow;
 
 describe("marquee helpers", () => {
   beforeEach(() => {

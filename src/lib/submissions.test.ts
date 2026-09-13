@@ -10,6 +10,7 @@ import {
   getSubmissionDocumentsBucketLevel,
   getStatusLabel,
   resolveReferralStatusFromRpcError,
+  type Submission,
   type UploadedDocument,
   toSubmissionInsert,
   validateSubmissionDocuments,
@@ -79,6 +80,11 @@ describe("submission helpers", () => {
     expect(getFormTypeLabel("support")).toBe("Destek");
     expect(getStatusLabel("contacted")).toBe("İletişime geçildi");
 
+    // Q5 (tsc TS2345): `Submission = Tables<"submissions">` tablo şeması
+    // büyüdükçe genişledi (whatsapp_interest, contact_*_reached gibi 20+ yeni
+    // alan) ama bu test yalnız buildSubmissionSearchText'in OKUDUĞU birkaç
+    // alanı doğruluyor. Fixture'ı tamamen alakasız alanlarla şişirmek yerine
+    // sınırda tek satırlık cast — üretim kodu değil, test verisi.
     const haystack = buildSubmissionSearchText({
       id: "1",
       form_type: "register",
@@ -112,7 +118,7 @@ describe("submission helpers", () => {
       notes: "Priority lead",
       reviewed_at: null,
       reviewed_by: null,
-    });
+    } as unknown as Submission);
 
     expect(haystack).toContain("community builder");
     expect(haystack).toContain("priority lead");
