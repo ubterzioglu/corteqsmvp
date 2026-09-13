@@ -1184,6 +1184,11 @@ export const toolCatalog = {
       "module_family": "other"
     },
     {
+      "path": "src/lib/admin-catalog-display.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
       "path": "src/lib/admin-catalog.test.ts",
       "kind": "ts",
       "module_family": "catalog"
@@ -1225,6 +1230,71 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/admin-shell/admin-navigation-registry.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry/communities.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry/content.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry/links.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry/members.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry/muhasebe.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry/overview.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry/radar.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry/relocation-ingestion.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry/roles-afs.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry/service-finder.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry/system.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry/workshop.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-navigation-registry/workspace.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -1284,6 +1354,36 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin-shell/admin-updates/2026-04.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-updates/2026-06.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-updates/2026-07.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-updates/2026-08.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-updates/2026-09.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-updates/types.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin-shell/admin-user-labels.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1300,6 +1400,71 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/admin-shell/burak-share-tools.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools/tool-01.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools/tool-02.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools/tool-03.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools/tool-04.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools/tool-05.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools/tool-06.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools/tool-07.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools/tool-08.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools/tool-09.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools/tool-10.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools/tool-11.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools/tool-12.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/burak-share-tools/types.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -1339,6 +1504,46 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin-shell/social-diaspora-posts/posts-01-13.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-diaspora-posts/posts-14-26.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-diaspora-posts/posts-27-38.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-diaspora-posts/posts-39-50.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-diaspora-posts/posts-51-60.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-diaspora-posts/posts-61-68.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-diaspora-posts/theme-labels.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-diaspora-posts/types.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin-shell/social-share-log.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1360,6 +1565,31 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/admin-shell/social-test-tools.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-test-tools/tools-01-03.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-test-tools/tools-04-06.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-test-tools/tools-07-08.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-test-tools/tools-09-10.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/social-test-tools/types.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -1924,6 +2154,71 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/dashboard/command-center-items/date-groups.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items/facet-options.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items/facet-summaries.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items/facets.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items/filters.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items/form-state.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items/grouping.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items/labels.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items/mutations.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items/queries.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items/row-mapping.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items/sorting.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/command-center-items/types.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/dashboard/hot-fix-comments.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1974,7 +2269,32 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/dashboard/resource-filters.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/resource-filters.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/resource-form-payload.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/resource-form-payload.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/dashboard/resource-items.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/resource-storage.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -2324,6 +2644,21 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/profile-attribute-drafts.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-attribute-keys.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-avatar-storage.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/profile-documents.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2364,7 +2699,17 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/profile-requestable-features.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/profile-routing.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-social-links.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -2840,6 +3185,26 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/welcome-pack-orders-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/whatsapp-landing-form.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/whatsapp-landing-options.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/whatsapp-landing-placeholders.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/whatsapp-landing-presentation.ts",
       "kind": "ts",
       "module_family": "lib"
     },
