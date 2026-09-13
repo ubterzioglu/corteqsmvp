@@ -14,6 +14,20 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260913-workshop-panolari-tamamen-kapandi",
+    date: "13 Eylül 2026",
+    title:
+      "Cadde ve Profil workshop panolarındaki tüm eski maddeler gözden geçirildi — 56 maddenin 55'i kapandı, 1 tanesi bilerek açık bırakıldı",
+    items: [
+      "GÜNÜN ÖZETİ: Daha önceki bir turda yarım kalan Cadde WS2 triyajı bitirildi, hiç başlanmamış Cadde WS1 ve WS3 panoları da tamamlandı. Hiç işaretlenmemiş 56 workshop maddesinin (Profil WS1 18/18 zaten bitmişti) tamamı artık gözden geçirilmiş durumda.",
+      "CADDE WS2 — KALAN 12 MADDE KAPANDI: Modül geliştirme sırası (Cadde → Profil → Çarşı → Taşınma motoru → WhatsApp botu, 4 madde) onaylanıp işaretlendi. Ertelenmiş ödeme programı (2 madde) ve WordPress taşıma + maliyet optimizasyonu (2 madde) hâlâ geçerli sayılıp açık bırakıldı — ayrı takip ediliyor. Proje kütüphanesi + NDA erişim yapısı + takım eşleştirme sistemi (3 madde) birleştirilip Komuta Merkezi'ne tek yeni todo olarak taşındı. Yorum hatası maddesi (m134) BİLEREK DOKUNULMADI — ayrı araştırılıyor, kullanıcı cevabı bekleniyor.",
+      "CADDE WS1 — İKİ MADDE SORU SORULMADAN, KOD KANITIYLA KAPANDI: '+90 numarasıyla kayıtlı kullanıcı yalnız Köprü'ye girebilir' ve '+90 dışı doğrulanmış diaspora üyesi tüm ülke/şehir + Köprü'yü görebilir' kuralları zaten koda geçmiş: is_tr_resident/is_diaspora_resident fonksiyonları ve can_post_kopru truth table'ı bunu TELEFON NUMARASINA GÖRE DEĞİL, profildeki ülke bilgisine göre yapıyor — bilerek öyle tasarlandı, çünkü +90 numaralı bir üye Berlin'de yaşıyor olabilir. Üçüncü madde (viral video/Jukebox fikri) somut bir karar gerektirmediği için açık fikir olarak bırakıldı.",
+      "CADDE WS3 — DÖRT MADDE ZATEN BAŞKA YERDE SAHİPLİ ÇIKTI: içerik/soğuk-başlangıç maddelerinin dördü (test içeriği için ayrı görünürlük, dört şehir için gerçek içerik, resmî hesaptan yayın, blog↔Cadde döngüsü) mevcut batch planında zaten UBT/Burak'a atanmış bulundu — yeni bir karar gerekmedi, sadece 'gözden geçirildi' işaretlendi.",
+      "DÜRÜST NOT: Bu partide de üretim kodu değişmedi — WS1'deki iki maddenin arkasındaki kural zaten önceden yazılmıştı, bu turda sadece doğrulanıp panoda kapatıldı. Veritabanında sadece workshop_items işaretleri güncellendi ve bir yeni Komuta Merkezi todo'su eklendi. 'Kapandı' denen maddeler kalıcı silinmedi, gerektiğinde yeniden açılabilir.",
+      "KONTROLLER: workshop_items artık Cadde WS1 0/54 açık, Cadde WS2 1/82 açık (yalnız m134), Cadde WS3 0/31 açık, Profil WS1 0/26 açık durumunda. Kod/test/deploy değişikliği yok, yalnızca veritabanı kayıtları güncellendi.",
+    ],
+  },
+  {
     id: "20260913-komuta-merkezi-76-madde-triyaji",
     date: "13 Eylül 2026",
     title:

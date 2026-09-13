@@ -6,11 +6,32 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260913-komuta-merkezi-76-madde-triyaji");
+    expect(ADMIN_UPDATES[0].id).toBe("20260913-workshop-panolari-tamamen-kapandi");
     expect(ADMIN_UPDATES[0].date).toBe("13 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("13 Eylül yedinci parti kaydı Cadde WS1/WS2/WS3 workshop kapanışını ölçümle söyler", () => {
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260913-workshop-panolari-tamamen-kapandi");
+    const detail = update?.items.join(" ") ?? "";
+
+    // Kapsam: 56 maddenin tamamı, sadece 1 tanesi (m134) bilerek açık kaldı.
+    expect(detail).toContain("56 workshop maddesinin");
+    expect(detail).toContain("BİLEREK DOKUNULMADI");
+
+    // Kod kanıtıyla soru sormadan kapatılan iki madde: telefona göre DEĞİL,
+    // ülke bilgisine göre çalıştığı açıkça yazılmalı — aksi hâlde bilinen
+    // "+90 numaralı üye Berlin'de yaşıyor olabilir" tuzağı tekrar ediyormuş sanılır.
+    expect(detail).toContain("TELEFON NUMARASINA GÖRE DEĞİL");
+    expect(detail).toContain("is_tr_resident");
+
+    // Yeni Komuta Merkezi todo'suna taşınan üç madde adıyla geçmeli.
+    expect(detail).toContain("Proje kütüphanesi + NDA erişim yapısı + takım eşleştirme");
+
+    // Dürüst not: üretim kodu değişmedi, sadece DB kayıtları.
+    expect(detail).toContain("üretim kodu değişmedi");
   });
 
   it("13 Eylül altıncı parti kaydı 76 maddelik triyajın sonucunu ölçümle söyler", () => {
