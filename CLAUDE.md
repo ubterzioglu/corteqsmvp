@@ -7,12 +7,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **CorteQS Landing** is a multi-feature React + Vite application with Supabase backend. It combines a public marketing site, admin dashboard, member profiles, surveys, workspace collaboration tools, and an accounting module (muhasebe) — all in a single SPA.
 
 **Key Metrics (ölçüldü 2026-09-13):**
-- **950** `.ts`/`.tsx` files under `src` — 199 pages, 356 components (2026-09-06 ölü kod
-  temizliğiyle 1.092'den indi; 150 erişilemez dosya silindi)
+- **1.025** `.ts`/`.tsx` files under `src` — 199 pages, 383 components (2026-09-06 ölü kod
+  temizliğiyle 1.092 → 950'ye inmişti; 13 Eylül gecesi büyük dosya ayrıştırmasıyla 1.025'e
+  **çıktı** — bu bilinçlidir, 6 dev dosya ~75 küçük modüle bölündü, bkz. Known Limitations md.7)
 - **383 Supabase migrations** — 131 in `supabase/migrations/applied/`
   + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split); 7 Edge Functions
-- **271 dosya / 1.897 test** yeşil (`npm run test`) — 245 taban rakamı bayattı, birkaç
-  oturumdur `*-api.ts` göçleriyle yeni test dosyaları ekleniyor
+- **276 dosya / 1.935 test** yeşil (`npm run test`, ölçüldü 2026-09-13 gece) — 245 ve 271
+  taban rakamları bayattı; birkaç oturumdur `*-api.ts` göçleriyle yeni test dosyaları ekleniyor
 - `npm run lint` → **0 problem** (eski "1280 problem" notu bayattı)
 - `src/App.tsx`: 313 lines, 51 `lazy()` imports
 - TypeScript with relaxed strict mode (intentional trade-off) — **`tsc` hatası SIFIRA indi**
@@ -709,12 +710,14 @@ belong there; documentation goes under `docs/`.
    `@/components/auth/useAuth` yoluna geçirildi, `src/contexts/AuthContext.tsx` silindi.
    Belgelenen `loading`→`isLoading` riski hiç gerçekleşmedi: alias'ı kullanan dosya yoktu.
    Ayrıntı ve test tuzağı için "Authentication & Roles" bölümüne bak.
-3. **Mixed data fetching (B6)** → **8** `supabase.from(` + **3** `supabase.rpc(` calls still sit
-   inside `src/components`+`src/pages` (ölçüldü 2026-09-13; sırasıyla 83+42 → 32+4 → **8+3**).
-   2026-09-13'te 4 domain daha `*-api.ts` kalıbına taşındı (`welcome-pack-orders-api.ts`,
-   `service-requests-api.ts`, `dashboard/resource-entries-api.ts`, `messages-api.ts`).
-   Kalan 8 `from(`: `MvpManager.tsx`, `AdminReferralPage.tsx`, `AdminRolesOverviewPage.tsx` (×4),
-   `AdminWhatsAppLandingEditorsPage.tsx`, `ProfilePage.tsx`. Standardize on `*-api.ts` + React Query.
+3. ~~**Mixed data fetching (B6)**~~ → **KAPANDI 2026-09-13 (aynı gün içinde iki kez bayatladı).**
+   Sabah ölçümü "8 `from(` + 3 `rpc(` kaldı" diyordu (83+42 → 32+4 → 8+3), ama S1-S10 göçü o
+   listedeki 7 dosyayı zaten kapatmıştı — akşam yeniden ölçülünce yalnız `ProfilePage.tsx`'teki
+   `individual_profile_details` tablosuna iki çağrı (select+upsert) kalmıştı. Commit `1285337`
+   bunu `member-profile-api.ts`'e taşıdı (`upsertIndividualProfileDetailsPatch`); `ProfilePage.tsx`
+   artık ince bir sarmalayıcı. **Ölçüm (2026-09-13 gece): `src/components`+`src/pages` içinde 0
+   doğrudan `supabase.from(`/`supabase.rpc(` kaldı.** Yeni özellik eklerken hâlâ `*-api.ts` +
+   React Query kalıbını kullan — bu madde "iş bitti" değil, "biriktirilen borç sıfırlandı" demek.
 4. **TypeScript loose (B7)** → **10** satırda `as any` metni geçiyor (3 gerçek cast + 7
    yorum/açıklama satırı — 2026-09-13 ölçümü, önceki not "9 kaldı, 6 yorum" idi). Gerçek cast'ler
    bilinçli: `const db = supabase as any` (`cadde-internal.ts` · `relocation-api.ts` ·
@@ -730,10 +733,38 @@ belong there; documentation goes under `docs/`.
    (`cadde-internal.ts`'teki `const db = supabase as any` ile aynı tuzak). Yeni bir `tsc` hatası
    açılırsa önce bu iki sınıftan birine mi girdiğine bak.
 6. **Test coverage spotty** → activate Playwright for critical flows.
-7. **Large files** → **92** files exceed 300 lines (112 → 126 → **92**; 2026-09-06 ölü kod
-   temizliği 34 dosya düşürdü). En büyük gerçek kaynak dosyalar `src/lib/admin-shell/social-diaspora-posts.ts`
-   (2934) ve `ProfilePage.tsx`. `src/integrations/supabase/types.ts` (15.010) ve
-   `src/lib/agent/tools-catalog.generated.ts` (3139) ÜRETİLEN dosyalardır, bu sayıma dahil edilmez.
+7. **Large files** → **800 satırı aşan üretilmemiş dosya: 13 → 10** (ölçüldü 2026-09-13 gece).
+   O gece altı dev dosya ayrıştırıldı, **9.982 satır** tek dosyalık yığınlardan odaklı
+   modüllere taşındı:
+
+   | Dosya | Önce | Sonra | Nereye |
+   |---|---|---|---|
+   | `admin-shell/social-diaspora-posts.ts` | 2934 | **37** | `social-diaspora-posts/posts-*.ts` + `theme-labels` + `types` |
+   | `pages/ProfilePage.tsx` | 2782 | **795** | `components/profile/*` + `hooks/profile/*` + `lib/profile-*.ts` |
+   | `admin-shell/admin-updates.ts` | 2210 | **31** | `admin-updates/2026-*.ts` (aylık) |
+   | `pages/AddWhatsAppPage.tsx` | 1747 | **493** | `components/whatsapp/*` + `lib/whatsapp-landing-*.ts` |
+   | `pages/admin/AdminCatalogPage.tsx` | 1249 | **393** | `components/admin/catalog/*` + `lib/admin-catalog-display.ts` |
+   | `admin-shell/admin-navigation-registry.ts` | 849 | **40** | `admin-navigation-registry/<grup>.ts` (13 grup) |
+
+   ⚠️ **300+ sayısı 92'den 97'ye ÇIKTI ve bu bir gerileme DEĞİL** — beklenen sonuç:
+   2934 satırlık tek dosyayı ~400'erlik 8 parçaya bölmek, 300-500 bandındaki dosya sayısını
+   artırır ama tek bir devi yok eder. Bu maddede takip edilecek metrik **800 üstü sayısı**dır,
+   300 üstü değil. 300 üstünü sayıp "kötüleşmiş" sonucuna varma.
+
+   **Hâlâ 800 üstünde (10):** `CommandCenterManager.tsx` (2127) · `CaddePage.test.tsx` (1845) ·
+   `CaddePage.tsx` (1716) · `burak-share-tools.ts` (1418) · `command-center-items.ts` (1276) ·
+   `social-test-tools.ts` (1189) · `ProfilePage.test.tsx` (1028) · `cadde-api.ts` (986) ·
+   `zgen-data.ts` (980) · `LinkManager.tsx` (967).
+   Bunlardan `cadde-api.ts` (25 importer, **testi yok**) ve `CaddePage.tsx` (19 importer)
+   bilinçli olarak ertelendi: CLAUDE.md Cadde bölümü bu alanın *sessizce* kırıldığı üç ayrı
+   olayı belgeliyor. Önce karakterizasyon testi, sonra ayrıştırma.
+
+   ⚠️ **Satır sayarken Windows tuzağı:** PowerShell'in `Measure-Object -Line`'ı **boş satırları
+   saymaz** — `burak-share-tools.ts` için 1091 der, gerçek 1418'dir. Doğru ölçüm
+   `(Get-Content $f).Count` veya `wc -l`. Bu farkla ölçülen bir "iyileşme" sahtedir.
+
+   `src/integrations/supabase/types.ts` (15.764) · `src/lib/agent/tools-catalog.generated.ts`
+   (3242) · `src/data/geoCountries.generated.ts` (1013) ÜRETİLEN dosyalardır, sayıma dahil değil.
 8. ~~**Duplicate images in `public/`**~~ → **YENİDEN ÖLÇÜLDÜ 2026-09-13, KAPANDI.**
    `sweet.png` gerçekten ölüydü, silindi (13 Eylül Q1) — `sweet.jpg` tek kalan, kullanılan
    dosya. `last.png`/`newbg.png` byte-birebir aynı dosya (763.198 bayt) ama **ikisi de
