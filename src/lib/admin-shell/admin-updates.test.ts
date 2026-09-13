@@ -6,11 +6,31 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260913-on-madde-daha-ve-komuta-merkezi-senkronu");
+    expect(ADMIN_UPDATES[0].id).toBe("20260913-acil-liste-radar-tamiri-ve-komuta-merkezi-temizligi");
     expect(ADMIN_UPDATES[0].date).toBe("13 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("13 Eylül beşinci parti kaydı Radar tanısını ve Komuta Merkezi temizliğini ölçümle söyler", () => {
+    const update = ADMIN_UPDATES.find(
+      ({ id }) => id === "20260913-acil-liste-radar-tamiri-ve-komuta-merkezi-temizligi",
+    );
+    const detail = update?.items.join(" ") ?? "";
+
+    // Radar bulgusu bu partinin en önemli maddesi — kök neden ve ölçüm ("20 Temmuz")
+    // duyurudan düşerse yanlış anlaşılır (sanki hâlâ araştırılıyor gibi okunur).
+    expect(detail).toContain("RADAR 2 AYDIR SESSİZCE BOZUKMUŞ");
+    expect(detail).toContain("20 Temmuz'dan beri");
+    expect(detail).toContain("yarın sabahki (05:00) gerçek çalışmayla doğrulanacak");
+
+    // Sayı (21 madde) ölçülmüş olmalı, "birkaç madde kapatıldı" demek yetmez.
+    expect(detail).toContain("21 MADDE");
+
+    // Dokunulmayan 55 maddenin nedeni dürüstçe yazılmalı — hepsi bitti sanılmasın.
+    expect(detail).toContain("GERİYE KALAN 55 MADDE BİLEREK DOKUNULMADI");
+    expect(detail).toContain("hâlâ canlıda kapalı");
   });
 
   it("13 Eylül dördüncü parti kaydı taşınan sekiz ekranı ve Komuta Merkezi senkronunu söyler", () => {

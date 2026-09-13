@@ -14,6 +14,21 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260913-acil-liste-radar-tamiri-ve-komuta-merkezi-temizligi",
+    date: "13 Eylül 2026",
+    title:
+      "Acil listedeki 3 madde ele alındı, 2 aydır sessizce bozuk olan günlük haber taraması onarıldı, Komuta Merkezi'nde 21 madde kapatıldı",
+    items: [
+      "GÜNÜN ÖZETİ: Komuta Merkezi'ndeki 'acil' listeye (Top 10 Hot Fix) günlerdir cevap gelmiyordu. Üç maddesi bugün ele alındı, ayrıca listenin GERİSİNDEKİ 'yapılacaklar' tablosu da (76 madde) tek tek gözden geçirilip gerçekten bitmiş olanlar işaretlendi.",
+      "PROFİL MENÜSÜ VE GOOGLE GİRİŞ MALİYETİ — BURAK'A SORULDU: İki maddenin kararı tasarım/maliyet onayı gerektirdiği için Burak'a hazır sorularla iletildi (Perşembe toplantısı notu olarak kaydedildi): profil sayfasındaki sabit menünün sola alınıp alınmayacağı, ve Google girişindeki çirkin adresi düzeltmek için aylık ek ücretli bir Supabase özelliğinin (Custom Domain) onaylanıp onaylanmayacağı.",
+      "ETKİNLİK ÖZELLİĞİ İÇİN DE BURAK'IN AÇIKLAMASI İSTENDİ: 'Etkinlikler' fikrinin tam olarak ne tür bir özellik olduğu netleşmemişti — bunun dışındaki üç karar (kimler oluşturabilir, kullanıcı ne yapabilir, Cadde'deki süzgeç geri gelsin mi) verildi, yalnız 'ne tür bir özellik' sorusu Burak'a yöneltildi.",
+      "⚠️ EN ÖNEMLİ BULGU — RADAR 2 AYDIR SESSİZCE BOZUKMUŞ, KÖK NEDEN BULUNUP DÜZELTİLDİ: Günlük haber taraması her sabah 05:00'te çalışıp 'başarılı' diyordu ama 20 Temmuz'dan beri tek bir haber taramamıştı. Kök neden: fonksiyonun kullandığı gizli anahtar ile veritabanındaki anahtar birbirinden FARKLIYMIŞ — muhtemelen bir güncelleme sırasında biri değişmiş diğeri değişmemiş. Sonuç: cron her sabah çağırıyor, fonksiyon 'yetkisiz erişim' deyip anında duruyordu, ama cron'un kendi kaydı bunu görmüyordu (sadece isteği gönderme adımını izliyor, cevabı değil) — bu yüzden 2 ay boyunca kimse fark etmedi. Anahtar senkronize edildi; yarın sabahki (05:00) gerçek çalışmayla doğrulanacak.",
+      "KOMUTA MERKEZİ'NDE 21 MADDE 'TAMAMLANDI'YA ÇEVRİLDİ: Panodaki 76 gerçek 'yapılacak iş' maddesinin çoğu aslında bitmiş ama hiç işaretlenmemişti — pano sürekli kalabalık görünüyordu. Her biri gerçek kanıtla (kod, dokuman veya veritabanı kaydı) doğrulanıp işaretlendi: görsel dil kuralları (köşe yuvarlaklığı, buton dili, rozet tipleri, marka rengi, İngilizce kalıntılar — 9-10 Eylül'deki çalışmadan), Cafe oda arayüzü düzeltmeleri, Contributor kaynak/FAQ paketinin dört alt maddesi, WhatsApp bot altyapısı ve Müşteri Talepleri paneli, Burak'ın yönetici hesabı ataması.",
+      "GERİYE KALAN 55 MADDE BİLEREK DOKUNULMADI: Beşi zaten acil listedeki WhatsApp grup maddeleriyle aynı (Burak'ın cevabı bekleniyor). Kalan 50'si tamamen iş/insan kararı — RASCI modeli, teklif modelleri, HR klasörleri, pilot ülke seçimi, sosyal medya planları gibi kodda hiçbir izi olmayan, gerçek dünyada yapılması/karar verilmesi gereken işler. Hoş geldin maili otomasyonu da ayrıca kontrol edildi — hâlâ canlıda kapalı, yanlışlıkla açık sanılmadı.",
+      "KONTROLLER: Radar düzeltmesi ve Komuta Merkezi güncellemeleri veritabanı kayıtları üzerinde yapıldı, kod/deploy gerekmedi. Herhangi bir kullanıcı deneyimi değişmedi.",
+    ],
+  },
+  {
     id: "20260913-on-madde-daha-ve-komuta-merkezi-senkronu",
     date: "13 Eylül 2026",
     title:
