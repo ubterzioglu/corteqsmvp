@@ -9,10 +9,17 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/components/auth/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import type { Tables, TablesInsert } from "@/integrations/supabase/types";
+import {
+  fetchCounterpartNames,
+  fetchReceivedMessages,
+  fetchSentMessages,
+  markDirectMessageRead,
+  sendDirectMessage,
+  type DirectMessage,
+} from "@/lib/messages-api";
+import type { TablesInsert } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
 
-type DirectMessage = Tables<"direct_messages">;
 type UserProfile = { user_id: string; full_name: string | null; email: string | null };
 
 type MessageWithDisplay = DirectMessage & {
@@ -44,20 +51,7 @@ const MessagesInbox = () => {
     if (!userId) return;
     setLoading(true);
 
-    const [recv, sentRes] = await Promise.all([
-      supabase
-        .from("direct_messages")
-        .select("id, sender_id, recipient_id, content, created_at, read_at")
-        .eq("recipient_id", userId)
-        .order("created_at", { ascending: false })
-        .limit(200),
-      supabase
-        .from("direct_messages")
-        .select("id, sender_id, recipient_id, content, created_at, read_at")
-        .eq("sender_id", userId)
-        .order("created_at", { ascending: false })
-        .limit(200),
-    ]);
+    const [recv, sentRes] = await Promise.all([fetchReceivedMessages(userId), fetchSentMessages(userId)]);
 
     if (recv.error || sentRes.error) {
       toast({
@@ -88,11 +82,7 @@ const MessagesInbox = () => {
       return;
     }
 
-    const attrsData = await supabase
-      .from("user_profile_attributes")
-      .select("user_id, value_text, afs_attributes!inner(key)")
-      .in("user_id", counterpartIds)
-      .eq("afs_attributes.key", "full_name");
+    const attrsData = await fetchCounterpartNames(counterpartIds);
     const profilesError = attrsData.error;
     const nameByUser: Record<string, string | null> = {};
     for (const row of attrsData.data ?? []) {
@@ -147,11 +137,7 @@ const MessagesInbox = () => {
     if (message.read_at || !user || message.recipient_id !== user.id) return;
 
     const readAt = new Date().toISOString();
-    const { error } = await supabase
-      .from("direct_messages")
-      .update({ read_at: readAt })
-      .eq("id", message.id)
-      .eq("recipient_id", user.id);
+    const { error } = await markDirectMessageRead(message.id, user.id, readAt);
 
     if (error) {
       toast({ title: "Mesaj okundu işaretlenemedi", description: error.message, variant: "destructive" });
@@ -175,7 +161,7 @@ const MessagesInbox = () => {
       content,
     };
 
-    const { error } = await supabase.from("direct_messages").insert(payload);
+    const { error } = await sendDirectMessage(payload);
 
     setSending(false);
 

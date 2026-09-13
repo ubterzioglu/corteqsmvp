@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 38,
+    "total": 39,
     "edge_functions": 9,
     "workers": 2,
-    "ui_modules": 26
+    "ui_modules": 27
   },
   "tools": [
     {
@@ -761,6 +761,27 @@ export const toolCatalog = {
         "update_profile_avatar"
       ],
       "evidence_path": "src/lib/member-profile-api.ts"
+    },
+    {
+      "tool_key": "module.messages_api",
+      "tool_name": "messages-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/messages-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "fetchCounterpartNames",
+        "fetchReceivedMessages",
+        "fetchSentMessages",
+        "markDirectMessageRead",
+        "sendDirectMessage"
+      ],
+      "tables_read_write": [
+        "direct_messages",
+        "user_profile_attributes"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/messages-api.ts"
     },
     {
       "tool_key": "module.muhasebe_api",
@@ -2140,6 +2161,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/member-profile.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/messages-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/messages-api.ts",
       "kind": "ts",
       "module_family": "lib"
     },
