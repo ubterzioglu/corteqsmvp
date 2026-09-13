@@ -11,13 +11,58 @@
 | | |
 |---|---|
 | Depo | `C:\temp_private\corteqs\corteqs_fin` · branch `main` |
-| Son commit | `01e04f0` (13 Eylül) · `origin/main` ile senkron · çalışma ağacı **temiz** |
-| Test tabanı | **266 dosya / 1.875 test** yeşil |
-| `tsc` | **6** hata (taban — artmamalı, hiçbiri canlı kusur değil) |
+| Son commit | `468e766` (13 Eylül) · `origin/main` ile senkron · çalışma ağacı **temiz** |
+| Test tabanı | **267 dosya / 1.877 test** yeşil |
+| `tsc` | **0 hata** ✅ (109'dan başlamıştı: 22→16→12→9→6→**0**, 13 Eylül'de kapandı) |
 | ESLint | **0** |
 | Migration | **393/393** sapmasız |
 | Pano | `/admin/workshop/cadde` → WS3 sekmesi · **27/31** (yalnız İ2-İ5 açık, içerik/insan işi) |
-| Acil liste | Komuta Merkezi → 9 madde, hepsinde 6'şar soru (54 toplam) |
+| Acil liste | Komuta Merkezi → 9 madde, hepsinde 6'şar soru (54 toplam) — 3 gündür cevap yok |
+
+## 0.6 — 13 Eylül ikinci eklenti: "kolay işler" cherry-picking (Q1-Q10)
+
+Kullanıcı "kalan kolay işler için cherry-picking yap" dedi — ürün kararı
+gerektirmeyen, tek başına yapılabilecek 10 küçük iş tarandı ve yapıldı:
+
+| Batch | İş | Sonuç | Commit |
+|---|---|---|---|
+| **Q1** | Kullanılmayan `public/sweet.png` (600KB) | Silindi | `e40c02b` |
+| **Q2** | Mobilde (390px) üst nav "Geri Bildirim" kelime ortasından bölünüyordu | `whitespace-nowrap`+`flex-wrap` ile düzeltildi, screenshot'la doğrulandı | `cc6f104` |
+| **Q3** | tsc TS2345 — `MvpManager.tsx` hesaplanan-anahtarlı update payload'ı | Tipli dallanmaya çevrildi | `b212f4c` |
+| **Q4** | tsc TS2322 — `marquee.test.ts` fixture spread genişlemesi | Sabit `base` nesnesi + sınır cast | `c874d8a` |
+| **Q5** | tsc TS2345 — `submissions.test.ts` eksik alanlı fixture | `as unknown as Submission` sınır cast | `c874d8a` |
+| **Q6** | tsc TS2589 ×3 — `command-center-items.ts` query builder recursion | `query: any` (cadde-internal.ts ile aynı desen) — **tsc 3→0, proje geneli SIFIR** | `2761e54` |
+| **Q7** | T6 rozet görsel doğrulaması (Sabit + Sponsorlu) | "Sabit" doğru (slate-700); **yeni bulgu**: Sponsorlu kartın arka planı hâlâ eski turuncu `--cadde-accent` — rozet pili düzeldi, kart çerçevesi düzelmedi. Kullanıcı onayıyla dokunulmadı | `ad62315` |
+| **Q8** | Bronz "tek primary" belirsizliği (aktif filtre çipi + composer butonu) | Karar: filtre çipi durum göstergesi sayılır, kod değişikliği yok | — (karar) |
+| **Q9** | `InterestForm.tsx` doğrudan `supabase.from()` çağırıyordu (B6) | `interest-registrations-api.ts`'e taşındı, 2 test eklendi | `468e766` |
+| **Q10** | WS1 `m134`: "yorum yazınca hata + görsel netlik gidiyor" | **Kök neden BULUNAMADI** — araştırma bulguları ve somut sorular aşağıda | — (araştırma) |
+
+### Q10 araştırma detayı — kapatılmadı, sorular var
+
+- `client_error_reports` tablosu **sıfır satır** — bu hata canlıda hiç
+  yakalanmamış (ya çok eski/tekrarlanmıyor ya da hata raporlama kurulmadan
+  önce yaşanmış, 5 Eylül'den önce).
+- `commentMutation`'ın `onError`'ı (`CaddePage.tsx:388`) doğru yazılmış:
+  `error instanceof Error ? error.message : resolveCaddeRpcErrorMessage(error)`
+  — hata toast'a düşüyor, sayfayı çökertecek bir kod yolu görülmedi.
+- Görsel yükleme (`uploadCaddeMedia`, `cadde-media.ts:118`) dosyayı **olduğu
+  gibi** yüklüyor — hiçbir sıkıştırma/yeniden boyutlandırma adımı yok, yani
+  kod tarafında netlik kaybettiren bir işlem yok.
+- `CaddeMediaGallery.tsx:33-38`'te **İLİŞKİLİ ama FARKLI** bir geçmiş düzeltme
+  var (m64): tek görselde `object-cover` dikey fotoğrafı ince bir şeride
+  kırpıyordu, `object-contain`'e çevrildi. Bu "görsel bozuk görünüyor"
+  şikâyetini kısmen açıklıyor olabilir ama m134'ün "netlik" iddiasıyla birebir
+  aynı değil — kırpılma ile bulanıklık farklı şeyler.
+
+**Kullanıcıya sorulacak somut sorular (madde kapanmadan önce gerekli):**
+1. Bu hata hâlâ tekrarlanıyor mu, yoksa eski bir rapor mu?
+2. Hangi tarayıcı/cihaz? (masaüstü/mobil, Safari/Chrome)
+3. "Sayfa hataya geçiyor" derken tam olarak ne görünüyor — beyaz ekran mı,
+   bir hata mesajı mı, yoksa yorum kutusu mu tepkisiz kalıyor?
+4. Görsel netliği kaybı yorum EKLERKEN mi oluyor, yoksa ana gönderi
+   paylaşırken de mi? (iki farklı yükleme yolu var, hangisi olduğunu ayırt eder)
+5. Hangi dosya formatı/boyutu? (HEIC gibi bazı formatlar tarayıcıda önizlemede
+   bozuk görünebilir, bu da kod hatası değil format uyumsuzluğu olurdu)
 
 ---
 
