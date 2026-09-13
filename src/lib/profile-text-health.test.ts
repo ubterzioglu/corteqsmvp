@@ -10,10 +10,14 @@ const suspiciousPatterns = [/\u00C3[\u0080-\u00BF]/u, /\u00C4[\u0080-\u00BF]/u, 
 describe("profile text health", () => {
   it("keeps Turkish profile page copy readable", () => {
     const profilePageSource = readFileSync(path.join(projectRoot, "src/pages/ProfilePage.tsx"), "utf8");
+    // Sosyal medya placeholder metinleri 2026-09-13 bölünmesinde bu modüle taşındı;
+    // aynı üç dize aynı şekilde denetlenir, yalnız kaynak dosya değişti.
+    const socialLinksSource = readFileSync(path.join(projectRoot, "src/lib/profile-social-links.ts"), "utf8");
 
-    expect(profilePageSource).toContain("@kullanıcıadı veya tam URL");
-    expect(profilePageSource).toContain("@kullanıcıadı");
-    expect(profilePageSource).toContain("u/kullanıcıadı veya URL");
+    expect(socialLinksSource).toContain("@kullanıcıadı veya tam URL");
+    expect(socialLinksSource).toContain("@kullanıcıadı");
+    expect(socialLinksSource).toContain("u/kullanıcıadı veya URL");
+    expect(suspiciousPatterns.some((pattern) => pattern.test(socialLinksSource))).toBe(false);
     expect(suspiciousPatterns.some((pattern) => pattern.test(profilePageSource))).toBe(false);
   });
 
