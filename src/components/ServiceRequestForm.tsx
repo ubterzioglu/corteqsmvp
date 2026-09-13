@@ -16,6 +16,7 @@ import { Upload, X, FileText, Send, Clock, MapPin, DollarSign, Briefcase, Buildi
 import { useToast } from "@/hooks/use-toast";
 import ConsentCheckboxes, { emptyConsent, isConsentValid, type ConsentState } from "@/components/ConsentCheckboxes";
 import { markRealServiceRequest } from "@/lib/demoFlags";
+import { createServiceRequest } from "@/lib/service-requests-api";
 import MockStripeCheckout from "@/components/payments/MockStripeCheckout";
 
 /** Göstermelik hizmet talebi başvuru ücreti (demo Stripe ödemesi). */
@@ -197,22 +198,20 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
         }
       }
 
-      const { error } = await supabase.from("service_requests").insert({
-        user_id: user.id,
+      await createServiceRequest({
+        userId: user.id,
         category: `${selectedTarget?.label || targetType} › ${finalCategoryLabel || category}`,
         subcategory: finalSubcategory || null,
         title: form.title,
         description: form.description,
         city: form.city || null,
         country: form.country || null,
-        budget_min: form.budgetMin ? parseFloat(form.budgetMin) : null,
-        budget_max: form.budgetMax ? parseFloat(form.budgetMax) : null,
-        preferred_time: form.preferredTime || null,
+        budgetMin: form.budgetMin ? parseFloat(form.budgetMin) : null,
+        budgetMax: form.budgetMax ? parseFloat(form.budgetMax) : null,
+        preferredTime: form.preferredTime || null,
         urgency: form.urgency,
-        attachment_urls: attachmentUrls,
+        attachmentUrls,
       });
-
-      if (error) throw error;
 
       markRealServiceRequest();
       toast({ title: "Ödeme alındı, talep oluşturuldu! 🎉", description: "Danışmanlar tekliflerini gönderecektir." });

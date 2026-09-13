@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 37,
+    "total": 38,
     "edge_functions": 9,
     "workers": 2,
-    "ui_modules": 25
+    "ui_modules": 26
   },
   "tools": [
     {
@@ -1037,6 +1037,26 @@ export const toolCatalog = {
         "admin_upsert_service_finder_template"
       ],
       "evidence_path": "src/lib/service-finder-api.ts"
+    },
+    {
+      "tool_key": "module.service_requests_api",
+      "tool_name": "service-requests-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/service-requests-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "createServiceRequest",
+        "listMyServiceRequestsWithProposals",
+        "markServiceRequestInProgress",
+        "updateServiceProposalStatus"
+      ],
+      "tables_read_write": [
+        "service_proposals",
+        "service_requests"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/service-requests-api.ts"
     },
     {
       "tool_key": "module.welcome_pack_orders_api",
@@ -2650,6 +2670,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/service-finder-schemas.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/service-requests-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/service-requests-api.ts",
       "kind": "ts",
       "module_family": "lib"
     },

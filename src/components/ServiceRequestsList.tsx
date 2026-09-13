@@ -4,6 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Briefcase, MapPin, Clock, DollarSign, MessageSquare, ChevronDown, ChevronUp, CheckCircle, XCircle, FileText, ExternalLink, Info } from "lucide-react";
 import { useDemoFlag, markRealServiceRequest } from "@/lib/demoFlags";
+import {
+  listMyServiceRequestsWithProposals,
+  markServiceRequestInProgress,
+  updateServiceProposalStatus,
+} from "@/lib/service-requests-api";
 
 interface Proposal {
   id: string;
@@ -90,42 +95,10 @@ const ServiceRequestsList = () => {
       return;
     }
 
-    const { data: reqData } = await supabase
-      .from("service_requests")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
-
-    if (!reqData) {
-      setRequests([]);
-      setLoading(false);
-      return;
-    }
-
-    // Fetch proposals for each request
-    const requestsWithProposals = await Promise.all(
-      reqData.map(async (req) => {
-        const { data: proposals } = await supabase
-          .from("service_proposals")
-          .select("*")
-          .eq("request_id", req.id)
-          .order("created_at", { ascending: false });
-
-        // Fetch consultant names
-        const proposalsWithNames = await Promise.all(
-          (proposals || []).map(async (p) => {
-            const { getAttributeValue } = await import("@/lib/profile-helpers");
-            const fullName = await getAttributeValue(p.consultant_id, "full_name");
-            return { ...p, consultant_name: fullName || "Danışman" };
-          })
-        );
-
-        return { ...req, proposals: proposalsWithNames } as ServiceRequest;
-      })
-    );
+    const requestsWithProposals = await listMyServiceRequestsWithProposals(user.id);
 
     if (requestsWithProposals.length > 0) markRealServiceRequest();
-    setRequests(requestsWithProposals);
+    setRequests(requestsWithProposals as ServiceRequest[]);
     setLoading(false);
   };
 
@@ -144,11 +117,11 @@ const ServiceRequestsList = () => {
   }, []);
 
   const handleProposalAction = async (proposalId: string, action: "accepted" | "rejected") => {
-    await supabase.from("service_proposals").update({ status: action }).eq("id", proposalId);
+    await updateServiceProposalStatus(proposalId, action);
     if (action === "accepted") {
       const proposal = requests.flatMap(r => r.proposals || []).find(p => p.id === proposalId);
       if (proposal) {
-        await supabase.from("service_requests").update({ status: "in_progress" }).eq("id", requests.find(r => r.proposals?.some(p => p.id === proposalId))?.id || "");
+        await markServiceRequestInProgress(requests.find(r => r.proposals?.some(p => p.id === proposalId))?.id || "");
       }
     }
     fetchRequests();
