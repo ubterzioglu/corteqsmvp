@@ -3,7 +3,10 @@
 
 export type CaddeContentMode = "demo" | "real";
 export type CaddePostType = "text" | "question" | "offer" | "event";
-export const CADDE_REACTION_TYPES = ["like", "love", "haha", "support", "unsure"] as const;
+// K1 (m156, 13 Eylül karar): "love"/"haha" kaldırıldı — bu SQL↔TS ayna sözleşmesinin
+// diğer yarısı `cadde_post_reactions_reaction_type_check`'tir (mig 20260913150000).
+// Biri değişirse öbürü de değişmeli; src/lib/cadde-rules.test.ts ikisini eşler.
+export const CADDE_REACTION_TYPES = ["like", "support", "unsure"] as const;
 export type CaddeReactionType = (typeof CADDE_REACTION_TYPES)[number];
 export type CaddeBillboardType = "consultant" | "business" | "event";
 export type CaddePublishStatus = "draft" | "published" | "hidden";

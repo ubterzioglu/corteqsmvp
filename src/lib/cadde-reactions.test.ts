@@ -24,7 +24,7 @@ const makePost = (overrides: Partial<CaddePost> = {}): CaddePost =>
     hashtags: [],
     mentions: [],
     media: [],
-    reactionCounts: { like: 2, love: 0, haha: 0, support: 0, unsure: 0 } as Record<CaddeReactionType, number>,
+    reactionCounts: { like: 2, support: 0, unsure: 0 } as Record<CaddeReactionType, number>,
     totalReactionCount: 2,
     commentCount: 0,
     shareCount: 0,
@@ -56,18 +56,18 @@ describe("toggleViewerReaction", () => {
   });
 
   it("aynı postta farklı reaksiyon tipleri bağımsızdır", () => {
-    const result = toggleViewerReaction(makePost({ viewerReactions: ["like"] }), "love");
+    const result = toggleViewerReaction(makePost({ viewerReactions: ["like"] }), "support");
 
-    expect(result.viewerReactions).toEqual(["like", "love"]);
+    expect(result.viewerReactions).toEqual(["like", "support"]);
     expect(result.reactionCounts.like).toBe(2);
-    expect(result.reactionCounts.love).toBe(1);
+    expect(result.reactionCounts.support).toBe(1);
     expect(result.totalReactionCount).toBe(3);
   });
 
   it("sunucuyla ayrışmada sayaç eksiye düşmez", () => {
     const post = makePost({
       viewerReactions: ["like"],
-      reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 } as Record<CaddeReactionType, number>,
+      reactionCounts: { like: 0, support: 0, unsure: 0 } as Record<CaddeReactionType, number>,
       totalReactionCount: 0,
     });
 

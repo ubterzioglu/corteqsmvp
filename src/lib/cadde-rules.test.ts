@@ -16,7 +16,8 @@ import {
 
 describe("cadde reaction set", () => {
   it("keeps the TS reaction union mirrored with the SQL CHECK list", () => {
-    const sqlReactionCheckValues = ["like", "love", "haha", "support", "unsure"] as const;
+    // K1 (m156, 13 Eylül): 5→3. SQL tarafı mig 20260913150000'de aynı listeye indirildi.
+    const sqlReactionCheckValues = ["like", "support", "unsure"] as const;
 
     expect(CADDE_REACTION_TYPES).toEqual(sqlReactionCheckValues);
   });

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { AlertTriangle, ArrowUpRight, ChevronDown, Flag, Globe2, Heart, HelpCircle, Laugh, MapPin, Megaphone, MessageCircle, MessagesSquare, RefreshCw, Send, Share2, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
+import { AlertTriangle, ArrowUpRight, ChevronDown, Flag, Globe2, HelpCircle, MapPin, Megaphone, MessageCircle, MessagesSquare, RefreshCw, Send, Share2, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
@@ -70,12 +70,15 @@ import type { CaddeCommentCursor, CaddeFeedPageParam, CaddeFilterState, CaddePos
 import { useSeo } from "@/lib/seo";
 import { PAGE_SEO } from "@/lib/page-seo";
 
+// K1 (m156, 13 Eylül karar): tepki seti 5'ten 3'e indirildi. Kalp ve Gülme
+// kaldırıldı (canlıda hiç kullanılmamışlardı — ölçüldü, `cadde_post_reactions`'ta
+// tek satır bile yok). "unsure" diaspora akışında beğeniden daha değerli bir
+// sinyal olduğu için kaldı, yalnız etiketi niyetini söyleyecek şekilde "Soru"
+// oldu (eskisi "Emin olamadım" belirsizdi).
 const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof ThumbsUp }> = [
   { key: "like", label: "Beğendim", icon: ThumbsUp },
-  { key: "love", label: "Kalp", icon: Heart },
-  { key: "haha", label: "Gülme", icon: Laugh },
   { key: "support", label: "Destek", icon: Sparkles },
-  { key: "unsure", label: "Emin olamadım", icon: HelpCircle },
+  { key: "unsure", label: "Soru", icon: HelpCircle },
 ];
 
 const COMMENT_PAGE_SIZE = 5;
@@ -978,9 +981,10 @@ const CaddePage = () => {
                                 viewerReaction ? "bg-slate-900 text-white hover:bg-slate-800" : "bg-white/80"
                               }`}
                             >
-                              <TriggerIcon
-                                className={`h-4 w-4 ${viewerReaction?.key === "love" ? "fill-current" : ""}`}
-                              />
+                              {/* "fill-current" (Kalp'e özel dolgu efekti) K1 ile
+                                  kaldırıldı — hiçbir hayatta kalan tepkinin dolgulu
+                                  görünmesi gerekmiyor. */}
+                              <TriggerIcon className="h-4 w-4" />
                               {/* H1 (m155): sıfır sayaç GÖRSEL olarak gizlenir — boş bir
                                   akışta her kartta bağıran "0" kalkar. Yukarıdaki
                                   aria-label AYNEN duruyor: ekran okuyucu sayıyı okumaya
@@ -1030,9 +1034,7 @@ const CaddePage = () => {
                                           active ? "bg-slate-900 text-white hover:bg-slate-800" : ""
                                         }`}
                                       >
-                                        <Icon
-                                          className={`h-4 w-4 ${active && reaction.key === "love" ? "fill-current" : ""}`}
-                                        />
+                                        <Icon className="h-4 w-4" />
                                         {/* Sıfır sayaç görsel olarak gizli; hemen
                                             yukarıdaki aria-label sayıyı taşımayı
                                             SÜRDÜRÜR (testler oradan okuyor). */}

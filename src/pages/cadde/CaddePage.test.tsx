@@ -56,7 +56,7 @@ const makeFeedPost = (overrides: Record<string, unknown> = {}) => ({
   hashtags: [],
   mentions: [],
   media: [],
-  reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+  reactionCounts: { like: 0, support: 0, unsure: 0 },
   totalReactionCount: 0,
   commentCount: 0,
   comments: [],
@@ -367,7 +367,7 @@ describe("CaddePage", () => {
           hashtags: [],
           mentions: [],
           media: [],
-          reactionCounts: { like: 1, love: 0, haha: 0, support: 0, unsure: 0 },
+          reactionCounts: { like: 1, support: 0, unsure: 0 },
           totalReactionCount: 1,
           commentCount: 3,
           comments: [],
@@ -430,7 +430,7 @@ describe("CaddePage", () => {
           hashtags: [],
           mentions: [],
           media: [],
-          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          reactionCounts: { like: 0, support: 0, unsure: 0 },
           totalReactionCount: 0,
           commentCount: 6,
           comments: [],
@@ -519,7 +519,7 @@ describe("CaddePage", () => {
           hashtags: [],
           mentions: [],
           media: [],
-          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          reactionCounts: { like: 0, support: 0, unsure: 0 },
           totalReactionCount: 0,
           commentCount: 1,
           comments: [],
@@ -624,7 +624,7 @@ describe("CaddePage", () => {
           hashtags: [],
           mentions: [],
           media: [],
-          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          reactionCounts: { like: 0, support: 0, unsure: 0 },
           totalReactionCount: 0,
           commentCount: 0,
           shareCount: 0,
@@ -689,7 +689,7 @@ describe("CaddePage", () => {
           hashtags: [],
           mentions: [],
           media: [],
-          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          reactionCounts: { like: 0, support: 0, unsure: 0 },
           totalReactionCount: 0,
           commentCount: 1,
           comments: [],
@@ -733,9 +733,13 @@ describe("CaddePage", () => {
   // O davranış ürün kararıyla değişti; test SİLİNMEDİ, doğru davranışı kilitleyecek
   // biçimde yeniden yazıldı — gevşetilmedi, aksine erişilebilirlik iddiaları eklendi.
   //
-  // Kilitlenen sözleşme: beş tepki tek tetiğin arkasında, tetik GERÇEK <button>,
+  // Kilitlenen sözleşme: üç tepki tek tetiğin arkasında, tetik GERÇEK <button>,
   // `aria-expanded` durumu söylüyor, TIKLAMA da açıyor (dokunmatiğin tek yolu) ve
   // tepki verme + sayaç davranışı değişmiyor.
+  //
+  // K1 (m156, 13 Eylül karar): tepki seti 5'ten 3'e indirildi (Kalp ve Gülme
+  // kaldırıldı, canlıda hiç kullanılmamışlardı). Bu blok o kararla güncellendi —
+  // gevşetilmedi, üç tepkinin de aynı sözleşmeye uyduğu doğrulandı.
   const reactionFeedPost = {
     id: "post-reactions",
     mode: "real",
@@ -756,12 +760,12 @@ describe("CaddePage", () => {
     hashtags: [],
     mentions: [],
     media: [],
-    reactionCounts: { like: 1, love: 2, haha: 3, support: 4, unsure: 5 },
-    totalReactionCount: 15,
+    reactionCounts: { like: 1, support: 4, unsure: 5 },
+    totalReactionCount: 10,
     commentCount: 0,
     shareCount: 0,
     comments: [],
-    viewerReactions: ["love"],
+    viewerReactions: ["support"],
   };
 
   const mountReactionPost = () => {
@@ -775,7 +779,7 @@ describe("CaddePage", () => {
     renderPage();
   };
 
-  it("keeps the five reactions behind one trigger that a tap can also open", async () => {
+  it("keeps the three reactions behind one trigger that a tap can also open", async () => {
     mountReactionPost();
 
     expect(await screen.findByText("Tepki seti testi")).toBeInTheDocument();
@@ -784,10 +788,10 @@ describe("CaddePage", () => {
     // Tetik gerçek bir <button>: klavyeyle odaklanabilir, Enter/Space onu tetikler.
     expect(trigger.tagName).toBe("BUTTON");
     expect(trigger).toHaveAttribute("aria-expanded", "false");
-    // Toplam sayaç tetikte görünür kalır — beş buton kalkarken etkileşim kaybolmaz.
-    expect(trigger).toHaveAccessibleName("Beğen (15)");
+    // Toplam sayaç tetikte görünür kalır — üç buton kalkarken etkileşim kaybolmaz.
+    expect(trigger).toHaveAccessibleName("Beğen (10)");
 
-    // Kapalıyken beş tepki DOM'da YOK (yığılmanın geri gelmesi buradan yakalanır).
+    // Kapalıyken üç tepki DOM'da YOK (yığılmanın geri gelmesi buradan yakalanır).
     expect(screen.queryByRole("button", { name: "Beğendim (1)" })).not.toBeInTheDocument();
     expect(screen.queryByTestId("cadde-reaction-panel")).not.toBeInTheDocument();
 
@@ -804,12 +808,10 @@ describe("CaddePage", () => {
     const panel = screen.getByTestId("cadde-reaction-panel");
     // Erişilebilir adlar eskisiyle BİREBİR aynı kaldı.
     expect(within(panel).getByRole("button", { name: "Beğendim (1)" })).toBeInTheDocument();
-    expect(within(panel).getByRole("button", { name: "Kalp (2)" })).toBeInTheDocument();
-    expect(within(panel).getByRole("button", { name: "Gülme (3)" })).toBeInTheDocument();
     expect(within(panel).getByRole("button", { name: "Destek (4)" })).toBeInTheDocument();
-    expect(within(panel).getByRole("button", { name: "Emin olamadım (5)" })).toBeInTheDocument();
+    expect(within(panel).getByRole("button", { name: "Soru (5)" })).toBeInTheDocument();
     // Görüntüleyenin mevcut tepkisi basılı durumda duyurulur.
-    expect(within(panel).getByRole("button", { name: "Kalp (2)" })).toHaveAttribute("aria-pressed", "true");
+    expect(within(panel).getByRole("button", { name: "Destek (4)" })).toHaveAttribute("aria-pressed", "true");
     // Radix HoverCard yerine satır içi disclosure seçilmesinin ASIL sebebi:
     // butonlar tabIndex'ini korumalı, yoksa klavyeyle tepki verilemez.
     expect(within(panel).getByRole("button", { name: "Beğendim (1)" })).not.toHaveAttribute("tabindex", "-1");
@@ -836,10 +838,10 @@ describe("CaddePage", () => {
     await user.click(screen.getByRole("button", { name: "Beğendim (1)" }));
 
     await waitFor(() => expect(toggleCaddeReactionMock).toHaveBeenCalledWith("post-reactions", "like"));
-    // Optimistic sayaç: like 1 → 2, toplam 15 → 16. Kart açık kalır ki kullanıcı
+    // Optimistic sayaç: like 1 → 2, toplam 10 → 11. Kart açık kalır ki kullanıcı
     // kendi tıklamasının sonucunu görebilsin.
     await waitFor(() => expect(screen.getByRole("button", { name: "Beğendim (2)" })).toBeInTheDocument());
-    expect(screen.getByTestId("cadde-reaction-trigger")).toHaveAccessibleName("Beğen (16)");
+    expect(screen.getByTestId("cadde-reaction-trigger")).toHaveAccessibleName("Beğen (11)");
   });
 
   it("opens the reaction card on mouse hover and on keyboard focus, and Escape closes it", async () => {
@@ -892,7 +894,7 @@ describe("CaddePage", () => {
         {
           ...reactionFeedPost,
           id: "post-zero-counters",
-          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          reactionCounts: { like: 0, support: 0, unsure: 0 },
           totalReactionCount: 0,
           commentCount: 0,
           shareCount: 0,
@@ -919,13 +921,13 @@ describe("CaddePage", () => {
     const shareButton = screen.getByRole("button", { name: "Paylaş (0)" });
     expect(within(shareButton).queryAllByText("0")).toHaveLength(0);
 
-    // Panelde beş tepkinin hiçbiri rakam çizmez; adları "(0)"ı BİREBİR taşır.
+    // Panelde üç tepkinin hiçbiri rakam çizmez; adları "(0)"ı BİREBİR taşır.
     await user.click(zeroTrigger);
     const zeroPanel = screen.getByTestId("cadde-reaction-panel");
     expect(within(zeroPanel).queryAllByText("0")).toHaveLength(0);
     expect(within(zeroPanel).getByRole("button", { name: "Beğendim (0)" })).toBeInTheDocument();
-    expect(within(zeroPanel).getByRole("button", { name: "Kalp (0)" })).toBeInTheDocument();
-    expect(within(zeroPanel).getByRole("button", { name: "Emin olamadım (0)" })).toBeInTheDocument();
+    expect(within(zeroPanel).getByRole("button", { name: "Destek (0)" })).toBeInTheDocument();
+    expect(within(zeroPanel).getByRole("button", { name: "Soru (0)" })).toBeInTheDocument();
   });
 
   // H3 (m146) — sabitlenmiş gönderi rozeti TÜRKÇE. Bu testten önce hiçbir fixture
@@ -957,11 +959,11 @@ describe("CaddePage", () => {
     expect(await screen.findByText("Tepki seti testi")).toBeInTheDocument();
 
     const visibleTrigger = screen.getByTestId("cadde-reaction-trigger");
-    expect(within(visibleTrigger).getByText("15")).toBeInTheDocument();
+    expect(within(visibleTrigger).getByText("10")).toBeInTheDocument();
 
     await user.click(visibleTrigger);
     const visiblePanel = screen.getByTestId("cadde-reaction-panel");
-    for (const shown of ["1", "2", "3", "4", "5"]) {
+    for (const shown of ["1", "4", "5"]) {
       expect(within(visiblePanel).getByText(shown)).toBeInTheDocument();
     }
   });
@@ -997,7 +999,7 @@ describe("CaddePage", () => {
           hashtags: [],
           mentions: [],
           media: [],
-          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          reactionCounts: { like: 0, support: 0, unsure: 0 },
           totalReactionCount: 0,
           commentCount: 0,
           shareCount: 0,
@@ -1051,7 +1053,7 @@ describe("CaddePage", () => {
           hashtags: [],
           mentions: [],
           media: [],
-          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          reactionCounts: { like: 0, support: 0, unsure: 0 },
           totalReactionCount: 0,
           commentCount: 0,
           shareCount: 2,
@@ -1823,7 +1825,7 @@ describe("CaddePage", () => {
           hashtags: [],
           mentions: [],
           media: [],
-          reactionCounts: { like: 0, love: 0, haha: 0, support: 0, unsure: 0 },
+          reactionCounts: { like: 0, support: 0, unsure: 0 },
           totalReactionCount: 0,
           commentCount: 0,
           comments: [],
