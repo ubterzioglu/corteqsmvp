@@ -15,13 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { requestNewCatalogItem } from "@/lib/member-profile-api";
-import { supabase } from "@/integrations/supabase/client";
-
-type FlatRoleOption = {
-  key: string;
-  label: string;
-  description: string | null;
-};
+import { fetchFlatRoles, mapFlatRoleOptions, type FlatRoleOption } from "@/lib/flat-roles-api";
 
 type RequestNewProfileDialogProps = {
   open: boolean;
@@ -45,7 +39,7 @@ const RequestNewProfileDialog = ({ open, onOpenChange, onSuccess }: RequestNewPr
     setRolesLoading(true);
 
     void (async () => {
-      const { data, error } = await supabase.rpc("get_flat_roles");
+      const { data, error } = await fetchFlatRoles();
       if (cancelled) return;
 
       if (error) {
@@ -59,14 +53,7 @@ const RequestNewProfileDialog = ({ open, onOpenChange, onSuccess }: RequestNewPr
         return;
       }
 
-      const options = (Array.isArray(data) ? data : [])
-        .map((item) => ({
-          key: typeof item?.key === "string" ? item.key : "",
-          label: typeof item?.label === "string" ? item.label : "",
-          description: typeof item?.description === "string" ? item.description : null,
-        }))
-        .filter((item) => item.key && item.label);
-      setRoleOptions(options);
+      setRoleOptions(mapFlatRoleOptions(data));
       setRolesLoading(false);
     })();
 

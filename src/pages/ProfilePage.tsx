@@ -66,6 +66,7 @@ import { getRoleMeta, getUiProfileType, isProfileType } from "@/lib/profile-type
 import { validateCvFile, validatePresentationFile } from "@/lib/security";
 import { formatBytes } from "@/lib/submissions";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchFlatRoles, mapFlatRoleOptions, type FlatRoleOption } from "@/lib/flat-roles-api";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
 import PremiumProfileHero from "@/components/profile/premium/PremiumProfileHero";
@@ -102,12 +103,6 @@ type GuideSection = {
   title: string;
   accentClassName: string;
   content: ReactNode;
-};
-
-type FlatRoleOption = {
-  key: string;
-  label: string;
-  description: string | null;
 };
 
 const REQUESTABLE_FEATURES: { key: GenericFeatureKey; title: string; description: string }[] = [
@@ -500,7 +495,7 @@ const ProfilePage = () => {
     setFlatRolesLoading(true);
 
     void (async () => {
-      const { data, error } = await supabase.rpc("get_flat_roles");
+      const { data, error } = await fetchFlatRoles();
       if (cancelled) return;
 
       if (error) {
@@ -515,14 +510,7 @@ const ProfilePage = () => {
         return;
       }
 
-      const options = (Array.isArray(data) ? data : [])
-        .map((item) => ({
-          key: typeof item?.key === "string" ? item.key : "",
-          label: typeof item?.label === "string" ? item.label : "",
-          description: typeof item?.description === "string" ? item.description : null,
-        }))
-        .filter((item) => item.key && item.label);
-      setFlatRoleOptions(options);
+      setFlatRoleOptions(mapFlatRoleOptions(data));
       setFlatRolesLoading(false);
     })();
 
