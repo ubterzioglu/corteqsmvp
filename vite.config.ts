@@ -49,11 +49,13 @@ export default defineConfig(({ mode }) => ({
         manualChunks(id) {
           const normalizedId = id.replace(/\\/g, "/");
 
-          // Uzantısız önek bilinçli: hem barrel (social-diaspora-posts.ts) hem de
-          // parça dosyalar (social-diaspora-posts/posts-XX-YY.ts) aynı chunk'a girsin.
+          // Uzantısız önek bilinçli: hem barrel (social-diaspora-posts.ts,
+          // social-test-tools.ts, burak-share-tools.ts) hem de parça dosyalar
+          // (social-diaspora-posts/posts-XX-YY.ts, social-test-tools/tools-XX-YY.ts,
+          // burak-share-tools/tool-XX.ts) aynı chunk'a girsin.
           if (normalizedId.includes("/src/lib/admin-shell/social-diaspora-posts")) return "social-vault-diaspora";
-          if (normalizedId.includes("/src/lib/admin-shell/social-test-tools.ts")) return "social-vault-tests";
-          if (normalizedId.includes("/src/lib/admin-shell/burak-share-tools.ts")) return "social-vault-burak";
+          if (normalizedId.includes("/src/lib/admin-shell/social-test-tools")) return "social-vault-tests";
+          if (normalizedId.includes("/src/lib/admin-shell/burak-share-tools")) return "social-vault-burak";
           if (normalizedId.includes("/src/lib/admin-shell/social-share-vault.ts")) return "social-vault-tools";
 
           if (!normalizedId.includes("/node_modules/")) return undefined;

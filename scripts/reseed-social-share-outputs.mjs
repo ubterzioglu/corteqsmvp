@@ -64,15 +64,25 @@ async function createAdminClient() {
 // --- BURAK_SHARE_TOOLS'un order→globalId eşlemesini kaynaktan oku ---
 // Dosya adlarındaki toolOrder, burak-share-tools.ts'teki her aracın "order"
 // alanına (1..12) karşılık gelir — bu alan globalId ile birebir eşleşir.
+// NOT: Araç kayıtları burak-share-tools.ts barrel'ından
+// burak-share-tools/tool-01.ts … tool-12.ts dosyalarına bölündü; barrel artık
+// yalnız import/re-export içerir. Bu yüzden regex, tek dosya yerine o klasördeki
+// tüm parça dosyaların birleşimi üzerinde çalışır.
 async function loadBurakOrderToGlobalId() {
-  const filePath = path.join(
+  const toolsDir = path.join(
     projectRoot,
     "src",
     "lib",
     "admin-shell",
-    "burak-share-tools.ts",
+    "burak-share-tools",
   );
-  const src = await readFile(filePath, "utf8");
+  const toolFiles = (await readdir(toolsDir))
+    .filter((name) => /^tool-\d+\.ts$/.test(name))
+    .sort();
+  const sources = await Promise.all(
+    toolFiles.map((name) => readFile(path.join(toolsDir, name), "utf8")),
+  );
+  const src = sources.join("\n");
   // Her tool bloğu: id: "burak-tool-N", globalId: "item-M", order: N, ...
   const blockRegex = /id:\s*"burak-tool-\d+",\s*globalId:\s*"(item-\d+)",\s*order:\s*(\d+),/g;
   const map = new Map();
@@ -84,7 +94,7 @@ async function loadBurakOrderToGlobalId() {
   }
   if (map.size !== 12) {
     throw new Error(
-      `burak-share-tools.ts'ten beklenen 12 order→globalId eşlemesi okunamadı (bulunan: ${map.size}). Dosya formatı değişmiş olabilir.`,
+      `burak-share-tools/ parça dosyalarından beklenen 12 order→globalId eşlemesi okunamadı (bulunan: ${map.size}). Dosya formatı değişmiş olabilir.`,
     );
   }
   return map;
