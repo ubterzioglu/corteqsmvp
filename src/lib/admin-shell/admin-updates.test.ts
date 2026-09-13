@@ -6,11 +6,26 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260913-acil-liste-radar-tamiri-ve-komuta-merkezi-temizligi");
+    expect(ADMIN_UPDATES[0].id).toBe("20260913-komuta-merkezi-76-madde-triyaji");
     expect(ADMIN_UPDATES[0].date).toBe("13 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("13 Eylül altıncı parti kaydı 76 maddelik triyajın sonucunu ölçümle söyler", () => {
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260913-komuta-merkezi-76-madde-triyaji");
+    const detail = update?.items.join(" ") ?? "";
+
+    // Sayılar (21 + 55 = 76, sonuçta 91 tamamlandı / 20 açık) ölçülmüş olmalı.
+    expect(detail).toContain("21 MADDE GERÇEK KANITLA KAPATILDI");
+    expect(detail).toContain("35 madde 'artık geçerli değil' denip kapatıldı");
+    expect(detail).toContain("12 MADDE 'HÂLÂ GEÇERLİ' ONAYI ALDI");
+    expect(detail).toContain("20 MADDE GEREKÇELİ OLARAK AÇIK KALDI");
+
+    // İptal edilenlerin kalıcı silinmediği, gerekçe dosyasının varlığı acıkça yazılmalı.
+    expect(detail).toContain("docs/notes/2026-09-13-komuta-merkezi-iptal-edilenler.md");
+    expect(detail).toContain("kalıcı olarak reddedilmiş değil");
   });
 
   it("13 Eylül beşinci parti kaydı Radar tanısını ve Komuta Merkezi temizliğini ölçümle söyler", () => {

@@ -14,6 +14,22 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260913-komuta-merkezi-76-madde-triyaji",
+    date: "13 Eylül 2026",
+    title:
+      "Komuta Merkezi'ndeki 76 eski maddenin tamamı tek tek gözden geçirildi — 91 madde artık 'Tamamlandı', 20 madde gerekçesiyle açık kaldı",
+    items: [
+      "GÜNÜN ÖZETİ: Bugünkü Radar/acil-liste çalışmasının ardından, Komuta Merkezi'ndeki 'yapılacak işler' panosunun kendisi de baştan sona tarandı. Bazıları Nisan 2026'dan (5 aylık), hiçbiri kod tarafından doğrulanıp kapatılmamıştı — pano sürekli kalabalık görünüyordu.",
+      "İLK TARAMA — 21 MADDE GERÇEK KANITLA KAPATILDI: Görsel dil kuralları (köşe yuvarlaklığı, buton dili, rozet tipleri, marka rengi, İngilizce kalıntılar — 9-10 Eylül çalışmasından), Cafe oda arayüzü, Contributor kaynak/FAQ paketinin dört alt maddesi, WhatsApp bot altyapısı, Müşteri Talepleri paneli, Burak'ın yönetici hesabı ataması — hepsi koda/dokümana/veritabanına bakılarak doğrulandı, tahmin edilmedi.",
+      "İKİNCİ TARAMA — KALAN 55 MADDE TEK TEK SORULDU, EN ESKİDEN BAŞLANARAK: 76 maddenin geri kalanı kategori kategori değil, en eskiden (17 Nisan 2026) en yeniye doğru soruldu. Sonuç: 35 madde 'artık geçerli değil' denip kapatıldı, birkaçı birbirine benzeyen konularda tek maddede birleştirildi (üç ayrı teklif modeli maddesi, dört ayrı WhatsApp bot kartı, beş ayrı İnsan Kaynakları maddesi, üç ayrı büyüme/affiliate maddesi tek çatı altında toplandı).",
+      "12 MADDE 'HÂLÂ GEÇERLİ' ONAYI ALDI, DOKUNULMADI: RASCI modeli, tech cost matrisi, işe alım metodolojisi, marketing içerik planı, LinkedIn takipçi artırma, Aramıza Katılanlar şablonu, chat grupları post planı gibi maddeler hâlâ öncelikli sayıldı — bunlar açık kalmaya devam ediyor, iptal edilmedi.",
+      "20 MADDE GEREKÇELİ OLARAK AÇIK KALDI: Beşi zaten bugünkü acil listedeki WhatsApp grup maddeleriyle aynı (Burak'ın cevabı bekleniyor), biri ürün sahibinin (kendi) gelir modeli/şehir sahipliği kararını bekliyor (Contributor FAQ'sının paylaşımı), biri kapsamı zaten başka bir maddeye taşınmış durumda (MVP V2 merge), biri de kanıt belirsiz olduğu için dokunulmadı (Cadde'de dört şehrin gerçekten 'tohumlanıp' tohumlanmadığı netleşmedi) — geri kalan 12'si yukarıdaki 'hâlâ geçerli' maddeleri.",
+      "İPTAL/BİRLEŞTİRME KARARLARI AYRI BİR DOSYADA TUTULUYOR: `docs/notes/2026-09-13-komuta-merkezi-iptal-edilenler.md` — hangi maddenin neden kapatıldığı, hangisinin hangi maddeyle birleştiği tek tek yazılı. Bu liste, panonun neden yenilenmesi/temizlenmesi gerektiğini anlatan bir sonuç dokümanı hazırlamak için kullanılacak.",
+      "DÜRÜST NOT: Bu partide hiçbir kod yazılmadı, hiçbir özellik değişmedi — yalnızca veritabanındaki kayıtların durumu güncellendi ve kararlar not edildi. 'İptal edildi' denen maddeler kalıcı olarak reddedilmiş değil; ileride yeniden gündeme gelebilir, o yüzden silinmedi, yalnızca 'Tamamlandı' işaretiyle kapatılıp gerekçe notu eklendi.",
+      "KONTROLLER: Kod/test/deploy değişikliği yok, yalnızca veritabanı kayıtları güncellendi. Karar geçmişi her maddenin kendi kaydında ve ayrı dosyada korunuyor.",
+    ],
+  },
+  {
     id: "20260913-acil-liste-radar-tamiri-ve-komuta-merkezi-temizligi",
     date: "13 Eylül 2026",
     title:
