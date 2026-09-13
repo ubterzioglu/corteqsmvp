@@ -2,10 +2,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const {
   rpcMock,
+  fromMock,
   getCurrentMemberCatalogProfileMock,
 } = vi.hoisted(() => {
   return {
     rpcMock: vi.fn(),
+    fromMock: vi.fn(),
     getCurrentMemberCatalogProfileMock: vi.fn(),
   };
 });
@@ -17,10 +19,15 @@ vi.mock("@/lib/member-catalog", () => ({
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     rpc: rpcMock,
+    from: fromMock,
   },
 }));
 
-import { updateProfileAttribute, requestNewCatalogItem } from "@/lib/member-profile-api";
+import {
+  requestNewCatalogItem,
+  updateProfileAttribute,
+  upsertIndividualProfileDetailsPatch,
+} from "@/lib/member-profile-api";
 
 describe("updateProfileAttribute", () => {
   beforeEach(() => {
@@ -138,5 +145,82 @@ describe("requestNewCatalogItem", () => {
     await expect(
       requestNewCatalogItem("Consultant_HealthcareDoctor", "Başlık", ""),
     ).rejects.toEqual({ message: "a pending new profile request already exists" });
+  });
+});
+
+describe("upsertIndividualProfileDetailsPatch (B6)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("reads the current row, merges the patch, and upserts it for that user", async () => {
+    const maybeSingle = vi.fn().mockResolvedValue({
+      data: { front_card: { linkedin_url: "old" }, detail_card: null, profile_settings: null },
+      error: null,
+    });
+    const eq = vi.fn(() => ({ maybeSingle }));
+    const select = vi.fn(() => ({ eq }));
+    const upsert = vi.fn().mockResolvedValue({ data: null, error: null });
+
+    fromMock.mockReturnValueOnce({ select }).mockReturnValueOnce({ upsert });
+
+    const patchBuilder = vi.fn((current) => ({
+      front_card: { ...current?.front_card, linkedin_url: "new" },
+    }));
+
+    await upsertIndividualProfileDetailsPatch("user-1", patchBuilder);
+
+    expect(select).toHaveBeenCalledWith("front_card, detail_card, profile_settings");
+    expect(eq).toHaveBeenCalledWith("user_id", "user-1");
+    expect(patchBuilder).toHaveBeenCalledWith({
+      front_card: { linkedin_url: "old" },
+      detail_card: null,
+      profile_settings: null,
+    });
+    expect(upsert).toHaveBeenCalledWith({
+      user_id: "user-1",
+      front_card: { linkedin_url: "new" },
+    });
+  });
+
+  it("passes null to the patch builder when no row exists yet", async () => {
+    const maybeSingle = vi.fn().mockResolvedValue({ data: null, error: null });
+    const eq = vi.fn(() => ({ maybeSingle }));
+    const select = vi.fn(() => ({ eq }));
+    const upsert = vi.fn().mockResolvedValue({ data: null, error: null });
+
+    fromMock.mockReturnValueOnce({ select }).mockReturnValueOnce({ upsert });
+
+    const patchBuilder = vi.fn(() => ({ job_seeking: true }));
+    await upsertIndividualProfileDetailsPatch("user-2", patchBuilder);
+
+    expect(patchBuilder).toHaveBeenCalledWith(null);
+    expect(upsert).toHaveBeenCalledWith({ user_id: "user-2", job_seeking: true });
+  });
+
+  it("throws without upserting when the read fails", async () => {
+    const maybeSingle = vi.fn().mockResolvedValue({ data: null, error: { message: "select failed" } });
+    const eq = vi.fn(() => ({ maybeSingle }));
+    const select = vi.fn(() => ({ eq }));
+
+    fromMock.mockReturnValueOnce({ select });
+
+    await expect(
+      upsertIndividualProfileDetailsPatch("user-3", () => ({})),
+    ).rejects.toEqual({ message: "select failed" });
+    expect(fromMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("throws when the upsert fails", async () => {
+    const maybeSingle = vi.fn().mockResolvedValue({ data: null, error: null });
+    const eq = vi.fn(() => ({ maybeSingle }));
+    const select = vi.fn(() => ({ eq }));
+    const upsert = vi.fn().mockResolvedValue({ data: null, error: { message: "upsert failed" } });
+
+    fromMock.mockReturnValueOnce({ select }).mockReturnValueOnce({ upsert });
+
+    await expect(
+      upsertIndividualProfileDetailsPatch("user-4", () => ({ mentor_opt_in: true })),
+    ).rejects.toEqual({ message: "upsert failed" });
   });
 });

@@ -54,6 +54,8 @@ import {
   submitRoleChangeRequest,
   updateProfileAttribute,
   updateProfileAvatar,
+  upsertIndividualProfileDetailsPatch,
+  type IndividualProfileDetailsRow,
   type MyReferralCodeUsage,
 } from "@/lib/member-profile-api";
 import { getAttributeStringValue, type AttributeVisibility, type ProfileAttributeState } from "@/lib/member-profile";
@@ -1141,36 +1143,10 @@ const ProfilePage = () => {
   };
 
   const patchIndividualProfileDetails = async (
-    patchBuilder: (
-      current: {
-        front_card: Record<string, unknown> | null;
-        detail_card: Record<string, unknown> | null;
-        profile_settings: Record<string, unknown> | null;
-      } | null,
-    ) => Record<string, unknown>,
+    patchBuilder: (current: IndividualProfileDetailsRow | null) => Record<string, unknown>,
   ) => {
     if (!user || !isIndividualProfile) return;
-
-    const { data: currentRow, error: currentError } = await supabase
-      .from("individual_profile_details")
-      .select("front_card, detail_card, profile_settings")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (currentError) throw currentError;
-
-    const payload = patchBuilder(currentRow as {
-      front_card: Record<string, unknown> | null;
-      detail_card: Record<string, unknown> | null;
-      profile_settings: Record<string, unknown> | null;
-    } | null);
-
-    const { error: upsertError } = await supabase.from("individual_profile_details").upsert({
-      user_id: user.id,
-      ...payload,
-    });
-
-    if (upsertError) throw upsertError;
+    await upsertIndividualProfileDetailsPatch(user.id, patchBuilder);
   };
 
   const handleSavePreferenceToggle = async (attributeKey: string, checked: boolean) => {

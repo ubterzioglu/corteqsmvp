@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 39,
+    "total": 40,
     "edge_functions": 9,
     "workers": 2,
-    "ui_modules": 27
+    "ui_modules": 28
   },
   "tools": [
     {
@@ -703,6 +703,23 @@ export const toolCatalog = {
       "evidence_path": "src/lib/catalog-import-api.ts"
     },
     {
+      "tool_key": "module.flat_roles_api",
+      "tool_name": "flat-roles-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/flat-roles-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "fetchFlatRoles",
+        "mapFlatRoleOptions"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "get_flat_roles"
+      ],
+      "evidence_path": "src/lib/flat-roles-api.ts"
+    },
+    {
       "tool_key": "module.germany_citizenship_api",
       "tool_name": "germany-citizenship-api",
       "family": "ui_module",
@@ -747,9 +764,11 @@ export const toolCatalog = {
         "submitFeatureRequest",
         "submitRoleChangeRequest",
         "updateProfileAttribute",
-        "updateProfileAvatar"
+        "updateProfileAvatar",
+        "upsertIndividualProfileDetailsPatch"
       ],
       "tables_read_write": [
+        "individual_profile_details",
         "referral_code_usages"
       ],
       "rpcs": [
@@ -1285,6 +1304,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin-shell/durum-raporu-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/durum-raporu-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin-shell/notification-settings-api.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1371,6 +1400,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/admin/admin-profile-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/admin-referral-api.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -1915,6 +1949,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/dashboard/mvp-items-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/mvp-items-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/dashboard/mvp-items.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1981,6 +2025,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/feedback.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/flat-roles-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/flat-roles-api.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -2746,6 +2800,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/survey-responses.ts",
+      "kind": "ts",
+      "module_family": "surveys"
+    },
+    {
+      "path": "src/lib/surveys.test.ts",
       "kind": "ts",
       "module_family": "surveys"
     },

@@ -134,3 +134,35 @@ export async function updateProfileAvatar(avatarUrl: string | null) {
   if (error) throw error;
   return data;
 }
+
+export type IndividualProfileDetailsRow = {
+  front_card: Record<string, unknown> | null;
+  detail_card: Record<string, unknown> | null;
+  profile_settings: Record<string, unknown> | null;
+};
+
+/**
+ * front_card/detail_card/profile_settings sütunlarını okuyup-birleştirip yazan
+ * tek nokta — çağıran, mevcut satırdan yola çıkıp yalnız değişen alanları döner.
+ */
+export async function upsertIndividualProfileDetailsPatch(
+  userId: string,
+  patchBuilder: (current: IndividualProfileDetailsRow | null) => Record<string, unknown>,
+): Promise<void> {
+  const { data: currentRow, error: currentError } = await supabase
+    .from("individual_profile_details")
+    .select("front_card, detail_card, profile_settings")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (currentError) throw currentError;
+
+  const payload = patchBuilder(currentRow as IndividualProfileDetailsRow | null);
+
+  const { error: upsertError } = await supabase.from("individual_profile_details").upsert({
+    user_id: userId,
+    ...payload,
+  });
+
+  if (upsertError) throw upsertError;
+}
