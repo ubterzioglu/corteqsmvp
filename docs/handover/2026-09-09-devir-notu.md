@@ -11,12 +11,40 @@
 | | |
 |---|---|
 | Depo | `C:\temp_private\corteqs\corteqs_fin` · branch `main` |
-| Son commit | `06d17cd` · `origin/main` ile senkron · çalışma ağacı **temiz** |
-| Test tabanı | **264 dosya / 1.863 test** yeşil |
+| Son commit | `01e04f0` (13 Eylül) · `origin/main` ile senkron · çalışma ağacı **temiz** |
+| Test tabanı | **266 dosya / 1.875 test** yeşil |
 | `tsc` | **6** hata (taban — artmamalı, hiçbiri canlı kusur değil) |
 | ESLint | **0** |
-| Migration | sapma yok |
-| Pano | `/admin/workshop/cadde` → WS3 sekmesi · **23/31** |
+| Migration | **393/393** sapmasız |
+| Pano | `/admin/workshop/cadde` → WS3 sekmesi · **27/31** (yalnız İ2-İ5 açık, içerik/insan işi) |
+| Acil liste | Komuta Merkezi → 9 madde, hepsinde 6'şar soru (54 toplam) |
+
+---
+
+## 0.5 — 13 Eylül eklentisi *(9-10 Eylül'ün 3 gün sonrası devamı, 10 madde/batch)*
+
+3 gündür yeni commit yoktu ve hiçbir acil soruya cevap gelmemişti — ama tarama
+sırasında **terk edilmiş bir worktree**'de yarım kalmış, commit'lenmemiş bir
+Cafe-format kararı bulundu. Bu bulgu günün önceliğini belirledi. Yapılanlar:
+
+| Batch | İş | Commit |
+|---|---|---|
+| **P1** | `.worktrees/c0-async`'ta bulunan taslak bitirildi: C0 kararı **async-first** onaylandı (odalar 1-7 gün açık, eskiden 2 saat), C3 (süre sonu metni) aynı pakette geldi | `98cfd76` |
+| **P2** | K1 kararı: tepki seti 5→3'e indirildi (Beğendim, Destek, Soru). Kalp/Gülme kaldırıldı — canlıda hiç kullanılmamışlardı (0 satır) | `48dad5a` |
+| **P3** | GOOGLE AUTH ID'nin 6 soruluk yorumu 10 Eylül sabahı yanlışlıkla silinmiş bulundu, kullanıcı onayıyla aynen geri eklendi | `77bbab3` |
+| **P4** | `e2e/cadde-visual-qa.spec.ts` (yeni) — 5 ekranlık screenshot altyapısı, gerçekten çalıştırıldı ve incelendi | `5f88232` |
+| **P4 bonus** | Bu incelemede bulundu: Cafe rozeti "Canlı" diyordu, hemen altındaki metin "asenkron çalışır" diyordu — DOĞRUDAN çelişki. "Açık" olarak düzeltildi | `5f88232` |
+| **P5** | Gözle-QA'nın 11 maddesi tek tek kapatıldı/işaretlendi (bkz. §6) | `1bbec6d` |
+| **P6** | `docs/plans/2026-09-09-cadde-ux-ui-batch-plani.md` DB ile senkronize edildi | `1bbec6d` |
+| **P7** | Tek test cafe'si (`title='Test'`) arşivlendi (silinmedi, geri alınabilir) | `310d255` |
+| **P8** | Eski "MVP V2 merge" todo'suna, kapsamının artık acil listeye taşındığını söyleyen not eklendi | `01e04f0` |
+| **P9** | Main'e tam merge olmuş ölü `codex/limit-sprint-2026-08-30` dalı yerelden silindi (origin'e dokunulmadı — kullanıcı kararı) | — |
+| **P10** | Devir notu bu bölümle 13 Eylül ölçümüne çekildi | — |
+
+**Kapsam dışı bırakılan, kullanıcı onayıyla dokunulmayan bulgu:** mobilde
+(390px) üst nav çöküyor — "Geri Bildirim" iki satıra bölünüp "Araçlar"/
+"Profilim" ile çakışıyor. Bugünkü batch'lerin konusu değildi, önceden var
+olan bir sorun. **Ayrı bir gün/batch olarak planlanmalı.**
 
 **✅ DEPLOY KAPANDI (10 Eylül 00:35'te ölçüldü).** Önceki turdaki "canlıya çıkmadı"
 maddesi çözüldü; kullanıcı Coolify'dan yeniden yayınladı ve soru/cevap sistemi
@@ -131,40 +159,41 @@ Tüm grup kapandı. Üç sözleşme testi bu sistemi kilitliyor — **gevşetme*
 `cadde-style-contract` (renk token'dan gelir) · `cadde-surface-contract`
 (tek yarıçap, kontrast tabanı) · `cadde-badge-contract` (üç rozet tipi).
 
-### C — Cafe *(2 batch)*
+### ✅ C — Cafe *(C0-C3 TAMAMEN KAPANDI, 13 Eylül)*
 
-| Batch | Madde | İş |
-|---|---|---|
-| **C0** | m159 | **KARAR** — Cafe formatı async-first mi, programlı canlı slotlar mı? |
-| **C3** | m162 | Süre dolunca ne olduğunu oda kartında yaz |
+**C0 kararı verildi: async-first.** Terk edilmiş bir worktree'de (`.worktrees/c0-async`)
+zaten neredeyse bitmiş bir taslak bulundu, kullanıcıya gösterildi, onaylandı,
+rebase edilip main'e taşındı (`98cfd76`). Odalar artık 2 saat değil **1-7 gün**
+açık kalıyor (`cadde_settings.cadde.cafe.mode=async_first`). **C3** aynı pakette
+geldi — oda kartına gerçek davranışı anlatan tek satır eklendi.
 
-**C0 kod işi DEĞİL, ürün kararı.** Bugün 2 saatlik canlı pencere var. Kritiğin tespiti:
-*"boş bir akış kötüdür, boş bir CANLI oda çok daha kötüdür"* — kullanıcı girer, kimse
-yoktur, süre akmaktadır, bir daha denemez. Oda süresi `cadde_settings` tablosunda, yani
-karar bir **SQL güncellemesi**, kod değişikliği değil.
+⚠️ Bu değişiklik bir yan etki de doğurdu: cafe rozeti hâlâ **"Canlı"** diyordu,
+yeni "asenkron çalışır" metniyle **doğrudan çelişiyordu**. Gözle QA'da (P5)
+bulundu, **"Açık" olarak düzeltildi** (`5f88232`).
 
-**C3, C0'a bağlı** — cevap metni değiştirir. Bilgi bugün yalnız kod yorumunda
-(`CaddeCafePage.tsx:4`), kullanıcı göremiyor ve bilmeden yazmıyor.
+### ✅ K — Karar *(K1 KAPANDI, 13 Eylül)*
 
-### K — Karar *(1 batch)*
+**K1 (m156) kararı verildi: evet, 3'e indi.** Beğendim, Destek, Soru (eski adı
+"Emin olamadım") kaldı; Kalp ve Gülme kaldırıldı — ölçüldü, canlıda hiç
+kullanılmamışlardı (`cadde_post_reactions`'ta 1 satır, o da 'like'). SQL↔TS
+ayna sözleşmesi (`cadde-rules.test.ts`) ve "üç tepki tek tetiğin arkasında"
+kontratı güncellendi, gevşetilmedi (`48dad5a`).
 
-**K1 (m156)** — Tepki seti 5'ten 3'e insin mi?
-⚠️ `CaddePage.test.tsx` "beş tepki tek tetiğin arkasında" sözleşmesini kilitliyor ve o
-sözleşme 2 Eylül'de **bilerek** yazıldı. Kritiğin şikâyet ettiği görsel yığılma
-**zaten çözülmüş**; kalan tek soru "5 tip fazla mı?". Cevap gelmeden koda dokunma.
-
-### İ — İçerik / soğuk başlangıç *(5 batch — KOD İŞİ DEĞİL)*
+### İ — İçerik / soğuk başlangıç *(4 batch kaldı — KOD İŞİ DEĞİL)*
 
 > Kaynak dokümanın en kritik başlığı: *"Header'ı düzeltmek 1 saatlik iş; boş akış ürünü
-> öldürür."* Bugün **kodu** yapıldı, **içeriği** duruyor.
+> öldürür."* Kodu yapıldı, **içeriği hâlâ duruyor.**
 
-**Bugün ölçülen canlı durum — bu grubun neden acil olduğu:**
+**9 Eylül'de ölçülen canlı durum** (değişmedi, yeniden ölçülmedi):
 **21** yayınlanmış public gönderi · 58 şehrin **10'unda** paylaşım var · en dolu şehir
 **4** (Doha, Antalya) · Berlin **1** · en dolu ülke Türkiye **8**.
 
+**✅ İ1 KAPANDI (13 Eylül, `310d255`):** tek test cafe'si (`title='Test'`,
+özet `agwdhjsajkkjsddfgsegdsfsdg`) arşivlendi — silinmedi, `archived_at` ile
+geri alınabilir durumda.
+
 | Batch | Madde | İş | Kim |
 |---|---|---|---|
-| **İ1** | m163 | Test gönderilerini ve test cafe'lerini canlı akıştan temizle | UBT (DB) |
 | **İ2** | m164 | Test içeriği için admin'e görünür seviye ya da staging kur | UBT (kod+DB) |
 | **İ3** | m165 | Berlin, Londra, Sydney, Dubai için 8-10 gerçek soru/not hazırla | Burak |
 | **İ4** | m166 | Resmî hesaptan yayınla, tarihleri geriye yay | Burak · İ3 sonrası |
@@ -183,6 +212,11 @@ PowerShell komut satırından geçen Türkçe karakter bozulur (`0xc7 0x69` hata
 Panoda **9 madde** var (tavan 10, bir slot boş). İlk 4'ü 5 Eylül'den; kalan 5'i
 13 Mayıs toplantı paketinden 10 Eylül'de taşındı (mig `20260910010000`).
 Dokuzunun her birinde **6 soru** var — toplam **54 soru**.
+
+⚠️ **13 Eylül'de 3 gün sonra tekrar bakıldı: hiçbir soruya cevap gelmemiş.**
+Tek değişiklik, GOOGLE AUTH ID'nin sorularının 10 Eylül sabahı **yanlışlıkla
+silindiğinin** fark edilip aynen geri eklenmesiydi (`77bbab3`) — kullanıcıya
+sorulup teyit edildi. Cevaplar gelmeden bu 9 maddeye kod yazma.
 
 ### İlk dört madde — **ölçtüm; dördü de yazılandan farklı çıktı:**
 
