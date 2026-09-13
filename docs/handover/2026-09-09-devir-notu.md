@@ -11,13 +11,165 @@
 | | |
 |---|---|
 | Depo | `C:\temp_private\corteqs\corteqs_fin` · branch `main` |
-| Son commit | `4ad322d` (13 Eylül, R5) · `origin/main` ile senkron · çalışma ağacı **temiz** |
-| Test tabanı | **271 dosya / 1.897 test** yeşil |
-| `tsc` | **0 hata** ✅ (109'dan başlamıştı: 22→16→12→9→6→**0**, 13 Eylül'de kapandı, R serisinde de sıfır kaldı) |
+| Son commit | `8973739` (13 Eylül, S-serisi + Komuta Merkezi triyajı) · `origin/main` ile senkron · çalışma ağacı **temiz** |
+| Test tabanı | **276 dosya / 1.927 test** yeşil |
+| `tsc` | **0 hata** ✅ (109'dan başlamıştı, 13 Eylül'de kapandı, sonraki tüm turlarda sıfır kaldı) |
 | ESLint | **0** |
-| Migration | **393/393** sapmasız |
-| Pano | `/admin/workshop/cadde` → WS3 sekmesi · **27/31** (yalnız İ2-İ5 açık, içerik/insan işi) |
-| Acil liste | Komuta Merkezi → 9 madde, hepsinde 6'şar soru (54 toplam) — 3 gündür cevap yok |
+| Migration | **393/393** sapmasız (bu turda hiç migration yazılmadı) |
+| Workshop panoları | Profil WS1 **18/18 tamamen gözden geçirildi** (0 açık) · Cadde WS2 **19/31 gözden geçirildi, 12 açık kaldı** (bkz. §0.8) · Cadde WS1/WS3 dokunulmadı (3+4 madde) |
+| Komuta Merkezi (todo) | 76 gerçek madde **tek tek triyaj edildi** (bkz. §0.8) — 91 Tamamlandı, 20 gerekçeli açık |
+| Acil liste (Top 10 Hot Fix) | 9 maddeden **3'ü bugün ele alındı** (Profil Menü→Burak'a, Google Auth maliyeti→Burak'a, Etkinlik detayı→Burak'a); RADAR+GRUP YÜKLEME kısmen çözüldü (Radar kök nedeni bulunup düzeltildi); kalan 5'i (WhatsApp grup paketi) hâlâ Burak'ın cevabını bekliyor |
+
+## 0.8 — 13 Eylül dördüncü eklenti: S1-S10 + Acil Liste + Komuta Merkezi/Workshop triyajı (DEVAM EDİYOR)
+
+> ⚠️ Bu bölüm oturum limiti nedeniyle **yarım kaldı** — devam eden bir asistan
+> önce "KALDIĞIMIZ YER" alt bölümünü okumalı.
+
+### S1-S10 — sekiz ekran daha *-api.ts kalıbına taşındı
+
+R-serisinin devamı, aynı disiplin. Commit'ler: `9ee8cf4` (S1+S2),
+`5143f12` (S3), `3661c59` (S4), `6434051` (S5), `3b921b8` (S6),
+`a9cc0dc` (S7), `a03873a` (S8), `b18be91` (S9 — docs), `07ba24f` (S10 — docs).
+
+| Batch | Taşınan | Hedef dosya |
+|---|---|---|
+| S1 | `MvpManager.tsx` (5 çağrı) | `dashboard/mvp-items-api.ts` (yeni) |
+| S2 | `AdminWhatsAppLandingEditorsPage.tsx` (2 çağrı) | `whatsapp-landings.ts` (sibling) |
+| S3 | `AdminRolesOverviewPage.tsx` (7 çağrı) | `admin-catalog.ts` (sibling) |
+| S4 | `AdminReferralPage.tsx` (2 çağrı) | `admin/admin-referral-api.ts` (sibling) |
+| S5 | `SurveyBuilder.tsx` (1 çağrı) | `surveys.ts` (sibling) |
+| S6 | `RequestNewProfileDialog.tsx` + `ProfilePage.tsx` (`get_flat_roles` RPC, dedup) | `flat-roles-api.ts` (yeni) |
+| S7 | `AdminNewMemberGuidePage.tsx` (1 çağrı) | `role-catalog.ts` (sibling) |
+| S8 | `AdminDurumRaporuPage.tsx` (1 çağrı) | `admin-shell/durum-raporu-api.ts` (yeni) |
+| S9 | `docs/ARCHITECTURE.md` + `docs/AGENT_CONTEXT.md` — silinen AuthContext shim + bayat tsc/lint sayıları düzeltildi | — |
+| S10 | `CLAUDE.md` "duplicate images" bulgusu yeniden ölçülüp kapatıldı | — |
+
+Doğrulama: 276 dosya / 1.927 test yeşil, tsc 0, lint 0.
+
+### Acil Liste (Top 10 Hot Fix) — 3 madde ele alındı
+
+- **Profil Menü Taşıma**, **Google Auth Custom Domain (maliyet)**, **Etkinlik
+  özelliği (tür netleştirme)** — üçü de tasarım/maliyet kararı gerektirdiği
+  için Burak'a hazır sorularla iletildi. Mesajlar `docs/notes/2026-09-17-persembe-burak-toplantisi.md`
+  dosyasında (Perşembe toplantısı için).
+- **RADAR+GRUP YÜKLEME — KÖK NEDEN BULUNUP DÜZELTİLDİ:** Radar günlük taraması
+  2 aydır (20 Temmuz'dan beri) sessizce bozukmuş. Sebep: edge fonksiyonun
+  `RADAR_NEWS_CRON_SECRET` ortam değişkeni ile veritabanındaki
+  (`vault.decrypted_secrets`) anahtar birbirinden farklıymış — cron her sabah
+  çağırıyor, fonksiyon 401 dönüp anında duruyordu ama pg_cron'un kendi kaydı
+  bunu göstermiyordu (yalnız enqueue adımını izliyor). `supabase secrets set`
+  ile senkronize edildi. **Doğrulama YARIM KALDI** — manuel test 150s'de
+  zaman aşımına uğradı (muhtemelen 6 kaynağı 6'şar saniye arayla tarayan
+  bilinçli gecikme + bir kaynağın yavaşlığı, RUNAWAY DEĞİL). **Yarın sabah
+  (14 Eylül 05:00 UTC) gerçek cron çalışmasıyla doğrulanmalı** —
+  `select * from radar_news_scan_runs order by started_at desc limit 3;`
+  ile kontrol et, 20 Temmuz'dan sonra yeni satır var mı bak.
+  "Grup yükleme" tarafı zaten çalışıyormuş (üye ekleme), ek iş gerekmiyor.
+- Kalan 5 madde (WhatsApp grup paketi — GRUP EKLEME POLİTİKASI, GRUP ONAY
+  AKIŞI, GRUP FORMU ALANLARI, ŞEHİR GRUPLARINI TOPLAMA, GRUP EKLEME ÇAĞRISI)
+  hiç ele alınmadı, hâlâ Burak'a atanmış durumda.
+
+### Komuta Merkezi — 76 madde tek tek triyaj edildi (TAMAMLANDI)
+
+76 gerçek "todo" maddesinin (1194 `meeting_note` tipi hariç — onlar tarihi
+kayıt, triyaja dahil edilmedi) tamamı en eskiden (17 Nisan 2026) başlanarak
+soruldu. Sonuç: **91 madde Tamamlandı** (35 zaten öyleydi + 21'i kod/kanıtla
++ 35'i UBT kararıyla — iptal veya birleştirme), **20 madde gerekçeli açık**.
+
+Kanıtla kapatılan 21 madde: görsel dil kuralları (köşe/buton/rozet/marka
+rengi/İngilizce kalıntılar — 9-10 Eylül), Cafe oda arayüzü, Contributor
+kaynak/FAQ paketinin 4 alt maddesi, WhatsApp bot altyapısı (webhook),
+Müşteri Talepleri paneli, Burak'ın SuperAdmin ataması.
+
+İptal/birleştirme kararlarının tam listesi:
+`docs/notes/2026-09-13-komuta-merkezi-iptal-edilenler.md` — kullanıcı burada
+bir sonuç dokümanı hazırlayacağını söyledi, dosya ona göre yazıldı.
+
+Birleştirilen maddeler (yeni tek todo'lar): "Teklif modeli: Circle 1-2-3-4 +
+ödeme zamanlaması + çalışma şekli", "WhatsApp bot kartları: Admin/Kanal/
+Mastermind/Role-based", "İnsan Kaynakları operasyonu: sayfa+klasörler+ücret
+analizi", "Landing page + affiliate genişlemesi: InnoVenture+VIP+Business
+Set-Up".
+
+Admin-updates'e iki ayrı kayıt olarak yazıldı ve mail tetiklendi:
+`20260913-acil-liste-radar-tamiri-ve-komuta-merkezi-temizligi` (`2326703`) ve
+`20260913-komuta-merkezi-76-madde-triyaji` (`8973739`).
+
+### Workshop panoları — Profil WS1 bitti, Cadde WS2 yarım kaldı
+
+Command Center'ın yanında, hiç `ubt_done` işaretlenmemiş **56 workshop
+maddesi** bulundu (ne UBT ne Burak dokunmuş). Bunlar da triyaja alındı:
+
+- **Profil WS1: 18/18 TAMAMEN BİTTİ.** 2 madde kodda zaten yapılmış
+  bulundu (ülke seçimi `SearchableCountrySelect`, referans kodu post-login
+  `WelcomeActivatePage.tsx`), 1 madde "yapıldı" onayı aldı (toplantı notları),
+  13 madde hâlâ geçerli — 4 yeni Komuta Merkezi todo'sunda toplandı
+  (doğrulama+tek-profil+etiketleme paketi `adeaef5f`, Google Auth rehberi
+  `7d76af92`, referans eşleştirme `4294c22e`, paketleme/abonelik notu
+  `3e624b92`), 1 madde (tek-profil/toggle kaldırma) **kod tarafında hiç
+  yapılmamış olduğu doğrulandı** (`ProfileSwitcherMenu.tsx` hâlâ aktif) —
+  gerçek bir kod işi olarak listede.
+- **Cadde WS2: 31'den 19'u işlendi, 12 madde AÇIK KALDI (bkz. KALDIĞIMIZ YER).**
+  1 madde kodda zaten yapılmış bulundu (#89, adaptif feed polling zaten var —
+  `cadde-feed-polling.ts`). #97 (Google/Supabase giriş ekranı marka uyumu)
+  bugünkü Google Auth Custom Domain maddesiyle aynı konu, ayrıca iş açılmadı.
+  10 eski toplantı-hazırlık maddesi (6/13 Ağustos toplantıları, #116-125)
+  soruldu — çoğu "artık geçerli değil" dendi, ikisi ("10'ar madde yöntemi",
+  kısa toplantı yöntemi) zaten benimsendiği için kapatıldı.
+- **Cadde WS1 (3 madde) ve WS3 (4 madde) hiç dokunulmadı** — sıradaki iş.
+
+### ⚠️ KALDIĞIMIZ YER — devam eden asistan buradan başlasın
+
+Cadde WS2'de **12 madde hâlâ açık**, DB'den şu sorguyla çekilebilir:
+
+```sql
+select item_no, section, title from workshop_items
+where workshop_key='cadde' and session_key='WS2' and ubt_done=false
+order by item_no;
+```
+
+Beklenen içerik:
+- **#120-123** (modül sırası: Cadde→Profil→Çarşı→Taşınma motoru→WhatsApp
+  botu) — kullanıcı "kararsızım" dedi, henüz sorulmadı/kapatılmadı, TEKRAR
+  SORULMALI ya da atlanıp sona bırakılmalı.
+- **#126-132** (7 madde: ödeme erteleme programı, WordPress taşıma, maliyet
+  optimizasyonu, proje kütüphanesi, NDA yapısı, takım eşleştirme) — kullanıcı
+  "karışık, ayrı sor" dedi, HİÇ SORULMADI. AskUserQuestion ile tek tek veya
+  2'şerli gruplar hâlinde sorulmalı.
+- **#134** (m134, "yorum yazınca hata + görsel netlik gidiyor") — bu zaten
+  bugünkü acil liste turunda (RADAR+GRUP YÜKLEME ile birlikte değil, ayrı)
+  araştırılmış, kullanıcıya sorulacak 5 somut soru hazırlanmıştı ama
+  cevaplanmadı. Bu maddeye AYRICA dokunma — cevap gelene kadar açık kalmalı.
+
+Sonra sırada: **Cadde WS1 (3 madde)** ve **Cadde WS3 (4 madde)** hiç
+başlanmadı — aynı yöntemle (`ubt_done=false` sorgusu, 10'ar 10'ar
+AskUserQuestion ile sor, kod kanıtı varsa önce onu kontrol et, kararları
+uygula, `ubt_done=true` + `ubt_done_at=now()` yaz) devam edilmeli.
+
+**Triyaj yöntemi (tekrar kullanılacak):**
+1. `select item_no, section, title from workshop_items where workshop_key=X and session_key=Y and ubt_done=false order by item_no;`
+2. Her madde için önce KOD/DB kanıtı ara (grep, DB sorgusu) — kanıt varsa
+   direkt `ubt_done=true` yap, kullanıcıya sormaya gerek yok.
+3. Kanıt yoksa AskUserQuestion ile 4'erli gruplar hâlinde sor (benzer
+   maddeleri tek soruda birleştir).
+4. "Hâlâ geçerli" → sadece `ubt_done=true` yaz (workshop_items'ta detay
+   alanı YOK, sadece title var — not eklenemez).
+5. "Birleştir" isteği gelirse → command_center_items'a YENİ bir `todo` satırı
+   aç (title+detail ile, tüm alt maddeleri listele), sonra tüm ilgili
+   workshop_items satırlarını `ubt_done=true` yap.
+6. "İptal" → command_center_items'taki maddeler için `status='Tamamlandi'`
+   + `detail`e "KARAR (tarih, UBT): ..." notu ekle
+   (`docs/notes/2026-09-13-komuta-merkezi-iptal-edilenler.md`'ye de ekle);
+   workshop_items'taki maddeler için sadece `ubt_done=true` yeterli.
+7. Her DB yazısından önce **AskUserQuestion ile onay al** — bu oturumda tüm
+   yazılar kullanıcının açık onayıyla yapıldı, bu disiplin korunmalı.
+
+**DB bağlantısı:** psql pooler üzerinden, `.env.local`'daki
+`SUPABASE_DB_PASSWORD` ile. Native Windows psql kullanılıyor — SQL dosyaları
+`C:/tmp/*.sql`'e yazılıp **Windows-stili yol** (`C:/tmp/...`, `/c/tmp/...`
+DEĞİL) ile `-f` bayrağıyla çalıştırılmalı, yoksa "No such file" hatası
+alınır. Türkçe karakterler doğrudan `-c` ile verilirse bozulur, her zaman
+dosyaya yaz.
 
 ## 0.6 — 13 Eylül ikinci eklenti: "kolay işler" cherry-picking (Q1-Q10)
 
