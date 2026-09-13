@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { getRebuildStatusReport, type StatusReport } from "@/lib/admin-shell/durum-raporu-api";
 import { AdminTodoListCard } from "@/components/admin/AdminTodoListCard";
 import { ADMIN_UPDATES } from "@/lib/admin-shell/admin-updates";
 import {
@@ -20,26 +20,6 @@ import {
 } from "lucide-react";
 
 // ── Live status metrics (from get_rebuild_status_report RPC) ──────────────────
-interface StatusReport {
-  generated_at: string;
-  roles_total: number;
-  roles_active: number;
-  legacy_roles: number;
-  afs_attributes: number;
-  afs_features: number;
-  afs_sections: number;
-  role_attributes: number;
-  role_features: number;
-  role_sections: number;
-  catalog_items_total: number;
-  placeholders: number;
-  item_role_links: number;
-  items_without_primary_role: number;
-  legacy_tables_remaining: number;
-  family_columns_remaining: number;
-  old_table_names_remaining: number;
-}
-
 // Expected targets for the rebuild (used to color metrics green/red).
 // roles_total pasif rolleri de sayar (satır silinmez); roles_active 2026-06-11
 // User_Standard konsolidasyonundan beri 75'tir.
@@ -135,9 +115,7 @@ const AdminDurumRaporuPage = () => {
   const load = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.rpc("get_rebuild_status_report");
-      if (error) throw error;
-      setReport(data as unknown as StatusReport);
+      setReport(await getRebuildStatusReport());
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Durum raporu alınamadı";
       toast({ title: "Hata", description: message, variant: "destructive" });
