@@ -16,6 +16,7 @@ vi.mock("@/integrations/supabase/client", () => ({
 
 import {
   buildLandingDescription,
+  listAssignableUsersAsAdmin,
   normalizeCommunityText,
   normalizeLandingCategory,
   parseAdminContact,
@@ -255,5 +256,53 @@ describe("submitLanding", () => {
       id: "",
       slug: "amsterdam-akademi-amsterdam",
     });
+  });
+});
+
+describe("listAssignableUsersAsAdmin", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("resolves full names for role-assigned users", async () => {
+    fromSpy.mockImplementation((table: string) => {
+      if (table === "user_role_assignments") {
+        return { select: vi.fn().mockResolvedValue({ data: [{ user_id: "u1" }, { user_id: "u2" }], error: null }) };
+      }
+      if (table === "user_profile_attributes") {
+        return {
+          select: () => ({
+            in: () => ({
+              in: vi.fn().mockResolvedValue({
+                data: [{ user_id: "u1", value_text: "Ayşe Kaya" }],
+                error: null,
+              }),
+            }),
+          }),
+        };
+      }
+      throw new Error(`Unexpected table: ${table}`);
+    });
+
+    const result = await listAssignableUsersAsAdmin();
+    expect(result).toEqual([
+      { user_id: "u1", email: null, full_name: "Ayşe Kaya" },
+      { user_id: "u2", email: null, full_name: null },
+    ]);
+  });
+
+  it("returns an empty list without querying attributes when there are no role assignments", async () => {
+    const attrsSpy = vi.fn();
+    fromSpy.mockImplementation((table: string) => {
+      if (table === "user_role_assignments") {
+        return { select: vi.fn().mockResolvedValue({ data: [], error: null }) };
+      }
+      attrsSpy();
+      throw new Error(`Unexpected table: ${table}`);
+    });
+
+    const result = await listAssignableUsersAsAdmin();
+    expect(result).toEqual([]);
+    expect(attrsSpy).not.toHaveBeenCalled();
   });
 });

@@ -6,21 +6,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import {
   grantLandingEditorAsAdmin,
   listAllSubmissions,
+  listAssignableUsersAsAdmin,
   listLandingEditorAssignmentsAsAdmin,
   revokeLandingEditorAsAdmin,
+  type AssignableUser,
   type LandingEditorAssignment,
   type WhatsAppLanding,
 } from "@/lib/whatsapp-landings";
 
-type UserOption = {
-  user_id: string;
-  email: string | null;
-  full_name: string | null;
-};
+type UserOption = AssignableUser;
 
 export default function AdminWhatsAppLandingEditorsPage() {
   const { toast } = useToast();
@@ -39,39 +36,17 @@ export default function AdminWhatsAppLandingEditorsPage() {
     void (async () => {
       setLoading(true);
       try {
-        const [landingRows, assignmentRows, usersResult] = await Promise.all([
+        const [landingRows, assignmentRows, userRows] = await Promise.all([
           listAllSubmissions(),
           listLandingEditorAssignmentsAsAdmin(),
-          supabase.from("user_role_assignments").select("user_id"),
+          listAssignableUsersAsAdmin(),
         ]);
 
         if (!mounted) return;
 
-        if (usersResult.error) throw usersResult.error;
-
-        const userIds = (usersResult.data ?? []).map((user) => user.user_id);
-        const attrsResult = userIds.length > 0
-          ? await supabase
-              .from("user_profile_attributes")
-              .select("user_id, value_text, afs_attributes!inner(key)")
-              .in("user_id", userIds)
-              .in("afs_attributes.key", ["full_name"])
-          : { data: [] };
-
-        const nameByUser: Record<string, string | null> = {};
-        for (const row of attrsResult.data ?? []) {
-          nameByUser[row.user_id] = row.value_text ?? null;
-        }
-
-        const enrichedUsers: UserOption[] = userIds.map((uid: string) => ({
-          user_id: uid,
-          email: null,
-          full_name: nameByUser[uid] ?? null,
-        }));
-
         setLandings(landingRows.filter((row) => Boolean(row.dbId)));
         setAssignments(assignmentRows);
-        setUsers(enrichedUsers);
+        setUsers(userRows);
       } catch (error) {
         toast({
           title: "Landing editör verileri alınamadı",

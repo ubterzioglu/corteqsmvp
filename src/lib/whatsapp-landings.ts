@@ -638,6 +638,41 @@ export async function listLandingEditorAssignmentsAsAdmin(): Promise<LandingEdit
   }));
 }
 
+export type AssignableUser = {
+  user_id: string;
+  email: string | null;
+  full_name: string | null;
+};
+
+/** S2 (13 Eylül, B6): AdminWhatsAppLandingEditorsPage.tsx'in editör atama açılır menüsü için
+ * tüm rol atanmış kullanıcıları isim çözerek döner — `listLandingEditorAssignmentsAsAdmin`
+ * ile aynı isim-çözme deseni (user_profile_attributes + afs_attributes.key='full_name'). */
+export async function listAssignableUsersAsAdmin(): Promise<AssignableUser[]> {
+  const { data, error } = await supabase.from("user_role_assignments").select("user_id");
+  if (error) throw error;
+
+  const userIds = (data ?? []).map((row) => row.user_id);
+  if (userIds.length === 0) return [];
+
+  const { data: attrRows, error: attrsError } = await supabase
+    .from("user_profile_attributes")
+    .select("user_id, value_text, afs_attributes!inner(key)")
+    .in("user_id", userIds)
+    .in("afs_attributes.key", ["full_name"]);
+  if (attrsError) throw attrsError;
+
+  const nameByUser: Record<string, string | null> = {};
+  for (const attr of (attrRows ?? []) as Array<{ user_id: string; value_text: string | null }>) {
+    nameByUser[attr.user_id] = attr.value_text ?? null;
+  }
+
+  return userIds.map((userId) => ({
+    user_id: userId,
+    email: null,
+    full_name: nameByUser[userId] ?? null,
+  }));
+}
+
 export async function grantLandingEditorAsAdmin(landingId: string, userId: string) {
   const { error } = await supabase.rpc("admin_grant_whatsapp_landing_editor", {
     p_landing_id: landingId,

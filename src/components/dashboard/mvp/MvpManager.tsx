@@ -12,11 +12,11 @@ import {
   INPUT_CLS,
   createEmptyMvpFormState,
   groupItemsByKonu,
-  mapMvpRow,
   type MvpFormState,
   type MvpItem,
   type MvpItemRow,
 } from '@/lib/dashboard/mvp-items'
+import { createMvpItem, deleteMvpItem, listMvpItems, updateMvpItem } from '@/lib/dashboard/mvp-items-api'
 
 export default function MvpManager() {
   const [items, setItems] = useState<MvpItem[]>([])
@@ -32,26 +32,16 @@ export default function MvpManager() {
   const konuGroups = useMemo(() => groupItemsByKonu(items), [items])
 
   const loadItems = useCallback(async () => {
-    if (!supabase) {
-      setError('Supabase bağlantısı yapılandırılmamış.')
-      setIsLoading(false)
-      return
-    }
     setIsLoading(true)
     setError(null)
     try {
-      const { data, error: fetchErr } = await supabase
-        .from('mvp_items')
-        .select('id, konu, sub, ayrinti, mvp_level, added_by, is_seed, created_at, updated_at')
-        .order('created_at', { ascending: false })
-      if (fetchErr) throw fetchErr
-      setItems((data as MvpItemRow[]).map(mapMvpRow))
+      setItems(await listMvpItems())
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : 'MVP listesi yüklenemedi.')
     } finally {
       setIsLoading(false)
     }
-  }, [supabase])
+  }, [])
 
   useEffect(() => {
     void loadItems()
@@ -63,20 +53,15 @@ export default function MvpManager() {
     setIsSubmitting(true)
     setError(null)
     try {
-      const insertPayload = {
+      const created = await createMvpItem({
         konu: formState.konu,
         sub: formState.sub.trim() || null,
         ayrinti: formState.ayrinti.trim() || null,
         mvp_level: formState.mvpLevel,
         added_by: formState.addedBy,
-      }
-      const { data, error: insertErr } = await supabase
-        .from('mvp_items')
-        .insert(insertPayload)
-        .select('id, konu, sub, ayrinti, mvp_level, added_by, is_seed, created_at, updated_at')
-        .single()
-      if (insertErr || !data) throw insertErr ?? new Error('Madde eklenemedi.')
-      setItems((prev) => [mapMvpRow(data as MvpItemRow), ...prev])
+      })
+      if (!created) throw new Error('Madde eklenemedi.')
+      setItems((prev) => [created, ...prev])
       setFormState(createEmptyMvpFormState())
     } catch (createError) {
       setError(createError instanceof Error ? createError.message : 'Madde eklenemedi.')
@@ -115,14 +100,9 @@ export default function MvpManager() {
         field === 'mvp_level'
           ? { mvp_level: value as MvpItemRow['mvp_level'] }
           : { added_by: value as MvpItemRow['added_by'] }
-      const { data, error: updateErr } = await supabase
-        .from('mvp_items')
-        .update(patch)
-        .eq('id', itemId)
-        .select('id, konu, sub, ayrinti, mvp_level, added_by, is_seed, created_at, updated_at')
-        .single()
-      if (updateErr || !data) throw updateErr
-      setItems((prev) => prev.map((i) => (i.id === itemId ? mapMvpRow(data as MvpItemRow) : i)))
+      const updated = await updateMvpItem(itemId, patch)
+      if (!updated) return
+      setItems((prev) => prev.map((i) => (i.id === itemId ? updated : i)))
     } catch (updateError) {
       setError(updateError instanceof Error ? updateError.message : 'Güncellenemedi.')
     }
@@ -133,21 +113,15 @@ export default function MvpManager() {
     setIsSubmitting(true)
     setError(null)
     try {
-      const updatePayload = {
+      const updated = await updateMvpItem(itemId, {
         konu: editingState.konu,
         sub: editingState.sub.trim() || null,
         ayrinti: editingState.ayrinti.trim() || null,
         mvp_level: editingState.mvpLevel,
         added_by: editingState.addedBy,
-      }
-      const { data, error: updateErr } = await supabase
-        .from('mvp_items')
-        .update(updatePayload)
-        .eq('id', itemId)
-        .select('id, konu, sub, ayrinti, mvp_level, added_by, is_seed, created_at, updated_at')
-        .single()
-      if (updateErr || !data) throw updateErr ?? new Error('Madde güncellenemedi.')
-      setItems((prev) => prev.map((i) => (i.id === itemId ? mapMvpRow(data as MvpItemRow) : i)))
+      })
+      if (!updated) throw new Error('Madde güncellenemedi.')
+      setItems((prev) => prev.map((i) => (i.id === itemId ? updated : i)))
       cancelEdit()
     } catch (updateError) {
       setError(updateError instanceof Error ? updateError.message : 'Madde güncellenemedi.')
@@ -162,8 +136,7 @@ export default function MvpManager() {
     setIsSubmitting(true)
     setError(null)
     try {
-      const { error: deleteErr } = await supabase.from('mvp_items').delete().eq('id', itemId)
-      if (deleteErr) throw deleteErr
+      await deleteMvpItem(itemId)
       setItems((prev) => prev.filter((i) => i.id !== itemId))
       if (editingId === itemId) cancelEdit()
     } catch (deleteError) {
