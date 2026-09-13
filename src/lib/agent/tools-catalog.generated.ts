@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 36,
+    "total": 37,
     "edge_functions": 9,
     "workers": 2,
-    "ui_modules": 24
+    "ui_modules": 25
   },
   "tools": [
     {
@@ -1037,6 +1037,22 @@ export const toolCatalog = {
         "admin_upsert_service_finder_template"
       ],
       "evidence_path": "src/lib/service-finder-api.ts"
+    },
+    {
+      "tool_key": "module.welcome_pack_orders_api",
+      "tool_name": "welcome-pack-orders-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/welcome-pack-orders-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "submitWelcomePackOrder"
+      ],
+      "tables_read_write": [
+        "welcome_pack_orders"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/welcome-pack-orders-api.ts"
     },
     {
       "tool_key": "worker.relocation_ingestion",
@@ -2684,6 +2700,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/vip-invitations.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/welcome-pack-orders-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/welcome-pack-orders-api.ts",
       "kind": "ts",
       "module_family": "lib"
     },

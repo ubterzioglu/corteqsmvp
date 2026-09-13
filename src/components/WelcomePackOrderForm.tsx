@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { submitWelcomePackOrder } from "@/lib/welcome-pack-orders-api";
 import { useAuth } from "@/components/auth/useAuth";
 import ConsentCheckboxes, { emptyConsent, isConsentValid, type ConsentState } from "@/components/ConsentCheckboxes";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
@@ -92,32 +92,32 @@ const WelcomePackOrderForm = ({
     }
 
     setLoading(true);
-    const { error } = await supabase.from("welcome_pack_orders").insert({
-      user_id: user.id,
-      country: form.country,
-      city: form.city,
-      arrival_date: form.arrivalDate,
-      adults: form.adults,
-      children: form.children,
-      has_pet: form.hasPet,
-      pet_details: form.petDetails || null,
-      needs_baby_seat: form.needsBabySeat,
-      needs_airport_transfer: form.needsAirportTransfer,
-      needs_car_rental: form.needsCarRental,
-      needs_flight_discount: form.needsFlightDiscount,
-      needs_sim_card: form.needsSimCard,
-      needs_mentor: form.needsMentor,
-      mentor_type: form.mentorType || null,
-      notes: form.notes || null,
-    });
-
-    setLoading(false);
-    if (error) {
-      toast({ title: "Hata oluştu", description: error.message, variant: "destructive" });
-    } else {
+    try {
+      await submitWelcomePackOrder({
+        userId: user.id,
+        country: form.country,
+        city: form.city,
+        arrivalDate: form.arrivalDate,
+        adults: form.adults,
+        children: form.children,
+        hasPet: form.hasPet,
+        petDetails: form.petDetails || null,
+        needsBabySeat: form.needsBabySeat,
+        needsAirportTransfer: form.needsAirportTransfer,
+        needsCarRental: form.needsCarRental,
+        needsFlightDiscount: form.needsFlightDiscount,
+        needsMentor: form.needsMentor,
+        needsSimCard: form.needsSimCard,
+        mentorType: form.mentorType || null,
+        notes: form.notes || null,
+      });
       toast({ title: "🎉 Hoşgeldin Paketi oluşturuldu!", description: "İşletme ve danışmanlardan teklifler gelecek." });
       setOpen(false);
       onSuccess?.();
+    } catch (err: unknown) {
+      toast({ title: "Hata oluştu", description: err instanceof Error ? err.message : undefined, variant: "destructive" });
+    } finally {
+      setLoading(false);
     }
   };
 
