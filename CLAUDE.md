@@ -734,8 +734,14 @@ belong there; documentation goes under `docs/`.
    temizliği 34 dosya düşürdü). En büyük gerçek kaynak dosyalar `src/lib/admin-shell/social-diaspora-posts.ts`
    (2934) ve `ProfilePage.tsx`. `src/integrations/supabase/types.ts` (15.010) ve
    `src/lib/agent/tools-catalog.generated.ts` (3139) ÜRETİLEN dosyalardır, bu sayıma dahil edilmez.
-8. **Duplicate images in `public/`** → `sweet.png`/`sweet.jpg`, `last.png`/`newbg.png`,
-   `og-image.png`/`og-image-new.jpg` altısı da hâlâ duruyor (video temizliğinin aksine bu kapanmadı).
+8. ~~**Duplicate images in `public/`**~~ → **YENİDEN ÖLÇÜLDÜ 2026-09-13, KAPANDI.**
+   `sweet.png` gerçekten ölüydü, silindi (13 Eylül Q1) — `sweet.jpg` tek kalan, kullanılan
+   dosya. `last.png`/`newbg.png` byte-birebir aynı dosya (763.198 bayt) ama **ikisi de
+   kullanılıyor**: `May19CampaignPage.tsx` ikisini de ayrı katmanlar için ayrı ayrı
+   çağırıyor (biri marquee/OG varsayılanı, öbürü "poetic layer"). `og-image.png`
+   (`MarqueeItemCard.tsx` · `marquee.ts` · `AdminMarqueePage.tsx` · `DiasporaDetailPage.tsx`)
+   ile `og-image-new.jpg` (`seo.ts`) de aynı şekilde — ikisi de canlı, farklı rolde. **Bu üç
+   çift "duplicate" değil, benzer görünümlü ama ayrı amaçlı dosyalar — silme.**
 
 **Deferred by user decision (report only, do not change):** `index.html` JSON-LD scope (12-question
 FAQPage, `Offer` 99 EUR, hardcoded `dateModified 2026-07-06`, `BreadcrumbList` inherited by every
