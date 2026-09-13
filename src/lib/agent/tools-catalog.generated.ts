@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 35,
+    "total": 36,
     "edge_functions": 9,
     "workers": 2,
-    "ui_modules": 23
+    "ui_modules": 24
   },
   "tools": [
     {
@@ -719,6 +719,22 @@ export const toolCatalog = {
       "evidence_path": "src/lib/germany-citizenship-api.ts"
     },
     {
+      "tool_key": "module.interest_registrations_api",
+      "tool_name": "interest-registrations-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/interest-registrations-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "submitInterestRegistration"
+      ],
+      "tables_read_write": [
+        "interest_registrations"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/interest-registrations-api.ts"
+    },
+    {
       "tool_key": "module.member_profile_api",
       "tool_name": "member-profile-api",
       "family": "ui_module",
@@ -1407,6 +1423,11 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-cafe-async-contract.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-cafe-join-requests.test.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -1822,6 +1843,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/dashboard/hot-fix-whatsapp-seed.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/dashboard/meeting-notes-data.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2003,6 +2029,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/index-html-csp.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/interest-registrations-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/interest-registrations-api.ts",
       "kind": "ts",
       "module_family": "lib"
     },

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { submitInterestRegistration } from "@/lib/interest-registrations-api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -142,8 +143,8 @@ const InterestForm = ({
     }
     setSubmitting(true);
     try {
-      const attachment_urls = await uploadAttachments();
-      const { error } = await supabase.from("interest_registrations").insert({
+      const attachmentUrls = await uploadAttachments();
+      await submitInterestRegistration({
         category: context,
         role: form.selected_category || null,
         name: form.name,
@@ -152,14 +153,12 @@ const InterestForm = ({
         country: form.country,
         city: form.city,
         organization: form.organization,
-        interest_area: form.interest_area,
-        supply_demand: form.supply_demand,
-        referral_code: referralCode || null,
+        interestArea: form.interest_area,
+        supplyDemand: form.supply_demand,
+        referralCode: referralCode || null,
         source: source || null,
-        attachment_urls,
-        message: form.supply_demand,
+        attachmentUrls,
       });
-      if (error) throw error;
       setSubmitted(true);
       toast({ title: "Kaydınız alındı", description: "En kısa sürede sizinle iletişime geçeceğiz." });
     } catch (err: unknown) {
