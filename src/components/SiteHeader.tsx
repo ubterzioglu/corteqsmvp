@@ -3,8 +3,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import { useAuth } from "@/components/auth/useAuth";
 const logo = "/newlogo.png";
+// Q2 (13 Eylül gözle QA): whitespace-nowrap olmadan dar ekranda link METNİ
+// kelime ortasından bölünüyordu ("Geri" / "Bildirim" iki satıra ayrılıp
+// komşu linklerle çakışıyordu). Satırın kendisi de flex-wrap almalı (aşağıda)
+// ki taşan link KELİME İÇİ değil, TAM BİRİM olarak alt satıra düşsün.
 const NAV_ACTION_CLASS =
-  "text-sm font-semibold text-slate-700 transition-colors hover:text-slate-950";
+  "whitespace-nowrap text-sm font-semibold text-slate-700 transition-colors hover:text-slate-950";
 
 // Beta bandı kapatma tercihi.
 // Desen kaynağı: src/lib/admin-shell/admin-storage.ts (ADMIN_STORAGE_KEYS.updatesSeen +
@@ -99,7 +103,7 @@ export default function SiteHeader() {
       )}
       {/* Yeni üst bar — beta uyarısının altında, eski header'ın üstünde; Profilim + Çıkış (sağ üst), beyaz zemin */}
       <div className="site-header__nav border-b border-slate-200/80 bg-white px-4 py-1.5">
-        <div className="container mx-auto flex items-center justify-end gap-x-4 lg:px-6">
+        <div className="container mx-auto flex flex-wrap items-center justify-end gap-x-4 gap-y-1 lg:px-6">
           {user ? (
             <>
               <Link
