@@ -14,6 +14,53 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260913-dort-domain-daha-api-katmanina-tasindi",
+    date: "13 Eylül 2026",
+    title:
+      "Dört form/ekran daha güvenli koda taşındı, geliştirici belgesindeki bayat rakamlar düzeltildi, iki eski yedek klasörü rapor edildi (silinmedi)",
+    items: [
+      "GÜNÜN ÖZETİ: Bugünün üçüncü ve son partisinde, doğrudan veritabanına yazan dört ayrı ekran/form projenin standart güvenli-katman kalıbına taşındı. Hiçbirinde kullanıcı tarafında görünür bir değişiklik yok — davranış birebir korundu, yalnızca kodun veritabanına NASIL ulaştığı değişti (dolaylı yoldan, tek bir kontrol noktasından geçerek).",
+      "TAŞINANLAR: 'Hoş Geldin Paketi' sipariş formu, Hizmet Talebi formu ve listesi, Kaynak/Link yöneticisi ekranı (5 ayrı yazma noktası), Mesaj Kutusu ekranı (4 ayrı okuma/yazma noktası).",
+      "BİLEREK DOKUNULMAYAN BİR KUSUR: Hizmet Talebi listesi taşınırken içinde küçük ama kırılgan bir eşleştirme mantığı fark edildi. Bu partinin amacı SADECE taşımaktı, davranış değiştirmek değil — kusur düzeltilmeden, olduğu gibi, yazılı notla birlikte taşındı. İleride ayrı bir düzeltme maddesi olabilir.",
+      "DÖRT KULLANILMAYAN GÖRSEL SİLİNDİ, BİR TANESİNDE DENETİM HATASI BULUNDU: Geçen ayki bir görsel denetiminde 'belki kullanılıyordur' diye elle kontrole bırakılmış 4 dosya tek tek yeniden doğrulanıp silindi. Bu sırada denetimin kendisinde bir hata yakalandı: 'kullanılmıyor' diye işaretlenmiş bir dosya (mail şablonu logosu) aslında hoş geldin mailinde kullanılıyormuş — o dosyaya dokunulmadı.",
+      "GELİŞTİRİCİ BELGESİNDEKİ BAYAT RAKAMLAR DÜZELTİLDİ: İç teknik belge hâlâ 'tip denetiminde 9 uyarı kaldı' diyordu; gerçek sayı SIFIRDI (bir önceki partide kapanmış ama belge güncellenmemişti). 'Doğrudan veritabanına yazan ekran sayısı' da yeniden ölçüldü: bugünün başında 32+4 iken 8+3'e indi.",
+      "İKİ ESKİ YEDEK KLASÖRÜ BULUNDU, RAPOR EDİLDİ — DOKUNULMADI: Depoda iki eski prototip kopyası duruyor (biri ~19 MB, biri ~152 MB), ikisi de günlük kullanımda hiç açılmıyor. Karar için soruldu, cevap: 'şimdilik dokunma, sadece rapor et'. Bu karar kayda geçti; ikisine de dokunulmadı.",
+      "KONTROLLER: Otomatik testlerin tamamı yeşil (271 dosya / 1.897 test), kod denetimi temiz, tip denetimi SIFIR hata, veritabanı şeması hiç değişmedi — bugünün üç partisinden hiçbiri veritabanına dokunmadı.",
+    ],
+  },
+  {
+    id: "20260913-tip-denetimi-borcu-sifira-indi",
+    date: "13 Eylül 2026",
+    title:
+      "Aylardır biriken tip-denetimi uyarılarının sonuncusu da kapandı, bir form daha güvenli koda taşındı",
+    items: [
+      "GÜNÜN ÖZETİ: Bir süre önce 109 olarak ölçülen 'tip denetimi uyarısı' sayısı, art arda yapılan küçük düzeltmelerle bugün SIFIRA indi (109 → 22 → 16 → 12 → 9 → 0). Bu sayı kodun çalışırken hata vermeden ama arka planda 'yanlış yazılmış' sayılan yerlerini gösteriyordu; kullanıcı hiçbir zaman doğrudan görmedi ama biriken her satır ileride gerçek bir hataya dönüşme riski taşıyordu.",
+      "KULLANILMAYAN BİR GÖRSEL SİLİNDİ: 600 KB'lık kullanılmayan bir görsel kaldırıldı; ekranda hâlâ kullanılan benzer isimli başka bir dosyayla karıştırılmasın diye önce tek tek doğrulandı.",
+      "MOBİLDE ÜST MENÜ DÜZELTİLDİ: Telefon genişliğinde üst menüdeki 'Geri Bildirim' yazısı kelimenin ortasından ikiye bölünüp yanındaki linklerle çakışıyordu. Düzeltildi ve ekran görüntüsüyle doğrulandı.",
+      "EN ZOR TİP HATASI SINIFI KAPATILDI: Komuta Merkezi'nin arka planında bir sorgu kodu kendi kendini tekrar tekrar sarmalıyor, derleyici de bu yüzden 'çok derin, pes ediyorum' diyordu. Projede zaten kullanılan güvenli ve dar bir gevşetme kalıbıyla çözüldü.",
+      "ROZET GÖRSELİ DOĞRULANDI, YENİ BİR BULGU ÇIKTI: 'Sabit' rozeti doğru renkte çiziliyor. Ama 'Sponsorlu' kartın kendisi hâlâ eski turuncu çerçeveyle çiziliyor — yalnız üstündeki rozet düzeldi, kartın arka planı düzelmedi. Bu bir ürün kararı gerektiriyor; onay alınana kadar ŞİMDİLİK dokunulmadı.",
+      "İLGİ ALANI FORMU GÜVENLİ KATMANA TAŞINDI: Doğrudan veritabanına yazan bir form, projenin standart güvenli-katman kalıbına taşındı — kullanıcı için görünür bir değişiklik yok, davranış birebir aynı.",
+      "ARAŞTIRILDI AMA KAPATILAMADI — 'YORUM YAZINCA HATA VERİYOR' ŞİKAYETİ: Workshop panosundaki bir şikayet ('yorum yazmaya çalışınca sayfa hataya geçiyor, eklenen görsel netliğini kaybediyor') araştırıldı. Kod tarafında bunu açıklayacak bir sorun BULUNAMADI — hata kayıtları tablosu bu konuda sıfır satır, yani hiç yakalanmamış. Kesin teşhis için 5 somut soru hazırlandı (hangi tarayıcı, ne zaman, hangi dosya formatı); madde şu an kod tarafında değil, cevap tarafında bekliyor.",
+      "KONTROLLER: Otomatik testlerin tamamı yeşil, kod denetimi temiz, tip denetimi SIFIR hata (bu depoda ilk kez).",
+    ],
+  },
+  {
+    id: "20260913-worktree-kurtarma-async-cafe-ve-gozle-denetim",
+    date: "13 Eylül 2026",
+    title:
+      "Bir bilgisayarda unutulmuş yarım kalmış Cafe kararı bitirilip yayına alındı, tepki seçenekleri sadeleşti, gözle denetimde gerçek bir çelişki yakalandı",
+    items: [
+      "GÜNÜN ÖZETİ: 3 gündür yeni bir işlem yapılmamıştı ve acil sorulara cevap gelmemişti. Tarama sırasında bir geliştiricinin bilgisayarında unutulmuş, hiçbir zaman ana koda birleştirilmemiş bir çalışma kopyası bulundu — içinde bitmemiş ama neredeyse tamamlanmış bir karar duruyordu.",
+      "CAFE ODALARI ARTIK GÜNLERCE AÇIK KALIYOR: Cafe odaları eskiden 2 saat sonra kendiliğinden kapanıyordu. Bu, unutulmuş çalışma kopyasında zaten '1-7 gün açık kalsın' diye değiştirilip test edilmiş ama hiç yayına alınmamıştı. Bugün bitirilip yayına alındı; oda süresi dolduğunda kullanıcıya bunu söyleyen metin de aynı pakette geldi.",
+      "TEPKİ SEÇENEKLERİ 5'TEN 3'E İNDİ: Beğendim / Destek / Soru dışında Kalp ve Gülme seçenekleri de vardı. Ölçtük: ikisi de canlıda BİR KEZ BİLE kullanılmamış — sıfır satır. Kaldırıldılar, ekran sadeleşti.",
+      "YANLIŞLIKLA SİLİNMİŞ BİR SORU GRUBU GERİ GETİRİLDİ: Komuta Merkezi'ndeki 'GOOGLE AUTH ID' maddesinin altındaki 6 soruluk açıklama 10 Eylül sabahı yanlışlıkla silinmiş bulundu. Aynen geri eklendi.",
+      "GÖZLE DENETİMDE GERÇEK BİR ÇELİŞKİ BULUNDU: Cafe kartındaki rozet 'Canlı' diyordu ama hemen altındaki açıklama metni 'asenkron çalışır, hemen yanıt beklemeyin' diyordu — aynı kartta birbirini yalanlayan iki mesaj. 'Canlı' yazısı 'Açık' olarak düzeltildi. Bu bulgu, 5 ekranlık bir gözle-denetim altyapısının ilk kez gerçekten çalıştırılıp sonuçlarının tek tek incelenmesiyle ortaya çıktı.",
+      "TEK BİR TEST ODASI TEMİZLENDİ: Başlığı 'Test' olan, gerçek kullanıcı verisi taşımayan bir Cafe odası arşivlendi (silinmedi, istenirse geri açılabilir).",
+      "KAPSAM DIŞI BIRAKILAN BİR BULGU — SADECE KAYDA GEÇTİ: Telefon ekranında üst menüde 'Geri Bildirim' yazısının ortadan bölünüp diğer linklerle çakıştığı görüldü. Bugünün konusu değildi; kayda geçti, ayrı bir güne bırakıldı.",
+      "KONTROLLER: Otomatik testlerin tamamı yeşil, kod ve yazı denetimi temiz, veritabanı sapması yok.",
+    ],
+  },
+  {
     id: "20260910-whatsapp-grup-maddeleri",
     date: "10 Eylül 2026",
     title: "13 Mayıs'tan kalan beş WhatsApp grup maddesi acil listesine taşındı — ve ölçüm hepsini değiştirdi",

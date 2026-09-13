@@ -6,11 +6,63 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260910-whatsapp-grup-maddeleri");
-    expect(ADMIN_UPDATES[0].date).toBe("10 Eylül 2026");
+    expect(ADMIN_UPDATES[0].id).toBe("20260913-dort-domain-daha-api-katmanina-tasindi");
+    expect(ADMIN_UPDATES[0].date).toBe("13 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("13 Eylül üçüncü parti kaydı taşınan dört ekranı ve dokunulmayan bulguları birlikte söyler", () => {
+    const update = ADMIN_UPDATES.find(
+      ({ id }) => id === "20260913-dort-domain-daha-api-katmanina-tasindi",
+    );
+    const detail = update?.items.join(" ") ?? "";
+
+    // Taşınan dört ekran adıyla geçmeli — biri düşerse duyuru eksik kalır.
+    expect(detail).toContain("Hoş Geldin Paketi");
+    expect(detail).toContain("Hizmet Talebi");
+    expect(detail).toContain("Kaynak/Link yöneticisi");
+    expect(detail).toContain("Mesaj Kutusu");
+
+    // Davranış değiştirmediği açıkça söylenmeli — "taşıma" ile "düzeltme" karışmasın.
+    expect(detail).toContain("BİLEREK DOKUNULMAYAN BİR KUSUR");
+
+    // Denetim hatası (yanlış pozitif) dürüstçe yazılmalı.
+    expect(detail).toContain("hoş geldin mailinde kullanılıyormuş");
+
+    // Kullanıcı kararı ("dokunma, rapor et") kayda geçmeli — silme YAPILMADI.
+    expect(detail).toContain("şimdilik dokunma, sadece rapor et");
+    expect(detail).toContain("İKİ ESKİ YEDEK KLASÖRÜ BULUNDU");
+  });
+
+  it("13 Eylül ikinci parti kaydı tip denetimi borcunun sıfırlandığını ölçümle söyler", () => {
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260913-tip-denetimi-borcu-sifira-indi");
+    const detail = update?.items.join(" ") ?? "";
+
+    // Sayı dizisi (109→...→0) duyuruda geçmeli, "düzeltildi" demek yetmez.
+    expect(detail).toContain("109");
+    expect(detail).toContain("SIFIRA indi");
+
+    // Sponsorlu kart bulgusu bilerek dokunulmadan bırakıldı — bu açıkça yazılmalı.
+    expect(detail).toContain("ŞİMDİLİK dokunulmadı");
+
+    // Kapatılamayan araştırma dürüstçe "bulunamadı" diye yazılmalı, "çözüldü" değil.
+    expect(detail).toContain("BULUNAMADI");
+  });
+
+  it("13 Eylül ilk parti kaydı unutulmuş çalışma kopyasını ve çelişki bulgusunu söyler", () => {
+    const update = ADMIN_UPDATES.find(
+      ({ id }) => id === "20260913-worktree-kurtarma-async-cafe-ve-gozle-denetim",
+    );
+    const detail = update?.items.join(" ") ?? "";
+
+    expect(detail).toContain("CAFE ODALARI ARTIK GÜNLERCE AÇIK KALIYOR");
+    expect(detail).toContain("TEPKİ SEÇENEKLERİ 5'TEN 3'E İNDİ");
+
+    // Çelişki bulgusu ("Canlı" derken altı "asenkron" diyordu) adıyla geçmeli.
+    expect(detail).toContain("GÖZLE DENETİMDE GERÇEK BİR ÇELİŞKİ BULUNDU");
+    expect(detail).toContain("'Canlı' yazısı 'Açık' olarak düzeltildi");
   });
 
   it("WhatsApp grup kaydı 'zaten yapılmış' bulgusunu ve ölçümleri birlikte söyler", () => {
