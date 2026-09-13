@@ -105,9 +105,19 @@ export default function MvpManager() {
   async function handleInlineUpdate(itemId: string, field: 'mvp_level' | 'added_by', value: string) {
     if (!supabase) return
     try {
+      // Q3 (tsc TS2345): `value` bir native <select>'in `e.target.value`'sinden
+      // geliyor — DOM API'si onu her zaman `string` verir. Ama `mvp_level`/
+      // `added_by` satır tarafında dar literal union (`MvpLevel`/`MvpAuthor`).
+      // Çağıran taraf <option>'ları zaten bu union'lardan üretiyor (KonuCard.tsx),
+      // yani tekil `as` cast burada güvenli — hesaplanan anahtarlı nesne
+      // ({ [field]: value }) index imzasına düşüp tipi tamamen kaybediyordu.
+      const patch: Partial<Pick<MvpItemRow, 'mvp_level' | 'added_by'>> =
+        field === 'mvp_level'
+          ? { mvp_level: value as MvpItemRow['mvp_level'] }
+          : { added_by: value as MvpItemRow['added_by'] }
       const { data, error: updateErr } = await supabase
         .from('mvp_items')
-        .update({ [field]: value })
+        .update(patch)
         .eq('id', itemId)
         .select('id, konu, sub, ayrinti, mvp_level, added_by, is_seed, created_at, updated_at')
         .single()
