@@ -1,5 +1,14 @@
-import { describe, expect, it } from "vitest";
-import { filterCatalogRows, type CatalogRow } from "@/lib/role-catalog";
+import { describe, expect, it, vi } from "vitest";
+
+const fromMock = vi.fn();
+
+vi.mock("@/integrations/supabase/client", () => ({
+  supabase: {
+    from: (...args: unknown[]) => fromMock(...args),
+  },
+}));
+
+import { fetchRolesForGuide, filterCatalogRows, type CatalogRow } from "@/lib/role-catalog";
 
 const rows: CatalogRow[] = [
   {
@@ -109,5 +118,20 @@ describe("filterCatalogRows", () => {
   it("does not match attribute when kind=feature", () => {
     const result = filterCatalogRows(rows, { search: "bio", kind: "feature" });
     expect(result).toHaveLength(0);
+  });
+});
+
+describe("fetchRolesForGuide", () => {
+  it("queries the roles table ordered by sort_order", () => {
+    const order = vi.fn().mockReturnValue("query-result");
+    const select = vi.fn(() => ({ order }));
+    fromMock.mockReturnValue({ select });
+
+    const result = fetchRolesForGuide();
+
+    expect(fromMock).toHaveBeenCalledWith("roles");
+    expect(select).toHaveBeenCalledWith("key, label, sort_order, is_active");
+    expect(order).toHaveBeenCalledWith("sort_order");
+    expect(result).toBe("query-result");
   });
 });

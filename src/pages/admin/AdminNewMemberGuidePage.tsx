@@ -2,8 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { fetchCatalogRows, type CatalogRow } from "@/lib/role-catalog";
+import { fetchCatalogRows, fetchRolesForGuide, type CatalogRow } from "@/lib/role-catalog";
 
 type RoleRow = { key: string; label: string; sort_order: number; is_active: boolean };
 
@@ -418,10 +417,7 @@ const AdminNewMemberGuidePage = () => {
     let isMounted = true;
     void (async () => {
       const [rolesResult, catalogResult] = await Promise.allSettled([
-        supabase
-          .from("roles")
-          .select("key, label, sort_order, is_active")
-          .order("sort_order"),
+        fetchRolesForGuide(),
         fetchCatalogRows(),
       ]);
       if (!isMounted) return;

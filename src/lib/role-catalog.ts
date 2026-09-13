@@ -27,6 +27,16 @@ type MetaRow = {
   admin_note: string | null;
 };
 
+export type RoleGuideRow = { key: string; label: string; sort_order: number; is_active: boolean };
+
+// S7 (13 Eylül, B6): AdminNewMemberGuidePage.tsx doğrudan supabase.from("roles")
+// çağırıyordu. Davranış korunumu: çağıran taraf Promise.allSettled içinde
+// kullanıyor ve `.error` alanını kontrol ediyor — bu yüzden burada throw YOK,
+// ham query nesnesi (thenable) döner, tıpkı messages-api.ts'teki desende olduğu gibi.
+export function fetchRolesForGuide() {
+  return supabase.from("roles").select("key, label, sort_order, is_active").order("sort_order");
+}
+
 export async function fetchCatalogRows(): Promise<CatalogRow[]> {
   const [attrResult, featResult, sectResult, metaResult] = await Promise.all([
     supabase
