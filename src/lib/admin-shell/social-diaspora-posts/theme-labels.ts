@@ -1,0 +1,40 @@
+// Admin Panel V2 — Diaspora postları: tema anahtarı → görünür Türkçe etiket.
+
+import type { DiasporaPostTheme } from "./types";
+
+/** Tema anahtarı → Türkçe görünür etiket (filtre çipleri + rozet). */
+export const DIASPORA_THEME_LABELS: Record<DiasporaPostTheme, string> = {
+  gurbet: "Gurbet",
+  kimlik: "Kimlik",
+  "ulke-dagilimi": "Ülke Dağılımı",
+  dil: "Dil",
+  mutfak: "Mutfak",
+  bayram: "Bayram",
+  gelenek: "Gelenek",
+  basari: "Başarı",
+  "yeni-gelenler": "Yeni Gelenler",
+  isletme: "İşletme",
+  ogrenci: "Öğrenci",
+  networking: "Networking",
+  mentorluk: "Mentorluk",
+  aidiyet: "Aidiyet",
+  "geri-donus": "Geri Dönüş",
+  etkinlik: "Etkinlik",
+  carsi: "Çarşı",
+  dayanisma: "Dayanışma",
+  spor: "Spor",
+  teknoloji: "Teknoloji",
+  ebeveyn: "Ebeveyn",
+  tatil: "Tatil",
+  cadde: "Cadde",
+  kadin: "Kadın",
+  kusaklar: "Kuşaklar",
+  manifesto: "Manifesto",
+  radar: "Radar",
+  blog: "Blog",
+  referans: "Referans",
+  ambasador: "Ambasador",
+  kariyer: "Kariyer",
+  "uzaktan-calisma": "Uzaktan Çalışma",
+  yalnizlik: "Yalnızlık",
+};
