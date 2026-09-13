@@ -13,6 +13,8 @@ vi.mock("@/integrations/supabase/client", () => ({
 }));
 
 import {
+  fetchRoleAssignmentDetail,
+  fetchRolesOverviewTopBundle,
   getAdminCatalogItemDetail,
   listAdminUnifiedRecords,
   listCatalogClaims,
@@ -221,5 +223,75 @@ describe("admin-catalog rpc wrappers", () => {
       p_item_id: "item-1",
       p_attribute_key: "full_name",
     });
+  });
+});
+
+describe("fetchRolesOverviewTopBundle", () => {
+  beforeEach(() => {
+    fromMock.mockReset();
+  });
+
+  const makeQuery = (data: unknown, error: unknown = null) => {
+    const query: Record<string, unknown> = {};
+    query.select = vi.fn(() => query);
+    query.eq = vi.fn(() => query);
+    query.order = vi.fn().mockResolvedValue({ data, error });
+    return query;
+  };
+
+  it("returns the four catalog lists together", async () => {
+    fromMock.mockImplementation((table: string) => {
+      if (table === "roles") return makeQuery([{ id: "r1", key: "User_X", label: "X", is_active: true, sort_order: 0 }]);
+      if (table === "afs_attributes") return makeQuery([{ key: "full_name", label: "Ad", description: null, data_type: "text", sort_order: 0 }]);
+      if (table === "afs_features") return makeQuery([{ key: "feat_x", label: "Özellik", description: null, scope_role: null, sort_order: 0 }]);
+      if (table === "afs_sections") return makeQuery([{ key: "sect_x", label: "Bölüm", description: null, section_area: null, sort_order: 0 }]);
+      throw new Error(`Unexpected table: ${table}`);
+    });
+
+    const result = await fetchRolesOverviewTopBundle();
+    expect(result.roles).toHaveLength(1);
+    expect(result.attrs[0].key).toBe("full_name");
+    expect(result.feats[0].key).toBe("feat_x");
+    expect(result.sects[0].key).toBe("sect_x");
+  });
+
+  it("silently defaults to an empty list on a query error (behavior preserved from original component)", async () => {
+    fromMock.mockImplementation((table: string) => {
+      if (table === "roles") return makeQuery(null, { message: "boom" });
+      return makeQuery([]);
+    });
+
+    const result = await fetchRolesOverviewTopBundle();
+    expect(result.roles).toEqual([]);
+  });
+});
+
+describe("fetchRoleAssignmentDetail", () => {
+  beforeEach(() => {
+    fromMock.mockReset();
+  });
+
+  it("returns attribute rules, feature flags and section rules for a role", async () => {
+    fromMock.mockImplementation((table: string) => {
+      const eq = vi.fn();
+      if (table === "role_attributes") {
+        eq.mockResolvedValue({
+          data: [{ is_enabled: true, is_required: false, is_public_default: true, afs_attributes: { key: "full_name", label: "Ad" } }],
+          error: null,
+        });
+      } else if (table === "role_features") {
+        eq.mockResolvedValue({ data: [{ feature_key: "feat_x", is_enabled: true }], error: null });
+      } else if (table === "role_sections") {
+        eq.mockResolvedValue({ data: [{ is_enabled: true, afs_sections: { key: "sect_x", label: "Bölüm" } }], error: null });
+      } else {
+        throw new Error(`Unexpected table: ${table}`);
+      }
+      return { select: vi.fn(() => ({ eq })) };
+    });
+
+    const result = await fetchRoleAssignmentDetail("role-1");
+    expect(result.attributeRules).toHaveLength(1);
+    expect(result.featureFlags[0].feature_key).toBe("feat_x");
+    expect(result.sectionRules[0].afs_sections?.key).toBe("sect_x");
   });
 });

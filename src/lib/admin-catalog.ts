@@ -418,6 +418,77 @@ export async function listAdminRoleRecordCounts(): Promise<AdminRoleRecordCount[
   }));
 }
 
+// S3 (13 Eylül, B6 mixed-data-fetching): AdminRolesOverviewPage.tsx doğrudan 7 ayrı
+// supabase.from() çağrısı yapıyordu (üst panel: roles/afs_attributes/afs_features/
+// afs_sections; rol seçilince: role_attributes/role_features/role_sections). Satır
+// tipleri generated types'ta yok (B1) — sayfadaki `as unknown as ...Row[]` cast'leri
+// birebir buraya taşındı.
+// ⚠️ Bilinçli davranış korunumu: orijinal bileşen bu 7 sorgunun `.error` alanını HİÇ
+// kontrol etmiyordu — hata dönerse sessizce `data ?? []` (boş liste) kullanılıyordu.
+// Bu fonksiyonlar da AYNEN öyle davranır (throw YOK); "sessiz yutma" bir kusur olabilir
+// ama bu batch'in kapsamı SADECE taşımak, davranış düzeltmek değil.
+export type RoleCatalogRow = { id: string; key: string; label: string; is_active: boolean; sort_order: number };
+export type AfsAttributeCatalogRow = { key: string; label: string; description: string | null; data_type: string; sort_order: number };
+export type AfsFeatureCatalogRow = { key: string; label: string; description: string | null; scope_role: string | null; sort_order: number };
+export type AfsSectionCatalogRow = { key: string; label: string; description: string | null; section_area: string | null; sort_order: number };
+
+export type RolesOverviewTopBundle = {
+  roles: RoleCatalogRow[];
+  attrs: AfsAttributeCatalogRow[];
+  feats: AfsFeatureCatalogRow[];
+  sects: AfsSectionCatalogRow[];
+};
+
+export async function fetchRolesOverviewTopBundle(): Promise<RolesOverviewTopBundle> {
+  const [rolesRes, attrRes, featRes, sectRes] = await Promise.all([
+    supabase.from("roles").select("id, key, label, is_active, sort_order").eq("is_active", true).order("sort_order"),
+    supabase.from("afs_attributes").select("key, label, description, data_type, sort_order").eq("is_active", true).order("sort_order"),
+    supabase.from("afs_features").select("key, label, description, scope_role, sort_order").order("sort_order"),
+    // afs_sections generated types'ta yok (B1) — B1 çözülünce cast kalkacak.
+    supabase.from("afs_sections").select("key, label, description, section_area, sort_order").eq("is_active", true).order("sort_order"),
+  ]);
+
+  return {
+    roles: (rolesRes.data ?? []) as unknown as RoleCatalogRow[],
+    attrs: (attrRes.data ?? []) as unknown as AfsAttributeCatalogRow[],
+    feats: (featRes.data ?? []) as unknown as AfsFeatureCatalogRow[],
+    sects: (sectRes.data ?? []) as unknown as AfsSectionCatalogRow[],
+  };
+}
+
+export type RoleAttributeRuleRow = {
+  is_enabled: boolean;
+  is_required: boolean;
+  is_public_default: boolean;
+  afs_attributes: { key: string; label: string } | null;
+};
+export type RoleFeatureFlagRow = { feature_key: string; is_enabled: boolean };
+export type RoleSectionRuleRow = { is_enabled: boolean; afs_sections: { key: string; label: string } | null };
+
+export type RoleAssignmentDetailBundle = {
+  attributeRules: RoleAttributeRuleRow[];
+  featureFlags: RoleFeatureFlagRow[];
+  sectionRules: RoleSectionRuleRow[];
+};
+
+export async function fetchRoleAssignmentDetail(roleId: string): Promise<RoleAssignmentDetailBundle> {
+  const [attrRulesRes, featFlagsRes, sectRulesRes] = await Promise.all([
+    supabase
+      .from("role_attributes")
+      .select("is_enabled, is_required, is_public_default, afs_attributes(key, label)")
+      .eq("role_id", roleId),
+    supabase.from("role_features").select("feature_key, is_enabled").eq("role_id", roleId),
+    // role_sections generated types'ta yok (B1) — B1 çözülünce cast kalkacak.
+    supabase.from("role_sections").select("is_enabled, afs_sections(key, label)").eq("role_id", roleId),
+  ]);
+
+  return {
+    attributeRules: (attrRulesRes.data ?? []) as unknown as RoleAttributeRuleRow[],
+    featureFlags: (featFlagsRes.data ?? []) as unknown as RoleFeatureFlagRow[],
+    sectionRules: (sectRulesRes.data ?? []) as unknown as RoleSectionRuleRow[],
+  };
+}
+
 export async function getAdminCatalogItemDetail(itemId: string): Promise<AdminCatalogDetail> {
   const { data, error } = await (supabase
     .from("catalog_items")

@@ -2,26 +2,17 @@ import { useEffect, useMemo, useState } from "react";
 import { Layers } from "lucide-react";
 import { AdminPageShell } from "@/components/admin/page";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { listAdminUnifiedRecords, listCatalogItemEditors } from "@/lib/admin-catalog";
+import {
+  fetchRoleAssignmentDetail,
+  fetchRolesOverviewTopBundle,
+  listAdminUnifiedRecords,
+  listCatalogItemEditors,
+} from "@/lib/admin-catalog";
 import ItemListPanel from "@/components/admin/roles-overview/ItemListPanel";
 import RoleListPanel from "@/components/admin/roles-overview/RoleListPanel";
 import EntityCatalogPanel from "@/components/admin/roles-overview/EntityCatalogPanel";
 import CaseDetailPanel from "@/components/admin/roles-overview/CaseDetailPanel";
 import type { EntityCatalogItem, ItemListEntry, RoleEntityAssignment, RoleListItem } from "@/components/admin/roles-overview/types";
-
-// Generated types (B1) güncel olmadığı için sorgu sonuçları lokal satır tipleriyle daraltılır.
-type AfsAttributeRow = { key: string; label: string; description: string | null; data_type: string; sort_order: number };
-type AfsFeatureRow = { key: string; label: string; description: string | null; scope_role: string | null; sort_order: number };
-type AfsSectionRow = { key: string; label: string; description: string | null; section_area: string | null; sort_order: number };
-type RoleAttributeRuleRow = {
-  is_enabled: boolean;
-  is_required: boolean;
-  is_public_default: boolean;
-  afs_attributes: { key: string; label: string } | null;
-};
-type RoleFeatureFlagRow = { feature_key: string; is_enabled: boolean };
-type RoleSectionRuleRow = { is_enabled: boolean; afs_sections: { key: string; label: string } | null };
 
 const AdminRolesOverviewPage = () => {
   const { toast } = useToast();
@@ -52,21 +43,16 @@ const AdminRolesOverviewPage = () => {
     let isMounted = true;
     void (async () => {
       try {
-        const [rolesRes, attrRes, featRes, sectRes, itemsRes] = await Promise.all([
-          supabase.from("roles").select("id, key, label, is_active, sort_order").eq("is_active", true).order("sort_order"),
-          supabase.from("afs_attributes").select("key, label, description, data_type, sort_order").eq("is_active", true).order("sort_order"),
-          supabase.from("afs_features").select("key, label, description, scope_role, sort_order").order("sort_order"),
-          // afs_sections generated types'ta yok (B1) — B1 çözülünce cast kalkacak.
-           
-          supabase.from("afs_sections").select("key, label, description, section_area, sort_order").eq("is_active", true).order("sort_order"),
+        const [topBundle, itemsRes] = await Promise.all([
+          fetchRolesOverviewTopBundle(),
           listAdminUnifiedRecords({ page: 1, pageSize: 100, filters: { kind: "", query: "", itemType: "", platformRoleKey: "", status: "", verificationStatus: "", city: "", countryCode: "" } }),
         ]);
 
         if (!isMounted) return;
 
-        setRoles((rolesRes.data ?? []) as RoleListItem[]);
+        setRoles(topBundle.roles as RoleListItem[]);
 
-        const attrs: EntityCatalogItem[] = ((attrRes.data ?? []) as unknown as AfsAttributeRow[]).map((a) => ({
+        const attrs: EntityCatalogItem[] = topBundle.attrs.map((a) => ({
           kind: "attribute" as const,
           key: a.key,
           label: a.label,
@@ -74,7 +60,7 @@ const AdminRolesOverviewPage = () => {
           data_type: a.data_type,
           sort_order: a.sort_order,
         }));
-        const feats: EntityCatalogItem[] = ((featRes.data ?? []) as unknown as AfsFeatureRow[]).map((f) => ({
+        const feats: EntityCatalogItem[] = topBundle.feats.map((f) => ({
           kind: "feature" as const,
           key: f.key,
           label: f.label,
@@ -82,7 +68,7 @@ const AdminRolesOverviewPage = () => {
           scope_role: f.scope_role,
           sort_order: f.sort_order,
         }));
-        const sects: EntityCatalogItem[] = ((sectRes.data ?? []) as unknown as AfsSectionRow[]).map((s) => ({
+        const sects: EntityCatalogItem[] = topBundle.sects.map((s) => ({
           kind: "section" as const,
           key: s.key,
           label: s.label,
@@ -128,22 +114,7 @@ const AdminRolesOverviewPage = () => {
     setLoadingCase(true);
     void (async () => {
       try {
-        const [attrRulesRes, featFlagsRes, sectRulesRes] = await Promise.all([
-          supabase
-            .from("role_attributes")
-            .select("is_enabled, is_required, is_public_default, afs_attributes(key, label)")
-            .eq("role_id", role.id),
-          supabase
-            .from("role_features")
-            .select("feature_key, is_enabled")
-            .eq("role_id", role.id),
-          // role_sections generated types'ta yok (B1) — B1 çözülünce cast kalkacak.
-           
-          supabase
-            .from("role_sections")
-            .select("is_enabled, afs_sections(key, label)")
-            .eq("role_id", role.id),
-        ]);
+        const detail = await fetchRoleAssignmentDetail(role.id);
 
         if (!isMounted) return;
 
@@ -152,19 +123,19 @@ const AdminRolesOverviewPage = () => {
         );
 
         setAssignment({
-          attributeRules: ((attrRulesRes.data ?? []) as unknown as RoleAttributeRuleRow[]).map((r) => ({
+          attributeRules: detail.attributeRules.map((r) => ({
             attributeKey: r.afs_attributes?.key ?? "",
             attributeLabel: r.afs_attributes?.label ?? r.afs_attributes?.key ?? "",
             is_enabled: r.is_enabled,
             is_required: r.is_required,
             is_public_default: r.is_public_default,
           })),
-          featureFlags: ((featFlagsRes.data ?? []) as unknown as RoleFeatureFlagRow[]).map((f) => ({
+          featureFlags: detail.featureFlags.map((f) => ({
             featureKey: f.feature_key,
             featureLabel: featureLabelMap.get(f.feature_key) ?? f.feature_key,
             is_enabled: f.is_enabled,
           })),
-          sectionRules: ((sectRulesRes.data ?? []) as unknown as RoleSectionRuleRow[]).map((s) => ({
+          sectionRules: detail.sectionRules.map((s) => ({
             sectionKey: s.afs_sections?.key ?? "",
             sectionLabel: s.afs_sections?.label ?? "",
             is_enabled: s.is_enabled,
