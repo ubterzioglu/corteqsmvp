@@ -5,6 +5,23 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260913-buyuk-dosya-temizligi",
+    date: "13 Eylül 2026",
+    title:
+      "Kodun en şişmiş 11 dosyası parçalara ayrıldı — 16.615 satır taşındı, kullanıcı tarafında hiçbir şey değişmedi",
+    items: [
+      "GÜNÜN ÖZETİ: Bugünkü son parti tamamen 'temiz kod' çalışmasıydı. Projenin kendi kuralı bir dosyanın en fazla 800 satır olmasını söylüyor; 13 dosya bu sınırı aşmıştı, en büyüğü 2.934 satırdı. Bunların 11'i küçük ve odaklı parçalara bölündü. Sınırı aşan dosya sayısı 13'ten 5'e indi — kalan 5'in ikisi test dosyası, biri veri dosyası, ikisi de bilerek sonraya bırakıldı.",
+      "KULLANICI TARAFINDA HİÇBİR ŞEY DEĞİŞMEDİ: Bu bir 'düzenleme' işiydi, 'değiştirme' değil. Hiçbir ekran, hiçbir buton, hiçbir metin, hiçbir kural değişmedi. Kod aynı işi yapıyor, sadece tek bir dev dosya yerine anlamlı isimlerle ayrılmış küçük dosyalarda duruyor. Faydası ileriye dönük: bundan sonra bir ekranda değişiklik yapmak hem daha hızlı hem daha az riskli olacak, çünkü değiştirilen yerin çevresinde binlerce ilgisiz satır durmayacak.",
+      "BÖLÜNEN DOSYALAR: Profil sayfası (2.782→795), Komuta Merkezi yöneticisi (2.127→25), sosyal paylaşım içerik havuzu (2.934→37), ürün güncellemeleri listesi (2.210→31 — şu an okuduğunuz bu liste), WhatsApp topluluk ekleme sayfası (1.747→493), Burak paylaşım araçları (1.418→49), Komuta Merkezi madde katmanı (1.276→107), Katalog yönetim sayfası (1.249→393), sosyal test araçları (1.189→32), Kaynak/Link yöneticisi (967→131), yönetici menü kayıtları (849→40).",
+      "ÜÇ SESSİZ ARIZA ÖNLENDİ — ÜÇÜ DE TESTTEN GEÇERDİ: (1) Site paketleme ayarları dosyaları tam adıyla tanıyordu; bölünen parçalar bu gruplandırmanın dışında kalacak ve sayfa yüklenme davranışı sessizce değişecekti. (2) Bir arka plan betiği Burak paylaşım araçlarının kaynağını doğrudan okuyup 12 eşleşme çıkarıyor, bulamazsa hata veriyordu — bölünmeden sonra çalışmayacaktı. (3) Yönetici panelindeki 'Araç Kaydı' ve 'Ajan Analitiği' ekranlarını besleyen dosya listesi bayat kalmıştı. Üçü de düzeltildi; hiçbirini otomatik testler yakalamıyor, bu yüzden ayrıca kontrol edildi.",
+      "İŞİ YAPAN VE İŞİ DENETLEYEN AYRILDI: Her dosyayı bölen ile onu kontrol eden ayrı ayrı çalıştı; denetleyenin görevi 'onaylamak' değil 'kusur bulmaya çalışmak' olarak tanımlandı. Yukarıdaki üç arızadan ikisini ve aşağıdaki ölçüm hatalarını bölme işini yapan taraf değil, denetleyen taraf buldu. Ayrıca kullanılmayan iki parça (bir profil kartı ve bir görünmez karakter hatası) bu sayede yakalanıp temizlendi.",
+      "DÜRÜST NOT — KENDİ ÖLÇÜM HATALARIM: Bu partide üç kez yanlış ölçüm yaptım ve üçü de belgelendi. Bir ara 'doğrudan veritabanı çağrısı hiç kalmadı' dedim, doğrusu 2 taneydi (giriş/oturum dosyasında); arama desenim çok satıra yayılan çağrıları görmüyordu. Satır sayarken kullandığım komut boş satırları saymıyormuş, bu yüzden bir ara size olduğundan küçük rakamlar verdim. Bir kontrolü de iş bitmeden çalıştırıp yanlış alarm ürettim. Üçü de düzeltildi ve nasıl tekrarlanmayacağı proje kurallarına yazıldı.",
+      "BİLEREK YAPILMAYAN: Cadde'nin iki büyük dosyası (cadde-api ve Cadde sayfası) bu partide KASITEN ellenmedi. Sebebi: bu iki dosyaya 25 ve 19 ayrı yerden bağlanılıyor ve birinin hiç otomatik testi yok. Cadde tarafında geçmişte üç ayrı arıza aylarca fark edilmeden canlıda kaldı; zaman kutulu bir çalışmada bu riski almak doğru olmaz. Doğru sıra önce koruyucu test yazmak, sonra bölmek — ayrı bir oturumda yapılacak.",
+      "KONTROLLER: Tip denetimi 0 hata · kod denetimi 0 hata · 278 dosyada 1.958 testin tamamı yeşil (23 yeni test eklendi) · canlı paket derlemesi başarılı · erişilemez dosya taraması temiz · veritabanı göç kontrolü sapma yok. 8 ayrı commit main dalına gönderildi.",
+      "HENÜZ YAPILMADI — GÖZLE KONTROL VE YAYIN BEKLİYOR: Bu 16.615 satırlık taşımanın hiçbiri henüz tarayıcıda açılıp görülmedi ve canlıya çıkılmadı. Testler kodun mantığını doğrular, ekranın doğru göründüğünü doğrulamaz. Özellikle Profil sayfası, WhatsApp topluluk sayfası ve Komuta Merkezi'nde yerleşimin bozulmadığı yayından sonra gözle kontrol edilmeli.",
+    ],
+  },
+  {
     id: "20260913-workshop-panolari-tamamen-kapandi",
     date: "13 Eylül 2026",
     title:

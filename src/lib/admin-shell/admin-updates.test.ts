@@ -6,11 +6,38 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260913-workshop-panolari-tamamen-kapandi");
+    expect(ADMIN_UPDATES[0].id).toBe("20260913-buyuk-dosya-temizligi");
     expect(ADMIN_UPDATES[0].date).toBe("13 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("13 Eylül sekizinci parti kaydı büyük dosya temizliğini ve YAPILMAYANI birlikte söyler", () => {
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260913-buyuk-dosya-temizligi");
+    const detail = update?.items.join(" ") ?? "";
+
+    // Ölçüm duyurunun kanıtı: "iyileştirildi" demek yetmez, sayı geçmeli.
+    expect(detail).toContain("16.615");
+    expect(detail).toContain("13'ten 5'e");
+
+    // ⚠️ EN KRİTİK CÜMLE: bu bir düzenleme işiydi. Bu düşerse okuyan kişi
+    // ekranlarda bir değişiklik arar ve bulamayınca "yapılmamış" sanır.
+    expect(detail).toContain("KULLANICI TARAFINDA HİÇBİR ŞEY DEĞİŞMEDİ");
+
+    // Testin yakalayamadığı üç sessiz arıza sınıfı duyuruda kalmalı.
+    expect(detail).toContain("ÜÇ SESSİZ ARIZA ÖNLENDİ");
+
+    // Kendi ölçüm hatalarım duyurudan düşerse, düzeltme hiç olmamış bir
+    // sorunun çözümü gibi görünür.
+    expect(detail).toContain("KENDİ ÖLÇÜM HATALARIM");
+
+    // Cadde'ye bilerek dokunulmadığı yazılmalı — yoksa "unutulmuş" sanılır.
+    expect(detail).toContain("KASITEN ellenmedi");
+
+    // ⚠️ Taşımanın hiçbiri tarayıcıda görülmedi; bunu duyurudan çıkarmak
+    // doğrulanmamış işi doğrulanmış gibi sunmak olur.
+    expect(detail).toContain("GÖZLE KONTROL VE YAYIN BEKLİYOR");
   });
 
   it("13 Eylül yedinci parti kaydı Cadde WS1/WS2/WS3 workshop kapanışını ölçümle söyler", () => {
