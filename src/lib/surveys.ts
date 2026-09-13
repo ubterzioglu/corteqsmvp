@@ -89,6 +89,31 @@ export async function getSurveyById(id: string) {
   } as SurveyWithQuestions;
 }
 
+// S5 (13 Eylül, B6): SurveyBuilder.tsx doğrudan supabase.from("surveys") ile
+// otomatik tarih-slug'ı hesaplıyordu — davranış birebir taşındı.
+function formatDateSlugPart(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}${m}${d}`;
+}
+
+export async function buildAutoDateSlug() {
+  const base = `anket-${formatDateSlugPart()}`;
+  const { data, error } = await supabase.from("surveys").select("slug").like("slug", `${base}%`);
+
+  if (error) throw error;
+
+  const existing = new Set((data ?? []).map((row) => row.slug));
+  if (!existing.has(base)) return base;
+
+  let suffix = 2;
+  while (existing.has(`${base}-${suffix}`)) {
+    suffix += 1;
+  }
+  return `${base}-${suffix}`;
+}
+
 export async function createSurvey(input: CreateSurveyInput) {
   const { data, error } = await supabase.from("surveys").insert(input).select("*").single();
   if (error) throw error;
