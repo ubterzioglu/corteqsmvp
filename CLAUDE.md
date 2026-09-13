@@ -6,18 +6,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **CorteQS Landing** is a multi-feature React + Vite application with Supabase backend. It combines a public marketing site, admin dashboard, member profiles, surveys, workspace collaboration tools, and an accounting module (muhasebe) — all in a single SPA.
 
-**Key Metrics (ölçüldü 2026-09-05, gün sonu):**
+**Key Metrics (ölçüldü 2026-09-13):**
 - **950** `.ts`/`.tsx` files under `src` — 199 pages, 356 components (2026-09-06 ölü kod
   temizliğiyle 1.092'den indi; 150 erişilemez dosya silindi)
 - **383 Supabase migrations** — 131 in `supabase/migrations/applied/`
   + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split); 7 Edge Functions
-- **245** test files under `src` (+ `scripts`/`supabase`/`workers`) + 21 Playwright `.spec.ts`;
-  `npm run test` → **259 dosya / 1.816 test** yeşil (sayı düştü çünkü silinen ölü
-  kodun testleri de gitti — çalışan hiçbir test kaybedilmedi)
+- **271 dosya / 1.897 test** yeşil (`npm run test`) — 245 taban rakamı bayattı, birkaç
+  oturumdur `*-api.ts` göçleriyle yeni test dosyaları ekleniyor
 - `npm run lint` → **0 problem** (eski "1280 problem" notu bayattı)
 - `src/App.tsx`: 313 lines, 51 `lazy()` imports
-- TypeScript with relaxed strict mode (intentional trade-off) — **9 remaining `tsc` errors**
-  (109 → 22 → 16 → 12 → 9; dökümü ve sınıfları "Known Limitations" md.5'te)
+- TypeScript with relaxed strict mode (intentional trade-off) — **`tsc` hatası SIFIRA indi**
+  (109 → 22 → 16 → 12 → 9 → **0**, 2026-09-13). "Known Limitations" md.5 artık KAPALI —
+  eski sınıf tablosunu ezberleme, aşağıdaki not güncel.
 - **Production runtime is nginx** (Dockerfile → `nginx.conf.template`), deployed via Docker (Coolify).
   `server.mjs` is the local/nixpacks path only — see the Deployment section.
 
@@ -709,29 +709,26 @@ belong there; documentation goes under `docs/`.
    `@/components/auth/useAuth` yoluna geçirildi, `src/contexts/AuthContext.tsx` silindi.
    Belgelenen `loading`→`isLoading` riski hiç gerçekleşmedi: alias'ı kullanan dosya yoktu.
    Ayrıntı ve test tuzağı için "Authentication & Roles" bölümüne bak.
-3. **Mixed data fetching (B6)** → **32** `supabase.from(` + **4** `supabase.rpc(` calls still sit
-   inside components (ölçüldü 2026-09-05; eski iddia 83+42 idi). Standardize on `*-api.ts` +
-   React Query.
-4. **TypeScript loose (B7)** → **9** `as any` kaldı (89 değil). Bunların 3'ü bilinçli
-   `const db = supabase as any` (cadde-internal · relocation-api · relocation-tools-api):
-   kaldırmak tsc'yi 16 → 37 yapıyor, yani hâlâ gerçek iş yapıyorlar. Gereksiz olan 5 tanesi
-   2026-09-06'da kaldırıldı. Kalan 6 satır yorum/açıklama.
-5. **12 remaining `tsc -p tsconfig.app.json --noEmit` errors** (109 → 22 → 16 → **12**).
-   Hiçbiri canlı kusur değil; hepsi `types.ts`'in çalışma zamanı yükünden daha katı
-   olmasından. Kalan iki sınıf:
-
-   | Sınıf | Adet | Nerede | Ne yapmalı |
-   |---|---|---|---|
-   | **A. Supabase insert/update yükü** (TS2345) | 7 | `resource-links.ts` (2) · `turkish-missions-admin.ts` (2) · `LinkManager.tsx` · `MvpManager.tsx` · `submissions.test.ts` | Yükü satır tipiyle açıkça tiple; en mekanik sınıf. |
-   | **C. Sorgu kurucusu özyinelemesi** (TS2589/TS2769) | 4 | `command-center-items.ts` (3) · `diasporaSearch.ts` | "Type instantiation is excessively deep" — zinciri bölmek veya ara tip vermek gerekir. |
-   | *(artık)* `marquee.test.ts` (TS2322) | 1 | test fixture'ı | A sınıfıyla aynı kökten. |
-
-   ✅ **B sınıfı (`Json` sütununa tipli nesne) 2026-09-06'da KAPANDI** — `src/lib/supabase-json.ts`
-   (`toJson` / `fromJson`). Yeni bir `jsonb` yazması eklerken `toJson` kullan. ⚠️ `fromJson`
-   bir DOĞRULAMA DEĞİLDİR; okunan veriye güvenmiyorsan zod şemasıyla parse et.
-
-   ⚠️ **Bu listeyi "karar bekliyor" diye bırakma alışkanlığı bitti**: her sınıfın ne olduğu ve
-   nasıl kapanacağı yukarıda yazılı. Sayı değişirse komutu tekrar çalıştırıp tabloyu güncelle.
+3. **Mixed data fetching (B6)** → **8** `supabase.from(` + **3** `supabase.rpc(` calls still sit
+   inside `src/components`+`src/pages` (ölçüldü 2026-09-13; sırasıyla 83+42 → 32+4 → **8+3**).
+   2026-09-13'te 4 domain daha `*-api.ts` kalıbına taşındı (`welcome-pack-orders-api.ts`,
+   `service-requests-api.ts`, `dashboard/resource-entries-api.ts`, `messages-api.ts`).
+   Kalan 8 `from(`: `MvpManager.tsx`, `AdminReferralPage.tsx`, `AdminRolesOverviewPage.tsx` (×4),
+   `AdminWhatsAppLandingEditorsPage.tsx`, `ProfilePage.tsx`. Standardize on `*-api.ts` + React Query.
+4. **TypeScript loose (B7)** → **10** satırda `as any` metni geçiyor (3 gerçek cast + 7
+   yorum/açıklama satırı — 2026-09-13 ölçümü, önceki not "9 kaldı, 6 yorum" idi). Gerçek cast'ler
+   bilinçli: `const db = supabase as any` (`cadde-internal.ts` · `relocation-api.ts` ·
+   `relocation-tools-api.ts`) — kaldırmak tsc'yi yeniden artırır, hâlâ gerçek iş yapıyorlar.
+5. ~~**`tsc -p tsconfig.app.json --noEmit` errors**~~ → **KAPANDI 2026-09-13, SIFIR hata**
+   (109 → 22 → 16 → 12 → 9 → **0**). Eskiden burada üç sınıflık (A/B/C) bir döküm tablosu vardı —
+   hepsi kapandı: B sınıfı (`Json` sütununa tipli nesne) 2026-09-06'da `src/lib/supabase-json.ts`
+   (`toJson`/`fromJson`) ile; A sınıfı (Supabase insert/update payload tipleme, `resource-links.ts` ·
+   `turkish-missions-admin.ts` · `LinkManager.tsx` · `MvpManager.tsx` · `submissions.test.ts` ·
+   `marquee.test.ts`) ve C sınıfı (sorgu kurucusu özyinelemesi TS2589/TS2769,
+   `command-center-items.ts` · `diasporaSearch.ts`) 2026-09-13'te kapandı — C sınıfının çözümü
+   `let query: any` + `// eslint-disable-next-line @typescript-eslint/no-explicit-any` deseni
+   (`cadde-internal.ts`'teki `const db = supabase as any` ile aynı tuzak). Yeni bir `tsc` hatası
+   açılırsa önce bu iki sınıftan birine mi girdiğine bak.
 6. **Test coverage spotty** → activate Playwright for critical flows.
 7. **Large files** → **92** files exceed 300 lines (112 → 126 → **92**; 2026-09-06 ölü kod
    temizliği 34 dosya düşürdü). En büyük gerçek kaynak dosyalar `src/lib/admin-shell/social-diaspora-posts.ts`

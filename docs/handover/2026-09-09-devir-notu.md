@@ -11,9 +11,9 @@
 | | |
 |---|---|
 | Depo | `C:\temp_private\corteqs\corteqs_fin` · branch `main` |
-| Son commit | `468e766` (13 Eylül) · `origin/main` ile senkron · çalışma ağacı **temiz** |
-| Test tabanı | **267 dosya / 1.877 test** yeşil |
-| `tsc` | **0 hata** ✅ (109'dan başlamıştı: 22→16→12→9→6→**0**, 13 Eylül'de kapandı) |
+| Son commit | `4ad322d` (13 Eylül, R5) · `origin/main` ile senkron · çalışma ağacı **temiz** |
+| Test tabanı | **271 dosya / 1.897 test** yeşil |
+| `tsc` | **0 hata** ✅ (109'dan başlamıştı: 22→16→12→9→6→**0**, 13 Eylül'de kapandı, R serisinde de sıfır kaldı) |
 | ESLint | **0** |
 | Migration | **393/393** sapmasız |
 | Pano | `/admin/workshop/cadde` → WS3 sekmesi · **27/31** (yalnız İ2-İ5 açık, içerik/insan işi) |
@@ -63,6 +63,37 @@ gerektirmeyen, tek başına yapılabilecek 10 küçük iş tarandı ve yapıldı
    paylaşırken de mi? (iki farklı yükleme yolu var, hangisi olduğunu ayırt eder)
 5. Hangi dosya formatı/boyutu? (HEIC gibi bazı formatlar tarayıcıda önizlemede
    bozuk görünebilir, bu da kod hatası değil format uyumsuzluğu olurdu)
+
+---
+
+## 0.7 — 13 Eylül üçüncü eklenti: "bir on madde daha" (R1-R5 + 3 rapor maddesi)
+
+Kullanıcı aynı isteği üçüncü kez tekrarladı. Bu turda plan-mode tetiklenmedi;
+araştırma + tek riskli karar için soru + sıralı yürütme aynı titizlikle
+uygulandı. 5 kod göçü + 3 rapor/doğrulama maddesi tamamlandı:
+
+| Batch | İş | Sonuç | Commit |
+|---|---|---|---|
+| **R1** | 4 kullanılmayan görsel (`fav.png`, `placeholder.svg`, `ataturk-marker.png`, eski agenda PNG'si) | `ASSET_AUDIT.md`'deki AST-015/016/017 tekrar doğrulandı (AST-014 `maillogo.png` YANLIŞ POZİTİFTİ — `_shared/emails/member-welcome.ts`'te kullanılıyor, DOKUNULMADI), 4 dosya silindi | `920806a` |
+| **R2** | `WelcomePackOrderForm.tsx` doğrudan `supabase.from()` çağırıyordu (B6) | `welcome-pack-orders-api.ts` + 2 test | `3aaeded` |
+| **R3** | `ServiceRequestForm.tsx`+`ServiceRequestsList.tsx` doğrudan çağırıyordu (B6) | `service-requests-api.ts` + 6 test; N+1 profil okuma deseni ve kırılgan çift-`.find()` **bilinçli olarak dokunulmadan** korundu | `76802eb` |
+| **R4** | `LinkManager.tsx` 5 ayrı yerden `resource_entries`'e çağırıyordu (B6) | `dashboard/resource-entries-api.ts` + 7 test | `8f5ca59` |
+| **R5** | `MessagesInbox.tsx` 4 ayrı yerden `direct_messages`/`user_profile_attributes`'a çağırıyordu (B6) | `messages-api.ts` + 5 test; realtime `.channel()` bilinçli olarak bilesende kaldı (R3 emsali) | `4ad322d` |
+| **Madde 6** | `CLAUDE.md` "Known Limitations" tablosu bayattı (tsc "9 kalan" diyordu, B6 "32+4" diyordu) | Yeniden ölçüldü ve güncellendi: tsc **0**, B6 **8+3** (`from(`+`rpc(`), `as any` **10** satır (3 gerçek cast + 7 yorum) | `(devir notu ile birlikte)` |
+| **Madde 7** | `docs/ARCHITECTURE.md`/`docs/AGENT_CONTEXT.md` yolları `check-drift.mjs` + `drift-rules.mjs`'te eşleşiyor mu? | ✅ **Eşleşiyor**, drift kuralı sessizce bozulmuyor. Ama **içerik bayat**: ikisi de hâlâ silinmiş `src/contexts/AuthContext.tsx` shim'ini "B5'te kalkacak" diye anlatıyor (B5 aslında 2026-09-06'da KAPANDI, shim SİLİNDİ) ve `tsc: 98 hata` yazıyor (bugün 0). **Bu batch'in kapsamı dışında bırakıldı** — 871 satırlık iki dokümanın tam güncellemesi ayrı bir batch gerektirir. | — (rapor) |
+| **Madde 8** | `docs/reference/` (397 dosya, 18,9MB, git-tracked) + `docs/reference-clones/` (151,6MB, gitignored) — iki eski Lovable-prototip klonu | Kullanıcıya soruldu → **"Şimdilik dokunma, sadece rapor et"**. **Dokunulmadı.** Her iki dizin de gelecekte temizlik adayı ama şu an kullanıcı kararıyla dondurulmuş durumda. | — (rapor, karar kalıcı) |
+
+**Doğrulama (R1-R5 sonu):** `npm run test` → **271 dosya / 1.897 test** yeşil ·
+`npx tsc -p tsconfig.app.json --noEmit` → **0** · `npm run lint` → **0** ·
+`npm run ingest:tools` her batch sonrası çalıştırıldı (39 modül kataloglandı).
+`npm run check:migrations` bu turda hiç migration yazılmadığı için tekrar
+çalıştırılmadı — R1-R5 hiçbiri DB şeması değiştirmedi.
+
+**Kalan gerçek B6 kapsamı:** `MvpManager.tsx`, `AdminReferralPage.tsx`,
+`AdminRolesOverviewPage.tsx` (×4 call), `AdminWhatsAppLandingEditorsPage.tsx`,
+`ProfilePage.tsx` — 8 `from(` + 3 `rpc(`. Bir sonraki "kolay iş" turunda
+bunlardan biri (`MvpManager.tsx` en izole görünüyor, tek dosya tek tablo)
+aday olabilir.
 
 ---
 
