@@ -14,6 +14,22 @@ export type AdminUpdateEntry = {
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
   {
+    id: "20260913-on-madde-daha-ve-komuta-merkezi-senkronu",
+    date: "13 Eylül 2026",
+    title:
+      "Bugünün dördüncü partisi: on ekran/dosya daha güvenli koda taşındı, Komuta Merkezi'ndeki bir karar maddesi kapatıldı",
+    items: [
+      "GÜNÜN ÖZETİ: Bugünün dördüncü ve son partisinde on küçük iş daha yapıldı — sekizi doğrudan veritabanına yazan ekranları güvenli koda taşımak, ikisi iç teknik belgelerdeki bayat bilgileri düzeltmekti. Ayrıca Komuta Merkezi ve Workshop panolarındaki maddeler bugünkü işle karşılaştırıldı.",
+      "TAŞINAN SEKİZ EKRAN: MVP Yapısal Liste, WhatsApp topluluk editör atama ekranı, Roller ve Özellikler ekranı, Referral (davet kodu) yönetimi, Anket oluşturma ekranı, yeni üye rehberi, durum raporu ekranı ve — iki ayrı yerde birebir tekrarlanan bir rol listesi sorgusu (tek yerde birleştirildi, kod tekrarı da gitti).",
+      "GÖZLE GÖRÜNÜR HİÇBİR DEĞİŞİKLİK YOK: Bu on maddenin hiçbiri ekranda görüneni değiştirmedi — amaç kodun veritabanına NASIL ulaştığını düzenlemekti, NE gösterdiğini değil.",
+      "İKİ İÇ BELGE DÜZELTİLDİ: Geliştirici belgeleri hâlâ Eylül başında kaldırılan eski bir oturum-açma yöntemini (AuthContext) 'yakında kaldırılacak' diye anlatıyordu — oysa aylar önce kaldırılmıştı. Aynı belgelerde 'tip denetiminde 98 hata var' yazıyordu, gerçek sayı sıfırdı. İkisi de düzeltildi.",
+      "BİR GÖRSEL DENETİM BULGUSU DÜZELTİLDİ: Geçen ayki bir denetim üç görsel çiftini 'muhtemelen gereksiz kopya' diye işaretlemişti. Tek tek kontrol edildi: üçü de gerçekten farklı iki yerde kullanılıyor (aynı görsel iki farklı sayfa katmanında görev yapıyor) — hiçbiri silinmedi, yanlış işaretli not düzeltildi.",
+      "KOMUTA MERKEZİ'NDE BİR KARAR MADDESİ KAPATILDI: 'Cafe formatı async-first mi, programlı canlı slotlar mı' karar maddesi (B+B, yani ikinizin birlikte karar vermesi gereken bir madde) 'Tamamlandı'ya çevrildi — çünkü async-first seçeneği bugünün ilk partisinde zaten uygulanmıştı (Cafe odaları artık 1-7 gün açık kalıyor, eskiden 2 saatti). Karara ekli notta uygulamanın ne yaptığı yazıyor.",
+      "WORKSHOP PANOSU KONTROL EDİLDİ, EK İŞLEM GEREKMEDİ: Cafe format kararı ve tepki seti sadeleştirmesiyle ilgili altı workshop maddesi zaten önceki bir partide UBT tarafında işaretliydi — yalnız Burak'ın kendi onay kutusu bekliyor, bu ikinizin panelden yapması gereken bir şey. Yorum hatası şikayeti (madde 134) hâlâ açık — kod tarafında bir sorun bulunamadı, cevap bekleniyor.",
+      "KONTROLLER: Otomatik testlerin tamamı yeşil (276 dosya / 1.927 test), kod ve tip denetimi temiz, veritabanı sapması yok — bu partinin hiçbiri şema değiştirmedi (tek DB yazısı yukarıdaki karar maddesinin durumuydu).",
+    ],
+  },
+  {
     id: "20260913-dort-domain-daha-api-katmanina-tasindi",
     date: "13 Eylül 2026",
     title:

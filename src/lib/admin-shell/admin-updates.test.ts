@@ -6,11 +6,30 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260913-dort-domain-daha-api-katmanina-tasindi");
+    expect(ADMIN_UPDATES[0].id).toBe("20260913-on-madde-daha-ve-komuta-merkezi-senkronu");
     expect(ADMIN_UPDATES[0].date).toBe("13 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("13 Eylül dördüncü parti kaydı taşınan sekiz ekranı ve Komuta Merkezi senkronunu söyler", () => {
+    const update = ADMIN_UPDATES.find(
+      ({ id }) => id === "20260913-on-madde-daha-ve-komuta-merkezi-senkronu",
+    );
+    const detail = update?.items.join(" ") ?? "";
+
+    expect(detail).toContain("MVP Yapısal Liste");
+    expect(detail).toContain("Referral");
+    expect(detail).toContain("GÖZLE GÖRÜNÜR HİÇBİR DEĞİŞİKLİK YOK");
+
+    // Komuta Merkezi karar maddesinin kapatıldığı açıkça yazılmalı.
+    expect(detail).toContain("KOMUTA MERKEZİ'NDE BİR KARAR MADDESİ KAPATILDI");
+    expect(detail).toContain("Tamamlandı");
+
+    // Burak'ın kendi onayının beklediği ve madde 134'ün hâlâ açık olduğu dürüstçe yazılmalı.
+    expect(detail).toContain("Burak'ın kendi onay kutusu bekliyor");
+    expect(detail).toContain("madde 134");
   });
 
   it("13 Eylül üçüncü parti kaydı taşınan dört ekranı ve dokunulmayan bulguları birlikte söyler", () => {
