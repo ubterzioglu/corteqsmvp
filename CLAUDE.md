@@ -7,12 +7,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **CorteQS Landing** is a multi-feature React + Vite application with Supabase backend. It combines a public marketing site, admin dashboard, member profiles, surveys, workspace collaboration tools, and an accounting module (muhasebe) — all in a single SPA.
 
 **Key Metrics (ölçüldü 2026-09-13):**
-- **1.025** `.ts`/`.tsx` files under `src` — 199 pages, 383 components (2026-09-06 ölü kod
-  temizliğiyle 1.092 → 950'ye inmişti; 13 Eylül gecesi büyük dosya ayrıştırmasıyla 1.025'e
-  **çıktı** — bu bilinçlidir, 6 dev dosya ~75 küçük modüle bölündü, bkz. Known Limitations md.7)
+- **1.091** `.ts`/`.tsx` files under `src` (2026-09-06 ölü kod temizliğiyle 1.092 → 950'ye
+  inmişti; 13 Eylül gecesi iki dalgalık büyük dosya ayrıştırmasıyla 1.091'e **çıktı** — bu
+  bilinçlidir, 11 dev dosya ~140 küçük modüle bölündü, bkz. Known Limitations md.7)
 - **383 Supabase migrations** — 131 in `supabase/migrations/applied/`
   + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split); 7 Edge Functions
-- **276 dosya / 1.935 test** yeşil (`npm run test`, ölçüldü 2026-09-13 gece) — 245 ve 271
+- **278 dosya / 1.958 test** yeşil (`npm run test`, ölçüldü 2026-09-13 gece) — 245, 271 ve 276
   taban rakamları bayattı; birkaç oturumdur `*-api.ts` göçleriyle yeni test dosyaları ekleniyor
 - `npm run lint` → **0 problem** (eski "1280 problem" notu bayattı)
 - `src/App.tsx`: 313 lines, 51 `lazy()` imports
@@ -710,14 +710,22 @@ belong there; documentation goes under `docs/`.
    `@/components/auth/useAuth` yoluna geçirildi, `src/contexts/AuthContext.tsx` silindi.
    Belgelenen `loading`→`isLoading` riski hiç gerçekleşmedi: alias'ı kullanan dosya yoktu.
    Ayrıntı ve test tuzağı için "Authentication & Roles" bölümüne bak.
-3. ~~**Mixed data fetching (B6)**~~ → **KAPANDI 2026-09-13 (aynı gün içinde iki kez bayatladı).**
+3. **Mixed data fetching (B6)** → **AÇIK, 2 çağrı kaldı** (2026-09-13 gece, düzeltilmiş ölçüm).
    Sabah ölçümü "8 `from(` + 3 `rpc(` kaldı" diyordu (83+42 → 32+4 → 8+3), ama S1-S10 göçü o
    listedeki 7 dosyayı zaten kapatmıştı — akşam yeniden ölçülünce yalnız `ProfilePage.tsx`'teki
    `individual_profile_details` tablosuna iki çağrı (select+upsert) kalmıştı. Commit `1285337`
    bunu `member-profile-api.ts`'e taşıdı (`upsertIndividualProfileDetailsPatch`); `ProfilePage.tsx`
-   artık ince bir sarmalayıcı. **Ölçüm (2026-09-13 gece): `src/components`+`src/pages` içinde 0
-   doğrudan `supabase.from(`/`supabase.rpc(` kaldı.** Yeni özellik eklerken hâlâ `*-api.ts` +
-   React Query kalıbını kullan — bu madde "iş bitti" değil, "biriktirilen borç sıfırlandı" demek.
+   artık ince bir sarmalayıcı.
+
+   ⚠️ **"0 kaldı" diye yazılmıştı, YANLIŞTI — aynı gece düzeltildi.** Gerçek sayı **2**, ikisi de
+   `src/components/auth/AuthProvider.tsx`'te (satır 14-15 `user_profile_attributes`, satır 19-20
+   `user_role_assignments`). Hata ölçüm yönteminde: `supabase\.from\(` deseni **tek satırda**
+   arandı, ama bu iki çağrı çok satırlı zincir (`supabase` bir satırda, `.from(...)` altında)
+   olduğu için görünmedi. **Bu deseni sayarken multiline arama kullan**
+   (`supabase\s*\n?\s*\.from\(`), yoksa borcu sıfır sanırsın.
+
+   Kalan 2 çağrı AuthProvider'da savunulabilir (oturum kurulumu, henüz API katmanı yok) ama
+   madde **kapanmadı**. Yeni özellik eklerken `*-api.ts` + React Query kalıbını kullan.
 4. **TypeScript loose (B7)** → **10** satırda `as any` metni geçiyor (3 gerçek cast + 7
    yorum/açıklama satırı — 2026-09-13 ölçümü, önceki not "9 kaldı, 6 yorum" idi). Gerçek cast'ler
    bilinçli: `const db = supabase as any` (`cadde-internal.ts` · `relocation-api.ts` ·
@@ -733,9 +741,36 @@ belong there; documentation goes under `docs/`.
    (`cadde-internal.ts`'teki `const db = supabase as any` ile aynı tuzak). Yeni bir `tsc` hatası
    açılırsa önce bu iki sınıftan birine mi girdiğine bak.
 6. **Test coverage spotty** → activate Playwright for critical flows.
-7. **Large files** → **800 satırı aşan üretilmemiş dosya: 13 → 10** (ölçüldü 2026-09-13 gece).
-   O gece altı dev dosya ayrıştırıldı, **9.982 satır** tek dosyalık yığınlardan odaklı
-   modüllere taşındı:
+7. **Large files** → **800 satırı aşan üretilmemiş dosya: 13 → 5** (ölçüldü 2026-09-13 gece).
+   O gece iki dalgada **on bir** dev dosya ayrıştırıldı, **16.615 satır** tek dosyalık
+   yığınlardan odaklı modüllere taşındı. Kalan 5'in ikisi test, biri veri, ikisi bilinçli
+   ertelenen Cadde dosyası — yani **ertelenenler dışında 800'ü aşan üretim kaynak dosyası
+   kalmadı.**
+
+   **Dalga 2 (aynı gece, bağımsız gözden geçirici doğrulamasıyla):**
+
+   | Dosya | Önce | Sonra |
+   |---|---|---|
+   | `commandcenter/CommandCenterManager.tsx` | 2127 | **25** |
+   | `admin-shell/burak-share-tools.ts` | 1418 | **49** |
+   | `dashboard/command-center-items.ts` | 1276 | **107** |
+   | `admin-shell/social-test-tools.ts` | 1189 | **32** |
+   | `dashboard/links/LinkManager.tsx` | 967 | **131** |
+
+   ⚠️ **Dalga 2'nin öğrettiği üç şey** (gözden geçirici ajanlar buldu, ayrıştıran ajanlar
+   kaçırmıştı — bu yüzden ayrıştırma ve inceleme AYRI ajanlara verilmelidir):
+   1. **`npm run ingest:tools:check` bu refactor sınıfında MUTLAKA çalıştırılmalı.** `src/lib/**`
+      altına yeni dosya ekleyen her değişiklik ajan araç kataloğunu (`docs/agent/tools.json` +
+      `src/lib/agent/tools-catalog.generated.ts` + `docs/agent/openapi.yaml`) bayatlatır. Bu
+      katalog `/admin/tool-registry` ve `/admin/agent-analytics` sayfalarına gider. **Ne lint ne
+      test yakalar** — `prelint` yalnız `check:drift` çalıştırır, `ingest:tools:check` DEĞİL.
+   2. **`npm run check:dead`** ayrıştırma sırasında geçici olarak kırmızı görünür (parçalar
+      oluşturulmuş ama henüz bağlanmamışken). İş bitmeden ölçüp "ölü kod var" sonucuna varma;
+      bitince tekrar çalıştır.
+   3. **Regex'teki kaçış dizileri ham karaktere çevrilmemeli.** Bir ajan
+      `command-center-items/date-groups.ts`'te `/[̀-ͯ]/` desenini gerçek görünmez
+      birleştirici karakterlere dönüştürdü. İşlevsel olarak aynı, ama editörde görünmez ve
+      kopyalanamaz. Geri alındı — Türkçe metin normalizasyonu yapan kodda bu ciddi bir tuzak.
 
    | Dosya | Önce | Sonra | Nereye |
    |---|---|---|---|
@@ -751,13 +786,15 @@ belong there; documentation goes under `docs/`.
    artırır ama tek bir devi yok eder. Bu maddede takip edilecek metrik **800 üstü sayısı**dır,
    300 üstü değil. 300 üstünü sayıp "kötüleşmiş" sonucuna varma.
 
-   **Hâlâ 800 üstünde (10):** `CommandCenterManager.tsx` (2127) · `CaddePage.test.tsx` (1845) ·
-   `CaddePage.tsx` (1716) · `burak-share-tools.ts` (1418) · `command-center-items.ts` (1276) ·
-   `social-test-tools.ts` (1189) · `ProfilePage.test.tsx` (1028) · `cadde-api.ts` (986) ·
-   `zgen-data.ts` (980) · `LinkManager.tsx` (967).
-   Bunlardan `cadde-api.ts` (25 importer, **testi yok**) ve `CaddePage.tsx` (19 importer)
-   bilinçli olarak ertelendi: CLAUDE.md Cadde bölümü bu alanın *sessizce* kırıldığı üç ayrı
-   olayı belgeliyor. Önce karakterizasyon testi, sonra ayrıştırma.
+   **Hâlâ 800 üstünde (5):** `CaddePage.test.tsx` (1845, test) · `CaddePage.tsx` (1716) ·
+   `ProfilePage.test.tsx` (1028, test) · `cadde-api.ts` (986) · `zgen-data.ts` (980, veri).
+
+   **Sıradaki gerçek iş = Cadde çifti** (`cadde-api.ts` + `CaddePage.tsx`). İki dalgada da
+   bilinçli olarak ERTELENDİ, çünkü: `cadde-api.ts`'in **25 importer'ı var ve hiç testi yok**,
+   `CaddePage.tsx`'in 19 importer'ı var. CLAUDE.md'nin Cadde bölümü bu alanın *sessizce*
+   kırıldığı üç ayrı olayı belgeliyor (fold-insensitive eşleşme, `instanceof Error` hatası
+   aylarca canlıda kaldı, hedef eşleşmesi). **Doğru sıra: önce karakterizasyon testi yaz,
+   sonra ayrıştır.** Testsiz ayrıştırma bu iki dosyada kabul edilemez.
 
    ⚠️ **Satır sayarken Windows tuzağı:** PowerShell'in `Measure-Object -Line`'ı **boş satırları
    saymaz** — `burak-share-tools.ts` için 1091 der, gerçek 1418'dir. Doğru ölçüm
