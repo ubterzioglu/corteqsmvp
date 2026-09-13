@@ -303,13 +303,13 @@ corteqs.net/cadde
     category: "baglan",
     name: "Cadde Cafe",
     description:
-      "1–6 saatlik süreli sohbet odaları kurarsın ya da katılırsın (açık, onaylı veya davet kodlu); oda kapanmadan uyarı alırsın, sonra salt-okunur arşive döner. Baskı yok, anın sohbeti var.",
+      "1, 3 veya 7 günlük süreli sohbet odaları kurarsın ya da katılırsın (açık, onaylı veya davet kodlu); oda kapanmadan uyarı alırsın, sonra salt-okunur arşive döner. Baskı yok, anın sohbeti var.",
     imagePrompts: [
       "Create a premium square 1:1 human-centered editorial illustration for CorteQS, a trusted global Turkish diaspora discovery and community platform. Feature: “Cadde Cafe”. Show Cadde Cafe as a lightweight live gathering space where spontaneous conversations can become genuine community connections. Scene: Four Turkish diaspora adults who did not previously know one another share coffee at a cozy independent cafe, leaning into an easy live conversation. One phone rests face-up with an active group-room interface made of participant portraits and an unreadable timer. Steam from real cups, natural gestures and warm window light make the gathering spontaneous rather than staged. At least one clearly visible human figure must be present and must remain the emotional center of the composition; use a small group only when the scene genuinely requires interaction. Around the person or group, arrange a balanced set of simple rounded contextual symbols that explain the idea immediately: speech bubbles, calendar, event pin, neighbor silhouettes, small globe, route line, and bridge arc. Translate the most important objects and signals from the scene into these surrounding symbols, using a halo, orbit, pathway or spatial cluster rather than a dense interface. Any phone, tablet or laptop may appear only as a secondary prop with abstract shapes; do not make screens, card grids or tiny interface details the main visual story. Use a polished contemporary editorial-illustration style with expressive simplified people, a soft dimensional vector and gentle 3D hybrid, rounded forms, smooth gradients, subtle depth and soft cinematic lighting. It does not need to look realistic; prioritize clarity, emotion and symbolic storytelling. Use the CorteQS visual system: warm ivory-cream background, deep teal as the dominant color, and controlled orange, blue, indigo, pink and yellow accents. Keep the mood inclusive, optimistic, trustworthy and modern. Square 1:1 composition at 1024x1024, strong thumbnail readability, one clear hierarchy, and at least 12% safe margin around every essential person and symbol. Keep all faces, hands and important objects fully inside the frame. No text, no letters, no readable numbers, no logos, no brand names, no provider names, no official seals and no watermark. Avoid photorealism, camera or lens aesthetics, stock-photo posing, clutter, excessive detail, decorative flags, duplicated people, distorted anatomy and unreadable fake interface text.",
       "Create a premium square 1:1 human-centered editorial illustration for CorteQS, a trusted global Turkish diaspora discovery and community platform. Feature: “Cadde Cafe”. Show Cadde Cafe as a lightweight live gathering space where spontaneous conversations can become genuine community connections. Scene: A Turkish woman joins a live Cadde Cafe conversation from her kitchen in the evening. Her laptop shows several friendly participant faces in a clean video or audio-room layout without legible names, while a mug and half-finished dinner sit nearby. Her smile and attentive posture communicate a lightweight social space that can turn an ordinary evening into connection. At least one clearly visible human figure must be present and must remain the emotional center of the composition; use a small group only when the scene genuinely requires interaction. Around the person or group, arrange a balanced set of simple rounded contextual symbols that explain the idea immediately: glowing connection line, matching nodes, best-match star, handshake symbol, speech bubbles, calendar, and event pin. Translate the most important objects and signals from the scene into these surrounding symbols, using a halo, orbit, pathway or spatial cluster rather than a dense interface. Any phone, tablet or laptop may appear only as a secondary prop with abstract shapes; do not make screens, card grids or tiny interface details the main visual story. Use a polished contemporary editorial-illustration style with expressive simplified people, a soft dimensional vector and gentle 3D hybrid, rounded forms, smooth gradients, subtle depth and soft cinematic lighting. It does not need to look realistic; prioritize clarity, emotion and symbolic storytelling. Use the CorteQS visual system: warm ivory-cream background, deep teal as the dominant color, and controlled orange, blue, indigo, pink and yellow accents. Keep the mood inclusive, optimistic, trustworthy and modern. Square 1:1 composition at 1024x1024, strong thumbnail readability, one clear hierarchy, and at least 12% safe margin around every essential person and symbol. Keep all faces, hands and important objects fully inside the frame. No text, no letters, no readable numbers, no logos, no brand names, no provider names, no official seals and no watermark. Avoid photorealism, camera or lens aesthetics, stock-photo posing, clutter, excessive detail, decorative flags, duplicated people, distorted anatomy and unreadable fake interface text.",
     ],
-    linkedinPost: `☕⏳ Bir kahve süresi kadar sohbet.
-Cadde Cafe'de 1-6 saatlik geçici odalar açılıyor: "Münih'te yeni gelenler", "bu akşam maç", "freelance vergi sohbeti"...
+    linkedinPost: `☕⏳ Sınırlı süreli, baskısız sohbet.
+Cadde Cafe'de 1-7 günlük geçici odalar açılıyor: "Münih'te yeni gelenler", "bu akşam maç", "freelance vergi sohbeti"...
 
 Süre dolunca oda arşive geçiyor — baskı yok, spam yok, sadece anın sohbeti. 🔥
 
@@ -317,18 +317,18 @@ Bir oda aç, şehrini çağır.
 👉 corteqs.net/cadde
 
 #CaddeCafe #Diaspora #Topluluk`,
-    instagramPost: `☕ Bir kahve süresi kadar sohbet!
+    instagramPost: `☕ Sınırlı süreli, baskısız sohbet!
 
-Cadde Cafe'de 1-6 saatlik geçici odalar açılıyor: yeni gelenler sohbeti, maç akşamı, vergi muhabbeti... Süre dolunca arşive geçiyor, baskı yok ⏳
+Cadde Cafe'de 1-7 günlük geçici odalar açılıyor: yeni gelenler sohbeti, maç akşamı, vergi muhabbeti... Süre dolunca arşive geçiyor, baskı yok ⏳
 
 👉 Bir oda aç, şehrini çağır! Ücretsiz kayıt ol.
 🔗 corteqs.net/cadde
 💬 WhatsApp topluluğu bio'da.
 
 #CaddeCafe #Diaspora #TürkDiasporası #Topluluk #Sohbet #Gurbet #YurtDışı #AnınSohbeti #ŞehirOdaları #CorteQS`,
-    redditPost: `1-6 saat açık kalıp sonra salt-okunur arşive dönen geçici sohbet odaları — bu format işe yarar mı?
+    redditPost: `1-7 gün açık kalıp sonra salt-okunur arşive dönen geçici sohbet odaları — bu format işe yarar mı?
 
-CorteQS'te "Cadde Cafe" diye bir özellik, süreli (1-6 saat) sohbet odaları açmaya izin veriyor: açık, onaylı ya da davet kodlu olabiliyor. Süre dolunca oda arşive geçiyor. Fikir Discord/Clubhouse'daki geçici oda mantığına benziyor ama "sonra tamamen arşivlenip kapanma" kısmı ilginç, sürekli açık kalan gruplardan farklı bir dinamik yaratıyor.
+CorteQS'te "Cadde Cafe" diye bir özellik, süreli (1-7 gün) sohbet odaları açmaya izin veriyor: açık, onaylı ya da davet kodlu olabiliyor. Süre dolunca oda arşive geçiyor. Fikir Discord/Clubhouse'daki geçici oda mantığına benziyor ama "sonra tamamen arşivlenip kapanma" kısmı ilginç, sürekli açık kalan gruplardan farklı bir dinamik yaratıyor.
 
 Bu tür zaman-sınırlı, sonra kapanan oda formatını deneyen oldu mu, katılım gerçekten artıyor mu yoksa insanlar "zaten kapanacak" diye ciddiye almıyor mu?
 

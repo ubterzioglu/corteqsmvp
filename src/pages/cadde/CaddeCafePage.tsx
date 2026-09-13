@@ -218,6 +218,11 @@ const CaddeCafePage = () => {
               <span className="inline-flex items-center gap-1.5"><Clock3 className="h-4 w-4 text-orange-500" />{formatDateTime(cafe.startsAt)} → {formatDateTime(cafe.endsAt)} ({remainingLabel(cafe.endsAt)})</span>
               <span className="inline-flex items-center gap-1.5"><Users className="h-4 w-4 text-orange-500" />{formatCafeOccupancy(cafe.memberCount, cafe.capacity)} • Ev Sahibi: {cafe.hostName}</span>
             </div>
+            {!isReadOnly ? (
+              <p className="text-sm leading-relaxed text-slate-600">
+                Bu Cafe asenkron çalışır; katılımcılar açık kaldığı süre boyunca farklı zamanlarda yazabilir. Süre bitince konuşmalar salt okunur arşiv olarak kalır.
+              </p>
+            ) : null}
             {/* C2 (m161): Arşivleme artık kebab (⋯) menüsünde.
                 Eskiden oda CANLIYKEN sayfadaki en görünür eylem "odayı kapat"tı —
                 ev sahibine sunulan birincil davranış odasını sonlandırmak olmamalı.

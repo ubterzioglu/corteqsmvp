@@ -25,7 +25,14 @@ import { checkBrandConflict, moderateCaddeCafeName, suggestParodyCafeName } from
 import { CADDE_CAFE_CAPACITY_OPTIONS } from "@/lib/cadde-schemas";
 import type { CaddeCafeEntryMode } from "@/lib/cadde-types";
 
-const DURATION_OPTIONS = [1, 2, 3, 4, 6] as const;
+// C0 (m159): küçük kullanıcı tabanında aynı iki saate denk gelme ihtimali düşük.
+// Geçici async-first model odanın içerik biriktirmesine zaman tanır; canlı etkinlik
+// modu ileride ayrı bir ürün davranışı olarak eklenebilir.
+const DURATION_OPTIONS = [
+  { hours: 24, label: "1 gün" },
+  { hours: 72, label: "3 gün" },
+  { hours: 168, label: "7 gün" },
+] as const;
 
 const ENTRY_MODE_LABELS: Record<CaddeCafeEntryMode, string> = {
   open: "Açık (herkes katılır)",
@@ -47,7 +54,7 @@ const emptyForm = {
   entryMode: "open" as CaddeCafeEntryMode,
   referralCode: "",
   entryQuestion: "",
-  durationHours: 2,
+  durationHours: 24,
   capacity: "",
   externalLink: "",
 };
@@ -167,8 +174,8 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
               <Select value={String(form.durationHours)} onValueChange={(value) => update("durationHours", Number(value))}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {DURATION_OPTIONS.map((hours) => (
-                    <SelectItem key={hours} value={String(hours)}>{hours} saat</SelectItem>
+                  {DURATION_OPTIONS.map((option) => (
+                    <SelectItem key={option.hours} value={String(option.hours)}>{option.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

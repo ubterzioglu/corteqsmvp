@@ -96,6 +96,15 @@ describe("CaddeCafePage", () => {
     expect(screen.getByRole("button", { name: /Katılım Talebi Gönder/i })).toBeInTheDocument();
   });
 
+  it("aktif Cafe'de async katılımı ve süre sonundaki arşiv davranışını açıklar", async () => {
+    getCaddeCafeMock.mockResolvedValue(makeCafe());
+
+    renderPage();
+
+    expect(await screen.findByText(/farklı zamanlarda yazabilir/i)).toBeInTheDocument();
+    expect(screen.getByText(/süre bitince konuşmalar salt okunur arşiv olarak kalır/i)).toBeInTheDocument();
+  });
+
   it("shows the read-only archive state without join box or composer", async () => {
     getCaddeCafeMock.mockResolvedValue(makeCafe({ archivedAt: new Date().toISOString(), isActive: false, viewerMemberStatus: "approved", joinedByViewer: true }));
 
