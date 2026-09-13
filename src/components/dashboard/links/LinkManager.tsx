@@ -25,17 +25,21 @@ import {
   createEmptyResourceFormState,
   getResourceSectionFromQuery,
   getStorageBucket,
-  mapResourceEntryRow,
   requiresStoredFile,
   requiresUrl,
   RESOURCE_ADDED_BY,
   RESOURCE_RECORD_KINDS,
   type ResourceEntry,
-  type ResourceEntryRow,
   type ResourceFormState,
   type ResourceSectionFilter,
   type ResourceSubsectionFilter,
 } from '@/lib/dashboard/resource-items'
+import {
+  createResourceEntry,
+  deleteResourceEntry,
+  listResourceEntries,
+  updateResourceEntry,
+} from '@/lib/dashboard/resource-entries-api'
 
 const INPUT_CLS =
   'w-full rounded-xl border border-[rgba(66,133,244,0.15)] bg-white px-3.5 py-2.5 text-sm text-gray-800 placeholder-gray-400 shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20'
@@ -47,9 +51,6 @@ const ICON_BTN_CLS =
 
 const FILTER_BTN_CLS =
   'rounded-full border px-3 py-2 text-xs font-semibold tracking-wide transition-all'
-
-const SELECT_FIELDS =
-  'id, order_no, slug, section, subsection, department, record_kind, added_by, title, description, url, file_id, file_type, mime_type, privacy_level, is_public_import, import_suggestion, tags, source_path, status, is_hidden, storage_bucket, storage_path, file_name, person_first_name, person_last_name, person_role, linkedin_url, instagram_url, website_url, source_folder, source_subfolder, source_snapshot_date, import_batch, created_at'
 
 function normalizeOptionalText(value: string): string | null {
   const normalized = value.trim()
@@ -90,14 +91,7 @@ export default function LinkManager() {
     setError(null)
 
     try {
-      const { data, error: fetchErr } = await supabase
-        .from('resource_entries')
-        .select(SELECT_FIELDS)
-        .order('created_at', { ascending: false })
-
-      if (fetchErr) throw fetchErr
-
-      setEntries((data as ResourceEntryRow[]).map(mapResourceEntryRow))
+      setEntries(await listResourceEntries())
     } catch (loadError) {
       setError(sanitizeError(loadError, 'Kayıtlar yüklenemedi.'))
     } finally {
@@ -296,15 +290,10 @@ export default function LinkManager() {
         website_url: formState.recordKind === 'CV' ? normalizeOptionalText(sanitizeUrl(formState.websiteUrl)) : null,
       }
 
-      const { data, error: insertErr } = await supabase
-        .from('resource_entries')
-        .insert(payload)
-        .select(SELECT_FIELDS)
-        .single()
+      const created = await createResourceEntry(payload)
+      if (!created) throw new Error('Kayıt eklenemedi.')
 
-      if (insertErr || !data) throw insertErr ?? new Error('Kayıt eklenemedi.')
-
-      setEntries((prev) => [mapResourceEntryRow(data as ResourceEntryRow), ...prev])
+      setEntries((prev) => [created, ...prev])
       setFormState(createEmptyResourceFormState())
       setSelectedFile(null)
     } catch (createError) {
@@ -380,16 +369,10 @@ export default function LinkManager() {
         website_url: editingState.recordKind === 'CV' ? normalizeOptionalText(sanitizeUrl(editingState.websiteUrl)) : null,
       }
 
-      const { data, error: updateErr } = await supabase
-        .from('resource_entries')
-        .update(payload)
-        .eq('id', entry.id)
-        .select(SELECT_FIELDS)
-        .single()
+      const updated = await updateResourceEntry(entry.id, payload)
+      if (!updated) throw new Error('Kayıt güncellenemedi.')
 
-      if (updateErr || !data) throw updateErr ?? new Error('Kayıt güncellenemedi.')
-
-      setEntries((prev) => prev.map((item) => (item.id === entry.id ? mapResourceEntryRow(data as ResourceEntryRow) : item)))
+      setEntries((prev) => prev.map((item) => (item.id === entry.id ? updated : item)))
       cancelEdit()
     } catch (updateError) {
       setError(sanitizeError(updateError, 'Kayıt güncellenemedi.'))
@@ -406,13 +389,7 @@ export default function LinkManager() {
     setError(null)
 
     try {
-      if (entry.storageBucket && entry.storagePath) {
-        const { error: storageErr } = await supabase.storage.from(entry.storageBucket).remove([entry.storagePath])
-        if (storageErr) throw storageErr
-      }
-
-      const { error: deleteErr } = await supabase.from('resource_entries').delete().eq('id', entry.id)
-      if (deleteErr) throw deleteErr
+      await deleteResourceEntry(entry)
 
       setEntries((prev) => prev.filter((item) => item.id !== entry.id))
       if (editingId === entry.id) cancelEdit()
@@ -430,15 +407,9 @@ export default function LinkManager() {
     setError(null)
 
     try {
-      const { data, error: updateErr } = await supabase
-        .from('resource_entries')
-        .update({ is_hidden: nextHidden })
-        .eq('id', entry.id)
-        .select(SELECT_FIELDS)
-        .single()
-
-      if (updateErr || !data) throw updateErr ?? new Error('Kayıt güncellenemedi.')
-      setEntries((prev) => prev.map((item) => (item.id === entry.id ? mapResourceEntryRow(data as ResourceEntryRow) : item)))
+      const updated = await updateResourceEntry(entry.id, { is_hidden: nextHidden })
+      if (!updated) throw new Error('Kayıt güncellenemedi.')
+      setEntries((prev) => prev.map((item) => (item.id === entry.id ? updated : item)))
     } catch (toggleError) {
       setError(sanitizeError(toggleError, 'Kayıt güncellenemedi.'))
     } finally {

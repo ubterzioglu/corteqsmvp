@@ -1899,6 +1899,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/dashboard/resource-entries-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/resource-entries-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/dashboard/resource-items.ts",
       "kind": "ts",
       "module_family": "lib"
