@@ -209,6 +209,40 @@ const mockCaddeCafeRoom = async (page: Page) => {
   await page.route(/\/rest\/v1\/cadde_cafe_members/, (route) => route.fulfill(json(CAFE_MEMBER_ROWS)));
 };
 
+/** Q7 (13 Eylül): T6 rozet doğrulaması — "Sabit" (pinned=true) ve "Sponsorlu"
+ * (getCaddeSponsoredPlacement) daha önce hiçbir ekranda hiç görüntülenmedi.
+ * getCaddeSponsoredPlacement .maybeSingle() bekler — cadde_sponsored_placements
+ * de cadde_cafes gibi TEK NESNE dönmeli, dizi değil. */
+const SPONSORED_ROW = {
+  id: "sponsor-1",
+  placement_key: "feed-inline",
+  title: "Berlin Vergi Danışmanlığı",
+  description: "Diaspora üyelerine özel vergi ve muhasebe danışmanlığı.",
+  badge_text: null,
+  cta_label: "İncele",
+  cta_url: "https://example.com/sponsor",
+  image_url: null,
+  content_mode: "real",
+  status: "published",
+  country_id: null,
+  city_id: null,
+  sort_order: 1,
+};
+
+const mockCaddeNetworkWithBadges = async (page: Page) => {
+  // injectSponsoredPlacement (cadde-format.ts) sponsoru YALNIZ posts.length >= 4
+  // iken 3. gönderiden sonra ekliyor — tek gönderiyle hiç görünmez.
+  await mockCaddeNetwork(page, [
+    feedItem({ pinned: true }),
+    feedItem({ id: "post-2", title: "İkinci gönderi", pinned: false }),
+    feedItem({ id: "post-3", title: "Üçüncü gönderi", pinned: false }),
+    feedItem({ id: "post-4", title: "Dördüncü gönderi", pinned: false }),
+  ]);
+  await page.route(/\/rest\/v1\/cadde_sponsored_placements/, (route) =>
+    route.fulfill(json(SPONSORED_ROW)),
+  );
+};
+
 const loginToCadde = async (page: Page, next = "/cadde") => {
   await page.goto(`/login?mode=login&next=${encodeURIComponent(next)}`);
   await page.locator("#login-email").fill("member@corteqs.net");
@@ -274,5 +308,22 @@ test.describe("Cadde visual QA (manuel/AI inceleme için screenshot üretir)", (
     await expect(page.getByText("Berlin'de yeni gelenler sohbeti")).toBeVisible();
     await page.waitForTimeout(300);
     await shot(page, "05-aktif-cafe-odasi");
+  });
+
+  test("T6 rozetleri — Sabit + Sponsorlu bir arada", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await mockCaddeNetworkWithBadges(page);
+    await loginToCadde(page);
+
+    await expect(page.getByText("Berlin'de ilk buluşma")).toBeVisible();
+    await expect(page.getByText("Sabit")).toBeVisible();
+    const sponsorHeading = page.getByText("Berlin Vergi Danışmanlığı");
+    await expect(sponsorHeading).toBeVisible();
+    // toBeVisible() ekran dışı da olsa DOM görünürlüğüne bakar; sponsor kartı
+    // 3. gönderiden sonra geldiği için fold altında kalıyor. Screenshot'ta
+    // GERÇEKTEN görünmesi için kaydır.
+    await sponsorHeading.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(300);
+    await shot(page, "06-sabit-ve-sponsorlu-rozetleri");
   });
 });
