@@ -98,43 +98,52 @@ uygulanır. Script dosyayı `applied/` altına **kendisi taşır**. Parent'ta b�
 **Önerilen sıra:** H1 → H2 → H3 → H4 → H5 → B1 → B2 → Y1 → Y2 → C0 → C1 → C2 → C3 →
 T1 *(deseni kurar)* → T2…T8 → K1 · **İ grubu paralel yürür** (kod işi değil).
 
-### Tüm batch'ler tek bakışta *(kopyalanabilir kontrol listesi)*
+### Tüm batch'ler tek bakışta *(güncellendi 13.09.2026 — yalnız İ grubu açık)*
 
 ```
-H1  sıfır sayıları gizle           m155      ⚠ aria-label DEĞİŞMEMELİ
-H2  "Caddeye Çık" kaldır/adlandır  m154      ⚠ test kilidi
-H3  Türkçeleştirme (3 etiket)      m146-148  ⚠ admin-updates'e DOKUNMA
-H4  slogan girişliye gösterilmesin m152      ⚠ test kilidi
-H5  beta bandı kapatılabilir       m150
+✅ H1  sıfır sayıları gizle           m155      09.09
+✅ H2  "Caddeye Çık" kaldır/adlandır  m154      09.09
+✅ H3  Türkçeleştirme (3 etiket)      m146-148  09.09
+✅ H4  slogan girişliye gösterilmesin m152      09.09
+✅ H5  beta bandı kapatılabilir       m150      09.09
 
-B1  boş şehirde otomatik fallback  m157      ⚠ test kilidi · en büyük mantık işi
-B2  boş durum dolu alternatif      m158      B1'den SONRA
+✅ B1  boş şehirde otomatik fallback  m157      09.09
+✅ B2  boş durum dolu alternatif      m158      09.09
 
-Y1  logo bandı + başlık birleşsin  m151
-Y2  scroll'da header daralsın      m153      Y1'den SONRA
+✅ Y1  logo bandı + başlık birleşsin  m151      09.09 (bdb6de8)
+✅ Y2  scroll'da header daralsın      m153      09.09 (a82d86c)
 
-C0  KARAR: cafe formatı            m159      ⚠ C1-C3'ü KİLİTLER
-C1  "2/100" paydası                m160
-C2  Arşivle → kebab menü           m161
-C3  süre sonu metni                m162      C0'dan SONRA
+✅ C0  KARAR: async-first seçildi    m159      13.09 (98cfd76)
+✅ C1  "2/100" paydası               m160      önce (d5ec924)
+✅ C2  Arşivle → kebab menü          m161      önce (d5ec924)
+✅ C3  süre sonu metni               m162      13.09 (98cfd76)
 
-T1  design-token dokümanı          m137      DESENİ BURADA KUR
-T2  altın primary                  m138      ⚠ style-contract testi
-T3  buton hiyerarşisi 3 seviye     m139
-T4  üst nav tek nötr renk          m140
-T5  gökkuşağı şerit → pillar       m141
-T6  rozet sistemi 3 tip            m142
-T7  köşe + gölge + gri alt sınırı  m143-145
-T8  cafe kartı çelişen sinyal      m149
+✅ T1  design-token dokümanı          m137      09.09
+✅ T2  altın primary                  m138      09.09
+✅ T3  buton hiyerarşisi 3 seviye     m139      09.09
+✅ T4  üst nav tek nötr renk          m140      09.09
+✅ T5  gökkuşağı şerit → pillar       m141      09.09
+✅ T6  rozet sistemi 3 tip            m142      09.09
+✅ T7  köşe + gölge + gri alt sınırı  m143-145  09.09
+✅ T8  cafe kartı çelişen sinyal      m149      09.09
 
-K1  tepki seti 5 → 3 mü?           m156      ⚠ sözleşme testini kırar
+✅ K1  KARAR: 3'e indirildi          m156      13.09 (48dad5a)
 
-İ1  test içeriğini temizle         m163      insan işi
-İ2  admin-görünür seviye/staging   m164
-İ3  4 şehir × 8-10 gönderi         m165      Burak + içerik
-İ4  resmî hesaptan yayınla         m166      İ3'ten sonra
-İ5  blog ↔ Cadde döngüsü           m167
+⬜ İ1  test içeriğini temizle         m163      insan işi — AÇIK
+⬜ İ2  admin-görünür seviye/staging   m164      AÇIK
+⬜ İ3  4 şehir × 8-10 gönderi         m165      Burak + içerik — AÇIK
+⬜ İ4  resmî hesaptan yayınla         m166      İ3'ten sonra — AÇIK
+⬜ İ5  blog ↔ Cadde döngüsü           m167      AÇIK
 ```
+
+**Durum: WS3'ün 31 maddesinden 26'sı kapandı. Kalan 5'i (İ1-İ5) kod işi değil**
+— içerik üretimi ve Burak'ın zamanı gerekiyor, bkz. aşağıdaki İ bölümü.
+
+⚠️ **Görsel batch'lerin (T5-T8, Y1-Y2, C0-C3) tamamı 13 Eylül'de Playwright
+screenshot'larıyla gözle doğrulandı** (`e2e/cadde-visual-qa.spec.ts`,
+bkz. `docs/handover/2026-09-09-devir-notu.md` §6). Bir gerçek çelişki bulundu
+ve düzeltildi (Cafe rozeti "Canlı"→"Açık"); "Sabit"/"Sponsorlu" rozetleri (T6)
+henüz görsel olarak doğrulanmadı.
 
 ---
 
@@ -297,7 +306,7 @@ kapısını taklit etmez. Ucuz ama **yanlış** sayı üretir.
 
 ---
 
-## Y — Yerleşim *(header konsolidasyonu; H4/H5 yığını zaten inceltti)*
+## Y — Yerleşim ✅ *(Y1+Y2 TAMAMLANDI, commit `bdb6de8`/`a82d86c`)*
 
 ### Y1 — Logo bandı ile sayfa başlığını tek satırda birleştir · ~20 dk · `m151`
 
@@ -319,9 +328,17 @@ güncellemek akışta gözle görülür takılma yapar.
 
 ---
 
-## C — Cafe *(C0 bir karardır ve C3'ü kilitler)*
+## C — Cafe ✅ *(TAMAMEN KAPANDI: C1+C2 önce `d5ec924`, C0+C3 13.09.2026 `98cfd76`)*
 
-### C0 — KARAR: Cafe formatı async-first mi, programlı canlı slotlar mı? · ~10 dk · `m159`
+### C0 — ✅ KARAR VERİLDİ: async-first · `m159`
+
+**Sonuç (13 Eylül):** (a) async-first seçildi. Odalar artık 24 saat varsayılan,
+1/3/7 gün seçilebiliyor (`cadde_settings`: `cadde.cafe.mode=async_first`,
+`default_duration_hours=24`, `max_duration_hours=168`). Programlı canlı
+slotlar (b) reddedildi — küçük kullanıcı tabanında aynı saate denk gelme
+ihtimali zaten düşüktü. Aşağıdaki orijinal karar metni referans için duruyor:
+
+### C0 — KARAR (kapandı): Cafe formatı async-first mi, programlı canlı slotlar mı? · ~10 dk · `m159`
 
 Mevcut model 2 saatlik canlı pencere. Kritiğin tespiti: **boş bir akış kötüdür, boş bir
 CANLI oda çok daha kötüdür** — kullanıcı girer, kimse yoktur, süre akmaktadır, çıkar ve
@@ -355,13 +372,13 @@ pozisyonda "Davet Et" / "Paylaş" durmalı.
 **Kabul:** Arşivle ⋯ menüsünde; ana pozisyonda davet/paylaş var; arşivleme hâlâ çalışıyor.
 **Tuzak:** Arşivle host'a özel — yetki kontrolünü menüye taşırken düşürme.
 
-### C3 — Süre dolunca ne olduğunu oda kartında yaz · ~10 dk · `m162`
+### C3 — ✅ TAMAMLANDI: Süre dolunca ne olduğunu oda kartında yaz · `m162`
 
-Bilgi bugün **yalnız kod yorumunda** (`CaddeCafePage.tsx:4`: "Arşivlenen veya süresi biten
-cafe read-only görünür"). Kullanıcı bunu bilmeden yazmaz.
-**Adımlar:** oda kartına tek satır ekle — **gerçek davranışı** yaz, kritiğin örnek
-cümlesini kopyalama.
-**Bağımlılık:** C0 (davranış kararla değişebilir).
+**Sonuç (13 Eylül, `98cfd76`):** C0'ın async-first kararına göre yazıldı —
+"Bu Cafe asenkron çalışır; katılımcılar açık kaldığı süre boyunca farklı
+zamanlarda yazabilir. Süre bitince konuşmalar salt okunur arşiv olarak kalır."
+⚠️ Aynı gün gözle QA'da (P5) durum rozetinin hâlâ "Canlı" dediği, bu metinle
+DOĞRUDAN çeliştiği bulundu ve "Açık" olarak düzeltildi (`5f88232`).
 
 ---
 
@@ -466,9 +483,14 @@ rozet, arşivlenince nötr. **Tek sinyal, tek renk.**
 
 ---
 
-## K — Karar *(kod yok; cevap gelmeden arkasındaki iş başlayamaz)*
+## K — Karar ✅ *(K1 KAPANDI 13.09.2026, commit `48dad5a`)*
 
-### K1 — Tepki seti 5'ten 3'e insin mi? · ~5 dk · `m156`
+**Sonuç:** Evet, 3'e indirildi — Beğendim, Destek, Soru (eski adı "Emin olamadım").
+Kalp ve Gülme kaldırıldı; ölçüldü, canlıda hiç kullanılmamışlardı (tek satır
+`cadde_post_reactions`, o da 'like'). SQL check constraint de aynı üçe indirildi
+(mig `20260913150000`). Aşağıdaki orijinal karar metni referans için duruyor:
+
+### K1 — (kapandı) Tepki seti 5'ten 3'e insin mi? · ~5 dk · `m156`
 
 Bugün 5 tip: beğeni, kalp, gülme, destek, **emin olamadım**. Kritik üçe indirmeyi öneriyor
 (beğeni + soru + yorum) ve "soru" sinyalinin diaspora akışında beğeniden daha değerli

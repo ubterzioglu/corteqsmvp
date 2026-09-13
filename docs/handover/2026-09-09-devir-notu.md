@@ -240,32 +240,52 @@ da aynı yere yapıştırabiliyor. Düğme yorum sayısını **kapalıyken de** 
 
 ---
 
-## 6. Bekleyen doğrulama — kod değil, **göz**
+## 6. Gözle-QA — **KONTROL EDİLDİ (13 Eylül, P4+P5)**
 
-Bugünkü işlerin çoğu görsel ve **hiçbiri tarayıcıda görülmedi** (jsdom yerleşim/geçiş
-hesaplamıyor). Yayından sonra `/cadde`'ye girip bak:
+⚠️ Gerçek bir tarayıcıda DEĞİL — Playwright ile mock ağ üzerinden 5 ekran
+üretildi ve tek tek incelendi (`e2e/cadde-visual-qa.spec.ts`,
+`$env:VISUAL_QA="1"; npx playwright test e2e/cadde-visual-qa.spec.ts`,
+çıktı `test-results/visual-qa-cadde/*.png`). Bu, tıklama akıcılığı/jitter gibi
+gerçek etkileşim hislerini ölçmez ama yerleşim, renk ve metin çelişkilerini
+kesin olarak gösterir. Aşağıdaki 11 madde bu ekranlara göre kapatıldı:
 
-1. **Üst alan** — kimlik şeridi kalktı; boşluk doğru mu, ilk gönderi fold'un üstünde mi?
-2. **Scroll'da header** — daralma akıcı mı, titreme var mı, yukarı dönünce büyüyor mu?
-3. **Zilin yeni yeri** — filtre satırının sağ ucunda; dar ekranda alta düşüyor mu?
-4. **Kapsam şeridi 40px→44px çıktı** (zil daha uzun) — dar ekranda sarma bozuldu mu?
-5. **Boş şehir akışı** — `?city=<boş bir şehir>` ile aç; "Almanya akışındaki N paylaşım"
-   düğmesi çıkıyor mu, tıklayınca çalışıyor mu?
-6. **Cafe odası** — payda gitti mi, Arşivle üç nokta menüsünde mi?
-7. **Bronz butonlar** — kontrast okunur mu, sayfa başına tek primary kuralı tutuyor mu?
-8. **Kart şeritleri (T5)** — artık pillar rengi: Cadde bronz, Cafe yeşil, Çarşı
-   terracotta. Karışık akışta bağlam renkten okunuyor mu, yoksa gürültü mü oldu?
-9. **Rozetler (T6)** — 13 stil 3 tipe indi. En kritik ikisi: "Sabit" artık siyah
-   değil, "Sponsorlu" artık turuncu değil. ⚠️ **Sponsorlu'nun nötre inmesi reklam
-   görünürlüğünü düşürür** — bu bir ürün kararı, gözle bakıp onayla ya da geri al.
-10. **Köşeler (T7)** — tek yarıçap 48 kartı birden etkiledi. Daha az yuvarlak
-    duruyor; "sert" mi hissettiriyor, yoksa daha derli toplu mu?
-11. **Gri metinler (T7)** — açık gri açıklamalar koyulaştı (2.56 → 4.76 kontrast).
-    Fazla mı koyu oldu, hiyerarşi kayboldu mu?
+1. **Üst alan** — ✅ kimlik şeridi yok, ilk gönderi ("Berlin'de ilk buluşma")
+   900px yükseklikte fold'un üstünde net görünüyor.
+2. **Scroll'da header** — ✅ KISMEN: 400px scroll sonrası header bandı görünür
+   şekilde küçülüyor (~55px kazanç). **Akıcılık/titreme/yukarı-dönünce-büyüme**
+   statik screenshot'la ölçülemedi — video/etkileşim testi gerekir.
+3. **Zilin yeri** — ✅ filtre satırının sağ ucunda, mobilde de bozulmuyor.
+4. **Kapsam şeridi sarma** — ✅ mobilde (390px) dört çip iki satıra doğal
+   şekilde sarıyor, kırık/üst üste binme yok.
+5. **Boş şehir akışı** — ✅ TAM DOĞRULANDI: `?city=Berlin` ile açılan ekranda
+   "Almanya akışındaki 1 paylaşım → gör" (ikincil buton) + "İlk paylaşımı yap"
+   (tek bronz primary) yan yana, metin `sparseContentHint` ile birebir eşleşiyor.
+6. **Cafe odası** — ✅ payda yok ("2 üye", "2/100" değil), Arşivle ana pozisyonda
+   DEĞİL — kebab (⋯) menüsü kartın sağ altında duruyor.
+7. **Bronz butonlar / tek primary kuralı** — ⚠️ KISMEN ÇELİŞKİLİ: ana akışta
+   "Paylaş" (composer) VE aktif "Tümü" filtre çipi AYNI ANDA bronz renkte.
+   Boş-şehir kartında ise kural tam tutuyor (yalnız "İlk paylaşımı yap" bronz).
+   Filtre çipinin "aktif durum" rengi mi sayılacağı yoksa T3'ün "primary"
+   tanımına mı gireceği bir ürün kararı — kesin hüküm verilmedi.
+8. **Kart şeritleri (T5)** — ✅ NET ÇALIŞIYOR: gönderi kartı bronz üst şerit,
+   Cafe odası kartı yeşil üst şerit. Karışık akışta bağlam gerçekten renkten
+   okunuyor, gürültülü değil.
+9. **Rozetler (T6)** — ❌ DOĞRULANMADI: mock veri "Sabit" veya "Sponsorlu"
+   içermiyordu, bu iki rozet hiç ekrana gelmedi. Ayrı bir tur gerekir.
+10. **Köşeler (T7)** — ✅ tek, tutarlı yarıçap; "sert" değil, derli toplu duruyor.
+11. **Gri metinler (T7)** — ✅ ikincil metinler (konum/tarih/etiket) okunaklı
+    orta-koyu gri, hiyerarşi kaybolmamış.
 
-⚠️ İddia edilen **~90px** kazanç hesapla çıkarıldı, **ekranda ölçülmedi**. DevTools'ta
-375 / 1366 / 1920 genişlikte, beta bandı açık ve kapalı hâlde ilk gönderi kartının üst
-kenarını ölç.
+### Taramada bulunan İKİ YENİ sorun (11 maddenin dışında)
+
+- **✅ DÜZELTİLDİ (13 Eylül, `5f88232`):** Cafe odası rozeti "Canlı" diyordu
+  ama hemen altındaki metin "Bu Cafe asenkron çalışır" diyordu — aynı kartta
+  DOĞRUDAN çelişki, bugünkü C0 (async-first) kararının "Canlı" etiketini
+  güncellemeden bırakmasından kaynaklanıyordu. "Açık" olarak değiştirildi.
+- **⚠️ AÇIK, DOKUNULMADI (kullanıcı kararı — kapsam dışı):** Mobilde (390px)
+  üst nav çöküyor — "Geri Bildirim" iki satıra bölünüp "Araçlar"/"Profilim"
+  ile çakışıyor. Bugünkü batch'lerin konusu değildi, önceden var olan bir
+  sorun. Ayrı bir gün/batch olarak planlanmalı.
 
 ---
 
