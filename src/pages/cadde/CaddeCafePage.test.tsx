@@ -91,7 +91,7 @@ describe("CaddeCafePage", () => {
     renderPage();
 
     expect(await screen.findByText("Berlin IT Sohbeti")).toBeInTheDocument();
-    expect(screen.getByText(/Canlı/)).toBeInTheDocument();
+    expect(screen.getByText(/Açık/)).toBeInTheDocument();
     expect(screen.getByText(/Hangi alanda çalışıyorsun\?/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Katılım Talebi Gönder/i })).toBeInTheDocument();
   });

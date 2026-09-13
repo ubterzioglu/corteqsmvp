@@ -196,7 +196,11 @@ const CaddeCafePage = () => {
               {isReadOnly ? (
                 <CaddeBadge tone="durum" intent="neutral">Arşiv (read-only)</CaddeBadge>
               ) : (
-                <CaddeBadge tone="durum" intent="positive">Canlı</CaddeBadge>
+                // 13 Eylül gözle QA'da bulundu: C0 (async-first) sonrası odalar artık
+                // 1-7 gün açık kalıyor ama rozet hâlâ "Canlı" diyordu — hemen altındaki
+                // "Bu Cafe asenkron çalışır" cümlesiyle DOĞRUDAN ÇELİŞİYORDU. "Açık" hem
+                // async modelle tutarlı hem de arşivin karşıtı olarak doğru okunuyor.
+                <CaddeBadge tone="durum" intent="positive">Açık</CaddeBadge>
               )}
               {/* Köprü bir DURUM değil, odanın türü — kategori tipinde. Eskiden yeşil
                   dolguyla "Canlı" ile aynı aileye giriyor ve ikisi karışıyordu. */}
