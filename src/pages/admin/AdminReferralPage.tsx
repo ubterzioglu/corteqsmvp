@@ -14,31 +14,22 @@ import { useToast } from "@/hooks/use-toast";
 import {
   createReferralCode,
   deleteReferralCodeHard,
+  listReferralCodeUsages,
+  listReferralCodes,
   listReferralGroups,
   listReferralSources,
   listReferralTypes,
   setReferralCodeActive,
   updateReferralCodeEditableFields,
+  type ReferralUsageRow,
 } from "@/lib/admin";
 import type { ReferralCodeRow, ReferralGroupRow, ReferralSourceRow, ReferralTypeRow } from "@/lib/referral-codes";
-import { supabase } from "@/integrations/supabase/client";
 import { useAdminOutletContext } from "@/components/admin/AdminLayout";
 import {
   buildReferralTargetUrl,
   generateReferralQrPngDataUrl,
   generateReferralQrSvg,
 } from "@/lib/referral-qr";
-
-type ReferralUsageRow = {
-  id: string;
-  referral_code_id: string;
-  used_at: string;
-  full_name: string | null;
-  email: string | null;
-  /** Kullanım kaynağı: ön kayıt trigger'ı (submission) ya da profil doğrulaması (profile). */
-  source: "submission" | "profile";
-  user_id: string | null;
-};
 
 const AdminReferralPage = () => {
   const { session } = useAdminOutletContext();
@@ -93,13 +84,13 @@ const AdminReferralPage = () => {
           listReferralSources(true),
           listReferralGroups(true),
           listReferralTypes(true),
-          supabase.from("referral_codes").select("*").order("created_at", { ascending: false }).limit(100),
+          listReferralCodes(),
         ]);
         if (cancelled) return;
         setSources(sourceData);
         setGroups(groupData);
         setTypes(typeData);
-        setReferralCodes(codeData.data ?? []);
+        setReferralCodes(codeData);
         setSourceId((current) => current || sourceData[0]?.id || "");
         setGroupId((current) => current || groupData[0]?.id || "");
         setTypeId((current) => current || typeData[0]?.id || "");
@@ -127,25 +118,24 @@ const AdminReferralPage = () => {
         return;
       }
 
-      const { data, error } = await supabase
-        .from("referral_code_usages")
-        .select("id,referral_code_id,used_at,full_name,email,source,user_id")
-        .in("referral_code_id", ids)
-        .order("used_at", { ascending: false });
-
-      if (cancelled) return;
-      if (error) {
+      let usages: ReferralUsageRow[];
+      try {
+        usages = await listReferralCodeUsages(ids);
+      } catch (error) {
+        if (cancelled) return;
         // Sessiz yutma bitti (B13): 403/RLS sorunu bir daha görünmez boş liste üretmesin.
         toast({
           title: "Kullanım listesi yüklenemedi",
-          description: error.message,
+          description: error instanceof Error ? error.message : "Beklenmeyen hata",
           variant: "destructive",
         });
         return;
       }
 
+      if (cancelled) return;
+
       const grouped: Record<string, ReferralUsageRow[]> = {};
-      for (const usage of (data ?? []) as ReferralUsageRow[]) {
+      for (const usage of usages) {
         if (!grouped[usage.referral_code_id]) grouped[usage.referral_code_id] = [];
         grouped[usage.referral_code_id].push(usage);
       }

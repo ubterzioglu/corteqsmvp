@@ -174,6 +174,43 @@ export async function setReferralCodeActive(params: { id: string; is_active: boo
   return data;
 }
 
+// S4 (13 Eylül, B6): AdminReferralPage.tsx doğrudan 2 supabase.from() çağrısı
+// yapıyordu (kod listesi + kullanım listesi).
+// ⚠️ listReferralCodes: orijinal bileşen bu sorgunun `.error` alanını HİÇ kontrol
+// etmiyordu — hata dönerse sessizce boş liste kullanılıyordu. Bu fonksiyon da
+// AYNEN öyle davranır (throw yok); sessiz yutma bir kusur olabilir ama bu
+// batch'in kapsamı sadece taşımak, davranış düzeltmek değil.
+export async function listReferralCodes(): Promise<ReferralCodeRow[]> {
+  const { data } = await supabase
+    .from("referral_codes")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(100);
+  return data ?? [];
+}
+
+export type ReferralUsageRow = {
+  id: string;
+  referral_code_id: string;
+  used_at: string;
+  full_name: string | null;
+  email: string | null;
+  /** Kullanım kaynağı: ön kayıt trigger'ı (submission) ya da profil doğrulaması (profile). */
+  source: "submission" | "profile";
+  user_id: string | null;
+};
+
+export async function listReferralCodeUsages(referralCodeIds: string[]): Promise<ReferralUsageRow[]> {
+  const { data, error } = await supabase
+    .from("referral_code_usages")
+    .select("id,referral_code_id,used_at,full_name,email,source,user_id")
+    .in("referral_code_id", referralCodeIds)
+    .order("used_at", { ascending: false });
+
+  if (error) throw error;
+  return (data ?? []) as ReferralUsageRow[];
+}
+
 export async function deleteReferralCodeHard(id: string): Promise<void> {
   const [submissionCountResult, usageCountResult] = await Promise.all([
     supabase
