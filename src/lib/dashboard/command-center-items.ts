@@ -689,16 +689,23 @@ export async function fetchCommandCenterItems(
   const from = (page - 1) * pageSize
   const to = from + pageSize - 1
 
-  let query = supabase
+  // Filtreler .order()/.range() zincirinden ONCE uygulanir. TS2589'un gercek
+  // sebebi jenerik degil, DERIN builder tipine yeniden atamaydi: her .eq() yeni
+  // bir derin tip uretiyor, `query`ye geri atamak tipi tekrar tekrar cozduruyordu.
+  // Siralama/sayfalama zinciri artik sorgunun SONUNDA, tek seferde eklenir.
+  //
+  // Q6 (tsc TS2589): yukarisi da yetmedi — her `.eq()` hala YENİ bir derin
+  // generic uretiyor. `query`nin tipi burada BILEREK `any`e genisletiliyor
+  // (cadde-internal.ts'teki `const db = supabase as any` ile ayni tuzak, ayni
+  // cozum): sizinti riski yok, cunku sonuc `data as CommandCenterItemRow[]`
+  // ile asagida zaten dar tipe geri donuyor.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let query: any = supabase
     .from('command_center_items')
     .select(COMMAND_CENTER_SELECT, { count: 'exact' })
     .is('deleted_at', null)
     .is('archived_at', null)
 
-  // Filtreler .order()/.range() zincirinden ONCE uygulanir. TS2589'un gercek
-  // sebebi jenerik degil, DERIN builder tipine yeniden atamaydi: her .eq() yeni
-  // bir derin tip uretiyor, `query`ye geri atamak tipi tekrar tekrar cozduruyordu.
-  // Siralama/sayfalama zinciri artik sorgunun SONUNDA, tek seferde eklenir.
   for (const op of buildCommandCenterFilters(options)) {
     if (op.kind === 'eq') query = query.eq(op.column, op.value)
     else if (op.kind === 'neq') query = query.neq(op.column, op.value)
@@ -736,16 +743,15 @@ export async function fetchDeletedCommandCenterItems(
     return []
   }
 
-  let query = supabase
+  // Filtreler .order()/.range() zincirinden ONCE uygulanir; `query` tipi Q6
+  // (tsc TS2589) nedeniyle bilerek `any` — açıklama fetchCommandCenterItems'ta.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let query: any = supabase
     .from('command_center_items')
     .select(COMMAND_CENTER_SELECT)
     .is('archived_at', null)
     .not('deleted_at', 'is', null)
 
-  // Filtreler .order()/.range() zincirinden ONCE uygulanir. TS2589'un gercek
-  // sebebi jenerik degil, DERIN builder tipine yeniden atamaydi: her .eq() yeni
-  // bir derin tip uretiyor, `query`ye geri atamak tipi tekrar tekrar cozduruyordu.
-  // Siralama/sayfalama zinciri artik sorgunun SONUNDA, tek seferde eklenir.
   for (const op of buildCommandCenterFilters(options)) {
     if (op.kind === 'eq') query = query.eq(op.column, op.value)
     else if (op.kind === 'neq') query = query.neq(op.column, op.value)
@@ -773,16 +779,15 @@ export async function fetchArchivedCommandCenterItems(
     return []
   }
 
-  let query = supabase
+  // Filtreler .order()/.range() zincirinden ONCE uygulanir; `query` tipi Q6
+  // (tsc TS2589) nedeniyle bilerek `any` — açıklama fetchCommandCenterItems'ta.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let query: any = supabase
     .from('command_center_items')
     .select(COMMAND_CENTER_SELECT)
     .is('deleted_at', null)
     .not('archived_at', 'is', null)
 
-  // Filtreler .order()/.range() zincirinden ONCE uygulanir. TS2589'un gercek
-  // sebebi jenerik degil, DERIN builder tipine yeniden atamaydi: her .eq() yeni
-  // bir derin tip uretiyor, `query`ye geri atamak tipi tekrar tekrar cozduruyordu.
-  // Siralama/sayfalama zinciri artik sorgunun SONUNDA, tek seferde eklenir.
   for (const op of buildCommandCenterFilters(options)) {
     if (op.kind === 'eq') query = query.eq(op.column, op.value)
     else if (op.kind === 'neq') query = query.neq(op.column, op.value)
