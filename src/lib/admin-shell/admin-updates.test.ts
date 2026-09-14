@@ -25,6 +25,20 @@ describe("ADMIN_UPDATES", () => {
     expect(detail).toContain("57 İŞ YAPILDI DEMEK DEĞİL");
     expect(detail).toContain("artık geçerli değil");
 
+    // Üç grubun sayısı ayrı ayrı yazılmalı: 22 yapıldı + 21 iptal + 12 birleşti.
+    // Tek bir "57 kapandı" rakamı bu ayrımı gizler.
+    expect(detail).toContain("22 madde gerçekten yapıldı");
+    expect(detail).toContain("21 madde 'artık geçerli değil' denilerek İPTAL EDİLDİ");
+    expect(detail).toContain("12 madde de benzerleriyle tek maddede BİRLEŞTİRİLDİ");
+
+    // Üç grubun madde madde dökümü de bulunmalı — özet sayı yetmez.
+    expect(detail).toContain("A GRUBU");
+    expect(detail).toContain("B GRUBU");
+    expect(detail).toContain("C GRUBU");
+
+    // İptal edilenlerin YAPILMADIĞI açıkça yazılmalı.
+    expect(detail).toContain("Bunlar YAPILMADI");
+
     // Kapatılanların kalıcı silinmediği ve gerekçe dosyasının yeri yazılmalı.
     expect(detail).toContain("docs/notes/2026-09-13-komuta-merkezi-iptal-edilenler.md");
     expect(detail).toContain("yeniden açılabilir");
