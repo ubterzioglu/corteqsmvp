@@ -6,11 +6,44 @@ describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260913-buyuk-dosya-temizligi");
-    expect(ADMIN_UPDATES[0].date).toBe("13 Eylül 2026");
+    expect(ADMIN_UPDATES[0].id).toBe("20260914-13-eylul-toplu-ozet-ve-kapanan-todolar");
+    expect(ADMIN_UPDATES[0].date).toBe("14 Eylül 2026");
 
     const ids = ADMIN_UPDATES.map((update) => update.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("14 Eylül toplu özet kaydı kapanan todo'ları sayar ama 'yapıldı' sanılmasını ENGELLER", () => {
+    const update = ADMIN_UPDATES.find(
+      ({ id }) => id === "20260914-13-eylul-toplu-ozet-ve-kapanan-todolar",
+    );
+    const detail = update?.items.join(" ") ?? "";
+
+    // ⚠️ EN KRİTİK CÜMLE: 57 madde "kapandı" ≠ 57 iş yapıldı. Bir kısmı
+    // "artık geçerli değil" denilerek kapatıldı. Bu uyarı düşerse duyuru
+    // olduğundan çok daha fazla iş bitmiş gibi okunur.
+    expect(detail).toContain("57 İŞ YAPILDI DEMEK DEĞİL");
+    expect(detail).toContain("artık geçerli değil");
+
+    // Kapatılanların kalıcı silinmediği ve gerekçe dosyasının yeri yazılmalı.
+    expect(detail).toContain("docs/notes/2026-09-13-komuta-merkezi-iptal-edilenler.md");
+    expect(detail).toContain("yeniden açılabilir");
+
+    // Hiç duyurulmamış güvenlik düzeltmesi bu kaydın asıl katkılarından biri.
+    expect(detail).toContain("GHSA-w9m9-85wc-3x92");
+
+    // Açık kalan 11 maddenin gerekçeli olduğu yazılmalı — "hepsi bitti" sanılmasın.
+    expect(detail).toContain("AÇIK KALAN 11 MADDE");
+
+    // Devir notunun adı ve içindeki en değerli bilgi (üç sessiz kırılma) geçmeli.
+    expect(detail).toContain("docs/handover/2026-09-13-buyuk-dosya-temizligi.md");
+    expect(detail).toContain("ÜÇ SESSİZ KIRILMA NOKTASI");
+
+    // Yanlış ölçümün düzeltildiği dürüstçe yazılmalı.
+    expect(detail).toContain("ölçüm YANLIŞTI");
+
+    // ⚠️ Hiçbiri canlıda değil ve gözle görülmedi.
+    expect(detail).toContain("HENÜZ CANLIDA DEĞİL");
   });
 
   it("13 Eylül sekizinci parti kaydı büyük dosya temizliğini ve YAPILMAYANI birlikte söyler", () => {
