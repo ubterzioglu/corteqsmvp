@@ -27,7 +27,7 @@ describe("ADMIN_UPDATES", () => {
 
     // Üç grubun sayısı ayrı ayrı yazılmalı: 22 yapıldı + 21 iptal + 12 birleşti.
     // Tek bir "57 kapandı" rakamı bu ayrımı gizler.
-    expect(detail).toContain("22 madde gerçekten yapıldı");
+    expect(detail).toContain("22 madde GERÇEKTEN YAPILDI");
     expect(detail).toContain("21 madde 'artık geçerli değil' denilerek İPTAL EDİLDİ");
     expect(detail).toContain("12 madde de benzerleriyle tek maddede BİRLEŞTİRİLDİ");
 
@@ -58,6 +58,20 @@ describe("ADMIN_UPDATES", () => {
 
     // ⚠️ Hiçbiri canlıda değil ve gözle görülmedi.
     expect(detail).toContain("HENÜZ CANLIDA DEĞİL");
+  });
+
+  // Panel (AdminUpdatesCard + /admin/about) kayıtları DÜZ METİN olarak çizer,
+  // markdown render ETMEZ. `**kalın**` yazarsan ekranda yıldızlar görünür.
+  // 14.09.2026'da tam olarak bu oldu ve ancak görsel QA ekran görüntüsünde fark
+  // edildi — hiçbir otomatik test yakalamıyordu, bu yüzden buraya kilitlendi.
+  it("hiçbir kayıtta markdown işareti bırakmaz (panel düz metin çizer)", () => {
+    const offenders = ADMIN_UPDATES.flatMap((update) =>
+      [update.title, ...update.items]
+        .filter((text) => text.includes("**") || /(^|\s)__\S/.test(text))
+        .map((text) => `${update.id}: ${text.slice(0, 80)}`),
+    );
+
+    expect(offenders).toEqual([]);
   });
 
   it("13 Eylül sekizinci parti kaydı büyük dosya temizliğini ve YAPILMAYANI birlikte söyler", () => {
