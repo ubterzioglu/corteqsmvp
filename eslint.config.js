@@ -5,11 +5,27 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  // .worktrees/**: git worktree'leri depo KÖKÜNÜN İÇİNE açıldığında ESLint onların
-  // tüm ağacını da tarar ve o worktree'deki arşiv/referans kodu lint tabanını
+  // .worktrees/** ve .kilo/**: git worktree'leri depo KÖKÜNÜN İÇİNE açıldığında ESLint
+  // onların tüm ağacını da tarar ve o worktree'deki arşiv/referans kodu lint tabanını
   // kirletir (09.09.2026'da tam olarak bu oldu: src temizken "1 error" raporlandı).
   // Worktree kendi checkout'unda zaten kendi lint'ini koşar.
-  { ignores: ["dist/**", ".worktrees/**", "referans/**", "docs/archive/**", "docs/reference/**", "docs/reference-clones/**"] },
+  //
+  // ⚠️ AYNI SINIF 17.09.2026'da TEKRARLADI, bu kez `.kilo/worktrees/psychedelic-hen`
+  // ile: src tertemizken lint 286 problem raporladı. Kök neden — **`.gitignore`
+  // ESLint'i bağlamaz**: `.kilo/` gitignore'da (satır 59) olmasına rağmen flat config
+  // onu kendiliğinden atlamaz, buraya ayrıca yazılması gerekir. Depo köküne worktree
+  // açan yeni bir araç eklenirse dizinini bu listeye de ekle.
+  {
+    ignores: [
+      "dist/**",
+      ".worktrees/**",
+      ".kilo/**",
+      "referans/**",
+      "docs/archive/**",
+      "docs/reference/**",
+      "docs/reference-clones/**",
+    ],
+  },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
