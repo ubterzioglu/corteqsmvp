@@ -2,6 +2,11 @@
 // İçerik tek kaynaktan gelir: lib/admin-shell/admin-updates.ts — aynı liste
 // topbar'daki Güncellemeler (bell) menüsünde ve /admin/about sayfasında da kullanılır.
 // Akordeon "single + collapsible" ve defaultValue YOK → tüm kayıtlar kapalı başlar.
+//
+// Her kayıt ayrı bir KART olarak çizilir (rounded-xl + border + aralık). Düz satır
+// listesindeyken kayıtlar birbirine yapışık görünüyordu; başlıklar uzun olduğu için
+// nerede bittiği okunmuyordu. Yarıçap 12px'tir (rounded-xl) — tasarım sistemi tek
+// yarıçap kuralı koyar, bkz. docs/modules/cadde-design-tokens.md §4.
 
 import { Newspaper } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -34,14 +39,21 @@ const AdminUpdatesCard = () => {
       {visibleUpdates.length === 0 ? (
         <p className="mt-3 text-sm text-muted-foreground">Henüz güncelleme yok.</p>
       ) : (
-        <Accordion type="single" collapsible className="mt-2">
+        <Accordion type="single" collapsible className="mt-3 space-y-2">
           {visibleUpdates.map((update) => (
-            <AccordionItem key={update.id} value={update.id} className="last:border-b-0">
-              <AccordionTrigger className="py-3 text-left hover:no-underline" chevronWrapperClassName="h-8 w-8">
+            <AccordionItem
+              key={update.id}
+              value={update.id}
+              className="rounded-xl border border-border bg-background data-[state=open]:bg-muted/40"
+            >
+              <AccordionTrigger
+                className="px-3 py-3 text-left hover:no-underline"
+                chevronWrapperClassName="h-8 w-8"
+              >
                 <p className="text-[11px] text-muted-foreground">{update.date}</p>
                 <p className="text-sm font-medium leading-5 text-foreground">{update.title}</p>
               </AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent className="px-3">
                 <ul className="list-disc space-y-2 pl-5 text-sm text-muted-foreground">
                   {update.items.map((item) => (
                     <li key={item}>{item}</li>

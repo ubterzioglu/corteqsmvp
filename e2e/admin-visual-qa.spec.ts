@@ -186,6 +186,36 @@ test.describe("Admin V2 visual QA (manuel inceleme için screenshot üretir)", (
     await shot(page, "mobile-drawer-light-390x844");
   });
 
+  test("güncellemeler — akordeon kart (pano + /admin/about, kapalı ve açık)", async ({ page }) => {
+    await mockSupabase(page);
+    await loginAsAdmin(page);
+
+    // Pano kartı: kayıtlar ayrı kart olarak ve KAPALI başlamalı.
+    const panoTrigger = page.getByRole("button", { name: /13 Eylül'ün tam dökümü/ }).first();
+    await expect(panoTrigger).toBeVisible();
+    await expect(panoTrigger).toHaveAttribute("data-state", "closed");
+    await shot(page, "guncellemeler-pano-kapali-1440x900");
+
+    await panoTrigger.click();
+    await expect(panoTrigger).toHaveAttribute("data-state", "open");
+    await shot(page, "guncellemeler-pano-acik-1440x900");
+
+    // /admin/about: 176 kayıt var, hepsi kapalı gelmeli (eskiden hepsi açıktı).
+    await page.goto("/admin/about");
+    const aboutTrigger = page.getByRole("button", { name: /13 Eylül'ün tam dökümü/ }).first();
+    await expect(aboutTrigger).toBeVisible();
+    await expect(aboutTrigger).toHaveAttribute("data-state", "closed");
+    await shot(page, "guncellemeler-about-kapali-1440x900");
+
+    await aboutTrigger.click();
+    await expect(aboutTrigger).toHaveAttribute("data-state", "open");
+    await shot(page, "guncellemeler-about-acik-1440x900");
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(250);
+    await shot(page, "guncellemeler-about-iphone-390x844");
+  });
+
   test("role matrix — geniş ekran power-user görünümü", async ({ page }) => {
     await mockSupabase(page);
     await loginAsAdmin(page);
