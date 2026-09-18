@@ -2,10 +2,10 @@ import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { categoryOptions, languageOptions, originOptions } from "@/lib/whatsapp-landing-options";
-import type { LandingCategory, LandingLanguage, LandingOrigin } from "@/lib/whatsapp-landings";
+import { categoryOptions } from "@/lib/whatsapp-landing-options";
+import type { LandingCategory } from "@/lib/whatsapp-landings";
 
-export type ApprovalFilter = "member" | "admin" | "";
+export type ApprovalFilter = "admin" | "";
 
 interface CommunityFiltersProps {
   searchQuery: string;
@@ -17,10 +17,6 @@ interface CommunityFiltersProps {
   onCityChange: (value: string) => void;
   approval: ApprovalFilter;
   onApprovalChange: (value: ApprovalFilter) => void;
-  origin: LandingOrigin | "";
-  onOriginChange: (value: LandingOrigin | "") => void;
-  language: LandingLanguage | "";
-  onLanguageChange: (value: LandingLanguage | "") => void;
 }
 
 export function CommunityFilters({
@@ -33,10 +29,6 @@ export function CommunityFilters({
   onCityChange,
   approval,
   onApprovalChange,
-  origin,
-  onOriginChange,
-  language,
-  onLanguageChange,
 }: CommunityFiltersProps) {
   return (
     <>
@@ -46,7 +38,7 @@ export function CommunityFilters({
           value={searchQuery}
           onChange={(event) => onSearchQueryChange(event.target.value)}
           className="pl-9"
-          placeholder="Topluluk ara!"
+          placeholder="Grup ara!"
         />
       </div>
 
@@ -75,38 +67,13 @@ export function CommunityFilters({
           </SelectContent>
         </Select>
 
-        <Select value={approval || "__all__"} onValueChange={(v) => onApprovalChange(v === "__all__" ? "" : (v as "member" | "admin"))}>
-          <SelectTrigger className="w-[180px]" aria-label="Onay tipi filtresi">
-            <SelectValue placeholder="Onay Tipi" />
+        <Select value={approval || "__all__"} onValueChange={(v) => onApprovalChange(v === "__all__" ? "" : "admin")}>
+          <SelectTrigger className="w-[180px]" aria-label="Onay filtresi">
+            <SelectValue placeholder="Onay Durumu" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__all__">Tüm Onaylar</SelectItem>
+            <SelectItem value="__all__">Tüm Gruplar</SelectItem>
             <SelectItem value="admin">Admin onaylı</SelectItem>
-            <SelectItem value="member">Kullanıcı onaylı</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={origin || "__all__"} onValueChange={(v) => onOriginChange(v === "__all__" ? "" : (v as LandingOrigin))}>
-          <SelectTrigger className="w-[130px]" aria-label="Bölge filtresi">
-            <SelectValue placeholder="Bölge" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="__all__">Tüm Bölgeler</SelectItem>
-            {originOptions.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Select value={language || "__all__"} onValueChange={(v) => onLanguageChange(v === "__all__" ? "" : (v as LandingLanguage))}>
-          <SelectTrigger className="w-[130px]" aria-label="Dil filtresi">
-            <SelectValue placeholder="Dil" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="__all__">Tüm Diller</SelectItem>
-            {languageOptions.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-            ))}
           </SelectContent>
         </Select>
       </div>

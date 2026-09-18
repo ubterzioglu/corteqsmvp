@@ -113,6 +113,13 @@ export default function SiteHeader() {
                 Araçlar
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              <Link
+                to="/addcom"
+                className={NAV_ACTION_CLASS}
+              >
+                WhatsApp Grupları
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               {/* Geri Bildirim — geldiği sayfa state.from ile /feedback'e taşınır (page_path). */}
               <Link
                 to="/feedback"
@@ -145,6 +152,13 @@ export default function SiteHeader() {
                 className={`inline-flex items-center gap-1 outline-none ${NAV_ACTION_CLASS}`}
               >
                 Araçlar
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              <Link
+                to="/addcom"
+                className={NAV_ACTION_CLASS}
+              >
+                WhatsApp Grupları
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link

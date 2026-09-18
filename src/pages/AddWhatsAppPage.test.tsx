@@ -38,7 +38,6 @@ vi.mock("@/lib/whatsapp-landings", () => ({
   canCurrentUserEditLanding: (...args: unknown[]) => canCurrentUserEditLandingSpy(...args),
   submitLanding: vi.fn(),
   createJoinRequest: vi.fn(),
-  uploadWhatsAppLandingHeroImage: vi.fn(),
   normalizeLandingCategory: (value?: string | null) =>
     value === "girisim" ? "yatirim" : value === "alumni" || value === "hobi" || value === "is" ||
       value === "doktor" || value === "yatirim" || value === "akademik" || value === "dayanisma" ||
@@ -100,9 +99,8 @@ describe("AddWhatsAppPage", () => {
     renderPage();
 
     expect(await screen.findByText("Berlin Girisimciler")).toBeInTheDocument();
-    expect(screen.queryByText("Kategori")).not.toBeInTheDocument();
 
-    fireEvent.change(screen.getByPlaceholderText(/Topluluk ara/i), {
+    fireEvent.change(screen.getByPlaceholderText(/Grup ara/i), {
       target: { value: "Tokyo" },
     });
 
@@ -113,14 +111,14 @@ describe("AddWhatsAppPage", () => {
     renderPage();
 
     expect(await screen.findByText("Berlin Girisimciler")).toBeInTheDocument();
-    expect(screen.queryByText("İsteğe bağlı kategori seç")).not.toBeInTheDocument();
+    expect(screen.queryByText("Grup Adı")).not.toBeInTheDocument();
   });
 
   it("starts Google OAuth for anonymous users and preserves open form intent", async () => {
     renderPage();
 
     expect(await screen.findByText("Berlin Girisimciler")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /google ile topluluk ekle/i }));
+    fireEvent.click(screen.getByRole("button", { name: /google ile grup ekle/i }));
 
     await waitFor(() => {
       expect(signInWithOAuthMock).toHaveBeenCalledTimes(1);
@@ -132,7 +130,6 @@ describe("AddWhatsAppPage", () => {
         redirectTo: `${window.location.origin}/addcom?openGroupForm=1`,
       },
     });
-    expect(screen.queryByText("İsteğe bağlı kategori seç")).not.toBeInTheDocument();
   });
 
   it("lets authenticated users use the same accordion form", async () => {
@@ -140,10 +137,9 @@ describe("AddWhatsAppPage", () => {
     renderPage();
 
     expect(await screen.findByText("Berlin Girisimciler")).toBeInTheDocument();
-    fireEvent.click(screen.getAllByRole("button", { name: /Topluluk formunu aç/i })[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: /Formu aç/i })[0]);
 
-    expect(screen.getByText("Kategori")).toBeInTheDocument();
-    expect(screen.getByText("İsteğe bağlı kategori seç")).toBeInTheDocument();
+    expect(screen.getByText("WhatsApp Grubu Ekle")).toBeInTheDocument();
     expect(signInWithOAuthMock).not.toHaveBeenCalled();
   });
 
@@ -153,8 +149,7 @@ describe("AddWhatsAppPage", () => {
     renderPage("/addcom?openGroupForm=1");
 
     expect(await screen.findByText("Berlin Girisimciler")).toBeInTheDocument();
-    expect(screen.getByText("Kategori")).toBeInTheDocument();
-    expect(screen.getByText("İsteğe bağlı kategori seç")).toBeInTheDocument();
+    expect(screen.getByText("WhatsApp Grubu Ekle")).toBeInTheDocument();
   });
 
   it("renders the landing detail when group query exists", async () => {
@@ -200,16 +195,16 @@ describe("AddWhatsAppPage", () => {
     expect(screen.getAllByText("8.4 / 10").length).toBeGreaterThan(0);
   });
 
-  it("filters communities by approval type", async () => {
+  it("filters communities by admin approval", async () => {
     listLandingsSpy.mockResolvedValue([
       listFixture[0],
       {
         ...listFixture[0],
-        id: "member-onayli",
+        id: "pending-group",
         dbId: "db-2",
         groupName: "Paris Dayanisma",
         adminApproved: false,
-        memberApproved: true,
+        memberApproved: false,
       },
     ]);
 
@@ -218,11 +213,11 @@ describe("AddWhatsAppPage", () => {
     expect(await screen.findByText("Berlin Girisimciler")).toBeInTheDocument();
     expect(screen.getByText("Paris Dayanisma")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("combobox", { name: /Onay Tipi/i }));
-    fireEvent.click(screen.getByText("Kullanıcı onaylı"));
+    fireEvent.click(screen.getByRole("combobox", { name: /Onay filtresi/i }));
+    fireEvent.click(screen.getByText("Admin onaylı"));
 
-    expect(screen.queryByText("Berlin Girisimciler")).not.toBeInTheDocument();
-    expect(screen.getByText("Paris Dayanisma")).toBeInTheDocument();
+    expect(screen.getByText("Berlin Girisimciler")).toBeInTheDocument();
+    expect(screen.queryByText("Paris Dayanisma")).not.toBeInTheDocument();
   });
 
   it("shows not found state for an unknown landing slug", async () => {

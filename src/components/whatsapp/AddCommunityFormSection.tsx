@@ -5,11 +5,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { categoryOptions, languageOptions, originOptions, platformOptions } from "@/lib/whatsapp-landing-options";
 import type { GroupFormState } from "@/lib/whatsapp-landing-form";
-import type { LandingCategory, LandingLanguage, LandingOrigin } from "@/lib/whatsapp-landings";
 
 const formFieldInsetClass = "mx-0.5 w-[calc(100%-4px)]";
 
@@ -33,14 +30,12 @@ export function AddCommunityFormSection({
   onOpenChange,
   form,
   onFieldChange,
-  heroImageFile,
-  onHeroImageFileChange,
   oauthSubmitting,
   submitting,
   onStartGoogleAuth,
   onSubmit,
 }: AddCommunityFormSectionProps) {
-  const heroImageInputRef = useRef<HTMLInputElement | null>(null);
+  void useRef;
 
   return (
     <div className="mt-8 rounded-[1.9rem] border border-emerald-200/70 bg-[linear-gradient(135deg,rgba(236,253,245,0.96)_0%,rgba(255,255,255,0.98)_42%,rgba(239,246,255,0.94)_100%)] p-3 shadow-[0_20px_60px_rgba(15,23,42,0.08)] ring-1 ring-white/80 backdrop-blur-sm">
@@ -51,9 +46,9 @@ export function AddCommunityFormSection({
               <Sparkles className="h-4.5 w-4.5 text-emerald-700" />
             </span>
             <div className="space-y-1">
-              <h2 className="text-base font-bold tracking-[0.01em] text-slate-900 md:text-lg">Topluluk eklemek istiyorum</h2>
+              <h2 className="text-base font-bold tracking-[0.01em] text-slate-900 md:text-lg">WhatsApp Grubu Eklemek İstiyorum</h2>
               <p className="text-sm text-slate-600">
-                Mevcut toplulukları herkes görebilir. Yeni topluluk eklemek için Google hesabınla giriş yap.
+                Grubunu ekle, admin onayından sonra listede yayınlanacak.
               </p>
             </div>
           </div>
@@ -67,8 +62,8 @@ export function AddCommunityFormSection({
             {oauthSubmitting
               ? "Google'a yönlendiriliyor..."
               : isSignedIn
-                ? "Topluluk formunu aç"
-                : "Google ile topluluk ekle"}
+                ? "Grup ekleme formunu aç"
+                : "Google ile grup ekle"}
           </Button>
         </div>
       </div>
@@ -84,230 +79,92 @@ export function AddCommunityFormSection({
           className="overflow-hidden rounded-[1.45rem] border border-emerald-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(236,253,245,0.92)_100%)]"
         >
           <AccordionTrigger className="px-5 py-4 text-left text-base font-bold text-slate-900 hover:no-underline">
-            {open ? "Topluluk formunu kapat" : "Topluluk formunu aç"}
+            {open ? "Formu kapat" : "Formu aç"}
           </AccordionTrigger>
           <AccordionContent className="border-t border-emerald-100 px-5 pb-5 pt-4">
             <div className="mb-5">
-              <h3 className="text-left text-xl font-bold text-slate-900">Topluluk Ekle</h3>
+              <h3 className="text-left text-xl font-bold text-slate-900">WhatsApp Grubu Ekle</h3>
               <p className="mt-1 text-left text-sm text-slate-600">
-                Formu doldurup topluluğunu hemen incelemeye gönderebilirsin.
+                Aşağıdaki bilgileri doldur. Grup admin onayından sonra listede görünecek.
               </p>
             </div>
 
             <div className="space-y-5">
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">1. Grup Bilgileri</h3>
-              <div>
-                <Label>Başvuru Tipi</Label>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  <Button
-                    type="button"
-                    variant={form.submitterRole === "member" ? "default" : "outline"}
-                    onClick={() => onFieldChange("submitterRole", "member")}
-                    className={form.submitterRole === "member" ? "border-orange-500 bg-orange-500 text-white hover:bg-orange-600" : ""}
-                  >
-                    Topluluk Üyesiyim
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={form.submitterRole === "manager" ? "default" : "outline"}
-                    onClick={() => onFieldChange("submitterRole", "manager")}
-                    className={form.submitterRole === "manager" ? "border-orange-500 bg-orange-500 text-white hover:bg-orange-600" : ""}
-                  >
-                    Topluluk Yöneticisiyim
-                  </Button>
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="platform">Platform *</Label>
-                <Select value={form.platform} onValueChange={(value) => onFieldChange("platform", value)}>
-                  <SelectTrigger id="platform" className={`mt-1 ${formFieldInsetClass}`}>
-                    <SelectValue placeholder="Platform seç" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {platformOptions.map((platform) => (
-                      <SelectItem key={platform} value={platform}>
-                        {platform}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="category">Kategori</Label>
-                <Select value={form.category} onValueChange={(value) => onFieldChange("category", value as LandingCategory)}>
-                  <SelectTrigger id="category" className={`mt-1 ${formFieldInsetClass}`}>
-                    <SelectValue placeholder="İsteğe bağlı kategori seç" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categoryOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="group-name">Grup Adı *</Label>
-                <Input
-                  id="group-name"
-                  className={formFieldInsetClass}
-                  lang="tr"
-                  spellCheck
-                  value={form.groupName}
-                  onChange={(event) => onFieldChange("groupName", event.target.value)}
-                  placeholder="Örn: Berlin Türk Girişimciler"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="whatsapp-link">Topluluk Linki *</Label>
-                <Input
-                  id="whatsapp-link"
-                  className={formFieldInsetClass}
-                  value={form.whatsappLink}
-                  onChange={(event) => onFieldChange("whatsappLink", event.target.value)}
-                  placeholder="https://..."
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="country">Ülke *</Label>
-                <Input
-                  id="country"
-                  className={formFieldInsetClass}
-                  lang="tr"
-                  spellCheck
-                  value={form.country}
-                  onChange={(event) => onFieldChange("country", event.target.value)}
-                  placeholder="Global veya ülke adı giriniz"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="description">Kısa Açıklama</Label>
-                <Textarea
-                  id="description"
-                  className={formFieldInsetClass}
-                  lang="tr"
-                  spellCheck
-                  rows={3}
-                  value={form.description}
-                  onChange={(event) => onFieldChange("description", event.target.value)}
-                  placeholder="Grup hakkında 1-2 cümle"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="member-count">Topluluk Üye Sayısı</Label>
-                <Input
-                  id="member-count"
-                  type="number"
-                  className={formFieldInsetClass}
-                  value={form.memberCount}
-                  onChange={(event) => onFieldChange("memberCount", event.target.value)}
-                  placeholder="Örn: 250"
-                  min={0}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="language">Topluluk Dili</Label>
-                <Select value={form.language} onValueChange={(value) => onFieldChange("language", value as LandingLanguage)}>
-                  <SelectTrigger id="language" className={formFieldInsetClass}>
-                    <SelectValue placeholder="Dil seçin" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {languageOptions.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="origin">Köken / Bölge</Label>
-                <Select value={form.origin} onValueChange={(value) => onFieldChange("origin", value as LandingOrigin)}>
-                  <SelectTrigger id="origin" className={formFieldInsetClass}>
-                    <SelectValue placeholder="Bölge seçin" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {originOptions.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {form.submitterRole === "manager" ? (
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                  2. Topluluk Kartı Özelliklerini Belirtin (Sadece Yöneticiler İçindir.)
-                </h3>
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Grup Bilgileri</h3>
 
                 <div>
-                  <Label htmlFor="hero-image-file">Topluluk Kartı İçin Görsel Yükle</Label>
-                  <input
-                    ref={heroImageInputRef}
-                    id="hero-image-file"
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp,image/gif"
-                    className="hidden"
-                    onChange={(event) => onHeroImageFileChange(event.target.files?.[0] ?? null)}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => heroImageInputRef.current?.click()}
-                    className="ml-3 inline-flex h-11 items-center gap-2 rounded-xl border border-orange-200 bg-orange-500 px-4 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(249,115,22,0.22)] transition hover:-translate-y-0.5 hover:bg-orange-600 hover:shadow-[0_16px_36px_rgba(249,115,22,0.28)]"
-                  >
-                    Dosya Seç
-                  </button>
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    {heroImageFile
-                      ? `Seçilen dosya: ${heroImageFile.name}`
-                      : "Dosya tipi: JPG, PNG, WEBP, GIF. Önerilen oran: 16:9 yatay. Maksimum dosya boyutu: 5 MB."}
-                  </p>
-                </div>
-
-                <div>
-                  <Label htmlFor="cta-text">Yeni üyeler için mesaj</Label>
-                  <Textarea
-                    id="cta-text"
+                  <Label htmlFor="group-name">Grup Adı *</Label>
+                  <Input
+                    id="group-name"
                     className={formFieldInsetClass}
                     lang="tr"
                     spellCheck
-                    rows={4}
-                    value={form.callToActionText}
-                    onChange={(event) => onFieldChange("callToActionText", event.target.value)}
-                    placeholder="Yeni üyelere çağrı amacıyla metin yaz."
+                    value={form.groupName}
+                    onChange={(event) => onFieldChange("groupName", event.target.value)}
+                    placeholder="Örn: Berlin Türk Girişimciler"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="conditions">Topluluk Kuralları</Label>
+                  <Label htmlFor="whatsapp-link">WhatsApp Davetiye Linki *</Label>
+                  <Input
+                    id="whatsapp-link"
+                    className={formFieldInsetClass}
+                    value={form.whatsappLink}
+                    onChange={(event) => onFieldChange("whatsappLink", event.target.value)}
+                    placeholder="https://chat.whatsapp.com/..."
+                  />
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <Label htmlFor="country">Ülke *</Label>
+                    <Input
+                      id="country"
+                      className={formFieldInsetClass}
+                      lang="tr"
+                      spellCheck
+                      value={form.country}
+                      onChange={(event) => onFieldChange("country", event.target.value)}
+                      placeholder="Örn: Almanya"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="city">Şehir *</Label>
+                    <Input
+                      id="city"
+                      className={formFieldInsetClass}
+                      lang="tr"
+                      spellCheck
+                      value={form.city}
+                      onChange={(event) => onFieldChange("city", event.target.value)}
+                      placeholder="Örn: Berlin"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="description">Kısa Açıklama</Label>
                   <Textarea
-                    id="conditions"
+                    id="description"
                     className={formFieldInsetClass}
                     lang="tr"
                     spellCheck
-                    rows={4}
-                    value={form.conditions}
-                    onChange={(event) => onFieldChange("conditions", event.target.value)}
-                    placeholder={"Her satıra bir kural yazın\nÖrn: Grup içi reklam yasak"}
+                    rows={3}
+                    value={form.description}
+                    onChange={(event) => onFieldChange("description", event.target.value)}
+                    placeholder="Grup hakkında 1-2 cümle"
                   />
                 </div>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Yönetici Bilgileri</h3>
 
                 <div>
-                  <Label htmlFor="admin-name">Topluluk Yöneticisi Adı Soyad *</Label>
+                  <Label htmlFor="admin-name">Ad Soyad *</Label>
                   <Input
                     id="admin-name"
                     className={formFieldInsetClass}
@@ -320,7 +177,7 @@ export function AddCommunityFormSection({
                 </div>
 
                 <div>
-                  <Label htmlFor="admin-email">Topluluk Yöneticisi Mail Adresi *</Label>
+                  <Label htmlFor="admin-email">E-posta *</Label>
                   <Input
                     id="admin-email"
                     type="email"
@@ -332,7 +189,7 @@ export function AddCommunityFormSection({
                 </div>
 
                 <div>
-                  <Label htmlFor="admin-phone">Topluluk Yöneticisi Telefon *</Label>
+                  <Label htmlFor="admin-phone">Telefon</Label>
                   <Input
                     id="admin-phone"
                     className={formFieldInsetClass}
@@ -342,15 +199,14 @@ export function AddCommunityFormSection({
                   />
                 </div>
               </div>
-            ) : null}
 
-            <Button
-              className="w-full bg-emerald-600 text-white hover:bg-emerald-700"
-              onClick={onSubmit}
-              disabled={submitting}
-            >
-              {submitting ? "Gönderiliyor..." : "Başvuruyu Gönder"}
-            </Button>
+              <Button
+                className="w-full bg-emerald-600 text-white hover:bg-emerald-700"
+                onClick={onSubmit}
+                disabled={submitting}
+              >
+                {submitting ? "Gönderiliyor..." : "Grubu Gönder"}
+              </Button>
             </div>
           </AccordionContent>
         </AccordionItem>

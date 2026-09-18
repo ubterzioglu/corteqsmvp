@@ -1,21 +1,12 @@
-import type { LandingCategory, LandingLanguage, LandingOrigin } from "@/lib/whatsapp-landings";
-
 export type GroupFormState = {
-  submitterRole: "manager" | "member";
-  platform: string;
-  category: LandingCategory | "";
   groupName: string;
-  country: string;
   whatsappLink: string;
+  country: string;
+  city: string;
   description: string;
-  callToActionText: string;
-  conditions: string;
   adminName: string;
   adminEmail: string;
   adminPhone: string;
-  memberCount: string;
-  language: LandingLanguage | "";
-  origin: LandingOrigin | "";
 };
 
 export type JoinFormState = {
@@ -26,21 +17,14 @@ export type JoinFormState = {
 };
 
 export const initialGroupForm: GroupFormState = {
-  submitterRole: "member",
-  platform: "",
-  category: "",
   groupName: "",
-  country: "",
   whatsappLink: "",
+  country: "",
+  city: "",
   description: "",
-  callToActionText: "",
-  conditions: "",
   adminName: "",
   adminEmail: "",
   adminPhone: "",
-  memberCount: "",
-  language: "",
-  origin: "",
 };
 
 export const initialJoinForm: JoinFormState = {
@@ -66,6 +50,5 @@ export function buildAdminContact(form: GroupFormState) {
 }
 
 export function buildSubmitterDescription(form: GroupFormState) {
-  const submitterLabel = form.submitterRole === "manager" ? "Topluluk Yöneticisiyim" : "Topluluk Üyesiyim";
-  return `[Başvuru tipi: ${submitterLabel}] ${form.description}`.trim();
+  return form.description.trim();
 }

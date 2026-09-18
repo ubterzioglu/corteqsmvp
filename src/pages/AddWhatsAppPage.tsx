@@ -20,7 +20,6 @@ import {
   type JoinFormState,
 } from "@/lib/whatsapp-landing-form";
 import { placeholderLandings } from "@/lib/whatsapp-landing-placeholders";
-import { waPlaceholderImage } from "@/lib/whatsapp-landing-presentation";
 import {
   buildLandingDescription,
   canCurrentUserEditLanding,
@@ -29,10 +28,7 @@ import {
   getLanding,
   listLandings,
   submitLanding,
-  uploadWhatsAppLandingHeroImage,
   type LandingCategory,
-  type LandingLanguage,
-  type LandingOrigin,
   type WhatsAppLanding,
 } from "@/lib/whatsapp-landings";
 
@@ -51,9 +47,7 @@ export default function AddWhatsAppPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState<LandingCategory | "">("");
   const [filterCity, setFilterCity] = useState("");
-  const [filterApproval, setFilterApproval] = useState<"member" | "admin" | "">("");
-  const [filterOrigin, setFilterOrigin] = useState<LandingOrigin | "">("");
-  const [filterLanguage, setFilterLanguage] = useState<LandingLanguage | "">("");
+  const [filterApproval, setFilterApproval] = useState<"admin" | "">("");
   const [joinDialogOpen, setJoinDialogOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [groupFormOpen, setGroupFormOpen] = useState(false);
@@ -63,7 +57,6 @@ export default function AddWhatsAppPage() {
   const [canEditSelectedLanding, setCanEditSelectedLanding] = useState(false);
   const [groupForm, setGroupForm] = useState<GroupFormState>(initialGroupForm);
   const [joinForm, setJoinForm] = useState<JoinFormState>(initialJoinForm);
-  const [heroImageFile, setHeroImageFile] = useState<File | null>(null);
 
   useEffect(() => {
     document.dispatchEvent(new Event("render-complete"));
@@ -175,13 +168,10 @@ export default function AddWhatsAppPage() {
       if (filterCategory && landing.category !== filterCategory) return false;
       if (filterCity && landing.city !== filterCity) return false;
       if (filterApproval === "admin" && !landing.adminApproved) return false;
-      if (filterApproval === "member" && !landing.memberApproved) return false;
-      if (filterOrigin && landing.origin !== filterOrigin) return false;
-      if (filterLanguage && landing.language !== filterLanguage) return false;
 
       return true;
     });
-  }, [landings, searchQuery, filterCategory, filterCity, filterApproval, filterOrigin, filterLanguage]);
+  }, [landings, searchQuery, filterCategory, filterCity, filterApproval]);
 
   const uniqueCities = useMemo(() => [...new Set(landings.map((l) => l.city).filter(Boolean))].sort(), [landings]);
 
@@ -195,7 +185,6 @@ export default function AddWhatsAppPage() {
 
   const resetGroupForm = () => {
     setGroupForm(initialGroupForm);
-    setHeroImageFile(null);
   };
 
   const startGoogleAuthForGroupForm = async () => {
@@ -243,19 +232,19 @@ export default function AddWhatsAppPage() {
   };
 
   const handleGroupSubmit = async () => {
-    if (!groupForm.platform.trim() || !groupForm.groupName.trim() || !groupForm.country.trim() || !groupForm.whatsappLink.trim()) {
+    if (!groupForm.groupName.trim() || !groupForm.whatsappLink.trim() || !groupForm.country.trim() || !groupForm.city.trim()) {
       toast({
         title: "Eksik alan",
-        description: "Platform, grup adı, ülke ve topluluk linki zorunludur.",
+        description: "Grup adı, WhatsApp linki, ülke ve şehir zorunludur.",
         variant: "destructive",
       });
       return;
     }
 
-    if (groupForm.submitterRole === "manager" && !groupForm.adminName.trim()) {
+    if (!groupForm.adminName.trim() || !groupForm.adminEmail.trim()) {
       toast({
         title: "Yönetici bilgisi eksik",
-        description: "Topluluk yöneticisi adı soyad alanını doldurun.",
+        description: "Ad soyad ve e-posta zorunludur.",
         variant: "destructive",
       });
       return;
@@ -265,15 +254,10 @@ export default function AddWhatsAppPage() {
 
     setSubmittingGroup(true);
     try {
-      let heroImageUrl: string | undefined;
-      if (groupForm.submitterRole === "manager" && heroImageFile) {
-        heroImageUrl = await uploadWhatsAppLandingHeroImage(heroImageFile);
-      }
-
       const adminContact = buildAdminContact(groupForm);
       const description = buildLandingDescription({
         description: buildSubmitterDescription(groupForm),
-        platform: groupForm.platform,
+        platform: "WhatsApp",
         memberApproved: true,
         adminApproved: false,
         editorReviewPending: false,
@@ -281,27 +265,19 @@ export default function AddWhatsAppPage() {
 
       await submitLanding({
         groupName: groupForm.groupName,
-        category: groupForm.category || "diger",
+        category: "diger",
         country: groupForm.country,
-        city: "Genel",
-        mode: groupForm.submitterRole === "manager" ? "visual" : "text",
-        heroImage: groupForm.submitterRole === "manager" ? heroImageUrl ?? waPlaceholderImage : undefined,
-        callToActionText: groupForm.callToActionText || groupForm.description,
-        conditions: groupForm.conditions,
+        city: groupForm.city,
+        mode: "text",
         whatsappLink: groupForm.whatsappLink,
         adminName: groupForm.adminName,
         adminContact,
         description,
-        memberCount: groupForm.memberCount ? parseInt(groupForm.memberCount, 10) : undefined,
-        language: groupForm.language || undefined,
-        origin: groupForm.origin || undefined,
       });
 
       toast({
-        title: "Başvurun alındı",
-        description: groupForm.submitterRole === "manager"
-          ? "Landing sayfan admin onayından sonra /addcom altında görünecek."
-          : "Grubun onay sonrası listede yayınlanacak.",
+        title: "Grubunuz alındı",
+        description: "Admin onayından sonra WhatsApp Grupları listesinde yayınlanacak.",
       });
 
       resetGroupForm();
@@ -322,24 +298,6 @@ export default function AddWhatsAppPage() {
       toast({
         title: "Kayıt bulunamadı",
         description: "Bu grup için aktif katılım kaydı bulunamadı.",
-      });
-      return;
-    }
-
-    if (groupForm.submitterRole === "manager" && !groupForm.adminEmail.trim()) {
-      toast({
-        title: "Yönetici bilgisi eksik",
-        description: "Topluluk yöneticisi mail adresini doldurun.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (groupForm.submitterRole === "manager" && !groupForm.adminPhone.trim()) {
-      toast({
-        title: "Yönetici bilgisi eksik",
-        description: "Topluluk yöneticisi telefon alanını doldurun.",
-        variant: "destructive",
       });
       return;
     }
@@ -435,8 +393,8 @@ export default function AddWhatsAppPage() {
           onOpenChange={setGroupFormOpen}
           form={groupForm}
           onFieldChange={updateGroupForm}
-          heroImageFile={heroImageFile}
-          onHeroImageFileChange={setHeroImageFile}
+          heroImageFile={null}
+          onHeroImageFileChange={() => undefined}
           oauthSubmitting={oauthSubmitting}
           submitting={submittingGroup}
           onStartGoogleAuth={() => void startGoogleAuthForGroupForm()}
@@ -454,15 +412,11 @@ export default function AddWhatsAppPage() {
             onCityChange={setFilterCity}
             approval={filterApproval}
             onApprovalChange={setFilterApproval}
-            origin={filterOrigin}
-            onOriginChange={setFilterOrigin}
-            language={filterLanguage}
-            onLanguageChange={setFilterLanguage}
           />
 
           <div className="mt-5">
             <div>
-              <h2 className="text-3xl font-bold text-slate-900">Katılabileceğin Topluluklar</h2>
+              <h2 className="text-3xl font-bold text-slate-900">WhatsApp Grupları</h2>
             </div>
           </div>
 

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Check, ExternalLink, Pencil, Share2, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Check, MessageCircle, Pencil, Share2, ShieldCheck } from "lucide-react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
@@ -125,10 +125,10 @@ export function LandingDetailView({
                   </Button>
                 ) : null}
 
-                <Button size="lg" asChild className="w-full gap-2 bg-emerald-600 text-white hover:bg-emerald-700">
+                <Button size="lg" asChild className="w-full gap-2 bg-[#25D366] text-white hover:bg-[#1fb855]">
                   <a href={landing.whatsappLink} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="h-5 w-5" />
-                    Platforma git!
+                    <MessageCircle className="h-5 w-5" />
+                    WhatsApp Grubuna Katıl
                   </a>
                 </Button>
 
