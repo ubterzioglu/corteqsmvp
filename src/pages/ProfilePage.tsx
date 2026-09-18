@@ -1,17 +1,26 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
+  Award,
   BookOpen,
   Briefcase,
   FileText,
   Globe2,
   HelpCircle,
+  Home,
   ImagePlus,
+  KeyRound,
   Linkedin,
+  Link2,
   MapPin,
   Plane,
+  Share2,
+  Sparkles,
+  Store,
   Trash2,
+  User,
   UserCheck,
+  Users,
 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
@@ -82,6 +91,8 @@ import {
 import CaddeInterestsCard from "@/components/cadde/CaddeInterestsCard";
 import CaddeMyContentCard from "@/components/cadde/CaddeMyContentCard";
 import CaddeTanitimPanel from "@/components/cadde/CaddeTanitimPanel";
+import ProfileSidebarLayout from "@/components/profile/ProfileSidebarLayout";
+import type { SidebarMenuItem } from "@/components/profile/ProfileSidebarLayout";
 import { trUpper } from "@/lib/text-normalization";
 
 const ProfilePage = () => {
@@ -771,25 +782,97 @@ const ProfilePage = () => {
     );
   }
 
+  const sidebarMenuItems: SidebarMenuItem[] = [
+    {
+      id: "overview",
+      label: "Profil Özeti",
+      icon: <Home className="h-4 w-4" />,
+      content: (
+        <div className="space-y-4">
+          {legacyHeroCard}
+          {legacySummaryCard}
+        </div>
+      ),
+    },
+    {
+      id: "fields",
+      label: "Profil Bilgileri",
+      icon: <User className="h-4 w-4" />,
+      content: profileFieldsCard,
+    },
+    ...(badgesCard
+      ? [
+          {
+            id: "badges",
+            label: "Rozetler",
+            icon: <Award className="h-4 w-4" />,
+            content: badgesCard,
+          } as SidebarMenuItem,
+        ]
+      : []),
+    {
+      id: "cadde",
+      label: "Çarşı & İlgi Alanları",
+      icon: <Store className="h-4 w-4" />,
+      content: caddeCards,
+    },
+    {
+      id: "social",
+      label: "Sosyal Medya",
+      icon: <Share2 className="h-4 w-4" />,
+      content: socialMediaCard,
+    },
+    {
+      id: "links",
+      label: "Bağlantılar",
+      icon: <Link2 className="h-4 w-4" />,
+      content: linkCardsGrid,
+    },
+    {
+      id: "documents",
+      label: "Belgeler",
+      icon: <BookOpen className="h-4 w-4" />,
+      content: documentsGrid,
+    },
+    {
+      id: "role",
+      label: "Rol Detayları",
+      icon: <Briefcase className="h-4 w-4" />,
+      content: roleSpecificCard,
+    },
+    {
+      id: "access",
+      label: "Erişim & Talepler",
+      icon: <KeyRound className="h-4 w-4" />,
+      content: accessCard,
+    },
+    ...(contributorResourcesCard
+      ? [
+          {
+            id: "contributor",
+            label: "Contributor Kaynakları",
+            icon: <Users className="h-4 w-4" />,
+            content: contributorResourcesCard,
+          } as SidebarMenuItem,
+        ]
+      : []),
+    {
+      id: "help",
+      label: "Yardım",
+      icon: <HelpCircle className="h-4 w-4" />,
+      content: helpCard,
+    },
+  ];
+
   return (
-    <div className={`relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 ${isIndividualProfile ? "pb-16" : ""}`}>
+    <div className="relative">
       {hiddenFileInputs}
-      {legacyHeroCard}
-      {legacySummaryCard}
-      <div className="space-y-4">
-        {profileFieldsCard}
-        {badgesCard}
-        {caddeCards}
-        {socialMediaCard}
-        {linkCardsGrid}
-        {documentsGrid}
-        {roleSpecificCard}
-        {contributorResourcesCard}
-      </div>
-      {accessCard}
-      {helpCard}
-  </div>
-);
+      <ProfileSidebarLayout
+        menuItems={sidebarMenuItems}
+        defaultActiveId="overview"
+      />
+    </div>
+  );
 };
 
 export default ProfilePage;
