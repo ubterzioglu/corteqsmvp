@@ -76,6 +76,9 @@ const IndependentProfilePage = lazy(() => import("@/pages/IndependentProfilePage
 const VipInvitationPage = lazy(() => import("@/pages/VipInvitationPage"));
 const NotificationPreferencesPage = lazy(() => import("@/pages/NotificationPreferencesPage"));
 const ContributorResourcesPage = lazy(() => import("@/pages/ContributorResourcesPage"));
+const EventsPage = lazy(() => import("@/pages/EventsPage"));
+const EventDetailPage = lazy(() => import("@/pages/EventDetailPage"));
+const CreateEventPage = lazy(() => import("@/pages/CreateEventPage"));
 
 // Admin route ağacı (lazy importlar dahil) — bkz. src/pages/admin/routes.tsx
 import { adminRoutes } from "@/pages/admin/routes";
@@ -190,6 +193,9 @@ const App = () => (
                       </RequireAuth>
                     }
                   />
+                  <Route path="/events" element={<EventsPage />} />
+                  <Route path="/events/create" element={<RequireAuth><CreateEventPage /></RequireAuth>} />
+                  <Route path="/events/:id" element={<EventDetailPage />} />
                   <Route path="/associations" element={<Associations />} />
                   <Route path="/association/:id" element={<AssociationDetail />} />
                   <Route path="/kurulus/:slug" element={<IndependentProfilePage />} />

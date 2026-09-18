@@ -107,6 +107,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/radar/sources",
   "/admin/radar/runs",
   "/admin/radar/rehber",
+  "/admin/events",
 ];
 
 /**

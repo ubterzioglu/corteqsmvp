@@ -79,6 +79,7 @@ const AdminCatalogPage = lazy(() => import("@/pages/admin/AdminCatalogPage"));
 const AdminDatabaseTablesPage = lazy(() => import("@/pages/admin/AdminDatabaseTablesPage"));
 const AdminBulkImportPage = lazy(() => import("@/pages/admin/AdminBulkImportPage"));
 const AdminLinksPage = lazy(() => import("@/pages/admin/AdminLinksPage"));
+const AdminEventsPage = lazy(() => import("@/pages/admin/AdminEventsPage"));
 
 // /admin alt ağacı — App.tsx'teki <Routes> içine {adminRoutes} olarak eklenir.
 export const adminRoutes = (
@@ -140,6 +141,7 @@ export const adminRoutes = (
     <Route path="tools" element={<AdminToolRegistryPage />} />
     <Route path="agent-analytics" element={<AdminAgentAnalyticsPage />} />
     <Route path="links" element={<AdminLinksPage />} />
+    <Route path="events" element={<AdminEventsPage />} />
     <Route path="guide" element={<AdminGuidePage />} />
     <Route path="workspace" element={<AdminWorkspaceHomePage />} />
     <Route path="workspace/command-center" element={<AdminCommandCenterPage />} />
