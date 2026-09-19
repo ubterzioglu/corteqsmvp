@@ -37,6 +37,9 @@ const LandingTrialPage = () => {
           <ManifestoSection />
         </Reveal>
         <Reveal delay={0.05}>
+          <DiasporaMarqueeSection />
+        </Reveal>
+        <Reveal delay={0.05}>
           <DiasporaSearchSection />
         </Reveal>
         <Reveal delay={0.05}>
@@ -44,9 +47,6 @@ const LandingTrialPage = () => {
         </Reveal>
         <Reveal delay={0.05}>
           <ProofBandSection />
-        </Reveal>
-        <Reveal delay={0.05}>
-          <DiasporaMarqueeSection />
         </Reveal>
         <Reveal delay={0.05}>
           <DiasporaStoriesSection />
