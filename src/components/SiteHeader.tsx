@@ -124,7 +124,7 @@ export default function SiteHeader() {
                 to="/addcom"
                 className={NAV_ACTION_CLASS}
               >
-                WhatsApp Grupları
+                Dijital Gruplar
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               {/* Geri Bildirim — geldiği sayfa state.from ile /feedback'e taşınır (page_path). */}
@@ -172,7 +172,7 @@ export default function SiteHeader() {
                 to="/addcom"
                 className={NAV_ACTION_CLASS}
               >
-                WhatsApp Grupları
+                Dijital Gruplar
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link

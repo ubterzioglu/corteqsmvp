@@ -1,13 +1,18 @@
 import {
   Briefcase,
+  ExternalLink,
   Globe,
   GraduationCap,
   HandHeart,
   Heart,
+  Link2,
+  MessageCircle,
+  Send,
   Sparkles,
   Stethoscope,
   TrendingUp,
   Users,
+  type LucideIcon,
 } from "lucide-react";
 
 import { normalizeLandingCategory, type LandingCategory, type WhatsAppLanding } from "@/lib/whatsapp-landings";
@@ -138,4 +143,55 @@ export function buildLandingCardSummary(landing: WhatsAppLanding) {
     ) ||
     "Topluluk detaylarını görmek için karta tıkla."
   );
+}
+
+export function detectPlatformFromUrl(url: string | undefined | null): string {
+  if (!url) return "";
+  const lower = url.toLowerCase();
+  if (lower.includes("chat.whatsapp.com") || lower.includes("wa.me")) return "WhatsApp";
+  if (lower.includes("t.me") || lower.includes("telegram")) return "Telegram";
+  if (lower.includes("discord.gg") || lower.includes("discord.com") || lower.includes("discord.app")) return "Discord";
+  if (lower.includes("facebook.com") || lower.includes("fb.com")) return "Facebook";
+  if (lower.includes("instagram.com")) return "Instagram";
+  if (lower.includes("linkedin.com")) return "LinkedIn";
+  if (lower.includes("x.com") || lower.includes("twitter.com")) return "X";
+  if (lower.includes("tiktok.com")) return "TikTok";
+  if (lower.includes("youtube.com") || lower.includes("youtu.be")) return "YouTube";
+  if (lower.includes("reddit.com")) return "Reddit";
+  return "";
+}
+
+export type PlatformCtaMeta = {
+  label: string;
+  bgClass: string;
+  hoverClass: string;
+  icon: LucideIcon;
+};
+
+export function getPlatformCtaMeta(platform: string | undefined, url: string): PlatformCtaMeta {
+  const effective = platform?.trim() || detectPlatformFromUrl(url);
+  switch (effective) {
+    case "WhatsApp":
+      return { label: "WhatsApp Grubuna Katıl", bgClass: "bg-[#25D366]", hoverClass: "hover:bg-[#1fb855]", icon: MessageCircle };
+    case "Telegram":
+      return { label: "Telegram Kanalına Katıl", bgClass: "bg-[#229ED9]", hoverClass: "hover:bg-[#1b8ac0]", icon: Send };
+    case "Discord":
+      return { label: "Discord Sunucusuna Katıl", bgClass: "bg-[#5865F2]", hoverClass: "hover:bg-[#4752C4]", icon: MessageCircle };
+    case "Facebook":
+      return { label: "Facebook Grubuna Katıl", bgClass: "bg-[#1877F2]", hoverClass: "hover:bg-[#1565CC]", icon: Users };
+    case "Instagram":
+      return { label: "Instagram'da Takip Et", bgClass: "bg-[#E1306C]", hoverClass: "hover:bg-[#c9265d]", icon: Heart };
+    case "LinkedIn":
+      return { label: "LinkedIn Grubuna Katıl", bgClass: "bg-[#0A66C2]", hoverClass: "hover:bg-[#084f9e]", icon: Briefcase };
+    case "X":
+      return { label: "X'te Takip Et", bgClass: "bg-slate-900", hoverClass: "hover:bg-slate-800", icon: ExternalLink };
+    case "TikTok":
+      return { label: "TikTok'ta Takip Et", bgClass: "bg-slate-900", hoverClass: "hover:bg-slate-800", icon: ExternalLink };
+    case "YouTube":
+      return { label: "YouTube'a Abone Ol", bgClass: "bg-[#FF0000]", hoverClass: "hover:bg-[#cc0000]", icon: ExternalLink };
+    case "Reddit":
+      return { label: "Reddit'te Katıl", bgClass: "bg-[#FF5700]", hoverClass: "hover:bg-[#e04d00]", icon: Users };
+    default:
+      return { label: "Gruba Katıl", bgClass: "bg-emerald-600", hoverClass: "hover:bg-emerald-700", icon: Link2 };
+  }
 }

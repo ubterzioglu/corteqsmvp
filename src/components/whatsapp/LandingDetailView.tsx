@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Check, MessageCircle, Pencil, Share2, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Check, Pencil, Share2, ShieldCheck } from "lucide-react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { LandingDetailMetaCards } from "@/components/whatsapp/LandingDetailMetaC
 import { PlatformLogo } from "@/components/whatsapp/PlatformLogo";
 import {
   getLandingHeroImage,
+  getPlatformCtaMeta,
   stripCommunityPrefix,
   waPlaceholderImage,
 } from "@/lib/whatsapp-landing-presentation";
@@ -38,6 +39,12 @@ export function LandingDetailView({
         .filter(Boolean) ?? [],
     [landing],
   );
+
+  const hasLink = Boolean(landing?.whatsappLink?.trim());
+  const ctaMeta = useMemo(() => {
+    if (!hasLink || !landing) return null;
+    return getPlatformCtaMeta(landing.platform, landing.whatsappLink);
+  }, [hasLink, landing]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -125,12 +132,18 @@ export function LandingDetailView({
                   </Button>
                 ) : null}
 
-                <Button size="lg" asChild className="w-full gap-2 bg-[#25D366] text-white hover:bg-[#1fb855]">
-                  <a href={landing.whatsappLink} target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="h-5 w-5" />
-                    WhatsApp Grubuna Katıl
-                  </a>
-                </Button>
+                {hasLink && ctaMeta ? (
+                  <Button
+                    size="lg"
+                    asChild
+                    className={`w-full gap-2 ${ctaMeta.bgClass} text-white ${ctaMeta.hoverClass}`}
+                  >
+                    <a href={landing.whatsappLink} target="_blank" rel="noopener noreferrer">
+                      <ctaMeta.icon className="h-5 w-5" />
+                      {ctaMeta.label}
+                    </a>
+                  </Button>
+                ) : null}
 
                 <Button size="lg" className="w-full gap-2 bg-orange-500 text-white hover:bg-orange-600" onClick={onShare}>
                   {copied ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
