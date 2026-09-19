@@ -114,6 +114,13 @@ export default function SiteHeader() {
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link
+                to="/radar"
+                className={NAV_ACTION_CLASS}
+              >
+                Radar
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              <Link
                 to="/addcom"
                 className={NAV_ACTION_CLASS}
               >
@@ -152,6 +159,13 @@ export default function SiteHeader() {
                 className={`inline-flex items-center gap-1 outline-none ${NAV_ACTION_CLASS}`}
               >
                 Araçlar
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              <Link
+                to="/radar"
+                className={NAV_ACTION_CLASS}
+              >
+                Radar
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link

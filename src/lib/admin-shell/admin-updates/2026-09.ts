@@ -5,6 +5,41 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260919-etkinlik-ve-radar-sistemleri",
+    date: "19 Eylül 2026",
+    title:
+      "Etkinlik modülü tamamlandı, Radar sistemi yeniden aktif edildi ve çoklu haber kaynağı rotasyonu eklendi",
+    items: [
+      "ETKİNLİK MODÜLÜ TAMAMEN YENİDEN YAZILDI: 6 Eylül'de silinen etkinlik sayfaları ve eksik altyapı tamamen yeniden oluşturuldu. Veritabanı şeması (events tablosu) zaten vardı ama frontend'i hiç yoktu. Şimdi her şey çalışır durumda.",
+      "YENİ ÖZELLİKLER — ETKİNLİKLER: (1) /events sayfası — tüm yayınlanmış etkinlikleri listeler, tür (fiziksel/dijital/hibrit) ve kategori filtreleri var, arama yapabilirsiniz. (2) /events/:id sayfası — etkinlik detayı, tarih/saat/konum/online bağlantı/fiyat/kayıt linki gösterir, sosyal medya paylaşım butonları var (X, Facebook, LinkedIn, WhatsApp, bağlantı kopyala). (3) /events/create sayfası — giriş yapmış kullanıcılar etkinlik oluşturabilir, fiziksel/dijital/hibrit seçimine göre alanlar dinamik görünür, admin onayı gerekir (status: pending → published). (4) /admin/events sayfası — tüm etkinlikleri listeler, onaylama/yayından kaldırma/öne çıkarma/silme işlemleri yapılır, durum ve tür filtreleri var.",
+      "ETKİNLİK İŞ AKIŞI: Kullanıcı etkinlik oluşturur → status 'pending' olur → admin /admin/events'den onaylar → status 'published' olur → /events sayfasında görünür. Feature flag'ler zaten tanımlıydı (individual.events ve events.create), şimdi gerçekten kullanılıyor.",
+      "RADAR SİSTEMİ YENİDEN AKTİF EDİLDİ: Radar haber tarama sistemi zaten vardı ama iki sorunu vardı: (1) Menüde Radar linki yoktu, kullanıcılar sayfaya ulaşamıyordu. (2) Ana sayfada Radar bölümü yoktu. İkisi de düzeltildi.",
+      "RADAR İÇİN YAPILAN DEĞİŞİKLİKLER: (1) SiteHeader'a 'Radar' menü linki eklendi — hem girişli hem misafir kullanıcılar görebilir, Araçlar ile WhatsApp Grupları arasında. (2) Ana sayfaya (LandingTrialPage) DiasporaMarqueeSection eklendi — ProofBandSection'dan sonra, DiasporaStoriesSection'dan önce, '8,8 milyon Türk' bandının altında Radar haber akışı görünüyor.",
+      "ÇOKLU HABER KAYNAĞI ROTASYON SİSTEMİ: Radar artık sadece ücretsiz kaynakları (GDELT, RSS, Atom) değil, ücretli haber API'lerini de destekliyor. Dört yeni adapter eklendi: NewsAPI.org, GNews.io, Bing News Search, TheNewsAPI.com. Her biri için ayrı adapter dosyası var.",
+      "ROTASYON STRATEJİLERİ: Dört farklı strateji var: (1) round-robin — her saat farklı provider kullanır, ücretsiz ve ücretli dönüşümlü çalışır (varsayılan). (2) fallback — tüm provider'ları sırayla dener, başarısız olursa sonrakine geçer. (3) scheduled — gün bazlı provider seçimi, örneğin Pazartesi NewsAPI, Çarşamba GNews, Cuma GDELT. (4) weighted — ağırlıklı rastgele seçim, örneğin %70 ücretsiz %30 ücretli.",
+      "YAPILANDIRMA: .env.local'a yeni değişkenler eklendi: RADAR_PROVIDER_ROTATION (strateji seçimi), RADAR_PROVIDERS_ENABLED (aktif provider'lar), RADAR_PROVIDER_SCHEDULE (gün bazlı program), RADAR_PROVIDER_WEIGHTS (ağırlıklar). Ücretli API anahtarları (NEWSAPI_KEY, GNEWS_KEY, BING_NEWS_KEY, THENEWSAPI_KEY) eklendiğinde o provider otomatik aktif olur, eklenmezse sadece ücretsiz provider'lar çalışır.",
+      "VERİTABANI GÖÇÜ: 20260919_add_radar_paid_providers.sql migration'ı eklendi — ücretli sağlayıcılar için 10 yeni kaynak kaydı (is_enabled: false, başlangıçta devre dışı, admin panelden aktif edilebilir).",
+      "DOKÜMANTASYON: docs/modules/radar/radar-provider-rotation.md dosyası eklendi — tüm rotasyon stratejileri, yapılandırma seçenekleri, örnek kullanım senaryoları, maliyet tahminleri ve SSS içeriyor.",
+      "DÜRÜST NOT — HENÜZ CANLIDA DEĞİL: Bu değişikliklerin hiçbiri henüz canlıya çıkmadı. Commit'ler main dalında ama deploy edilmedi. Yayından sonra özellikle etkinlik oluşturma formu, etkinlik detay sayfası, admin etkinlik yönetimi ve ana sayfadaki Radar bölümü gözle kontrol edilmeli.",
+      "KONTROLLER: Tip denetimi 0 hata, kod denetimi 0 hata, 9 dosya değiştirildi (6 yeni dosya eklendi), 1303 satır eklendi. Tüm değişiklikler main dalında ve gönderildi.",
+    ],
+  },
+  {
+    id: "20260918-whatsapp-gruplari-ve-admin-duzeltmeleri",
+    date: "18 Eylül 2026",
+    title:
+      "WhatsApp Grupları özelliği geri getirildi, profil menüsü sol kenara taşındı, admin panelinde akordeon düzeltmeleri",
+    items: [
+      "WHATSAPP GRUPLARI ÖZELLİĞİ GERİ GETİRİLDİ: Daha önce kaldırılan WhatsApp topluluk ekleme sayfası ve yönetimi yeniden aktif edildi. Kullanıcılar /addcom sayfasından WhatsApp grubu ekleyebilir, admin onayından sonra görünür olur.",
+      "PROFİL MENÜSÜ SOL KENARA TAŞINDI: Profil sayfasındaki sabit menü sağdan sola taşındı. Daha ergonomik ve modern bir görünüm.",
+      "ADMIN PANELİNDE AKORDEON DÜZELTMESİ: Ana güncelleme kartları akordeon yapısında, içindeki alt akordeonlarla eşzamanlı açılıp kapanabiliyordu. Multiple type ayarıyla bu düzeltildi, artık iç içe akordeonlar düzgün çalışıyor.",
+      "GÜNCELLEME KAYITLARI AKORDEON KART OLARAK GÖSTERİLİYOR: Admin panelindeki güncelleme kayıtları artık akordeon kart formatında, başlık tıklayınca detaylar açılıyor. Daha temiz ve okunabilir.",
+      "PANELDEKİ MARKDOWN İŞARETLERİ TEMİZLENDİ: Güncelleme kayıtlarında yıldız (*) olarak görünen markdown işaretleri kaldırıldı, düz metin olarak gösteriliyor.",
+      "LINT DÜZELTMESİ: .kilo worktree dizini ESLint taramasından çıkarıldı, gereksiz uyarılar engellendi.",
+      "KONTROLLER: 7 commit main dalında ve gönderildi, tip ve kod denetimi temiz.",
+    ],
+  },
+  {
     id: "20260914-13-eylul-toplu-ozet-ve-kapanan-todolar",
     date: "14 Eylül 2026",
     title:

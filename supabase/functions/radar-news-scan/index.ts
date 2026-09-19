@@ -2,9 +2,14 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 import { gdeltAdapter } from "./adapters/gdelt.ts";
 import { rssAdapter } from "./adapters/rss.ts";
 import { atomAdapter } from "./adapters/atom.ts";
+import { newsapiAdapter } from "./adapters/newsapi.ts";
+import { gnewsAdapter } from "./adapters/gnews.ts";
+import { bingNewsAdapter } from "./adapters/bing-news.ts";
+import { thenewsapiAdapter } from "./adapters/thenewsapi.ts";
 import { normalizeItem } from "./lib/normalize-item.ts";
 import { checkDuplicate } from "./lib/dedupe.ts";
 import { acquireScanLock, closeScanRun, openScanRun } from "./lib/scan-lock.ts";
+import { getEnabledProviders, getRotationStrategy } from "./lib/provider-config.ts";
 import type { ScoringKeyword } from "./lib/relevance-score.ts";
 import type { RadarNewsAdapter, RadarNewsSource, ScanResult, ScanSummary } from "./lib/types.ts";
 
@@ -12,6 +17,10 @@ const ADAPTERS: Record<string, RadarNewsAdapter> = {
   gdelt_doc_v2: gdeltAdapter,
   rss: rssAdapter,
   atom: atomAdapter,
+  newsapi: newsapiAdapter,
+  gnews: gnewsAdapter,
+  bing_news: bingNewsAdapter,
+  thenewsapi: thenewsapiAdapter,
 };
 
 // Bu eşiğin ALTINDA kalan haberler doğrudan "archived" statüsüyle kaydedilir
@@ -140,6 +149,99 @@ Deno.serve(async (req: Request): Promise<Response> => {
     return json({ error: sourcesError.message }, 500);
   }
 
+  // ── Provider rotation: hangi sağlayıcıları kullanacağımızı seç ──
+  const enabledProviders = getEnabledProviders();
+  const rotationStrategy = getRotationStrategy();
+  
+  // Kaynakları provider'a göre grupla (adapter_key üzerinden)
+  const sourcesByProvider = new Map<string, RadarNewsSource[]>();
+  for (const source of (sources ?? []) as RadarNewsSource[]) {
+    const provider = enabledProviders.find((p) => p.adapterKey === source.adapter_key);
+    if (provider) {
+      const existing = sourcesByProvider.get(provider.key) ?? [];
+      existing.push(source);
+      sourcesByProvider.set(provider.key, existing);
+    }
+  }
+
+  // Rotasyon stratejisine göre bu taramada kullanılacak provider'ları seç
+  let selectedSources: RadarNewsSource[] = [];
+  
+  if (rotationStrategy === "fallback") {
+    // Fallback: tüm enabled provider'ları kullan, sırayla dene
+    for (const provider of enabledProviders) {
+      const providerSources = sourcesByProvider.get(provider.key) ?? [];
+      selectedSources.push(...providerSources);
+    }
+  } else if (rotationStrategy === "round-robin") {
+    // Round-robin: scanIndex'e göre tek provider seç
+    const scanIndex = Math.floor(Date.now() / 3_600_000); // Her saat değişir
+    const selectedProvider = enabledProviders[scanIndex % enabledProviders.length];
+    if (selectedProvider) {
+      selectedSources = sourcesByProvider.get(selectedProvider.key) ?? [];
+    }
+  } else if (rotationStrategy === "scheduled") {
+    // Scheduled: gün bazlı provider seçimi
+    const dayOfWeek = new Date().getDay();
+    const dayNames = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+    const scheduleRaw = Deno.env.get("RADAR_PROVIDER_SCHEDULE");
+    
+    if (scheduleRaw) {
+      try {
+        const schedule = JSON.parse(scheduleRaw) as Record<string, string>;
+        const providerKey = schedule[dayNames[dayOfWeek]];
+        if (providerKey) {
+          selectedSources = sourcesByProvider.get(providerKey) ?? [];
+        }
+      } catch { /* fallback to all */ }
+    }
+    
+    // Schedule yoksa veya parse hatasıysa tüm provider'ları kullan
+    if (selectedSources.length === 0) {
+      for (const provider of enabledProviders) {
+        const providerSources = sourcesByProvider.get(provider.key) ?? [];
+        selectedSources.push(...providerSources);
+      }
+    }
+  } else if (rotationStrategy === "weighted") {
+    // Weighted: ağırlıklı rastgele seçim
+    const weightsRaw = Deno.env.get("RADAR_PROVIDER_WEIGHTS");
+    if (weightsRaw) {
+      try {
+        const weights = JSON.parse(weightsRaw) as Record<string, number>;
+        const totalWeight = enabledProviders.reduce((sum, p) => sum + (weights[p.key] ?? 1), 0);
+        let random = Math.random() * totalWeight;
+        
+        for (const provider of enabledProviders) {
+          random -= weights[provider.key] ?? 1;
+          if (random <= 0) {
+            selectedSources = sourcesByProvider.get(provider.key) ?? [];
+            break;
+          }
+        }
+      } catch { /* fallback to all */ }
+    }
+    
+    // Weights yoksa veya parse hatasıysa tüm provider'ları kullan
+    if (selectedSources.length === 0) {
+      for (const provider of enabledProviders) {
+        const providerSources = sourcesByProvider.get(provider.key) ?? [];
+        selectedSources.push(...providerSources);
+      }
+    }
+  } else {
+    // Default: tüm enabled provider'ları kullan
+    for (const provider of enabledProviders) {
+      const providerSources = sourcesByProvider.get(provider.key) ?? [];
+      selectedSources.push(...providerSources);
+    }
+  }
+
+  // Eğer provider rotation hiç kaynak döndürmediyse, tüm DB kaynaklarını kullan (geriye uyumluluk)
+  if (selectedSources.length === 0) {
+    selectedSources = (sources ?? []) as RadarNewsSource[];
+  }
+
   // ── Skorlama keyword'lerini yükle (admin DB'den yönetir) ──
   // Tablo boşsa boş dizi döner; scoreRelevance hardcode fallback'e geçer.
   const { data: keywordRows } = await supabase
@@ -162,7 +264,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   let failedSources = 0;
 
   // ── Her kaynak için tarama ──
-  const sourceList = (sources ?? []) as RadarNewsSource[];
+  const sourceList = selectedSources;
   for (let sourceIndex = 0; sourceIndex < sourceList.length; sourceIndex++) {
     const source = sourceList[sourceIndex];
     // Kaynaklar arası gecikme — aynı sağlayıcı (ör. GDELT) paylaşımlı
@@ -293,7 +395,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   }
 
   const durationMs = Date.now() - startMs;
-  const finalStatus = failedSources === (sources?.length ?? 0)
+  const finalStatus = failedSources === sourceList.length
     ? "failed"
     : failedSources > 0
     ? "partial"
@@ -301,7 +403,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
   if (!dryRun) {
     await closeScanRun(supabase, runId, finalStatus, {
-      source_count: sources?.length ?? 0,
+      source_count: sourceList.length,
       fetched_count: totalFetched,
       inserted_count: totalInserted,
       duplicate_count: totalDuplicate,
@@ -314,7 +416,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     runId,
     triggerType,
     status: finalStatus,
-    sourceCount: sources?.length ?? 0,
+    sourceCount: sourceList.length,
     fetchedCount: totalFetched,
     insertedCount: totalInserted,
     duplicateCount: totalDuplicate,

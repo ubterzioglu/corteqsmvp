@@ -13,6 +13,7 @@ import ManifestoSection from "@/components/home-trial/ManifestoSection";
 import DiasporaSearchSection from "@/components/home-trial/DiasporaSearchSection";
 import EcosystemRailSection from "@/components/home-trial/EcosystemRailSection";
 import ProofBandSection from "@/components/home-trial/ProofBandSection";
+import DiasporaMarqueeSection from "@/components/DiasporaMarqueeSection";
 import DiasporaStoriesSection from "@/components/home-trial/DiasporaStoriesSection";
 import FinalCtaSection from "@/components/home-trial/FinalCtaSection";
 import FAQSection from "@/components/FAQSection";
@@ -43,6 +44,9 @@ const LandingTrialPage = () => {
         </Reveal>
         <Reveal delay={0.05}>
           <ProofBandSection />
+        </Reveal>
+        <Reveal delay={0.05}>
+          <DiasporaMarqueeSection />
         </Reveal>
         <Reveal delay={0.05}>
           <DiasporaStoriesSection />
