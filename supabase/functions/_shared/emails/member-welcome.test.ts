@@ -93,7 +93,12 @@ describe("buildMemberWelcomeEmail", () => {
   it("görsel, hoş geldin mesajı ve kısa başlangıç yol haritasını birlikte içerir", () => {
     const email = buildMemberWelcomeEmail(BASE);
 
-    expect(email.html).toContain("/sharedx/maillogo.png");
+    // Marka kilidi: amblem GÖRSEL, ad METİN. Adı görsele gömmek, resimleri
+    // engelleyen istemcilerde markayı tamamen görünmez yapardı.
+    expect(email.html).toContain("/newlogo.png");
+    expect(email.html).not.toContain("/sharedx/maillogo.png");
+    expect(email.html).toContain(">CorteQS</span>");
+    expect(email.html).toContain("Global Türk Diaspora Network");
     expect(email.subject).toContain("hoş geldin");
     expect(email.html).toContain("Nereden başlasan?");
     expect(email.html).toContain("Profilini tamamla");

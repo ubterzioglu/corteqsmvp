@@ -169,9 +169,29 @@ export function buildMemberWelcomeEmail(input: MemberWelcomeInput): BuiltEmail {
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="width: 600px; max-width: 100%; background-color: ${CARD_BG}; border: 1px solid ${BORDER}; border-radius: 12px; border-collapse: separate;">
 
         <tr>
-          <td style="background-color: ${BRAND}; border-radius: 12px 12px 0 0; padding: 24px 32px;">
-            <a href="${escapeHtml(siteUrl)}" style="text-decoration: none;">
-              <img src="${escapeHtml(siteUrl)}/sharedx/maillogo.png" width="150" alt="CorteQS" style="display: block; width: 150px; max-width: 60%; height: auto; border: 0;">
+          <td style="background-color: ${BRAND}; border-radius: 12px 12px 0 0; padding: 20px 32px;">
+            <!--
+              Marka kilidi — SiteHeader ile AYNI yapı: beyaz yuvarlak zeminde çok renkli
+              amblem + yanında METİN olarak "CorteQS".
+              NEDEN metin: newlogo.png yalnızca amblemdir, yazısı YOKTUR (yazılı tek
+              sürüm logocorteqsbig.png, o da 2026 öncesi dünya logosudur). Marka adını
+              görsele gömmek yerine HTML metin bırakmak, görselleri varsayılan olarak
+              engelleyen istemcilerde (Outlook, Gmail "resimleri göster" öncesi) markanın
+              yine de okunmasını sağlar.
+              NEDEN tablo: e-postada flex/grid yoktur; hizalama tabloyla kurulur.
+            -->
+            <a href="${escapeHtml(siteUrl)}" style="text-decoration: none; color: #ffffff;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="background-color: #ffffff; border-radius: 50%; width: 48px; height: 48px; text-align: center; vertical-align: middle;">
+                    <img src="${escapeHtml(siteUrl)}/newlogo.png" width="36" height="36" alt="CorteQS" style="display: inline-block; width: 36px; height: 36px; border: 0; vertical-align: middle;">
+                  </td>
+                  <td style="padding-left: 14px; vertical-align: middle;">
+                    <span style="display: block; color: #ffffff; font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; font-size: 22px; line-height: 26px; font-weight: 700; letter-spacing: 0.06em;">CorteQS</span>
+                    <span style="display: block; margin-top: 2px; color: #d7f2ec; font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; font-size: 12px; line-height: 16px; font-weight: 500;">Global Türk Diaspora Network</span>
+                  </td>
+                </tr>
+              </table>
             </a>
           </td>
         </tr>
