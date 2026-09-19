@@ -31,6 +31,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 
 import { buildAdminUpdateEmail } from "../_shared/emails/admin-update-digest.ts";
+import { buildRadarScanDigestEmail } from "../_shared/emails/radar-scan-digest.ts";
 import { escapeHtml } from "../_shared/emails/html.ts";
 import { buildMemberWelcomeEmail } from "../_shared/emails/member-welcome.ts";
 import { buildRelocationToolAbandonmentEmail } from "../_shared/emails/relocation-tool-abandonment.ts";
@@ -63,7 +64,8 @@ type EventType =
   | "member_welcome"
   | "revision_request"
   | "relocation_tool_report"
-  | "relocation_tool_abandonment";
+  | "relocation_tool_abandonment"
+  | "radar_scan_digest";
 
 type OutboxRow = {
   id: string;
@@ -166,7 +168,7 @@ function buildWelcomeEmail(payload: Record<string, unknown>): BuiltEmail {
   });
 }
 
-// admin_update bu fonksiyona GELMEZ — o satırlar aşağıdaki toplu özet yolunda birleşir.
+// admin_update ve radar_scan_digest bu fonksiyona GELMEZ — o satırlar aşağıdaki toplu özet yolunda birleşir.
 function buildEmail(row: OutboxRow): BuiltEmail {
   switch (row.event_type) {
     case "member_welcome":
@@ -373,10 +375,11 @@ Deno.serve(async (request) => {
     let skipped = 0;
     let failed = 0;
 
-    // admin_update satırları TEK özet mailde birleşir (aşağıdaki blok); kalan tipler
-    // satır başına ayrı mail olarak gider.
-    const digestRows = rows.filter((row) => row.event_type === "admin_update");
-    const singleRows = rows.filter((row) => row.event_type !== "admin_update");
+    // admin_update ve radar_scan_digest satırları TEK özet mailde birleşir (aşağıdaki blok);
+    // kalan tipler satır başına ayrı mail olarak gider.
+    const digestEventTypes = new Set(["admin_update", "radar_scan_digest"]);
+    const digestRows = rows.filter((row) => digestEventTypes.has(row.event_type));
+    const singleRows = rows.filter((row) => !digestEventTypes.has(row.event_type));
 
     for (const row of singleRows) {
       try {
@@ -449,15 +452,16 @@ Deno.serve(async (request) => {
     // ── admin_update günlük özeti: claim'deki tüm satırlar tek mail ────────────
     // Alıcı başına yine ayrı gönderim yapılır (adres gizliliği); birleşen şey kayıtlardır.
     // Sayaçlar satır bazlı tutulur ki panel logu ("processed/sent") kuyruk gerçeğini yansıtsın.
-    if (digestRows.length > 0) {
-      const digestIds = digestRows.map((row) => row.id);
+    const adminUpdateRows = digestRows.filter((row) => row.event_type === "admin_update");
+    if (adminUpdateRows.length > 0) {
+      const digestIds = adminUpdateRows.map((row) => row.id);
       try {
         if (!(await isEventEnabled("admin_update"))) {
           await admin
             .from("notification_email_outbox")
             .update({ status: "skipped", last_error: "global_switch_off", sent_at: new Date().toISOString() })
             .in("id", digestIds);
-          skipped += digestRows.length;
+          skipped += adminUpdateRows.length;
         } else {
           const recipients = (await getSubscribers("admin_update")).map((subscriber) => subscriber.email);
           if (recipients.length === 0) {
@@ -465,9 +469,9 @@ Deno.serve(async (request) => {
               .from("notification_email_outbox")
               .update({ status: "skipped", last_error: "no_subscribers", recipient_count: 0, sent_at: new Date().toISOString() })
               .in("id", digestIds);
-            skipped += digestRows.length;
+            skipped += adminUpdateRows.length;
           } else {
-            const { subject, html, text } = buildAdminUpdateEmail(digestRows.map((row) => row.payload));
+            const { subject, html, text } = buildAdminUpdateEmail(adminUpdateRows.map((row) => row.payload));
 
             for (const recipient of recipients) {
               await sendMailViaZohoSmtp(smtpConfig, {
@@ -489,7 +493,7 @@ Deno.serve(async (request) => {
                 sent_at: new Date().toISOString(),
               })
               .in("id", digestIds);
-            sent += digestRows.length;
+            sent += adminUpdateRows.length;
           }
         }
       } catch (digestError: unknown) {
@@ -498,7 +502,7 @@ Deno.serve(async (request) => {
 
         // Toplu gönderim çöktüyse satırlar TEK TEK geri bırakılır: attempts sınırı satır
         // bazlıdır ve bir sonraki claim yeniden birleştirip dener.
-        for (const row of digestRows) {
+        for (const row of adminUpdateRows) {
           await admin
             .from("notification_email_outbox")
             .update({
@@ -507,7 +511,75 @@ Deno.serve(async (request) => {
             })
             .eq("id", row.id);
         }
-        failed += digestRows.length;
+        failed += adminUpdateRows.length;
+      }
+    }
+
+    // ── radar_scan_digest günlük özeti: TÜM adminlere gönderilir ──────────────
+    // Abone listesine bakılmaz — kullanıcı kararı. İstatistikler + top 10 haber.
+    const radarDigestRows = digestRows.filter((row) => row.event_type === "radar_scan_digest");
+    if (radarDigestRows.length > 0) {
+      const radarIds = radarDigestRows.map((row) => row.id);
+      try {
+        const { data: allAdmins, error: adminsError } = await admin
+          .from("profiles")
+          .select("email")
+          .eq("is_admin", true)
+          .not("email", "is", null);
+
+        if (adminsError) throw adminsError;
+
+        const recipients = (allAdmins ?? [])
+          .map((p: { email: string | null }) => p.email)
+          .filter((email: string | null): email is string => !!email);
+
+        if (recipients.length === 0) {
+          await admin
+            .from("notification_email_outbox")
+            .update({ status: "skipped", last_error: "no_admins_found", recipient_count: 0, sent_at: new Date().toISOString() })
+            .in("id", radarIds);
+          skipped += radarDigestRows.length;
+        } else {
+          const { subject, html, text } = buildRadarScanDigestEmail(
+            radarDigestRows.map((row) => row.payload as unknown as import("../_shared/emails/radar-scan-digest.ts").RadarScanDigestPayload)
+          );
+
+          for (const recipient of recipients) {
+            await sendMailViaZohoSmtp(smtpConfig, {
+              from: mailFrom,
+              to: [recipient],
+              replyTo: mailReplyTo || undefined,
+              subject,
+              html,
+              text,
+            });
+          }
+
+          await admin
+            .from("notification_email_outbox")
+            .update({
+              status: "sent",
+              recipient_count: recipients.length,
+              last_error: null,
+              sent_at: new Date().toISOString(),
+            })
+            .in("id", radarIds);
+          sent += radarDigestRows.length;
+        }
+      } catch (radarError: unknown) {
+        const message = radarError instanceof Error ? radarError.message : "unexpected_error";
+        console.error("send-notification-emails: radar_scan_digest ozeti basarisiz:", message);
+
+        for (const row of radarDigestRows) {
+          await admin
+            .from("notification_email_outbox")
+            .update({
+              status: row.attempts + 1 >= MAX_ATTEMPTS ? "failed" : "pending",
+              last_error: message.slice(0, 2000),
+            })
+            .eq("id", row.id);
+        }
+        failed += radarDigestRows.length;
       }
     }
 

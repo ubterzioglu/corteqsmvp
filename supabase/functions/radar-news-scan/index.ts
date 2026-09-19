@@ -410,6 +410,39 @@ Deno.serve(async (req: Request): Promise<Response> => {
       filtered_count: totalFiltered,
       failed_source_count: failedSources,
     });
+
+    // ── Radar tarama özeti mail kuyruğuna ekle ────────────────────────────
+    // Günlük özet (18:00 Europe/Berlin) olarak TÜM adminlere gönderilir.
+    // Top 10 haberi çek (en yüksek relevance score'a göre)
+    const { data: topItems } = await supabase
+      .from("radar_news_candidates")
+      .select("title, original_url, source_name, relevance_score")
+      .eq("scan_run_id", runId)
+      .eq("review_status", "pending")
+      .order("relevance_score", { ascending: false })
+      .limit(10);
+
+    const digestPayload = {
+      scan_run_id: runId,
+      total_fetched: totalFetched,
+      total_inserted: totalInserted,
+      total_duplicate: totalDuplicate,
+      total_filtered: totalFiltered,
+      top_items: (topItems ?? []).map((item) => ({
+        title: item.title,
+        url: item.original_url,
+        source_name: item.source_name,
+        relevance_score: item.relevance_score,
+      })),
+      scan_completed_at: new Date().toISOString(),
+    };
+
+    await supabase.from("notification_email_outbox").insert({
+      event_type: "radar_scan_digest",
+      dedupe_key: `radar_scan_${runId}`,
+      payload: digestPayload,
+      deliver_after: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 saat sonra (günlük özet)
+    });
   }
 
   const summary: ScanSummary = {
