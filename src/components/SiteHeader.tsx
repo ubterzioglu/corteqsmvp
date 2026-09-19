@@ -127,6 +127,14 @@ export default function SiteHeader() {
                 Dijital Gruplar
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              {/* Etkinlik Oluştur — /events/create sayfasına kısayol */}
+              <Link
+                to="/events/create"
+                className={NAV_ACTION_CLASS}
+              >
+                Etkinlik Oluştur
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               {/* Geri Bildirim — geldiği sayfa state.from ile /feedback'e taşınır (page_path). */}
               <Link
                 to="/feedback"
@@ -169,10 +177,25 @@ export default function SiteHeader() {
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link
+                to="/radar"
+                className={NAV_ACTION_CLASS}
+              >
+                Radar
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              <Link
                 to="/addcom"
                 className={NAV_ACTION_CLASS}
               >
                 Dijital Gruplar
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              {/* Etkinlik Oluştur — /events/create sayfas, sayfasına kısayol */}
+              <Link
+                to="/events/create"
+                className={NAV_ACTION_CLASS}
+              >
+                Etkinlik Oluştur
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link
