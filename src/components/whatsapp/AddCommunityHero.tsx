@@ -20,10 +20,10 @@ export function AddCommunityHero() {
               <MessageSquare className="mt-1 h-7 w-7 shrink-0 text-emerald-600 md:h-9 md:w-9" />
               <span className="flex flex-col leading-[0.95]">
                 <span className="bg-[linear-gradient(90deg,#059669_0%,#06b6d4_30%,#2563eb_65%)] bg-clip-text text-transparent drop-shadow-[0_3px_14px_rgba(255,255,255,0.52)]">
-                  WhatsApp
+                  Dijital
                 </span>
                 <span className="bg-[linear-gradient(90deg,#2563eb_0%,#7c3aed_45%,#f97316_100%)] bg-clip-text text-transparent drop-shadow-[0_3px_14px_rgba(255,255,255,0.52)]">
-                  Grupları
+                  Gruplar
                 </span>
               </span>
             </h1>
@@ -43,7 +43,7 @@ export function AddCommunityHero() {
             </div>
             <div className="mt-5 space-y-2">
               <p className="text-[1.05rem] font-semibold text-slate-900 md:text-[1.22rem] md:whitespace-nowrap">
-                Dünyadaki Türk WhatsApp gruplarını keşfet.
+                Dünyadaki Türk dijital gruplarını keşfet.
               </p>
               <p className="text-[1.05rem] font-bold text-slate-950 md:text-[1.22rem] md:whitespace-nowrap">
                 Sana uygun gruba doğrudan katıl!

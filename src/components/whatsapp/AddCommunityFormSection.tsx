@@ -4,8 +4,10 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import type { GroupFormState } from "@/lib/whatsapp-landing-form";
+import { GROUP_PLATFORM_OPTIONS, type GroupFormState, type GroupPlatform } from "@/lib/whatsapp-landing-form";
+import { PlatformLogo } from "@/components/whatsapp/PlatformLogo";
 
 const formFieldInsetClass = "mx-0.5 w-[calc(100%-4px)]";
 
@@ -43,7 +45,7 @@ export function AddCommunityFormSection({
               <Sparkles className="h-4.5 w-4.5 text-emerald-700" />
             </span>
             <div className="space-y-1">
-              <h2 className="text-base font-bold tracking-[0.01em] text-slate-900 md:text-lg">WhatsApp / Facebook Grubu Eklemek İstiyorum</h2>
+              <h2 className="text-base font-bold tracking-[0.01em] text-slate-900 md:text-lg">Dijital Grup Eklemek İstiyorum</h2>
               <p className="text-sm text-slate-600">
                 Grubunu ekle, admin onayından sonra listede yayınlanacak.
               </p>
@@ -104,14 +106,50 @@ export function AddCommunityFormSection({
                 </div>
 
                 <div>
-                  <Label htmlFor="group-link">WhatsApp Davetiye Linki *</Label>
+                  <Label htmlFor="group-link">Grup Davetiye Linki *</Label>
                   <Input
                     id="group-link"
                     className={formFieldInsetClass}
                     value={form.whatsappLink}
                     onChange={(event) => onFieldChange("whatsappLink", event.target.value)}
-                    placeholder="https://chat.whatsapp.com/..."
+                    placeholder={
+                      form.platform === "WhatsApp"
+                        ? "https://chat.whatsapp.com/..."
+                        : form.platform === "Facebook"
+                          ? "https://facebook.com/groups/..."
+                          : form.platform === "Instagram"
+                            ? "https://instagram.com/..."
+                            : form.platform === "LinkedIn"
+                              ? "https://linkedin.com/groups/..."
+                              : form.platform === "Reddit"
+                                ? "https://reddit.com/r/..."
+                                : form.platform === "YouTube"
+                                  ? "https://youtube.com/..."
+                                  : "https://..."
+                    }
                   />
+                </div>
+
+                <div>
+                  <Label htmlFor="platform">Platform *</Label>
+                  <Select
+                    value={form.platform}
+                    onValueChange={(value) => onFieldChange("platform", value as GroupPlatform)}
+                  >
+                    <SelectTrigger id="platform" className={formFieldInsetClass}>
+                      <SelectValue placeholder="Platform seçin" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {GROUP_PLATFORM_OPTIONS.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value} className="flex items-center gap-2">
+                          <span className="inline-flex items-center gap-2">
+                            <PlatformLogo platform={opt.value} size="card" />
+                            {opt.label}
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-2">

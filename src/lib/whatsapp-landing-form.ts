@@ -1,5 +1,17 @@
+export type GroupPlatform = "WhatsApp" | "Facebook" | "Instagram" | "LinkedIn" | "Reddit" | "YouTube";
+
+export const GROUP_PLATFORM_OPTIONS: { value: GroupPlatform; label: string }[] = [
+  { value: "WhatsApp", label: "WhatsApp" },
+  { value: "Facebook", label: "Facebook" },
+  { value: "Instagram", label: "Instagram" },
+  { value: "LinkedIn", label: "LinkedIn" },
+  { value: "Reddit", label: "Reddit" },
+  { value: "YouTube", label: "YouTube" },
+];
+
 export type GroupFormState = {
   groupName: string;
+  platform: GroupPlatform;
   whatsappLink: string;
   country: string;
   city: string;
@@ -15,6 +27,7 @@ export type JoinFormState = {
 
 export const initialGroupForm: GroupFormState = {
   groupName: "",
+  platform: "WhatsApp",
   whatsappLink: "",
   country: "",
   city: "",

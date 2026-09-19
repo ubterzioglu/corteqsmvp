@@ -63,9 +63,6 @@ const socialLinks = [
   },
 ];
 
-const seoLinkClass =
-  "font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80";
-
 const Footer = () => {
   return (
     <footer className="relative isolate select-none overflow-hidden bg-gradient-to-b from-background via-secondary/25 to-background text-muted-foreground">
@@ -139,87 +136,10 @@ const Footer = () => {
         {" · "}
         Türk Diasporası Topluluk ve Network Platformu
         {" · "}
-        Faydalı bağlantılar:{" "}
-        <a
-          href="https://chatio.com.tr/"
-          target="_blank"
-          rel="dofollow noopener noreferrer"
-          className={seoLinkClass}
-        >
-          Canlı Destek Yazılımı
-        </a>
-        {" · "}
-        <span className="whitespace-nowrap">
-          <a
-            href="https://www.spindorai.com/seo/izmir-seo"
-            target="_blank"
-            rel="dofollow noopener noreferrer"
-            className={seoLinkClass}
-          >
-            İzmir Seo Ajansı
-          </a>{" "}
-          Spindora Tarafından Seosu Yapılmıştır
-        </span>
-        {" · "}
-        <span className="whitespace-nowrap">
-          <a
-            href="https://tekhurdametal.com/istanbul-hurdaci/"
-            rel="dofollow"
-            aria-label="İstanbul Hurdacı - Tek Hurda Metal A.Ş"
-            title="Tek Hurda Metal A.Ş"
-            className={seoLinkClass}
-          >
-            İstanbul Hurdacı
-          </a>{" "}
-          Firması Tek Hurda Metal A.Ş
-        </span>
-        {" · "}
-        <span className="whitespace-nowrap">
-          <a
-            href="https://tekhurdametal.com/hurda-fiyatlari/"
-            rel="dofollow"
-            className={seoLinkClass}
-          >
-            Hurda Fiyatları
-          </a>{" "}
-          Tek Hurda Metal
-        </span>
-        {" · "}
-        <span className="whitespace-nowrap">
-          <a
-            href="https://lionerotik.com/urunler/fetis-urunleri"
-            rel="dofollow"
-            className={seoLinkClass}
-          >
-            Antalya Erotik Shop
-          </a>{" "}
-          Lion Erotik
-        </span>
-        {" · "}
-        <span className="whitespace-nowrap">
-          <a
-            href="https://ufuksoynakliyat.com.tr/esya-depolama"
-            rel="dofollow"
-            className={seoLinkClass}
-          >
-            Eşya Depolama
-          </a>{" "}
-          Firması Ufuksoy Nakliyat A.Ş
-        </span>
-        {" · "}
-        <a
-          href="https://ufuksoynakliyat.com.tr"
-          target="_blank"
-          rel="dofollow noopener noreferrer"
-          className={seoLinkClass}
-        >
-          Evden Eve Nakliyat
-        </a>
-        {" · "}
         © 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları
         saklıdır.
         {" · "}
-        Son güncelleme: 25 Temmuz 2026
+        Son güncelleme: 19.09.2026
       </div>
     </footer>
   );

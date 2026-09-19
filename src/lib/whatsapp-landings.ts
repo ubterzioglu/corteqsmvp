@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
+import type { GroupPlatform } from "@/lib/whatsapp-landing-form";
 
 export type LandingMode = "visual" | "text";
 export type LandingCategory =
@@ -79,6 +80,7 @@ export interface SaveLandingInput {
   memberCount?: number;
   language?: LandingLanguage;
   origin?: LandingOrigin;
+  platform?: GroupPlatform;
 }
 
 export interface JoinRequestInput {
@@ -107,6 +109,7 @@ export interface UpdateLandingInput {
   language?: LandingLanguage;
   origin?: LandingOrigin;
   groupScore?: number;
+  platform?: GroupPlatform;
 }
 
 export interface LandingEditorAssignment {
@@ -431,6 +434,7 @@ export async function submitLanding(input: SaveLandingInput): Promise<{ slug: st
     member_count_updated_at: input.memberCount ? new Date().toISOString() : null,
     language: input.language ?? null,
     origin: input.origin ?? null,
+    platform: input.platform ?? null,
   } as TablesInsert<"whatsapp_landings">;
 
   const { error } = await supabase.from("whatsapp_landings").insert(payload);

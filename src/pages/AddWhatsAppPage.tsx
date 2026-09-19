@@ -246,7 +246,7 @@ export default function AddWhatsAppPage() {
     try {
       const description = buildLandingDescription({
         description: buildSubmitterDescription(groupForm),
-        platform: "WhatsApp",
+        platform: groupForm.platform,
         memberApproved: true,
         adminApproved: false,
         editorReviewPending: false,
@@ -258,6 +258,7 @@ export default function AddWhatsAppPage() {
         country: groupForm.country,
         city: groupForm.city,
         mode: "text",
+        platform: groupForm.platform,
         whatsappLink: groupForm.whatsappLink,
         description,
       });
@@ -403,7 +404,7 @@ export default function AddWhatsAppPage() {
 
           <div className="mt-5">
             <div>
-              <h2 className="text-3xl font-bold text-slate-900">WhatsApp Grupları</h2>
+              <h2 className="text-3xl font-bold text-slate-900">Dijital Gruplar</h2>
             </div>
           </div>
 
