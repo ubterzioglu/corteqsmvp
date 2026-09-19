@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { GROUP_PLATFORMS } from "@/lib/whatsapp-landing-form";
 import {
   buildLandingDescription,
   deleteLanding,
@@ -51,19 +52,6 @@ const categoryOptions: Array<{ value: LandingCategoryInput; label: string }> = [
   { value: "dayanisma", label: "Dayanışma" },
   { value: "diger", label: "Diğer" },
 ];
-
-const platformOptions = [
-  "WhatsApp",
-  "Telegram",
-  "Discord",
-  "Facebook",
-  "Instagram",
-  "LinkedIn",
-  "X",
-  "TikTok",
-  "YouTube",
-  "Reddit",
-] as const;
 
 type EditLandingState = UpdateLandingInput & {
   dbId: string;
@@ -430,7 +418,7 @@ export default function WhatsAppLandingsModeration() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {platformOptions.map((platform) => (
+                    {GROUP_PLATFORMS.map((platform) => (
                       <SelectItem key={platform} value={platform}>
                         {platform}
                       </SelectItem>

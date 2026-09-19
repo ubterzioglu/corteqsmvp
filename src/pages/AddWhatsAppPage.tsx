@@ -272,7 +272,7 @@ export default function AddWhatsAppPage() {
         country: groupForm.country,
         city: groupForm.city,
         mode: "text",
-        platform: groupForm.platform,
+        // platform YUKARIDA `description` etiketine yazıldı; ayrı bir sütun yok.
         whatsappLink: groupForm.whatsappLink,
         description,
       });

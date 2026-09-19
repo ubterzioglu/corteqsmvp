@@ -1,5 +1,31 @@
-export type GroupPlatform = "WhatsApp" | "Facebook" | "Instagram" | "LinkedIn" | "Reddit" | "YouTube";
+// Grup platformları — tek kaynak.
+//
+// Platform DB'de AYRI BİR SÜTUNDA DEĞİL, `whatsapp_landings.description` içinde
+// `[Platform: X]` etiketi olarak yaşar (`buildLandingDescription` yazar,
+// `rowToLanding` okur). 19 Eylül 2026'da `submitLanding` bu değeri ayrıca
+// `platform` adlı bir sütuna yazmaya çalışıyordu; öyle bir sütun hiçbir zaman
+// var olmadı ve gönderim PGRST204 ile düşerdi. Gerçek bir sütun istenirse önce
+// migration yazılmalı, `types.ts` yenilenmeli, sonra yazma yolu değiştirilmeli.
+//
+// Moderasyon ekranı (admin) aşağıdaki LİSTENİN TAMAMINI sunar; herkese açık form
+// ise yalnızca `GROUP_PLATFORM_OPTIONS` alt kümesini gösterir. İki liste aynı
+// birlikten türediği için birbirinden kayamaz.
+export const GROUP_PLATFORMS = [
+  "WhatsApp",
+  "Telegram",
+  "Discord",
+  "Facebook",
+  "Instagram",
+  "LinkedIn",
+  "X",
+  "TikTok",
+  "YouTube",
+  "Reddit",
+] as const;
 
+export type GroupPlatform = (typeof GROUP_PLATFORMS)[number];
+
+/** Herkese açık grup ekleme formunun sunduğu alt küme. */
 export const GROUP_PLATFORM_OPTIONS: { value: GroupPlatform; label: string }[] = [
   { value: "WhatsApp", label: "WhatsApp" },
   { value: "Facebook", label: "Facebook" },

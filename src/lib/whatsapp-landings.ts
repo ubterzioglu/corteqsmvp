@@ -1,6 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
-import type { GroupPlatform } from "@/lib/whatsapp-landing-form";
 
 export type LandingMode = "visual" | "text";
 export type LandingCategory =
@@ -80,7 +79,9 @@ export interface SaveLandingInput {
   memberCount?: number;
   language?: LandingLanguage;
   origin?: LandingOrigin;
-  platform?: GroupPlatform;
+  // NOT: `platform` BURADA DA YOKTUR. Çağıran, platformu `buildLandingDescription`
+  // ile `description` alanına yazar; burada ayrıca almak "sütuna kaydediliyor"
+  // yanılgısı üretirdi (19.09.2026'da tam olarak bu oldu).
 }
 
 export interface JoinRequestInput {
@@ -109,7 +110,9 @@ export interface UpdateLandingInput {
   language?: LandingLanguage;
   origin?: LandingOrigin;
   groupScore?: number;
-  platform?: GroupPlatform;
+  // NOT: burada `platform` YOKTUR. `updateLanding` onu hiçbir yere yazmıyordu;
+  // moderasyon ekranı platformu zaten `buildLandingDescription` ile `description`
+  // etiketine koyuyor. Alanı bırakmak "kaydediliyor" yanılgısı üretir.
 }
 
 export interface LandingEditorAssignment {
@@ -434,8 +437,12 @@ export async function submitLanding(input: SaveLandingInput): Promise<{ slug: st
     member_count_updated_at: input.memberCount ? new Date().toISOString() : null,
     language: input.language ?? null,
     origin: input.origin ?? null,
-    platform: input.platform ?? null,
-  } as TablesInsert<"whatsapp_landings">;
+    // ⚠️ Buraya `platform` EKLEME. Platform `description` içinde `[Platform: X]`
+    // etiketi olarak saklanır (çağıran `buildLandingDescription` ile yazar).
+    // Tabloda `platform` sütunu YOKTUR; yazılırsa insert PGRST204 ile düşer.
+    // Aşağıdaki açık tip (cast DEĞİL) bunu derleme zamanında yakalar — `as
+    // TablesInsert<...>` cast'i 19.09.2026'da tam olarak bu hatayı gizlemişti.
+  } satisfies TablesInsert<"whatsapp_landings">;
 
   const { error } = await supabase.from("whatsapp_landings").insert(payload);
 
