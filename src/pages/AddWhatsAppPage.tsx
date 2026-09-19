@@ -224,9 +224,23 @@ export default function AddWhatsAppPage() {
     if (user) return true;
 
     toast({
-      title: "Google girişi gerekli",
-      description: "Topluluk formunu göndermek için önce Google hesabınla giriş yapmalısın.",
+      title: "Üye olmalısınız",
+      description: "Grup eklemek için önce üye olmalısınız. Google ile giriş yapılıyor...",
     });
+
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete("group");
+    nextParams.set("openGroupForm", "1");
+    const nextQuery = nextParams.toString();
+    const nextPath = nextQuery ? `${location.pathname}?${nextQuery}` : location.pathname;
+
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: new URL(nextPath, window.location.origin).toString(),
+      },
+    });
+
     return false;
   };
 

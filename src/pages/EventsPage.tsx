@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Calendar, MapPin, Monitor, Users, Search, Plus, Tag } from "lucide-react";
+import { Calendar, MapPin, Monitor, Users, Search, Tag } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -12,6 +11,8 @@ import { useSeo } from "@/lib/seo";
 import { useAuth } from "@/components/auth/useAuth";
 import { GENERIC_FEATURE_KEYS } from "@/lib/features";
 import { useFeatureFlags } from "@/hooks/useFeatureFlags";
+import { EventsHero } from "@/components/events/EventsHero";
+import { CreateEventFormSection } from "@/components/events/CreateEventFormSection";
 
 const CATEGORIES = [
   { value: "all", label: "Tüm Kategoriler" },
@@ -55,6 +56,7 @@ export default function EventsPage() {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [eventFormOpen, setEventFormOpen] = useState(false);
 
   const filters = useMemo(() => ({
     type: typeFilter !== "all" ? typeFilter : undefined,
@@ -71,24 +73,24 @@ export default function EventsPage() {
   });
 
   return (
-    <main className="min-h-screen bg-[linear-gradient(180deg,#fffdf9_0%,#f8fafc_100%)] px-4 py-10">
-      <div className="mx-auto max-w-6xl">
-        <header className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h1 className="text-3xl font-black text-slate-900">Etkinlikler</h1>
-            <p className="mt-2 text-sm text-slate-600">
-              Topluluğun düzenlediği fiziksel ve dijital etkinlikleri keşfedin.
-            </p>
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fffdf9_0%,#f9fafb_100%)]">
+      <main className="container mx-auto px-4 pb-16 pt-6">
+        <EventsHero />
+
+        {canCreate && (
+          <CreateEventFormSection
+            isSignedIn={Boolean(user)}
+            open={eventFormOpen}
+            onOpenChange={setEventFormOpen}
+          />
+        )}
+
+        <section className="mt-8">
+          <div className="mt-5">
+            <div>
+              <h2 className="text-3xl font-bold text-slate-900">Etkinlikler</h2>
+            </div>
           </div>
-          {canCreate && (
-            <Button asChild>
-              <Link to="/events/create">
-                <Plus className="mr-2 h-4 w-4" />
-                Etkinlik Oluştur
-              </Link>
-            </Button>
-          )}
-        </header>
 
         <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center">
           <div className="relative flex-1">
@@ -205,7 +207,8 @@ export default function EventsPage() {
             ))}
           </div>
         )}
-      </div>
+      </section>
     </main>
-  );
+  </div>
+);
 }

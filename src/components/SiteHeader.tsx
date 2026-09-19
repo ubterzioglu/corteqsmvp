@@ -127,12 +127,12 @@ export default function SiteHeader() {
                 Dijital Gruplar
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              {/* Etkinlik Oluştur — /events/create sayfasına kısayol */}
+              {/* Etkinlikler — etkinlik listeleme sayfasına kısayol */}
               <Link
-                to="/events/create"
+                to="/events"
                 className={NAV_ACTION_CLASS}
               >
-                Etkinlik Oluştur
+                Etkinlikler
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               {/* Geri Bildirim — geldiği sayfa state.from ile /feedback'e taşınır (page_path). */}
