@@ -1,5 +1,4 @@
 export type GroupFormState = {
-  platform: "WhatsApp" | "Facebook";
   groupName: string;
   whatsappLink: string;
   country: string;
@@ -15,7 +14,6 @@ export type JoinFormState = {
 };
 
 export const initialGroupForm: GroupFormState = {
-  platform: "WhatsApp",
   groupName: "",
   whatsappLink: "",
   country: "",

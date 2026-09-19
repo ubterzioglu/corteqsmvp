@@ -4,7 +4,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { GroupFormState } from "@/lib/whatsapp-landing-form";
 
@@ -92,19 +91,6 @@ export function AddCommunityFormSection({
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Grup Bilgileri</h3>
 
                 <div>
-                  <Label htmlFor="platform">Platform *</Label>
-                  <Select value={form.platform} onValueChange={(value) => onFieldChange("platform", value as "WhatsApp" | "Facebook")}>
-                    <SelectTrigger id="platform" className={`mt-1 ${formFieldInsetClass}`}>
-                      <SelectValue placeholder="Platform seç" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="WhatsApp">WhatsApp</SelectItem>
-                      <SelectItem value="Facebook">Facebook</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
                   <Label htmlFor="group-name">Grup Adı *</Label>
                   <Input
                     id="group-name"
@@ -118,13 +104,13 @@ export function AddCommunityFormSection({
                 </div>
 
                 <div>
-                  <Label htmlFor="group-link">{form.platform === "WhatsApp" ? "WhatsApp Davetiye Linki *" : "Facebook Grup Linki *"}</Label>
+                  <Label htmlFor="group-link">WhatsApp Davetiye Linki *</Label>
                   <Input
                     id="group-link"
                     className={formFieldInsetClass}
                     value={form.whatsappLink}
                     onChange={(event) => onFieldChange("whatsappLink", event.target.value)}
-                    placeholder={form.platform === "WhatsApp" ? "https://chat.whatsapp.com/..." : "https://facebook.com/groups/..."}
+                    placeholder="https://chat.whatsapp.com/..."
                   />
                 </div>
 

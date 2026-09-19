@@ -246,7 +246,7 @@ export default function AddWhatsAppPage() {
     try {
       const description = buildLandingDescription({
         description: buildSubmitterDescription(groupForm),
-        platform: groupForm.platform,
+        platform: "WhatsApp",
         memberApproved: true,
         adminApproved: false,
         editorReviewPending: false,
