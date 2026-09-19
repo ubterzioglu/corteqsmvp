@@ -5,11 +5,25 @@ import { ADMIN_UPDATES } from "./admin-updates";
 describe("ADMIN_UPDATES", () => {
   // Yeni kayıt EN ÜSTE eklenir: okunmamış rozeti ve /admin/about sıralaması bu
   // sıraya güvenir. Kimlikler benzersiz olmalı — okundu takibi id ile yapılır.
+  // Not: bu test eskiden en üstteki kaydın id'sini SABİT yazıyordu. O hâliyle
+  // sıralamayı hiç ölçmüyordu; yalnızca "birisi yeni kayıt ekleyince testi de
+  // güncelledi mi" diye soruyordu ve her duyuruda kırılıyordu (19 Eylül'de de
+  // kırıldı). Kontrol, maddenin gerçek sözleşmesine çevrildi: id'ler YYYYMMDD
+  // önekiyle başlar, liste bu önege göre azalan sıradadır ve id'ler benzersizdir.
   it("kayıtları en yeniden eskiye sıralar ve kimlikleri benzersizdir", () => {
-    expect(ADMIN_UPDATES[0].id).toBe("20260914-13-eylul-toplu-ozet-ve-kapanan-todolar");
-    expect(ADMIN_UPDATES[0].date).toBe("14 Eylül 2026");
-
     const ids = ADMIN_UPDATES.map((update) => update.id);
+
+    expect(ids.length).toBeGreaterThan(0);
+    for (const id of ids) {
+      expect(id).toMatch(/^\d{8}-/);
+    }
+
+    const dayOf = (id: string) => id.slice(0, 8);
+    for (let i = 1; i < ids.length; i += 1) {
+      // Aynı gün birden çok kayıt olabilir; bu yüzden ">=" değil "<=" ile geriye bakılır.
+      expect(dayOf(ids[i]) <= dayOf(ids[i - 1])).toBe(true);
+    }
+
     expect(new Set(ids).size).toBe(ids.length);
   });
 

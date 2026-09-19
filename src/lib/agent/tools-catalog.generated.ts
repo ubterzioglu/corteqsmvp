@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 40,
+    "total": 41,
     "edge_functions": 9,
     "workers": 2,
-    "ui_modules": 28
+    "ui_modules": 29
   },
   "tools": [
     {
@@ -151,6 +151,7 @@ export const toolCatalog = {
         "fields": []
       },
       "tables_read_write": [
+        "notification_email_outbox",
         "radar_news_candidates",
         "radar_news_keywords",
         "radar_news_sources"
@@ -701,6 +702,31 @@ export const toolCatalog = {
         "admin_review_catalog_import"
       ],
       "evidence_path": "src/lib/catalog-import-api.ts"
+    },
+    {
+      "tool_key": "module.events_api",
+      "tool_name": "events-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/events-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "createEvent",
+        "deleteEvent",
+        "fetchAllEventsAdmin",
+        "fetchEventById",
+        "fetchMyEvents",
+        "fetchPublishedEvents",
+        "publishEvent",
+        "toggleFeaturedEvent",
+        "unpublishEvent",
+        "updateEvent"
+      ],
+      "tables_read_write": [
+        "events"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/events-api.ts"
     },
     {
       "tool_key": "module.flat_roles_api",
@@ -2329,6 +2355,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/events-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/features.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -3259,6 +3290,11 @@ export const toolCatalog = {
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/_shared/emails/radar-scan-digest.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/_shared/emails/relocation-tool-abandonment.test.ts",
       "kind": "ts",
       "module_family": "edge"
@@ -3329,12 +3365,32 @@ export const toolCatalog = {
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/radar-news-scan/adapters/bing-news.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/radar-news-scan/adapters/gdelt.ts",
       "kind": "ts",
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/radar-news-scan/adapters/gnews.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/adapters/newsapi.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/radar-news-scan/adapters/rss.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/adapters/thenewsapi.ts",
       "kind": "ts",
       "module_family": "edge"
     },
@@ -3360,6 +3416,11 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/radar-news-scan/lib/normalize-item.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/radar-news-scan/lib/provider-config.ts",
       "kind": "ts",
       "module_family": "edge"
     },

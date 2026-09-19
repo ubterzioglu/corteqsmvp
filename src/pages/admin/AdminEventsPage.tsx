@@ -48,7 +48,9 @@ function typeLabel(type: string): string {
 
 const AdminEventsPage = () => {
   const { toast } = useToast();
-  const queryClient = useQueryClient();
+  // Not: burada useQueryClient ÇAĞRILMAZ — önbellek geçersizleştirmeyi mutation
+  // hook'larının kendisi (use-events.ts) yapar. Eskiden import edilmemiş bir
+  // useQueryClient çağrısı vardı; sayfa açılır açılmaz ReferenceError veriyordu.
   const { data: events, isLoading, error } = useAdminEvents();
   const deleteEventMutation = useDeleteEvent();
   const publishEventMutation = usePublishEvent();
@@ -168,7 +170,7 @@ const AdminEventsPage = () => {
       filters={filters}
     >
       {isLoading ? <AdminLoadingState /> : null}
-      {error ? <AdminErrorState message="Etkinlikler yüklenemedi." /> : null}
+      {error ? <AdminErrorState description="Etkinlikler yüklenemedi." /> : null}
 
       {!isLoading && !error && filteredEvents.length === 0 ? (
         <AdminEmptyState

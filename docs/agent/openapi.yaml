@@ -78,7 +78,7 @@ paths:
       operationId: execute_radar_news_scan
       x-tool-key: edge.radar_news_scan
       x-status: active
-      x-tables: [radar_news_candidates, radar_news_keywords, radar_news_sources]
+      x-tables: [notification_email_outbox, radar_news_candidates, radar_news_keywords, radar_news_sources]
       responses:
         "200":
           description: Başarılı
