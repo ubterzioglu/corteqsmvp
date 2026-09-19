@@ -10,10 +10,6 @@ vi.mock("@/hooks/use-toast", () => ({
   }),
 }));
 
-vi.mock("@/components/RegisterInterestForm", () => ({
-  default: () => null,
-}));
-
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     from: () => ({

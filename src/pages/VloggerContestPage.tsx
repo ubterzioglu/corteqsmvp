@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -13,7 +12,6 @@ import {
   Film,
   Globe2,
 } from "lucide-react";
-import RegisterInterestForm from "@/components/RegisterInterestForm";
 import { useSeo } from "@/lib/seo";
 const magicBallHero = "/lmaskot.png";
 
@@ -60,13 +58,7 @@ const softCardClass =
   "rounded-xl border border-white/60 bg-card/85 p-6 shadow-sm backdrop-blur-sm transition-all hover:border-primary/35 hover:shadow-lg";
 const iconBoxClass =
   "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10";
-const primaryButtonClass =
-  "group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90";
-
 const VloggerContestPage = () => {
-  const [formOpen, setFormOpen] = useState(false);
-  const openForm = () => setFormOpen(true);
-
   useSeo(
     {
       title: "CorteQS Vlogger İçerik Yarışması | Kültür, Mücadele, Mizah, Gusto",
@@ -117,11 +109,7 @@ const VloggerContestPage = () => {
                 akışlarında global görünürlük kazan.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-10">
-                <button onClick={openForm} className={primaryButtonClass}>
-                  Videonu Gönder
-                </button>
-              </div>
+
             </div>
 
             {/* Hero visual column — CorteQS Magic Ball */}
@@ -352,22 +340,11 @@ const VloggerContestPage = () => {
               içerik için <span className="text-accent font-bold">€25 katılım bedelinin</span> ödenmesi
               gerekir.
             </p>
-            <button onClick={openForm} className={primaryButtonClass}>
-              Başvuruyu Tamamla ve Ödemeye Geç
-            </button>
-            <p className="text-xs text-muted-foreground mt-6">
-              Ödeme akışı, başvuru tamamlandıktan sonra e-posta ile iletilecektir.
-            </p>
+
           </div>
         </div>
       </section>
 
-      <RegisterInterestForm
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        defaultCategory="blogger-vlogger"
-        defaultReferralCode="GGVBLA-M7SDSR"
-      />
     </div>
   );
 };

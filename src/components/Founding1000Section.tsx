@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Globe2,
   Users,
@@ -20,7 +19,6 @@ import {
   Building2,
   Check,
 } from "lucide-react";
-import RegisterInterestForm from "./RegisterInterestForm";
 import heroLandmarks from "@/assets/hero-landmarks-watercolor.png";
 
 const stats = [
@@ -101,20 +99,7 @@ const softCardClass =
   "rounded-xl border border-white/60 bg-card/85 p-6 shadow-sm backdrop-blur-sm transition-all hover:border-primary/35 hover:shadow-lg";
 const iconBoxClass =
   "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10";
-const primaryButtonClass =
-  "group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90";
-
-type Founding1000SectionProps = {
-  defaultReferralCode?: string;
-};
-
-const Founding1000Section = ({
-  defaultReferralCode = "GGVBLA-M7SDSR",
-}: Founding1000SectionProps) => {
-  const [formOpen, setFormOpen] = useState(false);
-
-  const openForm = () => setFormOpen(true);
-
+const Founding1000Section = () => {
   return (
     <section
       id="founding-1000"
@@ -146,12 +131,7 @@ const Founding1000Section = ({
               şehir şehir görünür kılmak için kuruluyor.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-10">
-              <button onClick={openForm} className={primaryButtonClass}>
-                Founding 1000'e Katıl
-              </button>
-            </div>
+
           </div>
 
           <div className="relative mx-auto w-full max-w-xl">
@@ -311,9 +291,7 @@ const Founding1000Section = ({
                 tarihinden itibaren başlar.
               </p>
 
-              <button onClick={openForm} className={`${primaryButtonClass} w-full`}>
-                Founding 1000'e Katıl
-              </button>
+
             </div>
 
             <p className="text-center text-xs text-muted-foreground mt-6 max-w-xl mx-auto leading-relaxed">
@@ -389,19 +367,11 @@ const Founding1000Section = ({
             CorteQS Founding 1000'e katılın ve global Türk diasporasının dijital haritasında erken
             pozisyon alın.
           </p>
-          <button onClick={openForm} className={primaryButtonClass}>
-            Founding 1000'e Katıl
-          </button>
+
         </div>
 
       </div>
 
-      <RegisterInterestForm
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        defaultCategory="isletme"
-        defaultReferralCode={defaultReferralCode}
-      />
     </section>
   );
 };

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -18,7 +17,6 @@ import {
   ShieldCheck,
   Bot,
 } from "lucide-react";
-import RegisterInterestForm from "@/components/RegisterInterestForm";
 import bloggerVisual from "@/assets/blogger-vlogger.jpg";
 import { useSeo } from "@/lib/seo";
 
@@ -70,13 +68,7 @@ const softCardClass =
   "rounded-xl border border-white/60 bg-card/85 p-6 shadow-sm backdrop-blur-sm transition-all hover:border-primary/35 hover:shadow-lg";
 const iconBoxClass =
   "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10";
-const primaryButtonClass =
-  "group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90";
-
 const BloggerContestPage = () => {
-  const [formOpen, setFormOpen] = useState(false);
-  const openForm = () => setFormOpen(true);
-
   useSeo(
     {
       title: "CorteQS Blogger İçerik Yarışması | Kültür, Mücadele, Mizah, Gusto",
@@ -129,11 +121,7 @@ const BloggerContestPage = () => {
                 Hikâyeni, gözlemini veya diaspora anlatını yaz. CorteQS'te yayınla. Dünyaya duyur.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-10">
-                <button onClick={openForm} className={primaryButtonClass}>
-                  Hikâyeni Gönder
-                </button>
-              </div>
+
             </div>
 
             <div className="relative mx-auto w-full max-w-lg overflow-hidden rounded-2xl border border-white/60 bg-card/80 shadow-2xl shadow-primary/10 backdrop-blur-sm">
@@ -439,22 +427,11 @@ const BloggerContestPage = () => {
               Katılımcı formu doldurur, içeriğini ve teaser materyallerini yükler, onayları verir ve her
               içerik için <span className="text-accent font-bold">€25 katılım bedelini</span> öder.
             </p>
-            <button onClick={openForm} className={primaryButtonClass}>
-              Başvuruyu Tamamla
-            </button>
-            <p className="text-xs text-muted-foreground mt-6">
-              Ödeme akışı, başvuru tamamlandıktan sonra e-posta ile iletilecektir.
-            </p>
+
           </div>
         </div>
       </section>
 
-      <RegisterInterestForm
-        open={formOpen}
-        onOpenChange={setFormOpen}
-        defaultCategory="blogger-vlogger"
-        defaultReferralCode="GGVBLA-M7SDSR"
-      />
     </div>
   );
 };
