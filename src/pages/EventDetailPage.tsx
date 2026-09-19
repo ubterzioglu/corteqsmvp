@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useEvent } from "@/hooks/use-events";
 import { useSeo } from "@/lib/seo";
 import { useToast } from "@/hooks/use-toast";
+import { eventTypeLabel, isOnlineEventType, isPhysicalEventType } from "@/lib/events-vocabulary";
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
@@ -17,12 +18,6 @@ function formatDate(dateStr: string): string {
 function formatTime(timeStr: string | null): string {
   if (!timeStr) return "";
   return timeStr.slice(0, 5);
-}
-
-function typeLabel(type: string): string {
-  if (type === "online") return "Dijital";
-  if (type === "hybrid") return "Hibrit";
-  return "Fiziksel";
 }
 
 function typeBadgeVariant(type: string): "default" | "secondary" | "outline" {
@@ -126,7 +121,7 @@ export default function EventDetailPage() {
         <Card>
           <CardContent className="p-6 md:p-8">
             <div className="mb-4 flex flex-wrap items-center gap-2">
-              <Badge variant={typeBadgeVariant(event.type)}>{typeLabel(event.type)}</Badge>
+              <Badge variant={typeBadgeVariant(event.type)}>{eventTypeLabel(event.type)}</Badge>
               {event.featured && (
                 <Badge variant="outline" className="border-amber-400 text-amber-600">Öne Çıkan</Badge>
               )}
@@ -156,7 +151,7 @@ export default function EventDetailPage() {
                   </span>
                 </div>
               )}
-              {(event.type === "yüz yüze" || event.type === "hybrid") && event.location && (
+              {isPhysicalEventType(event.type) && event.location && (
                 <div className="flex items-center gap-3 text-sm">
                   <MapPin className="h-4 w-4 text-slate-400" />
                   <span>
@@ -166,7 +161,7 @@ export default function EventDetailPage() {
                   </span>
                 </div>
               )}
-              {(event.type === "online" || event.type === "hybrid") && event.online_url && (
+              {isOnlineEventType(event.type) && event.online_url && (
                 <div className="flex items-center gap-3 text-sm">
                   <Monitor className="h-4 w-4 text-slate-400" />
                   <a

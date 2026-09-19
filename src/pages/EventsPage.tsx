@@ -10,23 +10,19 @@ import { usePublishedEvents } from "@/hooks/use-events";
 import { useSeo } from "@/lib/seo";
 import { EventsHero } from "@/components/events/EventsHero";
 import { CreateEventFormSection } from "@/components/events/CreateEventFormSection";
+import {
+  EVENT_CATEGORY_OPTIONS,
+  EVENT_TYPE_OPTIONS,
+  eventTypeLabel,
+  isOnlineEventType,
+  isPhysicalEventType,
+} from "@/lib/events-vocabulary";
 
-const CATEGORIES = [
-  { value: "all", label: "Tüm Kategoriler" },
-  { value: "networking", label: "Networking" },
-  { value: "eğitim", label: "Eğitim" },
-  { value: "kültür", label: "Kültür & Sanat" },
-  { value: "iş", label: "İş & Kariyer" },
-  { value: "sosyal", label: "Sosyal" },
-  { value: "spor", label: "Spor" },
-];
+// Filtre değerleri form ile BİREBİR aynı kaynaktan gelir; ayrı listeler yazılırsa
+// formdan eklenen etkinlik kendi filtresine düşmez (19.09.2026 kusuru).
+const CATEGORIES = [{ value: "all", label: "Tüm Kategoriler" }, ...EVENT_CATEGORY_OPTIONS];
 
-const EVENT_TYPES = [
-  { value: "all", label: "Tüm Türler" },
-  { value: "yüz yüze", label: "Fiziksel" },
-  { value: "online", label: "Dijital" },
-  { value: "hybrid", label: "Hibrit" },
-];
+const EVENT_TYPES = [{ value: "all", label: "Tüm Türler" }, ...EVENT_TYPE_OPTIONS];
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
@@ -39,11 +35,6 @@ function typeBadgeVariant(type: string): "default" | "secondary" | "outline" {
   return "default";
 }
 
-function typeLabel(type: string): string {
-  if (type === "online") return "Dijital";
-  if (type === "hybrid") return "Hibrit";
-  return "Fiziksel";
-}
 
 export default function EventsPage() {
   const [search, setSearch] = useState("");
@@ -143,7 +134,7 @@ export default function EventsPage() {
                   )}
                   <CardContent className={event.cover_image ? "p-4" : "p-4 pt-4"}>
                     <div className="mb-2 flex items-center gap-2">
-                      <Badge variant={typeBadgeVariant(event.type)}>{typeLabel(event.type)}</Badge>
+                      <Badge variant={typeBadgeVariant(event.type)}>{eventTypeLabel(event.type)}</Badge>
                       {event.featured && (
                         <Badge variant="outline" className="border-amber-400 text-amber-600">
                           Öne Çıkan
@@ -162,13 +153,13 @@ export default function EventsPage() {
                           <span className="text-slate-400">• {event.start_time.slice(0, 5)}</span>
                         )}
                       </div>
-                      {(event.type === "yüz yüze" || event.type === "hybrid") && event.city && (
+                      {isPhysicalEventType(event.type) && event.city && (
                         <div className="flex items-center gap-1.5">
                           <MapPin className="h-3.5 w-3.5" />
                           <span>{event.city}{event.country ? `, ${event.country}` : ""}</span>
                         </div>
                       )}
-                      {(event.type === "online" || event.type === "hybrid") && (
+                      {isOnlineEventType(event.type) && (
                         <div className="flex items-center gap-1.5">
                           <Monitor className="h-3.5 w-3.5" />
                           <span>Online katılım mevcut</span>

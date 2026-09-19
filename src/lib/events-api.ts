@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import type { EventType } from "@/lib/events-vocabulary";
 
 export type EventRow = {
   id: string;
@@ -98,7 +99,7 @@ export interface CreateEventInput {
   title: string;
   description: string;
   category: string;
-  type: "yüz yüze" | "online" | "hybrid";
+  type: EventType;
   eventDate: string;
   startTime: string | null;
   endTime: string | null;

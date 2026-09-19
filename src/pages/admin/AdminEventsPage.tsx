@@ -14,6 +14,7 @@ import {
 import { useAdminEvents, useDeleteEvent, usePublishEvent, useToggleFeaturedEvent, useUnpublishEvent } from "@/hooks/use-events";
 import { useToast } from "@/hooks/use-toast";
 import type { EventRow } from "@/lib/events-api";
+import { EVENT_TYPE_OPTIONS, eventTypeLabel } from "@/lib/events-vocabulary";
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
@@ -38,12 +39,6 @@ function statusTone(status: string): string {
     case "rejected": return "bg-red-100 text-red-700";
     default: return "bg-slate-100 text-slate-600";
   }
-}
-
-function typeLabel(type: string): string {
-  if (type === "online") return "Dijital";
-  if (type === "hybrid") return "Hibrit";
-  return "Fiziksel";
 }
 
 const AdminEventsPage = () => {
@@ -152,9 +147,9 @@ const AdminEventsPage = () => {
         <SelectTrigger className="w-full sm:w-[160px]"><SelectValue placeholder="Tür" /></SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Tüm Türler</SelectItem>
-          <SelectItem value="yüz yüze">Fiziksel</SelectItem>
-          <SelectItem value="online">Dijital</SelectItem>
-          <SelectItem value="hybrid">Hibrit</SelectItem>
+          {EVENT_TYPE_OPTIONS.map((option) => (
+            <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+          ))}
         </SelectContent>
       </Select>
     </div>
@@ -206,7 +201,7 @@ const AdminEventsPage = () => {
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <Badge variant="outline">{typeLabel(event.type)}</Badge>
+                      <Badge variant="outline">{eventTypeLabel(event.type)}</Badge>
                     </td>
                     <td className="px-4 py-3 text-slate-600">{formatDate(event.event_date)}</td>
                     <td className="px-4 py-3 text-slate-600">
