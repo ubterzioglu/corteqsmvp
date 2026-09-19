@@ -49,13 +49,6 @@ export {
   type ReferralUsageRow,
 } from "./admin/admin-referral-api";
 
-export {
-  fetchSubmissions,
-  updateSubmissionStatus,
-  getAdminSubmissionDocumentUrl,
-} from "./admin/admin-submissions-api";
-export type { AdminSubmissionFilters } from "./admin/admin-submissions-api";
-
 export type {
   AttributeRule,
   RoleManagementAttribute,

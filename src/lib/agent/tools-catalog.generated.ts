@@ -1675,16 +1675,6 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/admin/admin-submissions-api.test.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/admin/admin-submissions-api.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
       "path": "src/lib/admin/admin-taxonomy-api.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2355,7 +2345,27 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/event-form-draft.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/event-form-draft.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/events-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/events-vocabulary.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/events-vocabulary.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -2521,11 +2531,6 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/lansman.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/mail.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -3236,6 +3241,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/whatsapp-landing-presentation.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/whatsapp-landings-insert-contract.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
