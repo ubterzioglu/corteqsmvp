@@ -11,7 +11,6 @@ import { CommunityFilters } from "@/components/whatsapp/CommunityFilters";
 import { LandingCard } from "@/components/whatsapp/LandingCard";
 import { LandingDetailView } from "@/components/whatsapp/LandingDetailView";
 import {
-  buildAdminContact,
   buildSubmitterDescription,
   getErrorMessage,
   initialGroupForm,
@@ -235,16 +234,7 @@ export default function AddWhatsAppPage() {
     if (!groupForm.groupName.trim() || !groupForm.whatsappLink.trim() || !groupForm.country.trim() || !groupForm.city.trim()) {
       toast({
         title: "Eksik alan",
-        description: "Grup adı, WhatsApp linki, ülke ve şehir zorunludur.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!groupForm.adminName.trim() || !groupForm.adminEmail.trim()) {
-      toast({
-        title: "Yönetici bilgisi eksik",
-        description: "Ad soyad ve e-posta zorunludur.",
+        description: "Grup adı, link, ülke ve şehir zorunludur.",
         variant: "destructive",
       });
       return;
@@ -254,10 +244,9 @@ export default function AddWhatsAppPage() {
 
     setSubmittingGroup(true);
     try {
-      const adminContact = buildAdminContact(groupForm);
       const description = buildLandingDescription({
         description: buildSubmitterDescription(groupForm),
-        platform: "WhatsApp",
+        platform: groupForm.platform,
         memberApproved: true,
         adminApproved: false,
         editorReviewPending: false,
@@ -270,14 +259,12 @@ export default function AddWhatsAppPage() {
         city: groupForm.city,
         mode: "text",
         whatsappLink: groupForm.whatsappLink,
-        adminName: groupForm.adminName,
-        adminContact,
         description,
       });
 
       toast({
         title: "Grubunuz alındı",
-        description: "Admin onayından sonra WhatsApp Grupları listesinde yayınlanacak.",
+        description: "Admin onayından sonra listede yayınlanacak.",
       });
 
       resetGroupForm();

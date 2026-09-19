@@ -1,10 +1,10 @@
-import { useRef } from "react";
 import { Sparkles } from "lucide-react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { GroupFormState } from "@/lib/whatsapp-landing-form";
 
@@ -35,8 +35,6 @@ export function AddCommunityFormSection({
   onStartGoogleAuth,
   onSubmit,
 }: AddCommunityFormSectionProps) {
-  void useRef;
-
   return (
     <div className="mt-8 rounded-[1.9rem] border border-emerald-200/70 bg-[linear-gradient(135deg,rgba(236,253,245,0.96)_0%,rgba(255,255,255,0.98)_42%,rgba(239,246,255,0.94)_100%)] p-3 shadow-[0_20px_60px_rgba(15,23,42,0.08)] ring-1 ring-white/80 backdrop-blur-sm">
       <div className="rounded-[1.45rem] bg-white/55 p-4 md:p-5">
@@ -46,7 +44,7 @@ export function AddCommunityFormSection({
               <Sparkles className="h-4.5 w-4.5 text-emerald-700" />
             </span>
             <div className="space-y-1">
-              <h2 className="text-base font-bold tracking-[0.01em] text-slate-900 md:text-lg">WhatsApp Grubu Eklemek İstiyorum</h2>
+              <h2 className="text-base font-bold tracking-[0.01em] text-slate-900 md:text-lg">WhatsApp / Facebook Grubu Eklemek İstiyorum</h2>
               <p className="text-sm text-slate-600">
                 Grubunu ekle, admin onayından sonra listede yayınlanacak.
               </p>
@@ -83,7 +81,7 @@ export function AddCommunityFormSection({
           </AccordionTrigger>
           <AccordionContent className="border-t border-emerald-100 px-5 pb-5 pt-4">
             <div className="mb-5">
-              <h3 className="text-left text-xl font-bold text-slate-900">WhatsApp Grubu Ekle</h3>
+              <h3 className="text-left text-xl font-bold text-slate-900">Grup Ekle</h3>
               <p className="mt-1 text-left text-sm text-slate-600">
                 Aşağıdaki bilgileri doldur. Grup admin onayından sonra listede görünecek.
               </p>
@@ -92,6 +90,19 @@ export function AddCommunityFormSection({
             <div className="space-y-5">
               <div className="space-y-3">
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Grup Bilgileri</h3>
+
+                <div>
+                  <Label htmlFor="platform">Platform *</Label>
+                  <Select value={form.platform} onValueChange={(value) => onFieldChange("platform", value as "WhatsApp" | "Facebook")}>
+                    <SelectTrigger id="platform" className={`mt-1 ${formFieldInsetClass}`}>
+                      <SelectValue placeholder="Platform seç" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="WhatsApp">WhatsApp</SelectItem>
+                      <SelectItem value="Facebook">Facebook</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
                 <div>
                   <Label htmlFor="group-name">Grup Adı *</Label>
@@ -107,13 +118,13 @@ export function AddCommunityFormSection({
                 </div>
 
                 <div>
-                  <Label htmlFor="whatsapp-link">WhatsApp Davetiye Linki *</Label>
+                  <Label htmlFor="group-link">{form.platform === "WhatsApp" ? "WhatsApp Davetiye Linki *" : "Facebook Grup Linki *"}</Label>
                   <Input
-                    id="whatsapp-link"
+                    id="group-link"
                     className={formFieldInsetClass}
                     value={form.whatsappLink}
                     onChange={(event) => onFieldChange("whatsappLink", event.target.value)}
-                    placeholder="https://chat.whatsapp.com/..."
+                    placeholder={form.platform === "WhatsApp" ? "https://chat.whatsapp.com/..." : "https://facebook.com/groups/..."}
                   />
                 </div>
 
@@ -156,46 +167,6 @@ export function AddCommunityFormSection({
                     value={form.description}
                     onChange={(event) => onFieldChange("description", event.target.value)}
                     placeholder="Grup hakkında 1-2 cümle"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Yönetici Bilgileri</h3>
-
-                <div>
-                  <Label htmlFor="admin-name">Ad Soyad *</Label>
-                  <Input
-                    id="admin-name"
-                    className={formFieldInsetClass}
-                    lang="tr"
-                    spellCheck
-                    value={form.adminName}
-                    onChange={(event) => onFieldChange("adminName", event.target.value)}
-                    placeholder="Ad Soyad"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="admin-email">E-posta *</Label>
-                  <Input
-                    id="admin-email"
-                    type="email"
-                    className={formFieldInsetClass}
-                    value={form.adminEmail}
-                    onChange={(event) => onFieldChange("adminEmail", event.target.value)}
-                    placeholder="ornek@email.com"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="admin-phone">Telefon</Label>
-                  <Input
-                    id="admin-phone"
-                    className={formFieldInsetClass}
-                    value={form.adminPhone}
-                    onChange={(event) => onFieldChange("adminPhone", event.target.value)}
-                    placeholder="+49 ..."
                   />
                 </div>
               </div>

@@ -1,12 +1,10 @@
 export type GroupFormState = {
+  platform: "WhatsApp" | "Facebook";
   groupName: string;
   whatsappLink: string;
   country: string;
   city: string;
   description: string;
-  adminName: string;
-  adminEmail: string;
-  adminPhone: string;
 };
 
 export type JoinFormState = {
@@ -17,14 +15,12 @@ export type JoinFormState = {
 };
 
 export const initialGroupForm: GroupFormState = {
+  platform: "WhatsApp",
   groupName: "",
   whatsappLink: "",
   country: "",
   city: "",
   description: "",
-  adminName: "",
-  adminEmail: "",
-  adminPhone: "",
 };
 
 export const initialJoinForm: JoinFormState = {
@@ -41,12 +37,6 @@ export function getErrorMessage(error: unknown, fallback = "Beklenmeyen hata") {
   }
   if (typeof error === "string" && error.trim()) return error;
   return fallback;
-}
-
-export function buildAdminContact(form: GroupFormState) {
-  return [form.adminEmail.trim() ? `E-posta: ${form.adminEmail.trim()}` : "", form.adminPhone.trim() ? `Telefon: ${form.adminPhone.trim()}` : ""]
-    .filter(Boolean)
-    .join("\n");
 }
 
 export function buildSubmitterDescription(form: GroupFormState) {

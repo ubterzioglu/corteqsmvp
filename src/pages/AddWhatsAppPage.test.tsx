@@ -139,7 +139,8 @@ describe("AddWhatsAppPage", () => {
     expect(await screen.findByText("Berlin Girisimciler")).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole("button", { name: /Formu aç/i })[0]);
 
-    expect(screen.getByText("WhatsApp Grubu Ekle")).toBeInTheDocument();
+    expect(screen.getByText("Grup Ekle")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Örn: Berlin Türk Girişimciler/i)).toBeInTheDocument();
     expect(signInWithOAuthMock).not.toHaveBeenCalled();
   });
 
@@ -149,7 +150,8 @@ describe("AddWhatsAppPage", () => {
     renderPage("/addcom?openGroupForm=1");
 
     expect(await screen.findByText("Berlin Girisimciler")).toBeInTheDocument();
-    expect(screen.getByText("WhatsApp Grubu Ekle")).toBeInTheDocument();
+    expect(screen.getByText("Grup Ekle")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Örn: Berlin Türk Girişimciler/i)).toBeInTheDocument();
   });
 
   it("renders the landing detail when group query exists", async () => {
