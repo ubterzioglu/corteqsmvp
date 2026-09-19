@@ -159,9 +159,11 @@ describe("mapNotificationState", () => {
       adminUpdateEnabled: false,
       memberWelcomeEnabled: false,
       revisionRequestEnabled: false,
+      radarScanDigestEnabled: false,
       myNewMemberEmail: false,
       myAdminUpdateEmail: false,
       myRevisionRequestEmail: false,
+      myRadarScanDigestEmail: false,
       pendingCount: 0,
       recent: [],
     });
@@ -224,19 +226,23 @@ describe("setNotificationSetting", () => {
 });
 
 describe("setMyNotificationSubscription", () => {
-  it("üç tercihi birlikte gönderir (user_id parametresi yoktur)", async () => {
+  // Dört tercihin DÖRDÜ de her çağrıda gitmelidir: RPC upsert'i tüm sütunları yazar,
+  // eksik bırakılan alan DEFAULT false'a düşer ve kullanıcının aboneliğini sessizce siler.
+  it("dört tercihi birlikte gönderir (user_id parametresi yoktur)", async () => {
     rpcMock.mockResolvedValue({ data: {}, error: null });
 
     await setMyNotificationSubscription({
       newMemberEmail: true,
       adminUpdateEmail: false,
       revisionRequestEmail: true,
+      radarScanDigestEmail: true,
     });
 
     expect(rpcMock).toHaveBeenCalledWith("set_my_notification_subscription", {
       p_new_member: true,
       p_admin_update: false,
       p_revision_request: true,
+      p_radar_scan_digest: true,
     });
   });
 });

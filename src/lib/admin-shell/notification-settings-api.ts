@@ -23,6 +23,7 @@ export const NOTIFICATION_SETTING_KEYS = {
   adminUpdate: "email.admin_update.enabled",
   memberWelcome: "email.member_welcome.enabled",
   revisionRequest: "email.revision_request.enabled",
+  radarScanDigest: "email.radar_scan_digest.enabled",
 } as const;
 
 export type NotificationSettingKey =
@@ -42,13 +43,15 @@ export type NotificationEventType =
   | "new_member"
   | "admin_update"
   | "member_welcome"
-  | "revision_request";
+  | "revision_request"
+  | "radar_scan_digest";
 
 export const NOTIFICATION_EVENT_LABELS: Record<NotificationEventType, string> = {
   new_member: "Yeni üye",
   admin_update: "Güncelleme",
   member_welcome: "Hoş geldin",
   revision_request: "Revizyon isteği",
+  radar_scan_digest: "Radar tarama özeti",
 };
 
 export type OutboxEntry = {
@@ -69,9 +72,11 @@ export type AdminNotificationState = {
   adminUpdateEnabled: boolean;
   memberWelcomeEnabled: boolean;
   revisionRequestEnabled: boolean;
+  radarScanDigestEnabled: boolean;
   myNewMemberEmail: boolean;
   myAdminUpdateEmail: boolean;
   myRevisionRequestEmail: boolean;
+  myRadarScanDigestEmail: boolean;
   pendingCount: number;
   recent: OutboxEntry[];
 };
@@ -93,9 +98,11 @@ type RawState = {
   adminUpdateEnabled?: unknown;
   memberWelcomeEnabled?: unknown;
   revisionRequestEnabled?: unknown;
+  radarScanDigestEnabled?: unknown;
   myNewMemberEmail?: unknown;
   myAdminUpdateEmail?: unknown;
   myRevisionRequestEmail?: unknown;
+  myRadarScanDigestEmail?: unknown;
   pendingCount?: unknown;
   recent?: unknown;
 };
@@ -166,9 +173,11 @@ export function mapNotificationState(raw: unknown): AdminNotificationState {
     adminUpdateEnabled: toBoolean(state.adminUpdateEnabled),
     memberWelcomeEnabled: toBoolean(state.memberWelcomeEnabled),
     revisionRequestEnabled: toBoolean(state.revisionRequestEnabled),
+    radarScanDigestEnabled: toBoolean(state.radarScanDigestEnabled),
     myNewMemberEmail: toBoolean(state.myNewMemberEmail),
     myAdminUpdateEmail: toBoolean(state.myAdminUpdateEmail),
     myRevisionRequestEmail: toBoolean(state.myRevisionRequestEmail),
+    myRadarScanDigestEmail: toBoolean(state.myRadarScanDigestEmail),
     pendingCount: Number.isFinite(pendingCount) ? pendingCount : 0,
     recent: recent
       .map((row) => mapOutboxEntry(row as RawOutboxRow))
@@ -204,11 +213,16 @@ export async function setMyNotificationSubscription(input: {
   newMemberEmail: boolean;
   adminUpdateEmail: boolean;
   revisionRequestEmail: boolean;
+  radarScanDigestEmail: boolean;
 }): Promise<void> {
+  // DİKKAT: dört argümanın DÖRDÜ de gönderilmelidir. RPC'nin son iki parametresi
+  // DEFAULT false'tur — eksik gönderilen alan "kapat" anlamına gelir ve kullanıcının
+  // mevcut aboneliğini sessizce siler (upsert tüm sütunları yazar).
   const { error } = await supabase.rpc("set_my_notification_subscription" as never, {
     p_new_member: input.newMemberEmail,
     p_admin_update: input.adminUpdateEmail,
     p_revision_request: input.revisionRequestEmail,
+    p_radar_scan_digest: input.radarScanDigestEmail,
   } as never);
   if (error) {
     throw new Error(error.message);

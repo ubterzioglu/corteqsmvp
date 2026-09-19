@@ -203,6 +203,17 @@ const AdminNotificationSettingsPage = () => {
               setGlobal(SETTING_KEYS.memberWelcome, checked)
             }
           />
+
+          <ToggleRow
+            title="Radar tarama özeti açık"
+            description="Günlük haber taraması bittiğinde abonelere tek bir özet maili gider."
+            checked={state.radarScanDigestEnabled}
+            disabled={!state.isAdmin || settingsBusy}
+            label="Radar tarama özeti açık"
+            onCheckedChange={(checked) =>
+              setGlobal(SETTING_KEYS.radarScanDigest, checked)
+            }
+          />
         </section>
 
         <section className="space-y-3">
@@ -238,6 +249,15 @@ const AdminNotificationSettingsPage = () => {
             disabled={subscriptionBusy}
             label="Yeni revizyon isteği açıldığında bana mail gelsin"
             onCheckedChange={(checked) => updateSubscription({ revisionRequestEmail: checked })}
+          />
+
+          <ToggleRow
+            title="Radar tarama özeti bana mail gelsin"
+            description="Günlük haber taramasının sonucunu (istatistikler + öne çıkan haberler) tek özet mailde alırsın."
+            checked={state.myRadarScanDigestEmail}
+            disabled={subscriptionBusy}
+            label="Radar tarama özeti bana mail gelsin"
+            onCheckedChange={(checked) => updateSubscription({ radarScanDigestEmail: checked })}
           />
         </section>
 

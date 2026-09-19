@@ -37,9 +37,11 @@ const makeState = (overrides: Partial<AdminNotificationState> = {}): AdminNotifi
   adminUpdateEnabled: true,
   memberWelcomeEnabled: false,
   revisionRequestEnabled: true,
+  radarScanDigestEnabled: true,
   myNewMemberEmail: false,
   myAdminUpdateEmail: false,
   myRevisionRequestEmail: false,
+  myRadarScanDigestEmail: false,
   pendingCount: 0,
   recent: [],
   ...overrides,
@@ -136,6 +138,7 @@ describe("AdminNotificationSettingsPage", () => {
         myNewMemberEmail: false,
         myAdminUpdateEmail: true,
         myRevisionRequestEmail: true,
+        myRadarScanDigestEmail: true,
       }),
     );
 
@@ -150,6 +153,7 @@ describe("AdminNotificationSettingsPage", () => {
       newMemberEmail: true,
       adminUpdateEmail: true,
       revisionRequestEmail: true,
+      radarScanDigestEmail: true,
     });
   });
 
@@ -166,7 +170,11 @@ describe("AdminNotificationSettingsPage", () => {
 
   it("revizyon isteği aboneliğini açarken diğer tercihleri korur", async () => {
     fetchStateMock.mockResolvedValue(
-      makeState({ myRevisionRequestEmail: false, myAdminUpdateEmail: true }),
+      makeState({
+        myRevisionRequestEmail: false,
+        myAdminUpdateEmail: true,
+        myRadarScanDigestEmail: true,
+      }),
     );
 
     renderPage();
@@ -179,6 +187,7 @@ describe("AdminNotificationSettingsPage", () => {
       newMemberEmail: false,
       adminUpdateEmail: true,
       revisionRequestEmail: true,
+      radarScanDigestEmail: true,
     });
   });
 

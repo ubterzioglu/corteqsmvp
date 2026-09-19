@@ -577,6 +577,7 @@ export type Database = {
           admin_update_email: boolean
           created_at: string
           new_member_email: boolean
+          radar_scan_digest_email: boolean
           revision_request_email: boolean
           updated_at: string
           user_id: string
@@ -585,6 +586,7 @@ export type Database = {
           admin_update_email?: boolean
           created_at?: string
           new_member_email?: boolean
+          radar_scan_digest_email?: boolean
           revision_request_email?: boolean
           updated_at?: string
           user_id: string
@@ -593,6 +595,7 @@ export type Database = {
           admin_update_email?: boolean
           created_at?: string
           new_member_email?: boolean
+          radar_scan_digest_email?: boolean
           revision_request_email?: boolean
           updated_at?: string
           user_id?: string

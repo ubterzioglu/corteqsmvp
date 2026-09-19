@@ -56,6 +56,7 @@ const SETTING_KEY_BY_EVENT: Record<string, string> = {
   member_welcome: "email.member_welcome.enabled",
   revision_request: "email.revision_request.enabled",
   relocation_tool_abandonment: "email.relocation_tool_abandonment.enabled",
+  radar_scan_digest: "email.radar_scan_digest.enabled",
 };
 
 type EventType =
@@ -515,56 +516,58 @@ Deno.serve(async (request) => {
       }
     }
 
-    // ── radar_scan_digest günlük özeti: TÜM adminlere gönderilir ──────────────
-    // Abone listesine bakılmaz — kullanıcı kararı. İstatistikler + top 10 haber.
+    // ── radar_scan_digest günlük özeti ────────────────────────────────────────
+    // Alıcılar diğer üç bildirim tipiyle AYNI yoldan çözülür: global anahtar +
+    // admin_notification_subscriptions.radar_scan_digest_email (mig 20260919120000).
+    // İlk sürüm burada `profiles` tablosunu sorguluyordu — o tablo 2026-06-09'da
+    // DROP edildi, sorgu her çalıştırmada patlıyor ve satırlar sessizce `failed`a
+    // düşüyordu. `profiles`/`user_profiles`/`admin_users` bu kod tabanında yasaktır.
     const radarDigestRows = digestRows.filter((row) => row.event_type === "radar_scan_digest");
     if (radarDigestRows.length > 0) {
       const radarIds = radarDigestRows.map((row) => row.id);
       try {
-        const { data: allAdmins, error: adminsError } = await admin
-          .from("profiles")
-          .select("email")
-          .eq("is_admin", true)
-          .not("email", "is", null);
-
-        if (adminsError) throw adminsError;
-
-        const recipients = (allAdmins ?? [])
-          .map((p: { email: string | null }) => p.email)
-          .filter((email: string | null): email is string => !!email);
-
-        if (recipients.length === 0) {
+        if (!(await isEventEnabled("radar_scan_digest"))) {
           await admin
             .from("notification_email_outbox")
-            .update({ status: "skipped", last_error: "no_admins_found", recipient_count: 0, sent_at: new Date().toISOString() })
+            .update({ status: "skipped", last_error: "global_switch_off", sent_at: new Date().toISOString() })
             .in("id", radarIds);
           skipped += radarDigestRows.length;
         } else {
-          const { subject, html, text } = buildRadarScanDigestEmail(
-            radarDigestRows.map((row) => row.payload as unknown as import("../_shared/emails/radar-scan-digest.ts").RadarScanDigestPayload)
-          );
+          const recipients = (await getSubscribers("radar_scan_digest")).map((subscriber) => subscriber.email);
 
-          for (const recipient of recipients) {
-            await sendMailViaZohoSmtp(smtpConfig, {
-              from: mailFrom,
-              to: [recipient],
-              replyTo: mailReplyTo || undefined,
-              subject,
-              html,
-              text,
-            });
+          if (recipients.length === 0) {
+            await admin
+              .from("notification_email_outbox")
+              .update({ status: "skipped", last_error: "no_subscribers", recipient_count: 0, sent_at: new Date().toISOString() })
+              .in("id", radarIds);
+            skipped += radarDigestRows.length;
+          } else {
+            const { subject, html, text } = buildRadarScanDigestEmail(
+              radarDigestRows.map((row) => row.payload as unknown as import("../_shared/emails/radar-scan-digest.ts").RadarScanDigestPayload)
+            );
+
+            for (const recipient of recipients) {
+              await sendMailViaZohoSmtp(smtpConfig, {
+                from: mailFrom,
+                to: [recipient],
+                replyTo: mailReplyTo || undefined,
+                subject,
+                html,
+                text,
+              });
+            }
+
+            await admin
+              .from("notification_email_outbox")
+              .update({
+                status: "sent",
+                recipient_count: recipients.length,
+                last_error: null,
+                sent_at: new Date().toISOString(),
+              })
+              .in("id", radarIds);
+            sent += radarDigestRows.length;
           }
-
-          await admin
-            .from("notification_email_outbox")
-            .update({
-              status: "sent",
-              recipient_count: recipients.length,
-              last_error: null,
-              sent_at: new Date().toISOString(),
-            })
-            .in("id", radarIds);
-          sent += radarDigestRows.length;
         }
       } catch (radarError: unknown) {
         const message = radarError instanceof Error ? radarError.message : "unexpected_error";

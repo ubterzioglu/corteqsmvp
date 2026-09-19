@@ -26,6 +26,7 @@ export type NotificationSubscriptionPatch = Partial<{
   newMemberEmail: boolean;
   adminUpdateEmail: boolean;
   revisionRequestEmail: boolean;
+  radarScanDigestEmail: boolean;
 }>;
 
 export function useNotificationSettings() {
@@ -105,6 +106,7 @@ export function useNotificationSettings() {
       newMemberEmail: state.myNewMemberEmail,
       adminUpdateEmail: state.myAdminUpdateEmail,
       revisionRequestEmail: state.myRevisionRequestEmail,
+      radarScanDigestEmail: state.myRadarScanDigestEmail,
       ...patch,
     });
   };
@@ -121,6 +123,9 @@ export function useNotificationSettings() {
         state.myRevisionRequestEmail && !state.revisionRequestEnabled
           ? "revizyon isteği"
           : null,
+        state.myRadarScanDigestEmail && !state.radarScanDigestEnabled
+          ? "radar tarama özeti"
+          : null,
       ].filter((value): value is string => value !== null)
     : [];
 
@@ -129,7 +134,8 @@ export function useNotificationSettings() {
     state &&
       ((state.myNewMemberEmail && state.newMemberEnabled) ||
         (state.myAdminUpdateEmail && state.adminUpdateEnabled) ||
-        (state.myRevisionRequestEmail && state.revisionRequestEnabled)),
+        (state.myRevisionRequestEmail && state.revisionRequestEnabled) ||
+        (state.myRadarScanDigestEmail && state.radarScanDigestEnabled)),
   );
 
   return {

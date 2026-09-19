@@ -34,9 +34,11 @@ const makeState = (overrides: Partial<AdminNotificationState> = {}): AdminNotifi
   adminUpdateEnabled: true,
   memberWelcomeEnabled: false,
   revisionRequestEnabled: true,
+  radarScanDigestEnabled: true,
   myNewMemberEmail: false,
   myAdminUpdateEmail: false,
   myRevisionRequestEmail: false,
+  myRadarScanDigestEmail: false,
   pendingCount: 0,
   recent: [],
   ...overrides,
@@ -84,6 +86,7 @@ describe("AdminNotificationMenu", () => {
         myNewMemberEmail: false,
         myAdminUpdateEmail: true,
         myRevisionRequestEmail: true,
+        myRadarScanDigestEmail: true,
       }),
     );
 
@@ -91,11 +94,14 @@ describe("AdminNotificationMenu", () => {
     await openMenu();
     await userEvent.click(await screen.findByLabelText("Yeni üye kaydolduğunda bana mail gelsin"));
 
+    // DÖRT alanın dördü de gitmeli: RPC upsert'i tüm sütunları yazar, eksik
+    // bırakılan alan DEFAULT false'a düşer ve o aboneliği sessizce kapatır.
     await waitFor(() => expect(setSubscriptionMock).toHaveBeenCalledTimes(1));
     expect(setSubscriptionMock.mock.calls[0][0]).toEqual({
       newMemberEmail: true,
       adminUpdateEmail: true,
       revisionRequestEmail: true,
+      radarScanDigestEmail: true,
     });
   });
 
