@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { GROUP_PLATFORM_OPTIONS, type GroupFormState, type GroupPlatform } from "@/lib/whatsapp-landing-form";
-import { PlatformLogo } from "@/components/whatsapp/PlatformLogo";
 
 const formFieldInsetClass = "mx-0.5 w-[calc(100%-4px)]";
 
@@ -141,11 +140,8 @@ export function AddCommunityFormSection({
                     </SelectTrigger>
                     <SelectContent>
                       {GROUP_PLATFORM_OPTIONS.map((opt) => (
-                        <SelectItem key={opt.value} value={opt.value} className="flex items-center gap-2">
-                          <span className="inline-flex items-center gap-2">
-                            <PlatformLogo platform={opt.value} size="card" />
-                            {opt.label}
-                          </span>
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {opt.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
