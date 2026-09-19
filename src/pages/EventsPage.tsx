@@ -8,9 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePublishedEvents } from "@/hooks/use-events";
 import { useSeo } from "@/lib/seo";
-import { useAuth } from "@/components/auth/useAuth";
-import { GENERIC_FEATURE_KEYS } from "@/lib/features";
-import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 import { EventsHero } from "@/components/events/EventsHero";
 import { CreateEventFormSection } from "@/components/events/CreateEventFormSection";
 
@@ -49,10 +46,6 @@ function typeLabel(type: string): string {
 }
 
 export default function EventsPage() {
-  const { user } = useAuth();
-  const { isFeatureEnabled } = useFeatureFlags(true);
-  const canCreate = isFeatureEnabled(GENERIC_FEATURE_KEYS.eventsCreate);
-
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -77,12 +70,10 @@ export default function EventsPage() {
       <main className="container mx-auto px-4 pb-16 pt-6">
         <EventsHero />
 
-        {canCreate && (
-          <CreateEventFormSection
-            open={eventFormOpen}
-            onOpenChange={setEventFormOpen}
-          />
-        )}
+        <CreateEventFormSection
+          open={eventFormOpen}
+          onOpenChange={setEventFormOpen}
+        />
 
         <section className="mt-8">
           <div className="mt-5">
