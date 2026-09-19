@@ -14,26 +14,25 @@ import { useCreateEvent } from "@/hooks/use-events";
 
 const CATEGORIES = [
   { value: "networking", label: "Networking" },
-  { value: "eğitim", label: "Eğitim" },
-  { value: "kültür", label: "Kültür & Sanat" },
-  { value: "iş", label: "İş & Kariyer" },
+  { value: "egitim", label: "Eğitim" },
+  { value: "kultur", label: "Kültür & Sanat" },
+  { value: "is", label: "İş & Kariyer" },
   { value: "sosyal", label: "Sosyal" },
   { value: "spor", label: "Spor" },
 ];
 
 const EVENT_TYPES = [
-  { value: "yüz yüze", label: "Fiziksel" },
+  { value: "yuz yuze", label: "Fiziksel" },
   { value: "online", label: "Dijital" },
   { value: "hybrid", label: "Hibrit" },
 ];
 
 interface CreateEventFormSectionProps {
-  isSignedIn: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: CreateEventFormSectionProps) {
+export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSectionProps) {
   const { user, profile } = useAuth();
   const { toast } = useToast();
   const createEventMutation = useCreateEvent();
@@ -41,7 +40,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [type, setType] = useState("yüz yüze");
+  const [type, setType] = useState("yuz yuze");
   const [eventDate, setEventDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -56,9 +55,8 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
   const [tagInput, setTagInput] = useState("");
   const [organizerName, setOrganizerName] = useState(profile?.full_name ?? "");
   const [registrationUrl, setRegistrationUrl] = useState("");
-  const [oauthSubmitting, setOauthSubmitting] = useState(false);
 
-  const showPhysicalFields = type === "yüz yüze" || type === "hybrid";
+  const showPhysicalFields = type === "yuz yuze" || type === "hybrid";
   const showOnlineFields = type === "online" || type === "hybrid";
 
   const handleAddTag = () => {
@@ -73,50 +71,36 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
     setTags(tags.filter((t) => t !== tag));
   };
 
-  const startGoogleAuthForEventForm = async () => {
-    if (user) {
-      onOpenChange(true);
-      return true;
-    }
-
-    setOauthSubmitting(true);
-
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: new URL("/events", window.location.origin).toString(),
-      },
-    });
-
-    if (error) {
-      toast({
-        title: "Google girişi başlatılamadı",
-        description: error.message,
-        variant: "destructive",
-      });
-      setOauthSubmitting(false);
-      return false;
-    }
-
-    return false;
-  };
-
   const handleSubmit = async () => {
-    if (!user) {
-      toast({
-        title: "Üye olmalısınız",
-        description: "Etkinlik oluşturmak için önce üye olmalısınız. Google ile giriş yapılıyor...",
-      });
-      await startGoogleAuthForEventForm();
-      return;
-    }
-
     if (!title.trim() || !description.trim() || !category || !eventDate) {
       toast({
         title: "Eksik alan",
-        description: "Başlık, açıklama, kategori ve tarih zorunludur.",
+        description: "Baslik, aciklama, kategori ve tarih zorunludur.",
         variant: "destructive",
       });
+      return;
+    }
+
+    if (!user) {
+      toast({
+        title: "Uye olmalisiniz",
+        description: "Etkinlik olusturmak icin once uye olmalisiniz. Google ile giris yapiliyor...",
+      });
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: new URL("/events", window.location.origin).toString(),
+        },
+      });
+
+      if (error) {
+        toast({
+          title: "Google girisi baslatilamadi",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
       return;
     }
 
@@ -126,7 +110,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
         title: title.trim(),
         description: description.trim(),
         category,
-        type: type as "yüz yüze" | "online" | "hybrid",
+        type: type as "yuz yuze" | "online" | "hybrid",
         eventDate,
         startTime: startTime || null,
         endTime: endTime || null,
@@ -144,14 +128,14 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
       });
 
       toast({
-        title: "Etkinliğiniz alındı",
-        description: "Admin onayından sonra listede yayınlanacak.",
+        title: "Etkinliginiz alindi",
+        description: "Admin onayindan sonra listede yayinlanacak.",
       });
 
       setTitle("");
       setDescription("");
       setCategory("");
-      setType("yüz yüze");
+      setType("yuz yuze");
       setEventDate("");
       setStartTime("");
       setEndTime("");
@@ -169,7 +153,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
       onOpenChange(false);
     } catch (error) {
       toast({
-        title: "Gönderilemedi",
+        title: "Gonderilemedi",
         description: error instanceof Error ? error.message : "Beklenmeyen hata",
         variant: "destructive",
       });
@@ -180,53 +164,24 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
 
   return (
     <div className="mt-8 rounded-[1.9rem] border border-violet-200/70 bg-[linear-gradient(135deg,rgba(245,243,255,0.96)_0%,rgba(255,255,255,0.98)_42%,rgba(239,246,255,0.94)_100%)] p-3 shadow-[0_20px_60px_rgba(15,23,42,0.08)] ring-1 ring-white/80 backdrop-blur-sm">
-      <div className="rounded-[1.45rem] bg-white/55 p-4 md:p-5">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-start gap-3 text-left">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#f5f3ff_0%,#ede9fe_100%)] shadow-[0_10px_24px_rgba(139,92,246,0.16)] ring-1 ring-violet-200/80">
-              <Calendar className="h-4.5 w-4.5 text-violet-700" />
-            </span>
-            <div className="space-y-1">
-              <h2 className="text-base font-bold tracking-[0.01em] text-slate-900 md:text-lg">Etkinlik Eklemek İstiyorum</h2>
-              <p className="text-sm text-slate-600">
-                Etkinliğini ekle, admin onayından sonra listede yayınlanacak.
-              </p>
-            </div>
-          </div>
-
-          <Button
-            type="button"
-            className="w-full bg-violet-600 text-white hover:bg-violet-700 md:w-auto"
-            onClick={startGoogleAuthForEventForm}
-            disabled={oauthSubmitting || createEventMutation.isPending}
-          >
-            {oauthSubmitting
-              ? "Google'a yönlendiriliyor..."
-              : isSignedIn
-                ? "Etkinlik ekleme formunu aç"
-                : "Google ile etkinlik ekle"}
-          </Button>
-        </div>
-      </div>
       <Accordion
         type="single"
         collapsible
         value={open ? "event-form" : ""}
         onValueChange={(value) => onOpenChange(value === "event-form")}
-        className="mt-3"
       >
         <AccordionItem
           value="event-form"
           className="overflow-hidden rounded-[1.45rem] border border-violet-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(245,243,255,0.92)_100%)]"
         >
           <AccordionTrigger className="px-5 py-4 text-left text-base font-bold text-slate-900 hover:no-underline">
-            {open ? "Formu kapat" : "Formu aç"}
+            {open ? "Formu kapat" : "Etkinlik Eklemek Istiyorum — Formu Ac"}
           </AccordionTrigger>
           <AccordionContent className="border-t border-violet-100 px-5 pb-5 pt-4">
             <div className="mb-5">
               <h3 className="text-left text-xl font-bold text-slate-900">Etkinlik Ekle</h3>
               <p className="mt-1 text-left text-sm text-slate-600">
-                Aşağıdaki bilgileri doldur. Etkinlik admin onayından sonra listede görünecek.
+                Asagidaki bilgileri doldur. Etkinlik admin onayindan sonra listede gorunecek.
               </p>
             </div>
 
@@ -235,7 +190,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Etkinlik Bilgileri</h3>
 
                 <div>
-                  <Label htmlFor="event-title">Etkinlik Başlığı *</Label>
+                  <Label htmlFor="event-title">Etkinlik Basligi *</Label>
                   <Input
                     id="event-title"
                     className={formFieldInsetClass}
@@ -243,12 +198,12 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                     spellCheck
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
-                    placeholder="Örn: Berlin Türk Girişimciler Buluşması"
+                    placeholder="Orn: Berlin Turk Girisimciler Bulusmasi"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="event-description">Açıklama *</Label>
+                  <Label htmlFor="event-description">Aciklama *</Label>
                   <Textarea
                     id="event-description"
                     className={formFieldInsetClass}
@@ -257,7 +212,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                     rows={3}
                     value={description}
                     onChange={(event) => setDescription(event.target.value)}
-                    placeholder="Etkinlik hakkında detaylı bilgi..."
+                    placeholder="Etkinlik hakkinda detayli bilgi..."
                   />
                 </div>
 
@@ -266,7 +221,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                     <Label htmlFor="event-category">Kategori *</Label>
                     <Select value={category} onValueChange={setCategory}>
                       <SelectTrigger id="event-category" className={formFieldInsetClass}>
-                        <SelectValue placeholder="Seçin" />
+                        <SelectValue placeholder="Secin" />
                       </SelectTrigger>
                       <SelectContent>
                         {CATEGORIES.map((c) => (
@@ -279,7 +234,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                   </div>
 
                   <div>
-                    <Label htmlFor="event-type">Etkinlik Türü *</Label>
+                    <Label htmlFor="event-type">Etkinlik Turu *</Label>
                     <Select value={type} onValueChange={setType}>
                       <SelectTrigger id="event-type" className={formFieldInsetClass}>
                         <SelectValue />
@@ -307,7 +262,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                     />
                   </div>
                   <div>
-                    <Label htmlFor="start-time">Başlangıç Saati</Label>
+                    <Label htmlFor="start-time">Baslangic Saati</Label>
                     <Input
                       id="start-time"
                       type="time"
@@ -317,7 +272,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                     />
                   </div>
                   <div>
-                    <Label htmlFor="end-time">Bitiş Saati</Label>
+                    <Label htmlFor="end-time">Bitis Saati</Label>
                     <Input
                       id="end-time"
                       type="time"
@@ -333,7 +288,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                     <h4 className="text-sm font-semibold text-slate-700">Fiziksel Mekan Bilgileri</h4>
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div>
-                        <Label htmlFor="event-country">Ülke</Label>
+                        <Label htmlFor="event-country">Ulke</Label>
                         <Input
                           id="event-country"
                           className={formFieldInsetClass}
@@ -341,11 +296,11 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                           spellCheck
                           value={country}
                           onChange={(event) => setCountry(event.target.value)}
-                          placeholder="Örn: Almanya"
+                          placeholder="Orn: Almanya"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="event-city">Şehir</Label>
+                        <Label htmlFor="event-city">Sehir</Label>
                         <Input
                           id="event-city"
                           className={formFieldInsetClass}
@@ -353,7 +308,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                           spellCheck
                           value={city}
                           onChange={(event) => setCity(event.target.value)}
-                          placeholder="Örn: Berlin"
+                          placeholder="Orn: Berlin"
                         />
                       </div>
                     </div>
@@ -366,7 +321,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                         spellCheck
                         value={location}
                         onChange={(event) => setLocation(event.target.value)}
-                        placeholder="Mekan adı veya adres"
+                        placeholder="Mekan adi veya adres"
                       />
                     </div>
                   </div>
@@ -374,9 +329,9 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
 
                 {showOnlineFields && (
                   <div className="rounded-lg border border-violet-200/50 p-4 space-y-3">
-                    <h4 className="text-sm font-semibold text-slate-700">Dijital Katılım Bilgileri</h4>
+                    <h4 className="text-sm font-semibold text-slate-700">Dijital Katilim Bilgileri</h4>
                     <div>
-                      <Label htmlFor="event-online-url">Online Katılım Bağlantısı</Label>
+                      <Label htmlFor="event-online-url">Online Katilim Baglantisi</Label>
                       <Input
                         id="event-online-url"
                         type="url"
@@ -400,11 +355,11 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                       className={formFieldInsetClass}
                       value={price}
                       onChange={(event) => setPrice(event.target.value)}
-                      placeholder="Ücretsiz ise boş bırakın"
+                      placeholder="Ucretsiz ise bos birakin"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="event-max-attendees">Maks. Katılımcı</Label>
+                    <Label htmlFor="event-max-attendees">Maks. Katilimci</Label>
                     <Input
                       id="event-max-attendees"
                       type="number"
@@ -412,13 +367,13 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                       className={formFieldInsetClass}
                       value={maxAttendees}
                       onChange={(event) => setMaxAttendees(event.target.value)}
-                      placeholder="Sınırsız ise boş bırakın"
+                      placeholder="Sinirsiz ise bos birakin"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="event-cover">Kapak Görseli URL</Label>
+                  <Label htmlFor="event-cover">Kapak Gorseli URL</Label>
                   <Input
                     id="event-cover"
                     type="url"
@@ -430,7 +385,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                 </div>
 
                 <div>
-                  <Label htmlFor="event-organizer">Düzenleyen Adı</Label>
+                  <Label htmlFor="event-organizer">Duzenleyen Adi</Label>
                   <Input
                     id="event-organizer"
                     className={formFieldInsetClass}
@@ -438,19 +393,19 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                     spellCheck
                     value={organizerName}
                     onChange={(event) => setOrganizerName(event.target.value)}
-                    placeholder="Organizatör adı"
+                    placeholder="Organizator adi"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="event-registration">Kayıt Bağlantısı</Label>
+                  <Label htmlFor="event-registration">Kayit Baglantisi</Label>
                   <Input
                     id="event-registration"
                     type="url"
                     className={formFieldInsetClass}
                     value={registrationUrl}
                     onChange={(event) => setRegistrationUrl(event.target.value)}
-                    placeholder="https://... (harici kayıt sayfası)"
+                    placeholder="https://... (harici kayit sayfasi)"
                   />
                 </div>
 
@@ -493,7 +448,7 @@ export function CreateEventFormSection({ isSignedIn, open, onOpenChange }: Creat
                 onClick={handleSubmit}
                 disabled={createEventMutation.isPending}
               >
-                {createEventMutation.isPending ? "Gönderiliyor..." : "Etkinliği Gönder"}
+                {createEventMutation.isPending ? "Gonderiliyor..." : user ? "Etkinligi Gonder" : "Uye Ol ve Gonder"}
               </Button>
             </div>
           </AccordionContent>

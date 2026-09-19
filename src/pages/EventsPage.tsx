@@ -51,7 +51,7 @@ function typeLabel(type: string): string {
 export default function EventsPage() {
   const { user } = useAuth();
   const { isFeatureEnabled } = useFeatureFlags(true);
-  const canCreate = !!user && isFeatureEnabled(GENERIC_FEATURE_KEYS.eventsCreate);
+  const canCreate = isFeatureEnabled(GENERIC_FEATURE_KEYS.eventsCreate);
 
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -79,7 +79,6 @@ export default function EventsPage() {
 
         {canCreate && (
           <CreateEventFormSection
-            isSignedIn={Boolean(user)}
             open={eventFormOpen}
             onOpenChange={setEventFormOpen}
           />
