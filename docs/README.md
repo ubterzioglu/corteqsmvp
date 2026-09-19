@@ -1,5 +1,11 @@
 # CorteQS Documentation Index
 
+> **Güncelleme:** 2026-09-18 — sayılar yenilendi ve `CLAUDE.md`/`README.md`/`AGENT_CONTEXT.md`
+> ile hizalandı: **1.091** kaynak dosya (`src` altında `.ts`/`.tsx`), **393** migration
+> (141 `applied/` + 252 `archive/`), **9** Edge Function (`whatsapp-reply` + `whatsapp-webhook`
+> 2026-08-30'da eklendi; `lansman-admin` deprecated), `App.tsx` 313 satır / 51 `lazy()`,
+> 278 test dosyası / 1.958 test. Aşağıdaki 2026-08-04 ölçümleri tarihsel kayıttır.
+>
 > **Güncelleme:** 2026-08-04 — modernizasyon çalışması: 3 denetim raporu (`audits/`),
 > uygulama planı + backlog (`plans/`) ve kapanış raporu (`history/`) eklendi.
 > Listeleri aşağıdaki **2026-08-04 Modernizasyon Çalışması** bölümünde.

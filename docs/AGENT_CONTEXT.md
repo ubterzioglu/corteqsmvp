@@ -2,10 +2,12 @@
 
 > Bu dosya, yeni bir agent oturumunun projeyi hızla kavraması için hazırlanmıştır.
 > Diğer teknik belgelerden bilgi derleyerek token maliyetini minimize eder.
-> **Güncelleme:** 2026-06-11 (Cadde 3.0 E2E rebuild Faz 0–9 + kuyruk TAMAMLANDI; kök dizin temizliği ve dokümantasyon konsolidasyonu yapıldı)
+> **Güncelleme:** 2026-09-18 (bayat notlar ölçülerek düzeltildi: prod runtime nginx, 9 edge
+> function, 393 migration, stack sürümleri ve teknik borç listesi güncel — önceki güncelleme
+> 2026-06-11'de Cadde 3.0 E2E rebuild kapanışıydı)
 >
-> **Kök doküman düzeni (2026-06-11):** kökte yalnız 4 doküman yaşar —
-> `CLAUDE.md` (agent kuralları — kökte) · `docs/AGENT_CONTEXT.md` (bu dosya) · `docs/ARCHITECTURE.md` (tek ana mimari) · `docs/status/rapor.html` (rapor + takip tablosu).
+> **Kök doküman düzeni (2026-08-04):** kökte yalnız 2 `.md` yaşar —
+> `CLAUDE.md` (agent kuralları — kökte) ve `README.md` (GitHub giriş sayfası).
 > Geri kalan her şey `docs/` altındadır (`docs/README.md` indeksine bak).
 >
 > **Tek ana mimari doküman:** `docs/ARCHITECTURE.md`
@@ -21,8 +23,11 @@
 
 - URL: `https://corteqs.net`
 - Supabase Project ID: `injprdrsklkxgnaiixzh`
-- Deploy: Docker / Coolify → `npm run build` → `node server.mjs`
-- **Repo gerçekliği (2026-06-10):** 150 `*.tsx` page dosyası (65'i admin), 269 component, 81 lib modülü, **221 migration**, 83 test dosyası, 5 edge function
+- Deploy: Docker / Coolify → `npm run build` → **nginx** (production runtime).
+  `server.mjs` yalnız `npm run start` / nixpacks yoludur — bkz. §7.
+- **Repo gerçekliği (ölçüldü 2026-09-18):** 1.091 `ts/tsx` dosya `src` altında (157 sayfa `.tsx`,
+  91'i admin; 334 component; 277 lib modülü), **393 migration** (141 applied + 252 archive),
+  278 test dosyası / 1.958 test, **9 edge function**
 
 ### Modüller (tek SPA içinde)
 
@@ -50,10 +55,10 @@
 
 ```
 React 18.3        react-router-dom 7.17    @tanstack/react-query 5
-TypeScript 5.8    Vite 5.4 + SWC           @supabase/supabase-js 2.101
+TypeScript 5.8    Vite 8.2                 @supabase/supabase-js 2.108
 Tailwind 3.4      shadcn/ui (Radix)        react-hook-form 7 + zod 3
-Vitest 3          Playwright 1.57          sonner, next-themes, lucide-react
-recharts          react-simple-maps        @tanstack/react-table 8
+Vitest 4          Playwright 1.57          sonner, next-themes, lucide-react
+recharts          d3-geo, framer-motion    @tanstack/react-table 8
 ```
 
 **TypeScript strict modu KAPALI** (`strictNullChecks: false`, `noImplicitAny: false`) — intentional, refactor olmadan açılamaz.
@@ -154,7 +159,7 @@ useFeatureFlags() — get_current_user_features RPC
 | `public.admin_users` | `public.is_admin()` RPC / `public.is_moderator()` RPC |
 | `public.profiles` | `user_profile_attributes` (full_name, avatar_url vs. attribute olarak) |
 | `public.user_profiles` | `user_role_assignments` + `user_profile_attributes` |
-| `public.role_feature_defaults` | `role_feature_flags` |
+| `public.role_feature_defaults` | `role_features` (AFS rename öncesi ara ad: `role_feature_flags`) |
 
 **Profil/rol mantığına dokunmadan önce:** `user_role_assignments` ve `user_profile_attributes` tablolarını kullan. `public.profiles` veya `user_profiles`'a referans veren herhangi bir kod varsa kaldırılmalı.
 
@@ -292,14 +297,14 @@ geo_countries / geo_cities   → Global coğrafya referansı (251 ülke / ~77k �
 ### Feature Çözümleme Önceliği
 
 ```
-override (user/item bazlı) > role_feature_flags default > fallback (false)
+override (user/item bazlı) > role_features default > fallback (false)
 ```
 
 ### Claim Akışı
 
 ```
-submit_catalog_claim_request RPC → catalog_claim_requests (pending)
-Admin onay → admin_approve_catalog_claim → catalog_item_memberships (editor)
+submit_catalog_claim_request RPC → catalog_item_claims (pending; eski ad: catalog_claim_requests)
+Admin onay → admin_approve_catalog_claim → catalog_item_managers (editor; eski ad: catalog_item_memberships)
 Admin red  → admin_reject_catalog_claim
 ```
 
@@ -320,22 +325,36 @@ is_admin() / is_moderator()      → Yetki kontrol fonksiyonları
 
 ## 7. Deployment & Runtime
 
-### Build & Serve
+### Production runtime: nginx (server.mjs DEĞİL)
 
 ```bash
 npm run build        # dist/ üretir
-node server.mjs      # Production: static serve + env injection + /api/chat proxy
+node server.mjs      # YALNIZ local `npm run start` / nixpacks yolu — prod'da ÇALIŞMAZ
 ```
 
-### server.mjs Kritik İşlevler
+- `Dockerfile` iki aşamalı: `node:22-alpine` build → `nginx:1.27-alpine` serve (Coolify).
+- `nginx.conf.template` → `/etc/nginx/templates/default.conf.template`: güvenlik başlıkları +
+  CSP, tüm 301'ler, `/api/chat` rate-limit/proxy, prerender yönlendirmesi BURADAN gelir.
+  Header/redirect/CSP işi için `server.mjs` düzenlemenin prod'a etkisi YOKTUR.
+- `docker-entrypoint-env.sh` container açılışında `/env-config.js` yazar ve prerender
+  placeholder'larını (`__PRERENDER_URL__` vb.) substitute eder.
+- Deploy sonrası: `BASE_URL=https://corteqs.net npm run verify:release` +
+  `curl -sI https://corteqs.net/ | grep -Ei 'content-security-policy|x-frame-options'` +
+  tarayıcı konsolunda CSP ihlali kontrolü.
 
-1. `/env-config.js` → runtime'da env var'lardan üretilir (Coolify build-time inject edemez)
+### server.mjs (local/nixpacks yolu) Kritik İşlevler
+
+1. `/env-config.js` → runtime'da env var'lardan üretilir
 2. `/api/chat` → `RAG_API_SECRET` ile `rag.corteqs.net`'e proxy
-3. SPA fallback routing
+3. SPA fallback routing + sıkı asset handling (eksik chunk → 404)
+4. `legacyRedirectMap` → `src/lib/redirects.ts` ile hizalı kalmalı (redirects.test.ts kilitler)
 
 ### Vite Config Özel Mantık
 
-`info-*.html` dosyaları build sırasında `dist/commercial/<slug>/` altına emit edilir. **Bu mantığa dokunma.**
+- Ticari dokümanlar artık SPA rotası: `/commercial/<slug>` → içerik
+  `src/content/commercial/*.html` fragmanlarında (TEK kaynak). Eski standalone-HTML emit
+  plugin'i ve kök `info-*.html` dosyaları KALDIRILDI (2026-07-13); `vite.config.ts` yalnız
+  legacy `*.html` redirect stub'ları üretir.
 
 ### Env Vars
 
@@ -364,10 +383,12 @@ npm run start                # node server.mjs
 BASE_URL=https://corteqs.net npm run verify:release
 supabase migrations list
 
-# Edge functions (5): chat-register, find-matches, lansman-admin,
-#                     send-submission-email, submit-survey-response
+# Edge functions (9): find-matches, lansman-admin (DEPRECATED — HTTP 410),
+#   radar-news-scan, relocation-notifications, send-notification-emails,
+#   send-submission-email, submit-survey-response, whatsapp-reply, whatsapp-webhook
 supabase functions deploy send-submission-email
-supabase functions deploy lansman-admin
+supabase functions deploy whatsapp-webhook
+supabase functions deploy whatsapp-reply
 ```
 
 ---
@@ -392,8 +413,10 @@ supabase functions deploy lansman-admin
 | `src/lib/profile-helpers.ts` | Profil yardımcı fonksiyonları (yeni eklendi) |
 | `src/components/admin/roles-overview/` | RolesOverview modül bileşenleri |
 | `src/components/directory/` | Dizin arama/filtreleme/sonuç bileşenleri |
-| `vite.config.ts` | Standalone HTML emit — dokunma |
-| `server.mjs` | Production runtime |
+| `vite.config.ts` | Legacy `*.html` redirect stub'ları — ticari doküman içeriği SPA rotasında |
+| **`nginx.conf.template`** | **Production runtime config:** güvenlik başlıkları + CSP, tüm 301'ler, `/api/chat`, prerender |
+| **`src/lib/redirects.ts`** | Legacy redirect TEK kaynak; App.tsx buradan üretir, nginx aynalamalı (redirects.test.ts kilitler) |
+| `server.mjs` | local `npm run start` / nixpacks runtime — **prod runtime DEĞİL** |
 | `supabase/migrations/20260512103000_security_hardening_phase1.sql` | Güvenlik baseline |
 | `supabase/migrations/20260609003000_drop_legacy_tables.sql` | Legacy tablo temizliği |
 | `supabase/migrations/20260609015000_fix_catalog_profile_trigger_post_drop.sql` | Yeni kullanıcı oluşturma trigger düzeltmesi |
@@ -403,11 +426,11 @@ supabase functions deploy lansman-admin
 ## 10. Dokunulmayacak / Kırılmayacak Şeyler
 
 1. **SEO kilitli URL'ler:** `/lansman`, `/cadde` (+ alt rotaları `/cadde/cafe/:id`, `/cadde/carsi[/:id]`), `/19051919`, `/anket`, `/commercial/<slug>`, `/founders`, `/directory`, `/iletisim` — path değiştirilemez
-2. **Supabase migration'ları** — silinemez, yeniden sıralanamaz; sadece yeni ekle
-3. **`server.mjs`** — env injection ve RAG proxy mantığı
-4. **`vite.config.ts`** — standalone HTML emit
+2. **Supabase migration'ları** — silinemez, yeniden sıralanamaz; sadece yeni ekle (parent `supabase/migrations/` dizininde .sql BIRAKMA — `applied/` altına taşı)
+3. **`server.mjs`** — env injection ve RAG proxy mantığı (local/nixpacks yolu; prod davranışı `nginx.conf.template`'te)
+4. **`nginx.conf.template`** — `add_header` kalıtılmaz, CSP'ye `'unsafe-inline'` eklenmez, yönlendirme dönen server bloğu `default_server` olamaz (CLAUDE.md "Değişmez sözleşmeler")
 5. **`src/components/ui/*`** — shadcn generated, manuel düzenleme yapma
-6. **`info-*.html`** kök dizinde kalmalı (Vite plugin input)
+6. ~~`info-*.html` kökte kalmalı~~ → **GEÇERSİZ:** kök `info-*.html` dosyaları kaldırıldı (2026-07-13); ticari içerik `src/content/commercial/*.html` fragmanlarında
 7. **Türkçe domain terimleri** — aşağıdaki listeye bak, rename etme
 
 ### Türkçe Domain Terimleri (rename etme)
@@ -418,20 +441,36 @@ supabase functions deploy lansman-admin
 
 ## 11. Bilinen Teknik Borçlar (öncelik sırasıyla)
 
-> Konsolide, uygulanabilir yol haritası: `docs/refactor/2026-06-09-refactor-backlog.md` (B1–B10).
+> Konsolide yol haritası: `docs/refactor/2026-06-09-refactor-backlog.md` (B1–B10).
+> Bu liste 2026-09-18'de ölçülerek tazelendi; ayrıntı ve ölçüm yöntemleri CLAUDE.md
+> "Known Limitations" bölümünde.
 
-1. **Generated `supabase/types.ts` senkron değil** — `supabase gen types` ile yenile (B1, en yüksek öncelik). **2026-06-11 denemesi:** `.env.local`'daki `SUPABASE_ACCESS_TOKEN` (+backup) Unauthorized — token yenilenmeli; sonra `cadde-internal.ts`'teki tek `db as any` cast'i kalkar
-2. **Kırık import'lar** — `@/lib/mapEntities`, `@/lib/radarNews`, `html-to-image` eksik; runtime crash riski (B2)
-3. **`AdminLayout.tsx` hâlâ büyük (741 satır)** — alt bileşenlere + `useAdminAccess` hook'una böl (B4)
-4. ~~**Auth shim migrasyonu**~~ — **KAPANDI 2026-09-06** (B5). `@/contexts/AuthContext` silindi,
-  16 dosya kanonik `@/components/auth/useAuth` yoluna geçirildi.
-5. **Karışık data fetching** — component içi `supabase.from()` hâlâ yaygın; `*-api.ts` + React Query'ye geç (B6)
-6. **TypeScript loose** — B1 sonrası kademeli sıkılaştır; ~103 `as any` temizle (B7)
-7. **`no-unused-vars` ESLint kapalı** — warn seviyesinde aç (B8)
-8. **Test coverage parçalı** — `AdminMembersPage.test.tsx` kırık (B3); Playwright E2E pasif (kayıt/profil/catalog claim)
-9. **Yeni kullanıcı trigger** — `20260609015000` ile düzeltildi; yeni kayıt akışı `welcome/activate` üzerinden test edilmeli
+**KAPANDI (yeniden açma):**
+- ~~B1 `supabase/types.ts` senkron değil~~ → güncel; `tsc` hatası **0** (2026-09-13)
+- ~~B2 kırık import'lar~~ → 5 ölü sayfa silindi (2026-08-04)
+- ~~B3 `AdminMembersPage.test.tsx` kırık~~ → dosya artık yok
+- ~~B4 `AdminLayout.tsx` 741 satır~~ → 6 satır barrel
+- ~~B5 auth shim~~ → silindi (2026-09-06), 16 dosya kanonik yolda
+- ~~ESLint borcu (1280 problem)~~ → `npm run lint` **0 problem**
 
-**Zaten yapıldı:** App.tsx modüler (~75 lazy), tek Supabase client, legacy auth tabloları drop edildi (tek sistem), `admin.ts` → `admin/` domain modüllerine bölündü.
+**AÇIK:**
+1. **Cadde çifti refactor'u:** `cadde-api.ts` (~986 satır, 25 importer, **testi yok**) +
+   `CaddePage.tsx` (~1716 satır, 19 importer) — önce karakterizasyon testi yaz, sonra ayrıştır.
+   İki dalgada da bilinçli ERTELENDİ.
+2. **B6 karışık data fetching:** component-içi `supabase.from()` kalan 2 meşru çağrı
+   `AuthProvider.tsx`'te (çok satırlı zincir — tek satır regex'le sayma). Yeni kod:
+   `*-api.ts` + React Query.
+3. **B7 TypeScript loose:** 3 gerçek `as any` cast (`cadde-internal.ts`, `relocation-api.ts`,
+   `relocation-tools-api.ts`) — bilinçli, tsc'yi yeniden artırır.
+4. **B8:** `no-unused-vars` ESLint'te kapalı.
+5. **Playwright E2E pasif** (9 spec) — kritik akışlar (kayıt/profil/catalog claim) için aktive et.
+6. **Geo katalog uzlaştırması:** form `geo_countries/geo_cities` (251/76.990), Cadde
+   `cadde_countries/cities` (22/54) kullanıyor; köprü kolonlar kısmen dolu — CLAUDE.md Cadde
+   bölümündeki ölçümlere bak. Telefon kodundan ülke TÜRETME.
+
+**Zaten yapıldı:** App.tsx modüler (51 lazy), tek Supabase client, legacy auth tabloları drop,
+`admin.ts` → `admin/` domain modülleri, nginx güvenlik başlıkları + CSP, tek kaynaklı redirect
+tablosu, büyük dosya ayrıştırması (800+ üretim dosyası: Cadde çifti hariç kalmadı).
 
 ---
 

@@ -9,7 +9,7 @@ React + Vite landing page backed by Supabase for form collection, admin review, 
 - Standalone lansman registration page at `/lansman`
 - Lansman admin screen at `/admin/lansman` under the shared admin shell
 - Supabase Auth based admin access via `user_role_assignments` + the `is_admin()` RPC (the legacy `public.admin_users` table was dropped 2026-06-09)
-- 7 Supabase Edge Functions for email notifications, matching, radar news scanning, and survey intake
+- 9 Supabase Edge Functions for email notifications, matching, radar news scanning, survey intake, and WhatsApp webhook/reply handling
 - Additional workflow notes are indexed under `docs/README.md`.
 
 ## Local setup
@@ -86,6 +86,11 @@ supabase secrets set GEMINI_API_KEY=...           # find-matches
 supabase secrets set RADAR_NEWS_CRON_SECRET=...   # radar-news-scan (cron auth)
 supabase secrets set RADAR_NEWS_MIN_SCORE=...     # radar-news-scan (optional threshold)
 supabase secrets set SURVEY_IP_HASH_SALT=...      # submit-survey-response
+supabase secrets set WHATSAPP_VERIFY_TOKEN=...    # whatsapp-webhook (Meta verification handshake)
+supabase secrets set WHATSAPP_APP_SECRET=...      # whatsapp-webhook + whatsapp-reply (X-Hub-Signature)
+supabase secrets set WHATSAPP_ACCESS_TOKEN=...    # whatsapp-reply (Graph API send)
+supabase secrets set WHATSAPP_PHONE_NUMBER_ID=... # whatsapp-reply
+# Optional: WHATSAPP_GRAPH_API_VERSION (defaults to v26.0; whatsapp-reply)
 ```
 
 `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` are injected by the
@@ -93,7 +98,7 @@ Supabase runtime — do not set them manually.
 
 ## Deploying Edge Functions
 
-There are **7** Edge Functions in `supabase/functions/`:
+There are **9** Edge Functions in `supabase/functions/`:
 
 ```bash
 supabase functions deploy send-submission-email
@@ -102,6 +107,8 @@ supabase functions deploy submit-survey-response
 supabase functions deploy find-matches
 supabase functions deploy radar-news-scan
 supabase functions deploy relocation-notifications
+supabase functions deploy whatsapp-webhook
+supabase functions deploy whatsapp-reply
 
 # lansman-admin is DEPRECATED (its handler returns HTTP 410). Admin lansman access now
 # uses direct RLS-backed table access — do not deploy or call this function.

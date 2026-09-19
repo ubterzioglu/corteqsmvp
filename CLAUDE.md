@@ -10,8 +10,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **1.091** `.ts`/`.tsx` files under `src` (2026-09-06 ölü kod temizliğiyle 1.092 → 950'ye
   inmişti; 13 Eylül gecesi iki dalgalık büyük dosya ayrıştırmasıyla 1.091'e **çıktı** — bu
   bilinçlidir, 11 dev dosya ~140 küçük modüle bölündü, bkz. Known Limitations md.7)
-- **383 Supabase migrations** — 131 in `supabase/migrations/applied/`
-  + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split); 7 Edge Functions
+- **393 Supabase migrations** — 141 in `supabase/migrations/applied/`
+  + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split; ölçüldü 2026-09-18);
+  **9** Edge Functions (whatsapp-reply + whatsapp-webhook 2026-08-30'da eklendi)
 - **278 dosya / 1.958 test** yeşil (`npm run test`, ölçüldü 2026-09-13 gece) — 245, 271 ve 276
   taban rakamları bayattı; birkaç oturumdur `*-api.ts` göçleriyle yeni test dosyaları ekleniyor
 - `npm run lint` → **0 problem** (eski "1280 problem" notu bayattı)
@@ -79,7 +80,7 @@ npm run test -- src/lib/muhasebe-api.test.ts  # Run single test file
 ## Architecture & Code Organization
 
 ### Routing (App.tsx — Already Modularized)
-- All routes defined in `src/App.tsx` — the file is **283 lines** and **code-split via 51 `lazy()` imports** (not the monolith it once was)
+- All routes defined in `src/App.tsx` — the file is **313 lines** and **code-split via 51 `lazy()` imports** (not the monolith it once was)
 - **Reference:** Muhasebe routes are modularized via `src/pages/admin/muhasebe/routes.tsx` — use this as the pattern for further extraction
 - **Legacy redirects are NOT hand-written in App.tsx anymore.** They are generated from
   `src/lib/redirects.ts` (`LEGACY_REDIRECTS` 14 static + `DYNAMIC_LEGACY_REDIRECTS` 2 dynamic).
@@ -293,7 +294,7 @@ This is intentional to avoid massive refactor burden. When adding new code, writ
 
 | File | Why It Matters |
 |------|---|
-| `src/App.tsx` | Master route table (283 lines, 51 `lazy()` code-split) |
+| `src/App.tsx` | Master route table (313 lines, 51 `lazy()` code-split) |
 | `src/main.tsx` | Hydrate/Render switch (future SSR entry) |
 | `src/components/auth/AuthProvider.tsx` | Supabase session + context root |
 | `src/lib/muhasebe-*.ts` | Reference architecture (apis, schemas, aggregations) |
@@ -445,7 +446,7 @@ npm run test -- --coverage   # Coverage report (experimental)
 
 ### Test Organization
 - **Unit/integration:** `src/**/*.test.ts(x)` (vitest + Testing Library + jsdom)
-- **232 test files under `src`** (+ `scripts`/`supabase`/`workers`) — 1.768 test
+- **251 test files under `src`** (+ 16 `scripts` + 7 `supabase` + 4 `workers` = **278** toplam) — **1.958** test (ölçüldü 2026-09-13 gece)
 - **E2E:** Playwright configured but underutilized (18 `.spec.ts`)
 - **Setup:** `src/test/setup.ts` (jest-dom matchers)
 - **Coverage target:** 80%+ for new code
@@ -471,13 +472,13 @@ config **text** and route tables, so they fail loudly when someone edits one sid
 
 ## Database & Migrations
 
-- **381 migrations total, split by a baseline on 2026-08-04** (date-prefixed, immutable in prod).
+- **393 migrations total, split by a baseline on 2026-08-04** (date-prefixed, immutable in prod; sayı 2026-09-18'de dosyadan ölçüldü).
   Note the subdirectories — the parent `supabase/migrations/` contains 0 `.sql` files, so a glob
   on the parent silently finds nothing.
 
 | Path | Count | Meaning |
 |------|-------|---------|
-| `supabase/migrations/applied/` | 129 | Post-baseline (≥ `20260615100000`) — the working set |
+| `supabase/migrations/applied/` | 141 | Post-baseline (≥ `20260615100000`) — the working set |
 | `supabase/migrations/archive/` | 252 | Pre-baseline, **applied in production, never delete** |
 | `supabase/baseline/2026-08-04-public-schema.sql` | 1 | `pg_dump --schema-only` of the live `public` schema (237 tables, 481 RLS policies, 1568 grants, 342 indexes, 115 triggers, 5 views) |
 
@@ -542,9 +543,12 @@ Rules that follow from this:
    "instance unhealthy" in one call.
 
 - **RLS active** — submissions require specific conditions
-- **Edge Functions (7):** `find-matches`, `lansman-admin`, `radar-news-scan`,
-  `relocation-notifications`, `send-notification-emails`, `send-submission-email`,
-  `submit-survey-response`. (There is no `chat-register` function — that name was stale.)
+- **Edge Functions (9, ölçüldü 2026-09-18):** `find-matches`, `lansman-admin` (deprecated —
+  handler returns HTTP 410), `radar-news-scan`, `relocation-notifications`,
+  `send-notification-emails`, `send-submission-email`, `submit-survey-response`,
+  `whatsapp-reply`, `whatsapp-webhook` (last two added 2026-08-30; they read
+  `WHATSAPP_*` secrets — see README "Required function secrets").
+  (There is no `chat-register` function — that name was stale.)
 
 ### Canonical schema (after the AFS rebuild — 2026-06-09)
 
