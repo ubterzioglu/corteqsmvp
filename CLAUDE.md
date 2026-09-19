@@ -6,20 +6,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **CorteQS Landing** is a multi-feature React + Vite application with Supabase backend. It combines a public marketing site, admin dashboard, member profiles, surveys, workspace collaboration tools, and an accounting module (muhasebe) — all in a single SPA.
 
-**Key Metrics (ölçüldü 2026-09-13):**
-- **1.091** `.ts`/`.tsx` files under `src` (2026-09-06 ölü kod temizliğiyle 1.092 → 950'ye
+**Key Metrics (ölçüldü 2026-09-19 gece):**
+- **1.098** `.ts`/`.tsx` files under `src` (2026-09-06 ölü kod temizliğiyle 1.092 → 950'ye
   inmişti; 13 Eylül gecesi iki dalgalık büyük dosya ayrıştırmasıyla 1.091'e **çıktı** — bu
   bilinçlidir, 11 dev dosya ~140 küçük modüle bölündü, bkz. Known Limitations md.7)
-- **393 Supabase migrations** — 141 in `supabase/migrations/applied/`
-  + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split; ölçüldü 2026-09-18);
+- **397 Supabase migrations** — 145 in `supabase/migrations/applied/`
+  + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split; ölçüldü 2026-09-19);
   **9** Edge Functions (whatsapp-reply + whatsapp-webhook 2026-08-30'da eklendi)
-- **278 dosya / 1.958 test** yeşil (`npm run test`, ölçüldü 2026-09-13 gece) — 245, 271 ve 276
-  taban rakamları bayattı; birkaç oturumdur `*-api.ts` göçleriyle yeni test dosyaları ekleniyor
+- **279 dosya / 1.981 test** yeşil (`npm run test`, ölçüldü 2026-09-19 gece) — 245, 271, 276 ve
+  278 taban rakamları bayattı; birkaç oturumdur `*-api.ts` göçleriyle yeni test dosyaları ekleniyor
 - `npm run lint` → **0 problem** (eski "1280 problem" notu bayattı)
 - `src/App.tsx`: 313 lines, 51 `lazy()` imports
 - TypeScript with relaxed strict mode (intentional trade-off) — **`tsc` hatası SIFIRA indi**
-  (109 → 22 → 16 → 12 → 9 → **0**, 2026-09-13). "Known Limitations" md.5 artık KAPALI —
-  eski sınıf tablosunu ezberleme, aşağıdaki not güncel.
+  (109 → 22 → 16 → 12 → 9 → **0**, 2026-09-13; 19 Eylül gecesi 3 hataya çıkıp yeniden **0**'a
+  indirildi). "Known Limitations" md.5 artık KAPALI — eski sınıf tablosunu ezberleme, aşağıdaki
+  not güncel. ⚠️ `tsc` ne `prelint`te ne `pretest`te koşar; dosya ekleyen her oturum
+  `npx tsc -p tsconfig.app.json --noEmit` komutunu ELLE çalıştırmalıdır.
 - **Production runtime is nginx** (Dockerfile → `nginx.conf.template`), deployed via Docker (Coolify).
   `server.mjs` is the local/nixpacks path only — see the Deployment section.
 
@@ -344,6 +346,16 @@ Tekrarlayan Türkçe karakter sorunlarının kök nedeni budur. Kurallar:
 4. **psql/Windows tuzağı:** PowerShell komut satırından psql'e geçen Türkçe karakterler bozulur (ı→i).
    Türkçe içerikli SQL'i daima UTF-8 dosya olarak `psql -f` ile gönder veya `U&'...\0131...'` unicode escape kullan.
 5. `<html lang="tr">` (index.html) korunmalı — CSS `text-transform: uppercase` Türkçe i/İ kuralını bu nitelikten alır.
+6. **VERİTABANINA YAZILAN DEĞERLERDEN Türkçe karakter SİLİNMEZ.** 19 Eylül 2026'da herkese
+   açık etkinlik formunda `"yüz yüze" → "yuz yuze"`, `"eğitim" → "egitim"`, `"kültür" →
+   "kultur"`, `"iş" → "is"` yapıldı. Bunlar kullanıcıya görünen METİN değil, **DB anahtarı**
+   idi; `events.type` üzerinde CHECK kısıtı olmadığı için yanlış değer hata vermeden kaydedildi
+   ve formdan eklenen etkinlik "Fiziksel"/"Eğitim" filtresine düşmedi, detay sayfasında konumu
+   görünmedi. Kural: `value`/`key` alanları kaynak modülden gelir, elle yazılmaz —
+   `src/lib/events-vocabulary.ts` tek kaynaktır, `events-vocabulary.test.ts` kilitler.
+   Aynı gece yazılan kodda arayüz metinleri de ASCII'ye düşmüştü (459 satırda 5 Türkçe
+   karakter). Yeni dosya yazarken `npm run verify:text` BUNU YAKALAMAZ — o yalnız kodlama
+   ve mojibake denetler, eksik harfi değil. Gözle kontrol et.
 
 ## Değişmez sözleşmeler (ZORUNLU — 2026-08-04)
 
@@ -446,7 +458,7 @@ npm run test -- --coverage   # Coverage report (experimental)
 
 ### Test Organization
 - **Unit/integration:** `src/**/*.test.ts(x)` (vitest + Testing Library + jsdom)
-- **251 test files under `src`** (+ 16 `scripts` + 7 `supabase` + 4 `workers` = **278** toplam) — **1.958** test (ölçüldü 2026-09-13 gece)
+- **252 test files under `src`** (+ 16 `scripts` + 7 `supabase` + 4 `workers` = **279** toplam) — **1.981** test (ölçüldü 2026-09-19 gece)
 - **E2E:** Playwright configured but underutilized (18 `.spec.ts`)
 - **Setup:** `src/test/setup.ts` (jest-dom matchers)
 - **Coverage target:** 80%+ for new code
@@ -470,15 +482,31 @@ config **text** and route tables, so they fail loudly when someone edits one sid
 - `scripts/generate-sitemap.test.mjs` (9 tests) — parses `App.tsx` to prove no `STATIC_ROUTES`
   entry sits behind `RequireAuth`/`RequireFeature` or is a redirect source.
 
+**2026-09-19'da eklenen iki sözleşme testi** (aynı gün canlıya çıkmak üzereyken yakalanan
+iki sessiz kusur için — ayrıntı "Türkçe Metin Kuralları" md.6 ve aşağıdaki not):
+- `src/lib/events-vocabulary.test.ts` (12 test) — etkinlik kategori/tür DEĞERLERİNİ Türkçe
+  yazımlarına kilitler ve etkinlik dosyalarının kendi rakip seçenek listesini tanımlamadığını
+  kaynak metinden denetler. `events.type` üzerinde CHECK kısıtı YOKTUR; yanlış değer hata
+  vermeden kaydedilir ve etkinlik kendi filtresine düşmez.
+- `src/lib/whatsapp-landings-insert-contract.test.ts` (4 test) — `submitLanding` insert yükünün
+  her anahtarının `types.ts`'teki gerçek `whatsapp_landings` Insert sözleşmesinde bulunduğunu
+  doğrular ve yükün `as TablesInsert<...>` ile CAST edilmesini yasaklar (`satisfies` zorunlu).
+  Cast, olmayan bir sütuna yazmayı tsc'den gizlemişti.
+
+⚠️ **Supabase yüklerinde `as TablesInsert<...>` / `as TablesUpdate<...>` CAST KULLANMA.**
+Cast, olmayan bir sütuna yazmayı derleme zamanında gizler; hata yalnız canlıda,
+`PGRST204 Could not find the '<sütun>' column ... in the schema cache` olarak çıkar ve
+formu tamamen düşürür. Doğru araç `satisfies`: aynı okunabilirlik, gerçek denetim.
+
 ## Database & Migrations
 
-- **393 migrations total, split by a baseline on 2026-08-04** (date-prefixed, immutable in prod; sayı 2026-09-18'de dosyadan ölçüldü).
+- **397 migrations total, split by a baseline on 2026-08-04** (date-prefixed, immutable in prod; sayı 2026-09-19'da dosyadan ölçüldü, `check:migrations` 397/397 canlı kayıt doğruladı).
   Note the subdirectories — the parent `supabase/migrations/` contains 0 `.sql` files, so a glob
   on the parent silently finds nothing.
 
 | Path | Count | Meaning |
 |------|-------|---------|
-| `supabase/migrations/applied/` | 141 | Post-baseline (≥ `20260615100000`) — the working set |
+| `supabase/migrations/applied/` | 145 | Post-baseline (≥ `20260615100000`) — the working set |
 | `supabase/migrations/archive/` | 252 | Pre-baseline, **applied in production, never delete** |
 | `supabase/baseline/2026-08-04-public-schema.sql` | 1 | `pg_dump --schema-only` of the live `public` schema (237 tables, 481 RLS policies, 1568 grants, 342 indexes, 115 triggers, 5 views) |
 
