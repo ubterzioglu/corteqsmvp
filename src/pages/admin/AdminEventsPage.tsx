@@ -14,32 +14,13 @@ import {
 import { useAdminEvents, useDeleteEvent, usePublishEvent, useToggleFeaturedEvent, useUnpublishEvent } from "@/hooks/use-events";
 import { useToast } from "@/hooks/use-toast";
 import type { EventRow } from "@/lib/events-api";
-import { EVENT_TYPE_OPTIONS, eventTypeLabel } from "@/lib/events-vocabulary";
-
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" });
-}
-
-function statusLabel(status: string): string {
-  switch (status) {
-    case "published": return "Yayında";
-    case "pending": return "Onay Bekliyor";
-    case "draft": return "Taslak";
-    case "rejected": return "Reddedildi";
-    default: return status;
-  }
-}
-
-function statusTone(status: string): string {
-  switch (status) {
-    case "published": return "bg-emerald-100 text-emerald-700";
-    case "pending": return "bg-amber-100 text-amber-700";
-    case "draft": return "bg-slate-100 text-slate-600";
-    case "rejected": return "bg-red-100 text-red-700";
-    default: return "bg-slate-100 text-slate-600";
-  }
-}
+import {
+  EVENT_TYPE_OPTIONS,
+  eventStatusLabel,
+  eventStatusTone,
+  eventTypeLabel,
+} from "@/lib/events-vocabulary";
+import { formatEventDate } from "@/lib/events-timezone";
 
 const AdminEventsPage = () => {
   const { toast } = useToast();
@@ -203,13 +184,13 @@ const AdminEventsPage = () => {
                     <td className="px-4 py-3">
                       <Badge variant="outline">{eventTypeLabel(event.type)}</Badge>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(event.event_date)}</td>
+                    <td className="px-4 py-3 text-slate-600">{formatEventDate(event.event_date, { day: "numeric", month: "short", year: "numeric" })}</td>
                     <td className="px-4 py-3 text-slate-600">
                       {event.city ? `${event.city}${event.country ? `, ${event.country}` : ""}` : event.type === "online" ? "Online" : "—"}
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${statusTone(event.status)}`}>
-                        {statusLabel(event.status)}
+                      <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${eventStatusTone(event.status)}`}>
+                        {eventStatusLabel(event.status)}
                       </span>
                     </td>
                     <td className="px-4 py-3">

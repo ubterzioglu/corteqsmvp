@@ -17,6 +17,7 @@
 // fonksiyon fırlatmaz — taslak bir kolaylıktır, form akışını bozamaz.
 
 import { normalizeEventType, type EventType } from "@/lib/events-vocabulary";
+import { sanitizeEventTimezone } from "@/lib/events-timezone";
 
 const STORAGE_KEY = "corteqs.events.createDraft";
 
@@ -31,6 +32,7 @@ export interface EventFormDraft {
   eventDate: string;
   startTime: string;
   endTime: string;
+  timezone: string;
   country: string;
   city: string;
   location: string;
@@ -101,6 +103,7 @@ export function readEventFormDraft(): EventFormDraft | null {
     eventDate: text(record.eventDate),
     startTime: text(record.startTime),
     endTime: text(record.endTime),
+    timezone: sanitizeEventTimezone(record.timezone),
     country: text(record.country),
     city: text(record.city),
     location: text(record.location),

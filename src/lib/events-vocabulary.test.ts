@@ -9,6 +9,10 @@ import {
   EVENT_CATEGORY_VALUES,
   EVENT_TYPE_OPTIONS,
   EVENT_TYPE_VALUES,
+  EVENT_STATUS_VALUES,
+  eventStatusHint,
+  eventStatusLabel,
+  eventStatusTone,
   eventTypeLabel,
   isOnlineEventType,
   isPhysicalEventType,
@@ -31,6 +35,7 @@ const EVENT_SOURCE_FILES = [
   "src/pages/admin/AdminEventsPage.tsx",
   "src/lib/events-api.ts",
   "src/hooks/use-events.ts",
+  "src/components/events/MyEventsPanel.tsx",
 ];
 
 function readSource(relativePath: string): string {
@@ -76,6 +81,39 @@ describe("etkinlik sözlüğü", () => {
   });
 });
 
+describe("etkinlik yayın durumu", () => {
+  it("durum değerleri kod tarafındaki yazımlarla eşleşir", () => {
+    // `createEvent` "pending", `publishEvent` "published", `unpublishEvent` "draft"
+    // yazar. `events.status` üzerinde CHECK YOKTUR; bu liste tek doğrulamadır.
+    expect(EVENT_STATUS_VALUES).toEqual(["pending", "published", "draft", "rejected"]);
+  });
+
+  it("etiketler Türkçe yazımını korur", () => {
+    expect(eventStatusLabel("pending")).toBe("Onay Bekliyor");
+    expect(eventStatusLabel("published")).toBe("Yayında");
+    expect(eventStatusLabel("draft")).toBe("Taslak");
+    expect(eventStatusLabel("rejected")).toBe("Reddedildi");
+    // Tanınmayan değer ham hâliyle döner — uydurma.
+    expect(eventStatusLabel("archived")).toBe("archived");
+  });
+
+  it("her bilinen durumun rengi ve açıklaması vardır", () => {
+    for (const status of EVENT_STATUS_VALUES) {
+      expect(eventStatusTone(status)).toMatch(/^bg-/);
+      expect(eventStatusHint(status).length).toBeGreaterThan(0);
+    }
+  });
+
+  it("durum sözlüğü admin sayfasında YENİDEN tanımlanmaz", () => {
+    // 20.09.2026'ya kadar bu iki switch AdminEventsPage.tsx içine gömülüydü.
+    // Üye paneli eklenince ikinci kopya çıkacaktı; iki kopya zamanla ayrışır.
+    const admin = readSource("src/pages/admin/AdminEventsPage.tsx");
+    expect(admin).not.toContain('function statusLabel(');
+    expect(admin).not.toContain('function statusTone(');
+    expect(admin).toContain("eventStatusLabel");
+  });
+});
+
 describe("etkinlik dosyaları sözlükten sapmaz", () => {
   it.each(EVENT_SOURCE_FILES)("%s içinde ASCII'ye düşürülmüş değer yok", (relativePath) => {
     const source = readSource(relativePath);
@@ -91,6 +129,22 @@ describe("etkinlik dosyaları sözlükten sapmaz", () => {
     expect(source).not.toContain('label: "Fiziksel"');
     expect(source).not.toContain('label: "Hibrit"');
     expect(source).not.toContain('label: "Kültür & Sanat"');
+  });
+
+  it("paylaşım bağlantıları sayfalara GÖMÜLMEZ", () => {
+    // Paylaşım düğmeleri 20.09.2026'ya kadar yalnız EventDetailPage içindeydi.
+    // Liste kartına eklenirken kopyalanmaları hâlinde iki liste ayrışırdı;
+    // tek kaynak `src/lib/event-share.ts`.
+    for (const relativePath of [
+      "src/pages/EventsPage.tsx",
+      "src/pages/EventDetailPage.tsx",
+      "src/components/events/MyEventsPanel.tsx",
+    ]) {
+      const source = readSource(relativePath);
+      expect(source).not.toContain("twitter.com/intent/tweet");
+      expect(source).not.toContain("facebook.com/sharer");
+      expect(source).not.toContain("api.whatsapp.com/send");
+    }
   });
 
   it("etkinlik sayfaları tür karşılaştırmasını elle yapmaz", () => {

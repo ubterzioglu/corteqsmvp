@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
+  CalendarDays,
   Award,
   BookOpen,
   Briefcase,
@@ -62,6 +63,7 @@ import { supabase } from "@/integrations/supabase/client";
 import PremiumProfileHero from "@/components/profile/premium/PremiumProfileHero";
 import ProfileSwitcherMenu from "@/components/profile/ProfileSwitcherMenu";
 import PremiumProfileTabs, { PREMIUM_TAB_KEYS } from "@/components/profile/premium/PremiumProfileTabs";
+import MyEventsPanel from "@/components/events/MyEventsPanel";
 import ProfileCompletionCard from "@/components/profile/premium/ProfileCompletionCard";
 import ProfilePublicPreviewCard from "@/components/profile/premium/ProfilePublicPreviewCard";
 import { ProfileAccessCard } from "@/components/profile/ProfileAccessCard";
@@ -815,6 +817,16 @@ const ProfilePage = () => {
       label: "Çarşı & İlgi Alanları",
       icon: <Store className="h-4 w-4" />,
       content: caddeCards,
+    },
+    {
+      // Premium pilot dışındaki üyeler premium sekme çubuğunu HİÇ görmez
+      // (o düzen yalnız `isPremiumPilot` için çizilir). Etkinliklerim yalnız
+      // oraya eklenseydi üyelerin ezici çoğunluğu kendi etkinliğini yine
+      // göremezdi — bu yüzden iki düzende de var.
+      id: "events",
+      label: "Etkinliklerim",
+      icon: <CalendarDays className="h-4 w-4" />,
+      content: <MyEventsPanel />,
     },
     {
       id: "social",

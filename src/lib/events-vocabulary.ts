@@ -79,3 +79,63 @@ export function isOnlineEventType(type: string): boolean {
 export function normalizeEventType(value: unknown): EventType {
   return EVENT_TYPE_VALUES.includes(value as EventType) ? (value as EventType) : DEFAULT_EVENT_TYPE;
 }
+
+/**
+ * Yayın durumu değerleri. `events.status` üzerinde de CHECK kısıtı YOKTUR;
+ * `createEvent` "pending", `publishEvent` "published", `unpublishEvent` "draft"
+ * yazar, "rejected" ise admin ekranından gelir.
+ *
+ * Etiketler 20 Eylül 2026'ya kadar YALNIZ `AdminEventsPage.tsx` içinde,
+ * dosyaya gömülü iki `switch` olarak duruyordu. Üyenin kendi etkinliklerini
+ * gördüğü panel eklenince aynı sözlüğün ikinci bir kopyası çıkacaktı; iki
+ * kopya zamanla ayrışır ve üye "Onay Bekliyor" derken admin başka bir şey der.
+ */
+export const EVENT_STATUS_VALUES = ["pending", "published", "draft", "rejected"] as const;
+
+export type EventStatus = (typeof EVENT_STATUS_VALUES)[number];
+
+/** Rozet metni. Tanınmayan değer ham hâliyle döner — uydurma. */
+export function eventStatusLabel(status: string): string {
+  switch (status) {
+    case "published":
+      return "Yayında";
+    case "pending":
+      return "Onay Bekliyor";
+    case "draft":
+      return "Taslak";
+    case "rejected":
+      return "Reddedildi";
+    default:
+      return status;
+  }
+}
+
+/** Rozet renk sınıfları. */
+export function eventStatusTone(status: string): string {
+  switch (status) {
+    case "published":
+      return "bg-emerald-100 text-emerald-700";
+    case "pending":
+      return "bg-amber-100 text-amber-700";
+    case "rejected":
+      return "bg-red-100 text-red-700";
+    default:
+      return "bg-slate-100 text-slate-600";
+  }
+}
+
+/** Üyeye "şimdi ne oluyor" diye anlatan kısa açıklama. */
+export function eventStatusHint(status: string): string {
+  switch (status) {
+    case "published":
+      return "Etkinlik listesinde herkese görünüyor.";
+    case "pending":
+      return "Yönetici onayı bekleniyor; onaylanınca listede görünecek.";
+    case "draft":
+      return "Yayından kaldırıldı; listede görünmüyor.";
+    case "rejected":
+      return "Yayınlanmadı. Düzenleyip yeniden gönderebilirsin.";
+    default:
+      return "";
+  }
+}

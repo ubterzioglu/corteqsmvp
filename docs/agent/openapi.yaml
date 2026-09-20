@@ -92,6 +92,45 @@ paths:
           description: Yanıt
         "500":
           description: Sunucu hatası
+  /functions/v1/relocation-assistant:
+    post:
+      summary: relocation-assistant aracını çalıştır
+      operationId: execute_relocation_assistant
+      x-tool-key: edge.relocation_assistant
+      x-status: active
+      x-tables: [edge_rate_limits]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                moveId:
+                  type: string
+                context:
+                  type: string
+                messages:
+                  type: string
+      responses:
+        "200":
+          description: Başarılı
+        "400":
+          description: Geçersiz istek (payload doğrulama hatası)
+        "401":
+          description: Yanıt
+        "403":
+          description: Origin'e izin verilmedi
+        "405":
+          description: Yöntem desteklenmiyor
+        "413":
+          description: Payload çok büyük
+        "429":
+          description: Çok fazla istek (rate limit)
+        "500":
+          description: Sunucu hatası
+        "502":
+          description: Yanıt
   /functions/v1/relocation-notifications:
     post:
       summary: relocation-notifications aracını çalıştır

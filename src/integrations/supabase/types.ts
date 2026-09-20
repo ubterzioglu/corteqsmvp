@@ -5015,6 +5015,7 @@ export type Database = {
           start_time: string | null
           status: string
           tags: string[] | null
+          timezone: string | null
           title: string
           type: string
           updated_at: string
@@ -5041,6 +5042,7 @@ export type Database = {
           start_time?: string | null
           status?: string
           tags?: string[] | null
+          timezone?: string | null
           title: string
           type?: string
           updated_at?: string
@@ -5067,6 +5069,7 @@ export type Database = {
           start_time?: string | null
           status?: string
           tags?: string[] | null
+          timezone?: string | null
           title?: string
           type?: string
           updated_at?: string

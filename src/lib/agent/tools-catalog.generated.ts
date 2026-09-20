@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 41,
-    "edge_functions": 9,
+    "total": 45,
+    "edge_functions": 10,
     "workers": 2,
-    "ui_modules": 29
+    "ui_modules": 32
   },
   "tools": [
     {
@@ -178,6 +178,53 @@ export const toolCatalog = {
         "zod": null
       },
       "evidence_path": "supabase/functions/radar-news-scan/index.ts"
+    },
+    {
+      "tool_key": "edge.relocation_assistant",
+      "tool_name": "relocation-assistant",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/relocation-assistant/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "zod",
+        "fields": [
+          "moveId",
+          "context",
+          "messages"
+        ]
+      },
+      "tables_read_write": [
+        "edge_rate_limits"
+      ],
+      "rpcs": [],
+      "limits": {
+        "MAX_BODY_BYTES": 32000,
+        "RATE_LIMIT_MAX": 20,
+        "RATE_LIMIT_WINDOW_SECONDS": 600
+      },
+      "http_statuses": [
+        200,
+        400,
+        401,
+        403,
+        405,
+        413,
+        429,
+        500,
+        502
+      ],
+      "http_method": "POST",
+      "dependencies": [
+        "@supabase/supabase-js@2.108.2",
+        "zod@3.25.76",
+        "gemini"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.108.2",
+        "zod": "3.25.76"
+      },
+      "evidence_path": "supabase/functions/relocation-assistant/index.ts"
     },
     {
       "tool_key": "edge.relocation_notifications",
@@ -714,6 +761,7 @@ export const toolCatalog = {
       "exports": [
         "createEvent",
         "deleteEvent",
+        "escapeOrFilterValue",
         "fetchAllEventsAdmin",
         "fetchEventById",
         "fetchMyEvents",
@@ -904,6 +952,23 @@ export const toolCatalog = {
       "evidence_path": "src/lib/pending-onboarding-api.ts"
     },
     {
+      "tool_key": "module.public_catalog_api",
+      "tool_name": "public-catalog-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/public-catalog-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "countryNameOf",
+        "listPublicCatalogRows"
+      ],
+      "tables_read_write": [
+        "catalog_items"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/public-catalog-api.ts"
+    },
+    {
       "tool_key": "module.public_catalog_claim_api",
       "tool_name": "public-catalog-claim-api",
       "family": "ui_module",
@@ -975,6 +1040,7 @@ export const toolCatalog = {
         "getEmergencyContacts",
         "getMove",
         "getServiceRecommendations",
+        "listMoves",
         "recordInteraction",
         "saveWizardAnswers",
         "updateMove"
@@ -993,6 +1059,48 @@ export const toolCatalog = {
         "relocation_update_move"
       ],
       "evidence_path": "src/lib/relocation-api.ts"
+    },
+    {
+      "tool_key": "module.relocation_chat_api",
+      "tool_name": "relocation-chat-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/relocation-chat-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "MAX_CHAT_TURNS",
+        "MAX_MESSAGE_CHARS",
+        "askRelocationAssistant",
+        "trimChatHistory"
+      ],
+      "tables_read_write": [],
+      "rpcs": [],
+      "evidence_path": "src/lib/relocation-chat-api.ts"
+    },
+    {
+      "tool_key": "module.relocation_content_api",
+      "tool_name": "relocation-content-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/relocation-content-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "deleteMoveDocument",
+        "getLivingCosts",
+        "getMoveDocuments",
+        "getMoveProgress",
+        "getRequiredDocuments",
+        "saveMoveDocument",
+        "setMoveProgress"
+      ],
+      "tables_read_write": [
+        "relocation_living_costs",
+        "relocation_move_documents",
+        "relocation_move_progress",
+        "relocation_required_documents"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/relocation-content-api.ts"
     },
     {
       "tool_key": "module.relocation_reminders_api",
@@ -1731,6 +1839,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/business-demo-rows.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/business-demo-rows.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/cadde-admin-api.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -2096,6 +2214,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/city-ambassador-applications.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/city-ambassador-program.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/client-error-reports.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2356,6 +2484,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/directory-role-groups.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/directory-role-groups.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/event-form-draft.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2366,7 +2504,32 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/event-share.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/event-share.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/events-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/events-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/events-timezone.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/events-timezone.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -2776,6 +2939,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/public-catalog-api.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
       "path": "src/lib/public-catalog-claim-api.ts",
       "kind": "ts",
       "module_family": "catalog"
@@ -2804,6 +2972,16 @@ export const toolCatalog = {
       "path": "src/lib/public-catalog-profile-view-model.ts",
       "kind": "ts",
       "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/public-listing-filter.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/public-listing-filter.ts",
+      "kind": "ts",
+      "module_family": "lib"
     },
     {
       "path": "src/lib/radar-guides.test.ts",
@@ -2876,12 +3054,47 @@ export const toolCatalog = {
       "module_family": "relocation"
     },
     {
+      "path": "src/lib/relocation-chat-api.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-chat-context.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-chat-context.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
       "path": "src/lib/relocation-city-scope.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
       "path": "src/lib/relocation-city-scope.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-content-api.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-content-format.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-content-format.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-content-types.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
@@ -3462,6 +3675,11 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/radar-news-scan/lib/types.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/relocation-assistant/index.ts",
       "kind": "ts",
       "module_family": "edge"
     },

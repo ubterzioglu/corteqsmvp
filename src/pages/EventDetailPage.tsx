@@ -1,24 +1,19 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Clock, MapPin, Monitor, Users, Globe, ExternalLink, Share2, Copy, Check } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft, Calendar, Clock, MapPin, Monitor, Users, Globe, ExternalLink, Share2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEvent } from "@/hooks/use-events";
 import { useSeo } from "@/lib/seo";
-import { useToast } from "@/hooks/use-toast";
 import { eventTypeLabel, isOnlineEventType, isPhysicalEventType } from "@/lib/events-vocabulary";
-
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-}
-
-function formatTime(timeStr: string | null): string {
-  if (!timeStr) return "";
-  return timeStr.slice(0, 5);
-}
+import {
+  describeEventSchedule,
+  eventInstantRange,
+  formatEventDate,
+  resolveViewerTimezone,
+} from "@/lib/events-timezone";
+import { buildEventShareUrl } from "@/lib/event-share";
+import { EventShareButtons } from "@/components/events/EventShareButtons";
 
 function typeBadgeVariant(type: string): "default" | "secondary" | "outline" {
   if (type === "online") return "secondary";
@@ -29,12 +24,35 @@ function typeBadgeVariant(type: string): "default" | "secondary" | "outline" {
 export default function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { data: event, isLoading, error } = useEvent(id ?? "");
-  const { toast } = useToast();
-  const [copied, setCopied] = useState(false);
 
-  const eventUrl = typeof window !== "undefined" ? window.location.href : "";
-  const eventTitle = event ? event.title : "";
-  const eventDescription = event ? event.description.slice(0, 200) : "";
+  // Paylaşım adresi `window.location.href` DEĞİL: o, adrese yapışmış sorgu
+  // parametrelerini (utm_*, ?ref=...) de paylaşıma taşır.
+  const eventUrl =
+    event && typeof window !== "undefined" ? buildEventShareUrl(event.id, window.location.origin) : "";
+
+  const viewerTimezone = resolveViewerTimezone();
+  const schedule = event
+    ? describeEventSchedule({
+        eventDate: event.event_date,
+        startTime: event.start_time,
+        endTime: event.end_time,
+        eventTimezone: event.timezone,
+        viewerTimezone,
+      })
+    : null;
+
+  // schema.org/Event `startDate` zaman içeren bir andır; yalnız tarih vermek
+  // arama sonucunda saati düşürür. Saat dilimi bilinmiyorsa (eski kayıt) ham
+  // tarihte KALIRIZ — uydurulmuş bir ofset yanlış saatte zengin sonuç üretir.
+  const { start: startInstant, end: endInstant } =
+    event && event.timezone
+      ? eventInstantRange({
+          eventDate: event.event_date,
+          startTime: event.start_time,
+          endTime: event.end_time,
+          timezone: event.timezone,
+        })
+      : { start: null, end: null };
 
   useSeo(
     event
@@ -48,7 +66,8 @@ export default function EventDetailPage() {
             "@type": "Event",
             name: event.title,
             description: event.description,
-            startDate: event.event_date,
+            startDate: startInstant ? startInstant.toISOString() : event.event_date,
+            endDate: endInstant ? endInstant.toISOString() : undefined,
             eventAttendanceMode: event.type === "online" ? "https://schema.org/OnlineEventAttendanceMode" : "https://schema.org/OfflineEventAttendanceMode",
             location: event.location ? {
               "@type": "Place",
@@ -68,21 +87,6 @@ export default function EventDetailPage() {
       : { canonicalPath: `/events/${id}`, robots: "noindex, follow" },
     [event?.id],
   );
-
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(eventUrl);
-      setCopied(true);
-      toast({ title: "Bağlantı kopyalandı" });
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      toast({ title: "Kopyalanamadı", variant: "destructive" });
-    }
-  };
-
-  const shareText = `${eventTitle}\n${eventDescription}`;
-  const encodedText = encodeURIComponent(shareText);
-  const encodedUrl = encodeURIComponent(eventUrl);
 
   if (isLoading) {
     return (
@@ -140,15 +144,25 @@ export default function EventDetailPage() {
             <div className="mb-6 space-y-3 rounded-lg bg-slate-50 p-4">
               <div className="flex items-center gap-3 text-sm">
                 <Calendar className="h-4 w-4 text-slate-400" />
-                <span className="font-medium">{formatDate(event.event_date)}</span>
+                <span className="font-medium">{formatEventDate(event.event_date)}</span>
               </div>
-              {(event.start_time || event.end_time) && (
-                <div className="flex items-center gap-3 text-sm">
-                  <Clock className="h-4 w-4 text-slate-400" />
-                  <span>
-                    {formatTime(event.start_time)}
-                    {event.end_time ? ` – ${formatTime(event.end_time)}` : ""}
-                  </span>
+              {schedule && (
+                <div className="flex items-start gap-3 text-sm">
+                  <Clock className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+                  <div>
+                    <span className="font-medium">{schedule.sourceRange}</span>
+                    {schedule.sourceLabel && (
+                      <span className="text-slate-500"> · {schedule.sourceLabel} saatiyle</span>
+                    )}
+                    {schedule.viewerRange && (
+                      <p className="mt-0.5 text-xs text-slate-500">
+                        Senin saatinle{" "}
+                        <span className="font-medium text-slate-700">{schedule.viewerRange}</span>
+                        {schedule.viewerLabel ? ` (${schedule.viewerLabel})` : ""}
+                        {schedule.viewerDayLabel ? ` — senin takviminde ${schedule.viewerDayLabel}` : ""}
+                      </p>
+                    )}
+                  </div>
                 </div>
               )}
               {isPhysicalEventType(event.type) && event.location && (
@@ -217,40 +231,20 @@ export default function EventDetailPage() {
               <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-700">
                 <Share2 className="h-4 w-4" /> Paylaş
               </h3>
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`, "_blank")}
-                >
-                  X / Twitter
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`, "_blank")}
-                >
-                  Facebook
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`, "_blank")}
-                >
-                  LinkedIn
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => window.open(`https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`, "_blank")}
-                >
-                  WhatsApp
-                </Button>
-                <Button variant="outline" size="sm" onClick={handleCopyLink}>
-                  {copied ? <Check className="mr-1 h-3.5 w-3.5" /> : <Copy className="mr-1 h-3.5 w-3.5" />}
-                  {copied ? "Kopyalandı" : "Bağlantı Kopyala"}
-                </Button>
-              </div>
+              {/* Onay bekleyen etkinliği paylaşmak üyeyi zor durumda bırakır:
+                  RLS yalnız `published` kaydı herkese gösterir, bağlantıyı açan
+                  herkes "Etkinlik bulunamadı" görür. Aynı kural
+                  MyEventsPanel'de de uygulanır. */}
+              {event.status === "published" ? (
+                <EventShareButtons
+                  share={{ title: event.title, description: event.description, url: eventUrl }}
+                />
+              ) : (
+                <p className="text-sm text-slate-500">
+                  Etkinlik yönetici onayından sonra paylaşılabilir — şu anda bağlantıyı yalnız sen
+                  görebilirsin.
+                </p>
+              )}
             </div>
           </CardContent>
         </Card>

@@ -23,6 +23,8 @@ export type EventRow = {
   start_time: string | null;
   status: string;
   tags: string[] | null;
+  /** Etkinlik saatinin IANA saat dilimi. NULL = 20.09.2026 öncesi kayıt. */
+  timezone: string | null;
   title: string;
   type: string;
   updated_at: string;
@@ -37,6 +39,18 @@ export type EventFilters = {
   status?: string;
   search?: string;
 };
+
+/**
+ * PostgREST `or()` ifadesine gömülecek kullanıcı girdisini güvenli hâle getirir.
+ *
+ * `or()` sözdiziminde VİRGÜL koşul ayırıcıdır. Ham girdi gömülürse "kültür, sanat"
+ * yazan kullanıcı ifadeyi ikiye böler, sunucu 400 döner ve liste
+ * "Etkinlikler yüklenemedi." ile tamamen düşer. Değer çift tırnağa alınır;
+ * içindeki ters bölü ve çift tırnak kaçırılır.
+ */
+export function escapeOrFilterValue(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
 
 export async function fetchPublishedEvents(filters?: EventFilters): Promise<EventRow[]> {
   let query = supabase
@@ -58,7 +72,8 @@ export async function fetchPublishedEvents(filters?: EventFilters): Promise<Even
     query = query.eq("city", filters.city);
   }
   if (filters?.search) {
-    query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+    const needle = escapeOrFilterValue(filters.search);
+    query = query.or(`title.ilike."%${needle}%",description.ilike."%${needle}%"`);
   }
 
   const { data, error } = await query;
@@ -114,6 +129,8 @@ export interface CreateEventInput {
   organizerName: string | null;
   organizerType: string;
   registrationUrl: string | null;
+  /** IANA saat dilimi (ör. Europe/Berlin) — saat girildiyse zorunludur. */
+  timezone: string | null;
 }
 
 export async function createEvent(input: CreateEventInput): Promise<EventRow> {
@@ -137,6 +154,7 @@ export async function createEvent(input: CreateEventInput): Promise<EventRow> {
     organizer_name: input.organizerName,
     organizer_type: input.organizerType,
     registration_url: input.registrationUrl,
+    timezone: input.timezone,
     status: "pending",
   };
 

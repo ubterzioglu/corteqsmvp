@@ -20,6 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MessagesInbox from "@/components/messaging/MessagesInbox";
 import ServiceRequestForm from "@/components/ServiceRequestForm";
 import ServiceRequestsList from "@/components/ServiceRequestsList";
+import MyEventsPanel from "@/components/events/MyEventsPanel";
 
 import PremiumPanelPlaceholder from "./PremiumPanelPlaceholder";
 
@@ -44,7 +45,7 @@ export const PREMIUM_TAB_KEYS = {
 
 const SETTINGS_TAB_KEY = PREMIUM_TAB_KEYS.settings;
 
-type PremiumTabKind = "settings" | "messages" | "service-requests" | "placeholder";
+type PremiumTabKind = "settings" | "messages" | "service-requests" | "my-events" | "placeholder";
 
 type PremiumTabConfig = {
   key: string;
@@ -107,12 +108,10 @@ const PREMIUM_TABS: PremiumTabConfig[] = [
     key: "events",
     label: "Etkinliklerim",
     icon: Calendar,
-    kind: "placeholder",
-    placeholder: {
-      title: "Etkinliklerim",
-      description:
-        "Katıldığın ve oluşturduğun etkinlikler burada görünecek. Bu panel yakında gerçek verilerinle çalışacak.",
-    },
+    // 20.09.2026: placeholder'dan gerçek panele çevrildi. `useMyEvents` hook'u
+    // zaten yazılıydı ama hiçbir yerden çağrılmıyordu; üye gönderdiği etkinliği
+    // ve onay durumunu hiçbir ekranda göremiyordu.
+    kind: "my-events",
   },
   {
     key: "coupons",
@@ -260,6 +259,8 @@ const PremiumProfileTabs = ({
                 <MessagesInbox />
               ) : tab.kind === "service-requests" ? (
                 <ServiceRequestsPanel />
+              ) : tab.kind === "my-events" ? (
+                <MyEventsPanel />
               ) : tab.placeholder ? (
                 <PremiumPanelPlaceholder
                   title={tab.placeholder.title}

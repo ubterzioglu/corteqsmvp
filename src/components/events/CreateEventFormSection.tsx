@@ -5,7 +5,15 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/components/auth/useAuth";
@@ -24,6 +32,13 @@ import {
   isPhysicalEventType,
   type EventType,
 } from "@/lib/events-vocabulary";
+import {
+  EVENT_TIMEZONE_GROUPS,
+  EVENT_TIMEZONE_OPTIONS,
+  eventTimezoneLabel,
+  isKnownEventTimezone,
+  resolveBrowserEventTimezone,
+} from "@/lib/events-timezone";
 
 interface CreateEventFormSectionProps {
   open: boolean;
@@ -42,6 +57,10 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
   const [eventDate, setEventDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  // Başlangıç değeri tarayıcının saat dilimi — ANCAK listede varsa. Yoksa BOŞ
+  // kalır ve kullanıcı seçmek zorundadır. Bilinmeyeni sessizce "İstanbul"a
+  // çekmek, bu alanın önlemek için var olduğu zararı üretirdi.
+  const [timezone, setTimezone] = useState<string>(() => resolveBrowserEventTimezone());
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [location, setLocation] = useState("");
@@ -74,6 +93,7 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
     setEventDate(draft.eventDate);
     setStartTime(draft.startTime);
     setEndTime(draft.endTime);
+    setTimezone(draft.timezone);
     setCountry(draft.country);
     setCity(draft.city);
     setLocation(draft.location);
@@ -112,6 +132,17 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
       return;
     }
 
+    // Saat girildiyse saat dilimi ZORUNLUDUR. Diasporada referanssız bir "19:00"
+    // yanlış bilgidir: Katar'daki üye Berlin'deki etkinliğe iki saat geç kalır.
+    if ((startTime || endTime) && !isKnownEventTimezone(timezone)) {
+      toast({
+        title: "Saat dilimi seçin",
+        description: "Saat girdiniz — bu saat hangi ülkenin saati? Farklı ülkelerdeki üyeler kendi saatlerini buna göre görüyor.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!user) {
       // Google'a gitmeden ÖNCE taslağı bırak: yönlendirme sayfayı sıfırdan
       // yükler, bu bileşenin state'i tamamen kaybolur. Dönüşte yukarıdaki
@@ -124,6 +155,7 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
         eventDate,
         startTime,
         endTime,
+        timezone,
         country,
         city,
         location,
@@ -170,6 +202,9 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
         eventDate,
         startTime: startTime || null,
         endTime: endTime || null,
+        // Saat girilmediyse saat dilimi ANLAMSIZDIR; boş yazmak "referans var"
+        // izlenimi verir ve detay sayfası olmayan bir saati etiketler.
+        timezone: startTime || endTime ? timezone : null,
         country: country || null,
         city: city || null,
         location: location || null,
@@ -196,6 +231,7 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
       setEventDate("");
       setStartTime("");
       setEndTime("");
+      setTimezone(resolveBrowserEventTimezone());
       setCountry("");
       setCity("");
       setLocation("");
@@ -338,6 +374,32 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
                       onChange={(event) => setEndTime(event.target.value)}
                     />
                   </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="event-timezone">Saat Dilimi</Label>
+                  <Select value={timezone} onValueChange={setTimezone}>
+                    <SelectTrigger id="event-timezone" className={formFieldInsetClass}>
+                      <SelectValue placeholder="Saat dilimi seçin" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-72">
+                      {EVENT_TIMEZONE_GROUPS.map((group) => (
+                        <SelectGroup key={group}>
+                          <SelectLabel>{group}</SelectLabel>
+                          {EVENT_TIMEZONE_OPTIONS.filter((option) => option.group === group).map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="mt-1 text-xs text-slate-500">
+                    {timezone
+                      ? `Yukarıdaki saatler ${eventTimezoneLabel(timezone)} saatiyle okunur. Başka ülkedeki üye kendi saatini etkinlik sayfasında görür.`
+                      : "Saat girecekseniz bu alan zorunludur — hangi ülkenin saatini yazdığınızı seçin."}
+                  </p>
                 </div>
 
                 {showPhysicalFields && (

@@ -19,6 +19,7 @@ function makeDraft(overrides: Partial<EventFormDraft> = {}): EventFormDraft {
     eventDate: "2026-10-01",
     startTime: "19:00",
     endTime: "22:00",
+    timezone: "Europe/Berlin",
     country: "Almanya",
     city: "Berlin",
     location: "Kreuzberg",

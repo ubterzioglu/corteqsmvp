@@ -17,17 +17,15 @@ import {
   isOnlineEventType,
   isPhysicalEventType,
 } from "@/lib/events-vocabulary";
+import { eventTimezoneShortLabel, formatEventDate } from "@/lib/events-timezone";
+import { buildEventShareUrl } from "@/lib/event-share";
+import { EventShareButtons } from "@/components/events/EventShareButtons";
 
 // Filtre değerleri form ile BİREBİR aynı kaynaktan gelir; ayrı listeler yazılırsa
 // formdan eklenen etkinlik kendi filtresine düşmez (19.09.2026 kusuru).
 const CATEGORIES = [{ value: "all", label: "Tüm Kategoriler" }, ...EVENT_CATEGORY_OPTIONS];
 
 const EVENT_TYPES = [{ value: "all", label: "Tüm Türler" }, ...EVENT_TYPE_OPTIONS];
-
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
-}
 
 function typeBadgeVariant(type: string): "default" | "secondary" | "outline" {
   if (type === "online") return "secondary";
@@ -121,7 +119,14 @@ export default function EventsPage() {
         {events && events.length > 0 && (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {events.map((event) => (
-              <Link key={event.id} to={`/events/${event.id}`}>
+              // ⚠️ Paylaş düğmesi `<Link>`in İÇİNDE DEĞİL, KARDEŞİDİR. `<button>`ı
+              // `<a>` içine koymak geçersiz HTML'dir: ekran okuyucular iki
+              // etkileşimli öğeyi iç içe okur ve klavyeyle gezen kullanıcı
+              // düğmeye basınca sayfa da değişir. Bağlantı akış içinde (`block`),
+              // düğme ise `absolute` — konumlandırılmış öğeler akış içi blokların
+              // üstünde boyandığı için tıklama düğmeye gider, Link'e değil.
+              <div key={event.id} className="relative">
+                <Link to={`/events/${event.id}`} className="block">
                 <Card className="h-full transition-shadow hover:shadow-md">
                   {event.cover_image && (
                     <div className="h-40 w-full overflow-hidden rounded-t-lg">
@@ -148,9 +153,12 @@ export default function EventsPage() {
                     <div className="flex flex-col gap-1.5 text-xs text-slate-500">
                       <div className="flex items-center gap-1.5">
                         <Calendar className="h-3.5 w-3.5" />
-                        <span>{formatDate(event.event_date)}</span>
+                        <span>{formatEventDate(event.event_date, { day: "numeric", month: "long", year: "numeric" })}</span>
                         {event.start_time && (
-                          <span className="text-slate-400">• {event.start_time.slice(0, 5)}</span>
+                          <span className="text-slate-400">
+                            • {event.start_time.slice(0, 5)}
+                            {event.timezone ? ` (${eventTimezoneShortLabel(event.timezone)})` : ""}
+                          </span>
                         )}
                       </div>
                       {isPhysicalEventType(event.type) && event.city && (
@@ -184,7 +192,21 @@ export default function EventsPage() {
                     </div>
                   </CardContent>
                 </Card>
-              </Link>
+                </Link>
+                <div className="absolute right-2 top-2">
+                  <EventShareButtons
+                    variant="compact"
+                    share={{
+                      title: event.title,
+                      description: event.description,
+                      url:
+                        typeof window !== "undefined"
+                          ? buildEventShareUrl(event.id, window.location.origin)
+                          : "",
+                    }}
+                  />
+                </div>
+              </div>
             ))}
           </div>
         )}
