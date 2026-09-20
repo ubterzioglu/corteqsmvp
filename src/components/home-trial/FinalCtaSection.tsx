@@ -2,10 +2,8 @@
  * 7. Final CTA — tek, yüksek-niyetli çağrı. Footer (PublicLayout) hemen altında gelir.
  */
 
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-
-import { QuickLinkRow } from "./QuickLinkRow";
+import { ActionButtons } from "./ActionButtons";
+import { PRIMARY_ACTIONS, QUICK_ACTIONS } from "./action-buttons-data";
 
 const FinalCtaSection = () => {
   return (
@@ -38,28 +36,10 @@ const FinalCtaSection = () => {
           <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg md:whitespace-nowrap">
             Ücretsiz kayıt ol, kendi şehrindeki ağını keşfet ve büyümenin parçası ol.
           </p>
-          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              to="/login?mode=signup"
-              className="group inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#00ACC1] to-[#0097A7] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_hsl(var(--glow-teal)/0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-teal sm:w-auto"
-            >
-              Ücretsiz Kayıt Ol
-              <ArrowRight
-                className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </Link>
-            <Link
-              to="/founders"
-              className="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-slate-800 to-slate-950 px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_rgba(15,23,42,0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-12px_rgba(15,23,42,0.65)] sm:w-auto"
-            >
-              Biz kimiz?
-            </Link>
-          </div>
-
-          {/* Hero ile AYNI kısayol satırı (QuickLinkRow) — kapanışta da aynı dört kapı.
-              `mx-auto max-w-xl` ile kartın ortasına hizalanır; hero'da sola dayalıdır. */}
-          <QuickLinkRow className="mx-auto mt-4 max-w-xl" originPath="/" />
+          {/* Birincil eylemler + paylaşılan kısayollar — hero ile AYNI ölçüde,
+              ortalı hizalı (hero'da sola dayalıdır). */}
+          <ActionButtons buttons={[PRIMARY_ACTIONS.signup, PRIMARY_ACTIONS.tools, PRIMARY_ACTIONS.explore, PRIMARY_ACTIONS.founders]} className="mt-9" align="center" ariaLabel="Kayıt eylemleri" />
+          <ActionButtons buttons={QUICK_ACTIONS} className="mt-2.5" align="center" originPath="/" ariaLabel="Hızlı erişim (kapanış)" />
         </div>
       </div>
     </section>

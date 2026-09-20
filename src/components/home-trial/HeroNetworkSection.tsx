@@ -5,10 +5,8 @@
  * Video açık renkli olduğu için metin KOYU, okunabilirlik örtüsü de soldan BEYAZ.
  */
 
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-
-import { QuickLinkRow } from "./QuickLinkRow";
+import { ActionButtons } from "./ActionButtons";
+import { PRIMARY_ACTIONS, QUICK_ACTIONS } from "./action-buttons-data";
 
 // Telifsiz soyut "beyaz geometrik ağ" hero videosu (Pexels #29718114, telifsiz).
 // Açık zemin → metin koyu, gradyan örtü beyaz tarafta. Yeni videoyu aynı isimle
@@ -17,11 +15,6 @@ import { QuickLinkRow } from "./QuickLinkRow";
 // olsaydı Vite dist/landingtrial/ dizini üretir, nginx onu /landingtrial route'unun
 // önüne geçirip 403 verirdi (CLAUDE.md "dist/<slug>/ dizini oluşmamalı" uyarısı).
 const HERO_VIDEO_SRC = "/landing-assets/hero-network.mp4";
-
-const scrollToAtlas = () => {
-  const el = document.getElementById("landingtrial-atlas");
-  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-};
 
 const HeroNetworkSection = () => {
   return (
@@ -84,38 +77,9 @@ const HeroNetworkSection = () => {
             tek bir güven ağında buluşturuyoruz. Bir dizin değil, yaşayan bir ağ.
           </p>
 
-          <div className="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-            <Link
-              to="/login?mode=signup"
-              className="group inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#00ACC1] to-[#0097A7] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_hsl(var(--glow-teal)/0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-teal"
-            >
-              Ağa Katıl
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
-            </Link>
-            <Link
-              to="/tools"
-              className="group inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#F59E0B] to-[#EA580C] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_rgba(234,88,12,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_38px_-12px_rgba(234,88,12,0.65)]"
-            >
-              Araçlar!
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
-            </Link>
-            <button
-              type="button"
-              onClick={scrollToAtlas}
-              className="group inline-flex min-h-[46px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#34A853] to-[#2F9B4D] px-8 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_rgba(52,168,83,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_38px_-12px_rgba(52,168,83,0.65)]"
-            >
-              Ağı keşfet
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
-            </button>
-          </div>
-
-          {/*
-           * İkincil kısayol satırı — aynı bileşen FinalCtaSection'da da kullanılır.
-           * "Araçlar" burada TEKRARLANMAZ: yukarıda turuncu ana buton olarak duruyor.
-           * max-w-2xl içinde dört sütun ≈ 160px/buton — en uzun etiket "Dijital
-           * Gruplar" rahat sığar.
-           */}
-          <QuickLinkRow className="mt-4 max-w-xl" />
+          {/* Birincil eylemler — ikincil kısayollarla AYNI ölçüde (bkz. ActionButtons). */}
+          <ActionButtons buttons={[PRIMARY_ACTIONS.join, PRIMARY_ACTIONS.tools, PRIMARY_ACTIONS.explore]} className="mt-7 max-w-xl" ariaLabel="Ana eylemler" />
+          <ActionButtons buttons={QUICK_ACTIONS} className="mt-2.5 max-w-xl" ariaLabel="Hızlı erişim" />
         </div>
       </div>
     </section>
