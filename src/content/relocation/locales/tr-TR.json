@@ -17,7 +17,11 @@
     "cities": "Şehirler",
     "services": "Servisler",
     "checklist": "Bürokrasi",
-    "emergency": "Acil & Günlük"
+    "costs": "Yaşam Masrafları",
+    "documents": "Gerekli Belgeler",
+    "assistant": "Asistan",
+    "emergency": "Acil & Günlük",
+    "saved": "Dökümanlarım"
   },
   "cities": {
     "empty": "Hedef ülkeleriniz için lokasyon önerisi bulunamadı.",

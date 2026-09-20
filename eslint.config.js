@@ -19,6 +19,11 @@ export default tseslint.config(
     ignores: [
       "dist/**",
       ".worktrees/**",
+      // Ajan worktree'leri: .worktrees/ ve .kilo/ zaten elenmişti ama Claude Code
+      // worktree'lerini .claude/worktrees/ altına açıyor ve bu yol listede yoktu.
+      // 2026-09-20'de oraya açılan bir worktree `npm run lint`'i 286 hatayla
+      // kırdı — hiçbiri depo kodundan değildi.
+      ".claude/worktrees/**",
       ".kilo/**",
       "referans/**",
       // İçerik referansı için klonlanan corteqssocial-web/corteqs deposu.

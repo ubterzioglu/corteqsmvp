@@ -54,6 +54,25 @@ export async function saveWizardAnswers(
   if (error) throw error;
 }
 
+/**
+ * Kullanıcının taşınma dosyaları, en yeni önce.
+ *
+ * Sayfa `moveId`'yi yalnız bileşen state'inde tutuyordu; sayfa yenilenince dosya
+ * kayboluyor ve kullanıcı her girişte YENİ kayıt açıyordu. Canlıda
+ * `relocation_moves = 0` olduğu için bu kusur fark edilmemişti (2026-09-20 ölçümü).
+ * RLS sahibi dışındakileri zaten eler — burada ayrıca user_id filtresi gerekmez.
+ */
+export async function listMoves(): Promise<RelocationMoveRow[]> {
+  const { data, error } = await db
+    .from("relocation_moves")
+    .select("*")
+    .neq("status", "archived")
+    .order("created_at", { ascending: false })
+    .limit(50);
+  if (error) throw error;
+  return (data ?? []) as RelocationMoveRow[];
+}
+
 export async function getMove(moveId: string): Promise<RelocationMoveRow> {
   const { data, error } = await db
     .from("relocation_moves")

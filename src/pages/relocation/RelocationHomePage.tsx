@@ -1,6 +1,7 @@
 // Taşınma Planlayıcı — ana sayfa. Wizard → move oluştur → öneri sekmeleri (veri-tabanlı).
 // Eski mock RelocationEngine'in yerini alır (karar: ayrı modül, eski silindi).
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,8 +12,16 @@ import {
   getServiceRecommendations,
   getChecklist,
   getEmergencyContacts,
+  getMove,
+  listMoves,
   recordInteraction,
 } from "@/lib/relocation-api";
+import { MoveSelector } from "@/components/relocation/MoveSelector";
+import { useRelocationMoveContent } from "@/hooks/useRelocationMoveContent";
+import { LivingCostsPanel } from "@/components/relocation/tabs/LivingCostsPanel";
+import { RequiredDocumentsPanel } from "@/components/relocation/tabs/RequiredDocumentsPanel";
+import { RelocationChatPanel } from "@/components/relocation/tabs/RelocationChatPanel";
+import { SavedDocumentsPanel } from "@/components/relocation/tabs/SavedDocumentsPanel";
 import { relocationKeys } from "@/lib/relocation-query-keys";
 import { getRelocationDict } from "@/lib/relocation-i18n";
 import { useGeoCountries } from "@/hooks/useGeo";
@@ -59,7 +68,24 @@ export default function RelocationHomePage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const dict = getRelocationDict("tr-TR");
-  const [moveId, setMoveId] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  // Dosya kimliği URL'de yaşar: sayfa yenilenince plan kaybolmasın ve kullanıcı
+  // linki paylaşamasa bile geri dönebilsin. Eskiden yalnız bileşen state'indeydi,
+  // her yenileme sihirbazı sıfırlayıp YENİ kayıt açıyordu.
+  const moveId = searchParams.get("move");
+  const setMoveId = (next: string | null) => {
+    setSearchParams(
+      (current) => {
+        const params = new URLSearchParams(current);
+        if (next) params.set("move", next);
+        else params.delete("move");
+        return params;
+      },
+      { replace: true },
+    );
+  };
+
+  const [forceWizard, setForceWizard] = useState(false);
   const [activeTab, setActiveTab] = useState("cities");
   const [serviceCategory, setServiceCategory] = useState<RelocationServiceCategory>("housing");
 
@@ -72,6 +98,12 @@ export default function RelocationHomePage() {
     () => buildCountryOptions(countryCodesQuery.data ?? [], geoCountriesQuery.data ?? []),
     [countryCodesQuery.data, geoCountriesQuery.data],
   );
+
+  const movesQuery = useQuery({
+    queryKey: relocationKeys.moves(),
+    queryFn: listMoves,
+    enabled: !moveId,
+  });
 
   const createMoveMutation = useMutation({
     mutationFn: (input: MoveCreateInput) => createMove(input),
@@ -130,6 +162,45 @@ export default function RelocationHomePage() {
     enabled: !!firstCountry && activeTab === "emergency",
   });
 
+  // Taşınma dosyasının kendisi — hedef ülkeler, hane ve bütçe buradan gelir.
+  // Şehir önerilerinden TÜREMEZ: öneri listesi boş olabilir (relocation_locations
+  // eşleşmeyebilir) ama dosyanın hedef ülkesi her zaman bellidir.
+  const moveQuery = useQuery({
+    queryKey: moveId ? relocationKeys.move(moveId) : ["relocation", "noop-move"],
+    queryFn: () => getMove(moveId as string),
+    enabled: !!moveId,
+  });
+
+  const move = moveQuery.data;
+  const targetCountryCodes = useMemo(() => move?.target_country_codes ?? [], [move]);
+  const targetCountryNames = useMemo(
+    () =>
+      targetCountryCodes.map(
+        (code) => countryOptions.find((option) => option.code === code)?.label ?? code,
+      ),
+    [targetCountryCodes, countryOptions],
+  );
+
+  const adults = move?.household?.adults ?? 1;
+  const children = move?.household?.children ?? 0;
+  // `?? []` her render YENİ dizi üretir ve aşağıdaki useMemo'ları geçersiz kılar.
+  const mustHaves = useMemo(() => move?.must_haves ?? [], [move]);
+
+  const content = useRelocationMoveContent({
+    moveId,
+    targetCountryCodes,
+    targetCountryNames,
+    adults,
+    children,
+    budgetMonthly: move?.budget_monthly ?? null,
+    currency: move?.currency ?? "EUR",
+    moveWindowStart: move?.move_window_start ?? null,
+    moveWindowEnd: move?.move_window_end ?? null,
+    mustHaves,
+    onError: (message) =>
+      toast({ title: "İşlem tamamlanamadı", description: message, variant: "destructive" }),
+  });
+
   const triggerLabels = useMemo(
     (): Record<RelocationStepTrigger, string> => ({
       before_departure: dict.checklist.before_departure,
@@ -148,7 +219,18 @@ export default function RelocationHomePage() {
       </div>
 
       {!moveId ? (
-        <RelocationWizard
+        <>
+          {!forceWizard && (
+            <MoveSelector
+              moves={movesQuery.data ?? []}
+              countryLabel={(code) =>
+                countryOptions.find((option) => option.code === code)?.label ?? code
+              }
+              onSelect={(id) => setMoveId(id)}
+              onStartNew={() => setForceWizard(true)}
+            />
+          )}
+          <RelocationWizard
           countryOptions={countryOptions}
           labels={{
             targets: dict.wizard.targets,
@@ -162,14 +244,25 @@ export default function RelocationHomePage() {
           }}
           onSubmit={(input) => createMoveMutation.mutate(input)}
           isSubmitting={createMoveMutation.isPending}
-        />
+          />
+        </>
       ) : (
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="mb-6 flex-wrap">
             <TabsTrigger value="cities">{dict.tabs.cities}</TabsTrigger>
             <TabsTrigger value="services">{dict.tabs.services}</TabsTrigger>
             <TabsTrigger value="checklist">{dict.tabs.checklist}</TabsTrigger>
+            {/* Maliyet ve belge sekmeleri yalnızca VERİ VARSA çizilir — boş sekme,
+                kullanıcıya "burada bir şey olmalıydı" hissi verir. */}
+            {content.livingCosts.length > 0 && (
+              <TabsTrigger value="costs">{dict.tabs.costs}</TabsTrigger>
+            )}
+            {content.requiredDocuments.length > 0 && (
+              <TabsTrigger value="documents">{dict.tabs.documents}</TabsTrigger>
+            )}
+            <TabsTrigger value="assistant">{dict.tabs.assistant}</TabsTrigger>
             <TabsTrigger value="emergency">{dict.tabs.emergency}</TabsTrigger>
+            <TabsTrigger value="saved">{dict.tabs.saved}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="cities">
@@ -213,10 +306,49 @@ export default function RelocationHomePage() {
             />
           </TabsContent>
 
+          <TabsContent value="costs">
+            <LivingCostsPanel
+              rows={content.livingCosts}
+              householdSize={adults + children}
+              countryLabel={(code) =>
+                countryOptions.find((option) => option.code === code)?.label ?? code
+              }
+              isLoading={content.isContentLoading}
+            />
+          </TabsContent>
+
+          <TabsContent value="documents">
+            <RequiredDocumentsPanel
+              documents={content.requiredDocuments}
+              doneKeys={content.doneDocumentKeys}
+              onToggle={content.toggleDocument}
+              isLoading={content.isContentLoading}
+              isSaving={content.isProgressSaving}
+            />
+          </TabsContent>
+
+          <TabsContent value="assistant">
+            <RelocationChatPanel
+              messages={content.chatMessages}
+              isSending={content.isChatSending}
+              onSend={content.sendChatMessage}
+              onSaveTranscript={content.saveChatTranscript}
+              hasPlatformData={content.hasPlatformData}
+            />
+          </TabsContent>
+
           <TabsContent value="emergency">
             <EmergencyContactsPanel
               contacts={emergencyQuery.data ?? []}
               emptyLabel={dict.emergency.empty}
+            />
+          </TabsContent>
+
+          <TabsContent value="saved">
+            <SavedDocumentsPanel
+              documents={content.savedDocuments}
+              onDelete={content.deleteDocument}
+              isLoading={content.isDocumentsLoading}
             />
           </TabsContent>
         </Tabs>

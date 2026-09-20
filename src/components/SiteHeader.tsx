@@ -32,6 +32,10 @@ type NavItem = {
 /** Giriş yapmış üyenin gezinme öğeleri (hesap işleri hariç). */
 const MEMBER_BROWSE_ITEMS: NavItem[] = [
   { key: "tools", label: "Araçlar", to: "/tools" },
+  // /relocation RequireAuth arkasındadır, bu yüzden yalnız üye menüsünde.
+  // 2026-09-20 ölçümü: rotaya giden TEK link DiasporaSearchBar'daydı ve canlıda
+  // relocation_moves = 0 idi — motor çalışıyordu ama kimse bulamıyordu.
+  { key: "relocation", label: "Taşınma Planlayıcı", to: "/relocation" },
   { key: "radar", label: "Radar", to: "/radar" },
   { key: "groups", label: "Dijital Gruplar", to: "/addcom" },
   { key: "events", label: "Etkinlikler", to: "/events" },

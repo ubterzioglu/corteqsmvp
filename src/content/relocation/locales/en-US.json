@@ -17,7 +17,11 @@
     "cities": "Cities",
     "services": "Services",
     "checklist": "Bureaucracy",
-    "emergency": "Emergency & Daily"
+    "costs": "Living Costs",
+    "documents": "Required Documents",
+    "assistant": "Assistant",
+    "emergency": "Emergency & Daily",
+    "saved": "My Documents"
   },
   "cities": {
     "empty": "No location recommendations found for your target countries.",
