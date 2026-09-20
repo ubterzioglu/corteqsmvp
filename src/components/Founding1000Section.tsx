@@ -108,20 +108,15 @@ const Founding1000Section = () => {
       {/* Decorative background */}
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,hsl(var(--accent)/0.08),hsl(var(--primary)/0.07),hsl(var(--background)))]" aria-hidden />
 
-      <div className="container mx-auto px-4 py-20 lg:py-28 relative z-10">
+      {/* Üst boşluk kısaldı: başlık artık hero'da, bölüm hero'nun hemen altına oturur. */}
+      <div className="container mx-auto px-4 pb-20 pt-12 lg:pb-28 lg:pt-16 relative z-10">
         {/* HERO */}
         <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 mb-16">
           <div className="max-w-2xl text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-primary text-sm font-semibold tracking-wider uppercase">
-                🌍 CorteQS Founding 1000
-              </span>
-            </div>
-
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 leading-tight">
-              Global Türk diasporasının dijital haritasında{" "}
-              <span className="text-accent">erken yerinizi alın</span>.
+            {/* Başlık ve rozet 2026-09-20'de `Founding1000Hero`'ya taşındı — aynı cümleyi
+                iki yerde tutmuyoruz. Burada yalnız açıklama paragrafı kalır. */}
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 leading-tight">
+              Global Türk diasporasının dijital haritası
             </h2>
 
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
@@ -130,8 +125,6 @@ const Founding1000Section = () => {
               dernekleri, vakıfları, okulları, medya kuruluşlarını, içerik üreticilerini ve profesyonelleri
               şehir şehir görünür kılmak için kuruluyor.
             </p>
-
-
           </div>
 
           <div className="relative mx-auto w-full max-w-xl">
@@ -287,18 +280,12 @@ const Founding1000Section = () => {
 
               <p className="text-xs text-muted-foreground mb-6 leading-relaxed text-center">
                 <span className="font-semibold text-foreground">Önemli:</span> 6 aylık görünürlük periyodu,
-                CorteQS'in <span className="font-semibold text-foreground">29 Ekim full açılış</span>{" "}
+                CorteQS'in <span className="font-semibold text-foreground">full açılış</span>{" "}
                 tarihinden itibaren başlar.
               </p>
 
 
             </div>
-
-            <p className="text-center text-xs text-muted-foreground mt-6 max-w-xl mx-auto leading-relaxed">
-              CorteQS, 29 Ekim full açılış öncesinde kısım kısım açılmaya başlayacaktır. Founding 1000
-              üyelerine sunulan kategori vitrini ve ana sayfa carousel görünürlüğü, 29 Ekim full açılış
-              tarihinden itibaren geçerli olacaktır.
-            </p>
           </div>
         </div>
 
