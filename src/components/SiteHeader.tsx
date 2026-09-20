@@ -67,9 +67,9 @@ export default function SiteHeader() {
   // Bu adları yeniden adlandırmak Y2'yi SESSİZCE öldürür (test kırılmaz, sadece
   // hiçbir kural eşleşmez) — src/index.css'i de birlikte güncelle.
   return (
-    <div className="site-header sticky top-0 z-50 border-b border-slate-200/80 bg-white backdrop-blur-sm">
+    <div className="site-header sticky top-0 z-50 bg-white backdrop-blur-sm">
       {!betaBannerDismissed && (
-        <div className="relative border-b border-amber-300/50 bg-white px-4 py-1.5 shadow-[inset_0_-1px_0_rgba(217,119,6,0.12)] sm:py-2">
+        <div className="relative border-b border-amber-300/50 bg-gradient-to-r from-amber-50 via-white to-amber-50 px-4 py-1.5 shadow-[inset_0_-1px_0_rgba(217,119,6,0.12)] sm:py-2">
           {/* pr-9/sm:pr-10: ortalanan metin dar ekranda kapatma düğmesinin altına girmesin. */}
           <p className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-3 gap-y-1 pr-9 text-center text-[0.74rem] leading-snug text-slate-700 sm:pr-10 sm:text-[0.82rem]">
             <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-400/15 px-2.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.18em] text-amber-700">
@@ -102,7 +102,10 @@ export default function SiteHeader() {
         </div>
       )}
       {/* Yeni üst bar — beta uyarısının altında, eski header'ın üstünde; Profilim + Çıkış (sağ üst), beyaz zemin */}
-      <div className="site-header__nav border-b border-slate-200/80 bg-white px-4 py-1.5">
+      {/* Gezinme satırı: logonun turkuaz–menekşe ucundan çok düşük yoğunluklu bir
+          yıkama. Renk BAĞLANTILARIN üzerinden değil ZEMİNDEN gelir; böylece bağlantı
+          metinleri koyu slate kalır ve kontrast AA üstünde durur. */}
+      <div className="site-header__nav border-b border-slate-200/70 bg-[linear-gradient(90deg,hsl(var(--glow-teal)/0.10)_0%,transparent_38%,transparent_62%,hsl(var(--brand-indigo)/0.10)_100%)] px-4 py-1.5">
         <div className="container mx-auto flex flex-wrap items-center justify-end gap-x-4 gap-y-1 lg:px-6">
           {user ? (
             <>
@@ -169,13 +172,8 @@ export default function SiteHeader() {
                 Araçlar
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              <Link
-                to="/radar"
-                className={NAV_ACTION_CLASS}
-              >
-                Radar
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              {/* Radar tek kez: bu blok 2026-09-20'ye kadar birebir KOPYALANMIŞTI ve
+                  giriş yapmamış ziyaretçinin menüsünde "Radar | Radar" görünüyordu. */}
               <Link
                 to="/radar"
                 className={NAV_ACTION_CLASS}
@@ -190,7 +188,7 @@ export default function SiteHeader() {
                 Dijital Gruplar
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              {/* Etkinlik Oluştur — /events/create sayfas, sayfasına kısayol */}
+              {/* Etkinlik Oluştur — /events/create sayfasına kısayol */}
               <Link
                 to="/events/create"
                 className={NAV_ACTION_CLASS}
@@ -215,6 +213,9 @@ export default function SiteHeader() {
           )}
         </div>
       </div>
+      {/* Marka satırı: logonun altı kolundan gelen çok yumuşak köşe yıkamaları.
+          Ortası beyaza yakın kalır ki logo ve "CorteQS" yazısı zemine karışmasın. */}
+      <div className="site-header__brand-wrap relative bg-[radial-gradient(60%_140%_at_0%_50%,hsl(var(--glow-teal)/0.13),transparent_62%),radial-gradient(60%_140%_at_100%_50%,hsl(var(--brand-pink)/0.11),transparent_62%)]">
       <div className="site-header__brand container mx-auto px-4 py-2.5 lg:px-6 lg:py-3">
         <div className="flex flex-col items-center gap-3 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-4">
           <Link
@@ -258,6 +259,18 @@ export default function SiteHeader() {
           )}
         </div>
       </div>
+      </div>
+      {/* Header'ın alt kenarı: düz slate çizgi yerine logonun altı rengi.
+          Tek ve dar bir marka imzası — FinalCtaSection kartının üst şeridiyle aynı
+          jest, böylece sayfanın açılışı ve kapanışı aynı dili konuşur. */}
+      <div
+        aria-hidden="true"
+        className="h-[3px] w-full"
+        style={{
+          background:
+            "linear-gradient(90deg, hsl(var(--glow-teal)), hsl(var(--brand-blue)), hsl(var(--brand-indigo)), hsl(var(--brand-pink)), hsl(var(--glow-orange)), hsl(var(--brand-yellow)))",
+        }}
+      />
     </div>
   );
 }

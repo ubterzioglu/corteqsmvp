@@ -5,6 +5,8 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
+import { QuickLinkRow } from "./QuickLinkRow";
+
 const FinalCtaSection = () => {
   return (
     <section className="relative mx-auto max-w-4xl px-6 pb-28 pt-12 text-center">
@@ -31,7 +33,9 @@ const FinalCtaSection = () => {
             Yurt dışındaki hayatı
             <br className="hidden sm:block" /> şekillendiren sisteme katıl
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+          {/* Tek satır: md+ ekranda sarma kapatılır (kart 4xl, cümle ~620px — rahat sığar).
+              Dar ekranda nowrap yatay taşma yapardı, bu yüzden yalnız md'den itibaren. */}
+          <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg md:whitespace-nowrap">
             Ücretsiz kayıt ol, kendi şehrindeki ağını keşfet ve büyümenin parçası ol.
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -52,6 +56,10 @@ const FinalCtaSection = () => {
               Biz kimiz?
             </Link>
           </div>
+
+          {/* Hero ile AYNI kısayol satırı (QuickLinkRow) — kapanışta da aynı dört kapı.
+              `mx-auto max-w-xl` ile kartın ortasına hizalanır; hero'da sola dayalıdır. */}
+          <QuickLinkRow className="mx-auto mt-4 max-w-xl" originPath="/" />
         </div>
       </div>
     </section>

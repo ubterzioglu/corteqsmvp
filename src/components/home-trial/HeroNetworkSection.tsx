@@ -8,6 +8,8 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
+import { QuickLinkRow } from "./QuickLinkRow";
+
 // Telifsiz soyut "beyaz geometrik ağ" hero videosu (Pexels #29718114, telifsiz).
 // Açık zemin → metin koyu, gradyan örtü beyaz tarafta. Yeni videoyu aynı isimle
 // (public/landing-assets/hero-network.mp4) değiştirirsin — kod değişmez.
@@ -15,23 +17,6 @@ import { ArrowRight } from "lucide-react";
 // olsaydı Vite dist/landingtrial/ dizini üretir, nginx onu /landingtrial route'unun
 // önüne geçirip 403 verirdi (CLAUDE.md "dist/<slug>/ dizini oluşmamalı" uyarısı).
 const HERO_VIDEO_SRC = "/landing-assets/hero-network.mp4";
-
-/**
- * Hero'nun ikincil kısayolları — üst menüdeki (SiteHeader) şeridin aynısı.
- * "Araçlar" LİSTEDE YOKTUR: yukarıda turuncu birincil buton olarak zaten var,
- * iki kez göstermek ölü tekrar olurdu.
- *
- * ⚠️ `/feedback` rotası `RequireAuth` arkasındadır (App.tsx). Giriş yapmamış
- * ziyaretçi buraya tıklayınca giriş ekranına düşer — bu bilinçlidir; `carryOrigin`
- * ile geldiği sayfa taşınır, böylece geri bildirim kaydı `page_path` alanını
- * doğru doldurur (SiteHeader'daki `state.from` deseniyle aynı).
- */
-const HERO_QUICK_LINKS: { to: string; label: string; carryOrigin?: boolean }[] = [
-  { to: "/radar", label: "Radar" },
-  { to: "/addcom", label: "Dijital Gruplar" },
-  { to: "/events", label: "Etkinlikler" },
-  { to: "/feedback", label: "Geri Bildirim", carryOrigin: true },
-];
 
 const scrollToAtlas = () => {
   const el = document.getElementById("landingtrial-atlas");
@@ -125,23 +110,12 @@ const HeroNetworkSection = () => {
           </div>
 
           {/*
-           * İkincil kısayol şeridi — üst menüdeki (SiteHeader) bağlantıların hero'daki
-           * karşılığı. Bilerek HAFİF stilde: dolu gradyan yapılsaydı yedi eşit ağırlıklı
-           * buton olur ve birincil çağrı "Ağa Katıl" kaybolurdu.
-           * "Araçlar" burada TEKRARLANMAZ — yukarıda turuncu ana buton olarak duruyor.
+           * İkincil kısayol satırı — aynı bileşen FinalCtaSection'da da kullanılır.
+           * "Araçlar" burada TEKRARLANMAZ: yukarıda turuncu ana buton olarak duruyor.
+           * max-w-2xl içinde dört sütun ≈ 160px/buton — en uzun etiket "Dijital
+           * Gruplar" rahat sığar.
            */}
-          <nav aria-label="Hızlı erişim" className="mt-4 flex flex-wrap items-center gap-2">
-            {HERO_QUICK_LINKS.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                state={link.carryOrigin ? { from: "/" } : undefined}
-                className="inline-flex min-h-[38px] items-center rounded-full border border-slate-300/70 bg-white/70 px-4 text-sm font-medium text-slate-700 backdrop-blur-sm transition-colors duration-200 hover:border-slate-400 hover:bg-white hover:text-slate-900"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+          <QuickLinkRow className="mt-4 max-w-xl" />
         </div>
       </div>
     </section>
