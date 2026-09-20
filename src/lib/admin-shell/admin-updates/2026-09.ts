@@ -5,6 +5,113 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260920-tasinma-rehberi-ve-yapay-zeka-asistani",
+    date: "20 Eylül 2026",
+    title:
+      "Taşınma rehberi gerçekten çalışır hâle geldi: yaşam masrafı, belge listesi, ilerleme takibi ve soru cevaplayan bir asistan — tek eksik içerik, o da sizde",
+    items: [
+      "REFERANS SİTEDEKİ MOTOR KOPYALANMADI, ÇÜNKÜ İÇİ BOŞ ÇIKTI: Hayata geçirilmesi istenen Lovable örneğini satır satır ölçtük. 13 ülke listeleniyor ama gerçek maliyet verisi yalnız 2'sinde var; kalan 11 ülke hiçbir uyarı vermeden ALMANYA'nın rakamlarını gösteriyor. Kayıtlar veritabanında değil tarayıcının hafızasında tutuluyor — telefonunu değiştiren kullanıcı her şeyini kaybeder. İş ilanları ve danışman listeleri dosyanın içine elle yazılmış. Yani o ekran bir vitrin maketi. Ondan yalnız sekme kurgusu ve iki yetenek fikri alındı, kod alınmadı.",
+      "BİZDEKİ MOTOR ZATEN VARDI AMA CANLIDA BOMBOŞTU: Ölçüldü — taşınma kaydı 0, hizmet 0, resmi adım 2. Yani sayfa çalışıyordu, gösterecek şeyi yoktu.",
+      "YENİ YETENEKLER: Yaşam masrafı tablosu, ülkeye göre belge listesi ve kişiye özel ilerleme takibi (hangi belgeyi aldın, hangisi eksik) eklendi. Bir kullanıcı artık birden fazla taşınma planı tutabiliyor; hangi planda olduğu adres çubuğunda taşınıyor, böylece plan bağlantısı paylaşılabiliyor.",
+      "SORU CEVAPLAYAN ASİSTAN CANLIYA ALINDI: Çok turlu konuşabiliyor (önceki soruyu hatırlıyor) ve kişinin kendi taşınma dosyasını biliyor. Canlıda duman testi yapıldı, geçti. Hangi yapay zekâ sağlayıcısının kullanılacağı kod değil ayar meselesi — istenirse tek satırlık ayarla değiştirilir.",
+      "KALAN TEK GERÇEK İŞ İÇERİK VE O SİZDE: Dört tablonun dördü de sıfır satır. Maliyet ve belge sekmeleri veri yokken bilerek HİÇ çizilmiyor (boş kutu göstermek yerine). Doldurulabilir şablon hazır ve canlıda provası yapıldı: docs/operations/2026-09-20-relocation-icerik-seed-sablonu.sql. Bilgiler girildiği anda sayfa kendiliğinden dolar, kod değişikliği gerekmez.",
+      "BUGÜN ÖĞRENİLEN ÖNEMLİ BİR ŞEY — COOLIFY, YAPAY ZEKÂ FONKSİYONLARINI YAYINLAMIYOR: Depoda 'push ettik, Coolify alır' varsayımı vardı ve bu fonksiyonlar için YANLIŞ. Coolify yalnız web sitesini kuruyor. Kanıt: whatsapp-reply ve whatsapp-webhook 30 Ağustos'ta yazılmış, haftalardır depoda duruyor ama CANLIDA YOK. Tersi de doğru: canlıda çalışan dört fonksiyonun (chat-register, diaspora-search, whatsapp-bot-lookup, relocation-chat) kaynağı depoda yok. Bundan sonra her fonksiyon ayrıca elle yayına alınacak; taşınma asistanı öyle yapıldı.",
+      "ANA SAYFADAKİ SOHBET KUTUSUNDA AÇIK BİR KUSUR VAR, BUGÜN DÜZELTİLMEDİ: Kutu 'CorteQS bilgi asistanı' diye tanıtılıyor ama arkasındaki servis bu depoda olmayan harici bir sistem; tek soruluk, geçmiş tutmuyor ve taşınma konusunda hiçbir şey bilmiyor. Üstelik cevap bulamadığında da 'buldum' dediği için hazırladığımız kibar yedek metin hiç devreye girmiyor — kullanıcı ham 'Sağlanan bağlamda bilgi bulunmamaktadır' cümlesini görüyor. Kayda geçti, ayrı iş.",
+      "GÜNÜN TOPLAM KONTROLÜ: Tip denetimi 0 hata, kod denetimi 0 problem, son ölçümde 291 dosyada 2.171 testin tamamı yeşil.",
+    ],
+  },
+  {
+    id: "20260920-etkinlik-saat-dilimi-ve-etkinliklerim",
+    date: "20 Eylül 2026",
+    title:
+      "Etkinliklerde 'saat kimin saati?' sorusunun cevabı yoktu, artık var; üye gönderdiği etkinliği ilk kez kendi profilinde görebiliyor",
+    items: [
+      "BURAK'IN ÜÇ MADDESİ TEK TEK ÖLÇÜLDÜ, İKİSİ GERÇEKTEN EKSİKTİ: (1) Saat referansı HİÇ yoktu — veritabanı saati yazıyor ama hangi ülkenin saati olduğunu kaydetmiyordu. Üstelik ülke alanı formda yalnız fiziksel ve hibrit etkinlikte çıkıyordu; ONLINE etkinlikte saatin referansı hiç sorulmuyordu. (2) Sosyal medya paylaşımı ZATEN VARDI (detay sayfasında dört platform + bağlantı kopyala); eksik olan yalnız liste kartıydı, o da eklendi. (3) 'Kendi profilinde görme' gerçekten yoktu.",
+      "ÜYE GÖNDERDİĞİ ETKİNLİĞİ BİR DAHA HİÇBİR YERDE GÖREMİYORDU: Onaya düşen etkinlik kullanıcı için kayboluyordu. İlginç olan şu — bunu çözecek kod aylar önce yazılmış ama HİÇBİR YERDEN ÇAĞRILMIYORMUŞ, profildeki sekme 'yakında' yazan boş bir kutuydu. Bağlandı. 'Etkinliklerim' hem premium profil sekmesine hem de yan menüye eklendi; yalnız premium düzene koymak üyelerin çoğunu dışarıda bırakırdı.",
+      "ONAY BEKLEYEN ETKİNLİKTE PAYLAŞ DÜĞMELERİ ARTIK GİZLİ: Yoksa üye onaylanmamış etkinliğinin bağlantısını paylaşır, açan herkes 'Etkinlik bulunamadı' görürdü.",
+      "BAĞIMSIZ BİR İNCELEME 9 KUSUR BULDU, ÜÇÜ CİDDİYDİ — HEPSİ DÜZELTİLDİ: (a) Bilinmeyen bir saat dilimi sessizce 'Türkiye' sayılıyordu. Üsküp'teki üye 19:00 yazar, sistem 'Türkiye saatiyle' diye kaydeder, Berlin'deki izleyici iki saat erken gelirdi. (b) Gece yarısını aşan etkinlikte ('22:00 – 01:00') bitiş saati başlangıçtan 21 saat ÖNCEYE düşüyordu; ekranda tesadüfen doğru görünüyordu, yani gözle bakarak asla bulunamazdı. (c) Tarihler dört ayrı sayfada birden, batı yarımküredeki kullanıcıya BİR GÜN GERİ gösteriliyordu. (d) Aramaya virgül yazan kullanıcı ('kültür, sanat') listeyi tamamen düşürüyordu.",
+      "BUNDAN BİR KURAL ÇIKTI VE YAZILDI: Saat dilimi, ülke gibi REFERANS alanlarında 'makul varsayılan' koymak, sessizce yanlış veri üretmektir. Bilinmeyen değer artık boş bırakılıyor ve gönderimde soruluyor.",
+      "VERİTABANI DEĞİŞİKLİĞİ CANLIYA UYGULANDI VE DOSYAYA DEĞİL VERİTABANINA SORULARAK DOĞRULANDI: Saat dilimi alanı biçim kontrolüyle korunuyor — 'Europe/Berlin' kabul ediliyor, 'Almanya' reddediliyor. Bu önemli, çünkü 19 Eylül'deki Türkçe karakter kusurunun kök nedeni tam da böyle bir kontrolün olmamasıydı.",
+      "KALAN: Yayına alma ve gerçek tarayıcıda gözle kontrol.",
+    ],
+  },
+  {
+    id: "20260920-isletmeler-uzmanlar-sehir-elcileri-sayfalari",
+    date: "20 Eylül 2026",
+    title:
+      "İşletmeler, Uzmanlar ve Şehir Elçileri kendi sayfalarına ayrıldı — ama en yüksek getirili iş kod değil: 61 uzman kaydı üç aydır onay kuyruğunda bekliyor",
+    items: [
+      "ÜÇ YENİ VİTRİN SAYFASI: Ana sayfadaki 'Sistemin 6 Katmanı' kartlarının üçü tıklanınca artık kendi sayfasına gidiyor — /businesses, /consultants, /city-ambassadors. Hepsi filtre çubuğu ve liste kartı paylaşıyor, yani dördüncüsü gerektiğinde yeniden yazılmayacak.",
+      "GİRİŞ YAPMADAN GÖRÜLEBİLİYOR: Bu sayfalar üye dizininden farklı olarak ziyaretçiye de açık. Amaç arama motorlarından gelen kişinin ilk bakışta gerçek içerik görmesi.",
+      "İŞLETMELER SAYFASI ŞİMDİLİK ÖRNEK VERİYLE ÇALIŞIYOR VE BUNU AÇIKÇA SÖYLÜYOR: Ölçüldü — canlıdaki 25 işletme kaydının 25'i de yer tutucu, gerçek işletme kaydı SIFIR. Sayfa bu yüzden 'DEMO' rozeti ve kapatılamaz bir uyarı bandı taşıyor, arama motorlarına da bilerek bildirilmedi. Gerçek kayıtlar geldiğinde tek satır silinerek normale döner.",
+      "UZMANLAR VE ŞEHİR ELÇİLERİNDE ÖRNEK VERİ KOYULMADI — BİLİNÇLİ: Oradaki örnekler uydurma KİŞİ adları, puanlar ve '127 üye kazandırdı' gibi rakamlar taşıyordu. Ziyaretçi var olmayan bir avukata veya doktora ulaşmaya çalışabilirdi. İstenirse sonradan eklenebilir, deseni hazır.",
+      "⚠️ EN YÜKSEK GETİRİLİ İŞ KOD DEĞİL, ONAY: Ölçüldü — danışman ve sağlık rollerinde 81 gerçek kayıt var ama yalnız 20'si vitrine çıkabiliyor. Kalan 61'İN 61'İ DE 17 Haziran 2026'da tek bir toplu içe aktarmayla girmiş ve ÜÇ AYDIR onay kuyruğunda bekliyor (20 hukuk/vergi, 16 doktor, 7 vize, 7 diş hekimi, 4 emlak, 3 şirket kuruluşu, 3 psikolog/koç, 1 pratik yaşam). Yeri: /admin/data → durum filtresi 'İncelemede'. Onaylandığında Uzmanlar sayfası kendiliğinden 20'den 81 kayda çıkar, hiçbir kod değişikliği gerekmez.",
+      "ŞEHİR ELÇİSİ BAŞVURU FORMU EKLENDİ: Program anlatımı ve başvuru akışı aynı sayfada.",
+      "KALAN: Dört yeni adres henüz yayına alınmadı ve tarayıcıda gözle görülmedi.",
+    ],
+  },
+  {
+    id: "20260920-arama-denetimi-ve-linksiz-sayfalar",
+    date: "20 Eylül 2026",
+    title:
+      "Ana sayfadaki aramanın boş dönmesinin DÖRT ayrı sebebi ölçüldü; ayrıca sitede hiçbir yerden link almayan sayfalar tarandı",
+    items: [
+      "ARAMA BOŞ DÖNÜYORDU VE SEBEBİ TEK DEĞİL, DÖRT TANEYDİ: (1) Giriş yapmamış ziyaretçi için dizin sayfası hiç sorgu bile atmıyor, doğrudan 'Giriş Yap' kartı çiziyor — ama ana sayfadaki arama kutusu kullanıcıyı oraya gönderiyordu. (2) Arama servisi girişsiz çağrıda doğrudan hata veriyor. (3) Çok kelimeli arama her kelimenin ayrı ayrı bulunmasını şart koşuyor ve Türkçe harf toleransı yok; kutudaki örnek olan 'Berlin'de yazılımcı' bu yüzden GARANTİLİ sıfır sonuç veriyordu ('yazilimci' ile 'yazılımcı' da eşleşmiyor). (4) Veri yok: dizinde görünen 248 kaydın yalnız 21'inde şehir dolu ve Berlin'de kayıtlı KİMSE YOK (en çok Dortmund, 11 kişi). Kutudaki beş popüler etiketten dördü sıfır döner.",
+      "ANA SAYFADAKİ '645+ KAYITLI PROFİL' YAZISI YANILTICIYDI: Sayaç filtresiz sayıyordu; dizinde en fazla 248 kayıt görünebiliyor. Sayaç düzeltildi.",
+      "İLK DÜZELTME YAZILDI AMA HENÜZ GÖNDERİLMEDİ: Ziyaretçi artık giriş ekranına doğru şekilde yönlendiriliyor, örnek aramalar gerçekten sonuç veren hâle getirildi, etiketler gerçek veriye dayandırıldı. Kod ve yedi yeni test hazır, çalışma dizininde bekliyor — bugün aynı depoda birden fazla akış çalıştığı için birbirine karışmasın diye henüz gönderilmedi.",
+      "SİTEDE HAZIR DURAN AMA HİÇ KULLANILMAYAN BİR ARAMA ALTYAPISI BULUNDU: Canlıda 645 satırlık bir arama dokümanı tablosu, Türkçe harf normalleştirme ve anlamsal arama için gereken alanlar ZATEN VAR ve çalışıyor. Bugünkü arama bunların HİÇBİRİNİ kullanmıyor, ham metin eşleştirmesi yapıyor. Yani akıllı arama ve site içi yapay zekâ botu için sıfırdan altyapı kurmak gerekmiyor; var olanı bağlamak gerekiyor. Plan yazıldı: docs/plans/2026-09-20-arama-ve-ai-bot-plani.md",
+      "LİNKİ OLMAYAN SAYFA DENETİMİ YAPILDI: 145 gerçek sayfa adresi tarandı. İki sayfa arama motorlarına ilan edildiği hâlde sitenin HİÇBİR YERİNDEN link almıyor (/lansman ve 19 Mayıs haritası) — bu, arama motorlarında değer kaybettiren klasik bir durum. Bir canlı kırık link ve menüye hiç eklenmemiş dört yönetici sayfası bulundu. Denetim raporu yazıldı, DÜZELTME UYGULANMADI — hepsi açık iş olarak duruyor.",
+      "DOKÜMAN TEMİZLİĞİ: Anlattığı iş çoktan bitmiş dört eski plan arşive donduruldu — SİLİNMEDİ, çünkü bu depoda kararların tek kaydı çoğu zaman o planlar. Taşıma ölçütü ve taşınMAYANLARIN gerekçesi arşiv klasörünün kendi notunda yazılı.",
+      "⚠️ KİŞİSEL VERİ UYARISI: Dokümanlar klasöründe 1,67 MB'lık bir WhatsApp sohbet dökümü duruyor ve içinde GERÇEK TELEFON NUMARALARI ile özel yazışmalar var. Depoya girmiyor (yok sayılıyor), o yüzden dokunulmadı; ama orası dokümantasyon klasörü, üçüncü kişilerin kişisel verisi için değil. Depo dışına alınması öneriliyor.",
+    ],
+  },
+  {
+    id: "20260920-ana-sayfa-mobil-duzen-ve-demo-isareti",
+    date: "20 Eylül 2026",
+    title:
+      "Mobil düzen elden geçti, profil sayfasında kartların üst üste binmesinin kök nedeni bulundu, ana sayfa iki tam satıra oturdu",
+    items: [
+      "MOBİLDE TEK 'MENÜ' DÜĞMESİ VE SAĞDAN AÇILAN ÇEKMECE: Üstteki dağınık bağlantılar tek menüye toplandı. Çekmecede hesap işleri (Giriş Yap / Kayıt Ol) en başta, masaüstünde ise eskisi gibi en sonda. Gezinme artık tek listeden üretiliyor, yani bir bağlantı eklemek iki yerde ayrı ayrı iş olmaktan çıktı.",
+      "MOBİLDE KISAYOLLAR AKORDİYONA ALINDI: İlk üç düğme açık, kalan yedisi 'Tüm kısayollar' arkasında. Ekosistem kartlarının yüksekliği de mobilde yarıya indi (yaklaşık 240 pikselden 125'e).",
+      "PROFİL SAYFASINDA KARTLAR ÜST ÜSTE BİNİYORDU — KÖK NEDEN BULUNDU: Kartlara 'kolonun boyu kadar uza' kuralı uygulanıyordu. Bir kolonda iki bölüm varsa her kart tek başına KOLONUN TAMAMI kadar şişiyor, yan kolondaki karta ve hatta sayfa altlığına biniyordu. Tek bölümlü profillerde hiç görünmediği için (grup profilleri tertemiz çıkıyordu) sessizce yaşamış. Playwright ile 20 profil taranarak ölçüldü: düzeltmeden önce 1 çakışma, sonra 0.",
+      "KAYIT DÜĞMESİ TEKLEŞTİ: 'Ağa Katıl' ve benzeri farklı etiketler tek bir 'Ücretsiz kayıt ol!' hâline getirildi; ana sayfanın üstü ve altı artık aynı düğme listesini paylaşıyor, biri değişince öteki de değişiyor.",
+      "HERO VE KAPANIŞ KARTI TAM İKİ SATIRA OTURDU (5 + 5): Ölçülerek yapıldı, düğmeler artık yarım satır bırakmıyor. 'Biz kimiz?' düğmesi hem ana sayfaya hem menüye eklendi. 'Kampanyalar' ve 'Yarışmalar' kısayolları üç yere birden geldi (menü, hero, kapanış kartı) — ikisi de aynı kampanya sayfasına gidiyor, yarışmaların ayrı adresi henüz yok.",
+      "MANİFESTO BÖLÜMÜ 'BÜYÜYEN AĞ' OLDU: Statik metin yerine dokuz düğüm ve on beş bağlantıdan oluşan canlı bir ağ görseli, şehir etiketleriyle. Hareket duyarlılığı açık olan kullanıcıda animasyon kapanıyor ama görsel görünür kalıyor.",
+      "/founding-1000 SAYFASININ HİÇ ANA BAŞLIĞI YOKTU: Sayfa, Etkinlikler ve Radar'ın kullandığı hazır başlık kabuğuna geçirildi — dördüncü bir kopya yazılmadı. Artık sayfanın ilk başlığı doğru başlık.",
+      "'DEMO' DESENİ KURULDU (KALICI KURAL): Canlıda yayında ama içeriği gerçek olmayan sayfalar tek bir listeden işaretleniyor. Düğmenin köşesinde DEMO rozeti, sayfaya girince kapatılamaz bir uyarı bandı çıkıyor. Yeni demo sayfa eklemek tek satır, gerçek içeriğe kavuşunca o satırı silmek yetiyor. Bugünkü liste: Vlogger Yarışması, Blogger Yarışması, İşletmeler.",
+      "⚠️ CEVAPSIZ KALAN BİR SORU: Kurucu üyeler bölümündeki istatistik kartında hâlâ '29 Ekim / Full Açılış' yazıyor. Metinlerden 29 Ekim ibaresi kaldırılırken bu kart sorulmuştu, cevap gelmediği için BİLEREK dokunulmadı.",
+      "KALAN: Bu görsel işlerin hiçbiri tarayıcıda gözle kontrol edilmedi.",
+    ],
+  },
+  {
+    id: "20260920-kadro-konsolu-plani",
+    date: "20 Eylül 2026",
+    title:
+      "52 pozisyonluk kadro planı admin paneline taşınıyor — tasarım ve 13 görevlik uygulama planı hazır, kod henüz yazılmadı",
+    items: [
+      "BUGÜN NE YAPILDI: Kadro planı şu an iki kurucunun ortak kullandığı tek dosyalık bir panoda duruyor. O panonun admin paneline (/admin/kadro) taşınması için tasarım kararları alındı ve 13 görevlik uygulama planı yazıldı. KOD YAZILMADI — bu bir hazırlık kaydıdır.",
+      "MEVCUT PANONUN İKİ GERÇEK EKSİĞİ: Durum değişikliklerinde 'kim değiştirdi' bilgisi tutulmuyor, son yazan kazanıyor. Ve aday takibi yok — pozisyon başına tek bir serbest metin alanı var.",
+      "ALINAN KARARLAR: Rol tanımları kodda kalacak (versiyonlanır, gözden geçirilir), yalnız durum bilgisi veritabanında tutulacak. Sadece yöneticilere açık olacak; herkese açık kariyer sayfası ve başvuru formu ayrı iş olarak ertelendi. Değişiklik geçmişi, aday takibi ve toplantıya tablo götürmek için CSV dışa aktarım eklenecek.",
+      "52 ROLÜN DÖKÜMÜ SAYILDI: Kuruluş ve liderlik 5, finans/hukuk/idari 3, pazarlama 27 (ürün, işlev ve coğrafya hatları), ürün ve teknoloji 9, operasyon ve güven 5, gelir ve ortaklıklar 3.",
+      "TAŞINACAK VERİ YOK: Mevcut panonun kayıt koleksiyonu ölçüldü ve BOŞ çıktı — yani veri aktarma adımı gerekmiyor, doğrudan kurulabilir.",
+    ],
+  },
+  {
+    id: "20260920-yedek-maliyet-ve-iki-guvenlik-riski",
+    date: "20 Eylül 2026",
+    title:
+      "Her şeyin tam yedeği alındı (299 MB), veritabanı maliyeti ölçüldü ve ücretsiz plana inilebileceği çıktı — ayrıca iki açık güvenlik riski var, ikisi de sizde",
+    items: [
+      "ÖNCE YEDEK: Veritabanının ve tüm yüklenen dosyaların TAM yedeği alındı — 299 MB, 7 veritabanı dosyası + 242 kullanıcı dosyası, başarısız sıfır, depo dışında bilgisayarda duruyor. Bu, bugüne kadar alınmış ilk eksiksiz yedek. (Not: yedek dosyaları kod deposuna SIZMADI, ayrıca doğrulandı.)",
+      "MALİYET KARARI TAHMİNLE DEĞİL ÖLÇÜMLE VERİLDİ: Proje ücretli planda ve bunun gerekli olup olmadığı bilinmiyordu. Gerçek kullanım okundu — son 10 günde dış veri trafiği ücretsiz planın sınırının yalnız %19'u, veritabanı 500 MB'ın 103'ü, depolama 1 GB'ın 0,28'i, aylık aktif kullanıcı 50.000'in 5'i. Yani ücretsiz plan her eksende rahat sığıyor, yaklaşık beş kat büyüme payı var. Tasarruf aylık yaklaşık 25 dolar.",
+      "⚠️ AMA ÜCRETSİZ PLANIN İKİ BEDELİ VAR, KARAR VERİRKEN BİLİNMELİ: (1) Otomatik yedek kalkar ve plan değişikliği mevcut 8 günlük yedeği ANINDA SİLER — bu yüzden yukarıdaki tam yedek alındı ve günlük dönüşümlü yedek aracı yazılıp uçtan uca denendi. (2) Sunucunun belleği yarıya iner; bu da ağır veritabanı sorgularının siteyi düşürme riskini artırır.",
+      "SUPABASE'DEN TAMAMEN ÇIKIP KENDİ SUNUCUMUZA GEÇME PLANI DA YAZILDI AMA UYGULANMADI: Kurulum dosyaları, aktarma ve doğrulama araçları hazır ve test edildi; CANLI SİSTEME HİÇ DOKUNULMADI. Plan uykuda bekliyor, hangi koşullarda uyandırılacağı yazılı.",
+      "5 AĞUSTOS'TAKİ ÇÖKÜŞÜN KÖK NEDENİ BULUNDU: O gün kullanılan standart dışa aktarma komutu, kullanıcıları, rolleri ve izinleri sessizce ATLIYOR. Bu yüzden kopya sistemde 481 güvenlik kuralından yalnız 102'si vardı ve kimlik doğrulama sahteydi. Yeni araçlar ham yedekleme komutunu kullanıyor, bu tuzağa düşmüyor.",
+      "⚠️ AÇIK GÜVENLİK RİSKİ 1 — ESKİ SUNUCUNUN VERİTABANI PORTU 46 GÜNDÜR İNTERNETE AÇIK: 5 Ağustos'tan kalan üretim kopyası hâlâ ayakta, içinde 158 kullanıcı var ve parolası 'bilinen' bir parola. Bu bir kod işi değil, sunucu panelinden kapatılması gereken bir iş.",
+      "⚠️ AÇIK GÜVENLİK RİSKİ 2 — ÖZGEÇMİŞ KOVASI HERKESE AÇIK: Eski cv-files alanı herkese açık işaretli ve içinde 3 özgeçmiş var. Yeni tasarımdaki özgeçmiş alanı doğru şekilde kapalı; düzeltilmemiş olan eski kova. Taşıma yapılırsa bu 'açık' bayrağı olduğu gibi taşınır, yani taşımadan ÖNCE kapatılmalı.",
+    ],
+  },
+  {
     id: "20260920-seo-denetimi-ve-dugme-duzeni",
     date: "20 Eylül 2026",
     title:

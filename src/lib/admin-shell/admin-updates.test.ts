@@ -27,6 +27,82 @@ describe("ADMIN_UPDATES", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
+  it("taşınma kaydı 'kalan iş içerik' ve 'Coolify fonksiyon yayınlamaz' uyarılarını taşır", () => {
+    const update = ADMIN_UPDATES.find(
+      ({ id }) => id === "20260920-tasinma-rehberi-ve-yapay-zeka-asistani",
+    );
+    const detail = update?.items.join(" ") ?? "";
+
+    // ⚠️ EN KRİTİK CÜMLE: kalan iş koda değil İÇERİĞE bağlı. Bu düşerse okuyan
+    // kişi "bitti" sanıp bekler; oysa dört tablo da boş.
+    expect(detail).toContain("KALAN TEK GERÇEK İŞ İÇERİK VE O SİZDE");
+    expect(detail).toContain("relocation-icerik-seed-sablonu.sql");
+
+    // Referans motorun MOCK olduğu ölçümüyle yazılmalı — "port edilmedi" demek yetmez.
+    expect(detail).toContain("13 ülke");
+
+    // Coolify yanılgısı: bu cümle düşerse yazılan fonksiyonun canlıda olduğu sanılır.
+    expect(detail).toContain("COOLIFY, YAPAY ZEKÂ FONKSİYONLARINI YAYINLAMIYOR");
+    expect(detail).toContain("CANLIDA YOK");
+  });
+
+  it("uzmanlar kaydı, asıl işin kod değil 61 kaydın ONAYI olduğunu söyler", () => {
+    const update = ADMIN_UPDATES.find(
+      ({ id }) => id === "20260920-isletmeler-uzmanlar-sehir-elcileri-sayfalari",
+    );
+    const detail = update?.items.join(" ") ?? "";
+
+    // ⚠️ EN KRİTİK CÜMLE: en yüksek getirili iş panelde onay vermek. Bu düşerse
+    // kayıt "üç sayfa yaptık" diye okunur ve 61 kayıt kuyrukta beklemeye devam eder.
+    expect(detail).toContain("EN YÜKSEK GETİRİLİ İŞ KOD DEĞİL, ONAY");
+    expect(detail).toContain("61");
+    expect(detail).toContain("/admin/data");
+    expect(detail).toContain("20'den 81 kayda");
+
+    // İşletmeler sayfasının DEMO olduğu açıkça yazılmalı.
+    expect(detail).toContain("25 işletme kaydının 25'i de yer tutucu");
+  });
+
+  it("arama denetimi kaydı dört kök nedeni de ayrı ayrı sayar", () => {
+    const update = ADMIN_UPDATES.find(
+      ({ id }) => id === "20260920-arama-denetimi-ve-linksiz-sayfalar",
+    );
+    const detail = update?.items.join(" ") ?? "";
+
+    // Tek bir "arama düzeltildi" cümlesi bu dört ayrı işi gizler; dördü de kalmalı.
+    expect(detail).toContain("DÖRT TANEYDİ");
+    expect(detail).toContain("Berlin'de yazılımcı");
+    expect(detail).toContain("Berlin'de kayıtlı KİMSE YOK");
+
+    // ⚠️ Düzeltmenin henüz gönderilmediği yazılmalı.
+    expect(detail).toContain("HENÜZ GÖNDERİLMEDİ");
+
+    // Hazır ama kullanılmayan arama altyapısı bu kaydın en değerli bulgusu.
+    expect(detail).toContain("645 satırlık");
+
+    // Kişisel veri uyarısı düşerse dosya orada kalır.
+    expect(detail).toContain("GERÇEK TELEFON NUMARALARI");
+  });
+
+  it("altyapı kaydı yedeği, ücretsiz plan bedelini ve iki açık riski birlikte söyler", () => {
+    const update = ADMIN_UPDATES.find(
+      ({ id }) => id === "20260920-yedek-maliyet-ve-iki-guvenlik-riski",
+    );
+    const detail = update?.items.join(" ") ?? "";
+
+    expect(detail).toContain("299 MB");
+
+    // ⚠️ Ücretsiz plana geçmenin bedeli yazılmazsa karar eksik bilgiyle verilir.
+    expect(detail).toContain("8 günlük yedeği ANINDA SİLER");
+
+    // ⚠️ İki güvenlik riski de panel işi; düşerlerse kimse kapatmaz.
+    expect(detail).toContain("46 GÜNDÜR İNTERNETE AÇIK");
+    expect(detail).toContain("ÖZGEÇMİŞ KOVASI HERKESE AÇIK");
+
+    // Canlı sisteme dokunulmadığı açıkça yazılmalı.
+    expect(detail).toContain("CANLI SİSTEME HİÇ DOKUNULMADI");
+  });
+
   it("20 Eylül kaydı iki kusuru, hasar taramasını ve YAYINLANMAMIŞ olanı birlikte söyler", () => {
     const update = ADMIN_UPDATES.find(
       ({ id }) => id === "20260920-canliya-cikmadan-yakalanan-iki-kusur-ve-gorsel-yenileme",
