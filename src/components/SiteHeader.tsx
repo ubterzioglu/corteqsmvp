@@ -138,6 +138,22 @@ export default function SiteHeader() {
                 Etkinlikler
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              {/* Kampanyalar + Yarışmalar: ikisi de /campaign'e gider — yarışmalar şimdilik
+                  kampanya hub'ının içinde listeleniyor (kullanıcı kararı, 2026-09-20). */}
+              <Link
+                to="/campaign"
+                className={NAV_ACTION_CLASS}
+              >
+                Kampanyalar
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              <Link
+                to="/campaign"
+                className={NAV_ACTION_CLASS}
+              >
+                Yarışmalar
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               {/* Geri Bildirim — geldiği sayfa state.from ile /feedback'e taşınır (page_path). */}
               <Link
                 to="/feedback"
@@ -194,6 +210,21 @@ export default function SiteHeader() {
                 className={NAV_ACTION_CLASS}
               >
                 Etkinlik Oluştur
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              {/* Kampanyalar + Yarışmalar: ikisi de /campaign'e gider (bkz. üye menüsü). */}
+              <Link
+                to="/campaign"
+                className={NAV_ACTION_CLASS}
+              >
+                Kampanyalar
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              <Link
+                to="/campaign"
+                className={NAV_ACTION_CLASS}
+              >
+                Yarışmalar
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link

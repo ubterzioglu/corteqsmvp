@@ -78,10 +78,29 @@ export const PRIMARY_ACTIONS = {
 } satisfies Record<string, ActionButtonSpec>;
 
 /**
- * Hero ve CTA kartının PAYLAŞTIĞI dört kısayol. Renkler logonun kollarından seçildi;
+ * Hero ve CTA kartının PAYLAŞTIĞI kısayollar. Renkler logonun kollarından seçildi;
  * birincil düğmeler teal/turuncu/yeşil/lacivert kullandığı için hiçbiri karışmaz.
+ *
+ * ⚠️ Kampanyalar ve Yarışmalar BİLEREK aynı hedefe (`/campaign`) gider — kullanıcı
+ * kararı, 2026-09-20: yarışmalar şimdilik kampanya hub'ının içinde listeleniyor,
+ * ayrı bir rota açılmadı. Yarışmalara ayrı bir sayfa geldiğinde yalnız `to`
+ * değişecek. Aynı hedefli iki düğme olduğu için renkleri de kardeş tonlardır.
  */
 export const QUICK_ACTIONS: ActionButtonSpec[] = [
+  {
+    to: "/campaign",
+    label: "Kampanyalar",
+    hint: "Founding 1000 erken üyelik programı ve yürüyen tüm CorteQS kampanyaları tek sayfada.",
+    gradient: "from-[#D97706] to-[#A85B06]",
+    shadow: "rgba(168,91,6,0.55)",
+  },
+  {
+    to: "/campaign",
+    label: "Yarışmalar",
+    hint: "Vlogger ve blogger yarışmaları — ödüller, katılım koşulları ve başvuru adımları.",
+    gradient: "from-[#0E9F6E] to-[#047857]",
+    shadow: "rgba(4,120,87,0.55)",
+  },
   {
     to: "/radar",
     label: "Radar",

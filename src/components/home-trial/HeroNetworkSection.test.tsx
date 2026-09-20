@@ -30,6 +30,9 @@ describe("ana sayfa hero", () => {
     ]);
 
     expect(targets).toEqual([
+      // Kampanyalar ve Yarışmalar BİLEREK aynı hedefe gider (bkz. action-buttons-data.ts).
+      ["Kampanyalar", "/campaign"],
+      ["Yarışmalar", "/campaign"],
       ["Radar", "/radar"],
       ["Dijital Gruplar", "/addcom"],
       ["Etkinlikler", "/events"],
