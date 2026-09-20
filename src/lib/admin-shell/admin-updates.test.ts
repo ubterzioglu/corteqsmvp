@@ -27,6 +27,36 @@ describe("ADMIN_UPDATES", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
+  it("20 Eylül kaydı iki kusuru, hasar taramasını ve YAYINLANMAMIŞ olanı birlikte söyler", () => {
+    const update = ADMIN_UPDATES.find(
+      ({ id }) => id === "20260920-canliya-cikmadan-yakalanan-iki-kusur-ve-gorsel-yenileme",
+    );
+    const detail = update?.items.join(" ") ?? "";
+
+    // İki kusur da ölçümüyle yazılmalı — "düzeltildi" demek okuyana bir şey söylemez.
+    expect(detail).toContain("27 sütun var ve 'platform' diye bir sütun YOK");
+    expect(detail).toContain("'yüz yüze' yerine 'yuz yuze'");
+
+    // ⚠️ EN KRİTİK CÜMLE: hasar taraması. Bu düşerse okuyan kişi veri düzeltmesi
+    // gerektiğini sanıp olmayan bir işin peşine düşer.
+    expect(detail).toContain("HENÜZ KİMSE ZARAR GÖRMEDİ");
+    expect(detail).toContain("0 kayıt");
+
+    // Hoş geldin maili bulgusu: 22 kayıt hiç gitmemiş. Sayı duyurudan düşerse
+    // "anahtar açıldı" tek başına önemsiz görünür.
+    expect(detail).toContain("22 kayıt oluşmuş");
+
+    // Radar'ın canlıdaki sürümünün iki aylık olduğu yazılmalı.
+    expect(detail).toContain("20 Temmuz tarihliydi");
+
+    // İpucu metinlerinin TASLAK olduğu yazılmalı — onaylanmış sanılmasın.
+    expect(detail).toContain("açıklamalar taslak");
+
+    // ⚠️ Arayüz işinin tamamı yayında değil ve gözle tek testi /addcom gönderimi.
+    expect(detail).toContain("HENÜZ CANLIDA DEĞİL");
+    expect(detail).toContain("gerçek bir grup gönderimi denenmeli");
+  });
+
   it("14 Eylül toplu özet kaydı kapanan todo'ları sayar ama 'yapıldı' sanılmasını ENGELLER", () => {
     const update = ADMIN_UPDATES.find(
       ({ id }) => id === "20260914-13-eylul-toplu-ozet-ve-kapanan-todolar",
