@@ -39,6 +39,23 @@ supabase/.temp/
 supabase/.branches/
 supabase/.env
 
+# Kendi altyapımızın sırları (JWT secret, DB parolası, OAuth secret, SMTP).
+# Yukarıdaki `.env` deseni zaten her dizinde eşleşir; bu satır NİYETİ belgelemek
+# ve birisi deseni daraltırsa koruma kalsın diye AYRICA yazılmıştır.
+infra/selfhost/.env
+infra/selfhost/volumes/
+
+# Geçiş dump'ları — 158 kullanıcının kişisel verisi. Script'ler zaten repo
+# içine yazmayı reddeder; bu ikinci savunma hattıdır.
+corteqs-yedek/
+*.dump
+01-roles.sql
+02-schema-public.sql
+03-data-auth.sql
+04-data-public.sql
+05-data-storage.sql
+storage-inventory.json
+
 # Runtime config
 env-config.js
 

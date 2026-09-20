@@ -1,0 +1,144 @@
+# CorteQS veri katmanı geçidi — Kong/Envoy yerine.
+#
+# supabase-js şu yolları bekler; bu dosya onları karşılar:
+#   /auth/v1/*      -> GoTrue      (kök: /token, /signup, /verify, /user ...)
+#   /rest/v1/*      -> PostgREST   (kök: /<tablo>, /rpc/<fonksiyon>)
+#   /storage/v1/*   -> storage-api (kök: /object/..., /bucket/...)
+#   /realtime/v1/*  -> realtime    (kök: /socket/...)
+#   /functions/v1/* -> fonksiyon servisi (Faz 6)
+#
+# ⚠️ CLAUDE.md "Değişmez sözleşmeler" md.2: nginx'te `add_header` KALITILMAZ.
+#    Kendi add_header'ı olan her location, üst bloktaki TÜM add_header'ları iptal
+#    eder. Bu yüzden CORS başlıkları AŞAĞIDA HER location'da TEKRARLANIR. Yeni bir
+#    location eklersen başlıkları oraya da kopyala — yoksa o yolda CORS sessizce
+#    düşer ve tarayıcıda anlamsız bir hata olarak görünür.
+
+# supabase-js bağlantı başına 1 websocket + normal REST trafiği açar.
+limit_req_zone $binary_remote_addr zone=corteqs_rest:10m rate=30r/s;
+limit_req_zone $binary_remote_addr zone=corteqs_auth:10m rate=5r/s;
+
+map $http_origin $corteqs_cors_origin {
+    # Yalnız bilinen origin'lere izin verilir. Wildcard KULLANMIYORUZ çünkü
+    # kimlik bilgisi taşıyan istekler var.
+    default                          "";
+    "https://corteqs.net"            $http_origin;
+    "https://www.corteqs.net"        $http_origin;
+    "https://mvp.corteqs.net"        $http_origin;
+    "http://localhost:8080"          $http_origin;
+    "http://localhost:4173"          $http_origin;
+}
+
+upstream corteqs_rest      { server rest:3000;      keepalive 16; }
+upstream corteqs_auth      { server auth:9999;      keepalive 16; }
+upstream corteqs_storage   { server storage:5000;   keepalive 16; }
+upstream corteqs_realtime  { server realtime:4000;  keepalive 16; }
+
+server {
+    listen 8000 default_server;
+    server_name _;
+
+    # 50 MB yükleme sınırı (src/lib/security.ts ARGE_MAX_FILE_SIZE ile hizalı).
+    client_max_body_size 50m;
+
+    # Coolify TLS'i önde sonlandırır; gerçek istemci IP'si bu başlıklardan gelir.
+    real_ip_header X-Forwarded-For;
+    set_real_ip_from 0.0.0.0/0;
+
+    # Upstream'lerin kendi CORS başlıkları bizimkilerle çakışmasın.
+    proxy_hide_header Access-Control-Allow-Origin;
+    proxy_hide_header Access-Control-Allow-Methods;
+    proxy_hide_header Access-Control-Allow-Headers;
+    proxy_hide_header Access-Control-Allow-Credentials;
+    proxy_hide_header Access-Control-Expose-Headers;
+
+    proxy_http_version 1.1;
+    proxy_set_header Host              $host;
+    proxy_set_header X-Real-IP         $remote_addr;
+    proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+
+    # ------------------------------------------------------------- sağlık
+    location = /health {
+        access_log off;
+        add_header Content-Type text/plain always;
+        return 200 "ok\n";
+    }
+
+    # --------------------------------------------------------------- auth
+    location /auth/v1/ {
+        limit_req zone=corteqs_auth burst=20 nodelay;
+
+        add_header Access-Control-Allow-Origin      $corteqs_cors_origin always;
+        add_header Access-Control-Allow-Credentials "true" always;
+        add_header Access-Control-Allow-Methods     "GET, POST, PUT, PATCH, DELETE, OPTIONS" always;
+        add_header Access-Control-Allow-Headers     "authorization, apikey, x-client-info, content-type, x-supabase-api-version" always;
+        add_header Vary                             "Origin" always;
+        if ($request_method = OPTIONS) { return 204; }
+
+        proxy_pass http://corteqs_auth/;
+    }
+
+    # --------------------------------------------------------------- rest
+    location /rest/v1/ {
+        limit_req zone=corteqs_rest burst=60 nodelay;
+
+        add_header Access-Control-Allow-Origin      $corteqs_cors_origin always;
+        add_header Access-Control-Allow-Credentials "true" always;
+        add_header Access-Control-Allow-Methods     "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD" always;
+        add_header Access-Control-Allow-Headers     "authorization, apikey, x-client-info, content-type, prefer, range, range-unit, accept-profile, content-profile" always;
+        # ⚠️ PostgREST sayfalamayı Content-Range ile bildirir. Bu başlık expose
+        #    EDİLMEZSE tarayıcı onu JS'ten gizler ve `count` sessizce null döner.
+        add_header Access-Control-Expose-Headers    "content-range, content-encoding, content-location, range-unit" always;
+        add_header Vary                             "Origin" always;
+        if ($request_method = OPTIONS) { return 204; }
+
+        proxy_pass http://corteqs_rest/;
+    }
+
+    # ------------------------------------------------------------ storage
+    location /storage/v1/ {
+        add_header Access-Control-Allow-Origin      $corteqs_cors_origin always;
+        add_header Access-Control-Allow-Credentials "true" always;
+        add_header Access-Control-Allow-Methods     "GET, POST, PUT, DELETE, OPTIONS, HEAD" always;
+        add_header Access-Control-Allow-Headers     "authorization, apikey, x-client-info, content-type, cache-control, x-upsert" always;
+        add_header Access-Control-Expose-Headers    "content-range, content-length, etag" always;
+        add_header Vary                             "Origin" always;
+        if ($request_method = OPTIONS) { return 204; }
+
+        # storage-api imzalı URL'leri bu başlıktan üretir (REQUEST_ALLOW_X_FORWARDED_PATH).
+        # Eksikse imzalı URL'ler /storage/v1 önekini kaybeder ve 404 verir.
+        proxy_set_header X-Forwarded-Path /storage/v1;
+        proxy_pass http://corteqs_storage/;
+    }
+
+    # ----------------------------------------------------------- realtime
+    location /realtime/v1/ {
+        add_header Access-Control-Allow-Origin      $corteqs_cors_origin always;
+        add_header Access-Control-Allow-Credentials "true" always;
+        add_header Vary                             "Origin" always;
+        if ($request_method = OPTIONS) { return 204; }
+
+        proxy_set_header Upgrade    $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_read_timeout  3600s;
+        proxy_send_timeout  3600s;
+
+        proxy_pass http://corteqs_realtime/socket/;
+    }
+
+    # ---------------------------------------------------------- functions
+    # Faz 6'da devreye alınır. O zamana kadar kapalı olduğunu AÇIKÇA söyler;
+    # sessiz 404 yerine anlaşılır bir hata döner.
+    location /functions/v1/ {
+        add_header Access-Control-Allow-Origin  $corteqs_cors_origin always;
+        add_header Content-Type "application/json" always;
+        add_header Vary "Origin" always;
+        if ($request_method = OPTIONS) { return 204; }
+        return 503 '{"error":"functions henuz bu ortamda devrede degil (Faz 6)"}';
+    }
+
+    location / {
+        add_header Content-Type "application/json" always;
+        return 404 '{"error":"bilinmeyen yol"}';
+    }
+}
