@@ -1,15 +1,19 @@
 // Araç hub karşılama bandı — /tools.
 //
-// 10.08.2026 (kullanıcı kararı): bant AÇIK renge çevrildi (tools-daylight-shell).
-// Araç detay sayfası (RelocationToolPage) KOYU uzay yüzeyinde KALIR. Bu ikisi
-// eskiden aynı yüzeyi paylaşıyordu ve süreklilik bilinçliydi; ayrılık da artık
-// bilinçlidir. Yüzeyi "tutarsız" diye koyuya geri çevirme — hue çapaları
-// (258 lila / 190 turkuaz / 24 şeftali) iki yüzeyde birebir aynı, akrabalık
-// renkten geliyor, açıklıktan değil.
+// 2026-09-20 (kullanıcı kararı): bant, Etkinlikler ve Radar ile AYNI kabuğa geçti
+// (`components/common/PageHero`). Önceki `tools-daylight-shell` düz açık bandı
+// kaldırıldı; akrabalık artık üç sayfanın paylaştığı DÜZENDEN geliyor, ayrı ayrı
+// tutturulan hue çapalarından değil.
+//
+// ⚠️ Araç detay sayfası (RelocationToolPage) KOYU uzay yüzeyinde KALIR — bu ayrılık
+// 10.08.2026'da bilinçli olarak konuldu, "tutarsız" diye koyuya geri çevirme.
 //
 // Arama kutusu bilinçli olarak hero'nun İÇİNDE: 18 araçlık bir dizinde birincil eylem
-// gezinmek değil aramaktır (ui-ux-pro-max "Marketplace / Directory" deseni).
-import { Search, Sparkles, X } from "lucide-react";
+// gezinmek değil aramaktır (ui-ux-pro-max "Marketplace / Directory" deseni). PageHero'nun
+// `children` yuvası tam olarak bunun için var.
+import { Search, Wrench, X } from "lucide-react";
+
+import { PageHero } from "@/components/common/PageHero";
 import { Input } from "@/components/ui/input";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
 
@@ -23,34 +27,46 @@ interface ToolsHubHeroProps {
 
 export function ToolsHubHero({ query, onQueryChange, toolCount, categoryCount }: ToolsHubHeroProps) {
   return (
-    // ring: açık bant açık sayfa zemininde sınırsız kalıyordu; 1px kenar bandı oturtur.
-    <div className="tools-daylight-shell relative mb-6 overflow-hidden rounded-3xl px-5 py-10 text-center shadow-sm ring-1 ring-inset ring-slate-200/60 sm:px-8 sm:py-14">
-      <div className="tools-daylight-dots" aria-hidden="true" />
-
-      <div className="relative z-10 mx-auto max-w-2xl">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-200">
-          <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-          {TOOLS_UI_COPY.hubFree} · {TOOLS_UI_COPY.hubNoAccount}
-        </span>
-
-        <h1 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-[#1E1B3A] md:text-4xl">
-          {TOOLS_UI_COPY.hubTitle}
-        </h1>
-        <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-slate-600 md:text-base">
-          {TOOLS_UI_COPY.hubSubtitle}
-        </p>
-
-        {toolCount > 0 && (
-          <p className="mt-4 text-xs font-medium text-slate-500">
-            {toolCount} araç
-            <span aria-hidden="true" className="mx-2 text-slate-300">
-              ·
-            </span>
-            {categoryCount} kategori
-          </p>
-        )}
-
-        <div className="relative mt-6">
+    <div className="mb-6">
+      <PageHero
+        icon={Wrench}
+        iconClassName="text-amber-600"
+        shellClassName="border border-amber-100 bg-[radial-gradient(circle_at_top_left,#fffbeb_0%,#fafafa_45%,#ffffff_100%)]"
+        tintClassName="bg-[linear-gradient(135deg,rgba(245,158,11,0.07),transparent_45%,rgba(139,92,246,0.07))]"
+        // Arama kutusu için sol kolon Etkinlikler'dekinden geniş; 52%'de giriş alanı sıkışıyordu.
+        contentWidthClassName="md:w-[58%]"
+        image={{
+          src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=400&fit=crop",
+          alt: "Masada plan ve hesap üzerinde çalışan eller — yurt dışı yol haritası araçları",
+        }}
+        titleLines={[
+          {
+            text: "CorteQS",
+            gradientClassName: "bg-[linear-gradient(90deg,#d97706_0%,#f59e0b_40%,#fbbf24_75%)]",
+          },
+          {
+            text: "Araçlar",
+            gradientClassName: "bg-[linear-gradient(90deg,#f59e0b_0%,#8b5cf6_55%,#6366f1_100%)]",
+          },
+        ]}
+        badges={[
+          { label: TOOLS_UI_COPY.hubFree, className: "border-amber-200/70 text-amber-700" },
+          { label: TOOLS_UI_COPY.hubNoAccount, className: "border-violet-200/70 text-violet-700" },
+          ...(toolCount > 0
+            ? [
+                {
+                  label: `${toolCount} araç · ${categoryCount} kategori`,
+                  className: "border-slate-200/70 text-slate-700",
+                },
+              ]
+            : []),
+        ]}
+        // Alt başlık uzun; nowrap açık kalsaydı okunabilirlik örtüsünü aşıp
+        // görselin kalabalık kısmına taşardı.
+        nowrapLines={false}
+        lines={[TOOLS_UI_COPY.hubSubtitle]}
+      >
+        <div className="relative mt-5 max-w-md">
           <Search
             className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
             aria-hidden="true"
@@ -75,7 +91,9 @@ export function ToolsHubHero({ query, onQueryChange, toolCount, categoryCount }:
             </button>
           )}
         </div>
-      </div>
+      </PageHero>
     </div>
   );
 }
+
+export default ToolsHubHero;

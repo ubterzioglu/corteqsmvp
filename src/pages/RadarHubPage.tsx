@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BookOpen, RadioTower } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RadarHero } from "@/components/radar/RadarHero";
 import RadarHaberlerSection from "@/components/radar/RadarHaberlerSection";
 import RadarRehberlerSection from "@/components/radar/RadarRehberlerSection";
 import { PAGE_SEO } from "@/lib/page-seo";
@@ -46,35 +47,10 @@ const RadarHubPage = () => {
 
   return (
     <main className="min-h-screen bg-background">
-      <section className="border-b border-border bg-[linear-gradient(90deg,hsl(var(--background)),hsl(var(--secondary)),hsl(var(--background)))]">
-        <div className="container mx-auto px-4 py-8 md:py-12">
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="min-w-0 flex-1 space-y-4">
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
-                <RadioTower className="h-4 w-4" />
-                CorteQS Radar
-              </div>
-              <div className="space-y-2">
-                <h1 className="truncate text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl">
-                  Haberler, Duyurular ve Ülke Rehberleri
-                </h1>
-                <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
-                  Türk diasporasından haberler, topluluk sinyalleri ve ülke ülke rehberler — tek sayfada.
-                </p>
-              </div>
-            </div>
-            <img
-              src="/radar-hero.png"
-              alt=""
-              aria-hidden="true"
-              loading="lazy"
-              width={1376}
-              height={768}
-              className="hidden h-28 w-auto shrink-0 rounded-2xl object-cover shadow-[0_18px_45px_-28px_rgba(15,23,42,0.4)] md:block lg:h-32"
-            />
-          </div>
-        </div>
-      </section>
+      {/* Hero — Etkinlikler ile aynı kabuk (components/common/PageHero). */}
+      <div className="container mx-auto px-4 pt-6">
+        <RadarHero />
+      </div>
 
       <section className="container mx-auto px-4 py-8 md:py-12">
         <Tabs value={activeTab} onValueChange={handleTabChange}>
