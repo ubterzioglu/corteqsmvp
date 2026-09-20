@@ -5,6 +5,27 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260920-seo-denetimi-ve-dugme-duzeni",
+    date: "20 Eylül 2026",
+    title:
+      "Ahrefs'in bildirdiği 97 hatanın tek bir kök nedeni çıktı, dokuz sayfa arama sonucunda ana sayfa gibi görünüyordu, ana sayfa düğmeleri eşitlendi",
+    items: [
+      "AHREFS 97 SAYFAYI HATALI GÖSTERİYORDU — HEPSİNİN TEK BİR SEBEBİ VARMIŞ: Site denetim aracı, sitemap'teki 97 adresin tamamı için 'bu sayfa ana sayfanın kopyası' diyordu. CSV'yi inceledik: her satırda aynı değer vardı. Sebep şuydu — sitenin ortak iskelet dosyasında (index.html) sabit bir 'asıl adres' etiketi duruyordu ve bu iskelet 61 sayfanın hepsine aynen gönderiliyor. Yani her sayfa 'ben ana sayfayım' diyordu.",
+      "GOOGLE BUNU HİÇ GÖRMEDİ, AMA HERKES GÖRDÜ: Google'a özel bir yol var (sayfa botlar için önceden hazırlanıyor), orada doğru adres yazılıyor. Ölçtük: Googlebot doğru başlığı ve adresi görüyor. Ama o listede olmayan herkes — Ahrefs, Semrush, sosyal medya önizlemeleri, yazılım çalıştırmayan her araç — ham iskeleti alıyor ve yanlış bilgiyi okuyordu.",
+      "ÇÖZÜM, BOT LİSTESİNİ BÜYÜTMEK DEĞİLDİ: Ahrefs'i o listeye eklemek akla geliyor ama yanlış olurdu — sayfa hazırlama servisi istek başına ücretli, üstelik yalnız eklediğin aracı düzeltir ve yanlış bilgi kaynağında kalırdı. Bunun yerine sabit etiketi sildik. Etiket yoksa her arama motoru adresin kendisini asıl adres sayar; doğru davranış zaten budur.",
+      "DOKUZ SAYFA ARAMA SONUCUNDA ANA SAYFA GİBİ GÖRÜNÜYORDU: Sistematik tarama, dokuz sayfanın kendi başlığını ve açıklamasını hiç yazmadığını buldu. Üçüne gerçek metin yazıldı (Anketler, Dijital Grup Ekle, 19 Mayıs Fikri). Altısı arama sonucunda görünmemeli olduğu için gizlendi (giriş ekranı, şifre sıfırlama, hesap etkinleştirme, anket teşekkür sayfası, hastane randevu demosu ve 'profil bulunamadı' ekranı).",
+      "EN CİDDİSİ ANKETLER SAYFASIYDI: /anket adresi sitemap'te Google'a ilan ediliyordu ama kendi başlığı yoktu. Sitemap üreten scriptin kendi kuralı 'sayfa kendi başlığını yazıyor mu?' diye soruyor — kural yazılıydı ama denetlenmiyordu.",
+      "SİTEMAP EKSİKTİ, 108'DEN 111'E ÇIKTI: Etkinlik sayfaları sitemap'te hiç yoktu. Bu sayfalar arama sonuçlarında zengin görünüm (tarih, konum, fiyat kartı) alabilecek yapıda — keşfedilememeleri doğrudan kayıptı. Etkinlik listesi ve detay sayfaları için üretici yazıldı, 19 Mayıs harita ve anı sayfaları da eklendi.",
+      "SOSYAL MEDYA ÖNİZLEMESİ KIRPILIYORDU: Etkinlik kapak görseli veya üye avatarı paylaşıldığında, iskelette yazılı sabit ölçü (1200x630) yanlış kalıyor ve önizleme kırpılıyordu. Artık sayfa kendi görselini verdiğinde yanlış ölçü etiketi kaldırılıyor — Facebook, LinkedIn ve X görseli kendileri ölçüyor.",
+      "ANA SAYFA DÜĞMELERİ EŞİTLENDİ: Üstteki ve alttaki düğmeler farklı boyutlardaydı. Hepsi aynı en ve boya getirildi (ölçüldü: 15 düğmenin 15'i de 160x46 piksel). Düğmelerdeki sağ oklar kaldırıldı. Artık her düğmenin üzerine gelince ne işe yaradığını anlatan bir açıklama kutusu çıkıyor. Kapanış kartına da eksik düğmeler eklendi.",
+      "⚠️ AÇIKLAMA KUTULARININ METİNLERİ TASLAK: Düğme açıklamaları tarafımızdan yazıldı, gözden geçirilip değiştirilebilir.",
+      "MENÜDE 'RADAR' İKİ KEZ GÖRÜNÜYORDU: Giriş yapmamış ziyaretçinin menüsünde Radar bağlantısı kopyalanmış hâlde iki kez duruyordu. Ekran görüntüsü alınırken fark edildi, silindi.",
+      "DÜRÜST NOT — BİR HATAMI DÜZELTTİM: Katalog profil sayfasına SEO eklemiştim, sonra o sayfanın zaten SEO yazdığını gördüm. İlk taramada sayfa dosyasına bakıp onun çizdiği alt bileşene bakmamışım. Ekleme geri alındı; aynı sayfada iki kez çalışan kod çakışma üretirdi.",
+      "DEĞİŞTİRİLMEYENLER: Daha önce 'şimdilik dokunma' denen SEO maddelerine el sürülmedi — ana sayfadaki 12 soruluk soru-cevap bloğu, 99 EUR'luk fiyat etiketi, sabit güncelleme tarihi, '164 ülkede 8,8 milyon' gibi doğrulanamayan ifadeler ve yapay zekâ botlarına erişim politikası. Bunlar teknik değil içerik kararı.",
+      "KONTROLLER: Tip denetimi 0 hata, kod denetimi 0 hata, 280 dosyada 1.994 testin tamamı geçiyor. Beş commit gönderildi. Coolify otomatik yayınladığı için bu değişiklikler canlıda; Ahrefs bir sonraki taramasında 97 hatanın düşmesi bekleniyor.",
+    ],
+  },
+  {
     id: "20260920-canliya-cikmadan-yakalanan-iki-kusur-ve-gorsel-yenileme",
     date: "20 Eylül 2026",
     title:
