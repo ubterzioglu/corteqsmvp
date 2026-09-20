@@ -134,6 +134,17 @@ const STATIC_ROUTES = [
   { path: "/events", priority: "0.7", changefreq: "daily" },
   { path: "/directory", priority: "0.7", changefreq: "weekly" },
   { path: "/associations", priority: "0.6", changefreq: "weekly" },
+  // Şehir Elçileri (2026-09-20'de eklendi). Üç kriter de doğrulandı:
+  // (a) gerçekten public — RequireAuth/RequireFeature YOK ve verisi ANONİM
+  //     okunabilir (`set role anon` ile 9 yayında kayıt görüldü),
+  // (b) useSeo + canonicalPath tanımlı (PAGE_SEO.cityAmbassadors),
+  // (c) thin content değil — gerçek elçi listesi + program + başvuru.
+  // ⚠️ /businesses BURAYA EKLENMEYECEK: içeriği demodur (gerçek işletme kaydı 0),
+  // yani (c) kriterini geçmez.
+  { path: "/city-ambassadors", priority: "0.6", changefreq: "weekly" },
+  // Uzmanlar (2026-09-20). Gerçek veri: 20 yayında + herkese açık uzman kaydı.
+  // Onay kuyruğundaki 61 kayıt yayına alınınca bu sayfa kendiliğinden zenginleşir.
+  { path: "/consultants", priority: "0.7", changefreq: "weekly" },
   { path: "/tools", priority: "0.7", changefreq: "weekly" },
   // NOT: /cadde BİLİNÇLİ OLARAK YOK (2026-08-04'te çıkarıldı). RequireAuth +
   // RequireFeature(caddeAccess) arkasındadır (src/App.tsx) — girişsiz bot login'e

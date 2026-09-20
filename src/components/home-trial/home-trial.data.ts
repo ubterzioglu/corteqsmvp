@@ -74,9 +74,12 @@ export const ATLAS_LINKS: readonly AtlasLink[] = [
  */
 export const ECOSYSTEM_CARDS: readonly EcosystemCard[] = [
   {
+    // Uzmanlar ve İşletmeler 2026-09-20'ye kadar İKİSİ DE `/directory`'ye
+    // gidiyordu — aynı sayfa, ayırt edilemez. Üstelik o sayfa giriş yapmamış
+    // ziyaretçiye giriş duvarı gösteriyor. Artık her biri kendi sayfasına gider.
     title: "Uzmanlar",
     description: "Güvenilir Türk profesyonellere ve danışmanlara ulaş.",
-    to: "/directory",
+    to: "/consultants",
     cta: "Uzmanları bul",
     iconKey: "experts",
     accent: "teal",
@@ -84,7 +87,7 @@ export const ECOSYSTEM_CARDS: readonly EcosystemCard[] = [
   {
     title: "İşletmeler",
     description: "Yurt dışındaki Türk işletmelerini keşfet ve destekle.",
-    to: "/directory",
+    to: "/businesses",
     cta: "İşletmeleri keşfet",
     iconKey: "businesses",
     accent: "blue",
@@ -98,17 +101,24 @@ export const ECOSYSTEM_CARDS: readonly EcosystemCard[] = [
     accent: "indigo",
   },
   {
+    // Bu kart 2026-09-20'ye kadar `/associations`'a gidiyordu — yani "Topluluklar"
+    // yazıp KURULUŞLAR sayfasını açıyordu. `/addcom` gerçek grup kayıtlarını
+    // (WhatsApp, Telegram, LinkedIn, Discord) tutan canlı sayfadır.
     title: "Topluluklar",
-    description: "Topluluklar üzerinden yerel hayata ve etkinliklere katıl.",
-    to: "/associations",
+    description: "WhatsApp, Telegram ve Discord topluluklarını keşfet, kendi grubunu ekle.",
+    to: "/addcom",
     cta: "Toplulukları gör",
     iconKey: "communities",
     accent: "pink",
   },
   {
+    // Eskiden `/directory?role=User_CityAmbassador`'a gidiyordu. O sayfa giriş
+    // yapmamış ziyaretçiye giriş duvarı gösterir (`search_directory_catalog`
+    // anonim çağrıda 42501 verir), yani kartı tıklayan yeni ziyaretçi tek bir
+    // elçi göremiyordu. `/city-ambassadors` anonim okumaya uygun.
     title: "Şehir Elçileri",
     description: "Bulunduğun şehirde güveni inşa eden elçilerle tanış.",
-    to: "/directory?role=User_CityAmbassador",
+    to: "/city-ambassadors",
     cta: "Elçileri tanı",
     iconKey: "ambassadors",
     accent: "orange",

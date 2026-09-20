@@ -131,6 +131,24 @@ export const PAGE_SEO = {
       "Dünya genelindeki Türk dernekleri, vakıfları, odaları, büyükelçilikleri ve konsoloslukları CorteQS'te keşfedin.",
     canonicalPath: "/associations",
   },
+  cityAmbassadors: {
+    title: "Şehir Elçileri | CorteQS",
+    description:
+      "Bulunduğun şehirde güveni inşa eden, yeni gelenleri karşılayan CorteQS şehir elçileriyle tanış; kendi şehrin için elçi başvurusu yap.",
+    canonicalPath: "/city-ambassadors",
+  },
+  consultants: {
+    title: "Uzmanlar ve Danışmanlar | CorteQS",
+    description:
+      "Yurt dışındaki Türk uzmanları ve danışmanları keşfet: vize ve göçmenlik, şirket kuruluşu, hukuk ve vergi, relocation, sağlık ve psikoloji.",
+    canonicalPath: "/consultants",
+  },
+  businesses: {
+    title: "İşletmeler | CorteQS",
+    description:
+      "Yurt dışındaki Türk işletmelerini keşfet ve destekle: gastronomi, perakende, sağlık, inşaat, lojistik ve daha fazlası.",
+    canonicalPath: "/businesses",
+  },
   relocationToolsHub: {
     title: "Taşınma Araçları | CorteQS",
     description:

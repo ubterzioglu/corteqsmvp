@@ -176,12 +176,20 @@ export const toCountryCode = (value: string | null | undefined) => {
   return legacyCountryToCode[trimmed] ?? trimmed.toUpperCase();
 };
 
+/**
+ * Bir katalog kaydının detay adresi. TEK KAYNAK — hem bu dosyadaki RPC eşlemesi
+ * hem `public-catalog-api.ts` (anonim tablo okuması) bunu kullanır. İki yerde
+ * ayrı ayrı yazılırsa biri değişip öbürü kalır ve kartlar sessizce 404'e gider.
+ */
+export const directoryHrefFor = (itemType: string | null | undefined, slug: string): string =>
+  itemType === "member" ? `/directory/profile/${slug}` : `/directory/catalog/${slug}`;
+
 const mapDirectorySearchRow = (row: DirectorySearchRpcRow): UnifiedDirectoryRow => {
   const isMember = row.item_type === "member";
   return {
     recordType: isMember ? "member" : "catalog_item",
     id: row.item_id,
-    href: isMember ? `/directory/profile/${row.slug}` : `/directory/catalog/${row.slug}`,
+    href: directoryHrefFor(row.item_type, row.slug),
     title: row.title,
     roleKey: row.role_key,
     roleLabel: row.role_label,

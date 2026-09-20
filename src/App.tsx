@@ -70,6 +70,10 @@ const CaddeCafePage = lazy(() => import("@/pages/cadde/CaddeCafePage"));
 const CaddeCarsiPage = lazy(() => import("@/pages/cadde/CaddeCarsiPage"));
 const CaddeCarsiItemPage = lazy(() => import("@/pages/cadde/CaddeCarsiItemPage"));
 const Associations = lazy(() => import("@/pages/Associations"));
+const CityAmbassadorsPage = lazy(() => import("@/pages/CityAmbassadorsPage"));
+const ConsultantsPage = lazy(() => import("@/pages/ConsultantsPage"));
+const BusinessesPage = lazy(() => import("@/pages/BusinessesPage"));
+const BusinessDetailPage = lazy(() => import("@/pages/BusinessDetailPage"));
 const AssociationDetail = lazy(() => import("@/pages/AssociationDetail"));
 const HospitalAppointment = lazy(() => import("@/pages/HospitalAppointment"));
 const IndependentProfilePage = lazy(() => import("@/pages/IndependentProfilePage"));
@@ -197,6 +201,12 @@ const App = () => (
                   <Route path="/events/create" element={<RequireAuth><CreateEventPage /></RequireAuth>} />
                   <Route path="/events/:id" element={<EventDetailPage />} />
                   <Route path="/associations" element={<Associations />} />
+                  <Route path="/city-ambassadors" element={<CityAmbassadorsPage />} />
+                  <Route path="/consultants" element={<ConsultantsPage />} />
+                  <Route path="/businesses" element={<BusinessesPage />} />
+                  {/* Detay yolu TÜRKÇE — repodaki mevcut desen (`/associations`
+                      + `/kurulus/:slug`) böyle. Bu sayfa DEMO içeriktir. */}
+                  <Route path="/isletme/:slug" element={<BusinessDetailPage />} />
                   <Route path="/association/:id" element={<AssociationDetail />} />
                   <Route path="/kurulus/:slug" element={<IndependentProfilePage />} />
                   <Route path="/hospital-appointment/:id" element={<HospitalAppointment />} />

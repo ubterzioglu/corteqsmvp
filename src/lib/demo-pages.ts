@@ -40,6 +40,16 @@ export const DEMO_ROUTES: DemoRoute[] = [
     label: "Blogger Yarışması",
     note: "Ödüller, takvim ve başvuru akışı örnek verilerle gösteriliyor; yarışma henüz başlamadı.",
   },
+  {
+    // Ölçüldü 2026-09-20: `Business_*` rollerinde canlıda 25 satırın 25'i de
+    // `is_placeholder` — gerçek işletme kaydı SIFIR. Gerçek kayıtlar geldiğinde
+    // liste onları kendiliğinden üstte gösterir; o zaman BU SATIR SİLİNİR.
+    // ⚠️ `/isletme/:slug` buraya EKLENMEZ: `findDemoRoute` literal yol eşitliği
+    // arar, dinamik yol asla eşleşmez. O sayfa `DemoPageBanner` kullanır.
+    path: "/businesses",
+    label: "İşletmeler",
+    note: "Listedeki işletmeler örnektir. Gerçek işletme kayıtları başvurular değerlendirildikçe yayına alınır.",
+  },
 ];
 
 /** Rozetin ve bandın paylaştığı metinler — çeviri/ton tek yerden değişir. */

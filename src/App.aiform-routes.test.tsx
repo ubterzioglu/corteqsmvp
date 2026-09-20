@@ -13,7 +13,11 @@ describe("App /aiform routing", () => {
 
     render(<App />);
 
-    expect(await screen.findByText("ağına giriş yap")).toBeInTheDocument();
+    // Süre AÇIKÇA verildi: bu test TÜM App'i çizer ve giriş sayfası `lazy()` ile
+    // gelir. Yüklü test paketinde bu parçanın çözülmesi varsayılan 1 sn'yi
+    // aşabiliyor ve sahte kırılma üretiyordu (App.tsx'e her yeni `lazy()` rota
+    // eklendiğinde payı biraz daha artar). Doğrulanan davranış AYNI.
+    expect(await screen.findByText("ağına giriş yap", {}, { timeout: 15_000 })).toBeInTheDocument();
   });
 
   it("redirects the legacy /form route to /login", async () => {
@@ -21,7 +25,11 @@ describe("App /aiform routing", () => {
 
     render(<App />);
 
-    expect(await screen.findByText("ağına giriş yap")).toBeInTheDocument();
+    // Süre AÇIKÇA verildi: bu test TÜM App'i çizer ve giriş sayfası `lazy()` ile
+    // gelir. Yüklü test paketinde bu parçanın çözülmesi varsayılan 1 sn'yi
+    // aşabiliyor ve sahte kırılma üretiyordu (App.tsx'e her yeni `lazy()` rota
+    // eklendiğinde payı biraz daha artar). Doğrulanan davranış AYNI.
+    expect(await screen.findByText("ağına giriş yap", {}, { timeout: 15_000 })).toBeInTheDocument();
   });
 
   it("redirects the legacy /auth route to /login", async () => {
@@ -29,6 +37,10 @@ describe("App /aiform routing", () => {
 
     render(<App />);
 
-    expect(await screen.findByText("ağına giriş yap")).toBeInTheDocument();
+    // Süre AÇIKÇA verildi: bu test TÜM App'i çizer ve giriş sayfası `lazy()` ile
+    // gelir. Yüklü test paketinde bu parçanın çözülmesi varsayılan 1 sn'yi
+    // aşabiliyor ve sahte kırılma üretiyordu (App.tsx'e her yeni `lazy()` rota
+    // eklendiğinde payı biraz daha artar). Doğrulanan davranış AYNI.
+    expect(await screen.findByText("ağına giriş yap", {}, { timeout: 15_000 })).toBeInTheDocument();
   });
 });
