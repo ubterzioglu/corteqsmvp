@@ -21,6 +21,10 @@ export default tseslint.config(
       ".worktrees/**",
       ".kilo/**",
       "referans/**",
+      // İçerik referansı için klonlanan corteqssocial-web/corteqs deposu.
+      // .gitignore'da yok sayılıyor ama `eslint .` onu bilmez — eklenmezse
+      // yabancı deponun 300+ sorunu bizim lint çıktımızı boğar.
+      "referanslovable/**",
       "docs/archive/**",
       "docs/reference/**",
       "docs/reference-clones/**",
