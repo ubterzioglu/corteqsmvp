@@ -1003,3 +1003,78 @@
     width: 30px;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Manifesto "büyüyen ağ" görseli — src/components/home-trial/ManifestoSection.tsx
+
+   Üç sınıf, üç iş: kenar ÇİZİLİR (stroke-dashoffset), düğüm NEFES ALIR, hâle
+   GENİŞLEYİP SÖNER. Gecikmeler React tarafında inline `animationDelay` ile
+   verilir; burada yalnız hareketin kendisi tanımlıdır.
+
+   ⚠️ SVG'de transform'un düğümün KENDİ merkezine göre çalışması için
+   `transform-box: fill-box` şarttır; onsuz halka viewBox'ın sol üstüne göre
+   ölçeklenir ve ekranın dışına uçar.
+   ───────────────────────────────────────────────────────────────────────────── */
+.manifesto-edge {
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: manifesto-draw 1.6s ease-out forwards;
+}
+
+.manifesto-node {
+  animation: manifesto-breathe 3.2s ease-in-out infinite;
+}
+
+.manifesto-halo {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: manifesto-ripple 3.2s ease-out infinite;
+}
+
+@keyframes manifesto-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes manifesto-breathe {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes manifesto-ripple {
+  0% {
+    opacity: 0.45;
+    transform: scale(0.65);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+/* Hareket kapalıysa AĞ YİNE GÖRÜNÜR — yalnız durur. Animasyonu kaldırmak
+   kenarları dashoffset'te bırakıp çizimi görünmez yapardı, bu yüzden son kare
+   elle yazılır. */
+@media (prefers-reduced-motion: reduce) {
+  .manifesto-edge {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .manifesto-node {
+    animation: none;
+    opacity: 1;
+  }
+
+  .manifesto-halo {
+    animation: none;
+    opacity: 0.28;
+  }
+}
