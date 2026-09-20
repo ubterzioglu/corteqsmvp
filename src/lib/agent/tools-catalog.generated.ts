@@ -211,8 +211,7 @@ export const toolCatalog = {
         405,
         413,
         429,
-        500,
-        502
+        500
       ],
       "http_method": "POST",
       "dependencies": [
@@ -3680,6 +3679,11 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/relocation-assistant/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/relocation-assistant/providers.ts",
       "kind": "ts",
       "module_family": "edge"
     },

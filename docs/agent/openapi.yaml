@@ -129,8 +129,6 @@ paths:
           description: Çok fazla istek (rate limit)
         "500":
           description: Sunucu hatası
-        "502":
-          description: Yanıt
   /functions/v1/relocation-notifications:
     post:
       summary: relocation-notifications aracını çalıştır
