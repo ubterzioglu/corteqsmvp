@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSeo } from "@/lib/seo";
 import { Navigate, useSearchParams } from "react-router-dom";
 
 import { useAuth } from "@/components/auth/useAuth";
@@ -17,6 +18,9 @@ type AuthMode = "login" | "signup";
 const normalizeMode = (value: string | null): AuthMode => (value === "signup" ? "signup" : "login");
 
 const LoginPage = () => {
+  // Giriş/kayıt ekranı arama sonucunda görünmemeli; ayrıca document.title elle yazılıyordu, merkezî helper''a alındı.
+  useSeo({ title: "Giriş Yap | CorteQS", robots: "noindex, follow" });
+
   const { session, isLoading } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const [oauthSubmitting, setOauthSubmitting] = useState(false);

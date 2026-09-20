@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSeo } from "@/lib/seo";
 import { Navigate, useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/components/auth/useAuth";
@@ -15,6 +16,9 @@ import {
 } from "@/hooks/use-profile-onboarding";
 
 const WelcomeActivatePage = () => {
+  // E-posta bağlantısıyla gelinen tek kullanımlık ekran.
+  useSeo({ title: "Hesabını Etkinleştir | CorteQS", robots: "noindex, follow" });
+
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, isLoading: isAuthLoading } = useAuth();

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { trIncludes } from "@/lib/text-normalization";
+import { useSeo } from "@/lib/seo";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -136,6 +137,11 @@ const timeSlots = [
 ];
 
 const HospitalAppointment = () => {
+  // Kardeş /association/:id sayfasıyla aynı gerekçe: sayfa src/data/mock.ts demo
+  // verisiyle çalışıyor, gerçek hastane/randevu verisi yok. Gerçek veriye geçilince
+  // noindex kaldırılmalı. Başlık da yazılır; aksi halde kabuğun ana sayfa başlığı kalır.
+  useSeo({ title: "Hastane Randevusu | CorteQS", robots: "noindex, follow" });
+
   const { toast } = useToast();
   const { hospitalId } = useParams<{ hospitalId?: string }>();
   const { selectedCountry } = useDiaspora();

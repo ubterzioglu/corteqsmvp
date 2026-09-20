@@ -56,7 +56,19 @@
     <script src="/analytics.js" defer></script>
 
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://corteqs.net/" />
+    <!-- ⚠️ SABİT `og:url` EKLEME (kaldırıldı 2026-09-20) — silinen canonical'ın ikiziydi.
+         Aynı gerekçe harfi harfine geçerli: bu kabuk 61 public rotaya aynen servis
+         edilir, sabit bir `og:url` her sayfada "ben ana sayfayım" der. `applySeo`
+         og:url'ü KOŞULSUZ yazar ve canonical ile AYNI değişkenden alır (seo.ts:156),
+         yani ikisinin sapması yapısal olarak mümkün değil — kabuktaki sabit değer
+         yalnız JS çalıştırmayan istemcilerde hayatta kalıyor ve orada zarar veriyordu.
+
+         og:title / og:description BİLEREK KALDI: onlar yanlış bir ÖNİZLEME üretir,
+         og:url ise sayfaları birleştiren bir KİMLİK sinyalidir. İkisi aynı ağırlıkta
+         değil. Kaldırılırlarsa `useSeo`'ya description vermeyen sayfalar (noindex'li
+         giriş ekranları) hiç og metni taşımaz.
+
+         Sözleşme testi: src/lib/seo.test.ts — "index.html kabuğu" bloğu. -->
     <meta property="og:site_name" content="CorteQS" />
     <meta property="og:locale" content="tr_TR" />
     <meta property="og:title" content="CorteQS | Türk Diasporası Topluluk ve Network Platformu" />

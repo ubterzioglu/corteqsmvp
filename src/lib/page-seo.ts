@@ -7,6 +7,28 @@ export const PAGE_SEO = {
       "CorteQS, dünyadaki Türkleri şehir bazlı bağlantılar, topluluklar ve fırsatlar etrafında buluşturan diaspora platformudur.",
     canonicalPath: "/",
   },
+  // 2026-09-20 SEO denetiminde eklendi. Bu dört sayfa `useSeo` HİÇ çağırmıyordu ve
+  // canlıda ana sayfanın başlığını/açıklamasını gösteriyordu; `/anket` üstelik
+  // sitemap'te ilan edilmiş durumdaydı (generate-sitemap.mjs kendi (b) kuralını
+  // ihlal ediyordu — "sayfa useSeo + canonicalPath tanımlıyor mu?").
+  surveys: {
+    title: "Anketler | CorteQS",
+    description:
+      "CorteQS diaspora topluluğunun açık anketleri. Yurt dışındaki yaşam, kariyer ve topluluk konularında görüşünü paylaş, sonuçları birlikte görelim.",
+    canonicalPath: "/anket",
+  },
+  addCommunity: {
+    title: "Dijital Grup Ekle | CorteQS",
+    description:
+      "WhatsApp, Telegram, LinkedIn veya Discord topluluğunu CorteQS dizinine ücretsiz ekle. Şehir ve ilgi alanına göre listelenir, yeni üyelere ulaşır.",
+    canonicalPath: "/addcom",
+  },
+  may19Idea: {
+    title: "19 Mayıs Fikri | CorteQS",
+    description:
+      "19 Mayıs 1919'u diasporada birlikte anmanın fikri: neden bu tarih, neden şimdi ve nasıl katılabilirsin.",
+    canonicalPath: "/190519idea",
+  },
   founders: {
     title: "Kurucular | CorteQS",
     description:

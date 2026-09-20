@@ -227,6 +227,19 @@ describe("index.html kabuğu", () => {
     expect(shell).not.toMatch(/<link[^>]+hreflang=/i);
   });
 
+  it("sabit og:url İÇERMEZ — applySeo onu canonical ile aynı değişkenden yazar", () => {
+    // Canonical''ın ikizi. Kabuğa sabit bir og:url konduğunda, JS çalıştırmayan her
+    // istemci (AhrefsBot, sosyal önizleme) 61 rotanın hepsinde ana sayfayı görür.
+    expect(shell).not.toMatch(/<meta[^>]+property=["']og:url["']/i);
+  });
+
+  it("og:title / og:description ise KALIR — onlar önizleme, og:url kimlik sinyali", () => {
+    // Bu ikisi bilinçli duruyor: useSeo''ya description vermeyen sayfalar (noindex''li
+    // giriş ekranları) aksi halde hiç og metni taşımaz. Yanlışlıkla silinirse fark et.
+    expect(shell).toMatch(/<meta[^>]+property=["']og:title["']/i);
+    expect(shell).toMatch(/<meta[^>]+property=["']og:description["']/i);
+  });
+
   it("yerine seo.ts canonical'ı çalışma anında oluşturur", () => {
     // Kabukta etiket yokken bile applySeo onu yaratmalı; aksi halde canonical
     // hiçbir yerde üretilmez ve kaldırma işlemi sinyali tamamen yok ederdi.

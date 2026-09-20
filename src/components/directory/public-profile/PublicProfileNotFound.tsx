@@ -2,14 +2,27 @@ import { SearchX } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
+import { useSeo } from "@/lib/seo";
 
 import PublicProfileBreadcrumb from "./PublicProfileBreadcrumb";
 
 /**
  * Single leak-free screen for missing, private and unpublished profiles —
  * the copy never reveals which case applies.
+ *
+ * SEO (2026-09-20): bu ekran HTTP 200 ile servis edilir — SPA'da gerçek 404 yok.
+ * `noindex` olmadan arama motoru onu geçerli bir sayfa sanar ve silinmiş/gizlenmiş
+ * profiller indekste kalır (soft-404 sınıfı). Başlık da yazılır; aksi halde kabuğun
+ * ana sayfa başlığı durur ve arama sonucunda profil varmış gibi görünür.
+ * `follow`: sayfadaki "Dizine Dön" bağlantısı taranabilsin.
  */
-const PublicProfileNotFound = () => (
+const PublicProfileNotFound = () => {
+  useSeo({
+    title: "Profil görüntülenemiyor | CorteQS",
+    robots: "noindex, follow",
+  });
+
+  return (
   <div className="landing-ambient min-h-screen">
     <main className="relative z-10 mx-auto w-full max-w-6xl px-4 py-8 md:py-10">
       <PublicProfileBreadcrumb />
@@ -29,6 +42,7 @@ const PublicProfileNotFound = () => (
       </div>
     </main>
   </div>
-);
+  );
+};
 
 export default PublicProfileNotFound;

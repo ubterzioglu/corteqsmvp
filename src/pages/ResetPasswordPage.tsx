@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSeo } from "@/lib/seo";
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,9 @@ import { supabase } from "@/integrations/supabase/client";
 type RecoveryStatus = "checking" | "ready" | "invalid" | "updating" | "done";
 
 const ResetPasswordPage = () => {
+  // Token ile gelinen tek kullanımlık ekran — indekslenmesi anlamsız.
+  useSeo({ title: "Şifre Sıfırla | CorteQS", robots: "noindex, follow" });
+
   const { toast } = useToast();
   const navigate = useNavigate();
   const [status, setStatus] = useState<RecoveryStatus>("checking");

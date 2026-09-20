@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import { trIncludes } from "@/lib/text-normalization";
+import { PAGE_SEO } from "@/lib/page-seo";
+import { useSeo } from "@/lib/seo";
 import { useAuth } from "@/components/auth/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -32,6 +34,9 @@ import {
 } from "@/lib/whatsapp-landings";
 
 export default function AddWhatsAppPage() {
+  // 449 satırlık, gerçek içerikli public sayfa 2026-09-20'ye kadar SEO yazmıyordu.
+  useSeo(PAGE_SEO.addCommunity);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
