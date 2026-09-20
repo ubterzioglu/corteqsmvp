@@ -12,34 +12,54 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, ArrowRight } from "lucide-react";
+import { Search, ArrowRight, Info } from "lucide-react";
 
+import { useAuth } from "@/components/auth/useAuth";
 import { getTotalDirectoryCount } from "@/lib/catalog-directory";
 import { useGeoCountries } from "@/hooks/useGeo";
 
-// Arama çubuğunda sırayla beliren örnek aramalar (placeholder döngüsü).
+/**
+ * Arama çubuğunda sırayla beliren örnek aramalar (placeholder döngüsü).
+ *
+ * ⚠️ BURAYA EK'Lİ / APOSTROFLU ÖRNEK YAZMA. `search_directory_catalog` aramayı
+ * boşluktan bölüp HER kelimenin eşleşmesini şart koşar (AND) ve ham `ilike`
+ * kullanır — yani "Berlin'de yazılımcı" araması `Berlin'de` + `yazılımcı`
+ * kelimelerini arar; `Berlin'de` hiçbir alanda öyle yazmadığı için sonuç
+ * GARANTİLİ sıfırdır. Eski liste tam olarak bu kalıptaydı (ölçüldü 2026-09-20:
+ * altı örneğin altısı da 0 sonuç).
+ *
+ * Buradaki her örnek canlı veride ölçülmüştür (2026-09-20):
+ * "Dortmund doktor" → 10 · "Doktor" → 11 · "Danışman" → 22 · "Şehir Elçisi" → 10
+ * · "Topluluk" → 12 · "Dernek" → 4. Yeni örnek eklerken ÖNCE sonucu ölç;
+ * boş dönen bir örnek, kullanıcıya sistemin bozuk olduğunu öğretir.
+ */
 const EXAMPLE_QUERIES: readonly string[] = [
-  "Berlin'de yazılımcı",
-  "Londra'da avukat",
-  "Dubai'de doktor",
-  "Toronto'da girişimci",
-  "Paris'te tasarımcı",
-  "Münih'te mühendis",
+  "Dortmund doktor",
+  "Şehir Elçisi",
+  "Danışman",
+  "Topluluk",
+  "Dernek",
+  "Eczane",
 ];
 
-// Tıklanabilir hızlı örnekler — placeholder'dan bağımsız, kullanıcıyı aksiyona iter.
+/**
+ * Tıklanabilir hızlı örnekler — placeholder'dan bağımsız, kullanıcıyı aksiyona iter.
+ * Yukarıdaki ölçüm kuralı buraya da aynen geçerlidir. Eski liste (yazılımcı,
+ * avukat, girişimci, akademisyen) canlıda 5 çipten 4'ü SIFIR döndürüyordu.
+ */
 const QUICK_CHIPS: readonly string[] = [
-  "yazılımcı",
-  "avukat",
-  "doktor",
-  "girişimci",
-  "akademisyen",
+  "Doktor",
+  "Danışman",
+  "Şehir Elçisi",
+  "Topluluk",
+  "Dernek",
 ];
 
 const PLACEHOLDER_INTERVAL_MS = 2600;
 
 const DiasporaSearchSection = () => {
   const navigate = useNavigate();
+  const { user, isLoading: isAuthLoading } = useAuth();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [query, setQuery] = useState("");
   const [exampleIndex, setExampleIndex] = useState(0);
@@ -68,11 +88,28 @@ const DiasporaSearchSection = () => {
     return () => window.clearInterval(timer);
   }, [query]);
 
+  /**
+   * ⚠️ Ziyaretçiyi doğrudan /directory'ye GÖNDERME.
+   *
+   * `DirectoryPage` giriş yapmamış kullanıcı için sorguyu HİÇ atmaz
+   * (`if (isAuthLoading || !user) { setRows([]); return; }`) ve RPC'nin kendisi de
+   * anonim çağrıda `42501 authentication required` fırlatır. Bu bileşen eskiden
+   * kontrolsüz yönlendiriyordu; ziyaretçi arama yapınca yazdığı kelime kaybolup
+   * boş bir sayfaya düşüyordu — "arama boş dönüyor" şikayetinin görünen yüzü buydu.
+   *
+   * Davranış `DiasporaSearchBar` ile bilinçli olarak AYNI: aramayı `next` içinde
+   * koru, giriş sonrası kullanıcı doğrudan sonuçlara insin.
+   */
   const goToDirectory = (text: string) => {
     const trimmed = text.trim();
     const target = trimmed
       ? `/directory?q=${encodeURIComponent(trimmed)}`
       : "/directory";
+
+    if (!isAuthLoading && !user) {
+      navigate(`/login?next=${encodeURIComponent(target)}`);
+      return;
+    }
     navigate(target);
   };
 
@@ -151,6 +188,16 @@ const DiasporaSearchSection = () => {
         ))}
       </div>
 
+      {/* Ziyaretçiye giriş gerektiğini ÖNCEDEN söyle — aramadan sonra login
+          ekranına düşmek sürpriz olmasın. DiasporaSearchBar ile aynı sözleşme. */}
+      {!isAuthLoading && !user ? (
+        <p className="mx-auto mt-5 flex max-w-2xl items-center justify-center gap-1.5 text-xs text-muted-foreground">
+          <Info className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          Tam dizin için ücretsiz giriş gerekir — arama, giriş sonrası kaldığın
+          yerden devam eder.
+        </p>
+      ) : null}
+
       {/* Canlı istatistik şeridi — gerçek veriden. */}
       <ul className="mx-auto mt-12 flex max-w-3xl flex-wrap items-center justify-center gap-x-12 gap-y-6">
         {totalCount && totalCount > 0 ? (
@@ -159,7 +206,7 @@ const DiasporaSearchSection = () => {
               {totalCount.toLocaleString("tr-TR")}+
             </div>
             <div className="mt-1 text-sm text-muted-foreground">
-              kayıtlı profil
+              dizinde görünen kayıt
             </div>
           </li>
         ) : null}

@@ -1,5 +1,14 @@
 # CorteQS Documentation Index
 
+> **Güncelleme:** 2026-09-20 — **orphan (linki olmayan) sayfa denetimi** eklendi:
+> [`audits/2026-09-20-orphan-sayfa-denetimi.md`](audits/2026-09-20-orphan-sayfa-denetimi.md)
+> + yeniden ölçüm tarayıcısı [`audits/orphan-route-scan.mjs`](audits/orphan-route-scan.mjs).
+> Toplam 145 gerçek sayfa rotası tarandı; **8 açık bulgu** (2 public orphan sitemap'te,
+> `/settings/notifications` UI'dan hiç ulaşılamıyor, 4 admin rotası menüde yok) ve
+> **1 canlı kırık link** (`/radio/:id/song-request` — rota yok, buton çiziliyor).
+> Düzeltme uygulanmadı. ⚠️ Rapor kirli çalışma ağacında ölçüldü ve **ölçüm sırasında
+> bayatladı** (paralel oturum `/campaign`'i kapattı) — sayıları ezberlemeyin, yeniden ölçün.
+>
 > **Güncelleme:** 2026-09-18 — sayılar yenilendi ve `CLAUDE.md`/`README.md`/`AGENT_CONTEXT.md`
 > ile hizalandı: **1.091** kaynak dosya (`src` altında `.ts`/`.tsx`), **393** migration
 > (141 `applied/` + 252 `archive/`), **9** Edge Function (`whatsapp-reply` + `whatsapp-webhook`
@@ -62,12 +71,12 @@
 | `operations/` | Deploy, database, security, release rehberleri | Aktif |
 | `guides/` | Kullanım ve admin/developer rehberleri | Aktif |
 | `decisions/` | Teknik kararlar / ADR alanı | Aktif |
-| `audits/` | **Denetim raporları** (kanıta dayalı, ölçülmüş): 2026-08-04 depo sağlığı / SEO-GEO / dokümantasyon denetimleri, `2026-07-28-tools-noindex-karari.md`, `2026-06-08` kapsamlı denetim (html) | Aktif |
+| `audits/` | **Denetim raporları** (kanıta dayalı, ölçülmüş): **`2026-09-20-orphan-sayfa-denetimi.md`** (+ yanındaki `orphan-route-scan.mjs` tarayıcısı), 2026-08-04 depo sağlığı / SEO-GEO / dokümantasyon denetimleri, `2026-07-28-tools-noindex-karari.md`, `2026-06-08` kapsamlı denetim (html) | Aktif |
 | `database-audit/`, `cleanup/` | Veritabanı audit ve cleanup çıktıları | Referans |
 | `status/` | Durum panoları: `rapor.html` (ana pano + kullanım senaryoları), `burakubtstatus.html` | Aktif |
 | `history/` | Tamamlanmış planlar, eski handoff'lar (public-profil v2.1 dahil), durum ve **değişiklik kapanış raporları**, `SONDURUM.md` (faz/devir durumu) | Arşiv |
 | `exports/` | Üretilen dışa aktarımlar: `blog-md/` = `scripts/export-blog-md.mjs` varsayılan çıktısı | Üretilen |
-| `archive/` | **Dondurulmuş içerik:** `architecture/` (eski 9 mimari doküman — bakım ARCHITECTURE.md'de), `root-2026-06-11/` (kök temizliği: audit/cleancode/dbcheck/peronevera notları, deployerror, meeting10.csv, import-resources.ts), `root-2026-08-03/` (üçüncü kök temizliği: `1readme.md`, `tab_of.json`), `backups/` (Supabase DB dump'ları), `cleanup-2026-05-15/`, `cleanup-2026-05-30/`, `turkish_missions_import_builder/` | Arşiv |
+| `archive/` | **Dondurulmuş içerik:** `architecture/` (eski 9 mimari doküman — bakım ARCHITECTURE.md'de), `root-2026-06-11/` (kök temizliği: audit/cleancode/dbcheck/peronevera notları, deployerror, meeting10.csv, import-resources.ts), `root-2026-08-03/` (üçüncü kök temizliği: `1readme.md`, `tab_of.json`), `backups/` (Supabase DB dump'ları), `cleanup-2026-05-15/`, `cleanup-2026-05-30/`, `turkish_missions_import_builder/`, **`2026-09-20-guncelligini-yitirenler/`** (işi bitmiş/aşılmış 4 plan — taşıma ölçütü ve taşınMAYANLARIN listesi o klasörün `README.md`'sinde) | Arşiv |
 | `reference/` | Referans repo kopyaları (`global-network-bridge/`) | Arşiv |
 | `partner-materials/` | Influencer / Strategic Partner tanıtım materyalleri (`.docx`, `.png`) + referans görseller. 2026-09-04'te `docu/`'dan adlandırıldı; alt klasörler `.html` uzantılı isim taşıyordu (2026-06-11 kök temizliğinden kalma kaza), `influencer-partner/` ve `strategic-partner/` olarak düzeltildi. | Arşiv |
 | `assets/` | Arşiv görselleri (sweet.png, rapor ekran görüntüleri vb.) | Arşiv |

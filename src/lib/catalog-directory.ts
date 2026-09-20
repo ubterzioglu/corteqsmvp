@@ -246,23 +246,44 @@ export async function listUnifiedDirectoryRows(filters: {
     .map(mapDirectorySearchRow);
 }
 
+type CountFilterBuilder = PromiseLike<{
+  count: number | null;
+  error: SupabaseError | null;
+}> & {
+  eq: (column: string, value: unknown) => CountFilterBuilder;
+  in: (column: string, values: readonly string[]) => CountFilterBuilder;
+};
+
 type CountQueryClient = {
   from: (
     tableName: "catalog_items",
   ) => {
-    select: (
-      columns: string,
-      options: { count: "exact"; head: boolean },
-    ) => Promise<{ count: number | null; error: SupabaseError | null }>;
+    select: (columns: string, options: { count: "exact"; head: boolean }) => CountFilterBuilder;
   };
 };
 
 const countQueryClient = supabase as unknown as CountQueryClient;
 
+/**
+ * Dizinde GERÇEKTEN görünebilecek kayıt sayısı.
+ *
+ * ⚠️ Bu fonksiyon eskiden `catalog_items`'ı FİLTRESİZ sayıyordu ve ana sayfa
+ * "645+ kayıtlı profil" yazarken dizinde en fazla 248 kayıt çıkıyordu (ölçüldü
+ * 2026-09-20). Kullanıcı 645 bekleyip boş sayfa görünce güven iki kat kırılıyor.
+ *
+ * Buradaki iki koşul `search_directory_catalog`'un Branch 1 filtresiyle BİREBİR
+ * aynıdır — biri değişirse öbürü de değişmelidir, yoksa sayaç yine yalan söyler.
+ * RPC ayrıca `roles.is_directory_visible` ve yönetici hesabı elemesi uygular;
+ * bunlar sayaca dahil DEĞİLDİR, o yüzden gerçek sonuç bu sayıdan biraz düşük
+ * olabilir — fazla göstermek az göstermekten daha zararlı olduğu için bilinçli
+ * olarak burada duruyoruz, aşağı değil yukarı yuvarlamıyoruz.
+ */
 export async function getTotalDirectoryCount(): Promise<number> {
   const { count, error } = await countQueryClient
     .from("catalog_items")
-    .select("*", { count: "exact", head: true });
+    .select("*", { count: "exact", head: true })
+    .eq("status", "published")
+    .in("visibility", ["public", "unlisted"]);
 
   if (error) return 0;
   return count ?? 0;
