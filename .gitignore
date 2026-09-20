@@ -100,6 +100,9 @@ turkish_missions_import_builder/output/*
 
 # Reference directory (Lovable exports) — taşındı: docs/reference-clones/ (2026-07-18)
 referans/
+# corteqssocial-web/corteqs klonu — buradan SAYFA İÇERİĞİ alınır, kod değil.
+# Ayrı bir git deposu; repoya girmez (2026-09-20).
+referanslovable/
 docs/reference-clones/reference/
 docs/reference-clones/ref/
 docs/reference-clones/ref101/
