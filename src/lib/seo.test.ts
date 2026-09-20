@@ -7,6 +7,9 @@
 //   3. cleanup'ın eksik geri yüklemesi → sayfalar arası meta sızıntısı
 //   4. JSON-LD node'larının birikmesi
 
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { SEO_CANONICAL_ORIGIN, applySeo } from "./seo";
@@ -202,5 +205,34 @@ describe("prerender sinyali", () => {
 
     expect(listener).toHaveBeenCalledTimes(1);
     document.removeEventListener("render-complete", listener);
+  });
+});
+
+// Sözleşme testi — gevşetme, index.html'i düzelt.
+//
+// `index.html` 61 public rotanın HEPSİNE aynen servis edilen kabuktur. İçine sabit
+// bir `canonical` ya da `hreflang` konduğunda, o değer her sayfada aynı kalır ve
+// prerender'a girmeyen her istemciye (AhrefsBot, Semrush, sosyal önizleme, JS
+// çalıştırmayan her araç) YANLIŞ sinyal gider: "bu sayfa ana sayfanın kopyası".
+// 2026-09-20'de canlıda ölçüldü — AhrefsBot üç sayfada da ana sayfayı kanonik
+// görüyordu, Googlebot ise doğru adresi.
+describe("index.html kabuğu", () => {
+  const shell = readFileSync(resolve(process.cwd(), "index.html"), "utf8");
+
+  it("sabit canonical İÇERMEZ — canonical'ı yalnız seo.ts yazar", () => {
+    expect(shell).not.toMatch(/<link[^>]+rel=["']canonical["']/i);
+  });
+
+  it("sabit hreflang İÇERMEZ — seo.ts hreflang yönetmiyor, sabiti ölü sinyaldir", () => {
+    expect(shell).not.toMatch(/<link[^>]+hreflang=/i);
+  });
+
+  it("yerine seo.ts canonical'ı çalışma anında oluşturur", () => {
+    // Kabukta etiket yokken bile applySeo onu yaratmalı; aksi halde canonical
+    // hiçbir yerde üretilmez ve kaldırma işlemi sinyali tamamen yok ederdi.
+    document.head.querySelector('link[rel="canonical"]')?.remove();
+    applySeo({ canonicalPath: "/founding-1000" });
+
+    expect(canonicalHref()).toBe(`${SEO_CANONICAL_ORIGIN}/founding-1000`);
   });
 });

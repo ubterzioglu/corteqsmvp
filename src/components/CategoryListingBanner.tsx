@@ -10,12 +10,12 @@ interface CategoryListingBannerProps {
 
 /**
  * Kayıt formunun ÜZERİNE konulan Founding 1000 şeridi.
- * Tıklanınca /founders-1000 sayfasına yönlendirir.
+ * Tıklanınca /founding-1000 sayfasına yönlendirir.
  */
 const CategoryListingBanner = ({ categoryLabel }: CategoryListingBannerProps) => {
   return (
     <Link
-      to="/founders-1000"
+      to="/founding-1000"
       className="group block rounded-2xl border-2 border-gold/40 bg-gradient-to-r from-gold/10 via-orange-50/60 to-turquoise/10 hover:from-gold/15 hover:via-orange-50 hover:to-turquoise/15 transition-all px-6 py-7 md:py-9 mb-6"
     >
       <div className="flex flex-col items-center text-center gap-2 max-w-3xl mx-auto">

@@ -25,7 +25,7 @@ const DemoPageBanner = ({ categoryLabel, listingHref }: DemoPageBannerProps) => 
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-2 shrink-0">
-          <Link to="/founders-1000">
+          <Link to="/founding-1000">
             <Button size="sm" variant="default" className="h-7 text-xs gap-1 bg-gold text-foreground hover:bg-gold/90">
               <Crown className="h-3 w-3" /> Founders 1000
             </Button>

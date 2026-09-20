@@ -10,9 +10,27 @@
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#aa8c42" />
     <meta name="keywords" content="türk diaspora, diaspora connect, diaspora network, yurt dışı türkler, diaspora platformu, şehir elçisi, türk danışman ağı, global türk topluluğu, türk işletme ağı, diaspora networking" />
-    <link rel="canonical" href="https://corteqs.net/" />
-    <link rel="alternate" hreflang="tr" href="https://corteqs.net/" />
-    <link rel="alternate" hreflang="x-default" href="https://corteqs.net/" />
+    <!-- ⚠️ BURAYA SABİT `rel="canonical"` VEYA `hreflang` EKLEME (kaldırıldı 2026-09-20).
+         Bu kabuk 61 public rotanın HEPSİNE aynen servis edilir. Sabit bir
+         `canonical="https://corteqs.net/"` burada durduğunda /founding-1000,
+         /campaign/vlogger, /commercial/contributor gibi her sayfa "ben ana sayfanın
+         kopyasıyım" demiş oluyordu.
+
+         Googlebot bunu görmüyordu çünkü nginx onu prerender servisine yolluyor
+         (nginx.conf.template `$is_bot`) ve orada `useSeo` doğru canonical'ı yazıyor.
+         Ama listede OLMAYAN her istemci — AhrefsBot, Semrush, sosyal medya önizlemesi,
+         JS çalıştırmayan her araç — ham kabuğu alıyor ve yanlış sinyali okuyordu.
+         Canlıda ölçüldü: AhrefsBot üç sayfada da `canonical=https://corteqs.net/`
+         görürken Googlebot doğru adresi görüyordu.
+
+         ÇÖZÜM, bot listesini büyütmek DEĞİL, yanlış sinyali kaynağından silmek:
+         canonical yoksa her arama motoru adresin KENDİSİNİ kanonik sayar — doğru
+         varsayılan budur. `src/lib/seo.ts` içindeki `upsertCanonicalLink` etiketi
+         yoksa oluşturur, yani tarayıcıda ve prerender'da davranış aynı kalır.
+         hreflang satırları da aynı sebeple silindi; `seo.ts` hreflang YÖNETMİYOR,
+         dolayısıyla onlar her sayfada "Türkçe sürümüm ana sayfa" diyen ölü sinyaldi.
+
+         Sözleşme testi: src/lib/seo.test.ts — "index.html kabuğu" bloğu. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Fontlar: preload + DOĞRUDAN stylesheet. `media="print" onload="this.media='all'"`
