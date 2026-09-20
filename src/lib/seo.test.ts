@@ -249,3 +249,59 @@ describe("index.html kabuğu", () => {
     expect(canonicalHref()).toBe(`${SEO_CANONICAL_ORIGIN}/founding-1000`);
   });
 });
+
+// og:image yan etiketleri — `index.html` kabuğu bunları VARSAYILAN görsele göre sabit
+// yazar (1200x630, jpeg, ana sayfa alt metni). Sayfa kendi görselini verdiğinde bu
+// değerler yanlış kalıyordu: sosyal önizlemede kırpma + yanlış alt metin.
+describe("og:image yan etiketleri", () => {
+  const side = (selector: string) =>
+    document.head.querySelector(selector)?.getAttribute("content") ?? null;
+
+  function seedShellDefaults() {
+    document.head.innerHTML = `
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+      <meta property="og:image:type" content="image/jpeg">
+      <meta property="og:image:alt" content="CorteQS Diaspora Connect">
+      <meta name="twitter:image:alt" content="CorteQS Diaspora Connect">
+    `;
+  }
+
+  beforeEach(seedShellDefaults);
+
+  it("görsel EZİLDİĞİNDE yanlış boyut/tür etiketlerini KALDIRIR", () => {
+    applySeo({ title: "Berlin Buluşması", ogImage: "https://corteqs.net/etkinlik-kapak.png" });
+
+    // ⚠️ Yanlış boyut kalıcı kırpma üretir; eksik boyutu platform kendisi ölçer.
+    expect(side('meta[property="og:image:width"]')).toBeNull();
+    expect(side('meta[property="og:image:height"]')).toBeNull();
+    expect(side('meta[property="og:image:type"]')).toBeNull();
+  });
+
+  it("alt metni sayfa başlığından üretir", () => {
+    applySeo({ title: "Berlin Buluşması", ogImage: "https://corteqs.net/etkinlik-kapak.png" });
+
+    expect(side('meta[property="og:image:alt"]')).toBe("Berlin Buluşması");
+    expect(side('meta[name="twitter:image:alt"]')).toBe("Berlin Buluşması");
+  });
+
+  it("VARSAYILAN görselde kabuğun doğru değerlerine DOKUNMAZ", () => {
+    applySeo({ title: "Herhangi bir sayfa" });
+
+    expect(side('meta[property="og:image:width"]')).toBe("1200");
+    expect(side('meta[property="og:image:height"]')).toBe("630");
+    expect(side('meta[property="og:image:type"]')).toBe("image/jpeg");
+  });
+
+  it("cleanup SİLİNEN etiketleri geri getirir (SPA gezinmesinde sızıntı olmaz)", () => {
+    const cleanup = applySeo({ title: "Berlin Buluşması", ogImage: "https://corteqs.net/kapak.png" });
+    expect(side('meta[property="og:image:width"]')).toBeNull();
+
+    cleanup();
+
+    // `restore` yalnız var olan elemanın niteliğini yazar; silineni geri getirmek için
+    // ayrı bir yol gerekiyordu — bu test o yolun çalıştığını kanıtlar.
+    expect(side('meta[property="og:image:width"]')).toBe("1200");
+    expect(side('meta[property="og:image:alt"]')).toBe("CorteQS Diaspora Connect");
+  });
+});

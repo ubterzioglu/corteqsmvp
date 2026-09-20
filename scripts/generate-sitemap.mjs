@@ -122,7 +122,16 @@ const STATIC_ROUTES = [
   { path: "/campaign/vlogger", priority: "0.5", changefreq: "monthly" },
   { path: "/campaign/blogger", priority: "0.5", changefreq: "monthly" },
   { path: "/19051919", priority: "0.5", changefreq: "yearly" },
+  // May19 alt sayfaları (2026-09-20'de eklendi): ikisi de public, kendi useSeo +
+  // canonicalPath'leri var, thin değil. `/190519idea` LİSTEDE YOK ve öyle kalmalı —
+  // o bir form sayfası, indekslenecek içeriği yok.
+  { path: "/19051919/harita", priority: "0.4", changefreq: "yearly" },
+  { path: "/190519memory", priority: "0.4", changefreq: "yearly" },
   { path: "/anket", priority: "0.6", changefreq: "weekly" },
+  // Etkinlik listesi (2026-09-20'de eklendi). Detay sayfaları getEventRoutes() ile
+  // dinamik gelir — `Event` JSON-LD taşıdıkları için rich-result adayıdırlar ve
+  // keşif dışı kalmaları doğrudan kayıptı.
+  { path: "/events", priority: "0.7", changefreq: "daily" },
   { path: "/directory", priority: "0.7", changefreq: "weekly" },
   { path: "/associations", priority: "0.6", changefreq: "weekly" },
   { path: "/tools", priority: "0.7", changefreq: "weekly" },
@@ -179,6 +188,38 @@ async function getBlogRoutes() {
       path: `/blog/${r.slug}`,
       priority: "0.7",
       changefreq: "monthly",
+      lastmod: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
+    }));
+}
+
+// Yayınlanmış etkinlikleri Supabase REST üzerinden çek (graceful).
+//
+// ⚠️ FİLTRE KAYNAK MODÜLLE BİREBİR AYNI OLMALI: src/lib/events-api.ts
+// `fetchPublishedEvents` yalnız `status = "published"` süzer (başka koşul YOK).
+// Buraya fazladan bir koşul eklemek sitemap'i listeden dar yapar; eksik bırakmak
+// ise onay bekleyen (`pending`) etkinlikleri sızdırır. CLAUDE.md "Değişmez
+// sözleşmeler" md.5 tam olarak bu sınıfı anlatıyor.
+//
+// Geçmiş tarihli etkinlik BİLEREK ELENMEZ: etkinlik sayfası geçtikten sonra da
+// geçerli içeriktir (kimler katıldı, nerede yapıldı) ve `Event` JSON-LD'si
+// `endDate` taşır — arama motoru tarihi kendisi değerlendirir.
+async function getEventRoutes() {
+  const env = supabaseEnv();
+  if (!env) {
+    console.warn("[sitemap] Supabase env yok — etkinlikler atlandı.");
+    return [];
+  }
+
+  const endpoint = `${env.url}/rest/v1/events?select=id,updated_at&status=eq.published`;
+  const rows = await fetchAllRows(endpoint, env.key, "events");
+  if (!rows) return [];
+
+  return rows
+    .filter((r) => r?.id)
+    .map((r) => ({
+      path: `/events/${r.id}`,
+      priority: "0.6",
+      changefreq: "weekly",
       lastmod: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
     }));
 }
@@ -356,6 +397,7 @@ async function main() {
     diasporaRoutes,
     directoryCatalogRoutes,
     independentProfileRoutes,
+    eventRoutes,
   ] = await Promise.all([
     getCommercialRoutes(),
     getBlogRoutes(),
@@ -363,6 +405,7 @@ async function main() {
     getDiasporaRoutes(),
     getDirectoryCatalogRoutes(),
     getIndependentProfileRoutes(),
+    getEventRoutes(),
   ]);
 
   const entries = [
@@ -373,6 +416,7 @@ async function main() {
     ...diasporaRoutes,
     ...directoryCatalogRoutes,
     ...independentProfileRoutes,
+    ...eventRoutes,
   ];
   // Tekilleştir (path'e göre).
   const unique = [...new Map(entries.map((e) => [e.path, e])).values()];
@@ -389,7 +433,8 @@ ${unique.map((e) => renderUrl(e, today)).join("\n")}
     `[sitemap] ${unique.length} URL yazıldı → public/sitemap.xml ` +
       `(statik: ${STATIC_ROUTES.length}, commercial: ${commercialRoutes.length}, blog: ${blogRoutes.length}, ` +
       `anket: ${surveyRoutes.length}, diaspora: ${diasporaRoutes.length}, ` +
-      `directory/catalog: ${directoryCatalogRoutes.length}, kurulus: ${independentProfileRoutes.length})`,
+      `directory/catalog: ${directoryCatalogRoutes.length}, kurulus: ${independentProfileRoutes.length}, ` +
+      `etkinlik: ${eventRoutes.length})`,
   );
 }
 

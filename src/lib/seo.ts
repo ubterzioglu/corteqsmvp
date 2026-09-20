@@ -119,6 +119,15 @@ export function applySeo(opts: SeoOptions): () => void {
       ?.getAttribute("content"),
     twImage: document.head.querySelector('meta[name="twitter:image"]')?.getAttribute("content"),
     robots: document.head.querySelector('meta[name="robots"]')?.getAttribute("content"),
+    // og:image'in YAN etiketleri. index.html kabuğu bunları varsayılan görsele göre
+    // sabit yazar (1200x630, jpeg, ana sayfa alt metni). Sayfa kendi görselini
+    // verdiğinde bu değerler YANLIŞ kalıyordu — sosyal önizleme kırpması ve yanlış
+    // alt metin. Anlık görüntü alınmazsa cleanup'ta geri yüklenemezler.
+    ogImageWidth: document.head.querySelector('meta[property="og:image:width"]')?.getAttribute("content"),
+    ogImageHeight: document.head.querySelector('meta[property="og:image:height"]')?.getAttribute("content"),
+    ogImageType: document.head.querySelector('meta[property="og:image:type"]')?.getAttribute("content"),
+    ogImageAlt: document.head.querySelector('meta[property="og:image:alt"]')?.getAttribute("content"),
+    twImageAlt: document.head.querySelector('meta[name="twitter:image:alt"]')?.getAttribute("content"),
   };
 
   // ── Uygula ──
@@ -161,6 +170,32 @@ export function applySeo(opts: SeoOptions): () => void {
     ogImage,
   );
 
+  // ── og:image YAN etiketleri ──
+  // Sayfa KENDİ görselini verdiyse (etkinlik kapağı, profil avatarı) kabuktaki sabit
+  // boyut/tür yanlıştır ve düzeltilemez: gerçek ölçüyü burada bilmiyoruz. YANLIŞ değer
+  // yerine ETİKETİ KALDIRMAK doğrudur — Facebook/LinkedIn/X görseli kendileri indirip
+  // ölçer, eksik boyut yalnız ilk önizlemeyi biraz yavaşlatır; yanlış boyut ise kalıcı
+  // kırpmaya yol açar. Alt metin ise sayfa başlığından anlamlıca üretilebilir.
+  if (opts.ogImage) {
+    document.head.querySelector('meta[property="og:image:width"]')?.remove();
+    document.head.querySelector('meta[property="og:image:height"]')?.remove();
+    document.head.querySelector('meta[property="og:image:type"]')?.remove();
+
+    if (opts.title) {
+      upsertMeta('meta[property="og:image:alt"]', "property", "og:image:alt").setAttribute(
+        "content",
+        opts.title,
+      );
+      upsertMeta('meta[name="twitter:image:alt"]', "name", "twitter:image:alt").setAttribute(
+        "content",
+        opts.title,
+      );
+    } else {
+      document.head.querySelector('meta[property="og:image:alt"]')?.remove();
+      document.head.querySelector('meta[name="twitter:image:alt"]')?.remove();
+    }
+  }
+
   if (opts.robots !== undefined) {
     upsertMeta('meta[name="robots"]', "name", "robots").setAttribute("content", opts.robots);
   }
@@ -199,6 +234,27 @@ export function applySeo(opts: SeoOptions): () => void {
     restore('meta[name="twitter:title"]', prev.twTitle);
     restore('meta[name="twitter:description"]', prev.twDescription);
     restore('meta[name="twitter:image"]', prev.twImage);
+
+    // Yan etiketler SİLİNMİŞ olabilir (ogImage ezildiğinde) — `restore` yalnız var olan
+    // elemanın niteliğini yazar, silineni geri getirmez. SPA gezinmesinde bir sonraki
+    // sayfa varsayılan görsele dönerse kabuğun doğru boyutları kaybolmuş olurdu.
+    const restoreOrRemove = (
+      selector: string,
+      attrName: "property" | "name",
+      attrValue: string,
+      value: string | null | undefined,
+    ) => {
+      if (value == null) {
+        document.head.querySelector(selector)?.remove();
+        return;
+      }
+      upsertMeta(selector, attrName, attrValue).setAttribute("content", value);
+    };
+    restoreOrRemove('meta[property="og:image:width"]', "property", "og:image:width", prev.ogImageWidth);
+    restoreOrRemove('meta[property="og:image:height"]', "property", "og:image:height", prev.ogImageHeight);
+    restoreOrRemove('meta[property="og:image:type"]', "property", "og:image:type", prev.ogImageType);
+    restoreOrRemove('meta[property="og:image:alt"]', "property", "og:image:alt", prev.ogImageAlt);
+    restoreOrRemove('meta[name="twitter:image:alt"]', "name", "twitter:image:alt", prev.twImageAlt);
     if (prev.robots != null) {
       restore('meta[name="robots"]', prev.robots);
     } else {

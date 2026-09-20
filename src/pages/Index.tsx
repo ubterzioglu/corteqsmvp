@@ -18,12 +18,22 @@ import Reveal from "@/components/motion/Reveal";
 import { useSeo } from "@/lib/seo";
 
 const Index = () => {
+  // `/landingtrial` eski ana sayfa taslağıdır; canlı ana sayfa `LandingTrialPage`.
+  //
+  // ÇELİŞKİ DÜZELTİLDİ (2026-09-20): burada aynı anda hem `canonicalPath: "/"` hem
+  // `noindex` vardı. Bu iki sinyal birbirini iptal eder — Google noindex verilen bir
+  // sayfada canonical'ı DEĞERLENDİRMEZ (sayfa indekslenmeyeceği için birleştirilecek
+  // bir şey de yoktur). Yani cross-canonical hiçbir iş yapmıyor, yalnız "bu sayfa
+  // ana sayfanın kopyası" diye yanlış bir iz bırakıyordu.
+  //
+  // Karar: `noindex` KALIR (sayfa gerçekten indekslenmemeli, içeriği ana sayfayla
+  // birebir örtüşüyor), cross-canonical DÜŞER. Başlık da artık ana sayfanınkiyle
+  // birebir aynı değil — iki farklı şeyin aynı adı taşıması tanıyı zorlaştırıyordu.
   useSeo(
     {
-      title: "CorteQS | Türk Diasporası Topluluk ve Network Platformu",
+      title: "Ana Sayfa Taslağı | CorteQS",
       description:
-        "CorteQS, Türk diasporası için topluluk, danışman ve fırsatları bir araya getirir. Expat ağına katılın, şehir bazlı güvenilir bağlantılar kurun.",
-      canonicalPath: "/",
+        "CorteQS ana sayfasının eski taslak sürümü. Yayındaki sayfa için corteqs.net adresine gidin.",
       robots: "noindex, follow",
     },
     [],
