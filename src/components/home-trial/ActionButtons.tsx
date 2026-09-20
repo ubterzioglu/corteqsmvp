@@ -38,6 +38,17 @@ const BUTTON_CLASS =
 
 interface ActionButtonsProps {
   buttons: ActionButtonSpec[];
+  /**
+   * Bu indeksten itibaren düğmeler DAR EKRANDA gizlenir (`sm` altı). Mobilde on
+   * düğme alt alta dizilince şerit ekranı yiyordu; açılır-kapanır davranışı
+   * `HomeActionStack` yönetir, burada yalnız sınıf eklenir.
+   *
+   * ⚠️ `hidden` sınıfı `BUTTON_CLASS` içindeki `inline-flex`ten SONRA yazılmalı:
+   * Tailwind'in ürettiği CSS'te `display` yardımcıları arasında `hidden` en sonda
+   * gelir, bu yüzden taban katmanda kazanır; `sm:inline-flex` ise medya sorgusu
+   * içinde olduğu için geniş ekranda onu geri alır.
+   */
+  hideOnMobileFrom?: number;
   /** Sarmalayıcıya eklenecek yerleşim sınıfları (hizalama, üst boşluk). */
   className?: string;
   /** `state.from` değeri — Geri Bildirim kaydının `page_path` alanını doldurur. */
@@ -50,26 +61,35 @@ interface ActionButtonsProps {
    * dayanır. Sayfada birden çok satır varsa adları FARKLI olmalı.
    */
   ariaLabel?: string;
+  /** Sarmalayıcının `id`'si — mobil aç/kapa düğmesinin `aria-controls` hedefi. */
+  id?: string;
 }
 
 export function ActionButtons({
   buttons,
+  hideOnMobileFrom,
   className,
   originPath = "/",
   align = "start",
   ariaLabel,
+  id,
 }: ActionButtonsProps) {
   const Wrapper = ariaLabel ? "nav" : "div";
   return (
     <TooltipProvider delayDuration={150}>
       <Wrapper
+        id={id}
         aria-label={ariaLabel}
         className={`flex flex-wrap gap-2.5 ${align === "center" ? "justify-center" : "justify-start"} ${className ?? ""}`}
       >
-        {buttons.map((button) => {
+        {buttons.map((button, index) => {
+          const hiddenOnMobile =
+            hideOnMobileFrom !== undefined && index >= hideOnMobileFrom;
           // `relative`: DEMO rozeti köşeye `absolute` oturur (bkz. DemoBadge).
           const shared = {
-            className: `${BUTTON_CLASS} relative ${button.gradient}`,
+            className: `${BUTTON_CLASS} relative ${button.gradient}${
+              hiddenOnMobile ? " hidden sm:inline-flex" : ""
+            }`,
             style: { boxShadow: `0 16px 34px -12px ${button.shadow}` },
           };
           // Rozet düğmenin İÇİNE konur. Düğmeyi bir sarmalayıcıya almak

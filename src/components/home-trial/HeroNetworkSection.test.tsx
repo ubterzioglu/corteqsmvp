@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
@@ -23,7 +23,13 @@ const hrefsIn = (nav: HTMLElement) =>
 describe("ana sayfa hero", () => {
   it("birincil çağrıları çizer", () => {
     renderHero();
-    expect(screen.getByRole("link", { name: /Ağa Katıl/ })).toHaveAttribute("href", "/login?mode=signup");
+    // Etiket 2026-09-20'de "Ağa Katıl" → "Ücretsiz kayıt ol!" oldu (kullanıcı
+    // kararı): "ağa katıl" ücretsizliği söylemiyordu.
+    expect(screen.getByRole("link", { name: /Ücretsiz kayıt ol!/ })).toHaveAttribute(
+      "href",
+      "/login?mode=signup",
+    );
+    expect(screen.queryByRole("link", { name: /Ağa Katıl/ })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Araçlar!/ })).toHaveAttribute("href", "/tools");
     expect(screen.getByRole("button", { name: /Ağı keşfet/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Biz kimiz\?/ })).toHaveAttribute("href", "/founders");
@@ -61,6 +67,46 @@ describe("ana sayfa hero", () => {
     expect(
       within(screen.getByRole("link", { name: /Kampanyalar/ })).queryByText("DEMO"),
     ).not.toBeInTheDocument();
+  });
+
+  // Kullanıcı kararı 2026-09-20: mobilde on düğme alt alta çok yer kaplıyordu.
+  // İlk ÜÇÜ açık kalır, kalanlar aç/kapa düğmesinin arkasına girer. Gizleme
+  // SINIFLA yapılır (jsdom CSS uygulamaz), bu yüzden iddia sınıf üzerinedir —
+  // DOM sırası masaüstündeki 5 + 5 sözleşmesi için değişmeden kalmalı.
+  describe("mobil aç/kapa", () => {
+    const isHiddenOnMobile = (element: HTMLElement) =>
+      element.className.includes("hidden sm:inline-flex");
+
+    it("mobilde yalnız ilk üç düğmeyi açık bırakır", () => {
+      renderHero();
+
+      const rowOne = screen.getByRole("navigation", { name: "Ana eylemler" });
+      const buttons = Array.from(rowOne.children) as HTMLElement[];
+
+      expect(buttons.slice(0, 3).map(isHiddenOnMobile)).toEqual([false, false, false]);
+      expect(buttons.slice(3).map(isHiddenOnMobile)).toEqual([true, true]);
+      expect(screen.getByRole("navigation", { name: "Hızlı erişim" })).toHaveClass("hidden");
+    });
+
+    it("aç/kapa düğmesi tüm kısayolları açar ve kapatır", () => {
+      renderHero();
+
+      const toggle = screen.getByRole("button", { name: /Tüm kısayollar/ });
+      expect(toggle).toHaveAttribute("aria-expanded", "false");
+
+      fireEvent.click(toggle);
+
+      expect(screen.getByRole("navigation", { name: "Hızlı erişim" })).not.toHaveClass("hidden");
+      expect(
+        Array.from(screen.getByRole("navigation", { name: "Ana eylemler" }).children).some((child) =>
+          isHiddenOnMobile(child as HTMLElement),
+        ),
+      ).toBe(false);
+
+      fireEvent.click(screen.getByRole("button", { name: /Daha az göster/ }));
+
+      expect(screen.getByRole("navigation", { name: "Hızlı erişim" })).toHaveClass("hidden");
+    });
   });
 
   it("Araçlar kısayol şeridinde TEKRARLANMAZ", () => {

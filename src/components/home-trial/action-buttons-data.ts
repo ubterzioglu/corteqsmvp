@@ -40,21 +40,17 @@ const scrollToAtlas = () => {
  * BİRİNCİL eylemler. Hero ve kapanış kartı aynı havuzdan seçer, böylece iki bölüm
  * arasında renk/metin/ipucu ayrışması olamaz.
  *
- * `join` ile `signup` AYNI hedefe gider; etiketleri bilinçli farklı — sayfanın
- * sonunda okuyan kişi karara daha yakındır ve "ücretsiz" bilgisi orada daha çok
- * iş görür.
+ * KAYIT DÜĞMESİ TEKTİR (`signup`). Eskiden `join` ("Ağa Katıl", hero) ve
+ * `signup` ("Ücretsiz Kayıt Ol", kapanış) diye İKİ giriş vardı; ikisi de aynı
+ * hedefe gidiyor, yalnız etiketleri ayrışıyordu. 2026-09-20'de kullanıcı kararı
+ * ile hero "Ücretsiz kayıt ol!" oldu ve ardından iki etiket EŞİTLENDİ — geriye
+ * birebir aynı iki sabit kalınca `join` silindi. Tek kayıt düğmesi = iki bölüm
+ * arasında yazım ayrışması İMKÂNSIZ. İkiye tekrar bölme.
  */
 export const PRIMARY_ACTIONS = {
-  join: {
-    to: "/login?mode=signup",
-    label: "Ağa Katıl",
-    hint: "Ücretsiz üye ol. Profilini oluştur, şehrindeki ağı gör, etkinlik ve grup ekleyebil.",
-    gradient: "from-[#00ACC1] to-[#0097A7]",
-    shadow: "hsl(var(--glow-teal) / 0.6)",
-  },
   signup: {
     to: "/login?mode=signup",
-    label: "Ücretsiz Kayıt Ol",
+    label: "Ücretsiz kayıt ol!",
     hint: "Ücretsiz üye ol. Profilini oluştur, şehrindeki ağı gör, etkinlik ve grup ekleyebil.",
     gradient: "from-[#00ACC1] to-[#0097A7]",
     shadow: "hsl(var(--glow-teal) / 0.6)",
@@ -140,11 +136,27 @@ export const SECONDARY_ACTIONS = {
 } satisfies Record<string, ActionButtonSpec>;
 
 /**
+ * İKİ SATIRLIK DÜZENİN BİRİNCİ SATIRI — hero ve kapanış kartı AYNI beşliyi çizer.
+ *
+ * 2026-09-20'ye kadar iki bölüm bu satırı KENDİ içinde ayrı ayrı yazıyordu ve tek
+ * farkı ilk düğmenin etiketiydi ("Ağa Katıl" / "Ücretsiz Kayıt Ol"). Etiketler
+ * eşitlenince iki liste birebir aynı oldu; ikisini de burada tutmak ayrışmayı
+ * yeniden mümkün kılardı.
+ */
+export const ACTION_ROW_ONE: ActionButtonSpec[] = [
+  PRIMARY_ACTIONS.signup,
+  PRIMARY_ACTIONS.tools,
+  PRIMARY_ACTIONS.explore,
+  PRIMARY_ACTIONS.founders,
+  SECONDARY_ACTIONS.campaigns,
+];
+
+/**
  * İKİ SATIRLIK DÜZENİN İKİNCİ SATIRI — hero ve kapanış kartı AYNI beşliyi çizer.
  *
- * Birinci satır her bölümün kendi birincil çağrıları + `SECONDARY_ACTIONS.campaigns`
- * olur (hero "Ağa Katıl" ile, kapanış kartı "Ücretsiz Kayıt Ol" ile başlar —
- * tek fark budur). Beşe beş bölme kullanıcı kararıdır, 2026-09-20.
+ * Birinci satır `PRIMARY_ACTIONS` dörtlüsü + `SECONDARY_ACTIONS.campaigns` olur;
+ * 2026-09-20'de kayıt düğmesi tekleştirildikten sonra hero ile kapanış kartının
+ * birinci satırı BİREBİR AYNIDIR. Beşe beş bölme kullanıcı kararıdır.
  *
  * ⚠️ Buraya altıncı bir düğme eklemek İKİ bölümü birden üçüncü satıra taşırır.
  * Ölçü: düğme 10rem (160px) + gap 0.625rem (10px) → 5 düğme = 840px; hero

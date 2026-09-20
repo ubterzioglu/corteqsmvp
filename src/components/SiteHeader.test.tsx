@@ -100,6 +100,55 @@ describe("SiteHeader", () => {
     });
   });
 
+  // Kullanıcı kararı 2026-09-20: mobilde gezinme bağlantıları şeride sığmıyor,
+  // satırları sarıp header'ı şişiriyordu. Artık tek "Menü" düğmesi ve sağdan
+  // açılan çekmece var. Çekmece KAPALIYKEN içeriği DOM'a girmez — bu dosyadaki
+  // diğer `getByRole("link", …)` iddiaları ancak o sayede tekil kalıyor.
+  describe("mobil menü çekmecesi", () => {
+    it("ziyaretçiye önce Giriş Yap sonra Kayıt Ol gösterir", () => {
+      renderHeader();
+
+      fireEvent.click(screen.getByRole("button", { name: "Menü" }));
+
+      const drawer = screen.getByRole("navigation", { name: "Mobil gezinme" });
+      const labels = Array.from(drawer.children).map((child) => child.textContent);
+
+      expect(labels).toEqual([
+        "Giriş Yap",
+        "Kayıt Ol",
+        "Araçlar",
+        "Radar",
+        "Dijital Gruplar",
+        "Etkinlik Oluştur",
+        "Kampanyalar",
+        "Yarışmalar",
+        "Biz kimiz?",
+      ]);
+    });
+
+    it("üyeye önce Profilim sonra Çıkış gösterir", () => {
+      authState.user = { id: "user-1" };
+      renderHeader();
+
+      fireEvent.click(screen.getByRole("button", { name: "Menü" }));
+
+      const drawer = screen.getByRole("navigation", { name: "Mobil gezinme" });
+      const labels = Array.from(drawer.children).map((child) => child.textContent);
+
+      expect(labels.slice(0, 2)).toEqual(["Profilim", "Çıkış"]);
+      expect(labels).toContain("Geri Bildirim");
+    });
+
+    // Çekmece ile masaüstü şeridi AYNI listeden üretilir; çekmece kapalıyken
+    // ikinci bir kopya bırakmamalı.
+    it("kapalıyken bağlantıları DOM'a bırakmaz", () => {
+      renderHeader();
+
+      expect(screen.queryByRole("navigation", { name: "Mobil gezinme" })).not.toBeInTheDocument();
+      expect(screen.getAllByRole("link", { name: "Giriş Yap" })).toHaveLength(1);
+    });
+  });
+
   // DEMO deseni (2026-09-20) — bkz. src/lib/demo-pages.ts ve
   // docs/guides/demo-icerik-deseni.md. Bant ROTADAN türetilir; demo sayfaların
   // kendisine kod eklenmez, bu yüzden davranış burada doğrulanır.

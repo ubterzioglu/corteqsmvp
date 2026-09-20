@@ -1,5 +1,5 @@
 import { type ReactNode, useState } from "react";
-import { Menu } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -79,14 +79,32 @@ const ProfileSidebarLayout = ({
       <div className="flex-1 space-y-4 lg:w-4/5">
         <div className="lg:hidden">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            {/* Düğme seçili bölümün adını taşır ve bu ad her seçimde DEĞİŞİR.
+                Adın başına sabit "Menü" etiketi konur (kullanıcı kararı,
+                2026-09-20): etiketsizken düğme bir başlık gibi okunuyor, bir
+                menü açtığı anlaşılmıyordu. Etiket + ad + aşağı ok üçlüsü
+                düğmenin ne yaptığını tek bakışta söyler. */}
             <Button
               variant="outline"
-              size="sm"
-              className="gap-2"
+              className="h-auto w-full justify-between gap-3 rounded-2xl border-border/70 bg-background/80 px-3 py-2.5 shadow-sm backdrop-blur transition-colors hover:border-primary/40 hover:bg-background sm:w-auto sm:min-w-[16rem]"
               onClick={() => setMobileOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={mobileOpen}
             >
-              <Menu className="h-4 w-4" />
-              {activeItem?.label ?? "Menü"}
+              <span className="flex min-w-0 items-center gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Menu className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <span className="flex min-w-0 flex-col items-start text-left leading-tight">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                    Menü
+                  </span>
+                  <span className="truncate text-sm font-semibold text-foreground">
+                    {activeItem?.label ?? "Profil Menüsü"}
+                  </span>
+                </span>
+              </span>
+              <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
             </Button>
             <SheetContent side="left" className="w-72">
               <SheetHeader className="mb-4">

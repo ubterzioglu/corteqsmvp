@@ -31,10 +31,14 @@ describe("ana sayfa kapanış kartı", () => {
     expect(hrefsIn(rowTwo)).toEqual(["/campaign", "/radar", "/addcom", "/events", "/feedback"]);
   });
 
-  it("kapanışta 'Ücretsiz Kayıt Ol' etiketini kullanır", () => {
+  // Kayıt düğmesi 2026-09-20'de TEKLEŞTİ: hero ile kapanış kartı aynı etiketi
+  // kullanır ("Ücretsiz kayıt ol!"). Eskiden burada "Ücretsiz Kayıt Ol", hero'da
+  // "Ağa Katıl" yazıyordu; ikisi de aynı yere gittiği için ayrışma bir kazançtan
+  // çok drift kaynağıydı. Bu test yazımın geri ayrışmasını engeller.
+  it("hero ile AYNI kayıt etiketini kullanır", () => {
     renderCta();
 
-    expect(screen.getByRole("link", { name: /Ücretsiz Kayıt Ol/ })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /Ücretsiz kayıt ol!/ })).toHaveAttribute(
       "href",
       "/login?mode=signup",
     );

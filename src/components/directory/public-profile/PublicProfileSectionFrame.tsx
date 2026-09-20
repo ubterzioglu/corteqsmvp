@@ -19,7 +19,22 @@ interface PublicProfileSectionFrameProps {
   children: ReactNode;
 }
 
-/** Inner card following the IndividualPublicView bottom-card pattern. */
+/**
+ * Inner card following the IndividualPublicView bottom-card pattern.
+ *
+ * ⚠️ BURAYA `h-full` GERİ EKLEME (kaldırıldı 2026-09-20). Kartlar doğrudan
+ * grid hücresi DEĞİL, `PublicProfileSectionList` içindeki `space-y-4` bloğunun
+ * çocuklarıdır. O blok ise `grid`in çocuğu olduğu için `align-items: stretch`
+ * ile KESİN bir yükseklik alır — dolayısıyla `h-full` "kendi içeriğim kadar"
+ * değil, "TÜM KOLON kadar" demek olur. Kolonda iki ya da daha çok bölüm varsa
+ * her biri kolon boyuna şişer, blok taşar ve bir SONRAKİ içeriğin (yan kolonun
+ * "Profil Güvencesi" kartının, hatta footer'ın) üstüne biner.
+ *
+ * Canlıda ölçüldü: /directory/catalog/dortmund-doktor-suleyman-soyturk,
+ * 390px genişlik — "Hizmetler" ve "Profil Güvencesi" kartları aynı `top`
+ * değerinde üst üste çiziliyordu. Tek bölümlü profillerde kusur GÖRÜNMEZ
+ * (h-full o zaman kartın kendi boyuna eşit), bu yüzden sessizce yaşadı.
+ */
 const PublicProfileSectionFrame = ({
   title,
   description,
@@ -27,7 +42,7 @@ const PublicProfileSectionFrame = ({
   accent,
   children,
 }: PublicProfileSectionFrameProps) => (
-  <section className="h-full rounded-[22px] border border-border bg-background/70 p-4 md:p-5">
+  <section className="rounded-[22px] border border-border bg-background/70 p-4 md:p-5">
     <div className="mb-3 flex items-center gap-2">
       <Icon className={`h-4 w-4 shrink-0 ${ICON_TEXT_BY_ACCENT[accent]}`} aria-hidden="true" />
       <h2 className="text-sm font-semibold text-foreground">{title}</h2>

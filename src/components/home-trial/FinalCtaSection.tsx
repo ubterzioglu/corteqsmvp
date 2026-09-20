@@ -2,20 +2,13 @@
  * 7. Final CTA — tek, yüksek-niyetli çağrı. Footer (PublicLayout) hemen altında gelir.
  */
 
-import { ActionButtons } from "./ActionButtons";
-import { ACTION_ROW_TWO, PRIMARY_ACTIONS, SECONDARY_ACTIONS } from "./action-buttons-data";
+import { HomeActionStack } from "./HomeActionStack";
+import { ACTION_ROW_ONE, ACTION_ROW_TWO } from "./action-buttons-data";
 
 // Kapanış kartı da hero gibi TAM İKİ SATIR, 5 + 5 (kullanıcı kararı, 2026-09-20).
-// Tek fark birinci satırın ilk düğmesi: hero "Ağa Katıl", burada "Ücretsiz Kayıt
-// Ol" — sayfanın sonunda okuyan kişi karara daha yakındır ve "ücretsiz" bilgisi
-// orada daha çok iş görür (bkz. action-buttons-data.ts).
-const CTA_ROW_ONE = [
-  PRIMARY_ACTIONS.signup,
-  PRIMARY_ACTIONS.tools,
-  PRIMARY_ACTIONS.explore,
-  PRIMARY_ACTIONS.founders,
-  SECONDARY_ACTIONS.campaigns,
-];
+// Eskiden birinci satırın ilk düğmesi ayrışıyordu (hero "Ağa Katıl", burada
+// "Ücretsiz Kayıt Ol"); 20 Eylül'de etiketler eşitlendi ve iki satır da artık
+// action-buttons-data.ts'ten PAYLAŞILIYOR — tek fark hizalama (burada ortalı).
 
 const FinalCtaSection = () => {
   return (
@@ -51,9 +44,16 @@ const FinalCtaSection = () => {
             Ücretsiz kayıt ol, kendi şehrindeki ağını keşfet ve büyümenin parçası ol.
           </p>
           {/* İki satır, her biri 5 düğme — hero ile AYNI ölçüde, ortalı hizalı
-              (hero'da sola dayalıdır). İkinci satır hero ile PAYLAŞILIR. */}
-          <ActionButtons buttons={CTA_ROW_ONE} className="mt-9" align="center" ariaLabel="Kayıt eylemleri" />
-          <ActionButtons buttons={ACTION_ROW_TWO} className="mt-2.5" align="center" originPath="/" ariaLabel="Hızlı erişim (kapanış)" />
+              (hero'da sola dayalıdır). İkinci satır hero ile PAYLAŞILIR.
+              Mobilde ilk üçü açık, kalanlar aç/kapa arkasında (HomeActionStack). */}
+          <HomeActionStack
+            rowOne={ACTION_ROW_ONE}
+            rowTwo={ACTION_ROW_TWO}
+            rowOneLabel="Kayıt eylemleri"
+            rowTwoLabel="Hızlı erişim (kapanış)"
+            align="center"
+            topSpacingClassName="mt-9"
+          />
         </div>
       </div>
     </section>

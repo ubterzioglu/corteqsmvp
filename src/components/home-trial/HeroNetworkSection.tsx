@@ -5,8 +5,8 @@
  * Video açık renkli olduğu için metin KOYU, okunabilirlik örtüsü de soldan BEYAZ.
  */
 
-import { ActionButtons } from "./ActionButtons";
-import { ACTION_ROW_TWO, PRIMARY_ACTIONS, SECONDARY_ACTIONS } from "./action-buttons-data";
+import { HomeActionStack } from "./HomeActionStack";
+import { ACTION_ROW_ONE, ACTION_ROW_TWO } from "./action-buttons-data";
 
 // Hero'da düğmeler TAM İKİ SATIR çizilir (kullanıcı kararı, 2026-09-20). Onuncu
 // düğme eklenince kendiliğinden üçüncü satıra taşardı; bu yüzden bölme elle
@@ -16,17 +16,9 @@ import { ACTION_ROW_TWO, PRIMARY_ACTIONS, SECONDARY_ACTIONS } from "./action-but
 // Sarmalayıcı bu yüzden `max-w-4xl` (896px); `max-w-xl` (576px) ile satır başına
 // yalnız 3 düğme sığıyordu. Yeni düğme eklersen bu aritmetiği tekrar yap, yoksa
 // "iki satır" sözleşmesi sessizce bozulur.
-const HERO_ROW_ONE = [
-  PRIMARY_ACTIONS.join,
-  PRIMARY_ACTIONS.tools,
-  PRIMARY_ACTIONS.explore,
-  PRIMARY_ACTIONS.founders,
-  SECONDARY_ACTIONS.campaigns,
-];
-
-// İkinci satır kapanış kartıyla PAYLAŞILIR — iki bölümün ayrışmaması için
-// burada tekrar yazılmaz (bkz. action-buttons-data.ts → ACTION_ROW_TWO).
-const HERO_ROW_TWO = ACTION_ROW_TWO;
+//
+// İKİ SATIR DA kapanış kartıyla PAYLAŞILIR — burada tekrar yazılmaz, yoksa iki
+// bölüm ayrışır (bkz. action-buttons-data.ts).
 
 // Telifsiz soyut "beyaz geometrik ağ" hero videosu (Pexels #29718114, telifsiz).
 // Açık zemin → metin koyu, gradyan örtü beyaz tarafta. Yeni videoyu aynı isimle
@@ -102,9 +94,14 @@ const HeroNetworkSection = () => {
             `max-w-2xl` (672px) sınırı `max-w-4xl`'i yutar ve beş düğmelik satır
             yine üçe bölünürdü — "iki satır" sözleşmesi sessizce bozulurdu. */}
         <div className="max-w-4xl text-left">
-          {/* İki satır, her biri 5 düğme — bkz. dosya başındaki ölçü notu. */}
-          <ActionButtons buttons={HERO_ROW_ONE} className="mt-7" ariaLabel="Ana eylemler" />
-          <ActionButtons buttons={HERO_ROW_TWO} className="mt-2.5" ariaLabel="Hızlı erişim" />
+          {/* İki satır, her biri 5 düğme — bkz. dosya başındaki ölçü notu.
+              Mobilde ilk üçü açık, kalanlar aç/kapa arkasında (HomeActionStack). */}
+          <HomeActionStack
+            rowOne={ACTION_ROW_ONE}
+            rowTwo={ACTION_ROW_TWO}
+            rowOneLabel="Ana eylemler"
+            rowTwoLabel="Hızlı erişim"
+          />
         </div>
       </div>
     </section>

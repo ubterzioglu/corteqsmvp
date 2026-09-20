@@ -1,8 +1,9 @@
-import { useCallback, useState } from "react";
+import { Fragment, useCallback, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { useAuth } from "@/components/auth/useAuth";
 import { DemoBanner } from "@/components/common/DemoBanner";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { findDemoRoute } from "@/lib/demo-pages";
 const logo = "/newlogo.png";
 // Q2 (13 Eylül gözle QA): whitespace-nowrap olmadan dar ekranda link METNİ
@@ -11,6 +12,57 @@ const logo = "/newlogo.png";
 // ki taşan link KELİME İÇİ değil, TAM BİRİM olarak alt satıra düşsün.
 const NAV_ACTION_CLASS =
   "whitespace-nowrap text-sm font-semibold text-slate-700 transition-colors hover:text-slate-950";
+
+/**
+ * Üst gezinme TEK KAYNAKTAN çizilir (2026-09-20). Masaüstündeki yatay şerit ve
+ * mobildeki çekmece AYNI listeden üretilir; iki yerde ayrı ayrı yazılınca biri
+ * güncellenip öteki unutuluyordu (ziyaretçi menüsünde aylarca duran "Radar |
+ * Radar" kopyası tam olarak böyle oluşmuştu).
+ *
+ * `to` verilmeyen tek öğe çıkıştır — o bir `<button>` olarak çizilir.
+ */
+type NavItem = {
+  key: string;
+  label: string;
+  to?: string;
+  /** Geldiği sayfayı `state.from` ile taşır (Geri Bildirim'in `page_path`'i). */
+  carryOrigin?: boolean;
+};
+
+/** Giriş yapmış üyenin gezinme öğeleri (hesap işleri hariç). */
+const MEMBER_BROWSE_ITEMS: NavItem[] = [
+  { key: "tools", label: "Araçlar", to: "/tools" },
+  { key: "radar", label: "Radar", to: "/radar" },
+  { key: "groups", label: "Dijital Gruplar", to: "/addcom" },
+  { key: "events", label: "Etkinlikler", to: "/events" },
+  // Kampanyalar + Yarışmalar: ikisi de /campaign'e gider — yarışmalar şimdilik
+  // kampanya hub'ının içinde listeleniyor (kullanıcı kararı, 2026-09-20).
+  { key: "campaigns", label: "Kampanyalar", to: "/campaign" },
+  { key: "contests", label: "Yarışmalar", to: "/campaign" },
+  { key: "founders", label: "Biz kimiz?", to: "/founders" },
+  { key: "feedback", label: "Geri Bildirim", to: "/feedback", carryOrigin: true },
+];
+
+/** Giriş yapmamış ziyaretçinin gezinme öğeleri (giriş/kayıt hariç). */
+const VISITOR_BROWSE_ITEMS: NavItem[] = [
+  { key: "tools", label: "Araçlar", to: "/tools" },
+  { key: "radar", label: "Radar", to: "/radar" },
+  { key: "groups", label: "Dijital Gruplar", to: "/addcom" },
+  { key: "create-event", label: "Etkinlik Oluştur", to: "/events/create" },
+  { key: "campaigns", label: "Kampanyalar", to: "/campaign" },
+  { key: "contests", label: "Yarışmalar", to: "/campaign" },
+  { key: "founders", label: "Biz kimiz?", to: "/founders" },
+];
+
+const MEMBER_ACCOUNT_ITEMS: NavItem[] = [
+  { key: "profile", label: "Profilim", to: "/profile" },
+  { key: "signout", label: "Çıkış" },
+];
+
+const VISITOR_ACCOUNT_ITEMS: NavItem[] = [
+  { key: "login", label: "Giriş Yap", to: "/login?mode=login" },
+  { key: "signup", label: "Kayıt Ol", to: "/login?mode=signup" },
+];
 
 // Beta bandı kapatma tercihi.
 // Desen kaynağı: src/lib/admin-shell/admin-storage.ts (ADMIN_STORAGE_KEYS.updatesSeen +
@@ -49,6 +101,7 @@ export default function SiteHeader() {
   // Lazy initializer: değer İLK render'da okunur; band önce görünüp sonra kaybolmaz
   // (flash yok). useEffect içinde okumak tam olarak o kusuru üretirdi.
   const [betaBannerDismissed, setBetaBannerDismissed] = useState<boolean>(readBetaBannerDismissed);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   // Demo bandı ROTADAN türetilir; demo sayfalarına kod eklemek gerekmez.
   // Yeni demo sayfası = src/lib/demo-pages.ts'e bir satır. Bkz. o dosyanın başı.
   const demoRoute = findDemoRoute(location.pathname);
@@ -61,6 +114,63 @@ export default function SiteHeader() {
   const handleSignOut = async () => {
     await signOut();
     navigate("/login", { replace: true });
+  };
+
+  const accountItems = user ? MEMBER_ACCOUNT_ITEMS : VISITOR_ACCOUNT_ITEMS;
+  const browseItems = user ? MEMBER_BROWSE_ITEMS : VISITOR_BROWSE_ITEMS;
+  // Masaüstünde hesap işleri şeridin SONUNDA (bugünkü düzen korunur); mobil
+  // çekmecede BAŞTA — kullanıcı kararı 2026-09-20: "Giriş Yap ve Kayıt Ol
+  // başta olacak". İki sıra aynı listeden türer, ayrışamaz.
+  const desktopItems = [...browseItems, ...accountItems];
+  const mobileItems = [...accountItems, ...browseItems];
+
+  const originState = (item: NavItem) =>
+    item.carryOrigin ? { from: `${location.pathname}${location.search}` } : undefined;
+
+  const renderDesktopItem = (item: NavItem) =>
+    item.to ? (
+      <Link to={item.to} state={originState(item)} className={NAV_ACTION_CLASS}>
+        {item.label}
+      </Link>
+    ) : (
+      <button type="button" onClick={handleSignOut} className={NAV_ACTION_CLASS}>
+        {item.label}
+      </button>
+    );
+
+  const renderMobileItem = (item: NavItem, isAccountItem: boolean) => {
+    const className = `flex w-full items-center gap-2.5 px-5 py-3.5 text-left text-[15px] font-semibold transition-colors hover:bg-slate-100 hover:text-slate-950 ${
+      isAccountItem ? "bg-slate-50/80 text-slate-900" : "text-slate-700"
+    }`;
+
+    if (!item.to) {
+      return (
+        <button
+          key={item.key}
+          type="button"
+          onClick={() => {
+            setMobileNavOpen(false);
+            void handleSignOut();
+          }}
+          className={className}
+        >
+          <LogOut aria-hidden="true" className="h-4 w-4 shrink-0 text-slate-500" />
+          {item.label}
+        </button>
+      );
+    }
+
+    return (
+      <Link
+        key={item.key}
+        to={item.to}
+        state={originState(item)}
+        onClick={() => setMobileNavOpen(false)}
+        className={className}
+      >
+        {item.label}
+      </Link>
+    );
   };
 
   // ⚠️ Y2 (m153) SÖZLEŞMESİ: aşağıdaki dört sınıf adı — site-header,
@@ -114,157 +224,67 @@ export default function SiteHeader() {
           yıkama. Renk BAĞLANTILARIN üzerinden değil ZEMİNDEN gelir; böylece bağlantı
           metinleri koyu slate kalır ve kontrast AA üstünde durur. */}
       <div className="site-header__nav border-b border-slate-200/70 bg-[linear-gradient(90deg,hsl(var(--glow-teal)/0.10)_0%,transparent_38%,transparent_62%,hsl(var(--brand-indigo)/0.10)_100%)] px-4 py-1.5">
-        <div className="container mx-auto flex flex-wrap items-center justify-end gap-x-4 gap-y-1 lg:px-6">
-          {user ? (
-            <>
-              <Link
-                to="/tools"
-                className={NAV_ACTION_CLASS}
-              >
-                Araçlar
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              <Link
-                to="/radar"
-                className={NAV_ACTION_CLASS}
-              >
-                Radar
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              <Link
-                to="/addcom"
-                className={NAV_ACTION_CLASS}
-              >
-                Dijital Gruplar
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              {/* Etkinlikler — etkinlik listeleme sayfasına kısayol */}
-              <Link
-                to="/events"
-                className={NAV_ACTION_CLASS}
-              >
-                Etkinlikler
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              {/* Kampanyalar + Yarışmalar: ikisi de /campaign'e gider — yarışmalar şimdilik
-                  kampanya hub'ının içinde listeleniyor (kullanıcı kararı, 2026-09-20). */}
-              <Link
-                to="/campaign"
-                className={NAV_ACTION_CLASS}
-              >
-                Kampanyalar
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              <Link
-                to="/campaign"
-                className={NAV_ACTION_CLASS}
-              >
-                Yarışmalar
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              <Link
-                to="/founders"
-                className={NAV_ACTION_CLASS}
-              >
-                Biz kimiz?
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              {/* Geri Bildirim — geldiği sayfa state.from ile /feedback'e taşınır (page_path). */}
-              <Link
-                to="/feedback"
-                state={{ from: `${location.pathname}${location.search}` }}
-                className={NAV_ACTION_CLASS}
-              >
-                Geri Bildirim
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              <Link
-                to="/profile"
-                className={NAV_ACTION_CLASS}
-              >
-                Profilim
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              <button
-                type="button"
-                onClick={handleSignOut}
-                className={NAV_ACTION_CLASS}
-              >
-                Çıkış
-              </button>
-            </>
-          ) : (
-            <>
-              {/* Araçlar: dropdown kaldırıldı, hem masaüstü hem mobilde direkt /tools sayfasına gider */}
-              <Link
-                to="/tools"
-                className={`inline-flex items-center gap-1 outline-none ${NAV_ACTION_CLASS}`}
-              >
-                Araçlar
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              {/* Radar tek kez: bu blok 2026-09-20'ye kadar birebir KOPYALANMIŞTI ve
-                  giriş yapmamış ziyaretçinin menüsünde "Radar | Radar" görünüyordu. */}
-              <Link
-                to="/radar"
-                className={NAV_ACTION_CLASS}
-              >
-                Radar
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              <Link
-                to="/addcom"
-                className={NAV_ACTION_CLASS}
-              >
-                Dijital Gruplar
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              {/* Etkinlik Oluştur — /events/create sayfasına kısayol */}
-              <Link
-                to="/events/create"
-                className={NAV_ACTION_CLASS}
-              >
-                Etkinlik Oluştur
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              {/* Kampanyalar + Yarışmalar: ikisi de /campaign'e gider (bkz. üye menüsü). */}
-              <Link
-                to="/campaign"
-                className={NAV_ACTION_CLASS}
-              >
-                Kampanyalar
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              <Link
-                to="/campaign"
-                className={NAV_ACTION_CLASS}
-              >
-                Yarışmalar
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              <Link
-                to="/founders"
-                className={NAV_ACTION_CLASS}
-              >
-                Biz kimiz?
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              <Link
-                to="/login?mode=login"
-                className={NAV_ACTION_CLASS}
-              >
-                Giriş Yap
-              </Link>
-              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              <Link
-                to="/login?mode=signup"
-                className={NAV_ACTION_CLASS}
-              >
-                Kayıt Ol
-              </Link>
-            </>
-          )}
+        {/* Masaüstü şeridi — md altında GİZLİ, orada çekmece devralır. */}
+        <div className="container mx-auto hidden flex-wrap items-center justify-end gap-x-4 gap-y-1 md:flex lg:px-6">
+          {desktopItems.map((item, index) => (
+            <Fragment key={item.key}>
+              {index > 0 ? (
+                <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              ) : null}
+              {renderDesktopItem(item)}
+            </Fragment>
+          ))}
         </div>
+
+        {/* Mobil: tek "Menü" düğmesi + sağdan açılan ayraçlı çekmece.
+            Çekmece KAPALIYKEN içeriği DOM'a hiç girmez (Radix Dialog), bu
+            yüzden masaüstü şeridiyle çift bağlantı üretmez — aksi halde
+            `getByRole("link", …)` çağıran her test "birden çok öğe" ile
+            düşerdi. */}
+        <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+          <div className="container mx-auto flex items-center justify-end md:hidden">
+            <button
+              type="button"
+              onClick={() => setMobileNavOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={mobileNavOpen}
+              className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white/80 px-3.5 py-1.5 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur transition-colors hover:border-slate-400 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+            >
+              <Menu aria-hidden="true" className="h-4 w-4" />
+              Menü
+            </button>
+          </div>
+          {/* `flex flex-col` + `gap-0`: sheetVariants taban sınıfı `p-6 gap-4`
+              verir; çekmecede bağlantılar kenardan kenara uzanmalı ve uzun
+              listede YALNIZ liste kaymalı (başlık sabit kalmalı). */}
+          <SheetContent
+            side="right"
+            className="flex w-[17.5rem] flex-col gap-0 p-0 sm:max-w-none"
+          >
+            <SheetHeader className="shrink-0 border-b border-slate-200 px-5 py-4 text-left">
+              <SheetTitle className="text-sm font-bold uppercase tracking-[0.2em] text-slate-900">
+                Menü
+              </SheetTitle>
+            </SheetHeader>
+            <nav
+              aria-label="Mobil gezinme"
+              className="flex min-h-0 flex-1 flex-col divide-y divide-slate-200/80 overflow-y-auto"
+            >
+              {mobileItems.map((item, index) =>
+                renderMobileItem(item, index < accountItems.length),
+              )}
+            </nav>
+            {/* Marka imzası — header'ın alt şeridiyle aynı jest. */}
+            <div
+              aria-hidden="true"
+              className="h-[3px] w-full shrink-0"
+              style={{
+                background:
+                  "linear-gradient(90deg, hsl(var(--glow-teal)), hsl(var(--brand-blue)), hsl(var(--brand-indigo)), hsl(var(--brand-pink)), hsl(var(--glow-orange)), hsl(var(--brand-yellow)))",
+              }}
+            />
+          </SheetContent>
+        </Sheet>
       </div>
       {/* Marka satırı: logonun altı kolundan gelen çok yumuşak köşe yıkamaları.
           Ortası beyaza yakın kalır ki logo ve "CorteQS" yazısı zemine karışmasın. */}

@@ -15,6 +15,8 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
+import DemoBadge from "@/components/common/DemoBadge";
+import { isDemoRoute } from "@/lib/demo-pages";
 import { ECOSYSTEM_CARDS } from "./home-trial.data";
 import type { EcosystemAccent, EcosystemIconKey } from "./home-trial.types";
 
@@ -43,19 +45,23 @@ const ACCENT_CLASSES: Record<
 
 const EcosystemRailSection = () => {
   return (
-    <section className="relative mx-auto max-w-6xl px-6 py-20 sm:py-28">
+    // Mobilde bölüm dolgusu ve kart yüksekliği bilinçli olarak küçültüldü
+    // (kullanıcı kararı, 2026-09-20): altı kart alt alta gelince şerit tek
+    // başına iki ekran boyu yer kaplıyordu. `sm`den itibaren ölçüler aynen
+    // eskisi gibidir — masaüstü görünümü DEĞİŞMEDİ.
+    <section className="relative mx-auto max-w-6xl px-6 py-14 sm:py-28">
       <div className="max-w-2xl">
-        <h2 className="font-display text-3xl font-bold leading-[1.1] tracking-[-0.02em] text-foreground sm:text-4xl">
+        <h2 className="font-display text-2xl font-bold leading-[1.1] tracking-[-0.02em] text-foreground sm:text-4xl">
           Sistemin 6 Katmanı
         </h2>
-        <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:mt-4 sm:text-lg">
           İnsanlardan işletmelere, topluluklardan şehir elçilerine — diasporanın her katmanı tek ekosistemde.
           <br />
           Aradığın kişiyi, işletmeyi ya da topluluğu tek yerden bul ve bağlan.
         </p>
       </div>
 
-      <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-7 grid gap-3 sm:mt-12 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
         {ECOSYSTEM_CARDS.map((card) => {
           const Icon = ICONS[card.iconKey];
           const accent = ACCENT_CLASSES[card.accent];
@@ -63,18 +69,32 @@ const EcosystemRailSection = () => {
             <Link
               key={card.title}
               to={card.to}
-              className="glass-tech group flex flex-col rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-glow-teal"
+              // `relative`: DemoBadge `absolute` konumlanır, taşıyıcı olmadan
+              // kartın dışına kaçar.
+              className="glass-tech group relative flex flex-col rounded-2xl p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-glow-teal sm:p-6"
             >
-              <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${accent.iconWrap}`}>
-                <Icon className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <h3 className="mt-5 font-display text-xl font-bold text-foreground">
-                {card.title}
-              </h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
+              {/* Rozet ROTADAN türetilir (`DEMO_ROUTES`), karta elle yazılmaz.
+                  CLAUDE.md'nin kuralı: bant ve rozet tek listeden beslenmeli,
+                  yoksa sayfa demo bandı taşırken ona giden kart rozetsiz kalır. */}
+              {isDemoRoute(card.to) ? <DemoBadge /> : null}
+              {/* Mobilde ikon ve başlık YAN YANA (kullanıcı kararı): ikonun
+                  altındaki ~20px boşluk her kartta tekrarlanıyordu. `sm:block`
+                  ile geniş ekranda eski üst üste düzene döner — `gap` block
+                  düzeninde yok sayılır, başlığın boşluğunu `sm:mt-5` verir. */}
+              <div className="flex items-center gap-3 sm:block">
+                <span
+                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11 ${accent.iconWrap}`}
+                >
+                  <Icon className="h-[18px] w-[18px] sm:h-5 sm:w-5" aria-hidden="true" />
+                </span>
+                <h3 className="font-display text-base font-bold text-foreground sm:mt-5 sm:text-xl">
+                  {card.title}
+                </h3>
+              </div>
+              <p className="mt-2 flex-1 text-[13px] leading-relaxed text-muted-foreground sm:text-sm">
                 {card.description}
               </p>
-              <span className={`mt-5 inline-flex items-center gap-1 text-sm font-semibold ${accent.cta}`}>
+              <span className={`mt-3 inline-flex items-center gap-1 text-[13px] font-semibold sm:mt-5 sm:text-sm ${accent.cta}`}>
                 {card.cta}
                 <ArrowUpRight
                   className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
