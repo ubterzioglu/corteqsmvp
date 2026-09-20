@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Crown, PenLine, Sparkles, Video } from "lucide-react";
+import { DemoBadge } from "@/components/common/DemoBadge";
+import { isDemoRoute } from "@/lib/demo-pages";
 import { PAGE_SEO } from "@/lib/page-seo";
 import { useSeo } from "@/lib/seo";
 
@@ -67,7 +69,10 @@ const CampaignHubPage = () => {
             {/* Cards */}
             <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
               {campaigns.map((c) => (
-                <Link key={c.to} to={c.to} className={cardClass}>
+                <Link key={c.to} to={c.to} className={`relative ${cardClass}`}>
+                  {/* Rozet elle işaretlenmez, DEMO_ROUTES'tan türetilir — kart ile
+                      sayfa bandının ayrışması bu sayede imkânsız. */}
+                  {isDemoRoute(c.to) && <DemoBadge className="-right-2 -top-2" />}
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 mb-5">
                     <c.icon className="w-6 h-6 text-primary" />
                   </div>

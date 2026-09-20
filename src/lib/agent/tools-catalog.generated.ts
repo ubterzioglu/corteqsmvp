@@ -47,6 +47,7 @@ export const toolCatalog = {
         "pretest",
         "preview",
         "preview:emails",
+        "selfhost:limits",
         "social:generate",
         "start",
         "sync:admin-updates",
@@ -2327,6 +2328,16 @@ export const toolCatalog = {
     {
       "path": "src/lib/dashboard/workspace-doc-pages.tsx",
       "kind": "tsx",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/demo-pages.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/demo-pages.ts",
+      "kind": "ts",
       "module_family": "lib"
     },
     {

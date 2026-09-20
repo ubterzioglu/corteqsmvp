@@ -27,6 +27,7 @@
 
 import { Link } from "react-router-dom";
 
+import { DemoBadge } from "@/components/common/DemoBadge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import type { ActionButtonSpec } from "./action-buttons-data";
@@ -66,10 +67,15 @@ export function ActionButtons({
         className={`flex flex-wrap gap-2.5 ${align === "center" ? "justify-center" : "justify-start"} ${className ?? ""}`}
       >
         {buttons.map((button) => {
+          // `relative`: DEMO rozeti köşeye `absolute` oturur (bkz. DemoBadge).
           const shared = {
-            className: `${BUTTON_CLASS} ${button.gradient}`,
+            className: `${BUTTON_CLASS} relative ${button.gradient}`,
             style: { boxShadow: `0 16px 34px -12px ${button.shadow}` },
           };
+          // Rozet düğmenin İÇİNE konur. Düğmeyi bir sarmalayıcıya almak
+          // TooltipTrigger'ın `asChild` hedefini sarmalayıcıya kaydırır ve
+          // ipucu düğmenin kendisinden kopardı.
+          const badge = button.demo ? <DemoBadge /> : null;
 
           return (
             <Tooltip key={button.label}>
@@ -81,10 +87,12 @@ export function ActionButtons({
                     {...shared}
                   >
                     {button.label}
+                    {badge}
                   </Link>
                 ) : (
                   <button type="button" onClick={button.onClick} {...shared}>
                     {button.label}
+                    {badge}
                   </button>
                 )}
               </TooltipTrigger>

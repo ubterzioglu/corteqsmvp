@@ -21,9 +21,9 @@ vi.mock("@/components/auth/useAuth", () => ({
 
 const BETA_BANNER_STORAGE_KEY = "corteqs.site.beta-banner-dismissed.v1";
 const BETA_BANNER_TEXT = "CorteQS açık beta yayında!";
-const renderHeader = () =>
+const renderHeader = (initialPath = "/") =>
   render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[initialPath]}>
       <SiteHeader />
     </MemoryRouter>,
   );
@@ -97,6 +97,34 @@ describe("SiteHeader", () => {
         expectNeutralNavigationColor(screen.getByRole("link", { name }));
       });
       expectNeutralNavigationColor(screen.getByRole("button", { name: "Çıkış" }));
+    });
+  });
+
+  // DEMO deseni (2026-09-20) — bkz. src/lib/demo-pages.ts ve
+  // docs/guides/demo-icerik-deseni.md. Bant ROTADAN türetilir; demo sayfaların
+  // kendisine kod eklenmez, bu yüzden davranış burada doğrulanır.
+  describe("demo bandı", () => {
+    it("demo rotasında çizilir ve sayfayı adıyla söyler", () => {
+      renderHeader("/campaign/vlogger");
+
+      expect(screen.getByText(/Demo sayfa: Vlogger Yarışması/)).toBeInTheDocument();
+    });
+
+    it("demo olmayan rotada çizilmez", () => {
+      renderHeader("/campaign");
+
+      expect(screen.queryByText(/Demo sayfa:/)).not.toBeInTheDocument();
+    });
+
+    // Beta bandı kapatılabilir, demo bandı KAPATILAMAZ — ikisi farklı iştir.
+    it("beta bandı kapatılmış olsa da görünmeye devam eder", () => {
+      window.localStorage.setItem(BETA_BANNER_STORAGE_KEY, "true");
+
+      renderHeader("/campaign/blogger");
+
+      expect(screen.queryByText(BETA_BANNER_TEXT)).not.toBeInTheDocument();
+      expect(screen.getByText(/Demo sayfa: Blogger Yarışması/)).toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /Demo.*kapat/i })).not.toBeInTheDocument();
     });
   });
 

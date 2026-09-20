@@ -2,6 +2,8 @@ import { useCallback, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import { useAuth } from "@/components/auth/useAuth";
+import { DemoBanner } from "@/components/common/DemoBanner";
+import { findDemoRoute } from "@/lib/demo-pages";
 const logo = "/newlogo.png";
 // Q2 (13 Eylül gözle QA): whitespace-nowrap olmadan dar ekranda link METNİ
 // kelime ortasından bölünüyordu ("Geri" / "Bildirim" iki satıra ayrılıp
@@ -47,6 +49,9 @@ export default function SiteHeader() {
   // Lazy initializer: değer İLK render'da okunur; band önce görünüp sonra kaybolmaz
   // (flash yok). useEffect içinde okumak tam olarak o kusuru üretirdi.
   const [betaBannerDismissed, setBetaBannerDismissed] = useState<boolean>(readBetaBannerDismissed);
+  // Demo bandı ROTADAN türetilir; demo sayfalarına kod eklemek gerekmez.
+  // Yeni demo sayfası = src/lib/demo-pages.ts'e bir satır. Bkz. o dosyanın başı.
+  const demoRoute = findDemoRoute(location.pathname);
 
   const dismissBetaBanner = useCallback(() => {
     writeBetaBannerDismissed();
@@ -101,6 +106,9 @@ export default function SiteHeader() {
           </button>
         </div>
       )}
+      {/* Demo bandı beta bandının HEMEN ALTINDA; beta kapatılmış olsa bile çizilir
+          ve KAPATILAMAZ (gerekçe: DemoBanner.tsx dosya başı). */}
+      {demoRoute && <DemoBanner route={demoRoute} />}
       {/* Yeni üst bar — beta uyarısının altında, eski header'ın üstünde; Profilim + Çıkış (sağ üst), beyaz zemin */}
       {/* Gezinme satırı: logonun turkuaz–menekşe ucundan çok düşük yoğunluklu bir
           yıkama. Renk BAĞLANTILARIN üzerinden değil ZEMİNDEN gelir; böylece bağlantı
@@ -152,6 +160,13 @@ export default function SiteHeader() {
                 className={NAV_ACTION_CLASS}
               >
                 Yarışmalar
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              <Link
+                to="/founders"
+                className={NAV_ACTION_CLASS}
+              >
+                Biz kimiz?
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               {/* Geri Bildirim — geldiği sayfa state.from ile /feedback'e taşınır (page_path). */}
@@ -225,6 +240,13 @@ export default function SiteHeader() {
                 className={NAV_ACTION_CLASS}
               >
                 Yarışmalar
+              </Link>
+              <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
+              <Link
+                to="/founders"
+                className={NAV_ACTION_CLASS}
+              >
+                Biz kimiz?
               </Link>
               <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
               <Link

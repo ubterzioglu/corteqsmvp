@@ -357,6 +357,25 @@ Tekrarlayan Türkçe karakter sorunlarının kök nedeni budur. Kurallar:
    karakter). Yeni dosya yazarken `npm run verify:text` BUNU YAKALAMAZ — o yalnız kodlama
    ve mojibake denetler, eksik harfi değil. Gözle kontrol et.
 
+## DEMO içerik deseni (ZORUNLU — 2026-09-20)
+
+Canlıda yayında ama içeriği GERÇEK OLMAYAN sayfalar (örnek ödül/takvim/başvuru)
+tek bir listeden işaretlenir: **`src/lib/demo-pages.ts` → `DEMO_ROUTES`**.
+
+- İki görünür işaret vardır ve ikisi de o listeden türetilir: düğme/kartın sağ
+  üst köşesindeki `DemoBadge` ve sayfaya girince açık beta bandının altına
+  düşen `DemoBanner`. **Uyarıyı sayfaya elle yazma** — `SiteHeader` bandı
+  rotadan kendisi çizer, `CampaignHubPage` rozeti `isDemoRoute()` ile alır.
+- Yeni demo sayfası = `DEMO_ROUTES`'a **bir satır**. Gerçek içeriğe kavuşunca =
+  satırı **sil**. `path` `App.tsx`'teki `path` ile birebir aynı olmalı, yoksa
+  bant hiç çizilmez ve hata hiçbir yerde görünmez.
+- Demo bandı **kapatılamaz** (beta bandı kapatılabilir; ikisi farklı iştir) ve
+  rengi bilerek farklıdır.
+- Sözleşme testi: `src/lib/demo-pages.test.ts` — gevşetme.
+- Tam gerekçe ve akış: `docs/guides/demo-icerik-deseni.md`.
+
+Bugünkü liste: `/campaign/vlogger`, `/campaign/blogger`.
+
 ## Değişmez sözleşmeler (ZORUNLU — 2026-08-04)
 
 Bu beş kural 2026-08-04 modernizasyon çalışmasında ölçülerek konuldu. Her biri sessizce

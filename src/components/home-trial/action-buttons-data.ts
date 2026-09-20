@@ -19,6 +19,11 @@ export interface ActionButtonSpec {
   onClick?: () => void;
   /** Geldiği sayfayı `state.from` ile taşı (SiteHeader'daki desen). */
   carryOrigin?: boolean;
+  /**
+   * Düğmenin götürdüğü içerik şu an DEMO ise sağ üst köşeye "DEMO" rozeti
+   * konur. Kural ve gerekçe: `src/lib/demo-pages.ts` + `DemoBadge.tsx`.
+   */
+  demo?: boolean;
 }
 
 /**
@@ -86,43 +91,45 @@ export const PRIMARY_ACTIONS = {
  * ayrı bir rota açılmadı. Yarışmalara ayrı bir sayfa geldiğinde yalnız `to`
  * değişecek. Aynı hedefli iki düğme olduğu için renkleri de kardeş tonlardır.
  */
-export const QUICK_ACTIONS: ActionButtonSpec[] = [
-  {
+export const SECONDARY_ACTIONS = {
+  campaigns: {
     to: "/campaign",
     label: "Kampanyalar",
     hint: "Founding 1000 erken üyelik programı ve yürüyen tüm CorteQS kampanyaları tek sayfada.",
     gradient: "from-[#D97706] to-[#A85B06]",
     shadow: "rgba(168,91,6,0.55)",
   },
-  {
+  contests: {
     to: "/campaign",
     label: "Yarışmalar",
-    hint: "Vlogger ve blogger yarışmaları — ödüller, katılım koşulları ve başvuru adımları.",
+    hint: "Vlogger ve blogger yarışmaları — ödüller, katılım koşulları ve başvuru adımları. İçerik şu an DEMO.",
     gradient: "from-[#0E9F6E] to-[#047857]",
     shadow: "rgba(4,120,87,0.55)",
+    // Her iki yarışma sayfası da DEMO_ROUTES içinde; rozet bu yüzden var.
+    demo: true,
   },
-  {
+  radar: {
     to: "/radar",
     label: "Radar",
     hint: "Diaspora gündeminden derlenen haberler ve rehberler. Kaynaklar her gün taranır, ülke ve dile göre süzülür.",
     gradient: "from-[#2B7FD4] to-[#1B63B0]",
     shadow: "rgba(27,99,176,0.55)",
   },
-  {
+  groups: {
     to: "/addcom",
     label: "Dijital Gruplar",
     hint: "Şehrine ve ilgi alanına göre WhatsApp, Telegram, LinkedIn ve Discord toplulukları. Kendi grubunu da ücretsiz ekleyebilirsin.",
     gradient: "from-[#6D5BD0] to-[#5442B6]",
     shadow: "rgba(84,66,182,0.55)",
   },
-  {
+  events: {
     to: "/events",
     label: "Etkinlikler",
     hint: "Yurt dışındaki buluşmalar, atölyeler ve networking akşamları. Kendi etkinliğini duyurmak da ücretsiz.",
     gradient: "from-[#E0559B] to-[#C33C82]",
     shadow: "rgba(195,60,130,0.55)",
   },
-  {
+  feedback: {
     to: "/feedback",
     label: "Geri Bildirim",
     hint: "Eksik bulduğun, takıldığın ya da eklenmesini istediğin ne varsa yaz. Her mesaj okunur ve yanıtlanır.",
@@ -130,4 +137,24 @@ export const QUICK_ACTIONS: ActionButtonSpec[] = [
     shadow: "rgba(198,58,45,0.55)",
     carryOrigin: true,
   },
+} satisfies Record<string, ActionButtonSpec>;
+
+/**
+ * İKİ SATIRLIK DÜZENİN İKİNCİ SATIRI — hero ve kapanış kartı AYNI beşliyi çizer.
+ *
+ * Birinci satır her bölümün kendi birincil çağrıları + `SECONDARY_ACTIONS.campaigns`
+ * olur (hero "Ağa Katıl" ile, kapanış kartı "Ücretsiz Kayıt Ol" ile başlar —
+ * tek fark budur). Beşe beş bölme kullanıcı kararıdır, 2026-09-20.
+ *
+ * ⚠️ Buraya altıncı bir düğme eklemek İKİ bölümü birden üçüncü satıra taşırır.
+ * Ölçü: düğme 10rem (160px) + gap 0.625rem (10px) → 5 düğme = 840px; hero
+ * `max-w-4xl` (896px), kapanış kartı `max-w-5xl` bölüm içinde ~880px taşır.
+ * Eklemeden önce iki sarmalayıcının da genişliğini yeniden hesapla.
+ */
+export const ACTION_ROW_TWO: ActionButtonSpec[] = [
+  SECONDARY_ACTIONS.contests,
+  SECONDARY_ACTIONS.radar,
+  SECONDARY_ACTIONS.groups,
+  SECONDARY_ACTIONS.events,
+  SECONDARY_ACTIONS.feedback,
 ];

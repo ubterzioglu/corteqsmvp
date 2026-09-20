@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
@@ -12,32 +12,55 @@ function renderHero() {
   );
 }
 
+/**
+ * Düğme metni yerine HEDEF listesi karşılaştırılır: "Yarışmalar" düğmesi DEMO
+ * rozeti taşıdığı için `textContent` "YarışmalarDEMO" döner ve metne dayalı bir
+ * iddia rozet eklendiği anda sahte biçimde kırılırdı.
+ */
+const hrefsIn = (nav: HTMLElement) =>
+  Array.from(nav.querySelectorAll("a")).map((anchor) => anchor.getAttribute("href"));
+
 describe("ana sayfa hero", () => {
-  it("üç birincil çağrıyı çizer", () => {
+  it("birincil çağrıları çizer", () => {
     renderHero();
     expect(screen.getByRole("link", { name: /Ağa Katıl/ })).toHaveAttribute("href", "/login?mode=signup");
     expect(screen.getByRole("link", { name: /Araçlar!/ })).toHaveAttribute("href", "/tools");
     expect(screen.getByRole("button", { name: /Ağı keşfet/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Biz kimiz\?/ })).toHaveAttribute("href", "/founders");
   });
 
-  it("ikincil kısayol şeridi üst menüdeki hedeflere gider", () => {
+  // Kullanıcı kararı 2026-09-20: hero'daki düğmeler TAM İKİ SATIR, 5 + 5.
+  // Satır başına düşen sayı değişirse düzen sözleşmesi bozulur.
+  it("düğmeleri iki satıra beşer beşer böler", () => {
     renderHero();
-    const nav = screen.getByRole("navigation", { name: "Hızlı erişim" });
 
-    const targets = Array.from(nav.querySelectorAll("a")).map((anchor) => [
-      anchor.textContent,
-      anchor.getAttribute("href"),
-    ]);
+    const rowOne = screen.getByRole("navigation", { name: "Ana eylemler" });
+    const rowTwo = screen.getByRole("navigation", { name: "Hızlı erişim" });
 
-    expect(targets).toEqual([
-      // Kampanyalar ve Yarışmalar BİLEREK aynı hedefe gider (bkz. action-buttons-data.ts).
-      ["Kampanyalar", "/campaign"],
-      ["Yarışmalar", "/campaign"],
-      ["Radar", "/radar"],
-      ["Dijital Gruplar", "/addcom"],
-      ["Etkinlikler", "/events"],
-      ["Geri Bildirim", "/feedback"],
-    ]);
+    // "Ağı keşfet" bir <button> (aynı sayfada kaydırır), bu yüzden link sayısı 4.
+    expect(hrefsIn(rowOne)).toEqual(["/login?mode=signup", "/tools", "/founders", "/campaign"]);
+    expect(within(rowOne).getAllByRole("button")).toHaveLength(1);
+
+    expect(hrefsIn(rowTwo)).toEqual(["/campaign", "/radar", "/addcom", "/events", "/feedback"]);
+  });
+
+  // Kampanyalar ve Yarışmalar bilerek AYNI hedefe gider (action-buttons-data.ts).
+  it("Kampanyalar ve Yarışmalar aynı hedefi paylaşır", () => {
+    renderHero();
+
+    expect(screen.getByRole("link", { name: /Kampanyalar/ })).toHaveAttribute("href", "/campaign");
+    expect(screen.getByRole("link", { name: /Yarışmalar/ })).toHaveAttribute("href", "/campaign");
+  });
+
+  // DEMO deseni (bkz. src/lib/demo-pages.ts): yarışma içeriği gerçek değil,
+  // düğme bunu rozetle söylemeli.
+  it("Yarışmalar düğmesi DEMO rozeti taşır, Kampanyalar taşımaz", () => {
+    renderHero();
+
+    expect(within(screen.getByRole("link", { name: /Yarışmalar/ })).getByText("DEMO")).toBeInTheDocument();
+    expect(
+      within(screen.getByRole("link", { name: /Kampanyalar/ })).queryByText("DEMO"),
+    ).not.toBeInTheDocument();
   });
 
   it("Araçlar kısayol şeridinde TEKRARLANMAZ", () => {

@@ -6,7 +6,27 @@
  */
 
 import { ActionButtons } from "./ActionButtons";
-import { PRIMARY_ACTIONS, QUICK_ACTIONS } from "./action-buttons-data";
+import { ACTION_ROW_TWO, PRIMARY_ACTIONS, SECONDARY_ACTIONS } from "./action-buttons-data";
+
+// Hero'da düğmeler TAM İKİ SATIR çizilir (kullanıcı kararı, 2026-09-20). Onuncu
+// düğme eklenince kendiliğinden üçüncü satıra taşardı; bu yüzden bölme elle
+// yapılır ve iki satır EŞİT uzunlukta (5 + 5) tutulur.
+//
+// Ölçü: düğme 10rem (160px) + gap 0.625rem (10px) → 5 düğme = 5×160 + 4×10 = 840px.
+// Sarmalayıcı bu yüzden `max-w-4xl` (896px); `max-w-xl` (576px) ile satır başına
+// yalnız 3 düğme sığıyordu. Yeni düğme eklersen bu aritmetiği tekrar yap, yoksa
+// "iki satır" sözleşmesi sessizce bozulur.
+const HERO_ROW_ONE = [
+  PRIMARY_ACTIONS.join,
+  PRIMARY_ACTIONS.tools,
+  PRIMARY_ACTIONS.explore,
+  PRIMARY_ACTIONS.founders,
+  SECONDARY_ACTIONS.campaigns,
+];
+
+// İkinci satır kapanış kartıyla PAYLAŞILIR — iki bölümün ayrışmaması için
+// burada tekrar yazılmaz (bkz. action-buttons-data.ts → ACTION_ROW_TWO).
+const HERO_ROW_TWO = ACTION_ROW_TWO;
 
 // Telifsiz soyut "beyaz geometrik ağ" hero videosu (Pexels #29718114, telifsiz).
 // Açık zemin → metin koyu, gradyan örtü beyaz tarafta. Yeni videoyu aynı isimle
@@ -76,10 +96,15 @@ const HeroNetworkSection = () => {
             Berlin'den Sidney'e, Toronto'dan Dubai'ye insanları, toplulukları ve işletmeleri
             tek bir güven ağında buluşturuyoruz. Bir dizin değil, yaşayan bir ağ.
           </p>
+        </div>
 
-          {/* Birincil eylemler — ikincil kısayollarla AYNI ölçüde (bkz. ActionButtons). */}
-          <ActionButtons buttons={[PRIMARY_ACTIONS.join, PRIMARY_ACTIONS.tools, PRIMARY_ACTIONS.explore]} className="mt-7 max-w-xl" ariaLabel="Ana eylemler" />
-          <ActionButtons buttons={QUICK_ACTIONS} className="mt-2.5 max-w-xl" ariaLabel="Hızlı erişim" />
+        {/* Düğmeler metin kolonunun DIŞINDA durur. İçeride kalsalardı ebeveynin
+            `max-w-2xl` (672px) sınırı `max-w-4xl`'i yutar ve beş düğmelik satır
+            yine üçe bölünürdü — "iki satır" sözleşmesi sessizce bozulurdu. */}
+        <div className="max-w-4xl text-left">
+          {/* İki satır, her biri 5 düğme — bkz. dosya başındaki ölçü notu. */}
+          <ActionButtons buttons={HERO_ROW_ONE} className="mt-7" ariaLabel="Ana eylemler" />
+          <ActionButtons buttons={HERO_ROW_TWO} className="mt-2.5" ariaLabel="Hızlı erişim" />
         </div>
       </div>
     </section>
