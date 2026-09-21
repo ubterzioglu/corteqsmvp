@@ -30,7 +30,7 @@ import {
 } from "./cadde-internal";
 import { normalizeCaddeMedia } from "./cadde-media";
 import type { CaddeFeedReach } from "./cadde-reach";
-import { moderateCaddeCafeName } from "./cadde-rules";
+import { mapActorContext, moderateCaddeCafeName, type CaddeActorContext } from "./cadde-rules";
 import {
   caddeCafeCreateSchema,
   caddeCafeJoinInputSchema,
@@ -79,6 +79,12 @@ import type {
   CaddeSponsoredPlacement,
   CaddeSponsoredRow,
 } from "./cadde-types";
+
+export async function getCaddeActorContext(): Promise<CaddeActorContext | null> {
+  const { data, error } = await db.rpc("get_cadde_actor_context" as never);
+  if (error) throw error;
+  return mapActorContext(data);
+}
 
 const emptyReactions = (): Record<CaddeReactionType, number> =>
   Object.fromEntries(CADDE_REACTION_TYPES.map((reactionType) => [reactionType, 0])) as Record<CaddeReactionType, number>;
