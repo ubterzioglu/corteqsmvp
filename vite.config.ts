@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
@@ -24,6 +24,39 @@ const createRedirectStub = (target: string) =>
     `<title>CorteQS</title></head>`,
     `<body><a href="${target}">${target}</a></body></html>`,
   ].join("");
+
+const commercialLegacyHtmlRedirects: Plugin = {
+  name: "commercial-legacy-html-redirects",
+  generateBundle() {
+    for (const slug of commercialDocumentSlugs) {
+      const stub = createRedirectStub(`/commercial/${slug}`);
+
+      this.emitFile({
+        type: "asset",
+        fileName: `commercial/${slug}.html`,
+        source: stub,
+      });
+
+      this.emitFile({
+        type: "asset",
+        fileName: `${slug}.html`,
+        source: stub,
+      });
+    }
+
+    this.emitFile({
+      type: "asset",
+      fileName: "commercial.html",
+      source: createRedirectStub("/commercial"),
+    });
+
+    this.emitFile({
+      type: "asset",
+      fileName: "commercial/index.html",
+      source: createRedirectStub("/commercial"),
+    });
+  },
+};
 
 export default defineConfig(({ mode }) => ({
   server: {
@@ -78,38 +111,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    {
-      name: "commercial-legacy-html-redirects",
-      generateBundle() {
-        for (const slug of commercialDocumentSlugs) {
-          const stub = createRedirectStub(`/commercial/${slug}`);
-
-          this.emitFile({
-            type: "asset",
-            fileName: `commercial/${slug}.html`,
-            source: stub,
-          });
-
-          this.emitFile({
-            type: "asset",
-            fileName: `${slug}.html`,
-            source: stub,
-          });
-        }
-
-        this.emitFile({
-          type: "asset",
-          fileName: "commercial.html",
-          source: createRedirectStub("/commercial"),
-        });
-
-        this.emitFile({
-          type: "asset",
-          fileName: "commercial/index.html",
-          source: createRedirectStub("/commercial"),
-        });
-      },
-    },
+    commercialLegacyHtmlRedirects,
     mode === "development" && componentTagger(),
     ViteImageOptimizer({
       png: { quality: 80 },
