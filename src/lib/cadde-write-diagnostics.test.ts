@@ -16,6 +16,7 @@ import { describe, expect, it } from "vitest";
 
 const API_FILES = [
   "src/lib/cadde-api.ts",
+  "src/lib/cadde-engagement-api.ts",
   "src/lib/cadde-carsi-api.ts",
   "src/lib/cadde-moderation-api.ts",
   "src/lib/cadde-tanitim-api.ts",
