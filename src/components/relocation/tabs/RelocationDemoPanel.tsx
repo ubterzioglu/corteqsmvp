@@ -20,7 +20,10 @@ export function RelocationDemoPanel({ items, note }: RelocationDemoPanelProps) {
     <div className="space-y-4">
       <div className="flex items-start gap-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-3">
         <Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
-        <p className="text-xs text-amber-900 dark:text-amber-200">{note}</p>
+        <div className="space-y-1 text-xs text-amber-900 dark:text-amber-200">
+          <p>{note}</p>
+          <p>Bu örnek içerik resmî belge listesinin yerini tutmaz.</p>
+        </div>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
