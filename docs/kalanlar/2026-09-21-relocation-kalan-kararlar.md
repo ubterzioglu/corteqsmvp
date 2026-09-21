@@ -144,6 +144,18 @@ değil ama **sahipsiz kalmasın diye** buraya yazıldı; biri üstlenince silinm
 
 ## ⚠️ Bu işin dışında — deploy'u kırabilecek bir risk
 
+> ⚠️ **Bu bölümün TEŞHİSİ 21.09 akşamı çürüdü — bkz.
+> [master](2026-09-21-KALANLAR.md).** Risk gerçek ve tıkayıcı, ama sebep başka:
+>
+> - `scripts/ai-knowledge/text-extract.mjs` **artık temiz ve commit'li**
+>   (`String.fromCharCode(0xc4)` kullanıyor). Orada yapılacak iş kalmadı.
+> - `verify:text`'i bugün kıran tek dosya
+>   `docs/plans/2026-09-21-clean-code-repo-taramasi-plani.md`'dir (satır 7 ve 19) —
+>   yani aşağıda anlatılan "alıntılama" tuzağı **ikinci kez** yaşandı.
+> - `tsc` **0 hata** veriyor; "5 hata" iddiası çürüdü.
+>
+> İş master'da **B01**'dir. Aşağıdaki anlatım tarihsel kayıt olarak duruyor.
+
 Ölçüldü 21 Eylül, **hiçbirine dokunulmadı**; sahibi paralel bir oturum.
 
 `Dockerfile` → `RUN npm run build` → `prebuild` → **`verify:text`**. Yani
