@@ -83,6 +83,23 @@ export async function getMove(moveId: string): Promise<RelocationMoveRow> {
   return data as RelocationMoveRow;
 }
 
+/** Aktif taşınma lokasyonlarında bulunan benzersiz hedef ülke kodları. */
+export async function listActiveRelocationCountryCodes(): Promise<string[]> {
+  const { data, error } = await db
+    .from("relocation_locations")
+    .select("country_code")
+    .eq("is_active", true);
+  if (error) throw error;
+
+  return Array.from(
+    new Set(
+      (data ?? [])
+        .map((row: { country_code: string | null }) => row.country_code?.trim())
+        .filter((code): code is string => Boolean(code)),
+    ),
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Öneriler (RPC — kural skoru + açıklamalar DB'de hesaplanır)
 // ---------------------------------------------------------------------------

@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -13,6 +12,7 @@ import {
   getChecklist,
   getEmergencyContacts,
   getMove,
+  listActiveRelocationCountryCodes,
   listMoves,
   recordInteraction,
 } from "@/lib/relocation-api";
@@ -45,9 +45,6 @@ import {
   DEMO_WELCOME_PACK,
 } from "@/lib/relocation-demo-content";
 
- 
-const db = supabase;
-
 const SERVICE_CATEGORIES: RelocationServiceCategory[] = [
   "housing",
   "airline",
@@ -63,21 +60,6 @@ const SERVICE_CATEGORIES: RelocationServiceCategory[] = [
  * içeriğin canlıda unutulması bu yüzden mümkün değildir.
  */
 const SHOW_DEMO_TABS = isDemoRoute("/relocation");
-
-/** Aktif lokasyonlardaki distinct ISO alpha-2 ülke kodları. */
-async function fetchCountryCodes(): Promise<string[]> {
-  const { data, error } = await db
-    .from("relocation_locations")
-    .select("country_code")
-    .eq("is_active", true);
-  if (error) throw error;
-  const codes = new Set<string>();
-  for (const row of (data ?? []) as Array<{ country_code: string | null }>) {
-    const code = row.country_code?.trim();
-    if (code) codes.add(code);
-  }
-  return Array.from(codes);
-}
 
 export default function RelocationHomePage() {
   const { toast } = useToast();
@@ -106,7 +88,7 @@ export default function RelocationHomePage() {
 
   const countryCodesQuery = useQuery({
     queryKey: [...relocationKeys.all, "country-codes"],
-    queryFn: fetchCountryCodes,
+    queryFn: listActiveRelocationCountryCodes,
   });
   const geoCountriesQuery = useGeoCountries(true);
   const countryOptions = useMemo(
