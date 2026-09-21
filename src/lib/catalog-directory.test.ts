@@ -296,6 +296,19 @@ describe("catalog-directory", () => {
     it("Türkçe katlama SQL tarafında da uygulanır", () => {
       expect(migration).toContain("catalog_search_normalize");
     });
+
+  });
+
+  it("B07 placeholder kayıtlarını eler ve null featured filtresini kapalı sayar", () => {
+    const placeholderMigration = readMigrationSource(
+      [
+        "supabase/migrations/applied/20260921120000_directory_exclude_placeholders.sql",
+        "supabase/migrations/20260921120000_directory_exclude_placeholders.sql",
+      ],
+    );
+
+    expect(placeholderMigration).toContain("coalesce(p_featured_only, false)");
+    expect(placeholderMigration).toMatch(/ci\.is_placeholder\s*=\s*false/);
   });
 
   it("TS önekleri, dizin RPC'sindeki SQL koşuluyla aynı kalır (SQL↔TS ayna sözleşmesi)", () => {
