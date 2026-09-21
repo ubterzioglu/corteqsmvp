@@ -75,4 +75,17 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
+  // C11.2: veri erişimi API katmanına taşınmış yüzeylerde `any` geri gelemez.
+  {
+    files: [
+      "src/pages/relocation/**/*.{ts,tsx}",
+      "src/components/relocation/**/*.{ts,tsx}",
+      "src/hooks/useCurrentUserProfile.ts",
+      "src/hooks/useCurrentUserDashboard.ts",
+      "src/hooks/useFeatureFlags.ts",
+    ],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "error",
+    },
+  },
 );
