@@ -42,6 +42,7 @@ import {
 } from "./cadde-schemas";
 import { validatePostInterests } from "./cadde-targeting";
 import { CADDE_REACTION_TYPES } from "./cadde-types";
+export { listCaddeCities, listCaddeCountries, listCaddeFeed } from "./cadde-feed-location-api";
 import type {
   CaddeBillboardCard,
   CaddeBillboardRow,
@@ -109,95 +110,6 @@ function applyDemoFilters<T extends { country: string | null; city: string | nul
     if (filters.cities.length && (!item.city || !filters.cities.includes(item.city))) return false;
     return true;
   });
-}
-
-export async function listCaddeCountries(): Promise<CaddeCountry[]> {
-  if (!isSupabaseConfigured) return DEMO_COUNTRIES;
-
-  try {
-    const { data, error } = await db.from("cadde_countries").select("id, code, name, sort_order").eq("is_active", true).order("sort_order", { ascending: true });
-    if (error) throw error;
-    return (data as CaddeCountryRow[]).map((row) => ({ id: row.id, code: row.code, name: row.name }));
-  } catch (error: unknown) {
-    reportCaddeApiError("listCaddeCountries", error);
-    return [];
-  }
-}
-
-/** Seçili ülkelerin şehirleri (boş liste = tüm aktif şehirler). Alfabetik (tr) sıralı döner. */
-export async function listCaddeCities(countryNames: string[] = []): Promise<CaddeCity[]> {
-  const sortAlphabetically = (cities: CaddeCity[]): CaddeCity[] =>
-    [...cities].sort((left, right) => left.name.localeCompare(right.name, "tr"));
-
-  if (!isSupabaseConfigured) {
-    if (countryNames.length === 0) return sortAlphabetically(DEMO_CITIES);
-    const countryIds = new Set(
-      DEMO_COUNTRIES.filter((country) => countryNames.includes(country.name)).map((country) => country.id),
-    );
-    return sortAlphabetically(DEMO_CITIES.filter((city) => countryIds.has(city.countryId)));
-  }
-
-  try {
-    const countryIds = await resolveCountryIdsByNames(countryNames);
-    let query = db.from("cadde_cities").select("id, country_id, name, timezone, sort_order").eq("is_active", true);
-    if (countryIds.length > 0) query = query.in("country_id", countryIds);
-    const { data, error } = await query;
-    if (error) throw error;
-    return sortAlphabetically(
-      (data as CaddeCityRow[]).map((row) => ({ id: row.id, countryId: row.country_id, name: row.name, timezone: row.timezone })),
-    );
-  } catch (error: unknown) {
-    reportCaddeApiError("listCaddeCities", error);
-    return [];
-  }
-}
-
-/**
- * Feed okuma (Faz 3): real mod list_cadde_feed_v1 RPC'sinden gelir — band/skor/deterministik
- * random ve stabil cursor pagination DB'de hesaplanır (TS aynası: cadde-ranking.ts).
- * Demo mod istemci tarafında sayfa numarasıyla çalışmaya devam eder.
- */
-export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeFeedPageParam, currentUserId: string | null, diasporaKey = "tr"): Promise<CaddeFeedPage> {
-  if (!isSupabaseConfigured || filters.mode === "demo") {
-    const page = typeof pageParam === "number" ? pageParam : 1;
-    const filtered = applyDemoFilters(DEMO_POSTS, filters);
-    const start = (page - 1) * CADDE_PAGE_SIZE;
-    const items = filtered.slice(start, start + CADDE_PAGE_SIZE).map(stripEagerComments);
-    return { items, nextPage: start + CADDE_PAGE_SIZE < filtered.length ? page + 1 : null };
-  }
-
-  try {
-    const cursor = pageParam !== null && typeof pageParam === "object" ? pageParam : null;
-    const { data, error } = await db.rpc("list_cadde_feed_v1", {
-      p_filters: {
-        countries: filters.countries,
-        cities: filters.cities,
-        bridge: filters.bridge,
-        diaspora: diasporaKey,
-        hashtag: filters.hashtag,
-        scope: filters.scope,
-      },
-      p_cursor: cursor,
-      p_limit: CADDE_PAGE_SIZE,
-    });
-    if (error) throw error;
-
-    const payload = (data ?? { items: [], nextCursor: null }) as { items: CaddeFeedRpcItem[]; nextCursor: CaddeFeedCursor | null };
-    const rows = payload.items ?? [];
-    const postIds = rows.map((row) => row.id);
-    const [reactions, shareCounts, authorNames] = await Promise.all([
-      fetchPostReactions(postIds),
-      fetchPostShareCounts(postIds),
-      fetchUserNameMap(rows.map((row) => row.author_user_id).filter(Boolean) as string[], currentUserId ? [currentUserId] : []),
-    ]);
-
-    const items = rows.map((row) => mapRpcPost(row, reactions, new Map(), shareCounts, [], authorNames, currentUserId));
-    return { items, nextPage: payload.nextCursor ?? null };
-  } catch (error: unknown) {
-    // Boş sayfa DÖNMEZ: feed sayfanın tamamını besleyen birincil yüzeydir; boş dönmek
-    // hatayı "içerik yok"tan ayırt edilemez kılıyordu (bkz. caddeReadError açıklaması).
-    throw caddeReadError("listCaddeFeed", error);
-  }
 }
 
 async function fetchCountryMap(): Promise<Map<string, string>> {
