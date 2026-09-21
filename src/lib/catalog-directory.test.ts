@@ -14,6 +14,40 @@ import { readFileSync } from "node:fs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const rpcMock = vi.fn();
+const DIRECTORY_SEARCH_MIGRATION_CANDIDATES = [
+  "supabase/migrations/applied/20260921090000_directory_search_anon_normalized.sql",
+  "supabase/migrations/20260921090000_directory_search_anon_normalized.sql",
+  "supabase/migrations/archive/20260921090000_directory_search_anon_normalized.sql",
+] as const;
+
+function readMigrationSource(
+  candidates: readonly string[],
+  readSource: (path: string) => string = (path) => readFileSync(path, "utf8"),
+): string {
+  for (const candidate of candidates) {
+    try {
+      return readSource(candidate);
+    } catch {
+      // Migration bir sonraki aday konumunda olabilir.
+    }
+  }
+
+  throw new Error(`Migration bulunamadı: ${candidates.join(" | ")}`);
+}
+
+describe("migration aday yolu çözümü", () => {
+  it("migration taşındığında sonraki mevcut adaydan okumaya devam eder", () => {
+    const canonicalPath = "supabase/migrations/applied/example.sql";
+    const legacyPath = "supabase/migrations/example.sql";
+    const readSource = vi.fn((path: string) => {
+      if (path === canonicalPath) throw new Error("ENOENT");
+      return "migration sql";
+    });
+
+    expect(readMigrationSource([canonicalPath, legacyPath], readSource)).toBe("migration sql");
+    expect(readSource).toHaveBeenCalledTimes(2);
+  });
+});
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
@@ -214,10 +248,7 @@ describe("catalog-directory", () => {
   });
 
   describe("dizin RPC'si — anonim erişim ve PII sözleşmesi (Batch 0 + 3)", () => {
-    const migration = readFileSync(
-      "supabase/migrations/applied/20260921090000_directory_search_anon_normalized.sql",
-      "utf8",
-    );
+    const migration = readMigrationSource(DIRECTORY_SEARCH_MIGRATION_CANDIDATES);
 
     it("anonim çağrıyı engelleyen 42501 koşulu gövdede KALMAMALI", () => {
       expect(migration).not.toContain("authentication required");
