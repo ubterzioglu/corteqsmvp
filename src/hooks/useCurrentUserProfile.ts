@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { useAuth } from "@/components/auth/useAuth";
-import { supabase } from "@/integrations/supabase/client";
 import { mapCurrentUserProfilePayload, type CurrentUserProfilePayload } from "@/lib/member-profile";
+import { getCurrentUserProfile } from "@/lib/current-user-api";
 
 export const useCurrentUserProfile = (enabled = true) => {
   const { user, isLoading: isAuthLoading } = useAuth();
@@ -21,16 +21,13 @@ export const useCurrentUserProfile = (enabled = true) => {
     setIsLoading(true);
     setErrorMessage(null);
 
-    const { data, error } = await supabase.rpc("get_current_user_profile");
-
-    if (error) {
+    try {
+      const data = await getCurrentUserProfile();
+      setProfile(mapCurrentUserProfilePayload(data));
+    } catch (error) {
       setProfile(null);
-      setErrorMessage(error.message);
-      setIsLoading(false);
-      return;
+      setErrorMessage(error instanceof Error ? error.message : "Profil yüklenemedi");
     }
-
-    setProfile(mapCurrentUserProfilePayload(data));
     setIsLoading(false);
   }, [enabled, user]);
 

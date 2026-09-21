@@ -1,18 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { useAuth } from "@/components/auth/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { getCurrentUserDashboard, type CurrentUserDashboardFeature } from "@/lib/current-user-api";
 
-export type CurrentUserDashboardFeature = {
-  feature_key: string;
-  label: string;
-  description: string | null;
-  scope: string;
-  feature_type: string;
-  is_enabled: boolean;
-  source: string;
-  sort_order: number;
-};
+export type { CurrentUserDashboardFeature } from "@/lib/current-user-api";
 
 export const useCurrentUserDashboard = (enabled = true) => {
   const { user, isLoading: isAuthLoading } = useAuth();
@@ -31,16 +22,13 @@ export const useCurrentUserDashboard = (enabled = true) => {
     setIsLoading(true);
     setErrorMessage(null);
 
-    const { data, error } = await supabase.rpc("get_current_user_dashboard");
-
-    if (error) {
+    try {
+      const data = await getCurrentUserDashboard();
+      setItems((data ?? []).filter((item) => item.is_enabled));
+    } catch (error) {
       setItems([]);
-      setErrorMessage(error.message);
-      setIsLoading(false);
-      return;
+      setErrorMessage(error instanceof Error ? error.message : "Panel yüklenemedi");
     }
-
-    setItems((data ?? []).filter((item) => item.is_enabled));
     setIsLoading(false);
   }, [enabled, user]);
 

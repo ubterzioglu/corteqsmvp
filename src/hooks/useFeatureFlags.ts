@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useAuth } from "@/components/auth/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { getCurrentUserFeatures } from "@/lib/current-user-api";
 import {
   APP_FEATURE_KEY_LIST,
   INDIVIDUAL_FEATURE_KEY_LIST,
@@ -41,35 +41,24 @@ export const useFeatureFlags = (enabled = true) => {
     setIsLoading(true);
     setErrorMessage(null);
 
-    const { data, error } = await supabase.rpc("get_current_user_features");
+    try {
+      const data = await getCurrentUserFeatures();
+      const nextMap: FeatureStateMap = {};
+      const rows = data ?? [];
 
-    if (error) {
-      setFeatureMap({});
-      setErrorMessage(error.message);
-      setIsLoading(false);
-      return;
-    }
-
-    const nextMap: FeatureStateMap = {};
-    const rows = (data ?? []) as FeatureRow[];
-
-    for (const row of rows) {
-      if (!APP_FEATURE_KEY_LIST.includes(row.feature_key as AppFeatureKey)) {
-        continue;
+      for (const row of rows) {
+        if (!APP_FEATURE_KEY_LIST.includes(row.feature_key as AppFeatureKey)) continue;
+        const source: FeatureSource =
+          row.source === "override" || row.source === "role_default" || row.source === "fallback"
+            ? row.source
+            : "fallback";
+        nextMap[row.feature_key as AppFeatureKey] = { isEnabled: Boolean(row.is_enabled), source };
       }
-
-      const source: FeatureSource =
-        row.source === "override" || row.source === "role_default" || row.source === "fallback"
-          ? row.source
-          : "fallback";
-
-      nextMap[row.feature_key as AppFeatureKey] = {
-        isEnabled: Boolean(row.is_enabled),
-        source,
-      };
+      setFeatureMap(nextMap);
+    } catch (error) {
+      setFeatureMap({});
+      setErrorMessage(error instanceof Error ? error.message : "Özellikler yüklenemedi");
     }
-
-    setFeatureMap(nextMap);
     setIsLoading(false);
   }, [enabled, user]);
 
