@@ -10,6 +10,7 @@ import {
 } from "@/lib/cadde-engagement-api";
 import * as caddeApi from "@/lib/cadde-api";
 import { listCaddeCities, listCaddeCountries, listCaddeFeed } from "@/lib/cadde-feed-location-api";
+import { getCaddeSponsoredPlacement, listCaddeBillboardCards } from "@/lib/cadde-promotion-api";
 
 describe("Cadde API facade", () => {
   it("keeps the documented public surface stable for callers", () => {
@@ -28,5 +29,10 @@ describe("Cadde API facade", () => {
     expect(caddeApi.recordCaddeShare).toBe(recordCaddeShare);
     expect(caddeApi.reportCaddeEntity).toBe(reportCaddeEntity);
     expect(caddeApi.countCaddePostsSince).toBe(countCaddePostsSince);
+  });
+
+  it("routes promotion reads through their module without changing the facade", () => {
+    expect(caddeApi.listCaddeBillboardCards).toBe(listCaddeBillboardCards);
+    expect(caddeApi.getCaddeSponsoredPlacement).toBe(getCaddeSponsoredPlacement);
   });
 });
