@@ -20,6 +20,7 @@ import { muhasebeNavGroup } from "./admin-navigation-registry/muhasebe";
 import { serviceFinderNavGroup } from "./admin-navigation-registry/service-finder";
 import { relocationIngestionNavGroup } from "./admin-navigation-registry/relocation-ingestion";
 import { radarNavGroup } from "./admin-navigation-registry/radar";
+import { kadroNavGroup } from "./admin-navigation-registry/kadro";
 import { linksNavGroup } from "./admin-navigation-registry/links";
 import { systemNavGroup } from "./admin-navigation-registry/system";
 
@@ -35,6 +36,7 @@ export const adminNavGroups: AdminNavGroup[] = [
   serviceFinderNavGroup,
   relocationIngestionNavGroup,
   radarNavGroup,
+  kadroNavGroup,
   linksNavGroup,
   systemNavGroup,
 ];

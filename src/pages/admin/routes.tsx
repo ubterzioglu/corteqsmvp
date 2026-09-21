@@ -73,6 +73,7 @@ const AdminRoleManagementPage = lazy(() => import("@/pages/admin/AdminRoleManage
 const AdminRolesOverviewPage = lazy(() => import("@/pages/admin/AdminRolesOverviewPage"));
 import { adminCaddeRoutes } from "@/pages/admin/cadde/routes";
 import { radarRoutes } from "@/pages/admin/radar/routes";
+import { adminKadroRoutes } from "@/pages/admin/kadro/routes";
 const AdminConsulateProfilesPage = lazy(() => import("@/pages/admin/AdminConsulateProfilesPage"));
 const AdminCatalogPage = lazy(() => import("@/pages/admin/AdminCatalogPage"));
 const AdminDatabaseTablesPage = lazy(() => import("@/pages/admin/AdminDatabaseTablesPage"));
@@ -163,6 +164,7 @@ export const adminRoutes = (
     {serviceFinderRoutes}
     {relocationAdminRoutes}
     {radarRoutes}
+    {adminKadroRoutes}
     <Route path="*" element={<NotFound />} />
   </Route>
 );
