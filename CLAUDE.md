@@ -159,6 +159,49 @@ Migration: `20260904200000_profil_ws1_form_alanlari.sql`.
    detayında görünür). `REFERRAL_SOURCE_OPTIONS` etiket sözlüğü olarak DURUR — geçmiş
    satırları göstermek için gerekir, silme.
 
+### Dizin araması ANONİME AÇIKTIR (canlı 2026-09-21)
+
+Migration: `applied/20260921090000_directory_search_anon_normalized.sql`.
+Plan: `docs/plans/2026-09-20-dizin-arama-plani.md`.
+
+1. **`search_directory_catalog` artık giriş istemez.** Gövdedeki
+   `raise exception 'authentication required' ... 42501` KALDIRILDI. `anon`'un
+   EXECUTE grant'i zaten vardı — "grant ekle" diye bir iş yok, engel gövdedeydi.
+   `DirectoryPage` ziyaretçi için de sorgu atar; `DiasporaSearchBar` ve
+   `DiasporaSearchSection` artık `/login?next=`'e YÖNLENDİRMEZ. Üçü aynı
+   sözleşmededir — birini değiştirirsen üçünü birden değiştir.
+2. **Fonksiyon 7 argümanlıdır** (`p_limit`, `p_offset` eklendi) ve 5 argümanlı
+   sürüm DROP edildi. İkisini birden bırakma: PostgREST aşırı yükleme arasında
+   karar veremez. Sayfa tavanı **100**; `DIRECTORY_MAX_PAGE_SIZE`
+   (`src/lib/catalog-directory.ts`) bu sayıyla BİREBİR aynı olmalıdır ve
+   `catalog-directory.test.ts` bunu kilitler.
+3. **Sayaç ayrı sorgu DEĞİLDİR.** `total_count` pencere fonksiyonuyla sonuç
+   kümesinden döner; `getTotalDirectoryCount()` aynı RPC'yi `p_limit=1` ile
+   çağırır. Ayrı bir `catalog_items` sayımı yazma — tam olarak o ayrışma ana
+   sayfada "645+ kayıt" yazarken dizinde 237 kayıt gösterilmesine yol açtı.
+4. **B20 yönetici elemesi artık HER İKİ dalda SQL'de.** Eskiden yalnız Branch 2
+   (bireysel profil) vardı; Branch 1'de `Admin_ContentModerator` rolüyle bir
+   kayıt `is_directory_visible=true` kaldığı için SQL filtresinden GEÇİYORDU ve
+   onu gizleyen tek şey TS'teki `isPublicDirectoryRole` guard'ıydı. RPC anonime
+   açıldığı için bu artık kabul edilemezdi. TS guard'ı ikinci savunma olarak
+   DURUR — silme.
+5. ⚠️ **`catalog_search_documents.search_text` aramada KULLANILMAZ.** O blob
+   `catalog_item_contacts.contact_value` (is_public) değerlerini içerir (canlıda
+   336 açık iletişim kaydı); anonime açık aramada taranması e-posta/telefon
+   doğrulama (enumeration) yüzeyi açar. Aranan metin RPC içinde AÇIKÇA kurulur;
+   csd'den yalnız PII'siz türetilmiş kolonlar alınır (`city`, `country_code`,
+   `category_slugs`). `search_catalog` ve `catalog_rebuild_search_document`
+   DEĞİŞMEDİ.
+6. **Eşleşme ELEMEZ, SIRALAR.** `catalog_search_normalize()` (= `lower(unaccent(...))`)
+   ile hem sorgu hem belge katlanır; `match_rank` 0=tam başlık, 1=başlık öneki,
+   2=tüm kelimeler, 3=kısmi. Eski katı AND + ham `ilike` davranışı
+   `"Berlin'de doktor"` aramasını GARANTİLİ sıfırlıyordu (ölçüm: 0 → 11).
+   Kelime eşleşmesi `position(w in haystack)` ile yapılır, `like '%'||w||'%'`
+   ile DEĞİL — aksi hâlde kullanıcının yazdığı `%` tüm dizini döker.
+7. **Verisiz çip ekleme.** "İş İlanları" çipi kaldırıldı: `job_posting_details`
+   0 satır, `item_type='job_posting'` 0 kayıt. Boş dönen bir çip kullanıcıya
+   sistemin bozuk olduğunu öğretir. Yeni çip eklerken ÖNCE sonucu canlıda ölç.
+
 ### İstemci hata kayıtları (m134 tanısı — canlı 2026-09-05)
 
 `public.client_error_reports` + `report_client_error` RPC (mig `20260904210000`).
@@ -374,7 +417,15 @@ tek bir listeden işaretlenir: **`src/lib/demo-pages.ts` → `DEMO_ROUTES`**.
 - Sözleşme testi: `src/lib/demo-pages.test.ts` — gevşetme.
 - Tam gerekçe ve akış: `docs/guides/demo-icerik-deseni.md`.
 
-Bugünkü liste: `/campaign/vlogger`, `/campaign/blogger`.
+Bugünkü liste: `/campaign/vlogger`, `/campaign/blogger`, `/businesses`, `/relocation`.
+
+⚠️ `/relocation` **kısmi demodur** ve deseni bir adım ileri taşır: sayfanın şehir,
+servis, bürokrasi, maliyet ve belge sekmeleri GERÇEK veri okur; yalnız İş & İşletmeler,
+Okullar ve Hoşgeldin Paketi sekmeleri örnek içerik gösterir. O üç sekme
+`isDemoRoute("/relocation")` ile **gatelidir** (`RelocationHomePage.tsx`), yani
+`DEMO_ROUTES` satırı silindiğinde sekmeler de kendiliğinden kaybolur — demo içerik
+canlıda unutulamaz. Yeni bir kısmi demo sayfası yaparken bu deseni kopyala; örnek
+içeriği rotadan bağımsız bir bayrakla gizleme.
 
 ## Değişmez sözleşmeler (ZORUNLU — 2026-08-04)
 

@@ -50,6 +50,18 @@ export const DEMO_ROUTES: DemoRoute[] = [
     label: "İşletmeler",
     note: "Listedeki işletmeler örnektir. Gerçek işletme kayıtları başvurular değerlendirildikçe yayına alınır.",
   },
+  {
+    // Şehir/servis/bürokrasi/maliyet/belge sekmeleri GERÇEK veri okur; İş &
+    // İşletmeler, Okullar ve Hoşgeldin Paketi sekmeleri ise besleyecek veri
+    // kaynağı kararı verilene kadar örnek kategori kartları gösterir
+    // (`src/lib/relocation-demo-content.ts`).
+    // ⚠️ Bu satır SİLİNDİĞİNDE o üç sekme kendiliğinden ÇİZİLMEZ —
+    // `RelocationHomePage` onları `isDemoRoute` ile gateler. Yani araç son
+    // haline geldiğinde tek iş bu satırı silmektir, sekme temizliği gerekmez.
+    path: "/relocation",
+    label: "Taşınma Planlayıcı",
+    note: "İş & İşletmeler, Okullar ve Hoşgeldin Paketi sekmeleri örnek kategori kartlarıyla gösteriliyor; bu üç sekmede henüz gerçek kayıt yok.",
+  },
 ];
 
 /** Rozetin ve bandın paylaştığı metinler — çeviri/ton tek yerden değişir. */

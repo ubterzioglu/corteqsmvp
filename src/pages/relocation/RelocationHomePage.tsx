@@ -21,6 +21,7 @@ import { useRelocationMoveContent } from "@/hooks/useRelocationMoveContent";
 import { LivingCostsPanel } from "@/components/relocation/tabs/LivingCostsPanel";
 import { RequiredDocumentsPanel } from "@/components/relocation/tabs/RequiredDocumentsPanel";
 import { RelocationChatPanel } from "@/components/relocation/tabs/RelocationChatPanel";
+import { RelocationDemoPanel } from "@/components/relocation/tabs/RelocationDemoPanel";
 import { SavedDocumentsPanel } from "@/components/relocation/tabs/SavedDocumentsPanel";
 import { relocationKeys } from "@/lib/relocation-query-keys";
 import { getRelocationDict } from "@/lib/relocation-i18n";
@@ -37,6 +38,12 @@ import { CityComparisonTable } from "@/components/relocation/CityComparisonTable
 import { ServiceRecommendationCard } from "@/components/relocation/ServiceRecommendationCard";
 import { BureaucracyTimeline } from "@/components/relocation/BureaucracyTimeline";
 import { EmergencyContactsPanel } from "@/components/relocation/EmergencyContactsPanel";
+import { isDemoRoute } from "@/lib/demo-pages";
+import {
+  DEMO_BUSINESSES,
+  DEMO_SCHOOLS,
+  DEMO_WELCOME_PACK,
+} from "@/lib/relocation-demo-content";
 
  
 const db = supabase;
@@ -48,6 +55,14 @@ const SERVICE_CATEGORIES: RelocationServiceCategory[] = [
   "doctor",
   "community_hub",
 ];
+
+/**
+ * İş & İşletmeler · Okullar · Hoşgeldin Paketi sekmeleri örnek içerik taşır ve
+ * YALNIZ sayfa demo işaretliyken çizilir. Kaynak tek: `DEMO_ROUTES`.
+ * `/relocation` oradan silindiğinde üç sekme de kendiliğinden kaybolur — demo
+ * içeriğin canlıda unutulması bu yüzden mümkün değildir.
+ */
+const SHOW_DEMO_TABS = isDemoRoute("/relocation");
 
 /** Aktif lokasyonlardaki distinct ISO alpha-2 ülke kodları. */
 async function fetchCountryCodes(): Promise<string[]> {
@@ -260,6 +275,13 @@ export default function RelocationHomePage() {
             {content.requiredDocuments.length > 0 && (
               <TabsTrigger value="documents">{dict.tabs.documents}</TabsTrigger>
             )}
+            {SHOW_DEMO_TABS && (
+              <>
+                <TabsTrigger value="businesses">{dict.tabs.businesses}</TabsTrigger>
+                <TabsTrigger value="schools">{dict.tabs.schools}</TabsTrigger>
+                <TabsTrigger value="welcome">{dict.tabs.welcome}</TabsTrigger>
+              </>
+            )}
             <TabsTrigger value="assistant">{dict.tabs.assistant}</TabsTrigger>
             <TabsTrigger value="emergency">{dict.tabs.emergency}</TabsTrigger>
             <TabsTrigger value="saved">{dict.tabs.saved}</TabsTrigger>
@@ -326,6 +348,20 @@ export default function RelocationHomePage() {
               isSaving={content.isProgressSaving}
             />
           </TabsContent>
+
+          {SHOW_DEMO_TABS && (
+            <>
+              <TabsContent value="businesses">
+                <RelocationDemoPanel items={DEMO_BUSINESSES} note={dict.demo.businesses} />
+              </TabsContent>
+              <TabsContent value="schools">
+                <RelocationDemoPanel items={DEMO_SCHOOLS} note={dict.demo.schools} />
+              </TabsContent>
+              <TabsContent value="welcome">
+                <RelocationDemoPanel items={DEMO_WELCOME_PACK} note={dict.demo.welcome} />
+              </TabsContent>
+            </>
+          )}
 
           <TabsContent value="assistant">
             <RelocationChatPanel

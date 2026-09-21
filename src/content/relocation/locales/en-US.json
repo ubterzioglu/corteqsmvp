@@ -19,9 +19,17 @@
     "checklist": "Bureaucracy",
     "costs": "Living Costs",
     "documents": "Required Documents",
+    "businesses": "Work & Businesses",
+    "schools": "Schools",
+    "welcome": "Welcome Pack",
     "assistant": "Assistant",
     "emergency": "Emergency & Daily",
     "saved": "My Documents"
+  },
+  "demo": {
+    "businesses": "These entries are SAMPLES — category cards, not real business listings. Real businesses go live as applications are reviewed.",
+    "schools": "These entries are SAMPLES — they outline the education stages and do not recommend any specific school. Enrolment rules vary by country; confirm with official sources.",
+    "welcome": "These steps are SAMPLES and describe the usual order. Deadlines and requirements vary by country; confirm with official sources."
   },
   "cities": {
     "empty": "No location recommendations found for your target countries.",
