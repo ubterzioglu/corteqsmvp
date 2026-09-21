@@ -11,6 +11,14 @@ import {
 import * as caddeApi from "@/lib/cadde-api";
 import { listCaddeCities, listCaddeCountries, listCaddeFeed } from "@/lib/cadde-feed-location-api";
 import { getCaddeSponsoredPlacement, listCaddeBillboardCards } from "@/lib/cadde-promotion-api";
+import {
+  listCaddeInterestCatalog,
+  listMyCaddeInterests,
+  listTrendingCaddeHashtags,
+  saveMyCaddeInterests,
+  searchCaddeMentions,
+  searchCaddePeople,
+} from "@/lib/cadde-search-interests-api";
 
 describe("Cadde API facade", () => {
   it("keeps the documented public surface stable for callers", () => {
@@ -34,5 +42,14 @@ describe("Cadde API facade", () => {
   it("routes promotion reads through their module without changing the facade", () => {
     expect(caddeApi.listCaddeBillboardCards).toBe(listCaddeBillboardCards);
     expect(caddeApi.getCaddeSponsoredPlacement).toBe(getCaddeSponsoredPlacement);
+  });
+
+  it("routes search and interest operations through their module without changing the facade", () => {
+    expect(caddeApi.searchCaddeMentions).toBe(searchCaddeMentions);
+    expect(caddeApi.searchCaddePeople).toBe(searchCaddePeople);
+    expect(caddeApi.listTrendingCaddeHashtags).toBe(listTrendingCaddeHashtags);
+    expect(caddeApi.listCaddeInterestCatalog).toBe(listCaddeInterestCatalog);
+    expect(caddeApi.listMyCaddeInterests).toBe(listMyCaddeInterests);
+    expect(caddeApi.saveMyCaddeInterests).toBe(saveMyCaddeInterests);
   });
 });
