@@ -299,7 +299,7 @@ describe("catalog-directory", () => {
 
   });
 
-  it("B07 placeholder kayıtlarını eler ve null featured filtresini kapalı sayar", () => {
+  it("B07 null featured filtresini kapalı sayar; demo placeholder'lar görünür kalır", () => {
     const placeholderMigration = readMigrationSource(
       [
         "supabase/migrations/applied/20260921120000_directory_exclude_placeholders.sql",
@@ -309,6 +309,14 @@ describe("catalog-directory", () => {
 
     expect(placeholderMigration).toContain("coalesce(p_featured_only, false)");
     expect(placeholderMigration).toMatch(/ci\.is_placeholder\s*=\s*false/);
+
+    const keepDemoMigration = readMigrationSource([
+      "supabase/migrations/applied/20260921130000_directory_keep_demo_placeholders.sql",
+      "supabase/migrations/20260921130000_directory_keep_demo_placeholders.sql",
+    ]);
+
+    expect(keepDemoMigration).toContain("and ci.is_placeholder = false");
+    expect(keepDemoMigration).toContain("remove the demo-only filter");
   });
 
   it("TS önekleri, dizin RPC'sindeki SQL koşuluyla aynı kalır (SQL↔TS ayna sözleşmesi)", () => {
