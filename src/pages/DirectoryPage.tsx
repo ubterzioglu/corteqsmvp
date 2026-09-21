@@ -9,6 +9,7 @@ import DirectoryResultRow from "@/components/directory/DirectoryResultRow";
 import { groupDirectoryResults } from "@/lib/directory-grouping";
 import DirectorySearchBar from "@/components/directory/DirectorySearchBar";
 import {
+  DIRECTORY_PAGE_SIZE,
   getTotalDirectoryCount,
   listDirectoryRoleOptions,
   listUnifiedDirectoryRows,
@@ -40,8 +41,12 @@ const DirectoryPage = () => {
   const [rows, setRows] = useState<UnifiedDirectoryRow[]>([]);
   const [roleOptions, setRoleOptions] = useState<DirectoryRoleOption[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  /** Dizindeki toplam kayıt (filtresiz) — hero rozeti. */
   const [totalCount, setTotalCount] = useState<number | null>(null);
+  /** Aktif filtreye uyan toplam kayıt — sayfalanan `rows.length`'ten FARKLIDIR. */
+  const [resultTotal, setResultTotal] = useState<number | null>(null);
 
   // Kurum kaydı kart, kişi kaydı satır olarak çizilir (revizyon 32ae55b9).
   const { catalogItems, members } = useMemo(() => groupDirectoryResults(rows), [rows]);
@@ -78,50 +83,89 @@ const DirectoryPage = () => {
   const hasActiveFilters =
     draftRole !== "all" || Boolean(draftCountry) || Boolean(draftCity) || draftFeatured;
 
+  /**
+   * Sayfalama durumu, İÇİNDE bağlı olduğu filtre imzasını taşır.
+   *
+   * Neden ayrı bir `offset` state'i değil: filtre değişince offset'i ayrı bir
+   * effect'te sıfırlamak, aynı render'da ESKİ offset ile bir istek daha
+   * attırıyor (effect'ler sırayla koşar, setState bir sonraki render'a düşer).
+   * İmzayı state'in içinde tutunca "bu offset artık geçerli değil" bilgisi
+   * türetilebilir hale gelir ve boşa istek kalmaz.
+   */
+  const filterKey = `${searchText}\u0000${roleFilter}\u0000${countryFilter}\u0000${cityFilter}\u0000${featuredOnly}`;
+  const [pager, setPager] = useState<{ key: string; offset: number }>({
+    key: filterKey,
+    offset: 0,
+  });
+  const activeOffset = pager.key === filterKey ? pager.offset : 0;
+
   useEffect(() => {
-    if (isAuthLoading || !user) {
-      setRows([]);
-      setRoleOptions([]);
-      setIsLoading(false);
-      setErrorMessage(null);
-      return;
-    }
+    // Oturum durumu netleşmeden çağırma: `user` bir an null görünüp sonra
+    // dolabilir ve aynı sorgu iki kez gider. Sonuçlar ARTIK ziyaretçi için de
+    // yüklenir — `search_directory_catalog` anonim çağrılabilir (Batch 0).
+    if (isAuthLoading) return;
 
     let isMounted = true;
 
     void (async () => {
-      setIsLoading(true);
+      if (activeOffset === 0) setIsLoading(true);
+      else setIsLoadingMore(true);
       setErrorMessage(null);
 
       try {
-        const [nextRows, nextRoles] = await Promise.all([
+        const [result, nextRoles] = await Promise.all([
           listUnifiedDirectoryRows({
             searchText,
             roleFilter,
             countryFilter,
             cityFilter,
             featuredOnly,
+            offset: activeOffset,
+            limit: DIRECTORY_PAGE_SIZE,
           }),
           listDirectoryRoleOptions(),
         ]);
 
         if (!isMounted) return;
 
-        setRows(nextRows);
+        setRows((previous) =>
+          activeOffset === 0 ? result.rows : [...previous, ...result.rows],
+        );
+        setResultTotal(result.totalCount);
         setRoleOptions(nextRoles);
         setIsLoading(false);
+        setIsLoadingMore(false);
       } catch (error) {
         if (!isMounted) return;
         setErrorMessage(getDirectoryErrorMessage(error));
-        setRows([]);
+        // "Daha fazla" başarısız olursa eldeki sonuçları SİLME — kullanıcı
+        // okuduğu listeyi kaybetmesin, yalnız hata mesajı görsün.
+        if (activeOffset === 0) setRows([]);
         setIsLoading(false);
+        setIsLoadingMore(false);
       }
     })();
 
     return () => {
       isMounted = false;
     };
-  }, [cityFilter, countryFilter, featuredOnly, isAuthLoading, roleFilter, searchText, user]);
+  }, [
+    activeOffset,
+    cityFilter,
+    countryFilter,
+    featuredOnly,
+    isAuthLoading,
+    roleFilter,
+    searchText,
+  ]);
+
+  /**
+   * "Daha fazla var mı" sorusu, çekilen SAYFA ilerlemesinden hesaplanır —
+   * `rows.length`'ten DEĞİL. Sebep: `rows`, TS tarafındaki yönetici süzgecinden
+   * geçmiş listedir; süzgeç bir satır bile elerse `rows.length` sunucunun
+   * saydığı toplama asla yetişemez ve buton sonsuza kadar kalır.
+   */
+  const hasMore = resultTotal !== null && activeOffset + DIRECTORY_PAGE_SIZE < resultTotal;
 
   // B5 kök nedeni: bu effect'in temizleyicisi YOKTU. Sayım isteği çözülmeden
   // kullanıcı /directory'den ayrılırsa `setTotalCount` sökülmüş bileşen üzerinde
@@ -229,23 +273,30 @@ const DirectoryPage = () => {
           </div>
         </section>
 
+        {/* Ziyaretçi ARTIK duvara çarpmaz — arama herkese açık (Batch 0).
+            Buradaki kart bir engel değil, davet: giriş yapınca iletişime geçme
+            ve profil açma gibi işlemler açılır. `next` bu sayfaya döner, böylece
+            kullanıcı giriş sonrası aradığı yerden devam eder. */}
         {!isAuthLoading && !user ? (
-          <section className="mb-6 rounded-[28px] border border-primary/20 bg-white/70 p-6 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.35)] backdrop-blur-xl">
-            <h2 className="text-xl font-semibold text-foreground">Tam dizin için giriş gerekiyor.</h2>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Birleşik katalog araması sadece giriş yapmış kullanıcılara açık. Giriş yaptığında bireysel, doktor, avukat, işletme ve kuruluş profillerini aynı kaynaktan görebilirsin.
+          <section className="mb-6 rounded-[28px] border border-primary/20 bg-white/70 p-5 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.35)] backdrop-blur-xl">
+            <h2 className="text-base font-semibold text-foreground">
+              Dizinde arama herkese açık.
+            </h2>
+            <p className="mt-1.5 max-w-2xl text-sm text-muted-foreground">
+              Ücretsiz giriş yaptığında profillerle iletişime geçebilir, kendi kaydını
+              açabilir ve aramalarını kaydedebilirsin.
             </p>
-            <div className="mt-4">
-              <Button asChild>
-                <a href="/login?next=%2Fdirectory">Giriş Yap</a>
+            <div className="mt-3">
+              <Button asChild size="sm">
+                <a href={`/login?next=${encodeURIComponent(`/directory?${searchParams.toString()}`)}`}>
+                  Giriş Yap
+                </a>
               </Button>
             </div>
           </section>
         ) : null}
 
-        {user ? (
-          <>
-            <div className="mb-4">
+        <div className="mb-4">
               <DirectorySearchBar
                 value={searchText}
                 onChange={(value) => updateFilter("q", value || null)}
@@ -289,8 +340,14 @@ const DirectoryPage = () => {
               <div className="space-y-3">
                 {rows.length > 0 ? (
                   <>
+                    {/* Sayı RPC'nin `total_count`'undan gelir — sonuç listesiyle
+                        AYNI filtreyi paylaşır. `rows.length` yalnız o ana kadar
+                        ÇEKİLEN sayfaları gösterir; ikisini karıştırma. */}
                     <p className="pb-1 text-xs font-medium text-muted-foreground">
-                      {rows.length.toLocaleString("tr-TR")} sonuç bulundu
+                      {(resultTotal ?? rows.length).toLocaleString("tr-TR")} sonuç bulundu
+                      {resultTotal !== null && rows.length < resultTotal
+                        ? ` · ${rows.length.toLocaleString("tr-TR")} tanesi gösteriliyor`
+                        : ""}
                     </p>
                     {/* m32ae55b9: kurum kaydı kartta, kişi kaydı satırda. Kurumun
                         taşıdığı bilgi (logo, açıklama, hizmet etiketi) satıra
@@ -321,6 +378,20 @@ const DirectoryPage = () => {
                         </div>
                       </section>
                     ) : null}
+
+                    {hasMore ? (
+                      <div className="pt-4 text-center">
+                        <Button
+                          variant="outline"
+                          disabled={isLoadingMore}
+                          onClick={() =>
+                            setPager({ key: filterKey, offset: activeOffset + DIRECTORY_PAGE_SIZE })
+                          }
+                        >
+                          {isLoadingMore ? "Yükleniyor..." : "Daha fazla göster"}
+                        </Button>
+                      </div>
+                    ) : null}
                   </>
                 ) : (
                   <p className="py-8 text-center text-sm text-muted-foreground">
@@ -331,8 +402,6 @@ const DirectoryPage = () => {
                 )}
               </div>
             ) : null}
-          </>
-        ) : null}
       </main>
     </div>
   );

@@ -6,6 +6,11 @@
  * 1. Bileşen ziyaretçiyi kontrolsüzce `/directory`'ye yolluyordu. `DirectoryPage`
  *    giriş yapmamış kullanıcıda sorguyu HİÇ atmaz, RPC de anonim çağrıda
  *    `42501` fırlatır — kullanıcı yazdığı kelimeyi kaybedip boş sayfa görüyordu.
+ *    ⚠️ Bu madde 2026-09-21'de KÖKTEN kapandı: RPC artık anonim çağrılabilir
+ *    (migration `20260921090000`), dizin ziyaretçiye açık. Araya konan
+ *    `/login?next=` yönlendirmesi de KALDIRILDI — o bir çözüm değil, aynı kök
+ *    nedenin ikinci belirtisiydi (arama yapmak isteyen herkes giriş duvarına
+ *    çarpıyordu). Aşağıdaki testler artık DOĞRUDAN yönlendirmeyi kilitler.
  * 2. Placeholder ve çip örnekleri ek'li/apostroflu yazılmıştı ("Berlin'de
  *    yazılımcı"). Arama RPC'si kelimeleri boşluktan bölüp HEPSİNİN eşleşmesini
  *    şart koştuğu için bu örnekler GARANTİLİ sıfır sonuç veriyordu.
@@ -56,16 +61,18 @@ describe("DiasporaSearchSection", () => {
     mockAuth.isLoading = false;
   });
 
-  it("ziyaretçiyi aramayı koruyarak giriş ekranına yönlendirir", async () => {
+  it("ziyaretçiyi DOĞRUDAN dizine gönderir — giriş duvarı yok", async () => {
     renderSection();
     submitSearch("Doktor");
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/login?next=%2Fdirectory%3Fq%3DDoktor");
+      expect(mockNavigate).toHaveBeenCalledWith("/directory?q=Doktor");
     });
+    // Regresyon çapası: `/login?next=` geri gelirse ziyaretçi yine duvara çarpar.
+    expect(mockNavigate).not.toHaveBeenCalledWith(expect.stringContaining("/login"));
   });
 
-  it("giriş yapmış kullanıcıyı doğrudan dizine gönderir", async () => {
+  it("giriş yapmış kullanıcıyı da aynı adrese gönderir", async () => {
     mockAuth.user = { id: "u1" };
     renderSection();
     submitSearch("Doktor");
@@ -75,24 +82,24 @@ describe("DiasporaSearchSection", () => {
     });
   });
 
-  it("çip tıklaması da ziyaretçi için giriş kapısından geçer", async () => {
+  it("çip tıklaması ziyaretçi için de doğrudan dizine gider", async () => {
     renderSection();
     fireEvent.click(screen.getByRole("button", { name: "Doktor" }));
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/login?next=%2Fdirectory%3Fq%3DDoktor");
+      expect(mockNavigate).toHaveBeenCalledWith("/directory?q=Doktor");
     });
   });
 
-  it("ziyaretçiye giriş gerektiğini aramadan ÖNCE söyler", () => {
+  it("ziyaretçiye aramanın AÇIK olduğunu, girişin ne kazandırdığını söyler", () => {
     renderSection();
-    expect(screen.getByText(/Tam dizin için ücretsiz giriş gerekir/)).toBeInTheDocument();
+    expect(screen.getByText(/Arama herkese açık/)).toBeInTheDocument();
   });
 
-  it("giriş yapmış kullanıcıya giriş uyarısını göstermez", () => {
+  it("giriş yapmış kullanıcıya bu daveti göstermez", () => {
     mockAuth.user = { id: "u1" };
     renderSection();
-    expect(screen.queryByText(/Tam dizin için ücretsiz giriş gerekir/)).toBeNull();
+    expect(screen.queryByText(/Arama herkese açık/)).toBeNull();
   });
 
   it("sayaç etiketi dizinde görünen kayıt sayısını anlatır", async () => {

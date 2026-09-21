@@ -78,7 +78,9 @@ describe("DirectoryPage", () => {
       data: [{ code: "DE", name: "Almanya" }],
     });
     useGeoCitiesMock.mockReturnValue({ data: [] });
-    listUnifiedDirectoryRowsMock.mockResolvedValue([
+    listUnifiedDirectoryRowsMock.mockResolvedValue({
+      totalCount: 2,
+      rows: [
       {
         recordType: "catalog_item",
         id: "item-1",
@@ -115,7 +117,8 @@ describe("DirectoryPage", () => {
         isClaimable: true,
         itemType: "advisor",
       },
-    ]);
+      ],
+    });
   });
 
   it("renders canonical catalog records in one list", async () => {
@@ -141,16 +144,99 @@ describe("DirectoryPage", () => {
     });
   });
 
-  it("shows a login CTA for anonymous users", async () => {
-    useAuthMock.mockReturnValue({
-      user: null,
-      isLoading: false,
+  // 2026-09-21 (Batch 0): dizin ziyaretçiye açıldı. Eski davranış — `!user` ise
+  // sorguyu HİÇ atmamak — "arama boş dönüyor" şikayetinin doğrudan kaynağıydı.
+  it("ziyaretçi için de sonuçları YÜKLER, giriş duvarı göstermez", async () => {
+    useAuthMock.mockReturnValue({ user: null, isLoading: false });
+
+    renderPage("/directory?q=doktor");
+
+    expect(await screen.findByText("Ayşe Kaya")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(listUnifiedDirectoryRowsMock).toHaveBeenCalledWith(
+        expect.objectContaining({ searchText: "doktor" }),
+      );
     });
+    expect(screen.queryByText(/Tam dizin için giriş gerekiyor/i)).toBeNull();
+  });
+
+  it("ziyaretçiye giriş davetini gösterir ve `next` ile mevcut aramayı korur", async () => {
+    useAuthMock.mockReturnValue({ user: null, isLoading: false });
+
+    renderPage("/directory?q=doktor");
+
+    expect(await screen.findByText(/Dizinde arama herkese açık/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Giriş Yap/i })).toHaveAttribute(
+      "href",
+      "/login?next=%2Fdirectory%3Fq%3Ddoktor",
+    );
+  });
+
+  it("oturum durumu netleşmeden sorgu atmaz", () => {
+    useAuthMock.mockReturnValue({ user: null, isLoading: true });
 
     renderPage();
 
-    expect(screen.getByText(/Tam dizin için giriş gerekiyor/i)).toBeInTheDocument();
     expect(listUnifiedDirectoryRowsMock).not.toHaveBeenCalled();
-    await waitFor(() => expect(getTotalDirectoryCountMock).toHaveBeenCalledTimes(1));
+  });
+
+  describe("sayfalama", () => {
+    it("ilk sayfayı offset 0 ile ister", async () => {
+      renderPage();
+
+      await waitFor(() => {
+        expect(listUnifiedDirectoryRowsMock).toHaveBeenCalledWith(
+          expect.objectContaining({ offset: 0 }),
+        );
+      });
+    });
+
+    it("tüm sonuçlar gelmişse 'Daha fazla göster' çıkmaz", async () => {
+      renderPage();
+
+      expect(await screen.findByText("Ayşe Kaya")).toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /Daha fazla göster/i })).toBeNull();
+    });
+
+    it("sonuç sayısı sayfadan büyükse sonraki sayfayı ister", async () => {
+      // 40 toplam, sayfa 24 → buton çıkmalı ve tıklanınca offset 24 istenmeli.
+      listUnifiedDirectoryRowsMock.mockResolvedValue({
+        totalCount: 40,
+        rows: [
+          {
+            recordType: "catalog_item",
+            id: "item-1",
+            href: "/directory/catalog/ayse-kaya",
+            title: "Ayşe Kaya",
+            roleKey: "Business_Market_Bakkal",
+            roleLabel: "Bakkal",
+            description: null,
+            country: "DE",
+            city: "Berlin",
+            imageUrl: null,
+            specialLabel: null,
+            specialValue: null,
+            isFeatured: false,
+            isVerified: false,
+            isClaimable: false,
+            itemType: "business",
+          },
+        ],
+      });
+
+      renderPage();
+
+      const moreButton = await screen.findByRole("button", { name: /Daha fazla göster/i });
+      // Sayaç sunucunun toplamını gösterir, çekilen satır sayısını DEĞİL.
+      expect(screen.getByText(/40 sonuç bulundu/)).toBeInTheDocument();
+
+      moreButton.click();
+
+      await waitFor(() => {
+        expect(listUnifiedDirectoryRowsMock).toHaveBeenCalledWith(
+          expect.objectContaining({ offset: 24 }),
+        );
+      });
+    });
   });
 });

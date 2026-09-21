@@ -35,7 +35,11 @@ describe("DiasporaSearchBar", () => {
     mockAuth.isLoading = false;
   });
 
-  it("redirects visitors to login with directory search preserved in next", async () => {
+  // 2026-09-21: dizin araması anonime açıldı (migration 20260921090000), giriş
+  // yönlendirmesi kaldırıldı. Bu test artık ziyaretçi ile giriş yapmış
+  // kullanıcının AYNI adrese gittiğini kilitler — iki arama yüzeyinin
+  // (bu bileşen + DiasporaSearchSection) ayrışması tekrarlanan bir kusurdu.
+  it("ziyaretçiyi doğrudan dizine gönderir — giriş duvarı yok", async () => {
     render(
       <MemoryRouter>
         <DiasporaSearchBar />
@@ -48,10 +52,22 @@ describe("DiasporaSearchBar", () => {
     fireEvent.click(screen.getByRole("button", { name: "Ara" }));
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith(
-        "/login?next=%2Fdirectory%3Fq%3Ddanisman",
-      );
+      expect(mockNavigate).toHaveBeenCalledWith("/directory?q=danisman");
     });
+    expect(mockNavigate).not.toHaveBeenCalledWith(expect.stringContaining("/login"));
+  });
+
+  it("verisiz 'İş İlanları' çipi arayüzde YOKTUR", () => {
+    // Canlıda ölçüldü (2026-09-21): job_posting_details 0 satır,
+    // item_type='job_posting' 0 kayıt. Çip her tıklamada boş sonuç veriyordu.
+    // Veri gelmeden geri eklenirse bu test düşer — çip veriyi yaratmaz.
+    render(
+      <MemoryRouter>
+        <DiasporaSearchBar />
+      </MemoryRouter>,
+    );
+
+    expect(screen.queryByRole("button", { name: /İş İlanları/i })).toBeNull();
   });
 
   it("navigates authenticated users straight to directory on search submit", async () => {

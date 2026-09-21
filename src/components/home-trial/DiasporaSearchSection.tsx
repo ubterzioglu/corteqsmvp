@@ -89,28 +89,21 @@ const DiasporaSearchSection = () => {
   }, [query]);
 
   /**
-   * ⚠️ Ziyaretçiyi doğrudan /directory'ye GÖNDERME.
+   * Ziyaretçi DOĞRUDAN /directory'ye gider — giriş duvarı YOK.
    *
-   * `DirectoryPage` giriş yapmamış kullanıcı için sorguyu HİÇ atmaz
-   * (`if (isAuthLoading || !user) { setRows([]); return; }`) ve RPC'nin kendisi de
-   * anonim çağrıda `42501 authentication required` fırlatır. Bu bileşen eskiden
-   * kontrolsüz yönlendiriyordu; ziyaretçi arama yapınca yazdığı kelime kaybolup
-   * boş bir sayfaya düşüyordu — "arama boş dönüyor" şikayetinin görünen yüzü buydu.
+   * Tarihçe (silme, iki kez yanlış yapıldı): önce bu bileşen kontrolsüz
+   * yönlendiriyordu ve ziyaretçi boş sayfaya düşüyordu; sonra `/login?next=`
+   * eklendi ve arama yapmak isteyen herkes giriş ekranına çarptı. İkisi de
+   * aynı kök nedenin sonucuydu: `search_directory_catalog` anonim çağrıda
+   * `42501` fırlatıyordu. O koşul kaldırıldı (Batch 0), dizin artık ziyaretçiye
+   * açık ve sayfalı. Yönlendirmeyi geri koyma.
    *
-   * Davranış `DiasporaSearchBar` ile bilinçli olarak AYNI: aramayı `next` içinde
-   * koru, giriş sonrası kullanıcı doğrudan sonuçlara insin.
+   * Davranış `DiasporaSearchBar` ile BİREBİR aynıdır — iki arama yüzeyi
+   * ayrışırsa kullanıcı aynı siteden iki farklı cevap alır.
    */
   const goToDirectory = (text: string) => {
     const trimmed = text.trim();
-    const target = trimmed
-      ? `/directory?q=${encodeURIComponent(trimmed)}`
-      : "/directory";
-
-    if (!isAuthLoading && !user) {
-      navigate(`/login?next=${encodeURIComponent(target)}`);
-      return;
-    }
-    navigate(target);
+    navigate(trimmed ? `/directory?q=${encodeURIComponent(trimmed)}` : "/directory");
   };
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -188,13 +181,13 @@ const DiasporaSearchSection = () => {
         ))}
       </div>
 
-      {/* Ziyaretçiye giriş gerektiğini ÖNCEDEN söyle — aramadan sonra login
-          ekranına düşmek sürpriz olmasın. DiasporaSearchBar ile aynı sözleşme. */}
+      {/* Ziyaretçiye aramanın açık olduğunu söyle; girişin NE kazandırdığını
+          ayrıca belirt. DiasporaSearchBar ile aynı sözleşme. */}
       {!isAuthLoading && !user ? (
         <p className="mx-auto mt-5 flex max-w-2xl items-center justify-center gap-1.5 text-xs text-muted-foreground">
           <Info className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          Tam dizin için ücretsiz giriş gerekir — arama, giriş sonrası kaldığın
-          yerden devam eder.
+          Arama herkese açık — iletişime geçmek ve kendi kaydını açmak için
+          ücretsiz giriş yeterli.
         </p>
       ) : null}
 

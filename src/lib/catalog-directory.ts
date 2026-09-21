@@ -18,6 +18,14 @@ type DirectorySearchRpcRow = {
   is_featured: boolean;
   is_verified: boolean;
   is_claimable: boolean;
+  /**
+   * Eşleşme bandı: 0 = tam başlık, 1 = başlık öneki, 2 = tüm kelimeler,
+   * 3 = kısmi eşleşme. Sıralama SQL tarafında yapılır; burada yalnız
+   * hata ayıklama/ileride "kısmi sonuç" rozeti için taşınır.
+   */
+  match_rank: number;
+  /** Filtrelenmiş kümenin TAM sayısı — sayfalanan `rows.length` ile karıştırma. */
+  total_count: number;
 };
 
 type DirectoryRpcClient = {
@@ -29,9 +37,22 @@ type DirectoryRpcClient = {
       p_country_code: string | null;
       p_city: string | null;
       p_featured_only: boolean;
+      p_limit: number;
+      p_offset: number;
     },
   ) => Promise<{ data: DirectorySearchRpcRow[] | null; error: SupabaseError | null }>;
 };
+
+/** Bir sayfada çekilen kayıt sayısı. */
+export const DIRECTORY_PAGE_SIZE = 24;
+
+/**
+ * SQL tarafındaki `v_limit` tavanıyla BİREBİR aynı olmalıdır
+ * (`20260921090000_directory_search_anon_normalized.sql`). Buradan büyük bir
+ * değer göndermek sessizce 100'e kırpılır; kod "50 istedim, 50 geldi" sanır
+ * ama sayfa hesabı kayar.
+ */
+export const DIRECTORY_MAX_PAGE_SIZE = 100;
 
 const directoryRpcClient = supabase as unknown as DirectoryRpcClient;
 
@@ -224,67 +245,95 @@ export async function listDirectoryRoleOptions(): Promise<DirectoryRoleOption[]>
     }));
 }
 
-export async function listUnifiedDirectoryRows(filters: {
+export type DirectorySearchFilters = {
   searchText: string;
   roleFilter: string;
   countryFilter: string;
   cityFilter: string;
   featuredOnly: boolean;
-}): Promise<UnifiedDirectoryRow[]> {
+  /** Kaçıncı kayıttan itibaren — sayfalama. Varsayılan 0. */
+  offset?: number;
+  /** Sayfa boyutu. Varsayılan `DIRECTORY_PAGE_SIZE`, tavan `DIRECTORY_MAX_PAGE_SIZE`. */
+  limit?: number;
+};
+
+export type DirectorySearchResult = {
+  /** Bu sayfadaki satırlar. */
+  rows: UnifiedDirectoryRow[];
+  /**
+   * Filtreye uyan TOPLAM kayıt sayısı (sayfalanmamış). RPC bunu pencere
+   * fonksiyonuyla sonuç kümesinin kendisinden üretir — yani sayaç ile liste
+   * aynı filtreyi paylaşır. Ayrı bir sayım sorgusu YAZMA; tam olarak o ayrışma
+   * ana sayfada "645 kayıt" yazarken dizinde 237 kayıt gösterilmesine yol açtı.
+   */
+  totalCount: number;
+};
+
+export async function listUnifiedDirectoryRows(
+  filters: DirectorySearchFilters,
+): Promise<DirectorySearchResult> {
+  const limit = Math.min(
+    Math.max(filters.limit ?? DIRECTORY_PAGE_SIZE, 1),
+    DIRECTORY_MAX_PAGE_SIZE,
+  );
+  const offset = Math.max(filters.offset ?? 0, 0);
+
   const { data, error } = await directoryRpcClient.rpc("search_directory_catalog", {
     p_search_text: filters.searchText.trim() || null,
     p_role_key: filters.roleFilter === "all" ? null : filters.roleFilter,
     p_country_code: toCountryCode(filters.countryFilter),
     p_city: filters.cityFilter.trim() || null,
     p_featured_only: filters.featuredOnly,
+    p_limit: limit,
+    p_offset: offset,
   });
 
   if (error) throw error;
 
-  return ((data ?? []) as DirectorySearchRpcRow[])
-    .filter((row) => isPublicDirectoryRole(row.role_key, row.role_label))
-    .map(mapDirectorySearchRow);
-}
+  const rpcRows = (data ?? []) as DirectorySearchRpcRow[];
 
-type CountFilterBuilder = PromiseLike<{
-  count: number | null;
-  error: SupabaseError | null;
-}> & {
-  eq: (column: string, value: unknown) => CountFilterBuilder;
-  in: (column: string, values: readonly string[]) => CountFilterBuilder;
-};
-
-type CountQueryClient = {
-  from: (
-    tableName: "catalog_items",
-  ) => {
-    select: (columns: string, options: { count: "exact"; head: boolean }) => CountFilterBuilder;
+  return {
+    // Yönetici elemesi artık SQL'de de var (B20, iki dalda). Buradaki süzgeç
+    // İKİNCİ savunma hattı olarak KALIR: RPC gövdesi ileride yeniden yazılırsa
+    // (canlıda pg_get_functiondef ile yamandığı için bu gerçekten oluyor)
+    // sızıntı kullanıcıya ulaşmasın.
+    rows: rpcRows
+      .filter((row) => isPublicDirectoryRole(row.role_key, row.role_label))
+      .map(mapDirectorySearchRow),
+    // Sunucunun saydığı değer esas alınır; boş sayfada 0.
+    totalCount: rpcRows[0]?.total_count ?? 0,
   };
-};
-
-const countQueryClient = supabase as unknown as CountQueryClient;
+}
 
 /**
  * Dizinde GERÇEKTEN görünebilecek kayıt sayısı.
  *
- * ⚠️ Bu fonksiyon eskiden `catalog_items`'ı FİLTRESİZ sayıyordu ve ana sayfa
- * "645+ kayıtlı profil" yazarken dizinde en fazla 248 kayıt çıkıyordu (ölçüldü
- * 2026-09-20). Kullanıcı 645 bekleyip boş sayfa görünce güven iki kat kırılıyor.
+ * ⚠️ Bu fonksiyon İKİ KEZ yalan söyledi ve her ikisi de aynı kök nedendendi:
+ * sayacın kendi filtresi vardı. Önce `catalog_items`'ı FİLTRESİZ sayıyordu
+ * (ana sayfa "645+ kayıt" derken dizinde 248 görünüyordu); sonra iki koşul
+ * eklendi ama `roles.is_directory_visible`, yönetici elemesi ve bireysel profil
+ * dalı yine dışarıda kaldı.
  *
- * Buradaki iki koşul `search_directory_catalog`'un Branch 1 filtresiyle BİREBİR
- * aynıdır — biri değişirse öbürü de değişmelidir, yoksa sayaç yine yalan söyler.
- * RPC ayrıca `roles.is_directory_visible` ve yönetici hesabı elemesi uygular;
- * bunlar sayaca dahil DEĞİLDİR, o yüzden gerçek sonuç bu sayıdan biraz düşük
- * olabilir — fazla göstermek az göstermekten daha zararlı olduğu için bilinçli
- * olarak burada duruyoruz, aşağı değil yukarı yuvarlamıyoruz.
+ * Kalıcı çözüm: AYRI SAYIM SORGUSU YOK. Sayı, sonuç listesini üreten RPC'nin
+ * kendisinden (`total_count`, pencere fonksiyonu) gelir. Tek satır çekilir;
+ * amaç veri değil, sayıdır. Böylece sayacın liste filtresinden ayrışması
+ * yapısal olarak imkânsız hale gelir.
  */
 export async function getTotalDirectoryCount(): Promise<number> {
-  const { count, error } = await countQueryClient
-    .from("catalog_items")
-    .select("*", { count: "exact", head: true })
-    .eq("status", "published")
-    .in("visibility", ["public", "unlisted"]);
-
-  if (error) return 0;
-  return count ?? 0;
+  try {
+    const { totalCount } = await listUnifiedDirectoryRows({
+      searchText: "",
+      roleFilter: "all",
+      countryFilter: "",
+      cityFilter: "",
+      featuredOnly: false,
+      limit: 1,
+      offset: 0,
+    });
+    return totalCount;
+  } catch {
+    // Sayaç yardımcı bir bilgidir; alınamazsa etiket gizlenir (çağıran taraf
+    // 0'ı "gösterme" olarak yorumlar). Sayfayı düşürmesine izin verme.
+    return 0;
+  }
 }

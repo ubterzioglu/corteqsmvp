@@ -22,9 +22,14 @@ vi.mock("@/integrations/supabase/client", () => ({
   isSupabaseConfigured: true,
 }));
 
-const { isPublicDirectoryRole, listUnifiedDirectoryRows, toCountryCode } = await import(
-  "@/lib/catalog-directory"
-);
+const {
+  DIRECTORY_MAX_PAGE_SIZE,
+  DIRECTORY_PAGE_SIZE,
+  getTotalDirectoryCount,
+  isPublicDirectoryRole,
+  listUnifiedDirectoryRows,
+  toCountryCode,
+} = await import("@/lib/catalog-directory");
 
 type DirectoryRowSeed = {
   item_id: string;
@@ -32,7 +37,10 @@ type DirectoryRowSeed = {
   role_label: string;
 };
 
-const rpcRow = ({ item_id, role_key, role_label }: DirectoryRowSeed) => ({
+const rpcRow = (
+  { item_id, role_key, role_label }: DirectoryRowSeed,
+  total_count = 1,
+) => ({
   item_id,
   item_type: "member",
   slug: item_id,
@@ -48,6 +56,8 @@ const rpcRow = ({ item_id, role_key, role_label }: DirectoryRowSeed) => ({
   is_featured: false,
   is_verified: false,
   is_claimable: false,
+  match_rank: 2,
+  total_count,
 });
 
 const defaultFilters = {
@@ -109,16 +119,152 @@ describe("catalog-directory", () => {
   it("Admin_SuperAdmin kaydını dizin sonuçlarından eler", async () => {
     rpcMock.mockResolvedValue({
       data: [
-        rpcRow({ item_id: "uye", role_key: "User_DiasporaMember", role_label: "Diaspora Üyesi" }),
-        rpcRow({ item_id: "superadmin", role_key: "Admin_SuperAdmin", role_label: "Diaspora Üyesi" }),
-        rpcRow({ item_id: "moderator", role_key: "Moderator_Cadde", role_label: "Moderatör" }),
+        rpcRow({ item_id: "uye", role_key: "User_DiasporaMember", role_label: "Diaspora Üyesi" }, 3),
+        rpcRow({ item_id: "superadmin", role_key: "Admin_SuperAdmin", role_label: "Diaspora Üyesi" }, 3),
+        rpcRow({ item_id: "moderator", role_key: "Moderator_Cadde", role_label: "Moderatör" }, 3),
       ],
       error: null,
     });
 
-    const rows = await listUnifiedDirectoryRows(defaultFilters);
+    const { rows } = await listUnifiedDirectoryRows(defaultFilters);
 
     expect(rows.map((row) => row.id)).toEqual(["uye"]);
+  });
+
+  describe("sayfalama (Batch 0)", () => {
+    it("varsayılan sayfa boyutu ve offset'i RPC'ye geçirir", async () => {
+      rpcMock.mockResolvedValue({ data: [], error: null });
+
+      await listUnifiedDirectoryRows(defaultFilters);
+
+      expect(rpcMock).toHaveBeenCalledWith(
+        "search_directory_catalog",
+        expect.objectContaining({ p_limit: DIRECTORY_PAGE_SIZE, p_offset: 0 }),
+      );
+    });
+
+    it("istenen sayfa boyutunu SQL tavanına kırpar (tavan ile aynı sayı olmalı)", async () => {
+      rpcMock.mockResolvedValue({ data: [], error: null });
+
+      await listUnifiedDirectoryRows({ ...defaultFilters, limit: 5000, offset: 48 });
+
+      expect(rpcMock).toHaveBeenCalledWith(
+        "search_directory_catalog",
+        expect.objectContaining({ p_limit: DIRECTORY_MAX_PAGE_SIZE, p_offset: 48 }),
+      );
+    });
+
+    it("negatif offset'i 0'a çeker", async () => {
+      rpcMock.mockResolvedValue({ data: [], error: null });
+
+      await listUnifiedDirectoryRows({ ...defaultFilters, offset: -10 });
+
+      expect(rpcMock).toHaveBeenCalledWith(
+        "search_directory_catalog",
+        expect.objectContaining({ p_offset: 0 }),
+      );
+    });
+
+    it("toplam sayıyı RPC'nin total_count'undan alır, satır sayısından DEĞİL", async () => {
+      rpcMock.mockResolvedValue({
+        data: [
+          rpcRow({ item_id: "a", role_key: "User_DiasporaMember", role_label: "Üye" }, 237),
+          rpcRow({ item_id: "b", role_key: "User_DiasporaMember", role_label: "Üye" }, 237),
+        ],
+        error: null,
+      });
+
+      const result = await listUnifiedDirectoryRows(defaultFilters);
+
+      expect(result.rows).toHaveLength(2);
+      expect(result.totalCount).toBe(237);
+    });
+
+    it("boş sonuçta toplam 0 döner", async () => {
+      rpcMock.mockResolvedValue({ data: [], error: null });
+
+      expect((await listUnifiedDirectoryRows(defaultFilters)).totalCount).toBe(0);
+    });
+  });
+
+  describe("sayaç ↔ sonuç filtresi eşitliği (Batch 3)", () => {
+    it("getTotalDirectoryCount AYRI bir sayım sorgusu değil, AYNI RPC'yi kullanır", async () => {
+      rpcMock.mockResolvedValue({
+        data: [rpcRow({ item_id: "a", role_key: "User_DiasporaMember", role_label: "Üye" }, 237)],
+        error: null,
+      });
+
+      const total = await getTotalDirectoryCount();
+
+      expect(total).toBe(237);
+      // Kritik nokta: sayaç `catalog_items` tablosunu kendi filtresiyle saymaz.
+      // Saysaydı dizin filtreleri (is_directory_visible, B20, bireysel dal)
+      // dışarıda kalır ve sayı yine listeden ayrışırdı.
+      expect(rpcMock).toHaveBeenCalledWith(
+        "search_directory_catalog",
+        expect.objectContaining({ p_limit: 1, p_offset: 0, p_search_text: null }),
+      );
+    });
+
+    it("RPC hata verirse sayaç sayfayı düşürmez, 0 döner", async () => {
+      rpcMock.mockResolvedValue({ data: null, error: { message: "boom" } });
+
+      await expect(getTotalDirectoryCount()).resolves.toBe(0);
+    });
+  });
+
+  describe("dizin RPC'si — anonim erişim ve PII sözleşmesi (Batch 0 + 3)", () => {
+    const migration = readFileSync(
+      "supabase/migrations/20260921090000_directory_search_anon_normalized.sql",
+      "utf8",
+    );
+
+    it("anonim çağrıyı engelleyen 42501 koşulu gövdede KALMAMALI", () => {
+      expect(migration).not.toContain("authentication required");
+      expect(migration).toContain("grant execute on function");
+      expect(migration).toMatch(/to anon, authenticated, service_role/);
+    });
+
+    it("B20 yönetici elemesi HER İKİ dalda uygulanır", () => {
+      // Branch 1 (katalog) — canlıda eksikti, Admin_ContentModerator sızıyordu.
+      expect(migration).toContain("not ilike 'Admin_%'");
+      expect(migration).toContain("not ilike 'Moderator_%'");
+      // Branch 2 (bireysel) — mevcut koşul korunmalı.
+      expect(migration).toContain("r_x.key ilike 'Admin_%'");
+      expect(migration).toContain("r_x.key ilike 'Moderator_%'");
+    });
+
+    it("iletişim bilgisi taşıyan search_text aranan metne KARIŞTIRILMAZ", () => {
+      // `catalog_search_documents.search_text` public contact değerlerini içerir
+      // (canlıda 336 açık iletişim kaydı). Anonime açık aramada onu taramak
+      // e-posta/telefon doğrulama (enumeration) yüzeyi açardı.
+      //
+      // ⚠️ Denetim YORUMLARI dışarıda bırakır: bu kararın GEREKÇESİ migration'ın
+      // başlığında yazılıdır ve orada "catalog_item_contacts" kelimesi geçer.
+      // Ham metinde arayan bir test, kararı belgeleyen yorumu kusur sayardı.
+      const sqlOnly = migration
+        .replace(/--[^\n]*/g, "")
+        .replace(/\/\*[\s\S]*?\*\//g, "");
+
+      expect(sqlOnly).not.toMatch(/d\.search_text/);
+      expect(sqlOnly).not.toMatch(/catalog_item_contacts/);
+      // Buna karşılık csd'den yalnız PII'siz türetilmiş kolon alınır.
+      expect(sqlOnly).toContain("d.category_slugs");
+    });
+
+    it("kullanıcı girdisi LIKE jokeri olarak yorumlanmaz", () => {
+      // `'%' || word || '%'` kalıbı geri gelirse "%" araması tüm dizini döker.
+      expect(migration).not.toMatch(/'%'\s*\|\|\s*word/);
+      expect(migration).toContain("position(w in c.row_haystack)");
+    });
+
+    it("sayfalama tavanı TS sabitiyle aynı sayıdır", () => {
+      expect(migration).toContain(`, ${DIRECTORY_MAX_PAGE_SIZE})`);
+    });
+
+    it("Türkçe katlama SQL tarafında da uygulanır", () => {
+      expect(migration).toContain("catalog_search_normalize");
+    });
   });
 
   it("TS önekleri, dizin RPC'sindeki SQL koşuluyla aynı kalır (SQL↔TS ayna sözleşmesi)", () => {

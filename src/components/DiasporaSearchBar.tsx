@@ -20,16 +20,12 @@ const DiasporaSearchBar = () => {
   const { user, isLoading } = useAuth();
   const [query, setQuery] = useState("");
 
-  // Dizin yalnızca giriş yapmış kullanıcılara açık. Ziyaretçiyi boş bir sonuç
-  // sayfasına düşürmek yerine giriş/kayıt akışına yönlendirip aramayı next ile
-  // koruyoruz — böylece giriş sonrası doğrudan sonuçlara iner.
+  // Dizin araması ziyaretçiye AÇIK (Batch 0 — `search_directory_catalog` artık
+  // anonim çağrılabilir ve sayfalıdır). Giriş yönlendirmesini geri ekleme:
+  // `DiasporaSearchSection` ile aynı sözleşmede kalmalı, yoksa sitenin iki
+  // arama kutusu aynı tıklamaya iki farklı cevap verir.
   const goToDirectory = (search: string) => {
-    const target = search ? `/directory?${search}` : "/directory";
-    if (!isLoading && !user) {
-      navigate(`/login?next=${encodeURIComponent(target)}`);
-      return;
-    }
-    navigate(target);
+    navigate(search ? `/directory?${search}` : "/directory");
   };
 
   const handleSearch = () => {
@@ -97,7 +93,7 @@ const DiasporaSearchBar = () => {
           {visitorHint ? (
             <p className="mx-auto mb-6 flex max-w-2xl items-center justify-center gap-1.5 text-xs text-muted-foreground">
               <Info className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-              Tam dizin için ücretsiz giriş gerekir — arama, giriş sonrası kaldığın yerden devam eder.
+              Arama herkese açık — iletişime geçmek ve kendi kaydını açmak için ücretsiz giriş yeterli.
             </p>
           ) : (
             <div className="mb-6" />
@@ -121,9 +117,14 @@ const DiasporaSearchBar = () => {
                 <Plane className="h-4 w-4" aria-hidden="true" />
                 Vize & Göçmenlik
               </button>
-              <button onClick={() => handleQuickSearch("İş İlanları")} className={`${quickPillClass} ${quickPillStyles.green}`}>
+              {/* ⚠️ "İş İlanları" çipi 2026-09-21'de KALDIRILDI. Canlıda ölçüldü:
+                  job_posting_details 0 satır, item_type='job_posting' 0 kayıt —
+                  yani çip her tıklamada boş sonuç veriyordu ve kullanıcıya
+                  "arama bozuk" öğretiyordu. Geri eklemeden ÖNCE veri gelsin;
+                  çip veriyi yaratmaz. */}
+              <button onClick={() => handleQuickSearch("Dernek")} className={`${quickPillClass} ${quickPillStyles.green}`}>
                 <Briefcase className="h-4 w-4" aria-hidden="true" />
-                İş İlanları
+                Dernek & Vakıf
               </button>
             </div>
 
