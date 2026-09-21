@@ -2,8 +2,8 @@
 
 > Bu dosya, yeni bir agent oturumunun projeyi hızla kavraması için hazırlanmıştır.
 > Diğer teknik belgelerden bilgi derleyerek token maliyetini minimize eder.
-> **Güncelleme:** 2026-09-18 (bayat notlar ölçülerek düzeltildi: prod runtime nginx, 9 edge
-> function, 393 migration, stack sürümleri ve teknik borç listesi güncel — önceki güncelleme
+> **Güncelleme:** 2026-09-21 (bayat metrikler ölçülerek düzeltildi: prod runtime nginx, 11 Edge
+> Function kaynak dizini, 403 migration, stack sürümleri ve teknik borç listesi güncel — önceki güncelleme
 > 2026-06-11'de Cadde 3.0 E2E rebuild kapanışıydı)
 >
 > **Kök doküman düzeni (2026-08-04):** kökte yalnız 2 `.md` yaşar —
@@ -25,9 +25,9 @@
 - Supabase Project ID: `injprdrsklkxgnaiixzh`
 - Deploy: Docker / Coolify → `npm run build` → **nginx** (production runtime).
   `server.mjs` yalnız `npm run start` / nixpacks yoludur — bkz. §7.
-- **Repo gerçekliği (ölçüldü 2026-09-18):** 1.091 `ts/tsx` dosya `src` altında (157 sayfa `.tsx`,
-  91'i admin; 334 component; 277 lib modülü), **393 migration** (141 applied + 252 archive),
-  278 test dosyası / 1.958 test, **9 edge function**
+- **Repo gerçekliği (ölçüldü 2026-09-21):** 1.195 `ts/tsx` dosya `src` altında (211 sayfa `.tsx`,
+  117'si admin; 447 component; 463 lib modülü), **403 migration** (151 applied + 252 archive),
+  **306 test dosyası / 2.361 test**, **11 Edge Function kaynak dizini** (10 aktif, 1 deprecated)
 
 ### Modüller (tek SPA içinde)
 

@@ -19,14 +19,16 @@ katalog, **Cadde** (sosyal akış + Cafe + Çarşı + Tanıtım), anketler, muha
 ```
 React 18 + Vite 5 (SWC)  ·  TypeScript (strict KAPALI — bilinçli)  ·  Tailwind + shadcn/ui
 @tanstack/react-query 5  ·  react-router-dom 7  ·  zod + react-hook-form
-Supabase: Postgres + RLS + security-definer RPC'ler + Auth + Realtime + 7 Edge Function
+Supabase: Postgres + RLS + security-definer RPC'ler + Auth + Realtime + 11 Edge Function kaynak dizini
 Deploy: Docker/Coolify → npm run build → nginx 1.27-alpine (301'ler + güvenlik başlıkları + CSP +
         prerender proxy + RAG proxy + SPA fallback).  server.mjs PROD RUNTIME DEĞİLDİR — bkz. §6.
 Canlı: corteqs.net · Supabase proje: injprdrsklkxgnaiixzh
 ```
 
-Ölçülen büyüklük (2026-08-04): `src` altında 989 `.ts/.tsx` — 209 sayfa, 429 component, 278 lib
-modülü; 202 test dosyası + 18 Playwright `.spec.ts`; 352 migration; 7 Edge Function.
+Ölçülen büyüklük (2026-09-21): `src` altında 1.195 `.ts/.tsx` — 211 sayfa, 447 component, 463 lib
+modülü; 306 Vitest test dosyası (src 275, scripts 19, Supabase 8, workers 4) + 10 Playwright
+`.spec.ts`; 403 migration (151 applied + 252 archive); 11 Edge Function kaynak dizini (10 aktif,
+1 deprecated).
 
 **Temel mimari ilke:** Kural DB'de yaşar. Yazma işlemleri security-definer RPC'lerden geçer,
 RLS okumayı sınırlar; frontend yalnız yol gösterir (Zod ilk hat, Türkçe hata mesajları).
@@ -151,8 +153,8 @@ DROP migration (`user_follows` 1 satır R-06 notuyla). Bu tablolara yeniden poli
 
 ## 5. Veritabanı Operasyonları
 
-- **Migration konumu ve sayısı:** 352 migration — 100'ü `supabase/migrations/applied/`, 252'si
-  `supabase/migrations/archive/` altında (2026-08-04 taban çizgisi ayrımı; arşiv SİLİNMEZ,
+- **Migration konumu ve sayısı:** 403 migration — 151'i `supabase/migrations/applied/`, 252'si
+  `supabase/migrations/archive/` altında (2026-09-21 ölçümü; arşiv SİLİNMEZ,
   sıfırdan kurulum = `supabase/baseline/2026-08-04-public-schema.sql` + `applied/`).
   Uygulanmamış migration kontrolü elle yapılmaz: `npm run check:migrations`.
   Repo kökündeki `supabase/migrations/` dizininde 0 adet `.sql` vardır — yeni bir migration
@@ -327,14 +329,14 @@ Pre-hook: `verify:text` (encoding bekçisi) `src/public/docs/scripts` tarar — 
 
 ## 7. Test Stratejisi
 
-- **Vitest** (unit + component, jsdom): 202 test dosyası (src 190, scripts 9, supabase 3,
+- **Vitest** (unit + component, jsdom): 306 test dosyası (src 275, scripts 19, Supabase 8,
   workers 4) — SQL↔TS ayna truth table'ları, cursor tekrar/kayıp, Zod sınırları, sayfa smoke'ları.
   Tek dosya: `npm run test -- <path>`.
 - **Drift kilitleri** (bunlar bilerek "test" değil "sözleşme bekçisi"dir; kırılırsa iki tarafı da
   güncelle): `src/lib/redirects.test.ts` (redirects.ts ↔ nginx.conf.template + CSP kuralları),
   `scripts/generate-sitemap.test.mjs` (STATIC_ROUTES ↔ App.tsx route tablosu),
   `src/lib/cadde-rules` ayna testleri (SQL ↔ TS).
-- **Playwright** yapılandırılmış: 18 `.spec.ts`; persona matrisi (spec §22.4) açık kalem.
+- **Playwright** yapılandırılmış: 10 `.spec.ts`; persona matrisi (spec §22.4) açık kalem.
 - Tam `npm run lint` **0 problem** döner (eski "1280 problem" iddiası bayattı, 2026-09-05'te
   ölçülüp kapandı — CLAUDE.md "Known Limitations"). `tsc -p tsconfig.app.json --noEmit`:
   **0 hata** (2026-09-13'te sıfırlandı, §5 eski A/B/C sınıf dökümü artık tarihsel).

@@ -9,7 +9,7 @@ React + Vite landing page backed by Supabase for form collection, admin review, 
 - Standalone lansman registration page at `/lansman`
 - Lansman admin screen at `/admin/lansman` under the shared admin shell
 - Supabase Auth based admin access via `user_role_assignments` + the `is_admin()` RPC (the legacy `public.admin_users` table was dropped 2026-06-09)
-- 9 Supabase Edge Functions for email notifications, matching, radar news scanning, survey intake, and WhatsApp webhook/reply handling
+- 11 Supabase Edge Function source directories (10 active, 1 deprecated) for email notifications, matching, radar news scanning, survey intake, AI assistance, relocation, and WhatsApp webhook/reply handling
 - Additional workflow notes are indexed under `docs/README.md`.
 
 ## Local setup
@@ -98,7 +98,8 @@ Supabase runtime — do not set them manually.
 
 ## Deploying Edge Functions
 
-There are **9** Edge Functions in `supabase/functions/`:
+There are **10 active** Edge Functions in `supabase/functions/` (plus the deprecated
+`lansman-admin` handler):
 
 ```bash
 supabase functions deploy send-submission-email
@@ -106,7 +107,9 @@ supabase functions deploy send-notification-emails
 supabase functions deploy submit-survey-response
 supabase functions deploy find-matches
 supabase functions deploy radar-news-scan
+supabase functions deploy relocation-assistant
 supabase functions deploy relocation-notifications
+supabase functions deploy site-assistant
 supabase functions deploy whatsapp-webhook
 supabase functions deploy whatsapp-reply
 
