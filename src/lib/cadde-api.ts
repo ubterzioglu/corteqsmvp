@@ -29,6 +29,11 @@ import {
   resolveCountryIdsByNames,
 } from "./cadde-internal";
 import { normalizeCaddeMedia } from "./cadde-media";
+import {
+  fetchCaddeCityNameMap as fetchCityMap,
+  fetchCaddeCountryNameMap as fetchCountryMap,
+  fetchCaddeUserNameMap as fetchUserNameMap,
+} from "./cadde-api-support";
 import type { CaddeFeedReach } from "./cadde-reach";
 import { mapActorContext, moderateCaddeCafeName, type CaddeActorContext } from "./cadde-rules";
 import {
@@ -130,34 +135,12 @@ function applyDemoFilters<T extends { country: string | null; city: string | nul
   });
 }
 
-async function fetchCountryMap(): Promise<Map<string, string>> {
-  const { data } = await db.from("cadde_countries").select("id, name");
-  return new Map<string, string>((data ?? []).map((row: { id: string; name: string }) => [row.id, row.name]));
-}
-
 async function fetchPostShareCounts(postIds: string[]): Promise<Map<string, number>> {
   if (postIds.length === 0) return new Map();
   const { data } = await db.from("cadde_posts").select("id, share_count").in("id", postIds);
   return new Map<string, number>(
     ((data ?? []) as Array<{ id: string; share_count: number | null }>).map((row) => [row.id, row.share_count ?? 0]),
   );
-}
-
-async function fetchCityMap(): Promise<Map<string, string>> {
-  const { data } = await db.from("cadde_cities").select("id, name");
-  return new Map<string, string>((data ?? []).map((row: { id: string; name: string }) => [row.id, row.name]));
-}
-
-async function fetchUserNameMap(authorIds: string[], extraUserIds: string[] = []): Promise<Map<string, string>> {
-  const allIds = Array.from(new Set([...authorIds, ...extraUserIds].filter(Boolean)));
-  if (allIds.length === 0) return new Map<string, string>();
-  const { data } = await db
-    .from("user_profile_attributes")
-    .select("user_id, value_text, afs_attributes!inner(key)")
-    .in("user_id", allIds)
-    .eq("afs_attributes.key", "full_name");
-  const rows = (data ?? []) as Array<{ user_id: string; value_text: string | null }>;
-  return new Map<string, string>(rows.map((row) => [row.user_id, row.value_text ?? FALLBACK_PROFILE_NAME]));
 }
 
 async function fetchPostReactions(postIds: string[]): Promise<CaddeReactionRow[]> {
