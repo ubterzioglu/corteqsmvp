@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 45,
-    "edge_functions": 10,
+    "total": 47,
+    "edge_functions": 11,
     "workers": 2,
-    "ui_modules": 32
+    "ui_modules": 33
   },
   "tools": [
     {
@@ -19,6 +19,8 @@ export const toolCatalog = {
       "entrypoint": "package.json",
       "interface_kind": "cli",
       "commands": [
+        "ai:embed",
+        "ai:ingest",
         "build",
         "build:dev",
         "check:bundle",
@@ -337,6 +339,52 @@ export const toolCatalog = {
         "zod": "3.25.76"
       },
       "evidence_path": "supabase/functions/send-submission-email/index.ts"
+    },
+    {
+      "tool_key": "edge.site_assistant",
+      "tool_name": "site-assistant",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/site-assistant/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "zod",
+        "fields": [
+          "messages"
+        ]
+      },
+      "tables_read_write": [
+        "edge_rate_limits"
+      ],
+      "rpcs": [
+        "ai_knowledge_search",
+        "is_admin"
+      ],
+      "limits": {
+        "MAX_BODY_BYTES": 32000,
+        "RATE_LIMIT_MAX": 30,
+        "RATE_LIMIT_WINDOW_SECONDS": 600
+      },
+      "http_statuses": [
+        400,
+        401,
+        403,
+        405,
+        413,
+        429,
+        500
+      ],
+      "http_method": "POST",
+      "dependencies": [
+        "@supabase/supabase-js@2.108.2",
+        "zod@3.25.76",
+        "gemini"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.108.2",
+        "zod": "3.25.76"
+      },
+      "evidence_path": "supabase/functions/site-assistant/index.ts"
     },
     {
       "tool_key": "edge.submit_survey_response",
@@ -1231,6 +1279,23 @@ export const toolCatalog = {
       ],
       "rpcs": [],
       "evidence_path": "src/lib/service-requests-api.ts"
+    },
+    {
+      "tool_key": "module.site_assistant_api",
+      "tool_name": "site-assistant-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/site-assistant-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "MAX_CHAT_TURNS",
+        "MAX_MESSAGE_CHARS",
+        "askSiteAssistant",
+        "trimChatHistory"
+      ],
+      "tables_read_write": [],
+      "rpcs": [],
+      "evidence_path": "src/lib/site-assistant-api.ts"
     },
     {
       "tool_key": "module.welcome_pack_orders_api",
@@ -3513,6 +3578,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/site-assistant-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/site-assistant-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/standalone-tools.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -3626,6 +3701,16 @@ export const toolCatalog = {
       "path": "src/lib/zgen/zgen-types.ts",
       "kind": "ts",
       "module_family": "lib"
+    },
+    {
+      "path": "supabase/functions/_shared/ai-assistant-context.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/ai-assistant-context.ts",
+      "kind": "ts",
+      "module_family": "edge"
     },
     {
       "path": "supabase/functions/_shared/emails/admin-update-digest.test.ts",
@@ -3829,6 +3914,16 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/send-submission-email/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/site-assistant/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/site-assistant/providers.ts",
       "kind": "ts",
       "module_family": "edge"
     },

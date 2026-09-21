@@ -12,7 +12,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   bilinçlidir, 11 dev dosya ~140 küçük modüle bölündü, bkz. Known Limitations md.7)
 - **397 Supabase migrations** — 145 in `supabase/migrations/applied/`
   + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split; ölçüldü 2026-09-19);
-  **9** Edge Functions (whatsapp-reply + whatsapp-webhook 2026-08-30'da eklendi)
+  **11** Edge Functions (`relocation-assistant` 2026-09-20, `site-assistant` 2026-09-21;
+  "9" rakamı iki turdur bayattı — aşağıdaki listeye bak, ezberleme)
 - **279 dosya / 1.981 test** yeşil (`npm run test`, ölçüldü 2026-09-19 gece) — 245, 271, 276 ve
   278 taban rakamları bayattı; birkaç oturumdur `*-api.ts` göçleriyle yeni test dosyaları ekleniyor
 - `npm run lint` → **0 problem** (eski "1280 problem" notu bayattı)
@@ -427,6 +428,51 @@ Okullar ve Hoşgeldin Paketi sekmeleri örnek içerik gösterir. O üç sekme
 canlıda unutulamaz. Yeni bir kısmi demo sayfası yaparken bu deseni kopyala; örnek
 içeriği rotadan bağımsız bir bayrakla gizleme.
 
+## AI bilgi tabanı ve site asistanı (2026-09-21)
+
+Bot `supabase/functions/site-assistant/`'tır ve `ai_knowledge_documents` tablosunu okur.
+Plan: `docs/plans/2026-09-20-site-geneli-ai-bot-plani.md` · Ertelenenler:
+`docs/kalanlar/2026-09-21-site-geneli-ai-bot-kalan-isler.md`.
+
+1. **Bilgi tabanı TEK tablodur:** `ai_knowledge_documents`. Kaynaklar `source_key` ile
+   ayrılır (bugün `catalog` + `blog`). **`catalog_search_documents`'a blog/doküman
+   YAZILAMAZ** — `item_id` sütunu `catalog_items(id)` üzerine zorunlu FK'dir. Bu
+   varsayım bir kez yapıldı ve çürüdü; tekrarlama.
+2. **Yeni veri seti eklemek = `scripts/ai-knowledge/sources.mjs`'e bir satır** + bir
+   `load(client)` fonksiyonu. Şema değişmez, `npm run ai:ingest` aynı kalır.
+3. **Embedding boyutu 1536'dır ve pazarlık konusu değildir.** Gemini
+   `gemini-embedding-001` varsayılanı **3072**'dir; `outputDimensionality: 1536`
+   parametresi atlanırsa yazma anında patlar. Belge tarafı `RETRIEVAL_DOCUMENT`,
+   sorgu tarafı `RETRIEVAL_QUERY` `taskType` kullanır — **ikisi tutarsız olursa
+   mesafeler sessizce bozulur, hata çıkmaz.**
+4. **`audience` sütunu (`public`/`member`/`admin`) kitle filtresidir ve filtre
+   `ai_knowledge_search` RPC'si İÇİNDE uygulanır.** İstemciden gelen rol iddiasına
+   güvenilmez; `site-assistant` kullanıcının kendi oturumuyla `is_admin()` sorar.
+   Bugün korpusta `admin` satırı yok; iç belgeler eklendiğinde (kalan işler K1) bu
+   sözleşme onları üyeden gizleyen tek mekanizma olacak.
+5. **Yeni `hnsw` indeksi kullanılır, `ivfflat` değil.** ivfflat küme merkezlerini var
+   olan satırlardan öğrenir; boş tabloda kurulursa isabet *hiçbir hata vermeden* düşük
+   kalır. `catalog_search_documents` üzerindeki ivfflat indeksi (lists=100) tam olarak
+   bu durumdadır — o sütun doldurulursa indeks yeniden kurulmalıdır.
+6. **Korpus filtresi dizinin filtresini AYNEN yansıtır — bot kendi arayüzünden
+   cömert olamaz.** 21 Eylül'de ölçülen üç sızma: (a) `[PLACEHOLDER]` kayıtlar
+   (249'un **76**'sı) semantik aramada gerçeklerden DAHA İYİ eşleşiyordu, çünkü
+   başlıkları kategorinin tam adı; (b) yalnız `status`+`visibility` filtresiyle
+   `roles.is_directory_visible=false` olan **5 kayıt** (2 Süper Admin + 3 test
+   hesabı) korpusa giriyordu — dizinin B20 koşulunun karşılığı eksikti;
+   (c) `catalog_search_documents.search_text` **rol etiketini içermez**, bu yüzden
+   "şehir elçisi kim?" sorgusu hiçbir şey bulamıyordu. Üçü de
+   `scripts/ai-knowledge/sources.mjs` içinde kapatıldı — **gevşetme.**
+7. **Alaka eşiği `0.35`'tir ve ÖLÇÜMDÜR** (`site-assistant/index.ts`). Doğru
+   eşleşmeler 0.20–0.32, gürültü 0.36+. İlk sürümdeki 0.65 alakasız sorgulara da
+   bağlam veriyordu, yani `hasContext` hep `true` oluyordu — düzeltilmek istenen
+   kusurun aynısı. Değiştirmeden önce dosyadaki örnek sorguları yeniden ölç.
+8. **`ChatBot.tsx` artık `/api/chat`'i (rag.corteqs.net) ÇAĞIRMAZ.** Proxy nginx ve
+   `server.mjs`'te hâlâ duruyor (sökümü K4'te). `src/lib/ragApi.ts` artık ölüdür ama
+   silinmedi — silmeden önce importer sayısını ölç.
+7. **`site-assistant/providers.ts`, `relocation-assistant/providers.ts` ile AYNIDIR** ve
+   kopya olması bilinçlidir. Birleştirme K3'te; **birini değiştirirken diğerine bak.**
+
 ## Değişmez sözleşmeler (ZORUNLU — 2026-08-04)
 
 Bu beş kural 2026-08-04 modernizasyon çalışmasında ölçülerek konuldu. Her biri sessizce
@@ -641,12 +687,15 @@ Rules that follow from this:
    "instance unhealthy" in one call.
 
 - **RLS active** — submissions require specific conditions
-- **Edge Functions (9, ölçüldü 2026-09-18):** `find-matches`, `lansman-admin` (deprecated —
-  handler returns HTTP 410), `radar-news-scan`, `relocation-notifications`,
-  `send-notification-emails`, `send-submission-email`, `submit-survey-response`,
-  `whatsapp-reply`, `whatsapp-webhook` (last two added 2026-08-30; they read
-  `WHATSAPP_*` secrets — see README "Required function secrets").
+- **Edge Functions (11, ölçüldü 2026-09-21 dosyadan):** `find-matches`, `lansman-admin`
+  (deprecated — handler returns HTTP 410), `radar-news-scan`, `relocation-assistant`,
+  `relocation-notifications`, `send-notification-emails`, `send-submission-email`,
+  `site-assistant`, `submit-survey-response`, `whatsapp-reply`, `whatsapp-webhook`
+  (last two added 2026-08-30; they read `WHATSAPP_*` secrets — see README
+  "Required function secrets"). `_shared/` bir fonksiyon değil, paylaşılan modüller.
   (There is no `chat-register` function — that name was stale.)
+  ⚠️ Önceki "9" rakamı iki turdur bayattı: `relocation-assistant` (20 Eylül) ve
+  `site-assistant` (21 Eylül) listeye hiç eklenmemişti. **Sayıyı ezberleme, dizini say.**
 
 ### Canonical schema (after the AFS rebuild — 2026-06-09)
 

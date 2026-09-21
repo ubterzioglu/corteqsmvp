@@ -194,6 +194,37 @@ paths:
           description: Çok fazla istek (rate limit)
         "500":
           description: Sunucu hatası
+  /functions/v1/site-assistant:
+    post:
+      summary: site-assistant aracını çalıştır
+      operationId: execute_site_assistant
+      x-tool-key: edge.site_assistant
+      x-status: active
+      x-tables: [edge_rate_limits]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messages:
+                  type: string
+      responses:
+        "400":
+          description: Geçersiz istek (payload doğrulama hatası)
+        "401":
+          description: Yanıt
+        "403":
+          description: Origin'e izin verilmedi
+        "405":
+          description: Yöntem desteklenmiyor
+        "413":
+          description: Payload çok büyük
+        "429":
+          description: Çok fazla istek (rate limit)
+        "500":
+          description: Sunucu hatası
   /functions/v1/submit-survey-response:
     post:
       summary: submit-survey-response aracını çalıştır
