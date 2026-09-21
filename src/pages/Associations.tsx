@@ -191,12 +191,22 @@ const Associations = () => {
                   <Link to={a.href} className="flex-1" onClick={(e) => e.stopPropagation()}>
                     <Button variant="default" size="sm" className="w-full">Detay</Button>
                   </Link>
+                  {/* ⚠️ Radyo kartı 2026-09-21'e kadar `/radio/${a.id}/song-request`
+                      adresine gidiyordu. O rota `App.tsx`'te HİÇ TANIMLI DEĞİLDİ
+                      (54 rotanın hiçbiri `radio` ile başlamıyor), karşılığı olan bir
+                      sayfa, RPC veya tablo da yok — düğme 404'e düşüyordu. Kaldırıldı.
+                      Bu sayfadaki öbür tür-özel düğmeler (İzle / Etkinlikler) gibi
+                      şimdilik hareketsiz; gerçek "istek parça" akışı yazıldığında
+                      buraya bağlanır. */}
                   {a.type === "Radyo" ? (
-                    <Link to={`/radio/${a.id}/song-request`} className="flex-1" onClick={(e) => e.stopPropagation()}>
-                      <Button variant="outline" size="sm" className="w-full gap-1">
-                        <Music className="h-3 w-3" /> İstek Parça
-                      </Button>
-                    </Link>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 gap-1"
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                    >
+                      <Music className="h-3 w-3" /> Dinle
+                    </Button>
                   ) : a.type === "Hastane" ? (
                     <Link to={`/hospital-appointment/${a.id}`} className="flex-1" onClick={(e) => e.stopPropagation()}>
                       <Button variant="outline" size="sm" className="w-full gap-1 border-turquoise/30 text-turquoise hover:bg-turquoise/10">

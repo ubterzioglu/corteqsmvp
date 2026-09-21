@@ -170,15 +170,18 @@ const AssociationDetail = () => {
                   </>
                 ) : (
                   <>
-                    {assoc.type === "Radyo" && (
-                      <Link to={`/radio/${assoc.id}/song-request`}>
-                        <Button variant="default" className="gap-2 w-full bg-purple-600 hover:bg-purple-700">
-                          <Music className="h-4 w-4" /> İstek Parça Gönder
-                        </Button>
-                      </Link>
-                    )}
-                    <Button variant={assoc.type === "Radyo" ? "outline" : "default"} className="gap-2 w-full">
-                      <Users className="h-4 w-4" /> {assoc.type === "Radyo" ? "Dinle" : "Üye Ol"}
+                    {/* ⚠️ Burada 2026-09-21'e kadar `/radio/${assoc.id}/song-request`
+                        adresine giden "İstek Parça Gönder" düğmesi vardı. O rota
+                        `App.tsx`'te tanımlı DEĞİLDİ ve karşılığı bir sayfa/tablo da
+                        yoktu — sayfadaki TEK gezinen düğme 404'e düşüyordu. Kaldırıldı;
+                        "Dinle" artık birincil düğme. Gerçek istek-parça akışı
+                        yazıldığında rotayı `App.tsx`'e ekleyip düğmeyi geri koy. */}
+                    <Button variant="default" className="gap-2 w-full">
+                      {assoc.type === "Radyo" ? (
+                        <><Music className="h-4 w-4" /> Dinle</>
+                      ) : (
+                        <><Users className="h-4 w-4" /> Üye Ol</>
+                      )}
                     </Button>
                     {assoc.type !== "Radyo" && assoc.type !== "TV Kanalı" && (
                       <>
