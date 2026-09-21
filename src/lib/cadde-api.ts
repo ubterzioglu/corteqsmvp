@@ -60,6 +60,7 @@ export {
   searchCaddePeople,
 } from "./cadde-search-interests-api";
 export type { CaddePersonHit } from "./cadde-search-interests-api";
+export { approveCaddeCafeMember, archiveCaddeCafe, createCaddeCafe, joinCaddeCafe } from "./cadde-cafe-api";
 import type {
   CaddeBillboardCard,
   CaddeBillboardRow,
@@ -576,64 +577,6 @@ export async function createCaddePost(input: CaddePostInput): Promise<string> {
   );
   if (error) throw caddeWriteError("createCaddePost", error);
   return data as string;
-}
-
-/**
- * Cafe katılımı (Faz 4): entry policy (§7.3) + giriş tipi (open/approval/referral)
- * security-definer RPC'de enforce edilir; direct insert RLS'de kapalıdır.
- */
-export async function joinCaddeCafe(input: { cafeId: string; referralCode?: string; answer?: string }): Promise<CaddeCafeJoinResult> {
-  const parsed = parseWithUserError(caddeCafeJoinInputSchema, input);
-  const { data, error } = await db.rpc("join_cadde_cafe_v1", {
-    p_cafe_id: parsed.cafeId,
-    p_referral_code: parsed.referralCode?.trim() || null,
-    p_answer: parsed.answer?.trim() || null,
-  });
-  if (error) throw caddeWriteError("joinCaddeCafe", error);
-  const payload = (data ?? {}) as { memberId?: string; status?: string };
-  return {
-    memberId: payload.memberId ?? "",
-    status: (payload.status as CaddeCafeJoinResult["status"]) ?? "approved",
-  };
-}
-
-/** Cafe oluşturma (Faz 4): tek form + RPC; ad moderasyonu frontend ilk hattıdır (R-05). */
-export async function createCaddeCafe(input: CaddeCafeCreateInput): Promise<string> {
-  const parsed = parseWithUserError(caddeCafeCreateSchema, input);
-  const moderation = moderateCaddeCafeName(parsed.title);
-  if (moderation.ok === false) throw new Error(moderation.reason);
-
-  const { data, error } = await db.rpc("create_cadde_cafe_v1", {
-    p_title: parsed.title,
-    p_summary: parsed.summary,
-    p_theme_key: parsed.themeKey,
-    p_country: parsed.country ?? "",
-    p_city: parsed.city ?? "",
-    p_is_bridge: parsed.isBridge,
-    p_entry_mode: parsed.entryMode,
-    p_referral_code: parsed.referralCode?.trim() || null,
-    p_entry_question: parsed.entryQuestion?.trim() || null,
-    p_starts_at: parsed.startsAt ?? null,
-    p_ends_at: parsed.endsAt ?? null,
-    p_capacity: parsed.capacity ?? null,
-    p_external_links: parsed.externalLinks ?? [],
-    p_diaspora_key: parsed.diasporaKey ?? "tr",
-  });
-  if (error) throw caddeWriteError("createCaddeCafe", error);
-  return data as string;
-}
-
-export async function approveCaddeCafeMember(memberId: string, approve: boolean): Promise<void> {
-  const { error } = await db.rpc("approve_cadde_cafe_member_v1", {
-    p_member_id: memberId,
-    p_approve: approve,
-  });
-  if (error) throw caddeWriteError("approveCaddeCafeMember", error);
-}
-
-export async function archiveCaddeCafe(cafeId: string): Promise<void> {
-  const { error } = await db.rpc("archive_cadde_cafe_v1", { p_cafe_id: cafeId });
-  if (error) throw caddeWriteError("archiveCaddeCafe", error);
 }
 
 // ── Akış erişimi (CaddeReachCard) ────────────────────────────────────────────

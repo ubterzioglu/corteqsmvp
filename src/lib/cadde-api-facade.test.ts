@@ -9,6 +9,7 @@ import {
   toggleCaddeReaction,
 } from "@/lib/cadde-engagement-api";
 import * as caddeApi from "@/lib/cadde-api";
+import { approveCaddeCafeMember, archiveCaddeCafe, createCaddeCafe, joinCaddeCafe } from "@/lib/cadde-cafe-api";
 import { listCaddeCities, listCaddeCountries, listCaddeFeed } from "@/lib/cadde-feed-location-api";
 import { getCaddeSponsoredPlacement, listCaddeBillboardCards } from "@/lib/cadde-promotion-api";
 import {
@@ -51,5 +52,12 @@ describe("Cadde API facade", () => {
     expect(caddeApi.listCaddeInterestCatalog).toBe(listCaddeInterestCatalog);
     expect(caddeApi.listMyCaddeInterests).toBe(listMyCaddeInterests);
     expect(caddeApi.saveMyCaddeInterests).toBe(saveMyCaddeInterests);
+  });
+
+  it("routes cafe mutations through their existing module without changing the facade", () => {
+    expect(caddeApi.joinCaddeCafe).toBe(joinCaddeCafe);
+    expect(caddeApi.createCaddeCafe).toBe(createCaddeCafe);
+    expect(caddeApi.approveCaddeCafeMember).toBe(approveCaddeCafeMember);
+    expect(caddeApi.archiveCaddeCafe).toBe(archiveCaddeCafe);
   });
 });
