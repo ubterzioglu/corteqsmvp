@@ -3193,11 +3193,6 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/ragApi.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
       "path": "src/lib/recoveryReload.ts",
       "kind": "ts",
       "module_family": "lib"

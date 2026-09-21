@@ -2,7 +2,8 @@
 // Edge function: supabase/functions/site-assistant/index.ts
 // Plan: docs/plans/2026-09-20-site-geneli-ai-bot-plani.md (Adım 5)
 //
-// `src/lib/ragApi.ts` (`/api/chat` → rag.corteqs.net) YERİNE geçer. O servis bu
+// Eski `src/lib/ragApi.ts` (`/api/chat` → rag.corteqs.net) YERİNE geçer; o dosya
+// 21.09'da silindi (kalanlar yol haritası C02). O servis bu
 // repoda yoktur, tek soruluktur ve bağlam bulamadığında da `hasContext: true`
 // döndürür — bu yüzden ChatBot'taki yedek metin hiç devreye girmiyordu.
 

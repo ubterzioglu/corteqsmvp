@@ -215,7 +215,7 @@ describe("catalog-directory", () => {
 
   describe("dizin RPC'si — anonim erişim ve PII sözleşmesi (Batch 0 + 3)", () => {
     const migration = readFileSync(
-      "supabase/migrations/20260921090000_directory_search_anon_normalized.sql",
+      "supabase/migrations/applied/20260921090000_directory_search_anon_normalized.sql",
       "utf8",
     );
 

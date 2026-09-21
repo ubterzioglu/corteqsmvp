@@ -468,8 +468,8 @@ Plan: `docs/plans/2026-09-20-site-geneli-ai-bot-plani.md` · Ertelenenler:
    bağlam veriyordu, yani `hasContext` hep `true` oluyordu — düzeltilmek istenen
    kusurun aynısı. Değiştirmeden önce dosyadaki örnek sorguları yeniden ölç.
 8. **`ChatBot.tsx` artık `/api/chat`'i (rag.corteqs.net) ÇAĞIRMAZ.** Proxy nginx ve
-   `server.mjs`'te hâlâ duruyor (sökümü K4'te). `src/lib/ragApi.ts` artık ölüdür ama
-   silinmedi — silmeden önce importer sayısını ölç.
+   `server.mjs`'te hâlâ duruyor (sökümü B24'te). `src/lib/ragApi.ts` **21.09'da
+   SİLİNDİ** (0 importer ölçüldü; kalanlar yol haritası C02) — dosyayı arama.
 7. **`site-assistant/providers.ts`, `relocation-assistant/providers.ts` ile AYNIDIR** ve
    kopya olması bilinçlidir. Birleştirme K3'te; **birini değiştirirken diğerine bak.**
 
