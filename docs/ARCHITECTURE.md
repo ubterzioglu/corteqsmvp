@@ -157,8 +157,8 @@ DROP migration (`user_follows` 1 satır R-06 notuyla). Bu tablolara yeniden poli
   `supabase/migrations/archive/` altında (2026-09-21 ölçümü; arşiv SİLİNMEZ,
   sıfırdan kurulum = `supabase/baseline/2026-08-04-public-schema.sql` + `applied/`).
   Uygulanmamış migration kontrolü elle yapılmaz: `npm run check:migrations`.
-  Repo kökündeki `supabase/migrations/` dizininde 0 adet `.sql` vardır — yeni bir migration
-  ararken `applied/` alt klasörüne bak.
+  Repo kökündeki `supabase/migrations/` dizininde 0 adet `.sql` vardır — yeni migration dosyası
+  için canonical konum `supabase/migrations/applied/` alt klasörüdür.
 - **Migration kuralı:** silme/yeniden sıralama yok — yalnız yeni dosya, artan timestamp.
   Canlı son sürümü her zaman doğrula: `select max(version) from supabase_migrations.schema_migrations`.
   Dosyanın uygulanmış olması `schema_migrations` kaydının var olduğu anlamına gelmez; ikisi ayrı

@@ -358,7 +358,7 @@ This is intentional to avoid massive refactor burden. When adding new code, writ
 | **`src/lib/redirects.ts`** | Single source for legacy redirects; App.tsx generates routes from it, `nginx.conf.template` must mirror it (`src/lib/redirects.test.ts` enforces) |
 | `public/analytics.js` | gtag config + Clarity loader, moved out of `index.html` so CSP needs no `'unsafe-inline'` |
 | `server.mjs` | **NOT the production runtime.** Local `npm run start` + nixpacks path only; env injection via `/env-config.js`, `/api/chat` proxy. Keep its `legacyRedirectMap` aligned with `src/lib/redirects.ts`. |
-| `supabase/migrations/20260512103000_security_hardening_phase1.sql` | Security baseline |
+| `supabase/migrations/applied/20260512103000_security_hardening_phase1.sql` | Security baseline |
 | `tsconfig.json` | Relaxed strict mode — refactor pivot point |
 | `eslint.config.js` | Minimal rules; `no-unused-vars: off` |
 
@@ -535,7 +535,7 @@ bozulabilen (test/build patlamayan ama canlıda zarar veren) bir sınıfı kapat
    - Never change route paths without checking git history
 
 2. **Supabase Migrations** cannot be deleted or reordered in production. Only add new migrations.
-   They live in `supabase/migrations/applied/` (100) + `supabase/migrations/archive/` (252,
+   They live in `supabase/migrations/applied/` (151) + `supabase/migrations/archive/` (252,
    pre-baseline — **never delete**); the parent `supabase/migrations/`
    directory itself holds 0 `.sql` files.
 
@@ -1001,4 +1001,3 @@ single-source redirect table.
 - docs/cleanup/2026-05-30/ — recent cleanup audit results
 - vite.config.ts comments — explains custom plugin behavior
 - src/test/setup.ts — test environment config
-

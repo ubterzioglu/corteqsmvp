@@ -417,16 +417,16 @@ supabase functions deploy whatsapp-reply
 | **`nginx.conf.template`** | **Production runtime config:** güvenlik başlıkları + CSP, tüm 301'ler, `/api/chat`, prerender |
 | **`src/lib/redirects.ts`** | Legacy redirect TEK kaynak; App.tsx buradan üretir, nginx aynalamalı (redirects.test.ts kilitler) |
 | `server.mjs` | local `npm run start` / nixpacks runtime — **prod runtime DEĞİL** |
-| `supabase/migrations/20260512103000_security_hardening_phase1.sql` | Güvenlik baseline |
-| `supabase/migrations/20260609003000_drop_legacy_tables.sql` | Legacy tablo temizliği |
-| `supabase/migrations/20260609015000_fix_catalog_profile_trigger_post_drop.sql` | Yeni kullanıcı oluşturma trigger düzeltmesi |
+| `supabase/migrations/applied/20260512103000_security_hardening_phase1.sql` | Güvenlik baseline |
+| `supabase/migrations/applied/20260609003000_drop_legacy_tables.sql` | Legacy tablo temizliği |
+| `supabase/migrations/applied/20260609015000_fix_catalog_profile_trigger_post_drop.sql` | Yeni kullanıcı oluşturma trigger düzeltmesi |
 
 ---
 
 ## 10. Dokunulmayacak / Kırılmayacak Şeyler
 
 1. **SEO kilitli URL'ler:** `/lansman`, `/cadde` (+ alt rotaları `/cadde/cafe/:id`, `/cadde/carsi[/:id]`), `/19051919`, `/anket`, `/commercial/<slug>`, `/founders`, `/directory`, `/iletisim` — path değiştirilemez
-2. **Supabase migration'ları** — silinemez, yeniden sıralanamaz; sadece yeni ekle (parent `supabase/migrations/` dizininde .sql BIRAKMA — `applied/` altına taşı)
+2. **Supabase migration'ları** — silinemez, yeniden sıralanamaz; yalnız `supabase/migrations/applied/` altına yeni ekle (parent `supabase/migrations/` dizininde .sql BIRAKMA)
 3. **`server.mjs`** — env injection ve RAG proxy mantığı (local/nixpacks yolu; prod davranışı `nginx.conf.template`'te)
 4. **`nginx.conf.template`** — `add_header` kalıtılmaz, CSP'ye `'unsafe-inline'` eklenmez, yönlendirme dönen server bloğu `default_server` olamaz (CLAUDE.md "Değişmez sözleşmeler")
 5. **`src/components/ui/*`** — shadcn generated, manuel düzenleme yapma
