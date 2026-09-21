@@ -66,6 +66,7 @@
 | `cadde-300/` | Cadde 3.0 E2E rebuild: spec, envanter, devir notu, faz dokümanları (00–03), **change-report.md** (kapanış + kalan işler) | Tamamlandı (2026-06-11) — referans |
 | `plans/` | Uygulama planları; `plans/admin-v2/` = Admin Panel v2 masterplan (md+html) + progress handoff; **2026-08-04 modernizasyon planı + backlog'u** burada | Aktif/yeni biten |
 | `catalog-role-afs-rebuild/` | Catalog/flat-rol/AFS rebuild raporları (00–14, canlı 2026-06-09) | Referans |
+| `kalanlar/` | **Bitmiş planlardan artakalan, karar bekleyen maddeler.** `plans/` ile farkı: oradaki iş kod eksikliğidir, buradaki bekleyen bir **veri/ürün/gizlilik kararıdır** ve sahibi uygulayan oturum değil, karar veren kişidir. Karar verilip iş bitince dosya silinir. Klasörün kendi `README.md`'si açık maddeleri ve bekleyen soruları tablo hâlinde tutar. | Aktif |
 | `refactor/` | Refactor backlog'u (B1–B10) | Aktif |
 | `modules/` | Modül belgeleri (Türkçe domain adları) | Aktif |
 | `operations/` | Deploy, database, security, release rehberleri | Aktif |
