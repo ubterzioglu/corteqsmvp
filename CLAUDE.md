@@ -6,18 +6,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **CorteQS Landing** is a multi-feature React + Vite application with Supabase backend. It combines a public marketing site, admin dashboard, member profiles, surveys, workspace collaboration tools, and an accounting module (muhasebe) — all in a single SPA.
 
-**Key Metrics (ölçüldü 2026-09-19 gece):**
-- **1.098** `.ts`/`.tsx` files under `src` (2026-09-06 ölü kod temizliğiyle 1.092 → 950'ye
-  inmişti; 13 Eylül gecesi iki dalgalık büyük dosya ayrıştırmasıyla 1.091'e **çıktı** — bu
-  bilinçlidir, 11 dev dosya ~140 küçük modüle bölündü, bkz. Known Limitations md.7)
-- **397 Supabase migrations** — 145 in `supabase/migrations/applied/`
-  + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split; ölçüldü 2026-09-19);
-  **11** Edge Functions (`relocation-assistant` 2026-09-20, `site-assistant` 2026-09-21;
-  "9" rakamı iki turdur bayattı — aşağıdaki listeye bak, ezberleme)
-- **279 dosya / 1.981 test** yeşil (`npm run test`, ölçüldü 2026-09-19 gece) — 245, 271, 276 ve
-  278 taban rakamları bayattı; birkaç oturumdur `*-api.ts` göçleriyle yeni test dosyaları ekleniyor
-- `npm run lint` → **0 problem** (eski "1280 problem" notu bayattı)
-- `src/App.tsx`: 313 lines, 51 `lazy()` imports
+**Key Metrics (ölçüldü 2026-09-21 akşamı — önceki tur 19 Eylül'dü ve SEKİZ rakamı birden
+bayatlamıştı; ezberleme, komutu çalıştır):**
+- **1.195** `.ts`/`.tsx` files under `src` (`find src -name '*.ts' -o -name '*.tsx' | wc -l`;
+  bunun **275**'i test dosyası). 2026-09-06 ölü kod temizliğiyle 1.092 → 950'ye inmişti;
+  13 Eylül gecesi iki dalgalık büyük dosya ayrıştırmasıyla yeniden **çıktı** — bu
+  bilinçlidir, 11 dev dosya ~140 küçük modüle bölündü, bkz. Known Limitations md.7
+- **403 Supabase migrations** — **151** in `supabase/migrations/applied/`
+  + 252 in `supabase/migrations/archive/` (2026-08-04 baseline split).
+  ⚠️ Parent `supabase/migrations/` içinde **0** `.sql` olmalıdır; orada kalan dosya
+  sürüm karşılaştırmasına girmez (kör nokta, aşağıda ayrıntılı)
+- **306 dosya / 2.361 test** yeşil (`npm run test`) — **275** src + **19** scripts
+  + **8** supabase + **4** workers. 245, 271, 276, 278 ve 279 taban rakamları bayattı.
+  ⚠️ Test dosyası sayarken `find`'ı `-not -path '*/node_modules/*'` ile sınırla; aksi
+  hâlde `workers/` için 4 yerine 284 gelir
+- `npm run lint` → **0 problem** · `npx tsc -p tsconfig.app.json --noEmit` → **0 hata**
+  (eski "1280 problem" ve "5 hata" notları bayattı)
+- `src/App.tsx`: **329** lines, **61** `lazy()` imports
+- Playwright: **10** `.spec.ts` (eski "18" bayattı) — ⚠️ bu makinede `npm run test:e2e`
+  port 8080 başka uygulamada olduğu için düşer; yol haritası **B09**
 - TypeScript with relaxed strict mode (intentional trade-off) — **`tsc` hatası SIFIRA indi**
   (109 → 22 → 16 → 12 → 9 → **0**, 2026-09-13; 19 Eylül gecesi 3 hataya çıkıp yeniden **0**'a
   indirildi). "Known Limitations" md.5 artık KAPALI — eski sınıf tablosunu ezberleme, aşağıdaki
@@ -83,7 +90,7 @@ npm run test -- src/lib/muhasebe-api.test.ts  # Run single test file
 ## Architecture & Code Organization
 
 ### Routing (App.tsx — Already Modularized)
-- All routes defined in `src/App.tsx` — the file is **313 lines** and **code-split via 51 `lazy()` imports** (not the monolith it once was)
+- All routes defined in `src/App.tsx` — the file is **329 lines** and **code-split via 61 `lazy()` imports** (not the monolith it once was)
 - **Reference:** Muhasebe routes are modularized via `src/pages/admin/muhasebe/routes.tsx` — use this as the pattern for further extraction
 - **Legacy redirects are NOT hand-written in App.tsx anymore.** They are generated from
   `src/lib/redirects.ts` (`LEGACY_REDIRECTS` 14 static + `DYNAMIC_LEGACY_REDIRECTS` 2 dynamic).
@@ -340,7 +347,7 @@ This is intentional to avoid massive refactor burden. When adding new code, writ
 
 | File | Why It Matters |
 |------|---|
-| `src/App.tsx` | Master route table (313 lines, 51 `lazy()` code-split) |
+| `src/App.tsx` | Master route table (329 lines, 61 `lazy()` code-split) |
 | `src/main.tsx` | Hydrate/Render switch (future SSR entry) |
 | `src/components/auth/AuthProvider.tsx` | Supabase session + context root |
 | `src/lib/muhasebe-*.ts` | Reference architecture (apis, schemas, aggregations) |
@@ -574,8 +581,8 @@ npm run test -- --coverage   # Coverage report (experimental)
 
 ### Test Organization
 - **Unit/integration:** `src/**/*.test.ts(x)` (vitest + Testing Library + jsdom)
-- **252 test files under `src`** (+ 16 `scripts` + 7 `supabase` + 4 `workers` = **279** toplam) — **1.981** test (ölçüldü 2026-09-19 gece)
-- **E2E:** Playwright configured but underutilized (18 `.spec.ts`)
+- **275 test files under `src`** (+ 19 `scripts` + 8 `supabase` + 4 `workers` = **306** toplam) — **2.361** test (ölçüldü 2026-09-21 akşamı)
+- **E2E:** Playwright configured but underutilized (**10** `.spec.ts`) — ⚠️ bu makinede hiç koşmuyor, bkz. yol haritası **B09**
 - **Setup:** `src/test/setup.ts` (jest-dom matchers)
 - **Coverage target:** 80%+ for new code
 
@@ -616,13 +623,13 @@ formu tamamen düşürür. Doğru araç `satisfies`: aynı okunabilirlik, gerçe
 
 ## Database & Migrations
 
-- **397 migrations total, split by a baseline on 2026-08-04** (date-prefixed, immutable in prod; sayı 2026-09-19'da dosyadan ölçüldü, `check:migrations` 397/397 canlı kayıt doğruladı).
+- **403 migrations total, split by a baseline on 2026-08-04** (date-prefixed, immutable in prod; sayı 2026-09-21 akşamı dosyadan ölçüldü). ⚠️ `check:migrations` bugün **temiz değildir**: `20260920100000` (kadro konsolu) canlıda uygulanmış ama `schema_migrations` satırı yok — yol haritası **B03**.
   Note the subdirectories — the parent `supabase/migrations/` contains 0 `.sql` files, so a glob
   on the parent silently finds nothing.
 
 | Path | Count | Meaning |
 |------|-------|---------|
-| `supabase/migrations/applied/` | 145 | Post-baseline (≥ `20260615100000`) — the working set |
+| `supabase/migrations/applied/` | 151 | Post-baseline (≥ `20260615100000`) — the working set |
 | `supabase/migrations/archive/` | 252 | Pre-baseline, **applied in production, never delete** |
 | `supabase/baseline/2026-08-04-public-schema.sql` | 1 | `pg_dump --schema-only` of the live `public` schema (237 tables, 481 RLS policies, 1568 grants, 342 indexes, 115 triggers, 5 views) |
 
@@ -687,15 +694,26 @@ Rules that follow from this:
    "instance unhealthy" in one call.
 
 - **RLS active** — submissions require specific conditions
-- **Edge Functions (11, ölçüldü 2026-09-21 dosyadan):** `find-matches`, `lansman-admin`
-  (deprecated — handler returns HTTP 410), `radar-news-scan`, `relocation-assistant`,
-  `relocation-notifications`, `send-notification-emails`, `send-submission-email`,
-  `site-assistant`, `submit-survey-response`, `whatsapp-reply`, `whatsapp-webhook`
-  (last two added 2026-08-30; they read `WHATSAPP_*` secrets — see README
-  "Required function secrets"). `_shared/` bir fonksiyon değil, paylaşılan modüller.
-  (There is no `chat-register` function — that name was stale.)
-  ⚠️ Önceki "9" rakamı iki turdur bayattı: `relocation-assistant` (20 Eylül) ve
-  `site-assistant` (21 Eylül) listeye hiç eklenmemişti. **Sayıyı ezberleme, dizini say.**
+- **Edge Functions — repoda 11 · canlıda 13 · kesişim 9** (ölçüldü 2026-09-21 akşamı:
+  `ls supabase/functions/` + Management API `/v1/projects/<ref>/functions`).
+  **Tek bir sayı YOKTUR; iki taraf ayrışmıştır ve ayrım bilgi taşır:**
+
+  | Durum | Fonksiyon |
+  |---|---|
+  | ✅ İkisinde de (9) | `find-matches` · `lansman-admin` (deprecated — handler HTTP 410) · `radar-news-scan` · `relocation-assistant` · `relocation-notifications` · `send-notification-emails` · `send-submission-email` · `site-assistant` · `submit-survey-response` |
+  | ⚠️ Repoda var, **canlıda YOK** (2) | `whatsapp-reply` · `whatsapp-webhook` — `52433c2` ile 30 Ağustos'ta commit'lendi, **hâlâ deploy edilmedi**. `WHATSAPP_*` secret'ları okurlar (README "Required function secrets") |
+  | ⚠️ Canlıda var, **repoda YOK** (4) | `chat-register` v10 · `diaspora-search` v12 · `relocation-chat` v14 · `whatsapp-bot-lookup` v12 — `git log --all` ile arandı, bu repoda **hiç bulunmadılar** (`chat-register` bir ara vardı, `17ad6c2`, silinmiş) |
+
+  `_shared/` bir fonksiyon değil, paylaşılan modüllerdir.
+
+  ⚠️ **`chat-register` CANLIDA ACTIVE'dir.** Buradaki eski "There is no `chat-register`
+  function — that name was stale" notu **yanlıştı**; ölçüm tersini söylüyor.
+  ⚠️ **Sayıyı ezberleme, iki tarafı da say.** Bu satır üç turdur bayatladı (9 → 11 →
+  "canlıda 12" → gerçek 13). Sebep yapısal: **Coolify edge function deploy ETMEZ**
+  (`Dockerfile` yalnız frontend'i kurar), yani commit'lemek canlıya çıkarmaz ve bunu
+  haber veren hiçbir şey yoktur — ne CI, ne test, ne lint. Kalıcı çözüm bir sözleşme
+  scripti (`npm run check:functions`); yol haritasında **B06**, ayrışmanın kendisi
+  **B04** + **B05**: `docs/kalanlar/2026-09-21-KALANLAR.md`.
 
 ### Canonical schema (after the AFS rebuild — 2026-06-09)
 
@@ -970,7 +988,7 @@ records); invalid `SearchAction`, loose `SpeakableSpecification`, `meta keywords
 Google-Extended, Bytespider currently allowed); `Suspense fallback={null}` blank-screen/LCP effect;
 bundle work (recharts, d3-geo, framer-motion usage map, no `manualChunks`).
 
-**Already done:** App.tsx modularized (51 `lazy()`), single Supabase client, legacy auth tables
+**Already done:** App.tsx modularized (61 `lazy()`), single Supabase client, legacy auth tables
 dropped (single system), `admin.ts` split into `admin/` domain modules, `types.ts` regenerated,
 `AdminLayout` reduced to a barrel, 0 `console.log` under `src`, nginx security headers + CSP,
 single-source redirect table.
