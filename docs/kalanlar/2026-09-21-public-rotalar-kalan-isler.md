@@ -8,6 +8,10 @@
 > değil; her maddenin altındaki rakam bu oturumda çalıştırılan bir komuttan gelir.
 > Sıra bağlayıcı değil, maddeler birbirinden bağımsız. Rakamları **ezberleme** —
 > dokunmadan önce ölçüm komutunu tekrar çalıştır.
+>
+> **Yeri:** `docs/kalanlar/` — klasörün kuralı ve öbür açık dosyalar için
+> [README.md](README.md). PR1 ve PR4 karar işidir; PR2 ve PR3 saf kod işidir ve
+> bilinçli olarak burada tutulmuştur (gerekçe README'de).
 
 ## Kapanan plan neyi bıraktı
 
