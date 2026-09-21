@@ -113,7 +113,11 @@
 yarım kalan işinden geliyor, ezberlenmemeli, yeniden ölçülmeli:
 1. `tsc` → `src/lib/catalog-directory.test.ts` 5 hata (`DIRECTORY_PAGE_SIZE`,
    `getTotalDirectoryCount` kaynakta yok).
-2. `npm run verify:text` → `scripts/ai-knowledge/text-extract.mjs` (`"&Auml;": "Ä"`).
+2. `npm run verify:text` → `scripts/ai-knowledge/text-extract.mjs` (HTML entity →
+   Latin-1 harf eşleme tablosu; denetim bunu mojibake sanıyor).
+   ⚠️ **O satırı buraya alıntılama** — alıntı da denetime takılır ve bu dosyayı
+   kırar. (Tam olarak bu yaşandı: ilk yazımda alıntılanmıştı, `prebuild` üzerinden
+   deploy'u kıracaktı.)
    Bu `pretest`/`prelint` kancası olduğu için **`npm run test` ve `npm run lint` hiç
    koşamıyor** — bu yüzden yukarıdaki doğrulamalar `npx` ile doğrudan koşuldu.
 3. `ingest:tools` diff'inin büyük kısmı `src/lib/kadro/*` — `bdf4916 feat(kadro)`
