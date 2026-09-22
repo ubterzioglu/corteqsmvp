@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import { mapCaddeCafeJoinRequestRow } from "@/lib/cadde-api";
+import { mapCaddeCafeJoinRequestRow } from "@/lib/cadde-cafe-api";
 
 const MIGRATION = "supabase/migrations/applied/20260830100000_cadde_cafe_join_requests.sql";
 
