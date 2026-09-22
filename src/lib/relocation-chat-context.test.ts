@@ -224,3 +224,28 @@ describe("buildRelocationChatContext — maliyet kapsamı (B29)", () => {
     expect(out).toContain("DE/MUC");
   });
 });
+
+// B28: panelde "resmî endeks değil" uyarısını görüp bottan kesin rakam almak,
+// uyarıyı etkisiz kılar. Nitelik bağlamda da yazılır.
+describe("buildRelocationChatContext — maliyet niteliği (B28)", () => {
+  it("maliyet bloğunun başında rakamların niteliğini söyler", () => {
+    const out = buildRelocationChatContext({
+      profile: profile(),
+      livingCosts: [costRow()],
+      requiredDocuments: [],
+    });
+
+    expect(out).toContain("resmî fiyat endeksi değildir");
+  });
+
+  it("maliyet verisi YOKKEN nitelik satırını da yazmaz (uydurma freni)", () => {
+    const out = buildRelocationChatContext({
+      profile: profile(),
+      livingCosts: [],
+      requiredDocuments: [docRow()],
+    });
+
+    expect(out).not.toContain("Yaşam masrafları (platform verisi)");
+    expect(out).not.toContain("resmî fiyat endeksi değildir");
+  });
+});

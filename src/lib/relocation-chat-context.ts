@@ -106,7 +106,17 @@ function buildCostBlock(
     else byScopeItem.set(key, [row]);
   }
 
-  const lines: string[] = ["## Yaşam masrafları (platform verisi)"];
+  // Rakamların niteliği bağlamda da yazılır (B28, seçenek D) — panelde uyarı görüp
+  // bottan "Berlin'de kira 1.400 €" cevabı almak, uyarıyı etkisiz kılar. Modelin
+  // bunları ölçülmüş fiyat gibi sunmaması için kaynak niteliği baştan söylenir.
+  const header = [
+    "## Yaşam masrafları (platform verisi)",
+    "(Büyük şehirler için tipik aylık aralıklar; genel piyasa bilgisine dayanır, resmî fiyat endeksi değildir.)",
+  ];
+  // ⚠️ Uydurma freni: veri satırı AYRI dizide toplanır. Başlığı `lines`e koyup
+  // `lines.length > 1` ile ölçmek, iki satırlık başlık yüzünden hiç veri yokken de
+  // blok üretirdi — model "elimde rakam var" sanardı.
+  const lines: string[] = [];
   for (const group of byScopeItem.values()) {
     const picked = pickRowForHousehold(group, householdSize);
     if (!picked) continue;
@@ -118,7 +128,7 @@ function buildCostBlock(
     lines.push(`- ${scope} · ${label}: ${formatCostRange(picked)}${period}`);
   }
 
-  return lines.length > 1 ? lines.join("\n") : null;
+  return lines.length > 0 ? [...header, ...lines].join("\n") : null;
 }
 
 function buildDocumentBlock(rows: RelocationRequiredDocumentRow[]): string | null {

@@ -25,6 +25,28 @@ const ITEM_ICONS: Record<string, string> = {
   childcare: "👶",
 };
 
+/**
+ * Rakamların NİTELİĞİ (B28, karar: seçenek D).
+ *
+ * Bu tutarlar ölçülmüş fiyat değildir. Onları yazan seed dosyası
+ * (`docs/operations/2026-09-21-relocation-icerik-seed.sql`) bunu açıkça söylüyor:
+ * "büyük şehirler için tipik aylık aralıklar · genel piyasa bilgisi · resmî bir fiyat
+ * endeksinden TÜRETİLMEMİŞTİR". Kullanıcı bunu bilmezse geniş aralığı ölçülmüş bir
+ * fiyat sanar.
+ *
+ * ⚠️ Burada **tarih gösterilmez**. `freshness_at` canlıda 192/192 dolu ama hepsi tek
+ * an — verinin tazeliği değil, içe aktarma günü. Tek başına bir tarih, hiç ölçülmemiş
+ * bir rakama ölçülmüşlük havası verir. Gerçek bir fiyat endeksi kaynağı edinilirse
+ * (karar paketinde seçenek E) tarih o zaman anlam kazanır.
+ */
+const CostQualifierNote = () => (
+  <p className="text-xs leading-relaxed text-muted-foreground">
+    Bu tutarlar, ilgili ülkenin büyük şehirleri için <strong>tipik aylık aralıklardır</strong>;
+    genel piyasa bilgisine dayanır ve resmî bir fiyat endeksinden türetilmemiştir. Kendi
+    durumunuz bu aralığın dışında olabilir.
+  </p>
+);
+
 interface LivingCostsPanelProps {
   rows: RelocationLivingCostRow[];
   householdSize: number;
@@ -136,6 +158,8 @@ export function LivingCostsPanel({
           </Card>
         );
       })}
+
+      <CostQualifierNote />
     </div>
   );
 }

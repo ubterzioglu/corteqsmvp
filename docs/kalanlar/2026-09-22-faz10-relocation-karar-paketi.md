@@ -1,6 +1,6 @@
 # Faz 10 — Relocation karar paketi (B27–B31)
 
-**Tarih:** 22 Eylül 2026 · **Durum:** B27 + B29 uygulandı; B28 · B30 · B31 karar bekliyor
+**Tarih:** 22 Eylül 2026 · **Durum:** B27 · B28 · B29 uygulandı; B30 · B31 karar bekliyor
 **Kaynak:** `docs/kalanlar/2026-09-21-KALANLAR.md` Faz 10 ·
 `docs/kalanlar/2026-09-21-relocation-kalan-kararlar.md`
 
@@ -58,6 +58,14 @@ sonradan yapılabilir — sekmeyi geri eklemek ucuz, yanlış izlenim pahalı.
 > ⚠️ **22.09 · Bu bölümün İLK hâlindeki öneri (seçenek A) YANLIŞTI ve düzeltildi.**
 > "Önce `source_id`'yi doldur" demiştim; yeniden ölçünce **doldurulacak bir kaynak
 > olmadığı** ortaya çıktı. Aşağısı düzeltilmiş hâldir.
+>
+> ✅ **Seçenek D UYGULANDI.** Maliyet panelinde rakamların niteliği yazıyor ("tipik
+> aylık aralıklar · genel piyasa bilgisi · resmî fiyat endeksi değildir"); aynı cümle
+> AI bağlamının maliyet bloğuna da eklendi — panelde uyarı görüp bottan kesin rakam
+> almak uyarıyı etkisiz kılardı. **Tarih bilerek gösterilmiyor** (`freshness_at`
+> 192/192 tek an = içe aktarma günü). Yolda bir kusur da düzeltildi: iki satırlık
+> başlık "veri yoksa blok üretme" frenini bozuyordu; başlık ayrı diziye alındı.
+> **5 test eklendi**, tam suite **329 dosya / 2.446 test**. Seçenek E hâlâ açık.
 
 **Ölçüm (22.09, canlı + repo):**
 
@@ -168,7 +176,7 @@ currently not indexed").
 | # | Öneri | Bugün uygulanabilir mi |
 |---|---|---|
 | B27 | ✅ **A uygulandı** — üç sekme kaldırıldı, `/relocation` demodan çıktı | **Bitti** |
-| B28 | **D** — rakamın niteliğini yaz (A uygulanamaz: maliyet kaynağı yok) | Evet (saf sunum) |
+| B28 | ✅ **D uygulandı** — nitelik panelde ve botta yazıyor (A uygulanamaz) | **Bitti** (E açık) |
 | B29 | ✅ **A uygulandı** — okuma tarafı şehir farkındası; veri girilebilir | **Bitti** |
 | B30 | **A** — kur kaynağı yok, tek karşılık gösterilmez | Evet (değişiklik yok) |
 | B31 | Tetikleyiciyle beklet — gerçek kayıt yok | Hayır |
