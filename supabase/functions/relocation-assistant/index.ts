@@ -20,14 +20,7 @@ import {
   resolveProviderName,
   type ModelMessage,
 } from "./providers.ts";
-
-const ALLOWED_ORIGINS = new Set([
-  "https://corteqs.net",
-  "https://www.corteqs.net",
-  "http://localhost:5173",
-  "http://localhost:4173",
-  "http://localhost:8080",
-]);
+import { buildAssistantCorsHeaders, isAssistantOriginAllowed } from "../_shared/edge-security.ts";
 
 const MAX_BODY_BYTES = 32_000;
 const RATE_LIMIT_MAX = 20;
@@ -61,20 +54,6 @@ Kurallar:
    teyit et" uyarısını ekle.
 5. Hukuki, vergisel veya tıbbi konularda kesin hüküm verme; yönlendirme yap.
 6. Kullanıcının hane durumuna ve hedef ülkesine göre kişiselleştir.`;
-
-function buildCorsHeaders(req: Request): Record<string, string> {
-  const origin = req.headers.get("Origin");
-  const headers: Record<string, string> = {
-    "Access-Control-Allow-Headers":
-      "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Vary": "Origin",
-  };
-  if (origin && ALLOWED_ORIGINS.has(origin)) {
-    headers["Access-Control-Allow-Origin"] = origin;
-  }
-  return headers;
-}
 
 function jsonResponse(body: unknown, status: number, corsHeaders: Record<string, string>) {
   return new Response(JSON.stringify(body), {
@@ -168,17 +147,17 @@ async function enforceRateLimit(
 }
 
 Deno.serve(async (req) => {
-  const corsHeaders = buildCorsHeaders(req);
+  const corsHeaders = buildAssistantCorsHeaders(req);
   const origin = req.headers.get("Origin");
 
   if (req.method === "OPTIONS") {
-    if (origin && !ALLOWED_ORIGINS.has(origin)) {
+    if (origin && !isAssistantOriginAllowed(origin)) {
       return jsonResponse({ error: "Origin not allowed" }, 403, corsHeaders);
     }
     return new Response(null, { headers: corsHeaders });
   }
 
-  if (origin && !ALLOWED_ORIGINS.has(origin)) {
+  if (origin && !isAssistantOriginAllowed(origin)) {
     return jsonResponse({ error: "Origin not allowed" }, 403, corsHeaders);
   }
 
