@@ -6,6 +6,7 @@
   "include": [
     "src/vite-env.d.ts",
     "src/lib/site-assistant-api.ts",
-    "src/lib/cadde-rules.ts"
+    "src/lib/cadde-rules.ts",
+    "src/lib/cadde-api-support.ts"
   ]
 }
