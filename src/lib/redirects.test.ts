@@ -89,7 +89,6 @@ describe("nginx güvenlik başlıkları", () => {
   const KENDI_ADD_HEADERI_OLAN_LOCATIONLAR = [
     "location = /env-config.js",
     "location = /index.html",
-    "location = /api/chat",
     "location /assets/",
     "location = /__prerender_internal",
   ];
@@ -97,7 +96,7 @@ describe("nginx güvenlik başlıkları", () => {
   it("CSP tek kaynaktan gelir ve her ilgili location'da tekrarlanır", () => {
     const cspSatirlari = nginxConf.match(/add_header\s+Content-Security-Policy\s+\$corteqs_csp/g) ?? [];
 
-    // server bloğu + kendi add_header'ı olan 5 location = 6
+    // server bloğu + kendi add_header'ı olan 4 location = 5
     expect(cspSatirlari.length).toBe(KENDI_ADD_HEADERI_OLAN_LOCATIONLAR.length + 1);
   });
 

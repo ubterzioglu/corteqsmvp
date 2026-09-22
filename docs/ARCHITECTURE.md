@@ -189,8 +189,8 @@ DROP migration (`user_follows` 1 satır R-06 notuyla). Bu tablolara yeniden poli
 | **Yerel / nixpacks** | `node server.mjs` | Yalnız `npm run start` ve nixpacks yolunda çalışır. |
 
 > **`server.mjs` PROD RUNTIME DEĞİLDİR.** Uzun süre öyle sanıldı ve maliyeti şuydu: sadece
-> server.mjs'te tanımlı olan 301 yönlendirmeleri, www→apex birleştirmesi ve `/api/chat`
-> rate-limit'i canlıda hiç devrede olmadı (kanıt: `Server: nginx/1.27.5`, `/hakkimizda` → 200,
+> server.mjs'te tanımlı olan 301 yönlendirmeleri ve www→apex birleştirmesi
+> canlıda hiç devrede olmadı (kanıt: `Server: nginx/1.27.5`, `/hakkimizda` → 200,
 > `https://www.corteqs.net/` → 200). **Runtime davranışı değiştiren her değişiklik
 > `nginx.conf.template`'e yazılır**; server.mjs yalnızca yerel eşdeğerliği korumak için
 > hizalanır (dosyanın başındaki uyarı yorumuna bak).
@@ -205,9 +205,6 @@ istek
  └─ eski URL mü? (location = /hakkimizda, /blog, /auth, … 15 adet)
         → 301 hedef$is_args$args            (query string KORUNUR)
     /whatsapp-groups/<id>                    → 301 /addcom?group=<id>   (regex location)
- └─ POST /api/chat?  → limit_req ragchat 12r/m burst=4 nodelay
-        → yalnız POST + application/json (aksi 405 / 415)
-        → proxy_pass https://rag.corteqs.net/api/chat  (Authorization sunucu tarafında eklenir)
  └─ uzantılı statik dosya (~* \.[a-z0-9]+$) → try_files $uri =404
         /assets/  → immutable 1 yıl cache · /index.html, /env-config.js → no-store
  └─ location /
@@ -227,8 +224,8 @@ entrypoint bunu `0` yapar ve prerender no-op olur.
 
 **nginx'te `add_header` KALITILMAZ.** Kendi `add_header`'ı olan bir location, üst bloktaki *tüm*
 `add_header`'ları iptal eder. Bu yüzden 8 güvenlik başlığı server bloğunun yanı sıra kendi
-Cache-Control'ünü ekleyen **5 location'da tek tek tekrarlanır**: `= /env-config.js`,
-`= /index.html`, `= /api/chat`, `/assets/`, `= /__prerender_internal`.
+Cache-Control'ünü ekleyen **4 location'da tek tek tekrarlanır**: `= /env-config.js`,
+`= /index.html`, `/assets/`, `= /__prerender_internal`.
 
 > Bu tekrar 2026-08-04'ten önce yoktu. Sonuç: `location /` → `try_files` → `/index.html` internal
 > redirect'i `location = /index.html`'e düşüyor, oradaki Cache-Control `add_header`'ı server
@@ -310,9 +307,9 @@ noindex) ve `/blog` bir redirect'ti — gerçek hedeflere çevrildi.
 
 ```
 Build-time env: VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY / VITE_SUPABASE_PROJECT_ID
-Runtime-only (frontend'e gitmez): SUPABASE_SERVICE_ROLE_KEY, RAG_API_SECRET
+Runtime-only (frontend'e gitmez): SUPABASE_SERVICE_ROLE_KEY
 Runtime env injection: /env-config.js (Coolify; no-store)
-nginx template placeholder'ları: __PRERENDER_URL__, __PRERENDER_CANONICAL_HOST__, __RAG_API_SECRET__
+nginx template placeholder'ları: __PRERENDER_URL__, __PRERENDER_CANONICAL_HOST__
 Doğrulama: BASE_URL=https://corteqs.net npm run verify:release
 ```
 

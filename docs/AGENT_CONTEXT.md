@@ -334,7 +334,7 @@ node server.mjs      # YALNIZ local `npm run start` / nixpacks yolu — prod'da 
 
 - `Dockerfile` iki aşamalı: `node:22-alpine` build → `nginx:1.27-alpine` serve (Coolify).
 - `nginx.conf.template` → `/etc/nginx/templates/default.conf.template`: güvenlik başlıkları +
-  CSP, tüm 301'ler, `/api/chat` rate-limit/proxy, prerender yönlendirmesi BURADAN gelir.
+  CSP, tüm 301'ler ve prerender yönlendirmesi BURADAN gelir.
   Header/redirect/CSP işi için `server.mjs` düzenlemenin prod'a etkisi YOKTUR.
 - `docker-entrypoint-env.sh` container açılışında `/env-config.js` yazar ve prerender
   placeholder'larını (`__PRERENDER_URL__` vb.) substitute eder.
@@ -345,9 +345,8 @@ node server.mjs      # YALNIZ local `npm run start` / nixpacks yolu — prod'da 
 ### server.mjs (local/nixpacks yolu) Kritik İşlevler
 
 1. `/env-config.js` → runtime'da env var'lardan üretilir
-2. `/api/chat` → `RAG_API_SECRET` ile `rag.corteqs.net`'e proxy
-3. SPA fallback routing + sıkı asset handling (eksik chunk → 404)
-4. `legacyRedirectMap` → `src/lib/redirects.ts` ile hizalı kalmalı (redirects.test.ts kilitler)
+2. SPA fallback routing + sıkı asset handling (eksik chunk → 404)
+3. `legacyRedirectMap` → `src/lib/redirects.ts` ile hizalı kalmalı (redirects.test.ts kilitler)
 
 ### Vite Config Özel Mantık
 
@@ -366,7 +365,6 @@ VITE_SUPABASE_PROJECT_ID=injprdrsklkxgnaiixzh
 
 # Runtime only (server.mjs, frontend'e asla gönderilmez)
 SUPABASE_SERVICE_ROLE_KEY=...
-RAG_API_SECRET=...
 ```
 
 ---
@@ -414,7 +412,7 @@ supabase functions deploy whatsapp-reply
 | `src/components/admin/roles-overview/` | RolesOverview modül bileşenleri |
 | `src/components/directory/` | Dizin arama/filtreleme/sonuç bileşenleri |
 | `vite.config.ts` | Legacy `*.html` redirect stub'ları — ticari doküman içeriği SPA rotasında |
-| **`nginx.conf.template`** | **Production runtime config:** güvenlik başlıkları + CSP, tüm 301'ler, `/api/chat`, prerender |
+| **`nginx.conf.template`** | **Production runtime config:** güvenlik başlıkları + CSP, tüm 301'ler, prerender |
 | **`src/lib/redirects.ts`** | Legacy redirect TEK kaynak; App.tsx buradan üretir, nginx aynalamalı (redirects.test.ts kilitler) |
 | `server.mjs` | local `npm run start` / nixpacks runtime — **prod runtime DEĞİL** |
 | `supabase/migrations/applied/20260512103000_security_hardening_phase1.sql` | Güvenlik baseline |

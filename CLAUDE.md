@@ -354,10 +354,10 @@ This is intentional to avoid massive refactor burden. When adding new code, writ
 | `src/lib/admin.ts` + `src/lib/admin/*.ts` | `admin.ts` is a 57-line barrel; real impl in `admin/` (7 domain APIs) — pattern for new admin APIs |
 | `src/integrations/supabase/client.ts` | Lovable-generated, risky to modify |
 | `vite.config.ts` | Legacy `*.html` redirect stubs for commercial docs (SPA renders the content) |
-| **`nginx.conf.template`** | **THE production runtime config.** Security headers + CSP, all 301 redirects, `/api/chat` rate limit, prerender routing. SEO/header/redirect behavior belongs HERE, not in `server.mjs`. |
+| **`nginx.conf.template`** | **THE production runtime config.** Security headers + CSP, all 301 redirects, prerender routing. SEO/header/redirect behavior belongs HERE, not in `server.mjs`. |
 | **`src/lib/redirects.ts`** | Single source for legacy redirects; App.tsx generates routes from it, `nginx.conf.template` must mirror it (`src/lib/redirects.test.ts` enforces) |
 | `public/analytics.js` | gtag config + Clarity loader, moved out of `index.html` so CSP needs no `'unsafe-inline'` |
-| `server.mjs` | **NOT the production runtime.** Local `npm run start` + nixpacks path only; env injection via `/env-config.js`, `/api/chat` proxy. Keep its `legacyRedirectMap` aligned with `src/lib/redirects.ts`. |
+| `server.mjs` | **NOT the production runtime.** Local `npm run start` + nixpacks path only; env injection via `/env-config.js`. Keep its `legacyRedirectMap` aligned with `src/lib/redirects.ts`. |
 | `supabase/migrations/applied/20260512103000_security_hardening_phase1.sql` | Security baseline |
 | `tsconfig.json` | Relaxed strict mode — refactor pivot point |
 | `eslint.config.js` | Minimal rules; `no-unused-vars: off` |
@@ -474,8 +474,7 @@ Plan: `docs/plans/2026-09-20-site-geneli-ai-bot-plani.md` · Ertelenenler:
    eşleşmeler 0.20–0.32, gürültü 0.36+. İlk sürümdeki 0.65 alakasız sorgulara da
    bağlam veriyordu, yani `hasContext` hep `true` oluyordu — düzeltilmek istenen
    kusurun aynısı. Değiştirmeden önce dosyadaki örnek sorguları yeniden ölç.
-8. **`ChatBot.tsx` artık `/api/chat`'i (rag.corteqs.net) ÇAĞIRMAZ.** Proxy nginx ve
-   `server.mjs`'te hâlâ duruyor (sökümü B24'te). `src/lib/ragApi.ts` **21.09'da
+8. **`ChatBot.tsx` eski RAG proxy'sini çağırmaz.** `src/lib/ragApi.ts` **21.09'da
    SİLİNDİ** (0 importer ölçüldü; kalanlar yol haritası C02) — dosyayı arama.
 7. **`site-assistant/providers.ts`, `relocation-assistant/providers.ts` ile AYNIDIR** ve
    kopya olması bilinçlidir. Birleştirme K3'te; **birini değiştirirken diğerine bak.**
@@ -494,7 +493,7 @@ bozulabilen (test/build patlamayan ama canlıda zarar veren) bir sınıfı kapat
 
 2. **nginx'te `add_header` KALITILMAZ.** Kendi `add_header`'ı olan bir `location`, üst
    bloktaki TÜM `add_header`'ları iptal eder. Bu yüzden `nginx.conf.template` içinde güvenlik
-   başlıkları 5 location'da (`= /env-config.js`, `= /index.html`, `= /api/chat`, `/assets/`,
+   başlıkları 4 location'da (`= /env-config.js`, `= /index.html`, `/assets/`,
    `= /__prerender_internal`) + server bloğunda **tekrarlanır**. Yeni bir `add_header` içeren
    location eklersen güvenlik başlıklarını oraya da kopyala — yoksa CSP ve clickjacking
    koruması o yolda sessizce düşer. (Bu tam olarak yaşandı: `/robots.txt`'te 8 başlık vardı,
@@ -546,8 +545,8 @@ bozulabilen (test/build patlamayan ama canlıda zarar veren) bir sınıfı kapat
    - **Anything about response headers, CSP, 301 redirects, caching or robots behavior must be
      written into `nginx.conf.template`.** Editing `server.mjs` for these has no production effect.
    - `server.mjs` still matters for the local `npm run start` and the nixpacks path:
-     generates `/env-config.js` from env vars at startup, proxies `/api/chat` to
-     `rag.corteqs.net`, serves the SPA with fallback — keep this behavior, but keep its
+     generates `/env-config.js` from env vars at startup and serves the SPA with fallback —
+     keep this behavior, but keep its
      `legacyRedirectMap` (15 entries) aligned with `src/lib/redirects.ts`.
 
 4. **Commercial documents** (changed 2026-06-11 — now SPA routes):
@@ -753,7 +752,6 @@ VITE_SUPABASE_PROJECT_ID=injprdrsklkxgnaiixzh
 
 # Runtime only (server.mjs / nixpacks path)
 SUPABASE_SERVICE_ROLE_KEY=...  (never expose to frontend)
-RAG_API_SECRET=...             (server-side proxy secret)
 ```
 
 ### Coolify Deployment — nginx is the runtime
