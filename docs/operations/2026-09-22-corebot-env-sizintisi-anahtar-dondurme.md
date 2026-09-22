@@ -1,7 +1,8 @@
 # 🔴 Sızıntı: `corebot` public reposunda `.env` — anahtar döndürme listesi
 
-**Bulundu:** 22 Eylül 2026 · **Durum:** dosya silindi + geçmiş temizlendi;
-**3 kritik anahtar HÂLÂ DÖNMEDİ** · GitHub eski nesneyi hâlâ sunuyor
+**Bulundu:** 22 Eylül 2026 · **Son güncelleme:** 22 Eylül gece
+**Durum:** yeni anahtarlar üretildi ve yerel dosyalara işlendi;
+**sızan `service_role` hâlâ CANLI** — "Disable JWT-based API keys" yapılmadı
 
 ## Ne oldu
 
@@ -89,6 +90,65 @@ erişim **normal görünür** ve bu tablolarda ayırt edici iz bırakmaz. Özell
 **tespit edilemez**. Postgres/PostgREST logları bu katmanda kısa süre saklanıyor;
 sızıntının başladığı 27 Nisan'a bakmak mümkün değil. "İz bulunamadı" = "kötüye
 kullanım olmadı" DEĞİLDİR.
+
+---
+
+# ▶ YARIN BURADAN DEVAM — 22.09 gece durumu
+
+## Bitenler ✅
+
+| İş | Kanıt |
+|---|---|
+| `.env` corebot'tan silindi | commit `c590b12` |
+| Git geçmişi temizlendi | `.env` 28 commit'in tamamından çıkarıldı, `main` `5c7a716` |
+| Yeni anahtarlar üretildi (kullanıcı) | `sbp_…` · `sb_publishable_…` · `sb_secret_…` — **üçü de canlıda test edildi, geçerli** |
+| `.env.local` düzenlendi | `SUPABASE_ACCESS_TOKEN` → yeni (eskisi 401 veriyordu) · `SUPABASE_SERVICE_ROLE_KEY` → **`sb_secret_`** · `SUPABASE_PUBLISHABLE_KEY` eklendi · sondaki anahtarsız blok temizlendi |
+| `.env.local.bot` düzenlendi | `SUPABASE_SERVICE_ROLE_KEY` → `sb_secret_` · `ACCESS_TOKEN` → yeni 300 karakterlik · `SUPABASE_ACCESS_TOKEN` ve `SUPABASE_DB_PASSWORD` **kaldırıldı** (corebot kodu ikisini de okumuyor — en az yetki) |
+| Doğrulama koşusu | `check:functions` 12/12 · `check:migrations` sapma yok · `fx:refresh` 8 kur yazdı |
+| Kötüye kullanım taraması | iz bulunamadı (sınırları aşağıda) |
+| Coolify frontend | kullanıcı güncelledi — **ben doğrulamadım** |
+
+Yedekler: `C:	mp\env.local.yedek-2026-09-22` · `C:	mp\env.local.bot.yedek-2026-09-22`
+
+## Kalanlar — sıralı
+
+### 🔴 1. Sızan `service_role` hâlâ çalışıyor
+
+Sonuna eklenen legacy JWT, sızan değerin **birebir aynısıydı** (hash ile doğrulandı) —
+yani JWT secret döndürülmedi. O anahtar şu an **canlıda geçerli** ve elinde olan herkes
+tüm veritabanına erişebilir. Öldürmenin yolu:
+
+1. **Supabase → Edge Functions → Secrets** → `SUPABASE_SERVICE_ROLE_KEY` = yeni `sb_secret_`
+2. **Coolify — corebot** → `.env.local.bot`'taki **iki değişen satırı** uygula
+   ⚠️ Dosyayı komple yapıştırma: `PORT`, `RAG_API_SECRET` ve dokuz `WA_GROUP_*`
+   değişkeni bu dosyada yok, üzerine yazarsan grup bağlantıları kaybolur
+3. Bir edge function'ı test et (ör. `/directory` araması)
+4. Çalışıyorsa → **"Disable JWT-based API keys"** → sızan anahtar ölür
+
+### 🔴 2. Döndürülmemiş iki değer
+
+| Anahtar | Nereye yazılacak |
+|---|---|
+| `VERIFY_TOKEN` | `.env.local` + `.env.local.bot` + **Meta → Webhook → Verify and save** (üçü aynı olmalı) |
+| `SUPABASE_DB_PASSWORD` | Supabase → Settings → Database → reset, sonra `.env.local` |
+
+### 🟡 3. GitHub eski nesneyi hâlâ sunuyor
+
+Zorla yazmadan sonra ölçüldü: `raw.githubusercontent.com/.../e0f59c5/.env` → **HTTP 200**.
+Kesin çözüm: **depoyu sil ve yeniden oluştur** ya da **GitHub Support'a GC talebi**.
+
+### 🟡 4. `.env.local`'deki dört `WHATSAPP_*` yer tutucu
+
+Değerleri `"to …"` biçiminde, 15'er karakter. **Function secret'larına kopyalama** —
+deploy edilmiş fonksiyonları bozar.
+
+### ⬜ 5. B05.2 — WhatsApp outbound E2E (yol haritasındaki tek açık satır)
+
+Callback URL `corebot.corteqs.net/webhook`'a bakıyor ve `messages` alanına abone; bu
+yüzden bu deponun `whatsapp-webhook` fonksiyonu **hiç çağrılmadı**. Bir Meta
+uygulamasında tek callback URL olur. Seçenekler aşağıda (A / B / C) — karar verilmedi.
+
+---
 
 ## Yapılacaklar — sırayla
 
