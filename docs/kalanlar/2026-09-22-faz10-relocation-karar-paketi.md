@@ -55,27 +55,41 @@ sonradan yapılabilir — sekmeyi geri eklemek ucuz, yanlış izlenim pahalı.
 
 ## B28 — Maliyet kaynağı + tazeleme sorumlusu; `freshness_at` arayüzde görünsün mü?
 
-**Ölçüm — kararın kilit noktası:**
+> ⚠️ **22.09 · Bu bölümün İLK hâlindeki öneri (seçenek A) YANLIŞTI ve düzeltildi.**
+> "Önce `source_id`'yi doldur" demiştim; yeniden ölçünce **doldurulacak bir kaynak
+> olmadığı** ortaya çıktı. Aşağısı düzeltilmiş hâldir.
 
-- `relocation_living_costs.source_id` → **0 / 192 dolu.** Kaynak defteri (8 kayıt)
-  kurulu ama **hiçbir maliyet satırı ona bağlı değil.**
-- `freshness_at` → **192 / 192 dolu** (hepsi içe aktarma anında yazıldı).
-- `note` → 62 / 192.
-- Son `updated_at`: **2026-09-21** (hepsi aynı gün).
+**Ölçüm (22.09, canlı + repo):**
 
-Yani bugün ekranda bir tazelik tarihi gösterilebilir, ama **o tarihin arkasında bir
-kaynak yok**. "21 Eylül 2026 itibarıyla" yazmak, doğrulanmamış bir rakama doğrulanmış
-görüntüsü verir.
+- `relocation_living_costs.source_id` → **0 / 192 dolu.**
+- Kaynak defterinin **kategorileri**: `bureaucracy` 4 · `community` 1 · `consulate` 1 ·
+  `gsm` 1 · `doctor` 1. **Maliyet/fiyat kategorisi YOK.** `source_id` bu deftere FK ile
+  bağlı olduğundan, 192 satırın işaret edebileceği geçerli bir satır **hiç yok**.
+- `freshness_at` → 192/192 dolu ve **hepsi tek tarih: 2026-09-21.** Yani verinin
+  tazeliği değil, **içe aktarma anı.**
+- `note` → 62/192, ve içerikleri kaynak künyesi değil **açıklama**
+  ("Warmmiete hariç", "iki yetişkin için iki ayrı poliçe").
+- **Belirleyici kanıt** — rakamları yazan seed dosyası (`docs/operations/
+  2026-09-21-relocation-icerik-seed.sql`) kendi başlığında şunu söylüyor:
+  > "Tutarlar, ilgili ülkenin BÜYÜK ŞEHİRLERİ için tipik AYLIK ARALIKLARDIR… **Kaynak:
+  > genel piyasa bilgisi (2026 başı). Resmî bir fiyat endeksinden TÜRETİLMEMİŞTİR.**"
+
+Yani rakamların bilinçli olarak **atıf verilebilir bir kaynağı yok**; geniş ve dürüst
+aralıklar olarak seçilmişler. Bu, kararı tamamen değiştirir.
 
 | Seçenek | Sonuç |
 |---|---|
-| **A. Önce `source_id`'yi doldur, sonra göster** | 192 satır 8 kaynaktan birine bağlanır; arayüzde "kaynak + tarih" birlikte çıkar. Bağlanamayan satır için "kaynak belirtilmemiş" yazılır. |
-| **B. Yalnız tarihi göster** | Ucuz ama yanıltıcı: tarih tazeliği değil, içe aktarma gününü gösterir. |
-| **C. Hiçbirini gösterme** | Bugünkü durum. Kullanıcı rakamın ne kadar eski olduğunu bilemez. |
+| ~~**A. `source_id`'yi doldur**~~ | **Uygulanamaz.** Defterde maliyet kaynağı yok; uydurma bir kaynak kaydı eklemek, olmayan bir doğrulama iddiası üretir. |
+| **B. Yalnız tarihi göster** | **Yanıltıcı.** "21 Eylül 2026 itibarıyla" ifadesi, hiç ölçülmemiş bir rakama ölçülmüşlük havası verir. |
+| **C. Hiçbirini gösterme** | Bugünkü durum. Dürüst ama kullanıcı rakamın niteliğini bilmez. |
+| **D. Niteliği yaz (YENİ)** | Tarih yerine rakamın ne olduğunu söyle: "büyük şehirler için tipik aralık; genel piyasa bilgisine dayanır, resmî fiyat endeksi değildir." Seed dosyasının zaten söylediği şeyi kullanıcıya da söyler. |
+| **E. Gerçek kaynak edin** | Bir fiyat endeksi sağlayıcısı seç, `source_registry`'ye `cost` kategorisinde kaydet, 192 satırı ona göre YENİDEN üret, tazeleme sahibi ata. Tek "doğrulanmış rakam" yolu; en pahalısı. |
 
-**Öneri: A**, ve **tazeleme sorumlusu atanmadan gösterme.** Kaynak defterindeki
-`refresh_sla_hours` alanı (168 = haftalık) zaten var; sahibi olmayan bir SLA, arayüzde
-tutulamayan bir söz verir.
+**Öneri: D şimdi, E gerekiyorsa sonra.** D saf sunum işi, veri yazmaz, bugün
+yapılabilir ve mevcut tek gerçek riski (kullanıcının rakamı ölçülmüş sanması) kapatır.
+E'ye ancak "üye bu rakama göre karar verecek" dendiğinde girilmeli — o zaman da
+tazeleme **sahibi** atanmadan başlanmamalı; sahibi olmayan bir SLA arayüzde tutulamayan
+bir söz verir.
 
 ---
 
@@ -154,7 +168,7 @@ currently not indexed").
 | # | Öneri | Bugün uygulanabilir mi |
 |---|---|---|
 | B27 | ✅ **A uygulandı** — üç sekme kaldırıldı, `/relocation` demodan çıktı | **Bitti** |
-| B28 | **A** — önce `source_id` doldur, tazeleme sahibi atanmadan gösterme | Kısmen (sahip kararı ister) |
+| B28 | **D** — rakamın niteliğini yaz (A uygulanamaz: maliyet kaynağı yok) | Evet (saf sunum) |
 | B29 | ✅ **A uygulandı** — okuma tarafı şehir farkındası; veri girilebilir | **Bitti** |
 | B30 | **A** — kur kaynağı yok, tek karşılık gösterilmez | Evet (değişiklik yok) |
 | B31 | Tetikleyiciyle beklet — gerçek kayıt yok | Hayır |
