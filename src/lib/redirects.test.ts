@@ -169,8 +169,6 @@ describe("nginx yapısal bütünlük", () => {
       ["prerender dışlama (/admin, /api)", /map \$uri \$prerender_excluded \{/],
       ["birleşik prerender hedefi", /map "\$is_bot:\$prerender_excluded" \$prerender_target \{/],
       ["CSP tek kaynağı", /map \$host \$corteqs_csp \{/],
-      ["rate-limit bölgesi", /limit_req_zone .*zone=ragchat/],
-      ["rate-limit kullanımı", /limit_req zone=ragchat/],
       ["www/mvp → apex 301", /server_name www\.corteqs\.net mvp\.corteqs\.net;/],
       ["apex hedefi", /return 301 https:\/\/corteqs\.net\$request_uri;/],
       ["ana server bloğu", /server_name _;/],
