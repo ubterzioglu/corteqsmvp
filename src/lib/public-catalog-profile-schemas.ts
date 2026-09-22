@@ -103,6 +103,17 @@ export const publicCatalogProfilePageSchema = z.object({
       verificationStatus: nullableText,
     })
     .catch({ canClaim: false, verificationStatus: null }),
+  // Sahibi olmayan toplu içe aktarma kayıtlarının kaynak künyesi (B15/B16).
+  // Üyenin kendi açtığı profillerde RPC null döner; kart da çizilmez.
+  provenance: z
+    .object({
+      sourceKey: nullableText,
+      importedAt: nullableText,
+      isVerified: z.boolean().catch(false),
+    })
+    .nullish()
+    .transform((value) => value ?? null)
+    .catch(null),
 });
 
 export type PublicProfileCategory = z.infer<typeof publicProfileCategorySchema>;

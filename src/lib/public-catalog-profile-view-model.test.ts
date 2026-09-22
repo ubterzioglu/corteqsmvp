@@ -42,6 +42,41 @@ const makePayload = (
   languages: overrides.languages ?? [],
   media: overrides.media ?? [],
   claim: overrides.claim ?? { canClaim: true, verificationStatus: "unverified" },
+  provenance: overrides.provenance ?? null,
+});
+
+describe("buildPublicCatalogProfileViewModel — kaynak künyesi (B16)", () => {
+  const provenance = {
+    sourceKey: "vancouver-toronto-deep-research-20260617",
+    importedAt: "2026-06-17",
+    isVerified: false,
+  };
+
+  it("kişi kayıtlarında künyeyi taşır", () => {
+    const vm = buildPublicCatalogProfileViewModel(makePayload({ provenance }));
+    expect(vm.provenance).toEqual(provenance);
+  });
+
+  it("advisor kayıtlarında da taşır", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({ item: { itemType: "advisor" }, provenance }),
+    );
+    expect(vm.provenance?.sourceKey).toBe(provenance.sourceKey);
+  });
+
+  it("KURUM kayıtlarında künye çizilmez — kart metni kişi içindir", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({ item: { itemType: "organization" }, provenance }),
+    );
+    expect(vm.provenance).toBeNull();
+  });
+
+  it("derleme anahtarı yoksa künye çizilmez", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({ provenance: { sourceKey: null, importedAt: "2026-06-17", isVerified: false } }),
+    );
+    expect(vm.provenance).toBeNull();
+  });
 });
 
 describe("buildPublicCatalogProfileViewModel — hero", () => {

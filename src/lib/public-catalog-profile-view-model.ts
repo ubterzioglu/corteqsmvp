@@ -85,6 +85,44 @@ export type PublicProfileClaimViewModel = {
   isManaged: boolean;
 };
 
+/**
+ * Toplu içe aktarmayla gelen, sahibi olmayan kaydın kaynak künyesi (B15/B16).
+ * Künye UYDURULMAZ: yalnız RPC'nin gerçekten bildiği derleme anahtarı ve tarih
+ * taşınır. Kayıt bazında kaynak URL'i saklanmamıştır.
+ */
+export type PublicProfileProvenanceViewModel = {
+  sourceKey: string;
+  importedAt: string | null;
+  isVerified: boolean;
+};
+
+/**
+ * Künye kartı YALNIZ gerçek kişiyi anlatan kayıtlarda çizilir.
+ *
+ * RPC künyeyi sahibi olmayan HER içe aktarma kaydı için döner — bu doğrudur, veri
+ * katmanı kısıtlanmamalıdır. Ama kartın metni ("bu profili kişinin kendisi
+ * oluşturmadı") bir kurum için yanlıştır ve canlıda zaten yayında olan **241
+ * konsolosluk** sayfasına gürültü olarak düşerdi (ölçüldü 22.09). B15 kararı
+ * gerçek kişilerin yayınıyla ilgilidir; kapsam burada daraltılır.
+ */
+const PERSON_ITEM_TYPES = new Set(["advisor", "member"]);
+
+function buildProvenance(
+  payload: PublicCatalogProfilePagePayload,
+): PublicProfileProvenanceViewModel | null {
+  const provenance = payload.provenance;
+  // Derleme anahtarı yoksa künye çizilmez — boş bir "kaynak" kartı olmayan bir
+  // doğrulama izlenimi verir.
+  if (!provenance?.sourceKey) return null;
+  if (!PERSON_ITEM_TYPES.has(payload.item.itemType)) return null;
+
+  return {
+    sourceKey: provenance.sourceKey,
+    importedAt: provenance.importedAt,
+    isVerified: provenance.isVerified,
+  };
+}
+
 export type PublicCatalogProfileViewModel = {
   hero: PublicProfileHeroViewModel;
   quickActions: PublicProfileQuickAction[];
@@ -92,6 +130,7 @@ export type PublicCatalogProfileViewModel = {
   mainSections: PublicProfileSectionViewModel[];
   sidebarSections: PublicProfileSectionViewModel[];
   claim: PublicProfileClaimViewModel;
+  provenance: PublicProfileProvenanceViewModel | null;
   presentation: ProfilePresentationConfig;
 };
 
@@ -663,6 +702,7 @@ export function buildPublicCatalogProfileViewModel(
       canClaim: payload.claim.canClaim && item.verificationStatus !== "claimed",
       isManaged: item.verificationStatus === "claimed",
     },
+    provenance: buildProvenance(payload),
     presentation,
   };
 }
