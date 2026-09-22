@@ -55,3 +55,50 @@ describe("LivingCostsPanel — kapsam ayrımı (B29)", () => {
     expect(screen.getAllByText(/1\.400/).length).toBeGreaterThan(0);
   });
 });
+
+describe("LivingCostsPanel — bütçe para birimi karşılığı (B30)", () => {
+  const fxRates = [
+    { base_currency: "EUR", quote_currency: "TRY", rate: 40, rate_at: "2026-09-22T00:00:00Z" },
+  ];
+
+  it("karşılığı, kur tarihini ve kaynağı gösterir", () => {
+    render(
+      <LivingCostsPanel
+        rows={[costRow({ amount_min: 1000, amount_max: 1000 })]}
+        householdSize={1}
+        targetCurrency="TRY"
+        fxRates={fxRates}
+      />,
+    );
+
+    expect(screen.getByText(/≈/)).toBeInTheDocument();
+    expect(screen.getByText(/40\.000/)).toBeInTheDocument();
+    expect(screen.getByText(/open\.er-api\.com/)).toBeInTheDocument();
+  });
+
+  it("kur YOKKEN karşılık göstermez — yaklaşık değer uydurmaz", () => {
+    render(
+      <LivingCostsPanel
+        rows={[costRow({ amount_min: 1000, amount_max: 1000 })]}
+        householdSize={1}
+        targetCurrency="TRY"
+        fxRates={[]}
+      />,
+    );
+
+    expect(screen.queryByText(/≈/)).not.toBeInTheDocument();
+  });
+
+  it("hedef birim tutarın birimiyle AYNIYSA gereksiz karşılık çizmez", () => {
+    render(
+      <LivingCostsPanel
+        rows={[costRow({ amount_min: 1000, amount_max: 1000 })]}
+        householdSize={1}
+        targetCurrency="EUR"
+        fxRates={fxRates}
+      />,
+    );
+
+    expect(screen.queryByText(/≈/)).not.toBeInTheDocument();
+  });
+});

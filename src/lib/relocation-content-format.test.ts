@@ -12,9 +12,11 @@ import {
   completionPercent,
   formatCostAmount,
   formatCostRange,
+  convertCostAmount,
   groupCostsByScope,
   groupCostsByItem,
   groupDocumentsByCategory,
+  oldestRateAt,
   pickRowForHousehold,
   sumMonthlyCosts,
 } from "@/lib/relocation-content-format";
@@ -294,5 +296,50 @@ describe("completionPercent", () => {
 
   it("tamamlanmışta 100 döner", () => {
     expect(completionPercent(5, 5)).toBe(100);
+  });
+});
+
+describe("convertCostAmount (B30)", () => {
+  const rates = [
+    { base_currency: "EUR", quote_currency: "TRY", rate: 40, rate_at: "2026-09-22T00:00:00Z" },
+    { base_currency: "EUR", quote_currency: "USD", rate: 1.1, rate_at: "2026-09-22T00:00:00Z" },
+  ];
+
+  it("baz para biriminden hedefe çevirir", () => {
+    expect(convertCostAmount(100, "EUR", "TRY", rates)).toBe(4000);
+  });
+
+  it("çapraz çevrimi baz üzerinden yapar", () => {
+    // 110 USD = 100 EUR = 4000 TRY
+    expect(convertCostAmount(110, "USD", "TRY", rates)).toBeCloseTo(4000, 6);
+  });
+
+  it("aynı para biriminde tutarı aynen döndürür", () => {
+    expect(convertCostAmount(100, "TRY", "TRY", rates)).toBe(100);
+  });
+
+  it("kur YOKSA null döner — eksik kuru 1 kabul etmez", () => {
+    expect(convertCostAmount(100, "EUR", "QAR", rates)).toBeNull();
+    expect(convertCostAmount(100, "QAR", "EUR", rates)).toBeNull();
+    expect(convertCostAmount(100, "EUR", "TRY", [])).toBeNull();
+  });
+
+  it("tutar yoksa null döner", () => {
+    expect(convertCostAmount(null, "EUR", "TRY", rates)).toBeNull();
+  });
+});
+
+describe("oldestRateAt (B30)", () => {
+  it("kurların ait olduğu EN ESKİ anı döndürür — tazelik iddiası abartılmaz", () => {
+    expect(
+      oldestRateAt([
+        { base_currency: "EUR", quote_currency: "USD", rate: 1.1, rate_at: "2026-09-22T00:00:00Z" },
+        { base_currency: "EUR", quote_currency: "TRY", rate: 40, rate_at: "2026-09-20T00:00:00Z" },
+      ]),
+    ).toBe("2026-09-20T00:00:00Z");
+  });
+
+  it("kur yoksa null döner", () => {
+    expect(oldestRateAt([])).toBeNull();
   });
 });

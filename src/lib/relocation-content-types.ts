@@ -92,3 +92,16 @@ export interface RelocationDocumentGroup {
   category: string;
   documents: RelocationRequiredDocumentRow[];
 }
+
+/**
+ * Saklanan döviz kuru satırı (B30). `1 base_currency = rate quote_currency`.
+ *
+ * `rate_at` kurun SAĞLAYICI tarafından yayımlandığı andır, bizim çektiğimiz an değil
+ * (`fetched_at`). İkisini karıştırmak bayat bir kuru taze göstermektir.
+ */
+export interface RelocationFxRateRow {
+  base_currency: string;
+  quote_currency: string;
+  rate: number;
+  rate_at: string;
+}

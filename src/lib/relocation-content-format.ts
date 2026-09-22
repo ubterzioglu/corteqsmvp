@@ -10,6 +10,7 @@ import type {
   RelocationCostGroup,
   RelocationCostItemKey,
   RelocationCostScope,
+  RelocationFxRateRow,
   RelocationDocumentGroup,
   RelocationLivingCostRow,
   RelocationRequiredDocumentRow,
@@ -199,4 +200,47 @@ export function groupDocumentsByCategory(
 export function completionPercent(doneCount: number, totalCount: number): number {
   if (totalCount <= 0) return 0;
   return Math.round((doneCount / totalCount) * 100);
+}
+
+/**
+ * Saklanan kurlarla tutarı hedef para birimine çevirir (B30).
+ *
+ * Kurlar tek bir baz para birimine (bugün EUR) göre saklanır, bu yüzden çapraz çevrim
+ * baz üzerinden yapılır: `from → baz → to`. Aynı birime çevirmek kimliktir.
+ *
+ * ⚠️ Kur BULUNAMAZSA `null` döner ve arayüz karşılık GÖSTERMEZ. Yaklaşık bir değer
+ * uydurmak ya da eksik kuru 1 kabul etmek, B28'de kapatılan "ölçülmemiş rakama
+ * kesinlik havası verme" kusurunun aynısıdır.
+ */
+export function convertCostAmount(
+  amount: number | null,
+  from: string,
+  to: string,
+  rates: RelocationFxRateRow[],
+): number | null {
+  if (amount === null || !Number.isFinite(amount)) return null;
+  const source = from.toUpperCase();
+  const target = to.toUpperCase();
+  if (source === target) return amount;
+  if (rates.length === 0) return null;
+
+  const base = rates[0].base_currency.toUpperCase();
+  const rateOf = (currency: string): number | null => {
+    if (currency === base) return 1;
+    const row = rates.find((r) => r.quote_currency.toUpperCase() === currency);
+    return row && Number.isFinite(row.rate) && row.rate > 0 ? row.rate : null;
+  };
+
+  const fromRate = rateOf(source);
+  const toRate = rateOf(target);
+  if (fromRate === null || toRate === null) return null;
+
+  // amount birim `from`; baza böl, hedefle çarp.
+  return (amount / fromRate) * toRate;
+}
+
+/** Kurların ait olduğu en eski an — "bu karşılık ne kadar taze" sorusunun cevabı. */
+export function oldestRateAt(rates: RelocationFxRateRow[]): string | null {
+  const times = rates.map((r) => r.rate_at).filter(Boolean).sort();
+  return times[0] ?? null;
 }

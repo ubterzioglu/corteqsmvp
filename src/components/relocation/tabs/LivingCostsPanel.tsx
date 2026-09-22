@@ -7,14 +7,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   COST_ITEM_ORDER,
+  convertCostAmount,
   formatCostAmount,
   formatCostRange,
   groupCostsByScope,
+  oldestRateAt,
   pickRowForHousehold,
   sumMonthlyCosts,
 } from "@/lib/relocation-content-format";
 import { COST_ITEM_LABELS } from "@/lib/relocation-chat-context";
-import type { RelocationLivingCostRow } from "@/lib/relocation-content-types";
+import type {
+  RelocationFxRateRow,
+  RelocationLivingCostRow,
+} from "@/lib/relocation-content-types";
 
 const ITEM_ICONS: Record<string, string> = {
   rent: "🏠",
@@ -47,11 +52,57 @@ const CostQualifierNote = () => (
   </p>
 );
 
+/**
+ * Toplamın üyenin bütçe para birimindeki karşılığı (B30).
+ *
+ * Kur SAKLANIR, anlık çekilmez; bu yüzden karşılığın yanında kurun ait olduğu an ve
+ * kaynağı yazar. Kaynak bir merkez bankası DEĞİL, toplayıcıdır (`open.er-api.com`) —
+ * ECB, USD'ye sabitlenmiş QAR/AED'yi yayımlamadığı için 12 ülkenin 2'si çevrilemiyordu.
+ *
+ * ⚠️ Kur yoksa ya da hedef birim eksikse **hiçbir şey çizilmez**. Yaklaşık bir değer
+ * uydurmak, B28'de kapatılan "ölçülmemiş rakama kesinlik havası verme" kusurunun
+ * aynısıdır. Ayrıca "≈" işareti bilinçlidir: bu bir kur teklifi değil, kaba karşılıktır.
+ */
+const ConvertedTotal = ({
+  total,
+  targetCurrency,
+  fxRates,
+}: {
+  total: { min: number; max: number; currency: string };
+  targetCurrency?: string;
+  fxRates: RelocationFxRateRow[];
+}) => {
+  if (!targetCurrency) return null;
+  const target = targetCurrency.toUpperCase();
+  if (target === total.currency.toUpperCase()) return null;
+
+  const min = convertCostAmount(total.min, total.currency, target, fxRates);
+  const max = convertCostAmount(total.max, total.currency, target, fxRates);
+  if (min === null || max === null) return null;
+
+  const rateAt = oldestRateAt(fxRates);
+  const rateLabel = rateAt ? new Date(rateAt).toLocaleDateString("tr-TR") : null;
+
+  return (
+    <p className="mt-1 text-right text-xs text-muted-foreground">
+      ≈{" "}
+      {min === max
+        ? formatCostAmount(min, target)
+        : `${formatCostAmount(min, target)} – ${formatCostAmount(max, target)}`}
+      {rateLabel ? ` · ${rateLabel} kuru` : ""} · open.er-api.com
+    </p>
+  );
+};
+
 interface LivingCostsPanelProps {
   rows: RelocationLivingCostRow[];
   householdSize: number;
   /** ISO kodu görünen ada çevirir; verilmezse kod gösterilir. */
   countryLabel?: (code: string) => string;
+  /** Üyenin bütçe para birimi (B30). Verilmezse karşılık gösterilmez. */
+  targetCurrency?: string;
+  /** Saklanan kurlar. Boşsa karşılık gösterilmez — uydurma çevrim yapılmaz. */
+  fxRates?: RelocationFxRateRow[];
   isLoading?: boolean;
 }
 
@@ -59,6 +110,8 @@ export function LivingCostsPanel({
   rows,
   householdSize,
   countryLabel,
+  targetCurrency,
+  fxRates = [],
   isLoading,
 }: LivingCostsPanelProps) {
   if (isLoading) {
@@ -154,6 +207,8 @@ export function LivingCostsPanel({
                   Kalemler farklı para birimlerinde olduğu için toplam hesaplanmadı.
                 </p>
               )}
+
+              {total ? <ConvertedTotal total={total} targetCurrency={targetCurrency} fxRates={fxRates} /> : null}
             </CardContent>
           </Card>
         );

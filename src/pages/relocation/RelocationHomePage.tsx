@@ -19,6 +19,7 @@ import {
 import { MoveSelector } from "@/components/relocation/MoveSelector";
 import { useRelocationMoveContent } from "@/hooks/useRelocationMoveContent";
 import { LivingCostsPanel } from "@/components/relocation/tabs/LivingCostsPanel";
+import { useRelocationFxRates } from "@/hooks/useRelocationFxRates";
 import { RequiredDocumentsPanel } from "@/components/relocation/tabs/RequiredDocumentsPanel";
 import { RelocationChatPanel } from "@/components/relocation/tabs/RelocationChatPanel";
 import { SavedDocumentsPanel } from "@/components/relocation/tabs/SavedDocumentsPanel";
@@ -50,6 +51,8 @@ export default function RelocationHomePage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const dict = getRelocationDict("tr-TR");
+  // Kurlar saklanır; panel karşılığı bundan çizer. Sorgu düşerse karşılık gösterilmez.
+  const fxRatesQuery = useRelocationFxRates();
   const [searchParams, setSearchParams] = useSearchParams();
   // Dosya kimliği URL'de yaşar: sayfa yenilenince plan kaybolmasın ve kullanıcı
   // linki paylaşamasa bile geri dönebilsin. Eskiden yalnız bileşen state'indeydi,
@@ -295,6 +298,8 @@ export default function RelocationHomePage() {
               countryLabel={(code) =>
                 countryOptions.find((option) => option.code === code)?.label ?? code
               }
+              targetCurrency={move?.currency ?? undefined}
+              fxRates={fxRatesQuery.data ?? []}
               isLoading={content.isContentLoading}
             />
           </TabsContent>

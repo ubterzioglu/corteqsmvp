@@ -7,6 +7,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import type {
+  RelocationFxRateRow,
   RelocationLivingCostRow,
   RelocationMoveDocumentRow,
   RelocationMoveDocumentType,
@@ -138,4 +139,17 @@ export async function saveMoveDocument(input: {
 export async function deleteMoveDocument(documentId: string): Promise<void> {
   const { error } = await db.from("relocation_move_documents").delete().eq("id", documentId);
   if (error) throw error;
+}
+
+/**
+ * Saklanan döviz kurları (B30). Anlık çekim YOK — sayfa dış servise gitmez.
+ * Kur yoksa boş dizi döner ve panel karşılık göstermez; uydurma çevrim yapılmaz.
+ */
+export async function getFxRates(): Promise<RelocationFxRateRow[]> {
+  const { data, error } = await db
+    .from("relocation_fx_rates")
+    .select("base_currency, quote_currency, rate, rate_at")
+    .limit(MAX_ROWS);
+  if (error) throw error;
+  return (data ?? []) as RelocationFxRateRow[];
 }

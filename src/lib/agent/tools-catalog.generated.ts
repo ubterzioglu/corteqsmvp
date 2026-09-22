@@ -32,6 +32,7 @@ export const toolCatalog = {
         "check:migrations",
         "check:migrations:warn",
         "dev",
+        "fx:refresh",
         "generate:sitemap",
         "import:command-center:may13",
         "import:command-center:may13:write",
@@ -1295,6 +1296,7 @@ export const toolCatalog = {
       "interface_kind": "internal_api",
       "exports": [
         "deleteMoveDocument",
+        "getFxRates",
         "getLivingCosts",
         "getMoveDocuments",
         "getMoveProgress",
@@ -1303,6 +1305,7 @@ export const toolCatalog = {
         "setMoveProgress"
       ],
       "tables_read_write": [
+        "relocation_fx_rates",
         "relocation_living_costs",
         "relocation_move_documents",
         "relocation_move_progress",

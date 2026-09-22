@@ -1,6 +1,6 @@
 # Faz 10 — Relocation karar paketi (B27–B31)
 
-**Tarih:** 22 Eylül 2026 · **Durum:** B27 · B28 · B29 uygulandı · B31 kapandı; **yalnız B30 açık**
+**Tarih:** 22 Eylül 2026 · **Durum:** ✅ **beşi de kapandı** (B27 · B28 · B29 · B30 uygulandı, B31 karara bağlandı)
 **Kaynak:** `docs/kalanlar/2026-09-21-KALANLAR.md` Faz 10 ·
 `docs/kalanlar/2026-09-21-relocation-kalan-kararlar.md`
 
@@ -170,6 +170,12 @@ ile kapsam arasındadır:
   USD'ye sabitlidir ama pariteyi bizim koda yazmamız, yol haritasının "kur kaynağı
   yoksa girilmez" kuralını çiğner ve B28'de düzelttiğimiz hatanın aynısıdır.
 
+> ✅ **22.09 · B1 UYGULANDI.** `relocation_fx_rates` tablosu + `fx_open_er_api` kaynak
+> kaydı canlıda (migration `20260922210000`); `npm run fx:refresh` **8 kur** yazdı.
+> Panel toplamın altında `≈ karşılık · kur tarihi · open.er-api.com` çizer, kur yoksa
+> hiçbir şey çizmez. Künyede `authority_level = 'licensed_commercial'` — sözlükte
+> 'aggregator' yok ve **'official' YAZILMADI**, o etiket merkez bankası içindir.
+
 **Uygulama, seçim yapılınca:** `relocation_source_registry`'ye sağlayıcı kaydı
 (`category='fx'`, `refresh_sla_hours`) + kurları tutan tablo + tazeleme komutu + panelde
 "≈ X (kaynak · tarih)". Kur **anlık çekilmez**, kaydedilir — sayfa her açılışta dış
@@ -203,5 +209,5 @@ currently not indexed").
 | B27 | ✅ **A uygulandı** — üç sekme kaldırıldı, `/relocation` demodan çıktı | **Bitti** |
 | B28 | ✅ **D uygulandı** — nitelik panelde ve botta yazıyor (A uygulanamaz) | **Bitti** (E açık) |
 | B29 | ✅ **A uygulandı** — okuma tarafı şehir farkındası; veri girilebilir | **Bitti** |
-| B30 | **B** seçildi — sağlayıcı eklenecek; B1/B2 seçimi bekliyor | Sağlayıcı seçilince |
+| B30 | ✅ **B1 uygulandı** — open.er-api.com, üyenin bütçe birimi | **Bitti** |
 | B31 | ✅ **Karar verildi** — demo kalır, tetikleyici yazıldı | **Bitti** |

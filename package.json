@@ -54,7 +54,8 @@
     "pretest": "npm run verify:text",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "fx:refresh": "node scripts/relocation/fx-refresh.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

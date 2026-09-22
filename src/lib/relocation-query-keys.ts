@@ -19,4 +19,8 @@ export const relocationKeys = {
     [...relocationKeys.all, "required-documents", [...countryCodes].sort().join(",")] as const,
   moveProgress: (moveId: string) => [...relocationKeys.all, "progress", moveId] as const,
   moveDocuments: (moveId: string) => [...relocationKeys.all, "documents", moveId] as const,
+
+  // Saklanan döviz kurları (B30). Parametresizdir: tablo küçüktür ve tüm kapsamlarda
+  // aynı kur seti kullanılır.
+  fxRates: () => [...relocationKeys.all, "fx-rates"] as const,
 } as const;
