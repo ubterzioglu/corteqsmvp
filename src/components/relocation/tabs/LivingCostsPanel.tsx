@@ -9,7 +9,7 @@ import {
   COST_ITEM_ORDER,
   formatCostAmount,
   formatCostRange,
-  groupCostsByCountry,
+  groupCostsByScope,
   pickRowForHousehold,
   sumMonthlyCosts,
 } from "@/lib/relocation-content-format";
@@ -55,14 +55,15 @@ export function LivingCostsPanel({
     );
   }
 
-  // Ülke ülke çizilir. Tek grupta birleştirmek, hedefte iki ülke varken iki ülkenin
-  // aynı kalemini çakıştırır ve yalnız biri görünürdü — üstelik AI bağlamı ikisini de
-  // anlattığı için kullanıcı çelişen iki rakam görürdü.
-  const countries = groupCostsByCountry(rows);
+  // Kapsam kapsam çizilir (ülke + şehir). Tek grupta birleştirmek, hedefte iki ülke
+  // varken iki ülkenin aynı kalemini çakıştırır ve yalnız biri görünürdü — üstelik AI
+  // bağlamı ikisini de anlattığı için kullanıcı çelişen iki rakam görürdü. Aynısı şehir
+  // ekseninde de geçerlidir: "Berlin kirası" ile "Almanya geneli kira" ayrı kapsamdır.
+  const scopes = groupCostsByScope(rows);
 
   return (
     <div className="space-y-4">
-      {countries.map((country) => {
+      {scopes.map((country) => {
         // Toplam yalnızca haneye uyan satırlar üzerinden hesaplanır — tüm satırları
         // toplamak aynı kalemi birden çok hane büyüklüğü için sayardı.
         const pickedRows = country.groups
@@ -71,13 +72,16 @@ export function LivingCostsPanel({
         const total = sumMonthlyCosts(pickedRows);
 
         return (
-          <Card key={country.country_code}>
+          <Card key={`${country.country_code}|${country.city_code ?? ""}`}>
             <CardHeader>
               <CardTitle className="text-lg">
                 💰 Aylık yaşam masrafları
-                {countries.length > 1 && (
+                {scopes.length > 1 && (
                   <span className="ml-2 text-sm font-normal text-muted-foreground">
                     {countryLabel ? countryLabel(country.country_code) : country.country_code}
+                    {/* Şehir kapsamı ülke genelinden AYRI karttır; etiket ikisini
+                        karıştırmamak için açıkça yazılır. */}
+                    {country.city_code ? ` · ${country.city_code}` : " · ülke geneli"}
                   </span>
                 )}
               </CardTitle>

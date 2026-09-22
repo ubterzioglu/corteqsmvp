@@ -9,6 +9,7 @@ import { trCompare } from "@/lib/text-normalization";
 import type {
   RelocationCostGroup,
   RelocationCostItemKey,
+  RelocationCostScope,
   RelocationDocumentGroup,
   RelocationLivingCostRow,
   RelocationRequiredDocumentRow,
@@ -80,39 +81,58 @@ export function pickRowForHousehold(
 }
 
 /**
- * Ülke bazında gruplar — çok hedefli taşınma dosyalarında ZORUNLUDUR.
+ * Kapsam (ülke + şehir) bazında gruplar — çok hedefli taşınma dosyalarında ZORUNLUDUR.
  *
  * `groupCostsByItem` yalnız `item_key`'e göre grupladığı için, hedefte iki ülke
  * varsa (DE + NL) iki ülkenin "kira" satırı aynı gruba düşer ve `pickRowForHousehold`
  * bunlardan YALNIZ BİRİNİ seçer — hangisi olduğu DB sırasına bağlıdır. Sonuç: panelde
  * tek ülkenin rakamı görünür, toplam ona göre çıkar, ama AI bağlamı (ülke|kalem olarak
  * grupluyor) İKİ ülkeyi birden anlatır. Kullanıcı çelişen iki rakam görür.
- * Bu yüzden panel her zaman ülke ülke çizer.
+ *
+ * ⚠️ **Aynı kusur şehir ekseninde de vardı ve `city_code` doldurulduğu gün sessizce
+ * canlıya çıkardı** (B29, ölçüldü 22.09: 192 satırın 192'sinde `city_code` NULL, yani
+ * bugün hiç tetiklenmiyor). Yalnız ülkeye göre gruplansaydı "Berlin kirası" ile
+ * "Almanya geneli kira" aynı kutuya düşer, `pickRowForHousehold` `household_size`'a
+ * göre birini seçer, eşitlikte DİZİ SIRASINA göre karar verirdi. Hata vermez, test
+ * kırılmaz — yalnız yanlış rakam gösterir. Bu yüzden anahtar ülke DEĞİL, **kapsamdır**:
+ * `country_code` + `city_code`. Şehir satırı ile ülke geneli satırı ayrı kart çizer.
+ *
+ * Sıra: önce ülke, sonra kapsam — ülke geneli (`city_code = null`) o ülkenin şehir
+ * kapsamlarından ÖNCE gelir, çünkü genel çerçeveyi kırılımdan önce okumak doğaldır.
  */
-export function groupCostsByCountry(
-  rows: RelocationLivingCostRow[],
-): Array<{ country_code: string; groups: RelocationCostGroup[]; rows: RelocationLivingCostRow[] }> {
-  const byCountry = new Map<string, RelocationLivingCostRow[]>();
+export function groupCostsByScope(rows: RelocationLivingCostRow[]): RelocationCostScope[] {
+  const byScope = new Map<string, RelocationLivingCostRow[]>();
   for (const row of rows) {
-    const list = byCountry.get(row.country_code);
+    // \u0000 ayırıcı bilinçli: ülke/şehir kodunda geçemez, bu yüzden "TR|X" ile
+    // "TR|" + "X" karışamaz.
+    const key = `${row.country_code}\u0000${row.city_code ?? ""}`;
+    const list = byScope.get(key);
     if (list) list.push(row);
-    else byCountry.set(row.country_code, [row]);
+    else byScope.set(key, [row]);
   }
 
-  return [...byCountry.entries()]
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([country_code, countryRows]) => ({
-      country_code,
-      groups: groupCostsByItem(countryRows),
-      rows: countryRows,
-    }));
+  return [...byScope.values()]
+    .map((scopeRows) => ({
+      country_code: scopeRows[0].country_code,
+      city_code: scopeRows[0].city_code,
+      groups: groupCostsByItem(scopeRows),
+      rows: scopeRows,
+    }))
+    .sort((a, b) => {
+      const byCountry = a.country_code.localeCompare(b.country_code);
+      if (byCountry !== 0) return byCountry;
+      if (a.city_code === b.city_code) return 0;
+      if (a.city_code === null) return -1;
+      if (b.city_code === null) return 1;
+      return a.city_code.localeCompare(b.city_code);
+    });
 }
 
 /**
  * Kalem bazında gruplar; COST_ITEM_ORDER sırasını korur, verisi olmayan kalemi atlar.
  *
- * ⚠️ Bu fonksiyon ülke AYRIMI YAPMAZ. Çok ülkeli veri için önce `groupCostsByCountry`
- * ile ayır — yoksa iki ülkenin aynı kalemi tek grupta birleşir.
+ * ⚠️ Bu fonksiyon ülke ya da şehir AYRIMI YAPMAZ. Çok hedefli veri için önce
+ * `groupCostsByScope` ile ayır — yoksa iki kapsamın aynı kalemi tek grupta birleşir.
  */
 export function groupCostsByItem(rows: RelocationLivingCostRow[]): RelocationCostGroup[] {
   const byItem = new Map<RelocationCostItemKey, RelocationLivingCostRow[]>();

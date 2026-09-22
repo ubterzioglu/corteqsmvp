@@ -12,7 +12,7 @@ import {
   completionPercent,
   formatCostAmount,
   formatCostRange,
-  groupCostsByCountry,
+  groupCostsByScope,
   groupCostsByItem,
   groupDocumentsByCategory,
   pickRowForHousehold,
@@ -148,17 +148,17 @@ describe("groupCostsByItem", () => {
   });
 });
 
-describe("groupCostsByCountry", () => {
+describe("groupCostsByScope", () => {
   it("iki ülkenin AYNI kalemini birleştirmez", () => {
     const rows = [
       costRow({ id: "de", country_code: "DE", item_key: "rent", amount_min: 800 }),
       costRow({ id: "nl", country_code: "NL", item_key: "rent", amount_min: 900 }),
     ];
-    const byCountry = groupCostsByCountry(rows);
-    expect(byCountry).toHaveLength(2);
+    const byScope = groupCostsByScope(rows);
+    expect(byScope).toHaveLength(2);
 
-    const de = byCountry.find((c) => c.country_code === "DE");
-    const nl = byCountry.find((c) => c.country_code === "NL");
+    const de = byScope.find((c) => c.country_code === "DE");
+    const nl = byScope.find((c) => c.country_code === "NL");
     expect(de?.groups[0].rows[0].amount_min).toBe(800);
     expect(nl?.groups[0].rows[0].amount_min).toBe(900);
   });
@@ -168,16 +168,62 @@ describe("groupCostsByCountry", () => {
       costRow({ id: "de1", country_code: "DE", item_key: "rent", amount_min: 800, amount_max: 800 }),
       costRow({ id: "nl1", country_code: "NL", item_key: "rent", amount_min: 900, amount_max: 900 }),
     ];
-    const de = groupCostsByCountry(rows).find((c) => c.country_code === "DE");
+    const de = groupCostsByScope(rows).find((c) => c.country_code === "DE");
     expect(sumMonthlyCosts(de?.rows ?? [])).toEqual({ min: 800, max: 800, currency: "EUR" });
   });
 
   it("tek ülkede tek grup döner", () => {
-    expect(groupCostsByCountry([costRow({ country_code: "DE" })])).toHaveLength(1);
+    expect(groupCostsByScope([costRow({ country_code: "DE" })])).toHaveLength(1);
   });
 
   it("boş girdide boş dizi döner", () => {
-    expect(groupCostsByCountry([])).toEqual([]);
+    expect(groupCostsByScope([])).toEqual([]);
+  });
+
+  // B29: city_code doldurulduğu gün sessizce yanlış rakam gösterecek olan kusur.
+  it("ŞEHİR satırı ile ÜLKE GENELİ satırını birleştirmez", () => {
+    const rows = [
+      costRow({ id: "de", country_code: "DE", city_code: null, item_key: "rent", amount_min: 800 }),
+      costRow({ id: "berlin", country_code: "DE", city_code: "BER", item_key: "rent", amount_min: 1400 }),
+    ];
+    const scopes = groupCostsByScope(rows);
+    expect(scopes).toHaveLength(2);
+
+    const ulkeGeneli = scopes.find((s) => s.city_code === null);
+    const berlin = scopes.find((s) => s.city_code === "BER");
+    expect(ulkeGeneli?.groups[0].rows[0].amount_min).toBe(800);
+    expect(berlin?.groups[0].rows[0].amount_min).toBe(1400);
+  });
+
+  it("iki ŞEHRİ birbirine karıştırmaz", () => {
+    const rows = [
+      costRow({ id: "ber", country_code: "DE", city_code: "BER", item_key: "rent", amount_min: 1400 }),
+      costRow({ id: "muc", country_code: "DE", city_code: "MUC", item_key: "rent", amount_min: 1800 }),
+    ];
+    const scopes = groupCostsByScope(rows);
+    expect(scopes.map((s) => s.city_code)).toEqual(["BER", "MUC"]);
+  });
+
+  it("ülke geneli, o ülkenin şehir kapsamlarından ÖNCE gelir", () => {
+    const rows = [
+      costRow({ id: "muc", country_code: "DE", city_code: "MUC" }),
+      costRow({ id: "de", country_code: "DE", city_code: null }),
+      costRow({ id: "nl", country_code: "NL", city_code: null }),
+    ];
+    expect(groupCostsByScope(rows).map((s) => `${s.country_code}/${s.city_code ?? "-"}`)).toEqual([
+      "DE/-",
+      "DE/MUC",
+      "NL/-",
+    ]);
+  });
+
+  it("kapsam toplamı yalnız O KAPSAMIN satırlarından hesaplanır", () => {
+    const rows = [
+      costRow({ id: "de", country_code: "DE", city_code: null, amount_min: 800, amount_max: 800 }),
+      costRow({ id: "ber", country_code: "DE", city_code: "BER", amount_min: 1400, amount_max: 1400 }),
+    ];
+    const berlin = groupCostsByScope(rows).find((s) => s.city_code === "BER");
+    expect(sumMonthlyCosts(berlin?.rows ?? [])).toEqual({ min: 1400, max: 1400, currency: "EUR" });
   });
 });
 

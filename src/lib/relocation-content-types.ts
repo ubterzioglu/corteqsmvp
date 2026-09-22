@@ -74,6 +74,19 @@ export interface RelocationCostGroup {
   rows: RelocationLivingCostRow[];
 }
 
+/**
+ * Maliyet kapsamı: ülke + (varsa) şehir.
+ *
+ * `city_code = null` "ülke geneli" demektir; şehir satırıyla AYNI kapsam değildir.
+ * İkisini birleştirmek B29'da kapatılan sessiz yanlış rakam kusurunu geri getirir.
+ */
+export interface RelocationCostScope {
+  country_code: string;
+  city_code: string | null;
+  groups: RelocationCostGroup[];
+  rows: RelocationLivingCostRow[];
+}
+
 /** Kategoriye göre gruplanmış belge listesi. */
 export interface RelocationDocumentGroup {
   category: string;

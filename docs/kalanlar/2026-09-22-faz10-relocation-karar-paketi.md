@@ -1,6 +1,6 @@
 # Faz 10 — Relocation karar paketi (B27–B31)
 
-**Tarih:** 22 Eylül 2026 · **Durum:** karar bekliyor, uygulama YAPILMADI
+**Tarih:** 22 Eylül 2026 · **Durum:** B29 uygulandı (kod); B27 · B28 · B30 · B31 karar bekliyor
 **Kaynak:** `docs/kalanlar/2026-09-21-KALANLAR.md` Faz 10 ·
 `docs/kalanlar/2026-09-21-relocation-kalan-kararlar.md`
 
@@ -76,18 +76,29 @@ tutulamayan bir söz verir.
 
 ## B29 — Şehir kırılımı (192 satırın tamamı `city_code` NULL)
 
+> ✅ **22.09 · Seçenek A UYGULANDI — okuma tarafı artık şehir farkındası.**
+> `groupCostsByCountry` → `groupCostsByScope` oldu; anahtar `country_code + city_code`.
+> Panel (`LivingCostsPanel`) ülke geneli ile şehri **ayrı kart** çizer ve başlıkta
+> "· ülke geneli" / "· BER" yazar. AI bağlamı (`relocation-chat-context.ts`) aynı
+> sözleşmeye geçti: `DE (ülke geneli)` ve `DE/BER` ayrı satır. **6 test eklendi**
+> (şehir↔ülke karışmaz, iki şehir karışmaz, ülke geneli önce gelir, kapsam toplamı
+> yalnız o kapsamdan, bot iki rakamı da yazar). Tam suite **329 dosya / 2.442 test**.
+> **Veri hâlâ girilmedi** — artık girilebilir; kalan karar "hangi şehirler".
+> ⚠️ Panel ile bot AYNI sözleşmededir; birini değiştiren öbürünü de değiştirmelidir.
+
 **Yol haritası bu kararı bir önkoşula bağlamıştı: "önce `pickRowForHousehold` okuma
 tarafı gözden geçirilmiş." Gözden geçirildi — ve sonuç kararı değiştiriyor.**
 
-`src/lib/relocation-content-format.ts` okuma zinciri şöyle:
+`src/lib/relocation-content-format.ts` okuma zinciri **düzeltmeden önce** şöyleydi:
 `groupCostsByCountry` (ülke) → `groupCostsByItem` (kalem) → `pickRowForHousehold`
-(hane halkı). **Hiçbir aşamada `city_code` yok.**
+(hane halkı). **Hiçbir aşamada `city_code` yoktu.**
 
-Sonuç: bugün `city_code` doldurulursa Berlin kirası ile Almanya geneli kirası **aynı
-gruba** düşer; `pickRowForHousehold` ikisinden birini `household_size`'a göre seçer,
-eşitlikte **dizi sırasına** göre. Bu, aynı dosyanın 85–90. satırlarında ülke ekseni
-için zaten belgelenmiş olan hatanın şehir eksenindeki aynısıdır: panel tek rakam
-gösterir, hangisi olduğu DB sırasına bağlıdır.
+Sonuç: `city_code` doldurulsaydı Berlin kirası ile Almanya geneli kirası **aynı gruba**
+düşerdi; `pickRowForHousehold` ikisinden birini `household_size`'a göre seçer,
+eşitlikte **dizi sırasına** göre karar verirdi. Bu, aynı dosyada ülke ekseni için zaten
+belgelenmiş olan hatanın şehir eksenindeki aynısıdır: panel tek rakam gösterir,
+hangisi olduğu DB sırasına bağlıdır. Zincir bugün `groupCostsByScope` (ülke + şehir) →
+`groupCostsByItem` → `pickRowForHousehold` biçimindedir.
 
 | Seçenek | Sonuç |
 |---|---|
@@ -139,6 +150,6 @@ currently not indexed").
 |---|---|---|
 | B27 | **A** — üç boş sekmeyi kaldır, `/relocation`'ı demodan çıkar | Evet |
 | B28 | **A** — önce `source_id` doldur, tazeleme sahibi atanmadan gösterme | Kısmen (sahip kararı ister) |
-| B29 | **A veya C** — okuma tarafı düzelmeden veri doldurma | Evet (A kod işi) |
+| B29 | ✅ **A uygulandı** — okuma tarafı şehir farkındası; veri girilebilir | **Bitti** |
 | B30 | **A** — kur kaynağı yok, tek karşılık gösterilmez | Evet (değişiklik yok) |
 | B31 | Tetikleyiciyle beklet — gerçek kayıt yok | Hayır |

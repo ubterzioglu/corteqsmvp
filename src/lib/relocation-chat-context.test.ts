@@ -189,3 +189,38 @@ describe("buildRelocationChatContext — uzunluk sınırı", () => {
     expect(out).not.toContain("kesildi");
   });
 });
+
+// B29: panelle AYNI sözleşme. Bot kapsamı ayırmazsa, panel Berlin rakamını
+// gösterirken bot ülke geneli rakamını anlatır — kullanıcı çelişen iki rakam görür.
+describe("buildRelocationChatContext — maliyet kapsamı (B29)", () => {
+  it("şehir satırı ile ülke geneli satırını AYRI satır olarak yazar", () => {
+    const out = buildRelocationChatContext({
+      profile: profile(),
+      livingCosts: [
+        costRow({ id: "de", city_code: null, amount_min: 800, amount_max: 800 }),
+        costRow({ id: "ber", city_code: "BER", amount_min: 1400, amount_max: 1400 }),
+      ],
+      requiredDocuments: [],
+    });
+
+    expect(out).toContain("DE (ülke geneli)");
+    expect(out).toContain("DE/BER");
+    // İkisi de görünmeli — biri diğerini yutarsa rakamlardan biri kaybolur.
+    expect(out).toMatch(/1\.400/);
+    expect(out).toMatch(/800/);
+  });
+
+  it("iki şehri tek satıra indirgemez", () => {
+    const out = buildRelocationChatContext({
+      profile: profile(),
+      livingCosts: [
+        costRow({ id: "ber", city_code: "BER", amount_min: 1400, amount_max: 1400 }),
+        costRow({ id: "muc", city_code: "MUC", amount_min: 1800, amount_max: 1800 }),
+      ],
+      requiredDocuments: [],
+    });
+
+    expect(out).toContain("DE/BER");
+    expect(out).toContain("DE/MUC");
+  });
+});

@@ -94,22 +94,28 @@ function buildCostBlock(
 ): string | null {
   if (rows.length === 0) return null;
 
-  const byCountryItem = new Map<string, RelocationLivingCostRow[]>();
+  // Anahtar ülke DEĞİL kapsamdır (ülke + şehir). Yalnız ülkeye göre gruplansaydı
+  // "Berlin kirası" ile "Almanya geneli kira" aynı gruba düşer, `pickRowForHousehold`
+  // birini dizi sırasına göre seçer ve bot tek rakamı doğruymuş gibi anlatırdı.
+  // Panel ile aynı sözleşme — biri değişirse öbürü de değişmelidir (B29).
+  const byScopeItem = new Map<string, RelocationLivingCostRow[]>();
   for (const row of rows) {
-    const key = `${row.country_code}|${row.item_key}`;
-    const list = byCountryItem.get(key);
+    const key = `${row.country_code}\u0000${row.city_code ?? ""}\u0000${row.item_key}`;
+    const list = byScopeItem.get(key);
     if (list) list.push(row);
-    else byCountryItem.set(key, [row]);
+    else byScopeItem.set(key, [row]);
   }
 
   const lines: string[] = ["## Yaşam masrafları (platform verisi)"];
-  for (const [key, group] of byCountryItem) {
-    const [countryCode, itemKey] = key.split("|");
+  for (const group of byScopeItem.values()) {
     const picked = pickRowForHousehold(group, householdSize);
     if (!picked) continue;
-    const label = COST_ITEM_LABELS[itemKey] ?? itemKey;
+    const label = COST_ITEM_LABELS[picked.item_key] ?? picked.item_key;
     const period = picked.period === "monthly" ? "/ay" : " (tek seferlik)";
-    lines.push(`- ${countryCode} · ${label}: ${formatCostRange(picked)}${period}`);
+    const scope = picked.city_code
+      ? `${picked.country_code}/${picked.city_code}`
+      : `${picked.country_code} (ülke geneli)`;
+    lines.push(`- ${scope} · ${label}: ${formatCostRange(picked)}${period}`);
   }
 
   return lines.length > 1 ? lines.join("\n") : null;
