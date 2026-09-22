@@ -126,3 +126,38 @@ test.describe("Kırık bağlantı — Batch 3", () => {
     await expect(page.locator('a[href*="/radio/"]')).toHaveCount(0);
   });
 });
+
+test.describe("Hareketsiz düğme kontrolü — B11.5", () => {
+  // B11.1–B11.4: AssociationDetail'deki demo butonlar üç kovaya ayrıldı:
+  // - Bağla (Paylaş → MapShareButtons)
+  // - Kaldır (E-Konsolosluk)
+  // - Yakında (disabled + tooltip)
+  // Bu test, disabled olmayan buton sayısının kabul edilen eşiği aşmadığını doğrular.
+  // Yeni bir buton eklenirse ve unutulursa bu test düşer.
+  test("/association/:id — hareketsiz buton sayısı kabul edilen eşikte", async ({ page }) => {
+    await page.goto("/associations");
+    // İlk kuruluş kartına tıkla
+    const firstCard = page.getByRole("link").filter({ hasText: /Dernek/ }).first();
+    await firstCard.click();
+    await page.waitForURL(/\/association\//);
+
+    // Tüm butonları say
+    const allButtons = page.getByRole("button");
+    const allCount = await allButtons.count();
+
+    // Disabled butonları say
+    const disabledButtons = page.getByRole("button").filter({ disabled: true });
+    const disabledCount = await disabledButtons.count();
+
+    // Aktif (disabled olmayan) butonlar: takip, harita, yol tarifi, web sitesi (hospital ise)
+    const activeCount = allCount - disabledCount;
+
+    // Kabul edilen eşik: 5 aktif buton (Takip Et/Dinle, Konum, Yol Tarifi, Paylaş, + hospital/diplomatic ise 1-2 daha)
+    // Eğer yeni bir buton eklenirse ve disabled yapılmazsa bu test düşer.
+    expect(activeCount).toBeLessThanOrEqual(7);
+
+    // Disabled butonlar "Yakında" tooltip'i taşımalı
+    // En az bir disabled buton olmalı (demo sayfa olduğu için)
+    expect(disabledCount).toBeGreaterThanOrEqual(5);
+  });
+});

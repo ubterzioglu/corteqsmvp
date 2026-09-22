@@ -4,9 +4,11 @@ import { Users, MapPin, Calendar as CalendarIcon, Globe as GlobeIcon, ArrowLeft,
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { associations } from "@/data/mock";
 import { useToast } from "@/hooks/use-toast";
 import DemoPageBanner from "@/components/DemoPageBanner";
+import MapShareButtons from "@/components/MapShareButtons";
 import { useSeo } from "@/lib/seo";
 
 const AssociationDetail = () => {
@@ -152,21 +154,37 @@ const AssociationDetail = () => {
                         <GlobeIcon className="h-4 w-4" /> Web Sitesi
                       </Button>
                     </a>
-                    <Button variant="outline" className="gap-2 w-full">
-                      <MessageSquare className="h-4 w-4" /> İletişim
-                    </Button>
+                    {/* B11.4 — Yakında kovası: İletişim formu yok */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="outline" className="gap-2 w-full" disabled>
+                          <MessageSquare className="h-4 w-4" /> İletişim
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Yakında</TooltipContent>
+                    </Tooltip>
                   </>
                 ) : isDiplomatic ? (
                   <>
-                    <Button variant="default" className="gap-2 w-full">
-                      <CalendarIcon className="h-4 w-4" /> Randevu Al
-                    </Button>
-                    <Button variant="outline" className="gap-2 w-full">
-                      <FileText className="h-4 w-4" /> E-Konsolosluk
-                    </Button>
-                    <Button variant="outline" className="gap-2 w-full">
-                      <MessageSquare className="h-4 w-4" /> İletişim
-                    </Button>
+                    {/* B11.4 — Yakında kovası: Konsolosluk randevu sistemi yok */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="default" className="gap-2 w-full" disabled>
+                          <CalendarIcon className="h-4 w-4" /> Randevu Al
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Yakında</TooltipContent>
+                    </Tooltip>
+                    {/* B11.2 — Kaldır kovası: E-Konsolosluk sistemi yok, yakın planda da yok */}
+                    {/* B11.4 — Yakında kovası: İletişim formu yok */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="outline" className="gap-2 w-full" disabled>
+                          <MessageSquare className="h-4 w-4" /> İletişim
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Yakında</TooltipContent>
+                    </Tooltip>
                   </>
                 ) : (
                   <>
@@ -176,31 +194,54 @@ const AssociationDetail = () => {
                         yoktu — sayfadaki TEK gezinen düğme 404'e düşüyordu. Kaldırıldı;
                         "Dinle" artık birincil düğme. Gerçek istek-parça akışı
                         yazıldığında rotayı `App.tsx`'e ekleyip düğmeyi geri koy. */}
-                    <Button variant="default" className="gap-2 w-full">
-                      {assoc.type === "Radyo" ? (
-                        <><Music className="h-4 w-4" /> Dinle</>
-                      ) : (
-                        <><Users className="h-4 w-4" /> Üye Ol</>
-                      )}
-                    </Button>
+                    {/* B11.4 — Yakında kovası: Üyelik/radyo sistemi yok */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="default" className="gap-2 w-full" disabled>
+                          {assoc.type === "Radyo" ? (
+                            <><Music className="h-4 w-4" /> Dinle</>
+                          ) : (
+                            <><Users className="h-4 w-4" /> Üye Ol</>
+                          )}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Yakında</TooltipContent>
+                    </Tooltip>
                     {assoc.type !== "Radyo" && assoc.type !== "TV Kanalı" && (
                       <>
-                        <Button variant="outline" className="gap-2 w-full">
-                          <CreditCard className="h-4 w-4" /> Aidat Öde
-                        </Button>
-                        <Button variant="outline" className="gap-2 w-full">
-                          <Heart className="h-4 w-4" /> Bağış Yap
-                        </Button>
+                        {/* B11.4 — Yakında kovası: Ödeme sistemi yok */}
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="outline" className="gap-2 w-full" disabled>
+                              <CreditCard className="h-4 w-4" /> Aidat Öde
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Yakında</TooltipContent>
+                        </Tooltip>
+                        {/* B11.4 — Yakında kovası: Bağış sistemi yok */}
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="outline" className="gap-2 w-full" disabled>
+                              <Heart className="h-4 w-4" /> Bağış Yap
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Yakında</TooltipContent>
+                        </Tooltip>
                       </>
                     )}
-                    <Button variant="outline" className="gap-2 w-full">
-                      <MessageSquare className="h-4 w-4" /> Mesaj Gönder
-                    </Button>
+                    {/* B11.4 — Yakında kovası: Mesajlaşma sistemi yok */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="outline" className="gap-2 w-full" disabled>
+                          <MessageSquare className="h-4 w-4" /> Mesaj Gönder
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Yakında</TooltipContent>
+                    </Tooltip>
                   </>
                 )}
-                <Button variant="outline" className="gap-2 w-full">
-                  <Share2 className="h-4 w-4" /> Paylaş
-                </Button>
+                {/* B11.3 — Bağla kovası: MapShareButtons ile gerçek paylaşım */}
+                <MapShareButtons name={assoc.name} city={assoc.city} country={assoc.country} className="w-full" />
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(assoc.name + ', ' + assoc.city + ', ' + assoc.country)}`}
                   target="_blank"
@@ -291,9 +332,15 @@ const AssociationDetail = () => {
                       </div>
                     ))}
                   </div>
-                  <Button className="mt-4 gap-2">
-                    <CalendarIcon className="h-4 w-4" /> Online Randevu Al
-                  </Button>
+                  {/* B11.4 — Yakında kovası: Konsolosluk randevu sistemi yok */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button className="mt-4 gap-2" disabled>
+                        <CalendarIcon className="h-4 w-4" /> Online Randevu Al
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Yakında</TooltipContent>
+                  </Tooltip>
                 </div>
               )}
 
@@ -314,9 +361,15 @@ const AssociationDetail = () => {
                           <h3 className="font-semibold text-foreground">{e.title}</h3>
                           <Badge variant="outline" className="text-xs mt-1">{e.type}</Badge>
                         </div>
-                        <Button variant="outline" size="sm" className="shrink-0 gap-1">
-                          <CalendarIcon className="h-3 w-3" /> Katıl
-                        </Button>
+                        {/* B11.4 — Yakında kovası: Etkinlik katılım sistemi yok */}
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="outline" size="sm" className="shrink-0 gap-1" disabled>
+                              <CalendarIcon className="h-3 w-3" /> Katıl
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Yakında</TooltipContent>
+                        </Tooltip>
                       </div>
                     ))}
                   </div>
@@ -353,9 +406,15 @@ const AssociationDetail = () => {
                       <h3 className="font-semibold text-foreground">Networking Akşam Yemeği</h3>
                       <p className="text-sm text-muted-foreground font-body">{assoc.city} · 19:00</p>
                     </div>
-                    <Button variant="default" size="sm" className="shrink-0 gap-1">
-                      <Ticket className="h-3 w-3" /> Bilet Al
-                    </Button>
+                    {/* B11.4 — Yakında kovası: Bilet sistemi yok */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="default" size="sm" className="shrink-0 gap-1" disabled>
+                          <Ticket className="h-3 w-3" /> Bilet Al
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Yakında</TooltipContent>
+                    </Tooltip>
                   </div>
 
                   <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl bg-gold/5 border border-gold/20">
@@ -371,12 +430,24 @@ const AssociationDetail = () => {
                       <p className="text-sm text-muted-foreground font-body">{assoc.city} · 18:30 · Gala etkinliği — Gelirler burs fonuna aktarılır</p>
                     </div>
                     <div className="flex gap-2 shrink-0">
-                      <Button variant="default" size="sm" className="gap-1">
-                        <Ticket className="h-3 w-3" /> Bilet Al
-                      </Button>
-                      <Button variant="outline" size="sm" className="gap-1 border-gold/30 text-gold hover:bg-gold/10">
-                        <Heart className="h-3 w-3" /> Bağış Yap
-                      </Button>
+                      {/* B11.4 — Yakında kovası: Bilet sistemi yok */}
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="default" size="sm" className="gap-1" disabled>
+                            <Ticket className="h-3 w-3" /> Bilet Al
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Yakında</TooltipContent>
+                      </Tooltip>
+                      {/* B11.4 — Yakında kovası: Bağış sistemi yok */}
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="outline" size="sm" className="gap-1 border-gold/30 text-gold hover:bg-gold/10" disabled>
+                            <Heart className="h-3 w-3" /> Bağış Yap
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Yakında</TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
 
@@ -389,9 +460,15 @@ const AssociationDetail = () => {
                       <h3 className="font-semibold text-foreground">Kültür & Sanat Festivali</h3>
                       <p className="text-sm text-muted-foreground font-body">{assoc.city} · Tüm gün</p>
                     </div>
-                    <Button variant="default" size="sm" className="shrink-0 gap-1">
-                      <Ticket className="h-3 w-3" /> Bilet Al
-                    </Button>
+                    {/* B11.4 — Yakında kovası: Bilet sistemi yok */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="default" size="sm" className="shrink-0 gap-1" disabled>
+                          <Ticket className="h-3 w-3" /> Bilet Al
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Yakında</TooltipContent>
+                    </Tooltip>
                   </div>
 
                   <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/50">
@@ -403,7 +480,15 @@ const AssociationDetail = () => {
                       <h3 className="font-semibold text-foreground">Girişimcilik Paneli</h3>
                       <p className="text-sm text-muted-foreground font-body">Online · 18:00 CET</p>
                     </div>
-                    <Button variant="outline" size="sm" className="shrink-0">Katıl</Button>
+                    {/* B11.4 — Yakında kovası: Etkinlik katılım sistemi yok */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="outline" size="sm" className="shrink-0" disabled>
+                          Katıl
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Yakında</TooltipContent>
+                    </Tooltip>
                   </div>
                 </div>
               </div>
@@ -415,9 +500,15 @@ const AssociationDetail = () => {
                 <p className="text-muted-foreground font-body">
                   {assoc.members.toLocaleString()} aktif üye ile {assoc.country}'daki en büyük Türk topluluklarından biri.
                 </p>
-                <Button variant="default" className="mt-4 gap-2">
-                  <Users className="h-4 w-4" /> Üye Ol
-                </Button>
+                {/* B11.4 — Yakında kovası: Üyelik sistemi yok */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="default" className="mt-4 gap-2" disabled>
+                      <Users className="h-4 w-4" /> Üye Ol
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Yakında</TooltipContent>
+                </Tooltip>
               </div>
             </TabsContent>
 
