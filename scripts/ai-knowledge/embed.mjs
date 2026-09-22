@@ -85,7 +85,7 @@ export async function embedText(text, apiKey, { taskType = "RETRIEVAL_DOCUMENT" 
   return values;
 }
 
-async function embedWithRetry(text, apiKey) {
+export async function embedWithRetry(text, apiKey) {
   let lastError;
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt += 1) {
     try {
