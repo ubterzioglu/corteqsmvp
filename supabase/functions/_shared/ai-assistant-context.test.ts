@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -27,6 +29,15 @@ describe("resolveAudiences", () => {
 
   it("yoneticiye admin kitlesini de verir", () => {
     expect(resolveAudiences(true)).toEqual(["public", "member", "admin"]);
+  });
+
+  it("site assistant kitleyi dogrulanmis kullanici ile sunucuda cozer", () => {
+    const source = readFileSync("supabase/functions/site-assistant/index.ts", "utf8");
+
+    expect(source).toContain('userClient.rpc("is_admin")');
+    expect(source).toContain("resolveAudiences(isAdminData === true)");
+    expect(source).toContain("p_audiences: audiences");
+    expect(source).not.toMatch(/payload\.(?:audience|audiences|isAdmin|role)/);
   });
 });
 

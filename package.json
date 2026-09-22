@@ -31,6 +31,7 @@
     "check:drift:warn": "node scripts/check-drift.mjs --warn",
     "check:migrations": "node scripts/check-migrations.mjs",
     "check:migrations:warn": "node scripts/check-migrations.mjs --warn",
+    "check:functions": "node scripts/check-functions.mjs",
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "typecheck:strict-pilot": "tsc -p tsconfig.strict-pilot.json --noEmit",
     "typecheck:node": "tsc -p tsconfig.node.json --noEmit",

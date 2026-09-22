@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import DirectoryFilters from "@/components/directory/DirectoryFilters";
 import DirectoryResultCard from "@/components/directory/DirectoryResultCard";
 import DirectoryResultRow from "@/components/directory/DirectoryResultRow";
+import PublicContentSearchResults from "@/components/directory/PublicContentSearchResults";
 import { groupDirectoryResults } from "@/lib/directory-grouping";
 import DirectorySearchBar from "@/components/directory/DirectorySearchBar";
 import {
@@ -19,6 +20,10 @@ import {
 import { useGeoCountries } from "@/hooks/useGeo";
 import { useSeo } from "@/lib/seo";
 import { PAGE_SEO } from "@/lib/page-seo";
+import {
+  searchPublicContent,
+  type PublicContentSearchResult,
+} from "@/lib/public-content-search";
 const mascot = "/lmaskot.png";
 
 // Supabase RPC errors are plain objects ({ message, code, details }), not Error
@@ -47,6 +52,8 @@ const DirectoryPage = () => {
   const [totalCount, setTotalCount] = useState<number | null>(null);
   /** Aktif filtreye uyan toplam kayıt — sayfalanan `rows.length`'ten FARKLIDIR. */
   const [resultTotal, setResultTotal] = useState<number | null>(null);
+  const [contentResults, setContentResults] = useState<PublicContentSearchResult[]>([]);
+  const [isContentLoading, setIsContentLoading] = useState(false);
 
   // Kurum kaydı kart, kişi kaydı satır olarak çizilir (revizyon 32ae55b9).
   const { catalogItems, members } = useMemo(() => groupDirectoryResults(rows), [rows]);
@@ -184,6 +191,34 @@ const DirectoryPage = () => {
       isMounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (isAuthLoading) return;
+    if (searchText.trim().length < 2) {
+      setContentResults([]);
+      setIsContentLoading(false);
+      return;
+    }
+
+    let isMounted = true;
+    setIsContentLoading(true);
+
+    void searchPublicContent(searchText)
+      .then((results) => {
+        if (isMounted) setContentResults(results);
+      })
+      .catch(() => {
+        // İçerik araması yardımcı bir yüzeydir; hatası dizin sonuçlarını düşürmez.
+        if (isMounted) setContentResults([]);
+      })
+      .finally(() => {
+        if (isMounted) setIsContentLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isAuthLoading, searchText]);
 
   const updateFilter = (key: string, value: string | null) => {
     const next = new URLSearchParams(searchParams);
@@ -326,6 +361,11 @@ const DirectoryPage = () => {
             </div>
 
             <div ref={resultsRef} className="scroll-mt-24" />
+
+            <PublicContentSearchResults
+              results={contentResults}
+              isLoading={isContentLoading}
+            />
 
             {isLoading ? (
               <p className="py-8 text-center text-sm text-muted-foreground">Dizin yükleniyor...</p>

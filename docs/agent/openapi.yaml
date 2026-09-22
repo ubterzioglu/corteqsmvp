@@ -98,7 +98,6 @@ paths:
       operationId: execute_relocation_assistant
       x-tool-key: edge.relocation_assistant
       x-status: active
-      x-tables: [edge_rate_limits]
       requestBody:
         required: true
         content:
@@ -200,7 +199,6 @@ paths:
       operationId: execute_site_assistant
       x-tool-key: edge.site_assistant
       x-status: active
-      x-tables: [edge_rate_limits]
       requestBody:
         required: true
         content:

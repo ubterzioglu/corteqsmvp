@@ -22,6 +22,7 @@ import {
 } from "./providers.ts";
 import { buildAssistantCorsHeaders, isAssistantOriginAllowed, readJsonWithLimit } from "../_shared/edge-security.ts";
 import { enforceRateLimit as enforceSharedRateLimit } from "../_shared/rate-limit.ts";
+import { recordAssistantUsage, type UsageWriter } from "../_shared/assistant-usage.ts";
 
 const MAX_BODY_BYTES = 32_000;
 const RATE_LIMIT_MAX = 20;
@@ -66,6 +67,9 @@ function jsonResponse(body: unknown, status: number, corsHeaders: Record<string,
 Deno.serve(async (req) => {
   const corsHeaders = buildAssistantCorsHeaders(req);
   const origin = req.headers.get("Origin");
+  let usageClient: UsageWriter | null = null;
+  let usageUserId: string | null = null;
+  let usageProvider = "unknown";
 
   if (req.method === "OPTIONS") {
     if (origin && !isAssistantOriginAllowed(origin)) {
@@ -93,7 +97,7 @@ Deno.serve(async (req) => {
     // Sağlayıcı adı burada doğrulanır: yanlış `AI_PROVIDER` değeri isteğin en
     // başında patlasın, model çağrısına kadar taşınmasın. Sağlayıcının kendi
     // anahtarını (GEMINI_API_KEY / GROQ_API_KEY) providers.ts denetler.
-    resolveProviderName();
+    usageProvider = resolveProviderName();
 
     // Asistan üyelere açıktır ve para harcar — anonim çağrı kabul edilmez.
     const authHeader = req.headers.get("Authorization") ?? "";
@@ -110,6 +114,8 @@ Deno.serve(async (req) => {
     }
 
     const supabase = createClient(supabaseUrl, serviceKey);
+    usageClient = supabase;
+    usageUserId = userData.user.id;
     await enforceSharedRateLimit(
       supabase,
       req,
@@ -147,6 +153,15 @@ Deno.serve(async (req) => {
       messages: [...contextTurns, ...payload.messages],
     });
 
+    await recordAssistantUsage(supabase, {
+      userId: userData.user.id,
+      functionName: "relocation-assistant",
+      provider,
+      usage,
+      status: "success",
+      httpStatus: 200,
+    });
+
     // Maliyet takibi: relocation_cost_ledger KULLANILAMAZ — job_id'si
     // relocation_jobs'a zorunlu FK, o tablo ingestion hattına ait. Kullanım
     // ölçümü şimdilik fonksiyon loglarından okunur (açık madde: plan Faz 3).
@@ -164,6 +179,16 @@ Deno.serve(async (req) => {
     return jsonResponse({ answer }, 200, corsHeaders);
   } catch (error) {
     if (error instanceof ModelProviderError) {
+      if (error.status === 429 && usageClient && usageUserId) {
+        await recordAssistantUsage(usageClient, {
+          userId: usageUserId,
+          functionName: "relocation-assistant",
+          provider: usageProvider,
+          usage: null,
+          status: "quota_exceeded",
+          httpStatus: 429,
+        });
+      }
       // 429 = kota/yoğunluk. Ücretsiz katmanda aşım burada görünür: para değil,
       // bekleme. Kullanıcıya teknik ayrıntı gitmez.
       const message =

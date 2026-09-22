@@ -19,7 +19,7 @@ const legacySource = readFileSync("src/lib/cadde-api.ts", "utf8");
 
 /** Adı verilen export'un gövdesini (bir sonraki üst düzey export'a kadar) döndürür. */
 const functionBody = (name: string): string => {
-  const source = name === "listCaddeCafes" ? cafeSource : legacySource;
+  const source = name === "listCaddeCafes" || name === "listCaddeCafeFeed" ? cafeSource : legacySource;
   const start = source.indexOf(`export async function ${name}`);
   expect(start, `${name} bulunamadı`).toBeGreaterThan(-1);
   const rest = source.slice(start + 1);

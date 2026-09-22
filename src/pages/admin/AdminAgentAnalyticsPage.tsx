@@ -4,9 +4,10 @@
 // ops.* tabloları henüz boş olabilir; sayfa katalog + skor modelinden beslenir.
 
 import { useMemo } from "react";
-import { Activity, BookOpen, Gauge, ShieldCheck } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { Activity, AlertTriangle, BarChart3, Gauge, ShieldCheck } from "lucide-react";
 
+import { PanelHelpCard } from "@/components/admin/PanelHelpCard";
 import { AdminPageShell } from "@/components/admin/page";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -17,6 +18,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { toolCatalog } from "@/lib/agent/tools-catalog.generated";
+import {
+  fetchAssistantUsage,
+  getGeminiQuotaAlert,
+  summarizeAssistantUsage,
+} from "@/lib/assistant-usage-api";
 import {
   confidenceBand,
   contractCompleteness,
@@ -57,6 +63,19 @@ const BAND_LABEL: Record<string, { label: string; variant: "default" | "secondar
 };
 
 const AdminAgentAnalyticsPage = () => {
+  const usageQuery = useQuery({
+    queryKey: ["admin", "assistant-usage", 30],
+    queryFn: () => fetchAssistantUsage(30),
+    staleTime: 60_000,
+  });
+  const usageSummary = useMemo(
+    () => summarizeAssistantUsage(usageQuery.data ?? []),
+    [usageQuery.data],
+  );
+  const quotaAlert = useMemo(
+    () => getGeminiQuotaAlert(usageQuery.data ?? []),
+    [usageQuery.data],
+  );
   const scored = useMemo(() => {
     return tools
       .filter((t) => t.family === "edge_function" || t.family === "worker")
@@ -78,14 +97,12 @@ const AdminAgentAnalyticsPage = () => {
       icon={Activity}
       accent="red"
     >
-      <div className="mb-2 flex justify-end">
-        <Link
-          to="/admin/guide#agent-altyapisi"
-          className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
-        >
-          <BookOpen className="h-4 w-4" /> Kullanım kılavuzu
-        </Link>
-      </div>
+      <PanelHelpCard
+        title="Bu panel ne anlatıyor?"
+        description="Son 30 günlük asistan isteklerini, token kullanımını ve kota olaylarını izleyin. 429 uyarısı ücretsiz sağlayıcı kotasının dolduğunu; para harcandığını değil, isteklerin geçici olarak bekletildiğini gösterir."
+        guideHref="/admin/guide#agent-altyapisi"
+        assistantPrompt="Agent kullanım analitiğini ve Gemini kota uyarılarını nasıl yorumlamalıyım?"
+      />
       <div className="grid gap-3 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">
@@ -106,6 +123,65 @@ const AdminAgentAnalyticsPage = () => {
           </CardHeader>
         </Card>
       </div>
+
+      <Card className="mt-4">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <BarChart3 className="h-4 w-4 text-blue-500" /> Canlı kullanım · son 30 gün
+          </CardTitle>
+          <CardDescription>
+            Asistan yanıt içerikleri kaydedilmez; yalnız istek durumu ve token sayaçları gösterilir.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {usageQuery.isPending ? (
+            <p className="text-sm text-muted-foreground">Kullanım verileri yükleniyor…</p>
+          ) : usageQuery.isError ? (
+            <p role="alert" className="text-sm text-destructive">
+              Kullanım verileri alınamadı.
+            </p>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-md border border-border/60 p-3">
+                <p className="text-xs text-muted-foreground">Toplam kullanım</p>
+                <p className="mt-1 text-lg font-semibold tabular-nums">
+                  {usageSummary.totalRequests.toLocaleString("tr-TR")} istek
+                </p>
+              </div>
+              <div className="rounded-md border border-border/60 p-3">
+                <p className="text-xs text-muted-foreground">Toplam token</p>
+                <p className="mt-1 text-lg font-semibold tabular-nums">
+                  {usageSummary.totalTokens.toLocaleString("tr-TR")} token
+                </p>
+              </div>
+              <div className="rounded-md border border-border/60 p-3">
+                <p className="text-xs text-muted-foreground">Fonksiyon dağılımı</p>
+                <p className="mt-1 text-sm tabular-nums">site-assistant: {usageSummary.siteRequests}</p>
+                <p className="text-sm tabular-nums">relocation-assistant: {usageSummary.relocationRequests}</p>
+              </div>
+              <div className="rounded-md border border-border/60 p-3">
+                <p className="text-xs text-muted-foreground">Kota olayları</p>
+                <p className="mt-1 text-lg font-semibold tabular-nums">{usageSummary.quotaEvents}</p>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {quotaAlert.active && (
+        <div
+          role="alert"
+          className="mt-4 flex gap-3 rounded-lg border border-amber-500/50 bg-amber-500/10 p-4 text-amber-950 dark:text-amber-100"
+        >
+          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
+          <div>
+            <p className="font-semibold">Gemini kota uyarısı</p>
+            <p className="mt-1 text-sm">
+              Son 24 saatte {quotaAlert.eventCount} adet 429 yanıtı kaydedildi.
+            </p>
+          </div>
+        </div>
+      )}
 
       <Card className="mt-4">
         <CardHeader>

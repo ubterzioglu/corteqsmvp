@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import { CADDE_API_PUBLIC_EXPORTS } from "@/lib/cadde-api-facade";
 import {
   countCaddePostsSince,
   createCaddeComment,
@@ -15,6 +14,7 @@ import {
   createCaddeCafe,
   getCaddeCafe,
   joinCaddeCafe,
+  listCaddeCafeFeed,
   listCaddeCafeMembers,
   listCaddeCafes,
   listMyCaddeCafes,
@@ -30,6 +30,39 @@ import {
   searchCaddeMentions,
   searchCaddePeople,
 } from "@/lib/cadde-search-interests-api";
+
+const CADDE_API_PUBLIC_EXPORTS = [
+  "approveCaddeCafeMember",
+  "archiveCaddeCafe",
+  "countCaddePostsSince",
+  "createCaddeCafe",
+  "createCaddeComment",
+  "createCaddePost",
+  "getCaddeActorContext",
+  "getCaddeCafe",
+  "getCaddeFeedReach",
+  "getCaddeSponsoredPlacement",
+  "joinCaddeCafe",
+  "listCaddeBillboardCards",
+  "listCaddeCafeFeed",
+  "listCaddeCafeMembers",
+  "listCaddeCafes",
+  "listCaddeCities",
+  "listCaddeCountries",
+  "listCaddeFeed",
+  "listCaddeInterestCatalog",
+  "listCaddePostComments",
+  "listMyCaddeCafes",
+  "listMyCaddeInterests",
+  "listTrendingCaddeHashtags",
+  "mapCaddeCafeJoinRequestRow",
+  "recordCaddeShare",
+  "reportCaddeEntity",
+  "saveMyCaddeInterests",
+  "searchCaddeMentions",
+  "searchCaddePeople",
+  "toggleCaddeReaction",
+] as const;
 
 describe("Cadde API facade", () => {
   it("keeps the documented public surface stable for callers", () => {
@@ -75,6 +108,10 @@ describe("Cadde API facade", () => {
     expect(caddeApi.listCaddeCafes).toBe(listCaddeCafes);
     expect(caddeApi.getCaddeCafe).toBe(getCaddeCafe);
     expect(caddeApi.listMyCaddeCafes).toBe(listMyCaddeCafes);
+  });
+
+  it("routes the cafe feed through the cafe module without changing the facade", () => {
+    expect(caddeApi.listCaddeCafeFeed).toBe(listCaddeCafeFeed);
   });
 
   it("routes cafe membership reads through the cafe module without changing the facade", () => {

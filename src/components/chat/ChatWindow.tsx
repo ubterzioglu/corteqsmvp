@@ -19,6 +19,7 @@ type Props = {
   errorOverride?: string | null;
   allowInputAfterSubmit?: boolean;
   showProgress?: boolean;
+  initialInput?: string;
 };
 
 const ChatWindow = ({
@@ -33,8 +34,9 @@ const ChatWindow = ({
   errorOverride,
   allowInputAfterSubmit = false,
   showProgress = true,
+  initialInput = "",
 }: Props) => {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(initialInput);
   const scrollRef = useRef<HTMLDivElement>(null);
   const isLoading = loadingOverride ?? state.loading;
   const errorMessage = errorOverride ?? state.error;
@@ -43,7 +45,8 @@ const ChatWindow = ({
   const { percentage } = getProgressInfo(state.step, state.data);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({
+    if (typeof scrollRef.current?.scrollTo !== "function") return;
+    scrollRef.current.scrollTo({
       top: scrollRef.current.scrollHeight,
       behavior: "smooth",
     });

@@ -7,6 +7,11 @@
     "src/vite-env.d.ts",
     "src/lib/site-assistant-api.ts",
     "src/lib/cadde-rules.ts",
-    "src/lib/cadde-api-support.ts"
+    "src/lib/cadde-api-support.ts",
+    "src/lib/cadde-feed-location-api.ts",
+    "src/lib/cadde-engagement-api.ts",
+    "src/lib/cadde-cafe-api.ts",
+    "src/lib/cadde-promotion-api.ts",
+    "src/lib/cadde-search-interests-api.ts"
   ]
 }

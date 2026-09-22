@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { AlertTriangle, ArrowUpRight, ChevronDown, Flag, Globe2, HelpCircle, MapPin, Megaphone, MessageCircle, MessagesSquare, RefreshCw, Send, Share2, Sparkles, ThumbsUp, UserPlus2 } from "lucide-react";
 
@@ -21,8 +21,14 @@ import CarsiGlobalTicker from "@/components/cadde/CarsiGlobalTicker";
 import NotificationsBell from "@/components/cadde/NotificationsBell";
 import PromotionRail from "@/components/cadde/PromotionRail";
 import SponsoredFeedCard from "@/components/cadde/SponsoredFeedCard";
-import { useCaddeActorContext } from "@/hooks/cadde/useCaddeActorContext";
-import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
+import { useCaddePageData } from "@/hooks/cadde/useCaddePageData";
+import { useCaddeFeedState } from "@/hooks/cadde/useCaddeFeedState";
+import { useCaddeComposerState } from "@/hooks/cadde/useCaddeComposerState";
+import {
+  CADDE_REACTION_CLOSE_DELAY_MS,
+  useCaddePostEngagement,
+} from "@/hooks/cadde/useCaddePostEngagement";
+import { useCaddeLayoutState } from "@/hooks/cadde/useCaddeLayoutState";
 import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,39 +40,13 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
-import {
-  countCaddePostsSince,
-  createCaddeComment,
-  createCaddePost,
-  getCaddeSponsoredPlacement,
-  listCaddeBillboardCards,
-  listCaddeCafes,
-  searchCaddePeople,
-  listCaddeCities,
-  listCaddeCountries,
-  listCaddeFeed,
-  listCaddeInterestCatalog,
-  listCaddePostComments,
-  recordCaddeShare,
-  reportCaddeEntity,
-  toggleCaddeReaction,
-} from "@/lib/cadde-api";
-import { listCaddeCafeThemes } from "@/lib/cadde-cafe-api";
-import { emptyCaddeComposer } from "@/lib/cadde-composer";
-import { resolveCaddeClockTarget } from "@/lib/cadde-local-clock";
-import { caddeNewPostPollInterval, caddeOpenCommentsPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
-import { injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters } from "@/lib/cadde-format";
-import { describeCaddeWidenCount, widenCaddeFilters } from "@/lib/cadde-feed-widen";
+import { parseCaddeFilters, serializeCaddeFilters } from "@/lib/cadde-format";
+import { describeCaddeWidenCount } from "@/lib/cadde-feed-widen";
 import { useCompactHeaderOnScroll } from "@/hooks/useCompactHeaderOnScroll";
 import { isInternalCaddeLink } from "@/lib/cadde-links";
-import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
-import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
-import { CADDE_LIST_STALE_MS, CADDE_PROMO_STALE_MS, CADDE_REFERENCE_STALE_MS } from "@/lib/cadde-query-cache";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-import { applyReactionToFeedPages } from "@/lib/cadde-reactions";
 import { toggleInterestSelection } from "@/lib/cadde-targeting";
-import { insertTextAtSelection, type TextSelection } from "@/lib/cadde-text-insert";
-import type { CaddeCommentCursor, CaddeFeedPageParam, CaddeFilterState, CaddePostType, CaddeReactionType } from "@/lib/cadde-types";
+import type { CaddeFilterState, CaddePostType, CaddeReactionType } from "@/lib/cadde-types";
 import { useSeo } from "@/lib/seo";
 import { PAGE_SEO } from "@/lib/page-seo";
 
@@ -81,8 +61,6 @@ const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof
   { key: "unsure", label: "Soru", icon: HelpCircle },
 ];
 
-const COMMENT_PAGE_SIZE = 5;
-
 // Tepki kartının kapanış gecikmesi (revizyon 55a55bdf). Fare tetikten kartın içine
 // geçerken React'in `onPointerLeave`'i tetiklenebiliyor: React bu olayı `pointerout`ın
 // `relatedTarget`inden türetir ve relatedTarget çözülemediğinde (jsdom'da HER ZAMAN
@@ -91,14 +69,6 @@ const COMMENT_PAGE_SIZE = 5;
 // kapanıyor ve tepki butonlarına fareyle HİÇ tıklanamıyordu. Gecikme bu boşluğu
 // köprüler; karta girmek bekleyen kapanışı iptal eder (Radix HoverCard'ın `closeDelay`
 // fikri). Düşürmeden önce bunu oku — 0'a çekmek hatayı geri getirir.
-const CADDE_REACTION_CLOSE_DELAY_MS = 180;
-
-const caddePostShareUrl = (postId: string): string => {
-  const url = new URL("/cadde", window.location.origin);
-  url.searchParams.set("post", postId);
-  return url.toString();
-};
-
 // m29 (F9): Cadde içindeki tekrar eden ikincil menü (Cadde/İş/Sosyal/Harita/Giriş/Kayıt)
 // kaldırıldı — üst ana menü zaten aynı hedefleri taşıyor, cadde login-gated olduğu için
 // Giriş/Kayıt linkleri buraya hiç düşmüyordu.
@@ -122,165 +92,34 @@ const CaddePage = () => {
   useCompactHeaderOnScroll();
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const [composer, setComposer] = useState(emptyCaddeComposer);
-  const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
-  const [commentSelections, setCommentSelections] = useState<Record<string, TextSelection>>({});
-  const [expandedCommentPostId, setExpandedCommentPostId] = useState<string | null>(null);
-  // m68: bölüm kapanabilir olmalı, gizlenmiş olmamalı. Varsayılanı SABİT `true` idi;
-  // B1 ile içeriğe bağlandı (bkz. isColdStart). `null` = kullanıcı henüz dokunmadı,
-  // varsayılan geçerli; bir kez tıklandığında kullanıcının kararı kalıcı kazanır.
-  const [cafesOpenOverride, setCafesOpenOverride] = useState<boolean | null>(null);
-  const [geoFilterOpenOverride, setGeoFilterOpenOverride] = useState<boolean | null>(null);
-  // B10: yalnız mobil (lg altı) soğuk başlangıçta anlamlı. Masaüstünde bu durum CSS
-  // ile geçersiz kılınır (aşağıya bak) — bu yüzden viewport'u JS ile ÖLÇMÜYORUZ.
-  const [coldRailOpen, setColdRailOpen] = useState(false);
-  const [showAllCafes, setShowAllCafes] = useState(false);
-  // 05.09.2026 revizyon 55a55bdf — beş tepki butonu tek tetiğin arkasına alındı.
-  // Aynı anda YALNIZ bir postun tepki kartı açık olabilir: tek bir postId tutmak,
-  // her kart için ayrı state tutmaktan hem ucuz hem de "başka postun kartını açınca
-  // bu kapanır" davranışını bedava verir.
-  const [openReactionsPostId, setOpenReactionsPostId] = useState<string | null>(null);
-  // İşaretçiden gelen odak paneli AÇMAMALI ve fareyle açılmış paneli ilk tıklama
-  // KAPATMAMALI (aşağıdaki uzun yorum ikisini de anlatıyor). Aynı anda tek etkileşim
-  // olduğu için tüm kartlar için tek ref yeter.
-  const reactionPointerDownRef = useRef(false);
-  const reactionOpenedByHoverRef = useRef(false);
-  const reactionCloseTimerRef = useRef<number | null>(null);
-  useEffect(
-    () => () => {
-      if (reactionCloseTimerRef.current !== null) window.clearTimeout(reactionCloseTimerRef.current);
-    },
-    [],
-  );
   const filters = useMemo(() => parseCaddeFilters(searchParams), [searchParams]);
-  const diasporaKey = useCaddeDiasporaKey();
-  const actorContextQuery = useCaddeActorContext(Boolean(session));
+  const {
+    actorContextQuery,
+    allCitiesQuery,
+    billboardsQuery,
+    cafeThemesQuery,
+    cafesQuery,
+    citiesQuery,
+    countriesQuery,
+    debouncedPeopleQuery,
+    diasporaKey,
+    feedPromotionsQuery,
+    feedQuery,
+    feedQueryKey,
+    interestCatalogQuery,
+    peopleQueryText,
+    peopleSearch,
+    setPeopleQueryText,
+    sponsorQuery,
+  } = useCaddePageData({
+    filters,
+    hasSession: Boolean(session),
+    currentUserId: user?.id ?? null,
+  });
   const registeredCountry = actorContextQuery.data?.country?.trim() ?? "";
   const registeredCity = actorContextQuery.data?.city?.trim() ?? "";
-  const defaultComposerLocationLabel = [registeredCountry, registeredCity].filter(Boolean).join(" / ") || "profil konumun";
 
   useSeo(PAGE_SEO.cadde);
-
-  const countriesQuery = useQuery({
-    queryKey: caddeQueryKeys.countries(),
-    queryFn: listCaddeCountries,
-    staleTime: CADDE_REFERENCE_STALE_MS,
-  });
-
-  const citiesQuery = useQuery({
-    queryKey: caddeQueryKeys.cities(filters.countries),
-    queryFn: () => listCaddeCities(filters.countries),
-    staleTime: CADDE_REFERENCE_STALE_MS,
-  });
-
-  // m38: İnsanları Keşfet araması — 300ms debounce, 2 karakter altı sorgu atılmaz
-  // (RPC tarafında da aynı sınır var; enumerasyon koruması çift katman).
-  const [peopleQueryText, setPeopleQueryText] = useState("");
-  const [debouncedPeopleQuery, setDebouncedPeopleQuery] = useState("");
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedPeopleQuery(peopleQueryText.trim()), 300);
-    return () => clearTimeout(timer);
-  }, [peopleQueryText]);
-  const peopleSearch = useQuery({
-    queryKey: ["cadde", "people-search", debouncedPeopleQuery],
-    queryFn: () => searchCaddePeople(debouncedPeopleQuery),
-    enabled: debouncedPeopleQuery.length >= 2,
-    placeholderData: (previous) => previous,
-    staleTime: CADDE_LIST_STALE_MS,
-  });
-
-  const interestCatalogQuery = useQuery({
-    queryKey: caddeQueryKeys.interestCatalog,
-    queryFn: listCaddeInterestCatalog,
-    staleTime: CADDE_REFERENCE_STALE_MS,
-  });
-
-  // Composer ek hedefleri ülke değiştikçe yerelde süzmek için tüm aktif şehirleri taşır.
-  const allCitiesQuery = useQuery({
-    queryKey: caddeQueryKeys.cities(["__all__"]),
-    queryFn: () => listCaddeCities([]),
-    enabled: Boolean(session),
-    staleTime: CADDE_REFERENCE_STALE_MS,
-  });
-
-  // Anahtar tek yerde: optimistic reaksiyon aynı anahtara yazacağı için ikisi ayrışamaz.
-  const feedQueryKey = caddeQueryKeys.feed(filters, user?.id ?? null, diasporaKey);
-
-  const feedQuery = useInfiniteQuery({
-    queryKey: feedQueryKey,
-    initialPageParam: null as CaddeFeedPageParam,
-    queryFn: ({ pageParam }) => listCaddeFeed(filters, pageParam, user?.id ?? null, diasporaKey),
-    getNextPageParam: (lastPage) => lastPage.nextPage,
-    // Feed en pahalı sorgu (sayfa başına 1 RPC + 3 ek sorgu) ama staleTime'ı yoktu:
-    // her mount ve her sekme odağında YÜKLÜ TÜM sayfalar yeniden çekiliyordu. Yeni
-    // içerik zaten adaptif polling'li "N yeni paylaşım" chip'i ile duyuruluyor.
-    staleTime: 30_000,
-    refetchOnWindowFocus: false,
-  });
-
-  const cafesQuery = useQuery({
-    queryKey: caddeQueryKeys.cafes(filters, user?.id ?? null, diasporaKey),
-    queryFn: () => listCaddeCafes(filters, user?.id ?? null, diasporaKey),
-    staleTime: CADDE_LIST_STALE_MS,
-  });
-
-  const billboardsQuery = useQuery({
-    queryKey: caddeQueryKeys.billboards(filters),
-    queryFn: () => listCaddeBillboardCards(filters),
-    staleTime: CADDE_PROMO_STALE_MS,
-  });
-
-  const sponsorQuery = useQuery({
-    queryKey: caddeQueryKeys.sponsor(filters),
-    queryFn: () => getCaddeSponsoredPlacement(filters),
-    staleTime: CADDE_PROMO_STALE_MS,
-  });
-
-  const feedPromotionsQuery = useQuery({
-    queryKey: caddeQueryKeys.promotions("cadde-feed-inline", { countries: filters.countries, cities: filters.cities, diaspora: diasporaKey }),
-    queryFn: () => listCaddePromotions("cadde-feed-inline", { countries: filters.countries, cities: filters.cities, diaspora: diasporaKey }, 5),
-    staleTime: CADDE_PROMO_STALE_MS,
-  });
-
-  const commentsZeroStreakRef = useRef(0);
-  const commentsSignatureRef = useRef<string | null>(null);
-  const commentTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const commentsQuery = useInfiniteQuery({
-    queryKey: caddeQueryKeys.postComments(expandedCommentPostId),
-    initialPageParam: null as CaddeCommentCursor,
-    queryFn: ({ pageParam }) => listCaddePostComments(expandedCommentPostId ?? "", COMMENT_PAGE_SIZE, pageParam),
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-    enabled: Boolean(expandedCommentPostId),
-    refetchInterval: () =>
-      expandedCommentPostId ? caddeOpenCommentsPollInterval(commentsZeroStreakRef.current) : false,
-    refetchOnWindowFocus: "always",
-  });
-  const expandedComments = useMemo(
-    () => commentsQuery.data?.pages.flatMap((page) => page.items) ?? [],
-    [commentsQuery.data],
-  );
-  const commentsSignature = useMemo(
-    () => expandedComments.map((comment) => `${comment.id}:${comment.createdAt}`).join("|"),
-    [expandedComments],
-  );
-  useEffect(() => {
-    commentsZeroStreakRef.current = 0;
-    commentsSignatureRef.current = null;
-  }, [expandedCommentPostId]);
-  useEffect(() => {
-    if (!expandedCommentPostId || !commentsQuery.dataUpdatedAt) return;
-    if (commentsSignatureRef.current === null) {
-      commentsSignatureRef.current = commentsSignature;
-      commentsZeroStreakRef.current = 0;
-      return;
-    }
-    if (commentsSignatureRef.current === commentsSignature) {
-      commentsZeroStreakRef.current += 1;
-      return;
-    }
-    commentsSignatureRef.current = commentsSignature;
-    commentsZeroStreakRef.current = 0;
-  }, [commentsQuery.dataUpdatedAt, commentsSignature, expandedCommentPostId]);
 
   const invalidateCadde = async () => {
     await Promise.all([
@@ -289,381 +128,113 @@ const CaddePage = () => {
     ]);
   };
 
-  const postMutation = useMutation({
-    mutationFn: async () => {
-      if (!user) throw new Error("Bu işlem için giriş yapın.");
-      // Gövde boş olabilir — salt görsel/video paylaşımı meşru (şema + RPC aynı kuralı uygular).
-      if (!composer.body.trim() && composer.media.length === 0) {
-        throw new Error("Paylaşım metni veya en az bir görsel/video ekle.");
-      }
-      // Hedef: composer'daki açık seçim; boşsa kayıtlı profil konumu. Akış filtresi post hedefi değildir.
-      const primaryCountry = composer.country || registeredCountry;
-      const primaryCity = composer.country ? composer.city : registeredCity;
-      // 04.08.2026 — m75'in ikinci yarısı: profilinde konum OLMAYAN üye composer'da da
-      // ülke seçmezse hedef boş gidiyor, RPC `cadde_invalid_targets` ile reddediyordu.
-      // Global akışa doğrudan paylaşım yapılamaz (kural DB'de); kullanıcı bunu ağ turu
-      // sonrası genel bir hatayla öğreniyordu. Artık gönderimden ÖNCE ne yapacağı söylenir.
-      if (!primaryCountry.trim()) {
-        throw new Error(
-          "Paylaşımın hangi şehir/ülke akışına düşeceğini seç: Konum panelinden bir ülke seç ya da profiline konumunu ekle. Global akışa doğrudan paylaşım yapılamıyor.",
-        );
-      }
-      const targets = [
-        { country: primaryCountry, city: primaryCity },
-        ...composer.targets
-          .filter((target) => target.country.trim())
-          .map((target) => ({ country: target.country.trim(), city: target.city?.trim() ?? "" })),
-      ];
-      await createCaddePost({
-        type: composer.type,
-        title: composer.title,
-        body: composer.body,
-        countryId: primaryCountry,
-        cityId: primaryCity,
-        targets,
-        isBridge: false,
-        interests: composer.interests,
-        diasporaKey,
-        media: composer.media,
-      });
-    },
-    onSuccess: async () => {
-      setComposer(emptyCaddeComposer);
+  const { composer, defaultComposerLocationLabel, postMutation, setComposer } = useCaddeComposerState({
+    canPost: Boolean(user),
+    diasporaKey,
+    registeredCountry,
+    registeredCity,
+    onPublished: async () => {
       await invalidateCadde();
       setSearchParams(serializeCaddeFilters({ ...filters, mode: "real" }));
-      toast({ title: "Paylaşım Cadde'ye eklendi" });
-    },
-    onError: (error) => {
-      toast({ title: "Paylaşım gönderilemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
     },
   });
 
-  // Reaksiyon OPTIMISTIC: eskiden onSuccess: invalidateCadde idi, yani tek emoji tıklaması
-  // feedRoot + cafesRoot'u invalidate edip yüklü tüm sayfaları yeniden çektiriyordu
-  // (sayfa başına 1 RPC + 3 sorgu). Kullanıcı kendi tıklamasını ancak ağ turu bitince
-  // görüyordu. Artık sayaç anında dönüyor; hata olursa anlık görüntü geri yazılıyor.
-  // Bilinçli tercih: BAŞARIDA invalidate YOK — uygulanan delta zaten sunucudakiyle aynı,
-  // yeniden çekmek maliyeti geri getirirdi. Olası sunucu sapması bir sonraki doğal
-  // tazelemede (chip ile yenileme, filtre değişimi, staleTime dolması) kapanır.
-  const reactionMutation = useMutation({
-    mutationFn: async ({ postId, reactionType }: { postId: string; reactionType: CaddeReactionType }) => {
-      if (!user) throw new Error("Bu işlem için giriş yapın.");
-      await toggleCaddeReaction(postId, reactionType);
-    },
-    onMutate: async ({ postId, reactionType }: { postId: string; reactionType: CaddeReactionType }) => {
-      if (!user) return { previousFeed: undefined };
-      // Uçuştaki bir refetch optimistic değeri ezmesin.
-      await queryClient.cancelQueries({ queryKey: feedQueryKey });
-      const previousFeed = queryClient.getQueryData(feedQueryKey);
-      queryClient.setQueryData(feedQueryKey, (current: Parameters<typeof applyReactionToFeedPages>[0]) =>
-        applyReactionToFeedPages(current, postId, reactionType),
-      );
-      return { previousFeed };
-    },
-    onError: (error, _variables, context) => {
-      if (context?.previousFeed !== undefined) {
-        queryClient.setQueryData(feedQueryKey, context.previousFeed);
-      }
-      if (!user) {
-        navigate("/login");
-        return;
-      }
-      toast({ title: "Reaksiyon güncellenemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
-    },
-  });
-
-  const commentMutation = useMutation({
-    mutationFn: async ({ postId, body }: { postId: string; body: string }) => {
-      if (!user) throw new Error("Bu işlem için giriş yapın.");
-      if (!body.trim()) throw new Error("Yorum boş olamaz.");
-      await createCaddeComment(postId, body);
-    },
-    onSuccess: async (_data, variables) => {
-      setCommentDrafts((current) => ({ ...current, [variables.postId]: "" }));
-      await Promise.all([
-        invalidateCadde(),
-        queryClient.invalidateQueries({ queryKey: caddeQueryKeys.postComments(variables.postId) }),
-      ]);
-    },
-    onError: (error) => {
-      if (!user) {
-        navigate("/login");
-        return;
-      }
-      toast({
-        title: "Yorum gönderilemedi",
-        description: error instanceof Error ? error.message : resolveCaddeRpcErrorMessage(error),
-        variant: "destructive",
-      });
-    },
-  });
-
-  const syncCommentSelection = (postId: string, event: SyntheticEvent<HTMLTextAreaElement>) => {
-    setCommentSelections((current) => ({
-      ...current,
-      [postId]: {
-        start: event.currentTarget.selectionStart ?? 0,
-        end: event.currentTarget.selectionEnd ?? event.currentTarget.selectionStart ?? 0,
-      },
-    }));
-  };
-
-  const insertCommentEmoji = (postId: string, emoji: string) => {
-    const body = commentDrafts[postId] ?? "";
-    const next = insertTextAtSelection(body, emoji, commentSelections[postId] ?? { start: body.length, end: body.length });
-    setCommentDrafts((current) => ({ ...current, [postId]: next.value }));
-    setCommentSelections((current) => ({ ...current, [postId]: { start: next.caret, end: next.caret } }));
-    requestAnimationFrame(() => {
-      commentTextareaRef.current?.focus();
-      commentTextareaRef.current?.setSelectionRange(next.caret, next.caret);
-    });
-  };
-
-  const shareMutation = useMutation({
-    mutationFn: async ({ postId, title, body }: { postId: string; title: string | null; body: string }) => {
-      if (!user) throw new Error("Bu işlem için giriş yapın.");
-      const url = caddePostShareUrl(postId);
-      const text = body.trim().slice(0, 180);
-      if (typeof navigator.share === "function") {
-        await navigator.share({ title: title ?? "CorteQS Cadde", text, url });
-        await recordCaddeShare(postId, "web_share");
-        return "web_share" as const;
-      }
-      if (!navigator.clipboard?.writeText) throw new Error("Paylaşım bağlantısı kopyalanamadı.");
-      await navigator.clipboard.writeText(url);
-      await recordCaddeShare(postId, "copy_link");
-      return "copy_link" as const;
-    },
-    onSuccess: async (channel) => {
-      await invalidateCadde();
-      toast({ title: channel === "copy_link" ? "Bağlantı kopyalandı" : "Paylaşım kaydedildi" });
-    },
-    onError: (error) => {
-      if (!user) {
-        navigate("/login");
-        return;
-      }
-      toast({ title: "Paylaşım yapılamadı", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
-    },
-  });
-
-  const reportMutation = useMutation({
-    mutationFn: async (postId: string) => {
-      if (!user) throw new Error("Bu işlem için giriş yapın.");
-      const reason = window.prompt("Şikayet sebebini kısaca yaz (3-200 karakter):");
-      if (reason === null) return false;
-      await reportCaddeEntity("post", postId, reason);
-      return true;
-    },
-    onSuccess: (submitted) => {
-      if (submitted) toast({ title: "Şikayetin moderasyona iletildi" });
-    },
-    onError: (error) => {
-      toast({ title: "Şikayet gönderilemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
-    },
+  const {
+    commentDrafts,
+    commentMutation,
+    commentTextareaRef,
+    commentsQuery,
+    expandedComments,
+    expandedCommentPostId,
+    insertCommentEmoji,
+    openReactionsPostId,
+    reactionCloseTimerRef,
+    reactionMutation,
+    reactionOpenedByHoverRef,
+    reactionPointerDownRef,
+    reportMutation,
+    setCommentDrafts,
+    setExpandedCommentPostId,
+    setOpenReactionsPostId,
+    shareMutation,
+    syncCommentSelection,
+  } = useCaddePostEngagement({
+    currentUserId: user?.id ?? null,
+    feedQueryKey,
+    onInvalidateCadde: invalidateCadde,
   });
 
   const updateFilters = (nextPartial: Partial<CaddeFilterState>) => {
     setSearchParams(serializeCaddeFilters({ ...filters, ...nextPartial }));
   };
 
-  // "Yeni post" chip'i (spec §17.3): stream yok; hafif sayım, tıklayınca invalidate.
-  // Adaptif aralık (cadde-feed-polling): 0 sonuç sürdükçe 60sn→2dk→5dk, chip görünürken
-  // polling durur; odağa dönüşte anında tek kontrol yapılıp taban aralığa dönülür.
-  // Taban = yüklü sayfaların EN YENİ createdAt'i (m16): feed CKS-sıralı olduğundan
-  // ilk öğe pinned/eski olabilir — ilk öğeden alınan taban chip'i söndürmüyordu.
-  const newestLoadedAt = useMemo(
-    () => newestCaddeCreatedAt(feedQuery.data?.pages),
-    [feedQuery.data],
-  );
-  const zeroStreakRef = useRef(0);
-  useEffect(() => {
-    zeroStreakRef.current = 0;
-  }, [newestLoadedAt]);
-  useEffect(() => {
-    const resetStreak = () => {
-      zeroStreakRef.current = 0;
-    };
-    window.addEventListener("focus", resetStreak);
-    return () => window.removeEventListener("focus", resetStreak);
-  }, []);
-  const newPostsQuery = useQuery({
-    queryKey: ["cadde", "new-posts-since", newestLoadedAt],
-    queryFn: async () => {
-      const count = await countCaddePostsSince(newestLoadedAt ?? "");
-      zeroStreakRef.current = nextCaddeZeroStreak(count, zeroStreakRef.current);
-      return count;
-    },
-    enabled: filters.mode === "real" && Boolean(newestLoadedAt),
-    refetchInterval: (query) => caddeNewPostPollInterval(query.state.data ?? 0, zeroStreakRef.current),
-    refetchOnWindowFocus: "always",
+  const {
+    canWiden,
+    feedItems,
+    feedWithSponsor,
+    newPostCount,
+    newPostsQuery,
+    newestLoadedAt,
+    widenedCount,
+    widenedPage,
+    widenTarget,
+  } = useCaddeFeedState({
+    filters,
+    currentUserId: user?.id ?? null,
+    diasporaKey,
+    feedPages: feedQuery.data?.pages,
+    isFeedLoading: feedQuery.isLoading,
+    isFeedError: feedQuery.isError,
+    countries: countriesQuery.data,
+    cities: citiesQuery.data,
+    allCities: allCitiesQuery.data,
+    sponsor: sponsorQuery.data ?? null,
+    promotions: feedPromotionsQuery.data ?? [],
   });
-  const newPostCount = newPostsQuery.data ?? 0;
-
-  const feedItems = useMemo(() => feedQuery.data?.pages.flatMap((page) => page.items) ?? [], [feedQuery.data]);
-
-  // ── Daraltılmış akış boşsa bir üst kapsamı YOKLA (B1/B2, m157-m158) ─────────
-  // Ölçüldü 09.09.2026: 58 Cadde şehrinin yalnız 10'unda paylaşım var. Elle şehir
-  // seçen üye %83 ihtimalle boş akış görüyor ve ona bugün "ilk paylaşımı sen yap"
-  // deniyor — kullanıcı ilk paylaşımı yapmaz.
-  const widenTarget = useMemo(
-    () =>
-      widenCaddeFilters(
-        filters,
-        citiesQuery.data ?? allCitiesQuery.data ?? [],
-        countriesQuery.data ?? [],
-      ),
-    [filters, citiesQuery.data, allCitiesQuery.data, countriesQuery.data],
-  );
-
-  // ⚠️ `useInfiniteQuery` OLMASI ZORUNLU ve anahtar ana feed'in fabrikasından gelmeli.
-  // Düz `useQuery` + aynı anahtar, tek cache girdisine `{items,nextPage}` yazar ve
-  // yukarıdaki `feedQuery.data?.pages.flatMap(...)` TypeError fırlatır (optional
-  // chaining yalnız `data` üzerinde). Aynı fabrika sayesinde kullanıcı butona
-  // tıklayınca URL değişir, anahtar YOKLAMANINKİYLE BİREBİR eşleşir ve AĞA YENİ
-  // İSTEK GİTMEZ — bu tasarımın "ekstra sorgu açma" şartını karşılayan tek şey budur.
-  const widenedFeedQuery = useInfiniteQuery({
-    queryKey: caddeQueryKeys.feed(widenTarget?.next ?? filters, user?.id ?? null, diasporaKey),
-    initialPageParam: null as CaddeFeedPageParam,
-    queryFn: ({ pageParam }) =>
-      listCaddeFeed(widenTarget!.next, pageParam, user?.id ?? null, diasporaKey),
-    getNextPageParam: (lastPage) => lastPage.nextPage,
-    staleTime: 30_000,
-    refetchOnWindowFocus: false,
-    // Yalnız GERÇEKTEN gerekliyken koşar: filtresiz /cadde'de (kullanıcıların çoğu)
-    // widenTarget null olduğu için hiç ek sorgu açılmaz.
-    enabled:
-      widenTarget !== null &&
-      filters.mode === "real" &&
-      !feedQuery.isLoading &&
-      !feedQuery.isError &&
-      feedItems.length === 0,
+  const {
+    activeCafes,
+    asideRhythm,
+    cafeLocationLabel,
+    cafesOpen,
+    cafeThemeLabelByKey,
+    clockTarget,
+    coldRailOpen,
+    directoryLink,
+    geoFilterOpen,
+    hasAnyBillboard,
+    hasGeoSelection,
+    interestLabelByKey,
+    isColdStart,
+    listedBillboards,
+    promotionCtaLabel,
+    promotionCtaTarget,
+    setCafesOpenOverride,
+    setColdRailOpen,
+    setGeoFilterOpenOverride,
+    setShowAllCafes,
+    showAllCafes,
+    sparseContentHint,
+    spotlightBillboard,
+  } = useCaddeLayoutState({
+    filters,
+    registeredCity,
+    allCities: allCitiesQuery.data ?? [],
+    interests: interestCatalogQuery.data ?? [],
+    cafeThemes: cafeThemesQuery.data ?? [],
+    cafes: cafesQuery.data ?? [],
+    billboards: billboardsQuery.data ?? [],
+    feedItemCount: feedItems.length,
+    isFeedLoading: feedQuery.isLoading,
+    isFeedError: feedQuery.isError,
+    isCafesLoading: cafesQuery.isLoading,
+    canWiden,
+    widenTarget,
+    isAuthenticated: Boolean(user),
   });
-  const widenedPage = widenedFeedQuery.data?.pages[0];
-  const widenedCount = widenedPage?.items.length ?? 0;
-  // Yoklama hata verirse buton çizilmez: "içerik yok" iddiası ile hata karışmamalı.
-  const canWiden = widenTarget !== null && !widenedFeedQuery.isError && widenedCount > 0;
-  const feedWithSponsor = useMemo(
-    () =>
-      interleavePromotions(
-        injectSponsoredPlacement(feedItems, sponsorQuery.data ?? null, filters.mode),
-        feedPromotionsQuery.data ?? [],
-        filters.mode,
-      ),
-    [feedItems, sponsorQuery.data, feedPromotionsQuery.data, filters.mode],
-  );
-  const directoryLink = useMemo(() => {
-    const params = new URLSearchParams();
-    if (filters.countries[0]) params.set("country", filters.countries[0]);
-    if (filters.cities[0]) params.set("city", filters.cities[0]);
-    return `/directory${params.toString() ? `?${params.toString()}` : ""}`;
-  }, [filters.countries, filters.cities]);
-
-  const interestLabelByKey = useMemo(
-    () => new Map((interestCatalogQuery.data ?? []).map((interest) => [interest.key, interest.labelTr])),
-    [interestCatalogQuery.data],
-  );
-
-  // m4: kart başlığında tema Türkçe etiketiyle görünsün (themeKey ham anahtar taşır).
-  const cafeThemesQuery = useQuery({
-    queryKey: ["cadde", "cafe-themes"],
-    queryFn: listCaddeCafeThemes,
-    staleTime: CADDE_REFERENCE_STALE_MS,
-  });
-  const cafeThemeLabelByKey = useMemo(
-    () => new Map((cafeThemesQuery.data ?? []).map((theme) => [theme.key, theme.labelTr])),
-    [cafeThemesQuery.data],
-  );
-  const hasGeoSelection = filters.countries.length > 0 || filters.cities.length > 0;
-  // m52: boş cafe mesajı seçili konumu adıyla söylesin ("Dortmund için henüz...").
-  // Filtre değerleri zaten ham AD taşır (CaddeGeoFilter isimle çalışır), id değil.
-  // Bilinçli olarak ek (-ta/-te/-da/-de) ÜRETİLMİYOR: yabancı şehir adlarında Türkçe
-  // ünlü uyumu + sertleşme kuralı güvenilir değil ("Dortmund'ta" ✓ ama "Nice'te/Nice'de"?).
-  // Eksiz "X için" kalıbı her ad için doğru.
-  const cafeLocationLabel = filters.cities[0] ?? filters.countries[0] ?? null;
-  const activeCafes = cafesQuery.data ?? [];
-
-  // ── Soğuk başlangıç (B1) ────────────────────────────────────────────────────
-  // Canlı ölçüm (04.08.2026): akışta 9 herkese açık post, 0 gerçek kafe. Cadde
-  // aylarca düşük içerikle yaşayacak. Doğru tasarım hedefi "içerik dolu sosyal ağ"
-  // değil, boşluğun BOZUKLUK değil DAVET gibi okunması.
-  //
-  // Tanım bilinçli olarak plandaki ham koşuldan (`feed=0 && cafes=0`) daha dar:
-  // aktif bir filtre varsa boşluğun sebebi kullanıcının KENDİ seçimidir ve o
-  // seçimi yapan kontrol GÖRÜNÜR kalmalıdır — filtreyi gizlemek kullanıcıyı
-  // akışın neden boş olduğunu göremez hale getirir.
-  // ⚠️ `filters.scope !== "all"` ÖLÇÜLEN BİR KUSURU kapatır: kapsam çipi ("Şehrim")
-  // SQL'de ayrı ve SERT bir filtredir (20260805120000:220-233) ve izleyicinin şehri
-  // Cadde kataloğunda çözülemiyorsa akış GARANTİ boş kalır. Bu koşul olmadan o durum
-  // "soğuk başlangıç" sanılıyor, Konum paneli katlanıyor ve kullanıcıya akışı DAHA DA
-  // daraltan "Köprü modunu aç" öneriliyordu.
-  const hasNarrowingFilter =
-    hasGeoSelection || filters.bridge || Boolean(filters.hashtag) || filters.scope !== "all";
-  // Boş durumda ne söyleneceği. Eski metin ("Bu bölgede içerik azsa ülke geneli ve global
-  // akış da devreye girer.") EKRANDA DURAN BİR YALANDI: SQL'de öyle bir devreye girme
-  // yok, geo filtresi sert bir AND (a.g.e. 241-245). Akış daralınca daralır, kendiliğinden
-  // genişlemez. Artık duruma göre DOĞRU olan söyleniyor.
-  const sparseContentHint = canWiden
-    ? `Daraltılmış akışın boş; ${widenTarget!.label} akışına tek dokunuşla geçebilirsin.`
-    : hasNarrowingFilter
-      ? "Bu seçimde ve bir üst kapsamda henüz paylaşım yok."
-      : "İçerik az olduğunda global akışla başlayıp ilk hareketi sen başlatabilirsin.";
-  // Veri gelmeden karar verilmez: yükleme sırasında "içerik yok" DEĞİL "henüz
-  // bilinmiyor" durumundayız (aşağıda caddeDataResolved ile ayrılıyor).
-  const caddeDataResolved = !feedQuery.isLoading && !cafesQuery.isLoading;
-  const isColdStart =
-    caddeDataResolved &&
-    !feedQuery.isError &&
-    feedItems.length === 0 &&
-    activeCafes.length === 0 &&
-    !hasNarrowingFilter;
-
-  // Yükleme sırasında iki bölüm de KAPALI durur. Bu yalnız soğuk başlangıç için
-  // değil: kafe paneli açıkken veri beklerken gösterebildiği tek şey yanlış bir
-  // "henüz aktif bir cafe açılmadı" mesajıydı. Tek geçiş kalır ve o geçiş içerik
-  // GELİRKEN açılma yönündedir — göz önünde kapanma (jank) olmaz.
-  const cafesOpen = cafesOpenOverride ?? (caddeDataResolved && !isColdStart);
-  const geoFilterOpen = geoFilterOpenOverride ?? (caddeDataResolved && !isColdStart);
-
-  // B2: soğuk başlangıçta yan kolonların dikey ritmi sıkışır. Kompakt kartlar dolu
-  // kartlarla aynı 20px aralığı kullanınca sayfa uzun bir hiçlik şeridine dönüyordu.
-  // Orta kolondaki boş akış kartının cömert iç boşluğuna DOKUNULMAZ: soğuk başlangıçta
-  // alan harcadığımız tek yer orası olmalı, çünkü sayfanın o durumdaki TEK işi ilk
-  // paylaşımı aldırmak.
-  const asideRhythm = isColdStart ? "space-y-3" : "space-y-5";
-
-  const billboardCards = billboardsQuery.data ?? [];
-  // Soğuk başlangıç konsolidasyonu (04.08.2026): billboard tablosu TAMAMEN boşken sağ
-  // kolonda üç ayrı tanıtım yüzeyi aynı hedefe giden aynı çağrıyı tekrarlıyordu. Bu
-  // bayrak "hiç kart yok" durumunu üçünün de tek davet kartına düşmesi için kullanılır.
-  // Dikkat: featured'ın YOKLUĞU tek başına yetmez — featured olmayan bir kart varsa
-  // liste dolu olur ve ayrı yüzeyler korunmalıdır.
-  const hasAnyBillboard = billboardCards.length > 0;
 
   const scrollToComposer = () => {
     document.getElementById("cadde-composer")?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
-  // m41: sağ kolonun tepesindeki statik "CorteQS Panosu" yerine featured kayıt geçer.
-  // m44: liste de featured kayıtlara ayrılır; hiç featured yoksa yayındaki diğer kartlar
-  // gösterilir (yüzey boş kalmasın). Spotlight'a çıkan kart listede tekrar etmez.
-  const featuredBillboards = billboardCards.filter((card) => card.isFeatured);
-  const spotlightBillboard = featuredBillboards[0] ?? null;
-  const listedBillboards = (featuredBillboards.length > 0 ? featuredBillboards : billboardCards).filter(
-    (card) => card.id !== spotlightBillboard?.id,
-  );
-  // m45: "talep bırak / başvuru gönder" akışı bitti — kullanıcı kendi profilindeki
-  // tanıtım panelinden bütçe verip reklamını çıkarıyor. Hedef sabit "bireysel" değil:
-  // /profile kullanıcının profil tipine yönlenir, hash redirect'te korunur (F14 fix).
-  const promotionCtaTarget = user ? "/profile#cadde-tanitim" : "/login?mode=signup";
-  const promotionCtaLabel = user ? "Profilinden İlk Tanıtımını Yap" : "Profil Aç ve Tanıtıma Başla";
-
-  // m133: kapsam şeridindeki yerel saatin hangi şehre ait olacağı. Seçili filtre şehri
-  // profil şehrine yeğlenir (kullanıcı nereye bakıyorsa oranın saati). `allCitiesQuery`
-  // oturum yokken boştur — ziyaretçide saat çizilmez, bu kabul edilir.
-  const clockTarget = useMemo(
-    () => resolveCaddeClockTarget(filters.cities, registeredCity, allCitiesQuery.data ?? []),
-    [filters.cities, registeredCity, allCitiesQuery.data],
-  );
 
   return (
     <CaddeProfileGate context={actorContextQuery.data} isLoading={actorContextQuery.isLoading}>

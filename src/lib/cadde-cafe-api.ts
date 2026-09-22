@@ -6,9 +6,27 @@ import { isSupabaseConfigured } from "@/integrations/supabase/client";
 import { DEMO_CAFES } from "./cadde-demo-data";
 import { fetchCaddeCityNameMap, fetchCaddeCountryNameMap, fetchCaddeUserNameMap } from "./cadde-api-support";
 import { db, caddeReadError, caddeWriteError, reportCaddeApiError } from "./cadde-internal";
+import { normalizeCaddeMedia } from "./cadde-media";
 import { moderateCaddeCafeName, type CaddeProtectedBrand } from "./cadde-rules";
 import { caddeCafeCreateSchema, caddeCafeJoinInputSchema, parseWithUserError } from "./cadde-schemas";
-import type { CaddeCafe, CaddeCafeCreateInput, CaddeCafeJoinResult, CaddeCafeMember, CaddeCafeMemberRow, CaddeCafeRow, CaddeContentMode, CaddeFilterState } from "./cadde-types";
+import { CADDE_REACTION_TYPES } from "./cadde-types";
+import type {
+  CaddeCafe,
+  CaddeCafeCreateInput,
+  CaddeCafeJoinResult,
+  CaddeCafeMember,
+  CaddeCafeMemberRow,
+  CaddeCafeRow,
+  CaddeCommentRow,
+  CaddeFeedRpcItem,
+  CaddeFilterState,
+  CaddeHashtag,
+  CaddeMentionTargetType,
+  CaddePost,
+  CaddePostMention,
+  CaddeReactionRow,
+  CaddeReactionType,
+} from "./cadde-types";
 import { CADDE_CAFE_LIST_LIMIT, FALLBACK_PROFILE_NAME, resolveCityIdsByNames, resolveCountryIdsByNames } from "./cadde-internal";
 
 export type CaddeCafeTheme = {
@@ -283,6 +301,186 @@ export async function listMyCaddeCafes(userId: string): Promise<CaddeCafe[]> {
     return rows.map((row) => mapCafe(row, countries, cities, members, new Map(), userId));
   } catch (error: unknown) {
     reportCaddeApiError("listMyCaddeCafes", error);
+    return [];
+  }
+}
+
+const emptyReactions = (): Record<CaddeReactionType, number> =>
+  Object.fromEntries(CADDE_REACTION_TYPES.map((reactionType) => [reactionType, 0])) as Record<CaddeReactionType, number>;
+
+async function fetchPostShareCounts(postIds: string[]): Promise<Map<string, number>> {
+  if (postIds.length === 0) return new Map();
+  const { data } = await db.from("cadde_posts").select("id, share_count").in("id", postIds);
+  return new Map<string, number>(
+    ((data ?? []) as Array<{ id: string; share_count: number | null }>).map((row) => [row.id, row.share_count ?? 0]),
+  );
+}
+
+async function fetchPostReactions(postIds: string[]): Promise<CaddeReactionRow[]> {
+  if (postIds.length === 0) return [];
+  const { data } = await db.from("cadde_post_reactions").select("id, post_id, user_id, reaction_type").in("post_id", postIds);
+  return (data ?? []) as CaddeReactionRow[];
+}
+
+type CommentWithAuthor = CaddeCommentRow & { author_name: string };
+
+function countCommentsByPost(comments: Array<{ post_id: string }>): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const comment of comments) {
+    counts.set(comment.post_id, (counts.get(comment.post_id) ?? 0) + 1);
+  }
+  return counts;
+}
+
+async function fetchPostComments(postIds: string[]): Promise<CommentWithAuthor[]> {
+  if (postIds.length === 0) return [];
+  const { data, error } = await db
+    .from("cadde_post_comments")
+    .select("id, post_id, user_id, body, created_at")
+    .in("post_id", postIds)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  const rows = (data ?? []) as CaddeCommentRow[];
+  const userMap = await fetchCaddeUserNameMap(rows.map((row) => row.user_id));
+  return rows.map((row) => ({ ...row, author_name: userMap.get(row.user_id) ?? FALLBACK_PROFILE_NAME }));
+}
+
+function normalizeHashtagRows(raw: unknown): CaddeHashtag[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.flatMap((entry) => {
+    if (entry === null || typeof entry !== "object") return [];
+    const value = entry as Record<string, unknown>;
+    if (typeof value.tag !== "string" || !value.tag) return [];
+    return [{ tag: value.tag, displayTag: typeof value.displayTag === "string" ? value.displayTag : value.tag }];
+  });
+}
+
+function normalizeMentionRows(raw: unknown): CaddePostMention[] {
+  if (!Array.isArray(raw)) return [];
+  const allowed: CaddeMentionTargetType[] = ["user", "catalog_item", "cafe", "carsi_item"];
+  return raw.flatMap((entry) => {
+    if (entry === null || typeof entry !== "object") return [];
+    const value = entry as Record<string, unknown>;
+    const type = value.type as CaddeMentionTargetType;
+    if (!allowed.includes(type) || typeof value.id !== "string") return [];
+    return [{ type, id: value.id, label: typeof value.label === "string" ? value.label : null }];
+  });
+}
+
+function mapCafeFeedPost(
+  row: CaddeFeedRpcItem,
+  reactions: CaddeReactionRow[],
+  commentCounts: Map<string, number>,
+  shareCounts: Map<string, number>,
+  comments: CommentWithAuthor[],
+  authorNames: Map<string, string>,
+  currentUserId: string | null,
+): CaddePost {
+  const postReactions = reactions.filter((reaction) => reaction.post_id === row.id);
+  const postComments = comments.filter((comment) => comment.post_id === row.id);
+  const reactionCounts = emptyReactions();
+
+  for (const reaction of postReactions) {
+    reactionCounts[reaction.reaction_type] += 1;
+  }
+
+  return {
+    id: row.id,
+    mode: row.content_mode,
+    type: row.post_type,
+    title: row.title,
+    body: row.body,
+    authorName:
+      row.author_name_override ??
+      (row.author_user_id ? authorNames.get(row.author_user_id) ?? FALLBACK_PROFILE_NAME : FALLBACK_PROFILE_NAME),
+    authorRole: row.author_role,
+    authorAvatarUrl: row.author_avatar_url,
+    authorUserId: row.author_user_id,
+    country: row.country_name,
+    city: row.city_name,
+    isBridge: row.is_bridge,
+    pinned: row.pinned,
+    createdAt: row.created_at,
+    needCategory: row.need_category,
+    interests: row.interests ?? [],
+    hashtags: normalizeHashtagRows(row.hashtags),
+    mentions: normalizeMentionRows(row.mentions),
+    media: normalizeCaddeMedia(row.media),
+    reactionCounts,
+    totalReactionCount: CADDE_REACTION_TYPES.reduce((sum, reactionType) => sum + reactionCounts[reactionType], 0),
+    commentCount: row.comment_count ?? commentCounts.get(row.id) ?? postComments.length,
+    shareCount: shareCounts.get(row.id) ?? row.share_count ?? 0,
+    comments: postComments.map((comment) => ({
+      id: comment.id,
+      postId: comment.post_id,
+      userId: comment.user_id,
+      body: comment.body,
+      authorName: comment.author_name,
+      createdAt: comment.created_at,
+    })),
+    viewerReactions: currentUserId
+      ? postReactions.filter((reaction) => reaction.user_id === currentUserId).map((reaction) => reaction.reaction_type)
+      : [],
+  };
+}
+
+/** Cafe-içi feed: visibility='cafe' postları (yeniden eskiye). Arşivde read-only görünür. */
+export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | null): Promise<CaddePost[]> {
+  if (!isSupabaseConfigured) return [];
+
+  try {
+    const { data, error } = await db
+      .from("cadde_posts")
+      .select(
+        "id, author_user_id, author_name_override, author_role, author_avatar_url, content_mode, status, post_type, title, body, country_id, city_id, is_bridge, pinned, created_at, need_category, engagement_score, published_at, media, share_count",
+      )
+      .eq("cafe_id", cafeId)
+      .eq("status", "published")
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) throw error;
+    const rows = (data ?? []) as CaddeFeedRpcItem[];
+    const postIds = rows.map((row) => row.id);
+    const [countries, cities, reactions, comments, shareCounts, authorNames, interestRows] = await Promise.all([
+      fetchCaddeCountryNameMap(),
+      fetchCaddeCityNameMap(),
+      fetchPostReactions(postIds),
+      fetchPostComments(postIds),
+      fetchPostShareCounts(postIds),
+      fetchCaddeUserNameMap(
+        rows.map((row) => row.author_user_id).filter(Boolean) as string[],
+        currentUserId ? [currentUserId] : [],
+      ),
+      postIds.length > 0
+        ? db.from("cadde_post_interests").select("post_id, interest_key").in("post_id", postIds)
+        : Promise.resolve({ data: [] }),
+    ]);
+    const commentCounts = countCommentsByPost(comments);
+    const interestsByPost = new Map<string, string[]>();
+    for (const item of (interestRows.data ?? []) as Array<{ post_id: string; interest_key: string }>) {
+      interestsByPost.set(item.post_id, [...(interestsByPost.get(item.post_id) ?? []), item.interest_key]);
+    }
+    return rows.map((row) =>
+      mapCafeFeedPost(
+        {
+          ...row,
+          country_name: row.country_id ? countries.get(row.country_id) ?? null : null,
+          city_name: row.city_id ? cities.get(row.city_id) ?? null : null,
+          interests: interestsByPost.get(row.id) ?? [],
+          band: 0,
+          score: 0,
+          rand: 0,
+        },
+        reactions,
+        commentCounts,
+        shareCounts,
+        comments,
+        authorNames,
+        currentUserId,
+      ),
+    );
+  } catch (error: unknown) {
+    reportCaddeApiError("listCaddeCafeFeed", error);
     return [];
   }
 }

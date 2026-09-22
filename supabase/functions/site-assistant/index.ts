@@ -33,6 +33,7 @@ import {
 } from "../_shared/ai-assistant-context.ts";
 import { buildAssistantCorsHeaders, isAssistantOriginAllowed, readJsonWithLimit } from "../_shared/edge-security.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { recordAssistantUsage, type UsageWriter } from "../_shared/assistant-usage.ts";
 
 const MAX_BODY_BYTES = 32_000;
 const RATE_LIMIT_MAX = 30;
@@ -114,6 +115,9 @@ async function embedQuery(question: string, apiKey: string): Promise<number[] | 
 Deno.serve(async (req) => {
   const corsHeaders = buildAssistantCorsHeaders(req);
   const origin = req.headers.get("Origin");
+  let usageClient: UsageWriter | null = null;
+  let usageUserId: string | null = null;
+  let usageProvider = "unknown";
 
   if (req.method === "OPTIONS") {
     if (origin && !isAssistantOriginAllowed(origin)) {
@@ -142,7 +146,7 @@ Deno.serve(async (req) => {
 
     // Sağlayıcı adı burada doğrulanır: yanlış `AI_PROVIDER` değeri isteğin en başında
     // patlasın, model çağrısına kadar taşınmasın.
-    resolveProviderName();
+    usageProvider = resolveProviderName();
 
     // Asistan üyelere açıktır ve para harcar — anonim çağrı kabul edilmez.
     const authHeader = req.headers.get("Authorization") ?? "";
@@ -159,6 +163,8 @@ Deno.serve(async (req) => {
     }
 
     const supabase = createClient(supabaseUrl, serviceKey);
+    usageClient = supabase;
+    usageUserId = userData.user.id;
     await enforceRateLimit(supabase, req, "site-assistant", RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_SECONDS);
 
     const raw = await readJsonWithLimit(req, MAX_BODY_BYTES);
@@ -195,6 +201,15 @@ Deno.serve(async (req) => {
       messages: [...contextTurns, ...payload.messages],
     });
 
+    await recordAssistantUsage(supabase, {
+      userId: userData.user.id,
+      functionName: "site-assistant",
+      provider,
+      usage,
+      status: "success",
+      httpStatus: 200,
+    });
+
     console.log(
       "site-assistant ok",
       JSON.stringify({
@@ -217,6 +232,16 @@ Deno.serve(async (req) => {
     );
   } catch (error) {
     if (error instanceof ModelProviderError) {
+      if (error.status === 429 && usageClient && usageUserId) {
+        await recordAssistantUsage(usageClient, {
+          userId: usageUserId,
+          functionName: "site-assistant",
+          provider: usageProvider,
+          usage: null,
+          status: "quota_exceeded",
+          httpStatus: 429,
+        });
+      }
       const message =
         error.status === 429
           ? "Şu anda çok yoğunuz, biraz sonra tekrar deneyin."

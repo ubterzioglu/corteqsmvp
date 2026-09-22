@@ -9,6 +9,10 @@ import {
 } from "./cadde-schemas";
 import type { CaddeReactionType } from "./cadde-types";
 
+export function normalizeCaddeReportDetails(details?: string): string | null {
+  return details?.trim() || null;
+}
+
 /** Reaksiyon toggle'ı: ban, oran sınırı ve bildirim RPC'de uygulanır. */
 export async function toggleCaddeReaction(postId: string, reactionType: CaddeReactionType): Promise<boolean> {
   const parsed = parseWithUserError(caddeReactionSchema, { postId, reactionType });
@@ -46,7 +50,7 @@ export async function reportCaddeEntity(entityType: "post" | "comment" | "cafe" 
     p_entity_type: entityType,
     p_entity_id: entityId,
     p_reason: reason,
-    p_details: details?.trim() || null,
+    p_details: normalizeCaddeReportDetails(details),
   });
   if (error) throw caddeWriteError("reportCaddeEntity", error);
 }

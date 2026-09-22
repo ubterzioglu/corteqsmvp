@@ -23,7 +23,10 @@ import {
 
 /** Aynı QueryClient'ı paylaşan, /cadde ile birlikte mount olan yüzeyler. */
 const caddeQuerySurfaces = [
-  "src/pages/cadde/CaddePage.tsx",
+  "src/hooks/cadde/useCaddeActorContext.ts",
+  "src/hooks/cadde/useCaddeFeedState.ts",
+  "src/hooks/cadde/useCaddePageData.ts",
+  "src/hooks/cadde/useCaddePostEngagement.ts",
   "src/components/cadde/PromotionRail.tsx",
   "src/components/cadde/CarsiGlobalTicker.tsx",
   "src/components/cadde/CaddeTrendingHashtags.tsx",

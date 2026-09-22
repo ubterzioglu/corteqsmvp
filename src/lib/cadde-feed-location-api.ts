@@ -137,7 +137,7 @@ async function fetchPostReactions(postIds: string[]): Promise<CaddeReactionRow[]
   return (data ?? []) as CaddeReactionRow[];
 }
 
-function normalizeHashtagRows(raw: unknown): CaddeHashtag[] {
+export function normalizeCaddeHashtagRows(raw: unknown): CaddeHashtag[] {
   if (!Array.isArray(raw)) return [];
   return raw.flatMap((entry) => {
     if (entry === null || typeof entry !== "object") return [];
@@ -146,7 +146,7 @@ function normalizeHashtagRows(raw: unknown): CaddeHashtag[] {
   });
 }
 
-function normalizeMentionRows(raw: unknown): CaddePostMention[] {
+export function normalizeCaddeMentionRows(raw: unknown): CaddePostMention[] {
   if (!Array.isArray(raw)) return [];
   const allowed: CaddeMentionTargetType[] = ["user", "catalog_item", "cafe", "carsi_item"];
   return raw.flatMap((entry) => {
@@ -166,7 +166,7 @@ function mapRpcPost(row: CaddeFeedRpcItem, reactions: CaddeReactionRow[], shareC
     authorName: row.author_name_override ?? (row.author_user_id ? authorNames.get(row.author_user_id) ?? FALLBACK_PROFILE_NAME : FALLBACK_PROFILE_NAME),
     authorRole: row.author_role, authorAvatarUrl: row.author_avatar_url, authorUserId: row.author_user_id,
     country: row.country_name, city: row.city_name, isBridge: row.is_bridge, pinned: row.pinned, createdAt: row.created_at,
-    needCategory: row.need_category, interests: row.interests ?? [], hashtags: normalizeHashtagRows(row.hashtags), mentions: normalizeMentionRows(row.mentions), media: normalizeCaddeMedia(row.media),
+    needCategory: row.need_category, interests: row.interests ?? [], hashtags: normalizeCaddeHashtagRows(row.hashtags), mentions: normalizeCaddeMentionRows(row.mentions), media: normalizeCaddeMedia(row.media),
     reactionCounts, totalReactionCount: CADDE_REACTION_TYPES.reduce((sum, reactionType) => sum + reactionCounts[reactionType], 0),
     commentCount: row.comment_count ?? 0, shareCount: shareCounts.get(row.id) ?? row.share_count ?? 0, comments: [],
     viewerReactions: currentUserId ? postReactions.filter((reaction) => reaction.user_id === currentUserId).map((reaction) => reaction.reaction_type) : [],

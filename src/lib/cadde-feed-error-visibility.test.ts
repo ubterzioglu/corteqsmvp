@@ -86,7 +86,7 @@ describe("cadde feed okuma yolu hata görünürlüğü", () => {
   });
 
   it("listCaddeFeed catch bloğu boş sayfa döndürme kalıbını geri getirmez", () => {
-    const source = read("src/lib/cadde-api.ts");
+    const source = read("src/lib/cadde-feed-location-api.ts");
     const start = source.indexOf("export async function listCaddeFeed");
     expect(start).toBeGreaterThan(-1);
 

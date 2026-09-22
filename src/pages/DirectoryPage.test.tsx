@@ -15,6 +15,7 @@ const listDirectoryRoleOptionsMock = vi.fn();
 // Ürün tarafındaki isMounted koruması ayrıca eklendi (DirectoryPage.tsx);
 // buradaki mock ise testin ağa hiç çıkmamasını sağlar.
 const getTotalDirectoryCountMock = vi.fn();
+const searchPublicContentMock = vi.fn();
 const useGeoCountriesMock = vi.fn();
 const useGeoCitiesMock = vi.fn();
 const useAuthMock = vi.fn();
@@ -36,6 +37,10 @@ vi.mock("@/hooks/useGeo", () => ({
 
 vi.mock("@/components/auth/useAuth", () => ({
   useAuth: (...args: unknown[]) => useAuthMock(...args),
+}));
+
+vi.mock("@/lib/public-content-search", () => ({
+  searchPublicContent: (...args: unknown[]) => searchPublicContentMock(...args),
 }));
 
 const renderPage = (initialEntry = "/directory") => {
@@ -62,6 +67,7 @@ describe("DirectoryPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     getTotalDirectoryCountMock.mockResolvedValue(2);
+    searchPublicContentMock.mockResolvedValue([]);
     window.HTMLElement.prototype.scrollIntoView = vi.fn();
     window.HTMLElement.prototype.hasPointerCapture = vi.fn(() => false);
     window.HTMLElement.prototype.setPointerCapture = vi.fn();
@@ -142,6 +148,32 @@ describe("DirectoryPage", () => {
         expect.objectContaining({ roleFilter: "Healthcare_Doctor" }),
       );
     });
+  });
+
+  it("blog sonucunu ayri icerik bolumunde gosterir ve dizin sirasini bozmaz", async () => {
+    searchPublicContentMock.mockResolvedValue([
+      {
+        type: "blog",
+        id: "blog-1",
+        title: "Almanya'da gündelik bütçe",
+        description: "Kira ve yaşam giderleri",
+        href: "/blog/almanya-gundelik-butce",
+      },
+    ]);
+
+    renderPage("/directory?q=almanya");
+
+    const blogLink = await screen.findByRole("link", { name: /Almanya'da gündelik bütçe/i });
+    expect(blogLink).toHaveAttribute("href", "/blog/almanya-gundelik-butce");
+    expect(screen.getByRole("heading", { name: "İçerikler" })).toBeInTheDocument();
+
+    const directoryLinks = screen.getAllByRole("link").filter((link) =>
+      link.getAttribute("href")?.startsWith("/directory/catalog/"),
+    );
+    expect(directoryLinks.map((link) => link.getAttribute("href"))).toEqual([
+      "/directory/catalog/ayse-kaya",
+      "/directory/catalog/dortmund-turkce-doktor-arkin-kara",
+    ]);
   });
 
   // 2026-09-21 (Batch 0): dizin ziyaretçiye açıldı. Eski davranış — `!user` ise

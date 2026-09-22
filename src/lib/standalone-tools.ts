@@ -13,6 +13,11 @@ const OTHER_STANDALONE_TOOLS: Record<string, StandaloneTool> = {
 
 export type { StandaloneTool };
 
+export const STANDALONE_TOOLS: StandaloneTool[] = [
+  ...Object.values(GERMANY_STANDALONE_TOOLS),
+  ...Object.values(OTHER_STANDALONE_TOOLS),
+];
+
 /** Bir slug herhangi bir standalone araç registry'sinde mi? */
 export function getStandaloneTool(slug: string): StandaloneTool | null {
   return GERMANY_STANDALONE_TOOLS[slug] ?? OTHER_STANDALONE_TOOLS[slug] ?? null;

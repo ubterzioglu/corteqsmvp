@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Sparkles } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
 import ChatWindow from "@/components/chat/ChatWindow";
 import { useAuth } from "@/components/auth/useAuth";
@@ -62,6 +63,8 @@ const ChatBot = ({
 }: ChatBotProps) => {
   const [state, setState] = useState<ChatState>(createInitialState);
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const assistantPrefill = (searchParams.get("assistant") ?? "").trim().slice(0, 500);
 
   const askQuestion = useCallback(
     async (input: string) => {
@@ -210,6 +213,7 @@ const ChatBot = ({
           errorOverride={state.error}
           allowInputAfterSubmit
           showProgress={false}
+          initialInput={assistantPrefill}
         />
       </div>
     </section>

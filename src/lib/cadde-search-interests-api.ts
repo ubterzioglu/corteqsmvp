@@ -23,19 +23,27 @@ export type CaddePersonHit = {
   hasProfile: boolean;
 };
 
+export function mapCaddePersonRow(row: Record<string, unknown>): CaddePersonHit {
+  return {
+    userId: String(row.user_id),
+    fullName: String(row.full_name ?? ""),
+    city: typeof row.city === "string" ? row.city : null,
+    country: typeof row.country === "string" ? row.country : null,
+    hasProfile: row.has_profile === true,
+  };
+}
+
+export function normalizeCaddeInterestKeys(interestKeys: string[]): string[] {
+  return Array.from(new Set(interestKeys.map((key) => key.trim()).filter(Boolean)));
+}
+
 export async function searchCaddePeople(query: string, limit = 12): Promise<CaddePersonHit[]> {
   if (!isSupabaseConfigured || query.trim().length < 2) return [];
   try {
     const { data, error } = await db.rpc("search_cadde_people_v1", { p_query: query, p_limit: limit });
     if (error) throw error;
     if (!Array.isArray(data)) return [];
-    return (data as Array<Record<string, unknown>>).map((row) => ({
-      userId: String(row.user_id),
-      fullName: String(row.full_name ?? ""),
-      city: (row.city as string | null) ?? null,
-      country: (row.country as string | null) ?? null,
-      hasProfile: row.has_profile === true,
-    }));
+    return (data as Array<Record<string, unknown>>).map(mapCaddePersonRow);
   } catch (error: unknown) {
     reportCaddeApiError("searchCaddePeople", error);
     return [];
@@ -84,7 +92,7 @@ export async function listMyCaddeInterests(userId: string): Promise<string[]> {
 
 export async function saveMyCaddeInterests(userId: string, interestKeys: string[]): Promise<void> {
   if (!userId) throw new Error("Bu işlem için giriş yapın.");
-  const desired = Array.from(new Set(interestKeys.map((key) => key.trim()).filter(Boolean)));
+  const desired = normalizeCaddeInterestKeys(interestKeys);
   const current = await listMyCaddeInterests(userId);
   const toRemove = current.filter((key) => !desired.includes(key));
   const toAdd = desired.filter((key) => !current.includes(key));

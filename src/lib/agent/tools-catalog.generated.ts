@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 47,
+    "total": 53,
     "edge_functions": 11,
     "workers": 2,
-    "ui_modules": 33
+    "ui_modules": 39
   },
   "tools": [
     {
@@ -56,6 +56,11 @@ export const toolCatalog = {
         "test",
         "test:e2e",
         "test:watch",
+        "typecheck",
+        "typecheck:node",
+        "typecheck:strict-pilot",
+        "typecheck:workers",
+        "verify:quality",
         "verify:release",
         "verify:text",
         "warm:prerender"
@@ -196,9 +201,7 @@ export const toolCatalog = {
           "messages"
         ]
       },
-      "tables_read_write": [
-        "edge_rate_limits"
-      ],
+      "tables_read_write": [],
       "rpcs": [],
       "limits": {
         "MAX_BODY_BYTES": 32000,
@@ -353,9 +356,7 @@ export const toolCatalog = {
           "messages"
         ]
       },
-      "tables_read_write": [
-        "edge_rate_limits"
-      ],
+      "tables_read_write": [],
       "rpcs": [
         "ai_knowledge_search",
         "is_admin"
@@ -494,6 +495,25 @@ export const toolCatalog = {
       "evidence_path": "supabase/functions/whatsapp-webhook/index.ts"
     },
     {
+      "tool_key": "module.assistant_usage_api",
+      "tool_name": "assistant-usage-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/assistant-usage-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "GEMINI_QUOTA_WARNING_THRESHOLD",
+        "fetchAssistantUsage",
+        "getGeminiQuotaAlert",
+        "summarizeAssistantUsage"
+      ],
+      "tables_read_write": [
+        "ai_assistant_usage"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/assistant-usage-api.ts"
+    },
+    {
       "tool_key": "module.brainstorming_api",
       "tool_name": "brainstorming-api",
       "family": "ui_module",
@@ -562,66 +582,17 @@ export const toolCatalog = {
       "entrypoint": "src/lib/cadde-api.ts",
       "interface_kind": "internal_api",
       "exports": [
-        "approveCaddeCafeMember",
-        "archiveCaddeCafe",
-        "countCaddePostsSince",
-        "createCaddeCafe",
-        "createCaddeComment",
         "createCaddePost",
-        "getCaddeCafe",
+        "getCaddeActorContext",
         "getCaddeFeedReach",
-        "getCaddeSponsoredPlacement",
-        "joinCaddeCafe",
-        "listCaddeBillboardCards",
-        "listCaddeCafeFeed",
-        "listCaddeCafeMembers",
-        "listCaddeCafes",
-        "listCaddeCities",
-        "listCaddeCountries",
-        "listCaddeFeed",
-        "listCaddeInterestCatalog",
-        "listCaddePostComments",
-        "listMyCaddeCafes",
-        "listMyCaddeInterests",
-        "listTrendingCaddeHashtags",
-        "mapCaddeCafeJoinRequestRow",
-        "recordCaddeShare",
-        "reportCaddeEntity",
-        "saveMyCaddeInterests",
-        "searchCaddeMentions",
-        "searchCaddePeople",
-        "toggleCaddeReaction"
+        "listCaddePostComments"
       ],
       "tables_read_write": [
-        "cadde_billboard_cards",
-        "cadde_cafe_members",
-        "cadde_cafes",
-        "cadde_cities",
-        "cadde_countries",
-        "cadde_interest_catalog",
-        "cadde_post_comments",
-        "cadde_post_interests",
-        "cadde_post_reactions",
-        "cadde_posts",
-        "cadde_sponsored_placements",
-        "user_cadde_interests",
-        "user_profile_attributes"
+        "cadde_post_comments"
       ],
       "rpcs": [
-        "approve_cadde_cafe_member_v1",
-        "archive_cadde_cafe_v1",
-        "create_cadde_cafe_v1",
-        "create_cadde_comment_v1",
-        "get_cadde_feed_reach_v1",
-        "join_cadde_cafe_v1",
-        "list_cadde_cafe_join_requests_v1",
-        "list_cadde_feed_v1",
-        "list_trending_cadde_hashtags_v1",
-        "record_cadde_share_v1",
-        "report_cadde_entity_v1",
-        "search_cadde_mentions_v1",
-        "search_cadde_people_v1",
-        "toggle_cadde_reaction_v1"
+        "get_cadde_actor_context",
+        "get_cadde_feed_reach_v1"
       ],
       "evidence_path": "src/lib/cadde-api.ts"
     },
@@ -633,18 +604,40 @@ export const toolCatalog = {
       "entrypoint": "src/lib/cadde-cafe-api.ts",
       "interface_kind": "internal_api",
       "exports": [
+        "approveCaddeCafeMember",
+        "archiveCaddeCafe",
+        "createCaddeCafe",
         "createCaddeProtectedBrand",
         "deleteCaddeProtectedBrand",
+        "getCaddeCafe",
+        "joinCaddeCafe",
+        "listCaddeCafeFeed",
+        "listCaddeCafeMembers",
         "listCaddeCafeThemes",
+        "listCaddeCafes",
         "listCaddeProtectedBrands",
         "listCaddeProtectedBrandsForAdmin",
+        "listMyCaddeCafes",
+        "mapCaddeCafeJoinRequestRow",
         "setCaddeProtectedBrandActive"
       ],
       "tables_read_write": [
+        "cadde_cafe_members",
         "cadde_cafe_themes",
+        "cadde_cafes",
+        "cadde_post_comments",
+        "cadde_post_interests",
+        "cadde_post_reactions",
+        "cadde_posts",
         "cadde_protected_brands"
       ],
-      "rpcs": [],
+      "rpcs": [
+        "approve_cadde_cafe_member_v1",
+        "archive_cadde_cafe_v1",
+        "create_cadde_cafe_v1",
+        "join_cadde_cafe_v1",
+        "list_cadde_cafe_join_requests_v1"
+      ],
       "evidence_path": "src/lib/cadde-cafe-api.ts"
     },
     {
@@ -686,6 +679,58 @@ export const toolCatalog = {
       "evidence_path": "src/lib/cadde-carsi-api.ts"
     },
     {
+      "tool_key": "module.cadde_engagement_api",
+      "tool_name": "cadde-engagement-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/cadde-engagement-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "countCaddePostsSince",
+        "createCaddeComment",
+        "normalizeCaddeReportDetails",
+        "recordCaddeShare",
+        "reportCaddeEntity",
+        "toggleCaddeReaction"
+      ],
+      "tables_read_write": [
+        "cadde_posts"
+      ],
+      "rpcs": [
+        "create_cadde_comment_v1",
+        "record_cadde_share_v1",
+        "report_cadde_entity_v1",
+        "toggle_cadde_reaction_v1"
+      ],
+      "evidence_path": "src/lib/cadde-engagement-api.ts"
+    },
+    {
+      "tool_key": "module.cadde_feed_location_api",
+      "tool_name": "cadde-feed-location-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/cadde-feed-location-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "listCaddeCities",
+        "listCaddeCountries",
+        "listCaddeFeed",
+        "normalizeCaddeHashtagRows",
+        "normalizeCaddeMentionRows"
+      ],
+      "tables_read_write": [
+        "cadde_cities",
+        "cadde_countries",
+        "cadde_post_reactions",
+        "cadde_posts",
+        "user_profile_attributes"
+      ],
+      "rpcs": [
+        "list_cadde_feed_v1"
+      ],
+      "evidence_path": "src/lib/cadde-feed-location-api.ts"
+    },
+    {
       "tool_key": "module.cadde_moderation_api",
       "tool_name": "cadde-moderation-api",
       "family": "ui_module",
@@ -723,6 +768,54 @@ export const toolCatalog = {
       ],
       "rpcs": [],
       "evidence_path": "src/lib/cadde-notifications-api.ts"
+    },
+    {
+      "tool_key": "module.cadde_promotion_api",
+      "tool_name": "cadde-promotion-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/cadde-promotion-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "getCaddeSponsoredPlacement",
+        "listCaddeBillboardCards",
+        "mapCaddeBillboardRow",
+        "mapCaddeSponsoredRow"
+      ],
+      "tables_read_write": [
+        "cadde_billboard_cards",
+        "cadde_sponsored_placements"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/cadde-promotion-api.ts"
+    },
+    {
+      "tool_key": "module.cadde_search_interests_api",
+      "tool_name": "cadde-search-interests-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/cadde-search-interests-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "listCaddeInterestCatalog",
+        "listMyCaddeInterests",
+        "listTrendingCaddeHashtags",
+        "mapCaddePersonRow",
+        "normalizeCaddeInterestKeys",
+        "saveMyCaddeInterests",
+        "searchCaddeMentions",
+        "searchCaddePeople"
+      ],
+      "tables_read_write": [
+        "cadde_interest_catalog",
+        "user_cadde_interests"
+      ],
+      "rpcs": [
+        "list_trending_cadde_hashtags_v1",
+        "search_cadde_mentions_v1",
+        "search_cadde_people_v1"
+      ],
+      "evidence_path": "src/lib/cadde-search-interests-api.ts"
     },
     {
       "tool_key": "module.cadde_tanitim_api",
@@ -797,6 +890,22 @@ export const toolCatalog = {
         "admin_review_catalog_import"
       ],
       "evidence_path": "src/lib/catalog-import-api.ts"
+    },
+    {
+      "tool_key": "module.current_user_api",
+      "tool_name": "current-user-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/current-user-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "getCurrentUserDashboard",
+        "getCurrentUserFeatures",
+        "getCurrentUserProfile"
+      ],
+      "tables_read_write": [],
+      "rpcs": [],
+      "evidence_path": "src/lib/current-user-api.ts"
     },
     {
       "tool_key": "module.events_api",
@@ -1087,6 +1196,7 @@ export const toolCatalog = {
         "getEmergencyContacts",
         "getMove",
         "getServiceRecommendations",
+        "listActiveRelocationCountryCodes",
         "listMoves",
         "recordInteraction",
         "saveWizardAnswers",
@@ -1094,6 +1204,7 @@ export const toolCatalog = {
       ],
       "tables_read_write": [
         "relocation_emergency_contacts",
+        "relocation_locations",
         "relocation_moves"
       ],
       "rpcs": [
@@ -1873,6 +1984,16 @@ export const toolCatalog = {
       "module_family": "catalog"
     },
     {
+      "path": "src/lib/assistant-usage-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/assistant-usage-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/auth-messages.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -1919,6 +2040,26 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/cadde-admin-api.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-api-facade.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-api-modules.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-api-support.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-api-support.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
@@ -1993,12 +2134,22 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-engagement-api.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-error-map.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
       "path": "src/lib/cadde-feed-error-visibility.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-feed-location-api.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
@@ -2093,6 +2244,11 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-promotion-api.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-promotion-flow.test.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -2164,6 +2320,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/cadde-schemas.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-search-interests-api.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
@@ -2334,6 +2495,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/country-city-search.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/current-user-api.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -2768,6 +2934,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/internal-links.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/kadro/kadro-ad-text.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -3161,6 +3332,21 @@ export const toolCatalog = {
       "path": "src/lib/public-catalog-profile-view-model.ts",
       "kind": "ts",
       "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/public-content-search-migration.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/public-content-search.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/public-content-search.ts",
+      "kind": "ts",
+      "module_family": "lib"
     },
     {
       "path": "src/lib/public-listing-filter.test.ts",
@@ -3708,6 +3894,26 @@ export const toolCatalog = {
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/_shared/assistant-usage.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/assistant-usage.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/edge-security.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/edge-security.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/_shared/emails/admin-update-digest.test.ts",
       "kind": "ts",
       "module_family": "edge"
@@ -3769,6 +3975,26 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/_shared/emails/smtp.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/providers-contract.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/providers.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/rate-limit-contract.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/rate-limit.ts",
       "kind": "ts",
       "module_family": "edge"
     },
