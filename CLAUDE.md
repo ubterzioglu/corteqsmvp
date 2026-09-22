@@ -425,19 +425,25 @@ tek bir listeden işaretlenir: **`src/lib/demo-pages.ts` → `DEMO_ROUTES`**.
 - Sözleşme testi: `src/lib/demo-pages.test.ts` — gevşetme.
 - Tam gerekçe ve akış: `docs/guides/demo-icerik-deseni.md`.
 
-Bugünkü liste: `/campaign/vlogger`, `/campaign/blogger`, `/businesses`.
+Bugünkü liste: `/campaign/vlogger`, `/campaign/blogger`, `/businesses`, `/relocation`.
 
-⚠️ **`/relocation` 2026-09-22'de listeden ÇIKARILDI** (B27 kararı): örnek içerik taşıyan
-üç sekme (İş & İşletmeler · Okullar · Hoşgeldin Paketi) **kaldırıldı**, çünkü onları
-besleyecek veri yoktu (`relocation_jobs` ve `relocation_services` canlıda **0** satır;
-Okullar/Hoşgeldin için tablo hiç yoktu). Kalan beş sekme — şehir, servis, bürokrasi,
-maliyet, belge — GERÇEK veri okur, bu yüzden sayfa artık demo değildir.
-`src/lib/relocation-demo-content.ts` ve `RelocationDemoPanel` **silindi**.
+⚠️ **`/relocation` 2026-09-22'de listeden çıkarıldı ve AYNI GÜN geri kondu** — bu döngü
+öğreticidir. Önce örnek içerik taşıyan üç sekme (İş & İşletmeler · Okullar · Hoşgeldin
+Paketi) kaldırıldı (B27) ve sayfa "gerçek veri okuyor" sayıldı; `relocation_demo-content.ts`
+ile `RelocationDemoPanel` **silindi**. Sonra kalan sekmeler ölçüldü: `relocation_services`
+**12/12 ülkede 0 satır**, `bureaucratic_steps` yalnız DE+NL'de birer satır. Yani üç boş
+sekme kaldırılırken yerlerine pratikte boş üç gerçek sekme kalmıştı.
 
-Buradaki kısmi-demo deseni yine de doğrudur ve yeni bir sayfada gerekirse kopyalanmalıdır:
-örnek içeriği rotadan bağımsız bir bayrakla değil, `isDemoRoute(...)` ile gatele — böylece
-`DEMO_ROUTES` satırı silindiğinde örnek içerik de kendiliğinden kaybolur ve canlıda
-unutulamaz.
+**Karar: motor ÇALIŞAN bir demo olsun — kod gerçek, veri demo.** Seed:
+`docs/operations/2026-09-22-relocation-demo-seed.sql` (servis 120 · bürokrasi 60 satır).
+Veri demo olduğu sürece `DEMO_ROUTES` satırı da durur.
+
+⚠️ İki kural bu seed'de kilitlidir:
+1. **Demo satırlar DB'den ayırt edilebilir** — hepsi `relocation_source_registry`
+   içindeki `demo_seed_relocation` kaydına (`authority_level='user_generated'`) bağlıdır.
+   "Bu veri gerçek mi?" sorusu SQL'le cevaplanır; `[DEMO]` öneki yalnız ikinci işarettir.
+2. **Acil numaralar DEMO DEĞİLDİR** ve ayrı gerçek kaynağa bağlıdır
+   (`emergency_official_numbers`). Sahte bir acil numara gerçekten aranabilir.
 
 ## AI bilgi tabanı ve site asistanı (2026-09-21)
 

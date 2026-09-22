@@ -51,19 +51,58 @@ Diğer iki boş sekmenin (bürokrasi, acil) boş durumu **zaten vardı**
 (`dict.checklist.empty`, acil panelinin kendi metni) — orada kusur görünürlük değil,
 **içerik eksikliğidir.**
 
-## Sıradaki iş — içerik, kod değil
+## 22.09 · KARAR VE UYGULAMA — "çalışan demo"
 
-Üçü de **gerçek dünya verisi** ister ve uydurulamaz. Savunulabilirlik sırasına göre:
+**Kullanıcı kararı:** motor çalışan bir demo olsun — **kod gerçek, veri demo.**
 
-1. **Acil numaralar** (`relocation_emergency_contacts`) — en kolayı: resmî ve sabit
-   bilgi (AB genelinde 112, US/CA 911, GB 999 …). Kaynak `relocation_source_registry`'ye
-   ülke bazında yazılabilir. 10 ülke eksik.
-2. **Bürokrasi adımları** (`relocation_bureaucratic_steps`) — ülkeye göre değişir ve
-   **kaynak ister**. Defterde zaten uygun kayıtlar var: `eu_your_europe`,
-   `de_make_it_in_germany`, `de_berlin_service`, `nl_government`. 10 ülke eksik.
-3. **Servis sağlayıcılar** (`relocation_services`) — **uydurulamaz.** Bunlar gerçek
-   işletmelerdir (banka, sigorta, GSM, doktor). Ya gerçek sağlayıcı listesi girilir ya
-   da sekme kaldırılır; üçüncü bir dürüst seçenek yok.
+Uygulandı: `docs/operations/2026-09-22-relocation-demo-seed.sql`
+
+| Tablo | Önce | Sonra |
+|---|---|---|
+| `relocation_services` | 0 | **120** (12 ülke × 5 kategori × 2 sağlayıcı) |
+| `relocation_bureaucratic_steps` | 2 | **62** (12 ülke × 5 adım + var olan 2) |
+| `relocation_emergency_contacts` | 4 | **21** (10 ülke tamamlandı) |
+
+**Motor uçtan uca doğrulandı** (RPC'ler `auth.uid()` ister; sahibin kimliği JWT talebi
+olarak taklit edilip salt-okuma işlemde koşuldu, sonra `rollback`):
+servis sıralaması beş kategoride de **2/2**, kontrol listesi **6 adım**, şehir
+sıralaması **bozulmadı**.
+
+⚠️ **İki kural seed'de kilitli:**
+1. **Demo satırlar DB'den ayırt edilebilir** — hepsi `demo_seed_relocation` kaynağına
+   (`authority_level='user_generated'`) bağlı. `[DEMO]` öneki yalnız ikinci işarettir;
+   "bu veri gerçek mi?" sorusu SQL'le cevaplanır.
+2. **Acil numaralar DEMO DEĞİLDİR.** Sahte bir acil numara gerçekten aranabilir.
+   Gerçek resmî değerler girildi (AB 112 · US/CA 911 · GB 999 · CH 112/117/144 ·
+   AE 999/998/997 · QA 999), `official_url` ile ve ayrı gerçek kaynağa
+   (`emergency_official_numbers`) bağlı.
+
+**`/relocation` `DEMO_ROUTES`'a geri kondu.** B27'de "kalan sekmeler gerçek veri
+okuyor" diye çıkarılmıştı; içerik demo olduğu sürece işaret de durur.
+
+## Gerçek içeriğe geçişte yapılacak iş
+
+Demo veri motoru çalıştırır ama üründe kalamaz. Gerçeğe geçiş sırası:
+
+1. ✅ **Acil numaralar — BİTTİ.** Zaten gerçek girildi (demo değil).
+2. **Bürokrasi adımları** (`relocation_bureaucratic_steps`) — bugün 60 demo satır.
+   Gerçeği ülkeye göre değişir ve **kaynak ister**; defterde uygun kayıtlar hazır:
+   `eu_your_europe`, `de_make_it_in_germany`, `de_berlin_service`, `nl_government`.
+   Gerçek adım girilirken o ülkenin demo satırları silinmelidir.
+3. **Servis sağlayıcılar** (`relocation_services`) — bugün 120 demo satır. Gerçeği
+   **uydurulamaz**: bunlar gerçek işletmelerdir (banka, sigorta, GSM, doktor). Gerçek
+   sağlayıcı listesi dışarıdan gelmelidir.
+
+**Demo satırları silmek tek sorgudur** — hepsi tek kaynağa bağlı:
+
+```sql
+delete from public.relocation_services
+where source_id = (select id from public.relocation_source_registry
+                   where source_key = 'demo_seed_relocation');
+```
+
+⚠️ Son demo satır da silindiğinde `/relocation` `DEMO_ROUTES`'tan çıkarılmalıdır —
+ve tersi de doğrudur: demo satır durduğu sürece o işaret kalmalıdır.
 
 ⚠️ Maliyet rakamlarında yaptığımız hatayı tekrarlama: kaynağı olmayan içeriği
 "genel bilgi" diye girip sonra ona kaynak aramak yerine, **önce kaynağı belirle**

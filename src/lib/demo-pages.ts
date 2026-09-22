@@ -50,15 +50,23 @@ export const DEMO_ROUTES: DemoRoute[] = [
     label: "İşletmeler",
     note: "Listedeki işletmeler örnektir. Gerçek işletme kayıtları başvurular değerlendirildikçe yayına alınır.",
   },
+  {
+    // ⚠️ Bu satır 22.09'da bir çıkarılıp AYNI GÜN geri konuldu — sebebi öğreticidir.
+    // B27'de örnek içerik taşıyan üç sekme kaldırıldığı için sayfa "gerçek veri
+    // okuyor" sayılmış ve listeden çıkarılmıştı. Sonra kalan sekmeler ölçüldü:
+    // `relocation_services` 12/12 ülkede **0 satır**, `bureaucratic_steps` yalnız
+    // DE+NL'de birer satırdı. Karar: motor ÇALIŞAN bir demo olsun — kod gerçek,
+    // veri demo (`docs/operations/2026-09-22-relocation-demo-seed.sql`).
+    // Veri demo olduğu sürece işaret de durur.
+    //
+    // Demo satırlar DB'den de ayırt edilebilir: hepsi `relocation_source_registry`
+    // içindeki `demo_seed_relocation` kaydına bağlıdır. Acil numaralar DEMO DEĞİLDİR
+    // ve ayrı gerçek kaynağa bağlıdır — sahte acil numara gerçekten aranabilir.
+    path: "/relocation",
+    label: "Taşınma Planlayıcı",
+    note: "Araç çalışıyor ama şehir, servis ve bürokrasi içeriği şimdilik örnek veridir; gerçek sağlayıcı ve resmî süreç bilgisi değildir. Acil numaralar gerçektir.",
+  },
 ];
-
-// ⚠️ `/relocation` 22.09'da bu listeden ÇIKARILDI (B27, karar: seçenek A).
-// Sayfanın örnek içerik taşıyan üç sekmesi (İş & İşletmeler · Okullar · Hoşgeldin
-// Paketi) besleyecek veri kaynağı olmadığı için kaldırıldı — `relocation_jobs` ve
-// `relocation_services` canlıda 0 satır, Okullar/Hoşgeldin için tablo hiç yoktu.
-// Geriye kalan beş sekme (şehir · servis · bürokrasi · maliyet · belge) GERÇEK veri
-// okur, bu yüzden sayfa artık demo değildir. Üç sekme geri gelirse bu satır da geri
-// gelmelidir — örnek içerik demo işareti olmadan canlıya çıkmaz.
 
 /** Rozetin ve bandın paylaştığı metinler — çeviri/ton tek yerden değişir. */
 export const DEMO_COPY = {
