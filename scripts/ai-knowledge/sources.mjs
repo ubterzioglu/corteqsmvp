@@ -7,7 +7,40 @@
 // docs/kalanlar/2026-09-21-site-geneli-ai-bot-kalan-isler.md (K1 dokümanlar, K6 diğerleri).
 
 import { fetchAllRows } from "./client.mjs";
-import { markdownToPlainText, collapseWhitespace } from "./text-extract.mjs";
+import { readdir, readFile } from "node:fs/promises";
+import path from "node:path";
+import { markdownToPlainText, htmlToPlainText, collapseWhitespace } from "./text-extract.mjs";
+
+const DOCS_ROOT = "docs";
+
+/** New documentation is admin-only unless it is deliberately placed in guides. */
+export function classifyDocumentationPath(relativePath) {
+  const normalized = relativePath.replace(/\\/g, "/");
+  if (normalized.startsWith("docs/exports/blog-md/")) return null;
+  return normalized.startsWith("docs/guides/") ? "member" : "admin";
+}
+
+async function loadDocumentationDocuments(audience) {
+  const paths = await readdir(DOCS_ROOT, { recursive: true });
+  const documents = await Promise.all(
+    paths
+      .filter((entry) => /\.(md|html)$/i.test(entry))
+      .map(async (entry) => {
+        const relativePath = path.join(DOCS_ROOT, entry).replace(/\\/g, "/");
+        if (classifyDocumentationPath(relativePath) !== audience) return null;
+        const raw = await readFile(relativePath, "utf8");
+        const text = entry.toLowerCase().endsWith(".html") ? htmlToPlainText(raw) : markdownToPlainText(raw);
+        if (!text) return null;
+        return {
+          externalId: relativePath,
+          title: path.basename(entry, path.extname(entry)).replace(/[-_]/g, " "),
+          url: null,
+          text,
+        };
+      }),
+  );
+  return documents.filter(Boolean);
+}
 
 /**
  * Yer tutucu (placeholder) katalog kaydı mı?
@@ -153,6 +186,18 @@ export const KNOWLEDGE_SOURCES = [
     label: "Blog",
     audience: "public",
     load: loadBlogDocuments,
+  },
+  {
+    key: "docs-member",
+    label: "Üye rehberleri",
+    audience: "member",
+    load: () => loadDocumentationDocuments("member"),
+  },
+  {
+    key: "docs-admin",
+    label: "Yönetici dokümanları",
+    audience: "admin",
+    load: () => loadDocumentationDocuments("admin"),
   },
 ];
 
