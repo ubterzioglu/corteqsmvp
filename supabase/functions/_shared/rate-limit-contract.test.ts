@@ -11,5 +11,6 @@ describe("assistant rate-limit single-source contract", () => {
     expect(source).toContain('await enforceRateLimit(supabase, req, "site-assistant"');
     expect(relocationSource).toContain('import { enforceRateLimit as enforceSharedRateLimit } from "../_shared/rate-limit.ts"');
     expect(relocationSource).toContain("await enforceSharedRateLimit(");
+    expect(relocationSource).not.toContain("async function enforceRateLimit");
   });
 });
