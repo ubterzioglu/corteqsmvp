@@ -66,6 +66,7 @@ export {
 } from "./cadde-search-interests-api";
 export type { CaddePersonHit } from "./cadde-search-interests-api";
 export { approveCaddeCafeMember, archiveCaddeCafe, createCaddeCafe, joinCaddeCafe } from "./cadde-cafe-api";
+export { getCaddeCafe, listCaddeCafes, listMyCaddeCafes } from "./cadde-cafe-api";
 import type {
   CaddeBillboardCard,
   CaddeBillboardRow,
@@ -247,7 +248,7 @@ function mapRpcPost(
 const CAFE_SELECT_COLUMNS =
   "id, host_user_id, host_name_override, title, summary, country_id, city_id, content_mode, status, is_bridge, is_free, starts_at, ends_at, is_active, created_at, slug, theme_key, entry_mode, entry_question, capacity, external_links, archived_at";
 
-export async function listCaddeCafes(filters: CaddeFilterState, currentUserId: string | null, diasporaKey = "tr"): Promise<CaddeCafe[]> {
+async function legacyListCaddeCafes(filters: CaddeFilterState, currentUserId: string | null, diasporaKey = "tr"): Promise<CaddeCafe[]> {
   if (!isSupabaseConfigured || filters.mode === "demo") {
     return applyDemoFilters(DEMO_CAFES, filters);
   }
@@ -327,7 +328,7 @@ function mapCafe(
 }
 
 /** Tek cafe detayı — arşivlenmiş cafe de döner (read-only arşiv görünümü, spec §13.4). */
-export async function getCaddeCafe(cafeId: string, currentUserId: string | null): Promise<CaddeCafe | null> {
+async function legacyGetCaddeCafe(cafeId: string, currentUserId: string | null): Promise<CaddeCafe | null> {
   if (!isSupabaseConfigured) {
     return DEMO_CAFES.find((cafe) => cafe.id === cafeId) ?? null;
   }
@@ -351,7 +352,7 @@ export async function getCaddeCafe(cafeId: string, currentUserId: string | null)
 }
 
 /** Kullanıcının host olduğu aktif cafe'ler (profil paneli parity, spec §13.5). */
-export async function listMyCaddeCafes(userId: string): Promise<CaddeCafe[]> {
+async function legacyListMyCaddeCafes(userId: string): Promise<CaddeCafe[]> {
   if (!isSupabaseConfigured || !userId) return [];
 
   try {
