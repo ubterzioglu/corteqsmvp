@@ -14,7 +14,7 @@ import { resolve } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { STATIC_ROUTES, escapeXml, renderUrl } from "./generate-sitemap.mjs";
+import { STATIC_ROUTES, escapeXml, qualifiesForSitemap, renderUrl } from "./generate-sitemap.mjs";
 
 const appSource = readFileSync(resolve(process.cwd(), "src/App.tsx"), "utf8");
 
@@ -120,5 +120,43 @@ describe("XML üretimi", () => {
 
     expect(kok).toContain("<image:image>");
     expect(digeri).not.toContain("<image:image>");
+  });
+});
+
+describe("qualifiesForSitemap — katalog kapsam kuralı (22.09)", () => {
+  const row = (patch) => ({
+    slug: "x",
+    long_description: null,
+    headline: null,
+    short_description: null,
+    city: null,
+    ...patch,
+  });
+
+  it("uzun açıklaması olan kaydı alır", () => {
+    expect(qualifiesForSitemap(row({ long_description: "Uzun metin" }))).toBe(true);
+  });
+
+  it("başlık + kısa açıklama + şehir üçlüsü olan kaydı alır (konsolosluk/uzman)", () => {
+    expect(
+      qualifiesForSitemap(
+        row({ headline: "Başkonsolosluk", short_description: "T.C. temsilcilik", city: "Münih" }),
+      ),
+    ).toBe(true);
+  });
+
+  it("kısa açıklaması OLMAYAN üye kaydını ELER — ince sayfa dersi korunur", () => {
+    expect(qualifiesForSitemap(row({ headline: "Ad Soyad", city: "Berlin" }))).toBe(false);
+  });
+
+  it("şehri olmayan kaydı eler", () => {
+    expect(qualifiesForSitemap(row({ headline: "Ad", short_description: "Meslek" }))).toBe(false);
+  });
+
+  it("boşluktan ibaret alanları dolu saymaz", () => {
+    expect(
+      qualifiesForSitemap(row({ headline: "   ", short_description: "  ", city: " " })),
+    ).toBe(false);
+    expect(qualifiesForSitemap(row({ long_description: "   " }))).toBe(false);
   });
 });

@@ -311,6 +311,35 @@ async function getDiasporaRoutes() {
 // boş "thin content" satırlar vardı — Google bunları düşük-değerli görüp crawl
 // bütçesini gerçek/dolu profillere ayırmıyordu. status=published + visibility=public +
 // is_placeholder=false + dolu long_description şartı eklendi.
+/**
+ * Bir katalog kaydı sitemap'e girer mi? (22.09'da gevşetildi — gerekçesi ölçümdür.)
+ *
+ * Eski kural yalnız `long_description` doluluğuna bakıyordu ve **474 herkese açık
+ * profilin yalnız 20'si** sitemap'e giriyordu: 21.09'da açık onayla yayınlanan 241
+ * konsolosluğun ve 22.09'da yayınlanan 61 uzmanın **hiçbiri** arama motoruna
+ * bildirilmiyordu. Dizine yayınlamak ile bulunabilir olmak aynı şey değilmiş.
+ *
+ * Yeni kural: uzun açıklama VEYA **yapılandırılmış üçlü** (başlık + kısa açıklama +
+ * şehir). Bu üçlü keyfi değil, ölçümle seçildi — `member` kayıtlarını dışarıda
+ * bırakan tek ayırt edici alan `short_description`:
+ *   organization 241/241 · advisor 61/61 · **member 0/152**.
+ * Şehir + meslek + ad taşıyan bir dizin kaydı ince sayfa değildir; adı ve başka
+ * hiçbir şeyi olmayan üye kaydı ise incedir ve DIŞARIDA KALMALIDIR.
+ *
+ * ⚠️ 2026-07-28 GSC dersi hâlâ geçerli: `is_placeholder` kayıtlar ve içi boş
+ * profiller sitemap'e giremez — 236 sayfa "Discovered – currently not indexed"
+ * çıkmasının sebebi oydu. Bu gevşetme o dersi kaldırmaz, sınırını düzeltir.
+ */
+export function qualifiesForSitemap(row) {
+  const text = (value) => String(value ?? "").trim();
+  if (text(row.long_description).length > 0) return true;
+  return (
+    text(row.headline).length > 0 &&
+    text(row.short_description).length > 0 &&
+    text(row.city).length > 0
+  );
+}
+
 async function getDirectoryCatalogRoutes() {
   const env = supabaseEnv();
   if (!env) {
@@ -319,19 +348,18 @@ async function getDirectoryCatalogRoutes() {
   }
 
   const params = new URLSearchParams({
-    select: "slug,updated_at,long_description",
+    select: "slug,updated_at,long_description,headline,short_description,city",
     slug: "not.is.null",
     status: "eq.published",
     visibility: "eq.public",
     is_placeholder: "eq.false",
-    long_description: "not.is.null",
   });
   const endpoint = `${env.url}/rest/v1/catalog_items?${params.toString()}`;
   const rows = await fetchAllRows(endpoint, env.key, "catalog_items");
   if (!rows) return [];
 
   return rows
-    .filter((r) => r?.slug && String(r.long_description ?? "").trim().length > 0)
+    .filter((r) => r?.slug && qualifiesForSitemap(r))
     .map((r) => ({
       path: `/directory/catalog/${r.slug}`,
       priority: "0.6",
