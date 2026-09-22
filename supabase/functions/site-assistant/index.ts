@@ -32,6 +32,7 @@ import {
   type KnowledgeHit,
 } from "../_shared/ai-assistant-context.ts";
 import { buildAssistantCorsHeaders, isAssistantOriginAllowed, readJsonWithLimit } from "../_shared/edge-security.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
 
 const MAX_BODY_BYTES = 32_000;
 const RATE_LIMIT_MAX = 30;
@@ -74,69 +75,6 @@ function jsonResponse(body: unknown, status: number, corsHeaders: Record<string,
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
   });
-}
-
-function getClientKey(req: Request): string {
-  const forwardedFor = req.headers.get("x-forwarded-for");
-  if (forwardedFor) return forwardedFor.split(",")[0]?.trim() || "unknown";
-  return req.headers.get("cf-connecting-ip") ?? req.headers.get("x-real-ip") ?? "unknown";
-}
-
-/**
- * Pencere bazlı istek sınırı.
- *
- * ⚠️ PENCERE KARŞILAŞTIRMASI METİNLE YAPILMAZ. `window_started_at` bir `timestamptz`;
- * PostgREST bunu `2026-09-20T10:00:00+00:00` biçiminde döndürür ama
- * `Date.toISOString()` `...000Z` üretir. İki metin asla eşleşmezse her istek "yeni
- * pencere" sayılır, sayaç her seferinde 1'e döner ve SINIR HİÇBİR HATA VERMEDEN
- * TAMAMEN ÖLÜR. Bu yüzden iki taraf da epoch'a çevrilip sayı olarak karşılaştırılır.
- */
-async function enforceRateLimit(
-  supabase: ReturnType<typeof createClient>,
-  req: Request,
-  scope: string,
-  maxRequests: number,
-  windowSeconds: number,
-) {
-  const clientKey = getClientKey(req);
-  const windowMs = windowSeconds * 1000;
-  const windowStartMs = Math.floor(Date.now() / windowMs) * windowMs;
-  const windowStartedAt = new Date(windowStartMs).toISOString();
-
-  const { data: existing, error: fetchError } = await supabase
-    .from("edge_rate_limits")
-    .select("request_count, window_started_at")
-    .eq("scope", scope)
-    .eq("client_key", clientKey)
-    .maybeSingle();
-  if (fetchError) throw fetchError;
-
-  const existingWindowMs = existing?.window_started_at
-    ? new Date(existing.window_started_at as string).getTime()
-    : Number.NaN;
-  const isSameWindow = Number.isFinite(existingWindowMs) && existingWindowMs === windowStartMs;
-
-  if (!existing || !isSameWindow) {
-    const { error } = await supabase
-      .from("edge_rate_limits")
-      .upsert(
-        { scope, client_key: clientKey, window_started_at: windowStartedAt, request_count: 1 },
-        { onConflict: "scope,client_key" },
-      );
-    if (error) throw error;
-    return;
-  }
-
-  if ((existing.request_count as number) >= maxRequests) {
-    throw new Error("RATE_LIMITED");
-  }
-
-  const { error } = await supabase
-    .from("edge_rate_limits")
-    .update({ request_count: (existing.request_count as number) + 1 })
-    .eq("scope", scope)
-    .eq("client_key", clientKey);
-  if (error) throw error;
 }
 
 /**

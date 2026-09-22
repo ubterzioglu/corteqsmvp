@@ -21,6 +21,7 @@ import {
   type ModelMessage,
 } from "./providers.ts";
 import { buildAssistantCorsHeaders, isAssistantOriginAllowed, readJsonWithLimit } from "../_shared/edge-security.ts";
+import { enforceRateLimit as enforceSharedRateLimit } from "../_shared/rate-limit.ts";
 
 const MAX_BODY_BYTES = 32_000;
 const RATE_LIMIT_MAX = 20;
@@ -178,7 +179,7 @@ Deno.serve(async (req) => {
     }
 
     const supabase = createClient(supabaseUrl, serviceKey);
-    await enforceRateLimit(
+    await enforceSharedRateLimit(
       supabase,
       req,
       "relocation-assistant",
