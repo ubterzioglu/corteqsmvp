@@ -1,6 +1,7 @@
 # 🔴 Sızıntı: `corebot` public reposunda `.env` — anahtar döndürme listesi
 
-**Bulundu:** 22 Eylül 2026 · **Durum:** dosya silindi, **anahtarlar HENÜZ DÖNMEDİ**
+**Bulundu:** 22 Eylül 2026 · **Durum:** dosya silindi + geçmiş temizlendi;
+**3 kritik anahtar HÂLÂ DÖNMEDİ** · GitHub eski nesneyi hâlâ sunuyor
 
 ## Ne oldu
 
@@ -32,6 +33,62 @@ commit'te (`6d515dc`, `de322c1`, `e0f59c5`).
 
 ⚠️ `.gitignore` içinde `.env` **zaten vardı** — dosya takibe girdikten sonra eklenmiş.
 `.gitignore` bir kez commit'lenmiş dosyayı durdurmaz.
+
+## 22.09 · Ölçülen durum — anahtarların yalnız 2'si döndü
+
+Sızan `.env` ile şu anki `.env.local` değerleri **hash karşılaştırmasıyla** denetlendi
+(hiçbir değer yazdırılmadan):
+
+| Anahtar | Durum |
+|---|---|
+| `SUPABASE_SERVICE_ROLE_KEY` | ❌ **HÂLÂ SIZAN DEĞER** — en tehlikelisi, RLS baypas |
+| `SUPABASE_DB_PASSWORD` | ❌ **HÂLÂ SIZAN DEĞER** |
+| `VERIFY_TOKEN` | ❌ **HÂLÂ SIZAN DEĞER** |
+| `SUPABASE_ACCESS_TOKEN` | ✅ döndürülmüş |
+| `ACCESS_TOKEN` (WhatsApp) | ✅ döndürülmüş |
+| `PHONE_NUMBER_ID` · anon key | aynı — bunlar sır değil, döndürme gerekmez |
+
+⚠️ `.env.local` içindeki `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`,
+`WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET` dördü de **15 karakter** — yer tutucu
+oldukları açık. **Bunları canlı function secret'larına KOPYALAMA**, deploy edilmiş
+fonksiyonları bozarsın.
+
+## 22.09 · Git geçmişi temizlendi — ama YETMEDİ
+
+`git filter-branch` ile `.env` 28 commit'in tamamından çıkarıldı, `refs/original`
+silindi, reflog süresi doldurulup `gc --prune=now` çalıştırıldı, `main` zorla yazıldı
+(`c590b12` → `5c7a716`). Yerel klonda doğrulama: **hiçbir commit'te `.env` yok.**
+
+❌ **Ama GitHub sahipsiz nesneyi hâlâ sunuyor.** Zorla yazmadan SONRA ölçüldü:
+
+| Kontrol | Sonuç |
+|---|---|
+| `gh api .../commits/e0f59c5` | commit **hâlâ var** |
+| `raw.githubusercontent.com/.../e0f59c5/.env` | **HTTP 200** |
+
+GitHub, erişilemez hâle gelen nesneleri kendi çöp toplayıcısı çalışana kadar saklar.
+Kesin kaldırmanın **iki** yolu var:
+1. **Depoyu sil ve yeniden oluştur** (garanti, geri alınamaz)
+2. **GitHub Support'a GC talebi aç** (bekleme süresi belirsiz)
+
+Her iki durumda da **anahtar döndürme zorunludur** — dosya beş aydır açıktı.
+
+## 22.09 · Kötüye kullanım taraması — iz bulunamadı
+
+| Gösterge | Sonuç |
+|---|---|
+| Yönetici/moderatör rolleri | **2** adet `Admin_SuperAdmin`, ikisi de **24.05.2026** aynı saniyede = tek bilinçli işlem. Sızıntı penceresinde başka yetki verilmemiş |
+| `user_feature_overrides` | 59 kayıt, tamamı Mayıs–Haziran 2026; yakın dönemde **0** |
+| Haziran hesap sıçraması (135) | 08–09 Haziran'da 93+22 = belgelenmiş **üye içe aktarma** ve AFS rebuild işiyle örtüşüyor |
+| Son 30 gün hesap açılışı | günde 1–2, olağan |
+| `corebot` çalışma ağacı | başka sır **yok** (JWT/`sbp_`/`EAA`/DSN deseni taraması temiz) |
+
+⚠️ **Bu taramanın sınırı var ve abartılmamalı.** Service role anahtarıyla yapılan
+erişim **normal görünür** ve bu tablolarda ayırt edici iz bırakmaz. Özellikle
+**okuma yoluyla veri sızdırma** (üye verisi toplu çekilmesi) bu göstergelerle
+**tespit edilemez**. Postgres/PostgREST logları bu katmanda kısa süre saklanıyor;
+sızıntının başladığı 27 Nisan'a bakmak mümkün değil. "İz bulunamadı" = "kötüye
+kullanım olmadı" DEĞİLDİR.
 
 ## Yapılacaklar — sırayla
 
