@@ -1,6 +1,6 @@
 # Faz 10 — Relocation karar paketi (B27–B31)
 
-**Tarih:** 22 Eylül 2026 · **Durum:** B27 · B28 · B29 uygulandı; B30 · B31 karar bekliyor
+**Tarih:** 22 Eylül 2026 · **Durum:** B27 · B28 · B29 uygulandı · B31 kapandı; **yalnız B30 açık**
 **Kaynak:** `docs/kalanlar/2026-09-21-KALANLAR.md` Faz 10 ·
 `docs/kalanlar/2026-09-21-relocation-kalan-kararlar.md`
 
@@ -150,8 +150,30 @@ kaydın hiçbiri döviz kuru sağlayıcısı değil.
 | **B. Kur sağlayıcısı ekle, sonra göster** | Yeni bir dış bağımlılık + `source_registry` kaydı + tazeleme SLA'i. Tek karşılık gerçekten faydalı. |
 | **C. Sabit kur gir** | **Yapılmaz.** Yol haritasının kendi kuralı: "kur kaynağı yoksa girilmez." |
 
-**Öneri: A**, B ancak B28'in kaynak/tazeleme çerçevesi kurulduktan sonra anlamlı —
-ikisi aynı altyapıyı paylaşır.
+**22.09 · Kullanıcı kararı: seçenek B — kur sağlayıcısı eklenecek.** Sağlayıcı
+kapsamı ölçüldü, çünkü ihtiyaç duyulan 7 para birimini her kaynak taşımıyor:
+
+| Kaynak | Kapsam | 8 hedef para birimi | Yetke |
+|---|---|---|---|
+| `frankfurter.app` (ECB referans kurları) | 29 | ⚠️ **QAR ve AED YOK** | Merkez bankası (AMB) |
+| `open.er-api.com` (ücretsiz, anahtarsız) | 166 | ✅ **8/8 tam** | Toplayıcı (merkez bankası değil) |
+
+⚠️ **ECB, USD'ye sabitlenmiş Körfez para birimlerini (QAR, AED) yayımlamaz.** Yani
+yetkesi en yüksek kaynak, 12 ülkenin **2'sini** (Katar, BAE) çeviremez. Seçim, yetke
+ile kapsam arasındadır:
+
+- **B1 — `open.er-api.com`:** 12 ülkenin hepsi çevrilir, tek kaynak, anahtar gerekmez.
+  Bedeli: kaynak bir merkez bankası değil, toplayıcı. Künyede böyle yazılmalıdır.
+- **B2 — ECB + eksikler boş:** Katar ve BAE'de karşılık **gösterilmez** (kart "bu ülke
+  için kur yok" der). Dürüst ve yetkeli ama eksik.
+- **B3 — ECB + QAR/AED için sabit pariteyi elle gir:** ⚠️ **Yapılmamalı.** İkisi de
+  USD'ye sabitlidir ama pariteyi bizim koda yazmamız, yol haritasının "kur kaynağı
+  yoksa girilmez" kuralını çiğner ve B28'de düzelttiğimiz hatanın aynısıdır.
+
+**Uygulama, seçim yapılınca:** `relocation_source_registry`'ye sağlayıcı kaydı
+(`category='fx'`, `refresh_sla_hours`) + kurları tutan tablo + tazeleme komutu + panelde
+"≈ X (kaynak · tarih)". Kur **anlık çekilmez**, kaydedilir — sayfa her açılışta dış
+servise gitmez ve kurun hangi ana ait olduğu görünür.
 
 ---
 
@@ -166,8 +188,11 @@ Beş adım (yol haritasının şartı: birlikte yapılır) → **bugün başlat�
 ⚠️ Kayıt sıfırken sitemap'e eklenmez — `/cadde` ile bir kez yaşandı ("Crawled –
 currently not indexed").
 
-**Öneri: karar "bekliyor" olarak kapatılır**, tetikleyici yazılır: ilk gerçek
-(placeholder olmayan) `Business_*` kaydı geldiğinde beş adım birlikte açılır.
+> ✅ **22.09 · Kullanıcı kararı: kayıtlar sonra girilecek, sayfa şimdilik demo kalır.**
+> `/businesses` `DEMO_ROUTES`'ta kalır, sitemap'e eklenmez.
+> **Tetikleyici:** ilk placeholder olmayan `Business_*` kaydı geldiğinde beş adım
+> birlikte açılır — demo satırını sil · sitemap'e ekle · demo kayıtları kaldır ·
+> rozeti kaldır · canlıda doğrula.
 
 ---
 
@@ -178,5 +203,5 @@ currently not indexed").
 | B27 | ✅ **A uygulandı** — üç sekme kaldırıldı, `/relocation` demodan çıktı | **Bitti** |
 | B28 | ✅ **D uygulandı** — nitelik panelde ve botta yazıyor (A uygulanamaz) | **Bitti** (E açık) |
 | B29 | ✅ **A uygulandı** — okuma tarafı şehir farkındası; veri girilebilir | **Bitti** |
-| B30 | **A** — kur kaynağı yok, tek karşılık gösterilmez | Evet (değişiklik yok) |
-| B31 | Tetikleyiciyle beklet — gerçek kayıt yok | Hayır |
+| B30 | **B** seçildi — sağlayıcı eklenecek; B1/B2 seçimi bekliyor | Sağlayıcı seçilince |
+| B31 | ✅ **Karar verildi** — demo kalır, tetikleyici yazıldı | **Bitti** |
