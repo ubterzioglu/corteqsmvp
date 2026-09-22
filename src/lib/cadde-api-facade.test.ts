@@ -15,8 +15,10 @@ import {
   createCaddeCafe,
   getCaddeCafe,
   joinCaddeCafe,
+  listCaddeCafeMembers,
   listCaddeCafes,
   listMyCaddeCafes,
+  mapCaddeCafeJoinRequestRow,
 } from "@/lib/cadde-cafe-api";
 import { listCaddeCities, listCaddeCountries, listCaddeFeed } from "@/lib/cadde-feed-location-api";
 import { getCaddeSponsoredPlacement, listCaddeBillboardCards } from "@/lib/cadde-promotion-api";
@@ -73,5 +75,10 @@ describe("Cadde API facade", () => {
     expect(caddeApi.listCaddeCafes).toBe(listCaddeCafes);
     expect(caddeApi.getCaddeCafe).toBe(getCaddeCafe);
     expect(caddeApi.listMyCaddeCafes).toBe(listMyCaddeCafes);
+  });
+
+  it("routes cafe membership reads through the cafe module without changing the facade", () => {
+    expect(caddeApi.listCaddeCafeMembers).toBe(listCaddeCafeMembers);
+    expect(caddeApi.mapCaddeCafeJoinRequestRow).toBe(mapCaddeCafeJoinRequestRow);
   });
 });
