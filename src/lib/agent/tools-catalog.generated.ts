@@ -3525,11 +3525,6 @@ export const toolCatalog = {
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-demo-content.ts",
-      "kind": "ts",
-      "module_family": "relocation"
-    },
-    {
       "path": "src/lib/relocation-i18n.ts",
       "kind": "ts",
       "module_family": "relocation"

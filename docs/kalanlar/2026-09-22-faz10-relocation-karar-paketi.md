@@ -1,6 +1,6 @@
 # Faz 10 — Relocation karar paketi (B27–B31)
 
-**Tarih:** 22 Eylül 2026 · **Durum:** B29 uygulandı (kod); B27 · B28 · B30 · B31 karar bekliyor
+**Tarih:** 22 Eylül 2026 · **Durum:** B27 + B29 uygulandı; B28 · B30 · B31 karar bekliyor
 **Kaynak:** `docs/kalanlar/2026-09-21-KALANLAR.md` Faz 10 ·
 `docs/kalanlar/2026-09-21-relocation-kalan-kararlar.md`
 
@@ -28,6 +28,11 @@ Beş kararın hepsi "veri var mı" sorusuna dayanıyor, o yüzden önce tablo:
 ---
 
 ## B27 — Üç demo sekmesini (İş · Okullar · Hoşgeldin) ne besleyecek?
+
+> ✅ **22.09 · Seçenek A UYGULANDI.** Üç sekme kaldırıldı; `RelocationDemoPanel`,
+> `relocation-demo-content.ts` ve iki dildeki `tabs.businesses/schools/welcome` +
+> `demo` sözlük girdileri silindi; `/relocation` `DEMO_ROUTES`'tan çıkarıldı.
+> Sayfa artık demo bandı taşımıyor. CLAUDE.md'nin DEMO listesi de güncellendi.
 
 **Ölçüm:** `relocation_jobs` **0**, `relocation_services` **0**. Okullar ve Hoşgeldin
 Paketi için ayrılmış bir tablo **hiç yok**. Yani üç sekmenin üçü de bugün örnek
@@ -148,7 +153,7 @@ currently not indexed").
 
 | # | Öneri | Bugün uygulanabilir mi |
 |---|---|---|
-| B27 | **A** — üç boş sekmeyi kaldır, `/relocation`'ı demodan çıkar | Evet |
+| B27 | ✅ **A uygulandı** — üç sekme kaldırıldı, `/relocation` demodan çıktı | **Bitti** |
 | B28 | **A** — önce `source_id` doldur, tazeleme sahibi atanmadan gösterme | Kısmen (sahip kararı ister) |
 | B29 | ✅ **A uygulandı** — okuma tarafı şehir farkındası; veri girilebilir | **Bitti** |
 | B30 | **A** — kur kaynağı yok, tek karşılık gösterilmez | Evet (değişiklik yok) |

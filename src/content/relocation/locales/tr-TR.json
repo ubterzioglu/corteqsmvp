@@ -19,17 +19,9 @@
     "checklist": "Bürokrasi",
     "costs": "Yaşam Masrafları",
     "documents": "Gerekli Belgeler",
-    "businesses": "İş & İşletmeler",
-    "schools": "Okullar",
-    "welcome": "Hoşgeldin Paketi",
     "assistant": "Asistan",
     "emergency": "Acil & Günlük",
     "saved": "Dökümanlarım"
-  },
-  "demo": {
-    "businesses": "Bu sekmedeki kayıtlar ÖRNEKTİR — kategori kartlarıdır, gerçek işletme kaydı değildir. Gerçek işletmeler başvurular değerlendirildikçe yayına alınır.",
-    "schools": "Bu sekmedeki kayıtlar ÖRNEKTİR — eğitim kademelerinin iskeletini gösterir, belirli bir okulu önermez. Kayıt kuralları ülkeye göre değişir, resmî kaynaktan teyit edin.",
-    "welcome": "Bu sekmedeki adımlar ÖRNEKTİR ve genel sırayı anlatır. Süreler ve zorunluluklar ülkeye göre değişir, resmî kaynaktan teyit edin."
   },
   "cities": {
     "empty": "Hedef ülkeleriniz için lokasyon önerisi bulunamadı.",

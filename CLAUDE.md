@@ -425,15 +425,19 @@ tek bir listeden işaretlenir: **`src/lib/demo-pages.ts` → `DEMO_ROUTES`**.
 - Sözleşme testi: `src/lib/demo-pages.test.ts` — gevşetme.
 - Tam gerekçe ve akış: `docs/guides/demo-icerik-deseni.md`.
 
-Bugünkü liste: `/campaign/vlogger`, `/campaign/blogger`, `/businesses`, `/relocation`.
+Bugünkü liste: `/campaign/vlogger`, `/campaign/blogger`, `/businesses`.
 
-⚠️ `/relocation` **kısmi demodur** ve deseni bir adım ileri taşır: sayfanın şehir,
-servis, bürokrasi, maliyet ve belge sekmeleri GERÇEK veri okur; yalnız İş & İşletmeler,
-Okullar ve Hoşgeldin Paketi sekmeleri örnek içerik gösterir. O üç sekme
-`isDemoRoute("/relocation")` ile **gatelidir** (`RelocationHomePage.tsx`), yani
-`DEMO_ROUTES` satırı silindiğinde sekmeler de kendiliğinden kaybolur — demo içerik
-canlıda unutulamaz. Yeni bir kısmi demo sayfası yaparken bu deseni kopyala; örnek
-içeriği rotadan bağımsız bir bayrakla gizleme.
+⚠️ **`/relocation` 2026-09-22'de listeden ÇIKARILDI** (B27 kararı): örnek içerik taşıyan
+üç sekme (İş & İşletmeler · Okullar · Hoşgeldin Paketi) **kaldırıldı**, çünkü onları
+besleyecek veri yoktu (`relocation_jobs` ve `relocation_services` canlıda **0** satır;
+Okullar/Hoşgeldin için tablo hiç yoktu). Kalan beş sekme — şehir, servis, bürokrasi,
+maliyet, belge — GERÇEK veri okur, bu yüzden sayfa artık demo değildir.
+`src/lib/relocation-demo-content.ts` ve `RelocationDemoPanel` **silindi**.
+
+Buradaki kısmi-demo deseni yine de doğrudur ve yeni bir sayfada gerekirse kopyalanmalıdır:
+örnek içeriği rotadan bağımsız bir bayrakla değil, `isDemoRoute(...)` ile gatele — böylece
+`DEMO_ROUTES` satırı silindiğinde örnek içerik de kendiliğinden kaybolur ve canlıda
+unutulamaz.
 
 ## AI bilgi tabanı ve site asistanı (2026-09-21)
 

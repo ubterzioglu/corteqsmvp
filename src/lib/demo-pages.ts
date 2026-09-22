@@ -50,19 +50,15 @@ export const DEMO_ROUTES: DemoRoute[] = [
     label: "İşletmeler",
     note: "Listedeki işletmeler örnektir. Gerçek işletme kayıtları başvurular değerlendirildikçe yayına alınır.",
   },
-  {
-    // Şehir/servis/bürokrasi/maliyet/belge sekmeleri GERÇEK veri okur; İş &
-    // İşletmeler, Okullar ve Hoşgeldin Paketi sekmeleri ise besleyecek veri
-    // kaynağı kararı verilene kadar örnek kategori kartları gösterir
-    // (`src/lib/relocation-demo-content.ts`).
-    // ⚠️ Bu satır SİLİNDİĞİNDE o üç sekme kendiliğinden ÇİZİLMEZ —
-    // `RelocationHomePage` onları `isDemoRoute` ile gateler. Yani araç son
-    // haline geldiğinde tek iş bu satırı silmektir, sekme temizliği gerekmez.
-    path: "/relocation",
-    label: "Taşınma Planlayıcı",
-    note: "İş & İşletmeler, Okullar ve Hoşgeldin Paketi sekmeleri örnek kategori kartlarıyla gösteriliyor; bu üç sekmede henüz gerçek kayıt yok.",
-  },
 ];
+
+// ⚠️ `/relocation` 22.09'da bu listeden ÇIKARILDI (B27, karar: seçenek A).
+// Sayfanın örnek içerik taşıyan üç sekmesi (İş & İşletmeler · Okullar · Hoşgeldin
+// Paketi) besleyecek veri kaynağı olmadığı için kaldırıldı — `relocation_jobs` ve
+// `relocation_services` canlıda 0 satır, Okullar/Hoşgeldin için tablo hiç yoktu.
+// Geriye kalan beş sekme (şehir · servis · bürokrasi · maliyet · belge) GERÇEK veri
+// okur, bu yüzden sayfa artık demo değildir. Üç sekme geri gelirse bu satır da geri
+// gelmelidir — örnek içerik demo işareti olmadan canlıya çıkmaz.
 
 /** Rozetin ve bandın paylaştığı metinler — çeviri/ton tek yerden değişir. */
 export const DEMO_COPY = {
