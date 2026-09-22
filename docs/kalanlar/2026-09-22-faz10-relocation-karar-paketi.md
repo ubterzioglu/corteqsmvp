@@ -29,6 +29,12 @@ Beş kararın hepsi "veri var mı" sorusuna dayanıyor, o yüzden önce tablo:
 
 ## B27 — Üç demo sekmesini (İş · Okullar · Hoşgeldin) ne besleyecek?
 
+> ⚠️ **22.09 ek ölçüm — B27'deki "kalan beş sekme gerçek veri okur" ifadesi EKSİKTİ.**
+> Sekmeler gerçek tabloları okuyor ama üçü neredeyse boş: `services` **0** satır
+> (12/12 ülkede boş), `bureaucratic_steps` **2** (yalnız DE+NL), `emergency_contacts`
+> **4**. Servis sekmesinin boş durumu da yoktu — eklendi. Ayrıntı:
+> [içerik boşlukları](2026-09-22-relocation-icerik-bosluklari.md).
+
 > ✅ **22.09 · Seçenek A UYGULANDI.** Üç sekme kaldırıldı; `RelocationDemoPanel`,
 > `relocation-demo-content.ts` ve iki dildeki `tabs.businesses/schools/welcome` +
 > `demo` sözlük girdileri silindi; `/relocation` `DEMO_ROUTES`'tan çıkarıldı.

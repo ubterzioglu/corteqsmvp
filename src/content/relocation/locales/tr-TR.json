@@ -33,7 +33,8 @@
     "airline": "Uçuş",
     "gsm_operator": "GSM",
     "doctor": "Doktor",
-    "community_hub": "Topluluk"
+    "community_hub": "Topluluk",
+    "empty": "Bu kategori için henüz doğrulanmış hizmet sağlayıcı girilmedi. Sağlayıcı eklendiğinde bu liste kendiliğinden dolar."
   },
   "checklist": {
     "empty": "Hedef ülkeleriniz için bürokrasi adımı bulunamadı.",

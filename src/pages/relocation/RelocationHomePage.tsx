@@ -275,9 +275,21 @@ export default function RelocationHomePage() {
               ))}
             </div>
             <div className="space-y-3">
-              {(servicesQuery.data ?? []).map((service) => (
-                <ServiceRecommendationCard key={service.id} service={service} />
-              ))}
+              {/* Boş durum ZORUNLU: `relocation_services` canlıda 0 satır (ölçüldü
+                  22.09, 12 ülkenin 12'sinde de boş). Boş durum olmadan kullanıcı
+                  kategoriye tıklayıp bomboş bir alan görüyor ve sayfayı bozuk
+                  sanıyordu — CLAUDE.md'deki "İş İlanları çipi" dersinin aynısı. */}
+              {servicesQuery.data && servicesQuery.data.length > 0 ? (
+                servicesQuery.data.map((service) => (
+                  <ServiceRecommendationCard key={service.id} service={service} />
+                ))
+              ) : servicesQuery.isLoading ? (
+                <p className="text-sm text-muted-foreground">Hizmet sağlayıcılar yükleniyor…</p>
+              ) : (
+                <p className="rounded-lg bg-muted/40 px-4 py-6 text-center text-sm text-muted-foreground">
+                  {dict.services.empty}
+                </p>
+              )}
             </div>
           </TabsContent>
 

@@ -33,7 +33,8 @@
     "airline": "Flights",
     "gsm_operator": "Mobile",
     "doctor": "Doctor",
-    "community_hub": "Community"
+    "community_hub": "Community",
+    "empty": "No verified providers have been added for this category yet. The list fills in automatically once providers are added."
   },
   "checklist": {
     "empty": "No bureaucratic steps found for your target countries.",
