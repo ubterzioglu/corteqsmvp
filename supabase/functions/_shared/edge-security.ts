@@ -22,3 +22,13 @@ export function buildAssistantCorsHeaders(req: Request): Record<string, string> 
   if (isAssistantOriginAllowed(origin)) headers["Access-Control-Allow-Origin"] = origin;
   return headers;
 }
+
+/** Reads JSON only after enforcing the byte ceiling on both declared and actual size. */
+export async function readJsonWithLimit(req: Request, maxBytes: number): Promise<unknown> {
+  const declared = Number.parseInt(req.headers.get("content-length") ?? "", 10);
+  if (Number.isFinite(declared) && declared > maxBytes) throw new Error("PAYLOAD_TOO_LARGE");
+
+  const text = await req.text();
+  if (new TextEncoder().encode(text).length > maxBytes) throw new Error("PAYLOAD_TOO_LARGE");
+  return JSON.parse(text);
+}

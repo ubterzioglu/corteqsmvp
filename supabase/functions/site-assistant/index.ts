@@ -31,7 +31,7 @@ import {
   resolveAudiences,
   type KnowledgeHit,
 } from "../_shared/ai-assistant-context.ts";
-import { buildAssistantCorsHeaders, isAssistantOriginAllowed } from "../_shared/edge-security.ts";
+import { buildAssistantCorsHeaders, isAssistantOriginAllowed, readJsonWithLimit } from "../_shared/edge-security.ts";
 
 const MAX_BODY_BYTES = 32_000;
 const RATE_LIMIT_MAX = 30;
@@ -80,21 +80,6 @@ function getClientKey(req: Request): string {
   const forwardedFor = req.headers.get("x-forwarded-for");
   if (forwardedFor) return forwardedFor.split(",")[0]?.trim() || "unknown";
   return req.headers.get("cf-connecting-ip") ?? req.headers.get("x-real-ip") ?? "unknown";
-}
-
-async function readJsonWithLimit(req: Request, maxBytes: number) {
-  // Content-Length ile ÖN eleme: gövdeyi belleğe almadan reddet. Başlık sahte
-  // olabileceği için okuma sonrası kontrol de korunur.
-  const declared = Number.parseInt(req.headers.get("content-length") ?? "", 10);
-  if (Number.isFinite(declared) && declared > maxBytes) {
-    throw new Error("PAYLOAD_TOO_LARGE");
-  }
-
-  const text = await req.text();
-  if (new TextEncoder().encode(text).length > maxBytes) {
-    throw new Error("PAYLOAD_TOO_LARGE");
-  }
-  return JSON.parse(text);
 }
 
 /**
