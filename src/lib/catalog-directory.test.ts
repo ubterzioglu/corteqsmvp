@@ -14,6 +14,7 @@ import { readFileSync } from "node:fs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const rpcMock = vi.fn();
+const invokeMock = vi.fn();
 const DIRECTORY_SEARCH_MIGRATION_CANDIDATES = [
   "supabase/migrations/applied/20260921090000_directory_search_anon_normalized.sql",
   "supabase/migrations/20260921090000_directory_search_anon_normalized.sql",
@@ -52,6 +53,7 @@ describe("migration aday yolu çözümü", () => {
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     rpc: (...args: unknown[]) => rpcMock(...args),
+    functions: { invoke: (...args: unknown[]) => invokeMock(...args) },
   },
   isSupabaseConfigured: true,
 }));
@@ -105,6 +107,7 @@ const defaultFilters = {
 describe("catalog-directory", () => {
   beforeEach(() => {
     rpcMock.mockReset();
+    invokeMock.mockReset();
   });
 
   it("maps known country labels and codes to catalog country filters", () => {
@@ -163,6 +166,52 @@ describe("catalog-directory", () => {
     const { rows } = await listUnifiedDirectoryRows(defaultFilters);
 
     expect(rows.map((row) => row.id)).toEqual(["uye"]);
+  });
+
+  describe("B21.3 semantik arama sevki", () => {
+    it("dolu arama metnini sunucu tarafında embedding üreten Edge Function'a yollar", async () => {
+      invokeMock.mockResolvedValue({
+        data: {
+          rows: [rpcRow({ item_id: "doctor", role_key: "Healthcare_Doctor", role_label: "Doktor" })],
+          semantic: true,
+        },
+        error: null,
+      });
+
+      const result = await listUnifiedDirectoryRows({
+        ...defaultFilters,
+        searchText: "Toronto aile hekimi",
+      });
+
+      expect(invokeMock).toHaveBeenCalledWith("directory-search", {
+        body: expect.objectContaining({
+          p_search_text: "Toronto aile hekimi",
+          p_limit: DIRECTORY_PAGE_SIZE,
+          p_offset: 0,
+        }),
+      });
+      expect(rpcMock).not.toHaveBeenCalled();
+      expect(result.rows.map((row) => row.id)).toEqual(["doctor"]);
+    });
+
+    it("Edge Function kullanılamazsa aynı filtrelerle lexical RPC'ye düşer", async () => {
+      invokeMock.mockResolvedValue({ data: null, error: { message: "edge unavailable" } });
+      rpcMock.mockResolvedValue({
+        data: [rpcRow({ item_id: "fallback", role_key: "Healthcare_Doctor", role_label: "Doktor" })],
+        error: null,
+      });
+
+      const result = await listUnifiedDirectoryRows({
+        ...defaultFilters,
+        searchText: "Toronto aile hekimi",
+      });
+
+      expect(rpcMock).toHaveBeenCalledWith(
+        "search_directory_catalog",
+        expect.objectContaining({ p_search_text: "Toronto aile hekimi" }),
+      );
+      expect(result.rows.map((row) => row.id)).toEqual(["fallback"]);
+    });
   });
 
   describe("sayfalama (Batch 0)", () => {

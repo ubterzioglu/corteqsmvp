@@ -2,8 +2,8 @@
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 53,
-    "edge_functions": 11,
+    "total": 54,
+    "edge_functions": 12,
     "workers": 2,
     "ui_modules": 39
   },
@@ -20,10 +20,12 @@
         "ai:ingest",
         "build",
         "build:dev",
+        "catalog:embed",
         "check:bundle",
         "check:dead",
         "check:drift",
         "check:drift:warn",
+        "check:functions",
         "check:migrations",
         "check:migrations:warn",
         "dev",
@@ -63,6 +65,55 @@
         "warm:prerender"
       ],
       "evidence_path": "package.json"
+    },
+    {
+      "tool_key": "edge.directory_search",
+      "tool_name": "directory-search",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/directory-search/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "zod",
+        "fields": [
+          "p_search_text",
+          "p_role_key",
+          "p_country_code",
+          "p_city",
+          "p_featured_only",
+          "p_limit",
+          "p_offset"
+        ]
+      },
+      "tables_read_write": [],
+      "rpcs": [
+        "search_directory_catalog"
+      ],
+      "limits": {
+        "MAX_BODY_BYTES": 4096,
+        "RATE_LIMIT_MAX": 60,
+        "RATE_LIMIT_WINDOW_SECONDS": 600
+      },
+      "http_statuses": [
+        200,
+        400,
+        403,
+        405,
+        413,
+        429,
+        500
+      ],
+      "http_method": "POST",
+      "dependencies": [
+        "@supabase/supabase-js@2.108.2",
+        "zod@3.25.76",
+        "gemini"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.108.2",
+        "zod": "3.25.76"
+      },
+      "evidence_path": "supabase/functions/directory-search/index.ts"
     },
     {
       "tool_key": "edge.find_matches",
@@ -3901,6 +3952,11 @@
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/_shared/directory-search-contract.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/_shared/edge-security.test.ts",
       "kind": "ts",
       "module_family": "edge"
@@ -4012,6 +4068,11 @@
     },
     {
       "path": "supabase/functions/_shared/whatsapp-webhook.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/directory-search/index.ts",
       "kind": "ts",
       "module_family": "edge"
     },

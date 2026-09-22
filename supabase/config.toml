@@ -12,6 +12,11 @@ verify_jwt = true
 [functions.submit-survey-response]
 verify_jwt = false
 
+# Public directory search is anonymous. The function itself requires an allowed
+# browser Origin, enforces a shared IP rate limit, and validates a bounded body.
+[functions.directory-search]
+verify_jwt = false
+
 # Gateway JWT doğrulaması KAPALI, çünkü fonksiyon DB'den pg_net ile de çağrılır ve
 # net.http_post bir kullanıcı JWT'si taşıyamaz. Yetki fonksiyonun kendi içinde yapılır:
 # ya x-dispatch-secret (NOTIFY_DISPATCH_SECRET ile sabit zamanlı karşılaştırma)

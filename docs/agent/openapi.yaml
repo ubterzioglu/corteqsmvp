@@ -11,6 +11,48 @@ servers:
   - url: https://injprdrsklkxgnaiixzh.supabase.co
     description: Supabase Edge Functions
 paths:
+  /functions/v1/directory-search:
+    post:
+      summary: directory-search aracını çalıştır
+      operationId: execute_directory_search
+      x-tool-key: edge.directory_search
+      x-status: active
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                p_search_text:
+                  type: string
+                p_role_key:
+                  type: string
+                p_country_code:
+                  type: string
+                p_city:
+                  type: string
+                p_featured_only:
+                  type: string
+                p_limit:
+                  type: string
+                p_offset:
+                  type: string
+      responses:
+        "200":
+          description: Başarılı
+        "400":
+          description: Geçersiz istek (payload doğrulama hatası)
+        "403":
+          description: Origin'e izin verilmedi
+        "405":
+          description: Yöntem desteklenmiyor
+        "413":
+          description: Payload çok büyük
+        "429":
+          description: Çok fazla istek (rate limit)
+        "500":
+          description: Sunucu hatası
   /functions/v1/find-matches:
     post:
       summary: find-matches aracını çalıştır

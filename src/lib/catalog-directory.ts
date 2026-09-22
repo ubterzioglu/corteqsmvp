@@ -28,19 +28,33 @@ type DirectorySearchRpcRow = {
   total_count: number;
 };
 
+type DirectoryRpcArgs = {
+  p_search_text: string | null;
+  p_role_key: string | null;
+  p_country_code: string | null;
+  p_city: string | null;
+  p_featured_only: boolean;
+  p_limit: number;
+  p_offset: number;
+};
+
 type DirectoryRpcClient = {
   rpc: (
     functionName: "search_directory_catalog",
-    args: {
-      p_search_text: string | null;
-      p_role_key: string | null;
-      p_country_code: string | null;
-      p_city: string | null;
-      p_featured_only: boolean;
-      p_limit: number;
-      p_offset: number;
-    },
+    args: DirectoryRpcArgs,
   ) => Promise<{ data: DirectorySearchRpcRow[] | null; error: SupabaseError | null }>;
+};
+
+type DirectoryFunctionsClient = {
+  functions: {
+    invoke: (
+      functionName: "directory-search",
+      options: { body: DirectoryRpcArgs },
+    ) => Promise<{
+      data: { rows?: DirectorySearchRpcRow[]; semantic?: boolean } | null;
+      error: SupabaseError | null;
+    }>;
+  };
 };
 
 /** Bir sayfada çekilen kayıt sayısı. */
@@ -55,6 +69,7 @@ export const DIRECTORY_PAGE_SIZE = 24;
 export const DIRECTORY_MAX_PAGE_SIZE = 100;
 
 const directoryRpcClient = supabase as unknown as DirectoryRpcClient;
+const directoryFunctionsClient = supabase as unknown as DirectoryFunctionsClient;
 
 type RolesQueryClient = {
   from: (
@@ -278,7 +293,7 @@ export async function listUnifiedDirectoryRows(
   );
   const offset = Math.max(filters.offset ?? 0, 0);
 
-  const { data, error } = await directoryRpcClient.rpc("search_directory_catalog", {
+  const rpcArgs: DirectoryRpcArgs = {
     p_search_text: filters.searchText.trim() || null,
     p_role_key: filters.roleFilter === "all" ? null : filters.roleFilter,
     p_country_code: toCountryCode(filters.countryFilter),
@@ -286,11 +301,29 @@ export async function listUnifiedDirectoryRows(
     p_featured_only: filters.featuredOnly,
     p_limit: limit,
     p_offset: offset,
-  });
+  };
 
-  if (error) throw error;
+  let rpcRows: DirectorySearchRpcRow[] | null = null;
 
-  const rpcRows = (data ?? []) as DirectorySearchRpcRow[];
+  // Sorgu embedding'i sunucuda üretilir; Gemini anahtarı tarayıcıya ASLA girmez.
+  // Sağlayıcı/Edge Function kullanılamazsa lexical RPC aynı filtrelerle çalışmayı
+  // sürdürür. Boş sorguda gereksiz model çağrısı yapılmaz.
+  if (rpcArgs.p_search_text) {
+    try {
+      const { data, error } = await directoryFunctionsClient.functions.invoke("directory-search", {
+        body: rpcArgs,
+      });
+      if (!error && Array.isArray(data?.rows)) rpcRows = data.rows;
+    } catch {
+      // Aşağıdaki lexical fallback kullanıcıya arama sonucu vermeye devam eder.
+    }
+  }
+
+  if (rpcRows === null) {
+    const { data, error } = await directoryRpcClient.rpc("search_directory_catalog", rpcArgs);
+    if (error) throw error;
+    rpcRows = (data ?? []) as DirectorySearchRpcRow[];
+  }
 
   return {
     // Yönetici elemesi artık SQL'de de var (B20, iki dalda). Buradaki süzgeç
