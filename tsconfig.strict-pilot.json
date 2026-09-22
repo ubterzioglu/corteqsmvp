@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "strict": true
+  },
+  "include": [
+    "src/vite-env.d.ts",
+    "src/lib/site-assistant-api.ts"
+  ]
+}

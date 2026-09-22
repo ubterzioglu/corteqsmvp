@@ -32,6 +32,7 @@
     "check:migrations": "node scripts/check-migrations.mjs",
     "check:migrations:warn": "node scripts/check-migrations.mjs --warn",
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
+    "typecheck:strict-pilot": "tsc -p tsconfig.strict-pilot.json --noEmit",
     "typecheck:node": "tsc -p tsconfig.node.json --noEmit",
     "typecheck:workers": "npm --prefix workers/relocation-ingestion run typecheck && npm --prefix workers/service-finder run typecheck",
     "verify:quality": "npm run typecheck && npm run typecheck:node && npm run typecheck:workers",
