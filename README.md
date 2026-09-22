@@ -128,8 +128,8 @@ The runtime stage wires up three files:
 
 | File | Role |
 |------|------|
-| `nginx.conf.template` | Copied to `/etc/nginx/templates/default.conf.template`. Single source of truth for routing, `301` legacy redirects, security headers + CSP, `/api/chat` proxying and rate limiting, and prerender routing. |
-| `docker-entrypoint-env.sh` | Copied to `/docker-entrypoint.d/40-env-config.sh`. Substitutes `__RAG_API_SECRET__`, `__PRERENDER_URL__`, `__PRERENDER_CANONICAL_HOST__` into the rendered config and writes `/usr/share/nginx/html/env-config.js` at container start. |
+| `nginx.conf.template` | Copied to `/etc/nginx/templates/default.conf.template`. Single source of truth for routing, `301` legacy redirects, security headers + CSP, and prerender routing. |
+| `docker-entrypoint-env.sh` | Copied to `/docker-entrypoint.d/40-env-config.sh`. Substitutes prerender settings into the rendered config and writes `/usr/share/nginx/html/env-config.js` at container start. |
 | `dist/` | The built Vite app, copied from the build stage. |
 
 Note that the nginx image also runs `envsubst` over the template
@@ -141,7 +141,6 @@ nginx variables whose names could collide with environment variables.
 
 - serving `dist/` with SPA fallback
 - runtime `/env-config.js` generation
-- `/api/chat` proxying for `RAG_API_SECRET`
 - `nixpacks.toml` so Coolify builds with `npm run build` and starts with `npm run start`
 - strict asset handling so missing chunks return `404` instead of `index.html`
 
@@ -158,7 +157,6 @@ nginx):
 VITE_SUPABASE_URL=https://injprdrsklkxgnaiixzh.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=your_anon_key
 VITE_SUPABASE_PROJECT_ID=injprdrsklkxgnaiixzh
-RAG_API_SECRET=your_rag_api_secret
 PRERENDER_URL=https://prerender.corteqs.net   # optional; empty disables prerendering
 PRERENDER_CANONICAL_HOST=corteqs.net          # optional; defaults to corteqs.net
 ```
@@ -166,9 +164,7 @@ PRERENDER_CANONICAL_HOST=corteqs.net          # optional; defaults to corteqs.ne
 The container writes `/env-config.js` on startup so frontend runtime config works without
 committing `.env`. Only `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, and
 `VITE_SUPABASE_PROJECT_ID` are emitted into `/env-config.js` — set
-`VITE_SUPABASE_ANON_KEY` at build time if a module depends on it. `RAG_API_SECRET` is used
-only in the server-side nginx proxy for `/api/chat` and must not be exposed with a `VITE_`
-prefix.
+`VITE_SUPABASE_ANON_KEY` at build time if a module depends on it.
 
 Deploy `dist/` atomically: publish the new `index.html` together with the hashed `/assets/*` files from the same build. Do not switch the app shell before its referenced assets are available.
 

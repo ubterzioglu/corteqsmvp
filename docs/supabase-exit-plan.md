@@ -32,7 +32,8 @@ işi). Hiçbirine dokunulmadı.
 - **Veri katmanı:** `@supabase/supabase-js` **2.108.2** — tek istemci
   (`src/integrations/supabase/client.ts`). Kısmen `@tanstack/react-query`.
 - **Üretim çalışma zamanı:** **nginx 1.27-alpine** (`Dockerfile` → `nginx.conf.template`).
-  Statik dosya servisi + güvenlik başlıkları + CSP + 301'ler + `/api/chat` proxy.
+  Statik dosya servisi + güvenlik başlıkları + CSP + 301'ler. Eski `/api/chat` proxy
+  21 Eylül 2026'da kaldırıldı; tarihsel ölçümlerdeki atıflar aktif mimari değildir.
 - **`server.mjs`:** üretimde ÇALIŞMAZ. Yalnız `npm run start` ve nixpacks yolu.
 - **Paket yöneticisi:** npm (`package-lock.json`), Node >= 22.
 - **Ayrı Coolify uygulamaları:** `workers/service-finder`, `workers/relocation-ingestion`
@@ -71,7 +72,6 @@ saniyeler sürer.** Bu, tüm geçiş risk hesabını değiştiren en önemli tek
 | **Supabase Vault** | canlı `vault.secrets` (ölçüldü 2026-09-20) | **2 sır**: `notification_dispatch_secret` (bildirim maili) + `radar_news_cron_secret` (radar taraması). İkincisi repo taramasında GÖRÜNMÜYORDU, cron dump'ında çıktı | Hedefte ikisini de YENİDEN OLUŞTUR (kök anahtar taşınamaz) | **Yüksek** | Bildirim maili + `radar_news_scan_runs` satırı |
 | **Eklentiler** | migration'lar + baseline | `pgcrypto`, **`postgis`** (2 tabloda `geography(Point,4326)` — CANLI), `pg_trgm`, `unaccent`, `pg_cron`, `pg_net` | **Çıplak `postgres:17` YETMEZ** — özel imaj şart | **Yüksek** | `\dx` karşılaştırması |
 | **Webhook (gelen)** | `whatsapp-webhook` | Meta WhatsApp Cloud API → HMAC-SHA256 doğrulaması | Yeni URL + Meta panelinde güncelleme | Orta | İmza doğrulama testi |
-| **Dış proxy** | `nginx.conf.template:178` | `/api/chat` → `rag.corteqs.net` | Değişmez | Yok | — |
 
 ### Kullanılmadığı doğrulananlar (yeni altyapı EKLEME)
 

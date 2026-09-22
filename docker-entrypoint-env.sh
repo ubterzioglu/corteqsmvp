@@ -1,12 +1,6 @@
 #!/bin/sh
 set -eu
 
-escaped_rag_api_secret=$(
-  printf '%s' "${RAG_API_SECRET:-}" | sed -e 's/[|&\\]/\\&/g' -e 's/[$]/$$/g'
-)
-
-sed -i "s|__RAG_API_SECRET__|$escaped_rag_api_secret|g" /etc/nginx/conf.d/default.conf
-
 # Prerender (SEO/GEO): PRERENDER_URL boşsa map değeri "0" kalır → prerender no-op
 # (bot istekleri normal SPA kabuğu alır). Doluysa o URL'e proxy yapılır.
 prerender_url="${PRERENDER_URL:-}"
