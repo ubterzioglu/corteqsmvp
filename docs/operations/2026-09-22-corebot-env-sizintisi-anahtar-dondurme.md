@@ -108,7 +108,7 @@ kullanım olmadı" DEĞİLDİR.
 | Kötüye kullanım taraması | iz bulunamadı (sınırları aşağıda) |
 | Coolify frontend | kullanıcı güncelledi — **ben doğrulamadım** |
 
-Yedekler: `C:	mp\env.local.yedek-2026-09-22` · `C:	mp\env.local.bot.yedek-2026-09-22`
+Yedekler: `C:/tmp/env.local.yedek-2026-09-22` · `C:/tmp/env.local.bot.yedek-2026-09-22`
 
 ## Kalanlar — sıralı
 
