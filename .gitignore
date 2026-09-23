@@ -18,6 +18,11 @@ dist-ssr
 .env
 .env.local
 .env.*.local
+# 22.09.2026: `.env.local.bot` hicbir desene UYMUYORDU ve takip edilebilir
+# durumdaydi. corebot'ta tam olarak bu sinif bir dosya public repoya girdi ve
+# canli anahtarlar bes ay acikta kaldi. Genis desen + acik istisna:
+.env.*
+!.env.example
 *.local
 
 # Secrets
