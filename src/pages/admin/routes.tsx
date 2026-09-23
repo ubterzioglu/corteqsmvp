@@ -42,6 +42,7 @@ const AdminSocialMediaLinksPage = lazy(() => import("@/pages/admin/AdminSocialMe
 const AdminSocialShareVaultPage = lazy(() => import("@/pages/admin/AdminSocialShareVaultPage"));
 const AdminVipInvitationsPage = lazy(() => import("@/pages/admin/AdminVipInvitationsPage"));
 const AdminCustomerRequestsPage = lazy(() => import("@/pages/admin/AdminCustomerRequestsPage"));
+const AdminYenilikRehberiPage = lazy(() => import("@/pages/admin/AdminYenilikRehberiPage"));
 const AdminContributorResourcesPage = lazy(() => import("@/pages/admin/AdminContributorResourcesPage"));
 const AdminRevisionRequestsPage = lazy(() => import("@/pages/admin/AdminRevisionRequestsPage"));
 const AdminBrainstormingPage = lazy(() => import("@/pages/admin/AdminBrainstormingPage"));
@@ -100,6 +101,7 @@ export const adminRoutes = (
     <Route path="social-share-vault" element={<AdminSocialShareVaultPage />} />
     <Route path="vip-invitations" element={<AdminVipInvitationsPage />} />
     <Route path="customer-requests" element={<AdminCustomerRequestsPage />} />
+    <Route path="yenilik-rehberi" element={<AdminYenilikRehberiPage />} />
     <Route path="contributor-resources" element={<AdminContributorResourcesPage />} />
     <Route path="surveys" element={<AdminSurveysPage />} />
     <Route path="surveys/new" element={<AdminSurveyCreatePage />} />

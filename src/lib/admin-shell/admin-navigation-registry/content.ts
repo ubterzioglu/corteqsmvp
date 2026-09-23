@@ -108,6 +108,15 @@ export const contentNavGroup: AdminNavGroup = {
       aliases: ["vip", "davet", "invitation", "özel bağlantı"],
     },
     {
+      id: "yenilik-rehberi",
+      label: "Yenilikler ve Test Rehberi",
+      description: "Son yeniliklerin nasil calistigi ve nasil test edilecegi; HTML olarak indirilir.",
+      to: "/admin/yenilik-rehberi",
+      icon: FileText,
+      accent: "sky",
+      aliases: ["rehber", "test", "yenilik", "kilavuz", "surum notu", "burak"],
+    },
+    {
       id: "customer-requests",
       label: "Müşteri Talepleri",
       description: "WhatsApp taleplerini ata, durumunu yönet ve denetimli yanıtla.",
