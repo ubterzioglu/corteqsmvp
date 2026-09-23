@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Yenilikler ve Test Rehberi — 21–23 Eylül 2026</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1d21; --muted: #5b6470; --line: #e3e7ec;
+    --card: #f7f9fb; --accent: #0f766e; --warn-bg: #fff7ed; --warn-line: #fdba74;
+    --bad-bg: #fef2f2; --bad-line: #fca5a5; --ok-bg: #f0fdf4; --ok-line: #86efac;
+    --code-bg: #f1f5f9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12151a; --fg: #e8ecf1; --muted: #9aa5b1; --line: #2a313a;
+      --card: #171b21; --accent: #5eead4; --warn-bg: #2a1f12; --warn-line: #b45309;
+      --bad-bg: #2a1616; --bad-line: #b91c1c; --ok-bg: #12241a; --ok-line: #15803d;
+      --code-bg: #1c222a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.65 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 16px 96px; }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 20px; margin-bottom: 8px; }
+  h1 { font-size: 1.85rem; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 1.35rem; margin: 44px 0 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+  h3 { font-size: 1.08rem; margin: 26px 0 8px; color: var(--accent); }
+  p, li { margin: 8px 0; }
+  .lede { color: var(--muted); font-size: 0.97rem; }
+  code, kbd {
+    background: var(--code-bg); border-radius: 4px; padding: 1px 5px;
+    font: 0.88em ui-monospace, "Cascadia Code", Consolas, monospace; word-break: break-word;
+  }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px 14px; overflow-x: auto; font-size: 0.84rem; line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; }
+  .box { border-radius: 10px; padding: 14px 16px; margin: 16px 0; border: 1px solid var(--line); background: var(--card); }
+  .warn { background: var(--warn-bg); border-color: var(--warn-line); }
+  .bad  { background: var(--bad-bg);  border-color: var(--bad-line); }
+  .ok   { background: var(--ok-bg);   border-color: var(--ok-line); }
+  .box p:first-child { margin-top: 0; } .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93rem; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 600; }
+  ol.steps { padding-left: 20px; } ol.steps > li { margin: 10px 0; }
+  .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: .04em;
+         padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); }
+  nav.toc { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; margin: 22px 0; }
+  nav.toc ol { margin: 6px 0 0; padding-left: 20px; } nav.toc a { color: inherit; }
+  footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+  @media print { body { background: #fff; color: #000; } .box { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="tag">YALNIZ YÖNETİCİ</span>
+  <h1>Yenilikler ve Test Rehberi</h1>
+  <p class="lede">
+    21–23 Eylül 2026 arasında yapılan işlerin ne olduğu, nasıl çalıştığı ve nasıl test edileceği.
+    Bu dosya <strong>siteye yüklenmez</strong> — yalnız kod deposunda durur, internetten açılamaz.
+  </p>
+</header>
+
+<nav class="toc">
+  <strong>İçindekiler</strong>
+  <ol>
+    <li><a href="#guvenlik">Önce bu: açık duran güvenlik işi</a></li>
+    <li><a href="#dizin">Dizin ve arama</a></li>
+    <li><a href="#tasinma">Taşınma planlayıcı</a></li>
+    <li><a href="#test">Adım adım test listesi</a></li>
+    <li><a href="#sql">Veritabanından doğrulama sorguları</a></li>
+    <li><a href="#sinirlar">Yapılmayanlar ve bilinen sınırlar</a></li>
+  </ol>
+</nav>
+
+<h2 id="guvenlik">1. Önce bu: açık duran güvenlik işi</h2>
+
+<div class="bad box">
+  <p><strong>Durum: kapanmadı. Sizden işlem bekliyor.</strong></p>
+  <p>
+    WhatsApp botunun kod deposu (<code>github.com/ubterzioglu/corebot</code>) herkese açık ve
+    içinde sitenin en yetkili şifrelerini taşıyan bir dosya vardı. <strong>Yaklaşık beş ay</strong>
+    açıkta kaldı (27 Nisan → 22 Eylül). Dosya silindi, kod geçmişinden de temizlendi; ama
+    <strong>şifrelerin üçü hâlâ eski</strong> ve sızan anahtar şu anda geçerli.
+  </p>
+</div>
+
+<h3>Ne yapılması gerekiyor (sırayla)</h3>
+<ol class="steps">
+  <li><strong>Veritabanının ana anahtarını değiştirin.</strong> Supabase → Settings → API.
+      Not: eski tip anahtar bir JWT olduğu için tek başına sıfırlanamıyor; yeni tip
+      (<code>sb_secret_…</code>) anahtar zaten üretildi ve dosyalara işlendi.</li>
+  <li><strong>Yeni anahtarı üç yere birden yazın:</strong> Supabase → Edge Functions → Secrets ·
+      Coolify (site) · Coolify (bot). Biri atlanırsa o servis <em>sessizce</em> düşer.</li>
+  <li><strong>Bir fonksiyonu test edin</strong> (ör. <code>/directory</code> üzerinden arama yapın).
+      Çalışıyorsa devam.</li>
+  <li><strong>Supabase → API Keys → “Disable JWT-based API keys”.</strong>
+      Sızan anahtar ancak bu adımda ölür.</li>
+  <li><strong>Veritabanı şifresini</strong> (Settings → Database) ve
+      <strong>WhatsApp doğrulama anahtarını</strong> değiştirin. İkincisi üç yerde aynı olmalı:
+      site ayarı, bot ayarı ve Meta → WhatsApp → Configuration.</li>
+  <li><strong>GitHub deposunu silip yeniden kurun</strong> ya da GitHub’dan temizlik talep edin —
+      silinen dosya hâlâ eski kayıtlardan indirilebiliyor (kontrol edildi).</li>
+</ol>
+
+<div class="warn box">
+  <p><strong>Dikkat — bot ayar dosyasını olduğu gibi yapıştırmayın.</strong></p>
+  <p>
+    <code>.env.local.bot</code> dosyasında <code>PORT</code>, <code>RAG_API_SECRET</code> ve dokuz
+    <code>WA_GROUP_*</code> değişkeni <em>yok</em>. Coolify’daki mevcut değerlerin üzerine
+    yazarsanız grup bağlantıları kaybolur. Yalnızca değişen satırları güncelleyin.
+  </p>
+</div>
+
+<p>Adım adım tam hâli: <code>docs/operations/2026-09-22-corebot-env-sizintisi-anahtar-dondurme.md</code></p>
+
+<h2 id="dizin">2. Dizin ve arama</h2>
+
+<h3>2.1 · 61 uzman kaydı yayına alındı</h3>
+<p>
+  17 Haziran’da toplu girilen ve o günden beri onay kuyruğunda bekleyen kayıtlar yayında.
+  Dizinde görünen kayıt <strong>490 → 551</strong>, şehir bilgisi olan kayıt <strong>390</strong>.
+</p>
+
+<h3>2.2 · Her profilde kaynak künyesi</h3>
+<p>
+  Bu kayıtları kişiler kendileri oluşturmadı. Bu yüzden profil sayfalarında sarı bir kutu çıkıyor:
+  kaydın kendisi tarafından oluşturulmadığı, hangi derlemeden ve hangi tarihte geldiği,
+  doğrulanmadığı ve kaldırılmak istenirse <code>/iletisim</code> üzerinden başvurulabileceği yazıyor.
+</p>
+<p>
+  <strong>Nerede çıkar:</strong> yalnız kişi kayıtlarında (uzman/üye). Kurum sayfalarında
+  <em>çıkmaz</em> — 241 konsolosluk sayfasına “bu profili kişinin kendisi oluşturmadı” yazmak
+  yanlış olurdu.
+</p>
+
+<h3>2.3 · Boş örnek kayıtlar aramadan elendi</h3>
+<p>
+  Katalogda <code>[PLACEHOLDER]</code> adlı 77 örnek kayıt var (kategori iskeletini doldurmak için).
+  Bunlar aramada gerçek kayıtlarla birlikte çıkıyordu; <em>psikolog</em> araması 2 sonuç veriyordu ve
+  ikisi de boş kayıttı. Artık aramada görünmüyorlar. <strong>Silinmediler</strong> — doğrudan
+  bağlantıyla açılan sayfaları çalışmaya devam ediyor.
+</p>
+
+<h3>2.4 · Arama artık anlama göre de eşleşiyor</h3>
+<p>
+  Kelime birebir tutmasa bile yakın anlamlı kayıtlar bulunabiliyor. Yapay zekâ anahtarı
+  <strong>tarayıcıya hiç verilmiyor</strong>; işlem sunucuda yapılıyor. O servis düşerse arama
+  eski (kelime eşleşmeli) yöntemle çalışmaya devam eder — arama hiçbir durumda tamamen durmaz.
+</p>
+
+<h3>2.5 · Google’a bildirilen sayfa sayısı 20 → 320</h3>
+<p>
+  474 herkese açık profilin yalnız 20’si arama motorlarına bildiriliyormuş. Kural “uzun açıklaması
+  olsun” diyordu; o alan konsolosluk ve uzman kayıtlarında hiç dolu değil. Kural düzeltildi:
+  <strong>ad + meslek/tür + şehir</strong> taşıyan kayıt da yeterli sayılıyor.
+</p>
+<div class="warn box">
+  <p>
+    Adından başka bilgisi olmayan üye kayıtları <strong>bilerek dışarıda</strong>. Google böyle
+    “ince” sayfaları cezalandırıyor; 28 Temmuz’daki denetimde 236 sayfa tam bu yüzden
+    “bulundu ama indekslenmedi” durumundaydı.
+  </p>
+</div>
+
+<h2 id="tasinma">3. Taşınma planlayıcı</h2>
+
+<h3>3.1 · Artık uçtan uca çalışıyor — veri örnek, kod gerçek</h3>
+<table>
+  <tr><th>Tablo</th><th>Önce</th><th>Sonra</th><th>Nitelik</th></tr>
+  <tr><td>Hizmet sağlayıcılar</td><td>0</td><td><strong>120</strong></td><td>ÖRNEK</td></tr>
+  <tr><td>Resmî adımlar</td><td>2</td><td><strong>62</strong></td><td>ÖRNEK</td></tr>
+  <tr><td>Acil numaralar</td><td>4</td><td><strong>21</strong></td><td><strong>GERÇEK</strong></td></tr>
+</table>
+<p>
+  Örnek satırların hepsi tek bir “örnek veri” kaynağına bağlı ve adlarında <code>[DEMO]</code>
+  yazıyor. “Bu veri gerçek mi?” sorusu tahminle değil, tek sorguyla cevaplanabiliyor.
+</p>
+<div class="ok box">
+  <p>
+    <strong>Acil numaralar örnek değil.</strong> Sahte bir acil numara gerçekten aranabilir.
+    Avrupa 112 · ABD/Kanada 911 · İngiltere 999 · İsviçre 112/117/144 · BAE 999/998/997 ·
+    Katar 999 — gerçek değerleriyle ve resmî kaynak adresleriyle girildi.
+  </p>
+</div>
+
+<h3>3.2 · Sayfa “DEMO” işareti taşıyor</h3>
+<p>
+  İçerik örnek olduğu sürece işaret de duruyor. Gerçek içerik girildiğinde tek satır silinerek
+  normale döner — örnek içeriğin canlıda işaretsiz unutulması mümkün değil.
+</p>
+
+<h3>3.3 · Maliyetler bütçe para biriminde de gösteriliyor</h3>
+<p>
+  12 ülke, 7 para birimi vardı. Kur <strong>anlık çekilmiyor, kaydediliyor</strong>: sayfa her
+  açılışta dışarıya gitmiyor ve kurun hangi güne ait olduğu ekranda yazıyor. Kur bulunamazsa
+  <strong>karşılık hiç gösterilmiyor</strong> — yaklaşık değer uydurulmuyor.
+</p>
+
+<h3>3.4 · Rakamların ne olduğu ekranda yazıyor</h3>
+<p>
+  Maliyet listesinin altında: <em>“Bu tutarlar büyük şehirler için tipik aylık aralıklardır;
+  genel piyasa bilgisine dayanır ve resmî bir fiyat endeksinden türetilmemiştir.”</em>
+  Aynı cümle asistana da eklendi — panelde uyarıyı görüp bottan kesin rakam almak uyarıyı
+  etkisiz kılardı.
+</p>
+
+<h2 id="test">4. Adım adım test listesi</h2>
+<p class="lede">Her satırda: ne yapılacak · ne görülmeli. Hiçbiri veritabanına yazmaz.</p>
+
+<h3>T1 — Dizin araması (giriş yapmadan)</h3>
+<ol class="steps">
+  <li>Gizli sekmede <code>/directory</code> adresini aç.</li>
+  <li>Arama kutusuna <strong>psikolog</strong> yaz.</li>
+  <li><strong>Beklenen:</strong> sonuçlarda <code>[PLACEHOLDER]</code> ile başlayan <em>hiçbir</em>
+      kayıt olmamalı.</li>
+  <li><strong>Toronto doktor</strong> ara → dolu bir liste gelmeli (yaklaşık 45 sonuç).</li>
+  <li><strong>Münihte yaşayan avukat</strong> ara → sonuçlar arasında
+      <em>T.C. Münih Başkonsolosluğu</em> da çıkmalı (anlam eşleşmesinin kanıtı).</li>
+</ol>
+
+<h3>T2 — Uzman profilinde kaynak künyesi</h3>
+<ol class="steps">
+  <li>T1’deki “Toronto doktor” sonuçlarından birine tıkla.</li>
+  <li><strong>Beklenen:</strong> sayfanın üstünde sarı kutu — “Bu profili kişinin kendisi
+      oluşturmadı”, derleme adı, tarih, “doğrulanmadı” ve <code>/iletisim</code> bağlantısı.</li>
+  <li>Kutudaki <strong>iletişim sayfasından</strong> bağlantısına tıkla → <code>/iletisim</code>
+      açılmalı.</li>
+  <li><strong>Telefon numarası görünmemeli.</strong> Web sitesi görünebilir, o kasıtlı.</li>
+</ol>
+
+<h3>T3 — Kurum sayfasında künye ÇIKMAMALI</h3>
+<ol class="steps">
+  <li>Dizinde bir konsolosluk kaydı aç (ör. <strong>Sofya</strong> ara).</li>
+  <li><strong>Beklenen:</strong> sarı künye kutusu <em>çıkmamalı</em>. Çıkıyorsa kişi/kurum
+      ayrımı bozulmuş demektir.</li>
+</ol>
+
+<h3>T4 — Taşınma planlayıcı</h3>
+<ol class="steps">
+  <li>Üye hesabıyla giriş yap, <code>/relocation</code> aç.</li>
+  <li>Sayfanın üstünde <strong>DEMO bandı</strong> görünmeli.</li>
+  <li><strong>Hizmetler</strong> sekmesi → bir kategoriye tıkla → <code>[DEMO]</code> başlıklı
+      sağlayıcılar listelenmeli. <em>Boşsa</em> en azından açıklama metni görünmeli, boş alan değil.</li>
+  <li><strong>Kontrol listesi</strong> sekmesi → resmî adımlar listelenmeli.</li>
+  <li><strong>Acil</strong> sekmesi → ülkenin gerçek acil numarası görünmeli.</li>
+  <li><strong>Maliyetler</strong> sekmesi → listenin altında “tipik aylık aralıklar … resmî bir
+      fiyat endeksinden türetilmemiştir” cümlesi olmalı.</li>
+  <li>Taşınma dosyanızın bütçe para birimi kalemlerden farklıysa toplamın altında
+      <strong>≈ karşılık · kur tarihi · kaynak</strong> satırı çıkmalı.</li>
+</ol>
+
+<h3>T5 — Asistan, maliyet rakamlarını nasıl anlatıyor</h3>
+<ol class="steps">
+  <li><code>/relocation</code> → <strong>Asistan</strong> sekmesi.</li>
+  <li>“Aylık yaşam masrafı ne kadar?” diye sor.</li>
+  <li><strong>Beklenen:</strong> cevapta rakamlar geçebilir, ama bunların <em>tipik aralık</em>
+      olduğu ve resmî endeks olmadığı belirtilmeli. Kesin fiyat gibi sunuluyorsa kusurdur.</li>
+</ol>
+
+<h3>T6 — Sitemap (arama motorlarına bildirilen sayfalar)</h3>
+<ol class="steps">
+  <li><code>https://corteqs.net/sitemap.xml</code> aç.</li>
+  <li><kbd>Ctrl</kbd>+<kbd>F</kbd> → <code>directory/catalog</code> ara. Yüzlerce satır olmalı
+      (hedef ~320).</li>
+  <li><code>PLACEHOLDER</code> ara → <strong>sıfır sonuç</strong> olmalı.</li>
+</ol>
+
+<div class="warn box">
+  <p>
+    <strong>T6 için not:</strong> sitemap dosyası yayına alma (deploy) sırasında üretiliyor.
+    Deploy edilmediyse eski hâlini görürsünüz — bu bir kusur değil, sıra meselesidir.
+  </p>
+</div>
+
+<h2 id="sql">5. Veritabanından doğrulama sorguları</h2>
+<p class="lede">
+  Gözle bakmak yerine sayıyla doğrulamak isterseniz. Hepsi salt okuma.
+</p>
+
+<h3>Örnek kayıtlar aramaya sızıyor mu?</h3>
+<pre><code>select count(*) as toplam,
+       count(*) filter (where title like '[PLACEHOLDER]%') as bos_kayit
+from public.search_directory_catalog('psikolog', null, null, null, false, 100, 0);
+-- beklenen: bos_kayit = 0</code></pre>
+
+<h3>Yönetici hesapları dizine sızıyor mu?</h3>
+<pre><code>select count(*) as admin_sizinti
+from public.search_directory_catalog(null, null, null, null, false, 100, 0)
+where role_key ilike 'Admin\_%' or role_key ilike 'Moderator\_%';
+-- beklenen: 0</code></pre>
+
+<h3>Taşınma verisi: hangisi örnek, hangisi gerçek?</h3>
+<pre><code>select r.source_key, count(*) as satir
+from public.relocation_services s
+join public.relocation_source_registry r on r.id = s.source_id
+group by 1;
+-- demo_seed_relocation = ornek veri</code></pre>
+
+<h3>Kurlar ne kadar taze?</h3>
+<pre><code>select quote_currency, rate_at::date, fetched_at::date
+from public.relocation_fx_rates order by quote_currency;
+-- tazelemek icin:  npm run fx:refresh</code></pre>
+
+<h2 id="sinirlar">6. Yapılmayanlar ve bilinen sınırlar</h2>
+
+<table>
+  <tr><th>Konu</th><th>Durum</th></tr>
+  <tr>
+    <td>Güvenlik: üç şifre</td>
+    <td><strong>Açık.</strong> Ana veritabanı anahtarı, veritabanı şifresi ve WhatsApp doğrulama
+        anahtarı hâlâ sızan değerde. Bölüm 1’deki adımlar bekliyor.</td>
+  </tr>
+  <tr>
+    <td>Kötüye kullanım taraması</td>
+    <td>İz bulunamadı — <strong>ama bu “bir şey olmadı” demek değil.</strong> O anahtarla yapılan
+        erişim normal görünür; özellikle veri okuyup dışarı taşıma bu yöntemle tespit edilemez.</td>
+  </tr>
+  <tr>
+    <td>Görsel kontrol</td>
+    <td>Bu oturumda <strong>hiçbir şey tarayıcıda gözle görülmedi.</strong> Her şey test ve
+        veritabanı düzeyinde doğrulandı. Bölüm 4 tam da bu boşluğu kapatmak için var.</td>
+  </tr>
+  <tr>
+    <td>Taşınma içeriği</td>
+    <td>Hizmet sağlayıcılar ve resmî adımlar <strong>örnek veri</strong>. Gerçek sağlayıcı listesi
+        dışarıdan gelmeli — uydurulamaz.</td>
+  </tr>
+  <tr>
+    <td>İşletmeler sayfası</td>
+    <td>25 kaydın 25’i örnek. Karar: gerçek kayıt gelene kadar demo kalacak.</td>
+  </tr>
+  <tr>
+    <td>Etkinlik / kuruluş yayını</td>
+    <td>Yayınlanacak gerçek kayıt <strong>yok</strong> (etkinlik tablosunda tek test kaydı,
+        kuruluş tablosu boş). Bekleyen iş değil, bekleyen veri.</td>
+  </tr>
+</table>
+
+<footer>
+  Hazırlayan: Claude Code · 23 Eylül 2026 ·
+  Kaynaklar: <code>docs/kalanlar/2026-09-21-KALANLAR.md</code> ·
+  <code>docs/operations/2026-09-22-corebot-env-sizintisi-anahtar-dondurme.md</code> ·
+  <code>docs/kalanlar/2026-09-22-relocation-icerik-bosluklari.md</code><br />
+  Bu dosya <code>public/</code> altında değildir; siteye yüklenmez ve internetten açılamaz.
+</footer>
+
+</div>
+</body>
+</html>

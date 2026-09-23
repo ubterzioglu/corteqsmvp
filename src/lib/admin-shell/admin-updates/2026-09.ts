@@ -5,6 +5,60 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260923-corebot-sifre-sizintisi",
+    date: "23 Eylül 2026",
+    title:
+      "WhatsApp botunun kod deposu herkese açıkmış ve içinde sitenin ana şifreleri duruyormuş — beş aydır. Dosya silindi, bazı şifreler değişti, birkaçı hâlâ sizde",
+    items: [
+      "NE OLDU: WhatsApp botunun kodu GitHub'da herkese açık duruyor. Kodun içinde 'şifreler dosyası' diye bir dosya vardı ve bu dosya sitenin EN YETKİLİ şifrelerini taşıyordu. Bunlardan biri, veritabanındaki tüm güvenlik kurallarını es geçip her kaydı okumaya, değiştirmeye ve silmeye yeten anahtar. Yanında veritabanı şifresi ve WhatsApp mesaj gönderme anahtarı da vardı.",
+      "NE KADARDIR AÇIKTA: En az 27 Nisan'dan beri, yani yaklaşık BEŞ AY. İnternette herkesin görebileceği bir yerdeydi.",
+      "NASIL BULUNDU: WhatsApp botuyla ilgili başka bir işi araştırırken denk gelindi. Kimse aramıyordu; tesadüfen çıktı.",
+      "HEMEN YAPILANLAR: Dosya silindi. Sonra kodun geçmişinden de temizlendi (28 kaydın hepsinden çıkarıldı) — çünkü sadece silmek yetmiyor, eski kayıtlara bakan biri yine görebiliyordu.",
+      "⚠️ AMA HÂLÂ TAMAMEN KAPANMADI, İKİ SEBEPLE: (1) GitHub silinen şeyleri bir süre kendi sisteminde tutuyor; kontrol ettik, dosya ŞU AN BİLE indirilebiliyor. Kesin çözüm depoyu tamamen silip yeniden kurmak ya da GitHub'dan temizlik talep etmek. (2) Daha önemlisi: şifrelerin bir kısmı HÂLÂ ESKİ. Beş aydır açıkta olan bir şifreyi silmek yetmez, DEĞİŞTİRMEK gerekir.",
+      "ŞİFRELERİN DURUMU ÖLÇÜLDÜ (değerlere bakmadan, karşılaştırma yöntemiyle): İkisi değiştirilmiş — yönetim anahtarı ve WhatsApp mesaj anahtarı. Üçü HÂLÂ ESKİ: veritabanının ana anahtarı, veritabanı şifresi ve WhatsApp doğrulama anahtarı. Bunlardan ilki en tehlikelisi.",
+      "YENİ ŞİFRE SİSTEMİNE GEÇİLDİ: Supabase'in yeni tip anahtarları oluşturuldu ve hem sitenin hem botun ayar dosyalarına işlendi. Üç ayrı komutla çalıştığı doğrulandı: veritabanı bağlantısı, yönetim erişimi ve veri yazma. Üçü de yeşil.",
+      "BOTUN AYAR DOSYASI SADELEŞTİRİLDİ: Botun kodu okunup hangi ayarları gerçekten kullandığı tek tek çıkarıldı. İki tanesi (yönetim anahtarı ve veritabanı şifresi) hiç kullanılmıyormuş — çıkarıldılar. Bir bot sunucusunda gereksiz yetki taşımak, o dosya bir daha sızarsa zararı büyütmekten başka işe yaramıyor.",
+      "KÖTÜYE KULLANIM ARANDI, İZ BULUNAMADI: Yönetici yetkisi verilmiş hesaplar, ani hesap açılışları ve yetki yükseltmeleri tarandı. Olağandışı bir şey çıkmadı. AMA bunu abartmamak lazım: o anahtarla yapılan erişim normal görünür ve özellikle 'veriyi okuyup dışarı taşıma' bu yöntemle TESPİT EDİLEMEZ. 'İz bulunamadı', 'bir şey olmadı' demek değildir.",
+      "AYNI HATANIN BU DEPODA TEKRARI ENGELLENDİ: Kontrol edildi, bu projede de benzer adlı bir ayar dosyası korumasızdı — yani biri yanlışlıkla kaydetse şifreler bu depoya da girecekti. Koruma genişletildi ve dört dosyayla test edildi.",
+      "SİZDEN İSTENEN (öncelik sırasıyla): 1) Veritabanının ana anahtarını ve veritabanı şifresini değiştirin. 2) Yeni anahtarı üç yere birden yazın: Supabase fonksiyon ayarları, sitenin sunucusu, botun sunucusu. 3) Sonra Supabase panelinden eski tip anahtarları KAPATIN — sızan anahtar ancak o zaman ölür. 4) GitHub deposunu silip yeniden kurun. Adım adım yazılı hâli: docs/operations/2026-09-22-corebot-env-sizintisi-anahtar-dondurme.md",
+    ],
+  },
+  {
+    id: "20260922-61-uzman-yayinda-ve-arama-temizligi",
+    date: "22 Eylül 2026",
+    title:
+      "Üç aydır kuyrukta bekleyen 61 uzman kaydı yayına alındı; arama artık boş kayıtları göstermiyor ve Google'a bildirilen sayfa sayısı 20'den 320'ye çıktı",
+    items: [
+      "61 UZMAN KAYDI ARTIK DİZİNDE: 17 Haziran'da toplu olarak girilen ve o günden beri onay kuyruğunda bekleyen kayıtlar yayına alındı. Dizinde görünen kayıt 490'dan 551'e, şehir bilgisi olan kayıt 390'a çıktı. 'Toronto doktor' araması artık 45, 'Melbourne avukat' 19 sonuç veriyor.",
+      "AMA BU KAYITLAR GERÇEK KİŞİLER VE KENDİLERİ KAYDOLMADI — BU YÜZDEN HER PROFİLE KÜNYE KONDU: Her sayfada artık 'Bu profili kişinin kendisi oluşturmadı', kaydın hangi derlemeden ve hangi tarihte geldiği, doğrulanmadığı ve kaldırılmak istenirse iletişim yolu yazıyor. Künye uydurulmadı: kayıtların içinde zaten duran kaynak bilgisinden türetiliyor.",
+      "KAYNAĞIN NE OLDUĞU ÖLÇÜLDÜ VE DÜRÜSTÇE YAZILDI: Bu kayıtlar resmî bir meslek odası listesinden değil, 17 Haziran'da yapılmış araştırma derlemelerinden geliyor. Hepsi 'doğrulanmamış' durumda. Kayıt başına kaynak adresi saklanmamış, o yüzden künye 'şu siteden alındı' demiyor — diyemez.",
+      "⚠️ YAYIN SIRASINDA BİR SIZINTI YAKALANDI VE KAPATILDI: Bu kayıtlarda 10 telefon numarası 'herkese açık' işaretliydi. Bunu kişiler seçmemiş, toplu içe aktarma yazmış. Yayına almadan önce gizliye alındı. Web siteleri (34 adet) ve randevu bağlantısı işletme bilgisi olduğu için bırakıldı; e-postalar zaten gizliydi. Bundan bir kural çıktı: toplu içe aktarma yapan herkes bu kontrolü tekrarlamalı.",
+      "ARAMADAKİ BOŞ KAYITLAR TEMİZLENDİ: Katalogda gerçek kişi/kurum olmayan 77 örnek kayıt var ('[PLACEHOLDER] Psikolog & Koç' gibi, kategori iskeletini doldurmak için). Bunlar aramada gerçek kayıtlarla birlikte çıkıyordu — 'psikolog' araması 2 sonuç döndürüyordu ve İKİSİ DE boş kayıttı. Artık aramada görünmüyorlar; silinmediler, sadece arama sonuçlarından elendiler.",
+      "ARAMA ARTIK ANLAMA GÖRE DE EŞLEŞİYOR: Kelime birebir tutmasa bile yakın anlamlı kayıtları bulabiliyor. 'Münihte yaşayan avukat' araması 1 sonuçtan 3'e çıktı (T.C. Münih Başkonsolosluğu da geldi). Yapay zekâ anahtarı tarayıcıya hiç verilmiyor, işlem sunucuda yapılıyor; o servis düşerse arama eski yöntemle çalışmaya devam ediyor.",
+      "GOOGLE'A BİLDİRİLEN SAYFA SAYISI 20'DEN 320'YE ÇIKTI: Ölçünce çıktı ki 474 herkese açık profilin yalnız 20'si arama motorlarına bildiriliyormuş. 21 Eylül'de yayınlanan 241 konsolosluğun ve dünkü 61 uzmanın HİÇBİRİ listede yoktu — çünkü kural 'uzun açıklaması olsun' diyordu, o alan bu kayıtlarda hiç dolu değil. Kural düzeltildi: ad + meslek + şehir taşıyan kayıt da yeterli sayılıyor. Adı dışında bilgisi olmayan üye kayıtları hâlâ dışarıda, çünkü Google böyle sayfaları cezalandırıyor.",
+      "GÜNÜN TOPLAM KONTROLÜ: 330 dosyada 2.460 testin tamamı yeşil, kod denetimi 0 problem, tip denetimi 0 hata.",
+    ],
+  },
+  {
+    id: "20260922-tasinma-planlayici-calisan-demo",
+    date: "22 Eylül 2026",
+    title:
+      "Taşınma planlayıcı artık uçtan uca çalışıyor: boş duran üç sekme doldu, maliyetler bütçe para biriminde de gösteriliyor, rakamların ne olduğu açıkça yazıyor",
+    items: [
+      "ÖNCE BİR YANLIŞIM DÜZELTİLDİ: Sabah 'örnek içerik taşıyan üç sekmeyi kaldırdım, kalan beş sekme gerçek veri okuyor' demiştim. Doğruydu ama EKSİKTİ — sekmeler gerçek tabloları okuyor, ancak o tabloların üçü neredeyse boştu: hizmet sağlayıcı 12 ülkenin 12'sinde SIFIR, resmî adımlar yalnız Almanya ve Hollanda'da birer tane. Yani üç boş sekmeyi kaldırırken yerlerine pratikte boş üç sekme kalmış.",
+      "HİZMETLER SEKMESİNİN 'BOŞ' DURUMU HİÇ YOKMUŞ: Kullanıcı kategoriye tıklıyor, altında hiçbir şey görünmüyordu — açıklama bile yok. Sayfa bozuk görünüyordu. Boş durum mesajı eklendi.",
+      "KARARINIZLA ÇALIŞAN DEMO YAPILDI — KOD GERÇEK, VERİ ÖRNEK: Hizmet sağlayıcı 0'dan 120'ye, resmî adımlar 2'den 62'ye çıkarıldı (12 ülke için). Motor uçtan uca test edildi: hizmet sıralaması beş kategoride de sonuç veriyor, kontrol listesi 6 adım çiziyor, şehir sıralaması bozulmadı.",
+      "ÖRNEK VERİLER VERİTABANINDAN AYIRT EDİLEBİLİYOR: Hepsi tek bir 'örnek veri' kaynağına bağlı ve adlarında [DEMO] yazıyor. 'Bu veri gerçek mi?' sorusunun cevabı tahminle değil, tek sorguyla alınabiliyor. Gerçek içerik geldiğinde silmek de tek sorgu.",
+      "ACİL NUMARALAR ÖRNEK DEĞİL, GERÇEK: Burada bilerek sizden farklı davrandım — sahte bir acil numara gerçekten aranabilir. Avrupa 112, ABD/Kanada 911, İngiltere 999, İsviçre 112/117/144, BAE 999/998/997, Katar 999 gerçek değerleriyle, resmî kaynak adresleriyle girildi. 10 ülkenin eksiği tamamlandı.",
+      "SAYFA YİNE 'DEMO' İŞARETİ TAŞIYOR: Sabah kaldırmıştım, akşam geri koydum. İçerik örnek olduğu sürece işaret de durmalı — yoksa canlıda işaretsiz örnek içerik kalır ve bu deseni koymanın sebebi tam olarak buydu.",
+      "MALİYETLER ARTIK ÜYENİN BÜTÇE PARA BİRİMİNDE DE GÖSTERİLİYOR: 12 ülke, 7 farklı para birimi vardı ve karşılaştırma kullanıcıya kalıyordu. Kur kaynağı ölçümle seçildi: Avrupa Merkez Bankası Katar ve BAE paralarını yayımlamıyor, yani 12 ülkenin 2'si çevrilemiyordu. Tüm para birimlerini kapsayan bir kaynak seçildi ve bunun merkez bankası DEĞİL toplayıcı olduğu künyeye yazıldı. Kur anlık çekilmiyor, kaydediliyor — ekranda hangi güne ait olduğu görünüyor. Kur yoksa karşılık hiç gösterilmiyor; yaklaşık değer uydurulmuyor.",
+      "MALİYET RAKAMLARININ NE OLDUĞU ARTIK EKRANDA YAZIYOR: 'Bu tutarlar büyük şehirler için tipik aylık aralıklardır; genel piyasa bilgisine dayanır ve resmî bir fiyat endeksinden türetilmemiştir.' Aynı cümle asistana da eklendi — panelde uyarıyı görüp bottan kesin rakam almak uyarıyı etkisiz kılardı. Tarih bilerek gösterilmiyor: kayıtlardaki tarih verinin tazeliği değil, girildiği gün.",
+      "ŞEHİR BAZLI MALİYET İÇİN ZEMİN HAZIRLANDI — VE BU SIRADA SESSİZ BİR KUSUR YAKALANDI: Maliyetleri okuyan kodda 'şehir' diye bir kavram hiç yokmuş. Şehir verisi girilseydi 'Berlin kirası' ile 'Almanya geneli kira' aynı kutuya düşecek, ekran ikisinden birini rastgele seçecekti. Hata vermeden, test kırmadan, sadece yanlış rakam göstererek. Önce kod düzeltildi, veri sonra girilebilir.",
+      "İŞLETMELER SAYFASI HAKKINDA KARAR: 25 işletme kaydının 25'i de hâlâ örnek. Kararınız 'kayıtlar sonra girilecek, sayfa demo kalsın' oldu; tetikleyici yazıldı — ilk gerçek işletme kaydı geldiğinde beş adım birlikte açılacak.",
+      "ETKİNLİK VE KURULUŞ YAYIN KUYRUKLARI ÖLÇÜLDÜ, YAYINLANACAK KAYIT ÇIKMADI: Etkinlik tablosunda tek kayıt var ve o da test verisi; bağımsız kuruluş profili tablosu tamamen boş. Yani bekleyen bir iş değil, bekleyen bir veri varmış. Canlı veriye dokunulmadı.",
+    ],
+  },
+  {
     id: "20260920-tasinma-rehberi-ve-yapay-zeka-asistani",
     date: "20 Eylül 2026",
     title:
