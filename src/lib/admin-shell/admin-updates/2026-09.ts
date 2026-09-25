@@ -5,6 +5,20 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260925-toplanti-21-eylul-t20",
+    date: "25 Eylül 2026",
+    title: "21 Eylül toplantısının kararları ve yapılacakları Komuta Merkezi'ne eklendi (Toplantı 20)",
+    items: [
+      "NEREDE: Komuta Merkezi → Toplantı Notları, kaynak 'Toplantı 20 — 21 Eylül 2026'. Toplam 24 satır: UBT'ye 14 yapılacak, Burak'a 2 yapılacak + 2 fikir, 6 ortak karar (B+B).",
+      "EN ÖNEMLİ KARAR: Önce 'her şeyi eklemek' yerine mevcut modüller çalışır, düzgün arayüzlü ve test edilebilir hâle getirilip ilk sprint bitirilecek; ardından Cadde + Profil'e dönülecek. Büyük işler küçük parçalara bölünecek, her parça Burak'ın incelemesine gidecek.",
+      "UBT'NİN İŞLERİ: kadro/profil çalışmasını parçalara bölmek ve Burak'a incelemeye aktarmak · revizyonlara dosya yükleme (bugün yalnız görsel yüklenebiliyor) · Radar API key'lerini test edip Radar'ı yeniden çalıştırmak · ülke/şehir/konu RAG kütüphanesi · sayfa kullanım kılavuzlarını RAG'e aktarmak · sağ altta sayfa bazlı AI yardımcı bot · konuşmalı AI Search · role switching kontrolü · Cadde workshop transcriptini yeniden taramak · Cadde edit/delete + bildirim revizyonları · Cadde davet kodu + davet bildirimleri · Guides içeriği.",
+      "BURAK'IN İŞLERİ: ilk sprinti 'mevcut araçlar + paneller + revizyonlar çalışır' ölçütüyle kapatmak ve kadro/profil parçalarını inceleyip yeni revizyonları sisteme girmek. İki fikir Beklemede duruyor: rol başvurusunda botun gerekli belgeleri hatırlatması ve Cadde hazır olunca WhatsApp'ta bekleyenleri Cadde'ye yönlendirip Instagram'da tanıtmak.",
+      "ORTAK KARARLAR: arama RAG + LLM hibrit konuşmalı arama olacak · Radar yeniden çalıştırılacak, role switching netleştirilecek · Subscription ve Founder tarafı traction sonrası kontrollü açılacak · ilk dönemde €1 gibi düşük fiyatlı giriş modeli TEST EDİLEBİLİR — bu henüz fiyat kararı değil, karar veriyle verilecek.",
+      "DURUM NOTU: AI yardımcı bot 'Devam ediyor' olarak işlendi, çünkü site asistanı ve bilgi tabanı 21 Eylül'de canlıya alındı; sayfa bağlamı ve kılavuzlar henüz yok. Diğer yapılacakların hepsi 'Başlanmadı'.",
+      "EKSİK: 17 Eylül ve 25 Eylül toplantıları henüz Komuta Merkezi'nde yok; notları gelince ayrıca eklenecek.",
+    ],
+  },
+  {
     id: "20260925-cafe-bildirim-logo",
     date: "25 Eylül 2026",
     title: "Cafe bildirimleri iyileştirildi, hostlar artık logo yükleyebiliyor",
