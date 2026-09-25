@@ -55,16 +55,17 @@ describe("demo-pages", () => {
   });
 
   // Rozet ile bandın AYRIŞMASINI kapatan iddia: /campaign/vlogger ve
-  // /campaign/blogger demo olduğu sürece, onlara götüren "Yarışmalar" düğmesi
-  // rozetsiz kalamaz.
-  it("Yarışmalar düğmesi demo işaretli kalır", () => {
+  // /campaign/blogger demo olduğu sürece, onları listeleyen merkeze götüren
+  // "Kampanya & Yarışmalar" düğmesi rozetsiz kalamaz (2026-09-25'te tekleşti).
+  it("Kampanya & Yarışmalar düğmesi demo işaretli kalır", () => {
     const catalog = readSource("src/components/home-trial/action-buttons-data.ts");
     const contestsBlock = catalog.slice(
-      catalog.indexOf("contests:"),
+      catalog.indexOf("campaigns:"),
       catalog.indexOf("radar:"),
     );
 
-    expect(contestsBlock).toContain('label: "Yarışmalar"');
+    expect(contestsBlock).toContain('label: "Kampanya & Yarışmalar"');
+    expect(catalog).not.toContain("contests:");
     expect(contestsBlock).toContain("demo: true");
   });
 

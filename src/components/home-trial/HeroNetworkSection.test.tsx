@@ -13,8 +13,8 @@ function renderHero() {
 }
 
 /**
- * Düğme metni yerine HEDEF listesi karşılaştırılır: "Yarışmalar" düğmesi DEMO
- * rozeti taşıdığı için `textContent` "YarışmalarDEMO" döner ve metne dayalı bir
+ * Düğme metni yerine HEDEF listesi karşılaştırılır: "Kampanya & Yarışmalar" düğmesi
+ * DEMO rozeti taşıdığı için `textContent` "Kampanya & YarışmalarDEMO" döner ve metne dayalı bir
  * iddia rozet eklendiği anda sahte biçimde kırılırdı.
  */
 const hrefsIn = (nav: HTMLElement) =>
@@ -35,9 +35,10 @@ describe("ana sayfa hero", () => {
     expect(screen.getByRole("link", { name: /Biz kimiz\?/ })).toHaveAttribute("href", "/founders");
   });
 
-  // Kullanıcı kararı 2026-09-20: hero'daki düğmeler TAM İKİ SATIR, 5 + 5.
+  // Kullanıcı kararı 2026-09-20: hero'daki düğmeler TAM İKİ SATIR. 2026-09-25'te
+  // Kampanyalar ve Yarışmalar tek düğmeye indiği için 5 + 4.
   // Satır başına düşen sayı değişirse düzen sözleşmesi bozulur.
-  it("düğmeleri iki satıra beşer beşer böler", () => {
+  it("düğmeleri iki satıra 5 + 4 böler", () => {
     renderHero();
 
     const rowOne = screen.getByRole("navigation", { name: "Ana eylemler" });
@@ -47,32 +48,34 @@ describe("ana sayfa hero", () => {
     expect(hrefsIn(rowOne)).toEqual(["/login?mode=signup", "/tools", "/founders", "/campaign"]);
     expect(within(rowOne).getAllByRole("button")).toHaveLength(1);
 
-    expect(hrefsIn(rowTwo)).toEqual(["/campaign", "/radar", "/addcom", "/events", "/feedback"]);
+    expect(hrefsIn(rowTwo)).toEqual(["/radar", "/addcom", "/events", "/feedback"]);
   });
 
-  // Kampanyalar ve Yarışmalar bilerek AYNI hedefe gider (action-buttons-data.ts).
-  it("Kampanyalar ve Yarışmalar aynı hedefi paylaşır", () => {
+  // Kullanıcı kararı 2026-09-25: Kampanyalar ve Yarışmalar TEK düğme, başlıktaki
+  // menüyle aynı ad. Aynı hedefe giden ikinci bir düğme geri gelmemeli.
+  it("tek bir Kampanya & Yarışmalar düğmesi çizer", () => {
     renderHero();
 
-    expect(screen.getByRole("link", { name: /Kampanyalar/ })).toHaveAttribute("href", "/campaign");
-    expect(screen.getByRole("link", { name: /Yarışmalar/ })).toHaveAttribute("href", "/campaign");
+    const links = screen.getAllByRole("link", { name: /Kampanya|Yarışma/ });
+    expect(links).toHaveLength(1);
+    expect(links[0]).toHaveAttribute("href", "/campaign");
+    expect(links[0]).toHaveTextContent("Kampanya & Yarışmalar");
   });
 
-  // DEMO deseni (bkz. src/lib/demo-pages.ts): yarışma içeriği gerçek değil,
-  // düğme bunu rozetle söylemeli.
-  it("Yarışmalar düğmesi DEMO rozeti taşır, Kampanyalar taşımaz", () => {
+  // DEMO deseni (bkz. src/lib/demo-pages.ts): merkezdeki yarışma içeriği gerçek
+  // değil, düğme bunu rozetle söylemeli.
+  it("Kampanya & Yarışmalar düğmesi DEMO rozeti taşır", () => {
     renderHero();
 
-    expect(within(screen.getByRole("link", { name: /Yarışmalar/ })).getByText("DEMO")).toBeInTheDocument();
     expect(
-      within(screen.getByRole("link", { name: /Kampanyalar/ })).queryByText("DEMO"),
-    ).not.toBeInTheDocument();
+      within(screen.getByRole("link", { name: /Kampanya & Yarışmalar/ })).getByText("DEMO"),
+    ).toBeInTheDocument();
   });
 
-  // Kullanıcı kararı 2026-09-20: mobilde on düğme alt alta çok yer kaplıyordu.
+  // Kullanıcı kararı 2026-09-20: mobilde düğmeler alt alta çok yer kaplıyordu.
   // İlk ÜÇÜ açık kalır, kalanlar aç/kapa düğmesinin arkasına girer. Gizleme
   // SINIFLA yapılır (jsdom CSS uygulamaz), bu yüzden iddia sınıf üzerinedir —
-  // DOM sırası masaüstündeki 5 + 5 sözleşmesi için değişmeden kalmalı.
+  // DOM sırası masaüstündeki 5 + 4 sözleşmesi için değişmeden kalmalı.
   describe("mobil aç/kapa", () => {
     const isHiddenOnMobile = (element: HTMLElement) =>
       element.className.includes("hidden sm:inline-flex");

@@ -24,10 +24,10 @@ const PAGE_EXPECTATIONS = [
   },
   {
     path: "/founding-1000",
-    title: "Founding 1000 | CorteQS",
-    description: "CorteQS Founding 1000 programına katılın; erken dönem topluluk ve görünürlük avantajlarını keşfedin.",
+    title: "Kurucu 1000 | CorteQS",
+    description: "CorteQS Kurucu 1000 programına katılın; erken dönem topluluk ve görünürlük avantajlarını keşfedin.",
     canonical: "https://corteqs.net/founding-1000",
-    heading: /Founding 1000/i,
+    heading: /Kurucu\s*1000/i,
   },
   {
     path: "/iletisim",

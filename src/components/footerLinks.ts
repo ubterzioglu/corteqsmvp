@@ -17,7 +17,7 @@ export const footerLinkSections: FooterLinkSection[] = [
       { label: "Blog", to: "/radar/rehberler" },
       { label: "Dijital Gruplar", to: "/addcom" },
       { label: "Fiyatlandırma", to: "/pricing" },
-      { label: "Founding 1000", to: "/founding-1000" },
+      { label: "Kurucu 1000", to: "/founding-1000" },
       { label: "İletişim", to: "/iletisim" },
       { label: "Kariyer", to: "/kariyer" },
     ],

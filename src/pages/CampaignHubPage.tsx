@@ -16,8 +16,8 @@ const campaigns: CampaignCard[] = [
   {
     to: "/campaign/founding-1000",
     icon: Crown,
-    title: "Founding 1000",
-    desc: "Global Türk diasporasının dijital haritasında erken yerinizi alın. Founding Verified User avantajları ve sınırlı kontenjan.",
+    title: "Kurucu 1000",
+    desc: "Global Türk diasporasının dijital haritasında erken yerinizi alın. Kurucu Onaylı Üye avantajları ve sınırlı kontenjan.",
   },
   {
     to: "/campaign/vlogger",
@@ -54,14 +54,14 @@ const CampaignHubPage = () => {
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
                 <Sparkles className="w-4 h-4 text-primary" />
                 <span className="text-primary text-sm font-semibold tracking-wider uppercase">
-                  CorteQS Kampanyaları
+                  Kampanya & Yarışmalar
                 </span>
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
                 Aktif <span className="text-accent">kampanyalar</span> ve yarışmalar
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                Founding 1000 erken üyelik programından içerik yarışmalarına; CorteQS topluluğunda
+                Kurucu 1000 erken üyelik programından içerik yarışmalarına; CorteQS topluluğunda
                 erken görünürlük kazanmanın yollarını keşfedin.
               </p>
             </div>

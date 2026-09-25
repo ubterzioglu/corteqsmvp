@@ -1,6 +1,26 @@
 import { describe, expect, it } from "vitest";
 
-import { notificationDeepLink } from "@/lib/cadde-notifications-api";
+import {
+  CADDE_CAFE_OPENED_NOTIFICATION_TYPE,
+  notificationDeepLink,
+  notificationUsesCafeIcon,
+} from "@/lib/cadde-notifications-api";
+
+describe("cadde.cafe.opened bildirimi", () => {
+  it("yeni Cafe bildirimi Cafe detay sayfasına derin bağlantı verir", () => {
+    expect(CADDE_CAFE_OPENED_NOTIFICATION_TYPE).toBe("cadde.cafe.opened");
+    expect(
+      notificationDeepLink({ type: CADDE_CAFE_OPENED_NOTIFICATION_TYPE, entityType: "cafe", entityId: "cafe-9" }),
+    ).toBe("/cadde/cafe/cafe-9");
+  });
+
+  it("Cafe bildirimleri Cafe simgesini kullanır, diğerleri kullanmaz", () => {
+    expect(notificationUsesCafeIcon({ type: CADDE_CAFE_OPENED_NOTIFICATION_TYPE, entityType: "cafe" })).toBe(true);
+    expect(notificationUsesCafeIcon({ type: "cadde.cafe.expiring", entityType: null })).toBe(true);
+    expect(notificationUsesCafeIcon({ type: "cadde.comment.created", entityType: "post" })).toBe(false);
+    expect(notificationUsesCafeIcon({ type: "x", entityType: "carsi_item" })).toBe(false);
+  });
+});
 
 describe("notificationDeepLink (spec §17.2 entity deep link)", () => {
   it("cafe ve çarşı bildirimleri kendi detay sayfalarına gider", () => {

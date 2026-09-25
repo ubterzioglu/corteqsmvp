@@ -5,7 +5,8 @@
 import { HomeActionStack } from "./HomeActionStack";
 import { ACTION_ROW_ONE, ACTION_ROW_TWO } from "./action-buttons-data";
 
-// Kapanış kartı da hero gibi TAM İKİ SATIR, 5 + 5 (kullanıcı kararı, 2026-09-20).
+// Kapanış kartı da hero gibi TAM İKİ SATIR, 5 + 4 (kullanıcı kararı, 2026-09-20;
+// 2026-09-25'te Kampanyalar ve Yarışmalar tek düğmeye indi).
 // Eskiden birinci satırın ilk düğmesi ayrışıyordu (hero "Ağa Katıl", burada
 // "Ücretsiz Kayıt Ol"); 20 Eylül'de etiketler eşitlendi ve iki satır da artık
 // action-buttons-data.ts'ten PAYLAŞILIYOR — tek fark hizalama (burada ortalı).

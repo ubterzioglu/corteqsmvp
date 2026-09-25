@@ -15,10 +15,11 @@ const hrefsIn = (nav: HTMLElement) =>
   Array.from(nav.querySelectorAll("a")).map((anchor) => anchor.getAttribute("href"));
 
 describe("ana sayfa kapanış kartı", () => {
-  // Kullanıcı kararı 2026-09-20: kart genişledi ve düğmeler TAM İKİ SATIR, 5 + 5.
+  // Kullanıcı kararı 2026-09-20: kart genişledi ve düğmeler TAM İKİ SATIR
+  // (2026-09-25'ten beri 5 + 4 — Kampanyalar ve Yarışmalar tek düğme).
   // Önceden 4 + 6 verilip sarmaya bırakılıyordu ve canlıda 4/4/2 diye ÜÇ satır
   // çiziliyordu — bu test o gerilemeyi geri getirmeyi engeller.
-  it("düğmeleri iki satıra beşer beşer böler", () => {
+  it("düğmeleri iki satıra 5 + 4 böler", () => {
     renderCta();
 
     const rowOne = screen.getByRole("navigation", { name: "Kayıt eylemleri" });
@@ -28,7 +29,7 @@ describe("ana sayfa kapanış kartı", () => {
     expect(hrefsIn(rowOne)).toEqual(["/login?mode=signup", "/tools", "/founders", "/campaign"]);
     expect(within(rowOne).getAllByRole("button")).toHaveLength(1);
 
-    expect(hrefsIn(rowTwo)).toEqual(["/campaign", "/radar", "/addcom", "/events", "/feedback"]);
+    expect(hrefsIn(rowTwo)).toEqual(["/radar", "/addcom", "/events", "/feedback"]);
   });
 
   // Kayıt düğmesi 2026-09-20'de TEKLEŞTİ: hero ile kapanış kartı aynı etiketi
@@ -46,11 +47,12 @@ describe("ana sayfa kapanış kartı", () => {
   });
 
   // DEMO deseni (src/lib/demo-pages.ts) kapanış kartında da geçerli.
-  it("Yarışmalar düğmesi DEMO rozeti taşır", () => {
+  it("Kampanya & Yarışmalar düğmesi DEMO rozeti taşır", () => {
     renderCta();
 
+    expect(screen.getAllByRole("link", { name: /Kampanya|Yarışma/ })).toHaveLength(1);
     expect(
-      within(screen.getByRole("link", { name: /Yarışmalar/ })).getByText("DEMO"),
+      within(screen.getByRole("link", { name: /Kampanya & Yarışmalar/ })).getByText("DEMO"),
     ).toBeInTheDocument();
   });
 });

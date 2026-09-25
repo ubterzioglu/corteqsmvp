@@ -809,10 +809,12 @@ export const toolCatalog = {
       "entrypoint": "src/lib/cadde-notifications-api.ts",
       "interface_kind": "internal_api",
       "exports": [
+        "CADDE_CAFE_OPENED_NOTIFICATION_TYPE",
         "listMyNotifications",
         "markAllNotificationsRead",
         "markNotificationRead",
         "notificationDeepLink",
+        "notificationUsesCafeIcon",
         "subscribeToMyNotifications"
       ],
       "tables_read_write": [
@@ -2163,6 +2165,11 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-cafe-opened-notification-contract.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-cafe-themes.test.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -3123,6 +3130,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/lazy-with-reload.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/lazy-with-reload.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/marquee.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -3288,6 +3305,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/profile-education.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-education.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/profile-helpers.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -3433,6 +3460,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/recoveryReload.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/recoveryReload.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -3469,6 +3501,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/relocation-admin-api.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-api.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
@@ -3529,6 +3566,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/relocation-i18n.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-normalize.test.ts",
+      "kind": "ts",
+      "module_family": "relocation"
+    },
+    {
+      "path": "src/lib/relocation-normalize.ts",
       "kind": "ts",
       "module_family": "relocation"
     },

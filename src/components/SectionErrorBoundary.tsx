@@ -6,6 +6,12 @@ interface SectionErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
   sectionName?: string;
+  /**
+   * Değiştiğinde hata durumu sıfırlanır (ör. `location.key`). Çocuklar hatasız
+   * durumda YENİDEN MOUNT EDİLMEZ — yalnız hata kartı kalkar. `key={location.key}`
+   * yerine bu kullanılır; aksi hâlde her `setSearchParams` sayfanın state'ini silerdi.
+   */
+  resetKey?: unknown;
 }
 
 interface SectionErrorBoundaryState {
@@ -19,6 +25,14 @@ class SectionErrorBoundary extends Component<SectionErrorBoundaryProps, SectionE
 
   static getDerivedStateFromError(): SectionErrorBoundaryState {
     return { hasError: true };
+  }
+
+  componentDidUpdate(prevProps: SectionErrorBoundaryProps, prevState: SectionErrorBoundaryState) {
+    // prevState.hasError şartı: hatanın yakalandığı ilk commit'te (hata, resetKey'i
+    // değiştiren navigasyonun kendisinde oluştuysa) hemen sıfırlayıp döngüye girmesin.
+    if (this.state.hasError && prevState.hasError && prevProps.resetKey !== this.props.resetKey) {
+      this.setState({ hasError: false });
+    }
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {

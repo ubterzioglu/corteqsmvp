@@ -38,7 +38,7 @@ export function MoveSelector({
       </CardHeader>
       <CardContent className="space-y-2">
         {moves.map((move) => {
-          const countries = move.target_country_codes.map(countryLabel).join(", ");
+          const countries = (move.target_country_codes ?? []).map(countryLabel).join(", ");
           return (
             <button
               key={move.id}

@@ -9,7 +9,7 @@ interface CategoryListingBannerProps {
 }
 
 /**
- * Kayıt formunun ÜZERİNE konulan Founding 1000 şeridi.
+ * Kayıt formunun ÜZERİNE konulan Kurucu 1000 şeridi.
  * Tıklanınca /founding-1000 sayfasına yönlendirir.
  */
 const CategoryListingBanner = ({ categoryLabel }: CategoryListingBannerProps) => {
@@ -26,7 +26,7 @@ const CategoryListingBanner = ({ categoryLabel }: CategoryListingBannerProps) =>
           <div className="flex items-center gap-1.5">
             <Sparkles className="h-3.5 w-3.5 text-turquoise" />
             <span className="text-xs font-bold uppercase tracking-wider text-turquoise">
-              Founding 1000 — Sınırlı Kontenjan
+              Kurucu 1000 — Sınırlı Kontenjan
             </span>
           </div>
         </div>

@@ -14,15 +14,16 @@
 //   </Route>
 
 import { Route } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
+import { lazyWithReload } from '@/lib/lazy-with-reload';
 
 // Code-splitting: muhasebe sayfaları ihtiyaç anında yüklensin
-const MuhasebeLayout    = lazy(() => import('./MuhasebeLayout'));
-const MuhasebeDashboard = lazy(() => import('./MuhasebeDashboard'));
-const GiderlerPage      = lazy(() => import('./GiderlerPage'));
-const GelirlerPage      = lazy(() => import('./GelirlerPage'));
-const NakitAkisiPage    = lazy(() => import('./NakitAkisiPage'));
-const ButcePage         = lazy(() => import('./butce/ButcePage'));
+const MuhasebeLayout    = lazyWithReload(() => import('./MuhasebeLayout'));
+const MuhasebeDashboard = lazyWithReload(() => import('./MuhasebeDashboard'));
+const GiderlerPage      = lazyWithReload(() => import('./GiderlerPage'));
+const GelirlerPage      = lazyWithReload(() => import('./GelirlerPage'));
+const NakitAkisiPage    = lazyWithReload(() => import('./NakitAkisiPage'));
+const ButcePage         = lazyWithReload(() => import('./butce/ButcePage'));
 
 function PageFallback() {
   return (

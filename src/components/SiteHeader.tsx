@@ -29,6 +29,13 @@ type NavItem = {
   carryOrigin?: boolean;
 };
 
+/** Üye ve ziyaretçi menüsünün ORTAK kampanya öğesi — iki listede aynı yazım. */
+const CAMPAIGN_HUB_ITEM: NavItem = {
+  key: "campaigns",
+  label: "Kampanya & Yarışmalar",
+  to: "/campaign",
+};
+
 /** Giriş yapmış üyenin gezinme öğeleri (hesap işleri hariç). */
 const MEMBER_BROWSE_ITEMS: NavItem[] = [
   { key: "tools", label: "Araçlar", to: "/tools" },
@@ -39,10 +46,11 @@ const MEMBER_BROWSE_ITEMS: NavItem[] = [
   { key: "radar", label: "Radar", to: "/radar" },
   { key: "groups", label: "Dijital Gruplar", to: "/addcom" },
   { key: "events", label: "Etkinlikler", to: "/events" },
-  // Kampanyalar + Yarışmalar: ikisi de /campaign'e gider — yarışmalar şimdilik
-  // kampanya hub'ının içinde listeleniyor (kullanıcı kararı, 2026-09-20).
-  { key: "campaigns", label: "Kampanyalar", to: "/campaign" },
-  { key: "contests", label: "Yarışmalar", to: "/campaign" },
+  // Kampanya & Yarışmalar TEK öğedir (2026-09-25). Eskiden aynı hedefe (/campaign)
+  // giden iki ayrı bağlantı vardı ("Kampanyalar" + "Yarışmalar"); yarışmalar
+  // kampanya merkezinin içinde listelendiği için ikisi tek menüye indirildi.
+  // Ayrı bir yarışma sekmesi AÇMA — /campaign tek merkez ekrandır.
+  CAMPAIGN_HUB_ITEM,
   { key: "founders", label: "Biz kimiz?", to: "/founders" },
   { key: "feedback", label: "Geri Bildirim", to: "/feedback", carryOrigin: true },
 ];
@@ -53,8 +61,7 @@ const VISITOR_BROWSE_ITEMS: NavItem[] = [
   { key: "radar", label: "Radar", to: "/radar" },
   { key: "groups", label: "Dijital Gruplar", to: "/addcom" },
   { key: "create-event", label: "Etkinlik Oluştur", to: "/events/create" },
-  { key: "campaigns", label: "Kampanyalar", to: "/campaign" },
-  { key: "contests", label: "Yarışmalar", to: "/campaign" },
+  CAMPAIGN_HUB_ITEM,
   { key: "founders", label: "Biz kimiz?", to: "/founders" },
 ];
 

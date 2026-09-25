@@ -39,6 +39,16 @@ const markReloaded = () => {
 
 const isWithinCooldown = (): boolean => now() - readLastReloadAt() < COOLDOWN_MS;
 
+/**
+ * True once this page has actually called `location.reload()`. The document keeps
+ * running for a moment until the browser unloads it; during that window lazy imports
+ * that resolved to `undefined` (Vite's preload handler after `preventDefault`) or
+ * rejected must not reach React — see `src/lib/lazy-with-reload.ts`.
+ */
+let reloadInProgress = false;
+
+export const isRecoveryReloadInProgress = (): boolean => reloadInProgress;
+
 export interface RecoverOptions {
   /**
    * When true, reload even if a recent reload already happened. Use for explicit
@@ -61,6 +71,7 @@ export const recoverFromWhiteScreen = (options: RecoverOptions = {}): boolean =>
   }
 
   markReloaded();
+  reloadInProgress = true;
   window.location.reload();
   return true;
 };
@@ -71,7 +82,7 @@ const CHUNK_ERROR_PATTERNS = [
   "importing a module script failed",
 ];
 
-const looksLikeChunkLoadError = (reason: unknown): boolean => {
+export const looksLikeChunkLoadError = (reason: unknown): boolean => {
   const message =
     reason instanceof Error ? reason.message : typeof reason === "string" ? reason : "";
   const normalized = message.toLowerCase();
@@ -81,6 +92,28 @@ const looksLikeChunkLoadError = (reason: unknown): boolean => {
 let listenersInstalled = false;
 
 /**
+ * Handler for Vite's own signal for a failed dynamic import preload.
+ *
+ * preventDefault() tells Vite to swallow the error and resolve the import with
+ * `undefined`. That is only safe when a reload has REALLY started (the page is
+ * about to be replaced). Under cooldown the reload is suppressed, so the error must
+ * flow normally and reach the nearest error boundary — otherwise React reads
+ * `.default` of undefined and the user gets a meaningless crash.
+ */
+export const handleVitePreloadError = (event: Event): void => {
+  if (recoverFromWhiteScreen()) {
+    event.preventDefault();
+  }
+};
+
+/** Lazy import rejections that don't go through vite:preloadError. */
+const handleUnhandledRejection = (event: PromiseRejectionEvent): void => {
+  if (looksLikeChunkLoadError(event.reason)) {
+    recoverFromWhiteScreen();
+  }
+};
+
+/**
  * Install global listeners that auto-recover from failed lazy-chunk loads.
  * Idempotent — safe to call once at app startup.
  */
@@ -88,16 +121,16 @@ export const installChunkErrorRecovery = (): void => {
   if (typeof window === "undefined" || listenersInstalled) return;
   listenersInstalled = true;
 
-  // Vite's own signal for a failed dynamic import preload.
-  window.addEventListener("vite:preloadError", (event) => {
-    event.preventDefault();
-    recoverFromWhiteScreen();
-  });
+  window.addEventListener("vite:preloadError", handleVitePreloadError);
+  window.addEventListener("unhandledrejection", handleUnhandledRejection);
+};
 
-  // Lazy import rejections that don't go through vite:preloadError.
-  window.addEventListener("unhandledrejection", (event) => {
-    if (looksLikeChunkLoadError(event.reason)) {
-      recoverFromWhiteScreen();
-    }
-  });
+/** Test-only: remove listeners and reset module state between cases. */
+export const __resetRecoveryReloadStateForTests = (): void => {
+  reloadInProgress = false;
+  if (typeof window !== "undefined") {
+    window.removeEventListener("vite:preloadError", handleVitePreloadError);
+    window.removeEventListener("unhandledrejection", handleUnhandledRejection);
+  }
+  listenersInstalled = false;
 };

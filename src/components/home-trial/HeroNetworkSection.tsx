@@ -10,7 +10,7 @@ import { ACTION_ROW_ONE, ACTION_ROW_TWO } from "./action-buttons-data";
 
 // Hero'da düğmeler TAM İKİ SATIR çizilir (kullanıcı kararı, 2026-09-20). Onuncu
 // düğme eklenince kendiliğinden üçüncü satıra taşardı; bu yüzden bölme elle
-// yapılır ve iki satır EŞİT uzunlukta (5 + 5) tutulur.
+// yapılır: 5 + 4 (2026-09-25'te Kampanyalar ve Yarışmalar tek düğmeye indi).
 //
 // Ölçü: düğme 10rem (160px) + gap 0.625rem (10px) → 5 düğme = 5×160 + 4×10 = 840px.
 // Sarmalayıcı bu yüzden `max-w-4xl` (896px); `max-w-xl` (576px) ile satır başına

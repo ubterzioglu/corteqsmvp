@@ -12,7 +12,7 @@ CorteQS, yurt dışındaki Türk diasporasını şehir bazlı olarak danışmanl
 - [Dernekler ve Kuruluşlar](https://corteqs.net/associations): Dünya genelindeki Türk dernekleri, vakıfları, odaları, büyükelçilikleri ve konsoloslukları listeler. Kuruluş profilleri `https://corteqs.net/kurulus/<slug>` adresinde.
 
 ## Katılım yolları
-- [Founding 1000](https://corteqs.net/founding-1000): Erken kurucu üyelik programı ve katkı seçenekleri.
+- [Kurucu 1000](https://corteqs.net/founding-1000): Erken kurucu üyelik programı ve katkı seçenekleri.
 - [Şehir Elçisi](https://corteqs.net/commercial/ambassador): Bulunulan şehirde diaspora ağını temsil eden bölgesel partnerlik rolü.
 - [Katkı Sağlayıcı](https://corteqs.net/commercial/contributor): İçerik ve topluluk katkısı rolü.
 - [Influencer Partnerliği](https://corteqs.net/commercial/influencer-partner): İçerik üreticileri için görünürlük ve iş birliği programı.

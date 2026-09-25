@@ -11,11 +11,12 @@
 // admin-navigation-registry.ts kayıtları da güncellenmelidir (testler doğrular).
 
 import { Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
+import { lazyWithReload } from "@/lib/lazy-with-reload";
 
-const RelocationJobsPage = lazy(() => import("./RelocationJobsPage"));
-const RelocationCandidatesPage = lazy(() => import("./RelocationCandidatesPage"));
-const RelocationToolsQuestionCountsPage = lazy(
+const RelocationJobsPage = lazyWithReload(() => import("./RelocationJobsPage"));
+const RelocationCandidatesPage = lazyWithReload(() => import("./RelocationCandidatesPage"));
+const RelocationToolsQuestionCountsPage = lazyWithReload(
   () => import("./RelocationToolsQuestionCountsPage"),
 );
 

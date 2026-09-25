@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { SOCIAL_LINKS, buildMemberWelcomeEmail } from "./member-welcome.ts";
+import { MEMBER_SUPPORT_EMAIL, SOCIAL_LINKS, buildMemberWelcomeEmail } from "./member-welcome.ts";
 
 const BASE = { email: "uye@example.com", fullName: null as string | null };
 
@@ -54,13 +54,20 @@ describe("buildMemberWelcomeEmail", () => {
     expect(email.html).not.toContain("localhost:8080//profile");
   });
 
-  it("yanıt adresi verilirse destek metninde onu gösterir", () => {
-    const withReply = buildMemberWelcomeEmail({ ...BASE, replyTo: "destek@corteqs.net" });
-    expect(withReply.html).toContain("mailto:destek@corteqs.net");
+  it("görünür destek adresi varsayılan olarak destek@corteqs.net'tir", () => {
+    expect(MEMBER_SUPPORT_EMAIL).toBe("destek@corteqs.net");
 
-    const withoutReply = buildMemberWelcomeEmail(BASE);
-    expect(withoutReply.html).not.toContain("mailto:");
-    expect(withoutReply.html).toContain("https://corteqs.net/iletisim");
+    for (const replyTo of [undefined, null, "", "  "]) {
+      const email = buildMemberWelcomeEmail({ ...BASE, replyTo });
+      expect(email.html).toContain("mailto:destek@corteqs.net");
+      expect(email.html).toContain(">destek@corteqs.net</a>");
+      expect(email.text).toContain("destek@corteqs.net adresine yazabilirsin.");
+    }
+  });
+
+  it("yanıt adresi açıkça verilirse destek metninde onu gösterir", () => {
+    const withReply = buildMemberWelcomeEmail({ ...BASE, replyTo: "baska@example.com" });
+    expect(withReply.html).toContain("mailto:baska@example.com");
   });
 
   it("düz metin sürümü dolu ve HTML etiketi içermiyor", () => {
@@ -114,6 +121,29 @@ describe("buildMemberWelcomeEmail", () => {
       expect(email.html).toContain(link.href);
       expect(email.text).toContain(link.href);
     }
+  });
+});
+
+// Üye teşekkür mailinin görünür adresi ile Reply-To başlığı AYNI sabitten gelmeli; ortam
+// değişkeni örneği ve dağıtım talimatı (README secrets) da aynı değeri taşımalı.
+describe("destek adresi / Reply-To sözleşmesi", () => {
+  const root = process.cwd();
+  const read = (relativePath: string): string => readFileSync(path.join(root, relativePath), "utf8");
+
+  it("send-notification-emails hoş geldin başlığını MEMBER_SUPPORT_EMAIL'den kurar", () => {
+    const fn = read("supabase/functions/send-notification-emails/index.ts");
+
+    expect(fn).toMatch(/if \(eventType === "member_welcome"\) return MEMBER_SUPPORT_EMAIL;/);
+    expect(fn).toContain("replyTo: resolveReplyTo(row.event_type, mailReplyTo)");
+    expect(fn).toContain('replyTo: resolveReplyTo("member_welcome", mailReplyTo)');
+    // Şablon (görünür adres) kuyruk ve örnek mail yolunda da aynı sabiti alır.
+    expect(fn.match(/replyTo: MEMBER_SUPPORT_EMAIL,/g)).toHaveLength(2);
+    expect(fn).not.toContain('replyTo: Deno.env.get("MAIL_REPLY_TO")');
+  });
+
+  it(".env.example ve README secrets aynı adresi kullanır", () => {
+    expect(read(".env.example")).toContain(`MAIL_REPLY_TO="${MEMBER_SUPPORT_EMAIL}"`);
+    expect(read("README.md")).toContain(`supabase secrets set MAIL_REPLY_TO=${MEMBER_SUPPORT_EMAIL}`);
   });
 });
 

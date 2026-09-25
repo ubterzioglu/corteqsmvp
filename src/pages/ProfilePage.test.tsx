@@ -64,6 +64,15 @@ vi.mock("@/lib/member-profile-api", () => ({
   updateProfileAvatar: (...args: unknown[]) => updateProfileAvatarMock(...args),
 }));
 
+// İlgi alanı kartı katalog boşken hiç çizilmez; konum testleri için küçük bir katalog
+// verilir. Cafe listesi boş döner (Cadde bölümünde yalnız tanıtım paneli kalır).
+vi.mock("@/lib/cadde-api", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/cadde-api")>()),
+  listCaddeInterestCatalog: () => Promise.resolve([{ key: "kariyer", labelTr: "Kariyer", sortOrder: 1 }]),
+  listMyCaddeInterests: () => Promise.resolve(["kariyer"]),
+  listMyCaddeCafes: () => Promise.resolve([]),
+}));
+
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     auth: {
@@ -1024,5 +1033,176 @@ describe("ProfilePage", () => {
     // Web sitesi kartı düz opsiyonel — tavsiye rozeti yalnız LinkedIn'de (tek adet).
     expect(screen.getAllByText("Opsiyonel").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("Tavsiye edilir")).toHaveLength(1);
+  });
+
+  // ── Plan 2026-09-25: öğrenim alanları, ilgi alanı konumu, yalnız Cadde ─────────
+
+  const educationAttributes: CurrentUserProfilePayload["attributes"] = [
+    {
+      attributeKey: "education_level",
+      label: "Öğrenim durumu",
+      description: "En son tamamlanan öğrenim düzeyi.",
+      dataType: "select",
+      isSystem: false,
+      sortOrder: 55,
+      isRequired: false,
+      isPublicDefault: false,
+      userCanEdit: true,
+      userCanHide: true,
+      requiresAdminApprovalOnChange: false,
+      visibility: "private",
+      approvalStatus: "approved",
+      valueText: "lisans",
+      valueJson: null,
+      displayValue: "lisans",
+    },
+    {
+      attributeKey: "education_last_school",
+      label: "Son bitirdiği üniversite/okul",
+      description: "En son mezun olunan okul.",
+      dataType: "text",
+      isSystem: false,
+      sortOrder: 56,
+      isRequired: false,
+      isPublicDefault: false,
+      userCanEdit: true,
+      userCanHide: true,
+      requiresAdminApprovalOnChange: false,
+      visibility: "private",
+      approvalStatus: "approved",
+      valueText: null,
+      valueJson: null,
+      displayValue: null,
+    },
+  ];
+
+  const mountWithProfile = (
+    profile: CurrentUserProfilePayload,
+    path = "/profile/bireysel",
+    refreshProfile = vi.fn().mockResolvedValue(undefined),
+  ) => {
+    useAuthMock.mockReturnValue({
+      user: { id: "u-1", email: "firmascope@gmail.com", user_metadata: { name: "firmascope" } },
+    });
+    useCurrentUserDashboardMock.mockReturnValue({
+      isLoading: false,
+      errorMessage: null,
+      items: [],
+      refreshDashboard: vi.fn(),
+    });
+    useCurrentUserProfileMock.mockReturnValue({ isLoading: false, errorMessage: null, profile, refreshProfile });
+    renderProfilePage(path);
+    return refreshProfile;
+  };
+
+  it("öğrenim alanları kişisel bilgilerde, varsayılan gizli ve alan başına görünürlükle kaydedilir", async () => {
+    const refreshProfileMock = mountWithProfile({
+      ...baseProfile,
+      attributes: [...baseProfile.attributes, ...educationAttributes],
+    });
+
+    const fieldsCard = screen.getByText("Profil Alanları").closest("div[class*='rounded']") as HTMLElement;
+    const educationSection = within(fieldsCard).getByRole("region", { name: "Öğrenim bilgileri" });
+    const scope = within(educationSection);
+
+    expect(scope.getByText("Öğrenim durumu")).toBeInTheDocument();
+    expect(scope.getByText("Son bitirdiği üniversite/okul")).toBeInTheDocument();
+    expect(scope.getByRole("combobox", { name: "Öğrenim durumu" })).toHaveTextContent("Lisans");
+    // Varsayılan gizli: iki anahtar da kapalı ama kullanıcı değiştirebilir.
+    const levelSwitch = scope.getByRole("switch", { name: "Öğrenim durumu görünürlük" });
+    const schoolSwitch = scope.getByRole("switch", { name: "Son bitirdiği üniversite/okul görünürlük" });
+    expect(levelSwitch).not.toBeChecked();
+    expect(schoolSwitch).not.toBeChecked();
+    expect(levelSwitch).toBeEnabled();
+    expect(schoolSwitch).toBeEnabled();
+    // Rol-özel karta düşmez.
+    const roleCardButton = screen.getByRole("button", { name: /Rolüne Özel Alanları Kaydet/i });
+    const roleCard = roleCardButton.parentElement?.parentElement?.parentElement as HTMLElement;
+    expect(within(roleCard).queryByText("Öğrenim durumu")).not.toBeInTheDocument();
+
+    fireEvent.change(scope.getByPlaceholderText("Son bitirdiği üniversite/okul"), {
+      target: { value: "Orta Doğu Teknik Üniversitesi" },
+    });
+    fireEvent.click(levelSwitch);
+    fireEvent.click(scope.getByRole("button", { name: "Öğrenim Bilgilerini Kaydet" }));
+
+    await waitFor(() => {
+      expect(updateProfileAttributeMock.mock.calls).toEqual([
+        ["education_level", "lisans", "public"],
+        ["education_last_school", "Orta Doğu Teknik Üniversitesi", "private"],
+      ]);
+    });
+    expect(refreshProfileMock).toHaveBeenCalled();
+  });
+
+  it("öğrenim durumu seçimi DB'ye ASCII slug olarak yazılır", async () => {
+    mountWithProfile({
+      ...baseProfile,
+      attributes: [
+        ...baseProfile.attributes,
+        { ...educationAttributes[0], valueText: null, displayValue: null },
+        educationAttributes[1],
+      ],
+    });
+
+    fireEvent.click(screen.getByRole("combobox", { name: "Öğrenim durumu" }));
+    fireEvent.click(await screen.findByRole("option", { name: "Ön lisans" }));
+    fireEvent.click(screen.getByRole("button", { name: "Öğrenim Bilgilerini Kaydet" }));
+
+    await waitFor(() => {
+      expect(updateProfileAttributeMock).toHaveBeenCalledWith("education_level", "on_lisans", "private");
+    });
+    // Boş ve hiç doldurulmamış okul alanı gönderilmez.
+    expect(updateProfileAttributeMock.mock.calls.map((call) => call[0])).toEqual(["education_level"]);
+  });
+
+  it("kural yoksa (RPC döndürmezse) öğrenim bölümü hiç çizilmez", () => {
+    mountWithProfile(baseProfile);
+    expect(screen.queryByRole("region", { name: "Öğrenim bilgileri" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Öğrenim Bilgilerini Kaydet" })).not.toBeInTheDocument();
+  });
+
+  it("ilgi alanları kartı kişisel bilgiler kartının HEMEN altındadır ve gizlenemez kalır", async () => {
+    mountWithProfile({
+      ...baseProfile,
+      attributes: baseProfile.attributes.map((attribute) =>
+        attribute.attributeKey === "interests" ? { ...attribute, userCanHide: false } : attribute,
+      ),
+    });
+
+    const fieldsTitle = screen.getByText("Profil Alanları");
+    const fieldsCard = fieldsTitle.closest("div[class*='rounded']") as HTMLElement;
+    const interestsTitle = await screen.findByText("Bireysel İlgi Alanlarım");
+    const interestsCard = interestsTitle.closest("div[class*='rounded']") as HTMLElement;
+    expect(fieldsCard.nextElementSibling).toBe(interestsCard);
+    expect(screen.getByText(/İlgi alanların herkese açık görünür/)).toBeInTheDocument();
+  });
+
+  it("kurumsal (yan panelli) düzende bölüm adı yalnız 'Cadde'dir ve içinde Çarşı yoktur", async () => {
+    mountWithProfile(
+      {
+        ...baseProfile,
+        profileType: "Consultant_PracticalLife",
+        roleKey: "Consultant_PracticalLife",
+        roleLabel: "Pratik Hayat Danışmanı",
+        roleSlug: "Consultant_PracticalLife",
+      },
+      "/profile/danisman",
+    );
+
+    await screen.findAllByText("Pratik Hayat Danışmanı");
+    expect(screen.queryByText("Çarşı & İlgi Alanları")).not.toBeInTheDocument();
+    const caddeButtons = screen.getAllByRole("button", { name: "Cadde" });
+    expect(caddeButtons.length).toBeGreaterThanOrEqual(1);
+
+    fireEvent.click(caddeButtons[0]);
+    expect(screen.queryByText(/Çarşı/)).not.toBeInTheDocument();
+    expect(screen.queryByText("Bireysel İlgi Alanlarım")).not.toBeInTheDocument();
+    expect(document.querySelector("a[href^='/cadde/carsi']")).toBeNull();
+
+    // İlgi alanları "Profil Bilgileri" bölümünde, kişisel bilgilerin altında.
+    fireEvent.click(screen.getAllByRole("button", { name: "Profil Bilgileri" })[0]);
+    expect(screen.getByText("Profil Alanları")).toBeInTheDocument();
+    expect(await screen.findByText("Bireysel İlgi Alanlarım")).toBeInTheDocument();
   });
 });

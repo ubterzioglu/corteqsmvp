@@ -25,26 +25,32 @@ export function CityComparisonTable({
   emptyLabel,
   whyLabel,
 }: CityComparisonTableProps) {
-  if (recommendations.length === 0) {
+  const items = recommendations ?? [];
+  if (items.length === 0) {
     return <p className="text-sm text-muted-foreground py-8 text-center">{emptyLabel}</p>;
   }
 
   return (
     <div className="space-y-4">
-      {recommendations.map((rec) => (
+      {items.map((rec) => {
+        // `explanations` canlı RPC'de eksikti ve /relocation'ı düşürdü (2026-09-20..23).
+        // API katmanı normalize eder; bileşen yine de kendi başına çökmemeli.
+        const explanations = rec.explanations ?? [];
+        const finalScore = Number.isFinite(rec.final_score) ? rec.final_score : 0;
+        return (
         <Card key={rec.entity_id}>
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg">{rec.title}</CardTitle>
               <Badge variant="secondary" className="text-sm">
-                {Math.round(rec.final_score * 100)}%
+                {Math.round(finalScore * 100)}%
               </Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-3">
               {(Object.keys(SCORE_LABELS) as RelocationScoreKey[]).map((key) => {
-                const value = rec.score_breakdown[key] ?? 0;
+                const value = rec.score_breakdown?.[key] ?? 0;
                 return (
                   <div key={key} className="space-y-1">
                     <div className="flex justify-between text-xs text-muted-foreground">
@@ -56,11 +62,11 @@ export function CityComparisonTable({
                 );
               })}
             </div>
-            {rec.explanations.length > 0 && (
+            {explanations.length > 0 && (
               <div className="pt-1">
                 <p className="text-xs font-semibold text-foreground">{whyLabel}</p>
                 <ul className="mt-1 space-y-0.5 text-xs text-muted-foreground">
-                  {rec.explanations.map((why, i) => (
+                  {explanations.map((why, i) => (
                     <li key={i}>• {why}</li>
                   ))}
                 </ul>
@@ -68,7 +74,8 @@ export function CityComparisonTable({
             )}
           </CardContent>
         </Card>
-      ))}
+        );
+      })}
     </div>
   );
 }

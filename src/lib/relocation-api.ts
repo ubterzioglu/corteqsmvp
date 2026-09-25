@@ -18,6 +18,14 @@ import type {
   RelocationServiceRow,
   RelocationStepRow,
 } from "@/lib/relocation-types";
+import {
+  normalizeEmergencyContactRow,
+  normalizeList,
+  normalizeLocationRecommendation,
+  normalizeMoveRow,
+  normalizeServiceRow,
+  normalizeStepRow,
+} from "@/lib/relocation-normalize";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
@@ -70,7 +78,7 @@ export async function listMoves(): Promise<RelocationMoveRow[]> {
     .order("created_at", { ascending: false })
     .limit(50);
   if (error) throw error;
-  return (data ?? []) as RelocationMoveRow[];
+  return normalizeList(data, normalizeMoveRow);
 }
 
 export async function getMove(moveId: string): Promise<RelocationMoveRow> {
@@ -80,7 +88,7 @@ export async function getMove(moveId: string): Promise<RelocationMoveRow> {
     .eq("id", moveId)
     .single();
   if (error) throw error;
-  return data as RelocationMoveRow;
+  return normalizeMoveRow(data);
 }
 
 /** Aktif taşınma lokasyonlarında bulunan benzersiz hedef ülke kodları. */
@@ -109,7 +117,8 @@ export async function getCityRecommendations(
 ): Promise<RelocationLocationRecommendation[]> {
   const { data, error } = await db.rpc("relocation_rank_locations_v1", { p_move_id: moveId });
   if (error) throw error;
-  return (data ?? []) as RelocationLocationRecommendation[];
+  // Canlı RPC `explanations` döndürmüyordu (2026-09-25 öncesi) → şehir kartı çöküyordu.
+  return normalizeList(data, normalizeLocationRecommendation);
 }
 
 export async function getServiceRecommendations(
@@ -121,13 +130,13 @@ export async function getServiceRecommendations(
     p_category: category,
   });
   if (error) throw error;
-  return (data ?? []) as RelocationServiceRow[];
+  return normalizeList(data, normalizeServiceRow);
 }
 
 export async function getChecklist(moveId: string): Promise<RelocationStepRow[]> {
   const { data, error } = await db.rpc("relocation_build_checklist_v1", { p_move_id: moveId });
   if (error) throw error;
-  return (data ?? []) as RelocationStepRow[];
+  return normalizeList(data, normalizeStepRow);
 }
 
 // ---------------------------------------------------------------------------
@@ -148,7 +157,7 @@ export async function getEmergencyContacts(
   }
   const { data, error } = await query;
   if (error) throw error;
-  return (data ?? []) as RelocationEmergencyContactRow[];
+  return normalizeList(data, normalizeEmergencyContactRow);
 }
 
 // ---------------------------------------------------------------------------

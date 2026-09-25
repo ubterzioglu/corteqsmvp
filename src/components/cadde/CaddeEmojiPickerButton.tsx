@@ -1,11 +1,12 @@
-import { lazy, Suspense, useState } from "react";
+import { Suspense, useState } from "react";
+import { lazyWithReload } from "@/lib/lazy-with-reload";
 import { SmilePlus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-const CaddeEmojiPickerContent = lazy(() => import("@/components/cadde/CaddeEmojiPickerContent"));
+const CaddeEmojiPickerContent = lazyWithReload(() => import("@/components/cadde/CaddeEmojiPickerContent"));
 
 interface CaddeEmojiPickerButtonProps {
   onSelect: (emoji: string) => void;

@@ -33,7 +33,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 import { buildAdminUpdateEmail } from "../_shared/emails/admin-update-digest.ts";
 import { buildRadarScanDigestEmail } from "../_shared/emails/radar-scan-digest.ts";
 import { escapeHtml } from "../_shared/emails/html.ts";
-import { buildMemberWelcomeEmail } from "../_shared/emails/member-welcome.ts";
+import { MEMBER_SUPPORT_EMAIL, buildMemberWelcomeEmail } from "../_shared/emails/member-welcome.ts";
 import { buildRelocationToolAbandonmentEmail } from "../_shared/emails/relocation-tool-abandonment.ts";
 import { buildRelocationToolReportEmail } from "../_shared/emails/relocation-tool-report.ts";
 import { buildRevisionRequestEmail } from "../_shared/emails/revision-request.ts";
@@ -165,8 +165,17 @@ function buildWelcomeEmail(payload: Record<string, unknown>): BuiltEmail {
     fullName,
     email: String(payload.email ?? ""),
     siteUrl: resolveSiteUrl(),
-    replyTo: Deno.env.get("MAIL_REPLY_TO") ?? null,
+    replyTo: MEMBER_SUPPORT_EMAIL,
   });
+}
+
+/**
+ * Reply-To başlığı. Üye teşekkür maili görünür destek adresiyle AYNI sabiti kullanır
+ * (MEMBER_SUPPORT_EMAIL = destek@corteqs.net); diğer tipler genel MAIL_REPLY_TO secret'ını.
+ */
+function resolveReplyTo(eventType: EventType, mailReplyTo: string | undefined): string | undefined {
+  if (eventType === "member_welcome") return MEMBER_SUPPORT_EMAIL;
+  return mailReplyTo || undefined;
 }
 
 // admin_update ve radar_scan_digest bu fonksiyona GELMEZ — o satırlar aşağıdaki toplu özet yolunda birleşir.
@@ -284,14 +293,14 @@ Deno.serve(async (request) => {
       fullName: typeof body.full_name === "string" ? body.full_name : "Örnek Üye",
       email: caller.adminEmail,
       siteUrl: resolveSiteUrl(),
-      replyTo: mailReplyTo ?? null,
+      replyTo: MEMBER_SUPPORT_EMAIL,
     });
 
     try {
       await sendMailViaZohoSmtp(smtpConfig, {
         from: mailFrom,
         to: [caller.adminEmail],
-        replyTo: mailReplyTo || undefined,
+        replyTo: resolveReplyTo("member_welcome", mailReplyTo),
         subject: `[ÖRNEK] ${sample.subject}`,
         html: sample.html,
         text: sample.text,
@@ -416,7 +425,7 @@ Deno.serve(async (request) => {
           await sendMailViaZohoSmtp(smtpConfig, {
             from: mailFrom,
             to: [recipient],
-            replyTo: mailReplyTo || undefined,
+            replyTo: resolveReplyTo(row.event_type, mailReplyTo),
             subject,
             html,
             text,

@@ -13,15 +13,16 @@
 // admin-navigation-registry.ts kayıtları da güncellenmelidir (testler doğrular).
 
 import { Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
+import { lazyWithReload } from "@/lib/lazy-with-reload";
 
-const ServiceFinderDashboardPage = lazy(() => import("./ServiceFinderDashboardPage"));
-const ServiceFinderJobsPage = lazy(() => import("./ServiceFinderJobsPage"));
-const ServiceFinderJobDetailPage = lazy(() => import("./ServiceFinderJobDetailPage"));
-const ServiceFinderProvidersPage = lazy(() => import("./ServiceFinderProvidersPage"));
-const ServiceFinderTemplatesPage = lazy(() => import("./ServiceFinderTemplatesPage"));
-const ServiceFinderCostsPage = lazy(() => import("./ServiceFinderCostsPage"));
-const ServiceFinderGuidePage = lazy(() => import("./ServiceFinderGuidePage"));
+const ServiceFinderDashboardPage = lazyWithReload(() => import("./ServiceFinderDashboardPage"));
+const ServiceFinderJobsPage = lazyWithReload(() => import("./ServiceFinderJobsPage"));
+const ServiceFinderJobDetailPage = lazyWithReload(() => import("./ServiceFinderJobDetailPage"));
+const ServiceFinderProvidersPage = lazyWithReload(() => import("./ServiceFinderProvidersPage"));
+const ServiceFinderTemplatesPage = lazyWithReload(() => import("./ServiceFinderTemplatesPage"));
+const ServiceFinderCostsPage = lazyWithReload(() => import("./ServiceFinderCostsPage"));
+const ServiceFinderGuidePage = lazyWithReload(() => import("./ServiceFinderGuidePage"));
 
 function PageFallback() {
   return (

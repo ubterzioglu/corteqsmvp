@@ -23,7 +23,7 @@ import heroLandmarks from "@/assets/hero-landmarks-watercolor.png";
 
 const stats = [
   { icon: Globe2, value: "5", label: "Kıta" },
-  { icon: Users, value: "1000", label: "Founding User" },
+  { icon: Users, value: "1000", label: "Kurucu Üye" },
   { icon: Trophy, value: "200", label: "Her Kıtadan İlk" },
   { icon: Calendar, value: "29 Ekim", label: "Full Açılış" },
 ];
@@ -67,7 +67,7 @@ const eligibleCategories = [
 ];
 
 const benefits = [
-  { icon: BadgeCheck, text: "CorteQS Founding Verified User Badge" },
+  { icon: BadgeCheck, text: "CorteQS Kurucu Onaylı Üye rozeti" },
   { icon: MapPin, text: "Ülke, şehir ve kategori bazlı erken görünürlük" },
   { icon: Eye, text: "CorteQS kategori vitrininde yer alma hakkı" },
   { icon: Sparkles, text: "Ana sayfa carousel alanında 6 ay görünürlük" },
@@ -155,7 +155,7 @@ const Founding1000Section = () => {
           <span className="text-2xl">⏳</span>
           <p className="text-foreground text-sm md:text-base font-medium">
             <span className="font-bold text-accent">Kontenjan sınırlı:</span> Her kıtadan yalnızca
-            ilk 200 katılımcı Founding Verified User avantajından yararlanabilecek.
+            ilk 200 katılımcı Kurucu Onaylı Üye avantajından yararlanabilecek.
           </p>
         </div>
 
@@ -163,7 +163,7 @@ const Founding1000Section = () => {
         <div className="max-w-4xl mx-auto mb-20 rounded-xl bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/25 px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 shadow-sm">
           <span className="text-2xl">🎁</span>
           <p className="text-foreground text-sm md:text-base font-medium flex-1">
-            <span className="font-bold text-primary">Founding 1000 özel referral kodu:</span>{" "}
+            <span className="font-bold text-primary">Kurucu 1000 özel referral kodu:</span>{" "}
             <code className="px-2 py-0.5 rounded bg-card border border-primary/30 text-primary font-mono text-sm tracking-wider">
               GGVBLA-M7SDSR
             </code>{" "}
@@ -176,7 +176,7 @@ const Founding1000Section = () => {
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h3 className={sectionTitleClass}>Kimler Katılabilir?</h3>
             <p className="text-muted-foreground text-lg leading-relaxed">
-              CorteQS Founding 1000 programı, global Türk diasporasına hizmet veren veya diaspora içinde
+              CorteQS Kurucu 1000 programı, global Türk diasporasına hizmet veren veya diaspora içinde
               görünür olmak isteyen işletme, danışman, kurum, topluluk ve profesyoneller için tasarlandı.
             </p>
           </div>
@@ -201,7 +201,7 @@ const Founding1000Section = () => {
         <div className="mb-20">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h3 className={sectionTitleClass}>
-              Founding Verified User Avantajları
+              Kurucu Onaylı Üye Avantajları
             </h3>
             <p className="text-muted-foreground text-lg">
               Erken katılan, erken konumlanır. İşte size özel ayrıcalıklar:
@@ -227,7 +227,7 @@ const Founding1000Section = () => {
         <div className="mb-20">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h3 className={sectionTitleClass}>Erken Dönem Üyelik</h3>
-            <p className="text-muted-foreground text-lg">Founding 1000'e özel — sınırlı kontenjan.</p>
+            <p className="text-muted-foreground text-lg">Kurucu 1000'e özel — sınırlı kontenjan.</p>
           </div>
 
           <div className="max-w-2xl mx-auto">
@@ -235,13 +235,13 @@ const Founding1000Section = () => {
               {/* Badge */}
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                 <div className="px-4 py-1.5 rounded-full bg-accent text-accent-foreground text-xs font-bold tracking-wider uppercase shadow-lg">
-                  ⭐ Founding 1000 Özel
+                  ⭐ Kurucu 1000 Özel
                 </div>
               </div>
 
               <div className="text-center mb-6">
                 <p className="text-primary text-sm font-semibold uppercase tracking-wider mb-2">
-                  Founding 1000 Özel Yıllık Üyelik
+                  Kurucu 1000 Özel Yıllık Üyelik
                 </p>
                 <div className="flex items-baseline justify-center gap-2">
                   <span className="text-6xl md:text-7xl font-extrabold text-accent">
@@ -261,7 +261,7 @@ const Founding1000Section = () => {
                   <span className="line-through text-muted-foreground/70">€120</span>
                 </div>
                 <div className="flex justify-between text-primary font-bold pt-2 border-t border-border">
-                  <span>Founding 1000 özel</span>
+                  <span>Kurucu 1000 özel</span>
                   <span>€99</span>
                 </div>
               </div>
@@ -351,7 +351,7 @@ const Founding1000Section = () => {
             biri olun.
           </h3>
           <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-            CorteQS Founding 1000'e katılın ve global Türk diasporasının dijital haritasında erken
+            CorteQS Kurucu 1000'e katılın ve global Türk diasporasının dijital haritasında erken
             pozisyon alın.
           </p>
 

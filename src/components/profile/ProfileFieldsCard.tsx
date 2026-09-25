@@ -13,6 +13,7 @@ import { readDraftText } from "@/lib/profile-attribute-drafts";
 import type { DraftValueMap, DraftVisibilityMap } from "@/lib/profile-attribute-keys";
 import { PHONE_ATTRIBUTE_KEY } from "@/lib/profile-phone";
 
+import { ProfileAttributeEditor } from "./ProfileAttributeEditor";
 import { ProfilePhoneField } from "./ProfilePhoneField";
 import {
   AMBER_BUTTON_PRIMARY,
@@ -40,9 +41,13 @@ export type ProfileFieldsCardProps = {
   onDisplayNameSave: () => void;
   onCommonAllVisibleChange: (checked: boolean) => void;
   onCommonSave: () => void;
+  /** Öğrenim durumu + son okul; kural yoksa (RPC döndürmezse) bölüm hiç çizilmez. */
+  educationAttributes?: ProfileAttributeState[];
+  isSavingEducationAttributes?: boolean;
+  onEducationSave?: () => void;
 };
 
-/** Telefon, görünen isim, ülke/şehir ve kısa açıklamayı toplayan ana form kartı. */
+/** Telefon, görünen isim, ülke/şehir, kısa açıklama ve öğrenim bilgilerini toplayan ana form kartı. */
 export const ProfileFieldsCard = ({
   displayNameAttribute,
   displayNameLabel,
@@ -62,6 +67,9 @@ export const ProfileFieldsCard = ({
   onDisplayNameSave,
   onCommonAllVisibleChange,
   onCommonSave,
+  educationAttributes = [],
+  isSavingEducationAttributes = false,
+  onEducationSave,
 }: ProfileFieldsCardProps) => {
   const displayNameVisibility =
     draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility;
@@ -187,6 +195,46 @@ export const ProfileFieldsCard = ({
             </div>
           </div>
         </div>
+
+        {educationAttributes.length ? (
+          <>
+            <Separator className="my-2" />
+            <section aria-label="Öğrenim bilgileri" className="space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <p className="text-[11px] font-semibold text-foreground">Öğrenim</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    İsteğe bağlı. Varsayılan olarak gizlidir; göz anahtarıyla herkese açabilirsin.
+                  </p>
+                </div>
+                {onEducationSave ? (
+                  <Button
+                    size="sm"
+                    className={AMBER_BUTTON_PRIMARY}
+                    onClick={onEducationSave}
+                    disabled={isSavingEducationAttributes || educationAttributes.every((attribute) => !attribute.userCanEdit)}
+                  >
+                    {isSavingEducationAttributes ? "Kaydediliyor..." : "Öğrenim Bilgilerini Kaydet"}
+                  </Button>
+                ) : null}
+              </div>
+              {educationAttributes.map((attribute) => (
+                <ProfileAttributeEditor
+                  key={attribute.attributeKey}
+                  attribute={attribute}
+                  draftValue={draftValues[attribute.attributeKey]}
+                  draftVisibility={draftVisibilities[attribute.attributeKey] ?? attribute.visibility}
+                  displayNameLabel={displayNameLabel}
+                  isSaving={isSavingEducationAttributes}
+                  saveMode="section"
+                  visibilityMode="inline-switch"
+                  onValueChange={(nextValue) => onValueChange(attribute.attributeKey, nextValue)}
+                  onVisibilityChange={(nextVisibility) => onVisibilityChange(attribute.attributeKey, nextVisibility)}
+                />
+              ))}
+            </section>
+          </>
+        ) : null}
       </CardContent>
     </Card>
   );

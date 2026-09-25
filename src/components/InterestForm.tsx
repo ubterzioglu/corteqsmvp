@@ -39,7 +39,7 @@ export const INTEREST_CATEGORIES: { value: string; label: string }[] = [
   { value: "diaspora-medya", label: "Türk Diaspora Medyası (TV / Radyo / Dijital Medya)" },
   { value: "sehir-elcisi", label: "Şehir Elçisi" },
   { value: "kullanici", label: "Bireysel Kullanıcı (taşınma/yaşam)" },
-  { value: "founders_1000", label: "Founders 1000" },
+  { value: "founders_1000", label: "Kurucu 1000" },
   { value: "yarisma", label: "Yarışma (Blog / Vlog)" },
   { value: "kariyer", label: "CorteQS Kariyer" },
 ];
@@ -62,7 +62,7 @@ interface InterestFormProps {
 }
 
 const titles: Record<InterestCategory, string> = {
-  founders_1000: "Founding 1000'e Katıl — Diaspora Pasaportunuzu Oluşturun",
+  founders_1000: "Kurucu 1000'e Katıl — Diaspora Pasaportunuzu Oluşturun",
   yarisma: "Yarışmaya Başvur — Diaspora Pasaportunuzu Oluşturun",
   kariyer: "İş İlanına Başvur — Diaspora Pasaportunuzu Oluşturun",
   genel: "Diaspora Pasaportunuzu Oluşturun",

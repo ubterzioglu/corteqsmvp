@@ -1,10 +1,10 @@
-import { lazy } from "react";
+import { lazyWithReload } from "@/lib/lazy-with-reload";
 import { Route } from "react-router-dom";
 
-const AdminKadroPage = lazy(() => import("@/pages/admin/kadro/AdminKadroPage"));
-const AdminKadroMatrisPage = lazy(() => import("@/pages/admin/kadro/AdminKadroMatrisPage"));
-const AdminKadroRutinlerPage = lazy(() => import("@/pages/admin/kadro/AdminKadroRutinlerPage"));
-const AdminKadroIlanlarPage = lazy(() => import("@/pages/admin/kadro/AdminKadroIlanlarPage"));
+const AdminKadroPage = lazyWithReload(() => import("@/pages/admin/kadro/AdminKadroPage"));
+const AdminKadroMatrisPage = lazyWithReload(() => import("@/pages/admin/kadro/AdminKadroMatrisPage"));
+const AdminKadroRutinlerPage = lazyWithReload(() => import("@/pages/admin/kadro/AdminKadroRutinlerPage"));
+const AdminKadroIlanlarPage = lazyWithReload(() => import("@/pages/admin/kadro/AdminKadroIlanlarPage"));
 
 export const adminKadroRoutes = (
   <Route path="kadro">

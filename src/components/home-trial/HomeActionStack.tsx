@@ -2,15 +2,15 @@
  * Ana sayfanın iki satırlık eylem şeridi — hero ve kapanış kartı AYNI bileşeni
  * kullanır.
  *
- * NEDEN VAR: masaüstünde düğmeler 5 + 5 iki satır çizer ve bu sözleşme
+ * NEDEN VAR: masaüstünde düğmeler 5 + 4 iki satır çizer ve bu sözleşme
  * korunur (bkz. action-buttons-data.ts ölçü notu). Dar ekranda ise düğme
- * `w-full` olduğu için ON düğme alt alta ON SATIR olur ve şerit tek başına
+ * `w-full` olduğu için DOKUZ düğme alt alta DOKUZ SATIR olur ve şerit tek başına
  * ekranı yer. Kullanıcı kararı (2026-09-20): mobilde yalnız İLK ÜÇ düğme
  * açık kalır, kalanlar bir aç/kapa düğmesinin arkasına girer.
  *
  * DOM SIRASI DEĞİŞMEZ. Gizleme sadece sınıfla yapılır (`hidden sm:inline-flex`
  * / `hidden sm:flex`), çünkü satırları mobilde yeniden dizmek masaüstündeki
- * 5 + 5 sözleşmesini sessizce bozardı. `sm` (640px) eşiğinin üstünde aç/kapa
+ * 5 + 4 sözleşmesini sessizce bozardı. `sm` (640px) eşiğinin üstünde aç/kapa
  * düğmesi de kaybolur ve şerit bugünkü haliyle çizilir.
  */
 

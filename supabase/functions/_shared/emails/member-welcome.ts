@@ -30,6 +30,15 @@ const CARD_BG = "#ffffff";
 const DEFAULT_SITE_URL = "https://corteqs.net";
 
 /**
+ * Üye teşekkür/hoş geldin mailinin görünür destek adresi VE Reply-To başlığı (2026-09-25).
+ * Tek kaynak budur: send-notification-emails hoş geldin gönderiminde (kuyruk + örnek mail)
+ * başlığı da bu sabitten kurar; genel MAIL_REPLY_TO secret'ına BAĞLI DEĞİLDİR, böylece
+ * secret kayarsa metindeki adresle başlık ayrışmaz. .env.example ve README'deki
+ * MAIL_REPLY_TO örneği de aynı değerdedir — member-welcome.test.ts üçünü birlikte kilitler.
+ */
+export const MEMBER_SUPPORT_EMAIL = "destek@corteqs.net";
+
+/**
  * Sosyal bağlantılar src/components/Footer.tsx ve src/lib/contact-links.ts ile AYNI olmalıdır.
  * Edge Function deploy'u yalnız supabase/functions/ klasörünü yüklediği için src/ altından
  * import edilemez; bu yüzden değerler burada tekrarlanır. Kaymayı member-welcome.test.ts
@@ -71,7 +80,10 @@ export type MemberWelcomeInput = {
   email: string;
   /** Varsayılan https://corteqs.net — testler ve önizleme başka değer verebilir. */
   siteUrl?: string;
-  /** Yanıt adresi; yalnız metinde gösterilir, gönderim başlığını Edge Function ayarlar. */
+  /**
+   * Görünür destek adresi; verilmezse MEMBER_SUPPORT_EMAIL. Gönderim başlığını (Reply-To)
+   * Edge Function ayarlar ve aynı sabiti kullanır.
+   */
   replyTo?: string | null;
 };
 
@@ -136,8 +148,7 @@ export function buildMemberWelcomeEmail(input: MemberWelcomeInput): BuiltEmail {
   const greeting = firstName ? `Merhaba ${firstName},` : "Merhaba,";
   const profileUrl = `${siteUrl}/profile`;
   const privacyUrl = `${siteUrl}/legal/privacy`;
-  const contactUrl = `${siteUrl}/iletisim`;
-  const replyTo = (input.replyTo ?? "").trim();
+  const replyTo = (input.replyTo ?? "").trim() || MEMBER_SUPPORT_EMAIL;
 
   const subject = firstName
     ? `CorteQS'e hoş geldin ${firstName}`
@@ -148,9 +159,7 @@ export function buildMemberWelcomeEmail(input: MemberWelcomeInput): BuiltEmail {
   // dolgu karakterleri kullanılır (dolgu, gövde metninin önizlemeye sızmasını engeller).
   const preheader = "Kaydın tamamlandı. Profilini tamamlayarak başlayabilirsin.";
 
-  const supportLine = replyTo
-    ? `Bir sorun yaşarsan bu maili doğrudan yanıtlayabilir ya da <a href="mailto:${escapeHtml(replyTo)}" style="color: ${BRAND_DARK};">${escapeHtml(replyTo)}</a> adresine yazabilirsin.`
-    : `Bir sorun yaşarsan bu maili doğrudan yanıtlayabilir ya da <a href="${escapeHtml(contactUrl)}" style="color: ${BRAND_DARK};">iletişim sayfamızdan</a> bize ulaşabilirsin.`;
+  const supportLine = `Bir sorun yaşarsan bu maili doğrudan yanıtlayabilir ya da <a href="mailto:${escapeHtml(replyTo)}" style="color: ${BRAND_DARK};">${escapeHtml(replyTo)}</a> adresine yazabilirsin.`;
 
   const html = `<!doctype html>
 <html lang="tr">
@@ -287,9 +296,7 @@ export function buildMemberWelcomeEmail(input: MemberWelcomeInput): BuiltEmail {
     (section) => `- ${section.title}: ${section.description}\n  ${siteUrl}${section.path}`,
   ).join("\n");
 
-  const supportText = replyTo
-    ? `Bir sorun yaşarsan bu maili doğrudan yanıtlayabilir ya da ${replyTo} adresine yazabilirsin.`
-    : `Bir sorun yaşarsan bu maili doğrudan yanıtlayabilir ya da ${contactUrl} adresinden bize ulaşabilirsin.`;
+  const supportText = `Bir sorun yaşarsan bu maili doğrudan yanıtlayabilir ya da ${replyTo} adresine yazabilirsin.`;
 
   const text = [
     greeting,

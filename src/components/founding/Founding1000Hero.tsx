@@ -1,4 +1,4 @@
-// Founding 1000 hero'su — Etkinlikler / Radar / Araçlar ile AYNI kabuk (`PageHero`).
+// Kurucu 1000 hero'su — Etkinlikler / Radar / Araçlar ile AYNI kabuk (`PageHero`).
 //
 // 2026-09-20 (kullanıcı kararı): /founding-1000 de bu düzene geçti. Sayfanın eski
 // başlığı `Founding1000Section` içindeki grid'in sol kolonundaydı (rozet + h2 + paragraf)
@@ -25,7 +25,8 @@ export function Founding1000Hero() {
       }}
       titleLines={[
         {
-          text: "Founding",
+          // Görünen ad "Kurucu 1000"dır (2026-09-25); rota ve bileşen adı değişmedi.
+          text: "Kurucu",
           gradientClassName: "bg-[linear-gradient(90deg,#ea580c_0%,#f59e0b_45%,#f97316_80%)]",
         },
         {
@@ -36,12 +37,12 @@ export function Founding1000Hero() {
       badges={[
         { label: "5 Kıta", className: "border-orange-200/70 text-orange-700" },
         { label: "Her Kıtadan İlk 200", className: "border-teal-200/70 text-teal-700" },
-        { label: "Founding Verified Badge", className: "border-amber-200/70 text-amber-700" },
+        { label: "Kurucu Onaylı Rozeti", className: "border-amber-200/70 text-amber-700" },
       ]}
       lines={[
         "Diasporanın dijital haritasında erken yerini al.",
         "Her kıtadan yalnızca ilk 200 kontenjan.",
-        "Founding Verified rozetiyle öne çık.",
+        "Kurucu Onaylı rozetiyle öne çık.",
       ]}
     />
   );

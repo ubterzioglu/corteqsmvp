@@ -21,19 +21,22 @@ export function BureaucracyTimeline({
   deadlineLabel,
   emptyLabel,
 }: BureaucracyTimelineProps) {
-  if (steps.length === 0) {
+  const items = steps ?? [];
+  if (items.length === 0) {
     return <p className="text-sm text-muted-foreground py-8 text-center">{emptyLabel}</p>;
   }
 
   return (
     <div className="space-y-6">
       {TRIGGER_ORDER.map((trigger) => {
-        const group = steps.filter((s) => s.trigger === trigger);
+        const group = items.filter((s) => s.trigger === trigger);
         if (group.length === 0) return null;
         return (
           <div key={trigger} className="space-y-3">
             <h3 className="text-sm font-bold text-foreground">{triggerLabels[trigger]}</h3>
-            {group.map((step) => (
+            {group.map((step) => {
+              const documents = step.required_documents ?? [];
+              return (
               <Card key={step.id}>
                 <CardContent className="space-y-2 pt-4">
                   <div className="flex items-center justify-between gap-2">
@@ -47,10 +50,10 @@ export function BureaucracyTimeline({
                   {step.description && (
                     <p className="text-xs text-muted-foreground">{step.description}</p>
                   )}
-                  {step.required_documents.length > 0 && (
+                  {documents.length > 0 && (
                     <p className="text-xs text-muted-foreground">
                       <span className="font-medium">{documentsLabel}:</span>{" "}
-                      {step.required_documents.join(", ")}
+                      {documents.join(", ")}
                     </p>
                   )}
                   {step.official_url && (
@@ -66,7 +69,8 @@ export function BureaucracyTimeline({
                   )}
                 </CardContent>
               </Card>
-            ))}
+              );
+            })}
           </div>
         );
       })}

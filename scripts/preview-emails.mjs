@@ -30,7 +30,8 @@ function buildVariants(buildMemberWelcomeEmail) {
         fullName: "Ayşe Yılmaz",
         email: "ayse.yilmaz@example.com",
         siteUrl,
-        replyTo: process.env.MAIL_REPLY_TO || null,
+        // Verilmezse şablon MEMBER_SUPPORT_EMAIL'e (destek@corteqs.net) düşer — canlıyla aynı.
+        replyTo: null,
       }),
     },
     {

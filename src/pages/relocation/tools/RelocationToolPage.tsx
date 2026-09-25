@@ -6,7 +6,8 @@
 // Mod seçimi (hızlı/detaylı) kaldırıldı — her araç tek modlu sabit 20 sorudan oluşur
 // (relocation_tool_questions.mode = 'both'); session RPC'si şema uyumluluğu için sabit
 // 'detailed' mode değeriyle çağrılır.
-import { Suspense, lazy, useEffect, useMemo, useState, type CSSProperties } from "react";
+import { Suspense, useEffect, useMemo, useState, type CSSProperties } from "react";
+import { lazyWithReload } from "@/lib/lazy-with-reload";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -74,7 +75,7 @@ export default function RelocationToolPage() {
   // Hook sırası bozulmasın diye TÜM hook'lar koşulsuz çağrılır; standalone return en sonda.
   const standalone = getStandaloneTool(toolSlug);
   const StandaloneComponent = useMemo(
-    () => (standalone ? lazy(standalone.load) : null),
+    () => (standalone ? lazyWithReload(standalone.load) : null),
     [standalone],
   );
 

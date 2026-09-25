@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -47,6 +47,7 @@ describe("SiteHeader", () => {
     expect(screen.getByRole("link", { name: "Giriş Yap" })).toHaveAttribute("href", "/login?mode=login");
     expect(screen.getByRole("link", { name: "Kayıt Ol" })).toHaveAttribute("href", "/login?mode=signup");
     expect(screen.queryByText("Founding 1000")).not.toBeInTheDocument();
+    expect(screen.queryByText("Kurucu 1000")).not.toBeInTheDocument();
     expect(screen.queryByText("Whatsapp Topluluğu")).not.toBeInTheDocument();
     expect(screen.queryByText("Ana Sayfa")).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Anketler" })).not.toBeInTheDocument();
@@ -120,10 +121,24 @@ describe("SiteHeader", () => {
         "Radar",
         "Dijital Gruplar",
         "Etkinlik Oluştur",
-        "Kampanyalar",
-        "Yarışmalar",
+        "Kampanya & Yarışmalar",
         "Biz kimiz?",
       ]);
+    });
+
+    // 2026-09-25: Kampanyalar + Yarışmalar aynı hedefe giden iki ayrı bağlantıydı;
+    // tek "Kampanya & Yarışmalar" öğesine indirildi. İkisi geri ayrışırsa düşer.
+    it("kampanya ve yarışmaları tek öğede /campaign'e bağlar", () => {
+      renderHeader();
+
+      fireEvent.click(screen.getByRole("button", { name: "Menü" }));
+      const drawer = screen.getByRole("navigation", { name: "Mobil gezinme" });
+      const campaignLinks = Array.from(drawer.querySelectorAll('a[href="/campaign"]'));
+
+      expect(campaignLinks).toHaveLength(1);
+      expect(campaignLinks[0].textContent).toBe("Kampanya & Yarışmalar");
+      expect(within(drawer).queryByText("Kampanyalar")).not.toBeInTheDocument();
+      expect(within(drawer).queryByText("Yarışmalar")).not.toBeInTheDocument();
     });
 
     it("üyeye önce Profilim sonra Çıkış gösterir", () => {
@@ -137,6 +152,9 @@ describe("SiteHeader", () => {
 
       expect(labels.slice(0, 2)).toEqual(["Profilim", "Çıkış"]);
       expect(labels).toContain("Geri Bildirim");
+      expect(labels.filter((label) => label === "Kampanya & Yarışmalar")).toHaveLength(1);
+      expect(labels).not.toContain("Kampanyalar");
+      expect(labels).not.toContain("Yarışmalar");
     });
 
     // Çekmece ile masaüstü şeridi AYNI listeden üretilir; çekmece kapalıyken

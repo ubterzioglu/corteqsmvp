@@ -82,26 +82,21 @@ export const PRIMARY_ACTIONS = {
  * Hero ve CTA kartının PAYLAŞTIĞI kısayollar. Renkler logonun kollarından seçildi;
  * birincil düğmeler teal/turuncu/yeşil/lacivert kullandığı için hiçbiri karışmaz.
  *
- * ⚠️ Kampanyalar ve Yarışmalar BİLEREK aynı hedefe (`/campaign`) gider — kullanıcı
- * kararı, 2026-09-20: yarışmalar şimdilik kampanya hub'ının içinde listeleniyor,
- * ayrı bir rota açılmadı. Yarışmalara ayrı bir sayfa geldiğinde yalnız `to`
- * değişecek. Aynı hedefli iki düğme olduğu için renkleri de kardeş tonlardır.
+ * ⚠️ Kampanyalar ve Yarışmalar TEK düğmedir (`campaigns`, "Kampanya & Yarışmalar")
+ * — kullanıcı kararı, 2026-09-25: başlıktaki menüyle aynı ad, aynı tek merkez
+ * (`/campaign`). Eskiden aynı hedefe giden İKİ düğme vardı (`campaigns` +
+ * `contests`); ikiye tekrar bölme. Etiket 17 karakteri aşar ve 10rem düğmede
+ * iki satıra sarar — bu bilinçlidir (`leading-tight`, 46px yükseklik yeter).
  */
 export const SECONDARY_ACTIONS = {
   campaigns: {
     to: "/campaign",
-    label: "Kampanyalar",
-    hint: "Founding 1000 erken üyelik programı ve yürüyen tüm CorteQS kampanyaları tek sayfada.",
+    label: "Kampanya & Yarışmalar",
+    hint: "Kurucu 1000 erken üyelik programı, vlogger ve blogger yarışmaları — tüm CorteQS kampanyaları tek sayfada. Yarışma içeriği şu an DEMO.",
     gradient: "from-[#D97706] to-[#A85B06]",
     shadow: "rgba(168,91,6,0.55)",
-  },
-  contests: {
-    to: "/campaign",
-    label: "Yarışmalar",
-    hint: "Vlogger ve blogger yarışmaları — ödüller, katılım koşulları ve başvuru adımları. İçerik şu an DEMO.",
-    gradient: "from-[#0E9F6E] to-[#047857]",
-    shadow: "rgba(4,120,87,0.55)",
-    // Her iki yarışma sayfası da DEMO_ROUTES içinde; rozet bu yüzden var.
+    // Merkezdeki yarışma sayfaları (/campaign/vlogger, /campaign/blogger) DEMO_ROUTES
+    // içinde; rozet bu yüzden var. Yarışmalar gerçek içeriğe kavuşunca kaldır.
     demo: true,
   },
   radar: {
@@ -156,7 +151,8 @@ export const ACTION_ROW_ONE: ActionButtonSpec[] = [
  *
  * Birinci satır `PRIMARY_ACTIONS` dörtlüsü + `SECONDARY_ACTIONS.campaigns` olur;
  * 2026-09-20'de kayıt düğmesi tekleştirildikten sonra hero ile kapanış kartının
- * birinci satırı BİREBİR AYNIDIR. Beşe beş bölme kullanıcı kararıdır.
+ * birinci satırı BİREBİR AYNIDIR. 2026-09-25'te Kampanyalar ve Yarışmalar tek
+ * düğmeye indiği için düzen 5 + 5'ten 5 + 4'e döndü (kullanıcı kararı).
  *
  * ⚠️ Buraya altıncı bir düğme eklemek İKİ bölümü birden üçüncü satıra taşırır.
  * Ölçü: düğme 10rem (160px) + gap 0.625rem (10px) → 5 düğme = 840px; hero
@@ -164,7 +160,6 @@ export const ACTION_ROW_ONE: ActionButtonSpec[] = [
  * Eklemeden önce iki sarmalayıcının da genişliğini yeniden hesapla.
  */
 export const ACTION_ROW_TWO: ActionButtonSpec[] = [
-  SECONDARY_ACTIONS.contests,
   SECONDARY_ACTIONS.radar,
   SECONDARY_ACTIONS.groups,
   SECONDARY_ACTIONS.events,

@@ -66,6 +66,17 @@ export async function markAllNotificationsRead(userId: string): Promise<void> {
   if (error) throw error;
 }
 
+/**
+ * Yeni Cafe açıldığında açan HARİÇ Cadde erişimli herkese düşen bildirim tipi.
+ * Üretici: `create_cadde_cafe_v1` (mig 20260925110000) — entity_type='cafe', related_id=cafe id.
+ */
+export const CADDE_CAFE_OPENED_NOTIFICATION_TYPE = "cadde.cafe.opened";
+
+/** Cafe bildirimleri (açıldı/katılım/onay/kapanıyor) zilde CaddeCafeIcon ile çizilir. */
+export function notificationUsesCafeIcon(notification: Pick<CaddeNotification, "type" | "entityType">): boolean {
+  return notification.entityType === "cafe" || notification.type.startsWith("cadde.cafe.");
+}
+
 /** Bildirim tipi → deep link (spec §17.2). Bilinmeyen tipler Cadde köküne düşer. */
 export function notificationDeepLink(notification: Pick<CaddeNotification, "type" | "entityType" | "entityId">): string {
   if (notification.entityType === "cafe" && notification.entityId) return `/cadde/cafe/${notification.entityId}`;

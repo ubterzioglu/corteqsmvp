@@ -2,15 +2,15 @@
 // Yeni admin Cadde sayfaları buraya eklenir; admin kökündeki routes.tsx yalnız bu
 // fragment'i mount eder. Sayfalar lazy yüklenir (App.tsx code-split düzeniyle uyumlu).
 
-import { lazy } from "react";
+import { lazyWithReload } from "@/lib/lazy-with-reload";
 import { Route } from "react-router-dom";
 
-const AdminCaddePage = lazy(() => import("@/pages/admin/AdminCaddePage"));
-const AdminCaddePromotionsPage = lazy(() => import("@/pages/admin/AdminCaddePromotionsPage"));
-const AdminCaddeModerationPage = lazy(() => import("@/pages/admin/AdminCaddeModerationPage"));
-const AdminCaddeCarsiPage = lazy(() => import("@/pages/admin/AdminCaddeCarsiPage"));
-const AdminCaddeBrandsPage = lazy(() => import("@/pages/admin/AdminCaddeBrandsPage"));
-const AdminCaddeGuidePage = lazy(() => import("@/pages/admin/AdminCaddeGuidePage"));
+const AdminCaddePage = lazyWithReload(() => import("@/pages/admin/AdminCaddePage"));
+const AdminCaddePromotionsPage = lazyWithReload(() => import("@/pages/admin/AdminCaddePromotionsPage"));
+const AdminCaddeModerationPage = lazyWithReload(() => import("@/pages/admin/AdminCaddeModerationPage"));
+const AdminCaddeCarsiPage = lazyWithReload(() => import("@/pages/admin/AdminCaddeCarsiPage"));
+const AdminCaddeBrandsPage = lazyWithReload(() => import("@/pages/admin/AdminCaddeBrandsPage"));
+const AdminCaddeGuidePage = lazyWithReload(() => import("@/pages/admin/AdminCaddeGuidePage"));
 
 export const adminCaddeRoutes = (
   <Route path="cadde">

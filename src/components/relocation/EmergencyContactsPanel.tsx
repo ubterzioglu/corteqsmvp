@@ -9,13 +9,14 @@ interface EmergencyContactsPanelProps {
 }
 
 export function EmergencyContactsPanel({ contacts, emptyLabel }: EmergencyContactsPanelProps) {
-  if (contacts.length === 0) {
+  const items = contacts ?? [];
+  if (items.length === 0) {
     return <p className="text-sm text-muted-foreground py-8 text-center">{emptyLabel}</p>;
   }
 
   return (
     <div className="grid gap-3 sm:grid-cols-2">
-      {contacts.map((contact) => (
+      {items.map((contact) => (
         <Card key={contact.id}>
           <CardContent className="flex items-center justify-between gap-3 pt-4">
             <div className="min-w-0">

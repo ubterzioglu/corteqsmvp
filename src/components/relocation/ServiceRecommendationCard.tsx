@@ -20,6 +20,8 @@ function formatPrice(service: RelocationServiceRow): string | null {
 export function ServiceRecommendationCard({ service }: ServiceRecommendationCardProps) {
   const price = formatPrice(service);
   const link = service.appointment_url ?? service.website_url;
+  const languages = service.languages ?? [];
+  const trustScore = Number.isFinite(service.trust_score) ? service.trust_score : 0;
   return (
     <Card>
       <CardContent className="flex items-start justify-between gap-3 pt-4">
@@ -29,14 +31,14 @@ export function ServiceRecommendationCard({ service }: ServiceRecommendationCard
               {service.provider_name}
             </span>
             <Badge variant="outline" className="shrink-0 text-xs">
-              {Math.round(service.trust_score * 100)}% güven
+              {Math.round(trustScore * 100)}% güven
             </Badge>
           </div>
           {service.plan_name && (
             <p className="text-xs text-muted-foreground">{service.plan_name}</p>
           )}
-          {service.languages.length > 0 && (
-            <p className="text-xs text-muted-foreground">{service.languages.join(", ")}</p>
+          {languages.length > 0 && (
+            <p className="text-xs text-muted-foreground">{languages.join(", ")}</p>
           )}
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1">

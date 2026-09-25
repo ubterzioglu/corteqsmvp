@@ -3,12 +3,13 @@
 /* eslint-disable react-refresh/only-export-components */
 
 import { Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
+import { lazyWithReload } from "@/lib/lazy-with-reload";
 
-const AdminRadarQueuePage = lazy(() => import("../AdminRadarQueuePage"));
-const AdminRadarSourcesPage = lazy(() => import("../AdminRadarSourcesPage"));
-const AdminRadarRunsPage = lazy(() => import("../AdminRadarRunsPage"));
-const AdminRadarGuidePage = lazy(() => import("../AdminRadarGuidePage"));
+const AdminRadarQueuePage = lazyWithReload(() => import("../AdminRadarQueuePage"));
+const AdminRadarSourcesPage = lazyWithReload(() => import("../AdminRadarSourcesPage"));
+const AdminRadarRunsPage = lazyWithReload(() => import("../AdminRadarRunsPage"));
+const AdminRadarGuidePage = lazyWithReload(() => import("../AdminRadarGuidePage"));
 
 function PageFallback() {
   return (

@@ -3,11 +3,11 @@
 // yeni workshop eklerken: (1) buraya route, (2) ADMIN_ROUTE_PATTERNS,
 // (3) admin-navigation-registry "workshop" grubuna item ekle.
 
-import { lazy } from "react";
+import { lazyWithReload } from "@/lib/lazy-with-reload";
 import { Navigate, Route } from "react-router-dom";
 
-const AdminWorkshopCaddePage = lazy(() => import("@/pages/admin/workshop/AdminWorkshopCaddePage"));
-const AdminWorkshopProfilPage = lazy(() => import("@/pages/admin/workshop/AdminWorkshopProfilPage"));
+const AdminWorkshopCaddePage = lazyWithReload(() => import("@/pages/admin/workshop/AdminWorkshopCaddePage"));
+const AdminWorkshopProfilPage = lazyWithReload(() => import("@/pages/admin/workshop/AdminWorkshopProfilPage"));
 
 export const adminWorkshopRoutes = (
   <Route path="workshop">

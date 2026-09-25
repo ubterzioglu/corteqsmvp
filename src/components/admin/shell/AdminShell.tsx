@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { Outlet, useLocation, useOutletContext } from "react-router-dom";
 
+import RouteErrorBoundary from "@/components/RouteErrorBoundary";
 import { cn } from "@/lib/utils";
 import { buildAdminBreadcrumbs } from "@/lib/admin-shell/admin-navigation-utils";
 import { useAdminAccess } from "@/hooks/admin/useAdminAccess";
@@ -66,7 +67,10 @@ const AdminShell = () => {
           />
           <main className="container mx-auto flex-1 px-4 py-6">
             {access.session && (
-              <Outlet context={{ session: access.session, onLogout: access.logout }} />
+              // Sayfa çökerse sidebar/topbar erişilebilir kalır; navigasyon sınırı sıfırlar.
+              <RouteErrorBoundary sectionName="AdminRoute" homeHref="/admin" homeLabel="Yönetici paneline dön">
+                <Outlet context={{ session: access.session, onLogout: access.logout }} />
+              </RouteErrorBoundary>
             )}
           </main>
         </div>

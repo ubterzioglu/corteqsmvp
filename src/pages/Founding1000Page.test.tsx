@@ -31,7 +31,9 @@ describe("Founding1000Page", () => {
 
     const headings = container.querySelectorAll("h1");
     expect(headings).toHaveLength(1);
-    expect(headings[0].textContent).toBe("Founding1000");
+    // Görünen ad 2026-09-25'te "Kurucu 1000" oldu (satırlar ayrı span'lerde çizilir).
+    expect(headings[0].textContent).toBe("Kurucu1000");
+    expect(headings[0].textContent).not.toMatch(/Founding/i);
   });
 
   it("hero görseline gerçek bir alt metin verir (dekoratif değil)", () => {

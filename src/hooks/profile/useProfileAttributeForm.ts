@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 
 import { useToast } from "@/hooks/use-toast";
 import type { Json } from "@/integrations/supabase/types";
-import type {
-  AttributeVisibility,
-  CurrentUserProfilePayload,
-  ProfileAttributeState,
+import {
+  getAttributeStringValue,
+  type AttributeVisibility,
+  type CurrentUserProfilePayload,
+  type ProfileAttributeState,
 } from "@/lib/member-profile";
 import {
   updateProfileAttribute,
@@ -29,6 +30,8 @@ import { SOCIAL_ATTRIBUTE_KEYS, ensureHttpsUrl, normalizeSocialMediaValue } from
 
 export type GroupedProfileAttributes = {
   common: ProfileAttributeState[];
+  /** Öğrenim durumu + son okul (mig 20260925100000) — isteğe bağlı, varsayılan gizli. */
+  education: ProfileAttributeState[];
   socialMedia: ProfileAttributeState[];
   roleSpecific: ProfileAttributeState[];
 };
@@ -55,6 +58,7 @@ export type UseProfileAttributeFormResult = {
   savingCommonAttributes: boolean;
   savingSocialMedia: boolean;
   savingRoleSpecificAttributes: boolean;
+  savingEducationAttributes: boolean;
   savingPreferenceKey: string | null;
   handleDraftChange: (attributeKey: string, nextValue: string | boolean) => void;
   handleDraftVisibilityChange: (attributeKey: string, nextVisibility: AttributeVisibility) => void;
@@ -66,6 +70,7 @@ export type UseProfileAttributeFormResult = {
   handleSaveCommonAttributes: () => Promise<void>;
   handleSaveSocialMedia: () => Promise<void>;
   handleSaveRoleSpecificAttributes: () => Promise<void>;
+  handleSaveEducationAttributes: () => Promise<void>;
   handleSavePreferenceToggle: (attributeKey: string, checked: boolean) => Promise<void>;
   handleSaveLinkCard: (attribute: ProfileAttributeState) => Promise<void>;
 };
@@ -95,6 +100,7 @@ export const useProfileAttributeForm = ({
   const [savingCommonAttributes, setSavingCommonAttributes] = useState(false);
   const [savingSocialMedia, setSavingSocialMedia] = useState(false);
   const [savingRoleSpecificAttributes, setSavingRoleSpecificAttributes] = useState(false);
+  const [savingEducationAttributes, setSavingEducationAttributes] = useState(false);
   const [savingPreferenceKey, setSavingPreferenceKey] = useState<string | null>(null);
 
   useEffect(() => {
@@ -379,6 +385,60 @@ export const useProfileAttributeForm = ({
     }
   };
 
+  // Öğrenim alanları isteğe bağlıdır: boş bırakılan ve daha önce hiç doldurulmamış
+  // alan gönderilmez; daha önce dolu olan alan boşaltılırsa (temizleme) gönderilir.
+  // Görünürlük her alanda ayrı seçilir; varsayılan gizlidir (role_attributes kuralı).
+  const handleSaveEducationAttributes = async () => {
+    if (!groupedAttributes.education.length) return;
+
+    const attributesToSave = groupedAttributes.education.filter((attribute) => {
+      const draftText = String(draftValues[attribute.attributeKey] ?? "").trim();
+      const storedText = getAttributeStringValue(attribute).trim();
+      const draftVisibility = draftVisibilities[attribute.attributeKey] ?? attribute.visibility;
+      if (!draftText && !storedText) return false;
+      return draftText !== storedText || draftVisibility !== attribute.visibility;
+    });
+
+    if (!attributesToSave.length) {
+      toast({ title: "Kaydedilecek değişiklik yok", description: "Öğrenim bilgilerinde değişiklik bulunamadı." });
+      return;
+    }
+
+    setSavingEducationAttributes(true);
+    const failures: string[] = [];
+    let savedCount = 0;
+    try {
+      for (const attribute of attributesToSave) {
+        try {
+          const { valueToSend, visibility } = buildAttributePayload(attribute);
+          await updateProfileAttribute(attribute.attributeKey, valueToSend, visibility);
+          savedCount += 1;
+        } catch (error) {
+          const message = error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.";
+          failures.push(`${attribute.label}: ${message}`);
+        }
+      }
+
+      if (savedCount > 0) {
+        await refreshProfile();
+      }
+
+      if (failures.length === 0) {
+        toast({ title: "Öğrenim bilgileri kaydedildi", description: "Değerler ve görünürlük ayarları güncellendi." });
+      } else {
+        toast({
+          title: savedCount > 0
+            ? `${savedCount} alan kaydedildi, ${failures.length} alan kaydedilemedi`
+            : "Öğrenim bilgileri kaydedilemedi",
+          description: failures.join(" · "),
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setSavingEducationAttributes(false);
+    }
+  };
+
   const patchIndividualProfileDetails = async (
     patchBuilder: (current: IndividualProfileDetailsRow | null) => Record<string, unknown>,
   ) => {
@@ -510,6 +570,7 @@ export const useProfileAttributeForm = ({
     savingCommonAttributes,
     savingSocialMedia,
     savingRoleSpecificAttributes,
+    savingEducationAttributes,
     savingPreferenceKey,
     handleDraftChange,
     handleDraftVisibilityChange,
@@ -521,6 +582,7 @@ export const useProfileAttributeForm = ({
     handleSaveCommonAttributes,
     handleSaveSocialMedia,
     handleSaveRoleSpecificAttributes,
+    handleSaveEducationAttributes,
     handleSavePreferenceToggle,
     handleSaveLinkCard,
   };

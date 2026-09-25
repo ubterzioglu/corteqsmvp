@@ -9,16 +9,19 @@ import { buildKadroAdText } from "@/lib/kadro/kadro-ad-text";
 import { trIncludes } from "@/lib/text-normalization";
 import { Copy, Check } from "lucide-react";
 
+/** Radix Select boş string değerli SelectItem'da hata fırlatır; "tümü" için sentinel. */
+const ALL_DEPTS = "all";
+
 function AdminKadroIlanlarPage() {
   const [search, setSearch] = useState("");
-  const [selectedDept, setSelectedDept] = useState("");
+  const [selectedDept, setSelectedDept] = useState<string>(ALL_DEPTS);
   const [expandedRole, setExpandedRole] = useState<string | null>(null);
   const [copiedRole, setCopiedRole] = useState<string | null>(null);
 
   const rolesWithAd = KADRO_ROLES.filter((r) => r.ad !== null);
 
   const filteredRoles = rolesWithAd.filter((role) => {
-    if (selectedDept && role.dept !== selectedDept) return false;
+    if (selectedDept !== ALL_DEPTS && role.dept !== selectedDept) return false;
     if (search) {
       const searchText = `${role.title} ${role.ad?.sum ?? ""} ${role.ad?.does.join(" ") ?? ""} ${role.ad?.profile.join(" ") ?? ""}`;
       if (!trIncludes(searchText, search)) return false;
@@ -58,7 +61,7 @@ function AdminKadroIlanlarPage() {
             <SelectValue placeholder="Tüm Departmanlar" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Tüm Departmanlar</SelectItem>
+            <SelectItem value={ALL_DEPTS}>Tüm Departmanlar</SelectItem>
             {KADRO_DEPTS.map((dept) => (
               <SelectItem key={dept.id} value={dept.id}>
                 {dept.name}

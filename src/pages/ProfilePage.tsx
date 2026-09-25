@@ -16,8 +16,8 @@ import {
   MapPin,
   Plane,
   Share2,
+  Signpost,
   Sparkles,
-  Store,
   Trash2,
   User,
   UserCheck,
@@ -36,6 +36,7 @@ import { useProfileDocuments } from "@/hooks/profile/useProfileDocuments";
 import { useProfileRoleRequests } from "@/hooks/profile/useProfileRoleRequests";
 import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS } from "@/lib/features";
 import { PHONE_ATTRIBUTE_KEY } from "@/lib/profile-phone";
+import { EDUCATION_ATTRIBUTE_KEYS, isEducationAttributeKey } from "@/lib/profile-education";
 import { getMyReferralCodeUsage, type MyReferralCodeUsage } from "@/lib/member-profile-api";
 import { getAttributeStringValue, type ProfileAttributeState } from "@/lib/member-profile";
 import { formatDocumentMeta, readBooleanAttributeValue } from "@/lib/profile-attribute-drafts";
@@ -179,12 +180,17 @@ const ProfilePage = () => {
 
   const groupedAttributes = useMemo(() => {
     const common: ProfileAttributeState[] = [];
+    const education: ProfileAttributeState[] = [];
     const socialMedia: ProfileAttributeState[] = [];
     const roleSpecific: ProfileAttributeState[] = [];
 
     for (const attribute of profile?.attributes ?? []) {
       if (["country", "city", "bio_short"].includes(attribute.attributeKey)) {
         common.push(attribute);
+      } else if (isEducationAttributeKey(attribute.attributeKey)) {
+        // Öğrenim alanları kişisel bilgilerin içinde, alan başına görünürlükle çizilir
+        // (ortak alanların toplu görünürlük anahtarına bağlanmaz — varsayılan gizli).
+        education.push(attribute);
       } else if (SPECIAL_PROFILE_ATTRIBUTE_KEYS.has(attribute.attributeKey)) {
         continue;
       } else if (SOCIAL_ATTRIBUTE_KEYS.has(attribute.attributeKey)) {
@@ -202,7 +208,11 @@ const ProfilePage = () => {
       return leftIndex - rightIndex;
     });
 
-    return { common, socialMedia, roleSpecific };
+    education.sort(
+      (left, right) => EDUCATION_ATTRIBUTE_KEYS.indexOf(left.attributeKey) - EDUCATION_ATTRIBUTE_KEYS.indexOf(right.attributeKey),
+    );
+
+    return { common, education, socialMedia, roleSpecific };
   }, [profile?.attributes]);
 
   const attributeMap = useMemo(() => {
@@ -509,6 +519,9 @@ const ProfilePage = () => {
       onDisplayNameSave={() => void form.handleSaveAttribute(displayNameAttribute)}
       onCommonAllVisibleChange={form.handleCommonAllVisibleChange}
       onCommonSave={() => void form.handleSaveCommonAttributes()}
+      educationAttributes={groupedAttributes.education}
+      isSavingEducationAttributes={form.savingEducationAttributes}
+      onEducationSave={() => void form.handleSaveEducationAttributes()}
     />
   ) : null;
 
@@ -536,15 +549,27 @@ const ProfilePage = () => {
   ) : null;
 
   const interestsAttribute = attributeMap.get("interests") ?? null;
+  // WS1 madde 5 (T19 kararı): ilgi alanları herkese açık. Kural role_attributes'ta
+  // (user_can_hide=false, mig 20260904200000); kural yoksa da varsayılan "gizlenemez".
+  // Plan 2026-09-25: kişisel bilgiler kartının HEMEN altında çizilir (Cadde bölümünden taşındı).
+  const interestsCard = (
+    <CaddeInterestsCard
+      onSaved={() => void refreshProfile()}
+      visibility={interestsAttribute?.visibility ?? "public"}
+      canHide={interestsAttribute?.userCanHide ?? false}
+    />
+  );
+
+  const personalInfoSection = (
+    <div className="flex flex-col gap-4">
+      {profileFieldsCard}
+      {interestsCard}
+    </div>
+  );
+
+  // Cadde bölümü: yalnız Cadde içeriği (cafe'ler + tanıtım). Çarşı burada yer almaz.
   const caddeCards = (
     <>
-      {/* WS1 madde 5 (T19 kararı): ilgi alanları herkese açık. Kural role_attributes'ta
-          (user_can_hide=false, mig 20260904200000); kural yoksa da varsayılan "gizlenemez". */}
-      <CaddeInterestsCard
-        onSaved={() => void refreshProfile()}
-        visibility={interestsAttribute?.visibility ?? "public"}
-        canHide={interestsAttribute?.userCanHide ?? false}
-      />
       <CaddeMyContentCard />
       <CaddeTanitimPanel />
     </>
@@ -721,6 +746,7 @@ const ProfilePage = () => {
         <div className="grid gap-6 lg:grid-cols-12">
           <div className="flex min-w-0 flex-col gap-4 lg:col-span-8">
             {profileFieldsCard}
+            {interestsCard}
             {badgesCard}
             {caddeCards}
             {socialMediaCard}
@@ -800,7 +826,7 @@ const ProfilePage = () => {
       id: "fields",
       label: "Profil Bilgileri",
       icon: <User className="h-4 w-4" />,
-      content: profileFieldsCard,
+      content: personalInfoSection,
     },
     ...(badgesCard
       ? [
@@ -814,8 +840,10 @@ const ProfilePage = () => {
       : []),
     {
       id: "cadde",
-      label: "Çarşı & İlgi Alanları",
-      icon: <Store className="h-4 w-4" />,
+      // Yalnız Cadde: Çarşı verisi/sorgusu/bağlantısı bu bölümde YOK (plan 2026-09-25).
+      // İlgi alanları buradan "Profil Bilgileri"ne, kişisel bilgilerin hemen altına taşındı.
+      label: "Cadde",
+      icon: <Signpost className="h-4 w-4" />,
       content: caddeCards,
     },
     {
