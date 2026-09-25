@@ -136,6 +136,8 @@ export type CaddeCafeRow = {
   capacity: Nullable<number>;
   external_links: unknown;
   archived_at: Nullable<string>;
+  // m135: Kafe logosu
+  logo_url: Nullable<string>;
 };
 
 export type CaddeCafeMemberRow = {
@@ -336,6 +338,8 @@ export type CaddeCafe = {
   archivedAt: string | null;
   hostUserId: string | null;
   viewerMemberStatus: CaddeCafeMemberStatus | null;
+  // m135: Kafe logosu
+  logoUrl: string | null;
 };
 
 export type CaddeCafeMember = {

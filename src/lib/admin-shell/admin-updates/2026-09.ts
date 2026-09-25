@@ -5,6 +5,17 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260925-cafe-bildirim-logo",
+    date: "25 Eylül 2026",
+    title: "Cafe bildirimleri iyileştirildi, hostlar artık logo yükleyebiliyor",
+    items: [
+      "CAFEDEN ÇIKINCA BİLDİRİM DEĞİŞTİ: Eskiden 'Talebin kabul/red edildi' bildirimi giderdi. Artık onaylandığında 'X kafeye girdi' şeklinde akış bildirimi gidiyor. Reddedildiğinde bildirim yok (WhatsApp basitliği).",
+      "CAFEDEN İÇERİ BİLDİRİM ZATEN VARDI: Biri kafeye katılma talebi bıraktığında ev sahibine 'Yeni katılım talebi var' bildirimi gidiyordu. Bu zaten çalışıyordu, şimdi resmileştirildi.",
+      "KAFE LOGOSU YÜKLEME: Host artık kendi kafesi için logo görseli yükleyebiliyor. Kafe sayfasında logo varsa gösteriliyor, yoksa çay bardağı ikonu. '⋯' menüsünden 'Logo Yükle' seçeneğiyle yükleniyor.",
+      "GÜNÜN KONTROLÜ: 3 migration uygulandı (cafe join notification, cafe logo kolonu, cafe logo update RPC). Testler yeşil, tip denetimi 0 hata.",
+    ],
+  },
+  {
     id: "20260925-cadde-realtime-yenile",
     date: "25 Eylül 2026",
     title: "Cadde'de yeni paylaşım veya yorum geldiğinde bildirim çıkıyor, istediğinde yeniliyorsun",

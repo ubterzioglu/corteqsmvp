@@ -223,7 +223,7 @@ export async function archiveCaddeCafe(cafeId: string): Promise<void> {
 }
 
 const CAFE_SELECT_COLUMNS =
-  "id, host_user_id, host_name_override, title, summary, country_id, city_id, content_mode, status, is_bridge, is_free, starts_at, ends_at, is_active, created_at, slug, theme_key, entry_mode, entry_question, capacity, external_links, archived_at";
+  "id, host_user_id, host_name_override, title, summary, country_id, city_id, content_mode, status, is_bridge, is_free, starts_at, ends_at, is_active, created_at, slug, theme_key, entry_mode, entry_question, capacity, external_links, archived_at, logo_url";
 
 function filterDemoCafes(items: CaddeCafe[], filters: CaddeFilterState): CaddeCafe[] {
   return items.filter((item) =>
@@ -253,6 +253,8 @@ function mapCafe(row: CaddeCafeRow, countries: Map<string, string>, cities: Map<
     joinedByViewer: viewerMember?.status === "approved", mode: row.content_mode, slug: row.slug, themeKey: row.theme_key,
     entryMode: row.entry_mode, entryQuestion: row.entry_question, capacity: row.capacity, archivedAt: row.archived_at,
     hostUserId: row.host_user_id, viewerMemberStatus: viewerMember?.status ?? null,
+    // m135: Kafe logosu
+    logoUrl: row.logo_url ?? null,
   };
 }
 
@@ -483,4 +485,13 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
     reportCaddeApiError("listCaddeCafeFeed", error);
     return [];
   }
+}
+
+/** m135: Kafe logosu güncelleme — yalnız host/admin/mod yetkisi. */
+export async function updateCaddeCafeLogo(cafeId: string, logoUrl: string | null): Promise<void> {
+  const { error } = await db.rpc("update_cadde_cafe_logo_v1", {
+    p_cafe_id: cafeId,
+    p_logo_url: logoUrl ?? "",
+  });
+  if (error) throw caddeWriteError("updateCaddeCafeLogo", error);
 }

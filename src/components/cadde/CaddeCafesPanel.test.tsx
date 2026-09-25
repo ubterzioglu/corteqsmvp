@@ -37,6 +37,7 @@ const cafe = (overrides: Partial<CaddeCafe> = {}): CaddeCafe => ({
   archivedAt: null,
   hostUserId: null,
   viewerMemberStatus: null,
+  logoUrl: null,
   ...overrides,
 });
 

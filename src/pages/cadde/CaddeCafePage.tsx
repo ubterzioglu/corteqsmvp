@@ -4,10 +4,10 @@
 // Arşivlenen veya süresi biten cafe read-only görünür; enforce DB'dedir (RPC + RLS),
 // buradaki guard'lar yalnız UX içindir.
 
-import { useMemo, useState } from "react";
+import { useRef, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-import { Archive, Clock3, ExternalLink, KeyRound, MapPin, MoreHorizontal, ShieldQuestion, Users } from "lucide-react";
+import { Archive, Clock3, ExternalLink, Image, KeyRound, MapPin, MoreHorizontal, ShieldQuestion, Users } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
@@ -30,6 +30,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { formatCafeOccupancy } from "@/lib/cadde-cafe-occupancy";
+import { uploadCaddeMedia } from "@/lib/cadde-media";
 import {
   approveCaddeCafeMember,
   archiveCaddeCafe,
@@ -39,7 +40,7 @@ import {
   listCaddeCafeFeed,
   listCaddeCafeMembers,
 } from "@/lib/cadde-api";
-import { listCaddeCafeThemes } from "@/lib/cadde-cafe-api";
+import { listCaddeCafeThemes, updateCaddeCafeLogo } from "@/lib/cadde-cafe-api";
 import { emptyCaddeComposer } from "@/lib/cadde-composer";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 
@@ -62,6 +63,7 @@ const CaddeCafePage = () => {
   const [composer, setComposer] = useState(emptyCaddeComposer);
   const [joinAnswer, setJoinAnswer] = useState("");
   const [referralCode, setReferralCode] = useState("");
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   // m4: başlıkta tema Türkçe etiketiyle (themeKey ham anahtar).
   const themesQuery = useQuery({
@@ -163,6 +165,29 @@ const CaddeCafePage = () => {
     },
   });
 
+  // m135: Kafe logosu yükleme
+  const logoMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const asset = await uploadCaddeMedia(file, "cafe");
+      await updateCaddeCafeLogo(cafeId, asset.url);
+    },
+    onSuccess: async () => {
+      await invalidateCafe();
+      toast({ title: "Logo güncellendi" });
+    },
+    onError: (error) => {
+      toast({ title: "Logo güncellenemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+    },
+  });
+
+  const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      logoMutation.mutate(file);
+    }
+    event.target.value = "";
+  };
+
   const pendingMembers = useMemo(
     () => (membersQuery.data ?? []).filter((member) => member.status === "pending"),
     [membersQuery.data],
@@ -208,7 +233,12 @@ const CaddeCafePage = () => {
             </div>
             {/* m3+m4: çay bardağı ikonu + "ad bold, tema normal" tek satır (ham themeKey rozeti kalktı). */}
             <CardTitle className="flex items-center gap-2 text-2xl">
-              <CaddeCafeIcon className="h-6 w-6 shrink-0 text-orange-600" />
+              {/* m135: Kafe logosu varsa göster */}
+              {cafe.logoUrl ? (
+                <img src={cafe.logoUrl} alt={`${cafe.title} logosu`} className="h-10 w-10 shrink-0 rounded-lg object-cover" />
+              ) : (
+                <CaddeCafeIcon className="h-6 w-6 shrink-0 text-orange-600" />
+              )}
               <span className="min-w-0">
                 {cafe.title}
                 {cafe.themeKey && themeLabelByKey.get(cafe.themeKey) ? (
@@ -236,6 +266,14 @@ const CaddeCafePage = () => {
                 bu batch'in kapsamı değil — pozisyon bilinçli olarak boş bırakıldı. */}
             {isOwner && !isArchived ? (
               <div className="flex justify-end">
+                {/* m135: Logo yükleme input (gizli) */}
+                <input
+                  ref={logoInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleLogoChange}
+                />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -249,6 +287,13 @@ const CaddeCafePage = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onSelect={() => logoInputRef.current?.click()}
+                      disabled={logoMutation.isPending}
+                    >
+                      <Image className="mr-2 h-4 w-4" />
+                      {logoMutation.isPending ? "Yükleniyor..." : "Logo Yükle"}
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                       onSelect={() => archiveMutation.mutate()}
                       disabled={archiveMutation.isPending}

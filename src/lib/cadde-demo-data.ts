@@ -138,6 +138,7 @@ export const DEMO_CAFES: CaddeCafe[] = [
     archivedAt: null,
     hostUserId: null,
     viewerMemberStatus: null,
+    logoUrl: null,
   },
   {
     id: "demo-cafe-2",
@@ -162,6 +163,7 @@ export const DEMO_CAFES: CaddeCafe[] = [
     archivedAt: null,
     hostUserId: null,
     viewerMemberStatus: null,
+    logoUrl: null,
   },
 ];
 

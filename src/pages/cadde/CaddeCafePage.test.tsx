@@ -60,6 +60,7 @@ const makeCafe = (overrides: Partial<CaddeCafe> = {}): CaddeCafe => ({
   archivedAt: null,
   hostUserId: "host-1",
   viewerMemberStatus: null,
+  logoUrl: null,
   ...overrides,
 });
 
