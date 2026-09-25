@@ -5,6 +5,26 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260925-profil-cadde-kampanya-canli-hatalar",
+    date: "25 Eylül 2026",
+    title:
+      "Taşınma sayfası artık çökmüyor, profile öğrenim bilgisi geldi, 'Founding 1000' her yerde 'Kurucu 1000' oldu ve Kampanya & Yarışmalar tek menüde toplandı",
+    items: [
+      "TAŞINMA SAYFASININ ÇÖKMESİNİN SEBEBİ BULUNDU: Şehir önerileri ekrana 'açıklama' listesi olmadan geliyordu ve sayfa o listeyi okumaya çalışırken düşüyordu. 20–23 Eylül arasında bu yüzden 11 hata kaydı düşmüş. Hem veritabanı tarafı düzeltildi (liste artık hep geliyor, boş da olsa) hem de ekran eksik veriye karşı korundu. Hizmetler, kontrol listesi ve acil numaralar da aynı açık için tarandı.",
+      "BİR SAYFA ÇÖKSE BİLE MENÜ ÇALIŞMAYA DEVAM EDİYOR: Eskiden bir sayfadaki hata tüm siteyi hata ekranına düşürüyor, geri tuşu bile işe yaramıyordu. Artık hata yalnız o sayfanın alanında gösteriliyor; üst menü, yan menü ve geri tuşu çalışıyor, başka sayfaya geçince hata kendiliğinden temizleniyor.",
+      "SAYFA GEÇİŞLERİNDEKİ KISA SÜRELİ HATA EKRANI GİDERİLDİ: Site güncellendiğinde açık kalmış eski bir sekme yeni sayfayı yüklemeye çalışınca kısa süreli bir hata ekranı çıkıyordu. Artık sayfa sessizce yenileniyor ve yenilenirken hata göstermiyor. Uygulamadaki 149 sayfa geçişinin hepsi bu yeni yönteme alındı.",
+      "KADRO İLANLARI SAYFASI DÜZELDİ: Departman filtresindeki 'Tüm Departmanlar' seçeneği sayfayı çökertiyordu. Düzeltildi.",
+      "PROFİLE ÖĞRENİM BİLGİSİ EKLENDİ: 'Öğrenim durumu' (İlköğretim'den Doktora'ya) ve 'Son bitirdiği üniversite/okul'. İkisi de isteğe bağlı ve varsayılan olarak GİZLİ; kullanıcı isterse göz simgesiyle herkese açabilir. Tüm üye türlerinde (78 rol) açık.",
+      "PROFİL PANELİ SADELEŞTİ: İlgi alanları kişisel bilgilerin hemen altına taşındı. Yan menüdeki 'Çarşı & İlgi Alanları' artık yalnız 'Cadde'; Çarşı ile ilgili hiçbir şey kalmadı. Çarşı açıldığında üst menüye ayrıca eklenecek.",
+      "YENİ CAFE AÇILINCA HERKESE HABER GİDİYOR: Biri Cadde'de Cafe açtığında, açan hariç Cadde'ye erişimi olan herkesin bildirim zilinde Cafe simgeli bir bildirim beliriyor; tıklayınca doğrudan o Cafe'ye götürüyor. Yalnız site içi bildirim, e-posta gitmiyor.",
+      "TEŞEKKÜR MAİLİNDE DESTEK ADRESİ: Yeni üyeye giden teşekkür mailinde görünen adres ve 'yanıtla' adresi artık destek@corteqs.net.",
+      "'FOUNDING 1000' HER YERDE 'KURUCU 1000' OLDU: Menü, ana sayfa, kampanya sayfası, arama motoru başlıkları dahil. Rozet adı da Türkçeleşti: 'Kurucu Onaylı Üye'. Sayfa adresleri değişmedi, eski bağlantılar çalışıyor.",
+      "KAMPANYA & YARIŞMALAR TEK MENÜDE: Başlıktaki ve ana sayfadaki iki ayrı düğme (ikisi de aynı sayfaya gidiyordu) tek 'Kampanya & Yarışmalar' düğmesine indi. Ana sayfadaki düğme düzeni bu yüzden 5 + 5'ten 5 + 4 oldu.",
+      "REVİZYON İSTEKLERİ GÜNCELLENDİ: Bu işlerle eşleşen 6 talepten 5'i 'Yapıldı' oldu, her birine ne yapıldığı ve varsa kalan adımı yazan bir not düştü. 'Hata ekranları' talebi 'İnceleniyor'da kalıyor: düzeltme canlıda ama birkaç gün hata kaydı izlenip yenisi çıkmadığı görülmeden kapatılmayacak.",
+      "GÜNÜN TOPLAM KONTROLÜ: 342 dosyada 2.550 testin tamamı yeşil, kod denetimi 0 problem, tip denetimi 0 hata. Ayrı bir inceleme ajanı değişiklikleri çürütmeye çalıştı, kritik bulgu çıkmadı.",
+    ],
+  },
+  {
     id: "20260923-corebot-sifre-sizintisi",
     date: "23 Eylül 2026",
     title:
