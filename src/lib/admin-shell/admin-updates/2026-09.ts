@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260925-cadde-realtime-yenile",
+    date: "25 Eylül 2026",
+    title: "Cadde'de yeni paylaşım veya yorum geldiğinde bildirim çıkıyor, istediğinde yeniliyorsun",
+    items: [
+      "CADDE'DE YENİ PAYLAŞIMLAR İÇİN BİLDİRİM: Biri yeni paylaşım yaptığında sayfanın üstünde yeşil bir 'Yeni paylaşımlar var' kartı beliriyor. 'Yenile' butonuna tıklayınca feed güncelleniyor. Otomatik yenileme yok — kullanıcı rahatsız edilmiyor, istediğinde yeniliyor.",
+      "YORUMLAR İÇİN AYNI SİSTEM: Bir paylaşımın yorum paneli açıksa ve yeni yorum gelmişse 'Yeni yorumlar var' bildirimi çıkıyor. 'Yenile' ile güncelliyorsun. Arka planda Supabase Realtime dinliyor, yeni kayıt düşünce haber veriyor.",
+      "GİRİŞ EKRANINA CORTEQS LOGOSU EKLENDİ: Giriş sayfasının sol panelinde artık logo ve 'CorteQS' yazısı var. Diğer sayfalarla tutarlı.",
+      "ÖN KAYIT FORMUNDAN REFERANS KODU KALDIRILDI: Kayıt akışında referral kodu sormaya gerek yok — profil formunda topluyoruz. Chat akışı sadeleşti, özet ekranında da referral satırı kalktı.",
+      "GÜNÜN KONTROLÜ: 11 yeni test eklendi, tüm testler yeşil, tip denetimi 0 hata.",
+    ],
+  },
+  {
     id: "20260925-profil-cadde-kampanya-canli-hatalar",
     date: "25 Eylül 2026",
     title:
