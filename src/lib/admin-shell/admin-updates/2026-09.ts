@@ -5,6 +5,24 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260925-toplanti-25-eylul-t21",
+    date: "25 Eylül 2026",
+    title: "25 Eylül toplantısı Komuta Merkezi'ne eklendi (Toplantı 21), 21 Eylül'e transkriptten 7 madde daha girildi",
+    items: [
+      "NEREDE: Komuta Merkezi → Toplantı Notları, kaynak 'Toplantı 21 — 25 Eylül 2026'. 28 satır: UBT'ye 13 iş, Burak'a 4 iş + 2 fikir, 9 ortak karar.",
+      "KAFE BİLDİRİMLERİ: M91 = A (kafe ev sahibine kafe ekranında 'Yeni katılım talebi var' — canlıda). M93 = C (kabul/red edilince talep sahibine bildirim yok — kodu yazıldı, canlıya çıkmadı).",
+      "VİDEO: Cadde videosu en fazla 10 MB ve 30 saniye (kodu yazıldı, canlıya çıkmadı). Ücretsiz depolama kotası aşılırsa aylık 25 $'lık plana bakılacak, ileride kendi sunucumuza geçilecek.",
+      "TELEFON DOĞRULAMA (M95): SMS bütçesi onaylandı; 6 haneli kod, 5 dakika geçerli, harcama tavanıyla. Tavanın tutarı netleşmeli: transkriptte hem '20 €' hem '25 lira' geçiyor.",
+      "WHATSAPP VE AI SEARCH AYRI: WhatsApp botu numaralı menüyle (1-2-3) cevap verecek, yapay zekâ bilgi tabanını kullanmayacak; takılan kullanıcıyı sitedeki konuşmalı aramaya yönlendirecek. Sitedeki arama Google AI gibi çalışacak: sonucu özetleyecek, soru soracak, makale önerecek.",
+      "İPTAL VE ERTELEMELER: Eski üyelere 'profilini tamamla' maili (M12) ŞİMDİ GÖNDERİLMEYECEK; önce bot bitecek. Çoklu rol ertelendi: 1-2 ay tek rol, sonra talebe göre. M101 anlaşılamadığı için geçildi.",
+      "ROLLER: Burak 82 rolün kategorilere (Profesyoneller / İşletmeler / Kuruluşlar) etiketlenmesini önerdi. UBT, mevcut yapıyı 8-10 örnekle anlatan bir doküman ve ortak/role özel alan matrisi hazırlayacak; Burak matrisi işaretleyecek.",
+      "DİĞER İŞLER: Cadde sayfa başlığına Cadde logosu (logoyu Burak gönderecek) · 'Yetki yükleniyor' yerine 'Yükleniyor' · Supabase kapasite ve maliyet dokümanı + Burak'a panel erişimi · profil ön kart / detay kart envanteri.",
+      "TOPLANTIDA YAŞANAN SORUN: Cadde akışı ve revizyon sayfası yüklenmedi. Madde 'acil' işaretiyle açıldı, kök nedeni henüz doğrulanmadı.",
+      "21 EYLÜL'E EKLENENLER (tam transkriptten): taşınma planlayıcısına Demo etiketi (yapıldı) · planlayıcının RAG bilgisine bağlanması · Facebook linki (footer'da zaten var, nereye istendiği netleşmeli) · etkinlik formundaki 'Kapak görseli URL' alanı · Jukebox fikri · KARAR: Cadde dönmeye başlayınca Kurucu 1000 için Stripe açılacak (399 € yerine 99 €, 12 ay 1 Ocak'tan başlar).",
+      "EKSİK: 25 Eylül transkriptinin yalnız ilk ~55 dakikası geldi (toplam 80 dakika); kalan kısmın maddeleri ayrıca eklenecek. 17 Eylül toplantısı hâlâ yok.",
+    ],
+  },
+  {
     id: "20260925-toplanti-21-eylul-t20",
     date: "25 Eylül 2026",
     title: "21 Eylül toplantısının kararları ve yapılacakları Komuta Merkezi'ne eklendi (Toplantı 20)",
