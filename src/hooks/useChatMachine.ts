@@ -272,9 +272,7 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
         case "phone":
           newData.phone = input.trim().replace(/[\s\-().]/g, "");
           break;
-        case "referral_code":
-          newData.referral_code = input.trim().toUpperCase();
-          break;
+        // m17: referral_code chat akışından kaldırıldı — profil formunda toplanıyor
         case "offers_needs":
           newData.offers_needs = input.trim();
           break;

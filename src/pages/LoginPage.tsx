@@ -220,6 +220,15 @@ const LoginPage = () => {
               "linear-gradient(180deg, hsl(220 30% 6% / 0.35) 0%, hsl(220 30% 6% / 0.15) 45%, hsl(220 30% 6% / 0.72) 100%)",
           }}
         />
+        {/* m97: Marka logosu — diğer sayfalarla tutarlı */}
+        <div className="relative z-10 flex items-center gap-3">
+          <img
+            src="/newlogo.png"
+            alt="CorteQS"
+            className="h-10 w-10 rounded-lg object-contain"
+          />
+          <span className="font-display text-xl font-semibold tracking-wide">CorteQS</span>
+        </div>
       </aside>
 
       {/* ——— SAĞ PANEL: açık form ——— */}

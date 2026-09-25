@@ -86,7 +86,7 @@ export const STEP_ORDER: ChatStep[] = [
   "field",
   "email",
   "phone",
-  "referral_code",
+  // m17: referral_code chat akışından kaldırıldı — profil formunda toplanıyor
   "offers_needs",
   "documents",
   "documents_add_more",
@@ -324,7 +324,7 @@ function buildSummaryMessage(data: ChatCollectedData): { content: string; quickR
     `\u0130\u015ftigal: ${data.field || "\u2014"}`,
     `E-posta: ${data.email || "\u2014"}`,
     `Telefon: ${data.phone || "\u2014"}`,
-    `Referral: ${data.referral_code || "\u2014"}`,
+    // m17: referral_code chat akışından kaldırıldı — profil formunda toplanır
     `Arz/Talep: ${data.offers_needs || "\u2014"}`,
     "",
     "Bilgiler do\u011fruysa onayla.",

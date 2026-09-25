@@ -48,13 +48,14 @@ describe("chat kayıt akışı referans kaynağını sormaz", () => {
     expect(stepNames).not.toContain("referral_detail");
   });
 
-  it("telefondan sonra doğrudan davet koduna geçer", () => {
-    expect(getNextStep("phone", { ...INITIAL_DATA })).toBe("referral_code");
+  it("m17: telefondan sonra davet kodu adımı atlanır — profil formunda toplanır", () => {
+    expect(getNextStep("phone", { ...INITIAL_DATA })).toBe("offers_needs");
   });
 
   it("özet mesajında kaynak satırı yer almaz", () => {
     const summary = getStepMessage("summary", { ...INITIAL_DATA, fullname: "Ada Lovelace" });
     expect(summary.content).not.toContain("Kaynak:");
-    expect(summary.content).toContain("Referral:");
+    // m17: referral_code chat akışından kaldırıldı
+    expect(summary.content).not.toContain("Referral:");
   });
 });
