@@ -5,6 +5,23 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260925-toplanti-maddeleri-denetimi",
+    date: "25 Eylül 2026",
+    title: "Toplantı maddeleri tarandı: 9'u fiilen bitmiş çıktı, üç karar canlıda yürürlükte DEĞİL",
+    items: [
+      "NE YAPILDI: 19 Haziran – 25 Eylül arası toplantıların 121 açık maddesi kodda ve canlı veritabanında tek tek ölçüldü. Panodaki durumlar elle güncellendiği için bayatlamıştı.",
+      "TAMAMLANDI'YA ÇEKİLEN 9 MADDE: dizinin kart görünümü · ana sayfa alt bölümlerinden iç sayfalara yönlendirme · kafeden akışa dönüş butonu · telefonun profil formunda en üste alınması · 'Bizi nereden buldunuz?' alanının kaldırılması · Güncellemeler sekmesinin kapalı karta alınması · referans kodunun giriş sonrasına taşınması · Google Auth rehberi · Facebook linki. Her maddenin açıklamasına kanıtı yazıldı.",
+      "⚠️ ÜÇ KARAR CANLIDA YÜRÜRLÜKTE DEĞİL: 25 Eylül akşamı yazılan iki veritabanı değişikliği henüz uygulanmadı. Bu yüzden şu anda (1) Cadde videosu hâlâ 50 MB'a kadar yüklenebiliyor — 10 MB kararı geçerli değil, (2) kafeye kabul edilen üyeye hâlâ kendi adıyla 'X kafeye girdi' bildirimi gidiyor — M93 kararı geçerli değil, (3) kafe logosunda adres denetimi yok.",
+      "⚠️ E-POSTA DOĞRULAMASI AÇIK SANILIYOR AMA KAPALI: 171 üyenin tamamı 'onaylı' görünüyor, ancak hiçbirine doğrulama maili gönderilmemiş — kayıt anında otomatik onaylanıyor. Kod tarafı hazır; eksik olan Supabase panelindeki tek ayar.",
+      "⚠️ RADAR HÂLÂ ÖLÜ: 14 Eylül'de 'çalışıyor' durumunda takılı kalmış bir tarama var; o tarihten beri sıfır haber geldi. Günlük iş her gün tetikleniyor ve başarılı dönüyor, ama yeni haber üretmiyor.",
+      "PROFİL WORKSHOP PANOSU YANILTIYOR: 26 maddenin 25'i 'yapıldı' işaretli; ölçüm dördünü çürüttü (e-posta doğrulaması · çoklu rol etiketi · paket + ödeme adımı · Gmail geçiş maili). Çoklu rol etiketi bugünkü şemada mümkün değil: bir kullanıcıya tek rol atanabiliyor. Ödeme adımı ise sitede hiç yok — 'Kurucu 1000 için Stripe' kararı sıfırdan iş demek.",
+      "SAĞ ALTTAKİ BOT BEKLENENDEN AZ HAZIR: yalnız ana sayfada çalışıyor ve hangi sayfada olduğunu sunucuya bildirmiyor. 'Her sayfada' ve 'sayfa bazlı yardım' niteliklerinin ikisi de eksik.",
+      "YAN BULGU: canlı fonksiyon listesi değişmiş — WhatsApp fonksiyonları artık yayında, dizin araması için yeni bir fonksiyon eklenmiş, dört eski fonksiyon kaldırılmış. Aktif rol sayısı 82 toplam / 78 aktif.",
+      "SONRA BAKILACAK — ÜÇ SORU: (1) Cadde ana sayfasında Aktif Kafeler ve İnsanları Keşfet sağ kolonda mı kalsın yoksa akışın üstüne mi taşınsın? 5 Ağustos ve 27 Ağustos kararları birbiriyle çelişiyor. (2) Süresi dolan 'WordPress taşımayı 13 Eylül'e kadar dondur' maddesi arşivlensin mi? (3) Profil Workshop panosundaki dört yanlış 'yapıldı' işareti geri alınsın mı?",
+      "AYRICA BEKLİYOR: 17 Eylül toplantısı hâlâ Komuta Merkezi'nde yok (ham notu depoda duruyor). 25 Eylül transkriptinin de yalnız ilk 55 dakikası geldi; kalanı gelince eklenecek.",
+    ],
+  },
+  {
     id: "20260925-toplanti-25-eylul-t21",
     date: "25 Eylül 2026",
     title: "25 Eylül toplantısı Komuta Merkezi'ne eklendi (Toplantı 21), 21 Eylül'e transkriptten 7 madde daha girildi",
