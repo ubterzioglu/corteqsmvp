@@ -5,6 +5,20 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260926-toplantilar-komuta-merkezinde-ozet",
+    date: "26 Eylül 2026",
+    title: "Özet: 21 ve 25 Eylül toplantıları Komuta Merkezi'ne işlendi",
+    items: [
+      "NEREDE: Admin panel → Komuta Merkezi → Toplantı Notları. Kaynak seçicisinden 'Toplantı 20 — 21 Eylül 2026' ve 'Toplantı 21 — 25 Eylül 2026' filtrelenebilir.",
+      "21 EYLÜL (Toplantı 20): 31 satır — 24 yapılacak + 7 ortak karar.",
+      "25 EYLÜL (Toplantı 21): 28 satır — 19 yapılacak + 9 ortak karar.",
+      "KARARLAR AYRI DURUYOR: başlığı 'KARAR:' ile başlayan satırlar alınan kararlardır, iş değildir; sahibi 'B+B' (ortak) olarak işaretlidir. Başlığı 'FİKİR:' ile başlayanlar ise henüz karara bağlanmamış önerilerdir.",
+      "MADDELER KİME ATANDI: yapılacakların sahibi UBT veya Burak olarak ayrıldı. Burak'ın 'istediği' ama işi UBT'nin yapacağı maddeler UBT'ye yazıldı; açıklamasına 'Burak'ın isteği' notu düşüldü.",
+      "AYRICA: 19 Haziran – 25 Eylül arası 121 açık madde kodda ve canlı veritabanında tarandı; fiilen bitmiş olan 9 madde Tamamlandı'ya çekildi ve her birinin açıklamasına kanıtı yazıldı. Ayrıntısı bir önceki güncellemede.",
+      "EKSİK KALAN İKİ ŞEY: 17 Eylül toplantısı henüz eklenmedi (ham notu depoda duruyor). 25 Eylül transkriptinin de yalnız ilk 55 dakikası elimize ulaştı; son 25 dakikada konuşulanlar eklenmedi.",
+    ],
+  },
+  {
     id: "20260925-toplanti-maddeleri-denetimi",
     date: "25 Eylül 2026",
     title: "Toplantı maddeleri tarandı: 9'u fiilen bitmiş çıktı, üç karar canlıda yürürlükte DEĞİL",
