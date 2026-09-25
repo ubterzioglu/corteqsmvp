@@ -18,15 +18,19 @@
 // WS2'de "performans değerlendirmesinden sonra" diye PARK EDİLDİ. Ana akışta
 // olmasının sebebi F18'in bu karardan önce çıkmış olması. "Kafede eksik kalmış"
 // diye refetchInterval eklemeyin — önce park kararına bakın.
+//
+// m90 güncellemesi: Realtime dinleme + "Yeni yorumlar var" butonu eklendi.
+// Otomatik yenileme yerine kullanıcı butona tıkladığında yenilenir.
 
 import { useRef, useState } from "react";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { MessageCircle, Send } from "lucide-react";
+import { MessageCircle, RefreshCw, Send } from "lucide-react";
 
 import CaddeEmojiPickerButton from "@/components/cadde/CaddeEmojiPickerButton";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useCaddeCommentsRealtime } from "@/hooks/cadde/useCaddeCommentsRealtime";
 import { createCaddeComment, listCaddePostComments } from "@/lib/cadde-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
@@ -60,6 +64,9 @@ const CaddePostComments = ({ postId, commentCount, canComment, onCommentAdded }:
     // m21: panel kapalıyken DB'ye hiç gidilmez.
     enabled: open,
   });
+
+  // m90: Yeni yorum geldiğinde "Yeni yorumlar var" butonu göster
+  const { hasNewComments, reset: resetNewComments } = useCaddeCommentsRealtime(postId, open);
 
   const commentMutation = useMutation({
     mutationFn: (body: string) => createCaddeComment(postId, body),
@@ -114,6 +121,26 @@ const CaddePostComments = ({ postId, commentCount, canComment, onCommentAdded }:
 
       {open ? (
         <div className="mt-2 space-y-2 rounded-lg border border-slate-200/90 bg-slate-50/80 p-3">
+          {/* m90: Yeni yorum geldiğinde "Yeni yorumlar var" butonu */}
+          {hasNewComments && !commentsQuery.isFetching ? (
+            <div className="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2">
+              <span className="text-sm font-medium text-emerald-900">Yeni yorumlar var</span>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="cadde-secondary-action"
+                onClick={() => {
+                  void commentsQuery.refetch();
+                  resetNewComments();
+                }}
+              >
+                <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
+                Yenile
+              </Button>
+            </div>
+          ) : null}
+
           {commentsQuery.isLoading ? <p className="text-sm text-slate-500">Yorumlar yükleniyor…</p> : null}
 
           {/* Yükleme hatası "hiç yorum yok"tan AYIRT EDİLEBİLİR olmalı. Bu kusur

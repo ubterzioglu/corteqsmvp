@@ -23,6 +23,7 @@ import PromotionRail from "@/components/cadde/PromotionRail";
 import SponsoredFeedCard from "@/components/cadde/SponsoredFeedCard";
 import { useCaddePageData } from "@/hooks/cadde/useCaddePageData";
 import { useCaddeFeedState } from "@/hooks/cadde/useCaddeFeedState";
+import { useCaddeFeedRealtime } from "@/hooks/cadde/useCaddeFeedRealtime";
 import { useCaddeComposerState } from "@/hooks/cadde/useCaddeComposerState";
 import {
   CADDE_REACTION_CLOSE_DELAY_MS,
@@ -118,6 +119,9 @@ const CaddePage = () => {
   });
   const registeredCountry = actorContextQuery.data?.country?.trim() ?? "";
   const registeredCity = actorContextQuery.data?.city?.trim() ?? "";
+
+  // m89: Yeni paylaşım geldiğinde "Yeni paylaşımlar var" butonu göster
+  const { hasNewPosts, reset: resetNewPosts } = useCaddeFeedRealtime(Boolean(session));
 
   useSeo(PAGE_SEO.cadde);
 
@@ -787,6 +791,29 @@ const CaddePage = () => {
                 bu yüzden RLS reddi/RPC hatası ekranda "akış sessiz" gibi görünüyordu.
                 Artık fırlatıyor; buradaki kart o durumu AYRI yüzeyde ve kurtarma yoluyla
                 gösterir. Boş-durum kartı da isError'a bakar, ikisi asla birlikte çıkmaz. */}
+
+            {/* m89: Yeni paylaşım geldiğinde "Yeni paylaşımlar var" butonu */}
+            {hasNewPosts && !feedQuery.isFetching ? (
+              <Card className="cadde-card border-emerald-200 bg-emerald-50">
+                <CardContent className="p-4 text-center">
+                  <p className="text-sm font-medium text-emerald-900">
+                    Yeni paylaşımlar var
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="cadde-secondary-action mt-2 rounded-lg"
+                    onClick={() => {
+                      void feedQuery.refetch();
+                      resetNewPosts();
+                    }}
+                  >
+                    <RefreshCw className="h-4 w-4" aria-hidden="true" />
+                    Yenile
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : null}
+
             {feedQuery.isError ? (
               <Card
                 data-testid="cadde-feed-error-state"
