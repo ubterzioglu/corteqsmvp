@@ -27,23 +27,20 @@ import { useProfileDocuments } from "@/hooks/profile/useProfileDocuments";
 import { useProfileRoleRequests } from "@/hooks/profile/useProfileRoleRequests";
 import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS } from "@/lib/features";
 import { PHONE_ATTRIBUTE_KEY } from "@/lib/profile-phone";
-import { EDUCATION_ATTRIBUTE_KEYS, isEducationAttributeKey } from "@/lib/profile-education";
 import { getMyReferralCodeUsage, type MyReferralCodeUsage } from "@/lib/member-profile-api";
-import { getAttributeStringValue, type ProfileAttributeState } from "@/lib/member-profile";
+import { getAttributeStringValue } from "@/lib/member-profile";
 import { formatDocumentMeta, readBooleanAttributeValue } from "@/lib/profile-attribute-drafts";
 import {
   CV_DOCUMENT_ATTRIBUTE_KEY,
-  HIDDEN_ROLE_SPECIFIC_ATTRIBUTE_KEYS,
   JOB_SEEKING_OPT_IN_ATTRIBUTE_KEY,
   LINKEDIN_ATTRIBUTE_KEY,
   MOVING_SOON_OPT_IN_ATTRIBUTE_KEY,
   PRESENTATION_DOCUMENT_ATTRIBUTE_KEY,
   PROFILE_PHOTO_ATTRIBUTE_KEY,
-  SPECIAL_PROFILE_ATTRIBUTE_KEYS,
   VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY,
   WEBSITE_ATTRIBUTE_KEY,
 } from "@/lib/profile-attribute-keys";
-import { SOCIAL_ATTRIBUTE_CONFIGS, SOCIAL_ATTRIBUTE_KEYS } from "@/lib/profile-social-links";
+import { groupProfileAttributes } from "@/lib/profile-attribute-grouping";
 import { parseProfileDocumentRecord } from "@/lib/profile-documents";
 import {
   isPremiumPresentation,
@@ -164,42 +161,11 @@ const ProfilePage = () => {
     return featureMap.get(featureKey)?.isEnabled ?? false;
   }, [featureMap]);
 
-  const groupedAttributes = useMemo(() => {
-    const common: ProfileAttributeState[] = [];
-    const education: ProfileAttributeState[] = [];
-    const socialMedia: ProfileAttributeState[] = [];
-    const roleSpecific: ProfileAttributeState[] = [];
-
-    for (const attribute of profile?.attributes ?? []) {
-      if (["country", "city", "bio_short"].includes(attribute.attributeKey)) {
-        common.push(attribute);
-      } else if (isEducationAttributeKey(attribute.attributeKey)) {
-        // Öğrenim alanları kişisel bilgilerin içinde, alan başına görünürlükle çizilir
-        // (ortak alanların toplu görünürlük anahtarına bağlanmaz — varsayılan gizli).
-        education.push(attribute);
-      } else if (SPECIAL_PROFILE_ATTRIBUTE_KEYS.has(attribute.attributeKey)) {
-        continue;
-      } else if (SOCIAL_ATTRIBUTE_KEYS.has(attribute.attributeKey)) {
-        socialMedia.push(attribute);
-      } else if (HIDDEN_ROLE_SPECIFIC_ATTRIBUTE_KEYS.has(attribute.attributeKey)) {
-        continue;
-      } else {
-        roleSpecific.push(attribute);
-      }
-    }
-
-    socialMedia.sort((left, right) => {
-      const leftIndex = SOCIAL_ATTRIBUTE_CONFIGS.findIndex((item) => item.key === left.attributeKey);
-      const rightIndex = SOCIAL_ATTRIBUTE_CONFIGS.findIndex((item) => item.key === right.attributeKey);
-      return leftIndex - rightIndex;
-    });
-
-    education.sort(
-      (left, right) => EDUCATION_ATTRIBUTE_KEYS.indexOf(left.attributeKey) - EDUCATION_ATTRIBUTE_KEYS.indexOf(right.attributeKey),
-    );
-
-    return { common, education, socialMedia, roleSpecific };
-  }, [profile?.attributes]);
+  // Bölümleme ve sıralama kuralları `profile-attribute-grouping.ts`'te (A07e).
+  const groupedAttributes = useMemo(
+    () => groupProfileAttributes(profile?.attributes),
+    [profile?.attributes],
+  );
 
   const attributeMap = useMemo(() => {
     return new Map((profile?.attributes ?? []).map((attribute) => [attribute.attributeKey, attribute]));
