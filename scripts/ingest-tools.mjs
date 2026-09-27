@@ -89,6 +89,13 @@ async function main() {
   const files = await walkRepo(rootDir, {
     accept: (_abs, rel) => {
       if (rel.includes("node_modules/")) return false;
+      // Nokta ile başlayan dosya/dizinler (.env, .env.local, .DS_Store) kataloğa
+      // GİRMEZ. Bunlar yerel ve çoğu gitignore'lu olduğu için her makinede farklı
+      // çıkar; commit'lenen katalog CI'da yeniden üretilemez hâle gelir ve
+      // `--check` kalıcı olarak düşer. 27.09.2026'da tam olarak bu yaşandı:
+      // `workers/service-finder/.env` file_index'e girip commit'lenmişti, CI'da
+      // o dosya olmadığı için üç gün boyunca her koşu kırmızıydı.
+      if (rel.split("/").some((segment) => segment.startsWith("."))) return false;
       return (
         /^supabase\/functions\//.test(rel) ||
         /^workers\//.test(rel) ||

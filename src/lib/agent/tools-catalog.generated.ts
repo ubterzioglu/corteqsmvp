@@ -4372,11 +4372,6 @@ export const toolCatalog = {
       "module_family": "worker"
     },
     {
-      "path": "workers/service-finder/.env",
-      "kind": "none",
-      "module_family": "worker"
-    },
-    {
       "path": "workers/service-finder/Dockerfile",
       "kind": "none",
       "module_family": "worker"
