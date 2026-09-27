@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 54,
+    "total": 55,
     "edge_functions": 12,
     "workers": 2,
-    "ui_modules": 39
+    "ui_modules": 40
   },
   "tools": [
     {
@@ -564,6 +564,24 @@ export const toolCatalog = {
       ],
       "rpcs": [],
       "evidence_path": "src/lib/assistant-usage-api.ts"
+    },
+    {
+      "tool_key": "module.auth_api",
+      "tool_name": "auth-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/auth-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "AUTH_PROFILE_ATTRIBUTE_KEYS",
+        "fetchAuthProfile"
+      ],
+      "tables_read_write": [
+        "user_profile_attributes",
+        "user_role_assignments"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/auth-api.ts"
     },
     {
       "tool_key": "module.brainstorming_api",
@@ -2058,6 +2076,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/assistant-usage-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/auth-api.ts",
       "kind": "ts",
       "module_family": "lib"
     },

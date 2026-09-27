@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react
 import type { Session } from "@supabase/supabase-js";
 
 import { AuthContext, type AuthContextValue, type Profile } from "@/components/auth/auth-context";
+import { fetchAuthProfile } from "@/lib/auth-api";
 import { supabase } from "@/integrations/supabase/client";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -9,34 +10,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [profile, setProfile] = useState<Profile | null>(null);
 
+  // Tablo sorguları `@/lib/auth-api` içindedir; burası yalnız durumu tutar.
   const fetchProfile = useCallback(async (userId: string) => {
-    const [attrsResult, roleResult] = await Promise.all([
-      supabase
-        .from("user_profile_attributes")
-        .select("value_text, afs_attributes!inner(key)")
-        .eq("user_id", userId)
-        .in("afs_attributes.key", ["full_name", "avatar_url", "phone"]),
-      supabase
-        .from("user_role_assignments")
-        .select("roles!inner(key)")
-        .eq("user_id", userId)
-        .maybeSingle(),
-    ]);
-
-    const attrs = attrsResult.data ?? [];
-    const getValue = (key: string) =>
-      (attrs.find((attribute) => attribute.afs_attributes?.key === key)?.value_text ?? null);
-
-    const roleKey = roleResult.data?.roles?.key ?? null;
-    const onboardingCompleted = Boolean(getValue("full_name"));
-
-    setProfile({
-      full_name: getValue("full_name"),
-      avatar_url: getValue("avatar_url"),
-      phone: getValue("phone"),
-      account_type: roleKey,
-      onboarding_completed: onboardingCompleted,
-    });
+    setProfile(await fetchAuthProfile(userId));
   }, []);
 
   const signOut = useCallback(async () => {
