@@ -363,28 +363,43 @@ export default function HotFixPanel() {
         className="border-red-100 bg-red-50/20"
       />
 
-      {isLoading ? (
-        <div className="rounded-2xl border border-[rgba(220,38,38,0.12)] bg-white/80 p-8 text-center text-sm text-gray-400">
-          Yükleniyor…
-        </div>
-      ) : items.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-red-200 bg-white p-8 text-center text-sm text-gray-500">
-          Henüz hot fix yok. Yukarıdaki formla ilk maddeyi ekleyin.
-        </div>
-      ) : (
-        <HotFixTable
-          items={items}
-          editingId={editingId}
-          editingState={editingState}
-          setEditingState={setEditingState}
-          isSubmitting={isSubmitting}
-          onStartEdit={startEdit}
-          onCancelEdit={cancelEdit}
-          onUpdate={handleUpdate}
-          onArchive={handleArchive}
-          onDelete={handleDelete}
-        />
-      )}
+      {/* Liste VARSAYILAN OLARAK KAPALI bir akordeon kartıdır (karar 27.09):
+          tablo sayfanın çoğunu kaplıyordu ve altındaki Todo/Toplantı Notları
+          bloklarına inmek için uzun uzun kaydırmak gerekiyordu. Sayılar zaten
+          yukarıdaki başlıkta (Açık / Tamamlanan) görünüyor, bu yüzden kart
+          kapalıyken de durum okunabilir.
+          `defaultOpenId` VERİLMEZ — AccordionCard açılışta hiçbir maddeyi açmaz. */}
+      <AccordionCard
+        items={[
+          {
+            id: 'hot-fix-list',
+            title: 'Hot Fix Listesi',
+            badge: isLoading ? '…' : `${items.length} madde`,
+            accentColor: HOT_FIX_ACCENT,
+            children: isLoading ? (
+              <div className="p-4 text-center text-sm text-gray-400">Yükleniyor…</div>
+            ) : items.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-red-200 bg-white p-8 text-center text-sm text-gray-500">
+                Henüz hot fix yok. Yukarıdaki formla ilk maddeyi ekleyin.
+              </div>
+            ) : (
+              <HotFixTable
+                items={items}
+                editingId={editingId}
+                editingState={editingState}
+                setEditingState={setEditingState}
+                isSubmitting={isSubmitting}
+                onStartEdit={startEdit}
+                onCancelEdit={cancelEdit}
+                onUpdate={handleUpdate}
+                onArchive={handleArchive}
+                onDelete={handleDelete}
+              />
+            ),
+          },
+        ]}
+        className="border-red-100 bg-red-50/20"
+      />
 
       {!isLoading && archivedItems.length > 0 && (
         <AccordionCard
