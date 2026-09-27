@@ -49,7 +49,7 @@
     "import:doctors:dortmund": "node scripts/import-profiles-csv.mjs --role=Healthcare_Doctor --source=csv.dortmund_turkce_doktorlar --source-label=\"Dortmund Türkçe Doktorlar CSV\" --defaults.city=Dortmund --defaults.country=DE --defaults.region=Nordrhein-Westfalen",
     "import:doctors:dortmund:write": "npm run import:doctors:dortmund -- --write",
     "prelint": "npm run verify:text && npm run check:drift:warn",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "preview": "vite preview",
     "pretest": "npm run verify:text",
     "test": "vitest run",
