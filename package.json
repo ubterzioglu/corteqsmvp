@@ -37,7 +37,7 @@
     "typecheck:strict-pilot": "tsc -p tsconfig.strict-pilot.json --noEmit",
     "typecheck:node": "tsc -p tsconfig.node.json --noEmit",
     "typecheck:workers": "npm --prefix workers/relocation-ingestion run typecheck && npm --prefix workers/service-finder run typecheck",
-    "verify:quality": "npm run typecheck && npm run typecheck:node && npm run typecheck:workers",
+    "verify:quality": "npm run typecheck && npm run typecheck:node && npm run typecheck:workers && npm run typecheck:strict-pilot",
     "migrate:apply": "node scripts/apply-migration.mjs",
     "selfhost:limits": "node scripts/migration/check-free-tier-limits.mjs",
     "onboarding:import": "node scripts/onboarding-import.mjs",
