@@ -246,6 +246,13 @@ describe("CaddeComposer", () => {
       const { container } = render(<ControlledComposer />);
       pickImage(container);
 
+      // ⚠️ Yükleme ÇAĞRILANA KADAR bekle. m94 ile dosya doğrulaması asenkron oldu
+      // (video süresi okunuyor), bu yüzden `pickImage` döndüğünde `uploadCaddeMedia`
+      // henüz çağrılmamış olabilir; `finishUpload` da tanımsızdır. Beklemeden
+      // `finishUpload?.()` çağırmak sessizce hiçbir şey yapar ve test, kodda hata
+      // olmadığı hâlde "önizleme çizilmedi" diye düşer.
+      await waitFor(() => expect(finishUpload).toBeDefined());
+
       // Yükleme devam ederken kullanıcı yazıyor.
       const textarea = screen.getByLabelText("Paylaşım metni") as HTMLTextAreaElement;
       fireEvent.change(textarea, { target: { value: "yüklenirken yazdım" } });

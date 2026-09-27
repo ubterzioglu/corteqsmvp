@@ -67,3 +67,53 @@ Object.defineProperty(window, "scrollTo", {
   writable: true,
   value: () => {},
 });
+
+/**
+ * Supabase Realtime (m89/m90) bağlandığında GERÇEK bir WebSocket açar. Test
+ * ortamında bu iki ayrı soruna yol açıyordu:
+ *
+ *  1. Node'un yerleşik WebSocket'i (undici) ile jsdom'un `Event` sınıfı farklı
+ *     gerçeklemelerdir; bağlantı kurulduğunda undici olayı Node'un hedefine
+ *     yollar ve şu kafa karıştırıcı hata düşer:
+ *     "The 'event' argument must be an instance of Event. Received an instance of Event".
+ *     Bu hata bir TESTİN İÇİNDE değil, arka planda oluştuğu için testler yeşil
+ *     görünür ama koşu "unhandled error" ile biter ve CI kırmızı olur —
+ *     27 Eylül'de tam olarak bu yaşandı.
+ *  2. Test ortamı dışarıya ağ bağlantısı açmamalıdır; deterministik değildir.
+ *
+ * Bu sahte sınıf bağlantıyı hiç kurmaz, olay da yollamaz. Realtime davranışını
+ * DOĞRULAYAN testler hook'u kendileri mock'lamalıdır (useCaddeFeedRealtime.test.ts
+ * ve useCaddeCommentsRealtime.test.ts böyle yapar) — burada yalnız gerçek soket
+ * susturulur.
+ */
+class WebSocketMock {
+  static readonly CONNECTING = 0;
+  static readonly OPEN = 1;
+  static readonly CLOSING = 2;
+  static readonly CLOSED = 3;
+
+  readonly url: string;
+  readyState = WebSocketMock.CLOSED;
+  onopen: (() => void) | null = null;
+  onclose: (() => void) | null = null;
+  onerror: (() => void) | null = null;
+  onmessage: (() => void) | null = null;
+
+  constructor(url: string) {
+    this.url = url;
+  }
+
+  send() {}
+  close() {}
+  addEventListener() {}
+  removeEventListener() {}
+  dispatchEvent() {
+    return false;
+  }
+}
+
+Object.defineProperty(globalThis, "WebSocket", {
+  configurable: true,
+  writable: true,
+  value: WebSocketMock,
+});

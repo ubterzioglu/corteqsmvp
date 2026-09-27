@@ -135,6 +135,10 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
   cadde_cafe_full: "Cafe kapasitesi dolu.",
   cadde_cafe_tr_only: "Bu cafe yalnız Türkiye yerleşik üyelere açık.",
   cadde_cafe_invalid_referral: "Davet kodu geçersiz.",
+  // m135 (mig 20260925170000): logo yalnız kendi medya deposundan seçilebilir —
+  // dışarıdan adres yapıştırma reddedilir (izleme pikseli / uygunsuz görsel riski).
+  cadde_cafe_logo_invalid:
+    "Logo yalnız Cadde'ye yüklediğin görsellerden seçilebilir. Lütfen görseli yükleyerek tekrar dene.",
   cadde_cafe_answer_required: "Katılmak için giriş sorusunu yanıtla.",
   cadde_cafe_join_denied: "Bu cafe'ye katılım talebin daha önce reddedilmiş.",
   cadde_cafe_member_not_found: "Üyelik kaydı bulunamadı.",

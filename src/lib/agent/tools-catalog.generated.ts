@@ -671,7 +671,8 @@ export const toolCatalog = {
         "listCaddeProtectedBrandsForAdmin",
         "listMyCaddeCafes",
         "mapCaddeCafeJoinRequestRow",
-        "setCaddeProtectedBrandActive"
+        "setCaddeProtectedBrandActive",
+        "updateCaddeCafeLogo"
       ],
       "tables_read_write": [
         "cadde_cafe_members",
@@ -688,7 +689,8 @@ export const toolCatalog = {
         "archive_cadde_cafe_v1",
         "create_cadde_cafe_v1",
         "join_cadde_cafe_v1",
-        "list_cadde_cafe_join_requests_v1"
+        "list_cadde_cafe_join_requests_v1",
+        "update_cadde_cafe_logo_v1"
       ],
       "evidence_path": "src/lib/cadde-cafe-api.ts"
     },
@@ -1860,6 +1862,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin-shell/revision-number-format.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin-shell/revision-requests.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2040,6 +2047,11 @@ export const toolCatalog = {
       "module_family": "catalog"
     },
     {
+      "path": "src/lib/ai-knowledge-search-index.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/assistant-usage-api.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -2151,6 +2163,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/cadde-cafe-join-requests.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-cafe-logo.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
@@ -2676,6 +2693,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/dashboard/meeting-notes-data.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/dashboard/meeting-seed-contracts.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -4061,6 +4083,16 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/_shared/emails/relocation-tool-report.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/revision-request-completed.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/revision-request-completed.ts",
       "kind": "ts",
       "module_family": "edge"
     },
