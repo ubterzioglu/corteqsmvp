@@ -3,8 +3,14 @@
 // + satır (brainstorming_rows) CRUD'u + statusreport_comments üzerinden yorum thread'i
 // (section_key ile bağlı, FK yok — mig 20260718120000 / 20260718130000).
 //
-// types.ts bu tabloları/RPC'yi tanımıyor → revision-requests.ts / statusreport-comments.ts
-// deseniyle aynı: dar `as any` cast + gevşek istemci arayüzü.
+// 27.09.2026: gevşek istemci şimi (`LooseQuery` + `table(name)`) KALDIRILDI. Eski
+// not ("types.ts bu tabloları tanımıyor") ölçümle çürüdü — `brainstorming_sections`,
+// `brainstorming_rows` ve `statusreport_comments` üçü de tipli. Tipli istemciye
+// geçişte `tsc` 0 hata verdi.
+//
+// ⚠️ Tablo başına DOĞRUDAN `supabase.from("...")` çağrılır; ortak bir
+// `table(name: string)` yardımcısı KULLANILMAZ — birleşim tipi tabloların
+// sütunlarını kesişime sokar ve var olan sütunları bile reddeder.
 
 import { supabase } from "@/integrations/supabase/client";
 import { sanitizeError } from "@/lib/security";
@@ -84,18 +90,6 @@ const COMMENT_SELECT = "id,section_key,author_name,created_by,body,created_at";
 
 // types.ts bu tabloları tanımadığı için tüm sorgular tek bir gevşek istemci
 // arayüzünden geçer (revision-requests.ts deseni).
-type LooseQuery = {
-  select: (cols: string) => LooseQuery;
-  insert: (values: Record<string, unknown>) => LooseQuery;
-  update: (values: Record<string, unknown>) => LooseQuery;
-  eq: (column: string, value: unknown) => LooseQuery;
-  order: (column: string, options: { ascending: boolean }) => LooseQuery;
-  single: () => Promise<{ data: unknown; error: unknown }>;
-  then: Promise<{ data: unknown; error: unknown }>["then"];
-};
-
-const table = (name: string): LooseQuery =>
-  (supabase as unknown as { from: (t: string) => LooseQuery }).from(name);
 
 function mapRow(row: RowRow): BrainstormingRow {
   return {
@@ -151,7 +145,7 @@ async function currentUserId(): Promise<string | null> {
 
 /** Tüm bölümleri, her birinin satırlarıyla birlikte sıralı getirir. */
 export async function fetchSections(): Promise<BrainstormingSection[]> {
-  const { data: sectionData, error: sectionError } = await table("brainstorming_sections")
+  const { data: sectionData, error: sectionError } = await supabase.from("brainstorming_sections")
     .select(SECTION_SELECT)
     .order("order_index", { ascending: true });
 
@@ -159,7 +153,7 @@ export async function fetchSections(): Promise<BrainstormingSection[]> {
     throw new Error(sanitizeError(sectionError, "Bölümler yüklenemedi."));
   }
 
-  const { data: rowData, error: rowError } = await table("brainstorming_rows")
+  const { data: rowData, error: rowError } = await supabase.from("brainstorming_rows")
     .select(ROW_SELECT)
     .order("order_index", { ascending: true });
 
@@ -189,7 +183,7 @@ export async function createSection(
   const uid = await currentUserId();
   const sectionKey = `${slugify(parsed.title)}-${Date.now().toString(36)}`;
 
-  const { data, error } = await table("brainstorming_sections")
+  const { data, error } = await supabase.from("brainstorming_sections")
     .insert({
       section_key: sectionKey,
       group_label: parsed.groupLabel || null,
@@ -217,7 +211,7 @@ export async function updateSection(
   const parsed = brainstormingSectionFormSchema.parse(input);
   const uid = await currentUserId();
 
-  const { data, error } = await table("brainstorming_sections")
+  const { data, error } = await supabase.from("brainstorming_sections")
     .update({
       group_label: parsed.groupLabel || null,
       title: parsed.title,
@@ -237,9 +231,7 @@ export async function updateSection(
 
 /** Bölümü siler (satırları cascade ile birlikte gider). */
 export async function deleteSection(id: string): Promise<void> {
-  const { error } = await (
-    supabase as unknown as { from: (t: string) => { delete: () => LooseQuery } }
-  )
+  const { error } = await supabase
     .from("brainstorming_sections")
     .delete()
     .eq("id", id);
@@ -253,7 +245,7 @@ export async function deleteSection(id: string): Promise<void> {
 export async function reorderSections(orderedIds: string[]): Promise<void> {
   await Promise.all(
     orderedIds.map((id, index) =>
-      table("brainstorming_sections").update({ order_index: index }).eq("id", id),
+      supabase.from("brainstorming_sections").update({ order_index: index }).eq("id", id),
     ),
   );
 }
@@ -266,7 +258,7 @@ export async function createRow(
 ): Promise<BrainstormingRow> {
   const parsed = brainstormingRowFormSchema.parse(input);
 
-  const { data, error } = await table("brainstorming_rows")
+  const { data, error } = await supabase.from("brainstorming_rows")
     .insert({
       section_id: sectionId,
       label: parsed.label,
@@ -292,7 +284,7 @@ export async function updateRow(
 ): Promise<BrainstormingRow> {
   const parsed = brainstormingRowFormSchema.parse(input);
 
-  const { data, error } = await table("brainstorming_rows")
+  const { data, error } = await supabase.from("brainstorming_rows")
     .update({
       label: parsed.label,
       technical: parsed.technical,
@@ -312,9 +304,7 @@ export async function updateRow(
 
 /** Satırı siler. */
 export async function deleteRow(id: string): Promise<void> {
-  const { error } = await (
-    supabase as unknown as { from: (t: string) => { delete: () => LooseQuery } }
-  )
+  const { error } = await supabase
     .from("brainstorming_rows")
     .delete()
     .eq("id", id);
@@ -328,14 +318,14 @@ export async function deleteRow(id: string): Promise<void> {
 export async function reorderRows(orderedIds: string[]): Promise<void> {
   await Promise.all(
     orderedIds.map((id, index) =>
-      table("brainstorming_rows").update({ order_index: index }).eq("id", id),
+      supabase.from("brainstorming_rows").update({ order_index: index }).eq("id", id),
     ),
   );
 }
 
 /** Bir bölümün yorumlarını eskiden yeniye getirir. */
 export async function fetchComments(sectionKey: string): Promise<BrainstormingComment[]> {
-  const { data, error } = await table("statusreport_comments")
+  const { data, error } = await supabase.from("statusreport_comments")
     .select(COMMENT_SELECT)
     .eq("section_key", sectionKey)
     .order("created_at", { ascending: true });
@@ -396,3 +386,4 @@ export async function fetchUserEmails(ids: (string | null)[]): Promise<Record<st
   }
   return result;
 }
+

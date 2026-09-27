@@ -10,8 +10,9 @@
 // artık DB'ye girmez, yalnız UI rozeti içindir.
 // RLS: yalnız admin okur/yazar; tüm adminler ortak durumu görür.
 //
-// types.ts henüz bu tabloları içermeyebilir → supabase çağrılarında dar `as any` cast
-// kullanılır (B1 types regen sonrası kaldırılabilir).
+// 27.09.2026: `as unknown as {...}` gevşek istemci şimi KALDIRILDI. Eski not
+// ("types.ts bu tabloları içermeyebilir") ölçümle çürüdü — iki tablo da tipli.
+// Tipli istemciye geçişte `tsc` 0 hata verdi.
 
 import {
   Facebook,
@@ -101,15 +102,9 @@ const errorMessage = (error: unknown, fallback: string): string =>
 
 /** Her iki tabloyu çekip globalId anahtarlı haritalara dönüştürür. */
 export async function fetchShareState(): Promise<ShareState> {
-  const client = supabase as unknown as {
-    from: (table: string) => {
-      select: (cols: string) => Promise<{ data: unknown; error: unknown }>;
-    };
-  };
-
   const [logRes, noteRes] = await Promise.all([
-    client.from("social_share_log").select("global_id,platform,shared,marked_at,marked_by"),
-    client.from("social_share_item_note").select("global_id,note,marked_at,marked_by"),
+    supabase.from("social_share_log").select("global_id,platform,shared,marked_at,marked_by"),
+    supabase.from("social_share_item_note").select("global_id,note,marked_at,marked_by"),
   ]);
 
   if (logRes.error) {
@@ -153,16 +148,7 @@ export async function toggleShare(args: {
   shared: boolean;
 }): Promise<void> {
   const markedBy = await currentUserId();
-  const client = supabase as unknown as {
-    from: (table: string) => {
-      upsert: (
-        values: Record<string, unknown>,
-        options: { onConflict: string },
-      ) => Promise<{ error: unknown }>;
-    };
-  };
-
-  const { error } = await client.from("social_share_log").upsert(
+  const { error } = await supabase.from("social_share_log").upsert(
     {
       global_id: args.globalId,
       platform: args.platform,
@@ -184,16 +170,7 @@ export async function saveItemNote(args: {
   note: string;
 }): Promise<void> {
   const markedBy = await currentUserId();
-  const client = supabase as unknown as {
-    from: (table: string) => {
-      upsert: (
-        values: Record<string, unknown>,
-        options: { onConflict: string },
-      ) => Promise<{ error: unknown }>;
-    };
-  };
-
-  const { error } = await client.from("social_share_item_note").upsert(
+  const { error } = await supabase.from("social_share_item_note").upsert(
     {
       global_id: args.globalId,
       note: args.note,
@@ -207,3 +184,4 @@ export async function saveItemNote(args: {
     throw new Error(errorMessage(error, "Not kaydedilemedi"));
   }
 }
+

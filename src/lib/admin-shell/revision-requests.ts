@@ -3,12 +3,25 @@
 // (revision_requests) + talep başına çoklu yorum thread'i (revision_request_comments).
 // RLS: yalnız admin okur/yazar; tüm adminler ortak durumu görür (mig 20260628100000).
 //
-// types.ts henüz bu tabloları içermiyor → supabase çağrılarında dar `as any` cast
-// kullanılır (CLAUDE.md B1; social-share-log.ts ile aynı yaklaşım).
+// 27.09.2026: "types.ts henüz bu tabloları içermiyor" notu ölçümle çürüdü — üç
+// tablo da tipliydi. Gevşek istemci şimi (`LooseQuery`) KALDIRILDI.
+// ⚠️ Şim kaldırılınca `tsc` 3 gerçek bulgu verdi, üçü de YAZMA yükünde:
+// `buildRequestPayload` dönüşü `Record<string, unknown>` olduğu için yük hiç
+// denetlenmiyordu ve ek eklemede hesaplanmış anahtar (`[column]: value`) nesneyi
+// indeks imzasına genişletiyordu. İkisi de olmayan bir sütuna yazmayı derleme
+// zamanında gizler — canlıda `PGRST204` olarak çıkar (CLAUDE.md'nin belgelediği sınıf).
+//
+// Tablo başına DOĞRUDAN `supabase.from("...")` çağrılır; ortak bir
+// `table(name: string)` yardımcısı KULLANILMAZ — birleşim tipi üç tablonun
+// sütunlarını kesişime sokar ve var olan sütunları bile reddeder.
+//
 // created_by → e-posta gösterimi admin_get_user_email(uuid) RPC ile çözülür.
 
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 import { sanitizeError, validateContent, validateFile, validateTitle } from "@/lib/security";
+
+type AttachmentInsert = Database["public"]["Tables"]["revision_request_attachments"]["Insert"];
 
 /** Talep durumları — DB CHECK ile eşleşir. */
 export const REVISION_STATUSES = ["acik", "inceleniyor", "yapildi", "iptal"] as const;
@@ -102,19 +115,6 @@ const COMMENT_SELECT = "id,request_id,body,created_by,created_at";
 
 // types.ts bu tabloları tanımadığı için tüm sorgular tek bir gevşek istemci
 // arayüzünden geçer (social-share-log.ts deseni).
-type LooseQuery = {
-  select: (cols: string) => LooseQuery;
-  insert: (values: Record<string, unknown>) => LooseQuery;
-  update: (values: Record<string, unknown>) => LooseQuery;
-  eq: (column: string, value: unknown) => LooseQuery;
-  is: (column: string, value: unknown) => LooseQuery;
-  order: (column: string, options: { ascending: boolean }) => LooseQuery;
-  single: () => Promise<{ data: unknown; error: unknown }>;
-  then: Promise<{ data: unknown; error: unknown }>["then"];
-};
-
-const table = (name: string): LooseQuery =>
-  (supabase as unknown as { from: (t: string) => LooseQuery }).from(name);
 
 function mapRequest(row: RequestRow): RevisionRequest {
   return {
@@ -178,7 +178,11 @@ async function currentUserId(): Promise<string | null> {
   return data.user?.id ?? null;
 }
 
-function buildRequestPayload(form: RevisionRequestForm): Record<string, unknown> {
+// Dönüş tipi BİLEREK açıklanmıyor: `Record<string, unknown>` derleyicinin
+// insert/update yükünü tabloya karşı denetlemesini engelliyordu. Çıkarım
+// bırakıldığında olmayan bir sütuna yazmak derleme zamanında yakalanır
+// (CLAUDE.md: cast yerine `satisfies`; PGRST204 sınıfı).
+function buildRequestPayload(form: RevisionRequestForm) {
   return {
     title: form.title.trim().slice(0, 200),
     detail: form.detail.trim(),
@@ -190,7 +194,7 @@ function buildRequestPayload(form: RevisionRequestForm): Record<string, unknown>
 
 /** Aktif (silinmemiş) talepleri öncelik + tarih sırasıyla getirir. */
 export async function fetchRevisionRequests(): Promise<RevisionRequest[]> {
-  const { data, error } = await table("revision_requests")
+  const { data, error } = await supabase.from("revision_requests")
     .select(REQUEST_SELECT)
     .is("deleted_at", null)
     .order("priority", { ascending: false })
@@ -205,7 +209,7 @@ export async function fetchRevisionRequests(): Promise<RevisionRequest[]> {
 
 /** Bir talebin aktif yorumlarını eskiden yeniye getirir. */
 export async function fetchComments(requestId: string): Promise<RevisionComment[]> {
-  const { data, error } = await table("revision_request_comments")
+  const { data, error } = await supabase.from("revision_request_comments")
     .select(COMMENT_SELECT)
     .eq("request_id", requestId)
     .is("deleted_at", null)
@@ -228,7 +232,7 @@ export async function createRevisionRequest(
   }
 
   const createdBy = await currentUserId();
-  const { data, error } = await table("revision_requests")
+  const { data, error } = await supabase.from("revision_requests")
     .insert({ ...buildRequestPayload(form), created_by: createdBy })
     .select(REQUEST_SELECT)
     .single();
@@ -250,7 +254,7 @@ export async function updateRevisionRequest(
     throw new Error(validationError);
   }
 
-  const { data, error } = await table("revision_requests")
+  const { data, error } = await supabase.from("revision_requests")
     .update(buildRequestPayload(form))
     .eq("id", id)
     .select(REQUEST_SELECT)
@@ -265,7 +269,7 @@ export async function updateRevisionRequest(
 
 /** Talebi soft-delete eder (deleted_at set). Cascade ile yorumlar da gizlenir. */
 export async function deleteRevisionRequest(id: string): Promise<void> {
-  const { error } = await table("revision_requests")
+  const { error } = await supabase.from("revision_requests")
     .update({ deleted_at: new Date().toISOString() })
     .eq("id", id);
 
@@ -287,7 +291,7 @@ export async function addComment(requestId: string, body: string): Promise<Revis
   }
 
   const createdBy = await currentUserId();
-  const { data, error } = await table("revision_request_comments")
+  const { data, error } = await supabase.from("revision_request_comments")
     .insert({ request_id: requestId, body: trimmed, created_by: createdBy })
     .select(COMMENT_SELECT)
     .single();
@@ -301,7 +305,7 @@ export async function addComment(requestId: string, body: string): Promise<Revis
 
 /** Yorumu soft-delete eder. */
 export async function deleteComment(id: string): Promise<void> {
-  const { error } = await table("revision_request_comments")
+  const { error } = await supabase.from("revision_request_comments")
     .update({ deleted_at: new Date().toISOString() })
     .eq("id", id);
 
@@ -404,7 +408,7 @@ function buildAttachmentPath(parent: AttachmentParent, file: File): string {
 /** Bir talebin ya da yorumun aktif (silinmemiş) eklerini eskiden yeniye getirir. */
 export async function fetchAttachments(parent: AttachmentParent): Promise<RevisionAttachment[]> {
   const { column, value } = attachmentParentColumn(parent);
-  const { data, error } = await table("revision_request_attachments")
+  const { data, error } = await supabase.from("revision_request_attachments")
     .select(ATTACHMENT_SELECT)
     .eq(column, value)
     .is("deleted_at", null)
@@ -440,15 +444,25 @@ export async function uploadAttachment(
 
   const createdBy = await currentUserId();
   const { column, value } = attachmentParentColumn(parent);
-  const { data, error } = await table("revision_request_attachments")
-    .insert({
-      [column]: value,
-      storage_path: path,
-      file_name: file.name,
-      content_type: file.type || null,
-      size_bytes: file.size,
-      created_by: createdBy,
-    })
+  const base = {
+    storage_path: path,
+    file_name: file.name,
+    content_type: file.type || null,
+    size_bytes: file.size,
+    created_by: createdBy,
+  };
+  // Hesaplanmış anahtar (`[column]: value`) nesneyi indeks imzasına genişletiyor
+  // ve tipli istemcinin yükü tabloya karşı denetlemesini engelliyor. İki açık dal
+  // aynı yükü üretir — gönderilen alanlar birebir aynı — ama denetlenebilir.
+  // Tip açıklaması ŞART: iki dalın birleşimi doğrudan `.insert()`'e verilemiyor
+  // (`RejectExcessProperties` birleşime dağılmıyor). `satisfies` değil `:` —
+  // amaç birleşimi tek şekle indirmek; fazla sütun yine derlemede yakalanır.
+  const row: AttachmentInsert =
+    column === "request_id"
+      ? { ...base, request_id: value }
+      : { ...base, comment_id: value };
+  const { data, error } = await supabase.from("revision_request_attachments")
+    .insert(row)
     .select(ATTACHMENT_SELECT)
     .single();
 
@@ -468,7 +482,7 @@ export async function deleteAttachment(id: string, storagePath: string): Promise
     throw new Error(sanitizeError(removeError, "Ek silinemedi."));
   }
 
-  const { error } = await table("revision_request_attachments")
+  const { error } = await supabase.from("revision_request_attachments")
     .update({ deleted_at: new Date().toISOString() })
     .eq("id", id);
 
@@ -487,3 +501,5 @@ export async function getAttachmentUrl(storagePath: string): Promise<string> {
   }
   return data.signedUrl;
 }
+
+

@@ -6,8 +6,10 @@
 // Format kararı (30.07.2026 Cadde workshop'u): madde listesi + iki checkbox, yorum yok.
 // İkisi de onaylıysa madde "bitti" sayılır.
 //
-// types.ts henüz bu tabloyu içermiyor → supabase çağrılarında dar `as any` cast
-// kullanılır (CLAUDE.md B1; revision-requests.ts ile aynı yaklaşım).
+// 27.09.2026: "types.ts henüz bu tabloyu içermiyor" notu ölçümle çürüdü —
+// `workshop_items` zaten tipliydi. Gevşek istemci şimi (`LooseQuery`) KALDIRILDI,
+// tipli istemci doğrudan kullanılıyor ve `tsc` 0 hata verdi. Satır dönüşümü
+// zaten `mapItem` ile açıkça yapılıyordu, gizlenen bir kusur yoktu.
 
 import { supabase } from "@/integrations/supabase/client";
 import { sanitizeError, validateContent } from "@/lib/security";
@@ -100,23 +102,7 @@ const ITEM_SELECT =
 
 const TABLE = "workshop_items";
 
-// types.ts bu tabloyu tanımadığı için tüm sorgular tek bir gevşek istemci
-// arayüzünden geçer (revision-requests.ts deseni).
-type LooseQuery = {
-  select: (cols: string) => LooseQuery;
-  insert: (values: Record<string, unknown>) => LooseQuery;
-  update: (values: Record<string, unknown>) => LooseQuery;
-  eq: (column: string, value: unknown) => LooseQuery;
-  is: (column: string, value: unknown) => LooseQuery;
-  order: (column: string, options: { ascending: boolean }) => LooseQuery;
-  limit: (count: number) => LooseQuery;
-  maybeSingle: () => Promise<{ data: unknown; error: unknown }>;
-  single: () => Promise<{ data: unknown; error: unknown }>;
-  then: Promise<{ data: unknown; error: unknown }>["then"];
-};
-
-const table = (): LooseQuery =>
-  (supabase as unknown as { from: (t: string) => LooseQuery }).from(TABLE);
+const table = () => supabase.from(TABLE);
 
 function mapItem(row: ItemRow): WorkshopItem {
   return {
@@ -432,3 +418,4 @@ export async function deleteWorkshopItem(id: string): Promise<void> {
     throw new Error(sanitizeError(error, "Madde silinemedi."));
   }
 }
+

@@ -4,8 +4,9 @@
 // RLS: INSERT authenticated (auth.uid() = created_by); SELECT/UPDATE admin-only
 // (mig 20260707100000_member_feedback.sql).
 //
-// types.ts henüz bu tabloyu içermiyor → supabase çağrılarında dar cast kullanılır
-// (revision-requests.ts LooseQuery deseni; CLAUDE.md B1).
+// 27.09.2026: gevşek istemci şimi (`LooseQuery` + `table(name)`) KALDIRILDI. Eski
+// not ("types.ts henüz bu tabloyu içermiyor") ölçümle çürüdü — `member_feedback`
+// tipli. Tipli istemciye geçişte `tsc` 0 hata verdi.
 //
 // DİKKAT: submitFeedback insert'e .select() ZİNCİRLEMEZ — üyenin SELECT policy'si yok,
 // returning istenirse RLS'e takılır. Insert `return=minimal` olarak kalmalı.
@@ -48,19 +49,6 @@ const FEEDBACK_SELECT = "id,body,page_path,status,created_by,created_at,updated_
 
 // types.ts bu tabloyu tanımadığı için tüm sorgular tek bir gevşek istemci
 // arayüzünden geçer (revision-requests.ts deseni).
-type LooseQuery = {
-  select: (cols: string) => LooseQuery;
-  insert: (values: Record<string, unknown>) => LooseQuery;
-  update: (values: Record<string, unknown>) => LooseQuery;
-  eq: (column: string, value: unknown) => LooseQuery;
-  is: (column: string, value: unknown) => LooseQuery;
-  order: (column: string, options: { ascending: boolean }) => LooseQuery;
-  single: () => Promise<{ data: unknown; error: unknown }>;
-  then: Promise<{ data: unknown; error: unknown }>["then"];
-};
-
-const table = (name: string): LooseQuery =>
-  (supabase as unknown as { from: (t: string) => LooseQuery }).from(name);
 
 function mapFeedback(row: FeedbackRow): MemberFeedback {
   return {
@@ -104,7 +92,7 @@ export async function submitFeedback(body: string, pagePath: string): Promise<vo
     throw new Error("Feedback göndermek için giriş yapmalısınız.");
   }
 
-  const { error } = await table("member_feedback").insert({
+  const { error } = await supabase.from("member_feedback").insert({
     body: body.trim(),
     page_path: pagePath.trim().slice(0, 300),
     created_by: createdBy,
@@ -117,7 +105,7 @@ export async function submitFeedback(body: string, pagePath: string): Promise<vo
 
 /** Aktif (silinmemiş) feedback'leri yeniden eskiye getirir (admin). */
 export async function fetchFeedbackList(): Promise<MemberFeedback[]> {
-  const { data, error } = await table("member_feedback")
+  const { data, error } = await supabase.from("member_feedback")
     .select(FEEDBACK_SELECT)
     .is("deleted_at", null)
     .order("created_at", { ascending: false });
@@ -138,7 +126,7 @@ export async function updateFeedbackStatus(
     throw new Error("Geçersiz durum.");
   }
 
-  const { error } = await table("member_feedback").update({ status }).eq("id", id);
+  const { error } = await supabase.from("member_feedback").update({ status }).eq("id", id);
 
   if (error) {
     throw new Error(sanitizeError(error, "Durum güncellenemedi."));
@@ -147,7 +135,7 @@ export async function updateFeedbackStatus(
 
 /** Feedback'i soft-delete eder (admin). */
 export async function deleteFeedback(id: string): Promise<void> {
-  const { error } = await table("member_feedback")
+  const { error } = await supabase.from("member_feedback")
     .update({ deleted_at: new Date().toISOString() })
     .eq("id", id);
 
@@ -155,3 +143,4 @@ export async function deleteFeedback(id: string): Promise<void> {
     throw new Error(sanitizeError(error, "Geri bildirim silinemedi."));
   }
 }
+

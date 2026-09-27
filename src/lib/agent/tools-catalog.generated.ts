@@ -605,8 +605,10 @@ export const toolCatalog = {
         "updateSection"
       ],
       "tables_read_write": [
+        "...",
         "brainstorming_rows",
-        "brainstorming_sections"
+        "brainstorming_sections",
+        "statusreport_comments"
       ],
       "rpcs": [
         "add_brainstorming_comment_v1",

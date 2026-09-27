@@ -13,7 +13,8 @@ export interface CitizenshipQuestion {
   image_url: string | null;
 }
 
-// supabase/types.ts bu tabloyu henüz içermiyor (regen sonrası gelir) → as any (relocation-api deseni).
+// 27.09.2026: burada cast YOK ve gerekmiyor — `germany_citizenship_questions`
+// tipli. Eski "types.ts bu tabloyu içermiyor" notu bayattı, kaldırıldı.
  
 const db = supabase;
 
@@ -48,3 +49,4 @@ export async function listStates(): Promise<string[]> {
   const set = new Set<string>((data ?? []).map((r: { eyalet: string }) => r.eyalet));
   return [...set].sort((a, b) => a.localeCompare(b, "de"));
 }
+
