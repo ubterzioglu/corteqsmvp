@@ -3055,6 +3055,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/kadro/kadro-api-mapping.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/kadro/kadro-api.test.ts",
       "kind": "ts",
       "module_family": "lib"

@@ -1,9 +1,10 @@
 // Relocation içerik + ilerleme — Supabase okuma/yazma katmanı.
 // Desen: src/lib/relocation-api.ts (aynı modülün mevcut API'si).
 //
-// NOT: supabase/types.ts bu dört tablo için henüz regenerate edilmedi; mevcut
-// relocation-api.ts ile aynı sebeple `supabase as any` kullanılır. Kaldırmak tsc
-// hatalarını geri getirir (CLAUDE.md "TypeScript loose" maddesi).
+// 27.09.2026: supabase/types.ts yeniden üretildi ve bu tabloların hepsi artık
+// tipli (A05b). `const db = supabase as any` şimi bu yüzden KALDIRILDI; tipli
+// istemci doğrudan kullanılıyor. Satır tipleri zaten snake_case olduğu için
+// dönüşüm gerekmedi — gizlenen bir kusur yoktu.
 
 import { supabase } from "@/integrations/supabase/client";
 import type {
@@ -16,8 +17,6 @@ import type {
   RelocationRequiredDocumentRow,
 } from "@/lib/relocation-content-types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = supabase as any;
 
 /**
  * PostgREST tek sorguda 1000 satırda SESSİZCE keser (CLAUDE.md "Değişmez sözleşmeler" md.5).
@@ -37,7 +36,7 @@ export async function getLivingCosts(
   const codes = countryCodes.map((c) => c.trim().toUpperCase()).filter(Boolean);
   if (codes.length === 0) return [];
 
-  const { data, error } = await db
+  const { data, error } = await supabase
     .from("relocation_living_costs")
     .select("*")
     .in("country_code", codes)
@@ -54,7 +53,7 @@ export async function getRequiredDocuments(
   const codes = countryCodes.map((c) => c.trim().toUpperCase()).filter(Boolean);
   if (codes.length === 0) return [];
 
-  const { data, error } = await db
+  const { data, error } = await supabase
     .from("relocation_required_documents")
     .select("*")
     .in("country_code", codes)
@@ -70,7 +69,7 @@ export async function getRequiredDocuments(
 // ---------------------------------------------------------------------------
 
 export async function getMoveProgress(moveId: string): Promise<RelocationMoveProgressRow[]> {
-  const { data, error } = await db
+  const { data, error } = await supabase
     .from("relocation_move_progress")
     .select("*")
     .eq("move_id", moveId)
@@ -98,7 +97,7 @@ export async function setMoveProgress(input: {
     updated_at: new Date().toISOString(),
   };
 
-  const { error } = await db
+  const { error } = await supabase
     .from("relocation_move_progress")
     .upsert(payload, { onConflict: "move_id,item_type,item_key" });
   if (error) throw error;
@@ -109,7 +108,7 @@ export async function setMoveProgress(input: {
 // ---------------------------------------------------------------------------
 
 export async function getMoveDocuments(moveId: string): Promise<RelocationMoveDocumentRow[]> {
-  const { data, error } = await db
+  const { data, error } = await supabase
     .from("relocation_move_documents")
     .select("*")
     .eq("move_id", moveId)
@@ -132,12 +131,12 @@ export async function saveMoveDocument(input: {
     doc_type: input.docType,
   };
 
-  const { error } = await db.from("relocation_move_documents").insert(payload);
+  const { error } = await supabase.from("relocation_move_documents").insert(payload);
   if (error) throw error;
 }
 
 export async function deleteMoveDocument(documentId: string): Promise<void> {
-  const { error } = await db.from("relocation_move_documents").delete().eq("id", documentId);
+  const { error } = await supabase.from("relocation_move_documents").delete().eq("id", documentId);
   if (error) throw error;
 }
 
@@ -146,10 +145,11 @@ export async function deleteMoveDocument(documentId: string): Promise<void> {
  * Kur yoksa boş dizi döner ve panel karşılık göstermez; uydurma çevrim yapılmaz.
  */
 export async function getFxRates(): Promise<RelocationFxRateRow[]> {
-  const { data, error } = await db
+  const { data, error } = await supabase
     .from("relocation_fx_rates")
     .select("base_currency, quote_currency, rate, rate_at")
     .limit(MAX_ROWS);
   if (error) throw error;
   return (data ?? []) as RelocationFxRateRow[];
 }
+
