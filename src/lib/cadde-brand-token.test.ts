@@ -15,7 +15,14 @@ import { describe, expect, it } from "vitest";
 
 const CSS = readFileSync("src/index.css", "utf8");
 const SOCIAL_CONFIG = readFileSync("scripts/social-generate/config.mjs", "utf8");
-const CADDE_PAGE = readFileSync("src/pages/cadde/CaddePage.tsx", "utf8");
+// A06b (27.09.2026): /cadde sayfasının akış kolonu `CaddeFeedView.tsx`'e ayrıldı.
+// Bu testlerin denetlediği "giriş yüzeyi" artık İKİ dosyadır; ayrı ayrı bakmak
+// `cadde-primary-action` ve pillar sınıflarını sahte biçimde "kayıp" gösterir.
+// Birleştirme "en fazla bir primary" kuralını da bozmaz: sayfada 0, akışta 1.
+const CADDE_PAGE = [
+  readFileSync("src/pages/cadde/CaddePage.tsx", "utf8"),
+  readFileSync("src/components/cadde/CaddeFeedView.tsx", "utf8"),
+].join("\n");
 const SPONSORED_CARD = readFileSync("src/components/cadde/SponsoredFeedCard.tsx", "utf8");
 const SCOPE_BAR = readFileSync("src/components/cadde/CaddeFeedScopeBar.tsx", "utf8");
 const COMPOSER = readFileSync("src/components/cadde/CaddeComposer.tsx", "utf8");
