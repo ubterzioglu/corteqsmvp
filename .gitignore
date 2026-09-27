@@ -137,3 +137,10 @@ walast.txt
 
 # git worktree'leri depo kokune acilirsa commit'e karismasin (09.09.2026)
 .worktrees/
+
+# Command Center DB dokumu (scripts/export-command-center-md.mjs ciktisi) —
+# uretilen dosya, repoya girmez; gerekince `node scripts/export-command-center-md.mjs` ile uret
+docs/commandcenter/
+
+# Gecici commit mesaji taslagi
+commit-msg.txt
