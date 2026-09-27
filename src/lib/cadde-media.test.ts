@@ -1,6 +1,9 @@
 // cadde-media testleri (F5/m7) — SQL ayna sözleşmesi + doğrulama + yükleme yolu.
 // Ayna kaynağı: 20260730100000_cadde_v1_000_media_bucket.sql (cadde.media.* ayarları,
-// 52428800 = 50MB) ve 20260730110000_cadde_v1_001_post_media.sql (cadde_validate_media).
+// 20260730110000_cadde_v1_001_post_media.sql (cadde_validate_media) ve m94 kararı
+// 20260925180000_cadde_video_limit_10mb.sql (bucket file_size_limit 10485760 = 10MB, 30 sn).
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { getUserMock, uploadMock, getPublicUrlMock, removeMock } = vi.hoisted(() => ({
@@ -25,6 +28,7 @@ import {
   resolveCaddeMediaKind,
   uploadCaddeMedia,
   validateCaddeMediaFile,
+  validateCaddeVideoDuration,
   type CaddeMediaAsset,
 } from "@/lib/cadde-media";
 
@@ -44,7 +48,20 @@ describe("SQL ayna sözleşmesi (cadde_settings / cadde_validate_media)", () => 
     expect(CADDE_MEDIA_LIMITS.maxImages).toBe(4);
     expect(CADDE_MEDIA_LIMITS.maxVideos).toBe(1);
     expect(CADDE_MEDIA_LIMITS.maxImageBytes).toBe(5 * 1024 * 1024);
-    expect(CADDE_MEDIA_LIMITS.maxVideoBytes).toBe(52428800);
+    expect(CADDE_MEDIA_LIMITS.maxVideoBytes).toBe(10485760);
+    expect(CADDE_MEDIA_LIMITS.maxVideoSeconds).toBe(30);
+  });
+
+  it("bucket tavanı (10MB) video sınırıyla aynı, görsel sınırı onun altında", () => {
+    const sql = readFileSync(
+      resolve(process.cwd(), "supabase/migrations/applied/20260925180000_cadde_video_limit_10mb.sql"),
+      "utf8",
+    );
+    // ⚠️ Şablon dizesinde `\b` kelime sınırı DEĞİLDİR — JS onu görünmez bir kontrol
+    // karakterine çevirir ve desen hiçbir zaman eşleşmez (bu tam olarak yaşandı).
+    // RegExp kaynağına gerçek bir kelime sınırı geçirmek için çift ters bölü şart.
+    expect(sql).toMatch(new RegExp(`file_size_limit = ${CADDE_MEDIA_LIMITS.maxVideoBytes}\\b`));
+    expect(CADDE_MEDIA_LIMITS.maxImageBytes).toBeLessThanOrEqual(CADDE_MEDIA_LIMITS.maxVideoBytes);
   });
 });
 
@@ -83,11 +100,11 @@ describe("validateCaddeMediaFile", () => {
     expect(validateCaddeMediaFile(fakeFile("a.pdf", "application/pdf", 10), [])).toMatch(/Yalnız/);
   });
 
-  it("boyut sınırları: görsel 5MB, video 50MB", () => {
+  it("boyut sınırları: görsel 5MB, video 10MB", () => {
     expect(validateCaddeMediaFile(fakeFile("a.jpg", "image/jpeg", 5 * 1024 * 1024 + 1), [])).toMatch(/5MB/);
     expect(validateCaddeMediaFile(fakeFile("a.jpg", "image/jpeg", 5 * 1024 * 1024), [])).toBeNull();
-    expect(validateCaddeMediaFile(fakeFile("v.mp4", "video/mp4", 52428800 + 1), [])).toMatch(/50MB/);
-    expect(validateCaddeMediaFile(fakeFile("v.mp4", "video/mp4", 52428800), [])).toBeNull();
+    expect(validateCaddeMediaFile(fakeFile("v.mp4", "video/mp4", 10485760 + 1), [])).toMatch(/10MB/);
+    expect(validateCaddeMediaFile(fakeFile("v.mp4", "video/mp4", 10485760), [])).toBeNull();
   });
 
   it("adet sınırları: 4 görsel, 1 video (SQL ile aynı)", () => {
@@ -97,6 +114,25 @@ describe("validateCaddeMediaFile", () => {
     expect(validateCaddeMediaFile(fakeFile("v.mp4", "video/mp4", 10), [video()])).toMatch(/1 video/);
     // Görsel sayısı video eklemeyi engellemez (ve tersi).
     expect(validateCaddeMediaFile(fakeFile("v.mp4", "video/mp4", 10), fourImages)).toBeNull();
+  });
+});
+
+describe("validateCaddeVideoDuration (m94: 30 sn)", () => {
+  const mp4 = () => fakeFile("v.mp4", "video/mp4", 10);
+
+  it("30 sn üstü videoyu reddeder, sınırdakini kabul eder", async () => {
+    expect(await validateCaddeVideoDuration(mp4(), async () => 30.5)).toMatch(/30 saniye/);
+    expect(await validateCaddeVideoDuration(mp4(), async () => 30)).toBeNull();
+  });
+
+  it("süre okunamazsa engellemez (bayt sınırı bucket'ta)", async () => {
+    expect(await validateCaddeVideoDuration(mp4(), async () => null)).toBeNull();
+  });
+
+  it("görselde süreye hiç bakmaz", async () => {
+    const reader = vi.fn(async () => 999);
+    expect(await validateCaddeVideoDuration(fakeFile("a.jpg", "image/jpeg", 10), reader)).toBeNull();
+    expect(reader).not.toHaveBeenCalled();
   });
 });
 

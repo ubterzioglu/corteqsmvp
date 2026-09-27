@@ -17,12 +17,17 @@ export type CaddeMediaScope = "post" | "carsi" | "cafe";
 
 const BUCKET = "cadde-media";
 
-/** SQL `cadde_validate_media` ile aynı olmak zorunda (ayna sözleşmesi). */
+/**
+ * SQL `cadde_validate_media` + bucket `file_size_limit` ile aynı olmak zorunda (ayna sözleşmesi).
+ * m94 kararı (25.09): video en fazla 10 MB ve 30 sn — bkz. 20260925180000_cadde_video_limit_10mb.sql.
+ * Süre DB'de ölçülemez; yalnız burada (`validateCaddeVideoDuration`) denetlenir.
+ */
 export const CADDE_MEDIA_LIMITS = {
   maxImages: 4,
   maxVideos: 1,
   maxImageBytes: 5 * 1024 * 1024,
-  maxVideoBytes: 50 * 1024 * 1024,
+  maxVideoBytes: 10 * 1024 * 1024,
+  maxVideoSeconds: 30,
 } as const;
 
 export const CADDE_IMAGE_MIME_TYPES = [
@@ -99,6 +104,49 @@ export function validateCaddeMediaFile(file: File, existing: readonly CaddeMedia
   const videoCount = existing.filter((asset) => asset.kind === "video").length;
   if (videoCount >= CADDE_MEDIA_LIMITS.maxVideos) {
     return "Bir paylaşıma yalnız 1 video ekleyebilirsin.";
+  }
+  return null;
+}
+
+const VIDEO_METADATA_TIMEOUT_MS = 5000;
+
+/**
+ * Videonun süresini tarayıcıya okutur. Okunamazsa (codec desteklenmiyor, zaman aşımı,
+ * test ortamı) null döner — bu durumda bayt sınırı (bucket'ta enforce) tek koruma kalır.
+ */
+export function readVideoDurationSeconds(file: File): Promise<number | null> {
+  if (typeof document === "undefined" || typeof URL.createObjectURL !== "function") {
+    return Promise.resolve(null);
+  }
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const video = document.createElement("video");
+    let settled = false;
+    const finish = (seconds: number | null) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      URL.revokeObjectURL(url);
+      video.removeAttribute("src");
+      resolve(seconds);
+    };
+    const timer = setTimeout(() => finish(null), VIDEO_METADATA_TIMEOUT_MS);
+    video.preload = "metadata";
+    video.onloadedmetadata = () => finish(Number.isFinite(video.duration) ? video.duration : null);
+    video.onerror = () => finish(null);
+    video.src = url;
+  });
+}
+
+/** Video 30 sn sınırını aşıyorsa Türkçe hata mesajı, aksi halde null. Görsellerde her zaman null. */
+export async function validateCaddeVideoDuration(
+  file: File,
+  readDuration: (file: File) => Promise<number | null> = readVideoDurationSeconds,
+): Promise<string | null> {
+  if (resolveCaddeMediaKind(file.type) !== "video") return null;
+  const seconds = await readDuration(file);
+  if (seconds !== null && seconds > CADDE_MEDIA_LIMITS.maxVideoSeconds) {
+    return `Video en fazla ${CADDE_MEDIA_LIMITS.maxVideoSeconds} saniye olabilir.`;
   }
   return null;
 }

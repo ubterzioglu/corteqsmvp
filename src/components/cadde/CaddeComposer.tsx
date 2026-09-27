@@ -29,6 +29,7 @@ import {
   removeCaddeMedia,
   uploadCaddeMedia,
   validateCaddeMediaFile,
+  validateCaddeVideoDuration,
 } from "@/lib/cadde-media";
 import type { CaddeComposerValue } from "@/lib/cadde-composer";
 import { insertTextAtSelection, type TextSelection } from "@/lib/cadde-text-insert";
@@ -130,7 +131,7 @@ const CaddeComposer = ({
       // Sıralı yükleme: limit kontrolü her adımda o ana kadarki listeye bakmalı.
       let current = value.media;
       for (const file of Array.from(files)) {
-        const problem = validateCaddeMediaFile(file, current);
+        const problem = validateCaddeMediaFile(file, current) ?? (await validateCaddeVideoDuration(file));
         if (problem) {
           onError(problem);
           continue;

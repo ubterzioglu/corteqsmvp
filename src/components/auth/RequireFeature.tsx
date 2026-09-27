@@ -32,7 +32,7 @@ const RequireFeature = ({ feature, children, fallback = null }: RequireFeaturePr
   const { isLoading, isFeatureEnabled, errorMessage, refreshFeatures } = useFeatureFlags(true);
 
   if (isLoading) {
-    return <div className="flex min-h-[120px] items-center justify-center text-sm text-muted-foreground">Yetki yükleniyor...</div>;
+    return <div className="flex min-h-[120px] items-center justify-center text-sm text-muted-foreground">Yükleniyor...</div>;
   }
 
   if (errorMessage) {

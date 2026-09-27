@@ -20,6 +20,7 @@ import {
   removeCaddeMedia,
   uploadCaddeMedia,
   validateCaddeMediaFile,
+  validateCaddeVideoDuration,
 } from "@/lib/cadde-media";
 import type { CarsiFormValue } from "@/lib/cadde-composer";
 import type { CaddeCity, CaddeCountry, CaddeMediaAsset, CarsiCategory, CarsiContactMode } from "@/lib/cadde-types";
@@ -77,7 +78,9 @@ const CarsiItemForm = ({
           onError(`Bir ilana en fazla ${MAX_CARSI_IMAGES} görsel ekleyebilirsin.`);
           continue;
         }
-        const problem = validateCaddeMediaFile(file, current.filter((a) => a.kind === "video"));
+        const problem =
+          validateCaddeMediaFile(file, current.filter((a) => a.kind === "video")) ??
+          (await validateCaddeVideoDuration(file));
         if (problem && !problem.includes("görsel ekleyebilirsin")) {
           onError(problem);
           continue;
