@@ -39,7 +39,6 @@ import {
   MOVING_SOON_OPT_IN_ATTRIBUTE_KEY,
   PRESENTATION_DOCUMENT_ATTRIBUTE_KEY,
   PROFILE_PHOTO_ATTRIBUTE_KEY,
-  PROFILE_TYPE_TIP,
   SPECIAL_PROFILE_ATTRIBUTE_KEYS,
   VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY,
   WEBSITE_ATTRIBUTE_KEY,
@@ -52,11 +51,8 @@ import {
 } from "@/lib/profile-presentation";
 import { getRoleMeta, getUiProfileType, isProfileType } from "@/lib/profile-types";
 import { supabase } from "@/integrations/supabase/client";
-import PremiumProfileHero from "@/components/profile/premium/PremiumProfileHero";
-import ProfileSwitcherMenu from "@/components/profile/ProfileSwitcherMenu";
-import PremiumProfileTabs, { PREMIUM_TAB_KEYS } from "@/components/profile/premium/PremiumProfileTabs";
-import ProfileCompletionCard from "@/components/profile/premium/ProfileCompletionCard";
-import ProfilePublicPreviewCard from "@/components/profile/premium/ProfilePublicPreviewCard";
+import ProfilePremiumLayout from "@/components/profile/premium/ProfilePremiumLayout";
+import { PREMIUM_TAB_KEYS } from "@/components/profile/premium/PremiumProfileTabs";
 import { ProfileAccessCard } from "@/components/profile/ProfileAccessCard";
 import { ProfileDocumentCard } from "@/components/profile/ProfileDocumentCard";
 import { ProfileFieldsCard } from "@/components/profile/ProfileFieldsCard";
@@ -726,77 +722,56 @@ const ProfilePage = () => {
     />
   );
 
+  // Premium düzenin yerleşimi `ProfilePremiumLayout`'ta; burada yalnız hazır
+  // kartlar ve durum gruplu olarak geçilir (A07d).
   if (isPremiumPilot) {
-    // Experimental_2 premium pilot: owner hero + altında "Bireysel Panelim"
-    // sekmeli düzen (proref). İlk kart (hero) değişmedi; bugünkü 8/4 kolonlu
-    // düzenleme içeriği "Profil Ayarları" sekmesine taşındı. Tüm handler'lar ve
-    // veri sözleşmeleri generic layout ile birebir aynı (sadece sunum değişti).
-    const premiumSettingsContent = (
-      <div className="space-y-4">
-        <div className="grid gap-6 lg:grid-cols-12">
-          <div className="flex min-w-0 flex-col gap-4 lg:col-span-8">
-            {profileFieldsCard}
-            {interestsCard}
-            {badgesCard}
-            {caddeCards}
-            {socialMediaCard}
-            {linkCardsGrid}
-            {documentsGrid}
-            {roleSpecificCard}
-          </div>
-          <aside className="flex flex-col gap-4 lg:col-span-4 lg:sticky lg:top-24 lg:self-start">
-            <ProfileCompletionCard
-              requiredTotal={profile?.profileCompletion.requiredTotal ?? 0}
-              requiredCompleted={profile?.profileCompletion.requiredCompleted ?? 0}
-              percentage={profile?.profileCompletion.percentage ?? 0}
-              highlights={completionHighlights}
-            />
-            <ProfilePublicPreviewCard slug={memberCatalogSlug} isLoading={isMemberSlugLoading} />
-          </aside>
-        </div>
-        {accessCard}
-        {helpCard}
-      </div>
-    );
-
     return (
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 pb-16">
-        {hiddenFileInputs}
-        <PremiumProfileHero
-          displayName={displayName}
-          initials={initials}
-          avatarUrl={currentAvatarUrl || null}
-          roleLabel={profileTypeLabel}
-          roleTip={PROFILE_TYPE_TIP}
-          eyebrow={presentation.eyebrow}
-          email={profile?.email ?? user?.email ?? null}
-          locationLabel={locationLabel || null}
-          shortBio={shortBio || null}
-          completionPercentage={profile?.profileCompletion.percentage ?? 0}
-          hasPartialData={Boolean(errorMessage)}
-          publicProfileSlug={memberCatalogSlug}
-          switcherSlot={
-            <ProfileSwitcherMenu
-              currentItemId={null}
-              triggerClassName="h-8 w-full justify-start rounded-lg text-xs font-medium"
-            />
-          }
-          avatarUploading={avatarUploading}
-          avatarRemoving={avatarRemoving}
-          onChangePhoto={() => avatarInputRef.current?.click()}
-          onRemovePhoto={() => void handleRemoveAvatar()}
-          onShowSettings={() => setPremiumActiveTab(PREMIUM_TAB_KEYS.settings)}
-          onShowNotifications={() => setPremiumActiveTab(PREMIUM_TAB_KEYS.notifications)}
-          onShowHelp={scrollToHelpCard}
-          onSignOut={() => void handleSignOut()}
-        />
-        {contributorResourcesCard}
-        <PremiumProfileTabs
-          settingsContent={premiumSettingsContent}
-          activeTab={premiumActiveTab}
-          onActiveTabChange={setPremiumActiveTab}
-        />
-      </div>
+      <ProfilePremiumLayout
+        sections={{
+          hiddenFileInputs,
+          profileFieldsCard,
+          interestsCard,
+          badgesCard,
+          caddeCards,
+          socialMediaCard,
+          linkCardsGrid,
+          documentsGrid,
+          roleSpecificCard,
+          accessCard,
+          helpCard,
+          contributorResourcesCard,
+        }}
+        hero={{
+          displayName,
+          initials,
+          avatarUrl: currentAvatarUrl || null,
+          roleLabel: profileTypeLabel,
+          eyebrow: presentation.eyebrow,
+          email: profile?.email ?? user?.email ?? null,
+          locationLabel: locationLabel || null,
+          shortBio: shortBio || null,
+          completionPercentage: profile?.profileCompletion.percentage ?? 0,
+          hasPartialData: Boolean(errorMessage),
+          publicProfileSlug: memberCatalogSlug,
+        }}
+        avatar={{
+          uploading: avatarUploading,
+          removing: avatarRemoving,
+          onChangePhoto: () => avatarInputRef.current?.click(),
+          onRemovePhoto: () => void handleRemoveAvatar(),
+        }}
+        completion={{
+          requiredTotal: profile?.profileCompletion.requiredTotal ?? 0,
+          requiredCompleted: profile?.profileCompletion.requiredCompleted ?? 0,
+          percentage: profile?.profileCompletion.percentage ?? 0,
+          highlights: completionHighlights,
+        }}
+        publicPreview={{ slug: memberCatalogSlug, isLoading: isMemberSlugLoading }}
+        activeTab={premiumActiveTab}
+        onActiveTabChange={setPremiumActiveTab}
+        onShowHelp={scrollToHelpCard}
+        onSignOut={() => void handleSignOut()}
+      />
     );
   }
 
