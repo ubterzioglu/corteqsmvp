@@ -180,8 +180,11 @@ export async function joinCaddeCafe(input: { cafeId: string; referralCode?: stri
   const parsed = parseWithUserError(caddeCafeJoinInputSchema, input);
   const { data, error } = await db.rpc("join_cadde_cafe_v1", {
     p_cafe_id: parsed.cafeId,
-    p_referral_code: parsed.referralCode?.trim() || null,
-    p_answer: parsed.answer?.trim() || null,
+    // SQL doğrulaması (27.09, S01a): join_cadde_cafe_v1 her iki parametreyi
+    // DEFAULT NULL + nullif(trim(coalesce(...,''))) ile karşılıyor → null
+    // geçmek ile atlamak eşdeğer. strict-pilot tip sözleşmesi `| undefined` ister.
+    p_referral_code: parsed.referralCode?.trim() || undefined,
+    p_answer: parsed.answer?.trim() || undefined,
   });
   if (error) throw caddeWriteError("joinCaddeCafe", error);
   const payload = (data ?? {}) as { memberId?: string; status?: string };
@@ -201,11 +204,14 @@ export async function createCaddeCafe(input: CaddeCafeCreateInput): Promise<stri
     p_city: parsed.city ?? "",
     p_is_bridge: parsed.isBridge,
     p_entry_mode: parsed.entryMode,
-    p_referral_code: parsed.referralCode?.trim() || null,
-    p_entry_question: parsed.entryQuestion?.trim() || null,
-    p_starts_at: parsed.startsAt ?? null,
-    p_ends_at: parsed.endsAt ?? null,
-    p_capacity: parsed.capacity ?? null,
+    // SQL doğrulaması (27.09, S01a): create_cadde_cafe_v1 (applied/20260925110000:26)
+    // beş alanı da DEFAULT NULL + coalesce/nullif ile karşılıyor (:38-40, :108, :116)
+    // → null geçmek ile parametreyi atlamak eşdeğer.
+    p_referral_code: parsed.referralCode?.trim() || undefined,
+    p_entry_question: parsed.entryQuestion?.trim() || undefined,
+    p_starts_at: parsed.startsAt ?? undefined,
+    p_ends_at: parsed.endsAt ?? undefined,
+    p_capacity: parsed.capacity ?? undefined,
     p_external_links: parsed.externalLinks ?? [],
     p_diaspora_key: parsed.diasporaKey ?? "tr",
   });

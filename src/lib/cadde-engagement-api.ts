@@ -50,7 +50,10 @@ export async function reportCaddeEntity(entityType: "post" | "comment" | "cafe" 
     p_entity_type: entityType,
     p_entity_id: entityId,
     p_reason: reason,
-    p_details: normalizeCaddeReportDetails(details),
+    // normalizeCaddeReportDetails sözleşmesi toBeNull() testiyle kilitli (string|null).
+    // SQL doğrulaması (27.09, S01a): report_cadde_entity_v1 p_details'i DEFAULT NULL +
+    // nullif(trim(coalesce(...,''))) ile karşılıyor → null ≡ atla; çağrı yerinde daraltılır.
+    p_details: normalizeCaddeReportDetails(details) ?? undefined,
   });
   if (error) throw caddeWriteError("reportCaddeEntity", error);
 }
