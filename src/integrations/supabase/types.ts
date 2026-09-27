@@ -838,6 +838,99 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_assistant_usage: {
+        Row: {
+          created_at: string
+          function_name: string
+          http_status: number
+          id: string
+          input_tokens: number
+          output_tokens: number
+          provider: string
+          status: string
+          total_tokens: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          function_name: string
+          http_status: number
+          id?: string
+          input_tokens?: number
+          output_tokens?: number
+          provider: string
+          status?: string
+          total_tokens?: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          function_name?: string
+          http_status?: number
+          id?: string
+          input_tokens?: number
+          output_tokens?: number
+          provider?: string
+          status?: string
+          total_tokens?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      ai_knowledge_documents: {
+        Row: {
+          audience: string
+          chunk_index: number
+          content: string
+          content_hash: string
+          created_at: string
+          embed_attempts: number
+          embed_error: string | null
+          embedded_at: string | null
+          embedding: string | null
+          external_id: string
+          id: string
+          source_key: string
+          title: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          audience?: string
+          chunk_index?: number
+          content: string
+          content_hash: string
+          created_at?: string
+          embed_attempts?: number
+          embed_error?: string | null
+          embedded_at?: string | null
+          embedding?: string | null
+          external_id: string
+          id?: string
+          source_key: string
+          title: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          audience?: string
+          chunk_index?: number
+          content?: string
+          content_hash?: string
+          created_at?: string
+          embed_attempts?: number
+          embed_error?: string | null
+          embedded_at?: string | null
+          embedding?: string | null
+          external_id?: string
+          id?: string
+          source_key?: string
+          title?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
       appointments: {
         Row: {
           client_email: string | null
@@ -1409,6 +1502,7 @@ export type Database = {
           is_active: boolean
           is_bridge: boolean
           is_free: boolean
+          logo_url: string | null
           referral_code_hash: string | null
           slug: string | null
           starts_at: string
@@ -1436,6 +1530,7 @@ export type Database = {
           is_active?: boolean
           is_bridge?: boolean
           is_free?: boolean
+          logo_url?: string | null
           referral_code_hash?: string | null
           slug?: string | null
           starts_at?: string
@@ -1463,6 +1558,7 @@ export type Database = {
           is_active?: boolean
           is_bridge?: boolean
           is_free?: boolean
+          logo_url?: string | null
           referral_code_hash?: string | null
           slug?: string | null
           starts_at?: string
@@ -5967,6 +6063,102 @@ export type Database = {
           },
         ]
       }
+      kadro_candidates: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          full_name: string
+          id: string
+          links: string
+          note: string
+          role_key: string
+          stage: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          full_name: string
+          id?: string
+          links?: string
+          note?: string
+          role_key: string
+          stage?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          full_name?: string
+          id?: string
+          links?: string
+          note?: string
+          role_key?: string
+          stage?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      kadro_role_events: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          field: string
+          id: string
+          new_value: string | null
+          old_value: string | null
+          role_key: string
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          field: string
+          id?: string
+          new_value?: string | null
+          old_value?: string | null
+          role_key: string
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          field?: string
+          id?: string
+          new_value?: string | null
+          old_value?: string | null
+          role_key?: string
+        }
+        Relationships: []
+      }
+      kadro_role_states: {
+        Row: {
+          note: string | null
+          owner_name: string | null
+          priority: string | null
+          role_key: string
+          status: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          note?: string | null
+          owner_name?: string | null
+          priority?: string | null
+          role_key: string
+          status?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          note?: string | null
+          owner_name?: string | null
+          priority?: string | null
+          role_key?: string
+          status?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       lansman_registrations: {
         Row: {
           created_at: string
@@ -7912,6 +8104,50 @@ export type Database = {
           },
         ]
       }
+      relocation_fx_rates: {
+        Row: {
+          base_currency: string
+          created_at: string
+          fetched_at: string
+          id: string
+          quote_currency: string
+          rate: number
+          rate_at: string
+          source_id: string
+          updated_at: string
+        }
+        Insert: {
+          base_currency: string
+          created_at?: string
+          fetched_at?: string
+          id?: string
+          quote_currency: string
+          rate: number
+          rate_at: string
+          source_id: string
+          updated_at?: string
+        }
+        Update: {
+          base_currency?: string
+          created_at?: string
+          fetched_at?: string
+          id?: string
+          quote_currency?: string
+          rate?: number
+          rate_at?: string
+          source_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_fx_rates_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_source_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       relocation_interactions: {
         Row: {
           context: Json
@@ -8108,6 +8344,68 @@ export type Database = {
           },
         ]
       }
+      relocation_living_costs: {
+        Row: {
+          amount_max: number | null
+          amount_min: number | null
+          city_code: string | null
+          country_code: string
+          created_at: string
+          currency: string
+          freshness_at: string | null
+          household_size: number
+          id: string
+          is_active: boolean
+          item_key: string
+          note: string | null
+          period: string
+          source_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount_max?: number | null
+          amount_min?: number | null
+          city_code?: string | null
+          country_code: string
+          created_at?: string
+          currency?: string
+          freshness_at?: string | null
+          household_size?: number
+          id?: string
+          is_active?: boolean
+          item_key: string
+          note?: string | null
+          period?: string
+          source_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount_max?: number | null
+          amount_min?: number | null
+          city_code?: string | null
+          country_code?: string
+          created_at?: string
+          currency?: string
+          freshness_at?: string | null
+          household_size?: number
+          id?: string
+          is_active?: boolean
+          item_key?: string
+          note?: string | null
+          period?: string
+          source_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_living_costs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_source_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       relocation_locations: {
         Row: {
           bureaucracy_complexity: number | null
@@ -8184,6 +8482,82 @@ export type Database = {
             columns: ["source_id"]
             isOneToOne: false
             referencedRelation: "relocation_source_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_move_documents: {
+        Row: {
+          content: string
+          created_at: string
+          doc_type: string
+          id: string
+          move_id: string
+          title: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          doc_type: string
+          id?: string
+          move_id: string
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          doc_type?: string
+          id?: string
+          move_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_move_documents_move_id_fkey"
+            columns: ["move_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_moves"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_move_progress: {
+        Row: {
+          created_at: string
+          done_at: string | null
+          id: string
+          is_done: boolean
+          item_key: string
+          item_type: string
+          move_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          done_at?: string | null
+          id?: string
+          is_done?: boolean
+          item_key: string
+          item_type: string
+          move_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          done_at?: string | null
+          id?: string
+          is_done?: boolean
+          item_key?: string
+          item_type?: string
+          move_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_move_progress_move_id_fkey"
+            columns: ["move_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_moves"
             referencedColumns: ["id"]
           },
         ]
@@ -8390,6 +8764,53 @@ export type Database = {
             columns: ["move_id"]
             isOneToOne: false
             referencedRelation: "relocation_moves"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relocation_required_documents: {
+        Row: {
+          category: string
+          country_code: string
+          created_at: string
+          doc_name: string
+          id: string
+          is_active: boolean
+          note: string | null
+          sort_order: number
+          source_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          country_code: string
+          created_at?: string
+          doc_name: string
+          id?: string
+          is_active?: boolean
+          note?: string | null
+          sort_order?: number
+          source_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          country_code?: string
+          created_at?: string
+          doc_name?: string
+          id?: string
+          is_active?: boolean
+          note?: string | null
+          sort_order?: number
+          source_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relocation_required_documents_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "relocation_source_registry"
             referencedColumns: ["id"]
           },
         ]
@@ -9185,6 +9606,7 @@ export type Database = {
           detail: string
           id: string
           priority: number
+          revision_number: number | null
           status: string
           title: string
           updated_at: string
@@ -9197,6 +9619,7 @@ export type Database = {
           detail?: string
           id?: string
           priority?: number
+          revision_number?: number | null
           status?: string
           title: string
           updated_at?: string
@@ -9209,6 +9632,7 @@ export type Database = {
           detail?: string
           id?: string
           priority?: number
+          revision_number?: number | null
           status?: string
           title?: string
           updated_at?: string
@@ -13347,6 +13771,59 @@ export type Database = {
         Args: { p_patch: Json; p_template_id: string }
         Returns: Json
       }
+      ai_knowledge_mark_embed_error: {
+        Args: { p_document_id: string; p_error: string }
+        Returns: undefined
+      }
+      ai_knowledge_pending_documents: {
+        Args: { p_limit?: number; p_max_attempts?: number }
+        Returns: {
+          chunk_index: number
+          content: string
+          document_id: string
+          external_id: string
+          source_key: string
+          title: string
+        }[]
+      }
+      ai_knowledge_prune_source: {
+        Args: { p_keep_external_ids: string[]; p_source_key: string }
+        Returns: number
+      }
+      ai_knowledge_search: {
+        Args: {
+          p_audiences?: string[]
+          p_embedding: string
+          p_limit?: number
+          p_max_distance?: number
+        }
+        Returns: {
+          content: string
+          distance: number
+          source_key: string
+          title: string
+          url: string
+        }[]
+      }
+      ai_knowledge_set_embedding: {
+        Args: { p_document_id: string; p_embedding: string }
+        Returns: undefined
+      }
+      ai_knowledge_upsert_document: {
+        Args: {
+          p_audience: string
+          p_chunk_index: number
+          p_content: string
+          p_external_id: string
+          p_source_key: string
+          p_title: string
+          p_url: string
+        }
+        Returns: {
+          action: string
+          document_id: string
+        }[]
+      }
       approve_cadde_cafe_member_v1: {
         Args: { p_approve: boolean; p_member_id: string }
         Returns: undefined
@@ -14537,6 +15014,9 @@ export type Database = {
           p_city?: string
           p_country_code?: string
           p_featured_only?: boolean
+          p_limit?: number
+          p_offset?: number
+          p_query_embedding?: string
           p_role_key?: string
           p_search_text?: string
         }
@@ -14550,11 +15030,25 @@ export type Database = {
           is_verified: boolean
           item_id: string
           item_type: string
+          match_rank: number
           role_key: string
           role_label: string
           slug: string
           special_label: string
           special_value: string
+          title: string
+          total_count: number
+        }[]
+      }
+      search_public_content: {
+        Args: { p_limit?: number; p_search_text: string }
+        Returns: {
+          content_type: string
+          description: string
+          external_id: string
+          href: string
+          match_rank: number
+          slug: string
           title: string
         }[]
       }
@@ -14573,6 +15067,7 @@ export type Database = {
         Args: {
           p_admin_update: boolean
           p_new_member: boolean
+          p_radar_scan_digest?: boolean
           p_revision_request?: boolean
         }
         Returns: Json
@@ -15227,6 +15722,10 @@ export type Database = {
       }
       unaccent: { Args: { "": string }; Returns: string }
       unlockrows: { Args: { "": string }; Returns: number }
+      update_cadde_cafe_logo_v1: {
+        Args: { p_cafe_id: string; p_logo_url: string }
+        Returns: undefined
+      }
       update_carsi_item_v1: {
         Args: {
           p_description?: string
@@ -15767,4 +16266,3 @@ export const Constants = {
     },
   },
 } as const
-
