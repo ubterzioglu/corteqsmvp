@@ -5,6 +5,20 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260927-eposta-dogrulamasi-acildi",
+    date: "27 Eylül 2026",
+    title: "E-posta doğrulaması açıldı, doğrulama mailleri Türkçeleşti",
+    items: [
+      "ÖNCEKİ DURUM: Kayıt olan herkes otomatik onaylanıyordu. 171 üyenin tamamı 'onaylı' görünüyordu ama HİÇBİRİNE doğrulama maili gönderilmemişti — çünkü doğrulama kapalıydı. Panolarda bu madde 'yapıldı' işaretliydi, ölçüm çürüttü.",
+      "ŞİMDİ: Yeni kayıtlar e-posta doğrulaması istiyor. Mevcut üyeler etkilenmedi, onlar zaten onaylı.",
+      "MAİL ALTYAPISI: Doğrulama mailleri Supabase'in kendi göndericisi yerine Zoho üzerinden gidiyor. Bu şarttı — Supabase'in yerleşik göndericisi saatte yalnız 2 maille sınırlı; o hâliyle açılsaydı saatte 3. kişi mailini alamaz ve hesabına giremezdi. Sınır 60'a çıkarıldı.",
+      "GÖNDEREN: info@corteqs.net, görünen ad 'CorteQS'.",
+      "ŞABLONLAR TÜRKÇELEŞTİ: Kayıt doğrulama, parola sıfırlama, giriş bağlantısı ve e-posta değişikliği mailleri artık Türkçe ve CorteQS görünümünde. Eskiden Supabase'in İngilizce varsayılanıydı ('Confirm Your Signup').",
+      "⚠️ TEST EDİLMESİ GEREKİYOR: SMTP kimliği update@corteqs.net, gönderen ise info@corteqs.net. Zoho, gönderen adresin hesabın kendisi veya tanımlı bir alias'ı olmasını şart koşar; değilse maili reddeder. Bir test kaydıyla doğrulanmalı. Mail gelmezse gönderen update@corteqs.net'e çekilecek veya Zoho'da info@ alias'ı tanımlanacak.",
+      "NOT: Bu bir panel ayarıdır, depoda kod değişikliği yoktur — bu yüzden yalnız bu kayıtla belgelenmiştir.",
+    ],
+  },
+  {
     id: "20260926-toplantilar-komuta-merkezinde-ozet",
     date: "26 Eylül 2026",
     title: "Özet: 21 ve 25 Eylül toplantıları Komuta Merkezi'ne işlendi",
