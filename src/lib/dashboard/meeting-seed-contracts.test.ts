@@ -18,7 +18,7 @@ const MIGRATIONS = "supabase/migrations/applied";
 const STATUSES = ["Baslanmadi", "Beklemede", "Devam ediyor", "Tamamlandi"];
 
 interface MeetingSeedCase {
-  code: "T20" | "T21";
+  code: "T20" | "T21" | "T22";
   dateLabel: string;
   files: { name: string; rows: number }[];
   total: number;
@@ -42,6 +42,16 @@ const CASES: MeetingSeedCase[] = [
     files: [{ name: "20260925195000_seed_command_center_meeting_t21.sql", rows: 28 }],
     total: 28,
     decisions: 9,
+  },
+  {
+    // ⚠️ T22 = 17 Eylül, yani T20/T21'den ÖNCE. Kod sırası ekleme sırasıdır.
+    // Kaynak bir transkript değil, konuşma öncesi hazırlanmış SORU listesidir;
+    // bu yüzden 'KARAR:' satırı yoktur — satırlar 'SORU:' ile başlar.
+    code: "T22",
+    dateLabel: "17 Eylül 2026",
+    files: [{ name: "20260927120000_seed_command_center_meeting_t22.sql", rows: 5 }],
+    total: 5,
+    decisions: 0,
   },
 ];
 
