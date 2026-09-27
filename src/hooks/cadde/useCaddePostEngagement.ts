@@ -154,12 +154,19 @@ export function useCaddePostEngagement({
   });
 
   const syncCommentSelection = (postId: string, event: SyntheticEvent<HTMLTextAreaElement>) => {
+    // ⚠️ `event.currentTarget` SADECE olay işleyicisi çalışırken doludur. React
+    // durum güncelleyicisini (aşağıdaki ok fonksiyonu) işleyici bittikten SONRA
+    // çağırır; o anda `currentTarget` null olur ve okuma
+    // "Cannot read properties of null (reading 'selectionStart')" ile patlar.
+    // Bu canlıda Cadde yorum kutusunu tamamen düşürdü (27.09, 4 hata kaydı).
+    // Kural: olay alanlarını güncelleyiciye SOKMA, önce oku.
+    const target = event.currentTarget;
+    const start = target?.selectionStart ?? 0;
+    const end = target?.selectionEnd ?? start;
+
     setCommentSelections((current) => ({
       ...current,
-      [postId]: {
-        start: event.currentTarget.selectionStart ?? 0,
-        end: event.currentTarget.selectionEnd ?? event.currentTarget.selectionStart ?? 0,
-      },
+      [postId]: { start, end },
     }));
   };
 
