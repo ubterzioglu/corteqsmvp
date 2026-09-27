@@ -9,10 +9,22 @@ import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
 // client-error-reports yalnız supabase client'a bağlı — döngü yok. Kalıcı kanıt (m134).
 import { reportClientError } from "@/lib/client-error-reports";
 
-// Generated types (B1) güncel olmadığı için cadde_* tabloları typed client ile uyuşmayabilir.
-// Tek izole cast burada tutulur; B1 çözülünce kaldırılacak.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const db = supabase as any;
+/**
+ * Cadde katmanının paylaşılan Supabase istemcisi.
+ *
+ * ⚠️ 27.09.2026'ya kadar burası `supabase as any` idi ve gerekçesi "generated
+ * types (B1) güncel değil" diye yazılıydı. **Bu gerekçe ölçümle çürüdü:**
+ * `cadde_*` tabloları zaten tipliydi. Cast kaldırılınca `tsc` yalnız **3 hata**
+ * verdi (84 çağrı yerine rağmen) ve üçü de aynı şeydi: `cadde_posts.media`
+ * sütunu üretilen tipte `Json`, `CaddePostRow.media` ise `CaddeMediaAsset[]`.
+ * Üçü de `cadde-admin-api.ts` içinde, açık ve gerekçeli dönüşümle kapatıldı.
+ *
+ * Artık TİPLİ istemcidir: Cadde katmanındaki 84 çağrı yeri tip denetiminden
+ * geçer. `as any`'ye geri döndürme — bu alan bu repoda üç kez SESSİZCE kırıldı
+ * (fold-insensitive eşleşme, `instanceof Error`, hedef eşleşmesi) ve tip
+ * denetimi o sınıfın tek otomatik savunmasıdır.
+ */
+export const db = supabase;
 
 export const FALLBACK_PROFILE_NAME = "CorteQS Üyesi";
 export const CADDE_PAGE_SIZE = 20;
@@ -128,3 +140,4 @@ export async function resolveCityIdsByNames(cityNames: readonly string[], countr
   const { data } = await query;
   return ((data ?? []) as Array<{ id: string }>).map((row) => row.id);
 }
+

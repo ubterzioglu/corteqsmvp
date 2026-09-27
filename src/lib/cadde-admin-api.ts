@@ -18,10 +18,18 @@ import type {
   CaddeSponsoredRow,
 } from "./cadde-types";
 
+// `cadde_posts.media` üretilen tipte `Json`, `CaddePostRow.media` ise
+// `CaddeMediaAsset[]`. İkisi örtüşmediği için satırı daraltmak açık bir dönüşüm
+// ister. Çalışma zamanında HİÇBİR ŞEY yapmaz — eski `supabase as any` şiminin
+// yaptığının birebir aynısı, ama modül geneli değil, yalnız bu üç noktada.
+// Gerçek doğrulama gerekirse `normalizeCaddeMedia` (cadde-media.ts) kullanılmalı;
+// o bir DAVRANIŞ değişikliğidir, bilerek yapılmadı.
+const asCaddePostRow = (row: unknown) => row as CaddePostRow;
+
 export async function listAdminCaddePosts(): Promise<CaddePostRow[]> {
   const { data, error } = await db.from("cadde_posts").select("*").order("created_at", { ascending: false });
   if (error) throw error;
-  return (data ?? []) as CaddePostRow[];
+  return (data ?? []).map(asCaddePostRow);
 }
 
 export async function saveAdminCaddePost(id: string | null, payload: CaddeAdminPostInput): Promise<CaddePostRow> {
@@ -31,11 +39,11 @@ export async function saveAdminCaddePost(id: string | null, payload: CaddeAdminP
   if (id) {
     const { data, error } = await db.from("cadde_posts").update(normalizedPayload).eq("id", id).select("*").single();
     if (error) throw error;
-    return data as CaddePostRow;
+    return asCaddePostRow(data);
   }
   const { data, error } = await db.from("cadde_posts").insert(normalizedPayload).select("*").single();
   if (error) throw error;
-  return data as CaddePostRow;
+  return asCaddePostRow(data);
 }
 
 export async function deleteAdminCaddePost(id: string): Promise<void> {

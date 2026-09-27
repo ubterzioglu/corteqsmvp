@@ -1,10 +1,16 @@
 // src/lib/relocation-tools-api.ts
 // Supabase RPC + okuma çağrıları — relocation-api.ts deseni.
 // Mutasyonlar generic security-definer RPC üzerinden (docs/10tool/00 §RPC); araç/soru listeleri RLS'li SELECT.
-// NOT: supabase/types.ts relocation_tool_* için henüz regenerate edilmedi (B1 backlog);
-// RPC dönüşleri tiplenirken `as unknown as T` kullanılır (relocation-api/geo deseni).
+// 27.09.2026: `const db = supabase as any` şimi KALDIRILDI. Eski gerekçe
+// ("types.ts relocation_tool_* için regenerate edilmedi") ölçümle çürüdü — bu
+// tablolar zaten tipliydi. Gerçek sebep `jsonb` sütunlarıydı:
+//   - YAZMA yönü (`p_answer`, `p_context`) → `toJson` (src/lib/supabase-json.ts)
+//   - OKUMA yönü (`options`/`validation`/`scoring`, `answer`) → `fromJson` ya da
+//     aşağıdaki `asToolQuestionRow` dar dönüşümü
+// RPC dönüşleri tiplenirken hâlâ `as unknown as T` kullanılır.
 
 import { supabase } from "@/integrations/supabase/client";
+import { fromJson, toJson } from "@/lib/supabase-json";
 import type {
   RelocationToolQuestionRow,
   RelocationToolReportRequest,
@@ -18,15 +24,21 @@ import type {
   ToolSessionResume,
 } from "@/lib/relocation-tools-types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = supabase as any;
+
+// `options` / `validation` / `scoring` sütunları üretilen tipte `Json`, alan
+// tipinde ise yapılandırılmış (`ToolQuestionOption[]`, `Record<string, unknown>`).
+// İkisi örtüşmediği için satırı daraltmak açık dönüşüm ister. Çalışma zamanında
+// HİÇBİR ŞEY yapmaz — kaldırılan modül geneli `supabase as any` şiminin yaptığının
+// aynısı, ama tek noktada ve gerekçeli. DOĞRULAMA DEĞİLDİR: sütunda eski şemalı
+// bir nesne varsa burada yakalanmaz.
+const asToolQuestionRow = (row: unknown) => row as RelocationToolQuestionRow;
 
 // ---------------------------------------------------------------------------
 // Araç + soru bankası (referans — RLS authenticated read)
 // ---------------------------------------------------------------------------
 
 export async function listTools(): Promise<RelocationToolRow[]> {
-  const { data, error } = await db
+  const { data, error } = await supabase
     .from("relocation_tools")
     .select("*")
     .eq("is_active", true)
@@ -36,7 +48,7 @@ export async function listTools(): Promise<RelocationToolRow[]> {
 }
 
 export async function getToolBySlug(slug: string): Promise<RelocationToolWithQuestions | null> {
-  const { data: tool, error: toolError } = await db
+  const { data: tool, error: toolError } = await supabase
     .from("relocation_tools")
     .select("*")
     .eq("slug", slug)
@@ -45,7 +57,7 @@ export async function getToolBySlug(slug: string): Promise<RelocationToolWithQue
   if (toolError) throw toolError;
   if (!tool) return null;
 
-  const { data: questions, error: qError } = await db
+  const { data: questions, error: qError } = await supabase
     .from("relocation_tool_questions")
     .select("*")
     .eq("tool_key", (tool as RelocationToolRow).key)
@@ -55,7 +67,7 @@ export async function getToolBySlug(slug: string): Promise<RelocationToolWithQue
 
   return {
     ...(tool as RelocationToolRow),
-    questions: (questions ?? []) as RelocationToolQuestionRow[],
+    questions: (questions ?? []).map(asToolQuestionRow),
   };
 }
 
@@ -68,7 +80,7 @@ export async function startSession(
   mode: ToolMode,
   sourceMoveId?: string,
 ): Promise<ToolSessionStart> {
-  const { data, error } = await db.rpc("relocation_tool_start_session", {
+  const { data, error } = await supabase.rpc("relocation_tool_start_session", {
     p_tool_key: toolKey,
     p_mode: mode,
     p_source_move_id: sourceMoveId ?? null,
@@ -82,16 +94,16 @@ export async function saveAnswer(
   questionKey: string,
   answer: ToolAnswerValue,
 ): Promise<void> {
-  const { error } = await db.rpc("relocation_tool_save_answer", {
+  const { error } = await supabase.rpc("relocation_tool_save_answer", {
     p_session_id: sessionId,
     p_question_key: questionKey,
-    p_answer: answer,
+    p_answer: toJson(answer),
   });
   if (error) throw error;
 }
 
 export async function getSessionForResume(sessionId: string): Promise<ToolSessionResume | null> {
-  const { data: session, error: sessionError } = await db
+  const { data: session, error: sessionError } = await supabase
     .from("relocation_tool_sessions")
     .select("id, tool_key, mode, status")
     .eq("id", sessionId)
@@ -99,16 +111,18 @@ export async function getSessionForResume(sessionId: string): Promise<ToolSessio
   if (sessionError) throw sessionError;
   if (!session || session.status !== "in_progress") return null;
 
-  const { data: answerRows, error: answersError } = await db
+  const { data: answerRows, error: answersError } = await supabase
     .from("relocation_tool_answers")
     .select("question_key, answer")
     .eq("session_id", sessionId);
   if (answersError) throw answersError;
 
+  // `answer` jsonb'dir; üretilen tip `Json` verir, uygulama `ToolAnswerValue` bekler.
+  // `fromJson` bu daraltmanın greplenebilir tek geçiş noktasıdır (doğrulama DEĞİL).
   const answers = Object.fromEntries(
-    (answerRows ?? []).map((row: { question_key: string; answer: ToolAnswerValue }) => [
+    (answerRows ?? []).map((row) => [
       row.question_key,
-      row.answer,
+      fromJson<ToolAnswerValue>(row.answer) as ToolAnswerValue,
     ]),
   );
 
@@ -123,7 +137,7 @@ export async function getSessionForResume(sessionId: string): Promise<ToolSessio
 export async function completeSession(
   sessionId: string,
 ): Promise<RelocationToolResultPayload> {
-  const { data, error } = await db.rpc("relocation_tool_complete_session", {
+  const { data, error } = await supabase.rpc("relocation_tool_complete_session", {
     p_session_id: sessionId,
   });
   if (error) throw error;
@@ -135,10 +149,10 @@ export async function recordEvent(
   eventType: ToolEventType,
   context: Record<string, unknown> = {},
 ): Promise<void> {
-  const { error } = await db.rpc("relocation_tool_record_event", {
+  const { error } = await supabase.rpc("relocation_tool_record_event", {
     p_session_id: sessionId,
     p_event_type: eventType,
-    p_context: context,
+    p_context: toJson(context),
   });
   if (error) throw error;
 }
@@ -150,9 +164,9 @@ export async function requestDiasporaIntro(
   candidateId: string,
   context: Record<string, unknown> = {},
 ): Promise<{ match_id: string; status: string }> {
-  const { data, error } = await db.rpc("diaspora_request_intro_v1", {
+  const { data, error } = await supabase.rpc("diaspora_request_intro_v1", {
     p_candidate_id: candidateId,
-    p_context: context,
+    p_context: toJson(context),
   });
   if (error) throw error;
   return data as unknown as { match_id: string; status: string };
@@ -163,7 +177,7 @@ export async function requestDiasporaIntro(
 // ---------------------------------------------------------------------------
 
 export async function getResult(resultId: string): Promise<RelocationToolResultPayload | null> {
-  const { data, error } = await db
+  const { data, error } = await supabase
     .from("relocation_tool_results")
     .select("*")
     .eq("id", resultId)
@@ -203,9 +217,10 @@ export async function getResult(resultId: string): Promise<RelocationToolResultP
 export async function requestRelocationToolReport(
   resultId: string,
 ): Promise<RelocationToolReportRequest> {
-  const { data, error } = await db.rpc("request_relocation_tool_report", {
+  const { data, error } = await supabase.rpc("request_relocation_tool_report", {
     p_result_id: resultId,
   });
   if (error) throw error;
   return data as unknown as RelocationToolReportRequest;
 }
+

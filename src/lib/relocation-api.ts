@@ -1,10 +1,16 @@
 // src/lib/relocation-api.ts
 // Supabase RPC + okuma çağrıları — service-finder-api / muhasebe-api deseni.
 // Mutasyonlar security-definer RPC üzerinden; referans listeler RLS'li SELECT.
-// NOT: supabase/types.ts relocation_* için henüz regenerate edilmedi (B1 backlog);
-// yeni RPC dönüşleri tiplenirken `as unknown as T` kullanılır (geo.ts'teki `as any` deseniyle aynı sebep).
+// 27.09.2026: `const db = supabase as any` şimi KALDIRILDI. Eski gerekçe ("types.ts
+// relocation_* için regenerate edilmedi") ölçümle çürüdü — bu tablolar zaten tipliydi.
+// Gerçek sebep iki ayrı şeydi ve ikisi de nokta atışı çözüldü:
+//   1) `jsonb` sütunlarına tipli nesne yazmak → `toJson` (bkz. src/lib/supabase-json.ts)
+//   2) koşullu filtre için sorgu kurucusunun yeniden atanması → TS2589; yalnız o
+//      satırda dar `let query: any` (gerekçesi kendi yanında yazılı)
+// RPC dönüşleri tiplenirken hâlâ `as unknown as T` kullanılır.
 
 import { supabase } from "@/integrations/supabase/client";
+import { toJson } from "@/lib/supabase-json";
 import type {
   InteractionInput,
   MoveCreateInput,
@@ -27,15 +33,13 @@ import {
   normalizeStepRow,
 } from "@/lib/relocation-normalize";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = supabase as any;
 
 // ---------------------------------------------------------------------------
 // Taşınma dosyaları (mutasyon = RPC)
 // ---------------------------------------------------------------------------
 
 export async function createMove(input: MoveCreateInput): Promise<{ move_id: string }> {
-  const { data, error } = await db.rpc("relocation_create_move", { p_payload: input });
+  const { data, error } = await supabase.rpc("relocation_create_move", { p_payload: toJson(input) });
   if (error) throw error;
   return data as { move_id: string };
 }
@@ -44,7 +48,7 @@ export async function updateMove(
   moveId: string,
   patch: Partial<MoveCreateInput>,
 ): Promise<void> {
-  const { error } = await db.rpc("relocation_update_move", {
+  const { error } = await supabase.rpc("relocation_update_move", {
     p_move_id: moveId,
     p_patch: patch,
   });
@@ -55,9 +59,9 @@ export async function saveWizardAnswers(
   moveId: string,
   answer: WizardAnswerInput,
 ): Promise<void> {
-  const { error } = await db.rpc("relocation_save_wizard", {
+  const { error } = await supabase.rpc("relocation_save_wizard", {
     p_move_id: moveId,
-    p_payload: answer,
+    p_payload: toJson(answer),
   });
   if (error) throw error;
 }
@@ -71,7 +75,7 @@ export async function saveWizardAnswers(
  * RLS sahibi dışındakileri zaten eler — burada ayrıca user_id filtresi gerekmez.
  */
 export async function listMoves(): Promise<RelocationMoveRow[]> {
-  const { data, error } = await db
+  const { data, error } = await supabase
     .from("relocation_moves")
     .select("*")
     .neq("status", "archived")
@@ -82,7 +86,7 @@ export async function listMoves(): Promise<RelocationMoveRow[]> {
 }
 
 export async function getMove(moveId: string): Promise<RelocationMoveRow> {
-  const { data, error } = await db
+  const { data, error } = await supabase
     .from("relocation_moves")
     .select("*")
     .eq("id", moveId)
@@ -93,7 +97,7 @@ export async function getMove(moveId: string): Promise<RelocationMoveRow> {
 
 /** Aktif taşınma lokasyonlarında bulunan benzersiz hedef ülke kodları. */
 export async function listActiveRelocationCountryCodes(): Promise<string[]> {
-  const { data, error } = await db
+  const { data, error } = await supabase
     .from("relocation_locations")
     .select("country_code")
     .eq("is_active", true);
@@ -115,7 +119,7 @@ export async function listActiveRelocationCountryCodes(): Promise<string[]> {
 export async function getCityRecommendations(
   moveId: string,
 ): Promise<RelocationLocationRecommendation[]> {
-  const { data, error } = await db.rpc("relocation_rank_locations_v1", { p_move_id: moveId });
+  const { data, error } = await supabase.rpc("relocation_rank_locations_v1", { p_move_id: moveId });
   if (error) throw error;
   // Canlı RPC `explanations` döndürmüyordu (2026-09-25 öncesi) → şehir kartı çöküyordu.
   return normalizeList(data, normalizeLocationRecommendation);
@@ -125,7 +129,7 @@ export async function getServiceRecommendations(
   moveId: string,
   category: RelocationServiceCategory,
 ): Promise<RelocationServiceRow[]> {
-  const { data, error } = await db.rpc("relocation_rank_services_v1", {
+  const { data, error } = await supabase.rpc("relocation_rank_services_v1", {
     p_move_id: moveId,
     p_category: category,
   });
@@ -134,7 +138,7 @@ export async function getServiceRecommendations(
 }
 
 export async function getChecklist(moveId: string): Promise<RelocationStepRow[]> {
-  const { data, error } = await db.rpc("relocation_build_checklist_v1", { p_move_id: moveId });
+  const { data, error } = await supabase.rpc("relocation_build_checklist_v1", { p_move_id: moveId });
   if (error) throw error;
   return normalizeList(data, normalizeStepRow);
 }
@@ -147,7 +151,11 @@ export async function getEmergencyContacts(
   countryCode: string,
   cityCode?: string,
 ): Promise<RelocationEmergencyContactRow[]> {
-  let query = db
+  // Koşullu `.or(...)` için sorgu kurucusu yeniden atanıyor; tipli kurucuda bu
+  // TS2589 (özyineleme derinliği) üretir. CLAUDE.md'de belgelenen çözüm: DAR
+  // `any` + açık gerekçe. Modül geneli `supabase as any` yerine yalnız burası.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let query: any = supabase
     .from("relocation_emergency_contacts")
     .select("*")
     .eq("country_code", countryCode)
@@ -165,6 +173,8 @@ export async function getEmergencyContacts(
 // ---------------------------------------------------------------------------
 
 export async function recordInteraction(input: InteractionInput): Promise<void> {
-  const { error } = await db.rpc("relocation_record_interaction", { p_payload: input });
+  const { error } = await supabase.rpc("relocation_record_interaction", { p_payload: toJson(input) });
   if (error) throw error;
 }
+
+
