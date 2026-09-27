@@ -14,10 +14,14 @@
 // gibi sadedir — 600px'lik table iskeleti gerekmez.
 
 import { escapeHtml } from "./html.ts";
+// Numara biçimi tek yerde tanımlıdır; tamamlanma şablonuyla ortaktır.
+import { formatRevisionNumber } from "./revision-request-completed.ts";
 
 /** notification_email_outbox.payload içeriği (enqueue_revision_request_notification yazar). */
 export type RevisionRequestPayload = {
   request_id?: unknown;
+  /** Sıralı numara (#REV-N). Tetikleyici öncesi kuyruğa girmiş satırlarda yoktur. */
+  revision_number?: unknown;
   title?: unknown;
   detail?: unknown;
   status?: unknown;
@@ -56,6 +60,7 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 type NormalizedRequest = {
+  numara: string;
   title: string;
   detail: string;
   status: string;
@@ -74,6 +79,7 @@ function normalize(payload: RevisionRequestPayload): NormalizedRequest {
   const priority = payload?.priority;
 
   return {
+    numara: formatRevisionNumber(payload?.revision_number),
     title: asText(payload?.title) || "Yeni revizyon isteği",
     detail: asText(payload?.detail),
     status: STATUS_LABELS[status] ?? (status || "-"),
@@ -109,10 +115,14 @@ export function buildRevisionRequestEmail(
     ? `<p style="margin:0 0 16px 0;">${detailHtml(entry.detail)}</p>`
     : `<p style="margin:0 0 16px 0;color:${MUTED};">Detay girilmemiş.</p>`;
 
+  // Numara yoksa başlık eskisi gibi yalnız başlıktan oluşur (eski kuyruk satırları).
+  const basligiOlustur = () => (entry.numara ? `${entry.numara} ${entry.title}` : entry.title);
+
   const html = `
-      <h2 style="margin:0 0 12px 0;">Yeni revizyon isteği: ${escapeHtml(entry.title)}</h2>
+      <h2 style="margin:0 0 12px 0;">Yeni revizyon isteği: ${escapeHtml(basligiOlustur())}</h2>
       ${detailBlock}
       <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+        ${entry.numara ? row("Revizyon No", entry.numara) : ""}
         ${row("Öncelik", entry.priority)}
         ${row("Durum", entry.status)}
         ${row("Alan", entry.areaLabel)}
@@ -124,10 +134,11 @@ export function buildRevisionRequestEmail(
       <p style="color:${MUTED};font-size:12px;margin-top:16px;">${FOOTNOTE}</p>`;
 
   const text = [
-    `Yeni revizyon isteği: ${entry.title}`,
+    `Yeni revizyon isteği: ${basligiOlustur()}`,
     "",
     entry.detail || "Detay girilmemiş.",
     "",
+    ...(entry.numara ? [`Revizyon No: ${entry.numara}`] : []),
     `Öncelik: ${entry.priority}`,
     `Durum: ${entry.status}`,
     `Alan: ${entry.areaLabel}`,
@@ -139,7 +150,7 @@ export function buildRevisionRequestEmail(
   ].join("\n");
 
   return {
-    subject: `CorteQS yeni revizyon isteği: ${entry.title}`,
+    subject: `CorteQS yeni revizyon isteği: ${basligiOlustur()}`,
     html,
     text,
   };

@@ -102,6 +102,7 @@ describe("fetchRevisionRequests", () => {
           data: [
             {
               id: "r-1",
+              revision_number: 42,
               title: "Başlık",
               detail: "Detay",
               status: "inceleniyor",
@@ -122,6 +123,7 @@ describe("fetchRevisionRequests", () => {
     expect(fromMock).toHaveBeenCalledWith("revision_requests");
     expect(requests[0]).toEqual({
       id: "r-1",
+      revisionNumber: 42,
       title: "Başlık",
       detail: "Detay",
       status: "inceleniyor",

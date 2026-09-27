@@ -30,6 +30,7 @@ import {
   deleteRevisionRequest,
   fetchRevisionRequests,
   fetchUserEmails,
+  formatRevisionNumber,
   getRevisionStatusLabel,
   REVISION_STATUSES,
   updateRevisionRequest,
@@ -191,6 +192,13 @@ const AdminRevisionRequestsPage = () => {
             />
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-1.5">
+                {/* Numara yoksa rozet HİÇ çizilmez — tetikleyici öncesi açılmış
+                    satırlarda null olabilir, "#REV-null" gösterilmemeli. */}
+                {request.revisionNumber !== null ? (
+                  <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 font-mono text-xs font-medium text-muted-foreground">
+                    {formatRevisionNumber(request.revisionNumber)}
+                  </span>
+                ) : null}
                 <AdminStatusBadge tone={STATUS_TONES[request.status]}>
                   {getRevisionStatusLabel(request.status)}
                 </AdminStatusBadge>

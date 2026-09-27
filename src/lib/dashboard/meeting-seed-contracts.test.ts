@@ -18,7 +18,7 @@ const MIGRATIONS = "supabase/migrations/applied";
 const STATUSES = ["Baslanmadi", "Beklemede", "Devam ediyor", "Tamamlandi"];
 
 interface MeetingSeedCase {
-  code: "T20" | "T21" | "T22";
+  code: "T19" | "T20" | "T21" | "T22";
   dateLabel: string;
   files: { name: string; rows: number }[];
   total: number;

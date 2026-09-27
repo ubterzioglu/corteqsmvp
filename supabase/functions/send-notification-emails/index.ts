@@ -36,6 +36,7 @@ import { escapeHtml } from "../_shared/emails/html.ts";
 import { MEMBER_SUPPORT_EMAIL, buildMemberWelcomeEmail } from "../_shared/emails/member-welcome.ts";
 import { buildRelocationToolAbandonmentEmail } from "../_shared/emails/relocation-tool-abandonment.ts";
 import { buildRelocationToolReportEmail } from "../_shared/emails/relocation-tool-report.ts";
+import { buildRevisionCompletedEmail } from "../_shared/emails/revision-request-completed.ts";
 import { buildRevisionRequestEmail } from "../_shared/emails/revision-request.ts";
 import { resolveZohoSmtpConfig, sendMailViaZohoSmtp } from "../_shared/emails/smtp.ts";
 
@@ -55,6 +56,9 @@ const SETTING_KEY_BY_EVENT: Record<string, string> = {
   admin_update: "email.admin_update.enabled",
   member_welcome: "email.member_welcome.enabled",
   revision_request: "email.revision_request.enabled",
+  // Tamamlanma bildirimi AÇILIŞLA AYNI anahtarı paylaşır — ayrı bir düğme yoktur.
+  // Revizyon bildirimini kapatan kişi ikisini birden kapatmış olur (karar 27.09).
+  revision_request_completed: "email.revision_request.enabled",
   relocation_tool_abandonment: "email.relocation_tool_abandonment.enabled",
   radar_scan_digest: "email.radar_scan_digest.enabled",
 };
@@ -64,6 +68,7 @@ type EventType =
   | "admin_update"
   | "member_welcome"
   | "revision_request"
+  | "revision_request_completed"
   | "relocation_tool_report"
   | "relocation_tool_abandonment"
   | "radar_scan_digest";
@@ -185,6 +190,8 @@ function buildEmail(row: OutboxRow): BuiltEmail {
       return buildWelcomeEmail(row.payload);
     case "revision_request":
       return buildRevisionRequestEmail(row.payload, resolveSiteUrl());
+    case "revision_request_completed":
+      return buildRevisionCompletedEmail(row.payload, resolveSiteUrl());
     case "relocation_tool_report":
       return buildRelocationToolReportEmail(row.payload, resolveSiteUrl());
     case "relocation_tool_abandonment":

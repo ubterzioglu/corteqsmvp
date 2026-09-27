@@ -26,6 +26,12 @@ export const REVISION_PRIORITY_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as cons
 
 export type RevisionRequest = {
   id: string;
+  /**
+   * Sıralı revizyon numarası (#REV-N). Veritabanındaki BEFORE INSERT tetikleyicisi
+   * atar (mig 20260927190000) — istemci ASLA yazmaz. Numara atanmadan önce açılmış
+   * satırlarda null olabileceği için gösterim tarafı bunu karşılamalıdır.
+   */
+  revisionNumber: number | null;
   title: string;
   detail: string;
   status: RevisionStatus;
@@ -35,6 +41,23 @@ export type RevisionRequest = {
   createdAt: string;
   updatedAt: string;
 };
+
+/**
+ * Revizyon numarasını "#REV-042" biçimine çevirir.
+ *
+ * ⚠️ AYNA: Aynı biçim mail şablonunda da var
+ * (`supabase/functions/_shared/emails/revision-request-completed.ts`).
+ * Edge Function deploy'u yalnız `supabase/functions/` klasörünü yüklediği için
+ * oradan `src/` içine import EDİLEMEZ; bu yüzden biçim iki yerde tekrarlanır
+ * (STATUS_LABELS ile aynı gerekçe). Birini değiştirirsen diğerini de değiştir —
+ * `revision-requests.test.ts` ikisini birlikte kilitler.
+ *
+ * Numara yoksa BOŞ döner; çağıran taraf rozeti hiç çizmemelidir.
+ */
+export function formatRevisionNumber(value: number | null | undefined): string {
+  if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) return "";
+  return `#REV-${String(Math.trunc(value)).padStart(3, "0")}`;
+}
 
 export type RevisionComment = {
   id: string;
@@ -54,6 +77,7 @@ export type RevisionRequestForm = {
 
 type RequestRow = {
   id: string;
+  revision_number: number | null;
   title: string;
   detail: string;
   status: RevisionStatus;
@@ -73,7 +97,7 @@ type CommentRow = {
 };
 
 const REQUEST_SELECT =
-  "id,title,detail,status,priority,area_label,created_by,created_at,updated_at";
+  "id,revision_number,title,detail,status,priority,area_label,created_by,created_at,updated_at";
 const COMMENT_SELECT = "id,request_id,body,created_by,created_at";
 
 // types.ts bu tabloları tanımadığı için tüm sorgular tek bir gevşek istemci
@@ -95,6 +119,7 @@ const table = (name: string): LooseQuery =>
 function mapRequest(row: RequestRow): RevisionRequest {
   return {
     id: row.id,
+    revisionNumber: typeof row.revision_number === "number" ? row.revision_number : null,
     title: row.title,
     detail: row.detail,
     status: row.status,
