@@ -5,6 +5,7 @@ import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
 import { DEMO_CAFES } from "./cadde-demo-data";
 import { fetchCaddeCityNameMap, fetchCaddeCountryNameMap, fetchCaddeUserNameMap } from "./cadde-api-support";
+import { isCaddeCafeLogoUrl } from "./cadde-cafe-logo";
 import { db, caddeReadError, caddeWriteError, reportCaddeApiError } from "./cadde-internal";
 import { normalizeCaddeMedia } from "./cadde-media";
 import { moderateCaddeCafeName, type CaddeProtectedBrand } from "./cadde-rules";
@@ -487,8 +488,22 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
   }
 }
 
-/** m135: Kafe logosu güncelleme — yalnız host/admin/mod yetkisi. */
+/**
+ * m135: Kafe logosu güncelleme — yalnız host/admin/mod yetkisi.
+ *
+ * Adres, RPC'ye gitmeden ÖNCE de doğrulanır. Sunucu zaten `cadde_cafe_logo_invalid`
+ * ile reddediyor; buradaki denetim kullanıcıya ağ turu beklemeden anlaşılır bir
+ * mesaj vermek içindir. İki taraf AYNI deseni kullanır (bkz. cadde-cafe-logo.ts) —
+ * istemci denetimi gevşetilirse kullanıcı ham hata koduyla karşılaşır, sunucu yine
+ * korur ama deneyim bozulur.
+ */
 export async function updateCaddeCafeLogo(cafeId: string, logoUrl: string | null): Promise<void> {
+  if (logoUrl !== null && !isCaddeCafeLogoUrl(logoUrl)) {
+    throw new Error(
+      "Logo yalnız Cadde'ye yüklediğin görsellerden seçilebilir. Lütfen görseli yükleyerek tekrar dene.",
+    );
+  }
+
   const { error } = await db.rpc("update_cadde_cafe_logo_v1", {
     p_cafe_id: cafeId,
     p_logo_url: logoUrl ?? "",
