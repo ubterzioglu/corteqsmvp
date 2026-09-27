@@ -25,6 +25,10 @@ interface MeetingSeedCase {
   decisions: number;
 }
 
+// ⚠️ Her toplantı BİRDEN ÇOK dosyadan kurulur ve bu bilinçlidir: uygulanmış bir
+// seed migration'ı DEĞİŞTİRİLEMEZ, o yüzden sonradan gelen maddeler yeni bir
+// "_ek" dosyasıyla eklenir. Önce özet/transkript parçasından kuruldu, sonra
+// toplantının resmî çıktı listesi gelince eksikler tamamlandı (27 Eylül).
 const CASES: MeetingSeedCase[] = [
   {
     code: "T20",
@@ -32,26 +36,43 @@ const CASES: MeetingSeedCase[] = [
     files: [
       { name: "20260925193000_seed_command_center_meeting_t20.sql", rows: 24 },
       { name: "20260925194000_seed_command_center_meeting_t20_ek.sql", rows: 7 },
+      { name: "20260927160000_seed_command_center_meeting_t20_ek2.sql", rows: 6 },
     ],
-    total: 31,
-    decisions: 7,
+    total: 37,
+    decisions: 9,
   },
   {
     code: "T21",
     dateLabel: "25 Eylül 2026",
-    files: [{ name: "20260925195000_seed_command_center_meeting_t21.sql", rows: 28 }],
-    total: 28,
-    decisions: 9,
+    files: [
+      { name: "20260925195000_seed_command_center_meeting_t21.sql", rows: 28 },
+      { name: "20260927180000_seed_command_center_meeting_t21_ek.sql", rows: 6 },
+    ],
+    total: 34,
+    decisions: 13,
   },
   {
     // ⚠️ T22 = 17 Eylül, yani T20/T21'den ÖNCE. Kod sırası ekleme sırasıdır.
-    // Kaynak bir transkript değil, konuşma öncesi hazırlanmış SORU listesidir;
-    // bu yüzden 'KARAR:' satırı yoktur — satırlar 'SORU:' ile başlar.
+    // İlk dosya bir transkript değil, konuşma öncesi hazırlanmış SORU listesiydi
+    // ('SORU:' ile başlar); ikinci dosya toplantının gerçek çıktılarıdır.
     code: "T22",
     dateLabel: "17 Eylül 2026",
-    files: [{ name: "20260927120000_seed_command_center_meeting_t22.sql", rows: 5 }],
-    total: 5,
-    decisions: 0,
+    files: [
+      { name: "20260927120000_seed_command_center_meeting_t22.sql", rows: 5 },
+      { name: "20260927170000_seed_command_center_meeting_t22_gercek.sql", rows: 22 },
+    ],
+    total: 27,
+    decisions: 7,
+  },
+  {
+    code: "T19",
+    dateLabel: "3 Eylül 2026",
+    files: [
+      { name: "20260904120000_seed_command_center_meeting_t19.sql", rows: 24 },
+      { name: "20260927150000_seed_command_center_meeting_t19_ek.sql", rows: 4 },
+    ],
+    total: 28,
+    decisions: 7,
   },
 ];
 
@@ -86,8 +107,10 @@ describe.each(CASES)("$code komuta merkezi seed'i", ({ code, dateLabel, files, t
   });
 
   it("yalnız geçerli assignee ve status değerlerini kullanır", () => {
+    // Öncelik sabit 5 DEĞİLDİR: acil maddeler daha yüksek değer alır (ör. Supabase
+    // Pro yükseltmesi 8). Desen rakamı serbest bırakır ama yerini korur.
     const pairs = Array.from(
-      allSql().matchAll(new RegExp(`'${dateLabel}', '([^']+)', '([^']+)', 5, null`, "g")),
+      allSql().matchAll(new RegExp(`'${dateLabel}', '([^']+)', '([^']+)', \\d+, null`, "g")),
     ).map((match) => ({ assignee: match[1], status: match[2] }));
 
     expect(pairs).toHaveLength(total);
