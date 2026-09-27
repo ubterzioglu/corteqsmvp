@@ -1,27 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
-  CalendarDays,
-  Award,
   BookOpen,
   Briefcase,
   FileText,
   Globe2,
   HelpCircle,
-  Home,
   ImagePlus,
-  KeyRound,
   Linkedin,
-  Link2,
   MapPin,
   Plane,
-  Share2,
-  Signpost,
   Sparkles,
   Trash2,
-  User,
   UserCheck,
-  Users,
 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
@@ -64,7 +55,6 @@ import { supabase } from "@/integrations/supabase/client";
 import PremiumProfileHero from "@/components/profile/premium/PremiumProfileHero";
 import ProfileSwitcherMenu from "@/components/profile/ProfileSwitcherMenu";
 import PremiumProfileTabs, { PREMIUM_TAB_KEYS } from "@/components/profile/premium/PremiumProfileTabs";
-import MyEventsPanel from "@/components/events/MyEventsPanel";
 import ProfileCompletionCard from "@/components/profile/premium/ProfileCompletionCard";
 import ProfilePublicPreviewCard from "@/components/profile/premium/ProfilePublicPreviewCard";
 import { ProfileAccessCard } from "@/components/profile/ProfileAccessCard";
@@ -95,7 +85,7 @@ import CaddeInterestsCard from "@/components/cadde/CaddeInterestsCard";
 import CaddeMyContentCard from "@/components/cadde/CaddeMyContentCard";
 import CaddeTanitimPanel from "@/components/cadde/CaddeTanitimPanel";
 import ProfileSidebarLayout from "@/components/profile/ProfileSidebarLayout";
-import type { SidebarMenuItem } from "@/components/profile/ProfileSidebarLayout";
+import { buildProfileSidebarMenu } from "@/components/profile/profile-sidebar-menu";
 import { trUpper } from "@/lib/text-normalization";
 
 const ProfilePage = () => {
@@ -810,99 +800,22 @@ const ProfilePage = () => {
     );
   }
 
-  const sidebarMenuItems: SidebarMenuItem[] = [
-    {
-      id: "overview",
-      label: "Profil Özeti",
-      icon: <Home className="h-4 w-4" />,
-      content: (
-        <div className="space-y-4">
-          {legacyHeroCard}
-          {legacySummaryCard}
-        </div>
-      ),
-    },
-    {
-      id: "fields",
-      label: "Profil Bilgileri",
-      icon: <User className="h-4 w-4" />,
-      content: personalInfoSection,
-    },
-    ...(badgesCard
-      ? [
-          {
-            id: "badges",
-            label: "Rozetler",
-            icon: <Award className="h-4 w-4" />,
-            content: badgesCard,
-          } as SidebarMenuItem,
-        ]
-      : []),
-    {
-      id: "cadde",
-      // Yalnız Cadde: Çarşı verisi/sorgusu/bağlantısı bu bölümde YOK (plan 2026-09-25).
-      // İlgi alanları buradan "Profil Bilgileri"ne, kişisel bilgilerin hemen altına taşındı.
-      label: "Cadde",
-      icon: <Signpost className="h-4 w-4" />,
-      content: caddeCards,
-    },
-    {
-      // Premium pilot dışındaki üyeler premium sekme çubuğunu HİÇ görmez
-      // (o düzen yalnız `isPremiumPilot` için çizilir). Etkinliklerim yalnız
-      // oraya eklenseydi üyelerin ezici çoğunluğu kendi etkinliğini yine
-      // göremezdi — bu yüzden iki düzende de var.
-      id: "events",
-      label: "Etkinliklerim",
-      icon: <CalendarDays className="h-4 w-4" />,
-      content: <MyEventsPanel />,
-    },
-    {
-      id: "social",
-      label: "Sosyal Medya",
-      icon: <Share2 className="h-4 w-4" />,
-      content: socialMediaCard,
-    },
-    {
-      id: "links",
-      label: "Bağlantılar",
-      icon: <Link2 className="h-4 w-4" />,
-      content: linkCardsGrid,
-    },
-    {
-      id: "documents",
-      label: "Belgeler",
-      icon: <BookOpen className="h-4 w-4" />,
-      content: documentsGrid,
-    },
-    {
-      id: "role",
-      label: "Rol Detayları",
-      icon: <Briefcase className="h-4 w-4" />,
-      content: roleSpecificCard,
-    },
-    {
-      id: "access",
-      label: "Erişim & Talepler",
-      icon: <KeyRound className="h-4 w-4" />,
-      content: accessCard,
-    },
-    ...(contributorResourcesCard
-      ? [
-          {
-            id: "contributor",
-            label: "Contributor Kaynakları",
-            icon: <Users className="h-4 w-4" />,
-            content: contributorResourcesCard,
-          } as SidebarMenuItem,
-        ]
-      : []),
-    {
-      id: "help",
-      label: "Yardım",
-      icon: <HelpCircle className="h-4 w-4" />,
-      content: helpCard,
-    },
-  ];
+  // Menü sırası ve koşullu öğeler `profile-sidebar-menu.tsx`'te; burada yalnız
+  // hazır bölümler tek nesne olarak geçilir (A07c).
+  const sidebarMenuItems = buildProfileSidebarMenu({
+    legacyHeroCard,
+    legacySummaryCard,
+    personalInfoSection,
+    badgesCard,
+    caddeCards,
+    socialMediaCard,
+    linkCardsGrid,
+    documentsGrid,
+    roleSpecificCard,
+    accessCard,
+    contributorResourcesCard,
+    helpCard,
+  });
 
   return (
     <div className="relative">

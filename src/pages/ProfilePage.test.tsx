@@ -1205,4 +1205,77 @@ describe("ProfilePage", () => {
     expect(screen.getByText("Profil Alanları")).toBeInTheDocument();
     expect(await screen.findByText("Bireysel İlgi Alanlarım")).toBeInTheDocument();
   });
+
+  // A07c ön koşulu: yan panel menüsünün ÖĞE LİSTESİNİ okuyan test yoktu; bu blok
+  // `ProfilePage.tsx`'ten ayrılacağı için önce etiketler ve sıra kilitlenir.
+  // Aksi hâlde taşıma sonrası "testler yeşil" bu blok hakkında hiçbir şey söylemez.
+  describe("yan panel menüsü (kurumsal düzen)", () => {
+    const consultantProfile = {
+      profileType: "Consultant_PracticalLife",
+      roleKey: "Consultant_PracticalLife",
+      roleLabel: "Pratik Hayat Danışmanı",
+      roleSlug: "Consultant_PracticalLife",
+    };
+
+    /**
+     * İlk `<nav>` içindeki menü düğmelerinin etiketlerini çizim sırasıyla döndürür.
+     * Yan panel hiç çizilmediyse (rol premium yola düşmüşse) boş dizi döner.
+     */
+    const readMenuLabels = (): string[] => {
+      const nav = document.querySelector("nav");
+      if (!nav) return [];
+      return Array.from(nav.querySelectorAll("button")).map((button) =>
+        (button.textContent ?? "").trim(),
+      );
+    };
+
+    it("menü öğelerini beklenen sırayla çizer", async () => {
+      mountWithProfile({ ...baseProfile, ...consultantProfile }, "/profile/danisman");
+      await screen.findAllByText("Pratik Hayat Danışmanı");
+
+      // Sıra anlam taşır: "Profil Özeti" ilk, "Yardım" son olmalıdır.
+      expect(readMenuLabels()).toEqual([
+        "Profil Özeti",
+        "Profil Bilgileri",
+        "Rozetler",
+        "Cadde",
+        "Etkinliklerim",
+        "Sosyal Medya",
+        "Bağlantılar",
+        "Belgeler",
+        "Rol Detayları",
+        "Erişim & Talepler",
+        "Yardım",
+      ]);
+    });
+
+    it("koşullu 'Contributor Kaynakları' öğesi danışman rolünde çizilmez", async () => {
+      mountWithProfile({ ...baseProfile, ...consultantProfile }, "/profile/danisman");
+      await screen.findAllByText("Pratik Hayat Danışmanı");
+
+      expect(readMenuLabels()).not.toContain("Contributor Kaynakları");
+    });
+
+    // ⚠️ ÖLÇÜLEN GERÇEK (A07c): yan paneldeki "Contributor Kaynakları" öğesi
+    // ERİŞİLEMEZ. Öğe yalnız `roleKey === "User_Contributor"` iken eklenir, ama
+    // `resolveProfilePresentation` o anahtarı premium sunuma çözer
+    // (`profile-types.ts` "User_" -> bireysel), dolayısıyla User_Contributor
+    // yan paneli HİÇ görmez. Kaynak premium yolda render edilir; yan paneldeki
+    // kopya ölü daldır. Bu test o gerçeği kilitler — davranış değişirse düşer.
+    it("User_Contributor premium yola düşer, yan panel hiç çizilmez", async () => {
+      mountWithProfile(
+        {
+          ...baseProfile,
+          profileType: "User_Contributor",
+          roleKey: "User_Contributor",
+          roleLabel: "Contributor",
+          roleSlug: "User_Contributor",
+        },
+        "/profile/bireysel",
+      );
+      await screen.findAllByText("Contributor");
+
+      expect(readMenuLabels()).toEqual([]);
+    });
+  });
 });
