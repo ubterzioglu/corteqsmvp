@@ -14,10 +14,17 @@ Bir madde buraya girdiyse, ana plan "tamamlandı" sayılabilir demektir — kala
 iş kod eksikliği değil, **bekleyen bir karardır**. Karar verilip iş bitince
 dosya buradan silinir (ya da ilgili plana geri taşınır), öylece durmaz.
 
-## ⚠️ Giriş noktası: master yol haritası
+## ⚠️ Giriş noktası: güncel yol haritası
 
-**Buradan başla:** [2026-09-21-KALANLAR.md](2026-09-21-KALANLAR.md) —
-*Kalanlar — Tek Yol Haritası*, **11 faz / 95 minik adım** (48 kaba batch'ten bölündü).
+**Buradan başla:** [2026-09-27-KALANLAR.md](2026-09-27-KALANLAR.md) —
+*Kalan İşler*, **15 batch + karar/ertelenen bölümleri**. Üç plan dosyası
+(`revision-number-completion-email`, `command-center-column-sorting`,
+`corteqs_clean_code_prompt`) ile 17/21/25 Eylül toplantılarının açık maddeleri
+tek listede toplandı; her batch tek oturumda bitecek büyüklükte.
+⚠️ Temiz kod talimatındaki rakamların çoğu bayattı, dosyada ölçülmüş hâlleri var.
+
+Önceki tur: [2026-09-21-KALANLAR.md](2026-09-21-KALANLAR.md) —
+*Tek Yol Haritası*, **11 faz / 95 minik adım**.
 
 Aşağıdaki altı dosya artık **ölçüm/gerekçe arşividir.** Sıra, durum ve öncelik
 **yalnız master'da** yaşar; bir batch'e başlamadan önce ayrıntı için arşiv dosyasını
