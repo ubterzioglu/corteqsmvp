@@ -5,7 +5,7 @@
 
 import { isSupabaseConfigured, supabase } from "@/integrations/supabase/client";
 
-import { db, reportCaddeApiError } from "./cadde-internal";
+import { caddeWriteError, db, reportCaddeApiError } from "./cadde-internal";
 
 export type CaddeNotification = {
   id: string;
@@ -58,12 +58,12 @@ export async function listMyNotifications(userId: string, limit = 20): Promise<C
 
 export async function markNotificationRead(notificationId: string): Promise<void> {
   const { error } = await db.from("notifications").update({ is_read: true }).eq("id", notificationId);
-  if (error) throw error;
+  if (error) throw caddeWriteError("markNotificationRead", error);
 }
 
 export async function markAllNotificationsRead(userId: string): Promise<void> {
   const { error } = await db.from("notifications").update({ is_read: true }).eq("user_id", userId).eq("is_read", false);
-  if (error) throw error;
+  if (error) throw caddeWriteError("markAllNotificationsRead", error);
 }
 
 /**

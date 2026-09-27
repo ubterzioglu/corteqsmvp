@@ -447,7 +447,7 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
       .eq("status", "published")
       .order("created_at", { ascending: false })
       .limit(100);
-    if (error) throw error;
+    if (error) throw caddeReadError("listCaddeCafeFeed", error);
     const rows = (data ?? []) as CaddeFeedRpcItem[];
     const postIds = rows.map((row) => row.id);
     const [countries, cities, reactions, comments, shareCounts, authorNames, interestRows] = await Promise.all([

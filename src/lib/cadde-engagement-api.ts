@@ -1,6 +1,6 @@
 import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
-import { db, caddeWriteError } from "./cadde-internal";
+import { db, caddeWriteError, reportCaddeApiError } from "./cadde-internal";
 import {
   caddeCommentCreateSchema,
   caddeReactionSchema,
@@ -73,7 +73,9 @@ export async function countCaddePostsSince(isoTimestamp: string): Promise<number
     if (error) throw error;
     return count ?? 0;
   } catch (error: unknown) {
-    console.error("[cadde_api_error] countCaddePostsSince", error);
+    // İkincil yüzey (chip sayacı): boş sonuç kalıbı bilinçli, ama hata artık
+    // kalıcı kayda düşüyor — ham console.error teşhis edilmiyordu (S03c).
+    reportCaddeApiError("countCaddePostsSince", error);
     return 0;
   }
 }

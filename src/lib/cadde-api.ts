@@ -65,7 +65,7 @@ import type {
 
 export async function getCaddeActorContext(): Promise<CaddeActorContext | null> {
   const { data, error } = await db.rpc("get_cadde_actor_context" as never);
-  if (error) throw error;
+  if (error) throw caddeReadError("getCaddeActorContext", error);
   return mapActorContext(data);
 }
 
