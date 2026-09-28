@@ -6,6 +6,7 @@ import type {
   ServiceFinderJobStatus,
   ServiceFinderReviewStatus,
 } from "@/lib/service-finder-schemas";
+import { extractRpcErrorText } from "./rpc-error-text";
 
 export const SF_ERROR_MESSAGES: Record<string, string> = {
   sf_auth_required: "Oturum gerekli. Lütfen yeniden giriş yapın.",
@@ -47,17 +48,6 @@ const SF_GENERIC_ERROR = "Beklenmeyen bir hata oluştu.";
  * haritasını 2026-08-05'e kadar canlıda tamamen ölü bırakan hata tam olarak buydu.
  * (`cadde-rules.ts` → `extractErrorText` ile aynı sözleşme.)
  */
-function extractSfErrorText(error: unknown): string {
-  if (typeof error === "string") return error;
-  if (error instanceof Error) return error.message;
-  if (error && typeof error === "object") {
-    const record = error as Record<string, unknown>;
-    return [record.message, record.code, record.details, record.hint]
-      .filter((field): field is string => typeof field === "string")
-      .join(" ");
-  }
-  return "";
-}
 
 /**
  * Ham metin kullanıcıya gösterilebilir mi? Eşlenmemiş bir RPC kodu (`rl_budget_stop`,
@@ -76,7 +66,7 @@ function looksLikeRawCode(raw: string): boolean {
 
 /** Supabase hata mesajından sf_* kodunu yakalayıp Türkçe mesaja çevirir. */
 export function sfErrorMessage(error: unknown): string {
-  const raw = extractSfErrorText(error);
+  const raw = extractRpcErrorText(error);
   // ⚠️ Rakam da kabul edilir: `sf_[a-z_]+` deseni `sf_budget_2x` gibi bir kodu sessizce
   // ıskalar ve kullanıcı ham metni görürdü.
   const match = raw.match(/sf_[a-z0-9_]+/);

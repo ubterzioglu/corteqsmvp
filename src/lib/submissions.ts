@@ -424,15 +424,6 @@ export async function validateReferralCodeBeforeSubmit(referralCode: string | nu
   return result?.normalized_code ?? normalized;
 }
 
-export function getReadableErrorMessage(error: unknown, fallback: string) {
-  if (error instanceof Error && error.message.trim() !== "") return error.message;
-  if (error && typeof error === "object" && "message" in error) {
-    const maybeMessage = (error as ErrorWithMessage).message;
-    if (typeof maybeMessage === "string" && maybeMessage.trim() !== "") return maybeMessage;
-  }
-  return fallback;
-}
-
 function getMissingColumnName(error: unknown): string | null {
   const message =
     error instanceof Error

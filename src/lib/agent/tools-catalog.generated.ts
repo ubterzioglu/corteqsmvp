@@ -3913,6 +3913,16 @@ export const toolCatalog = {
       "module_family": "catalog"
     },
     {
+      "path": "src/lib/rpc-error-text.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/rpc-error-text.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/security.ts",
       "kind": "ts",
       "module_family": "lib"

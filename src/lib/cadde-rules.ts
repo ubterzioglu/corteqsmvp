@@ -4,6 +4,7 @@
 // SQL kaynağı: supabase/migrations/20260610182000_cadde300_003_actor_context.sql
 
 import { trFold } from "@/lib/text-normalization";
+import { extractRpcErrorText } from "./rpc-error-text";
 
 export type CaddeMissingGateField = "country" | "city" | "phone_verification";
 
@@ -207,21 +208,10 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
  * ÜRETİMDE HİÇ ÇALIŞMIYORDU ve kullanıcı her zaman genel fallback'i görüyordu.
  * `message` dışındaki alanlar da taranır: bazı hatalar kodu `details`/`hint`'te taşır.
  */
-function extractErrorText(error: unknown): string {
-  if (typeof error === "string") return error;
-  if (error instanceof Error) return error.message;
-  if (error && typeof error === "object") {
-    const record = error as Record<string, unknown>;
-    return [record.message, record.code, record.details, record.hint]
-      .filter((field): field is string => typeof field === "string")
-      .join(" ");
-  }
-  return "";
-}
 
 /** Supabase RPC hatasını kullanıcıya gösterilebilir mesaja çevirir. */
 export function resolveCaddeRpcErrorMessage(error: unknown, fallback = "İşlem tamamlanamadı. Lütfen tekrar dene."): string {
-  const raw = extractErrorText(error);
+  const raw = extractRpcErrorText(error);
   for (const [code, message] of Object.entries(CADDE_RPC_ERROR_MESSAGES)) {
     if (raw.includes(code)) return message;
   }
