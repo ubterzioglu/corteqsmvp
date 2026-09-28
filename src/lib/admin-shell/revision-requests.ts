@@ -20,6 +20,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { sanitizeError, validateContent, validateFile, validateTitle } from "@/lib/security";
+import { fetchAllRows } from "@/lib/supabase-chunked";
 
 type AttachmentInsert = Database["public"]["Tables"]["revision_request_attachments"]["Insert"];
 
@@ -193,12 +194,22 @@ function buildRequestPayload(form: RevisionRequestForm) {
 }
 
 /** Aktif (silinmemiş) talepleri öncelik + tarih sırasıyla getirir. */
+/** ⚠️ TAM liste (S07b): eksik gösterilen talep "yok" sanılır ve işlenmeden kalır. */
 export async function fetchRevisionRequests(): Promise<RevisionRequest[]> {
-  const { data, error } = await supabase.from("revision_requests")
-    .select(REQUEST_SELECT)
-    .is("deleted_at", null)
-    .order("priority", { ascending: false })
-    .order("created_at", { ascending: false });
+  let data: unknown[] | null = null;
+  let error: unknown = null;
+  try {
+    data = await fetchAllRows((from, to) =>
+      supabase.from("revision_requests")
+        .select(REQUEST_SELECT)
+        .is("deleted_at", null)
+        .order("priority", { ascending: false })
+        .order("created_at", { ascending: false })
+        .range(from, to),
+    );
+  } catch (caught: unknown) {
+    error = caught;
+  }
 
   if (error) {
     throw new Error(sanitizeError(error, "Revizyon istekleri yüklenemedi."));

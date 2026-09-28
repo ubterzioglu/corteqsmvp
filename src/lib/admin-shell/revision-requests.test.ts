@@ -45,7 +45,8 @@ const VALID_FORM: RevisionRequestForm = {
 // `resolved` → query thenable olarak çözülür (fetch/list); `single` → .single() döner.
 function chainable(opts: { resolved?: { data: unknown; error: unknown }; single?: { data: unknown; error: unknown } }) {
   const builder: Record<string, unknown> = {};
-  for (const method of ["select", "insert", "update", "eq", "is", "order"]) {
+  // S07b: `fetchRevisionRequests` artık sayfalanıyor, zincire `range` girdi.
+  for (const method of ["select", "insert", "update", "eq", "is", "order", "range"]) {
     builder[method] = vi.fn(() => builder);
   }
   builder.single = vi.fn().mockResolvedValue(opts.single ?? { data: null, error: null });

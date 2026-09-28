@@ -45,3 +45,43 @@ export async function fetchInChunks<TRow>(
   }
   return out;
 }
+
+/** `fetchAllRows` sayfa boyu. Tavana eşit: her sayfa tam dolarsa devam edilir. */
+const PAGE_SIZE = POSTGREST_ROW_CAP;
+
+/**
+ * Bir listeyi `.range()` ile SONUNA KADAR okur.
+ *
+ * Ne zaman bu, ne zaman `.limit()`:
+ *   • Liste TAM olmak zorundaysa (muhasebe kayıtları, başvurular, yönetici
+ *     envanterleri) → `fetchAllRows`. Açık bir `.limit(500)` koymak burada kesmeyi
+ *     *bilinçli* yapar ama yine veri kaybettirir; yönetici eksik toplam görür.
+ *   • Liste doğası gereği "son N" ise (akış sayfası, öneri listesi) → `.limit()`.
+ *
+ * ⚠️ Referans desen `scripts/generate-sitemap.mjs` içindeki `fetchAllRows()`'tur;
+ * bu, aynı sözleşmenin supabase-js karşılığıdır.
+ *
+ * Güvenlik freni: `maxPages` sonsuz döngüyü keser. Tavana dayanılırsa fırlatır —
+ * sessizce eksik veri döndürmek tam da kapatmaya çalıştığımız kusurdur.
+ */
+export async function fetchAllRows<TRow>(
+  run: (from: number, to: number) => PromiseLike<{ data: TRow[] | null; error: unknown }>,
+  maxPages = 50,
+): Promise<TRow[]> {
+  const out: TRow[] = [];
+
+  for (let page = 0; page < maxPages; page += 1) {
+    const from = page * PAGE_SIZE;
+    const { data, error } = await run(from, from + PAGE_SIZE - 1);
+    if (error) throw error;
+
+    const rows = data ?? [];
+    out.push(...rows);
+    if (rows.length < PAGE_SIZE) return out;
+  }
+
+  throw new Error(
+    `fetchAllRows: ${maxPages} sayfa sonrası bitmedi (${out.length}+ satır). `
+      + "Sessizce eksik veri dönmemek için durduruldu — sorguyu daralt ya da maxPages'i bilinçli yükselt.",
+  );
+}

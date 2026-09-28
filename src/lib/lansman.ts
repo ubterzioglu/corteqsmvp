@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 import { supabase } from "@/integrations/supabase/client";
+
+import { fetchAllRows } from "./supabase-chunked";
 import type {
   LansmanRegistration,
   LansmanRegistrationFormData,
@@ -123,14 +125,17 @@ export async function createRegistration(data: LansmanRegistrationFormData) {
   return payload;
 }
 
+/** ⚠️ TAM liste (S07b): başvuru sayısı eksik gösterilemez — sessiz kesme yasak. */
 export async function getAllRegistrations() {
-  const { data, error } = await supabase
-    .from("lansman_registrations")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (error) throw error;
-  return (data ?? []) as LansmanRegistration[];
+  const rows = await fetchAllRows((from, to) =>
+    supabase
+      .from("lansman_registrations")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .range(from, to),
+  );
+  // Cast orijinal koddan devralındı: `status` sütunu şemada `string`, burada dar birlik.
+  return rows as LansmanRegistration[];
 }
 
 export async function updateRegistrationStatus(

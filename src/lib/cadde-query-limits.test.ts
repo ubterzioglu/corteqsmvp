@@ -87,3 +87,42 @@ describe("toplu profil sorgularında satır tavanı", () => {
     expect(source).toContain("POSTGREST_ROW_CAP / 2");
   });
 });
+
+// S07b — TAM olması gereken listeler sayfalanarak okunur.
+//
+// ⚠️ Buradaki listelerde açık bir `.limit(500)` de YANLIŞ olurdu: kesmeyi bilinçli
+// yapar ama yine eksik veri üretir. Mali toplam, başvuru sayısı, anket yüzdesi ya da
+// işlenmemiş talep sayısı eksik çıkarsa kimse fark etmez — kesme sessizdir.
+describe("tam olması gereken listeler sayfalanır", () => {
+  const SITES = [
+    { file: "src/lib/muhasebe-api.ts", fn: "fetchExpenses", why: "gider toplamı" },
+    { file: "src/lib/muhasebe-api.ts", fn: "fetchIncomes", why: "gelir toplamı" },
+    { file: "src/lib/lansman.ts", fn: "getAllRegistrations", why: "başvuru sayısı" },
+    { file: "src/lib/survey-responses.ts", fn: "getSurveyResponses", why: "anket yüzdeleri" },
+    {
+      file: "src/lib/admin-shell/revision-requests.ts",
+      fn: "fetchRevisionRequests",
+      why: "işlenmemiş talepler",
+    },
+  ];
+
+  it.each(SITES)("$fn sayfalanır ($why eksik çıkamaz)", ({ file, fn }) => {
+    const source = readFileSync(file, "utf8");
+    const start = source.indexOf(`function ${fn}`);
+    expect(start, `${fn} bulunamadı`).toBeGreaterThan(-1);
+    const body = source.slice(start, start + 1200);
+
+    expect(body).toContain("fetchAllRows");
+    expect(body).toContain(".range(");
+  });
+
+  it("fetchAllRows sessizce eksik dönmez — tavana dayanırsa FIRLATIR", () => {
+    // Sonsuz döngü freni gerekli, ama frene takılınca boş/eksik dizi dönmek tam da
+    // kapatmaya çalıştığımız kusur olurdu.
+    const source = readFileSync("src/lib/supabase-chunked.ts", "utf8");
+    const start = source.indexOf("export async function fetchAllRows");
+    expect(start).toBeGreaterThan(-1);
+
+    expect(source.slice(start)).toContain("throw new Error(");
+  });
+});

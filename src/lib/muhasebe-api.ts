@@ -2,6 +2,8 @@
 // Supabase CRUD + aggregation çağrıları
 
 import { supabase } from '@/integrations/supabase/client';
+
+import { fetchAllRows } from './supabase-chunked';
 import type {
   ExpenseRow,
   ExpenseInput,
@@ -17,14 +19,22 @@ import type {
 // EXPENSES
 // ---------------------------------------------------------------------
 
+/**
+ * ⚠️ TAM liste (S07b). Mali kayıt eksik gösterilemez: PostgREST sınırsız sorguyu
+ * 1000 satırda SESSİZCE keser ve gider toplamı olduğundan küçük çıkar — kimse fark
+ * etmez. Açık bir `.limit()` de burada yanlış olurdu, kesmeyi bilinçli yapar ama
+ * yine eksik toplam üretirdi. Bu yüzden sayfalanarak sonuna kadar okunur.
+ */
 export async function fetchExpenses(): Promise<ExpenseRow[]> {
-  const { data, error } = await supabase
-    .from('expenses')
-    .select('*')
-    .order('expense_date', { ascending: false })
-    .order('created_at', { ascending: false });
-  if (error) throw error;
-  return (data ?? []) as ExpenseRow[];
+  const rows = await fetchAllRows<ExpenseRow>((from, to) =>
+    supabase
+      .from('expenses')
+      .select('*')
+      .order('expense_date', { ascending: false })
+      .order('created_at', { ascending: false })
+      .range(from, to),
+  );
+  return rows;
 }
 
 export async function createExpense(input: ExpenseInput): Promise<ExpenseRow> {
@@ -60,14 +70,17 @@ export async function deleteExpense(id: string): Promise<void> {
 // INCOMES
 // ---------------------------------------------------------------------
 
+/** ⚠️ TAM liste (S07b) — gerekçe `fetchExpenses` üzerinde. */
 export async function fetchIncomes(): Promise<IncomeRow[]> {
-  const { data, error } = await supabase
-    .from('incomes')
-    .select('*')
-    .order('income_date', { ascending: false })
-    .order('created_at', { ascending: false });
-  if (error) throw error;
-  return (data ?? []) as IncomeRow[];
+  const rows = await fetchAllRows<IncomeRow>((from, to) =>
+    supabase
+      .from('incomes')
+      .select('*')
+      .order('income_date', { ascending: false })
+      .order('created_at', { ascending: false })
+      .range(from, to),
+  );
+  return rows;
 }
 
 export async function createIncome(input: IncomeInput): Promise<IncomeRow> {
