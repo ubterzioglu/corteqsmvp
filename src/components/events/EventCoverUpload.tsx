@@ -4,9 +4,8 @@
 // 578 satırlık tek dosyadır; yükleme mantığını oraya doğrudan eklemek diff'i okunmaz
 // yapardı. Forma bağlama ve ham URL kutusunun değiştirilmesi A10b'nin işidir.
 //
-// ⚠️ `event-covers` bucket'ı CANLIDA HENÜZ YOK —
-// `docs/operations/2026-09-28-event-covers-bucket.sql` uygulanmayı bekliyor.
-// O uygulanmadan bu bileşen canlıda yükleme hatası döndürür.
+// ✅ `event-covers` bucket'ı 2026-09-28'de canlıya uygulandı
+// (`supabase/migrations/applied/20260928140000_event_covers_bucket.sql`).
 
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { useRef, useState } from "react";

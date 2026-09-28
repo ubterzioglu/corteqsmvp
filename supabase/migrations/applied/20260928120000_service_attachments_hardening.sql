@@ -1,14 +1,18 @@
--- service-attachments bucket sıkılaştırması — G03 (HAZIRLIK, HENÜZ UYGULANMADI)
+-- service-attachments bucket sıkılaştırması — G03 / P1
 -- ============================================================================
 --
--- ⚠️ BU DOSYA CANLIDA ÇALIŞTIRILMADI. Uygulaması onaya tabidir (P01): canlı
--- migration. Onaylandığında aşağıdaki "UYGULAMA" bölümündeki adımlar izlenir.
+-- ✅ 2026-09-28'de CANLIYA UYGULANDI ve doğrulandı:
+--    file_size_limit = 15728640 · 6 MIME türü ·
+--    policy `service_attachments_insert_own_folder` (INSERT) +
+--    `service_attachments_delete_own` (DELETE) · eski gevşek INSERT policy düştü.
+--    `schema_migrations` kaydı atıldı (version 20260928120000).
 --
--- ⚠️ Bu dosya BİLEREK `supabase/migrations/` altında DEĞİL. CLAUDE.md kuralı:
--- migration dosyası parent dizinde bırakılmaz (sürüm karşılaştırmasına girmez ve
--- `check:migrations` onu başıboş dosya sayıp exit 1 verir), `applied/` altına ise
--- ancak UYGULANDIKTAN sonra taşınır. Uygulanmamış SQL'in yeri `docs/operations/`
--- (`2026-09-22-relocation-demo-seed.sql` ile aynı desen).
+-- ⚠️ Uygulandığı için `docs/operations/`ten buraya TAŞINDI. Kural: uygulanmamış SQL
+-- `docs/operations/` altında durur; `applied/` altına ancak UYGULANDIKTAN sonra
+-- taşınır ve parent `supabase/migrations/` dizininde hiç bırakılmaz.
+--
+-- ⚠️ `src/lib/service-attachment-security.test.ts` bu dosyayı YOLUYLA okur —
+-- taşırsan o testi de güncelle (taşıma sırasında tam olarak bu yaşandı).
 --
 -- ----------------------------------------------------------------------------
 -- MEVCUT DURUM (ölçüldü: archive/20260326112832_*.sql, bucket'ın kurulduğu yer)

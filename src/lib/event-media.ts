@@ -3,8 +3,8 @@
 // Bucket: `event-covers` (public read, yazma yalnız kullanıcının kendi `{uid}/` klasörüne).
 // Yol şeması: {uid}/{uuid}.{ext}
 //
-// ⚠️ Bucket HENÜZ CANLIDA YOK: `docs/operations/2026-09-28-event-covers-bucket.sql`
-// uygulanmayı bekliyor. O uygulanana kadar `uploadEventCover` canlıda hata döner.
+// ✅ Bucket 2026-09-28'de canlıya uygulandı
+// (`supabase/migrations/applied/20260928140000_event_covers_bucket.sql`).
 //
 // Buradaki limitler bucket'ın `file_size_limit` + `allowed_mime_types` değerleriyle
 // AYNA sözleşmesidir: birini değiştiren diğerini de günceller

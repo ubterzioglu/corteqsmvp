@@ -10,7 +10,7 @@
 // gerektirdiği için ONAYA TABİDİR (G03/P01). Buradaki denetim kazayla yanlış dosya
 // yükleyen kullanıcıyı ve "sessizce kabul edilmiş gibi görünen" akışı kapatır.
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
@@ -95,16 +95,17 @@ describe("safeStorageFileName", () => {
 
 // G03-h — hazırlanan bucket migration'ı istemciyle AYNI hizada kalmalı.
 //
-// ⚠️ Bu migration HENÜZ UYGULANMADI (onaya tabi, P01). Test SQL metnini denetler,
-// canlı durumu değil. Amaç: onay geldiğinde uygulanacak dosya ile bugünkü istemci
-// denetimi ayrışmış olmasın.
+// ✅ Migration 2026-09-28'de CANLIYA UYGULANDI (P1) ve dosya `applied/` altına taşındı.
+// ⚠️ Test yine de yalnız SQL METNİNİ denetler, canlı durumu değil — testin yeşil olması
+// bucket'ın gerçekten sıkılaştırıldığını KANITLAMAZ. Amacı, dosya ile bugünkü istemci
+// denetiminin ayrışmamasıdır.
 //
 // Ayrışmanın bedeli ölçülmüştür: Cadde videosunda (m94) istemci sınırı ile bucket
 // tavanı ayrı ayrı değiştirildiğinde kullanıcı 50 MB yükleyip sunucudan anlamsız
 // hata alıyordu. Aynı tuzağa düşülmesin.
 describe("bucket migration'ı istemci denetimiyle hizada (G03-h)", () => {
   const sql = readFileSync(
-    "docs/operations/2026-09-28-service-attachments-bucket-hardening.sql",
+    "supabase/migrations/applied/20260928120000_service_attachments_hardening.sql",
     "utf8",
   );
 
@@ -139,10 +140,16 @@ describe("bucket migration'ı istemci denetimiyle hizada (G03-h)", () => {
     expect(sql).toContain("GERİ ALMA");
   });
 
-  it("dosya migration dizinlerinde DEĞİL (uygulanmadan oraya konmaz)", () => {
-    // CLAUDE.md: parent `supabase/migrations/` başıboş dosya = check:migrations exit 1;
-    // `applied/` ise "canlıda var" demektir ve sapma raporlanır.
-    expect(sql).toContain("HENÜZ UYGULANMADI");
+  it("uygulandığı için `applied/` altında ve parent dizinde DEĞİL", () => {
+    // Bu iddia 28.09'da TERSİNE DÖNDÜ ve dönmesi doğrudur: dosya o gün canlıya
+    // uygulandı, `docs/operations/`ten `applied/` altına taşındı ve schema_migrations
+    // kaydı atıldı. Eskiden burada `expect(sql).toContain("HENÜZ UYGULANMADI")` vardı.
+    //
+    // CLAUDE.md kuralı: parent `supabase/migrations/` içinde başıboş dosya =
+    // check:migrations exit 1; `applied/` ise "canlıda kayıtlı" demektir.
+    expect(existsSync("supabase/migrations/applied/20260928120000_service_attachments_hardening.sql")).toBe(true);
+    expect(existsSync("supabase/migrations/20260928120000_service_attachments_hardening.sql")).toBe(false);
+    expect(existsSync("docs/operations/2026-09-28-service-attachments-bucket-hardening.sql")).toBe(false);
   });
 });
 

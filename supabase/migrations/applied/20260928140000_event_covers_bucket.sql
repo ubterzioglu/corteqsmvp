@@ -1,13 +1,17 @@
--- `event-covers` bucket'ı — etkinlik kapak görseli yükleme (A10a, HENÜZ UYGULANMADI)
+-- `event-covers` bucket'ı — etkinlik kapak görseli yükleme (A10)
 -- ============================================================================
 --
--- ⚠️ BU DOSYA CANLIDA ÇALIŞTIRILMADI. Ajanın izin sınıflandırıcısı canlı DB yazımını
--- reddediyor; dosya `docs/operations/` altında bekliyor (P1'in
--- `2026-09-28-service-attachments-bucket-hardening.sql` dosyasıyla aynı desen).
+-- ✅ 2026-09-28'de CANLIYA UYGULANDI ve doğrulandı:
+--    public = t · file_size_limit = 5242880 · 4 MIME türü
+--    (image/jpeg, image/png, image/webp, image/avif).
+--    `schema_migrations` kaydı atıldı (version 20260928140000).
 --
--- ⚠️ Bu dosya BİLEREK `supabase/migrations/` parent dizininde DEĞİL: orada kalan bir
--- dosya sürüm karşılaştırmasına girmez ve `check:migrations` onu başıboş sayıp exit 1
--- verir. `applied/` altına ancak UYGULANDIKTAN sonra taşınır.
+-- ⚠️ Uygulandığı için `docs/operations/`ten buraya TAŞINDI. Kural: uygulanmamış SQL
+-- `docs/operations/` altında durur; `applied/` altına ancak UYGULANDIKTAN sonra
+-- taşınır ve parent `supabase/migrations/` dizininde hiç bırakılmaz.
+--
+-- ⚠️ `src/lib/event-media-contract.test.ts` bu dosyayı YOLUYLA okur — taşırsan o testi
+-- de güncelle.
 --
 -- ----------------------------------------------------------------------------
 -- NEDEN YENİ BİR BUCKET

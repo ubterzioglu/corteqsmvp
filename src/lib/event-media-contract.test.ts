@@ -42,10 +42,14 @@ describe("validateEventCoverFile", () => {
 // (Cadde videosu) istemci sınırı ile bucket tavanı ayrı ayrı değiştirildiğinde
 // kullanıcı istemcide kabul edilen dosyada sunucudan anlamsız hata alıyordu.
 //
-// ⚠️ SQL dosyası HENÜZ UYGULANMADI (canlı DB yazımı ajana kapalı). Test SQL METNİNİ
-// denetler, canlı durumu değil — amaç, uygulandığı gün ayrışmış olmaması.
+// ✅ Bucket 2026-09-28'de CANLIYA UYGULANDI ve dosya `applied/` altına taşındı.
+// ⚠️ Test yine de yalnız SQL METNİNİ denetler, canlı durumu değil — testin yeşil
+// olması bucket'ın canlıda var olduğunu KANITLAMAZ.
 describe("event-covers bucket'ı istemci denetimiyle hizada (A10a)", () => {
-  const sql = readFileSync("docs/operations/2026-09-28-event-covers-bucket.sql", "utf8");
+  const sql = readFileSync(
+    "supabase/migrations/applied/20260928140000_event_covers_bucket.sql",
+    "utf8",
+  );
 
   it("boyut tavanı istemcideki 5 MB ile AYNI", () => {
     expect(sql).toContain("5242880");
