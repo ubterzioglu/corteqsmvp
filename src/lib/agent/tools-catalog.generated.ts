@@ -4369,6 +4369,11 @@ export const toolCatalog = {
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/radar-news-scan/lib/scan-lock.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/radar-news-scan/lib/scan-lock.ts",
       "kind": "ts",
       "module_family": "edge"

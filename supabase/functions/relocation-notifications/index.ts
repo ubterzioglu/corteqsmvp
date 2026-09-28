@@ -9,6 +9,8 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 
+import { resolveAdminOrSecretCaller } from "../_shared/edge-authorization.ts";
+
 const ALLOWED_ORIGINS = new Set([
   "https://corteqs.net",
   "https://www.corteqs.net",
@@ -20,7 +22,7 @@ function corsHeaders(origin: string | null): HeadersInit {
   const allow = origin && ALLOWED_ORIGINS.has(origin) ? origin : "https://corteqs.net";
   return {
     "Access-Control-Allow-Origin": allow,
-    "Access-Control-Allow-Headers": "authorization, content-type",
+    "Access-Control-Allow-Headers": "authorization, content-type, x-dispatch-secret",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
   };
 }
@@ -57,6 +59,29 @@ Deno.serve(async (req: Request) => {
   const admin = createClient(supabaseUrl, serviceKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
+
+  // ⚠️ Bu kapı olmadan fonksiyon TÜM kullanıcıların aktif taşınma kayıtlarını
+  // (`relocation_moves`, RLS'i `service_role` ile atlayarak) isteyen herkese
+  // döndürüyordu. `verify_jwt` yetmez: anon anahtarı da geçerli bir JWT'dir ve
+  // frontend paketinde herkese açıktır. Ölçüldü (28.09): tabloda 4 kayıt vardı ve
+  // hepsi `draft` olduğu için sızıntı o gün BOŞ dönüyordu — yani açık gerçekti,
+  // yalnız ilk kayıt `active` olana kadar görünmezdi.
+  //
+  // Bu bir toplu iş (batch) ucudur: meşru çağıranı ya pg_net/pg_cron (secret) ya da
+  // yönetici panelidir. Kullanıcıya kendi bildirimlerini gösteren bir uç gerekirse
+  // AYRI yazılmalı ve move'ları çağıranın kendi `user_id`siyle filtrelemelidir —
+  // bu ucu kullanıcıya açmak sızıntıyı geri getirir.
+  const caller = await resolveAdminOrSecretCaller(
+    req,
+    admin,
+    Deno.env.get("NOTIFY_DISPATCH_SECRET"),
+  );
+  if (!caller.authorized) {
+    return new Response(JSON.stringify({ error: "unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders(origin), "content-type": "application/json" },
+    });
+  }
 
   try {
     // Aktif move'lar + hedef ülkelerin 'after_arrival' bürokrasi adımları → bildirim adayları.
