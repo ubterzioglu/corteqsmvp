@@ -10,7 +10,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { SEO_CANONICAL_ORIGIN, applySeo } from "./seo";
 
@@ -218,6 +218,27 @@ describe("prerender sinyali", () => {
 // görüyordu, Googlebot ise doğru adresi.
 describe("index.html kabuğu", () => {
   const shell = readFileSync(resolve(process.cwd(), "index.html"), "utf8");
+
+  // ÇIPA (S04a) — aşağıdaki üç `not.toMatch` bloğu TEK BAŞINA hiçbir şey kanıtlamıyordu.
+  // Negatif iddia yalnız taranan metnin gerçek olduğu ayrıca kanıtlanırsa anlam taşır;
+  // aksi halde kabuk bozuldukça test DAHA KOLAY yeşil olur. Ölçüldü (27.09): `shell`
+  // yalnız iki og etiketine indirildiğinde — yani tüm SEO kabuğu yok olduğunda —
+  // dosyadaki 26 testin 26'sı da geçiyordu. Kardeş "og:title KALIR" testi bunu
+  // yakalamadı (og etiketleri duruyordu) ve zaten ayrı bir `it`; silinse ya da
+  // skip'lense üç negatif yine çıpasız kalırdı. Bu yüzden çıpa blok düzeyindedir:
+  // düşerse `describe` toptan kırmızı olur.
+  //
+  // Eşikler bilerek GEVŞEK — amaç biçim denetlemek değil, kabuğun gerçekten
+  // `index.html` olduğunu kanıtlamak. Gerçek değerler (27.09 ölçümü): 23.284 bayt ·
+  // 367 satır · 6 `<link` · 10 `<meta ... property=`. Son iki sayaç kritiktir:
+  // negatifler tam da bu iki etiket ailesini tarıyor, yani "eşleşme yok" sonucunun
+  // "etiket ailesi hiç yok" anlamına GELMEDİĞİNİ kanıtlarlar.
+  beforeAll(() => {
+    expect(shell.length).toBeGreaterThan(5000);
+    expect(shell).toMatch(/<html lang=["']tr["']/i);
+    expect(shell.match(/<link/gi)?.length ?? 0).toBeGreaterThanOrEqual(3);
+    expect(shell.match(/<meta[^>]+property=/gi)?.length ?? 0).toBeGreaterThanOrEqual(3);
+  });
 
   it("sabit canonical İÇERMEZ — canonical'ı yalnız seo.ts yazar", () => {
     expect(shell).not.toMatch(/<link[^>]+rel=["']canonical["']/i);
