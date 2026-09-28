@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { trIncludes } from "@/lib/text-normalization";
-import { Link, useSearchParams } from "react-router-dom";
+import ReferralCreateForm from "@/components/admin/referral/ReferralCreateForm";
+import {
+  buildReferralCodePreview,
+  filterReferralCodes,
+  groupUsagesByCode,
+  validateReferralCreateForm,
+} from "@/lib/admin/referral-page-logic";
+import { useSearchParams } from "react-router-dom";
 import { Download, QrCode, Search } from "lucide-react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -8,7 +14,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -51,17 +56,10 @@ const AdminReferralPage = () => {
   const [busyById, setBusyById] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredReferralCodes = useMemo(() => {
-    if (!searchQuery.trim()) return referralCodes;
-    return referralCodes.filter((referral) => {
-      const sourceGroupType = `${referral.source_code}/${referral.group_code}/${referral.type_code}`;
-      return (
-        trIncludes(referral.note, searchQuery) ||
-        trIncludes(referral.code, searchQuery) ||
-        trIncludes(sourceGroupType, searchQuery)
-      );
-    });
-  }, [referralCodes, searchQuery]);
+  const filteredReferralCodes = useMemo(
+    () => filterReferralCodes(referralCodes, searchQuery),
+    [referralCodes, searchQuery],
+  );
 
   const now = new Date();
   const defaultFrom = now.toISOString().slice(0, 10);
@@ -134,12 +132,7 @@ const AdminReferralPage = () => {
 
       if (cancelled) return;
 
-      const grouped: Record<string, ReferralUsageRow[]> = {};
-      for (const usage of usages) {
-        if (!grouped[usage.referral_code_id]) grouped[usage.referral_code_id] = [];
-        grouped[usage.referral_code_id].push(usage);
-      }
-      setUsageMap(grouped);
+      setUsageMap(groupUsagesByCode(usages));
     };
 
     void loadUsage();
@@ -155,21 +148,20 @@ const AdminReferralPage = () => {
     }
   }, [searchParams]);
 
-  const summary = useMemo(() => {
-    const source = sources.find((item) => item.id === sourceId)?.code ?? "??";
-    const group = groups.find((item) => item.id === groupId)?.code ?? "??";
-    const type = types.find((item) => item.id === typeId)?.code ?? "??";
-    return `${source}${group}${type}-XXXXXX`;
-  }, [groupId, groups, sourceId, sources, typeId, types]);
+  const summary = useMemo(
+    () =>
+      buildReferralCodePreview({
+        sourceCode: sources.find((item) => item.id === sourceId)?.code,
+        groupCode: groups.find((item) => item.id === groupId)?.code,
+        typeCode: types.find((item) => item.id === typeId)?.code,
+      }),
+    [groupId, groups, sourceId, sources, typeId, types],
+  );
 
   const handleCreate = async () => {
-    if (!sourceId || !groupId || !typeId) {
-      toast({ title: "Source, Group ve Type gerekli", variant: "destructive" });
-      return;
-    }
-
-    if (!validFrom || !validUntil) {
-      toast({ title: "Başlangıç ve bitiş tarihi gerekli", variant: "destructive" });
+    const formProblem = validateReferralCreateForm({ sourceId, groupId, typeId, validFrom, validUntil });
+    if (formProblem) {
+      toast({ title: formProblem, variant: "destructive" });
       return;
     }
 
@@ -340,73 +332,29 @@ const AdminReferralPage = () => {
 
   return (
     <div className="space-y-6">
-      <Card id="referral-create-form">
-        <CardHeader>
-          <CardTitle>Referral Kod Oluştur</CardTitle>
-          <CardDescription>Format: [SOURCE][GROUP][TYPE]-[RAND]</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-            <Select value={sourceId} onValueChange={setSourceId}>
-              <SelectTrigger><SelectValue placeholder="Source seçin" /></SelectTrigger>
-              <SelectContent>
-                {sources.map((source) => (
-                  <SelectItem key={source.id} value={source.id}>
-                    {source.name} ({source.code})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={groupId} onValueChange={setGroupId}>
-              <SelectTrigger><SelectValue placeholder="Group seçin" /></SelectTrigger>
-              <SelectContent>
-                {groups.map((group) => (
-                  <SelectItem key={group.id} value={group.id}>
-                    {group.name} ({group.code})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={typeId} onValueChange={setTypeId}>
-              <SelectTrigger><SelectValue placeholder="Type seçin" /></SelectTrigger>
-              <SelectContent>
-                {types.map((type) => (
-                  <SelectItem key={type.id} value={type.id}>
-                    {type.name} ({type.code})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Input type="date" value={validFrom} onChange={(event) => setValidFrom(event.target.value)} placeholder="Başlangıç" />
-            <Input type="date" value={validUntil} onChange={(event) => setValidUntil(event.target.value)} placeholder="Bitiş" />
-          </div>
-          <Button onClick={() => void handleCreate()} disabled={creating || loading}>
-            {creating ? "Üretiliyor..." : "Generate + Save"}
-          </Button>
-          <Textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="Not (opsiyonel)" rows={3} />
-          <div className="rounded-md border bg-muted/20 p-3">
-            <p className="text-xs text-muted-foreground">Önizleme</p>
-            <p className="font-mono text-lg font-semibold">{summary}</p>
-            <p className="mt-1 text-xs text-muted-foreground">Valid: {validFrom} - {validUntil}</p>
-          </div>
-          {lastCreatedCode && (
-            <div className="flex items-center justify-between rounded-md border bg-primary/5 p-3">
-              <div>
-                <p className="text-xs text-muted-foreground">Son üretilen kod</p>
-                <p className="font-mono text-base font-semibold">{lastCreatedCode}</p>
-              </div>
-              <Button variant="outline" size="sm" onClick={() => void copyCode(lastCreatedCode)}>
-                Kopyala
-              </Button>
-            </div>
-          )}
-          <div className="flex flex-wrap gap-2">
-            <Button asChild variant="outline" size="sm"><Link to="/admin/referral/sources">Source Yönetimi</Link></Button>
-            <Button asChild variant="outline" size="sm"><Link to="/admin/referral/groups">Group Yönetimi</Link></Button>
-            <Button asChild variant="outline" size="sm"><Link to="/admin/referral/types">Type Yönetimi</Link></Button>
-          </div>
-        </CardContent>
-      </Card>
+      <ReferralCreateForm
+        sources={sources}
+        groups={groups}
+        types={types}
+        sourceId={sourceId}
+        groupId={groupId}
+        typeId={typeId}
+        validFrom={validFrom}
+        validUntil={validUntil}
+        note={note}
+        summary={summary}
+        lastCreatedCode={lastCreatedCode}
+        creating={creating}
+        loading={loading}
+        onSourceChange={setSourceId}
+        onGroupChange={setGroupId}
+        onTypeChange={setTypeId}
+        onValidFromChange={setValidFrom}
+        onValidUntilChange={setValidUntil}
+        onNoteChange={setNote}
+        onCreate={() => void handleCreate()}
+        onCopyCode={(value) => void copyCode(value)}
+      />
 
       <Card>
         <CardHeader>
