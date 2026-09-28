@@ -12,7 +12,7 @@
 // `session`/`user`, `navigate`, `toast` ve `queryClient` prop DEGILDIR: hepsi
 // baglam hook'larindan gelir, yani ayni orneklerdir.
 import { useQueryClient } from "@tanstack/react-query";
-import { AlertTriangle, Flag, HelpCircle, Megaphone, MessageCircle, RefreshCw, Send, Share2, Sparkles, ThumbsUp } from "lucide-react";
+import { Flag, HelpCircle, Megaphone, MessageCircle, RefreshCw, Send, Share2, Sparkles, ThumbsUp } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/components/auth/useAuth";
@@ -20,6 +20,7 @@ import CaddeBadge from "@/components/cadde/CaddeBadge";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
 import CaddeEmojiPickerButton from "@/components/cadde/CaddeEmojiPickerButton";
 import CaddeFeedScopeBar from "@/components/cadde/CaddeFeedScopeBar";
+import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 import CaddeMediaGallery from "@/components/cadde/CaddeMediaGallery";
 import CaddePostBody from "@/components/cadde/CaddePostBody";
 import NotificationsBell from "@/components/cadde/NotificationsBell";
@@ -643,30 +644,12 @@ export const CaddeFeedView = ({
             ) : null}
 
             {feedQuery.isError ? (
-              <Card
-                data-testid="cadde-feed-error-state"
-                className="cadde-card border-amber-200 bg-amber-50"
-              >
-                <CardContent className="p-6 text-center">
-                  <AlertTriangle className="mx-auto h-5 w-5 text-amber-600" aria-hidden="true" />
-                  <p className="mt-2 text-base font-semibold text-amber-900">Akış yüklenemedi.</p>
-                  <p className="mt-2 text-sm leading-relaxed text-amber-800">
-                    Bu bir içerik eksikliği değil — sunucudan yanıt alınamadı. Bağlantını kontrol edip tekrar deneyebilirsin.
-                  </p>
-                  <Button
-                    variant="outline"
-                    className="cadde-secondary-action mt-4 rounded-lg"
-                    onClick={() => void feedQuery.refetch()}
-                    disabled={feedQuery.isFetching}
-                  >
-                    <RefreshCw
-                      className={feedQuery.isFetching ? "h-4 w-4 animate-spin" : "h-4 w-4"}
-                      aria-hidden="true"
-                    />
-                    {feedQuery.isFetching ? "Deneniyor..." : "Tekrar dene"}
-                  </Button>
-                </CardContent>
-              </Card>
+              <CaddeLoadErrorCard
+                testId="cadde-feed-error-state"
+                title="Akış yüklenemedi."
+                onRetry={() => void feedQuery.refetch()}
+                isRetrying={feedQuery.isFetching}
+              />
             ) : null}
 
             {!feedQuery.isLoading && !feedQuery.isError && filters.mode === "real" && feedItems.length === 0 ? (

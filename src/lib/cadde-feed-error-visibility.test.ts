@@ -106,3 +106,52 @@ describe("cadde feed okuma yolu hata görünürlüğü", () => {
     expect(catchBody).not.toContain("return { items: [], nextPage: null }");
   });
 });
+
+// S06a — aynı sözleşme cafe okuma yüzeyine genişletildi.
+//
+// ⚠️ Bu ayrımı listeyi uzatmadan önce OKU: her okuma fonksiyonu fırlatmaz.
+// İÇERİK fonksiyonları fırlatır (boş sonuç kullanıcıya "yok" der ve yanıltır).
+// YARDIMCI SÖZLÜKLER bilerek boş döner (`listCaddeCafeThemes`, `listCaddeProtectedBrands`):
+// okunamazsa özellik kısmen çalışmaya devam eder, fırlatmak kullanıcıyı işten tamamen
+// alıkoyardı. İkisinin de gerekçesi kaynak dosyada yorum olarak yazılıdır.
+describe("cafe okuma yüzeyi hata görünürlüğü sözleşmesi", () => {
+  const cafeSource = readFileSync("src/lib/cadde-cafe-api.ts", "utf8");
+
+  /**
+   * ⚠️ Kesit catch bloğunun KAPANIŞINDA biter. Fonksiyon sonunu `\nexport ` ile aramak
+   * yetmez: `listMyCaddeCafes`'ten sonra `export` değil `const emptyReactions` geliyor,
+   * bu yüzden kesit sonraki fonksiyonlara taşıyor ve onların `return [];` satırlarını
+   * bu fonksiyona ait sanıyordu (ölçüldü — test ilk sürümde yanlış yerde kırmızı verdi).
+   */
+  const catchBodyOf = (fnName: string): string => {
+    const fn = sliceFrom(cafeSource, `export async function ${fnName}`, fnName);
+    const catchBlock = sliceFrom(fn, "} catch (error", `${fnName} catch bloğu`);
+    return sliceUntil(catchBlock.slice(1), "\n  }", `${fnName} catch kapanışı`);
+  };
+
+  it.each([
+    "listCaddeCafes",
+    "getCaddeCafe",
+    "listMyCaddeCafes",
+    "listCaddeCafeFeed",
+    "listCaddeProtectedBrandsForAdmin",
+  ])("%s içerik okumasıdır: hatayı FIRLATIR, boş sonuç dönmez", (fnName) => {
+    const catchBody = catchBodyOf(fnName);
+
+    expect(catchBody).toContain(`throw caddeReadError("${fnName}", error)`);
+    // Boş sonuç dönüşü geri gelirse hata yeniden "içerik yok" gibi görünür.
+    expect(catchBody).not.toMatch(/return (\[\]|null);/);
+  });
+
+  it.each(["listCaddeCafeThemes", "listCaddeProtectedBrands"])(
+    "%s yardımcı sözlüktür: boş döner AMA gerekçesi yazılıdır",
+    (fnName) => {
+      const catchBody = catchBodyOf(fnName);
+
+      expect(catchBody).toContain("reportCaddeApiError");
+      expect(catchBody).toMatch(/return \[\];/);
+      // Gerekçesiz sessizlik yasak: kararın niçin alındığı kaynakta durmalı.
+      expect(catchBody).toContain("BİLEREK");
+    },
+  );
+});

@@ -96,6 +96,9 @@ export async function listCaddeCafeThemes(): Promise<CaddeCafeTheme[]> {
       (row) => ({ key: row.key, labelTr: row.label_tr, iconKey: row.icon_key, sortOrder: row.sort_order }),
     );
   } catch (error: unknown) {
+    // BİLEREK boş döner (S06a kararı): tema listesi yardımcı bir sözlüktür, içerik
+    // değildir. Okunamazsa form tema rozetleri olmadan ÇALIŞMAYA DEVAM eder;
+    // fırlatmak kullanıcıyı kafe kurmaktan tamamen alıkoyardı. Hata yine kaydedilir.
     reportCaddeApiError("listCaddeCafeThemes", error);
     return [];
   }
@@ -115,6 +118,9 @@ export async function listCaddeProtectedBrands(): Promise<CaddeProtectedBrand[]>
       matchPattern: row.match_pattern,
     }));
   } catch (error: unknown) {
+    // BİLEREK boş döner (S06a kararı): bu liste yalnız ANINDA uyarı içindir, gerçek
+    // engelleme RPC'de yapılır. Okunamazsa kullanıcı uyarıyı önden görmez ama korumasız
+    // kalmaz — sunucu yine reddeder. Fırlatmak formu gereksiz yere kilitlerdi.
     reportCaddeApiError("listCaddeProtectedBrands", error);
     return [];
   }
@@ -146,8 +152,9 @@ export async function listCaddeProtectedBrandsForAdmin(): Promise<CaddeProtected
       }),
     );
   } catch (error: unknown) {
-    reportCaddeApiError("listCaddeProtectedBrandsForAdmin", error);
-    return [];
+    // Yönetici ekranı: boş liste "marka yok" anlamına gelir ve yönetici yanlış karar
+    // verir (ör. korumalı markayı serbest sanır). Fırlatır.
+    throw caddeReadError("listCaddeProtectedBrandsForAdmin", error);
   }
 }
 
@@ -280,8 +287,9 @@ export async function listCaddeCafes(filters: CaddeFilterState, currentUserId: s
     const [countries, cities, members, hosts] = await Promise.all([fetchCaddeCountryNameMap(), fetchCaddeCityNameMap(), fetchCafeMembers(rows.map((row) => row.id)), fetchCaddeUserNameMap(rows.map((row) => row.host_user_id).filter(Boolean) as string[])]);
     return rows.map((row) => mapCafe(row, countries, cities, members, hosts, currentUserId));
   } catch (error: unknown) {
-    reportCaddeApiError("listCaddeCafes", error);
-    return [];
+    // Hata ≠ "kafe yok". Boş dizi dönmek RLS reddini/ağ hatasını ekranda içerik
+    // yokluğu gibi gösterirdi (S06a; feed'de aynı kusur 04.08'de ölçülmüştü).
+    throw caddeReadError("listCaddeCafes", error);
   }
 }
 
@@ -295,8 +303,9 @@ export async function getCaddeCafe(cafeId: string, currentUserId: string | null)
     const [countries, cities, members, hosts] = await Promise.all([fetchCaddeCountryNameMap(), fetchCaddeCityNameMap(), fetchCafeMembers([row.id]), fetchCaddeUserNameMap(row.host_user_id ? [row.host_user_id] : [])]);
     return mapCafe(row, countries, cities, members, hosts, currentUserId);
   } catch (error: unknown) {
-    reportCaddeApiError("getCaddeCafe", error);
-    return null;
+    // ⚠️ `null` iki farklı şeyi karıştırıyordu: "kafe bulunamadı" (yukarıdaki
+    // `if (!data) return null` — meşru) ve "okunamadı". İkincisi artık fırlatır.
+    throw caddeReadError("getCaddeCafe", error);
   }
 }
 
@@ -309,8 +318,7 @@ export async function listMyCaddeCafes(userId: string): Promise<CaddeCafe[]> {
     const [countries, cities, members] = await Promise.all([fetchCaddeCountryNameMap(), fetchCaddeCityNameMap(), fetchCafeMembers(rows.map((row) => row.id))]);
     return rows.map((row) => mapCafe(row, countries, cities, members, new Map(), userId));
   } catch (error: unknown) {
-    reportCaddeApiError("listMyCaddeCafes", error);
-    return [];
+    throw caddeReadError("listMyCaddeCafes", error);
   }
 }
 
@@ -489,8 +497,7 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
       ),
     );
   } catch (error: unknown) {
-    reportCaddeApiError("listCaddeCafeFeed", error);
-    return [];
+    throw caddeReadError("listCaddeCafeFeed", error);
   }
 }
 

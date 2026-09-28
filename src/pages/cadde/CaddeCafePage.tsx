@@ -12,6 +12,7 @@ import { Archive, Clock3, ExternalLink, Image, KeyRound, MapPin, MoreHorizontal,
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
+import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 import CaddeMediaGallery from "@/components/cadde/CaddeMediaGallery";
 import CaddePostBody from "@/components/cadde/CaddePostBody";
 import CaddePostComments from "@/components/cadde/CaddePostComments";
@@ -195,6 +196,23 @@ const CaddeCafePage = () => {
 
   if (cafeQuery.isLoading) {
     return <main className="mx-auto max-w-3xl px-4 py-16 text-center text-slate-500">Cafe yükleniyor...</main>;
+  }
+
+  // ⚠️ Hata ≠ bulunamadı (S06a). `getCaddeCafe` eskiden okuma hatasında da `null`
+  // dönüyordu, bu yüzden RLS reddi / ağ hatası kullanıcıya "Cafe bulunamadı veya
+  // kaldırılmış" diye görünüyordu — var olan bir cafe silinmiş sanılıyordu.
+  // API artık fırlatıyor; bu dal `!cafe` dalından ÖNCE gelmeli.
+  if (cafeQuery.isError) {
+    return (
+      <main className="mx-auto max-w-3xl px-4 py-16">
+        <CaddeLoadErrorCard
+          testId="cadde-cafe-error-state"
+          title="Cafe yüklenemedi."
+          onRetry={() => void cafeQuery.refetch()}
+          isRetrying={cafeQuery.isFetching}
+        />
+      </main>
+    );
   }
 
   if (!cafe) {

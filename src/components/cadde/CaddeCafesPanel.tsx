@@ -22,6 +22,7 @@ import { ChevronDown } from "lucide-react";
 
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
 import CaddeInfoPopover from "@/components/cadde/CaddeInfoPopover";
+import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 import CreateCafeForm from "@/components/cadde/CreateCafeForm";
 import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Button } from "@/components/ui/button";
@@ -58,6 +59,14 @@ export interface CaddeCafesPanelProps {
   onOpenChange: (open: boolean) => void;
   showAll: boolean;
   onShowAll: () => void;
+  /**
+   * Cafe listesi OKUNAMADI. Boş listeden ayrı tutulur (S06a): `listCaddeCafes` eskiden
+   * hatayı yutup boş dizi dönüyordu ve panel "henüz aktif bir cafe açılmadı" yazıyordu —
+   * kullanıcı sistemin bozuk olduğunu değil, cafe olmadığını görüyordu.
+   */
+  isError?: boolean;
+  onRetry?: () => void;
+  isRetrying?: boolean;
 }
 
 const CaddeCafesPanel = ({
@@ -70,6 +79,9 @@ const CaddeCafesPanel = ({
   onOpenChange,
   showAll,
   onShowAll,
+  isError = false,
+  onRetry,
+  isRetrying = false,
 }: CaddeCafesPanelProps) => {
   const visibleCafes = showAll ? cafes : cafes.slice(0, CAFE_PREVIEW_COUNT);
   const hiddenCount = cafes.length - visibleCafes.length;
@@ -184,6 +196,14 @@ const CaddeCafesPanel = ({
                   </Button>
                 ) : null}
               </div>
+            ) : isError ? (
+              // Hata ≠ cafe yok. Boş-durum kartıyla asla birlikte çıkmaz.
+              <CaddeLoadErrorCard
+                testId="cadde-cafes-error-state"
+                title="Cafe listesi yüklenemedi."
+                onRetry={() => onRetry?.()}
+                isRetrying={isRetrying}
+              />
             ) : (
               <div
                 data-testid="cadde-cafes-empty-state"

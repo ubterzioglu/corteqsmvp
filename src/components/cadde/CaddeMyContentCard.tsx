@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
+import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,7 +33,23 @@ const CaddeMyContentCard = () => {
   const cafes = cafesQuery.data ?? [];
   const activeCafes = cafes.filter((cafe) => cafe.isActive && !cafe.archivedAt);
 
-  if (!user || activeCafes.length === 0) return null;
+  if (!user) return null;
+
+  // ⚠️ Hata durumunda kart SESSİZCE KAYBOLUYORDU (S06a): `listMyCaddeCafes` hatayı yutup
+  // boş dizi dönünce `activeCafes.length === 0` oluyor ve `null` dönülüyordu. Kullanıcı
+  // "açık cafem yok" sanıyordu. API artık fırlatıyor; burada hata ayrı gösterilir.
+  if (cafesQuery.isError) {
+    return (
+      <CaddeLoadErrorCard
+        testId="cadde-my-content-error-state"
+        title="Cafe'lerin yüklenemedi."
+        onRetry={() => void cafesQuery.refetch()}
+        isRetrying={cafesQuery.isFetching}
+      />
+    );
+  }
+
+  if (activeCafes.length === 0) return null;
 
   return (
     <Card>
