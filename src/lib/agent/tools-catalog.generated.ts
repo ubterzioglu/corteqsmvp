@@ -2058,6 +2058,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin/cadde-admin-form-defaults.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/cadde-admin-form-defaults.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin/referral-page-logic.test.ts",
       "kind": "ts",
       "module_family": "lib"

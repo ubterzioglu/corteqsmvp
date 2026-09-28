@@ -13,6 +13,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
+  billboardDefaults,
+  cafeDefaults,
+  normalizeFormText,
+  postDefaults,
+  sponsoredDefaults,
+  type BillboardFormState,
+  type CafeFormState,
+  type PostFormState,
+  type SponsoredFormState,
+} from "@/lib/admin/cadde-admin-form-defaults";
+import {
   deleteAdminCaddeBillboardCard,
   deleteAdminCaddeCafe,
   deleteAdminCaddePost,
@@ -38,76 +49,6 @@ import {
 
 type DraftStatus = "draft" | "published" | "hidden";
 
-type PostFormState = Omit<CaddeAdminPostInput, "country_id" | "city_id"> & { countryName: string; cityName: string };
-type CafeFormState = Omit<CaddeAdminCafeInput, "country_id" | "city_id"> & { countryName: string; cityName: string };
-type BillboardFormState = Omit<CaddeAdminBillboardInput, "country_id" | "city_id"> & { countryName: string; cityName: string };
-type SponsoredFormState = Omit<CaddeAdminSponsoredInput, "country_id" | "city_id"> & { countryName: string; cityName: string };
-
-const postDefaults = (): PostFormState => ({
-  content_mode: "demo",
-  status: "published",
-  post_type: "text",
-  title: null,
-  body: "",
-  countryName: "",
-  cityName: "",
-  is_bridge: false,
-  pinned: false,
-  author_name_override: null,
-  author_role: null,
-});
-
-const cafeDefaults = (): CafeFormState => ({
-  content_mode: "demo",
-  status: "published",
-  title: "",
-  summary: "",
-  countryName: "",
-  cityName: "",
-  is_bridge: false,
-  is_free: true,
-  starts_at: new Date().toISOString().slice(0, 16),
-  ends_at: new Date(Date.now() + 60 * 60 * 1000).toISOString().slice(0, 16),
-  is_active: true,
-  host_name_override: null,
-});
-
-const billboardDefaults = (): BillboardFormState => ({
-  card_type: "consultant",
-  title: "",
-  subtitle: null,
-  description: "",
-  badge_text: null,
-  cta_label: "",
-  cta_url: "",
-  image_url: null,
-  content_mode: "demo",
-  status: "published",
-  countryName: "",
-  cityName: "",
-  is_featured: false,
-  sort_order: 0,
-});
-
-const sponsoredDefaults = (): SponsoredFormState => ({
-  placement_key: "feed-inline",
-  title: "",
-  description: "",
-  badge_text: null,
-  cta_label: "",
-  cta_url: "",
-  image_url: null,
-  content_mode: "demo",
-  status: "published",
-  countryName: "",
-  cityName: "",
-  sort_order: 0,
-});
-
-const normalizeText = (value: string) => {
-  const trimmed = value.trim();
-  return trimmed ? trimmed : null;
-};
 
 export default function AdminCaddePage() {
   const { toast } = useToast();
@@ -144,14 +85,14 @@ export default function AdminCaddePage() {
         content_mode: postForm.content_mode,
         status: postForm.status,
         post_type: postForm.post_type,
-        title: normalizeText(postForm.title ?? ""),
+        title: normalizeFormText(postForm.title ?? ""),
         body: postForm.body.trim(),
-        country_id: normalizeText(postForm.countryName),
-        city_id: normalizeText(postForm.cityName),
+        country_id: normalizeFormText(postForm.countryName),
+        city_id: normalizeFormText(postForm.cityName),
         is_bridge: postForm.is_bridge,
         pinned: postForm.pinned,
-        author_name_override: normalizeText(postForm.author_name_override ?? ""),
-        author_role: normalizeText(postForm.author_role ?? ""),
+        author_name_override: normalizeFormText(postForm.author_name_override ?? ""),
+        author_role: normalizeFormText(postForm.author_role ?? ""),
       };
       return saveAdminCaddePost(editingPostId, payload);
     },
@@ -171,14 +112,14 @@ export default function AdminCaddePage() {
         status: cafeForm.status,
         title: cafeForm.title.trim(),
         summary: cafeForm.summary.trim(),
-        country_id: normalizeText(cafeForm.countryName),
-        city_id: normalizeText(cafeForm.cityName),
+        country_id: normalizeFormText(cafeForm.countryName),
+        city_id: normalizeFormText(cafeForm.cityName),
         is_bridge: cafeForm.is_bridge,
         is_free: cafeForm.is_free,
         starts_at: new Date(cafeForm.starts_at).toISOString(),
         ends_at: new Date(cafeForm.ends_at).toISOString(),
         is_active: cafeForm.is_active,
-        host_name_override: normalizeText(cafeForm.host_name_override ?? ""),
+        host_name_override: normalizeFormText(cafeForm.host_name_override ?? ""),
       };
       return saveAdminCaddeCafe(editingCafeId, payload);
     },
@@ -196,16 +137,16 @@ export default function AdminCaddePage() {
       const payload: CaddeAdminBillboardInput = {
         card_type: billboardForm.card_type,
         title: billboardForm.title.trim(),
-        subtitle: normalizeText(billboardForm.subtitle ?? ""),
+        subtitle: normalizeFormText(billboardForm.subtitle ?? ""),
         description: billboardForm.description.trim(),
-        badge_text: normalizeText(billboardForm.badge_text ?? ""),
+        badge_text: normalizeFormText(billboardForm.badge_text ?? ""),
         cta_label: billboardForm.cta_label.trim(),
         cta_url: billboardForm.cta_url.trim(),
-        image_url: normalizeText(billboardForm.image_url ?? ""),
+        image_url: normalizeFormText(billboardForm.image_url ?? ""),
         content_mode: billboardForm.content_mode,
         status: billboardForm.status,
-        country_id: normalizeText(billboardForm.countryName),
-        city_id: normalizeText(billboardForm.cityName),
+        country_id: normalizeFormText(billboardForm.countryName),
+        city_id: normalizeFormText(billboardForm.cityName),
         is_featured: billboardForm.is_featured,
         sort_order: Number(billboardForm.sort_order) || 0,
       };
@@ -226,14 +167,14 @@ export default function AdminCaddePage() {
         placement_key: sponsoredForm.placement_key.trim(),
         title: sponsoredForm.title.trim(),
         description: sponsoredForm.description.trim(),
-        badge_text: normalizeText(sponsoredForm.badge_text ?? ""),
+        badge_text: normalizeFormText(sponsoredForm.badge_text ?? ""),
         cta_label: sponsoredForm.cta_label.trim(),
         cta_url: sponsoredForm.cta_url.trim(),
-        image_url: normalizeText(sponsoredForm.image_url ?? ""),
+        image_url: normalizeFormText(sponsoredForm.image_url ?? ""),
         content_mode: sponsoredForm.content_mode,
         status: sponsoredForm.status,
-        country_id: normalizeText(sponsoredForm.countryName),
-        city_id: normalizeText(sponsoredForm.cityName),
+        country_id: normalizeFormText(sponsoredForm.countryName),
+        city_id: normalizeFormText(sponsoredForm.cityName),
         sort_order: Number(sponsoredForm.sort_order) || 0,
       };
       return saveAdminCaddeSponsoredPlacement(editingSponsoredId, payload);
