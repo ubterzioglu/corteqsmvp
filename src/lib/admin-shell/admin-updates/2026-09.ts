@@ -5,6 +5,93 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260928-yetki-acigi-kapatildi",
+    date: "28 Eylül 2026",
+    title: "Taşınma kayıtlarını herkese açan bir kapı bulundu ve kapatıldı",
+    items: [
+      "NE BULUNDU: Taşınma bildirimlerini üreten servis, kendisini çağıranın kim olduğunu HİÇ sormuyordu. Üstelik veritabanına yönetici yetkisiyle bağlanıyor, yani normalde her kullanıcıyı yalnız kendi kaydına kilitleyen koruma bu serviste devreye girmiyordu. Sonuç: isteyen herkes TÜM üyelerin aktif taşınma kayıtlarını çekebilirdi.",
+      "NEDEN GÖZDEN KAÇMIŞ: Serviste 'geçerli bir anahtarla gel' kuralı açıktı ve bu, korumalı olduğu izlenimi veriyordu. Oysa o kural yalnız anahtarın geçerli olmasına bakıyor — sitenin herkese açık anahtarı da geçerli bir anahtardır ve tarayıcıdan okunabilir. Yani pratikte kapı herkese açıktı.",
+      "ŞANS ESERİ VERİ SIZMAMIŞ: Ölçüldü — taşınma tablosunda 4 kayıt var ve dördü de taslak durumunda. Servis yalnız 'aktif' kayıtları döndürdüğü için bugüne kadar boş dönüyordu. Yani açık gerçekti ama ilk gerçek kayıt aktifleştiği an veri akmaya başlayacaktı. Kapı, bedeli sıfırken kapandı.",
+      "NASIL KAPATILDI: Servis artık ya sistemin kendi iç anahtarını ya da yönetici girişini istiyor; ikisi de yoksa isteği reddediyor. Aynı korumanın bildirim e-postası servisinde denenmiş hâli örnek alındı.",
+      "DOĞRULANDI: Yayına alındıktan sonra servis sitenin herkese açık anahtarıyla çağrıldı ve 'yetkisiz' cevabı verdi. Düzeltmeden önce aynı çağrı kayıtları döndürüyordu.",
+    ],
+  },
+  {
+    id: "20260928-radar-14-gundur-oluymus",
+    date: "28 Eylül 2026",
+    title: "Radar 14 gündür hiç haber getirmiyormuş — sebebi bulundu, kendi kendini onaracak hâle getirildi",
+    items: [
+      "DURUM: Haber radarı 14 Eylül'den beri tek bir haber üretmemiş. En son o gün 65 haber gelmiş, sonrası boş.",
+      "SEBEP BEKLENEN DEĞİLDİ: 14 Eylül sabahki tarama yarıda kaldı ve sistem o taramayı 'hâlâ sürüyor' diye işaretli bıraktı. Radar, aynı anda iki tarama çakışmasın diye 'sürüyor' işareti varken yeni tarama başlatmıyor. Ama bu işaretin bir zaman aşımı yoktu — yani yarım kalan tek bir tarama radarı SÜRESİZ kilitliyordu.",
+      "⚠️ PANO BUNU GÖSTERMEDİ, ASIL TEHLİKE BU: Zamanlanmış görev her sabah çalıştı ve her sabah 'başarılı' yazdı — bugün dahil. Çünkü o kayıt yalnız 'isteği gönderdim' demek; radarın ne cevap verdiğini ölçmüyor. 14 gün boyunca sisteme bakan herkes her şeyin yolunda olduğunu gördü.",
+      "ÇÖZÜM: 'Sürüyor' işareti artık 30 dakika sonra geçersiz sayılıyor. Gerçek taramalar 1–3 dakika sürdüğü için 30 dakikayı geçen bir tarama kesinlikle ölmüştür. Bundan sonra bir tarama neden ölürse ölsün, radar en geç yarım saat sonra kendini toparlıyor.",
+      "ELLE MÜDAHALE GEREKMİYOR: Yarın sabahki tarama 14 Eylül'den kalan takılı kaydı kendisi kapatıp yeniden başlayacak.",
+      "⚠️ KONTROL EDERKEN: Radarın çalıştığını 'zamanlanmış görev başarılı mı' diye kontrol etmeyin — 14 gün boyunca tam olarak o yanılttı. Doğru ölçüt, son 24 saatte yeni haber gelip gelmediğidir.",
+      "YAN BULGU: Haber kaynaklarından 'DW Deutschland' 20 Temmuz'dan beri hata veriyor (besleme adresi bozuk). Ayrı ve küçük bir iş olarak not edildi. Ayrıca 19 Eylül'de eklenen 9 ücretli haber kaynağı canlıda kapalı duruyor; hiç çalışmamışlar ve radarın durmasıyla ilgileri yok.",
+    ],
+  },
+  {
+    id: "20260928-etkinlik-kapak-gorseli",
+    date: "28 Eylül 2026",
+    title: "Etkinlik formunda kapak görseli artık yükleniyor — adres yapıştırma dönemi bitti",
+    items: [
+      "ÖNCESİ: Etkinlik oluştururken 'Kapak Görseli URL' diye bir kutu vardı ve kullanıcıdan internetten bir resim adresi yapıştırması bekleniyordu. Bu hem zahmetliydi hem de adres bir gün kırılırsa etkinliğin görseli sessizce kayboluyordu.",
+      "ŞİMDİ: 'Görsel yükle' düğmesi var. Dosya seçiliyor, hemen önizlemesi çıkıyor, beğenilmezse kaldırılıp yenisi yüklenebiliyor. Yüklenen dosya bizim depomuzda duruyor.",
+      "SINIRLAR: JPG, PNG, WebP ve AVIF; en fazla 5 MB. Bu sınırlar hem tarayıcıda hem sunucuda aynı şekilde uygulanıyor — yani kullanıcının seçebildiği bir dosya sunucuda reddedilmiyor.",
+      "ESKİ ETKİNLİKLER BOZULMADI: Daha önce adres yapıştırılarak girilmiş kayıtlar aynen çalışmaya devam ediyor; veri biçimi değişmedi.",
+      "GÜVENLİK: Her kullanıcı yalnız kendi klasörüne yükleyebiliyor ve dosya adı sistem tarafından üretiliyor — yüklenen dosyanın adıyla başka bir klasöre sızma denemesi engelli.",
+    ],
+  },
+  {
+    id: "20260928-dosya-eklerinde-guvenlik",
+    date: "28 Eylül 2026",
+    title: "Hizmet talebi eklerindeki üç açık kapatıldı",
+    items: [
+      "NE AÇIKTI: Hizmet taleplerine eklenen dosyalar için sunucuda hiçbir sınır yoktu. Üç somut sorun vardı: (1) boyut ve dosya türü sınırı yoktu, yani giriş yapmış herkes istediği büyüklükte ve türde dosya yükleyebilirdi; (2) yükleme kuralı dosyanın nereye yazıldığına bakmıyordu, yani bir kullanıcı doğrudan sisteme giderek başka bir kullanıcının klasörüne yazabilirdi; (3) kullanıcı kendi eklediği dosyayı silemiyordu.",
+      "NEDEN ÖNEMLİ: Bu ekler CV, sözleşme, kimlik gibi kişisel belgeler taşıyabiliyor. Ayrıca kendi dosyasını silememek, silme talebi geldiğinde elle müdahale gerektiriyordu.",
+      "ŞİMDİ: En fazla 15 MB; yalnız PDF, Word, JPG, PNG ve WebP; herkes yalnız kendi klasörüne yazabiliyor ve kendi ekini silebiliyor.",
+      "ZAMANLAMA İYİ DENK GELDİ: Ölçüldü — bu alan bugüne kadar hiç kullanılmamış, depoda tek bir dosya bile yok. Yani sınırlar kimsenin mevcut dosyasını geçersiz kılmadı.",
+      "⚠️ AÇIK KALAN BİR KONU: Bu depo hâlâ 'adresi bilen okuyabilir' modunda. Şu an içi boş olduğu için kimseye ait bir belge açıkta değil; ama ekler gelmeye başlamadan önce kapalı moda geçirilmesi gerekiyor. Şimdi yapılırsa maliyeti yalnız birkaç saatlik iş; dosyalar biriktikten sonra yapılırsa daha önce paylaşılmış bağlantılar da kırılır. Karar bekliyor.",
+    ],
+  },
+  {
+    id: "20260928-sessiz-hatalar-temizligi",
+    date: "28 Eylül 2026",
+    title: "Kullanıcıya yanlış görünen sekiz hata bulundu ve düzeltildi",
+    items: [
+      "BU TURDA 22 AYRI İŞ YAPILDI ve hepsinin ortak konusu şuydu: bir şey ters gittiğinde kullanıcı ya yanlış bir şey görüyor ya da hiçbir şey görmüyordu.",
+      "SERVİS ARAMADA ANLAMSIZ HATA: Bir hata oluştuğunda kullanıcıya hatanın kendisi yerine '[object Object]' yazısı gösteriliyordu. Düzeltildi.",
+      "CADDE'DE HATA 'İÇERİK YOK' GİBİ GÖRÜNÜYORDU: Kafe, Çarşı, bildirimler ve moderasyon ekranlarında bağlantı hatası olduğunda ekran boş geliyordu — kullanıcı 'burada hiç içerik yok' sanıyordu. Artık gerçek durum gösteriliyor.",
+      "İLGİ ALANLARI KARTI SEÇİMLERİ SİLEBİLİYORDU: Profil ekranındaki ilgi alanları kartı, kaydedildiğinde kullanıcının gerçek seçimlerinin üzerine yazabiliyordu. Düzeltildi.",
+      "TOPLU LİSTELER SESSİZCE KESİLİYORDU: Veritabanı tek seferde en fazla 1.000 satır döndürüyor ve bunu hata olarak bildirmiyor — eksik veri sanki tam veriymiş gibi geliyor. Profil sorgularının ve Cadde tepki/yorum sayılarının bu sınıra takıldığı yerler bulundu ve sayfalama eklendi. Yani bazı gönderilerdeki beğeni ve yorum sayıları bugüne kadar OLDUĞUNDAN AZ görünüyordu.",
+      "DOSYA ADI GÜVENLİĞİ: Yüklenen dosyanın adı doğrudan depolama adresine giriyordu; özel karakterlerle dizin dışına çıkma denemesi mümkündü. Ayrıca yükleme başarısız olsa bile talep gönderiliyor, kullanıcı ekini iletmiş sanıyordu. İkisi de düzeltildi.",
+      "ADMİN FORMUNDA TARİH DENETİMİ: Referans formunda bitiş tarihinin başlangıçtan önce girilmesi engellenmiyordu. Eklendi.",
+      "GÜNÜN SONU: 365 dosyada 2.820 test yeşil; tip hatası ve kod denetimi hatası sıfır; ölü kod sıfır.",
+    ],
+  },
+  {
+    id: "20260928-sunucu-yukseltildi",
+    date: "28 Eylül 2026",
+    title: "Sunucu yükseltildi — bellek iki katına çıktı, sürekli takılma sebebi ortadan kalktı",
+    items: [
+      "SORUN: Veritabanı sunucusu en küçük katmandaydı ve belleği sürekli doluyordu. Bellek dolunca sistem diske taşma yapıyor, bu da aralıklı 'sayfa yüklenmiyor' hatalarına yol açıyordu. Toplantılarda şikâyet edilen Cadde yüklenme sorununun büyük bölümü buydu.",
+      "YAPILDI: Bellek 407 MB'den 904 MB'ye çıktı; diske taşma 615 MB'den 151 MB'ye indi.",
+      "⚠️ İKİ AŞAMALIYDI VE İLKİ TEK BAŞINA YETMEDİ: Abonelik Pro'ya geçmişti ama sunucu hâlâ en küçük katmanda kalmıştı. Yani 'Pro'ya geçtik' demek işin bittiği anlamına gelmiyordu; ayrıca sunucu boyutunun da yükseltilmesi gerekiyordu. Bu ayar, panelde beklenen yerde değil, altyapı bölümünde duruyor.",
+      "NOT: 25 Eylül'deki 'karar alındı ama uygulanmamış' bulgusu böylece kapandı.",
+    ],
+  },
+  {
+    id: "20260928-whatsapp-baglantisi-hala-kapali",
+    date: "28 Eylül 2026",
+    title: "WhatsApp servisleri canlıda ama bağlantı çalışmıyor — eksik olan Meta bilgileri",
+    items: [
+      "ÖNCEKİ KAYITLARDA 'HENÜZ YAYINA ALINMADI' YAZIYORDU, BU YANLIŞTI: Ölçüldü — WhatsApp'ın iki servisi de 22 Eylül'de yayına alınmış ve şu an canlıda çalışıyor.",
+      "AMA BAĞLANTI YİNE DE KAPALI: Meta'ya bağlanmak için gereken dört gizli anahtarın dördü de aynı geçici değeri taşıyor, yani gerçek bilgiler hiç girilmemiş. WhatsApp'tan gelen her istek imza doğrulamasından geçemediği için reddediliyor.",
+      "PRATİK ANLAMI: 'Servis yayında' ile 'servis çalışıyor' aynı şey değil. Yapılacak iş yayına almak değil, Meta hesabından alınan gerçek bilgileri sisteme girmek.",
+      "⚠️ BU NEDEN GÖZDEN KAÇIYOR: Kontrol listeleri genelde 'anahtar tanımlı mı' diye sorar. Dördü de tanımlı — ama dördü de aynı geçici değer. Tanımlı olmak doğru olmak demek değil.",
+    ],
+  },
+  {
     id: "20260927-komuta-merkezi-1761-madde-incelemesi",
     date: "27 Eylül 2026",
     title: "Komuta Merkezi'ndeki 1.761 maddenin tamamı okunabilir dosyalara aktarıldı — tek tek inceleniyor",
