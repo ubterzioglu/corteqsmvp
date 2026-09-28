@@ -4,10 +4,18 @@ import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.108.
  * Bir `running` koşusunun "hâlâ yaşıyor" sayılacağı en uzun süre.
  *
  * ⚠️ Bu eşik olmadan Radar KALICI olarak kilitlenir ve bu gerçekten yaşandı:
- * 2026-09-14 05:02'de başlayan koşu, GDELT kaynağı zaman aşımına uğrayınca
- * (`The signal has been aborted`) `closeScanRun`'a varmadan öldü. Satır `running`
+ * 2026-09-14 05:02'de başlayan koşu `closeScanRun`'a hiç varmadı. Satır `running`
  * kaldı; sonraki 14 gün boyunca her sabahki cron 409 aldı, hiçbir koşu kaydı
  * açılmadı ve tek haber üretilmedi.
+ *
+ * ⚠️ Koşuyu öldüren şeyin NE olduğu kanıtlanamadı ve "GDELT zaman aşımı öldürdü"
+ * demek YANLIŞ olur: kaynak döngüsü (`index.ts`) zaten try/catch ile sarılıdır ve
+ * o hatayı yakalayıp `radar_news_sources.last_error_message`'a yazmıştır — yani
+ * koşu onu atlatıp devam etti. Ölüm döngüden SONRA oldu; muhtemel sebep isolate'in
+ * öldürülmesi ya da o gün Nano compute'ta (~426 MB RAM, sürekli swap) kapanış
+ * update'inin düşmesi. **Bu yüzden `index.ts`'i genel try/catch ile sarmak bu olayı
+ * önlemezdi** — doğru çözüm, sebebi ne olursa olsun kilidin kendi kendini
+ * çözmesidir.
  *
  * ⚠️ Pano bunu GÖSTERMEZ: pg_cron yalnız `net.http_post`'un kuyruğa alınmasını
  * ölçer, fonksiyonun yanıtını değil — `cron.job_run_details` 409'a rağmen her gün

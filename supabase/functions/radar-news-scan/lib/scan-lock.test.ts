@@ -123,7 +123,8 @@ describe("gercek olay kaydi (2026-09-14)", () => {
   });
 });
 
-// ⚠️ NOT (test degil, uyari): `index.ts` icinde tarama dongusu genel bir try/catch ile
-// sarili DEGIL — beklenmedik bir throw `closeScanRun`a hic varmaz ve kosu `running`
-// kalir. Buradaki bayatlama esigi o durumu ZARARSIZ hale getirir (en fazla ~30 dk
-// kayip) ama kok nedeni kaldirmaz. Kaldirmak index.ts'i sarmalamayi gerektirir.
+// ⚠️ NOT (test degil, kayit): `index.ts`'te kaynak dongusu ZATEN try/catch ile saridir
+// ve 14.09'daki GDELT hatasini yakalayip DB'ye yazmistir — yani kosu o hatadan olmedi,
+// olum dongudEN SONRA oldu (muhtemelen isolate oldurulmesi ya da o gun Nano compute'ta
+// kapanis update'inin dusmesi). Bu yuzden "index.ts'i genel try/catch ile sar" bu olayi
+// ONLEMEZDI; sebebi ne olursa olsun kilidin kendi kendini cozmesi dogru cozumdur.
