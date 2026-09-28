@@ -4,9 +4,15 @@
 import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
 import { DEMO_CAFES } from "./cadde-demo-data";
-import { fetchCaddeCityNameMap, fetchCaddeCountryNameMap, fetchCaddeUserNameMap } from "./cadde-api-support";
+import {
+  CADDE_ROWS_PER_POST,
+  fetchCaddeCityNameMap,
+  fetchCaddeCountryNameMap,
+  fetchCaddeUserNameMap,
+} from "./cadde-api-support";
 import { isCaddeCafeLogoUrl } from "./cadde-cafe-logo";
 import { db, caddeReadError, caddeWriteError, reportCaddeApiError } from "./cadde-internal";
+import { fetchInChunks } from "./supabase-chunked";
 import { normalizeCaddeMedia } from "./cadde-media";
 import { moderateCaddeCafeName, type CaddeProtectedBrand } from "./cadde-rules";
 import { caddeCafeCreateSchema, caddeCafeJoinInputSchema, parseWithUserError } from "./cadde-schemas";
@@ -327,16 +333,22 @@ const emptyReactions = (): Record<CaddeReactionType, number> =>
 
 async function fetchPostShareCounts(postIds: string[]): Promise<Map<string, number>> {
   if (postIds.length === 0) return new Map();
-  const { data } = await db.from("cadde_posts").select("id, share_count").in("id", postIds);
-  return new Map<string, number>(
-    ((data ?? []) as Array<{ id: string; share_count: number | null }>).map((row) => [row.id, row.share_count ?? 0]),
+  // Parçalı (S07c): gönderi başına 1 satir, ama liste büyüdüğünde tavana dayanır.
+  const rows = await fetchInChunks<{ id: string; share_count: number | null }>(postIds, 1, (chunk) =>
+    db.from("cadde_posts").select("id, share_count").in("id", chunk),
   );
+  return new Map<string, number>(rows.map((row) => [row.id, row.share_count ?? 0]));
 }
 
 async function fetchPostReactions(postIds: string[]): Promise<CaddeReactionRow[]> {
   if (postIds.length === 0) return [];
-  const { data } = await db.from("cadde_post_reactions").select("id, post_id, user_id, reaction_type").in("post_id", postIds);
-  return (data ?? []) as CaddeReactionRow[];
+  // ⚠️ Parçalı (S07c): gönderi başına ÇOK satir döner. 20 gönderi x 50 tepki = 1000
+  // ve PostgREST orada SESSIZCE keser — tepki sayıları olduğundan küçük görünür,
+  // hata hiçbir yerde çıkmaz.
+  const rows = await fetchInChunks(postIds, CADDE_ROWS_PER_POST, (chunk) =>
+    db.from("cadde_post_reactions").select("id, post_id, user_id, reaction_type").in("post_id", chunk),
+  );
+  return rows as CaddeReactionRow[];
 }
 
 type CommentWithAuthor = CaddeCommentRow & { author_name: string };
@@ -351,13 +363,15 @@ function countCommentsByPost(comments: Array<{ post_id: string }>): Map<string, 
 
 async function fetchPostComments(postIds: string[]): Promise<CommentWithAuthor[]> {
   if (postIds.length === 0) return [];
-  const { data, error } = await db
-    .from("cadde_post_comments")
-    .select("id, post_id, user_id, body, created_at")
-    .in("post_id", postIds)
-    .order("created_at", { ascending: true });
-  if (error) throw error;
-  const rows = (data ?? []) as CaddeCommentRow[];
+  // ⚠️ Parçalı (S07c): yorumlar da gönderi başına çok satır döner; tepkilerle aynı
+  // sınıf. Kesilirse yorum sayısı ve listesi eksik görünür.
+  const rows = await fetchInChunks<CaddeCommentRow>(postIds, CADDE_ROWS_PER_POST, (chunk) =>
+    db
+      .from("cadde_post_comments")
+      .select("id, post_id, user_id, body, created_at")
+      .in("post_id", chunk)
+      .order("created_at", { ascending: true }),
+  );
   const userMap = await fetchCaddeUserNameMap(rows.map((row) => row.user_id));
   return rows.map((row) => ({ ...row, author_name: userMap.get(row.user_id) ?? FALLBACK_PROFILE_NAME }));
 }

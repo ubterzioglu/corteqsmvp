@@ -8,6 +8,10 @@ import {
   validateReferralCodeToken,
 } from "@/lib/referral-codes";
 import { normalizeTurkishText } from "@/lib/text-normalization";
+import { fetchInChunks } from "@/lib/supabase-chunked";
+
+/** Bir referans kodunun donebilecegi EN FAZLA kullanim satiri (parca boyu bundan turer). */
+const REFERRAL_USAGES_PER_CODE = 50;
 
 export async function listReferralSources(onlyActive = false): Promise<ReferralSourceRow[]> {
   let query = supabase.from("referral_sources").select("*").order("name", { ascending: true });
@@ -201,14 +205,16 @@ export type ReferralUsageRow = {
 };
 
 export async function listReferralCodeUsages(referralCodeIds: string[]): Promise<ReferralUsageRow[]> {
-  const { data, error } = await supabase
-    .from("referral_code_usages")
-    .select("id,referral_code_id,used_at,full_name,email,source,user_id")
-    .in("referral_code_id", referralCodeIds)
-    .order("used_at", { ascending: false });
-
-  if (error) throw error;
-  return (data ?? []) as ReferralUsageRow[];
+  // ⚠️ Parçalı (S07c): bir referans kodunun ÇOK kullanımı olabilir; fan-out 1000
+  // satirda sessizce kesilir ve kullanım sayısı olduğundan küçük görünür.
+  const rows = await fetchInChunks(referralCodeIds, REFERRAL_USAGES_PER_CODE, (chunk) =>
+    supabase
+      .from("referral_code_usages")
+      .select("id,referral_code_id,used_at,full_name,email,source,user_id")
+      .in("referral_code_id", chunk)
+      .order("used_at", { ascending: false }),
+  );
+  return rows as ReferralUsageRow[];
 }
 
 export async function deleteReferralCodeHard(id: string): Promise<void> {

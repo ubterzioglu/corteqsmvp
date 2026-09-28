@@ -11,6 +11,17 @@ export async function fetchCaddeCityNameMap(): Promise<Map<string, string>> {
   return new Map<string, string>((data ?? []).map((row: { id: string; name: string }) => [row.id, row.name]));
 }
 
+/**
+ * Bir gönderinin döndürebileceği EN FAZLA tepki/yorum satırı — parça boyu bundan
+ * türetilir (S07c).
+ *
+ * ⚠️ Bu bir tahmindir, garanti değildir. Tek bir gönderi bu sayıyı aşarsa PostgREST
+ * yine keser ve tepki sayısı olduğundan küçük görünür. Yapısal çözüm sunucu tarafı
+ * toplama (gönderi başına `count`) olurdu; o bir migration gerektirdiği için onaya
+ * tabi işler arasında. Bugünkü hacimde 50 fazlasıyla güvenli tarafta.
+ */
+export const CADDE_ROWS_PER_POST = 50;
+
 export async function fetchCaddeUserNameMap(authorIds: string[], extraUserIds: string[] = []): Promise<Map<string, string>> {
   const allIds = Array.from(new Set([...authorIds, ...extraUserIds].filter(Boolean)));
   if (allIds.length === 0) return new Map<string, string>();

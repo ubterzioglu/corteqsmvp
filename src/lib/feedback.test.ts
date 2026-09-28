@@ -28,7 +28,8 @@ import {
 // Zincirlenebilir sorgu kurucusu mock'u — thenable olarak `resolved` ile çözülür.
 function chainable(opts: { resolved?: { data: unknown; error: unknown } }) {
   const builder: Record<string, unknown> = {};
-  for (const method of ["select", "insert", "update", "eq", "is", "order"]) {
+  // S07c: `fetchFeedbackList` artık sayfalanıyor, zincire `range` girdi.
+  for (const method of ["select", "insert", "update", "eq", "is", "order", "range"]) {
     builder[method] = vi.fn(() => builder);
   }
   builder.then = (onF: (v: { data: unknown; error: unknown }) => unknown) =>

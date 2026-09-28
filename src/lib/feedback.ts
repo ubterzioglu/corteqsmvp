@@ -13,6 +13,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { sanitizeError, validateContent } from "@/lib/security";
+import { fetchAllRows } from "./supabase-chunked";
 
 /** Feedback durumları — DB CHECK ile eşleşir. */
 export const FEEDBACK_STATUSES = ["yeni", "okundu", "arsiv"] as const;
@@ -105,10 +106,20 @@ export async function submitFeedback(body: string, pagePath: string): Promise<vo
 
 /** Aktif (silinmemiş) feedback'leri yeniden eskiye getirir (admin). */
 export async function fetchFeedbackList(): Promise<MemberFeedback[]> {
-  const { data, error } = await supabase.from("member_feedback")
-    .select(FEEDBACK_SELECT)
-    .is("deleted_at", null)
-    .order("created_at", { ascending: false });
+  // ⚠️ TAM liste (S07c): eksik gösterilen geri bildirim okunmadan kapanır.
+  let data: unknown[] | null = null;
+  let error: unknown = null;
+  try {
+    data = await fetchAllRows((from, to) =>
+      supabase.from("member_feedback")
+        .select(FEEDBACK_SELECT)
+        .is("deleted_at", null)
+        .order("created_at", { ascending: false })
+        .range(from, to),
+    );
+  } catch (caught: unknown) {
+    error = caught;
+  }
 
   if (error) {
     throw new Error(sanitizeError(error, "Geri bildirimler yüklenemedi."));

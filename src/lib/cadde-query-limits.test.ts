@@ -95,6 +95,10 @@ describe("toplu profil sorgularında satır tavanı", () => {
 // işlenmemiş talep sayısı eksik çıkarsa kimse fark etmez — kesme sessizdir.
 describe("tam olması gereken listeler sayfalanır", () => {
   const SITES = [
+    { file: "src/lib/whatsapp-landings.ts", fn: "listLandings", why: "onaylı gruplar" },
+    { file: "src/lib/whatsapp-landings.ts", fn: "listAllSubmissions", why: "moderasyon kuyruğu" },
+    { file: "src/lib/feedback.ts", fn: "fetchFeedbackList", why: "okunmamış geri bildirim" },
+    { file: "src/lib/may19-campaign.ts", fn: "listMay19CampaignEntries", why: "katılım sayısı" },
     { file: "src/lib/muhasebe-api.ts", fn: "fetchExpenses", why: "gider toplamı" },
     { file: "src/lib/muhasebe-api.ts", fn: "fetchIncomes", why: "gelir toplamı" },
     { file: "src/lib/lansman.ts", fn: "getAllRegistrations", why: "başvuru sayısı" },
@@ -114,6 +118,34 @@ describe("tam olması gereken listeler sayfalanır", () => {
 
     expect(body).toContain("fetchAllRows");
     expect(body).toContain(".range(");
+  });
+
+  // S07c — `.in(...)` fan-out'u: kimlik başına ÇOK satır dönen sorgular.
+  it.each([
+    { file: "src/lib/cadde-cafe-api.ts", fn: "fetchPostReactions", why: "tepki sayısı" },
+    { file: "src/lib/cadde-cafe-api.ts", fn: "fetchPostComments", why: "yorum sayısı" },
+    { file: "src/lib/cadde-feed-location-api.ts", fn: "fetchPostReactions", why: "tepki sayısı" },
+    {
+      file: "src/lib/admin/admin-referral-api.ts",
+      fn: "listReferralCodeUsages",
+      why: "referans kullanım sayısı",
+    },
+  ])("$fn parçalı okur ($why eksik çıkamaz)", ({ file, fn }) => {
+    const source = readFileSync(file, "utf8");
+    const start = source.indexOf(`function ${fn}`);
+    expect(start, `${fn} bulunamadı`).toBeGreaterThan(-1);
+
+    expect(source.slice(start, start + 1200)).toContain("fetchInChunks");
+  });
+
+  it("gönderi başına satır tahmini tek kaynaktan gelir", () => {
+    // İki dosya da aynı sabiti kullanmalı; ayrışırlarsa biri sessizce kesilmeye döner.
+    const support = readFileSync("src/lib/cadde-api-support.ts", "utf8");
+    expect(support).toContain("export const CADDE_ROWS_PER_POST");
+
+    for (const file of ["src/lib/cadde-cafe-api.ts", "src/lib/cadde-feed-location-api.ts"]) {
+      expect(readFileSync(file, "utf8")).toContain("CADDE_ROWS_PER_POST");
+    }
   });
 
   it("fetchAllRows sessizce eksik dönmez — tavana dayanırsa FIRLATIR", () => {

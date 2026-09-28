@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import { fetchAllRows } from "./supabase-chunked";
 
 export type May19SubmissionKind = "idea" | "moment";
 export type May19SubmissionStatus = "pending" | "approved" | "rejected";
@@ -156,12 +157,22 @@ export async function listMay19CampaignEntries(
   kind: May19SubmissionKind,
   status: May19SubmissionStatus,
 ) {
-  const { data, error } = await supabase
-    .from("may19_campaign_submissions")
-    .select("*")
-    .eq("kind", kind)
-    .eq("status", status)
-    .order("created_at", { ascending: false });
+  // ⚠️ TAM liste (S07c): kampanya katılım sayısı eksik çıkamaz.
+  let data: unknown[] | null = null;
+  let error: unknown = null;
+  try {
+    data = await fetchAllRows((from, to) =>
+      supabase
+        .from("may19_campaign_submissions")
+        .select("*")
+        .eq("kind", kind)
+        .eq("status", status)
+        .order("created_at", { ascending: false })
+        .range(from, to),
+    );
+  } catch (caught: unknown) {
+    error = caught;
+  }
 
   if (error) {
     throw error;

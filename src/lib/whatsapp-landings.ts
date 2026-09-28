@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
+import { fetchAllRows } from "./supabase-chunked";
 
 export type LandingMode = "visual" | "text";
 export type LandingCategory =
@@ -385,15 +386,21 @@ export async function canCurrentUserEditLanding(landingDbId: string): Promise<bo
   return Boolean(data);
 }
 
+/** ⚠️ TAM liste (S07c): onaylı kayıt eksik gösterilirse grup "yok" sanılır. */
 export async function listLandings(): Promise<WhatsAppLanding[]> {
-  const { data, error } = await supabase
-    .from("whatsapp_landings")
-    .select("*")
-    .eq("status", "approved")
-    .order("created_at", { ascending: false });
-
-  if (!error && data) return data.map(rowToLanding);
-  return [];
+  try {
+    const rows = await fetchAllRows((from, to) =>
+      supabase
+        .from("whatsapp_landings")
+        .select("*")
+        .eq("status", "approved")
+        .order("created_at", { ascending: false })
+        .range(from, to),
+    );
+    return rows.map(rowToLanding);
+  } catch {
+    return [];
+  }
 }
 
 export async function submitLanding(input: SaveLandingInput): Promise<{ slug: string; id: string }> {
@@ -493,12 +500,18 @@ export async function createJoinRequest(input: JoinRequestInput) {
   if (error) throw error;
 }
 
+/** ⚠️ TAM liste (S07c): yönetici moderasyon kuyruğu eksik gösterilemez. */
 export async function listAllSubmissions(status?: LandingStatus): Promise<WhatsAppLanding[]> {
-  let query = supabase.from("whatsapp_landings").select("*").order("created_at", { ascending: false });
-  if (status) query = query.eq("status", status);
-  const { data, error } = await query;
-  if (error || !data) return [];
-  return data.map(rowToLanding);
+  try {
+    const rows = await fetchAllRows((from, to) => {
+      let query = supabase.from("whatsapp_landings").select("*").order("created_at", { ascending: false });
+      if (status) query = query.eq("status", status);
+      return query.range(from, to);
+    });
+    return rows.map(rowToLanding);
+  } catch {
+    return [];
+  }
 }
 
 export async function setLandingStatus(dbId: string, status: LandingStatus, rejectionReason?: string) {

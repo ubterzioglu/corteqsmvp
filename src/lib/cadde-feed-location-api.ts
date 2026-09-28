@@ -10,6 +10,7 @@ import {
   resolveCountryIdsByNames,
 } from "./cadde-internal";
 import { normalizeCaddeMedia } from "./cadde-media";
+import { CADDE_ROWS_PER_POST } from "./cadde-api-support";
 import { fetchInChunks } from "./supabase-chunked";
 import { CADDE_REACTION_TYPES } from "./cadde-types";
 import type {
@@ -122,8 +123,11 @@ export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeF
 
 async function fetchPostShareCounts(postIds: string[]): Promise<Map<string, number>> {
   if (postIds.length === 0) return new Map();
-  const { data } = await db.from("cadde_posts").select("id, share_count").in("id", postIds);
-  return new Map<string, number>(((data ?? []) as Array<{ id: string; share_count: number | null }>).map((row) => [row.id, row.share_count ?? 0]));
+  // Parçalı (S07c): gönderi başına 1 satir, ama liste büyüdüğünde tavana dayanır.
+  const rows = await fetchInChunks<{ id: string; share_count: number | null }>(postIds, 1, (chunk) =>
+    db.from("cadde_posts").select("id, share_count").in("id", chunk),
+  );
+  return new Map<string, number>(rows.map((row) => [row.id, row.share_count ?? 0]));
 }
 
 async function fetchUserNameMap(authorIds: string[], extraUserIds: string[] = []): Promise<Map<string, string>> {
@@ -139,8 +143,13 @@ async function fetchUserNameMap(authorIds: string[], extraUserIds: string[] = []
 
 async function fetchPostReactions(postIds: string[]): Promise<CaddeReactionRow[]> {
   if (postIds.length === 0) return [];
-  const { data } = await db.from("cadde_post_reactions").select("id, post_id, user_id, reaction_type").in("post_id", postIds);
-  return (data ?? []) as CaddeReactionRow[];
+  // ⚠️ Parçalı (S07c): gönderi başına ÇOK satir döner. 20 gönderi x 50 tepki = 1000
+  // ve PostgREST orada SESSIZCE keser — tepki sayıları olduğundan küçük görünür,
+  // hata hiçbir yerde çıkmaz.
+  const rows = await fetchInChunks(postIds, CADDE_ROWS_PER_POST, (chunk) =>
+    db.from("cadde_post_reactions").select("id, post_id, user_id, reaction_type").in("post_id", chunk),
+  );
+  return rows as CaddeReactionRow[];
 }
 
 export function normalizeCaddeHashtagRows(raw: unknown): CaddeHashtag[] {
