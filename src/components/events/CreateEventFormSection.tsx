@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { EventCoverUpload } from "@/components/events/EventCoverUpload";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/components/auth/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -68,6 +69,12 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
   const [price, setPrice] = useState("");
   const [maxAttendees, setMaxAttendees] = useState("");
   const [coverImage, setCoverImage] = useState("");
+  // Bucket yolu YALNIZ bu oturumda tutulur; taslak şeması (`EventFormDraft.coverImage`,
+  // düz string) bilerek değiştirilmedi. Sonuç: Google OAuth dönüşünde taslaktan geri
+  // yüklenen kapak, elle yapıştırılmış bir URL gibi davranır — kaldırılırsa depolamadaki
+  // dosya yetim kalır. Yetim dosya kritik değil (kimseye görünmez); taslak şemasını
+  // genişletmenin bedeli (okuyucu + testi + eski taslaklarla uyum) buna değmedi.
+  const [coverPath, setCoverPath] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [organizerName, setOrganizerName] = useState(profile?.full_name ?? "");
@@ -239,6 +246,7 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
       setPrice("");
       setMaxAttendees("");
       setCoverImage("");
+      setCoverPath(null);
       setTags([]);
       setTagInput("");
       setOrganizerName(profile?.full_name ?? "");
@@ -491,17 +499,18 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="event-cover">Kapak Görseli URL</Label>
-                  <Input
-                    id="event-cover"
-                    type="url"
-                    className={formFieldInsetClass}
-                    value={coverImage}
-                    onChange={(event) => setCoverImage(event.target.value)}
-                    placeholder="https://..."
-                  />
-                </div>
+                {/* T20: ham URL kutusu yerine yükleme. Eski kayıtların `cover_image`
+                    değeri yine düz metindir — kolon tipi değişmedi, o kayıtlar bozulmaz. */}
+                <EventCoverUpload
+                  value={coverImage ? { url: coverImage, path: coverPath } : null}
+                  onChange={(next) => {
+                    setCoverImage(next?.url ?? "");
+                    setCoverPath(next?.path ?? null);
+                  }}
+                  onError={(message) =>
+                    toast({ title: "Kapak görseli yüklenemedi", description: message, variant: "destructive" })
+                  }
+                />
 
                 <div>
                   <Label htmlFor="event-organizer">Düzenleyen Adı</Label>

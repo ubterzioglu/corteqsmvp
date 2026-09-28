@@ -301,6 +301,7 @@ export const toolCatalog = {
       "limits": {},
       "http_statuses": [
         200,
+        401,
         405,
         500
       ],
@@ -2888,6 +2889,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/event-media-contract.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/event-media.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/event-share.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -4134,6 +4145,16 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/_shared/directory-search-contract.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/edge-authorization.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/edge-authorization.ts",
       "kind": "ts",
       "module_family": "edge"
     },

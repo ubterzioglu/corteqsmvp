@@ -180,6 +180,8 @@ paths:
       responses:
         "200":
           description: Başarılı
+        "401":
+          description: Yanıt
         "405":
           description: Yöntem desteklenmiyor
         "500":

@@ -298,6 +298,7 @@
       "limits": {},
       "http_statuses": [
         200,
+        401,
         405,
         500
       ],
@@ -2885,6 +2886,16 @@
       "module_family": "lib"
     },
     {
+      "path": "src/lib/event-media-contract.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/event-media.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/event-share.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -4131,6 +4142,16 @@
     },
     {
       "path": "supabase/functions/_shared/directory-search-contract.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/edge-authorization.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/edge-authorization.ts",
       "kind": "ts",
       "module_family": "edge"
     },
