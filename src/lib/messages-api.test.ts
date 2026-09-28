@@ -9,6 +9,7 @@ vi.mock("@/integrations/supabase/client", () => ({
 }));
 
 import {
+  COUNTERPART_NAME_CAP,
   fetchCounterpartNames,
   fetchReceivedMessages,
   fetchSentMessages,
@@ -51,7 +52,10 @@ describe("messages-api", () => {
   });
 
   it("fetchCounterpartNames: user_profile_attributes'ı full_name anahtarına filtreler", async () => {
-    const eq = vi.fn().mockResolvedValue({ data: [{ user_id: "u1", value_text: "Ayşe" }], error: null });
+    // S07a: zincire AÇIK tavan eklendi. `.in(...)` tek başına PostgREST'in 1000 satır
+    // sınırına açıktır ve kesme sessizdir; mock da o tavanı geçmek zorunda.
+    const limit = vi.fn().mockResolvedValue({ data: [{ user_id: "u1", value_text: "Ayşe" }], error: null });
+    const eq = vi.fn(() => ({ limit }));
     const inFn = vi.fn(() => ({ eq }));
     const select = vi.fn(() => ({ in: inFn }));
     fromMock.mockReturnValue({ select });
@@ -61,7 +65,14 @@ describe("messages-api", () => {
     expect(fromMock).toHaveBeenCalledWith("user_profile_attributes");
     expect(inFn).toHaveBeenCalledWith("user_id", ["u1", "u2"]);
     expect(eq).toHaveBeenCalledWith("afs_attributes.key", "full_name");
+    expect(limit).toHaveBeenCalledWith(COUNTERPART_NAME_CAP);
     expect(result.data).toEqual([{ user_id: "u1", value_text: "Ayşe" }]);
+  });
+
+  it("COUNTERPART_NAME_CAP PostgREST tavanının ALTINDA kalır", () => {
+    // Tavana eşit/üstü olursa açık sınır anlamını yitirir — örtük kesme geri gelir.
+    expect(COUNTERPART_NAME_CAP).toBeGreaterThan(0);
+    expect(COUNTERPART_NAME_CAP).toBeLessThan(1000);
   });
 
   it("markDirectMessageRead: id ve recipient_id ile update eder", () => {

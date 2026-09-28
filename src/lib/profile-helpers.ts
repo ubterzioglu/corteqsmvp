@@ -1,5 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
 
+import { fetchInChunks } from "./supabase-chunked";
+
+/** Toplu profil okumasında çekilen nitelikler. Parça boyu bu sayıdan türetilir. */
+const ATTRIBUTE_KEYS = ["full_name", "avatar_url"] as const;
+
 export type ProfileBasic = {
   user_id: string;
   full_name: string | null;
@@ -68,27 +73,35 @@ export async function getAttributesBatch(
 export async function getProfilesBasicBatch(userIds: string[]): Promise<ProfileBasic[]> {
   if (userIds.length === 0) return [];
 
+  // ⚠️ PARÇALI SORGU (S07a). `.in("user_id", userIds)` tek başına güvenli değildir:
+  // burada kullanıcı başına İKİ nitelik çekiliyor, yani 500 kullanıcıda 1000 satıra
+  // ulaşılır ve PostgREST sessizce keser. Liste büyüdükçe eksik profil sayısı artar
+  // ve hiçbir yerde hata görünmez.
   const [attrsResult, rolesResult] = await Promise.all([
-    supabase
-      .from("user_profile_attributes")
-      .select("user_id, value_text, afs_attributes!inner(key)")
-      .in("user_id", userIds)
-      .in("afs_attributes.key", ["full_name", "avatar_url"]),
-    supabase
-      .from("user_role_assignments")
-      .select("user_id, roles!inner(key)")
-      .in("user_id", userIds),
+    fetchInChunks(userIds, ATTRIBUTE_KEYS.length, (chunk) =>
+      supabase
+        .from("user_profile_attributes")
+        .select("user_id, value_text, afs_attributes!inner(key)")
+        .in("user_id", chunk)
+        .in("afs_attributes.key", ATTRIBUTE_KEYS),
+    ),
+    fetchInChunks(userIds, 1, (chunk) =>
+      supabase
+        .from("user_role_assignments")
+        .select("user_id, roles!inner(key)")
+        .in("user_id", chunk),
+    ),
   ]);
 
   const attrsByUser: Record<string, Record<string, string>> = {};
-  for (const row of attrsResult.data ?? []) {
+  for (const row of attrsResult) {
     const key = row.afs_attributes?.key;
     if (!attrsByUser[row.user_id]) attrsByUser[row.user_id] = {};
     if (key && row.value_text) attrsByUser[row.user_id][key] = row.value_text;
   }
 
   const roleByUser: Record<string, string> = {};
-  for (const row of rolesResult.data ?? []) {
+  for (const row of rolesResult) {
     const roleKey = row.roles?.key;
     if (roleKey) roleByUser[row.user_id] = roleKey;
   }

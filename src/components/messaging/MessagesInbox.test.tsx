@@ -90,19 +90,21 @@ vi.mock("@/integrations/supabase/client", () => {
         }
 
         if (table === "user_profile_attributes") {
+          // S07a: zincir artık `.limit(...)` ile bitiyor (PostgREST 1000 satır tavanı).
+          const resolve = () =>
+            Promise.resolve({
+              data: mocks.profiles.map((p) => ({
+                user_id: p.user_id,
+                value_text: p.full_name,
+                afs_attributes: { key: "full_name" },
+              })),
+              error: null,
+            });
           const query = {
             select: vi.fn(() => query),
             in: vi.fn(() => query),
-            eq: vi.fn(() =>
-              Promise.resolve({
-                data: mocks.profiles.map((p) => ({
-                  user_id: p.user_id,
-                  value_text: p.full_name,
-                  afs_attributes: { key: "full_name" },
-                })),
-                error: null,
-              }),
-            ),
+            eq: vi.fn(() => query),
+            limit: vi.fn(resolve),
           };
           return query;
         }

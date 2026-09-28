@@ -1096,6 +1096,7 @@ export const toolCatalog = {
       "entrypoint": "src/lib/messages-api.ts",
       "interface_kind": "internal_api",
       "exports": [
+        "COUNTERPART_NAME_CAP",
         "fetchCounterpartNames",
         "fetchReceivedMessages",
         "fetchSentMessages",
@@ -3938,6 +3939,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/submissions.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/supabase-chunked.ts",
       "kind": "ts",
       "module_family": "lib"
     },
