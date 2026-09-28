@@ -2078,6 +2078,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin/whatsapp-moderation-logic.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/whatsapp-moderation-logic.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/agent/tool-router.ts",
       "kind": "ts",
       "module_family": "lib"

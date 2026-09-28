@@ -20,38 +20,19 @@ import {
   parseAdminContact,
   setLandingStatus,
   normalizeLandingCategory,
-  type LandingCategoryInput,
   type LandingStatus,
   type UpdateLandingInput,
   type WhatsAppLanding,
   updateLanding,
 } from "@/lib/whatsapp-landings";
-
-const statusBadgeClass: Record<LandingStatus, string> = {
-  pending: "border-amber-200 bg-amber-100 text-amber-800",
-  approved: "border-emerald-200 bg-emerald-100 text-emerald-800",
-  rejected: "border-rose-200 bg-rose-100 text-rose-800",
-};
-
-const statusLabel: Record<LandingStatus, string> = {
-  pending: "Beklemede",
-  approved: "Onaylandı",
-  rejected: "Reddedildi",
-};
-
-// Liste 'girisim' takma adini da sunuyor (kaydederken 'yatirim'a cevrilir),
-// bu yuzden kanonik LandingCategory degil girdi tipi kullanilir.
-const categoryOptions: Array<{ value: LandingCategoryInput; label: string }> = [
-  { value: "alumni", label: "Alumni" },
-  { value: "hobi", label: "Hobi" },
-  { value: "is", label: "İş Grubu" },
-  { value: "doktor", label: "Doktor / Sağlık" },
-  { value: "yatirim", label: "Yatırım" },
-  { value: "girisim", label: "Girişim" },
-  { value: "akademik", label: "Akademik" },
-  { value: "dayanisma", label: "Dayanışma" },
-  { value: "diger", label: "Diğer" },
-];
+import {
+  LANDING_CATEGORY_OPTIONS,
+  LANDING_STATUS_BADGE_CLASS,
+  LANDING_STATUS_LABEL,
+  approvalFlagsFor,
+  buildAdminContact,
+  platformLabelsByRowId,
+} from "@/lib/admin/whatsapp-moderation-logic";
 
 type EditLandingState = UpdateLandingInput & {
   dbId: string;
@@ -118,14 +99,7 @@ export default function WhatsAppLandingsModeration() {
     void load(tab);
   }, [tab]);
 
-  const platformLabelByRowId = useMemo(
-    () =>
-      rows.reduce<Record<string, string>>((accumulator, row) => {
-        accumulator[row.dbId ?? row.id] = row.platform?.trim() || "Belirtilmedi";
-        return accumulator;
-      }, {}),
-    [rows],
-  );
+  const platformLabelByRowId = useMemo(() => platformLabelsByRowId(rows), [rows]);
 
   const handleStatus = async (dbId: string, status: LandingStatus) => {
     try {
@@ -172,11 +146,8 @@ export default function WhatsAppLandingsModeration() {
     setEditState((current) => {
       if (!current) return current;
 
-      return {
-        ...current,
-        memberApproved: value === "member",
-        adminApproved: value === "admin",
-      };
+      // Kural tek kaynakta: uye ve yonetici birbirini disliyor.
+      return { ...current, ...approvalFlagsFor(value) };
     });
   };
 
@@ -198,12 +169,10 @@ export default function WhatsAppLandingsModeration() {
         conditions: editState.conditions,
         whatsappLink: editState.whatsappLink,
         adminName: editState.adminName,
-        adminContact: [
-          editState.adminEmail.trim() ? `E-posta: ${editState.adminEmail.trim()}` : "",
-          editState.adminPhone.trim() ? `Telefon: ${editState.adminPhone.trim()}` : "",
-        ]
-          .filter(Boolean)
-          .join("\n"),
+        adminContact: buildAdminContact({
+          email: editState.adminEmail,
+          phone: editState.adminPhone,
+        }),
         description: buildLandingDescription({
           description: editState.description,
           platform: editState.platform,
@@ -287,8 +256,8 @@ export default function WhatsAppLandingsModeration() {
                     </div>
 
                     <div>
-                      <Badge className={statusBadgeClass[(row.status ?? "pending") as LandingStatus]}>
-                        {statusLabel[(row.status ?? "pending") as LandingStatus]}
+                      <Badge className={LANDING_STATUS_BADGE_CLASS[(row.status ?? "pending") as LandingStatus]}>
+                        {LANDING_STATUS_LABEL[(row.status ?? "pending") as LandingStatus]}
                       </Badge>
                     </div>
 
@@ -402,7 +371,7 @@ export default function WhatsAppLandingsModeration() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {categoryOptions.map((option) => (
+                    {LANDING_CATEGORY_OPTIONS.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
