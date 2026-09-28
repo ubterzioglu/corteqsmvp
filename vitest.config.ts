@@ -33,9 +33,15 @@ export default defineConfig({
       "src/**/*.{test,spec}.{ts,tsx}",
       "scripts/**/*.test.mjs",
       "workers/service-finder/src/**/*.test.ts",
-      // Edge Function'ların paylaşılan saf modülleri — Deno API'si
-      // kullanmadıkları için Node/jsdom altında da koşarlar.
-      "supabase/functions/_shared/**/*.test.ts",
+      // Edge Function'ların saf modülleri — Deno API'si kullanmadıkları için
+      // Node/jsdom altında da koşarlar.
+      //
+      // ⚠️ Bu desen 28.09'a kadar yalnız `_shared/**` idi ve SESSİZ bir tuzaktı:
+      // bir fonksiyonun kendi `lib/` klasörüne yazılan test dosyası hiç koşmuyor,
+      // hiçbir yerde uyarı çıkmıyordu. `radar-news-scan/lib/scan-lock.test.ts`
+      // tam olarak buna takıldı ("No test files found"). Yeni test bir edge
+      // function'ın yanına yazılabilsin diye kapsam tüm `functions/` ağacına açıldı.
+      "supabase/functions/**/*.test.ts",
     ],
   },
   resolve: {
