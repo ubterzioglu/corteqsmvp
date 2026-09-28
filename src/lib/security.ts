@@ -71,6 +71,46 @@ export function validateArgeFile(file: File): string | null {
   return validateFile(file, { maxSize: ARGE_MAX_FILE_SIZE });
 }
 
+/**
+ * Hizmet talebi eki (G01).
+ *
+ * ⚠️ Uzantı seti, formdaki `accept=` niteliğiyle BİREBİR aynı olmalıdır. `accept`
+ * yalnız DOSYA SEÇİCİYE VERİLEN BİR TAVSİYEDİR: kullanıcı "Tüm dosyalar"ı seçerek,
+ * sürükle-bırakla ya da DOM'u düzenleyerek onu atlar. Gerçek denetim burada yapılır.
+ * (Sunucu tarafı bucket kısıtı ayrı bir iştir ve onaya tabidir — G03.)
+ */
+const SERVICE_ATTACHMENT_EXTENSIONS = new Set(["pdf", "doc", "docx", "jpg", "jpeg", "png", "webp"]);
+const SERVICE_ATTACHMENT_MAX_SIZE = 15 * 1024 * 1024;
+
+export function validateServiceAttachment(file: File): string | null {
+  return validateFile(file, {
+    allowedExtensions: SERVICE_ATTACHMENT_EXTENSIONS,
+    maxSize: SERVICE_ATTACHMENT_MAX_SIZE,
+  });
+}
+
+/**
+ * Dosya adını depolama anahtarı için güvenli hâle getirir (G01).
+ *
+ * ⚠️ Ham `file.name` doğrudan anahtara girerse kullanıcı adı denetler: `../` ile
+ * dizin dışına çıkmayı deneyebilir, eğik çizgiyle sahte klasör açabilir, ya da çok
+ * uzun/görünmez karakterli bir ad gönderebilir. Anahtar yalnız ASCII harf, rakam,
+ * nokta, tire ve alt çizgi taşır.
+ *
+ * ⚠️ Nokta dizisi sadeleştirmesi AYRI bir korumadır ve mutasyonla doğrulanmıştır:
+ * yol ayracı bölmesi `../../x` örneğini zaten çözer, bu satır AYRAÇSIZ adlardaki
+ * `..` dizisini kapatır (kimi depolama arkayüzleri anahtarı ayrıca normalleştirir).
+ */
+export function safeStorageFileName(name: string): string {
+  const base = name.split(/[\\/]/).pop() ?? "dosya";
+  const cleaned = base
+    .replace(/\.{2,}/g, ".")
+    .replace(/[^A-Za-z0-9._-]/g, "_")
+    .replace(/^[._-]+/, "");
+  const trimmed = cleaned.slice(0, 120);
+  return trimmed === "" ? "dosya" : trimmed;
+}
+
 export function validateTitle(value: string): string | null {
   if (value.length > MAX_TITLE_LENGTH) {
     return `Başlık ${MAX_TITLE_LENGTH} karakterden uzun olamaz.`;

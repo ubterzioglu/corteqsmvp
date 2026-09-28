@@ -3888,6 +3888,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/service-attachment-security.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/service-finder-api.ts",
       "kind": "ts",
       "module_family": "lib"

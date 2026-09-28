@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { Upload, X, FileText, Send, Clock, MapPin, DollarSign, Briefcase, Building2, Users, Target } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { safeStorageFileName, validateServiceAttachment } from "@/lib/security";
 import ConsentCheckboxes, { emptyConsent, isConsentValid, type ConsentState } from "@/components/ConsentCheckboxes";
 import { markRealServiceRequest } from "@/lib/demoFlags";
 import { createServiceRequest } from "@/lib/service-requests-api";
@@ -134,8 +135,30 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newFiles = Array.from(e.target.files);
-      setFiles(prev => [...prev, ...newFiles].slice(0, 5));
+      // ⚠️ `accept=` yalnız dosya seçiciye verilen bir TAVSİYEDİR; "Tüm dosyalar"
+      // seçilerek, sürükle-bırakla ya da DOM düzenlenerek atlanır. Gerçek denetim
+      // burada (G01). Geçersiz dosya sessizce düşürülmez, kullanıcıya söylenir.
+      const incoming = Array.from(e.target.files);
+      const accepted: File[] = [];
+      const rejected: string[] = [];
+
+      for (const file of incoming) {
+        const problem = validateServiceAttachment(file);
+        if (problem) rejected.push(`${file.name}: ${problem}`);
+        else accepted.push(file);
+      }
+
+      if (rejected.length > 0) {
+        toast({
+          title: "Bazı dosyalar eklenmedi",
+          description: rejected.join(" · "),
+          variant: "destructive",
+        });
+      }
+
+      setFiles(prev => [...prev, ...accepted].slice(0, 5));
+      // Aynı dosya tekrar seçilebilsin diye girdi sıfırlanır.
+      e.target.value = "";
     }
   };
 
@@ -185,17 +208,42 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
 
       // Upload files
       const attachmentUrls: string[] = [];
+      const failedUploads: string[] = [];
       for (const file of files) {
-        const filePath = `${user.id}/${Date.now()}-${file.name}`;
+        // ⚠️ İkinci savunma (G01): dosya listeye eklendikten sonra da doğrulanır.
+        // Liste programatik olarak da değiştirilebilir; kapı yalnız seçim anında
+        // durursa atlanabilir.
+        const problem = validateServiceAttachment(file);
+        if (problem) {
+          failedUploads.push(`${file.name}: ${problem}`);
+          continue;
+        }
+
+        // ⚠️ Ham `file.name` anahtara GİRMEZ — `../` ile dizin dışına çıkma denemesi
+        // ve sahte klasör oluşturma bu yüzden engellenir.
+        const filePath = `${user.id}/${Date.now()}-${safeStorageFileName(file.name)}`;
         const { error: uploadError } = await supabase.storage
           .from("service-attachments")
           .upload(filePath, file);
-        if (!uploadError) {
-          const { data: urlData } = supabase.storage
-            .from("service-attachments")
-            .getPublicUrl(filePath);
-          attachmentUrls.push(urlData.publicUrl);
+        if (uploadError) {
+          // ⚠️ Eskiden hata SESSİZCE yutuluyordu: dosya yüklenmese de talep
+          // gönderiliyor, kullanıcı ekini iletmiş sanıyordu.
+          failedUploads.push(`${file.name}: yüklenemedi`);
+          continue;
         }
+
+        const { data: urlData } = supabase.storage
+          .from("service-attachments")
+          .getPublicUrl(filePath);
+        attachmentUrls.push(urlData.publicUrl);
+      }
+
+      if (failedUploads.length > 0) {
+        toast({
+          title: "Bazı ekler gönderilemedi",
+          description: `${failedUploads.join(" · ")} — talep yine de gönderiliyor.`,
+          variant: "destructive",
+        });
       }
 
       await createServiceRequest({
