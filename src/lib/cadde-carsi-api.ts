@@ -8,6 +8,7 @@ import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
 import {
   FALLBACK_PROFILE_NAME,
+  caddeReadError,
   caddeWriteError,
   db,
   reportCaddeApiError,
@@ -82,6 +83,9 @@ export async function listCarsiCategories(): Promise<CarsiCategory[]> {
     if (error) throw error;
     return (data as CarsiCategoryRow[]).map((row) => ({ key: row.key, labelTr: row.label_tr, sortOrder: row.sort_order }));
   } catch (error: unknown) {
+    // BİLEREK boş döner (S06b kararı): kategori listesi yardımcı bir sözlüktür, içerik
+    // değildir. Okunamazsa çarşı kategori çipleri olmadan ÇALIŞMAYA DEVAM eder;
+    // fırlatmak tüm sayfayı düşürürdü. Hata yine kaydedilir.
     reportCaddeApiError("listCarsiCategories", error);
     return [];
   }
@@ -173,8 +177,9 @@ export async function listCarsiItems(filters: CarsiListFilters, limit = 60): Pro
     const maps = await fetchReferenceMaps(rows);
     return rows.map((row) => mapItem(row, maps));
   } catch (error: unknown) {
-    reportCaddeApiError("listCarsiItems", error);
-    return [];
+    // Hata ≠ "ilan yok". Boş dizi RLS reddini/ağ hatasını çarşıda içerik yokluğu gibi
+    // gösterirdi (S06b; feed ve cafe'de aynı kusur ölçülmüştü).
+    throw caddeReadError("listCarsiItems", error);
   }
 }
 
@@ -194,8 +199,7 @@ export async function listMyCarsiItems(userId: string): Promise<CarsiItem[]> {
     const maps = await fetchReferenceMaps(rows);
     return rows.map((row) => mapItem(row, maps));
   } catch (error: unknown) {
-    reportCaddeApiError("listMyCarsiItems", error);
-    return [];
+    throw caddeReadError("listMyCarsiItems", error);
   }
 }
 
@@ -210,8 +214,11 @@ export async function getCarsiItem(itemId: string): Promise<CarsiItem | null> {
     const maps = await fetchReferenceMaps([row]);
     return mapItem(row, maps);
   } catch (error: unknown) {
-    reportCaddeApiError("getCarsiItem", error);
-    return null;
+    // ⚠️ `null` iki şeyi karıştırıyordu: "ilan yok/silinmiş" (yukarıdaki
+    // `if (!data) return null` — meşru) ve "okunamadı". İkincisi artık fırlatır;
+    // aksi halde okuma hatası kullanıcıya "İlan bulunamadı, kaldırılmış veya süresi
+    // dolmuş" diye görünüyordu ve duran bir ilan silinmiş sanılıyordu.
+    throw caddeReadError("getCarsiItem", error);
   }
 }
 

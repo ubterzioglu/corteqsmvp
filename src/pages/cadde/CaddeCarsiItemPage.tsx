@@ -8,6 +8,7 @@ import { Clock3, MapPin, ShoppingBag, User2 } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeBadge from "@/components/cadde/CaddeBadge";
+import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -59,6 +60,23 @@ const CaddeCarsiItemPage = () => {
 
   if (itemQuery.isLoading) {
     return <main className="mx-auto max-w-3xl px-4 py-16 text-center text-slate-500">İlan yükleniyor...</main>;
+  }
+
+  // ⚠️ Hata ≠ bulunamadı (S06b). `getCarsiItem` eskiden okuma hatasında da `null`
+  // dönüyordu; RLS reddi / ağ hatası kullanıcıya "İlan bulunamadı, kaldırılmış veya
+  // süresi dolmuş" diye görünüyor, duran bir ilan silinmiş sanılıyordu.
+  // Bu dal `!item` dalından ÖNCE gelmeli.
+  if (itemQuery.isError) {
+    return (
+      <main className="mx-auto max-w-3xl px-4 py-16">
+        <CaddeLoadErrorCard
+          testId="carsi-item-error-state"
+          title="İlan yüklenemedi."
+          onRetry={() => void itemQuery.refetch()}
+          isRetrying={itemQuery.isFetching}
+        />
+      </main>
+    );
   }
 
   if (!item) {

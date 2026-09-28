@@ -37,7 +37,11 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
     staleTime: CADDE_PROMO_STALE_MS,
   });
 
-  const items = itemsQuery.data ?? [];
+  // BİLEREK hata kartı ÇİZİLMEZ (S06b kararı): bu şerit Cadde akışının yanında duran
+  // DEKORATİF bir teaser'dır, kullanıcının aradığı içerik değil. `listCarsiItems` artık
+  // fırlattığı için hata React Query'de görünür ve kaydedilir; ama akışın yanına
+  // "yüklenemedi" kartı koymak asıl içeriğin dikkatini dağıtırdı. Şerit sessizce boş kalır.
+  const items = itemsQuery.isError ? [] : itemsQuery.data ?? [];
 
   if (!carsiVisible) {
     // m40: linksiz teaser. m51+m53: marka adı her yerde "CorteQS Çarşı" — isim hakkı

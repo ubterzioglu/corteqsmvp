@@ -155,3 +155,32 @@ describe("cafe okuma yüzeyi hata görünürlüğü sözleşmesi", () => {
     },
   );
 });
+
+// S06b — aynı sözleşme çarşı okuma yüzeyine genişletildi.
+describe("çarşı okuma yüzeyi hata görünürlüğü sözleşmesi", () => {
+  const carsiSource = readFileSync("src/lib/cadde-carsi-api.ts", "utf8");
+
+  const catchBodyOf = (fnName: string): string => {
+    const fn = sliceFrom(carsiSource, `export async function ${fnName}`, fnName);
+    const catchBlock = sliceFrom(fn, "} catch (error", `${fnName} catch bloğu`);
+    return sliceUntil(catchBlock.slice(1), "\n  }", `${fnName} catch kapanışı`);
+  };
+
+  it.each(["listCarsiItems", "listMyCarsiItems", "getCarsiItem"])(
+    "%s içerik okumasıdır: hatayı FIRLATIR, boş sonuç dönmez",
+    (fnName) => {
+      const catchBody = catchBodyOf(fnName);
+
+      expect(catchBody).toContain(`throw caddeReadError("${fnName}", error)`);
+      expect(catchBody).not.toMatch(/return (\[\]|null);/);
+    },
+  );
+
+  it("listCarsiCategories yardımcı sözlüktür: boş döner AMA gerekçesi yazılıdır", () => {
+    const catchBody = catchBodyOf("listCarsiCategories");
+
+    expect(catchBody).toContain("reportCaddeApiError");
+    expect(catchBody).toMatch(/return \[\];/);
+    expect(catchBody).toContain("BİLEREK");
+  });
+});

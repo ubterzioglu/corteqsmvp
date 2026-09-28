@@ -10,6 +10,7 @@ import { MapPin, Plus, ShoppingBag } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CarsiItemForm from "@/components/cadde/CarsiItemForm";
+import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 import { emptyCarsiForm } from "@/lib/cadde-composer";
 import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Button } from "@/components/ui/button";
@@ -198,7 +199,18 @@ const CaddeCarsiPage = () => {
           </CardHeader>
         </Card>
 
-        {user && myItems.length > 0 ? (
+        {/* "İlanlarım" bölümü hata durumunda SESSİZCE KAYBOLUYORDU: boş dizi
+            "ilanım yok" demekti ve kullanıcı kendi ilanlarını kaybettiğini sanabilirdi. */}
+        {user && myItemsQuery.isError ? (
+          <CaddeLoadErrorCard
+            testId="carsi-my-items-error-state"
+            title="İlanların yüklenemedi."
+            onRetry={() => void myItemsQuery.refetch()}
+            isRetrying={myItemsQuery.isFetching}
+          />
+        ) : null}
+
+        {user && !myItemsQuery.isError && myItems.length > 0 ? (
           <Card className="border-slate-200 bg-white/95">
             <CardHeader>
               <CardTitle className="text-base">İlanlarım</CardTitle>
@@ -286,7 +298,18 @@ const CaddeCarsiPage = () => {
           ))}
         </div>
 
-        {!itemsQuery.isLoading && items.length === 0 ? (
+        {/* Hata ≠ ilan yok (S06b). Boş-durum kartı `!isError` ile kapılı; ikisi asla
+            birlikte çıkmaz. Eskiden okuma hatası "İlk ilanı sen ver." diye görünüyordu. */}
+        {itemsQuery.isError ? (
+          <CaddeLoadErrorCard
+            testId="carsi-items-error-state"
+            title="İlanlar yüklenemedi."
+            onRetry={() => void itemsQuery.refetch()}
+            isRetrying={itemsQuery.isFetching}
+          />
+        ) : null}
+
+        {!itemsQuery.isLoading && !itemsQuery.isError && items.length === 0 ? (
           <Card data-testid="carsi-empty-state" className="border-dashed border-amber-300 bg-white/90">
             <CardContent className="space-y-3 p-8 text-center">
               <p className="text-base font-semibold text-slate-900">İlk ilanı sen ver.</p>
