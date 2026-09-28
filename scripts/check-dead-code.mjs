@@ -13,10 +13,14 @@ export const CONFIG_REFERENCED_EXCEPTIONS = new Set([
 
 // Existing unreachable production files are an explicit baseline. New entries fail the check;
 // deleting a baseline entry is reported as stale so the list gets smaller over time.
-export const KNOWN_DEAD_FILES = new Set([
-  // Public barrel reserved for new admin-shell consumers; current code imports concrete files.
-  "src/components/admin/shell/index.ts",
-]);
+// S09: liste BOŞALDI. `src/components/admin/shell/index.ts` "yeni tüketiciler için
+// rezerve" diye burada bekliyordu, ama ölçüldü: hiçbir şey onu import etmiyordu ve
+// en çok kullanılan shell modülünü (`admin-accent`) zaten ihraç etmiyordu — yani
+// rezerve edilen şey gerçek kullanımı yansıtmıyordu. Silindi.
+//
+// ⚠️ Buraya yeni satır eklemek SON çare olmalı: bu liste "ölü ama şimdilik dursun"
+// demektir ve kolayca kalıcı hâle gelir. Eklemeden önce dosyayı silmeyi dene.
+export const KNOWN_DEAD_FILES = new Set([]);
 
 // Yalnız testlerin kullandığı paylaşılan yardımcıların yaşadığı dizin. Buradaki bir
 // dosya üretim grafiğinden değil, TEST grafiğinden erişilebilir olmalıdır.
