@@ -5,7 +5,7 @@
 
 import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
-import { caddeWriteError, db, reportCaddeApiError } from "./cadde-internal";
+import { caddeReadError, caddeWriteError, db, reportCaddeApiError } from "./cadde-internal";
 import { caddePromotionCreateSchema, parseWithUserError } from "./cadde-schemas";
 import type {
   CaddePromotionCampaign,
@@ -48,6 +48,7 @@ export async function listPromotionPlacementOptions(): Promise<CaddePromotionPla
       sortOrder: row.sort_order,
     }));
   } catch (error: unknown) {
+    // Yerleşim seçenekleri sözlüğü. BİLEREK boş döner: form seçenek çizmez, veri kaybı olmaz.
     reportCaddeApiError("listPromotionPlacementOptions", error);
     return [];
   }
@@ -126,8 +127,9 @@ export async function listMyPromotionCampaigns(userId: string): Promise<CaddePro
     if (error) throw error;
     return enrichCampaigns((data ?? []) as CampaignRow[]);
   } catch (error: unknown) {
-    reportCaddeApiError("listMyPromotionCampaigns", error);
-    return [];
+    // Kullanıcının KENDİ kampanyaları: boş liste "kampanyam yok" der ve para harcadığı
+    // bir kampanyayı kaybettiğini sanar.
+    throw caddeReadError("listMyPromotionCampaigns", error);
   }
 }
 
@@ -144,8 +146,8 @@ export async function adminListPendingPromotions(): Promise<CaddePromotionCampai
     if (error) throw error;
     return enrichCampaigns((data ?? []) as CampaignRow[]);
   } catch (error: unknown) {
-    reportCaddeApiError("adminListPendingPromotions", error);
-    return [];
+    // Yönetici onay kuyruğu: boş liste "onay bekleyen yok" der, kampanyalar askıda kalır.
+    throw caddeReadError("adminListPendingPromotions", error);
   }
 }
 
@@ -197,6 +199,7 @@ export async function listCaddePromotions(
     if (error) throw error;
     return (data ?? []) as CaddePromotionCard[];
   } catch (error: unknown) {
+    // Akış içi tanıtım kartları DEKORATİFTİR. BİLEREK boş döner.
     reportCaddeApiError("listCaddePromotions", error);
     return [];
   }

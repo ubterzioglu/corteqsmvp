@@ -105,7 +105,24 @@ const NotificationsBell = () => {
           ) : null}
         </div>
         <div className="max-h-96 overflow-y-auto">
-          {notifications.length === 0 ? (
+          {notificationsQuery.isError ? (
+            // Hata ≠ bildirim yok (S06c). Eskiden okuma hatası "Bildirim yok." diye
+            // görünüyordu; kullanıcı gelen bir yanıtı veya daveti kaçırıyordu.
+            <div className="px-3 py-6 text-center">
+              <p className="text-sm font-medium text-amber-900">Bildirimler yüklenemedi.</p>
+              <p className="mt-1 text-xs text-amber-800">
+                Bu, bildirimin olmadığı anlamına gelmez.
+              </p>
+              <button
+                type="button"
+                className="mt-3 text-xs font-medium text-primary underline-offset-2 hover:underline"
+                onClick={() => void notificationsQuery.refetch()}
+                disabled={notificationsQuery.isFetching}
+              >
+                {notificationsQuery.isFetching ? "Deneniyor..." : "Tekrar dene"}
+              </button>
+            </div>
+          ) : notifications.length === 0 ? (
             <p className="px-3 py-6 text-center text-sm text-muted-foreground">
               {notificationsQuery.isLoading ? "Yükleniyor..." : "Bildirim yok."}
             </p>

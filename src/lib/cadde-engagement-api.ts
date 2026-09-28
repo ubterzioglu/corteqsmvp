@@ -75,6 +75,7 @@ export async function countCaddePostsSince(isoTimestamp: string): Promise<number
   } catch (error: unknown) {
     // İkincil yüzey (chip sayacı): boş sonuç kalıbı bilinçli, ama hata artık
     // kalıcı kayda düşüyor — ham console.error teşhis edilmiyordu (S03c).
+    // "Yeni paylaşım var" rozetinin sayacı. BİLEREK 0 doner: rozet çıkmaz, akış çalışmaya devam eder. Fırlatmak akışı düşürürdü.
     reportCaddeApiError("countCaddePostsSince", error);
     return 0;
   }

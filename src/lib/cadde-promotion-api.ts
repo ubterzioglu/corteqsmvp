@@ -50,6 +50,7 @@ export async function listCaddeBillboardCards(filters: CaddeFilterState): Promis
     if (error) throw error;
     return (data as CaddeBillboardRow[]).map(mapCaddeBillboardRow);
   } catch (error: unknown) {
+    // Tanıtım panosu DEKORATİFTİR. BİLEREK boş döner: reklam alani boş kalır, asil icerik etkilenmez.
     reportCaddeApiError("listCaddeBillboardCards", error);
     return [];
   }
@@ -76,6 +77,7 @@ export async function getCaddeSponsoredPlacement(filters: CaddeFilterState): Pro
     if (!data) return null;
     return mapCaddeSponsoredRow(data as CaddeSponsoredRow);
   } catch (error: unknown) {
+    // Sponsorlu yerleşim DEKORATİFTİR. BİLEREK boş döner.
     reportCaddeApiError("getCaddeSponsoredPlacement", error);
     return null;
   }

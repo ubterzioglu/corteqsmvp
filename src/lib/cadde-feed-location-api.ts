@@ -58,6 +58,7 @@ export async function listCaddeCountries(): Promise<CaddeCountry[]> {
     if (error) throw error;
     return (data as CaddeCountryRow[]).map((row) => ({ id: row.id, code: row.code, name: row.name }));
   } catch (error: unknown) {
+    // Filtre sözlüğü. BİLEREK boş döner: kullanıcı ülke filtresi olmadan akışı görmeye devam eder.
     reportCaddeApiError("listCaddeCountries", error);
     return [];
   }
@@ -80,6 +81,7 @@ export async function listCaddeCities(countryNames: string[] = []): Promise<Cadd
     if (error) throw error;
     return sortAlphabetically((data as CaddeCityRow[]).map((row) => ({ id: row.id, countryId: row.country_id, name: row.name, timezone: row.timezone })));
   } catch (error: unknown) {
+    // Filtre sözlüğü. BİLEREK boş döner: şehir filtresi çizilmez, akış çalışır.
     reportCaddeApiError("listCaddeCities", error);
     return [];
   }

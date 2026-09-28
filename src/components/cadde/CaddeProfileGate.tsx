@@ -3,22 +3,54 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Lock, Settings } from "lucide-react";
 
 import CaddeBadge from "@/components/cadde/CaddeBadge";
+import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 import { Button } from "@/components/ui/button";
 import { missingGateFieldLabel, type CaddeActorContext } from "@/lib/cadde-rules";
 
 interface CaddeProfileGateProps {
   context: CaddeActorContext | null | undefined;
   isLoading: boolean;
+  /** Bağlam OKUNAMADI. `context === null` ("bağlamı yok") ile KARIŞTIRILMAMALI. */
+  isError?: boolean;
+  onRetry?: () => void;
+  isRetrying?: boolean;
   children: ReactNode;
 }
 
 /**
  * Cadde profil kapısı (CKS §6): profili eksik kullanıcı blurlu demo görür,
  * eksik alan listesi ve profil ayarları CTA'sı gösterilir.
- * Context yüklenemezse kapı FAIL-OPEN davranır — gerçek enforce DB'dedir
- * (create_cadde_post_v1 + RLS); UI kilidi yalnız yönlendirme amaçlıdır.
+ *
+ * ⚠️ FAIL-OPEN DAVRANIŞI S06c'de DARALTILDI. Eskiden bağlam okunamadığında da
+ * `null` geliyordu ve bu dal kullanıcıyı sessizce içeri alıyordu; RPC herkes için
+ * bozulsa kapı ölür, kimse fark etmezdi. Artık arıza AYRI gösterilir.
+ *
+ * Gerçek enforce DEĞİŞMEDİ: `create_cadde_post_v1` + RLS. UI kapısı hâlâ yalnız
+ * yönlendirme amaçlıdır; burada engellenen bir kullanıcı sunucuda da engellidir.
+ * `context === null` (bağlamı olmayan kullanıcı) hâlâ MEŞRUDUR ve içeri alır.
  */
-const CaddeProfileGate = ({ context, isLoading, children }: CaddeProfileGateProps) => {
+const CaddeProfileGate = ({
+  context,
+  isLoading,
+  isError = false,
+  onRetry,
+  isRetrying = false,
+  children,
+}: CaddeProfileGateProps) => {
+  if (isError) {
+    return (
+      <div className="mx-auto w-full max-w-md px-4 py-16">
+        <CaddeLoadErrorCard
+          testId="cadde-actor-context-error-state"
+          title="Yetki bilgin okunamadı."
+          description="Cadde'ye girip giremeyeceğini belirleyemedik — bu bir yetki reddi değil, sunucudan yanıt alınamadı. Tekrar deneyebilirsin."
+          onRetry={() => onRetry?.()}
+          isRetrying={isRetrying}
+        />
+      </div>
+    );
+  }
+
   if (isLoading || !context || context.canEnterCadde) return <>{children}</>;
 
   return (

@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ShieldAlert } from "lucide-react";
 
+import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -131,7 +132,19 @@ const AdminCaddeModerationPage = () => {
         </Card>
       ))}
 
-      {!queueQuery.isLoading && items.length === 0 ? (
+      {/* Hata ≠ temiz kuyruk (S06c). Eskiden okuma hatası yöneticiye "Açık moderasyon
+          kaydı yok." diye görünüyordu ve gerçek şikâyetler işlenmeden kalıyordu. */}
+      {queueQuery.isError ? (
+        <CaddeLoadErrorCard
+          testId="cadde-moderation-error-state"
+          title="Moderasyon kuyruğu yüklenemedi."
+          description="Bu, kuyruğun boş olduğu anlamına GELMEZ — sunucudan yanıt alınamadı. Tekrar deneyin."
+          onRetry={() => void queueQuery.refetch()}
+          isRetrying={queueQuery.isFetching}
+        />
+      ) : null}
+
+      {!queueQuery.isLoading && !queueQuery.isError && items.length === 0 ? (
         <Card>
           <CardContent className="p-8 text-center text-slate-500">Açık moderasyon kaydı yok.</CardContent>
         </Card>

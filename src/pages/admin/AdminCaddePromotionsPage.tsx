@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ExternalLink, Megaphone } from "lucide-react";
 
+import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -98,7 +99,19 @@ const AdminCaddePromotionsPage = () => {
         </Card>
       ))}
 
-      {!pendingQuery.isLoading && pending.length === 0 ? (
+      {/* Hata ≠ bekleyen yok (S06c). Okuma hatası "Bekleyen kampanya yok." diye
+          görünüyordu ve onay bekleyen kampanyalar askıda kalıyordu. */}
+      {pendingQuery.isError ? (
+        <CaddeLoadErrorCard
+          testId="cadde-promotions-error-state"
+          title="Onay kuyruğu yüklenemedi."
+          description="Bu, bekleyen kampanya olmadığı anlamına GELMEZ — sunucudan yanıt alınamadı. Tekrar deneyin."
+          onRetry={() => void pendingQuery.refetch()}
+          isRetrying={pendingQuery.isFetching}
+        />
+      ) : null}
+
+      {!pendingQuery.isLoading && !pendingQuery.isError && pending.length === 0 ? (
         <Card>
           <CardContent className="p-8 text-center text-slate-500">Bekleyen kampanya yok.</CardContent>
         </Card>

@@ -1,6 +1,6 @@
 import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
-import { db, caddeWriteError, reportCaddeApiError } from "./cadde-internal";
+import { db, caddeReadError, caddeWriteError, reportCaddeApiError } from "./cadde-internal";
 import type { CaddeInterest, CaddeInterestRow, CaddeMentionSuggestion, CaddeTrendingHashtag } from "./cadde-types";
 
 export async function searchCaddeMentions(query: string, limit = 8): Promise<CaddeMentionSuggestion[]> {
@@ -10,6 +10,7 @@ export async function searchCaddeMentions(query: string, limit = 8): Promise<Cad
     if (error) throw error;
     return Array.isArray(data) ? (data as CaddeMentionSuggestion[]) : [];
   } catch (error: unknown) {
+    // Yazıyorken çıkan öneri listesi. BİLEREK boş döner: boş sonuç zaten normal bir cevaptır, kullanıcı yazmaya devam eder.
     reportCaddeApiError("searchCaddeMentions", error);
     return [];
   }
@@ -45,6 +46,7 @@ export async function searchCaddePeople(query: string, limit = 12): Promise<Cadd
     if (!Array.isArray(data)) return [];
     return (data as Array<Record<string, unknown>>).map(mapCaddePersonRow);
   } catch (error: unknown) {
+    // Arama önerisi. BİLEREK boş döner: boş sonuç normal bir cevaptır.
     reportCaddeApiError("searchCaddePeople", error);
     return [];
   }
@@ -57,6 +59,7 @@ export async function listTrendingCaddeHashtags(limit = 10): Promise<CaddeTrendi
     if (error) throw error;
     return Array.isArray(data) ? (data as CaddeTrendingHashtag[]) : [];
   } catch (error: unknown) {
+    // Trend etiketler DEKORATİFTİR. BİLEREK boş döner.
     reportCaddeApiError("listTrendingCaddeHashtags", error);
     return [];
   }
@@ -73,6 +76,7 @@ export async function listCaddeInterestCatalog(): Promise<CaddeInterest[]> {
     if (error) throw error;
     return (data as CaddeInterestRow[]).map((row) => ({ key: row.key, labelTr: row.label_tr, sortOrder: row.sort_order }));
   } catch (error: unknown) {
+    // Seçilebilir ilgi alanı SÖZLÜĞÜ (kullanıcının kendi seçimi değil). BİLEREK boş döner: form seçenek göstermez ama mevcut seçimleri SİLMEZ.
     reportCaddeApiError("listCaddeInterestCatalog", error);
     return [];
   }
@@ -85,8 +89,9 @@ export async function listMyCaddeInterests(userId: string): Promise<string[]> {
     if (error) throw error;
     return ((data ?? []) as Array<{ interest_key: string }>).map((row) => row.interest_key);
   } catch (error: unknown) {
-    reportCaddeApiError("listMyCaddeInterests", error);
-    return [];
+    // Kullanıcının KENDİ seçtiği ilgi alanları: boş liste forma "hiç seçmemişsin" der;
+    // kullanıcı üzerine kaydederse gerçek seçimlerini SİLER. Hata ≠ seçim yok (S06c).
+    throw caddeReadError("listMyCaddeInterests", error);
   }
 }
 

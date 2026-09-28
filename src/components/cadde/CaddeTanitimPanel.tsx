@@ -95,7 +95,9 @@ const CaddeTanitimPanel = () => {
   });
 
   const campaigns = myCampaignsQuery.data ?? [];
-  if (!user || (!canCreate && campaigns.length === 0)) return null;
+  // ⚠️ Hata durumunda panel SESSİZCE KAYBOLUYORDU: boş dizi + `canCreate=false`
+  // birleşince `null` dönüyordu. Hata varsa panel DURMALI ki kullanıcı uyarıyı görsün.
+  if (!user || (!canCreate && campaigns.length === 0 && !myCampaignsQuery.isError)) return null;
 
   // Elçi yalnız ücretsiz highlight tipi/placement'ı görür (spec §15.1).
   const availableTypes = (Object.keys(CADDE_PROMOTION_TYPE_LABELS) as CaddePromotionType[]).filter((type) =>
@@ -200,7 +202,22 @@ const CaddeTanitimPanel = () => {
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
-        {campaigns.length === 0 ? (
+        {myCampaignsQuery.isError ? (
+          // Hata ≠ kampanyan yok (S06c). Para harcanmış bir kampanyanın kaybolmuş
+          // görünmesi kabul edilemez.
+          <div className="text-[11px]">
+            <p className="font-medium text-amber-900">Kampanyaların yüklenemedi.</p>
+            <p className="mt-1 text-amber-800">Bu, kampanyan olmadığı anlamına gelmez.</p>
+            <button
+              type="button"
+              className="mt-2 font-medium text-primary underline-offset-2 hover:underline"
+              onClick={() => void myCampaignsQuery.refetch()}
+              disabled={myCampaignsQuery.isFetching}
+            >
+              {myCampaignsQuery.isFetching ? "Deneniyor..." : "Tekrar dene"}
+            </button>
+          </div>
+        ) : campaigns.length === 0 ? (
           <p className="text-[11px] text-muted-foreground">Henüz kampanyan yok.</p>
         ) : (
           campaigns.map((campaign) => (

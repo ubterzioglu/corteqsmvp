@@ -4,7 +4,7 @@
 
 import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
-import { caddeWriteError, db, reportCaddeApiError } from "./cadde-internal";
+import { caddeReadError, caddeWriteError, db } from "./cadde-internal";
 
 export type CaddeModerationEntityType = "post" | "comment" | "cafe" | "carsi_item";
 export type CaddeModerationAction = "dismiss" | "hide" | "publish" | "ban_owner" | "unban_owner";
@@ -58,8 +58,9 @@ export async function listModerationQueue(status: "open" | "resolved" = "open"):
       resolutionNote: row.resolution_note,
     }));
   } catch (error: unknown) {
-    reportCaddeApiError("listModerationQueue", error);
-    return [];
+    // Moderasyon kuyruğu: boş liste yöneticiye "bekleyen şikâyet yok" der ve gerçek
+    // şikâyetler işlenmeden kalır. Hata ≠ temiz kuyruk (S06c).
+    throw caddeReadError("listModerationQueue", error);
   }
 }
 

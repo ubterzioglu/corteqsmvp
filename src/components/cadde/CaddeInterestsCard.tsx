@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Eye, EyeOff, Heart } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
+import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -94,7 +95,25 @@ const CaddeInterestsCard = ({ onSaved, visibility = "public", canHide = true }: 
     },
   });
 
-  if (!user || (catalogQuery.data ?? []).length === 0) return null;
+  if (!user) return null;
+
+  // ⚠️ VERİ KAYBI KAPISI (S06c). Kullanıcının MEVCUT seçimi okunamadıysa kartı
+  // düzenlenebilir göstermek tehlikelidir: `selection` boş kalır ve kullanıcı
+  // "Kaydet"e basarsa gerçek ilgi alanlarını SİLER. Eskiden `listMyCaddeInterests`
+  // hatada boş dizi dönüyordu, yani bu tuzak sessizce kuruluydu.
+  if (myInterestsQuery.isError) {
+    return (
+      <CaddeLoadErrorCard
+        testId="cadde-interests-error-state"
+        title="İlgi alanların yüklenemedi."
+        description="Mevcut seçimlerini okuyamadığımız için düzenlemeyi kapattık — aksi halde kaydetmek onları silebilirdi. Tekrar deneyebilirsin."
+        onRetry={() => void myInterestsQuery.refetch()}
+        isRetrying={myInterestsQuery.isFetching}
+      />
+    );
+  }
+
+  if ((catalogQuery.data ?? []).length === 0) return null;
 
   const toggle = (key: string) => {
     setSelection((current) => (current.includes(key) ? current.filter((item) => item !== key) : [...current, key]));

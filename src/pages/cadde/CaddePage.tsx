@@ -225,7 +225,13 @@ const CaddePage = () => {
   };
 
   return (
-    <CaddeProfileGate context={actorContextQuery.data} isLoading={actorContextQuery.isLoading}>
+    <CaddeProfileGate
+      context={actorContextQuery.data}
+      isLoading={actorContextQuery.isLoading}
+      isError={actorContextQuery.isError}
+      onRetry={() => void actorContextQuery.refetch()}
+      isRetrying={actorContextQuery.isFetching}
+    >
     <main className="cadde-shell">
       {/* Y1 (m151, 09.09.2026): kimlik şeridi KALDIRILDI.
           Kritik "logo bandı ile sayfa başlığını birleştir" diyordu, ama ölçünce
@@ -378,6 +384,9 @@ const CaddePage = () => {
             onOpenChange={setCafesOpenOverride}
             showAll={showAllCafes}
             onShowAll={() => setShowAllCafes(true)}
+            isError={cafesQuery.isError}
+            onRetry={() => void cafesQuery.refetch()}
+            isRetrying={cafesQuery.isFetching}
           />
 
           {/* `hidden lg:block` KORUNDU: kart mobilde eskiden de çizilmiyordu, taşınma

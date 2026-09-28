@@ -11,7 +11,7 @@
 // yüzeyinin TAMAMI için: hatayı `caddeReadError` ile logla ve FIRLAT; boş sonuç yalnız
 // gerçekten içerik yokken dönsün.
 
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -182,5 +182,42 @@ describe("çarşı okuma yüzeyi hata görünürlüğü sözleşmesi", () => {
     expect(catchBody).toContain("reportCaddeApiError");
     expect(catchBody).toMatch(/return \[\];/);
     expect(catchBody).toContain("BİLEREK");
+  });
+});
+
+// S06c — GENEL kural: tüm cadde API dosyaları taranır, sabit liste YOK.
+//
+// Hatayı yutup boş sonuç dönmek bazen doğrudur (dekoratif/yardımcı yüzey), bazen
+// kullanıcıyı yanıltır (içerik). Bu testin kilitlediği şey hangisinin seçildiği
+// DEĞİL, seçimin GEREKÇELENDİRİLMİŞ olması: sessizce yutan yeni bir catch eklenemez.
+describe("cadde okuma yollarında gerekçesiz sessizlik yasağı", () => {
+  const API_FILES = readdirSync("src/lib")
+    .filter((file) => /^cadde.*api.*\.ts$/.test(file) && !file.includes(".test."))
+    .map((file) => `src/lib/${file}`);
+
+  it("cadde API dosyalarını gerçekten tarıyor (kapsam boşa düşmesin)", () => {
+    expect(API_FILES.length, "cadde API dosyası bulunamadı").toBeGreaterThan(5);
+  });
+
+  it("boş sonuç dönen her catch bloğu gerekçe taşır", () => {
+    const offenders: string[] = [];
+
+    for (const file of API_FILES) {
+      const lines = readFileSync(file, "utf8").split(/\r?\n/);
+      lines.forEach((line, index) => {
+        if (!/^\s*return (\[\]|null|0);\s*$/.test(line)) return;
+        // Sadece catch bloğu içindeki dönüşler: geriye doğru en yakın catch/başlangıç.
+        const before = lines.slice(Math.max(0, index - 6), index);
+        if (!before.some((candidate) => candidate.includes("} catch (error"))) return;
+        // Gerekçe: ya BİLEREK açıklaması var, ya da bu bir erken çıkış değil.
+        if (before.some((candidate) => candidate.includes("BİLEREK"))) return;
+        offenders.push(`${file}:${index + 1} → ${line.trim()}`);
+      });
+    }
+
+    expect(
+      offenders,
+      "catch bloğunda boş sonuç dönüyorsan NEDEN olduğunu 'BİLEREK' ile yaz ya da caddeReadError ile fırlat",
+    ).toEqual([]);
   });
 });

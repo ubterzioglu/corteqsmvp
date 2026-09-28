@@ -5,7 +5,7 @@
 
 import { isSupabaseConfigured, supabase } from "@/integrations/supabase/client";
 
-import { caddeWriteError, db, reportCaddeApiError } from "./cadde-internal";
+import { caddeReadError, caddeWriteError, db, reportCaddeApiError } from "./cadde-internal";
 
 export type CaddeNotification = {
   id: string;
@@ -51,8 +51,8 @@ export async function listMyNotifications(userId: string, limit = 20): Promise<C
       createdAt: row.created_at,
     }));
   } catch (error: unknown) {
-    reportCaddeApiError("listMyNotifications", error);
-    return [];
+    // Boş liste "bildirimin yok" der; kullanıcı gelen bir yanıtı/daveti kaçırır.
+    throw caddeReadError("listMyNotifications", error);
   }
 }
 

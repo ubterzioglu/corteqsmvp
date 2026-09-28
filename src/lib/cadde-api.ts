@@ -175,6 +175,8 @@ export async function getCaddeFeedReach(): Promise<CaddeFeedReach | null> {
     if (!payload || payload.signedIn !== true) return null;
     return payload;
   } catch (error: unknown) {
+    // BİLEREK boş döner: erişim kartı bilgilendiricidir, içerik değil. Okunamazsa kart
+    // çizilmez; fırlatmak akışı düşürürdü.
     reportCaddeApiError("getCaddeFeedReach", error);
     return null;
   }
