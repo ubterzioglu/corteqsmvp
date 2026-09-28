@@ -381,3 +381,44 @@ describe("catalog-directory", () => {
     expect(isPublicDirectoryRole("Moderator_Herhangi", null)).toBe(false);
   });
 });
+
+// G02 — semantik aramadan lexical aramaya düşüş GÖRÜNÜR olmalı.
+//
+// Fallback'in kendisi doğrudur ve kalır: kaldırılsaydı edge function düştüğünde
+// dizin araması tamamen ölürdü. Kapatılan kusur görünmezlikti — düşüş sessizdi,
+// yani sağlayıcı herkes için bozulsa arama kalıcı olarak "basit" moda iner ve
+// kimse öğrenmezdi. Kullanıcı sonuç almaya devam ettiği için şikâyet de gelmez.
+describe("dizin araması düşüş görünürlüğü sözleşmesi", () => {
+  const source = readFileSync("src/lib/catalog-directory.ts", "utf8");
+
+  it("edge function hatası kaydedilir, sessizce yutulmaz", () => {
+    // ⚠️ Yalnız `toContain("reportSemanticSearchFallback")` demek YETMEZ — mutasyon
+    // sınamasıyla ölçüldü: çağrı yerlerinden biri silinse bile yardımcının TANIMI
+    // metinde kaldığı için test yeşil kalıyordu. İKİ çağrı yeri de ayrı ayrı
+    // doğrulanmalı: beklenmedik yanıt dalı ve `catch` dalı.
+    // Tanım ok işaretli olduğu için `reportSemanticSearchFallback(` desenine GİRMEZ;
+    // sayılan yalnız çağrılardır (ölçüldü: 2).
+    const calls = source.match(/reportSemanticSearchFallback\(/g) ?? [];
+    expect(calls.length, "iki çağrı yeri de korunmalı").toBeGreaterThanOrEqual(2);
+
+    const catchStart = source.indexOf("} catch (error: unknown) {");
+    expect(catchStart, "catch bloğu bulunamadı").toBeGreaterThan(-1);
+    expect(source.slice(catchStart, catchStart + 400)).toContain("reportSemanticSearchFallback");
+  });
+
+  it("HATASIZ ama beklenmedik biçimli yanıt da düşüş sayılır", () => {
+    // `error` boş olduğu için eskiden hiç fark edilmiyordu.
+    expect(source).toContain("beklenmedik yanıt biçimi");
+  });
+
+  it("kaynak değeri canlıdaki CHECK kısıtıyla uyumlu kalır", () => {
+    // ⚠️ `client_error_reports.source` canlıda DÖRT değere kilitli. Uydurulmuş bir
+    // değer RPC tarafından reddedilir ve `reportClientError` fırlatmadığı için kayıt
+    // SESSİZCE kaybolur — görünürlük düzeltmesi görünmez olurdu.
+    const allowed = ["cadde_write", "cadde_read", "render", "unhandled"];
+    const match = source.match(/source:\s*"([a-z_]+)",\s*\n\s*context:\s*"directory_search/);
+
+    expect(match, "düşüş kaydının source alanı bulunamadı").not.toBeNull();
+    expect(allowed).toContain((match as RegExpMatchArray)[1]);
+  });
+});

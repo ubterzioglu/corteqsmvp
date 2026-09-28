@@ -1,5 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 
+import { reportClientError } from "./client-error-reports";
+
 type SupabaseError = { message: string };
 
 type DirectorySearchRpcRow = {
@@ -305,6 +307,35 @@ export async function listUnifiedDirectoryRows(
 
   let rpcRows: DirectorySearchRpcRow[] | null = null;
 
+  /**
+   * Semantik aramadan lexical aramaya DÜŞÜŞÜ kaydeder (G02).
+   *
+   * ⚠️ Fallback'in kendisi doğrudur ve KALIR: kaldırılsaydı edge function düştüğünde
+   * dizin araması tamamen ölürdü. Kapatılan kusur GÖRÜNMEZLİKTİ — düşüş sessizdi,
+   * yani sağlayıcı herkes için bozulsa arama kalıcı olarak "basit" moda iner ve
+   * kimse öğrenmezdi. Kullanıcı sonuç almaya devam ettiği için şikâyet de gelmez.
+   *
+   * Fren `reportClientError`ın kendisinde: aynı (kaynak, bağlam, mesaj) 60 sn içinde
+   * tekrar gönderilmez, sayfa ömrü boyunca 20 kayıt tavanı var. Bu yüzden her tuş
+   * vuruşunda arama yapılsa bile kayıt seli oluşmaz — ayrı bir throttle gerekmedi.
+   *
+   * ⚠️ `source` NEDEN "unhandled"? `client_error_reports.source` canlıda hem CHECK
+   * kısıtıyla hem `report_client_error` gövdesindeki denetimle DÖRT değere kilitli
+   * (`cadde_write · cadde_read · render · unhandled`). Yeni bir `directory_search`
+   * kaynağı eklemek MIGRATION ister, yani onaya tabidir. Uydurulmuş bir değer
+   * gönderilseydi RPC `invalid source` ile reddederdi ve `reportClientError` asla
+   * fırlatmadığı için kayıt SESSİZCE kaybolurdu — yani görünürlük düzeltmesinin
+   * kendisi görünmez olurdu. Bu yüzden ayırt etme işi serbest metin olan `context`
+   * alanına verildi; `/admin/client-errors` ekranından bu bağlamla süzülebilir.
+   */
+  const reportSemanticSearchFallback = (error: unknown): void => {
+    reportClientError({
+      source: "unhandled",
+      context: "directory_search_semantic_fallback",
+      error,
+    });
+  };
+
   // Sorgu embedding'i sunucuda üretilir; Gemini anahtarı tarayıcıya ASLA girmez.
   // Sağlayıcı/Edge Function kullanılamazsa lexical RPC aynı filtrelerle çalışmayı
   // sürdürür. Boş sorguda gereksiz model çağrısı yapılmaz.
@@ -314,8 +345,13 @@ export async function listUnifiedDirectoryRows(
         body: rpcArgs,
       });
       if (!error && Array.isArray(data?.rows)) rpcRows = data.rows;
-    } catch {
-      // Aşağıdaki lexical fallback kullanıcıya arama sonucu vermeye devam eder.
+      // ⚠️ Hatasız ama BEKLENMEDİK BİÇİMDE dönen yanıt da düşüştür ve eskiden
+      // `error` boş olduğu için hiç fark edilmiyordu.
+      else reportSemanticSearchFallback(error ?? new Error("directory-search beklenmedik yanıt biçimi"));
+    } catch (error: unknown) {
+      // Lexical fallback kullanıcıya arama sonucu vermeye DEVAM eder — bu bilinçli:
+      // fallback kaldırılsaydı edge function düştüğünde arama tamamen ölürdü.
+      reportSemanticSearchFallback(error);
     }
   }
 
