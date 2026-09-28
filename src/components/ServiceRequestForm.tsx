@@ -207,7 +207,10 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
       }
 
       // Upload files
-      const attachmentUrls: string[] = [];
+      // B3/Y6 (28.09): bucket PRIVATE — DB'ye public URL değil, storage PATH
+      // yazılır. Görüntüleme tarafı (ServiceAttachmentLink) tıklamada imzalı
+      // link üretir. Private bucket'ta getPublicUrl adresi ölü doğar (400).
+      const attachmentRefs: string[] = [];
       const failedUploads: string[] = [];
       for (const file of files) {
         // ⚠️ İkinci savunma (G01): dosya listeye eklendikten sonra da doğrulanır.
@@ -232,10 +235,7 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
           continue;
         }
 
-        const { data: urlData } = supabase.storage
-          .from("service-attachments")
-          .getPublicUrl(filePath);
-        attachmentUrls.push(urlData.publicUrl);
+        attachmentRefs.push(filePath);
       }
 
       if (failedUploads.length > 0) {
@@ -258,7 +258,7 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
         budgetMax: form.budgetMax ? parseFloat(form.budgetMax) : null,
         preferredTime: form.preferredTime || null,
         urgency: form.urgency,
-        attachmentUrls,
+        attachmentUrls: attachmentRefs,
       });
 
       markRealServiceRequest();

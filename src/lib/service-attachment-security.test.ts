@@ -182,3 +182,52 @@ describe("form ile doğrulama sözleşmesi aynı hizada", () => {
     expect(form).toContain("failedUploads");
   });
 });
+
+// B3/Y6 (28.09) — bucket PRIVATE'a geçti: SQL ile kod AYNI hizada kalmalı.
+//
+// Özelik: SQL dosyası uygulanana kadar `docs/operations/` altında, uygulandıktan
+// sonra `applied/` altında durur (repo kuralı). Test iki yolu da kabul eder;
+// ikisi de yoksa kırmızı olur (migration hiç yazılmamış demektir).
+describe("private bucket geçişi (B3/Y6) SQL-kod sözleşmesi", () => {
+  const appliedPath =
+    "supabase/migrations/applied/20260928210000_service_attachments_private.sql";
+  const operationsPath = "docs/operations/2026-09-28-service-attachments-private.sql";
+  const sqlPath = existsSync(appliedPath) ? appliedPath : operationsPath;
+  const sql = existsSync(sqlPath) ? readFileSync(sqlPath, "utf8") : "";
+
+  it("migration dosyası mevcut (operations veya applied)", () => {
+    expect(sql, `${sqlPath} bulunamadı`).not.toBe("");
+  });
+
+  it("bucket'ı private yapar ve herkese SELECT policy'sini DÜŞÜRÜR", () => {
+    expect(sql).toContain("public = false");
+    expect(sql).toContain('drop policy if exists "Anyone can view attachments"');
+  });
+
+  it("okuma kuralı own-or-admin: giriş yapan herkes TÜM ekleri okuyamaz", () => {
+    expect(sql).toContain("service_attachments_select_own_or_admin");
+    expect(sql).toContain("(storage.foldername(name))[1] = auth.uid()::text");
+    expect(sql).toContain("public.is_admin(auth.uid())");
+  });
+
+  it("geri alma bloğu var", () => {
+    expect(sql).toContain("GERİ ALMA");
+  });
+
+  it("form public URL ÜRETMİYOR — DB'ye path yazıyor", () => {
+    const form = readFileSync("src/components/ServiceRequestForm.tsx", "utf8");
+    // Gerçek API ÇAĞRISI yasak (yorumda kelimenin geçmesi serbest — bu test
+    // ilk halinde yorumdaki "getPublicUrl ölü doğar" notuna takıldı).
+    expect(form).not.toContain(".getPublicUrl(");
+    expect(form).toContain("attachmentRefs.push(filePath)");
+  });
+
+  it("görüntüleme imzalı linkle: ServiceAttachmentLink + createSignedUrl", () => {
+    const list = readFileSync("src/components/ServiceRequestsList.tsx", "utf8");
+    expect(list).toContain("ServiceAttachmentLink");
+    expect(list).not.toContain("href={url}");
+
+    const link = readFileSync("src/components/ServiceAttachmentLink.tsx", "utf8");
+    expect(link).toContain("createServiceAttachmentUrl");
+  });
+});

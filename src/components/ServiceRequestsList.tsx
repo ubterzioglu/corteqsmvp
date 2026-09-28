@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Briefcase, MapPin, Clock, DollarSign, MessageSquare, ChevronDown, ChevronUp, CheckCircle, XCircle, FileText, ExternalLink, Info } from "lucide-react";
+import { Briefcase, MapPin, Clock, DollarSign, MessageSquare, ChevronDown, ChevronUp, CheckCircle, XCircle, Info } from "lucide-react";
+import { ServiceAttachmentLink } from "@/components/ServiceAttachmentLink";
 import { useDemoFlag, markRealServiceRequest } from "@/lib/demoFlags";
 import {
   listMyServiceRequestsWithProposals,
@@ -212,15 +213,11 @@ const ServiceRequestsList = () => {
                   <p className="text-sm text-foreground whitespace-pre-wrap">{req.description}</p>
                 </div>
 
-                {/* Attachments */}
+                {/* Attachments — B3/Y6: private bucket, tıklamada imzalı link */}
                 {req.attachment_urls && req.attachment_urls.length > 0 && (
                   <div className="flex flex-wrap gap-2">
-                    {req.attachment_urls.map((url, i) => (
-                      <a key={i} href={url} target="_blank" rel="noopener noreferrer">
-                        <Badge variant="outline" className="gap-1.5 cursor-pointer hover:bg-muted">
-                          <FileText className="h-3 w-3" /> Dosya {i + 1} <ExternalLink className="h-3 w-3" />
-                        </Badge>
-                      </a>
+                    {req.attachment_urls.map((stored, i) => (
+                      <ServiceAttachmentLink key={i} stored={stored} index={i} />
                     ))}
                   </div>
                 )}

@@ -3951,6 +3951,16 @@
       "module_family": "lib"
     },
     {
+      "path": "src/lib/service-attachment-url.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/service-attachment-url.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/service-finder-api.ts",
       "kind": "ts",
       "module_family": "lib"
