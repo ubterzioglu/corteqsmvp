@@ -2068,6 +2068,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin/marquee-form-logic.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/marquee-form-logic.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin/referral-page-logic.test.ts",
       "kind": "ts",
       "module_family": "lib"

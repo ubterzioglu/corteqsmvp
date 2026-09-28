@@ -26,74 +26,14 @@ import {
   type MarqueeItemType,
   type NewsPostRow,
 } from "@/lib/marquee";
-
-type MarqueeFormState = {
-  type: MarqueeItemType;
-  slug: string;
-  title: string;
-  summary: string;
-  detail_content: string;
-  image_url: string;
-  image_alt: string;
-  metric_value: string;
-  link_enabled: boolean;
-  sort_order: string;
-  is_active: boolean;
-  published_at: string;
-};
-
-const emptyForm = (): MarqueeFormState => ({
-  type: "news",
-  slug: "",
-  title: "",
-  summary: "",
-  detail_content: "",
-  image_url: "",
-  image_alt: "",
-  metric_value: "",
-  link_enabled: false,
-  sort_order: "0",
-  is_active: true,
-  published_at: new Date().toISOString().slice(0, 16),
-});
-
-const toLocalInputValue = (value: string) => {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return new Date().toISOString().slice(0, 16);
-  const offsetMs = date.getTimezoneOffset() * 60_000;
-  return new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
-};
-
-const toFormState = (item: MarqueeItemRow): MarqueeFormState => ({
-  type: item.type === "news" || item.type === "stat" || item.type === "announcement" ? item.type : "news",
-  slug: item.slug ?? "",
-  title: item.title,
-  summary: item.summary,
-  detail_content: item.detail_content ?? "",
-  image_url: item.image_url ?? "",
-  image_alt: item.image_alt ?? "",
-  metric_value: item.metric_value ?? "",
-  link_enabled: item.link_enabled,
-  sort_order: String(item.sort_order),
-  is_active: item.is_active,
-  published_at: toLocalInputValue(item.published_at),
-});
-
-const normalizeOptional = (value: string) => {
-  const trimmed = value.trim();
-  return trimmed ? trimmed : null;
-};
-
-const formatNewsDate = (value: string | null) => {
-  if (!value) return "Tarih yok";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Tarih yok";
-  return new Intl.DateTimeFormat("tr-TR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(date);
-};
+import {
+  emptyMarqueeForm,
+  formatMarqueeNewsDate,
+  marqueeRowToFormState,
+  normalizeOptionalText,
+  toLocalInputValue,
+  type MarqueeFormState,
+} from "@/lib/admin/marquee-form-logic";
 
 const AdminMarqueePage = () => {
   const { toast } = useToast();
@@ -106,7 +46,7 @@ const AdminMarqueePage = () => {
   const [importingNewsPostId, setImportingNewsPostId] = useState<number | null>(null);
   const [imageUploadError, setImageUploadError] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [form, setForm] = useState<MarqueeFormState>(() => emptyForm());
+  const [form, setForm] = useState<MarqueeFormState>(() => emptyMarqueeForm());
 
   const editingItem = useMemo(() => items.find((item) => item.id === editingId) ?? null, [editingId, items]);
 
@@ -172,12 +112,12 @@ const AdminMarqueePage = () => {
 
   const resetForm = () => {
     setEditingId(null);
-    setForm(emptyForm());
+    setForm(emptyMarqueeForm());
   };
 
   const editItem = (item: MarqueeItemRow) => {
     setEditingId(item.id);
-    setForm(toFormState(item));
+    setForm(marqueeRowToFormState(item));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -205,10 +145,10 @@ const AdminMarqueePage = () => {
       slug: slug || null,
       title,
       summary,
-      detail_content: normalizeOptional(form.detail_content),
-      image_url: normalizeOptional(form.image_url),
-      image_alt: normalizeOptional(form.image_alt),
-      metric_value: normalizeOptional(form.metric_value),
+      detail_content: normalizeOptionalText(form.detail_content),
+      image_url: normalizeOptionalText(form.image_url),
+      image_alt: normalizeOptionalText(form.image_alt),
+      metric_value: normalizeOptionalText(form.metric_value),
       link_enabled: form.link_enabled,
       sort_order: sortOrder,
       is_active: form.is_active,
@@ -476,7 +416,7 @@ const AdminMarqueePage = () => {
                           {[post.city, post.country].filter(Boolean).join(", ") || post.category || "-"}
                         </div>
                       </TableCell>
-                      <TableCell>{formatNewsDate(post.published_at ?? post.created_at)}</TableCell>
+                      <TableCell>{formatMarqueeNewsDate(post.published_at ?? post.created_at)}</TableCell>
                       <TableCell>
                         {importedItem ? <Badge variant="outline">Marquee’de</Badge> : <Badge>Hazır</Badge>}
                       </TableCell>
