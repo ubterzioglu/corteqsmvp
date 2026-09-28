@@ -1,4 +1,25 @@
 import "@testing-library/jest-dom";
+import { configure } from "@testing-library/react";
+
+/**
+ * `waitFor` / `findBy*` varsayılan bekleme süresi 1 SANİYEDİR ve tam koşudaki
+ * flake'lerin GERÇEK darboğazı buydu (2026-09-28 ölçümü).
+ *
+ * ⚠️ Yanlış teşhis edilmesi kolay: `vitest.config.ts`'teki `testTimeout` 15 sn'dir,
+ * yani "zaman aşımı zaten bol" görünür. Ama düşen testler o duvara değil, Testing
+ * Library'nin 1 sn'lik ASENKRON İDDİA duvarına tosluyordu. Beş ayrı dosyada aynı
+ * desen görüldü (commercial, CaddePage, CaddeComposer): izole koşuda saniyeler
+ * içinde geçen dosya, tam koşuda tek testte kırmızı.
+ *
+ * Neden 1 sn yetmiyor: bu testlerin çoğu `<App />` render ediyor ve App 61 `lazy()`
+ * import taşıyor. Yük altında bir Suspense parçasının çözülmesi 1 sn'yi rahatça
+ * aşar — test yavaş değildir, İDDİA erken pes eder.
+ *
+ * ⚠️ Bu bir "bekleyip geçsin" gevşetmesi DEĞİLDİR: gerçekten bozuk bir test yine
+ * düşer, yalnız 5 sn sonra. Zaman aşımını büyütmek yerine burayı ayarlamak doğru
+ * olan, çünkü kusur iddia katmanındaydı.
+ */
+configure({ asyncUtilTimeout: 5_000 });
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,

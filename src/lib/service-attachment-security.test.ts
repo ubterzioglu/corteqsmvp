@@ -93,6 +93,59 @@ describe("safeStorageFileName", () => {
   });
 });
 
+// G03-h — hazırlanan bucket migration'ı istemciyle AYNI hizada kalmalı.
+//
+// ⚠️ Bu migration HENÜZ UYGULANMADI (onaya tabi, P01). Test SQL metnini denetler,
+// canlı durumu değil. Amaç: onay geldiğinde uygulanacak dosya ile bugünkü istemci
+// denetimi ayrışmış olmasın.
+//
+// Ayrışmanın bedeli ölçülmüştür: Cadde videosunda (m94) istemci sınırı ile bucket
+// tavanı ayrı ayrı değiştirildiğinde kullanıcı 50 MB yükleyip sunucudan anlamsız
+// hata alıyordu. Aynı tuzağa düşülmesin.
+describe("bucket migration'ı istemci denetimiyle hizada (G03-h)", () => {
+  const sql = readFileSync(
+    "docs/operations/2026-09-28-service-attachments-bucket-hardening.sql",
+    "utf8",
+  );
+
+  it("boyut tavanı istemcideki 15 MB ile AYNI", () => {
+    expect(sql).toContain("file_size_limit = 15728640");
+    expect(15728640).toBe(15 * 1024 * 1024);
+  });
+
+  it("izin verilen MIME türleri istemcideki uzantı setini karşılar", () => {
+    // pdf · doc · docx · jpg/jpeg · png · webp
+    for (const mime of [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+    ]) {
+      expect(sql, mime).toContain(mime);
+    }
+  });
+
+  it("yükleme kuralı SAHİPLİK denetler, yalnız bucket adına bakmaz", () => {
+    // Eski kural yalnız `bucket_id`ye bakıyordu: kullanıcı A, B'nin klasörüne
+    // yazabiliyordu. Kod anahtarı `<user_id>/...` kuruyor ama bu yalnız istemcinin
+    // nezaketiydi.
+    expect(sql).toContain("(storage.foldername(name))[1] = auth.uid()::text");
+    expect(sql).toContain('drop policy if exists "Authenticated users can upload attachments"');
+  });
+
+  it("geri alma bloğu var (canlı migration geri alınabilir olmalı)", () => {
+    expect(sql).toContain("GERİ ALMA");
+  });
+
+  it("dosya migration dizinlerinde DEĞİL (uygulanmadan oraya konmaz)", () => {
+    // CLAUDE.md: parent `supabase/migrations/` başıboş dosya = check:migrations exit 1;
+    // `applied/` ise "canlıda var" demektir ve sapma raporlanır.
+    expect(sql).toContain("HENÜZ UYGULANMADI");
+  });
+});
+
 describe("form ile doğrulama sözleşmesi aynı hizada", () => {
   const form = readFileSync("src/components/ServiceRequestForm.tsx", "utf8");
 
