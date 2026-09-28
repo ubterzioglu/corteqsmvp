@@ -260,7 +260,23 @@ async function fetchCafeMembers(cafeIds: string[]): Promise<CaddeCafeMemberRow[]
   return (data ?? []) as CaddeCafeMemberRow[];
 }
 
-function mapCafe(row: CaddeCafeRow, countries: Map<string, string>, cities: Map<string, string>, members: CaddeCafeMemberRow[], hosts: Map<string, string>, currentUserId: string | null): CaddeCafe {
+/**
+ * ⚠️ Konumsal parametre yerine TEK BAĞLAM NESNESİ (C01). Eski imzada `countries`
+ * ve `cities` ikisi de `Map<string, string>`, `members` ve `hosts` de benzerdi:
+ * İKİSİNİ YER DEĞİŞTİRMEK tsc'den GEÇERDİ ve kafeler yanlış şehir/ülke ile
+ * çizilirdi — hata hiçbir yerde çıkmaz, yalnız veri sessizce yanlış olurdu.
+ * Adlandırılmış alanlar bu sınıfı tamamen kapatır.
+ */
+type CafeMapContext = {
+  countries: Map<string, string>;
+  cities: Map<string, string>;
+  members: CaddeCafeMemberRow[];
+  hosts: Map<string, string>;
+  currentUserId: string | null;
+};
+
+function mapCafe(row: CaddeCafeRow, ctx: CafeMapContext): CaddeCafe {
+  const { countries, cities, members, hosts, currentUserId } = ctx;
   const cafeMembers = members.filter((member) => member.cafe_id === row.id);
   const viewerMember = currentUserId ? cafeMembers.find((member) => member.user_id === currentUserId) ?? null : null;
   return {
@@ -291,7 +307,7 @@ export async function listCaddeCafes(filters: CaddeFilterState, currentUserId: s
     if (error) throw error;
     const rows = (data ?? []) as CaddeCafeRow[];
     const [countries, cities, members, hosts] = await Promise.all([fetchCaddeCountryNameMap(), fetchCaddeCityNameMap(), fetchCafeMembers(rows.map((row) => row.id)), fetchCaddeUserNameMap(rows.map((row) => row.host_user_id).filter(Boolean) as string[])]);
-    return rows.map((row) => mapCafe(row, countries, cities, members, hosts, currentUserId));
+    return rows.map((row) => mapCafe(row, { countries, cities, members, hosts, currentUserId }));
   } catch (error: unknown) {
     // Hata ≠ "kafe yok". Boş dizi dönmek RLS reddini/ağ hatasını ekranda içerik
     // yokluğu gibi gösterirdi (S06a; feed'de aynı kusur 04.08'de ölçülmüştü).
@@ -307,7 +323,7 @@ export async function getCaddeCafe(cafeId: string, currentUserId: string | null)
     if (!data) return null;
     const row = data as CaddeCafeRow;
     const [countries, cities, members, hosts] = await Promise.all([fetchCaddeCountryNameMap(), fetchCaddeCityNameMap(), fetchCafeMembers([row.id]), fetchCaddeUserNameMap(row.host_user_id ? [row.host_user_id] : [])]);
-    return mapCafe(row, countries, cities, members, hosts, currentUserId);
+    return mapCafe(row, { countries, cities, members, hosts, currentUserId });
   } catch (error: unknown) {
     // ⚠️ `null` iki farklı şeyi karıştırıyordu: "kafe bulunamadı" (yukarıdaki
     // `if (!data) return null` — meşru) ve "okunamadı". İkincisi artık fırlatır.
@@ -322,7 +338,7 @@ export async function listMyCaddeCafes(userId: string): Promise<CaddeCafe[]> {
     if (error) throw error;
     const rows = (data ?? []) as CaddeCafeRow[];
     const [countries, cities, members] = await Promise.all([fetchCaddeCountryNameMap(), fetchCaddeCityNameMap(), fetchCafeMembers(rows.map((row) => row.id))]);
-    return rows.map((row) => mapCafe(row, countries, cities, members, new Map(), userId));
+    return rows.map((row) => mapCafe(row, { countries, cities, members, hosts: new Map(), currentUserId: userId }));
   } catch (error: unknown) {
     throw caddeReadError("listMyCaddeCafes", error);
   }
@@ -398,15 +414,23 @@ function normalizeMentionRows(raw: unknown): CaddePostMention[] {
   });
 }
 
-function mapCafeFeedPost(
-  row: CaddeFeedRpcItem,
-  reactions: CaddeReactionRow[],
-  commentCounts: Map<string, number>,
-  shareCounts: Map<string, number>,
-  comments: CommentWithAuthor[],
-  authorNames: Map<string, string>,
-  currentUserId: string | null,
-): CaddePost {
+/**
+ * ⚠️ Konumsal parametre yerine TEK BAĞLAM NESNESİ (C01). Eski imzada
+ * `commentCounts` ve `shareCounts` İKİSİ DE `Map<string, number>` idi: yerlerini
+ * değiştirmek tsc'den GEÇERDİ ve gönderiler yorum sayısı yerine paylaşım sayısını
+ * gösterirdi — sessiz, görünürde makul, tamamen yanlış veri.
+ */
+type CafeFeedPostContext = {
+  reactions: CaddeReactionRow[];
+  commentCounts: Map<string, number>;
+  shareCounts: Map<string, number>;
+  comments: CommentWithAuthor[];
+  authorNames: Map<string, string>;
+  currentUserId: string | null;
+};
+
+function mapCafeFeedPost(row: CaddeFeedRpcItem, ctx: CafeFeedPostContext): CaddePost {
+  const { reactions, commentCounts, shareCounts, comments, authorNames, currentUserId } = ctx;
   const postReactions = reactions.filter((reaction) => reaction.post_id === row.id);
   const postComments = comments.filter((comment) => comment.post_id === row.id);
   const reactionCounts = emptyReactions();
@@ -502,12 +526,7 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
           score: 0,
           rand: 0,
         },
-        reactions,
-        commentCounts,
-        shareCounts,
-        comments,
-        authorNames,
-        currentUserId,
+        { reactions, commentCounts, shareCounts, comments, authorNames, currentUserId },
       ),
     );
   } catch (error: unknown) {

@@ -115,7 +115,7 @@ export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeF
       fetchPostShareCounts(postIds),
       fetchUserNameMap(rows.map((row) => row.author_user_id).filter(Boolean) as string[], currentUserId ? [currentUserId] : []),
     ]);
-    return { items: rows.map((row) => mapRpcPost(row, reactions, shareCounts, authorNames, currentUserId)), nextPage: payload.nextCursor ?? null };
+    return { items: rows.map((row) => mapRpcPost(row, { reactions, shareCounts, authorNames, currentUserId })), nextPage: payload.nextCursor ?? null };
   } catch (error: unknown) {
     throw caddeReadError("listCaddeFeed", error);
   }
@@ -172,7 +172,22 @@ export function normalizeCaddeMentionRows(raw: unknown): CaddePostMention[] {
   });
 }
 
-function mapRpcPost(row: CaddeFeedRpcItem, reactions: CaddeReactionRow[], shareCounts: Map<string, number>, authorNames: Map<string, string>, currentUserId: string | null): CaddePost {
+/**
+ * ⚠️ Konumsal parametre yerine TEK BAĞLAM NESNESİ (C01). `shareCounts` ve
+ * `authorNames` farklı değer tipleri taşısa da ikisi de `Map`tır ve sıraları karışınca
+ * tsc her zaman yakalamaz; aynı ailedeki `cadde-cafe-api` eşlemelerinde iki harita
+ * BİREBİR aynı tipteydi ve yer değiştirmeleri tamamen sessizdi.
+ * Üç eşleme fonksiyonu aynı kalıbı kullanır; birini değiştiren öbürlerine de baksın.
+ */
+type RpcPostContext = {
+  reactions: CaddeReactionRow[];
+  shareCounts: Map<string, number>;
+  authorNames: Map<string, string>;
+  currentUserId: string | null;
+};
+
+function mapRpcPost(row: CaddeFeedRpcItem, ctx: RpcPostContext): CaddePost {
+  const { reactions, shareCounts, authorNames, currentUserId } = ctx;
   const postReactions = reactions.filter((reaction) => reaction.post_id === row.id);
   const reactionCounts = emptyReactions();
   for (const reaction of postReactions) reactionCounts[reaction.reaction_type] += 1;

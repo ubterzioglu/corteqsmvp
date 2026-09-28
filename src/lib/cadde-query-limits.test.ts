@@ -148,6 +148,29 @@ describe("tam olması gereken listeler sayfalanır", () => {
     }
   });
 
+  // C01 — eşleme fonksiyonları BAĞLAM NESNESİ alır, konumsal parametre yığını değil.
+  //
+  // ⚠️ Gerekçe biçimsel değil, SESSİZ VERİ HATASI: eski imzalarda aynı tipte iki
+  // parametre yan yanaydı (`countries`/`cities` ikisi de `Map<string, string>`,
+  // `commentCounts`/`shareCounts` ikisi de `Map<string, number>`). Yerlerini
+  // değiştirmek tsc'den GEÇERDİ ve kafeler yanlış şehirle, gönderiler yorum yerine
+  // paylaşım sayısıyla çizilirdi — görünürde makul, tamamen yanlış.
+  it.each([
+    { file: "src/lib/cadde-cafe-api.ts", fn: "mapCafe", ctx: "CafeMapContext" },
+    { file: "src/lib/cadde-cafe-api.ts", fn: "mapCafeFeedPost", ctx: "CafeFeedPostContext" },
+    { file: "src/lib/cadde-feed-location-api.ts", fn: "mapRpcPost", ctx: "RpcPostContext" },
+  ])("$fn bağlam nesnesi alır", ({ file, fn, ctx }) => {
+    const source = readFileSync(file, "utf8");
+    const start = source.indexOf(`function ${fn}(`);
+    expect(start, `${fn} bulunamadı`).toBeGreaterThan(-1);
+
+    const signature = source.slice(start, start + 200);
+    expect(signature).toContain(`ctx: ${ctx}`);
+    // İmza tek satıra sığmalı: aynı tipte iki parametreyi yan yana koyma kalıbı geri
+    // gelirse bu iddia düşer.
+    expect(signature.split("\n")[0]).toContain("): CaddePost {".slice(0, 3));
+  });
+
   it("fetchAllRows sessizce eksik dönmez — tavana dayanırsa FIRLATIR", () => {
     // Sonsuz döngü freni gerekli, ama frene takılınca boş/eksik dizi dönmek tam da
     // kapatmaya çalıştığımız kusur olurdu.
