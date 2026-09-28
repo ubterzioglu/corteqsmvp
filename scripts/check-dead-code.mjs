@@ -18,6 +18,10 @@ export const KNOWN_DEAD_FILES = new Set([
   "src/components/admin/shell/index.ts",
 ]);
 
+// Yalnız testlerin kullandığı paylaşılan yardımcıların yaşadığı dizin. Buradaki bir
+// dosya üretim grafiğinden değil, TEST grafiğinden erişilebilir olmalıdır.
+export const TEST_SUPPORT_DIR = "src/test/";
+
 const normalizePath = (value) => value.replaceAll("\\", "/").replace(/^\.\//, "");
 
 export function isTestFile(filePath) {
@@ -137,24 +141,39 @@ export function analyzeSourceGraph({
   configReferencedExceptions = CONFIG_REFERENCED_EXCEPTIONS,
 }) {
   const sourceFiles = new Set(sources.keys());
-  const reachable = new Set();
-  const queue = [entry];
 
-  while (queue.length > 0) {
-    const current = queue.shift();
-    if (!current || reachable.has(current) || !sourceFiles.has(current)) continue;
-    reachable.add(current);
+  const walk = (entries) => {
+    const seen = new Set();
+    const queue = [...entries];
+    while (queue.length > 0) {
+      const current = queue.shift();
+      if (!current || seen.has(current) || !sourceFiles.has(current)) continue;
+      seen.add(current);
 
-    for (const specifier of extractModuleSpecifiers(sources.get(current))) {
-      const resolved = resolveLocalModule(current, specifier, sourceFiles);
-      if (resolved && !reachable.has(resolved)) queue.push(resolved);
+      for (const specifier of extractModuleSpecifiers(sources.get(current))) {
+        const resolved = resolveLocalModule(current, specifier, sourceFiles);
+        if (resolved && !seen.has(resolved)) queue.push(resolved);
+      }
     }
-  }
+    return seen;
+  };
+
+  const reachable = walk([entry]);
+  // İKİNCİ GEÇİŞ — yalnız `src/test/**` muafiyeti için (S04b).
+  // Test dosyaları üretim grafiğinin dışındadır, bu yüzden SADECE testlerin kullandığı
+  // bir yardımcı `src/main.tsx`'ten erişilemez ve "ölü" raporlanırdı. Bu, ortak test
+  // yardımcısı çıkarmayı cezalandırıyordu (ölçüldü 28.09: `src/test/source-slice.ts`).
+  // ⚠️ Bu geçiş ÜRETİM dosyalarını muaf tutmaz — bir `src/lib` dosyasını yalnız testi
+  // import ediyorsa o dosya hâlâ ölüdür ve raporlanır. Muafiyet `src/test/` ile sınırlı.
+  const testReachable = walk([...sourceFiles].filter((filePath) => isTestFile(filePath)));
 
   const unreachable = [...sourceFiles]
     .filter((filePath) => !reachable.has(filePath))
     .filter((filePath) => !isTestFile(filePath))
     .filter((filePath) => !configReferencedExceptions.has(filePath))
+    .filter(
+      (filePath) => !(filePath.startsWith(TEST_SUPPORT_DIR) && testReachable.has(filePath)),
+    )
     .sort();
 
   return {

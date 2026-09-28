@@ -3,6 +3,8 @@ import { resolve } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { sliceFrom, sliceUntil } from "@/test/source-slice";
+
 import {
   DEFAULT_EVENT_TIMEZONE,
   EVENT_TIMEZONE_GROUPS,
@@ -181,8 +183,8 @@ describe("etkinlik günü", () => {
     // 5 Ekim etkinliği "4 Ekim" olur). Test makinesi UTC olabileceği için
     // davranış tek başına yetmez; uygulamayı kaynaktan da kilitleriz.
     const source = readSource("src/lib/events-timezone.ts");
-    const fn = source.slice(source.indexOf("export function formatEventDate"));
-    const body = fn.slice(0, fn.indexOf("\n}"));
+    const fn = sliceFrom(source, "export function formatEventDate", "formatEventDate");
+    const body = sliceUntil(fn, "\n}", "formatEventDate gövde sonu");
     // Gün UTC'de kurulur ve UTC'de yazılır — ikisi birden olmalı.
     expect(body).toContain("Date.UTC(");
     expect(body).toContain('timeZone: "UTC"');
@@ -199,7 +201,7 @@ describe("izleyici saat dilimi", () => {
     // Daraltılsaydı `America/Detroit` kullanıcısına İstanbul saati "senin saatin"
     // diye gösterilirdi.
     const source = readSource("src/lib/events-timezone.ts");
-    const fn = source.slice(source.indexOf("export function resolveViewerTimezone"));
+    const fn = sliceFrom(source, "export function resolveViewerTimezone", "resolveViewerTimezone");
     expect(fn.slice(0, 400)).not.toContain("isKnownEventTimezone");
     expect(resolveViewerTimezone().length).toBeGreaterThan(0);
   });
@@ -368,7 +370,7 @@ describe("migration sözleşmesi", () => {
     // `PGRST204 Could not find the 'timezone' column` olarak çıkar ve formu
     // tamamen düşürür (CLAUDE.md'de belgelenen sınıf).
     const types = readSource("src/integrations/supabase/types.ts");
-    const eventsBlock = types.slice(types.indexOf("      events: {"));
+    const eventsBlock = sliceFrom(types, "      events: {", "types.ts events tablosu");
     expect(eventsBlock.slice(0, 4000)).toContain("timezone: string | null");
   });
 });

@@ -17,13 +17,15 @@ import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
+import { sliceBetween, sliceFrom } from "@/test/source-slice";
+
 const SQL = readFileSync(
   "supabase/migrations/applied/20260927140000_ai_knowledge_search_index_kullanimi.sql",
   "utf8",
 );
 
 /** Fonksiyon gövdesindeki `return query` ile biten ifadeyi çıkarır. */
-const body = SQL.slice(SQL.indexOf("return query"), SQL.indexOf("end;\n$function$"));
+const body = sliceBetween(SQL, "return query", "end;\n$function$", "ai_knowledge_search gövdesi");
 
 describe("ai_knowledge_search — HNSW indeks deseni", () => {
   it("mesafe sıralamasını limit ile birlikte alt sorguda tutar", () => {
@@ -37,9 +39,9 @@ describe("ai_knowledge_search — HNSW indeks deseni", () => {
   });
 
   it("alt sorgunun WHERE'inde mesafe hesabı YOKTUR", () => {
-    const subquery = body.slice(body.indexOf("from ("), body.indexOf("order by"));
+    const subquery = sliceBetween(body, "from (", "order by");
     // Alt sorgunun filtre bölümünde `<=>` geçerse indeks devre dışı kalır.
-    const whereBlock = subquery.slice(subquery.indexOf("where"));
+    const whereBlock = sliceFrom(subquery, "where", "alt sorgu WHERE bloğu");
     expect(whereBlock).not.toContain("<=>");
   });
 

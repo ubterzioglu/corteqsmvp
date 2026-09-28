@@ -97,6 +97,49 @@ describe("analyzeSourceGraph", () => {
     expect(result.knownDead).toEqual(["src/lib/known-dead.ts"]);
     expect(result.newDead).toEqual(["src/lib/new-dead.ts"]);
   });
+
+  // S04b — paylaşılan test yardımcıları üretim grafiğinde YOKTUR; onları ölü saymak
+  // ortak yardımcı çıkarmayı cezalandırıyordu. Muafiyet iki koşullu ve DAR olmalı:
+  // dosya `src/test/` altında OLACAK ve bir testten gerçekten erişilebilir OLACAK.
+  it("src/test/ altındaki yardımcıyı yalnız bir TEST onu import ediyorsa muaf tutar", () => {
+    const sources = new Map([
+      ["src/main.tsx", "export const app = true;"],
+      ["src/lib/live.test.ts", 'import { helper } from "@/test/source-slice";'],
+      ["src/test/source-slice.ts", "export const helper = true;"],
+      ["src/test/hic-kullanilmayan.ts", "export const unused = true;"],
+    ]);
+
+    const result = analyzeSourceGraph({
+      sources,
+      entry: "src/main.tsx",
+      knownDeadFiles: new Set(),
+      configReferencedExceptions: new Set(),
+    });
+
+    // Kullanılan yardımcı muaf; kullanılmayan yardımcı HÂLÂ yakalanır.
+    expect(result.newDead).toEqual(["src/test/hic-kullanilmayan.ts"]);
+    // Muafiyet üretim grafiğini büyütmez.
+    expect(result.reachable).toEqual(new Set(["src/main.tsx"]));
+  });
+
+  it("yalnız testin import ettiği ÜRETİM dosyasını muaf TUTMAZ", () => {
+    // Muafiyet `src/test/` ile sınırlıdır. `src/lib` altındaki bir dosya yalnız
+    // testinden erişiliyorsa o gerçekten ölü üretim kodudur — gevşetme.
+    const sources = new Map([
+      ["src/main.tsx", "export const app = true;"],
+      ["src/lib/olu.test.ts", 'import { x } from "@/lib/olu";'],
+      ["src/lib/olu.ts", "export const x = true;"],
+    ]);
+
+    const result = analyzeSourceGraph({
+      sources,
+      entry: "src/main.tsx",
+      knownDeadFiles: new Set(),
+      configReferencedExceptions: new Set(),
+    });
+
+    expect(result.newDead).toEqual(["src/lib/olu.ts"]);
+  });
 });
 
 describe("isTestFile", () => {

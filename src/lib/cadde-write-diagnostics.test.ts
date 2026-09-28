@@ -22,6 +22,8 @@ import { readdirSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
+import { sliceUntil } from "@/test/source-slice";
+
 // Sabit liste YASAK: yeni bölünen/eklenen cadde API dosyaları otomatik kapsanır.
 const API_FILES = readdirSync("src/lib")
   .filter(
@@ -131,7 +133,7 @@ describe("cadde yazma yolu teşhis sözleşmesi", () => {
     expect(source).toContain("return new Error(resolveCaddeRpcErrorMessage(error, fallback))");
     // Okuma yolunun toast'ı yazma yolunda çift/yanlış mesaj üretir — çağrılmamalı.
     const body = source.slice(anchor);
-    const fnBody = body.slice(0, body.indexOf("\n}"));
+    const fnBody = sliceUntil(body, "\n}", "caddeWriteError gövde sonu");
     expect(fnBody).not.toContain("reportCaddeApiError");
     expect(fnBody).not.toContain("toast");
   });
@@ -142,14 +144,14 @@ describe("cadde yazma yolu teşhis sözleşmesi", () => {
     const writeAnchor = source.indexOf("export function caddeWriteError");
     expect(writeAnchor, "caddeWriteError tanımı bulunamadı").toBeGreaterThan(-1);
     const writeBody = source.slice(writeAnchor);
-    expect(writeBody.slice(0, writeBody.indexOf("\n}"))).toContain(
+    expect(sliceUntil(writeBody, "\n}", "caddeWriteError gövde sonu")).toContain(
       'reportClientError({ source: "cadde_write", context, error })',
     );
 
     const readAnchor = source.indexOf("export function caddeReadError");
     expect(readAnchor, "caddeReadError tanımı bulunamadı").toBeGreaterThan(-1);
     const readBody = source.slice(readAnchor);
-    expect(readBody.slice(0, readBody.indexOf("\n}"))).toContain(
+    expect(sliceUntil(readBody, "\n}", "caddeReadError gövde sonu")).toContain(
       'reportClientError({ source: "cadde_read", context, error })',
     );
   });
