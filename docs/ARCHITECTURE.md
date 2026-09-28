@@ -151,6 +151,41 @@ DROP migration (`user_follows` 1 satır R-06 notuyla). Bu tablolara yeniden poli
 
 ---
 
+### 4.4 Kod haritası (ölçüldü 2026-09-28 gece)
+
+Yukarıdaki §4.1 Cadde'yi **işlevsel** olarak anlatır; burası kodun **nerede durduğunu**
+söyler. `src/lib` altında **35** `cadde-*` modülü (test hariç), `src/pages/cadde` altında
+**4** sayfa, `src/components/cadde` altında **31** bileşen vardır.
+
+⚠️ **Tek bir "cadde servisi" yoktur.** Yeni iş yaparken aşağıdaki gruptan doğru modülü
+seç; `cadde-api.ts`'e yeni iş ekleme — o artık bir **cephedir** (183 satır, işi alt
+modüllere devredip `export { ... } from` ile yeniden yayar).
+
+| Grup | Modüller |
+|---|---|
+| **Cephe / barrel** | `cadde-api.ts` (183, okuma + mutation cephesi) · `cadde.ts` (12, **geçici uyumluluk barrel'ı**, Faz 2 sonunda silinecek — yeni kod buradan import ETMEZ) |
+| **Ortak altyapı** | `cadde-types.ts` (635) · `cadde-schemas.ts` (245, Zod) · `cadde-format.ts` · `cadde-internal.ts` (`db` + `caddeReadError`/`caddeWriteError`) · `cadde-text.ts` · `cadde-text-insert.ts` · `cadde-query-keys.ts` · `cadde-query-cache.ts` · `cadde-api-support.ts` · `cadde-links.ts` · `cadde-local-clock.ts` |
+| **Feed + ranking** | `cadde-feed-location-api.ts` · `cadde-ranking.ts` · `cadde-feed-widen.ts` · `cadde-feed-polling.ts` · `cadde-reach.ts` · `cadde-targeting.ts` |
+| **Kurallar** | `cadde-rules.ts` (358 — köprü kuralı + **Türkçe hata kodu haritası**) |
+| **Etkileşim** | `cadde-engagement-api.ts` · `cadde-reactions.ts` · `cadde-composer.ts` · `cadde-media.ts` |
+| **Cafe** | `cadde-cafe-api.ts` (558) · `cadde-cafe-occupancy.ts` · `cadde-cafe-logo.ts` |
+| **Çarşı** | `cadde-carsi-api.ts` (305) |
+| **Tanıtım** | `cadde-tanitim-api.ts` (242) · `cadde-promotion-api.ts` |
+| **Bildirim / moderasyon** | `cadde-notifications-api.ts` · `cadde-moderation-api.ts` · `cadde-admin-api.ts` |
+| **Arama / ilgi alanları** | `cadde-search-interests-api.ts` |
+| **Demo veri** | `cadde-demo-data.ts` (yalnız `mode==='demo'` veya Supabase yapılandırılmamışken) |
+
+**Sayfalar:** `CaddePage.tsx` (670) · `CaddeCafePage.tsx` (495) · `CaddeCarsiPage.tsx` (337) ·
+`CaddeCarsiItemPage.tsx` (172).
+
+⚠️ **"Cadde ikilisi devasa, önce karakterizasyon testi gerekir" notu ARTIK GEÇERSİZ.**
+Ölçüldü: `cadde-api.ts` **986 → 183**, `CaddePage.tsx` **1716 → 670**. İkisi de bölündü;
+bu ikiliyi "ertelenen büyük refactor" diye yeniden açma.
+
+⚠️ Buna rağmen §4.2'deki dikkat kuralları **aynen geçerlidir**: bu alan üç kez *sessizce*
+kırıldı (fold-insensitive eşleşme, `instanceof Error` daraltması aylarca canlıda kaldı,
+hedef eşleşmesi). Dosya küçüldü diye denetim gevşetilmez.
+
 ## 5. Veritabanı Operasyonları
 
 - **Migration konumu ve sayısı:** 403 migration — 151'i `supabase/migrations/applied/`, 252'si
