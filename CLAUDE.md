@@ -8,24 +8,36 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Key Metrics (ölçüldü 2026-09-21 akşamı — önceki tur 19 Eylül'dü ve SEKİZ rakamı birden
 bayatlamıştı; ezberleme, komutu çalıştır):**
-> ⚠️ **Rakamlar 2026-09-28'de yeniden ölçüldü (S/G/C serisi kapanışı).** Aşağıdaki
-> blokta **1.195 dosya · 275 test · 151 applied migration · 306 dosya/2.361 test ·
-> 61 `lazy()` · App.tsx 329 satır** rakamlarının HEPSİ bayattı. Güncel değerler:
+> ⚠️ **Rakamlar 2026-09-28 GECE yeniden ölçüldü (A13a).** Aşağıdaki blokta yazan
+> **1.195 dosya · 275 test · 151 applied migration · 306 dosya/2.361 test ·
+> 61 `lazy()` · App.tsx 329 satır** rakamlarının HEPSİ bayattır; aynı gün sabah
+> yazılan 1.270/316/359 rakamları da bayatladı. Güncel değerler:
 >
-> | İddia (eski) | Ölçüm (28.09) |
+> | İddia (eski) | Ölçüm (28.09 gece) |
 > |---|---|
-> | 1.195 `.ts`/`.tsx` | **1.270** |
-> | 275 test dosyası (src) | **316** |
-> | 306 dosya / 2.361 test | **359 dosya / 2.765 test** |
-> | 151 applied migration | **182** (archive 252, toplam 434) |
+> | 1.270 `.ts`/`.tsx` | **1.278** |
+> | 316 test dosyası (src) | **320** |
+> | 359 dosya / 2.765 test | **364 dosya / 2.811 test** |
+> | 151 applied migration | **182** (archive 252, toplam 434 · canlı kayıt da **434**) |
 > | App.tsx 329 satır · 61 `lazy()` | **336 satır · 61 `lazyWithReload()`** |
-> | 5 dosya 800+ satır | **3** — ve yalnız 1'i üretim (`zgen-data.ts` 981, VERİ) |
-> | `check:dead` 1 bilinen borç | **0** (S09'da kapandı) |
-> | 3 gerçek `as any` cast | **2** |
+> | 5 dosya 800+ satır | **3** — ve yalnız 1'i üretim (`zgen-data.ts` **980**, VERİ) |
+> | `check:dead` 1 bilinen borç | **0** · 955 erişilebilir kaynak |
+> | 3 (sonra 2) gerçek `as any` cast | **0** — 12 geçişin HEPSİ yorum satırı |
+> | Playwright 10 `.spec.ts` | **11** |
+> | 76 rol / 75 aktif | **82 / 78** · afs_attributes **57** · afs_features **61** · afs_sections 7 |
 >
 > ⚠️ `lazy()` artık DOĞRUDAN kullanılmıyor: `lazyWithReload()` sarmalayıcısı var
 > (`src/lib/lazy-with-reload.ts`). `grep -c "lazy("` **0** döner ve "kod bölme
 > kaldırılmış" sanılır — doğru desen `lazyWithReload(() =>`.
+>
+> ⚠️ **Sayarken `git ls-files` kullan, çıplak `find` DEĞİL.** Bu makinede depo kökünün
+> altında **gitignore'lu `referanslovable/` klonu** duruyor. 28.09'da `find` Playwright
+> spec'lerini **44** saydı; gerçek sayı **11**'dir (33 fazlası o klondan geldi).
+> Aynı tuzak `.ts`/`.tsx` sayımında da vardır.
+>
+> ⚠️ **`as any` sayarken metin geçişini cast sanma.** Bugün dosyalarda `as any` geçen
+> 12 satırın hepsi, şimin NEDEN kaldırıldığını anlatan **yorum**dur. Gerçek cast yok;
+> "12 cast kaldı" sonucuna varma.
 
 - **1.195** `.ts`/`.tsx` files under `src` (`find src -name '*.ts' -o -name '*.tsx' | wc -l`;
   bunun **275**'i test dosyası). 2026-09-06 ölü kod temizliğiyle 1.092 → 950'ye inmişti;
@@ -41,9 +53,9 @@ bayatlamıştı; ezberleme, komutu çalıştır):**
   hâlde `workers/` için 4 yerine 284 gelir
 - `npm run lint` → **0 problem** · `npx tsc -p tsconfig.app.json --noEmit` → **0 hata**
   (eski "1280 problem" ve "5 hata" notları bayattı)
-- `src/App.tsx`: **329** lines, **61** `lazy()` imports
-- Playwright: **10** `.spec.ts` (eski "18" bayattı) — ⚠️ bu makinede `npm run test:e2e`
-  port 8080 başka uygulamada olduğu için düşer; yol haritası **B09**
+- `src/App.tsx`: **336** lines, **61** `lazyWithReload()` imports
+- Playwright: **11** `.spec.ts` (eski "18" ve "10" bayattı) — ⚠️ bu makinede
+  `npm run test:e2e` port 8080 başka uygulamada olduğu için düşer; yol haritası **B09**
 - TypeScript with relaxed strict mode (intentional trade-off) — **`tsc` hatası SIFIRA indi**
   (109 → 22 → 16 → 12 → 9 → **0**, 2026-09-13; 19 Eylül gecesi 3 hataya çıkıp yeniden **0**'a
   indirildi). "Known Limitations" md.5 artık KAPALI — eski sınıf tablosunu ezberleme, aşağıdaki
@@ -609,8 +621,12 @@ npm run test -- --coverage   # Coverage report (experimental)
 
 ### Test Organization
 - **Unit/integration:** `src/**/*.test.ts(x)` (vitest + Testing Library + jsdom)
-- **275 test files under `src`** (+ 19 `scripts` + 8 `supabase` + 4 `workers` = **306** toplam) — **2.361** test (ölçüldü 2026-09-21 akşamı)
-- **E2E:** Playwright configured but underutilized (**10** `.spec.ts`) — ⚠️ bu makinede hiç koşmuyor, bkz. yol haritası **B09**
+- **320 test files under `src`** — toplam **364 dosya / 2.811 test** (`npm run test`,
+  ölçüldü 2026-09-28 gece). Eski "275 src / 306 toplam / 2.361 test" rakamları bayattı.
+- **E2E:** Playwright configured but underutilized (**11** `.spec.ts`, hepsi `e2e/` altında)
+  — ⚠️ bu makinede hiç koşmuyor, bkz. yol haritası **B09**.
+  ⚠️ Sayarken `git ls-files '*.spec.ts'` kullan: çıplak `find` gitignore'lu
+  `referanslovable/` klonunu da tarar ve **44** der (28.09'da yaşandı).
 - **Setup:** `src/test/setup.ts` (jest-dom matchers)
 - **Coverage target:** 80%+ for new code
 
@@ -756,27 +772,38 @@ Rules that follow from this:
    "instance unhealthy" in one call.
 
 - **RLS active** — submissions require specific conditions
-- **Edge Functions — repoda 11 · canlıda 13 · kesişim 9** (ölçüldü 2026-09-21 akşamı:
-  `ls supabase/functions/` + Management API `/v1/projects/<ref>/functions`).
-  **Tek bir sayı YOKTUR; iki taraf ayrışmıştır ve ayrım bilgi taşır:**
+- **Edge Functions — repoda 12 · canlıda 12 · SAPMA YOK** (ölçüldü 2026-09-28 gece:
+  `npm run check:functions` + Management API `/v1/projects/<ref>/functions`).
 
-  | Durum | Fonksiyon |
-  |---|---|
-  | ✅ İkisinde de (9) | `find-matches` · `lansman-admin` (deprecated — handler HTTP 410) · `radar-news-scan` · `relocation-assistant` · `relocation-notifications` · `send-notification-emails` · `send-submission-email` · `site-assistant` · `submit-survey-response` |
-  | ⚠️ Repoda var, **canlıda YOK** (2) | `whatsapp-reply` · `whatsapp-webhook` — `52433c2` ile 30 Ağustos'ta commit'lendi, **hâlâ deploy edilmedi**. `WHATSAPP_*` secret'ları okurlar (README "Required function secrets") |
-  | ⚠️ Canlıda var, **repoda YOK** (4) | `chat-register` v10 · `diaspora-search` v12 · `relocation-chat` v14 · `whatsapp-bot-lookup` v12 — `git log --all` ile arandı, bu repoda **hiç bulunmadılar** (`chat-register` bir ara vardı, `17ad6c2`, silinmiş) |
+  ⚠️ **Buradaki eski "repoda 11 · canlıda 13 · kesişim 9" tablosu TAMAMEN ÇÜRÜDÜ.**
+  Ayrışmanın iki yakası da kapandı; eski tabloya bakıp iş çıkarma:
+  - `whatsapp-reply` ve `whatsapp-webhook` **canlıda YOK diye yazılmıştı — YANLIŞ.**
+    İkisi de **22 Eylül'de deploy edildi**, bugün `v17 · ACTIVE`.
+  - "Canlıda var, repoda yok" denen dördü (`chat-register` · `diaspora-search` ·
+    `relocation-chat` · `whatsapp-bot-lookup`) **artık canlıda YOK.**
+  - `directory-search` **artık repoda da var** (canlıda `v7`, 22 Eylül).
+
+  Bugünkü 12 (ikisinde de): `directory-search` · `find-matches` ·
+  `lansman-admin` (deprecated — handler HTTP 410) · `radar-news-scan` ·
+  `relocation-assistant` · `relocation-notifications` · `send-notification-emails` ·
+  `send-submission-email` · `site-assistant` · `submit-survey-response` ·
+  `whatsapp-reply` · `whatsapp-webhook`.
 
   `_shared/` bir fonksiyon değil, paylaşılan modüllerdir.
 
-  ⚠️ **`chat-register` CANLIDA ACTIVE'dir.** Buradaki eski "There is no `chat-register`
-  function — that name was stale" notu **yanlıştı**; ölçüm tersini söylüyor.
-  ⚠️ **Sayıyı ezberleme, iki tarafı da say.** Bu satır üç turdur bayatladı (9 → 11 →
-  "canlıda 12" → gerçek 13). Sebep yapısal: **Coolify edge function deploy ETMEZ**
-  (`Dockerfile` yalnız frontend'i kurar), yani commit'lemek canlıya çıkarmaz ve bunu
-  haber veren hiçbir şey yoktur — ne CI, ne test, ne lint. Kalıcı çözüm bir sözleşme
-  scripti — ✅ **`npm run check:functions` ARTIK VAR** (`scripts/check-functions.mjs`;
-  "yazılacak" notu 28.09'da çürüdü, ölçüldü). Ayrışmanın kendisi
-  **B04** + **B05**: `docs/kalanlar/2026-09-21-KALANLAR.md`.
+  ⚠️ **WhatsApp fonksiyonları canlıda ama BAĞLANTI KAPALI.** Dört `WHATSAPP_*`
+  secret'ının da sakladığı özet değeri **birebir aynıdır** (ölçüldü 28.09) — yani
+  hepsi aynı yer tutucu. Gerçek Meta kimlik bilgileri girilmeden `whatsapp-webhook`
+  gelen isteklerin HMAC-SHA256 imzasını doğrulayamaz. "Deploy edildi" ile "çalışıyor"
+  aynı şey değil; **deploy durumuna bakıp entegrasyonu açık sanma.**
+
+  ⚠️ **Sayıyı ezberleme, iki tarafı da say.** Bu satır DÖRT turdur bayatladı
+  (9 → 11 → "canlıda 12" → 13 → gerçek 12). Sebep yapısal: **Coolify edge function
+  deploy ETMEZ** (`Dockerfile` yalnız frontend'i kurar), yani commit'lemek canlıya
+  çıkarmaz ve tersi de doğrudur — canlıya elle deploy edilen bir sürüm repoda
+  görünmez. ✅ Kalıcı çözüm var: **`npm run check:functions`**
+  (`scripts/check-functions.mjs`) iki tarafı karşılaştırır; rakam yazmadan önce onu
+  çalıştır.
 
 ### Canonical schema (after the AFS rebuild — 2026-06-09)
 
@@ -787,7 +814,7 @@ system. **Do not reference the old names** — runtime code has 0 references to 
 |--------|------------------|
 | **Auth/roles** | `auth.users`, `user_role_assignments`, `user_profile_attributes`, `user_feature_overrides` |
 | **Catalog** | `catalog_items`, `catalog_item_roles`, `catalog_item_attribute_values`, `catalog_item_claims`, `catalog_item_managers` (+ ~15 satellite tables) |
-| **AFS rules** | `roles` (76 flat, no families; 75 aktif — `User_Standard` 2026-06-11'de `User_DiasporaMember`'a konsolide edilip pasifleştirildi), `afs_attributes` (53), `afs_features` (42), `afs_sections` (7), `role_attributes`, `role_features`, `role_sections` |
+| **AFS rules** | `roles` (**82** flat, no families; **78 aktif** — `User_Standard` 2026-06-11'de `User_DiasporaMember`'a konsolide edilip pasifleştirildi), `afs_attributes` (**57**), `afs_features` (**61**), `afs_sections` (7), `role_attributes`, `role_features`, `role_sections` |
 | **Other** | `submissions`, `surveys`/`survey_*`, `muhasebe_gelirler`/`muhasebe_giderler`, `lansman_basvurular`, `referral_*`, `workspace_*` |
 
 **Renamed (old → new):** `attribute_catalog`→`afs_attributes`, `feature_catalog`→`afs_features`,
@@ -964,7 +991,13 @@ belong there; documentation goes under `docs/`.
 
    Kalan 2 çağrı AuthProvider'da savunulabilir (oturum kurulumu, henüz API katmanı yok) ama
    madde **kapanmadı**. Yeni özellik eklerken `*-api.ts` + React Query kalıbını kullan.
-4. **TypeScript loose (B7)** → **10** satırda `as any` metni geçiyor (3 gerçek cast + 7
+4. ~~**TypeScript loose (B7)**~~ → ⚠️ **ÖLÇÜM 2026-09-28 GECE: gerçek `as any` cast SIFIR.**
+   `as any` metni **12** satırda geçiyor ama **hepsi yorum** — şimin neden kaldırıldığını
+   anlatıyorlar (`cadde-internal.ts` · `relocation-api.ts` · `relocation-tools-api.ts` ·
+   `kadro-api.ts` · `command-center-items/queries.ts` ...). 27.09'daki S-serisi şimleri
+   kaldırdı. **Metin geçişini cast sanma**; aşağıdaki eski döküm tarihsel kayıttır:
+
+   ~~**10** satırda `as any` metni geçiyor (3 gerçek cast + 7~~
    yorum/açıklama satırı — 2026-09-13 ölçümü, önceki not "9 kaldı, 6 yorum" idi). Gerçek cast'ler
    bilinçli: `const db = supabase as any` (`cadde-internal.ts` · `relocation-api.ts` ·
    `relocation-tools-api.ts`) — kaldırmak tsc'yi yeniden artırır, hâlâ gerçek iş yapıyorlar.
@@ -1024,15 +1057,22 @@ belong there; documentation goes under `docs/`.
    artırır ama tek bir devi yok eder. Bu maddede takip edilecek metrik **800 üstü sayısı**dır,
    300 üstü değil. 300 üstünü sayıp "kötüleşmiş" sonucuna varma.
 
-   **Hâlâ 800 üstünde (5):** `CaddePage.test.tsx` (1845, test) · `CaddePage.tsx` (1716) ·
-   `ProfilePage.test.tsx` (1028, test) · `cadde-api.ts` (986) · `zgen-data.ts` (980, veri).
+   ⚠️ **Yeniden ölçüldü 2026-09-28 gece — bu maddenin "kalan iş" kısmı ÇÜRÜDÜ.**
+   **Hâlâ 800 üstünde (3):** `CaddePage.test.tsx` (**1845**, test) ·
+   `ProfilePage.test.tsx` (**1281**, test) · `zgen-data.ts` (**980**, VERİ).
+   Yani **800'ü aşan üretim kaynak dosyası KALMADI**; üçünün ikisi test, biri veri.
 
-   **Sıradaki gerçek iş = Cadde çifti** (`cadde-api.ts` + `CaddePage.tsx`). İki dalgada da
-   bilinçli olarak ERTELENDİ, çünkü: `cadde-api.ts`'in **25 importer'ı var ve hiç testi yok**,
-   `CaddePage.tsx`'in 19 importer'ı var. CLAUDE.md'nin Cadde bölümü bu alanın *sessizce*
-   kırıldığı üç ayrı olayı belgeliyor (fold-insensitive eşleşme, `instanceof Error` hatası
-   aylarca canlıda kaldı, hedef eşleşmesi). **Doğru sıra: önce karakterizasyon testi yaz,
-   sonra ayrıştır.** Testsiz ayrıştırma bu iki dosyada kabul edilemez.
+   ~~**Sıradaki gerçek iş = Cadde çifti**~~ → **KAPANDI.** `cadde-api.ts` **986 → 183**,
+   `CaddePage.tsx` **1716 → 670**. İkisi de artık bölünmüş durumda; bu maddeyi
+   "Cadde ikilisi ertelendi" diye yeniden açma.
+
+   Kalan (isteğe bağlı) iş: 500–800 satır bandındaki **34** üretim dosyası
+   (test ve üretilen dosyalar hariç, `git ls-files` ile sayıldı).
+
+   ⚠️ Cadde dosyalarına dokunurken hâlâ geçerli olan kural: CLAUDE.md'nin Cadde bölümü
+   bu alanın *sessizce* kırıldığı üç ayrı olayı belgeliyor (fold-insensitive eşleşme,
+   `instanceof Error` hatası aylarca canlıda kaldı, hedef eşleşmesi).
+   **Doğru sıra: önce karakterizasyon testi yaz, sonra ayrıştır.**
 
    ⚠️ **Satır sayarken Windows tuzağı:** PowerShell'in `Measure-Object -Line`'ı **boş satırları
    saymaz** — `burak-share-tools.ts` için 1091 der, gerçek 1418'dir. Doğru ölçüm

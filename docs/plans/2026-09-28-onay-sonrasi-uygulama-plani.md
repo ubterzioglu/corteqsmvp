@@ -163,7 +163,27 @@ verify:text 1.844 dosya.
 ⚠️ **`npm run ingest:tools:check` çalıştırılamadı** (aynı izin engeli). `src/lib/**`
 değişmedi ama katalog edge function'ları da indeksliyor — commit öncesi bir kez koş.
 
-## ⛔ P3(b) DEPLOY EDİLMEDİ — ve ölçüm deploy'a KARŞI çıkıyor
+## ✅ P3(b) — ZATEN DEPLOY EDİLMİŞ (28.09 gece ölçümü bu bölümü ÇÜRÜTTÜ)
+
+> ⚠️ **Aşağıdaki "canlıda YOK, deploy edilmeli" tespiti YANLIŞTI ve kaynağı bayat bir
+> nottu.** Management API ile doğrudan ölçüldü (28.09 gece):
+> `whatsapp-reply` **v17 · ACTIVE** · `whatsapp-webhook` **v17 · ACTIVE**, ikisi de
+> **22 Eylül'de** deploy edilmiş. `npm run check:functions` → **repo 12 · canlı 12 ·
+> sapma yok.** Yani P3(b)'de **deploy işi yoktur.**
+>
+> **Ama sorun ortadan kalkmadı, YER DEĞİŞTİRDİ.** Fonksiyonlar canlıda, yalnız dört
+> `WHATSAPP_*` secret'ının da özeti birebir aynı — hepsi aynı yer tutucu. Yani durum
+> "deploy edilmeyi bekliyor" değil, **"canlıda ama kimlik bilgileri sahte"**.
+> `whatsapp-webhook` gelen isteğin HMAC-SHA256 imzasını `WHATSAPP_APP_SECRET` ile
+> doğruluyor; yer tutucuyla Meta'dan gelen her istek reddedilir.
+>
+> ➡️ **Kalan iş deploy değil, GERÇEK META KİMLİK BİLGİLERİNİ girmek** (sende).
+> Bu, admin panelindeki 2026-08 kaydıyla da tutarlı: "Meta hesap bilgileri henüz
+> verilmediği için WhatsApp bağlantısı şimdilik kapalı."
+
+---
+
+### (tarihsel — çürüyen tespit) P3(b) DEPLOY EDİLMEDİ
 
 `supabase secrets list` ölçüldü: dört `WHATSAPP_*` secret'ı **da mevcut**, ama
 dördünün de sakladığı özet değeri **BİREBİR AYNI**
