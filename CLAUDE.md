@@ -8,6 +8,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Key Metrics (ölçüldü 2026-09-21 akşamı — önceki tur 19 Eylül'dü ve SEKİZ rakamı birden
 bayatlamıştı; ezberleme, komutu çalıştır):**
+> ⚠️ **Rakamlar 2026-09-28'de yeniden ölçüldü (S/G/C serisi kapanışı).** Aşağıdaki
+> blokta **1.195 dosya · 275 test · 151 applied migration · 306 dosya/2.361 test ·
+> 61 `lazy()` · App.tsx 329 satır** rakamlarının HEPSİ bayattı. Güncel değerler:
+>
+> | İddia (eski) | Ölçüm (28.09) |
+> |---|---|
+> | 1.195 `.ts`/`.tsx` | **1.270** |
+> | 275 test dosyası (src) | **316** |
+> | 306 dosya / 2.361 test | **359 dosya / 2.765 test** |
+> | 151 applied migration | **182** (archive 252, toplam 434) |
+> | App.tsx 329 satır · 61 `lazy()` | **336 satır · 61 `lazyWithReload()`** |
+> | 5 dosya 800+ satır | **3** — ve yalnız 1'i üretim (`zgen-data.ts` 981, VERİ) |
+> | `check:dead` 1 bilinen borç | **0** (S09'da kapandı) |
+> | 3 gerçek `as any` cast | **2** |
+>
+> ⚠️ `lazy()` artık DOĞRUDAN kullanılmıyor: `lazyWithReload()` sarmalayıcısı var
+> (`src/lib/lazy-with-reload.ts`). `grep -c "lazy("` **0** döner ve "kod bölme
+> kaldırılmış" sanılır — doğru desen `lazyWithReload(() =>`.
+
 - **1.195** `.ts`/`.tsx` files under `src` (`find src -name '*.ts' -o -name '*.tsx' | wc -l`;
   bunun **275**'i test dosyası). 2026-09-06 ölü kod temizliğiyle 1.092 → 950'ye inmişti;
   13 Eylül gecesi iki dalgalık büyük dosya ayrıştırmasıyla yeniden **çıktı** — bu
@@ -600,6 +619,40 @@ npm run test -- --coverage   # Coverage report (experimental)
 - `src/lib/lansman.test.ts` — domain logic testing
 - `src/components/AdminLansmanTable.test.tsx` — component testing
 
+### S/G/C serisi sözleşmeleri (2026-09-28) — gevşetme, çağrı yerini düzelt
+
+Bu altı sözleşme sessiz başarısızlık sınıflarını kapatır. Hepsi mutasyonla sınandı.
+
+1. **`src/lib/test-source-slice-contract.test.ts`** — kaynak metni dilimleyen testlerde
+   çıplak `indexOf + slice` YASAK; `@/test/source-slice` yardımcıları kullanılır.
+   ⚠️ `indexOf` −1 dönünce `slice(-1)` hata vermez, son karakteri döndürür; ardından
+   gelen iddia **her iki polaritede de** sessizce geçebilir. Ölçüldü: HNSW testinin
+   çıpası bozulduğunda dosyanın 5 testi de yeşil kaldı.
+2. **`cadde-feed-error-visibility.test.ts`** — cadde okuma yollarında gerekçesiz
+   sessizlik yasak. `catch` bloğunda boş sonuç dönüyorsan ya `caddeReadError` ile
+   FIRLAT, ya nedenini **`BİLEREK`** ile yaz. Dizin taramalıdır, sabit liste yoktur.
+3. **`cadde-query-limits.test.ts`** — PostgREST 1000 satır tavanı. `.in("user_id", ids)`
+   TEK BAŞINA GÜVENLİ DEĞİLDİR (satır = `ids × kullanıcı başına satır`); `fetchInChunks`
+   kullan. Liste TAM olmalıysa `fetchAllRows` (sayfalama), "son N" ise açık `.limit()`.
+4. **`use-seo-deps-contract.test.ts`** — veri bağımlı `useSeo` çağrısı `deps` GEÇMELİ;
+   opts sabitse açık `[]`. Varsayılan boş deps ile SEO ilk render'da donar.
+5. **`service-attachment-security.test.ts`** — dosya eki denetimi `accept=` ile hizada
+   kalmalı; ham `file.name` depolama anahtarına GİRMEZ (`safeStorageFileName`).
+6. **`service-finder-format.test.ts`** — SQL↔TS hata kodu haritası çift yönlü.
+   ⚠️ RPC hatasını `instanceof Error` ile DARALTMA: düz nesnedir, `code/details/hint`
+   taşır. Daraltma kullanıcıya `[object Object]` gösterir (canlıda yaşandı).
+
+⚠️ **Yeni bir `client_error_reports` kaynağı eklemek MIGRATION ister.** `source`
+sütunu canlıda hem CHECK hem RPC denetimiyle dört değere kilitli; TS birliğini tek
+başına genişletirsen RPC reddeder ve `reportClientError` fırlatmadığı için kayıt
+**sessizce kaybolur**. Ayırt etmek için serbest metin `context` alanını kullan.
+
+⚠️ **Test flake'i: "izole geçer, tam koşuda düşer" görürsen `testTimeout`a bakma.**
+Darboğaz Testing Library'nin `waitFor` varsayılanıydı (1 sn) — `<App />` render eden
+testlerde 61 `lazyWithReload` parçasının çözülmesi yük altında 1 sn'yi aşıyordu.
+`src/test/setup.ts` içinde `asyncUtilTimeout: 5000` ve `vitest.config.ts` içinde
+`maxWorkers: "50%"` bu yüzden var.
+
 ### Contract tests — do not delete, do not "fix" by loosening (added 2026-08-04)
 These four guard the silent-failure classes listed in "Değişmez sözleşmeler". They assert on
 config **text** and route tables, so they fail loudly when someone edits one side of a pair.
@@ -721,7 +774,8 @@ Rules that follow from this:
   "canlıda 12" → gerçek 13). Sebep yapısal: **Coolify edge function deploy ETMEZ**
   (`Dockerfile` yalnız frontend'i kurar), yani commit'lemek canlıya çıkarmaz ve bunu
   haber veren hiçbir şey yoktur — ne CI, ne test, ne lint. Kalıcı çözüm bir sözleşme
-  scripti (`npm run check:functions`); yol haritasında **B06**, ayrışmanın kendisi
+  scripti — ✅ **`npm run check:functions` ARTIK VAR** (`scripts/check-functions.mjs`;
+  "yazılacak" notu 28.09'da çürüdü, ölçüldü). Ayrışmanın kendisi
   **B04** + **B05**: `docs/kalanlar/2026-09-21-KALANLAR.md`.
 
 ### Canonical schema (after the AFS rebuild — 2026-06-09)
@@ -887,7 +941,14 @@ belong there; documentation goes under `docs/`.
    `@/components/auth/useAuth` yoluna geçirildi, `src/contexts/AuthContext.tsx` silindi.
    Belgelenen `loading`→`isLoading` riski hiç gerçekleşmedi: alias'ı kullanan dosya yoktu.
    Ayrıntı ve test tuzağı için "Authentication & Roles" bölümüne bak.
-3. **Mixed data fetching (B6)** → **AÇIK, 2 çağrı kaldı** (2026-09-13 gece, düzeltilmiş ölçüm).
+3. ~~**Mixed data fetching (B6)**~~ → ✅ **KAPANDI 2026-09-27 (A04b).** AuthProvider'daki
+   son iki doğrudan sorgu `src/lib/auth-api.ts`'e taşındı; bileşen ve sayfa katmanında
+   doğrudan tablo sorgusu KALMADI (multiline arama ile doğrulandı). Aşağıdaki "2 çağrı
+   kaldı" dökümü tarihsel kayıt olarak duruyor — **güncel durum değildir.**
+   ⚠️ `src/components/InterestForm.tsx` aramada çıkar ama `supabase.storage.from(...)`
+   kullanır; depolama kovasıdır, tablo değil, B6 kapsamında değildir.
+
+   *(Tarihsel döküm — 2026-09-13 gece, düzeltilmiş ölçüm.)*
    Sabah ölçümü "8 `from(` + 3 `rpc(` kaldı" diyordu (83+42 → 32+4 → 8+3), ama S1-S10 göçü o
    listedeki 7 dosyayı zaten kapatmıştı — akşam yeniden ölçülünce yalnız `ProfilePage.tsx`'teki
    `individual_profile_details` tablosuna iki çağrı (select+upsert) kalmıştı. Commit `1285337`
