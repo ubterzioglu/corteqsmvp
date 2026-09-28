@@ -8,6 +8,10 @@ const PAGE_DESCRIPTION =
   "CorteQS rolleri ve iş birliği başlıkları (contributor, influencer partner, strategic partner, community leader, ambassador) hakkında kısa ön bilgi dokümanları.";
 
 const CommercialIndexPage = () => {
+  // Opts tamamen MODÜL SABİTLERİNDEN üretilir (`PAGE_TITLE`, `SEO_CANONICAL_ORIGIN`,
+  // `publicCommercialDocuments`); hiçbiri render arasında değişmez. Boş deps AÇIKÇA
+  // geçiliyor: sözleşme testinin sezgisi `${document.slug}` gibi map değişkenlerini
+  // durum sanabilir, niyeti tahmin ettirmek yerine kodda yazıyoruz (S08).
   useSeo({
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
@@ -26,7 +30,8 @@ const CommercialIndexPage = () => {
         url: `${SEO_CANONICAL_ORIGIN}/commercial/${document.slug}`,
       })),
     },
-  });
+  },
+  []);
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--section-warm))_52%,hsl(var(--background))_100%)]">

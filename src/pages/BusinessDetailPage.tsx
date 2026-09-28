@@ -40,6 +40,11 @@ const BusinessDetailPage = () => {
           description: "Aradığın işletme kaydı bulunamadı.",
           robots: "noindex, follow",
         },
+    // ⚠️ deps ZORUNLU (S08). `useSeo` varsayılan boş deps ile BİR KEZ çalışır.
+    // `business` burada eşzamanlı çözülüyor, yani ilk yüklemede sorun yok; kusur
+    // ROTA DEĞİŞİMİNDE ortaya çıkıyor: `/isletme/a` → `/isletme/b` geçişinde bileşen
+    // yeniden bağlanmadığı için başlık ilk işletmede donuyordu.
+    [business?.id],
   );
 
   if (!business) {
