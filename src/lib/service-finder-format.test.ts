@@ -1,3 +1,6 @@
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -29,6 +32,96 @@ describe("sfErrorMessage", () => {
       expect(code.startsWith("sf_")).toBe(true);
       expect(message.length).toBeGreaterThan(5);
     }
+  });
+});
+
+// SQL↔TS sözleşmesi (S05a) — `cadde-error-map.test.ts` deseninin ikizi.
+//
+// Yukarıdaki testler TEK YÖNLÜYDÜ: yalnız haritadaki kodların mesajı dolu mu diye
+// bakıyor, SQL'e hiç dokunmuyorlardı. Bu yüzden SQL'e yeni bir `sf_*` eklenip haritaya
+// yazılmadığında hiçbir şey düşmüyordu — ölçüldü (28.09): SQL'de 24 kod vardı, haritada
+// 21; `sf_worker_id_required` · `sf_cost_payload_invalid` · `sf_invalid_final_status`
+// eksikti ve kullanıcı Türkçe mesaj yerine HAM KODU görüyordu.
+//
+// Testi susturma, haritaya satır ekle.
+describe("service-finder RPC hata kodu ↔ Türkçe mesaj sözleşmesi", () => {
+  const MIGRATION_DIRS = ["supabase/migrations/applied", "supabase/migrations/archive"];
+
+  const sqlCodes = (() => {
+    const codes = new Map<string, string>();
+    for (const dir of MIGRATION_DIRS) {
+      let files: string[];
+      try {
+        files = readdirSync(dir).filter((file) => file.endsWith(".sql"));
+      } catch {
+        continue; // dizin yoksa (kısmi checkout) atla
+      }
+      for (const file of files) {
+        const sql = readFileSync(join(dir, file), "utf8");
+        for (const match of sql.matchAll(/raise\s+exception\s+'(sf_[a-z0-9_]+)'/gi)) {
+          if (!codes.has(match[1])) codes.set(match[1], `${dir}/${file}`);
+        }
+      }
+    }
+    return codes;
+  })();
+
+  it("migration dosyalarından sf_ kodu toplayabiliyor (tarama boşa düşmesin)", () => {
+    // Bu kapan olmadan aşağıdaki iddia negatif ve çıpasızdır: regex veya yol bozulunca
+    // "hiç eksik yok" der. S04a/S04c'de ölçülen sınıf.
+    expect(sqlCodes.size, "SQL'den sf_ kodu toplanamadı").toBeGreaterThan(20);
+    expect(Object.keys(SF_ERROR_MESSAGES).length).toBeGreaterThan(20);
+  });
+
+  it("her SQL hata kodunun Türkçe karşılığı var", () => {
+    const missing = [...sqlCodes.entries()]
+      .filter(([code]) => !(code in SF_ERROR_MESSAGES))
+      .map(([code, file]) => `${code} (${file})`);
+
+    expect(missing).toEqual([]);
+  });
+
+  it("kod yakalayan regex rakam içeren kodları da tanır", () => {
+    // Desen `sf_[a-z_]+` idi; `sf_budget_2x` gibi bir kod sessizce eşleşmezdi.
+    expect(sfErrorMessage(new Error("... sf_worker_id_required ..."))).toBe(
+      SF_ERROR_MESSAGES.sf_worker_id_required,
+    );
+  });
+});
+
+// S05b — eşlenmemiş kod ve düz-nesne hatası davranışı.
+describe("sfErrorMessage kullanıcıya ham kod göstermez", () => {
+  it("RPC hatası DÜZ NESNE olsa da kodu bulur", () => {
+    // ⚠️ CLAUDE.md'de belgelenen sınıf: supabase-js RPC hataları `Error` örneği
+    // DEĞİLDİR. Eski kod `instanceof Error` ile daraltıyordu; düz nesne
+    // `String(error)` yolundan geçip "[object Object]" oluyordu.
+    expect(sfErrorMessage({ message: "sf_job_not_found", code: "P0001" })).toBe(
+      SF_ERROR_MESSAGES.sf_job_not_found,
+    );
+  });
+
+  it("kodu `details`/`hint` alanında taşıyan hatayı da çözer", () => {
+    expect(sfErrorMessage({ message: "", details: "sf_admin_required" })).toBe(
+      SF_ERROR_MESSAGES.sf_admin_required,
+    );
+  });
+
+  it("EŞLENMEMİŞ kodu ham göstermez, Türkçe genel mesaja düşer", () => {
+    // SQL'de 204 benzersiz hata kodu var; yalnız cadde (81) ve sf (24) eşlenmiş.
+    // Geri kalanı ham gösterilirse kullanıcı anlamsız teknik metin görür.
+    expect(sfErrorMessage({ message: "rl_budget_exceeded" })).toBe("Beklenmeyen bir hata oluştu.");
+    expect(sfErrorMessage(new Error("invalid_payload"))).toBe("Beklenmeyen bir hata oluştu.");
+  });
+
+  it("ham Postgres gövdesini kullanıcıya geçirmez", () => {
+    expect(sfErrorMessage(new Error("raise exception 'rl_unknown'"))).toBe(
+      "Beklenmeyen bir hata oluştu.",
+    );
+  });
+
+  it("gerçek bir cümleyi ise KORUR (ağ hatası gibi okunabilir metin)", () => {
+    // Aşırı düzeltme olmasın: okunabilir bir mesaj kullanıcıya yardımcıdır.
+    expect(sfErrorMessage(new Error("network down"))).toBe("network down");
   });
 });
 

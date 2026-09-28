@@ -29,16 +29,61 @@ export const SF_ERROR_MESSAGES: Record<string, string> = {
   sf_candidate_not_approved: "Yayınlamak için aday önce onaylanmalı.",
   sf_category_required: "Kategori slug'ı zorunludur (aday veya iş üzerinde).",
   sf_slug_generation_failed: "Slug üretilemedi; aday adını kontrol edin.",
+  // S05a'da eklendi — SQL'de vardı, haritada YOKTU: kullanıcı ham kodu görüyordu.
+  // Üçü de worker/maliyet yolunda; arayüzden değil işleyiciden tetiklenir.
+  sf_worker_id_required: "İşleyici kimliği zorunludur.",
+  sf_cost_payload_invalid: "Maliyet kaydı eksik veya geçersiz (iş ve olay türü zorunlu).",
+  sf_invalid_final_status:
+    "Geçersiz bitiş durumu; yalnızca inceleme, tamamlandı veya bütçe-durduruldu olabilir.",
 };
+
+/** Kullanıcıya gösterilemeyecek kadar teknik olan ham metinler için genel karşılık. */
+const SF_GENERIC_ERROR = "Beklenmeyen bir hata oluştu.";
+
+/**
+ * Hata metnini çıkarır. ⚠️ Supabase RPC hataları **düz nesnedir, `Error` örneği
+ * DEĞİLDİR** — kodu `message` yerine `code`/`details`/`hint` alanlarında taşıyabilirler.
+ * `instanceof Error` ile daraltmak CLAUDE.md'de belgelenen sınıftır: cadde mesaj
+ * haritasını 2026-08-05'e kadar canlıda tamamen ölü bırakan hata tam olarak buydu.
+ * (`cadde-rules.ts` → `extractErrorText` ile aynı sözleşme.)
+ */
+function extractSfErrorText(error: unknown): string {
+  if (typeof error === "string") return error;
+  if (error instanceof Error) return error.message;
+  if (error && typeof error === "object") {
+    const record = error as Record<string, unknown>;
+    return [record.message, record.code, record.details, record.hint]
+      .filter((field): field is string => typeof field === "string")
+      .join(" ");
+  }
+  return "";
+}
+
+/**
+ * Ham metin kullanıcıya gösterilebilir mi? Eşlenmemiş bir RPC kodu (`rl_budget_stop`,
+ * `invalid_payload` …) ya da çıplak bir Postgres kodu kullanıcı için anlamsızdır;
+ * S05b ölçümü: SQL'de 204 benzersiz hata kodu var, yalnız cadde (81) ve sf (24)
+ * eşlenmiş durumda. Geri kalanı ham gösterilirse kullanıcı İngilizce/teknik metin görür.
+ */
+function looksLikeRawCode(raw: string): boolean {
+  const trimmed = raw.trim();
+  if (trimmed === "") return true;
+  // Boşluksuz snake_case bir belirteç = kod, cümle değil.
+  if (/^[a-z][a-z0-9]*(_[a-z0-9]+)+$/.test(trimmed)) return true;
+  // Postgres'in ham hata gövdesi de kullanıcıya gitmemeli.
+  return /\braise\s+exception\b|\bSQLSTATE\b|^PGRST\d+/i.test(trimmed);
+}
 
 /** Supabase hata mesajından sf_* kodunu yakalayıp Türkçe mesaja çevirir. */
 export function sfErrorMessage(error: unknown): string {
-  const raw = error instanceof Error ? error.message : String(error ?? "");
-  const match = raw.match(/sf_[a-z_]+/);
+  const raw = extractSfErrorText(error);
+  // ⚠️ Rakam da kabul edilir: `sf_[a-z_]+` deseni `sf_budget_2x` gibi bir kodu sessizce
+  // ıskalar ve kullanıcı ham metni görürdü.
+  const match = raw.match(/sf_[a-z0-9_]+/);
   if (match && SF_ERROR_MESSAGES[match[0]]) {
     return SF_ERROR_MESSAGES[match[0]];
   }
-  return raw || "Beklenmeyen bir hata oluştu.";
+  return looksLikeRawCode(raw) ? SF_GENERIC_ERROR : raw;
 }
 
 // ---------------------------------------------------------------------------
