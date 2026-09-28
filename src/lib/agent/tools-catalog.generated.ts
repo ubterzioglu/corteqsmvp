@@ -3962,6 +3962,11 @@ export const toolCatalog = {
       "module_family": "surveys"
     },
     {
+      "path": "src/lib/test-source-slice-contract.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/text-normalization.test.ts",
       "kind": "ts",
       "module_family": "lib"

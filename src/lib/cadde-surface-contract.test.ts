@@ -14,6 +14,8 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { sliceFrom } from "@/test/source-slice";
+
 const SURFACE_DIRS = ["src/pages/cadde", "src/components/cadde"];
 
 function collectFiles(dir: string): string[] {
@@ -55,7 +57,7 @@ describe("Cadde yüzey sözleşmesi", () => {
   });
 
   it("CSS tarafında sabit yarıçap yazılmaz, token kullanılır", () => {
-    const caddeBlock = CSS.slice(CSS.indexOf(".cadde-shell"));
+    const caddeBlock = sliceFrom(CSS, ".cadde-shell", "cadde yüzey bloğu");
     // `border-radius: 1rem` gibi sabitler yüzey dilini sessizce böler.
     // (9999px pill/avatar için meşrudur.)
     // Değerleri önce topla, sonra JS'te süz: regex'te negatif ileri-bakış `\s*`

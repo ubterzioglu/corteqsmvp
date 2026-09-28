@@ -47,6 +47,13 @@ describe("internal link contract", () => {
       })),
     );
 
+    // KAPSAM KAPANI (S04c) — aşağıdaki iddia negatiftir ("kırık bağlantı yok"), yani
+    // tarama boşa düşerse SESSİZCE geçer. Dosya yürüyüşü, rota regex'i ya da bağlantı
+    // regex'i bozulduğunda test "her şey yolunda" der. Üç sayaç da gerçek olmalı.
+    expect(files.length, "kaynak ağacı taranamadı").toBeGreaterThan(100);
+    expect(routes.length, "App.tsx/routes.tsx içinden rota çıkarılamadı").toBeGreaterThan(50);
+    expect(links.length, "hiç iç bağlantı bulunamadı").toBeGreaterThan(50);
+
     const broken = links.filter(({ path }) => !routes.some((route) => routeMatches(path, route)));
 
     expect(broken, `Undeclared internal links: ${broken.map(({ file, path }) => `${file} → ${path}`).join(", ")}`).toEqual([]);

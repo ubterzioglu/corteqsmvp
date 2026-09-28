@@ -15,6 +15,8 @@ import { readFileSync } from "node:fs";
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { sliceFrom, sliceUntil } from "@/test/source-slice";
+
 import type { CaddeFilterState } from "@/lib/cadde-types";
 
 const rpcMock = vi.fn();
@@ -80,8 +82,8 @@ describe("cadde feed okuma yolu hata görünürlüğü", () => {
 
     // Toast, tüm yüzeyi kaplayan bir hata kartı varken çift mesaj üretir; okuma
     // yüzeyi kendi satır içi hata kartını çizer.
-    const body = source.slice(source.indexOf("export function caddeReadError"));
-    const fnBody = body.slice(0, body.indexOf("\n}"));
+    const body = sliceFrom(source, "export function caddeReadError", "caddeReadError");
+    const fnBody = sliceUntil(body, "\n}", "caddeReadError gövde sonu");
     expect(fnBody).not.toContain("toast");
   });
 

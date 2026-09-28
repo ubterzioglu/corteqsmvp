@@ -29,6 +29,8 @@ function readInsertColumns(): string[] {
   expect(insertStart, "whatsapp_landings için Insert bloğu bulunamadı").toBeGreaterThan(-1);
 
   const insertEnd = source.indexOf("\n        }", insertStart);
+  expect(insertEnd, "Insert bloğu kapanışı bulunamadı").toBeGreaterThan(-1);
+
   const block = source.slice(insertStart, insertEnd);
 
   return [...block.matchAll(/^\s{10}(\w+)\??:/gm)].map((match) => match[1]);

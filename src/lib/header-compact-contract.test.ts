@@ -16,6 +16,8 @@ import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
+import { sliceFrom } from "@/test/source-slice";
+
 const HEADER = readFileSync("src/components/SiteHeader.tsx", "utf8");
 const CSS = readFileSync("src/index.css", "utf8");
 const HOOK = readFileSync("src/hooks/useCompactHeaderOnScroll.ts", "utf8");
@@ -44,7 +46,7 @@ describe("header daraltma sözleşmesi", () => {
   it("CSS kuralları YALNIZ öznitelik varken eşleşir", () => {
     // Öznitelik yokken (hook'u çağırmayan 60 public rota) hiçbir kural devreye
     // girmemeli — aksi halde Cadde için yapılan bir değişiklik tüm siteyi etkiler.
-    const block = CSS.slice(CSS.indexOf("Y2 (m153)"));
+    const block = sliceFrom(CSS, "Y2 (m153)", "başlık sıkışık blok");
     const selectorLines = block
       .split("\n")
       .filter((line) => line.includes(".site-header"));
