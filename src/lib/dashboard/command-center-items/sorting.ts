@@ -1,6 +1,11 @@
 // Komuta Merkezi — sıralama kuralları.
 // Panoda görünen sıra doğrudan buradan gelir; kurallar kullanıcıya yansır,
 // karşılaştırma sırasını değiştirme.
+//
+// A08b: sıralama SUNUCUDA (Postgres `.order()` zinciri) yapılır — istemci
+// tarafı sıralama YASAK (A08a ölçümü). `buildCommandCenterSortOrders` seçilen
+// anahtarı `.order()` çağrılarına çevirir; `sortCommandCenterItems` yalnız
+// VARSAYILAN sıralamada ince ayar (tie-break) için istemcide çalışır.
 
 import { getDateGroupSortToken } from './date-groups'
 import { TODO_CATEGORY_SET } from './labels'
@@ -8,7 +13,75 @@ import type {
   CommandCenterCategoryOption,
   CommandCenterDateGroupOption,
   CommandCenterItem,
+  CommandCenterSortDirection,
+  CommandCenterSortKey,
 } from './types'
+
+export interface CommandCenterSortOrder {
+  column: string
+  ascending: boolean
+}
+
+/** Bir anahtar ilk kez seçildiğinde kullanılacak yön. */
+export const COMMAND_CENTER_SORT_DEFAULT_DIRECTIONS: Record<
+  CommandCenterSortKey,
+  CommandCenterSortDirection
+> = {
+  priority: 'desc',
+  title: 'asc',
+  status: 'asc',
+  assignee: 'asc',
+  item_type: 'asc',
+  due_date: 'asc',
+  created_at: 'desc',
+}
+
+// Varsayılan zincir (A08a'dan beri canlıdaki sıra) — KORUNMALI.
+const DEFAULT_SORT_CHAIN: readonly CommandCenterSortOrder[] = [
+  { column: 'priority', ascending: false },
+  { column: 'item_type', ascending: true },
+  { column: 'sort_order', ascending: true },
+  { column: 'created_at', ascending: false },
+]
+
+export function isDefaultCommandCenterSort(
+  sortKey?: CommandCenterSortKey,
+  sortDirection?: CommandCenterSortDirection
+): boolean {
+  if (!sortKey) {
+    return true
+  }
+
+  const direction = sortDirection ?? COMMAND_CENTER_SORT_DEFAULT_DIRECTIONS[sortKey]
+  return sortKey === 'priority' && direction === 'desc'
+}
+
+/**
+ * Seçilen anahtarı `.order()` zincirine çevirir. Varsayılan (priority desc)
+ * mevcut zinciri birebir döndürür; özel anahtarda sayfalama boyunca kararlı
+ * sıra için varsayılan zincir tie-break olarak SONA eklenir (seçilen kolon
+ * tekrarlanmaz).
+ */
+export function buildCommandCenterSortOrders(
+  sortKey?: CommandCenterSortKey,
+  sortDirection?: CommandCenterSortDirection
+): CommandCenterSortOrder[] {
+  if (isDefaultCommandCenterSort(sortKey, sortDirection)) {
+    return [...DEFAULT_SORT_CHAIN]
+  }
+
+  const direction = sortDirection ?? COMMAND_CENTER_SORT_DEFAULT_DIRECTIONS[sortKey!]
+  const orders: CommandCenterSortOrder[] = [
+    { column: sortKey!, ascending: direction === 'asc' },
+  ]
+  for (const tieBreaker of DEFAULT_SORT_CHAIN) {
+    if (!orders.some((order) => order.column === tieBreaker.column)) {
+      orders.push(tieBreaker)
+    }
+  }
+
+  return orders
+}
 
 function getCategorySortRank(option: CommandCenterCategoryOption): number {
   return TODO_CATEGORY_SET.has(option.label) ? 0 : 1

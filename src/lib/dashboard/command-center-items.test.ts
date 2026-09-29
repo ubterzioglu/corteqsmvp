@@ -3,9 +3,11 @@ import {
   buildCommandCenterCategoryOptions,
   buildCommandCenterDateGroupOptions,
   buildCommandCenterItemCounts,
+  buildCommandCenterSortOrders,
   buildCommandCenterSourceBreakdown,
   createEmptyCommandCenterFormState,
   getCommandCenterDateGroupInfo,
+  isDefaultCommandCenterSort,
   validateCommandCenterFormState,
   type CommandCenterFacetRow,
 } from './command-center-items'
@@ -206,6 +208,52 @@ describe('buildCommandCenterItemCounts', () => {
       // Eski sorgu ikilisiyle aynı: "team" de toplantı notlarını sayar.
       team: 329,
     })
+  })
+})
+
+describe('buildCommandCenterSortOrders — A08b sunucu sıralaması', () => {
+  it('varsayılan: priority DESC zinciri birebir korunur', () => {
+    expect(buildCommandCenterSortOrders()).toEqual([
+      { column: 'priority', ascending: false },
+      { column: 'item_type', ascending: true },
+      { column: 'sort_order', ascending: true },
+      { column: 'created_at', ascending: false },
+    ])
+    expect(buildCommandCenterSortOrders('priority', 'desc')).toEqual(
+      buildCommandCenterSortOrders()
+    )
+    expect(isDefaultCommandCenterSort()).toBe(true)
+    expect(isDefaultCommandCenterSort('priority', 'desc')).toBe(true)
+  })
+
+  it('özel anahtar seçilen kolonu öne alır, varsayılan zincir tie-break olur', () => {
+    expect(buildCommandCenterSortOrders('title', 'asc')).toEqual([
+      { column: 'title', ascending: true },
+      { column: 'priority', ascending: false },
+      { column: 'item_type', ascending: true },
+      { column: 'sort_order', ascending: true },
+      { column: 'created_at', ascending: false },
+    ])
+  })
+
+  it('tie-break zinciri seçilen kolonu tekrarlamaz', () => {
+    const orders = buildCommandCenterSortOrders('created_at', 'asc')
+    expect(orders[0]).toEqual({ column: 'created_at', ascending: true })
+    expect(orders.filter((order) => order.column === 'created_at')).toHaveLength(1)
+  })
+
+  it('priority ASC özel sıralamadır — istemci tie-break sıralaması uygulanmaz', () => {
+    expect(isDefaultCommandCenterSort('priority', 'asc')).toBe(false)
+    expect(buildCommandCenterSortOrders('priority', 'asc')[0]).toEqual({
+      column: 'priority',
+      ascending: true,
+    })
+  })
+
+  it('yön verilmezse anahtarın varsayılan yönü kullanılır', () => {
+    expect(buildCommandCenterSortOrders('due_date')).toEqual(
+      buildCommandCenterSortOrders('due_date', 'asc')
+    )
   })
 })
 

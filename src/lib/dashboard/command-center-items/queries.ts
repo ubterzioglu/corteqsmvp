@@ -10,7 +10,11 @@
 import { getSupabaseBrowserClient } from '../supabase'
 import { buildCommandCenterFilters } from './filters'
 import { COMMAND_CENTER_SELECT, mapCommandCenterRow } from './row-mapping'
-import { sortCommandCenterItems } from './sorting'
+import {
+  buildCommandCenterSortOrders,
+  isDefaultCommandCenterSort,
+  sortCommandCenterItems,
+} from './sorting'
 import type {
   CommandCenterItem,
   CommandCenterItemRow,
@@ -60,12 +64,13 @@ export async function fetchCommandCenterItems(
     else query = query.or(op.filters)
   }
 
-  const { data, error, count } = await query
-    .order('priority', { ascending: false })
-    .order('item_type', { ascending: true })
-    .order('sort_order', { ascending: true })
-    .order('created_at', { ascending: false })
-    .range(from, to)
+  // A08b: sıralama anahtarı parametrik; varsayılan zincir (priority desc)
+  // korunur. `.order()` çağrıları filtrelerden SONRA, `.range()`ten önce.
+  for (const order of buildCommandCenterSortOrders(options?.sortKey, options?.sortDirection)) {
+    query = query.order(order.column, { ascending: order.ascending })
+  }
+
+  const { data, error, count } = await query.range(from, to)
   if (error || !data) {
     return {
       items: [],
@@ -75,8 +80,13 @@ export async function fetchCommandCenterItems(
     }
   }
 
+  const rows = (data as CommandCenterItemRow[]).map(mapCommandCenterRow)
   return {
-    items: sortCommandCenterItems((data as CommandCenterItemRow[]).map(mapCommandCenterRow)),
+    // İstemci tarafı ince ayar sıralaması YALNIZ varsayılan anahtarda uygulanır;
+    // özel sıralamada sunucu sırasını bozmamak için ham sıra korunur.
+    items: isDefaultCommandCenterSort(options?.sortKey, options?.sortDirection)
+      ? sortCommandCenterItems(rows)
+      : rows,
     totalCount: count ?? 0,
     page,
     pageSize,

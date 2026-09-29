@@ -25,12 +25,15 @@
 export {
   COMMAND_CENTER_ITEM_TYPES,
   COMMAND_CENTER_PRIORITY_OPTIONS,
+  COMMAND_CENTER_SORT_KEYS,
 } from './command-center-items/types'
 export type {
   CommandCenterItemType,
   CommandCenterAssignee,
   CommandCenterStatus,
   CommandCenterPriority,
+  CommandCenterSortKey,
+  CommandCenterSortDirection,
   CommandCenterItemRow,
   CommandCenterItem,
   CommandCenterFormState,
@@ -74,7 +77,11 @@ export {
   sortCommandCenterCategoryOptions,
   sortCommandCenterDateGroupOptions,
   sortCommandCenterItems,
+  buildCommandCenterSortOrders,
+  isDefaultCommandCenterSort,
+  COMMAND_CENTER_SORT_DEFAULT_DIRECTIONS,
 } from './command-center-items/sorting'
+export type { CommandCenterSortOrder } from './command-center-items/sorting'
 
 export {
   fetchCommandCenterItems,

@@ -74,6 +74,23 @@ export interface CommandCenterFormState {
   legacySourceTitle: string
 }
 
+/**
+ * Sunucuda sıralanabilir kolonlar (A08b). Liste bilinçli olarak DAR tutulur:
+ * `.order()` değeri PostgREST'e kolon adı olarak gittiği için serbest metin
+ * kolon adı injection yüzeyi olur — yeni anahtar eklerken tabloya da bak.
+ */
+export const COMMAND_CENTER_SORT_KEYS = [
+  'priority',
+  'title',
+  'status',
+  'assignee',
+  'item_type',
+  'due_date',
+  'created_at',
+] as const
+export type CommandCenterSortKey = (typeof COMMAND_CENTER_SORT_KEYS)[number]
+export type CommandCenterSortDirection = 'asc' | 'desc'
+
 export interface FetchCommandCenterItemsOptions {
   page?: number
   pageSize?: number
@@ -86,6 +103,8 @@ export interface FetchCommandCenterItemsOptions {
   sourceCode?: string
   dateGroup?: string
   searchTerm?: string
+  sortKey?: CommandCenterSortKey
+  sortDirection?: CommandCenterSortDirection
 }
 
 export interface CommandCenterItemsResult {

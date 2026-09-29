@@ -14,6 +14,7 @@ import {
   buildCommandCenterDateGroupOptions,
   buildCommandCenterItemCounts,
   buildCommandCenterSourceBreakdown,
+  COMMAND_CENTER_SORT_DEFAULT_DIRECTIONS,
   createEmptyCommandCenterFormState,
   fetchArchivedCommandCenterItems,
   fetchCommandCenterFacets,
@@ -24,6 +25,8 @@ import {
   type CommandCenterFormState,
   type CommandCenterItem,
   type CommandCenterItemType,
+  type CommandCenterSortDirection,
+  type CommandCenterSortKey,
 } from '@/lib/dashboard/command-center-items'
 import { createCommandCenterActions } from './command-center-actions'
 import { createDefaultFormState } from './formatters'
@@ -55,6 +58,9 @@ export function useCommandCenterManager(lockedItemType?: CommandCenterItemType) 
   const [editingState, setEditingState] = useState<CommandCenterFormState>(() =>
     createEmptyCommandCenterFormState()
   )
+  // A08b: sunucu sıralaması — varsayılan priority DESC korunur.
+  const [sortKey, setSortKey] = useState<CommandCenterSortKey>('priority')
+  const [sortDirection, setSortDirection] = useState<CommandCenterSortDirection>('desc')
   const activeItemType = lockedItemType
 
   // Filtre seçenekleri, kaynak dökümü ve rozet sayıları tek facet sorgusundan türetilir —
@@ -97,6 +103,8 @@ export function useCommandCenterManager(lockedItemType?: CommandCenterItemType) 
         urgentOnly,
         dateGroup: selectedDateGroup,
         searchTerm,
+        sortKey,
+        sortDirection,
       })
       setItems(result.items)
       setTotalCount(result.totalCount)
@@ -121,6 +129,8 @@ export function useCommandCenterManager(lockedItemType?: CommandCenterItemType) 
     selectedDateGroup,
     selectedPriority,
     selectedStatus,
+    sortDirection,
+    sortKey,
     urgentOnly,
   ])
 
@@ -262,6 +272,19 @@ export function useCommandCenterManager(lockedItemType?: CommandCenterItemType) 
     setCurrentPage(1)
   }
 
+  // A08b: aynı başlığa tekrar tıklama yönü değiştirir; yeni başlık kendi
+  // varsayılan yönüyle gelir. Sıralama değişince sayfa 1'e dönülür — 7. sayfadaki
+  // sıra yeni anahtarda anlamsız olurdu.
+  function changeSort(key: CommandCenterSortKey) {
+    if (key === sortKey) {
+      setSortDirection((direction) => (direction === 'asc' ? 'desc' : 'asc'))
+    } else {
+      setSortKey(key)
+      setSortDirection(COMMAND_CENTER_SORT_DEFAULT_DIRECTIONS[key])
+    }
+    setCurrentPage(1)
+  }
+
   const activeItems = items.filter((item) => item.status !== 'Tamamlandi')
   const completedItems = items.filter((item) => item.status === 'Tamamlandi')
   const hasActiveFilter =
@@ -298,6 +321,8 @@ export function useCommandCenterManager(lockedItemType?: CommandCenterItemType) 
     selectedPriority,
     searchTerm,
     urgentOnly,
+    sortKey,
+    sortDirection,
     hasActiveFilter,
     totalCount,
     currentPage,
@@ -321,5 +346,6 @@ export function useCommandCenterManager(lockedItemType?: CommandCenterItemType) 
     changePriority,
     changeUrgentOnly,
     changeSearchTerm,
+    changeSort,
   }
 }
