@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       _bak_org_catalog_item_categories_20260609: {
@@ -14124,6 +14149,7 @@ export type Database = {
         Args: { p_landing_id: string }
         Returns: boolean
       }
+      delete_cadde_post_v1: { Args: { p_post_id: string }; Returns: undefined }
       delete_carsi_item_v1: { Args: { p_item_id: string }; Returns: undefined }
       diaspora_accept_intro_v1: {
         Args: { p_match_id: string }
@@ -15726,6 +15752,19 @@ export type Database = {
         Args: { p_cafe_id: string; p_logo_url: string }
         Returns: undefined
       }
+      update_cadde_post_v1: {
+        Args: {
+          p_body?: string
+          p_interests?: string[]
+          p_media?: Json
+          p_mentions?: Json
+          p_need_category?: string
+          p_post_id: string
+          p_targets?: Json
+          p_title?: string
+        }
+        Returns: undefined
+      }
       update_carsi_item_v1: {
         Args: {
           p_description?: string
@@ -16226,6 +16265,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       currency_code: ["TRY", "USD", "EUR", "GBP", "QAR"],

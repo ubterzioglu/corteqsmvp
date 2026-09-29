@@ -155,6 +155,21 @@ export async function createCaddePost(input: CaddePostInput): Promise<string> {
   return data as string;
 }
 
+/**
+ * Gönderiyi SOFT-DELETE eder (A11a/A11c): `delete_cadde_post_v1` sunucuda
+ * `status='hidden'` yapar — cascade tetiklenmez, akış sorguları ve sayaçlar
+ * tutarlı kalır. Yetki (sahip veya admin/moderatör) DB'de enforce edilir;
+ * istemcide rol kontrolü YAPMA, yalnız menüyü kendi gönderisinde göster.
+ *
+ * ⚠️ RPC hatası supabase-js'te DÜZ NESNEDİR (`Error` örneği değil) —
+ * `caddeWriteError` onu Error'a sarar ve kodu message'a taşır; toast tarafı
+ * `resolveCaddeRpcErrorMessage` ile Türkçesini gösterir.
+ */
+export async function deleteCaddePost(postId: string): Promise<void> {
+  const { error } = await db.rpc("delete_cadde_post_v1", { p_post_id: postId });
+  if (error) throw caddeWriteError("deleteCaddePost", error);
+}
+
 // ── Akış erişimi (CaddeReachCard) ────────────────────────────────────────────
 
 /**

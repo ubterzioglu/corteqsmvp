@@ -23,6 +23,7 @@ import CaddeFeedScopeBar from "@/components/cadde/CaddeFeedScopeBar";
 import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 import CaddeMediaGallery from "@/components/cadde/CaddeMediaGallery";
 import CaddePostBody from "@/components/cadde/CaddePostBody";
+import CaddePostMenu from "@/components/cadde/CaddePostMenu";
 import NotificationsBell from "@/components/cadde/NotificationsBell";
 import SponsoredFeedCard from "@/components/cadde/SponsoredFeedCard";
 import { Button } from "@/components/ui/button";
@@ -531,6 +532,12 @@ export const CaddeFeedView = ({
                           </TooltipTrigger>
                           <TooltipContent>Şikayet et</TooltipContent>
                         </Tooltip>
+                      ) : null}
+                      {/* A11c: kendi gönderisinde şikayet yerine üç nokta menüsü
+                          (sil + onay diyaloğu). Yetkinin gerçek denetimi DB'de
+                          (delete_cadde_post_v1) — buradaki koşul yalnız görünürlük. */}
+                      {session && item.post.authorUserId === user?.id ? (
+                        <CaddePostMenu postId={item.post.id} />
                       ) : null}
                     </div>
                     </TooltipProvider>

@@ -656,6 +656,7 @@ export const toolCatalog = {
       "interface_kind": "internal_api",
       "exports": [
         "createCaddePost",
+        "deleteCaddePost",
         "getCaddeActorContext",
         "getCaddeFeedReach",
         "listCaddePostComments"
@@ -664,6 +665,7 @@ export const toolCatalog = {
         "cadde_post_comments"
       ],
       "rpcs": [
+        "delete_cadde_post_v1",
         "get_cadde_actor_context",
         "get_cadde_feed_reach_v1"
       ],
@@ -1880,6 +1882,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/admin-shell/notification-settings-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/revision-attachment-media-contract.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/revision-attachment-media.ts",
       "kind": "ts",
       "module_family": "lib"
     },

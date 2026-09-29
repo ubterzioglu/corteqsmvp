@@ -38,6 +38,8 @@ const CADDE_API_PUBLIC_EXPORTS = [
   "createCaddeCafe",
   "createCaddeComment",
   "createCaddePost",
+  // A11c: soft-delete RPC sarmalayıcısı (delete_cadde_post_v1) — bilinçli genişletme.
+  "deleteCaddePost",
   "getCaddeActorContext",
   "getCaddeCafe",
   "getCaddeFeedReach",
