@@ -11,6 +11,7 @@ import RequireFeature from "@/components/auth/RequireFeature";
 import { DiasporaProvider } from "@/contexts/DiasporaContext";
 import { GENERIC_FEATURE_KEYS } from "@/lib/features";
 import ScrollTopButton from "@/components/ScrollTopButton";
+import AssistantBubble from "@/components/AssistantBubble";
 import ScrollToTop from "@/components/ScrollToTop";
 import PublicLayout from "@/components/PublicLayout";
 import RouteLoadingFallback from "@/components/RouteLoadingFallback";
@@ -325,6 +326,7 @@ const App = () => (
                 </Routes>
               </Suspense>
               <ScrollTopButton />
+              <AssistantBubble />
             </AuthProvider>
           </DiasporaProvider>
         </RouterAppErrorBoundary>

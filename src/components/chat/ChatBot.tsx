@@ -17,6 +17,11 @@ type ChatBotProps = {
   topLogoAlt?: string;
   shellVariant?: "gradient" | "plain";
   showIntro?: boolean;
+  /** Sayfa çıpası (`#kaydol`). Yüzen balon gibi ikinci yüzeylerde null ver —
+   *  aynı sayfada iki `id="kaydol"` çıpa gezinmesini bozar. */
+  sectionId?: string | null;
+  /** Yüzen panel içi yerleşim: bölüm dolgusu ve genişlik kısıtı olmadan. */
+  compact?: boolean;
 };
 
 const createMessage = (role: ChatMessage["role"], content: string): ChatMessage => ({
@@ -60,6 +65,8 @@ const ChatBot = ({
   topLogoAlt = "CorteQS Logo",
   shellVariant = "gradient",
   showIntro = true,
+  sectionId = "kaydol",
+  compact = false,
 }: ChatBotProps) => {
   const [state, setState] = useState<ChatState>(createInitialState);
   const { user } = useAuth();
@@ -175,8 +182,12 @@ const ChatBot = ({
 
   return (
     <section
-      id="kaydol"
-      className={`relative overflow-hidden ${useGradientShell ? "py-16 lg:py-24" : ""}`}
+      id={sectionId ?? undefined}
+      className={
+        compact
+          ? "relative"
+          : `relative overflow-hidden ${useGradientShell ? "py-16 lg:py-24" : ""}`
+      }
       style={
         useGradientShell
           ? {
@@ -199,7 +210,13 @@ const ChatBot = ({
         </>
       ) : null}
 
-      <div className={`relative z-10 mx-auto px-4 ${useGradientShell ? "container" : "max-w-2xl py-10 sm:py-12"}`}>
+      <div
+        className={
+          compact
+            ? "relative z-10 mx-auto w-full px-1"
+            : `relative z-10 mx-auto px-4 ${useGradientShell ? "container" : "max-w-2xl py-10 sm:py-12"}`
+        }
+      >
         {introContent}
         <ChatWindow
           state={state}
