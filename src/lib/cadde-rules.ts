@@ -177,6 +177,8 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
   cadde_invalid_comment: "Yorum 1-2000 karakter olmalı.",
   cadde_invalid_reaction: "Geçersiz reaksiyon tipi.",
   cadde_post_not_found: "Paylaşım bulunamadı veya yayında değil.",
+  // A11a (mig 20260929130000): delete_cadde_post_v1 — soft-delete, sahip+moderatör.
+  cadde_post_owner_required: "Bu işlem yalnız paylaşım sahibine veya moderatöre açık.",
   cadde_invalid_share_channel: "Geçersiz paylaşım kanalı.",
   cadde_share_rate_limited: "Çok hızlı paylaşım yapıyorsun. Lütfen biraz bekleyip tekrar dene.",
   cadde_share_post_not_found: "Paylaşım bulunamadı veya yayında değil.",
