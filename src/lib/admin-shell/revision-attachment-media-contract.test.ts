@@ -15,10 +15,13 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import {
+  formatRevisionAttachmentSize,
+  isRevisionAttachmentImage,
   REVISION_ATTACHMENT_ACCEPT,
   REVISION_ATTACHMENT_EXTENSIONS,
   REVISION_ATTACHMENT_MAX_BYTES,
   REVISION_ATTACHMENT_MIME_TYPES,
+  revisionAttachmentExtension,
 } from "./revision-attachment-media";
 
 const sql = readFileSync(
@@ -73,5 +76,38 @@ describe("kabul noktaları sabiti kullanıyor", () => {
   it.each(sources)("%s accept'i REVISION_ATTACHMENT_ACCEPT'ten alır", (_path, source) => {
     expect(source).toContain("accept={REVISION_ATTACHMENT_ACCEPT}");
     expect(source).not.toContain('accept="image/*"');
+  });
+});
+
+describe("A09c yardımcıları — görsel/belge ayrımı ve boyut etiketi", () => {
+  it("content_type ile türü ayırt eder", () => {
+    expect(isRevisionAttachmentImage("image/png", "x.png")).toBe(true);
+    expect(isRevisionAttachmentImage("image/gif", "x.gif")).toBe(true);
+    expect(isRevisionAttachmentImage("application/pdf", "x.pdf")).toBe(false);
+    expect(
+      isRevisionAttachmentImage(
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "x.xlsx",
+      ),
+    ).toBe(false);
+  });
+
+  it("content_type null ise uzantıdan sezilir (eski satırlar)", () => {
+    expect(isRevisionAttachmentImage(null, "foto.jpeg")).toBe(true);
+    expect(isRevisionAttachmentImage(null, "belge.pdf")).toBe(false);
+    expect(isRevisionAttachmentImage(null, "uzantisiz")).toBe(false);
+  });
+
+  it("uzantı etiketi teknik büyük harfe çevrilir", () => {
+    expect(revisionAttachmentExtension("belge.PDF")).toBe("PDF");
+    expect(revisionAttachmentExtension("tablo.xlsx")).toBe("XLSX");
+    expect(revisionAttachmentExtension("uzantisiz")).toBe("");
+  });
+
+  it("boyut etiketi KB/MB gösterir, null'da boş döner", () => {
+    expect(formatRevisionAttachmentSize(20480)).toBe("20 KB");
+    expect(formatRevisionAttachmentSize(1258291)).toBe("1.2 MB");
+    expect(formatRevisionAttachmentSize(500)).toBe("1 KB");
+    expect(formatRevisionAttachmentSize(null)).toBe("");
   });
 });

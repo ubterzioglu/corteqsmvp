@@ -39,3 +39,36 @@ export const REVISION_ATTACHMENT_EXTENSIONS: Set<string> = new Set<string>(
 
 /** `<input type="file" accept=...>` için. Elle yazma, buradan türet. */
 export const REVISION_ATTACHMENT_ACCEPT = REVISION_ATTACHMENT_MIME_TYPES.join(",");
+
+/**
+ * Ek görsel mi (thumbnail önizlenir) yoksa belge mi (A09c: ad + ikon + boyut
+ * kartı)? `content_type` satıra yüklemede yazılır ama null olabilir (eski satırlar
+ * / tarayıcı türü bilmiyor) — o durumda uzantıdan sezilir.
+ */
+export function isRevisionAttachmentImage(
+  contentType: string | null,
+  fileName: string,
+): boolean {
+  if (contentType) {
+    return contentType.startsWith("image/");
+  }
+  const ext = fileName.includes(".") ? (fileName.split(".").pop() ?? "").toLowerCase() : "";
+  return IMAGE_EXTENSIONS.has(ext);
+}
+
+const IMAGE_EXTENSIONS: ReadonlySet<string> = new Set(["jpg", "jpeg", "png", "webp", "gif"]);
+
+/** Uzantı etiketi (büyük harf, teknik değer → düz toUpperCase doğru). */
+export function revisionAttachmentExtension(fileName: string): string {
+  const ext = fileName.includes(".") ? (fileName.split(".").pop() ?? "").toLowerCase() : "";
+  return ext.replace(/[^a-z0-9]/g, "").toUpperCase();
+}
+
+/** Kart altında gösterim için insan-okur boyut ("340 KB", "1.2 MB"). */
+export function formatRevisionAttachmentSize(sizeBytes: number | null): string {
+  if (sizeBytes === null || Number.isNaN(sizeBytes)) return "";
+  if (sizeBytes < 1024 * 1024) {
+    return `${Math.max(1, Math.round(sizeBytes / 1024))} KB`;
+  }
+  return `${(sizeBytes / (1024 * 1024)).toFixed(1)} MB`;
+}

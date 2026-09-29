@@ -1,10 +1,21 @@
-// Revizyon talebi/yorum görsel ekleri — ortak thumbnail grid.
+// Revizyon talebi/yorum ekleri — ortak grid (görsel thumbnail + belge kartı).
 // AdminRevisionRequestsPage (talep detay drawer'ı) ve RevisionCommentThread
 // (her yorumun altı) tarafından kullanılır.
+//
+// A09c: görsel OLMAYAN ekler (PDF/Office) `<img>` ile kırık görsel göstermesin
+// diye ad + uzantı ikonu + boyut kartıyla çizilir; görseller thumbnail kalır.
 
 import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Trash2, Upload } from "lucide-react";
+import {
+  File as FileIcon,
+  FileSpreadsheet,
+  FileText,
+  Loader2,
+  Presentation,
+  Trash2,
+  Upload,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -16,7 +27,12 @@ import {
   type AttachmentParent,
   type RevisionAttachment,
 } from "@/lib/admin-shell/revision-requests";
-import { REVISION_ATTACHMENT_ACCEPT } from "@/lib/admin-shell/revision-attachment-media";
+import {
+  formatRevisionAttachmentSize,
+  isRevisionAttachmentImage,
+  REVISION_ATTACHMENT_ACCEPT,
+  revisionAttachmentExtension,
+} from "@/lib/admin-shell/revision-attachment-media";
 
 function attachmentsKey(parent: AttachmentParent) {
   return "requestId" in parent
@@ -26,6 +42,90 @@ function attachmentsKey(parent: AttachmentParent) {
 
 const errMessage = (error: unknown): string =>
   error instanceof Error ? error.message : "Beklenmeyen hata";
+
+function documentIcon(fileName: string, contentType: string | null) {
+  const ext = revisionAttachmentExtension(fileName);
+  const type = contentType ?? "";
+  if (ext === "PDF" || type === "application/pdf") return FileText;
+  if (["XLS", "XLSX"].includes(ext) || type.includes("spreadsheetml") || type === "application/vnd.ms-excel") {
+    return FileSpreadsheet;
+  }
+  if (["PPT", "PPTX"].includes(ext) || type.includes("presentationml") || type === "application/vnd.ms-powerpoint") {
+    return Presentation;
+  }
+  if (["DOC", "DOCX"].includes(ext) || type === "application/msword" || type.includes("wordprocessingml")) {
+    return FileText;
+  }
+  return FileIcon;
+}
+
+/**
+ * Sunum bileşeni — hook YOK, test edilebilir çekirdek (A09c).
+ * Görsel: 64px thumbnail. Belge: ad + uzantı ikonu + boyut kartı.
+ */
+export function AttachmentCard({
+  attachment,
+  url,
+  onDelete,
+  isDeleting,
+}: {
+  attachment: RevisionAttachment;
+  url: string | null;
+  onDelete: () => void;
+  isDeleting: boolean;
+}) {
+  const isImage = isRevisionAttachmentImage(attachment.contentType, attachment.fileName);
+  const DocumentIcon = documentIcon(attachment.fileName, attachment.contentType);
+  const sizeLabel = formatRevisionAttachmentSize(attachment.sizeBytes);
+
+  return (
+    <div
+      className={`group relative h-16 overflow-hidden rounded border border-border bg-muted ${
+        isImage ? "w-16" : "w-44"
+      }`}
+    >
+      {isImage ? (
+        url ? (
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            <img src={url} alt={attachment.fileName} className="h-full w-full object-cover" />
+          </a>
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          </div>
+        )
+      ) : (
+        <a
+          href={url ?? undefined}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-disabled={url === null}
+          className={`flex h-full w-full flex-col items-center justify-center gap-1 p-2 text-center ${
+            url ? "hover:bg-muted/60" : "pointer-events-none opacity-80"
+          }`}
+          title={attachment.fileName}
+        >
+          <DocumentIcon className="h-5 w-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+          <span className="w-full truncate text-[10px] font-medium text-foreground">
+            {attachment.fileName}
+          </span>
+          {sizeLabel ? (
+            <span className="text-[9px] text-muted-foreground">{sizeLabel}</span>
+          ) : null}
+        </a>
+      )}
+      <button
+        type="button"
+        aria-label="Eki sil"
+        onClick={onDelete}
+        disabled={isDeleting}
+        className="absolute right-0.5 top-0.5 hidden rounded-full bg-background/90 p-1 text-muted-foreground hover:text-red-500 group-hover:block"
+      >
+        <Trash2 className="h-3 w-3" />
+      </button>
+    </div>
+  );
+}
 
 function AttachmentThumbnail({
   attachment,
@@ -45,26 +145,12 @@ function AttachmentThumbnail({
   });
 
   return (
-    <div className="group relative h-16 w-16 overflow-hidden rounded border border-border bg-muted">
-      {url ? (
-        <a href={url} target="_blank" rel="noopener noreferrer">
-          <img src={url} alt={attachment.fileName} className="h-full w-full object-cover" />
-        </a>
-      ) : (
-        <div className="flex h-full w-full items-center justify-center">
-          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-        </div>
-      )}
-      <button
-        type="button"
-        aria-label="Görseli sil"
-        onClick={onDelete}
-        disabled={isDeleting}
-        className="absolute right-0.5 top-0.5 hidden rounded-full bg-background/90 p-1 text-muted-foreground hover:text-red-500 group-hover:block"
-      >
-        <Trash2 className="h-3 w-3" />
-      </button>
-    </div>
+    <AttachmentCard
+      attachment={attachment}
+      url={url}
+      onDelete={onDelete}
+      isDeleting={isDeleting}
+    />
   );
 }
 
