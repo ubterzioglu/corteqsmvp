@@ -1,4 +1,4 @@
-import { Bot, User as UserIcon } from "lucide-react";
+import { User as UserIcon } from "lucide-react";
 import type { ChatMessage as ChatMessageType } from "@/lib/chatConfig";
 
 type Props = {
@@ -11,9 +11,12 @@ const ChatMessage = ({ message }: Props) => {
   return (
     <div className={`flex gap-3 ${isUser ? "justify-end" : "justify-start"}`}>
       {!isUser && (
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent shadow">
-          <Bot className="h-4 w-4 text-primary-foreground" />
-        </div>
+        <img
+          src="/lmaskog.png"
+          alt=""
+          aria-hidden="true"
+          className="h-8 w-8 shrink-0 rounded-full object-cover shadow"
+        />
       )}
       <div className={`flex max-w-[80%] flex-col gap-2 ${isUser ? "items-end" : "items-start"}`}>
         <div

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Bot, X } from "lucide-react";
+import { X } from "lucide-react";
 
 import ChatBot from "@/components/chat/ChatBot";
 
@@ -46,7 +46,12 @@ const AssistantBubble = () => {
         ].join(" ")}
         style={{ right: RIGHT, bottom: BUBBLE_BOTTOM }}
       >
-        <Bot className="h-6 w-6" />
+        <img
+          src="/lmaskog.png"
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full rounded-full object-cover"
+        />
       </button>
 
       {open ? (
