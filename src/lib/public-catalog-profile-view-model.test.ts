@@ -261,6 +261,66 @@ describe("buildPublicCatalogProfileViewModel — quick actions ve claim", () => 
     expect(vm.quickActions.find((action) => action.key === "website")).toBeUndefined();
   });
 
+  it("website contact yoksa ilk güvenli LINK'e düşer", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        links: [{ type: "website", url: "https://link.example.com", label: "Site" }],
+      }),
+    );
+    expect(vm.quickActions.find((action) => action.key === "website")?.href).toBe(
+      "https://link.example.com/",
+    );
+  });
+
+  it("whatsapp numarası wa.me derin linkine döner ve external işaretlenir", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        contacts: [{ type: "whatsapp", value: "+49 151 12345678", label: null, isPrimary: false }],
+      }),
+    );
+    const whatsapp = vm.quickActions.find((action) => action.key === "whatsapp");
+    expect(whatsapp?.href).toBe("https://wa.me/4915112345678");
+    expect(whatsapp?.external).toBe(true);
+  });
+
+  it("randevu linki aksiyon üretir", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        contacts: [
+          { type: "appointment_url", value: "https://cal.example.com/x", label: null, isPrimary: false },
+        ],
+      }),
+    );
+    expect(vm.quickActions.find((action) => action.key === "appointment")?.href).toBe(
+      "https://cal.example.com/x",
+    );
+  });
+
+  it("adres VE şehir yoksa harita aksiyonu ÇIKMAZ", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({ item: { ...makePayload().item, city: null, addressLine: null } }),
+    );
+    expect(vm.quickActions.find((action) => action.key === "map")).toBeUndefined();
+  });
+
+  it("presentation önceliği primary'leri seçer, kota üçüncüyü secondary bırakır", () => {
+    const vm = buildPublicCatalogProfileViewModel(
+      makePayload({
+        item: { ...makePayload().item, roleKey: "Experimental_2" },
+        contacts: [
+          { type: "email", value: "a@b.com", label: null, isPrimary: false },
+          { type: "whatsapp", value: "https://wa.me/4915112345678", label: null, isPrimary: false },
+          { type: "phone", value: "+49 231 818 687", label: null, isPrimary: false },
+        ],
+      }),
+    );
+    const variantByKey = Object.fromEntries(vm.quickActions.map((action) => [action.key, action.variant]));
+    // Experimental_2: priority [email, whatsapp, phone], maxPrimaryActions 2.
+    expect(variantByKey.email).toBe("primary");
+    expect(variantByKey.whatsapp).toBe("primary");
+    expect(variantByKey.phone).toBe("secondary");
+  });
+
   it("claim view-model reflects managed state", () => {
     const vm = buildPublicCatalogProfileViewModel(
       makePayload({

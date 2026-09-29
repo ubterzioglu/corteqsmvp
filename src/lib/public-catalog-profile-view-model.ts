@@ -384,71 +384,80 @@ export function toWhatsAppHref(value: string | null | undefined): string | null 
 
 type QuickActionDraft = Omit<PublicProfileQuickAction, "variant">;
 
+/** İlgili tipteki İLK iletişim kaydının güvenli linki; yoksa null. */
+function firstContactHref(
+  contacts: PublicProfileContact[],
+  type: string,
+  toHref: (value: string) => string | null,
+): string | null {
+  const contact = contacts.find((entry) => entry.type === type && toHref(entry.value));
+  return contact ? toHref(contact.value) : null;
+}
+
+/** İlk güvenli katalog linki (website aksiyonunun yedek kaynağı). */
+function firstSafeLinkHref(links: PublicProfileLink[]): string | null {
+  const link = links.find((entry) => toSafeExternalUrl(entry.url));
+  return link ? toSafeExternalUrl(link.url) : null;
+}
+
+type QuickActionSpec = {
+  key: ProfileQuickActionKey;
+  label: string;
+  external: boolean;
+  resolveHref: (payload: PublicCatalogProfilePagePayload) => string | null;
+};
+
+/**
+ * Quick action kaynakları TEK tabloda: satır sırası = aksiyon sırası, her satır
+ * kendi temizleyicisini taşır. Refactor öncesi beş ayrı find+push bloğu aynı
+ * biçimin tekrarıydı; yeni aksiyon eklemek artık tek satır.
+ */
+const QUICK_ACTION_SPECS: QuickActionSpec[] = [
+  {
+    key: "website",
+    label: "Web Sitesi",
+    external: true,
+    resolveHref: (payload) =>
+      firstContactHref(payload.contacts, "website", toSafeExternalUrl) ??
+      firstSafeLinkHref(payload.links),
+  },
+  {
+    key: "email",
+    label: "E-posta Gönder",
+    external: false,
+    resolveHref: (payload) => firstContactHref(payload.contacts, "email", toSafeMailHref),
+  },
+  {
+    key: "phone",
+    label: "Telefon Et",
+    external: false,
+    resolveHref: (payload) => firstContactHref(payload.contacts, "phone", toSafePhoneHref),
+  },
+  {
+    key: "whatsapp",
+    label: "WhatsApp",
+    external: true,
+    resolveHref: (payload) => firstContactHref(payload.contacts, "whatsapp", toWhatsAppHref),
+  },
+  {
+    key: "appointment",
+    label: "Randevu Al",
+    external: true,
+    resolveHref: (payload) => firstContactHref(payload.contacts, "appointment_url", toSafeExternalUrl),
+  },
+];
+
 function buildQuickActions(
   payload: PublicCatalogProfilePagePayload,
   presentation: ProfilePresentationConfig,
 ): PublicProfileQuickAction[] {
   const actions: QuickActionDraft[] = [];
 
-  const websiteContact = payload.contacts.find(
-    (contact) => contact.type === "website" && toSafeExternalUrl(contact.value),
-  );
-  const websiteLink = payload.links.find((link) => toSafeExternalUrl(link.url));
-  const websiteHref = websiteContact
-    ? toSafeExternalUrl(websiteContact.value)
-    : websiteLink
-      ? toSafeExternalUrl(websiteLink.url)
-      : null;
-  if (websiteHref) {
-    actions.push({ key: "website", label: "Web Sitesi", href: websiteHref, external: true });
-  }
-
-  const emailContact = payload.contacts.find(
-    (contact) => contact.type === "email" && toSafeMailHref(contact.value),
-  );
-  if (emailContact) {
-    actions.push({
-      key: "email",
-      label: "E-posta Gönder",
-      href: toSafeMailHref(emailContact.value)!,
-      external: false,
-    });
-  }
-
-  const phoneContact = payload.contacts.find(
-    (contact) => contact.type === "phone" && toSafePhoneHref(contact.value),
-  );
-  if (phoneContact) {
-    actions.push({
-      key: "phone",
-      label: "Telefon Et",
-      href: toSafePhoneHref(phoneContact.value)!,
-      external: false,
-    });
-  }
-
-  const whatsappContact = payload.contacts.find(
-    (contact) => contact.type === "whatsapp" && toWhatsAppHref(contact.value),
-  );
-  if (whatsappContact) {
-    actions.push({
-      key: "whatsapp",
-      label: "WhatsApp",
-      href: toWhatsAppHref(whatsappContact.value)!,
-      external: true,
-    });
-  }
-
-  const appointmentContact = payload.contacts.find(
-    (contact) => contact.type === "appointment_url" && toSafeExternalUrl(contact.value),
-  );
-  if (appointmentContact) {
-    actions.push({
-      key: "appointment",
-      label: "Randevu Al",
-      href: toSafeExternalUrl(appointmentContact.value)!,
-      external: true,
-    });
+  for (const spec of QUICK_ACTION_SPECS) {
+    const href = spec.resolveHref(payload);
+    if (href) {
+      actions.push({ key: spec.key, label: spec.label, href, external: spec.external });
+    }
   }
 
   const mapHref = toMapHref([
