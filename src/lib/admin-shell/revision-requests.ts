@@ -21,6 +21,10 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { sanitizeError, validateContent, validateFile, validateTitle } from "@/lib/security";
 import { fetchAllRows } from "@/lib/supabase-chunked";
+import {
+  REVISION_ATTACHMENT_EXTENSIONS,
+  REVISION_ATTACHMENT_MAX_BYTES,
+} from "./revision-attachment-media";
 
 type AttachmentInsert = Database["public"]["Tables"]["revision_request_attachments"]["Insert"];
 
@@ -437,9 +441,11 @@ export async function uploadAttachment(
   parent: AttachmentParent,
   file: File,
 ): Promise<RevisionAttachment> {
+  // A09b: tür/boyut sınırları TEK KAYNAKTAN (revision-attachment-media.ts) —
+  // bucket'ın allowed_mime_types/file_size_limit değerleriyle ayna sözleşmesi.
   const fileError = validateFile(file, {
-    allowedExtensions: new Set(["png", "jpg", "jpeg", "gif", "webp"]),
-    maxSize: 15 * 1024 * 1024,
+    allowedExtensions: REVISION_ATTACHMENT_EXTENSIONS,
+    maxSize: REVISION_ATTACHMENT_MAX_BYTES,
   });
   if (fileError) {
     throw new Error(fileError);
@@ -450,7 +456,7 @@ export async function uploadAttachment(
     .from(ATTACHMENTS_BUCKET)
     .upload(path, file, { contentType: file.type || undefined, upsert: false });
   if (uploadError) {
-    throw new Error(sanitizeError(uploadError, "Görsel yüklenemedi."));
+    throw new Error(sanitizeError(uploadError, "Dosya yüklenemedi."));
   }
 
   const createdBy = await currentUserId();
@@ -478,7 +484,7 @@ export async function uploadAttachment(
     .single();
 
   if (error || !data) {
-    throw new Error(sanitizeError(error, "Görsel yüklenemedi."));
+    throw new Error(sanitizeError(error, "Dosya yüklenemedi."));
   }
 
   return mapAttachment(data as AttachmentRow);
@@ -508,7 +514,7 @@ export async function getAttachmentUrl(storagePath: string): Promise<string> {
     .from(ATTACHMENTS_BUCKET)
     .createSignedUrl(storagePath, 300);
   if (error || !data?.signedUrl) {
-    throw new Error(sanitizeError(error, "Görsel için erişim linki üretilemedi."));
+    throw new Error(sanitizeError(error, "Dosya için erişim linki üretilemedi."));
   }
   return data.signedUrl;
 }

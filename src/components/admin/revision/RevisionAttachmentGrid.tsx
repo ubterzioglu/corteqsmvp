@@ -16,6 +16,7 @@ import {
   type AttachmentParent,
   type RevisionAttachment,
 } from "@/lib/admin-shell/revision-requests";
+import { REVISION_ATTACHMENT_ACCEPT } from "@/lib/admin-shell/revision-attachment-media";
 
 function attachmentsKey(parent: AttachmentParent) {
   return "requestId" in parent
@@ -125,7 +126,7 @@ export function RevisionAttachmentGrid({ parent }: RevisionAttachmentGridProps) 
       <input
         ref={fileRef}
         type="file"
-        accept="image/*"
+        accept={REVISION_ATTACHMENT_ACCEPT}
         multiple
         className="hidden"
         onChange={(event) => handleFiles(event.target.files)}
@@ -141,7 +142,7 @@ export function RevisionAttachmentGrid({ parent }: RevisionAttachmentGridProps) 
         ) : (
           <Upload className="mr-1.5 h-3.5 w-3.5" />
         )}
-        Görsel Ekle
+        Dosya Ekle
       </Button>
     </div>
   );

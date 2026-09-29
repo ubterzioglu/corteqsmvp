@@ -18,6 +18,7 @@ import {
   uploadAttachment,
   type RevisionComment,
 } from "@/lib/admin-shell/revision-requests";
+import { REVISION_ATTACHMENT_ACCEPT } from "@/lib/admin-shell/revision-attachment-media";
 
 const commentsKey = (requestId: string) => ["revision-comments", requestId] as const;
 
@@ -75,7 +76,7 @@ export function RevisionCommentThread({ requestId }: RevisionCommentThreadProps)
           await uploadAttachment({ commentId: comment.id }, file);
         } catch (error: unknown) {
           toast({
-            title: "Görsel yüklenemedi",
+            title: "Dosya yüklenemedi",
             description: error instanceof Error ? error.message : "Bilinmeyen hata",
             variant: "destructive",
           });
@@ -187,7 +188,7 @@ export function RevisionCommentThread({ requestId }: RevisionCommentThreadProps)
         <input
           ref={fileRef}
           type="file"
-          accept="image/*"
+          accept={REVISION_ATTACHMENT_ACCEPT}
           multiple
           className="hidden"
           onChange={(event) => {
@@ -201,7 +202,7 @@ export function RevisionCommentThread({ requestId }: RevisionCommentThreadProps)
         <div className="flex items-center justify-between">
           <Button variant="ghost" size="sm" onClick={() => fileRef.current?.click()}>
             <Paperclip className="mr-1.5 h-3.5 w-3.5" />
-            Görsel Ekle
+            Dosya Ekle
           </Button>
           <Button
             size="sm"

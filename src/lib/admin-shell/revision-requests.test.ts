@@ -388,13 +388,42 @@ describe("uploadAttachment", () => {
     expect(storageFromMock).not.toHaveBeenCalled();
   });
 
+  it("accepts a PDF attachment (A09b: belge kabulü)", async () => {
+    const uploadMock = vi.fn().mockResolvedValue({ error: null });
+    storageFromMock.mockReturnValue({ upload: uploadMock });
+    fromMock.mockReturnValue(
+      chainable({
+        single: {
+          data: {
+            id: "a-4",
+            request_id: "r-1",
+            comment_id: null,
+            storage_path: "request/r-1/1-a-belge.pdf",
+            file_name: "belge.pdf",
+            content_type: "application/pdf",
+            size_bytes: 10,
+            created_by: "admin-1",
+            created_at: "2026-09-29T12:00:00.000Z",
+          },
+          error: null,
+        },
+      }),
+    );
+
+    const file = new File(["x"], "belge.pdf", { type: "application/pdf" });
+    const result = await uploadAttachment({ requestId: "r-1" }, file);
+
+    expect(uploadMock).toHaveBeenCalled();
+    expect(result.contentType).toBe("application/pdf");
+  });
+
   it("throws a sanitized message when storage upload fails", async () => {
     storageFromMock.mockReturnValue({
       upload: vi.fn().mockResolvedValue({ error: { message: "storage full" } }),
     });
     const file = new File(["x"], "test.png", { type: "image/png" });
     await expect(uploadAttachment({ requestId: "r-1" }, file)).rejects.toThrow(
-      "Görsel yüklenemedi.",
+      "Dosya yüklenemedi.",
     );
   });
 });
@@ -437,7 +466,7 @@ describe("getAttachmentUrl", () => {
       createSignedUrl: vi.fn().mockResolvedValue({ data: null, error: { message: "nope" } }),
     });
     await expect(getAttachmentUrl("request/r-1/x.png")).rejects.toThrow(
-      "Görsel için erişim linki üretilemedi.",
+      "Dosya için erişim linki üretilemedi.",
     );
   });
 });
