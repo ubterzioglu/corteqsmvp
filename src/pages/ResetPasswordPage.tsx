@@ -96,7 +96,7 @@ const ResetPasswordPage = () => {
 
     await supabase.auth.signOut();
     setTimeout(() => {
-      navigate("/admin", { replace: true });
+      navigate("/login", { replace: true });
     }, 1500);
   };
 
@@ -119,7 +119,7 @@ const ResetPasswordPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => navigate("/admin")} className="w-full">
+            <Button onClick={() => navigate("/login")} className="w-full">
               Giriş ekranına dön
             </Button>
           </CardContent>

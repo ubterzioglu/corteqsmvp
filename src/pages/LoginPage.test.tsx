@@ -63,6 +63,22 @@ describe("LoginPage", () => {
     });
   });
 
+  it("şifre alanının altında /forgot-password bağlantısı gösterir", () => {
+    useAuthMock.mockReturnValue({
+      session: null,
+      isLoading: false,
+    });
+
+    render(
+      <MemoryRouter initialEntries={["/login"]}>
+        <LoginPage />
+      </MemoryRouter>,
+    );
+
+    const forgotLink = screen.getByRole("link", { name: /şifremi unuttum/i });
+    expect(forgotLink).toHaveAttribute("href", "/forgot-password");
+  });
+
   it("starts on signup mode from query param", () => {
     useAuthMock.mockReturnValue({
       session: null,

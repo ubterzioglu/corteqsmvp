@@ -27,6 +27,7 @@ import NotFound from "./pages/NotFound.tsx";
 // Lazy — public pages
 const LandingTrialPage = lazyWithReload(() => import("./pages/LandingTrialPage.tsx")); // ana sayfa (/) içeriği — eski /landingtrial denemesi 2026-06-18'de ana sayfa yapıldı
 const ResetPasswordPage = lazyWithReload(() => import("./pages/ResetPasswordPage.tsx"));
+const ForgotPasswordPage = lazyWithReload(() => import("./pages/ForgotPasswordPage.tsx"));
 const PrivacyPolicyPage = lazyWithReload(() => import("./pages/PrivacyPolicyPage.tsx"));
 const TermsOfService = lazyWithReload(() => import("./pages/TermsOfService.tsx"));
 const KVKK = lazyWithReload(() => import("./pages/KVKK.tsx"));
@@ -309,6 +310,7 @@ const App = () => (
                     <Route path="/pricing" element={<Pricing />} />
                     <Route path="/kariyer" element={<Career />} />
                     <Route path="/reset-password" element={<ResetPasswordPage />} />
+                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Route>
                   {/* Legacy yönlendirmeler — tek kaynak: src/lib/redirects.ts.

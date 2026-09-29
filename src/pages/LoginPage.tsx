@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSeo } from "@/lib/seo";
-import { Navigate, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { describeSignInError, describeSignUpResult } from "@/lib/auth-messages";
@@ -310,6 +310,14 @@ const LoginPage = () => {
                     disabled={isBusy}
                     required
                   />
+                  <div className="text-right">
+                    <Link
+                      to="/forgot-password"
+                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                    >
+                      Şifremi unuttum
+                    </Link>
+                  </div>
                 </div>
 
                 <Button type="submit" variant="outline" className="w-full" disabled={isBusy}>
