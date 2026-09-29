@@ -166,6 +166,9 @@ export default function CommandCenterManager({
                 editingState={manager.editingState}
                 setEditingState={manager.setEditingState}
                 isSubmitting={manager.isSubmitting}
+                sortKey={manager.sortKey}
+                sortDirection={manager.sortDirection}
+                onSortChange={manager.changeSort}
                 onStartEdit={manager.startEdit}
                 onCancelEdit={manager.cancelEdit}
                 onUpdate={manager.handleUpdate}
@@ -210,6 +213,9 @@ export default function CommandCenterManager({
                         editingState={manager.editingState}
                         setEditingState={manager.setEditingState}
                         isSubmitting={manager.isSubmitting}
+                        sortKey={manager.sortKey}
+                        sortDirection={manager.sortDirection}
+                        onSortChange={manager.changeSort}
                         onStartEdit={manager.startEdit}
                         onCancelEdit={manager.cancelEdit}
                         onUpdate={manager.handleUpdate}
