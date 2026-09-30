@@ -77,7 +77,7 @@
 | `status/` | Durum panoları: `rapor.html` (ana pano + kullanım senaryoları), `burakubtstatus.html` | Aktif |
 | `history/` | Tamamlanmış planlar, eski handoff'lar (public-profil v2.1 dahil), durum ve **değişiklik kapanış raporları**, `SONDURUM.md` (faz/devir durumu) | Arşiv |
 | `exports/` | Üretilen dışa aktarımlar: `blog-md/` = `scripts/export-blog-md.mjs` varsayılan çıktısı | Üretilen |
-| `archive/` | **Dondurulmuş içerik:** `architecture/` (eski 9 mimari doküman — bakım ARCHITECTURE.md'de), `root-2026-06-11/` (kök temizliği: audit/cleancode/dbcheck/peronevera notları, deployerror, meeting10.csv, import-resources.ts), `root-2026-08-03/` (üçüncü kök temizliği: `1readme.md`, `tab_of.json`), `backups/` (Supabase DB dump'ları), `cleanup-2026-05-15/`, `cleanup-2026-05-30/`, `turkish_missions_import_builder/`, **`2026-09-20-guncelligini-yitirenler/`** (işi bitmiş/aşılmış 4 plan — taşıma ölçütü ve taşınMAYANLARIN listesi o klasörün `README.md`'sinde) | Arşiv |
+| `archive/` | **Dondurulmuş içerik:** `architecture/` (eski 9 mimari doküman — bakım ARCHITECTURE.md'de), `root-2026-06-11/` (kök temizliği: audit/cleancode/dbcheck/peronevera notları, deployerror, meeting10.csv, import-resources.ts), `root-2026-08-03/` (üçüncü kök temizliği: `1readme.md`, `tab_of.json`), `backups/` (Supabase DB dump'ları), `cleanup-2026-05-15/`, `cleanup-2026-05-30/`, `turkish_missions_import_builder/`, **`2026-09-20-guncelligini-yitirenler/`** (işi bitmiş/aşılmış 4 plan), **`2026-09-30-kapanan-is-dokumanlari/`** (33 kapanan devir notu / durum raporu / eski plan — taşıma ölçütü, taşınMAYANLAR ve kalıcı derslerin taşındığı yer o klasörün `README.md`'sinde) | Arşiv |
 | `reference/` | Referans repo kopyaları (`global-network-bridge/`) | Arşiv |
 | `partner-materials/` | Influencer / Strategic Partner tanıtım materyalleri (`.docx`, `.png`) + referans görseller. 2026-09-04'te `docu/`'dan adlandırıldı; alt klasörler `.html` uzantılı isim taşıyordu (2026-06-11 kök temizliğinden kalma kaza), `influencer-partner/` ve `strategic-partner/` olarak düzeltildi. | Arşiv |
 | `assets/` | Arşiv görselleri (sweet.png, rapor ekran görüntüleri vb.) | Arşiv |
@@ -105,6 +105,9 @@ Denetim → plan → uygulama → kapanış zinciri. Sıra bu; okumaya denetimle
 ## Nereden başlamalı?
 
 1. Yeni oturum/bağlam → **[`AGENT_CONTEXT.md`](AGENT_CONTEXT.md)**
+   · operasyon temeli (deploy/DB/secret/tuzaklar) →
+   **[`operations/2026-09-30-kalici-operasyon-dersleri.md`](operations/2026-09-30-kalici-operasyon-dersleri.md)**
+   · güncel kalan işler → **[`kalanlar/2026-09-27-KALANLAR.md`](kalanlar/2026-09-27-KALANLAR.md)**
 2. Mimari soru → **[`ARCHITECTURE.md`](ARCHITECTURE.md)**
 3. Proje durumu / ne bitti ne açık → **[`status/rapor.html`](status/rapor.html)**
 4. Cadde 3.0 detayı → `cadde-300/change-report.md`
