@@ -43,3 +43,11 @@ verify_jwt = false
 
 [functions.whatsapp-reply]
 verify_jwt = true
+
+# A12b kuyruğu (A99-R2 dersi): site-assistant kullanıcı JWT'si İSTER (üyeler-only,
+# anon 401 — fonksiyonun kendi denetimi). Canlı durum zaten doğru (v19,
+# verify_jwt=true ölçüldü 30.09); buraya YAZILMA sebebi, gelecekteki bir CLI
+# deploy'unun kapıyı yanlışlıkla çevirmesini engellemek — config girdisi olmayan
+# fonksiyonlarda deploy sonrası verify_jwt'yi ÖLÇ (radar'da tam bu oldu).
+[functions.site-assistant]
+verify_jwt = true
