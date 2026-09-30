@@ -535,9 +535,20 @@ export const CaddeFeedView = ({
                       ) : null}
                       {/* A11c: kendi gönderisinde şikayet yerine üç nokta menüsü
                           (sil + onay diyaloğu). Yetkinin gerçek denetimi DB'de
-                          (delete_cadde_post_v1) — buradaki koşul yalnız görünürlük. */}
+                          (delete_cadde_post_v1) — buradaki koşul yalnız görünürlük.
+                          A11d: "Paylaş" mevcut shareMutation'a bağlı — şeritteki
+                          paylaş butonuyla AYNI altyapı (web share → pano → sayaç). */}
                       {session && item.post.authorUserId === user?.id ? (
-                        <CaddePostMenu postId={item.post.id} />
+                        <CaddePostMenu
+                          postId={item.post.id}
+                          onShare={() =>
+                            shareMutation.mutate({
+                              postId: item.post.id,
+                              title: item.post.title,
+                              body: item.post.body,
+                            })
+                          }
+                        />
                       ) : null}
                     </div>
                     </TooltipProvider>

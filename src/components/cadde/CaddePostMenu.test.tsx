@@ -65,4 +65,33 @@ describe("CaddePostMenu — üç nokta menüsü (A11c)", () => {
     );
     expect(deleteCaddePostMock).not.toHaveBeenCalled();
   });
+
+  it("A11d: Paylaş maddesi onShare'i çağırır, silme RPC'sine DOKUNMAZ", async () => {
+    const user = userEvent.setup();
+    const onShare = vi.fn();
+    const client = new QueryClient({
+      defaultOptions: { mutations: { retry: false }, queries: { retry: false } },
+    });
+    render(
+      <QueryClientProvider client={client}>
+        <CaddePostMenu postId="post-1" onShare={onShare} />
+      </QueryClientProvider>,
+    );
+
+    await user.click(screen.getByTestId("cadde-post-menu-trigger"));
+    await user.click(await screen.findByRole("menuitem", { name: /Paylaş/ }));
+
+    expect(onShare).toHaveBeenCalledTimes(1);
+    expect(deleteCaddePostMock).not.toHaveBeenCalled();
+  });
+
+  it("onShare verilmeyince Paylaş maddesi hiç çizilmez", async () => {
+    const user = userEvent.setup();
+    renderMenu();
+
+    await user.click(screen.getByTestId("cadde-post-menu-trigger"));
+
+    expect(await screen.findByRole("menuitem", { name: /Sil/ })).toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: /Paylaş/ })).not.toBeInTheDocument();
+  });
 });

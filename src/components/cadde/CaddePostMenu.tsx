@@ -10,7 +10,7 @@
 // yedeğiyle yapılır.
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { MoreHorizontal, Trash2 } from "lucide-react";
+import { MoreHorizontal, Share2, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 import {
@@ -37,9 +37,15 @@ import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
 
 export type CaddePostMenuProps = {
   postId: string;
+  /**
+   * A11d: "Paylaş" maddesi MEVCUT paylaşım altyapısına bağlanır —
+   * `useCaddePostEngagement.shareMutation` (web share → pano → sayaç).
+   * Yeni mekanizma YAZMA; çağıran FeedView'de mutation'ı geçirir.
+   */
+  onShare?: () => void;
 };
 
-export default function CaddePostMenu({ postId }: CaddePostMenuProps) {
+export default function CaddePostMenu({ postId, onShare }: CaddePostMenuProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -77,6 +83,12 @@ export default function CaddePostMenu({ postId }: CaddePostMenuProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          {onShare ? (
+            <DropdownMenuItem onSelect={onShare}>
+              <Share2 className="mr-2 h-4 w-4" aria-hidden="true" />
+              Paylaş
+            </DropdownMenuItem>
+          ) : null}
           <DropdownMenuItem
             className="text-red-600 focus:text-red-600"
             onSelect={() => setConfirmOpen(true)}
