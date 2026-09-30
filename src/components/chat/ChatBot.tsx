@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Sparkles } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 import ChatWindow from "@/components/chat/ChatWindow";
 import { useAuth } from "@/components/auth/useAuth";
@@ -71,6 +71,9 @@ const ChatBot = ({
   const [state, setState] = useState<ChatState>(createInitialState);
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
+  // A12b: asistan hangi sayfada olunduğunu bilsin — "burada" gibi ifadeler
+  // sayfa bağlamıyla yorumlanır. Retrieval değişmez, yalnız prompt notu.
+  const location = useLocation();
   const assistantPrefill = (searchParams.get("assistant") ?? "").trim().slice(0, 500);
 
   const askQuestion = useCallback(
@@ -108,7 +111,10 @@ const ChatBot = ({
       }));
 
       try {
-        const { answer, hasContext, sources } = await askSiteAssistant(history);
+        const { answer, hasContext, sources } = await askSiteAssistant(history, {
+          path: location.pathname,
+          title: document.title,
+        });
         // `hasContext` artık sunucuda gerçekten hesaplanıyor; eşleşme yoksa modelin
         // serbest yanıtı yerine dürüst bir "bulamadım" gösterilir.
         const botAnswer = hasContext ? appendSources(answer, sources) : NO_CONTEXT_MESSAGE;
@@ -132,7 +138,7 @@ const ChatBot = ({
         }));
       }
     },
-    [state.messages, user],
+    [state.messages, user, location.pathname],
   );
 
   // `askQuestion` her mesajda yeniden kurulur (geçmişi kapsıyor). Dinleyicinin her

@@ -252,6 +252,8 @@ paths:
               properties:
                 messages:
                   type: string
+                page:
+                  type: string
       responses:
         "400":
           description: Geçersiz istek (payload doğrulama hatası)

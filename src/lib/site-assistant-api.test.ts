@@ -116,4 +116,47 @@ describe("askSiteAssistant", () => {
       },
     });
   });
+
+  it("A12b: sayfa baglami verildiyse govdeye `page` olarak girer", async () => {
+    invoke.mockResolvedValue({ data: { answer: "ok", hasContext: false }, error: null });
+
+    await askSiteAssistant([{ role: "user", content: "soru" }], {
+      path: "/cadde",
+      title: "CorteQS Cadde",
+    });
+
+    expect(invoke).toHaveBeenCalledWith("site-assistant", {
+      body: {
+        messages: [{ role: "user", content: "soru" }],
+        page: { path: "/cadde", title: "CorteQS Cadde" },
+      },
+    });
+  });
+
+  it("A12b: baglam verilmezse govdede `page` anahtari HIC olmaz", async () => {
+    invoke.mockResolvedValue({ data: { answer: "ok", hasContext: false }, error: null });
+
+    await askSiteAssistant([{ role: "user", content: "soru" }]);
+
+    const body = invoke.mock.calls[0][1].body as Record<string, unknown>;
+    expect(Object.keys(body)).toEqual(["messages"]);
+  });
+
+  it("A12b: bos path sayfayi govdeye sokmaz, uzun degerleri kirpar", async () => {
+    invoke.mockResolvedValue({ data: { answer: "ok", hasContext: false }, error: null });
+
+    await askSiteAssistant([{ role: "user", content: "soru" }], { path: "  " });
+    const emptyBody = invoke.mock.calls[0][1].body as Record<string, unknown>;
+    expect(Object.keys(emptyBody)).toEqual(["messages"]);
+
+    await askSiteAssistant([{ role: "user", content: "soru" }], {
+      path: `/${"x".repeat(400)}`,
+      title: "t".repeat(300),
+    });
+    const page = (
+      invoke.mock.calls[1][1].body as { page: { path: string; title: string } }
+    ).page;
+    expect(page.path).toHaveLength(300);
+    expect(page.title).toHaveLength(200);
+  });
 });

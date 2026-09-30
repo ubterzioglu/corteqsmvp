@@ -50,15 +50,38 @@ export function trimChatHistory(messages: SiteAssistantMessage[]): SiteAssistant
 }
 
 /**
+ * A12b: kullanıcının bulunduğu sayfanın bağlamı. Edge function bu bilgiyi
+ * sistem promptuna EKLER — retrieval'a (0.35 eşiği, embedding 1536) DOKUNMAZ.
+ * path zorunlu (route), title opsiyonel (document.title).
+ */
+export interface SiteAssistantPageContext {
+  path: string;
+  title?: string;
+}
+
+/**
  * Asistana sorar. Hata durumunda Türkçe mesajla `Error` fırlatır —
  * çağıran taraf kullanıcıya gösterir.
  */
 export async function askSiteAssistant(
   messages: SiteAssistantMessage[],
+  pageContext?: SiteAssistantPageContext,
 ): Promise<SiteAssistantAnswer> {
-  const { data, error } = await supabase.functions.invoke("site-assistant", {
-    body: { messages: trimChatHistory(messages) },
-  });
+  // `page` yalnız verildiyse gövdeye girer: verilmeyen bağlam için `undefined`
+  // anahtar GÖNDERME (edge zod şeması opsiyonel ama gövde şekli sabit kalsın).
+  const body: { messages: SiteAssistantMessage[]; page?: { path: string; title?: string } } = {
+    messages: trimChatHistory(messages),
+  };
+  const pagePath = pageContext?.path.trim() ?? "";
+  if (pagePath) {
+    const pageTitle = pageContext?.title?.trim() ?? "";
+    body.page = {
+      path: pagePath.slice(0, 300),
+      ...(pageTitle ? { title: pageTitle.slice(0, 200) } : {}),
+    };
+  }
+
+  const { data, error } = await supabase.functions.invoke("site-assistant", { body });
 
   if (error) {
     // supabase-js fonksiyon hataları DÜZ NESNE olabilir — `instanceof Error`'a

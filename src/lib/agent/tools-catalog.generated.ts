@@ -406,7 +406,8 @@ export const toolCatalog = {
       "input_schema": {
         "validation": "zod",
         "fields": [
-          "messages"
+          "messages",
+          "page"
         ]
       },
       "tables_read_write": [],
