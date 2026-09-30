@@ -5,6 +5,96 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260930-radar-kapisi-duzeltildi",
+    date: "30 Eylül 2026",
+    title: "Radar'ı kilitleyen asıl kapı bulundu ve açıldı — kesin doğrulama yarın sabah",
+    items: [
+      "ÖZET: 28 Eylül gecesi radarın kendi kendini onarma kodu düzeltilip yayına alınmıştı ama 29 Eylül sabahı ölçüldüğünde radar hâlâ ölüydü: 14 Eylül'den beri tek bir tarama satırı bile açılmamıştı.",
+      "GERÇEK SEBEP: Akşamki yayın, servisin 'kapı kilidini' (token doğrulaması) yanlışlıkla kapatmıştı. Sabahki zamanlanmış görev ham bir gizli anahtar gönderir, giriş-oturum token'ı değil — kilit kapalıyken istekler daha kapıdan dönüyor, içerideki onarım koduna hiç ulaşmıyordu.",
+      "DÜZELTME: Kilit ayarı repo yapılandırmasına yazıldı ve servis yeniden yayınlandı (sürüm 34). Canlı ölçüm: kilit açık, servis etkin. Güvenlik gerilemedi — yetki zaten fonksiyonun içinde denetleniyor (gizli anahtar ya da yönetici girişi; ikisi de yoksa 401).",
+      "İKİNCİ KÜÇÜK İŞ DE KAPANDI: 'DW Deutschland' haber kaynağı 20 Temmuz'dan beri hata veriyordu — hiç çalışmamış. Besleme adresinin geçersiz olduğu canlı ölçümle kanıtlandı (sunucu 200 dönüyor ama gövde 'böyle bir besleme yok' diyor). Doğru adres bulundu, canlıda doğrulandı ve değiştirildi.",
+      "⚠️ YARIN SABAH DOĞRULAMA (1 Ekim 05:00 taramasından sonra): (1) yeni bir tarama satırı açılmış olmalı, (2) 14 Eylül'den kalma takılı satır kendiliğinden 'başarısız'a düşmeli, (3) son 24 saatte yeni haber gelmiş olmalı. 'Zamanlanmış görev başarılı görünüyor' KANIT DEĞİL — 14 gün boyunca tam olarak o yanılttı. Otomatik doğrulama randevusu kuruldu.",
+      "⚠️ YAN BULGU: Yerel yapılandırma dosyasındaki radar gizli anahtarı bayat — canlıda anahtar 13 Eylül'de döndürülmüş, yerel kopya güncellenmemiş. Zamanlanmış görevi etkilemiyor (o sunucudaki kopyayı kullanıyor) ama elle tetikleme için yenilenmesi gerekiyor.",
+    ],
+  },
+  {
+    id: "20260930-cadde-paylasim-silme-paylasma",
+    date: "30 Eylül 2026",
+    title: "Cadde'de kendi paylaşımını silme geldi — üç nokta menüsü, onay kutusu ve paylaş kısayolu",
+    items: [
+      "NE EKLENDİ: Cadde akışında KENDİ paylaşımınızda üç nokta menüsü görünüyor. Menüde 'Paylaş' ve 'Sil' var. Sil, onay kutusu açıyor — yanlışlıkla silme yok.",
+      "SİLME 'YUMUŞAK': Paylaşım akıştan ve aramalardan düşer ama veritabanında satırı korunur ('gizli' işaretlenir). Sebep: sert silme yorumları/beğenileri/paylaşım sayaçlarını zincirleme bozuyordu. Gerekiyorsa yönetici geri açabilir.",
+      "YETKİ SUNUCUDA: Menü yalnız kendi paylaşımınızda görünür ama asıl denetim veritabanında — isteyen biri arayüzü atlatsa bile başkasının paylaşımını silemez (yalnız sahip veya yönetici/moderatör). Canlı ölçüm: girişsiz çağrı 'giriş gerekiyor' hatasıyla döndü.",
+      "PAYLAŞ MEVCUT ALTYAPININ AYNISI: Menüdeki Paylaş, kartın altındaki şeritle aynı yolu kullanıyor (sistem paylaşım sayfası → pano → paylaşım sayacı). Yeni mekanizma yazılmadı.",
+      "DÜZENLEME SUNUCUDA HAZIR, EKRANI AYRI İŞ: Paylaşım düzenleme servisi (başlık/gövde/medya/ilgi/hedef) yazıldı ve canlıya uygulandı — hedef eşleştirmesi Türkçe karakter katlamalı (eski 'Türkiye/Turkiye' kusuru tekrarlanmadı). Formun menüye bağlanması bir sonraki iş.",
+    ],
+  },
+  {
+    id: "20260930-asistan-sayfa-baglami",
+    date: "30 Eylül 2026",
+    title: "Bilgi asistanı artık hangi sayfada olduğunuzu biliyor",
+    items: [
+      "ÖNCESİ: Asistan yalnız mesajlarınızı alıyordu — 'bu sayfada', 'buradaki' gibi ifadeler havada kalıyordu.",
+      "ŞİMDİ: Mesajla birlikte sayfanın adresi ve başlığı da gönderiliyor; asistan yanıtını bulunduğunuz sayfanın konusuna önceliklendiriyor. Bu bilgi 'konum bilgisi' olarak kullanılıyor, asla talimat gibi yorumlanmıyor (kötüye kullanım koruması).",
+      "ÖLÇÜMLERE DOKUNULMADI: Asistanın bilgi arama eşiği (0.35) ve vektör boyutu (1536) ölçülmüş değerlerinde sabit — yalnız prompt zenginleştirildi.",
+      "YAYIN: Servis canlıya alındı (sürüm 19, etkin, giriş doğrulaması açık — yalnız üyeler, olması gereken bu).",
+    ],
+  },
+  {
+    id: "20260930-gorunmeyen-bakim",
+    date: "30 Eylül 2026",
+    title: "Görünmeyen bakım: Cadde sayfası bölündü, profil kısayolları sadeleşti, kataloglar yenilendi",
+    items: [
+      "CADDE SAYFASI: Sağ kolon (379 satır) davranış birebir korunarak ayrı dosyaya taşındı — ana sayfa dosyası 670'ten 261 satıra indi. 53 sayfa testi TEK DEĞİŞİKLİK OLMADAN yeşil.",
+      "PROFİL KISAYOLLARI: Beş tekrarlayan kopya blok tek tabloya indirildi (C07). Refaktörden önce eski davranışı kilitleyen 6 karakterizasyon testi yazıldı — 44/44 geçti.",
+      "KATALOG YENİLEME: Veritabanı tip kataloğu yeniden üretildi (yeni paylaşım sil/düzenle servisleri tipe girdi), araç kataloğu güncellendi (55 araç).",
+      "GÜN SONU ÖLÇÜMÜ: tip hatası 0 · 372 dosyada 2.882 test yeşil · ölü kod 0 · migration kayıtları sapmasız.",
+    ],
+  },
+  {
+    id: "20260929-revizyon-belge-ekleri",
+    date: "29 Eylül 2026",
+    title: "Revizyon taleplerine artık PDF ve Office belgeleri eklenebiliyor",
+    items: [
+      "ÖNCESİ: Revizyon taleplerine ve yorumlarına yalnız görsel eklenebiliyordu (JPG/PNG/WebP/GIF). Düğmenin adı da 'Dosya Ekle' oldu.",
+      "ŞİMDİ: PDF + Word + Excel + PowerPoint (eski ve yeni formatlar) kabul ediliyor — toplam 11 dosya türü. Boyut sınırı değişmedi: 15 MB.",
+      "SIRA ÖNEMLİYDİ, UYULDU: Önce sunucu kapısı açıldı, sonra ekran — tersi olsaydı kullanıcının dosyası sunucuda sessizce reddedilirdi. İki taraftaki liste TEK kaynaktan üretiliyor (dosya seçicide görünen ile sunucunun kabul ettiği asla ayrışamaz); bunu kilitleyen otomatik test var.",
+      "BELGELER KIRIK GÖRSEL GİBİ GÖRÜNMÜYOR: Görsel olmayan ekler ad + tür ikonu + boyut kartıyla çiziliyor, tıklayınca açılıyor. (Bu kart olmadan belge kabulü canlıya alınmadı — sıralama bilinçli.)",
+      "GÜVENLİK: Depo 'özel' modda kaldı (imzalı link); kabul listesine çalıştırılabilir/tehlikeli türler (exe, js, html, svg vb.) GİRMEDİ.",
+    ],
+  },
+  {
+    id: "20260929-komuta-merkezi-siralama",
+    date: "29 Eylül 2026",
+    title: "Komuta Merkezi listesi sıralanabilir oldu — sıra sunucuda kuruluyor, sayfa 2'de bozulmuyor",
+    items: [
+      "NE EKLENDİ: Öncelik, Başlık, Kim, Durum ve Eklenme sütun başlıkları tıklanabilir; aynı başlığa ikinci tık yönü değiştirir (artan/azalan). Aktif sıralama ekran okuyuculara da bildiriliyor (aria-sort).",
+      "NEDEN SUNUCUDA: Liste sayfalanmış — istemcide sıralama yalnız eldeki 10 satırı dizer, sayfa 2'de sıra bozulurdu. Artık sıralama veritabanında yapılıyor ve sayfalar arasında tutarlı.",
+      "VARSAYILAN KORUNDU: Liste eskisi gibi önceliğe göre (azalan) açılıyor; eşitlik bozma zinciri (tür → sıra no → tarih) değişmedi.",
+      "TÜRETİLMİŞ SÜTUNLAR BİLEREK DIŞARIDA: Acil (rozet), Kategori (etiket) ve Tarih (hafta kovası) ekranda görünen değerler ham alanlardan türüyor — onları ham alana göre sıralamak kullanıcıya 'yanlış sıralanmış' görünürdü. İşlem sütunu zaten sıralanamaz.",
+      "TÜRKÇE ÖLÇÜMÜ: Veritabanı Türkçe harfleri (ç/ğ/ı/İ/ö/ş/ü) doğru sıralıyor mu? Canlıda ölçüldü — 7 kritik sıranın 7'si de doğru; ek ayar gerekmedi.",
+    ],
+  },
+  {
+    id: "20260929-sifre-sifirlama-ekrani",
+    date: "29 Eylül 2026",
+    title: "Giriş ekranına 'Şifremi unuttum' akışı eklendi",
+    items: [
+      "Giriş ekranındaki bağlantı ayrı bir şifre sıfırlama sayfası açıyor; sıfırtma sonrası kullanıcı girişe yönlendiriliyor.",
+      "GÜVENLİK: E-posta sisteme kayıtlı olsun olmasın aynı genel mesaj gösteriliyor — kimlerin üye olduğu bu ekrandan çıkarılamıyor (hesap numaralama koruması).",
+    ],
+  },
+  {
+    id: "20260929-asistan-balonu-ve-maskot",
+    date: "29 Eylül 2026",
+    title: "Bilgi asistanı artık her sayfada — yüzen balon ve maskot",
+    items: [
+      "Asistan balonu her sayfada görünür (karar: sabit köşe yerine yüzen balon). Kaydırma düğmesi yuvarlak, turuncu zemin + beyaz ok.",
+      "Sohbet robotunun ve mesajların avatarı CorteQS maskotu oldu.",
+      "YAZMADA ÇİFT KAPI: Giriş yapmamış ziyaretçiden tarayıcı tarafında hiç istek gönderilmiyor; sunucu tarafında da girişsiz istek 401 alıyor (ölçüldü) — asistan para harcadığı için anonim kullanım kapalı.",
+    ],
+  },
+  {
     id: "20260928-yetki-acigi-kapatildi",
     date: "28 Eylül 2026",
     title: "Taşınma kayıtlarını herkese açan bir kapı bulundu ve kapatıldı",
