@@ -24,6 +24,18 @@ verify_jwt = false
 [functions.send-notification-emails]
 verify_jwt = false
 
+# A99-R2 kök nedeni: pg_cron her sabah 05:00'te bu fonksiyonu
+# `Authorization: Bearer <vault:radar_news_cron_secret>` ile çağırıyor — yani HAM
+# SECRET, JWT değil. verify_jwt AÇIKken ağ geçidi bu ham secret'ı JWT diye doğrulamaya
+# çalışıp 401 döner; istek fonksiyon koduna HİÇ ulaşmaz. Sonuç: koşu satırı açılmaz,
+# f6b5c6f'teki bayat-kilit düzeltmesi çalışamaz, Radar 14.09'dan beri ölü kalır
+# (cron.job_run_details ise yalnız http_post kuyruğa alındığı için 'succeeded' yazar).
+# Yetki zaten fonksiyonun içinde: RADAR_NEWS_CRON_SECRET karşılaştırması (cron) ya da
+# getUser + is_admin (manuel/admin panel). İkisi de yoksa 401 (index.ts:74-108).
+# Aynı desen: send-notification-emails, whatsapp-webhook.
+[functions.radar-news-scan]
+verify_jwt = false
+
 # Meta gateway Supabase JWT gondermez. GET verify token ve POST HMAC-SHA256
 # dogrulamasi fonksiyonun kendi icinde zorunludur.
 [functions.whatsapp-webhook]
