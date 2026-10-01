@@ -124,7 +124,7 @@ traction ölçülecek.
 
 | Faz | ID | Kapsam | Kapı | Bağımlılık |
 |---|---|---|---|---|
-| A | **G01** | Paket dosyalarını `docs/dijital-gruplar/`'a al + CLAUDE.md eki | 🟢 | kök temizliği |
+| A | ~~G01~~ | ✅ **KAPANDI 01.10** — `docs/dijital-gruplar/` + CLAUDE.md bölümü + kök temiz | ✅ | — |
 | A | **G02–G03** | **Canlı güvenlik:** anonim INSERT kapat · davet linki anonime kapat | 🟢 | — |
 | B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟢 | ⛔ **U06** |
 | B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🟢 | — |
@@ -830,15 +830,40 @@ npm run ai:embed
 
 ### Faz A — zemin ve canlı güvenlik açıkları
 
-**G01 — Paket dosyalarını repoya al + CLAUDE.md eki** · kod yok, migration yok
-- `01_politika_v1.1.md` + `02_motor-tasarimi.md` → `docs/dijital-gruplar/`; `03`'ün "Ortak
-  bağlam" bölümü → CLAUDE.md "Dijital Gruplar" bölümü, **M0 bulgularıyla düzeltilmiş hâlde**;
-  `07` maddeleri inşa notlarına.
-- ⚠️ Paket dizini şu an **repo kökünde ve untracked** — CLAUDE.md "köke yeni dosya eklenmez"
-  diyor; `docs/` altına taşı, kökü temizle.
-- **Kabul:** `docs/dijital-gruplar/` iki dosya; CLAUDE.md bölümü M0 tablosunu içeriyor; kök temiz.
+**✅ G01 — Paket dosyalarını repoya al + CLAUDE.md eki** · KAPANDI 01.10
+
+> **Kanıt:** `docs/dijital-gruplar/` = `01_politika_v1.1.md` · `02_motor-tasarimi.md` ·
+> `07_insa-notlari-eklentisi.md` · `README.md`. CLAUDE.md'ye **"Dijital Gruplar modülü"**
+> bölümü eklendi (6 değişmez kural + çürüyen 5 varsayım tablosu + K1–K5 kusurları).
+> Kök temiz: paket + zip repo dışına **TAŞINDI** (silinmedi) →
+> `C:\temp_private\corteqs\_paketler\`. `check:drift` ✓ · `verify:text` ✓ · tsc 0.
+> ⚠️ **`07` ikinci bir takip listesi DEĞİLDİR.** Paket onu `claude_corteqs-insa-notlari.md`
+> sonuna eklemeyi söylüyor ama **o dosya bu repoda YOK** (ölçüldü: `git ls-files` 0 eşleşme,
+> repoda `[ ] **BE**` deseni taşıyan doküman yok) — Barış'ın repo dışı notları. 07 arşiv
+> olarak kondu; canlı takip tek yerde: **bu dosyanın G bölümü**. İkisi ayrışırsa KALANLAR doğru.
+> ⚠️ `docs/README.md` indeksine satır EKLENMEDİ — o dosyada başka oturumun commit'lenmemiş
+> değişiklikleri var, karıştırmamak için dokunulmadı. Klasör CLAUDE.md ve buradan bulunur.
+> ⚠️ Pakette kalan `00` · `03`–`06` (prompt + tanıtım) repoya ALINMADI — iş kuralı taşımazlar.
 
 **G02 — RLS temizliği: anonim INSERT kapatma + mükerrer politika silme** · migration
+
+> ⚠️ **ÖLÇÜLDÜ 01.10 — bu maddedeki iki ayrıntı YANLIŞ, düzeltilmeden migration yazma:**
+> 1. **`submitted_by` diye bir kolon YOK.** `whatsapp_landings`'in sahip kolonu **`user_id`**
+>    (27 kolon listelendi). Plandaki `WITH CHECK (auth.uid() = submitted_by)` canlıda
+>    `42703 column does not exist` ile patlar.
+> 2. **`Anyone can insert whatsapp landings` politikasında `WITH CHECK` YOK değil, `true`.**
+>    Etkisi aynı (hiçbir şey kısıtlamıyor) ama `pg_policies.with_check = 'true'` görünür —
+>    "boş mu" diye arayan bir kontrol onu bulamaz.
+>
+> **Ölçülen 11 politika (01.10):** INSERT 2 · SELECT 5 · UPDATE 2 · DELETE 2.
+> Zaten DOĞRU olan `Users can create own landings` (authenticated, `WITH CHECK (auth.uid() =
+> user_id)`) **duruyor** — `Anyone can insert...` silinince INSERT yolu kendiliğinden doğru
+> politikaya düşer, yeni INSERT politikası YAZMAYA GEREK YOK.
+> Mükerrer SELECT çiftleri doğrulandı: `Anyone can view approved landings` ≡ `Public approved
+> whatsapp landings select` · `Users can view own landings` ≡ `Owners can select own whatsapp
+> landings`. ⚠️ Hangisinin silineceği **keyfi değil**: kalan politika anon'a `status='approved'`
+> satırının TÜM kolonlarını (yani `whatsapp_link`'i) döndürmeye devam eder — K1'i kapatan
+> **G03'tür**, G02 değil. G02'yi tek başına uygulayıp "link kapandı" sanma.
 - `Anyone can insert whatsapp landings` kaldırılır → `authenticated` + `WITH CHECK (auth.uid()
   = submitted_by)`. 2 mükerrer SELECT politikası silinir (`Public approved whatsapp landings
   select`, `Owners can select own whatsapp landings`).

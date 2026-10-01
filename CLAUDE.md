@@ -520,6 +520,73 @@ Plan: `docs/plans/2026-09-20-site-geneli-ai-bot-plani.md` · Ertelenenler:
 7. **`site-assistant/providers.ts`, `relocation-assistant/providers.ts` ile AYNIDIR** ve
    kopya olması bilinçlidir. Birleştirme K3'te; **birini değiştirirken diğerine bak.**
 
+## Dijital Gruplar modülü (politika v1.1 — repoya alındı 2026-10-01)
+
+Kaynak: `docs/dijital-gruplar/` (`01_politika_v1.1.md` + `02_motor-tasarimi.md`).
+Batch listesi: `docs/kalanlar/KALANLAR.md` → **G01–G25**. Plan ve M0 ölçümleri:
+`docs/plans/2026-09-30-dijital-gruplar-plani.md`.
+
+Ana fikir: **"Linkini saklama, kapını paylaş."** Admin ham davet linki yerine CorteQS grup
+sayfasını paylaşır; katılmak isteyen kimliğini doğrular, admin onaylar, spam kapıda kalır.
+
+**İş kuralı uydurma.** Yukarıdaki iki dosyada olmayan bir kural için dur ve sor.
+
+### Değişmez kurallar
+
+1. **`invite_url` / `whatsapp_link` anonim kullanıcıya HİÇBİR YOLDAN dönmez** — ne RLS
+   politikasından, ne view'dan, ne RPC'den. Girişli kullanıcıya günlük sınırla verilir.
+   ⚠️ Bu kural **bugün canlıda İHLAL EDİLİYOR** (aşağıdaki K1) — G03 kapatır.
+2. **Telefon numarası `group_*` tablolarına YAZILMAZ.** Doğrulama bilgisi
+   `user_verifications` aynasında durur; grup tarafı yalnız "doğrulanmış mı" sorar.
+3. **Şehir/ülke `geo_countries` (251) / `geo_cities` (76.992) tablolarından gelir,
+   `cadde_*`'tan DEĞİL.** İki ayrık katalogdur; bu ayrışma Cadde'de aylarca sessiz kusur
+   üretti (bkz. Cadde bölümü). Serbest metin konum yok.
+   ⚠️ `geo_cities` 76.992 satır — satır başına fonksiyon uygulayan keşif sorgusu YASAK;
+   önce `select distinct`, sonra join.
+4. **Her eşik/bayrak `group_settings` satırıdır, kodda sabit yazılmaz** (`cadde_settings`
+   deseni). Ürün kararı SQL update'i olsun, kod değişikliği değil.
+5. **Mevcut şemayı genişletmek yeni tablo açmaya tercih edilir**; her migration geri
+   alınabilir olsun.
+6. Arayüz metinleri **Türkçe**, kod ve değişken adları **İngilizce**.
+   ⚠️ Paketin "commit mesajı İngilizce" kuralı bu repoda GEÇERSİZ — repo konvansiyonu
+   Türkçe commit mesajıdır (git geçmişi), ona uyulur.
+
+### ⚠️ Tasarımın ÇÜRÜYEN beş varsayımı (canlı ölçüm 2026-09-30)
+
+`02_motor-tasarimi.md` 27 Eylül'de yazıldı. Ezberleme, tabloyu oku:
+
+| Tasarımın varsaydığı | Canlı gerçek |
+|---|---|
+| `whatsapp_link_requests` tablosu var | ❌ **YOK** — tasarımın Soru 5'i yanlış öncül üzerine kurulu |
+| `whatsapp_landing_comments` / `_likes` / `_follows` var | ❌ **ÜÇÜ DE YOK** — grup sayfası gönderileri (politika §3) **sıfırdan** yazılacak |
+| Bayrak/kara liste `site_settings`'e konur | ❌ **Anahtar-değer tablosu DEĞİL** (`id · brand_name · logo_url · favicon_url · email_header_html`, tek satır) → yeni **`group_settings`** |
+| "Seviye 2 doğrulanmış kuruluş" kavramı var | ❌ **YOK** — `trust_level` yalnız `radar_news_sources`'ta (haber kaynağı güveni) → kurulacak (G06) |
+| `send-phone-otp` / `verify-phone-otp` kullanılır | ❌ **Edge function YOK**, `user_verifications` **0 satır**, `auth.users`'da **0 telefon / 0 onaylı** → `is_phone_verified()` herkes için `false` → kurulacak (G04–G05) |
+
+**Hazır çıkanlar (sıfırdan yazma):** `pg_cron` + `pg_net` kurulu (6 aktif iş) ·
+`user_verifications` şeması OTP aynası için doğru · `catalog_item_claims`
+(`claim_type` + `evidence jsonb` + reviewer) kurumsal doğrulamanın birebir karşılığı ·
+`whatsapp_landing_editors` + 5 RPC sahip panelinin temeli ·
+**6 aktif rol zaten var:** `Community_WhatsAppAdmin` · `Community_TelegramAdmin` ·
+`Community_DiscordAdmin` · `Community_GroupAdmin` · `Community_SocialMediaAdmin` ·
+`Organization_DigitalCommunity`.
+⚠️ **Rol varlığı yetmez** — `role_attributes`/`role_features` kuralı olmayan rol sessizce boş
+görür (profil formu bölümündeki aynı tuzak).
+
+### ⚠️ Canlıda AÇIK iki güvenlik kusuru (G02/G03 kapatır)
+
+- **K1 — Davet linki anonime tamamen açık.** `Anyone can view approved landings` politikası
+  `status='approved'` satırının **tüm kolonlarını** döner; `whatsapp_link` o satırda ve
+  `NOT NULL`. Tasarımın kabul testi #5 **bugün başarısız**.
+- **K2 — Anonim herkes sınırsız grup ekleyebiliyor.** `Anyone can insert whatsapp landings`
+  politikası `{anon, authenticated}` için açık ve **`WITH CHECK` yok**; günlük gönderim
+  sınırı da yok.
+
+Ayrıca **K3** 2 mükerrer RLS politikası, **K4** veri politikaya uymuyor (10 grubun 3'ü
+`diger` kategorisinde — politika §5 *"'Diğer' kategorisi yoktur"* diyor; 2 grubun linki boş;
+6 grubun konumu `Global`/`Genel`; `group_score` 10/10 `null`), **K5** şema değişikliği
+`catalog_sync_whatsapp_landing_trigger`'ı etkiler. Ayrıntı: plan dosyası.
+
 ## Değişmez sözleşmeler (ZORUNLU — 2026-08-04)
 
 Bu beş kural 2026-08-04 modernizasyon çalışmasında ölçülerek konuldu. Her biri sessizce
