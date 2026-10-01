@@ -40,6 +40,7 @@ export const toolCatalog = {
         "import:doctors:dortmund:write",
         "import:profiles:csv",
         "import:resources:replace",
+        "ingest:admin-menu",
         "ingest:tools",
         "ingest:tools:check",
         "lint",
@@ -1615,6 +1616,11 @@ export const toolCatalog = {
       "path": "src/lib/admin-shell/admin-dashboard-api.ts",
       "kind": "ts",
       "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-menu-catalog.test.ts",
+      "kind": "ts",
+      "module_family": "catalog"
     },
     {
       "path": "src/lib/admin-shell/admin-menu-numbering.test.ts",
