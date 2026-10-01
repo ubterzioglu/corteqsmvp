@@ -2568,6 +2568,11 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/careers/career-applications-migration.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/careers/careers-data.test.ts",
       "kind": "ts",
       "module_family": "lib"

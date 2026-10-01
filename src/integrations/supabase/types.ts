@@ -2595,6 +2595,69 @@ export type Database = {
         }
         Relationships: []
       }
+      career_applications: {
+        Row: {
+          city: string | null
+          consent: boolean
+          country: string
+          cover_letter_path: string | null
+          cover_letter_text: string | null
+          created_at: string
+          cv_path: string
+          email: string
+          full_name: string
+          id: string
+          linkedin: string | null
+          model: string
+          notes: string | null
+          phone: string | null
+          position: string
+          presentation_path: string | null
+          source: string | null
+          status: string
+        }
+        Insert: {
+          city?: string | null
+          consent: boolean
+          country: string
+          cover_letter_path?: string | null
+          cover_letter_text?: string | null
+          created_at?: string
+          cv_path: string
+          email: string
+          full_name: string
+          id: string
+          linkedin?: string | null
+          model: string
+          notes?: string | null
+          phone?: string | null
+          position: string
+          presentation_path?: string | null
+          source?: string | null
+          status?: string
+        }
+        Update: {
+          city?: string | null
+          consent?: boolean
+          country?: string
+          cover_letter_path?: string | null
+          cover_letter_text?: string | null
+          created_at?: string
+          cv_path?: string
+          email?: string
+          full_name?: string
+          id?: string
+          linkedin?: string | null
+          model?: string
+          notes?: string | null
+          phone?: string | null
+          position?: string
+          presentation_path?: string | null
+          source?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       carsi_categories: {
         Row: {
           is_active: boolean
@@ -5600,6 +5663,27 @@ export type Database = {
           gorev?: string | null
           id?: string
           link?: string | null
+        }
+        Relationships: []
+      }
+      group_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
         }
         Relationships: []
       }
@@ -14542,6 +14626,18 @@ export type Database = {
       }
       get_whatsapp_landing_invite: { Args: { p_slug: string }; Returns: string }
       gettransactionid: { Args: never; Returns: unknown }
+      group_setting_bool: {
+        Args: { p_default: boolean; p_key: string }
+        Returns: boolean
+      }
+      group_setting_int: {
+        Args: { p_default: number; p_key: string }
+        Returns: number
+      }
+      group_setting_json: {
+        Args: { p_default: Json; p_key: string }
+        Returns: Json
+      }
       has_cadde_feature: {
         Args: { fkey: string; uid: string }
         Returns: boolean
@@ -15793,6 +15889,26 @@ export type Database = {
       st_wrapx: {
         Args: { geom: unknown; move: number; wrap: number }
         Returns: unknown
+      }
+      submit_career_application: {
+        Args: {
+          p_application_id: string
+          p_city?: string
+          p_consent: boolean
+          p_country: string
+          p_cover_letter_path?: string
+          p_cover_letter_text?: string
+          p_cv_path: string
+          p_email: string
+          p_full_name: string
+          p_linkedin?: string
+          p_model: string
+          p_phone?: string
+          p_position: string
+          p_presentation_path?: string
+          p_source?: string
+        }
+        Returns: string
       }
       submit_catalog_claim_request: {
         Args: {
