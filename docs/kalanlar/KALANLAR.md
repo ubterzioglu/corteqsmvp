@@ -13,7 +13,7 @@
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
-> | **Son devir notu** | [`docs/handover/2026-10-01-devir-notu.md`](../handover/2026-10-01-devir-notu.md) — 1 Ekim oturumu, 13 commit (PUSH EDİLMEDİ) |
+> | **Son devir notu** | [`docs/handover/2026-10-01-devir-notu-2.md`](../handover/2026-10-01-devir-notu-2.md) — 1 Ekim akşam oturumu, 24 commit (PUSH EDİLMEDİ); ilk not [`2026-10-01-devir-notu.md`](../handover/2026-10-01-devir-notu.md) hâlâ geçerli (§7 tuzaklar + §9 ortam) |
 > | **Kalıcı operasyon dersleri** | [`docs/operations/2026-09-30-kalici-operasyon-dersleri.md`](../operations/2026-09-30-kalici-operasyon-dersleri.md) |
 
 ---
