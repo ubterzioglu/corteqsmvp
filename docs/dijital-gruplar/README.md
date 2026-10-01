@@ -10,6 +10,7 @@
 | [`01_politika_v1.1.md`](01_politika_v1.1.md) | Kurallar: kim ekler, form, moderasyon, kırmızı çizgiler, kategoriler, skor, Grup Sözü |
 | [`02_motor-tasarimi.md`](02_motor-tasarimi.md) | Politikanın kod karşılığı: durum makinesi, akışlar, veri modeli, skor formülü, zamanlanmış görevler, bildirim metinleri, kabul testleri |
 | [`07_insa-notlari-eklentisi.md`](07_insa-notlari-eklentisi.md) | Paketin özgün BE/FE/Admin kontrol listesi — **arşiv niteliğinde**, aşağıdaki nota bak |
+| [`2026-10-01-g08-davet-sayfasi-spike.md`](2026-10-01-g08-davet-sayfasi-spike.md) | **G08 ölçümü:** davet linkinden grup adı/görseli okunabiliyor mu (WhatsApp · Telegram · Discord), `ok`/`invalid`/`unknown` işaretleri, hız sınırı, G13'e çıkan 8 kural |
 
 ## ⚠️ Hangi liste canlı takip ediliyor
 

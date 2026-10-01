@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **68** (N 0 · W 8 · M 27 · G 23 · KR 10) |
+> | **Açık batch** | **67** (N 0 · W 8 · M 27 · G 22 · KR 10) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -136,7 +136,7 @@ traction ölçülecek.
 | A | ~~G02~~ ~~G03a~~ ~~G03b~~ · **G03c** | ✅ G02 + G03a + G03b KAPANDI 01.10 · 🔴 **sızıntı G03c'ye kadar AÇIK** (taban tablo hâlâ anonime açık) | 🟢 | ⛔ G03b canlıda olmalı |
 | B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟢 | ⛔ **U06** |
 | B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🟢 | — |
-| C | **G08** | M1 spike: davet sayfasından grup adı okunabiliyor mu (rapor) | 🟢 | — |
+| C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
 | C | **G09–G11** | `group_settings` · `whatsapp_landings` genişletme · 10 grubun göçü | 🟢 | ⛔ **U07** (G11) |
 | D | **G12–G17** | Durum makinesi · sahiplik · şikayet · uyarı · gönderiler · sağlık skoru | 🟢 | — |
 | E | **G18–G21** | 4 sayfa: form · dizin · detay · sahip paneli | 🟢 | — |
@@ -1298,8 +1298,14 @@ zaten temiz ölçüldü, G03c'den sonra yeniden doğrulanacak:
 
 ### Faz C — spike ve veri modeli
 
-**G08 — M1 Spike: davet sayfasından grup adı okunabiliyor mu?** · rapor, üretim kodu yok
-- WhatsApp / Telegram / Discord için sunucu tarafında ad+görsel okuma denenir; hız sınırı ve
+**~~G08~~ — ✅ KAPANDI 01.10** · M1 Spike: davet sayfasından grup adı okunabiliyor mu? · rapor
+
+- **Rapor:** [`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)
+- **Sonuç:** üçünde de ad+görsel kimlik doğrulamasız okunuyor, ama **sahiplik kanıtı değil** →
+  paketin "ekran görüntüsü + manuel onay" kararı **değişmiyor**. G13'e çıkan 8 kural raporda.
+- 🔴 Kalan tek ölçüm: **gerçek bir `t.me/+…` özel davet linki** (elimizde yok; 10 kaydın 10'u
+  WhatsApp). G13'ü bloke etmez.
+- *(özgün kapsam)* WhatsApp / Telegram / Discord için sunucu tarafında ad+görsel okuma denenir; hız sınırı ve
   `unknown` davranışı ölçülür. Okunamıyorsa sahiplik **ekran görüntüsü + manuel onaya** döner.
 - **Kabul:** üç platform için `ok`/`invalid`/`unknown` ölçümlü kısa rapor; istek sayısı ve yanıt
   kodları yazılı.
@@ -1716,6 +1722,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G08 · M1 spike: davet sayfasından grup adı okunabiliyor mu (rapor, üretim kodu yok) | **59 istek** ölçüldü (WA 27 · TG 13 · DC 34) — üçünde de ad+görsel kimlik doğrulamasız okunuyor · ⚠️ **HTTP 200 geçerlilik kanıtı DEĞİL**: WhatsApp uydurma 5 kodun 5'ine de 200 döndü, tek işaret `og:title`'ın **boş** olması · ⚠️ okunan ad kayıtlı addan farklı (2/2) → tam eşitlik karşılaştırması yazılamaz · ⚠️ başlık HTML varlık kodlu (`&#x131;`) → çözülmezse Türkçe bozulur · Discord resmî API `10006 Unknown Invite` (10/10) en temiz yol · hız sınırı bu hacimde görülmedi ama Discord `x-ratelimit-*` **yayınlamıyor** → "sınır yok" denemez · 🔴 `t.me/+…` geçerli hâli ÖLÇÜLEMEDİ (link yok) |
 | N07 · canlı ingest + embed + getirme kanıtı · docs-admin vekil kusuru kökten onarıldı | `8a777afc` — 88 admin-menu belgesi canlıda gömülü · getirme: ADMIN 0.215–0.287 doğru kayıt en üstte, MEMBER **0 admin-menu** · docs-admin re-ingest 404 belge/4901 parça **0 hata** (640 bayat satır prune) · korpus 5639/5639 gömülü · 🔴 kusur kök neden: `chunkText` emojiyi (🔴 U+1F534) örtüşme sınırında bölüyordu → yalnız vekil `\uDD34` → PostgREST "Empty or invalid json" (93'te 1, deterministik) · 3 test + 2/2 mutasyon · ⏳ tek kalan: kullanıcı UI kabulü (frontend deploy sonrası) |
 | N05 · yönetici menüsü prompt kuralı (`is_admin()` kapılı) + deploy | deploy `site-assistant` 88.19kB · canlı anon POST **401** · 5 yeni test, 3 mutasyon 3/3 · `check:functions` 12/12 sapmasız · ⚠️ Rancher Desktop motoru takılıydı (deploy Docker ister) — süreç+`wsl -t` ile yeniden başlatıldı · ℹ️ etki N07 embed'inden sonra görünür |
 | N06 · bot yanıtında tıklanabilir link (beyaz liste: iç `/…` + `https://`) | `a506f92c` — 17 yeni test, 3 mutasyon 3/3 yakalandı · 381 dosya/2972 test yeşil · ⚠️ ilk desen parantezlu hedefleri (`javascript:alert(1)`) hiç eşleştirmiyordu — ham markdown sızıyordu, test yakaladı · ℹ️ canlıya yansıması frontend deploy'una bağlı |
