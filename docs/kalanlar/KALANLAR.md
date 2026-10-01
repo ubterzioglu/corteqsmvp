@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **64** (N 0 · W 8 · M 27 · G 21 · KR 8) |
+> | **Açık batch** | **63** (N 0 · W 8 · M 27 · G 21 · KR 7) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -149,7 +149,7 @@ traction ölçülecek.
 | Faz | ID | Kapsam | Kapı |
 |---|---|---|---|
 | 0 | ~~KR01~~ | ✅ **KAPANDI 01.10** — `src/lib/careers/` (17 ilan + staj) + 6 sözleşme testi | ✅ |
-| 1 | ~~KR02~~ · **KR03** | ✅ KR02 KAPANDI 01.10 (tablo + kova + RPC canlıda) · kalan: `careers-api` + şema + hata haritası | 🟢 |
+| 1 | ~~KR02~~ ~~KR03~~ | ✅ **İKİSİ DE KAPANDI 01.10** — tablo + kova + RPC canlıda · `careers-api` + şema + çift yönlü hata haritası | ✅ |
 | 2 | **KR04–KR06** | Sayfa iskeleti · ilan listesi + filtre · başvuru formu (3 dosya) | 🟢 |
 | 3 | **KR07** | Eski 4 ilanın korunması | 🟢 |
 | 4 | **KR08–KR09** | `/admin/kadro/basvurular` · yeni başvuruda e-posta | 🟢 |
@@ -1500,7 +1500,7 @@ gidiyor ve **o tablonun özel admin ekranı yok** — başvurular düzenli okunm
   ilk çağrı satır oluşturuyor, art arda çağrı hız sınırına takılıyor, doğrudan
   PostgREST INSERT **reddediliyor** (yanıt gövdesi kanıt satırına yazılır).
 
-**KR03 — `careers-api.ts` + `careers-schemas.ts` + hata haritası**
+**~~KR03~~ — ✅ KAPANDI 01.10** · `careers-api.ts` + `careers-schemas.ts` + hata haritası
 
 - Zod şema → `z.infer`. `uploadCareerFiles(applicationId, files)`: `safeStorageFileName` +
   `validateFile` (CV pdf/doc/docx 10 MB · sunum pdf/ppt/pptx/key 25 MB), anahtar `{id}/cv-…`.
@@ -1745,6 +1745,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| KR03 · `careers-api.ts` + `careers-schemas.ts` + çift yönlü hata haritası | 11 sözleşme testi, **6/6 mutasyon yakalandı** (haritadan kod silindi · haritaya hayali kod · istemci sınırı kovayı aştı · ham dosya adı anahtarda · `.key` MIME silindi · `accept` ayrıştı) · ⚠️ **mevcut `validatePresentationFile` KULLANILMADI: 50 MB'a izin veriyor, kova 25 MB'da kesiyor** → 40 MB'lık sunum istemciden geçip kovadan dönerdi; kariyer kendi sınırlarını tanımlar (CV 10 MB · sunum 25 MB) ve test bunları migration'daki kova sınırına karşı denetler · ⚠️ MIME `file.type`'tan DEĞİL uzantıdan verilir: `.key` tarayıcıya göre boş/zip gelir ve dar kova listesinden dönerdi · `check:dead` 0 yeni / **4 bilinen borç** (🔴 KR04 hepsini siler) |
 | KR02 · `career_applications` tablosu + private kova + `submit_career_application` RPC | mig `20261001130000` **canlıda** · anon smoke (10 çağrı): geçerli başvuru **200+uuid** · doğrudan PostgREST INSERT **401/42501** · anon SELECT **401/42501** · başka klasörün `cv_path`'i **400** · `consent=false` **400** · bozuk e-posta **400** · geçersiz model **400** · aynı e-posta 6. başvuru **53400** (5'e kadar geçti) · aynı id tekrar **409** · 6 ölçüm satırının 6'sında `status='yeni'` + `notes is null` **zorlandı**, hepsi silindi (tablo 0 satır) · types regen **+116/−0** (`graphql_public` yerinde) · 7 sözleşme testi, **5/5 mutasyon yakalandı** · ⚠️ gelen paketin 3 hatası düzeltildi (`has_role` yok → `is_admin(uid)`; anon INSERT → RPC; anahtar deseni denetimi eklendi) · ⚠️ `application/octet-stream` MIME listesinden ÇIKARILDI (tür sınırını fiilen kaldırıyordu) · RPC **`career_` önekli 12 snake_case kod** fırlatır (İngilizce cümle DEĞİL — KR03'ün çift yönlü haritası için), canlıda doğrulandı |
 | KR01 · `src/lib/careers/` ilan verisi + sözleşme testi | **17 ilan + staj programı** · veri kaynak HTML'den **makineyle** çıkarıldı (25 KB Türkçe metin) · 6 test, **5/5 mutasyon yakalandı** (id tekrarı · boş `tasks` · geçersiz `area` · ilansız bölüm · Türkçe harf kırpma) · ⚠️ Türkçe iddiası ilk hâlinde KAÇIRMIŞTI (`toContain("Ürün")` başka ilan başlığından yeşil kalıyordu) → birebir etiket listesine çevrildi · ⚠️ `check:dead` 0 yeni / **2 bilinen borç**: iki dosya tüketicisinden önde, 🔴 **KR04 baseline satırlarını silmeli** |
 | G09 · `group_settings` anahtar-değer ayar tablosu + 3 okuma yardımcısı | mig `20261001120000` **canlıda** — 15 satır · `group_setting_bool/int/json` çalışıyor (olmayan anahtar varsayılana düşüyor: 42) · tablo grant'ları yalnız `postgres`+`service_role`, **anon SELECT 42501**, **anon RPC 42501** · RLS açık/0 politika · `group_setting_json` `authenticated`'a **açılmadı** (kara liste gizli kalmalı) · 5 sözleşme testi, **3/3 mutasyon yakalandı** · ledger 444/444 sapmasız · ⚠️ TS ayna modülü bilerek YOK (`check:dead` 0 yeni/0 borç korundu) · 🔴 `otp_rate_limits` değeri ajan ihtiyatı → G05'te teyit |

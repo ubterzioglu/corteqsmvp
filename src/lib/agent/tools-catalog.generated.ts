@@ -2573,12 +2573,27 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/careers/careers-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/careers/careers-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/careers/careers-data.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
       "path": "src/lib/careers/careers-data.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/careers/careers-schemas.ts",
       "kind": "ts",
       "module_family": "lib"
     },
