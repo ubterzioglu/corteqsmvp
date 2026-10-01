@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **69** (N 1 · W 8 · M 27 · G 23 · KR 10) |
+> | **Açık batch** | **68** (N 0 · W 8 · M 27 · G 23 · KR 10) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -73,8 +73,15 @@ Bu dosyaya yeni gelen ajan **sırayla** şunu yapar:
 
 ### N · Admin menü numaraları + asistanın yönetici bağlamı
 
-Sıra bağlayıcı: N01 → N02 → N03 → N04 → N05 → N07. **N06 bağımsız**, araya girebilir.
-Sıfır migration · sıfır yeni bağımlılık. Tahmin: 1–2 gün.
+**Açık N batch'i YOK** — seri 01.10'da TAMAMEN kapandı (N01…N07 ↓ Kapananlar).
+⏳ Seride kalan tek kullanıcı adımı: N07'nin UI kabulü (admin hesabıyla soru) —
+**frontend deploy'u gerektirir** (G03b ile aynı bekleyen kuyruk).
+📌 Kalıcı kural: menü sırası her değiştiğinde `npm run ingest:admin-menu` +
+`node scripts/ai-knowledge/ingest.mjs --source=admin-menu` + `node scripts/ai-knowledge/embed.mjs`
+çalıştırılmalı, yoksa bot bayat numara söyler (ayrıntı ↓ N07).
+
+Sıra bağlayıcıydı: N01 → N02 → N03 → N04 → N05 → N07. **N06 bağımsızdı**, araya alındı.
+Sıfır migration · sıfır yeni bağımlılık.
 
 | ID | Başlık | Boyut | Kapı | Not |
 |---|---|---|---|---|
@@ -84,7 +91,7 @@ Sıfır migration · sıfır yeni bağımlılık. Tahmin: 1–2 gün.
 | ~~N04~~ | ✅ **KAPANDI 01.10** — `admin-menu` bilgi kaynağı (88 belge, öğe başına bir) | ✅ | ⚠️ npm argüman tuzağı + canlıya erken yazım (↓ N04) |
 | ~~N05~~ | ✅ **KAPANDI 01.10** — yönetici menüsü prompt kuralı (`is_admin()` kapılı) + DEPLOY | ✅ | canlı: deploy OK + anon 401 |
 | ~~N06~~ | ✅ **KAPANDI 01.10** — bot yanıtında tıklanabilir link (beyaz liste: `/…` + `https://`) | ✅ | ⚠️ canlıya yansıması frontend deploy'una bağlı (G03b ile aynı bekleyen) |
-| **N07** | Canlı ingest + uçtan uca kabul · **KANIT TURU** | küçük | 🟢 | ⛔ N05 |
+| ~~N07~~ | ✅ **KAPANDI 01.10** — canlı ingest + embed + getirme kanıtı; docs-admin vekil kusuru kökten onarıldı | ✅ | ⏳ tek kalan: kullanıcı UI kabulü (admin sorusu) — frontend deploy sonrası |
 
 ### W · WhatsApp botu otomatik yanıt
 
@@ -541,6 +548,36 @@ Eksik olan tek şey korpusta menüyü anlatan **veri seti** ve promptta **bir ku
 - **Kabul:** yeni `ChatMessage.test.tsx` — iç yol `<a href>` üretir, `javascript:` ÜRETMEZ.
 
 **N07 — Canlı ingest + uçtan uca kabul** · küçük · **KANIT TURU**
+
+> ✅ **KAPANDI 2026-10-01 · `8a777afc` (kusur onarımı) + canlı ölçümler.**
+> - Katalog taze: `npm run ingest:admin-menu` → **drift YOK** (4/4 test).
+> - Canlı ingest: `node scripts/ai-knowledge/ingest.mjs --source=admin-menu` →
+>   **88 belge / 88 parça (değişmedi 88)** — belgeler N04 olayında zaten yazılmıştı, md5 birebir.
+> - Embed 1. tur: **396/396 başarılı** → `admin-menu` **88/88 gömülü**.
+> - **Getirme kanıtı** (canlı `ai_knowledge_search`, eşik 0.35 — RPC ile ölçüldü):
+>   - ADMIN "üyeler menüde nerede" → **0.287 · admin-menu · Kayıt Veritabanı · /admin/data** (en üstte, doğru kayıt)
+>   - ADMIN "kayıt veritabanı menüde kaçıncı sırada" → **0.215** aynı kayıt
+>   - MEMBER kitle, iki soruda → **0 admin-menu kaydı** ("üye menu kaydı GELMEMELİ" mekanizması kanıtlı)
+> - 🔴 **docs-admin kusuru KÖKTEN ÇÖZÜLDÜ:** "Empty or invalid json" dosya boyutu DEĞİL
+>   **yalnız vekil (lone surrogate)** idi — `chunkText` 🔴 emojisini (U+1F534, iki UTF-16
+>   birimi) örtüşme sınırından ortasından kesiyordu; `KALANLAR.md` chunk 5 `\uDD34` ile
+>   başlıyor, PostgREST (aeson) bunu geçersiz JSON sayıyordu. Deterministik: 93'te tam 1.
+>   `JSON.stringify` istemcide geçerli JSON ürettiği için hata YALNIZ sunucuda görünüyordu.
+>   Düzeltme: `trimLeadingLoneSurrogates` + `safeBoundaryEnd` (sert kesim de çifti bölemez).
+>   **Kanıt:** düzeltme sonrası KALANLAR.md **93/93 canlı upsert OK** · 3 yeni test ·
+>   **2/2 mutasyon yakalandı** · tam takım **381 dosya / 2980 test yeşil** · lint 0 · verify:text ✓.
+> - docs-admin tam re-ingest (süpürme + prune): **404 belge → 4901 parça**
+>   (yeni 1066 · güncel 2 · değişmedi 3833 · **silindi 640** · **hata 0**) — yeniden
+>   adlandırılmış eski satırlar temizlendi, diğer olası aynı-sınıf hatalar süpürüldü.
+> - Embed 2. tur: **1158/1158 başarılı** → tüm korpus **5639/5639 gömülü, bekleyen 0, hatalı 0**.
+> - ⏳ **Tek kalan kullanıcı adımı — UI kabulü:** yönetici hesabıyla `/admin`'de
+>   "üyeler menüde nerede" → yanıtta sıra numarası (2) sol menüyle eşleşmeli + kaynak
+>   linki tıklanabilir olmalı (N06 — **frontend deploy gerekir**, G03b ile aynı kuyruk);
+>   üye hesabıyla aynı soru → menü kaydı görünmemeli. Sunucu tarafı mekanizma yukarıdaki
+>   RPC ölçümleriyle kanıtlandı; bu adım yalnız görsel teyit.
+> - 📌 **Kalıcı kural:** menü sırası her değiştiğinde `npm run ingest:admin-menu` +
+>   `node scripts/ai-knowledge/ingest.mjs --source=admin-menu` + `node scripts/ai-knowledge/embed.mjs`
+>   çalıştırılmalı, yoksa bot bayat numara söyler.
 ```bash
 npm run ingest:admin-menu
 node scripts/ai-knowledge/ingest.mjs --source=admin-menu   # ⚠️ npm DEĞİL node — npm argümanları yutuyor (↓ N04 olayı)
@@ -1679,6 +1716,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| N07 · canlı ingest + embed + getirme kanıtı · docs-admin vekil kusuru kökten onarıldı | `8a777afc` — 88 admin-menu belgesi canlıda gömülü · getirme: ADMIN 0.215–0.287 doğru kayıt en üstte, MEMBER **0 admin-menu** · docs-admin re-ingest 404 belge/4901 parça **0 hata** (640 bayat satır prune) · korpus 5639/5639 gömülü · 🔴 kusur kök neden: `chunkText` emojiyi (🔴 U+1F534) örtüşme sınırında bölüyordu → yalnız vekil `\uDD34` → PostgREST "Empty or invalid json" (93'te 1, deterministik) · 3 test + 2/2 mutasyon · ⏳ tek kalan: kullanıcı UI kabulü (frontend deploy sonrası) |
 | N05 · yönetici menüsü prompt kuralı (`is_admin()` kapılı) + deploy | deploy `site-assistant` 88.19kB · canlı anon POST **401** · 5 yeni test, 3 mutasyon 3/3 · `check:functions` 12/12 sapmasız · ⚠️ Rancher Desktop motoru takılıydı (deploy Docker ister) — süreç+`wsl -t` ile yeniden başlatıldı · ℹ️ etki N07 embed'inden sonra görünür |
 | N06 · bot yanıtında tıklanabilir link (beyaz liste: iç `/…` + `https://`) | `a506f92c` — 17 yeni test, 3 mutasyon 3/3 yakalandı · 381 dosya/2972 test yeşil · ⚠️ ilk desen parantezlu hedefleri (`javascript:alert(1)`) hiç eşleştirmiyordu — ham markdown sızıyordu, test yakaladı · ℹ️ canlıya yansıması frontend deploy'una bağlı |
 | N04 · `admin-menu` bilgi kaynağı (`sources.mjs`, öğe başına bir belge) | `3be3e694` — kabul `node scripts/ai-knowledge/ingest.mjs --source=admin-menu --dry-run` **88 belge/88 parça** · 9 test, 3 mutasyon 3/3 yakalandı · 380 dosya/2955 test yeşil · ⚠️ **npm `--` sonrasını yuttu** → ilk deneme canlıya GERÇEK yazım yaptı (88 admin-menu belgesi embed'siz bekliyor, aranamaz; catalog/docs-member idempotent tazelendi) → kural: argümanlı ingest **doğrudan node** ile · 🔴 yeni açık kusur: `docs-admin` ingest'i `KALANLAR.md` upsert'inde `Empty or invalid json` ile düşüyor (↓ N07) |
