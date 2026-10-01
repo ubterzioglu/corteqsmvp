@@ -7,9 +7,9 @@ import CareerHero from "@/components/career/CareerHero";
 import CareerPositionList from "@/components/career/CareerPositionList";
 import FounderLetters from "@/components/career/FounderLetters";
 import ParticipationModels from "@/components/career/ParticipationModels";
-import InterestForm from "@/components/InterestForm";
 import { Button } from "@/components/ui/button";
 import { CAREER_INTERNSHIP, CAREER_JOBS } from "@/lib/careers/careers-data";
+import { LEGACY_CAREER_POSITIONS, LEGACY_POSITION_NOTE } from "@/lib/careers/careers-legacy";
 import { PAGE_SEO } from "@/lib/page-seo";
 import { useSeo } from "@/lib/seo";
 
@@ -132,14 +132,7 @@ const jobs: Job[] = [
 
 const Career = () => {
   useSeo(PAGE_SEO.career, []);
-  const [open, setOpen] = useState(false);
-  const [activeJob, setActiveJob] = useState<Job | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
-
-  const apply = (job: Job | null) => {
-    setActiveJob(job);
-    setOpen(true);
-  };
 
   /**
    * Yeni ilan listesinden gelen başvuru isteği (KR05). Seçim tutulur ve forma
@@ -154,6 +147,7 @@ const Career = () => {
 
   const selectedPositionLabel =
     CAREER_JOBS.find((job) => job.id === selectedPosition)?.tr ??
+    LEGACY_CAREER_POSITIONS.find((job) => job.id === selectedPosition)?.title ??
     (selectedPosition === CAREER_INTERNSHIP.id ? CAREER_INTERNSHIP.tr : null);
 
   return (
@@ -208,14 +202,16 @@ const Career = () => {
           </div>
         </section>
 
-        {/* JOBS */}
+        {/* ÖNCEKİ DÖNEM İLANLARI (KR07) — silinmedi, yeni 17 ilanın altında
+            ayrı bölümde duruyor. Kaldırma koşulu KALANLAR'da yazılı. */}
         <section className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-extrabold mb-2 text-center">
-              Açık Pozisyonlar
+              Önceki dönem ilanları
             </h2>
             <p className="text-center text-muted-foreground mb-10">
-              Her pozisyon için doğrudan başvuru bırakabilirsin.
+              Bu ilanlar önceki dönemde yayınlandı ve hâlâ geçerli. Başvuruların
+              yukarıdaki formla aynı yere düşer.
             </p>
 
             <div className="grid gap-6">
@@ -233,8 +229,13 @@ const Career = () => {
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs font-semibold text-turquoise mb-2">
-                          {idx + 1}. Pozisyon
+                        <div className="mb-2 flex flex-wrap items-center gap-2">
+                          <span className="text-xs font-semibold text-turquoise">
+                            {idx + 1}. Pozisyon
+                          </span>
+                          <span className="rounded-full border border-border px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                            {LEGACY_POSITION_NOTE}
+                          </span>
                         </div>
                         <h3 className="text-2xl font-bold mb-2">{job.title}</h3>
                         <p className="text-sm text-muted-foreground italic mb-4">
@@ -288,7 +289,7 @@ const Career = () => {
                           </div>
                         )}
 
-                        <Button onClick={() => apply(job)} className="mt-2">
+                        <Button onClick={() => handleApplyToPosition(job.id)} className="mt-2">
                           Bu Pozisyona Başvur
                         </Button>
                       </div>
@@ -347,15 +348,7 @@ const Career = () => {
           </div>
         </section>
       </main>
-      <InterestForm
-        open={open}
-        onOpenChange={setOpen}
-        context="kariyer" lockCategory
-        title={activeJob ? `Başvuru: ${activeJob.title}` : "Genel Başvuru"}
-        description="Bilgilerinizi bırakın, başvurunuzu inceleyip dönüş yapalım."
-        source={activeJob ? `career-${activeJob.id}` : "career-general"}
-        defaultCategory="kariyer"
-      />
+
     </div>
   );
 };

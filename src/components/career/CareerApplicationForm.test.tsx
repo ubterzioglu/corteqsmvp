@@ -43,6 +43,7 @@ const toastSpy = { success: vi.fn(), error: vi.fn() };
 vi.mock("sonner", () => ({ toast: { success: (m: string) => toastSpy.success(m), error: (m: string) => toastSpy.error(m) } }));
 
 import CareerApplicationForm from "@/components/career/CareerApplicationForm";
+import { LEGACY_CAREER_POSITIONS } from "@/lib/careers/careers-legacy";
 
 const formSource = () => readFileSync("src/components/career/CareerApplicationForm.tsx", "utf8");
 const dropSource = () => readFileSync("src/components/career/CareerFileDrop.tsx", "utf8");
@@ -137,6 +138,16 @@ describe("kariyer başvuru formu", () => {
     rerender(<CareerApplicationForm selectedPosition="network" />);
 
     expect(screen.getByLabelText(/Pozisyon/)).toHaveValue("network");
+  });
+
+  it("önceki dönem ilanları da pozisyon seçeneklerinde görünür (KR07)", () => {
+    // Davranış testi: metin testi mutasyonu kaçırmıştı (import satırı adı
+    // taşıdığı için `map` boşaltılsa bile yeşil kalıyordu).
+    render(<CareerApplicationForm selectedPosition={null} />);
+
+    for (const job of LEGACY_CAREER_POSITIONS) {
+      expect(screen.getByRole("option", { name: job.title })).toHaveValue(job.id);
+    }
   });
 
   it("KVKK ve gizlilik bağlantıları gerçek rotalara gider", () => {

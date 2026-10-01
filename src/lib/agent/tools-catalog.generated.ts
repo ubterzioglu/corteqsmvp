@@ -2593,6 +2593,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/careers/careers-legacy.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/careers/careers-legacy.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/careers/careers-schemas.ts",
       "kind": "ts",
       "module_family": "lib"

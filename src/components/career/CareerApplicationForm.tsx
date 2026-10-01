@@ -18,6 +18,7 @@ import {
   validateCareerPresentationFile,
 } from "@/lib/careers/careers-api";
 import { CAREER_INTERNSHIP, CAREER_JOBS } from "@/lib/careers/careers-data";
+import { LEGACY_CAREER_POSITIONS } from "@/lib/careers/careers-legacy";
 import {
   CAREER_MODELS,
   careerApplicationSchema,
@@ -177,6 +178,16 @@ export function CareerApplicationForm({ selectedPosition }: CareerApplicationFor
               </option>
             ))}
             <option value={CAREER_INTERNSHIP.id}>{CAREER_INTERNSHIP.tr}</option>
+            {/* ⚠️ Önceki dönem ilanları da listede olmalı (KR07): eski bir ilandan
+                "Bu pozisyona başvur" diyen kullanıcıya boş bir kutu gösterilirdi
+                ve seçim sessizce kaybolurdu. */}
+            <optgroup label="Önceki dönem ilanları">
+              {LEGACY_CAREER_POSITIONS.map((job) => (
+                <option key={job.id} value={job.id}>
+                  {job.title}
+                </option>
+              ))}
+            </optgroup>
           </select>
           {errors.position && <p role="alert" className="mt-1 text-sm text-destructive">{errors.position.message}</p>}
         </div>
