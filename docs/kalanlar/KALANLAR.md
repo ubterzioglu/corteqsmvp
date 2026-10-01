@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **75** (N 5 · W 8 · M 27 · G 25 · KR 10) |
+> | **Açık batch** | **72** (N 4 · W 8 · M 27 · G 23 · KR 10) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -79,7 +79,7 @@ Sıfır migration · sıfır yeni bağımlılık. Tahmin: 1–2 gün.
 |---|---|---|---|---|
 | ~~N01~~ | ✅ **KAPANDI 01.10** — numaralandırma çekirdeği (88 kayıt: 75 üst · 13 alt · 3 inaktif) | ✅ | N02 ile BİRLİKTE commit'lendi |
 | ~~N02~~ | ✅ **KAPANDI 01.10** — numara sidebar + komut paletinde görünüyor | ✅ | ⚠️ N01 tek başına commit'lenemezdi (↓) |
-| **N03** | Üretilen katalog + bayatlama kapanı (snapshot) | küçük | 🟢 | ⛔ N01 |
+| ~~N03~~ | ✅ **KAPANDI 01.10** — `docs/agent/admin-menu.json` (88 öğe) + bayatlama kapanı | ✅ | — |
 | **N04** | `admin-menu` bilgi kaynağı (`sources.mjs`) | küçük | 🟢 | ⛔ N03 |
 | **N05** | Prompt kuralı (yalnız yöneticide) · **DEPLOY** | küçük | 🟢 | ⛔ N04 |
 | **N06** | Bot yanıtında tıklanabilir link | küçük | 🟢 | **bağımsız · bugün canlıda kusur** |
@@ -407,19 +407,38 @@ Eksik olan tek şey korpusta menüyü anlatan **veri seti** ve promptta **bir ku
 > altında olmadığı için `check:dead` etkilenmez, ama yeni bir `src/lib` modülü
 > eklenirse aynı kural geçerli.
 
-**N03 — Üretilen katalog + bayatlama kapanı** · küçük
-- Yeni `src/lib/admin-shell/admin-menu-catalog.test.ts` →
-  `toMatchFileSnapshot("../../../docs/agent/admin-menu.json")`.
-- package.json: `"ingest:admin-menu": "vitest run -u src/lib/admin-shell/admin-menu-catalog.test.ts"`.
-- ⚠️ **Neden snapshot, neden yeni bağımlılık değil:** `sources.mjs` saf Node'dur, lucide
-  import'lu TS registry'yi import edemez; repoda `tsx`/`esbuild` **YOK** (ölçüldü,
-  `jiti` yalnız transitif). Artefakt vitest ile üretilir — üstelik drift `npm run test`
-  içinde yakalanır, yani `ingest:tools:check`'in bilinen "ne lint ne test yakalar"
-  bayatlama sorunu TEKRARLANMAZ.
-- `docs/agent/admin-menu.json` `.json` olduğu için `docs-admin` kaynağına ikinci kez
-  GİRMEZ (`classifyDocumentationPath` yalnız `.md|.html` alır).
-- **Kabul:** `npm run ingest:admin-menu` dosyayı üretir; bir label elle değiştirilince
-  `npm run test` KIRILIR.
+**✅ N03 — Üretilen katalog + bayatlama kapanı** · KAPANDI 01.10
+
+> `docs/agent/admin-menu.json` üretildi: **88 öğe, 39 KB**. Üretim komutu
+> `npm run ingest:admin-menu`. Test: `src/lib/admin-shell/admin-menu-catalog.test.ts` (4 test).
+>
+> **KABUL KRİTERİ ÖLÇÜLDÜ:** artefaktdaki bir etiket elle `"ELLE DEGISTIRILDI"`
+> yapıldı → test **KıRıLDı** (`Snapshot ... mismatched`); geri alınınca 4/4 yeşil.
+> Yani menü değişip artefakt tazelenmezse **CI kırılır** — `ingest:tools:check`'in
+> bilinen "ne lint ne test yakalar" sorununa DÜŞMÜYOR.
+>
+> ⚠️ **PLANDAKİ SCRIPT HATALIYDI — düzeltildi.** Plan
+> `vitest run -u <yol>` diyordu. Ölçüm:
+>
+> | Biçim | Koşan |
+> |---|---|
+> | `vitest run -u <yol>` | **380 dosya / 2947 test** ❌ |
+> | `vitest run --update <yol>` | **380 dosya / 2947 test** ❌ |
+> | `vitest run <yol> -u` | **1 dosya / 4 test** ✅ |
+>
+> Bayrak yolun ÖNÜNE yazılırsa vitest yolu **yutuyor** ve tüm takımı
+> snapshot-güncelleme modunda koşuyor. Bugün zararsızdı (repoda başka snapshot
+> yok) ama ileride biri snapshot testi eklediğinde menüyü tazelemek **başka
+> yerdeki bayat bir snapshot'ı sessizce yeniden yazardı**. **Bayrak DAİMA yolun
+> ARKASINA.** Ölçüm test dosyasının başında yazılı.
+>
+> ℹ️ Artefaktın `.json` olması bilinçli: `classifyDocumentationPath` yalnız
+> `.md|.html` alır (`sources.mjs:27`), böylece menü `docs-admin` korpusuna **ikinci
+> kez girmez**. `.md` yapılırsa menü korpusa iki kez girer ve semantik arama kendi
+> kendisiyle yarışır.
+>
+> ℹ️ `toMatchFileSnapshot` bu repoda **ilk kez** kullanıldı (ölçüldü: 0 önceki
+> örnek). Vitest 4.1.11 ile sorunsuz çalışıyor.
 
 **N04 — `admin-menu` bilgi kaynağı** · küçük · migration YOK
 - `scripts/ai-knowledge/sources.mjs`: `loadAdminMenuDocuments()` (üretilen JSON'u okur) +
@@ -1584,6 +1603,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| N03 · `docs/agent/admin-menu.json` üretilen katalog + bayatlama kapanı | 88 öğe/39 KB · kabul ölçüldü: artefakt elle bozulunca test KıRıLDı · ⚠️ plandaki `vitest run -u <yol>` script'i yolu YUTUP tüm takımı (2947 test) snapshot-güncelleme modunda koşturuyordu — bayrak yolun arkasına alındı (1 dosya/4 test) |
 | N01+N02 · yönetici menüsü mutlak sıra numaraları (sidebar + komut paleti) | 88 kayıt (75 üst · 13 alt · 3 inaktif) · 17 test, 4 mutasyonun hepsi yakalandı · DOM↔katalog sözleşmesi "iki ayrı sayaç" sınıfını kapatır · ⚠️ N01 TEK BAŞINA commit'lenemezdi: `check:dead` bağlanmamış modülü erişilemez sayıp exit 1 veriyor ve CI onu çalıştırıyor |
 | G03b · dizin + detay view'a taşındı, davet linki RPC'ye | `types.ts` +105/−0 (⚠️ ilk regen `graphql_public`'i siliyordu, yakalandı) · "Katıl" düğmesi 4 durumda da GÖRÜNÜR (eski kod linki yokken düğmeyi hiç çizmiyordu) · link sayfa açılırken çekilir (popup engeli) · 14 test, mutasyonla 8 düşüş · ⚠️ bir vakum test yakalanıp daraltıldı |
 | G03a · PII'siz public view + davet linki RPC'si (salt ekleme) | mig `20261001110000` — anon view 10 satır / **0 PII sızıntısı** · anon RPC **permission denied** · girişli RPC link döndü · olmayan slug + **boş linkli grup** `P0002` · RLS 8→8 değişmedi · 14 sözleşme testi 4 mutasyonla sınandı · ⚠️ `admin_contact` ad+e-posta+telefon taşıyordu, K1'de yazılı değildi |

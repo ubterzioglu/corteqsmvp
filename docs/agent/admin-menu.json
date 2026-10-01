@@ -1,0 +1,1522 @@
+{
+  "generatedBy": "npm run ingest:admin-menu",
+  "source": "src/lib/admin-shell/admin-menu-numbering.ts",
+  "items": [
+    {
+      "id": "dashboard",
+      "number": "1",
+      "label": "Genel Bakış",
+      "groupLabel": "Genel Bakış",
+      "parentId": null,
+      "to": "/admin",
+      "href": null,
+      "description": "Operasyon merkezi: KPI'lar, dikkat isteyenler ve hızlı işlemler.",
+      "aliases": [
+        "dashboard",
+        "ana sayfa",
+        "home",
+        "özet"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "catalog-database",
+      "number": "2",
+      "label": "Kayıt Veritabanı",
+      "groupLabel": "Üyeler ve Dizin",
+      "parentId": null,
+      "to": "/admin/data",
+      "href": null,
+      "description": "Tüm katalog ve profil kayıtları; kullanıcı rol atama buradan yapılır.",
+      "aliases": [
+        "kayıt",
+        "katalog",
+        "veritabanı",
+        "üyeler",
+        "kullanıcı rol atama",
+        "profil"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "bulk-import",
+      "number": "3",
+      "label": "Toplu İçe Aktarma",
+      "groupLabel": "Üyeler ve Dizin",
+      "parentId": null,
+      "to": "/admin/bulk-import",
+      "href": null,
+      "description": "CSV/JSON profesyonel listelerini beklemeye al; Kayıt Veritabanı'ndan onayla.",
+      "aliases": [
+        "içe aktar",
+        "ice aktar",
+        "import",
+        "toplu",
+        "csv",
+        "json",
+        "profil yükle",
+        "deep research"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "approvals",
+      "number": "4",
+      "label": "Approval Queue",
+      "groupLabel": "Üyeler ve Dizin",
+      "parentId": null,
+      "to": "/admin/approvals",
+      "href": null,
+      "description": "Bekleyen talepleri incele, onayla veya reddet.",
+      "aliases": [
+        "onay",
+        "approval",
+        "claim",
+        "bekleyen talepler"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "feature-overrides",
+      "number": "5",
+      "label": "Feature Override",
+      "groupLabel": "Üyeler ve Dizin",
+      "parentId": null,
+      "to": "/admin/new-member/overrides",
+      "href": null,
+      "description": "Kullanıcı bazlı feature istisnaları.",
+      "aliases": [
+        "override",
+        "feature",
+        "istisna",
+        "yetki"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "audit-logs",
+      "number": "6",
+      "label": "Audit Logs",
+      "groupLabel": "Üyeler ve Dizin",
+      "parentId": null,
+      "to": "/admin/audit-logs",
+      "href": null,
+      "description": "Kritik admin işlem geçmişi.",
+      "aliases": [
+        "audit",
+        "log",
+        "denetim",
+        "geçmiş"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "client-errors",
+      "number": "7",
+      "label": "İstemci Hataları",
+      "groupLabel": "Üyeler ve Dizin",
+      "parentId": null,
+      "to": "/admin/client-errors",
+      "href": null,
+      "description": "Tarayıcıda yakalanan Cadde yazma/okuma ve render hataları (m134 tanısı).",
+      "aliases": [
+        "hata",
+        "istemci",
+        "client error",
+        "m134",
+        "tarayıcı hatası",
+        "console"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "referral",
+      "number": "8",
+      "label": "Referans Kodları",
+      "groupLabel": "Üyeler ve Dizin",
+      "parentId": null,
+      "to": "/admin/referral",
+      "href": null,
+      "description": "Referans kodu kaynakları, grupları ve tipleri.",
+      "aliases": [
+        "ref kod",
+        "referans",
+        "davet",
+        "referral"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "afs-overview",
+      "number": "9",
+      "label": "AFS Genel Bakış",
+      "groupLabel": "Roller ve AFS",
+      "parentId": null,
+      "to": "/admin/new-member/roles-overview",
+      "href": null,
+      "description": "Roller ve entity genel bakış.",
+      "aliases": [
+        "afs",
+        "rol",
+        "roller",
+        "rolesgo",
+        "genel bakış"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "role-matrix",
+      "number": "10",
+      "label": "Roller AFS Matrisi",
+      "groupLabel": "Roller ve AFS",
+      "parentId": null,
+      "to": "/admin/new-member/role-matrix",
+      "href": null,
+      "description": "Rol başına attribute / feature / section kuralları.",
+      "aliases": [
+        "matris",
+        "attribute",
+        "feature",
+        "section",
+        "rol kuralları"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "durum-raporu",
+      "number": "11",
+      "label": "Durum Raporu",
+      "groupLabel": "Roller ve AFS",
+      "parentId": null,
+      "to": "/admin/new-member/durum-raporu",
+      "href": null,
+      "description": "Canlı rebuild sağlığı ve sistem metrikleri.",
+      "aliases": [
+        "durum",
+        "sağlık",
+        "health",
+        "rapor"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "database-tables",
+      "number": "12",
+      "label": "Veritabanı Tabloları",
+      "groupLabel": "Roller ve AFS",
+      "parentId": null,
+      "to": "/admin/veritabani-tablolari",
+      "href": null,
+      "description": "Teknik tablo görünümü.",
+      "aliases": [
+        "tablo",
+        "şema",
+        "teknik",
+        "database"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "system-guide",
+      "number": "13",
+      "label": "Sistem Kullanım Kılavuzu",
+      "groupLabel": "Roller ve AFS",
+      "parentId": null,
+      "to": "/admin/new-member/guide",
+      "href": null,
+      "description": "Admin rehberi.",
+      "aliases": [
+        "kılavuz",
+        "klavuz",
+        "rehber",
+        "guide",
+        "yardım"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "brainstorming",
+      "number": "14",
+      "label": "Brainstorming",
+      "groupLabel": "Roller ve AFS",
+      "parentId": null,
+      "to": "/admin/brainstorming",
+      "href": null,
+      "description": "Cadde 3.0 & Premium Panel durum ve karar raporu — düzenlenebilir.",
+      "aliases": [
+        "brainstorming",
+        "durum raporu",
+        "karar",
+        "statusreport",
+        "3006"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "community-landings",
+      "number": "15",
+      "label": "Topluluk Landingleri",
+      "groupLabel": "Topluluklar",
+      "parentId": null,
+      "to": "/admin/whatsapp-landings",
+      "href": null,
+      "description": "Topluluk kayıtları ve landing yönetimi.",
+      "aliases": [
+        "topluluk",
+        "whatsapp",
+        "landing"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "community-editors",
+      "number": "16",
+      "label": "Topluluk Editörleri",
+      "groupLabel": "Topluluklar",
+      "parentId": null,
+      "to": "/admin/whatsapp-landings/editors",
+      "href": null,
+      "description": "Landing editor atamaları.",
+      "aliases": [
+        "editör",
+        "editor"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "community-guide",
+      "number": "17",
+      "label": "Topluluk Kılavuzu",
+      "groupLabel": "Topluluklar",
+      "parentId": null,
+      "to": "/admin/whatsapp-landings/guide",
+      "href": null,
+      "description": "Topluluk akış rehberi.",
+      "aliases": [
+        "topluluk kılavuzu",
+        "rehber"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "consulates",
+      "number": "18",
+      "label": "Diplomatik Profiller",
+      "groupLabel": "Topluluklar",
+      "parentId": null,
+      "to": "/admin/consulates",
+      "href": null,
+      "description": "Konsolosluk ve diplomatik temsilcilik profilleri.",
+      "aliases": [
+        "diplomatik",
+        "konsolosluk",
+        "consulate"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "cadde",
+      "number": "19",
+      "label": "Cadde",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": null,
+      "to": "/admin/cadde",
+      "href": null,
+      "description": "Cadde yönetimi.",
+      "aliases": [
+        "cadde",
+        "marketplace"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "cadde-guide",
+      "number": "20",
+      "label": "Cadde Kural Kitabı",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": null,
+      "to": "/admin/cadde/rehber",
+      "href": null,
+      "description": "Cadde'nin üye ve admin tarafı rehberi.",
+      "aliases": [
+        "cadde rehber",
+        "cadde kılavuz",
+        "kural kitabı"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "surveys",
+      "number": "21",
+      "label": "Anketler",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": null,
+      "to": "/admin/surveys",
+      "href": null,
+      "description": "Survey CRUD ve cevaplar.",
+      "aliases": [
+        "anket",
+        "survey"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "marquee",
+      "number": "22",
+      "label": "Haber Bandı",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": null,
+      "to": "/admin/marquee",
+      "href": null,
+      "description": "Marquee yönetimi.",
+      "aliases": [
+        "haber bandı",
+        "marquee"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "blog",
+      "number": "23",
+      "label": "Blog",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": null,
+      "to": "/admin/blog",
+      "href": null,
+      "description": "Ülke rehberi yazıları — oluştur, düzenle, yayınla.",
+      "aliases": [
+        "blog",
+        "yazı",
+        "makale",
+        "rehber",
+        "ülke rehberi"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "social-media",
+      "number": "24",
+      "label": "Sosyal Medya",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": null,
+      "to": "/admin/social-media",
+      "href": null,
+      "description": "Sosyal medya bağlantıları.",
+      "aliases": [
+        "sosyal medya",
+        "social"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "social-share-vault",
+      "number": "25",
+      "label": "Sosyal Medya Paylaşım Deposu",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": null,
+      "to": "/admin/social-share-vault",
+      "href": null,
+      "description": "Hazır Canva görsel promptları ve LinkedIn postları — araç tanıtımları, diaspora postları ve test araçları için kopyala-paylaş.",
+      "aliases": [
+        "sosyal medya deposu",
+        "paylaşım",
+        "canva",
+        "linkedin",
+        "prompt",
+        "içerik paketi",
+        "post",
+        "diaspora",
+        "gurbet",
+        "test aracı",
+        "varyant"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "vip-invitations",
+      "number": "26",
+      "label": "VIP Davetleri",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": null,
+      "to": "/admin/vip-invitations",
+      "href": null,
+      "description": "Tek kullanımlık kişisel VIP davetlerini oluştur ve iptal et.",
+      "aliases": [
+        "vip",
+        "davet",
+        "invitation",
+        "özel bağlantı"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "yenilik-rehberi",
+      "number": "27",
+      "label": "Yenilikler ve Test Rehberi",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": null,
+      "to": "/admin/yenilik-rehberi",
+      "href": null,
+      "description": "Son yeniliklerin nasil calistigi ve nasil test edilecegi; HTML olarak indirilir.",
+      "aliases": [
+        "rehber",
+        "test",
+        "yenilik",
+        "kilavuz",
+        "surum notu",
+        "burak"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "customer-requests",
+      "number": "28",
+      "label": "Müşteri Talepleri",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": null,
+      "to": "/admin/customer-requests",
+      "href": null,
+      "description": "WhatsApp taleplerini ata, durumunu yönet ve denetimli yanıtla.",
+      "aliases": [
+        "müşteri",
+        "talep",
+        "whatsapp",
+        "destek",
+        "inbox",
+        "cevap"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "advisor-profiles",
+      "number": "29",
+      "label": "Sosyal Link Profilleri",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": null,
+      "to": null,
+      "href": null,
+      "description": "Profil bazlı sosyal link içerikleri.",
+      "aliases": [
+        "advisor",
+        "consultant",
+        "influencer",
+        "contributor"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "advisors-consultant",
+      "number": "29.1",
+      "label": "Consultant",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": "advisor-profiles",
+      "to": "/admin/advisors/consultant",
+      "href": null,
+      "description": null,
+      "aliases": [],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "advisors-influencer",
+      "number": "29.2",
+      "label": "Influencer",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": "advisor-profiles",
+      "to": "/admin/advisors/influencer",
+      "href": null,
+      "description": null,
+      "aliases": [],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "advisors-contributor",
+      "number": "29.3",
+      "label": "Contributor",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": "advisor-profiles",
+      "to": "/admin/advisors/contributor",
+      "href": null,
+      "description": null,
+      "aliases": [],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-home",
+      "number": "30",
+      "label": "Workspace",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": null,
+      "to": "/admin/workspace",
+      "href": null,
+      "description": "Workspace ana sayfası.",
+      "aliases": [
+        "workspace",
+        "dashboard merkezi"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "command-center",
+      "number": "31",
+      "label": "Command Center",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": null,
+      "to": "/admin/workspace/command-center",
+      "href": null,
+      "description": "Todo ve koordinasyon merkezi.",
+      "aliases": [
+        "cc",
+        "todo",
+        "komuta",
+        "command"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "revision-requests",
+      "number": "32",
+      "label": "Revizyon İstekleri",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": null,
+      "to": "/admin/revision-requests",
+      "href": null,
+      "description": "Site/ürün revizyon talepleri ve yorum thread'leri — tüm adminler ortak.",
+      "aliases": [
+        "revizyon",
+        "istek",
+        "talep",
+        "yorum",
+        "comment",
+        "revision"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "member-feedback",
+      "number": "33",
+      "label": "Üye Geri Bildirimleri",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": null,
+      "to": "/admin/feedback",
+      "href": null,
+      "description": "Üyelerin 'Geri Bildirim' formundan gelen geri bildirimler — durum + arşiv.",
+      "aliases": [
+        "feedback",
+        "geri bildirim",
+        "üye görüşü",
+        "öneri",
+        "şikayet"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-resources",
+      "number": "34",
+      "label": "Dosyalar ve Linkler",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": null,
+      "to": "/admin/workspace/resources",
+      "href": null,
+      "description": "Kaynak merkezi.",
+      "aliases": [
+        "dosya",
+        "link",
+        "kaynak",
+        "resources"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "contributor-resources",
+      "number": "35",
+      "label": "Contributor Kaynakları",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": null,
+      "to": "/admin/contributor-resources",
+      "href": null,
+      "description": "Yerel kaynak gönderimlerini incele, eksik bilgi iste veya kabul et.",
+      "aliases": [
+        "contributor",
+        "katkı",
+        "kaynak kuyruğu",
+        "yerel kaynak"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-mvp",
+      "number": "36",
+      "label": "MVP Listesi",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": null,
+      "to": "/admin/workspace/mvp",
+      "href": null,
+      "description": "MVP takip listesi.",
+      "aliases": [
+        "mvp"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-docs",
+      "number": "37",
+      "label": "Dokümanlar",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": null,
+      "to": null,
+      "href": null,
+      "description": "Workspace doküman sayfaları.",
+      "aliases": [
+        "doküman",
+        "docs"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-doc-kortexdocs",
+      "number": "37.1",
+      "label": "Kortex — CTO, Pitch & PRD Dokümanları",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": "workspace-docs",
+      "to": "/admin/workspace/docs/kortexdocs",
+      "href": null,
+      "description": "Teknik omurga, pitch anlatısı ve PRD hattını tek admin alanında toplayan referans sayfa.",
+      "aliases": [],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-doc-roadmap",
+      "number": "37.2",
+      "label": "Roadmap",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": "workspace-docs",
+      "to": "/admin/workspace/docs/roadmap",
+      "href": null,
+      "description": "MVP'den seed-ready seviyesine giden 12 aylık ürün ve büyüme planı.",
+      "aliases": [],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-doc-ambassador",
+      "number": "37.3",
+      "label": "Ambassador",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": "workspace-docs",
+      "to": "/admin/workspace/docs/ambassador",
+      "href": null,
+      "description": "Şehir bazlı topluluk büyüme motoru, onboarding ve saha dağıtımı modeli.",
+      "aliases": [],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-doc-captable",
+      "number": "37.4",
+      "label": "Cap Table V2 — Hisse Yapısı",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": "workspace-docs",
+      "to": "/admin/workspace/docs/captable",
+      "href": null,
+      "description": "Kurucu hisse yapısı, ESOP kurgusu ve seyrelme senaryoları için referans panel.",
+      "aliases": [],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-doc-ekip",
+      "number": "37.5",
+      "label": "Ekip ve Bütçe",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": "workspace-docs",
+      "to": "/admin/workspace/docs/ekip",
+      "href": null,
+      "description": "Rol mimarisi, ücret bantları, ESOP dağılımı ve işe alım altyapısı.",
+      "aliases": [],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-doc-dijitalpazarlama",
+      "number": "37.6",
+      "label": "Dijital Pazarlama",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": "workspace-docs",
+      "to": "/admin/workspace/docs/dijitalpazarlama",
+      "href": null,
+      "description": "İçerik ve kampanya yönetimini tek çalışma sistemi içinde toplayan operasyon paneli.",
+      "aliases": [],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-doc-projetakibi",
+      "number": "37.7",
+      "label": "Proje Takibi Şablonu",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": "workspace-docs",
+      "to": "/admin/workspace/docs/projetakibi",
+      "href": null,
+      "description": "Ekiplerin iş parçası, sahiplik ve teslim mantığını hizalamak için kullandığı yönetim çerçevesi.",
+      "aliases": [],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-doc-captablev2",
+      "number": "37.8",
+      "label": "Cap Table V2",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": "workspace-docs",
+      "to": "/admin/workspace/docs/captablev2",
+      "href": null,
+      "description": "Cap table içeriğinin kısaltılmış erişim etiketi; aynı hisse yapısı dokümanına ikinci giriş noktası sağlar.",
+      "aliases": [],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-doc-whatsappbot",
+      "number": "37.9",
+      "label": "WhatsApp Bot",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": "workspace-docs",
+      "to": "/admin/workspace/docs/whatsappbot",
+      "href": null,
+      "description": "Topluluk tanıtımı, opt-in akışı ve token mantığı için fikir ve operasyon paneli.",
+      "aliases": [],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workspace-doc-out-of-order",
+      "number": "37.10",
+      "label": "Out of Order — Bekleyen Sistem Borçları",
+      "groupLabel": "Operasyon Workspace",
+      "parentId": "workspace-docs",
+      "to": "/admin/workspace/docs/out-of-order",
+      "href": null,
+      "description": "Bilerek arka planda tutulan, zamanı gelince devreye alınacak ya da silinecek kod ve sistemlerin envanteri.",
+      "aliases": [],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workshop-cadde",
+      "number": "38",
+      "label": "Cadde",
+      "groupLabel": "Workshop",
+      "parentId": null,
+      "to": "/admin/workshop/cadde",
+      "href": null,
+      "description": "30.07.2026 Cadde workshop maddeleri; UBT + Burak onay kutuları.",
+      "aliases": [
+        "workshop",
+        "cadde workshop",
+        "atölye",
+        "madde",
+        "checklist",
+        "ubt",
+        "burak"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "workshop-profil",
+      "number": "39",
+      "label": "Profil",
+      "groupLabel": "Workshop",
+      "parentId": null,
+      "to": "/admin/workshop/profil",
+      "href": null,
+      "description": "03.09.2026 Profiller toplantısı maddeleri; UBT + Burak onay kutuları.",
+      "aliases": [
+        "profil workshop",
+        "profiller",
+        "rol etiketi",
+        "doğrulama",
+        "referans",
+        "paket"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "muhasebe-dashboard",
+      "number": "40",
+      "label": "Muhasebe Dashboard",
+      "groupLabel": "Muhasebe",
+      "parentId": null,
+      "to": "/admin/muhasebe",
+      "href": null,
+      "description": "KPI özet ekranı.",
+      "aliases": [
+        "muhasebe",
+        "finans"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "muhasebe-giderler",
+      "number": "41",
+      "label": "Giderler",
+      "groupLabel": "Muhasebe",
+      "parentId": null,
+      "to": "/admin/muhasebe/giderler",
+      "href": null,
+      "description": "Gider kayıtları CRUD.",
+      "aliases": [
+        "gider",
+        "masraf"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "muhasebe-gelirler",
+      "number": "42",
+      "label": "Gelirler",
+      "groupLabel": "Muhasebe",
+      "parentId": null,
+      "to": "/admin/muhasebe/gelirler",
+      "href": null,
+      "description": "Gelir kayıtları CRUD.",
+      "aliases": [
+        "gelir"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "muhasebe-nakit-akisi",
+      "number": "43",
+      "label": "Nakit Akışı",
+      "groupLabel": "Muhasebe",
+      "parentId": null,
+      "to": "/admin/muhasebe/nakit-akisi",
+      "href": null,
+      "description": "Finansal akış görünümü.",
+      "aliases": [
+        "nakit",
+        "cash flow",
+        "akış"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "muhasebe-butce",
+      "number": "44",
+      "label": "Bütçe",
+      "groupLabel": "Muhasebe",
+      "parentId": null,
+      "to": "/admin/muhasebe/butce",
+      "href": null,
+      "description": "Yıllık departman bütçesi, gelir beklentisi ve runway.",
+      "aliases": [
+        "bütçe",
+        "butce",
+        "budget",
+        "runway"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "service-finder-dashboard",
+      "number": "45",
+      "label": "Hizmet Bulucu",
+      "groupLabel": "Hizmet Bulucu",
+      "parentId": null,
+      "to": "/admin/service-finder",
+      "href": null,
+      "description": "AI destekli hizmet sağlayıcı keşfi — özet ve hızlı iş oluşturma.",
+      "aliases": [
+        "service finder",
+        "bulucu",
+        "tarama",
+        "scraper",
+        "keşif"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "service-finder-jobs",
+      "number": "46",
+      "label": "Tarama İşleri",
+      "groupLabel": "Hizmet Bulucu",
+      "parentId": null,
+      "to": "/admin/service-finder/jobs",
+      "href": null,
+      "description": "İş kuyruğu, durum ve aday incelemesi.",
+      "aliases": [
+        "tarama işi",
+        "job",
+        "kuyruk"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "service-finder-providers",
+      "number": "47",
+      "label": "Sağlayıcılar",
+      "groupLabel": "Hizmet Bulucu",
+      "parentId": null,
+      "to": "/admin/service-finder/providers",
+      "href": null,
+      "description": "Tavily / SerpAPI / Gemini ayarları ve bütçe tavanları.",
+      "aliases": [
+        "tavily",
+        "serpapi",
+        "gemini",
+        "sağlayıcı",
+        "provider"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "service-finder-templates",
+      "number": "48",
+      "label": "Meslek Şablonları",
+      "groupLabel": "Hizmet Bulucu",
+      "parentId": null,
+      "to": "/admin/service-finder/templates",
+      "href": null,
+      "description": "Sorgu üretimi için meslek/dil terimi şablonları.",
+      "aliases": [
+        "şablon",
+        "template",
+        "meslek"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "service-finder-costs",
+      "number": "49",
+      "label": "Maliyetler",
+      "groupLabel": "Hizmet Bulucu",
+      "parentId": null,
+      "to": "/admin/service-finder/costs",
+      "href": null,
+      "description": "Sağlayıcı bazında maliyet defteri toplamları.",
+      "aliases": [
+        "maliyet",
+        "cost",
+        "harcama",
+        "bütçe"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "service-finder-guide",
+      "number": "50",
+      "label": "Hizmet Bulucu Kılavuzu",
+      "groupLabel": "Hizmet Bulucu",
+      "parentId": null,
+      "to": "/admin/service-finder/guide",
+      "href": null,
+      "description": "İş oluşturma, aday inceleme ve sağlayıcı ayarları rehberi.",
+      "aliases": [
+        "hizmet bulucu kılavuz",
+        "scrapper rehber",
+        "tarama rehber",
+        "bulucu kılavuz"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "relocation-ingestion-jobs",
+      "number": "51",
+      "label": "Toplama İşleri",
+      "groupLabel": "Kullanıcı Araçları",
+      "parentId": null,
+      "to": "/admin/relocation-ingestion",
+      "href": null,
+      "description": "Taşınma kaynak toplama işleri ve worker durumu.",
+      "aliases": [
+        "relocation",
+        "taşınma toplama",
+        "ingestion",
+        "relokasyon iş"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "relocation-ingestion-candidates",
+      "number": "52",
+      "label": "Aday İnceleme",
+      "groupLabel": "Kullanıcı Araçları",
+      "parentId": null,
+      "to": "/admin/relocation-ingestion/candidates",
+      "href": null,
+      "description": "Toplanan servis/bürokrasi/acil adaylarını onayla ve yayınla.",
+      "aliases": [
+        "taşınma aday",
+        "relocation candidate",
+        "aday onay"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "relocation-tools-question-counts",
+      "number": "53",
+      "label": "Araç Soru Sayıları",
+      "groupLabel": "Kullanıcı Araçları",
+      "parentId": null,
+      "to": "/admin/relocation-tools/soru-sayilari",
+      "href": null,
+      "description": "Her relocation aracında hızlı/normal modda kaç soru/alan var, canlı DB'den.",
+      "aliases": [
+        "soru sayısı",
+        "relocation tool questions",
+        "araç soru",
+        "quiz sayısı"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "radar-queue",
+      "number": "54",
+      "label": "Moderasyon Kuyruğu",
+      "groupLabel": "Radar Haber Pipeline",
+      "parentId": null,
+      "to": "/admin/radar/queue",
+      "href": null,
+      "description": "Bekleyen haber adaylarını incele, onayla veya reddet.",
+      "aliases": [
+        "radar",
+        "haber kuyruğu",
+        "moderasyon",
+        "aday haber"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "radar-sources",
+      "number": "55",
+      "label": "Haber Kaynakları",
+      "groupLabel": "Radar Haber Pipeline",
+      "parentId": null,
+      "to": "/admin/radar/sources",
+      "href": null,
+      "description": "RSS, Atom ve GDELT kaynaklarını yönet.",
+      "aliases": [
+        "kaynak",
+        "rss",
+        "atom",
+        "gdelt",
+        "feed"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "radar-runs",
+      "number": "56",
+      "label": "Tarama Geçmişi",
+      "groupLabel": "Radar Haber Pipeline",
+      "parentId": null,
+      "to": "/admin/radar/runs",
+      "href": null,
+      "description": "Günlük cron ve manuel tarama sonuçlarını izle.",
+      "aliases": [
+        "tarama geçmişi",
+        "cron",
+        "scan runs"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "radar-guide",
+      "number": "57",
+      "label": "Radar Kural Kitabı",
+      "groupLabel": "Radar Haber Pipeline",
+      "parentId": null,
+      "to": "/admin/radar/rehber",
+      "href": null,
+      "description": "Radar'ın nasıl çalıştığını ve nasıl yönetildiğini anlatan rehber.",
+      "aliases": [
+        "radar rehber",
+        "haber rehber",
+        "radar kılavuz",
+        "haber otomasyonu rehber"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "kadro-liste",
+      "number": "58",
+      "label": "Kadro Listesi",
+      "groupLabel": "Kadro",
+      "parentId": null,
+      "to": "/admin/kadro",
+      "href": null,
+      "description": "52 pozisyon, durum ve öncelik takibi",
+      "aliases": [
+        "kadro",
+        "pozisyon",
+        "rol"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "kadro-matris",
+      "number": "59",
+      "label": "Pazarlama Matrisi",
+      "groupLabel": "Kadro",
+      "parentId": null,
+      "to": "/admin/kadro/matris",
+      "href": null,
+      "description": "Ürün, işlev ve coğrafya eksenleri",
+      "aliases": [
+        "matris",
+        "pazarlama"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "kadro-rutinler",
+      "number": "60",
+      "label": "Rutinler",
+      "groupLabel": "Kadro",
+      "parentId": null,
+      "to": "/admin/kadro/rutinler",
+      "href": null,
+      "description": "Günlük, haftalık, aylık rutinler",
+      "aliases": [
+        "rutin",
+        "görev"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "kadro-ilanlar",
+      "number": "61",
+      "label": "İlan Metinleri",
+      "groupLabel": "Kadro",
+      "parentId": null,
+      "to": "/admin/kadro/ilanlar",
+      "href": null,
+      "description": "Pozisyon ilan metinleri",
+      "aliases": [
+        "ilan",
+        "iş ilanı"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "links-overview",
+      "number": "62",
+      "label": "Linkler",
+      "groupLabel": "Linkler",
+      "parentId": null,
+      "to": "/admin/links",
+      "href": null,
+      "description": "Admin panelinden hızlı erişilen dış araçlar ve panolar.",
+      "aliases": [
+        "link",
+        "linkler",
+        "dış bağlantı",
+        "araçlar",
+        "kısayol"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "external-site-traffic",
+      "number": "63",
+      "label": "Site Trafik Durumu",
+      "groupLabel": "Linkler",
+      "parentId": null,
+      "to": null,
+      "href": "https://clarity.microsoft.com/projects/view/wdkgdje6rb/",
+      "description": "Microsoft Clarity — site trafik ve davranış panosu.",
+      "aliases": [
+        "trafik",
+        "clarity",
+        "site trafik",
+        "analytics",
+        "ziyaretçi",
+        "istatistik"
+      ],
+      "isExternal": true,
+      "isInactive": false
+    },
+    {
+      "id": "about",
+      "number": "64",
+      "label": "Ürün Güncellemeleri",
+      "groupLabel": "Sistem",
+      "parentId": null,
+      "to": "/admin/about",
+      "href": null,
+      "description": "Sürüm notları ve güncellemeler.",
+      "aliases": [
+        "güncelleme",
+        "sürüm",
+        "release",
+        "about"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "notification-settings",
+      "number": "65",
+      "label": "Bildirim Ayarları",
+      "groupLabel": "Sistem",
+      "parentId": null,
+      "to": "/admin/notifications",
+      "href": null,
+      "description": "Yeni üye ve güncelleme e-postalarını aç/kapa; kendi aboneliğini yönet.",
+      "aliases": [
+        "bildirim",
+        "mail",
+        "e-posta",
+        "eposta",
+        "abonelik",
+        "notification",
+        "yeni üye"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "tools",
+      "number": "66",
+      "label": "Araç Kataloğu",
+      "groupLabel": "Sistem",
+      "parentId": null,
+      "to": "/admin/tools",
+      "href": null,
+      "description": "Platformun tüm edge function, worker, modül ve script'leri — koddan otomatik üretilen liste.",
+      "aliases": [
+        "araç",
+        "arac",
+        "tool",
+        "registry",
+        "katalog",
+        "edge",
+        "worker"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "agent-analytics",
+      "number": "67",
+      "label": "Agent Analitik",
+      "groupLabel": "Sistem",
+      "parentId": null,
+      "to": "/admin/agent-analytics",
+      "href": null,
+      "description": "Araç sağlığı, yönlendirme skorları ve gizlilik özeti.",
+      "aliases": [
+        "analitik",
+        "skor",
+        "score",
+        "routing",
+        "agent",
+        "metrik",
+        "saglik"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "admin-guide",
+      "number": "68",
+      "label": "Admin Kullanım Kılavuzu",
+      "groupLabel": "Sistem",
+      "parentId": null,
+      "to": "/admin/guide",
+      "href": null,
+      "description": "Tüm admin fonksiyonlarının kullanım rehberi.",
+      "aliases": [
+        "yardım",
+        "kılavuz",
+        "klavuz",
+        "guide",
+        "help",
+        "rehber"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "external-engine",
+      "number": "69",
+      "label": "Engine",
+      "groupLabel": "Sistem",
+      "parentId": null,
+      "to": null,
+      "href": "https://eng.corteqs.net",
+      "description": null,
+      "aliases": [
+        "engine"
+      ],
+      "isExternal": true,
+      "isInactive": false
+    },
+    {
+      "id": "external-globe",
+      "number": "70",
+      "label": "Globe",
+      "groupLabel": "Sistem",
+      "parentId": null,
+      "to": null,
+      "href": "https://globe.corteqs.net",
+      "description": null,
+      "aliases": [
+        "globe"
+      ],
+      "isExternal": true,
+      "isInactive": false
+    },
+    {
+      "id": "external-founders",
+      "number": "71",
+      "label": "Founders",
+      "groupLabel": "Sistem",
+      "parentId": null,
+      "to": null,
+      "href": "https://corteqs.net/founders",
+      "description": null,
+      "aliases": [
+        "founders",
+        "kurucular"
+      ],
+      "isExternal": true,
+      "isInactive": false
+    },
+    {
+      "id": "external-drive",
+      "number": "72",
+      "label": "Drive Klasörü",
+      "groupLabel": "Sistem",
+      "parentId": null,
+      "to": null,
+      "href": "https://drive.google.com/drive/u/3/folders/1TYFEdjDPOLOMWAf_MScs6XJXRW9FHh-r",
+      "description": null,
+      "aliases": [
+        "drive",
+        "google drive",
+        "klasör",
+        "klasor",
+        "dosyalar",
+        "drive klasörü"
+      ],
+      "isExternal": true,
+      "isInactive": false
+    },
+    {
+      "id": "roles-draft",
+      "number": "73",
+      "label": "Roller Taslak",
+      "groupLabel": "Roller ve AFS",
+      "parentId": null,
+      "to": "/admin/roller-taslak",
+      "href": null,
+      "description": "Taslak rol çalışma ekranı.",
+      "aliases": [
+        "taslak",
+        "draft"
+      ],
+      "isExternal": false,
+      "isInactive": true
+    },
+    {
+      "id": "may19-kelime",
+      "number": "74",
+      "label": "19 Mayıs Kelime",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": null,
+      "to": "/admin/may19/kelime",
+      "href": null,
+      "description": "Kampanya kelime kayıtları.",
+      "aliases": [
+        "19 mayıs",
+        "kelime",
+        "fikir"
+      ],
+      "isExternal": false,
+      "isInactive": true
+    },
+    {
+      "id": "may19-ani",
+      "number": "75",
+      "label": "19 Mayıs Anı",
+      "groupLabel": "İçerik ve Kampanyalar",
+      "parentId": null,
+      "to": "/admin/may19/ani",
+      "href": null,
+      "description": "Kampanya anı kayıtları.",
+      "aliases": [
+        "19 mayıs",
+        "anı"
+      ],
+      "isExternal": false,
+      "isInactive": true
+    }
+  ]
+}
