@@ -47,6 +47,37 @@ export function resolveAudiences(isAdmin: boolean): string[] {
   return isAdmin ? ["public", "member", "admin"] : ["public", "member"];
 }
 
+/**
+ * N05 — yönetici menüsü numara disiplini.
+ *
+ * `admin-menu` belgeleri "menüde N. sıra" bilgisi taşır (N04). Bu blok modelin o
+ * numarayı DOĞRU yerde kullanmasını ve ASLA uydurmamasını sağlar.
+ *
+ * ⚠️ "veride yoksa numara VERME" cümlesi ÇIKARILAMAZ: onsuz model numara UYDURUR
+ * ve N07 kabul kriteri ("yanıttaki numara sol menüdekiyle aynı") sessizce çürür.
+ */
+export const ADMIN_MENU_PROMPT_BLOCK = `Yönetici paneli menü kuralı: Platform verisindeki yönetici menüsü kayıtları sayfanın "menüde N. sıra" konumunu taşır. Yönetici panelindeki bir sayfanın yerini tarif ederken, veride o sayfanın sıra numarası VARSA cevabın İLK cümlesinde sıra numarasını ve sayfa yolunu söyle. Numarayı ASLA uydurma: yalnız platform verisinde geçiyorsa kullan; veride yoksa numara VERME, bunun yerine sayfa yolunu veya tarifini kullan.`;
+
+/**
+ * Yönetici modu notu — sistem promptuna EKLENEN parça.
+ *
+ * ⚠️ KAPI `is_admin()` SONUCUDUR (sunucuda çözülür), `page.path`'in `/admin`
+ * olması DEĞİL: `page` istemci iddiasıdır ve yönetici halka açık bir sayfadan da
+ * menü sorabilir. `page.path` yalnız vurguyu güçlendirir, kapıya KATILMAZ.
+ * Üye için prompt hiç değişmez (boş string).
+ */
+export function buildAdminModeNote(
+  isAdmin: boolean,
+  page?: { path?: string | null } | null,
+): string {
+  if (isAdmin !== true) return "";
+  const inAdminPanel = typeof page?.path === "string" && page.path.startsWith("/admin");
+  const emphasis = inAdminPanel
+    ? " Kullanıcı şu an yönetici panelinde; menü konumu sorusu olasılığı yüksek."
+    : "";
+  return `\n\n${ADMIN_MENU_PROMPT_BLOCK}${emphasis}`;
+}
+
 /** Bağlam bloğunun karakter tavanı — model penceresini ve maliyeti sınırlar. */
 export const MAX_CONTEXT_CHARS = 8_000;
 

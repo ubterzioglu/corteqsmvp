@@ -3,7 +3,9 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import {
+  ADMIN_MENU_PROMPT_BLOCK,
   MAX_CONTEXT_CHARS,
+  buildAdminModeNote,
   buildContextBlock,
   buildContextTurns,
   collectSources,
@@ -139,5 +141,45 @@ describe("lastUserQuestion", () => {
   it("kullanici mesaji yoksa bos string doner", () => {
     expect(lastUserQuestion([{ role: "assistant", content: "merhaba" }])).toBe("");
     expect(lastUserQuestion([])).toBe("");
+  });
+});
+
+describe("buildAdminModeNote (N05)", () => {
+  it("uye icin promptu HIC degistirmez — page.path /admin olsa bile", () => {
+    // Kapı is_admin()'dir, istemcinin sayfa iddiası DEĞİL.
+    expect(buildAdminModeNote(false, { path: "/admin/data" })).toBe("");
+    expect(buildAdminModeNote(false)).toBe("");
+  });
+
+  it("yonetici icin menu kurali blogunu ekler", () => {
+    const note = buildAdminModeNote(true);
+    expect(note).toContain(ADMIN_MENU_PROMPT_BLOCK);
+  });
+
+  it("blok 'veride yoksa numara VERME' cumlesini TASIR — uydurma freni", () => {
+    // Bu cümle çıkarılırsa model numara uydurur, kabul kriteri sessizce çürür.
+    expect(ADMIN_MENU_PROMPT_BLOCK).toContain("veride yoksa numara VERME");
+    expect(ADMIN_MENU_PROMPT_BLOCK).toContain("ASLA uydurma");
+  });
+
+  it("/admin sayfasinda vurguyu guclendirir, halka acik sayfada guclendirmez", () => {
+    expect(buildAdminModeNote(true, { path: "/admin/members" })).toContain(
+      "şu an yönetici panelinde",
+    );
+    const publicPage = buildAdminModeNote(true, { path: "/blog/vize" });
+    expect(publicPage).not.toContain("şu an yönetici panelinde");
+    expect(publicPage).toContain(ADMIN_MENU_PROMPT_BLOCK);
+  });
+
+  it("index.ts baglantisi: kapi isAdminData === true, blok sayfa notundan ONCE gelir", () => {
+    const source = readFileSync("supabase/functions/site-assistant/index.ts", "utf8");
+
+    expect(source).toContain("buildAdminModeNote(isAdminData === true, payload.page)");
+    const adminNoteAt = source.indexOf("buildAdminModeNote(isAdminData === true");
+    const pageNoteAt = source.indexOf("buildPageContextNote(payload.page),");
+    expect(adminNoteAt).toBeGreaterThan(-1);
+    expect(pageNoteAt).toBeGreaterThan(adminNoteAt);
+    // Kapı page.path'e bağlanamaz.
+    expect(source).not.toMatch(/buildAdminModeNote\([^)]*payload\.page\.path/);
   });
 });

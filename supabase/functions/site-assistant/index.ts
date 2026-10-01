@@ -24,6 +24,7 @@ import {
 } from "./providers.ts";
 import {
   SITE_ASSISTANT_SYSTEM_PROMPT,
+  buildAdminModeNote,
   buildContextBlock,
   buildContextTurns,
   collectSources,
@@ -216,7 +217,12 @@ Deno.serve(async (req) => {
     const contextTurns = buildContextTurns(context) as ModelMessage[];
 
     const { answer, usage, provider } = await callModel({
-      system: SITE_ASSISTANT_SYSTEM_PROMPT + buildPageContextNote(payload.page),
+      // N05: yönetici menüsü numara kuralı YALNIZ `is_admin()` true iken eklenir;
+      // kapı sunucudadır, `payload.page` istemci iddiasıdır ve kapıya katılmaz.
+      system:
+        SITE_ASSISTANT_SYSTEM_PROMPT +
+        buildAdminModeNote(isAdminData === true, payload.page) +
+        buildPageContextNote(payload.page),
       messages: [...contextTurns, ...payload.messages],
     });
 
