@@ -136,6 +136,66 @@ async function loadCatalogDocuments(client) {
     .filter((document) => document.text.length > 0);
 }
 
+const ADMIN_MENU_CATALOG_PATH = "docs/agent/admin-menu.json";
+
+/**
+ * Yönetici menüsü kataloğundan ÖĞE BAŞINA BİR belge üretir (tek blob DEĞİL):
+ * semantik aramanın "üyeler menüde nerede" gibi bir soruda tek kayda
+ * kilitlenmesi gerekir; 88 öğelik dev tek belge her soruya bulanık eşleşirdi.
+ *
+ * Saf fonksiyon (fs yok) — test dosyadan bağımsız kurabilirdi. Metin,
+ * kullanıcının yazacağı kelimeleri taşır: etiket, "menüde N. sıra", grup adı,
+ * sayfa yolu, açıklama, diğer adlar. Numara UYDURULMAZ: katalog
+ * `npm run ingest:admin-menu` ile koddan üretilir (N03 bayatlama kapanı).
+ *
+ * @param {{ items?: unknown[] }} catalog
+ * @returns {Array<{ externalId: string, title: string, url: string | null, text: string }>}
+ */
+export function buildAdminMenuDocuments(catalog) {
+  const items = Array.isArray(catalog?.items) ? catalog.items : [];
+  const byId = new Map(items.map((item) => [item?.id, item]));
+
+  return items.map((item) => buildAdminMenuDocument(item, items, byId)).filter(Boolean);
+}
+
+function buildAdminMenuDocument(item, items, byId) {
+  if (!item?.id || !item.label || !item.number) return null;
+  const parent = item.parentId ? byId.get(item.parentId) ?? null : null;
+  const children = items.filter((entry) => entry?.parentId === item.id);
+
+  const paragraphs = [
+    `"${item.label}" sayfası yönetici sol menüsünde ${item.number}. sırada,` +
+      ` "${item.groupLabel}" grubunda yer alır.`,
+  ];
+  if (parent) paragraphs.push(`Üst menü öğesi: ${parent.number}. ${parent.label}.`);
+  if (children.length > 0) {
+    paragraphs.push(
+      `Bu öğe bir alt menü açar: ${children.map((child) => `${child.number}. ${child.label}`).join(" · ")}.`,
+    );
+  }
+  if (item.to) paragraphs.push(`Sayfa yolu: ${item.to}`);
+  if (item.href) paragraphs.push(`Dış bağlantı (siteden ayrılır): ${item.href}`);
+  if (item.description) paragraphs.push(`Açıklama: ${item.description}`);
+  const aliases = (item.aliases ?? []).filter((alias) => alias && alias !== item.label);
+  if (aliases.length > 0) paragraphs.push(`Diğer adlar: ${aliases.join(", ")}`);
+  if (item.isInactive) paragraphs.push("Durum: pasif (taslak) — menüde görünür ama henüz kullanımda değil.");
+
+  return {
+    externalId: item.id,
+    title: item.label,
+    // N06 ile birlikte "Kaynaklar" bloğu tıklanabilir link versin diye:
+    // iç sayfa `to`, dış bağlantı `href`.
+    url: item.to ?? item.href ?? null,
+    text: paragraphs.join("\n\n"),
+  };
+}
+
+/** Üretilen kataloğu diskten okur — `ingest:admin-menu` güncel tutar. */
+async function loadAdminMenuDocuments() {
+  const raw = await readFile(ADMIN_MENU_CATALOG_PATH, "utf8");
+  return buildAdminMenuDocuments(JSON.parse(raw));
+}
+
 /** Blog yazıları — yayımlanmış olanlar. */
 async function loadBlogDocuments(client) {
   const rows = await fetchAllRows(() =>
@@ -198,6 +258,15 @@ export const KNOWLEDGE_SOURCES = [
     label: "Yönetici dokümanları",
     audience: "admin",
     load: () => loadDocumentationDocuments("admin"),
+  },
+  {
+    // `admin-menu` → **admin**: menü sıra numaraları yalnız yöneticiye anlamlı;
+    // üye hesabına servis edilirse bot olmayan bir sayfayı tarif eder (N07 kabulü:
+    // üye aynı soruyu sorunca menü kaydı GELMEMELİ).
+    key: "admin-menu",
+    label: "Yönetici menüsü",
+    audience: "admin",
+    load: () => loadAdminMenuDocuments(),
   },
 ];
 
