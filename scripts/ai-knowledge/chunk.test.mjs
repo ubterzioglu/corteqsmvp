@@ -80,3 +80,50 @@ describe("chunkText", () => {
     expect(chunks.length).toBeGreaterThan(0);
   });
 });
+
+describe("vekil cifti guvenligi (N07 kusuru — canli olcum 01.10)", () => {
+  // Yalniz vekil: yuksek vekilin esligi olmayan alt vekil ya da tersi.
+  // PostgREST (aeson) bunu "Empty or invalid json" diye reddeder.
+  const LONE_SURROGATE = /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/;
+
+  it("ortusme kuyrugu emojiyi ortasindan kesemez — gercek olay: KALANLAR.md chunk 5", () => {
+    // 🔴 (U+1F534, iki UTF-16 birimi) tam slice(-overlapChars) kesimine denk gelir:
+    // birinci paragraf 1401 birim; emoji 1200–1201'de; kesim 1201'den başlar.
+    const first = "a".repeat(1200) + "🔴" + "a".repeat(199);
+    const second = "b".repeat(300);
+    const chunks = chunkText([first, second].join("\n\n"), { maxChars: 1500, overlapChars: 200 });
+
+    expect(chunks.length).toBe(2);
+    for (const chunk of chunks) {
+      expect(chunk).not.toMatch(LONE_SURROGATE);
+    }
+    // Emoji ilk parçada BÜTÜN kalır; ikinci parçaya yarım karakter sızmaz.
+    expect(chunks[0]).toContain("🔴");
+    expect(chunks[1]).not.toContain("🔴");
+    expect(chunks[1]).toContain("b".repeat(10));
+  });
+
+  it("sert kesim de vekil ciftini bolmez", () => {
+    const text = "🔴".repeat(2000); // bosluksuz tek paragraf → hardSplit garantili
+    const chunks = chunkText(text, { maxChars: 101, overlapChars: 0 }); // tek sayi sinir → çiftin ortası
+
+    expect(chunks.length).toBeGreaterThan(10);
+    for (const chunk of chunks) {
+      expect(chunk).not.toMatch(LONE_SURROGATE);
+    }
+  });
+
+  it("emoji dolu metinde hicbir sinir yalniz vekil uretmez (tarama)", () => {
+    const text = Array.from({ length: 40 }, (_, index) => `Paragraf ${index}: ` + "🔴🟡🟢 x ".repeat(30)).join("\n\n");
+
+    for (const maxChars of [80, 137, 200, 512, 1500]) {
+      for (const overlapChars of [0, 50, 200]) {
+        const chunks = chunkText(text, { maxChars, overlapChars });
+        expect(chunks.length).toBeGreaterThan(0);
+        for (const chunk of chunks) {
+          expect(chunk, `maxChars=${maxChars} overlap=${overlapChars}`).not.toMatch(LONE_SURROGATE);
+        }
+      }
+    }
+  });
+});

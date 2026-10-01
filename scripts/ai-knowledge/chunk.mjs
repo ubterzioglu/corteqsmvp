@@ -71,9 +71,38 @@ export function chunkText(text, options = {}) {
 
 /** Önceki parçanın kuyruğunu yeni parçanın başına ekler (örtüşme). */
 function joinWithOverlap(previous, unit, overlapChars, maxChars) {
-  const tail = previous.slice(-overlapChars).trimStart();
+  const tail = trimLeadingLoneSurrogates(previous.slice(-overlapChars)).trimStart();
   if (!tail || tail.length + 2 + unit.length > maxChars) return unit;
   return `${tail}\n\n${unit}`;
+}
+
+/**
+ * ⚠️ VEKİL ÇİFTİ (surrogate pair) GÜVENLİĞİ — 01.10.2026'da canlıda ölçüldü:
+ * `slice(-overlapChars)` 🔴 emojisini (U+1F534 = iki UTF-16 birimi) tam ortasından
+ * kesmiş, sonraki parça YALNIZ ALT VEKİL `\uDD34` ile başlamıştı. PostgREST (aeson)
+ * yalnız vekili "Empty or invalid json" diye REDDEDER — `docs-admin` ingest'i
+ * `KALANLAR.md`'de deterministik patlıyordu (93 parçadan tam olarak 1'i).
+ * JS'te `JSON.stringify` bunu geçerli JSON saydığı için hata istemci tarafında
+ * GÖRÜNMEZ; patlama sunucuda olur. Astral düzlem karakterleri (emoji) bölünemez.
+ */
+function trimLeadingLoneSurrogates(value) {
+  let start = 0;
+  while (start < value.length) {
+    const code = value.charCodeAt(start);
+    if (code >= 0xdc00 && code <= 0xdfff) start += 1;
+    else break;
+  }
+  return start > 0 ? value.slice(start) : value;
+}
+
+/** Kesim sınırı vekil çiftinin ortasına düşüyorsa sınırı bir geri çek. */
+function safeBoundaryEnd(value, end) {
+  if (end <= 0 || end >= value.length) return Math.min(Math.max(end, 0), value.length);
+  const previousCode = value.charCodeAt(end - 1);
+  const nextCode = value.charCodeAt(end);
+  const splitsPair =
+    previousCode >= 0xd800 && previousCode <= 0xdbff && nextCode >= 0xdc00 && nextCode <= 0xdfff;
+  return splitsPair ? end - 1 : end;
 }
 
 /**
@@ -123,11 +152,16 @@ function splitLongParagraph(paragraph, maxChars) {
   return units;
 }
 
-/** Son çare: cümle sınırı bile yoksa sert kes. İlerleme garantisini bu sağlar. */
+/** Son çare: cümle sınırı bile yoksa sert kes. İlerleme garantisini bu sağlar.
+ *  Sınır vekil çiftini bölemez (safeBoundaryEnd); maxChars ≥ MIN_CHUNK_CHARS
+ *  olduğu için bir geri çekme ilerlemeyi bozmaz. */
 function hardSplit(value, maxChars) {
   const parts = [];
-  for (let index = 0; index < value.length; index += maxChars) {
-    parts.push(value.slice(index, index + maxChars));
+  let index = 0;
+  while (index < value.length) {
+    const end = safeBoundaryEnd(value, index + maxChars);
+    parts.push(value.slice(index, end));
+    index = end;
   }
   return parts;
 }
