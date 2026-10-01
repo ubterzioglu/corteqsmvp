@@ -11,7 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { extractRpcErrorText } from "@/lib/rpc-error-text";
 import { safeStorageFileName, validateFile } from "@/lib/security";
 
-import type { CareerApplicationInput, CareerApplicationRow } from "./careers-schemas";
+import type { CareerApplicationInput } from "./careers-schemas";
 
 export const CAREER_BUCKET = "career-applications";
 
@@ -183,14 +183,4 @@ export async function submitCareerApplication(
   return String(data ?? applicationId);
 }
 
-/** Yönetici listesi (KR08). RLS yalnız yöneticiye açar; burada ek kapı yoktur. */
-export async function listCareerApplications(): Promise<CareerApplicationRow[]> {
-  const { data, error } = await supabase
-    .from("career_applications")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(500);
 
-  if (error) throw error;
-  return (data ?? []) as CareerApplicationRow[];
-}

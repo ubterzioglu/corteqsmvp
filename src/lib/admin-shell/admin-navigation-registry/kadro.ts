@@ -1,4 +1,4 @@
-import { Users, LayoutGrid, Clock, FileText } from "lucide-react";
+import { Users, LayoutGrid, Clock, FileText, Inbox } from "lucide-react";
 import type { AdminNavGroup } from "../admin-shell-types";
 
 export const kadroNavGroup: AdminNavGroup = {
@@ -42,6 +42,15 @@ export const kadroNavGroup: AdminNavGroup = {
       icon: FileText,
       accent: "amber",
       aliases: ["ilan", "iş ilanı"],
+    },
+    {
+      id: "kadro-basvurular",
+      label: "Kariyer Başvuruları",
+      description: "/kariyer formundan gelen başvurular",
+      to: "/admin/kadro/basvurular",
+      icon: Inbox,
+      accent: "amber",
+      aliases: ["başvuru", "aday", "cv", "kariyer"],
     },
   ],
 };

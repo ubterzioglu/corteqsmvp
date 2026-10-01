@@ -5,6 +5,7 @@ const AdminKadroPage = lazyWithReload(() => import("@/pages/admin/kadro/AdminKad
 const AdminKadroMatrisPage = lazyWithReload(() => import("@/pages/admin/kadro/AdminKadroMatrisPage"));
 const AdminKadroRutinlerPage = lazyWithReload(() => import("@/pages/admin/kadro/AdminKadroRutinlerPage"));
 const AdminKadroIlanlarPage = lazyWithReload(() => import("@/pages/admin/kadro/AdminKadroIlanlarPage"));
+const AdminKadroBasvurularPage = lazyWithReload(() => import("@/pages/admin/kadro/AdminKadroBasvurularPage"));
 
 export const adminKadroRoutes = (
   <Route path="kadro">
@@ -12,5 +13,6 @@ export const adminKadroRoutes = (
     <Route path="matris" element={<AdminKadroMatrisPage />} />
     <Route path="rutinler" element={<AdminKadroRutinlerPage />} />
     <Route path="ilanlar" element={<AdminKadroIlanlarPage />} />
+    <Route path="basvurular" element={<AdminKadroBasvurularPage />} />
   </Route>
 );

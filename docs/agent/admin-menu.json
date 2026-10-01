@@ -1264,8 +1264,26 @@
       "isInactive": false
     },
     {
-      "id": "links-overview",
+      "id": "kadro-basvurular",
       "number": "62",
+      "label": "Kariyer Başvuruları",
+      "groupLabel": "Kadro",
+      "parentId": null,
+      "to": "/admin/kadro/basvurular",
+      "href": null,
+      "description": "/kariyer formundan gelen başvurular",
+      "aliases": [
+        "başvuru",
+        "aday",
+        "cv",
+        "kariyer"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "links-overview",
+      "number": "63",
       "label": "Linkler",
       "groupLabel": "Linkler",
       "parentId": null,
@@ -1284,7 +1302,7 @@
     },
     {
       "id": "external-site-traffic",
-      "number": "63",
+      "number": "64",
       "label": "Site Trafik Durumu",
       "groupLabel": "Linkler",
       "parentId": null,
@@ -1304,7 +1322,7 @@
     },
     {
       "id": "about",
-      "number": "64",
+      "number": "65",
       "label": "Ürün Güncellemeleri",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1322,7 +1340,7 @@
     },
     {
       "id": "notification-settings",
-      "number": "65",
+      "number": "66",
       "label": "Bildirim Ayarları",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1343,7 +1361,7 @@
     },
     {
       "id": "tools",
-      "number": "66",
+      "number": "67",
       "label": "Araç Kataloğu",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1364,7 +1382,7 @@
     },
     {
       "id": "agent-analytics",
-      "number": "67",
+      "number": "68",
       "label": "Agent Analitik",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1385,7 +1403,7 @@
     },
     {
       "id": "admin-guide",
-      "number": "68",
+      "number": "69",
       "label": "Admin Kullanım Kılavuzu",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1405,7 +1423,7 @@
     },
     {
       "id": "external-engine",
-      "number": "69",
+      "number": "70",
       "label": "Engine",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1420,7 +1438,7 @@
     },
     {
       "id": "external-globe",
-      "number": "70",
+      "number": "71",
       "label": "Globe",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1435,7 +1453,7 @@
     },
     {
       "id": "external-founders",
-      "number": "71",
+      "number": "72",
       "label": "Founders",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1451,7 +1469,7 @@
     },
     {
       "id": "external-drive",
-      "number": "72",
+      "number": "73",
       "label": "Drive Klasörü",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1471,7 +1489,7 @@
     },
     {
       "id": "roles-draft",
-      "number": "73",
+      "number": "74",
       "label": "Roller Taslak",
       "groupLabel": "Roller ve AFS",
       "parentId": null,
@@ -1487,7 +1505,7 @@
     },
     {
       "id": "may19-kelime",
-      "number": "74",
+      "number": "75",
       "label": "19 Mayıs Kelime",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,
@@ -1504,7 +1522,7 @@
     },
     {
       "id": "may19-ani",
-      "number": "75",
+      "number": "76",
       "label": "19 Mayıs Anı",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,

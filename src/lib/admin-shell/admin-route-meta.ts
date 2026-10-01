@@ -111,6 +111,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/kadro/matris",
   "/admin/kadro/rutinler",
   "/admin/kadro/ilanlar",
+  "/admin/kadro/basvurular",
   "/admin/events",
 ];
 
