@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **77** (N 7 · W 8 · M 27 · G 25 · KR 10) |
+> | **Açık batch** | **75** (N 5 · W 8 · M 27 · G 25 · KR 10) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -77,8 +77,8 @@ Sıfır migration · sıfır yeni bağımlılık. Tahmin: 1–2 gün.
 
 | ID | Başlık | Boyut | Kapı | Not |
 |---|---|---|---|---|
-| **N01** | Numaralandırma çekirdeği (`admin-menu-numbering.ts`) | küçük | 🟢 | UI değişmez, yalnız yeni dosya |
-| **N02** | Menüde numaranın görünmesi (sidebar + palet) | küçük | 🟢 | ⛔ N01 |
+| ~~N01~~ | ✅ **KAPANDI 01.10** — numaralandırma çekirdeği (88 kayıt: 75 üst · 13 alt · 3 inaktif) | ✅ | N02 ile BİRLİKTE commit'lendi |
+| ~~N02~~ | ✅ **KAPANDI 01.10** — numara sidebar + komut paletinde görünüyor | ✅ | ⚠️ N01 tek başına commit'lenemezdi (↓) |
 | **N03** | Üretilen katalog + bayatlama kapanı (snapshot) | küçük | 🟢 | ⛔ N01 |
 | **N04** | `admin-menu` bilgi kaynağı (`sources.mjs`) | küçük | 🟢 | ⛔ N03 |
 | **N05** | Prompt kuralı (yalnız yöneticide) · **DEPLOY** | küçük | 🟢 | ⛔ N04 |
@@ -326,30 +326,86 @@ Eksik olan tek şey korpusta menüyü anlatan **veri seti** ve promptta **bir ku
 
 ### Faz 1 — numara (görünür iş, bota hiç dokunmaz)
 
-**N01 — Numaralandırma çekirdeği** · küçük · yalnız yeni dosya, UI değişmez
-- Yeni `src/lib/admin-shell/admin-menu-numbering.ts`: `buildAdminMenuCatalog(groups)` +
-  `adminMenuNumberById`. Sıra = sidebar'ın çizdiği sıra: gruplar registry sırasında →
-  grup içi aktif öğeler → **en sonda** 3 inaktif öğe.
-- Üst seviye global `1..N`; alt öğeler `34.1`, `34.2` (kullanıcı kararı — dinamik alt
-  sayfa eklenince üst sayaç KAYMASIN).
-- ⚠️ `flattenAdminNav()` (`admin-navigation-utils.ts:35`) grup/inaktif ayrımını KAYBEDER;
-  onu kullanma, ayrı yürüyüş yaz.
-- Yeni `admin-menu-numbering.test.ts`: biçim, benzersizlik, inaktiflerin sonda olması,
-  alt öğenin üst sayacı bozmaması.
-- **Kabul:** test/tsc/lint yeşil; arayüzde hiçbir değişiklik yok (bilinçli).
+**✅ N01 + N02 — Numaralandırma çekirdeği + menüde görünmesi** · KAPANDI 01.10
 
-**N02 — Menüde numaranın görünmesi** · küçük
-- `AdminSidebarItem.tsx`: ikondan önce dar, mono, soluk numara rozeti
-  (`adminMenuNumberById.get(item.id)`). Yalnız `collapsed=false` iken — 72px kolona sığmaz.
-  Tek değişiklik hem desktop sidebar'ı hem `AdminMobileSidebar`'ı kapatır.
-- `AdminCommandPalette.tsx:77-83`: `CommandItem` label'ının önüne aynı numara.
-- Numara `aria-hidden` **DEĞİL** — ekran okuyucu "17, Üyeler" desin; botun verdiği
-  referans sesli okumada da eşleşsin.
-- **Kabul (sözleşme testi):** `AdminSidebar` jsdom'da render edilir; DOM'daki numara
-  dizisi artan **ve** `buildAdminMenuCatalog()` çıktısıyla BİREBİR aynı. Bu test "iki
-  ayrı sayaç" sınıfını kapatır — gevşetme.
+> ⚠️ **PLANIN N01/N02 AYRIMI AYAKTA KALMADI — tek commit oldular.**
+> N01'in kabulü "yalnız yeni dosya, UI değişmez" diyordu. Ama o hâlde modülü
+> **hiçbir yer import etmiyor** → `npm run check:dead` onu *erişilemez* sayıp
+> **exit 1** veriyor ve **CI bu kontrolü çalıştırıyor**
+> (`.github/workflows` → `npm run check:dead`). Yani N01 tek başına CI'ı kırardı.
+> Alternatif ölü-kod istisna listesine yazmaktı; o gerçek sinyali gizlerdi.
+> **Ders:** `src/lib/**` altına "henüz bağlanmamış" bir modül ekleyen her batch
+> aynı duvara çarpar — üreten ve bağlayan adımlar AYNI commit'te olmalı.
 
-### Faz 2 — korpus (bot admin sayfalarını öğrenir)
+> **Ölçüm (canlı registry):** **88 kayıt** = 75 üst seviye · 13 alt öğe ·
+> 3 inaktif · 5 external. Plandaki 14 grup / 75 öğe rakamıyla birebir uyuştu.
+> Alt öğeler: `29.1–29.3` (advisor-profiles) · `37.1–37.10` (workspace-docs).
+>
+> **Sıra sidebar KODUNDAN okundu, tahmin edilmedi** (`AdminSidebar.tsx:24,71,91`,
+> `AdminSidebarGroup.tsx:26`): gruplar registry sırasında → grup içi aktif öğeler
+> → **en sonda** tüm gruplardan toplanan inaktifler.
+>
+> ⚠️ **FAVORİLER NUMARALANMAZ.** Sidebar en üstte kullanıcıya özel bir "Favoriler"
+> bloğu çizer; oradaki öğe grubundakinin AYNISIDIR ve kendi numarasını taşır.
+> Ayrı numara verilseydi aynı sayfanın kullanıcıdan kullanıcıya değişen İKİ
+> numarası olurdu ve "mutlak numara" fikri çökerdi.
+>
+> ⚠️ **Alt öğeler üst sayacı KAYDIRMAZ** (`37.1 … 37.10`, sonraki üst öğe 38).
+> `workspace-docs`/`advisor-profiles` dinamik alt sayfa alıyor; kaymaya izin
+> verilseydi bir alt sayfa eklenince TÜM menü numaraları bir gecede bayatlardı.
+>
+> ⚠️ `flattenAdminNav()` KULLANILMADI — grup sınırını ve `isInactive` ayrımını
+> kaybediyor, oysa numaralandırmanın tamamı o iki bilgiye dayanıyor.
+>
+> **N02:** numara rozeti `AdminSidebarItem`'ın **ÜÇ render dalına da** eklendi
+> (external `<a>` · alt öğeli ebeveyn `<button>` · düz `NavLink`); tek dala
+> eklemek external ve ebeveyn satırlarını numarasız bırakırdı. Komut paletinde
+> aynı numara, aynı kaynaktan. Daraltılmış sidebar'da çizilmez (72px).
+> Numara **`aria-hidden` DEĞİL** — ekran okuyucu "17, Üyeler" der; botun vereceği
+> "menüde 17. sırada" referansı sesli okumada da karşılık bulsun.
+>
+> **Sözleşme testleri (17 test, hepsi mutasyonla sınandı):**
+> `admin-menu-numbering.test.ts` (12) — alt öğe üst sayacı kaydırsın → **4 düştü**;
+> inaktifler araya girsin → **7 düştü**.
+> `AdminSidebar.numbering.test.tsx` (5) — ⚠️ katalogu YENİDEN HESAPLAMAZ, sidebar'ın
+> gerçekten render ettiği DOM'u okur. "İkinci sayaç" mutasyonu → **3 düştü**;
+> `aria-hidden` mutasyonu → **1 düştü**. Bu test "iki ayrı sayaç" sınıfını kapatır
+> (numara sidebar'a bir yerden, bot korpusuna başka yerden gelirse hiçbir şey
+> patlamaz, yalnız kullanıcı yanlış satıra bakar). **Gevşetme.**
+> ℹ️ DOM testi favori listesi BOŞ çalışır: favoriler üstte tekrar çizilir ve
+> numara dizisi katalog sırasını izlemez. Favorinin numarası gruptakiyle aynı
+> olduğu için kapsam kaybı yok; gerekçe testin içinde yazılı.
+
+> ⚠️ **N02'de üç mevcut `AdminLayout.test.tsx` testi kırıldı — iki AYRI sebep,
+> ikisi de öğretici:**
+> 1. **Beklenen kırılma:** numara erişilebilir ada girdi → `getByRole("link",
+>    { name: "Kayıt Veritabanı" })` artık eşleşmiyor, ad `"2. Kayıt Veritabanı"`.
+>    Bu PLANIN BİLİNÇLİ KARARI (`aria-hidden` değil). İddialar sona-çapalı regex'e
+>    çevrildi; `toContain` ile gevşetilmedi (başka satıra da uyardı).
+> 2. ⚠️ **Beklenmeyen ve asıl tehlikeli olan:** düzeltme sırasında yazdığım
+>    regex'e koyduğum **kelime-sınırı kaçış dizisi** dosyaya **ham BACKSPACE
+>    karakteri (U+0008) olarak** yazıldı. Regex hiçbir şeyle eşleşemez hâle geldi
+>    ve ben bir süre kusuru BİLEŞENDE aradım. **7 ham backspace** temizlenince
+>    testler düzeldi. Bu, CLAUDE.md'nin "Regex'teki kaçış dizileri ham karaktere
+>    çevrilmemeli" uyarısının birebir tekrarı (daha önce `date-groups.ts`'te
+>    yaşanmıştı). **Ders:** regex yazan bir düzenlemeden sonra dosyayı
+>    `ascii(line)` ile **DOĞRULA**; gözle bakınca kaçış dizisi ile ona dönüşen
+>    ham kontrol karakteri **ayırt edilemez**. `verify:text` de bunu YAKALAMAZ —
+>    o yalnız kodlama ve mojibake denetler, kontrol karakterini değil.
+>
+> ⚠️ **Erişilebilir ad ayırıcısı ŞART.** Bitişik `<span>`'ler ad hesabında
+> BOŞLUKSUZ birleşir: numara etikete yapışıp `"2Kayıt Veritabanı"` olur ve ekran
+> okuyucu tek kelime gibi okur — numarayı sesli okumaya katma amacının tam tersi.
+> Rozetin YANINA ayrı bir `sr-only` düğüm kondu. **Rozetin İÇİNE koyma:** o zaman
+> rozetin metni `"2."` olur ve DOM sözleşmesi testi çıpasını kaybeder.
+>
+> ⚠️ Numara kutusu `w-7` DEĞİL `min-w-[1.75rem]`: alt öğe numaraları beş karaktere
+> çıkıyor (`37.10`) ve sabit 28px kutudan taşardı.
+>
+> ⏭️ **N03 için not:** aynı tuzak orada da var — `admin-menu-catalog.test.ts`
+> snapshot üretecek ve `docs/agent/admin-menu.json` yazacak. O dosya `src/lib/**`
+> altında olmadığı için `check:dead` etkilenmez, ama yeni bir `src/lib` modülü
+> eklenirse aynı kural geçerli.
 
 **N03 — Üretilen katalog + bayatlama kapanı** · küçük
 - Yeni `src/lib/admin-shell/admin-menu-catalog.test.ts` →
@@ -1528,6 +1584,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| N01+N02 · yönetici menüsü mutlak sıra numaraları (sidebar + komut paleti) | 88 kayıt (75 üst · 13 alt · 3 inaktif) · 17 test, 4 mutasyonun hepsi yakalandı · DOM↔katalog sözleşmesi "iki ayrı sayaç" sınıfını kapatır · ⚠️ N01 TEK BAŞINA commit'lenemezdi: `check:dead` bağlanmamış modülü erişilemez sayıp exit 1 veriyor ve CI onu çalıştırıyor |
 | G03b · dizin + detay view'a taşındı, davet linki RPC'ye | `types.ts` +105/−0 (⚠️ ilk regen `graphql_public`'i siliyordu, yakalandı) · "Katıl" düğmesi 4 durumda da GÖRÜNÜR (eski kod linki yokken düğmeyi hiç çizmiyordu) · link sayfa açılırken çekilir (popup engeli) · 14 test, mutasyonla 8 düşüş · ⚠️ bir vakum test yakalanıp daraltıldı |
 | G03a · PII'siz public view + davet linki RPC'si (salt ekleme) | mig `20261001110000` — anon view 10 satır / **0 PII sızıntısı** · anon RPC **permission denied** · girişli RPC link döndü · olmayan slug + **boş linkli grup** `P0002` · RLS 8→8 değişmedi · 14 sözleşme testi 4 mutasyonla sınandı · ⚠️ `admin_contact` ad+e-posta+telefon taşıyordu, K1'de yazılı değildi |
 | G01 · Dijital Gruplar paketi repoya + CLAUDE.md bölümü + kök temiz | `bacc959` — `docs/dijital-gruplar/` 4 dosya · çürüyen 5 varsayım + K1–K5 CLAUDE.md'de · paket repo dışına taşındı · ⚠️ `claude_corteqs-insa-notlari.md` bu repoda YOK, 07 arşiv |

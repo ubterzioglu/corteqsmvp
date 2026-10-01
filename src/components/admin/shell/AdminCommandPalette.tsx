@@ -16,6 +16,7 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { adminNavGroups } from "@/lib/admin-shell/admin-navigation-registry";
+import { adminMenuNumberById } from "@/lib/admin-shell/admin-menu-numbering";
 import { flattenAdminNav } from "@/lib/admin-shell/admin-navigation-utils";
 import type { AdminNavEntry } from "@/lib/admin-shell/admin-navigation-utils";
 import type { AdminNavItem } from "@/lib/admin-shell/admin-shell-types";
@@ -76,6 +77,13 @@ const AdminCommandPalette = ({
     return (
       <CommandItem key={item.id} value={searchValue(item, group.label)} onSelect={() => selectInternal(to)}>
         <Icon aria-hidden="true" className="mr-2 h-4 w-4" />
+        {/* N02 · Sidebar ile AYNI numara (tek kaynak `adminMenuNumberById`).
+            `aria-hidden` değil: ekran okuyucu "17, Üyeler" demeli. */}
+        <span className="mr-2 min-w-[1.75rem] shrink-0 text-right font-mono text-[10px] tabular-nums text-muted-foreground/60">
+          {adminMenuNumberById.get(item.id)}
+        </span>
+        {/* Sidebar ile aynı gerekçe: ayırıcı olmadan ad "2Kayıt Veritabanı" olur. */}
+        <span className="sr-only">. </span>
         <span>{item.label}</span>
         {item.description && (
           <span className="ml-2 truncate text-xs text-muted-foreground">{item.description}</span>

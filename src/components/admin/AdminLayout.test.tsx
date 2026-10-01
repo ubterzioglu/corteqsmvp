@@ -87,6 +87,12 @@ beforeEach(() => {
   saveFavoritesMock.mockClear().mockResolvedValue(undefined);
 });
 
+// ⚠️ N02'den sonra sidebar link/düğmelerinin ERİŞİLEBİLİR ADI "<numara> <etiket>"
+// biçimindedir (ör. "2 Kayıt Veritabanı"). Numara bilerek `aria-hidden` DEĞİL:
+// asistan "menüde 17. sırada" dediğinde sesli okumada da karşılık bulsun diye.
+// Bu yüzden isim eşleşmeleri sona-çapalı regex ile yapılır — tam dize eşleşmesi
+// numarayı dışarıda bıraktığı için kırılır. Etiketi `toContain` ile aramak ise
+// testi zayıflatırdı (başka satıra da uyardı), sona çapa o yüzden.
 describe("AdminLayout (Admin Panel V2 shell)", () => {
   it("sidebar registry'deki ana ekran linklerini gösterir", async () => {
     renderAdminLayout("/admin");
@@ -96,17 +102,17 @@ describe("AdminLayout (Admin Panel V2 shell)", () => {
     });
 
     // "Üyeler ve Dizin" defaultOpen olduğundan linkleri doğrudan görünür.
-    expect(screen.getByRole("link", { name: "Kayıt Veritabanı" })).toHaveAttribute("href", "/admin/data");
-    expect(screen.getByRole("link", { name: "Approval Queue" })).toHaveAttribute("href", "/admin/approvals");
+    expect(screen.getByRole("link", { name: /Kayıt Veritabanı$/ })).toHaveAttribute("href", "/admin/data");
+    expect(screen.getByRole("link", { name: /Approval Queue$/ })).toHaveAttribute("href", "/admin/approvals");
 
     // Kapalı gruplar başlığa tıklanınca açılır.
     fireEvent.click(screen.getByRole("button", { name: "Operasyon Workspace" }));
-    expect(screen.getByRole("link", { name: "Command Center" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /Command Center$/ })).toHaveAttribute(
       "href",
       "/admin/workspace/command-center",
     );
     fireEvent.click(screen.getByRole("button", { name: "Muhasebe" }));
-    expect(screen.getByRole("link", { name: "Muhasebe Dashboard" })).toHaveAttribute("href", "/admin/muhasebe");
+    expect(screen.getByRole("link", { name: /Muhasebe Dashboard$/ })).toHaveAttribute("href", "/admin/muhasebe");
     expect(screen.getByRole("button", { name: "Roller ve AFS" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /CorteQS ana siteye git/i })).toHaveAttribute(
       "href",
@@ -118,12 +124,12 @@ describe("AdminLayout (Admin Panel V2 shell)", () => {
     renderAdminLayout("/admin");
     await screen.findByText("Admin Home Content");
 
-    expect(screen.queryByRole("link", { name: "19 Mayıs Kelime" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /19 Mayıs Kelime$/ })).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "İnaktif" }));
 
-    expect(screen.getByRole("link", { name: "19 Mayıs Kelime" })).toHaveAttribute("href", "/admin/may19/kelime");
-    expect(screen.getByRole("link", { name: "Roller Taslak" })).toHaveAttribute("href", "/admin/roller-taslak");
+    expect(screen.getByRole("link", { name: /19 Mayıs Kelime$/ })).toHaveAttribute("href", "/admin/may19/kelime");
+    expect(screen.getByRole("link", { name: /Roller Taslak$/ })).toHaveAttribute("href", "/admin/roller-taslak");
   });
 
   it("dış bağlantılar menüsü registry'deki external linkleri sunar", async () => {
@@ -215,7 +221,7 @@ describe("AdminLayout (Admin Panel V2 shell)", () => {
       expect(saveFavoritesMock).toHaveBeenCalledWith("admin-user", ["approvals"]);
     });
     expect(screen.getByText("Favoriler")).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: "Approval Queue" })).toHaveLength(2);
+    expect(screen.getAllByRole("link", { name: /Approval Queue$/ })).toHaveLength(2);
 
     // Yıldız hem grup item'ında hem Favoriler bölümündeki kopyada görünür.
     fireEvent.click(screen.getAllByRole("button", { name: "Approval Queue favorilerden çıkar" })[0]);

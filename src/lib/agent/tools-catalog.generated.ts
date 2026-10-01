@@ -1617,6 +1617,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin-shell/admin-menu-numbering.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/admin-menu-numbering.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin-shell/admin-navigation-registry.test.ts",
       "kind": "ts",
       "module_family": "lib"

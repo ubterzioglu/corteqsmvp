@@ -8,6 +8,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { ChevronDown, ExternalLink as ExternalLinkIcon, Star } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { adminMenuNumberById } from "@/lib/admin-shell/admin-menu-numbering";
 import {
   isNavItemActive,
   isNavItemOrChildActive,
@@ -47,6 +48,34 @@ const AdminSidebarItem = ({ item, collapsed = false, depth = 0, onNavigate, favo
 
   const Icon = item.icon;
   const label = collapsed ? null : <span className="truncate">{item.label}</span>;
+
+  // N02 · Mutlak menü numarası. TEK kaynak `adminMenuNumberById`; burada sayma.
+  //
+  // ⚠️ `aria-hidden` DEĞİL — ekran okuyucu "17, Üyeler" demeli. Botun verdiği
+  // referans ("menüde 17. sırada") sesli okumada da eşleşsin diye.
+  //
+  // ⚠️ Yalnız `collapsed=false` iken çizilir: daraltılmış sidebar 72px'lik bir
+  // kolon ve numara oraya sığmaz; sığdırmaya çalışmak ikonu kaydırır.
+  //
+  // ⚠️ Genişlik `w-7` DEĞİL `min-w-`: alt öğe numaraları beş karaktere çıkıyor
+  // (`37.10`) ve sabit 28px kutudan taşardı. Kısa numaralar yine hizalı kalır.
+  const menuNumber = collapsed ? undefined : adminMenuNumberById.get(item.id);
+  const numberElement = menuNumber ? (
+    <>
+      <span className="min-w-[1.75rem] shrink-0 text-right font-mono text-[10px] tabular-nums text-muted-foreground/60">
+        {menuNumber}
+      </span>
+      {/* ⚠️ Bu ayırıcı ŞART. Bitişik <span>'ler erişilebilir ad hesabında
+          BOŞLUKSUZ birleşir: numara doğrudan etikete yapışıp "2Kayıt
+          Veritabanı" olur ve ekran okuyucu bunu tek kelime gibi okur — yani
+          numarayı sesli okumaya katma amacının tam tersi. Ayrı bir sr-only
+          düğüm, adı "2. Kayıt Veritabanı" yapar. Rozetin KENDİ içine koyma:
+          o zaman rozetin metni "2." olur ve numara sözleşmesi testi çıpasını
+          kaybeder. */}
+      <span className="sr-only">. </span>
+    </>
+  ) : null;
+
   const iconElement = (
     <Icon
       aria-hidden="true"
@@ -64,6 +93,7 @@ const AdminSidebarItem = ({ item, collapsed = false, depth = 0, onNavigate, favo
         aria-label={collapsed ? item.label : undefined}
         className={cn(baseItemClasses, idleItemClasses, collapsed && "justify-center px-0")}
       >
+        {numberElement}
         {iconElement}
         {label}
         {!collapsed && <ExternalLinkIcon aria-hidden="true" className="ml-auto h-3 w-3 opacity-60" />}
@@ -107,6 +137,7 @@ const AdminSidebarItem = ({ item, collapsed = false, depth = 0, onNavigate, favo
             "font-medium",
           )}
         >
+          {numberElement}
           {iconElement}
           {label}
           <ChevronDown
@@ -147,6 +178,7 @@ const AdminSidebarItem = ({ item, collapsed = false, depth = 0, onNavigate, favo
         selfActive ? accentActiveItemClasses[item.accent] : idleItemClasses,
       )}
     >
+      {numberElement}
       {iconElement}
       {label}
     </NavLink>
