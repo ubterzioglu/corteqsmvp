@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **71** (N 3 · W 8 · M 27 · G 23 · KR 10) |
+> | **Açık batch** | **70** (N 2 · W 8 · M 27 · G 23 · KR 10) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -83,7 +83,7 @@ Sıfır migration · sıfır yeni bağımlılık. Tahmin: 1–2 gün.
 | ~~N03~~ | ✅ **KAPANDI 01.10** — `docs/agent/admin-menu.json` (88 öğe) + bayatlama kapanı | ✅ | — |
 | ~~N04~~ | ✅ **KAPANDI 01.10** — `admin-menu` bilgi kaynağı (88 belge, öğe başına bir) | ✅ | ⚠️ npm argüman tuzağı + canlıya erken yazım (↓ N04) |
 | **N05** | Prompt kuralı (yalnız yöneticide) · **DEPLOY** | küçük | 🟢 | ⛔ N04 |
-| **N06** | Bot yanıtında tıklanabilir link | küçük | 🟢 | **bağımsız · bugün canlıda kusur** |
+| ~~N06~~ | ✅ **KAPANDI 01.10** — bot yanıtında tıklanabilir link (beyaz liste: `/…` + `https://`) | ✅ | ⚠️ canlıya yansıması frontend deploy'una bağlı (G03b ile aynı bekleyen) |
 | **N07** | Canlı ingest + uçtan uca kabul · **KANIT TURU** | küçük | 🟢 | ⛔ N05 |
 
 ### W · WhatsApp botu otomatik yanıt
@@ -497,6 +497,23 @@ Eksik olan tek şey korpusta menüyü anlatan **veri seti** ve promptta **bir ku
 ### Faz 3 — link + kanıt
 
 **N06 — Bot yanıtında tıklanabilir link** · küçük · **BAĞIMSIZ**
+
+> ✅ **KAPANDI 2026-10-01 · `a506f92c`.** `parseRichText()` + `classifyLinkTarget()`
+> (`chatbot-message-helpers.ts`) ve `ChatMessage.tsx` bağlantı işleme: iç yol →
+> react-router `<Link>`, `https://` → `<a target="_blank" rel="noopener noreferrer">`,
+> diğer her hedef (`javascript:`, `data:`, `http:`, `//evil.com`, `/\evil.com`) →
+> link ÜRETİLMEZ, yalnız etiket düz metin. `**kalın**` davranışı aynen korundu.
+> **Kanıt:** 17 yeni test (8 bileşen + 9 yardımcı) · **3 mutasyon turu 3/3 yakalandı**
+> (`//` koruması silme · `http` kabulü · ham markdown sızdırma) · tam takım
+> **381 dosya / 2972 test yeşil** · tsc 0 · lint 0 · check:dead 0/0/963 · verify:text ✓.
+>
+> ⚠️ **İlk ölçümde iki test DÜŞTÜ ve gerçek kusur yakalandı:** link hedefi deseni
+> `[^()\s]+` parantezlu hedefleri (`javascript:alert(1)`, ama aynı zamanda meşru
+> `…/wiki/A_(b)`) hiç eşleştirmiyor, ham markdown düz metin olarak sızıyordu.
+> Desen bir düzey dengeli paranteze genişletildi — reddedilen hedef de önce
+> AYRIŞTIRILIP sonra beyaz listeden geçirilmek zorunda, yoksa filtre hiç çalışmaz.
+>
+> ℹ️ Canlıya yansıması **frontend deploy'una** bağlı (G03b ile aynı bekleyen kuyruk).
 - ⚠️ **Bu bugün canlıda bir kusur:** `ChatMessage.tsx:29` yalnız `**kalın**` işliyor;
   `appendSources()`'ın ürettiği "Kaynaklar" bloğu kullanıcıya ham
   `[Başlık](/admin/members)` metni olarak görünüyor — hiçbir link tıklanabilir değil.
@@ -1645,6 +1662,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| N06 · bot yanıtında tıklanabilir link (beyaz liste: iç `/…` + `https://`) | `a506f92c` — 17 yeni test, 3 mutasyon 3/3 yakalandı · 381 dosya/2972 test yeşil · ⚠️ ilk desen parantezlu hedefleri (`javascript:alert(1)`) hiç eşleştirmiyordu — ham markdown sızıyordu, test yakaladı · ℹ️ canlıya yansıması frontend deploy'una bağlı |
 | N04 · `admin-menu` bilgi kaynağı (`sources.mjs`, öğe başına bir belge) | `3be3e694` — kabul `node scripts/ai-knowledge/ingest.mjs --source=admin-menu --dry-run` **88 belge/88 parça** · 9 test, 3 mutasyon 3/3 yakalandı · 380 dosya/2955 test yeşil · ⚠️ **npm `--` sonrasını yuttu** → ilk deneme canlıya GERÇEK yazım yaptı (88 admin-menu belgesi embed'siz bekliyor, aranamaz; catalog/docs-member idempotent tazelendi) → kural: argümanlı ingest **doğrudan node** ile · 🔴 yeni açık kusur: `docs-admin` ingest'i `KALANLAR.md` upsert'inde `Empty or invalid json` ile düşüyor (↓ N07) |
 | N03 · `docs/agent/admin-menu.json` üretilen katalog + bayatlama kapanı | 88 öğe/39 KB · kabul ölçüldü: artefakt elle bozulunca test KıRıLDı · ⚠️ plandaki `vitest run -u <yol>` script'i yolu YUTUP tüm takımı (2947 test) snapshot-güncelleme modunda koşturuyordu — bayrak yolun arkasına alındı (1 dosya/4 test) |
 | N01+N02 · yönetici menüsü mutlak sıra numaraları (sidebar + komut paleti) | 88 kayıt (75 üst · 13 alt · 3 inaktif) · 17 test, 4 mutasyonun hepsi yakalandı · DOM↔katalog sözleşmesi "iki ayrı sayaç" sınıfını kapatır · ⚠️ N01 TEK BAŞINA commit'lenemezdi: `check:dead` bağlanmamış modülü erişilemez sayıp exit 1 veriyor ve CI onu çalıştırıyor |
