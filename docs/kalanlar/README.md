@@ -16,9 +16,13 @@ dosya buradan silinir (ya da ilgili plana geri taşınır), öylece durmaz.
 
 ## ⚠️ Giriş noktası: güncel yol haritası
 
-**Buradan başla:** [2026-09-27-KALANLAR.md](2026-09-27-KALANLAR.md) —
-*Kalan İşler*, **15 batch + karar/ertelenen bölümleri**. Üç plan dosyası
-(`revision-number-completion-email`, `command-center-column-sorting`,
+**Buradan başla:** [KALANLAR.md](KALANLAR.md) — *(genel isim; master her turda yeniden
+adlandırılmaz, başlığındaki tarih son ölçüm/temizlik tarihidir)*
+*Kalan İşler*, karar/ertelenen bölümleri + **M01–M27 Topluluk Motoru batch'leri**
+(kaynak plan: `docs/plans/2026-09-30-topluluk-motoru-ucretsiz-islevler-plani.md`) ve
+**KR01–KR10 Kariyer sayfası yenilemesi** batch'leri
+(kaynak plan: `docs/plans/2026-09-30-kariyer-sayfasi-yenileme-plani.md`).
+Üç plan dosyası (`revision-number-completion-email`, `command-center-column-sorting`,
 `corteqs_clean_code_prompt`) ile 17/21/25 Eylül toplantılarının açık maddeleri
 tek listede toplandı; her batch tek oturumda bitecek büyüklükte.
 ⚠️ Temiz kod talimatındaki rakamların çoğu bayattı, dosyada ölçülmüş hâlleri var.
