@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **72** (N 4 · W 8 · M 27 · G 23 · KR 10) |
+> | **Açık batch** | **71** (N 3 · W 8 · M 27 · G 23 · KR 10) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -81,7 +81,7 @@ Sıfır migration · sıfır yeni bağımlılık. Tahmin: 1–2 gün.
 | ~~N01~~ | ✅ **KAPANDI 01.10** — numaralandırma çekirdeği (88 kayıt: 75 üst · 13 alt · 3 inaktif) | ✅ | N02 ile BİRLİKTE commit'lendi |
 | ~~N02~~ | ✅ **KAPANDI 01.10** — numara sidebar + komut paletinde görünüyor | ✅ | ⚠️ N01 tek başına commit'lenemezdi (↓) |
 | ~~N03~~ | ✅ **KAPANDI 01.10** — `docs/agent/admin-menu.json` (88 öğe) + bayatlama kapanı | ✅ | — |
-| **N04** | `admin-menu` bilgi kaynağı (`sources.mjs`) | küçük | 🟢 | ⛔ N03 |
+| ~~N04~~ | ✅ **KAPANDI 01.10** — `admin-menu` bilgi kaynağı (88 belge, öğe başına bir) | ✅ | ⚠️ npm argüman tuzağı + canlıya erken yazım (↓ N04) |
 | **N05** | Prompt kuralı (yalnız yöneticide) · **DEPLOY** | küçük | 🟢 | ⛔ N04 |
 | **N06** | Bot yanıtında tıklanabilir link | küçük | 🟢 | **bağımsız · bugün canlıda kusur** |
 | **N07** | Canlı ingest + uçtan uca kabul · **KANIT TURU** | küçük | 🟢 | ⛔ N05 |
@@ -442,6 +442,38 @@ Eksik olan tek şey korpusta menüyü anlatan **veri seti** ve promptta **bir ku
 > örnek). Vitest 4.1.11 ile sorunsuz çalışıyor.
 
 **N04 — `admin-menu` bilgi kaynağı** · küçük · migration YOK
+
+> ✅ **KAPANDI 2026-10-01 · `3be3e694`.** `sources.mjs`'e `buildAdminMenuDocuments()`
+> (saf, test edilebilir) + `loadAdminMenuDocuments()` + kayıt `{ key: "admin-menu",
+> audience: "admin" }` eklendi. Öğe başına BİR belge; metin kullanıcının kelimelerini
+> taşır (etiket · "yönetici sol menüsünde N. sırada" · grup · yol/href · açıklama ·
+> diğer adlar · alt/üst öğe bağı · pasif-taslak durumu). `url = to ?? href ?? null`.
+> **Kanıt:** kabul `node scripts/ai-knowledge/ingest.mjs --source=admin-menu --dry-run`
+> → **88 belge → 88 parça, yazma yok** · 9 yeni test, **3 mutasyon turu 3/3 yakalandı**
+> (url önceliği `href??to`, grup adı silme, alias filtresi kaldırma) · tam takım
+> **380 dosya / 2955 test yeşil** · lint 0 · `check:dead` 0 yeni/0 borç/963 ·
+> `verify:text` ✓ (1851 dosya).
+>
+> ⚠️ **OLAY + KALICI DERS (npm argüman yutma):** kabul ilk denemede
+> `npm run ai:ingest -- --source=admin-menu --dry-run` ile koşuldu; npm bu makinede
+> `--` sonrasını script'e GEÇİRMEDİ (`npm warn Unknown cli config "--source"`), script
+> argümansız → **tüm kaynaklar + gerçek yazım** modunda koştu ve **canlı DB'ye yazdı**:
+> `admin-menu` 88 belge **insert edildi (embedding 0 — bekleyen 88, yani aranamaz,
+> bota sızmaz)** · `catalog` +65 yeni/+10 güncel · `docs-member` +5 (yayımlı içerik,
+> idempotent, zararsız) · `docs-admin` **ortada patladı** (↓). `ai:embed` ÇALIŞTIRILMADI
+> (N07'nin işini N05'ten önce yapmak olurdu, sıra korundu). **Kural: bu repoda
+> `ai:ingest`/`ai:embed` argümanlı çağrılacaksa npm DEĞİL doğrudan
+> `node scripts/ai-knowledge/ingest.mjs …` kullan; çıktıdaki "(DRY RUN — yazma yok)"
+> başlığını GÖRMEDEN dry-run'a güvenme.**
+>
+> 🔴 **YENİ AÇIK KUSUR (bu olayda ortaya çıktı):** tam ingest'te `docs-admin` kaynağı
+> `docs/kalanlar/KALANLAR.md` upsert'inde `Empty or invalid json` hatasıyla düşüyor
+> (kaynak yarıda kesildi, prune koşmadı). N04 öncesinde de var mıydı bilinmiyor —
+> KALANLAR.md 01.10'da büyüyüp yeniden adlandırıldı. N07 öncesi araştırılmalı: olası
+> yönler dosya boyutu/içerik (RPC veya PostgREST limiti) ya da chunk içeriği.
+> **N07'nin kendi komutları etkilenmez** (`--source=admin-menu`), ama tam korpus
+> ingest'i bu kusur yüzünden `docs-admin`'i güncelleyemiyor.
+
 - `scripts/ai-knowledge/sources.mjs`: `loadAdminMenuDocuments()` (üretilen JSON'u okur) +
   tek satır kayıt `{ key: "admin-menu", label: "Yönetici menüsü", audience: "admin", … }`.
 - **Öğe başına BİR belge** (tek blob DEĞİL) — semantik arama tek kayda kilitlensin.
@@ -477,9 +509,18 @@ Eksik olan tek şey korpusta menüyü anlatan **veri seti** ve promptta **bir ku
 **N07 — Canlı ingest + uçtan uca kabul** · küçük · **KANIT TURU**
 ```bash
 npm run ingest:admin-menu
-npm run ai:ingest -- --source=admin-menu
-npm run ai:embed
+node scripts/ai-knowledge/ingest.mjs --source=admin-menu   # ⚠️ npm DEĞİL node — npm argümanları yutuyor (↓ N04 olayı)
+node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM bekleyenleri gömer: 88 admin-menu + ~308 diğer (catalog/docs)
 ```
+- ℹ️ **01.10 durumu (N04 olayı):** 88 `admin-menu` belgesi npm'in argüman yutması
+  yüzünden canlıya **zaten insert edildi** — hepsi `embedding NULL / bekleyen`, yani
+  gömülene kadar aranamaz ve bota sızmaz. N07'nin ingest adımı büyük ölçüde
+  "değişmedi" raporlayacak; **asıl kalan iş embed + uçtan uca kabul.** Embed'i N05
+  deploy'undan ÖNCE çalıştırma: prompt kuralı olmadan bot menü numarası söylemeye
+  başlar, kabul kriteri ("veride yoksa numara VERME") denetlenemez.
+- 🔴 Embed öncesi `docs-admin` upsert kusuruna bak (↓ N04): tam ingest
+  `KALANLAR.md`'de `Empty or invalid json` ile düşüyor.
+
 - Yönetici hesabıyla `/admin` üzerindeyken **"üyeler menüde nerede"** → yanıtta sıra
   numarası geçiyor **ve** o numara sol menüde aynı satırda yazıyor; kaynak linki
   tıklanınca sayfa açılıyor. (İstenen kabul kriteri birebir budur.)
@@ -1604,6 +1645,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| N04 · `admin-menu` bilgi kaynağı (`sources.mjs`, öğe başına bir belge) | `3be3e694` — kabul `node scripts/ai-knowledge/ingest.mjs --source=admin-menu --dry-run` **88 belge/88 parça** · 9 test, 3 mutasyon 3/3 yakalandı · 380 dosya/2955 test yeşil · ⚠️ **npm `--` sonrasını yuttu** → ilk deneme canlıya GERÇEK yazım yaptı (88 admin-menu belgesi embed'siz bekliyor, aranamaz; catalog/docs-member idempotent tazelendi) → kural: argümanlı ingest **doğrudan node** ile · 🔴 yeni açık kusur: `docs-admin` ingest'i `KALANLAR.md` upsert'inde `Empty or invalid json` ile düşüyor (↓ N07) |
 | N03 · `docs/agent/admin-menu.json` üretilen katalog + bayatlama kapanı | 88 öğe/39 KB · kabul ölçüldü: artefakt elle bozulunca test KıRıLDı · ⚠️ plandaki `vitest run -u <yol>` script'i yolu YUTUP tüm takımı (2947 test) snapshot-güncelleme modunda koşturuyordu — bayrak yolun arkasına alındı (1 dosya/4 test) |
 | N01+N02 · yönetici menüsü mutlak sıra numaraları (sidebar + komut paleti) | 88 kayıt (75 üst · 13 alt · 3 inaktif) · 17 test, 4 mutasyonun hepsi yakalandı · DOM↔katalog sözleşmesi "iki ayrı sayaç" sınıfını kapatır · ⚠️ N01 TEK BAŞINA commit'lenemezdi: `check:dead` bağlanmamış modülü erişilemez sayıp exit 1 veriyor ve CI onu çalıştırıyor |
 | G03b · dizin + detay view'a taşındı, davet linki RPC'ye | `types.ts` +105/−0 (⚠️ ilk regen `graphql_public`'i siliyordu, yakalandı) · "Katıl" düğmesi 4 durumda da GÖRÜNÜR (eski kod linki yokken düğmeyi hiç çizmiyordu) · link sayfa açılırken çekilir (popup engeli) · 14 test, mutasyonla 8 düşüş · ⚠️ bir vakum test yakalanıp daraltıldı |
