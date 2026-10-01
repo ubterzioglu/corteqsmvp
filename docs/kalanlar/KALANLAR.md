@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **63** (N 0 · W 8 · M 27 · G 21 · KR 7) |
+> | **Açık batch** | **62** (N 0 · W 8 · M 27 · G 21 · KR 6) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -150,7 +150,7 @@ traction ölçülecek.
 |---|---|---|---|
 | 0 | ~~KR01~~ | ✅ **KAPANDI 01.10** — `src/lib/careers/` (17 ilan + staj) + 6 sözleşme testi | ✅ |
 | 1 | ~~KR02~~ ~~KR03~~ | ✅ **İKİSİ DE KAPANDI 01.10** — tablo + kova + RPC canlıda · `careers-api` + şema + çift yönlü hata haritası | ✅ |
-| 2 | **KR04–KR06** | Sayfa iskeleti · ilan listesi + filtre · başvuru formu (3 dosya) | 🟢 |
+| 2 | ~~KR04~~ · **KR05–KR06** | ✅ KR04 KAPANDI 02.10 (iskelet canlı kodda) · kalan: ilan listesi + filtre · başvuru formu (3 dosya) | 🟢 |
 | 3 | **KR07** | Eski 4 ilanın korunması | 🟢 |
 | 4 | **KR08–KR09** | `/admin/kadro/basvurular` · yeni başvuruda e-posta | 🟢 |
 | 5 | **KR10** | SEO · sitemap · araç kataloğu · doküman | 🟢 |
@@ -1510,7 +1510,7 @@ gidiyor ve **o tablonun özel admin ekranı yok** — başvurular düzenli okunm
 
 ### Faz 2 — public sayfa
 
-**KR04 — Sayfa iskeleti: hero · kurucu mektupları · saat bandı · katılım modelleri**
+**~~KR04~~ — ✅ KAPANDI 02.10** · Sayfa iskeleti: hero · kurucu mektupları · saat bandı · katılım modelleri
 
 - `src/pages/Career.tsx` yeniden yazılır; `src/components/career/` altına `CareerHero` ·
   `CareerClockBand` · `FounderLetters` · `ParticipationModels`.
@@ -1745,6 +1745,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| KR04 · kariyer sayfa iskeleti (hero · saat bandı · kurucu mektupları · katılım modelleri) | `src/components/career/` 5 dosya · kurucu fotoğrafları base64'ten çıkarılıp `public/career/` altına **gerçek dosya** (14,5 KB + 17,1 KB) · saat bandı 8 şehir, `Intl.DateTimeFormat("tr-TR", { timeZone })`, 15 sn · 7 sözleşme testi, **6/6 mutasyon yakalandı** (elle UTC kaydırması · yerelsiz biçimlendirme · şehir düşürüldü · base64 koda gömüldü · `useSeo` deps kaldırıldı · Türkçe harf kırpıldı) · ⚠️ sayfa YARIM BIRAKILMADI: eski içerik "önceki dönem" olarak altta duruyor, KR05/KR06 araya giriyor · ⚠️ `check:dead` baseline notu düzeltildi — 4 dosyayı KR04 değil **KR05 (veri) ve KR06 (API)** siler |
 | KR03 · `careers-api.ts` + `careers-schemas.ts` + çift yönlü hata haritası | 11 sözleşme testi, **6/6 mutasyon yakalandı** (haritadan kod silindi · haritaya hayali kod · istemci sınırı kovayı aştı · ham dosya adı anahtarda · `.key` MIME silindi · `accept` ayrıştı) · ⚠️ **mevcut `validatePresentationFile` KULLANILMADI: 50 MB'a izin veriyor, kova 25 MB'da kesiyor** → 40 MB'lık sunum istemciden geçip kovadan dönerdi; kariyer kendi sınırlarını tanımlar (CV 10 MB · sunum 25 MB) ve test bunları migration'daki kova sınırına karşı denetler · ⚠️ MIME `file.type`'tan DEĞİL uzantıdan verilir: `.key` tarayıcıya göre boş/zip gelir ve dar kova listesinden dönerdi · `check:dead` 0 yeni / **4 bilinen borç** (🔴 KR04 hepsini siler) |
 | KR02 · `career_applications` tablosu + private kova + `submit_career_application` RPC | mig `20261001130000` **canlıda** · anon smoke (10 çağrı): geçerli başvuru **200+uuid** · doğrudan PostgREST INSERT **401/42501** · anon SELECT **401/42501** · başka klasörün `cv_path`'i **400** · `consent=false` **400** · bozuk e-posta **400** · geçersiz model **400** · aynı e-posta 6. başvuru **53400** (5'e kadar geçti) · aynı id tekrar **409** · 6 ölçüm satırının 6'sında `status='yeni'` + `notes is null` **zorlandı**, hepsi silindi (tablo 0 satır) · types regen **+116/−0** (`graphql_public` yerinde) · 7 sözleşme testi, **5/5 mutasyon yakalandı** · ⚠️ gelen paketin 3 hatası düzeltildi (`has_role` yok → `is_admin(uid)`; anon INSERT → RPC; anahtar deseni denetimi eklendi) · ⚠️ `application/octet-stream` MIME listesinden ÇIKARILDI (tür sınırını fiilen kaldırıyordu) · RPC **`career_` önekli 12 snake_case kod** fırlatır (İngilizce cümle DEĞİL — KR03'ün çift yönlü haritası için), canlıda doğrulandı |
 | KR01 · `src/lib/careers/` ilan verisi + sözleşme testi | **17 ilan + staj programı** · veri kaynak HTML'den **makineyle** çıkarıldı (25 KB Türkçe metin) · 6 test, **5/5 mutasyon yakalandı** (id tekrarı · boş `tasks` · geçersiz `area` · ilansız bölüm · Türkçe harf kırpma) · ⚠️ Türkçe iddiası ilk hâlinde KAÇIRMIŞTI (`toContain("Ürün")` başka ilan başlığından yeşil kalıyordu) → birebir etiket listesine çevrildi · ⚠️ `check:dead` 0 yeni / **2 bilinen borç**: iki dosya tüketicisinden önde, 🔴 **KR04 baseline satırlarını silmeli** |

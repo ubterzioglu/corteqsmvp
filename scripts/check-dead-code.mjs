@@ -21,11 +21,16 @@ export const CONFIG_REFERENCED_EXCEPTIONS = new Set([
 // ⚠️ Buraya yeni satır eklemek SON çare olmalı: bu liste "ölü ama şimdilik dursun"
 // demektir ve kolayca kalıcı hâle gelir. Eklemeden önce dosyayı silmeyi dene.
 // KR01–KR03 (01.10): kariyer modülü sayfasından ÖNCE geldi. Plan işi bilerek
-// böldü — KR01 veri, KR02 migration, KR03 veri katmanı, **sayfa KR04'te**. Yani
-// bu dörtlü ölü değil, TÜKETİCİSİNDEN ÖNDE. Silmek doğru olmaz; veriyi/API'yi
-// test dosyasının içine gömmek de olmaz, çünkü `/kariyer` sayfası onları import
-// edecek. 🔴 KR04 bu dört satırı SİLER (aksi hâlde bayat baseline kaydı olarak
-// rapor edilirler ve check:dead yine kırmızıya döner — mekanizma kendini temizler).
+// böldü — KR01 veri, KR02 migration, KR03 veri katmanı, KR04 sayfa iskeleti,
+// KR05 ilan listesi, KR06 başvuru formu. Yani bu dörtlü ölü değil,
+// TÜKETİCİSİNDEN ÖNDE.
+//
+// 🔴 Kim siler: **KR05** ilan listesini yazınca `careers-data.ts` +
+// `careers-types.ts` satırlarını, **KR06** formu yazınca `careers-api.ts` +
+// `careers-schemas.ts` satırlarını. (KR04 iskeleti yazar ama bu dosyaları
+// kullanmaz — 02.10'da ölçüldü, bu yüzden "KR04 siler" notu düzeltildi.)
+// Silinmezlerse bayat baseline kaydı olarak rapor edilir ve check:dead yine
+// kırmızıya döner — mekanizma kendini temizler.
 export const KNOWN_DEAD_FILES = new Set([
   "src/lib/careers/careers-api.ts",
   "src/lib/careers/careers-data.ts",

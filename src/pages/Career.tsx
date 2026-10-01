@@ -1,13 +1,9 @@
 import { useState } from "react";
-import {
-  Briefcase,
-  Globe2,
-  PenTool,
-  Megaphone,
-  Code2,
-  Sparkles,
-  AlertTriangle,
-} from "lucide-react";
+import { Globe2, PenTool, Megaphone, Code2, AlertTriangle } from "lucide-react";
+import CareerClockBand from "@/components/career/CareerClockBand";
+import CareerHero from "@/components/career/CareerHero";
+import FounderLetters from "@/components/career/FounderLetters";
+import ParticipationModels from "@/components/career/ParticipationModels";
 import InterestForm from "@/components/InterestForm";
 import { Button } from "@/components/ui/button";
 import { PAGE_SEO } from "@/lib/page-seo";
@@ -143,43 +139,16 @@ const Career = () => {
   return (
     <div className="min-h-screen bg-background">
       <main className="pt-24 pb-20">
-        {/* HERO */}
-        <section className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-turquoise/15 border border-turquoise/30 mb-6">
-              <Briefcase className="h-4 w-4 text-turquoise" />
-              <span className="text-sm font-semibold text-turquoise">
-                CorteQS Kariyer
-              </span>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-              CorteQS Global Ekibine Katıl
-            </h1>
-            <p className="text-xl text-muted-foreground mb-6">
-              Dünyanın dört bir yanındaki Türk diasporasını tek bir dijital ağda
-              buluşturuyoruz.
-            </p>
-            <p className="text-base text-muted-foreground leading-relaxed">
-              CorteQS; global Türk diasporasının profesyonellerini,
-              işletmelerini, içerik üreticilerini, topluluklarını ve yerel
-              aktörlerini tek çatı altında görünür, erişilebilir ve bağlantılı
-              hale getirmek için geliştirilen yeni nesil bir dijital
-              platformdur.
-            </p>
-            <p className="text-base text-muted-foreground leading-relaxed mt-4">
-              Şu anda hızlı büyüme dönemine hazırlanıyoruz. Önümüzde 19 ülkeye
-              yayılacak bir <strong>pre-launch</strong> süreci,{" "}
-              <strong>29 Ekim 2026</strong>'da planlanan tam açılış ve global
-              ölçekte büyüyecek bir ekosistem var.
-            </p>
-            <div className="mt-8">
-              <Button size="lg" onClick={() => apply(null)}>
-                <Sparkles className="h-4 w-4 mr-2" />
-                Genel Başvuru Bırak
-              </Button>
-            </div>
-          </div>
-        </section>
+        {/* KR04 — yeni iskelet. Açık pozisyon listesi KR05'te, başvuru formu
+            KR06'da bu bölümlerin arasına girer. Aşağıdaki "önceki dönem"
+            bölümü KR07'ye kadar yerinde kalır: sayfa hiçbir commit'te yarım
+            kalmaz. */}
+        <CareerHero />
+        <CareerClockBand />
+        <FounderLetters />
+        <ParticipationModels />
+
+        {/* ——— Önceki dönem içeriği (KR07'de ayrı bölüme alınacak) ——— */}
 
         {/* INTRO BLOCK */}
         <section className="container mx-auto px-4 mb-14">
