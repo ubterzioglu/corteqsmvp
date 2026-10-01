@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **70** (N 2 · W 8 · M 27 · G 23 · KR 10) |
+> | **Açık batch** | **69** (N 1 · W 8 · M 27 · G 23 · KR 10) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -82,7 +82,7 @@ Sıfır migration · sıfır yeni bağımlılık. Tahmin: 1–2 gün.
 | ~~N02~~ | ✅ **KAPANDI 01.10** — numara sidebar + komut paletinde görünüyor | ✅ | ⚠️ N01 tek başına commit'lenemezdi (↓) |
 | ~~N03~~ | ✅ **KAPANDI 01.10** — `docs/agent/admin-menu.json` (88 öğe) + bayatlama kapanı | ✅ | — |
 | ~~N04~~ | ✅ **KAPANDI 01.10** — `admin-menu` bilgi kaynağı (88 belge, öğe başına bir) | ✅ | ⚠️ npm argüman tuzağı + canlıya erken yazım (↓ N04) |
-| **N05** | Prompt kuralı (yalnız yöneticide) · **DEPLOY** | küçük | 🟢 | ⛔ N04 |
+| ~~N05~~ | ✅ **KAPANDI 01.10** — yönetici menüsü prompt kuralı (`is_admin()` kapılı) + DEPLOY | ✅ | canlı: deploy OK + anon 401 |
 | ~~N06~~ | ✅ **KAPANDI 01.10** — bot yanıtında tıklanabilir link (beyaz liste: `/…` + `https://`) | ✅ | ⚠️ canlıya yansıması frontend deploy'una bağlı (G03b ile aynı bekleyen) |
 | **N07** | Canlı ingest + uçtan uca kabul · **KANIT TURU** | küçük | 🟢 | ⛔ N05 |
 
@@ -484,6 +484,23 @@ Eksik olan tek şey korpusta menüyü anlatan **veri seti** ve promptta **bir ku
 - **Kabul:** `npm run ai:ingest -- --source=admin-menu --dry-run` ~80 belge raporlar.
 
 **N05 — Prompt kuralı (yalnız yöneticide)** · küçük · **DEPLOY gerekir**
+
+> ✅ **KAPANDI 2026-10-01 · deploy canlıda.** `ADMIN_MENU_PROMPT_BLOCK` +
+> `buildAdminModeNote(isAdmin, page?)` (`_shared/ai-assistant-context.ts`) ve
+> `site-assistant/index.ts` sistem promptu: `SYSTEM_PROMPT + buildAdminModeNote(isAdminData === true,
+> payload.page) + buildPageContextNote(payload.page)`. Kapı **`is_admin()` RPC'si** —
+> `page.path` yalnız vurgu ("şu an yönetici panelinde"), kapıya KATILMIYOR; üye için
+> prompt hiç değişmiyor. "Veride yoksa numara VERME" cümlesi blokta (test kilitledi).
+> **Kanıt:** 5 yeni test (21/21 dosya yeşil) · **3 mutasyon turu 3/3 yakalandı**
+> (kapı kırma · "numara VERME" cümlesini silme · index.ts kapısını page.path'e bağlama) ·
+> `check:functions` 12/12 sapmasız · lint 0 · deploy: `Deployed Functions on project
+> injprdrsklkxgnaiixzh: site-assistant` (script 88.19kB) · canlı anon POST → **HTTP 401**
+> `UNAUTHORIZED_NO_AUTH_HEADER` (fonksiyon ayakta, yazma kapısı çalışıyor).
+> ⚠️ `supabase functions list` bu hesapla **403** (yetki yok) — sürüm kanıtı deploy
+> çıktısı + 401 smoke. ⚠️ Deploy için Docker şart: Rancher Desktop motoru takılıydı,
+> süreç kapatılıp `wsl -t rancher-desktop` + yeniden başlatma ile açıldı (~1 dk).
+> ℹ️ Kuralın kullanıcıya görünür etkisi **N07 embed'inden sonra** başlar: 88 admin-menu
+> belgesi henüz embed'siz, getirme eşleşemez.
 - `_shared/ai-assistant-context.ts`: `ADMIN_MENU_PROMPT_BLOCK` + `buildAdminModeNote()`.
 - `site-assistant/index.ts:219`: `SITE_ASSISTANT_SYSTEM_PROMPT +
   buildAdminModeNote(isAdminData === true, payload.page) + buildPageContextNote(payload.page)`.
@@ -1662,6 +1679,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| N05 · yönetici menüsü prompt kuralı (`is_admin()` kapılı) + deploy | deploy `site-assistant` 88.19kB · canlı anon POST **401** · 5 yeni test, 3 mutasyon 3/3 · `check:functions` 12/12 sapmasız · ⚠️ Rancher Desktop motoru takılıydı (deploy Docker ister) — süreç+`wsl -t` ile yeniden başlatıldı · ℹ️ etki N07 embed'inden sonra görünür |
 | N06 · bot yanıtında tıklanabilir link (beyaz liste: iç `/…` + `https://`) | `a506f92c` — 17 yeni test, 3 mutasyon 3/3 yakalandı · 381 dosya/2972 test yeşil · ⚠️ ilk desen parantezlu hedefleri (`javascript:alert(1)`) hiç eşleştirmiyordu — ham markdown sızıyordu, test yakaladı · ℹ️ canlıya yansıması frontend deploy'una bağlı |
 | N04 · `admin-menu` bilgi kaynağı (`sources.mjs`, öğe başına bir belge) | `3be3e694` — kabul `node scripts/ai-knowledge/ingest.mjs --source=admin-menu --dry-run` **88 belge/88 parça** · 9 test, 3 mutasyon 3/3 yakalandı · 380 dosya/2955 test yeşil · ⚠️ **npm `--` sonrasını yuttu** → ilk deneme canlıya GERÇEK yazım yaptı (88 admin-menu belgesi embed'siz bekliyor, aranamaz; catalog/docs-member idempotent tazelendi) → kural: argümanlı ingest **doğrudan node** ile · 🔴 yeni açık kusur: `docs-admin` ingest'i `KALANLAR.md` upsert'inde `Empty or invalid json` ile düşüyor (↓ N07) |
 | N03 · `docs/agent/admin-menu.json` üretilen katalog + bayatlama kapanı | 88 öğe/39 KB · kabul ölçüldü: artefakt elle bozulunca test KıRıLDı · ⚠️ plandaki `vitest run -u <yol>` script'i yolu YUTUP tüm takımı (2947 test) snapshot-güncelleme modunda koşturuyordu — bayrak yolun arkasına alındı (1 dosya/4 test) |
