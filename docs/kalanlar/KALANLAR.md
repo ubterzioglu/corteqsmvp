@@ -125,7 +125,7 @@ traction ölçülecek.
 | Faz | ID | Kapsam | Kapı | Bağımlılık |
 |---|---|---|---|---|
 | A | ~~G01~~ | ✅ **KAPANDI 01.10** — `docs/dijital-gruplar/` + CLAUDE.md bölümü + kök temiz | ✅ | — |
-| A | **G02–G03** | **Canlı güvenlik:** anonim INSERT kapat · davet linki anonime kapat | 🟢 | — |
+| A | ~~G02~~ · **G03** | ✅ G02 KAPANDI 01.10 (anon INSERT → `42501`) · 🔴 **G03 davet linki HÂLÂ anonime açık** | 🟢 | — |
 | B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟢 | ⛔ **U06** |
 | B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🟢 | — |
 | C | **G08** | M1 spike: davet sayfasından grup adı okunabiliyor mu (rapor) | 🟢 | — |
@@ -845,7 +845,42 @@ npm run ai:embed
 > değişiklikleri var, karıştırmamak için dokunulmadı. Klasör CLAUDE.md ve buradan bulunur.
 > ⚠️ Pakette kalan `00` · `03`–`06` (prompt + tanıtım) repoya ALINMADI — iş kuralı taşımazlar.
 
-**G02 — RLS temizliği: anonim INSERT kapatma + mükerrer politika silme** · migration
+**✅ G02 — RLS temizliği: anonim INSERT kapatma + mükerrer politika silme** · KAPANDI 01.10
+
+> **KAPANDI 2026-10-01 · migration `20261001100000_whatsapp_landings_rls_cleanup.sql`**
+> (canlıya uygulandı · `applied/` altında · `schema_migrations` kaydı atıldı ·
+> `check:migrations` **442 dosya / 442 canlı kayıt · sapma yok**).
+>
+> **CANLI KANIT (psql, hepsi rollback'li):**
+> | # | Senaryo | Sonuç |
+> |---|---|---|
+> | 1 | `set role anon` → INSERT | **`42501`** new row violates RLS ✅ |
+> | 2 | Girişli kullanıcı KENDİ `user_id`'siyle INSERT | **başarılı** (`INSERT 0 1`) — form kırılmadı ✅ |
+> | 3 | Girişli kullanıcı BAŞKASININ `user_id`'siyle INSERT | **`42501`** ✅ |
+> | 4 | Politika sayısı | **11 → 8** (INSERT 2→1, SELECT 5→3) ✅ |
+> | 5 | `set role anon` → SELECT | **10 satır** — dizin kırılmadı ✅ |
+>
+> **Yeni INSERT politikası YAZILMADI** — zaten doğru olan `Users can create own landings`
+> (`authenticated`, `WITH CHECK (auth.uid() = user_id)`) duruyordu; permissive politikalar
+> OR'landığı için yanlış olan silinince INSERT yolu kendiliğinden doğruya düştü.
+>
+> **Arayüz zaten kapalıydı:** `handleGroupSubmit` → `ensureSignedInForGroupSubmit()`
+> ("Üye olmalısınız" + Google OAuth). Açık olan yol **formu atlayıp doğrudan PostgREST'e**
+> POST atmaktı; kapanan o. Sözleşme testi `src/lib/whatsapp-landings-insert-auth-contract.test.ts`
+> (8 test) **iki yakayı birden** kilitler — mutasyonla sınandı, ikisi de düştü.
+>
+> 🔴 **DAVET LİNKİ HÂLÂ AÇIK — G02 onu kapatmadı ve kapatmaya çalışmadı.** Ölçüldü:
+> anon hâlâ 10 satırın 10'unda `whatsapp_link` okuyabiliyor (`Anyone can view approved
+> landings` tüm kolonları döner). **K1'i kapatan G03'tür.**
+>
+> ⏭️ **Günlük 5 gönderim sınırı bu batch'te YAPILMADI** (kullanıcı kararı 01.10, seçenek a):
+> sınır `group_settings`'ten okunacak, o tablo **G09**'da açılıyor; eşiği koda sabit yazmak
+> CLAUDE.md kuralına aykırı olurdu. **G09'dan sonra ayrı küçük batch** olarak yapılacak.
+>
+> ⚠️ **Yan bulgu (G02 kapsamı DIŞI, ele alınmadı):** `anon` rolünün `whatsapp_landings`
+> üzerinde tablo düzeyinde `INSERT, UPDATE, DELETE, TRUNCATE` **grant'ı var**. Bugün
+> zararsız — RLS hepsini kesiyor — ama RLS bir gün kapatılırsa anon tabloyu
+> `TRUNCATE` edebilir. Grant daraltma ayrı bir karar; burada yalnız kayda geçiriliyor.
 
 > ⚠️ **ÖLÇÜLDÜ 01.10 — bu maddedeki iki ayrıntı YANLIŞ, düzeltilmeden migration yazma:**
 > 1. **`submitted_by` diye bir kolon YOK.** `whatsapp_landings`'in sahip kolonu **`user_id`**
@@ -1340,6 +1375,8 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G01 · Dijital Gruplar paketi repoya + CLAUDE.md bölümü + kök temiz | `bacc959` — `docs/dijital-gruplar/` 4 dosya · çürüyen 5 varsayım + K1–K5 CLAUDE.md'de · paket repo dışına taşındı · ⚠️ `claude_corteqs-insa-notlari.md` bu repoda YOK, 07 arşiv |
+| G02 · anon INSERT kapatıldı + 2 mükerrer RLS politikası silindi | mig `20261001100000` — canlı: anon INSERT **42501** · kendi satırı INSERT **başarılı** · başkasının `user_id` **42501** · politika **11→8** · anon SELECT 10 satır (dizin sağlam) · 8 sözleşme testi mutasyonla sınandı · 🔴 davet linki HÂLÂ açık → G03 |
 | A14 · #REV-034 sıralama sonuçları kutulu renkli görsel (4 `ranked_list` aracı) | `c3ff905` — 373 dosya/2889 test yeşil · 7 yeni test mutasyonla sınandı · önizleme claude.ai/artifact/5KN3KXDDt7vvnR9PwD1R8L · ⏳ Burak görsel onayı bekliyor |
 | S01–S09 · G01–G03h · C00–C06 (22 batch: sessiz başarısızlık + güvenlik + clean code) | `3d8adc3`…`ccfbc28` zinciri · 28.09 devir notu (git geçmişi) |
 | A01 CI yeşil (katalog nokta-dosya sızıntısı) | `8389fb3` |
