@@ -125,7 +125,7 @@ traction ölçülecek.
 | Faz | ID | Kapsam | Kapı | Bağımlılık |
 |---|---|---|---|---|
 | A | ~~G01~~ | ✅ **KAPANDI 01.10** — `docs/dijital-gruplar/` + CLAUDE.md bölümü + kök temiz | ✅ | — |
-| A | ~~G02~~ ~~G03a~~ · **G03b** · **G03c** | ✅ G02 + G03a KAPANDI 01.10 · 🔴 **davet linki + admin e-posta/telefon HÂLÂ anonime açık** → G03b (istemci göçü) + G03c (grant daraltma) | 🟢 | — |
+| A | ~~G02~~ ~~G03a~~ ~~G03b~~ · **G03c** | ✅ G02 + G03a + G03b KAPANDI 01.10 · 🔴 **sızıntı G03c'ye kadar AÇIK** (taban tablo hâlâ anonime açık) | 🟢 | ⛔ G03b canlıda olmalı |
 | B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟢 | ⛔ **U06** |
 | B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🟢 | — |
 | C | **G08** | M1 spike: davet sayfasından grup adı okunabiliyor mu (rapor) | 🟢 | — |
@@ -960,24 +960,103 @@ npm run ai:embed
 > ⏭️ **`types.ts` yeniden üretilmedi** — view + RPC tipleri G03b'de gerekecek,
 > regen orada yapılacak (Management API + geçerli `SUPABASE_ACCESS_TOKEN`).
 
-**G03b — İstemci göçü: dizin ve detay view'dan okusun** · kod · ⛔ G03a
+**✅ G03b — İstemci göçü: dizin ve detay view'dan okuyor** · KAPANDI 01.10
 
-- `getLanding` + `listLandings` (`src/lib/whatsapp-landings.ts`) `whatsapp_landings`
-  yerine `whatsapp_landings_public` okur. `rowToLanding` DEĞİŞMEZ (kolon şekli aynı).
-- "Katıl" akışı: link artık satırda gelmiyor → tıklanınca `get_whatsapp_landing_invite`
-  çağrılır; girişsiz kullanıcıya kayıt/giriş penceresi açılır.
-- `adminContact` artık `null` gelir → detay sayfasında o alanı çizen yer varsa gizlenmeli
-  (boş etiket bırakma).
-- `types.ts` yeniden üretilir (view + RPC tipleri).
-- ⚠️ Yönetici yolları (`select("*")`, satır 507 vb.) tabandan okumaya DEVAM eder —
-  onları view'a çevirme, admin'in `rejection_reason`'a ihtiyacı var.
-- **Kabul:** dizin ve detay sayfası anon olarak çalışıyor; link yalnız girişli
-  kullanıcıda geliyor; linki boş 2 grupta "Katıl" düğmesi uygun şekilde ele alınıyor.
+> `getLanding` + `listLandings` → `whatsapp_landings_public`. Yeni
+> `fetchLandingInviteUrl(slug)` davet linkini RPC'den alır ve **`42501` (giriş
+> gerek) ile `P0002` (link yok) hatalarını AYIRT eder** — ikisini tek mesaja
+> indirmek, kullanıcıya giriş yapması gerektiğini söylemeyen bir düğme üretirdi.
+>
+> ⚠️ **ASIL RİSK BURADAYDI:** eski CTA `hasLink` yanlışsa düğmeyi **hiç
+> çizmiyordu.** Link artık satırla gelmediği için o davranış bırakılsaydı
+> ziyaretçi için "Katıl" düğmesi **SESSİZCE YOK OLURDU**. Dört durumun dördünün
+> de görünür karşılığı var: `ready` → dış bağlantı · `signed_out` → "Giriş yap ve
+> katıl" · `loading` → devre dışı bekleme · `unavailable` → **sebebi yazan**
+> `role="status"` mesajı (linki boş 2 grubu da bu karşılıyor).
+>
+> ⚠️ **Link TIKLAMADA değil SAYFA AÇILIRKEN çekilir.** Tıklamadan sonra
+> `window.open` çağırmak mobil tarayıcılarda açılır pencere engeline takılır ve
+> kullanıcı hiçbir şey olmadığını görür. Böylece düğme normal bir `<a>` kalıyor.
+> Bu kararı geri alma.
+>
+> ⚠️ **Giriş mesajı niyete göre ayrıldı.** Eski tek fonksiyon "Grup EKLEMEK için
+> üye olmalısınız" diyor ve dönüşte `openGroupForm=1` ile formu açıyordu —
+> katılma akışında yanlış mesaj + yanlış dönüş adresi. `ensureSignedIn(intent)`.
+>
+> **`types.ts` yeniden üretildi: +105 satır, −0 satır.** ⚠️ İlk denemede
+> `included_schemas=public` kullanıldı ve **`graphql_public` şeması siliniyordu**
+> (diff'te 28 silinen satır görülüp yakalandı). Doğrusu:
+> `?included_schemas=public,graphql_public`. Bir dahaki regen'de bunu kontrol et.
+>
+> **Testler mutasyonla sınandı:**
+> `LandingDetailView.invite.test.tsx` (6 test) — eski "sessizce kaybol"
+> davranışına döndürüldü → **5 test düştü**.
+> `whatsapp-landings-public-source.test.ts` (8 test) — okuma tabana çevrildi +
+> hata kodu ayrımı silindi → **3 test düştü**.
+> ⚠️ Bir test ilk yazımında **VAKUMDU** ("sayfada herhangi bir düğme var mı" —
+> "Sayfayı Paylaş" her durumda var, iddia hep geçiyordu). Mutasyon turunda
+> yakalandı ve katılmaya ait eylemi arayacak şekilde daraltıldı. Gevşetme.
+> ⚠️ `sliceBetween`'de bitiş çıpası `"export async function"` OLAMAZ —
+> başlangıcın kendisiyle eşleşir. Yardımcı bunu sessiz geçirmedi, AÇIKÇA düşürdü.
+>
+> **Yönetici/sahip yolları DEĞİŞMEDİ** — `rejection_reason` ve `admin_contact`
+> gerektikleri için tabandan/RPC'den okumaya devam ediyorlar.
+>
+> ⚠️ **SIZINTI HÂLÂ AÇIK.** Bu batch istemciyi taşıdı; taban tablo anon'a hâlâ
+> açık. Kapanması **G03c** ile.
 
-**G03c — Taban tablonun anon yetkisi daraltılır (kırıcı adım)** · migration · ⛔ G03b
+**G03c — Taban tablonun anon yetkisi daraltılır (SIZINTIYI KAPATAN ADIM)** · migration
 
-- `Anyone can view approved landings` politikası anon'dan alınır / anon'un
-  `whatsapp_landings` SELECT grant'ı çekilir. Bundan SONRA tek anon yüzeyi view'dır.
+> ⛔ **BLOKE: G03b CANLIYA DEPLOY EDİLMEDEN UYGULANAMAZ** (kullanıcı kararı 01.10).
+> Kod commit'li ama Coolify deploy'u kullanıcıda. Şimdi uygulanırsa canlıdaki ESKİ
+> frontend hâlâ taban tablodan okur → **dizin ziyaretçiye boş görünür.**
+> Sıra: (1) G03b deploy → (2) `/addcom` ziyaretçi olarak açılıp dizin + detay
+> çalışıyor mu doğrula → (3) bu migration.
+
+**Uygulanacak SQL (hazır):**
+
+```sql
+-- İKİSİ BİRLİKTE uygulanır. Tek başına politikayı düşürmek tablo grant'ını
+-- bırakır; ileride biri yeni bir anon politikası eklerse kapı SESSİZCE yeniden
+-- açılır. Grant'ı da çekmek o sınıfı kapatır.
+drop policy if exists "Anyone can view approved landings" on public.whatsapp_landings;
+revoke select on public.whatsapp_landings from anon;
+```
+
+**Geri alma (dizin boşalırsa):**
+
+```sql
+grant select on public.whatsapp_landings to anon;
+create policy "Anyone can view approved landings" on public.whatsapp_landings
+  for select to anon, authenticated using (status = 'approved');
+```
+
+> ⚠️ **`anon`'un DİĞER grant'ları da duruyor:** `INSERT, UPDATE, DELETE, TRUNCATE`
+> (ölçüldü 01.10). Bugün zararsız — RLS hepsini kesiyor, G02'den sonra anon'un
+> hiçbir yazma politikası yok — ama RLS bir gün kapatılırsa anon tabloyu
+> **TRUNCATE** edebilir. Aynı desen `catalog_search_documents`'ta da var. Bu
+> migration'a dahil edilip edilmeyeceği ayrı karar; en azından `truncate`/`delete`
+> çekilmesi düşünülmeli.
+
+**KABUL TESTİ #5 — dört yolun DÖRDÜ birden ölçülerek yazılır.** Üçü 01.10'da
+zaten temiz ölçüldü, G03c'den sonra yeniden doğrulanacak:
+
+| Yol | 01.10 ölçümü | G03c sonrası beklenen |
+|---|---|---|
+| `whatsapp_landings` (taban) | 🔴 link **10/10** · `admin_contact` **10/10** | **0 satır** (yetki yok) |
+| `whatsapp_landings_public` (view) | ✅ link 0 · contact 0 | aynı, 10 satır görünür |
+| `catalog_items` | ✅ 651 kayıtta link **0** | aynı |
+| `catalog_search_documents` | ✅ anon **0 satır** (politika `is_moderator()`) | aynı |
+
+> ℹ️ Katalog tarafı için AYRI İŞ YOK. `catalog_search_documents.search_text`
+> içinde 8 satırda davet linki + 1 satırda e-posta var, ama tablonun SELECT
+> politikası `is_moderator(auth.uid())` — anon da, sıradan üye de okuyamıyor.
+> "Katalog senkronu da sızdırıyor" sonucuna varma, ölçüldü.
+
+- ⚠️ Kırıcı değişiklik (politika bilinçli istiyor): ziyaretçi dizini görmeye devam
+  eder ama **"Katıl" için giriş** gerekir → **U08** "2 hafta sonra dönüşüm gözden
+  geçirme" maddesini tetikler; canlıya çıkış tarihini U08'e NOT ET.
+
 - ⚠️ **G03b canlıya çıkmadan uygulanamaz** — çıkarsa dizin anında boşalır.
 - ⚠️ Katalog senkron trigger'ı (`trg_catalog_sync_whatsapp_landing`) ve
   `catalog_items` yolu ayrıca denetlenir: link oradan da sızmamalı (kabul testi #5
@@ -1449,6 +1528,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G03b · dizin + detay view'a taşındı, davet linki RPC'ye | `types.ts` +105/−0 (⚠️ ilk regen `graphql_public`'i siliyordu, yakalandı) · "Katıl" düğmesi 4 durumda da GÖRÜNÜR (eski kod linki yokken düğmeyi hiç çizmiyordu) · link sayfa açılırken çekilir (popup engeli) · 14 test, mutasyonla 8 düşüş · ⚠️ bir vakum test yakalanıp daraltıldı |
 | G03a · PII'siz public view + davet linki RPC'si (salt ekleme) | mig `20261001110000` — anon view 10 satır / **0 PII sızıntısı** · anon RPC **permission denied** · girişli RPC link döndü · olmayan slug + **boş linkli grup** `P0002` · RLS 8→8 değişmedi · 14 sözleşme testi 4 mutasyonla sınandı · ⚠️ `admin_contact` ad+e-posta+telefon taşıyordu, K1'de yazılı değildi |
 | G01 · Dijital Gruplar paketi repoya + CLAUDE.md bölümü + kök temiz | `bacc959` — `docs/dijital-gruplar/` 4 dosya · çürüyen 5 varsayım + K1–K5 CLAUDE.md'de · paket repo dışına taşındı · ⚠️ `claude_corteqs-insa-notlari.md` bu repoda YOK, 07 arşiv |
 | G02 · anon INSERT kapatıldı + 2 mükerrer RLS politikası silindi | mig `20261001100000` — canlı: anon INSERT **42501** · kendi satırı INSERT **başarılı** · başkasının `user_id` **42501** · politika **11→8** · anon SELECT 10 satır (dizin sağlam) · 8 sözleşme testi mutasyonla sınandı · 🔴 davet linki HÂLÂ açık → G03 |

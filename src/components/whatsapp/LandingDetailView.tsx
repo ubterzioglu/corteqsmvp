@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Check, Pencil, Share2, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Check, Loader2, Pencil, Share2, ShieldCheck } from "lucide-react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
@@ -14,13 +14,34 @@ import {
 } from "@/lib/whatsapp-landing-presentation";
 import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
 
+/**
+ * G03b · "Katıl" düğmesinin durumu.
+ *
+ * ⚠️ Davet linki ARTIK satırla gelmiyor (`whatsapp_landings_public` onu `null`
+ * döner); yalnız girişli kullanıcıya RPC ile veriliyor. Eski kod `hasLink` yanlışsa
+ * düğmeyi HİÇ ÇİZMİYORDU — o davranış bırakılsaydı ziyaretçi için "Katıl" düğmesi
+ * sessizce yok olurdu ve kimse neden olduğunu anlamazdı. Bu yüzden her durumun
+ * kendi görünür karşılığı var.
+ */
+export type LandingInviteState =
+  /** Ziyaretçi girişsiz — düğme giriş akışını başlatır. */
+  | { kind: "signed_out" }
+  /** Link alınıyor. */
+  | { kind: "loading" }
+  /** Link hazır — normal dış bağlantı. */
+  | { kind: "ready"; url: string }
+  /** Alınamadı (linki olmayan grup dahil) — sebep kullanıcıya YAZILIR. */
+  | { kind: "unavailable"; message: string };
+
 interface LandingDetailViewProps {
   loading: boolean;
   landing: WhatsAppLanding | null;
   canEdit: boolean;
   copied: boolean;
+  invite: LandingInviteState;
   onBackToList: () => void;
   onShare: () => void;
+  onRequestSignIn: () => void;
 }
 
 export function LandingDetailView({
@@ -28,8 +49,10 @@ export function LandingDetailView({
   landing,
   canEdit,
   copied,
+  invite,
   onBackToList,
   onShare,
+  onRequestSignIn,
 }: LandingDetailViewProps) {
   const conditionItems = useMemo(
     () =>
@@ -40,11 +63,13 @@ export function LandingDetailView({
     [landing],
   );
 
-  const hasLink = Boolean(landing?.whatsappLink?.trim());
-  const ctaMeta = useMemo(() => {
-    if (!hasLink || !landing) return null;
-    return getPlatformCtaMeta(landing.platform, landing.whatsappLink);
-  }, [hasLink, landing]);
+  // CTA'nın etiketi/ikonu platformdan gelir ve linkten BAĞIMSIZ hesaplanır —
+  // böylece link henüz yokken de düğme doğru görünür (eski kod linki olmayan
+  // grupta düğmeyi tamamen gizliyordu).
+  const ctaMeta = useMemo(
+    () => (landing ? getPlatformCtaMeta(landing.platform, invite.kind === "ready" ? invite.url : "") : null),
+    [landing, invite],
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -132,17 +157,42 @@ export function LandingDetailView({
                   </Button>
                 ) : null}
 
-                {hasLink && ctaMeta ? (
-                  <Button
-                    size="lg"
-                    asChild
-                    className={`w-full gap-2 ${ctaMeta.bgClass} text-white ${ctaMeta.hoverClass}`}
-                  >
-                    <a href={landing.whatsappLink} target="_blank" rel="noopener noreferrer">
+                {ctaMeta ? (
+                  invite.kind === "ready" ? (
+                    <Button
+                      size="lg"
+                      asChild
+                      className={`w-full gap-2 ${ctaMeta.bgClass} text-white ${ctaMeta.hoverClass}`}
+                    >
+                      <a href={invite.url} target="_blank" rel="noopener noreferrer">
+                        <ctaMeta.icon className="h-5 w-5" />
+                        {ctaMeta.label}
+                      </a>
+                    </Button>
+                  ) : invite.kind === "signed_out" ? (
+                    <Button
+                      size="lg"
+                      onClick={onRequestSignIn}
+                      className={`w-full gap-2 ${ctaMeta.bgClass} text-white ${ctaMeta.hoverClass}`}
+                    >
                       <ctaMeta.icon className="h-5 w-5" />
-                      {ctaMeta.label}
-                    </a>
-                  </Button>
+                      Giriş yap ve katıl
+                    </Button>
+                  ) : invite.kind === "loading" ? (
+                    <Button size="lg" disabled className="w-full gap-2">
+                      <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+                      Davet linki alınıyor...
+                    </Button>
+                  ) : (
+                    // Sebep YAZILIR. Sessizce kaybolan düğme, kullanıcıya sistemin
+                    // bozuk olduğunu öğretir.
+                    <div
+                      role="status"
+                      className="w-full rounded-md border border-border bg-muted/50 px-4 py-3 text-center text-sm text-muted-foreground"
+                    >
+                      {invite.message}
+                    </div>
+                  )
                 ) : null}
 
                 <Button size="lg" className="w-full gap-2 bg-orange-500 text-white hover:bg-orange-600" onClick={onShare}>

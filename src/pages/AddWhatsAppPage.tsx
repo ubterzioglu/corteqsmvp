@@ -11,7 +11,7 @@ import { AddCommunityFormSection } from "@/components/whatsapp/AddCommunityFormS
 import { AddCommunityHero } from "@/components/whatsapp/AddCommunityHero";
 import { CommunityFilters } from "@/components/whatsapp/CommunityFilters";
 import { LandingCard } from "@/components/whatsapp/LandingCard";
-import { LandingDetailView } from "@/components/whatsapp/LandingDetailView";
+import { LandingDetailView, type LandingInviteState } from "@/components/whatsapp/LandingDetailView";
 import {
   buildSubmitterDescription,
   getErrorMessage,
@@ -25,8 +25,10 @@ import {
   buildLandingDescription,
   canCurrentUserEditLanding,
   createJoinRequest,
+  fetchLandingInviteUrl,
   getEditableLandingForCurrentUser,
   getLanding,
+  LANDING_INVITE_FAILURE_MESSAGES,
   listLandings,
   submitLanding,
   type LandingCategory,
@@ -59,6 +61,7 @@ export default function AddWhatsAppPage() {
   const [submittingGroup, setSubmittingGroup] = useState(false);
   const [submittingJoin, setSubmittingJoin] = useState(false);
   const [canEditSelectedLanding, setCanEditSelectedLanding] = useState(false);
+  const [invite, setInvite] = useState<LandingInviteState>({ kind: "signed_out" });
   const [groupForm, setGroupForm] = useState<GroupFormState>(initialGroupForm);
   const [joinForm, setJoinForm] = useState<JoinFormState>(initialJoinForm);
 
@@ -133,6 +136,41 @@ export default function AddWhatsAppPage() {
       cancelled = true;
     };
   }, [groupSlug, user]);
+
+  // G03b · Davet linki artık satırla gelmiyor; yalnız girişli kullanıcıya RPC ile
+  // veriliyor. Link SAYFA AÇILIRKEN çekilir, düğmeye basılınca DEĞİL — tıklamadan
+  // sonra `window.open` çağırmak mobil tarayıcılarda açılır pencere engeline takılır
+  // ve kullanıcı hiçbir şey olmadığını görür. Böylece düğme normal bir <a> kalır.
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!selectedLanding?.id) {
+      setInvite({ kind: "signed_out" });
+      return;
+    }
+
+    if (!user) {
+      setInvite({ kind: "signed_out" });
+      return;
+    }
+
+    setInvite({ kind: "loading" });
+    void fetchLandingInviteUrl(selectedLanding.id).then((result) => {
+      if (cancelled) return;
+      setInvite(
+        result.url
+          ? { kind: "ready", url: result.url }
+          : {
+              kind: "unavailable",
+              message: LANDING_INVITE_FAILURE_MESSAGES[result.failure ?? "unknown"],
+            },
+      );
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedLanding?.id, user]);
 
   useEffect(() => {
     let cancelled = false;
@@ -225,17 +263,30 @@ export default function AddWhatsAppPage() {
     return false;
   };
 
-  const ensureSignedInForGroupSubmit = async () => {
+  /**
+   * Girişsiz kullanıcıyı Google ile girişe yollar ve DÖNÜŞ ADRESİNİ korur.
+   *
+   * ⚠️ `description` ve dönüş parametreleri çağrı yerine göre DEĞİŞİR; tek bir
+   * metinle iki akışı kullanmak kullanıcıyı yanlış yere götürür: grup EKLEME
+   * akışı dönüşte formu açmalı (`openGroupForm=1`), grup KATILMA akışı ise
+   * bulunduğu grubun sayfasında kalmalı.
+   */
+  const ensureSignedIn = async (intent: "submit_group" | "join_group") => {
     if (user) return true;
 
     toast({
       title: "Üye olmalısınız",
-      description: "Grup eklemek için önce üye olmalısınız. Google ile giriş yapılıyor...",
+      description:
+        intent === "submit_group"
+          ? "Grup eklemek için önce üye olmalısınız. Google ile giriş yapılıyor..."
+          : "Davet linkini görmek için önce üye olmalısınız. Google ile giriş yapılıyor...",
     });
 
     const nextParams = new URLSearchParams(searchParams);
-    nextParams.delete("group");
-    nextParams.set("openGroupForm", "1");
+    if (intent === "submit_group") {
+      nextParams.delete("group");
+      nextParams.set("openGroupForm", "1");
+    }
     const nextQuery = nextParams.toString();
     const nextPath = nextQuery ? `${location.pathname}?${nextQuery}` : location.pathname;
 
@@ -248,6 +299,8 @@ export default function AddWhatsAppPage() {
 
     return false;
   };
+
+  const ensureSignedInForGroupSubmit = () => ensureSignedIn("submit_group");
 
   const handleGroupSubmit = async () => {
     if (!groupForm.groupName.trim() || !groupForm.whatsappLink.trim() || !groupForm.country.trim() || !groupForm.city.trim()) {
@@ -383,8 +436,10 @@ export default function AddWhatsAppPage() {
         landing={selectedLanding}
         canEdit={canEditSelectedLanding}
         copied={copied}
+        invite={invite}
         onBackToList={backToList}
         onShare={() => void handleShare()}
+        onRequestSignIn={() => void ensureSignedIn("join_group")}
       />
     );
   }

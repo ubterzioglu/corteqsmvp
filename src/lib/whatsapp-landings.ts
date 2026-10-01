@@ -20,6 +20,24 @@ export type LandingLanguage = "tr" | "en" | "de" | "ar";
 export type LandingOrigin = "global" | "mena" | "berlin" | "turkiye" | "avrupa";
 
 type WhatsAppLandingRow = Tables<"whatsapp_landings">;
+
+/**
+ * G03b · Dizinin ve detay sayfasının ANONİME AÇIK okuma yüzeyi.
+ *
+ * ⚠️ Halka açık okuma `whatsapp_landings` tablosundan DEĞİL, bu view'dan yapılır.
+ * View `whatsapp_link` · `admin_contact` · `user_id` · `rejection_reason` alanlarını
+ * `null` döner (migration `20261001110000`). Sebep: taban tablo anon'a `approved`
+ * satırın TÜM kolonlarını açıyordu — davet linki (K1) ve grup yöneticilerinin
+ * **adı + e-postası + telefonu** (`admin_contact`, 10/10 satırda dolu) dahil.
+ *
+ * ⚠️ Buraya `whatsapp_landings` yazıp geri çevirme. RLS **satır** düzeyinde çalışır,
+ * **kolon** düzeyinde değil; "satırı göster, kolonu gizle" politikası yazılamaz.
+ * Tek doğru yüzey view'dır; davet linki yalnız `fetchLandingInviteUrl` ile gelir.
+ *
+ * ⚠️ YÖNETİCİ ve SAHİP yolları bu view'ı KULLANMAZ — onların `rejection_reason` ve
+ * `admin_contact` alanlarına ihtiyacı var ve taban tablodan/RPC'den okurlar.
+ */
+const PUBLIC_LANDINGS_SOURCE = "whatsapp_landings_public" as const;
 type WhatsAppJoinRequestInsert = TablesInsert<"whatsapp_join_requests">;
 
 export interface WhatsAppLanding {
@@ -358,15 +376,58 @@ async function getOptionalUser() {
 }
 
 export async function getLanding(slug: string): Promise<WhatsAppLanding | undefined> {
+  // G03b: PII'siz view. `whatsappLink` burada daima boş gelir — davet linki
+  // `fetchLandingInviteUrl` ile, yalnız girişli kullanıcıya verilir.
   const { data, error } = await supabase
-    .from("whatsapp_landings")
+    .from(PUBLIC_LANDINGS_SOURCE)
     .select("*")
     .eq("slug", slug)
     .maybeSingle();
 
-  if (!error && data) return rowToLanding(data);
+  if (!error && data) return rowToLanding(data as WhatsAppLandingRow);
   return undefined;
 }
+
+/**
+ * Yayındaki bir grubun davet linkini döner. **Yalnız girişli kullanıcı** çağırabilir;
+ * RPC `anon`'a kapalıdır (migration `20261001110000`).
+ *
+ * Hata YUTULMAZ, çağırana döner: linki olmayan grup (`P0002`) ile giriş gerektiren
+ * durum (`42501`) kullanıcıya FARKLI mesaj göstermek zorundadır — ikisini tek
+ * "bir şeyler ters gitti"ye indirmek, kullanıcıya giriş yapması gerektiğini
+ * söylemeyen bir düğme üretir.
+ *
+ * ⚠️ RPC hataları supabase-js'te **düz nesnedir**, `Error` örneği DEĞİL — `instanceof
+ * Error` ile daraltma, `code` okunamaz hâle gelir (bu repoda aylarca canlıda kalmış
+ * bir kusur sınıfı).
+ */
+export type LandingInviteFailure = "auth_required" | "no_link" | "unknown";
+
+export interface LandingInviteResult {
+  url: string | null;
+  failure: LandingInviteFailure | null;
+}
+
+export async function fetchLandingInviteUrl(slug: string): Promise<LandingInviteResult> {
+  const { data, error } = await supabase.rpc("get_whatsapp_landing_invite", { p_slug: slug });
+
+  if (!error) {
+    const url = typeof data === "string" ? data.trim() : "";
+    return url ? { url, failure: null } : { url: null, failure: "no_link" };
+  }
+
+  const code = (error as { code?: string } | null)?.code;
+  if (code === "42501") return { url: null, failure: "auth_required" };
+  if (code === "P0002") return { url: null, failure: "no_link" };
+  return { url: null, failure: "unknown" };
+}
+
+/** Davet linki alınamadığında kullanıcıya gösterilecek Türkçe metin. */
+export const LANDING_INVITE_FAILURE_MESSAGES: Record<LandingInviteFailure, string> = {
+  auth_required: "Davet linkini görmek için giriş yapmalısın.",
+  no_link: "Bu grubun davet linki henüz eklenmemiş.",
+  unknown: "Davet linki alınamadı. Lütfen daha sonra tekrar dene.",
+};
 
 export async function getEditableLandingForCurrentUser(slug: string): Promise<WhatsAppLanding | undefined> {
   const { data, error } = await supabase.rpc("get_current_user_editable_whatsapp_landing", {
@@ -389,15 +450,18 @@ export async function canCurrentUserEditLanding(landingDbId: string): Promise<bo
 /** ⚠️ TAM liste (S07c): onaylı kayıt eksik gösterilirse grup "yok" sanılır. */
 export async function listLandings(): Promise<WhatsAppLanding[]> {
   try {
+    // G03b: PII'siz view. View zaten `status='approved'` süzüyor ama filtre burada
+    // da BIRAKILDI — sözleşme iki yerde birden yazılı olsun, view bir gün
+    // genişletilirse dizin sessizce taslak grup göstermesin.
     const rows = await fetchAllRows((from, to) =>
       supabase
-        .from("whatsapp_landings")
+        .from(PUBLIC_LANDINGS_SOURCE)
         .select("*")
         .eq("status", "approved")
         .order("created_at", { ascending: false })
         .range(from, to),
     );
-    return rows.map(rowToLanding);
+    return rows.map((row) => rowToLanding(row as WhatsAppLandingRow));
   } catch {
     return [];
   }

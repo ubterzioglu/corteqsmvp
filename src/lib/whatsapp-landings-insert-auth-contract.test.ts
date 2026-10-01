@@ -69,15 +69,30 @@ describe("G02 · grup ekleme giriş ister (arayüz yakası)", () => {
   });
 
   it("oturum kapısı girişsiz kullanıcıyı açıkça uyarır", () => {
+    // G03b'de kapı `ensureSignedIn(intent)` olarak genelleştirildi ve
+    // `ensureSignedInForGroupSubmit` ince bir sarmalayıcıya döndü. Bu testi ilk
+    // yazıldığı hâlde bırakmak onu VAKUM yapardı: sarmalayıcının gövdesinde
+    // ne `if (user)` ne de uyarı metni var, iddia boş dilimde çalışırdı.
+    // Bu yüzden çıpa GERÇEK kapıya taşındı — gevşetme değil, hedef düzeltme.
     const gate = sliceBetween(
       read(PAGE),
-      "const ensureSignedInForGroupSubmit",
+      "const ensureSignedIn = async (",
       "signInWithOAuth",
-      "ensureSignedInForGroupSubmit gövdesi",
+      "ensureSignedIn gövdesi",
     );
     expect(gate).toContain("if (user) return true;");
     // Kullanıcıya Türkçe bir açıklama gösterilmeli — sessizce yönlendirme değil.
     expect(gate).toContain("Üye olmalısınız");
+    // Grup ekleme ve davet linki akışları AYRI metin göstermeli; tek metin
+    // kullanıcıyı yanlış beklentiye sokar.
+    expect(gate).toContain("Grup eklemek için");
+    expect(gate).toContain("Davet linkini görmek için");
+  });
+
+  it("grup ekleme sarmalayıcısı gerçekten o kapıya bağlıdır", () => {
+    expect(read(PAGE)).toContain(
+      'const ensureSignedInForGroupSubmit = () => ensureSignedIn("submit_group");',
+    );
   });
 
   it("gönderim hatası kullanıcıya gösterilir, yutulmaz", () => {

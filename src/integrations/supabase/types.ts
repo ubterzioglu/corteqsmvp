@@ -12672,6 +12672,13 @@ export type Database = {
             referencedRelation: "whatsapp_landings"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "whatsapp_join_requests_landing_id_fkey"
+            columns: ["landing_id"]
+            isOneToOne: false
+            referencedRelation: "whatsapp_landings_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       whatsapp_landing_editors: {
@@ -12705,6 +12712,13 @@ export type Database = {
             columns: ["landing_id"]
             isOneToOne: false
             referencedRelation: "whatsapp_landings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "whatsapp_landing_editors_landing_id_fkey"
+            columns: ["landing_id"]
+            isOneToOne: false
+            referencedRelation: "whatsapp_landings_public"
             referencedColumns: ["id"]
           },
         ]
@@ -13095,6 +13109,96 @@ export type Database = {
           total_expense_try: number | null
           total_income_try: number | null
           total_records: number | null
+        }
+        Relationships: []
+      }
+      whatsapp_landings_public: {
+        Row: {
+          admin_approved: boolean | null
+          admin_contact: string | null
+          admin_name: string | null
+          call_to_action_text: string | null
+          category: string | null
+          city: string | null
+          conditions: string | null
+          country: string | null
+          created_at: string | null
+          description: string | null
+          group_name: string | null
+          group_score: number | null
+          hero_image: string | null
+          id: string | null
+          language: string | null
+          member_approved: boolean | null
+          member_count: number | null
+          member_count_updated_at: string | null
+          mode: string | null
+          origin: string | null
+          rejection_reason: string | null
+          slug: string | null
+          status: string | null
+          tagline: string | null
+          updated_at: string | null
+          user_id: string | null
+          whatsapp_link: string | null
+        }
+        Insert: {
+          admin_approved?: boolean | null
+          admin_contact?: never
+          admin_name?: string | null
+          call_to_action_text?: string | null
+          category?: string | null
+          city?: string | null
+          conditions?: string | null
+          country?: string | null
+          created_at?: string | null
+          description?: string | null
+          group_name?: string | null
+          group_score?: number | null
+          hero_image?: string | null
+          id?: string | null
+          language?: string | null
+          member_approved?: boolean | null
+          member_count?: number | null
+          member_count_updated_at?: string | null
+          mode?: string | null
+          origin?: string | null
+          rejection_reason?: never
+          slug?: string | null
+          status?: string | null
+          tagline?: string | null
+          updated_at?: string | null
+          user_id?: never
+          whatsapp_link?: never
+        }
+        Update: {
+          admin_approved?: boolean | null
+          admin_contact?: never
+          admin_name?: string | null
+          call_to_action_text?: string | null
+          category?: string | null
+          city?: string | null
+          conditions?: string | null
+          country?: string | null
+          created_at?: string | null
+          description?: string | null
+          group_name?: string | null
+          group_score?: number | null
+          hero_image?: string | null
+          id?: string | null
+          language?: string | null
+          member_approved?: boolean | null
+          member_count?: number | null
+          member_count_updated_at?: string | null
+          mode?: string | null
+          origin?: string | null
+          rejection_reason?: never
+          slug?: string | null
+          status?: string | null
+          tagline?: string | null
+          updated_at?: string | null
+          user_id?: never
+          whatsapp_link?: never
         }
         Relationships: []
       }
@@ -14436,6 +14540,7 @@ export type Database = {
           usage_ratio: number
         }[]
       }
+      get_whatsapp_landing_invite: { Args: { p_slug: string }; Returns: string }
       gettransactionid: { Args: never; Returns: unknown }
       has_cadde_feature: {
         Args: { fkey: string; uid: string }
