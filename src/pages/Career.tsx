@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Globe2, PenTool, Megaphone, Code2, AlertTriangle } from "lucide-react";
+import CareerApplicationForm from "@/components/career/CareerApplicationForm";
 import CareerClockBand from "@/components/career/CareerClockBand";
 import CareerInternProgram from "@/components/career/CareerInternProgram";
 import CareerHero from "@/components/career/CareerHero";
@@ -330,19 +331,19 @@ const Career = () => {
             Çapa şimdiden burada: ilan kartındaki "Bu pozisyona başvur" düğmesi
             hiçbir ara adımda boşa düşmesin. */}
         <section id="basvuru" className="container mx-auto scroll-mt-24 px-4 mt-12">
-          <div className="max-w-2xl mx-auto text-center">
-            {selectedPosition && (
-              <p className="mb-4 rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 text-sm">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="text-2xl font-bold sm:text-3xl">Başvur</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Formu doldur, CV'ni ekle. Ön yazı ve sunum isteğe bağlı.
+            </p>
+            {selectedPosition && selectedPositionLabel && (
+              <p className="mt-4 rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 text-sm">
                 Seçtiğin pozisyon: <strong>{selectedPositionLabel}</strong>
               </p>
             )}
-            <p className="text-sm text-muted-foreground mb-4">
-              Aradığın pozisyonu bulamadın mı? Genel başvuru bırak — yetenek
-              havuzumuza ekleyelim.
-            </p>
-            <Button variant="outline" onClick={() => apply(null)}>
-              Genel Başvuru Bırak
-            </Button>
+            <div className="mt-8">
+              <CareerApplicationForm selectedPosition={selectedPosition} />
+            </div>
           </div>
         </section>
       </main>

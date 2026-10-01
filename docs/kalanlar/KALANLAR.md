@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **61** (N 0 · W 8 · M 27 · G 21 · KR 5) |
+> | **Açık batch** | **60** (N 0 · W 8 · M 27 · G 21 · KR 4) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -150,7 +150,7 @@ traction ölçülecek.
 |---|---|---|---|
 | 0 | ~~KR01~~ | ✅ **KAPANDI 01.10** — `src/lib/careers/` (17 ilan + staj) + 6 sözleşme testi | ✅ |
 | 1 | ~~KR02~~ ~~KR03~~ | ✅ **İKİSİ DE KAPANDI 01.10** — tablo + kova + RPC canlıda · `careers-api` + şema + çift yönlü hata haritası | ✅ |
-| 2 | ~~KR04~~ ~~KR05~~ · **KR06** | ✅ KR04+KR05 KAPANDI 02.10 (iskelet + 17 ilan + staj + filtre) · kalan: başvuru formu (3 dosya) | 🟢 |
+| 2 | ~~KR04~~ ~~KR05~~ ~~KR06~~ | ✅ **ÜÇÜ DE KAPANDI 02.10** — iskelet + 17 ilan + staj + filtre + başvuru formu (uçtan uca canlı kanıt) | ✅ |
 | 3 | **KR07** | Eski 4 ilanın korunması | 🟢 |
 | 4 | **KR08–KR09** | `/admin/kadro/basvurular` · yeni başvuruda e-posta | 🟢 |
 | 5 | **KR10** | SEO · sitemap · araç kataloğu · doküman | 🟢 |
@@ -1530,7 +1530,7 @@ gidiyor ve **o tablonun özel admin ekranı yok** — başvurular düzenli okunm
 - "Bu pozisyona başvur" → form seçimini doldurur + forma kaydırır.
 - **Kabul:** 17 ilan + staj görünüyor, filtre çalışıyor, derin bağlantı (`#ilan-<id>`) açılıyor.
 
-**KR06 — Başvuru formu (3 dosya) · canlı kanıt zorunlu**
+**~~KR06~~ — ✅ KAPANDI 02.10** · Başvuru formu (3 dosya) · canlı kanıt alındı
 
 - `CareerApplicationForm` + `CareerFileDrop`; `react-hook-form` + `zodResolver`,
   sürükle-bırak + tıkla. KVKK onayı zorunlu (`/legal/kvkk`, `/legal/privacy` — ikisi de mevcut).
@@ -1745,6 +1745,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| KR06 · başvuru formu (3 dosya) + sürükle-bırak + KVKK onayı | **CANLI UÇTAN UCA KANIT (anon anahtarla, 5 çağrı):** doğru desenli anahtarla CV yükleme **200** · desen dışı anahtar **RLS reddi** · izinsiz MIME **415** · anon dosya okuma **reddedildi** · RPC başvuru **200** · ölçüm satırı + dosya silindi (canlı: 0 başvuru / 0 dosya) · 8 sözleşme testi, **7/7 mutasyon yakalandı** · 🔴 **Bir mutasyon KAÇTI ve testi düzeltti:** seçilen pozisyon testi mount anını ölçüyordu, oysa `defaultValues` zaten seçimi taşıyor — senkron eden `useEffect` silinse bile yeşil kalıyordu; gerçek senaryo form ekrandayken listeden seçim yapmak, test `rerender` ile ona çevrildi · ⚠️ KVKK onayı varsayılan **işaretsiz** (işaretli gelseydi kullanıcı onay vermeden göndermiş sayılırdı ve RPC de görmezdi) · `check:dead` **0 borç** — kariyer baseline'ı tamamen boşaldı |
 | KR05 · 17 ilan listesi + alan filtresi + staj bloğu + derin bağlantı | `CareerPositionList` · `CareerPositionCard` · `CareerInternProgram` · `career-anchors.ts` · 8 sözleşme testi, **6/6 mutasyon yakalandı** · 🔴 **Bir mutasyon KAÇTI ve gerçek bir kusur çıkardı:** derin bağlantı yalnız mount'ta okunuyordu, yani SPA'da sayfadayken tıklanan `#ilan-…` bağlantısı SESSİZCE ölüyordu ve `setFilter(ALL)` satırı fiilen ölü koddu → `hashchange` dinleyicisi eklendi, test gerçek senaryoya (önce filtrele, sonra başka alandaki ilana git) çevrildi · ⚠️ `positionAnchorId` bileşen dosyasından çıkarıldı (bileşen dışı ihraç fast refresh'i kapatıyor, ESLint uyardı) · `check:dead` bayat baseline uyardı, 2 satır silindi |
 | KR04 · kariyer sayfa iskeleti (hero · saat bandı · kurucu mektupları · katılım modelleri) | `src/components/career/` 5 dosya · kurucu fotoğrafları base64'ten çıkarılıp `public/career/` altına **gerçek dosya** (14,5 KB + 17,1 KB) · saat bandı 8 şehir, `Intl.DateTimeFormat("tr-TR", { timeZone })`, 15 sn · 7 sözleşme testi, **6/6 mutasyon yakalandı** (elle UTC kaydırması · yerelsiz biçimlendirme · şehir düşürüldü · base64 koda gömüldü · `useSeo` deps kaldırıldı · Türkçe harf kırpıldı) · ⚠️ sayfa YARIM BIRAKILMADI: eski içerik "önceki dönem" olarak altta duruyor, KR05/KR06 araya giriyor · ⚠️ `check:dead` baseline notu düzeltildi — 4 dosyayı KR04 değil **KR05 (veri) ve KR06 (API)** siler |
 | KR03 · `careers-api.ts` + `careers-schemas.ts` + çift yönlü hata haritası | 11 sözleşme testi, **6/6 mutasyon yakalandı** (haritadan kod silindi · haritaya hayali kod · istemci sınırı kovayı aştı · ham dosya adı anahtarda · `.key` MIME silindi · `accept` ayrıştı) · ⚠️ **mevcut `validatePresentationFile` KULLANILMADI: 50 MB'a izin veriyor, kova 25 MB'da kesiyor** → 40 MB'lık sunum istemciden geçip kovadan dönerdi; kariyer kendi sınırlarını tanımlar (CV 10 MB · sunum 25 MB) ve test bunları migration'daki kova sınırına karşı denetler · ⚠️ MIME `file.type`'tan DEĞİL uzantıdan verilir: `.key` tarayıcıya göre boş/zip gelir ve dar kova listesinden dönerdi · `check:dead` 0 yeni / **4 bilinen borç** (🔴 KR04 hepsini siler) |
