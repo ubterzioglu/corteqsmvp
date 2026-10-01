@@ -31,11 +31,12 @@ export const CONFIG_REFERENCED_EXCEPTIONS = new Set([
 // kullanmaz — 02.10'da ölçüldü, bu yüzden "KR04 siler" notu düzeltildi.)
 // Silinmezlerse bayat baseline kaydı olarak rapor edilir ve check:dead yine
 // kırmızıya döner — mekanizma kendini temizler.
+// ✅ KR05 (02.10): `careers-data.ts` + `careers-types.ts` satırları SİLİNDİ —
+// ilan listesi artık onları kullanıyor, denetleyici "bayat baseline" diye
+// uyardı ve mekanizma kendini temizledi. Kalan ikisini KR06 (form) siler.
 export const KNOWN_DEAD_FILES = new Set([
   "src/lib/careers/careers-api.ts",
-  "src/lib/careers/careers-data.ts",
   "src/lib/careers/careers-schemas.ts",
-  "src/lib/careers/careers-types.ts",
 ]);
 
 // Yalnız testlerin kullandığı paylaşılan yardımcıların yaşadığı dizin. Buradaki bir

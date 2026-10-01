@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Globe2, PenTool, Megaphone, Code2, AlertTriangle } from "lucide-react";
 import CareerClockBand from "@/components/career/CareerClockBand";
+import CareerInternProgram from "@/components/career/CareerInternProgram";
 import CareerHero from "@/components/career/CareerHero";
+import CareerPositionList from "@/components/career/CareerPositionList";
 import FounderLetters from "@/components/career/FounderLetters";
 import ParticipationModels from "@/components/career/ParticipationModels";
 import InterestForm from "@/components/InterestForm";
 import { Button } from "@/components/ui/button";
+import { CAREER_INTERNSHIP, CAREER_JOBS } from "@/lib/careers/careers-data";
 import { PAGE_SEO } from "@/lib/page-seo";
 import { useSeo } from "@/lib/seo";
 
@@ -130,11 +133,27 @@ const Career = () => {
   useSeo(PAGE_SEO.career, []);
   const [open, setOpen] = useState(false);
   const [activeJob, setActiveJob] = useState<Job | null>(null);
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
 
   const apply = (job: Job | null) => {
     setActiveJob(job);
     setOpen(true);
   };
+
+  /**
+   * Yeni ilan listesinden gelen başvuru isteği (KR05). Seçim tutulur ve forma
+   * kaydırılır; formun kendisi KR06'da bu seçimi doldurur. Şu an hedef, eski
+   * ilgi formunun bulunduğu `#basvuru` çapasıdır — KR06 aynı çapayı devralır,
+   * böylece bağlantı hiçbir ara adımda boşa düşmez.
+   */
+  const handleApplyToPosition = (positionId: string) => {
+    setSelectedPosition(positionId);
+    document.getElementById("basvuru")?.scrollIntoView({ block: "start" });
+  };
+
+  const selectedPositionLabel =
+    CAREER_JOBS.find((job) => job.id === selectedPosition)?.tr ??
+    (selectedPosition === CAREER_INTERNSHIP.id ? CAREER_INTERNSHIP.tr : null);
 
   return (
     <div className="min-h-screen bg-background">
@@ -147,6 +166,8 @@ const Career = () => {
         <CareerClockBand />
         <FounderLetters />
         <ParticipationModels />
+        <CareerPositionList onApply={handleApplyToPosition} />
+        <CareerInternProgram onApply={handleApplyToPosition} />
 
         {/* ——— Önceki dönem içeriği (KR07'de ayrı bölüme alınacak) ——— */}
 
@@ -305,9 +326,16 @@ const Career = () => {
           </div>
         </section>
 
-        {/* FOOTER CTA */}
-        <section className="container mx-auto px-4 mt-12">
+        {/* FOOTER CTA — `#basvuru` çapası KR06'da gerçek başvuru formuna devredilir.
+            Çapa şimdiden burada: ilan kartındaki "Bu pozisyona başvur" düğmesi
+            hiçbir ara adımda boşa düşmesin. */}
+        <section id="basvuru" className="container mx-auto scroll-mt-24 px-4 mt-12">
           <div className="max-w-2xl mx-auto text-center">
+            {selectedPosition && (
+              <p className="mb-4 rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 text-sm">
+                Seçtiğin pozisyon: <strong>{selectedPositionLabel}</strong>
+              </p>
+            )}
             <p className="text-sm text-muted-foreground mb-4">
               Aradığın pozisyonu bulamadın mı? Genel başvuru bırak — yetenek
               havuzumuza ekleyelim.
