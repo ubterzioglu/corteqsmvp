@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **67** (N 0 · W 8 · M 27 · G 22 · KR 10) |
+> | **Açık batch** | **66** (N 0 · W 8 · M 27 · G 21 · KR 10) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -137,7 +137,7 @@ traction ölçülecek.
 | B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟢 | ⛔ **U06** |
 | B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🟢 | — |
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
-| C | **G09–G11** | `group_settings` · `whatsapp_landings` genişletme · 10 grubun göçü | 🟢 | ⛔ **U07** (G11) |
+| C | ~~G09~~ · **G10–G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda, 15 satır) · kalan: `whatsapp_landings` genişletme · 10 grubun göçü | 🟢 | ⛔ **U07** (G11) |
 | D | **G12–G17** | Durum makinesi · sahiplik · şikayet · uyarı · gönderiler · sağlık skoru | 🟢 | — |
 | E | **G18–G21** | 4 sayfa: form · dizin · detay · sahip paneli | 🟢 | — |
 | F | **G22–G25** | 6 zamanlanmış görev · 8 bildirim · moderatör paneli · 13 kabul testi | 🟢 | — |
@@ -1277,6 +1277,9 @@ zaten temiz ölçüldü, G03c'den sonra yeniden doğrulanacak:
 - ⚠️ **SMS ÜCRETLİ (bütçe 20–25 €, T21) → hız sınırı zorunlu**, yoksa fatura riski. Sınırlar
   `group_settings`'te, sayım **DB'de** (istemcide değil).
 - **Kabul:** sınır aşımında Türkçe mesaj; sınır DB'de sayılıyor.
+- 🔴 **G09'dan devredilen karar:** `groups.otp_rate_limits` satırı canlıda **ajan ihtiyatıyla**
+  dolduruldu (günde 5 · saatte 3 · 60 sn bekleme · 5 doğrulama denemesi). Pakette sayı YOK;
+  bu batch'te kullanıcıyla teyit edilir. Değiştirmek kod değil, tek satır SQL `update`'idir.
 
 **G06 — Kurumsal doğrulama seviyesi: şema + belge yükleme** · migration + kod
 - `catalog_items.verification_level` (0/1/2) + `verified_at` + `verified_by`. Talep akışı
@@ -1310,8 +1313,20 @@ zaten temiz ölçüldü, G03c'den sonra yeniden doğrulanacak:
 - **Kabul:** üç platform için `ok`/`invalid`/`unknown` ölçümlü kısa rapor; istek sayısı ve yanıt
   kodları yazılı.
 
-**G09 — `group_settings` anahtar-değer ayar tablosu** · migration
-- `cadde_settings` deseni. İlk satırlar: `fast_lane_enabled=false` · `daily_submit_limit=5` ·
+**~~G09~~ — ✅ KAPANDI 01.10** · `group_settings` anahtar-değer ayar tablosu · migration
+
+- Migration `20261001120000_group_settings.sql` **canlıda** · **15 satır** · 3 okuma yardımcısı
+  (`group_setting_bool` / `_int` / `_json`).
+- ⚠️ **`group_setting_json` istemciye AÇILMADI** (kara listeyi okuyan onu atlatır); sayısal
+  yardımcılar `authenticated`'a açık, tablo anon+authenticated'a tamamen kapalı.
+- ⚠️ **TS'te ayna modül bilerek YOK** — tek kaynak migration. Ayna modül bugün erişilemez
+  olurdu (`check:dead`, N01 tuzağı) ve "kodda 5 yazıyor → canlıda da 5" yanılgısını beslerdi
+  (Cadde'de yaşandı). Eşiği TS'ten okuyan ilk kod (G12+) modülü **gerçek tüketicisiyle**
+  ekler ve `group-settings.test.ts` içindeki `allowed` listesine yazar.
+- 🔴 **G05'e devredilen karar:** `groups.otp_rate_limits` pakette sayı taşımıyor; konan değer
+  (günde 5 · saatte 3 · 60 sn bekleme · 5 deneme) **ajan ihtiyatı**, kullanıcıyla teyit edilecek.
+  SMS ücretli (bütçe 20–25 €, T21) olduğu için sıfır sınırla bırakılamazdı.
+- *(özgün kapsam)* `cadde_settings` deseni. İlk satırlar: `fast_lane_enabled=false` · `daily_submit_limit=5` ·
   `report_threshold=3` · **`report_require_phone=true`** · `report_min_account_age_days=7` ·
   `blocklist_keywords[]` · `invite_open_daily_limit=20` · `claim_code_ttl_minutes=10` ·
   `otp_rate_limits`.
@@ -1722,6 +1737,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G09 · `group_settings` anahtar-değer ayar tablosu + 3 okuma yardımcısı | mig `20261001120000` **canlıda** — 15 satır · `group_setting_bool/int/json` çalışıyor (olmayan anahtar varsayılana düşüyor: 42) · tablo grant'ları yalnız `postgres`+`service_role`, **anon SELECT 42501**, **anon RPC 42501** · RLS açık/0 politika · `group_setting_json` `authenticated`'a **açılmadı** (kara liste gizli kalmalı) · 5 sözleşme testi, **3/3 mutasyon yakalandı** · ledger 444/444 sapmasız · ⚠️ TS ayna modülü bilerek YOK (`check:dead` 0 yeni/0 borç korundu) · 🔴 `otp_rate_limits` değeri ajan ihtiyatı → G05'te teyit |
 | G08 · M1 spike: davet sayfasından grup adı okunabiliyor mu (rapor, üretim kodu yok) | **59 istek** ölçüldü (WA 27 · TG 13 · DC 34) — üçünde de ad+görsel kimlik doğrulamasız okunuyor · ⚠️ **HTTP 200 geçerlilik kanıtı DEĞİL**: WhatsApp uydurma 5 kodun 5'ine de 200 döndü, tek işaret `og:title`'ın **boş** olması · ⚠️ okunan ad kayıtlı addan farklı (2/2) → tam eşitlik karşılaştırması yazılamaz · ⚠️ başlık HTML varlık kodlu (`&#x131;`) → çözülmezse Türkçe bozulur · Discord resmî API `10006 Unknown Invite` (10/10) en temiz yol · hız sınırı bu hacimde görülmedi ama Discord `x-ratelimit-*` **yayınlamıyor** → "sınır yok" denemez · 🔴 `t.me/+…` geçerli hâli ÖLÇÜLEMEDİ (link yok) |
 | N07 · canlı ingest + embed + getirme kanıtı · docs-admin vekil kusuru kökten onarıldı | `8a777afc` — 88 admin-menu belgesi canlıda gömülü · getirme: ADMIN 0.215–0.287 doğru kayıt en üstte, MEMBER **0 admin-menu** · docs-admin re-ingest 404 belge/4901 parça **0 hata** (640 bayat satır prune) · korpus 5639/5639 gömülü · 🔴 kusur kök neden: `chunkText` emojiyi (🔴 U+1F534) örtüşme sınırında bölüyordu → yalnız vekil `\uDD34` → PostgREST "Empty or invalid json" (93'te 1, deterministik) · 3 test + 2/2 mutasyon · ⏳ tek kalan: kullanıcı UI kabulü (frontend deploy sonrası) |
 | N05 · yönetici menüsü prompt kuralı (`is_admin()` kapılı) + deploy | deploy `site-assistant` 88.19kB · canlı anon POST **401** · 5 yeni test, 3 mutasyon 3/3 · `check:functions` 12/12 sapmasız · ⚠️ Rancher Desktop motoru takılıydı (deploy Docker ister) — süreç+`wsl -t` ile yeniden başlatıldı · ℹ️ etki N07 embed'inden sonra görünür |
