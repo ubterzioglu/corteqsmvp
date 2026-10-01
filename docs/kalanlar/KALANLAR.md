@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **78** (A 1 · N 7 · W 8 · M 27 · G 25 · KR 10) |
+> | **Açık batch** | **77** (N 7 · W 8 · M 27 · G 25 · KR 10) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -68,9 +68,7 @@ Bu dosyaya yeni gelen ajan **sırayla** şunu yapar:
 
 ### A · Ajan yapar, karar gerekmez
 
-| ID | Başlık | Boyut | Kapı | Bağımlılık |
-|---|---|---|---|---|
-| **A14** | #REV-034 araç sonuç grafikleri → kutulu renkli görsel | küçük | 🟢 | — (görsel onayı iş bitince) |
+**Açık A batch'i YOK** — A14 01.10'da kapandı (↓ Kapananlar).
 
 ### N · Admin menü numaraları + asistanın yönetici bağlamı
 
@@ -246,7 +244,24 @@ gh run list --limit 1         # push sonrası CI yeşil mi
 
 ## A — Ajan yapar (senin kararın gerekmez)
 
-### A14 · #REV-034 — "Hangi Ülke Sana Uygun" sonuç grafikleri → kutulu renkli görsel
+### ✅ A14 · #REV-034 — "Hangi Ülke Sana Uygun" sonuç grafikleri → kutulu renkli görsel
+
+> **KAPANDI 2026-10-01 · `c3ff905`.** `RankedListCard` öğeleri artık bant rengini taşıyan
+> başlık şeridi olan kutular; alt boyut barları `h-1` → `h-2.5`, sayılar bant renginde.
+> **Kapsam kararı:** `ranked_list` canlıda **DÖRT** aktif araçta (`country_match` ·
+> `city_match` · `banka_secim_almanya` · `sigorta_secim_almanya`) — aşağıdaki eski not
+> "`city_match` gibi" diyordu, ölçülen sayı **4**. `toolKey` prop'u ile tek araca özel
+> görünüm üretmek YERİNE dördü birden güncellendi: aynı `result_kind` için iki ayrı
+> grafik dili tutarsızlık olurdu.
+> **Kanıt:** tsc **0** · lint **0** (32 problemin hepsi untracked `corteqs-ekstre-motoru/`'den) ·
+> `npm run test` **373 dosya / 2889 test** yeşil (taban 372/2882) · `check:dead` 0 yeni /
+> 0 borç / **962** erişilebilir · 7 yeni test **mutasyonla sınandı** (h-2.5→h-1, bant
+> rengi→nötr, bant etiketi silme — üçü de ilgili testi düşürdü, vakum test değil).
+> ⚠️ `ScoreBandBar`'a DOKUNULMADI — yalnız `className` geçildi; a275f131'in `progressbar`
+> rolü/aria sözleşmesi ve mevcut 21 testi aynen duruyor.
+> **Kalan tek adım: Burak'ın görsel onayı.** Önce/sonra önizlemesi:
+> <https://claude.ai/artifact/5KN3KXDDt7vvnR9PwD1R8L> — onay gelince panelden REV-034
+> "Yapıldı" işaretlenir (tamamlanma maili `#REV-034` numaralı gider, mekanizma U03(b)).
 
 - **İstek (Açık · Ö5 · ARAÇLAR 17.07.2026 · Burak, 18.07 kaydı):** test bitince çıkan
   **yatay bar grafikler** → "görselli kutular içinde **renkli** grafikler olabilir mi?"
@@ -1300,6 +1315,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| A14 · #REV-034 sıralama sonuçları kutulu renkli görsel (4 `ranked_list` aracı) | `c3ff905` — 373 dosya/2889 test yeşil · 7 yeni test mutasyonla sınandı · önizleme claude.ai/artifact/5KN3KXDDt7vvnR9PwD1R8L · ⏳ Burak görsel onayı bekliyor |
 | S01–S09 · G01–G03h · C00–C06 (22 batch: sessiz başarısızlık + güvenlik + clean code) | `3d8adc3`…`ccfbc28` zinciri · 28.09 devir notu (git geçmişi) |
 | A01 CI yeşil (katalog nokta-dosya sızıntısı) | `8389fb3` |
 | A03a/b pano ölçümü + yanlış onay migration'ı | `20260927200000…sql` · UPDATE 6+1 |
