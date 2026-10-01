@@ -11,6 +11,8 @@
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
 > | **Açık batch** | **78** (A 1 · N 7 · W 8 · M 27 · G 25 · KR 10) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
+> | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
+> | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
 > | **Kalıcı operasyon dersleri** | [`docs/operations/2026-09-30-kalici-operasyon-dersleri.md`](../operations/2026-09-30-kalici-operasyon-dersleri.md) |
 
 ---
@@ -35,6 +37,19 @@ Bu dosyaya yeni gelen ajan **sırayla** şunu yapar:
   Kanıt = hash, ölçülmüş sayı, SQL çıktısı, canlı HTTP kodu.
 - **Rakamlar bayatlar.** Aşağıdaki ölçüm tabanı 30.09'dan; batch'e başlarken yeniden ölç.
 - **Seriler birbirini bloke etmez.** U/K/P beklerken 🟢 olan başka bir seriden devam edilir.
+- 🛑 **Her batch'e BAŞLAMADAN kullanıcı onayı alınır** (kullanıcı kuralı, 01.10). Kapı 🟢
+  olması "plan onaylı" demektir, "şimdi başla" demek DEĞİLDİR — hangi batch'e geçileceği
+  her seferinde teyit edilir.
+
+**Önerilen yürütme sırası (01.10 onayından sonra):**
+
+1. **A14** — tek başına duran küçük UI işi, hiçbir şeye bağlı değil.
+2. **G01 → G02 → G03** — ⚠️ **canlıda AÇIK iki güvenlik kusuru.** Onaylı seriler arasında
+   tek "bugün zarar veriyor" sınıfı bu; sıranın başında olmaları bu yüzden.
+3. **N01 → N07** — 7 küçük batch, sıfır migration, en düşük risk.
+4. **G04 → G25** — G04/G05 ⛔ U06, G11 ⛔ U07; o üçü atlanıp gerisi sürdürülebilir.
+5. **KR01 → KR10**.
+6. **M01–M27** — onay geldiğinde.
 
 ---
 
@@ -64,13 +79,13 @@ Sıfır migration · sıfır yeni bağımlılık. Tahmin: 1–2 gün.
 
 | ID | Başlık | Boyut | Kapı | Not |
 |---|---|---|---|---|
-| **N01** | Numaralandırma çekirdeği (`admin-menu-numbering.ts`) | küçük | 🟡 | UI değişmez, yalnız yeni dosya |
-| **N02** | Menüde numaranın görünmesi (sidebar + palet) | küçük | 🟡 | ⛔ N01 |
-| **N03** | Üretilen katalog + bayatlama kapanı (snapshot) | küçük | 🟡 | ⛔ N01 |
-| **N04** | `admin-menu` bilgi kaynağı (`sources.mjs`) | küçük | 🟡 | ⛔ N03 |
-| **N05** | Prompt kuralı (yalnız yöneticide) · **DEPLOY** | küçük | 🟡 | ⛔ N04 |
-| **N06** | Bot yanıtında tıklanabilir link | küçük | 🟡 | **bağımsız · bugün canlıda kusur** |
-| **N07** | Canlı ingest + uçtan uca kabul · **KANIT TURU** | küçük | 🟡 | ⛔ N05 |
+| **N01** | Numaralandırma çekirdeği (`admin-menu-numbering.ts`) | küçük | 🟢 | UI değişmez, yalnız yeni dosya |
+| **N02** | Menüde numaranın görünmesi (sidebar + palet) | küçük | 🟢 | ⛔ N01 |
+| **N03** | Üretilen katalog + bayatlama kapanı (snapshot) | küçük | 🟢 | ⛔ N01 |
+| **N04** | `admin-menu` bilgi kaynağı (`sources.mjs`) | küçük | 🟢 | ⛔ N03 |
+| **N05** | Prompt kuralı (yalnız yöneticide) · **DEPLOY** | küçük | 🟢 | ⛔ N04 |
+| **N06** | Bot yanıtında tıklanabilir link | küçük | 🟢 | **bağımsız · bugün canlıda kusur** |
+| **N07** | Canlı ingest + uçtan uca kabul · **KANIT TURU** | küçük | 🟢 | ⛔ N05 |
 
 ### W · WhatsApp botu otomatik yanıt
 
@@ -111,15 +126,15 @@ traction ölçülecek.
 
 | Faz | ID | Kapsam | Kapı | Bağımlılık |
 |---|---|---|---|---|
-| A | **G01** | Paket dosyalarını `docs/dijital-gruplar/`'a al + CLAUDE.md eki | 🟡 | kök temizliği |
-| A | **G02–G03** | **Canlı güvenlik:** anonim INSERT kapat · davet linki anonime kapat | 🟡 | — |
-| B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟡 | ⛔ **U06** |
-| B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🟡 | — |
-| C | **G08** | M1 spike: davet sayfasından grup adı okunabiliyor mu (rapor) | 🟡 | — |
-| C | **G09–G11** | `group_settings` · `whatsapp_landings` genişletme · 10 grubun göçü | 🟡 | ⛔ **U07** (G11) |
-| D | **G12–G17** | Durum makinesi · sahiplik · şikayet · uyarı · gönderiler · sağlık skoru | 🟡 | — |
-| E | **G18–G21** | 4 sayfa: form · dizin · detay · sahip paneli | 🟡 | — |
-| F | **G22–G25** | 6 zamanlanmış görev · 8 bildirim · moderatör paneli · 13 kabul testi | 🟡 | — |
+| A | **G01** | Paket dosyalarını `docs/dijital-gruplar/`'a al + CLAUDE.md eki | 🟢 | kök temizliği |
+| A | **G02–G03** | **Canlı güvenlik:** anonim INSERT kapat · davet linki anonime kapat | 🟢 | — |
+| B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟢 | ⛔ **U06** |
+| B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🟢 | — |
+| C | **G08** | M1 spike: davet sayfasından grup adı okunabiliyor mu (rapor) | 🟢 | — |
+| C | **G09–G11** | `group_settings` · `whatsapp_landings` genişletme · 10 grubun göçü | 🟢 | ⛔ **U07** (G11) |
+| D | **G12–G17** | Durum makinesi · sahiplik · şikayet · uyarı · gönderiler · sağlık skoru | 🟢 | — |
+| E | **G18–G21** | 4 sayfa: form · dizin · detay · sahip paneli | 🟢 | — |
+| F | **G22–G25** | 6 zamanlanmış görev · 8 bildirim · moderatör paneli · 13 kabul testi | 🟢 | — |
 
 ### KR · Kariyer sayfası yenilemesi
 
@@ -127,12 +142,12 @@ traction ölçülecek.
 
 | Faz | ID | Kapsam | Kapı |
 |---|---|---|---|
-| 0 | **KR01** | `src/lib/careers/` modülü + sözleşme testi | 🟡 |
-| 1 | **KR02–KR03** | Migration (tablo + kova + RPC) · `careers-api` + şema + hata haritası | 🟡 |
-| 2 | **KR04–KR06** | Sayfa iskeleti · ilan listesi + filtre · başvuru formu (3 dosya) | 🟡 |
-| 3 | **KR07** | Eski 4 ilanın korunması | 🟡 |
-| 4 | **KR08–KR09** | `/admin/kadro/basvurular` · yeni başvuruda e-posta | 🟡 |
-| 5 | **KR10** | SEO · sitemap · araç kataloğu · doküman | 🟡 |
+| 0 | **KR01** | `src/lib/careers/` modülü + sözleşme testi | 🟢 |
+| 1 | **KR02–KR03** | Migration (tablo + kova + RPC) · `careers-api` + şema + hata haritası | 🟢 |
+| 2 | **KR04–KR06** | Sayfa iskeleti · ilan listesi + filtre · başvuru formu (3 dosya) | 🟢 |
+| 3 | **KR07** | Eski 4 ilanın korunması | 🟢 |
+| 4 | **KR08–KR09** | `/admin/kadro/basvurular` · yeni başvuruda e-posta | 🟢 |
+| 5 | **KR10** | SEO · sitemap · araç kataloğu · doküman | 🟢 |
 
 ### Plan yazılmamış, batch'e bölünmemiş ajan işi
 
