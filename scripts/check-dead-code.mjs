@@ -20,7 +20,13 @@ export const CONFIG_REFERENCED_EXCEPTIONS = new Set([
 //
 // ⚠️ Buraya yeni satır eklemek SON çare olmalı: bu liste "ölü ama şimdilik dursun"
 // demektir ve kolayca kalıcı hâle gelir. Eklemeden önce dosyayı silmeyi dene.
-export const KNOWN_DEAD_FILES = new Set([]);
+// KR01 (01.10): kariyer ilan verisi, sayfasından ÖNCE geldi. Plan bu işi bilerek
+// ikiye böldü — KR01 "UI yok, migration yok" veri batch'i, sayfa KR04'te yazılıyor.
+// Yani bu iki dosya ölü değil, TÜKETİCİSİNDEN ÖNDE. Silmek doğru olmaz; veriyi
+// test dosyasının içine gömmek de olmaz, çünkü `/kariyer` sayfası onu import
+// edecek. 🔴 KR04 bu iki satırı SİLER (aksi hâlde bayat baseline kaydı olarak
+// rapor edilirler ve check:dead yine kırmızıya döner — mekanizma kendini temizler).
+export const KNOWN_DEAD_FILES = new Set(["src/lib/careers/careers-data.ts", "src/lib/careers/careers-types.ts"]);
 
 // Yalnız testlerin kullandığı paylaşılan yardımcıların yaşadığı dizin. Buradaki bir
 // dosya üretim grafiğinden değil, TEST grafiğinden erişilebilir olmalıdır.

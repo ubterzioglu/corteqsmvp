@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **66** (N 0 · W 8 · M 27 · G 21 · KR 10) |
+> | **Açık batch** | **65** (N 0 · W 8 · M 27 · G 21 · KR 9) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -148,7 +148,7 @@ traction ölçülecek.
 
 | Faz | ID | Kapsam | Kapı |
 |---|---|---|---|
-| 0 | **KR01** | `src/lib/careers/` modülü + sözleşme testi | 🟢 |
+| 0 | ~~KR01~~ | ✅ **KAPANDI 01.10** — `src/lib/careers/` (17 ilan + staj) + 6 sözleşme testi | ✅ |
 | 1 | **KR02–KR03** | Migration (tablo + kova + RPC) · `careers-api` + şema + hata haritası | 🟢 |
 | 2 | **KR04–KR06** | Sayfa iskeleti · ilan listesi + filtre · başvuru formu (3 dosya) | 🟢 |
 | 3 | **KR07** | Eski 4 ilanın korunması | 🟢 |
@@ -1464,7 +1464,15 @@ gidiyor ve **o tablonun özel admin ekranı yok** — başvurular düzenli okunm
 
 ### Faz 0 — ilan verisi
 
-**KR01 — `src/lib/careers/` modülü + sözleşme testi** · küçük, UI ve migration yok
+**~~KR01~~ — ✅ KAPANDI 01.10** · `src/lib/careers/` modülü + sözleşme testi
+
+- `careers-types.ts` · `careers-data.ts` (**17 ilan + staj programı**) · `careers-data.test.ts` (6 test).
+- Veri kaynak HTML'den **makineyle** çıkarıldı (25 KB Türkçe metin elle kopyalanmaz).
+- ⚠️ **`check:dead` iki dosyayı erişilemez sayar** — ölü değiller, **tüketicilerinden
+  öndeler** (sayfa KR04'te). Denetleyicinin kendi baseline'ına yazıldı.
+  🔴 **KR04 o iki satırı `scripts/check-dead-code.mjs`'ten SİLMELİDİR**; silinmezse
+  bayat baseline kaydı olarak rapor edilir ve `check:dead` yine kırmızıya döner.
+- *(özgün kapsam)* küçük, UI ve migration yok
 
 - Yeni: `careers-types.ts` · `careers-data.ts` · `careers-data.test.ts`.
 - Kaynak HTML'in 405–406. satırlarındaki `JOBS` (17 kayıt) ve `INTERN` JSON'u TS'e taşınır.
@@ -1737,6 +1745,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| KR01 · `src/lib/careers/` ilan verisi + sözleşme testi | **17 ilan + staj programı** · veri kaynak HTML'den **makineyle** çıkarıldı (25 KB Türkçe metin) · 6 test, **5/5 mutasyon yakalandı** (id tekrarı · boş `tasks` · geçersiz `area` · ilansız bölüm · Türkçe harf kırpma) · ⚠️ Türkçe iddiası ilk hâlinde KAÇIRMIŞTI (`toContain("Ürün")` başka ilan başlığından yeşil kalıyordu) → birebir etiket listesine çevrildi · ⚠️ `check:dead` 0 yeni / **2 bilinen borç**: iki dosya tüketicisinden önde, 🔴 **KR04 baseline satırlarını silmeli** |
 | G09 · `group_settings` anahtar-değer ayar tablosu + 3 okuma yardımcısı | mig `20261001120000` **canlıda** — 15 satır · `group_setting_bool/int/json` çalışıyor (olmayan anahtar varsayılana düşüyor: 42) · tablo grant'ları yalnız `postgres`+`service_role`, **anon SELECT 42501**, **anon RPC 42501** · RLS açık/0 politika · `group_setting_json` `authenticated`'a **açılmadı** (kara liste gizli kalmalı) · 5 sözleşme testi, **3/3 mutasyon yakalandı** · ledger 444/444 sapmasız · ⚠️ TS ayna modülü bilerek YOK (`check:dead` 0 yeni/0 borç korundu) · 🔴 `otp_rate_limits` değeri ajan ihtiyatı → G05'te teyit |
 | G08 · M1 spike: davet sayfasından grup adı okunabiliyor mu (rapor, üretim kodu yok) | **59 istek** ölçüldü (WA 27 · TG 13 · DC 34) — üçünde de ad+görsel kimlik doğrulamasız okunuyor · ⚠️ **HTTP 200 geçerlilik kanıtı DEĞİL**: WhatsApp uydurma 5 kodun 5'ine de 200 döndü, tek işaret `og:title`'ın **boş** olması · ⚠️ okunan ad kayıtlı addan farklı (2/2) → tam eşitlik karşılaştırması yazılamaz · ⚠️ başlık HTML varlık kodlu (`&#x131;`) → çözülmezse Türkçe bozulur · Discord resmî API `10006 Unknown Invite` (10/10) en temiz yol · hız sınırı bu hacimde görülmedi ama Discord `x-ratelimit-*` **yayınlamıyor** → "sınır yok" denemez · 🔴 `t.me/+…` geçerli hâli ÖLÇÜLEMEDİ (link yok) |
 | N07 · canlı ingest + embed + getirme kanıtı · docs-admin vekil kusuru kökten onarıldı | `8a777afc` — 88 admin-menu belgesi canlıda gömülü · getirme: ADMIN 0.215–0.287 doğru kayıt en üstte, MEMBER **0 admin-menu** · docs-admin re-ingest 404 belge/4901 parça **0 hata** (640 bayat satır prune) · korpus 5639/5639 gömülü · 🔴 kusur kök neden: `chunkText` emojiyi (🔴 U+1F534) örtüşme sınırında bölüyordu → yalnız vekil `\uDD34` → PostgREST "Empty or invalid json" (93'te 1, deterministik) · 3 test + 2/2 mutasyon · ⏳ tek kalan: kullanıcı UI kabulü (frontend deploy sonrası) |
