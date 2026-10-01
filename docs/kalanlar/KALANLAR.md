@@ -125,7 +125,7 @@ traction ölçülecek.
 | Faz | ID | Kapsam | Kapı | Bağımlılık |
 |---|---|---|---|---|
 | A | ~~G01~~ | ✅ **KAPANDI 01.10** — `docs/dijital-gruplar/` + CLAUDE.md bölümü + kök temiz | ✅ | — |
-| A | ~~G02~~ · **G03** | ✅ G02 KAPANDI 01.10 (anon INSERT → `42501`) · 🔴 **G03 davet linki HÂLÂ anonime açık** | 🟢 | — |
+| A | ~~G02~~ ~~G03a~~ · **G03b** · **G03c** | ✅ G02 + G03a KAPANDI 01.10 · 🔴 **davet linki + admin e-posta/telefon HÂLÂ anonime açık** → G03b (istemci göçü) + G03c (grant daraltma) | 🟢 | — |
 | B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟢 | ⛔ **U06** |
 | B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🟢 | — |
 | C | **G08** | M1 spike: davet sayfasından grup adı okunabiliyor mu (rapor) | 🟢 | — |
@@ -905,13 +905,87 @@ npm run ai:embed
 - Günlük 5 gönderim sınırı `group_settings`'ten okunan trigger/RPC'ye bağlanır.
 - **Kabul:** anonim INSERT `42501`; aynı kullanıcı 6. gönderimde reddedilir.
 
-**G03 — Davet linki anonime kapanır + tek kapı RPC** · migration + kod
-- `whatsapp_link` anonim SELECT'ten çıkar; PII'siz view/RPC. Ham link yalnız
-  `get_group_invite_url(p_id)` ile girişli kullanıcıya, **her çağrı loglanır**, günlük 20 sınırı.
-- "Katıl" girişsiz kullanıcıda kısa kayıt penceresi açar.
-- ⚠️ **Kırıcı** değişiklik (politika bilinçli istiyor) → U listesinde "2 hafta sonra dönüşüm".
-- **Kabul:** kabul testi **#5** — anonim istemci ham tablo, view, RPC **ve katalog senkronu**
-  yollarının hiçbirinden link okuyamıyor. Başlangıç durumu **kırmızıdır** (bugün okuyor).
+**G03 — Davet linki anonime kapanır + tek kapı RPC** · ÜÇE BÖLÜNDÜ (kullanıcı kararı 01.10)
+
+> ⚠️ **ÖLÇÜLDÜ 01.10 — sızıntı K1'de yazılandan GENİŞ.** Anon'a açık olan yalnız
+> `whatsapp_link` değil: **`admin_contact` 10/10 satırda DOLU** ve biçimi
+> `Ad Soyad e-posta@alan.com +90xxxxxxxxxx` — yani grup adminlerinin **adı +
+> e-postası + telefonu**. Kişisel veri ve enumeration yüzeyi. K1'i buna göre oku.
+>
+> ⚠️ **Neden tek batch'te yapılamadı:** RLS **satır** düzeyinde çalışır, **kolon**
+> düzeyinde değil — "satırı göster, kolonu gizle" politikası YAZILAMAZ. Kolon
+> grant'ını çekmek de çözüm değil: istemcinin iki anon yolu da (`getLanding`,
+> `listLandings`) `select("*")` kullanıyor; çekilince ikisi de `42501` ile düşer ve
+> kullanıcıya "izin yok" diye DEĞİL **"dizin boş"** diye görünür.
+
+**✅ G03a — PII'siz view + davet RPC'si (salt ekleme)** · KAPANDI 01.10
+
+> **Migration `20261001110000_whatsapp_landings_public_view_and_invite_rpc.sql`**
+> canlıya uygulandı · `applied/` altında · `schema_migrations` kaydı atıldı ·
+> `check:migrations` sapmasız · **RLS politikaları DEĞİŞMEDİ (8 → 8)**.
+>
+> `public.whatsapp_landings_public` view'ı: `whatsapp_link` · `admin_contact` ·
+> `user_id` · `rejection_reason` **`null::<tip>` olarak** döner. Kolon adları ve
+> sırası tabanla AYNI tutuldu → `rowToLanding` DEĞİŞMEDEN çalışır, G03b yalnızca
+> tablo adını değiştirir.
+> `security_invoker = false` (taban RLS'i bypass eder — G03c'de anon'un taban
+> yetkisi alınınca view çalışmaya devam etsin diye) + `security_barrier = true`.
+> ⚠️ Bu yüzden **`status = 'approved'` filtresi view'ın İÇİNDEDİR**; kaldıran,
+> `pending` ve `rejected` grupları anonime açar.
+>
+> `get_whatsapp_landing_invite(p_slug)` · security definer · `search_path` sabit ·
+> `anon`/`public`'ten EXECUTE geri alındı, yalnız `authenticated`.
+>
+> **CANLI KANIT (hepsi rollback'li):**
+> | # | Senaryo | Sonuç |
+> |---|---|---|
+> | 1 | anon → view SELECT | **10 satır**, `whatsapp_link`/`admin_contact`/`user_id` **0 sızıntı** ✅ |
+> | 2 | anon → davet RPC | **permission denied for function** ✅ |
+> | 3 | girişli → davet RPC (geçerli grup) | `https://chat.whatsapp.com/…` döndü ✅ |
+> | 4 | girişli → olmayan slug | **`P0002`** group not found ✅ |
+> | 5 | girişli → **linki BOŞ** grup | **`P0002`** — boş string DÖNMÜYOR ✅ |
+>
+> ⚠️ **5 numara testte bulundu ve migration düzeltildi.** İlk sürüm ham kolonu
+> döndürüyordu; canlıda yayındaki 10 grubun **2'sinin linki boş string** (K4'teki
+> bilinen veri kusuru). İstemci boş string'i geçerli link sanıp **tıklanamayan bir
+> "Katıl" düğmesi** çizerdi ve hata hiçbir yerde görünmezdi. Çözüm:
+> `nullif(trim(l.whatsapp_link), '')`. **Gevşetme.**
+>
+> Sözleşme testi: `src/lib/whatsapp-landings-public-view-contract.test.ts` (14 test),
+> 4 mutasyonla sınandı (PII kolonunu açma · `approved` filtresini silme ·
+> `security_invoker=true` · `nullif` kaldırma) — dördü de yakalandı.
+>
+> ⏭️ **Günlük 20 çağrı sınırı YOK** — `group_settings` G09'da açılıyor, eşik koda
+> sabit yazılmaz. G09 sonrası ayrı batch (G02'nin 5 gönderim sınırıyla aynı kuyruk).
+> ⏭️ **`types.ts` yeniden üretilmedi** — view + RPC tipleri G03b'de gerekecek,
+> regen orada yapılacak (Management API + geçerli `SUPABASE_ACCESS_TOKEN`).
+
+**G03b — İstemci göçü: dizin ve detay view'dan okusun** · kod · ⛔ G03a
+
+- `getLanding` + `listLandings` (`src/lib/whatsapp-landings.ts`) `whatsapp_landings`
+  yerine `whatsapp_landings_public` okur. `rowToLanding` DEĞİŞMEZ (kolon şekli aynı).
+- "Katıl" akışı: link artık satırda gelmiyor → tıklanınca `get_whatsapp_landing_invite`
+  çağrılır; girişsiz kullanıcıya kayıt/giriş penceresi açılır.
+- `adminContact` artık `null` gelir → detay sayfasında o alanı çizen yer varsa gizlenmeli
+  (boş etiket bırakma).
+- `types.ts` yeniden üretilir (view + RPC tipleri).
+- ⚠️ Yönetici yolları (`select("*")`, satır 507 vb.) tabandan okumaya DEVAM eder —
+  onları view'a çevirme, admin'in `rejection_reason`'a ihtiyacı var.
+- **Kabul:** dizin ve detay sayfası anon olarak çalışıyor; link yalnız girişli
+  kullanıcıda geliyor; linki boş 2 grupta "Katıl" düğmesi uygun şekilde ele alınıyor.
+
+**G03c — Taban tablonun anon yetkisi daraltılır (kırıcı adım)** · migration · ⛔ G03b
+
+- `Anyone can view approved landings` politikası anon'dan alınır / anon'un
+  `whatsapp_landings` SELECT grant'ı çekilir. Bundan SONRA tek anon yüzeyi view'dır.
+- ⚠️ **G03b canlıya çıkmadan uygulanamaz** — çıkarsa dizin anında boşalır.
+- ⚠️ Katalog senkron trigger'ı (`trg_catalog_sync_whatsapp_landing`) ve
+  `catalog_items` yolu ayrıca denetlenir: link oradan da sızmamalı (kabul testi #5
+  "katalog senkronu" yolunu açıkça sayıyor).
+- **Kabul (kabul testi #5):** anonim istemci **ham tablo · view · RPC · katalog**
+  yollarının HİÇBİRİNDEN link veya `admin_contact` okuyamıyor. Ölçülerek yazılır.
+- ⚠️ Kırıcı değişiklik (politika bilinçli istiyor) → U listesinde **U08** "2 hafta
+  sonra dönüşüm gözden geçirme" maddesini tetikler; canlıya çıkış tarihini not et.
 
 ### Faz B — ön koşul altyapıları (iki kararın gerektirdiği; pakette YOK)
 
@@ -1375,6 +1449,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G03a · PII'siz public view + davet linki RPC'si (salt ekleme) | mig `20261001110000` — anon view 10 satır / **0 PII sızıntısı** · anon RPC **permission denied** · girişli RPC link döndü · olmayan slug + **boş linkli grup** `P0002` · RLS 8→8 değişmedi · 14 sözleşme testi 4 mutasyonla sınandı · ⚠️ `admin_contact` ad+e-posta+telefon taşıyordu, K1'de yazılı değildi |
 | G01 · Dijital Gruplar paketi repoya + CLAUDE.md bölümü + kök temiz | `bacc959` — `docs/dijital-gruplar/` 4 dosya · çürüyen 5 varsayım + K1–K5 CLAUDE.md'de · paket repo dışına taşındı · ⚠️ `claude_corteqs-insa-notlari.md` bu repoda YOK, 07 arşiv |
 | G02 · anon INSERT kapatıldı + 2 mükerrer RLS politikası silindi | mig `20261001100000` — canlı: anon INSERT **42501** · kendi satırı INSERT **başarılı** · başkasının `user_id` **42501** · politika **11→8** · anon SELECT 10 satır (dizin sağlam) · 8 sözleşme testi mutasyonla sınandı · 🔴 davet linki HÂLÂ açık → G03 |
 | A14 · #REV-034 sıralama sonuçları kutulu renkli görsel (4 `ranked_list` aracı) | `c3ff905` — 373 dosya/2889 test yeşil · 7 yeni test mutasyonla sınandı · önizleme claude.ai/artifact/5KN3KXDDt7vvnR9PwD1R8L · ⏳ Burak görsel onayı bekliyor |
