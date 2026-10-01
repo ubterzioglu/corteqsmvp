@@ -1,9 +1,14 @@
 import { User as UserIcon } from "lucide-react";
+import { Link } from "react-router-dom";
+
+import { parseRichText } from "@/components/chat/chatbot-message-helpers";
 import type { ChatMessage as ChatMessageType } from "@/lib/chatConfig";
 
 type Props = {
   message: ChatMessageType;
 };
+
+const LINK_CLASS = "font-medium underline underline-offset-2";
 
 const ChatMessage = ({ message }: Props) => {
   const isUser = message.role === "user";
@@ -26,15 +31,33 @@ const ChatMessage = ({ message }: Props) => {
               : `rounded-tl-sm bg-muted text-foreground ${message.isSummary ? "font-mono text-xs" : ""}`
           }`}
         >
-          {message.content.split(/(\*\*[^*]+\*\*)/).map((part, i) => {
-            if (part.startsWith("**") && part.endsWith("**")) {
+          {parseRichText(message.content).map((segment, i) => {
+            if (segment.kind === "bold") {
               return (
                 <strong key={i} className="font-semibold">
-                  {part.slice(2, -2)}
+                  {segment.text}
                 </strong>
               );
             }
-            return <span key={i}>{part}</span>;
+            if (segment.kind === "link") {
+              // Güvenlik sözleşmesi parseRichText'te: hedef ya iç yol ya https.
+              return segment.external ? (
+                <a
+                  key={i}
+                  href={segment.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={LINK_CLASS}
+                >
+                  {segment.text}
+                </a>
+              ) : (
+                <Link key={i} to={segment.href} className={LINK_CLASS}>
+                  {segment.text}
+                </Link>
+              );
+            }
+            return <span key={i}>{segment.text}</span>;
           })}
         </div>
       </div>
