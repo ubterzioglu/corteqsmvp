@@ -159,7 +159,7 @@ traction ölçülecek.
 
 | Konu | Durum |
 |---|---|
-| **Cadde gönderi DÜZENLEME UI'ı** | `update_cadde_post_v1` canlıda hazır (A11b); composer'ı "düzenleme modu"nda açacak form + menü bağlantısı yazılacak. **Ayrı plan ister** — batch'e bölünmedi |
+| **Cadde gönderi DÜZENLEME UI'ı** | ✅ **PLAN YAZILDI, ONAYA SUNULDU (03.10 gece turu):** [`docs/plans/2026-10-03-cadde-gonderi-duzenleme-plani.md`](../plans/2026-10-03-cadde-gonderi-duzenleme-plani.md) — CD01–CD04 (sarmalayıcı+şema · composer edit modu · menü bağlantısı · canlı kanıt turu). Backend hazır (`update_cadde_post_v1`, A11b); migration yok; T1-T5 tuzakları planda (mentions null · medya tam-değişim · premium kapı · facade/diagnostics testleri · invalidation). **Onay gelince CD01'den başlanır** |
 
 ### U · Kullanıcı eli gerekiyor (öncelik sırasıyla)
 
