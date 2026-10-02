@@ -67,6 +67,16 @@ describe("STATIC_ROUTES ↔ App.tsx", () => {
     expect(cakisan, `sitemap'te redirect kaynağı var: ${cakisan.join(", ")}`).toEqual([]);
   });
 
+  it("/kariyer önceliği 0.7'dir (KR10)", () => {
+    // 0.4 → 0.7: sayfa artık 17 ilan + staj programı + kurucu mektupları taşıyor,
+    // yani sitemap'in üç kriterini de geçiyor (public · useSeo+canonical · ince değil).
+    // Çıpa burada: sessizce 0.4'e dönerse test söyler.
+    const kariyer = STATIC_ROUTES.find((route) => route.path === "/kariyer");
+
+    expect(kariyer, "/kariyer STATIC_ROUTES'tan düşmüş").toBeTruthy();
+    expect(kariyer.priority).toBe("0.7");
+  });
+
   it("aynı path iki kez listelenmez", () => {
     const paths = STATIC_ROUTES.map((r) => r.path);
 

@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **57** (N 0 · W 8 · M 27 · G 21 · KR 1) |
+> | **Açık batch** | **56** (N 0 · W 8 · M 27 · G 21 · KR 0) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -142,7 +142,7 @@ traction ölçülecek.
 | E | **G18–G21** | 4 sayfa: form · dizin · detay · sahip paneli | 🟢 | — |
 | F | **G22–G25** | 6 zamanlanmış görev · 8 bildirim · moderatör paneli · 13 kabul testi | 🟢 | — |
 
-### KR · Kariyer sayfası yenilemesi
+### KR · Kariyer sayfası yenilemesi — ✅ SERİ TAMAMEN KAPANDI (02.10)
 
 ⚠️ `KR01` ≠ `K01`. **Yeni sayfa değil** — `/kariyer` zaten canlıda, bu bir değiştirme işi.
 
@@ -153,7 +153,7 @@ traction ölçülecek.
 | 2 | ~~KR04~~ ~~KR05~~ ~~KR06~~ | ✅ **ÜÇÜ DE KAPANDI 02.10** — iskelet + 17 ilan + staj + filtre + başvuru formu (uçtan uca canlı kanıt) | ✅ |
 | 3 | ~~KR07~~ | ✅ **KAPANDI 02.10** — 4 ilan ibareli duruyor, başvuruları yeni tabloya düşüyor | ✅ |
 | 4 | ~~KR08~~ ~~KR09~~ | ✅ **İKİSİ DE KAPANDI 02.10** — ekran + imzalı dosya bağlantısı · yeni başvuruda e-posta (canlı `sent`) | ✅ |
-| 5 | **KR10** | SEO · sitemap · araç kataloğu · doküman | 🟢 |
+| 5 | ~~KR10~~ | ✅ **KAPANDI 02.10** — öncelik 0.7 · kök temiz · katalog güncel · CLAUDE.md bölümü | ✅ |
 
 ### Plan yazılmamış, batch'e bölünmemiş ajan işi
 
@@ -1575,7 +1575,7 @@ orada). Başvurular oraya **5. madde** olarak girer.
 
 ### Faz 5 — kapanış
 
-**KR10 — SEO, sitemap, araç kataloğu, doküman**
+**~~KR10~~ — ✅ KAPANDI 02.10** · SEO, sitemap, araç kataloğu, doküman
 
 - `STATIC_ROUTES` içindeki `/kariyer` önceliği `0.4 → 0.7` (içerik artık zengin;
   üç kriteri de geçiyor: public, `useSeo`+canonical, thin değil).
@@ -1745,6 +1745,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| KR10 · SEO · sitemap · araç kataloğu · kök temizliği · doküman | `/kariyer` sitemap önceliği **0.4 → 0.7** (sözleşme testiyle kilitli — sessizce geri dönerse düşer) · `PAGE_SEO.career.description` 17 ilan + staj + uzaktan çalışmayı anlatacak şekilde yenilendi · sitemap üretildi: **413 URL**, `/kariyer` priority 0.7 ölçüldü · `ingest:tools:check` **temiz** · `check:drift` temiz · **kök temizlendi:** `EKİP WEB SAYFASI …` klasörü + zip kaldırıldı, içerik `docs/archive/2026-10-02-kariyer-kaynak-paketi/` altına alındı (zip birebir aynı 3 dosyaydı — ölçüldü) · kökte yalnız `CLAUDE.md` + `README.md` kaldı · **CLAUDE.md'ye kariyer modülü bölümü** (11 değişmez kural) · ⏳ tek kalan: deploy sonrası canlı kontrol (`curl -I /kariyer` + CSP) — kullanıcıda |
 | KR09 · yeni başvuruda e-posta bildirimi | mig `20261002000000` canlıda + `send-notification-emails` **DEPLOY EDİLDİ** (94 kB) · **uçtan uca canlı kanıt:** gerçek başvuru satırı → trigger → kuyruk → `status=sent`, **recipient_count 2**, `last_error` boş, 3 saniyede (06:43:22 claimed → 06:43:25 sent) · payload'da `cv_path` **YOK** (ölçüldü: `payload ? 'cv_path'` = false) · ölçüm satırları silindi (başvuru 0 / kuyruk 0) · 8 şablon testi, mutasyonla sınandı · `check:functions` 12/12 sapmasız · 🔴 **YAN BULGU — canlıda sessiz kusur onarıldı:** `notification_email_outbox.event_type` CHECK listesi `radar_scan_digest`'i İÇERMİYORDU ama `radar-news-scan` (satır 440) tam o tiple kuyruğa yazıyor → insert her seferinde `23514` ile reddedilmiş, kuyrukta **0 radar satırı**, yani **radar özet maili 19 Eylül'den beri hiç gitmemiş**. Aynı kısıt zaten değiştirilmek zorundaydı, iki değer birlikte eklendi · **KR09b (kullanıcı isteği 02.10): mail TÜM yöneticilere gider.** Alıcılar abonelik tablosundan geliyordu, yani satırı olmayan yönetici sessizce mail ALMIYORDU; kariyer bildirimi opt-in'den **opt-out**'a çevrildi (mig `20261002010000`). Ölçüm: sistemde **2 yönetici**, ikisinin de satırı var — bugün davranış aynı, kusur gelecekte patlayacaktı. Kanıt (geri alınan işlem içinde): satırı silinen yönetici kariyer alıcılarında **KALDI**, aynı kişi `new_member`'da listeden **DÜŞTÜ** (eski kural korundu), açık `false` ile **ÇIKTI**. Kapı `is_admin` · diğer olay tipleri değişmedi · 10 sözleşme testi |
 | KR08 · `/admin/kadro/basvurular` ekranı + `careers-admin-api.ts` | Kadro grubuna **5. madde** olarak girdi (yeni admin grubu açılmadı) · rota + navigasyon kaydı + `admin-route-meta` **üçü birlikte** · dosyalar **`createSignedUrl`** ile 5 dk'lık bağlantı, kova private KALIR · liste/pozisyon/durum filtresi + durum geçişi + not · arama `trIncludes` · **canlı ACL ölçümü:** `career_applications` üzerinde yalnız 2 politika (SELECT+UPDATE, ikisi de `is_admin(auth.uid())` koşullu, `authenticated` rolünde) · anon tablo grant'ı **YOK** (anon SELECT 42501) · kova `public=false`, 7 MIME, 25 MB · kova politikaları: INSERT `{anon,authenticated}` (başvuru girişsizdir), SELECT/DELETE yalnız admin · 7 sözleşme testi, **7/7 mutasyon yakalandı** (menü kaydı · route-meta · rota · public URL · çıplak `toLowerCase` · sessiz yutulan hata · menü rengi) · ⚠️ Yönetici OLMAYAN girişli kullanıcı hata almaz, RLS **0 satır** döndürür — ekranın kendisi AdminLayout kapısının arkasındadır · 📌 **N03 bayatlama kapanı çalıştı:** yeni menü maddesi `admin-menu-catalog.test.ts'i` düşürdü → `npm run ingest:admin-menu` (88→**89** öğe) + `ingest.mjs --source=admin-menu` + `embed.mjs` koşuldu, korpus **89/89 gömülü, bekleyen 0** |
 | KR07 · önceki dönem 4 ilanı korundu, yeni başvuru akışına bağlandı | `careers-legacy.ts` tek kaynak · 4 ilan "önceki dönem ilanı" rozetiyle duruyor · başvuru düğmeleri yeni forma bağlandı, **eski `InterestForm` kariyer sayfasından kaldırıldı** · formun pozisyon kutusuna `optgroup` ile eklendiler (eksik olsa seçim SESSİZCE kaybolurdu) · 6+1 sözleşme testi, **5/5 mutasyon yakalandı** · 🔴 **İki mutasyon önce KAÇTI:** iddialar yalnız `"LEGACY_..."` metnini arıyordu ve IMPORT SATIRI o adı taşıdığı için kullanım boşaltılsa da yeşil kalıyorlardı → biri davranış testine (seçenekler gerçekten çiziliyor mu), diğeri gerçek JSX çıpasına (`{LEGACY_POSITION_NOTE}`) çevrildi · 📌 **Kaldırma koşulu:** yeni 17 ilan üzerinden en az bir tam başvuru döngüsü tamamlanıp ekip "artık başvuru gelmiyor" diyene kadar dururlar |

@@ -63,7 +63,7 @@ export const PAGE_SEO = {
   career: {
     title: "Kariyer | CorteQS",
     description:
-      "CorteQS kariyer sayfasında açık rollerimizi ve global diaspora ekosistemini birlikte büyütme fırsatlarını inceleyin.",
+      "CorteQS kurucu ekibini kuruyor: 17 açık pozisyon ve Geleceğin Liderleri stajyer programı. Tüm roller uzaktan; kurucu ekip ve yatırımcı-ortak modelleriyle başvur.",
     canonicalPath: "/kariyer",
   },
   radarNews: {

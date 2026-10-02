@@ -152,7 +152,7 @@ const STATIC_ROUTES = [
   // /cadde atlanmıştı, canlı sitemap'te 107 URL içinde duruyordu.
   { path: "/iletisim", priority: "0.4", changefreq: "yearly" },
   { path: "/pricing", priority: "0.5", changefreq: "monthly" },
-  { path: "/kariyer", priority: "0.4", changefreq: "monthly" },
+  { path: "/kariyer", priority: "0.7", changefreq: "monthly" },
   { path: "/legal/privacy", priority: "0.2", changefreq: "yearly" },
   { path: "/legal/terms", priority: "0.2", changefreq: "yearly" },
   { path: "/legal/business-information", priority: "0.2", changefreq: "yearly" },

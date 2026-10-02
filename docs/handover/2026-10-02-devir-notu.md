@@ -8,9 +8,9 @@
 
 ## 1 · Tek cümlelik durum
 
-**Kariyer serisi KR01–KR09 kapandı** (yalnız KR10 kaldı) + **G08** ve **G09** kapandı.
-Kullanıcı bu oturumda "sormadan, kalanlardan çalış" dedi; 11 batch tek akışta yürütüldü.
-**Commit'ler lokalde — `origin/main`'e PUSH EDİLMEDİ.** Açık batch 68 → **57**.
+**Kariyer serisi KR01–KR10 TAMAMEN kapandı** + **G08** ve **G09** kapandı.
+Kullanıcı bu oturumda "sormadan, kalanlardan çalış" dedi; **12 batch** tek akışta yürütüldü.
+**Commit'ler lokalde — `origin/main`'e PUSH EDİLMEDİ.** Açık batch 68 → **56**.
 
 ## 2 · İLK YAPILACAK
 
@@ -42,7 +42,8 @@ git status --porcelain -- src/ supabase/ scripts/ docs/kalanlar CLAUDE.md   # BO
 | **KR06** | `670a8461` | Başvuru formu (3 dosya) — uçtan uca canlı kanıt |
 | **KR07** | `41ec13d2` | Önceki dönem 4 ilan korundu, yeni akışa bağlandı |
 | **KR08** | `e6b5f56e` | `/admin/kadro/basvurular` + imzalı dosya bağlantısı |
-| **KR09** | *(bu oturum)* | Yeni başvuruda e-posta — canlı `sent`, 2 alıcı · **mail TÜM yöneticilere** (↓ §5.7) |
+| **KR09** | `ee466a88` | Yeni başvuruda e-posta — canlı `sent`, 2 alıcı · **mail TÜM yöneticilere** (↓ §5.7) |
+| **KR10** | *(bu oturum)* | SEO · sitemap önceliği 0.7 · kök temizliği · CLAUDE.md kariyer bölümü |
 
 Her batch'in kanıtı KALANLAR → **Kapananlar** tablosunda tek satır hâlinde.
 
@@ -61,7 +62,7 @@ Her batch'in kanıtı KALANLAR → **Kapananlar** tablosunda tek satır hâlinde
 
 ➕ Bu oturumdan **yeni** iki kullanıcı maddesi:
 
-5. **Kariyer sayfası canlıya çıkmadı.** KR01–KR09 kodu hazır ama `/kariyer` hâlâ
+5. **Kariyer sayfası canlıya çıkmadı.** KR01–KR10 kodu hazır ama `/kariyer` hâlâ
    eski sürümü gösteriyor; frontend deploy'u gerekiyor (G03b ile aynı kuyruk).
    Deploy sonrası görsel kabul: 17 ilan + filtre + staj + form açılıyor mu,
    tarayıcı konsolunda CSP ihlali var mı.
@@ -168,9 +169,15 @@ Mutasyon turları: G09 3/3 · KR01 5/5 · KR02 5/5 · KR03 6/6 · KR04 6/6 ·
 
 ## 7 · Sıradaki iş
 
-- **KR10** (SEO · sitemap · araç kataloğu · kök temizliği) — kariyer serisinin son
-  batch'i, 🟢. İçinde bir kullanıcı adımı var: kökteki `EKİP WEB SAYFASI …`
-  klasörü/zip'i kaldırılacak (başkasının dosyası olabilir, **sorarak** yap).
+**KR serisi bitti.** Panoda 🟢 kalan adaylar:
+
+- **G06–G07** (kurumsal doğrulama: şema + belge yükleme + admin inceleme) — G'nin
+  bloke olmayan ilk işi.
+- **G10** (`whatsapp_landings` şema genişletme) ⚠️ **dikkat:** spec'i
+  `member_approved`/`admin_approved` kolonlarını **DÜŞÜRMEYİ** söylüyor, ama bu
+  kolonlar repoda **9 dosyada** kullanılıyor (admin moderasyon, onay rozetleri,
+  editör sayfası) ve canlı paket hâlâ eski kod. **Salt ekleme olarak uygula,
+  düşürmeyi deploy sonrasına bırak** (G03a/b/c deseni).
+- **G12–G25** 🟢 (G11 ⛔ U07).
 - **G03c** ⛔ hâlâ kullanıcı deploy'una bağlı; deploy biterse AJAN UYGULAR (SQL hazır).
-- **G06–G07** · **G10–G25** 🟢 · **G04–G05** ⛔ U06 · **W01–W08** ⛔ U09 ·
-  **M01–M27** ⏳ plan onayı bekliyor.
+- ⛔ **G04–G05** U06'ya · **W01–W08** U09'a bağlı · ⏳ **M01–M27** plan onayı bekliyor.

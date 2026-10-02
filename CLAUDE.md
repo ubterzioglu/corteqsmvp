@@ -587,6 +587,58 @@ Ayrıca **K3** 2 mükerrer RLS politikası, **K4** veri politikaya uymuyor (10 g
 6 grubun konumu `Global`/`Genel`; `group_score` 10/10 `null`), **K5** şema değişikliği
 `catalog_sync_whatsapp_landing_trigger`'ı etkiler. Ayrıntı: plan dosyası.
 
+## Kariyer modülü (`/kariyer` — yenilendi 2026-10-02, KR01–KR10)
+
+Sayfa **17 ilan + staj programı** taşır; başvurular kendi tablosunda toplanır ve
+`/admin/kadro/basvurular`'dan yönetilir. Kaynak plan:
+`docs/plans/2026-09-30-kariyer-sayfasi-yenileme-plani.md`. Gelen ham paket arşivde:
+`docs/archive/2026-10-02-kariyer-kaynak-paketi/`.
+
+| Katman | Yer |
+|---|---|
+| İlan verisi | `src/lib/careers/careers-data.ts` (17 ilan + staj) · `careers-types.ts` |
+| Önceki dönem ilanları | `src/lib/careers/careers-legacy.ts` (4 kayıt, **silinmedi**) |
+| Veri katmanı | `careers-api.ts` (başvuru) · `careers-admin-api.ts` (yönetici) · `careers-schemas.ts` |
+| Sayfa | `src/pages/Career.tsx` + `src/components/career/*` |
+| Tablo/kova/RPC | mig `20261001130000` · bildirim `20261002000000` + `20261002010000` |
+
+### Değişmez kurallar
+
+1. **Tek yazma yolu `submit_career_application` RPC'sidir.** `career_applications`
+   tablosunda anon yetkisi YOKTUR; RPC `status='yeni'` ve `notes=null` değerlerini
+   gövdede ZORLAR (istemci bu ikisini parametre olarak gönderemez).
+2. **Akış sırası:** istemci kimliği üretir → dosyalar `<id>/…` altına yüklenir →
+   RPC çağrılır. `cv_path` tabloda `not null` ve anon satırı sonradan güncelleyemez.
+3. ⚠️ **İstemci dosya sınırı kovanın sınırını AŞAMAZ.** Mevcut
+   `validatePresentationFile` 50 MB'a izin verir, kova 25 MB'da keser — bu yüzden
+   kariyer kendi sınırlarını tanımlar (CV 10 MB · sunum 25 MB) ve sözleşme testi
+   bunları migration metnindeki kova sınırına karşı denetler.
+4. ⚠️ **MIME `file.type`'tan DEĞİL uzantıdan verilir.** `.key` dosyaları tarayıcıya
+   göre boş/`application/zip` gelir ve dar kova listesinden döner. Kova listesinde
+   `application/octet-stream` **bilerek YOK** — her şeyi kabul eden bir değerdir.
+5. **Dosyalar yalnız imzalı bağlantıyla açılır** (`createSignedUrl`, 5 dk). Kova
+   private kalır; `getPublicUrl` başvuranın CV'sini herkese açar.
+6. **RPC `career_` önekli snake_case KOD fırlatır**, İngilizce cümle değil. Yeni kod
+   eklenince `careers-api.ts`'teki Türkçe haritaya da eklenir — **çift yönlü**
+   sözleşme testi iki yönü de denetler.
+7. **Önceki dönem 4 ilan silinmez** ve kimlikleri başvuru formunun `position`
+   seçeneklerinde KALIR; çıkarılırsa seçim sessizce kaybolur. Kaldırma koşulu:
+   yeni ilanlar üzerinden en az bir tam başvuru döngüsü + ekip onayı.
+8. **Bildirim hattı beş parçalıdır** ve biri eksikse hata vermez, yalnız mail gitmez:
+   `notification_email_outbox` **CHECK listesi** · `notification_settings` anahtarı ·
+   `admin_notification_subscriptions` sütunu · `admin_get_notification_subscribers`
+   eşlemesi · edge function (`SETTING_KEY_BY_EVENT` + `buildEmail` kolu).
+   ⚠️ CHECK listesi `client_error_reports.source` ile aynı sınıftır — TS'te
+   tanımlamak YETMEZ, insert `23514` ile reddedilir.
+9. **Kariyer bildirimi `is_admin` olan HERKESE gider** (opt-out): abonelik satırı
+   olmayan yönetici de alır, yalnız açıkça `career_application_email=false` diyen
+   çıkar. **Diğer olay tipleri hâlâ opt-in'dir** (abonelik tablosundan gelir).
+10. **Maile dosya yolu/bağlantısı KONMAZ.** İmzalı bağlantı süreli üretilir; maile
+    gömülen bağlantı kutuda süresiz kalır ve iletilen her kopya erişim açar.
+11. `position` değeri **ilan listesine karşı doğrulanmaz** (SQL'e kopyalamak ikinci
+    kaynak yaratır ve yeni ilan eklendiği gün başvuruyu sessizce reddeder); yalnız
+    biçim doğrulanır.
+
 ## Değişmez sözleşmeler (ZORUNLU — 2026-08-04)
 
 Bu beş kural 2026-08-04 modernizasyon çalışmasında ölçülerek konuldu. Her biri sessizce
