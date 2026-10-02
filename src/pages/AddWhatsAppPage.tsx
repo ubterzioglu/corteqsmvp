@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AddCommunityFormSection } from "@/components/whatsapp/AddCommunityFormSection";
 import { AddCommunityHero } from "@/components/whatsapp/AddCommunityHero";
 import { CommunityFilters } from "@/components/whatsapp/CommunityFilters";
+import { GroupOwnershipClaim } from "@/components/whatsapp/GroupOwnershipClaim";
 import { LandingCard } from "@/components/whatsapp/LandingCard";
 import { LandingDetailView, type LandingInviteState } from "@/components/whatsapp/LandingDetailView";
 import {
@@ -74,6 +75,8 @@ export default function AddWhatsAppPage() {
   const [submissionBanned, setSubmissionBanned] = useState(false);
   const previewedLinkRef = useRef("");
   const prefilledGroupNameRef = useRef("");
+  // G20: sahiplik doğrulanınca detayı tazelemek için (rozet dili anında değişir).
+  const [landingRefreshKey, setLandingRefreshKey] = useState(0);
 
   useEffect(() => {
     document.dispatchEvent(new Event("render-complete"));
@@ -145,7 +148,7 @@ export default function AddWhatsAppPage() {
     return () => {
       cancelled = true;
     };
-  }, [groupSlug, user]);
+  }, [groupSlug, user, landingRefreshKey]);
 
   // G03b · Davet linki artık satırla gelmiyor; yalnız girişli kullanıcıya RPC ile
   // veriliyor. Link SAYFA AÇILIRKEN çekilir, düğmeye basılınca DEĞİL — tıklamadan
@@ -361,7 +364,7 @@ export default function AddWhatsAppPage() {
    * akışı dönüşte formu açmalı (`openGroupForm=1`), grup KATILMA akışı ise
    * bulunduğu grubun sayfasında kalmalı.
    */
-  const ensureSignedIn = async (intent: "submit_group" | "join_group") => {
+  const ensureSignedIn = async (intent: "submit_group" | "join_group" | "claim_group") => {
     if (user) return true;
 
     toast({
@@ -369,7 +372,9 @@ export default function AddWhatsAppPage() {
       description:
         intent === "submit_group"
           ? "Grup eklemek için önce üye olmalısınız. Google ile giriş yapılıyor..."
-          : "Davet linkini görmek için önce üye olmalısınız. Google ile giriş yapılıyor...",
+          : intent === "claim_group"
+            ? "Sahiplik doğrulaması için önce üye olmalısınız. Google ile giriş yapılıyor..."
+            : "Davet linkini görmek için önce üye olmalısınız. Google ile giriş yapılıyor...",
     });
 
     const nextParams = new URLSearchParams(searchParams);
@@ -595,6 +600,16 @@ export default function AddWhatsAppPage() {
         onBackToList={backToList}
         onShare={() => void handleShare()}
         onRequestSignIn={() => void ensureSignedIn("join_group")}
+        ownershipClaim={
+          selectedLanding ? (
+            <GroupOwnershipClaim
+              landing={selectedLanding}
+              isSignedIn={Boolean(user)}
+              onRequestSignIn={() => void ensureSignedIn("claim_group")}
+              onVerified={() => setLandingRefreshKey((key) => key + 1)}
+            />
+          ) : null
+        }
       />
     );
   }

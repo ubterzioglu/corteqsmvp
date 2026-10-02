@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **49** (N 0 · W 8 · M 27 · G 14 · KR 0) — G10+G12+G13+G15+G16+G17+G18+G19 kapandı, **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
+> | **Açık batch** | **48** (N 0 · W 8 · M 27 · G 13 · KR 0) — G10+G12+G13+G15+G16+G17+G18+G19+G20 kapandı, **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -139,7 +139,7 @@ traction ölçülecek.
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
 | C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
 | D | ~~G12~~ ~~G13~~ ~~G15~~ ~~G16~~ ~~G17~~ · **G14** | ✅ G12 02.10 (durum makinesi) · ✅ G13 02.10 (sahiplik + guard v2) · ✅ G15 02.10 (strike + yasak) · ✅ G16 02.10 (`group_posts` sıfırdan, §3.D 4 sınıf) · ✅ **G17 KAPANDI 02.10** (sağlık skoru + tavsiyeler + guard v3; skorlar cron'a kadar NULL — 🔴 G22 tuzağı aşağıda) · kalan: şikayet | 🟢 | ⛔ **G14: G04/U06** (kabul testi telefonu doğrulanmış hesap istiyor) |
-| E | ~~G18~~ ~~G19~~ · **G20–G21** | ✅ **G18 KAPANDI 02.10** (S1 form: `submit_group_v1` tek kapı + `group-preview` edge; kabul 14/14) · ✅ **G19 KAPANDI 02.10** (S2 dizin: view v2 çift filtre + rozet dili + is_new + skor sıralaması; kabul 8/8) · kalan 2 sayfa: detay · sahip paneli | 🟢 | ⚠️ yeni form+dizin frontend deploy kuyruğunda (G03b ile aynı) |
+| E | ~~G18~~ ~~G19~~ ~~G20~~ · **G21** | ✅ **G18 KAPANDI 02.10** (S1 form: `submit_group_v1` + `group-preview` edge; kabul 14/14) · ✅ **G19 KAPANDI 02.10** (S2 dizin: view v2 + rozet dili + is_new; kabul 8/8) · ✅ **G20 KAPANDI 02.10** (S3 detay: "Bu grup sizin mi?" claim UI — kod+ekran görüntüsü; kabul DOM+canlı 5/5; "Şikayet et" G14'e ertelendi) · kalan: sahip paneli | 🟢 | ⚠️ G18+G19+G20 frontend deploy kuyruğunda (G03b ile aynı) |
 | F | **G22–G25** | 6 zamanlanmış görev · 8 bildirim · moderatör paneli · 13 kabul testi | 🟢 | — |
 
 ### KR · Kariyer sayfası yenilemesi — ✅ SERİ TAMAMEN KAPANDI (02.10)
@@ -1747,8 +1747,49 @@ doğrulanmamış hesabın şikayeti sayılmaz. ⚠️ "0 geçerli şikayet" ile 
   arama `trIncludes`/`trCompare`; sayfalama. **Kabul:** **#3** ("Yeni" 72 saat sonra kalkıyor —
   DB tarafı canlı, UI tarafı bileşen testiyle kilitli).
 
-**G20 — S3 Detay** · boş "Grup koşulları" gizlenir; "Bu grup sizin mi?" + "Şikayet et"; "Katıl"
-G03 RPC'sinden geçer. **Kabul:** anonimde link sayfa kaynağı dahil hiçbir yerde görünmüyor.
+**~~G20~~ — ✅ KAPANDI 02.10** · S3 Detay · kod (migration YOK — G13 backend hazırdı)
+
+- **"Bu grup sizin mi?" UI'ı kuruldu** (`GroupOwnershipClaim` + `src/lib/group-claims.ts`,
+  tasarım §3.B birebir): yalnız `ownership ≠ verified` gruplarda görünür · KOD yolu
+  (`group_claim_start_code` → CQ+4 hane + talimat "Grup adının sonuna `· CQxxxx` ekle, sonra
+  Kontrol et'e bas" → `group-claim-verify` edge, body YALNIZ `claim_id` — kural 8) · sonuçlar:
+  verified (→ `onVerified` sayfa tazeler, rozet "Sahibi doğruladı" olur; mesaj tasarımın
+  "Kodu artık silebilirsin" cümlesini TAŞIR) · not_found (kalan deneme yazılır) · exhausted →
+  ekran görüntüsü formu OTOMATİK açılır · invalid_link/unknown "deneme sayılmadı" (kural 5) ·
+  expired → yeni kod. EKRAN GÖRÜNTÜSÜ yolu: private kovaya `{uid}/screenshot-*` (RPC
+  `split_part` + storage politikası deseni birebir) → moderatör kuyruğu · bekleyen talep sayfa
+  açılışında geri yüklenir (RLS kendi satırı) · girişsiz tıklama OAuth'a düşer (`claim_group`
+  intent'i, G02 kapı deseni — RPC'ye değil).
+- ⚠️ **KARAR — "Şikayet et" ÇİZİLMEDİ:** `group_reports` canlıda YOK (G14 ⛔ G04/U06) —
+  backend'i olmayan buton ölü düğümdür (dark pattern). G14 gelince bu bileşenin yanına
+  eklenecek; yokluk sözleşme testiyle kilitli.
+- Planın diğer kalemleri ÖLÇÜLDÜ: boş "Grup koşulları" GİZLİ (G03b'den beri — testle kilitlendi)
+  · "Katıl" G03 RPC'sinden geçiyor (G03b — invite testleri aynen yeşil) · sahiplik yuvası
+  `LandingDetailView`'a `ownershipClaim` prop'u olarak eklendi (veri/tazeleme sayfada, sunum
+  bileşende).
+- **Kabul (anonim ziyaretçide link hiçbir yerde yok — DOM düzeyinde):** signed_out detayının
+  `container.innerHTML`'inde `chat.whatsapp.com|t.me/|discord.gg` izi YOK + http-href'ler
+  platform dışı + "Giriş yap ve katıl" görünür · unavailable durumda da kaynak temiz + sebep
+  yazılı · ready durumunda tek dış link RPC sonucu. **Canlı prob (geri alınan işlem, 5/5):**
+  anon `group_claims` OKUYAMIYOR (`permission denied`) · view'da link 0 · authenticated
+  `group_claim_start_code` → **CQ6991** + pending satır · RLS başka kullanıcıya 0 satır ·
+  yabancı klasör yolu → `group_claim_path_forbidden`, kendi yolu → screenshot claim ·
+  rollback sonrası `group_claims` 0 (canlıda artık yok).
+- **Kanıt:** **28 yeni test** (`group-claims.test.ts` 6 — hata haritası G13 migration'ına karşı
+  ÇİFT YÖNLÜ · verify body kilidi · §3.B mesaj dili · kova/pat deseni · `GroupOwnershipClaim.test.tsx`
+  11 · `LandingDetailView.g20.test.tsx` 8 + G03b invite/sayfa/G02 regresyonları yeşil) ·
+  **mutasyon 6/6** (verified guard · body'ye kod sızdırma · mesaj silme · boş koşullar ·
+  Şikayet düğmesi · paylaşımlı klasör — ⚠️ M3/M5 ilk koşuda **konsol kodlaması** yüzünden
+  uygulanmadı (Türkçe karakterler bozuldu), UTF-8 Node betiğiyle TEKİL koşuldu ve ikisi de
+  YAKALANDI: kanıt mutasyon notunda) · tam takım **408 dosya / 3321 test yeşil** · `tsc` 0 ·
+  lint 0 (32 problem tümü `corteqs-ekstre-motoru/`) · `check:dead` 0/0/**985** · `ingest:tools`
+  57 + check 0 · `verify:text` ✓ 1908 · types regen YOK (`as never` deseni — G12 borcu).
+- 📌 **Devir:** G14 şikayet butonunu bu bileşenin yanına ekleyecek · G21 sahip paneli
+  `onVerified` sonrası görünür olan sahiplik alanlarını kullanır · deploy kuyruğu: G18+G19+G20
+  birlikte canlanır.
+- *(özgün kapsam)* boş "Grup koşulları" gizlenir; "Bu grup sizin mi?" + "Şikayet et"; "Katıl"
+  G03 RPC'sinden geçer. **Kabul:** anonimde link sayfa kaynağı dahil hiçbir yerde görünmüyor
+  ("Şikayet et" → G14'e ertelendi, gerekçesi yukarıda).
 
 **G21 — S4 Sahip paneli** · düzenleme, onay kuyruğu, skor kalemleri ("Kurallarını ekle, +15"),
 rozet görseli, "Sayfayı paylaş", "Grubu listeden kaldır". Mevcut `whatsapp_landing_editors` +
@@ -2103,6 +2144,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G20 · S3 detay — "Bu grup sizin mi?" claim UI | KOD (migration YOK — G13 backend hazırdı): `GroupOwnershipClaim` + `src/lib/group-claims.ts` — kod yolu (CQ+4, talimat §3.B.2 birebir, verify body YALNIZ `claim_id` [kural 8], verified→"Kodu artık silebilirsin"+sayfa tazelenir, exhausted→ekran görüntüsü formu açılır, invalid/unknown "deneme sayılmadı") + screenshot yolu (`{uid}/screenshot-*` private kova, RPC/policy deseni birebir) + bekleyen talep geri yükleme + `claim_group` OAuth intent'i · ⚠️ "Şikayet et" ÇİZİLMEDİ (group_reports YOK — G14 ⛔; ölü düğme yok, yokluk testle kilitli) · boş koşullar gizli + "Katıl" RPC'den (kilitlendi) · **kabul DOM'da:** signed_out innerHTML'de platform linki izi YOK · **canlı prob 5/5** (geri alınan işlem: anon claims okuyamıyor · view link 0 · start_code→CQ6991+pending · RLS başka kullanıcı 0 · yabancı path reddi · rollback temiz) · 28 yeni test (hata haritası G13'e karşı çift yönlü) · **mutasyon 6/6** (⚠️ M3/M5 konsol kodlaması yüzünden ilk koşuda uygulanamadı — UTF-8 Node betiğiyle tekil koşuldu, ikisi de yakalandı; PowerShell mutasyonlarında Türkçe karakter dersi) · tam takım **408 dosya/3321 test** · `tsc` 0 · `check:dead` 0/0/985 · `ingest` 57+check 0 · deploy kuyruğu G18+G19'la aynı |
 | G19 · S2 dizin — view v2 + rozet dili | mig `20261002090000` canlıda + kayıt (`check:migrations` **455/455**) · `whatsapp_landings_public` v2: G03a masking AYNEN (4 kolon null) + motor kolonları sonda + `is_new` (`group_listing_is_new`, SECURITY DEFINER — G09 grant matrisi değişmedi, eşik `groups.new_badge_hours=72`) · 🔴 **gizli kusur kapatıldı:** tek filtre `status='approved'` idi, G12 legacy `status`'ü değiştirmediği için motor `hidden/suspended/removed` kararı dizine YANSIMIYORDU → ÇİFT filtre (canlıda 10/10 aynı kaldı, eski paket onay yolu da görünür) · rozet dili politika §6 birebir (dosyaya karşı kilitli): "Admin onaylı!/Üye onaylı!" KALKTI → "Sahibi doğruladı"/"Üye önerisi" + "Yeni" + "Onaylı Grup" (eşik istemcide YOK) · "Skor bekleniyor" HİÇBİR YERDE yok, skor 0-100 · sıralama `group_score DESC NULLS LAST` (politika §7) · `categoryOptions`=`categoryMeta` türevi (tek liste) · **kabul #3 canlı 8/8** (geri alınan işlem: is_new şimdi/73h/eşik-100 kanıtı · hidden→9 · suspended→9 · legacy yol→10 · skor→ilk sıra · anon grant matrisi · rollback temiz) · 34 yeni test · **mutasyon 6/6** (M5 tekil koşuda doğrulandı — toplu koşu rapor yarışı) · tam takım **405 dosya/3297 test** · `tsc` 0 · `check:dead` 0/0/983 · `ingest:tools` 57 · types regen YOK (`WhatsAppLandingPublicRow` kesişimi) · 📌 devir: claim UI girişi + şikayet G20'de · admin panel dili G24'te · deploy kuyruğu G18'le aynı |
 | G18 · S1 form + `submit_group_v1` + `group-preview` edge | mig `20261002080000` canlıda + kayıt (`check:migrations` 454/454) · tek gönderim kapısı (dedup `group_invite_code` · kara liste→`review_flags` REDDETMEZ · hızlı şerit 4 koşul + `fast_lane` log · günlük 5 · Grup Sözü · geo doğrulama · kategori CHECK 10+7) · edge DEPLOY (`check:functions` **14/14**, duman 4/4: 200/401/401/401 — verify_jwt default ÖLÇÜLDÜ) · `_shared/group-invite-read`'e `image` (og:image + Discord CDN, G13 semantiği değişmedi) · form 7 satır (politika §2): platform seçimi + serbest metin konum KALKTI, Grup Sözü birebir kilitli, Aile & Çocuk disabled + **sunucuda kilitli** (kabul #10 bugünkü hâl — seviye sistemi G06/K09) · karar: admin `claims_admin` özbeyanı = verified (kabul #3 ölçülebilir) · ⚠️ paralel sistem: `submitLanding`+INSERT RLS deploy'a dek BİLİNÇLİ duruyor · **kabul canlı 14/14** (geri alınan işlem: #1 already_listed+INSERT yok · #2 şerit açıkken pending_review · #4 {vize,oturum} işaretli pending_review · #3-karşılığı published+log · 8 sınır hatası · limit · ban · Global · anon) · 🔴 iki gerçek kusur canlı testte yakalandı (`v_country.code` select eksik · Global dalda `v_city` atanmadan okunuyor) — kaynak testi göremezdi · sözleşme+birim 67 · **mutasyon 6/6** · tam takım **402 dosya/3263 test** · `tsc` 0 · `check:dead` 0/0/983 · `ingest:tools` 57 (14 edge) · 📌 devir: claim UI girişi G20 · rozet/skor view G19 · "Yeni" 72h G19 |
 | G17 · grup sağlık skoru + tavsiyeler | mig `20261002070000` canlıda + kayıt (`check:migrations` 453/453 sapmasız) · `group_recommendations` (tekil, tek kapı RPC) + `group_health_score_compute` (§5 birebir 15+15+15+15+20+20) + `recompute`/`_all` (service_role ONLY, cron G22) + 4 eşik `group_settings`'te (70/65/10/90) + **guard v3** (skor kolonları motor alanı, `is_admin` muaf) · 🔴 **ölçüm:** eski kod group_score'a YAZIYORDU (`updateLanding` her admin kaydında null — `1a3310a1` 03.06, canlı pakette) → src clobber kaldırıldı, guard admin'i muaf tuttu (canlı moderasyon kırılmasın) · ⚠️ **kalıcı skor YAZILMADI:** canlı eski kart `X / 10` çiziyor → cron G22'ye dek NULL (🔴 G22 tuzağı panoda yazılı) · vacuous kalemler: şikayet (group_reports YOK → G14) + link (`link_fail_count=0`, tarihçe yok → G22) · **kabul #11 canlı 16/16** (geri alınan işlem: grace NULL · 35→65→80 · histerezis 65'te korudu/50'de düştü · tavsiye idempotent+cap→100 · guard sahip engelledi/admin geçti · RLS · rollback sonrası canlı dokunulmamış 0/0/0) · sözleşme **23/23** · **mutasyon 6/6** · tam takım **399 dosya/3211 test** yeşil · `tsc` 0 · `check:dead` 0/0/982 · `ingest:tools` 56 · types regen YOK (TS tüketici yok — G12 borcu aynı) |

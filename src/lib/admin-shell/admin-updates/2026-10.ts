@@ -5,6 +5,20 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261002-grup-sahipligi-ekrani",
+    date: "2 Ekim 2026",
+    title: "“Bu grup sizin mi?” — grup sahiplenme ekranı hazır (deploy kuyruğunda)",
+    items: [
+      "SAHİPLENME EKRANI: Her grup sayfasının altında “Bu grubun admini misin?” bölümü açıldı. İki yol var: (1) KOD — sistem 10 dakikalık tek kullanımlık bir kod üretir (CQ+4 hane), kodu grup adının sonuna eklersin, “Kontrol et”e basınca sistem grup adını SUNUCUDA okur ve kodu bulursa sayfa sana bağlanır; (2) EKRAN GÖRÜNTÜSÜ — kodla olmuyorsa admin panelinin ekran görüntüsünü yüklersin, talep moderatör kuyruğuna düşer.",
+      "GÜVENLİK: Doğrulamada 3 deneme hakkı var; linki ölü ya da okunamayan gruplarda deneme YANMAZ (sistem hatası kullanıcıya mal edilmez). Ekran görüntüleri yalnızca kişinin kendi özel klasörüne yazılır — başkasının kanıtını kimse göremez, silmeyi yalnız admin yapabilir. Günlük talep sınırı ayar tablosundan yönetiliyor.",
+      "GRUP ZATEN SAHİPLENİLMİŞSE: Otomatik devir YOK. Ekran görüntüsüyle itiraz edilebilir, kararı moderatör verir; mevcut sahibe haber gider (bildirim altyapısı M4’te bağlanacak).",
+      "ANONİM ZİYARETÇİ GÜVENCESİ (kabul testi): Giriş yapmamış ziyaretçi için davet linki sayfa kaynağı dahil HİÇBİR YERDE görünmüyor — “Katıl” düğmesi önce giriş istiyor. Bu davranış otomatik testlerle kilitlendi.",
+      "EKSİK BÖLÜM DÜZELTİLDİ: “Grup koşulları” bölümü boşken artık hiç çizilmiyor (boş başlık görünmüyor).",
+      "⚠️ “ŞİKAYET ET” BİLEREK YOK: Şikayet altyapısı telefon doğrulamasına bağlı (K09/U06 kararı bekleniyor). Arkasında sistem olmayan bir buton koymak yerine hiç konmadı — altyapı gelince eklenecek.",
+      "⚠️ EKRAN DEPLOY BEKLİYOR: Veritabanı tarafı zaten canlıydı ve yeniden doğrulandı; ekran, form + dizin ile aynı deploy kuyruğunda.",
+    ],
+  },
+  {
     id: "20261002-grup-dizini-yeni-dil",
     date: "2 Ekim 2026",
     title: "Grup dizininin yeni dili hazır — sahiplik rozetleri, “Yeni” etiketi, 0-100 skor (deploy kuyruğunda)",
