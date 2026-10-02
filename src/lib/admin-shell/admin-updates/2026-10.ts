@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261002-grup-sahip-paneli",
+    date: "2 Ekim 2026",
+    title: "Grup sahibi paneli hazır — skor rehberi, onay kuyruğu, düzenleme, listeden kaldırma (deploy kuyruğunda)",
+    items: [
+      "SAHİP PANELİ: Grubun doğrulanmış sahibi grup sayfasında kendi panelini görüyor: sağlık skoru kalem kalem + eksik adım rehberi (“Kurallarını ekle, +15” gibi), onay bekleyen gönderiler, bilgi düzenleme ve “Grubu listeden kaldır”. Sahip olmayan ziyaretçiye panel HİÇ çizilmiyor — sunucu da panel verisini yalnız sahibe veriyor (başkasına tek alan dönüyor: “sahip değil”).",
+      "ONAY KUYRUĞU SAHİPTE: Gruba düşen gönderiler önce sahibin onayına düşüyor (48 saat içinde bakmazsa ekibimizin kuyruğuna geçiyor — uyarı panelde yazılı). Sahip tek tıkla onaylıyor ya da reddediyor.",
+      "LİSTEDEN KALDIRMA ANINDA: Doğrulanmış sahip “Grubu listeden kaldır”a basınca grup ANINDA gizleniyor — gerekçe SORMUYORUZ (politika: sahip istemezse 24 saat). 24 saat içinde moderatör kalıcı kaldırmaya çeviriyor. İki adımlı onay var, yanlışlıkla basılamıyor.",
+      "DÜZENLEME SKORU BESLİYOR: Sahip kısa açıklamayı, kuralları, kategoriyi, şehri/ülkeyi, vurgu cümlesini ve görseli değiştirebiliyor; skor ertesi günkü günlük hesapta güncelleniyor. “Aile & Çocuk” kategorisi burada da doğrulama altyapısına kadar kilitli.",
+      "ROZET GÖRSELİ: “Onaylı Grup” rozetini kazanan gruplar, Instagram’da paylaşılabilir 1080x1080 rozet görselini panelden indirebiliyor (grup adı + skor yazılı).",
+      "⚠️ EKRAN DEPLOY BEKLİYOR: Sunucu tarafı canlıda ve doğrulandı (kaldırma isteği canlı ölçümde grubu anında dizinden düşürdü, sonra geri alındı); panel ekranı form + dizin + detay ile aynı deploy kuyruğunda.",
+    ],
+  },
+  {
     id: "20261002-grup-sahipligi-ekrani",
     date: "2 Ekim 2026",
     title: "“Bu grup sizin mi?” — grup sahiplenme ekranı hazır (deploy kuyruğunda)",

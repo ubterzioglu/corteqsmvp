@@ -3272,6 +3272,21 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/group-owner-panel-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group-owner-panel.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group-owner-panel.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/group-posts-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"

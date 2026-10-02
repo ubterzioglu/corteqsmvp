@@ -11,6 +11,7 @@ import { AddCommunityFormSection } from "@/components/whatsapp/AddCommunityFormS
 import { AddCommunityHero } from "@/components/whatsapp/AddCommunityHero";
 import { CommunityFilters } from "@/components/whatsapp/CommunityFilters";
 import { GroupOwnershipClaim } from "@/components/whatsapp/GroupOwnershipClaim";
+import { GroupOwnerPanel } from "@/components/whatsapp/GroupOwnerPanel";
 import { LandingCard } from "@/components/whatsapp/LandingCard";
 import { LandingDetailView, type LandingInviteState } from "@/components/whatsapp/LandingDetailView";
 import {
@@ -602,12 +603,30 @@ export default function AddWhatsAppPage() {
         onRequestSignIn={() => void ensureSignedIn("join_group")}
         ownershipClaim={
           selectedLanding ? (
-            <GroupOwnershipClaim
-              landing={selectedLanding}
-              isSignedIn={Boolean(user)}
-              onRequestSignIn={() => void ensureSignedIn("claim_group")}
-              onVerified={() => setLandingRefreshKey((key) => key + 1)}
-            />
+            <>
+              {/* G21: sahip paneli — verified SAHİPSE çizilir (RPC kendini
+                  sahiple sınırlar, is_owner:false → hiçbir şey render olmaz). */}
+              <GroupOwnerPanel
+                landing={selectedLanding}
+                isSignedIn={Boolean(user)}
+                onHidden={() => {
+                  toast({
+                    title: "Grup listeden kaldırıldı",
+                    description:
+                      "Grup anında gizlendi. 24 saat içinde moderatör kalıcı kaldırmaya çevirir.",
+                  });
+                  backToList();
+                }}
+              />
+              {/* G20: sahiplik doğrulama — verified değilse çizilir. İkisi
+                  ownership durumuna göre birbirini dışlar. */}
+              <GroupOwnershipClaim
+                landing={selectedLanding}
+                isSignedIn={Boolean(user)}
+                onRequestSignIn={() => void ensureSignedIn("claim_group")}
+                onVerified={() => setLandingRefreshKey((key) => key + 1)}
+              />
+            </>
           ) : null
         }
       />
