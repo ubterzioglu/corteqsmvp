@@ -600,6 +600,7 @@ export type Database = {
       admin_notification_subscriptions: {
         Row: {
           admin_update_email: boolean
+          career_application_email: boolean
           created_at: string
           new_member_email: boolean
           radar_scan_digest_email: boolean
@@ -609,6 +610,7 @@ export type Database = {
         }
         Insert: {
           admin_update_email?: boolean
+          career_application_email?: boolean
           created_at?: string
           new_member_email?: boolean
           radar_scan_digest_email?: boolean
@@ -618,6 +620,7 @@ export type Database = {
         }
         Update: {
           admin_update_email?: boolean
+          career_application_email?: boolean
           created_at?: string
           new_member_email?: boolean
           radar_scan_digest_email?: boolean
@@ -12815,23 +12818,43 @@ export type Database = {
           call_to_action_text: string | null
           category: string
           city: string
+          city_id: string | null
           conditions: string | null
           country: string
+          country_code: string | null
           created_at: string
           description: string | null
           group_name: string
           group_score: number | null
           hero_image: string | null
+          hidden_reason: string | null
           id: string
+          invite_code: string | null
+          is_global: boolean
           language: string | null
+          link_checked_at: string | null
+          link_fail_count: number
+          listing_status: string
           member_approved: boolean
           member_count: number | null
           member_count_updated_at: string | null
           mode: string
           origin: string | null
+          owner_renewal_due: string | null
+          owner_user_id: string | null
+          ownership: string
+          platform: string
+          published_at: string | null
           rejection_reason: string | null
+          review_flags: string[]
+          rules: string | null
+          short_description: string | null
           slug: string
           status: string
+          strike_count: number
+          submitted_as_admin: boolean
+          submitted_by: string | null
+          suspended_until: string | null
           tagline: string | null
           updated_at: string
           user_id: string | null
@@ -12844,23 +12867,43 @@ export type Database = {
           call_to_action_text?: string | null
           category: string
           city: string
+          city_id?: string | null
           conditions?: string | null
           country: string
+          country_code?: string | null
           created_at?: string
           description?: string | null
           group_name: string
           group_score?: number | null
           hero_image?: string | null
+          hidden_reason?: string | null
           id?: string
+          invite_code?: string | null
+          is_global?: boolean
           language?: string | null
+          link_checked_at?: string | null
+          link_fail_count?: number
+          listing_status?: string
           member_approved?: boolean
           member_count?: number | null
           member_count_updated_at?: string | null
           mode?: string
           origin?: string | null
+          owner_renewal_due?: string | null
+          owner_user_id?: string | null
+          ownership?: string
+          platform?: string
+          published_at?: string | null
           rejection_reason?: string | null
+          review_flags?: string[]
+          rules?: string | null
+          short_description?: string | null
           slug: string
           status?: string
+          strike_count?: number
+          submitted_as_admin?: boolean
+          submitted_by?: string | null
+          suspended_until?: string | null
           tagline?: string | null
           updated_at?: string
           user_id?: string | null
@@ -12873,29 +12916,57 @@ export type Database = {
           call_to_action_text?: string | null
           category?: string
           city?: string
+          city_id?: string | null
           conditions?: string | null
           country?: string
+          country_code?: string | null
           created_at?: string
           description?: string | null
           group_name?: string
           group_score?: number | null
           hero_image?: string | null
+          hidden_reason?: string | null
           id?: string
+          invite_code?: string | null
+          is_global?: boolean
           language?: string | null
+          link_checked_at?: string | null
+          link_fail_count?: number
+          listing_status?: string
           member_approved?: boolean
           member_count?: number | null
           member_count_updated_at?: string | null
           mode?: string
           origin?: string | null
+          owner_renewal_due?: string | null
+          owner_user_id?: string | null
+          ownership?: string
+          platform?: string
+          published_at?: string | null
           rejection_reason?: string | null
+          review_flags?: string[]
+          rules?: string | null
+          short_description?: string | null
           slug?: string
           status?: string
+          strike_count?: number
+          submitted_as_admin?: boolean
+          submitted_by?: string | null
+          suspended_until?: string | null
           tagline?: string | null
           updated_at?: string
           user_id?: string | null
           whatsapp_link?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_landings_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "geo_cities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       whatsapp_message_templates: {
         Row: {
@@ -14524,23 +14595,43 @@ export type Database = {
           call_to_action_text: string | null
           category: string
           city: string
+          city_id: string | null
           conditions: string | null
           country: string
+          country_code: string | null
           created_at: string
           description: string | null
           group_name: string
           group_score: number | null
           hero_image: string | null
+          hidden_reason: string | null
           id: string
+          invite_code: string | null
+          is_global: boolean
           language: string | null
+          link_checked_at: string | null
+          link_fail_count: number
+          listing_status: string
           member_approved: boolean
           member_count: number | null
           member_count_updated_at: string | null
           mode: string
           origin: string | null
+          owner_renewal_due: string | null
+          owner_user_id: string | null
+          ownership: string
+          platform: string
+          published_at: string | null
           rejection_reason: string | null
+          review_flags: string[]
+          rules: string | null
+          short_description: string | null
           slug: string
           status: string
+          strike_count: number
+          submitted_as_admin: boolean
+          submitted_by: string | null
+          suspended_until: string | null
           tagline: string | null
           updated_at: string
           user_id: string | null
@@ -14626,6 +14717,7 @@ export type Database = {
       }
       get_whatsapp_landing_invite: { Args: { p_slug: string }; Returns: string }
       gettransactionid: { Args: never; Returns: unknown }
+      group_invite_code: { Args: { p_url: string }; Returns: string }
       group_setting_bool: {
         Args: { p_default: boolean; p_key: string }
         Returns: boolean
@@ -16071,23 +16163,43 @@ export type Database = {
           call_to_action_text: string | null
           category: string
           city: string
+          city_id: string | null
           conditions: string | null
           country: string
+          country_code: string | null
           created_at: string
           description: string | null
           group_name: string
           group_score: number | null
           hero_image: string | null
+          hidden_reason: string | null
           id: string
+          invite_code: string | null
+          is_global: boolean
           language: string | null
+          link_checked_at: string | null
+          link_fail_count: number
+          listing_status: string
           member_approved: boolean
           member_count: number | null
           member_count_updated_at: string | null
           mode: string
           origin: string | null
+          owner_renewal_due: string | null
+          owner_user_id: string | null
+          ownership: string
+          platform: string
+          published_at: string | null
           rejection_reason: string | null
+          review_flags: string[]
+          rules: string | null
+          short_description: string | null
           slug: string
           status: string
+          strike_count: number
+          submitted_as_admin: boolean
+          submitted_by: string | null
+          suspended_until: string | null
           tagline: string | null
           updated_at: string
           user_id: string | null

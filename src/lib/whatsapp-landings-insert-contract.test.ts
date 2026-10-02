@@ -15,6 +15,11 @@ import { describe, expect, it } from "vitest";
 //
 // Bu test iki şeyi kilitler: (1) yük hâlâ `satisfies` ile DOĞRULANIYOR (cast değil),
 // (2) yükün her anahtarı `types.ts`'teki gerçek Insert sözleşmesinde var.
+//
+// GÜNCELLEME (2 Ekim 2026, G10): `20261002020000_whatsapp_landings_group_schema`
+// migration'ı `platform` sütununu ekledi ve types.ts yeniden üretildi — yukarıdaki
+// "sütun YOK" tespiti tarihîdir. Yeni sözleşme üçüncü testte: sütun VAR, ama yük
+// entegrasyon işine dek platformu `description` etiketinden saklamaya devam eder.
 
 const LANDINGS_SOURCE = resolve(process.cwd(), "src/lib/whatsapp-landings.ts");
 const TYPES_SOURCE = resolve(process.cwd(), "src/integrations/supabase/types.ts");
@@ -64,8 +69,11 @@ describe("whatsapp_landings insert sözleşmesi", () => {
     expect(payloadKeys.filter((key) => !columns.has(key))).toEqual([]);
   });
 
-  it("olmayan `platform` sütununa yazılmaz", () => {
-    expect(readInsertColumns()).not.toContain("platform");
+  it("`platform` sütunu var ama yük ona yazmaz — geçiş entegrasyon işinde", () => {
+    // G10 sütunu ekledi; canlı paket ve moderasyon akışı platformu hâlâ
+    // `description` etiketinde tutuyor. İki kaynağın aynı anda yazılması değeri
+    // ayrıştırır, bu yüzden sütuna geçiş tek bir entegrasyon işinde yapılacak.
+    expect(readInsertColumns()).toContain("platform");
     expect(readPayloadKeys()).not.toContain("platform");
   });
 

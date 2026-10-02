@@ -510,7 +510,9 @@ export async function submitLanding(input: SaveLandingInput): Promise<{ slug: st
     origin: input.origin ?? null,
     // ⚠️ Buraya `platform` EKLEME. Platform `description` içinde `[Platform: X]`
     // etiketi olarak saklanır (çağıran `buildLandingDescription` ile yazar).
-    // Tabloda `platform` sütunu YOKTUR; yazılırsa insert PGRST204 ile düşer.
+    // G10 (20261002020000) `platform` sütununu ekledi; insert artık PGRST204 ile
+    // düşmez AMA okuma akışı hâlâ etikete bağlı — iki kaynak birlikte yazılırsa
+    // değer ayrışır. Sütuna geçiş tek bir entegrasyon işinde yapılacak.
     // Aşağıdaki açık tip (cast DEĞİL) bunu derleme zamanında yakalar — `as
     // TablesInsert<...>` cast'i 19.09.2026'da tam olarak bu hatayı gizlemişti.
   } satisfies TablesInsert<"whatsapp_landings">;

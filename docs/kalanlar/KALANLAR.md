@@ -9,11 +9,11 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **56** (N 0 · W 8 · M 27 · G 21 · KR 0) |
+> | **Açık batch** | **56** (N 0 · W 8 · M 27 · G 21 · KR 0) — G10 kapandı, **G10c** açıldı (eski kolonların düşürülmesi, ⛔ G03b deploy) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 8 (K — **K09 yeni, 02.10**) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
-> | **Son devir notu** | [`docs/handover/2026-10-01-devir-notu-2.md`](../handover/2026-10-01-devir-notu-2.md) — 1 Ekim akşam oturumu, 24 commit (PUSH EDİLMEDİ); ilk not [`2026-10-01-devir-notu.md`](../handover/2026-10-01-devir-notu.md) hâlâ geçerli (§7 tuzaklar + §9 ortam) |
+> | **Son devir notu** | [`docs/handover/2026-10-02-devir-notu.md`](../handover/2026-10-02-devir-notu.md) — 2 Ekim gece oturumu (KR01–KR10 + G08/G09) · [`2026-10-01-devir-notu.md`](../handover/2026-10-01-devir-notu.md) §7 tuzaklar + §9 ortam hâlâ geçerli |
 > | **Kalıcı operasyon dersleri** | [`docs/operations/2026-09-30-kalici-operasyon-dersleri.md`](../operations/2026-09-30-kalici-operasyon-dersleri.md) |
 
 ---
@@ -48,7 +48,7 @@ Bu dosyaya yeni gelen ajan **sırayla** şunu yapar:
 2. **G01 → G02 → G03** — ⚠️ **canlıda AÇIK iki güvenlik kusuru.** Onaylı seriler arasında
    tek "bugün zarar veriyor" sınıfı bu; sıranın başında olmaları bu yüzden.
 3. **N01 → N07** — 7 küçük batch, sıfır migration, en düşük risk.
-4. **G04 → G25** — G04/G05 ⛔ U06, G11 ⛔ U07; o üçü atlanıp gerisi sürdürülebilir.
+4. **G04 → G25** — G04/G05 ⛔ U06, G10c ⛔ G03b deploy, G11 ⛔ U07; bunlar atlanıp gerisi sürdürülebilir.
 5. **KR01 → KR10**.
 6. **M01–M27** — onay geldiğinde.
 
@@ -137,7 +137,7 @@ traction ölçülecek.
 | B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟢 | ⛔ **U06** |
 | B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🔴 | ⛔ **K09 kararı** (↓ ölçüm 02.10) |
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
-| C | ~~G09~~ · **G10–G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda, 15 satır) · kalan: `whatsapp_landings` genişletme · 10 grubun göçü | 🟢 | ⛔ **U07** (G11) |
+| C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
 | D | **G12–G17** | Durum makinesi · sahiplik · şikayet · uyarı · gönderiler · sağlık skoru | 🟢 | — |
 | E | **G18–G21** | 4 sayfa: form · dizin · detay · sahip paneli | 🟢 | — |
 | F | **G22–G25** | 6 zamanlanmış görev · 8 bildirim · moderatör paneli · 13 kabul testi | 🟢 | — |
@@ -1373,16 +1373,50 @@ zaten temiz ölçüldü, G03c'den sonra yeniden doğrulanacak:
 - **Kabul:** her sayı bu tablodan okunuyor; kodda eşik sabiti yok (sözleşme testi kaynak metnini
   denetler).
 
-**G10 — `whatsapp_landings` şema genişletme** · migration
-- Yeni: `platform` · `invite_code` (unique, normalize) · `listing_status` · `hidden_reason` ·
-  `ownership` · `owner_user_id` · `submitted_by` · `submitted_as_admin` · `review_flags[]` ·
-  `is_global` · `country_code` · `city_id`(→`geo_cities`) · `short_description(160)` · `rules` ·
-  `strike_count` · `published_at` · `suspended_until` · `owner_renewal_due` · `link_fail_count` ·
-  `link_checked_at`.
-- `status`→`listing_status` eşlenir (`approved`→`published`); `group_score` `health_score` olarak
-  kalır (yeni kolon açma); `member_approved`/`admin_approved` **kaldırılır**.
-- ⚠️ `catalog_sync_whatsapp_landing` + trigger'ı **aynı migration'da** güncellenir.
-- **Kabul:** `tsc` 0 (types regen dahil); katalog senkronu 10 grup için çalışıyor.
+**~~G10~~ — ✅ KAPANDI 02.10** · `whatsapp_landings` şema genişletme · migration
+
+- Migration `20261002020000_whatsapp_landings_group_schema.sql` **canlıda** (`applied/` +
+  `schema_migrations` kaydı, `check:migrations` sapmasız). **20 yeni kolon** (hepsi
+  `add column if not exists`), 4 CHECK kısıtı, `group_invite_code()` fonksiyonu + kısmi tekil
+  indeks (`invite_code`), `listing_status` indeksi.
+- ⚠️ **BİLİNÇLİ SAPMA — salt ekleme uygulandı.** Spec `member_approved`/`admin_approved`
+  kolonlarını DÜŞÜRMEYİ söylüyordu; ama kolonlar repoda **9 dosyada** kullanılıyor ve canlı
+  paket hâlâ eski kod (G03b deploy edilmedi). Düşürme **G10c'ye** bırakıldı (G03a/b/c deseni).
+  Sözleşme testi düşürmeyi yasaklıyor (`drop column`/`drop table` → test düşer).
+- `status`→`listing_status` eşlendi (`approved`→`published`), `group_score` yerinde kaldı,
+  mekanik geri doldurma yapıldı: **`invite_code` 8/10 dolu** (2 boş link U07 kararı),
+  `listing_status` 10/10 `published`, `ownership` 10/10 `unclaimed`. Ekip kararı alanlarına
+  (kategori · ülke/şehir · `short_description`) **DOKUNULMADI** → G11/U07.
+- K5: `catalog_sync_whatsapp_landing` eski kolonları okumaya devam ediyor (düşürme yok) →
+  fonksiyon değişmedi ve **canlı kanıt:** geri alınan işlemde `catalog_sync_whatsapp_landing`
+  **10/10 hatasız**; `source_records` eşleşmesi **10/10**; trigger `trg_catalog_sync_whatsapp_landing`
+  yerinde; migration'ın kendi `update`'i sync'i tetikledi (`catalog_items.updated_at` = uygulama anı).
+- **Kanıt:** types regen edildi (+113 satır, tek silinen satır boş `Relationships: []` → FK'larla
+  doldu) · `tsc` 0 · 10 sözleşme testi (`whatsapp-landings-group-schema.test.ts`) ·
+  **mutasyon 6/6 yakalandı** (kolon düşürme · uydurma durum/sahiplik adı · `cadde_*` kataloğu ·
+  tekil indeks gevşetme · ekip kararı alanını doldurma).
+- *(özgün kapsam)* Yeni: `platform` · `invite_code` · `listing_status` · `hidden_reason` · `ownership` ·
+  `owner_user_id` · `submitted_by` · `submitted_as_admin` · `review_flags[]` · `is_global` ·
+  `country_code` · `city_id`(→`geo_cities`) · `short_description(160)` · `rules` · `strike_count` ·
+  `published_at` · `suspended_until` · `owner_renewal_due` · `link_fail_count` · `link_checked_at`.
+
+**G10c — Eski kolonların düşürülmesi (G10'un ertelenen yarısı)** · migration · ⛔ **BLOKE**
+
+> ⛔ **G03b canlıya deploy edilmeden UYGULANAMAZ** (G03c ile aynı kuyruk — canlı paket hâlâ
+> `whatsapp_landings`'i `select("*")` ile okuyor; kolonlar düşerse yayındaki site kırılır).
+
+- Düşürülecekler: `member_approved` · `admin_approved` · (spec'e göre `status`'ün kendisi —
+  ama `catalog_sync_whatsapp_landing` ve view `v_landing` onu okuyor; önce onların
+  `listing_status`'e geçirilmesi gerekir).
+- Sıra: `catalog_sync_whatsapp_landing` + `v_landing` yeni kolonları okuyacak şekilde güncellenir
+  (K5'in ertelenen yarısı) → repodaki **9 dosya** (`WhatsAppLandingsModeration.tsx`,
+  `LandingApprovalBadges.tsx`, `WhatsAppLandingEditorPage.tsx`, `AddWhatsAppPage.tsx`,
+  `whatsapp-landings.ts`, `whatsapp-landing-presentation.ts` + testleri) `listing_status`'e taşınır
+  → deploy → **sonra** `drop column`.
+- Sözleşme testi `whatsapp-landings-group-schema.test.ts` o gün **güncellenir** (şu an düşürmeyi
+  yasaklayan test, düşürme batch'inde tersine çevrilir — G03b'de `rowToLanding`'de yapılanın aynısı).
+- **Kabul:** canlı paket yeni kolonlardan okuyor (ölçüm: yayında `member_approved`'ı okuyan 0 chunk);
+  drop migration'ı canlıda; `tsc` 0; moderasyon ekranı çalışıyor.
 
 **G11 — Mevcut 10 grubun eşlemesi + veri göçü** · migration + CSV
 - CSV üretilir, **ekibe gider** (U listesi). 4 karar: `diger`×3'ün kategorisi · 6 `Global/Genel`
@@ -1785,6 +1819,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G10 · `whatsapp_landings` şema genişletme | mig `20261002020000` canlıda + `schema_migrations` kaydı (`check:migrations` sapmasız) · **20 kolon** salt ekleme (`if not exists`), 4 CHECK, `group_invite_code()` + kısmi tekil indeks · **BİLİNÇLİ SAPMA:** `member_approved`/`admin_approved` DÜŞÜRÜLMEDİ (9 dosya + canlı paket eski kod) → **G10c** (⛔ G03b deploy) · geri doldurma: `invite_code` **8/10** (2 boş link U07), `listing_status` 10/10 `published`, `ownership` 10/10 `unclaimed`; ekip kararı alanlarına dokunulmadı · K5 canlı kanıt: sync fonksiyonu **10/10 hatasız** (geri alınan işlem), `source_records` 10/10, trigger yerinde · types regen +113 satır · `tsc` 0 · 10 sözleşme testi · **mutasyon 6/6** |
 | KR10 · SEO · sitemap · araç kataloğu · kök temizliği · doküman | `/kariyer` sitemap önceliği **0.4 → 0.7** (sözleşme testiyle kilitli — sessizce geri dönerse düşer) · `PAGE_SEO.career.description` 17 ilan + staj + uzaktan çalışmayı anlatacak şekilde yenilendi · sitemap üretildi: **413 URL**, `/kariyer` priority 0.7 ölçüldü · `ingest:tools:check` **temiz** · `check:drift` temiz · **kök temizlendi:** `EKİP WEB SAYFASI …` klasörü + zip kaldırıldı, içerik `docs/archive/2026-10-02-kariyer-kaynak-paketi/` altına alındı (zip birebir aynı 3 dosyaydı — ölçüldü) · kökte yalnız `CLAUDE.md` + `README.md` kaldı · **CLAUDE.md'ye kariyer modülü bölümü** (11 değişmez kural) · ⏳ tek kalan: deploy sonrası canlı kontrol (`curl -I /kariyer` + CSP) — kullanıcıda |
 | KR09 · yeni başvuruda e-posta bildirimi | mig `20261002000000` canlıda + `send-notification-emails` **DEPLOY EDİLDİ** (94 kB) · **uçtan uca canlı kanıt:** gerçek başvuru satırı → trigger → kuyruk → `status=sent`, **recipient_count 2**, `last_error` boş, 3 saniyede (06:43:22 claimed → 06:43:25 sent) · payload'da `cv_path` **YOK** (ölçüldü: `payload ? 'cv_path'` = false) · ölçüm satırları silindi (başvuru 0 / kuyruk 0) · 8 şablon testi, mutasyonla sınandı · `check:functions` 12/12 sapmasız · 🔴 **YAN BULGU — canlıda sessiz kusur onarıldı:** `notification_email_outbox.event_type` CHECK listesi `radar_scan_digest`'i İÇERMİYORDU ama `radar-news-scan` (satır 440) tam o tiple kuyruğa yazıyor → insert her seferinde `23514` ile reddedilmiş, kuyrukta **0 radar satırı**, yani **radar özet maili 19 Eylül'den beri hiç gitmemiş**. Aynı kısıt zaten değiştirilmek zorundaydı, iki değer birlikte eklendi · **KR09b (kullanıcı isteği 02.10): mail TÜM yöneticilere gider.** Alıcılar abonelik tablosundan geliyordu, yani satırı olmayan yönetici sessizce mail ALMIYORDU; kariyer bildirimi opt-in'den **opt-out**'a çevrildi (mig `20261002010000`). Ölçüm: sistemde **2 yönetici**, ikisinin de satırı var — bugün davranış aynı, kusur gelecekte patlayacaktı. Kanıt (geri alınan işlem içinde): satırı silinen yönetici kariyer alıcılarında **KALDI**, aynı kişi `new_member`'da listeden **DÜŞTÜ** (eski kural korundu), açık `false` ile **ÇIKTI**. Kapı `is_admin` · diğer olay tipleri değişmedi · 10 sözleşme testi |
 | KR08 · `/admin/kadro/basvurular` ekranı + `careers-admin-api.ts` | Kadro grubuna **5. madde** olarak girdi (yeni admin grubu açılmadı) · rota + navigasyon kaydı + `admin-route-meta` **üçü birlikte** · dosyalar **`createSignedUrl`** ile 5 dk'lık bağlantı, kova private KALIR · liste/pozisyon/durum filtresi + durum geçişi + not · arama `trIncludes` · **canlı ACL ölçümü:** `career_applications` üzerinde yalnız 2 politika (SELECT+UPDATE, ikisi de `is_admin(auth.uid())` koşullu, `authenticated` rolünde) · anon tablo grant'ı **YOK** (anon SELECT 42501) · kova `public=false`, 7 MIME, 25 MB · kova politikaları: INSERT `{anon,authenticated}` (başvuru girişsizdir), SELECT/DELETE yalnız admin · 7 sözleşme testi, **7/7 mutasyon yakalandı** (menü kaydı · route-meta · rota · public URL · çıplak `toLowerCase` · sessiz yutulan hata · menü rengi) · ⚠️ Yönetici OLMAYAN girişli kullanıcı hata almaz, RLS **0 satır** döndürür — ekranın kendisi AdminLayout kapısının arkasındadır · 📌 **N03 bayatlama kapanı çalıştı:** yeni menü maddesi `admin-menu-catalog.test.ts'i` düşürdü → `npm run ingest:admin-menu` (88→**89** öğe) + `ingest.mjs --source=admin-menu` + `embed.mjs` koşuldu, korpus **89/89 gömülü, bekleyen 0** |
