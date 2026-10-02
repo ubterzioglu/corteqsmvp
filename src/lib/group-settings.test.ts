@@ -147,6 +147,15 @@ describe("group_settings sözleşmesi", () => {
       // kilitler (link_fail_threshold · link_health_* · health_score_cron_enabled ·
       // owner_renewal_*).
       "src/lib/group-scheduled-tasks-schema.test.ts",
+      // G24: moderatör paneli sözleşme + API testleri hızlı şerit anahtarını kilitler
+      // (fast_lane_enabled · fast_lane_suggest_threshold — beyaz liste TEK anahtar).
+      "src/lib/group-moderator-panel-schema.test.ts",
+      "src/lib/admin-shell/group-moderation-api.test.ts",
+      // G24: API katmanı `groups.fast_lane_enabled` LİTERALİNİ sunucuya p_key
+      // olarak gönderir (admin_set_group_setting beyaz listesiyle birebir — iki
+      // tarafta da kilitli). Bu, kaynak ağacındaki TEK meşru çıplak anahtardır;
+      // okuma yolu DEĞİL (okumalar group_setting_* fonksiyonlarından).
+      "src/lib/admin-shell/group-moderation-api.ts",
     ]);
     const offenders = sourceFiles().filter((file) => {
       if (allowed.has(file.replace(/\\/g, "/"))) return false;

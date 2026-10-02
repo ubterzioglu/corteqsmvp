@@ -2021,6 +2021,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin-shell/group-moderation-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin-shell/group-moderation-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin-shell/notification-settings-api.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -3302,6 +3312,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/group-index-view-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group-moderator-panel-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },

@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261002-grup-moderator-paneli",
+    date: "2 Ekim 2026",
+    title: "Grup moderatör paneli hazır — dört kuyruk tek ekranda (/admin/gruplar, deploy kuyruğunda)",
+    items: [
+      "TEK EKRAN DÖRT KUYRUK: Yeni gruplar · sahiplik talepleri (ekran görüntüsü yöntemi) · şikayetler · platform gönderi kuyruğu. Klavye kısayolları: J/K gez, A onayla, R reddet (hazır sebep listesi + not). Reddin sebebi üyeye giden bildirim mailine yazılıyor.",
+      "ÜST ŞERİT: Kuyruk sayaçları · moderasyondan geçen grup sayacı (x/100 — eşik dolunca “hızlı şeridi aç” önerisi görünür, karar insanın) · hızlı şerit anahtarı (ayar tablosuna yazar; anahtar listesi DAR: panelden yalnız bu tek ayar değişebilir, eşikler ürün kararı olarak kalır) · 6 zamanlanmış görevin son koşu durumları.",
+      "TEK TIK KARARLAR: Grup yayınla/reddet · uyarı ver (ihlal merdiveni otomatik: 1. uyarı → 2.’de 30 gün askı → 3.’te kaldırma+yasak; kırmızı çizgi seçilirse ilk ihlalde kaldırır) · sahipliği onayla/reddet (onay, sahipliği doğrulanmış yapar) · gönderi onayla/reddet. Ekran görüntüsü kanıtları 5 dakikalık imzalı bağlantıyla açılır (kova private kalır).",
+      "ŞİKAYET KUYRUĞU BİLİNÇLİ BOŞ: Altyapısı telefon doğrulamasına bağlı (G14) — o güne dek sekme boş durumu açıklıyor, sayaç 0 dönüyor. Uydurma veri yok.",
+      "KANIT: Sunucu kapıları canlıda ölçüldü (geri alınan işlem): üye ve anonim özeti OKUYAMIYOR · anahtarı yalnız admin yazıyor (iz: updated_by) · beyaz liste dışı anahtar ve tip reddi · kuyruk sayacı gerçek gönderiyle 0→1 hareket etti · görev koşuları gerçek cron verisinden (claim-expiry 22:30’da succeeded). Ekran deploy kuyruğunda (form/dizin/detay ile aynı).",
+    ],
+  },
+  {
     id: "20261002-grup-bildirimleri",
     date: "2 Ekim 2026",
     title: "Grup bildirimleri canlıda — 8 olayda üyeler artık otomatik e-posta alıyor",

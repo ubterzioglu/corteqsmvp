@@ -65,6 +65,7 @@ export const ADMIN_ROUTE_PATTERNS: string[] = [
   "/admin/whatsapp-landings",
   "/admin/whatsapp-landings/editors",
   "/admin/whatsapp-landings/guide",
+  "/admin/gruplar",
   "/admin/consulates",
   "/admin/may19/kelime",
   "/admin/may19/ani",

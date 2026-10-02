@@ -2,7 +2,7 @@
 // URL path'leri App.tsx route ağacıyla birebir aynıdır ve değiştirilemez
 // (masterplan §4.3). Grup sırası ../admin-navigation-registry.ts'te belirlenir.
 
-import { BookOpen, Globe, MessageSquare, Users } from "lucide-react";
+import { BookOpen, Globe, MessageSquare, ShieldCheck, Users } from "lucide-react";
 
 import type { AdminNavGroup } from "../admin-shell-types";
 
@@ -11,6 +11,16 @@ export const communitiesNavGroup: AdminNavGroup = {
   label: "Topluluklar",
   accent: "rose",
   items: [
+    {
+      // G24 · M5 moderatör paneli — dört kuyruk tek ekran (tasarım §10).
+      id: "community-moderation",
+      label: "Grup Moderasyonu",
+      description: "Yeni gruplar · sahiplik · şikayet · gönderi kuyrukları.",
+      to: "/admin/gruplar",
+      icon: ShieldCheck,
+      accent: "rose",
+      aliases: ["moderatör", "moderasyon", "kuyruk", "grup moderasyonu"],
+    },
     {
       id: "community-landings",
       label: "Topluluk Landingleri",

@@ -56,6 +56,8 @@ const AdminMeetingNotesWorkspacePage = lazyWithReload(() => import("@/pages/admi
 const AdminMvpWorkspacePage = lazyWithReload(() => import("@/pages/admin/workspace/AdminMvpWorkspacePage"));
 const AdminWorkspaceDocPage = lazyWithReload(() => import("@/pages/admin/workspace/AdminWorkspaceDocPage"));
 const AdminWhatsAppLandingsPage = lazyWithReload(() => import("@/pages/admin/AdminWhatsAppLandingsPage"));
+// G24 · M5 moderatör paneli (tasarım §10 — dört kuyruk tek ekran)
+const AdminGruplarPage = lazyWithReload(() => import("@/pages/admin/AdminGruplarPage"));
 const AdminWhatsAppLandingEditorsPage = lazyWithReload(() => import("@/pages/admin/AdminWhatsAppLandingEditorsPage"));
 const AdminCommunityGuidePage = lazyWithReload(() => import("@/pages/admin/AdminCommunityGuidePage"));
 const AdminMay19IdeaPage = lazyWithReload(() => import("@/pages/admin/AdminMay19IdeaPage"));
@@ -133,6 +135,7 @@ export const adminRoutes = (
     <Route path="whatsapp-landings" element={<AdminWhatsAppLandingsPage />} />
     <Route path="whatsapp-landings/editors" element={<AdminWhatsAppLandingEditorsPage />} />
     <Route path="whatsapp-landings/guide" element={<AdminCommunityGuidePage />} />
+        <Route path="gruplar" element={<AdminGruplarPage />} />
     <Route path="consulates" element={<AdminConsulateProfilesPage />} />
     <Route path="data/:category" element={<Navigate to="/admin/data" replace />} />
     <Route path="may19/kelime" element={<AdminMay19IdeaPage />} />
