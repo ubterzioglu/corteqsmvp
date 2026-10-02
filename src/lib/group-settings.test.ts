@@ -123,6 +123,9 @@ describe("group_settings sözleşmesi", () => {
       // G13: sahiplik sözleşme testi claim anahtarlarını kilitler
       // (claim_start_daily_limit · claim_code_ttl_minutes · claim_attempt_*).
       "src/lib/group-claims-schema.test.ts",
+      // G15: uyarı sistemi sözleşme testi strike eşiklerini kilitler
+      // (strike_suspend_threshold · strike_remove_threshold · terminal_redlines).
+      "src/lib/group-strikes-schema.test.ts",
     ]);
     const offenders = sourceFiles().filter((file) => {
       if (allowed.has(file.replace(/\\/g, "/"))) return false;

@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **54** (N 0 · W 8 · M 27 · G 19 · KR 0) — G10+G12+G13 kapandı, **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
+> | **Açık batch** | **53** (N 0 · W 8 · M 27 · G 18 · KR 0) — G10+G12+G13+G15 kapandı, **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -138,7 +138,7 @@ traction ölçülecek.
 | B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🔴 | ⛔ **K09 kararı** (↓ ölçüm 02.10) |
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
 | C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
-| D | ~~G12~~ ~~G13~~ · **G14–G17** | ✅ G12 KAPANDI 02.10 (durum makinesi + moderasyon logu) · ✅ **G13 KAPANDI 02.10** (sahiplik doğrulama canlıda: kod + ekran görüntüsü yolu, guard v2, edge deploy 13/13, kabul 18/18) · kalan: şikayet · uyarı · gönderiler · sağlık skoru | 🟢 | ⛔ **G14: G04/U06** (kabul testi telefonu doğrulanmış hesap istiyor) |
+| D | ~~G12~~ ~~G13~~ ~~G15~~ · **G14** · **G16–G17** | ✅ G12 KAPANDI 02.10 (durum makinesi) · ✅ G13 KAPANDI 02.10 (sahiplik doğrulama + guard v2) · ✅ **G15 KAPANDI 02.10** (strike merdiveni + ekleme yasağı canlıda, kabul 13/13) · kalan: şikayet · gönderiler · sağlık skoru | 🟢 | ⛔ **G14: G04/U06** (kabul testi telefonu doğrulanmış hesap istiyor) |
 | E | **G18–G21** | 4 sayfa: form · dizin · detay · sahip paneli | 🟢 | — |
 | F | **G22–G25** | 6 zamanlanmış görev · 8 bildirim · moderatör paneli · 13 kabul testi | 🟢 | — |
 
@@ -1516,9 +1516,36 @@ doğrulanmış** (G04) + hesap ≥7 gün + farklı 3 hesap (hepsi `group_setting
 doğrulanmamış hesabın şikayeti sayılmaz. ⚠️ "0 geçerli şikayet" ile geçmiş sayma — eşiğin
 **gerçekten tetiklendiği** ölçülür.
 
-**G15 — Uyarı sistemi** · migration · `group_strikes`: uyarı → 30 gün `suspended` → `removed` +
-ekleme yasağı; kırmızı çizgi 2/4/6 doğrudan `removed`.
-**Kabul:** üç senaryo ayrı ölçüldü; askı süresi `suspended_until`'da.
+**~~G15~~ — ✅ KAPANDI 02.10** · Uyarı (strike) sistemi + ekleme yasağı · migration
+
+- Migration `20261002050000_group_strikes.sql` **canlıda** (`applied/` + kayıt, `check:migrations`
+  sapmasız): `group_strikes` (sebep · karar veren · tarih · outcome) · `group_submission_bans`
+  (süresiz, `unique(user,landing,reason)`) · `admin_record_group_strike` (is_admin tek kapı) ·
+  `group_submission_banned()` yardımcısı · **`trg_block_banned_submitter`** (BEFORE INSERT —
+  bugünkü AddWhatsApp akışı dahil her ekleme yolunu kapsar, admin muaf).
+- Merdiven tasarım §7 birebir: 1.=uyarı (durum değişmez) · 2.=30 gün `suspended`
+  (`suspended_until`'da, G12 `groups.suspension_days`'ten) · 3.=`removed` + **ekleyen VE sahibe**
+  yasak · kırmızı çizgi **2/4/6** (politika §4) İLK ihlalde `removed`+yasak. Eşikler
+  `group_settings`'te (`strike_suspend_threshold=2` · `strike_remove_threshold=3` ·
+  `terminal_redlines=[2,4,6]`) — kodda sabit yok.
+- **Geçişler YALNIZ G12 tek kapısından** (`set_group_status_v1`) → her strike kaynaklı durum
+  değişikliği `group_moderation_log`'da (kabul #12 zinciri korunur; canlı testte doğrulandı:
+  `reason=strike_2`/`strike_3` log satırları).
+- Karar (tasarımın boşluğu): 2. ihlal grup `published` değilse askı MATRİS GEREĞİ uygulanamaz →
+  ihlal kaydedilir, `outcome='warning'` + "askı uygulanamadı" notu; merdiven 3.'te `removed`'la
+  kapanır (canlı S6 ile ölçüldü). `removed` gruba ihlal işlenmez (`group_already_removed`).
+  Yasak kaldırma moderatör işi → G24. Uyarı BİLDİRİMİ (tasarım §9) → G23.
+- **Kabul kanıtı (canlı, geri alınan işlem — 13/13):** S0 yetkisiz red · S1 uyarı+yayında ·
+  S2 askı ~30 gün + G12 logu · S3 removed + 2 yasak (ekleyen+sahip) + log · S4 kırmızı 2 ilk
+  ihlalde terminal · S5 kırmızı 1 terminal DEĞİL · S6 hidden'da karar yolu · S7-S9 sınır hataları ·
+  S10 yasaklı INSERT engellendi/temiz kullanıcı geçti/admin muaf · S11 yardımcı doğru.
+  Rollback sonrası canlı **dokunulmamış** (0 strike, 0 ban, 0 log, 10 published, max_strike 0).
+- **Kanıt:** sözleşme testi **16/16** · **mutasyon 6/6** (yasak yazımı saptırma · tek kapı atlama ·
+  eşik sabitleme · trigger susturma · terminal liste daraltma [2] · strike_count senkron bozma) ·
+  `tsc` 0 · `check:dead` 0 · `ingest:tools` güncel · G09 kapanı allowed listesine önceden işlendi.
+- *(özgün kapsam)* `group_strikes`: uyarı → 30 gün `suspended` → `removed` + ekleme yasağı;
+  kırmızı çizgi 2/4/6 doğrudan `removed`. **Kabul:** üç senaryo ayrı ölçüldü; askı süresi
+  `suspended_until`'da.
 
 **G16 — Grup sayfası gönderileri + moderasyon** · migration + kod · ⚠️ **yorum tablosu YOK** →
 `group_posts` sıfırdan (`post_status` + `escalate_at`). İlk durum: doğrulanmış admin ve güvenilir
@@ -1891,6 +1918,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G15 · uyarı (strike) sistemi + ekleme yasağı | mig `20261002050000` canlıda + kayıt (`check:migrations` sapmasız) · `group_strikes` + `group_submission_bans` + `admin_record_group_strike` (is_admin tek kapı) + `trg_block_banned_submitter` (BEFORE INSERT, admin muaf) · merdiven §7 birebir: 1.=uyarı · 2.=30 gün suspended (`suspended_until`) · 3.=removed+**ekleyen VE sahip** yasaklı · kırmızı çizgi **2/4/6 ilk ihlalde** removed+yasak · eşikler `group_settings`'te (2/3/[2,4,6]) · geçişler YALNIZ `set_group_status_v1` → hepsi `group_moderation_log`'da (reason=strike_N, canlı doğrulandı) · karar: published-olmayanda 2. ihlal warning+not (matris), 3.'te removed · **kabul canlı 13/13** (geri alınan işlem; rollback sonrası 0/0/0, 10 published, max_strike 0) · sözleşme **16/16** · **mutasyon 6/6** · `tsc` 0 · `check:dead` 0 · bildirim G23'e, yasak kaldırma G24'e |
 | G13 · sahiplik doğrulama | mig `20261002040000` canlıda + kayıt (`check:migrations` sapmasız) · `group_claims` (aktif TEK kod + kullanıcı başına TEK talep, kısmi tekil indeks) + `group_invite_reads` (**link kolonu YOK**) + private kova `group-claim-screenshots` + 4 RPC · **edge `group-claim-verify` DEPLOY** (`check:functions` 13/13) · 🔴 **guard v2:** `Users can update own landings` ile `ownership='verified'` YAZILABİLİYORDU → ownership+11 motor alanı engellendi, legacy `status`/içerik SERBEST · 🔴 **K10 ölçümü:** 175/175 kullanıcının tek rolü var (signup trigger'ı `User_DiasporaMember`) → `Community_*Admin` atanamaz, güvenli skip + `role_skipped_reason` · **kabul canlı 18/18** (geri alınan işlem; rollback sonrası 0 claim/0 read/10 unclaimed/175 rol) · gerçek sayfa 8/8 `ok` (Türkçe çözüm ✓) · duman 4/4 (401/401/403/200) · sözleşme 30 + birim 18 · **mutasyon 6/6** · `tsc` 0 · `check:dead` 0 · `ingest:tools` 56 |
 | G12 · durum makinesi + moderasyon logu | mig `20261002030000` canlıda + `schema_migrations` kaydı (`check:migrations` sapmasız) · **tek kapı** `set_group_status_v1` (security-definer) + `group_status_transition_allowed` (tasarım §2 birebir: removed kalıcı, rejected terminal) + `trg_guard_listing_status` (doğrudan `update...listing_status` YASAK) + `group_moderation_log` (istemciye kapalı, admin select) + `groups.suspension_days=30` · **kabul #12 canlı kanıt 13/13** (geri alınan işlem): her geçiş loglanır · no-op log yazmaz · illegal/geçersiz/sebepsiz-hidden reddedilir · anon `group_forbidden` · admin `moderator` · doğrudan update trigger ile engellenir · **legacy `status` SERBEST** (eski paket kırılmaz) · rollback sonrası canlı dokunulmamış (10 published, 0 log) · 🔴 **gerçek kusur onarıldı:** SQL üç-değerli mantık — `hidden` sebepsiz kabul ediliyordu (`NULL NOT IN`→NULL, `if NULL` atlar), NULL-safe'e çevrildi + sözleşmeye kilitlendi · sözleşme testi **20/20** · **mutasyon 6/6** · ⚠️ types regen ERTELENDİ (TS tüketici yok; db-url kompakt 6923 ≠ canonical verbose 16634 = ayrı format borcu) · `tsc` 0 · `check:dead` 0 |
 | G10 · `whatsapp_landings` şema genişletme | mig `20261002020000` canlıda + `schema_migrations` kaydı (`check:migrations` sapmasız) · **20 kolon** salt ekleme (`if not exists`), 4 CHECK, `group_invite_code()` + kısmi tekil indeks · **BİLİNÇLİ SAPMA:** `member_approved`/`admin_approved` DÜŞÜRÜLMEDİ (9 dosya + canlı paket eski kod) → **G10c** (⛔ G03b deploy) · geri doldurma: `invite_code` **8/10** (2 boş link U07), `listing_status` 10/10 `published`, `ownership` 10/10 `unclaimed`; ekip kararı alanlarına dokunulmadı · K5 canlı kanıt: sync fonksiyonu **10/10 hatasız** (geri alınan işlem), `source_records` 10/10, trigger yerinde · types regen +113 satır · `tsc` 0 · 10 sözleşme testi · **mutasyon 6/6** |
