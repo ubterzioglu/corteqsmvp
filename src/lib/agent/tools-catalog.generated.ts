@@ -3257,6 +3257,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/group-index-view-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/group-posts-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -4303,6 +4308,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/welcome-pack-orders-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/whatsapp-landing-badges.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },

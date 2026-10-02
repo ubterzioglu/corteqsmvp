@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261002-grup-dizini-yeni-dil",
+    date: "2 Ekim 2026",
+    title: "Grup dizininin yeni dili hazır — sahiplik rozetleri, “Yeni” etiketi, 0-100 skor (deploy kuyruğunda)",
+    items: [
+      "ROZET DİLİ DEĞİŞTİ: Kartlardaki “Admin onaylı!” / “Üye onaylı!” rozetleri kalktı. Yerine politikanın dili geldi: “Sahibi doğruladı” (gerçek admin ekledi ve kanıtladı), “Üye önerisi” (admin olmayan biri önerdi, sahiplenilmedi), “Yeni” (ilk 72 saat) ve “Onaylı Grup” (sağlık skoru 70+).",
+      "“SKOR BEKLENİYOR” KUTUSU KALKTI: Skor hesaplanana kadar kartta skor alanı hiç gösterilmiyor (politika kuralı). Skor gelince 0-100 ölçeğinde “Grup Sağlık Skoru” olarak görünüyor — eski “X / 10” dili bitti.",
+      "GİZLİ BİR KUSUR KAPATILDI: Yeni moderasyon motoru bir grubu gizlediğinde/askıya aldığında, dizinin okuduğu eski görünüm yalnızca eski onay alanına baktığı için grup SİTEDE GÖRÜNMEYE DEVAM EDERDİ. Dizin artık her iki sisteme de bakıyor: motor “gizli/askıda/kaldırıldı” dediyse grup anında dizinden düşüyor (canlıda ölçüldü).",
+      "SIRALAMA SKORA BAĞLANDI: Gruplar sağlık skoruna göre diziliyor (skoru yüksek olan üste); skoru henüz hesaplanmamış gruplar sonda kalıyor. “Yeni” etiketinin 72 saat eşiği ayar tablosundan yönetiliyor, koda gömülü değil.",
+      "FİLTRE VE KARTLAR ARTIK AYNI LİSTE: Kategori filtreleri ile kart rozetleri tek kaynaktan besleniyor — eskiden iki ayrı liste vardı ve birbirinden sessizce kayabilirdi.",
+      "⚠️ EKRAN DEPLOY BEKLİYOR: Veritabanı tarafı canlıda ve doğrulandı; yeni kart/filtre görünümü frontend deploy kuyruğunda (form ile aynı). Eski paket deploy’a kadar mevcut diliyle çalışmaya devam eder — hiçbir sayfa kırılmaz (canlı dizin içeriği bugün birebir aynı kaldı, 10 grup).",
+    ],
+  },
+  {
     id: "20261002-grup-ekleme-formu-yenilendi",
     date: "2 Ekim 2026",
     title: "Grup ekleme formu baştan yazıldı — link yapıştır, gerisi otomatik (deploy kuyruğunda)",

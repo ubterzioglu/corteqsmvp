@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **50** (N 0 · W 8 · M 27 · G 15 · KR 0) — G10+G12+G13+G15+G16+G17+G18 kapandı, **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
+> | **Açık batch** | **49** (N 0 · W 8 · M 27 · G 14 · KR 0) — G10+G12+G13+G15+G16+G17+G18+G19 kapandı, **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -139,7 +139,7 @@ traction ölçülecek.
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
 | C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
 | D | ~~G12~~ ~~G13~~ ~~G15~~ ~~G16~~ ~~G17~~ · **G14** | ✅ G12 02.10 (durum makinesi) · ✅ G13 02.10 (sahiplik + guard v2) · ✅ G15 02.10 (strike + yasak) · ✅ G16 02.10 (`group_posts` sıfırdan, §3.D 4 sınıf) · ✅ **G17 KAPANDI 02.10** (sağlık skoru + tavsiyeler + guard v3; skorlar cron'a kadar NULL — 🔴 G22 tuzağı aşağıda) · kalan: şikayet | 🟢 | ⛔ **G14: G04/U06** (kabul testi telefonu doğrulanmış hesap istiyor) |
-| E | ~~G18~~ · **G19–G21** | ✅ **G18 KAPANDI 02.10** (S1 form: `submit_group_v1` tek kapı + `group-preview` edge DEPLOY + dedup/kara liste/hızlı şerit; kabul 14/14) · kalan 3 sayfa: dizin · detay · sahip paneli | 🟢 | ⚠️ yeni form frontend deploy kuyruğunda (G03b ile aynı) |
+| E | ~~G18~~ ~~G19~~ · **G20–G21** | ✅ **G18 KAPANDI 02.10** (S1 form: `submit_group_v1` tek kapı + `group-preview` edge; kabul 14/14) · ✅ **G19 KAPANDI 02.10** (S2 dizin: view v2 çift filtre + rozet dili + is_new + skor sıralaması; kabul 8/8) · kalan 2 sayfa: detay · sahip paneli | 🟢 | ⚠️ yeni form+dizin frontend deploy kuyruğunda (G03b ile aynı) |
 | F | **G22–G25** | 6 zamanlanmış görev · 8 bildirim · moderatör paneli · 13 kabul testi | 🟢 | — |
 
 ### KR · Kariyer sayfası yenilemesi — ✅ SERİ TAMAMEN KAPANDI (02.10)
@@ -1694,10 +1694,58 @@ doğrulanmamış hesabın şikayeti sayılmaz. ⚠️ "0 geçerli şikayet" ile 
   "admini misin"; Grup Sözü. **Kabul:** **#1** · **#2** · **#4** · **#10** (bugünkü hâli: sunucu
   kilidi — seviye sistemi G06'da).
 
-**G19 — S2 Dizin** · "Admin onaylı!"/"Üye onaylı!" **kalkar** → "Sahibi doğruladı"/"Üye önerisi";
-"Skor bekleniyor" **hiçbir yerde** görünmez; filtreler kartlarla aynı listeyi kullanır; Türkçe
-arama `trIncludes`/`trCompare`. ⚠️ PostgREST 1000 satır tavanı → sayfalama.
-**Kabul:** kabul testi **#3** ("Yeni" 72 saat sonra kalkıyor).
+**~~G19~~ — ✅ KAPANDI 02.10** · S2 Dizin · migration + kod
+
+- Migration `20261002090000_public_view_motor_badges.sql` **canlıda** (`applied/` + kayıt,
+  `check:migrations` 455/455 sapmasız): `whatsapp_landings_public` **v2** — G03a PII masking'i
+  (4 kolon null) AYNEN, sona motor kolonları (`platform · short_description · listing_status ·
+  ownership · published_at · has_approved_badge · is_new`) · `groups.new_badge_hours=72` (politika
+  §6 "Yeni: ilk 72 saat") · `group_listing_is_new()` (SECURITY DEFINER → `group_setting_int`
+  anon'a AÇILMADI, G09 grant matrisi değişmedi; `coalesce(published_at, created_at)` — eski paket
+  onay yolu da "Yeni" alır).
+- 🔴 **GİZLİ KUSUR KAPATILDI (canlı ölçümle):** view filtresi yalnız legacy `status='approved'`
+  idi; G12 `set_group_status_v1` legacy `status`'ü DEĞİŞTİRMİYOR → moderatörün `hidden/suspended/
+  removed` yaptığı grup **dizinde görünmeye devam ederdi**. Yeni ÇİFT filtre: `status='approved'
+  AND listing_status IN ('published','pending_review')` — motor kararı anında yansır, eski paketin
+  onay yolu (status approved + listing pending_review) GÖRÜNÜR KALIR (canlı içerik bugün birebir
+  aynı: 10/10). DROP VIEW tek istisna (create-or-replace kolon EKLEYEMEZ; bağımlı 0 ölçüldü,
+  recreate aynı transaction'da).
+- **Rozet dili (politika §6 birebir, metinler politika DOSYASINA karşı kilitli):** "Admin onaylı!"/
+  "Üye onaylı!" KALKTI → `ownership='verified'` → **"Sahibi doğruladı"**, değilse **"Üye önerisi"**
+  (eski tag'ler rozeti etkilemez — motor alanı tek kaynak) · `is_new` → **"Yeni"** ·
+  `has_approved_badge` → **"Onaylı Grup"** (eşik İSTEMCİDE YOK — sunucu bayrağı, histerezis G17'de).
+  Filtre "Sahibi doğruladı"ya geçti. Admin moderasyon ekranının eski dili G24'e kadar duruyor
+  (bilinçli sınır — public yüzey değişti).
+- **"Skor bekleniyor" HİÇBİR YERDE YOK** (politika §6: "Skor hesaplanana kadar kartta skor alanı
+  gösterilmez") — kart + detay placeholder kutusu söküldü; skor 0-100 ölçeğiyle ("Grup Sağlık
+  Skoru X / 100") yalnız sayı varsa render. Eski "/ 10" dili bitti.
+- **Sıralama skora bağlandı** (politika §7): `listLandings` `group_score DESC NULLS LAST +
+  created_at DESC`. **Filtre+kart tek liste:** `categoryOptions` artık `categoryMeta`'dan
+  TÜRETİLİYOR (ikinci liste silindi). Türkçe arama `trIncludes` mevcut hâliyle korundu; sayfalama
+  `fetchAllRows` (S07c) zaten vardı. ⚠️ Kategori taksonomisi (eski 10 → yeni 7) G11 veri
+  eşlemesine bağlı — canlı 10 grup eski anahtarları taşırken filtre onları göstermek ZORUNDA
+  (motor form zaten yeni 7'yi kullanıyor).
+- **Kabul #3 canlı ölçüldü (geri alınan işlem — 8/8):** V1 anon view → 10 satır, motor kolonlar
+  dolu, PII 0/0/0 · V2 `is_new`: şimdi → true · 73 saat → false · **eşik 100'e çekilince true'ya
+  döndü** (72 sabit değil, ayarlardan) · V3 `published→hidden` → dizin 9 · `→suspended` → 9 ·
+  `→published` → 10 (motor kararı yansıyor) · V4 legacy onay yolu görünür (10) · V5 skor 99 →
+  ilk sırada · V6 `group_listing_is_new` anon'a açık, `group_setting_json/int` anon'a KAPALI ·
+  rollback sonrası canlı dokunulmamış (10/0/0, eşik 72, log 0).
+- **Kanıt:** sözleşme+birim **34 yeni test** (`group-index-view-schema` 15 · `whatsapp-landing-badges`
+  9 · `LandingCard.badges` 10) + sayfa/G03b/G02 regresyonları yeşil (public-source çıpası
+  `WhatsAppLandingPublicRow` cast'ine BİLİNÇLİ taşındı — iddialar aynı) · **mutasyon 6/6** (motor
+  filtresi düşürme · eşiği sabitleme · link sızdırma · "Skor bekleniyor" geri koyma · sahiplik
+  rozetini tersleme [M5 tekil koşuda 8 test düşürdüğü ÖLÇÜLDÜ — toplu koşu rapor yarışı] · ikinci
+  kategori listesi) · tam takım **405 dosya / 3297 test yeşil** · `tsc` 0 · lint 0 (32 problem
+  tümü `corteqs-ekstre-motoru/`) · `check:dead` 0/0/983 · `ingest:tools` 57 · `verify:text` ✓ 1903 ·
+  types regen YOK (`WhatsAppLandingPublicRow` kesişim tipi — G12 borcu; regen gelince eritilir).
+- 📌 **G20'ye devir:** "Bu grup sizin mi?" + claim UI girişi (G18 already_listed uyarısı oraya
+  bağlanacak) · "Şikayet et" G14'e dek YOK · detail `getLanding` zaten view'dan okuyor (motor
+  kolonlar detayda da mevcut). Frontend deploy kuyruğu: G18 form + G19 dizin birlikte canlanır.
+- *(özgün kapsam)* "Admin onaylı!"/"Üye onaylı!" kalkar → "Sahibi doğruladı"/"Üye önerisi";
+  "Skor bekleniyor" hiçbir yerde görünmez; filtreler kartlarla aynı listeyi kullanır; Türkçe
+  arama `trIncludes`/`trCompare`; sayfalama. **Kabul:** **#3** ("Yeni" 72 saat sonra kalkıyor —
+  DB tarafı canlı, UI tarafı bileşen testiyle kilitli).
 
 **G20 — S3 Detay** · boş "Grup koşulları" gizlenir; "Bu grup sizin mi?" + "Şikayet et"; "Katıl"
 G03 RPC'sinden geçer. **Kabul:** anonimde link sayfa kaynağı dahil hiçbir yerde görünmüyor.
@@ -2055,6 +2103,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G19 · S2 dizin — view v2 + rozet dili | mig `20261002090000` canlıda + kayıt (`check:migrations` **455/455**) · `whatsapp_landings_public` v2: G03a masking AYNEN (4 kolon null) + motor kolonları sonda + `is_new` (`group_listing_is_new`, SECURITY DEFINER — G09 grant matrisi değişmedi, eşik `groups.new_badge_hours=72`) · 🔴 **gizli kusur kapatıldı:** tek filtre `status='approved'` idi, G12 legacy `status`'ü değiştirmediği için motor `hidden/suspended/removed` kararı dizine YANSIMIYORDU → ÇİFT filtre (canlıda 10/10 aynı kaldı, eski paket onay yolu da görünür) · rozet dili politika §6 birebir (dosyaya karşı kilitli): "Admin onaylı!/Üye onaylı!" KALKTI → "Sahibi doğruladı"/"Üye önerisi" + "Yeni" + "Onaylı Grup" (eşik istemcide YOK) · "Skor bekleniyor" HİÇBİR YERDE yok, skor 0-100 · sıralama `group_score DESC NULLS LAST` (politika §7) · `categoryOptions`=`categoryMeta` türevi (tek liste) · **kabul #3 canlı 8/8** (geri alınan işlem: is_new şimdi/73h/eşik-100 kanıtı · hidden→9 · suspended→9 · legacy yol→10 · skor→ilk sıra · anon grant matrisi · rollback temiz) · 34 yeni test · **mutasyon 6/6** (M5 tekil koşuda doğrulandı — toplu koşu rapor yarışı) · tam takım **405 dosya/3297 test** · `tsc` 0 · `check:dead` 0/0/983 · `ingest:tools` 57 · types regen YOK (`WhatsAppLandingPublicRow` kesişimi) · 📌 devir: claim UI girişi + şikayet G20'de · admin panel dili G24'te · deploy kuyruğu G18'le aynı |
 | G18 · S1 form + `submit_group_v1` + `group-preview` edge | mig `20261002080000` canlıda + kayıt (`check:migrations` 454/454) · tek gönderim kapısı (dedup `group_invite_code` · kara liste→`review_flags` REDDETMEZ · hızlı şerit 4 koşul + `fast_lane` log · günlük 5 · Grup Sözü · geo doğrulama · kategori CHECK 10+7) · edge DEPLOY (`check:functions` **14/14**, duman 4/4: 200/401/401/401 — verify_jwt default ÖLÇÜLDÜ) · `_shared/group-invite-read`'e `image` (og:image + Discord CDN, G13 semantiği değişmedi) · form 7 satır (politika §2): platform seçimi + serbest metin konum KALKTI, Grup Sözü birebir kilitli, Aile & Çocuk disabled + **sunucuda kilitli** (kabul #10 bugünkü hâl — seviye sistemi G06/K09) · karar: admin `claims_admin` özbeyanı = verified (kabul #3 ölçülebilir) · ⚠️ paralel sistem: `submitLanding`+INSERT RLS deploy'a dek BİLİNÇLİ duruyor · **kabul canlı 14/14** (geri alınan işlem: #1 already_listed+INSERT yok · #2 şerit açıkken pending_review · #4 {vize,oturum} işaretli pending_review · #3-karşılığı published+log · 8 sınır hatası · limit · ban · Global · anon) · 🔴 iki gerçek kusur canlı testte yakalandı (`v_country.code` select eksik · Global dalda `v_city` atanmadan okunuyor) — kaynak testi göremezdi · sözleşme+birim 67 · **mutasyon 6/6** · tam takım **402 dosya/3263 test** · `tsc` 0 · `check:dead` 0/0/983 · `ingest:tools` 57 (14 edge) · 📌 devir: claim UI girişi G20 · rozet/skor view G19 · "Yeni" 72h G19 |
 | G17 · grup sağlık skoru + tavsiyeler | mig `20261002070000` canlıda + kayıt (`check:migrations` 453/453 sapmasız) · `group_recommendations` (tekil, tek kapı RPC) + `group_health_score_compute` (§5 birebir 15+15+15+15+20+20) + `recompute`/`_all` (service_role ONLY, cron G22) + 4 eşik `group_settings`'te (70/65/10/90) + **guard v3** (skor kolonları motor alanı, `is_admin` muaf) · 🔴 **ölçüm:** eski kod group_score'a YAZIYORDU (`updateLanding` her admin kaydında null — `1a3310a1` 03.06, canlı pakette) → src clobber kaldırıldı, guard admin'i muaf tuttu (canlı moderasyon kırılmasın) · ⚠️ **kalıcı skor YAZILMADI:** canlı eski kart `X / 10` çiziyor → cron G22'ye dek NULL (🔴 G22 tuzağı panoda yazılı) · vacuous kalemler: şikayet (group_reports YOK → G14) + link (`link_fail_count=0`, tarihçe yok → G22) · **kabul #11 canlı 16/16** (geri alınan işlem: grace NULL · 35→65→80 · histerezis 65'te korudu/50'de düştü · tavsiye idempotent+cap→100 · guard sahip engelledi/admin geçti · RLS · rollback sonrası canlı dokunulmamış 0/0/0) · sözleşme **23/23** · **mutasyon 6/6** · tam takım **399 dosya/3211 test** yeşil · `tsc` 0 · `check:dead` 0/0/982 · `ingest:tools` 56 · types regen YOK (TS tüketici yok — G12 borcu aynı) |
 | G16 · grup gönderileri + moderasyon | mig `20261002060000` canlıda + kayıt (`check:migrations` sapmasız) · ⚠️ tasarım §4 çürüdü (ölçüldü): `whatsapp_landing_comments/_likes/_follows` canlıda YOK → `group_posts` sıfırdan · ilk durum §3.D birebir 4 sınıf (verified admin→published · güvenilir üye→published · sahiplide diğer→pending_group_admin+48h `escalate_at` · sahipsizde→pending_platform) · **kabul #7 canlı:** `group_posts_escalate_due()` (service_role ONLY) süresi dolanı platform kuyruğuna taşıdı · yetki: sahip yalnız kendi kuyruğu, platform kuyruğu + remove YALNIZ admin (uydurma yetki yok) · istemciye yazma yolu YOK (grant select only) · kararlar: yalnız published gruba · `post_max_chars=10000` ajan ihtiyatı · trusted'ın "onaylı şikayet yok" yarısı G14'e (group_reports YOK, şema uydurulmadı — sözleşme kilitli) · **kabul canlı 14/14** (C1–C14, geri alınan işlem; rollback sonrası 0/10/10) · sözleşme **25/25** · **mutasyon 6/6** · `tsc` 0 · `check:dead` 0 · cron G22 · bildirim G23 · UI G20/G21 |

@@ -58,7 +58,7 @@ export default function AddWhatsAppPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState<LandingCategory | "">("");
   const [filterCity, setFilterCity] = useState("");
-  const [filterApproval, setFilterApproval] = useState<"admin" | "">("");
+  const [filterApproval, setFilterApproval] = useState<"verified" | "">("");
   const [joinDialogOpen, setJoinDialogOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [groupFormOpen, setGroupFormOpen] = useState(false);
@@ -219,7 +219,8 @@ export default function AddWhatsAppPage() {
 
       if (filterCategory && landing.category !== filterCategory) return false;
       if (filterCity && landing.city !== filterCity) return false;
-      if (filterApproval === "admin" && !landing.adminApproved) return false;
+      // G19: sahiplik filtresi (politika §6 dili) — eski adminApproved tag'i değil.
+      if (filterApproval === "verified" && landing.ownership !== "verified") return false;
 
       return true;
     });

@@ -22,6 +22,23 @@ export type LandingOrigin = "global" | "mena" | "berlin" | "turkiye" | "avrupa";
 type WhatsAppLandingRow = Tables<"whatsapp_landings">;
 
 /**
+ * G19 · public view'ın motor kolonları. types.ts regen BORCU (G12): view v2'nin
+ * yeni kolonları üretilmiş tiplerde YOK — bu kesişim tipi canlı ölçümle
+ * doğrulanmış gerçek yüzeyi taşır (migration 20261002090000). Regen gelince
+ * eritilir. Alanlar opsiyoneldir: taban tablodan gelen satırlarda (admin/editör
+ * yolları) bulunmazlar.
+ */
+type WhatsAppLandingPublicRow = WhatsAppLandingRow & {
+  platform?: string | null;
+  short_description?: string | null;
+  listing_status?: string | null;
+  ownership?: string | null;
+  published_at?: string | null;
+  has_approved_badge?: boolean | null;
+  is_new?: boolean | null;
+};
+
+/**
  * G03b · Dizinin ve detay sayfasının ANONİME AÇIK okuma yüzeyi.
  *
  * ⚠️ Halka açık okuma `whatsapp_landings` tablosundan DEĞİL, bu view'dan yapılır.
@@ -70,6 +87,13 @@ export interface WhatsAppLanding {
   status?: LandingStatus;
   rejectionReason?: string;
   createdAt: string;
+  // G19 motor alanları (public view v2): rozetler + sıralama + "Yeni" etiketi.
+  ownership?: "unclaimed" | "claim_pending" | "verified";
+  listingStatus?: string;
+  publishedAt?: string;
+  hasApprovedBadge?: boolean;
+  isNew?: boolean;
+  shortDescription?: string;
 }
 
 /**
@@ -312,7 +336,14 @@ export function buildLandingDescription(params: {
   return parts.filter(Boolean).join(" ").trim();
 }
 
-export function rowToLanding(row: WhatsAppLandingRow): WhatsAppLanding {
+/** Motor platform kodu → ekran etiketi (G10 backfill + G18 submit küçük harf yazar). */
+const MOTOR_PLATFORM_LABEL_BY_CODE: Record<string, string> = {
+  whatsapp: "WhatsApp",
+  telegram: "Telegram",
+  discord: "Discord",
+};
+
+export function rowToLanding(row: WhatsAppLandingPublicRow): WhatsAppLanding {
   const hasMemberApprovalTag = hasBooleanTag(row.description, "Badge member");
   const hasAdminApprovalTag = hasBooleanTag(row.description, "Badge admin");
   const adminApproved = hasAdminApprovalTag
@@ -328,7 +359,12 @@ export function rowToLanding(row: WhatsAppLandingRow): WhatsAppLanding {
     id: row.slug,
     dbId: row.id,
     groupName: normalizeCommunityText(row.group_name),
-    platform: parseTagValue(row.description, "Platform"),
+    // G19: motor `platform` kolonu birincil — küçük harf DB değeri ekran
+    // etiketine çevrilir (CTA meta 'WhatsApp' büyük hâliyle eşleşiyor);
+    // kolon boşsa description etiketi yedek (eski satırlar).
+    platform: row.platform
+      ? MOTOR_PLATFORM_LABEL_BY_CODE[row.platform] ?? row.platform
+      : parseTagValue(row.description, "Platform"),
     category: normalizeLandingCategory(row.category),
     country: normalizeCommunityText(row.country),
     city: normalizeCommunityText(row.city),
@@ -354,6 +390,14 @@ export function rowToLanding(row: WhatsAppLandingRow): WhatsAppLanding {
     status: row.status as LandingStatus,
     rejectionReason: row.rejection_reason ?? undefined,
     createdAt: row.created_at,
+    // G19 motor alanları — taban tablo satırlarında (admin/editör yolları)
+    // undefined gelir; dizin view'ı bunları her zaman döner.
+    ownership: (row.ownership as WhatsAppLanding["ownership"]) ?? undefined,
+    listingStatus: row.listing_status ?? undefined,
+    publishedAt: row.published_at ?? undefined,
+    hasApprovedBadge: row.has_approved_badge ?? false,
+    isNew: row.is_new ?? false,
+    shortDescription: row.short_description ?? undefined,
   };
 }
 
@@ -387,7 +431,7 @@ export async function getLanding(slug: string): Promise<WhatsAppLanding | undefi
     .eq("slug", slug)
     .maybeSingle();
 
-  if (!error && data) return rowToLanding(data as WhatsAppLandingRow);
+  if (!error && data) return rowToLanding(data as WhatsAppLandingPublicRow);
   return undefined;
 }
 
@@ -438,7 +482,7 @@ export async function getEditableLandingForCurrentUser(slug: string): Promise<Wh
   });
 
   if (error || !Array.isArray(data) || data.length === 0) return undefined;
-  return rowToLanding(data[0] as WhatsAppLandingRow);
+  return rowToLanding(data[0] as WhatsAppLandingPublicRow);
 }
 
 export async function canCurrentUserEditLanding(landingDbId: string): Promise<boolean> {
@@ -453,18 +497,21 @@ export async function canCurrentUserEditLanding(landingDbId: string): Promise<bo
 /** ⚠️ TAM liste (S07c): onaylı kayıt eksik gösterilirse grup "yok" sanılır. */
 export async function listLandings(): Promise<WhatsAppLanding[]> {
   try {
-    // G03b: PII'siz view. View zaten `status='approved'` süzüyor ama filtre burada
-    // da BIRAKILDI — sözleşme iki yerde birden yazılı olsun, view bir gün
-    // genişletilirse dizin sessizce taslak grup göstermesin.
+    // G03b: PII'siz view. View zaten `status='approved'` + motor durumu süzüyor
+    // ama legacy filtre burada da BIRAKILDI — sözleşme iki yerde birden yazılı
+    // olsun, view bir gün genişletilirse dizin sessizce taslak grup göstermesin.
+    // G19 sıralama: politika §7 "Skor sıralamayı belirler" → skor DESC (skorsuz
+    // gruplar SONA), eşitlikte yeni kayıt üste.
     const rows = await fetchAllRows((from, to) =>
       supabase
         .from(PUBLIC_LANDINGS_SOURCE)
         .select("*")
         .eq("status", "approved")
+        .order("group_score", { ascending: false, nullsFirst: false })
         .order("created_at", { ascending: false })
         .range(from, to),
     );
-    return rows.map((row) => rowToLanding(row as WhatsAppLandingRow));
+    return rows.map((row) => rowToLanding(row as WhatsAppLandingPublicRow));
   } catch {
     return [];
   }

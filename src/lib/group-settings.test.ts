@@ -140,6 +140,9 @@ describe("group_settings sözleşmesi", () => {
       // G18: S1 form sözleşme testi gönderim kapısının ayar anahtarlarını kilitler
       // (daily_submit_limit · fast_lane_enabled · blocklist_keywords).
       "src/lib/group-submit-schema.test.ts",
+      // G19: dizin view sözleşme testi "Yeni" etiketi eşiğini kilitler
+      // (new_badge_hours).
+      "src/lib/group-index-view-schema.test.ts",
     ]);
     const offenders = sourceFiles().filter((file) => {
       if (allowed.has(file.replace(/\\/g, "/"))) return false;

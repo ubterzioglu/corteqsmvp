@@ -37,10 +37,12 @@ describe("G03b · halka açık okuma yüzeyi", () => {
   it("listLandings view'dan okur, tabandan DEĞİL", () => {
     // ⚠️ Bitiş çıpası "export async function" OLAMAZ — başlangıç çıpasının
     // kendisiyle eşleşir ve dilim boş gelir (sliceBetween bunu açıkça düşürür).
+    // G19: çıpa `WhatsAppLandingPublicRow` cast'ine taşındı (rowToLanding artık
+    // motor kolonlu kesişim tipi alıyor) — iddialar AYNI, hedef güncel.
     const body = sliceBetween(
       source,
       "export async function listLandings(",
-      "rowToLanding(row as WhatsAppLandingRow)",
+      "rowToLanding(row as WhatsAppLandingPublicRow)",
       "listLandings gövdesi",
     );
     expect(body).toContain("PUBLIC_LANDINGS_SOURCE");

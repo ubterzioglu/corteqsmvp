@@ -76,17 +76,34 @@ export const categoryMeta: Record<
   },
 };
 
-export const approvalBadgeMeta = {
-  member: {
-    label: "Üye onaylı!",
-    tooltip: "Bu topluluk kaydı bir topluluk üyesi tarafından gönderildi.",
-    className: "border-sky-600 bg-sky-500 text-white",
-  },
-  admin: {
-    label: "Admin onaylı!",
-    tooltip: "Bu topluluk CorteQS admin ekibi tarafından incelenip onaylandı.",
+/**
+ * G19 · Politika §6 rozet/etiket diline geçiş: "Admin onaylı!"/"Üye onaylı!"
+ * (kim onayladı rozeti) KALKTI — yerine SAHİPLİK + YAŞ + SKOR rozetleri gelir.
+ * Etiket ve tooltip metinleri politika §6 tablosundan BİREBİR.
+ */
+export const ownershipBadgeMeta = {
+  verified: {
+    label: "Sahibi doğruladı",
+    tooltip: "Grubu gerçek admini ekledi ve sahipliğini kanıtladı",
     className: "border-orange-600 bg-orange-500 text-white",
   },
+  suggestion: {
+    label: "Üye önerisi",
+    tooltip: "Grubu admin olmayan biri önerdi, admin henüz sahiplenmedi",
+    className: "border-sky-600 bg-sky-500 text-white",
+  },
+} as const;
+
+export const newBadgeMeta = {
+  label: "Yeni",
+  tooltip: "İlk 72 saat",
+  className: "border-emerald-600 bg-emerald-500 text-white",
+} as const;
+
+export const approvedGroupBadgeMeta = {
+  label: "Onaylı Grup",
+  tooltip: "Grup Sağlık Skoru 70 ve üzeri",
+  className: "border-violet-600 bg-violet-500 text-white",
 } as const;
 
 export function getCategoryMeta(category?: string | null) {
@@ -106,28 +123,16 @@ export function getLandingHeroImage(landing: WhatsAppLanding) {
   return landing.heroImage?.trim() || waPlaceholderImage;
 }
 
-export function getApprovalStatusMeta(landing: WhatsAppLanding) {
-  if (landing.adminApproved) {
-    return {
-      label: approvalBadgeMeta.admin.label,
-      tooltip: approvalBadgeMeta.admin.tooltip,
-      className: approvalBadgeMeta.admin.className,
-    };
-  }
-
-  if (landing.memberApproved) {
-    return {
-      label: approvalBadgeMeta.member.label,
-      tooltip: approvalBadgeMeta.member.tooltip,
-      className: approvalBadgeMeta.member.className,
-    };
-  }
-
-  return {
-    label: "Onay bekliyor",
-    tooltip: "Bu topluluk henüz topluluk üyesi veya yönetici onayı almamış.",
-    className: "border-amber-300 bg-amber-50 text-amber-700",
-  };
+/**
+ * G19: sahiplik rozeti — `ownership='verified'` → "Sahibi doğruladı", aksi
+ * hâlde "Üye önerisi" (politika §6). Eski `adminApproved/memberApproved`
+ * tag'leri motor alanı DEĞİL; moderasyon ekranı kendi dilini kullanmaya devam
+ * eder (aynı dosyadaki `approvalFlagsFor` mantığı orada).
+ */
+export function getOwnershipStatusMeta(landing: WhatsAppLanding) {
+  return landing.ownership === "verified"
+    ? ownershipBadgeMeta.verified
+    : ownershipBadgeMeta.suggestion;
 }
 
 export function buildLandingCardSummary(landing: WhatsAppLanding) {

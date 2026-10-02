@@ -81,25 +81,19 @@ export function LandingCard({ landing }: LandingCardProps) {
         </div>
         <div className="mt-4 flex items-end justify-between gap-3">
           <div className="min-h-[3rem]">
+            {/* G19 · politika §6: "Skor hesaplanana kadar kartta skor alanı
+                gösterilmez" — "Skor bekleniyor" kutusu KALKTI. Ölçek 0-100
+                (politika §7); eski "/ 10" dili kalktı. */}
             {typeof landing.groupScore === "number" ? (
               <div className="inline-flex min-w-[7.5rem] flex-col rounded-2xl border border-violet-200 bg-violet-50 px-3 py-2 text-left shadow-sm">
                 <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-violet-500">
-                  CorteQS Skoru
+                  Grup Sağlık Skoru
                 </span>
                 <span className="text-base font-black text-violet-700">
-                  {formatGroupScore(landing.groupScore)} / 10
+                  {formatGroupScore(landing.groupScore)} / 100
                 </span>
               </div>
-            ) : (
-              <div className="inline-flex min-w-[7.5rem] flex-col rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-left shadow-sm">
-                <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
-                  CorteQS Skoru
-                </span>
-                <span className="text-sm font-semibold text-slate-700">
-                  Skor bekleniyor
-                </span>
-              </div>
-            )}
+            ) : null}
           </div>
           <div className="shrink-0 self-end">
             <PlatformLogo platform={landing.platform} size="card" />

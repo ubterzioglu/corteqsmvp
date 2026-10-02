@@ -5,7 +5,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { categoryOptions } from "@/lib/whatsapp-landing-options";
 import type { LandingCategory } from "@/lib/whatsapp-landings";
 
-export type ApprovalFilter = "admin" | "";
+/** G19: "admin" → "verified" — filtre artık sahiplik doğrulamasına bakar. */
+export type ApprovalFilter = "verified" | "";
 
 interface CommunityFiltersProps {
   searchQuery: string;
@@ -67,13 +68,15 @@ export function CommunityFilters({
           </SelectContent>
         </Select>
 
-        <Select value={approval || "__all__"} onValueChange={(v) => onApprovalChange(v === "__all__" ? "" : "admin")}>
+        {/* G19 · politika §6: rozet dili sahipliğe geçti — "Admin onaylı"
+            filtresi "Sahibi doğruladı" oldu (ownership='verified'). */}
+        <Select value={approval || "__all__"} onValueChange={(v) => onApprovalChange(v === "__all__" ? "" : "verified")}>
           <SelectTrigger className="w-[180px]" aria-label="Onay filtresi">
-            <SelectValue placeholder="Onay Durumu" />
+            <SelectValue placeholder="Sahiplik Durumu" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="__all__">Tüm Gruplar</SelectItem>
-            <SelectItem value="admin">Admin onaylı</SelectItem>
+            <SelectItem value="verified">Sahibi doğruladı</SelectItem>
           </SelectContent>
         </Select>
       </div>

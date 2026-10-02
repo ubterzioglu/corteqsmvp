@@ -101,6 +101,7 @@ const listFixture = [
     adminName: "Burak",
     adminContact: "info@example.com",
     groupScore: 8.4,
+    ownership: "verified",
     adminApproved: true,
     memberApproved: false,
     createdAt: "2026-05-15T00:00:00Z",
@@ -198,7 +199,7 @@ describe("AddWhatsAppPage", () => {
 
     expect(await screen.findByText("Berlin Girisimciler")).toBeInTheDocument();
     expect(screen.getByText(/Katıl ve ağını büyüt/i)).toBeInTheDocument();
-    expect(screen.getAllByText("8.4 / 10").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("8.4 / 100").length).toBeGreaterThan(0);
   });
 
   it("renders legacy girisim categories without crashing", async () => {
@@ -228,15 +229,15 @@ describe("AddWhatsAppPage", () => {
     expect(screen.getAllByText("Yatırım & Girişim").length).toBeGreaterThan(0);
   });
 
-  it("shows the CorteQS score card on listing cards", async () => {
+  it("shows the health score card (0-100) on listing cards", async () => {
     renderPage();
 
     expect(await screen.findByText("Berlin Girisimciler")).toBeInTheDocument();
-    expect(screen.getAllByText("CorteQS Skoru").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("8.4 / 10").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Grup Sağlık Skoru").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("8.4 / 100").length).toBeGreaterThan(0);
   });
 
-  it("filters communities by admin approval", async () => {
+  it("filters communities by verified ownership", async () => {
     listLandingsSpy.mockResolvedValue([
       listFixture[0],
       {
@@ -246,6 +247,8 @@ describe("AddWhatsAppPage", () => {
         groupName: "Paris Dayanisma",
         adminApproved: false,
         memberApproved: false,
+        // G19: filtre artık sahipliğe bakıyor — doğrulanmamış grup süzülür.
+        ownership: "unclaimed",
       },
     ]);
 
@@ -255,7 +258,8 @@ describe("AddWhatsAppPage", () => {
     expect(screen.getByText("Paris Dayanisma")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("combobox", { name: /Onay filtresi/i }));
-    fireEvent.click(screen.getByText("Admin onaylı"));
+    // "Sahibi doğruladı" hem rozet hem filtre seçeneği — option rolüyle ayırt et.
+    fireEvent.click(screen.getByRole("option", { name: "Sahibi doğruladı" }));
 
     expect(screen.getByText("Berlin Girisimciler")).toBeInTheDocument();
     expect(screen.queryByText("Paris Dayanisma")).not.toBeInTheDocument();
