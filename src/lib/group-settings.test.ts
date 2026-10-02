@@ -113,7 +113,14 @@ describe("group_settings sözleşmesi", () => {
     // Yanlış yazılmış anahtar HATA VERMEZ: group_setting_* sessizce varsayılana
     // düşer ve ürün kuralı sessizce yanlış çalışır. Anahtarı kullanan ilk üretim
     // kodu tek bir modülden okumalı ve o modül buraya yazılmalıdır.
-    const allowed = new Set(["src/lib/group-settings.test.ts"]);
+    const allowed = new Set([
+      "src/lib/group-settings.test.ts",
+      // G12: durum makinesi sözleşme testi `groups.suspension_days` anahtarını
+      // migration metninde kilitler. Üretim tüketicisi SQL tarafında
+      // (set_group_status_v1 → group_setting_int); TS'ten okuyan ilk üretim kodu
+      // geldiğinde modülünü buraya O batch ekler.
+      "src/lib/group-status-machine.test.ts",
+    ]);
     const offenders = sourceFiles().filter((file) => {
       if (allowed.has(file.replace(/\\/g, "/"))) return false;
       return /["'`]groups\.[a-z_]+["'`]/.test(readFileSync(file, "utf8"));

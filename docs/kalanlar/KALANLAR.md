@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **56** (N 0 · W 8 · M 27 · G 21 · KR 0) — G10 kapandı, **G10c** açıldı (eski kolonların düşürülmesi, ⛔ G03b deploy) |
+> | **Açık batch** | **55** (N 0 · W 8 · M 27 · G 20 · KR 0) — G10+G12 kapandı, **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 8 (K — **K09 yeni, 02.10**) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -138,7 +138,7 @@ traction ölçülecek.
 | B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🔴 | ⛔ **K09 kararı** (↓ ölçüm 02.10) |
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
 | C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
-| D | **G12–G17** | Durum makinesi · sahiplik · şikayet · uyarı · gönderiler · sağlık skoru | 🟢 | — |
+| D | ~~G12~~ · **G13–G17** | ✅ **G12 KAPANDI 02.10** (durum makinesi canlıda: tek kapı RPC + moderasyon logu + guard trigger, kabul #12 canlı 13/13) · kalan: sahiplik · şikayet · uyarı · gönderiler · sağlık skoru | 🟢 | — |
 | E | **G18–G21** | 4 sayfa: form · dizin · detay · sahip paneli | 🟢 | — |
 | F | **G22–G25** | 6 zamanlanmış görev · 8 bildirim · moderatör paneli · 13 kabul testi | 🟢 | — |
 
@@ -1427,9 +1427,36 @@ zaten temiz ölçüldü, G03c'den sonra yeniden doğrulanacak:
 
 ### Faz D — iş kuralları
 
-**G12 — Durum makinesi + moderasyon logu** · migration · `group_moderation_log` + **tek**
-`set_group_status_v1(...)`; doğrudan `update ... set listing_status` YASAK (trigger engeller).
-**Kabul:** kabul testi **#12** — her geçiş logda.
+**~~G12~~ — ✅ KAPANDI 02.10** · Durum makinesi + moderasyon logu · migration
+
+- Migration `20261002030000_group_status_machine.sql` **canlıda** (`applied/` + `schema_migrations`
+  kaydı, `check:migrations` sapmasız). Salt ekleme: `group_moderation_log` (RLS: istemciye kapalı,
+  admin select) · **tek kapı** `set_group_status_v1(...)` security-definer RPC · geçiş yasallığı
+  `group_status_transition_allowed()` (tasarım §2 birebir: `removed` kalıcı, `rejected` terminal,
+  `published→rejected` YOK) · `trg_guard_listing_status` (BEFORE UPDATE) · `groups.suspension_days=30`
+  (G09 doktrini: eşik `group_settings`'ten, kodda sabit yok).
+- **Kabul testi #12 canlı kanıt (geri alınan işlem, 13/13):** her geçiş loglanır · no-op log YAZMAZ ·
+  illegal geçiş + geçersiz durum + sebepsiz `hidden` reddedilir · anon/sıradan kullanıcı `group_forbidden` ·
+  admin→`actor_kind=moderator`, service_role→`system` · doğrudan `update...set listing_status`
+  **trigger ile engellenir** · **legacy `status` update SERBEST** (eski paket kırılmaz, iki sistem
+  G10c'ye dek paralel) · askı ~30 gün. Rollback sonrası canlı veri dokunulmamış (10 published, 0 committed log).
+- 🔴 **Gerçek kusur bulundu ve onarıldı (canlı davranış testi yakaladı — kaynak testi GÖREMEZDİ):**
+  SQL üç-değerli mantık tuzağı: `p_reason not in (...)` NULL reason'da **NULL** döner (TRUE değil) →
+  `if NULL` raise'i atlar → `hidden` **sebepsiz kabul ediliyordu**. NULL-safe yapıldı
+  (`p_reason is null or ...`), sözleşme testine kilitlendi.
+- ⚠️ **types.ts regen BİLİNÇLİ ERTELENDİ:** G12 hiçbir TS-tüketimli tip eklemiyor (yeni tablo/fonksiyonları
+  G18+/G24 tüketecek). db-url regen **kompakt format** (6923 satır) üretiyor, repodaki canonical dosya
+  **verbose** (16634 satır) → ~9700 satır churn; canonical `--project-id` **login ister** (token yok).
+  `tsc` regen olmadan **0**. 📌 **AYRI BORÇ:** CLI 2.119 (kompakt) ≠ committed types.ts (verbose) —
+  gelecekteki HER regen dev diff üretir; canonical komut standardize edilmeli (kullanıcı login'i gerek).
+- **Kanıt:** sözleşme testi **20/20** · **mutasyon 6/6 yakalandı** (log INSERT yönlendirme · guard raise
+  kaldırma · NULL-safe geri alma · security definer kaldırma · kaçak `rejected→published` kenarı · ayar
+  okuması silme) · `tsc` 0 · `check:dead` 0 · `check:migrations` sapmasız · 📌 **G09 bayatlama
+  kapanı çalıştı:** tam takım `group-settings.test.ts`'i düşürdü (yeni test dosyası çıplak
+  `groups.suspension_days` metni taşıyor) → `allowed` listesine eklendi (doktrin: anahtarı
+  kullanan ilk dosya listeye kendini yazar).
+- *(özgün kapsam)* `group_moderation_log` + **tek** `set_group_status_v1(...)`; doğrudan
+  `update ... set listing_status` YASAK (trigger engeller). **Kabul:** #12 — her geçiş logda.
 
 **G13 — Sahiplik doğrulama** · migration + kod · `group_claims`; `CQ`+4 hane, 10 dk, 3 deneme,
 10 dakikada 3 deneme sınırı; yedek yol ekran görüntüsü. Doğrulanınca platforma göre
@@ -1819,6 +1846,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G12 · durum makinesi + moderasyon logu | mig `20261002030000` canlıda + `schema_migrations` kaydı (`check:migrations` sapmasız) · **tek kapı** `set_group_status_v1` (security-definer) + `group_status_transition_allowed` (tasarım §2 birebir: removed kalıcı, rejected terminal) + `trg_guard_listing_status` (doğrudan `update...listing_status` YASAK) + `group_moderation_log` (istemciye kapalı, admin select) + `groups.suspension_days=30` · **kabul #12 canlı kanıt 13/13** (geri alınan işlem): her geçiş loglanır · no-op log yazmaz · illegal/geçersiz/sebepsiz-hidden reddedilir · anon `group_forbidden` · admin `moderator` · doğrudan update trigger ile engellenir · **legacy `status` SERBEST** (eski paket kırılmaz) · rollback sonrası canlı dokunulmamış (10 published, 0 log) · 🔴 **gerçek kusur onarıldı:** SQL üç-değerli mantık — `hidden` sebepsiz kabul ediliyordu (`NULL NOT IN`→NULL, `if NULL` atlar), NULL-safe'e çevrildi + sözleşmeye kilitlendi · sözleşme testi **20/20** · **mutasyon 6/6** · ⚠️ types regen ERTELENDİ (TS tüketici yok; db-url kompakt 6923 ≠ canonical verbose 16634 = ayrı format borcu) · `tsc` 0 · `check:dead` 0 |
 | G10 · `whatsapp_landings` şema genişletme | mig `20261002020000` canlıda + `schema_migrations` kaydı (`check:migrations` sapmasız) · **20 kolon** salt ekleme (`if not exists`), 4 CHECK, `group_invite_code()` + kısmi tekil indeks · **BİLİNÇLİ SAPMA:** `member_approved`/`admin_approved` DÜŞÜRÜLMEDİ (9 dosya + canlı paket eski kod) → **G10c** (⛔ G03b deploy) · geri doldurma: `invite_code` **8/10** (2 boş link U07), `listing_status` 10/10 `published`, `ownership` 10/10 `unclaimed`; ekip kararı alanlarına dokunulmadı · K5 canlı kanıt: sync fonksiyonu **10/10 hatasız** (geri alınan işlem), `source_records` 10/10, trigger yerinde · types regen +113 satır · `tsc` 0 · 10 sözleşme testi · **mutasyon 6/6** |
 | KR10 · SEO · sitemap · araç kataloğu · kök temizliği · doküman | `/kariyer` sitemap önceliği **0.4 → 0.7** (sözleşme testiyle kilitli — sessizce geri dönerse düşer) · `PAGE_SEO.career.description` 17 ilan + staj + uzaktan çalışmayı anlatacak şekilde yenilendi · sitemap üretildi: **413 URL**, `/kariyer` priority 0.7 ölçüldü · `ingest:tools:check` **temiz** · `check:drift` temiz · **kök temizlendi:** `EKİP WEB SAYFASI …` klasörü + zip kaldırıldı, içerik `docs/archive/2026-10-02-kariyer-kaynak-paketi/` altına alındı (zip birebir aynı 3 dosyaydı — ölçüldü) · kökte yalnız `CLAUDE.md` + `README.md` kaldı · **CLAUDE.md'ye kariyer modülü bölümü** (11 değişmez kural) · ⏳ tek kalan: deploy sonrası canlı kontrol (`curl -I /kariyer` + CSP) — kullanıcıda |
 | KR09 · yeni başvuruda e-posta bildirimi | mig `20261002000000` canlıda + `send-notification-emails` **DEPLOY EDİLDİ** (94 kB) · **uçtan uca canlı kanıt:** gerçek başvuru satırı → trigger → kuyruk → `status=sent`, **recipient_count 2**, `last_error` boş, 3 saniyede (06:43:22 claimed → 06:43:25 sent) · payload'da `cv_path` **YOK** (ölçüldü: `payload ? 'cv_path'` = false) · ölçüm satırları silindi (başvuru 0 / kuyruk 0) · 8 şablon testi, mutasyonla sınandı · `check:functions` 12/12 sapmasız · 🔴 **YAN BULGU — canlıda sessiz kusur onarıldı:** `notification_email_outbox.event_type` CHECK listesi `radar_scan_digest`'i İÇERMİYORDU ama `radar-news-scan` (satır 440) tam o tiple kuyruğa yazıyor → insert her seferinde `23514` ile reddedilmiş, kuyrukta **0 radar satırı**, yani **radar özet maili 19 Eylül'den beri hiç gitmemiş**. Aynı kısıt zaten değiştirilmek zorundaydı, iki değer birlikte eklendi · **KR09b (kullanıcı isteği 02.10): mail TÜM yöneticilere gider.** Alıcılar abonelik tablosundan geliyordu, yani satırı olmayan yönetici sessizce mail ALMIYORDU; kariyer bildirimi opt-in'den **opt-out**'a çevrildi (mig `20261002010000`). Ölçüm: sistemde **2 yönetici**, ikisinin de satırı var — bugün davranış aynı, kusur gelecekte patlayacaktı. Kanıt (geri alınan işlem içinde): satırı silinen yönetici kariyer alıcılarında **KALDI**, aynı kişi `new_member`'da listeden **DÜŞTÜ** (eski kural korundu), açık `false` ile **ÇIKTI**. Kapı `is_admin` · diğer olay tipleri değişmedi · 10 sözleşme testi |
