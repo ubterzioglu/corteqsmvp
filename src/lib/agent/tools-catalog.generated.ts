@@ -5,8 +5,8 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 57,
-    "edge_functions": 14,
+    "total": 58,
+    "edge_functions": 15,
     "workers": 2,
     "ui_modules": 40
   },
@@ -216,6 +216,40 @@ export const toolCatalog = {
         "zod": "3.25.76"
       },
       "evidence_path": "supabase/functions/group-claim-verify/index.ts"
+    },
+    {
+      "tool_key": "edge.group_link_health",
+      "tool_name": "group-link-health",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/group-link-health/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "manual",
+        "fields": []
+      },
+      "tables_read_write": [],
+      "rpcs": [
+        "group_link_health_due",
+        "group_link_health_record",
+        "group_setting_int"
+      ],
+      "limits": {},
+      "http_statuses": [
+        200,
+        401,
+        405,
+        500
+      ],
+      "http_method": "POST",
+      "dependencies": [
+        "@supabase/supabase-js@2.108.2"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.108.2",
+        "zod": null
+      },
+      "evidence_path": "supabase/functions/group-link-health/index.ts"
     },
     {
       "tool_key": "edge.group_preview",
@@ -3292,6 +3326,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/group-scheduled-tasks-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/group-settings.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -4603,6 +4642,11 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/group-claim-verify/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/group-link-health/index.ts",
       "kind": "ts",
       "module_family": "edge"
     },

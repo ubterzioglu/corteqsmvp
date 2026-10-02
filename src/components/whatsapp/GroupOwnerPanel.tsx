@@ -14,6 +14,7 @@ import { MOTOR_CATEGORIES } from "@/lib/group-submit";
 import {
   downloadBadgeSvg,
   fetchOwnerPanelState,
+  ownerRenew,
   ownerUpdate,
   requestGroupRemoval,
   reviewGroupPost,
@@ -187,6 +188,22 @@ export function GroupOwnerPanel({ landing, isSignedIn, onHidden }: GroupOwnerPan
     }
   };
 
+  // G22: yıllık yenileme onayı (tasarım §8) — 30 gün yanıt vermeyen sahip
+  // unclaimed'a düşer; tek tıkla due 365 gün uzar.
+  const handleRenew = async () => {
+    setErrorText(null);
+    try {
+      const due = await ownerRenew();
+      setMessage(
+        due
+          ? `Yenileme onayın kaydedildi — sonraki onay ${new Date(due).toLocaleDateString("tr-TR")} tarihine kadar.`
+          : "Yenileme onayın kaydedildi.",
+      );
+    } catch (error) {
+      setErrorText(getErrorMessage(error));
+    }
+  };
+
   return (
     <section
       aria-labelledby="owner-panel-title"
@@ -201,6 +218,10 @@ export function GroupOwnerPanel({ landing, isSignedIn, onHidden }: GroupOwnerPan
           <Button variant="outline" size="sm" className="gap-2" onClick={() => void handleShare()}>
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             {copied ? "Kopyalandı" : "Sayfayı paylaş"}
+          </Button>
+          <Button variant="outline" size="sm" className="gap-2" onClick={() => void handleRenew()}>
+            <ShieldCheck className="h-4 w-4" />
+            Yenileme onayını ver
           </Button>
           {panel.landing.has_approved_badge ? (
             <Button

@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **47** (N 0 · W 8 · M 27 · G 12 · KR 0) — G10+G12+G13+G15–G21 kapandı (Faz E TAMAM), **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
+> | **Açık batch** | **46** (N 0 · W 8 · M 27 · G 11 · KR 0) — G10+G12+G13+G15–G22 kapandı (Faz E TAMAM + G22), **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -140,7 +140,7 @@ traction ölçülecek.
 | C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
 | D | ~~G12~~ ~~G13~~ ~~G15~~ ~~G16~~ ~~G17~~ · **G14** | ✅ G12 02.10 (durum makinesi) · ✅ G13 02.10 (sahiplik + guard v2) · ✅ G15 02.10 (strike + yasak) · ✅ G16 02.10 (`group_posts` sıfırdan, §3.D 4 sınıf) · ✅ **G17 KAPANDI 02.10** (sağlık skoru + tavsiyeler + guard v3; skorlar cron'a kadar NULL — 🔴 G22 tuzağı aşağıda) · kalan: şikayet | 🟢 | ⛔ **G14: G04/U06** (kabul testi telefonu doğrulanmış hesap istiyor) |
 | E | ~~G18~~ ~~G19~~ ~~G20~~ ~~G21~~ | ✅ **FAZ E TAMAM 02.10** — G18 (S1 form, kabul 14/14) · G19 (S2 dizin, kabul 8/8) · G20 (S3 detay + claim UI, kabul DOM+canlı 5/5; "Şikayet et" G14'e ertelendi) · ✅ **G21 KAPANDI 02.10** (S4 sahip paneli: `group_owner_panel_state`+`group_owner_update_v1`; kabul #9 canlı 9/9 — kaldırma ANINDA hidden) | 🟢 | ⚠️ G18–G21 frontend deploy kuyruğunda (G03b ile aynı) |
-| F | **G22–G25** | 6 zamanlanmış görev · 8 bildirim · moderatör paneli · 13 kabul testi | 🟢 | — |
+| F | ~~G22~~ · **G23–G25** | ✅ **G22 KAPANDI 02.10** (6 cron işi + `group-link-health` edge; kabul #8 canlı 8/8 + GERÇEK tur koştu; health-score BAYRAKLA KAPALI — deploy sonrası insan kararı) · kalan: bildirimler · moderatör paneli · QA | 🟢 | ⚠️ G23 outbox CHECK 7 değere kilitli (migration ister) |
 
 ### KR · Kariyer sayfası yenilemesi — ✅ SERİ TAMAMEN KAPANDI (02.10)
 
@@ -165,6 +165,7 @@ traction ölçülecek.
 
 | ID | Konu | Neyi açar |
 |---|---|---|
+| **U10** | **Frontend deploy kuyruğu** (Coolify): G03b + G18 form + G19 dizin + G20 detay/claim + G21 panel — tek deploy hepsini canlandırır. Deploy sonrası: (1) `/addcom` ziyaretçi + girişli tur, (2) `groups.health_score_cron_enabled=true` **insan kararı** (G17/G22 tuzağı: eski kart 0-100 skoru "X / 10" çiziyor — bayrak bu yüzden KAPALI), (3) G03c + G10c'nin önü açılır | **G03c · G10c · health-score cron · yeni UI'ın tamamı** |
 | **U09** | WhatsApp Meta kimlik bilgileri (5 secret) — 30.09: "bilgiler hazır" | **W01–W08** |
 | **U03** | İki gerçek mail testi (e-posta doğrulama · revizyon tamamlanma) | A14 kapanış maili |
 | **U06** | Telefon/SMS sağlayıcısı teyidi (panelden) | **G04–G05** |
@@ -1845,18 +1846,63 @@ doğrulanmamış hesabın şikayeti sayılmaz. ⚠️ "0 geçerli şikayet" ile 
 
 ### Faz F — otomasyon, bildirim, moderatör paneli, QA
 
-**G22 — 6 zamanlanmış görev** · migration · `link-health` (haftalık, yayılmış) ·
-`queue-escalation` (saatlik) · `health-score` · `suspension-release` · `owner-renewal` (günlük) ·
-`claim-expiry` (10 dk). ⚠️ Link kontrolü **üç değerli**; **`unknown` sayacı ARTIRMAZ.**
-🔴 **G17'den devir tuzağı:** `health-score` cron'u `group_health_scores_recompute_all()`'ı
-bağlamadan ÖNCE canlı frontend'in yeni kartı (G19) çizdiğinden emin ol — canlı ESKİ paket
-`groupScore / 10` çiziyor (0-10 ölçek dili), kalıcı 0-100 skor yazılırsa kullanıcı "35 / 10"
-görür. G17 bu yüzden canlıya HİÇ skor yazmadı (hepsi NULL). Aynı turda link-health
-`link_fail_count`'u gerçekten doldurmaya başlayınca G17'nin link kalemi (`link_fail_count=0`,
-vacuous) gerçek sinyale döner; "son 4 kontrol" tarihçesi istenirse tabloyu G22 ekler
-(guard v3 `link_fail_count`/`link_checked_at`'i zaten koruyor).
-⚠️ "cron yeşil" kanıt DEĞİLDİR (Radar dersi) — görevin **etkisi** ölçülür.
-**Kabul:** kabul testi **#8** — 2 başarısız gizler, 1 başarılı geri açar, `unknown` etkisiz.
+**~~G22~~ — ✅ KAPANDI 02.10** · 6 zamanlanmış görev · migration + edge
+
+- Migration `20261002110000_group_scheduled_tasks.sql` **canlıda** (`applied/` + kayıt,
+  `check:migrations` **457/457** sapmasız) · **pg_cron'a 6 isimli iş** (M0 keşfi: pg_cron+pg_net
+  hazırdı, 6 iş çalışıyordu → 12): `group_link_health` saatlik :23 (edge) · `group_queue_escalation`
+  :17 (G16 fonksiyonu) · `group_health_score` 04:31 · `group_suspension_release` 04:37 ·
+  `group_owner_renewal` 04:43 · `group_claim_expiry` */10. Tüm görev fonksiyonları YALNIZ
+  service_role (canlı ölçüldü: authenticated `permission denied`).
+- 🔴 **G17 TUZAĞI BAYRAKLA ÇÖZÜLDÜ:** `group_health_score_cron()` sarmalısı
+  `groups.health_score_cron_enabled=false` iken **-1** döner (skor YAZILMAZ). Bayrak YALNIZ
+  yeni kart (G19) deploy edildikten sonra **insan kararıyla** açılır (fast_lane doktrini).
+  Canlı ölçüldü: kapalı → -1 · açık → 10/10 skor yazıldı (geri alınan işlemde).
+- **Edge `group-link-health` DEPLOY** (`check:functions` **15/15**): cron `x-dispatch-secret`
+  ile çağırır (dispatcher deseni, sabit-zamanlı karşılaştırma) · `verify_jwt=false` config'te
+  + gerekçe yorumu (A99-R2 radar dersi) ve **ÖLÇÜLDÜ** (secretsiz POST → fonksiyonun kendi
+  401'i, gateway'in değil) · parti + gecikme ayarlardan (`link_health_batch_limit=10` ⚠️,
+  `link_health_request_delay_ms=5000` ⚠️ — "dakikada en fazla birkaç istek", Meta 200/W04) ·
+  kural 8: log/yanıt yalnız sayılar, link YOK. ⚠️ **Secret yeniden kullanımı:** yeni vault
+  secret'ı SQL'den YARATILAMIYOR (`_crypto_aead_det_noncegen` permission denied ÖLÇÜLDÜ) →
+  cron header'ı vault `radar_news_cron_secret`'ı okuyor, aynı değer `supabase secrets set` ile
+  edge env'e yazıldı (ekrana basılmadan). **Rotasyonda İKİ yer güncellenir.** Migration secret
+  literalİ TAŞIMAZ (sözleşme testi 32+ karakterlik diziyi tarıyor).
+- **Link sağlığı ÜÇ DEĞERLİ (kabul #8):** `group_link_health_due` (yayma: `mod(abs(hashtext(slug)),24)`
+  saat yuvası · haftalık aralık · linki BOŞ 2 grup taranmaz [G11/U07 bekliyor] · **link_dead
+  gizliler DAHİL** — geri açma yolu) + `group_link_health_record`: ok → sayaç 0 + `hidden(link_dead)`
+  ise published · invalid → sayaç++ ve `link_fail_threshold=2` eşikte hidden(link_dead) ·
+  **unknown → sayaca DOKUNMAZ** (G08 kural 5), yalnız `link_checked_at` tazelenir. Geçişler
+  `set_group_status_v1` tek kapısından (log otomatik, actor `system`). 🔴 **Canlı test İKİ gerçek
+  kusur yakaladı:** (1) security-definer zincirinde `auth.role()` JWT claim'i TAŞINMIYOR →
+  record/suspension `group_forbidden` ile düşüyordu — geçici service claim'i + **geri yükleme**
+  ile çözüldü (yamandı, yeniden ölçüldü); (2) T2 ilk iddialarım satır değil slot sayıyordu (test
+  düzeltildi). **GERÇEK TUR KOŞTU:** slot-21 grubu kontrol edildi → `unknown` (sayaç 0 kaldı,
+  checked_at tazelenmiş — canlı ayak izi doğrulandı).
+- **Diğer görevler:** suspension-release (süresi dolan askı → published) · owner-renewal
+  (çıpa: `claim.reviewed_at > published_at > now()` + 365 gün — ayarlardan; due+30 gün yanıtsız →
+  `ownership=unclaimed` via_rpc; **`group_owner_renew_v1`** sahip RPC'si + panelde "Yenileme
+  onayını ver" düğmesi; bildirim G23) · claim-expiry (pending code, süresi dolmuş → expired —
+  "grup başına tek aktif kod" indeksi boşa işgal edilmez). 7 yeni ayar anahtarı (kaynaklılar:
+  threshold 2 · interval 7d · renewal 365/30 · ⚠️ ajan ihtiyatları: batch 10 · delay 5000ms ·
+  **bayrak false**).
+- **Kabul #8 canlı ölçüldü (geri alınan işlem — 8/8):** invalid#1 → sayaç 1 published ·
+  invalid#2 → **hidden(link_dead)** + log actor `system` · unknown → sayaç 2 KALDI + checked_at
+  tazelendi · ok → **published'a geri açıldı** + sayaç 0 · due: yuva/slot/boş-link eleme ·
+  health bayrak -1→10 · suspension 1 bırakıldı · renewal çıpa+düşürme+renew RPC · claim-expiry 1 ·
+  grant matrisi authenticated'a kapalı · rollback sonrası canlı dokunulmamış (skor 0, log 0,
+  bayrak false, published).
+- **Kanıt:** sözleşme **21/21** (`group-scheduled-tasks-schema`) · **mutasyon 6/6** (unknown
+  sayacı artırma · bayrak default true · yaymayı kaldırma · edge gecikmesini silme · cron programı
+  kaydırma · renew sahip kontrolünü kaldırma) · tam takım **412 dosya / 3377 test yeşil** · `tsc` 0 ·
+  lint 0 (30 problem tümü `corteqs-ekstre-motoru/`) · `check:dead` 0/0/987 · `ingest:tools` **58**
+  (15 edge) + check 0 · `verify:text` ✓ 1915 · types regen YOK (`as never` — G12 borcu).
+- 📌 **G23/G24'e devir:** yenileme hatırlatması + "link çalışmıyor" + "skor kazanımı" bildirimleri
+  G23'te (outbox CHECK 7 değere kilitli — migration ister) · moderatör `link_dead` kuyruğu G24'te ·
+  **health_score_cron_enabled bayrağı deploy sonrası insan kararıyla açılacak** (pano §K'da
+  bekleyenler listesine eklendi).
+- *(özgün kapsam)* 6 görev + üç değerli link kontrolü + unknown sayacı artırmaz. **Kabul:** **#8**
+  — 2 başarısız gizler, 1 başarılı geri açar, `unknown` etkisiz (canlı ölçüldü).
 
 **G23 — 8 bildirim metni** · migration + kod · tasarım §9. ⚠️ `notification_email_outbox.event_type`
 CHECK'i canlıda **7 değere kilitli** — yeni tip **migration ister**; TS birliğini tek başına
@@ -2192,6 +2238,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G22 · 6 zamanlanmış görev + link-health edge | mig `20261002110000` canlıda + kayıt (**457/457**) · pg_cron 6 isimli iş (link-health :23 edge · queue :17 · health-score 04:31 · suspension 04:37 · renewal 04:43 · claim-expiry */10) · 🔴 **G17 tuzağı bayrakla kapalı:** `health_score_cron_enabled=false` → -1 (canlı ölçüldü; deploy sonrası İNSAN kararıyla açılacak — kullanıcıda bekleyenler listesinde) · edge DEPLOY (`check:functions` **15/15**) + `verify_jwt=false` ÖLÇÜLDÜ (fonksiyon 401'i, gateway değil — A99-R2 dersi) + sabit-zamanlı `x-dispatch-secret` · ⚠️ secret: vault'a SQL'den yazılamıyor (ölçüldü) → `radar_news_cron_secret` yeniden kullanıldı + `supabase secrets set` (rotasyonda İKİ yer) · **kabul #8 canlı 8/8** (geri alınan işlem: 2 invalid→hidden(link_dead)+log system · unknown sayaç 2 KALDI+checked_at tazelendi · ok→published+sayaç 0 · due yayma/boş-link eleme · suspension · renewal çıpa+düşürme+renew · claim-expiry · grant matrisi · rollback temiz) + **GERÇEK tur:** slot-21 grubu kontrol edildi → unknown, ayak izi doğru · 🔴 canlı test 2 gerçek kusur yakaladı: security-definer zincirinde `auth.role()` claim taşımıyor → record/suspension `group_forbidden` (geçici service claim + geri yükleme ile yamandı) · 7 yeni ayar anahtarı · sözleşme **21/21** · **mutasyon 6/6** · tam takım **412 dosya/3377 test** · `tsc` 0 · `check:dead` 0/0/987 · `ingest` 58 (15 edge) |
 | G21 · S4 sahip paneli | mig `20261002100000` canlıda + kayıt (`check:migrations` **456/456**) · `group_owner_panel_state` (sahiplik kontrolü VERİDEN ÖNCE — sahip değilse/anon `{"is_owner":false}` TEK alan, skor G17 compute'tan, kuyruk pending_group_admin) + `group_owner_update_v1` (motor form alanları+rules+tagline; set listesi içerikle sınırlı — group_score/ownership/listing YAZILAMAZ; aile-cocuk G18 kilidi; legacy description ETİKET KUYRUĞU korunur) · kaldırmada YENİ KAPI YOK: UI → G12 `set_group_status_v1(hidden, owner_request)` · kuyruk → G16 `group_post_review` · panel: skor 6 kalem + "Kurallarını ekle, +15" rehberi + rozet SVG (1080², XSS kaçışlı) + paylaş + iki adım onaylı kaldırma · **kabul #9 canlı 9/9** (geri alınan işlem: ANINDA hidden + log actor_kind=owner + dizin 10→9 · sahip-olmayan forbidden · panel sızıntısız · düzenleme + etiket korundu + 161/aile/diger reddi · kuyruk approve/reject · rollback temiz) · 🔴 mutasyon turu TEST AÇIĞI yakaladı: M3 ilk turda geçildi (test yalnız raise'i kilitliyordu) → koşul kilidi eklendi, tekil koşuda düştü → **6/6** · 49 yeni test · tam takım **411 dosya/3356 test** · `tsc` 0 · `check:dead` 0/0/987 · `ingest` 57+0 · 📌 Faz E TAMAM — deploy kuyruğu G03b+G18–G21 |
 | G20 · S3 detay — "Bu grup sizin mi?" claim UI | KOD (migration YOK — G13 backend hazırdı): `GroupOwnershipClaim` + `src/lib/group-claims.ts` — kod yolu (CQ+4, talimat §3.B.2 birebir, verify body YALNIZ `claim_id` [kural 8], verified→"Kodu artık silebilirsin"+sayfa tazelenir, exhausted→ekran görüntüsü formu açılır, invalid/unknown "deneme sayılmadı") + screenshot yolu (`{uid}/screenshot-*` private kova, RPC/policy deseni birebir) + bekleyen talep geri yükleme + `claim_group` OAuth intent'i · ⚠️ "Şikayet et" ÇİZİLMEDİ (group_reports YOK — G14 ⛔; ölü düğme yok, yokluk testle kilitli) · boş koşullar gizli + "Katıl" RPC'den (kilitlendi) · **kabul DOM'da:** signed_out innerHTML'de platform linki izi YOK · **canlı prob 5/5** (geri alınan işlem: anon claims okuyamıyor · view link 0 · start_code→CQ6991+pending · RLS başka kullanıcı 0 · yabancı path reddi · rollback temiz) · 28 yeni test (hata haritası G13'e karşı çift yönlü) · **mutasyon 6/6** (⚠️ M3/M5 konsol kodlaması yüzünden ilk koşuda uygulanamadı — UTF-8 Node betiğiyle tekil koşuldu, ikisi de yakalandı; PowerShell mutasyonlarında Türkçe karakter dersi) · tam takım **408 dosya/3321 test** · `tsc` 0 · `check:dead` 0/0/985 · `ingest` 57+check 0 · deploy kuyruğu G18+G19'la aynı |
 | G19 · S2 dizin — view v2 + rozet dili | mig `20261002090000` canlıda + kayıt (`check:migrations` **455/455**) · `whatsapp_landings_public` v2: G03a masking AYNEN (4 kolon null) + motor kolonları sonda + `is_new` (`group_listing_is_new`, SECURITY DEFINER — G09 grant matrisi değişmedi, eşik `groups.new_badge_hours=72`) · 🔴 **gizli kusur kapatıldı:** tek filtre `status='approved'` idi, G12 legacy `status`'ü değiştirmediği için motor `hidden/suspended/removed` kararı dizine YANSIMIYORDU → ÇİFT filtre (canlıda 10/10 aynı kaldı, eski paket onay yolu da görünür) · rozet dili politika §6 birebir (dosyaya karşı kilitli): "Admin onaylı!/Üye onaylı!" KALKTI → "Sahibi doğruladı"/"Üye önerisi" + "Yeni" + "Onaylı Grup" (eşik istemcide YOK) · "Skor bekleniyor" HİÇBİR YERDE yok, skor 0-100 · sıralama `group_score DESC NULLS LAST` (politika §7) · `categoryOptions`=`categoryMeta` türevi (tek liste) · **kabul #3 canlı 8/8** (geri alınan işlem: is_new şimdi/73h/eşik-100 kanıtı · hidden→9 · suspended→9 · legacy yol→10 · skor→ilk sıra · anon grant matrisi · rollback temiz) · 34 yeni test · **mutasyon 6/6** (M5 tekil koşuda doğrulandı — toplu koşu rapor yarışı) · tam takım **405 dosya/3297 test** · `tsc` 0 · `check:dead` 0/0/983 · `ingest:tools` 57 · types regen YOK (`WhatsAppLandingPublicRow` kesişimi) · 📌 devir: claim UI girişi + şikayet G20'de · admin panel dili G24'te · deploy kuyruğu G18'le aynı |

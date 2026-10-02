@@ -5,6 +5,20 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261002-grup-motoru-zamanlanmis-gorevler",
+    date: "2 Ekim 2026",
+    title: "Grup motorunun 6 zamanlanmış görevi canlıda — link sağlığı çalışmaya başladı",
+    items: [
+      "LİNK SAĞLIĞI (çalışıyor): Her grubun davet linki haftada bir, günlere/saatlere YAYILMIŞ biçimde sunucu tarafında kontrol ediliyor. Sonuç üç değerli: çalışıyor / ölü / okunamadı. Üst üste 2 ölü kontrol grubu gizler (sebep: link_dead) ve admin kuyruğuna düşürür; 1 başarılı kontrol gizli grubu GERİ AÇAR. “Okunamadı” sonucu gruba asla mal edilmez — sayaç artmaz (ağ hatası yüzünden kimse gizlenmez). İlk gerçek tur koştu: 1 grup kontrol edildi, sonuç “okunamadı” (sayaç 0 kaldı).",
+      "KUYRUK ESKALASYONU (saatlik): Grup admininin 48 saat içinde bakmadığı gönderiler otomatik olarak platform ekibinin kuyruğuna geçiyor.",
+      "ASKI BIRAKMA (günlük): 30 günlük askı süresi dolan gruplar otomatik yayına dönüyor.",
+      "SAHİPLİK YENİLEME (günlük): Doğrulanmış sahipler yılda bir kısa onay veriyor (panelde “Yenileme onayını ver” düğmesi). 30 gün yanıt gelmezse sahiplik düşer ve grup yeniden “üye önerisi” durumuna geçer.",
+      "KOD SÜRESİ (10 dakikada bir): Sahiplik doğrulama kodlarının süresi dolunca kayıtları otomatik kapanıyor — “grup başına tek aktif kod” kuralı boşa işgal edilmiyor.",
+      "⚠️ SKOR HESABI BİLEREK KAPALI: Günlük sağlık skoru görevi kuruldu ama ANAHTARI KAPALI. Sebep: canlı site hâlâ eski kartı çiziyor ve yeni 0-100 skorları “35 / 10” gibi bozuk gösterirdi. Yeni ekranlar deploy edildikten sonra anahtarı insan kararıyla açacağız (tek ayar satırı).",
+      "KANIT: Görevlerin tamamı canlı veritabanında geri alınan bir işlemde 8 senaryoyla ölçüldü (2 ölü link → gizledi → başarılı kontrol → geri açtı dahil); görev fonksiyonları üyelere kapalı, yalnız sistem rolü çağırabiliyor. Zamanlayıcıya 6 yeni iş kaydedildi.",
+    ],
+  },
+  {
     id: "20261002-grup-sahip-paneli",
     date: "2 Ekim 2026",
     title: "Grup sahibi paneli hazır — skor rehberi, onay kuyruğu, düzenleme, listeden kaldırma (deploy kuyruğunda)",

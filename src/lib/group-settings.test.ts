@@ -143,6 +143,10 @@ describe("group_settings sözleşmesi", () => {
       // G19: dizin view sözleşme testi "Yeni" etiketi eşiğini kilitler
       // (new_badge_hours).
       "src/lib/group-index-view-schema.test.ts",
+      // G22: zamanlanmış görev sözleşme testi link/skor/yenileme eşik anahtarlarını
+      // kilitler (link_fail_threshold · link_health_* · health_score_cron_enabled ·
+      // owner_renewal_*).
+      "src/lib/group-scheduled-tasks-schema.test.ts",
     ]);
     const offenders = sourceFiles().filter((file) => {
       if (allowed.has(file.replace(/\\/g, "/"))) return false;

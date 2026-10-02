@@ -157,6 +157,18 @@ export async function requestGroupRemoval(landingDbId: string): Promise<void> {
 }
 
 /**
+ * G22 · yıllık yenileme onayı (tasarım §8: "Admin rolü yılda bir kısa onayla
+ * yenilenir"). `owner_renewal_due` 365 gün ileri atar; 30 gün yanıt vermeyen
+ * sahibin grubu `unclaimed`'a düşer (günlük `group_owner_renewals_process`).
+ */
+export async function ownerRenew(): Promise<string> {
+  const { data, error } = await supabase.rpc("group_owner_renew_v1" as never, {} as never);
+
+  if (error) throw mapOwnerError(error, "Yenileme onayı kaydedilemedi.");
+  return String((data as { owner_renewal_due?: string } | null)?.owner_renewal_due ?? "");
+}
+
+/**
  * Eksik adım rehberi (tasarım §11: "skor ve eksik adımlar"; KALANLAR G21:
  * "Kurallarını ekle, +15"). Kalem puanları G17 formülünün kendisi — burada
  * eşik UYDURULMAZ, yalnız 0 puanlı kalemin karşılığı yazılır.

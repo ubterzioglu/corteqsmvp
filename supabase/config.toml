@@ -51,3 +51,11 @@ verify_jwt = true
 # fonksiyonlarda deploy sonrası verify_jwt'yi ÖLÇ (radar'da tam bu oldu).
 [functions.site-assistant]
 verify_jwt = true
+
+# G22: pg_cron her saat :23'te bu fonksiyonu `x-dispatch-secret: <vault:radar_news_cron_secret>`
+# ile çağırıyor — ham SECRET, JWT değil (A99-R2 dersi: verify_jwt AÇIKken ağ geçidi
+# isteği 401'le keser, kod hiç çalışmaz; radar'da tam bu oldu). Yetki fonksiyonun
+# içinde: GROUP_LINK_HEALTH_CRON_SECRET sabit-zamanlı karşılaştırma (dispatcher
+# deseni). Aynı desen: send-notification-emails, radar-news-scan.
+[functions.group-link-health]
+verify_jwt = false

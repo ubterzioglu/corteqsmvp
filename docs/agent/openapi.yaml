@@ -128,6 +128,21 @@ paths:
           description: Çok fazla istek (rate limit)
         "500":
           description: Sunucu hatası
+  /functions/v1/group-link-health:
+    post:
+      summary: group-link-health aracını çalıştır
+      operationId: execute_group_link_health
+      x-tool-key: edge.group_link_health
+      x-status: active
+      responses:
+        "200":
+          description: Başarılı
+        "401":
+          description: Yanıt
+        "405":
+          description: Yöntem desteklenmiyor
+        "500":
+          description: Sunucu hatası
   /functions/v1/group-preview:
     post:
       summary: group-preview aracını çalıştır
