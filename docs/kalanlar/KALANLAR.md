@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **52** (N 0 · W 8 · M 27 · G 17 · KR 0) — G10+G12+G13+G15+G16 kapandı, **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
+> | **Açık batch** | **51** (N 0 · W 8 · M 27 · G 16 · KR 0) — G10+G12+G13+G15+G16+G17 kapandı, **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -138,7 +138,7 @@ traction ölçülecek.
 | B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🔴 | ⛔ **K09 kararı** (↓ ölçüm 02.10) |
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
 | C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
-| D | ~~G12~~ ~~G13~~ ~~G15~~ ~~G16~~ · **G14** · **G17** | ✅ G12 02.10 (durum makinesi) · ✅ G13 02.10 (sahiplik + guard v2) · ✅ G15 02.10 (strike + yasak) · ✅ **G16 KAPANDI 02.10** (`group_posts` sıfırdan, §3.D 4 sınıf, kabul #7 canlı ölçüldü) · kalan: şikayet · sağlık skoru | 🟢 | ⛔ **G14: G04/U06** (kabul testi telefonu doğrulanmış hesap istiyor) |
+| D | ~~G12~~ ~~G13~~ ~~G15~~ ~~G16~~ ~~G17~~ · **G14** | ✅ G12 02.10 (durum makinesi) · ✅ G13 02.10 (sahiplik + guard v2) · ✅ G15 02.10 (strike + yasak) · ✅ G16 02.10 (`group_posts` sıfırdan, §3.D 4 sınıf) · ✅ **G17 KAPANDI 02.10** (sağlık skoru + tavsiyeler + guard v3; skorlar cron'a kadar NULL — 🔴 G22 tuzağı aşağıda) · kalan: şikayet | 🟢 | ⛔ **G14: G04/U06** (kabul testi telefonu doğrulanmış hesap istiyor) |
 | E | **G18–G21** | 4 sayfa: form · dizin · detay · sahip paneli | 🟢 | — |
 | F | **G22–G25** | 6 zamanlanmış görev · 8 bildirim · moderatör paneli · 13 kabul testi | 🟢 | — |
 
@@ -1578,9 +1578,52 @@ doğrulanmamış hesabın şikayeti sayılmaz. ⚠️ "0 geçerli şikayet" ile 
 - *(özgün kapsam)* ⚠️ yorum tablosu YOK → `group_posts` sıfırdan (`post_status` + `escalate_at`).
   **Kabul:** #7 — 48 saat bekleyen gönderi platform kuyruğuna geçiyor.
 
-**G17 — Grup Sağlık Skoru** · migration · `group_recommendations` + tasarım §5 formülü birebir;
-ilk 7 gün `null`; rozet 70'te kazanılır, **65 altında** kaybedilir (histerezis).
-**Kabul:** kabul testi **#11** — ilk 7 gün `null` ve kartta görünmüyor.
+**~~G17~~ — ✅ KAPANDI 02.10** · Grup Sağlık Skoru · migration
+
+- Migration `20261002070000_group_health_score.sql` **canlıda** (`applied/` + kayıt, `check:migrations`
+  sapmasız): `group_recommendations` (kullanıcı+grup TEKİL, istemciye yazma yolu YOK — tek kapı
+  `group_recommendation_set`) · 3 yeni kolon (`has_approved_badge` · `group_score_computed_at` ·
+  `group_score_breakdown`) · `group_health_score_compute` (tasarım §5 birebir: 15+15+15+15+20+20) ·
+  `group_health_score_recompute` + `_all` (YALNIZ service_role — cron G22) · **guard v3** (skor
+  kolonları motor alanı; `is_admin` muaf ↓) · 4 yeni eşik `group_settings`'te (70/65/10/90 — hepsi
+  paket kaynaklı; 7 gün G09'da zaten vardı).
+- 🔴 **ÖLÇÜM (batch ön şartı): ESKİ KOD group_score'A YAZIYORDU.** `updateLanding`
+  (`src/lib/whatsapp-landings.ts`, `1a3310a1` 03.06 → canlı pakette) her admin moderasyon
+  kaydında `group_score: null` gönderiyor (çağıran ekran alanı hiç geçmiyor). Canlı DB'de 10/10
+  NULL, DB tarafında yazan yok (tek referans `catalog_sync`, o da OKUR). **İki sonuç:** (1) src
+  clobber kaldırıldı (guard v3 + sözleşme testi kilitledi); (2) guard v3 admin'i **MUAF** tutuyor —
+  aksi halde canlı moderasyon kaydı deploy'a kadar kırılırdı (legacy `status` doktrini). Sahip/anonim
+  kendi skorunu YAZAMAZ (canlı ölçüldü: `group_score_direct_update_forbidden`).
+- ⚠️ **KARAR — kalıcı skor yazılmadı:** canlı eski kart `groupScore / 10` çiziyor (0-10 ölçek dili);
+  0-100 skor yazılsaydı kullanıcı "35 / 10" görürdü. Migration HİÇBİR landing satırını güncellemez;
+  skorlar cron (G22 `health-score`) bağlanana kadar NULL. **🔴 G22 TUZAĞI:** health-score cron'u
+  frontend deploy'undan (G19 yeni kart) ÖNCE bağlanırsa canlıda "X / 10" görünür.
+- Kararlar (tasarımın boşlukları): "48 saati aşan kuyruk kaydı" = süresi dolmuş `pending_group_admin`
+  VEYA eskale olmuş kararsız `pending_platform` (90 gün penceresi, kuyruk eriyince kalem geri
+  kazanılır) · tavsiye yalnız `published` gruba (G16 deseni) · **link kalemi bugün `link_fail_count=0`**
+  (tarihçe tablosu tasarımda YOK, uydurulmadı — "son 4 kontrol" gerçek sinyali G22 link-health'ta) ·
+  **şikayet kalemi vacuous TRUE** (`group_reports` YOK — G16 deseni, compute BAKAMAZ, sözleşme
+  kilitler; G14 genişletirken testi bilinçli günceller) · `whatsapp_landings_public` view'ına rozet
+  EKLENMEDİ (drop/recreate salt-eklemeyi bozardı; teşhir G19/G20).
+- **Kabul #11 canlı ölçüldü (geri alınan işlem, 16/16):** ilk 7 gün skor NULL + rozet false +
+  computed_at NULL · 8 günlük grup 35 (link+reports) · kalem kalem 65→80→rozet TRUE · **histerezis:**
+  65'e düşünce rozet KALDI, 50'de düştü, 65'te geri GELMEDİ, 80'de geldi · tavsiye: idempotent,
+  geri alma, 3 tavsiye +6 puan, 12 tavsiye tavan +20 → skor 100 · sınır hataları (anon/hidden/yok) ·
+  guard: sahip skor+rozet+breakdown YAZAMADI, içerik serbest, admin clobber muaf · `recompute_all`
+  10/10 · RLS (kendi satırı 1, admin 2, anon 0) · recompute authenticated'a kapalı. Rollback sonrası
+  canlı **dokunulmamış** (0 skor, 0 rozet, 0 tavsiye, 0 gönderi, alanlar eski değerinde).
+- **Kanıt:** sözleşme testi **23/23** (`group-health-score-schema.test.ts`) · **mutasyon 6/6**
+  (seed 70→75 · admin muafiyeti silme · tavsiye ağırlığı 20→10 · unique kısıtı silme · grace dalı
+  kırma · src clobber'ı geri koyma) · `tsc` 0 · lint 0 (32 problem tümü `corteqs-ekstre-motoru/`) ·
+  tam takım **399 dosya / 3211 test yeşil** (⚠️ ilk koşuda 3 ilgisiz dosyada geçici "forks worker"
+  hatası — tekil ve tam yeniden koşuda yeşil) · `check:dead` 0/0/**982** · `ingest:tools` 56 araç
+  (tools.json + generated +2 kayıt: bu test dosyası + `admin-updates/2026-10.ts` — önceki batch'ten
+  bayat kalmış) · `verify:text` ✓ 1895 dosya · G09 kapanı: yeni test dosyası `group-settings.test.ts`
+  allowed listesine eklendi.
+- *(özgün kapsam)* `group_recommendations` + tasarım §5 formülü birebir; ilk 7 gün `null`; rozet
+  70/65 histerezis. **Kabul:** #11 — ilk 7 gün `null` ve kartta görünmüyor (DB tarafı ölçüldü;
+  kart tarafı G19'da — mevcut kart NULL skoru zaten "Skor bekleniyor" çiziyor, yeni tasarım o
+  metni kaldırıyor).
 
 ### Faz E — sayfalar (paketin S1–S4'ü)
 
@@ -1606,6 +1649,13 @@ rozet görseli, "Sayfayı paylaş", "Grubu listeden kaldır". Mevcut `whatsapp_l
 **G22 — 6 zamanlanmış görev** · migration · `link-health` (haftalık, yayılmış) ·
 `queue-escalation` (saatlik) · `health-score` · `suspension-release` · `owner-renewal` (günlük) ·
 `claim-expiry` (10 dk). ⚠️ Link kontrolü **üç değerli**; **`unknown` sayacı ARTIRMAZ.**
+🔴 **G17'den devir tuzağı:** `health-score` cron'u `group_health_scores_recompute_all()`'ı
+bağlamadan ÖNCE canlı frontend'in yeni kartı (G19) çizdiğinden emin ol — canlı ESKİ paket
+`groupScore / 10` çiziyor (0-10 ölçek dili), kalıcı 0-100 skor yazılırsa kullanıcı "35 / 10"
+görür. G17 bu yüzden canlıya HİÇ skor yazmadı (hepsi NULL). Aynı turda link-health
+`link_fail_count`'u gerçekten doldurmaya başlayınca G17'nin link kalemi (`link_fail_count=0`,
+vacuous) gerçek sinyale döner; "son 4 kontrol" tarihçesi istenirse tabloyu G22 ekler
+(guard v3 `link_fail_count`/`link_checked_at`'i zaten koruyor).
 ⚠️ "cron yeşil" kanıt DEĞİLDİR (Radar dersi) — görevin **etkisi** ölçülür.
 **Kabul:** kabul testi **#8** — 2 başarısız gizler, 1 başarılı geri açar, `unknown` etkisiz.
 
@@ -1943,6 +1993,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G17 · grup sağlık skoru + tavsiyeler | mig `20261002070000` canlıda + kayıt (`check:migrations` 453/453 sapmasız) · `group_recommendations` (tekil, tek kapı RPC) + `group_health_score_compute` (§5 birebir 15+15+15+15+20+20) + `recompute`/`_all` (service_role ONLY, cron G22) + 4 eşik `group_settings`'te (70/65/10/90) + **guard v3** (skor kolonları motor alanı, `is_admin` muaf) · 🔴 **ölçüm:** eski kod group_score'a YAZIYORDU (`updateLanding` her admin kaydında null — `1a3310a1` 03.06, canlı pakette) → src clobber kaldırıldı, guard admin'i muaf tuttu (canlı moderasyon kırılmasın) · ⚠️ **kalıcı skor YAZILMADI:** canlı eski kart `X / 10` çiziyor → cron G22'ye dek NULL (🔴 G22 tuzağı panoda yazılı) · vacuous kalemler: şikayet (group_reports YOK → G14) + link (`link_fail_count=0`, tarihçe yok → G22) · **kabul #11 canlı 16/16** (geri alınan işlem: grace NULL · 35→65→80 · histerezis 65'te korudu/50'de düştü · tavsiye idempotent+cap→100 · guard sahip engelledi/admin geçti · RLS · rollback sonrası canlı dokunulmamış 0/0/0) · sözleşme **23/23** · **mutasyon 6/6** · tam takım **399 dosya/3211 test** yeşil · `tsc` 0 · `check:dead` 0/0/982 · `ingest:tools` 56 · types regen YOK (TS tüketici yok — G12 borcu aynı) |
 | G16 · grup gönderileri + moderasyon | mig `20261002060000` canlıda + kayıt (`check:migrations` sapmasız) · ⚠️ tasarım §4 çürüdü (ölçüldü): `whatsapp_landing_comments/_likes/_follows` canlıda YOK → `group_posts` sıfırdan · ilk durum §3.D birebir 4 sınıf (verified admin→published · güvenilir üye→published · sahiplide diğer→pending_group_admin+48h `escalate_at` · sahipsizde→pending_platform) · **kabul #7 canlı:** `group_posts_escalate_due()` (service_role ONLY) süresi dolanı platform kuyruğuna taşıdı · yetki: sahip yalnız kendi kuyruğu, platform kuyruğu + remove YALNIZ admin (uydurma yetki yok) · istemciye yazma yolu YOK (grant select only) · kararlar: yalnız published gruba · `post_max_chars=10000` ajan ihtiyatı · trusted'ın "onaylı şikayet yok" yarısı G14'e (group_reports YOK, şema uydurulmadı — sözleşme kilitli) · **kabul canlı 14/14** (C1–C14, geri alınan işlem; rollback sonrası 0/10/10) · sözleşme **25/25** · **mutasyon 6/6** · `tsc` 0 · `check:dead` 0 · cron G22 · bildirim G23 · UI G20/G21 |
 | G15 · uyarı (strike) sistemi + ekleme yasağı | mig `20261002050000` canlıda + kayıt (`check:migrations` sapmasız) · `group_strikes` + `group_submission_bans` + `admin_record_group_strike` (is_admin tek kapı) + `trg_block_banned_submitter` (BEFORE INSERT, admin muaf) · merdiven §7 birebir: 1.=uyarı · 2.=30 gün suspended (`suspended_until`) · 3.=removed+**ekleyen VE sahip** yasaklı · kırmızı çizgi **2/4/6 ilk ihlalde** removed+yasak · eşikler `group_settings`'te (2/3/[2,4,6]) · geçişler YALNIZ `set_group_status_v1` → hepsi `group_moderation_log`'da (reason=strike_N, canlı doğrulandı) · karar: published-olmayanda 2. ihlal warning+not (matris), 3.'te removed · **kabul canlı 13/13** (geri alınan işlem; rollback sonrası 0/0/0, 10 published, max_strike 0) · sözleşme **16/16** · **mutasyon 6/6** · `tsc` 0 · `check:dead` 0 · bildirim G23'e, yasak kaldırma G24'e |
 | G13 · sahiplik doğrulama | mig `20261002040000` canlıda + kayıt (`check:migrations` sapmasız) · `group_claims` (aktif TEK kod + kullanıcı başına TEK talep, kısmi tekil indeks) + `group_invite_reads` (**link kolonu YOK**) + private kova `group-claim-screenshots` + 4 RPC · **edge `group-claim-verify` DEPLOY** (`check:functions` 13/13) · 🔴 **guard v2:** `Users can update own landings` ile `ownership='verified'` YAZILABİLİYORDU → ownership+11 motor alanı engellendi, legacy `status`/içerik SERBEST · 🔴 **K10 ölçümü:** 175/175 kullanıcının tek rolü var (signup trigger'ı `User_DiasporaMember`) → `Community_*Admin` atanamaz, güvenli skip + `role_skipped_reason` · **kabul canlı 18/18** (geri alınan işlem; rollback sonrası 0 claim/0 read/10 unclaimed/175 rol) · gerçek sayfa 8/8 `ok` (Türkçe çözüm ✓) · duman 4/4 (401/401/403/200) · sözleşme 30 + birim 18 · **mutasyon 6/6** · `tsc` 0 · `check:dead` 0 · `ingest:tools` 56 |

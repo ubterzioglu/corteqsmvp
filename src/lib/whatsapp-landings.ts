@@ -128,7 +128,10 @@ export interface UpdateLandingInput {
   memberCount?: number;
   language?: LandingLanguage;
   origin?: LandingOrigin;
-  groupScore?: number;
+  // NOT: `groupScore` BURADA YOKTUR (G17, 02.10). Skor motor alanıdır — yalnız
+  // `group_health_score_recompute` RPC'si yazar (guard v3). Eski hâli
+  // (`group_score: input.groupScore ?? null`) her moderasyon kaydında skoru
+  // sessizce NULL'luyordu: çağıran ekran bu alanı HİÇ geçmiyordu (ölçüldü).
   // NOT: burada `platform` YOKTUR. `updateLanding` onu hiçbir yere yazmıyordu;
   // moderasyon ekranı platformu zaten `buildLandingDescription` ile `description`
   // etiketine koyuyor. Alanı bırakmak "kaydediliyor" yanılgısı üretir.
@@ -629,7 +632,6 @@ export async function updateLanding(dbId: string, input: UpdateLandingInput) {
       member_count_updated_at: input.memberCount ? new Date().toISOString() : null,
       language: input.language ?? null,
       origin: input.origin ?? null,
-      group_score: input.groupScore ?? null,
       updated_at: new Date().toISOString(),
     })
     .eq("id", dbId);

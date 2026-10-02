@@ -1839,6 +1839,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin-shell/admin-updates/2026-10.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin-shell/admin-updates/types.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -3200,6 +3205,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/group-claims-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group-health-score-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },

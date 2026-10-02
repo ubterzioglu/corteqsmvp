@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261002-grup-saglik-skoru",
+    date: "2 Ekim 2026",
+    title: "Grup sağlık skoru motoru kuruldu — “Onaylı Grup” rozeti otomatik hesaplanacak (ekranlar henüz yok)",
+    items: [
+      "SKOR NEDİR: Her grup için 0-100 arası bir sağlık skoru hesaplayan motor kuruldu. Kalem kalem: profil bilgileri dolu mu (15), grup kuralları yazılı mı (15), sahibi doğrulanmış mı ve onay kuyruğunu 48 saat içinde eritiyor mu (15), davet linki çalışıyor mu (15), kaç üye “bu gruptayım, tavsiye ederim” dedi (20’ye kadar), son 90 günde onaylanmış şikayet var mı (20).",
+      "ROZET KURALI — GİDİP GELMESİN DİYE: Skor 70’e ulaşan grup “Onaylı Grup” rozetini kazanır; rozet ancak skor 65’İN ALTINA düşünce geri alınır. Aradaki bantta rozet yerinde kalır — grup bir gün var bir gün yok diye titremez.",
+      "İLK 7 GÜN SKOR YOK: Yeni bir grup yayına çıkınca ilk 7 gün skor hesaplanmaz (boş kalır) — yeni grup “puanı düşük” diye cezalı görünmesin.",
+      "TAVSİYE SİSTEMİ: Üyeler bir grup için “tavsiye ederim” diyebilecek; aynı kişi aynı grubu iki kez sayılmaz, tavsiyesini geri çekebilir. İlk 10 tavsiye skora puan olarak yansır, sonrası yansımaz (skor şişirilmesin).",
+      "⚠️ EKRANLAR HENÜZ YOK: Bu da altyapı işi — skor kartlarda G19 (dizin), sahip panelinde G21, günlük otomatik hesap ise G22’de bağlanacak. Bugün canlıda hiçbir grubun skoru değişmedi; motorun bütün davranışı canlı veritabanında GERİ ALINAN bir işlemde 16 senaryoyla ölçüldü.",
+      "SESSİZ BİR HATA BULUNDU VE KAPATILDI: Eski yönetici ekranı, bir grup kaydını her düzenleyip kaydettiğinde skor alanını sessizce SIFIRLIYORDU (kimse fark etmiyordu çünkü skorlar henüz boştu). Skor sistemi devreye girmeden önce bu davranış ölçüldü ve kapatıldı: skor artık yalnızca motorun kendisi tarafından yazılır; grup sahibi kendi skorunu elle yükseltemez.",
+    ],
+  },
+  {
     id: "20261002-kariyer-sayfasi-ve-basvuru-sistemi",
     date: "2 Ekim 2026",
     title: "Kariyer sayfası baştan yazıldı — 17 ilan, başvuru formu ve yönetici ekranı artık çalışıyor",

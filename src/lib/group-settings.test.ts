@@ -132,6 +132,11 @@ describe("group_settings sözleşmesi", () => {
       // G16: gönderi sözleşme testi post anahtarlarını kilitler
       // (post_escalation_hours · post_max_chars · trusted_member_min_approved_posts).
       "src/lib/group-posts-schema.test.ts",
+      // G17: sağlık skoru sözleşme testi rozet/tavsiye/kuyruk eşiklerini kilitler
+      // (health_score_badge_award · health_score_badge_revoke ·
+      // health_score_recommendation_cap · health_score_queue_window_days ·
+      // health_score_min_days_published).
+      "src/lib/group-health-score-schema.test.ts",
     ]);
     const offenders = sourceFiles().filter((file) => {
       if (allowed.has(file.replace(/\\/g, "/"))) return false;
