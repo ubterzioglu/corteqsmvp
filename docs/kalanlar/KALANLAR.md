@@ -9,8 +9,8 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **55** (N 0 · W 8 · M 27 · G 20 · KR 0) — G10+G12 kapandı, **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
-> | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 8 (K — **K09 yeni, 02.10**) · **Onay** 6 (P) |
+> | **Açık batch** | **54** (N 0 · W 8 · M 27 · G 19 · KR 0) — G10+G12+G13 kapandı, **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
+> | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
 > | **Son devir notu** | [`docs/handover/2026-10-02-devir-notu.md`](../handover/2026-10-02-devir-notu.md) — 2 Ekim gece oturumu (KR01–KR10 + G08/G09) · [`2026-10-01-devir-notu.md`](../handover/2026-10-01-devir-notu.md) §7 tuzaklar + §9 ortam hâlâ geçerli |
@@ -138,7 +138,7 @@ traction ölçülecek.
 | B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🔴 | ⛔ **K09 kararı** (↓ ölçüm 02.10) |
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
 | C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
-| D | ~~G12~~ · **G13–G17** | ✅ **G12 KAPANDI 02.10** (durum makinesi canlıda: tek kapı RPC + moderasyon logu + guard trigger, kabul #12 canlı 13/13) · kalan: sahiplik · şikayet · uyarı · gönderiler · sağlık skoru | 🟢 | — |
+| D | ~~G12~~ ~~G13~~ · **G14–G17** | ✅ G12 KAPANDI 02.10 (durum makinesi + moderasyon logu) · ✅ **G13 KAPANDI 02.10** (sahiplik doğrulama canlıda: kod + ekran görüntüsü yolu, guard v2, edge deploy 13/13, kabul 18/18) · kalan: şikayet · uyarı · gönderiler · sağlık skoru | 🟢 | ⛔ **G14: G04/U06** (kabul testi telefonu doğrulanmış hesap istiyor) |
 | E | **G18–G21** | 4 sayfa: form · dizin · detay · sahip paneli | 🟢 | — |
 | F | **G22–G25** | 6 zamanlanmış görev · 8 bildirim · moderatör paneli · 13 kabul testi | 🟢 | — |
 
@@ -183,6 +183,14 @@ traction ölçülecek.
   Ölçüm ve öneri G06 bloğunda; özet: `catalog_items` zaten `verification_status`
   (5 değer) + `is_verified` taşıyor, spec üçüncü bir `verification_level` istiyor.
   Ayrıca politika kapıyı **ekleyen kişiye** koyuyor, spec **katalog kaydına**.
+- 🔴 **K10 (02.10) — rol modeli TEK rol: grup admini rolü kimseye ATANAMIYOR.**
+  G13 ölçümü: `auth.users` trigger'ı her yeni kullanıcıya `User_DiasporaMember` atıyor;
+  `user_role_assignments` PK=(user_id) → **175/175 kullanıcının tam 1 rolü var**. Ezme-yok
+  ilkesiyle `Community_*Admin` üretikte kimseye verilemez (G13 güvenli davranıyor: rol
+  yerinde kalır, `role_skipped_reason` yazılır). Karar seçenekleri: (a) yalnız DEFAULT rol
+  ezilebilir (yükseltme) · (b) PK → (user_id, role_id) çoklu rol (geniş etki: `is_admin`,
+  dizin, `sync_member_catalog_role_for_user`) · (c) rol faydası ertelenir. G18 sahip paneli
+  ve G24'ün rol tabanlı ayrıcalıkları bu karara bağlı.
 - **P02–P07** — clean-code planının canlı DB/deploy/ürün kararı isteyen maddeleri.
 - **X** — batch'e bölünmeden önce ayrı plan isteyen büyük işler.
 
@@ -1458,11 +1466,48 @@ zaten temiz ölçüldü, G03c'den sonra yeniden doğrulanacak:
 - *(özgün kapsam)* `group_moderation_log` + **tek** `set_group_status_v1(...)`; doğrudan
   `update ... set listing_status` YASAK (trigger engeller). **Kabul:** #12 — her geçiş logda.
 
-**G13 — Sahiplik doğrulama** · migration + kod · `group_claims`; `CQ`+4 hane, 10 dk, 3 deneme,
-10 dakikada 3 deneme sınırı; yedek yol ekran görüntüsü. Doğrulanınca platforma göre
-`Community_WhatsApp/Telegram/DiscordAdmin` rolü. ⚠️ `user_role_assignments` PK'si **kullanıcı
-başına TEK rol** — mevcut rolü ezme. `verified` gruba yeni talep → **otomatik devir YOK**.
-**Kabul:** G08 sonucuna göre kod veya ekran görüntüsü yolu uçtan uca çalışıyor.
+**~~G13~~ — ✅ KAPANDI 02.10** · Sahiplik doğrulama · migration + kod + edge function
+
+- Migration `20261002040000_group_claims.sql` **canlıda** (`applied/` + kayıt, `check:migrations`
+  sapmasız): `group_claims` (aktif TEK kod + kullanıcı başına TEK açık talep — kısmi tekil indeksler) ·
+  `group_invite_reads` denetim tablosu (**link kolonu YOK**, G08 kural 8) · private kova
+  `group-claim-screenshots` (10 MB, 4 MIME, kendi-klasör politika) · 4 RPC + 1 iç yardımcı ·
+  `groups.claim_start_daily_limit=10` (⚠️ pakette sayı yok — ajan ihtiyatı, K10'la birlikte teyit).
+- **Edge function `group-claim-verify` DEPLOY EDİLDİ** (`check:functions` **13/13** sapmasız):
+  davet sayfasını SUNUCU TARAFINDA okur (G08 kural 1), platform-özel geçerlilik işaretleri
+  (boş `og:title`=invalid · jenerik Telegram=invalid · Discord API 404=invalid), HTML varlık
+  çözümü (`Mezunları` ✓), sonuç YALNIZ service_role'e açık `group_claim_record_verification`'a yazılır.
+- 🔴 **Guard v2 — canlı güvenlik kusuru kapatıldı:** `Users can update own landings` politikasıyla
+  kullanıcı kendi satırına `ownership='verified'` YAZABİLİYORDU (ölçüldü). Guard artık ownership +
+  `owner_user_id` + 11 motor alanını (strike/link sayaçları, invite_code, platform…) engelliyor;
+  legacy `status` + içerik alanları (tagline, group_name…) SERBEST (canlı paket kırılmaz — ölçüldü).
+- 🔴 **K10'a giden ölçüm:** `auth.users` trigger'ı HER kullanıcıya otomatik `User_DiasporaMember`
+  atıyor (**175/175 kullanıcının tam 1 rolü var**, PK=user_id). Ezme-yok kuralıyla
+  `Community_*Admin` üretimde **hiç kimseye atanamaz** → G13 güvenli davranışı uyguluyor
+  (rol yerinde kalır + `role_skipped_reason` yazılır), rol modeli kararı **K10**.
+- **Kabul kanıtı (canlı, geri alınan işlem — 18/18):** kod yolu uçtan uca: CQ+4 hane · TTL 10 dk ·
+  idempotent yeniden istek · 2 yanlış deneme `attempts_left` 2→1 · **invalid/unknown deneme SAYMAZ**
+  (G08 kural 5) · 3.'de `rejected` + not · doğruda `verified`+`ownership`+rol ATANDI (rolsüz kullanıcıda) ·
+  supersede (aktif tek kod) · günlük sınır `rate_limited` · RLS yalnız kendi talepler (5 satır) ·
+  ekran görüntüsü yolu: başkasının klasörü `path_forbidden` · `is_contested=true` (verified grup) ·
+  admin approve → ownership devri + default rol EZİLMEDİ · Admin_SuperAdmin EZİLMEDİ · aynı rol →
+  `role_assigned=true` · grant matrisi: record=service_role ONLY, apply=iç, start=authenticated.
+  Rollback sonrası canlı dokunulmamış (0 claim, 0 read, 10 unclaimed, 175 rol, limit 10).
+- **Gerçek sayfa ölçümü:** 8/8 canlı davet linki `ok` + ad okundu (Türkçe çözülüyor), linkler
+  loglanmadı/ekrana basılmadı. **Duman 4/4:** JWT'siz 401 (gateway) · anon 401 (`getUser` reddi —
+  verify_jwt tek başına yetki değil) · kötü origin 403 · preflight 200.
+- **Kanıt:** 30 sözleşme testi (`group-claims-schema.test.ts`) + 18 birim (`group-invite-read.test.ts`) ·
+  **mutasyon 6/6** (grant sızdırma · guard raise silme · ezme koruması kırma · TTL sabitleme ·
+  **reads'e link kolonu sızdırma** · verified'a kod yolu açma) · `tsc` 0 · `check:dead` 0 ·
+  `ingest:tools` 56 araç (13 edge) · 📌 G09 kapanı önceden karşılandı (allowed listesi).
+- ⏳ Kod yolunun TAM mutlu sonu (gerçek grup adına CQ kodu eklenip doğrulanması) ekip işi:
+  Burak bir grubun adına geçici `· CQxxxx` eklediğinde 1 dakikalık canlı kabul (G08'in Telegram
+  linki notuyla aynı sınıf). RPC/edge katmanı bu teste gerek kalmadan kanıtlı.
+- *(özgün kapsam)* `group_claims`; `CQ`+4 hane, 10 dk, 3 deneme, 10 dakikada 3 deneme sınırı; yedek
+  yol ekran görüntüsü. Doğrulanınca platforma göre `Community_WhatsApp/Telegram/DiscordAdmin` rolü.
+  ⚠️ `user_role_assignments` PK'si **kullanıcı başına TEK rol** — mevcut rolü ezme. `verified` gruba
+  yeni talep → **otomatik devir YOK**. **Kabul:** G08 sonucuna göre kod veya ekran görüntüsü yolu
+  uçtan uca çalışıyor.
 
 **G14 — Şikayet sistemi** · migration + kod · `group_reports`; eşik: girişli + **telefonu
 doğrulanmış** (G04) + hesap ≥7 gün + farklı 3 hesap (hepsi `group_settings`'ten). Sebepler kırmızı
@@ -1846,6 +1891,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G13 · sahiplik doğrulama | mig `20261002040000` canlıda + kayıt (`check:migrations` sapmasız) · `group_claims` (aktif TEK kod + kullanıcı başına TEK talep, kısmi tekil indeks) + `group_invite_reads` (**link kolonu YOK**) + private kova `group-claim-screenshots` + 4 RPC · **edge `group-claim-verify` DEPLOY** (`check:functions` 13/13) · 🔴 **guard v2:** `Users can update own landings` ile `ownership='verified'` YAZILABİLİYORDU → ownership+11 motor alanı engellendi, legacy `status`/içerik SERBEST · 🔴 **K10 ölçümü:** 175/175 kullanıcının tek rolü var (signup trigger'ı `User_DiasporaMember`) → `Community_*Admin` atanamaz, güvenli skip + `role_skipped_reason` · **kabul canlı 18/18** (geri alınan işlem; rollback sonrası 0 claim/0 read/10 unclaimed/175 rol) · gerçek sayfa 8/8 `ok` (Türkçe çözüm ✓) · duman 4/4 (401/401/403/200) · sözleşme 30 + birim 18 · **mutasyon 6/6** · `tsc` 0 · `check:dead` 0 · `ingest:tools` 56 |
 | G12 · durum makinesi + moderasyon logu | mig `20261002030000` canlıda + `schema_migrations` kaydı (`check:migrations` sapmasız) · **tek kapı** `set_group_status_v1` (security-definer) + `group_status_transition_allowed` (tasarım §2 birebir: removed kalıcı, rejected terminal) + `trg_guard_listing_status` (doğrudan `update...listing_status` YASAK) + `group_moderation_log` (istemciye kapalı, admin select) + `groups.suspension_days=30` · **kabul #12 canlı kanıt 13/13** (geri alınan işlem): her geçiş loglanır · no-op log yazmaz · illegal/geçersiz/sebepsiz-hidden reddedilir · anon `group_forbidden` · admin `moderator` · doğrudan update trigger ile engellenir · **legacy `status` SERBEST** (eski paket kırılmaz) · rollback sonrası canlı dokunulmamış (10 published, 0 log) · 🔴 **gerçek kusur onarıldı:** SQL üç-değerli mantık — `hidden` sebepsiz kabul ediliyordu (`NULL NOT IN`→NULL, `if NULL` atlar), NULL-safe'e çevrildi + sözleşmeye kilitlendi · sözleşme testi **20/20** · **mutasyon 6/6** · ⚠️ types regen ERTELENDİ (TS tüketici yok; db-url kompakt 6923 ≠ canonical verbose 16634 = ayrı format borcu) · `tsc` 0 · `check:dead` 0 |
 | G10 · `whatsapp_landings` şema genişletme | mig `20261002020000` canlıda + `schema_migrations` kaydı (`check:migrations` sapmasız) · **20 kolon** salt ekleme (`if not exists`), 4 CHECK, `group_invite_code()` + kısmi tekil indeks · **BİLİNÇLİ SAPMA:** `member_approved`/`admin_approved` DÜŞÜRÜLMEDİ (9 dosya + canlı paket eski kod) → **G10c** (⛔ G03b deploy) · geri doldurma: `invite_code` **8/10** (2 boş link U07), `listing_status` 10/10 `published`, `ownership` 10/10 `unclaimed`; ekip kararı alanlarına dokunulmadı · K5 canlı kanıt: sync fonksiyonu **10/10 hatasız** (geri alınan işlem), `source_records` 10/10, trigger yerinde · types regen +113 satır · `tsc` 0 · 10 sözleşme testi · **mutasyon 6/6** |
 | KR10 · SEO · sitemap · araç kataloğu · kök temizliği · doküman | `/kariyer` sitemap önceliği **0.4 → 0.7** (sözleşme testiyle kilitli — sessizce geri dönerse düşer) · `PAGE_SEO.career.description` 17 ilan + staj + uzaktan çalışmayı anlatacak şekilde yenilendi · sitemap üretildi: **413 URL**, `/kariyer` priority 0.7 ölçüldü · `ingest:tools:check` **temiz** · `check:drift` temiz · **kök temizlendi:** `EKİP WEB SAYFASI …` klasörü + zip kaldırıldı, içerik `docs/archive/2026-10-02-kariyer-kaynak-paketi/` altına alındı (zip birebir aynı 3 dosyaydı — ölçüldü) · kökte yalnız `CLAUDE.md` + `README.md` kaldı · **CLAUDE.md'ye kariyer modülü bölümü** (11 değişmez kural) · ⏳ tek kalan: deploy sonrası canlı kontrol (`curl -I /kariyer` + CSP) — kullanıcıda |

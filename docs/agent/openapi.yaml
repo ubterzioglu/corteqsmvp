@@ -100,6 +100,34 @@ paths:
           description: Çok fazla istek (rate limit)
         "500":
           description: Sunucu hatası
+  /functions/v1/group-claim-verify:
+    post:
+      summary: group-claim-verify aracını çalıştır
+      operationId: execute_group_claim_verify
+      x-tool-key: edge.group_claim_verify
+      x-status: active
+      x-tables: [group_claims, whatsapp_landings]
+      responses:
+        "200":
+          description: Başarılı
+        "400":
+          description: Geçersiz istek (payload doğrulama hatası)
+        "401":
+          description: Yanıt
+        "403":
+          description: Origin'e izin verilmedi
+        "404":
+          description: Bulunamadı
+        "405":
+          description: Yöntem desteklenmiyor
+        "409":
+          description: Yanıt
+        "413":
+          description: Payload çok büyük
+        "429":
+          description: Çok fazla istek (rate limit)
+        "500":
+          description: Sunucu hatası
   /functions/v1/lansman-admin:
     post:
       summary: lansman-admin aracını çalıştır

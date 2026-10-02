@@ -120,6 +120,9 @@ describe("group_settings sözleşmesi", () => {
       // (set_group_status_v1 → group_setting_int); TS'ten okuyan ilk üretim kodu
       // geldiğinde modülünü buraya O batch ekler.
       "src/lib/group-status-machine.test.ts",
+      // G13: sahiplik sözleşme testi claim anahtarlarını kilitler
+      // (claim_start_daily_limit · claim_code_ttl_minutes · claim_attempt_*).
+      "src/lib/group-claims-schema.test.ts",
     ]);
     const offenders = sourceFiles().filter((file) => {
       if (allowed.has(file.replace(/\\/g, "/"))) return false;

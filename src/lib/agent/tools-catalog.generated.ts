@@ -5,8 +5,8 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 55,
-    "edge_functions": 12,
+    "total": 56,
+    "edge_functions": 13,
     "workers": 2,
     "ui_modules": 40
   },
@@ -170,6 +170,52 @@ export const toolCatalog = {
         "zod": "3.25.76"
       },
       "evidence_path": "supabase/functions/find-matches/index.ts"
+    },
+    {
+      "tool_key": "edge.group_claim_verify",
+      "tool_name": "group-claim-verify",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/group-claim-verify/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "zod",
+        "fields": []
+      },
+      "tables_read_write": [
+        "group_claims",
+        "whatsapp_landings"
+      ],
+      "rpcs": [
+        "group_claim_record_verification"
+      ],
+      "limits": {
+        "MAX_BODY_BYTES": 1024,
+        "RATE_LIMIT_MAX": 12,
+        "RATE_LIMIT_WINDOW_SECONDS": 600
+      },
+      "http_statuses": [
+        200,
+        400,
+        401,
+        403,
+        404,
+        405,
+        409,
+        413,
+        429,
+        500
+      ],
+      "http_method": "POST",
+      "dependencies": [
+        "@supabase/supabase-js@2.108.2",
+        "zod@3.25.76"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.108.2",
+        "zod": "3.25.76"
+      },
+      "evidence_path": "supabase/functions/group-claim-verify/index.ts"
     },
     {
       "tool_key": "edge.lansman_admin",
@@ -3153,7 +3199,17 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/group-claims-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/group-settings.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group-status-machine.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -4193,6 +4249,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/whatsapp-landings-group-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/whatsapp-landings-insert-auth-contract.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -4368,6 +4429,16 @@ export const toolCatalog = {
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/_shared/group-invite-read.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/group-invite-read.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/_shared/providers-contract.test.ts",
       "kind": "ts",
       "module_family": "edge"
@@ -4414,6 +4485,11 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/find-matches/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/group-claim-verify/index.ts",
       "kind": "ts",
       "module_family": "edge"
     },
