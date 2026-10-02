@@ -37,6 +37,7 @@ import { MEMBER_SUPPORT_EMAIL, buildMemberWelcomeEmail } from "../_shared/emails
 import { buildRelocationToolAbandonmentEmail } from "../_shared/emails/relocation-tool-abandonment.ts";
 import { buildRelocationToolReportEmail } from "../_shared/emails/relocation-tool-report.ts";
 import { buildRevisionCompletedEmail } from "../_shared/emails/revision-request-completed.ts";
+import { buildCareerApplicationEmail } from "../_shared/emails/career-application.ts";
 import { buildRevisionRequestEmail } from "../_shared/emails/revision-request.ts";
 import { resolveZohoSmtpConfig, sendMailViaZohoSmtp } from "../_shared/emails/smtp.ts";
 
@@ -61,6 +62,7 @@ const SETTING_KEY_BY_EVENT: Record<string, string> = {
   revision_request_completed: "email.revision_request.enabled",
   relocation_tool_abandonment: "email.relocation_tool_abandonment.enabled",
   radar_scan_digest: "email.radar_scan_digest.enabled",
+  career_application: "email.career_application.enabled",
 };
 
 type EventType =
@@ -71,7 +73,8 @@ type EventType =
   | "revision_request_completed"
   | "relocation_tool_report"
   | "relocation_tool_abandonment"
-  | "radar_scan_digest";
+  | "radar_scan_digest"
+  | "career_application";
 
 type OutboxRow = {
   id: string;
@@ -196,6 +199,8 @@ function buildEmail(row: OutboxRow): BuiltEmail {
       return buildRelocationToolReportEmail(row.payload, resolveSiteUrl());
     case "relocation_tool_abandonment":
       return buildRelocationToolAbandonmentEmail(row.payload, resolveSiteUrl());
+    case "career_application":
+      return buildCareerApplicationEmail(row.payload, resolveSiteUrl());
     default:
       return buildNewMemberEmail(row.payload);
   }
